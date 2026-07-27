@@ -126,7 +126,7 @@ function BarGraphic({
   revoSize: number;
 }) {
   return (
-    <div className="ability-bar mt-3 flex gap-1" role="list" aria-label="Revolution bar">
+    <div className="ability-bar" role="list" aria-label="Revolution bar">
       {slots.map((slot, index) => {
         const isKeybind = index >= revoSize;
         const unmodelled = !isKeybind && slot.modelledBy === "unmodelled";
@@ -134,14 +134,8 @@ function BarGraphic({
           <div
             key={`${slot.name}-${index}`}
             role="listitem"
-            title={
-              isKeybind
-                ? "Manual keybind. Revolution does not manage this slot."
-                : unmodelled
-                  ? "No damage band. Skipped in the sim."
-                  : slot.name
-            }
-            className={`ability-bar-slot border px-1.5 py-1 ${
+            title={slot.name}
+            className={`ability-bar-slot border ${
               isKeybind
                 ? "border-dashed border-stone-750/40 text-parch-300/45"
                 : unmodelled
@@ -149,22 +143,19 @@ function BarGraphic({
                   : "border-stone-750 bg-stone-850 text-parch-50"
             }`}
           >
-            <div className="ability-bar-slot__number font-mono text-[11px] text-parch-300">{index + 1}</div>
+            <div className="ability-bar-slot__number font-mono">{index + 1}</div>
             {slot.spec ? (
               <GameIcon
                 src={abilityIconPath(slot.spec.id, slot.spec.style)}
-                size={28}
+                size={54}
                 className="ability-bar-slot__icon"
               />
             ) : (
               <span className="ability-bar-slot__empty" aria-hidden="true" />
             )}
-            <div className="ability-bar-slot__name text-[11px] leading-tight">{slot.name}</div>
-            {isKeybind ? (
-              <div className="text-[11px] text-parch-300/45">keybind</div>
-            ) : unmodelled ? (
-              <div className="text-[11px] text-parch-300/60">unmodelled</div>
-            ) : null}
+            <div className="ability-bar-slot__name">{slot.name}</div>
+            {isKeybind ? <div className="ability-bar-slot__tag">keybind</div> : null}
+            {unmodelled ? <div className="ability-bar-slot__tag">skip</div> : null}
           </div>
         );
       })}

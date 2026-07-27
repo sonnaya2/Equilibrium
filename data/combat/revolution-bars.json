@@ -13,25 +13,58 @@
       "label": "PvME ST",
       "revolutionSize": 11,
       "slots": [
-        { "name": "Chaos Roar", "abilityId": "melee:chaos-roar" },
-        { "name": "Meteor Strike", "abilityId": "melee:meteor-strike" },
-        { "name": "Rend", "abilityId": "melee:rend" },
-        { "name": "Berserk", "abilityId": "melee:berserk" },
-        { "name": "Pulverise", "abilityId": "melee:pulverise" },
-        { "name": "Overpower", "abilityId": "melee:overpower" },
-        { "name": "Greater Fury", "abilityId": "melee:greater-fury" },
-        { "name": "Hurricane", "abilityId": "melee:hurricane" },
-        { "name": "Dismember", "abilityId": "melee:dismember" },
-        { "name": "Punish", "abilityId": "melee:punish" },
-        { "name": "Adaptive Strike", "abilityId": "melee:adaptive-strike" }
+        {
+          "name": "Chaos Roar",
+          "abilityId": "melee:chaos-roar"
+        },
+        {
+          "name": "Meteor Strike",
+          "abilityId": "melee:meteor-strike"
+        },
+        {
+          "name": "Rend",
+          "abilityId": "melee:rend"
+        },
+        {
+          "name": "Berserk",
+          "abilityId": "melee:berserk"
+        },
+        {
+          "name": "Pulverise",
+          "abilityId": "melee:pulverise"
+        },
+        {
+          "name": "Overpower",
+          "abilityId": "melee:overpower"
+        },
+        {
+          "name": "Greater Fury",
+          "abilityId": "melee:greater-fury"
+        },
+        {
+          "name": "Hurricane",
+          "abilityId": "melee:hurricane"
+        },
+        {
+          "name": "Dismember",
+          "abilityId": "melee:dismember"
+        },
+        {
+          "name": "Punish",
+          "abilityId": "melee:punish"
+        },
+        {
+          "name": "Adaptive Strike",
+          "abilityId": "melee:adaptive-strike"
+        }
       ],
       "replacements": [
-        { "from": "Greater Fury", "to": "Fury" }
+        {
+          "from": "Greater Fury",
+          "to": "Fury"
+        }
       ],
-      "notes": [
-        "PvME single-target / 2-handed bar.",
-        "Revo++: trigger Basic, Threshold, Enhanced, Ultimate; revolution size 14; Auto-retaliate on; Auto Attack off."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -56,25 +89,58 @@
       "label": "PvME ST",
       "revolutionSize": 10,
       "slots": [
-        { "name": "Meteor Strike", "abilityId": "melee:meteor-strike" },
-        { "name": "Rend", "abilityId": "melee:rend" },
-        { "name": "Berserk", "abilityId": "melee:berserk" },
-        { "name": "Greater Flurry", "abilityId": "melee:greater-flurry" },
-        { "name": "Overpower", "abilityId": "melee:overpower" },
-        { "name": "Greater Fury", "abilityId": "melee:greater-fury" },
-        { "name": "Dismember", "abilityId": "melee:dismember" },
-        { "name": "Punish", "abilityId": "melee:punish" },
-        { "name": "Adaptive Strike", "abilityId": "melee:adaptive-strike" },
-        { "name": "Chaos Roar", "abilityId": "melee:chaos-roar" }
+        {
+          "name": "Meteor Strike",
+          "abilityId": "melee:meteor-strike"
+        },
+        {
+          "name": "Rend",
+          "abilityId": "melee:rend"
+        },
+        {
+          "name": "Berserk",
+          "abilityId": "melee:berserk"
+        },
+        {
+          "name": "Greater Flurry",
+          "abilityId": "melee:greater-flurry"
+        },
+        {
+          "name": "Overpower",
+          "abilityId": "melee:overpower"
+        },
+        {
+          "name": "Greater Fury",
+          "abilityId": "melee:greater-fury"
+        },
+        {
+          "name": "Dismember",
+          "abilityId": "melee:dismember"
+        },
+        {
+          "name": "Punish",
+          "abilityId": "melee:punish"
+        },
+        {
+          "name": "Adaptive Strike",
+          "abilityId": "melee:adaptive-strike"
+        },
+        {
+          "name": "Chaos Roar",
+          "abilityId": "melee:chaos-roar"
+        }
       ],
       "replacements": [
-        { "from": "Greater Fury", "to": "Fury" },
-        { "from": "Greater Flurry", "to": "Flurry" }
+        {
+          "from": "Greater Fury",
+          "to": "Fury"
+        },
+        {
+          "from": "Greater Flurry",
+          "to": "Flurry"
+        }
       ],
-      "notes": [
-        "PvME single-target / dual-wield bar.",
-        "Revo++: trigger Basic, Threshold, Enhanced, Ultimate; revolution size 14; Auto-retaliate on; Auto Attack off."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -99,25 +165,58 @@
       "label": "PvME ST · Ful arrow",
       "revolutionSize": 10,
       "slots": [
-        { "name": "Imbue: Shadows", "abilityId": "ranged:imbue-shadows" },
-        { "name": "Galeshot", "abilityId": "ranged:galeshot" },
-        { "name": "Greater Death's Swiftness", "abilityId": "ranged:greater-deaths-swiftness" },
-        { "name": "Rapid Fire", "abilityId": "ranged:rapid-fire" },
-        { "name": "Deadshot", "abilityId": "ranged:deadshot" },
-        { "name": "Greater Ricochet", "abilityId": "ranged:greater-ricochet" },
-        { "name": "Corruption Shot", "abilityId": "ranged:corruption-shot" },
-        { "name": "Snipe", "abilityId": "ranged:snipe" },
-        { "name": "Snap Shot", "abilityId": "ranged:snap-shot" },
-        { "name": "Piercing Shot", "abilityId": "ranged:piercing-shot" }
+        {
+          "name": "Imbue: Shadows",
+          "abilityId": "ranged:imbue-shadows"
+        },
+        {
+          "name": "Galeshot",
+          "abilityId": "ranged:galeshot"
+        },
+        {
+          "name": "Greater Death's Swiftness",
+          "abilityId": "ranged:greater-deaths-swiftness"
+        },
+        {
+          "name": "Rapid Fire",
+          "abilityId": "ranged:rapid-fire"
+        },
+        {
+          "name": "Deadshot",
+          "abilityId": "ranged:deadshot"
+        },
+        {
+          "name": "Greater Ricochet",
+          "abilityId": "ranged:greater-ricochet"
+        },
+        {
+          "name": "Corruption Shot",
+          "abilityId": "ranged:corruption-shot"
+        },
+        {
+          "name": "Snipe",
+          "abilityId": "ranged:snipe"
+        },
+        {
+          "name": "Snap Shot",
+          "abilityId": "ranged:snap-shot"
+        },
+        {
+          "name": "Piercing Shot",
+          "abilityId": "ranged:piercing-shot"
+        }
       ],
       "replacements": [
-        { "from": "Greater Death's Swiftness", "to": "Death's Swiftness" },
-        { "from": "Greater Ricochet", "to": "Ricochet" }
+        {
+          "from": "Greater Death's Swiftness",
+          "to": "Death's Swiftness"
+        },
+        {
+          "from": "Greater Ricochet",
+          "to": "Ricochet"
+        }
       ],
-      "notes": [
-        "PvME single-target / 2h and dual-wield (Ful arrow).",
-        "Revo++: trigger Basic, Threshold, Enhanced, Ultimate; revolution size 14; Auto-retaliate on; Auto Attack off."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -142,26 +241,62 @@
       "label": "PvME ST · Exsanguinate",
       "revolutionSize": 10,
       "slots": [
-        { "name": "Greater Sunshine", "abilityId": "magic:greater-sunshine" },
-        { "name": "Asphyxiate", "abilityId": "magic:asphyxiate" },
-        { "name": "Greater Concentrated Blast", "abilityId": "magic:greater-concentrated-blast" },
-        { "name": "Omnipower", "abilityId": "magic:omnipower" },
-        { "name": "Tsunami", "abilityId": "magic:tsunami" },
-        { "name": "Combust", "abilityId": "magic:combust" },
-        { "name": "Corruption Blast", "abilityId": "magic:corruption-blast" },
-        { "name": "Sonic Wave", "abilityId": "magic:sonic-wave" },
-        { "name": "Dragon Breath", "abilityId": "magic:dragon-breath" },
-        { "name": "Greater Chain", "abilityId": "magic:greater-chain" }
+        {
+          "name": "Greater Sunshine",
+          "abilityId": "magic:greater-sunshine"
+        },
+        {
+          "name": "Asphyxiate",
+          "abilityId": "magic:asphyxiate"
+        },
+        {
+          "name": "Greater Concentrated Blast",
+          "abilityId": "magic:greater-concentrated-blast"
+        },
+        {
+          "name": "Omnipower",
+          "abilityId": "magic:omnipower"
+        },
+        {
+          "name": "Tsunami",
+          "abilityId": "magic:tsunami"
+        },
+        {
+          "name": "Combust",
+          "abilityId": "magic:combust"
+        },
+        {
+          "name": "Corruption Blast",
+          "abilityId": "magic:corruption-blast"
+        },
+        {
+          "name": "Sonic Wave",
+          "abilityId": "magic:sonic-wave"
+        },
+        {
+          "name": "Dragon Breath",
+          "abilityId": "magic:dragon-breath"
+        },
+        {
+          "name": "Greater Chain",
+          "abilityId": "magic:greater-chain"
+        }
       ],
       "replacements": [
-        { "from": "Greater Sunshine", "to": "Sunshine" },
-        { "from": "Greater Concentrated Blast", "to": "Concentrated Blast" },
-        { "from": "Greater Chain", "to": "Chain" }
+        {
+          "from": "Greater Sunshine",
+          "to": "Sunshine"
+        },
+        {
+          "from": "Greater Concentrated Blast",
+          "to": "Concentrated Blast"
+        },
+        {
+          "from": "Greater Chain",
+          "to": "Chain"
+        }
       ],
-      "notes": [
-        "PvME single-target / 2h and dual-wield. Auto-cast Exsanguinate.",
-        "Revo++: trigger Basic, Threshold, Enhanced, Ultimate; revolution size 14; Auto-retaliate on; Auto Attack off."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -186,23 +321,53 @@
       "label": "PvME ST",
       "revolutionSize": 11,
       "slots": [
-        { "name": "Conjure Undead Army", "abilityId": "necromancy:conjure-undead-army" },
-        { "name": "Death Skulls", "abilityId": "necromancy:death-skulls" },
-        { "name": "Conjure Vengeful Ghost", "abilityId": "necromancy:conjure-vengeful-ghost" },
-        { "name": "Living Death", "abilityId": "necromancy:living-death" },
-        { "name": "Conjure Skeleton Warrior", "abilityId": "necromancy:conjure-skeleton-warrior" },
-        { "name": "Soul Sap", "abilityId": "necromancy:soul-sap" },
-        { "name": "Touch of Death", "abilityId": "necromancy:touch-of-death" },
-        { "name": "Sacrifice", "abilityId": "shared:sacrifice" },
-        { "name": "Volley of Souls", "abilityId": "necromancy:volley-of-souls" },
-        { "name": "Finger of Death", "abilityId": "necromancy:finger-of-death" },
-        { "name": "Bloat", "abilityId": "necromancy:bloat" }
+        {
+          "name": "Conjure Undead Army",
+          "abilityId": "necromancy:conjure-undead-army"
+        },
+        {
+          "name": "Death Skulls",
+          "abilityId": "necromancy:death-skulls"
+        },
+        {
+          "name": "Conjure Vengeful Ghost",
+          "abilityId": "necromancy:conjure-vengeful-ghost"
+        },
+        {
+          "name": "Living Death",
+          "abilityId": "necromancy:living-death"
+        },
+        {
+          "name": "Conjure Skeleton Warrior",
+          "abilityId": "necromancy:conjure-skeleton-warrior"
+        },
+        {
+          "name": "Soul Sap",
+          "abilityId": "necromancy:soul-sap"
+        },
+        {
+          "name": "Touch of Death",
+          "abilityId": "necromancy:touch-of-death"
+        },
+        {
+          "name": "Sacrifice",
+          "abilityId": "shared:sacrifice"
+        },
+        {
+          "name": "Volley of Souls",
+          "abilityId": "necromancy:volley-of-souls"
+        },
+        {
+          "name": "Finger of Death",
+          "abilityId": "necromancy:finger-of-death"
+        },
+        {
+          "name": "Bloat",
+          "abilityId": "necromancy:bloat"
+        }
       ],
       "replacements": [],
-      "notes": [
-        "PvME single-target bar. Customise Conjure Undead Army for all available conjures; prioritise Ghost > Skeleton > Zombie > Phantom.",
-        "Revo++: trigger Basic, Threshold, Enhanced, Ultimate; revolution size 14; Auto-retaliate on; Auto Attack off."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -227,19 +392,34 @@
       "label": "PvME basics",
       "revolutionSize": 5,
       "slots": [
-        { "name": "Rend", "abilityId": "melee:rend" },
-        { "name": "Adaptive Strike", "abilityId": "melee:adaptive-strike" },
-        { "name": "Greater Fury", "abilityId": "melee:greater-fury" },
-        { "name": "Punish", "abilityId": "melee:punish" },
-        { "name": "Attack", "abilityId": "melee:attack" }
+        {
+          "name": "Rend",
+          "abilityId": "melee:rend"
+        },
+        {
+          "name": "Adaptive Strike",
+          "abilityId": "melee:adaptive-strike"
+        },
+        {
+          "name": "Greater Fury",
+          "abilityId": "melee:greater-fury"
+        },
+        {
+          "name": "Punish",
+          "abilityId": "melee:punish"
+        },
+        {
+          "name": "Attack",
+          "abilityId": "melee:attack"
+        }
       ],
       "replacements": [
-        { "from": "Greater Fury", "to": "Fury" }
+        {
+          "from": "Greater Fury",
+          "to": "Fury"
+        }
       ],
-      "notes": [
-        "PvME Basics only melee bar (shorter). Not the full Revo++ config — basics-focused.",
-        "For full bars use the Single-target rows and enable all four Automatically trigger toggles."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -264,17 +444,26 @@
       "label": "PvME basics",
       "revolutionSize": 3,
       "slots": [
-        { "name": "Greater Ricochet", "abilityId": "ranged:greater-ricochet" },
-        { "name": "Piercing Shot", "abilityId": "ranged:piercing-shot" },
-        { "name": "Ranged", "abilityId": "ranged:attack" }
+        {
+          "name": "Greater Ricochet",
+          "abilityId": "ranged:greater-ricochet"
+        },
+        {
+          "name": "Piercing Shot",
+          "abilityId": "ranged:piercing-shot"
+        },
+        {
+          "name": "Ranged",
+          "abilityId": "ranged:attack"
+        }
       ],
       "replacements": [
-        { "from": "Greater Ricochet", "to": "Ricochet" }
+        {
+          "from": "Greater Ricochet",
+          "to": "Ricochet"
+        }
       ],
-      "notes": [
-        "PvME Basics only ranged bar. Use Ricochet if Greater Ricochet is unowned.",
-        "For full bars use Single-target and enable all four Automatically trigger toggles."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -299,17 +488,26 @@
       "label": "PvME basics",
       "revolutionSize": 3,
       "slots": [
-        { "name": "Greater Concentrated Blast", "abilityId": "magic:greater-concentrated-blast" },
-        { "name": "Dragon Breath", "abilityId": "magic:dragon-breath" },
-        { "name": "Sonic Wave", "abilityId": "magic:sonic-wave" }
+        {
+          "name": "Greater Concentrated Blast",
+          "abilityId": "magic:greater-concentrated-blast"
+        },
+        {
+          "name": "Dragon Breath",
+          "abilityId": "magic:dragon-breath"
+        },
+        {
+          "name": "Sonic Wave",
+          "abilityId": "magic:sonic-wave"
+        }
       ],
       "replacements": [
-        { "from": "Greater Concentrated Blast", "to": "Concentrated Blast" }
+        {
+          "from": "Greater Concentrated Blast",
+          "to": "Concentrated Blast"
+        }
       ],
-      "notes": [
-        "PvME Basics only magic bar. Use Concentrated Blast if Greater is unowned. Include Combust when using Roar of Awakening + Ode to Deceit.",
-        "For full bars use Single-target and enable all four Automatically trigger toggles."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {
@@ -334,17 +532,29 @@
       "label": "PvME basics",
       "revolutionSize": 5,
       "slots": [
-        { "name": "Conjure Undead Army", "abilityId": "necromancy:conjure-undead-army" },
-        { "name": "Conjure Vengeful Ghost", "abilityId": "necromancy:conjure-vengeful-ghost" },
-        { "name": "Conjure Skeleton Warrior", "abilityId": "necromancy:conjure-skeleton-warrior" },
-        { "name": "Touch of Death", "abilityId": "necromancy:touch-of-death" },
-        { "name": "Soul Sap", "abilityId": "necromancy:soul-sap" }
+        {
+          "name": "Conjure Undead Army",
+          "abilityId": "necromancy:conjure-undead-army"
+        },
+        {
+          "name": "Conjure Vengeful Ghost",
+          "abilityId": "necromancy:conjure-vengeful-ghost"
+        },
+        {
+          "name": "Conjure Skeleton Warrior",
+          "abilityId": "necromancy:conjure-skeleton-warrior"
+        },
+        {
+          "name": "Touch of Death",
+          "abilityId": "necromancy:touch-of-death"
+        },
+        {
+          "name": "Soul Sap",
+          "abilityId": "necromancy:soul-sap"
+        }
       ],
       "replacements": [],
-      "notes": [
-        "PvME Basics only necromancy bar. Customise conjures (Ghost > Skeleton > Zombie > Phantom).",
-        "For full bars use Single-target and enable all four Automatically trigger toggles."
-      ],
+      "notes": [],
       "supported": true,
       "sources": [
         {

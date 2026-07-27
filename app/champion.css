@@ -2983,25 +2983,45 @@
   position: absolute;
   z-index: 4;
   inset: 0;
-  overflow: hidden;
-  color: color-mix(in srgb, var(--combat-gold-bright) 76%, transparent);
   pointer-events: none;
 }
 
+/* Simple L-brackets at frame corners (not stacked SVGs / center gem). */
 .eq-champion .combat-frame-corner {
   position: absolute;
-  width: 1.65rem;
-  height: 1.65rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
+  width: 0.85rem;
+  height: 0.85rem;
+  opacity: 0.72;
+  background:
+    linear-gradient(var(--combat-gold-bright), var(--combat-gold-bright)) 0 0 / 0.75rem 1px no-repeat,
+    linear-gradient(var(--combat-gold-bright), var(--combat-gold-bright)) 0 0 / 1px 0.75rem no-repeat;
 }
 
-.eq-champion .combat-frame-corner.is-nw { top: 0.22rem; left: 0.22rem; }
-.eq-champion .combat-frame-corner.is-ne { top: 0.22rem; right: 0.22rem; transform: rotate(90deg); }
-.eq-champion .combat-frame-corner.is-se { right: 0.22rem; bottom: 0.22rem; transform: rotate(180deg); }
-.eq-champion .combat-frame-corner.is-sw { bottom: 0.22rem; left: 0.22rem; transform: rotate(270deg); }
+.eq-champion .combat-frame-corner.is-nw {
+  top: 0.28rem;
+  left: 0.28rem;
+}
+
+.eq-champion .combat-frame-corner.is-ne {
+  top: 0.28rem;
+  right: 0.28rem;
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+.eq-champion .combat-frame-corner.is-se {
+  right: 0.28rem;
+  bottom: 0.28rem;
+  transform: rotate(180deg);
+  transform-origin: center;
+}
+
+.eq-champion .combat-frame-corner.is-sw {
+  bottom: 0.28rem;
+  left: 0.28rem;
+  transform: rotate(270deg);
+  transform-origin: center;
+}
 
 .eq-champion .combat-quick {
   gap: 0.65rem;
@@ -3128,26 +3148,6 @@
   min-height: 0;
   overflow: hidden;
   border-color: var(--combat-gold-mid);
-}
-
-.eq-champion .combat-detail::after {
-  content: "";
-  position: absolute;
-  right: 12%;
-  bottom: 7%;
-  width: 11rem;
-  aspect-ratio: 1;
-  border: 1px solid rgb(201 154 89 / 5%);
-  border-radius: 50%;
-  background:
-    linear-gradient(45deg, transparent 48.8%, rgb(201 154 89 / 4%) 49% 51%, transparent 51.2%),
-    linear-gradient(-45deg, transparent 48.8%, rgb(201 154 89 / 4%) 49% 51%, transparent 51.2%);
-  box-shadow:
-    inset 0 0 0 1.6rem var(--combat-panel),
-    inset 0 0 0 1.68rem rgb(201 154 89 / 4%);
-  opacity: 0.8;
-  transform: rotate(22.5deg);
-  pointer-events: none;
 }
 
 .eq-champion .combat-detail .panel-head,

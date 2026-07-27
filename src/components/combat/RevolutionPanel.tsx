@@ -285,10 +285,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   return (
     <div className="revolution-panel">
-      <p className="revo-intro mb-2 text-xs text-parch-300">
-        First ready affordable bar ability each GCD ·{" "}
-        <span className="text-parch-50">PvME Revolution Bars</span>
-      </p>
       <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
         <label className="flex items-center gap-1 text-parch-300">
           Bar
@@ -328,12 +324,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       {styleMismatch && bar ? (
         <p className="mt-2 text-xs text-chaos-300">
           Loadout: {loadout.style}. Bar: {bar.style}. AD and crit may not match.
-        </p>
-      ) : null}
-
-      {hybrid ? (
-        <p className="mt-2 text-xs text-parch-300">
-          Revolution uses the first {revoSize} slots. The rest are keybinds.
         </p>
       ) : null}
 
@@ -421,9 +411,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
           <section className="revo-section revo-timeline">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">Cast timeline</h3>
-            <p className="mt-1 text-xs text-parch-300">
-              One row per GCD. Basics fill idle GCDs.
-            </p>
             <div className="mt-2 max-h-80 overflow-y-auto border-t border-stone-750" data-testid="revo-cast-timeline">
             <table className="w-full min-w-[520px] border-collapse text-left text-xs">
               <thead className="sticky top-0 bg-stone-900 text-parch-300">

@@ -147,7 +147,7 @@ export function RotationPlanner() {
             Use Loadout
           </label>
           {mode === "manual" ? (
-            <label className="flex items-center gap-2 text-xs text-parch-300" title="Basics auto-fire in GCD gaps and adrenaline shortfalls, as in game">
+            <label className="flex items-center gap-2 text-xs text-parch-300">
               <input type="checkbox" checked={weave} onChange={(e) => setWeave(e.target.checked)} />
               Auto-weave basics
             </label>

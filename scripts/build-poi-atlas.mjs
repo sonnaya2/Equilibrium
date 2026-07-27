@@ -42,13 +42,33 @@ const slug = (s) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+/**
+ * Walked, not listed.
+ *
+ * `public/game/upgrades` has twenty entries at the top and 1243 files below it —
+ * the art lives in `permanent-unlocks/`, `progression/`, `skilling-tools/` and a
+ * dozen more. A flat readdir found 20 of them, which is why Musa Point drew its
+ * region's crest while its own icon sat published one directory down.
+ *
+ * First match wins and SOURCES is ordered, so a boss portrait still loses to the
+ * place it happens at.
+ */
+function walk(dir, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full, out);
+    else if (/\.(png|gif|jpe?g|webp)$/i.test(entry.name)) out.push(full);
+  }
+  return out;
+}
+
 const byName = new Map();
 for (const dir of SOURCES) {
   const full = path.join(GAME, dir);
   if (!fs.existsSync(full)) continue;
-  for (const file of fs.readdirSync(full)) {
-    const key = file.replace(/\.(png|gif|jpe?g|webp)$/i, "");
-    if (!byName.has(key)) byName.set(key, path.join(full, file));
+  for (const file of walk(full)) {
+    const key = path.basename(file).replace(/\.(png|gif|jpe?g|webp)$/i, "");
+    if (!byName.has(key)) byName.set(key, file);
   }
 }
 

@@ -33,8 +33,8 @@ const PROBES = [
   ["Paterdomus W", 3400, 3488, "misthalin"], // west bank of Salve
   ["Paterdomus temple", 3405, 3488, "misthalin"],
   ["Salve bridge E", 3430, 3485, "morytania"],
-  ["Dig Site S approach", 3360, 3300, "misthalin"],
-  ["Dig Site SE", 3380, 3280, "misthalin"],
+  ["Desert top N of Al Kharid", 3320, 3240, "desert"],
+  ["Desert top E sand", 3380, 3280, "desert"],
   ["Varrock W corridor", 3100, 3420, "misthalin"],
   ["Draynor Manor", 3100, 3330, "misthalin"],
 
@@ -181,9 +181,9 @@ const PROBES = [
   ["Lumbridge SE river", 3255, 3200, "misthalin"],
   ["Cabbage patch band", 3260, 3270, "misthalin"], // just N of desert cap y
   ["Dig Site core", 3360, 3420, "misthalin"],
-  ["Dig Site S mid", 3360, 3340, "misthalin"],
-  ["Dig Site SE mid", 3380, 3320, "misthalin"],
-  ["Dig Site SE tip", 3385, 3285, "misthalin"],
+  ["Dig Site S campus", 3360, 3380, "misthalin"],
+  ["Desert top mid", 3360, 3300, "desert"],
+  ["Oasis NE sand", 3400, 3280, "desert"],
   ["Dig Site E ridge", 3390, 3360, "misthalin"],
   ["Senntisten approach", 3350, 3400, "misthalin"],
   ["Desert N of AK", 3320, 3240, "desert"],
@@ -212,6 +212,24 @@ const PROBES = [
   ["Burgh de Rott N", 3490, 3230, "morytania"],
   ["Burgh de Rott", 3490, 3210, "morytania"],
   ["Mine NW of Burgh", 3445, 3245, "morytania"],
+
+  // ── Mory–Desert river/sand contact (no fingers either way) ───────────────
+  // Piecewise cut in build-map-terrain.mjs: desert W/S, mory E/N of ~x 3440.
+  ["Mine core", 3441, 3233, "morytania"],
+  ["Mine W sand", 3430, 3210, "desert"], // no mory finger into orange sand
+  ["Mine SW scrub", 3430, 3230, "desert"], // land tile (river gap is water)
+  ["N of mine scrub", 3435, 3255, "desert"], // west of vertical cut @3440
+  ["N of mine mory", 3445, 3255, "morytania"],
+  ["Desert finger ban", 3440, 3295, "morytania"], // was multi-flip desert hole
+  ["Mort Myre SW solid", 3445, 3310, "morytania"],
+  ["Mortton W approach", 3460, 3280, "morytania"],
+  ["Burgh SW dune", 3460, 3185, "desert"], // dunes SW of Burgh stay desert
+  ["Burgh W approach", 3475, 3210, "morytania"],
+  ["Uzer N dunes", 3450, 3150, "desert"], // land on northern dune tongue
+  ["Het N sand tongue", 3410, 3240, "desert"],
+  ["Contact mid river", 3440, 3235, "morytania"], // on/just E of cut near mine
+  ["Contact cut N", 3435, 3280, "desert"],
+  ["Contact cut N mory", 3445, 3280, "morytania"],
 
   // ── Asgarnia–Kandarin (White Wolf, Catherby E, Taverley W) ───────────────
   ["White Wolf summit", 2870, 3480, "asgarnia"],
@@ -335,9 +353,10 @@ const GRIDS = [
     name: "Misth/Desert dig SE",
     x0: 3240, x1: 3420, y0: 3200, y1: 3400, step: 10,
     expect: (x, y) => {
-      if (y >= 3270 && x <= 3390) return "misthalin";
-      if (y <= 3275 && x >= 3305 && x <= 3425) return "desert";
-      if (x >= 3400 && y <= 3285 && y >= 3200) return "desert";
+      // Dig Site campus only; northern desert sand is desert (not mist).
+      if (y >= 3345 && x >= 3310 && x <= 3395) return "misthalin";
+      if (y <= 3338 && x >= 3260 && x <= 3405) return "desert";
+      if (x >= 3400 && y <= 3338 && y >= 3200) return "desert";
       return null;
     },
   },
@@ -406,6 +425,25 @@ const GRIDS = [
       if (y <= 3522 && x >= 3075) return "misthalin";
       if (y >= 3526) return "forinthry";
       return null;
+    },
+  },
+  {
+    // Mory–Desert contact: piecewise xCut mirrors build-map-terrain.mjs.
+    // Desert west/south of cut; mory east/north. ±2 tile deadband on the cut
+    // absorbs plate-ring simplify drift; water samples are skipped.
+    name: "Mory/Desert contact",
+    x0: 3405,
+    x1: 3520,
+    y0: 3175,
+    y1: 3315,
+    step: 8,
+    expect: (x, y) => {
+      let xCut;
+      if (y >= 3260) xCut = 3440;
+      else if (y >= 3220) xCut = 3440 - (3260 - y) * 0.1;
+      else xCut = 3436 + ((3220 - y) / 45) * 49;
+      if (Math.abs(x - xCut) <= 2) return null;
+      return x + 0.5 < xCut ? "desert" : "morytania";
     },
   },
 ];

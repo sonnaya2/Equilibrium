@@ -372,42 +372,53 @@ const owner = new Uint8Array(N);
 
       // --- Salve: Paterdomus / Dig Site west bank = Misthalin; east bank = Mory ---
       // Temple ~[3405,3488] west bank; bridge ~[3425,3485].
+      // Mory E bank is y≥3325 only — river/sand contact below owns Mine/Burgh/N dunes
+      // through y=3320 so the vertical cut @x≈3440 is not truncated early.
+      // Always force mory (no desert skip): a prior skip+continue preserved Voronoi
+      // desert fingers into Mort Myre and blocked the Burgh/contact boxes.
       if (gx >= 3300 && gx <= 3416 && gy >= 3360 && gy <= 3535) {
         force(i, mistId);
         continue;
       }
-      if (gx >= 3420 && gx <= 3560 && gy >= 3240 && gy <= 3565) {
-        if (owner[i] !== desertId) force(i, moryId);
-        continue;
-      }
-
-      // --- Dig Site south approach = Misthalin (not desert fingers) ---
-      // Dig Site [3360,3420] + SE approach [3380,3280]. Cap x short of oasis NE
-      // (3400,3280) so Het's sand stays desert.
-      if (gx >= 3240 && gx <= 3390 && gy >= 3270 && gy <= 3450) {
-        force(i, mistId);
-        continue;
-      }
-
-      // --- Burgh / Abandoned Mine / Mort Myre SW = Morytania ---
-      // Abandoned Mine [3441,3233] must not fall to desert force below.
-      if (gx >= 3430 && gx <= 3560 && gy >= 3195 && gy <= 3325) {
+      if (gx >= 3420 && gx <= 3560 && gy >= 3325 && gy <= 3565) {
         force(i, moryId);
         continue;
       }
 
-      // --- Mory ↔ Desert river/sand contact ---
-      // High band (Dig Site latitudes): mist west of Salve, mory east — no desert wedges.
-      if (gy >= 3300 && gy <= 3365 && gx >= 3388 && gx <= 3455) {
-        if (gx <= 3416) force(i, mistId);
+      // --- Dig Site campus only = Misthalin ---
+      // Dig Site [3360,3420]. Prior gy≥3270 box painted the whole northern
+      // Kharidian sand top as Misthalin (user report). Campus only.
+      if (gx >= 3310 && gx <= 3395 && gy >= 3345 && gy <= 3485) {
+        force(i, mistId);
+        continue;
+      }
+
+      // --- Mory–Desert river / sand contact (piecewise diagonal, not sawtooth) ---
+      // Band ~x 3405–3525, y 3175–3320. Desert west/south (Het's, Uzer dunes,
+      // northern Kharidian sand). Mory east/north (Abandoned Mine [3441,3233],
+      // Burgh de Rott, Mort'ton, Mort Myre SW).
+      //   y 3260–3320: near-vertical x≈3440
+      //   y 3220–3260: slight west drift (Mine mory, SW sand desert)
+      //   y 3175–3220: swings east toward Burgh (dunes SW of town = desert)
+      if (gx >= 3405 && gx <= 3525 && gy >= 3175 && gy <= 3324) {
+        let xCut;
+        if (gy >= 3260) {
+          xCut = 3440;
+        } else if (gy >= 3220) {
+          // 3440 @ y3260 → ~3436 @ y3220
+          xCut = 3440 - (3260 - gy) * 0.1;
+        } else {
+          // 3436 @ y3220 → ~3485 @ y3175
+          xCut = 3436 + ((3220 - gy) / 45) * 49;
+        }
+        if (gx + 0.5 < xCut) force(i, desertId);
         else force(i, moryId);
         continue;
       }
-      // Low sand belt (oasis NE → Burgh approach): desert west of ~3428, mory east.
-      // Keeps [3400,3280] desert while Dig Site SE [3380,3280] stays mist via dig box.
-      if (gy >= 3120 && gy < 3300 && gx >= 3392 && gx <= 3520) {
-        if (gx < 3428) force(i, desertId);
-        else force(i, moryId);
+
+      // South-east Mory body past the contact box (Barrows / Meiyerditch fringe).
+      if (gx > 3525 && gx <= 3620 && gy >= 3180 && gy <= 3360) {
+        force(i, moryId);
         continue;
       }
 
@@ -419,10 +430,16 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Al Kharid + north oasis sand = Desert (not Misthalin wedges) ---
-      // Al Kharid [3293,3184], Het's Oasis [3360,3120]. Cap y so Dig Site stays M;
-      // cap x short of the mory-desert contact cut (~3428).
-      if (gx >= 3260 && gx <= 3426 && gy >= 2900 && gy <= 3275) {
+      // --- Northern desert sand (top of Kharidian) = Desert ---
+      // Al Kharid [3293,3184], Het's Oasis [3360,3120], sand north of the city.
+      // Dig Site campus force starts at y 3345 — desert holds up to 3338 so the
+      // desert *top* is not painted Misthalin. East of x3405: mory contact box.
+      if (gx >= 3260 && gx <= 3405 && gy >= 2900 && gy <= 3338) {
+        force(i, desertId);
+        continue;
+      }
+      // Southern dunes under the contact band (Uzer / N dunes latitudes).
+      if (gx > 3405 && gx <= 3520 && gy >= 2900 && gy < 3175) {
         force(i, desertId);
         continue;
       }

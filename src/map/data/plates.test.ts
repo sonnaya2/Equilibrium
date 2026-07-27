@@ -87,10 +87,10 @@ describe("region plates", () => {
     }
   });
 
-  it("contains every place pin, bar the two known offshore ones", () => {
-    // Lost Grove and the Fishing Trawler sit on water their region does not own;
-    // both are real coordinates, so they are named rather than moved.
-    const OFFSHORE = new Set(["tirannwn/Lost Grove", "kandarin/Fishing Trawler"]);
+  it("contains every place pin, bar the known offshore ones", () => {
+    // Fishing Trawler sits on water Kandarin does not own — real coord, named not moved.
+    // Lost Grove lives on the Tirannwn-owned island west of Isafdar (near Solak).
+    const OFFSHORE = new Set(["kandarin/Fishing Trawler"]);
     const stray: string[] = [];
     for (const place of [...PLACE_ANCHORS, ...SITE_ANCHORS]) {
       const point = placeMapCoord(place.region, place.area);

@@ -69,6 +69,10 @@ const ALIASES = {
   "lletya": "lletya",
   "isafdar": "isafdar",
   "port-tyras": "port-tyras",
+  "lost-grove": "lost-grove",
+  "hefin-agility-course": "hefin-agility-course",
+  "max-guild": "max-guild",
+  "prifddinas": "prifddinas",
 };
 
 const sharp = await import("sharp").then((m) => m.default).catch(() => null);

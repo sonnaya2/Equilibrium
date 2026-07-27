@@ -153,11 +153,13 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   // Burgh de Rott start (Hiylik Myna) — not the old mid-Mort Myre guess.
   ["Temple Trekking", [3479, 3238]],
   ["Prifddinas", [2235, 3340]],
-  // Was 2150,3050 — eight tiles offshore, so the pin floated in open sea.
-  ["Lost Grove", [2157, 3054]],
+  // Lost Grove island (wiki Map 1952,3168). Pin sits NE of Solak so both read.
+  ["Lost Grove", [1988, 3190]],
   ["Lletya", [2340, 3170]],
   ["Isafdar", [2244, 3200]],
-  ["Port Tyras", [2180, 3120]],
+  // Wiki charter dock ~2153,3123.
+  ["Port Tyras", [2153, 3123]],
+  // Solak arena on the Lost Grove island — SW of the grove area pin.
   ["Solak", [1952, 3151]],
   ["Max Guild", [2276, 3319]],
   ["Hefin Agility Course", [2181, 3423]],

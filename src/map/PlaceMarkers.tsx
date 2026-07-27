@@ -35,21 +35,31 @@ const FACE_AREA = 0.03;
 const FACE_SITE = 0.018;
 /** ED2 — between area and site so the pin is readable without drowning neighbours. */
 const FACE_ED2 = 0.028;
+/** Solak / big outdoor bosses — larger than a generic site so the disc clears the plate. */
+const FACE_SOLAK = 0.026;
 const BEAM_H_AREA = 0.014;
-const BEAM_H_SITE = 0.01;
+const BEAM_H_SITE = 0.014;
 const BEAM_H_ED2 = 0.013;
+const BEAM_H_SOLAK = 0.018;
 const BEAM_R_BASE_AREA = 0.007;
-const BEAM_R_BASE_SITE = 0.005;
+const BEAM_R_BASE_SITE = 0.0055;
 const BEAM_R_BASE_ED2 = 0.0065;
+const BEAM_R_BASE_SOLAK = 0.0065;
 const FOOT_AREA = 0.011;
 const FOOT_SITE = 0.008;
 const FOOT_ED2 = 0.01;
+const FOOT_SOLAK = 0.01;
 const FACE_TILT = -0.72;
 const HIT_OVERSIZE = 1.55;
+/** Extra lift so tilted face discs do not clip into the plate top (Solak "under ground"). */
+const FACE_CLEARANCE = 0.004;
 
 function pinScale(place: PlaceAnchor) {
   if (place.area === "Dragonkin Laboratory") {
     return { face: FACE_ED2, beamH: BEAM_H_ED2, beamR: BEAM_R_BASE_ED2, foot: FOOT_ED2 };
+  }
+  if (place.area === "Solak") {
+    return { face: FACE_SOLAK, beamH: BEAM_H_SOLAK, beamR: BEAM_R_BASE_SOLAK, foot: FOOT_SOLAK };
   }
   if (place.site) {
     return { face: FACE_SITE, beamH: BEAM_H_SITE, beamR: BEAM_R_BASE_SITE, foot: FOOT_SITE };
@@ -57,8 +67,8 @@ function pinScale(place: PlaceAnchor) {
   return { face: FACE_AREA, beamH: BEAM_H_AREA, beamR: BEAM_R_BASE_AREA, foot: FOOT_AREA };
 }
 
-export const POI_ATLAS_URL = "/map/poi-atlas.json?v=wiki208";
-export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp?v=wiki208";
+export const POI_ATLAS_URL = "/map/poi-atlas.json?v=wiki209";
+export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp?v=wiki209";
 
 export interface AtlasIndex {
   cell: number;
@@ -297,7 +307,8 @@ export function PlaceMarkers({
       const beamR = sz.beamR * reveal;
       const footW = sz.foot * reveal;
 
-      face.position.set(pin.x, surfaceY + beamH + faceW * 0.1, pin.z);
+      // Clearance keeps the tilted disc above the plate bevel (site pins especially).
+      face.position.set(pin.x, surfaceY + beamH + faceW * 0.22 + FACE_CLEARANCE, pin.z);
       face.scale.setScalar(faceW);
       face.rotation.set(FACE_TILT, 0, 0);
 

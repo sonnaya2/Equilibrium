@@ -43,16 +43,29 @@ test("data region rail owns every downstream filter", async ({ page }) => {
       .filter({ hasText: /^Expansive essence pouch/ })
       .getByLabel("Region combo: misthalin + forinthry"),
   ).toHaveCount(1);
-  await expect(
-    page.locator(".data-region-content-table tbody tr").filter({ hasText: "Kerapac" }),
-  ).toContainText("Fractured Staff of Armadyl");
+  const contentTable = page.locator(".data-region-content-table");
+  await expect(contentTable.getByRole("columnheader", { name: "Type", exact: true })).toBeVisible();
+  await expect(contentTable.getByRole("columnheader", { name: "Location", exact: true })).toBeVisible();
+  await expect(contentTable.getByRole("columnheader", { name: "Rewards / access", exact: true })).toBeVisible();
+
+  const kerapac = contentTable.locator("tbody tr").filter({ hasText: "Kerapac" });
+  await expect(kerapac).toContainText("Fractured Staff of Armadyl");
+  // Reward icons at a glance (at least one resolved game icon in the rewards cell).
+  await expect(kerapac.locator(".data-reward-icons img").first()).toBeVisible();
+
+  const digSite = contentTable.locator("tbody tr").filter({ hasText: "Varrock Dig Site" });
+  await expect(digSite.getByRole("link", { name: /Open .+ on map/i })).toHaveAttribute(
+    "href",
+    /\/map#region=misthalin&place=/,
+  );
+
   await expect(page.getByText("Major unlocks", { exact: true })).toBeVisible();
-  await expect(page.locator(".data-region-content-table")).not.toContainText("Vermyx");
+  await expect(contentTable).not.toContainText("Vermyx");
   await page.getByRole("button", { name: "View Varrock Dig Site image" }).click();
   await expect(page.getByRole("dialog", { name: "Varrock Dig Site image" })).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("combobox", { name: "Sort browse data" }).selectOption("name");
-  await expect(page.locator(".data-region-content-table tbody tr").first()).toContainText("Arch-Glacor");
+  await expect(contentTable.locator("tbody tr").first()).toContainText("Arch-Glacor");
 
   await page.getByRole("option", { name: /^Havenhythe,/ }).click();
   const skills = page.getByRole("listbox", { name: "Skills in Havenhythe" });

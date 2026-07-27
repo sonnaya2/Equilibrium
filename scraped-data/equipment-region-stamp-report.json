@@ -1,0 +1,2817 @@
+{
+  "snapshotDate": "2026-07-27",
+  "purpose": "Report for stamp-equipment-regions.mjs — corpus-only region stamping.",
+  "sources": {
+    "regionalCombatUnlocks": "data/research/regional-combat-unlocks.json",
+    "majorUpgrades": "scraped-data/major-upgrades-by-region.json",
+    "enrichmentFiles": [
+      "progression-enrichment-regional-combat-2026-07-25.json",
+      "progression-enrichment-regional-combat-bis-accessories-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-armor-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-magic-necro-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-polish-bosses-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json",
+      "progression-enrichment-regional-combat-bis-residual-2026-07-26.json",
+      "progression-enrichment-regional-combat-pass-2-2026-07-25.json",
+      "progression-enrichment-regional-combat-pass-3-2026-07-25.json"
+    ]
+  },
+  "counts": {
+    "equipmentTotal": 556,
+    "taggedBefore": 552,
+    "taggedAfter": 556,
+    "newlyStampedOrUnioned": 96,
+    "unlockObjectsCreated": 0,
+    "unionedExisting": 36,
+    "claimsBuilt": 605,
+    "unmatchedClaims": 49,
+    "conflicts": 35,
+    "stillEmptyHighTier": 0,
+    "userForceCleared": 0,
+    "userForceSet": 393
+  },
+  "keyBis": {
+    "item:drygore-mace": {
+      "name": "Drygore mace",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:off-hand-drygore-mace": {
+      "name": "Off-hand drygore mace",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:noxious-scythe": {
+      "name": "Noxious scythe",
+      "regions": [
+        "morytania"
+      ]
+    },
+    "item:noxious-longbow": {
+      "name": "Noxious longbow",
+      "regions": [
+        "morytania"
+      ]
+    },
+    "item:noxious-staff": {
+      "name": "Noxious staff",
+      "regions": [
+        "morytania"
+      ]
+    },
+    "item:zaros-godsword": {
+      "name": "Zaros godsword",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:seren-godbow": {
+      "name": "Seren godbow",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:staff-of-sliske": {
+      "name": "Staff of Sliske",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:seismic-wand": {
+      "name": "Seismic wand",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:seismic-singularity": {
+      "name": "Seismic singularity",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:tectonic-helm": {
+      "name": "Tectonic mask",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:elite-tectonic-mask": {
+      "name": "Elite tectonic mask",
+      "regions": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    "item:malevolent-body": {
+      "name": "Malevolent cuirass",
+      "regions": [
+        "morytania"
+      ]
+    },
+    "item:torva-platebody": {
+      "name": "Torva platebody",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:pernix-body": {
+      "name": "Pernix body",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:virtus-robe-top": {
+      "name": "Virtus robe top",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:bandos-chestplate": {
+      "name": "Bandos chestplate",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:armadyl-chestplate": {
+      "name": "Armadyl chestplate",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:garb-of-subjugation": {
+      "name": "Garb of subjugation",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:chaotic-rapier": {
+      "name": "Chaotic rapier",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:ascension-crossbow": {
+      "name": "Ascension crossbow",
+      "regions": [
+        "kandarin"
+      ]
+    },
+    "item:blightbound-crossbow": {
+      "name": "Blightbound crossbow",
+      "regions": [
+        "tirannwn"
+      ]
+    },
+    "item:cinderbane-gloves": {
+      "name": "Cinderbane gloves",
+      "regions": [
+        "tirannwn"
+      ]
+    },
+    "item:cryptbloom-body": {
+      "name": "Cryptbloom top",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:dracolich-body": {
+      "name": "Dracolich hauberk",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:vestments-of-havoc-robe-top": {
+      "name": "Robe top of the Vestments of Havoc",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:dark-shard-of-leng": {
+      "name": "Dark shard of Leng",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:fractured-staff-of-armadyl": {
+      "name": "Fractured Staff of Armadyl",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:essence-of-finality": {
+      "name": "Essence of Finality",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:igneous-kal-zuk": {
+      "name": "Igneous Kal-Zuk",
+      "regions": [
+        "karamja",
+        "misthalin"
+      ]
+    },
+    "item:tokhaar-kal-ket": {
+      "name": "TokHaar-Kal-Ket",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:fire-cape": {
+      "name": "Fire cape",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:tokkul-zo": {
+      "name": "TokKul-Zo",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:obsidian-platebody": {
+      "name": "Obsidian platebody",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:gemstone-hauberk": {
+      "name": "Gemstone hauberk",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:abomination-cape": {
+      "name": "Abomination cape",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:tzhaar-ket-om": {
+      "name": "TzHaar-Ket-Om",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:laceration-boots": {
+      "name": "Laceration boots",
+      "regions": [
+        "anachronia"
+      ]
+    },
+    "item:enhanced-laceration-boots": {
+      "name": "Enhanced laceration boots",
+      "regions": [
+        "anachronia"
+      ]
+    },
+    "item:blast-diffusion-boots": {
+      "name": "Blast diffusion boots",
+      "regions": [
+        "anachronia"
+      ]
+    },
+    "item:steadfast-boots": {
+      "name": "Steadfast boots",
+      "regions": [
+        "fremennik"
+      ]
+    },
+    "item:emberkeen-boots": {
+      "name": "Emberkeen boots",
+      "regions": [
+        "forinthry",
+        "fremennik"
+      ]
+    },
+    "item:hailfire-boots": {
+      "name": "Hailfire boots",
+      "regions": [
+        "forinthry",
+        "fremennik"
+      ]
+    },
+    "item:flarefrost-boots": {
+      "name": "Flarefrost boots",
+      "regions": [
+        "forinthry",
+        "fremennik"
+      ]
+    },
+    "item:trimmed-masterwork-platebody": {
+      "name": "Trimmed masterwork platebody",
+      "regions": [
+        "asgarnia",
+        "morytania"
+      ]
+    },
+    "item:masterwork-platebody": {
+      "name": "Masterwork platebody",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:wand-of-the-praesul": {
+      "name": "Wand of the praesul",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:imperium-core": {
+      "name": "Imperium core",
+      "regions": [
+        "asgarnia"
+      ]
+    },
+    "item:ek-zekkil": {
+      "name": "Ek-ZekKil",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:bow-of-the-last-guardian": {
+      "name": "Bow of the Last Guardian",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:reavers-ring": {
+      "name": "Reaver's ring",
+      "regions": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    "item:channelers-ring": {
+      "name": "Channeler's ring",
+      "regions": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    "item:champions-ring": {
+      "name": "Champion's ring",
+      "regions": [
+        "anachronia",
+        "fremennik"
+      ]
+    },
+    "item:anima-core-body-of-zaros": {
+      "name": "Anima core body of Zaros",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:masterwork-staff": {
+      "name": "Masterwork staff",
+      "regions": [
+        "asgarnia",
+        "desert",
+        "tirannwn",
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    "item:masterwork-2h-sword": {
+      "name": "Masterwork 2h sword",
+      "regions": [
+        "desert",
+        "forinthry"
+      ]
+    },
+    "item:masterwork-bow": {
+      "name": "Masterwork bow",
+      "regions": [
+        "kandarin",
+        "morytania"
+      ]
+    },
+    "item:reaper-necklace": {
+      "name": "Reaper necklace",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:amulet-of-souls": {
+      "name": "Amulet of souls",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:ring-of-death": {
+      "name": "Ring of death",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:luck-of-the-dwarves": {
+      "name": "Luck of the Dwarves",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:dragon-rider-amulet": {
+      "name": "Dragon Rider amulet",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:deathtouch-bracelet": {
+      "name": "Deathtouch bracelet",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:max-cape": {
+      "name": "Max cape",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:illuminated-book-of-law": {
+      "name": "Illuminated Book of Law",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:underworld-grimoire-4": {
+      "name": "Underworld Grimoire 4",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:erethdors-grimoire": {
+      "name": "Erethdor's grimoire",
+      "regions": [
+        "tirannwn"
+      ]
+    },
+    "item:mercenarys-gloves": {
+      "name": "Mercenary's gloves",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:gloves-of-passage": {
+      "name": "Gloves of passage",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:enhanced-gloves-of-passage": {
+      "name": "Enhanced gloves of passage",
+      "regions": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    "item:nightmare-gauntlets": {
+      "name": "Nightmare gauntlets",
+      "regions": [
+        "kandarin"
+      ]
+    },
+    "item:razorback-gauntlets": {
+      "name": "Razorback gauntlets",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:asylum-surgeons-ring": {
+      "name": "Asylum surgeon's ring",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:scripture-of-jas": {
+      "name": "Scripture of Jas",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:scripture-of-wen": {
+      "name": "Scripture of Wen",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:scripture-of-ful": {
+      "name": "Scripture of Ful",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:scripture-of-bik": {
+      "name": "Scripture of Bik",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:scripture-of-amascut": {
+      "name": "Scripture of Amascut",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:scripture-of-elidinis": {
+      "name": "Scripture of Elidinis",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:holy-wrench": {
+      "name": "Holy wrench",
+      "regions": [
+        "morytania"
+      ]
+    },
+    "item:tokhaar-kal-mor": {
+      "name": "TokHaar-Kal-Mor",
+      "regions": [
+        "karamja"
+      ]
+    },
+    "item:igneous-kal-ket": {
+      "name": "Igneous Kal-Ket",
+      "regions": [
+        "karamja",
+        "misthalin"
+      ]
+    },
+    "item:slayer-helmet-i": {
+      "name": "Full slayer helmet",
+      "regions": [
+        "morytania"
+      ]
+    },
+    "item:hexhunter-bow": {
+      "name": "Hexhunter bow",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:black-salamander": {
+      "name": "Black salamander",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:occultists-ring": {
+      "name": "Occultist's ring",
+      "regions": [
+        "anachronia"
+      ]
+    },
+    "item:ring-of-vigour": {
+      "name": "Ring of vigour",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:guthix-staff": {
+      "name": "Guthix staff",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:spirit-cape": {
+      "name": "Spirit cape",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:chaotic-kiteshield": {
+      "name": "Chaotic kiteshield",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:farseer-kiteshield": {
+      "name": "Farseer kiteshield",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:kalphite-rebounder": {
+      "name": "Kalphite rebounder",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:ancient-lantern": {
+      "name": "Ancient lantern",
+      "regions": [
+        "asgarnia",
+        "forinthry"
+      ]
+    },
+    "item:stalker-arrows": {
+      "name": "Stalker arrows",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:dragon-claws": {
+      "name": "Dragon claws",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:off-hand-dragon-claw": {
+      "name": "Off-hand dragon claw",
+      "regions": [
+        "misthalin"
+      ]
+    },
+    "item:enhanced-excalibur": {
+      "name": "Enhanced Excalibur",
+      "regions": [
+        "kandarin"
+      ]
+    },
+    "item:enhanced-nightmare-gauntlets": {
+      "name": "Enhanced nightmare gauntlets",
+      "regions": [
+        "kandarin",
+        "misthalin"
+      ]
+    },
+    "item:decimation": {
+      "name": "Decimation",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:obliteration": {
+      "name": "Obliteration",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:annihilation": {
+      "name": "Annihilation",
+      "regions": [
+        "forinthry"
+      ]
+    },
+    "item:off-hand-shadow-glaive": {
+      "name": "Off-hand shadow glaive",
+      "regions": [
+        "desert"
+      ]
+    },
+    "item:orb-of-the-cywir-elders": {
+      "name": "Orb of the Cywir elders",
+      "regions": [
+        "desert"
+      ]
+    }
+  },
+  "conflicts": [
+    {
+      "id": "item:luck-of-the-dwarves",
+      "name": "Luck of the Dwarves",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:asgarnia:luck-of-the-dwarves-combat",
+            "hard": true,
+            "regions": [
+              "asgarnia"
+            ],
+            "requirement": "Luck of the Dwarves (combat luck ring)",
+            "note": "single"
+          },
+          "b": {
+            "source": "family:misthalin-lotd",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Luck of the Dwarves",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:asgarnia:luck-of-the-dwarves-combat",
+            "hard": true,
+            "regions": [
+              "asgarnia"
+            ],
+            "requirement": "Luck of the Dwarves (combat luck ring)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:misthalin-lotd",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Luck of the Dwarves",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:asgarnia:luck-of-the-dwarves-combat",
+            "hard": true,
+            "regions": [
+              "asgarnia"
+            ],
+            "requirement": "Luck of the Dwarves (combat luck ring)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:misthalin-lotd",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Luck of the Dwarves",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json:asgarnia:luck-of-the-dwarves-combat",
+            "hard": true,
+            "regions": [
+              "asgarnia"
+            ],
+            "requirement": "Luck of the Dwarves (combat luck ring)",
+            "note": "acquisition_region"
+          },
+          "b": {
+            "source": "family:misthalin-lotd",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Luck of the Dwarves",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json:asgarnia:luck-of-the-dwarves-combat",
+            "hard": true,
+            "regions": [
+              "asgarnia"
+            ],
+            "requirement": "Luck of the Dwarves (combat luck ring)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:misthalin-lotd",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Luck of the Dwarves",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json:asgarnia:luck-of-the-dwarves-combat",
+            "hard": true,
+            "regions": [
+              "asgarnia"
+            ],
+            "requirement": "Luck of the Dwarves (combat luck ring)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:misthalin-lotd",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Luck of the Dwarves",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "asgarnia",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:dracolich-helm",
+      "name": "Dracolich coif",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:misthalin:dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Dracolich armour (T90 ranged bow power)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:misthalin:dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Dracolich armour (T90 ranged bow power)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json:misthalin:dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Dracolich armour (T90 ranged bow power)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json:misthalin:dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Dracolich armour (T90 ranged bow power)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "major-upgrades:misthalin:Zemouregal & Vorkath progression",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Zemouregal & Vorkath progression",
+            "note": "Ranged armour / Necromancy invocation"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:elite-dracolich-helm",
+      "name": "Elite Dracolich coif",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:misthalin:elite-dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Elite Dracolich armour (T92 ranged bow power)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:misthalin:elite-dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Elite Dracolich armour (T92 ranged bow power)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json:misthalin:elite-dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Elite Dracolich armour (T92 ranged bow power)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json:misthalin:elite-dracolich-armour",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Elite Dracolich armour (T92 ranged bow power)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:gemstone-helm",
+      "name": "Gemstone helm",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:anachronia:gemstone-armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour (T80 hybrid Enchanted touch)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:anachronia:gemstone-armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour (T80 hybrid Enchanted touch)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json:anachronia:gemstone-armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour (T80 hybrid Enchanted touch)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json:anachronia:gemstone-armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour (T80 hybrid Enchanted touch)",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "major-upgrades:anachronia:Gemstone armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour",
+            "note": "T80 hybrid armour residual"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "anachronia",
+        "karamja"
+      ]
+    },
+    {
+      "id": "item:enhanced-gloves-of-passage",
+      "name": "Enhanced gloves of passage",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:misthalin:leng-artefact-t90-glove-ladder",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Leng artefact T90 glove upgrades (shared Arch-Glacor)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "regional-combat-unlocks:desert:gloves-of-passage",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Gloves of passage / enhanced gloves of passage",
+            "note": "single|unlock"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:misthalin:leng-artefact-t90-glove-ladder",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Leng artefact T90 glove upgrades (shared Arch-Glacor)",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "regional-combat-unlocks:desert:gloves-of-passage",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Gloves of passage / enhanced gloves of passage",
+            "note": "single|unlock"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:abyssal-wand",
+      "name": "Abyssal wand",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "morytania"
+      ]
+    },
+    {
+      "id": "item:abyssal-orb",
+      "name": "Abyssal orb",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "single|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json:forinthry:abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal wand and abyssal orb",
+            "note": "acquisition_region|unlock"
+          },
+          "b": {
+            "source": "family:morytania-abyssal-wand-orb",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "morytania"
+      ]
+    },
+    {
+      "id": "item:spear-of-annihilation",
+      "name": "Spear of Annihilation",
+      "conflicts": [
+        {
+          "a": {
+            "source": "regional-combat-unlocks:kandarin:spear-of-annihilation-base",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Spear of Annihilation (base archaeology spear)",
+            "note": "single"
+          },
+          "b": {
+            "source": "family:spear-annihilation-base",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Spear of Annihilation base",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json:cross-region:spear-of-annihilation-base",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Spear of Annihilation (base archaeology spear)",
+            "note": "acquisition_region"
+          },
+          "b": {
+            "source": "family:spear-annihilation-base",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Spear of Annihilation base",
+            "note": "family-expansion"
+          }
+        },
+        {
+          "a": {
+            "source": "regional-combat-unlocks:kandarin:spear-of-annihilation-base",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Spear of Annihilation (base archaeology spear)",
+            "note": "single"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin",
+              "forinthry"
+            ],
+            "requirement": "Spear of Annihilation",
+            "note": "high"
+          }
+        },
+        {
+          "a": {
+            "source": "enrichment:progression-enrichment-regional-combat-bis-polish-weapons-2026-07-26.json:cross-region:spear-of-annihilation-base",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Spear of Annihilation (base archaeology spear)",
+            "note": "acquisition_region"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin",
+              "forinthry"
+            ],
+            "requirement": "Spear of Annihilation",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:gemstone-hauberk",
+      "name": "Gemstone hauberk",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:anachronia:Gemstone armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour",
+            "note": "T80 hybrid armour residual"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "anachronia",
+        "karamja"
+      ]
+    },
+    {
+      "id": "item:gemstone-greaves",
+      "name": "Gemstone greaves",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:anachronia:Gemstone armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour",
+            "note": "T80 hybrid armour residual"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "anachronia",
+        "karamja"
+      ]
+    },
+    {
+      "id": "item:gemstone-gauntlets",
+      "name": "Gemstone gauntlets",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:anachronia:Gemstone armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour",
+            "note": "T80 hybrid armour residual"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "anachronia",
+        "karamja"
+      ]
+    },
+    {
+      "id": "item:gemstone-boots",
+      "name": "Gemstone boots",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:anachronia:Gemstone armour",
+            "hard": true,
+            "regions": [
+              "anachronia"
+            ],
+            "requirement": "Gemstone armour",
+            "note": "T80 hybrid armour residual"
+          },
+          "b": {
+            "source": "family:karamja-gemstone",
+            "hard": true,
+            "regions": [
+              "karamja"
+            ],
+            "requirement": "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "anachronia",
+        "karamja"
+      ]
+    },
+    {
+      "id": "item:dracolich-body",
+      "name": "Dracolich hauberk",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:misthalin:Zemouregal & Vorkath progression",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Zemouregal & Vorkath progression",
+            "note": "Ranged armour / Necromancy invocation"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:dracolich-legs",
+      "name": "Dracolich chaps",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:misthalin:Zemouregal & Vorkath progression",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Zemouregal & Vorkath progression",
+            "note": "Ranged armour / Necromancy invocation"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:dracolich-gloves",
+      "name": "Dracolich vambraces",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:misthalin:Zemouregal & Vorkath progression",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Zemouregal & Vorkath progression",
+            "note": "Ranged armour / Necromancy invocation"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:dracolich-boots",
+      "name": "Dracolich boots",
+      "conflicts": [
+        {
+          "a": {
+            "source": "major-upgrades:misthalin:Zemouregal & Vorkath progression",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Zemouregal & Vorkath progression",
+            "note": "Ranged armour / Necromancy invocation"
+          },
+          "b": {
+            "source": "family:forinthry-dracolich",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
+            "note": "family-expansion"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:corrupted-defender",
+      "name": "Corrupted defender",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:morytania-defenders",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Barrows defenders / corruption sigil ladder",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-map-pass2-forinthry.json",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Corrupted defender",
+            "note": "confirmed_wiki_daemonheim_access"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "morytania"
+      ]
+    },
+    {
+      "id": "item:tainted-repriser",
+      "name": "Tainted repriser",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:morytania-defenders",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Barrows defenders / corruption sigil ladder",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-map-pass2-forinthry.json",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Tainted repriser",
+            "note": "confirmed_wiki_daemonheim_access"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "morytania"
+      ]
+    },
+    {
+      "id": "item:abyssal-vine-whip",
+      "name": "Abyssal vine whip",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:morytania-karamja-vine-whip",
+            "hard": true,
+            "regions": [
+              "morytania",
+              "karamja"
+            ],
+            "requirement": "Abyssal vine whip (whip + whip vine)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-map-pass2-forinthry.json",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Abyssal vine whip",
+            "note": "confirmed_wiki_wilderness_forinthry_mapping"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "karamja",
+        "morytania"
+      ]
+    },
+    {
+      "id": "item:illuminated-book-of-law",
+      "name": "Illuminated Book of Law",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:desert-illuminated-godbooks",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-accessories-pass3.json",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Illuminated Book of Law",
+            "note": "verified_pass3_live_equipment"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:illuminated-book-of-war",
+      "name": "Illuminated Book of War",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:desert-illuminated-godbooks",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-accessories-pass3.json",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Illuminated Book of War",
+            "note": "verified_pass3_live_equipment"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:illuminated-book-of-chaos",
+      "name": "Illuminated Book of Chaos",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:desert-illuminated-godbooks",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-accessories-pass3.json",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Illuminated Book of Chaos",
+            "note": "verified_pass3_live_equipment"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:illuminated-book-of-wisdom",
+      "name": "Illuminated Book of Wisdom",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:desert-illuminated-godbooks",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-accessories-pass3.json",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Illuminated Book of Wisdom",
+            "note": "verified_pass3_live_equipment"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:illuminated-book-of-balance",
+      "name": "Illuminated Book of Balance",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:desert-illuminated-godbooks",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Illuminated god books (Abbey of St. Elspeth Citharede)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-accessories-pass3.json",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Illuminated Book of Balance",
+            "note": "verified_pass3_live_equipment"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:celestial-handwraps",
+      "name": "Celestial handwraps",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:morytania-celestial-handwraps",
+            "hard": true,
+            "regions": [
+              "morytania"
+            ],
+            "requirement": "Celestial handwraps (celestial dragons / Dragontooth)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-map-pass2-accessories.json",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Celestial handwraps",
+            "note": "confirmed_corpus_hard"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "morytania"
+      ]
+    },
+    {
+      "id": "item:dragon-rider-amulet",
+      "name": "Dragon Rider amulet",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:misthalin-dragon-rider-amulet",
+            "hard": true,
+            "regions": [
+              "misthalin"
+            ],
+            "requirement": "Dragon Rider amulet (One of a Kind / Museum)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-accessories-pass3.json",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Dragon Rider amulet",
+            "note": "verified_pass3_live_equipment"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "misthalin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-orb-meagre",
+      "name": "Eternal magic orb (meagre)",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Eternal magic orb (meagre)",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-orb-saturated",
+      "name": "Eternal magic orb (saturated)",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Eternal magic orb (saturated)",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-wand-meagre",
+      "name": "Eternal magic wand (meagre)",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Eternal magic wand (meagre)",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-wand-saturated",
+      "name": "Eternal magic wand (saturated)",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Eternal magic wand (saturated)",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-staff-saturated",
+      "name": "Saturated eternal magic staff",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Saturated eternal magic staff",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-staff-meagre",
+      "name": "Meagre eternal magic staff",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Meagre eternal magic staff",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-longbow",
+      "name": "Eternal Magic longbow",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Eternal Magic longbow",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:eternal-magic-shortbow-mk-5",
+      "name": "Eternal magic shortbow Mk. 5",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-dg-weapons",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Daemonheim / Dungeoneering residual weapons",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-gaps-pass9.json",
+            "hard": true,
+            "regions": [
+              "kandarin"
+            ],
+            "requirement": "Eternal magic shortbow Mk. 5",
+            "note": "high"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "forinthry",
+        "kandarin"
+      ]
+    },
+    {
+      "id": "item:wand-of-treachery",
+      "name": "Wand of treachery",
+      "conflicts": [
+        {
+          "a": {
+            "source": "family:forinthry-wand-of-treachery",
+            "hard": true,
+            "regions": [
+              "forinthry"
+            ],
+            "requirement": "Wand of treachery (Wilderness Warbands residual)",
+            "note": "family-expansion"
+          },
+          "b": {
+            "source": "agent-map:agent-region-map-pass6-desert.json",
+            "hard": true,
+            "regions": [
+              "desert"
+            ],
+            "requirement": "Wand of treachery",
+            "note": "confirmed_desert_hub_2026_07_26"
+          }
+        }
+      ],
+      "resolvedUnion": [
+        "desert",
+        "forinthry"
+      ]
+    }
+  ],
+  "stillEmptyHighTier": [],
+  "unmatchedClaims": [
+    {
+      "key": "amulet-of-the-forsaken-to-berserkers-fury",
+      "regions": [
+        "morytania"
+      ],
+      "sources": [
+        "agent-map:agent-accessories-pass3.json",
+        "agent-map:agent-region-map-desert-morytania.json",
+        "agent-map:agent-region-map-pass2-morytania.json",
+        "agent-map:agent-region-map-pass6-morytania.json"
+      ]
+    },
+    {
+      "key": "praesul-codex",
+      "regions": [
+        "asgarnia"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-asgarnia-forinthry-kandarin.json"
+      ]
+    },
+    {
+      "key": "tectonic-energy",
+      "regions": [
+        "asgarnia"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-asgarnia-forinthry-kandarin.json"
+      ]
+    },
+    {
+      "key": "corporeal-beast-holy-elixir-supply",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-asgarnia-forinthry-kandarin.json"
+      ]
+    },
+    {
+      "key": "eldritch-crossbow-components",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-asgarnia-forinthry-kandarin.json",
+        "agent-map:agent-region-map-pass2-forinthry.json"
+      ]
+    },
+    {
+      "key": "shard-of-genesis-essence",
+      "regions": [
+        "desert"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-desert-morytania.json"
+      ]
+    },
+    {
+      "key": "tumekens-resplendence-equipment",
+      "regions": [
+        "desert"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-desert-morytania.json"
+      ]
+    },
+    {
+      "key": "barrows-defenders-shields-progression",
+      "regions": [
+        "morytania"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-desert-morytania.json",
+        "agent-map:agent-region-map-pass2-morytania.json"
+      ]
+    },
+    {
+      "key": "malevolent-armour",
+      "regions": [
+        "morytania"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-desert-morytania.json",
+        "agent-map:agent-region-map-pass2-morytania.json"
+      ]
+    },
+    {
+      "key": "malevolent-energy",
+      "regions": [
+        "morytania"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-desert-morytania.json",
+        "agent-map:agent-region-map-pass2-morytania.json"
+      ]
+    },
+    {
+      "key": "trimmed-masterwork-spear-of-annihilation",
+      "regions": [
+        "asgarnia",
+        "morytania"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-desert-morytania.json",
+        "agent-map:agent-region-map-pass6-asgarnia.json"
+      ]
+    },
+    {
+      "key": "leng-artefact",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "cryptbloom-armour",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "croesus-skilling-offhands",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "robes-of-the-first-necromancer",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "deathdealer-deathwarden",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "divine-rage-prayer-codex",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "dracolich-armour",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json:dracolich-forinthry-override"
+      ]
+    },
+    {
+      "key": "elite-dracolich-armour",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json:dracolich-forinthry-override"
+      ]
+    },
+    {
+      "key": "vestments-of-havoc",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "staff-of-armadyl-residual",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "gate-of-elidinis-combat-residual",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "invoke-lord-of-bones",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json"
+      ]
+    },
+    {
+      "key": "gemstone-armour",
+      "regions": [
+        "karamja"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-misthalin-tirannwn-anachronia.json:gemstone-karamja-override"
+      ]
+    },
+    {
+      "key": "deathdealer-gloves-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-accessories.json",
+        "agent-map:agent-region-map-pass2-necromancy.json",
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "second-age-sword",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-forinthry.json"
+      ]
+    },
+    {
+      "key": "second-age-bow",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-forinthry.json"
+      ]
+    },
+    {
+      "key": "second-age-staff",
+      "regions": [
+        "forinthry"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-forinthry.json"
+      ]
+    },
+    {
+      "key": "igneous-cape-progression",
+      "regions": [
+        "karamja",
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-kandarin-frem-tir-anach.json"
+      ]
+    },
+    {
+      "key": "deathguard",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-misthalin.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "deathguard-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-misthalin.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "skull-lantern-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-misthalin.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "death-guard-tier-70",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-misthalin.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "death-guard-tier-80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-misthalin.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "death-guard-tier-90",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-misthalin.json",
+        "agent-map:agent-region-map-pass2-necromancy.json"
+      ]
+    },
+    {
+      "key": "deathdealer-hood-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-necromancy.json",
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathdealer-robe-top-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-necromancy.json",
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathdealer-robe-bottom-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-necromancy.json",
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathdealer-boots-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass2-necromancy.json",
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-hood-t60",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-robe-top-t60",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-robe-bottom-t60",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-gloves-t60",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-boots-t60",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-hood-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-robe-top-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-robe-bottom-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-gloves-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    },
+    {
+      "key": "deathwarden-boots-t80",
+      "regions": [
+        "misthalin"
+      ],
+      "sources": [
+        "agent-map:agent-region-map-pass3-deathwarden.json"
+      ]
+    }
+  ],
+  "stampedSample": [
+    "item:luck-of-the-dwarves",
+    "item:dracolich-helm",
+    "item:elite-dracolich-helm",
+    "item:gemstone-helm",
+    "item:masterwork-2h-sword",
+    "item:masterwork-bow",
+    "item:abyssal-wand",
+    "item:abyssal-orb",
+    "item:spear-of-annihilation",
+    "item:gemstone-hauberk",
+    "item:gemstone-greaves",
+    "item:gemstone-gauntlets",
+    "item:gemstone-boots",
+    "item:dracolich-body",
+    "item:dracolich-legs",
+    "item:dracolich-gloves",
+    "item:dracolich-boots",
+    "item:corrupted-defender",
+    "item:tainted-repriser",
+    "item:abyssal-vine-whip",
+    "item:illuminated-book-of-law",
+    "item:illuminated-book-of-war",
+    "item:illuminated-book-of-chaos",
+    "item:illuminated-book-of-wisdom",
+    "item:illuminated-book-of-balance",
+    "item:celestial-handwraps",
+    "item:dragon-rider-amulet",
+    "item:eternal-magic-orb-meagre",
+    "item:eternal-magic-orb-saturated",
+    "item:eternal-magic-wand-meagre",
+    "item:eternal-magic-wand-saturated",
+    "item:eternal-magic-staff-saturated",
+    "item:eternal-magic-staff-meagre",
+    "item:eternal-magic-longbow",
+    "item:eternal-magic-shortbow-mk-5",
+    "item:wand-of-treachery",
+    "item:spear-of-annihilation",
+    "item:luck-of-the-dwarves",
+    "item:lava-whip",
+    "item:dragon-rider-amulet",
+    "item:masterwork-magic-hat",
+    "item:masterwork-magic-robe-top",
+    "item:masterwork-magic-robe-bottom",
+    "item:masterwork-magic-gloves",
+    "item:masterwork-magic-boots",
+    "item:custom-fit-masterwork-magic-hat",
+    "item:custom-fit-masterwork-magic-robe-top",
+    "item:custom-fit-masterwork-magic-robe-bottom",
+    "item:custom-fit-masterwork-magic-gloves",
+    "item:custom-fit-masterwork-magic-boots",
+    "item:visage-of-the-first-necromancer",
+    "item:illuminated-book-of-law",
+    "item:illuminated-book-of-war",
+    "item:illuminated-book-of-chaos",
+    "item:illuminated-book-of-wisdom",
+    "item:illuminated-book-of-balance",
+    "item:jaws-of-the-abyss",
+    "item:abyssal-scourge",
+    "item:eternal-magic-staff-saturated",
+    "item:eternal-magic-staff-meagre",
+    "item:corrupted-defender",
+    "item:tainted-repriser",
+    "item:masterwork-bow",
+    "item:masterwork-staff",
+    "item:wand-of-treachery",
+    "item:abyssal-wand",
+    "item:abyssal-orb",
+    "item:abyssal-vine-whip",
+    "item:gemstone-helm",
+    "item:gemstone-hauberk",
+    "item:gemstone-greaves",
+    "item:gemstone-gauntlets",
+    "item:gemstone-boots",
+    "item:staff-of-darkness",
+    "item:celestial-handwraps",
+    "item:eternal-magic-longbow",
+    "item:eternal-magic-shortbow-mk-5",
+    "item:eternal-magic-wand-meagre",
+    "item:eternal-magic-wand-saturated",
+    "item:eternal-magic-orb-meagre",
+    "item:eternal-magic-orb-saturated",
+    "item:dracolich-helm",
+    "item:dracolich-body",
+    "item:dracolich-legs",
+    "item:dracolich-gloves",
+    "item:dracolich-boots",
+    "item:elite-dracolich-helm",
+    "item:masterwork-2h-sword",
+    "item:sirenic-mask",
+    "item:sirenic-hauberk",
+    "item:sirenic-chaps",
+    "item:masterwork-spear-of-annihilation",
+    "item:onyx-bakriminel-bolts-e",
+    "item:hydra-bakriminel-bolts-e",
+    "item:ancient-lantern",
+    "item:greater-runic-staff"
+  ]
+}

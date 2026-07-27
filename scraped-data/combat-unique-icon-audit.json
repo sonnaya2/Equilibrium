@@ -1,0 +1,2195 @@
+{
+  "by": {
+    "BLANK": [],
+    "STUB": [],
+    "MISSING": [],
+    "OK": [
+      {
+        "status": "OK",
+        "size": 310955,
+        "path": "/game/upgrades/progression/acht-primeval-robe-top.png",
+        "name": "Achto raids armour (Mazcab)"
+      },
+      {
+        "status": "OK",
+        "size": 310955,
+        "path": "/game/upgrades/progression/acht-primeval-robe-top.png",
+        "name": "Achto raids armour residual (Mazcab)"
+      },
+      {
+        "status": "OK",
+        "size": 221726,
+        "path": "/game/bosses/ambassador.png",
+        "name": "Ambassador residual uniques"
+      },
+      {
+        "status": "OK",
+        "size": 24711,
+        "path": "/game/combat/equipment/ancient-defender.png",
+        "name": "Ancient defender"
+      },
+      {
+        "status": "OK",
+        "size": 265783,
+        "path": "/game/upgrades/permanent-unlocks/anima-core-body-of-zaros.png",
+        "name": "Anima core armour (GWD2 T80 power)"
+      },
+      {
+        "status": "OK",
+        "size": 257241,
+        "path": "/game/bosses/arch-glacor.png",
+        "name": "Arch-Glacor"
+      },
+      {
+        "status": "OK",
+        "size": 257241,
+        "path": "/game/bosses/arch-glacor.png",
+        "name": "Arch-Glacor progression"
+      },
+      {
+        "status": "OK",
+        "size": 4033,
+        "path": "/game/combat/equipment/armadyl-battlestaff.png",
+        "name": "Armadyl battlestaff (Storm's End special residual)"
+      },
+      {
+        "status": "OK",
+        "size": 4033,
+        "path": "/game/combat/equipment/armadyl-battlestaff.png",
+        "name": "Armadyl battlestaff (Storm's End special)"
+      },
+      {
+        "status": "OK",
+        "size": 181984,
+        "path": "/game/upgrades/armadyl-chestplate.png",
+        "name": "Armadyl equipment"
+      },
+      {
+        "status": "OK",
+        "size": 181984,
+        "path": "/game/upgrades/armadyl-chestplate.png",
+        "name": "Armadyl equipment (GWD1 ranged power ladder)"
+      },
+      {
+        "status": "OK",
+        "size": 204095,
+        "path": "/game/upgrades/progression/armadyl-godsword.png",
+        "name": "Armadyl godsword"
+      },
+      {
+        "status": "OK",
+        "size": 114757,
+        "path": "/game/upgrades/permanent-unlocks/ascension-crossbow.png",
+        "name": "Ascension crossbow"
+      },
+      {
+        "status": "OK",
+        "size": 114757,
+        "path": "/game/upgrades/permanent-unlocks/ascension-crossbow.png",
+        "name": "Ascension crossbows"
+      },
+      {
+        "status": "OK",
+        "size": 70727,
+        "path": "/game/upgrades/combat-utility/asylum-surgeons-ring.png",
+        "name": "Asylum surgeon's ring"
+      },
+      {
+        "status": "OK",
+        "size": 416938,
+        "path": "/game/upgrades/bandos-chestplate.png",
+        "name": "Bandos equipment"
+      },
+      {
+        "status": "OK",
+        "size": 416938,
+        "path": "/game/upgrades/bandos-chestplate.png",
+        "name": "Bandos equipment (GWD1 melee power ladder)"
+      },
+      {
+        "status": "OK",
+        "size": 5746,
+        "path": "/game/combat/equipment/bandos-godsword.png",
+        "name": "Bandos godsword"
+      },
+      {
+        "status": "OK",
+        "size": 2589069,
+        "path": "/game/upgrades/permanent-unlocks/barrows.png",
+        "name": "Barrows defenders / shields progression"
+      },
+      {
+        "status": "OK",
+        "size": 171331,
+        "path": "/game/upgrades/progression/black-stone-arrow.png",
+        "name": "Black stone arrows residual"
+      },
+      {
+        "status": "OK",
+        "size": 5120,
+        "path": "/game/combat/equipment/blade-of-avaryss.png",
+        "name": "Blade of Avaryss / Blade of Nymora"
+      },
+      {
+        "status": "OK",
+        "size": 217400,
+        "path": "/game/upgrades/progression/blade-of-leng.png",
+        "name": "Blade of Leng"
+      },
+      {
+        "status": "OK",
+        "size": 112975,
+        "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+        "name": "Blast diffusion / enhanced blast diffusion boots"
+      },
+      {
+        "status": "OK",
+        "size": 112975,
+        "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+        "name": "Blast diffusion boots"
+      },
+      {
+        "status": "OK",
+        "size": 55353,
+        "path": "/game/upgrades/combat-utility/channelers-ring.png",
+        "name": "Channeller's ring"
+      },
+      {
+        "status": "OK",
+        "size": 76058,
+        "path": "/game/upgrades/progression/chaotic-rapier.png",
+        "name": "Chaotic equipment"
+      },
+      {
+        "status": "OK",
+        "size": 76058,
+        "path": "/game/upgrades/progression/chaotic-rapier.png",
+        "name": "Chaotic melee and ranged weapons"
+      },
+      {
+        "status": "OK",
+        "size": 3151,
+        "path": "/game/combat/equipment/chaotic-staff.png",
+        "name": "Chaotic staff"
+      },
+      {
+        "status": "OK",
+        "size": 9416,
+        "path": "/game/combat/equipment/cryptbloom-body.png",
+        "name": "Cryptbloom armour"
+      },
+      {
+        "status": "OK",
+        "size": 9416,
+        "path": "/game/combat/equipment/cryptbloom-body.png",
+        "name": "Cryptbloom armour (T90 magic tank)"
+      },
+      {
+        "status": "OK",
+        "size": 659556,
+        "path": "/game/upgrades/progression/trimmed-masterwork-platebody.png",
+        "name": "Custom-fit trimmed masterwork (Elof / Master Crafter)"
+      },
+      {
+        "status": "OK",
+        "size": 7150,
+        "path": "/game/upgrades/permanent-unlocks/daemonheim-dig-site.png",
+        "name": "Daemonheim Dig Site (Dragonkin mini-site)"
+      },
+      {
+        "status": "OK",
+        "size": 217400,
+        "path": "/game/upgrades/progression/dark-shard-of-leng.png",
+        "name": "Dark ice → Dark Shard/Sliver of Leng"
+      },
+      {
+        "status": "OK",
+        "size": 353646,
+        "path": "/game/upgrades/progression/death-lotus-chestplate.png",
+        "name": "Death Lotus chestplate"
+      },
+      {
+        "status": "OK",
+        "size": 353646,
+        "path": "/game/upgrades/progression/death-lotus-chestplate.png",
+        "name": "Death lotus equipment"
+      },
+      {
+        "status": "OK",
+        "size": 353646,
+        "path": "/game/upgrades/progression/death-lotus-chestplate.png",
+        "name": "Death Lotus equipment"
+      },
+      {
+        "status": "OK",
+        "size": 426317,
+        "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+        "name": "Deathdealer robe armour (necro power residual)"
+      },
+      {
+        "status": "OK",
+        "size": 426317,
+        "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+        "name": "Deathdealer robe armour (necro power)"
+      },
+      {
+        "status": "OK",
+        "size": 426317,
+        "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+        "name": "Deathwarden / Deathdealer armour"
+      },
+      {
+        "status": "OK",
+        "size": 426317,
+        "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+        "name": "Deathwarden / Deathdealer armour residual"
+      },
+      {
+        "status": "OK",
+        "size": 601999,
+        "path": "/game/upgrades/progression/deathwarden-robe-top.png",
+        "name": "Deathwarden robe armour (necro tank residual)"
+      },
+      {
+        "status": "OK",
+        "size": 601999,
+        "path": "/game/upgrades/progression/deathwarden-robe-top.png",
+        "name": "Deathwarden robe armour (necro tank)"
+      },
+      {
+        "status": "OK",
+        "size": 135435,
+        "path": "/game/upgrades/progression/dragon-defender.png",
+        "name": "Dragon defender"
+      },
+      {
+        "status": "OK",
+        "size": 140046,
+        "path": "/game/upgrades/progression/dragon-rider-lance.png",
+        "name": "Dragon Rider lance"
+      },
+      {
+        "status": "OK",
+        "size": 135435,
+        "path": "/game/upgrades/progression/dragon-defender.png",
+        "name": "Dragonfire defender"
+      },
+      {
+        "status": "OK",
+        "size": 216978,
+        "path": "/game/upgrades/permanent-unlocks/dragonkin-laboratory.jpg",
+        "name": "Dragonkin Laboratory (ED2)"
+      },
+      {
+        "status": "OK",
+        "size": 216978,
+        "path": "/game/upgrades/permanent-unlocks/dragonkin-laboratory.jpg",
+        "name": "Dragonkin Laboratory upgrades"
+      },
+      {
+        "status": "OK",
+        "size": 259660,
+        "path": "/game/activities/orthen-dig-site.png",
+        "name": "Dragonkin potion recipe fragments (Orthen)"
+      },
+      {
+        "status": "OK",
+        "size": 170277,
+        "path": "/game/upgrades/drygore-longsword.png",
+        "name": "Drygore longsword"
+      },
+      {
+        "status": "OK",
+        "size": 211439,
+        "path": "/game/upgrades/progression/drygore-mace.png",
+        "name": "Drygore mace"
+      },
+      {
+        "status": "OK",
+        "size": 86269,
+        "path": "/game/upgrades/progression/drygore-rapier.png",
+        "name": "Drygore rapier"
+      },
+      {
+        "status": "OK",
+        "size": 211439,
+        "path": "/game/upgrades/progression/drygore-mace.png",
+        "name": "Drygore weapon set"
+      },
+      {
+        "status": "OK",
+        "size": 211439,
+        "path": "/game/upgrades/permanent-unlocks/drygore-weapons.png",
+        "name": "Drygore weaponry"
+      },
+      {
+        "status": "OK",
+        "size": 211439,
+        "path": "/game/upgrades/permanent-unlocks/drygore-weapons.png",
+        "name": "Drygore weapons"
+      },
+      {
+        "status": "OK",
+        "size": 303579,
+        "path": "/game/upgrades/progression/ek-zekkil.png",
+        "name": "Ek-ZekKil (Zuk 2h melee)"
+      },
+      {
+        "status": "OK",
+        "size": 161266,
+        "path": "/game/upgrades/progression/eldritch-crossbow.png",
+        "name": "Eldritch crossbow"
+      },
+      {
+        "status": "OK",
+        "size": 1835815,
+        "path": "/game/upgrades/progression/elite-sirenic-hauberk.png",
+        "name": "Elite sirenic armour (T92 ranged power)"
+      },
+      {
+        "status": "OK",
+        "size": 804955,
+        "path": "/game/upgrades/progression/elite-tectonic-robe-top.png",
+        "name": "Elite tectonic robe armour"
+      },
+      {
+        "status": "OK",
+        "size": 804955,
+        "path": "/game/upgrades/progression/elite-tectonic-robe-top.png",
+        "name": "Elite tectonic robe armour (T92 magic power)"
+      },
+      {
+        "status": "OK",
+        "size": 6644,
+        "path": "/game/upgrades/permanent-unlocks/emberkeen.png",
+        "name": "Emberkeen / Hailfire / Flarefrost boots (T90 glacor upgrades)"
+      },
+      {
+        "status": "OK",
+        "size": 7504,
+        "path": "/game/combat/equipment/emberkeen-boots.png",
+        "name": "Emberkeen boots"
+      },
+      {
+        "status": "OK",
+        "size": 112975,
+        "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+        "name": "Enhanced blast diffusion boots"
+      },
+      {
+        "status": "OK",
+        "size": 3036,
+        "path": "/game/combat/equipment/enhanced-kerapacs-wrist-wraps.png",
+        "name": "Enhanced Kerapac's wrist wraps (T90 magic)"
+      },
+      {
+        "status": "OK",
+        "size": 183144,
+        "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+        "name": "Essence of Finality"
+      },
+      {
+        "status": "OK",
+        "size": 183144,
+        "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+        "name": "Essence of Finality amulet"
+      },
+      {
+        "status": "OK",
+        "size": 183144,
+        "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+        "name": "Essence of Finality amulet (neck BiS chain)"
+      },
+      {
+        "status": "OK",
+        "size": 183144,
+        "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+        "name": "Essence of Finality ornament kit (style bonus residual)"
+      },
+      {
+        "status": "OK",
+        "size": 183144,
+        "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+        "name": "Essence of Finality ornament kit (style bonus)"
+      },
+      {
+        "status": "OK",
+        "size": 183144,
+        "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+        "name": "Essence of Finality stored special attack"
+      },
+      {
+        "status": "OK",
+        "size": 719458,
+        "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+        "name": "First necromancer equipment"
+      },
+      {
+        "status": "OK",
+        "size": 719458,
+        "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+        "name": "First necromancer's equipment"
+      },
+      {
+        "status": "OK",
+        "size": 719458,
+        "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+        "name": "First Necromancer's equipment"
+      },
+      {
+        "status": "OK",
+        "size": 719458,
+        "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+        "name": "First necromancer's equipment (Rasial)"
+      },
+      {
+        "status": "OK",
+        "size": 719458,
+        "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+        "name": "First Necromancer's equipment (Rasial)"
+      },
+      {
+        "status": "OK",
+        "size": 209558,
+        "path": "/game/upgrades/progression/fleeting-boots.png",
+        "name": "Fleeting boots"
+      },
+      {
+        "status": "OK",
+        "size": 654697,
+        "path": "/game/upgrades/progression/fractured-staff-of-armadyl.png",
+        "name": "Fractured Staff of Armadyl"
+      },
+      {
+        "status": "OK",
+        "size": 593649,
+        "path": "/game/bosses/gate-of-elidinis.png",
+        "name": "Gate of Elidinis uniques"
+      },
+      {
+        "status": "OK",
+        "size": 405647,
+        "path": "/game/upgrades/progression/steadfast-boots.png",
+        "name": "Glacor boots"
+      },
+      {
+        "status": "OK",
+        "size": 3107079,
+        "path": "/game/upgrades/permanent-unlocks/god-wars-dungeon.png",
+        "name": "God Wars Dungeon 1 (+ Nex)"
+      },
+      {
+        "status": "OK",
+        "size": 4557485,
+        "path": "/game/upgrades/permanent-unlocks/god-wars-dungeon-1-equipment.png",
+        "name": "God Wars Dungeon 1 equipment"
+      },
+      {
+        "status": "OK",
+        "size": 204095,
+        "path": "/game/upgrades/permanent-unlocks/godswords.png",
+        "name": "Godswords (GWD1 hilt + shard assembly)"
+      },
+      {
+        "status": "OK",
+        "size": 305482,
+        "path": "/game/upgrades/progression/deathguard.png",
+        "name": "Gravite and Chaotic Necromancy weapons"
+      },
+      {
+        "status": "OK",
+        "size": 265783,
+        "path": "/game/upgrades/permanent-unlocks/anima-core-body-of-zaros.png",
+        "name": "GWD2 anima core and mid-tier melee/ranged weapons"
+      },
+      {
+        "status": "OK",
+        "size": 6943,
+        "path": "/game/upgrades/progression/hoardstalker-ring.png",
+        "name": "Hoardstalker ring"
+      },
+      {
+        "status": "OK",
+        "size": 437928,
+        "path": "/game/upgrades/progression/igneous-kal-zuk.png",
+        "name": "Igneous cape progression"
+      },
+      {
+        "status": "OK",
+        "size": 437928,
+        "path": "/game/upgrades/progression/igneous-kal-zuk.png",
+        "name": "Igneous Kal-Zuk"
+      },
+      {
+        "status": "OK",
+        "size": 95634,
+        "path": "/game/upgrades/progression/imperium-core.png",
+        "name": "Imperium core"
+      },
+      {
+        "status": "OK",
+        "size": 119867,
+        "path": "/game/upgrades/progression/inquisitor-staff.png",
+        "name": "Inquisitor staff"
+      },
+      {
+        "status": "OK",
+        "size": 4253,
+        "path": "/game/combat/equipment/kalphite-defender.png",
+        "name": "Kalphite defender"
+      },
+      {
+        "status": "OK",
+        "size": 187457,
+        "path": "/game/bosses/kalphite-king.png",
+        "name": "Kalphite King"
+      },
+      {
+        "status": "OK",
+        "size": 362814,
+        "path": "/game/bosses/kalphite-queen.png",
+        "name": "Kalphite Queen"
+      },
+      {
+        "status": "OK",
+        "size": 370724,
+        "path": "/game/bosses/kerapac.png",
+        "name": "Kerapac hard mode FSoA farm"
+      },
+      {
+        "status": "OK",
+        "size": 370724,
+        "path": "/game/bosses/kerapac.png",
+        "name": "Kerapac hard mode FSoA farm residual"
+      },
+      {
+        "status": "OK",
+        "size": 370724,
+        "path": "/game/bosses/kerapac.png",
+        "name": "Kerapac Magic progression"
+      },
+      {
+        "status": "OK",
+        "size": 370724,
+        "path": "/game/bosses/kerapac.png",
+        "name": "Kerapac Magic residual progression"
+      },
+      {
+        "status": "OK",
+        "size": 370724,
+        "path": "/game/bosses/kerapac.png",
+        "name": "Kerapac progression"
+      },
+      {
+        "status": "OK",
+        "size": 370724,
+        "path": "/game/bosses/kerapac.png",
+        "name": "Kerapac, the bound"
+      },
+      {
+        "status": "OK",
+        "size": 53378,
+        "path": "/game/upgrades/progression/kerapacs-wrist-wraps.png",
+        "name": "Kerapac's wrist wraps"
+      },
+      {
+        "status": "OK",
+        "size": 5109,
+        "path": "/game/upgrades/permanent-unlocks/laceration.png",
+        "name": "Laceration / fleeting boots + shadow spike T90"
+      },
+      {
+        "status": "OK",
+        "size": 101767,
+        "path": "/game/upgrades/progression/laceration-boots.png",
+        "name": "Laceration boots"
+      },
+      {
+        "status": "OK",
+        "size": 2570719,
+        "path": "/game/upgrades/permanent-unlocks/legiones.png",
+        "name": "Legiones"
+      },
+      {
+        "status": "OK",
+        "size": 2570719,
+        "path": "/game/upgrades/permanent-unlocks/legiones.png",
+        "name": "Legiones (Monastery of Ascension)"
+      },
+      {
+        "status": "OK",
+        "size": 3084,
+        "path": "/game/skills/archaeology.png",
+        "name": "Leng artefact T90 glove upgrades (shared Arch-Glacor)"
+      },
+      {
+        "status": "OK",
+        "size": 442968,
+        "path": "/game/upgrades/progression/malevolent-cuirass.png",
+        "name": "Malevolent armour"
+      },
+      {
+        "status": "OK",
+        "size": 442968,
+        "path": "/game/upgrades/progression/malevolent-cuirass.png",
+        "name": "Malevolent armour and malevolent energy"
+      },
+      {
+        "status": "OK",
+        "size": 7736,
+        "path": "/game/combat/equipment/masutas-warspear.png",
+        "name": "Masuta's warspear"
+      },
+      {
+        "status": "OK",
+        "size": 385099,
+        "path": "/game/bosses/nex.png",
+        "name": "Nex"
+      },
+      {
+        "status": "OK",
+        "size": 385099,
+        "path": "/game/bosses/nex.png",
+        "name": "Nex equipment"
+      },
+      {
+        "status": "OK",
+        "size": 821345,
+        "path": "/game/upgrades/torva-platebody.png",
+        "name": "Nex T80 power armour (Torva / Pernix / Virtus)"
+      },
+      {
+        "status": "OK",
+        "size": 821345,
+        "path": "/game/upgrades/torva-platebody.png",
+        "name": "Nex T80 power armour residual (Torva / Pernix / Virtus)"
+      },
+      {
+        "status": "OK",
+        "size": 301082,
+        "path": "/game/bosses/nex-aod.png",
+        "name": "Nex: Angel of Death"
+      },
+      {
+        "status": "OK",
+        "size": 301082,
+        "path": "/game/bosses/nex-aod.png",
+        "name": "Nex: Angel of Death progression"
+      },
+      {
+        "status": "OK",
+        "size": 8580,
+        "path": "/game/upgrades/permanent-unlocks/nexus-mod.png",
+        "name": "Nexus Mod (Abyssal Gatestone)"
+      },
+      {
+        "status": "OK",
+        "size": 147871,
+        "path": "/game/upgrades/progression/noxious-longbow.png",
+        "name": "Noxious longbow"
+      },
+      {
+        "status": "OK",
+        "size": 130131,
+        "path": "/game/upgrades/progression/noxious-scythe.png",
+        "name": "Noxious scythe"
+      },
+      {
+        "status": "OK",
+        "size": 130131,
+        "path": "/game/upgrades/progression/noxious-scythe.png",
+        "name": "Noxious scythe and noxious longbow"
+      },
+      {
+        "status": "OK",
+        "size": 3166,
+        "path": "/game/combat/equipment/noxious-staff.png",
+        "name": "Noxious staff"
+      },
+      {
+        "status": "OK",
+        "size": 130131,
+        "path": "/game/upgrades/permanent-unlocks/noxious-weapons.png",
+        "name": "Noxious weapons"
+      },
+      {
+        "status": "OK",
+        "size": 647579,
+        "path": "/game/upgrades/progression/pernix-body.png",
+        "name": "Pernix armour"
+      },
+      {
+        "status": "OK",
+        "size": 189267,
+        "path": "/game/upgrades/progression/praesul-codex.png",
+        "name": "Praesul codex"
+      },
+      {
+        "status": "OK",
+        "size": 189267,
+        "path": "/game/upgrades/progression/praesul-codex.png",
+        "name": "Praesul codex curses"
+      },
+      {
+        "status": "OK",
+        "size": 189267,
+        "path": "/game/upgrades/progression/praesul-codex.png",
+        "name": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)"
+      },
+      {
+        "status": "OK",
+        "size": 243882,
+        "path": "/game/bosses/rasial.png",
+        "name": "Rasial Necromancy BiS farm"
+      },
+      {
+        "status": "OK",
+        "size": 243882,
+        "path": "/game/bosses/rasial.png",
+        "name": "Rasial Necromancy BiS farm residual"
+      },
+      {
+        "status": "OK",
+        "size": 243882,
+        "path": "/game/bosses/rasial.png",
+        "name": "Rasial, the First Necromancer"
+      },
+      {
+        "status": "OK",
+        "size": 92720,
+        "path": "/game/upgrades/combat-utility/reavers-ring.png",
+        "name": "Reaver's ring"
+      },
+      {
+        "status": "OK",
+        "size": 537400,
+        "path": "/game/upgrades/progression/refined-anima-core-body-of-zaros.png",
+        "name": "Refined anima core armour (GWD2)"
+      },
+      {
+        "status": "OK",
+        "size": 371301,
+        "path": "/game/upgrades/subjugation-robe-top.png",
+        "name": "Robes of subjugation (GWD1 magic power ladder)"
+      },
+      {
+        "status": "OK",
+        "size": 112975,
+        "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+        "name": "Rune dragon boot-upgrade glands"
+      },
+      {
+        "status": "OK",
+        "size": 112975,
+        "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+        "name": "Rune dragon boot-upgrade glands residual"
+      },
+      {
+        "status": "OK",
+        "size": 1532463,
+        "path": "/game/activities/sanctum-of-rebirth.png",
+        "name": "Sanctum of Rebirth uniques"
+      },
+      {
+        "status": "OK",
+        "size": 150706,
+        "path": "/game/upgrades/progression/saradomin-godsword.png",
+        "name": "Saradomin godsword special (heal switch)"
+      },
+      {
+        "status": "OK",
+        "size": 150706,
+        "path": "/game/upgrades/progression/saradomin-godsword.png",
+        "name": "Saradomin godsword special residual (heal switch)"
+      },
+      {
+        "status": "OK",
+        "size": 288070,
+        "path": "/game/upgrades/progression/scripture-of-amascut.png",
+        "name": "Scripture of Amascut (Devourer's Corruption pocket book)"
+      },
+      {
+        "status": "OK",
+        "size": 168401,
+        "path": "/game/upgrades/progression/scripture-of-bik.png",
+        "name": "Scripture of Bik"
+      },
+      {
+        "status": "OK",
+        "size": 168401,
+        "path": "/game/upgrades/progression/scripture-of-bik.png",
+        "name": "Scripture of Bik (skilling pocket book)"
+      },
+      {
+        "status": "OK",
+        "size": 367040,
+        "path": "/game/upgrades/progression/scripture-of-elidinis.png",
+        "name": "Scripture of Elidinis (skilling pocket book)"
+      },
+      {
+        "status": "OK",
+        "size": 182023,
+        "path": "/game/upgrades/progression/scripture-of-ful.png",
+        "name": "Scripture of Ful"
+      },
+      {
+        "status": "OK",
+        "size": 182023,
+        "path": "/game/upgrades/progression/scripture-of-ful.png",
+        "name": "Scripture of Ful (Gladiator's Rage pocket book)"
+      },
+      {
+        "status": "OK",
+        "size": 155824,
+        "path": "/game/upgrades/progression/scripture-of-jas.png",
+        "name": "Scripture of Jas"
+      },
+      {
+        "status": "OK",
+        "size": 193383,
+        "path": "/game/upgrades/progression/scripture-of-wen.png",
+        "name": "Scripture of Wen"
+      },
+      {
+        "status": "OK",
+        "size": 193383,
+        "path": "/game/upgrades/progression/scripture-of-wen.png",
+        "name": "Scripture of Wen (Sheer Cold pocket book)"
+      },
+      {
+        "status": "OK",
+        "size": 380156,
+        "path": "/game/upgrades/progression/seasingers-robe-top.png",
+        "name": "Seasinger (Ports / Arc)"
+      },
+      {
+        "status": "OK",
+        "size": 380156,
+        "path": "/game/upgrades/progression/seasingers-robe-top.png",
+        "name": "Seasinger residual (Ports / Arc)"
+      },
+      {
+        "status": "OK",
+        "size": 380156,
+        "path": "/game/upgrades/progression/seasingers-robe-top.png",
+        "name": "Seasinger's robe top"
+      },
+      {
+        "status": "OK",
+        "size": 457854,
+        "path": "/game/upgrades/progression/seismic-singularity.png",
+        "name": "Seismic singularity"
+      },
+      {
+        "status": "OK",
+        "size": 6690,
+        "path": "/game/upgrades/progression/seismic-wand.png",
+        "name": "Seismic wand"
+      },
+      {
+        "status": "OK",
+        "size": 6690,
+        "path": "/game/upgrades/progression/seismic-wand.png",
+        "name": "Seismic wand and singularity"
+      },
+      {
+        "status": "OK",
+        "size": 410602,
+        "path": "/game/upgrades/progression/seren-godbow.png",
+        "name": "Seren godbow"
+      },
+      {
+        "status": "OK",
+        "size": 4825,
+        "path": "/game/upgrades/permanent-unlocks/shadow-glaives.png",
+        "name": "Shadow glaives"
+      },
+      {
+        "status": "OK",
+        "size": 19376,
+        "path": "/game/upgrades/permanent-unlocks/shadow-reef.png",
+        "name": "Shadow Reef progression"
+      },
+      {
+        "status": "OK",
+        "size": 83526,
+        "path": "/game/upgrades/progression/shadow-spike.png",
+        "name": "Shadow spike"
+      },
+      {
+        "status": "OK",
+        "size": 218114,
+        "path": "/game/upgrades/progression/sirenic-hauberk.png",
+        "name": "Sirenic → elite sirenic armour"
+      },
+      {
+        "status": "OK",
+        "size": 218114,
+        "path": "/game/upgrades/progression/sirenic-hauberk.png",
+        "name": "Sirenic armour"
+      },
+      {
+        "status": "OK",
+        "size": 218114,
+        "path": "/game/upgrades/progression/sirenic-hauberk.png",
+        "name": "Sirenic armour (T90 ranged power craft)"
+      },
+      {
+        "status": "OK",
+        "size": 654697,
+        "path": "/game/upgrades/progression/fractured-staff-of-armadyl.png",
+        "name": "Staff of Armadyl (FSoA component residual)"
+      },
+      {
+        "status": "OK",
+        "size": 654697,
+        "path": "/game/upgrades/progression/fractured-staff-of-armadyl.png",
+        "name": "Staff of Armadyl (FSoA component)"
+      },
+      {
+        "status": "OK",
+        "size": 140185,
+        "path": "/game/upgrades/progression/staff-of-sliske.png",
+        "name": "Staff of Sliske"
+      },
+      {
+        "status": "OK",
+        "size": 75477,
+        "path": "/game/upgrades/combat-utility/stalkers-ring.png",
+        "name": "Stalker's ring"
+      },
+      {
+        "status": "OK",
+        "size": 7880,
+        "path": "/game/upgrades/permanent-unlocks/steadfast.png",
+        "name": "Steadfast / Ragefire / Glaiven boots (glacor T85 tank)"
+      },
+      {
+        "status": "OK",
+        "size": 3205489,
+        "path": "/game/activities/stormguard-citadel-dig-site.png",
+        "name": "Stormguard Citadel Dig Site (Armadylean)"
+      },
+      {
+        "status": "OK",
+        "size": 371301,
+        "path": "/game/upgrades/subjugation-robe-top.png",
+        "name": "Subjugation equipment"
+      },
+      {
+        "status": "OK",
+        "size": 647385,
+        "path": "/game/upgrades/progression/tectonic-robe-top.png",
+        "name": "Tectonic robe armour"
+      },
+      {
+        "status": "OK",
+        "size": 647385,
+        "path": "/game/upgrades/progression/tectonic-robe-top.png",
+        "name": "Tectonic robe armour (T90 magic power craft)"
+      },
+      {
+        "status": "OK",
+        "size": 1312121,
+        "path": "/game/activities/temple-of-aminishi.png",
+        "name": "Temple of Aminishi (ED1)"
+      },
+      {
+        "status": "OK",
+        "size": 269732,
+        "path": "/game/upgrades/progression/tetsu-body.png",
+        "name": "Tetsu equipment"
+      },
+      {
+        "status": "OK",
+        "size": 19376,
+        "path": "/game/upgrades/permanent-unlocks/shadow-reef.png",
+        "name": "The Shadow Reef (ED3)"
+      },
+      {
+        "status": "OK",
+        "size": 821345,
+        "path": "/game/upgrades/torva-platebody.png",
+        "name": "Torva armour and praesulic essence (melee)"
+      },
+      {
+        "status": "OK",
+        "size": 659556,
+        "path": "/game/upgrades/progression/trimmed-masterwork-platebody.png",
+        "name": "Trimmed / custom-fit trimmed masterwork melee armour"
+      },
+      {
+        "status": "OK",
+        "size": 659556,
+        "path": "/game/upgrades/progression/trimmed-masterwork-platebody.png",
+        "name": "Trimmed masterwork melee armour (t92)"
+      },
+      {
+        "status": "OK",
+        "size": 346348,
+        "path": "/game/bosses/tzkal-zuk.png",
+        "name": "TzKal-Zuk"
+      },
+      {
+        "status": "OK",
+        "size": 346348,
+        "path": "/game/bosses/tzkal-zuk.png",
+        "name": "TzKal-Zuk progression"
+      },
+      {
+        "status": "OK",
+        "size": 9420,
+        "path": "/game/upgrades/permanent-unlocks/unexpected-diplomacy.png",
+        "name": "Unexpected Diplomacy (Seal of the Praefectus Praetorio)"
+      },
+      {
+        "status": "OK",
+        "size": 217328,
+        "path": "/game/upgrades/progression/virtus-robe-top.png",
+        "name": "Virtus equipment and Praesulic essence"
+      },
+      {
+        "status": "OK",
+        "size": 217328,
+        "path": "/game/upgrades/progression/virtus-robe-top.png",
+        "name": "Virtus equipment and Praesulic essence residual"
+      },
+      {
+        "status": "OK",
+        "size": 334063,
+        "path": "/game/bosses/vorago.png",
+        "name": "Vorago progression"
+      },
+      {
+        "status": "OK",
+        "size": 105110,
+        "path": "/game/upgrades/progression/wand-of-the-cywir-elders.png",
+        "name": "Wand / Orb of the Cywir elders"
+      },
+      {
+        "status": "OK",
+        "size": 126739,
+        "path": "/game/upgrades/progression/wand-of-the-praesul.png",
+        "name": "Wand of the praesul"
+      },
+      {
+        "status": "OK",
+        "size": 126739,
+        "path": "/game/upgrades/progression/wand-of-the-praesul.png",
+        "name": "Wand of the praesul and Imperium core"
+      },
+      {
+        "status": "OK",
+        "size": 1018893,
+        "path": "/game/upgrades/permanent-unlocks/warforge-dig-site.png",
+        "name": "Warforge Dig Site (Bandosian)"
+      },
+      {
+        "status": "OK",
+        "size": 246519,
+        "path": "/game/upgrades/progression/zaros-godsword.png",
+        "name": "Zaros godsword"
+      },
+      {
+        "status": "OK",
+        "size": 3864,
+        "path": "/game/combat/equipment/zaryte-bow.png",
+        "name": "Zaryte bow"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "status": "OK",
+      "size": 310955,
+      "path": "/game/upgrades/progression/acht-primeval-robe-top.png",
+      "name": "Achto raids armour (Mazcab)"
+    },
+    {
+      "status": "OK",
+      "size": 310955,
+      "path": "/game/upgrades/progression/acht-primeval-robe-top.png",
+      "name": "Achto raids armour residual (Mazcab)"
+    },
+    {
+      "status": "OK",
+      "size": 221726,
+      "path": "/game/bosses/ambassador.png",
+      "name": "Ambassador residual uniques"
+    },
+    {
+      "status": "OK",
+      "size": 24711,
+      "path": "/game/combat/equipment/ancient-defender.png",
+      "name": "Ancient defender"
+    },
+    {
+      "status": "OK",
+      "size": 265783,
+      "path": "/game/upgrades/permanent-unlocks/anima-core-body-of-zaros.png",
+      "name": "Anima core armour (GWD2 T80 power)"
+    },
+    {
+      "status": "OK",
+      "size": 257241,
+      "path": "/game/bosses/arch-glacor.png",
+      "name": "Arch-Glacor"
+    },
+    {
+      "status": "OK",
+      "size": 257241,
+      "path": "/game/bosses/arch-glacor.png",
+      "name": "Arch-Glacor progression"
+    },
+    {
+      "status": "OK",
+      "size": 4033,
+      "path": "/game/combat/equipment/armadyl-battlestaff.png",
+      "name": "Armadyl battlestaff (Storm's End special residual)"
+    },
+    {
+      "status": "OK",
+      "size": 4033,
+      "path": "/game/combat/equipment/armadyl-battlestaff.png",
+      "name": "Armadyl battlestaff (Storm's End special)"
+    },
+    {
+      "status": "OK",
+      "size": 181984,
+      "path": "/game/upgrades/armadyl-chestplate.png",
+      "name": "Armadyl equipment"
+    },
+    {
+      "status": "OK",
+      "size": 181984,
+      "path": "/game/upgrades/armadyl-chestplate.png",
+      "name": "Armadyl equipment (GWD1 ranged power ladder)"
+    },
+    {
+      "status": "OK",
+      "size": 204095,
+      "path": "/game/upgrades/progression/armadyl-godsword.png",
+      "name": "Armadyl godsword"
+    },
+    {
+      "status": "OK",
+      "size": 114757,
+      "path": "/game/upgrades/permanent-unlocks/ascension-crossbow.png",
+      "name": "Ascension crossbow"
+    },
+    {
+      "status": "OK",
+      "size": 114757,
+      "path": "/game/upgrades/permanent-unlocks/ascension-crossbow.png",
+      "name": "Ascension crossbows"
+    },
+    {
+      "status": "OK",
+      "size": 70727,
+      "path": "/game/upgrades/combat-utility/asylum-surgeons-ring.png",
+      "name": "Asylum surgeon's ring"
+    },
+    {
+      "status": "OK",
+      "size": 416938,
+      "path": "/game/upgrades/bandos-chestplate.png",
+      "name": "Bandos equipment"
+    },
+    {
+      "status": "OK",
+      "size": 416938,
+      "path": "/game/upgrades/bandos-chestplate.png",
+      "name": "Bandos equipment (GWD1 melee power ladder)"
+    },
+    {
+      "status": "OK",
+      "size": 5746,
+      "path": "/game/combat/equipment/bandos-godsword.png",
+      "name": "Bandos godsword"
+    },
+    {
+      "status": "OK",
+      "size": 2589069,
+      "path": "/game/upgrades/permanent-unlocks/barrows.png",
+      "name": "Barrows defenders / shields progression"
+    },
+    {
+      "status": "OK",
+      "size": 171331,
+      "path": "/game/upgrades/progression/black-stone-arrow.png",
+      "name": "Black stone arrows residual"
+    },
+    {
+      "status": "OK",
+      "size": 5120,
+      "path": "/game/combat/equipment/blade-of-avaryss.png",
+      "name": "Blade of Avaryss / Blade of Nymora"
+    },
+    {
+      "status": "OK",
+      "size": 217400,
+      "path": "/game/upgrades/progression/blade-of-leng.png",
+      "name": "Blade of Leng"
+    },
+    {
+      "status": "OK",
+      "size": 112975,
+      "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+      "name": "Blast diffusion / enhanced blast diffusion boots"
+    },
+    {
+      "status": "OK",
+      "size": 112975,
+      "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+      "name": "Blast diffusion boots"
+    },
+    {
+      "status": "OK",
+      "size": 55353,
+      "path": "/game/upgrades/combat-utility/channelers-ring.png",
+      "name": "Channeller's ring"
+    },
+    {
+      "status": "OK",
+      "size": 76058,
+      "path": "/game/upgrades/progression/chaotic-rapier.png",
+      "name": "Chaotic equipment"
+    },
+    {
+      "status": "OK",
+      "size": 76058,
+      "path": "/game/upgrades/progression/chaotic-rapier.png",
+      "name": "Chaotic melee and ranged weapons"
+    },
+    {
+      "status": "OK",
+      "size": 3151,
+      "path": "/game/combat/equipment/chaotic-staff.png",
+      "name": "Chaotic staff"
+    },
+    {
+      "status": "OK",
+      "size": 9416,
+      "path": "/game/combat/equipment/cryptbloom-body.png",
+      "name": "Cryptbloom armour"
+    },
+    {
+      "status": "OK",
+      "size": 9416,
+      "path": "/game/combat/equipment/cryptbloom-body.png",
+      "name": "Cryptbloom armour (T90 magic tank)"
+    },
+    {
+      "status": "OK",
+      "size": 659556,
+      "path": "/game/upgrades/progression/trimmed-masterwork-platebody.png",
+      "name": "Custom-fit trimmed masterwork (Elof / Master Crafter)"
+    },
+    {
+      "status": "OK",
+      "size": 7150,
+      "path": "/game/upgrades/permanent-unlocks/daemonheim-dig-site.png",
+      "name": "Daemonheim Dig Site (Dragonkin mini-site)"
+    },
+    {
+      "status": "OK",
+      "size": 217400,
+      "path": "/game/upgrades/progression/dark-shard-of-leng.png",
+      "name": "Dark ice → Dark Shard/Sliver of Leng"
+    },
+    {
+      "status": "OK",
+      "size": 353646,
+      "path": "/game/upgrades/progression/death-lotus-chestplate.png",
+      "name": "Death Lotus chestplate"
+    },
+    {
+      "status": "OK",
+      "size": 353646,
+      "path": "/game/upgrades/progression/death-lotus-chestplate.png",
+      "name": "Death lotus equipment"
+    },
+    {
+      "status": "OK",
+      "size": 353646,
+      "path": "/game/upgrades/progression/death-lotus-chestplate.png",
+      "name": "Death Lotus equipment"
+    },
+    {
+      "status": "OK",
+      "size": 426317,
+      "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+      "name": "Deathdealer robe armour (necro power residual)"
+    },
+    {
+      "status": "OK",
+      "size": 426317,
+      "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+      "name": "Deathdealer robe armour (necro power)"
+    },
+    {
+      "status": "OK",
+      "size": 426317,
+      "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+      "name": "Deathwarden / Deathdealer armour"
+    },
+    {
+      "status": "OK",
+      "size": 426317,
+      "path": "/game/upgrades/progression/deathdealer-robe-top.png",
+      "name": "Deathwarden / Deathdealer armour residual"
+    },
+    {
+      "status": "OK",
+      "size": 601999,
+      "path": "/game/upgrades/progression/deathwarden-robe-top.png",
+      "name": "Deathwarden robe armour (necro tank residual)"
+    },
+    {
+      "status": "OK",
+      "size": 601999,
+      "path": "/game/upgrades/progression/deathwarden-robe-top.png",
+      "name": "Deathwarden robe armour (necro tank)"
+    },
+    {
+      "status": "OK",
+      "size": 135435,
+      "path": "/game/upgrades/progression/dragon-defender.png",
+      "name": "Dragon defender"
+    },
+    {
+      "status": "OK",
+      "size": 140046,
+      "path": "/game/upgrades/progression/dragon-rider-lance.png",
+      "name": "Dragon Rider lance"
+    },
+    {
+      "status": "OK",
+      "size": 135435,
+      "path": "/game/upgrades/progression/dragon-defender.png",
+      "name": "Dragonfire defender"
+    },
+    {
+      "status": "OK",
+      "size": 216978,
+      "path": "/game/upgrades/permanent-unlocks/dragonkin-laboratory.jpg",
+      "name": "Dragonkin Laboratory (ED2)"
+    },
+    {
+      "status": "OK",
+      "size": 216978,
+      "path": "/game/upgrades/permanent-unlocks/dragonkin-laboratory.jpg",
+      "name": "Dragonkin Laboratory upgrades"
+    },
+    {
+      "status": "OK",
+      "size": 259660,
+      "path": "/game/activities/orthen-dig-site.png",
+      "name": "Dragonkin potion recipe fragments (Orthen)"
+    },
+    {
+      "status": "OK",
+      "size": 170277,
+      "path": "/game/upgrades/drygore-longsword.png",
+      "name": "Drygore longsword"
+    },
+    {
+      "status": "OK",
+      "size": 211439,
+      "path": "/game/upgrades/progression/drygore-mace.png",
+      "name": "Drygore mace"
+    },
+    {
+      "status": "OK",
+      "size": 86269,
+      "path": "/game/upgrades/progression/drygore-rapier.png",
+      "name": "Drygore rapier"
+    },
+    {
+      "status": "OK",
+      "size": 211439,
+      "path": "/game/upgrades/progression/drygore-mace.png",
+      "name": "Drygore weapon set"
+    },
+    {
+      "status": "OK",
+      "size": 211439,
+      "path": "/game/upgrades/permanent-unlocks/drygore-weapons.png",
+      "name": "Drygore weaponry"
+    },
+    {
+      "status": "OK",
+      "size": 211439,
+      "path": "/game/upgrades/permanent-unlocks/drygore-weapons.png",
+      "name": "Drygore weapons"
+    },
+    {
+      "status": "OK",
+      "size": 303579,
+      "path": "/game/upgrades/progression/ek-zekkil.png",
+      "name": "Ek-ZekKil (Zuk 2h melee)"
+    },
+    {
+      "status": "OK",
+      "size": 161266,
+      "path": "/game/upgrades/progression/eldritch-crossbow.png",
+      "name": "Eldritch crossbow"
+    },
+    {
+      "status": "OK",
+      "size": 1835815,
+      "path": "/game/upgrades/progression/elite-sirenic-hauberk.png",
+      "name": "Elite sirenic armour (T92 ranged power)"
+    },
+    {
+      "status": "OK",
+      "size": 804955,
+      "path": "/game/upgrades/progression/elite-tectonic-robe-top.png",
+      "name": "Elite tectonic robe armour"
+    },
+    {
+      "status": "OK",
+      "size": 804955,
+      "path": "/game/upgrades/progression/elite-tectonic-robe-top.png",
+      "name": "Elite tectonic robe armour (T92 magic power)"
+    },
+    {
+      "status": "OK",
+      "size": 6644,
+      "path": "/game/upgrades/permanent-unlocks/emberkeen.png",
+      "name": "Emberkeen / Hailfire / Flarefrost boots (T90 glacor upgrades)"
+    },
+    {
+      "status": "OK",
+      "size": 7504,
+      "path": "/game/combat/equipment/emberkeen-boots.png",
+      "name": "Emberkeen boots"
+    },
+    {
+      "status": "OK",
+      "size": 112975,
+      "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+      "name": "Enhanced blast diffusion boots"
+    },
+    {
+      "status": "OK",
+      "size": 3036,
+      "path": "/game/combat/equipment/enhanced-kerapacs-wrist-wraps.png",
+      "name": "Enhanced Kerapac's wrist wraps (T90 magic)"
+    },
+    {
+      "status": "OK",
+      "size": 183144,
+      "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+      "name": "Essence of Finality"
+    },
+    {
+      "status": "OK",
+      "size": 183144,
+      "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+      "name": "Essence of Finality amulet"
+    },
+    {
+      "status": "OK",
+      "size": 183144,
+      "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+      "name": "Essence of Finality amulet (neck BiS chain)"
+    },
+    {
+      "status": "OK",
+      "size": 183144,
+      "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+      "name": "Essence of Finality ornament kit (style bonus residual)"
+    },
+    {
+      "status": "OK",
+      "size": 183144,
+      "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+      "name": "Essence of Finality ornament kit (style bonus)"
+    },
+    {
+      "status": "OK",
+      "size": 183144,
+      "path": "/game/upgrades/permanent-equipment/essence-of-finality.png",
+      "name": "Essence of Finality stored special attack"
+    },
+    {
+      "status": "OK",
+      "size": 719458,
+      "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+      "name": "First necromancer equipment"
+    },
+    {
+      "status": "OK",
+      "size": 719458,
+      "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+      "name": "First necromancer's equipment"
+    },
+    {
+      "status": "OK",
+      "size": 719458,
+      "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+      "name": "First Necromancer's equipment"
+    },
+    {
+      "status": "OK",
+      "size": 719458,
+      "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+      "name": "First necromancer's equipment (Rasial)"
+    },
+    {
+      "status": "OK",
+      "size": 719458,
+      "path": "/game/upgrades/progression/first-necromancer-robe-top.png",
+      "name": "First Necromancer's equipment (Rasial)"
+    },
+    {
+      "status": "OK",
+      "size": 209558,
+      "path": "/game/upgrades/progression/fleeting-boots.png",
+      "name": "Fleeting boots"
+    },
+    {
+      "status": "OK",
+      "size": 654697,
+      "path": "/game/upgrades/progression/fractured-staff-of-armadyl.png",
+      "name": "Fractured Staff of Armadyl"
+    },
+    {
+      "status": "OK",
+      "size": 593649,
+      "path": "/game/bosses/gate-of-elidinis.png",
+      "name": "Gate of Elidinis uniques"
+    },
+    {
+      "status": "OK",
+      "size": 405647,
+      "path": "/game/upgrades/progression/steadfast-boots.png",
+      "name": "Glacor boots"
+    },
+    {
+      "status": "OK",
+      "size": 3107079,
+      "path": "/game/upgrades/permanent-unlocks/god-wars-dungeon.png",
+      "name": "God Wars Dungeon 1 (+ Nex)"
+    },
+    {
+      "status": "OK",
+      "size": 4557485,
+      "path": "/game/upgrades/permanent-unlocks/god-wars-dungeon-1-equipment.png",
+      "name": "God Wars Dungeon 1 equipment"
+    },
+    {
+      "status": "OK",
+      "size": 204095,
+      "path": "/game/upgrades/permanent-unlocks/godswords.png",
+      "name": "Godswords (GWD1 hilt + shard assembly)"
+    },
+    {
+      "status": "OK",
+      "size": 305482,
+      "path": "/game/upgrades/progression/deathguard.png",
+      "name": "Gravite and Chaotic Necromancy weapons"
+    },
+    {
+      "status": "OK",
+      "size": 265783,
+      "path": "/game/upgrades/permanent-unlocks/anima-core-body-of-zaros.png",
+      "name": "GWD2 anima core and mid-tier melee/ranged weapons"
+    },
+    {
+      "status": "OK",
+      "size": 6943,
+      "path": "/game/upgrades/progression/hoardstalker-ring.png",
+      "name": "Hoardstalker ring"
+    },
+    {
+      "status": "OK",
+      "size": 437928,
+      "path": "/game/upgrades/progression/igneous-kal-zuk.png",
+      "name": "Igneous cape progression"
+    },
+    {
+      "status": "OK",
+      "size": 437928,
+      "path": "/game/upgrades/progression/igneous-kal-zuk.png",
+      "name": "Igneous Kal-Zuk"
+    },
+    {
+      "status": "OK",
+      "size": 95634,
+      "path": "/game/upgrades/progression/imperium-core.png",
+      "name": "Imperium core"
+    },
+    {
+      "status": "OK",
+      "size": 119867,
+      "path": "/game/upgrades/progression/inquisitor-staff.png",
+      "name": "Inquisitor staff"
+    },
+    {
+      "status": "OK",
+      "size": 4253,
+      "path": "/game/combat/equipment/kalphite-defender.png",
+      "name": "Kalphite defender"
+    },
+    {
+      "status": "OK",
+      "size": 187457,
+      "path": "/game/bosses/kalphite-king.png",
+      "name": "Kalphite King"
+    },
+    {
+      "status": "OK",
+      "size": 362814,
+      "path": "/game/bosses/kalphite-queen.png",
+      "name": "Kalphite Queen"
+    },
+    {
+      "status": "OK",
+      "size": 370724,
+      "path": "/game/bosses/kerapac.png",
+      "name": "Kerapac hard mode FSoA farm"
+    },
+    {
+      "status": "OK",
+      "size": 370724,
+      "path": "/game/bosses/kerapac.png",
+      "name": "Kerapac hard mode FSoA farm residual"
+    },
+    {
+      "status": "OK",
+      "size": 370724,
+      "path": "/game/bosses/kerapac.png",
+      "name": "Kerapac Magic progression"
+    },
+    {
+      "status": "OK",
+      "size": 370724,
+      "path": "/game/bosses/kerapac.png",
+      "name": "Kerapac Magic residual progression"
+    },
+    {
+      "status": "OK",
+      "size": 370724,
+      "path": "/game/bosses/kerapac.png",
+      "name": "Kerapac progression"
+    },
+    {
+      "status": "OK",
+      "size": 370724,
+      "path": "/game/bosses/kerapac.png",
+      "name": "Kerapac, the bound"
+    },
+    {
+      "status": "OK",
+      "size": 53378,
+      "path": "/game/upgrades/progression/kerapacs-wrist-wraps.png",
+      "name": "Kerapac's wrist wraps"
+    },
+    {
+      "status": "OK",
+      "size": 5109,
+      "path": "/game/upgrades/permanent-unlocks/laceration.png",
+      "name": "Laceration / fleeting boots + shadow spike T90"
+    },
+    {
+      "status": "OK",
+      "size": 101767,
+      "path": "/game/upgrades/progression/laceration-boots.png",
+      "name": "Laceration boots"
+    },
+    {
+      "status": "OK",
+      "size": 2570719,
+      "path": "/game/upgrades/permanent-unlocks/legiones.png",
+      "name": "Legiones"
+    },
+    {
+      "status": "OK",
+      "size": 2570719,
+      "path": "/game/upgrades/permanent-unlocks/legiones.png",
+      "name": "Legiones (Monastery of Ascension)"
+    },
+    {
+      "status": "OK",
+      "size": 3084,
+      "path": "/game/skills/archaeology.png",
+      "name": "Leng artefact T90 glove upgrades (shared Arch-Glacor)"
+    },
+    {
+      "status": "OK",
+      "size": 442968,
+      "path": "/game/upgrades/progression/malevolent-cuirass.png",
+      "name": "Malevolent armour"
+    },
+    {
+      "status": "OK",
+      "size": 442968,
+      "path": "/game/upgrades/progression/malevolent-cuirass.png",
+      "name": "Malevolent armour and malevolent energy"
+    },
+    {
+      "status": "OK",
+      "size": 7736,
+      "path": "/game/combat/equipment/masutas-warspear.png",
+      "name": "Masuta's warspear"
+    },
+    {
+      "status": "OK",
+      "size": 385099,
+      "path": "/game/bosses/nex.png",
+      "name": "Nex"
+    },
+    {
+      "status": "OK",
+      "size": 385099,
+      "path": "/game/bosses/nex.png",
+      "name": "Nex equipment"
+    },
+    {
+      "status": "OK",
+      "size": 821345,
+      "path": "/game/upgrades/torva-platebody.png",
+      "name": "Nex T80 power armour (Torva / Pernix / Virtus)"
+    },
+    {
+      "status": "OK",
+      "size": 821345,
+      "path": "/game/upgrades/torva-platebody.png",
+      "name": "Nex T80 power armour residual (Torva / Pernix / Virtus)"
+    },
+    {
+      "status": "OK",
+      "size": 301082,
+      "path": "/game/bosses/nex-aod.png",
+      "name": "Nex: Angel of Death"
+    },
+    {
+      "status": "OK",
+      "size": 301082,
+      "path": "/game/bosses/nex-aod.png",
+      "name": "Nex: Angel of Death progression"
+    },
+    {
+      "status": "OK",
+      "size": 8580,
+      "path": "/game/upgrades/permanent-unlocks/nexus-mod.png",
+      "name": "Nexus Mod (Abyssal Gatestone)"
+    },
+    {
+      "status": "OK",
+      "size": 147871,
+      "path": "/game/upgrades/progression/noxious-longbow.png",
+      "name": "Noxious longbow"
+    },
+    {
+      "status": "OK",
+      "size": 130131,
+      "path": "/game/upgrades/progression/noxious-scythe.png",
+      "name": "Noxious scythe"
+    },
+    {
+      "status": "OK",
+      "size": 130131,
+      "path": "/game/upgrades/progression/noxious-scythe.png",
+      "name": "Noxious scythe and noxious longbow"
+    },
+    {
+      "status": "OK",
+      "size": 3166,
+      "path": "/game/combat/equipment/noxious-staff.png",
+      "name": "Noxious staff"
+    },
+    {
+      "status": "OK",
+      "size": 130131,
+      "path": "/game/upgrades/permanent-unlocks/noxious-weapons.png",
+      "name": "Noxious weapons"
+    },
+    {
+      "status": "OK",
+      "size": 647579,
+      "path": "/game/upgrades/progression/pernix-body.png",
+      "name": "Pernix armour"
+    },
+    {
+      "status": "OK",
+      "size": 189267,
+      "path": "/game/upgrades/progression/praesul-codex.png",
+      "name": "Praesul codex"
+    },
+    {
+      "status": "OK",
+      "size": 189267,
+      "path": "/game/upgrades/progression/praesul-codex.png",
+      "name": "Praesul codex curses"
+    },
+    {
+      "status": "OK",
+      "size": 189267,
+      "path": "/game/upgrades/progression/praesul-codex.png",
+      "name": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)"
+    },
+    {
+      "status": "OK",
+      "size": 243882,
+      "path": "/game/bosses/rasial.png",
+      "name": "Rasial Necromancy BiS farm"
+    },
+    {
+      "status": "OK",
+      "size": 243882,
+      "path": "/game/bosses/rasial.png",
+      "name": "Rasial Necromancy BiS farm residual"
+    },
+    {
+      "status": "OK",
+      "size": 243882,
+      "path": "/game/bosses/rasial.png",
+      "name": "Rasial, the First Necromancer"
+    },
+    {
+      "status": "OK",
+      "size": 92720,
+      "path": "/game/upgrades/combat-utility/reavers-ring.png",
+      "name": "Reaver's ring"
+    },
+    {
+      "status": "OK",
+      "size": 537400,
+      "path": "/game/upgrades/progression/refined-anima-core-body-of-zaros.png",
+      "name": "Refined anima core armour (GWD2)"
+    },
+    {
+      "status": "OK",
+      "size": 371301,
+      "path": "/game/upgrades/subjugation-robe-top.png",
+      "name": "Robes of subjugation (GWD1 magic power ladder)"
+    },
+    {
+      "status": "OK",
+      "size": 112975,
+      "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+      "name": "Rune dragon boot-upgrade glands"
+    },
+    {
+      "status": "OK",
+      "size": 112975,
+      "path": "/game/upgrades/progression/blast-diffusion-boots.png",
+      "name": "Rune dragon boot-upgrade glands residual"
+    },
+    {
+      "status": "OK",
+      "size": 1532463,
+      "path": "/game/activities/sanctum-of-rebirth.png",
+      "name": "Sanctum of Rebirth uniques"
+    },
+    {
+      "status": "OK",
+      "size": 150706,
+      "path": "/game/upgrades/progression/saradomin-godsword.png",
+      "name": "Saradomin godsword special (heal switch)"
+    },
+    {
+      "status": "OK",
+      "size": 150706,
+      "path": "/game/upgrades/progression/saradomin-godsword.png",
+      "name": "Saradomin godsword special residual (heal switch)"
+    },
+    {
+      "status": "OK",
+      "size": 288070,
+      "path": "/game/upgrades/progression/scripture-of-amascut.png",
+      "name": "Scripture of Amascut (Devourer's Corruption pocket book)"
+    },
+    {
+      "status": "OK",
+      "size": 168401,
+      "path": "/game/upgrades/progression/scripture-of-bik.png",
+      "name": "Scripture of Bik"
+    },
+    {
+      "status": "OK",
+      "size": 168401,
+      "path": "/game/upgrades/progression/scripture-of-bik.png",
+      "name": "Scripture of Bik (skilling pocket book)"
+    },
+    {
+      "status": "OK",
+      "size": 367040,
+      "path": "/game/upgrades/progression/scripture-of-elidinis.png",
+      "name": "Scripture of Elidinis (skilling pocket book)"
+    },
+    {
+      "status": "OK",
+      "size": 182023,
+      "path": "/game/upgrades/progression/scripture-of-ful.png",
+      "name": "Scripture of Ful"
+    },
+    {
+      "status": "OK",
+      "size": 182023,
+      "path": "/game/upgrades/progression/scripture-of-ful.png",
+      "name": "Scripture of Ful (Gladiator's Rage pocket book)"
+    },
+    {
+      "status": "OK",
+      "size": 155824,
+      "path": "/game/upgrades/progression/scripture-of-jas.png",
+      "name": "Scripture of Jas"
+    },
+    {
+      "status": "OK",
+      "size": 193383,
+      "path": "/game/upgrades/progression/scripture-of-wen.png",
+      "name": "Scripture of Wen"
+    },
+    {
+      "status": "OK",
+      "size": 193383,
+      "path": "/game/upgrades/progression/scripture-of-wen.png",
+      "name": "Scripture of Wen (Sheer Cold pocket book)"
+    },
+    {
+      "status": "OK",
+      "size": 380156,
+      "path": "/game/upgrades/progression/seasingers-robe-top.png",
+      "name": "Seasinger (Ports / Arc)"
+    },
+    {
+      "status": "OK",
+      "size": 380156,
+      "path": "/game/upgrades/progression/seasingers-robe-top.png",
+      "name": "Seasinger residual (Ports / Arc)"
+    },
+    {
+      "status": "OK",
+      "size": 380156,
+      "path": "/game/upgrades/progression/seasingers-robe-top.png",
+      "name": "Seasinger's robe top"
+    },
+    {
+      "status": "OK",
+      "size": 457854,
+      "path": "/game/upgrades/progression/seismic-singularity.png",
+      "name": "Seismic singularity"
+    },
+    {
+      "status": "OK",
+      "size": 6690,
+      "path": "/game/upgrades/progression/seismic-wand.png",
+      "name": "Seismic wand"
+    },
+    {
+      "status": "OK",
+      "size": 6690,
+      "path": "/game/upgrades/progression/seismic-wand.png",
+      "name": "Seismic wand and singularity"
+    },
+    {
+      "status": "OK",
+      "size": 410602,
+      "path": "/game/upgrades/progression/seren-godbow.png",
+      "name": "Seren godbow"
+    },
+    {
+      "status": "OK",
+      "size": 4825,
+      "path": "/game/upgrades/permanent-unlocks/shadow-glaives.png",
+      "name": "Shadow glaives"
+    },
+    {
+      "status": "OK",
+      "size": 19376,
+      "path": "/game/upgrades/permanent-unlocks/shadow-reef.png",
+      "name": "Shadow Reef progression"
+    },
+    {
+      "status": "OK",
+      "size": 83526,
+      "path": "/game/upgrades/progression/shadow-spike.png",
+      "name": "Shadow spike"
+    },
+    {
+      "status": "OK",
+      "size": 218114,
+      "path": "/game/upgrades/progression/sirenic-hauberk.png",
+      "name": "Sirenic → elite sirenic armour"
+    },
+    {
+      "status": "OK",
+      "size": 218114,
+      "path": "/game/upgrades/progression/sirenic-hauberk.png",
+      "name": "Sirenic armour"
+    },
+    {
+      "status": "OK",
+      "size": 218114,
+      "path": "/game/upgrades/progression/sirenic-hauberk.png",
+      "name": "Sirenic armour (T90 ranged power craft)"
+    },
+    {
+      "status": "OK",
+      "size": 654697,
+      "path": "/game/upgrades/progression/fractured-staff-of-armadyl.png",
+      "name": "Staff of Armadyl (FSoA component residual)"
+    },
+    {
+      "status": "OK",
+      "size": 654697,
+      "path": "/game/upgrades/progression/fractured-staff-of-armadyl.png",
+      "name": "Staff of Armadyl (FSoA component)"
+    },
+    {
+      "status": "OK",
+      "size": 140185,
+      "path": "/game/upgrades/progression/staff-of-sliske.png",
+      "name": "Staff of Sliske"
+    },
+    {
+      "status": "OK",
+      "size": 75477,
+      "path": "/game/upgrades/combat-utility/stalkers-ring.png",
+      "name": "Stalker's ring"
+    },
+    {
+      "status": "OK",
+      "size": 7880,
+      "path": "/game/upgrades/permanent-unlocks/steadfast.png",
+      "name": "Steadfast / Ragefire / Glaiven boots (glacor T85 tank)"
+    },
+    {
+      "status": "OK",
+      "size": 3205489,
+      "path": "/game/activities/stormguard-citadel-dig-site.png",
+      "name": "Stormguard Citadel Dig Site (Armadylean)"
+    },
+    {
+      "status": "OK",
+      "size": 371301,
+      "path": "/game/upgrades/subjugation-robe-top.png",
+      "name": "Subjugation equipment"
+    },
+    {
+      "status": "OK",
+      "size": 647385,
+      "path": "/game/upgrades/progression/tectonic-robe-top.png",
+      "name": "Tectonic robe armour"
+    },
+    {
+      "status": "OK",
+      "size": 647385,
+      "path": "/game/upgrades/progression/tectonic-robe-top.png",
+      "name": "Tectonic robe armour (T90 magic power craft)"
+    },
+    {
+      "status": "OK",
+      "size": 1312121,
+      "path": "/game/activities/temple-of-aminishi.png",
+      "name": "Temple of Aminishi (ED1)"
+    },
+    {
+      "status": "OK",
+      "size": 269732,
+      "path": "/game/upgrades/progression/tetsu-body.png",
+      "name": "Tetsu equipment"
+    },
+    {
+      "status": "OK",
+      "size": 19376,
+      "path": "/game/upgrades/permanent-unlocks/shadow-reef.png",
+      "name": "The Shadow Reef (ED3)"
+    },
+    {
+      "status": "OK",
+      "size": 821345,
+      "path": "/game/upgrades/torva-platebody.png",
+      "name": "Torva armour and praesulic essence (melee)"
+    },
+    {
+      "status": "OK",
+      "size": 659556,
+      "path": "/game/upgrades/progression/trimmed-masterwork-platebody.png",
+      "name": "Trimmed / custom-fit trimmed masterwork melee armour"
+    },
+    {
+      "status": "OK",
+      "size": 659556,
+      "path": "/game/upgrades/progression/trimmed-masterwork-platebody.png",
+      "name": "Trimmed masterwork melee armour (t92)"
+    },
+    {
+      "status": "OK",
+      "size": 346348,
+      "path": "/game/bosses/tzkal-zuk.png",
+      "name": "TzKal-Zuk"
+    },
+    {
+      "status": "OK",
+      "size": 346348,
+      "path": "/game/bosses/tzkal-zuk.png",
+      "name": "TzKal-Zuk progression"
+    },
+    {
+      "status": "OK",
+      "size": 9420,
+      "path": "/game/upgrades/permanent-unlocks/unexpected-diplomacy.png",
+      "name": "Unexpected Diplomacy (Seal of the Praefectus Praetorio)"
+    },
+    {
+      "status": "OK",
+      "size": 217328,
+      "path": "/game/upgrades/progression/virtus-robe-top.png",
+      "name": "Virtus equipment and Praesulic essence"
+    },
+    {
+      "status": "OK",
+      "size": 217328,
+      "path": "/game/upgrades/progression/virtus-robe-top.png",
+      "name": "Virtus equipment and Praesulic essence residual"
+    },
+    {
+      "status": "OK",
+      "size": 334063,
+      "path": "/game/bosses/vorago.png",
+      "name": "Vorago progression"
+    },
+    {
+      "status": "OK",
+      "size": 105110,
+      "path": "/game/upgrades/progression/wand-of-the-cywir-elders.png",
+      "name": "Wand / Orb of the Cywir elders"
+    },
+    {
+      "status": "OK",
+      "size": 126739,
+      "path": "/game/upgrades/progression/wand-of-the-praesul.png",
+      "name": "Wand of the praesul"
+    },
+    {
+      "status": "OK",
+      "size": 126739,
+      "path": "/game/upgrades/progression/wand-of-the-praesul.png",
+      "name": "Wand of the praesul and Imperium core"
+    },
+    {
+      "status": "OK",
+      "size": 1018893,
+      "path": "/game/upgrades/permanent-unlocks/warforge-dig-site.png",
+      "name": "Warforge Dig Site (Bandosian)"
+    },
+    {
+      "status": "OK",
+      "size": 246519,
+      "path": "/game/upgrades/progression/zaros-godsword.png",
+      "name": "Zaros godsword"
+    },
+    {
+      "status": "OK",
+      "size": 3864,
+      "path": "/game/combat/equipment/zaryte-bow.png",
+      "name": "Zaryte bow"
+    }
+  ]
+}

@@ -107,7 +107,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Soulgazer": "Hexhunter bow",
   "Wilderness strykewyrms": "Staff of light, Focus sight, Hexcrest",
   "Ice strykewyrm": "Staff of light",
-  "Lava strykewyrm": "Lava strykewyrm",
+  "Ice strykewyrms": "Staff of light",
+  "Lava strykewyrm": "Wyrm spike, Wyrm scalp, Wyrm heart",
+  "Lava strykewyrms": "Wyrm spike, Wyrm scalp, Wyrm heart",
+  Glacors: "Steadfast boots, Ragefire boots, Glaiven boots",
+  "Acheron mammoths": "Mammoth tusk, Pack mammoth",
   // Mazcab — one piece per Achto style (melee / mage / range).
   "Beastmaster Durzag":
     "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",

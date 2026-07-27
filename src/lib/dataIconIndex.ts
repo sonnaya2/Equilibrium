@@ -1316,6 +1316,8 @@ export const ACTIVITY_ICON_BY_SLUG: Record<string, string> = {
   "ripper-demons": "ripper-demons.png",
   "abyssal-beasts": "abyssal-beasts.png",
   "abyssal-lords": "abyssal-lords.png",
+  glacors: "glacors.png",
+  "acheron-mammoths": "acheron-mammoths.png",
   "edgeville": "edgeville.png",
   "edimmu-resource-dungeon": "edimmu-resource-dungeon.png",
   "elemental-workshop": "elemental-workshop.png",

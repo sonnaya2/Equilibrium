@@ -16010,21 +16010,21 @@
           }
         },
         {
-          "name": "Ice strykewyrm",
+          "name": "Ice strykewyrms",
           "kind": "Slayer",
-          "detail": "Wilderness ice strykewyrm. Staff of light drop.",
+          "detail": "Frozen Waste Plateau and ice cave paths. Drop the staff of light (93 Slayer).",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ice_strykewyrm",
-            "title": "Ice strykewyrm",
+            "title": "Ice strykewyrms",
             "verifiedAt": "2026-07-27"
           }
         },
         {
-          "name": "Lava strykewyrm",
+          "name": "Lava strykewyrms",
           "kind": "Slayer",
-          "detail": "Wilderness lava strykewyrm (and related mounds). High-level Slayer combat.",
+          "detail": "Wilderness lava mounds south of Lava Maze. Wyrm spike/scalp/heart for lava whip, strykebow, and staff of darkness.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -16078,6 +16078,30 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Abyssal_lord",
             "title": "Abyssal lords",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Glacors",
+          "kind": "Slayer",
+          "detail": "Frozen Waste Plateau Wilderness glacors (and Glacor Cave). Drop Steadfast, Ragefire, and Glaiven glacyte boots.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Glacor",
+            "title": "Glacors",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Acheron mammoths",
+          "kind": "Slayer",
+          "detail": "Frozen Waste Plateau Wilderness mammoths (96 Slayer). Mammoth tusks for the pack mammoth familiar.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Acheron_mammoth",
+            "title": "Acheron mammoths",
             "verifiedAt": "2026-07-27"
           }
         }

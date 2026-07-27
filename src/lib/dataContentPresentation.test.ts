@@ -797,6 +797,17 @@ describe("contentRewardsFull — catalog boss packages", () => {
       },
       { name: "Abyssal beasts", must: [/Jaws of the Abyss/i], minIcons: 1 },
       { name: "Abyssal lords", must: [/Abyssal scourge/i], minIcons: 1 },
+      {
+        name: "Glacors",
+        must: [/Steadfast/i, /Ragefire/i, /Glaiven/i],
+        minIcons: 3,
+      },
+      { name: "Ice strykewyrms", must: [/Staff of light/i], minIcons: 1 },
+      {
+        name: "Acheron mammoths",
+        must: [/Mammoth tusk/i],
+        minIcons: 1,
+      },
     ];
     for (const { name, must, minIcons } of cases) {
       const { row, upgrades } = contentRow("forinthry", name);

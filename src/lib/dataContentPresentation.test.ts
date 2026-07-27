@@ -603,6 +603,28 @@ describe("presentInterestName / presentInterestMeta", () => {
 });
 
 describe("contentRewardsFull — catalog boss packages", () => {
+  it("Necromantic Rune Temple shows four runes and max XP/h", () => {
+    const { row, upgrades } = contentRow("misthalin", "Necromantic Rune Temple");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Spirit rune/i);
+    expect(full).toMatch(/Bone rune/i);
+    expect(full).toMatch(/Flesh rune/i);
+    expect(full).toMatch(/Miasma rune/i);
+    expect(full).toMatch(/50k XP\/h/i);
+    expect(full).not.toMatch(/Spirit altar \(spirit runes\)/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.map((i) => i.label.toLowerCase())).toEqual(
+      expect.arrayContaining([
+        "spirit rune",
+        "bone rune",
+        "flesh rune",
+        "miasma rune",
+      ]),
+    );
+    expect(presented.icons).toHaveLength(4);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+  });
+
   it("Kerapac full text contains Fractured Staff of Armadyl", () => {
     const { row, upgrades } = contentRow("misthalin", "Kerapac, the bound");
     const full = contentRewardsFull(row, upgrades);

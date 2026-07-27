@@ -73,6 +73,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // ED4 — Vestments of havoc is the headline package players care about.
   "Zamorak, Lord of Chaos": "Vestments of havoc, Chaos witch equipment",
   "Zamorak, Lord of Chaos (Undercity)": "Vestments of havoc, Chaos witch equipment",
+  // Necrotic altars — four runes + max RC rate (20 XP/ess Miasma · ~2.5k ess/h pouches).
+  "Necromantic Rune Temple":
+    "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
+  "Necrotic altars":
+    "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
 };
 
 /**

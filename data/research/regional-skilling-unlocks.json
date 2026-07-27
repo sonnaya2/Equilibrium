@@ -16000,8 +16000,8 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "category": "Runecrafting altar infrastructure for necrotic runes",
-      "detail": "Cannot be reached via wicked hood or Abyss. Common access routes: Underworld portal/ritual site, City of Um ferry to Haunt on the Hill, passing bracelet Haunt on the Hill, or Underworld Grimoire smithy teleports then ferry. Abyss XP buff does not apply after the September 2023 fix. Ironman RC guides treat this as the impure-essence alternate path, not a generic Abyss substitute · City of Um/Misthalin RC infrastructure. Keep Rune Mythos and ritual essence supply as hard gates · Unlocks: Spirit altar (spirit runes), Bone altar (bone runes), Flesh altar (flesh runes), Miasma altar (miasma runes), Self-sufficient necrotic rune supply for Necromancy abilities and incantations · Region status: historical_city_of_um_working_taxonomy",
+      "category": "Runecrafting",
+      "detail": "City of Um necrotic altars (impure essence). Craft spirit, bone, flesh, and miasma runes. Max ~50k RC XP/h at Miasma (20 XP/ess, pouches; essence supply-limited by rituals). Not Abyss/wicked-hood reachable.",
       "requirements": [
         "Most of Rune Mythos completed for temple access",
         "Impure essence from Necromancy rituals",

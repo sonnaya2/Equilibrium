@@ -17,7 +17,15 @@ const rootUp = (slug: string) => `/game/upgrades/${slug}.png`;
  * Explicit reward-token aliases. Keys must be unique (lowercase, trimmed).
  * Omit labels with no verified public/game asset.
  */
+const skProd = (slug: string) => `/game/upgrades/skilling-production/${slug}.png`;
+
 export const REWARD_ICON_BY_LABEL: Record<string, string> = {
+  // --- Necrotic runes (Necromantic Rune Temple) ---
+  "spirit rune": skProd("spirit-rune"),
+  "bone rune": skProd("bone-rune"),
+  "flesh rune": skProd("flesh-rune"),
+  "miasma rune": skProd("miasma-rune"),
+
   // --- Kerapac ---
   "fractured staff of armadyl": prog("fractured-staff-of-armadyl"),
   "fractured staff of armadyl components": prog("fractured-staff-of-armadyl"),

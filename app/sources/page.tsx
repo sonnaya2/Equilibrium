@@ -66,9 +66,9 @@ export default function SourcesPage() {
           Licence split
         </h2>
         <p className="mt-1 max-w-prose text-sm leading-5 text-parch-300">
-          This is a free, non-commercial fan tool. Do not sell Jagex game art from this project, and
-          do not treat wiki or PvME adapted data as MIT. Original code is MIT. Adapted RuneScape Wiki
-          material is{" "}
+          Free fan tool. Original code is MIT. Jagex game art is not for sale and is not covered by
+          that licence. Wiki and PvME adapted data stay under their Creative Commons terms, not MIT.
+          Adapted RuneScape Wiki material is{" "}
           <a
             href="https://creativecommons.org/licenses/by-nc-sa/3.0/"
             className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"

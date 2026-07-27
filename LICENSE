@@ -1,41 +1,23 @@
-MIT License — original application code only
-============================================
+Copyright (c) 2026 sonnaya2
 
-Copyright (c) 2026 sonnaya2 and contributors
+This MIT licence covers original program code and original documentation
+written for RS3 Equilibrium. Paths that usually fall under that include
+app/, src/, the product scripts used to run and build the app, tests, and
+docs we wrote ourselves that are not copies of game data.
 
-IMPORTANT SCOPE LIMITATION
---------------------------
-This MIT License applies **only** to original application software and
-original documentation authored for the RS3 Equilibrium project
-(primarily `app/`, `src/`, product `scripts/` excluding pure research
-dumps, automated tests, and project-authored docs that are not game-data
-extracts).
+It does not cover Jagex trademarks or game media (icons, art, screenshots
+and the like under assets/, public/game/, and related trees). It does not
+cover text or data adapted from the RuneScape Wiki, research notes drawn
+from PvME / pvme-guides, or material from RS Analysis. Those keep their own
+terms; see the NOTICE file in this repository.
 
-It does **NOT** apply to, and does **NOT** grant any rights in:
+Permission to "sell copies of the Software" under MIT is permission to sell
+the original code, not a licence to sell Jagex art or to treat wiki or PvME
+adapted data as MIT work.
 
-  • Jagex Ltd. trademarks, trade dress, game names, or in-game media
-    (including icons, art, screenshots under `assets/`, `public/game/`,
-    and similar paths)
-  • Text, tables, or data adapted from the RuneScape Wiki
-    (CC BY-NC-SA 3.0 — see NOTICE)
-  • Research notes adapted from PvM Encyclopedia / pvme-guides
-    (CC BY-NC-SA 4.0 — see NOTICE)
-  • Third-party research from RS Analysis or other sites (see NOTICE)
+If this file and NOTICE disagree about third-party material, NOTICE wins.
 
-Those materials remain under their own terms. **Selling, paid
-redistribution, or commercial packaging of Jagex game assets, or of
-wiki/PvME adapted data as if it were MIT-licensed, is not permitted
-by this grant.**
-
-Authoritative multi-layer rights split, attribution duties, ShareAlike
-and NonCommercial rules: **NOTICE** (repository root).
-Also: CONTRIBUTING.md, /sources on the live site, and licenses/README.md.
-
-If NOTICE and this file conflict on third-party material, NOTICE wins.
-
-
-MIT License text (applies only as limited above)
-------------------------------------------------
+---
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -44,9 +26,8 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice, this permission notice, and the scope limitation
-in this file shall be included in all copies or substantial portions of the
-Software.
+The above copyright notice, the scope notes above, and this permission notice
+shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

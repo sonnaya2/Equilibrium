@@ -1,208 +1,143 @@
-RS3 Equilibrium — third-party notices and reuse rules
-=====================================================
+NOTICE
+======
 
-This file is the **authoritative** rights split for this repository and the
-public app. Keep it with every redistribution.
+RS3 Equilibrium
+Copyright (c) 2026 sonnaya2
 
-The root LICENSE (MIT) covers **original application code only**. It does not
-re-license Jagex property, RuneScape Wiki content, PvME material, or other
-third-party research.
-
-
-0. Summary
-----------
-| Layer | Typical paths | Terms | Commercial sale? |
-|---|---|---|---|
-| Original app code | `app/`, `src/`, product `scripts/`, tests | MIT — see `LICENSE` | Code only, as MIT allows |
-| Wiki-derived text/data | Much of `data/`, `scraped-data/`, research JSON | **CC BY-NC-SA 3.0** | **No** (NonCommercial) |
-| PvME-derived research notes | Rows/files citing PvME / pvme-guides | **CC BY-NC-SA 4.0** | **No** (NonCommercial) |
-| Jagex trademarks & game media | Marks; `assets/`, `public/game/`, screenshots | Jagex IP / Fan Content Policy | **No** (fan non-commercial) |
-| RS Analysis | Math/model cross-checks only | Their site terms | No bulk copy / no relicensing as MIT |
-
-**This project is a free, non-commercial fan tool.** There is no paid access
-wall and no sale of game art packs.
-
-### Hard bans (redistributors)
-You **must not**:
-1. Sell or commercially package **Jagex game assets** from this repo
-   (`assets/`, `public/game/`, crests, icons, screenshots, map art).
-2. Re-label **wiki-adapted** or **PvME-adapted** data as MIT-only.
-3. Strip `SourceReference` / source URLs from data rows.
-4. Remove the site footer credits, `/sources`, or this NOTICE.
-5. Claim affiliation with or endorsement by Jagex, Weird Gloop, PvME, or
-   RS Analysis.
-6. Use this project’s wiki/PvME-derived material for commercial advantage
-   contrary to CC BY-NC-SA NonCommercial terms.
+This repository holds more than one kind of material. The MIT licence in
+LICENSE applies only to original code and original docs we wrote for the
+app. Keep this NOTICE with any redistribution of the project.
 
 
-1. Original software (this project)
------------------------------------
-Copyright (c) 2026 sonnaya2 and contributors.
+Original code
+-------------
 
-Application source under `app/`, `src/`, product automation under `scripts/`
-(excluding pure one-shot research dumps), automated tests, and original
-documentation that is not a game-data extract: MIT License (see `LICENSE`),
-subject to the scope limitation printed in that file.
-
-MIT “sell copies of the Software” means **original code**, not a right to
-sell third-party IP bundled beside that code.
+Original application software (typically app/, src/, product build/run
+scripts, and automated tests) is available under the MIT licence; see
+LICENSE. Selling copies of that code is a MIT question. It is not a grant
+over third-party IP that happens to sit in the same tree.
 
 
-2. RuneScape Wiki (Weird Gloop) — CC BY-NC-SA 3.0
--------------------------------------------------
-Primary game-data source: https://runescape.wiki/
+RuneScape Wiki (Weird Gloop)
+----------------------------
 
-Text and wiki-authored data on the RuneScape Wiki are licensed under
-Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported:
+Game facts, tables, and much of the research JSON under data/ and
+scraped-data/ are adapted from the RuneScape Wiki (https://runescape.wiki/).
 
-  Deed:       https://creativecommons.org/licenses/by-nc-sa/3.0/
-  Legal code: https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
-  Host policy: https://meta.weirdgloop.org/w/Licensing
+Wiki text is licensed under Creative Commons Attribution-NonCommercial-
+ShareAlike 3.0 Unported (CC BY-NC-SA 3.0):
 
-### What we take
-Game facts, table extracts, quest/region notes, combat modernisation values,
-and other research under `data/` and `scraped-data/` are **adapted** from wiki
-material (and other sources below where noted). Wording and structure are
-changed for planner use; values remain wiki-sourced unless a row says
-otherwise.
+  https://creativecommons.org/licenses/by-nc-sa/3.0/
+  https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
 
-### Attribution (required on reuse)
-Weird Gloop requires at least one of:
-- a link to the wiki page(s) reused, or
-- a link to a stable free copy that credits authors equivalently, or
-- a list of authors.
+Host licensing notes: https://meta.weirdgloop.org/w/Licensing
 
-**This project meets that by:**
-1. Crediting the RuneScape Wiki and CC BY-NC-SA 3.0 in the site footer and on
-   `/sources`.
-2. Keeping per-record `source` / `SourceReference` fields where present.
-3. Shipping this NOTICE and linking it from LICENSE, package.json, and
-   `/sources#licenses`.
+We reword and restructure material for the planner. Values still come from
+the cited pages unless a record says otherwise. Images on the Wiki are not
+automatically under the same text licence; check the file page, and treat
+Jagex game art under the Jagex section below.
 
-Example credit form:
+If you reuse wiki-derived material from this project you must give
+attribution (a link to the relevant Wiki page is enough in most cases),
+keep the work non-commercial under the CC BY-NC-SA 3.0 deed, share alike
+on adaptations, and not rebrand that material as MIT-only.
+
+A short credit form that matches Weird Gloop's usual practice:
 
   This tool uses material from the RuneScape Wiki
   (https://runescape.wiki/), licensed under CC BY-NC-SA 3.0
-  (https://creativecommons.org/licenses/by-nc-sa/3.0/). Content is adapted
-  for RS3 Equilibrium (structure and wording modified; game values retained
-  from cited pages).
+  (https://creativecommons.org/licenses/by-nc-sa/3.0/). The text is
+  adapted for RS3 Equilibrium.
 
-### ShareAlike
-Adapted wiki material (including substantially wiki-derived planner JSON)
-must stay under **CC BY-NC-SA 3.0** (or a compatible BY-NC-SA licence) when
-shared. You may not re-license that material as MIT-only.
-
-### NonCommercial
-Do not use wiki-derived material for commercial advantage or monetary
-compensation, except as the CC BY-NC-SA 3.0 deed allows.
-
-### Non-text media on the Wiki
-Images and files are **not** automatically under the same text licence.
-Wiki file pages and our asset manifests carry per-file provenance. Treat
-Jagex game art under section 5.
+We credit the Wiki in the site footer and on /sources, and we keep
+per-record source fields where the data has them.
 
 
-3. PvM Encyclopedia (PvME) — CC BY-NC-SA 4.0
---------------------------------------------
-Site: https://pvme.io/
-Guides: https://github.com/pvme/pvme-guides
-Upstream LICENSE: CC BY-NC-SA 4.0
+PvM Encyclopedia (PvME)
+-----------------------
 
-  Deed:       https://creativecommons.org/licenses/by-nc-sa/4.0/
-  Legal code: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
-  Upstream:   https://github.com/pvme/pvme-guides/blob/master/LICENSE
+Some research rows and notes cite PvME (https://pvme.io/; guide source
+https://github.com/pvme/pvme-guides).
 
-### How this project uses PvME
-- Mechanics and route **discovery** (what exists; what to re-check).
-- Occasional research notes and source rows tagged `pvme`.
-- **Not** a wholesale mirror of guides, Discord content, UI, or rotations.
+That guide repository is licensed under Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0):
 
-### Attribution
-Credit when sharing PvME-derived notes:
+  https://creativecommons.org/licenses/by-nc-sa/4.0/
+  https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+  https://github.com/pvme/pvme-guides/blob/master/LICENSE
 
-  PvM Encyclopedia (PvME) — https://pvme.io/ and
-  https://github.com/pvme/pvme-guides — CC BY-NC-SA 4.0.
+We use PvME for discovery (what mechanics exist, what to re-check). We do
+not mirror their guides, Discord posts, layouts, or UI. Anything we keep
+that is still PvME-derived stays under CC BY-NC-SA 4.0; it is not MIT.
 
-### ShareAlike & NonCommercial
-Adapted PvME material remains under **CC BY-NC-SA 4.0** (or compatible).
-Not MIT. Not for commercial use under NC terms.
+If a figure only came from PvME, we do not treat it as verified game data
+until it is checked against the Wiki or Jagex. Prefer a Wiki URL once that
+is done.
 
-### Verification policy
-PvME-only discoveries are **not** marked verified game facts until re-checked
-against the RuneScape Wiki or Jagex. Prefer wiki URLs after re-verification.
+Credit when you pass on PvME-derived notes from here:
+
+  PvM Encyclopedia (PvME), https://pvme.io/ and
+  https://github.com/pvme/pvme-guides, CC BY-NC-SA 4.0.
 
 
-4. RS Analysis
---------------
-Site: https://rs-analysis.xyz/
+RS Analysis
+-----------
 
-Combat **math / model cross-check** only. No bulk dump of their UI, code, or
-guides. Rows tagged `rs-analysis` keep that citation. Their site terms
-control their original material.
+https://rs-analysis.xyz/ is used as a combat math cross-check. We do not
+copy their UI, code, or guide prose. Rows tagged rs-analysis should keep
+that citation. Their site terms apply to their own material.
 
 
-5. Jagex trademarks and game media
-----------------------------------
-RuneScape® and related marks are trademarks of **Jagex Ltd.**
+Jagex Ltd.
+----------
 
-In-game art, icons, screenshots, map/region art, and other Jagex media
-(including under `assets/`, `public/game/`, `scraped-data/jagex-build-ref/`)
-remain **Jagex property**.
+RuneScape is a trademark of Jagex Ltd.
 
-Use is under Jagex’s Fan Content Policy (non-commercial fan use, no false
-endorsement, revocable):
+Icons, crests, screenshots, map art, and other game media under assets/,
+public/game/, and similar paths remain Jagex property. Use of that media
+is under Jagex's Fan Content Policy:
 
   https://legal.jagex.com/docs/policies/fan-content-policy
 
-### This project’s compliance posture
-- Free planner; no sale of access to Jagex IP.
-- Footer: Fan Content Policy link + “not endorsed / not affiliated”.
-- Trademark line: “RuneScape is a trademark of Jagex Ltd.”
-- No claim of ownership of Jagex art or names.
-- Asset provenance catalogued in `assets/source-manifest*.json` and
-  `assets/manifest.generated.json` where registered (`assets/README.md`).
+This is a free fan tool. It is not affiliated with or endorsed by Jagex.
+We do not sell access to Jagex IP and we do not claim ownership of their
+art or marks.
 
-### Explicitly forbidden without separate Jagex permission
-- Selling merch, asset packs, or paid builds whose value is Jagex art.
-- Commercial redistribution of the `public/game/` or `assets/` trees as a
-  product.
-- Using Jagex marks to imply official status.
+Do not sell asset packs, merch, or paid builds built around the game art
+from this tree without separate permission from Jagex. MIT on our code is
+not a licence to commercialise those files.
 
-Wiki-hosted file pages may add further per-image notes; game media is still
-Jagex IP first.
+Where icons were harvested via the Wiki, the file page may add further
+notes; the underlying game art is still Jagex's.
 
 
-6. Attribution surfaces (must keep when forking)
-------------------------------------------------
-1. Site footer — Fan Content Policy, trademark, licence panel (Wiki 3.0,
-   PvME 4.0, MIT code, link to `/sources#licenses` and NOTICE).
-2. `/sources` — full credit list and licence split.
-3. Repository — `LICENSE`, this `NOTICE`, `CONTRIBUTING.md`,
-   `licenses/README.md`.
-4. Per-record `SourceReference` on combat/league/research data.
+What to leave intact
+--------------------
 
-Attribution corrections: open an issue on
+If you fork the app, keep:
+
+  - the footer credits (Fan Content Policy, trademark line, licence panel)
+  - the /sources page
+  - this NOTICE and LICENSE
+  - source / SourceReference fields on data rows
+
+Questions about missing attribution: open an issue on
 https://github.com/sonnaya2/Equilibrium
 
 
-7. Downstream redistributors
-----------------------------
-You **may** redistribute **original code** under MIT (as limited in LICENSE).
+Redistribution in plain terms
+-----------------------------
 
-You **must**, when sharing adapted wiki or PvME material:
-- keep Attribution + NonCommercial + ShareAlike;
-- include licence URIs (CC BY-NC-SA 3.0 and/or 4.0 as applicable);
-- indicate material was adapted for this tool;
-- retain this NOTICE.
+You may redistribute original code under MIT as limited in LICENSE.
 
-You **must not** treat a checkout of this monorepo as a single MIT work that
-includes sellable game assets or CC-NC data.
+You may not treat a full checkout as one MIT bundle that includes sellable
+game art or Creative Commons NonCommercial data.
+
+When you share wiki- or PvME-adapted material, keep attribution,
+non-commercial use, and share-alike as those licences require, and leave
+this NOTICE in place.
 
 
-8. Disclaimer
--------------
-Not legal advice. Fan-content rules and Creative Commons deeds can change;
-check the linked policies when redistributing. Not affiliated with or
-endorsed by Jagex Ltd., Weird Gloop, PvME, or RS Analysis.
-
-RuneScape is a trademark of Jagex Ltd.
+This file is not legal advice. Policies and deeds change; check the links
+above when you redistribute. Not affiliated with Jagex Ltd., Weird Gloop,
+PvME, or RS Analysis.

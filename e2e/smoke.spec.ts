@@ -16,7 +16,7 @@ test("home renders nav and footer", async ({ page }) => {
   await expect(footer.getByText("CC BY-NC-SA 3.0", { exact: true })).toBeVisible();
   await expect(footer.getByText("CC BY-NC-SA 4.0", { exact: true })).toBeVisible();
   await expect(footer.getByRole("link", { name: "PvM Encyclopedia" })).toBeVisible();
-  await expect(footer.getByText(/Not for sale/i)).toBeVisible();
+  await expect(footer.getByText(/not for sale/i)).toBeVisible();
   await expect(footer.getByText(/original code only/i)).toBeVisible();
 });
 
@@ -25,7 +25,7 @@ test("sources page states wiki and PvME Creative Commons terms", async ({ page }
   await expect(page.getByRole("heading", { name: "Sources", exact: true })).toBeVisible();
   await expect(page.locator("#licenses")).toContainText("CC BY-NC-SA 3.0");
   await expect(page.locator("#licenses")).toContainText("CC BY-NC-SA 4.0");
-  await expect(page.locator("#licenses")).toContainText(/Do not sell Jagex game art/i);
+  await expect(page.locator("#licenses")).toContainText(/not for sale/i);
   await expect(page.getByRole("link", { name: /RuneScape Wiki/i }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: /PvM Encyclopedia/i }).first()).toBeVisible();
 });

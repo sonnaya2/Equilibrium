@@ -33,7 +33,8 @@ const ALIASES = {
   "deep-sea-fishing-hub": "deep-sea-fishing",
   "howls-floating-workshop": "howls-workshop",
   "howl-s-floating-workshop": "howls-workshop",
-  "brimhaven": "brimhaven-agility-arena",
+  // Brimhaven *town* has its own plate; do not steal the agility-arena shot.
+  // Musa Point / Hardwood Grove resolve by slug to their own activity files.
   "trollheim": "trollheim",
   "troll-stronghold": "trollheim",
   "death-plateau": "trollheim",
@@ -44,8 +45,6 @@ const ALIASES = {
   "rogues-den": "rogues-den",
   "armadyls-tower": "god-wars-dungeon",
   "armady-ls-tower": "god-wars-dungeon",
-  "musa-point": "karamja",
-  "hardwood-grove": "herblore-habitat",
   "ourania-runecrafting-altar": "ourania-runecrafting-altar",
   "ourania-altar": "ourania-altar",
   "chaos-temple-wilderness": "chaos-altar",

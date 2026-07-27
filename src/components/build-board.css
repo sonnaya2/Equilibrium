@@ -1,22 +1,18 @@
-/* Production Build board (/build) — plan seal, regions, relic tiers, blessings. */
-
-.mc {
-  --mc-gap: 0.65rem;
-  --mc-line: var(--color-stone-750);
-  --mc-gold: var(--color-gold-400);
-  --mc-gem: var(--color-gem-400);
-  --mc-gold-dim: color-mix(in srgb, var(--color-gold-500) 42%, var(--color-stone-950));
-  color: var(--color-parch-100);
+.build-board {
+  --build-gap: 0.65rem;
+  --build-line: var(--color-stone-750);
+  --build-gold: var(--color-gold-400);
+  --build-gem: var(--color-gem-400);
+  --build-gold-dim: color-mix(in srgb, var(--color-gold-500) 42%, var(--color-stone-950));
   position: relative;
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   gap: 0.2rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  flex: 1 1 0;
   min-height: 0;
-  /* Outer nav/side gap comes from .workbench-fill (Tasks parity). */
   padding: 0 0 0.5rem;
   overflow: auto;
   box-sizing: border-box;
@@ -35,39 +31,32 @@
     repeating-linear-gradient(104deg, transparent 0 5px, rgb(224 178 100 / 0.008) 5px 6px),
     var(--color-stone-950);
   background-attachment: fixed;
+  color: var(--color-parch-100);
 }
 
-.mc::before {
+.build-board::before {
   content: "";
   position: fixed;
   z-index: 0;
   inset: 0;
-  pointer-events: none;
-  opacity: 0.28;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' seed='19'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 .45 0 0 0 0 .34 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: soft-light;
+  opacity: 0.28;
+  pointer-events: none;
 }
 
-.mc > * {
+.build-board > * {
   position: relative;
   z-index: 1;
 }
 
-/* Mast uses the shared Data-style nav from champion.css — no Build fork. */
-
-.mc *,
-.mc *::before,
-.mc *::after {
-  box-sizing: border-box;
-}
-
-.mc__frame {
+.build-board__frame {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--mc-gap);
+  gap: var(--build-gap);
   padding: 1rem 1rem 1.05rem;
-  border: 1px solid color-mix(in srgb, var(--color-gold-500) 42%, var(--mc-line));
+  border: 1px solid color-mix(in srgb, var(--color-gold-500) 42%, var(--build-line));
   border-radius: var(--radius-sm);
   background:
     linear-gradient(
@@ -77,50 +66,51 @@
     ),
     var(--color-stone-950);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--mc-gold) 18%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--build-gold) 18%, transparent),
     0 1px 2px rgb(0 0 0 / 40%);
 }
 
-.mc__frame > :not(.mc__corner) {
+.build-board__frame > :not(.build-board__corner) {
   position: relative;
   z-index: 1;
 }
 
-/* Quiet outer anchors; the Blessings frame carries the intricate engraving. */
-.mc__corner {
+.build-board__corner {
   position: absolute;
   z-index: 2;
   width: 1rem;
   height: 1rem;
+  background:
+    linear-gradient(var(--build-gold-dim), var(--build-gold-dim)) 0 0 / 0.85rem 1px no-repeat,
+    linear-gradient(var(--build-gold-dim), var(--build-gold-dim)) 0 0 / 1px 0.85rem no-repeat;
   opacity: 0.62;
   pointer-events: none;
-  background:
-    linear-gradient(var(--mc-gold-dim), var(--mc-gold-dim)) 0 0 / 0.85rem 1px no-repeat,
-    linear-gradient(var(--mc-gold-dim), var(--mc-gold-dim)) 0 0 / 1px 0.85rem no-repeat;
 }
 
-.mc__corner.is-tl {
+.build-board__corner.is-tl {
   top: -0.2rem;
   left: -0.2rem;
 }
-.mc__corner.is-tr {
+
+.build-board__corner.is-tr {
   top: -0.2rem;
   right: -0.2rem;
   transform: rotate(90deg);
 }
-.mc__corner.is-br {
+
+.build-board__corner.is-br {
   right: -0.2rem;
   bottom: -0.2rem;
   transform: rotate(180deg);
 }
-.mc__corner.is-bl {
+
+.build-board__corner.is-bl {
   bottom: -0.2rem;
   left: -0.2rem;
   transform: rotate(270deg);
 }
 
-/* ── Seal bar ── */
-.mc__seal {
+.build-board__seal {
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -128,27 +118,27 @@
   gap: 0.5rem 1.2rem;
   min-height: 3.5rem;
   padding: 0.55rem 2rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-stone-raised) 42%, var(--color-stone-850)),
     var(--color-stone-850)
   );
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--mc-gold) 8%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--build-gold) 8%, transparent);
 }
 
-.mc__title {
+.build-board__title {
   margin: 0;
   font-family: var(--font-display), serif;
   font-size: 1.125rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--mc-gold);
+  color: var(--build-gold);
 }
 
-.mc__count {
+.build-board__count {
   font-family: ui-monospace, monospace;
   font-size: 1.7rem;
   font-weight: 700;
@@ -156,39 +146,39 @@
   color: var(--color-gem-300);
 }
 
-.mc__pips {
+.build-board__pips {
   display: inline-flex;
-  gap: 0.3rem;
   align-items: center;
+  gap: 0.3rem;
   margin-left: 0.75rem;
 }
 
-.mc__pip {
+.build-board__pip {
   width: 0.5rem;
   height: 0.5rem;
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--mc-line);
   background: var(--color-stone-800);
   transform: rotate(45deg);
 }
 
-.mc__pip.is-on {
-  background: var(--color-gem-400);
+.build-board__pip.is-on {
   border-color: var(--color-gem-300);
+  background: var(--color-gem-400);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-gem-600) 55%, transparent);
 }
 
-.mc__actions {
+.build-board__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   margin-left: 2.05rem;
 }
 
-.mc__btn {
+.build-board__btn {
   min-height: 2.15rem;
   padding: 0.3rem 0.8rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
   background: linear-gradient(
     180deg,
@@ -200,32 +190,31 @@
   cursor: pointer;
 }
 
-.mc__btn:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--mc-gem) 62%, var(--mc-line));
+.build-board__btn:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--build-gem) 62%, var(--build-line));
   color: var(--color-parch-50);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 16%, transparent);
 }
 
-.mc__btn:disabled {
+.build-board__btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.mc__btn--gem {
+.build-board__btn--gem {
   border-color: var(--color-gem-500);
   background: color-mix(in srgb, var(--color-gem-600) 28%, var(--color-stone-800));
   color: var(--color-parch-50);
 }
 
-/* ── Zones ── */
-.mc__zone {
+.build-board__zone {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
   min-width: 0;
   padding: 0.8rem 0.75rem 0.75rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
   background: linear-gradient(
     180deg,
@@ -235,34 +224,35 @@
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent);
 }
 
-.mc__zone[aria-label="Regions"] {
+.build-board__zone[aria-label="Regions"] {
   padding-top: 1.4rem;
   padding-bottom: 1rem;
   padding-inline: 1.35rem;
 }
 
-.mc__zone[aria-label="Relics"] {
+.build-board__zone[aria-label="Relics"] {
   margin-top: -0.35rem;
   padding-top: 1.5rem;
 }
 
-.mc__court {
+.build-board__court {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(19rem, 21rem);
-  gap: var(--mc-gap);
+  gap: var(--build-gap);
   align-items: stretch;
   min-width: 0;
 }
 
-.mc__court-main {
+.build-board__court-main {
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: var(--mc-gap);
+  gap: var(--build-gap);
   min-width: 0;
 }
 
-.mc__zone-title {
+.build-board__zone-title {
   position: relative;
+  z-index: 2;
   align-self: flex-start;
   margin: -1.3rem 0 0;
   padding: 0 0.55rem;
@@ -272,45 +262,43 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mc-gold);
-  z-index: 2;
+  color: var(--build-gold);
 }
 
-.mc__zone-title::before,
-.mc__zone-title::after {
+.build-board__zone-title::before,
+.build-board__zone-title::after {
   content: "";
   display: inline-block;
   width: 0.5rem;
   height: 0.5rem;
   margin: 0 0.35rem 0.02rem;
-  border-top: 1px solid color-mix(in srgb, var(--mc-gold) 45%, transparent);
-  border-left: 1px solid color-mix(in srgb, var(--mc-gold) 28%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--build-gold) 45%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--build-gold) 28%, transparent);
   transform: skewX(-35deg);
 }
 
-.mc__zone-title::before {
+.build-board__zone-title::before {
   position: absolute;
   top: 0.28rem;
   left: -0.18rem;
   margin: 0;
 }
 
-.mc__zone-title::after {
+.build-board__zone-title::after {
   margin-right: 0;
   border-left: 0;
   transform: skewX(35deg);
 }
 
-/* ── Regions: single 11-col grid ── */
-.mc__crests {
+.build-board__crests {
   display: grid;
   grid-template-columns: repeat(11, minmax(0, 1fr));
   gap: 0.4rem;
-  width: 100%;
   align-items: stretch;
+  width: 100%;
 }
 
-.mc__crest {
+.build-board__crest {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -321,55 +309,55 @@
   min-height: 6.15rem;
   margin: 0;
   padding: 0.45rem 0.2rem 0.3rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-stone-raised) 32%, var(--color-stone-800)),
     var(--color-stone-800)
   );
-  color: var(--color-parch-100);
-  cursor: pointer;
-  text-align: center;
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 38%, transparent),
     inset 0 -1px 0 rgb(0 0 0 / 55%);
+  color: var(--color-parch-100);
+  text-align: center;
+  cursor: pointer;
 }
 
-.mc__crest:hover:not(.is-blocked) {
-  border-color: color-mix(in srgb, var(--mc-gem) 50%, var(--mc-line));
+.build-board__crest:hover:not(.is-blocked) {
+  border-color: color-mix(in srgb, var(--build-gem) 50%, var(--build-line));
   background: color-mix(in srgb, var(--color-stone-raised) 45%, var(--color-stone-800));
 }
 
-.mc__crest:hover:not(.is-blocked) .mc__crest-art {
+.build-board__crest:hover:not(.is-blocked) .build-board__crest-art {
   transform: translateY(-1px);
 }
 
-.mc__crest-art {
+.build-board__crest-art {
   display: block;
   width: 3rem;
   height: 3rem;
   flex: 0 0 auto;
-  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: contain;
   transition: transform 120ms ease;
 }
 
-.mc__crest-name {
+.build-board__crest-name {
   display: block;
   width: 100%;
   padding: 0 0.1rem;
+  overflow: hidden;
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.15;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--color-parch-50);
 }
 
-.mc__crest-meta {
+.build-board__crest-meta {
   display: block;
   font-family: ui-monospace, monospace;
   font-size: 0.75rem;
@@ -378,46 +366,45 @@
   color: var(--color-parch-300);
 }
 
-.mc__crest.is-on {
-  border-color: var(--mc-gem);
+.build-board__crest.is-on {
+  border-color: var(--build-gem);
   background: linear-gradient(
     165deg,
     color-mix(in srgb, var(--color-gem-600) 32%, var(--color-stone-raised)) 0%,
     color-mix(in srgb, var(--color-gem-600) 15%, var(--color-stone-800)) 72%
   );
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 48%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 48%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 22%, transparent);
 }
 
-.mc__crest.is-on .mc__crest-art {
-  filter: drop-shadow(0 0 0.35rem color-mix(in srgb, var(--mc-gem) 24%, transparent));
+.build-board__crest.is-on .build-board__crest-art {
+  filter: drop-shadow(0 0 0.35rem color-mix(in srgb, var(--build-gem) 24%, transparent));
 }
 
-.mc__crest.is-on .mc__crest-meta {
+.build-board__crest.is-on .build-board__crest-meta {
   color: var(--color-gem-300);
 }
 
-.mc__crest.is-dim:not(.is-on) {
+.build-board__crest.is-dim:not(.is-on) {
   opacity: 0.68;
   filter: saturate(0.7);
 }
 
-.mc__crest.is-blocked,
-.mc__crest:disabled {
+.build-board__crest.is-blocked,
+.build-board__crest:disabled {
   opacity: 0.4;
   cursor: not-allowed;
   filter: grayscale(0.35);
 }
 
-/* ── Relics ── */
-.mc__relics {
+.build-board__relics {
   display: flex;
   flex-direction: column;
   gap: 0.28rem;
 }
 
-.mc__tier {
+.build-board__tier {
   position: relative;
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr) 1.25rem;
@@ -425,7 +412,7 @@
   align-items: center;
   min-height: 3.3rem;
   padding: 0.32rem 0.45rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
   background: linear-gradient(
     180deg,
@@ -437,15 +424,15 @@
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 20%, transparent);
 }
 
-.mc__tier-id {
+.build-board__tier-id {
   font-family: var(--font-display), serif;
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--mc-gold);
   text-align: center;
+  color: var(--build-gold);
 }
 
-.mc__seats {
+.build-board__seats {
   display: flex;
   flex-wrap: nowrap;
   gap: 0.4rem;
@@ -456,7 +443,7 @@
   scrollbar-width: thin;
 }
 
-.mc__seat {
+.build-board__seat {
   position: relative;
   display: inline-flex;
   flex-direction: column;
@@ -468,26 +455,26 @@
   max-width: 6.4rem;
   min-height: 3.25rem;
   padding: 0.2rem 0.3rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: var(--radius-sm);
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-stone-raised) 30%, var(--color-stone-800)),
     var(--color-stone-800)
   );
-  color: var(--color-parch-100);
-  cursor: pointer;
-  text-align: center;
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent),
     inset 0 -1px 0 rgb(0 0 0 / 48%);
+  color: var(--color-parch-100);
+  text-align: center;
+  cursor: pointer;
 }
 
-.mc__seat:hover:not(.is-empty) {
-  border-color: color-mix(in srgb, var(--mc-gem) 50%, var(--mc-line));
+.build-board__seat:hover:not(.is-empty) {
+  border-color: color-mix(in srgb, var(--build-gem) 50%, var(--build-line));
 }
 
-.mc__seat-emblem {
+.build-board__seat-emblem {
   position: relative;
   display: grid;
   place-items: center;
@@ -495,10 +482,10 @@
   height: 2.05rem;
   flex: 0 0 auto;
   clip-path: polygon(24% 0, 76% 0, 100% 50%, 76% 100%, 24% 100%, 0 50%);
-  background: color-mix(in srgb, var(--mc-gold) 68%, var(--mc-line));
+  background: color-mix(in srgb, var(--build-gold) 68%, var(--build-line));
 }
 
-.mc__seat-emblem::before {
+.build-board__seat-emblem::before {
   content: "";
   position: absolute;
   inset: 1px;
@@ -506,7 +493,7 @@
   background: color-mix(in srgb, var(--color-gem-600) 36%, var(--color-stone-950));
 }
 
-.mc__seat-emblem img {
+.build-board__seat-emblem img {
   position: relative;
   z-index: 1;
   width: 1.85rem;
@@ -514,7 +501,7 @@
   object-fit: contain;
 }
 
-.mc__seat-mono {
+.build-board__seat-mono {
   position: relative;
   z-index: 1;
   display: grid;
@@ -523,47 +510,47 @@
   height: 1.75rem;
   font-family: var(--font-display), serif;
   font-size: 0.7rem;
-  color: var(--mc-gold);
+  color: var(--build-gold);
 }
 
-.mc__seat-name {
+.build-board__seat-name {
   width: 100%;
+  overflow: hidden;
   font-size: 0.8125rem;
   font-weight: 600;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.mc__seat.is-on {
-  border-color: var(--mc-gem);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 45%, transparent);
+.build-board__seat.is-on {
+  border-color: var(--build-gem);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 45%, transparent);
 }
 
-.mc__seat.is-empty {
+.build-board__seat.is-empty {
+  justify-content: center;
   width: 6.4rem;
   min-width: 6.4rem;
   max-width: 6.4rem;
-  justify-content: center;
   min-height: 2.75rem;
   padding: 0;
+  background: var(--color-stone-inset);
+  opacity: 0.7;
   cursor: default;
   pointer-events: none;
-  opacity: 0.7;
-  background: var(--color-stone-inset);
 }
 
-.mc__seat-plus {
+.build-board__seat-plus {
   position: relative;
   display: block;
   width: 1.75rem;
   height: 1.75rem;
   clip-path: polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%);
-  background: color-mix(in srgb, var(--mc-gold) 30%, var(--mc-line));
+  background: color-mix(in srgb, var(--build-gold) 30%, var(--build-line));
   opacity: 0.55;
 }
 
-.mc__seat-plus::before {
+.build-board__seat-plus::before {
   content: "";
   position: absolute;
   inset: 1px;
@@ -571,7 +558,7 @@
   background: var(--color-stone-950);
 }
 
-.mc__seat-plus::after {
+.build-board__seat-plus::after {
   content: "+";
   position: absolute;
   inset: 0;
@@ -582,42 +569,42 @@
   line-height: 1;
 }
 
-.mc__tier-mark {
+.build-board__tier-mark {
   position: relative;
+  justify-self: center;
   width: 0.45rem;
   height: 0.45rem;
-  border: 1px solid var(--mc-gold);
+  border: 1px solid var(--build-gold);
   opacity: 0.45;
   transform: rotate(45deg);
-  justify-self: center;
 }
 
-.mc__tier-mark::before,
-.mc__tier-mark::after {
+.build-board__tier-mark::before,
+.build-board__tier-mark::after {
   content: "";
   position: absolute;
   top: 50%;
   width: 0.42rem;
-  border-top: 1px solid var(--mc-gold);
+  border-top: 1px solid var(--build-gold);
 }
 
-.mc__tier-mark::before {
+.build-board__tier-mark::before {
   right: calc(100% + 0.12rem);
 }
-.mc__tier-mark::after {
+
+.build-board__tier-mark::after {
   left: calc(100% + 0.12rem);
 }
 
-/* Hover tip */
-.mc__tip {
-  display: none;
+.build-board__tip {
   position: absolute;
   z-index: 40;
   left: 0;
   bottom: calc(100% + 6px);
+  display: none;
   width: min(19rem, 72vw);
   padding: 0.5rem 0.6rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   border-radius: 2px;
   background: var(--color-stone-950);
   box-shadow: 3px 5px 0 color-mix(in srgb, var(--color-stone-950) 80%, transparent);
@@ -629,42 +616,41 @@
   pointer-events: none;
 }
 
-.mc__tip strong {
+.build-board__tip strong {
   display: block;
   margin-bottom: 0.25rem;
   font-family: var(--font-display), serif;
   font-size: 0.875rem;
-  color: var(--mc-gold);
+  color: var(--build-gold);
 }
 
-.mc__tip ul {
+.build-board__tip ul {
   margin: 0;
   padding-left: 0.95rem;
   font-size: 0.8125rem;
 }
 
-.mc__tip li + li {
+.build-board__tip li + li {
   margin-top: 0.12rem;
 }
 
-.mc__seat:hover .mc__tip,
-.mc__seat:focus-visible .mc__tip {
+.build-board__seat:hover .build-board__tip,
+.build-board__seat:focus-visible .build-board__tip {
   display: block;
 }
 
-.mc__tier:nth-child(-n + 2) .mc__tip {
+.build-board__tier:nth-child(-n + 2) .build-board__tip {
   bottom: auto;
   top: calc(100% + 6px);
 }
 
-/* ── Character loadout: read-only mirror of Combat Setup ── */
-.mc__loadout {
+.build-board__loadout {
   align-self: stretch;
   gap: 0.7rem;
   padding: 1.45rem 0.85rem 0.85rem;
 }
 
-.mc__loadout-head {
+.build-board__loadout-head {
   position: relative;
   z-index: 2;
   display: flex;
@@ -674,85 +660,85 @@
   margin-top: -1.25rem;
 }
 
-.mc__loadout-head .mc__zone-title {
+.build-board__loadout-head .build-board__zone-title {
   margin: 0;
 }
 
-.mc__loadout-head a {
+.build-board__loadout-head a {
   color: var(--color-gem-300);
   font-size: 0.75rem;
   text-underline-offset: 3px;
 }
 
-.mc__loadout-style {
+.build-board__loadout-style {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.65rem;
   align-items: center;
   padding: 0.55rem 0.65rem;
-  border: 1px solid var(--mc-line);
+  border: 1px solid var(--build-line);
   background: var(--color-stone-inset);
 }
 
-.mc__loadout-style strong,
-.mc__loadout-style span {
+.build-board__loadout-style strong,
+.build-board__loadout-style span {
   display: block;
 }
 
-.mc__loadout-style strong {
+.build-board__loadout-style strong {
   color: var(--color-parch-50);
   font-size: 0.875rem;
 }
 
-.mc__loadout-style span {
+.build-board__loadout-style span {
   margin-top: 0.1rem;
   color: var(--color-parch-300);
   font-size: 0.7rem;
 }
 
-.mc__loadout-style .mc__loadout-tier {
+.build-board__loadout-style .build-board__loadout-tier {
   margin: 0;
-  color: var(--mc-gold);
   font-family: var(--font-mono);
   font-size: 0.8rem;
+  color: var(--build-gold);
 }
 
-.mc__doll {
+.build-board__doll {
   display: grid;
   grid-template-columns: repeat(3, 3.7rem);
   justify-content: center;
   gap: 0.32rem;
   padding: 0.65rem;
-  border-block: 1px solid color-mix(in srgb, var(--mc-line) 70%, transparent);
+  border-block: 1px solid color-mix(in srgb, var(--build-line) 70%, transparent);
   background: color-mix(in srgb, var(--color-stone-inset) 72%, transparent);
 }
 
-.mc__doll > span:not(.mc__doll-core),
-.mc__doll-slot,
-.mc__doll-core {
+.build-board__doll > span:not(.build-board__doll-core),
+.build-board__doll-slot,
+.build-board__doll-core {
   min-height: 3.25rem;
 }
 
-.mc__doll-slot,
-.mc__doll-core {
+.build-board__doll-slot,
+.build-board__doll-core {
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--mc-line) 72%, var(--color-stone-950));
+  border: 1px solid color-mix(in srgb, var(--build-line) 72%, var(--color-stone-950));
   background: var(--color-stone-950);
 }
 
-.mc__doll-slot {
+.build-board__doll-slot {
   grid-template-rows: minmax(1.75rem, 1fr) auto;
   padding: 0.2rem;
   color: var(--color-parch-400);
 }
 
-.mc__doll-slot.is-filled {
-  border-color: color-mix(in srgb, var(--mc-gold) 42%, var(--mc-line));
+.build-board__doll-slot.is-filled {
+  border-color: color-mix(in srgb, var(--build-gold) 42%, var(--build-line));
   background: var(--color-stone-800);
 }
 
-.mc__doll-slot small {
+.build-board__doll-slot small {
   max-width: 100%;
   overflow: hidden;
   color: var(--color-parch-400);
@@ -762,20 +748,20 @@
   white-space: nowrap;
 }
 
-.mc__doll-empty {
+.build-board__doll-empty {
   color: color-mix(in srgb, var(--color-parch-500) 60%, transparent);
 }
 
-.mc__doll-core {
-  border-color: color-mix(in srgb, var(--mc-gem) 38%, var(--mc-line));
+.build-board__doll-core {
+  border-color: color-mix(in srgb, var(--build-gem) 38%, var(--build-line));
   background: color-mix(in srgb, var(--color-gem-600) 14%, var(--color-stone-950));
 }
 
-.mc__loadout-plan {
+.build-board__loadout-plan {
   padding-top: 0.1rem;
 }
 
-.mc__loadout-plan h3 {
+.build-board__loadout-plan h3 {
   margin: 0 0 0.45rem;
   color: var(--color-parch-100);
   font-size: 0.75rem;
@@ -784,77 +770,76 @@
   text-transform: uppercase;
 }
 
-.mc__loadout-regions {
+.build-board__loadout-regions {
   display: flex;
   gap: 0.4rem;
   margin-bottom: 0.5rem;
 }
 
-.mc__loadout-regions > span {
+.build-board__loadout-regions > span {
   width: 2.35rem;
   height: 2.35rem;
-  border: 1px solid color-mix(in srgb, var(--mc-line) 75%, var(--color-stone-950));
+  border: 1px solid color-mix(in srgb, var(--build-line) 75%, var(--color-stone-950));
   background: var(--color-stone-inset) center / 1.8rem 1.8rem no-repeat;
 }
 
-.mc__loadout-regions > span.is-filled {
-  border-color: color-mix(in srgb, var(--mc-gem) 48%, var(--mc-line));
+.build-board__loadout-regions > span.is-filled {
+  border-color: color-mix(in srgb, var(--build-gem) 48%, var(--build-line));
 }
 
-.mc__loadout-plan dl {
+.build-board__loadout-plan dl {
   margin: 0;
-  border-top: 1px solid color-mix(in srgb, var(--mc-line) 65%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--build-line) 65%, transparent);
 }
 
-.mc__loadout-plan dl > div {
+.build-board__loadout-plan dl > div {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   padding: 0.35rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--mc-line) 50%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--build-line) 50%, transparent);
   font-size: 0.75rem;
 }
 
-.mc__loadout-plan dt {
+.build-board__loadout-plan dt {
   color: var(--color-parch-300);
 }
 
-.mc__loadout-plan dd {
+.build-board__loadout-plan dd {
   margin: 0;
-  color: var(--color-parch-50);
   font-family: var(--font-mono);
+  color: var(--color-parch-50);
 }
 
-/* ── Blessings: path icons + full-width seats ── */
-.mc__zone--bless {
+.build-board__zone--bless {
   margin-top: 0.05rem;
   padding-bottom: 0.85rem;
 }
 
-.mc__bless-board {
+.build-board__bless-board {
   position: relative;
   display: flex;
-  align-items: center;
   flex: 1 1 auto;
-  isolation: isolate;
+  align-items: center;
   min-width: 0;
-  border: 1px solid color-mix(in srgb, var(--mc-line) 70%, var(--color-stone-950));
+  border: 1px solid color-mix(in srgb, var(--build-line) 70%, var(--color-stone-950));
   background: var(--color-stone-950);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 14%, transparent);
   overflow: hidden;
+  isolation: isolate;
 }
 
-.mc__bless-scroll {
+.build-board__bless-scroll {
   position: relative;
   z-index: 1;
-  min-width: 0;
   width: 100%;
+  min-width: 0;
   padding: 0.55rem 0.65rem 0.65rem;
   overflow-x: auto;
   scrollbar-width: thin;
 }
 
-.mc__lattice {
+.build-board__lattice {
   display: grid;
   gap: 0.35rem 0.4rem;
   align-items: center;
@@ -862,11 +847,11 @@
   min-width: 35rem;
 }
 
-.mc__lat-corner {
+.build-board__lat-corner {
   min-height: 1.1rem;
 }
 
-.mc__lat-head {
+.build-board__lat-head {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -875,21 +860,21 @@
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--color-parch-300);
   text-align: center;
+  color: var(--color-parch-300);
 }
 
-.mc__lat-head.is-god {
-  color: color-mix(in srgb, var(--mc-gold) 70%, var(--color-parch-300));
+.build-board__lat-head.is-god {
+  color: color-mix(in srgb, var(--build-gold) 70%, var(--color-parch-300));
 }
 
-.mc__lat-path {
+.build-board__lat-path {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   min-height: 2.35rem;
   padding: 0 0.35rem;
-  border: 1px solid color-mix(in srgb, var(--mc-line) 88%, var(--color-stone-950));
+  border: 1px solid color-mix(in srgb, var(--build-line) 88%, var(--color-stone-950));
   border-radius: var(--radius-sm);
   background: var(--color-stone-inset);
   font-size: 0.875rem;
@@ -897,7 +882,7 @@
   letter-spacing: 0.02em;
 }
 
-.mc__lat-ico {
+.build-board__lat-ico {
   display: grid;
   place-items: center;
   width: 1.35rem;
@@ -906,21 +891,23 @@
   opacity: 0.95;
 }
 
-.mc__lat-path-name {
+.build-board__lat-path-name {
   line-height: 1.1;
 }
 
-.mc__lat-path.is-order {
+.build-board__lat-path.is-order {
   color: var(--color-order-400);
 }
-.mc__lat-path.is-chaos {
+
+.build-board__lat-path.is-chaos {
   color: var(--color-chaos-300);
 }
-.mc__lat-path.is-balance {
+
+.build-board__lat-path.is-balance {
   color: var(--color-balance-400);
 }
 
-.mc__lat-cell {
+.build-board__lat-cell {
   position: relative;
   display: grid;
   place-items: center;
@@ -929,14 +916,14 @@
   min-height: 2.35rem;
   margin: 0;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--mc-line) 90%, var(--color-stone-950));
+  border: 1px solid color-mix(in srgb, var(--build-line) 90%, var(--color-stone-950));
   border-radius: var(--radius-sm);
   background: var(--color-stone-inset);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 14%, transparent);
   cursor: pointer;
 }
 
-.mc__lat-fill {
+.build-board__lat-fill {
   display: block;
   width: calc(100% - 0.3rem);
   height: calc(100% - 0.3rem);
@@ -944,25 +931,25 @@
   background: transparent;
 }
 
-.mc__lat-cell:hover:not(:disabled):not(.is-god) {
-  border-color: color-mix(in srgb, var(--mc-gem) 45%, var(--mc-line));
+.build-board__lat-cell:hover:not(:disabled):not(.is-god) {
+  border-color: color-mix(in srgb, var(--build-gem) 45%, var(--build-line));
 }
 
-.mc__lat-cell:disabled,
-.mc__lat-cell.is-locked {
+.build-board__lat-cell:disabled,
+.build-board__lat-cell.is-locked {
   opacity: 0.42;
   cursor: not-allowed;
   filter: brightness(0.85);
 }
 
-.mc__lat-cell.is-on {
-  border-color: color-mix(in srgb, var(--mc-gem) 70%, var(--mc-line));
+.build-board__lat-cell.is-on {
+  border-color: color-mix(in srgb, var(--build-gem) 70%, var(--build-line));
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--mc-gem) 35%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 35%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 18%, transparent);
 }
 
-.mc__lat-cell.is-on .mc__lat-fill {
+.build-board__lat-cell.is-on .build-board__lat-fill {
   background: linear-gradient(
     165deg,
     color-mix(in srgb, var(--color-gem-500) 52%, var(--color-stone-800)) 0%,
@@ -971,73 +958,79 @@
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gem-200) 35%, transparent);
 }
 
-.mc__lat-cell.is-god {
-  cursor: default;
-  opacity: 0.78;
+.build-board__lat-cell.is-god {
   border-style: dashed;
+  opacity: 0.78;
+  cursor: default;
 }
 
-.mc__lat-cell.is-god.is-on {
-  opacity: 1;
+.build-board__lat-cell.is-god.is-on {
   border-style: solid;
-  border-color: color-mix(in srgb, var(--mc-gold) 55%, var(--mc-gem));
+  border-color: color-mix(in srgb, var(--build-gold) 55%, var(--build-gem));
+  opacity: 1;
 }
 
-.mc__lat-cell.is-god.is-on .mc__lat-fill {
+.build-board__lat-cell.is-god.is-on .build-board__lat-fill {
   background: color-mix(in srgb, var(--color-gem-600) 75%, var(--color-stone-900));
 }
 
 @media (min-width: 1380px) {
-  .mc__relics {
+  .build-board__relics {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .mc__relics .mc__tier:first-child {
+  .build-board__relics .build-board__tier:first-child {
     grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 1200px) {
-  .mc__crests {
+  .build-board__crests {
     display: flex;
-    overflow-x: auto;
     padding-bottom: 0.25rem;
+    overflow-x: auto;
     scrollbar-width: thin;
   }
-  .mc__crest {
+
+  .build-board__crest {
     flex: 0 0 7rem;
   }
 }
 
 @media (max-width: 1080px) {
-  .mc__court {
+  .build-board__court {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .mc__loadout {
+  .build-board__loadout {
     width: 100%;
   }
 }
 
 @media (max-width: 720px) {
-  .mc {
+  .build-board {
     padding-inline: 0.4rem;
   }
-  .mc__frame {
+
+  .build-board__frame {
     padding-inline: 0.72rem;
   }
-  .mc__seal {
+
+  .build-board__seal {
     padding-inline: 0.8rem;
   }
-  .mc__actions {
+
+  .build-board__actions {
     width: 100%;
     margin-left: 0;
   }
-  .mc__seat-name {
+
+  .build-board__seat-name {
     font-size: 0.75rem;
   }
-  .mc__lattice {
+
+  .build-board__lattice {
     min-width: 35rem;
   }
 }

@@ -151,27 +151,27 @@ function CharacterLoadout({
     .filter((region): region is PlannerRegion => Boolean(region));
 
   return (
-    <aside className="mc__zone mc__loadout" aria-label="Final loadout">
-      <div className="mc__loadout-head">
-        <h2 className="mc__zone-title">Final loadout</h2>
+    <aside className="build-board__zone build-board__loadout" aria-label="Final loadout">
+      <div className="build-board__loadout-head">
+        <h2 className="build-board__zone-title">Final loadout</h2>
         <Link href="/combat">Edit in Combat</Link>
       </div>
 
-      <div className="mc__loadout-style">
+      <div className="build-board__loadout-style">
         <GameIcon src={styleIconPath(loadout.style)} size={34} />
         <div>
           <strong>{STYLE_LABEL[loadout.style]}</strong>
           <span>{equippedCount} / 13 gear slots</span>
         </div>
-        <span className="mc__loadout-tier">T{loadout.weaponTier}</span>
+        <span className="build-board__loadout-tier">T{loadout.weaponTier}</span>
       </div>
 
-      <div className="mc__doll" aria-label={`${STYLE_LABEL[loadout.style]} equipment`}>
+      <div className="build-board__doll" aria-label={`${STYLE_LABEL[loadout.style]} equipment`}>
         {LOADOUT_DOLL.map((entry, index) => {
           if (entry === null) return <span key={`space-${index}`} aria-hidden />;
           if (entry === "style") {
             return (
-              <span key="style" className="mc__doll-core" aria-hidden>
+              <span key="style" className="build-board__doll-core" aria-hidden>
                 <GameIcon src={styleIconPath(loadout.style)} size={30} />
               </span>
             );
@@ -182,14 +182,14 @@ function CharacterLoadout({
           return (
             <div
               key={entry}
-              className={`mc__doll-slot${item ? " is-filled" : ""}`}
+              className={`build-board__doll-slot${item ? " is-filled" : ""}`}
               aria-label={`${label}: ${item?.name ?? "Empty"}`}
               title={item ? `${label}: ${item.name}` : `${label}: Empty`}
             >
               {item ? (
                 <GameIcon src={equipmentIconPath(item.id)} size={30} />
               ) : (
-                <span className="mc__doll-empty" aria-hidden>
+                <span className="build-board__doll-empty" aria-hidden>
                   —
                 </span>
               )}
@@ -199,9 +199,9 @@ function CharacterLoadout({
         })}
       </div>
 
-      <div className="mc__loadout-plan">
+      <div className="build-board__loadout-plan">
         <h3>League plan</h3>
-        <div className="mc__loadout-regions" aria-label="Elective regions">
+        <div className="build-board__loadout-regions" aria-label="Elective regions">
           {Array.from({ length: ELECTIVE_CAP }, (_, index) => {
             const region = pickedRegions[index];
             return (
@@ -274,25 +274,25 @@ export function BuildPlanner({
     copyFeedback === "ok" ? "Copied" : copyFeedback === "err" ? "Failed" : "Copy link";
 
   return (
-    <div className="mc">
-      <div className="mc__frame">
+    <div className="build-board">
+      <div className="build-board__frame">
         {(["tl", "tr", "br", "bl"] as const).map((corner) => (
-          <span key={corner} className={`mc__corner is-${corner}`} aria-hidden />
+          <span key={corner} className={`build-board__corner is-${corner}`} aria-hidden />
         ))}
-        <header className="mc__seal">
-          <h1 className="mc__title">Build</h1>
-          <span className="mc__count" aria-live="polite">
+        <header className="build-board__seal">
+          <h1 className="build-board__title">Build</h1>
+          <span className="build-board__count" aria-live="polite">
             {pickCounter}
           </span>
-          <span className="mc__pips" aria-hidden>
+          <span className="build-board__pips" aria-hidden>
             {Array.from({ length: ELECTIVE_CAP }, (_, i) => (
-              <span key={i} className={`mc__pip${i < picks.length ? " is-on" : ""}`} />
+              <span key={i} className={`build-board__pip${i < picks.length ? " is-on" : ""}`} />
             ))}
           </span>
-          <div className="mc__actions">
+          <div className="build-board__actions">
             <button
               type="button"
-              className="mc__btn"
+              className="build-board__btn"
               // Elective count only (empty server snapshot) — same as RegionLedger.
               disabled={Boolean(picks.length === 0)}
               onClick={clearElectives}
@@ -301,7 +301,7 @@ export function BuildPlanner({
             </button>
             <button
               type="button"
-              className="mc__btn mc__btn--gem"
+              className="build-board__btn build-board__btn--gem"
               disabled={Boolean(!loaded)}
               onClick={copyShareLink}
             >
@@ -309,7 +309,7 @@ export function BuildPlanner({
             </button>
             <button
               type="button"
-              className="mc__btn"
+              className="build-board__btn"
               disabled={Boolean(!loaded)}
               onClick={resetBuild}
             >
@@ -318,9 +318,9 @@ export function BuildPlanner({
           </div>
         </header>
 
-        <section className="mc__zone" aria-label="Regions">
-          <h2 className="mc__zone-title">Regions</h2>
-          <div className="mc__crests">
+        <section className="build-board__zone" aria-label="Regions">
+          <h2 className="build-board__zone-title">Regions</h2>
+          <div className="build-board__crests">
             {regions.map((region) => {
               const elective = region.availability === "elective";
               const selectable = elective && canSelectElective(build, region.id as RegionId);
@@ -329,7 +329,7 @@ export function BuildPlanner({
               const meta = availLabel(region.availability);
               const status = blocked ? "blocked" : isOn && elective ? "picked" : meta;
               const cls = [
-                "mc__crest",
+                "build-board__crest",
                 isOn ? "is-on" : "",
                 elective && !isOn ? "is-dim" : "",
                 blocked ? "is-blocked" : "",
@@ -352,14 +352,14 @@ export function BuildPlanner({
                   }}
                 >
                   <span
-                    className="mc__crest-art"
+                    className="build-board__crest-art"
                     aria-hidden
                     style={{ backgroundImage: `url(${regionCrestPath(region.id)})` }}
                   />
-                  <span className="mc__crest-name" aria-hidden>
+                  <span className="build-board__crest-name" aria-hidden>
                     {region.name}
                   </span>
-                  <span className="mc__crest-meta" aria-hidden>
+                  <span className="build-board__crest-meta" aria-hidden>
                     {meta}
                   </span>
                 </button>
@@ -368,11 +368,11 @@ export function BuildPlanner({
           </div>
         </section>
 
-        <div className="mc__court">
-          <div className="mc__court-main">
-            <section className="mc__zone" aria-label="Relics">
-              <h2 className="mc__zone-title">Relics · hover for effects</h2>
-              <div className="mc__relics">
+        <div className="build-board__court">
+          <div className="build-board__court-main">
+            <section className="build-board__zone" aria-label="Relics">
+              <h2 className="build-board__zone-title">Relics · hover for effects</h2>
+              <div className="build-board__relics">
                 {relicTiers.map((tier) => {
                   const open = tier.revealed && tier.choices.length > 0;
                   const seated = build.relics[String(tier.tier)] ?? null;
@@ -382,15 +382,15 @@ export function BuildPlanner({
                   return (
                     <div
                       key={tier.tier}
-                      className={`mc__tier${open ? "" : " is-sealed"}`}
+                      className={`build-board__tier${open ? "" : " is-sealed"}`}
                       role="group"
                       aria-label={`Tier ${tier.tier}${open ? "" : " sealed"}`}
                     >
-                      <span className="mc__tier-id" aria-hidden>
+                      <span className="build-board__tier-id" aria-hidden>
                         T{tier.tier}
                       </span>
                       <div
-                        className="mc__seats"
+                        className="build-board__seats"
                         role="listbox"
                         aria-label={`Tier ${tier.tier} choices`}
                       >
@@ -399,11 +399,11 @@ export function BuildPlanner({
                             return (
                               <span
                                 key={`e-${tier.tier}-${i}`}
-                                className="mc__seat is-empty"
+                                className="build-board__seat is-empty"
                                 title={open ? undefined : "Sealed until reveal"}
                                 aria-hidden
                               >
-                                <span className="mc__seat-plus" />
+                                <span className="build-board__seat-plus" />
                               </span>
                             );
                           }
@@ -418,19 +418,19 @@ export function BuildPlanner({
                               aria-selected={on}
                               aria-pressed={on}
                               aria-label={relic.name}
-                              className={`mc__seat${on ? " is-on" : ""}`}
+                              className={`build-board__seat${on ? " is-on" : ""}`}
                               onClick={() => toggleRelic(tier.tier, relic.name)}
                             >
-                              <span className="mc__seat-emblem" aria-hidden>
+                              <span className="build-board__seat-emblem" aria-hidden>
                                 {icon ? (
                                   // eslint-disable-next-line @next/next/no-img-element
                                   <img src={icon} alt="" width={32} height={32} />
                                 ) : (
-                                  <span className="mc__seat-mono">{mono}</span>
+                                  <span className="build-board__seat-mono">{mono}</span>
                                 )}
                               </span>
-                              <span className="mc__seat-name">{shortName(relic.name)}</span>
-                              <span className="mc__tip" role="tooltip">
+                              <span className="build-board__seat-name">{shortName(relic.name)}</span>
+                              <span className="build-board__tip" role="tooltip">
                                 <strong>{relic.name}</strong>
                                 <ul>
                                   {relic.effects.map((fx) => (
@@ -442,28 +442,28 @@ export function BuildPlanner({
                           );
                         })}
                       </div>
-                      <span className="mc__tier-mark" aria-hidden />
+                      <span className="build-board__tier-mark" aria-hidden />
                     </div>
                   );
                 })}
               </div>
             </section>
 
-            <section className="mc__zone mc__zone--bless" aria-label="Blessings">
-              <h2 className="mc__zone-title">Blessings</h2>
-              <div className="mc__bless-board">
-                <div className="mc__bless-scroll">
+            <section className="build-board__zone build-board__zone--bless" aria-label="Blessings">
+              <h2 className="build-board__zone-title">Blessings</h2>
+              <div className="build-board__bless-board">
+                <div className="build-board__bless-scroll">
                   <div
-                    className="mc__lattice"
+                    className="build-board__lattice"
                     role="grid"
                     aria-label="Blessing path lattice"
                     style={{
                       gridTemplateColumns: `6.5rem repeat(${blessingTiers.length}, minmax(3.25rem, 1fr))`,
                     }}
                   >
-                    <span className="mc__lat-corner" aria-hidden />
+                    <span className="build-board__lat-corner" aria-hidden />
                     {blessingTiers.map((t) => (
-                      <span key={t.tier} className={`mc__lat-head${t.godTier ? " is-god" : ""}`}>
+                      <span key={t.tier} className={`build-board__lat-head${t.godTier ? " is-god" : ""}`}>
                         T{t.tier}
                         {t.godTier ? "?" : ""}
                       </span>
@@ -471,8 +471,8 @@ export function BuildPlanner({
 
                     {(["Order", "Balance", "Chaos"] as const).map((path) => (
                       <div key={path} style={{ display: "contents" }}>
-                        <div className={`mc__lat-path is-${path.toLowerCase()}`}>
-                          <span className="mc__lat-ico" aria-hidden>
+                        <div className={`build-board__lat-path is-${path.toLowerCase()}`}>
+                          <span className="build-board__lat-ico" aria-hidden>
                             {path === "Order" ? (
                               <svg viewBox="0 0 16 16" width="14" height="14">
                                 <path
@@ -496,7 +496,7 @@ export function BuildPlanner({
                               </svg>
                             )}
                           </span>
-                          <span className="mc__lat-path-name">{path}</span>
+                          <span className="build-board__lat-path-name">{path}</span>
                         </div>
                         {blessingTiers.map((tier) => {
                           if (tier.godTier) {
@@ -505,14 +505,14 @@ export function BuildPlanner({
                             return (
                               <div
                                 key={`${path}-${tier.tier}`}
-                                className={`mc__lat-cell is-god${lit ? " is-on" : ""}`}
+                                className={`build-board__lat-cell is-god${lit ? " is-on" : ""}`}
                                 role="img"
                                 title={
                                   lit ? `God T${tier.tier}: ${path}` : `God T${tier.tier} undecided`
                                 }
                                 aria-label={`${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`}
                               >
-                                <span className="mc__lat-fill" aria-hidden />
+                                <span className="build-board__lat-fill" aria-hidden />
                               </div>
                             );
                           }
@@ -521,7 +521,7 @@ export function BuildPlanner({
                             return (
                               <div
                                 key={`${path}-${tier.tier}`}
-                                className="mc__lat-cell"
+                                className="build-board__lat-cell"
                                 aria-hidden
                               />
                             );
@@ -535,10 +535,10 @@ export function BuildPlanner({
                               disabled={locked}
                               aria-pressed={selected}
                               aria-label={`${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`}
-                              className={`mc__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}`}
+                              className={`build-board__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}`}
                               onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
                             >
-                              <span className="mc__lat-fill" aria-hidden />
+                              <span className="build-board__lat-fill" aria-hidden />
                             </button>
                           );
                         })}

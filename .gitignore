@@ -86,6 +86,7 @@ data/**/.cache/
 # ---------------------------------------------------------------------------
 /playwright-report/
 /test-results/
+/css-visual/baseline/
 /blob-report/
 /playwright/.cache/
 .playwright-mcp/

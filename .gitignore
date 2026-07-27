@@ -165,50 +165,7 @@ scripts/_*.cmd
 scripts/_*.py
 
 # ---------------------------------------------------------------------------
-# scraped-data: durable research inputs stay tracked; dumps do not
+# scraped-data: research ingest only — not shipped. App reads data/ alone.
+# Restore a local copy if you need npm run normalize:data.
 # ---------------------------------------------------------------------------
-scraped-data/_tmp_*
-scraped-data/_run_*
-scraped-data/_fetch-*
-scraped-data/*.ndjson
-scraped-data/agent-*.json
-scraped-data/bulk-icon-harvest-*.json
-scraped-data/unresolved-harvest-*.json
-scraped-data/public-game-provenance-gap.json
-scraped-data/archive/
-scraped-data/pvme-revo/
-scraped-data/fix-patches/
-scraped-data/info-patches/
-
-# One-shot audit dumps (durable research stays tracked)
-scraped-data/audit-status-*.json
-scraped-data/audit-final-*.json
-scraped-data/audit-still-*.txt
-scraped-data/audit-longtail-*.json
-scraped-data/audit-phantom-*.json
-scraped-data/audit-wave*.json
-scraped-data/audit-trim-*.json
-scraped-data/audit-mazcab-*.json
-scraped-data/audit-detail-*.json
-scraped-data/audit-false-*.json
-scraped-data/audit-false-*.txt
-scraped-data/audit-false-*.md
-scraped-data/audit-schema-hygiene-*.json
-scraped-data/audit-regional-unlocks-*.json
-scraped-data/audit-region-rulings-*.json
-scraped-data/equipment-sync-report-*.json
-scraped-data/data-audit-*.json
-scraped-data/data-icon-audit.json
-scraped-data/data-icon-gaps-*.md
-scraped-data/bench-tasks-wiki-*.json
-scraped-data/bench-tasks-wiki-*.md
-scraped-data/reapply-all-user-rulings-*.txt
-scraped-data/foreign-upgrades-*.json
-scraped-data/patch-*.json
-scraped-data/*-report-*.json
-scraped-data/exp*.log
-
-# Keep these audit inputs used by sync/normalize scripts:
-!scraped-data/audit-ironman-gaps-crosscheck-2026-07-26.json
-!scraped-data/audit-ironman-unlocks-vs-app-2026-07-26.json
-!scraped-data/audit-region-combos-skilling-2026-07-26.json
+scraped-data/

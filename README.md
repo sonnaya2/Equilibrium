@@ -62,7 +62,7 @@ that server if you've got a dev server running from the same checkout, so stop y
 ## Data jobs
 
 ```bash
-npm run normalize:data   # rebuild app-facing data from scraped-data/ (includes league planner JSON)
+npm run normalize:data   # research-only: needs a local scraped-data/ checkout (not shipped)
 npm run sync:combat      # refresh combat data
 npm run sync:league:disabled  # exits 1 on purpose; use normalize:data for data/league/*
 npm run sync:assets      # refresh sourced RS3 and League media
@@ -72,7 +72,8 @@ npm run sync:planner     # rebuild region-value and progression research
 npm run audit:all-data   # run the full data audit set
 ```
 
-`data/` is what the app reads. `scraped-data/` is the source-shaped research before normalization.
+`data/` is what the app reads and ships. Research scrapes (`scraped-data/`) are gitignored;
+restore them only when regenerating from the Wiki pipeline.
 `src/combat/data/` reads and types the canonical combat JSON — it is not a second copy to hand-edit.
 
 ## Layout

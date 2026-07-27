@@ -1,26 +1,28 @@
 # Data
 
-This folder is the app-facing data store.
+This folder is the **only** game-data store the app reads at runtime.
 
-- `scraped-data/` contains research and ingest inputs.
-- `scripts/normalize-scraped-data.mjs` builds the region, skill and League planner datasets.
-- `scripts/sync-reference-data.mjs` copies the combat, historical League, region-boundary, permanent-unlock, prayer-book, complete-prayer, spellbook, reference-research, focused progression-chain and 2026 datasets into their app-facing locations, and enriches the overload progression chain from the combat-consumables pass.
-- `scripts/sync-planner-expansions.mjs` validates the sourced base planner rows and applies merge-only audits/enrichments.
-- `scripts/sync-planner-supplements.mjs` validates and copies the specialist Slayer, Invention and Archaeology supplements, including the active Invention perk catalogue, Guild progression, production collection routes, special relic chains and non-Guild collection utilities.
-- `scripts/sync-permanent-unlock-passes.mjs` copies the combat-consumables and permanent-unlock research passes into `reference/`, and builds the canonical support-item and container-bag supplements from the enrichment overlays.
-- The app reads `data/` directly. It does not read `scraped-data/` at runtime.
-- Changes under `scraped-data/` are normalized and committed back to this branch by `.github/workflows/normalize-data.yml`.
+Research scrapes used to live in `scraped-data/` (gitignored, not shipped). Meaningful
+inputs were normalized into `data/` before release. To re-run the pipeline you need a
+local research checkout and `npm run normalize:data` (workflow is manual-only).
 
-### Hand-owned vs generated (do not clobber)
+| Script | Role |
+|---|---|
+| `scripts/normalize-scraped-data.mjs` | League planner shells from research inputs |
+| `scripts/sync-reference-data.mjs` | Combat/reference copies + progression merges |
+| `scripts/sync-planner-expansions.mjs` / `sync-planner-supplements.mjs` | Planner expansion families |
+| `scripts/sync-permanent-unlock-passes.mjs` | Permanent unlock / consumable supplements |
+
+### Ownership (do not clobber blindly)
 
 | Path | Ownership |
 |---|---|
-| `research/catalog.json` | **Curated.** Region major unlocks and points-of-interest rows are edited for the Data browser. `normalize:data` may enrich related research files — re-check catalog majors after a full normalize before committing. |
-| `league/regions.json`, `relics.json`, `blessings.json`, `tasks.json` | **Normalize-owned** from scraped-data (plus official empty/provisional shells). |
-| `research/planner-expansions*.json`, many `reference/*` | **Sync scripts** from scraped-data / research passes. |
-| `combat/*` | Combat sync scripts + hand review; keep engine records sourced. |
+| `research/catalog.json` | **Curated** for the Data browser majors / POI |
+| `league/*` | League shells + empty/provisional records |
+| `research/planner-expansions*.json`, many `reference/*` | Sync outputs (or hand-maintained after dump) |
+| `combat/*` | Combat engine data + review |
 
-When in doubt: change `scraped-data/` + re-run the named sync script, or edit catalog majors only with an explicit non-normalize commit.
+Edit files here for release. Restore `scraped-data/` only when regenerating from research.
 
 ## Source rules
 

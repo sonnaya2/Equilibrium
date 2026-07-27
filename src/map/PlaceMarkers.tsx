@@ -1,15 +1,10 @@
 "use client";
 
 /**
- * Crest stakes for the framed region.
+ * Crest discs for the framed region with a soft light beam from the plate.
  *
- * Planted on the plate (world-stable size and pose) — not constant-screen-size
- * billboards. Soft medallions, contact shadows and per-pin Html labels were the
- * flicker source: every demand-loop tick rewrote quaternion/scale and blended
- * transparent cards over the HD raster.
- *
- * Named areas show while framed; sites arrive once a place is selected.
- * Names live on the ledger chips (accessible), not as canvas DOM overlays.
+ * Planted (world-stable) — no camera billboards. Beams pulse via mapClock in the
+ * shader so they ride MotionDriver without extra invalidates.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
@@ -20,33 +15,27 @@ import { useBuild } from "@/league/useBuild";
 import { PLACES_BY_REGION, rasterPlaceUv, type PlaceAnchor } from "./data/placeAnchors";
 import { MAP_WORLD } from "./data/regionAnchors";
 import {
+  createMarkerBeamMaterial,
   createMarkerFootMaterial,
   createMarkerHitMaterial,
   createMarkerMaterial,
-  createMarkerStemMaterial,
 } from "./materials/MarkerMaterial";
 import { plateTopY } from "./plateHeight";
 import { useMapFocus } from "./useMapFocus";
 
-/** Same spring as RegionPlate / BorderVines so stakes ride the rising plate. */
 const Y_SPEED = 6.5;
 
-/**
- * World-unit face widths. Physical on the board — no CSS-pixel billboard.
- * Sized so the icon disc is readable under the framed table elevation.
- */
-const FACE_AREA = 0.056;
-const FACE_SITE = 0.05;
-const SHAFT_AREA = 0.016;
-const SHAFT_SITE = 0.014;
-const FOOT_AREA = 0.015;
-const FOOT_SITE = 0.013;
-/**
- * Easel cant toward the designed table shot (~FOCUS_ELEVATION 0.88).
- * Near-upright (−0.2) was edge-on under that camera and collapsed every icon.
- */
+/** Smaller discs — still readable; hit pad is oversized. */
+const FACE_AREA = 0.038;
+const FACE_SITE = 0.034;
+const BEAM_H_AREA = 0.026;
+const BEAM_H_SITE = 0.022;
+const BEAM_R_BASE_AREA = 0.014;
+const BEAM_R_BASE_SITE = 0.012;
+const FOOT_AREA = 0.02;
+const FOOT_SITE = 0.017;
 const FACE_TILT = -0.72;
-const HIT_OVERSIZE = 1.4;
+const HIT_OVERSIZE = 1.6;
 
 export const POI_ATLAS_URL = "/map/poi-atlas.json";
 export const POI_ATLAS_IMAGE = "/map/poi-atlas.webp";
@@ -64,7 +53,6 @@ function slotFor(atlas: AtlasIndex, place: PlaceAnchor): number {
   return atlas.index[`crest/${place.region}`] ?? 0;
 }
 
-/** Face quad with atlas cell UVs and site flag in aState.x. */
 function markerGeometry(atlas: AtlasIndex, place: PlaceAnchor): THREE.PlaneGeometry {
   const geometry = new THREE.PlaneGeometry(1, 1);
   const slot = slotFor(atlas, place);
@@ -131,37 +119,50 @@ export function PlaceMarkers({
   );
 
   const faceMat = useMemo(() => createMarkerMaterial(atlasTexture), [atlasTexture]);
-  const stemMat = useMemo(() => createMarkerStemMaterial(), []);
+  const beamMat = useMemo(() => createMarkerBeamMaterial(), []);
   const footMat = useMemo(() => createMarkerFootMaterial(), []);
   const hitMat = useMemo(() => createMarkerHitMaterial(), []);
   useEffect(
     () => () => {
       faceMat.dispose();
-      stemMat.dispose();
+      beamMat.dispose();
       footMat.dispose();
       hitMat.dispose();
     },
-    [faceMat, stemMat, footMat, hitMat],
+    [faceMat, beamMat, footMat, hitMat],
   );
 
   const footGeometry = useMemo(() => new THREE.CircleGeometry(0.5, 12), []);
-  const stemGeometry = useMemo(() => new THREE.CylinderGeometry(0.0007, 0.0012, 1, 5, 1), []);
+  // Open tapered shaft: rTop 0.32, rBottom 1, unit height, open-ended.
+  const beamGeometry = useMemo(() => new THREE.CylinderGeometry(0.32, 1, 1, 10, 1, true), []);
+  const litAttr = useMemo(() => {
+    const attr = new THREE.InstancedBufferAttribute(new Float32Array(Math.max(1, pins.length)), 1);
+    attr.setUsage(THREE.DynamicDrawUsage);
+    return attr;
+  }, [pins.length]);
+
+  useEffect(() => {
+    beamGeometry.setAttribute("aLit", litAttr);
+    return () => {
+      beamGeometry.deleteAttribute("aLit");
+    };
+  }, [beamGeometry, litAttr]);
+
   useEffect(
     () => () => {
       footGeometry.dispose();
-      stemGeometry.dispose();
+      beamGeometry.dispose();
     },
-    [footGeometry, stemGeometry],
+    [footGeometry, beamGeometry],
   );
 
   const faces = useRef<THREE.Group>(null);
   const hits = useRef<THREE.Group>(null);
   const feet = useRef<THREE.InstancedMesh>(null);
-  const stems = useRef<THREE.InstancedMesh>(null);
+  const beams = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const shown = useRef<number[]>([]);
   const litFlags = useRef<number[]>([]);
-  /** One-shot: pin set / frame gate / surface target changed — rewrite poses. */
   const forcePose = useRef(true);
   if (shown.current.length !== pins.length) {
     shown.current = pins.map(() => 0);
@@ -169,7 +170,6 @@ export function PlaceMarkers({
     forcePose.current = true;
   }
 
-  // Seed hidden. Scale/visibility belong to the frame loop only.
   useEffect(() => {
     for (const child of faces.current?.children ?? []) {
       child.visible = false;
@@ -224,7 +224,6 @@ export function PlaceMarkers({
       if (liveSurfaceY.current !== targetSurfaceY) busy = true;
     }
     const surfaceY = liveSurfaceY.current;
-    // Plate still rising → every stake must ride it.
     const yBusy = liveSurfaceY.current !== targetSurfaceY;
 
     for (let i = 0; i < pins.length; i++) {
@@ -253,9 +252,10 @@ export function PlaceMarkers({
         const state = face.geometry.getAttribute("aState") as THREE.BufferAttribute;
         for (let v = 0; v < state.count; v++) state.setY(v, wantLit);
         state.needsUpdate = true;
+        litAttr.setX(i, wantLit);
+        litAttr.needsUpdate = true;
       }
 
-      // Water ticks must not rewrite settled stakes.
       if (!rewriteAll && !yBusy && !revealBusy && !litChanged) continue;
 
       wrotePose = true;
@@ -268,17 +268,17 @@ export function PlaceMarkers({
         dummy.position.set(pin.x, -1, pin.z);
         dummy.updateMatrix();
         feet.current?.setMatrixAt(i, dummy.matrix);
-        stems.current?.setMatrixAt(i, dummy.matrix);
+        beams.current?.setMatrixAt(i, dummy.matrix);
         continue;
       }
 
       const site = pin.place.site;
       const faceW = (site ? FACE_SITE : FACE_AREA) * (0.88 + reveal * 0.12) * (lit ? 1.06 : 1);
-      const shaftH = (site ? SHAFT_SITE : SHAFT_AREA) * reveal;
+      const beamH = (site ? BEAM_H_SITE : BEAM_H_AREA) * reveal;
+      const beamR = (site ? BEAM_R_BASE_SITE : BEAM_R_BASE_AREA) * reveal;
       const footW = (site ? FOOT_SITE : FOOT_AREA) * reveal;
 
-      // Planted easel: short pin, face tilts toward the table view — never camera.quaternion.
-      face.position.set(pin.x, surfaceY + shaftH + faceW * 0.12, pin.z);
+      face.position.set(pin.x, surfaceY + beamH + faceW * 0.1, pin.z);
       face.scale.setScalar(faceW);
       face.rotation.set(FACE_TILT, 0, 0);
 
@@ -286,22 +286,23 @@ export function PlaceMarkers({
       hit.scale.setScalar(faceW * HIT_OVERSIZE);
       hit.rotation.copy(face.rotation);
 
-      dummy.position.set(pin.x, surfaceY + 0.0004, pin.z);
+      dummy.position.set(pin.x, surfaceY + 0.0005, pin.z);
       dummy.rotation.set(-Math.PI / 2, 0, 0);
       dummy.scale.setScalar(footW);
       dummy.updateMatrix();
       feet.current?.setMatrixAt(i, dummy.matrix);
 
-      dummy.position.set(pin.x, surfaceY + shaftH / 2, pin.z);
+      // Beam: unit cylinder along Y, base at plate, top under face.
+      dummy.position.set(pin.x, surfaceY + beamH / 2, pin.z);
       dummy.rotation.set(0, 0, 0);
-      dummy.scale.set(1, Math.max(shaftH, 0.0002), 1);
+      dummy.scale.set(beamR, Math.max(beamH, 0.0002), beamR);
       dummy.updateMatrix();
-      stems.current?.setMatrixAt(i, dummy.matrix);
+      beams.current?.setMatrixAt(i, dummy.matrix);
     }
 
     if (wrotePose) {
       if (feet.current) feet.current.instanceMatrix.needsUpdate = true;
-      if (stems.current) stems.current.instanceMatrix.needsUpdate = true;
+      if (beams.current) beams.current.instanceMatrix.needsUpdate = true;
     }
     if (!busy && !yBusy) forcePose.current = false;
     if (busy) invalidate();
@@ -316,14 +317,14 @@ export function PlaceMarkers({
         args={[footGeometry, footMat.material, pins.length]}
         frustumCulled={false}
         raycast={() => null}
-        renderOrder={2}
+        renderOrder={1}
       />
       <instancedMesh
-        ref={stems}
-        args={[stemGeometry, stemMat.material, pins.length]}
+        ref={beams}
+        args={[beamGeometry, beamMat.material, pins.length]}
         frustumCulled={false}
         raycast={() => null}
-        renderOrder={2}
+        renderOrder={1}
       />
       <group ref={faces} renderOrder={3}>
         {pins.map((pin) => (

@@ -24,7 +24,7 @@ import {
   vec3,
 } from "three/tsl";
 import type { Node } from "three/webgpu";
-import { linear } from "./shared";
+import { linear, mapClock } from "./shared";
 
 const STONE_DARK = 0x14120e;
 const STONE = 0x2b251b;
@@ -92,18 +92,37 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   };
 }
 
-/** Short brass/stone shaft — fully opaque. */
-export function createMarkerStemMaterial(): MarkerMaterial {
+/**
+ * Soft light pillar from plate to disc. Additive colour only — no emissive —
+ * so bloom stays off the wiki raster. Pulse rides mapClock (no extra invalidate).
+ *
+ * Instance attribute `aLit` (float): 0 rest brass, 1 gem when hovered/selected.
+ */
+export function createMarkerBeamMaterial(): MarkerMaterial {
   const material = new THREE.MeshBasicNodeMaterial({
-    transparent: false,
-    depthWrite: true,
+    transparent: true,
+    depthWrite: false,
+    depthTest: true,
+    side: THREE.DoubleSide,
     toneMapped: false,
+    blending: THREE.AdditiveBlending,
+    polygonOffset: true,
+    polygonOffsetFactor: -1,
+    polygonOffsetUnits: -1,
   });
-  material.colorNode = mix(
-    linear(BRASS_DEEP),
-    linear(STONE_DARK),
-    positionLocal.y.mul(0.5).add(0.5),
-  );
+
+  const lit = attribute("aLit", "float") as unknown as Node<"float">;
+  // Unit cylinder: y −0.5..0.5, radius ~1 at base of our open frustum.
+  const y = positionLocal.y.add(0.5); // 0 base → 1 top
+  const radial = vec2(positionLocal.x, positionLocal.z).length();
+  const core = float(1).sub(smoothstep(float(0.15), float(0.95), radial));
+  const vertical = smoothstep(float(0), float(0.12), y).mul(float(1).sub(smoothstep(float(0.75), float(1), y)));
+  const pulse = mapClock.mul(1.7).sin().mul(0.12).add(0.88);
+  const brass = mix(linear(BRASS_DEEP), linear(BRASS), y.mul(0.6).add(0.2));
+  const gem = mix(linear(0x1a6b52), linear(GEM), y.mul(0.5).add(0.35));
+  material.colorNode = mix(brass, gem, lit).mul(core.mul(pulse));
+  material.opacityNode = core.mul(vertical).mul(mix(float(0.12), float(0.22), lit)).mul(pulse);
+
   return {
     material,
     dispose() {
@@ -112,19 +131,21 @@ export function createMarkerStemMaterial(): MarkerMaterial {
   };
 }
 
-/** Hard plinth under the stake. */
+/** Soft contact disc under the beam. */
 export function createMarkerFootMaterial(): MarkerMaterial {
   const material = new THREE.MeshBasicNodeMaterial({
-    transparent: false,
-    depthWrite: true,
+    transparent: true,
+    depthWrite: false,
     toneMapped: false,
+    blending: THREE.AdditiveBlending,
     polygonOffset: true,
     polygonOffsetFactor: -2,
     polygonOffsetUnits: -2,
   });
   const r = vec2(positionLocal.x, positionLocal.y).mul(2).length();
-  const rim = smoothstep(float(0.72), float(0.88), r).mul(smoothstep(float(1.02), float(0.9), r));
-  material.colorNode = mix(linear(STONE_DARK), linear(BRASS_DEEP), rim.mul(0.65));
+  const fall = float(1).sub(smoothstep(float(0.15), float(1), r));
+  material.colorNode = mix(linear(BRASS_DEEP), linear(BRASS), fall.mul(0.5));
+  material.opacityNode = fall.mul(0.14);
   return {
     material,
     dispose() {

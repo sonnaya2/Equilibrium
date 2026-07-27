@@ -47,25 +47,27 @@ export const OCEAN_HORIZON = 0x1e354c;
  * World units of swell — a couple of game tiles, and deliberately less than
  * plateHeight's REST_CLEARANCE so a crest never washes over a coastline.
  */
-export const SWELL = 0.0014;
+/** Peak crest; must stay under REST_CLEARANCE − LOCKED_DROP (~0.0075). */
+export const SWELL = 0.004;
 /**
  * The shading normal is steeper than the mesh. A surface displaced by two tiles
  * over a two-unit board is flat to within a degree, and a flat mirror turns the
  * sun into one enormous soft blob across half the sea instead of a scatter of
  * points. Shading it as if the ripples were deeper is what breaks that blob up.
  */
-const NORMAL_RELIEF = 0.016;
+const NORMAL_RELIEF = 0.026;
 
 type FloatNode = Node<"float">;
 
-/** The two long waves the mesh actually follows. */
+/** The long waves the mesh actually follows. */
 function longSwell(x: FloatNode, z: FloatNode): FloatNode {
-  const a = x.mul(5.1).add(z.mul(2.6)).add(mapClock.mul(0.62)).sin();
-  const b = z.mul(6.4).sub(x.mul(3.1)).sub(mapClock.mul(0.44)).sin();
-  return a.mul(0.58).add(b.mul(0.42));
+  const a = x.mul(5.1).add(z.mul(2.6)).add(mapClock.mul(0.75)).sin();
+  const b = z.mul(6.4).sub(x.mul(3.1)).sub(mapClock.mul(0.55)).sin();
+  const c = x.mul(3.2).add(z.mul(4.1)).add(mapClock.mul(0.38)).sin();
+  return a.mul(0.48).add(b.mul(0.34)).add(c.mul(0.18));
 }
 
-/** Long swell plus the two short waves that only ever show up in the normal. */
+/** Long swell plus short waves that only show up in the normal. */
 function surfaceHeight(x: FloatNode, z: FloatNode): FloatNode {
   return longSwell(x, z)
     .mul(0.62)
@@ -127,7 +129,7 @@ export function createWaterMaterial(
   const F = texture(field, mapUvFrom(positionWorld));
   const offshore = smoothstep(float(0.5), float(0.455), F.g);
 
-  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.06)));
+  let water = mix(linear(SHALLOW), linear(DEEP), offshore.mul(0.85).add(height.mul(0.1)));
   // Darker right against the land. The board has no shadow maps, and this is
   // what gives every coast its contact edge.
   water = water.mul(mix(float(0.78), float(1), offshore));
@@ -139,17 +141,15 @@ export function createWaterMaterial(
   const toward = reflected.dot(view).clamp(0, 1);
   // Gated by fresnel, so the sun answers from the far half of the sea where you
   // are looking across it and not from the water directly under the camera.
-  // Soft sun path on the water — enough life under the hard key, not a strobe.
-  const glint = toward.pow(70).mul(fresnel.mul(0.6).add(0.08)).mul(0.28);
-  const sheen = toward.pow(14).mul(0.014);
+  const glint = toward.pow(70).mul(fresnel.mul(0.6).add(0.08)).mul(0.32);
+  const sheen = toward.pow(14).mul(0.016);
 
-  // Foam, and very little of it: a thread along the crests, and a soft line
-  // where the water actually meets a coast.
-  const crest = smoothstep(float(0.86), float(0.99), height.abs()).mul(0.07);
+  // Crest threads + shore line — cartographic, not storm seas.
+  const crest = smoothstep(float(0.78), float(0.96), height.abs()).mul(0.15);
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
     .mul(height.mul(0.35).add(0.65))
-    .mul(0.2);
+    .mul(0.3);
   water = mix(water, linear(FOAM), crest.add(surf).clamp(0, 0.45));
 
   // Dissolve into the page toward the outer void, so the plane has no hard rim.

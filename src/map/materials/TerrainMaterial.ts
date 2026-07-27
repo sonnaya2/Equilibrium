@@ -30,11 +30,30 @@ import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
  */
 const ALBEDO_GAIN = 2.05;
 /** Contrast around a mid pivot — restores wiki punch after lighting. */
-const PRINT_CONTRAST = 1.16;
+const PRINT_CONTRAST = 1.2;
 /** Saturation lift; 1 = unchanged, >1 pulls chroma back toward the webp. */
 const PRINT_SAT = 1.14;
-/** Soft floor so emboss shadows never crush blacks to void. */
-const PRINT_LIFT = 0.04;
+/** Soft floor — keep tiny so ink blacks stay black under flat tonemap. */
+const PRINT_LIFT = 0.008;
+
+/**
+ * Soft lava discs in map UV (wiki paint has no field channel for heat).
+ * Centres: TzHaar crater, Lava Maze, Wilderness Crater.
+ */
+function softLava(mapUv: ReturnType<typeof mapUvFrom>, F: ReturnType<typeof texture>) {
+  const disc = (cx: number, cy: number, r: number) => {
+    const d = mapUv.sub(vec2(cx, cy)).length().div(float(r));
+    return float(1).sub(d).max(float(0)).pow(1.6);
+  };
+  // Land only — F.r is land coverage (unused elsewhere; safe gate).
+  const land = smoothstep(float(0.35), float(0.65), F.r);
+  const dry = float(1).sub(smoothstep(float(0.15), float(0.45), F.b));
+  const heat = disc(0.3444, 0.7046, 0.042)
+    .add(disc(0.416, 0.37, 0.028))
+    .add(disc(0.437, 0.385, 0.032))
+    .clamp(0, 1);
+  return heat.mul(land).mul(dry);
+}
 
 export interface TerrainMaterials {
   cap: THREE.MeshStandardNodeMaterial;
@@ -128,44 +147,68 @@ export function createTerrainMaterials(
     const gy = texture(field, mapUv.add(vec2(float(0), t))).g.sub(
       texture(field, mapUv.add(vec2(float(0), t.negate()))).g,
     );
-    const slope = gx.mul(gx).add(gy.mul(gy)).sqrt();
-    const flow = vec2(gy.negate(), gx).div(slope.add(0.0004));
+    // Also sample B gradient so mid-map rivers (flat coast SDF) still flow.
+    const bx = texture(field, mapUv.add(vec2(t, float(0)))).b.sub(
+      texture(field, mapUv.add(vec2(t.negate(), float(0)))).b,
+    );
+    const by = texture(field, mapUv.add(vec2(float(0), t))).b.sub(
+      texture(field, mapUv.add(vec2(float(0), t.negate()))).b,
+    );
+    const gSlope = gx.mul(gx).add(gy.mul(gy)).sqrt();
+    const bSlope = bx.mul(bx).add(by.mul(by)).sqrt();
+    const useB = smoothstep(float(0.001), float(0.006), bSlope.sub(gSlope));
+    const fx = mix(gy.negate(), by.negate(), useB);
+    const fy = mix(gx, bx, useB);
+    const slope = mix(gSlope, bSlope, useB);
+    const flow = vec2(fx, fy).div(slope.add(0.0004));
 
     const along = mapUv.x.mul(flow.x).add(mapUv.y.mul(flow.y));
-    // Lower spatial freq + slower clock: high-frequency sin under a 30Hz demand
-    // loop read as sparkle/flicker on every lake and river.
-    const drift = along.mul(220).sub(mapClock.mul(0.55));
+    // Modest temporal speed — high spatial freq under 30Hz demand = strobe.
+    const drift = along.mul(200).sub(mapClock.mul(0.85));
     const ripple = drift.sin().mul(0.6).add(drift.mul(1.7).add(1.7).sin().mul(0.4));
     const shimmer = mx_noise_float(
-      vec3(mapUv.x.mul(160), mapUv.y.mul(160), mapClock.mul(0.12)),
+      vec3(mapUv.x.mul(140), mapUv.y.mul(140), mapClock.mul(0.1)),
     );
     const directional = smoothstep(float(0.0006), float(0.004), slope);
     const surface = mix(shimmer, ripple, directional);
 
-    const wet = F.b.mul(smoothstep(float(0.18), float(0.55), F.b));
-    const glint = smoothstep(float(0.55), float(0.95), surface).mul(wet);
+    const wet = F.b.mul(smoothstep(float(0.16), float(0.52), F.b));
+    // Soft bank foam at the wet edge (coverage band, not hard step).
+    const bank = wet.mul(float(1).sub(wet)).mul(4).clamp(0, 1);
+    const glint = smoothstep(float(0.5), float(0.92), surface).mul(wet);
     base = base
-      .mul(float(1).sub(wet.mul(0.1)))
-      .add(linear(0xbfe4e2).mul(glint.mul(0.09)))
-      .add(linear(0x1d3f4e).mul(wet.mul(surface.mul(0.4).add(0.6)).mul(0.05)));
+      .mul(float(1).sub(wet.mul(0.16)))
+      .add(linear(0xbfe4e2).mul(glint.mul(0.14)))
+      .add(linear(0x1d3f4e).mul(wet.mul(surface.mul(0.4).add(0.6)).mul(0.09)))
+      .add(linear(0xd0e4ea).mul(bank.mul(0.08)));
   }
 
-  // Nothing is emissive at rest: both terms sit on uniforms that stay at 0 until
-  // a selection or an unlock, which is what keeps the bloom pass off the map.
+  // Lava / volcano heat: soft discs at known map UV centres (no field channel).
+  // TzHaar crater, Wilderness Lava Maze, Wilderness Crater — paint-only heat
+  // on the wiki raster, gated so deserts don't false-positive.
+  const lavaHeat = softLava(mapUv, F);
+  const ember = linear(0xff6a2a);
+  const coal = linear(0x4a1810);
+  const lavaPulse = mx_noise_float(vec3(mapUv.x.mul(40), mapUv.y.mul(40), mapClock.mul(0.2)))
+    .mul(0.5)
+    .add(0.5);
+  base = mix(base, mix(coal, ember, lavaPulse.mul(0.55).add(0.35)), lavaHeat.mul(0.72));
+
+  // Focus/unlock emissive only at rest — no full-sheet rest floor (washes blacks).
   const rimWarm = linear(0xf2dcac);
   const rimGem = linear(0x57e0ae);
   const capRim = smoothstep(float(0.5), float(0.505), F.g).oneMinus();
   const capGlow = rimWarm
     .mul(capRim.mul(focus).mul(0.5))
     .add(rimGem.mul(capRim.mul(sweep).mul(0.85)));
+  // Sub-threshold lava warmth (bloom high-pass is ~0.96).
+  const lavaGlow = ember.mul(lavaHeat.mul(lavaPulse.mul(0.025).add(0.02)));
 
   base = base.mul(float(1).add(focus.mul(0.07)));
   const lum = base.x.mul(0.2126).add(base.y.mul(0.7152)).add(base.z.mul(0.0722));
   cap.colorNode = mix(base, vec3(lum, lum, lum), drain).mul(shade);
-  // Tiny rest emissive of the graded albedo keeps midtones out of the void
-  // without lighting the bloom path (values stay far under bloom threshold).
-  cap.emissiveNode = capGlow.add(base.mul(0.045));
-  cap.roughnessNode = float(0.86).sub(F.b.mul(0.5));
+  cap.emissiveNode = capGlow.add(lavaGlow);
+  cap.roughnessNode = float(0.86).sub(F.b.mul(0.5)).sub(lavaHeat.mul(0.25));
 
   // ---- wall -----------------------------------------------------------------
   // Local y runs 0..depth: the shape is extruded along +z and rotated -90 about

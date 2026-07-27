@@ -711,43 +711,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Grace of the elves / signs of the porter supply chain",
-          "category": "cross-region gathering necklace and porter charge supply",
-          "detail": "Finished GOTE is tradeable until first equip/charge/attune, then permanently untradeable. Self-sufficient League planning must model Invention manufacture + sustained porter energy/necklace supply, not only the necklace drop price. Pair with Superheat Form and Orthen furnace core stacks for prayer-drain planning · Invention manufacture is global; track energy tiers the player can reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding · Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin · Effects: Halves drain of Light Form, Superheat Form, and Chronicle Attraction while worn (zero drain with Dark Facet of Grace), 10% chance per minute for a Seren spirit rare-drop-table bank deposit while gathering, Acts as a sign of the porter while charged (ores → metal bank; Archaeology materials → material storage), Two configurable Max Guild skill-portal teleports when attuned · Region pressure: Asgarnia: Invention Guild / inventor's workbench is the natural alchemical-onyx manufacture hub., Tirannwn: Max Guild garden portal attunement; Seren prayer value pairing; incandescent energy south of the Poison Waste for porter VII., Desert: luminous energy (Sophanem) for porter VI; onyx / gem pressure for high necklaces., Morytania: radiant energy near Dragontooth Island for porter V., Kandarin: vibrant energy (e.g. west of Oo'glog / southern Kandarin routes) for porter IV midgame volume., Misthalin working taxonomy: necklace production loops (gold ore → furnaces / Fort-style banks) feeding porter crafts · Invention workbench craft is global (not region-locked)",
-          "requirements": [
-            "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious at inventor's workbench)",
-            "91 Crafting to smelt alchemical onyx necklace (gold bar + alchemical onyx)",
-            "87 Magic Lvl-6 Enchant (or enchant tablet) to create grace of the elves",
-            "Signs of the porter I–VII: Divination energy tiers + matching necklaces (or memory shards for IV+)",
-            "Charge GOTE by using porters on the necklace (500 charges base; 2,000 with Dark Facet of Grace)"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Grace_of_the_elves",
-            "title": "Grace of the elves / signs of the porter supply chain",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin",
-          "isRegionCombo": true
-        },
-        {
           "name": "Hatchet of Bloom and Blight",
           "category": "tier-100 augmentable Woodcutting tool follow-on chain",
           "detail": "This inherits the full multi-region Ember and Glade chain before adding the tier-100 Ramarno and moonstone progression. Keep the component-level region map conservative until every 2026 League quest/access override is known · Surface it as the late-game continuation of Ember and Glade without inventing a single-region requirement · Region combo (all required): tirannwn + misthalin + fremennik · Effects: Level-100 augmentable hatchet, Designed as the highest-level Woodcutting hatchet and best XP/log-yield tool in its update tier · Invention workbench craft is global (not region-locked)",
@@ -12729,43 +12692,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Grace of the elves / signs of the porter supply chain",
-          "category": "cross-region gathering necklace and porter charge supply",
-          "detail": "Finished GOTE is tradeable until first equip/charge/attune, then permanently untradeable. Self-sufficient League planning must model Invention manufacture + sustained porter energy/necklace supply, not only the necklace drop price. Pair with Superheat Form and Orthen furnace core stacks for prayer-drain planning · Invention manufacture is global; track energy tiers the player can reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding · Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin · Effects: Halves drain of Light Form, Superheat Form, and Chronicle Attraction while worn (zero drain with Dark Facet of Grace), 10% chance per minute for a Seren spirit rare-drop-table bank deposit while gathering, Acts as a sign of the porter while charged (ores → metal bank; Archaeology materials → material storage), Two configurable Max Guild skill-portal teleports when attuned · Region pressure: Asgarnia: Invention Guild / inventor's workbench is the natural alchemical-onyx manufacture hub., Tirannwn: Max Guild garden portal attunement; Seren prayer value pairing; incandescent energy south of the Poison Waste for porter VII., Desert: luminous energy (Sophanem) for porter VI; onyx / gem pressure for high necklaces., Morytania: radiant energy near Dragontooth Island for porter V., Kandarin: vibrant energy (e.g. west of Oo'glog / southern Kandarin routes) for porter IV midgame volume., Misthalin working taxonomy: necklace production loops (gold ore → furnaces / Fort-style banks) feeding porter crafts · Invention workbench craft is global (not region-locked)",
-          "requirements": [
-            "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious at inventor's workbench)",
-            "91 Crafting to smelt alchemical onyx necklace (gold bar + alchemical onyx)",
-            "87 Magic Lvl-6 Enchant (or enchant tablet) to create grace of the elves",
-            "Signs of the porter I–VII: Divination energy tiers + matching necklaces (or memory shards for IV+)",
-            "Charge GOTE by using porters on the necklace (500 charges base; 2,000 with Dark Facet of Grace)"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Grace_of_the_elves",
-            "title": "Grace of the elves / signs of the porter supply chain",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "kandarin",
-          "regionHints": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin",
-          "isRegionCombo": true
-        },
-        {
           "name": "Nature's sentinel outfit",
           "category": "Woodcutting elite skilling outfit",
           "detail": "No prior equipment row. Fragment craft is global; region_hints mark major tree-teleport and training geography, not a hard exclusive region. for the inherited XP layer · Region combo (all required): asgarnia + kandarin + misthalin · Effects: Full set: 7% increased Woodcutting success chance, 7% increased bird's nest and crystal geode chance (stacks with strung rabbit foot, Woodcutting cape, tree-shaking scrimshaw), Optional auto-burn (Firemaking XP) or auto-fletch-and-consume (Fletching XP) on cut logs — 25% chance, additive with Inferno adze; level gates still apply, Inherits lumberjack outfit XP (1% per sentinel piece) after lumberjack worn once — even while lumberjack is banked (wiki notes a bugged 1% baseline on some worlds), 20 daily teleports to Woodcutting locations via helm (elder, magic, yew, ivy, acadia, overgrown idols, Havenhythe creeping ivy / eternal magic destinations added 2026), Contact active Evil Tree via helm (miniature evil tree daily spawn removed in March 2026 DailyScape overhaul)",
@@ -20974,43 +20900,6 @@
           "regionId": "desert"
         },
         {
-          "name": "Grace of the elves / signs of the porter supply chain",
-          "category": "cross-region gathering necklace and porter charge supply",
-          "detail": "Finished GOTE is tradeable until first equip/charge/attune, then permanently untradeable. Self-sufficient League planning must model Invention manufacture + sustained porter energy/necklace supply, not only the necklace drop price. Pair with Superheat Form and Orthen furnace core stacks for prayer-drain planning · Invention manufacture is global; track energy tiers the player can reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding · Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin · Effects: Halves drain of Light Form, Superheat Form, and Chronicle Attraction while worn (zero drain with Dark Facet of Grace), 10% chance per minute for a Seren spirit rare-drop-table bank deposit while gathering, Acts as a sign of the porter while charged (ores → metal bank; Archaeology materials → material storage), Two configurable Max Guild skill-portal teleports when attuned · Region pressure: Asgarnia: Invention Guild / inventor's workbench is the natural alchemical-onyx manufacture hub., Tirannwn: Max Guild garden portal attunement; Seren prayer value pairing; incandescent energy south of the Poison Waste for porter VII., Desert: luminous energy (Sophanem) for porter VI; onyx / gem pressure for high necklaces., Morytania: radiant energy near Dragontooth Island for porter V., Kandarin: vibrant energy (e.g. west of Oo'glog / southern Kandarin routes) for porter IV midgame volume., Misthalin working taxonomy: necklace production loops (gold ore → furnaces / Fort-style banks) feeding porter crafts · Invention workbench craft is global (not region-locked)",
-          "requirements": [
-            "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious at inventor's workbench)",
-            "91 Crafting to smelt alchemical onyx necklace (gold bar + alchemical onyx)",
-            "87 Magic Lvl-6 Enchant (or enchant tablet) to create grace of the elves",
-            "Signs of the porter I–VII: Divination energy tiers + matching necklaces (or memory shards for IV+)",
-            "Charge GOTE by using porters on the necklace (500 charges base; 2,000 with Dark Facet of Grace)"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Grace_of_the_elves",
-            "title": "Grace of the elves / signs of the porter supply chain",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "desert",
-          "regionHints": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin",
-          "isRegionCombo": true
-        },
-        {
           "name": "Player-owned house portal towns and Construction utilities",
           "category": "Construction teleport and housing infrastructure",
           "detail": "Portal towns are multi-region geography for default exit convenience; the house instance itself is not region-owned. Prefer Rimmington for Construction supply loops. Fort Forinthry Workshop remains the separate fort Construction hub · region_hint asgarnia for the default starter / Rimmington Construction utility cluster. Other portals are convenience destinations when those regions unlock · Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin · Unlocks: House portal network: Rimmington, Taverley (Asgarnia); Pollnivneach, Menaphos (Desert); Rellekka (Fremennik); Brimhaven (Karamja); Yanille (Kandarin); Prifddinas (Tirannwn); Otot (Mazcab / external), Rimmington: furniture storage, furniture workbench, housing wizard, nearby plank maker and bank chest (primary Construction supply portal), House Teleport (40 Magic) / teleport tablets into house or outside portal; Love Story chipped tablets to any portal, Important Con utilities colocated with portals: gilded altar Prayer path, workshop repair stands, menagerie, study lecterns, costume room — global once house is owned",
@@ -23338,43 +23227,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): misthalin + morytania",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Grace of the elves / signs of the porter supply chain",
-          "category": "cross-region gathering necklace and porter charge supply",
-          "detail": "Finished GOTE is tradeable until first equip/charge/attune, then permanently untradeable. Self-sufficient League planning must model Invention manufacture + sustained porter energy/necklace supply, not only the necklace drop price. Pair with Superheat Form and Orthen furnace core stacks for prayer-drain planning · Invention manufacture is global; track energy tiers the player can reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding · Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin · Effects: Halves drain of Light Form, Superheat Form, and Chronicle Attraction while worn (zero drain with Dark Facet of Grace), 10% chance per minute for a Seren spirit rare-drop-table bank deposit while gathering, Acts as a sign of the porter while charged (ores → metal bank; Archaeology materials → material storage), Two configurable Max Guild skill-portal teleports when attuned · Region pressure: Asgarnia: Invention Guild / inventor's workbench is the natural alchemical-onyx manufacture hub., Tirannwn: Max Guild garden portal attunement; Seren prayer value pairing; incandescent energy south of the Poison Waste for porter VII., Desert: luminous energy (Sophanem) for porter VI; onyx / gem pressure for high necklaces., Morytania: radiant energy near Dragontooth Island for porter V., Kandarin: vibrant energy (e.g. west of Oo'glog / southern Kandarin routes) for porter IV midgame volume., Misthalin working taxonomy: necklace production loops (gold ore → furnaces / Fort-style banks) feeding porter crafts · Invention workbench craft is global (not region-locked)",
-          "requirements": [
-            "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious at inventor's workbench)",
-            "91 Crafting to smelt alchemical onyx necklace (gold bar + alchemical onyx)",
-            "87 Magic Lvl-6 Enchant (or enchant tablet) to create grace of the elves",
-            "Signs of the porter I–VII: Divination energy tiers + matching necklaces (or memory shards for IV+)",
-            "Charge GOTE by using porters on the necklace (500 charges base; 2,000 with Dark Facet of Grace)"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Grace_of_the_elves",
-            "title": "Grace of the elves / signs of the porter supply chain",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "morytania",
-          "regionHints": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin",
           "isRegionCombo": true
         },
         {
@@ -25861,43 +25713,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): tirannwn + forinthry",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Grace of the elves / signs of the porter supply chain",
-          "category": "cross-region gathering necklace and porter charge supply",
-          "detail": "Finished GOTE is tradeable until first equip/charge/attune, then permanently untradeable. Self-sufficient League planning must model Invention manufacture + sustained porter energy/necklace supply, not only the necklace drop price. Pair with Superheat Form and Orthen furnace core stacks for prayer-drain planning · Invention manufacture is global; track energy tiers the player can reach. Seren prayer pairing still pressures Tirannwn even if GOTE itself is obtained via tradeable intermediate before binding · Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin · Effects: Halves drain of Light Form, Superheat Form, and Chronicle Attraction while worn (zero drain with Dark Facet of Grace), 10% chance per minute for a Seren spirit rare-drop-table bank deposit while gathering, Acts as a sign of the porter while charged (ores → metal bank; Archaeology materials → material storage), Two configurable Max Guild skill-portal teleports when attuned · Region pressure: Asgarnia: Invention Guild / inventor's workbench is the natural alchemical-onyx manufacture hub., Tirannwn: Max Guild garden portal attunement; Seren prayer value pairing; incandescent energy south of the Poison Waste for porter VII., Desert: luminous energy (Sophanem) for porter VI; onyx / gem pressure for high necklaces., Morytania: radiant energy near Dragontooth Island for porter V., Kandarin: vibrant energy (e.g. west of Oo'glog / southern Kandarin routes) for porter IV midgame volume., Misthalin working taxonomy: necklace production loops (gold ore → furnaces / Fort-style banks) feeding porter crafts · Invention workbench craft is global (not region-locked)",
-          "requirements": [
-            "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious at inventor's workbench)",
-            "91 Crafting to smelt alchemical onyx necklace (gold bar + alchemical onyx)",
-            "87 Magic Lvl-6 Enchant (or enchant tablet) to create grace of the elves",
-            "Signs of the porter I–VII: Divination energy tiers + matching necklaces (or memory shards for IV+)",
-            "Charge GOTE by using porters on the necklace (500 charges base; 2,000 with Dark Facet of Grace)"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain_with_alternates",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Grace_of_the_elves",
-            "title": "Grace of the elves / signs of the porter supply chain",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "tirannwn",
-          "regionHints": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "tirannwn",
-            "desert",
-            "morytania",
-            "kandarin",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): tirannwn + desert + morytania + kandarin + misthalin",
           "isRegionCombo": true
         },
         {

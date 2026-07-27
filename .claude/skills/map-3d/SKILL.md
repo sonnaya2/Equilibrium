@@ -170,11 +170,11 @@ camera never goes under the board. Pointer parallax is a degree and a half, no m
 R3F raycasts in NDC with fresh rects. Hit-testing bugs here are never stale
 `getBoundingClientRect` — they are the pick set.
 
-- **Decorative meshes opt out** with `raycast={() => null}` (vines, leaves, marker stems
-  and shadows).
+- **Decorative meshes opt out** with `raycast={() => null}` (vines, leaves, marker
+  stems and feet).
 - **Invisible hit targets use `colorWrite: false`, never `visible={false}`** — three's
-  raycaster skips invisible objects. A marker's quad is deliberately wider than the disc
-  it paints; the margin is the click target.
+  raycaster skips invisible objects. A marker's hit plane is wider than the painted
+  flag; the painted face itself does not take rays.
 - Marker handlers must `stopPropagation()`, or the click falls through to the plate.
 - **A board click focuses. It never mutates the build.** Picking a region is an explicit
   button, in `RegionLedger` and in the inspector header. A click that both framed and
@@ -188,9 +188,23 @@ R3F raycasts in NDC with fresh rects. Hit-testing bugs here are never stale
 
 Only for the region currently framed — eleven regions at once is noise on a 2-unit
 board, and the region crests carry the overview. Site pins are a second tier that
-arrives once a place is selected. Medallions hold a **constant screen size**; geometry
-is one quad each, carrying the atlas cell in `uv` and hover/site state in `aState`, so
-the whole board shares one material.
+arrives once a place is selected.
+
+**Crest stakes, not screen billboards.** Each pin is a planted foot + shaft + flag
+face with a **fixed world size** and a slight table-facing tilt — never
+`quaternion.copy(camera)` and never CSS-pixel constant screen size. Soft transparent
+medallions, contact shadows and per-pin `Html` labels were the flicker source under the
+30Hz demand loop; do not reintroduce them.
+
+- Face material: binary disc cut (`alphaTest` / `depthWrite: true`), atlas icon, thin
+  brass rim; **emissive only when lit** (gem). Idle stakes write black emissive.
+- Foot/stem: fully opaque. Hit proxy is a wider invisible plane (`colorWrite: false`).
+- Pose matrices rewrite only on reveal spring, plate-Y spring, or lit change — not on
+  every water tick.
+- Names live on the ledger chips, not canvas DOM overlays.
+
+Geometry is one face quad per pin (atlas cell in `uv`, hover/site in `aState`) plus
+instanced feet/stems.
 
 Anchors are hand-authored map coordinates in `gameCoords.ts` / `placeAnchors.ts` and
 gated by tests: the name must resolve against real catalog data, and the point must land

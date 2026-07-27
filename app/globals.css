@@ -1128,24 +1128,10 @@ textarea:focus-visible {
     font-size: 8px;
   }
 
-  /* The medallion itself is geometry now (see materials/MarkerMaterial.ts).
-     All that is left in the DOM is the name, and only while a pin is lit. */
+  /* Canvas POI names were dropped — crest stakes are geometry-only; the ledger
+     chips own the accessible place names. Kept as a no-op class for any residual. */
   .map-poi-label {
-    padding: 2px 6px;
-    color: var(--color-parch-50);
-    font-family: var(--font-display);
-    font-size: 10px;
-    line-height: 1.15;
-    letter-spacing: 0.035em;
-    white-space: nowrap;
-    text-shadow: 0 1px 2px #000;
-    background: rgb(7 11 12 / 92%);
-    border-bottom: 1px solid var(--color-gem-600);
-    pointer-events: none;
-  }
-  .map-poi-label.is-selected {
-    color: var(--color-gem-100);
-    border-bottom-color: var(--color-gem-400);
+    display: none;
   }
 
   .stat-strip {

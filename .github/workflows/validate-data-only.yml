@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "data/**"
-      - "scraped-data/**"
       - "scripts/**"
       - "package.json"
       - "package-lock.json"
@@ -30,13 +29,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run normalize:data
-      - name: Run complete data audit
+      - name: Audit shipped data/
         id: data-audit
         shell: bash
         run: |
           set +e
-          npm run audit:all-data > data-audit.log 2>&1
+          npm run audit:data > data-audit.log 2>&1
           status=$?
           tail -n 120 data-audit.log
           exit "$status"
@@ -48,5 +46,3 @@ jobs:
           path: data-audit.log
           if-no-files-found: error
           retention-days: 3
-      - name: Ensure generated data is committed
-        run: git diff --exit-code -- data/

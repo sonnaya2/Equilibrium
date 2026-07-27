@@ -1,5 +1,5 @@
 /**
- * Audit /data icon wells — blank vs garbage. Writes scraped-data/data-icon-audit.json
+ * Audit /data icon wells — blank vs garbage. Writes tmp-data-icon-audit.json (gitignored).
  * Run: npx vitest run src/lib/dataIconAudit.test.ts
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -171,7 +171,8 @@ describe("data icon audit", () => {
       garbage: dedupe(garbage),
       missingFile: dedupe(missingFile),
     };
-    writeFileSync("scraped-data/data-icon-audit.json", `${JSON.stringify(report, null, 2)}\n`);
+    // Optional local dump (gitignored tmp-*.json); do not require scraped-data/.
+    writeFileSync("tmp-data-icon-audit.json", `${JSON.stringify(report, null, 2)}\n`);
     // Sanity: bosses still resolve
     expect(bossIconPath("Kerapac")).toBeTruthy();
     expect(activityIconPath("Prifddinas") || true).toBeTruthy();

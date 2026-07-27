@@ -1,6 +1,6 @@
 /**
  * Equilibrium league domain model. Zero React — the binding lives in useBuild.ts.
- * Unlock structure (confirmed_official, scraped-data/equilibrium.json):
+ * Unlock structure (confirmed_official, data/league from research normalize):
  * Misthalin + Havenhythe fixed, Karamja at the first task milestone,
  * then 3 elective picks from the remaining 8. Six regions total, never more.
  * Blessing paths, god tiers and the reset count derive from data/league/blessings.json.

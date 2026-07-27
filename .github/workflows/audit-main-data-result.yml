@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "data/**"
-      - "scraped-data/**"
       - "scripts/**"
       - "package.json"
       - "package-lock.json"
@@ -37,35 +36,25 @@ jobs:
 
       - run: npm ci
 
-      - name: Normalize and audit
+      - name: Audit shipped data/
         id: audit
         shell: bash
         run: |
           set +e
           source_head="$(git rev-parse HEAD)"
-          npm run normalize:data > main-data-audit.log 2>&1
-          normalize_status=$?
-          audit_status=125
-          if [ "$normalize_status" -eq 0 ]; then
-            npm run audit:all-data >> main-data-audit.log 2>&1
-            audit_status=$?
-          fi
-          export SOURCE_HEAD="$source_head" NORMALIZE_STATUS="$normalize_status" AUDIT_STATUS="$audit_status"
+          # Release tree has no scraped-data/; audit data/ only.
+          npm run audit:data > main-data-audit.log 2>&1
+          audit_status=$?
+          export SOURCE_HEAD="$source_head" AUDIT_STATUS="$audit_status"
           node <<'NODE'
           const fs = require('node:fs');
-          const { spawnSync } = require('node:child_process');
           const log = fs.readFileSync('main-data-audit.log', 'utf8');
-          const normalizeStatus = Number(process.env.NORMALIZE_STATUS);
           const auditStatus = Number(process.env.AUDIT_STATUS);
-          const diffStatus = spawnSync('git', ['diff', '--quiet', '--', 'data/'], { stdio: 'ignore' }).status;
           const result = {
             source_head: process.env.SOURCE_HEAD,
             captured_at: new Date().toISOString(),
-            status: normalizeStatus === 0 && auditStatus === 0 ? 'passed' : 'failed',
-            normalize_exit_code: normalizeStatus,
+            status: auditStatus === 0 ? 'passed' : 'failed',
             audit_exit_code: auditStatus,
-            generated_data_changed: diffStatus === 1,
-            generated_data_diff_probe_exit_code: diffStatus,
             log_tail: log.split(/\r?\n/).slice(-300),
           };
           fs.writeFileSync('MAIN_DATA_AUDIT_RESULT.json', `${JSON.stringify(result, null, 2)}\n`);

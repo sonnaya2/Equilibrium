@@ -3,7 +3,6 @@
 import {
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -26,6 +25,7 @@ import {
   upgradeIconPath,
 } from "@/lib/gameArt";
 import {
+  contentRewardTokens,
   contentTypeLabel,
   presentContentRewards,
   presentInterestMeta,
@@ -35,6 +35,8 @@ import {
 } from "@/lib/dataContentPresentation";
 import { contentRewardsFull, majorContentRows } from "@/lib/researchRewards";
 import { safeExternalHref } from "@/lib/safeHref";
+import { safeWikiPage } from "@/lib/wikiArticle";
+import { WikiArticleDialog, type WikiArticleTarget } from "@/components/WikiArticleDialog";
 import { clipProse } from "./ResearchSection";
 import { useDataRegion } from "./DataWorkbench";
 
@@ -138,72 +140,10 @@ function InlineSource({ source }: { source: SourceReference | null | undefined }
   );
 }
 
-type PreviewImage = { src: string; name: string } | null;
-
-function ImageViewer({
-  image,
-  onClose,
-}: {
-  image: PreviewImage;
-  onClose: () => void;
-}) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const [pixelated, setPixelated] = useState(false);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (image && dialog && !dialog.open) dialog.showModal();
-    if (!image && dialog?.open) dialog.close();
-    setPixelated(false);
-  }, [image]);
-
-  return (
-    <dialog
-      ref={dialogRef}
-      className="data-image-viewer"
-      aria-label={image ? `${image.name} image` : "Image viewer"}
-      onClose={onClose}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) event.currentTarget.close();
-      }}
-    >
-      {image ? (
-        <>
-          <button
-            type="button"
-            className="data-image-viewer__close"
-            onClick={() => dialogRef.current?.close()}
-          >
-            Close
-          </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={image.src}
-            alt={image.name}
-            className={pixelated ? "is-pixel" : undefined}
-            onLoad={(event) => {
-              const img = event.currentTarget;
-              const nw = img.naturalWidth;
-              const nh = img.naturalHeight;
-              // Inventory glyphs are ~20–64px — never fill the viewport; scale up crisply.
-              const maxEdge = Math.max(nw, nh);
-              const isGlyph = maxEdge > 0 && maxEdge <= 96;
-              setPixelated(isGlyph);
-              if (isGlyph) {
-                const scale = Math.min(8, Math.max(4, Math.floor(480 / maxEdge)));
-                img.style.width = `${nw * scale}px`;
-                img.style.height = `${nh * scale}px`;
-              } else {
-                img.style.width = "";
-                img.style.height = "";
-              }
-            }}
-          />
-          <p>{image.name}</p>
-        </>
-      ) : null}
-    </dialog>
-  );
+function wikiUrlFromSource(source: SourceReference | null | undefined): string | null {
+  const href = safeExternalHref(source?.url);
+  if (!href) return null;
+  return safeWikiPage(href)?.pageUrl ?? null;
 }
 
 function MethodTable({
@@ -289,7 +229,7 @@ function MethodTable({
 
 function RegionDetail({ region }: { region: ResearchRegion }) {
   const { build, loaded } = useBuild();
-  const [previewImage, setPreviewImage] = useState<PreviewImage>(null);
+  const [preview, setPreview] = useState<WikiArticleTarget | null>(null);
   const relicPicks = loaded
     ? Object.entries(build.relics).sort(([a], [b]) => Number(a) - Number(b))
     : [];
@@ -302,9 +242,10 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           className="data-region-detail__crest-button"
           aria-label={`View ${cleanText(region.name)} crest`}
           onClick={() =>
-            setPreviewImage({
-              src: regionCrestPath(region.id),
+            setPreview({
+              localArtSrc: regionCrestPath(region.id),
               name: `${cleanText(region.name)} crest`,
+              wikiUrl: wikiUrlFromSource(region.source),
             })
           }
         >
@@ -374,9 +315,22 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                           <button
                             type="button"
                             className="data-icon-well data-image-button"
-                            aria-label={`View ${displayName} image`}
+                            aria-label={
+                              wikiUrlFromSource(row.source)
+                                ? `Open ${displayName} wiki article`
+                                : `View ${displayName} image`
+                            }
                             onClick={() =>
-                              setPreviewImage({ src: iconSrc, name: displayName })
+                              setPreview({
+                                localArtSrc: iconSrc,
+                                name: displayName,
+                                wikiUrl: wikiUrlFromSource(row.source),
+                                relatedLabels: rewardIcons.map((item) => item.label),
+                                relatedIcons: rewardIcons.map((item) => ({
+                                  label: item.label,
+                                  src: item.src,
+                                })),
+                              })
                             }
                           >
                             <GameIcon src={iconSrc} size={34} />
@@ -447,6 +401,26 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                 upgradeIconPath(upgrade.name) ??
                 dataEntityIconPath({ name: upgrade.name, kind: upgrade.category });
               const requiredRegions = [...new Set(upgrade.requiredRegions ?? [])];
+              const displayUpgradeName = interestName(upgrade.name);
+              // Category + name tokens already in memory for extra local art resolve.
+              const upgradeRelatedLabels = (() => {
+                const seen = new Set<string>();
+                const out: string[] = [];
+                for (const part of [
+                  ...contentRewardTokens(upgrade.name),
+                  ...contentRewardTokens(upgrade.category ?? ""),
+                  displayUpgradeName,
+                  upgrade.category ? interestMeta(upgrade.category) : "",
+                ]) {
+                  const label = part.replace(/\s+/g, " ").trim();
+                  if (!label) continue;
+                  const key = label.toLowerCase();
+                  if (seen.has(key)) continue;
+                  seen.add(key);
+                  out.push(label);
+                }
+                return out;
+              })();
               return (
                 <div
                   key={`upgrade-${index}-${upgrade.name}`}
@@ -458,9 +432,18 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                     <button
                       type="button"
                       className="data-icon-well data-image-button"
-                      aria-label={`View ${interestName(upgrade.name)} image`}
+                      aria-label={
+                        wikiUrlFromSource(upgrade.source)
+                          ? `Open ${displayUpgradeName} wiki article`
+                          : `View ${displayUpgradeName} image`
+                      }
                       onClick={() =>
-                        setPreviewImage({ src: iconSrc, name: interestName(upgrade.name) })
+                        setPreview({
+                          localArtSrc: iconSrc,
+                          name: displayUpgradeName,
+                          wikiUrl: wikiUrlFromSource(upgrade.source),
+                          relatedLabels: upgradeRelatedLabels,
+                        })
                       }
                     >
                       <GameIcon src={iconSrc} size={28} />
@@ -502,7 +485,7 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
         </div>
       </section>
       </div>
-      <ImageViewer image={previewImage} onClose={() => setPreviewImage(null)} />
+      <WikiArticleDialog target={preview} onClose={() => setPreview(null)} />
     </article>
   );
 }

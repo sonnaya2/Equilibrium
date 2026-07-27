@@ -509,7 +509,7 @@ describe("resolveTrainingLocation", () => {
 describe("contentTypeLabel", () => {
   it("returns short type labels for catalog samples", () => {
     expect(contentTypeLabel("Elder God Wars Dungeon", "Kerapac, the bound")).toBeTruthy();
-    expect(contentTypeLabel("Divination", "Pale wisps near Draynor")).toBe("Divination");
+    expect(contentTypeLabel("Divination", "Misthalin wisp colonies")).toBe("Divination");
   });
 });
 

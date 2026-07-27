@@ -130,7 +130,10 @@ describe("gameArt", () => {
       "/game/activities/zanaris.png",
     );
     expect(dataEntityIconPath({ name: "Sanctum of Rebirth uniques" })).toBe(
-      "/game/activities/sanctum-of-rebirth.png",
+      "/game/bosses/nakatra.png",
+    );
+    expect(dataEntityIconPath({ name: "Sanctum of Rebirth", kind: "boss dungeon" })).toBe(
+      "/game/bosses/nakatra.png",
     );
     expect(dataEntityIconPath({ name: "Zemouregal & Vorkath progression" })).toBe(
       "/game/bosses/zemouregal-vorkath.png",

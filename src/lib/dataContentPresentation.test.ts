@@ -547,6 +547,29 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestName("Abyss Runecrafting stack")).toBe("Abyss Runecrafting");
   });
 
+  it("rewrites Um / diary / combat planner titles", () => {
+    expect(presentInterestName("Soul Supplies and City of Um skilling shops")).toBe(
+      "Soul Supplies",
+    );
+    expect(presentInterestName("City of Um ritual site and focus storage")).toBe(
+      "Um ritual site",
+    );
+    expect(
+      presentInterestName("Selene Necromancy prayer and curse unlocks (City of Um)"),
+    ).toBe("Selene prayers");
+    expect(presentInterestName("Underworld Grimoire 1-4")).toBe("Underworld Grimoire");
+    expect(
+      presentInterestName("Underworld Grimoire skilling milestone ladder (UG1–4 densify)"),
+    ).toBe("Underworld Grimoire");
+    expect(presentInterestName("Varrock Lumber Yard sawmill operator")).toBe(
+      "Varrock sawmill",
+    );
+    expect(presentInterestName("Kerapac Magic progression")).toBe("Kerapac magic");
+    expect(presentInterestName("Velucia museum Archaeology collections")).toBe(
+      "Velucia collections",
+    );
+  });
+
   it("rewrites multi-skill category taxonomy into short meta", () => {
     expect(presentInterestMeta("regional multi-skill bank and production hub")).toBe(
       "Bank and production",
@@ -561,6 +584,21 @@ describe("presentInterestName / presentInterestMeta", () => {
     expect(presentInterestMeta("Runecrafting altar infrastructure")).toBe("Runecrafting");
     expect(presentInterestMeta("regional boss BiS drop source")).toBe("Boss uniques");
     expect(presentInterestMeta("achievement diary acquisition frame")).toBe("Diary rewards");
+    expect(presentInterestMeta("Necromancy supply shops")).toBe("Necromancy shops");
+    expect(presentInterestMeta("Necromancy ritual infrastructure")).toBe("Rituals");
+    expect(presentInterestMeta("Prayer unlock infrastructure")).toBe("Prayer");
+    expect(presentInterestMeta("Construction plank production infrastructure")).toBe(
+      "Sawmill",
+    );
+    expect(presentInterestMeta("Magic ability codex gloves and scripture")).toBe(
+      "Magic uniques",
+    );
+    expect(presentInterestMeta("combat Archaeology relic cross-region chain")).toBe(
+      "Archaeology relic",
+    );
+    expect(presentInterestMeta("quest-challenge combat equipment")).toBe("Quest reward");
+    expect(presentInterestMeta("style glove T90 upgrade hub")).toBe("T90 gloves");
+    expect(presentInterestMeta("Necromancy crafted armour progression")).toBe("Necro armour");
   });
 });
 

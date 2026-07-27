@@ -599,6 +599,27 @@ export function presentInterestName(value: string): string {
   if (/^Seren skilling prayers package\b/i.test(raw)) return "Seren prayers";
   if (/^Allotment patch hub package$/i.test(raw)) return "Allotment patches";
 
+  // City of Um / Necromancy / prayer
+  if (/^Soul Supplies\b/i.test(raw)) return "Soul Supplies";
+  if (/^City of Um ritual site\b/i.test(raw)) return "Um ritual site";
+  if (/^Selene Necromancy\b/i.test(raw)) return "Selene prayers";
+  if (/^Underworld Grimoire\b/i.test(raw)) return "Underworld Grimoire";
+  if (/^Velucia museum\b/i.test(raw)) return "Velucia collections";
+  if (/^Varrock Lumber Yard\b/i.test(raw)) return "Varrock sawmill";
+  if (/^Kerapac Magic\b/i.test(raw)) return "Kerapac magic";
+  if (/^Conservation of Energy\b/i.test(raw)) return "Conservation of Energy";
+  if (/^Death Ward relic chain$/i.test(raw)) return "Death Ward";
+  if (/^Fury of the Small relic chain$/i.test(raw)) return "Fury of the Small";
+  if (/^Leng artefact T90 glove\b/i.test(raw)) return "Leng gloves";
+  if (/^Deathwarden\b/i.test(raw) && /Deathdealer/i.test(raw)) return "Deathwarden / Deathdealer";
+  if (/^Zamorak,\s*Lord of Chaos\b/i.test(raw)) return "Zamorak, Lord of Chaos";
+  if (/^Slayer helmet \(craft/i.test(raw)) return "Slayer helmet";
+  if (/^Ring of slaying\b/i.test(raw)) return "Ring of slaying";
+  if (/^Full slayer helmet\b/i.test(raw)) return "Full slayer helmet";
+  if (/^Wizards' Tower\b/i.test(raw)) return "Wizards' Tower";
+  if (/^Woodcutters?' Grove\b/i.test(raw)) return "Woodcutters' Grove";
+  if (/^Tier 3 Woodcutter's Grove\b/i.test(raw)) return "Woodcutters' Grove";
+
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
     .replace(/\s+progression$/i, "")
@@ -612,7 +633,6 @@ export function presentInterestName(value: string): string {
   if (/^Master thief's lockpick \+ stethoscope\b/i.test(name)) return "Master thief's tools";
   if (/^Ava's device chain$/i.test(name)) return "Ava's devices";
   if (/^Research team size ladder\b/i.test(name)) return "Research team upgrades";
-  if (/^Underworld Grimoire skilling milestone ladder$/i.test(name)) return "Underworld Grimoire";
   if (/^Prayer training infrastructure stack$/i.test(name)) return "Prayer training";
   if (/^War's Retreat hub amenities$/i.test(name)) return "War's Retreat";
 
@@ -634,7 +654,6 @@ export function presentInterestName(value: string): string {
   if (/^Mattock precision upgrades\b/i.test(name)) return "Mattock precision";
   if (/^Tetracompass pieces\b/i.test(name)) return "Tetracompass";
   if (/^Museum donation bin\b/i.test(name)) return "Museum donation bin";
-  if (/^Velucia museum\b/i.test(name)) return "Velucia collections";
   if (/^Archaeology Campus and Varrock Dig Site hub$/i.test(name)) return "Archaeology Campus";
   if (/^Screening station\b/i.test(name)) return "Screening station";
   if (/^Archaeologist's workbench\b/i.test(name)) return "Archaeologist's workbench";
@@ -778,6 +797,30 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "regional mining infrastructure residual": "Mining",
     "necromancy ritual geography": "Necromancy",
     "magic guild infrastructure and rune-essence logistics": "Magic Guild",
+    "necromancy supply shops": "Necromancy shops",
+    "necromancy ritual infrastructure": "Rituals",
+    "prayer unlock infrastructure": "Prayer",
+    "underworld achievement skilling utility pocket": "Underworld diary",
+    "underworld achievement skilling breakpoint densify": "Underworld diary",
+    "construction plank production infrastructure": "Sawmill",
+    "archaeology museum chronote progression checklist": "Museum",
+    "archaeology collector and chronote infrastructure": "Museum",
+    "archaeology museum collection-log infrastructure": "Museum",
+    "magic ability codex gloves and scripture": "Magic uniques",
+    "combat archaeology relic cross-region chain": "Archaeology relic",
+    "combat archaeology and invention relic cross-region chain": "Archaeology relic",
+    "style glove t90 upgrade hub": "T90 gloves",
+    "style glove t90 upgrade hub residual": "T90 gloves",
+    "necromancy crafted armour progression": "Necro armour",
+    "necromancy crafted armour residual progression": "Necro armour",
+    "quest-challenge combat equipment": "Quest reward",
+    "quest-challenge equipment unlock": "Quest reward",
+    "permanent prayer unlock scroll (daemonheim rewards)": "Prayer unlock",
+    "permanent slayer equipment unlock": "Slayer",
+    "permanent slayer teleport jewellery unlock": "Slayer",
+    "permanent slayer teleport jewellery equipment": "Slayer",
+    "woodcutting tool progression": "Woodcutting",
+    "woodcutting hub infrastructure": "Woodcutting",
   };
   if (exact[lower]) return exact[lower];
 

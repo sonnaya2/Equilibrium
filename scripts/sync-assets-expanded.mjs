@@ -36,6 +36,8 @@ const overrides = new Map([
   ["place-fort-guardhouse", { fileTitle: "Guardhouse (tier 3, exterior).png", search: "Fort Forinthry Guardhouse exterior" }],
   ["arch-senntisten", { fileTitle: "Senntisten Dig Site camp.png", search: "Senntisten Dig Site camp location image" }],
   ["place-senntisten", { fileTitle: "Senntisten Dig Site entrance.png", search: "Senntisten Dig Site entrance location image" }],
+  ["activity-woodcutters-grove", { fileTitle: "Woodcutters' Grove.png", search: "Woodcutters Grove Fort Forinthry built location" }],
+  ["boss-zamorak", { fileTitle: "Zamorak, Lord of Chaos.png", search: "Zamorak Lord of Chaos official boss image" }],
   ["activity-everlight-dig-site", { fileTitle: "Everlight.png", search: "Everlight Dig Site location image" }],
   ["activity-barrows", { fileTitle: "Barrows Scenery.png", search: "Barrows scenery minigame location image" }],
   ["activity-rise-of-the-six", { fileTitle: "Well (Barrows Rise of the Six).png", search: "Rise of the Six entrance well boss activity image" }],

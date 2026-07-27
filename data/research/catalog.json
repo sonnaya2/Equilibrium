@@ -334,6 +334,33 @@
             "title": "City of Um mushroom patch",
             "verifiedAt": "2026-07-26"
           }
+        },
+        {
+          "name": "Zamorak, Lord of Chaos",
+          "kind": "Elite Dungeon 4",
+          "detail": "ED4 final boss in the Zamorakian Undercity (Senntisten). Vestments of havoc and other uniques · Wiki Equilibrium tags Misthalin for Undercity access",
+          "requirements": [
+            "Access to the Zamorakian Undercity (Elder God Wars / Senntisten path)",
+            "Elite Dungeon group or story mode as applicable"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+            "title": "Zamorak, Lord of Chaos",
+            "verifiedAt": "2026-07-27"
+          },
+          "regionId": "misthalin",
+          "regionHints": [
+            "misthalin",
+            "forinthry"
+          ],
+          "requiredRegions": [
+            "misthalin"
+          ],
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
         }
       ],
       "upgrades": [
@@ -3626,34 +3653,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Underworld Grimoire skilling milestone ladder (UG1–4 densify)",
-          "category": "Underworld achievement skilling breakpoint densify",
-          "detail": "Densify companion to equipment row. Bone auto-deposit takes priority over bonecrusher when toggled; full focus storage falls through to crusher · Hard Misthalin for City of Um diary-style rewards. Achievement task access follows League quest/region rules · Unlocks: UG1 (Easy): toggleable bones + big bones → focus storage (priority over bonecrusher); picked-up ashes → bank; 2.5% extra necrotic rune chance; 3% ritual-disturbance XP; 10% 4-dose necro potion chance in Um; 10 smithy teles/day; 60 weekly noted bones from Lupe, UG2 (Medium): baby dragon + wyvern bones to focus storage; 5% extra rune chance; 5% extra necroplasm (additive with Multiply glyphs); 6% disturbance XP; unlimited smithy tele + 10 shared daily Um/Ungael ritual-site teles; weekly baby dragon bones + regular candles/ink, UG3 (Hard): dragon / dagannoth / airut / ourg / hardened dragon / dragonkin bones to focus storage; 7.5% extra rune chance; 10% necroplasm; 9% disturbance XP; unlimited Um + Ungael ritual teles; disease-free City of Um mushroom patch; Soul Supplies 10 daily slime; weekly dragon bones + greater candles/ink, UG4 (Elite): dinosaur / frost dragon / reinforced dragon bones to focus storage; 10% extra rune chance; 15% necroplasm; 12% disturbance XP; potion 4-dose effects no longer Um-restricted; Lupe weekly ink to bank and bones to focus storage; free daily Death reclaim; daily Lupe teleport · Region pressure: Misthalin / City of Um owns claim NPCs, ritual site, mushroom patch, and Lupe supplies",
-          "requirements": [
-            "Necromancy! / City of Um access",
-            "Easy → Medium → Hard → Elite Underworld achievements claimed in order",
-            "Prior grimoire tier claimed before the next (Icthlarin / Frank / Kili / Crunchy claim NPCs)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Underworld_Grimoire",
-            "title": "Underworld Grimoire skilling milestone ladder (UG1–4 densify)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "misthalin",
-            "fremennik"
-          ],
-          "requiredRegions": [
-            "misthalin"
-          ],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): misthalin / fremennik",
-          "isRegionCombo": false
-        },
-        {
           "name": "Varrock armour 1-4",
           "category": "Varrock achievement Mining and Smithing utility",
           "detail": "Core Misthalin diary Mining/Smithing utility called out in ironman gap audits. New Varrock achievements can double double-ore / double-bar / double-progress chances and remove the need to wear the armour for most of those effects · Starting-region diary reward. Achievement prerequisites still apply unless League auto-completes them · Effects: Chance to mine two ores at once on tiered ore brackets (4% / 3% / 2% / 1% by armour tier before New Varrock doubling), Chance to smelt an extra bar to metal bank on tiered brackets, Chance for double Smithing progress per strike on tiered metal brackets, 1% bonus Mining XP while wearing (does not contribute to golden mining suit set bonus), Always: Edgeville furnace access from tier 1; expanded Naff battlestaff stock by tier, Tier 3 always: Cooks' Guild entry without chef's hat/Cooking cape and bank access, Tier 4 operate: unlimited Chaos Tunnels teleport; log storage boxes near beacons",
@@ -3726,40 +3725,6 @@
           "regionRequirementType": "single",
           "comboLabel": "",
           "isRegionCombo": false
-        },
-        {
-          "name": "Velucia museum collection chronote tiers (225% set bonus)",
-          "category": "Archaeology museum chronote progression checklist",
-          "detail": "Dense chronote-tier sibling of thin hub. No first-time non-chronote rewards on Velucia museum sets (recurring chronotes only) · Hard Misthalin for Velucia payout premium. Artefact self-source follows unlocked dig-site regions · Unlocks: Velucia museum collections pay full per-artefact chronotes plus a 25% larger set bonus than standard collectors — 225% total of base artefact chronotes on completion (standard collectors are 200%), Museum tracks as permanent recurring chronote farms: Zarosian I–VII, Zamorakian I–IV, Saradominist I–IV, Guthixian I–II, Armadylean I–III, Bandosian I–III, Dragonkin I–VII (see It Belongs in a Museum! log), Example wiki completion totals (artefact + set): Museum - Zarosian I 4,743; Museum - Armadylean I 12,798; Museum - Bandosian I 15,201; Museum - Zarosian III 16,744; Museum - Armadylean III 23,553; Museum - Bandosian III 21,465; Museum - Dragonkin IV 15,705, One-time full unique-collection pass (all collectors including Velucia museum sets) awards ~554,464 chronotes — about half the Guild shop permanent-unlock budget · Region pressure: Misthalin Velucia hand-in and the museum chronote premium., Anachronia / Forinthry /",
-          "requirements": [
-            "Restored unnoted artefacts matching each Museum - * collection",
-            "Archaeology level equal to the collection gate (Museum - Zarosian I at 25 through Museum - Dragonkin IV at 120)",
-            "Dig-site access for each culture track (optional pressure by region)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Velucia",
-            "title": "Velucia museum collection chronote tiers (225% set bonus)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "misthalin",
-            "desert",
-            "asgarnia",
-            "morytania",
-            "kandarin",
-            "anachronia",
-            "forinthry",
-            "havenhythe"
-          ],
-          "requiredRegions": [
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): misthalin + desert + asgarnia + morytania + kandarin + anachronia + forinthry + havenhythe",
-          "isRegionCombo": true
         },
         {
           "name": "Velucia museum Archaeology collections",
@@ -4032,71 +3997,6 @@
           "requiredRegions": [],
           "regionRequirementType": "support",
           "comboLabel": "Region chain (support pressure): misthalin / forinthry / desert / morytania / asgarnia / kandarin / tirannwn",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Ring of slaying (craft unlock)",
-          "category": "permanent Slayer teleport jewellery unlock",
-          "detail": "Core midgame teleport QoL. Enchanted gem stock is daily-limited from Slayer Masters (including Turael/Spria separate stock). Compacted ring exists via teleportation compactor (Invention) · Craft unlock is global points. Teleport destinations pressure Desert, Morytania, Fremennik, and Morytania/Misthalin for Tarn's Lair quest gate · Region combo (all required): desert + morytania + fremennik + misthalin · Effects: 8 teleports per crafted ring: Sumona (Pollnivneach), Slayer Tower, Fremennik Slayer Dungeon, Tarn's Lair (Haunted Mine), Contact Slayer Masters / check task and points without spending charges (enchanted-gem functions), Social Slayer invite via use-on-player, Fusable into full slayer helmet",
-          "requirements": [
-            "300 Slayer points: Learn how to craft rings of slaying",
-            "75 Crafting at a furnace (boostable / Assist allowed if unlock owned)",
-            "Enchanted gem + gold bar per ring",
-            "Alternate: buy finished rings for 75 points each without craft unlock"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Ring_of_slaying",
-            "title": "Ring of slaying (craft unlock)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "desert",
-            "morytania",
-            "fremennik",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "desert",
-            "morytania",
-            "fremennik",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + morytania + fremennik + misthalin",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Slayer helmet (craft unlock + base helm)",
-          "category": "permanent Slayer equipment unlock",
-          "detail": "Ironman guide top permanent. Point sink is global; black mask farm is Morytania-pressure; shop pieces multi-master. Base tier is melee-only damage/accuracy boost until full upgrade · Track as multi-region permanent. Component farms still apply regional pressure (especially Morytania black mask) · Region combo (all required): morytania + misthalin · Effects: Combines all protective piece effects into one head slot, On-task melee: +7.5% damage and +12.5% accuracy from black mask (base tier), Can be disassembled into components and reassembled, Eligible for Slayer Lodge helmet stand (Anachronia tier 3) for passive task bonuses without wearing stats/teleports",
-          "requirements": [
-            "Smoking Kills completed",
-            "400 Slayer points: Learn how to craft Slayer helmets",
-            "55 Crafting (boostable; Assist System cannot craft)",
-            "35 Slayer (Smoking Kills gate)",
-            "Uncharged black mask + spiny helmet + face mask + earmuffs + nose peg"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Slayer_helmet",
-            "title": "Slayer helmet (craft unlock + base helm)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "misthalin",
-          "regionHints": [
-            "morytania",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "morytania",
-            "misthalin"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): morytania + misthalin",
           "isRegionCombo": true
         },
         {
@@ -17502,17 +17402,15 @@
           "regionHints": [
             "desert",
             "morytania",
-            "fremennik",
-            "misthalin"
+            "fremennik"
           ],
           "requiredRegions": [
             "desert",
             "morytania",
-            "fremennik",
-            "misthalin"
+            "fremennik"
           ],
           "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + morytania + fremennik + misthalin",
+          "comboLabel": "Region combo (all required): desert + morytania + fremennik",
           "isRegionCombo": true
         },
         {
@@ -18017,6 +17915,33 @@
             "title": "Mage of Zamorak (Abyss entrance)",
             "verifiedAt": "2026-07-26"
           }
+        },
+        {
+          "name": "Zamorak, Lord of Chaos",
+          "kind": "Elite Dungeon 4",
+          "detail": "ED4 final boss — Undercity access often planned with Forinthry/Wilderness logistics alongside Senntisten (Misthalin) · Uniques: Vestments of havoc path",
+          "requirements": [
+            "Access to the Zamorakian Undercity (Elder God Wars / Senntisten path)",
+            "Elite Dungeon group or story mode as applicable"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Zamorak,_Lord_of_Chaos",
+            "title": "Zamorak, Lord of Chaos",
+            "verifiedAt": "2026-07-27"
+          },
+          "regionId": "forinthry",
+          "regionHints": [
+            "forinthry",
+            "misthalin"
+          ],
+          "requiredRegions": [
+            "misthalin"
+          ],
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
         }
       ],
       "upgrades": [
@@ -22948,7 +22873,6 @@
             "desert",
             "morytania",
             "fremennik",
-            "misthalin",
             "asgarnia"
           ],
           "requiredRegions": [],
@@ -22977,17 +22901,15 @@
           "regionHints": [
             "desert",
             "morytania",
-            "fremennik",
-            "misthalin"
+            "fremennik"
           ],
           "requiredRegions": [
             "desert",
             "morytania",
-            "fremennik",
-            "misthalin"
+            "fremennik"
           ],
           "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + morytania + fremennik + misthalin",
+          "comboLabel": "Region combo (all required): desert + morytania + fremennik",
           "isRegionCombo": true
         },
         {
@@ -25826,17 +25748,15 @@
           "regionHints": [
             "desert",
             "morytania",
-            "fremennik",
-            "misthalin"
+            "fremennik"
           ],
           "requiredRegions": [
             "desert",
             "morytania",
-            "fremennik",
-            "misthalin"
+            "fremennik"
           ],
           "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): desert + morytania + fremennik + misthalin",
+          "comboLabel": "desert + morytania + fremennik",
           "isRegionCombo": true
         },
         {
@@ -25860,15 +25780,14 @@
           "regionId": "morytania",
           "regionHints": [
             "morytania",
-            "misthalin"
+            "forinthry"
           ],
           "requiredRegions": [
-            "morytania",
-            "misthalin"
+            "morytania"
           ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): morytania + misthalin",
-          "isRegionCombo": true
+          "regionRequirementType": "single",
+          "comboLabel": "",
+          "isRegionCombo": false
         },
         {
           "name": "Hard Morytania Barrows rewards",

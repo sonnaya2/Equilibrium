@@ -54,11 +54,25 @@ export const CONTENT_ACCESS: Record<string, string> = {
  * Cap-5 chip order for Zuk: weapon, ability, scripture, BiS cape, one style cape.
  */
 export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
-  // Capes next to Zuk: BiS igneous set (style stones) after the weapon/ability/scripture.
-  "TzKal-Zuk":
-    "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk, Igneous Kal-Ket, Igneous Kal-Mej, Igneous Kal-Xil, Igneous Kal-Mor",
+  // Main Zuk uniques + BiS igneous cape only (no +N from listing every style stone).
+  "TzKal-Zuk": "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk",
   "TzHaar Fight Cave": "Fire cape",
   "Fight Kiln": "TokHaar-Kal-Ket, TokHaar-Kal-Xil, TokHaar-Kal-Mej, TokHaar-Kal-Mor",
+  // Catalog Unlocks essay is huge — keep the two things players need.
+  "The Empty Throne Room": "Auto-cycles · unique rocks inside",
+  "Empty Throne Room": "Auto-cycles · unique rocks inside",
+  // Abilities + boots would overflow the 5-chip strip (+2).
+  Raksha: "Greater Ricochet, Greater Chain, Divert, Fleeting boots, Laceration boots",
+  // Full GWD2 weapon list is 7 items — keep five headline uniques.
+  "Heart of Gielinor / God Wars Dungeon 2":
+    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Anima core equipment",
+  "Heart of Gielinor":
+    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Anima core equipment",
+  // No upgrade package in catalog — short honest label.
+  "Kalphite Queen": "Dragon chainbody · KQ head",
+  // ED4 — Vestments of havoc is the headline package players care about.
+  "Zamorak, Lord of Chaos": "Vestments of havoc, Chaos witch equipment",
+  "Zamorak, Lord of Chaos (Undercity)": "Vestments of havoc, Chaos witch equipment",
 };
 
 /**
@@ -78,6 +92,8 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   Croesus: "Croesus progression",
   "TzKal-Zuk": "TzKal-Zuk progression",
   "Zemouregal & Vorkath": "Zemouregal & Vorkath progression",
+  "Zamorak, Lord of Chaos": "Zamorak, Lord of Chaos",
+  "Zamorak, Lord of Chaos (Undercity)": "Zamorak, Lord of Chaos",
 
   // —— Asgarnia / GWD1 ——
   Nex: "Nex equipment",
@@ -375,4 +391,53 @@ function withRewardAppend(rowName: string, base: string): string {
     .filter((t) => t && !have.has(t.toLowerCase()));
   if (!add.length) return base;
   return `${base}, ${add.join(", ")}`;
+}
+
+/**
+ * Parent rows that own multi-boss unique packages (Sanctum, EGWD fronts…).
+ * Place hubs (Lost Grove, City of Um) must NOT collapse their boss (Solak, Rasial).
+ */
+export function isMajorCollapseParent(parent: {
+  name: string;
+  kind?: string | null;
+}): boolean {
+  const k = `${parent.kind ?? ""} ${parent.name}`.toLowerCase();
+  return (
+    /\bboss(?:es|ing)?\b/.test(k) ||
+    /\bdungeon\b/.test(k) ||
+    /\bsanctum\b/.test(k) ||
+    /\bgate of\b/.test(k) ||
+    /\bgod wars\b/.test(k) ||
+    /\belite dungeon\b/.test(k) ||
+    /\bundercity\b/.test(k) ||
+    /\bzamorakian\b/.test(k) ||
+    /\bfront\b/.test(k)
+  );
+}
+
+/**
+ * Major unlocks list: hide sub-boss children of multi-boss packages that share
+ * the same unique list (Vermyx under Sanctum). Keeps Solak under Tirannwn —
+ * kind "The Lost Grove" must not hide the boss behind a place hub.
+ */
+export function majorContentRows<T extends { name: string; kind?: string | null }>(
+  content: readonly T[],
+  upgrades: readonly RewardUpgrade[],
+): T[] {
+  return content.filter(
+    (row) =>
+      !content.some((parent) => {
+        if (parent === row) return false;
+        if (!isMajorCollapseParent(parent)) return false;
+        if (
+          cleanRewardText(parent.name).toLowerCase() !==
+          cleanRewardText(String(row.kind ?? "")).toLowerCase()
+        ) {
+          return false;
+        }
+        return (
+          contentRewardsFull(parent, upgrades) === contentRewardsFull(row, upgrades)
+        );
+      }),
+  );
 }

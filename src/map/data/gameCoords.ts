@@ -92,7 +92,9 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Rellekka", [2670, 3661]],
   ["Miscellania", [2530, 3860]],
   ["Keldagrim", [2850, 3580]],
-  ["Lava Flow Mine", [2930, 3520]],
+  // Underground fre content under the massif; surface pin sits on the fre
+  // Keldagrim pocket (not Ice Mountain asgarnia land at the old 2930,3520).
+  ["Lava Flow Mine", [2860, 3575]],
   ["Dagannoth Kings", [2522, 3740]],
   ["Wilderness Agility Course", [2998, 3931]],
   ["Mage Arena", [3105, 3930]],
@@ -148,7 +150,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Solak", [1952, 3151]],
   ["Max Guild", [2276, 3319]],
   ["Hefin Agility Course", [2181, 3423]],
-  ["Motherlode Maw", [2205, 3310]],
+
   ["Anachronia base camp", [3908, 4270]],
   ["Orthen Dig Site", [3972, 4322]],
   ["Time altar", [3813, 4468]],

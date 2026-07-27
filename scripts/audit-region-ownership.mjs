@@ -299,8 +299,10 @@ const PROBES = [
   ["Rellekka", 2670, 3661, "fremennik"],
   ["Rellekka SE approach", 2700, 3620, "fremennik"],
   ["Keldagrim entrance", 2850, 3580, "fremennik"],
-  // Lava Flow surface sits on Ice Mountain body = Asgarnia plate (mine content is fre).
-  ["Lava Flow Mine", 2930, 3520, "asgarnia"],
+  // Lava Flow Mine pin lives on the fre Keldagrim pocket (underground fre content).
+  ["Lava Flow Mine", 2860, 3575, "fremennik"],
+  // Ice Mountain body itself stays Asgarnia.
+  ["Ice Mountain body", 2930, 3520, "asgarnia"],
   ["Trollheim", 2885, 3675, "asgarnia"],
   ["Troll Stronghold", 2830, 3675, "asgarnia"],
   ["GWD approach", 2910, 3745, "asgarnia"],

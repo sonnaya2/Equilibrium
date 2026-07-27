@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { loadState, saveState } from "@/lib/storage";
 import {
   emptyBuild,
@@ -89,10 +89,23 @@ export function useBuild() {
   // flag before a Suspense-delayed child hydrates; getServerSnapshot stays
   // false for the hydration pass so Clear picks `disabled` matches the HTML.
   const build = useSyncExternalStore(subscribe, () => state, () => SERVER_SNAPSHOT);
-  const loaded = useSyncExternalStore(subscribe, () => hydrated, () => false);
+  // Per-instance, and deliberately not `useSyncExternalStore(() => hydrated)`.
+  //
+  // The module flag is shared: ShareImport hydrates the store from the layout,
+  // so by the time the map subtree renders — it is behind Suspense and
+  // next/dynamic, so it goes late — `hydrated` is already true and every
+  // consumer's *first* render disagrees with HTML that was built while it was
+  // false. A local flag always starts false on its own first render, whether
+  // that render is a hydration pass or a fresh client mount, which is the only
+  // version of this that does not depend on subtree timing.
+  //
+  // Anything whose markup depends on `build` must gate on this, or it will
+  // paint real localStorage state over server HTML that had none.
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     hydrateLocalBuild();
+    setLoaded(true);
   }, []);
 
   return {

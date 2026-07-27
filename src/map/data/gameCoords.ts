@@ -66,7 +66,8 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Underground Pass", [2440, 3310]],
   ["Legiones", [2500, 2887]],
   ["Elemental Workshop", [2710, 3497]],
-  ["Fishing Trawler", [2675, 3160]],
+  // Was 2675,3160 — two tiles offshore, so the pin floated in open sea.
+  ["Fishing Trawler", [2676, 3162]],
   ["Gnome Restaurant", [2466, 3497]],
   ["Musa Point", [2950, 3145]],
   ["Brimhaven", [2760, 3170]],
@@ -143,7 +144,8 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Abandoned Mine", [3441, 3233]],
   ["Temple Trekking", [3440, 3400]],
   ["Prifddinas", [2235, 3340]],
-  ["Lost Grove", [2150, 3050]],
+  // Was 2150,3050 — eight tiles offshore, so the pin floated in open sea.
+  ["Lost Grove", [2157, 3054]],
   ["Lletya", [2340, 3170]],
   ["Isafdar", [2200, 3200]],
   ["Port Tyras", [2180, 3120]],

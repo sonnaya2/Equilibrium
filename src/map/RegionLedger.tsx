@@ -37,11 +37,14 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
   const regionById = new Map(regions.map((r) => [r.id, r]));
   const pickCount = build.elective.length;
   const counterLabel = loaded ? `${pickCount}/${ELECTIVE_CAP}` : `…/${ELECTIVE_CAP}`;
-  // Native `disabled` must be a real boolean on every render. Do not gate on
-  // `loaded` — build is empty on the server snapshot and the hydration pass
-  // (useSyncExternalStore), so SSR HTML and the first client paint both see
-  // clearDisabled=true. After mount, picks flip it to false.
-  const clearDisabled = Boolean(pickCount === 0);
+  // Native `disabled` must be a real boolean on every render, and it must be
+  // gated on `loaded`. The server snapshot is an empty build, so SSR always
+  // ships `disabled`; but this subtree renders late (Suspense + next/dynamic),
+  // by which point the store can already hold real localStorage picks — and a
+  // first paint computed straight off `build` would drop the attribute the HTML
+  // has, which React reports as an unpatchable mismatch. `loaded` is false for
+  // every instance's first render, so this matches the HTML either way.
+  const clearDisabled = !loaded || pickCount === 0;
 
   return (
     <section className="board-sky__regions" aria-busy={!loaded}>

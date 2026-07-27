@@ -128,3 +128,6 @@ scripts/.map-terrain-debug.png
 
 # Untracked render of the map terrain partition (npm run build:map)
 scripts/.map-terrain-debug.png
+
+# Untracked pin-audit renders (node scripts/audit-map-anchors.mjs --render)
+scripts/.map-anchor-audit/

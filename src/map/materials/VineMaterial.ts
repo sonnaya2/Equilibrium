@@ -26,10 +26,10 @@ import {
 import type { Node } from "three/webgpu";
 import { linear } from "./shared";
 
-/** Leaf gain under the sparse light rig. Stem uses a lower gain so wood hides. */
-const FOLIAGE_GAIN = 1.85;
-const STEM_GAIN = 1.3;
-const TENDRIL_GAIN = 1.15;
+/** Leaf gain under the key-heavy desk lamp. Stem stays darker under the mass. */
+const FOLIAGE_GAIN = 2.0;
+const STEM_GAIN = 1.35;
+const TENDRIL_GAIN = 1.2;
 
 const BARK_DARK = 0x1c1610;
 const BARK = 0x32281c;

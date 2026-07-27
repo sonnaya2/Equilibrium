@@ -8,10 +8,9 @@
  * plates share one raster, one field and one atlas rather than eleven copies of
  * each. Nothing under this component fetches anything.
  *
- * The light rig is small and fixed: a warm key from the upper left, a cool sky
- * fill, and no shadow maps. Contact comes from the water darkening against every
- * coast, which is exact — it reads the same distance field the coastline was cut
- * from — and costs nothing.
+ * The light rig is a desk-lamp print setup: strong warm key, weak cool fill,
+ * tiny ambient so the wiki sheet keeps chroma. No shadow maps — contact comes
+ * from the water darkening against every coast.
  */
 
 import { useEffect, useMemo } from "react";
@@ -29,8 +28,11 @@ import { MAP_IMAGE } from "./data/regionAnchors";
 import { asAlbedoTexture, asDataTexture } from "./materials/shared";
 import { mapFlags } from "./mapQuality";
 
-/** Warm key from the upper left; the water reflects this same direction. */
-export const KEY_DIRECTION = new THREE.Vector3(-0.62, 0.78, -0.44).normalize();
+/**
+ * Warm key from the upper left — steep enough to sculpt emboss, not a
+ * overhead wash. Water reflects this same direction.
+ */
+export const KEY_DIRECTION = new THREE.Vector3(-0.55, 0.86, -0.38).normalize();
 
 export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
   const flags = mapFlags();
@@ -69,8 +71,17 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group>
-      <hemisphereLight args={[0xa8c0d8, 0x4a3c28, 0.58]} />
-      <directionalLight position={keyPosition} intensity={0.98} color={0xffe9c8} />
+      {/* Ambient lifts the floor without flattening; hemi is a cool bounce only. */}
+      <ambientLight intensity={0.16} color={0xfff0dd} />
+      <hemisphereLight args={[0x8fa8c4, 0x3a3020, 0.28]} />
+      {/* Hard warm sun — high intensity, low fill = contrast not chalk. */}
+      <directionalLight position={keyPosition} intensity={1.62} color={0xffe0a8} />
+      {/* Soft fill from the opposite quarter so wall strata don't go black. */}
+      <directionalLight
+        position={keyPosition.clone().multiplyScalar(-0.55).setY(2.2)}
+        intensity={0.22}
+        color={0xc4d4ee}
+      />
 
       {flags.water ? <Ocean field={field} keyDirection={KEY_DIRECTION} /> : null}
 

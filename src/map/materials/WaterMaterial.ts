@@ -35,13 +35,13 @@ import {
 import type { Node } from "three/webgpu";
 import { linear, mapClock, mapUvFrom } from "./shared";
 
-const DEEP = 0x1e3d58;
-const SHALLOW = 0x3a6580;
-const SKY = 0x6f94b4;
-const FOAM = 0xb0c4d0;
-/** What the sea fades to at the outer edge. The canvas clears to this too, so
- *  the plane has no rim and the board sits in one continuous field. */
-export const OCEAN_HORIZON = 0x1a2e42;
+const DEEP = 0x24506e;
+const SHALLOW = 0x4a7fa0;
+const SKY = 0x7ea8c6;
+const FOAM = 0xb8ccd8;
+/** Outer void — a touch darker than shallow so the board sits in a continuous
+ *  field without turning the whole viewport into a black pit. */
+export const OCEAN_HORIZON = 0x1e354c;
 
 /**
  * World units of swell — a couple of game tiles, and deliberately less than
@@ -139,9 +139,9 @@ export function createWaterMaterial(
   const toward = reflected.dot(view).clamp(0, 1);
   // Gated by fresnel, so the sun answers from the far half of the sea where you
   // are looking across it and not from the water directly under the camera.
-  // Softened: a hard specular under 30Hz demand frames strobes as flicker.
-  const glint = toward.pow(90).mul(fresnel.mul(0.55).add(0.06)).mul(0.18);
-  const sheen = toward.pow(16).mul(0.008);
+  // Soft sun path on the water — enough life under the hard key, not a strobe.
+  const glint = toward.pow(70).mul(fresnel.mul(0.6).add(0.08)).mul(0.28);
+  const sheen = toward.pow(14).mul(0.014);
 
   // Foam, and very little of it: a thread along the crests, and a soft line
   // where the water actually meets a coast.

@@ -24,11 +24,17 @@ import { TERRAIN_WALL_DEEP, TERRAIN_WALL_ROCK, TERRAIN_WALL_SUBSOIL, TERRAIN_WAL
 import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
 
 /**
- * Pre-light boost so the wiki raster survives MeshStandard Lambert (÷π) on the
- * board's sparse rig. Tuned with Canvas `flat` (NoToneMapping) — 2.05 washed
- * the print chalky; 1.55 was muddy under the old ACES path.
+ * Pre-light boost so the wiki raster survives MeshStandard Lambert (÷π).
+ * Paired with a key-heavy desk lamp (strong sun, weak fill) — gain alone
+ * without a hard key just chalks the sheet.
  */
-const ALBEDO_GAIN = 1.72;
+const ALBEDO_GAIN = 2.05;
+/** Contrast around a mid pivot — restores wiki punch after lighting. */
+const PRINT_CONTRAST = 1.16;
+/** Saturation lift; 1 = unchanged, >1 pulls chroma back toward the webp. */
+const PRINT_SAT = 1.14;
+/** Soft floor so emboss shadows never crush blacks to void. */
+const PRINT_LIFT = 0.04;
 
 export interface TerrainMaterials {
   cap: THREE.MeshStandardNodeMaterial;
@@ -58,8 +64,8 @@ export function createTerrainMaterials(
   // Restrained on purpose. A sealed region should read as sealed and a
   // sidelined one as sidelined, but the HD map has to stay the HD map — the
   // board is not allowed to grey out ten elevenths of Gielinor to say so.
-  const drain = lock.mul(0.3).add(dim.mul(0.13)).min(float(0.42));
-  const shade = float(1).sub(dim.mul(0.13)).sub(lock.mul(0.07));
+  const drain = lock.mul(0.22).add(dim.mul(0.1)).min(float(0.32));
+  const shade = float(1).sub(dim.mul(0.1)).sub(lock.mul(0.05));
 
   const mapUv = mapUvFrom(positionWorld);
   const F = texture(field, mapUv);
@@ -68,8 +74,10 @@ export function createTerrainMaterials(
   // polygonOffset: neighbouring plates share byte-identical seam edges at the
   // same rest height, so without a bias the caps z-fight and shimmer under
   // any camera motion.
+  // Slightly lower roughness so the warm key can sparkle on wet / desert paint
+  // without going plastic.
   const cap = new THREE.MeshStandardNodeMaterial({
-    roughness: 0.9,
+    roughness: 0.82,
     metalness: 0,
     wireframe: options.wireframe,
     polygonOffset: true,
@@ -77,7 +85,16 @@ export function createTerrainMaterials(
     polygonOffsetUnits: 2,
   });
 
-  let base = texture(albedo, mapUv).rgb.mul(float(ALBEDO_GAIN));
+  // Sample → print grade → light prep. Order matters: grade the wiki sheet
+  // first so lighting doesn't flatten chroma we already lost.
+  let base = texture(albedo, mapUv).rgb;
+
+  // Mild contrast + sat: restores "wiki screenshot" punch under flat tonemap.
+  const pivot = float(0.4);
+  base = pivot.add(base.sub(pivot).mul(float(PRINT_CONTRAST))).max(float(0));
+  const preLum = base.x.mul(0.2126).add(base.y.mul(0.7152)).add(base.z.mul(0.0722));
+  base = mix(vec3(preLum, preLum, preLum), base, float(PRINT_SAT));
+  base = base.mul(float(ALBEDO_GAIN)).add(float(PRINT_LIFT));
 
   if (options.relief) {
     // Emboss, not terrain. The A channel is a low-passed luminance of the map
@@ -89,15 +106,14 @@ export function createTerrainMaterials(
     const hR = texture(field, mapUv.add(vec2(t, float(0)))).a;
     const hD = texture(field, mapUv.add(vec2(float(0), t.negate()))).a;
     const hU = texture(field, mapUv.add(vec2(float(0), t))).a;
-    const emboss = hL.sub(hR).mul(0.62).add(hU.sub(hD).mul(0.44));
-    base = base.mul(float(1).add(emboss.mul(0.5).clamp(-0.14, 0.16)));
+    const emboss = hL.sub(hR).mul(0.72).add(hU.sub(hD).mul(0.5));
+    base = base.mul(float(1).add(emboss.mul(0.55).clamp(-0.12, 0.18)));
   }
 
   // The waterline, from the real signed distance. Land within a few tiles of the
-  // sea cools and darkens — the shore reading a coast wants, and the only thing
-  // standing in for a contact shadow on a board with no shadow maps.
+  // sea cools and darkens — contact without crushing the whole coast.
   const inlandDepth = smoothstep(float(0.5), float(0.53), F.g);
-  base = mix(base.mul(0.84).mul(vec3(0.94, 0.98, 1.04)), base, inlandDepth);
+  base = mix(base.mul(0.9).mul(vec3(0.95, 0.98, 1.03)), base, inlandDepth);
 
   if (options.water) {
     // Rivers and lakes. Flow runs along the channel, which is perpendicular to
@@ -143,11 +159,13 @@ export function createTerrainMaterials(
     .mul(capRim.mul(focus).mul(0.5))
     .add(rimGem.mul(capRim.mul(sweep).mul(0.85)));
 
-  base = base.mul(float(1).add(focus.mul(0.06)));
+  base = base.mul(float(1).add(focus.mul(0.07)));
   const lum = base.x.mul(0.2126).add(base.y.mul(0.7152)).add(base.z.mul(0.0722));
   cap.colorNode = mix(base, vec3(lum, lum, lum), drain).mul(shade);
-  cap.emissiveNode = capGlow;
-  cap.roughnessNode = float(0.92).sub(F.b.mul(0.55));
+  // Tiny rest emissive of the graded albedo keeps midtones out of the void
+  // without lighting the bloom path (values stay far under bloom threshold).
+  cap.emissiveNode = capGlow.add(base.mul(0.045));
+  cap.roughnessNode = float(0.86).sub(F.b.mul(0.5));
 
   // ---- wall -----------------------------------------------------------------
   // Local y runs 0..depth: the shape is extruded along +z and rotated -90 about

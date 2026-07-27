@@ -112,6 +112,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "chaos tunnels": "chaos-tunnels",
   "lesser demons": "lesser-demons",
   "edgeville dungeon combat": "edgeville-resource-dungeons",
+  "rogues' castle safes": "rogues-castle",
+  "rogues castle safes": "rogues-castle",
   "abyssal wand and abyssal orb": "abyssal-wand",
   "accidental fletching and firemaking": "accidental-fletching",
   "achto raids armour (mazcab)": "acht-primeval-robe-top",

@@ -680,6 +680,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "chaos druids": skProd("grimy-ranarr"),
   "multi-combat training": perm("chaos-tunnels"),
   "lesser demons": perm("lesser-demons"),
+  "thieving xp": perm("safe"),
   "ghost hunter gear": perm("ghost-hunter-gear"),
   "ghost hunter goggles": perm("ghost-hunter-goggles"),
   "ghost hunter body": perm("ghost-hunter-body"),

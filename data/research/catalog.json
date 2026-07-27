@@ -16152,6 +16152,18 @@
             "title": "Edgeville Dungeon combat",
             "verifiedAt": "2026-07-27"
           }
+        },
+        {
+          "name": "Rogues' Castle safes",
+          "kind": "Thieving",
+          "detail": "Deep Wilderness Rogues' Castle. Three hidden safes (90+ Thieving) on a 10-minute reset — high XP safecracking node for Forinthry thieving routes. Chests and rogue captains between cracks.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Rogues%27_Castle",
+            "title": "Rogues' Castle safes",
+            "verifiedAt": "2026-07-27"
+          }
         }
       ],
       "upgrades": [

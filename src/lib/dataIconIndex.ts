@@ -1324,6 +1324,7 @@ export const ACTIVITY_ICON_BY_SLUG: Record<string, string> = {
   "green-dragons": "green-dragons.png",
   "chaos-tunnels": "chaos-tunnels.png",
   "lesser-demons": "lesser-demons.png",
+  "rogues-castle": "rogues-castle.png",
   "edgeville": "edgeville.png",
   "edimmu-resource-dungeon": "edimmu-resource-dungeon.png",
   "elemental-workshop": "elemental-workshop.png",

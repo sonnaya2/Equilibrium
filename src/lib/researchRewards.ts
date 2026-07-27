@@ -161,6 +161,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Lesser demons": "Lesser demons",
   Ghouls: "Ghoul Champion's scroll",
   "Slayer Tower early floors": "Crawling hands, Banshees",
+  "Rogues' Castle safes": "Safecracking, Thieving XP",
   "Wilderness bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Bloodwood trees": "Bloodwood logs, Bakriminel bolt tips, Dark onyx core",
   "Black salamanders": "Black salamander, Dark onyx core",

@@ -83,11 +83,13 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // expandSlashList prefix path only handles "Bandos helmet / chestplate". Explicit pieces.
   "K'ril Tsutsaroth":
     "Hood of subjugation, Garb of subjugation, Gown of subjugation, Gloves of subjugation, Boots of subjugation",
-  // Cap-5 GWD2 headline weapons (icons resolve; anima core deferred for chip space).
-  "Heart of Gielinor / God Wars Dungeon 2":
-    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
-  "Heart of Gielinor":
-    "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Blade of Nymora",
+  // GWD2 generals (Heart of Gielinor) — one major per boss; Telos is separate.
+  "Vindicta & Gorvek": "Dragon Rider lance, Anima core of Zaros",
+  Vindicta: "Dragon Rider lance, Anima core of Zaros",
+  Helwyr: "Wand of the Cywir elders, Orb of the Cywir elders, Anima core of Seren",
+  "Twin Furies": "Blade of Avaryss, Blade of Nymora, Anima core of Zamorak",
+  Gregorovic: "Shadow glaives, Off-hand shadow glaive, Anima core of Sliske",
+  "Telos, the Warden": "Seren godbow, Staff of Sliske, Zaros godsword",
   // Zilyana uniques with published inventory icons (murmur/hiss/whisper have none).
   "Commander Zilyana":
     "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
@@ -269,7 +271,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Shilo Village": "Gems, cart, Karamja gloves adjacency",
   "Nature altar": "Nature runes",
   "Gleaming wisp colony": "Gleaming wisps / energy",
-  "Pyramid Plunder": "Thieving XP, sceptre",
+  // Pyramid Plunder full chips defined under Desert block (ibis + sceptres).
   "Soul altar": "Soul runes",
   "Slayer Tower":
     "Abyssal scourge, Abyssal whip, Ghost hunter gear, Cremation",
@@ -351,6 +353,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Menaphos reputation, Feather of Ma'at, Camouflage fragments, Off-hand khopesh of the Kharidian",
   "Mazcab Emergency Merchants":
     "Super restore, Super attack, Super strength, Super defence, Super magic potion, Super ranging potion, Super necromancy, Cooked eeligator",
+  "Pyramid Plunder":
+    "Black ibis outfit, Sceptre of the gods, Pharaoh's sceptre",
+  "Pyramid Plunder (Jalsavrah / Sophanem)":
+    "Black ibis outfit, Sceptre of the gods, Pharaoh's sceptre",
   "Goebie scavengers": "Teci, Burial charms, Cooked eeligator, Mazcab reroll tokens",
   "Sunken Pyramid / player-owned Slayer dungeon": "Slayer Codex",
   "Het's Oasis":
@@ -375,7 +381,9 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Ourania Runecrafting Altar": "1.5× RC XP, random runes",
   "Jadinko Favour offering stone": "Favour shop · seeds / fruits / outfits",
   "Nature Grotto altar of nature": "Prayer restore + boost",
-  "Kharid-et Dig Site": "Venator digs, materials, caches",
+  "Kharid-et Dig Site":
+    "Pontifex observation ring, Tetracompass, Inquisitor staff",
+  "Pontifex observation ring": "Pontifex observation ring",
   // Wilderness Slayer rewards defined earlier (dark onyx core + chest).
   "Everlight Dig Site":
     "Porcelain clay, Inspire Effort, Sticky Fingers, Heightened Senses, Tetracompass",
@@ -503,8 +511,8 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   Abomination: "Abomination progression",
 
   // —— Desert / GWD2 ——
-  "Heart of Gielinor / God Wars Dungeon 2": "God Wars Dungeon 2",
-  "Telos, the Warden": "Telos weapon progression",
+  // Heart generals: early overrides (Vindicta / Helwyr / Twin Furies / Gregorovic).
+  "Telos, the Warden": "Seren godbow, Staff of Sliske, Zaros godsword",
   "Amascut, the Devourer": "Amascut, the Devourer progression",
   "Kalphite King": "Drygore",
   "Sophanem Slayer Dungeon / The Magister": "The Magister",

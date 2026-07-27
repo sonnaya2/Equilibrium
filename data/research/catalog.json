@@ -19005,20 +19005,8 @@
           }
         },
         {
-          "name": "Heart of Gielinor / God Wars Dungeon 2",
-          "kind": "bossing hub",
-          "detail": "",
-          "confidence": "historical_catalyst_region_mapping_current_wiki_content",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Heart_of_Gielinor",
-            "title": "Heart of Gielinor / God Wars Dungeon 2",
-            "verifiedAt": "2026-07-25"
-          }
-        },
-        {
           "name": "Telos, the Warden",
-          "kind": "Heart of Gielinor",
+          "kind": "Boss",
           "detail": "",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
@@ -19067,7 +19055,7 @@
         {
           "name": "Pyramid Plunder",
           "kind": "Thieving minigame infrastructure",
-          "detail": "minigame package. Does NOT add a separate sceptre equipment row — sceptre/SotG are rewards and teleports inside this activity; amulet diary already tracks SotG charge caps. Prefer room 7–8 urn focus for XP; room gates are hard level checks",
+          "detail": "Sophanem Pyramid Plunder. Black ibis outfit and Pharaoh's / Sceptre of the gods path for Thieving and desert teleports.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -19079,7 +19067,7 @@
         {
           "name": "Kharid-et Dig Site",
           "kind": "Archaeology dig site progression",
-          "detail": "Canonical Desert dig site in league mapping (Kharid-et → desert). Pylon charge is a shared world state; batteries are unbankable hand-ins. Robust-glass Archaeology collections that include Kharid-et artefacts are multi-region production rows elsewhere",
+          "detail": "Desert Zarosian Archaeology dig site. Pylon batteries, Protection of Zaros, pontifex ring path, and inquisitor-staff heist pressure.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -19175,7 +19163,7 @@
         {
           "name": "Mazcab Emergency Merchants",
           "kind": "combat supply shop",
-          "detail": "Kanatah / Otot / raids Goebie shop. Super combat-style pots, super restore, summoning potion, cooked eeligator. Restocks every 2 minutes; Mazcab reputation discounts 10%/25%.",
+          "detail": "Mazcab goebie combat supply shop. Super potions and cooked eeligator restocks for raids and island combat.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -19241,6 +19229,66 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Illuminated_god_book",
             "title": "Citharede Abbey",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Vindicta & Gorvek",
+          "kind": "Boss",
+          "detail": "Heart of Gielinor Zaros general. Dragon Rider lance and anima-core of Zaros path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Vindicta",
+            "title": "Vindicta & Gorvek",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Helwyr",
+          "kind": "Boss",
+          "detail": "Heart of Gielinor Seren general. Wand and orb of the Cywir elders; anima-core of Seren.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Helwyr",
+            "title": "Helwyr",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Twin Furies",
+          "kind": "Boss",
+          "detail": "Heart of Gielinor Zamorak generals Avaryss and Nymora. Blade of Avaryss, Blade of Nymora, anima-core of Zamorak.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Twin_Furies",
+            "title": "Twin Furies",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Gregorovic",
+          "kind": "Boss",
+          "detail": "Heart of Gielinor Sliske general. Shadow glaives and anima-core of Sliske.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Gregorovic",
+            "title": "Gregorovic",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Pontifex observation ring",
+          "kind": "Archaeology / Elder God Wars",
+          "detail": "Kharid-et Archaeology permanent. Divination XP and chronicle spawns; feeds Elder God Wars front utility upgrades.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Pontifex_observation_ring",
+            "title": "Pontifex observation ring",
             "verifiedAt": "2026-07-27"
           }
         }

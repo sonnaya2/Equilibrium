@@ -629,19 +629,22 @@ describe("presentInterestName / presentInterestMeta", () => {
 });
 
 describe("contentRewardsFull — catalog boss packages", () => {
-  it("GWD2 Heart of Gielinor resolves five headline weapon chips", () => {
-    const { row, upgrades } = contentRow("desert", /Heart of Gielinor/);
-    const full = contentRewardsFull(row, upgrades);
-    expect(full).toMatch(/Dragon Rider lance/i);
-    expect(full).toMatch(/Wand of the Cywir elders/i);
-    expect(full).toMatch(/Shadow glaives/i);
-    expect(full).toMatch(/Blade of Avaryss/i);
-    expect(full).toMatch(/Blade of Nymora/i);
-    expect(full).not.toMatch(/Anima core/i);
-    const presented = presentContentRewards(full);
-    expect(presented.icons.length).toBeGreaterThanOrEqual(5);
-    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
-    expect(presented.icons.some((i) => /blade-of-nymora/i.test(i.src))).toBe(true);
+  it("GWD2 Heart bosses resolve per-general weapon chips", () => {
+    const cases: Array<{ name: string | RegExp; re: RegExp; minIcons: number }> = [
+      { name: /Vindicta/, re: /Dragon Rider lance/i, minIcons: 1 },
+      { name: "Helwyr", re: /Cywir/i, minIcons: 2 },
+      { name: "Twin Furies", re: /Blade of Avaryss|Blade of Nymora/i, minIcons: 2 },
+      { name: "Gregorovic", re: /Shadow glaive/i, minIcons: 1 },
+      { name: /Telos/, re: /Seren godbow|Staff of Sliske|Zaros godsword/i, minIcons: 3 },
+    ];
+    for (const { name, re, minIcons } of cases) {
+      const { row, upgrades } = contentRow("desert", name);
+      const full = contentRewardsFull(row, upgrades);
+      expect(full, String(name)).toMatch(re);
+      const presented = presentContentRewards(full);
+      expect(presented.icons.length, String(name)).toBeGreaterThanOrEqual(minIcons);
+      expect(presented.icons.every((i) => publicOk(i.src)), String(name)).toBe(true);
+    }
   });
 
   it("Commander Zilyana resolves Saradomin / ACB uniques (not bare Godswords package)", () => {
@@ -742,6 +745,26 @@ describe("contentRewardsFull — catalog boss packages", () => {
         must: [/Focus sight/i],
         minIcons: 1,
       },
+      {
+        name: "Pyramid Plunder",
+        must: [/Black ibis/i, /Sceptre of the gods/i, /Pharaoh/i],
+        minIcons: 3,
+      },
+      {
+        name: "Mazcab Emergency Merchants",
+        must: [/Super restore/i, /Super attack/i, /Cooked eeligator/i],
+        minIcons: 5,
+      },
+      {
+        name: "Kharid-et Dig Site",
+        must: [/Pontifex/i, /Tetracompass/i, /Inquisitor/i],
+        minIcons: 3,
+      },
+      {
+        name: "Pontifex observation ring",
+        must: [/Pontifex/i],
+        minIcons: 1,
+      },
     ];
     for (const { name, must, minIcons } of cases) {
       const { row, upgrades } = contentRow("desert", name);
@@ -753,6 +776,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
     }
     expect(presentInterestName("Corrupted creatures & soul devourers")).toBe(
       "Corrupted creatures",
+    );
+    const desert = regionById("desert");
+    expect(desert.content.some((c) => /Heart of Gielinor \/ God Wars/i.test(c.name))).toBe(
+      false,
     );
     // Het powders must not collapse to a single generic "Prayer powders" chip.
     const het = contentRow("desert", "Het's Oasis");
@@ -1195,8 +1222,23 @@ describe("contentRewardsFull — catalog boss packages", () => {
       { region: "desert", name: "Kalphite King", re: /Drygore/i },
       {
         region: "desert",
-        name: /Heart of Gielinor/,
-        re: /Dragon Rider lance|Cywir|Shadow glaive|Blade of (Avaryss|Nymora)/i,
+        name: /Vindicta/,
+        re: /Dragon Rider lance/i,
+      },
+      {
+        region: "desert",
+        name: "Helwyr",
+        re: /Cywir/i,
+      },
+      {
+        region: "desert",
+        name: "Twin Furies",
+        re: /Blade of Avaryss|Blade of Nymora/i,
+      },
+      {
+        region: "desert",
+        name: "Gregorovic",
+        re: /Shadow glaive/i,
       },
       {
         region: "asgarnia",

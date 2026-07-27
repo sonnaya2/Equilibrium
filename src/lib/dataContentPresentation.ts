@@ -650,6 +650,7 @@ export function presentInterestName(value: string): string {
   if (/^Yakamaru$/i.test(raw)) return "Yakamaru";
   if (/^Vampyrism Aspect$/i.test(raw)) return "Vampyrism Aspect";
   if (/^Desert strykewyrm$/i.test(raw)) return "Desert strykewyrm";
+  if (/^Sophanem plover birds\b/i.test(raw)) return "Sophanem plovers";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")
@@ -818,6 +819,7 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
     "permanent slayer rewards buy unlock — personal dungeon capacity": "Slayer dungeon",
     "permanent slayer rewards learn unlock — dungeon layout qol": "Slayer dungeon",
     "slayer permanent utility and reputation": "Slayer utility",
+    "hunter activity and slayer supply adjacency": "Hunter",
     "invention guild machine infrastructure": "Invention machines",
     "achievement diary acquisition frame": "Diary rewards",
     "construction teleport and housing infrastructure": "POH",

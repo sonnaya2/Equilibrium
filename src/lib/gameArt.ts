@@ -1177,6 +1177,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "solak / lost grove rewards": "solak",
   "sophanem": "sophanem",
   "sophanem plover birds and slayer support skilling": "sophanem",
+  "sophanem plover birds": "sophanem",
+  "sophanem plovers": "sophanem",
   "sophanem slayer dungeon": "sophanem-slayer-dungeon",
   "sophanem slayer dungeon / the magister": "magister",
   "corrupted creatures & soul devourers": "sophanem-slayer-dungeon",

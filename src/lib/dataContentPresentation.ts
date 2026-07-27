@@ -636,6 +636,13 @@ export function presentInterestName(value: string): string {
   if (/^Ring of Vigour and passive conversion$/i.test(raw)) return "Ring of Vigour";
   if (/^Ring of Vigour passive$/i.test(raw)) return "RoV passive";
   if (/^Ring of Vigour$/i.test(raw)) return "Ring of Vigour";
+  if (/^Sophanem Slayer Dungeon\s*\/\s*The Magister$/i.test(raw)) return "The Magister";
+  if (/^Corrupted creatures\s*&\s*soul devourers$/i.test(raw)) {
+    return "Corrupted creatures";
+  }
+  if (/^Liberation of Mazcab$/i.test(raw)) return "Liberation of Mazcab";
+  if (/^Agility Pyramid\b/i.test(raw)) return "Agility Pyramid";
+  if (/^Het's Oasis$/i.test(raw)) return "Het's Oasis";
 
   const name = raw
     .replace(/\s*\([^)]*\)/g, "")

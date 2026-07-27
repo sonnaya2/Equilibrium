@@ -299,9 +299,36 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "off-hand ascension crossbow": equip("off-hand-ascension-crossbow"),
   "ascension grips": equip("ascension-grips"),
 
-  // --- Magister ---
+  // --- Magister / Sophanem Slayer Dungeon ---
   "gloves of passage": equip("gloves-of-passage"),
   "enhanced gloves of passage": equip("enhanced-gloves-of-passage"),
+  phylactery: perm("phylactery"),
+  "vital spark": skProd("vital-spark"),
+  "vital sparks": skProd("vital-spark"),
+  "key to the crossing": perm("key-to-the-crossing"),
+  "keys to the crossing": perm("key-to-the-crossing"),
+  "corrupted gem": skProd("corrupted-gem"),
+  "corrupted gems": skProd("corrupted-gem"),
+  "corrupted magic logs": skProd("corrupted-magic-logs"),
+  "khopesh of the kharidian": equip("khopesh-of-the-kharidian"),
+  "off-hand khopesh of the kharidian": equip("khopesh-of-the-kharidian"),
+  "khopesh of tumeken": equip("khopesh-of-tumeken"),
+  "khopesh of elidinis": equip("khopesh-of-tumeken"),
+  "feather of ma'at": skProd("feather-of-maat"),
+  "feathers of ma'at": skProd("feather-of-maat"),
+  "menaphos reputation": perm("menaphos-reputation"),
+  "camouflage fragments": perm("menaphos-reputation"),
+  "prayer powders": prog("powder-of-burials"),
+  "agility course": perm("hets-oasis"),
+  "statue of het": perm("statue-of-het"),
+  "agility xp": perm("agility-pyramid"),
+  "achto armour": perm("liberation-of-mazcab"),
+  "raids uniques": perm("liberation-of-mazcab"),
+  "drygore rapier": equip("drygore-rapier"),
+  "drygore longsword": equip("drygore-longsword"),
+  "drygore mace": equip("drygore-mace"),
+  "dragon chainbody": perm("kalphite-queen"), // no separate chainbody icon; KQ plate fallback
+  "kalphite queen head": perm("kalphite-queen"),
 
   // --- Access / materials (inventory or permanent-unlock art only) ---
   "pale energy": "/game/upgrades/skilling-production/pale-energy.png",

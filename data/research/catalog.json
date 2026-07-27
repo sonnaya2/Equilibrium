@@ -20872,7 +20872,7 @@
         {
           "name": "Het's Oasis",
           "kind": "skilling",
-          "detail": "",
+          "detail": "Agility course, flower bushes, whirligigs for prayer powders, Statue of Het blessing. Desert oasis skilling hub.",
           "confidence": "confirmed_official",
           "source": {
             "source": "runescape-wiki",
@@ -20906,15 +20906,27 @@
           }
         },
         {
-          "name": "Sophanem Slayer Dungeon / The Magister",
-          "kind": "Slayer/bossing",
-          "detail": "",
-          "confidence": "inferred_region",
+          "name": "The Magister",
+          "kind": "Slayer boss",
+          "detail": "First Gate boss in Sophanem. 115 Slayer + Key to the Crossing. Gloves of passage, phylactery, khopesh upgrade path.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/The_Magister",
+            "title": "The Magister",
+            "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Corrupted creatures & soul devourers",
+          "kind": "Slayer dungeon uniques",
+          "detail": "Sophanem Slayer Dungeon trash (the black corrupted set + akhs). Vital sparks, keys to the Crossing, corrupted gems, corrupted magic logs, khopesh of the Kharidian. Feathers of Ma'at required to kill.",
+          "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon",
-            "title": "Sophanem Slayer Dungeon / The Magister",
-            "verifiedAt": "2026-07-25"
+            "title": "Corrupted creatures & soul devourers",
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -20966,9 +20978,9 @@
           }
         },
         {
-          "name": "Agility Pyramid (Jaleustrophos)",
+          "name": "Agility Pyramid",
           "kind": "Agility course and Menaphos reputation supply",
-          "detail": "Dual-purpose Desert Agility training and Menaphos reputation farm via Simon. Pets and familiars banned on the pyramid. Pyramid tops are not stackable and weigh 11 kg — sell before next ascent",
+          "detail": "Jaleustrophos pyramid laps for Agility XP and Menaphos reputation supply.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -21028,13 +21040,13 @@
         {
           "name": "Shifting Tombs",
           "kind": "skilling minigame",
-          "detail": "Menaphos Shifting Tombs multi-skill minigame.",
+          "detail": "Menaphos multi-skill run. Reputation, feathers of Ma'at, secondary XP choices, camouflage fragments on full clears. Off-hand khopesh of the Kharidian can drop here.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Shifting_Tombs",
             "title": "Shifting Tombs",
-            "verifiedAt": "2026-07-26"
+            "verifiedAt": "2026-07-27"
           }
         },
         {
@@ -21047,6 +21059,18 @@
             "url": "https://runescape.wiki/w/Soul_altar",
             "title": "Soul altar",
             "verifiedAt": "2026-07-26"
+          }
+        },
+        {
+          "name": "Liberation of Mazcab",
+          "kind": "Raid",
+          "detail": "Beastmaster Durzag and Yakamaru. Achto armour and raids uniques.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Liberation_of_Mazcab",
+            "title": "Liberation of Mazcab",
+            "verifiedAt": "2026-07-27"
           }
         }
       ],

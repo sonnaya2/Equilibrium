@@ -646,6 +646,42 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presentInterestName(row.name)).toBe("Bloodweed / aggression pots");
   });
 
+  it("Desert majors: Shifting Tombs, Magister split, KQ/KK rewards", () => {
+    const cases: Array<{ name: string; must: RegExp[]; minIcons?: number }> = [
+      {
+        name: "Shifting Tombs",
+        must: [/Menaphos reputation/i, /Feather of Ma'at/i],
+        minIcons: 2,
+      },
+      {
+        name: "The Magister",
+        must: [/Gloves of passage/i, /Phylactery/i],
+        minIcons: 2,
+      },
+      {
+        name: "Corrupted creatures & soul devourers",
+        must: [/Vital spark/i, /Key to the Crossing/i, /Corrupted gem/i],
+        minIcons: 3,
+      },
+      {
+        name: "Kalphite King",
+        must: [/Drygore/i],
+        minIcons: 2,
+      },
+    ];
+    for (const { name, must, minIcons } of cases) {
+      const { row, upgrades } = contentRow("desert", name);
+      const full = contentRewardsFull(row, upgrades);
+      for (const re of must) expect(full, name).toMatch(re);
+      const presented = presentContentRewards(full);
+      if (minIcons) expect(presented.icons.length, name).toBeGreaterThanOrEqual(minIcons);
+      expect(presented.icons.every((i) => publicOk(i.src)), name).toBe(true);
+    }
+    expect(presentInterestName("Corrupted creatures & soul devourers")).toBe(
+      "Corrupted creatures",
+    );
+  });
+
   it("Forinthry majors: Abyss, Chaotics, Corp shields, Dark facets", () => {
     const cases: Array<{ name: string; must: RegExp[]; minIcons?: number }> = [
       { name: "Abyss Runecrafting", must: [/Magical thread/i, /Multi-altar/i] },

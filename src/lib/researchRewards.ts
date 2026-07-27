@@ -69,7 +69,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Heart of Gielinor":
     "Dragon Rider lance, Wand of the Cywir elders, Shadow glaives, Blade of Avaryss, Anima core equipment",
   // No upgrade package in catalog — short honest label.
-  "Kalphite Queen": "Dragon chainbody · KQ head",
+  "Kalphite Queen": "Dragon chainbody, Kalphite queen head",
   // ED4 — Vestments of havoc is the headline package players care about.
   "Zamorak, Lord of Chaos": "Vestments of havoc, Chaos witch equipment",
   "Zamorak, Lord of Chaos (Undercity)": "Vestments of havoc, Chaos witch equipment",
@@ -114,6 +114,20 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Daemonheim Divination": "Time-Worn Memories, Scroll of gathering · Kandarin Memorial hub",
   "Primal ores": "Primal ores",
   "Daemonheim Dig Site": "Dragonkin collections, Aged journal, Balarak pieces",
+
+  // —— Desert ——
+  "Kalphite King": "Drygore rapier, Drygore longsword, Drygore mace",
+  "Sophanem Slayer Dungeon / The Magister":
+    "Gloves of passage, Phylactery, Vital spark, Key to the Crossing",
+  "The Magister": "Gloves of passage, Phylactery, Khopesh of Tumeken",
+  "Corrupted creatures & soul devourers":
+    "Vital spark, Key to the Crossing, Corrupted gem, Corrupted magic logs, Khopesh of the Kharidian",
+  "Shifting Tombs":
+    "Menaphos reputation, Feather of Ma'at, Camouflage fragments, Off-hand khopesh of the Kharidian",
+  "Liberation of Mazcab": "Achto armour, Raids uniques",
+  "Het's Oasis": "Prayer powders, Agility course, Statue of Het",
+  "Agility Pyramid": "Agility XP, Menaphos reputation",
+  "Agility Pyramid (Jaleustrophos)": "Agility XP, Menaphos reputation",
 };
 
 /**
@@ -177,8 +191,10 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "Heart of Gielinor / God Wars Dungeon 2": "God Wars Dungeon 2",
   "Telos, the Warden": "Telos weapon progression",
   "Amascut, the Devourer": "Amascut, the Devourer progression",
-  "Kalphite King": "Drygore weapons",
+  "Kalphite King": "Drygore",
   "Sophanem Slayer Dungeon / The Magister": "The Magister",
+  "The Magister": "The Magister",
+  "Liberation of Mazcab": "Achto",
 
   // —— Morytania ——
   "Araxxor / Araxxi": "Noxious weapons",

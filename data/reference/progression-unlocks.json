@@ -2161,29 +2161,6 @@
       "league_treatment": "This is a major no-trading production unlock because it controls self-supplied combination-potion containers"
     },
     {
-      "id": "prifddinas:motherlode-maw",
-      "name": "Motherlode Maw and Meilyr resource dungeons",
-      "category": "high-level skilling reward infrastructure",
-      "region_hint": "tirannwn",
-      "requirements": [
-        "115 Dungeoneering for the Motherlode Maw resource dungeon",
-        "95 in normal skills for Maw rewards, including Necromancy"
-      ],
-      "unlocks": [
-        "Motherlode Maw daily reward",
-        "Edimmu resource dungeon",
-        "Meilyr crystal sandstone access",
-        "Useful enhancers and high-level skilling rewards"
-      ],
-      "notes": "The Maw is a high-level Prifddinas reward source and can also help with otherwise awkward unlocks such as Meilyr potion recipes",
-      "source_urls": [
-        "https://runescape.wiki/w/Motherlode_Maw",
-        "https://runescape.wiki/w/Template:Meilyr_Features"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "The activity lives in Tirannwn, but its 115 Dungeoneering requirement means Forinthry can still be a practical cross-region dependency in Equilibrium"
-    },
-    {
       "id": "prifddinas:seren-stones",
       "name": "Seren stones and corrupted ore",
       "category": "AFK Mining and Smithing supply loop",
@@ -3614,52 +3591,6 @@
       "league_treatment": ""
     },
     {
-      "id": "global:area-tasks-overview",
-      "name": "Area Tasks (achievement diaries) skilling overview",
-      "category": "achievement diary acquisition frame",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "karamja",
-        "asgarnia",
-        "kandarin",
-        "fremennik",
-        "forinthry",
-        "desert",
-        "morytania",
-        "tirannwn"
-      ],
-      "required_regions": [
-        "misthalin",
-        "karamja",
-        "asgarnia",
-        "kandarin",
-        "fremennik",
-        "forinthry",
-        "desert",
-        "morytania",
-        "tirannwn"
-      ],
-      "region_requirement_type": "all_required",
-      "requirements": [
-        "Members for all Area Tasks sets except some free Lumbridge achievements",
-        "Prior reward tier claimed before the next (e.g. armour 2 before armour 3)",
-        "Skill, quest, and activity gates per easy/medium/hard/elite subcategory"
-      ],
-      "unlocks": [
-        "One worn-equipment reward family per classic Area Tasks region (cloak, amulet, ring, shield, boots, gloves, legs, headband, quiver, armour, sword, grimoire)",
-        "Task Master emote after completing all Area Tasks achievements",
-        "Daemonheim Area Tasks benefits are passive (aura items removed)"
-      ],
-      "notes": "Planner multi-host frame for all classic diary regions (user KEEP). Each diary is completed in its own geography; required_regions lists every diary-owning region so hosts + comboLabel stay in sync. Prefer per-region equipment rows below for stacking · Region combo (all required): misthalin + karamja + asgarnia + kandarin + fremennik + forinthry + desert + morytania + tirannwn",
-      "source_urls": [
-        "https://runescape.wiki/w/Area_Tasks_achievements",
-        "https://runescape.wiki/w/Tasks_set"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Multi-ok on every classic Area Tasks region with matching all_required list. Achievement/quest gates follow Equilibrium auto-quest overlays. Per-region reward items still live on dedicated area-tasks equipment rows · Region combo (all required): misthalin + karamja + asgarnia + kandarin + fremennik + forinthry + desert + morytania + tirannwn"
-    },
-    {
       "id": "forinthry:area-tasks-daemonheim-passives",
       "name": "Daemonheim Area Tasks passive rewards",
       "category": "achievement diary passive Dungeoneering unlocks",
@@ -4720,8 +4651,7 @@
       ],
       "requirements": [
         "63 Construction for bathysphere + oyster hunter diving suit + driftwood prawnbroker (boostable build; settings toggle needs unboosted 63)",
-        "Higher diving suits at 72 / 80 Construction; boutique prawnbroker at 81 Construction",
-        "Golden fish eggs and prawn balls from fishing / Motherlode Maw mystery egg path for perk points"
+        "Higher diving suits at 72 / 80 Construction; boutique prawnbroker at 81 Construction"
       ],
       "unlocks": [
         "Aquarium room via bathysphere; weekly seaweed/kelp/oyster/mermaid purse/treasure chest decorations (5× weekly output post-Dailyscape overhaul)",
@@ -5078,30 +5008,6 @@
       "league_treatment": "Starting Misthalin Guild infrastructure. Collection/mystery counts still require multi-region dig sites"
     },
     {
-      "id": "misthalin:material-manuals",
-      "name": "Material manuals (Guild shop Archaeology boost)",
-      "category": "Archaeology consumable shop infrastructure",
-      "region_hint": "misthalin",
-      "location": "Archaeology Guild Shop (Ezreal)",
-      "requirements": [
-        "Qualification - Intern for shop access",
-        "2,000 chronotes per manual (or Reiniger qualification claim packs / pickpocket / ancient casket)"
-      ],
-      "unlocks": [
-        "Read for +10% material find chance while excavating",
-        "20 minutes base duration; 30 minutes in full master archaeologist's outfit",
-        "Stackable up to 1 hour of uptime"
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Material_manual",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Hi-spec_monocle"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin Guild shop geography. Chronotes come from all dig sites"
-    },
-    {
       "id": "misthalin:screening-station",
       "name": "Screening station (Archaeology Campus)",
       "category": "Archaeology campus infrastructure",
@@ -5158,32 +5064,6 @@
       "isRegionCombo": false
     },
     {
-      "id": "misthalin:archaeology-research",
-      "name": "Archaeology research system",
-      "category": "Archaeology research infrastructure",
-      "region_hint": "misthalin",
-      "location": "Research notes table, Exam Centre, Archaeology Campus",
-      "requirements": [
-        "Assistant qualification for research tutorial unlock",
-        "Chronotes to fund general and special research expeditions",
-        "Guildmaster for research team size 5 and professor researchers"
-      ],
-      "unlocks": [
-        "General research: timed offline dig-site expeditions for Arch XP, materials, rare damaged artefacts",
-        "Special research: one-time higher-value studies (culture and dig-site gated), including Back to the Drawing Board for Ancient Invention theoretical blueprints",
-        "Fort Forinthry Command Centre: −3% chronote cost (T2) and +3% research speed (T3) as optional Misthalin fort pressure"
-      ],
-      "notes": "Campus-managed system with dig-site-specific research destinations. Prefer special research first for permanent unlocks and better XP efficiency",
-      "source_urls": [
-        "https://runescape.wiki/w/Research",
-        "https://runescape.wiki/w/Research_notes",
-        "https://runescape.wiki/w/Back_to_the_Drawing_Board",
-        "https://runescape.wiki/w/Command_Centre"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Management hub is Misthalin campus. Destination dig sites still need their regions. Fort Command Centre is optional same-region fort pressure"
-    },
-    {
       "id": "misthalin:archaeology-collectors",
       "name": "Archaeology collectors and collection system",
       "category": "Archaeology collection infrastructure",
@@ -5208,31 +5088,6 @@
       ],
       "confidence": "confirmed_wiki",
       "league_treatment": "Campus collectors are Misthalin. Collection completion often multi-region"
-    },
-    {
-      "id": "misthalin:mattock-precision-upgrades",
-      "name": "Mattock precision upgrades (Guild shop permanent)",
-      "category": "Archaeology tool permanent upgrade",
-      "region_hint": "misthalin",
-      "requirements": [
-        "Assistant: 8,000 chronotes for first +2 precision",
-        "Associate: 30,000 chronotes for next +2 (cumulative +4)",
-        "Professor: 75,000 chronotes for next +2 (cumulative +6)",
-        "Guildmaster: 150,000 chronotes for final +2 (cumulative +8 base precision)"
-      ],
-      "unlocks": [
-        "Permanent +2 base mattock precision per qualification shop purchase",
-        "Applies to every mattock used (reflected on tooltips)",
-        "Stacks with Flow State (+20% base precision) and hi-spec monocle (+20% base for duration)"
-      ],
-      "notes": "Account-wide permanent upgrades, not per-tool. Distinct from mattock tier ladder and Mattock of Time and Space craft",
-      "source_urls": [
-        "https://runescape.wiki/w/Mattocks",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Precision"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin Guild shop purchases. Qualification gates still apply"
     },
     {
       "id": "anachronia:flow-state-relic",
@@ -7024,34 +6879,6 @@
       ]
     },
     {
-      "id": "misthalin:archaeology-guild-shop",
-      "name": "Archaeology Guild Shop and qualification upgrades",
-      "category": "Archaeology shop, outfits, storage, precision and tool progression",
-      "region_hint": "misthalin",
-      "location": "Archaeology Campus at the Varrock Dig Site",
-      "unlocks": [
-        "Archaeologist's outfit, up to 6% Archaeology XP",
-        "Master archaeologist's outfit at Guildmaster qualification",
-        "Master outfit: +7% excavation success, +7% screening success and +7% mattock base precision",
-        "Faster artefact restoration and soil screening",
-        "Longer Archaeology consumable durations",
-        "Unlimited dig-site and collector teleports from the master outfit",
-        "Material storage upgrades",
-        "Mattock precision upgrades",
-        "Auto-screener blueprint",
-        "Energised meteorite shard for the Mattock of Time and Space"
-      ],
-      "notes": "This is one of the strongest starting-region skilling infrastructure unlocks. Archaeology qualifications convert chronotes into permanent tool, storage, outfit and quality-of-life upgrades rather than only consumables",
-      "source_urls": [
-        "https://runescape.wiki/w/Archaeology_Guild",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Master_archaeologist%27s_outfit",
-        "https://runescape.wiki/w/Energised_meteorite_shard"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "The Archaeology Guild is in the starting Misthalin/Varrock bucket. Qualification and level requirements still apply unless a League rule overrides them"
-    },
-    {
       "id": "misthalin:city-of-um-ritualist-outfit",
       "name": "Austin's Place and ritualist's outfit",
       "category": "Necromancy skilling outfit and ritual support",
@@ -7351,7 +7178,7 @@
     },
     {
       "id": "prifddinas:edimmu-resource-dungeon",
-      "name": "Edimmu resource dungeon (post-Maw DailyScape)",
+      "name": "Edimmu resource dungeon",
       "category": "high-level resource dungeon access",
       "region_hint": "tirannwn",
       "requirements": [
@@ -7360,16 +7187,16 @@
       ],
       "unlocks": [
         "Edimmu resource dungeon geography still reachable for Meilyr-side content",
-        "Crystal sandstone / Meilyr dungeon access independent of the removed Maw daily pull"
+        "Crystal sandstone / Meilyr dungeon access"
       ],
-      "notes": "2026 DailyScape Overhaul removed Motherlode Maw daily arm-pull rewards; the scenery is examine-only. This row documents what remains after that removal. remains the historical hub pointer and should be treated as partially stale on daily rewards",
+      "notes": "remains the historical hub pointer and",
       "source_urls": [
-        "https://runescape.wiki/w/Motherlode_Maw",
+        "https://runescape.wiki/w/Edimmu_resource_dungeon",
         "https://runescape.wiki/w/Edimmu_resource_dungeon",
         "https://runescape.wiki/w/Update:Patch_Notes:_Dailyscape_Overhaul"
       ],
       "confidence": "confirmed_wiki_2026_dailyscape",
-      "league_treatment": "Tirannwn location with Forinthry Dungeoneering pressure for 115 entry. Strip daily-Maw planning from League guides"
+      "league_treatment": "Tirannwn location with Forinthry Dungeoneering pressure for 115 entry."
     },
     {
       "id": "tirannwn:plagues-end-unlocks",
@@ -7852,8 +7679,8 @@
       "unlocks": [
         "District hub residual uniting Lady Meilyr Recipe Shop, harmony pillars, fruit tree patch, Meilyr workers (98 Thieving), and dual resource dungeons",
         "Gorajo resource dungeon (95 DG): bloodwood tree, pawya/grenwall, implings, Gorajo hoardstalker cards",
-        "Edimmu resource dungeon (115 DG): Meilyr crystal sandstone + edimmu (already has dedicated edimmu row for Maw adjacency)",
-        "Gnome glider (Captain Muggin) to Grand Tree; Wythien Motherlode shard exchange; Meilyr Clan Store / harmony pillar farmers",
+        "Edimmu resource dungeon (115 DG): Meilyr crystal sandstone + edimmu (already has dedicated edimmu row )",
+        "Gnome glider (Captain Muggin) to Grand Tree; Meilyr Clan Store / harmony pillar farmers",
         "Meilyr Voice of Seren: +20% Farming on fruit tree and harmony pillars; +20% Herblore on combination potions"
       ],
       "region_pressure": [
@@ -7875,7 +7702,6 @@
         "prifddinas:meilyr-recipe-shop",
         "prifddinas:meilyr-harmony-pillars",
         "prifddinas:edimmu-resource-dungeon",
-        "prifddinas:motherlode-maw",
         "prifddinas:voice-of-seren",
         "prifddinas:elven-clan-thieving"
       ]
@@ -10355,187 +10181,6 @@
       ]
     },
     {
-      "id": "misthalin:soil-box-material-storage",
-      "name": "Soil box + material storage capacity ladders",
-      "category": "Archaeology inventory / storage permanent upgrades",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [],
-      "location": "Archaeological soil box from Ezreal (tutorial / Guild shop reclaim); material storage containers at Archaeology Campus, all dig sites, Fort Forinthry Workshop, and Memorial to Guthix (quest-only)",
-      "requirements": [
-        "Archaeology tutorial / free soil box claim from Ezreal (one owned; free reclaim retains upgrades and stored soil)",
-        "Soil box capacity upgrades from Archaeology Guild Shop by qualification: Intern free 50 each soil; Assistant 3,500 chronotes → 100; Associate 18,000 → 250; Professor 48,000 → 500",
-        "Material storage type-capacity upgrades from same shop: Intern free 30 material types; Assistant 7,000 chronotes → 35; Associate 25,000 → 40; Professor 60,000 → 45",
-        "Qualifications (Intern → Assistant → Associate → Professor) gate which upgrades appear — chronotes from collectors / dig sites"
-      ],
-      "unlocks": [
-        "Archaeological soil box: holds up to capacity of each soil type; fill/inspect without interrupting excavation; screen soil directly from the box; deposit contents via bank/deposit box",
-        "Soil box capacity ladder 50 → 100 → 250 → 500 of each soil (permanent account upgrades; auto-screener can make late soil-box ranks optional depending on loadout)",
-        "Material storage container: shared capacity across campus / dig-site / Fort containers; holds Archaeology restoration materials by type",
-        "Material storage type ladder 30 → 35 → 40 → 45 types (base raised to 30 on 15 June 2026 wiki; full late-game material sets need Professor upgrade)",
-        "Signs of the porter / Grace of the Elves send excavated materials straight into material storage; materials carts bank overflow when type slots full"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns Guild shop upgrades, tutorial soil box, and campus material storage.",
-        "Dig-site containers exist in every Archaeology region once those sites unlock — capacity upgrades still purchase only at Misthalin Guild.",
-        "Fort Forinthry Workshop container is Forinthry convenience only after Workshop build — not a second upgrade shop."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Archaeological_soil_box",
-        "https://runescape.wiki/w/Material_storage_container",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin for shop capacity purchases. Dig-site use of containers follows whichever dig-site regions are unlocked",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-guild-shop",
-        "misthalin:archaeology-campus-hub",
-        "misthalin:auto-screener",
-        "misthalin:screening-station",
-        "asgarnia:ore-box-tier-upgrades",
-        "misthalin:wood-box-tier-upgrades"
-      ]
-    },
-    {
-      "id": "misthalin:archaeologists-tea",
-      "name": "Archaeologist's tea (Guild shop excavation XP boost)",
-      "category": "Archaeology consumable shop infrastructure",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [],
-      "location": "Archaeology Guild Shop (Ezreal) — Archaeology Campus",
-      "requirements": [
-        "Qualification - Intern for Archaeology Guild Shop stock of archaeologist's tea",
-        "2,000 chronotes per cup from Ezreal (infinite stock)",
-        "Also obtainable: ancient casket (1/4), pickpocketing trainee archaeologists / archaeologists / archaeology professors, and Reiniger qualification claim packs (includes tea)"
-      ],
-      "unlocks": [
-        "Permanent shop access to archaeologist's tea after Intern qualification",
-        "Drink: +50% Archaeology excavation XP for 20 minutes (30 minutes with full master archaeologist's outfit); also +50% equipment XP on an augmented mattock",
-        "Duration stacks by drinking multiple cups up to 60 minutes total (warning if a drink would exceed the hour cap)",
-        "Tea is destroyed on drink; not a permanent passive — same consumable-shop class as material manuals"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns Guild shop purchase and Reiniger claim path.",
-        "Chronotes and casket/pickpocket tea supply still pressure multi-region dig sites — shop access itself is Misthalin."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Archaeologist%27s_tea",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Archaeologist%27s_tea_(status)"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin for shop access after Intern. Excavation use is global once stocked",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-guild-shop",
-        "misthalin:material-manuals",
-        "misthalin:master-archaeologists-outfit",
-        "misthalin:guildmaster-qualification",
-        "cross-region:tetracompass-and-tomes"
-      ]
-    },
-    {
-      "id": "cross-region:luck-of-the-dwarves",
-      "name": "Luck of the Dwarves (Archaeology rare-table / tetra / tome luck)",
-      "category": "skilling luck ring + Archaeology rare-drop QoL",
-      "region_hint": "fremennik",
-      "region_hints": [
-        "fremennik",
-        "asgarnia",
-        "misthalin",
-        "kandarin",
-        "morytania",
-        "forinthry",
-        "desert"
-      ],
-      "required_regions": [
-        "fremennik",
-        "asgarnia",
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "misthalin",
-        "fremennik",
-        "kandarin",
-        "morytania",
-        "forinthry",
-        "desert"
-      ],
-      "location": "Craft anywhere with furnace + ring mould after alchemical onyx; dwarf tele package centres on Keldagrim / Miscellania (Fremennik); Invention alchemical onyx at inventor's workbench (Asgarnia Guild natural hub)",
-      "requirements": [
-        "107 Invention to discover and manufacture alchemical onyx (onyx + 50 fortunate + 50 refined + 10 precious components) at an inventor's workbench",
-        "91 Crafting: alchemical onyx + gold bar → alchemical onyx ring",
-        "87 Magic: Lvl-6 Enchant on alchemical onyx ring → Luck of the Dwarves (tier-4 luck; includes tier 1–3 effects)",
-        "Keldagrim first-entry cutscene for Keldagrim teleport; Throne of Miscellania for Miscellania teleport",
-        "Optional: Hand of glory (dig-site Archaeology artefacts) + LotD → Luck of the Dwarves monolith relic power (passive luck without wearing the ring)",
-        "Optional: Dark Facet of Luck for clue-step skip / double casket rolls + Dwarven Outpost teleport",
-        "91 Crafting + alchemical onyx + gold bar + ring mould → alchemical onyx ring; 87 Magic Lvl-6 Enchant → Luck of the Dwarves (or GE / trade path)",
-        "For relic power: prior Hand of Glory (Ring of Luck / Wealth / Fortune) rungs completed; any remaining unused hand of glory + Luck of the Dwarves ring → Hand of Glory (Luck of the Dwarves)",
-        "83 Archaeology (boostable) to harness the relic; 4,000 chronotes and 200 monolith energy",
-        "Optional: Dark Facet of Luck on the physical ring for clue-step skip / double casket / Dwarven Outpost tele (does not transfer to the relic power)"
-      ],
-      "unlocks": [
-        "Tier-4 luck enhancer worn (or harnessed as Archaeology monolith relic power after Hand of glory conversion)",
-        "Archaeology skilling luck: improved chance of finding a tetracompass piece or complete tome while excavating",
-        "Broader skilling luck also covers metamorphic geodes, Pyramid Plunder rares, implings, Seren's symbol pieces, clue-while-skilling, etc. — this row prioritises Arch rare-table framing",
-        "Unlimited teleports: Miscellania (quest-gated), Grand Exchange (Varrock), Keldagrim (first-entry), plus Dwarven Outpost with Dark Facet",
-        "Ring can be equipped at kill moment for combat rare tables — combat BiS comparison is out of scope here",
-        "Physical Luck of the Dwarves: tier 4 luck while worn (includes T1–T3 effects) plus unlimited teleports to Miscellania (Throne of Miscellania), Grand Exchange, and Keldagrim",
-        "Luck of the Dwarves relic power: always gain tier 4 luck while harnessed without occupying the ring slot",
-        "Tier 4 skilling QoL: improved tetracompass piece / complete tome chance while excavating; +2% metamorphic geode; Pyramid Plunder / Menaphite offerings / Seren's symbol pieces; rare drop table access including Vecna skull and Hazelmere's signet ring rolls; removes flax / raw lobsters / molten glass from RDT",
-        "Relic power does NOT grant the ring's teleports — keep a second physical ring (or accept tele loss) if teleports matter",
-        "Imbue at Mazcab Armoursmith (7,500 teci) is combat-stat only on the physical ring"
-      ],
-      "region_pressure": [
-        "Fremennik hard-owns dwarf-ring teleport identity (Keldagrim + Miscellania path) and namesake luck-ring geography.",
-        "Asgarnia hard-owns practical Invention Guild / inventor's workbench path for alchemical onyx manufacture on ironman.",
-        "Misthalin optional: GE teleport convenience + mysterious monolith harness if converting LotD into the Archaeology relic power via Hand of glory.",
-        "Misthalin: monolith harness + Grand Exchange teleport destination.",
-        "Fremennik optional: Miscellania tele (Throne of Miscellania) and Keldagrim access lore; not required to harness the relic.",
-        "Kandarin optional: Warforge hand of glory (highest-level hand often used for the top rung).",
-        "Hands of glory also available from Infernal Source / Everlight / Kharid-et."
-      ],
-      "notes": "Region combo (all required): fremennik + asgarnia + misthalin",
-      "source_urls": [
-        "https://runescape.wiki/w/Luck_of_the_Dwarves",
-        "https://runescape.wiki/w/Alchemical_onyx",
-        "https://runescape.wiki/w/Luck_of_the_Dwarves_(relic_power)",
-        "https://runescape.wiki/w/Complete_tome",
-        "https://runescape.wiki/w/Tetracompass_piece",
-        "https://runescape.wiki/w/Hand_of_Glory_(Luck_of_the_Dwarves)",
-        "https://runescape.wiki/w/Hand_of_glory",
-        "https://runescape.wiki/w/Dark_Facet_of_Luck"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Fremennik + Asgarnia both required for full ironman craft + dwarf tele package. Misthalin optional for GE tele and monolith relic conversion. Arch luck effect works account-wide once the ring (or harnessed relic power) is owned · Region combo (all required): fremennik + asgarnia + misthalin",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "cross-region:tetracompass-and-tomes",
-        "asgarnia:invention-guild",
-        "invention:charge-pack-infrastructure",
-        "fremennik:keldagrim-brewery",
-        "misthalin:archaeology-campus-hub",
-        "cross-region:ring-of-wealth-relic",
-        "cross-region:ring-of-fortune-relic",
-        "fremennik:keldagrim-hub",
-        "kandarin:warforge-dig-site"
-      ]
-    },
-    {
       "id": "fremennik:god-books-horror-from-the-deep",
       "name": "God books base unlock (Horror from the Deep)",
       "category": "permanent Prayer pocket-slot unlock",
@@ -11100,58 +10745,6 @@
       ]
     },
     {
-      "id": "cross-region:decorated-urns-infrastructure",
-      "name": "Decorated and exquisite urn craft infrastructure",
-      "category": "permanent multi-skill urn production package",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia",
-        "misthalin",
-        "kandarin"
-      ],
-      "required_regions": [],
-      "optional_pressure_regions": [
-        "asgarnia",
-        "misthalin",
-        "kandarin",
-        "tirannwn"
-      ],
-      "requirements": [
-        "Crafting levels for decorated urns (skill-dependent; e.g. decorated cooking 81 Crafting) — assist system can cover form/fire/rune steps",
-        "Two soft clay per standard urn; soft porcelain + gem for exquisite tiers (103+ Crafting)",
-        "Potter's wheel + pottery oven (or portable crafter / Lunar Fire Urn)"
-      ],
-      "unlocks": [
-        "Planner-visible permanent craft ladder for decorated urns across Cooking/Fishing/Mining/Woodcutting/Smithing/Prayer/Divination/Farming/Hunter/Runecrafting",
-        "+20% tele XP from filled decorated urns (+25% exquisite); further +25% tele XP with invention:urn-enhancer",
-        "Brooch of the Gods stores 1,000 of each decorated/exquisite empty urn type",
-        "Artificer's measure: 5% chance to duplicate urn while forming",
-        "Does not invent per-skill fill tables or XP/hour"
-      ],
-      "region_pressure": [
-        "No single hard region for clay/pottery — score optional pressure from unlocked pottery sites and soft clay mines.",
-        "Asgarnia optional: Brooch of the Gods storage + Invention urn enhancer.",
-        "Tirannwn optional: Artificer's measure for form-dupe.",
-        "Misthalin/Kandarin optional: classic pottery hubs and soft clay."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Urns",
-        "https://runescape.wiki/w/Decorated_cooking_urn",
-        "https://runescape.wiki/w/Brooch_of_the_Gods",
-        "https://runescape.wiki/w/Artificer%27s_measure"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Support-pressure by pottery access. Pair Asgarnia when scoring Brooch + urn enhancer stack",
-      "region_requirement_type": "any_optional",
-      "links_existing_ids": [
-        "invention:urn-enhancer",
-        "invention:brooch-of-the-gods",
-        "cross-region:artificers-measure",
-        "morytania:attuned-ectoplasmator"
-      ]
-    },
-    {
       "id": "cross-region:skilling-accumulators-package",
       "name": "Invention skilling accumulators (mining / fishing / woodcutting)",
       "category": "Invention device discovery package",
@@ -11489,66 +11082,6 @@
         "misthalin:wars-grimoire",
         "tirannwn:elven-grimoire",
         "misthalin:fort-chapel"
-      ]
-    },
-    {
-      "id": "cross-region:prayer-book-switch-network",
-      "name": "Prayer-book switch network (Zaros / Fort / Elven / War)",
-      "category": "multi-region Prayer book logistics package",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "tirannwn",
-        "desert",
-        "fremennik"
-      ],
-      "required_regions": [],
-      "optional_pressure_regions": [
-        "misthalin",
-        "tirannwn",
-        "desert",
-        "fremennik",
-        "forinthry",
-        "morytania"
-      ],
-      "requirements": [
-        "Piecewise — package itself has no gate; each child facility has its own unlock",
-        "Ancient Curses book: misthalin:ancient-curses-senntisten",
-        "Primary switch sites: misthalin:altar-of-zaros, misthalin:fort-chapel (tier 3), tirannwn:elven-grimoire, misthalin:wars-grimoire + misthalin:wars-blessing (Blessing 3)"
-      ],
-      "unlocks": [
-        "Planner checklist comparing prayer-book swap sites without re-emitting full child rows",
-        "Altar of Zaros: earliest dedicated curses switch + +15% prayer restore boost",
-        "Fort Forinthry chapel tier 3: bank-adjacent swap on the Fort altar (Construction 90 chapel)",
-        "Elven grimoire (Cadarn): Prif-local prayer + spellbook swap; hard Fremennik adds Lunar as third spellbook target",
-        "War's Grimoire + War's Blessing 3: hub-side prayer swap next to Altar of War / boss portals (no Dig Site / Prif / Fort travel)",
-        "Seren skilling prayers (Superheat / Light Form / Chronicle Attraction) remain Ancient Curses extensions via The Light Within — not a third switchable prayer book"
-      ],
-      "region_pressure": [
-        "Misthalin: Altar of Zaros, Fort chapel, War's Retreat grimoire.",
-        "Tirannwn: Elven grimoire after Plague's End.",
-        "Desert/Fremennik: spellbook targets (Ancient Magicks / Lunar) when valuing full Elven grimoire third-book utility."
-      ],
-      "notes": "Meta densify row for prayer switchers",
-      "source_urls": [
-        "https://runescape.wiki/w/Altar_of_Zaros",
-        "https://runescape.wiki/w/Elven_grimoire",
-        "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
-        "https://runescape.wiki/w/War%27s_Grimoire",
-        "https://runescape.wiki/w/War%27s_Blessing_3"
-      ],
-      "confidence": "confirmed_wiki_stack",
-      "league_treatment": "Score each switch site by the region that owns its hard gate. Package is comparison edge, not a free global unlock",
-      "region_requirement_type": "support",
-      "links_existing_ids": [
-        "misthalin:altar-of-zaros",
-        "misthalin:ancient-curses-senntisten",
-        "misthalin:fort-chapel",
-        "tirannwn:elven-grimoire",
-        "misthalin:wars-grimoire",
-        "misthalin:wars-blessing",
-        "multi-region:prayer-training-infrastructure-stack",
-        "tirannwn:seren-skilling-prayers-package"
       ]
     },
     {
@@ -11938,162 +11471,6 @@
       ]
     },
     {
-      "id": "misthalin:research-team-size-ladder",
-      "name": "Research team size ladder (Assistant → Guildmaster)",
-      "category": "Archaeology research permanent capacity ladder",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "anachronia",
-        "havenhythe",
-        "forinthry"
-      ],
-      "location": "Research notes table in Exam Centre (Archaeology Campus); team size scales with Guild qualification",
-      "requirements": [
-        "Assistant qualification: unlock research tutorial and base research team",
-        "Associate qualification: team size 3 + access to research assistants",
-        "Professor qualification: team size 4 + access to research associates",
-        "Guildmaster qualification: team size 5 + access to research professors",
-        "Chronotes to fund general/special expeditions after each expansion"
-      ],
-      "unlocks": [
-        "Permanent research team size ladder: Assistant base → Associate 3 → Professor 4 → Guildmaster 5",
-        "Researcher rank unlocks: assistants (Associate player rank) → associates (Professor) → professors (Guildmaster)",
-        "Larger teams enable faster parallel expedition coverage once hireable researchers and chronote budget allow",
-        "Fort Forinthry Command Centre T2/T3: −3% research chronote cost / +3% research speed as optional Misthalin fort pressure (not a second team-size shop)"
-      ],
-      "region_pressure": [
-        "Misthalin owns research UI, team-size awards, and campus management.",
-        "Anachronia / Havenhythe optional for hireable assistant researchers (Alpheus, Eliza, Tali).",
-        "Destination dig sites remain multi-region for expedition targets."
-      ],
-      "notes": "Full size ladder. is the Guildmaster-only end rung (size 5 + professors)",
-      "source_urls": [
-        "https://runescape.wiki/w/Research",
-        "https://runescape.wiki/w/Qualifications",
-        "https://runescape.wiki/w/Qualification_-_Associate",
-        "https://runescape.wiki/w/Qualification_-_Professor",
-        "https://runescape.wiki/w/Qualification_-_Guildmaster"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin for team-size awards. Hireable researcher geography is optional multi-region",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-research-team",
-        "misthalin:archaeology-research",
-        "misthalin:qualification-ladder-intern-professor",
-        "misthalin:guildmaster-qualification",
-        "misthalin:hireable-researchers-recruitment",
-        "misthalin:monolith-energy-research-ladder"
-      ]
-    },
-    {
-      "id": "misthalin:hireable-researchers-recruitment",
-      "name": "Hireable research team recruitment ladder",
-      "category": "Archaeology research personnel permanent unlocks",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "anachronia",
-        "havenhythe"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "anachronia",
-        "havenhythe",
-        "desert",
-        "asgarnia",
-        "morytania"
-      ],
-      "location": "Campus tutorial interns; Varrock Dig Site student recruits; Anachronia / Havenhythe assistants; automatic Associate/Professor unlocks at ceremony",
-      "requirements": [
-        "Player Assistant qualification to hire Intern-rank researchers (Jimmy/Scarlet tutorial; Katarina/Dorian/Eduardo need restored artefacts + Dig Site quest path)",
-        "Player Associate qualification to hire Assistant-rank researchers (Alpheus/Eliza need completed Anachronia totem in backpack; Tali after Finding Tali on Havenhythe)",
-        "Player Professor qualification auto-unlocks Associate-rank Drew/Helen/Easty",
-        "Player Guildmaster qualification unlocks Professor-rank researchers (e.g. Simon Templeton and peers) plus consultants on wiki list"
-      ],
-      "unlocks": [
-        "Permanent hireable researcher roster with speed buffs and chronote cost modifiers per researcher rank",
-        "Interns: low speed buff (+0–1%) for early research hours toward Researcher achievements",
-        "Assistants: +2% speed / +3% cost (Anachronia/Havenhythe geography)",
-        "Associates: +4% speed / +6% cost auto on Professor player rank",
-        "Professors: +6% speed / +9% cost tier after Guildmaster — top passive research throughput personnel"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns qualification gates and campus default roster.",
-        "Anachronia optional for Alpheus/Eliza totem recruitment.",
-        "Havenhythe optional for Tali.",
-        "Dig Site quest / artefact recruits sit on campus Varrock Dig Site (Misthalin)."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Research",
-        "https://runescape.wiki/w/Intern_Jimmy",
-        "https://runescape.wiki/w/Alpheus",
-        "https://runescape.wiki/w/Tali"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin required for rank gates. Anachronia/Havenhythe only if recruiting those assistants",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:research-team-size-ladder",
-        "misthalin:archaeology-research",
-        "misthalin:qualification-ladder-intern-professor",
-        "anachronia:orthen-dig-site",
-        "havenhythe:moonrise-dig-site"
-      ]
-    },
-    {
-      "id": "misthalin:qualification-certificates-poh",
-      "name": "Certificates of qualification (POH display permanents)",
-      "category": "Archaeology Guild permanent POH decorations",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [],
-      "location": "Archaeology Guild Shop (Ezreal) → furniture storage → player-owned house display",
-      "requirements": [
-        "Matching Guild qualification for each certificate tier",
-        "Chronote purchase: Intern 1,000; Assistant 2,500; Associate 5,000; Professor 10,000; Guildmaster 25,000",
-        "13 July 2026 POH rework furniture system (deposit into furniture storage to place)"
-      ],
-      "unlocks": [
-        "Five framed Certificate of qualification décor items (Intern → Guildmaster) as permanent POH display unlocks",
-        "Cosmetic/account prestige checklist tied 1:1 to Guild rank ladder — not excavation throughput",
-        "Guildmaster certificate is the end rung of the set (25,000 chronotes after Qualification - Guildmaster)"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns Guild shop certificates.",
-        "POH placement is account-global after purchase."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Certificate_of_qualification_(intern)",
-        "https://runescape.wiki/w/Certificate_of_qualification_(guildmaster)",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin shop. Qualifications still required",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:qualification-ladder-intern-professor",
-        "misthalin:guildmaster-qualification",
-        "misthalin:archaeology-guild-shop",
-        "misthalin:prodigal-spender-guild-permanents"
-      ]
-    },
-    {
       "id": "misthalin:museum-donation-bin",
       "name": "Museum donation bin (40% chronote overflow)",
       "category": "Archaeology chronote overflow infrastructure",
@@ -12134,222 +11511,6 @@
         "misthalin:archaeology-collectors",
         "misthalin:archaeology-campus-hub",
         "misthalin:varrock-museum-kudos"
-      ]
-    },
-    {
-      "id": "misthalin:workbench-storage-ladder",
-      "name": "Archaeologist's workbench damaged-artefact storage ladder",
-      "category": "Archaeology inventory permanent storage upgrades",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "forinthry"
-      ],
-      "location": "Purchase from Archaeology Guild Shop (Ezreal); shared storage on every archaeologist's workbench (campus, dig sites, Fort Workshop)",
-      "requirements": [
-        "Associate qualification: Workbench upgrade 25,000 chronotes → 125 unique damaged-artefact slots",
-        "Professor qualification + prior upgrade: Workbench storage upgrade 60,000 chronotes → 175 slots",
-        "Guildmaster qualification + prior upgrade: Workbench storage upgrade 100,000 chronotes → 225 slots",
-        "Matching damaged artefacts stack into one slot (no known per-type quantity cap)"
-      ],
-      "unlocks": [
-        "Permanent shared workbench storage for damaged artefacts across all dig-site and campus workbenches",
-        "Restore directly from storage without backpack ferrying",
-        "Capacity ladder 125 → 175 → 225 unique artefact types (13 July 2026 Guild shop workbench storage system)",
-        "Counts toward The Prodigal Spender permanent-unlock set"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns Guild shop purchases.",
-        "Forinthry optional: Fort Forinthry Workshop workbench convenience after Workshop build — not a second upgrade vendor."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Archaeologist%27s_workbench",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/The_Prodigal_Spender"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin for upgrades. Dig-site workbenches use the shared unlocked capacity",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:soil-box-material-storage",
-        "misthalin:archaeology-guild-shop",
-        "misthalin:archaeology-campus-hub",
-        "misthalin:prodigal-spender-guild-permanents",
-        "misthalin:qualification-ladder-intern-professor",
-        "misthalin:guildmaster-qualification"
-      ]
-    },
-    {
-      "id": "misthalin:prodigal-spender-guild-permanents",
-      "name": "The Prodigal Spender (all Guild shop permanents)",
-      "category": "Archaeology Guild permanent shop completion checklist",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "desert",
-        "kandarin",
-        "morytania",
-        "anachronia",
-        "asgarnia"
-      ],
-      "location": "Ezreal Archaeology Guild Shop — purchase all permanent unlocks",
-      "requirements": [
-        "Qualification - Guildmaster (shop end tab + trimmed completionist path context)",
-        "1,039,500 chronotes total for all permanent unlocks (wiki total; GE coin value fluctuates)",
-        "Includes soil box upgrades, material storage upgrades, workbench storage upgrades, mattock precision upgrades, auto-screener blueprint, archaeologist's outfit, master archaeologist's outfit, additional relic loadout"
-      ],
-      "unlocks": [
-        "The Prodigal Spender achievement (30 RuneScore; trimmed completionist cape achievement list)",
-        "Account checklist that all Ezreal permanent infrastructure is owned (not consumables like tea/manuals/teleports)",
-        "Planner end-state for chronote sink budgeting after Velucia/collector farming"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns the shop and achievement.",
-        "Chronote farming pressure is multi dig-site optional (Velucia 225% museum sets are the Misthalin-efficient path)."
-      ],
-      "notes": "Completion meta-row over existing shop/outfit/precision/soil/storage/auto-screener ids — Energised meteorite shard (250k) is a Guildmaster shop item for MoTaS but is not listed on the Prodigal Spender unlock table — keep on mattock chain",
-      "source_urls": [
-        "https://runescape.wiki/w/The_Prodigal_Spender",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Chronotes"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin shop completion. Chronote supply needs dig-site regions unless gifted",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-guild-shop",
-        "misthalin:soil-box-material-storage",
-        "misthalin:workbench-storage-ladder",
-        "misthalin:mattock-precision-upgrades",
-        "misthalin:auto-screener",
-        "misthalin:archaeologists-outfit",
-        "misthalin:master-archaeologists-outfit",
-        "misthalin:professor-relic-loadout-purchase",
-        "misthalin:velucia-museum-chronote-tiers",
-        "cross-region:mattock-of-time-and-space"
-      ]
-    },
-    {
-      "id": "misthalin:collectors-assemble-ladder",
-      "name": "Collectors Assemble unique-collection ladder",
-      "category": "Archaeology qualification gate permanent milestones",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "desert",
-        "asgarnia",
-        "morytania",
-        "kandarin",
-        "anachronia",
-        "forinthry",
-        "havenhythe",
-        "karamja"
-      ],
-      "location": "Any archaeological collector (campus + culture experts); tracked in Archaeology achievements",
-      "requirements": [
-        "Complete unique collections (first completion of a named collection counts once)",
-        "Collectors Assemble I: 1 unique (Assistant gate)",
-        "Collectors Assemble III: 5 unique (Associate gate)",
-        "Collectors Assemble VI: 20 unique (Professor gate)",
-        "Collectors Assemble VII: 25 unique (Guildmaster gate)"
-      ],
-      "unlocks": [
-        "Permanent achievement ladder gating every Guild rank above Intern",
-        "Planner checklist: 1 / 5 / 20 / 25 unique collections as hard rank breakpoints",
-        "Velucia museum sets and culture-expert sets both count — mix campus-easy early sets with dig-site expert sets",
-        "Does not itself grant chronotes beyond the collections completed"
-      ],
-      "region_pressure": [
-        "Misthalin owns many early collectors (Velucia, Soran, Wise Old Man, Jacques) for low unique counts.",
-        "Higher unique totals pressure multi dig-site collectors (Lowse, Sir Atcha, Eblis, Sharrigan, etc.)."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Collectors_Assemble_I",
-        "https://runescape.wiki/w/Collectors_Assemble_VII",
-        "https://runescape.wiki/w/Qualifications",
-        "https://runescape.wiki/w/Collectors"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin can seed early uniques; 20–25 usually needs multi-region dig sites",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:qualification-ladder-intern-professor",
-        "misthalin:guildmaster-qualification",
-        "misthalin:archaeology-collectors",
-        "misthalin:velucia-museum-collections",
-        "cross-region:high-value-collector-permanents"
-      ]
-    },
-    {
-      "id": "misthalin:chronote-currency-economy",
-      "name": "Chronotes currency economy (earn + spend sinks)",
-      "category": "Archaeology currency permanent infrastructure",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "desert",
-        "kandarin",
-        "morytania",
-        "anachronia",
-        "asgarnia",
-        "forinthry",
-        "havenhythe"
-      ],
-      "location": "Currency pouch (account); primary earn via collectors/Velucia/bin on campus; primary spend at Guild shop, research notes, mysterious monolith harness",
-      "requirements": [
-        "Archaeology unlocked with restored artefacts to sell",
-        "Access to collectors and/or museum donation bin for earn path",
-        "Guild / research / monolith for spend path"
-      ],
-      "unlocks": [
-        "Chronotes as Archaeology currency stored in currency pouch (max 2,147,483,647)",
-        "Earn structure: collectors 200% set completion; Velucia museum 225%; donation bin 40% of base artefact value unrestricted",
-        "Spend structure: Guild shop permanents + consumables, research expedition fees, relic power harness chronote costs at the mysterious monolith",
-        "One-time complete-all-collections pass ~554,464 chronotes vs ~1,039,500 permanent shop budget — planners must farm repeats (especially Velucia)"
-      ],
-      "region_pressure": [
-        "Misthalin owns pouch-facing campus earn (Velucia/bin) and the three major spend hubs (shop, research, monolith).",
-        "Dig-site regions optional for artefact volume."
-      ],
-      "notes": "Systems row — not a second shop listing. Links soil/storage/precision/outfit/prodigal without re-emitting costs. No chronotes/hour claims",
-      "source_urls": [
-        "https://runescape.wiki/w/Chronotes",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Research",
-        "https://runescape.wiki/w/Mysterious_monolith"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin for campus earn premium and all three spend hubs",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:velucia-museum-chronote-tiers",
-        "misthalin:museum-donation-bin",
-        "misthalin:archaeology-guild-shop",
-        "misthalin:archaeology-research",
-        "misthalin:prodigal-spender-guild-permanents",
-        "misthalin:archaeology-collectors"
       ]
     },
     {
@@ -12394,127 +11555,6 @@
         "misthalin:qualification-ladder-intern-professor",
         "misthalin:guildmaster-qualification",
         "misthalin:prodigal-spender-guild-permanents"
-      ]
-    },
-    {
-      "id": "cross-region:high-value-collector-permanents",
-      "name": "High-value collector first-time permanent rewards",
-      "category": "Archaeology collector permanent reward package",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "asgarnia",
-        "desert",
-        "morytania",
-        "kandarin",
-        "anachronia"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "asgarnia",
-        "desert",
-        "morytania",
-        "kandarin",
-        "anachronia",
-        "forinthry",
-        "havenhythe"
-      ],
-      "location": "Named collectors at culture hubs; offer first-time reward items → often mysterious monolith relic harness",
-      "requirements": [
-        "Restored unnoted artefact sets for each listed collection",
-        "Collector geography access (Wise Old Man Draynor; Soran Varrock; Sir Atcha Falador; Lowse Armadyl's Tower; Eblis Bandit Camp; etc.)",
-        "Archaeology levels matching collection gates (examples span ~25–119)"
-      ],
-      "unlocks": [
-        "Planner shortlist of permanent (or relic-hand) first completions — not every chronote-only collection:",
-        "Wise Old Man Knowledge is Power (119) → Amascut's Enchanted Gem → Slayer Introspection relic path (see cross-region:slayer-introspection-relic)",
-        "Wise Old Man Wise Am the Music Man (91) → Koschei's needle (permanent needle tool/reward)",
-        "Soran Zarosian I → Seal of the Praefectus Praetorio → Unexpected Diplomacy relic hand",
-        "Sir Atcha Saradominist I → Lock of hair → Dharok's Memento / Berserker's Fury chain (Asgarnia+Morytania pressure)",
-        "Lowse Armadylean collections → Inspire Genius and sibling Inspire relic hands (see asgarnia:inspire-genius-relic)",
-        "Eblis / other desert and dig-site expert first rewards: luck-ladder hands and tetracompass-piece collections — link cross-region:tetracompass-and-tomes for piece loops, do not re-list every tetra farm",
-        "Velucia museum sets: chronotes only (no separate permanent item) — use misthalin:velucia-museum-chronote-tiers"
-      ],
-      "region_pressure": [
-        "Misthalin required for Wise Old Man + Soran + monolith offer for many hands.",
-        "Asgarnia optional/hard depending on chain: Sir Atcha, Lowse.",
-        "Desert optional: Eblis and Kharid-et artefact volume.",
-        "Morytania / Kandarin / Anachronia optional for Everlight / Stormguard-Warforge / Orthen artefact legs of multi-region collections."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Collectors",
-        "https://runescape.wiki/w/Knowledge_is_Power",
-        "https://runescape.wiki/w/Wise_Am_the_Music_Man",
-        "https://runescape.wiki/w/Zarosian_I",
-        "https://runescape.wiki/w/Wise_Old_Man"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin anchors major collectors and monolith",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-collectors",
-        "cross-region:slayer-introspection-relic",
-        "asgarnia:inspire-genius-relic",
-        "cross-region:tetracompass-and-tomes",
-        "misthalin:velucia-museum-chronote-tiers",
-        "misthalin:collectors-assemble-ladder"
-      ]
-    },
-    {
-      "id": "cross-region:culture-expert-titles",
-      "name": "Archaeology culture Expert titles",
-      "category": "Archaeology permanent title rewards",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "desert",
-        "asgarnia",
-        "morytania",
-        "kandarin",
-        "anachronia"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "desert",
-        "asgarnia",
-        "morytania",
-        "kandarin",
-        "anachronia",
-        "forinthry"
-      ],
-      "location": "Complete culture collection sets for the matching expert collector / campus tracking; titles under Archaeology qualifications experts list",
-      "requirements": [
-        "Complete the full culture collection set(s) associated with each Expert title track",
-        "Archaeology level and dig-site access for that culture (Zarosian, Zamorakian, Saradominist, Armadylean, Bandosian, Dragonkin)"
-      ],
-      "unlocks": [
-        "Permanent titles: Zarosian Expert, Zamorakian Expert, Saradominist Expert, Armadylean Expert, Bandosian Expert, Dragonkin Expert",
-        "Account prestige / completionist-adjacent checklist for finishing culture logs beyond chronotes",
-        "Does not replace relic-hand first rewards — titles are cosmetic permanent milestones"
-      ],
-      "region_pressure": [
-        "Misthalin owns campus tracking and several collectors.",
-        "Each Expert title pressures its dig-site culture region(s)."
-      ],
-      "notes": "Title — high-signal permanent for collectors who finish culture logs. Not every collection reward. No invented combat effects",
-      "source_urls": [
-        "https://runescape.wiki/w/Qualifications",
-        "https://runescape.wiki/w/Zarosian_Expert_(title)",
-        "https://runescape.wiki/w/Collectors"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin campus titles; culture completion needs dig-site regions",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-collectors",
-        "cross-region:high-value-collector-permanents",
-        "misthalin:collectors-assemble-ladder",
-        "misthalin:velucia-museum-chronote-tiers"
       ]
     },
     {
@@ -13298,50 +12338,6 @@
         "misthalin:guildmaster-qualification",
         "misthalin:archaeology-campus-hub",
         "misthalin:archaeology-guild-shop"
-      ]
-    },
-    {
-      "id": "misthalin:master-archaeologists-outfit-claim",
-      "name": "Master archaeologist's outfit (Guildmaster shop claim)",
-      "category": "Archaeology skilling outfit permanent unlock",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "location": "Archaeology Guild Shop Guildmaster tab (Ezreal) + Reiniger claimables",
-      "requirements": [
-        "Qualification - Guildmaster",
-        "99 Archaeology",
-        "250,000 chronotes for master archaeologist's outfit purchase"
-      ],
-      "unlocks": [
-        "Full master set: +7% excavation success, +7% screening success, +7% mattock base precision",
-        "Faster artefact restoration and soil screening; longer Archaeology consumable durations",
-        "Unlimited dig-site and collector teleports from the outfit",
-        "Enables daily Fixate (3 energy) while wearing full set — guaranteed next artefact choice at hotspot",
-        "Material manuals last 30 minutes in full master outfit (20 base)"
-      ],
-      "region_pressure": [
-        "Misthalin Guild shop purchase and teleports origin.",
-        "Qualification counts (collections/mysteries/research hours) still multi-region dig pressure."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Master_archaeologist%27s_outfit",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Fixate",
-        "https://runescape.wiki/w/Qualification_-_Guildmaster"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin shop. Qualification progress multi-region",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:guildmaster-qualification",
-        "misthalin:archaeology-guild-shop",
-        "misthalin:material-manuals"
       ]
     },
     {
@@ -14596,8 +13592,7 @@
       "region_requirement_type": "support",
       "links_existing_ids": [
         "asgarnia:mining-guild-resource-dungeon",
-        "prifddinas:edimmu-resource-dungeon",
-        "prifddinas:motherlode-maw"
+        "prifddinas:edimmu-resource-dungeon"
       ]
     },
     {
@@ -20070,7 +19065,6 @@
         "forinthry"
       ],
       "requirements": [
-        "Inactive scrimshaw of sacrifice from Giant Mimic loot chests (current self-source; Motherlode Maw path removed 16 March 2026 Dailyscape Overhaul)",
         "Optional superior: 250,000 Dungeoneering tokens unlock at Daemonheim Rewards to upgrade sacrifice/aggression/corruption scrimshaws at Scrimshaw Crafter",
         "Superior craft: inactive base + 10 ancient bones at Scrimshaw Crafter (95 Fletching)"
       ],
@@ -21420,48 +20414,6 @@
         "kandarin:manor-farm-farming-guild",
         "cross-region:allotment-hub-package",
         "morytania:sticky-fingers-relic"
-      ]
-    },
-    {
-      "id": "misthalin:archaeology-research-team",
-      "name": "Archaeology research team permanent (Guildmaster)",
-      "category": "Archaeology research team permanent unlock",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [],
-      "requirements": [
-        "Qualification - Guildmaster (see misthalin:guildmaster-qualification gates: 99 Archaeology, Discoverer/Restorer IX, Collectors Assemble VII, Mystery Solver VI, Researcher IV)",
-        "Chronotes to fund expeditions after team expansion"
-      ],
-      "unlocks": [
-        "Research team size expanded to 5 (Guildmaster permanent)",
-        "Access to research professors (higher-tier researchers)",
-        "Pairs with fourth monolith relic loadout tab (also Guildmaster-gated) without re-emitting monolith energy ladder"
-      ],
-      "region_pressure": [
-        "Misthalin campus owns research management UI, team size, and professor unlocks.",
-        "Destination dig sites still need their own regions for expedition targets."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Research",
-        "https://runescape.wiki/w/Guildmaster",
-        "https://runescape.wiki/w/Archaeology"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin campus. Dig-site destinations remain multi-region support",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:guildmaster-qualification",
-        "misthalin:archaeology-research",
-        "misthalin:monolith-energy-research-ladder",
-        "misthalin:guildmaster-tonys-mattock",
-        "misthalin:material-manuals"
       ]
     },
     {
@@ -24703,36 +23655,6 @@
       "league_treatment": "Misthalin is the working Senntisten/EGWD region and matches the wiki Equilibrium badge. Keep quest gates (Desperate Measures etc.) as overlays rather than second elective regions"
     },
     {
-      "id": "misthalin:kerapac-magic-residuals",
-      "name": "Kerapac Magic progression",
-      "category": "Magic ability codex gloves and scripture residual",
-      "region_hint": "misthalin",
-      "required_regions": [
-        "misthalin"
-      ],
-      "region_requirement_type": "acquisition_region",
-      "requirements": [
-        "Kerapac, the bound (normal or hard mode) for non-FSoA uniques"
-      ],
-      "unlocks": [
-        "Greater Concentrated Blast ability codex",
-        "Kerapac's wrist wraps (t85 Magic power gloves; Combust / Dragon Breath boost)",
-        "Scripture of Jas and Manuscript of Jas pages"
-      ],
-      "effects": [
-        "Greater Concentrated Blast is a core Magic basic upgrade used with FSoA / dual-wield crit setups",
-        "Wrist wraps are a strong mid-to-high Magic glove option and appear in many FSoA crit stacks",
-        "Scripture of Jas is a high-end pocket-slot Magic damage book"
-      ],
-      "notes": "Magic value from Kerapac even when a planner already tracks FSoA hard-mode pieces. GConc is not covered by mage-arena:guthix-staff",
-      "source_urls": [
-        "https://runescape.wiki/w/Kerapac,_the_bound",
-        "https://runescape.wiki/w/Greater_Concentrated_Blast_ability_codex",
-        "https://runescape.wiki/w/Kerapac%27s_wrist_wraps"
-      ],
-      "confidence": "confirmed_current_wiki_equilibrium_league_badge"
-    },
-    {
       "id": "asgarnia:wand-of-the-praesul",
       "name": "Wand of the praesul and Imperium core",
       "category": "Magic dual-wield best-in-slot residual weapons",
@@ -25782,34 +24704,6 @@
       ],
       "confidence": "confirmed_current_wiki_cross_region_chain",
       "league_treatment": "Anachronia + Fremennik both required for self-source · Region combo (all required): anachronia + fremennik"
-    },
-    {
-      "id": "asgarnia:luck-of-the-dwarves-combat",
-      "name": "Luck of the Dwarves (combat luck ring)",
-      "category": "luck ring with combat/drop relevance",
-      "region_hint": "asgarnia",
-      "required_regions": [
-        "asgarnia"
-      ],
-      "region_requirement_type": "acquisition_region",
-      "requirements": [
-        "Asgarnia dwarf infrastructure (Lava Flow Mine / Motherlode Maw / related luck ring progression)",
-        "Ring of fortune → luck of the dwarves upgrade path"
-      ],
-      "unlocks": [
-        "Luck of the Dwarves"
-      ],
-      "effects": [
-        "Tier-4 luck for rare drop tables",
-        "Combat-relevant for farming BiS uniques faster, not a direct DPS ring"
-      ],
-      "notes": "Combat-adjacent permanent unlock: improves acquisition rate of other BiS rows rather than worn DPS. Prefer reaver/stalker for damage slots",
-      "source_urls": [
-        "https://runescape.wiki/w/Luck_of_the_dwarves",
-        "https://runescape.wiki/w/Motherlode_Maw"
-      ],
-      "confidence": "confirmed_wiki_region_inferred_asgarnia_dwarf_content",
-      "league_treatment": "Asgarnia owns the classic dwarf luck progression geography"
     },
     {
       "id": "cross-region:essence-of-finality",
@@ -31050,40 +29944,6 @@
       "isRegionCombo": false
     },
     {
-      "id": "misthalin:mattock-tier-ladder",
-      "name": "Mattock tier ladder (bronze through elder rune + specials)",
-      "category": "Archaeology tool progression",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "anachronia",
-        "tirannwn",
-        "kandarin"
-      ],
-      "requirements": [
-        "Archaeology level matching mattock tier (1–90 smithable; 60 dragon; 70 crystal; 80 Imcando; 99 MoTaS / Tony)",
-        "Smithing for bronze–elder rune mattocks; Matty Ock's Mattock Shop sells early tiers at campus",
-        "Dragon mattock: Anachronia BGH / ancient casket",
-        "Crystal: dragon mattock + 4,000 harmonic dust (Tirannwn)",
-        "Imcando: dragon mattock + imcando metal pieces (Warforge / Thalmund path)",
-        "Mattock of Time and Space: crystal + Imcando + energised meteorite shard (already indexed as cross-region:mattock-of-time-and-space)"
-      ],
-      "effects": [
-        "Precision scales excavation artefact speed; focus scales material find rate",
-        "Dragon / crystal / Imcando / MoTaS / Tony's are augmentable",
-        "Imcando (80) matches elder rune (90) precision/focus while remaining augmentable — preferred mid-late tool"
-      ],
-      "notes": "Campus Matty Ock shop is Misthalin starting infrastructure for early mattocks. Special mattocks pressure Anachronia (dragon), Tirannwn (crystal), Warforge (Imcando pieces; Warforge boundary often Kandarin/Forinthry depending on mapping)",
-      "source_urls": [
-        "https://runescape.wiki/w/Mattocks",
-        "https://runescape.wiki/w/Matty_Ock%27s_Mattock_Shop",
-        "https://runescape.wiki/w/Dragon_mattock",
-        "https://runescape.wiki/w/Imcando_mattock"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Early ladder is Misthalin. Flag optional region_hints for special mattock bases rather than hard-requiring every region"
-    },
-    {
       "id": "invention:ancient-gizmo-shells",
       "name": "Ancient weapon / armour / tool gizmo shells",
       "category": "Ancient Invention equipment shells",
@@ -32229,30 +31089,6 @@
       ],
       "confidence": "confirmed_wiki",
       "league_treatment": "Hard Kandarin. Completes Agile from Head to Toe with agile top"
-    },
-    {
-      "id": "misthalin:archaeologists-outfit",
-      "name": "Archaeologist's outfit",
-      "category": "Archaeology XP outfit",
-      "region_hint": "misthalin",
-      "requirements": [
-        "Qualification - Associate (70 Archaeology) for Archaeology Guild Shop outfit section",
-        "10,000 chronotes per piece (50,000 full set)"
-      ],
-      "effects": [
-        "1% Archaeology XP per piece through four pieces",
-        "6% Archaeology XP when all five pieces worn (+1% set bonus)",
-        "Free Diango reclaim if lost",
-        "Master archaeologist's outfit at Guildmaster qualification is a separate elite upgrade path (success/precision/teleports) — keep on guild shop activity row"
-      ],
-      "notes": "Equipment split from activity unlocks. Master archaeologist benefits stay on the guild shop / master outfit documentation rather than duplicating here",
-      "source_urls": [
-        "https://runescape.wiki/w/Archaeologist%27s_outfit",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "https://runescape.wiki/w/Master_archaeologist%27s_outfit"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Starting-region Misthalin Guild shop. Qualification gates still apply"
     },
     {
       "id": "misthalin:artisans-outfit",
@@ -33692,64 +32528,6 @@
         "cross-region:grasping-rune-pouch",
         "cross-region:rune-pouch-ladder",
         "forinthry:sealed-small-rune-pouch"
-      ]
-    },
-    {
-      "id": "cross-region:expansive-essence-pouch",
-      "name": "Expansive essence pouch (70 essence, non-degrading)",
-      "category": "permanent endgame RC essence-storage pouch",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "forinthry",
-        "anachronia",
-        "kandarin"
-      ],
-      "required_regions": [
-        "misthalin",
-        "forinthry"
-      ],
-      "optional_pressure_regions": [
-        "anachronia",
-        "kandarin",
-        "morytania"
-      ],
-      "requirements": [
-        "105 Runecrafting unboostable + 95 Divination (Divination boostable) to craft",
-        "Hungry hood: 20,000 Runespan points from Wizard Rinsit (Wizards' Tower)",
-        "Full small→massive essence pouch set fed into hungry hood (cross-region:runecrafting-essence-pouch-set)",
-        "Ilme's thread (craft ~7,500 essence at non-Abyss altars; reclaimable from Wizard Rinsit if lost)",
-        "100 magical threads for expansive pouch cord (forinthry:magical-thread-abyss-supply)",
-        "Shielded pouch exterior materials: sign of runic protection (2,500 incandescent energy), 1 royal dragon leather, 2 dinosaur leather, 10 felt",
-        "Sate hungry dimensional pouch with 2–60 unnoted talismans (random)",
-        "Combine exterior + cord + sated pouch at non-necrotic altar → sealed expansive → large Runedoku unseal → fill bottomless form at Rune Essence mine"
-      ],
-      "effects": [
-        "Permanent non-degrading 70-essence storage (22 more than the sum of small→massive; frees 4 inventory slots vs multi-pouch set)",
-        "Replaces the multi-pouch inventory tax for altar trips; other essence pouches cannot be used/withdrawn while expansive is in the backpack (fill-while-mining still allowed across types)",
-        "Configure preferred essence order (pure / rune / impure after Rune Mythos)",
-        "Always kept on death including PvP; multiple crafted expansive pouches share contents",
-        "With abyssal titan + infinity ethereal + 27 inv: wiki ceiling 129 essence per trip"
-      ],
-      "notes": "equipment. Essence storage — not a combat rune pouch. Magical thread demand: 100 thread cord + optional parallel combat-pouch spends · Region combo (all required): misthalin + forinthry",
-      "source_urls": [
-        "https://runescape.wiki/w/Expansive_pouch",
-        "https://runescape.wiki/w/Expansive_essence_pouch",
-        "https://runescape.wiki/w/Hungry_hood",
-        "https://runescape.wiki/w/Ilme%27s_thread",
-        "https://runescape.wiki/w/Magical_thread",
-        "https://runescape.wiki/w/Runecrafting_pouches"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin (Runespan shops / essence mine) + Forinthry (Abyss thread). Anachronia optional for dinosaur leather; Kandarin optional for altar geography · Region combo (all required): misthalin + forinthry",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "cross-region:rune-pouch-ladder",
-        "cross-region:runecrafting-essence-pouch-set",
-        "forinthry:magical-thread-abyss-supply",
-        "forinthry:pouch-protector-relic",
-        "misthalin:runespan-portal",
-        "asgarnia:wicked-hood"
       ]
     },
     {
@@ -35622,35 +34400,6 @@
       ]
     },
     {
-      "id": "misthalin:master-archaeologists-outfit",
-      "name": "Master archaeologist's outfit",
-      "category": "Archaeology elite skilling outfit",
-      "region_hint": "misthalin",
-      "requirements": [
-        "99 Archaeology and Qualification - Guildmaster achievement",
-        "250,000 chronotes total from Archaeology Guild Shop (50,000 per piece × 5)"
-      ],
-      "effects": [
-        "1% Archaeology XP if no base archaeologist's outfit owned; each piece acts as the matching base piece if unlocked for up to 6% XP with full set",
-        "7% increase to excavation success rate",
-        "7% increase to screening success rate",
-        "7% increase to mattock base precision",
-        "Faster artefact restore (4.8 s per artefact, down from 6 s)",
-        "Faster soil screening (1.2 s per soil, down from 1.8 s)",
-        "50% longer material manuals, hi-spec monocles, tarpaulin sheets, and archaeologist's tea (30 min from 20)",
-        "3 daily Fixate uses guaranteeing a chosen artefact from an excavation (daily soft reset)",
-        "Unlimited hat teleports to dig sites (including Archaeology Campus, Kharid-et, Infernal Source, Everlight, Moonrise, Senntisten, Stormguard, Daemonheim, Warforge, Orthen) and collectors",
-        "Ability to see strange writings (Writings on the Walls mystery needs full set)"
-      ],
-      "notes": "Guild shop is on the Archaeology Campus (Misthalin). Free Diango reclaim. Dig-site destinations are multi-region pressure after unlock",
-      "source_urls": [
-        "https://runescape.wiki/w/Master_archaeologist%27s_outfit",
-        "https://runescape.wiki/w/Archaeology_Guild_Shop"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin for Guildmaster + chronote shop. Destinations are use-pressure only"
-    },
-    {
       "id": "misthalin:master-constructors-outfit",
       "name": "Master constructor's outfit",
       "category": "Construction elite skilling outfit",
@@ -36422,46 +35171,6 @@
       "isRegionCombo": false
     },
     {
-      "id": "forinthry:hoardstalker-ring",
-      "name": "Hoardstalker ring",
-      "category": "resource dungeon teleport ring",
-      "region_hint": "forinthry",
-      "region_hints": [
-        "forinthry",
-        "asgarnia",
-        "misthalin",
-        "karamja",
-        "kandarin",
-        "morytania",
-        "desert",
-        "tirannwn"
-      ],
-      "requirements": [
-        "Sinkholes D&D reward path (preening ibis after full hoardstalker outfit) or rare Sinkholes/chest sources",
-        "Prior first entry to a resource dungeon before the ring can teleport there",
-        "Depleted rings recharge via Daemonheim Rewards shop"
-      ],
-      "effects": [
-        "Up to 8 teleports to unlocked resource dungeons (lands outside entrance; places inside vs cape for some planning)",
-        "Shares destination list with Dungeoneering cape resource-dungeon teleports",
-        "Skilling travel backbone for Mining Guild RD, Al Kharid RD, Edimmu, Slayer Tower RD, Brimhaven metal dragons, etc."
-      ],
-      "notes": "Pairs with package. Cape is unlimited alternate; ring is the pre-99 / ring-slot travel tool",
-      "source_urls": [
-        "https://runescape.wiki/w/Hoardstalker_ring",
-        "https://runescape.wiki/w/Resource_dungeon",
-        "https://runescape.wiki/w/Sinkholes"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Forinthry for Sinkholes/DG reward framing. Destination dungeons still need surface regions unlocked",
-      "region_requirement_type": "support",
-      "links_existing_ids": [
-        "forinthry:resource-dungeon-unlocks",
-        "asgarnia:mining-guild-resource-dungeon",
-        "prifddinas:edimmu-resource-dungeon"
-      ]
-    },
-    {
       "id": "cross-region:grasping-rune-pouch",
       "name": "Grasping rune pouch",
       "category": "permanent RC/Magic combat-skilling pouch upgrade",
@@ -36813,61 +35522,6 @@
         "kandarin:spirit-tree-network",
         "kandarin:oo-glog-spa",
         "desert:hets-oasis-farming"
-      ]
-    },
-    {
-      "id": "misthalin:amulet-of-glory",
-      "name": "Amulet of glory",
-      "category": "permanent multi-city travel amulet",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "karamja",
-        "desert",
-        "asgarnia",
-        "tirannwn"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "karamja",
-        "desert",
-        "asgarnia",
-        "tirannwn"
-      ],
-      "requirements": [
-        "Lvl-4 Enchant on dragonstone amulet",
-        "Recharge at Fountain of Heroes (Heroes' Guild — Heroes' Quest) or Tears of Seren (Prif) or geyser titan",
-        "Dragonstone + gold craft path for ironman self-supply"
-      ],
-      "effects": [
-        "Up to 4 charges teleporting to Edgeville, Karamja (Musa Point), Draynor Village, Al Kharid",
-        "Ironman banking + early Karamja/Al Kharid on-ramps without fairy rings",
-        "Worn glories improve gem chance while Mining and clue-adjacent QoL historically",
-        "Compactable; POH glory mount / jewellery box endgame storage paths"
-      ],
-      "region_pressure": [
-        "Misthalin primary: Edgeville + Draynor destinations and common craft/enchant home.",
-        "Karamja: Musa Point destination.",
-        "Desert: Al Kharid destination.",
-        "Asgarnia: Heroes' Guild Fountain of Heroes recharge (Heroes' Quest).",
-        "Tirannwn optional: Tears of Seren recharge."
-      ],
-      "notes": "Classic ironman travel still missing while games necklace Burgh and TokKul-Zo are. Recharge is Asgarnia Heroes' Guild pressure, not a hard second region for using Edgeville/Draynor teles",
-      "source_urls": [
-        "https://runescape.wiki/w/Amulet_of_glory",
-        "https://runescape.wiki/w/Fountain_of_Heroes",
-        "https://runescape.wiki/w/Lvl-4_Enchant"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Primary Misthalin for Edgeville/Draynor density. Tag Karamja/Desert when valuing those destinations; Asgarnia for Heroes' Guild recharge",
-      "region_requirement_type": "support",
-      "links_existing_ids": [
-        "misthalin:edgeville-skilling-hub",
-        "misthalin:draynor-skilling-hub",
-        "karamja:musa-point-fishing-stiles",
-        "cross-region:fairy-ring-network"
       ]
     },
     {

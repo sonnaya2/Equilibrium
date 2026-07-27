@@ -17225,38 +17225,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Hoardstalker ring",
-          "category": "resource dungeon teleport ring",
-          "detail": "Pairs with package. Cape is unlimited alternate; ring is the pre-99 / ring-slot travel tool · Destination dungeons still need surface regions unlocked · Effects: Up to 8 teleports to unlocked resource dungeons (lands outside entrance; places inside vs cape for some planning), Shares destination list with Dungeoneering cape resource-dungeon teleports, Skilling travel backbone for Mining Guild RD, Al Kharid RD, Edimmu, Slayer Tower RD, Brimhaven metal dragons, etc",
-          "requirements": [
-            "Sinkholes D&D reward path (preening ibis after full hoardstalker outfit) or rare Sinkholes/chest sources",
-            "Prior first entry to a resource dungeon before the ring can teleport there",
-            "Depleted rings recharge via Daemonheim Rewards shop"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hoardstalker_ring",
-            "title": "Hoardstalker ring",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry",
-            "asgarnia",
-            "misthalin",
-            "karamja",
-            "kandarin",
-            "morytania",
-            "desert",
-            "tirannwn"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "support",
-          "comboLabel": "Region chain (support pressure): forinthry / asgarnia / misthalin / karamja / kandarin / morytania / desert / tirannwn",
-          "isRegionCombo": false
-        },
-        {
           "name": "Infernal Source Dig Site (Zamorakian)",
           "category": "Archaeology dig-site hub",
           "detail": "Pack treats Forinthry as hard gate for Source/Wilderness adjacency. Surface approach may also require Misthalin depending on League area split · Unlocks: Zamorakian hotspots levels 20–110+ (lodge storage through chthonian trophies / hellfire forges), Materials for Ancient Summoning and site exclusives (cadmium red, chaotic brimstone, Eye of Dagon, hellfire metal, demonhide), Zamorakian collections for Isaura (Zamorakian I → Pouch Protector Abyssal thread; Zamorakian IV → Inspire Love Ariadne's Diadem), Chaos star artefact for Nexus Mod Abyssal Gatestone craft and Source portal reliability (tool belt), Surface bank chest, workbench, material storage; Mephisto/chaos portal QoL · Region pressure: Forinthry: The Source lies under Wilderness Crater; pack dig-site map assigns forinthry",

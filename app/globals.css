@@ -1284,9 +1284,8 @@ textarea:focus-visible {
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
-    /* Overrides Page's utility py-4 so the board keeps the pixels. */
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    /* Match workbench / Tasks nav gap (not Page py-4). */
+    padding: clamp(0.75rem, 1.25vw, 1.5rem);
   }
   .map-shell > :not(.board-sky) {
     flex-shrink: 0;

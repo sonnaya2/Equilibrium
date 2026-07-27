@@ -562,6 +562,8 @@
   min-height: 0;
   flex: 1;
   overflow-y: auto;
+  /* Match workbench / Tasks nav gap. */
+  padding: clamp(0.75rem, 1.25vw, 1.5rem);
   background:
     radial-gradient(
       ellipse 120% 50% at 50% 0%,
@@ -2312,12 +2314,12 @@
   max-width: 1680px;
   width: 100%;
   margin: 0 auto;
-  padding: 0.4rem 0.65rem 0.55rem;
+  /* Shared nav gap — same as Tasks on every workbench route. */
+  padding: clamp(0.75rem, 1.25vw, 1.5rem);
 }
 
 .eq-champion .workbench-fill:has(> .tasks-page) {
   max-width: 1920px;
-  padding: clamp(0.75rem, 1.25vw, 1.5rem);
 }
 
 /* Data only: definite height so twin-desk bays scroll without freezing the shell. */
@@ -2386,10 +2388,6 @@
 }
 
 /* Build one-screen — dense Relic Court (no panel voids) */
-.eq-champion .workbench-fill:has(> .build-screen) {
-  padding: 0.4rem 0.65rem 0.45rem;
-}
-
 .eq-champion .build-screen {
   gap: 0.35rem;
   min-height: 0;
@@ -2796,10 +2794,7 @@
   line-height: 1.2;
 }
 
-/* Data workbench shell only — do not touch Tasks/Build/Combat fill */
-.eq-champion .workbench-fill:has(.data-screen) {
-  padding: 0.3rem 0.5rem 0.4rem;
-}
+/* Data inherits shared workbench nav gap (Tasks parity). */
 
 .eq-champion .research-browse-desk {
   flex: 1;
@@ -2880,7 +2875,7 @@
   height: calc(100svh - 3.25rem);
   min-height: calc(100svh - 3.25rem);
   max-height: calc(100svh - 3.25rem);
-  padding: 0.35rem clamp(0.55rem, 1.1vw, 1.15rem) 0.45rem;
+  /* Inherit shared workbench nav gap (do not collapse under the bar). */
   overflow: hidden;
 }
 

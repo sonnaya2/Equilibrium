@@ -16,7 +16,8 @@
   min-width: 0;
   flex: 1 1 0;
   min-height: 0;
-  padding: 0 1.6rem 0.9rem;
+  /* Outer nav/side gap comes from .workbench-fill (Tasks parity). */
+  padding: 0 0 0.5rem;
   overflow: auto;
   box-sizing: border-box;
   background:
@@ -61,11 +62,6 @@
 }
 
 /* Mast uses the shared Data-style nav from champion.css — no Build fork. */
-
-.eq-champion .workbench-fill:has(.mc) {
-  padding-top: 0;
-  padding-inline: 0;
-}
 
 .mc *,
 .mc *::before,

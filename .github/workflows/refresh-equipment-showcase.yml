@@ -2,6 +2,14 @@ name: Refresh equipment showcase
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/equipment-showcase-refresh.trigger
+      - scripts/write-equipment-showcase-html.mjs
+      - scripts/build-equipment-showcase.mjs
+      - scripts/refresh-equipment-showcase-icons.mjs
+      - data/combat/equipment.json
+      - data/league/regions.json
   push:
     paths:
       - .github/workflows/refresh-equipment-showcase.yml
@@ -18,8 +26,12 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -55,5 +67,5 @@ jobs:
             echo "No generated changes"
           else
             git commit -m "Refresh equipment showcase data and icons"
-            git push
+            git push origin "HEAD:${TARGET_BRANCH}"
           fi

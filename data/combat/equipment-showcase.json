@@ -1,16 +1,11 @@
 {
   "generatedAt": "2026-07-28",
   "sourceLastSynced": "2026-07-28",
-  "sourceRecordCount": 572,
-  "showcasableRecordCount": 572,
-  "showcaseCount": 396,
-  "collapsedCount": 176,
-  "omittedNoIcon": [
-    {
-      "id": "item:vampyrism-gloves",
-      "name": "Vampyrism gloves"
-    }
-  ],
+  "sourceRecordCount": 573,
+  "showcasableRecordCount": 573,
+  "showcaseCount": 398,
+  "collapsedCount": 175,
+  "omittedNoIcon": [],
   "records": [
     {
       "id": "showcase:set:custom-fit-masterwork-magic-robe-top",
@@ -20318,6 +20313,51 @@
       ]
     },
     {
+      "id": "item:bens-spare-hat",
+      "name": "Ben's spare hat",
+      "kind": "item",
+      "iconId": "item:bens-spare-hat",
+      "style": "magic",
+      "tier": 30,
+      "tierRange": null,
+      "slots": [
+        "helmet"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 1,
+      "memberIds": [
+        "item:bens-spare-hat"
+      ],
+      "members": [
+        {
+          "id": "item:bens-spare-hat",
+          "name": "Ben's spare hat",
+          "slot": "helmet",
+          "tier": 30
+        }
+      ],
+      "displayDescription": "Tier 30 magic tank headgear rewarded by the Wiz Kid quest.",
+      "unlock": {
+        "type": "quest",
+        "requirement": "Complete Wiz Kid",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "armour": 90.8
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ben's_spare_hat",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
       "id": "item:slayer-helmet-i",
       "name": "Full slayer helmet",
       "kind": "item",
@@ -20360,6 +20400,49 @@
           "url": "https://runescape.wiki/w/Full_slayer_helmet",
           "title": "Full slayer helmet",
           "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:vampyrism-gloves",
+      "name": "Vampyrism gloves",
+      "kind": "item",
+      "iconId": "item:vampyrism-gloves",
+      "style": "hybrid",
+      "tier": 25,
+      "tierRange": null,
+      "slots": [
+        "gloves"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 1,
+      "memberIds": [
+        "item:vampyrism-gloves"
+      ],
+      "members": [
+        {
+          "id": "item:vampyrism-gloves",
+          "name": "Vampyrism gloves",
+          "slot": "gloves",
+          "tier": 25
+        }
+      ],
+      "displayDescription": "Tier 25 hybrid gloves dropped by Sanguine crawlers; heals 2% of damage dealt, capped at 20 life points per hit.",
+      "unlock": {
+        "type": "drop",
+        "requirement": "Sanguine crawlers in Havenhythe",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {},
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vampyrism_gloves",
+          "verifiedAt": "2026-07-28"
         }
       ]
     },

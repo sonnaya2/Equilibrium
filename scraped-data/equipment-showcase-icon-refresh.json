@@ -1,15 +1,7 @@
 {
   "generatedAt": "2026-07-28",
-  "targets": 16,
-  "downloaded": 15,
-  "failed": 1,
-  "failures": [
-    {
-      "id": "item:vampyrism-gloves",
-      "name": "Vampyrism gloves",
-      "title": "Vampyrism gloves",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Vampyrism_gloves_detail.png/128px-Vampyrism_gloves_detail.png?3707b"
-    }
-  ]
+  "targets": 2,
+  "downloaded": 2,
+  "failed": 0,
+  "failures": []
 }

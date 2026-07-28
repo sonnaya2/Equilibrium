@@ -1,8 +1,8 @@
 {
   "generatedAt": "2026-07-28",
-  "count": 602,
-  "ok": 602,
-  "failed": 1,
+  "count": 604,
+  "ok": 604,
+  "failed": 0,
   "note": "Local paths under /game/combat/equipment/. Attribution: RuneScape Wiki / Jagex. Never hotlink wiki at runtime.",
   "icons": {
     "item:seismic-wand": {
@@ -6556,6 +6556,28 @@
       "sourceUrl": "https://runescape.wiki/images/thumb/Black_chinchompa_detail.png/128px-Black_chinchompa_detail.png",
       "bytes": 11264,
       "sha256": "8fbefc4eceb046a1d771fc301692112e166b5f220f224e89f911e17f2b6b0877",
+      "cached": false
+    },
+    "item:vampyrism-gloves": {
+      "ok": true,
+      "path": "/game/combat/equipment/vampyrism-gloves.webp",
+      "asset": "assets/rs3/combat/equipment/vampyrism-gloves.webp",
+      "pageTitle": "Vampyrism gloves",
+      "fileTitle": "File:Vampyrism_gloves_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Vampyrism_gloves_detail.png/128px-Vampyrism_gloves_detail.png",
+      "bytes": 10678,
+      "sha256": "3f00bc6fdd8b0eda9b9b1b97a2036fdb73a5a5cee8f773aaa6209f610e8429f4",
+      "cached": false
+    },
+    "item:bens-spare-hat": {
+      "ok": true,
+      "path": "/game/combat/equipment/bens-spare-hat.webp",
+      "asset": "assets/rs3/combat/equipment/bens-spare-hat.webp",
+      "pageTitle": "Ben's spare hat",
+      "fileTitle": "File:Ben's_spare_hat_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Ben%27s_spare_hat_detail.png/128px-Ben%27s_spare_hat_detail.png",
+      "bytes": 11574,
+      "sha256": "2a19af26eea5560ae04b6a557c551e16261fbfd7036732edcea151e51a9d7616",
       "cached": false
     }
   }

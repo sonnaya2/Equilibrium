@@ -15256,6 +15256,31 @@
           "verifiedAt": "2026-07-28"
         }
       ]
+    },
+    {
+      "id": "item:bens-spare-hat",
+      "name": "Ben's spare hat",
+      "style": "magic",
+      "slot": "helmet",
+      "tier": 30,
+      "bonuses": {
+        "armour": 90.8
+      },
+      "displayDescription": "Tier 30 magic tank headgear rewarded by the Wiz Kid quest.",
+      "unlock": {
+        "type": "quest",
+        "requirement": "Complete Wiz Kid",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Ben's_spare_hat",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
     }
   ]
 }

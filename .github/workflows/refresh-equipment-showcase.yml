@@ -2,12 +2,98 @@ name: Refresh equipment showcase
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/equipment-showcase-refresh.trigger
+      - scripts/sync-havenhythe-equipment.mjs
+      - scripts/audit-equipment-wiki-regions.mjs
+      - scripts/build-equipment-showcase.mjs
+      - scripts/postprocess-equipment-showcase.mjs
+      - scripts/refresh-equipment-showcase-icons.mjs
+      - scripts/patch-equipment-showcase-html.mjs
+      - scripts/render-equipment-showcase-png.mjs
+      - data/combat/equipment.json
+      - data/league/regions.json
+  push:
+    paths:
+      - .github/workflows/refresh-equipment-showcase.yml
+      - scripts/equipment-showcase-refresh.trigger
+      - scripts/sync-havenhythe-equipment.mjs
+      - scripts/audit-equipment-wiki-regions.mjs
+      - scripts/build-equipment-showcase.mjs
+      - scripts/postprocess-equipment-showcase.mjs
+      - scripts/refresh-equipment-showcase-icons.mjs
+      - scripts/patch-equipment-showcase-html.mjs
+      - scripts/render-equipment-showcase-png.mjs
+      - data/combat/equipment.json
+      - data/league/regions.json
 
 permissions:
   contents: write
 
 jobs:
-  paused:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     steps:
-      - run: echo "Showcase refresh temporarily paused while the audited generator is installed."
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Sync verified Havenhythe equipment
+        run: node scripts/sync-havenhythe-equipment.mjs
+      - name: Audit equipment regions against the Wiki
+        run: node scripts/audit-equipment-wiki-regions.mjs
+      - name: Fill missing local equipment icons
+        run: node scripts/refresh-equipment-showcase-icons.mjs
+      - name: Build consolidated showcase data
+        run: node scripts/build-equipment-showcase.mjs
+      - name: Fix semantic families and representative icons
+        run: node scripts/postprocess-equipment-showcase.mjs
+      - name: Patch standalone HTML layout and download behavior
+        run: node scripts/patch-equipment-showcase-html.mjs
+      - name: Render reliable PNG export
+        run: node scripts/render-equipment-showcase-png.mjs
+      - name: Verify generated files
+        run: |
+          node --check scripts/sync-havenhythe-equipment.mjs
+          node --check scripts/audit-equipment-wiki-regions.mjs
+          node --check scripts/build-equipment-showcase.mjs
+          node --check scripts/postprocess-equipment-showcase.mjs
+          node --check scripts/refresh-equipment-showcase-icons.mjs
+          node --check scripts/patch-equipment-showcase-html.mjs
+          node --check scripts/render-equipment-showcase-png.mjs
+          test -s data/combat/equipment-showcase.json
+          test -s data/combat/equipment-icon-slugs.json
+          test -s scraped-data/equipment-wiki-region-audit.json
+          test -s equilibrium-region-equipment.html
+          test -s equilibrium-regional-combat-unlocks.png
+      - name: Commit refreshed showcase
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            equilibrium-region-equipment.html \
+            equilibrium-regional-combat-unlocks.png \
+            data/combat/equipment.json \
+            data/combat/equipment-showcase.json \
+            data/combat/equipment-icon-slugs.json \
+            data/combat/equipment-icons.json \
+            assets/rs3/combat/equipment \
+            public/game/combat/equipment
+          git add -f \
+            scraped-data/equipment-showcase-icon-refresh.json \
+            scraped-data/equipment-wiki-region-audit.json || true
+          git status --short
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+          else
+            git commit -m "Audit and refresh regional equipment showcase"
+            git push origin "HEAD:${TARGET_BRANCH}"
+          fi

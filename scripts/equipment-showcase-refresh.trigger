@@ -1,1 +1,1 @@
-2026-07-28 havenhythe wiki audit pass 2: Ben's spare hat and PNG icon conversion
+2026-07-28 equipment wiki audit pass 3: canonical titles and classified leads

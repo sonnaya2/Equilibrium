@@ -1,120 +1,15 @@
 {
   "generatedAt": "2026-07-28",
   "targets": 16,
-  "downloaded": 0,
-  "failed": 16,
+  "downloaded": 15,
+  "failed": 1,
   "failures": [
-    {
-      "id": "item:havensilver-greatsword",
-      "name": "Havensilver greatsword",
-      "title": "Havensilver greatsword",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_greatsword_detail.png/128px-Havensilver_greatsword_detail.png?4a106"
-    },
-    {
-      "id": "item:havensilver-greatsword-plus-1",
-      "name": "Havensilver greatsword +1",
-      "title": "Havensilver greatsword +1",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_greatsword_%2B1_detail.png/128px-Havensilver_greatsword_%2B1_detail.png?3edbb"
-    },
-    {
-      "id": "item:havensilver-greatsword-plus-2",
-      "name": "Havensilver greatsword +2",
-      "title": "Havensilver greatsword +2",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_greatsword_%2B2_detail.png/128px-Havensilver_greatsword_%2B2_detail.png?83d53"
-    },
-    {
-      "id": "item:havensilver-longsword",
-      "name": "Havensilver longsword",
-      "title": "Havensilver longsword",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_longsword_detail.png/128px-Havensilver_longsword_detail.png?fdb2f"
-    },
-    {
-      "id": "item:havensilver-longsword-plus-1",
-      "name": "Havensilver longsword +1",
-      "title": "Havensilver longsword +1",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_longsword_%2B1_detail.png/128px-Havensilver_longsword_%2B1_detail.png?9b439"
-    },
-    {
-      "id": "item:havensilver-longsword-plus-2",
-      "name": "Havensilver longsword +2",
-      "title": "Havensilver longsword +2",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_longsword_%2B2_detail.png/128px-Havensilver_longsword_%2B2_detail.png?56f2a"
-    },
-    {
-      "id": "item:havensilver-off-hand-longsword",
-      "name": "Havensilver off-hand longsword",
-      "title": "Havensilver off-hand longsword",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_off-hand_longsword_detail.png/128px-Havensilver_off-hand_longsword_detail.png?a380d"
-    },
-    {
-      "id": "item:havensilver-off-hand-longsword-plus-1",
-      "name": "Havensilver off-hand longsword +1",
-      "title": "Havensilver off-hand longsword +1",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_off-hand_longsword_%2B1_detail.png/128px-Havensilver_off-hand_longsword_%2B1_detail.png?4d9f9"
-    },
-    {
-      "id": "item:havensilver-off-hand-longsword-plus-2",
-      "name": "Havensilver off-hand longsword +2",
-      "title": "Havensilver off-hand longsword +2",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_off-hand_longsword_%2B2_detail.png/128px-Havensilver_off-hand_longsword_%2B2_detail.png?79ab2"
-    },
-    {
-      "id": "item:havensilver-bolt",
-      "name": "Havensilver bolt",
-      "title": "Havensilver bolt",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_bolt_5_detail.png/128px-Havensilver_bolt_5_detail.png?72421"
-    },
-    {
-      "id": "item:havensilver-bolt-plus-1",
-      "name": "Havensilver bolt +1",
-      "title": "Havensilver bolt +1",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_bolt_%2B1_5_detail.png/128px-Havensilver_bolt_%2B1_5_detail.png?fd2e2"
-    },
-    {
-      "id": "item:havensilver-bolt-plus-2",
-      "name": "Havensilver bolt +2",
-      "title": "Havensilver bolt +2",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_bolt_%2B2_5_detail.png/128px-Havensilver_bolt_%2B2_5_detail.png?7e810"
-    },
-    {
-      "id": "item:bonecrusher-maul",
-      "name": "Bonecrusher maul",
-      "title": "Bonecrusher maul",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Bonecrusher_maul_detail.png/128px-Bonecrusher_maul_detail.png?2f4f7"
-    },
-    {
-      "id": "item:magic-skull-mask",
-      "name": "Magic skull mask",
-      "title": "Magic skull mask",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Magic_skull_mask_detail.png/128px-Magic_skull_mask_detail.png?f89be"
-    },
     {
       "id": "item:vampyrism-gloves",
       "name": "Vampyrism gloves",
       "title": "Vampyrism gloves",
       "error": "wiki thumbnail was image/png, not WebP",
       "sourceUrl": "https://runescape.wiki/images/thumb/Vampyrism_gloves_detail.png/128px-Vampyrism_gloves_detail.png?3707b"
-    },
-    {
-      "id": "item:black-chinchompa",
-      "name": "Black chinchompa",
-      "title": "Black chinchompa",
-      "error": "wiki thumbnail was image/png, not WebP",
-      "sourceUrl": "https://runescape.wiki/images/thumb/Black_chinchompa_detail.png/128px-Black_chinchompa_detail.png?38bb8"
     }
   ]
 }

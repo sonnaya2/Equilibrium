@@ -3,69 +3,9 @@
   "sourceLastSynced": "2026-07-28",
   "sourceRecordCount": 572,
   "showcasableRecordCount": 572,
-  "showcaseCount": 389,
-  "collapsedCount": 183,
+  "showcaseCount": 396,
+  "collapsedCount": 176,
   "omittedNoIcon": [
-    {
-      "id": "item:havensilver-greatsword",
-      "name": "Havensilver greatsword"
-    },
-    {
-      "id": "item:havensilver-greatsword-plus-1",
-      "name": "Havensilver greatsword +1"
-    },
-    {
-      "id": "item:havensilver-greatsword-plus-2",
-      "name": "Havensilver greatsword +2"
-    },
-    {
-      "id": "item:havensilver-longsword",
-      "name": "Havensilver longsword"
-    },
-    {
-      "id": "item:havensilver-longsword-plus-1",
-      "name": "Havensilver longsword +1"
-    },
-    {
-      "id": "item:havensilver-longsword-plus-2",
-      "name": "Havensilver longsword +2"
-    },
-    {
-      "id": "item:havensilver-off-hand-longsword",
-      "name": "Havensilver off-hand longsword"
-    },
-    {
-      "id": "item:havensilver-off-hand-longsword-plus-1",
-      "name": "Havensilver off-hand longsword +1"
-    },
-    {
-      "id": "item:havensilver-off-hand-longsword-plus-2",
-      "name": "Havensilver off-hand longsword +2"
-    },
-    {
-      "id": "item:havensilver-bolt",
-      "name": "Havensilver bolt"
-    },
-    {
-      "id": "item:havensilver-bolt-plus-1",
-      "name": "Havensilver bolt +1"
-    },
-    {
-      "id": "item:havensilver-bolt-plus-2",
-      "name": "Havensilver bolt +2"
-    },
-    {
-      "id": "item:bonecrusher-maul",
-      "name": "Bonecrusher maul"
-    },
-    {
-      "id": "item:black-chinchompa",
-      "name": "Black chinchompa"
-    },
-    {
-      "id": "item:magic-skull-mask",
-      "name": "Magic skull mask"
-    },
     {
       "id": "item:vampyrism-gloves",
       "name": "Vampyrism gloves"
@@ -19179,6 +19119,49 @@
       ]
     },
     {
+      "id": "item:black-chinchompa",
+      "name": "Black chinchompa",
+      "kind": "item",
+      "iconId": "item:black-chinchompa",
+      "style": "ranged",
+      "tier": 65,
+      "tierRange": null,
+      "slots": [
+        "mainhand"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 1,
+      "memberIds": [
+        "item:black-chinchompa"
+      ],
+      "members": [
+        {
+          "id": "item:black-chinchompa",
+          "name": "Black chinchompa",
+          "slot": "mainhand",
+          "tier": 65
+        }
+      ],
+      "displayDescription": "Stackable multi-target ranged weapon caught from volatile chinchompas in Havenhythe.",
+      "unlock": {
+        "type": "hunter",
+        "requirement": "Box trap volatile chinchompas in Havenhythe",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {},
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Black_chinchompa",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
       "id": "item:ring-of-vigour",
       "name": "Ring of vigour",
       "kind": "item",
@@ -19364,6 +19347,297 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Guthix_staff",
           "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "showcase:variants:havensilver-bolts",
+      "name": "Havensilver bolts",
+      "kind": "variants",
+      "iconId": "item:havensilver-bolt-plus-2",
+      "style": "ranged",
+      "tier": 60,
+      "tierRange": [
+        5,
+        60
+      ],
+      "slots": [
+        "ammo"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 3,
+      "memberIds": [
+        "item:havensilver-bolt-plus-2",
+        "item:havensilver-bolt-plus-1",
+        "item:havensilver-bolt"
+      ],
+      "members": [
+        {
+          "id": "item:havensilver-bolt-plus-2",
+          "name": "Havensilver bolt +2",
+          "slot": "ammo",
+          "tier": 60
+        },
+        {
+          "id": "item:havensilver-bolt-plus-1",
+          "name": "Havensilver bolt +1",
+          "slot": "ammo",
+          "tier": 30
+        },
+        {
+          "id": "item:havensilver-bolt",
+          "name": "Havensilver bolt",
+          "slot": "ammo",
+          "tier": 5
+        }
+      ],
+      "displayDescription": "Havenhythe crossbow ammunition; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and fletching; Silverquill spines for upgrades",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "damage": 576
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_bolt_%2B2",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_bolt_%2B1",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_bolt",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "showcase:variants:havensilver-greatsword",
+      "name": "Havensilver greatsword",
+      "kind": "variants",
+      "iconId": "item:havensilver-greatsword-plus-2",
+      "style": "melee",
+      "tier": 60,
+      "tierRange": [
+        5,
+        60
+      ],
+      "slots": [
+        "twohand"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 3,
+      "memberIds": [
+        "item:havensilver-greatsword-plus-2",
+        "item:havensilver-greatsword-plus-1",
+        "item:havensilver-greatsword"
+      ],
+      "members": [
+        {
+          "id": "item:havensilver-greatsword-plus-2",
+          "name": "Havensilver greatsword +2",
+          "slot": "twohand",
+          "tier": 60
+        },
+        {
+          "id": "item:havensilver-greatsword-plus-1",
+          "name": "Havensilver greatsword +1",
+          "slot": "twohand",
+          "tier": 30
+        },
+        {
+          "id": "item:havensilver-greatsword",
+          "name": "Havensilver greatsword",
+          "slot": "twohand",
+          "tier": 5
+        }
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 1341
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_greatsword_%2B2",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_greatsword_%2B1",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_greatsword",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "showcase:variants:havensilver-longsword",
+      "name": "Havensilver longsword",
+      "kind": "variants",
+      "iconId": "item:havensilver-longsword-plus-2",
+      "style": "melee",
+      "tier": 60,
+      "tierRange": [
+        5,
+        60
+      ],
+      "slots": [
+        "mainhand"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 3,
+      "memberIds": [
+        "item:havensilver-longsword-plus-2",
+        "item:havensilver-longsword-plus-1",
+        "item:havensilver-longsword"
+      ],
+      "members": [
+        {
+          "id": "item:havensilver-longsword-plus-2",
+          "name": "Havensilver longsword +2",
+          "slot": "mainhand",
+          "tier": 60
+        },
+        {
+          "id": "item:havensilver-longsword-plus-1",
+          "name": "Havensilver longsword +1",
+          "slot": "mainhand",
+          "tier": 30
+        },
+        {
+          "id": "item:havensilver-longsword",
+          "name": "Havensilver longsword",
+          "slot": "mainhand",
+          "tier": 5
+        }
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 735
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_longsword_%2B2",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_longsword_%2B1",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_longsword",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "showcase:variants:havensilver-off-hand-longsword",
+      "name": "Havensilver off-hand longsword",
+      "kind": "variants",
+      "iconId": "item:havensilver-off-hand-longsword-plus-2",
+      "style": "melee",
+      "tier": 60,
+      "tierRange": [
+        5,
+        60
+      ],
+      "slots": [
+        "offhand"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 3,
+      "memberIds": [
+        "item:havensilver-off-hand-longsword-plus-2",
+        "item:havensilver-off-hand-longsword-plus-1",
+        "item:havensilver-off-hand-longsword"
+      ],
+      "members": [
+        {
+          "id": "item:havensilver-off-hand-longsword-plus-2",
+          "name": "Havensilver off-hand longsword +2",
+          "slot": "offhand",
+          "tier": 60
+        },
+        {
+          "id": "item:havensilver-off-hand-longsword-plus-1",
+          "name": "Havensilver off-hand longsword +1",
+          "slot": "offhand",
+          "tier": 30
+        },
+        {
+          "id": "item:havensilver-off-hand-longsword",
+          "name": "Havensilver off-hand longsword",
+          "slot": "offhand",
+          "tier": 5
+        }
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "accuracy": 1132,
+        "damage": 367.5
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_off-hand_longsword_%2B2",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_off-hand_longsword_%2B1",
+          "verifiedAt": "2026-07-28"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_off-hand_longsword",
+          "verifiedAt": "2026-07-28"
         }
       ]
     },
@@ -19908,6 +20182,49 @@
       ]
     },
     {
+      "id": "item:bonecrusher-maul",
+      "name": "Bonecrusher maul",
+      "kind": "item",
+      "iconId": "item:bonecrusher-maul",
+      "style": "melee",
+      "tier": 50,
+      "tierRange": null,
+      "slots": [
+        "twohand"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 1,
+      "memberIds": [
+        "item:bonecrusher-maul"
+      ],
+      "members": [
+        {
+          "id": "item:bonecrusher-maul",
+          "name": "Bonecrusher maul",
+          "slot": "twohand",
+          "tier": 50
+        }
+      ],
+      "displayDescription": "Tier 50 two-handed maul dropped by Ivar, King of Bones.",
+      "unlock": {
+        "type": "drop",
+        "requirement": "Ivar, King of Bones",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {},
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Bonecrusher_maul",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
       "id": "item:spirit-cape",
       "name": "Spirit cape",
       "kind": "item",
@@ -19950,6 +20267,53 @@
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Spirit_cape",
           "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "item:magic-skull-mask",
+      "name": "Magic skull mask",
+      "kind": "item",
+      "iconId": "item:magic-skull-mask",
+      "style": "magic",
+      "tier": 45,
+      "tierRange": null,
+      "slots": [
+        "helmet"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 1,
+      "memberIds": [
+        "item:magic-skull-mask"
+      ],
+      "members": [
+        {
+          "id": "item:magic-skull-mask",
+          "name": "Magic skull mask",
+          "slot": "helmet",
+          "tier": 45
+        }
+      ],
+      "displayDescription": "Tier 45 magic power headgear dropped by Ivar, King of Bones.",
+      "unlock": {
+        "type": "drop",
+        "requirement": "Ivar, King of Bones",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "accuracy": 29,
+        "armour": 125.6,
+        "damage": 11.2
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Magic_skull_mask",
+          "verifiedAt": "2026-07-28"
         }
       ]
     },

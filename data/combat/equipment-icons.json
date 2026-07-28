@@ -1,8 +1,8 @@
 {
   "generatedAt": "2026-07-28",
-  "count": 587,
-  "ok": 587,
-  "failed": 16,
+  "count": 602,
+  "ok": 602,
+  "failed": 1,
   "note": "Local paths under /game/combat/equipment/. Attribution: RuneScape Wiki / Jagex. Never hotlink wiki at runtime.",
   "icons": {
     "item:seismic-wand": {
@@ -6391,6 +6391,171 @@
       "sourceUrl": "https://runescape.wiki/images/thumb/Visage_of_the_First_Necromancer_detail.png/128px-Visage_of_the_First_Necromancer_detail.png",
       "bytes": 23322,
       "sha256": "41ade11cf2f89a8f2355b9cc1f8ebf1715ccd31eaff83bb3b6b1ebc2d8fe67ab",
+      "cached": false
+    },
+    "item:havensilver-greatsword": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-greatsword.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-greatsword.webp",
+      "pageTitle": "Havensilver greatsword",
+      "fileTitle": "File:Havensilver_greatsword_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_greatsword_detail.png/128px-Havensilver_greatsword_detail.png",
+      "bytes": 5290,
+      "sha256": "b9ce0390a3cfb94f3202384e4c059928afd2b832e43c8a38606aa39dc6090ec6",
+      "cached": false
+    },
+    "item:havensilver-greatsword-plus-1": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-greatsword-plus-1.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-greatsword-plus-1.webp",
+      "pageTitle": "Havensilver greatsword +1",
+      "fileTitle": "File:Havensilver_greatsword_+1_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_greatsword_%2B1_detail.png/128px-Havensilver_greatsword_%2B1_detail.png",
+      "bytes": 5290,
+      "sha256": "b9ce0390a3cfb94f3202384e4c059928afd2b832e43c8a38606aa39dc6090ec6",
+      "cached": false
+    },
+    "item:havensilver-greatsword-plus-2": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-greatsword-plus-2.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-greatsword-plus-2.webp",
+      "pageTitle": "Havensilver greatsword +2",
+      "fileTitle": "File:Havensilver_greatsword_+2_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_greatsword_%2B2_detail.png/128px-Havensilver_greatsword_%2B2_detail.png",
+      "bytes": 5290,
+      "sha256": "b9ce0390a3cfb94f3202384e4c059928afd2b832e43c8a38606aa39dc6090ec6",
+      "cached": false
+    },
+    "item:havensilver-longsword": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-longsword.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-longsword.webp",
+      "pageTitle": "Havensilver longsword",
+      "fileTitle": "File:Havensilver_longsword_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_longsword_detail.png/128px-Havensilver_longsword_detail.png",
+      "bytes": 5336,
+      "sha256": "f7693b1e20c77cfd6a35c45f84ae350d02a2748bf734bb58c3dba464bc99033b",
+      "cached": false
+    },
+    "item:havensilver-longsword-plus-1": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-longsword-plus-1.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-longsword-plus-1.webp",
+      "pageTitle": "Havensilver longsword +1",
+      "fileTitle": "File:Havensilver_longsword_+1_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_longsword_%2B1_detail.png/128px-Havensilver_longsword_%2B1_detail.png",
+      "bytes": 5336,
+      "sha256": "f7693b1e20c77cfd6a35c45f84ae350d02a2748bf734bb58c3dba464bc99033b",
+      "cached": false
+    },
+    "item:havensilver-longsword-plus-2": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-longsword-plus-2.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-longsword-plus-2.webp",
+      "pageTitle": "Havensilver longsword +2",
+      "fileTitle": "File:Havensilver_longsword_+2_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_longsword_%2B2_detail.png/128px-Havensilver_longsword_%2B2_detail.png",
+      "bytes": 5336,
+      "sha256": "f7693b1e20c77cfd6a35c45f84ae350d02a2748bf734bb58c3dba464bc99033b",
+      "cached": false
+    },
+    "item:havensilver-off-hand-longsword": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-off-hand-longsword.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-off-hand-longsword.webp",
+      "pageTitle": "Havensilver off-hand longsword",
+      "fileTitle": "File:Havensilver_off-hand_longsword_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_off-hand_longsword_detail.png/128px-Havensilver_off-hand_longsword_detail.png",
+      "bytes": 5276,
+      "sha256": "fa46f13bf66e84ed641957dacc5a02d2fc15308d81fe772d93d0449b1269301e",
+      "cached": false
+    },
+    "item:havensilver-off-hand-longsword-plus-1": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-off-hand-longsword-plus-1.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-off-hand-longsword-plus-1.webp",
+      "pageTitle": "Havensilver off-hand longsword +1",
+      "fileTitle": "File:Havensilver_off-hand_longsword_+1_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_off-hand_longsword_%2B1_detail.png/128px-Havensilver_off-hand_longsword_%2B1_detail.png",
+      "bytes": 5276,
+      "sha256": "fa46f13bf66e84ed641957dacc5a02d2fc15308d81fe772d93d0449b1269301e",
+      "cached": false
+    },
+    "item:havensilver-off-hand-longsword-plus-2": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-off-hand-longsword-plus-2.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-off-hand-longsword-plus-2.webp",
+      "pageTitle": "Havensilver off-hand longsword +2",
+      "fileTitle": "File:Havensilver_off-hand_longsword_+2_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_off-hand_longsword_%2B2_detail.png/128px-Havensilver_off-hand_longsword_%2B2_detail.png",
+      "bytes": 5276,
+      "sha256": "fa46f13bf66e84ed641957dacc5a02d2fc15308d81fe772d93d0449b1269301e",
+      "cached": false
+    },
+    "item:havensilver-bolt": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-bolt.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-bolt.webp",
+      "pageTitle": "Havensilver bolt",
+      "fileTitle": "File:Havensilver_bolt_5_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_bolt_5_detail.png/128px-Havensilver_bolt_5_detail.png",
+      "bytes": 10122,
+      "sha256": "f99577f14fcd8e65540969a34334543f20630314a43bfa2f8c4933f85e526db7",
+      "cached": false
+    },
+    "item:havensilver-bolt-plus-1": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-bolt-plus-1.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-bolt-plus-1.webp",
+      "pageTitle": "Havensilver bolt +1",
+      "fileTitle": "File:Havensilver_bolt_+1_5_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_bolt_%2B1_5_detail.png/128px-Havensilver_bolt_%2B1_5_detail.png",
+      "bytes": 10122,
+      "sha256": "f99577f14fcd8e65540969a34334543f20630314a43bfa2f8c4933f85e526db7",
+      "cached": false
+    },
+    "item:havensilver-bolt-plus-2": {
+      "ok": true,
+      "path": "/game/combat/equipment/havensilver-bolt-plus-2.webp",
+      "asset": "assets/rs3/combat/equipment/havensilver-bolt-plus-2.webp",
+      "pageTitle": "Havensilver bolt +2",
+      "fileTitle": "File:Havensilver_bolt_+2_5_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Havensilver_bolt_%2B2_5_detail.png/128px-Havensilver_bolt_%2B2_5_detail.png",
+      "bytes": 10122,
+      "sha256": "f99577f14fcd8e65540969a34334543f20630314a43bfa2f8c4933f85e526db7",
+      "cached": false
+    },
+    "item:bonecrusher-maul": {
+      "ok": true,
+      "path": "/game/combat/equipment/bonecrusher-maul.webp",
+      "asset": "assets/rs3/combat/equipment/bonecrusher-maul.webp",
+      "pageTitle": "Bonecrusher maul",
+      "fileTitle": "File:Bonecrusher_maul_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Bonecrusher_maul_detail.png/128px-Bonecrusher_maul_detail.png",
+      "bytes": 6782,
+      "sha256": "ae4eaaf50f4f4a7e1ad555f06f404a62e8c2b8c240b5bf57d0bc2ebbc58aefc0",
+      "cached": false
+    },
+    "item:magic-skull-mask": {
+      "ok": true,
+      "path": "/game/combat/equipment/magic-skull-mask.webp",
+      "asset": "assets/rs3/combat/equipment/magic-skull-mask.webp",
+      "pageTitle": "Magic skull mask",
+      "fileTitle": "File:Magic_skull_mask_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Magic_skull_mask_detail.png/128px-Magic_skull_mask_detail.png",
+      "bytes": 23696,
+      "sha256": "7769cd4daa92a95a8973dfdf75129dfcf3b8aece046f81bd46ad7598aeac9bc5",
+      "cached": false
+    },
+    "item:black-chinchompa": {
+      "ok": true,
+      "path": "/game/combat/equipment/black-chinchompa.webp",
+      "asset": "assets/rs3/combat/equipment/black-chinchompa.webp",
+      "pageTitle": "Black chinchompa",
+      "fileTitle": "File:Black_chinchompa_detail.png",
+      "sourceUrl": "https://runescape.wiki/images/thumb/Black_chinchompa_detail.png/128px-Black_chinchompa_detail.png",
+      "bytes": 11264,
+      "sha256": "8fbefc4eceb046a1d771fc301692112e166b5f220f224e89f911e17f2b6b0877",
       "cached": false
     }
   }

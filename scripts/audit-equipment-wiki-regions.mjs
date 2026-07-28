@@ -3,9 +3,13 @@ import path from "node:path";
 
 const root = process.cwd();
 const equipment = JSON.parse(fs.readFileSync(path.join(root, "data/combat/equipment.json"), "utf8"));
+const iconMetadataPath = path.join(root, "data/combat/equipment-icons.json");
+const iconMetadata = fs.existsSync(iconMetadataPath)
+  ? JSON.parse(fs.readFileSync(iconMetadataPath, "utf8"))
+  : { icons: {} };
 const records = Array.isArray(equipment.records) ? equipment.records : [];
 const API = "https://runescape.wiki/api.php";
-const UA = "EquilibriumEquipmentRegionAudit/1.0 (https://github.com/sonnaya2/Equilibrium)";
+const UA = "EquilibriumEquipmentRegionAudit/1.1 (https://github.com/sonnaya2/Equilibrium)";
 const BATCH = 40;
 
 const categoryRegions = new Map([
@@ -25,7 +29,13 @@ const categoryRegions = new Map([
   ["Category:Misthalin", "misthalin"],
 ]);
 
+function normalizeTitle(value) {
+  return String(value || "").toLowerCase().replaceAll("_", " ").replace(/\s+/g, " ").trim();
+}
+
 function wikiTitle(record) {
+  const canonical = iconMetadata.icons?.[record.id]?.pageTitle;
+  if (canonical) return canonical;
   const source = record.sources?.find((entry) => entry?.url?.includes("runescape.wiki/w/"));
   if (source?.url) {
     try {
@@ -63,6 +73,12 @@ async function categoriesForTitles(titles) {
       const set = result.get(page.title) || new Set();
       for (const category of page.categories || []) set.add(category.title);
       result.set(page.title, set);
+    }
+    for (const redirect of data?.query?.redirects || []) {
+      if (result.has(redirect.to)) result.set(redirect.from, result.get(redirect.to));
+    }
+    for (const normalized of data?.query?.normalized || []) {
+      if (result.has(normalized.to)) result.set(normalized.from, result.get(normalized.to));
     }
     continuation = data.continue || null;
   } while (continuation);
@@ -109,7 +125,7 @@ const requiredHavenhythe = [
   "item:havensilver-longsword", "item:havensilver-longsword-plus-1", "item:havensilver-longsword-plus-2",
   "item:havensilver-off-hand-longsword", "item:havensilver-off-hand-longsword-plus-1", "item:havensilver-off-hand-longsword-plus-2",
   "item:havensilver-bolt", "item:havensilver-bolt-plus-1", "item:havensilver-bolt-plus-2",
-  "item:bonecrusher-maul", "item:magic-skull-mask", "item:vampyrism-gloves", "item:black-chinchompa",
+  "item:bonecrusher-maul", "item:magic-skull-mask", "item:bens-spare-hat", "item:vampyrism-gloves", "item:black-chinchompa",
 ];
 const ids = new Set(records.map((record) => record.id));
 const missingRequiredHavenhythe = requiredHavenhythe.filter((id) => !ids.has(id));
@@ -141,12 +157,26 @@ for (let index = 0; index < havenhytheTitles.length; index += BATCH) {
   for (const [title, categories] of categoryMap) havenhytheCategories.set(title, categories);
   await new Promise((resolve) => setTimeout(resolve, 250));
 }
-const catalogueTitles = new Set(titles.map((title) => title.toLowerCase().replaceAll("_", " ")));
+const catalogueTitles = new Set(titles.map(normalizeTitle));
 const havenhytheEquipmentPages = havenhytheTitles.filter((title) => {
   const categories = havenhytheCategories.get(title) || new Set();
   return categories.has("Category:Equipment") || [...categories].some((category) => /(?:slot items|weapons|armour|ammunition)$/i.test(category));
 });
-const missingHavenhytheEquipmentPages = havenhytheEquipmentPages.filter((title) => !catalogueTitles.has(title.toLowerCase().replaceAll("_", " "))).sort();
+const missingHavenhytheEquipmentPages = havenhytheEquipmentPages
+  .filter((title) => !catalogueTitles.has(normalizeTitle(title)))
+  .sort();
+
+const intentionalHavenhytheLeads = {
+  consolidatedUpgradeVariants: missingHavenhytheEquipmentPages.filter((title) => /^Apex hide .+ \+ [1-5]$/.test(title)),
+  augmentedDuplicates: missingHavenhytheEquipmentPages.filter((title) => /^Augmented (?:custom-fit )?masterwork ranged (?:body|chaps)$/.test(title)),
+  indexPages: missingHavenhytheEquipmentPages.filter((title) => ["Apex hide armour", "Masterwork ranged equipment"].includes(title)),
+  nonCombatOrSkilling: missingHavenhytheEquipmentPages.filter((title) => [
+    "Crab amulet", "Crabulet", "Elegant parasol", "Inanna's gift", "Masterwork ranged cape",
+    "Ring of Kayazu", "Tellervo's lantern", "Tellervo's net",
+  ].includes(title)),
+};
+const classifiedTitles = new Set(Object.values(intentionalHavenhytheLeads).flat());
+const unresolvedHavenhytheCombatCandidates = missingHavenhytheEquipmentPages.filter((title) => !classifiedTitles.has(title));
 
 const report = {
   generatedAt: new Date().toISOString(),
@@ -159,11 +189,22 @@ const report = {
   havenhytheCategoryPageCount: havenhytheMembers.length,
   havenhytheEquipmentPageCount: havenhytheEquipmentPages.length,
   missingHavenhytheEquipmentPages,
+  intentionalHavenhytheLeads,
+  unresolvedHavenhytheCombatCandidates,
   mismatches,
   missingPages,
-  note: "Category-derived regions are audit leads, not automatic truth for multi-region crafting chains. The Havenhythe category comparison discovers directly categorised equipment pages missing from the catalogue; review cosmetic, broken and used variants before adding them.",
+  note: "Category-derived regions are audit leads, not automatic truth for multi-region crafting chains. Upgrade variants, augmented duplicates, category pages and known non-combat/skilling entries are classified separately; unresolvedHavenhytheCombatCandidates is the actionable omission list.",
 };
 const outPath = path.join(root, "scraped-data/equipment-wiki-region-audit.json");
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, `${JSON.stringify(report, null, 2)}\n`);
-console.log(JSON.stringify({ outPath, recordCount: report.recordCount, wikiTitlesChecked: report.wikiTitlesChecked, mismatches: mismatches.length, missingPages: missingPages.length, missingRequiredHavenhythe, havenhytheEquipmentPages: havenhytheEquipmentPages.length, missingHavenhytheEquipmentPages }, null, 2));
+console.log(JSON.stringify({
+  outPath,
+  recordCount: report.recordCount,
+  wikiTitlesChecked: report.wikiTitlesChecked,
+  mismatches: mismatches.length,
+  missingPages: missingPages.length,
+  missingRequiredHavenhythe,
+  havenhytheEquipmentPages: havenhytheEquipmentPages.length,
+  unresolvedHavenhytheCombatCandidates,
+}, null, 2));

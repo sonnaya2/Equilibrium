@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 import { createHash } from "node:crypto";
 
 const root = process.cwd();
@@ -126,11 +127,12 @@ async function downloadWebp(url) {
   if (!response.ok) throw new Error(`image ${response.status}`);
   const source = Buffer.from(await response.arrayBuffer());
   if (source.length < 40 || source.length > 4_000_000) throw new Error(`bad image size ${source.length}`);
-  if (!isWebp(source)) {
-    const type = response.headers.get("content-type") || "unknown";
-    throw new Error(`wiki thumbnail was ${type}, not WebP`);
-  }
-  return source;
+  if (isWebp(source)) return source;
+  return sharp(source, { animated: false, pages: 1, failOn: "none" })
+    .rotate()
+    .resize({ width: THUMB, height: THUMB, fit: "inside", withoutEnlargement: true })
+    .webp({ quality: 92, alphaQuality: 100, effort: 4 })
+    .toBuffer();
 }
 
 const targets = records.filter((record) => {

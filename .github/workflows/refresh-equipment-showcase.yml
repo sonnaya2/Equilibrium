@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - .github/workflows/refresh-equipment-showcase.yml
       - equilibrium-region-equipment.html
       - scripts/write-equipment-showcase-html.mjs
       - scripts/build-equipment-showcase.mjs

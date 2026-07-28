@@ -1,0 +1,58 @@
+name: Refresh equipment showcase
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - equilibrium-region-equipment.html
+      - scripts/write-equipment-showcase-html.mjs
+      - scripts/build-equipment-showcase.mjs
+      - scripts/refresh-equipment-showcase-icons.mjs
+      - data/combat/equipment.json
+      - data/league/regions.json
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Fill missing local equipment icons
+        run: node scripts/refresh-equipment-showcase-icons.mjs
+      - name: Build consolidated showcase data
+        run: node scripts/build-equipment-showcase.mjs
+      - name: Write cleaned standalone HTML
+        run: node scripts/write-equipment-showcase-html.mjs
+      - name: Verify generated files
+        run: |
+          node --check scripts/build-equipment-showcase.mjs
+          node --check scripts/refresh-equipment-showcase-icons.mjs
+          node --check scripts/write-equipment-showcase-html.mjs
+          test -s data/combat/equipment-showcase.json
+          test -s data/combat/equipment-icon-slugs.json
+          test -s equilibrium-region-equipment.html
+      - name: Commit refreshed showcase
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            equilibrium-region-equipment.html \
+            data/combat/equipment-showcase.json \
+            data/combat/equipment-icon-slugs.json \
+            data/combat/equipment-icons.json \
+            scraped-data/equipment-showcase-icon-refresh.json \
+            assets/rs3/combat/equipment \
+            public/game/combat/equipment
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+          else
+            git commit -m "Refresh equipment showcase data and icons"
+            git push
+          fi

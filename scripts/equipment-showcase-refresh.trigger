@@ -1,1 +1,1 @@
-2026-07-28 havenhythe wiki audit and compact-region refresh
+2026-07-28 havenhythe wiki audit pass 2: Ben's spare hat and PNG icon conversion

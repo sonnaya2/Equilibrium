@@ -105,7 +105,7 @@ upsert({
   bonuses: { armour: 90.8 },
   displayDescription: "Tier 30 magic tank headgear rewarded by the Wiz Kid quest.",
   unlock: { type: "quest", requirement: "Complete Wiz Kid", regions: ["havenhythe"] },
-  sources: source("Ben%27s_spare_hat"),
+  sources: source("Ben's_spare_hat"),
 });
 
 upsert({

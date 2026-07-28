@@ -60,9 +60,10 @@ jobs:
             data/combat/equipment-showcase.json \
             data/combat/equipment-icon-slugs.json \
             data/combat/equipment-icons.json \
-            scraped-data/equipment-showcase-icon-refresh.json \
             assets/rs3/combat/equipment \
             public/game/combat/equipment
+          git add -f scraped-data/equipment-showcase-icon-refresh.json || true
+          git status --short
           if git diff --cached --quiet; then
             echo "No generated changes"
           else

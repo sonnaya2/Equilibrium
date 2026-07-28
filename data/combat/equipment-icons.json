@@ -2,7 +2,7 @@
   "generatedAt": "2026-07-28",
   "count": 587,
   "ok": 587,
-  "failed": 0,
+  "failed": 16,
   "note": "Local paths under /game/combat/equipment/. Attribution: RuneScape Wiki / Jagex. Never hotlink wiki at runtime.",
   "icons": {
     "item:seismic-wand": {

@@ -80,12 +80,13 @@
     .region-band[data-region="karamja"] { --region-bg: #79af14; }
     .region-band[data-region="asgarnia"] { --region-bg: #c75b18; }
     .region-band[data-region="kandarin"] { --region-bg: #c91e31; }
-    .region-band[data-region="fremennik"] { --region-bg: #70503e; min-height: 78px; }
+    .region-band[data-region="fremennik"] { --region-bg: #70503e; }
     .region-band[data-region="forinthry"] { --region-bg: #4d4f54; }
     .region-band[data-region="desert"] { --region-bg: #d3bd08; --region-fg: #171405; }
     .region-band[data-region="morytania"] { --region-bg: #08736b; }
     .region-band[data-region="tirannwn"] { --region-bg: #079356; }
     .region-band[data-region="anachronia"] { --region-bg: #8c4b2e; }
+    .region-band:is([data-region="fremennik"], [data-region="havenhythe"], [data-region="karamja"], [data-region="kandarin"]) { min-height: 78px; }
 
     .region-identity {
       position: relative;
@@ -116,8 +117,8 @@
 
     .region-crest { width: 60px; height: 68px; object-fit: contain; filter: drop-shadow(1px 2px 0 rgba(0,0,0,.28)); }
     .region-count { position: absolute; right: 6px; bottom: 4px; font: 700 10px var(--mono); }
-    .region-band[data-region="fremennik"] .region-crest { width: 42px; height: 46px; }
-    .region-band[data-region="fremennik"] .region-identity { padding-top: 24px; }
+    .region-band:is([data-region="fremennik"], [data-region="havenhythe"], [data-region="karamja"], [data-region="kandarin"]) .region-crest { width: 42px; height: 46px; }
+    .region-band:is([data-region="fremennik"], [data-region="havenhythe"], [data-region="karamja"], [data-region="kandarin"]) .region-identity { padding-top: 24px; }
 
     .region-items {
       min-width: 0;
@@ -134,7 +135,7 @@
       scrollbar-color: rgba(255,255,255,.42) rgba(0,0,0,.16);
     }
 
-    .region-band[data-region="fremennik"] .region-items {
+    .region-band:is([data-region="fremennik"], [data-region="havenhythe"], [data-region="karamja"], [data-region="kandarin"]) .region-items {
       grid-template-rows: 52px;
       grid-auto-columns: 42px;
       padding-block: 10px;
@@ -154,6 +155,7 @@
     .item-button:hover,
     .item-button:focus-visible { background: rgba(0,0,0,.2); box-shadow: inset 0 0 0 1px rgba(255,255,255,.42); }
     .item-button img { max-width: 32px; max-height: 32px; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,.2)); }
+    .item-fallback { width: 30px; height: 30px; display: grid; place-items: center; color: rgba(255,255,255,.9); background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.42); font: 800 9px/1 var(--mono); }
     .member-count, .combo-count {
       position: absolute;
       right: 0;
@@ -256,7 +258,7 @@
       .masthead { min-height: 126px; padding: 18px 12px; }
       .crest-chain img { width: 18px; height: 18px; }
       .region-band { grid-template-columns: 90px minmax(0,1fr); min-height: 150px; }
-      .region-band[data-region="fremennik"] { min-height: 70px; }
+      .region-band:is([data-region="fremennik"], [data-region="havenhythe"], [data-region="karamja"], [data-region="kandarin"]) { min-height: 70px; }
       .region-items { grid-auto-columns: 33px; grid-template-rows: repeat(3, minmax(38px,1fr)); }
       .item-button { width: 33px; height: 38px; }
       .item-button img { max-width: 27px; max-height: 27px; }
@@ -338,6 +340,8 @@
         morytania: "#08736b", tirannwn: "#079356", anachronia: "#8c4b2e"
       };
 
+      const compactRegions = new Set(["fremennik", "havenhythe", "karamja", "kandarin"]);
+
       const elements = {
         poster: document.querySelector("#poster"),
         regionList: document.querySelector("#region-list"),
@@ -394,7 +398,7 @@
 
       function iconMarkup(item, className = "") {
         const path = iconPath(item);
-        if (!path) return `<span aria-hidden="true">${escapeHtml(initials(item.name))}</span>`;
+        if (!path) return `<span class="item-fallback" aria-label="No local icon">${escapeHtml(initials(item.name))}</span>`;
         return `<img class="${escapeHtml(className)}" src="${path}" alt="" loading="lazy" decoding="async">`;
       }
 
@@ -406,10 +410,10 @@
         elements.regionList.innerHTML = state.regions.map((region) => {
           const all = state.items.filter((item) => item.regions?.includes(region.id));
           const items = visibleItems(all);
-          const rows = region.id === "fremennik" ? 1 : 3;
-          const controls = items.map((item) => `<button class="item-button" type="button" data-item-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)}">
+          const rows = compactRegions.has(region.id) ? 1 : 3;
+          const controls = items.map((item) => `<button class="item-button" type="button" data-item-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)}" title="${escapeHtml(item.name)}">
             ${iconMarkup(item)}
-            ${item.memberCount > 1 ? `<span class="member-count">×${item.memberCount}</span>` : ""}
+            ${item.memberCount > 1 ? `<span class="member-count">${item.kind === "set" ? "SET" : `×${item.memberCount}`}</span>` : ""}
             ${item.regions?.length > 1 ? `<span class="combo-count">${item.regions.length}R</span>` : ""}
           </button>`).join("");
 
@@ -429,7 +433,7 @@
       function renderCombos() {
         const combos = visibleItems(state.items.filter((item) => item.regions?.length > 1));
         elements.comboList.innerHTML = combos.length ? combos.map((item) => `<button class="combo-item" type="button" data-item-id="${escapeHtml(item.id)}">
-          <span class="combo-icon">${iconMarkup(item)}${item.memberCount > 1 ? `<span class="member-count">×${item.memberCount}</span>` : ""}</span>
+          <span class="combo-icon">${iconMarkup(item)}${item.memberCount > 1 ? `<span class="member-count">${item.kind === "set" ? "SET" : `×${item.memberCount}`}</span>` : ""}</span>
           <span><span class="combo-name">${escapeHtml(item.name)}</span><span class="region-tags">${item.regions.map(regionTag).join("")}</span></span>
         </button>`).join("") : `<p class="combo-empty">No combo unlocks match the current search.</p>`;
       }
@@ -472,7 +476,7 @@
         const records = Array.isArray(showcaseData) ? showcaseData : showcaseData?.records;
         if (!Array.isArray(regions) || !Array.isArray(records) || !Array.isArray(iconsData)) throw new Error("Select regions.json, equipment-showcase.json, and equipment-icon-slugs.json.");
         state.regions = regions.filter((region) => region?.id && region?.name);
-        state.items = records.filter((item) => item?.id && item?.iconId && iconsData.includes(slugFromId(item.iconId)));
+        state.items = records.filter((item) => item?.id);
         state.itemById = new Map(state.items.map((item) => [item.id, item]));
         state.iconSlugs = new Set(iconsData);
         state.meta = showcaseData;
@@ -488,7 +492,7 @@
           acceptData(regions, showcase, icons);
         } catch (error) {
           elements.statusTitle.textContent = "Serve the repository or choose the JSON files";
-          elements.statusCopy.textContent = "The page now uses regions.json, equipment-showcase.json, and equipment-icon-slugs.json. PNG export also requires the repository to be served over http://localhost.";
+          elements.statusCopy.textContent = "The page now uses regions.json, equipment-showcase.json, and equipment-icon-slugs.json. Choose the three JSON files when opening the HTML directly. The PNG button downloads the generated PNG beside this file.";
           elements.fileLabel.hidden = false;
           console.warn(error);
         }
@@ -536,128 +540,14 @@
       }
 
       async function savePng() {
-        if (location.protocol === "file:") throw new Error("PNG export cannot safely read local images from file://. Run python -m http.server from the repository root and open the localhost URL.");
         elements.savePng.disabled = true;
-        elements.savePng.textContent = "Rendering…";
-        await document.fonts?.ready;
-
-        const width = 1460;
-        const leftWidth = 1000;
-        const sideWidth = width - leftWidth;
-        const mastheadHeight = 150;
-        const regionGap = 8;
-        const heights = state.regions.map((region) => region.id === "fremennik" ? 78 : 174);
-        const height = mastheadHeight + heights.reduce((sum, value) => sum + value, 0) + regionGap * state.regions.length;
-        const canvas = document.createElement("canvas");
-        const scale = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-        canvas.width = width * scale;
-        canvas.height = height * scale;
-        const context = canvas.getContext("2d");
-        context.scale(scale, scale);
-
-        const needed = new Set();
-        for (const region of state.regions) needed.add(`./public/game/regions/${region.id}.webp`);
-        for (const item of state.items) { const path = iconPath(item); if (path) needed.add(path); }
-        await Promise.all([...needed].map(loadImage));
-
-        context.fillStyle = "#25100e";
-        context.fillRect(0, 0, width, height);
-        context.fillStyle = "#183224";
-        context.fillRect(0, 0, leftWidth, mastheadHeight);
-        context.fillStyle = "#211f19";
-        context.fillRect(leftWidth, 0, sideWidth, height);
-        context.fillStyle = "#f1e9d6";
-        context.textAlign = "center";
-        context.font = "800 42px Georgia";
-        context.fillText("LEAGUES II", leftWidth / 2, 62);
-        context.fillStyle = "#e0b264";
-        context.font = "700 15px Georgia";
-        context.fillText("E Q U I L I B R I U M", leftWidth / 2, 88);
-        context.fillStyle = "#55b574";
-        context.font = "800 43px Georgia";
-        context.fillText("Regional Unlocks", leftWidth / 2, 130);
-
-        context.fillStyle = "#4b4537";
-        context.fillRect(leftWidth, 0, sideWidth, 58);
-        context.fillStyle = "#f1e9d6";
-        context.font = "700 14px monospace";
-        context.fillText("★ COMBO ITEM UNLOCKS ★", leftWidth + sideWidth / 2, 35);
-
-        let y = mastheadHeight + regionGap;
-        for (let index = 0; index < state.regions.length; index++) {
-          const region = state.regions[index];
-          const bandHeight = heights[index];
-          const items = state.items.filter((item) => item.regions?.includes(region.id));
-          const fg = region.id === "desert" ? "#171405" : "#ffffff";
-          context.fillStyle = regionColors[region.id] || "#555";
-          context.fillRect(0, y, leftWidth, bandHeight);
-          context.fillStyle = "rgba(0,0,0,.2)";
-          context.fillRect(0, y, 112, bandHeight);
-          context.fillStyle = "rgba(17,17,17,.72)";
-          context.fillRect(8, y + 7, 96, 18);
-          context.strokeStyle = "#fff";
-          context.lineWidth = 2;
-          context.strokeRect(8, y + 7, 96, 18);
-          context.fillStyle = "#fff";
-          context.textAlign = "left";
-          context.font = "800 10px monospace";
-          context.fillText(region.name.toUpperCase(), 13, y + 20, 86);
-          const crest = await loadImage(`./public/game/regions/${region.id}.webp`);
-          drawContain(context, crest, 22, y + 28, 68, bandHeight - 38);
-          context.textAlign = "right";
-          context.font = "700 10px monospace";
-          context.fillText(String(items.length), 105, y + bandHeight - 6);
-
-          const rows = region.id === "fremennik" ? 1 : 3;
-          const columns = Math.max(1, Math.ceil(items.length / rows));
-          const availableWidth = leftWidth - 132;
-          const cellWidth = Math.min(38, Math.max(15, Math.floor(availableWidth / columns)));
-          const rowHeight = bandHeight / rows;
-          for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-            const item = items[itemIndex];
-            const row = itemIndex % rows;
-            const column = Math.floor(itemIndex / rows);
-            const x = 124 + column * cellWidth;
-            const itemY = y + row * rowHeight;
-            const image = await loadImage(iconPath(item));
-            drawContain(context, image, x, itemY + 4, Math.max(12, cellWidth - 4), Math.max(12, rowHeight - 8));
-            if (item.memberCount > 1) {
-              context.fillStyle = "#fff";
-              context.fillRect(x + Math.max(0, cellWidth - 17), itemY + rowHeight - 13, 17, 11);
-              context.fillStyle = "#111";
-              context.textAlign = "center";
-              context.font = "800 8px monospace";
-              context.fillText(`×${item.memberCount}`, x + Math.max(8, cellWidth - 8), itemY + rowHeight - 5);
-            }
-          }
-          y += bandHeight + regionGap;
-        }
-
-        const combos = state.items.filter((item) => item.regions?.length > 1);
-        let comboY = 82;
-        context.textAlign = "left";
-        for (const item of combos) {
-          if (comboY + 54 > height - 40) break;
-          const image = await loadImage(iconPath(item));
-          drawContain(context, image, leftWidth + 30, comboY, 34, 34);
-          context.fillStyle = "#e7db66";
-          context.font = "550 13px system-ui";
-          comboY = drawText(context, item.name, leftWidth + 74, comboY + 13, sideWidth - 96, 15) + 9;
-          context.fillStyle = "#c4b59a";
-          context.font = "700 9px monospace";
-          context.fillText(item.regions.map((id) => state.regions.find((region) => region.id === id)?.name || id).join(" + "), leftWidth + 74, comboY);
-          comboY += 32;
-        }
-
-        const blob = await new Promise((resolve, reject) => canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Canvas PNG encoding failed.")), "image/png"));
-        const url = URL.createObjectURL(blob);
+        elements.savePng.textContent = "Downloading…";
         const link = document.createElement("a");
-        link.href = url;
+        link.href = "./equilibrium-regional-combat-unlocks.png";
         link.download = "equilibrium-regional-combat-unlocks.png";
         document.body.append(link);
         link.click();
         link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
 
       elements.search.addEventListener("input", () => { state.query = elements.search.value; renderRegions(); renderCombos(); });

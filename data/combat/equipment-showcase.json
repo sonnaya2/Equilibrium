@@ -1,11 +1,76 @@
 {
   "generatedAt": "2026-07-28",
-  "sourceLastSynced": "2026-07-26",
-  "sourceRecordCount": 556,
-  "showcasableRecordCount": 556,
+  "sourceLastSynced": "2026-07-28",
+  "sourceRecordCount": 572,
+  "showcasableRecordCount": 572,
   "showcaseCount": 389,
-  "collapsedCount": 167,
-  "omittedNoIcon": [],
+  "collapsedCount": 183,
+  "omittedNoIcon": [
+    {
+      "id": "item:havensilver-greatsword",
+      "name": "Havensilver greatsword"
+    },
+    {
+      "id": "item:havensilver-greatsword-plus-1",
+      "name": "Havensilver greatsword +1"
+    },
+    {
+      "id": "item:havensilver-greatsword-plus-2",
+      "name": "Havensilver greatsword +2"
+    },
+    {
+      "id": "item:havensilver-longsword",
+      "name": "Havensilver longsword"
+    },
+    {
+      "id": "item:havensilver-longsword-plus-1",
+      "name": "Havensilver longsword +1"
+    },
+    {
+      "id": "item:havensilver-longsword-plus-2",
+      "name": "Havensilver longsword +2"
+    },
+    {
+      "id": "item:havensilver-off-hand-longsword",
+      "name": "Havensilver off-hand longsword"
+    },
+    {
+      "id": "item:havensilver-off-hand-longsword-plus-1",
+      "name": "Havensilver off-hand longsword +1"
+    },
+    {
+      "id": "item:havensilver-off-hand-longsword-plus-2",
+      "name": "Havensilver off-hand longsword +2"
+    },
+    {
+      "id": "item:havensilver-bolt",
+      "name": "Havensilver bolt"
+    },
+    {
+      "id": "item:havensilver-bolt-plus-1",
+      "name": "Havensilver bolt +1"
+    },
+    {
+      "id": "item:havensilver-bolt-plus-2",
+      "name": "Havensilver bolt +2"
+    },
+    {
+      "id": "item:bonecrusher-maul",
+      "name": "Bonecrusher maul"
+    },
+    {
+      "id": "item:black-chinchompa",
+      "name": "Black chinchompa"
+    },
+    {
+      "id": "item:magic-skull-mask",
+      "name": "Magic skull mask"
+    },
+    {
+      "id": "item:vampyrism-gloves",
+      "name": "Vampyrism gloves"
+    }
+  ],
   "records": [
     {
       "id": "showcase:set:custom-fit-masterwork-magic-robe-top",
@@ -132,6 +197,7 @@
       "regions": [
         "anachronia",
         "forinthry",
+        "havenhythe",
         "kandarin"
       ],
       "memberCount": 5,
@@ -177,10 +243,11 @@
       "displayDescription": null,
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
+          "havenhythe",
           "kandarin"
         ]
       },
@@ -342,6 +409,7 @@
       "regions": [
         "anachronia",
         "forinthry",
+        "havenhythe",
         "kandarin"
       ],
       "memberCount": 5,
@@ -387,10 +455,11 @@
       "displayDescription": null,
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
+          "havenhythe",
           "kandarin"
         ]
       },
@@ -3224,6 +3293,107 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Amulet_of_souls",
+          "verifiedAt": "2026-07-26"
+        }
+      ]
+    },
+    {
+      "id": "showcase:set:apex-hide-body",
+      "name": "Apex hide set",
+      "kind": "set",
+      "iconId": "item:apex-hide-body",
+      "style": "ranged",
+      "tier": 90,
+      "tierRange": [
+        85,
+        90
+      ],
+      "slots": [
+        "helmet",
+        "body",
+        "legs",
+        "gloves",
+        "boots"
+      ],
+      "regions": [
+        "havenhythe"
+      ],
+      "memberCount": 5,
+      "memberIds": [
+        "item:apex-hide-cowl",
+        "item:apex-hide-body",
+        "item:apex-hide-chaps",
+        "item:apex-hide-vambraces",
+        "item:apex-hide-boots"
+      ],
+      "members": [
+        {
+          "id": "item:apex-hide-cowl",
+          "name": "Apex hide cowl",
+          "slot": "helmet",
+          "tier": 85
+        },
+        {
+          "id": "item:apex-hide-body",
+          "name": "Apex hide body",
+          "slot": "body",
+          "tier": 85
+        },
+        {
+          "id": "item:apex-hide-chaps",
+          "name": "Apex hide chaps",
+          "slot": "legs",
+          "tier": 85
+        },
+        {
+          "id": "item:apex-hide-vambraces",
+          "name": "Apex hide vambraces",
+          "slot": "gloves",
+          "tier": 85
+        },
+        {
+          "id": "item:apex-hide-boots",
+          "name": "Apex hide boots",
+          "slot": "boots",
+          "tier": 85
+        }
+      ],
+      "displayDescription": "Apex hide ranged tank armour, crafted in Havenhythe and upgradeable from tier 85 to tier 90 (+5).",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Apex-hide tailoring in Havenhythe",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "bonuses": {
+        "armour": 500.9,
+        "life": 1275
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Apex_hide_cowl",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Apex_hide_body",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Apex_hide_chaps",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Apex_hide_vambraces",
+          "verifiedAt": "2026-07-26"
+        },
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Apex_hide_boots",
           "verifiedAt": "2026-07-26"
         }
       ]
@@ -8694,104 +8864,6 @@
         {
           "source": "runescape-wiki",
           "url": "https://runescape.wiki/w/Upgraded_bone_blowpipe",
-          "verifiedAt": "2026-07-26"
-        }
-      ]
-    },
-    {
-      "id": "showcase:set:apex-hide-body",
-      "name": "Apex hide set",
-      "kind": "set",
-      "iconId": "item:apex-hide-cowl",
-      "style": "ranged",
-      "tier": 85,
-      "tierRange": null,
-      "slots": [
-        "helmet",
-        "body",
-        "legs",
-        "gloves",
-        "boots"
-      ],
-      "regions": [
-        "havenhythe"
-      ],
-      "memberCount": 5,
-      "memberIds": [
-        "item:apex-hide-cowl",
-        "item:apex-hide-body",
-        "item:apex-hide-chaps",
-        "item:apex-hide-vambraces",
-        "item:apex-hide-boots"
-      ],
-      "members": [
-        {
-          "id": "item:apex-hide-cowl",
-          "name": "Apex hide cowl",
-          "slot": "helmet",
-          "tier": 85
-        },
-        {
-          "id": "item:apex-hide-body",
-          "name": "Apex hide body",
-          "slot": "body",
-          "tier": 85
-        },
-        {
-          "id": "item:apex-hide-chaps",
-          "name": "Apex hide chaps",
-          "slot": "legs",
-          "tier": 85
-        },
-        {
-          "id": "item:apex-hide-vambraces",
-          "name": "Apex hide vambraces",
-          "slot": "gloves",
-          "tier": 85
-        },
-        {
-          "id": "item:apex-hide-boots",
-          "name": "Apex hide boots",
-          "slot": "boots",
-          "tier": 85
-        }
-      ],
-      "displayDescription": null,
-      "unlock": {
-        "type": "drop",
-        "requirement": "League self-supply: havenhythe",
-        "regions": [
-          "havenhythe"
-        ]
-      },
-      "bonuses": {
-        "armour": 500.9,
-        "life": 1275
-      },
-      "sources": [
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Apex_hide_cowl",
-          "verifiedAt": "2026-07-26"
-        },
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Apex_hide_body",
-          "verifiedAt": "2026-07-26"
-        },
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Apex_hide_chaps",
-          "verifiedAt": "2026-07-26"
-        },
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Apex_hide_vambraces",
-          "verifiedAt": "2026-07-26"
-        },
-        {
-          "source": "runescape-wiki",
-          "url": "https://runescape.wiki/w/Apex_hide_boots",
           "verifiedAt": "2026-07-26"
         }
       ]

@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-07-28T15:42:18.321Z",
+  "sourceLastSynced": "2026-07-28",
+  "recordCount": 572,
+  "wikiTitlesChecked": 571,
+  "directRegionMismatchCount": 0,
+  "missingWikiPageCount": 21,
+  "missingRequiredHavenhythe": [],
+  "havenhytheCategoryPageCount": 829,
+  "havenhytheEquipmentPageCount": 70,
+  "missingHavenhytheEquipmentPages": [
+    "Apex hide armour",
+    "Apex hide body + 1",
+    "Apex hide body + 2",
+    "Apex hide body + 3",
+    "Apex hide body + 4",
+    "Apex hide body + 5",
+    "Apex hide boots + 1",
+    "Apex hide boots + 2",
+    "Apex hide boots + 3",
+    "Apex hide boots + 4",
+    "Apex hide boots + 5",
+    "Apex hide chaps + 1",
+    "Apex hide chaps + 2",
+    "Apex hide chaps + 3",
+    "Apex hide chaps + 4",
+    "Apex hide chaps + 5",
+    "Apex hide cowl + 1",
+    "Apex hide cowl + 2",
+    "Apex hide cowl + 3",
+    "Apex hide cowl + 4",
+    "Apex hide cowl + 5",
+    "Apex hide vambraces + 1",
+    "Apex hide vambraces + 2",
+    "Apex hide vambraces + 3",
+    "Apex hide vambraces + 4",
+    "Apex hide vambraces + 5",
+    "Augmented custom-fit masterwork ranged body",
+    "Augmented custom-fit masterwork ranged chaps",
+    "Augmented masterwork ranged body",
+    "Augmented masterwork ranged chaps",
+    "Ben's spare hat",
+    "Crab amulet",
+    "Crabulet",
+    "Elegant parasol",
+    "Inanna's gift",
+    "Masterwork ranged cape",
+    "Masterwork ranged equipment",
+    "Ring of Kayazu",
+    "Tellervo's lantern",
+    "Tellervo's net"
+  ],
+  "mismatches": [],
+  "missingPages": [
+    {
+      "title": "Dark sliver of Leng",
+      "ids": [
+        "item:dark-sliver-of-leng"
+      ]
+    },
+    {
+      "title": "Dark shard of Leng",
+      "ids": [
+        "item:dark-shard-of-leng"
+      ]
+    },
+    {
+      "title": "Masterwork helm",
+      "ids": [
+        "item:masterwork-helm"
+      ]
+    },
+    {
+      "title": "Masterwork platebody",
+      "ids": [
+        "item:masterwork-platebody"
+      ]
+    },
+    {
+      "title": "Masterwork platelegs",
+      "ids": [
+        "item:masterwork-platelegs"
+      ]
+    },
+    {
+      "title": "Masterwork gloves",
+      "ids": [
+        "item:masterwork-gloves"
+      ]
+    },
+    {
+      "title": "Masterwork boots",
+      "ids": [
+        "item:masterwork-boots"
+      ]
+    },
+    {
+      "title": "Trimmed masterwork helm",
+      "ids": [
+        "item:trimmed-masterwork-helm"
+      ]
+    },
+    {
+      "title": "Trimmed masterwork platebody",
+      "ids": [
+        "item:trimmed-masterwork-platebody"
+      ]
+    },
+    {
+      "title": "Trimmed masterwork platelegs",
+      "ids": [
+        "item:trimmed-masterwork-platelegs"
+      ]
+    },
+    {
+      "title": "Trimmed masterwork gloves",
+      "ids": [
+        "item:trimmed-masterwork-gloves"
+      ]
+    },
+    {
+      "title": "Trimmed masterwork boots",
+      "ids": [
+        "item:trimmed-masterwork-boots"
+      ]
+    },
+    {
+      "title": "Off-hand Ascension crossbow",
+      "ids": [
+        "item:off-hand-ascension-crossbow"
+      ]
+    },
+    {
+      "title": "Deathguard",
+      "ids": [
+        "item:deathguard-t90"
+      ]
+    },
+    {
+      "title": "Channeler's ring",
+      "ids": [
+        "item:channelers-ring"
+      ]
+    },
+    {
+      "title": "Wen arrows",
+      "ids": [
+        "item:wen-arrows"
+      ]
+    },
+    {
+      "title": "Ful arrows",
+      "ids": [
+        "item:ful-arrows"
+      ]
+    },
+    {
+      "title": "Bik arrows",
+      "ids": [
+        "item:bik-arrows"
+      ]
+    },
+    {
+      "title": "Jas dragonbane arrows",
+      "ids": [
+        "item:jas-dragonbane-arrows"
+      ]
+    },
+    {
+      "title": "Eternal Magic longbow",
+      "ids": [
+        "item:eternal-magic-longbow"
+      ]
+    },
+    {
+      "title": "Dragon claws",
+      "ids": [
+        "item:dragon-claws"
+      ]
+    }
+  ],
+  "note": "Category-derived regions are audit leads, not automatic truth for multi-region crafting chains. The Havenhythe category comparison discovers directly categorised equipment pages missing from the catalogue; review cosmetic, broken and used variants before adding them."
+}

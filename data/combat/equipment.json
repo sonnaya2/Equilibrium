@@ -1,5 +1,5 @@
 {
-  "lastSynced": "2026-07-26",
+  "lastSynced": "2026-07-28",
   "trackedSince": "2024-03-04",
   "records": [
     {
@@ -13794,12 +13794,17 @@
         }
       ],
       "unlock": {
-        "type": "drop",
-        "requirement": "League self-supply: havenhythe",
+        "type": "craft",
+        "requirement": "Apex-hide tailoring in Havenhythe",
         "regions": [
           "havenhythe"
         ]
-      }
+      },
+      "showcaseTierRange": [
+        85,
+        90
+      ],
+      "displayDescription": "Apex hide ranged tank armour, upgradeable from tier 85 to tier 90 (+5), crafted in Havenhythe."
     },
     {
       "id": "item:apex-hide-body",
@@ -13820,12 +13825,17 @@
         }
       ],
       "unlock": {
-        "type": "drop",
-        "requirement": "League self-supply: havenhythe",
+        "type": "craft",
+        "requirement": "Apex-hide tailoring in Havenhythe",
         "regions": [
           "havenhythe"
         ]
-      }
+      },
+      "showcaseTierRange": [
+        85,
+        90
+      ],
+      "displayDescription": "Apex hide ranged tank armour, upgradeable from tier 85 to tier 90 (+5), crafted in Havenhythe."
     },
     {
       "id": "item:apex-hide-chaps",
@@ -13846,12 +13856,17 @@
         }
       ],
       "unlock": {
-        "type": "drop",
-        "requirement": "League self-supply: havenhythe",
+        "type": "craft",
+        "requirement": "Apex-hide tailoring in Havenhythe",
         "regions": [
           "havenhythe"
         ]
-      }
+      },
+      "showcaseTierRange": [
+        85,
+        90
+      ],
+      "displayDescription": "Apex hide ranged tank armour, upgradeable from tier 85 to tier 90 (+5), crafted in Havenhythe."
     },
     {
       "id": "item:apex-hide-vambraces",
@@ -13872,12 +13887,17 @@
         }
       ],
       "unlock": {
-        "type": "drop",
-        "requirement": "League self-supply: havenhythe",
+        "type": "craft",
+        "requirement": "Apex-hide tailoring in Havenhythe",
         "regions": [
           "havenhythe"
         ]
-      }
+      },
+      "showcaseTierRange": [
+        85,
+        90
+      ],
+      "displayDescription": "Apex hide ranged tank armour, upgradeable from tier 85 to tier 90 (+5), crafted in Havenhythe."
     },
     {
       "id": "item:apex-hide-boots",
@@ -13898,12 +13918,17 @@
         }
       ],
       "unlock": {
-        "type": "drop",
-        "requirement": "League self-supply: havenhythe",
+        "type": "craft",
+        "requirement": "Apex-hide tailoring in Havenhythe",
         "regions": [
           "havenhythe"
         ]
-      }
+      },
+      "showcaseTierRange": [
+        85,
+        90
+      ],
+      "displayDescription": "Apex hide ranged tank armour, upgradeable from tier 85 to tier 90 (+5), crafted in Havenhythe."
     },
     {
       "id": "item:masterwork-ranged-cowl",
@@ -13926,11 +13951,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -13955,11 +13981,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -13984,11 +14011,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14013,11 +14041,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14042,11 +14071,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14521,11 +14551,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14550,11 +14581,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14579,11 +14611,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14608,11 +14641,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14637,11 +14671,12 @@
       ],
       "unlock": {
         "type": "drop",
-        "requirement": "League self-supply: anachronia + forinthry + kandarin",
+        "requirement": "League self-supply requires Havenhythe apex-hide progression plus Anachronia, Forinthry and Kandarin materials",
         "regions": [
           "anachronia",
           "forinthry",
-          "kandarin"
+          "kandarin",
+          "havenhythe"
         ]
       }
     },
@@ -14747,6 +14782,480 @@
           "desert"
         ]
       }
+    },
+    {
+      "id": "item:havensilver-greatsword",
+      "name": "Havensilver greatsword",
+      "style": "melee",
+      "slot": "twohand",
+      "tier": 5,
+      "bonuses": {
+        "damage": 111.8,
+        "accuracy": 150
+      },
+      "showcaseFamily": "havensilver-greatsword",
+      "showcaseLabel": "Havensilver greatsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_greatsword",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-greatsword-plus-1",
+      "name": "Havensilver greatsword +1",
+      "style": "melee",
+      "slot": "twohand",
+      "tier": 30,
+      "bonuses": {
+        "damage": 670.5,
+        "accuracy": 454
+      },
+      "showcaseFamily": "havensilver-greatsword",
+      "showcaseLabel": "Havensilver greatsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_greatsword_%2B1",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-greatsword-plus-2",
+      "name": "Havensilver greatsword +2",
+      "style": "melee",
+      "slot": "twohand",
+      "tier": 60,
+      "bonuses": {
+        "damage": 1341,
+        "accuracy": 1132
+      },
+      "showcaseFamily": "havensilver-greatsword",
+      "showcaseLabel": "Havensilver greatsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_greatsword_%2B2",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-longsword",
+      "name": "Havensilver longsword",
+      "style": "melee",
+      "slot": "mainhand",
+      "tier": 5,
+      "bonuses": {
+        "damage": 61.3,
+        "accuracy": 150
+      },
+      "showcaseFamily": "havensilver-longsword",
+      "showcaseLabel": "Havensilver longsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_longsword",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-longsword-plus-1",
+      "name": "Havensilver longsword +1",
+      "style": "melee",
+      "slot": "mainhand",
+      "tier": 30,
+      "bonuses": {
+        "damage": 367.5,
+        "accuracy": 454
+      },
+      "showcaseFamily": "havensilver-longsword",
+      "showcaseLabel": "Havensilver longsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_longsword_%2B1",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-longsword-plus-2",
+      "name": "Havensilver longsword +2",
+      "style": "melee",
+      "slot": "mainhand",
+      "tier": 60,
+      "bonuses": {
+        "damage": 735,
+        "accuracy": 1132
+      },
+      "showcaseFamily": "havensilver-longsword",
+      "showcaseLabel": "Havensilver longsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_longsword_%2B2",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-off-hand-longsword",
+      "name": "Havensilver off-hand longsword",
+      "style": "melee",
+      "slot": "offhand",
+      "tier": 5,
+      "bonuses": {
+        "damage": 30.6,
+        "accuracy": 150
+      },
+      "showcaseFamily": "havensilver-off-hand-longsword",
+      "showcaseLabel": "Havensilver off-hand longsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_off-hand_longsword",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-off-hand-longsword-plus-1",
+      "name": "Havensilver off-hand longsword +1",
+      "style": "melee",
+      "slot": "offhand",
+      "tier": 30,
+      "bonuses": {
+        "damage": 183.7,
+        "accuracy": 454
+      },
+      "showcaseFamily": "havensilver-off-hand-longsword",
+      "showcaseLabel": "Havensilver off-hand longsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_off-hand_longsword_%2B1",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-off-hand-longsword-plus-2",
+      "name": "Havensilver off-hand longsword +2",
+      "style": "melee",
+      "slot": "offhand",
+      "tier": 60,
+      "bonuses": {
+        "damage": 367.5,
+        "accuracy": 1132
+      },
+      "showcaseFamily": "havensilver-off-hand-longsword",
+      "showcaseLabel": "Havensilver off-hand longsword",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe havensilver weapon; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and Hearts of Sanguine progression",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_off-hand_longsword_%2B2",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-bolt",
+      "name": "Havensilver bolt",
+      "style": "ranged",
+      "slot": "ammo",
+      "tier": 5,
+      "bonuses": {
+        "damage": 48
+      },
+      "showcaseFamily": "havensilver-bolts",
+      "showcaseLabel": "Havensilver bolts",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe crossbow ammunition; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and fletching; Silverquill spines for upgrades",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_bolt",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-bolt-plus-1",
+      "name": "Havensilver bolt +1",
+      "style": "ranged",
+      "slot": "ammo",
+      "tier": 30,
+      "bonuses": {
+        "damage": 288
+      },
+      "showcaseFamily": "havensilver-bolts",
+      "showcaseLabel": "Havensilver bolts",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe crossbow ammunition; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and fletching; Silverquill spines for upgrades",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_bolt_%2B1",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:havensilver-bolt-plus-2",
+      "name": "Havensilver bolt +2",
+      "style": "ranged",
+      "slot": "ammo",
+      "tier": 60,
+      "bonuses": {
+        "damage": 576
+      },
+      "showcaseFamily": "havensilver-bolts",
+      "showcaseLabel": "Havensilver bolts",
+      "showcaseTierRange": [
+        5,
+        60
+      ],
+      "displayDescription": "Havenhythe crossbow ammunition; base, +1 and +2 upgrades collapse into one showcase entry.",
+      "unlock": {
+        "type": "craft",
+        "requirement": "Havensilver smithing and fletching; Silverquill spines for upgrades",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Havensilver_bolt_%2B2",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:bonecrusher-maul",
+      "name": "Bonecrusher maul",
+      "style": "melee",
+      "slot": "twohand",
+      "tier": 50,
+      "displayDescription": "Tier 50 two-handed maul dropped by Ivar, King of Bones.",
+      "unlock": {
+        "type": "drop",
+        "requirement": "Ivar, King of Bones",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Bonecrusher_maul",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:magic-skull-mask",
+      "name": "Magic skull mask",
+      "style": "magic",
+      "slot": "helmet",
+      "tier": 45,
+      "bonuses": {
+        "armour": 125.6,
+        "damage": 11.2,
+        "accuracy": 29
+      },
+      "displayDescription": "Tier 45 magic power headgear dropped by Ivar, King of Bones.",
+      "unlock": {
+        "type": "drop",
+        "requirement": "Ivar, King of Bones",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Magic_skull_mask",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:vampyrism-gloves",
+      "name": "Vampyrism gloves",
+      "style": "hybrid",
+      "slot": "gloves",
+      "tier": 25,
+      "displayDescription": "Tier 25 hybrid gloves dropped by Sanguine crawlers; heals 2% of damage dealt, capped at 20 life points per hit.",
+      "unlock": {
+        "type": "drop",
+        "requirement": "Sanguine crawlers in Havenhythe",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Vampyrism_gloves",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "id": "item:black-chinchompa",
+      "name": "Black chinchompa",
+      "style": "ranged",
+      "slot": "mainhand",
+      "tier": 65,
+      "displayDescription": "Stackable multi-target ranged weapon caught from volatile chinchompas in Havenhythe.",
+      "unlock": {
+        "type": "hunter",
+        "requirement": "Box trap volatile chinchompas in Havenhythe",
+        "regions": [
+          "havenhythe"
+        ]
+      },
+      "sources": [
+        {
+          "source": "runescape-wiki",
+          "url": "https://runescape.wiki/w/Black_chinchompa",
+          "verifiedAt": "2026-07-28"
+        }
+      ]
     }
   ]
 }

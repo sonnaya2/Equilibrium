@@ -97,6 +97,18 @@ upsert({
 });
 
 upsert({
+  id: "item:bens-spare-hat",
+  name: "Ben's spare hat",
+  style: "magic",
+  slot: "helmet",
+  tier: 30,
+  bonuses: { armour: 90.8 },
+  displayDescription: "Tier 30 magic tank headgear rewarded by the Wiz Kid quest.",
+  unlock: { type: "quest", requirement: "Complete Wiz Kid", regions: ["havenhythe"] },
+  sources: source("Ben%27s_spare_hat"),
+});
+
+upsert({
   id: "item:vampyrism-gloves",
   name: "Vampyrism gloves",
   style: "hybrid",

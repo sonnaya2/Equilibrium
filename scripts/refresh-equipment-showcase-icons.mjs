@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import sharp from "sharp";
 import { createHash } from "node:crypto";
 
 const root = process.cwd();
@@ -115,16 +114,23 @@ async function fileFallback(title) {
   return null;
 }
 
+function isWebp(buffer) {
+  return buffer.length >= 12 && buffer.subarray(0, 4).toString("ascii") === "RIFF" && buffer.subarray(8, 12).toString("ascii") === "WEBP";
+}
+
 async function downloadWebp(url) {
-  const response = await fetch(url, { headers: { "User-Agent": UA, Accept: "image/*" }, redirect: "follow" });
+  const response = await fetch(url, {
+    headers: { "User-Agent": UA, Accept: "image/webp,image/*;q=0.8" },
+    redirect: "follow",
+  });
   if (!response.ok) throw new Error(`image ${response.status}`);
   const source = Buffer.from(await response.arrayBuffer());
   if (source.length < 40 || source.length > 4_000_000) throw new Error(`bad image size ${source.length}`);
-  return sharp(source, { animated: false, pages: 1, failOn: "none" })
-    .rotate()
-    .resize({ width: 128, height: 128, fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 92, alphaQuality: 100, effort: 4 })
-    .toBuffer();
+  if (!isWebp(source)) {
+    const type = response.headers.get("content-type") || "unknown";
+    throw new Error(`wiki thumbnail was ${type}, not WebP`);
+  }
+  return source;
 }
 
 const targets = records.filter((record) => {

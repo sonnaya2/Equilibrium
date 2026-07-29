@@ -479,6 +479,7 @@ const ASGARNIA_UPGRADE_DROP = new Set([
   "Player-owned house portal towns and Construction utilities",
   "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
   "POH gilded altar (Chapel offering)",
+  "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
   "Rimmington Construction supply loop",
   "Rogues' Den banking, safes, and Thieving hub",
   "Saradomin godsword special (heal switch)",
@@ -550,6 +551,14 @@ function applyRegionCorrections(catalog) {
       detail: "Tier 85 armour crafted at the Crafting Guild and upgraded to tier 90.",
       confidence: "confirmed_wiki",
       source: wikiSource("Starbloom equipment", "Starbloom_equipment"),
+    },
+    {
+      name: "Praesul codex",
+      kind: "Prayer unlock",
+      detail:
+        "One codex unlocks Malevolence, Desolation, Affliction, or Ruination. Each curse requires its own codex.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Praesul codex", "Praesul_codex"),
     },
   ];
   for (const major of majors) {

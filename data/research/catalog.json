@@ -5899,6 +5899,18 @@
             "title": "Starbloom equipment",
             "verifiedAt": "2026-07-26"
           }
+        },
+        {
+          "name": "Praesul codex",
+          "kind": "Prayer unlock",
+          "detail": "One codex unlocks Malevolence, Desolation, Affliction, or Ruination. Each curse requires its own codex.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Praesul_codex",
+            "title": "Praesul codex",
+            "verifiedAt": "2026-07-26"
+          }
         }
       ],
       "upgrades": [
@@ -7927,34 +7939,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Seasinger%27s_equipment",
             "title": "Seasinger residual (Ports / Arc)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "asgarnia",
-          "regionHints": [
-            "asgarnia"
-          ],
-          "requiredRegions": [
-            "asgarnia"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
-          "category": "regional prayer unlock / Ancient Curses BiS",
-          "detail": "Hard Asgarnia for codex drops. Misthalin for curses book + Ruination Selene only · Effects: Upgrades the Turmoil / Anguish / Torment / Sorrow accuracy-damage prayer lines into the praesul endgame variants, One codex = one choice; full four-style coverage is a multi-drop AoD project · Unlocks: Malevolence (melee style curse), Desolation (ranged style curse), Affliction (magic style curse), Ruination (necromancy style curse via Selene) · Region pressure: Asgarnia Nex Angel of Death praesul codex drops (wiki League badge Asgarnia)., not the codex drop home",
-          "requirements": [
-            "99 Prayer to use the unlocked curses",
-            "Praesul codex from Nex, Angel of Death (one curse per codex — four codices for full set)",
-            "Ancient Curses prayer book unlocked (Temple at Senntisten — Misthalin pressure, not second AoD gate)",
-            "Ruination: hand codex to Selene in City of Um at 95 Necromancy (Misthalin Um working map)"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Praesul_codex",
-            "title": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "asgarnia",

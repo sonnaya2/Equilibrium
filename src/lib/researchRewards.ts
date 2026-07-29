@@ -168,6 +168,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Elite Dungeon 1":
     "Ancient scales, Masuta's warspear, Tetsu sword upgrade kit, Seasinger's kiba upgrade kit, Death Lotus dart upgrade kit",
   "Starbloom armour": "Tier 85 Starbloom armour, tier 90 upgraded Starbloom armour",
+  "Praesul codex": "Praesul codex, Malevolence, Desolation, Affliction, Ruination",
   "Warriors' Guild": "Dragon defender",
   "Safecracking route": "Safecracking",
   "Warforge Dig Site (Bandosian)": "Imcando mattock, Inspire Awe, Endurance",

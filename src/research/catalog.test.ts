@@ -75,6 +75,7 @@ describe("research catalog", () => {
       "The Arc",
       "Elite Dungeon 1",
       "Starbloom armour",
+      "Praesul codex",
       "Nex",
       "God Wars Dungeon 1",
       "Falador farm allotment / flower / herb patches",
@@ -119,6 +120,7 @@ describe("research catalog", () => {
       "Player-owned house portal towns and Construction utilities",
       "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
       "POH gilded altar (Chapel offering)",
+      "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
       "Saradomin godsword special (heal switch)",
       "Temple of Aminishi (ED1)",
       "The Arc skilling destinations (Equilibrium Asgarnia mapping)",
@@ -167,6 +169,11 @@ describe("research catalog", () => {
     );
     expect(contentRewardsFull(flashPowder!, asg!.upgrades)).toBe(
       "Botanist's outfit, Factory outfit, Rogue equipment",
+    );
+
+    const praesul = asg?.content.find((row) => row.name === "Praesul codex");
+    expect(contentRewardsFull(praesul!, asg!.upgrades)).toBe(
+      "Praesul codex, Malevolence, Desolation, Affliction, Ruination",
     );
 
     const karNames = new Set((kar?.content ?? []).map((c) => c.name));

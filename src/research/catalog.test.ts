@@ -80,13 +80,13 @@ describe("research catalog", () => {
       "Scrimshaws",
       "Ports armour",
       "Nex",
-      "God Wars Dungeon 1",
       "Falador farm allotment / flower / herb patches",
     ]) {
       expect(asgNames.has(name), `asgarnia missing ${name}`).toBe(true);
     }
     expect(asgNames.has("Rimmington Construction supply loop")).toBe(false);
     expect(asgNames.has("Player-owned port")).toBe(false);
+    expect(asgNames.has("God Wars Dungeon 1")).toBe(false);
 
     const asgUpgradeNames = new Set((asg?.upgrades ?? []).map((upgrade) => upgrade.name));
     const removedAsgarniaPois = [
@@ -257,6 +257,17 @@ describe("research catalog", () => {
       "Rocktail",
     );
 
+    const queenBlackDragon = asg?.content.find((row) => row.name === "Queen Black Dragon");
+    expect(queenBlackDragon).toMatchObject({
+      kind: "Boss",
+      detail: "Drops the Dragon kiteshield.",
+    });
+    expect(asg?.upgrades.some((row) => row.name === "Queen Black Dragon")).toBe(false);
+    expect(contentRewardsFull(queenBlackDragon!, asg!.upgrades)).toBe("Dragon kiteshield");
+    expect(dataEntityIconPath({ name: queenBlackDragon?.name, kind: queenBlackDragon?.kind })).toBe(
+      "/game/upgrades/skilling-production/dragon-kiteshield.webp",
+    );
+
     const karNames = new Set((kar?.content ?? []).map((c) => c.name));
     for (const name of [
       "Herblore Habitat",
@@ -270,6 +281,9 @@ describe("research catalog", () => {
       "Duradel",
       "TzHaar Fight Cave",
       "Fight Kiln",
+      "Hardwood Grove",
+      "Tai Bwo Wannai Cleanup",
+      "Shilo Village gem mine and Gemstone cavern",
     ]) {
       expect(karNames.has(name), `karamja missing ${name}`).toBe(true);
     }
@@ -290,6 +304,9 @@ describe("research catalog", () => {
       "Dark facets",
       "Brawling gloves",
       "Daemonheim Rewards shop",
+      "Magic axe hut chest",
+      "Bandit Camp shops",
+      "Infernal Puzzle Box",
     ]) {
       expect(forNames.has(name), `forinthry missing ${name}`).toBe(true);
     }
@@ -646,7 +663,6 @@ describe("research catalog", () => {
       "Mort Myre fungi Bloom harvest",
       "Nature Grotto altar of nature",
       "Port Phasmatys brewery",
-      "Port Phasmatys farming patches",
       "Port Phasmatys skilling hub",
       "Ring of Vitur",
       "Ring of slaying (craft unlock)",
@@ -659,10 +675,15 @@ describe("research catalog", () => {
       "Mort Myre fungi Bloom harvest",
       "Nature Grotto altar of nature",
       "Port Phasmatys",
-      "Port Phasmatys farming patches",
     ]) {
       expect(morytania?.content.some((row) => row.name === name)).toBe(false);
     }
+    expect(morytania?.content.filter((row) => row.name === "Canifis mushroom patch")).toHaveLength(
+      1,
+    );
+    expect(
+      morytania?.content.filter((row) => row.name === "Port Phasmatys farming patches"),
+    ).toHaveLength(1);
     expect(
       catalogSource.regions
         .find((region) => region.id === "misthalin")
@@ -701,6 +722,21 @@ describe("research catalog", () => {
       "Super Zamorak brew",
       "Weapon poison+++",
     ]);
+  });
+
+  it("keeps removed queue rows out of every region", () => {
+    const removed = new Set([
+      "Artificer's measure component region map",
+      "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+      "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+      "Toolbelt attach: Seedicide",
+    ]);
+    const leftovers = catalogSource.regions.flatMap((region) =>
+      [...region.content, ...region.upgrades]
+        .filter((row) => removed.has(row.name))
+        .map((row) => `${region.id}:${row.name}`),
+    );
+    expect(leftovers).toEqual([]);
   });
 
   it("lists Havenhythe majors with correct wiki homes and no thin stubs", () => {

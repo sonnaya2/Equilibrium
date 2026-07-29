@@ -82,8 +82,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
   "Kalphite Queen": "Dragon chainbody, Kalphite queen head, Dragon 2h sword",
   "Giant Mole": "Dragon 2h sword",
-  "Queen Black Dragon":
-    "Royal crossbow, Dragon kiteshield, Draconic visage, Dragonbone upgrade kit",
+  "Queen Black Dragon": "Dragon kiteshield",
   Legiones:
     "Ascension signets, Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
   "Monastery of Ascension":
@@ -108,7 +107,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Kuradal's Dungeon and ferocious ring hub": "Ferocious ring",
   Abomination: "Abomination cape",
   "Magic axe hut chest": "Rune hatchet, Muddy key",
-  "Bandit Camp shops": "Bloodweed seed, Pizza base",
+  "Bandit Camp shops":
+    "Bloodweed seed, Vial of water pack, Broad arrowheads, Gold leaf, Marble block, Stone of binding, Reinforcing plate, Algarum thread, Pizza base",
   "Infernal Puzzle Box": "Infernal Puzzle Box",
   "Polypore Dungeon (spore and stick resources)": "Polypore staff",
   "Rex Matriarchs": "Occultist's ring, Reaver's ring, Skeka's hypnowand",
@@ -562,7 +562,7 @@ export function contentDetailOrRewards(
   if (detail) return detail;
   const source = contentRewardsSource(contentRewardsFull(row, upgrades));
   if (!source || source === "—") return "";
-  return clipRewardDisplay(source);
+  return clipRewardDisplay(source, 96);
 }
 
 export function contentRewardsFull(

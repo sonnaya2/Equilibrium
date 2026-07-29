@@ -3809,8 +3809,8 @@
         },
         {
           "name": "Fight Kiln",
-          "kind": "combat",
-          "detail": "TokHaar-Kal cape path through the Fight Kiln.",
+          "kind": "Combat",
+          "detail": "Wave challenge awarding the four TokHaar-Kal capes.",
           "confidence": "inferred_region",
           "source": {
             "source": "runescape-wiki",
@@ -3821,8 +3821,8 @@
         },
         {
           "name": "Abomination",
-          "kind": "Brimhaven area",
-          "detail": "",
+          "kind": "Boss",
+          "detail": "Brimhaven Dungeon boss that drops the Abomination cape.",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
             "source": "runescape-wiki",
@@ -3917,8 +3917,8 @@
         },
         {
           "name": "Karambwan vessel fishing",
-          "kind": "Fishing method and bait tool unlock",
-          "detail": "Pre-quest Lubufu spot is temporary tutorial fishing only; permanent method is post-Trio at DKP. Vessel must be filled with raw karambwanji each attempt; fish can steal bait without a catch. Distinct from Musa Point lobster dock / Stiles noting",
+          "kind": "Fishing",
+          "detail": "Catch raw karambwans with a vessel baited with raw karambwanji.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -3928,50 +3928,26 @@
           }
         },
         {
-          "name": "Musa Point fishing dock and Stiles",
-          "kind": "Fishing and fish-noting infrastructure",
-          "detail": "Early/mid Fishing infrastructure on automatic-early Karamja. Stiles removes the classic bank run. Members usually outgrow this dock for Deep Sea Fishing (Kandarin) but Stiles remains a regional QoL landmark",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Musa_Point",
-            "title": "Musa Point fishing dock and Stiles",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Hardwood Grove teaks and mahoganies",
-          "kind": "Woodcutting and Construction log supply",
-          "detail": "Primary midgame teak/mahogany Construction plank source for iron accounts that do not yet have Miscellania or other dense hardwoods. Entry fee is every visit. Banking options: Rionasta (sticks), TokKul-Zo + Tai Bwo Wannai teleport, Brimhaven POH, porters, or Deadliest Catch south",
+          "name": "Hardwood Grove",
+          "kind": "Woodcutting",
+          "detail": "Nine teak trees and four mahogany trees. Entry costs 100 trading sticks.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Hardwood_grove",
-            "title": "Hardwood Grove teaks and mahoganies",
+            "title": "Hardwood grove",
             "verifiedAt": "2026-07-26"
           }
         },
         {
-          "name": "Tai Bwo Wannai Cleanup and trading sticks",
-          "kind": "regional currency and jungle skilling hub",
-          "detail": "Trading sticks are the gate currency for Hardwood Grove density teaks/mahoganies on no-trade accounts. Cleanup is the durable self-supply loop; treat sticks as infrastructure currency, not a GE convenience",
+          "name": "Tai Bwo Wannai Cleanup",
+          "kind": "Woodcutting",
+          "detail": "Earn trading sticks for Hardwood Grove and village shops.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Tai_Bwo_Wannai_Cleanup",
-            "title": "Tai Bwo Wannai Cleanup and trading sticks",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "Gemstone cavern (Shilo underground)",
-          "kind": "Mining–Slayer residual infrastructure",
-          "detail": "of shilo-gem-mine + area-tasks gloves. Prefer gloves row for teleport/diary perks; prefer shilo-gem-mine for surface gem rocks; Combat loot tables stay out of skilling detail",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Gemstone_cavern",
-            "title": "Gemstone cavern (Shilo underground)",
+            "title": "Tai Bwo Wannai Cleanup",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -3989,8 +3965,8 @@
         },
         {
           "name": "Karamja overgrown idols",
-          "kind": "Woodcutting / Karamja",
-          "detail": "Woodcutting method at overgrown idols with a temporary Woodcutting buff",
+          "kind": "Woodcutting",
+          "detail": "Clear the Gara-Dul idols for a temporary Woodcutting buff.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -4010,6 +3986,18 @@
             "title": "Obsidian equipment",
             "verifiedAt": "2026-07-28"
           }
+        },
+        {
+          "name": "Shilo Village gem mine and Gemstone cavern",
+          "kind": "Mining and Slayer",
+          "detail": "Gem rocks in the Shilo Village mine and the underground Gemstone cavern reached with Karamja gloves 3.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Shilo_Village_mine",
+            "title": "Shilo Village mine",
+            "verifiedAt": "2026-07-26"
+          },
+          "confidence": "confirmed_wiki"
         }
       ],
       "upgrades": [
@@ -4158,31 +4146,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Gemstone cavern (Shilo underground)",
-          "category": "Mining–Slayer infrastructure",
-          "detail": "of shilo-gem-mine + area-tasks gloves. Prefer gloves row for teleport/diary perks; prefer shilo-gem-mine for surface gem rocks; Combat loot tables stay out of skilling detail · Gloves 3 is the permanent access item on automatic-early diary path · Unlocks: Access to gemstone dragon cavern beneath Shilo Village mine (diary-gated permanent ladder path via gloves 3), Gem rocks colocated with dragonstone/onyx/hydrix dragons for Mining during Slayer, Logistics synergy with Shilo gem mine surface bank and gloves 3 operate teleport to underground mine",
-          "requirements": [
-            "Karamja gloves 3 or 4 worn or in backpack to descend",
-            "Speak to Kelhar in Shilo underground mine; gemstone dragons Slayer task or pay incomplete hydrix / uncut onyx / uncut dragonstone",
-            "95 / 98 / 101 Slayer for dragonstone / onyx / hydrix dragons; 94 Agility for hydrix shortcut crevice"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Gemstone_cavern",
-            "title": "Gemstone cavern (Shilo underground)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "karamja",
-          "regionHints": [
-            "karamja"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Gleaming wisp colony",
           "category": "Divination gathering colony",
           "detail": "Karamja's named mid-tier Divination colony. Watch wandering warriors on the western side for lower-level accounts · Unlocks: Tier 6 gleaming wisp / spring colony north-east of Shilo Village, Gleaming memories and gleaming energy (tier used for midgame divination products and boons), Colony near Nature altar / CKR / spirit graahk / Karamja gloves routes",
@@ -4194,31 +4157,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Gleaming_wisp",
             "title": "Gleaming wisp colony",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "karamja",
-          "regionHints": [
-            "karamja"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Hardwood Grove teaks and mahoganies",
-          "category": "Woodcutting and Construction log supply",
-          "detail": "Primary midgame teak/mahogany Construction plank source for iron accounts that do not yet have Miscellania or other dense hardwoods. Entry fee is every visit. Banking options: Rionasta (sticks), TokKul-Zo + Tai Bwo Wannai teleport, Brimhaven POH, porters, or Deadliest Catch south-Brimhaven deposit box · Karamja owns the grove and trading-stick economy. Pair with Deadliest Catch deposit QoL when ranking teak banking efficiency · Unlocks: Nine teak trees and four mahogany trees in one fenced grove (highest hardwood density site), In-grove burn training (vines do not block fires), Rionasta parcel service bank-send at 10 trading sticks per log, Synergy with Deadliest Catch Brimhaven beach deposit box and porters",
-          "requirements": [
-            "100 trading sticks paid to Murcaily per entry (Tai Bwo Wannai Cleanup / shops / GE; no-trade: Cleanup or self-supply)",
-            "30 Woodcutting for teak; 60 Woodcutting for mahogany",
-            "Jungle Potion not required to enter"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Hardwood_grove",
-            "title": "Hardwood Grove teaks and mahoganies",
             "verifiedAt": "2026-07-26"
           },
           "regionId": "karamja",
@@ -4314,54 +4252,6 @@
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): karamja + tirannwn",
           "isRegionCombo": true
-        },
-        {
-          "name": "Shilo Village underground gem mine",
-          "category": "Crafting self-supply mining infrastructure",
-          "detail": "Unlocks: Dense gem rock mining for Crafting self-supply, Karamja gloves 3-4 adjacency for diary utility",
-          "requirements": [
-            "Shilo Village quest completed",
-            "Access to underground gem rocks beneath Shilo"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Shilo_Village_mine",
-            "title": "Shilo Village underground gem mine",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "karamja",
-          "regionHints": [
-            "karamja"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
-          "name": "Tai Bwo Wannai Cleanup and trading sticks",
-          "category": "regional currency and jungle skilling hub",
-          "detail": "Trading sticks are the gate currency for Hardwood Grove density teaks/mahoganies on no-trade accounts. Cleanup is the durable self-supply loop; treat sticks as infrastructure currency, not a GE convenience · Karamja currency hub. Quest auto-complete may open shops; stick grinding remains activity time · Unlocks: Trading sticks as local currency from Cleanup favour, Hardwood Grove entry fee supply without GE, Gabooty cooperative / drinky stores and village shops priced in sticks, Gout tuber, gem rocks, thatch spars, broodoo materials as Cleanup byproducts, Calquat Farming patch and village services (Tiadeche karambwan stall after quests, etc.)",
-          "requirements": [
-            "Tai Bwo Wannai village access (Jungle Potion recommended for village progress but not strictly for all Cleanup actions)",
-            "Machete for jungle cutting; combat readiness for broodoo victims and jungle spawns"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Tai_Bwo_Wannai_Cleanup",
-            "title": "Tai Bwo Wannai Cleanup and trading sticks",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "karamja",
-          "regionHints": [
-            "karamja"
-          ],
-          "requiredRegions": [],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
         },
         {
           "name": "TokKul-Zo",
@@ -4639,8 +4529,8 @@
         },
         {
           "name": "Queen Black Dragon",
-          "kind": "Port Sarim / Grotworm Lair",
-          "detail": "",
+          "kind": "Boss",
+          "detail": "Drops the Dragon kiteshield.",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
             "source": "runescape-wiki",
@@ -4742,18 +4632,6 @@
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Port_Sarim",
             "title": "Port Sarim docks and skilling hub",
-            "verifiedAt": "2026-07-26"
-          }
-        },
-        {
-          "name": "God Wars Dungeon 1",
-          "kind": "Boss dungeon",
-          "detail": "GWD1 approach and god camps (Graardor / Kree'arra / Zilyana / K'ril + Nex). Equipment uniques live on each boss row.",
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/God_Wars_Dungeon",
-            "title": "God Wars Dungeon 1",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -6019,29 +5897,6 @@
           "isRegionCombo": false
         },
         {
-          "name": "Queen Black Dragon",
-          "category": "regional boss BiS drop source",
-          "detail": "Grotworm Lair (Port Sarim / Rimmington approach). Wiki Equilibrium badge: Asgarnia. Ironman early-mid ranged 2h self-source when higher unique regions are locked · Hard Asgarnia. Badge Asgarnia ✓. 60 Summoning portal gate is skill, not region relocation · Effects: Royal torsion spring / royal sight / royal frame / royal bolt stabiliser → Royal crossbow (t80 untradeable 2h ranged), Draconic visage, Royal dragonhide / royal bolts ammo economy",
-          "requirements": [],
-          "confidence": "confirmed_current_wiki_league_asgarnia_badge",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Queen_Black_Dragon",
-            "title": "Queen Black Dragon",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "asgarnia",
-          "regionHints": [
-            "asgarnia"
-          ],
-          "requiredRegions": [
-            "asgarnia"
-          ],
-          "regionRequirementType": "single",
-          "comboLabel": "",
-          "isRegionCombo": false
-        },
-        {
           "name": "Seiryu, the Azure Serpent (ED1 final)",
           "category": "regional boss BiS drop source",
           "detail": "Hard Asgarnia (Arc / Seiryu). Optional Desert Ports pressure may be added later · Effects: Ancient scales (elite sirenic upgrade — primary Arc path), ED1 final-boss under Temple of Aminishi family",
@@ -6425,8 +6280,8 @@
       "content": [
         {
           "name": "Legiones",
-          "kind": "Monastery of Ascension",
-          "detail": "",
+          "kind": "Bosses",
+          "detail": "Six Monastery of Ascension bosses whose signets assemble the Ascension crossbows.",
           "confidence": "historical_catalyst_region_mapping_current_wiki_content",
           "source": {
             "source": "runescape-wiki",
@@ -6582,7 +6437,7 @@
         {
           "name": "Kuradal",
           "kind": "Slayer master",
-          "detail": "Slayer master with access to Kuradal's Dungeon",
+          "detail": "Slayer master, Slayer points, Kuradal's Dungeon, and ferocious ring access.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
@@ -6641,8 +6496,8 @@
         },
         {
           "name": "Muspah",
-          "kind": "Freneskae Summoning / combat",
-          "detail": "Muspah on Freneskae (The Pit) via World Gate — Summoning ingredient and combat farm.",
+          "kind": "Freneskae combat",
+          "detail": "Freneskae creatures that drop muspah spines, dragon wards, and dragon knives.",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Muspah",
@@ -9747,6 +9602,42 @@
             "title": "Dragon harpoon",
             "verifiedAt": "2026-07-28"
           }
+        },
+        {
+          "name": "Magic axe hut chest",
+          "kind": "Thieving",
+          "detail": "Deep Wilderness chest with muddy keys and rune hatchets.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Chest_(magic_axe_hut)",
+            "title": "Chest (magic axe hut)",
+            "verifiedAt": "2026-07-26"
+          },
+          "confidence": "confirmed_wiki"
+        },
+        {
+          "name": "Bandit Camp shops",
+          "kind": "Shops",
+          "detail": "Skulled-only Wilderness camp with Bandit Duty Free and Tony's Pizza Bases.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Bandit_Duty_Free",
+            "title": "Bandit Duty Free",
+            "verifiedAt": "2026-07-26"
+          },
+          "confidence": "confirmed_wiki"
+        },
+        {
+          "name": "Infernal Puzzle Box",
+          "kind": "Combat unlock",
+          "detail": "Upgradeable box with Wilderness and Infernus effects, adrenaline retention, bloodwood bonuses, and tier-6 tool-belt storage.",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Infernal_Puzzle_Box",
+            "title": "Infernal Puzzle Box",
+            "verifiedAt": "2026-07-26"
+          },
+          "confidence": "confirmed_wiki"
         }
       ],
       "upgrades": [
@@ -10038,7 +9929,7 @@
         {
           "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
           "category": "cross-region Seren prayer and porter sustain stack",
-          "detail": "Stack combo above. GOTE alone is not zero-drain; Dark Facet is the permanent upgrade; ritual shard is the rechargeable sustain piece when facet is missing or for Light Form. Prefer existing GOTE porter-chain row for energy geography; this row is the prayer-sustain edge · Hard Tirannwn for Seren prayers + ritual-shard geography + GOTE value pair. Hard Forinthry for dark onyx core self-source. Invention manufacture is global (not a · Region combo (all required): tirannwn + forinthry · Unlocks: Base GOTE: halves Light Form / Superheat Form / Chronicle Attraction drain; 500 porter charges; Seren spirit RDT bank deposits while gathering; Max Guild skill-portal teleports when attuned, Dark Facet of Grace imbued: Seren skill-prayer drain reduction 50% → 100% (zero drain while GOTE worn); porter capacity 500 → 2,000, Ancient elven ritual shard: activate to restore 37.5% of max prayer points over 30s (5-minute cooldown, infinite uses), Wiki sustain pattern: GOTE + ritual shard fully supports Superheat Form and Chronicle Attraction; Light Form still needs renewals/prayer gear or Dark Facet zero-drain, With Dark Facet, Seren skill prayers cost zero prayer while GOTE is worn — ritual shard becomes optional combat/AFK buffer rather than required sustain · Region pressure: Tirannwn: Seren prayer unlock (The Light Within), Max Guild portal attunement, crystal tool seeds / Seren components pressure, Lost Grove + Solak ritual-shard self-source, GOTE Seren-spirit gathering value., Forinthry: dark onyx core is hard Wilderness / Forinthry geography — without it ironmen cannot self-craft Dark Facet of Grace., Porter energy tiers remain multi-colony pressure (Desert luminous VI, Morytania radiant V, Kandarin vibrant IV, Tirannwn incandescent VII) — optional unless modelling full self-charge",
+          "detail": "Stack combo above. GOTE alone is not zero-drain; Dark Facet is the permanent upgrade; ritual shard is the rechargeable sustain piece when facet is missing or for Light Form. Prefer existing GOTE porter-chain row for energy geography; this row is the prayer-sustain edge · Hard Tirannwn for Seren prayers + ritual-shard geography + GOTE value pair. Hard Forinthry for dark onyx core self-source. Invention manufacture is global · Region combo (all required): tirannwn + forinthry · Unlocks: Base GOTE: halves Light Form / Superheat Form / Chronicle Attraction drain; 500 porter charges; Seren spirit RDT bank deposits while gathering; Max Guild skill-portal teleports when attuned, Dark Facet of Grace imbued: Seren skill-prayer drain reduction 50% → 100% (zero drain while GOTE worn); porter capacity 500 → 2,000, Ancient elven ritual shard: activate to restore 37.5% of max prayer points over 30s (5-minute cooldown, infinite uses), Wiki sustain pattern: GOTE + ritual shard fully supports Superheat Form and Chronicle Attraction; Light Form still needs renewals/prayer gear or Dark Facet zero-drain, With Dark Facet, Seren skill prayers cost zero prayer while GOTE is worn — ritual shard becomes optional combat/AFK buffer rather than required sustain · Region pressure: Tirannwn: Seren prayer unlock (The Light Within), Max Guild portal attunement, crystal tool seeds / Seren components pressure, Lost Grove + Solak ritual-shard self-source, GOTE Seren-spirit gathering value., Forinthry: dark onyx core is hard Wilderness / Forinthry geography — without it ironmen cannot self-craft Dark Facet of Grace., Porter energy tiers remain multi-colony pressure (Desert luminous VI, Morytania radiant V, Kandarin vibrant IV, Tirannwn incandescent VII) — optional unless modelling full self-charge",
           "requirements": [
             "Grace of the elves: 107 Invention alchemical onyx → 91 Crafting alchemical onyx necklace → 87 Magic Lvl-6 Enchant",
             "Dark Facet of Grace: imbue enchantment on GOTE (permanent account upgrade for the player who imbues)",
@@ -10100,39 +9991,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): morytania + forinthry",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
-          "category": "cross-region Herblore efficiency stack",
-          "detail": "Fills audit combo:scroll-cleansing-herb-bag-factory. Individual pieces already exist as single-region rows; this stack links them for no-trade Herblore planning · Surface the three hard regions when scoring optimized no-trade Herblore. Tirannwn is combination-potion pressure, not a cleansing/bag hard gate · Region combo (all required): forinthry + anachronia + asgarnia · Effects: Scroll: permanent 12.5% faster next mix chance and 10% secondary save, Herb bag: large grimy-herb inventory container (50 base / 100 upgraded per type), Botanist + factory outfits: Herblore XP and 4-dose production QoL · Region pressure: Forinthry: Daemonheim scroll of cleansing., Anachronia: Herby Werby herb bag., Asgarnia: Flash Powder Factory / Taverley outfit infrastructure",
-          "requirements": [
-            "Scroll of cleansing: 49 Herblore, 49 Dungeoneering, 20,000 Daemonheim tokens",
-            "Herb bag / upgrade: Herby Werby spirit points on Anachronia",
-            "Botanist's outfit and Factory outfit routes via Flash Powder Factory / Taverley (Asgarnia)",
-            "Optional crystal flasks / Meilyr combination infrastructure (Tirannwn) for combination potions"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Scroll_of_cleansing",
-            "title": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "forinthry",
-          "regionHints": [
-            "forinthry",
-            "anachronia",
-            "asgarnia",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "forinthry",
-            "anachronia",
-            "asgarnia"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): forinthry + anachronia + asgarnia",
           "isRegionCombo": true
         },
         {
@@ -12660,14 +12518,14 @@
           }
         },
         {
-          "name": "Sumona (Pollnivneach Slayer Master)",
-          "kind": "regional Slayer master hub",
-          "detail": "Mid-hard master bridge when combat/Slayer is too low for Duradel. NPC Contact (Lunar Diplomacy) and ring of slaying / desert amulet / Pollnivneach teleports are logistics, not region gates",
+          "name": "Sumona",
+          "kind": "Slayer master",
+          "detail": "Slayer master in Pollnivneach.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Sumona",
-            "title": "Sumona (Pollnivneach Slayer Master)",
+            "title": "Sumona",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -13850,13 +13708,13 @@
         },
         {
           "name": "Ectofuntus",
-          "kind": "Prayer training infrastructure",
-          "detail": "Core early/mid ironman Prayer path and permanent ecto-token farm. First age outfit purchases live. Powder of pulverising (Desert whirligig powders) can grind a full inventory of one bone type at once for 30 minutes; that powder is Desert-sourced, not Morytania. First age outfit X",
+          "kind": "Prayer",
+          "detail": "Four-times Prayer XP from bonemeal or ashes and slime, plus ecto-tokens and the First age outfit shop.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
             "url": "https://runescape.wiki/w/Ectofuntus",
-            "title": "Ectofuntus Prayer worship",
+            "title": "Ectofuntus",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -13873,14 +13731,14 @@
           }
         },
         {
-          "name": "Canifis",
-          "kind": "regional mid-tier Slayer master hub",
-          "detail": "Early members point ladder after Jacquelyn/Vannaka. Canifis lodestone / fairy CKS / Kharyrll POH portal are logistics",
+          "name": "Canifis mushroom patch",
+          "kind": "Farming",
+          "detail": "Mushroom patch west of Canifis. Morytania medium prevents disease; elite doubles the yield.",
           "confidence": "confirmed_wiki",
           "source": {
             "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Mazchna",
-            "title": "Mazchna / Achtryn (Canifis Slayer Masters)",
+            "url": "https://runescape.wiki/w/Mushroom_patch",
+            "title": "Mushroom patch",
             "verifiedAt": "2026-07-26"
           }
         },
@@ -13894,6 +13752,18 @@
             "url": "https://runescape.wiki/w/Slayer_Tower",
             "title": "Slayer Tower early floors",
             "verifiedAt": "2026-07-27"
+          }
+        },
+        {
+          "name": "Port Phasmatys farming patches",
+          "kind": "Farming",
+          "detail": "Two allotment patches, one flower patch, and one herb patch west of Port Phasmatys.",
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Farming_patch",
+            "title": "Farming patch",
+            "verifiedAt": "2026-07-26"
           }
         }
       ],
@@ -13974,36 +13844,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): anachronia + forinthry + tirannwn + morytania",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Cooking dual-brewery network (Keldagrim + Phasmatys)",
-          "category": "cross-region Cooking production stack",
-          "detail": "Requires both Fremennik and Morytania for full network. Single-site still viable but half the queue capacity · Region combo (all required): fremennik + morytania · Unlocks: Parallel vat queues — run both breweries so one matures while the other is filled · Region pressure: Fremennik + Morytania are both hard-required for true dual-vat coverage., not brewing",
-          "requirements": [
-            "Both brewery site unlocks (Keldagrim Laughing Miner + Port Phasmatys)",
-            "Yeast supply and empty pots at each site",
-            "Cooking levels for target ale/cider recipes"
-          ],
-          "confidence": "confirmed_wiki_cross_region_stack",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Brewing",
-            "title": "Cooking dual-brewery network (Keldagrim + Phasmatys)",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "morytania",
-          "regionHints": [
-            "fremennik",
-            "morytania",
-            "misthalin"
-          ],
-          "requiredRegions": [
-            "fremennik",
-            "morytania"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): fremennik + morytania",
           "isRegionCombo": true
         },
         {
@@ -15632,7 +15472,7 @@
         {
           "name": "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain",
           "category": "cross-region Seren prayer and porter sustain stack",
-          "detail": "Stack combo above. GOTE alone is not zero-drain; Dark Facet is the permanent upgrade; ritual shard is the rechargeable sustain piece when facet is missing or for Light Form. Prefer existing GOTE porter-chain row for energy geography; this row is the prayer-sustain edge · Hard Tirannwn for Seren prayers + ritual-shard geography + GOTE value pair. Hard Forinthry for dark onyx core self-source. Invention manufacture is global (not a · Region combo (all required): tirannwn + forinthry · Unlocks: Base GOTE: halves Light Form / Superheat Form / Chronicle Attraction drain; 500 porter charges; Seren spirit RDT bank deposits while gathering; Max Guild skill-portal teleports when attuned, Dark Facet of Grace imbued: Seren skill-prayer drain reduction 50% → 100% (zero drain while GOTE worn); porter capacity 500 → 2,000, Ancient elven ritual shard: activate to restore 37.5% of max prayer points over 30s (5-minute cooldown, infinite uses), Wiki sustain pattern: GOTE + ritual shard fully supports Superheat Form and Chronicle Attraction; Light Form still needs renewals/prayer gear or Dark Facet zero-drain, With Dark Facet, Seren skill prayers cost zero prayer while GOTE is worn — ritual shard becomes optional combat/AFK buffer rather than required sustain · Region pressure: Tirannwn: Seren prayer unlock (The Light Within), Max Guild portal attunement, crystal tool seeds / Seren components pressure, Lost Grove + Solak ritual-shard self-source, GOTE Seren-spirit gathering value., Forinthry: dark onyx core is hard Wilderness / Forinthry geography — without it ironmen cannot self-craft Dark Facet of Grace., Porter energy tiers remain multi-colony pressure (Desert luminous VI, Morytania radiant V, Kandarin vibrant IV, Tirannwn incandescent VII) — optional unless modelling full self-charge",
+          "detail": "Stack combo above. GOTE alone is not zero-drain; Dark Facet is the permanent upgrade; ritual shard is the rechargeable sustain piece when facet is missing or for Light Form. Prefer existing GOTE porter-chain row for energy geography; this row is the prayer-sustain edge · Hard Tirannwn for Seren prayers + ritual-shard geography + GOTE value pair. Hard Forinthry for dark onyx core self-source. Invention manufacture is global · Region combo (all required): tirannwn + forinthry · Unlocks: Base GOTE: halves Light Form / Superheat Form / Chronicle Attraction drain; 500 porter charges; Seren spirit RDT bank deposits while gathering; Max Guild skill-portal teleports when attuned, Dark Facet of Grace imbued: Seren skill-prayer drain reduction 50% → 100% (zero drain while GOTE worn); porter capacity 500 → 2,000, Ancient elven ritual shard: activate to restore 37.5% of max prayer points over 30s (5-minute cooldown, infinite uses), Wiki sustain pattern: GOTE + ritual shard fully supports Superheat Form and Chronicle Attraction; Light Form still needs renewals/prayer gear or Dark Facet zero-drain, With Dark Facet, Seren skill prayers cost zero prayer while GOTE is worn — ritual shard becomes optional combat/AFK buffer rather than required sustain · Region pressure: Tirannwn: Seren prayer unlock (The Light Within), Max Guild portal attunement, crystal tool seeds / Seren components pressure, Lost Grove + Solak ritual-shard self-source, GOTE Seren-spirit gathering value., Forinthry: dark onyx core is hard Wilderness / Forinthry geography — without it ironmen cannot self-craft Dark Facet of Grace., Porter energy tiers remain multi-colony pressure (Desert luminous VI, Morytania radiant V, Kandarin vibrant IV, Tirannwn incandescent VII) — optional unless modelling full self-charge",
           "requirements": [
             "Grace of the elves: 107 Invention alchemical onyx → 91 Crafting alchemical onyx necklace → 87 Magic Lvl-6 Enchant",
             "Dark Facet of Grace: imbue enchantment on GOTE (permanent account upgrade for the player who imbues)",
@@ -17972,39 +17812,6 @@
           "isRegionCombo": true
         },
         {
-          "name": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
-          "category": "cross-region Herblore efficiency stack",
-          "detail": "Fills audit combo:scroll-cleansing-herb-bag-factory. Individual pieces already exist as single-region rows; this stack links them for no-trade Herblore planning · Surface the three hard regions when scoring optimized no-trade Herblore. Tirannwn is combination-potion pressure, not a cleansing/bag hard gate · Region combo (all required): forinthry + anachronia + asgarnia · Effects: Scroll: permanent 12.5% faster next mix chance and 10% secondary save, Herb bag: large grimy-herb inventory container (50 base / 100 upgraded per type), Botanist + factory outfits: Herblore XP and 4-dose production QoL · Region pressure: Forinthry: Daemonheim scroll of cleansing., Anachronia: Herby Werby herb bag., Asgarnia: Flash Powder Factory / Taverley outfit infrastructure",
-          "requirements": [
-            "Scroll of cleansing: 49 Herblore, 49 Dungeoneering, 20,000 Daemonheim tokens",
-            "Herb bag / upgrade: Herby Werby spirit points on Anachronia",
-            "Botanist's outfit and Factory outfit routes via Flash Powder Factory / Taverley (Asgarnia)",
-            "Optional crystal flasks / Meilyr combination infrastructure (Tirannwn) for combination potions"
-          ],
-          "confidence": "confirmed_wiki_cross_region_chain",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Scroll_of_cleansing",
-            "title": "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "anachronia",
-          "regionHints": [
-            "forinthry",
-            "anachronia",
-            "asgarnia",
-            "tirannwn"
-          ],
-          "requiredRegions": [
-            "forinthry",
-            "anachronia",
-            "asgarnia"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): forinthry + anachronia + asgarnia",
-          "isRegionCombo": true
-        },
-        {
           "name": "Skeka's hypnowand",
           "category": "Hunter skilling off-hand",
           "detail": "Requires the aged journal from Daemonheim Dig Site. Pieces drop from Anachronia Big Game Hunter, Rex Matriarchs, vile blooms, and the Agility Course · Region combo (all required): forinthry + anachronia",
@@ -18031,36 +17838,6 @@
           ],
           "regionRequirementType": "all_required",
           "comboLabel": "Region combo (all required): forinthry + anachronia",
-          "isRegionCombo": true
-        },
-        {
-          "name": "Toolbelt attach: Seedicide",
-          "category": "permanent Slayer Rewards toolbelt unlock",
-          "detail": "Attach is the missing permanent; acquisition remains multi-route (Asgarnia renown, Kandarin/Anachronia beans, Thaler). Optional 25,000-bean collector upgrade is separate · Region combo (all required): asgarnia + kandarin + anachronia · Effects: Seedicide functions from the tool belt, Configured seed drops convert to double plant XP when Farming level can plant them",
-          "requirements": [
-            "Seedicide owned (NOT Daemonheim — seedicide-not-daemonheim / drop-cleaner:seedicide routes)",
-            "500 Slayer points: Learn how to attach seedicide to your tool belt"
-          ],
-          "confidence": "confirmed_wiki",
-          "source": {
-            "source": "runescape-wiki",
-            "url": "https://runescape.wiki/w/Seedicide",
-            "title": "Toolbelt attach: Seedicide",
-            "verifiedAt": "2026-07-26"
-          },
-          "regionId": "anachronia",
-          "regionHints": [
-            "asgarnia",
-            "kandarin",
-            "anachronia"
-          ],
-          "requiredRegions": [
-            "asgarnia",
-            "kandarin",
-            "anachronia"
-          ],
-          "regionRequirementType": "all_required",
-          "comboLabel": "Region combo (all required): asgarnia + kandarin + anachronia",
           "isRegionCombo": true
         },
         {

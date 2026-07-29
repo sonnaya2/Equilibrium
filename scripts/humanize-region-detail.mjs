@@ -391,6 +391,7 @@ function humanizeDetail(detail, requiredRegions = []) {
     .replace(/·\s*,/g, " · ")
     .replace(/,\s*·/g, " · ")
     .replace(/\s*[—–]\s*·/g, " ·")
+    .replace(/\s*\(not a(?=\s*·|$)/gi, "")
     .replace(/^\s*·\s*|\s*·\s*$/g, "")
     .trim();
 
@@ -445,7 +446,11 @@ function humanizeRequirement(text) {
   return s || text;
 }
 
-const ASGARNIA_CONTENT_DROP = new Set(["Player-owned port", "Rimmington Construction supply loop"]);
+const ASGARNIA_CONTENT_DROP = new Set([
+  "God Wars Dungeon 1",
+  "Player-owned port",
+  "Rimmington Construction supply loop",
+]);
 
 const ASGARNIA_UPGRADE_DROP = new Set([
   "Bandos equipment (GWD1 melee power ladder)",
@@ -570,6 +575,7 @@ const FREMENNIK_UPGRADE_DROP = new Set([
   "Bake Pie (Lunar)",
   "Blast Furnace (Keldagrim)",
   "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+  "Citharede Abbey illuminated god books",
   "Dagannoth Kings",
   "Dagannoth Kings uniques",
   "Elite Fremennik combat rewards",
@@ -606,6 +612,63 @@ const FREMENNIK_UPGRADE_DROP = new Set([
   "Ungael ritual site pressure",
 ]);
 
+const REMOVED_QUEUE_NAMES = new Set([
+  ...ASGARNIA_CONTENT_DROP,
+  ...ASGARNIA_UPGRADE_DROP,
+  ...KANDARIN_CONTENT_DROP,
+  ...KANDARIN_UPGRADE_DROP,
+  ...FREMENNIK_CONTENT_DROP,
+  ...FREMENNIK_UPGRADE_DROP,
+  "Anachronia Agility codex-page progression",
+  "Anachronia Agility Course section ladder",
+  "Artificer's measure component region map",
+  "Barrows chest diary skilling utility",
+  "Barrows defenders / shields progression",
+  "Blisterwood and Sunspear weapon chain",
+  "Burgh de Rott skilling hub",
+  "Canifis farming and Slayer Tower hub",
+  "Canifis–Mort'ton trapdoor shortcut",
+  "Columbarium ring",
+  "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+  "Darkmeyer Thieving and Ring of Vitur",
+  "Dundee's Crocodile Upgrades",
+  "Ectophial",
+  "Ectofuntus Pool of Slime (slime pit)",
+  "Ectofuntus Prayer worship",
+  "Essential oils (base-camp spa tier 3)",
+  "Fairy ring network (Zanaris hub)",
+  "Full slayer helmet and point upgrades (reinforced through corrupted)",
+  "Games necklace Burgh de Rott teleport",
+  "Gemstone cavern (Shilo underground)",
+  "Ghast familiar (Temple Trekking)",
+  "Ghostly essence (attuned ectoplasmator supply)",
+  "Hard Morytania Barrows rewards",
+  "Hardwood Grove teaks and mahoganies",
+  "Hunter Lodge (base-camp BGH permanent)",
+  "Mazchna / Achtryn (Canifis Slayer Masters)",
+  "Modified first age tiara",
+  "Mort Myre fungi Bloom harvest",
+  "Musa Point fishing dock and Stiles",
+  "Nature Grotto altar of nature",
+  "Orthen Dig Site full mastery (monolith + recipes)",
+  "Port Phasmatys brewery",
+  "Port Phasmatys skilling hub",
+  "Quick traps (BGH permanent trap speed)",
+  "Raksha ability upgrades",
+  "Raksha boot upgrades",
+  "Raksha, the Shadow Colossus",
+  "Ring of imbuing",
+  "Ring of Vitur",
+  "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+  "Shilo Village underground gem mine",
+  "Skeka hypnowand Anachronia piece sources",
+  "Sunken Pyramid / player-owned Slayer dungeon",
+  "Tai Bwo Wannai Cleanup and trading sticks",
+  "Terrasaur maul components",
+  "Time altar / 110 Runecrafting",
+  "Toolbelt attach: Seedicide",
+]);
+
 function applyRegionCorrections(catalog) {
   const anachronia = catalog.regions?.find((region) => region.id === "anachronia");
   const asgarnia = catalog.regions?.find((region) => region.id === "asgarnia");
@@ -639,6 +702,14 @@ function applyRegionCorrections(catalog) {
     title,
     verifiedAt,
   });
+  const removedUpgradeNames = new Set([
+    "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+    "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+    "Toolbelt attach: Seedicide",
+  ]);
+  for (const region of catalog.regions) {
+    region.upgrades = region.upgrades.filter((row) => !removedUpgradeNames.has(row.name));
+  }
   for (const region of [anachronia, kandarin]) {
     region.upgrades = region.upgrades.filter(
       (row) => row.name !== "Bait and Switch + Always Adze dual monolith skilling paths",
@@ -798,6 +869,34 @@ function applyRegionCorrections(catalog) {
     sumona.source.title = "Sumona";
   }
 
+  const forinthryMajors = [
+    {
+      name: "Magic axe hut chest",
+      kind: "Thieving",
+      detail: "Deep Wilderness chest with muddy keys and rune hatchets.",
+      source: wikiSource("Chest (magic axe hut)", "Chest_(magic_axe_hut)"),
+    },
+    {
+      name: "Bandit Camp shops",
+      kind: "Shops",
+      detail: "Skulled-only Wilderness camp with Bandit Duty Free and Tony's Pizza Bases.",
+      source: wikiSource("Bandit Duty Free", "Bandit_Duty_Free"),
+    },
+    {
+      name: "Infernal Puzzle Box",
+      kind: "Combat unlock",
+      detail:
+        "Upgradeable box with Wilderness and Infernus effects, adrenaline retention, bloodwood bonuses, and tier-6 tool-belt storage.",
+      source: wikiSource("Infernal Puzzle Box", "Infernal_Puzzle_Box"),
+    },
+  ];
+  for (const major of forinthryMajors) {
+    const current = forinthry.content.find((row) => row.name === major.name);
+    const next = { ...major, confidence: "confirmed_wiki" };
+    if (current) Object.assign(current, next);
+    else forinthry.content.push(next);
+  }
+
   karamja.content = karamja.content.filter(
     (row) =>
       ![
@@ -937,6 +1036,13 @@ function applyRegionCorrections(catalog) {
   };
   if (phasmatysPatches) Object.assign(phasmatysPatches, phasmatysPatchData);
   else morytania.content.push(phasmatysPatchData);
+  const ectofuntus = morytania.content.find((row) => row.name === "Ectofuntus");
+  if (ectofuntus) {
+    ectofuntus.kind = "Prayer";
+    ectofuntus.detail =
+      "Four-times Prayer XP from bonemeal or ashes and slime, plus ecto-tokens and the First age outfit shop.";
+    ectofuntus.source = wikiSource("Ectofuntus", "Ectofuntus");
+  }
   morytania.upgrades = morytania.upgrades.filter(
     (row) =>
       ![
@@ -1005,6 +1111,13 @@ function applyRegionCorrections(catalog) {
     nex.detail = "God Wars Dungeon boss and source of Torva, Pernix, Virtus, and the Zaryte bow.";
     nex.confidence = "confirmed_wiki";
   }
+
+  const queenBlackDragon = asgarnia.content.find((row) => row.name === "Queen Black Dragon");
+  if (queenBlackDragon) {
+    queenBlackDragon.kind = "Boss";
+    queenBlackDragon.detail = "Drops the Dragon kiteshield.";
+  }
+  asgarnia.upgrades = asgarnia.upgrades.filter((row) => row.name !== "Queen Black Dragon");
 
   const majors = [
     {
@@ -1213,7 +1326,9 @@ function applyRegionCorrections(catalog) {
 
   kandarin.content = kandarin.content.filter((row) => !KANDARIN_CONTENT_DROP.has(row.name));
 
-  const kuradal = kandarin.content.find((row) => row.name.startsWith("Kuradal ("));
+  const kuradal = kandarin.content.find(
+    (row) => row.name === "Kuradal" || row.name.startsWith("Kuradal ("),
+  );
   if (kuradal) {
     kuradal.name = "Kuradal";
     kuradal.kind = "Slayer master";
@@ -1438,6 +1553,73 @@ function applyRegionCorrections(catalog) {
 
 const skPath = "data/research/regional-skilling-unlocks.json";
 const sk = read(skPath);
+const removedRegionalIds = new Set([
+  "cross-region:artificers-measure-components",
+  "cross-region:cooking-brewery-network",
+  "cross-region:herblore-efficiency-stack",
+  "karamja:musa-point-fishing-stiles",
+  "karamja:shilo-gem-mine",
+  "morytania:canifis-farming-and-slayer-hub",
+  "morytania:mazchna-slayer-master",
+  "multi-region:toolbelt-seedicide-attach",
+]);
+for (const row of sk.records || []) {
+  if (REMOVED_QUEUE_NAMES.has(row.name) && row.id) removedRegionalIds.add(row.id);
+}
+sk.records = (sk.records || []).filter(
+  (row) => !removedRegionalIds.has(row.id) && !REMOVED_QUEUE_NAMES.has(row.name),
+);
+const gemstoneRegional = sk.records.find((row) => row.id === "karamja:gemstone-cavern");
+if (gemstoneRegional) {
+  gemstoneRegional.name = "Shilo Village gem mine and Gemstone cavern";
+  gemstoneRegional.category = "Mining and Slayer";
+  gemstoneRegional.detail =
+    "Gem rocks in the Shilo Village mine and the underground Gemstone cavern reached with Karamja gloves 3";
+  gemstoneRegional.source = {
+    source: "runescape-wiki",
+    url: "https://runescape.wiki/w/Shilo_Village_mine",
+    title: "Shilo Village gem mine and Gemstone cavern",
+    verifiedAt: sk.snapshotDate,
+  };
+}
+const canifisRegional = {
+  id: "morytania:canifis-mushroom-patch",
+  name: "Canifis mushroom patch",
+  recordType: "activity",
+  regionHints: ["morytania"],
+  requiredRegions: [],
+  regionRequirementType: "single",
+  comboLabel: "",
+  isRegionCombo: false,
+  category: "Farming",
+  detail:
+    "Mushroom patch west of Canifis. Morytania medium prevents disease; elite doubles the yield",
+  requirements: [],
+  confidence: "confirmed_wiki",
+  source: {
+    source: "runescape-wiki",
+    url: "https://runescape.wiki/w/Mushroom_patch",
+    title: "Canifis mushroom patch",
+    verifiedAt: sk.snapshotDate,
+  },
+  sourceFile: "scripts/humanize-region-detail.mjs",
+};
+const currentCanifisRegional = sk.records.find((row) => row.id === canifisRegional.id);
+if (currentCanifisRegional) Object.assign(currentCanifisRegional, canifisRegional);
+else sk.records.push(canifisRegional);
+const phasmatysRegional = sk.records.find((row) => row.id === "morytania:phasmatys-farming-patches");
+if (phasmatysRegional) {
+  phasmatysRegional.detail =
+    "Two allotment patches, one flower patch, and one herb patch west of Port Phasmatys";
+  phasmatysRegional.source = {
+    source: "runescape-wiki",
+    url: "https://runescape.wiki/w/Farming_patch",
+    title: "Port Phasmatys farming patches",
+    verifiedAt: sk.snapshotDate,
+  };
+}
+const sumonaRegional = sk.records.find((row) => row.id === "desert:sumona-slayer-master");
+if (sumonaRegional) sumonaRegional.detail = "Slayer master in Pollnivneach";
 let skChanged = 0;
 for (const row of sk.records || []) {
   let changed = false;
@@ -1465,6 +1647,16 @@ for (const row of sk.records || []) {
   if (changed) skChanged++;
 }
 write(skPath, sk);
+
+const combatPath = "data/research/regional-combat-unlocks.json";
+const combat = read(combatPath);
+for (const row of combat.records || []) {
+  if (REMOVED_QUEUE_NAMES.has(row.name) && row.id) removedRegionalIds.add(row.id);
+}
+combat.records = (combat.records || []).filter(
+  (row) => !removedRegionalIds.has(row.id) && !REMOVED_QUEUE_NAMES.has(row.name),
+);
+write(combatPath, combat);
 
 const catPath = "data/research/catalog.json";
 const cat = read(catPath);
@@ -1502,6 +1694,62 @@ write(catPath, cat);
 
 const progPath = "data/reference/progression-unlocks.json";
 const prog = read(progPath);
+for (const rows of Object.values(prog)) {
+  if (!Array.isArray(rows)) continue;
+  for (const row of rows) {
+    if (REMOVED_QUEUE_NAMES.has(row.name) && row.id) removedRegionalIds.add(row.id);
+  }
+}
+for (const [section, rows] of Object.entries(prog)) {
+  if (Array.isArray(rows)) {
+    prog[section] = rows.filter(
+      (row) => !removedRegionalIds.has(row.id) && !REMOVED_QUEUE_NAMES.has(row.name),
+    );
+  }
+}
+const gemstoneProgression = prog.activity_unlocks.find((row) => row.id === "karamja:gemstone-cavern");
+if (gemstoneProgression) {
+  gemstoneProgression.name = "Shilo Village gem mine and Gemstone cavern";
+  gemstoneProgression.category = "Mining and Slayer";
+  gemstoneProgression.notes =
+    "The Shilo Village mine supplies gem rocks; Karamja gloves 3 open the underground Gemstone cavern and teleport to the mine";
+  gemstoneProgression.source_urls = [
+    "https://runescape.wiki/w/Shilo_Village_mine",
+    "https://runescape.wiki/w/Gemstone_cavern",
+  ];
+}
+const canifisProgression = {
+  id: "morytania:canifis-mushroom-patch",
+  name: "Canifis mushroom patch",
+  category: "Farming",
+  region_hint: "morytania",
+  unlocks: ["Mushroom patch west of Canifis"],
+  notes: "The Morytania medium achievements prevent disease; elite achievements double yield",
+  source_urls: ["https://runescape.wiki/w/Mushroom_patch"],
+  confidence: "confirmed_wiki",
+};
+const currentCanifisProgression = prog.activity_unlocks.find(
+  (row) => row.id === canifisProgression.id,
+);
+if (currentCanifisProgression) Object.assign(currentCanifisProgression, canifisProgression);
+else prog.activity_unlocks.push(canifisProgression);
+const sumonaProgression = prog.activity_unlocks.find((row) => row.id === "desert:sumona-slayer-master");
+if (sumonaProgression) sumonaProgression.notes = "Slayer master in Pollnivneach";
+for (const rows of Object.values(prog)) {
+  if (!Array.isArray(rows)) continue;
+  for (const row of rows) {
+    if (Array.isArray(row.links_existing_ids)) {
+      row.links_existing_ids = row.links_existing_ids.filter((id) => !removedRegionalIds.has(id));
+    }
+    if (Array.isArray(row.effects)) {
+      row.effects = row.effects.map((effect) =>
+        effect === "Works with toolbelt seedicide after multi-region:toolbelt-seedicide-attach"
+          ? "Works with toolbelt seedicide"
+          : effect,
+      );
+    }
+  }
+}
 let progChanged = 0;
 for (const section of [
   "quest_unlocks",

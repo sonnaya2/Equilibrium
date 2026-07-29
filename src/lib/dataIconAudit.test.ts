@@ -175,12 +175,42 @@ describe("data icon audit", () => {
     };
     writeFileSync("tmp-data-icon-audit.json", `${JSON.stringify(report, null, 2)}\n`);
     expect(bossIconPath("Kerapac")).toBeTruthy();
-    expect(activityIconPath("Prifddinas") || true).toBeTruthy();
+    expect(activityIconPath("Prifddinas")).toBeTruthy();
     // eslint-disable-next-line no-console
     console.log("AUDIT", report.counts);
     // eslint-disable-next-line no-console
     console.log("garbage sample", report.garbage.slice(0, 15));
     // eslint-disable-next-line no-console
     console.log("blank sample", report.blank.slice(0, 15));
+  });
+
+  it("publishes every curated queue icon", () => {
+    const rows = [
+      ["Abomination", "Boss"],
+      ["Citharede Abbey", "Prayer"],
+      ["Constructor's outfit", "Construction XP outfit"],
+      ["Corrupted creatures & soul devourers", "Slayer dungeon"],
+      ["Fight Kiln", "Combat"],
+      ["Hardwood Grove", "Woodcutting"],
+      ["Het's Oasis", "Skilling hub"],
+      ["Karamja overgrown idols", "Woodcutting"],
+      ["Karambwan vessel fishing", "Fishing"],
+      ["Kharid-et Dig Site", "Archaeology"],
+      ["Kuradal", "Slayer master"],
+      ["Legiones", "Bosses"],
+      ["Liberation of Mazcab", "Raid"],
+      ["Mage Training Arena", "Magic"],
+      ["Mazcab Emergency Merchants", "Shops"],
+      ["Muspah", "Freneskae combat"],
+      ["Queen Black Dragon", "Boss"],
+      ["Shilo Village gem mine and Gemstone cavern", "Mining and Slayer"],
+      ["Tai Bwo Wannai Cleanup", "Woodcutting"],
+    ] as const;
+
+    for (const [name, kind] of rows) {
+      const path = upgradeIconPath(name) ?? dataEntityIconPath({ name, kind });
+      expect(path, `${name} has no icon`).toBeTruthy();
+      expect(publicExists(path), `${name} missing ${path}`).toBe(true);
+    }
   });
 });

@@ -17,81 +17,6 @@
   ],
   "records": [
     {
-      "id": "achievements:morytania-barrows",
-      "name": "Hard Morytania Barrows rewards",
-      "recordType": "account",
-      "category": "regional achievement combat passives",
-      "regionHints": [
-        "morytania"
-      ],
-      "requiredRegions": [
-        "morytania"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Rewards: Prayer drain is halved in Barrows, Barrows rune rewards are doubled, Barrows chest loot can be banked directly from the reward chest",
-      "requirements": [],
-      "confidence": "confirmed_current_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Morytania_achievements",
-        "title": "Hard Morytania Barrows rewards",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-2026-07-25.json"
-    },
-    {
-      "id": "achievements:seers-combat",
-      "name": "Seers' Village combat achievement rewards",
-      "recordType": "account",
-      "category": "regional achievement combat passives",
-      "regionHints": [
-        "kandarin"
-      ],
-      "requiredRegions": [
-        "kandarin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Rewards: Enhanced Excalibur healing progression, Elite tier doubles Enhanced Excalibur's healing duration, +2 percentage points to enchanted-bolt special-effect activation chance",
-      "requirements": [],
-      "confidence": "confirmed_current_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Enhanced_Excalibur",
-        "title": "Seers' Village combat achievement rewards",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-2026-07-25.json"
-    },
-    {
-      "id": "achievements:fremennik-combat",
-      "name": "Elite Fremennik combat rewards",
-      "recordType": "account",
-      "category": "regional achievement combat passives",
-      "regionHints": [
-        "fremennik"
-      ],
-      "requiredRegions": [
-        "fremennik"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Rewards: Dagannoth Kings drop noted bones, 10% more auto-attack damage and 5% more ability damage against the Dagannoth Kings",
-      "requirements": [],
-      "confidence": "confirmed_current_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Fremennik_achievements",
-        "title": "Elite Fremennik combat rewards",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-2026-07-25.json"
-    },
-    {
       "id": "achievements:tirannwn-combat",
       "name": "Tirannwn combat achievement rewards",
       "recordType": "account",
@@ -519,36 +444,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/War%27s_Blessing",
         "title": "War's Blessing combat mastery residual",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-accessories-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:essence-of-finality-amulet",
-      "name": "Essence of Finality amulet (neck BiS chain)",
-      "recordType": "equipment",
-      "category": "best-in-slot combat neckwear cross-region production",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Primary combat neck BiS residual. Pair with combat:reaper-necklace and combat:amulet-of-souls as intermediate wearables. Do not dual-claim Brooch of the Gods craft path as combat BiS (skilling pocket). Do not invent special-attack DPS rankings. · Hard Asgarnia for alchemical hydrix manufacture. Reaper-point hydrix supply remains Global shop framing under current wiki League badge. · Effects: +55.7 damage bonus in all styles and +7 Prayer (+58.6 damage with essence of finality ornament kit), Successful hits stack +0.1% hit chance (cap 30 stacks / +3%) for 54 seconds (Reaper passive), Soul Split has 50% chance to heal 25–50% more (average +18.75% Soul Split healing), Protection prayers and deflect curses gain +10 percentage points base damage reduction (to 60%) · Unlocks: Neck-slot BiS combining Reaper stacking hit-chance and Amulet of souls Soul Split / protect-prayer passives, Essence of Finality ability: permanently sacrifice a weapon to store its special attack for unlimited style-matched use without amulet charge loss, Alchemical hydrix dust recharge path (crush alchemical hydrix → 10 dust; each dust restores 50% amulet charge) · Region pressure: Asgarnia hard-owns Invention Guild manufacture of the alchemical hydrix and the alchemical hydrix blueprint discovery home used by ironman EoF planners., Incomplete hydrix is bought from Death's Store for 300 reaper points (wiki League badge Global — not a second elective region). Onyx completes incomplete hydrix into uncut hydrix., Crafting levels and Lvl-6 Enchant are global skill gates, not region picks.",
-      "requirements": [
-        "99 Crafting (boostable) to assemble the amulet",
-        "Alchemical hydrix (117 Invention, boostable from 100 with extreme invention — inventor's workbench Misc support tab after alchemical hydrix blueprint discovery)",
-        "Fully charged amulet of souls (hydrix amulet + Lvl-6 Enchant)",
-        "Fully charged reaper necklace (hydrix necklace + Lvl-6 Enchant)"
-      ],
-      "confidence": "confirmed_current_wiki_region_chain",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Essence_of_Finality_amulet",
-        "title": "Essence of Finality amulet (neck BiS chain)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-accessories-2026-07-26.json"
@@ -985,40 +880,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-armor-2026-07-26.json"
-    },
-    {
-      "id": "cross-region:trimmed-masterwork-melee",
-      "name": "Trimmed / custom-fit trimmed masterwork melee armour",
-      "recordType": "equipment",
-      "category": "best-in-slot melee power armour cross-region chain",
-      "regionHints": [
-        "asgarnia",
-        "morytania"
-      ],
-      "requiredRegions": [
-        "asgarnia",
-        "morytania"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): asgarnia + morytania",
-      "isRegionCombo": true,
-      "detail": "This is the defining multi-region melee armour chain: Morytania owns malevolent essence supply; Asgarnia owns both Torva/praesulic essence and the Artisans' Workshop custom-fit step. Base masterwork plates are pure Mining/Smithing ore chain (not region-hard), but the T92 trim is the hard BiS gate. · Treat Asgarnia + Morytania as both required for a full self-source T92 trim set. GE-traded essence does not remove the regional self-source pressure in ironman/League no-trade framing. · Region combo (all required): asgarnia + morytania · Effects: Tier-92 smithable melee power armour — permanent BiS body path for melee outside Daemonheim, No charges used inside Elite Dungeons or Sanctum of Rebirth, Unlike elite sirenic/tectonic, trimmed masterwork cannot be dyed · Unlocks: Masterwork melee armour (T90 power), Trimmed masterwork melee armour (T92 power), Custom-fit trimmed masterwork melee armour (200k charges), Optional custom-fit spiked variant",
-      "requirements": [
-        "99 Smithing and It Should Have Been Called Aetherium for masterwork / trim smithing",
-        "92 Defence to wear trimmed masterwork",
-        "Asgarnia: Artisans' Workshop / Imcando anvil smithing hub; Torva pieces break down into praesulic essence (melee) — Torva is Nex (GWD1) Asgarnia",
-        "Morytania: full malevolent set equivalent breaks down into malevolent essence — Malevolent energy/armour from Barrows: Rise of the Six",
-        "12× masterwork melee armour trim for a full trimmed set (each trim = elder rune bar + malevolent essence + praesulic essence (melee))",
-        "Custom-fit at Elof in Artisans' Workshop (Asgarnia) doubles charges; free custom-fit, independent of augmentation"
-      ],
-      "confidence": "confirmed_current_wiki_cross_region_chain",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Trimmed_masterwork_melee_armour",
-        "title": "Trimmed / custom-fit trimmed masterwork melee armour",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
     },
     {
       "id": "asgarnia:custom-fit-trimmed-masterwork",
@@ -1585,31 +1446,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
     },
     {
-      "id": "boss:gwd1",
-      "name": "God Wars Dungeon 1 (+ Nex)",
-      "recordType": "equipment",
-      "category": "regional boss BiS drop source",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Official Equilibrium Asgarnia example (GWD approach). 2026: GWD1 killcount persists after leaving, capped at 200. Ironman midgame armour BiS before t90/t95 sets. Nex is the same dungeon complex, not a separate region. · Hard Asgarnia. Northern Asgarnia boundary includes the GWD approach. · Effects: Bandos equipment (melee power armour ladder), Armadyl equipment (ranged power armour ladder), Subjugation equipment (magic power armour ladder), Godsword shard / hilt assembly (godswords), Nex: Torva / Pernix / Virtus (t80 power armour sets)",
-      "requirements": [],
-      "confidence": "confirmed_official_region_example_with_base_game_drop_mapping",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/God_Wars_Dungeon",
-        "title": "God Wars Dungeon 1 (+ Nex)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
-    },
-    {
       "id": "boss:nex-angel-of-death",
       "name": "Nex: Angel of Death",
       "recordType": "equipment",
@@ -1630,31 +1466,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Nex:_Angel_of_Death",
         "title": "Nex: Angel of Death",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
-    },
-    {
-      "id": "boss:vorago",
-      "name": "Vorago",
-      "recordType": "equipment",
-      "category": "regional boss BiS drop source",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Borehole near Falador — Asgarnia. Ironman seismic dual + tectonic armour energy farm. Hard-mode/team content; still the region-defining Magic mid-end BiS source before praesul/FSoA. · Hard Asgarnia. Do not file under Forinthry. · Effects: Seismic wand (t90 magic main-hand), Seismic singularity (t90 magic off-hand), Tectonic energy (t90 Magic power armour craft material)",
-      "requirements": [],
-      "confidence": "historical_catalyst_region_mapping_current_wiki_content",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Vorago",
-        "title": "Vorago",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
@@ -1735,31 +1546,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
     },
     {
-      "id": "boss:raksha",
-      "name": "Raksha, the Shadow Colossus",
-      "recordType": "equipment",
-      "category": "regional boss BiS drop source",
-      "regionHints": [
-        "anachronia"
-      ],
-      "requiredRegions": [
-        "anachronia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Anachronia island boss. Ironman ability codices (GRico/GChain/Divert) and boot tier upgrades are the BiS reason to pick Anachronia for combat — not only BGH skilling. · Hard Anachronia elective. · Effects: Greater Ricochet ability codex, Greater Chain ability codex, Divert ability codex, Shadow spike upgrades for Fleeting / Laceration / Blast diffusion boots to t90",
-      "requirements": [],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Raksha,_the_Shadow_Colossus",
-        "title": "Raksha, the Shadow Colossus",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
-    },
-    {
       "id": "boss:legiones",
       "name": "Legiones (Monastery of Ascension)",
       "recordType": "equipment",
@@ -1780,31 +1566,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Legiones",
         "title": "Legiones (Monastery of Ascension)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
-    },
-    {
-      "id": "boss:ed1-temple-of-aminishi",
-      "name": "Temple of Aminishi (ED1)",
-      "recordType": "equipment",
-      "category": "regional boss BiS drop source",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Temple of Aminishi (Arc ED1) is Asgarnia under Equilibrium Arc packaging. Port Sarim is the practical access package. Ancient scales, Masuta warspear, and Ports t85→88 upgrade kits densify here. · Hard Asgarnia (Arc / ED1). Optional Desert Ports pressure may be added later. · Effects: Ancient scales (elite sirenic upgrade residual), Masuta's warspear (t82 spear residual), Seasinger / Tetsu / Death lotus upgrade kits (t85→88 Ports weapon residual)",
-      "requirements": [],
-      "confidence": "confirmed_user_rule_arc_asgarnia_2026_07_26",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Temple_of_Aminishi",
-        "title": "Temple of Aminishi (ED1)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-boss-drops-2026-07-26.json"
@@ -2462,34 +2223,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
     },
     {
-      "id": "morytania:barrows-defenders",
-      "name": "Barrows defenders / shields progression",
-      "recordType": "equipment",
-      "category": "melee off-hand defender and shield progression",
-      "regionHints": [
-        "morytania"
-      ],
-      "requiredRegions": [
-        "morytania"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Region-defining defensive off-hand progression. Keep separate from desert khopesh/repriser lines. · Morytania owns classic Barrows defender geography. · Effects: Defenders remain core for resonance/reflect/provoke melee utility switches, Not pure DPS BiS but permanent combat infrastructure · Unlocks: Ancient defender line, Kalphite defender adjacency is desert-side — not this chain, Malevolent energy pathway overlap with RoTS",
-      "requirements": [
-        "Barrows brothers for base defender pieces",
-        "Barrows: Rise of the Six / related Morytania progression for higher-tier defender and shield upgrades"
-      ],
-      "confidence": "confirmed_wiki_content_region_inferred",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Ancient_defender",
-        "title": "Barrows defenders / shields progression",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
-    },
-    {
       "id": "desert:gwd2-anima-melee-ranged",
       "name": "GWD2 anima core and mid-tier melee/ranged weapons",
       "recordType": "equipment",
@@ -2874,63 +2607,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
     },
     {
-      "id": "asgarnia:torva-praesulic-melee",
-      "name": "Torva armour and praesulic essence (melee)",
-      "recordType": "equipment",
-      "category": "tier-80 melee armour and trim material",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Asgarnia half of the trimmed masterwork material lock. Praesul weapons/codex from Angel of Death are magic/prayer — separate from this melee essence path. · Asgarnia owns Nex/Torva self-source. · Effects: T80 power with LP/prayer bonuses, Required essence family for trimmed masterwork (with malevolent essence) · Unlocks: Torva full helm / platebody / platelegs / gloves / boots, Praesulic essence (melee)",
-      "requirements": [
-        "Nex (GWD1 Ancient Prison, Asgarnia)",
-        "80 Defence / Constitution for Torva",
-        "Break Torva into praesulic essence (melee) for masterwork trim"
-      ],
-      "confidence": "confirmed_current_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Torva_armour",
-        "title": "Torva armour and praesulic essence (melee)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:pernix-ranged",
-      "name": "Pernix armour",
-      "recordType": "equipment",
-      "category": "tier-80 residual ranged power armour",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Symmetric to Torva for ranged. Still region-defining when elite sirenic is out of reach. · Asgarnia acquisition. · Effects: Classic T80 ranged power set before sirenic / masterwork ranged · Unlocks: Pernix cowl / body / chaps / gloves / boots",
-      "requirements": [
-        "Nex (Asgarnia)",
-        "80 Defence / Ranged gates per piece"
-      ],
-      "confidence": "confirmed_current_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Pernix_armour",
-        "title": "Pernix armour",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
-    },
-    {
       "id": "forinthry:chaotic-melee-ranged",
       "name": "Chaotic melee and ranged weapons",
       "recordType": "equipment",
@@ -2955,39 +2631,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Chaotic_equipment",
         "title": "Chaotic melee and ranged weapons",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
-    },
-    {
-      "id": "cross-region:masterwork-spear-of-annihilation",
-      "name": "Masterwork Spear of Annihilation",
-      "recordType": "equipment",
-      "category": "tier-92 melee DoT spear",
-      "regionHints": [
-        "asgarnia",
-        "morytania",
-        "anachronia"
-      ],
-      "requiredRegions": [
-        "asgarnia",
-        "morytania"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): asgarnia + morytania",
-      "isRegionCombo": true,
-      "detail": "Hard material lock mirrors trimmed masterwork (Asgarnia + Morytania). Base spear archaeology path may add further region pressure — keep Anachronia as hint only. · Require Asgarnia + Morytania for trim/essence; treat base spear sources as separate archaeology densify. · Region combo (all required): asgarnia + morytania · Effects: Specialist bleed/DoT melee weapon rather than general ST BiS, Shares trim material pressure with trimmed masterwork armour · Unlocks: Masterwork Spear of Annihilation T92, +50% duration on melee damage-over-time abilities",
-      "requirements": [
-        "Spear of Annihilation base (Archaeology / dig-site material path — region pressure varies)",
-        "Masterwork melee armour trim (malevolent essence Morytania + praesulic essence Asgarnia)",
-        "Glorious bar + masterwork rivets + Imcando anvil smithing (Artisans' Workshop Asgarnia)",
-        "Anachronia region_hint only if using terrasaur / island material routes for related spear progression — not always mandatory"
-      ],
-      "confidence": "confirmed_wiki_cross_region_material_chain",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Masterwork_Spear_of_Annihilation",
-        "title": "Masterwork Spear of Annihilation",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-melee-ranged-2026-07-26.json"
@@ -3267,36 +2910,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
     },
     {
-      "id": "asgarnia:praesul-codex-style-prayers",
-      "name": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
-      "recordType": "equipment",
-      "category": "regional prayer unlock residual / Ancient Curses BiS",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Previously only nested under asgarnia:wand-of-the-praesul / boss:nex-angel-of-death. First-class so prayer planners see the four-codex requirement without opening weapon rows. Do not invent prayer DPS percentages here — prayer datasets own effect numbers. · Hard Asgarnia for codex drops. Misthalin for curses book + Ruination Selene only. · Effects: Upgrades the Turmoil / Anguish / Torment / Sorrow accuracy-damage prayer lines into the praesul endgame variants, One codex = one choice; full four-style coverage is a multi-drop AoD project · Unlocks: Malevolence (melee style curse), Desolation (ranged style curse), Affliction (magic style curse), Ruination (necromancy style curse via Selene) · Region pressure: Asgarnia hard-owns Nex Angel of Death praesul codex drops (wiki League badge Asgarnia)., Misthalin optional: Senntisten Ancient Curses book gate + Selene for Ruination teach — prayer book infrastructure, not the codex drop home.",
-      "requirements": [
-        "99 Prayer to use the unlocked curses",
-        "Praesul codex from Nex, Angel of Death (one curse per codex — four codices for full set)",
-        "Ancient Curses prayer book unlocked (Temple at Senntisten — Misthalin pressure, not second AoD gate)",
-        "Ruination: hand codex to Selene in City of Um at 95 Necromancy (Misthalin Um working map)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Praesul_codex",
-        "title": "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
-    },
-    {
       "id": "misthalin:divine-rage-prayer-codex",
       "name": "Divine Rage prayer codex",
       "recordType": "equipment",
@@ -3431,36 +3044,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Essence_of_finality_ornament_kit",
         "title": "Essence of Finality ornament kit (style bonus residual)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:combat-scrimshaw-pocket-package",
-      "name": "Combat scrimshaw pocket package (POP)",
-      "recordType": "equipment",
-      "category": "combat pocket residual / player-owned port",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Skilling already has asgarnia:scrimshaw-of-the-elements and skilling-scrimshaw-package — this row is the combat pocket checklist (cruelty/vampyrism/style lines) for combat catalog merge without re-emitting pure skilling scrimshaws. Sacrifice stays multi-region skilling (Mimic) and is not re-emitted. · Hard Asgarnia craft facility. Voyage destinations add soft pressure only. · Effects: Pocket-slot activated combat buffs (standard ~3 hours before dust; combine same type to extend up to 24 hours), Compete with scriptures / Erethdor grimoire / god books for the pocket slot — mid-to-high ironman pocket ladder when EGWD books are offline · Unlocks: Scrimshaw of cruelty (+5% Ranged damage when active), Scrimshaw of the elements (+5% Magic damage when active), Scrimshaw of vampyrism (melee lifesteal line), Scrimshaw of attack / magic / ranging (style accuracy-damage lines), Superior variants via Ports upgrade / DG token unlocks where applicable · Region pressure: Asgarnia hard for Port Sarim POP workshop / Scrimshaw Crafter under Equilibrium Arc taxonomy., Desert optional: Menaphos / desert:player-owned-port hub and voyage economy pressure., Forinthry optional: 250k DG tokens for some superior combat scrimshaw unlock lines (sacrifice/aggression/corruption).",
-      "requirements": [
-        "Player-owned port workshop Scrimshaw Crafter (Port Sarim — Asgarnia under Equilibrium Arc mapping)",
-        "Eastern combat scrimshaw scrolls from POP voyages (cruelty, elements, vampyrism, attack, magic, ranging, plus aggression/corruption/sacrifice siblings)",
-        "Ancient bones (10 per standard combat scrimshaw craft; higher for some superiors)",
-        "Fletching 85–95 depending on scrimshaw (92 for cruelty/elements/vampyrism lines)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Scrimshaw_of_cruelty",
-        "title": "Combat scrimshaw pocket package (POP)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-polish-armor-acc-2026-07-26.json"
@@ -3690,31 +3273,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Hermod,_the_Spirit_of_War",
         "title": "Hermod, the Spirit of War",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-polish-bosses-2026-07-26.json"
-    },
-    {
-      "id": "boss:dagannoth-kings",
-      "name": "Dagannoth Kings",
-      "recordType": "equipment",
-      "category": "regional boss BiS drop source",
-      "regionHints": [
-        "fremennik"
-      ],
-      "requiredRegions": [
-        "fremennik"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Waterbirth Island dungeon — hard Fremennik (wiki leagueRegion on Dagannoth Rex: Fremennik). Ironman early-mid ring ladder before heart-upgraded / Occultist paths. Complements Anachronia Rex Matriarch heart upgrades (boss:rex-matriarchs) without relocating DKs. · Hard Fremennik elective. · Effects: Warrior ring / Berserker ring / Archers' ring / Seers' ring (base combat rings), Dragon hatchet residual, Mud battlestaff / Seercull residual midgame",
-      "requirements": [],
-      "confidence": "confirmed_current_wiki_league_fremennik_badge",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Dagannoth_Kings",
-        "title": "Dagannoth Kings",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-polish-bosses-2026-07-26.json"
@@ -4573,35 +4131,6 @@
       "sourceFile": "progression-enrichment-regional-combat-bis-residual-2026-07-26.json"
     },
     {
-      "id": "asgarnia:gwd1-bandos-equipment",
-      "name": "Bandos equipment (GWD1 melee power ladder)",
-      "recordType": "equipment",
-      "category": "midgame GWD1 melee power armour residual",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Residual densify under thin boss:gwd1 hub. Do not re-emit boss:gwd1. · Hard Asgarnia. Nex/Torva is a separate residual row already first-class. · Effects: Classic T70 non-degrading melee power armour ladder before Torva / malevolent / masterwork, Still a common ironman midgame set and disassembly source for Bandos components · Unlocks: Bandos helmet / chestplate / tassets / gloves / boots, Bandos warshield adjacency · Region pressure: Asgarnia hard-owns GWD1 Bandos self-supply.",
-      "requirements": [
-        "70 Defence to wear Bandos power armour",
-        "General Graardor and Bandosian bodyguards in God Wars Dungeon 1",
-        "Official Equilibrium Asgarnia GWD approach"
-      ],
-      "confidence": "confirmed_wiki_and_official_region_example",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Bandos_equipment",
-        "title": "Bandos equipment (GWD1 melee power ladder)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-residual-2026-07-26.json"
-    },
-    {
       "id": "asgarnia:gwd1-armadyl-equipment",
       "name": "Armadyl equipment (GWD1 ranged power ladder)",
       "recordType": "equipment",
@@ -4653,35 +4182,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Subjugation_robe_armour",
         "title": "Robes of subjugation (GWD1 magic power ladder)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-combat-bis-residual-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:gwd1-godswords",
-      "name": "Godswords (GWD1 hilt + shard assembly)",
-      "recordType": "equipment",
-      "category": "midgame GWD1 two-handed melee special residual",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "detail": "Do not fold ZGS into this row. Residual under thin boss:gwd1 effects list. · Hard Asgarnia for classic four godswords. · Effects: T75 non-degrading 2h melee with unique specials / passives per hilt, Still used as EoF-stored special switches and midgame 2h until ZGS / Ek-ZekKil / Leng / scythe paths · Unlocks: Armadyl godsword, Bandos godsword, Saradomin godsword, Zamorak godsword · Region pressure: Asgarnia hard-owns the four classic godsword hilt/shard farms. Zaros godsword is Telos/Desert and already first-class as desert:zaros-godsword.",
-      "requirements": [
-        "75 Attack to wield",
-        "80 Smithing to forge godsword blade from shards 1–3 (assistable)",
-        "Godsword shards from GWD1 generals and bodyguards; hilts from the matching general only (Armadyl / Bandos / Saradomin / Zamorak)"
-      ],
-      "confidence": "confirmed_current_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Godsword",
-        "title": "Godswords (GWD1 hilt + shard assembly)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-combat-bis-residual-2026-07-26.json"

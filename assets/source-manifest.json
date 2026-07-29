@@ -2854,6 +2854,16 @@
       ]
     },
     {
+      "id": "upgrades-permanent-unlocks-overgrown-idol-karamja",
+      "label": "Overgrown idol (Karamja)",
+      "category": "rs3/upgrades/permanent-unlocks",
+      "path": "assets/rs3/upgrades/permanent-unlocks/overgrown-idol",
+      "fileTitle": "Overgrown idol (Karamja).png",
+      "canonicalPage": "https://runescape.wiki/w/Overgrown_idol",
+      "sourcePage": "https://runescape.wiki/w/File:Overgrown_idol_(Karamja).png",
+      "search": "Overgrown idol Karamja"
+    },
+    {
       "id": "bulk39-polypore-dungeon",
       "label": "Polypore Dungeon",
       "category": "rs3/activities",
@@ -4565,6 +4575,8 @@
       "label": "Abomination",
       "category": "rs3/bosses",
       "path": "assets/rs3/bosses/abomination",
+      "fileTitle": "Abomination.png",
+      "sourcePage": "https://runescape.wiki/w/File:Abomination.png",
       "search": "Abomination boss image",
       "canonicalPage": "https://runescape.wiki/w/Abomination"
     },
@@ -4890,6 +4902,8 @@
       "label": "Legiones",
       "category": "rs3/bosses",
       "path": "assets/rs3/bosses/legiones",
+      "fileTitle": "Legio Primus.png",
+      "sourcePage": "https://runescape.wiki/w/File:Legio_Primus.png",
       "search": "Legiones boss image",
       "canonicalPage": "https://runescape.wiki/w/Legiones"
     },
@@ -5117,9 +5131,10 @@
       "label": "Muspah",
       "category": "rs3/bosses",
       "path": "assets/rs3/bosses/muspah",
-      "search": "Muspah inventory icon",
+      "search": "Throwing muspah creature render",
       "canonicalPage": "https://runescape.wiki/w/Muspah",
-      "fileTitle": "Muspah.png"
+      "fileTitle": "Throwing muspah.png",
+      "sourcePage": "https://runescape.wiki/w/File:Throwing_muspah.png"
     },
     {
       "id": "bosses-nightmare",
@@ -10809,7 +10824,8 @@
       "path": "assets/rs3/combat/equipment/tokhaar-kal-xil",
       "search": "Tokhaar Kal Xil inventory icon",
       "canonicalPage": "https://runescape.wiki/w/Tokhaar_Kal_Xil",
-      "fileTitle": "Tokhaar Kal Xil.png"
+      "fileTitle": "TokHaar-Kal-Xil.png",
+      "sourcePage": "https://runescape.wiki/w/File:TokHaar-Kal-Xil.png"
     },
     {
       "id": "combat-equipment-tokkul-zo",
@@ -19056,9 +19072,10 @@
       "label": "Karambwan Vessel",
       "category": "rs3/upgrades/permanent-unlocks",
       "path": "assets/rs3/upgrades/permanent-unlocks/karambwan-vessel",
-      "search": "Karambwan Vessel inventory icon",
+      "search": "Karambwan vessel detail",
       "canonicalPage": "https://runescape.wiki/w/Karambwan_Vessel",
-      "fileTitle": "Karambwan Vessel.png"
+      "fileTitle": "Karambwan vessel detail.png",
+      "sourcePage": "https://runescape.wiki/w/File:Karambwan_vessel_detail.png"
     },
     {
       "id": "upgrades-permanent-unlocks-karamja-gloves-1",
@@ -19110,9 +19127,10 @@
       "label": "Kuradal",
       "category": "rs3/upgrades/permanent-unlocks",
       "path": "assets/rs3/upgrades/permanent-unlocks/kuradal",
-      "search": "Kuradal inventory icon",
+      "search": "Kuradal chathead",
       "canonicalPage": "https://runescape.wiki/w/Kuradal",
-      "fileTitle": "Kuradal.png"
+      "fileTitle": "Kuradal chathead.png",
+      "sourcePage": "https://runescape.wiki/w/File:Kuradal_chathead.png"
     },
     {
       "id": "upgrades-permanent-unlocks-kwuarm-incense-sticks",
@@ -20439,12 +20457,13 @@
     },
     {
       "id": "upgrades-permanent-unlocks-shilo-village-underground-gem-mine",
-      "label": "Shilo Village Underground Gem Mine",
+      "label": "Shilo Village mine",
       "category": "rs3/upgrades/permanent-unlocks",
       "path": "assets/rs3/upgrades/permanent-unlocks/shilo-village-underground-gem-mine",
-      "search": "Shilo Village Underground Gem Mine inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Shilo_Village_Underground_Gem_Mine",
-      "fileTitle": "Shilo Village Underground Gem Mine.png"
+      "search": "Shilo Village mine",
+      "canonicalPage": "https://runescape.wiki/w/Shilo_Village_mine",
+      "fileTitle": "Shilo Village mine.png",
+      "sourcePage": "https://runescape.wiki/w/File:Shilo_Village_mine.png"
     },
     {
       "id": "upgrades-permanent-unlocks-sign-of-the-porter",
@@ -21581,6 +21600,16 @@
       "fileTitle": "Elite tectonic robe top.png",
       "canonicalPage": "https://runescape.wiki/w/Elite_tectonic_robe_top",
       "search": "Elite tectonic robe top inventory icon"
+    },
+    {
+      "id": "arm-starbloom-robes",
+      "label": "Starbloom robes",
+      "category": "rs3/upgrades/progression",
+      "path": "assets/rs3/upgrades/progression/starbloom-robes",
+      "fileTitle": "Starbloom robes (adorned).png",
+      "sourcePage": "https://runescape.wiki/w/File:Starbloom_robes_(adorned).png",
+      "canonicalPage": "https://runescape.wiki/w/Starbloom_equipment",
+      "search": "Starbloom robes inventory icon"
     },
     {
       "id": "arm-first-necromancer-robe-top",

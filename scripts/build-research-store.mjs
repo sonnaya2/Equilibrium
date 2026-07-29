@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
-  renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -127,5 +127,6 @@ for (const [path, body] of files) {
   writeFileSync(destination, body);
 }
 rmSync(TARGET, { force: true, recursive: true });
-renameSync(temporary, TARGET);
+cpSync(temporary, TARGET, { recursive: true });
+rmSync(temporary, { force: true, recursive: true });
 console.log(`Research store built: ${regionFiles.length} region shards`);

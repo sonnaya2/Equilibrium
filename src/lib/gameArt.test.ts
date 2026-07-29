@@ -292,7 +292,7 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Dream of Iaia" })).toMatch(/dream-of-iaia\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Orthen Dig Site" })).toMatch(/orthen-dig/);
     expect(dataEntityIconPath({ name: "Ranch Out of Time (Anachronia Dinosaur Farm)" })).toMatch(
-      /big-game-hunter\.(webp|png)$/,
+      /anachronia-dinosaur-farm\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Herby Werby herb bag skilling unlock" })).toMatch(
       /herby-werby\.(webp|png)$/,
@@ -405,7 +405,10 @@ describe("gameArt", () => {
       ["Brimhaven Agility Arena", /brimhaven-agility-arena\.(webp|png)$/],
       ["Shilo Village", /shilo-village\.(webp|png)$/],
       ["TzHaar City skilling hub", /tzhaar-city\.(webp|png)$/],
-      ["Gemstone cavern (Shilo underground)", /gemstone-cavern\.(webp|png)$/],
+      [
+        "Shilo Village gem mine and Gemstone cavern",
+        /shilo-village-underground-gem-mine\.(webp|png)$/,
+      ],
       ["Mage Arena", /mage-arena\.(webp|png)$/],
       ["Forinthry Dungeon", /forinthry-dungeon\.(webp|png)$/],
       ["Charming moths", /charming-moths\.(webp|png)$/],
@@ -594,6 +597,18 @@ describe("gameArt", () => {
       /ivar-uniques\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Scripture of Amascut" })).not.toMatch(/\/bosses\//);
+  });
+
+  it("honors curated major-unlock icons before generic boss plates", () => {
+    expect(dataEntityIconPath({ name: "Legiones", kind: "Bosses" })).toMatch(
+      /ascension-crossbow\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Fight Kiln", kind: "Combat" })).toMatch(
+      /tokhaar-kal-ket\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Tai Bwo Wannai Cleanup", kind: "Woodcutting" })).toMatch(
+      /trading-sticks\.(webp|png)$/,
+    );
   });
 
   it("critical upgrade aliases resolve to published full slugs (not short junk)", () => {

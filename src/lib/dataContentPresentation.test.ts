@@ -632,7 +632,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
   it("Queen Black Dragon uses Dragon kiteshield, not Kalphite Queen drops", () => {
     const { row, upgrades } = contentRow("asgarnia", "Queen Black Dragon");
     const full = contentRewardsFull(row, upgrades);
-    expect(full).toBe("Royal crossbow, Dragon kiteshield, Draconic visage, Dragonbone upgrade kit");
+    expect(full).toBe("Dragon kiteshield");
     expect(full).not.toMatch(/Dragon chainbody|Dragon 2h sword/i);
     expect(resolveRewardIcon("Dragon kiteshield")).toMatch(/dragon-kiteshield\.webp$/);
     expect(publicOk(resolveRewardIcon("Dragon kiteshield"))).toBe(true);
@@ -1086,7 +1086,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(kdP.icons.some((i) => /ferocious-ring/i.test(i.src))).toBe(true);
   });
 
-  it("Asgarnia hubs: Port Sarim Arc, Warriors defender, GWD1 access, safecracking", () => {
+  it("Asgarnia hubs: Port Sarim Arc, Warriors defender, safecracking", () => {
     const port = contentRow("asgarnia", "Port Sarim docks and skilling hub");
     const portFull = contentRewardsFull(port.row, port.upgrades);
     expect(portFull).not.toMatch(/Player-owned port/i);
@@ -1100,13 +1100,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(wgFull).toMatch(/Dragon defender/i);
     const wgP = presentContentRewards(wgFull);
     expect(wgP.icons.some((i) => /dragon-defender/i.test(i.src))).toBe(true);
-
-    const gwd = contentRow("asgarnia", "God Wars Dungeon 1");
-    const gwdFull = contentRewardsFull(gwd.row, gwd.upgrades);
-    expect(gwdFull).not.toMatch(/Bandos equipment|Armadyl equipment|Subjugation/i);
-    expect(gwdFull).toMatch(/killcount|God camps|altar/i);
-    const gwdP = presentContentRewards(gwdFull);
-    expect(gwdP.icons.length).toBe(0);
 
     const safe = contentRow("asgarnia", "Safecracking route");
     const safeP = presentContentRewards(contentRewardsFull(safe.row, safe.upgrades));
@@ -1133,7 +1126,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
   it("expands low-icon majors: Mole, QBD, Legiones, ED3, Achto, Barrows", () => {
     const cases: Array<{ region: string; name: string | RegExp; min: number; re: RegExp }> = [
       { region: "asgarnia", name: "Giant Mole", min: 1, re: /Dragon 2h/i },
-      { region: "asgarnia", name: "Queen Black Dragon", min: 2, re: /Royal crossbow/i },
+      { region: "asgarnia", name: "Queen Black Dragon", min: 1, re: /Dragon kiteshield/i },
       { region: "kandarin", name: "Legiones", min: 3, re: /Ascension/i },
       { region: "forinthry", name: /Shadow Reef/, min: 2, re: /Eldritch|Black stone/i },
       { region: "desert", name: "Beastmaster Durzag", min: 3, re: /Achto/i },
@@ -1198,7 +1191,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
       { region: "asgarnia", name: /K'ril/, re: /subjugation/i },
       { region: "asgarnia", name: "Nex", re: /Torva|Pernix|Virtus/i },
       { region: "asgarnia", name: "Vorago", re: /Seismic/i },
-      { region: "asgarnia", name: "Queen Black Dragon", re: /Royal|Draconic visage/i },
+      { region: "asgarnia", name: "Queen Black Dragon", re: /Dragon kiteshield/i },
       { region: "morytania", name: /Araxxor/, re: /Noxious/i },
       { region: "desert", name: /Telos/, re: /Seren godbow|Staff of Sliske|Zaros godsword/i },
       { region: "desert", name: /Amascut/, re: /Devourer's Guard|Tumeken/i },

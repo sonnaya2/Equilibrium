@@ -1072,13 +1072,13 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(kdP.icons.some((i) => /ferocious-ring/i.test(i.src))).toBe(true);
   });
 
-  it("Asgarnia hubs: Port Sarim POP/Arc, Warriors defender, GWD1 access, safecracking", () => {
+  it("Asgarnia hubs: Port Sarim Arc, Warriors defender, GWD1 access, safecracking", () => {
     const port = contentRow("asgarnia", "Port Sarim docks and skilling hub");
     const portFull = contentRewardsFull(port.row, port.upgrades);
-    expect(portFull).toMatch(/Player-owned port/i);
+    expect(portFull).not.toMatch(/Player-owned port/i);
     expect(portFull).toMatch(/The Arc/i);
     const portP = presentContentRewards(portFull);
-    expect(portP.icons.length).toBeGreaterThanOrEqual(2);
+    expect(portP.icons.length).toBeGreaterThanOrEqual(1);
     expect(portP.icons.every((i) => publicOk(i.src))).toBe(true);
 
     const wg = contentRow("asgarnia", "Warriors' Guild");

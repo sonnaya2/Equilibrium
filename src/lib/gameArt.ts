@@ -777,6 +777,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   hexcrest: "hexcrest",
   "highweald / deserted mine mining access": "highweald",
   "highweald ruins mine (necrite / phasmatite / platinum / havensilver)": "highweald-ruins-mine",
+  "necrite rocks, phasmatite rocks, platinum rocks and havensilver rock": "highweald-ruins-mine",
   "hireable research team recruitment ladder": "archaeology-research",
   "hoardstalker ring": "hoardstalker-ring",
   "holy elixir supply": "holy-elixir",

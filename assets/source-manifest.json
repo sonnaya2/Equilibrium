@@ -27705,6 +27705,42 @@
       ]
     },
     {
+      "id": "skilling-production-necrite-rock",
+      "label": "Necrite rock",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/necrite-rock",
+      "fileTitle": "Necrite ore.png",
+      "canonicalPage": "https://runescape.wiki/w/Necrite_ore",
+      "sourcePage": "https://runescape.wiki/w/File:Necrite_ore.png"
+    },
+    {
+      "id": "skilling-production-phasmatite-rock",
+      "label": "Phasmatite rock",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/phasmatite-rock",
+      "fileTitle": "Phasmatite.png",
+      "canonicalPage": "https://runescape.wiki/w/Phasmatite",
+      "sourcePage": "https://runescape.wiki/w/File:Phasmatite.png"
+    },
+    {
+      "id": "skilling-production-platinum-rock",
+      "label": "Platinum rock",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/platinum-rock",
+      "fileTitle": "Platinum ore.png",
+      "canonicalPage": "https://runescape.wiki/w/Platinum_ore",
+      "sourcePage": "https://runescape.wiki/w/File:Platinum_ore.png"
+    },
+    {
+      "id": "skilling-production-havensilver-rock",
+      "label": "Havensilver rock",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/havensilver-rock",
+      "fileTitle": "Havensilver ore.png",
+      "canonicalPage": "https://runescape.wiki/w/Havensilver_ore",
+      "sourcePage": "https://runescape.wiki/w/File:Havensilver_ore.png"
+    },
+    {
       "id": "util-rune-pouch",
       "label": "Rune pouch",
       "category": "rs3/upgrades/skilling-utility",

@@ -68,6 +68,186 @@ const WIKI_TRAINING_SOURCES = {
 
 const ACTUAL_SKILLS = new Set(Object.keys(WIKI_TRAINING_SOURCES));
 
+const DROP_HAVENHYTHE_UPGRADE_NAMES = new Set([
+  "Kerapac progression",
+  "Kerapac hard mode FSoA farm",
+  "Kerapac, the bound",
+  "Arch-Glacor",
+  "Arch-Glacor progression",
+  "Croesus",
+  "Croesus progression",
+  "Croesus Front skilling nodes and skilling-boss access",
+  "First Necromancer's equipment",
+  "First Necromancer's equipment (Rasial)",
+  "Archaeology Campus and Varrock Dig Site hub",
+  "Archaeology collectors and collection system",
+  "Archaeology Guildmaster qualification permanent rewards",
+  "City of Um ritual site and focus storage",
+  "Draynor Village skilling hub",
+  "Edgeville skilling and Wilderness on-ramp hub",
+  "Family Crest cooking and smelting gauntlets",
+  "Focus storage",
+  "Infinity ethereal outfit",
+  "Infinity ethereal and Runespan utility rewards",
+  "It Belongs in a Museum! (Velucia meta collection log)",
+  "Imcando tools family (pickaxe, hatchet, related craft pressure)",
+  "Master thief's lockpick + stethoscope (toolbelt)",
+  "Master thief's lockpick + master thief's stethoscope",
+  "Master thief's tools",
+  "Misthalin Runecrafting altars (Water, Earth) and essence access",
+  "Museum donation bin (40% chronote overflow)",
+  "Mysterious monolith energy + relic loadout ladder",
+  "Necromancy conjure unlocks",
+  "Necromantic Rune Temple",
+  "Player-owned house portal towns and Construction utilities",
+  "Professor additional relic loadout (80k chronotes)",
+  "Rasial Necromancy BiS farm",
+  "Rasial, the First Necromancer",
+  "Sanctum of Rebirth (Nakatra)",
+  "Scripture of Bik",
+  "Sanctum of Rebirth uniques",
+  "TzKal-Zuk",
+  "TzKal-Zuk progression",
+  "Varrock Museum kudos progression",
+  "Velucia museum Archaeology collections",
+  "Velucia museum collection chronote tiers (225% set bonus)",
+  "War's Blessing 1-4 (Combat Mastery)",
+  "War's Blessing combat mastery",
+  "War's Blessing 1-4 (Combat Mastery)",
+  "Fort Forinthry Botanist's Workbench",
+  "Fort Forinthry Command Centre",
+  "Fort Forinthry Workshop",
+  "Fort Forinthry Guardhouse and Raptor Slayer hub",
+  "Fort Forinthry Kitchen",
+  "Fort Forinthry Ranger's Workroom",
+  "Fort Forinthry Town Hall",
+  "Apex Hide Armour",
+  "Havenhythe Hunter 110 progression",
+  "Havenhythe canoe network",
+  "Havenhythe open-water fishing spots (beyond fish farm)",
+  "War's Grimoire (Retreat spellbook and prayer-book swap)",
+  "Well of Souls talent infrastructure",
+  "Wizards' Tower and Runecrafting Guild",
+  "Wood box tier upgrades",
+  "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
+  "Woodcutters' Grove facility tiers",
+  "Jackalope familiar (Archaeology soil BoB)",
+  "Jackalope hunting (antler tertiary)",
+  "Trader Woes shrine bank chest",
+  "Old Meats (Hollow Hill meat shop)",
+  "Shrine of Inanna and Spirit Wolves Summoning hub",
+  "Modified artisan's bandana",
+  "Modified ritualist's mask",
+  "Modified shaman's headdress",
+  "Modified blacksmith's helmet",
+  "Modified botanist's mask",
+  "Modified diviner's headwear",
+  "Modified sous chef's toque",
+  "Modified farmer's hat",
+  "Modified first age tiara",
+]);
+
+const DROP_HAVENHYTHE_CONTENT_NAMES = new Set(["Marigold Farm patch cluster"]);
+
+const MANUAL_MAJOR_CONTENT = {
+  misthalin: [{
+    name: "Pure essence chest",
+    kind: "Runecrafting",
+    detail: "Archmage Sedridor's Rune chest supplies up to 24,750 pure essence in total: 5 × each Runecrafting level gained through level 99",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Rune_chest",
+      title: "Pure essence chest",
+      verifiedAt: "2026-07-28",
+    },
+  }],
+  forinthry: [{
+    name: "Dragon harpoon",
+    kind: "Fishing tool",
+    detail: "Wilderness Fishing tool with a 9% catch-rate boost at harpoon fishing spots",
+    confidence: "confirmed_wiki_2026",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Dragon_harpoon",
+      title: "Dragon harpoon",
+      verifiedAt: "2026-07-28",
+    },
+  }],
+  anachronia: [{
+    name: "Effigy Incubator",
+    kind: "Distraction and Diversion",
+    detail: "Monthly Anachronia activity that gathers materials and casings, creates effigies, and awards skill XP lamps or stars after they are filled",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Effigy_Incubator",
+      title: "Effigy Incubator",
+      verifiedAt: "2026-07-28",
+    },
+  }],
+  havenhythe: [{
+    name: "Old Meats",
+    kind: "Food and farm-supply shop",
+    detail: "PoF food and raw meat source: permanent raw rabbit, beef, bird, rat, bear and chicken stock, plus cooked meat supplies",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Old_Meats",
+      title: "Old Meats",
+      verifiedAt: "2026-07-28",
+    },
+  }, {
+    name: "Jackalope familiar",
+    kind: "Archaeology / Havenhythe",
+    detail: "Archaeology soil storage and bonus material supply from the Jackalope familiar",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Jackalope",
+      title: "Jackalope familiar",
+      verifiedAt: "2026-07-28",
+    },
+  }, {
+    name: "Allotment patches",
+    kind: "Farming / Marigold Farm",
+    detail: "Two allotment patches at Marigold Farm",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Allotment_patch",
+      title: "Allotment patch",
+      verifiedAt: "2026-07-28",
+    },
+  }, {
+    name: "Herb patch",
+    kind: "Farming / Marigold Farm",
+    detail: "One herb patch at Marigold Farm",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Herb_patch",
+      title: "Herb patch",
+      verifiedAt: "2026-07-28",
+    },
+  }, {
+    name: "Flower patch",
+    kind: "Farming / Marigold Farm",
+    detail: "One flower patch at Marigold Farm",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Flower_patch",
+      title: "Flower patch",
+      verifiedAt: "2026-07-28",
+    },
+  }],
+};
+
+const HIGHWEALD_ROCKS_NAME = "Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock";
+const HIGHWEALD_ROCKS_SOURCE = "https://runescape.wiki/w/Highweald_Ruins_mine";
+const HIGHWEALD_ROCKS_DETAIL = "Unlocks: Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock · Hearts of Sanguine opens the Highweald Ruins mine · 104 Mining (boostable) and the Oh Yeah! achievement open the platinum rocks behind the primeval slabs";
+
 const ENTITY_SOURCE_OVERRIDES = {
   "Varrock Dig Site / early Archaeology": ["Varrock Dig Site", "https://runescape.wiki/w/Varrock_Dig_Site"],
   "Pale wisps near Draynor": ["Pale wisp", "https://runescape.wiki/w/Pale_wisp"],
@@ -349,8 +529,11 @@ function normalizeContent(region, raw, fallbackKind) {
     };
   }
 
-  const name = text(raw.name, "Unnamed content");
-  const kind = first(raw, ["skill", "type", "group"]) || fallbackKind;
+  const rawName = text(raw.name, "Unnamed content");
+  const isHighwealdRocks = /^(?:Highweald Ruins mine \(necrite \/ phasmatite \/ platinum \/ havensilver\)|Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock)$/i.test(rawName);
+  const isWendlewickFishFarm = /^Wendlewick fish farm(?: \(Havenhythe\))?$/i.test(rawName);
+  const name = isHighwealdRocks ? HIGHWEALD_ROCKS_NAME : rawName;
+  const kind = isHighwealdRocks ? "Mining / Highweald Forest" : first(raw, ["skill", "type", "group"]) || fallbackKind;
   const detail = [
     first(raw, ["note", "notes", "level_range", "base_game_requirements"]),
     raw.unlock_level ? `Level ${raw.unlock_level}` : "",
@@ -365,9 +548,15 @@ function normalizeContent(region, raw, fallbackKind) {
   return {
     name,
     kind,
-    detail,
+    detail: isHighwealdRocks
+      ? HIGHWEALD_ROCKS_DETAIL
+      : isWendlewickFishFarm
+        ? `High XP/h Active Fishing method · ${detail}`
+        : detail,
     confidence: text(raw.confidence, "unclassified"),
-    source: contentSource(region, raw, name, kind),
+    source: isHighwealdRocks
+      ? sourceFromUrl(HIGHWEALD_ROCKS_SOURCE, HIGHWEALD_ROCKS_NAME)
+      : contentSource(region, raw, name, kind),
   };
 }
 
@@ -449,8 +638,13 @@ const normalizedRegions = rawRegions.regions.map((region) => {
     ...list(region.bosses_and_combat).map((row) => normalizeContent(region, row, "combat")),
     ...list(region.skilling).map((row) => normalizeContent(region, row, "skilling")),
     ...list(region.power_upgrades).map((row) => normalizeContent(region, row, "upgrade")),
-  ];
-  const regionUpgrades = list(upgrades.regions?.[regionId]).map((row) => normalizeUpgrade(regionId, row));
+  ].filter((row) => !DROP_HAVENHYTHE_CONTENT_NAMES.has(row.name));
+  for (const row of MANUAL_MAJOR_CONTENT[regionId] ?? []) {
+    if (!content.some((existing) => existing.name === row.name)) content.push(row);
+  }
+  const regionUpgrades = list(upgrades.regions?.[regionId])
+    .map((row) => normalizeUpgrade(regionId, row))
+    .filter((row) => !DROP_HAVENHYTHE_UPGRADE_NAMES.has(row.name));
   const hardRules = dependencyRows
     .filter((row) => row.required_region === regionId)
     .map((row) => row.planner_rule)

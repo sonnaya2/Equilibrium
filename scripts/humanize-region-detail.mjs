@@ -1,4 +1,3 @@
-/** Removes internal audit prose from player-facing regional data. */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -196,7 +195,12 @@ function isNoiseSegment(seg) {
   }
   // empty Complements / dash-only fragments
   if (/^Complements\.?$/i.test(s)) return true;
-  if (/^Complements\b/i.test(s) && /without re-|re-emit|re-author|phantom |first-class|prefer this|system blob|activity pointer/i.test(s)) {
+  if (
+    /^Complements\b/i.test(s) &&
+    /without re-|re-emit|re-author|phantom |first-class|prefer this|system blob|activity pointer/i.test(
+      s,
+    )
+  ) {
     return true;
   }
   if (/^[—–\-·,.;:\s]+$/.test(s)) return true;
@@ -211,36 +215,38 @@ function titleCaseRegion(id) {
 }
 
 function polishPlayerCopy(seg) {
-  return seg
-    // Aura Overhaul: live stack wording only (keep "old … aura" history intact)
-    .replace(/\bworks with greenfingers auras active\b/gi, "works with Greenfingers passive")
-    .replace(/\bworks with greenfingers auras\b/gi, "works with Greenfingers passive")
-    // undo over-eager history rewrite from earlier passes
-    .replace(/\bReplaces the old Greenfingers passive\b/g, "Replaces the old Greenfingers aura")
-    .replace(/^Was only a[^.·]*[.·]?\s*/i, "")
-    .replace(/^Was buried[^.·]*[.·]?\s*/i, "")
-    .replace(/^Was fully missing\.?\s*/i, "")
-    .replace(/^Missing (?:named |combat[^.·]*|t\d+[^.·]*|mid-high[^.·]*)[.·]?\s*/i, "")
-    // orphan clause after wiping a leading region:id subject
-    .replace(/^Arc reward depth;\s*/i, "")
-    .replace(/^this is the Ports hub itself\.?\s*/i, "Player-owned port hub. ")
-    .replace(/^Player-owned port hub\.\s*/i, "Player-owned port hub. ")
-    .replace(/\s*[—–]\s*$/g, "")
-    .replace(/^[—–]\s*/g, "")
-    .replace(/\s*[—–]\s*·/g, " ·")
-    .replace(/·\s*[—–]\s*/g, " · ")
-    // orphan Complements / glue after id wipe
-    .replace(/\bComplements\s*$/gi, "")
-    .replace(/\bComplements\s*·/gi, "·")
-    .replace(/\.\s*Complements\b/gi, ".")
-    // double punctuation / empty list glue
-    .replace(/,\s*,/g, ",")
-    .replace(/·\s*,/g, " · ")
-    .replace(/,\s*·/g, " · ")
-    .replace(/\.\s*\./g, ".")
-    .replace(/^\s*(?:is|was|and)\s+/i, "")
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  return (
+    seg
+      // Aura Overhaul: live stack wording only (keep "old … aura" history intact)
+      .replace(/\bworks with greenfingers auras active\b/gi, "works with Greenfingers passive")
+      .replace(/\bworks with greenfingers auras\b/gi, "works with Greenfingers passive")
+      // undo over-eager history rewrite from earlier passes
+      .replace(/\bReplaces the old Greenfingers passive\b/g, "Replaces the old Greenfingers aura")
+      .replace(/^Was only a[^.·]*[.·]?\s*/i, "")
+      .replace(/^Was buried[^.·]*[.·]?\s*/i, "")
+      .replace(/^Was fully missing\.?\s*/i, "")
+      .replace(/^Missing (?:named |combat[^.·]*|t\d+[^.·]*|mid-high[^.·]*)[.·]?\s*/i, "")
+      // orphan clause after wiping a leading region:id subject
+      .replace(/^Arc reward depth;\s*/i, "")
+      .replace(/^this is the Ports hub itself\.?\s*/i, "Player-owned port hub. ")
+      .replace(/^Player-owned port hub\.\s*/i, "Player-owned port hub. ")
+      .replace(/\s*[—–]\s*$/g, "")
+      .replace(/^[—–]\s*/g, "")
+      .replace(/\s*[—–]\s*·/g, " ·")
+      .replace(/·\s*[—–]\s*/g, " · ")
+      // orphan Complements / glue after id wipe
+      .replace(/\bComplements\s*$/gi, "")
+      .replace(/\bComplements\s*·/gi, "·")
+      .replace(/\.\s*Complements\b/gi, ".")
+      // double punctuation / empty list glue
+      .replace(/,\s*,/g, ",")
+      .replace(/·\s*,/g, " · ")
+      .replace(/,\s*·/g, " · ")
+      .replace(/\.\s*\./g, ".")
+      .replace(/^\s*(?:is|was|and)\s+/i, "")
+      .replace(/\s{2,}/g, " ")
+      .trim()
+  );
 }
 
 function humanizeDetail(detail, requiredRegions = []) {
@@ -248,7 +254,10 @@ function humanizeDetail(detail, requiredRegions = []) {
   const req = Array.isArray(requiredRegions) ? requiredRegions.filter(Boolean) : [];
   const reqSet = new Set(req);
 
-  let segments = detail.split(/\s*·\s*/).map((s) => s.trim()).filter(Boolean);
+  let segments = detail
+    .split(/\s*·\s*/)
+    .map((s) => s.trim())
+    .filter(Boolean);
   const out = [];
 
   for (let seg of segments) {
@@ -262,10 +271,19 @@ function humanizeDetail(detail, requiredRegions = []) {
       for (const reg of REGIONS) {
         if (reqSet.has(reg)) continue;
         seg = seg.replace(new RegExp(`Hard ${reg}\\b[^.·,]*(?:[.,]|$)`, "gi"), "");
-        seg = seg.replace(new RegExp(`${titleCaseRegion(reg)} hard-owns[^.·,]*(?:[.,]|$)`, "gi"), "");
-        seg = seg.replace(new RegExp(`${titleCaseRegion(reg)} optional:[^.·,]*(?:[.,]|$)`, "gi"), "");
+        seg = seg.replace(
+          new RegExp(`${titleCaseRegion(reg)} hard-owns[^.·,]*(?:[.,]|$)`, "gi"),
+          "",
+        );
+        seg = seg.replace(
+          new RegExp(`${titleCaseRegion(reg)} optional:[^.·,]*(?:[.,]|$)`, "gi"),
+          "",
+        );
       }
-      seg = seg.replace(/^Region pressure:\s*/i, "Region pressure: ").replace(/\s{2,}/g, " ").trim();
+      seg = seg
+        .replace(/^Region pressure:\s*/i, "Region pressure: ")
+        .replace(/\s{2,}/g, " ")
+        .trim();
       if (/^Region pressure:\s*$/i.test(seg) || seg.length < 24) continue;
     }
 
@@ -292,7 +310,10 @@ function humanizeDetail(detail, requiredRegions = []) {
     for (const re of STRIP_CLAUSES) seg = seg.replace(re, " ");
     seg = stripInternalIds(seg);
     seg = seg
-      .replace(/\b(?:ranch |Orthen |Agility |Herblore |produce |machine |outfit head )?residual\b/gi, "")
+      .replace(
+        /\b(?:ranch |Orthen |Agility |Herblore |produce |machine |outfit head )?residual\b/gi,
+        "",
+      )
       .replace(/\bpermanent residual\b/gi, "permanent unlock")
       .replace(/\s{2,}/g, " ")
       .replace(/·\s*·/g, "·")
@@ -309,14 +330,20 @@ function humanizeDetail(detail, requiredRegions = []) {
       .replace(/^Pair with\b[^·]*(?:·\s*)?/i, "")
       .replace(/^Prefer\b[^.·]*[.·]?\s*/i, "")
       .replace(/^Complements\b[^.·]*[.·]?\s*/i, "")
-      .replace(/^Consumable per application but the blueprint discovery is the permanent account unlock\.?\s*/i, "")
+      .replace(
+        /^Consumable per application but the blueprint discovery is the permanent account unlock\.?\s*/i,
+        "",
+      )
       .replace(/^Consumable charges but permanent discovery[^.·]*[.·]?\s*/i, "")
       .replace(/^Consumable but permanent shop unlock[^.·]*[.·]?\s*/i, "")
       .replace(/^High-value only package\.?\s*/i, "")
       .replace(/^Explicitly excludes[^.·]*[.·]?\s*/i, "")
       .replace(/Multi dig-site collectors add[^.·]*[.·]?\s*/gi, "")
       .replace(/treat chains with dual hard gates on their dedicated relic rows\.?\s*/gi, "")
-      .replace(/Planner shortlist of permanent \(or relic-hand\) first completions[^.·]*[.·]?\s*/gi, "")
+      .replace(
+        /Planner shortlist of permanent \(or relic-hand\) first completions[^.·]*[.·]?\s*/gi,
+        "",
+      )
       .replace(/not every chronote-only collection:\s*/gi, "");
 
     seg = polishPlayerCopy(seg);
@@ -343,7 +370,11 @@ function humanizeDetail(detail, requiredRegions = []) {
       .replace(/[^.·]*not Asgarnia-locked[^.·]*[.!]?\s*/gi, " ")
       .replace(/[^.·]*Guild machine-room scenery stays Asgarnia place geography only\.?\s*/gi, " ")
       .trim();
-    if (!/Invention (skill )?unlock and workbench|workbench manufacture are global|workbench craft is global/i.test(result)) {
+    if (
+      !/Invention (skill )?unlock and workbench|workbench manufacture are global|workbench craft is global/i.test(
+        result,
+      )
+    ) {
       result = `${result} · Invention workbench craft is global (not region-locked).`.trim();
     }
   }
@@ -398,15 +429,225 @@ function humanizeRequirement(text) {
     .replace(/\s*—\s*Misthalin-accessible not regi.*$/i, "")
     .trim();
   // Normalize known intentional empty-region reasons
-  if (/Loyalty\/Solomon store aura/i.test(s)) return "Loyalty / Solomon store aura (not region-gated)";
-  if (/invent\/POP craft/i.test(s)) return "Invention / Player-owned ports craft (not region-gated)";
+  if (/Loyalty\/Solomon store aura/i.test(s))
+    return "Loyalty / Solomon store aura (not region-gated)";
+  if (/invent\/POP craft/i.test(s))
+    return "Invention / Player-owned ports craft (not region-gated)";
   if (/invent fletching global/i.test(s)) return "Invention / Fletching craft (not region-gated)";
   if (/invent-global offhand/i.test(s)) return "Invention craft off-hand (not region-gated)";
-  if (/master casket|Global reward/i.test(s)) return "Treasure Trails / global reward (not region-gated)";
+  if (/master casket|Global reward/i.test(s))
+    return "Treasure Trails / global reward (not region-gated)";
   if (/skilling bow/i.test(s)) return "Skilling bow (not a League combat region gate)";
-  if (/base sirenic multi-source/i.test(s)) return "Sirenic craft — multi-source material pressure (no single hard region)";
+  if (/base sirenic multi-source/i.test(s))
+    return "Sirenic craft — multi-source material pressure (no single hard region)";
   if (/Runespan reward/i.test(s)) return "Runespan reward (not a hard elective region gate)";
   return s || text;
+}
+
+const ASGARNIA_CONTENT_DROP = new Set(["Player-owned port", "Rimmington Construction supply loop"]);
+
+const ASGARNIA_UPGRADE_DROP = new Set([
+  "Bandos equipment (GWD1 melee power ladder)",
+  "Essence of Finality amulet (neck BiS chain)",
+  "Essence of Finality ornament kit (style bonus)",
+  "Familiarisation (weekly triple-charm D&D)",
+  "Flash Powder Factory Herblore outfits",
+  "Flash Powder Factory minigame and reward shop",
+  "Games necklace teleport package",
+  "God Wars Dungeon 1 (+ Nex)",
+  "God Wars Dungeon 1 equipment",
+  "Godswords (GWD1 hilt + shard assembly)",
+  "Herb patch network (global herb-run map)",
+  "Hops patch network (Entrana + run geography)",
+  "Invention Guild named machine room",
+  "Invention machines (Invention Guild + Fort Workshop power)",
+  "Large Summoning obelisk production network",
+  "Magic golem outfit",
+  "Masterwork melee plate / glorious-bar smithing chain",
+  "Masterwork Spear of Annihilation",
+  "Mining Guild metal-bank smithing loop",
+  "Mining Guild resource dungeon",
+  "Modified blacksmith's helmet",
+  "Modified botanist's mask",
+  "Nex equipment",
+  "Nex T80 power armour (Torva / Pernix / Virtus)",
+  "Nex: Angel of Death progression",
+  "Ore box tier upgrades",
+  "Pernix armour",
+  "Pikkupstix Summoning shop and large obelisk (Taverley)",
+  "Player-owned house Aquarium and Prawnbroker",
+  "Player-owned house portal towns and Construction utilities",
+  "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
+  "POH gilded altar (Chapel offering)",
+  "Rimmington Construction supply loop",
+  "Rogues' Den banking, safes, and Thieving hub",
+  "Saradomin godsword special (heal switch)",
+  "Temple of Aminishi (ED1)",
+  "The Arc skilling destinations (Equilibrium Asgarnia mapping)",
+  "The Arc Waiko reward shop (chime economy)",
+  "Trimmed / custom-fit trimmed masterwork melee armour",
+]);
+
+function applyRegionCorrections(catalog) {
+  const asgarnia = catalog.regions?.find((region) => region.id === "asgarnia");
+  const misthalin = catalog.regions?.find((region) => region.id === "misthalin");
+  if (!asgarnia || !misthalin) throw new Error("Missing Asgarnia or Misthalin catalog region");
+
+  const verifiedAt = catalog.snapshotDate;
+  const wikiSource = (title, page) => ({
+    source: "runescape-wiki",
+    url: `https://runescape.wiki/w/${page}`,
+    title,
+    verifiedAt,
+  });
+
+  asgarnia.content = asgarnia.content.filter((row) => !ASGARNIA_CONTENT_DROP.has(row.name));
+
+  const roguesDen = asgarnia.content.find(
+    (row) => row.name === "Rogues' Den banking, safes, and Thieving hub",
+  );
+  if (roguesDen) {
+    roguesDen.name = "Rogues' Den";
+    roguesDen.kind = "Thieving hub";
+    roguesDen.detail = "Bank chest, four wall safes, and the entrance to Flash Powder Factory.";
+    roguesDen.source.title = "Rogues' Den";
+  }
+
+  const flashPowder = asgarnia.content.find(
+    (row) => row.name === "Flash Powder Factory minigame and reward shop",
+  );
+  if (flashPowder) {
+    flashPowder.kind = "Minigame";
+    flashPowder.detail =
+      "Brian points buy the Botanist's outfit and Factory outfit; fallen rubble can drop Rogue equipment.";
+  }
+
+  const nex = asgarnia.content.find((row) => row.name === "Nex");
+  if (nex) {
+    nex.kind = "Boss";
+    nex.detail = "God Wars Dungeon boss and source of Torva, Pernix, Virtus, and the Zaryte bow.";
+    nex.confidence = "confirmed_wiki";
+  }
+
+  const majors = [
+    {
+      name: "The Arc",
+      kind: "Eastern Lands",
+      detail: "Waiko, uncharted isles, contracts, and the chime shop.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("The Arc", "The_Arc"),
+    },
+    {
+      name: "Elite Dungeon 1",
+      kind: "Elite Dungeon",
+      detail: "Temple of Aminishi, with the Sanctum Guardian, Masuta the Ascended, and Seiryu.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Temple of Aminishi", "Temple_of_Aminishi"),
+    },
+    {
+      name: "Starbloom armour",
+      kind: "Crafting armour",
+      detail: "Tier 85 armour crafted at the Crafting Guild and upgraded to tier 90.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Starbloom equipment", "Starbloom_equipment"),
+    },
+  ];
+  for (const major of majors) {
+    const current = asgarnia.content.find((row) => row.name === major.name);
+    if (current) Object.assign(current, major);
+    else asgarnia.content.push(major);
+  }
+
+  const deathtouch = asgarnia.upgrades.find((row) => row.name.startsWith("Deathtouch bracelet"));
+  asgarnia.upgrades = asgarnia.upgrades.filter(
+    (row) =>
+      row !== deathtouch &&
+      !ASGARNIA_UPGRADE_DROP.has(row.name) &&
+      !/Invention Guild machine infrastructure/i.test(row.category),
+  );
+
+  const inventionGuild = asgarnia.upgrades.find((row) => row.name === "Invention Guild");
+  if (inventionGuild) {
+    inventionGuild.category = "Invention workshop and machines";
+    inventionGuild.detail =
+      "Inventor's workbenches, technology blueprints, generators, and the offline machine room";
+  }
+
+  const miningGuild = asgarnia.upgrades.find((row) => row.name === "Mining Guild");
+  if (miningGuild) {
+    miningGuild.category = "Mining and Smithing hub";
+    miningGuild.detail =
+      "Ore bank, furnaces, resource dungeon, and direct access to the Artisans' Workshop";
+  }
+
+  const blacksmith = asgarnia.upgrades.find((row) => row.name === "Blacksmith's outfit");
+  if (blacksmith) {
+    blacksmith.detail =
+      "Up to 6% Smithing XP. The modified helmet adds Artisans' Workshop teleports and a chance to smelt an extra ore";
+  }
+
+  const botanist = asgarnia.upgrades.find((row) => row.name === "Botanist's outfit");
+  if (botanist) {
+    botanist.detail =
+      "Up to 6% Herblore XP. The modified mask can duplicate potions and teleport to the Catherby herb patch";
+  }
+
+  const factory = asgarnia.upgrades.find((row) => row.name.startsWith("Factory outfit"));
+  if (factory) {
+    factory.detail =
+      "Three pieces can produce four-dose potions. The full set also grants herb-cleaning XP when making unfinished potions";
+  }
+
+  const rogueEquipment = asgarnia.upgrades.find((row) => row.name.startsWith("Rogue equipment"));
+  if (rogueEquipment) {
+    rogueEquipment.detail =
+      "Fallen rubble in Flash Powder Factory can award the five-piece Rogue equipment set";
+  }
+
+  const angelOfDeath = asgarnia.upgrades.find((row) => row.name === "Nex: Angel of Death");
+  if (angelOfDeath) {
+    angelOfDeath.category = "Boss rewards";
+    angelOfDeath.detail = "Wand of the praesul, Imperium core, and the Praesul codex";
+  }
+
+  const customFit = asgarnia.upgrades.find((row) =>
+    row.name.startsWith("Custom-fit trimmed masterwork"),
+  );
+  if (customFit) {
+    customFit.name = "Custom-fit trimmed masterwork";
+    customFit.category = "Tier 92 melee armour upgrade";
+    customFit.detail =
+      "Elof custom-fits trimmed masterwork at the Artisans' Workshop. The full self-sufficient chain requires Asgarnia and Morytania · Region combo (all required): asgarnia + morytania";
+    customFit.regionHints = ["asgarnia", "morytania"];
+    customFit.requiredRegions = ["asgarnia", "morytania"];
+    customFit.regionRequirementType = "all_required";
+    customFit.comboLabel = "Region combo (all required): asgarnia + morytania";
+    customFit.isRegionCombo = true;
+  }
+
+  const misthalinEof = misthalin.upgrades.find((row) =>
+    row.name.startsWith("Essence of Finality amulet"),
+  );
+  if (misthalinEof) {
+    misthalinEof.category = "Combat necklace";
+    misthalinEof.detail =
+      "Combines the amulet of souls and reaper necklace, and stores one weapon special attack";
+  }
+
+  if (deathtouch && !misthalin.upgrades.some((row) => row.name.startsWith("Deathtouch bracelet"))) {
+    misthalin.upgrades.push({
+      ...deathtouch,
+      name: "Deathtouch bracelet",
+      category: "Hybrid power gloves",
+      detail: "Hydrix gloves with a chance to reflect part of incoming damage.",
+      regionId: "misthalin",
+      regionHints: ["misthalin"],
+      requiredRegions: ["misthalin"],
+      regionRequirementType: "single",
+      comboLabel: "",
+      isRegionCombo: false,
+    });
+  }
 }
 
 const skPath = "data/research/regional-skilling-unlocks.json";
@@ -442,6 +683,7 @@ write(skPath, sk);
 const catPath = "data/research/catalog.json";
 const cat = read(catPath);
 let catChanged = 0;
+applyRegionCorrections(cat);
 for (const region of cat.regions || []) {
   for (const u of region.upgrades || []) {
     let changed = false;
@@ -534,7 +776,9 @@ for (const r of after.records || []) {
   }
 }
 const eqAfter = read(eqPath);
-const eqUser = eqAfter.records.filter((r) => /user ruling/i.test(r.unlock?.requirement || "")).length;
+const eqUser = eqAfter.records.filter((r) =>
+  /user ruling/i.test(r.unlock?.requirement || ""),
+).length;
 
 const catAfter = read(catPath);
 let catLeft = 0;

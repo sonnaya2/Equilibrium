@@ -65,11 +65,11 @@
     "progression-enrichment-regional-skilling-wave5-residual-b-2026-07-26.json"
   ],
   "stats": {
-    "total": 751,
-    "activities": 517,
-    "equipment": 234,
-    "regionCombos": 142,
-    "comboLabeled": 260
+    "total": 671,
+    "activities": 459,
+    "equipment": 212,
+    "regionCombos": 106,
+    "comboLabeled": 210
   },
   "records": [
     {
@@ -2340,64 +2340,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-asgarnia-2026-07-26.json"
     },
     {
-      "id": "asgarnia:modified-blacksmiths-helmet",
-      "name": "Modified blacksmith's helmet",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent modified skill-outfit head",
-      "detail": "Hard Asgarnia for Respect shop path · Unlocks: Retains 1% Smithing XP head-piece share of the blacksmith set, 3 daily teleports to Artisans' Workshop, 1% chance for double bars when smelting (examine-accurate; dialogue +5% is incorrect — excludes concentrated/enriched/immaculate alloy and masterwork alloy bars), Post-16-Mar-2026 DailyScape Overhaul: daily free coal claim removed — teleports + double-smelt remain · Region pressure: Hard Asgarnia for Artisans' Workshop Respect grind and shop geography",
-      "requirements": [
-        "Blacksmith's helmet piece from Artisans' Workshop Respect shop (Asgarnia)",
-        "Blacksmith's helmet add-on (Respect shop rotation / skill-outfit add-on path)",
-        "Use helmet on add-on to create modified version; free Diango reclaim"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_blacksmith%27s_helmet",
-        "title": "Modified blacksmith's helmet",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:modified-botanists-mask",
-      "name": "Modified botanist's mask",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia",
-        "kandarin"
-      ],
-      "requiredRegions": [
-        "asgarnia"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): asgarnia / kandarin",
-      "isRegionCombo": false,
-      "category": "Herblore outfit head add-on permanent",
-      "detail": "Ironman Herblore stack piece should be checklist-visible beside scroll of cleansing · Hard Asgarnia for FPF outfit path · Effects: Retains botanist head-piece Herblore XP share of the set, 5% chance to duplicate finished potions and bank the extra, Daily teleports to Catherby herb patch · Region pressure: Asgarnia: FPF Brian-point grind., Kandarin: Catherby herb-patch teleport destination value",
-      "requirements": [
-        "Botanist's mask owned (asgarnia:botanists-outfit — Flash Powder Factory Brian points; not Thaler)",
-        "Botanist's mask add-on (1,000 Brian points) applied to create modified mask"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_botanist%27s_mask",
-        "title": "Modified botanist's mask",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
-    },
-    {
       "id": "asgarnia:ore-box-tier-upgrades",
       "name": "Ore box tier upgrades",
       "recordType": "equipment",
@@ -2933,36 +2875,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-restore-wave3-2026-07-26.json"
-    },
-    {
-      "id": "asgarnia:toolbelt-master-thief-tools",
-      "name": "Master thief's lockpick + stethoscope (toolbelt)",
-      "recordType": "equipment",
-      "regionHints": [
-        "asgarnia",
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "Region chain (support pressure): asgarnia / misthalin",
-      "isRegionCombo": false,
-      "category": "Thieving permanent toolbelt tools",
-      "detail": "This id emphasises toolbelt permanence for ironman Thieving planning. Trahaearn exoskeleton / master camouflage remain separate Thieving stacks · Hard Misthalin Thieves' Guild despite asgarnia: id prefix. Not Asgarnia acquisition · Effects: Master thief's lockpick: unbreakable lockpick on toolbelt; +7% chest lock success (vs +3% ordinary lockpick) inside and outside heists, Master thief's stethoscope: permanent safecracking toolbelt path (no inventory stethoscope), Reclaim purchases from Dodgy Derek if destroyed before toolbelt attach · Region pressure: Misthalin hard: Thieves' Guild + Dodgy Derek are Lumbridge Misthalin (wiki League badge Misthalin)., Asgarnia id prefix is",
-      "requirements": [
-        "Thieves' Guild access (Buyers and Cellars series) — Lumbridge, Misthalin",
-        "Dodgy Derek's Dirty Deals: 2,500 pilfer points each for master thief's lockpick and master thief's stethoscope",
-        "Add both tools to the tool belt (permanent account unlock)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
-        "title": "Master thief's lockpick + stethoscope (toolbelt)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json"
     },
     {
       "id": "asgarnia:trollheim-disease-free-herb-patch",
@@ -4271,44 +4183,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-cross-chains-2026-07-26.json"
     },
     {
-      "id": "cross-region:imcando-tools-family",
-      "name": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
-      "recordType": "activity",
-      "regionHints": [
-        "fremennik",
-        "misthalin",
-        "asgarnia",
-        "tirannwn",
-        "karamja",
-        "anachronia"
-      ],
-      "requiredRegions": [
-        "fremennik",
-        "misthalin",
-        "asgarnia"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): fremennik + misthalin + asgarnia",
-      "isRegionCombo": true,
-      "category": "cross-region Imcando gather-tool family package",
-      "detail": "Package row for planners that only score one Imcando tool. Full finished t90 tools still need Tirannwn crystal legs (see cross-region Earth and Song / Ember and Glade). This family stack hard-requires the three non-crystal ownership regions of the ironman path · Surface Fremennik + Misthalin + Asgarnia when ranking the full Imcando family before crystal fusions. Tirannwn remains a separate crystal-leg gate on finished t90 tools · Region combo (all required): fremennik + misthalin + asgarnia · Unlocks: Family of Imcando-tier gather tools feeding tier-90 crystal fusions and later tier-100 Ramarno upgrades, Imcando pickaxe → crystal pickaxe / Earth and Song mining chain, Imcando hatchet → crystal hatchet / Ember and Glade woodcutting chain, Asgarnia Shard of the Lumberjack is the hard third region for the hatchet fusion family even when Imcando pick is Fremennik-only · Region pressure: Fremennik hard: Keldagrim / Lava Flow Mine Imcando pickaxe + blast fusion hammer shop., Misthalin hard: Fort Forinthry Woodcutter's Grove Imcando hatchet fragments (working Fort taxonomy)., Asgarnia hard: Shard of the Lumberjack purchase geography for Ember and Glade; also Ramarno/Camdozaal later tier-100 pressure., Tirannwn optional for crystal legs; Karamja/Anachronia optional for Warforge Imcando mattock / dragon mattock bases",
-      "requirements": [
-        "Imcando pickaxe: Birthright of the Dwarves / Lava Flow Mine gilding path; four Imcando pickaxe fragments; Keldagrim / Fremennik geography (fremennik:imcando-pickaxe, fremennik:lava-geyser-imcando-path)",
-        "Imcando hatchet: Woodcutter's Grove tier-3 fragment nests at Fort Forinthry (misthalin working taxonomy) after Birthright-class Imcando progression (misthalin:imcando-hatchet)",
-        "Shard of the Lumberjack: 1,000,000 coins from Wilfred north of Falador lodestone (Asgarnia) for Hatchet of Ember and Glade fuse",
-        "Blast fusion hammer (Keldagrim Blast Furnace Foreman, 1,000,000 coins post-WGS) for Pickaxe of Earth and Song fuse",
-        "Optional crystal conversion legs: Lady Ithell + harmonic dust (Tirannwn) when finishing Earth and Song / Ember and Glade"
-      ],
-      "confidence": "confirmed_wiki_cross_region_stack",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Imcando_pickaxe",
-        "title": "Imcando tools family (pickaxe, hatchet, related craft pressure)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json"
-    },
-    {
       "id": "cross-region:invention-machines-guild",
       "name": "Invention machines (Invention Guild + Fort Workshop power)",
       "recordType": "equipment",
@@ -4741,47 +4615,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Aquarium",
         "title": "Player-owned house Aquarium and Prawnbroker",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
-    },
-    {
-      "id": "cross-region:poh-portal-towns",
-      "name": "Player-owned house portal towns and Construction utilities",
-      "recordType": "activity",
-      "regionHints": [
-        "asgarnia",
-        "kandarin",
-        "karamja",
-        "fremennik",
-        "desert",
-        "tirannwn",
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "asgarnia",
-        "kandarin",
-        "karamja",
-        "fremennik",
-        "desert",
-        "tirannwn",
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin",
-      "isRegionCombo": true,
-      "category": "Construction teleport and housing infrastructure",
-      "detail": "Portal towns are multi-region geography for default exit convenience; the house instance itself is not region-owned. Prefer Rimmington for Construction supply loops. Fort Forinthry Workshop remains the separate fort Construction hub · region_hint asgarnia for the default starter / Rimmington Construction utility cluster. Other portals are convenience destinations when those regions unlock · Region combo (all required): asgarnia + kandarin + karamja + fremennik + desert + tirannwn + misthalin · Unlocks: House portal network: Rimmington, Taverley (Asgarnia); Pollnivneach, Menaphos (Desert); Rellekka (Fremennik); Brimhaven (Karamja); Yanille (Kandarin); Prifddinas (Tirannwn); Otot (Mazcab / external), Rimmington: furniture storage, furniture workbench, housing wizard, nearby plank maker and bank chest (primary Construction supply portal), House Teleport (40 Magic) / teleport tablets into house or outside portal; Love Story chipped tablets to any portal, Important Con utilities colocated with portals: gilded altar Prayer path, workshop repair stands, menagerie, study lecterns, costume room — global once house is owned",
-      "requirements": [
-        "Construction tutorial / house owned",
-        "Portal location Con levels: Rimmington/Taverley 1, Pollnivneach 20, Rellekka 30, Brimhaven 40, Yanille 50, Menaphos 50 + Jack of Spades, Otot 60 + 1,750 Mazcab reputation, Prifddinas 75 + Plague's End",
-        "Post-13 Jul 2026 POH rework: houses accessible from any portal the player qualifies for; estate agent sets default exit only"
-      ],
-      "confidence": "confirmed_wiki_with_2026_current_rule",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/House_portal",
-        "title": "Player-owned house portal towns and Construction utilities",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
@@ -5317,7 +5150,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Hunter elite outfit",
-      "detail": "Anachronia Hunter outfit. Blueprint and hunter marks on the island; full set for trap XP/QoL. League: Anachronia-only — not a multi-region fragment combo.",
+      "detail": "Anachronia Hunter outfit. Blueprint and hunter marks on the island; full set for trap XP/QoL. League: Anachronia-only — not a multi-region fragment combo",
       "requirements": [
         "Hunter mark shop blueprint for 100 hunter marks (Irwinsson) then Invention discovery",
         "80 Hunter and 20 Invention to craft desert / jungle / arctic trapper pieces",
@@ -6086,36 +5919,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-desert-2026-07-26.json"
-    },
-    {
-      "id": "desert:modified-farmers-hat",
-      "name": "Modified farmer's hat",
-      "recordType": "equipment",
-      "regionHints": [
-        "desert",
-        "morytania",
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "desert"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): desert / morytania / asgarnia",
-      "isRegionCombo": false,
-      "category": "Farming outfit head add-on permanent",
-      "detail": "Hard Desert for outfit + add-on. Teleport destinations are support value · Effects: +1% Farming XP (same as base hat piece), 2% chance to save seeds when sowing (including starbloom + battlestaff save when applicable), Daily teleports to Morytania allotment patch (or Taverley if Morytania inaccessible) — three teleports/day, Historical daily bird's nest claim removed in Dailyscape Overhaul (16 March 2026) — teleports + seed-save remain · Region pressure: Desert: farmer outfit acquisition., Morytania: preferred teleport destination value., Asgarnia: Taverley fallback teleport",
-      "requirements": [
-        "Farmer's hat piece owned (desert:farmers-outfit — Garden of Kharid Crux Eqal favour path)",
-        "Farmer's hat add-on applied to create modified hat"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_farmer%27s_hat",
-        "title": "Modified farmer's hat",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
     },
     {
       "id": "desert:nardah-elidinis-statuette",
@@ -8240,7 +8043,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Bloodweed farm + aggression potion craft",
-      "detail": "Only herb patch that accepts bloodweed seeds (57 Farming). Clean bloodweed + searing ashes craft aggression potions (82 Herblore, 185 XP, unassistable). Each dose lasts 6 minutes and pulls monsters in a 17x17 area (1 mob every 3s), ignoring tolerance. Sword 1 teleports to the patch; sword 3 / hard diary makes it disease-free. No G.A.G. gardener. · Unlocks: Bloodweed seed plant and grimy harvest (Wilderness-only crop), Aggression potion from clean bloodweed + searing ashes, Standard herbs also plantable here, Rare dark onyx core / portable obelisk rolls on full harvest · Region pressure: Forinthry owns the only bloodweed patch; searing ashes are a Forinthry wilderness drop path",
+      "detail": "Only herb patch that accepts bloodweed seeds (57 Farming). Clean bloodweed + searing ashes craft aggression potions (82 Herblore, 185 XP, unassistable). Each dose lasts 6 minutes and pulls monsters in a 17x17 area (1 mob every 3s), ignoring tolerance. Sword 1 teleports to the patch; sword 3 / hard diary makes it disease-free. No G.A.G. gardener · Unlocks: Bloodweed seed plant and grimy harvest (Wilderness-only crop), Aggression potion from clean bloodweed + searing ashes, Standard herbs also plantable here, Rare dark onyx core / portable obelisk rolls on full harvest · Region pressure: Forinthry owns the only bloodweed patch; searing ashes are a Forinthry wilderness drop path",
       "requirements": [
         "Wilderness / Forinthry access",
         "57 Farming for bloodweed seeds",
@@ -9493,34 +9296,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
     },
     {
-      "id": "havenhythe:apex-hide-masterwork-ranged-path",
-      "name": "Apex hide → Masterwork Ranged craft path",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Hunter–Crafting production permanent",
-      "detail": "Skilling half of BGH. Activity row stays XP/encounters; this id is the permanent material → armour craft edge for region pickers · Masterwork finishing materials remain multi-region pressure · Unlocks: Apex leather / apex sinew self-supply from Havenhythe BGH hides — regional Crafting material not found elsewhere, Tier 85–90 apex hide tank armour via tailoring (non-augmentable, non-degrading); upgrade ladder through +5, Masterwork ranged equipment unlock gate (It Should Have Been Called Chinskin) after full apex +5 set, Masterwork path still consumes multi-region materials (essences, lacquer, glorious bars) — Havenhythe owns the apex leather bottle-neck, not the entire masterwork recipe",
-      "requirements": [
-        "Havenhythe Big Game Hunter access (high Hunter / Slayer band for apex hides)",
-        "100 Crafting to tailor apex hide armour from apex leather",
-        "It Should Have Been Called Chinskin: craft a full apex hide set upgraded to +5 (384 apex leather total for full +5 set path)",
-        "110 Crafting (and associated multi-skill floors) for masterwork ranged armour after the apex +5 achievement"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Apex_hide_armour",
-        "title": "Apex hide → Masterwork Ranged craft path",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave5-havenhythe-2026-07-26.json"
-    },
-    {
       "id": "havenhythe:big-game-hunter",
       "name": "Havenhythe Big Game Hunter",
       "recordType": "activity",
@@ -9572,33 +9347,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:canoe-network",
-      "name": "Havenhythe canoe network",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent regional travel infrastructure",
-      "detail": "Havenhythe-local canoe system — not the River Lum / Wilderness canoe network used for. Construction plank costs are one-time repairs per station · Unlocks: Four canoe stations: Wendlewick (Burnt Lobster Tavern dock), Wendlewick (Farm / Blighted Cave approach), Wendlewick (Grotto / Deserted Mine approach), Amberfell east dock, Intra-Havenhythe water travel without lodestone spam once stations are repaired, Quick routing to Sanguine Crawlers, Deserted Mine approach, and Amberfell / Moonrise logistics",
-      "requirements": [
-        "Havenhythe access",
-        "Repair each dilapidated station before first use: Wendlewick stations need 20 Construction, 6 willow planks, 20 steel nails",
-        "Amberfell canoe station needs 40 Construction, 6 maple planks, 20 steel nails (after Secrets of Amberfell access)"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Havenhythe",
-        "title": "Havenhythe canoe network",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
     },
     {
       "id": "havenhythe:creeping-ivy",
@@ -9681,7 +9429,7 @@
     },
     {
       "id": "havenhythe:eternal-magic-nursery",
-      "name": "Dalia's Tree Nursery eternal magic plots",
+      "name": "Dalia's Tree Nursery eternal magic trees",
       "recordType": "activity",
       "regionHints": [
         "havenhythe",
@@ -9692,7 +9440,7 @@
       "comboLabel": "Region chain (support pressure): havenhythe / kandarin",
       "isRegionCombo": false,
       "category": "Woodcutting and Farming supply infrastructure",
-      "detail": "Alternate chopping location, not proof that the full self-source chain is Havenhythe-only. Saplings still come from Heedi / Piscatoris (Kandarin pressure). Eternal magic logs feed Masterwork staff, eternal birdhouses, high Construction, and weapon imbuing · Havenhythe owns the nursery plots. Kandarin still owns the original sapling NPC source unless Equilibrium adds another rule · Unlocks: Three empty tree plots that grow Heedi's eternal magic saplings into mature eternal magic trees next game day, Havenhythe-local eternal magic log supply once saplings are planted, Standard tree and fruit tree patches plus nearby bank and birdhouse plot",
+      "detail": "Alternate chopping location, not proof that the full self-source chain is Havenhythe-only. Saplings still come from Heedi / Piscatoris (Kandarin pressure). Eternal magic logs feed Masterwork staff, eternal birdhouses, high Construction, and weapon imbuing · Havenhythe owns the nursery plots; Kandarin's Piscatoris grove is the independent eternal magic tree route · Unlocks: Three empty tree plots that grow Heedi's eternal magic saplings into mature eternal magic trees next game day, Havenhythe-local eternal magic log supply once saplings are planted, Standard tree and fruit tree patches plus nearby bank and birdhouse plot",
       "requirements": [
         "The Lute of Love achievement (craft a lute for Dalia) to use nursery patches",
         "Heedi's eternal magic saplings (obtained from Heedi near Piscatoris)",
@@ -9706,6 +9454,34 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:eternal-magic-trees",
+      "name": "Eternal magic trees",
+      "recordType": "activity",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "kandarin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Woodcutting resource supply",
+      "detail": "Kandarin's Piscatoris grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement · Hard Kandarin for the Piscatoris eternal magic tree grove · Unlocks: Kandarin eternal magic log supply from the Piscatoris grove, Perfect eternal magic branch chance at 110 Woodcutting",
+      "requirements": [
+        "Piscatoris Hunter area access in Kandarin",
+        "100 Woodcutting for eternal magic trees"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Eternal_magic_tree",
+        "title": "Eternal magic trees",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-kandarin-2026-07-26.json"
     },
     {
       "id": "havenhythe:fang-of-mohegan",
@@ -9789,7 +9565,7 @@
     },
     {
       "id": "havenhythe:highweald-ruins-mine",
-      "name": "Highweald Ruins mine (necrite / phasmatite / platinum / havensilver)",
+      "name": "Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock",
       "recordType": "activity",
       "regionHints": [
         "havenhythe"
@@ -9798,8 +9574,8 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "category": "regional Mining infrastructure",
-      "detail": "depth for (thin geography pointer only) · Hearts of Sanguine is the permanent gate · Unlocks: Underground Highweald Ruins mine: 4 necrite, 4 phasmatite, 4 platinum (after slabs), 3 havensilver rocks, Starting-region high-tier Mining geography beyond the surface Highweald copper/tin/iron/coal/silver site, Permanent platinum chamber access once primeval slabs broken (Oh Yeah!)",
+      "category": "Mining / Highweald Forest",
+      "detail": "Unlocks: Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock · Hearts of Sanguine opens the Highweald Ruins mine · 104 Mining (boostable) and the Oh Yeah! achievement open the platinum rocks behind the primeval slabs",
       "requirements": [
         "Partial completion of Hearts of Sanguine so Gidon clears the ancient boulder and opens the Highweald Ruins cave",
         "Havenhythe access via Visions of Havenhythe progression",
@@ -9809,14 +9585,14 @@
       "source": {
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Highweald_Ruins_mine",
-        "title": "Highweald Ruins mine (necrite / phasmatite / platinum / havensilver)",
+        "title": "Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave-continue-starting-regions-2026-07-26.json"
     },
     {
-      "id": "havenhythe:jackalope-familiar",
-      "name": "Jackalope familiar (Archaeology soil BoB)",
+      "id": "havenhythe:marigold-farm-allotments",
+      "name": "Allotment patches",
       "recordType": "activity",
       "regionHints": [
         "havenhythe"
@@ -9825,104 +9601,63 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "category": "Archaeology soil-support familiar",
-      "detail": "CANONICAL jackalope equipment row referenced by shrine hub. Havenhythe owns the antler tertiary; Archaeology utility is global after pouch creation. Not a combat familiar and not an unrestricted BoB. Pair with Moonrise dig-site soil volume · Unlocks: Non-combat Beast of Burden / forager familiar with 16-minute duration and 40 summoning-point cost, 30 inventory slots restricted to Archaeology soil only; stores received soil when space remains, Passive screening: screens stored soil over time with 33% chance to receive materials per soil (uses a sign-of-the-porter charge to bank materials if available); very rare artefact discovery chance, Special Dig for Soil (Jackalope scroll): 12 special-move points (9 with spirit cape) — +10% chance of finding soil while excavating for 1 minute, stackable to 5 minutes maximum, Scroll conversion: 10 scrolls normal / 12 under Amlodd Voice of Seren",
-      "requirements": [
-        "30 Summoning",
-        "Jackalope pouch: gold charm + 10 spirit shards + empty pouch + jackalope antlers tertiary",
-        "Antlers from Havenhythe jackalope hunting (see havenhythe:jackalope-hunting)"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Jackalope",
-        "title": "Jackalope familiar (Archaeology soil BoB)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave5-havenhythe-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:jackalope-hunting",
-      "name": "Jackalope hunting (antler tertiary)",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Hunter tertiary supply for Summoning",
-      "detail": "Eagles' Peak ferret is optional multi-region convenience only · Unlocks: Always-drop jackalope antlers (tertiary for jackalope pouch) plus bones and raw rabbit, 202 Hunter XP per successful catch (wiki method rates are approximate only — do not hardcode optimizer XP/h), Starting-region tertiary loop colocated with empowered obelisks and birdhouse plot at the shrine, Trader Woes bank chest northwest of the shrine unlock path for non-drop loot banking",
-      "requirements": [
-        "32 Hunter",
-        "Rabbit snares at jackalope burrows south-west of Shrine of Inanna",
-        "Optional: teasing stick to flush one burrow; ferret (Eagles' Peak) to flush multiple burrows"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Jackalope_(Hunter)",
-        "title": "Jackalope hunting (antler tertiary)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave5-havenhythe-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:marigold-farm-patches",
-      "name": "Marigold Farm patch cluster",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "regional Farming infrastructure",
-      "detail": "split from the old farming-patch-cluster audit blob. Dalia's Tree Nursery (tree/fruit/eternal-magic plots) remains — do not merge. Marigold is the allotment/herb/flower half for daily Farming runs on automatic Havenhythe · Unlocks: Two allotment patches, one herb patch, and one flower patch south-east of Wendlewick, Extra starting-region herb/allotment density beyond Manor Farm defaults, Birdhouse plot adjacency on Marigold Farm (",
-      "requirements": [
-        "Havenhythe access via Visions of Havenhythe progression",
-        "Farming levels matching planted crops (standard allotment/herb/flower gates)"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Marigold_Farm",
-        "title": "Marigold Farm patch cluster",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:modified-shamans-headdress",
-      "name": "Modified shaman's headdress",
-      "recordType": "equipment",
-      "regionHints": [
-        "havenhythe",
-        "asgarnia"
-      ],
-      "requiredRegions": [
-        "havenhythe"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): havenhythe / asgarnia",
-      "isRegionCombo": false,
-      "category": "permanent modified skill-outfit head",
-      "detail": "Hard Havenhythe for outfit. Bogrog tele is Asgarnia support value · Unlocks: Retains 1% Summoning XP head-piece share of the shaman set, 3 daily teleports to Bogrog (Gu'Tanoth / Asgarnia-adjacent Summoning exchange), 5% chance to save a charm while infusing pouches (prioritised over spirit gems), Post-16-Mar-2026 DailyScape Overhaul: daily free spirit shard claim removed · Region pressure: Hard Havenhythe for Shrine of Inanna shaman outfit acquisition",
-      "requirements": [
-        "Shaman's headdress from Shrine of Inanna / spirit wolf blood path (havenhythe:shaman-outfit)",
-        "Shaman's headdress add-on",
-        "Use headdress on add-on; free Diango reclaim"
-      ],
+      "category": "Farming / Marigold Farm",
+      "detail": "Unlocks: Two allotment patches at Marigold Farm",
+      "requirements": [],
       "confidence": "confirmed_wiki",
       "source": {
         "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_shaman%27s_headdress",
-        "title": "Modified shaman's headdress",
-        "verifiedAt": "2026-07-26"
+        "url": "https://runescape.wiki/w/Allotment_patch",
+        "title": "Allotment patches",
+        "verifiedAt": "2026-07-28"
       },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json"
+      "sourceFile": "manual"
+    },
+    {
+      "id": "havenhythe:marigold-farm-herb-patch",
+      "name": "Herb patch",
+      "recordType": "activity",
+      "regionHints": [
+        "havenhythe"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Farming / Marigold Farm",
+      "detail": "Unlocks: One herb patch at Marigold Farm",
+      "requirements": [],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Herb_patch",
+        "title": "Herb patch",
+        "verifiedAt": "2026-07-28"
+      },
+      "sourceFile": "manual"
+    },
+    {
+      "id": "havenhythe:marigold-farm-flower-patch",
+      "name": "Flower patch",
+      "recordType": "activity",
+      "regionHints": [
+        "havenhythe"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Farming / Marigold Farm",
+      "detail": "Unlocks: One flower patch at Marigold Farm",
+      "requirements": [],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Flower_patch",
+        "title": "Flower patch",
+        "verifiedAt": "2026-07-28"
+      },
+      "sourceFile": "manual"
     },
     {
       "id": "havenhythe:moonrise-dig-site",
@@ -9950,58 +9685,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:old-meats",
-      "name": "Old Meats (Hollow Hill meat shop)",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent regional food and farm-supply shop",
-      "detail": "Hub: ironman dinosaur/dragon food bottlenecks cite Havenhythe Old Meats · Anachronia Ranch pressure is optional consumer, not a second home region · Unlocks: Permanent ironman meat packs: raw rabbit / beef / bird meat packs plus individual raw rabbit, beef, bird, rat, bear, chicken, Cooked rabbit / cooked meat / cooked chicken stock for early food, Starting-region Ranch Out of Time / Player-Owned Farm meat top-up alternative to Kandarin Oo'glog Fresh Meat",
-      "requirements": [
-        "Havenhythe access; Hollow Hill north of Wendlewick",
-        "Coins for Meat trader stock"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Old_Meats",
-        "title": "Old Meats (Hollow Hill meat shop)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-starting-regions-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:open-water-fishing-spots",
-      "name": "Havenhythe open-water fishing spots (beyond fish farm)",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "regional Fishing infrastructure",
-      "detail": "wendlewick-fish-farm is thin (multi-pool only) and giant-crayfish-fishing is the named high fish. This row is the open-water network for early/mid self-supply. No invented XP/h · Unlocks: Named open-water spots: big net/harpoon south of Deserted Mine; lure/bait in Amberfell and north of Blighted Cave; cage/harpoon south of Shrine of Inanna and west Wendlewick beach; crayfish south of shrine and in Wendlewick; small net/bait west Wendlewick beach, Passive fishing ladder independent of multi-pool fish farm management, Complements giant crayfish spots without re-emitting farm pool construction",
-      "requirements": [
-        "Havenhythe access via Visions of Havenhythe",
-        "Fishing gear for the relevant spot type (net/bait, cage/harpoon, lure/bait, big net/harpoon, crayfish cage)"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Havenhythe",
-        "title": "Havenhythe open-water fishing spots (beyond fish farm)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-starting-regions-2026-07-26.json"
     },
     {
       "id": "havenhythe:ring-of-kayazu",
@@ -10058,59 +9741,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
     },
     {
-      "id": "havenhythe:shrine-of-inanna-summoning-hub",
-      "name": "Shrine of Inanna Summoning hub",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "regional Summoning production hub pointer",
-      "detail": "Havenhythe Summoning production advantage. Pair with shaman outfit and jackalope equipment rows · Unlocks: Empowered Summoning obelisks with Spirit Plane Connection (",
-      "requirements": [
-        "Havenhythe / Visions of Havenhythe progression for shrine access",
-        "Fairy ring BKS later access"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Shrine_of_Inanna",
-        "title": "Shrine of Inanna Summoning hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:shrine-of-the-spirit-wolves",
-      "name": "Shrine of the Spirit Wolves (Blessings of the Wolf shop)",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Summoning reward-shop infrastructure",
-      "detail": "Shop infrastructure row · Unlocks: Permanent ordered shop unlocks: full shaman's outfit pieces, shaman's headdress add-on, Fang of Mohegan, the Spirit Wolf title, Blessings of the Wolf currency is not spent when unlocking — thresholds gate purchases only (Het's Oasis scarabs-caught pattern), Pre-Havenhythe owners of shaman outfit + Fang of Mohegan start at 4,200 Blessings without pouch work, Pikkenflix also runs Summoning Supplies at the shrine for local shard/pouch logistics",
-      "requirements": [
-        "Access to Shrine of Inanna / Pikkenflix",
-        "Infuse summoning pouches at any of the three shrine obelisks to earn Blessings of the Wolf (1 per pouch)",
-        "5,000 cumulative Blessings required to unlock the entire ordered stock list (comp cape requirement via No Need to Pikkenchoose)"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Shrine_of_the_Spirit_Wolves",
-        "title": "Shrine of the Spirit Wolves (Blessings of the Wolf shop)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave5-havenhythe-2026-07-26.json"
-    },
-    {
       "id": "havenhythe:spirit-moths",
       "name": "Spirit moths (Highweald charm supply)",
       "recordType": "activity",
@@ -10163,32 +9793,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
-    },
-    {
-      "id": "havenhythe:trader-woes-bank-chest",
-      "name": "Trader Woes shrine bank chest",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent regional banking QoL",
-      "detail": "Small permanent unlock with outsized Summoning/Hunter loop value. Documented on Shrine of Inanna and jackalope hunting strategy pages · Unlocks: Permanent bank chest northwest of Shrine of Inanna, Banking for empowered-obelisk pouch runs, jackalope hunting loot, and shrine birdhouse trips without Wendlewick runbacks",
-      "requirements": [
-        "Complete Trader Woes achievement near Shrine of Inanna",
-        "30 iron nails for the repair/unlock step"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Trader_Woes",
-        "title": "Trader Woes shrine bank chest",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave5-havenhythe-2026-07-26.json"
     },
     {
       "id": "havenhythe:volatile-chinchompas",
@@ -12489,62 +12093,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
     },
     {
-      "id": "kandarin:modified-diviners-headwear",
-      "name": "Modified diviner's headwear",
-      "recordType": "equipment",
-      "regionHints": [
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Divination modified outfit head",
-      "detail": "Deferred from Free Diango reclaim. Distinct from full elder outfit — this is the base-outfit head upgrade path · Add-on acquisition follows skill-outfit add-on rules (not TH as League path) · Effects: 1% Divination XP while worn (same as base head piece), 3 daily teleports to Guthixian ruins / May Stormbrewer / Guthix's shrine destinations, While weaving or transmuting: 5% chance to save half the divine energy (≈2.5% energy saved on average over time), Energy-save effect does not apply to divine charges, Elder divination head inherits the energy-save benefit if this modified head is owned, Post-16-Mar-2026 DailyScape Overhaul: daily free chronicle-fragment claim removed — teleport + energy-save remain",
-      "requirements": [
-        "Diviner's headwear piece of the diviner's outfit (Guthixian Cache route)",
-        "Diviner's headwear add-on applied to the base headwear"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_diviner%27s_headwear",
-        "title": "Modified diviner's headwear",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json"
-    },
-    {
-      "id": "kandarin:modified-sous-chefs-toque",
-      "name": "Modified sous chef's toque",
-      "recordType": "equipment",
-      "regionHints": [
-        "kandarin",
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "kandarin"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): kandarin / misthalin",
-      "isRegionCombo": false,
-      "category": "permanent modified skill-outfit head",
-      "detail": "Hard Kandarin for outfit path. Cooks' Guild tele is Misthalin support value · Unlocks: Retains 1% Cooking XP head-piece share of the sous chef set, 3 daily teleports outside the Cooks' Guild; wearing the toque also grants Cooks' Guild entry, 5% chance to cook duplicate food (banks automatically); stacks with portable range / Waiko grill 5% duplication, Does not duplicate rocktail soup, sailfish soup, or primal feast; does work on apex sinew, Post-16-Mar-2026 DailyScape Overhaul: daily free pie shell claim removed · Region pressure: Hard Kandarin for Gnome Restaurant outfit acquisition",
-      "requirements": [
-        "Sous chef's toque from Gnome Restaurant (Kandarin gameplay path)",
-        "Sous chef's toque add-on",
-        "Use toque on add-on; free Diango reclaim"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_sous_chef%27s_toque",
-        "title": "Modified sous chef's toque",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json"
-    },
-    {
       "id": "kandarin:oo-glog-spa",
       "name": "Oo'glog spa pools (As a First Resort)",
       "recordType": "activity",
@@ -14060,59 +13608,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-slayer-rc-prayer-2026-07-26.json"
     },
     {
-      "id": "misthalin:archaeology-campus-hub",
-      "name": "Archaeology Campus and Varrock Dig Site hub",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology guild campus infrastructure",
-      "detail": "Broader campus infrastructure pointer beyond the guild-shop outfit row. Senntisten dig-site access historically routes through the Varrock Dig Site campus; treat Senntisten dig content as a separate locality decision if Equilibrium splits it · Starting Misthalin Archaeology hub. Keep individual dig sites on their own region_hints · Unlocks: Archaeology Guild and Guild Shop (chronote permanent upgrades · Region status: confirmed_base_game_geography",
-      "requirements": [
-        "Archaeology tutorial / skill unlock",
-        "Guild qualifications and levels for shop and research upgrades"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Archaeology_Guild",
-        "title": "Archaeology Campus and Varrock Dig Site hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:archaeology-collectors",
-      "name": "Archaeology collectors and collection system",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology collection infrastructure",
-      "detail": "Collectors live on campus and at culture hubs; artefact geography is dig-site regional. Relic powers unlocked via collections should keep their dig-site region_hints on their own rows · Campus collectors are Misthalin. Collection completion often multi-region · Unlocks: Chronote payouts for artefact turn-ins vs museum bin (collectors pay full; bin pays 40%), Collection completion rewards including many monolith relic unlock items, Museum / Velucia training collections and culture experts as permanent progression tracks",
-      "requirements": [
-        "Restored artefacts matching each collection",
-        "Dig-site access for artefact sources (multi-region)",
-        "Collectors Assemble progression for Guildmaster (25 unique collections)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Collectors",
-        "title": "Archaeology collectors and collection system",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
-    },
-    {
       "id": "misthalin:artisans-outfit",
       "name": "Artisan's outfit",
       "recordType": "equipment",
@@ -14314,33 +13809,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
     },
     {
-      "id": "misthalin:croesus-front-skilling",
-      "name": "Croesus Front skilling nodes and skilling-boss access",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "high-level gather hub and skilling boss infrastructure",
-      "detail": "Skilling-first row: permanent access to 88/92 gather nodes and boss contribution economy. Combat Cryptbloom stays combat catalogs · Misthalin Senntisten working taxonomy. Skill level gates remain · Unlocks: Front nodes: fungal algae (Fishing), fungal spores (Hunter), calcified fungus (Mining), timber fungus (Woodcutting) + enriched 90s spawns, Resonant anima of Bik and Bik Elder Troves while skilling (pontifex ring tier scales troves), Skilling boss Croesus (safe encounter) for contribution-based chest loot, Skilling off-hand drop path: Tagga's corehammer, Sana's fyrtorch (already equipment rows), Seed bag materials, grasping rune pouch upgrade path, Scripture of Bik, Cryptbloom armour (combat tank — note only), Heroes of the Graveyard lore books from any front node · Region status: historical_senntisten_working_taxonomy",
-      "requirements": [
-        "No hard entry gate; City of Senntisten recommended for narrative and pontifex ring",
-        "88 Fishing / Hunter / Mining / Woodcutting for standard front nodes; 92 for enriched variants",
-        "Level 80 in those skills + Construction recommended for Croesus skilling-boss encounter"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Croesus_Front",
-        "title": "Croesus Front skilling nodes and skilling-boss access",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
-    },
-    {
       "id": "misthalin:dig-site-pendant",
       "name": "Dig Site pendant",
       "recordType": "equipment",
@@ -14369,62 +13837,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave5-residual-a-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:draynor-skilling-hub",
-      "name": "Draynor Village skilling hub",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "regional multi-skill bank and production hub",
-      "detail": "Central Misthalin logistics village between starter Lumbridge and Asgarnia Port Sarim. Prefer existing rows for Ava, Runespan, and Um facilities · Unlocks: Draynor Market bank, willow trees, fishing spots, and seed / farming shop adjacency, Draynor Manor (Ava / Animal Magnetism reclaim",
-      "requirements": [
-        "No skill gate for village",
-        "Animal Magnetism for Ava's devices (equipment row already first-class)",
-        "Partial progressive quests for Wise Old Man / diary content as applicable"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Draynor_Village",
-        "title": "Draynor Village skilling hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:edgeville-skilling-hub",
-      "name": "Edgeville skilling and Wilderness on-ramp hub",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "forinthry",
-        "asgarnia"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / forinthry / asgarnia",
-      "isRegionCombo": false,
-      "category": "regional multi-skill bank and production hub",
-      "detail": "Wilderness destinations need Forinthry · Unlocks: Compact bank + free Edgeville furnace (Varrock diary) for smelting loops, Yew trees, everlasting bonfire convenience, canoe station on the River Lum, Edgeville dungeon resource-dungeon approaches (hill giants / chaos druids — DG skill pressure), Primary surface on-ramp to low Wilderness (Mage of Zamorak Abyss, Wilderness herb patch sword tele), Grand Exchange via glory / spirit tree alternatives nearby; monastery combat-bracelet west toward Ice Mountain / Camdozaal",
-      "requirements": [
-        "No skill gate for town",
-        "Varrock achievements for free Edgeville furnace access always-on diary side effect",
-        "Optional Wilderness sword for diary teleports (Forinthry)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Edgeville",
-        "title": "Edgeville skilling and Wilderness on-ramp hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
     },
     {
       "id": "misthalin:empty-throne-room",
@@ -14478,299 +13890,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:family-crest-skilling-gauntlets",
-      "name": "Family Crest cooking and smelting gauntlets",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "asgarnia"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / asgarnia",
-      "isRegionCombo": false,
-      "category": "permanent skilling glove unlocks",
-      "detail": "Quest is Misthalin-started; Boot/Dwarven Mine step and Artisans Workshop synergy make this a must-list for Asgarnia smithing audits. Smelting gauntlets pair with Asgarnia metal bank + Artisans Superheat workflows. After 12 Aug 2024, Family Crest is no longer required to store silver/gold in ore box/metal bank — gauntlets remain the burn/smelt QoL unlock · Quest auto-completion may grant gauntlets without walking the quest. Keep Misthalin as quest region; Asgarnia is the practical Artisans synergy region, not the quest start · Unlocks: Cooking gauntlets (reduced fish burn chance; can contribute sous chef 1% mitts set bonus if owned), Smelting gauntlets (smelted bars go to metal bank; Make-X up to 60; Superheat Item metal-bank mode inside Artisans' Workshop), Chaos gauntlets (combat bolt-spell path — not a skilling priority), Ability to own all three pairs with paid re-enchant paths",
-      "requirements": [
-        "Family Crest completed (starts with Dimintheis in south-east Varrock)",
-        "Normal game skill suggestions include 40 Crafting / Mining / Smithing; combat path or deathtouched dart for Chronozon"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Family_Crest",
-        "title": "Family Crest cooking and smelting gauntlets",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-asgarnia-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fletchers-outfit",
-      "name": "Fletcher's outfit",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin",
-        "forinthry"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / forinthry",
-      "isRegionCombo": false,
-      "category": "Fletching XP outfit",
-      "detail": "Gameplay path is Stealing Creation or thaler — not TH (removed from TH 27 Sep 2021). Free Diango reclaim. Cannot store in POH costume room · Stealing Creation is Wilderness/forinthry pressure; thaler path is multi-hub. Misthalin id per · Effects: 1% Fletching XP per worn piece, +1% set bonus when all five pieces worn (6% total)",
-      "requirements": [
-        "Stealing Creation Reward Shop: 100 Stealing Creation points per piece (500 full set)",
-        "Alternate: Stanley Limelight Traders — 360 thaler per piece (post-16-Mar-2026 DailyScape Overhaul)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Fletcher%27s_outfit",
-        "title": "Fletcher's outfit",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:focus-storage",
-      "name": "Focus storage",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Necromancy ritual material container",
-      "detail": "Container infrastructure rather than wearable equipment; listed under equipment_additions for planner merge consistency with other permanent utility containers. Moonstones used in ensoul moonstone cannot be stored · Um/Misthalin ritual QoL. Ungael site access remains a separate Fort/dragonkin geography question if localities split · Effects: Stores up to 20 stacks of ritual focus materials, Rituals automatically consume valid focuses from storage, Shared contents between Um and Ungael focus storages, Receives Underworld Grimoire auto-deposited bones when toggled · Region status: historical_city_of_um_working_taxonomy",
-      "requirements": [
-        "Necromancy! access to a ritual site"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Focus_storage",
-        "title": "Focus storage",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-botanists-workbench",
-      "name": "Fort Forinthry Botanist's Workbench",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Herblore batch-production infrastructure",
-      "detail": "Regional pointer for the fort Herblore bench already sketched as fort- in progression-enrichment-2026-07-24. Combination-potion recipes still require Meilyr Recipe Shop unlocks (Tirannwn pressure). Scroll of cleansing and some ingredient-save bonuses do not apply to Granny unfinished overload prep · Misthalin owns the bench. Treat Tirannwn Meilyr recipes as a separate cross-region dependency for combination potions · Unlocks: Granny Rowan Herblore services including potion/blubber decanting, Tier 2 limited Herblore supply stock and unnoted vials of water from the workbench, Tier 3 Granny Rowan unfinished overload / overload-salve preparation from noted ingredients, Tier 3 stackable unfinished overload chain finishing at the workbench, Herblore master cape batching options at tier 3 (more finished overloads per ingredient sets) · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Ancient Awakening completed",
-        "Construction 54 / 78 / 92 for workbench tiers 1 / 2 / 3",
-        "Talk through Granny Rowan unlock dialogue after building"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Botanist%27s_Workbench",
-        "title": "Fort Forinthry Botanist's Workbench",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-chapel",
-      "name": "Fort Forinthry Chapel",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Prayer altar and offering infrastructure",
-      "detail": "Post-16-February-2026 early-game rebalance reduced Fort Chapel offering XP bonuses by 50% relative to older guides; use the current 200%/250%/300% tier ladder, not pre-rebalance 400%+ claims. Burner save chance is permanent facility QoL separate from pure XP ranking. POH altars may still outpace for raw XP/hour after the rebalance · Permanent Prayer infrastructure under Fort/Misthalin. Prefer current wiki tier percentages over any pre-2026 ironman guide numbers · Unlocks: Bank chest plus Fort altar and Chapel Burners, Tier 1: 200% Prayer XP when offering ashes or bones, Tier 2: 250% Prayer XP; longer burners with higher save chance, Tier 3: 300% Prayer XP; prayer book swap on the altar; god decor customisation, Herb-fed Chapel Burners that can save offerings (tiered duration and save chance) · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "New Foundations completed",
-        "Construction 15 / 55 / 90 for Chapel tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_with_2026_current_rule",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
-        "title": "Fort Forinthry Chapel",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-command-centre",
-      "name": "Fort Forinthry Command Centre",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "global operations and Archaeology research hub",
-      "detail": "This is fort-side management infrastructure for systems that still live in other regions · Surface as Misthalin fort QoL that amplifies other regions' passive systems rather than replacing them · Unlocks: Remote tables for player-owned port, Managing Miscellania, Anachronia base camp, and Archaeology research notes, Tiered player-owned port voyage success chance (+3% / +6% / +10%), Tier 2: five extra Anachronia base camp workers; 3% reduced chronote cost for Archaeology research, Tier 3: ten extra Anachronia workers total; 3% faster Archaeology research; Miscellania approval lock purchase · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "New Foundations completed",
-        "Construction 25 / 70 / 99 for Command Centre tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Command_Centre",
-        "title": "Fort Forinthry Command Centre",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-forinthry-workshop",
-      "name": "Fort Forinthry Workshop",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Construction hub and multi-skill workshop infrastructure",
-      "detail": "The Workshop is the gate building for the rest of Fort Forinthry. It is permanent multi-skill infrastructure (Construction, Invention machines, Archaeology restore, Smithing), not only a Construction XP method · Map under Misthalin using Catalyst Fort Forinthry precedent until Equilibrium confirms locality. Keep Construction level gates even if quests auto-complete · Unlocks: Fort Construction training method and blueprints table, Sawmill, stonecutter, and woodworking bench for fort timber and stone materials, Bill's Construction Supplies store, Inventor's workbench, Archaeologist's workbench and material storage container, Furnace, two anvils, and two forges, Tier 1-3 Construction hotspot XP bonus inside the fort (+5% / +10% / +15%), Tier 2 remote Invention machine management, Tier 3 +25% Invention machine power capacity · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Partial completion of New Foundations for full workshop amenities",
-        "Construction 1 / 35 / 75 for Workshop tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Workshop_(Fort_Forinthry)",
-        "title": "Fort Forinthry Workshop",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-guardhouse-slayer",
-      "name": "Fort Forinthry Guardhouse and Raptor Slayer hub",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Slayer infrastructure",
-      "detail": "Skilling-adjacent Slayer facility, not combat gear BiS. Keep separate from weapon/armour progression rows. Trophy mount gates and point scaling belong in Slayer training data, not invented here · Unlocks: The Raptor as a Fort Slayer master location, Trophy stands for Raptor Slayer challenge trophies, Tier 1: +1% damage on Slayer assignments (+2% vs undead); +2% elite spawn chance, Tier 2: +5% ushabti capture rate; +4% elite spawn chance total, Tier 3: non-boss Slayer execute chance on ultimate hits; extra damage vs low-HP non-boss Slayer targets; +6% elite spawn chance total · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Partial completion of Unwelcome Guests for tier 1; full quest for tiers 2-3",
-        "Construction 40 / 65 / 95 for Guardhouse tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Guardhouse",
-        "title": "Fort Forinthry Guardhouse and Raptor Slayer hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-kitchen",
-      "name": "Fort Forinthry Kitchen",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Cooking infrastructure and range hub",
-      "detail": "Ironman guides stack a bonfire at the kitchen entrance with the in-kitchen facility bonuses. Only portable ranges can be placed inside the kitchen · Misthalin fort Cooking hub. Port soup output still depends on player-owned port access for full value · Unlocks: Range, sink, and bank chest in the Kitchen, Tier 1 permanent never-fail spiderweb/Wilderness web slash, Tier 2: 3% reduced burn chance while cooking in the Kitchen; Rodney's Independent Trading Co access, Tier 3: 5% increased base Cooking XP while cooking in the Kitchen (not protean proteins), Tier 3 soup creation station for player-owned port soups · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Partial completion of Murder on the Border for tier 1; full quest for tiers 2-3",
-        "Construction 25 / 50 / 85 for Kitchen tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Kitchen_(Fort_Forinthry)",
-        "title": "Fort Forinthry Kitchen",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-rangers-workroom",
-      "name": "Fort Forinthry Ranger's Workroom",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Fletching infrastructure",
-      "detail": "Bonuses apply while standing inside the workroom, including at the bank chest or a portable fletcher placed inside. Not all fletching actions receive the material-save effect (stringing bows is a known exclusion) · Fort/Misthalin Fletching facility. Wisdom of Anima still requires its own Anachronia/anima unlocks · Unlocks: Bank chest, spinning wheel, fletching workbench, and nearby ranged target, Tier 1: chance to save resources on many fletching actions; chance for extra arrow shafts, Tier 2: chance for extra ammo/headless arrows; chance to auto-string unstrung bows, Tier 3: 5% increased base Fletching XP inside the workroom, Tier 3 toggle for Wisdom of Anima perks via the fletching workbench · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Partial completion of Dead and Buried for tier 1; full quest for later tiers",
-        "Construction 50 / 65 / 80 for workroom tiers 1 / 2 / 3"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Ranger%27s_Workroom",
-        "title": "Fort Forinthry Ranger's Workroom",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:fort-town-hall",
-      "name": "Fort Forinthry Town Hall",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Fort bank, Construction tiers, and rested XP",
-      "detail": "Town Hall is the fort bank, Construction tier gate, and rested XP source. Woodcutters' Grove counts as in-fort for rested gain. Unlocks: bank chest + Copperpot banker; Zoe seasonal tree decor; rested XP while offline (1 per 15 min) or skilling in fort (1/2/3 per 3 min at T1/T2/T3); caps 500 / 1,000 / 1,500; spend rested points with Aster for bonus XP (redeems all at once). Tier buildings unlock at matching Town Hall tier. · Hard Misthalin fort geography",
-      "requirements": [
-        "New Foundations completed for full fort construction access",
-        "Construction 10 for Town Hall tier 1 (10 oak frames + 6 stone wall segments)",
-        "Construction 45 for Town Hall tier 2 (22 maple frames + 6 stone wall segments)",
-        "Construction 80 for Town Hall tier 3 (60 magic frames + 6 stone wall segments)",
-        "Blueprint progress at Fort Forinthry blueprints: base 200 / 396 / 840 batches for T1 / T2 / T3"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
-        "title": "Fort Forinthry Town Hall",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue2-2026-07-26.json"
     },
     {
       "id": "misthalin:gate-of-elidinis",
@@ -14854,36 +13973,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
     },
     {
-      "id": "misthalin:guildmaster-qualification",
-      "name": "Archaeology Guildmaster qualification permanent rewards",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology Guild permanent unlock",
-      "detail": "Acting Guildmaster Reiniger awards ceremony/claimables; Guildmaster Tony is the missing prior guildmaster (Tony's mattock is a separate end-game tool). Expands without re-emitting that id. Fixate daily energy requires wearing full master outfit (99 Arch + Guildmaster shop) · Starting Misthalin Guild infrastructure. Collection/mystery counts still require multi-region dig sites · Unlocks: Research team size 5 and access to research professors, Fourth relic loadout tab (after tutorial 2 + Professor purchase 3), Guildmaster Archaeology Guild Shop tab: master archaeologist's outfit, energised meteorite shard, final +2 mattock precision, Claim pack from Acting Guildmaster Reiniger: 5 material manuals, 5 hi-spec monocles, 5 tarpaulin sheets, 5 archaeologist's tea",
-      "requirements": [
-        "Qualification - Professor already complete",
-        "99 Archaeology",
-        "Discoverer IX / Restorer IX (1,000 excavate and restore each)",
-        "Collectors Assemble VII (25 unique collections)",
-        "Mystery Solver VI (20 mysteries)",
-        "Researcher IV (168 research hours)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Qualification_-_Guildmaster",
-        "title": "Archaeology Guildmaster qualification permanent rewards",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
-    },
-    {
       "id": "misthalin:guildmaster-tonys-mattock",
       "name": "Guildmaster Tony's mattock",
       "recordType": "activity",
@@ -14962,69 +14051,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
-    },
-    {
-      "id": "misthalin:infinity-ethereal-outfit",
-      "name": "Infinity ethereal outfit",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin",
-        "morytania"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / morytania",
-      "isRegionCombo": false,
-      "category": "Runecrafting elite skilling outfit",
-      "detail": "Equipment upgrade of thin activity. Wizards' Tower / Runespan portal is Misthalin. master runecrafter robes and wicked hood stacks · Misthalin for Runespan hub. Morytania optional for blood-altar inherit layer only · Effects: 5 daily teleports to the yellow wizard within the Runespan (same floor) and free return after hand-in, 7% chance to double runes when siphoning in the Runespan (double XP on the double), Free movement between Runespan platforms (level requirements still apply), Infinity ethereal body stores 12 rune / pure / impure essence, 50% chance for runecrafting pouches not to degrade while runecrafting, Body and legs weight reduction (−9.5 kg / −7.5 kg), Inherits Master runecrafter robes XP bonus if owned (after those robes worn once) even while ethereal is banked/Diango, Inherits wicked robes effects if owned; full set head acts as wicked hood, Infinity ethereal legs inherit Morytania legs 2 blood-altar benefits if owned; chance to save blood altar tablets if legs 3/4 owned",
-      "requirements": [
-        "54,000 rune ethereal fragments total to craft law + blood + death ethereal outfits then combine into infinity",
-        "Invention craft path for ethereal pieces (gameplay default; not TH)",
-        "Optional: Rune Mythos for impure essence fill order on body storage"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Infinity_ethereal_outfit",
-        "title": "Infinity ethereal outfit",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:it-belongs-in-a-museum-log",
-      "name": "It Belongs in a Museum! (Velucia meta collection log)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "desert",
-        "asgarnia",
-        "morytania",
-        "kandarin",
-        "anachronia",
-        "forinthry",
-        "havenhythe"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + desert + asgarnia + morytania + kandarin + anachronia + forinthry + havenhythe",
-      "isRegionCombo": true,
-      "category": "Archaeology museum collection-log infrastructure",
-      "detail": "Meta-log id only — not a second chronote payout system · Hard Misthalin log owner. Sub-collections need dig-site regions · Unlocks: Account collection-log track grouping all Velucia Museum - * culture sub-collections (Zarosian, Zamorakian, Saradominist, Guthixian, Armadylean, Bandosian, Dragonkin), Planner surface for museum completion percentage separate from culture-expert collector logs, Pairs with for chronote-value checklist without listing every artefact · Region pressure: Misthalin owns the log NPC and campus hand-in., Dig-site optional pressure matches museum culture geography",
-      "requirements": [
-        "Access to Velucia as museum collector",
-        "Progressive Archaeology levels and dig sites for each Museum - * sub-collection"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/It_Belongs_in_a_Museum!",
-        "title": "It Belongs in a Museum! (Velucia meta collection log)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json"
     },
     {
       "id": "misthalin:lorehound",
@@ -15156,149 +14182,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
     },
     {
-      "id": "misthalin:modified-artisans-bandana",
-      "name": "Modified artisan's bandana",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin",
-        "forinthry"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / forinthry",
-      "isRegionCombo": false,
-      "category": "permanent modified skill-outfit head",
-      "detail": "Hard Misthalin for Crafting Guild teleport value. SC path adds Forinthry optional pressure · Unlocks: Retains 1% Crafting XP head-piece share of the artisan set, 3 daily teleports outside the Crafting Guild, 5% chance to save one leather / hide / cloth (including starbloom cloth) per crafted item — extra banks automatically, Post-16-Mar-2026 DailyScape Overhaul: daily free soft clay claim removed · Region pressure: Misthalin taxonomy for Crafting Guild teleport home and SC/Gamers' Grotto adjacency",
-      "requirements": [
-        "Artisan's bandana from Stealing Creation / thaler path (not TH)",
-        "Artisan's bandana add-on",
-        "Use bandana on add-on; free Diango reclaim"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_artisan%27s_bandana",
-        "title": "Modified artisan's bandana",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:modified-ritualists-mask",
-      "name": "Modified ritualist's mask",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent modified skill-outfit head",
-      "detail": "Hard Misthalin for City of Um shop path · Unlocks: Retains 1% Necromancy XP head-piece share of the ritualist set (up to 6% with full set), 5% chance not to consume the ritual focus object on ritual completion, Once per day: spawn one deathshead moth (not usable in instances), Post-16-Mar-2026 DailyScape Overhaul: daily free bucket of slime claim removed · Region pressure: Hard Misthalin for City of Um / Austin's Place acquisition and Necromancy ritual geography",
-      "requirements": [
-        "Ritualist's mask + add-on from Austin's Place (City of Um) after capturing 70 deathshead moths (ectoplasm shop path post-2025)",
-        "Use mask on add-on; free Diango / bank reclaim"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_ritualist%27s_mask",
-        "title": "Modified ritualist's mask",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:monolith-energy-research-ladder",
-      "name": "Mysterious monolith energy + relic loadout ladder",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology monolith infrastructure",
-      "detail": "Archaeology monolith powers are a different system from Equilibrium League Relics — never share slot state · Hard Misthalin campus. Dig-site relics still need their regions · Unlocks: Offer relics then harness powers spending chronotes + limited monolith energy (hard cap of three powers active per loadout regardless of energy), Energy capacity ladder by Archaeology level — required to co-harness high-cost powers (e.g. 250-energy Inspire set / Abyssal Link), Relic loadout tabs: 2 after tutorial (2025 Relic Presets), 3 via Professor shop, 4 via Guildmaster award, Switching active loadout costs 80% of normal chronote harness cost for powers on the target loadout (shared powers still contribute), Also powers tetracompass and hosts Mattock of Time and Space craft · Region pressure: Misthalin owns the physical monolith and loadout shop purchases., Individual relic unlock items still require dig-site regions listed on their own rows",
-      "requirements": [
-        "Archaeology tutorial relic onboarding (The Mortal Cup / Font of Life path)",
-        "Archaeology level gates monolith energy capacity (capacity scales with level)",
-        "Professor qualification + 80,000 chronotes for third relic loadout tab",
-        "Guildmaster qualification for fourth (final) relic loadout tab"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Mysterious_monolith",
-        "title": "Mysterious monolith energy + relic loadout ladder",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:museum-donation-bin",
-      "name": "Museum donation bin (40% chronote overflow)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology chronote overflow infrastructure",
-      "detail": "Mentioned only as blurb on collectors hub before — id. Velucia premium without competing as best payout. Spear of Annihilation donation blocked if unused (wiki patch) · Hard Misthalin campus scenery · Unlocks: Donate restored artefacts for 40% of the base chronote value a collector would pay for that artefact in a collection, Permanent campus sink for duplicates / artefacts not currently needed by collectors, The Donator I–V achievements track donation counts (1 / 25 / 50 / 100 / 250), Planner rule: collectors (and Velucia 225% sets) dominate chronote efficiency — bin is overflow only, never primary funding · Region pressure: Misthalin the bin scenery and campus geography",
-      "requirements": [
-        "Restored unnoted artefacts (any culture)",
-        "No collection slot required — bin accepts unrestricted donations (Baby Shakes-style overflow)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Museum_donation_bin",
-        "title": "Museum donation bin (40% chronote overflow)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:necromantic-rune-temple",
-      "name": "Necromantic Rune Temple",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Runecrafting",
-      "detail": "City of Um necrotic altars (impure essence). Craft spirit, bone, flesh, and miasma runes. Max ~50k RC XP/h at Miasma (20 XP/ess, pouches; essence supply-limited by rituals). Not Abyss/wicked-hood reachable.",
-      "requirements": [
-        "Most of Rune Mythos completed for temple access",
-        "Impure essence from Necromancy rituals",
-        "Runecrafting 1 / 20 / 40 / 60 for spirit / bone / flesh / miasma altars"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Necromantic_Rune_Temple",
-        "title": "Necromantic Rune Temple",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
       "id": "misthalin:new-varrock-achievements-doubling",
       "name": "New Varrock achievements (Varrock armour doubling)",
       "recordType": "activity",
@@ -15373,35 +14256,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-ironman-unlocks-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:professor-relic-loadout-purchase",
-      "name": "Professor additional relic loadout (80k chronotes)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology monolith loadout permanent purchase",
-      "detail": "Hard Misthalin Professor shop + monolith · Unlocks: Third relic loadout tab (each loadout holds up to three active powers within monolith energy budget), Guildmaster ceremony later awards the fourth loadout free · Region pressure: Misthalin shop purchase and monolith loadout UI",
-      "requirements": [
-        "Qualification - Professor",
-        "80,000 chronotes for Additional relic loadout",
-        "Relic system already onboarding-complete (two loadouts from tutorial / Relic Presets)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Archaeology_Guild_Shop",
-        "title": "Professor additional relic loadout (80k chronotes)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json"
     },
     {
       "id": "misthalin:puro-puro-dragon-implings",
@@ -15522,56 +14376,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
     },
     {
-      "id": "misthalin:runecrafting-altars",
-      "name": "Misthalin Runecrafting altars (Water, Earth) and essence access",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Runecrafting geography",
-      "detail": "Unlocks: Water altar (Lumbridge Swamp) for water runes, Earth altar (north-east Varrock / Silvarea approach) for earth runes, Aubury (Varrock magic shop) free essence-mine teleport after Rune Mysteries, Archmage Sedridor (Wizards' Tower) free essence-mine teleport, Native Misthalin elemental altar pair complementing Asgarnia Mind/Body/Law package",
-      "requirements": [
-        "5 Runecrafting for water runes; 9 for earth runes (higher for multiples)",
-        "Matching talisman/tiara/omni/wicked hood or Abyss rifts",
-        "Rune Mysteries path for Aubury essence mine teleport / Wizards' Tower Sedridor"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Water_altar",
-        "title": "Misthalin Runecrafting altars (Water, Earth) and essence access",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:runespan-ethereal-outfits",
-      "name": "Infinity ethereal and Runespan utility rewards",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Runecrafting outfit and utility shop",
-      "detail": "Unlocks: Infinity ethereal outfit path via Runespan points, Runespan reward shop utilities beyond master runecrafter robes",
-      "requirements": [],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Infinity_ethereal_outfit",
-        "title": "Infinity ethereal and Runespan utility rewards",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-ironman-unlocks-2026-07-26.json"
-    },
-    {
       "id": "misthalin:runespan-portal",
       "name": "Runespan portals at Wizards' Tower",
       "recordType": "activity",
@@ -15673,7 +14477,7 @@
     },
     {
       "id": "misthalin:scripture-of-bik",
-      "name": "Scripture of Bik (skilling pocket book)",
+      "name": "Scripture of Bik",
       "recordType": "equipment",
       "regionHints": [
         "misthalin",
@@ -15685,8 +14489,8 @@
       "regionRequirementType": "all_required",
       "comboLabel": "Region combo (all required): misthalin + desert",
       "isRegionCombo": true,
-      "category": "permanent skilling pocket scripture",
-      "detail": "Hard Misthalin for Croesus Front access under current EGWD taxonomy. Manuscript sustain is self-source or trade pressure only · Unlocks: Pocket-slot skilling book with +6 Prayer equip bonus when unlocked/used, Nature's Veil passive when activated: 17% chance once per minute on first eligible XP drop to spawn a catalyst of alteration (1–3 sealed clue scrolls of one tier to bank or Charos clue carrier) plus 5% XP boost for one minute on capture, Shares the first-XP-per-minute spawn roll with Grace of the elves Seren spirits and Brooch of the Gods divine blessings, Shred option converts a new scripture into 10 Manuscripts of Bik, Distinct from base god books (Horror from the Deep) and Citharede illuminated upgrades — EGWD scripture family · Region pressure: Misthalin owns Croesus Front / Senntisten EGWD working taxonomy and the scripture drop geography",
+      "category": "Magic / skilling pocket scripture",
+      "detail": "Croesus Front pocket scripture for Magic and skilling: Scripture of Bik and Manuscripts of Bik charge path",
       "requirements": [
         "Croesus Front / Elder God Wars access (historical Senntisten working taxonomy under Misthalin)",
         "Scripture of Bik drop from Croesus (tradeable until unlocked; unlocks untradeable with 3 hours charge)",
@@ -15958,32 +14762,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
     },
     {
-      "id": "misthalin:thieves-guild-master-tools",
-      "name": "Master thief's lockpick + master thief's stethoscope",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Thieving permanent tools",
-      "detail": "Wiki League region for Dodgy Derek / Thieves' Guild is Misthalin (Lumbridge). Required for efficient high-level chests and safecracking/heists. Trahaearn exoskeleton and master camouflage · Not Asgarnia · Effects: Master thief's lockpick: unbreakable lockpick; toolbelt-eligible; +7% chest lock success (vs 3% ordinary lockpick), Master thief's stethoscope: permanent safecracking QoL toolbelt path",
-      "requirements": [
-        "Thieves' Guild access (Buyers and Cellars series)",
-        "Pilfer points for Dodgy Derek purchases (2,500 each for lockpick and stethoscope per wiki shops)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
-        "title": "Master thief's lockpick + master thief's stethoscope",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
-    },
-    {
       "id": "misthalin:um-mushroom-patch",
       "name": "City of Um mushroom patch",
       "recordType": "activity",
@@ -16004,31 +14782,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/City_of_Um",
         "title": "City of Um mushroom patch",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:um-ritual-site-infrastructure",
-      "name": "City of Um ritual site and focus storage",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Necromancy ritual infrastructure",
-      "detail": "Core permanent. Necromancy non-combat infrastructure. Focus storage holds bones, pure essence, mementos, necroplasm, unensouled bars, selected armour pieces, thread/wool, slime, and related focuses (20 stacks). Underworld Grimoire bone auto-deposit writes into this storage · City of Um remains historical Misthalin working mapping. Ritual skill progression still needs Necromancy levels and materials · Unlocks: Um ritual site pedestal, glyph spots, and platforms for rituals, Focus storage for ritual focus materials (shared with Ungael ritual site), Ritual chest for ritual outputs, Communion, essence, necroplasm, ensoul, and related ritual loops, Impure essence production path feeding necrotic Runecrafting · Region status: historical_city_of_um_working_taxonomy",
-      "requirements": [
-        "Necromancy! tutorial for access"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Um_ritual_site",
-        "title": "City of Um ritual site and focus storage",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
@@ -16197,104 +14950,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
     },
     {
-      "id": "misthalin:varrock-museum-kudos",
-      "name": "Varrock Museum kudos progression",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "museum permanent unlock and XP infrastructure",
-      "detail": "Classic Misthalin permanent account checklist. Separate from Archaeology Velucia collections. Free players limited to ground-floor viewing · Quest kudos follow League auto-complete overlays · Unlocks: Up to 198 kudos from quest exhibits, specimen cleaning (50 kudos), natural history quiz, and first Dahmaroc statue, Clean necklace path → Dig Site pendant enchant (I Dig This Transportation), Information clerk one-time XP: 51+ Mining; 101+ Crafting+Mining; 151+ Crafting/Hunter/Prayer/Slayer/Smithing, Antique lamps (3×1k any skill 20+; Historian Minas 10k any skill 50+ after full quest kudos), Master quest cape purchase (Curator Haig Halen) and completionist cape touchpoint upstairs, Shattered Heart / Dahmaroc statue add ability after kudos threshold",
-      "requirements": [
-        "The Dig Site for specimen cleaning activity",
-        "Leather boots/gloves + trowel, rock pick, specimen brush for cleaning",
-        "Quest completions reported to Historian Minas for exhibit kudos",
-        "Natural history quiz in the basement for Hunter/Slayer XP"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Varrock_Museum",
-        "title": "Varrock Museum kudos progression",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:velucia-museum-chronote-tiers",
-      "name": "Velucia museum collection chronote tiers (225% set bonus)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "desert",
-        "asgarnia",
-        "morytania",
-        "kandarin",
-        "anachronia",
-        "forinthry",
-        "havenhythe"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + desert + asgarnia + morytania + kandarin + anachronia + forinthry + havenhythe",
-      "isRegionCombo": true,
-      "category": "Archaeology museum chronote progression checklist",
-      "detail": "Dense chronote-tier sibling of thin hub. No first-time non-chronote rewards on Velucia museum sets (recurring chronotes only) · Hard Misthalin for Velucia payout premium. Artefact self-source follows unlocked dig-site regions · Unlocks: Velucia museum collections pay full per-artefact chronotes plus a 25% larger set bonus than standard collectors — 225% total of base artefact chronotes on completion (standard collectors are 200%), Museum tracks as permanent recurring chronote farms: Zarosian I–VII, Zamorakian I–IV, Saradominist I–IV, Guthixian I–II, Armadylean I–III, Bandosian I–III, Dragonkin I–VII (see It Belongs in a Museum! log), Example wiki completion totals (artefact + set): Museum - Zarosian I 4,743; Museum - Armadylean I 12,798; Museum - Bandosian I 15,201; Museum - Zarosian III 16,744; Museum - Armadylean III 23,553; Museum - Bandosian III 21,465; Museum - Dragonkin IV 15,705, One-time full unique-collection pass (all collectors including Velucia museum sets) awards ~554,464 chronotes — about half the Guild shop permanent-unlock budget · Region pressure: Misthalin Velucia hand-in and the museum chronote premium., Anachronia / Forinthry /",
-      "requirements": [
-        "Restored unnoted artefacts matching each Museum - * collection",
-        "Archaeology level equal to the collection gate (Museum - Zarosian I at 25 through Museum - Dragonkin IV at 120)",
-        "Dig-site access for each culture track (optional pressure by region)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Velucia",
-        "title": "Velucia museum collection chronote tiers (225% set bonus)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-museum-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:velucia-museum-collections",
-      "name": "Velucia museum Archaeology collections",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "asgarnia",
-        "desert",
-        "karamja",
-        "morytania",
-        "anachronia",
-        "tirannwn",
-        "fremennik"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / asgarnia / desert / karamja / morytania / anachronia / tirannwn / fremennik",
-      "isRegionCombo": false,
-      "category": "Archaeology collector and chronote infrastructure",
-      "detail": "Velucia hub row. is the generic collector system; this id names Velucia's museum acquisition track so planners can checklist Museum vs dig-site experts. Artefact farms remain dig-site regional · Campus collector is Misthalin. Collection completion is multi-region pressure · Unlocks: Velucia as universal collector interested in every artefact culture track (Armadylean, Bandosian, Dragonkin, Saradominist, Zamorakian, Zarosian, and training sets), Full chronote payouts for turn-ins vs museum donation bin (bin pays 40%), Recurring collection completion chronote bundles for ironman chronote economy, Museum-facing progression complementary to culture-expert collectors at dig sites",
-      "requirements": [
-        "Restored unnoted artefacts matching each collection tier",
-        "Dig-site access for artefact sources (multi-region by culture)",
-        "Archaeology levels matching collection gates (culture sets scale into 100s)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Velucia",
-        "title": "Velucia museum Archaeology collections",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
-    },
-    {
       "id": "misthalin:wars-blessing",
       "name": "War's Blessing 1-4 (Combat Mastery)",
       "recordType": "activity",
@@ -16326,143 +14981,8 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-combat-adjacent-2026-07-26.json"
     },
     {
-      "id": "misthalin:wars-grimoire",
-      "name": "War's Grimoire (Retreat spellbook and prayer-book swap)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent Prayer and spellbook swap facility",
-      "detail": "High ironman-value prayer-book permanent still missing as a regional-skilling row (only footnoted. tier 3 without replacing them — grimoire is hub-side, not Prif or Fort. Spellbook swap unlocks at 750 kills alone; prayer-book swap needs Blessing 3 on top · Unlocks: Permanent War's Retreat scenery to swap between unlocked spellbooks after 750 boss kills, With War's Blessing 3: also swap between unlocked prayer books (standard ↔ Ancient Curses) at the hub without travelling to Altar of Zaros / Elven grimoire / Fort chapel, Hub-local book logistics next to Altar of War, boss portals, and adrenaline crystal amenities · Region pressure: Misthalin is the planner region_hint for War's Retreat permanent hub unlocks (matches wars-retreat:permanent-hub-unlocks). Do not League hub access until League documents it., Boss-kill and Combat Mastery score are account-wide combat progression, not additional region locks",
-      "requirements": [
-        "War's Retreat access (60 Combat or 1,000 total level baseline for the hub)",
-        "750 boss kills to unlock War's Grimoire spellbook switching in War's Wares / on the scenery",
-        "War's Blessing 3 (Combat Mastery achievements — 661 CombatScore; all easy/medium/hard or equivalent score mix) to enable prayer-book switching on the same grimoire",
-        "Target spellbooks / prayer books must already be unlocked (Ancient Magicks, Lunar, Ancient Curses, etc.)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/War%27s_Grimoire",
-        "title": "War's Grimoire (Retreat spellbook and prayer-book swap)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-final-prayer-magic-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:well-of-souls",
-      "name": "Well of Souls talent infrastructure",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Necromancy talent tree infrastructure",
-      "detail": "Misthalin/Um owns the facility. Individual talent combat effects stay in combat datasets · Unlocks: Well of Souls soul tracking and talent interface, Talent tree gates for abilities, incantations, and permanent. Necromancy effects, City of Um repopulation progression tied to souls and levels · Region status: historical_city_of_um_working_taxonomy",
-      "requirements": [
-        "Necromancy! access to the Um ritual site",
-        "Communion rituals (and other soul sources) to fill the Well",
-        "Talent points to spend once soul thresholds are met"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Well_of_Souls",
-        "title": "Well of Souls talent infrastructure",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:wizards-tower-runecrafting-guild",
-      "name": "Wizards' Tower and Runecrafting Guild",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Runecrafting guild and portal infrastructure",
-      "detail": "Geography is Misthalin. RC infrastructure, not the Runespan XP method itself · Altar geography for individual runes remains regional (e.g., morytania blood, desert soul) · Unlocks: Runecrafting Guild inside Runespan via blue roof portal, Low- and mid-level Runespan portals on the same roof (training infrastructure; ethereal outfits already modeled",
-      "requirements": [
-        "50 Runecrafting to enter the Runecrafting Guild (boostable)",
-        "Access to Wizards' Tower roof (no combat gate)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Runecrafting_Guild",
-        "title": "Wizards' Tower and Runecrafting Guild",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-guilds-hubs-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:wood-box-tier-upgrades",
-      "name": "Wood box tier upgrades",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin",
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / kandarin",
-      "isRegionCombo": false,
-      "category": "Woodcutting inventory tool progression",
-      "detail": "Parallel inventory chain to ore boxes. Misthalin Woodcutters' Grove is the fort association for spirit storage; Kandarin is general WC tree pressure. No invented XP · Misthalin Grove association for advanced storage. Kandarin support for tree density · Effects: Stores logs by tier; empties at bank / deposit box / log pile, Grove upgrades enable wood spirit / nest / geode storage in wood boxes",
-      "requirements": [
-        "Fletching level for each wood box tier (wood through eternal magic)",
-        "Prior-tier wood box plus logs of the upgrade tier"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Wood_box",
-        "title": "Wood box tier upgrades",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-ironman-gaps-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:woodcutters-grove",
-      "name": "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Woodcutting tool progression",
-      "detail": "After tier 3 Grove is built, Imcando-hatchet fragments can appear in bird nests from Woodcutting. This makes Fort progression a permanent. Woodcutting tool gate · The repo currently maps Fort Forinthry to Misthalin using Catalyst precedent. Keep that mapping provisional until Equilibrium confirms it · Unlocks: Imcando hatchet fragment nests from Woodcutting, One guaranteed first fragment from Oak, Bad-luck mitigation on fragment nests · Region status: historical_fort_working_taxonomy",
-      "requirements": [
-        "Tier 3 Woodcutter's Grove in the normal game"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Woodcutter%27s_Grove",
-        "title": "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
-    },
-    {
       "id": "misthalin:woodcutters-grove-facilities",
-      "name": "Woodcutters' Grove facility tiers",
+      "name": "Woodcutters' Grove",
       "recordType": "activity",
       "regionHints": [
         "misthalin"
@@ -16471,18 +14991,19 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "category": "Woodcutting hub infrastructure",
-      "detail": "Grove facility bundle (transport, tree patch, banking QoL), not a second Imcando unlock claim · Keep Fort Forinthry under Misthalin working taxonomy · Unlocks: Tier 1: normal and oak trees; wood spirit storage in wood boxes; log piles to bank; nests/geodes auto into backpack, Tier 2: willow, yew, and ivy; fairy ring BJP; Farming tree patch; nests/geodes into wood boxes, Tier 3: elder tree; improved bird nests; Imcando hatchet fragment nests ( · Region status: historical_fort_working_taxonomy",
+      "category": "Woodcutting hub and Imcando hatchet progression",
+      "detail": "Single Woodcutters' Grove row: tiered tree, storage, banking, fairy-ring and farming facilities plus the tier-3 Imcando hatchet fragment nest gate",
       "requirements": [
         "Unwelcome Guests and eastern border wall progression to unlock Grove cabin blueprints",
-        "Construction 50 for Grove tiers 1-2; Construction 60 for tier 3"
+        "Construction 50 for Grove tiers 1-2; Construction 60 for tier 3",
+        "Tier 3 Woodcutter's Grove for Imcando hatchet fragment nests"
       ],
       "confidence": "confirmed_wiki_method_working_league_taxonomy",
       "source": {
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Woodcutters%27_Grove",
-        "title": "Woodcutters' Grove facility tiers",
-        "verifiedAt": "2026-07-26"
+        "title": "Woodcutters' Grove",
+        "verifiedAt": "2026-07-28"
       },
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     },
@@ -17274,36 +15795,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-slayer-rc-prayer-2026-07-26.json"
-    },
-    {
-      "id": "morytania:modified-first-age-tiara",
-      "name": "Modified first age tiara",
-      "recordType": "equipment",
-      "regionHints": [
-        "morytania",
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "morytania"
-      ],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): morytania / misthalin",
-      "isRegionCombo": false,
-      "category": "permanent modified skill-outfit head",
-      "detail": "Hard Morytania for first age outfit path · Unlocks: Retains 1% Prayer XP head-piece share of the first age set, 3 daily teleports to player-owned house near the portal, 2% chance to save bones or ashes when buried, scattered, or used on an altar (message: Divine intervention saves your offering), Post-16-Mar-2026 DailyScape Overhaul: daily free dragon bones claim removed · Region pressure: Hard Morytania for first age outfit / Ectofuntus acquisition geography",
-      "requirements": [
-        "First age tiara from Ectofuntus / first age outfit path (morytania:first-age-outfit-equipment)",
-        "First age tiara add-on",
-        "Use tiara on add-on; free Diango reclaim"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Modified_first_age_tiara",
-        "title": "Modified first age tiara",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-misc-2026-07-26.json"
     },
     {
       "id": "morytania:mort-myre-fungi-bloom",
@@ -20202,7 +18693,7 @@
     },
     {
       "id": "desert:greenfingers-passive",
-      "name": "Greenfingers passive (ex-aura)",
+      "name": "Greenfingers passive",
       "recordType": "activity",
       "regionHints": [
         "desert"
@@ -20214,7 +18705,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — permanent Farming unlock",
-      "detail": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields. Bought from Sydekix's Shop of Balance in the Garden of Kharid for 30,000 Crux Eqal favour. Replaces the old Greenfingers aura.",
+      "detail": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields. Bought from Sydekix's Shop of Balance in the Garden of Kharid for 30,000 Crux Eqal favour. Replaces the old Greenfingers aura",
       "requirements": [
         "30,000 Crux Eqal favour",
         "Garden of Kharid access (Desert)"
@@ -20230,7 +18721,7 @@
     },
     {
       "id": "misthalin:focused-siphoning-passive",
-      "name": "Focused Siphoning passive (ex-aura)",
+      "name": "Focused Siphoning passive",
       "recordType": "activity",
       "regionHints": [
         "misthalin"
@@ -20242,7 +18733,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — permanent Runespan unlock",
-      "detail": "7.5% increased Runespan siphoning success. Bought from Wizard Rinsit's Runecrafting Shop on the Wizards' Tower roof for 20,000 Runespan points. Replaces the old Focused Siphoning aura.",
+      "detail": "7.5% increased Runespan siphoning success. Bought from Wizard Rinsit's Runecrafting Shop on the Wizards' Tower roof for 20,000 Runespan points. Replaces the old Focused Siphoning aura",
       "requirements": [
         "20,000 Runespan points",
         "Wizards' Tower (Misthalin)"
@@ -20258,7 +18749,7 @@
     },
     {
       "id": "misthalin:five-finger-discount-passive",
-      "name": "Five-Finger Discount passive (ex-aura)",
+      "name": "Five-Finger Discount passive",
       "recordType": "activity",
       "regionHints": [
         "misthalin"
@@ -20270,7 +18761,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — permanent Thieving unlock",
-      "detail": "Up to five ranks (+2% pickpocket success each, max +10%) from the Thieves' Guild for pilfer points (also from Heists). Replaces the old Five-Finger Discount aura.",
+      "detail": "Up to five ranks (+2% pickpocket success each, max +10%) from the Thieves' Guild for pilfer points (also from Heists). Replaces the old Five-Finger Discount aura",
       "requirements": [
         "Thieves' Guild (Misthalin)",
         "1,000 pilfer points per rank"
@@ -20286,7 +18777,7 @@
     },
     {
       "id": "desert:vampyrism-aspect",
-      "name": "Vampyrism Aspect (ex-aura)",
+      "name": "Vampyrism Aspect",
       "recordType": "activity",
       "regionHints": [
         "desert"
@@ -20298,7 +18789,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Ancient Magicks combat Aspect",
-      "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks.",
+      "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks",
       "requirements": [
         "69 Magic",
         "Ancient Magicks spellbook (Desert Treasure path)"
@@ -20314,7 +18805,7 @@
     },
     {
       "id": "global:penance-aspect",
-      "name": "Penance Aspect (ex-aura)",
+      "name": "Penance Aspect",
       "recordType": "activity",
       "regionHints": [],
       "requiredRegions": [],
@@ -20322,7 +18813,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Standard spellbook combat Aspect",
-      "detail": "Standard spellbook Aspect (Magic 67): restores Prayer equal to 5% of damage taken (cap 100) for 12 minutes. Only one Aspect can be active. Replaces the Penance combat aura — not elective-region gated.",
+      "detail": "Standard spellbook Aspect (Magic 67): restores Prayer equal to 5% of damage taken (cap 100) for 12 minutes. Only one Aspect can be active. Replaces the Penance combat aura — not elective-region gated",
       "requirements": [
         "67 Magic",
         "Standard spellbook"
@@ -20338,7 +18829,7 @@
     },
     {
       "id": "morytania:sunspear-prayer-sustain",
-      "name": "Sunspear Vyre prayer sustain (ex-aura)",
+      "name": "Sunspear Vyre prayer sustain",
       "recordType": "activity",
       "regionHints": [
         "morytania"
@@ -20350,7 +18841,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Morytania combat passive",
-      "detail": "Cremating Vyres with Sunspear unlocks prayer restore on Vyre kills (1–5% by cremation ladder). Replaces Harmony / Corruption / Salvation aura prayer sustain.",
+      "detail": "Cremating Vyres with Sunspear unlocks prayer restore on Vyre kills (1–5% by cremation ladder). Replaces Harmony / Corruption / Salvation aura prayer sustain",
       "requirements": [
         "Sunspear",
         "Vyre cremation / Columbarium (Morytania)"
@@ -20378,7 +18869,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Anachronia totem",
-      "detail": "+25% maximum life points (cap +1,500). Replaces the Desert Pantheon / Might of Het aura effect. Anachronia totems no longer need weekly charging.",
+      "detail": "+25% maximum life points (cap +1,500). Replaces the Desert Pantheon / Might of Het aura effect. Anachronia totems no longer need weekly charging",
       "requirements": [
         "Anachronia base camp / totem system"
       ],
@@ -20401,7 +18892,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Divination level passive",
-      "detail": "Enriched memory chance scales with Divination level: 2% at 39, 4% at 59, 7% at 79, 10% at 99. Not region-gated.",
+      "detail": "Enriched memory chance scales with Divination level: 2% at 39, 4% at 59, 7% at 79, 10% at 99. Not region-gated",
       "requirements": [
         "Divination level thresholds"
       ],
@@ -20424,7 +18915,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Mining level passive",
-      "detail": "+5% Mining critical chance at 59, another +5% at 85 (10% total). Not region-gated.",
+      "detail": "+5% Mining critical chance at 59, another +5% at 85 (10% total). Not region-gated",
       "requirements": [
         "Mining 59 / 85"
       ],
@@ -20447,7 +18938,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — Archaeology gathering passive",
-      "detail": "An Archaeology material cache cannot expire on the first two gathers. Not region-gated.",
+      "detail": "An Archaeology material cache cannot expire on the first two gathers. Not region-gated",
       "requirements": [
         "Archaeology material caches"
       ],
@@ -20470,7 +18961,7 @@
       "comboLabel": "",
       "isRegionCombo": false,
       "category": "Aura Overhaul — system removal",
-      "detail": "The aura equipment slot's timed combat powers were removed on 13 April 2026. Berserker, Maniacal, Reckless, Mahjarrat, Equilibrium, Dark Magic and many others have no 1:1 replacement. Plan Equilibrium combat without those auras.",
+      "detail": "The aura equipment slot's timed combat powers were removed on 13 April 2026. Berserker, Maniacal, Reckless, Mahjarrat, Equilibrium, Dark Magic and many others have no 1:1 replacement. Plan Equilibrium combat without those auras",
       "requirements": [],
       "confidence": "confirmed_official_2026",
       "source": {
@@ -20480,6 +18971,34 @@
         "verifiedAt": "2026-04-13"
       },
       "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "misthalin:thieves-guild-master-tools",
+      "name": "Master thief's tools",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Thieving permanent toolbelt tools",
+      "detail": "Wiki League region for Dodgy Derek / Thieves' Guild is Misthalin (Lumbridge). Required for efficient high-level chests and safecracking/heists. Trahaearn exoskeleton and master camouflage · Not Asgarnia · Effects: Master thief's lockpick: unbreakable lockpick; toolbelt-eligible; +7% chest lock success (vs 3% ordinary lockpick), Master thief's stethoscope: permanent safecracking QoL toolbelt path",
+      "requirements": [
+        "Thieves' Guild access (Buyers and Cellars series)",
+        "Pilfer points for Dodgy Derek purchases (2,500 each for lockpick and stethoscope per wiki shops)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
+        "title": "Master thief's lockpick + master thief's stethoscope",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     }
   ]
 }

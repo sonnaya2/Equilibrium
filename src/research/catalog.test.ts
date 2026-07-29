@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { REGION_IDS } from "@/league";
+import { presentContentRewards } from "@/lib/dataContentPresentation";
+import { contentRewardsFull } from "@/lib/researchRewards";
 import catalogSource from "#data/research/catalog.json";
 import { getResearchCatalog } from "./catalog";
 
@@ -70,12 +72,102 @@ describe("research catalog", () => {
       "Warriors' Guild",
       "Artisans' Workshop",
       "Port Sarim docks and skilling hub",
-      "Rimmington Construction supply loop",
+      "The Arc",
+      "Elite Dungeon 1",
+      "Starbloom armour",
+      "Nex",
       "God Wars Dungeon 1",
       "Falador farm allotment / flower / herb patches",
     ]) {
       expect(asgNames.has(name), `asgarnia missing ${name}`).toBe(true);
     }
+    expect(asgNames.has("Rimmington Construction supply loop")).toBe(false);
+    expect(asgNames.has("Player-owned port")).toBe(false);
+
+    const asgUpgradeNames = new Set((asg?.upgrades ?? []).map((upgrade) => upgrade.name));
+    const removedAsgarniaPois = [
+      "Bandos equipment (GWD1 melee power ladder)",
+      "Essence of Finality amulet (neck BiS chain)",
+      "Essence of Finality ornament kit (style bonus)",
+      "Familiarisation (weekly triple-charm D&D)",
+      "Flash Powder Factory Herblore outfits",
+      "Games necklace teleport package",
+      "God Wars Dungeon 1 (+ Nex)",
+      "God Wars Dungeon 1 equipment",
+      "Godswords (GWD1 hilt + shard assembly)",
+      "Herb patch network (global herb-run map)",
+      "Hops patch network (Entrana + run geography)",
+      "Invention Guild named machine room",
+      "Invention machines (Invention Guild + Fort Workshop power)",
+      "Large Summoning obelisk production network",
+      "Magic golem outfit",
+      "Masterwork melee plate / glorious-bar smithing chain",
+      "Masterwork Spear of Annihilation",
+      "Mining Guild metal-bank smithing loop",
+      "Mining Guild resource dungeon",
+      "Modified blacksmith's helmet",
+      "Modified botanist's mask",
+      "Nex equipment",
+      "Nex T80 power armour (Torva / Pernix / Virtus)",
+      "Nex: Angel of Death progression",
+      "Ore box tier upgrades",
+      "Partial potion producer / DX (Invention Guild)",
+      "Pernix armour",
+      "Pikkupstix Summoning shop and large obelisk (Taverley)",
+      "Plank maker / high capacity plank maker (Invention Guild)",
+      "Player-owned house Aquarium and Prawnbroker",
+      "Player-owned house portal towns and Construction utilities",
+      "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
+      "POH gilded altar (Chapel offering)",
+      "Saradomin godsword special (heal switch)",
+      "Temple of Aminishi (ED1)",
+      "The Arc skilling destinations (Equilibrium Asgarnia mapping)",
+      "The Arc Waiko reward shop (chime economy)",
+      "Trimmed / custom-fit trimmed masterwork melee armour",
+    ];
+    for (const name of removedAsgarniaPois) {
+      expect(asgUpgradeNames.has(name), `asgarnia still lists ${name}`).toBe(false);
+    }
+    expect(
+      asg?.upgrades.filter(
+        (upgrade) =>
+          upgrade.name !== "Invention Guild" &&
+          /machine/i.test(`${upgrade.name} ${upgrade.category}`),
+      ),
+    ).toEqual([]);
+    expect([...asgUpgradeNames].filter((name) => name.startsWith("Nex: Angel of Death"))).toEqual([
+      "Nex: Angel of Death",
+    ]);
+    expect(
+      asg?.upgrades.find((upgrade) => upgrade.name === "Custom-fit trimmed masterwork"),
+    ).toMatchObject({
+      requiredRegions: ["asgarnia", "morytania"],
+      regionRequirementType: "all_required",
+    });
+
+    const misthalin = catalog.find((region) => region.id === "misthalin");
+    expect(misthalin?.upgrades.some((upgrade) => upgrade.name === "Deathtouch bracelet")).toBe(
+      true,
+    );
+    expect(asg?.upgrades.some((upgrade) => upgrade.name.startsWith("Deathtouch bracelet"))).toBe(
+      false,
+    );
+
+    const nex = asg?.content.find((row) => row.name === "Nex");
+    const nexRewards = presentContentRewards(contentRewardsFull(nex!, asg!.upgrades), 5);
+    expect(nexRewards.icons.map((icon) => icon.label)).toEqual([
+      "Torva armour",
+      "Pernix armour",
+      "Virtus armour",
+      "Zaryte bow",
+    ]);
+
+    const flashPowder = asg?.content.find(
+      (row) => row.name === "Flash Powder Factory minigame and reward shop",
+    );
+    expect(contentRewardsFull(flashPowder!, asg!.upgrades)).toBe(
+      "Botanist's outfit, Factory outfit, Rogue equipment",
+    );
 
     const karNames = new Set((kar?.content ?? []).map((c) => c.name));
     for (const name of [

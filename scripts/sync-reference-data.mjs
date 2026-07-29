@@ -29,12 +29,7 @@ function mergeAddition(target, addition) {
   }
   const existing = target[index];
   const merged = { ...addition, ...existing };
-  // Overlays are additive, and they are applied in filename order. On a scalar
-  // the first overlay to describe a row wins, which is fine. On a list it was
-  // not: a new overlay that happened to sort earlier and carried a shorter
-  // version of a list silently dropped what a later overlay knew. That is how
-  // rum-deal:holy-wrench lost "Rum Deal for the Holy wrench" and started
-  // failing its audit — the record was right, the merge threw half of it away.
+  // Array fields union across overlays; scalar fields keep existing-first precedence.
   for (const [key, value] of Object.entries(addition)) {
     if (!Array.isArray(value) || !Array.isArray(existing[key])) continue;
     const seen = new Map();
@@ -71,6 +66,180 @@ function applyEnrichment(progressionUnlocks, enrichment, sourceName) {
 
   progressionUnlocks.snapshot_date = [progressionUnlocks.snapshot_date, enrichment.snapshot_date].filter(Boolean).sort().at(-1);
 }
+
+const MANUAL_ACTIVITY_ADDITIONS = [
+  {
+    id: "forinthry:dragon-harpoon",
+    name: "Dragon harpoon",
+    category: "Fishing tool progression",
+    region_hint: "forinthry",
+    unlocks: ["Wieldable Fishing tool with a 9% catch-rate boost at harpoon fishing spots"],
+    source_urls: ["https://runescape.wiki/w/Dragon_harpoon"],
+    confidence: "confirmed_wiki_2026",
+    league_treatment: "Major Forinthry Fishing tool unlock",
+  },
+  {
+    id: "anachronia:effigy-incubator",
+    name: "Effigy Incubator",
+    category: "monthly Distraction and Diversion",
+    region_hint: "anachronia",
+    requirements: ["Desperate Measures and level 85 in Crafting, RuneCrafting, Invention, or Smithing"],
+    unlocks: ["Create monthly effigies from gathered materials and casings", "Filled effigies award skill XP lamps or stars"],
+    source_urls: ["https://runescape.wiki/w/Effigy_Incubator"],
+    confidence: "confirmed_wiki",
+    league_treatment: "Major Anachronia monthly skilling unlock",
+  },
+  {
+    id: "misthalin:pure-essence-chest",
+    name: "Pure essence chest",
+    category: "Runecrafting pure essence supply",
+    region_hint: "misthalin",
+    location: "Wizards' Tower beside Archmage Sedridor",
+    requirements: ["Completion of Rune Memories"],
+    unlocks: [
+      "Archmage Sedridor's Rune chest supplies up to 24,750 pure essence in total",
+      "The amount is 5 × each Runecrafting level gained through level 99",
+    ],
+    notes: "One-time scalable pure essence source; the full level-99 claim totals 24,750 pure essence",
+    source_urls: [
+      "https://runescape.wiki/w/Rune_chest",
+      "https://runescape.wiki/w/Rune_Memories",
+    ],
+    confidence: "confirmed_wiki",
+    league_treatment: "Major Misthalin Runecrafting supply unlock",
+  },
+  {
+    id: "kandarin:eternal-magic-trees",
+    name: "Eternal magic trees",
+    category: "Woodcutting resource supply",
+    region_hint: "kandarin",
+    requirements: [
+      "Piscatoris Hunter area access in Kandarin",
+      "100 Woodcutting for eternal magic trees"
+    ],
+    unlocks: [
+      "Kandarin eternal magic log supply from the Piscatoris grove",
+      "Perfect eternal magic branch chance at 110 Woodcutting"
+    ],
+    notes: "The Kandarin grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement",
+    source_urls: [
+      "https://runescape.wiki/w/Eternal_magic_tree",
+      "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"
+    ],
+    confidence: "confirmed_wiki",
+    league_treatment: "Hard Kandarin for the Piscatoris eternal magic tree grove"
+  },
+  {
+    id: "misthalin:fort-forinthry",
+    name: "Fort Forinthry",
+    category: "Construction, skilling and operations hub",
+    region_hint: "misthalin",
+    requirements: ["Fort Forinthry access", "Construction levels for the relevant building tiers"],
+    unlocks: [
+      "Botanist's Workbench Herblore batching and supplies",
+      "Command Centre operations and Archaeology research",
+      "Guardhouse Slayer, Kitchen Cooking and Ranger's Workroom Fletching bonuses",
+      "Town Hall bank/rested XP and Workshop Construction, Invention, Archaeology and Smithing facilities",
+      "Fort chapel Prayer support",
+    ],
+    notes: "One Misthalin Fort Forinthry infrastructure line replaces the separate building rows",
+    source_urls: [
+      "https://runescape.wiki/w/Fort_Forinthry",
+      "https://runescape.wiki/w/Botanist%27s_Workbench",
+      "https://runescape.wiki/w/Command_Centre",
+      "https://runescape.wiki/w/Guardhouse",
+      "https://runescape.wiki/w/Kitchen_(Fort_Forinthry)",
+      "https://runescape.wiki/w/Ranger%27s_Workroom",
+      "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
+      "https://runescape.wiki/w/Workshop_(Fort_Forinthry)",
+    ],
+    confidence: "confirmed_wiki",
+    league_treatment: "Hard Misthalin for Fort Forinthry infrastructure under the current working taxonomy",
+  }
+];
+
+const REMOVED_ACTIVITY_IDS = new Set([
+  "misthalin:archaeology-campus-hub",
+  "misthalin:archaeology-collectors",
+  "misthalin:croesus-front-skilling",
+  "misthalin:draynor-skilling-hub",
+  "misthalin:edgeville-skilling-hub",
+  "misthalin:family-crest-skilling-gauntlets",
+  "misthalin:fort-botanists-workbench",
+  "misthalin:fort-command-centre",
+  "misthalin:fort-forinthry-workshop",
+  "misthalin:fort-guardhouse-slayer",
+  "misthalin:fort-kitchen",
+  "misthalin:fort-rangers-workroom",
+  "misthalin:fort-town-hall",
+  "misthalin:fort-chapel",
+  "misthalin:guildmaster-qualification",
+  "misthalin:it-belongs-in-a-museum-log",
+  "misthalin:runespan-ethereal-outfits",
+  "misthalin:um-ritual-site-infrastructure",
+  "cross-region:imcando-tools-family",
+  "cross-region:poh-portal-towns",
+  "misthalin:monolith-energy-research-ladder",
+  "misthalin:museum-donation-bin",
+  "misthalin:necromantic-rune-temple",
+  "misthalin:professor-relic-loadout-purchase",
+  "misthalin:runecrafting-altars",
+  "misthalin:varrock-museum-kudos",
+  "misthalin:velucia-museum-chronote-tiers",
+  "misthalin:velucia-museum-collections",
+  "asgarnia:thieves-guild-master-tools",
+  "misthalin:kerapac-hard-mode-fsoa-farm",
+  "misthalin:rasial-necro-bis-farm",
+  "misthalin:wars-blessing-combat-mastery",
+  "havenhythe:apex-hide-masterwork-ranged-path",
+  "havenhythe:canoe-network",
+  "havenhythe:open-water-fishing-spots",
+  "havenhythe:shrine-of-the-spirit-wolves",
+  "havenhythe:jackalope-familiar",
+  "havenhythe:jackalope-hunting",
+  "havenhythe:trader-woes-bank-chest",
+  "asgarnia:modified-blacksmiths-helmet",
+  "asgarnia:modified-botanists-mask",
+  "havenhythe:modified-shamans-headdress",
+  "kandarin:modified-diviners-headwear",
+  "kandarin:modified-sous-chefs-toque",
+  "desert:modified-farmers-hat",
+  "misthalin:modified-artisans-bandana",
+  "misthalin:modified-ritualists-mask",
+  "morytania:modified-first-age-tiara",
+  "misthalin:wars-grimoire",
+  "misthalin:well-of-souls",
+  "misthalin:wizards-tower-runecrafting-guild",
+  "misthalin:wood-box-tier-upgrades",
+  "misthalin:woodcutters-grove",
+]);
+
+const REMOVED_EQUIPMENT_IDS = new Set([
+  "boss:arch-glacor",
+  "boss:croesus",
+  "boss:kerapac",
+  "boss:rasial",
+  "boss:sanctum-of-rebirth",
+  "boss:tzkal-zuk",
+  "misthalin:rasial-first-necromancer-equipment",
+  "misthalin:fletchers-outfit",
+  "misthalin:focus-storage",
+  "misthalin:infinity-ethereal-outfit",
+  "asgarnia:toolbelt-master-thief-tools",
+  "misthalin:necromancy-conjure-residuals",
+  "misthalin:scripture-of-bik",
+  "misthalin:wood-box-tier-upgrades",
+  "havenhythe:jackalope-familiar",
+  "asgarnia:modified-blacksmiths-helmet",
+  "asgarnia:modified-botanists-mask",
+  "havenhythe:modified-shamans-headdress",
+  "kandarin:modified-diviners-headwear",
+  "kandarin:modified-sous-chefs-toque",
+  "desert:modified-farmers-hat",
+  "misthalin:modified-artisans-bandana",
+  "misthalin:modified-ritualists-mask",
+  "morytania:modified-first-age-tiara",
+]);
 
 function enrichPrayerCatalogue(prayerSource, details) {
   const enriched = structuredClone(prayerSource);
@@ -149,6 +318,87 @@ const enrichmentFiles = readdirSync(join(ROOT, "scraped-data"))
   .sort();
 for (const file of enrichmentFiles) {
   applyEnrichment(progressionUnlocks, read(`scraped-data/${file}`), file);
+}
+
+for (const addition of MANUAL_ACTIVITY_ADDITIONS) {
+  mergeAddition(progressionUnlocks.activity_unlocks, addition);
+}
+
+const woodcuttersGrove = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "misthalin:woodcutters-grove-facilities",
+);
+if (woodcuttersGrove) {
+  Object.assign(woodcuttersGrove, {
+    name: "Woodcutters' Grove",
+    category: "Woodcutting hub and Imcando hatchet progression",
+    requirements: [
+      "Unwelcome Guests and eastern border wall progression to unlock Grove cabin blueprints",
+      "Construction 50 for Grove tiers 1-2; Construction 60 for tier 3",
+      "Tier 3 Woodcutter's Grove for Imcando hatchet fragment nests",
+    ],
+    unlocks: [
+      "Tier 1: normal and oak trees; wood spirit storage in wood boxes; log piles to bank; nests/geodes auto into backpack",
+      "Tier 2: willow, yew, and ivy; fairy ring BJP; Farming tree patch; nests/geodes into wood boxes",
+      "Tier 3: elder tree; improved bird nests; Imcando hatchet fragment nests",
+      "One guaranteed first Imcando fragment from Oak and bad-luck mitigation on fragment nests",
+      "Counts as in-fort for Town Hall rested experience",
+    ],
+    notes: "Single Woodcutters' Grove row combines facility tiers, Woodcutting access, storage, and the Imcando hatchet fragment gate",
+    source_urls: [
+      "https://runescape.wiki/w/Woodcutters%27_Grove",
+      "https://runescape.wiki/w/Woodcutter%27s_Grove",
+      "https://runescape.wiki/w/Imcando_hatchet",
+    ],
+  });
+}
+
+const shrine = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "havenhythe:shrine-of-inanna-summoning-hub",
+);
+if (shrine) {
+  Object.assign(shrine, {
+    name: "Shrine of Inanna and Spirit Wolves Summoning hub",
+    category: "regional Summoning production and reward-shop hub",
+    notes: "One Havenhythe shrine complex combines the empowered Summoning obelisks, Spirit Plane Connection, Blessings of the Wolf shop, shaman outfit stock and local pouch logistics",
+    league_treatment: "Hard Havenhythe Summoning shrine and shop path",
+  });
+}
+
+const highwealdRocks = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "havenhythe:highweald-ruins-mine",
+);
+if (highwealdRocks) {
+  Object.assign(highwealdRocks, {
+    name: "Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock",
+    category: "Mining / Highweald Forest",
+    unlocks: [
+      "Necrite rocks",
+      "Phasmatite rocks",
+      "Platinum rocks",
+      "Havensilver rock",
+      "Hearts of Sanguine opens the Highweald Ruins mine",
+      "104 Mining (boostable) and the Oh Yeah! achievement open the platinum rocks behind the primeval slabs",
+    ],
+    notes: "Highweald Ruins mine resource set",
+    source_urls: ["https://runescape.wiki/w/Highweald_Ruins_mine"],
+  });
+}
+
+progressionUnlocks.activity_unlocks = progressionUnlocks.activity_unlocks.filter(
+  (row) => !REMOVED_ACTIVITY_IDS.has(row.id),
+);
+progressionUnlocks.equipment_models = progressionUnlocks.equipment_models.filter(
+  (row) => !REMOVED_EQUIPMENT_IDS.has(row.id),
+);
+for (const rows of Object.values(progressionUnlocks)) {
+  if (!Array.isArray(rows)) continue;
+  for (const row of rows) {
+    if (Array.isArray(row.links_existing_ids)) {
+      row.links_existing_ids = row.links_existing_ids.filter(
+        (id) => !REMOVED_ACTIVITY_IDS.has(id) && !REMOVED_EQUIPMENT_IDS.has(id),
+      );
+    }
+  }
 }
 
 // Enrich the overload progression chain with the per-record research from the

@@ -33,7 +33,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "format:check": "prettier --check \"app/**/*.{ts,tsx,css,mjs}\" \"src/**/*.{ts,tsx,css}\" \"eslint.config.mjs\" \"vitest.config.ts\" \"next.config.ts\" \"playwright.config.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",

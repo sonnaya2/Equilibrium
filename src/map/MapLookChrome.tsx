@@ -56,7 +56,6 @@ export function MapLookChrome() {
       <div className="board-sky__look" aria-live="polite">
         <div className="board-sky__look-main">
           {art ? (
-            // eslint-disable-next-line @next/next/no-img-element -- local game art only
             <img src={art} alt="" className="board-sky__look-art" width={36} height={36} />
           ) : null}
           <div className="board-sky__look-copy">

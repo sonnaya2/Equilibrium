@@ -93,9 +93,9 @@ export function CombatReference({
       </header>
       <section className="border-b border-stone-750 py-3">
         <div className="mb-1.5 flex items-baseline justify-between gap-4">
-          <h2 className="text-sm font-medium text-parch-50">Source status</h2>
+          <h2 className="text-sm font-medium text-parch-50">Data updates</h2>
           <span className="text-xs text-parch-300">
-            {updateIndex.records.length} tracked entities · polled {updateIndex.lastSynced}
+            {updateIndex.records.length} tracked pages · checked {updateIndex.lastSynced}
           </span>
         </div>
         <dl className="grid text-xs md:grid-cols-5">
@@ -107,7 +107,7 @@ export function CombatReference({
           ))}
         </dl>
         <p className="mt-2 text-xs text-parch-300">
-          Wiki poll:{" "}
+          Wiki check:{" "}
           {updateIndex.records.some((entry) => entry.stale === true)
             ? "stale rows. Run npm run sync:combat"
             : "no tracked page revised since last verify"}
@@ -298,7 +298,7 @@ export function CombatReference({
       <section className="border-b border-stone-750 py-3">
         <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-4">
           <div>
-            <h2 className="text-sm font-medium text-parch-50">Catalyst baseline</h2>
+            <h2 className="text-sm font-medium text-parch-50">Catalyst League reference</h2>
             <p className="mt-0.5 text-xs text-parch-300">
               Catalyst history. Not used in Equilibrium math.
             </p>

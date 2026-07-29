@@ -213,7 +213,6 @@ function ImageOnlyBody({
     <div className="data-wiki-article__image-only">
       <div className="data-wiki-article__image-only-well">
         {src ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={src}
             alt={name}
@@ -257,8 +256,8 @@ function WikiBody({
   const [dropsOpen, setDropsOpen] = useState(false);
   const view = load.status === "ready" ? load.view : null;
   const heading = view?.title || name;
-  const drops = view?.drops ?? [];
-  const hasStructuredDrops = drops.length > 0;
+  const drops = view?.drops;
+  const hasStructuredDrops = Boolean(drops?.length);
   const hasHtmlDrops = Boolean(view?.hasDrops && view.dropsHtml.trim());
   // Prefer click-time safe URL; re-validate view.pageUrl before external nav.
   const externalWikiHref =
@@ -323,7 +322,7 @@ function WikiBody({
   const factChips = useMemo(() => factsToChips(heroFacts), [heroFacts]);
 
   const notable = useMemo(
-    () => (hasStructuredDrops ? notableDropsForPresentation(drops, 8) : []),
+    () => (hasStructuredDrops && drops ? notableDropsForPresentation(drops, 8) : []),
     [hasStructuredDrops, drops],
   );
 
@@ -358,7 +357,6 @@ function WikiBody({
         <div className="data-wiki-article__stage">
           <div className="data-wiki-article__art-primary">
             {localArtSrc ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={localArtSrc}
                 alt=""
@@ -414,7 +412,7 @@ function WikiBody({
         <section className="data-wiki-article__drops" aria-label="Drops">
           {hasStructuredDrops ? (
             <WikiDropTable
-              rows={drops}
+              rows={drops ?? []}
               iconByItem={iconByItem}
               variant="summary"
               onOpenFull={() => setDropsOpen(true)}
@@ -484,7 +482,7 @@ function WikiBody({
           </header>
           <div className="data-wiki-drops-popup__body">
             {hasStructuredDrops ? (
-              <WikiDropTable rows={drops} iconByItem={iconByItem} variant="full" />
+              <WikiDropTable rows={drops ?? []} iconByItem={iconByItem} variant="full" />
             ) : null}
           </div>
         </div>

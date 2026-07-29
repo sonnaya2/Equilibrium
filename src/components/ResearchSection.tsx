@@ -383,6 +383,13 @@ function isPlainObject(value: unknown): value is ResearchRow {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+export function researchRows(rows: readonly unknown[]): ResearchRow[] {
+  if (!rows.every(isPlainObject)) {
+    throw new TypeError("Research datasets must contain objects");
+  }
+  return [...rows];
+}
+
 /** Hard cap for any body line. Audit notes in JSON run 1–2k chars — never show that. */
 const LINE_MAX = 120;
 const BODY_MAX_LINES = 2;
@@ -966,7 +973,7 @@ export function ResearchSection({
         />
       </DataViewHeader>
 
-      <div role="tablist" aria-label={`${heading} sections`} className="comp-seg data-record-tabs">
+      <div role="tablist" aria-label={`${heading} sections`} className="seg data-record-tabs">
         {tabs.map((tab) => {
           const active = tabKey === tab.key;
           return (
@@ -976,7 +983,7 @@ export function ResearchSection({
               role="tab"
               aria-selected={active}
               onClick={() => setTabKey(tab.key)}
-              className={`comp-seg__btn${active ? " is-active" : ""}`}
+              className={`seg__btn${active ? " is-active" : ""}`}
             >
               {tab.label}
             </button>

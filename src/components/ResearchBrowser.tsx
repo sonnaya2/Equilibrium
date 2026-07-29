@@ -597,7 +597,7 @@ export function DataRegionRail({
         aria-pressed={mineOnly}
         disabled={!loaded}
         title={loaded ? "Only regions you've unlocked" : "Loading your picks…"}
-        className={`comp-facet data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
+        className={`chip data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
       >
         My regions
       </button>

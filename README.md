@@ -42,6 +42,8 @@ Full list is at `/sources`.
 
 ## Running it locally
 
+Requires Node.js 22.
+
 ```bash
 npm ci
 npm run dev
@@ -92,7 +94,6 @@ data/research/       normalized research and progression data
 assets/              sourced game media and provenance manifest
 scripts/             optional research sync / normalize (needs local scraped-data/)
 ```
-
 
 ## House rules
 

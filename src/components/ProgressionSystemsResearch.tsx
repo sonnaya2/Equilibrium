@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import pass3 from "../../data/reference/permanent-unlocks-pass-3.json";
 import pass5 from "../../data/reference/permanent-unlocks-pass-5.json";
 
@@ -27,43 +27,43 @@ export const PROGRESSION_SYSTEM_TABS: ResearchTab[] = [
     key: "necromancy",
     label: "Necro talents",
     description: "",
-    rows: necromancyTiers as unknown as ResearchRow[],
+    rows: researchRows(necromancyTiers),
   },
   {
     key: "archaeology",
     label: "Arch relics",
     description: "",
-    rows: archaeologyRelics as unknown as ResearchRow[],
+    rows: researchRows(archaeologyRelics),
   },
   {
     key: "dungeoneering",
     label: "Dungeoneering",
     description: "",
-    rows: pass5.dungeoneering as unknown as ResearchRow[],
+    rows: researchRows(pass5.dungeoneering),
   },
   {
     key: "base-camp",
     label: "Base camp",
     description: "",
-    rows: pass5.anachronia_base_camp as unknown as ResearchRow[],
+    rows: researchRows(pass5.anachronia_base_camp),
   },
   {
     key: "farm",
     label: "Farm perks",
     description: "",
-    rows: farmPerks as unknown as ResearchRow[],
+    rows: researchRows(farmPerks),
   },
   {
     key: "region-passives",
     label: "Passives",
     description: "",
-    rows: pass5.region_achievement_passives as unknown as ResearchRow[],
+    rows: researchRows(pass5.region_achievement_passives),
   },
   {
     key: "account",
     label: "Account",
     description: "",
-    rows: pass5.account_combat_infrastructure as unknown as ResearchRow[],
+    rows: researchRows(pass5.account_combat_infrastructure),
   },
 ];
 

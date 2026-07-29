@@ -58,11 +58,7 @@ function rendererFor(
   return made;
 }
 
-/**
- * frameloop="demand" sleeps unless something invalidates. Any store change
- * that forgets leaves a stale frame on screen (wartable plan, risk 3), so one
- * subscription re-renders on every build mutation.
- */
+/** Re-render the demand-driven canvas when the build changes. */
 function InvalidateOnBuild() {
   const invalidate = useThree((s) => s.invalidate);
   const { build } = useBuild();
@@ -189,6 +185,8 @@ export default function MapScene() {
           WebGPU glued to the host so min-h-0 ancestors actually work. */}
       <div className="board-sky__canvas-host">
         <Canvas
+          // Absolute fill of the host cell; R3F's wrapper default is relative.
+          style={{ position: "absolute", inset: 0 }}
           // Cap dpr: 2x on a 4k display multiplies subpixel z-fight and coast
           // aliasing into visible shimmer under the demand loop.
           dpr={[1, 1.5]}

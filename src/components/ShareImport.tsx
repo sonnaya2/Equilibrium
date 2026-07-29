@@ -59,17 +59,17 @@ export function ShareImport() {
       aria-modal="true"
       aria-labelledby="share-import-title"
     >
-      <section className="comp-panel w-full max-w-sm">
-        <div className="comp-panel__head" id="share-import-title">
+      <section className="slab w-full max-w-sm">
+        <div className="slab__head" id="share-import-title">
           Shared build
         </div>
-        <div className="comp-panel__body space-y-2.5">
+        <div className="slab__body space-y-2.5">
           <p className="text-sm text-parch-300">Link differs from the build saved here.</p>
           <div className="flex flex-wrap gap-1.5">
-            <button type="button" onClick={importShared} className="comp-btn comp-btn--gem">
+            <button type="button" onClick={importShared} className="btn btn--gem">
               Import
             </button>
-            <button type="button" onClick={keepMine} className="comp-btn">
+            <button type="button" onClick={keepMine} className="btn">
               Keep mine
             </button>
           </div>

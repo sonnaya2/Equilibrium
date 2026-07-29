@@ -16,7 +16,7 @@ import { dataEntityIconPath } from "@/lib/gameArt";
 import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
-import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
+import { clipProse, researchRowMatchesRegion, researchRows } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 import { PROGRESSION_SYSTEM_TABS } from "./ProgressionSystemsResearch";
 
@@ -48,13 +48,13 @@ const SECTIONS: Array<{ key: string; label: string }> = [
 
 /** Section loaders via plannerExpansions typed getters (not raw JSON). */
 const BASE: Record<SectionKey, () => Row[]> = {
-  combat_training_spots: () => getCombatTrainingSpots() as unknown as Row[],
-  runecrafting_altars: () => getRunecraftingAltars() as unknown as Row[],
-  invention_progression: () => getInventionProgression() as unknown as Row[],
-  invention_component_sources: () => getInventionComponentSources() as unknown as Row[],
-  archaeology_progression: () => getArchaeologyProgression() as unknown as Row[],
-  archaeology_combat_relics: () => getArchaeologyCombatRelics() as unknown as Row[],
-  regional_unique_drops: () => getAllRegionalUniqueDrops() as unknown as Row[],
+  combat_training_spots: () => researchRows(getCombatTrainingSpots()),
+  runecrafting_altars: () => researchRows(getRunecraftingAltars()),
+  invention_progression: () => researchRows(getInventionProgression()),
+  invention_component_sources: () => researchRows(getInventionComponentSources()),
+  archaeology_progression: () => researchRows(getArchaeologyProgression()),
+  archaeology_combat_relics: () => researchRows(getArchaeologyCombatRelics()),
+  regional_unique_drops: () => researchRows(getAllRegionalUniqueDrops()),
 };
 
 // Overlay only — base unique drops come from getAllRegionalUniqueDrops.
@@ -65,7 +65,7 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   invention_component_sources: [],
   archaeology_progression: [],
   archaeology_combat_relics: [],
-  regional_unique_drops: getSupportUniqueDropOverlay() as unknown as Row[],
+  regional_unique_drops: researchRows(getSupportUniqueDropOverlay()),
 };
 
 const REGION_LABELS: Record<string, string> = {
@@ -277,7 +277,7 @@ function rowDetails(row: Row): string[] {
 
 function rowsFor(section: string): Row[] {
   const system = SYSTEM_TABS.find((tab) => `system-${tab.key}` === section);
-  if (system) return system.rows as Row[];
+  if (system) return system.rows;
 
   const key = section as SectionKey;
   const base = BASE[key]();
@@ -355,11 +355,7 @@ export function ProgressionResearch() {
         />
       </DataViewHeader>
 
-      <div
-        role="tablist"
-        aria-label="Progression sections"
-        className="comp-seg data-progression__tabs"
-      >
+      <div role="tablist" aria-label="Progression sections" className="seg data-progression__tabs">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -369,7 +365,7 @@ export function ProgressionResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`comp-seg__btn${active ? " is-active" : ""}`}
+              className={`seg__btn${active ? " is-active" : ""}`}
             >
               {item.label}
             </button>

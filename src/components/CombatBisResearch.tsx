@@ -1,7 +1,7 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import combat from "../../data/research/regional-combat-unlocks.json";
 
-const combatRows = combat.records as unknown as ResearchRow[];
+const combatRows = researchRows(combat.records);
 
 const accounts = combatRows.filter((row) => row.recordType === "account");
 const activities = combatRows.filter((row) => row.recordType === "activity");

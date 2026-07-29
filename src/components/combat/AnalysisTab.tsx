@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { calculateAbility, type AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
@@ -80,14 +80,8 @@ export function AnalysisTab() {
     ),
   };
 
-  const resultA = useMemo(
-    () => runCast(ability, entry.style, statsA),
-    [ability, entry.style, statsA],
-  );
-  const resultB = useMemo(
-    () => runCast(ability, entry.style, statsB),
-    [ability, entry.style, statsB],
-  );
+  const resultA = runCast(ability, entry.style, statsA);
+  const resultB = runCast(ability, entry.style, statsB);
 
   const delta =
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;

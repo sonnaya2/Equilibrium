@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import { getPrayerCatalogueBooks } from "@/research/prayers";
 import { getPrayerBooks } from "@/research/prayerBooks";
 import { getSpellbooks } from "@/research/spellbooks";
@@ -32,22 +32,24 @@ const prayerTabs: ResearchTab[] = books.map((book) => ({
   key: book.id,
   label: book.name,
   description: "",
-  rows: book.prayers.map((prayer) => {
-    const urls = resolveSourceRefs(
-      "source_refs" in prayer ? (prayer as { source_refs?: unknown }).source_refs : undefined,
-    );
-    const required = (prayer as { required_regions?: string[] }).required_regions;
-    const regionType = (prayer as { region_requirement_type?: string }).region_requirement_type;
-    return {
-      ...prayer,
-      category: book.name,
-      book_id: book.id,
-      // Empty [] alone is unmapped; explicit no_region_requirement is global.
-      requiredRegions: regionType === "no_region_requirement" ? ["global"] : required,
-      region_requirement_type: regionType,
-      source_urls: urls.length ? urls : undefined,
-    } as unknown as ResearchRow;
-  }),
+  rows: researchRows(
+    book.prayers.map((prayer) => {
+      const urls = resolveSourceRefs(
+        "source_refs" in prayer ? (prayer as { source_refs?: unknown }).source_refs : undefined,
+      );
+      const required = (prayer as { required_regions?: string[] }).required_regions;
+      const regionType = (prayer as { region_requirement_type?: string }).region_requirement_type;
+      return {
+        ...prayer,
+        category: book.name,
+        book_id: book.id,
+        // Empty [] alone is unmapped; explicit no_region_requirement is global.
+        requiredRegions: regionType === "no_region_requirement" ? ["global"] : required,
+        region_requirement_type: regionType,
+        source_urls: urls.length ? urls : undefined,
+      };
+    }),
+  ),
 }));
 
 const PRAYER_TABS: ResearchTab[] = [
@@ -56,7 +58,7 @@ const PRAYER_TABS: ResearchTab[] = [
     key: "books-model",
     label: "Book unlocks",
     description: "",
-    rows: prayerBooks as unknown as ResearchRow[],
+    rows: researchRows(prayerBooks),
   },
 ];
 
@@ -65,16 +67,18 @@ const MAGIC_TABS: ResearchTab[] = [
     key: "spellbooks",
     label: "Spellbooks",
     description: "",
-    rows: spellbooks.map((book) => ({
-      ...book,
-      requiredRegions: book.default_book
-        ? ["global"]
-        : "region_hint" in book
-          ? [book.region_hint]
-          : book.id === "ancient-magicks"
-            ? ["desert"]
-            : undefined,
-    })) as unknown as ResearchRow[],
+    rows: researchRows(
+      spellbooks.map((book) => ({
+        ...book,
+        requiredRegions: book.default_book
+          ? ["global"]
+          : "region_hint" in book
+            ? [book.region_hint]
+            : book.id === "ancient-magicks"
+              ? ["desert"]
+              : undefined,
+      })),
+    ),
   },
 ];
 

@@ -1,19 +1,5 @@
 "use client";
 
-/**
- * The region pick rail under Board Sky.
- *
- * It owns the route's whole keyboard and screen-reader surface, and every
- * assertion e2e/map.spec.ts pins: one `<button>` per region whose accessible
- * name starts with the display name, the `0/3` counter, a fourth elective with
- * aria-disabled at cap (still focusable), and always-mounted `Clear picks`.
- * Nothing inside the canvas may repeat any of that — two matches is a
- * Playwright strict-mode failure.
- *
- * Focusing a chip also drives the camera. Elective chips toggle pick when
- * allowed; fixed regions only frame.
- */
-
 import { Pips } from "@/components/Pips";
 import { RegionCrest, RegionCrestPreload } from "@/components/RegionCrest";
 import {
@@ -51,7 +37,7 @@ export function RegionLedger({ regions }: { regions: PlannerRegion[] }) {
       <RegionCrestPreload regionIds={ORDER} />
       <div className="board-sky__regions-head">
         <h2 className="board-sky__rail-label">Regions</h2>
-        <span className={`comp-pick-count${loaded ? "" : " opacity-60"}`} aria-live="polite">
+        <span className={`pick-count${loaded ? "" : " opacity-60"}`} aria-live="polite">
           {counterLabel}
         </span>
         <Pips

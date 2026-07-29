@@ -33,7 +33,6 @@ function formatNum(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
-/** Combat Setup workbench: style + sub-panels + live summary rail. */
 export function SetupTab() {
   const [loadout, setLoadout] = useLoadout();
   const [subTab, setSubTab] = useState<SubTab>("Gear");
@@ -127,7 +126,6 @@ export function SetupTab() {
           {subTab === "Target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}
         </div>
 
-        {/* Live summary rail */}
         <aside className="combat-frame setup-summary p-3">
           <CombatFrameCorners />
           <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">

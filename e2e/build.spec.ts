@@ -7,12 +7,14 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("build shows region pick counter and Clear picks", async ({ page }) => {
-  // Nav mast + build chrome both show N/3 after champion shell.
+  // The first counter may be in either the navigation or planner.
   await expect(page.getByText("0/3").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Clear picks" })).toBeVisible();
 });
 
-test("build caps elective regions without removing the fourth pick from focus", async ({ page }) => {
+test("build caps elective regions without removing the fourth pick from focus", async ({
+  page,
+}) => {
   for (const name of ["Asgarnia", "Kandarin", "Fremennik Province"]) {
     await page.getByRole("button", { name: new RegExp(`^${name},`) }).click();
   }

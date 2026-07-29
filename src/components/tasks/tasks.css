@@ -378,16 +378,6 @@
 
   .tasks-page .facet-chip {
     min-height: 2.75rem;
-    padding: 0.5rem 0.7rem;
-    background: var(--tasks-inset);
-    color: var(--color-parch-100);
-    font-size: 0.8125rem;
-  }
-
-  .tasks-page .facet-chip[aria-pressed="true"] {
-    border-color: var(--color-gem-500);
-    color: var(--color-gem-300);
-    background: var(--tasks-raised);
   }
 
   .tasks-skill-filter {

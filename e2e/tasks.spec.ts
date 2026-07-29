@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
+test("tasks keeps temporary task provenance visible", async ({ page }) => {
   const browserErrors: string[] = [];
   page.on("pageerror", (error) => browserErrors.push(error.message));
   page.on("console", (message) => {
@@ -39,7 +39,9 @@ test("tasks keeps Catalyst baseline provenance visible", async ({ page }) => {
   await expect(importWindow.getByRole("button", { name: "Upload" })).toBeDisabled();
 
   await expect(page.getByRole("navigation", { name: "Primary" })).toContainText("Overview");
-  await expect(page.locator("body > footer")).toContainText("RuneScape is a trademark of Jagex Ltd.");
+  await expect(page.locator("body > footer")).toContainText(
+    "RuneScape is a trademark of Jagex Ltd.",
+  );
   await expect(page.locator("[data-nextjs-dialog]")).toHaveCount(0);
   expect(browserErrors).toEqual([]);
 });
@@ -87,18 +89,25 @@ test("task filters compose and completion state persists in the page model", asy
   const completedId = await page.locator("[data-task-id]").first().getAttribute("data-task-id");
   await complete.click();
   await expect(page.getByRole("button", { name: /Mark incomplete:/ }).first()).toBeVisible();
-  await expect.poll(() => page.evaluate(async () => new Promise<string[]>((resolve, reject) => {
-    const open = indexedDB.open("equilibrium");
-    open.onerror = () => reject(open.error);
-    open.onsuccess = () => {
-      const read = open.result
-        .transaction("task-progress", "readonly")
-        .objectStore("task-progress")
-        .get("progress");
-      read.onerror = () => reject(read.error);
-      read.onsuccess = () => resolve(read.result?.completed ?? []);
-    };
-  }))).toContain(completedId);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        async () =>
+          new Promise<string[]>((resolve, reject) => {
+            const open = indexedDB.open("equilibrium");
+            open.onerror = () => reject(open.error);
+            open.onsuccess = () => {
+              const read = open.result
+                .transaction("task-progress", "readonly")
+                .objectStore("task-progress")
+                .get("progress");
+              read.onerror = () => reject(read.error);
+              read.onsuccess = () => resolve(read.result?.completed ?? []);
+            };
+          }),
+      ),
+    )
+    .toContain(completedId);
 
   await page.getByRole("button", { name: "Clear filters" }).click();
   await expect(buildOnly).toHaveAttribute("aria-pressed", "false");

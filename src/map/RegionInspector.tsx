@@ -1,20 +1,6 @@
 "use client";
 
-/**
- * Everything known about the region in focus, sorted into tabs.
- *
- * It used to be one content table with a `kind` dropdown, which did not work:
- * the catalog's kinds are freeform prose, so Misthalin alone offered twelve
- * one-row options, the 142 upgrade rows were squeezed into a second column, and
- * the training methods were counted in the stat strip and then shown nowhere at
- * all. Tabs come from regionDetail.ts, which classifies once and is tested.
- *
- * Hard rules and the source line stay outside the tabs — they qualify every tab,
- * and e2e pins both.
- *
- * Under-board Board Sky dossier: framed note + places-pinned meter over live
- * catalog counts only. No concept fixture drops, no invented lore.
- */
+/** Region details grouped into tabs; hard rules and sources apply to every tab. */
 
 import { useMemo, useState } from "react";
 import { contentDetailOrRewards } from "@/lib/researchRewards";

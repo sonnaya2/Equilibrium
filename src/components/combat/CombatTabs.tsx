@@ -6,6 +6,7 @@ import { AnalysisTab } from "./AnalysisTab";
 import { QuickCalculator } from "./QuickCalculator";
 import { RotationPlanner } from "./RotationPlanner";
 import { SetupTab } from "./SetupTab";
+import "./combat.css";
 
 const COMBAT_TABS = [
   { id: "Quick", label: "Abilities" },

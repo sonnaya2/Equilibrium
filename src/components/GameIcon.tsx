@@ -34,7 +34,6 @@ export function GameIcon({
   if (!src || failed) return null;
 
   // Plain img: game art is small static PNG from public/, next/image buys nothing here.
-  // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
       src={src}

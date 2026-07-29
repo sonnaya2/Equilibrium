@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import type { ResearchRegion } from "@/research/catalog";
 import { WorkbenchPanel, WorkbenchTabs } from "./WorkbenchTabs";
+import "./data.css";
 
 const DataRegionContext = createContext<ResearchRegion | null>(null);
 

@@ -416,20 +416,20 @@ export function BuildPlanner({
                               type="button"
                               role="option"
                               aria-selected={on}
-                              aria-pressed={on}
                               aria-label={relic.name}
                               className={`build-board__seat${on ? " is-on" : ""}`}
                               onClick={() => toggleRelic(tier.tier, relic.name)}
                             >
                               <span className="build-board__seat-emblem" aria-hidden>
                                 {icon ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
                                   <img src={icon} alt="" width={32} height={32} />
                                 ) : (
                                   <span className="build-board__seat-mono">{mono}</span>
                                 )}
                               </span>
-                              <span className="build-board__seat-name">{shortName(relic.name)}</span>
+                              <span className="build-board__seat-name">
+                                {shortName(relic.name)}
+                              </span>
                               <span className="build-board__tip" role="tooltip">
                                 <strong>{relic.name}</strong>
                                 <ul>
@@ -463,7 +463,10 @@ export function BuildPlanner({
                   >
                     <span className="build-board__lat-corner" aria-hidden />
                     {blessingTiers.map((t) => (
-                      <span key={t.tier} className={`build-board__lat-head${t.godTier ? " is-god" : ""}`}>
+                      <span
+                        key={t.tier}
+                        className={`build-board__lat-head${t.godTier ? " is-god" : ""}`}
+                      >
                         T{t.tier}
                         {t.godTier ? "?" : ""}
                       </span>

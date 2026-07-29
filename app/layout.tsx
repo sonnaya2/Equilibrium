@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Cinzel } from "next/font/google";
 import "./globals.css";
-import "./theme.css";
 import { Nav } from "@/components/Nav";
 import { ShareImport } from "@/components/ShareImport";
 
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={cinzel.variable}>
-      <body className="eq-champion flex min-h-screen flex-col font-sans antialiased">
+      <body className="flex min-h-screen flex-col font-sans antialiased">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-2 focus:z-50 focus:border focus:border-stone-750 focus:bg-stone-850 focus:px-2 focus:py-1.5 focus:text-xs focus:text-gem-400"
@@ -34,11 +33,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </a>
         <Nav />
         <ShareImport />
-        <main id="main" className="comp-stage flex-1">
+        <main id="main" className="site-main">
           {children}
         </main>
-        <footer className="comp-foot">
-          <p className="comp-foot__jagex">
+        <footer className="site-foot">
+          <p className="site-foot__legal">
             Created using intellectual property belonging to Jagex Limited under the terms of
             Jagex&apos;s{" "}
             <a
@@ -61,9 +60,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <span className="text-stone-750" aria-hidden>
               ·
             </span>
-            <details className="comp-foot__licenses">
+            <details className="site-foot__licenses">
               <summary>Licenses</summary>
-              <div className="comp-foot__license-copy">
+              <div className="site-foot__license-copy">
                 <p>
                   <strong>Wiki text and data:</strong> adapted from the{" "}
                   <a href="https://runescape.wiki/" target="_blank" rel="noreferrer noopener">

@@ -9,7 +9,7 @@ import { dataEntityIconPath } from "@/lib/gameArt";
 import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
-import { clipProse, researchRowMatchesRegion } from "./ResearchSection";
+import { clipProse, researchRowMatchesRegion, researchRows } from "./ResearchSection";
 import { DataViewHeader, useDataRegion } from "./DataWorkbench";
 
 type Row = Record<string, unknown>;
@@ -39,8 +39,8 @@ const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   account_unlocks: [],
   activity_unlocks: [],
   equipment_models: [
-    ...(supportItems.equipment_models as unknown as Row[]),
-    ...(containerBags.equipment_models as unknown as Row[]),
+    ...researchRows(supportItems.equipment_models),
+    ...researchRows(containerBags.equipment_models),
   ],
   consumable_unlocks: [],
 };
@@ -238,7 +238,7 @@ function mapKey(row: Row, index: number, prefix: string): string {
 }
 
 function rowsFor(section: SectionKey): Row[] {
-  const base = unlockData[section] as unknown as Row[];
+  const base = researchRows(unlockData[section]);
   const rows = new Map<string, Row>();
   // Base first, then supplements — on id collision the newer supplement wins.
   base.forEach((row, index) => {
@@ -301,7 +301,7 @@ export function PermanentUnlockResearch() {
         />
       </DataViewHeader>
 
-      <div role="tablist" aria-label="Unlock sections" className="comp-seg data-record-tabs">
+      <div role="tablist" aria-label="Unlock sections" className="seg data-record-tabs">
         {SECTIONS.map((item) => {
           const active = section === item.key;
           return (
@@ -311,7 +311,7 @@ export function PermanentUnlockResearch() {
               role="tab"
               aria-selected={active}
               onClick={() => setSection(item.key)}
-              className={`comp-seg__btn${active ? " is-active" : ""}`}
+              className={`seg__btn${active ? " is-active" : ""}`}
             >
               {item.label}
             </button>

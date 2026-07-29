@@ -68,11 +68,7 @@ function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
   return float(1).sub(d).max(float(0)).pow(float(1.8));
 }
 
-/**
- * Tight lava basins only (TzHaar, Lava Maze, Wilderness Crater).
- * Chroma + land + dry gates stop heat painting open ocean under plate rims
- * (clipboard god-rays) and non-red land inside the discs.
- */
+/** Restrict lava shading to dry, red-dominant land inside known lava basins. */
 function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
   // Inland + solid land only — plate-rim ocean stays cold.
   const land = smoothstep(float(0.53), float(0.6), F.g).mul(

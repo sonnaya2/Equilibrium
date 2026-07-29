@@ -127,7 +127,7 @@ export function QuickCalculator() {
                   setAbilityId(firstDamagingId(s));
                 }}
                 aria-pressed={active}
-                className={`comp-facet inline-flex items-center gap-1.5${active ? " is-on" : ""}`}
+                className={`chip inline-flex items-center gap-1.5${active ? " is-on" : ""}`}
               >
                 <GameIcon src={styleIconPath(s)} size={14} />
                 {STYLE_LABELS[s]}
@@ -166,7 +166,7 @@ export function QuickCalculator() {
             aria-label={`${STYLE_LABELS[style]} abilities`}
             className="combat-ability-scroll"
           >
-            <table className="comp-table w-full">
+            <table className="quick-table w-full">
               <thead>
                 <tr>
                   <th scope="col">Ability</th>

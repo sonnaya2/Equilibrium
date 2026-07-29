@@ -92,7 +92,6 @@ function DropIcon({
       ) : null}
       {showPrimary && !isLocalGamePath(src) ? (
         // Live wiki inventory glyph (runescape.wiki CDN only).
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt=""
@@ -114,7 +113,6 @@ function DropIcon({
 function NotedBadge() {
   return (
     <span className="data-wiki-article__noted-badge" title="Noted" aria-label="Noted">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={NOTED_BADGE_ICON_URL}
         alt=""

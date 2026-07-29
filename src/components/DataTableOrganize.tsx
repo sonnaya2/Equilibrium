@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * Shared A–Z / Z–A sort + multi type toggles for Data workbench tables.
- */
-
 import { useMemo, useState } from "react";
 
 export type SortDir = "asc" | "desc";

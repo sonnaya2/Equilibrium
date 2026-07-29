@@ -190,8 +190,11 @@ describe("data icon audit", () => {
     // Sanity: bosses still resolve
     expect(bossIconPath("Kerapac")).toBeTruthy();
     expect(activityIconPath("Prifddinas") || true).toBeTruthy();
+    // eslint-disable-next-line no-console -- this audit prints its local report
     console.log("AUDIT", report.counts);
+    // eslint-disable-next-line no-console -- this audit prints its local report
     console.log("garbage sample", report.garbage.slice(0, 15));
+    // eslint-disable-next-line no-console -- this audit prints its local report
     console.log("blank sample", report.blank.slice(0, 15));
   });
 });

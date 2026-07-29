@@ -59,8 +59,12 @@ test("data region rail owns every downstream filter", async ({ page }) => {
   ).toHaveCount(1);
   const contentTable = page.locator(".data-region-content-table");
   await expect(contentTable.getByRole("columnheader", { name: "Type", exact: true })).toBeVisible();
-  await expect(contentTable.getByRole("columnheader", { name: "Location", exact: true })).toBeVisible();
-  await expect(contentTable.getByRole("columnheader", { name: "Rewards / access", exact: true })).toBeVisible();
+  await expect(
+    contentTable.getByRole("columnheader", { name: "Location", exact: true }),
+  ).toBeVisible();
+  await expect(
+    contentTable.getByRole("columnheader", { name: "Rewards / access", exact: true }),
+  ).toBeVisible();
 
   const kerapac = contentTable.locator("tbody tr").filter({ hasText: "Kerapac" });
   await expect(kerapac).toContainText("Fractured Staff of Armadyl");
@@ -75,10 +79,10 @@ test("data region rail owns every downstream filter", async ({ page }) => {
 
   await expect(page.getByText("Major unlocks", { exact: true })).toBeVisible();
   await expect(contentTable).not.toContainText("Vermyx");
-  await page.getByRole("button", { name: "View Varrock Dig Site image" }).click();
-  await expect(page.getByRole("dialog", { name: "Varrock Dig Site image" })).toBeVisible();
+  await page.getByRole("button", { name: "Open Varrock Dig Site wiki article" }).click();
+  await expect(page.getByRole("dialog", { name: "Varrock Dig Site article" })).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByRole("combobox", { name: "Sort browse data" }).selectOption("name");
+  await page.getByRole("combobox", { name: "Sort mode" }).selectOption("name");
   await expect(contentTable.locator("tbody tr").first()).toContainText("Arch-Glacor");
 
   await page.getByRole("option", { name: /^Havenhythe,/ }).click();
@@ -86,7 +90,9 @@ test("data region rail owns every downstream filter", async ({ page }) => {
   await expect(skills.getByRole("option", { name: /^Archaeology/ })).toBeVisible();
   await skills.getByRole("option", { name: /^Archaeology/ }).click();
   await expect(page.getByRole("heading", { name: "Archaeology" })).toBeVisible();
-  await expect(page.getByRole("table", { name: "Archaeology training in Havenhythe" })).toBeVisible();
+  await expect(
+    page.getByRole("table", { name: "Archaeology training in Havenhythe" }),
+  ).toBeVisible();
 
   const dataTabs = page.getByRole("tablist", { name: "Data" });
   await expect(dataTabs.getByRole("tab", { name: "Systems", exact: true })).toHaveCount(0);
@@ -104,7 +110,10 @@ test("data region rail owns every downstream filter", async ({ page }) => {
   await expect(page.getByText("Hearts of Sanguine", { exact: false })).toHaveCount(0);
 
   await dataTabs.getByRole("tab", { name: "Progression", exact: true }).click();
-  await expect(page.getByRole("option", { name: /^Misthalin,/ })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("option", { name: /^Misthalin,/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   await expect(page.getByRole("tabpanel").getByLabel(/^[1-9]\d* routes$/)).toBeVisible();
 
   await page.getByRole("option", { name: /^Havenhythe,/ }).click();

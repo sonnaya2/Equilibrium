@@ -27,7 +27,6 @@ function catalogRegionCount(): number {
   return Array.isArray(regions) ? regions.length : 0;
 }
 
-/** Overview is the courtyard gate only — champion DNA, not a status blog. */
 export default function OverviewPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">

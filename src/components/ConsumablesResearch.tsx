@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import consumables from "../../data/reference/combat-consumables-pass-1.json";
 
 const chain = consumables.overload_chain;
@@ -8,31 +8,31 @@ const TABS: ResearchTab[] = [
     key: "overload",
     label: "Overloads",
     description: "",
-    rows: chain.records as unknown as ResearchRow[],
+    rows: researchRows(chain.records),
   },
   {
     key: "adrenaline",
     label: "Adrenaline",
     description: "",
-    rows: consumables.adrenaline as unknown as ResearchRow[],
+    rows: researchRows(consumables.adrenaline),
   },
   {
     key: "bombs",
     label: "Bombs",
     description: "",
-    rows: consumables.bombs as unknown as ResearchRow[],
+    rows: researchRows(consumables.bombs),
   },
   {
     key: "poison",
     label: "Poison",
     description: "",
-    rows: consumables.poison_stack as unknown as ResearchRow[],
+    rows: researchRows(consumables.poison_stack),
   },
   {
     key: "production",
     label: "Production",
     description: "",
-    rows: consumables.production_infrastructure as unknown as ResearchRow[],
+    rows: researchRows(consumables.production_infrastructure),
   },
 ];
 

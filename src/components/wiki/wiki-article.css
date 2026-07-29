@@ -1,4 +1,4 @@
-.eq-champion .data-image-viewer {
+.data-image-viewer {
   position: relative;
   box-sizing: border-box;
   width: min(96vw, 56rem);
@@ -7,16 +7,16 @@
   margin: auto;
   padding: 2.75rem 1.75rem 1.5rem;
   overflow: hidden;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-shell);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-900);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 55%, transparent),
-    0 12px 40px color-mix(in srgb, var(--echo-void) 72%, transparent);
-  color: var(--echo-parch-50);
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 55%, transparent),
+    0 12px 40px color-mix(in srgb, var(--color-stone-950) 72%, transparent);
+  color: var(--color-parch-50);
   text-align: center;
 }
 
-.eq-champion .data-image-viewer[open] {
+.data-image-viewer[open] {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,11 +24,11 @@
   gap: 0.65rem;
 }
 
-.eq-champion .data-image-viewer::backdrop {
-  background: color-mix(in srgb, var(--echo-void) 88%, transparent);
+.data-image-viewer::backdrop {
+  background: color-mix(in srgb, var(--color-stone-950) 88%, transparent);
 }
 
-.eq-champion .data-image-viewer > img {
+.data-image-viewer > img {
   display: block;
   box-sizing: border-box;
   width: auto;
@@ -37,49 +37,49 @@
   max-height: min(72vh, 40rem);
   margin: 0 auto;
   padding: 0.75rem;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-inset);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 22%, transparent);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
   object-fit: contain;
   image-rendering: auto;
 }
 
-.eq-champion .data-image-viewer > img.is-pixel {
+.data-image-viewer > img.is-pixel {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-.eq-champion .data-image-viewer > p {
+.data-image-viewer > p {
   margin: 0;
   max-width: 40rem;
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
   font-size: 0.9375rem;
   line-height: 1.35;
 }
 
-.eq-champion .data-image-viewer__close {
+.data-image-viewer__close {
   position: absolute;
   top: 0.65rem;
   right: 0.65rem;
   z-index: 2;
   padding: 0.4rem 0.7rem;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-raised);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
-  color: var(--echo-parch-50);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+  color: var(--color-parch-50);
   font-size: 0.8125rem;
   line-height: 1.2;
   cursor: pointer;
 }
 
-.eq-champion .data-image-viewer__close:hover,
-.eq-champion .data-image-viewer__close:focus-visible {
-  border-color: var(--echo-gem-deep);
-  background: color-mix(in srgb, var(--echo-raised) 88%, var(--echo-void));
-  color: var(--echo-gem-bright);
+.data-image-viewer__close:hover,
+.data-image-viewer__close:focus-visible {
+  border-color: var(--color-gem-500);
+  background: color-mix(in srgb, var(--color-stone-raised) 88%, var(--color-stone-950));
+  color: var(--color-gem-300);
 }
 
-.eq-champion .data-image-viewer .data-wiki-article__image-only {
+.data-image-viewer .data-wiki-article__image-only {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -90,47 +90,47 @@
   padding: 0.35rem 0.5rem 0.15rem;
 }
 
-.eq-champion .data-image-viewer .data-wiki-article__image-only-well {
+.data-image-viewer .data-wiki-article__image-only-well {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 9rem;
   min-height: 9rem;
   padding: 1.35rem 1.6rem;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-raised);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-raised);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 55%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, var(--echo-void) 30%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 55%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 30%, transparent);
 }
 
-.eq-champion .data-image-viewer .data-wiki-article__image-only-well img {
+.data-image-viewer .data-wiki-article__image-only-well img {
   display: block;
   width: auto;
   height: auto;
   max-width: min(78vw, 22rem);
   max-height: min(58vh, 22rem);
   padding: 0.25rem;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
-  background: var(--echo-inset);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 80%, transparent);
+  background: var(--color-stone-inset);
   object-fit: contain;
   image-rendering: auto;
 }
 
-.eq-champion .data-image-viewer .data-wiki-article__image-only-well img.is-pixel {
+.data-image-viewer .data-wiki-article__image-only-well img.is-pixel {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-.eq-champion .data-image-viewer .data-wiki-article__image-only-well .data-wiki-article__art-empty {
+.data-image-viewer .data-wiki-article__image-only-well .data-wiki-article__art-empty {
   width: 5rem;
   height: 5rem;
 }
 
-.eq-champion .data-image-viewer p.data-wiki-article__image-only-name {
+.data-image-viewer p.data-wiki-article__image-only-name {
   margin: 0;
   max-width: 100%;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: 1.125rem;
   font-weight: 600;
@@ -140,22 +140,22 @@
   word-break: normal;
 }
 
-.eq-champion .data-wiki-article {
+.data-wiki-article {
   position: relative;
   width: min(96vw, 87.5rem);
   max-width: 96vw;
   max-height: calc(100vh - 2.5rem);
   padding: 0;
   overflow: hidden;
-  border-color: var(--echo-border);
-  background: var(--echo-void);
+  border-color: var(--color-stone-750);
+  background: var(--color-stone-950);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 42%, transparent),
-    0 16px 48px color-mix(in srgb, var(--echo-void) 78%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 42%, transparent),
+    0 16px 48px color-mix(in srgb, var(--color-stone-950) 78%, transparent);
   text-align: left;
 }
 
-.eq-champion .data-wiki-article[open] {
+.data-wiki-article[open] {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -163,7 +163,7 @@
   gap: 0;
 }
 
-.eq-champion .data-wiki-article__shell {
+.data-wiki-article__shell {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -173,12 +173,12 @@
   padding: 0 0 0.15rem;
   overflow-x: hidden;
   overflow-y: auto;
-  background: var(--echo-void);
-  scrollbar-color: var(--echo-border) transparent;
+  background: var(--color-stone-950);
+  scrollbar-color: var(--color-stone-750) transparent;
   scrollbar-width: thin;
 }
 
-.eq-champion .data-wiki-article__header {
+.data-wiki-article__header {
   position: sticky;
   top: 0;
   z-index: 3;
@@ -189,15 +189,15 @@
   gap: 0.75rem;
   margin: 0;
   padding: 0.7rem 0.85rem 0.55rem 1.15rem;
-  border-bottom: 1px solid var(--echo-border);
-  background: color-mix(in srgb, var(--echo-void) 92%, var(--echo-stage));
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--echo-carve) 28%, transparent);
+  border-bottom: 1px solid var(--color-stone-750);
+  background: color-mix(in srgb, var(--color-stone-950) 92%, var(--color-stone-800));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 28%, transparent);
 }
 
-.eq-champion .data-wiki-article__title {
+.data-wiki-article__title {
   margin: 0;
   min-width: 0;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: clamp(1.15rem, 1.5vw, 1.4rem);
   font-weight: 600;
@@ -206,36 +206,36 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__close {
+.data-wiki-article__close {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
   width: 2.15rem;
   height: 2.15rem;
   padding: 0;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-raised);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent);
-  color: var(--echo-parch-100);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent);
+  color: var(--color-parch-100);
   font-size: 1.25rem;
   line-height: 1;
   cursor: pointer;
 }
 
-.eq-champion .data-wiki-article__close:hover,
-.eq-champion .data-wiki-article__close:focus-visible {
-  border-color: var(--echo-gem-deep);
-  background: color-mix(in srgb, var(--echo-raised) 88%, var(--echo-void));
-  color: var(--echo-gem-bright);
-  outline: 1px solid var(--echo-gem);
+.data-wiki-article__close:hover,
+.data-wiki-article__close:focus-visible {
+  border-color: var(--color-gem-500);
+  background: color-mix(in srgb, var(--color-stone-raised) 88%, var(--color-stone-950));
+  color: var(--color-gem-300);
+  outline: 1px solid var(--color-gem-400);
   outline-offset: 2px;
 }
 
-.eq-champion .data-wiki-article > .data-image-viewer__close {
+.data-wiki-article > .data-image-viewer__close {
   display: none;
 }
 
-.eq-champion .data-wiki-article__hero {
+.data-wiki-article__hero {
   --wiki-hero-h: min(44vh, 22rem);
   display: grid;
   flex: 0 0 auto;
@@ -247,7 +247,7 @@
   overflow: hidden;
 }
 
-.eq-champion .data-wiki-article__stage {
+.data-wiki-article__stage {
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
@@ -261,14 +261,14 @@
   max-height: var(--wiki-hero-h);
   padding: 0.35rem;
   overflow: hidden;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-raised);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-raised);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 48%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, var(--echo-void) 35%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 48%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 35%, transparent);
 }
 
-.eq-champion .data-wiki-article__art-primary {
+.data-wiki-article__art-primary {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -281,9 +281,9 @@
   height: 100%;
 }
 
-.eq-champion .data-wiki-article__stage img,
-.eq-champion .data-wiki-article__art-primary img,
-.eq-champion .data-wiki-article__art-img {
+.data-wiki-article__stage img,
+.data-wiki-article__art-primary img,
+.data-wiki-article__art-img {
   display: block;
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -293,34 +293,34 @@
   max-height: 100%;
   min-height: 0;
   padding: 0.1rem;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 85%, transparent);
-  background: var(--echo-inset);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 85%, transparent);
+  background: var(--color-stone-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 18%, transparent);
   object-fit: contain;
   object-position: center;
   image-rendering: auto;
 }
 
-.eq-champion .data-wiki-article__stage img.is-pixel,
-.eq-champion .data-wiki-article__art-primary img.is-pixel {
+.data-wiki-article__stage img.is-pixel,
+.data-wiki-article__art-primary img.is-pixel {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-.eq-champion .data-wiki-article__art-empty {
+.data-wiki-article__art-empty {
   display: block;
   width: min(10rem, 70%);
   height: min(10rem, 70%);
   min-width: 6rem;
   min-height: 6rem;
-  border: 1px dashed color-mix(in srgb, var(--echo-border) 80%, transparent);
-  background: color-mix(in srgb, var(--echo-inset) 88%, var(--echo-void));
+  border: 1px dashed color-mix(in srgb, var(--color-stone-750) 80%, transparent);
+  background: color-mix(in srgb, var(--color-stone-inset) 88%, var(--color-stone-950));
 }
 
-.eq-champion .data-wiki-article__art-name {
+.data-wiki-article__art-name {
   margin: 0;
   width: 100%;
-  color: var(--echo-parch-300);
+  color: var(--color-parch-300);
   font-size: 0.625rem;
   letter-spacing: 0.03em;
   line-height: 1.2;
@@ -328,7 +328,7 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__summary {
+.data-wiki-article__summary {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -339,7 +339,7 @@
   overflow: hidden;
 }
 
-.eq-champion .data-wiki-article__lead-prose {
+.data-wiki-article__lead-prose {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 14;
@@ -350,82 +350,82 @@
   overflow: hidden;
 }
 
-.eq-champion .data-wiki-article__lead-prose :where(p) {
+.data-wiki-article__lead-prose :where(p) {
   margin: 0 0 0.28rem;
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
   font-size: 0.72rem;
   line-height: 1.32;
 }
 
-.eq-champion .data-wiki-article__lead-prose :where(p):last-child {
+.data-wiki-article__lead-prose :where(p):last-child {
   margin-bottom: 0;
 }
 
-.eq-champion .data-wiki-article__facts {
+.data-wiki-article__facts {
   display: grid;
   flex: 0 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
   gap: 0;
   margin: 0;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 90%, transparent);
-  background: var(--echo-stage);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 90%, transparent);
+  background: var(--color-stone-800);
 }
 
-.eq-champion .data-wiki-article__facts--strip {
+.data-wiki-article__facts--strip {
   grid-template-columns: repeat(auto-fit, minmax(5.25rem, 1fr));
 }
 
-.eq-champion .data-wiki-article__fact {
+.data-wiki-article__fact {
   display: flex;
   flex-direction: column;
   gap: 0.08rem;
   min-width: 0;
   padding: 0.28rem 0.4rem;
-  border-right: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--color-stone-750) 80%, transparent);
   background: transparent;
   box-shadow: none;
 }
 
-.eq-champion .data-wiki-article__fact:last-child {
+.data-wiki-article__fact:last-child {
   border-right: none;
 }
 
-.eq-champion .data-wiki-article__fact-icon {
+.data-wiki-article__fact-icon {
   display: none;
 }
 
-.eq-champion .data-wiki-article__fact-label,
-.eq-champion .data-wiki-article__fact dt {
-  color: var(--echo-gold);
+.data-wiki-article__fact-label,
+.data-wiki-article__fact dt {
+  color: var(--color-gold-400);
   font-size: 0.5625rem;
   letter-spacing: 0.06em;
   line-height: 1.15;
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__fact-value,
-.eq-champion .data-wiki-article__fact dd {
+.data-wiki-article__fact-value,
+.data-wiki-article__fact dd {
   margin: 0;
-  color: var(--echo-parch-50);
+  color: var(--color-parch-50);
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
 }
 
-.eq-champion .data-wiki-article__modules {
+.data-wiki-article__modules {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
   padding: 0.5rem 0.6rem;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 88%, transparent);
-  background: var(--echo-stage);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 88%, transparent);
+  background: var(--color-stone-800);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 18%, transparent);
 }
 
-.eq-champion .data-wiki-article__module-title {
+.data-wiki-article__module-title {
   margin: 0 0 0.3rem;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.07em;
@@ -433,7 +433,7 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__notable {
+.data-wiki-article__notable {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.55rem;
@@ -442,18 +442,18 @@
   list-style: none;
 }
 
-.eq-champion .data-wiki-article__notable-item {
+.data-wiki-article__notable-item {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
   min-width: 0;
   max-width: 100%;
   padding: 0.15rem 0.3rem 0.15rem 0.15rem;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 75%, transparent);
-  background: var(--echo-inset);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 75%, transparent);
+  background: var(--color-stone-inset);
 }
 
-.eq-champion .data-wiki-article__notable-name {
+.data-wiki-article__notable-name {
   min-width: 0;
   overflow: hidden;
   color: var(--color-parch-50);
@@ -463,21 +463,21 @@
   white-space: nowrap;
 }
 
-.eq-champion .data-wiki-article__status {
+.data-wiki-article__status {
   margin: 0;
-  color: var(--echo-parch-300);
+  color: var(--color-parch-300);
   font-size: 0.875rem;
   line-height: 1.35;
 }
 
-.eq-champion .data-wiki-article__status[role="alert"] {
+.data-wiki-article__status[role="alert"] {
   padding: 0.45rem 0.55rem;
-  border: 1px solid var(--echo-border);
-  background: color-mix(in srgb, var(--echo-inset) 80%, var(--echo-void));
-  color: var(--echo-parch-100);
+  border: 1px solid var(--color-stone-750);
+  background: color-mix(in srgb, var(--color-stone-inset) 80%, var(--color-stone-950));
+  color: var(--color-parch-100);
 }
 
-.eq-champion .data-wiki-article__drops {
+.data-wiki-article__drops {
   flex: 0 1 auto;
   width: 100%;
   min-width: 0;
@@ -485,13 +485,13 @@
   padding: 0 1.15rem 0.15rem;
 }
 
-.eq-champion .data-wiki-article__drop-board {
+.data-wiki-article__drop-board {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
 }
 
-.eq-champion .data-wiki-article__drop-board-head {
+.data-wiki-article__drop-board-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -499,9 +499,9 @@
   gap: 0.35rem 0.65rem;
 }
 
-.eq-champion .data-wiki-article__drop-board-title {
+.data-wiki-article__drop-board-title {
   margin: 0;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: 0.9rem;
   font-weight: 600;
@@ -509,44 +509,44 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__drop-columns {
+.data-wiki-article__drop-columns {
   display: grid;
   gap: 0.55rem 0.65rem;
   align-items: start;
 }
 
-.eq-champion .data-wiki-article__drop-columns[data-cols="1"] {
+.data-wiki-article__drop-columns[data-cols="1"] {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.eq-champion .data-wiki-article__drop-columns[data-cols="2"] {
+.data-wiki-article__drop-columns[data-cols="2"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.eq-champion .data-wiki-article__drop-columns[data-cols="3"] {
+.data-wiki-article__drop-columns[data-cols="3"] {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.eq-champion .data-wiki-article__drop-group {
+.data-wiki-article__drop-group {
   min-width: 0;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-stage);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 16%, transparent);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-800);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 16%, transparent);
 }
 
-.eq-champion .data-wiki-article__drop-group-head {
+.data-wiki-article__drop-group-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.4rem;
   padding: 0.3rem 0.45rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--echo-border) 88%, transparent);
-  background: var(--echo-raised);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 88%, transparent);
+  background: var(--color-stone-raised);
 }
 
-.eq-champion .data-wiki-article__drop-group-title {
+.data-wiki-article__drop-group-title {
   margin: 0;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -554,45 +554,45 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__drop-group-count {
-  color: var(--echo-parch-400);
+.data-wiki-article__drop-group-count {
+  color: var(--color-parch-400);
   font-size: 0.6875rem;
   font-variant-numeric: tabular-nums;
 }
 
-.eq-champion .data-wiki-article__drop-toggle {
+.data-wiki-article__drop-toggle {
   padding: 0.15rem 0.4rem;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-inset);
-  color: var(--echo-parch-100);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-inset);
+  color: var(--color-parch-100);
   font-size: 0.6875rem;
   line-height: 1.2;
   cursor: pointer;
 }
 
-.eq-champion .data-wiki-article__drop-toggle:hover,
-.eq-champion .data-wiki-article__drop-toggle:focus-visible {
-  border-color: var(--echo-gem-deep);
-  color: var(--echo-gem-bright);
-  outline: 1px solid var(--echo-gem);
+.data-wiki-article__drop-toggle:hover,
+.data-wiki-article__drop-toggle:focus-visible {
+  border-color: var(--color-gem-500);
+  color: var(--color-gem-300);
+  outline: 1px solid var(--color-gem-400);
   outline-offset: 1px;
 }
 
-.eq-champion .data-wiki-article__drop-board-meta {
-  color: var(--echo-parch-400);
+.data-wiki-article__drop-board-meta {
+  color: var(--color-parch-400);
   font-size: 0.6875rem;
   letter-spacing: 0.03em;
   line-height: 1.2;
 }
 
-.eq-champion .data-wiki-article__drop-more {
+.data-wiki-article__drop-more {
   display: block;
   width: 100%;
   margin: 0;
   padding: 0.35rem 0.45rem 0.4rem;
   border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
-  background: color-mix(in srgb, var(--echo-raised) 55%, var(--echo-stage));
+  border-top: 1px solid color-mix(in srgb, var(--color-stone-750) 80%, transparent);
+  background: color-mix(in srgb, var(--color-stone-raised) 55%, var(--color-stone-800));
   color: var(--color-parch-100);
   font-size: 0.6875rem;
   letter-spacing: 0.03em;
@@ -601,14 +601,14 @@
   cursor: pointer;
 }
 
-.eq-champion .data-wiki-article__drop-more:hover,
-.eq-champion .data-wiki-article__drop-more:focus-visible {
-  color: var(--echo-gem-bright);
-  outline: 1px solid var(--echo-gem);
+.data-wiki-article__drop-more:hover,
+.data-wiki-article__drop-more:focus-visible {
+  color: var(--color-gem-300);
+  outline: 1px solid var(--color-gem-400);
   outline-offset: -1px;
 }
 
-.eq-champion .data-wiki-article__noted-badge {
+.data-wiki-article__noted-badge {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
@@ -616,12 +616,12 @@
   height: 0.95rem;
   margin-left: 0.1rem;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 75%, transparent);
-  background: var(--echo-inset);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 75%, transparent);
+  background: var(--color-stone-inset);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 18%, transparent);
 }
 
-.eq-champion .data-wiki-article__noted-badge img {
+.data-wiki-article__noted-badge img {
   display: block;
   width: 0.75rem;
   height: 0.75rem;
@@ -632,11 +632,11 @@
   image-rendering: crisp-edges;
 }
 
-.eq-champion .data-wiki-article__drop-table-item .data-wiki-article__noted-badge {
+.data-wiki-article__drop-table-item .data-wiki-article__noted-badge {
   align-self: center;
 }
 
-.eq-champion .data-wiki-article__drop-table {
+.data-wiki-article__drop-table {
   width: 100%;
   margin: 0;
   border-collapse: collapse;
@@ -645,11 +645,11 @@
   table-layout: fixed;
 }
 
-.eq-champion .data-wiki-article__drop-table-th {
+.data-wiki-article__drop-table-th {
   padding: 0.22rem 0.35rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--echo-border) 90%, transparent);
-  background: color-mix(in srgb, var(--echo-raised) 70%, var(--echo-stage));
-  color: var(--echo-parch-400);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 90%, transparent);
+  background: color-mix(in srgb, var(--color-stone-raised) 70%, var(--color-stone-800));
+  color: var(--color-parch-400);
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -657,40 +657,40 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__drop-table-th:nth-child(2) {
+.data-wiki-article__drop-table-th:nth-child(2) {
   width: 3.5rem;
 }
 
-.eq-champion .data-wiki-article__drop-table-th:nth-child(3) {
+.data-wiki-article__drop-table-th:nth-child(3) {
   width: 5.75rem;
 }
 
-.eq-champion .data-wiki-article__drop-table-row td {
+.data-wiki-article__drop-table-row td {
   height: 2.15rem;
   padding: 0.22rem 0.35rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--echo-border) 70%, transparent);
-  color: var(--echo-parch-50);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-stone-750) 70%, transparent);
+  color: var(--color-parch-50);
   font-variant-numeric: tabular-nums;
   line-height: 1.25;
   vertical-align: middle;
 }
 
-.eq-champion .data-wiki-article__drop-table-row:last-child td {
+.data-wiki-article__drop-table-row:last-child td {
   border-bottom: none;
 }
 
-.eq-champion .data-wiki-article__drop-table-row:hover td {
-  background: color-mix(in srgb, var(--echo-raised) 40%, var(--echo-stage));
+.data-wiki-article__drop-table-row:hover td {
+  background: color-mix(in srgb, var(--color-stone-raised) 40%, var(--color-stone-800));
 }
 
-.eq-champion .data-wiki-article__drop-table-item {
+.data-wiki-article__drop-table-item {
   display: flex;
   align-items: center;
   gap: 0.35rem;
   min-width: 0;
 }
 
-.eq-champion .data-wiki-article__drop-table-icon {
+.data-wiki-article__drop-table-icon {
   display: grid;
   box-sizing: border-box;
   flex: 0 0 auto;
@@ -699,17 +699,17 @@
   height: 1.75rem;
   padding: 0.1rem;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
-  background: var(--echo-inset);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 80%, transparent);
+  background: var(--color-stone-inset);
 }
 
-.eq-champion .data-wiki-article__drop-table-icon.is-empty {
+.data-wiki-article__drop-table-icon.is-empty {
   border-style: dashed;
-  background: color-mix(in srgb, var(--echo-inset) 70%, var(--echo-void));
+  background: color-mix(in srgb, var(--color-stone-inset) 70%, var(--color-stone-950));
 }
 
-.eq-champion .data-wiki-article__drop-table-icon img,
-.eq-champion .data-wiki-article__drop-table-icon .game-icon {
+.data-wiki-article__drop-table-icon img,
+.data-wiki-article__drop-table-icon .game-icon {
   display: block;
   width: 100%;
   height: 100%;
@@ -721,88 +721,88 @@
   image-rendering: crisp-edges;
 }
 
-.eq-champion .data-wiki-article__drop-table-name {
+.data-wiki-article__drop-table-name {
   min-width: 0;
   overflow: hidden;
-  color: var(--echo-parch-50);
+  color: var(--color-parch-50);
   font-size: 0.8125rem;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.eq-champion .data-wiki-article__drop-table-qty {
+.data-wiki-article__drop-table-qty {
   width: 3.5rem;
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
   font-size: 0.8125rem;
   white-space: nowrap;
 }
 
-.eq-champion .data-wiki-article__drop-table-rarity {
+.data-wiki-article__drop-table-rarity {
   width: 5.75rem;
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
   font-size: 0.75rem;
 }
 
-.eq-champion .data-wiki-article__drop-rate {
+.data-wiki-article__drop-rate {
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
   min-width: 0;
 }
 
-.eq-champion .data-wiki-article__rarity-dot {
+.data-wiki-article__rarity-dot {
   flex: 0 0 auto;
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 50%;
-  background: var(--echo-parch-400);
+  background: var(--color-parch-400);
 }
 
-.eq-champion .data-wiki-article__rarity-dot--always {
-  background: var(--echo-gold);
+.data-wiki-article__rarity-dot--always {
+  background: var(--color-gold-400);
 }
 
-.eq-champion .data-wiki-article__rarity-dot--common {
-  background: color-mix(in srgb, var(--echo-parch-300) 80%, #6a9bb8);
+.data-wiki-article__rarity-dot--common {
+  background: color-mix(in srgb, var(--color-parch-300) 80%, #6a9bb8);
 }
 
-.eq-champion .data-wiki-article__rarity-dot--uncommon {
-  background: color-mix(in srgb, #5a9e7a 70%, var(--echo-parch-300));
+.data-wiki-article__rarity-dot--uncommon {
+  background: color-mix(in srgb, #5a9e7a 70%, var(--color-parch-300));
 }
 
-.eq-champion .data-wiki-article__rarity-dot--rare {
-  background: color-mix(in srgb, #7a6ab0 75%, var(--echo-parch-300));
+.data-wiki-article__rarity-dot--rare {
+  background: color-mix(in srgb, #7a6ab0 75%, var(--color-parch-300));
 }
 
-.eq-champion .data-wiki-article__rarity-dot--very-rare {
-  background: color-mix(in srgb, #c47a3a 80%, var(--echo-gold));
+.data-wiki-article__rarity-dot--very-rare {
+  background: color-mix(in srgb, #c47a3a 80%, var(--color-gold-400));
 }
 
-.eq-champion .data-wiki-article__rarity-dot--varies {
-  background: color-mix(in srgb, var(--echo-gem) 55%, var(--echo-parch-400));
+.data-wiki-article__rarity-dot--varies {
+  background: color-mix(in srgb, var(--color-gem-400) 55%, var(--color-parch-400));
 }
 
-.eq-champion .data-wiki-article__asset-rail {
+.data-wiki-article__asset-rail {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   width: auto;
   margin: 0 1.15rem;
   padding: 0.45rem 0.55rem;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 80%, transparent);
-  background: var(--echo-stage);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 80%, transparent);
+  background: var(--color-stone-800);
   list-style: none;
 }
 
-.eq-champion .data-wiki-article__asset-item {
+.data-wiki-article__asset-item {
   display: flex;
   justify-content: center;
   min-width: 0;
 }
 
-.eq-champion .data-wiki-article__asset.data-icon-well,
-.eq-champion .data-wiki-article__asset-rail .data-icon-well {
+.data-wiki-article__asset.data-icon-well,
+.data-wiki-article__asset-rail .data-icon-well {
   width: 1.85rem;
   height: 1.85rem;
   min-width: 1.85rem;
@@ -811,17 +811,17 @@
   max-height: 1.85rem;
 }
 
-.eq-champion .data-wiki-article__body {
+.data-wiki-article__body {
   flex: 0 1 auto;
   min-height: 0;
   margin: 0 1.15rem;
   padding: 0;
-  border-top: 1px solid var(--echo-border);
+  border-top: 1px solid var(--color-stone-750);
 }
 
-.eq-champion .data-wiki-article__body-summary {
+.data-wiki-article__body-summary {
   padding: 0.45rem 0;
-  color: var(--echo-parch-300);
+  color: var(--color-parch-300);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
   list-style: none;
@@ -829,19 +829,19 @@
   cursor: pointer;
 }
 
-.eq-champion .data-wiki-article__body-summary::-webkit-details-marker {
+.data-wiki-article__body-summary::-webkit-details-marker {
   display: none;
 }
 
-.eq-champion .data-wiki-article__body[open] .data-wiki-article__body-summary {
-  color: var(--echo-gold);
+.data-wiki-article__body[open] .data-wiki-article__body-summary {
+  color: var(--color-gold-400);
 }
 
-.eq-champion .data-wiki-article__body .data-wiki-article__content {
+.data-wiki-article__body .data-wiki-article__content {
   padding: 0 0 0.5rem;
 }
 
-.eq-champion .data-wiki-article__footer {
+.data-wiki-article__footer {
   display: flex;
   flex: 0 0 auto;
   flex-wrap: wrap;
@@ -849,36 +849,36 @@
   gap: 0.45rem 1rem;
   margin-top: auto;
   padding: 0.55rem 1.15rem 0.75rem;
-  border-top: 1px solid var(--echo-border);
-  color: var(--echo-parch-400);
+  border-top: 1px solid var(--color-stone-750);
+  color: var(--color-parch-400);
   font-size: 0.75rem;
   line-height: 1.3;
 }
 
-.eq-champion .data-wiki-article__external {
-  color: var(--echo-gem-bright);
+.data-wiki-article__external {
+  color: var(--color-gem-300);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.eq-champion .data-wiki-article__external:hover,
-.eq-champion .data-wiki-article__external:focus-visible {
-  color: var(--echo-gem);
+.data-wiki-article__external:hover,
+.data-wiki-article__external:focus-visible {
+  color: var(--color-gem-400);
 }
 
-.eq-champion .data-wiki-article__credit {
-  color: var(--echo-parch-400);
+.data-wiki-article__credit {
+  color: var(--color-parch-400);
 }
 
-.eq-champion .data-wiki-article__content {
-  color: var(--echo-parch-50);
+.data-wiki-article__content {
+  color: var(--color-parch-50);
   font-size: 0.875rem;
   line-height: 1.4;
 }
 
-.eq-champion .data-wiki-article__content :where(h2, h3, h4) {
+.data-wiki-article__content :where(h2, h3, h4) {
   margin: 0.7rem 0 0.4rem;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: 0.9rem;
   font-weight: 600;
@@ -886,86 +886,86 @@
   line-height: 1.25;
 }
 
-.eq-champion .data-wiki-article__content :where(h2):first-child,
-.eq-champion .data-wiki-article__content :where(h3):first-child,
-.eq-champion .data-wiki-article__content :where(h4):first-child {
+.data-wiki-article__content :where(h2):first-child,
+.data-wiki-article__content :where(h3):first-child,
+.data-wiki-article__content :where(h4):first-child {
   margin-top: 0;
 }
 
-.eq-champion .data-wiki-article__content :where(p) {
+.data-wiki-article__content :where(p) {
   margin: 0 0 0.5rem;
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
 }
 
-.eq-champion .data-wiki-article__content :where(a) {
-  color: var(--echo-gem-bright);
+.data-wiki-article__content :where(a) {
+  color: var(--color-gem-300);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.eq-champion .data-wiki-article__content :where(a):hover,
-.eq-champion .data-wiki-article__content :where(a):focus-visible {
-  color: var(--echo-gem);
+.data-wiki-article__content :where(a):hover,
+.data-wiki-article__content :where(a):focus-visible {
+  color: var(--color-gem-400);
 }
 
-.eq-champion .data-wiki-article__content :where(ul, ol) {
+.data-wiki-article__content :where(ul, ol) {
   margin: 0 0 0.55rem;
   padding-left: 1.2rem;
-  color: var(--echo-parch-100);
+  color: var(--color-parch-100);
 }
 
-.eq-champion .data-wiki-article__content :where(li) {
+.data-wiki-article__content :where(li) {
   margin: 0.12rem 0;
 }
 
-.eq-champion .data-wiki-article__content :where(li)::marker {
-  color: var(--echo-parch-400);
+.data-wiki-article__content :where(li)::marker {
+  color: var(--color-parch-400);
 }
 
-.eq-champion .data-wiki-article__content :where(table) {
+.data-wiki-article__content :where(table) {
   width: 100%;
   margin: 0 0 0.65rem;
-  border: 1px solid var(--echo-border);
+  border: 1px solid var(--color-stone-750);
   border-collapse: collapse;
-  background: var(--echo-stage);
+  background: var(--color-stone-800);
   font-size: 0.8125rem;
 }
 
-.eq-champion .data-wiki-article__content :where(th, td) {
+.data-wiki-article__content :where(th, td) {
   padding: 0.28rem 0.4rem;
-  border: 1px solid color-mix(in srgb, var(--echo-border) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-stone-750) 90%, transparent);
   text-align: left;
   vertical-align: middle;
 }
 
-.eq-champion .data-wiki-article__content :where(th) {
-  background: var(--echo-raised);
-  color: var(--echo-parch-100);
+.data-wiki-article__content :where(th) {
+  background: var(--color-stone-raised);
+  color: var(--color-parch-100);
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-article__content :where(td) {
-  color: var(--echo-parch-50);
+.data-wiki-article__content :where(td) {
+  color: var(--color-parch-50);
   font-variant-numeric: tabular-nums;
   line-height: 1.3;
 }
 
-.eq-champion .data-wiki-article__content :where(tbody tr:hover td) {
-  background: color-mix(in srgb, var(--echo-raised) 45%, var(--echo-stage));
+.data-wiki-article__content :where(tbody tr:hover td) {
+  background: color-mix(in srgb, var(--color-stone-raised) 45%, var(--color-stone-800));
 }
 
-.eq-champion .data-wiki-article__drops .data-wiki-article__content :where(table) {
+.data-wiki-article__drops .data-wiki-article__content :where(table) {
   font-size: 0.8125rem;
 }
 
-.eq-champion .data-wiki-article__content :where(img, picture, video, svg, figure) {
+.data-wiki-article__content :where(img, picture, video, svg, figure) {
   display: none;
 }
 
-.eq-champion .data-wiki-article__drop-board-actions {
+.data-wiki-article__drop-board-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -974,14 +974,14 @@
   margin-left: auto;
 }
 
-.eq-champion .data-wiki-article__drop-open-full {
+.data-wiki-article__drop-open-full {
   display: inline-flex;
   align-items: center;
   margin: 0;
   padding: 0.28rem 0.55rem;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-raised);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 35%, transparent);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-raised);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 35%, transparent);
   color: var(--color-parch-50);
   font-size: 0.6875rem;
   font-weight: 600;
@@ -991,25 +991,23 @@
   cursor: pointer;
 }
 
-.eq-champion .data-wiki-article__drop-open-full:hover,
-.eq-champion .data-wiki-article__drop-open-full:focus-visible {
-  border-color: var(--echo-gem-deep);
-  color: var(--echo-gem-bright);
-  outline: 1px solid var(--echo-gem);
+.data-wiki-article__drop-open-full:hover,
+.data-wiki-article__drop-open-full:focus-visible {
+  border-color: var(--color-gem-500);
+  color: var(--color-gem-300);
+  outline: 1px solid var(--color-gem-400);
   outline-offset: 2px;
 }
 
-.eq-champion
-  .data-wiki-article__drop-board--summary
-  .data-wiki-article__drop-columns[data-cols="1"] {
+.data-wiki-article__drop-board--summary .data-wiki-article__drop-columns[data-cols="1"] {
   gap: 0.4rem;
 }
 
-.eq-champion .data-wiki-article__drop-board--summary .data-wiki-article__drop-group {
+.data-wiki-article__drop-board--summary .data-wiki-article__drop-group {
   max-width: 100%;
 }
 
-.eq-champion .data-wiki-drops-popup {
+.data-wiki-drops-popup {
   position: relative;
   width: min(96vw, 90rem);
   max-width: 96vw;
@@ -1017,24 +1015,24 @@
   margin: auto;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--echo-border);
-  background: var(--echo-void);
+  border: 1px solid var(--color-stone-750);
+  background: var(--color-stone-950);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--echo-carve) 40%, transparent),
-    0 18px 52px color-mix(in srgb, var(--echo-void) 80%, transparent);
-  color: var(--echo-parch-50);
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 40%, transparent),
+    0 18px 52px color-mix(in srgb, var(--color-stone-950) 80%, transparent);
+  color: var(--color-parch-50);
 }
 
-.eq-champion .data-wiki-drops-popup[open] {
+.data-wiki-drops-popup[open] {
   display: flex;
   flex-direction: column;
 }
 
-.eq-champion .data-wiki-drops-popup::backdrop {
-  background: color-mix(in srgb, var(--echo-void) 90%, transparent);
+.data-wiki-drops-popup::backdrop {
+  background: color-mix(in srgb, var(--color-stone-950) 90%, transparent);
 }
 
-.eq-champion .data-wiki-drops-popup__shell {
+.data-wiki-drops-popup__shell {
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -1042,25 +1040,25 @@
   overflow: hidden;
 }
 
-.eq-champion .data-wiki-drops-popup__header {
+.data-wiki-drops-popup__header {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.7rem 0.85rem 0.55rem 1.15rem;
-  border-bottom: 1px solid var(--echo-border);
-  background: color-mix(in srgb, var(--echo-void) 92%, var(--echo-stage));
+  border-bottom: 1px solid var(--color-stone-750);
+  background: color-mix(in srgb, var(--color-stone-950) 92%, var(--color-stone-800));
 }
 
-.eq-champion .data-wiki-drops-popup__title {
+.data-wiki-drops-popup__title {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.35rem 0.65rem;
   margin: 0;
   min-width: 0;
-  color: var(--echo-gold);
+  color: var(--color-gold-400);
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: clamp(1.05rem, 1.4vw, 1.3rem);
   font-weight: 600;
@@ -1069,111 +1067,111 @@
   text-transform: uppercase;
 }
 
-.eq-champion .data-wiki-drops-popup__subtitle {
-  color: var(--echo-parch-300);
+.data-wiki-drops-popup__subtitle {
+  color: var(--color-parch-300);
   font-family: ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.06em;
 }
 
-.eq-champion .data-wiki-drops-popup__body {
+.data-wiki-drops-popup__body {
   flex: 1 1 auto;
   min-height: 0;
   padding: 0.75rem 1rem 1rem;
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-color: var(--echo-border) transparent;
+  scrollbar-color: var(--color-stone-750) transparent;
   scrollbar-width: thin;
 }
 
-.eq-champion .data-wiki-article__drop-board--full .data-wiki-article__drop-columns[data-cols="3"] {
+.data-wiki-article__drop-board--full .data-wiki-article__drop-columns[data-cols="3"] {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.eq-champion .data-wiki-article__drop-board--full .data-wiki-article__drop-group {
+.data-wiki-article__drop-board--full .data-wiki-article__drop-group {
   max-height: none;
 }
 
 @media (max-width: 960px) {
-  .eq-champion .data-wiki-article__drop-columns[data-cols="3"] {
+  .data-wiki-article__drop-columns[data-cols="3"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 720px) {
-  .eq-champion .data-wiki-article {
+  .data-wiki-article {
     max-height: calc(100vh - 1.25rem);
   }
 
-  .eq-champion .data-wiki-article__shell {
+  .data-wiki-article__shell {
     max-height: calc(100vh - 1.25rem);
   }
 
-  .eq-champion .data-wiki-article__hero {
+  .data-wiki-article__hero {
     --wiki-hero-h: auto;
     grid-template-columns: 1fr;
     max-height: none;
     padding: 0 0.85rem;
   }
 
-  .eq-champion .data-wiki-article__stage {
+  .data-wiki-article__stage {
     width: min(14rem, 100%);
     height: auto;
     max-height: 16rem;
   }
 
-  .eq-champion .data-wiki-article__summary {
+  .data-wiki-article__summary {
     height: auto;
     max-height: none;
     overflow: visible;
   }
 
-  .eq-champion .data-wiki-article__lead-prose {
+  .data-wiki-article__lead-prose {
     -webkit-line-clamp: 10;
     line-clamp: 10;
   }
 
-  .eq-champion .data-wiki-article__stage img,
-  .eq-champion .data-wiki-article__art-primary img,
-  .eq-champion .data-wiki-article__art-img {
+  .data-wiki-article__stage img,
+  .data-wiki-article__art-primary img,
+  .data-wiki-article__art-img {
     max-height: 15rem;
   }
 
-  .eq-champion .data-wiki-article__drops,
-  .eq-champion .data-wiki-article__asset-rail,
-  .eq-champion .data-wiki-article__body {
+  .data-wiki-article__drops,
+  .data-wiki-article__asset-rail,
+  .data-wiki-article__body {
     margin-left: 0.85rem;
     margin-right: 0.85rem;
   }
 
-  .eq-champion .data-wiki-article__drops {
+  .data-wiki-article__drops {
     padding: 0 0.85rem;
   }
 
-  .eq-champion .data-wiki-article__footer {
+  .data-wiki-article__footer {
     padding-left: 0.85rem;
     padding-right: 0.85rem;
   }
 
-  .eq-champion .data-wiki-article__drop-columns[data-cols="2"],
-  .eq-champion .data-wiki-article__drop-columns[data-cols="3"] {
+  .data-wiki-article__drop-columns[data-cols="2"],
+  .data-wiki-article__drop-columns[data-cols="3"] {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .eq-champion .data-wiki-article__header {
+  .data-wiki-article__header {
     padding-left: 0.85rem;
     padding-right: 0.65rem;
   }
 }
 
 @media (max-width: 420px) {
-  .eq-champion .data-wiki-article__title {
+  .data-wiki-article__title {
     font-size: 1.05rem;
   }
 
-  .eq-champion .data-wiki-article__drop-table-th:nth-child(3),
-  .eq-champion .data-wiki-article__drop-table-rarity {
+  .data-wiki-article__drop-table-th:nth-child(3),
+  .data-wiki-article__drop-table-rarity {
     width: 4.75rem;
   }
 }

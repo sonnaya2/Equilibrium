@@ -41,7 +41,7 @@ const SURFACE_Y = 0.012;
 const PARALLAX_AZIMUTH = 0.02;
 const PARALLAX_ELEVATION = 0.01;
 
-/** User orbit offsets from the designed shot (radians). */
+/** User orbit offsets from the selected view (radians). */
 const MAX_AZ_OFF = 0.95;
 const MAX_EL_OFF = 0.42;
 /** Pan target max from designed target (world units on 2u board). */
@@ -142,9 +142,7 @@ export function CameraRig({
     const anchored = anchorWorld(uv);
     const rawX = anchored[0];
     let rawZ = anchored[1];
-    // Southern anchors (desert, islands) leave a huge empty ocean band under
-    // the plate when the look-at sits on the crest. Nudge inland so the shot
-    // keeps land in frame instead of pure south sea (clipboard desert crop).
+    // Nudge southern anchors inland so the selected region remains in frame.
     if (!place && rawZ > MAP_WORLD.height * 0.12) {
       rawZ -= Math.min(0.12, (rawZ - MAP_WORLD.height * 0.12) * 0.45);
     }
@@ -198,8 +196,9 @@ export function CameraRig({
   const keys = useRef(new Set<string>());
   const targetVec = useMemo(() => new THREE.Vector3(), []);
   const position = useMemo(() => new THREE.Vector3(), []);
+  const [wantTargetX, , wantTargetZ] = want.target;
 
-  // New designed shot: ease there and clear manual offsets so focus/place win.
+  // Clear manual offsets when the selected region or place changes.
   useEffect(() => {
     user.current.azOff = 0;
     user.current.elOff = 0;
@@ -212,8 +211,8 @@ export function CameraRig({
     want.azimuth,
     want.elevation,
     want.radius,
-    want.target[0],
-    want.target[2],
+    wantTargetX,
+    wantTargetZ,
     focus,
     place,
   ]);
@@ -384,13 +383,14 @@ export function CameraRig({
   // the a11y surface). Ignore when typing in form fields / contenteditable.
   useEffect(() => {
     if (reducedMotion) return;
+    const pressedKeys = keys.current;
 
     const onDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (!WASD_CODES.has(event.code)) return;
       if (typingTarget(event.target)) return;
-      if (keys.current.has(event.code)) return;
-      keys.current.add(event.code);
+      if (pressedKeys.has(event.code)) return;
+      pressedKeys.add(event.code);
       event.preventDefault();
       moving.current = false;
       // Kill hover parallax while driving.
@@ -400,12 +400,12 @@ export function CameraRig({
     };
     const onUp = (event: KeyboardEvent) => {
       if (!WASD_CODES.has(event.code)) return;
-      keys.current.delete(event.code);
+      pressedKeys.delete(event.code);
       invalidate();
     };
     const clear = () => {
-      if (keys.current.size === 0) return;
-      keys.current.clear();
+      if (pressedKeys.size === 0) return;
+      pressedKeys.clear();
       invalidate();
     };
 
@@ -416,7 +416,7 @@ export function CameraRig({
       window.removeEventListener("keydown", onDown);
       window.removeEventListener("keyup", onUp);
       window.removeEventListener("blur", clear);
-      keys.current.clear();
+      pressedKeys.clear();
     };
   }, [invalidate, reducedMotion]);
 

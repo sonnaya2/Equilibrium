@@ -1,11 +1,6 @@
 "use client";
 
-/**
- * Crest discs for the framed region with a soft light beam from the plate.
- *
- * Planted (world-stable) — no camera billboards. Beams pulse via mapClock in the
- * shader so they ride MotionDriver without extra invalidates.
- */
+/** World-space region markers animated in the shader. */
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame, useLoader, useThree, type ThreeEvent } from "@react-three/fiber";
@@ -25,12 +20,7 @@ import { useMapFocus } from "./useMapFocus";
 
 const Y_SPEED = 6.5;
 
-/**
- * POI stake sizes (world units). Keep small under framed/table shots —
- * oversized discs ate the desert (clipboard). Areas still beat sites.
- * Elite Dungeon 2 (Dragonkin Laboratory) is deliberately larger so the ED2 pin
- * reads among the dense Wilderness cluster.
- */
+/** POI sizes in world units; areas are larger than sites. */
 const FACE_AREA = 0.03;
 const FACE_SITE = 0.018;
 /** ED2 — between area and site so the pin is readable without drowning neighbours. */
@@ -218,13 +208,9 @@ export function PlaceMarkers({
   useLayoutEffect(() => {
     liveSurfaceY.current = targetSurfaceY;
     ySeeded.current = true;
+    // Target-height changes animate in useFrame; region changes reset immediately.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [region]);
-  useLayoutEffect(() => {
-    if (!ySeeded.current) {
-      liveSurfaceY.current = targetSurfaceY;
-      ySeeded.current = true;
-    }
-  }, [targetSurfaceY]);
 
   const active = focus.framed && pins.length > 0;
 

@@ -36,6 +36,14 @@ describe("research catalog", () => {
     expect(orphans).toEqual([]);
   });
 
+  it("shows region combos in every required region", () => {
+    const misthalin = getResearchCatalog().regions.find((region) => region.id === "misthalin");
+    const pouch = misthalin?.upgrades.find((upgrade) =>
+      upgrade.name.startsWith("Expansive essence pouch"),
+    );
+    expect(pouch?.requiredRegions).toEqual(["misthalin", "forinthry"]);
+  });
+
   it("normalizes structured Wiki XP rates", () => {
     const divination = catalogSource.skills.find((skill) => skill.id === "divination");
     expect(divination?.methods.find((method) => method.method === "Pale wisps")?.xpRate).toBe(

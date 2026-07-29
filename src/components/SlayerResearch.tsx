@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import {
   getAllArchaeologyRelicAcquisitions,
   getAllInventionComponentChains,
@@ -6,39 +6,48 @@ import {
   getStaleSlayerMethodCorrections,
 } from "@/research/slayerPlanner";
 
-const methods = getAllSlayerMethods().map((row) => ({
-  ...row,
-  name: (row as { name?: string; monster?: string }).name || (row as { monster?: string }).monster,
-})) as unknown as ResearchRow[];
-
-const stale = getStaleSlayerMethodCorrections().map((row) => {
-  const loose = row as {
-    name?: string;
-    topic?: string;
-    method?: string;
-    monster?: string;
-    id?: string;
-  };
-  return {
+const methods = researchRows(
+  getAllSlayerMethods().map((row) => ({
     ...row,
-    name: loose.name || loose.topic || loose.method || loose.monster || loose.id || "Old method",
-  };
-}) as unknown as ResearchRow[];
+    name:
+      (row as { name?: string; monster?: string }).name || (row as { monster?: string }).monster,
+  })),
+);
 
-const inventionChains = getAllInventionComponentChains().map((row) => ({
-  ...row,
-  name:
-    (row as { name?: string; component?: string }).name ||
-    (row as { component?: string }).component,
-})) as unknown as ResearchRow[];
+const stale = researchRows(
+  getStaleSlayerMethodCorrections().map((row) => {
+    const loose = row as {
+      name?: string;
+      topic?: string;
+      method?: string;
+      monster?: string;
+      id?: string;
+    };
+    return {
+      ...row,
+      name: loose.name || loose.topic || loose.method || loose.monster || loose.id || "Old method",
+    };
+  }),
+);
 
-const archRelics = getAllArchaeologyRelicAcquisitions().map((row) => {
-  const loose = row as { name?: string; relic?: string; relic_power?: string; id?: string };
-  return {
+const inventionChains = researchRows(
+  getAllInventionComponentChains().map((row) => ({
     ...row,
-    name: loose.name || loose.relic || loose.relic_power || loose.id || "Relic",
-  };
-}) as unknown as ResearchRow[];
+    name:
+      (row as { name?: string; component?: string }).name ||
+      (row as { component?: string }).component,
+  })),
+);
+
+const archRelics = researchRows(
+  getAllArchaeologyRelicAcquisitions().map((row) => {
+    const loose = row as { name?: string; relic?: string; relic_power?: string; id?: string };
+    return {
+      ...row,
+      name: loose.name || loose.relic || loose.relic_power || loose.id || "Relic",
+    };
+  }),
+);
 
 const TABS: ResearchTab[] = [
   {

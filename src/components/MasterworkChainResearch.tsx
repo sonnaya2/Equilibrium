@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import chain from "../../data/research/masterwork-staff-chain.json";
 
 function urlsFrom(...values: unknown[]): string[] {
@@ -18,14 +18,16 @@ type PressureRow = (typeof chain.region_pressure)[number] & {
   component?: string;
 };
 
-const regionPressure = (chain.region_pressure as PressureRow[]).map((row) => {
-  const source_urls = urlsFrom(row.source_url, row.secondary_source_url, row.region_source_url);
-  return {
-    ...row,
-    name: row.component ?? "Component",
-    source_urls: source_urls.length ? source_urls : undefined,
-  };
-}) as unknown as ResearchRow[];
+const regionPressure = researchRows(
+  (chain.region_pressure as PressureRow[]).map((row) => {
+    const source_urls = urlsFrom(row.source_url, row.secondary_source_url, row.region_source_url);
+    return {
+      ...row,
+      name: row.component ?? "Component",
+      source_urls: source_urls.length ? source_urls : undefined,
+    };
+  }),
+);
 
 export const MASTERWORK_CHAIN_TABS: ResearchTab[] = [
   {
@@ -38,13 +40,13 @@ export const MASTERWORK_CHAIN_TABS: ResearchTab[] = [
     key: "assembly",
     label: "Assembly",
     description: "",
-    rows: chain.assembly_evidence as unknown as ResearchRow[],
+    rows: researchRows(chain.assembly_evidence),
   },
   {
     key: "requirements",
     label: "Reqs",
     description: "",
-    rows: chain.requirements as unknown as ResearchRow[],
+    rows: researchRows(chain.requirements),
   },
 ];
 

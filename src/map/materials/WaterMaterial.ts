@@ -51,13 +51,7 @@ export const OCEAN_HORIZON = 0x1e354c;
  */
 /** Peak crest; must stay under REST_CLEARANCE − LOCKED_DROP (~0.0075). */
 export const SWELL = 0.0032;
-/**
- * The shading normal is steeper than the mesh. A surface displaced by two tiles
- * over a two-unit board is flat to within a degree, and a flat mirror turns the
- * sun into one enormous soft blob across half the sea instead of a scatter of
- * points. Shading it as if the ripples were deeper is what breaks that blob up.
- * Keep modest — high relief turns the key into island god-ray shafts (clipboard).
- */
+/** Extra normal relief breaks up broad highlights without changing wave height. */
 const NORMAL_RELIEF = 0.008;
 
 type FloatNode = Node<"float">;
@@ -130,9 +124,7 @@ export function createWaterMaterial(
   // is the very thing being computed here.
   const px = positionWorld.x;
   const pz = positionWorld.z;
-  // Distance from board centre. Swell/sky keep a soft nearSea so the sea under
-  // the plates still lives; specular alone uses nearSea² so far/southern ocean
-  // does not stretch the sun into white island god-rays (clipboard).
+  // Fade specular toward the outer ocean while retaining the swell under plates.
   const far = smoothstep(float(1.05), float(2.35), vec2(px, pz).length());
   const nearSea = float(1).sub(far);
   const nearSea2 = nearSea.mul(nearSea);

@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import {
   getAccountComponentRoutes,
   getActiveInventionPerks,
@@ -18,10 +18,12 @@ const activeSourceUrls = (activePerkData.source_urls ?? []).filter(
   (url): url is string => typeof url === "string" && url.startsWith("https://"),
 );
 
-const activePerks = getActiveInventionPerks().map((row) => ({
-  ...row,
-  source_urls: activeSourceUrls,
-})) as unknown as ResearchRow[];
+const activePerks = researchRows(
+  getActiveInventionPerks().map((row) => ({
+    ...row,
+    source_urls: activeSourceUrls,
+  })),
+);
 
 const armour = getCurrentArmourPerkRecipes();
 const utility = getUtilityPerkRecipes();
@@ -34,10 +36,12 @@ const perkDeps2026 = getCurrent2026PerkDependencies();
 const account = getAccountComponentRoutes();
 
 /** Bottlenecks use `material` — ResearchSection titles name/component/perk only. */
-const bottlenecks = getPerkMaterialBottlenecks().map((row) => ({
-  ...row,
-  name: row.material,
-})) as unknown as ResearchRow[];
+const bottlenecks = researchRows(
+  getPerkMaterialBottlenecks().map((row) => ({
+    ...row,
+    name: row.material,
+  })),
+);
 
 const TABS: ResearchTab[] = [
   {
@@ -50,31 +54,31 @@ const TABS: ResearchTab[] = [
     key: "armour",
     label: "Armour",
     description: "",
-    rows: armour as unknown as ResearchRow[],
+    rows: researchRows(armour),
   },
   {
     key: "utility",
     label: "Utility",
     description: "",
-    rows: utility as unknown as ResearchRow[],
+    rows: researchRows(utility),
   },
   {
     key: "supply",
     label: "Components",
     description: "",
-    rows: [...supply, ...globalRoutes, ...account] as unknown as ResearchRow[],
+    rows: researchRows([...supply, ...globalRoutes, ...account]),
   },
   {
     key: "rare",
     label: "Rares",
     description: "",
-    rows: [...rare, ...remaining] as unknown as ResearchRow[],
+    rows: researchRows([...rare, ...remaining]),
   },
   {
     key: "2026",
     label: "Routes",
     description: "",
-    rows: [...routes2026, ...perkDeps2026] as unknown as ResearchRow[],
+    rows: researchRows([...routes2026, ...perkDeps2026]),
   },
   {
     key: "bottlenecks",

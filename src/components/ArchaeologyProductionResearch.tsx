@@ -1,4 +1,9 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import {
+  researchRows,
+  ResearchSection,
+  type ResearchRow,
+  type ResearchTab,
+} from "./ResearchSection";
 import production from "../../data/research/planner-expansions-archaeology-production.json";
 import specialRelics from "../../data/research/planner-expansions-archaeology-special-relics.json";
 import {
@@ -17,18 +22,22 @@ import {
 import { MASTERWORK_CHAIN_TABS } from "./MasterworkChainResearch";
 
 // Loader drops the stale guildmaster-second-loadout claim (see guild stale_data_correction).
-const relicSystemRows = getRelicSystemProgression().map((row) => ({
-  ...row,
-  name: row.requirement,
-})) as unknown as ResearchRow[];
+const relicSystemRows = researchRows(
+  getRelicSystemProgression().map((row) => ({
+    ...row,
+    name: row.requirement,
+  })),
+);
 
-const relicLoadoutRows = getRelicLoadoutProgression().map((row) => ({
-  ...row,
-  name: String(row.stage).replaceAll("-", " "),
-})) as unknown as ResearchRow[];
+const relicLoadoutRows = researchRows(
+  getRelicLoadoutProgression().map((row) => ({
+    ...row,
+    name: String(row.stage).replaceAll("-", " "),
+  })),
+);
 
-function withCollectionName<T extends Record<string, unknown>>(rows: T[]): ResearchRow[] {
-  return rows.map((row) => {
+function withCollectionName(rows: readonly unknown[]): ResearchRow[] {
+  return researchRows(rows).map((row) => {
     const collections = Array.isArray(row.collections)
       ? (row.collections as unknown[]).filter((v): v is string => typeof v === "string")
       : [];
@@ -40,120 +49,119 @@ function withCollectionName<T extends Record<string, unknown>>(rows: T[]): Resea
       (typeof row.id === "string" && row.id) ||
       "—";
     return { ...row, name };
-  }) as unknown as ResearchRow[];
+  });
 }
 
-const collectionRoutes = withCollectionName(
-  getCollectionRelicRoutes() as unknown as Record<string, unknown>[],
+const collectionRoutes = withCollectionName(getCollectionRelicRoutes());
+const repeatables = withCollectionName(getRepeatableCollectionRewards());
+const qualifications = researchRows(
+  getArchaeologyQualificationMilestones().map((row) => ({
+    ...row,
+    name: row.qualification,
+  })),
 );
-const repeatables = withCollectionName(
-  getRepeatableCollectionRewards() as unknown as Record<string, unknown>[],
+const guildShop = researchRows(
+  getArchaeologyGuildShopProgression().map((row) => {
+    const loose = row as { name?: string; qualification?: string; stage?: string; id?: string };
+    return {
+      ...row,
+      name: loose.name || loose.qualification || loose.stage || loose.id || "Shop tier",
+    };
+  }),
 );
-const qualifications = getArchaeologyQualificationMilestones().map((row) => ({
-  ...row,
-  name: row.qualification,
-})) as unknown as ResearchRow[];
-const guildShop = getArchaeologyGuildShopProgression().map((row) => {
-  const loose = row as { name?: string; qualification?: string; stage?: string; id?: string };
-  return {
-    ...row,
-    name: loose.name || loose.qualification || loose.stage || loose.id || "Shop tier",
-  };
-}) as unknown as ResearchRow[];
-const completionTools = getArchaeologyCollectionCompletionTools() as unknown as ResearchRow[];
-const corrections = getArchaeologyDataCorrections().map((row) => {
-  const loose = row as {
-    name?: string;
-    target_relic?: string;
-    target_id?: string;
-    id?: string;
-    correction?: string;
-    topic?: string;
-  };
-  return {
-    ...row,
-    name:
-      loose.name ||
-      loose.target_relic ||
-      loose.target_id ||
-      loose.id ||
-      loose.topic ||
-      loose.correction ||
-      "Correction",
-  };
-}) as unknown as ResearchRow[];
-const additions2026 = getCurrentArchaeologyRelicAdditions().map((row) => {
-  const loose = row as { name?: string; relic_power?: string; id?: string };
-  return {
-    ...row,
-    name: loose.name || loose.relic_power || loose.id || "Addition",
-  };
-}) as unknown as ResearchRow[];
+const completionTools = researchRows(getArchaeologyCollectionCompletionTools());
+const corrections = researchRows(
+  getArchaeologyDataCorrections().map((row) => {
+    const loose = row as {
+      name?: string;
+      target_relic?: string;
+      target_id?: string;
+      id?: string;
+      correction?: string;
+      topic?: string;
+    };
+    return {
+      ...row,
+      name:
+        loose.name ||
+        loose.target_relic ||
+        loose.target_id ||
+        loose.id ||
+        loose.topic ||
+        loose.correction ||
+        "Correction",
+    };
+  }),
+);
+const additions2026 = researchRows(
+  getCurrentArchaeologyRelicAdditions().map((row) => {
+    const loose = row as { name?: string; relic_power?: string; id?: string };
+    return {
+      ...row,
+      name: loose.name || loose.relic_power || loose.id || "Addition",
+    };
+  }),
+);
 const museumMatrix = getMuseumCollectionMatrix();
-const productionRoutes = withCollectionName(
-  production.production_collection_routes as unknown as Record<string, unknown>[],
-);
-const specialRelicRoutes = withCollectionName(
-  specialRelics.collection_relic_routes as unknown as Record<string, unknown>[],
-);
-const pending2026 = withCollectionName(
-  specialRelics.current_2026_pending_exact_collection as unknown as Record<string, unknown>[],
-);
+const productionRoutes = withCollectionName(production.production_collection_routes);
+const specialRelicRoutes = withCollectionName(specialRelics.collection_relic_routes);
+const pending2026 = withCollectionName(specialRelics.current_2026_pending_exact_collection);
 
-const museumRows = museumMatrix.map((row) => {
-  // Museum matrix rows are snake_case JSON; optional fields vary by collection kind.
-  const loose = row as MuseumCollectionMatrixRow & {
-    requiredRegions?: string[];
-    chronotes_first?: number | string | null;
-    comboLabel?: string;
-  };
-  const required = (loose.required_regions ?? loose.requiredRegions ?? []) as string[];
-  const artifacts = (loose.artifact_regions ?? []) as string[];
-  const collectors = (loose.collector_regions ?? []) as string[];
-  const combo = loose.comboLabel || (required.length > 1 ? required.join(" + ") : "");
-  const status = String(loose.status || "obtainable");
-  const reason = loose.unobtainable_reason ? ` · ${loose.unobtainable_reason}` : "";
-  const chronotesFirst = loose.chronotes_first;
-  return {
-    id: loose.id,
-    name: loose.name,
-    recordType: "activity",
-    category: status === "unobtainable" ? "museum · can't get" : "museum",
-    regionHints: [...new Set([...required, ...artifacts, ...collectors])],
-    requiredRegions: required,
-    regionRequirementType: required.length > 1 ? "all_required" : "single",
-    comboLabel: combo,
-    isRegionCombo: required.length > 1,
-    status,
-    dig_sites: loose.dig_sites,
-    collector: loose.collector,
-    first_reward: loose.first_reward,
-    chronotes_first: chronotesFirst,
-    archaeology_level: loose.archaeology_level,
-    detail: [
-      combo,
-      status === "unobtainable" ? `Can't get${reason}` : "Can get",
-      loose.collector ? `Collector ${loose.collector}` : "",
-      Array.isArray(loose.dig_sites) && loose.dig_sites.length
-        ? `Sites ${loose.dig_sites.join(", ")}`
-        : "",
-      loose.first_reward ? `Reward ${loose.first_reward}` : "",
-      chronotesFirst != null ? `Chronotes ${chronotesFirst}` : "",
-    ]
-      .filter(Boolean)
-      .join(" · "),
-    requirements: [
-      row.archaeology_level != null ? `Archaeology ${row.archaeology_level}` : "",
-      ...required,
-    ].filter(Boolean),
-    confidence: row.confidence || "confirmed_wiki",
-    // Pass full source_urls through — ResearchSection links() reads the array.
-    source_urls: Array.isArray(row.source_urls) ? row.source_urls : undefined,
-    source: row.source_urls?.[0]
-      ? { source: "runescape-wiki", url: row.source_urls[0], title: row.name }
-      : null,
-  };
-}) as unknown as ResearchRow[];
+const museumRows = researchRows(
+  museumMatrix.map((row) => {
+    // Museum matrix rows are snake_case JSON; optional fields vary by collection kind.
+    const loose = row as MuseumCollectionMatrixRow & {
+      requiredRegions?: string[];
+      chronotes_first?: number | string | null;
+      comboLabel?: string;
+    };
+    const required = (loose.required_regions ?? loose.requiredRegions ?? []) as string[];
+    const artifacts = (loose.artifact_regions ?? []) as string[];
+    const collectors = (loose.collector_regions ?? []) as string[];
+    const combo = loose.comboLabel || (required.length > 1 ? required.join(" + ") : "");
+    const status = String(loose.status || "obtainable");
+    const reason = loose.unobtainable_reason ? ` · ${loose.unobtainable_reason}` : "";
+    const chronotesFirst = loose.chronotes_first;
+    return {
+      id: loose.id,
+      name: loose.name,
+      recordType: "activity",
+      category: status === "unobtainable" ? "museum · can't get" : "museum",
+      regionHints: [...new Set([...required, ...artifacts, ...collectors])],
+      requiredRegions: required,
+      regionRequirementType: required.length > 1 ? "all_required" : "single",
+      comboLabel: combo,
+      isRegionCombo: required.length > 1,
+      status,
+      dig_sites: loose.dig_sites,
+      collector: loose.collector,
+      first_reward: loose.first_reward,
+      chronotes_first: chronotesFirst,
+      archaeology_level: loose.archaeology_level,
+      detail: [
+        combo,
+        status === "unobtainable" ? `Can't get${reason}` : "Can get",
+        loose.collector ? `Collector ${loose.collector}` : "",
+        Array.isArray(loose.dig_sites) && loose.dig_sites.length
+          ? `Sites ${loose.dig_sites.join(", ")}`
+          : "",
+        loose.first_reward ? `Reward ${loose.first_reward}` : "",
+        chronotesFirst != null ? `Chronotes ${chronotesFirst}` : "",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      requirements: [
+        row.archaeology_level != null ? `Archaeology ${row.archaeology_level}` : "",
+        ...required,
+      ].filter(Boolean),
+      confidence: row.confidence || "confirmed_wiki",
+      source_urls: Array.isArray(row.source_urls) ? row.source_urls : undefined,
+      source: row.source_urls?.[0]
+        ? { source: "runescape-wiki", url: row.source_urls[0], title: row.name }
+        : null,
+    };
+  }),
+);
 
 const TABS: ResearchTab[] = [
   {

@@ -1,4 +1,4 @@
-import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
+import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
 import dependencies from "../../data/league/region-dependencies.json";
 
 const TABS: ResearchTab[] = [
@@ -6,22 +6,24 @@ const TABS: ResearchTab[] = [
     key: "overrides",
     label: "Overrides",
     description: "",
-    rows: dependencies.boundary_overrides as unknown as ResearchRow[],
+    rows: researchRows(dependencies.boundary_overrides),
   },
   {
     key: "dependencies",
     label: "Must unlock",
     description: "",
-    rows: dependencies.dependencies as unknown as ResearchRow[],
+    rows: researchRows(dependencies.dependencies),
   },
   {
     key: "crossings",
     label: "Edge cases",
     description: "",
-    rows: dependencies.cross_boundary_cases.map((row) => ({
-      ...row,
-      confidence: (row as { confidence?: string }).confidence ?? row.planner_status,
-    })) as unknown as ResearchRow[],
+    rows: researchRows(
+      dependencies.cross_boundary_cases.map((row) => ({
+        ...row,
+        confidence: (row as { confidence?: string }).confidence ?? row.planner_status,
+      })),
+    ),
   },
 ];
 

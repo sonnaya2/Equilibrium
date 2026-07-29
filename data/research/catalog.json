@@ -413,6 +413,43 @@
       ],
       "upgrades": [
         {
+          "name": "Expansive essence pouch (70 essence, non-degrading)",
+          "category": "permanent endgame RC essence-storage pouch",
+          "detail": "equipment. Essence storage — not a combat rune pouch. Magical thread demand: 100 thread cord + optional parallel combat-pouch spends · Hard Misthalin (Runespan shops / essence mine) + Forinthry (Abyss thread). Anachronia optional for dinosaur leather; Kandarin optional for altar geography · Region combo (all required): misthalin + forinthry · Effects: Permanent non-degrading 70-essence storage (22 more than the sum of small→massive; frees 4 inventory slots vs multi-pouch set), Replaces the multi-pouch inventory tax for altar trips; other essence pouches cannot be used/withdrawn while expansive is in the backpack (fill-while-mining still allowed across types), Configure preferred essence order (pure / rune / impure after Rune Mythos), Always kept on death including PvP; multiple crafted expansive pouches share contents, With abyssal titan + infinity ethereal + 27 inv: wiki ceiling 129 essence per trip",
+          "requirements": [
+            "105 Runecrafting unboostable + 95 Divination (Divination boostable) to craft",
+            "Hungry hood: 20,000 Runespan points from Wizard Rinsit (Wizards' Tower)",
+            "Full small→massive essence pouch set fed into hungry hood (cross-region:runecrafting-essence-pouch-set)",
+            "Ilme's thread (craft ~7,500 essence at non-Abyss altars; reclaimable from Wizard Rinsit if lost)",
+            "100 magical threads for expansive pouch cord (forinthry:magical-thread-abyss-supply)",
+            "Shielded pouch exterior materials: sign of runic protection (2,500 incandescent energy), 1 royal dragon leather, 2 dinosaur leather, 10 felt",
+            "Sate hungry dimensional pouch with 2–60 unnoted talismans (random)",
+            "Combine exterior + cord + sated pouch at non-necrotic altar → sealed expansive → large Runedoku unseal → fill bottomless form at Rune Essence mine"
+          ],
+          "confidence": "confirmed_wiki",
+          "source": {
+            "source": "runescape-wiki",
+            "url": "https://runescape.wiki/w/Expansive_pouch",
+            "title": "Expansive essence pouch (70 essence, non-degrading)",
+            "verifiedAt": "2026-07-26"
+          },
+          "regionId": "misthalin",
+          "regionHints": [
+            "misthalin",
+            "forinthry",
+            "anachronia",
+            "kandarin",
+            "morytania"
+          ],
+          "requiredRegions": [
+            "misthalin",
+            "forinthry"
+          ],
+          "regionRequirementType": "all_required",
+          "comboLabel": "Region combo (all required): misthalin + forinthry",
+          "isRegionCombo": true
+        },
+        {
           "name": "Kerapac progression",
           "category": "Magic weapons / ability / scripture",
           "detail": "Fractured Staff of Armadyl components, Greater Concentrated Blast, Kerapac's wrist wraps, Scripture of Jas",

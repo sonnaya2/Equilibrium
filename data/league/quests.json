@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-28T20:10:09.170Z",
-  "snapshot_date": "2026-07-28",
+  "generated_at": "2026-07-29T18:44:00.922Z",
+  "snapshot_date": "2026-07-29",
   "quest_count": 281,
   "quest_list_entry_count": 281,
   "wiki_numbered_quest_count": 276,
@@ -6723,8 +6723,8 @@
       "primary_region": "morytania",
       "mapping_reason": "Mapped from RuneScape Wiki start area: Morytania",
       "source_url": "https://runescape.wiki/w/The_Darkness_of_Hallowvale",
-      "source_revision": 37118228,
-      "source_revision_timestamp": "2026-07-23T19:10:46Z",
+      "source_revision": 37129296,
+      "source_revision_timestamp": "2026-07-28T22:10:57Z",
       "direct_prerequisites": [
         "In Aid of the Myreque"
       ],

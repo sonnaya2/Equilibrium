@@ -3,11 +3,11 @@ import blessingsData from "#data/league/blessings.json";
 /**
  * Blessing domain. Canonical structure (paths, god tiers, reset count) lives in
  * data/league/blessings.json; this module types it and derives from it.
- * God Tier rule (AGENTS.md, Jagex countdown post): tiers 4 and 8 grant a God
+ * Jagex's countdown post says tiers 4 and 8 grant a God
  * Tier Blessing set by the three path picks in their segment (tier 4 <- tiers
  * 1-3, tier 8 <- tiers 5-7) — 2+ of one path wins that path's god, one of each
  * grants the Balance god. God blessing names/effects are unrevealed, so the
- * derivation returns the alignment only, never an invented blessing.
+ * derivation returns only the alignment.
  */
 
 export const BLESSING_PATHS = ["Order", "Balance", "Chaos"] as const;

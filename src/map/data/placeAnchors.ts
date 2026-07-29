@@ -1,14 +1,6 @@
 /**
- * Where the named places actually are.
- *
- * The region ledger answers "which shape is this". This answers "where is the
- * thing", which is the only question that makes the board a map rather than a
- * diagram with eleven labels.
- *
- * Every `area` string here must match one already in that region's catalog
- * areas list — these are positions for facts we hold, never new facts.
- *
- * `rasterPlaceUv` resolves every entry through its Wiki surface coordinate.
+ * Verified positions for catalog areas. `rasterPlaceUv` resolves each entry
+ * through its Wiki surface coordinate.
  */
 
 import type { RegionId } from "@/league";
@@ -178,20 +170,8 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
 ];
 
 /**
- * Places named by content and upgrade rows rather than by the catalog's `areas`
- * list — the bosses, dungeons and guilds a region's highlights actually happen
- * at. Same two invariants as above, held by the same test.
- *
- * Deliberately partial. Most of the 680 content+upgrade rows are items, perks,
- * outfits, scrolls and spells, which have no position on Gielinor and get no
- * marker; the rest are pinned only where the location is known. The alternative
- * the brief floated — falling back to the region centroid — would stack
- * hundreds of pins on one point and pass off a guess as a coordinate, which is
- * the one thing this repo does not ship. Unpinned rows are counted, not hidden:
- * the inspector says "N of M pinned" out loud.
- *
- * Site pins near a parent area inherit that area's georef delta so GWD generals
- * stay clustered on God Wars Dungeon, TzHaar arenas on the city, etc.
+ * Pins content sites only when a location is known. Unpinned rows remain counted.
+ * Sites near a parent area inherit that area's georeference delta.
  */
 export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   // Misthalin — the Necromancy sites hang off the City of Um.
@@ -290,10 +270,7 @@ export function rasterPlaceUv(place: PlaceAnchor): readonly [number, number] {
 }
 
 /**
- * Which pin a highlight row belongs to, or null when we do not know where it
- * happens. Substring rather than equality because the rows are prose — "Canifis
- * farming and Slayer Tower hub" is a Slayer Tower row. Longest match wins so a
- * row naming two places lands on the more specific one.
+ * Matches prose highlight rows to the longest named place in the same region.
  */
 export function pinForHighlight(region: RegionId, rowName: string): PlaceAnchor | null {
   const hay = rowName.toLowerCase();

@@ -51,7 +51,6 @@ describe("contentRewardsSource + clipRewardDisplay", () => {
     const display = clipRewardDisplay(full, 96);
     expect(display.length).toBeLessThanOrEqual(96);
     expect(display.endsWith("...") || display === full).toBe(true);
-    // Last unique must remain in the source used for tokens.
     expect(contentRewardsSource(full)).toMatch(/Scripture of Jas/);
   });
 
@@ -140,19 +139,14 @@ describe("resolveRewardIcon + contentRewardIcons", () => {
   });
 
   it("rejects skill glyphs and scenery for weak reward labels", () => {
-    // Pure skill name must not become a skill cap chip in reward wells.
     expect(resolveRewardIcon("Mining")).toBeNull();
     expect(resolveRewardIcon("Random scenery hub")).toBeNull();
-    // Multi-MB place plates must never land as reward chips (aliases may remap to inventory).
     expect(resolveRewardIcon("Menaphos")).toBeNull();
     expect(resolveRewardIcon("Liberation of Mazcab")).toBeNull();
     expect(resolveRewardIcon("Het's Oasis")).toBeNull();
     const soul = resolveRewardIcon("Soul altar");
-    // Honest remaps OK; the multi-MB soul-altar place plate is not.
     if (soul) expect(soul).not.toMatch(/\/soul-altar\.(webp|png)$/);
-    // Small inventory permanents stay allowed.
     expect(resolveRewardIcon("Menaphos reputation")).toMatch(/menaphos-reputation\.(webp|png)$/);
-    // Hermod path may map "Necromancy power armour" to deathdealer inventory art (not skill glyph).
     const necro = resolveRewardIcon("Necromancy power armour");
     if (necro) {
       expect(necro).not.toMatch(/\/skills\//);
@@ -375,12 +369,9 @@ describe("presentContentRewards — major boss uniques", () => {
       expect(all.length, `${sample.name} resolved`).toBeGreaterThanOrEqual(sample.minResolved);
       expect(all.every((i) => publicOk(i.src))).toBe(true);
       expect(all.some((i) => sample.srcRe.test(i.src))).toBe(true);
-      // Prefer inventory / upgrade chips over boss plate photos.
       expect(all.every((i) => !i.src.includes("/game/bosses/"))).toBe(true);
-      // Display cap: overflow only when more *resolved* than cap.
       expect(presented.icons.length).toBeLessThanOrEqual(REWARD_ICON_CAP);
       expect(presented.overflowResolved).toBe(Math.max(0, all.length - presented.icons.length));
-      // Unresolved failures must not inflate +N.
       if (all.length <= REWARD_ICON_CAP) {
         expect(presented.overflowResolved).toBe(0);
       }
@@ -388,7 +379,6 @@ describe("presentContentRewards — major boss uniques", () => {
   }
 
   it("does not show +N when tokens fail to resolve (user complaint)", () => {
-    // Tokens with no honest inventory art — must not invent chips or fake +N.
     const presented = presentContentRewards(
       "Hermodic plates, Ascension signet keystone, Savage spear components",
     );
@@ -404,7 +394,6 @@ describe("presentContentRewards — major boss uniques", () => {
     expect(fullPresented.tokens).toContain("Scripture of Jas");
     expect(fullPresented.icons.some((i) => /scripture-of-jas/i.test(i.src))).toBe(true);
     expect(clipped.length).toBeLessThan(full.length);
-    // Prove the old bug: truncated last token would not resolve.
     expect(resolveRewardIcon("Scripture of Ja")).toBeNull();
   });
 });
@@ -419,7 +408,6 @@ describe("REWARD_ICON_BY_LABEL", () => {
       expect(src.startsWith("/game/")).toBe(true);
       expect(publicOk(src), `missing file ${key} → ${src}`).toBe(true);
       expect(src.includes("/game/bosses/")).toBe(false);
-      // Alias must survive acceptRewardPath (EQUIPMENT_OK gate for equipment/*).
       const resolved = resolveRewardIcon(key);
       expect(resolved, `resolveRewardIcon failed for alias "${key}"`).toBe(src);
     }
@@ -503,7 +491,6 @@ describe("resolveContentLocation", () => {
   });
 
   it("may label unpinned place-like kinds without href", () => {
-    // If kind is place-like but no anchor match, label without link is ok.
     const loc = resolveContentLocation("fremennik", "Some unknown site", "Wilderness");
     if (loc.label) expect(loc.href === null || typeof loc.href === "string").toBe(true);
   });
@@ -758,7 +745,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presentInterestName("Corrupted creatures & soul devourers")).toBe("Corrupted creatures");
     const desert = regionById("desert");
     expect(desert.content.some((c) => /Heart of Gielinor \/ God Wars/i.test(c.name))).toBe(false);
-    // Het powders must not collapse to a single generic "Prayer powders" chip.
     const het = contentRow("desert", "Het's Oasis");
     const hetPresented = presentContentRewards(contentRewardsFull(het.row, het.upgrades));
     expect(hetPresented.icons.some((i) => /powder-of-burials/i.test(i.src))).toBe(true);
@@ -825,7 +811,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
         name,
       ).toBe(true);
     }
-    // AI noise rows removed from majors/upgrades surface via content list.
     const for_ = contentRow("forinthry", "Corporeal Beast");
     expect(
       for_.upgrades.some((u) => /holy-elixir supply|Resource dungeon unlock map/i.test(u.name)),
@@ -874,7 +859,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(full).toMatch(/Magma Tempest/i);
     expect(full).toMatch(/Scripture of Ful/i);
     expect(full).toMatch(/Igneous Kal-Zuk/i);
-    // Style stones not listed — listing all five caused +3 chip spam.
     expect(full).not.toMatch(/Igneous Kal-Ket|Igneous Kal-Mej|Igneous Kal-Xil|Igneous Kal-Mor/i);
     const presented = presentContentRewards(full);
     expect(presented.icons.length).toBe(4);
@@ -883,7 +867,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
   });
 
   it("Zamorak LoC is Misthalin and shows Vestments, Bolg, Chaos Roar, and Lost Knowledge codices", () => {
-    // ED4 lives under Senntisten / Undercity — not the Wilderness tab.
     expect(() => contentRow("forinthry", "Zamorak, Lord of Chaos")).toThrow();
     const { row, upgrades } = contentRow("misthalin", "Zamorak, Lord of Chaos");
     const full = contentRewardsFull(row, upgrades);
@@ -993,7 +976,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const presented = presentContentRewards(full);
     expect(presented.icons.length).toBeGreaterThanOrEqual(5);
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
-    // Standalone Bandos equipment content row is gone (merged into Graardor).
     const asg = regionById("asgarnia");
     expect(asg.content.some((c) => c.name === "Bandos equipment")).toBe(false);
   });
@@ -1201,10 +1183,8 @@ describe("contentRewardsFull — catalog boss packages", () => {
       { region: "asgarnia", name: "Vorago", re: /Seismic/i },
       { region: "asgarnia", name: "Queen Black Dragon", re: /Royal|Draconic visage/i },
       { region: "morytania", name: /Araxxor/, re: /Noxious/i },
-      // Rot6 is upgrade-only in catalog (no content row) — covered by alias pack tests.
       { region: "desert", name: /Telos/, re: /Seren godbow|Staff of Sliske|Zaros godsword/i },
       { region: "desert", name: /Amascut/, re: /Devourer's Guard|Tumeken/i },
-      // GWD1 ability drops moved to One Piercing Note (Aug 2025); books as one package chip.
       {
         region: "desert",
         name: "Citharede Abbey",
@@ -1277,7 +1257,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const majors = majorContentRows(region.content, region.upgrades);
     expect(majors.some((c) => c.name === "Solak")).toBe(true);
     expect(majors.some((c) => c.name === "The Lost Grove")).toBe(true);
-    // Sanctum children still collapse on Misthalin.
     const misth = regionById("misthalin");
     const misthMajors = majorContentRows(misth.content, misth.upgrades);
     expect(misthMajors.some((c) => c.name === "Sanctum of Rebirth")).toBe(true);

@@ -3,14 +3,13 @@ import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import type { SourceReference } from "../../types";
 
 /**
- * Death's Swiftness: reworked 16 Mar 2026 (changelog §7) from a ground-targeted
- * area into a mobile self-buff — 1.5x ranged damage, 50 ticks base, 63 Greater.
- * The wiki ability pages pin one more fact: the damage buff begins 1 tick after
- * cast, so the window opens on cast+1, not on the cast tick.
+ * Death's Swiftness became a mobile self-buff on 16 Mar 2026: 1.5x ranged
+ * damage for 50 ticks, or 63 ticks for the Greater variant. Damage begins one
+ * tick after cast.
  *
  * Planted Feet (base only): duration × PLANTED_FEET_DURATION_MULT → 63 ticks
  * (Math.round(50 × 1.25)); same [cast+1, cast+duration) shape as base. Greater:
- * no change. Planted Feet also removes periodic DoT hits in-game — not modelled.
+ * no change. Periodic DoT removal from Planted Feet is outside this model.
  */
 export const DEATHS_SWIFTNESS_MULTIPLIER = 1.5;
 export const DEATHS_SWIFTNESS_DURATION_TICKS = 50;

@@ -103,8 +103,7 @@ export function normalizeBuild(value: unknown): BuildState {
       ) {
         continue;
       }
-      // Revealed tiers with choices: name must be one of them. Unrevealed /
-      // empty tiers keep any well-formed name so we do not strip placeholders.
+      // Revealed tiers accept listed choices; unrevealed tiers preserve names.
       const allowed = REVEALED_RELIC_NAMES_BY_TIER.get(tier);
       if (allowed && !allowed.has(name)) continue;
       base.relics[tier] = name;
@@ -158,9 +157,7 @@ export function toggleRelic(state: BuildState, tier: number, name: string): Buil
 /**
  * Picks are positional and contiguous: a tier opens once the previous path tier
  * is picked; re-picking the same path un-picks it and drops every later pick.
- * ponytail: re-picking an earlier tier is free here — in-game reset mechanics are
- * unrevealed; upgrade trigger is the official reset reveal (28 Jul+), after which
- * re-picks charge against blessingResetsUsed.
+ * Re-picking an earlier tier is free until Jagex publishes reset costs.
  */
 export function pickBlessing(state: BuildState, pathTier: number, path: BlessingPath): BuildState {
   const idx = PATH_TIERS.indexOf(pathTier);

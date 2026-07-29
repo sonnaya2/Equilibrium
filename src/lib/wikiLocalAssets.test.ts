@@ -5,7 +5,6 @@ import { collectArticleAssets, resolveLocalAsset, resolveLocalAssets } from "./w
 
 const PUBLIC = join(process.cwd(), "public");
 
-/** Assert path is under /game/ and the file is published (skip flaky unpublished). */
 function expectPublishedLocal(src: string | null | undefined, label: string) {
   expect(src, `${label} should resolve`).toBeTruthy();
   expect(src!.startsWith("/game/"), `${label} must be local /game/ path`).toBe(true);
@@ -42,7 +41,6 @@ describe("resolveLocalAsset", () => {
     expect(glacor?.src).toMatch(/^\/game\/bosses\/arch-glacor\.(webp|png|gif)$/);
     expectPublishedLocal(glacor!.src, "Arch-Glacor");
 
-    // Epithet form still hits the same plate (display label preserved).
     const kerapac = resolveLocalAsset("Kerapac, the bound");
     expect(kerapac?.kind).toBe("boss");
     expect(kerapac?.label).toBe("Kerapac, the bound");
@@ -64,7 +62,6 @@ describe("resolveLocalAsset", () => {
     expect(resolveLocalAsset("Common")).toBeNull();
     expect(resolveLocalAsset("1–500")).toBeNull();
     expect(resolveLocalAsset("42%")).toBeNull();
-    // Abstract package — prefer empty over a weak skill/scenery hit.
     expect(resolveLocalAsset("Random abstract skilling package ladder")).toBeNull();
   });
 });
@@ -85,11 +82,9 @@ describe("resolveLocalAssets / collectArticleAssets", () => {
       dropItems: ["Bonecrusher", "Bones", "Always"],
       primaryArtSrc: primary,
     });
-    // Primary plate excluded from the related-asset rail.
     if (primary) {
       expect(assets.every((a) => a.src !== primary)).toBe(true);
     }
-    // Noise rarity labels never become icons.
     expect(assets.every((a) => a.label.toLowerCase() !== "always")).toBe(true);
     for (const a of assets) {
       expect(a.src.startsWith("/game/")).toBe(true);

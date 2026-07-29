@@ -115,10 +115,6 @@ if (fots?.region_status !== "needs_equilibrium_boundary_confirmation") {
 
 const whole = JSON.stringify(doc).toLowerCase();
 for (const phrase of bannedCopy) if (whole.includes(phrase)) errors.push(`document clanker phrase ${phrase}`);
-if (whole.includes('"league relic"') && whole.includes('"monolith_energy"')) {
-  // This is intentionally broad only as a warning against accidentally serializing League relics into the archaeology list.
-  // The prose can discuss the separation, but relic objects themselves must all use arch-relic IDs.
-}
 for (const relic of relics) {
   if (!String(relic.id).startsWith("arch-relic:")) errors.push(`${relic.id}: archaeology relic id namespace violation`);
 }

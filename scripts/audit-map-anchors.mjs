@@ -1,22 +1,11 @@
 /**
- * Audit where the board's pins actually land.
- *
- *   node scripts/audit-map-anchors.mjs
- *
- * Every check here is objective — it reads the same generated artifacts the
- * board renders from, so it reports what a player sees rather than what the
- * coordinate table claims:
- *
+ * Audits board pins against rendered terrain and region geometry:
  *   SEA        the pin sits on open water (land coverage below LAND_MIN)
  *   SHORE      on land, but within a few tiles of the waterline
- *   OFF-PLATE  outside every ring of its own region — it will draw over a
- *              neighbour, or over nothing
- *   FOREIGN    inside a *different* region's plate, which names the culprit
- *   STACKED    two pins on one point, so one of them is unclickable
- *   OUTLIER    far from every other pin in its region, the usual signature of a
- *              coordinate that was guessed rather than looked up
- *
- * It changes nothing. Fixes belong in src/map/data/gameCoords.ts.
+ *   OFF-PLATE  outside every ring of its region
+ *   FOREIGN    inside another region's plate
+ *   STACKED    two pins share a point
+ *   OUTLIER    far from the other pins in its region
  */
 
 import fs from "node:fs";
@@ -81,7 +70,6 @@ const inRegion = (region, [x, y]) =>
 const REGIONS = Object.keys(plates.regions);
 const findRegion = ([x, y]) => REGIONS.find((r) => inRegion(r, [x, y]));
 
-// --------------------------------------------------------------- gather ----
 
 const pins = [];
 const missing = [];
@@ -110,13 +98,7 @@ for (const pin of pins) {
   stacked.set(key, [...(stacked.get(key) ?? []), pin]);
 }
 
-/**
- * The raster has a few solid black discs — areas the Wiki map simply does not
- * draw. A pin on one is wrong whatever its coordinate says, because there is no
- * art under it to be right about; the Araxyte Hive sits on the Morytania one.
- * Cheap to detect and impossible to see in the field texture, which only knows
- * land from water.
- */
+/** Solid black gaps in the Wiki raster cannot host visible map pins. */
 /** Nearest, not cubic — resampling blends a disc edge back up into terrain. */
 const artwork = await sharp(RASTER_FOR_HOLES)
   .resize(SPAN_X, SPAN_Y, { kernel: "nearest" })
@@ -163,7 +145,6 @@ for (const pin of pins) {
   if (flags.length) findings.push({ ...pin, flags, field: f });
 }
 
-// --------------------------------------------------------------- report ----
 
 const order = ["UNMAPPED", "SEA", "OFF-PLATE", "FOREIGN", "OUTLIER", "STACKED", "SHORE"];
 const rank = (f) => Math.min(...f.flags.map((x) => order.findIndex((o) => x.startsWith(o))));
@@ -197,17 +178,10 @@ for (const f of findings) for (const flag of f.flags) {
 }
 console.log("\n[anchors] " + Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(" · "));
 
-// ---------------------------------------------------------------- render ----
-
 /**
  * `--render [region...]` writes one annotated crop per region to
  * scripts/.map-anchor-audit/ (untracked).
- *
- * The automated checks above only catch a pin that is in the sea, off its
- * plate, or stacked. They cannot catch the common case — a pin on land, in the
- * right region, in the wrong place — because there is no machine-readable
- * ground truth for that. The raster has one: it draws its own town names. So
- * this puts every pin next to them and lets a human read the disagreement.
+ * Crops expose incorrect on-land placements that geometry checks cannot detect.
  */
 if (process.argv.includes("--render")) {
   const OUT_DIR = path.join(ROOT, "scripts/.map-anchor-audit");

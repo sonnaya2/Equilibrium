@@ -35,7 +35,7 @@ interface CombatRecordBase {
   /** Every record carries provenance; `verifiedAt` is mandatory on each entry. */
   sources: SourceReference[];
   unlock?: UnlockInfo;
-  /** Our own normalized words — never copied source prose. */
+  /** Normalized summary, not copied source prose. */
   displayDescription?: string;
   /** Set alongside displayDescription when tooltip text and mechanic diverge. */
   mechanicalImplementation?: string;
@@ -87,7 +87,6 @@ export interface EquipmentBonuses {
 }
 
 export interface EquipmentRecord extends CombatRecordBase {
-  /** Absent when the corpus does not source it — never inferred from vibes. */
   slot?: EquipmentSlot;
   tier?: number;
   style?: CombatStyle | "hybrid";
@@ -141,8 +140,7 @@ export interface RevolutionBarRecord extends CombatRecordBase {
   notes?: string[];
   /** How many slots Revolution manages on this bar. */
   revolutionSize: number;
-  /** Slot names as the source lists them; abilityId is null when no sourced record
-   *  or engine spec exists — that slot is unmodelled, never invented. */
+  /** Slot names as sourced; abilityId is null when the slot is unmodelled. */
   slots: Array<{ name: string; abilityId: string | null }>;
   /** Swap notes for locked greater variants. */
   replacements: Array<{ from: string; to: string }>;

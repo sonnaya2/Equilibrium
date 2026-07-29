@@ -154,9 +154,7 @@ async function main() {
       unmatchedStrict: unmatched.length,
       pathMatchedCount: pathMatched.length,
       softMatchedCount: softMatched.length,
-      unmatchedSample: [...unmatched, ...softMatched]
-        .slice(0, SAMPLE_SIZE)
-        .map((r) => r.path),
+      unmatchedSample: [...unmatched, ...softMatched].slice(0, SAMPLE_SIZE).map((r) => r.path),
       unmatchedPaths: [...unmatched, ...softMatched].map((r) => r.path),
       unmatchedStrictPaths: unmatched.map((r) => r.path),
       softMatchedSample: softMatched.slice(0, SAMPLE_SIZE).map((r) => r.path),
@@ -203,14 +201,11 @@ async function main() {
     manifestGeneratedAt: raw.generatedAt ?? null,
     matchPolicy: {
       matched: "exact path or public/game -> assets/rs3 path map against assets[].path",
-      softMatched:
-        "basename / stem / id / label only (not counted as path provenance)",
-      unmatched:
-        "no path match (includes soft-only hits) — primary gap for registration",
+      softMatched: "basename / stem / id / label only (not counted as path provenance)",
+      unmatched: "no path match (includes soft-only hits) — primary gap for registration",
     },
     counts: {
-      totalScanned:
-        trees.publicGame.total + trees.assetsRs3.total + trees.assetsLeagues.total,
+      totalScanned: trees.publicGame.total + trees.assetsRs3.total + trees.assetsLeagues.total,
       publicGame: {
         total: trees.publicGame.total,
         matched: trees.publicGame.matched,
@@ -253,8 +248,7 @@ async function main() {
     ),
     notes: [
       "Path match is authoritative provenance; basename soft-match can false-positive across categories.",
-      "Register gaps via assets/source-manifest-expansion-*.json then harvest.",
-      "Prefer: node scripts/_sync-expansion.mjs N  (single expansion) over full npm run sync:assets.",
+      "Register gaps in assets/source-manifest.json, then harvest.",
       "Exit always 0; this is a report, not a gate.",
     ],
   };

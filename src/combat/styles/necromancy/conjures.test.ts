@@ -83,7 +83,6 @@ describe("conjures", () => {
   it("lands skeleton autos with progressive rage and never marks crit", () => {
     const state = summonConjure(newConjures(), "skeleton_warrior", 0);
     const { events, state: after } = processSpiritAutos(state, 0, 20);
-    // hits at 7, 12, 17
     expect(events.map((e) => e.tick)).toEqual([7, 12, 17]);
     expect(events.every((e) => e.critEligible === false)).toBe(true);
     expect(events.every((e) => e.abilityId === SPIRIT_AUTO_ABILITY_ID.skeleton_warrior)).toBe(true);
@@ -97,7 +96,6 @@ describe("conjures", () => {
   it("lands full SP3 skeleton autos (~20 hits) with rage capped at 25", () => {
     const state = summonConjure(newConjures(), "skeleton_warrior", 0);
     const { events } = processSpiritAutos(state, 0, CONJURE_UNTIL_OFFSET_TICKS);
-    // first 7, last 102: (102-7)/5 + 1 = 20
     expect(events).toHaveLength(20);
     expect(events.at(-1)!.tick).toBe(102);
     expect(events.at(-1)!.mult).toBeCloseTo(skeletonRageMult(19));

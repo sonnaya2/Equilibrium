@@ -1,16 +1,8 @@
 "use client";
 
 /**
- * The board: water, eleven plates cut from the HD raster, and pins for the
- * framed region.
- *
- * Every texture and every ring is loaded once here and handed down, so eleven
- * plates share one raster, one field and one atlas rather than eleven copies of
- * each. Nothing under this component fetches anything.
- *
- * The light rig is a desk-lamp print setup: strong warm key, weak cool fill,
- * tiny ambient so the wiki sheet keeps chroma. No shadow maps — contact comes
- * from the water darkening against every coast.
+ * Loads one shared raster, terrain field, atlas, and ring set for all plates.
+ * Contact shading comes from coast-aware water darkening rather than shadow maps.
  */
 
 import { useEffect, useMemo } from "react";
@@ -55,8 +47,7 @@ export function MapTable({ reducedMotion }: { reducedMotion: boolean }) {
 
   const keyPosition = useMemo(() => KEY_DIRECTION.clone().multiplyScalar(4), []);
 
-  // The loaders cache by url across mounts, so the textures outlive this
-  // component and must not be disposed with it — only what we built goes.
+  // Shared loader textures outlive this component; dispose only locally owned objects.
   useEffect(() => undefined, []);
 
   if (flags.debugGeometry) {

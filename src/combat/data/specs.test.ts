@@ -18,7 +18,6 @@ const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
   ].map((spec) => [spec.id, spec]),
 );
 
-/** Melee record ids that must map to engine AbilitySpecs present in ENGINE_SPECS. */
 const MELEE_RECORD_ENGINE_PAIRS: Array<[string, string]> = [
   ["melee:attack", "attack"],
   ["melee:rend", "rend"],
@@ -241,15 +240,10 @@ describe("revolution bar resolve coverage matrix", () => {
       }
       matrix[bar.id] = counts;
     }
-    // PvME ST dual-wield: 10 engine.
     expect(matrix["melee-dual-wield"]).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // PvME ST 2h: 11 engine (incl. Hurricane + Pulverise).
     expect(matrix["melee-two-handed"]).toEqual({ engine: 11, record: 0, unmodelled: 0 });
-    // PvME ST ranged: all engine (no Sacrifice on this bar).
     expect(matrix.ranged).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // PvME ST magic: all 10 engine.
     expect(matrix.magic).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    // Necromancy ST: 10 engine (incl. 3 conjures) + Sacrifice record.
     expect(matrix.necromancy).toEqual({ engine: 10, record: 1, unmodelled: 0 });
   });
 });

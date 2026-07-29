@@ -3,20 +3,12 @@ import type { SourceReference } from "../../types";
 import { NECROSIS_WIKI } from "../../data/sources";
 
 /**
- * Conjures (Spirit Pact III endgame default). Spirits cannot crit.
- *
- * Duration (wiki Skeleton / Zombie / Ghost hit timings, SP3):
+ * Spirit Pact III timing:
  *   5-tick conjure anim + 100-tick lifetime → exclusive end at cast+105.
- * Skeleton: first hit cast+7, every 5 ticks; last hit cast+102.
- * Zombie: first hit cast+7, every 6 ticks; last auto cast+103.
- * Ghost: first hit cast+6, every 7 ticks; last hit cast+104.
- * Phantom Guardian: no auto (defensive only) — command is the damage.
- *
- * Skeleton rage: +3% damage per stack after each attack, max 25 (1.75×).
- * Progressive stacks over SP3 life avg mult ≈ 1.285 (wiki 642.5% / 500%).
- *
- * Army default set: skeleton + ghost + zombie (PvME priority Ghost>Skeleton>
- * Zombie>Phantom; phantom is opt-in, not in the default three).
+ * Skeleton attacks from +7 every 5 ticks, Zombie from +7 every 6, and Ghost
+ * from +6 every 7. Skeleton rage adds 3% per attack up to 25 stacks.
+ * Phantom has no auto; the default army is Skeleton, Ghost, and Zombie.
+ * Spirit attacks cannot crit.
  */
 
 export const CONJURE_IDS = [

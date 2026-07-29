@@ -10,8 +10,8 @@ import {
 /**
  * Post-modernisation magic abilities. Damage bands and timing are wiki-verified
  * (individual ability pages + Magic abilities table, 2026-07-26). Multi-hit
- * tickOffsets only when the wiki states an interval; unknown multi-hit timing
- * carries hits without invented offsets. Ability-level crit modifiers the pipeline
+ * tickOffsets only when the wiki states an interval; unknown timing leaves the
+ * offsets unset. Ability-level crit modifiers the pipeline
  * cannot yet express (Wild Magic +10% chance / +20% damage) stay as MAGIC_EFFECTS.
  *
  * Removed by Combat Style Modernisation (do not re-add): Wrack, Wrack and Ruin,
@@ -34,9 +34,11 @@ export interface MagicAbilitySpec extends AbilitySpec {
   style: "magic";
   /** Cast only under Anima Charged (Runic Charge); the unempowered band is separate. */
   requiresAnima?: boolean;
-  /** Smoke Tendrils: every hit is a guaranteed critical strike. */
-  guaranteedCrit?: boolean;
   source: SourceReference;
+}
+
+export function isMagicAbility(ability: AbilitySpec): ability is MagicAbilitySpec {
+  return ability.style === "magic";
 }
 
 /** 3-tick channel: one hit per tick over 1.8s (wiki: "Attack 3 times over 1.8s (3 ticks)"). */
@@ -320,13 +322,13 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Omnipower"),
   },
   {
-    // Base Sunshine DoT (16 x 10-20%). Zone 1.5x buff via appliesBuff "sunshine"
+    // Base Sunshine DoT (16 x 10-20%). Zone 1.5x buff via appliesEffect "sunshine"
     // (effects.ts / simulate): 50-tick beam, buff starts cast+1.
     id: "sunshine",
     name: "Sunshine",
     style: "magic",
     category: "ultimate",
-    appliesBuff: "sunshine",
+    appliesEffect: "sunshine",
     hits: sunshineDotHits(16),
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
@@ -334,12 +336,12 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
   },
   {
     // Greater Sunshine: DoT 21 x 10-20% (avg 315% total — not a front-loaded hit).
-    // Zone buff via appliesBuff; 64 active ticks after 1-tick delay (effects.ts).
+    // Zone buff via appliesEffect; 64 active ticks after 1-tick delay (effects.ts).
     id: "greater_sunshine",
     name: "Greater Sunshine",
     style: "magic",
     category: "ultimate",
-    appliesBuff: "greater_sunshine",
+    appliesEffect: "greater_sunshine",
     hits: sunshineDotHits(21),
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
@@ -361,14 +363,14 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     style: "magic",
     category: "utility",
     hits: [],
-    buff: "runic_charge",
+    stateEffect: "runic_charge",
     offGcd: true,
     cooldownSeconds: 30,
     source: RUNIC_CHARGE_WIKI,
   },
   {
     // FSOA special: cast hit 120-140%. Lightning Surge (70-90% on crit, +1 tick)
-    // is state via appliesBuff "instability" (effects.ts / simulate).
+    // is state via appliesEffect "instability" (effects.ts / simulate).
     id: "instability",
     name: "Instability",
     style: "magic",
@@ -376,7 +378,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 120, maxPct: 140 } }],
     adrenaline: { cost: 50 },
     cooldownSeconds: 60,
-    appliesBuff: "instability",
+    appliesEffect: "instability",
     source: wikiAbility("Instability"),
   },
   {
@@ -451,7 +453,7 @@ export const MAGIC_EFFECTS = [
     id: "sunshine_zone",
     name: "Sunshine zone buff",
     notes:
-      "Magic attacks deal 1.5x while inside the 7x7 beam (sim: player stays inside). Wired in simulate via appliesBuff sunshine/greater_sunshine. Greater: 64-tick buff after 1-tick delay. Base: 50-tick beam, buff from cast+1. Planted Feet (base → 63 ticks) not modelled.",
+      "Magic attacks deal 1.5× damage inside the 7×7 beam. The calculator assumes the player stays inside. Greater lasts 64 ticks after a 1-tick delay; Planted Feet extends the base version to 63 ticks.",
     source: wikiAbility("Sunshine"),
   },
   {

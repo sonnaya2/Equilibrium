@@ -1,25 +1,4 @@
-/**
- * Stamp unlock.regions onto data/combat/equipment.json from scraped corpus.
- * NEVER invents regions — only required_regions / hard hubs / explicit family expansions.
- *
- * Sources:
- *   data/research/regional-combat-unlocks.json
- *   scraped-data/major-upgrades-by-region.json
- *   scraped-data/progression-enrichment-regional-combat*.json
- *   scraped-data/agent-region-map-*.json (parallel agent audits)
- *   scraped-data/agent-region-gaps-*.json (per-region densify / gap re-assert passes)
- *   scraped-data/agent-slayer-midgear*.json (pass3 slayer/mid combat densify)
- *   scraped-data/agent-accessories-pass*.json (pass3 accessories densify)
- *   scraped-data/agent-accessories-pass3.json (pockets/capes/hybrid accessories densify)
- *
- * Outputs:
- *   data/combat/equipment.json  (mutated unlock.regions, union with existing)
- *   data/research/equipment-region-index.json
- *   scraped-data/equipment-region-stamp-report.json
- *
- * Run: node scripts/stamp-equipment-regions.mjs
- *      npm run stamp:equipment-regions
- */
+/** Applies verified region claims to combat equipment and rebuilds the region index. */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
@@ -92,7 +71,6 @@ function list(v) {
   return Array.isArray(v) ? v : v == null || v === "" ? [] : [v];
 }
 
-// ─── aliases: corpus name → equipment kebab id (without item:) ───────────────
 const ALIASES = new Map([
   ["tectonic-mask", "tectonic-helm"],
   ["tectonic-robe-top", "tectonic-body"],
@@ -119,14 +97,11 @@ const ALIASES = new Map([
   ["tumekens-light", "tumekens-light"],
   ["devourers-guard", "devourers-guard"],
   ["masterwork-spear-of-annihilation", "masterwork-spear-of-annihilation"],
-  // trimmed-masterwork-spear-of-annihilation: pass7 REMOVE_IDS phantom (wiki redirect only)
-  // ancient-rebounder: pass9 REMOVE_IDS phantom (wiki redirects to Ancient lantern)
   ["ancient-rebounder", "ancient-lantern"],
   ["kerapacs-wrist-wraps", "kerapacs-wrist-wraps"],
   ["enhanced-kerapacs-wrist-wraps", "enhanced-kerapacs-wrist-wraps"],
   ["erethdors-grimoire", "erethdors-grimoire"],
   ["ig neous-kal-zuk", "igneous-kal-zuk"],
-  // City of Um necro DW ladder — residual is t90 only (pass6); aliases point at kept ids
   ["death-guard", "deathguard-t90"],
   ["deathguard", "deathguard-t90"],
   ["death-guard-tier-70", "deathguard-t90"],
@@ -138,7 +113,6 @@ const ALIASES = new Map([
   ["skull-lantern-tier-90", "skull-lantern-t90"],
 ]);
 
-// ─── claim registry: eqKey → { regions, sources[], hard } ────────────────────
 /** @type {Map<string, { regions: Set<string>, sources: object[], hard: boolean, requirement: string }>} */
 const claims = new Map();
 
@@ -179,7 +153,6 @@ function addClaim(key, regions, meta) {
   }
 }
 
-// ─── load equipment index ────────────────────────────────────────────────────
 const eqFile = read(EQ_PATH);
 const records = eqFile.records ?? [];
 
@@ -241,7 +214,7 @@ const CATALOG_EXTRA = [
   },
 ];
 
-// Deathwarden tank ladder — inject T90 residual only (loadout browse; mid tiers stripped).
+// Only the T90 Deathwarden tank tier belongs in loadout browsing.
 {
   const DW_PIECES = [
     { slug: "hood", name: "hood", slot: "helmet" },
@@ -274,8 +247,7 @@ const CATALOG_EXTRA = [
   }
 }
 
-// Obsidian armour (Karamja Fight Cauldron) — corpus karamja:fight-cauldron-obsidian-support.
-// Skip plateskirt (legs alt of platelegs) and tokkul shop weapons.
+// Obsidian armour comes from Karamja's Fight Cauldron.
 for (const row of [
   { id: "item:obsidian-warrior-helm", name: "Obsidian warrior helm", style: "melee", slot: "helmet", wiki: "Obsidian_warrior_helm" },
   { id: "item:obsidian-ranger-helm", name: "Obsidian ranger helm", style: "ranged", slot: "helmet", wiki: "Obsidian_ranger_helm" },
@@ -298,8 +270,6 @@ for (const row of [
   });
 }
 
-// Gemstone armour T80 hybrid — wiki: Gemstone cavern under Shilo Village (Karamja gloves 3).
-// NOT Anachronia (pass4 false override); Dragonkin Lab gemstone dragons use a different drop table.
 for (const row of [
   { id: "item:gemstone-helm", name: "Gemstone helm", slot: "helmet", wiki: "Gemstone_helm" },
   { id: "item:gemstone-hauberk", name: "Gemstone hauberk", slot: "body", wiki: "Gemstone_hauberk" },
@@ -319,9 +289,6 @@ for (const row of [
   });
 }
 
-// Pass6 Forinthry densify — missing Daemonheim / Corp shield ladder rows.
-// Chaotic kiteshield stamped by family:forinthry-chaotic; eagle/farseer by forinthry-dg-weapons;
-// blessed spirit by forinthry-spirit-shield.
 for (const row of [
   {
     id: "item:chaotic-kiteshield",
@@ -359,8 +326,6 @@ for (const row of [
   });
 }
 
-// Pass3 Karamja residual: Abomination unique cape + lean classic TzHaar weapon icons.
-// Full Toktz GE junk list skipped; Ek-ZekKil remains Misthalin Zuk drop.
 CATALOG_EXTRA.push({
   id: "item:abomination-cape",
   name: "Abomination cape",
@@ -388,7 +353,7 @@ for (const row of [
   });
 }
 
-// GWD1 residual wearables still absent (bandos/subjugation families already cover name prefixes).
+// GWD1 wearables not covered by the Bandos and Subjugation families.
 for (const row of [
   {
     id: "item:ward-of-subjugation",
@@ -445,8 +410,7 @@ for (const row of [
   });
 }
 
-// Ports / Arc combat densify (Asgarnia packaging) — NOT scrimshaws.
-// Core t85/88 body + weapons already in equipment.json; inject gloves/boots, elite DL darts, cape/ring.
+// Ports and Arc combat gear is packaged under Asgarnia; scrimshaws are excluded.
 for (const row of [
   { id: "item:superior-seasinger-aonori", name: "Superior seasinger aonori", style: "magic", slot: "gloves", tier: 85, setId: "seasinger", wiki: "Superior_seasinger_aonori" },
   { id: "item:superior-seasinger-asari", name: "Superior seasinger asari", style: "magic", slot: "boots", tier: 85, setId: "seasinger", wiki: "Superior_seasinger_asari" },
@@ -494,8 +458,6 @@ for (const row of [
   });
 }
 
-// Masterwork ranged power armour t100 (user MW ruling: anachronia + forinthry + kandarin).
-// Craft gate includes Apex hide +5 achievement (Havenhythe soft pressure — not hard elective here).
 for (const row of [
   { id: "item:masterwork-ranged-cowl", name: "Masterwork ranged cowl", slot: "helmet", armour: 553, prayer: 2, life: 950, wiki: "Masterwork_ranged_cowl" },
   { id: "item:masterwork-ranged-body", name: "Masterwork ranged body", slot: "body", armour: 635.9, prayer: 3, life: 1425, wiki: "Masterwork_ranged_body" },
@@ -535,30 +497,17 @@ for (const row of [
   });
 }
 
-// Pass6 BiS residual densify — real wearables still absent after pass1–5 injects.
-// Audit (2026-07-26): Hexhunter / Decimation / Obliteration / Annihilation / Enhanced Excalibur /
-// Nightmare gauntlets / Enhanced nightmare / GWD2 OH (shadow glaive OH, Cywir orb, Avaryss OH) already present.
-// Inject only confirmed wiki wearables with equip slots (no codices / craft mats / set aggregates).
 for (const row of [
-  // Necro BiS ring (Osseous / Rex Matriarchs — Anachronia); family:anachronia-occultist
+  // Osseous and the Rex Matriarchs place the Occultist's ring in Anachronia.
   { id: "item:occultists-ring", name: "Occultist's ring", style: "necromancy", slot: "ring", tier: 85, wiki: "Occultist%27s_ring" },
-  // Universal adrenaline utility (Daemonheim tokens — Forinthry)
   { id: "item:ring-of-vigour", name: "Ring of vigour", style: "hybrid", slot: "ring", tier: 62, wiki: "Ring_of_vigour" },
-  // Claws of Guthix / EoF store (Mage Arena — Forinthry)
   { id: "item:guthix-staff", name: "Guthix staff", style: "magic", slot: "twohand", tier: 60, wiki: "Guthix_staff" },
-  // Summoning special cost passive cape (DG tokens — Forinthry)
   { id: "item:spirit-cape", name: "Spirit cape", style: "hybrid", slot: "cape", tier: 50, wiki: "Spirit_cape" },
-  // DG chaotic style shields (eagle-eye already catalogued)
   { id: "item:chaotic-kiteshield", name: "Chaotic kiteshield", style: "melee", slot: "offhand", tier: 80, wiki: "Chaotic_kiteshield" },
   { id: "item:farseer-kiteshield", name: "Farseer kiteshield", style: "magic", slot: "offhand", tier: 80, wiki: "Farseer_kiteshield" },
-  // Style OH defender ladder siblings (defender/repriser already present)
   { id: "item:kalphite-rebounder", name: "Kalphite rebounder", style: "magic", slot: "offhand", tier: 90, wiki: "Kalphite_rebounder" },
-  // pass9: ancient-rebounder removed — wiki redirect phantom of Ancient lantern (item:ancient-lantern)
-  // Hexhunter ammo residual (wiki: Stalker arrows, not "Hexhunter arrows")
   { id: "item:stalker-arrows", name: "Stalker arrows", style: "ranged", slot: "ammo", tier: 80, wiki: "Stalker_arrow", bonuses: { damage: 768 } },
-  // EoF melee special residual (Tormented demons — Misthalin Ancient Guthix Temple)
   { id: "item:dragon-claws", name: "Dragon claws", style: "melee", slot: "mainhand", tier: 60, wiki: "Dragon_claws", bonuses: { damage: 576, accuracy: 1132 } },
-  // pass8: OH sibling of dragon claws (same TD drop; wiki Off-hand_dragon_claw singular)
   { id: "item:off-hand-dragon-claw", name: "Off-hand dragon claw", style: "melee", slot: "offhand", tier: 60, wiki: "Off-hand_dragon_claw", bonuses: { damage: 288, accuracy: 1132 } },
 ]) {
   CATALOG_EXTRA.push({
@@ -572,33 +521,24 @@ for (const row of [
   });
 }
 
-// Pass9 BiS residual densify — custom-fit MW (distinct untradeable ids), base Morrigan, First Necro helm ladder.
-// Audit 2026-07-26: MW magic/ranged base sets, GWD2 weapons/anima, Kerapac wraps, Cryptbloom 5/5,
-// Vestments of Havoc 4/4 (no gloves piece), Devourer's Guard + Tumeken resplendence already present.
-// Skip: Amascut's crown (POH trophy), spiked custom-fit (cosmetic only), vestments gloves (REMOVE_IDS phantom).
 for (const row of [
-  // Custom-fit trimmed masterwork melee — same combat stats as trimmed; distinct wiki ids (Elof custom-fit).
   { id: "item:custom-fit-trimmed-masterwork-melee-helm", name: "Custom-fit trimmed masterwork melee helm", style: "melee", slot: "helmet", tier: 92, setId: "custom-fit-trimmed-masterwork", wiki: "Custom-fit_trimmed_masterwork_melee_helm", bonuses: { armour: 457.4, prayer: 2, damage: 23 } },
   { id: "item:custom-fit-trimmed-masterwork-melee-platebody", name: "Custom-fit trimmed masterwork melee platebody", style: "melee", slot: "body", tier: 92, setId: "custom-fit-trimmed-masterwork", wiki: "Custom-fit_trimmed_masterwork_melee_platebody", bonuses: { armour: 526, prayer: 3, damage: 34.5 } },
   { id: "item:custom-fit-trimmed-masterwork-melee-platelegs", name: "Custom-fit trimmed masterwork melee platelegs", style: "melee", slot: "legs", tier: 92, setId: "custom-fit-trimmed-masterwork", wiki: "Custom-fit_trimmed_masterwork_melee_platelegs", bonuses: { armour: 503.1, prayer: 2, damage: 28.7 } },
   { id: "item:custom-fit-trimmed-masterwork-melee-gloves", name: "Custom-fit trimmed masterwork melee gloves", style: "melee", slot: "gloves", tier: 92, setId: "custom-fit-trimmed-masterwork", wiki: "Custom-fit_trimmed_masterwork_melee_gloves", bonuses: { armour: 114.3, prayer: 2, damage: 14.3 } },
   { id: "item:custom-fit-trimmed-masterwork-melee-boots", name: "Custom-fit trimmed masterwork melee boots", style: "melee", slot: "boots", tier: 92, setId: "custom-fit-trimmed-masterwork", wiki: "Custom-fit_trimmed_masterwork_melee_boots", bonuses: { armour: 114.3, prayer: 2, damage: 14.3 } },
-  // Custom-fit masterwork magic — same stats as MW magic base; Crafting Guild Master Crafter.
   { id: "item:custom-fit-masterwork-magic-hat", name: "Custom-fit masterwork magic hat", style: "magic", slot: "helmet", tier: 100, setId: "custom-fit-masterwork-magic", wiki: "Custom-fit_masterwork_magic_hat", bonuses: { armour: 553, prayer: 2, life: 950 } },
   { id: "item:custom-fit-masterwork-magic-robe-top", name: "Custom-fit masterwork magic robe top", style: "magic", slot: "body", tier: 100, setId: "custom-fit-masterwork-magic", wiki: "Custom-fit_masterwork_magic_robe_top", bonuses: { armour: 635.9, prayer: 3, life: 1425 } },
   { id: "item:custom-fit-masterwork-magic-robe-bottom", name: "Custom-fit masterwork magic robe bottom", style: "magic", slot: "legs", tier: 100, setId: "custom-fit-masterwork-magic", wiki: "Custom-fit_masterwork_magic_robe_bottom", bonuses: { armour: 608.3, prayer: 2, life: 1425 } },
   { id: "item:custom-fit-masterwork-magic-gloves", name: "Custom-fit masterwork magic gloves", style: "magic", slot: "gloves", tier: 100, setId: "custom-fit-masterwork-magic", wiki: "Custom-fit_masterwork_magic_gloves", bonuses: { armour: 138.2, prayer: 2, life: 475 } },
   { id: "item:custom-fit-masterwork-magic-boots", name: "Custom-fit masterwork magic boots", style: "magic", slot: "boots", tier: 100, setId: "custom-fit-masterwork-magic", wiki: "Custom-fit_masterwork_magic_boots", bonuses: { armour: 138.2, prayer: 2, life: 475 } },
-  // Custom-fit masterwork ranged — same stats as MW ranged base.
   { id: "item:custom-fit-masterwork-ranged-cowl", name: "Custom-fit masterwork ranged cowl", style: "ranged", slot: "helmet", tier: 100, setId: "custom-fit-masterwork-ranged", wiki: "Custom-fit_masterwork_ranged_cowl", bonuses: { armour: 553, prayer: 2, life: 950 } },
   { id: "item:custom-fit-masterwork-ranged-body", name: "Custom-fit masterwork ranged body", style: "ranged", slot: "body", tier: 100, setId: "custom-fit-masterwork-ranged", wiki: "Custom-fit_masterwork_ranged_body", bonuses: { armour: 635.9, prayer: 3, life: 1425 } },
   { id: "item:custom-fit-masterwork-ranged-chaps", name: "Custom-fit masterwork ranged chaps", style: "ranged", slot: "legs", tier: 100, setId: "custom-fit-masterwork-ranged", wiki: "Custom-fit_masterwork_ranged_chaps", bonuses: { armour: 608.3, prayer: 2, life: 1425 } },
   { id: "item:custom-fit-masterwork-ranged-vambraces", name: "Custom-fit masterwork ranged vambraces", style: "ranged", slot: "gloves", tier: 100, setId: "custom-fit-masterwork-ranged", wiki: "Custom-fit_masterwork_ranged_vambraces", bonuses: { armour: 138.2, prayer: 2, life: 475 } },
   { id: "item:custom-fit-masterwork-ranged-boots", name: "Custom-fit masterwork ranged boots", style: "ranged", slot: "boots", tier: 100, setId: "custom-fit-masterwork-ranged", wiki: "Custom-fit_masterwork_ranged_boots", bonuses: { armour: 138.2, prayer: 2, life: 475 } },
-  // Base Morrigan weapons (t78) — superior already catalogued; no OH variants on wiki.
   { id: "item:morrigans-javelin", name: "Morrigan's javelin", style: "ranged", slot: "mainhand", tier: 78, wiki: "Morrigan%27s_javelin", bonuses: { damage: 1162.2, accuracy: 1829 } },
   { id: "item:morrigans-throwing-axe", name: "Morrigan's throwing axe", style: "ranged", slot: "mainhand", tier: 78, wiki: "Morrigan%27s_throwing_axe", bonuses: { damage: 955.5, accuracy: 1829 } },
-  // First Necromancer helm ladder residual (crown already present).
   { id: "item:misalionars-death-mask", name: "Misalionar's death mask", style: "necromancy", slot: "helmet", tier: 95, setId: "first-necromancer", wiki: "Misalionar%27s_death_mask", bonuses: { armour: 491.6, damage: 23.7 } },
   { id: "item:visage-of-the-first-necromancer", name: "Visage of the First Necromancer", style: "necromancy", slot: "helmet", tier: 95, setId: "first-necromancer", wiki: "Visage_of_the_First_Necromancer", bonuses: { armour: 491.6, damage: 23.7 } },
 ]) {
@@ -614,7 +554,6 @@ for (const row of [
   });
 }
 
-/** @type {string[]} ids newly pushed this run (for pass3 report) */
 const catalogInjectedThisRun = [];
 {
   const have = new Set(records.map((r) => r.id));
@@ -683,12 +622,9 @@ function extractNameCandidates(text) {
   return out;
 }
 
-// ─── 1) regional-combat-unlocks.json ─────────────────────────────────────────
 const combatUnlocks = read(COMBAT_UNLOCKS);
 for (const rec of combatUnlocks.records ?? []) {
   if (rec.recordType !== "equipment") continue;
-  // Corpus still has asgarnia:combat-scrimshaw-pocket-package as hard Asgarnia —
-  // user ruling: invent/POP scrimshaws are NOT region-gated like EoF. Skip whole row.
   if (/scrimshaw/i.test(rec.id || "") || /scrimshaw/i.test(rec.name || "")) continue;
   const req = regionList(rec.requiredRegions);
   const hints = regionList(rec.regionHints);
@@ -696,7 +632,7 @@ for (const rec of combatUnlocks.records ?? []) {
   const hard =
     req.length > 0 &&
     !/support|self_supply|pressure|alternates/.test(type);
-  // Prefer required over soft hints alone — skip soft-only unless single-region hard-ish name match later via families
+  // Soft hints alone cannot establish a region.
   const regions =
     hard
       ? type === "all_required" || rec.isRegionCombo || req.length > 1
@@ -727,7 +663,6 @@ for (const rec of combatUnlocks.records ?? []) {
   }
 }
 
-// ─── 2) progression-enrichment-regional-combat*.json ─────────────────────────
 const enrichFiles = readdirSync(join(ROOT, "scraped-data")).filter((n) => ENRICH_RE.test(n)).sort();
 for (const file of enrichFiles) {
   const data = read(`scraped-data/${file}`);
@@ -749,7 +684,7 @@ for (const file of enrichFiles) {
 
     for (const key of resolveEquipmentKeys(row.name)) addClaim(key, regions, meta);
 
-    // unlocks[] only — NEVER effects/notes (those name competing BiS from other regions)
+    // Effects and notes may name equipment from unrelated regions.
     for (const u of list(row.unlocks)) {
       for (const cand of extractNameCandidates(String(u))) {
         for (const key of resolveEquipmentKeys(cand)) {
@@ -760,7 +695,6 @@ for (const file of enrichFiles) {
   }
 }
 
-// ─── 3) major-upgrades-by-region examples ────────────────────────────────────
 const major = read(MAJOR);
 for (const [regionRaw, entries] of Object.entries(major.regions ?? {})) {
   const region = normRegion(regionRaw);
@@ -772,8 +706,7 @@ for (const [regionRaw, entries] of Object.entries(major.regions ?? {})) {
       requirement: entry.name,
       note: entry.category || "",
     };
-    // Whitelist set-root expansions only (never free-form comparison prose).
-    // Base sirenic: USER_FORCE kandarin (Ascension + Ocellus); elite via family:elite-sirenic.
+    // Only explicit set roots expand to equipment families.
     const SET_ROOTS = [
       "torva", "pernix", "virtus", "bandos", "armadyl", "subjugation",
       "anima-core", "malevolent", "tectonic", "cryptbloom",
@@ -808,8 +741,7 @@ for (const [regionRaw, entries] of Object.entries(major.regions ?? {})) {
   }
 }
 
-// ─── 4) family expansions (corpus hubs → wearables in equipment.json) ────────
-// Only patterns backed by major-upgrades hubs or explicit user family table.
+// Family expansions are limited to sourced major-upgrade hubs.
 const FAMILY = [
   // desert
   {
@@ -819,8 +751,6 @@ const FAMILY = [
     test: (r) => /^(off-hand )?drygore (mace|rapier|longsword)$/i.test(r.name),
   },
   {
-    // Kalphite King residual defenders (pass2 — not covered by drygore family alone).
-    // pass6: +rebounder magic OH sibling.
     regions: ["desert"],
     requirement: "Kalphite King defender residual",
     source: "family:desert-kalphite-defenders",
@@ -870,8 +800,7 @@ const FAMILY = [
     test: (r) => /^inquisitor staff$/i.test(r.name),
   },
   {
-    // Mazcab = desert (user + corpus rule). Base Teralith/Tempest/Primeval + Achto.
-    // Pass2: base sets were pass1 misses (Achto-only in agent-region-map-desert-morytania).
+    // Mazcab is packaged under Desert.
     regions: ["desert"],
     requirement: "Liberation of Mazcab armour (Teralith / Tempest / Primeval / Achto)",
     source: "family:desert-mazcab-armour",
@@ -886,7 +815,6 @@ const FAMILY = [
     test: (r) => /^camel staff$/i.test(r.name),
   },
   {
-    // Ripper Demon cave wiki dual Desert + Wilderness (pass6).
     regions: ["desert", "forinthry"],
     requirement: "Ripper claws (Ripper Demon cave)",
     source: "family:desert-forinthry-ripper-claws",
@@ -916,19 +844,14 @@ const FAMILY = [
   },
   {
     regions: ["morytania"],
-    // Wearable amulet + Barrows→Berserker's Fury progression residual (same Barrows source).
     requirement: "Amulet of the forsaken / Berserker's Fury chain",
     source: "family:morytania-forsaken",
     test: (r) => /^amulet of the forsaken/i.test(r.name),
   },
   {
     regions: ["morytania"],
-    // t70: corruption sigil + Barrows weapons; t80 ancient line kept mory per corpus (emblem is Nex).
-    // pass2: reclaim corrupted/tainted from false Forinthry DG claim.
     requirement: "Barrows defenders / corruption sigil ladder",
     source: "family:morytania-defenders",
-    // pass6 had "ancient rebounder" — pass9: that name is a wiki redirect to Ancient lantern
-    // (invent-global USER_FORCE clear). Keep defender/repriser/t70 ladder only.
     test: (r) =>
       /^(ancient defender|ancient repriser|corrupted defender|tainted repriser|sunspear)/i.test(
         r.name,
@@ -942,14 +865,11 @@ const FAMILY = [
   },
   {
     regions: ["morytania"],
-    // RoTS style shields — NOT Vorago (pass1 asgarnia-rago-shields was false).
     requirement: "Barrows: Rise of the Six style kiteshields",
     source: "family:morytania-rots-kiteshields",
     test: (r) => /^(vengeful|merciless) kiteshield$/i.test(r.name),
   },
   {
-    // Classic Barrows brothers + Akrisae / Linza residual weapons (armour pieces not in catalog).
-    // pass6 densify: durable family so agent-map-only stamps survive corpus re-runs.
     regions: ["morytania"],
     requirement: "Barrows brothers weapons (classic + Akrisae / Linza)",
     source: "family:morytania-barrows-weapons",
@@ -991,7 +911,6 @@ const FAMILY = [
     test: (r) => /^(saradomin sword|zamorakian spear)$/i.test(r.name),
   },
   {
-    // Commander Zilyana residual amulets (style-split necks).
     regions: ["asgarnia"],
     requirement: "God Wars Dungeon 1 equipment",
     source: "family:asgarnia-gwd1-amulets",
@@ -1089,7 +1008,7 @@ const FAMILY = [
     test: (r) => /^(annihilation|decimation|obliteration)$/i.test(r.name),
   },
   {
-    // Dominion Tower ruinous set is Wilderness geography for League electives (user 2026-07-26).
+    // Dominion Tower's ruinous set uses Wilderness geography for League electives.
     regions: ["forinthry"],
     requirement: "Ruinous weapons (Wilderness / Dominion Tower path)",
     source: "family:forinthry-ruinous",
@@ -1110,7 +1029,6 @@ const FAMILY = [
     test: (r) => /^abyssal vine whip$/i.test(r.name),
   },
   {
-    // Base + superior ancient warriors (Wilderness). Base Zuriel was empty after pass1.
     regions: ["forinthry"],
     requirement: "Ancient warrior weapons (Wilderness residual)",
     source: "family:forinthry-ancient-warrior",
@@ -1133,7 +1051,6 @@ const FAMILY = [
     test: (r) => /^ring of vigour$/i.test(r.name),
   },
   {
-    // Mage Arena Guthix staff — Claws of Guthix / EoF residual.
     regions: ["forinthry"],
     requirement: "Guthix staff (Mage Arena)",
     source: "family:forinthry-guthix-staff",
@@ -1147,7 +1064,7 @@ const FAMILY = [
     test: (r) => /^spirit cape$/i.test(r.name),
   },
   {
-    // Tormented demons at Ancient Guthix Temple — Misthalin (wiki / corpus dragon-claws residual).
+    // Tormented demons at the Ancient Guthix Temple place dragon claws in Misthalin.
     // MH catalog is plural "Dragon claws"; OH wiki item is singular "Off-hand dragon claw".
     regions: ["misthalin"],
     requirement: "Dragon claws (Tormented demons)",
@@ -1161,7 +1078,6 @@ const FAMILY = [
     test: (r) => /^(divine|arcane|elysian|spectral|blessed) spirit shield$/i.test(r.name),
   },
   {
-    // Mercenary's gloves only — true Daemonheim token residual.
     // Corrupted defender / tainted repriser are Barrows t70 ladder → morytania (USER_FORCE).
     regions: ["forinthry"],
     requirement: "Daemonheim token residual (mercenary gloves)",
@@ -1225,7 +1141,6 @@ const FAMILY = [
     test: (r) => /^cryptbloom /i.test(r.name),
   },
   {
-    // Fort Forinthry / Zemouregal & Vorkath — not Misthalin EGWD (pass6).
     regions: ["forinthry"],
     requirement: "Dracolich armour (Zemouregal & Vorkath / Fort Forinthry)",
     source: "family:forinthry-dracolich",
@@ -1283,7 +1198,7 @@ const FAMILY = [
     // Spaced wiki name "Death guard (tier N)" AND unspaced catalog "Deathguard" / "Deathguard (tier N)"
     // plus Skull lantern OH ladder — City of Um craft path (misthalin:death-guard-skull-lantern).
     // Id match is mandatory: bare ids deathguard / skull-lantern collide with kebab(name) of
-    // tiered siblings if apply-path only uses bare-key byId (fixed in reindex + claim resolve).
+    // Tiered siblings share bare ids, so exact ids must win during claim resolution.
     requirement: "Death guard / Skull lantern (City of Um)",
     source: "family:misthalin-death-guard",
     test: (r) =>
@@ -1294,8 +1209,6 @@ const FAMILY = [
   },
   {
     regions: ["misthalin"],
-    // Power (Deathdealer) + tank (Deathwarden) Um soul-forge ladders (City of Um / Misthalin).
-    // Deathwarden pieces injected via CATALOG_EXTRA when equipment.json lacks them (pass3).
     requirement: "Deathdealer / Deathwarden armour",
     source: "family:misthalin-necro-armour",
     test: (r) =>
@@ -1319,7 +1232,6 @@ const FAMILY = [
       ),
   },
   {
-    // Abyssal lords: wiki dual Misthalin + Wilderness (match jaws-of-the-abyss) (pass6).
     regions: ["misthalin", "forinthry"],
     requirement: "Abyssal scourge (abyssal lords / Senntisten Asylum + Wilderness)",
     source: "family:misthalin-forinthry-scourge",
@@ -1341,7 +1253,7 @@ const FAMILY = [
   },
   {
     regions: ["karamja"],
-    // Fight Cauldron shard craft — corpus karamja:fight-cauldron-obsidian-support.
+    // Fight Cauldron shards are crafted in Karamja.
     requirement: "Fight Cauldron obsidian armour progression",
     source: "family:karamja-obsidian",
     test: (r) =>
@@ -1350,8 +1262,6 @@ const FAMILY = [
       ),
   },
   {
-    // Wiki: Gemstone cavern under Shilo Village mine — hard Karamja (gloves 3 / Kelhar).
-    // Pass4 anachronia override was false; Dragonkin Lab dragons ≠ armour residual.
     regions: ["karamja"],
     requirement: "Gemstone armour (Shilo gemstone cavern / gemstone dragons)",
     source: "family:karamja-gemstone",
@@ -1408,9 +1318,6 @@ const FAMILY = [
     test: (r) => /^(reaver'?s|stalker'?s|channell?er'?s|champion'?s) ring$/i.test(r.name),
   },
 
-  // trimmed masterwork melee armour only — asgarnia + morytania
-  // (do not match "Trimmed Masterwork Spear..." phantoms — pass7 REMOVE_IDS)
-  // pass9: also custom-fit trimmed masterwork melee * (distinct wiki ids)
   {
     regions: ["asgarnia", "morytania"],
     requirement: "Trimmed / custom-fit trimmed masterwork melee armour",
@@ -1454,8 +1361,6 @@ const FAMILY = [
 
   // masterwork 2h sword / bow / staff cross-region from enrichment
   {
-    // Chaotic essence (DG/Forinthry) + drygore + Twin Furies blades (Desert).
-    // No Artisans Workshop / Asgarnia hard residual (pass6 strip false asgarnia).
     regions: ["desert", "forinthry"],
     requirement: "Masterwork 2h sword",
     source: "family:mw-2h-sword",
@@ -1474,7 +1379,6 @@ const FAMILY = [
     test: (r) => /^masterwork staff$/i.test(r.name),
   },
 
-  // User: LOTD / hydrix residuals / illuminated books / underworld grim = Misthalin.
   {
     regions: ["misthalin"],
     requirement: "Luck of the Dwarves",
@@ -1527,17 +1431,13 @@ const FAMILY = [
     test: (r) => /^apex hide (cowl|body|chaps|vambraces|boots)$/i.test(r.name),
   },
   {
-    // User MW ruling 2026-07-26: anachronia + forinthry + kandarin (not Asgarnia plate anvil).
-    // pass9: custom-fit masterwork ranged * shares material chain.
-    regions: ["anachronia", "forinthry", "kandarin"],
+    regions: ["asgarnia", "tirannwn", "anachronia"],
     requirement: "Masterwork ranged armour",
     source: "family:mw-ranged-armour",
     test: (r) =>
       /^(custom-fit )?masterwork ranged (cowl|body|chaps|vambraces|boots)$/i.test(r.name),
   },
   {
-    // Same multi-region material chain as Masterwork staff (user MW answers).
-    // pass9: custom-fit masterwork magic * shares material chain.
     regions: ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"],
     requirement: "Masterwork magic armour",
     source: "family:mw-magic-armour",
@@ -1545,7 +1445,6 @@ const FAMILY = [
       /^(custom-fit )?masterwork magic (hat|robe top|robe bottom|gloves|boots)$/i.test(r.name),
   },
   {
-    // One of a Kind / Varrock Museum — Misthalin (pass7 wiki; not Forinthry/KBD).
     regions: ["misthalin"],
     requirement: "Dragon Rider amulet (One of a Kind / Museum)",
     source: "family:misthalin-dragon-rider-amulet",
@@ -1569,7 +1468,7 @@ const FAMILY = [
       /^(superior )?leviathan ring$/i.test(r.name),
   },
 
-  // User 2026-07-26: base Spear of Annihilation → Kandarin (overrides prior Misthalin stamp).
+  // The base Spear of Annihilation belongs to Kandarin.
   {
     regions: ["kandarin"],
     requirement: "Spear of Annihilation base",
@@ -1577,9 +1476,6 @@ const FAMILY = [
     test: (r) => /^spear of annihilation$/i.test(r.name),
   },
 
-  // ─── densify pass: remaining BiS / clear gaps ─────────────────────────────
-  // deathguard/skull-lantern: covered by family:misthalin-death-guard above (pass2 necro densify).
-  // jaws-of-the-abyss: dual misthalin+forinthry via family:misthalin-forinthry-jaws-abyss (pass5).
   {
     regions: ["misthalin"],
     requirement: "Elder God Wars arrows / deathspore",
@@ -1630,8 +1526,6 @@ const FAMILY = [
     test: (r) => /^hellfire bow$/i.test(r.name),
   },
   {
-    // Vault of Hereditas = Desert (wiki leagueRegion + desert:vault-of-hereditas-heist).
-    // Pass1 morytania-gloomfire-bow was a false lock. Legatus is family:desert-legatus-emberstaff.
     regions: ["desert"],
     requirement: "Vault of Hereditas (Gloomfire bow)",
     source: "family:desert-gloomfire-bow",
@@ -1650,8 +1544,7 @@ const FAMILY = [
       /farseer kiteshield/i.test(r.name),
   },
   {
-    // Dominion Tower (Al Kharid) = Desert. Main-game usable gloves only.
-    // Tower-only dominion sword/staff/crossbow are REMOVE_IDS, not stamped.
+    // Dominion Tower is in the Desert; only its main-game usable gloves are retained.
     // Celestial handwraps are celestial dragons (Morytania) — never DT.
     regions: ["desert"],
     requirement: "Dominion Tower wearable rewards (main-game usable gloves)",
@@ -1684,15 +1577,12 @@ const FAMILY = [
     test: (r) => /^ascendri bolts/i.test(r.name),
   },
   {
-    // Vault of Hereditas (Kharid-et = Desert) — sibling of gloomfire / Misalionar death mask.
-    // Pass1–8 family:misthalin-legatus-emberstaff was a false home (Senntisten name pollution).
     regions: ["desert"],
     requirement: "Legatus's Emberstaff (Vault of Hereditas)",
     source: "family:desert-legatus-emberstaff",
     test: (r) => /legatus'?s? emberstaff/i.test(r.name),
   },
 
-  // ─── mid-tier densify (remaining empties with clear geography) ─────────────
   {
     regions: ["asgarnia"],
     requirement: "Warriors' Guild dragon defender",
@@ -1719,7 +1609,7 @@ const FAMILY = [
     test: (r) => /^hand cannon$/i.test(r.name),
   },
   {
-    // Match abyssal whip primary (Slayer Tower). Multi-source demons exist but forinthry-only was false.
+    // The Slayer Tower is the abyssal whip's primary source.
     regions: ["morytania"],
     requirement: "Abyssal wand / orb (abyssal demons — Slayer Tower primary)",
     source: "family:morytania-abyssal-wand-orb",
@@ -1745,7 +1635,6 @@ const FAMILY = [
     test: (r) => /^enhanced ancient staff$/i.test(r.name),
   },
   {
-    // Wilderness Warbands residual (removed 2026) — never Dominion Tower (pass6).
     regions: ["forinthry"],
     requirement: "Wand of treachery (Wilderness Warbands residual)",
     source: "family:forinthry-wand-of-treachery",
@@ -1793,7 +1682,7 @@ const FAMILY = [
     test: (r) => /^abomination cape$/i.test(r.name),
   },
   {
-    // Classic Toktz / TzHaar-Ket weapons — GE/shop residual, hard TzHaar City geography.
+    // Toktz and TzHaar-Ket weapons use TzHaar City geography.
     regions: ["karamja"],
     requirement: "TzHaar City obsidian weapons",
     source: "family:karamja-obsidian-weapons",
@@ -1813,7 +1702,6 @@ const FAMILY = [
     regions: ["fremennik"],
     requirement: "Dagannoth Kings rings",
     source: "family:fremennik-dk-rings",
-    // Pass3: Archers'/Seers' use trailing apostrophe ("Archers' ring") — old ('?s)? missed them.
     test: (r) =>
       /^(berserker|warrior|seers'?|archers'?) ring$/i.test(r.name) ||
       /^(berserker|warrior|seers|archers)-ring$/i.test(r.id),
@@ -1825,7 +1713,6 @@ const FAMILY = [
     test: (r) => /^dragonfire (shield|deflector|ward)$/i.test(r.name),
   },
 
-  // ─── pass3 empty resolution ────────────────────────────────────────────────
   {
     // Boneyard Hunter net traps only — hard Forinthry (corpus hunter:black-salamanders).
     regions: ["forinthry"],
@@ -1835,39 +1722,33 @@ const FAMILY = [
   },
 ];
 
-/** Force-replace regions (not union) — user overrides that must win over stale stamps.
- *  Empty array = clear region tags (intentionally unverified / not region-gated).
- *  See scraped-data/agent-intentionally-unverified-pass2.json. */
+/** Forced region replacements; an empty array clears an unverified lock. */
 const USER_FORCE = new Map([
-  // pass7: Warforge (Kandarin) + chaotic spikes (Forinthry/DG) — user MW ruling 2026-07-26.
   ["spear-of-annihilation", ["kandarin", "forinthry"]],
   ["reaper-necklace", ["misthalin"]],
   ["amulet-of-souls", ["misthalin"]],
   ["ring-of-death", ["misthalin"]],
   ["luck-of-the-dwarves", ["misthalin"]],
   ["max-cape", ["misthalin"]],
-  // Airut / Beastmaster Durzag (Desert) — not QBD/Asgarnia (false family:asgarnia-razorback).
+  // Airut and Beastmaster Durzag belong to the Desert, not Asgarnia.
   ["razorback-gauntlets", ["desert"]],
-  // pass7: abyssal whip (Morytania) + wyrm spike (Wildywyrm Forinthry) — forinthry-only understates whip.
   ["lava-whip", ["morytania", "forinthry"]],
-  // pass7: One of a Kind quest reward + Mordaut reclaim (Varrock Museum) = Misthalin — not Forinthry.
   ["dragon-rider-amulet", ["misthalin"]],
   ["apex-hide-cowl", ["havenhythe"]],
   ["apex-hide-body", ["havenhythe"]],
   ["apex-hide-chaps", ["havenhythe"]],
   ["apex-hide-vambraces", ["havenhythe"]],
   ["apex-hide-boots", ["havenhythe"]],
-  ["masterwork-ranged-cowl", ["anachronia", "forinthry", "kandarin"]],
-  ["masterwork-ranged-body", ["anachronia", "forinthry", "kandarin"]],
-  ["masterwork-ranged-chaps", ["anachronia", "forinthry", "kandarin"]],
-  ["masterwork-ranged-vambraces", ["anachronia", "forinthry", "kandarin"]],
-  ["masterwork-ranged-boots", ["anachronia", "forinthry", "kandarin"]],
+  ["masterwork-ranged-cowl", ["asgarnia", "tirannwn", "anachronia"]],
+  ["masterwork-ranged-body", ["asgarnia", "tirannwn", "anachronia"]],
+  ["masterwork-ranged-chaps", ["asgarnia", "tirannwn", "anachronia"]],
+  ["masterwork-ranged-vambraces", ["asgarnia", "tirannwn", "anachronia"]],
+  ["masterwork-ranged-boots", ["asgarnia", "tirannwn", "anachronia"]],
   ["masterwork-magic-hat", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
   ["masterwork-magic-robe-top", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
   ["masterwork-magic-robe-bottom", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
   ["masterwork-magic-gloves", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
   ["masterwork-magic-boots", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
-  // pass9 custom-fit MW — same hard multi-region chains as base/trimmed parents.
   ["custom-fit-trimmed-masterwork-melee-helm", ["asgarnia", "morytania"]],
   ["custom-fit-trimmed-masterwork-melee-platebody", ["asgarnia", "morytania"]],
   ["custom-fit-trimmed-masterwork-melee-platelegs", ["asgarnia", "morytania"]],
@@ -1878,11 +1759,11 @@ const USER_FORCE = new Map([
   ["custom-fit-masterwork-magic-robe-bottom", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
   ["custom-fit-masterwork-magic-gloves", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
   ["custom-fit-masterwork-magic-boots", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
-  ["custom-fit-masterwork-ranged-cowl", ["anachronia", "forinthry", "kandarin"]],
-  ["custom-fit-masterwork-ranged-body", ["anachronia", "forinthry", "kandarin"]],
-  ["custom-fit-masterwork-ranged-chaps", ["anachronia", "forinthry", "kandarin"]],
-  ["custom-fit-masterwork-ranged-vambraces", ["anachronia", "forinthry", "kandarin"]],
-  ["custom-fit-masterwork-ranged-boots", ["anachronia", "forinthry", "kandarin"]],
+  ["custom-fit-masterwork-ranged-cowl", ["asgarnia", "tirannwn", "anachronia"]],
+  ["custom-fit-masterwork-ranged-body", ["asgarnia", "tirannwn", "anachronia"]],
+  ["custom-fit-masterwork-ranged-chaps", ["asgarnia", "tirannwn", "anachronia"]],
+  ["custom-fit-masterwork-ranged-vambraces", ["asgarnia", "tirannwn", "anachronia"]],
+  ["custom-fit-masterwork-ranged-boots", ["asgarnia", "tirannwn", "anachronia"]],
   // Vault of Hereditas (Kharid-et digsite = Desert); Visage = crown (Misthalin) + death mask (Desert).
   ["misalionars-death-mask", ["desert"]],
   ["visage-of-the-first-necromancer", ["misthalin", "desert"]],
@@ -1896,10 +1777,8 @@ const USER_FORCE = new Map([
   ["deathtouch-bracelet", ["misthalin"]],
   // Abyssal beasts: Senntisten Asylum + Wilderness wiki dual.
   ["jaws-of-the-abyss", ["misthalin", "forinthry"]],
-  // City of Um necro DW residual — t90 only (pass6; base/t80 stripped from catalog)
   ["deathguard-t90", ["misthalin"]],
   ["skull-lantern-t90", ["misthalin"]],
-  // ─── pass6 Misthalin densify reaffirm (force-replace; EGW / Um / Sanctum / Zuk) ──
   ["fractured-staff-of-armadyl", ["misthalin"]],
   ["dark-shard-of-leng", ["misthalin"]],
   ["dark-sliver-of-leng", ["misthalin"]],
@@ -1931,7 +1810,6 @@ const USER_FORCE = new Map([
   ["deathwarden-robe-bottom-t90", ["misthalin"]],
   ["deathwarden-gloves-t90", ["misthalin"]],
   ["deathwarden-boots-t90", ["misthalin"]],
-  // Dracolich: NOT here — pass6 forinthry USER_FORCE (Fort Forinthry / Vorkath) owns the set.
   ["vestments-of-havoc-hood", ["misthalin"]],
   ["vestments-of-havoc-robe-top", ["misthalin"]],
   ["vestments-of-havoc-robe-bottom", ["misthalin"]],
@@ -1939,10 +1817,7 @@ const USER_FORCE = new Map([
   ["abyssal-scourge", ["misthalin"]],
   ["kerapacs-wrist-wraps", ["misthalin"]],
   ["enhanced-kerapacs-wrist-wraps", ["misthalin"]],
-  // enhanced-nightmare-gauntlets: dual kandarin+misthalin later (base World Gate + Leng).
-  // pass9: Legatus's Emberstaff = Vault of Hereditas (Desert), not Misthalin.
   ["legatuss-emberstaff", ["desert"]],
-  // Dominion Tower gloves — hard Desert (pass2 densify black recolours + swift).
   ["goliath-gloves", ["desert"]],
   ["goliath-gloves-black", ["desert"]],
   ["spellcaster-gloves", ["desert"]],
@@ -1952,31 +1827,22 @@ const USER_FORCE = new Map([
   ["pneumatic-gloves", ["desert"]],
   ["static-gloves", ["desert"]],
   ["tracking-gloves", ["desert"]],
-  // celestial-handwraps: NOT Dominion Tower — pass5 reclaims Morytania (see below).
-  // Kalphite King residual defenders (not dual-home with morytania barrows package).
   ["kalphite-defender", ["desert"]],
   ["kalphite-repriser", ["desert"]],
   ["kalphite-rebounder", ["desert"]],
-  // pass6 BiS inject force stamps
   ["occultists-ring", ["anachronia"]],
   ["ring-of-vigour", ["forinthry"]],
   ["guthix-staff", ["forinthry"]],
   ["spirit-cape", ["forinthry"]],
   ["chaotic-kiteshield", ["forinthry"]],
   ["farseer-kiteshield", ["forinthry"]],
-  // pass9: ancient-rebounder removed (wiki redirect → ancient-lantern; invent-global empty)
   ["stalker-arrows", ["forinthry"]],
-  // phantom wiki id — strip if re-scraped
-  // hexhunter-arrows removed; stalker-arrows is the real ammo
+  // `hexhunter-arrows` is not a real item; Hexhunter bow uses Stalker arrows.
   ["dragon-claws", ["misthalin"]],
-  // pass8: OH sibling of dragon claws (Tormented demons / Misthalin — wiki Off-hand_dragon_claw).
   ["off-hand-dragon-claw", ["misthalin"]],
-  // pass7: eternal magic trees = Piscatoris (Kandarin) — not DG/Forinthry residual.
   ["eternal-magic-staff-saturated", ["kandarin"]],
   ["eternal-magic-staff-meagre", ["kandarin"]],
 
-  // ─── pass2 morytania corrections (force-replace wins over stale unions) ────
-  // RoTS style shields — never Vorago/Asgarnia.
   ["merciless-kiteshield", ["morytania"]],
   ["vengeful-kiteshield", ["morytania"]],
   // t70 Barrows defenders — never Daemonheim/Forinthry.
@@ -1984,13 +1850,8 @@ const USER_FORCE = new Map([
   ["tainted-repriser", ["morytania"]],
   // Gloomfire from Vault of Hereditas — Desert, not Morytania.
   ["gloomfire-bow", ["desert"]],
-  // ─── pass3 wrong-region audit (force-replace wins over stale multi-unions) ──
-  // shard-of-genesis-essence removed pass4 (slotless progression junk — see REMOVE_IDS).
-  // cross-region:masterwork-bow = kandarin+morytania; pass1 asgarnia partial polluted union.
   ["masterwork-bow", ["kandarin", "morytania"]],
-  // pass7: seismic Asgarnia + Cywir Desert + crystal Tirannwn + Abyss synapse Forinthry + Ourania Kandarin (user MW ruling).
   ["masterwork-staff", ["asgarnia", "desert", "tirannwn", "forinthry", "kandarin"]],
-  // Mid-tier densify force (wins over empty).
   ["dragon-defender", ["asgarnia"]],
   ["korasis-sword", ["asgarnia"]],
   ["jessikas-sword", ["asgarnia"]],
@@ -1999,13 +1860,12 @@ const USER_FORCE = new Map([
   ["hand-cannon", ["fremennik"]],
   ["dark-bow", ["tirannwn"]],
   ["enhanced-ancient-staff", ["desert"]],
-  // Wilderness Warbands residual — not Dominion Tower desert (pass6 reclaim below).
   ["wand-of-treachery", ["forinthry"]],
   ["abyssal-whip", ["morytania"]],
-  // Match whip primary (Slayer Tower); strip false forinthry:abyssal-wand-orb.
+  // Abyssal whip uses its Slayer Tower source.
   ["abyssal-wand", ["morytania"]],
   ["abyssal-orb", ["morytania"]],
-  // Whip + whip vine (Jadinko Lair Karamja) — strip false forinthry-lava-wyrm bundle.
+  // The whip vine comes from Karamja's Jadinko Lair.
   ["abyssal-vine-whip", ["morytania", "karamja"]],
   ["slayer-helmet-i", ["morytania"]],
   ["fire-cape", ["karamja"]],
@@ -2019,29 +1879,22 @@ const USER_FORCE = new Map([
   ["obsidian-gloves", ["karamja"]],
   ["obsidian-boots", ["karamja"]],
   ["obsidian-kiteshield", ["karamja"]],
-  // Hard audit 2026-07-26: wiki Gemstone cavern = Karamja (not Anachronia pass4 false lock).
   ["gemstone-helm", ["karamja"]],
   ["gemstone-hauberk", ["karamja"]],
   ["gemstone-greaves", ["karamja"]],
   ["gemstone-gauntlets", ["karamja"]],
   ["gemstone-boots", ["karamja"]],
-  // Ice strykewyrms Fremennik — strip false asgarnia GWD1 bundle.
+  // Ice strykewyrms place the staff of light in Fremennik.
   ["staff-of-light", ["fremennik"]],
-  // SoL + wyrm heart (Wildywyrm) — strip false desert GWD2 stamp.
+  // A wyrm heart adds Forinthry to the staff of light path.
   ["staff-of-darkness", ["fremennik", "forinthry"]],
-  // Dark bow + wyrm scalp — strip false asgarnia QBD stamp.
+  // A wyrm scalp adds Forinthry to the dark bow path.
   ["strykebow", ["forinthry", "tirannwn"]],
-  // ─── pass5 hard audit 2026-07-26 ───────────────────────────────────────────
-  // Celestial dragons / Dragontooth Island = Morytania (not Dominion Tower desert).
   ["celestial-handwraps", ["morytania"]],
-  // Second-Age weapons: Global master casket — REMOVE_IDS (not region-stamped).
-  // ─── pass6 Forinthry densify 2026-07-26 ────────────────────────────────────
-  // DG style kiteshields + blessed spirit intermediate (catalog-injected above).
   ["chaotic-kiteshield", ["forinthry"]],
   ["farseer-kiteshield", ["forinthry"]],
   ["eagle-eye-kiteshield", ["forinthry"]],
   ["blessed-spirit-shield", ["forinthry"]],
-  // Reaffirm user-verify targets (chaotics / eldritch / hex / T87 / ruinous / spirit / lava / hellfire / DRA).
   ["hexhunter-bow", ["forinthry"]],
   ["eldritch-crossbow", ["forinthry"]],
   ["hellfire-bow", ["forinthry"]],
@@ -2052,9 +1905,7 @@ const USER_FORCE = new Map([
   ["arcane-spirit-shield", ["forinthry"]],
   ["elysian-spirit-shield", ["forinthry"]],
   ["spectral-spirit-shield", ["forinthry"]],
-  // Mercenary gloves only from former dg-token-residual trio (defenders stay morytania).
   ["mercenarys-gloves", ["forinthry"]],
-  // Primal = DG residual (Forinthry). Eternal magic = Piscatoris trees (Kandarin) — pass7 reclaim.
   ["primal-crossbow-mk-5", ["forinthry"]],
   ["off-hand-primal-crossbow-mk-5", ["forinthry"]],
   ["eternal-magic-longbow", ["kandarin"]],
@@ -2075,8 +1926,6 @@ const USER_FORCE = new Map([
   ["dragonfire-shield", ["asgarnia"]],
   ["dragonfire-deflector", ["asgarnia"]],
 
-  // ─── pass6 wrong-region hard audit 2026-07-26 ─────────────────────────────
-  // Fort Forinthry / Zemouregal & Vorkath — strip false family:misthalin-dracolich.
   ["dracolich-helm", ["forinthry"]],
   ["dracolich-body", ["forinthry"]],
   ["dracolich-legs", ["forinthry"]],
@@ -2092,19 +1941,12 @@ const USER_FORCE = new Map([
   // Ripper Demon cave wiki dual Desert + Wilderness.
   ["ripper-claw", ["desert", "forinthry"]],
   ["off-hand-ripper-claw", ["desert", "forinthry"]],
-  // Nightmare (Kandarin World Gate ruling) + Leng artefact (EGWD Misthalin).
+    // Nightmare gauntlets use Kandarin; the Leng artefact uses Misthalin.
   ["enhanced-nightmare-gauntlets", ["kandarin", "misthalin"]],
-  // Chaotic + drygore + Twin Furies — strip false Asgarnia Artisans residual.
   ["masterwork-2h-sword", ["desert", "forinthry"]],
 
-  // ─── pass3 hard densify (still-empty non-intentional) ──────────────────────
-  // Black salamander: Boneyard Hunter (Wilderness) → Forinthry.
-  // Not multi-hunter intentional empty — black colour is site-specific.
-  // See scraped-data/agent-slayer-midgear-pass3.json.
   ["black-salamander", ["forinthry"]],
 
-  // ─── pass3 accessories densify (pockets / capes / hybrid necks+rings) ─────
-  // Scriptures + grimoires + god books — durable force (corpus family already stamps).
   ["scripture-of-jas", ["misthalin"]],
   ["scripture-of-wen", ["misthalin"]],
   ["scripture-of-ful", ["misthalin"]],
@@ -2113,7 +1955,6 @@ const USER_FORCE = new Map([
   ["scripture-of-elidinis", ["misthalin"]],
   ["erethdors-grimoire", ["tirannwn"]],
   ["holy-wrench", ["morytania"]],
-  // EoF Asgarnia (user ruling + asgarnia:essence-of-finality-amulet).
   ["essence-of-finality", ["asgarnia"]],
   // Capes: max/fire already forced; TokHaar / Igneous durable force.
   ["tokhaar-kal-ket", ["karamja"]],
@@ -2125,7 +1966,6 @@ const USER_FORCE = new Map([
   ["igneous-kal-mej", ["karamja", "misthalin"]],
   ["igneous-kal-mor", ["karamja", "misthalin"]],
   ["igneous-kal-zuk", ["karamja", "misthalin"]],
-  // Hybrid rings / amulets reaffirm (no empty wearables remain beyond intentional).
   ["asylum-surgeons-ring", ["misthalin"]],
   ["reavers-ring", ["anachronia", "fremennik"]],
   ["channelers-ring", ["anachronia", "fremennik"]],
@@ -2133,15 +1973,12 @@ const USER_FORCE = new Map([
   ["champions-ring", ["anachronia", "fremennik"]],
   ["salve-amulet-e", ["morytania"]],
   ["amulet-of-the-forsaken", ["morytania"]],
-  // amulet-of-the-forsaken-to-berserkers-fury removed pass7 (progression-path aggregate — see REMOVE_IDS)
   ["arcane-blood-necklace", ["morytania"]],
   ["brawlers-knockout-necklace", ["morytania"]],
   ["farsight-sniper-necklace", ["morytania"]],
   ["demon-horn-necklace", ["forinthry"]],
   ["split-dragontooth-necklace", ["forinthry"]],
 
-  // ─── pass6 morytania densify reaffirm (force-replace; wins over forinthry/asgarnia pollution) ──
-  // Araxxor / Araxxi noxious triad.
   ["noxious-scythe", ["morytania"]],
   ["noxious-longbow", ["morytania"]],
   ["noxious-staff", ["morytania"]],
@@ -2164,7 +2001,6 @@ const USER_FORCE = new Map([
   ["sunspear-melee", ["morytania"]],
   ["sunspear-magic", ["morytania"]],
   ["sunspear-ranged", ["morytania"]],
-  // Classic Barrows brothers + residual weapons.
   ["ahrims-staff", ["morytania"]],
   ["ahrims-wand", ["morytania"]],
   ["ahrims-book-of-magic", ["morytania"]],
@@ -2181,8 +2017,6 @@ const USER_FORCE = new Map([
   ["ancient-defender", ["morytania"]],
   ["ancient-repriser", ["morytania"]],
 
-  // ─── pass6 asgarnia densify reaffirm (force-replace; durable vs stale multi-unions) ──
-  // GWD1 armour + unique weapons + style amulets + godswords.
   ["bandos-helmet", ["asgarnia"]],
   ["bandos-chestplate", ["asgarnia"]],
   ["bandos-tassets", ["asgarnia"]],
@@ -2243,11 +2077,8 @@ const USER_FORCE = new Map([
   ["elite-tectonic-mask", ["asgarnia", "forinthry"]],
   ["elite-tectonic-robe-top", ["asgarnia", "forinthry"]],
   ["elite-tectonic-robe-bottom", ["asgarnia", "forinthry"]],
-  // EoF already forced above; reaffirm for pass6 density report.
   ["essence-of-finality", ["asgarnia"]],
-  // QBD path (razorback is desert — never reaffirm here).
   ["royal-crossbow", ["asgarnia"]],
-  // pass9: wyvern dual Asgarnian Ice Dungeon + Frozen Waste Plateau (Wilderness/Forinthry).
   ["wyvern-crossbow", ["asgarnia", "forinthry"]],
   // Ports / Arc combat armour+weapons+accessories (NOT scrimshaws).
   ["seasingers-hood", ["asgarnia"]],
@@ -2293,8 +2124,6 @@ const USER_FORCE = new Map([
   ["superior-reefwalkers-cape", ["asgarnia"]],
   ["leviathan-ring", ["asgarnia"]],
   ["superior-leviathan-ring", ["asgarnia"]],
-  // Elite sirenic: ancient scales / Arc packaging → asgarnia.
-  // Base sirenic: Ascension Legiones + Ocellus algarum → kandarin (pass10 user ruling).
   ["elite-sirenic-mask", ["asgarnia"]],
   ["elite-sirenic-hauberk", ["asgarnia"]],
   ["elite-sirenic-chaps", ["asgarnia"]],
@@ -2312,16 +2141,9 @@ const USER_FORCE = new Map([
   ["trimmed-masterwork-platelegs", ["asgarnia", "morytania"]],
   ["trimmed-masterwork-gloves", ["asgarnia", "morytania"]],
   ["trimmed-masterwork-boots", ["asgarnia", "morytania"]],
-  // pass7 MW spear: base SoA (kandarin+forinthry) + trim (malevolent mory + praesulic asg) = 4-region UO.
-  // wiki: Masterwork Spear of Annihilation only (no separate trimmed spear wearable).
   ["masterwork-spear-of-annihilation", ["kandarin", "forinthry", "morytania", "asgarnia"]],
-  // pass6: strip Asgarnia Artisans pollution — chaotic (forinthry) + drygore/Twin Furies (desert).
   ["masterwork-2h-sword", ["desert", "forinthry"]],
-  // Mid-asgarnia residual already forced above (defender / korasi / jessika / vanquish / DFS).
 
-  // ─── pass10 user ruling 2026-07-26 ─────────────────────────────────────────
-  // Skilling bows (magic/elder/yew): REMOVE_IDS — not loadout residual.
-  // Bakriminel: Wilderness bloodwood tree → forinthry.
   ["onyx-bakriminel-bolts-e", ["forinthry"]],
   ["hydra-bakriminel-bolts-e", ["forinthry"]],
   // Ancient lantern: Nex emblem (asgarnia) + chaotic splint (forinthry DG).
@@ -2331,7 +2153,7 @@ const USER_FORCE = new Map([
   // Base sirenic already forced above (kandarin: Ascension Legiones + Ocellus).
   // limitless-staff / second-age / skilling bows → REMOVE_IDS.
 
-  // ─── multi-region hard stamps (League self-supply) ─────────────────────────
+  // multi-region hard stamps (League self-supply)
   // POP / Arc scrimshaws — Asgarnia packaging under Equilibrium Arc mapping.
   ["scrimshaw-of-vampyrism", ["asgarnia"]],
   ["scrimshaw-of-the-elements", ["asgarnia"]],
@@ -2356,6 +2178,9 @@ function userForceClearReason(key, rec) {
 /** Requirement text when USER_FORCE stamps non-empty regions. */
 function userForceStampRequirement(key, rec, regions) {
   const blob = `${key} ${rec?.name || ""}`;
+  if (/masterwork-ranged/i.test(blob)) {
+    return "League self-supply: Asgarnia + Tirannwn + Anachronia + Wilderness*";
+  }
   if (/scrimshaw/i.test(blob)) {
     return "Player-owned ports / Arc craft (Asgarnia mapping)";
   }
@@ -2380,9 +2205,8 @@ function isUserForceClear(key) {
   return Array.isArray(v) && v.length === 0;
 }
 
-/** Drop from equipment catalog — unusable / unobtainable / junk for main-game loadouts. */
+/** Equipment that cannot be used or obtained in a main-game loadout. */
 const REMOVE_IDS = new Set([
-  // pass1 — DT-only / unobtainable / joke / malformed
   "item:dominion-sword",
   "item:dominion-staff",
   "item:dominion-crossbow",
@@ -2390,7 +2214,6 @@ const REMOVE_IDS = new Set([
   "item:corrupted-slayer-helmet",
   "item:body-helmet", // malformed wiki scrape junk
   "item:swordy-mcswordface", // joke / unusable loadout row
-  // pass2 — pure craft energy/components (no slot) that duplicate wearable sets/weapons
   "item:tectonic-energy",
   "item:malevolent-energy",
   "item:eldritch-crossbow-components",
@@ -2401,12 +2224,9 @@ const REMOVE_IDS = new Set([
   "item:leng-artefact",
   "item:croesus-foultorch", // skilling material, not combat wearable
   "item:croesus-sporehammer", // skilling material, not combat wearable
-  // pass2 — malformed / phantom loadout rows
   "item:vestments-of-havoc-gloves", // no gloves piece on Vestments of Havoc set
   "item:glacier-boots", // Glacyte boots disambiguation scrap — not equippable
-  // pass7 multi-region audit — wiki redirect phantom (no distinct trimmed spear item)
   "item:trimmed-masterwork-spear-of-annihilation",
-  // pass2 — set aggregates with no slot that only duplicate equippable pieces
   "item:malevolent-armour",
   "item:tumekens-resplendence-equipment",
   "item:cryptbloom-armour",
@@ -2415,13 +2235,11 @@ const REMOVE_IDS = new Set([
   "item:robes-of-the-first-necromancer",
   "item:igneous-capes",
   "item:godsword",
-  // pass3 — deathwarden t60 craft base (not residual)
   "item:deathwarden-hood-t60",
   "item:deathwarden-robe-top-t60",
   "item:deathwarden-robe-bottom-t60",
   "item:deathwarden-gloves-t60",
   "item:deathwarden-boots-t60",
-  // pass4 — slotless abilities/codices/progressions (not loadout wearables)
   "item:praesul-codex",
   "item:shard-of-genesis-essence",
   "item:barrows-defenders-shields-progression",
@@ -2435,10 +2253,7 @@ const REMOVE_IDS = new Set([
   "item:invoke-lord-of-bones",
   "item:igneous-cape-progression",
   "item:corporeal-beast-holy-elixir-supply",
-  // pass8 — phantom ammo (wiki has Stalker arrows, not Hexhunter arrows)
   "item:hexhunter-arrows",
-  // pass5 — catalog hygiene: duplicate / mid-tier ladder spam that wrecks loadout browse
-  // Death guard spaced-name twins + scrape aliases (pass5 kept bare/t80/t90; pass6 keeps t90 only)
   "item:death-guard-tier-70",
   "item:death-guard-tier-80",
   "item:death-guard-tier-90",
@@ -2448,18 +2263,15 @@ const REMOVE_IDS = new Set([
   "item:death-guard-t70",
   "item:death-guard-t80",
   "item:death-guard-t90",
-  // pass6 — Death guard residual t90 only (drop base t70 + t80 ladder spam)
   "item:deathguard",
   "item:deathguard-t80",
-  // Skull lantern OH pair — same residual policy (t90 only)
   "item:skull-lantern",
   "item:skull-lantern-t80",
   "item:skull-lantern-tier-70",
   "item:skull-lantern-tier-80",
   "item:skull-lantern-tier-90",
   "item:skull-lantern-t70",
-  // Deathdealer / deathwarden: keep *-t90 residual only (5 pieces each).
-  // Bare + -t70/-t80 = catalog short forms; *-tier-70/80 = wiki slugId re-scrape forms.
+  // Deathdealer and Deathwarden retain only their five tier-90 pieces.
   "item:deathdealer-hood",
   "item:deathdealer-robe-top",
   "item:deathdealer-robe-bottom",
@@ -2485,7 +2297,6 @@ const REMOVE_IDS = new Set([
   "item:deathdealer-robe-bottom-tier-80",
   "item:deathdealer-gloves-tier-80",
   "item:deathdealer-boots-tier-80",
-  // re-scrape twins of t90 (if wiki slugId form reappears mid-catalog)
   "item:deathdealer-hood-tier-90",
   "item:deathdealer-robe-top-tier-90",
   "item:deathdealer-robe-bottom-tier-90",
@@ -2523,20 +2334,14 @@ const REMOVE_IDS = new Set([
   "item:deathwarden-boots-tier-90",
   // duplicate bolt id (same display name)
   "item:enchanted-bakriminel-bolts",
-  // pass7 — catalog consistency: progression-path / plural-family aggregates (not loadout wearables)
-  // Forsaken amulet already catalogued; this row is Barrows→Archaeology→Berserker's Fury relic chain narrative.
   "item:amulet-of-the-forsaken-to-berserkers-fury",
   // Wiki family scrape "Limitless staves" — Invention Limitless ability category, not a single weapon.
   "item:limitless-staff",
   "item:limitless-staves", // scrape alias guard
-  // pass9 — catalog hygiene: wiki-redirect phantom duplicate of a kept wearable
-  // "Ancient rebounder" redirects to "Ancient lantern" (same item); pass6 inject invented a twin row.
   "item:ancient-rebounder",
-  // pass10 — user ruling: Global master-casket Second-Age weapons (not region-gated combat residual)
   "item:second-age-sword",
   "item:second-age-staff",
   "item:second-age-bow",
-  // pass10 — user ruling: skilling bows (not league-hard combat loadout residual)
   "item:magic-longbow",
   "item:magic-shortbow",
   "item:magic-composite-bow",
@@ -2559,9 +2364,6 @@ for (const rule of FAMILY) {
   }
 }
 
-// ─── 5) agent region maps (parallel corpus audits → durable hard claims) ─────
-// Written by research agents under scraped-data/agent-region-map-*.json
-// Pass-1 used some group hubs; expand to real equipment ids so byId matches.
 const AGENT_GROUP_EXPAND = new Map([
   [
     "attuned-crystal-weapons",
@@ -2586,7 +2388,6 @@ const AGENT_GROUP_EXPAND = new Map([
     "t90-glacor-upgraded-boots",
     ["emberkeen-boots", "hailfire-boots", "flarefrost-boots"],
   ],
-  // Pass3 Fremennik densify — group hubs from pass1 maps + DK base quartet.
   [
     "dagannoth-kings-rings",
     ["berserker-ring", "warrior-ring", "archers-ring", "seers-ring"],
@@ -2609,11 +2410,9 @@ const AGENT_GROUP_EXPAND = new Map([
     [
       "igneous-kal-ket", "igneous-kal-xil", "igneous-kal-mej", "igneous-kal-mor",
       "igneous-kal-zuk",
-      // igneous-cape-progression removed pass4 (slotless progression shell)
     ],
   ],
   [
-    // Pass3: expand set hubs claimed in pass1 misthalin map / pass3 karamja map.
     "obsidian-armour",
     [
       "obsidian-warrior-helm", "obsidian-ranger-helm", "obsidian-mage-helm",
@@ -2622,7 +2421,7 @@ const AGENT_GROUP_EXPAND = new Map([
     ],
   ],
   [
-    // Shilo gemstone cavern hub → piece ids (USER_FORCE karamja wins over any stale anachronia claim).
+    // Shilo Village's gemstone cavern places these pieces in Karamja.
     "gemstone-armour",
     [
       "gemstone-helm", "gemstone-hauberk", "gemstone-greaves",
@@ -2630,11 +2429,9 @@ const AGENT_GROUP_EXPAND = new Map([
     ],
   ],
   ["channellers-ring", ["channelers-ring"]],
-  // pass6 residual: t90 DW pair only (base/t80 stripped)
   ["death-guard-skull-lantern", ["deathguard-t90", "skull-lantern-t90"]],
 ]);
 
-// agent-region-map-* + agent-region-gaps-* + agent-accessories-pass* + agent-slayer-midgear* (pass3)
 const agentMapFiles = readdirSync(join(ROOT, "scraped-data"))
   .filter(
     (n) =>
@@ -2651,27 +2448,19 @@ for (const file of agentMapFiles) {
   } catch {
     continue;
   }
-  // agent-accessories-passN may use verified[] as the stampable list (items preferred).
-  // agent-region-gaps-passN may also expose clear[] (handled only via USER_FORCE empties).
   const agentItems = pack.items?.length ? pack.items : pack.verified || [];
   for (const it of agentItems) {
     if (!it?.id?.startsWith("item:")) continue;
     if (it.lockType === "soft" || it.lockType === "pressure" || it.lockType === "clear") continue;
     if (/pressure_not_hard/i.test(it.confidence || "")) continue;
     const bare = stripItemPrefix(it.id);
-    // Pass2 intentional empties — never re-stamp from agent maps.
     if (isUserForceClear(bare)) continue;
     if (/scrimshaw/i.test(it.id) || /scrimshaw/i.test(it.name || "")) continue;
     if (/\baura\b/i.test(it.id) || /\baura\b/i.test(it.name || "")) continue;
-    // base sirenic: USER_FORCE kandarin (pass10); elite stays family:elite-sirenic → asgarnia
     if (it.id === "item:luck-of-the-dwarves") continue;
-    // pass6: invent craft / global residual — never hard-lock from agent maps (EoF is explicit).
     if (/invent|gizmo|blueprint|turtling|pneumatic|static-glove|tracking-glove/i.test(`${it.id} ${it.name || ""}`)) {
       continue;
     }
-    // pass6: strip stale false Asgarnia claims from pass1/pass2 maps (USER_FORCE also wins).
-    // staff-of-light = ice strykewyrms Fremennik (pass2 wrongly listed under GWD1).
-    // razorback = Airut/Durzag desert (not QBD). strykebow = dark bow + wyrm scalp.
     if (
       bare === "staff-of-light" ||
       bare === "staff-of-darkness" ||
@@ -2680,7 +2469,6 @@ for (const file of agentMapFiles) {
     ) {
       continue;
     }
-    // pass6: hydrix residual necks are Misthalin craft — skip pass1 asgarnia EoF-ingredient claims.
     if (
       bare === "reaper-necklace" ||
       bare === "amulet-of-souls" ||
@@ -2689,8 +2477,7 @@ for (const file of agentMapFiles) {
     ) {
       continue;
     }
-    // Hard audit: gemstone is Karamja (Shilo cavern). Skip stale anachronia agent claims;
-    // family + USER_FORCE apply the correct lock. Still accept karamja claims from pass3 maps.
+    // Gemstone cavern is in Shilo Village; reject stale Anachronia-only claims.
     if (
       (/^gemstone-/.test(bare) || /^gemstone /i.test(it.name || "")) &&
       Array.isArray(it.regions) &&
@@ -2705,8 +2492,7 @@ for (const file of agentMapFiles) {
       });
       continue;
     }
-    // pass6: Dracolich = Fort Forinthry / Vorkath → Forinthry. Reject stale Misthalin agent claims
-    // (pass1–3 maps + misthalin-tirannwn pack still list misthalin).
+    // Dracolich belongs to Forinthry through Fort Forinthry and Vorkath.
     if (
       (/^dracolich-/.test(bare) || /^elite-dracolich-/.test(bare) || /dracolich/i.test(it.name || "")) &&
       Array.isArray(it.regions) &&
@@ -2737,7 +2523,6 @@ for (const file of agentMapFiles) {
   }
 }
 
-// ─── apply stamps ────────────────────────────────────────────────────────────
 let taggedBefore = 0;
 let stamped = 0;
 let unioned = 0;
@@ -2747,7 +2532,7 @@ const stampedIds = [];
 const conflicts = [];
 const unmatchedClaims = [];
 
-// Drop unusable / unobtainable loadout junk before stamping.
+// Remove unusable or unobtainable equipment before stamping.
 {
   const before = records.length;
   const kept = records.filter((r) => !REMOVE_IDS.has(r.id));
@@ -2756,13 +2541,12 @@ const unmatchedClaims = [];
   records.push(...kept);
   // Catalog display hygiene (loadout scan).
   for (const rec of records) {
-    // Masterwork Spear of Annihilation is T92 (wiki); stale scrap had tier 90 + phantom "trimmed" row.
+    // Masterwork Spear of Annihilation is tier 92.
     if (rec.id === "item:masterwork-spear-of-annihilation") rec.tier = 92;
     if (rec.id === "item:essence-of-finality") {
       if (rec.tier == null) rec.tier = 90;
       if (!rec.style) rec.style = "hybrid";
     }
-    // Canonical spelling on kept residual (pass6: t90 only for death guard / skull lantern).
     if (rec.id === "item:deathguard-t90") rec.name = "Death guard (tier 90)";
     if (rec.id === "item:skull-lantern-t90") rec.name = "Skull lantern (tier 90)";
   }
@@ -2837,7 +2621,7 @@ for (const [key, claim] of claims) {
   }
 }
 
-// Force-replace user overrides (wins over prior stamps; empty = clear false locks).
+// Forced replacements supersede inferred stamps; an empty set clears the lock.
 let userForceCleared = 0;
 let userForceSet = 0;
 for (const [key, regions] of USER_FORCE) {
@@ -2860,7 +2644,6 @@ for (const [key, regions] of USER_FORCE) {
     next.some((r, i) => r !== prevSorted[i]) ||
     (!next.length && !rec.unlock); // create explicit empty unlock for intentional clears
   if (!next.length) {
-    // Clear region tags — intentional empty / not region-gated (pass2 policy).
     const reason = userForceClearReason(key, rec);
     rec.unlock = {
       type: rec.unlock?.type || "drop",
@@ -2891,10 +2674,9 @@ const stillEmpty = records
   .sort((a, b) => (b.tier ?? 0) - (a.tier ?? 0) || a.name.localeCompare(b.name))
   .slice(0, 80);
 
-// name→regions index for merge-equipment-sync reuse
 const index = {
   snapshotDate: new Date().toISOString().slice(0, 10),
-  purpose: "Equipment id/name → required regions map stamped from regional combat corpus. Reuse in merge-equipment-sync; never invent regions.",
+  purpose: "Equipment id/name to required regions map stamped from regional combat corpus; never invent regions.",
   validRegions: [...VALID],
   count: 0,
   byId: {},
@@ -2927,7 +2709,6 @@ const KEY_BIS = [
   "item:wand-of-the-praesul", "item:imperium-core", "item:ek-zekkil", "item:bow-of-the-last-guardian",
   "item:reavers-ring", "item:channelers-ring", "item:champions-ring", "item:anima-core-body-of-zaros",
   "item:masterwork-staff", "item:masterwork-2h-sword", "item:masterwork-bow",
-  // pass2/pass3 accessories densify snapshot
   "item:reaper-necklace", "item:amulet-of-souls", "item:ring-of-death", "item:luck-of-the-dwarves",
   "item:dragon-rider-amulet", "item:deathtouch-bracelet", "item:max-cape",
   "item:illuminated-book-of-law", "item:underworld-grimoire-4", "item:erethdors-grimoire",
@@ -2938,9 +2719,7 @@ const KEY_BIS = [
   "item:scripture-of-bik", "item:scripture-of-amascut", "item:scripture-of-elidinis",
   "item:fire-cape", "item:essence-of-finality", "item:holy-wrench",
   "item:tokhaar-kal-mor", "item:igneous-kal-ket", "item:tokkul-zo",
-  // pass3 slayer / mid-gear densify
   "item:slayer-helmet-i", "item:hexhunter-bow", "item:black-salamander", "item:cinderbane-gloves",
-  // pass6 BiS residual inject
   "item:occultists-ring", "item:ring-of-vigour", "item:guthix-staff", "item:spirit-cape",
   "item:chaotic-kiteshield", "item:farseer-kiteshield", "item:kalphite-rebounder",
   "item:ancient-lantern", "item:stalker-arrows", "item:dragon-claws", "item:off-hand-dragon-claw",
@@ -2987,7 +2766,6 @@ write(EQ_PATH, eqFile);
 write(INDEX_OUT, index);
 write(REPORT_OUT, report);
 
-// Re-fill empty bonuses from scraped stats after injects (never invents; never touches regions).
 {
   const merge = spawnSync(process.execPath, [join(ROOT, "scripts/merge-equipment-longtail-stats.mjs")], {
     cwd: ROOT,
@@ -2999,7 +2777,6 @@ write(REPORT_OUT, report);
   }
 }
 
-// pass6 BiS residual inject report
 {
   const pass6Ids = [
     "item:occultists-ring",
@@ -3009,7 +2786,6 @@ write(REPORT_OUT, report);
     "item:chaotic-kiteshield",
     "item:farseer-kiteshield",
     "item:kalphite-rebounder",
-    // pass9: ancient-rebounder dropped (phantom of ancient-lantern)
     "item:stalker-arrows",
     "item:dragon-claws",
   ];
@@ -3085,7 +2861,6 @@ write(REPORT_OUT, report);
   console.log(`pass6 BiS inject report: +${added.length} new / ${alreadyInCatalog.length} targets already present`);
 }
 
-// pass9 BiS residual inject report
 {
   const pass9Ids = [
     "item:custom-fit-trimmed-masterwork-melee-helm",
@@ -3188,7 +2963,6 @@ write(REPORT_OUT, report);
   console.log(`pass9 BiS inject report: +${added.length} new / ${alreadyInCatalog.length} targets already present`);
 }
 
-// pass3 catalog-inject report (deathwarden / obsidian / gemstone / GWD1 residual)
 {
   const pass3Prefixes = [
     "item:deathwarden-",

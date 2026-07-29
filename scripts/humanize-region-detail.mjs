@@ -1,13 +1,4 @@
-/**
- * Player-facing prose cleanup for regional data.
- * - Strip agent/audit voice from skilling, catalog, progression
- * - Rebuild Region combo from requiredRegions
- * - Soften false Hard REGION claims
- * - Clean equipment unlock.requirement "user ruling" prefixes
- * - Strip ex-aura name tags, empty Complements, broken · glue
- *
- * Run last in normalize:data so stamp/sync steps cannot re-poison copy.
- */
+/** Removes internal audit prose from player-facing regional data. */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -68,7 +59,6 @@ const STRIP_CLAUSES = [
   /\bPlanner checklist[^.·]*[.·]?/gi,
   /\bCloses ['"]?wave[^.·]*[.·]?/gi,
   /\bCloses the false[^.·]*[.·]?/gi,
-  // agent row/id preference voice
   /\bPrefer this id when[^.·]*[.·]?/gi,
   /\bPrefer this id[^.·]*[.·]?/gi,
   /\bprefer this id[^.·]*[.·]?/gi,
@@ -138,7 +128,6 @@ const STRIP_CLAUSES = [
   /\bfirst-classes the[^.·]*[.·]?/gi,
   /\bNamed\.\s*Parity fix only\.?\s*/gi,
   /\bParity fix only\.?\s*/gi,
-  // agent geography jargon
   /\bhard-owns\b/gi,
   /\bhard-gates?\b/gi,
   /\boptional_pressure(?:_regions)?\b/gi,
@@ -162,7 +151,6 @@ const STRIP_CLAUSES = [
 
 function stripInternalIds(text) {
   return text
-    // drop whole "region:id is …" agent compare clauses before bare-id wipe
     .replace(
       /\b(?:cross-region|multi-region|invention|combat|boss|asgarnia|kandarin|misthalin|fremennik|forinthry|desert|morytania|tirannwn|anachronia|karamja|havenhythe|prifddinas):[a-z0-9][a-z0-9:_-]*\s+(?:is|already|remains|lists|covers|owns|names|tracks)\b[^.·;]*/gi,
       "",
@@ -229,7 +217,6 @@ function polishPlayerCopy(seg) {
     .replace(/\bworks with greenfingers auras\b/gi, "works with Greenfingers passive")
     // undo over-eager history rewrite from earlier passes
     .replace(/\bReplaces the old Greenfingers passive\b/g, "Replaces the old Greenfingers aura")
-    // agent openers left after strip
     .replace(/^Was only a[^.·]*[.·]?\s*/i, "")
     .replace(/^Was buried[^.·]*[.·]?\s*/i, "")
     .replace(/^Was fully missing\.?\s*/i, "")
@@ -238,7 +225,6 @@ function polishPlayerCopy(seg) {
     .replace(/^Arc reward depth;\s*/i, "")
     .replace(/^this is the Ports hub itself\.?\s*/i, "Player-owned port hub. ")
     .replace(/^Player-owned port hub\.\s*/i, "Player-owned port hub. ")
-    // hanging em-dash before segment glue left by agent strip
     .replace(/\s*[—–]\s*$/g, "")
     .replace(/^[—–]\s*/g, "")
     .replace(/\s*[—–]\s*·/g, " ·")
@@ -272,7 +258,6 @@ function humanizeDetail(detail, requiredRegions = []) {
     }
     if (/^Region chain \(support pressure\):/i.test(seg)) continue;
 
-    // Soften "Region pressure: Hard Asgarnia..." invent noise when not hard-req
     if (/^Region pressure:/i.test(seg) && req.length) {
       for (const reg of REGIONS) {
         if (reqSet.has(reg)) continue;
@@ -306,7 +291,6 @@ function humanizeDetail(detail, requiredRegions = []) {
 
     for (const re of STRIP_CLAUSES) seg = seg.replace(re, " ");
     seg = stripInternalIds(seg);
-    // residual used as agent noun → drop the word when agent-ish
     seg = seg
       .replace(/\b(?:ranch |Orthen |Agility |Herblore |produce |machine |outfit head )?residual\b/gi, "")
       .replace(/\bpermanent residual\b/gi, "permanent unlock")
@@ -320,7 +304,6 @@ function humanizeDetail(detail, requiredRegions = []) {
     if (!seg || isNoiseSegment(seg)) continue;
     if (seg.length < 12 && !/^(Unlocks|Effects|Hard|Region)/i.test(seg)) continue;
 
-    // Fix bad openings left after stripping lead sentences
     seg = seg
       .replace(/^(Also|And)\s+/i, "")
       .replace(/^Pair with\b[^·]*(?:·\s*)?/i, "")
@@ -355,7 +338,6 @@ function humanizeDetail(detail, requiredRegions = []) {
     }
   }
 
-  // Shorten invent global note spam to one short clause
   if ((result.match(/not Asgarnia-locked/g) || []).length) {
     result = result
       .replace(/[^.·]*not Asgarnia-locked[^.·]*[.!]?\s*/gi, " ")
@@ -427,7 +409,6 @@ function humanizeRequirement(text) {
   return s || text;
 }
 
-// ─── skilling ────────────────────────────────────────────────────────────────
 const skPath = "data/research/regional-skilling-unlocks.json";
 const sk = read(skPath);
 let skChanged = 0;
@@ -458,7 +439,6 @@ for (const row of sk.records || []) {
 }
 write(skPath, sk);
 
-// ─── catalog ─────────────────────────────────────────────────────────────────
 const catPath = "data/research/catalog.json";
 const cat = read(catPath);
 let catChanged = 0;
@@ -491,7 +471,6 @@ for (const region of cat.regions || []) {
 }
 write(catPath, cat);
 
-// ─── progression ─────────────────────────────────────────────────────────────
 const progPath = "data/reference/progression-unlocks.json";
 const prog = read(progPath);
 let progChanged = 0;
@@ -525,7 +504,6 @@ for (const section of [
 }
 write(progPath, prog);
 
-// ─── equipment (after stamp — this script runs last) ─────────────────────────
 const eqPath = "data/combat/equipment.json";
 const eq = read(eqPath);
 let eqChanged = 0;

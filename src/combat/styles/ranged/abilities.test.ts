@@ -38,7 +38,6 @@ describe("ranged ability data", () => {
     expect(byId("rapid_fire").hits.every((h) => h.band.minPct === 75 && h.band.maxPct === 85)).toBe(
       true,
     );
-    // Rapid Fire: 8 channel hits every tick over 4.8s (8 ticks).
     expect(byId("rapid_fire").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
 
     expect(byId("bombardment").hits[0]!.band).toEqual({ minPct: 220, maxPct: 260 });
@@ -48,7 +47,6 @@ describe("ranged ability data", () => {
     expect(byId("deadshot").hits[0]!.band).toEqual({ minPct: 105, maxPct: 125 });
     expect(byId("deadshot_igneous").hits).toHaveLength(8);
     expect(byId("deadshot_igneous").hits[0]!.band).toEqual({ minPct: 55, maxPct: 75 });
-    // Deadshot / Snap Shot / Piercing Shot: wiki has no inter-hit tick schedule — leave unset.
     expect(byId("deadshot").hits.every((h) => h.tickOffset === undefined)).toBe(true);
     expect(byId("deadshot_igneous").hits.every((h) => h.tickOffset === undefined)).toBe(true);
     expect(byId("snap_shot").hits.every((h) => h.tickOffset === undefined)).toBe(true);
@@ -77,9 +75,7 @@ describe("ranged ability data", () => {
     expect(corr.hits[1]!.band).toEqual({ minPct: 72, maxPct: 88 });
     expect(corr.hits[4]!.band).toEqual({ minPct: 18, maxPct: 22 });
     expect(corr.hits.every((h) => h.critEligible === false)).toBe(true);
-    // DoT: 5 hits every 2 ticks (0, 2, 4, 6, 8).
     expect(corr.hits.map((h) => h.tickOffset)).toEqual([0, 2, 4, 6, 8]);
-    // Total band midpoints: 100+80+60+40+20 = 300% AVG.
     const input = { base: 1000, level: 99, accuracy: 1, crit: { chance: 0 } };
     const result = calculateAbility(corr, input);
     expect(result.expected).toBeCloseTo(3000);
@@ -127,7 +123,7 @@ describe("ranged ability data", () => {
 
     expect(byId("galeshot").adrenaline).toEqual({ gain: 9 });
     expect(byId("galeshot").cooldownSeconds).toBe(20.4);
-    expect(byId("galeshot").appliesBuff).toBe("searing_winds");
+    expect(byId("galeshot").appliesEffect).toBe("searing_winds");
 
     expect(byId("ricochet").adrenaline).toEqual({ gain: 9 });
     expect(byId("ricochet").cooldownSeconds).toBe(10.2);
@@ -155,7 +151,7 @@ describe("ranged ability data", () => {
     expect(byId("imbue_shadows").adrenaline).toEqual({ cost: 40 });
     expect(byId("imbue_shadows").cooldownSeconds).toBe(60);
     expect(byId("imbue_shadows").hits).toHaveLength(0);
-    expect(byId("imbue_shadows").buff).toBe("shadow_imbued");
+    expect(byId("imbue_shadows").stateEffect).toBe("shadow_imbued");
 
     expect(byId("deadshot").adrenaline).toEqual({ cost: 60 });
     expect(byId("deadshot").cooldownSeconds).toBe(30);
@@ -163,7 +159,7 @@ describe("ranged ability data", () => {
 
     expect(byId("deaths_swiftness").adrenaline).toEqual({ cost: 100 });
     expect(byId("deaths_swiftness").cooldownSeconds).toBe(60);
-    expect(byId("greater_deaths_swiftness").buff).toBe("greater_deaths_swiftness");
+    expect(byId("greater_deaths_swiftness").stateEffect).toBe("greater_deaths_swiftness");
   });
 
   it("does not ship CSM-removed abilities as calculable specs", () => {

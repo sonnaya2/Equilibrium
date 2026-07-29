@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * Board overlay: what you are looking at + designed zoom controls.
- *
- * Lives outside the WebGPU canvas so it is readable UI (not Html flicker under
- * demand-loop). Wiki opens the existing article dialog — not a second 3D panel.
- */
-
 import { useMemo, useState } from "react";
 import { activityIconPath, bossIconPath, regionCrestPath, upgradeIconPath } from "@/lib/gameArt";
 import { WikiArticleDialog, type WikiArticleTarget } from "@/components/WikiArticleDialog";

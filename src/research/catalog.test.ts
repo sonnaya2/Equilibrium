@@ -92,7 +92,6 @@ describe("research catalog", () => {
       expect(karNames.has(name), `karamja missing ${name}`).toBe(true);
     }
 
-    // Forinthry Dungeon is an areas pin, not a content major (see dataContentPresentation).
     const forNames = new Set((for_?.content ?? []).map((c) => c.name));
     for (const name of [
       "Mage Arena",
@@ -135,7 +134,8 @@ describe("research catalog", () => {
       "Masterwork Ranged Armour materials",
       "Jackalopes (BIS early–mid Hunter method)",
       "Charming moths / Highweald charm training",
-      "Shrine of Inanna Summoning",
+      "Shrine of Inanna and Spirit Wolves Summoning hub",
+      "Shaman's outfit",
       "Empowered Summoning obelisks",
       "Ivar, King of Bones uniques",
       "Silverquill, the Dreadhog uniques",

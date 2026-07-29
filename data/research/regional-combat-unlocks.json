@@ -3028,13 +3028,20 @@
       "category": "tier-100 ranged armour region pressure",
       "regionHints": [
         "havenhythe",
+        "asgarnia",
+        "tirannwn",
+        "anachronia",
+        "forinthry"
+      ],
+      "requiredRegions": [
+        "asgarnia",
+        "tirannwn",
         "anachronia"
       ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): havenhythe / anachronia",
-      "isRegionCombo": false,
-      "detail": "Support densify: do not hard-lock electives until full material recipe is normalized against Equilibrium. Havenhythe is starting — strong free value for ranged. · Prefer Havenhythe as available starting pressure; Anachronia elective only if BGH route is chosen. · Region chain (support pressure): havenhythe / anachronia · Effects: New 2026 ranged armour endgame competing with elite sirenic · Unlocks: Masterwork ranged cowl/body/chaps/vambraces/boots path, Apex Hide Armour intermediate path",
+      "regionRequirementType": "all_required",
+      "comboLabel": "Region combo (all required): Asgarnia + Tirannwn + Anachronia · Wilderness*",
+      "isRegionCombo": true,
+      "detail": "Hard Asgarnia + Tirannwn + Anachronia for Masterwork ranged armour. Wilderness* is optional pressure. · Effects: New 2026 ranged armour endgame competing with elite sirenic · Unlocks: Masterwork ranged cowl/body/chaps/vambraces/boots path, Apex Hide Armour intermediate path",
       "requirements": [
         "2026 Masterwork ranged equipment craft path",
         "Havenhythe Hunter / Apex Hide progression feeds materials (official starting-region power)",

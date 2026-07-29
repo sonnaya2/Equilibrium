@@ -4,19 +4,8 @@ import { useEffect, useRef, useSyncExternalStore } from "react";
 import { isRegionId, type RegionId } from "@/league";
 
 /**
- * What the map route is currently looking at.
- *
- * Separate from the build store on purpose: picks are persisted player state,
- * focus is view state and dies with the page. It lives outside React for the
- * same reason useBuild does — the ledger, the inspector, the flat board and the
- * canvas all read it, and they are not in one subtree.
- *
- * Two place slots, not one. `place` is the sticky selection a click makes and a
- * pointer-out must not erase — it is what the inspector scrolls to, what the
- * camera pushes toward, and what the deep link carries. `hover` is the transient
- * pointer highlight. Collapsing them (the original design) meant there was no
- * selection to sync against at all: moving the mouse off a marker cleared the
- * only state either side could have read.
+ * Route-local view state shared by the board, canvas, ledger, and inspector.
+ * `place` is sticky selection; `hover` is transient pointer state.
  */
 
 export interface MapFocus {
@@ -119,7 +108,6 @@ export function selectPlace(place: string | null) {
   emit({ ...state, framed: place === null ? state.framed : true, place });
 }
 
-/** The pointer. Transient, never touches the sticky selection. */
 let hoverRaf = 0;
 let hoverQueued: string | null | undefined;
 
@@ -162,19 +150,13 @@ export function setZoom(zoom: number) {
   if (next !== state.zoom) emit({ ...state, zoom: next });
 }
 
-/**
- * Flat board on or off, remembered.
- *
- * Written straight to localStorage rather than through the build store: this is
- * a view preference, not player progress, and it must not ride along in a share
- * hash or an export.
- */
+/** Persists a view-only preference outside build shares and exports. */
 export function setFlatBoard(flat: boolean) {
   if (state.flat === flat) return;
   try {
     window.localStorage.setItem(FLAT_STORAGE_KEY, flat ? "1" : "0");
   } catch {
-    // Private mode / storage disabled. The toggle still works for this session.
+    // Storage failure leaves the preference session-only.
   }
   emit({ ...state, flat });
 }
@@ -195,14 +177,8 @@ export function zoomRadiusMul(zoom: number = state.zoom): number {
 }
 
 /**
- * `#region=<id>[&place=<area>]`, both ways.
- *
- * replaceState, never push: framing a region is looking around a page, not
- * navigating, and a history entry per glance makes the back button useless.
- * replaceState also does not fire `hashchange`, so the read and write halves
- * cannot feed each other — no suppression flag needed here.
- *
- * Call once, from the route's client boundary.
+ * Synchronizes `#region=<id>[&place=<area>]` with replaceState. Framing does not
+ * create history entries, and replaceState avoids a hashchange feedback loop.
  */
 export function useMapHashSync() {
   const { focus } = useMapFocus();

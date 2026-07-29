@@ -7,7 +7,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("build shows region pick counter and Clear picks", async ({ page }) => {
-  // The first counter may be in either the navigation or planner.
   await expect(page.getByText("0/3").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Clear picks" })).toBeVisible();
 });
@@ -27,7 +26,6 @@ test("build caps elective regions without removing the fourth pick from focus", 
 });
 
 test("share hash with empty storage does not crash build", async ({ page }) => {
-  // Empty #b= is not a valid payload — page must still render the planner chrome.
   await page.goto("/build#b=");
   await expect(page.getByRole("button", { name: "Clear picks" })).toBeVisible();
   await expect(page.getByText(/0\/3|…\/3/).first()).toBeVisible();

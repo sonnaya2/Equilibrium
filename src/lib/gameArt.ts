@@ -1,7 +1,6 @@
 /**
  * Conventional paths to web-served game art. Art lands in public/game/<category>/
- * via scripts/publish-assets.mjs from the attributed assets/ manifest — never hotlink
- * the wiki, never invent substitute art.
+ * via scripts/publish-assets.mjs from the attributed assets/ manifest.
  */
 import {
   ACTIVITY_ICON_BY_SLUG,
@@ -72,9 +71,7 @@ export function abilityCategoryLabel(
   return category;
 }
 
-// ---------------------------------------------------------------------------
 // Data route resolvers — return null when unknown (prefer no icon over wrong).
-// ---------------------------------------------------------------------------
 
 /** Explicit name / label → published slug. Wrong icon is worse than none. */
 const DATA_ICON_ALIASES: Record<string, string> = {
@@ -628,7 +625,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "flash powder factory": "flash-powder-factory",
   "flash powder factory herblore outfits": "factory-outfit",
   "flash powder factory minigame and reward shop": "flash-powder",
-  "fletcher's outfit": "fletchers-outfit",
+  "fletcher's outfit": "fletching",
   "flow state (soma)": "flow-state",
   "focus storage": "focus-storage",
   "focused siphoning passive": "focused-siphoning",
@@ -1881,7 +1878,7 @@ export function isSceneryPermanentUnlock(path: string): boolean {
 
 /**
  * Map skill-hub / patch / course bags to a skill glyph path.
- * Used for major-unlock name wells — never invent scenery as a substitute.
+ * Used for major-unlock name wells; scenery is not a valid fallback.
  */
 function skillHubIconFromBag(bag: string): string | null {
   const hit = (skill: string) => skillIconPath(skill);

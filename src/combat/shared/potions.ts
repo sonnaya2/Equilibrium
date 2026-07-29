@@ -5,7 +5,7 @@ import type { SourceReference } from "../types";
  *   boost = floor(level × percent) + flat
  * where regular overload is 15% + 3, supreme 16% + 4, elder 17% + 5.
  *
- * Scope note (honest): the 4 Mar 2024 Core Combat Update removed the boosted-level
+ * The 4 Mar 2024 Core Combat Update removed the boosted-level
  * contribution to damage-per-level. These helpers return the temporary skill level
  * delta for accuracy / hit-chance composition. They do NOT multiply ability damage
  * and must not be fed into DPL as if boosted levels raised ability damage base.

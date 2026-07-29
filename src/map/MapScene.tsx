@@ -18,18 +18,7 @@ import { useMapFocus } from "./useMapFocus";
 
 extend(THREE as never);
 
-/**
- * One renderer per canvas element, cached outside React.
- *
- * A ref cannot do this job: StrictMode's dev replay unmounts and remounts on a
- * fresh fiber, so every ref is new and a second WebGPURenderer gets built over
- * the same canvas. The second `getContext('webgpu')` + configure() displaces the
- * first, which leaves frames drawing while R3F's event system is still bound to
- * the torn-down root — a board that renders and cannot be hovered or clicked.
- * Production never replays, which is why only dev was ever broken.
- *
- * Keyed weakly so a discarded canvas takes its renderer with it.
- */
+/** One renderer per canvas across StrictMode replays, weakly keyed by canvas lifetime. */
 const RENDERERS = new WeakMap<HTMLCanvasElement, Promise<THREE.WebGPURenderer>>();
 
 type RendererParams = ConstructorParameters<typeof THREE.WebGPURenderer>[0];
@@ -68,7 +57,7 @@ function InvalidateOnBuild() {
   return null;
 }
 
-/** Demand loop is silent until something invalidates — kick once on mount. */
+/** Starts the demand loop on mount. */
 function KickFirstFrame() {
   const invalidate = useThree((s) => s.invalidate);
   useEffect(() => {
@@ -80,34 +69,18 @@ function KickFirstFrame() {
 }
 
 export default function MapScene() {
-  // Gate on a real adapter, not just the API — three would otherwise fall back
-  // to WebGL2 silently, and the honest-unsupported state is the spec.
+  // Require a real WebGPU adapter; Three otherwise falls back to WebGL2.
   const [supported, setSupported] = useState<boolean | null>(null);
-  // Adapter can exist while WebGPURenderer.init() still fails (driver, flags).
-  // Fall through to FlatBoard rather than leave a blank/broken canvas.
+  // Renderer initialization failures use the flat fallback.
   const failRef = useRef(() => setSupported(false));
   failRef.current = () => setSupported(false);
   const { focus, unframe } = useMapFocus();
   const reducedMotion = useReducedMotion();
-  // Exactly one renderer, and it must be built from R3F's own canvas — the
-  // factory's `props` carry it, so constructing without them makes three spin up
-  // a second, detached canvas and the board renders where nobody can see it.
-  //
-  // The promise is cached rather than the renderer. StrictMode replays
-  // mount/unmount in dev, and an un-cached async factory races two
-  // `renderer.init()` calls against the same canvas: the later one reconfigures
-  // the GPUCanvasContext so frames keep drawing, while R3F's events stay bound
-  // to the root that was torn down. That is a board which renders perfectly and
-  // cannot be hovered or clicked, and it only ever reproduced in dev — which is
-  // why the production build was fine the whole time.
-  //
-  // R3F never disposes a custom gl (its forceContextLoss is a WebGL concept
-  // WebGPURenderer lacks), so disposal is ours, deferred past the replay.
-  // The WeakMap owns the renderer's lifetime now: when React drops the canvas,
-  // the entry goes with it. No manual dispose, so nothing can tear down a
-  // renderer that the replayed mount is still driving.
+  // Cache the renderer promise per R3F canvas. StrictMode can replay mounts while
+  // init is pending; a second init on the same canvas leaves events on a stale root.
+  // R3F does not dispose custom WebGPU renderers, so the WeakMap owns the lifetime.
 
-  // Sub-760px: FlatBoard is the planner (comments + mobile cost). Skip WebGPU.
+  // Skip WebGPU when the flat board is the active mobile planner.
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 760px)");
@@ -133,11 +106,7 @@ export default function MapScene() {
       .catch(() => setSupported(false));
   }, [narrow]);
 
-  /**
-   * Chosen 2D. Checked before the adapter probe and before mounting anything,
-   * so picking flat never pays for a WebGPU context — and, unlike the
-   * unsupported branch, it says nothing about WebGPU, because nothing is wrong.
-   */
+  // Explicit flat mode bypasses adapter probing and fallback messaging.
   if (focus.flat) {
     return (
       <div className="map-layout__scene">

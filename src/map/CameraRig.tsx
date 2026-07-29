@@ -1,12 +1,9 @@
 "use client";
 
 /**
- * Designed camera with restricted mouse + WASD control.
- *
- * Still spherical (azimuth / elevation / radius / target) — never free OrbitControls.
+ * Restricted spherical camera with mouse and WASD controls.
  * Mouse: LMB drag orbit, RMB/MMB drag pan, wheel zoom steps.
- * Keys: WASD pan on the board plane (camera-relative). Everything is clamped so
- * you cannot fly under the board, spin forever, or pan off the map.
+ * Keys: WASD pan on the board plane. Elevation, azimuth, radius, and pan are clamped.
  */
 
 import { useEffect, useMemo, useRef } from "react";
@@ -41,7 +38,7 @@ const SURFACE_Y = 0.012;
 const PARALLAX_AZIMUTH = 0.02;
 const PARALLAX_ELEVATION = 0.01;
 
-/** User orbit offsets from the selected view (radians). */
+/** Orbit offsets from the selected view, in radians. */
 const MAX_AZ_OFF = 0.95;
 const MAX_EL_OFF = 0.42;
 /** Pan target max from designed target (world units on 2u board). */

@@ -82,7 +82,7 @@ describe("necromancy ability data", () => {
   it("Living Death is a buff-only ultimate at 100% adrenaline", () => {
     const ld = NECROMANCY_ABILITIES.find((a) => a.id === "living_death")!;
     expect(ld.hits).toHaveLength(0);
-    expect(ld.buff).toBe("living_death");
+    expect(ld.stateEffect).toBe("living_death");
     expect(ld.adrenaline?.cost).toBe(100);
   });
 
@@ -121,7 +121,7 @@ describe("necromancy ability data", () => {
       expect(a.category, id).toBe("enhanced");
       expect(a.hits, id).toEqual([]);
       expect(a.adrenaline?.cost, id).toBe(0);
-      expect(a.buff, id).toBe(id);
+      expect(a.stateEffect, id).toBe(id);
       expect(a.source.verifiedAt, id).toBeTruthy();
     }
   });

@@ -14,7 +14,6 @@ const AREAS_BY_REGION = new Map(
   getResearchCatalog().regions.map((region) => [region.id, region.areas]),
 );
 
-/** Every content + upgrade row name a region carries, lowercased. */
 const ROWS_BY_REGION = new Map(
   getResearchCatalog().regions.map((region) => [
     region.id,
@@ -24,7 +23,6 @@ const ROWS_BY_REGION = new Map(
   ]),
 );
 
-/** Catalog areas with no PLACE_ANCHORS entry, grouped by region. */
 export function unanchoredAreasByRegion(): Map<RegionId, string[]> {
   const out = new Map<RegionId, string[]>();
   for (const [region, areas] of AREAS_BY_REGION) {
@@ -37,8 +35,6 @@ export function unanchoredAreasByRegion(): Map<RegionId, string[]> {
 
 describe("placeAnchors", () => {
   it("names only areas the catalog already carries", () => {
-    // Anchors are positions for facts we hold. A name that does not resolve is
-    // an invented place, which is the one thing this repo never ships.
     for (const anchor of PLACE_ANCHORS) {
       const areas = AREAS_BY_REGION.get(anchor.region);
       expect(areas, anchor.region).toBeDefined();
@@ -47,8 +43,6 @@ describe("placeAnchors", () => {
   });
 
   it("names only sites some content or upgrade row actually mentions", () => {
-    // The site half of the same rule: a pin has to be a position for a fact we
-    // already hold. A site nothing references is a place we invented.
     for (const anchor of SITE_ANCHORS) {
       const rows = ROWS_BY_REGION.get(anchor.region);
       expect(rows, anchor.region).toBeDefined();
@@ -86,9 +80,6 @@ describe("placeAnchors", () => {
   });
 
   it("anchors every catalog area (inventory of gaps)", () => {
-    // After the place-anchor expansion pass, every catalog area is a real place
-    // with a board position. If a new area is added without an anchor, this
-    // fails with the region → missing list rather than silently dropping it.
     const gaps = unanchoredAreasByRegion();
     expect(Object.fromEntries(gaps), "unanchored catalog areas").toEqual({});
   });

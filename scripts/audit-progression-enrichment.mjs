@@ -73,10 +73,7 @@ if (!JSON.stringify(seers?.rewards ?? []).includes("+2 percentage points")) fail
 const frem = byId(progression.account_unlocks, "achievements:fremennik-combat");
 if (!JSON.stringify(frem?.rewards ?? []).includes("10%") || !JSON.stringify(frem?.rewards ?? []).includes("5%")) fail("Fremennik combat rewards drifted");
 const tir = byId(progression.account_unlocks, "achievements:tirannwn-combat");
-// Rewards are a string in most rows and an object in a few, so match on the
-// serialised row the way the Seers and Fremennik checks above do. Reading
-// row.effect only worked on the object shape: against a string it produced
-// "undefined", matched nothing, and failed an entry that was actually correct.
+// Reward rows may be strings or objects.
 if ((tir?.rewards ?? []).filter((row) => JSON.stringify(row).includes("5%")).length < 4) fail("Tirannwn combat reward set incomplete");
 const keris = byId(progression.account_unlocks, "achievements:desert-keris");
 if (!keris?.effect?.includes("25%") || !keris?.effect?.includes("5%")) fail("Hard Desert Keris reward drifted");
@@ -105,7 +102,7 @@ if (!salve?.effect?.includes("20%") || !salve?.quest_dependencies?.includes("Lai
 const asylum = byId(progression.equipment_models, "broken-home:asylum-surgeons-ring");
 const asylumRegions = [...(asylum?.required_regions || []), ...(asylum?.region_hints || [])].map(String);
 if (!asylum?.requirements?.some((row) => row.includes("37 minutes"))) fail("Asylum surgeon's ring acquisition drifted");
-// User rule 2026-07-26: hard Misthalin (not unresolved Misthalin/Morytania boundary).
+// The Archaeology Guild is in Misthalin.
 if (!asylumRegions.includes("misthalin") && asylum?.region_hint !== "misthalin") fail("Asylum surgeon's ring should map to Misthalin");
 if (asylum?.region_status === "unresolved_misthalin_morytania_boundary") fail("Asylum surgeon's ring still unresolved boundary");
 const split = byId(progression.equipment_models, "dungeoneering:split-dragontooth-necklace-current");

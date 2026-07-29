@@ -1,17 +1,12 @@
 import { damagePotential } from "../core/damagePotential";
 
 /**
- * Generic target model. Boss-specific anything stays out, forever: settings stop at
- * Defence, armour, affinity, a Damage Potential override, HP%, and the flags modifiers
- * check (vulnerability, poisonable, Slayer category, undead/dragon/demon).
- *
- * Verified formula chain (docs/combat-changelog.md §1.1 Hit chance, §5.2):
+ * Generic-target accuracy model:
  *   f(x) = x³/1250 + 4x + 40
  *   player accuracy  = f(style level) + 2.5 × f(weapon tier)
  *   target armour    = armour stat + f(Defence level)
  *   hit chance       = affinity × accuracy / armour + additive modifiers, capped at 100%
- * Post-2 Mar 2026 default NPC affinities: Weak 70 / Same 60 / Strong 50, specific
- * weakness 90. Necromancy uses the Same value.
+ * Default affinities are Weak 70, Same 60, Strong 50, and specific weakness 90.
  */
 
 export const AFFINITY = {

@@ -1,16 +1,8 @@
 "use client";
 
 /**
- * Selective bloom, and nothing else.
- *
- * MRT splits emissive from output and only the emissive channel blooms. At rest
- * every plate is emissive zero, so the pass is cheap — but the RenderPipeline
- * still owns presentation. Skipping `rp.render()` leaves a blank canvas (the
- * demand loop's default path is not a safe substitute once the pipeline exists).
- *
- * Disposal is manual and complete: RenderPipeline.dispose() frees only the
- * output quad's material, so the scene pass render target and the bloom pass
- * would leak GPU textures on every route change without this.
+ * Selective MRT bloom. RenderPipeline owns presentation even with zero emissive
+ * output. Scene and bloom render targets require explicit disposal.
  */
 
 import { useEffect, useMemo } from "react";

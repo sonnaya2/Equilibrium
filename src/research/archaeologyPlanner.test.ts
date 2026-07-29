@@ -28,7 +28,6 @@ describe("archaeologyPlanner loaders", () => {
     expect(matrix.length).toBeGreaterThanOrEqual(80);
     expect(matrix.length).toBe(museumMatrixSource.collections.length);
     expect(getUnobtainableMuseumCollections()).toEqual([]);
-    // Harvest Hollow / Eep seasonals are stripped — not Equilibrium permanent content
     expect(
       matrix.some((row) => /hollow|bounty of bones|horrible hollow/i.test(String(row.name))),
     ).toBe(false);

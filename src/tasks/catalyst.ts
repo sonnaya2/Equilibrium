@@ -222,7 +222,7 @@ export async function fetchCatalystCompletionRates(): Promise<{
   live: boolean;
 }> {
   try {
-    // Next extends fetch with `next.revalidate`; keep timeout so a hung wiki doesn't block the page forever.
+    // Bound stalled Wiki requests independently of Next's revalidation cache.
     const response = await fetch(CATALYST_COMPLETION_URL, {
       headers: {
         "User-Agent": "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)",

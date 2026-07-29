@@ -14,12 +14,6 @@ import {
   recordsByRegion,
 } from "./index";
 import type { CombatDataset, RevolutionBarRecord } from "./records";
-import { resolveBar } from "./specs";
-import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { MAGIC_ABILITIES } from "../styles/magic/abilities";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
-import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 
 const datasets: Array<[string, CombatDataset<{ id: string; sources: { verifiedAt: string }[] }>]> = [
   ["abilities", combatAbilities],
@@ -29,13 +23,6 @@ const datasets: Array<[string, CombatDataset<{ id: string; sources: { verifiedAt
   ["prayers", combatPrayers],
 ];
 
-/** Optional multi/hybrid fields may land on bars before the type is updated. */
-type BarExtras = {
-  target?: "single" | "multi";
-  mode?: "revo++" | "hybrid";
-};
-type RevolutionBarWithMeta = RevolutionBarRecord & BarExtras;
-
 const CORE_BAR_IDS = [
   "melee-dual-wield",
   "melee-two-handed",
@@ -44,18 +31,8 @@ const CORE_BAR_IDS = [
   "necromancy",
 ] as const;
 
-const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
-  [
-    ...MELEE_ABILITIES,
-    ...RANGED_ABILITIES,
-    ...MAGIC_ABILITIES,
-    ...NECROMANCY_ABILITIES,
-    volleyOfSouls(3),
-  ].map((spec) => [spec.id, spec]),
-);
-
-function bars(): RevolutionBarWithMeta[] {
-  return combatRevolutionBars.records as RevolutionBarWithMeta[];
+function bars(): RevolutionBarRecord[] {
+  return combatRevolutionBars.records;
 }
 
 describe("canonical combat datasets", () => {
@@ -90,15 +67,13 @@ describe("canonical combat datasets", () => {
     }
   });
 
-  it("pins the documented adrenaline exceptions (§5.4 basics rule, §5.7, §4.4)", () => {
-    // All basics generate 9% unless a source names a different value.
+  it("pins basic adrenaline and its named exceptions", () => {
     expect(abilityById("melee:dismember")?.adrenaline).toEqual({ kind: "gain", percent: 0 });
     expect(abilityById("melee:adaptive-strike")?.adrenaline).toEqual({ kind: "gain", percent: 12 });
     expect(abilityById("melee:chaos-roar")?.adrenaline).toEqual({ kind: "gain", percent: 9 });
     expect(abilityById("melee:chaos-roar")?.category).toBe("basic");
     expect(abilityById("melee:punish")?.category).toBe("basic");
     expect(abilityById("ranged:ricochet")?.adrenaline).toEqual({ kind: "gain", percent: 9 });
-    // Unsourced adrenaline stays absent rather than manufactured.
     expect(abilityById("magic:runic-charge")?.adrenaline).toBeUndefined();
   });
 });
@@ -121,7 +96,6 @@ describe("combat data accessors", () => {
     expect(locked.some((record) => record.id === "magic:greater-sonic-wave")).toBe(true);
     expect(locked.every((record) => record.unlock?.regions.includes("misthalin"))).toBe(true);
     expect(misthalin.length).toBeGreaterThan(locked.length);
-    // kandarin gets the quest-unlocked Death's Swiftness; anachronia does not.
     expect(
       recordsByRegion(combatAbilities.records, "kandarin", { regionLockedOnly: true }).map((r) => r.id),
     ).toContain("ranged:deaths-swiftness");
@@ -146,10 +120,8 @@ describe("combat data accessors", () => {
         expect(recordIds.has(slot.abilityId) || ENGINE_IDS.has(slot.abilityId)).toBe(true);
       }
     }
-    // Necro bar stays in the catalogue even when most slots are unsourced (abilityId null).
     const necro = combatRevolutionBars.records.find((bar) => bar.id === "necromancy");
     expect(necro).toBeTruthy();
-    // Supported only once necro bands beyond Volley are in the ability corpus.
     if (necro?.supported) {
       expect(necro.slots.every((s) => s.abilityId != null)).toBe(true);
     } else {
@@ -163,15 +135,15 @@ describe("combat data accessors", () => {
     const ruination = combatPrayers.records.find((record) => record.id === "curse:ruination");
     expect(ruination?.level).toBe(99);
     expect(ruination?.unlock?.type).toBe("drop");
-    // Overlay merged into the catalogue row, not duplicated.
     expect(combatPrayers.records.filter((record) => record.name === "Ruination")).toHaveLength(1);
   });
 });
 
-/** Golden BiS region tags — planner home from wiki League geography. */
 function regionsOf(id: string): string[] {
   return combatEquipment.records.find((r) => r.id === id)?.unlock?.regions ?? [];
 }
+
+const equipmentIds = new Set(combatEquipment.records.map((record) => record.id));
 
 describe("equipment BiS region tags", () => {
   const DRYGORE_IDS = [
@@ -235,7 +207,6 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf("item:seismic-wand")).toContain("asgarnia");
   });
 
-  // Misthalin jewellery / necro BiS
   it.each([
     "item:luck-of-the-dwarves",
     "item:reaper-necklace",
@@ -249,7 +220,6 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf(id), id).toContain("misthalin");
   });
 
-  // Illuminated god books — Citharede Abbey (Desert). User ruling: all illuminated books = Desert hard.
   it.each(
     combatEquipment.records
       .filter((r) => r.id.startsWith("item:illuminated-book-"))
@@ -261,51 +231,39 @@ describe("equipment BiS region tags", () => {
     expect(regions, id).not.toContain("fremennik");
   });
 
-  // Hand cannon — Fremennik (not Forinthry / Daemonheim wilderness framing)
   it("item:hand-cannon is fremennik (not forinthry)", () => {
     const regions = regionsOf("item:hand-cannon");
     expect(regions).toContain("fremennik");
     expect(regions).not.toContain("forinthry");
   });
 
-  // Havenhythe Apex hide (2026 BGH ranged tank)
   it("item:apex-hide-body includes havenhythe", () => {
-    if (!equipmentIds.has("item:apex-hide-body")) return;
     expect(regionsOf("item:apex-hide-body")).toContain("havenhythe");
   });
 
-  // Masterwork ranged t100 armour (user MW multi-region)
   it("item:masterwork-ranged-body multi-region MW ruling", () => {
-    if (!equipmentIds.has("item:masterwork-ranged-body")) return;
     const regions = regionsOf("item:masterwork-ranged-body");
-    expect(regions).toEqual(expect.arrayContaining(["anachronia", "forinthry", "kandarin"]));
+    expect(regions).toEqual(["asgarnia", "tirannwn", "anachronia"]);
+    expect(combatEquipment.records.find((r) => r.id === "item:masterwork-ranged-body")?.unlock?.requirement).toContain("Wilderness*");
   });
 
-  // Masterwork magic t100 — hard-owns Asgarnia + Desert among multi-region stamp
   it("item:masterwork-magic-hat contains asgarnia and desert", () => {
-    if (!equipmentIds.has("item:masterwork-magic-hat")) return;
     const regions = regionsOf("item:masterwork-magic-hat");
     expect(regions).toEqual(expect.arrayContaining(["asgarnia", "desert"]));
   });
 
-  // Stalker arrows — Forinthry (stalker dungeon / hexhunter ammo)
   it("item:stalker-arrows includes forinthry", () => {
-    if (!equipmentIds.has("item:stalker-arrows")) return;
     expect(regionsOf("item:stalker-arrows")).toContain("forinthry");
   });
 
-  // Off-hand dragon claw — Misthalin (tormented demons / dclaw pair)
   it("item:off-hand-dragon-claw includes misthalin", () => {
-    if (!equipmentIds.has("item:off-hand-dragon-claw")) return;
     expect(regionsOf("item:off-hand-dragon-claw")).toContain("misthalin");
   });
 
-  // Asgarnia
   it("item:seasingers-hood includes asgarnia", () => {
     expect(regionsOf("item:seasingers-hood")).toContain("asgarnia");
   });
 
-  // Forinthry
   it.each([
     "item:ruinous-rapier",
     "item:lava-whip",
@@ -313,18 +271,14 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf(id), id).toContain("forinthry");
   });
 
-  // Dragon Rider amulet — One of a Kind / Varrock Museum (Misthalin), not Forinthry
   it("item:dragon-rider-amulet includes misthalin", () => {
     expect(regionsOf("item:dragon-rider-amulet")).toContain("misthalin");
   });
 
-  // Kandarin
   it("item:spear-of-annihilation includes kandarin", () => {
     expect(regionsOf("item:spear-of-annihilation")).toContain("kandarin");
   });
 
-  // Pass3 mid-tier densify + necro sets — only assert ids present in equipment.json
-  const equipmentIds = new Set(combatEquipment.records.map((r) => r.id));
   const PASS3_REGION_PINS: Array<[string, string]> = [
     ["item:fire-cape", "karamja"],
     ["item:berserker-ring", "fremennik"],
@@ -335,11 +289,9 @@ describe("equipment BiS region tags", () => {
   ];
   const pass3Cases: Array<[string, string]> = [
     ...PASS3_REGION_PINS.filter(([id]) => equipmentIds.has(id)),
-    // deathwarden pieces if injected → misthalin
     ...combatEquipment.records
       .filter((r) => r.id.startsWith("item:deathwarden"))
       .map((r): [string, string] => [r.id, "misthalin"]),
-    // any deathdealer piece → misthalin
     ...combatEquipment.records
       .filter((r) => r.id.startsWith("item:deathdealer"))
       .map((r): [string, string] => [r.id, "misthalin"]),
@@ -348,7 +300,6 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf(id), id).toContain(region);
   });
 
-  // Desert armour / gloves
   it.each([
     "item:achto-teralith-cuirass",
     "item:teralith-cuirass",
@@ -357,7 +308,6 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf(id), id).toContain("desert");
   });
 
-  // Pass5+6 golden BiS region pins — only assert ids present in equipment.json
   const PASS5_6_REGION_PINS: Array<[string, string]> = [
     ["item:razorback-gauntlets", "desert"],
     ["item:illuminated-book-of-law", "desert"],
@@ -373,23 +323,18 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf(id), id).toContain(region);
   });
 
-  // Bare deathdealer t70 removed — craft base into t90, not loadout residual
   it("has no bare deathdealer t70 residual (pass5+6)", () => {
     const bareT70 = combatEquipment.records.filter(
       (r) =>
         r.id.startsWith("item:deathdealer") &&
         (r.id.includes("-t70") || r.id.endsWith("-70") || /deathdealer-(hood|robe|gloves|boots|leggings)?$/.test(r.id)),
     );
-    // Only t90 (or other retained tiers) should remain — no bare / t70 deathdealer rows
     expect(
       bareT70.map((r) => r.id),
       "bare or t70 deathdealer should be removed",
     ).toEqual([]);
   });
 
-  // Pass6+7 golden BiS region pins — only assert ids present in equipment.json
-  // dracolich/elite-dracolich = Forinthry (Zemouregal & Vorkath); deathguard-t90 Misthalin ladder only;
-  // fire cape Karamja; occultist's ring Anachronia; RoV Forinthry; razorback/illuminated Desert; hand-cannon Fremennik.
   const PASS6_7_REGION_PINS: Array<[string, string]> = [
     ["item:dracolich-helm", "forinthry"],
     ["item:dracolich-body", "forinthry"], // hauberk
@@ -418,7 +363,6 @@ describe("equipment BiS region tags", () => {
     expect(regionsOf(id), id).toContain(region);
   });
 
-  // Death guard residual is t90-only (pass6 hygiene stripped base/t80)
   it("deathguard ladder is misthalin t90 only — no base/t70/t80 residual (pass6+7)", () => {
     const deathguard = combatEquipment.records.filter((r) => r.id.includes("deathguard"));
     expect(
@@ -434,7 +378,6 @@ describe("equipment BiS region tags", () => {
     expect(equipmentIds.has("item:deathguard-t80")).toBe(false);
   });
 
-  // Dracolich family hard-owns Forinthry (never re-stamp Misthalin)
   it.each(
     combatEquipment.records
       .filter((r) => r.id.includes("dracolich"))
@@ -446,7 +389,7 @@ describe("equipment BiS region tags", () => {
   });
 });
 
-describe("revolution bars multi / hybrid structural contract", () => {
+describe("revolution bar contract", () => {
   it("keeps the core single-target Revo++ bar ids", () => {
     const ids = new Set(bars().map((bar) => bar.id));
     for (const id of CORE_BAR_IDS) {
@@ -468,17 +411,13 @@ describe("revolution bars multi / hybrid structural contract", () => {
     }
   });
 
-  it("when target is present on any bar, every bar's target is single|multi", () => {
-    const withTarget = bars().filter((bar) => bar.target != null);
-    if (withTarget.length === 0) return; // field not landed yet
+  it("every bar has a valid target", () => {
     for (const bar of bars()) {
       expect(["single", "multi"], `${bar.id} target`).toContain(bar.target);
     }
   });
 
-  it("when mode is present on any bar, every bar's mode is revo++|hybrid|basics", () => {
-    const withMode = bars().filter((bar) => bar.mode != null);
-    if (withMode.length === 0) return; // field not landed yet
+  it("every bar has a valid mode", () => {
     for (const bar of bars()) {
       expect(["revo++", "hybrid", "basics"], `${bar.id} mode`).toContain(bar.mode);
     }
@@ -497,42 +436,6 @@ describe("revolution bars multi / hybrid structural contract", () => {
   it("catalogue is single-target only", () => {
     for (const bar of bars()) {
       expect(bar.target, bar.id).toBe("single");
-    }
-  });
-
-  it("hybrid bars have slots.length > revolutionSize", () => {
-    const hybrids = bars().filter((bar) => bar.mode === "hybrid");
-    if (hybrids.length === 0) return;
-    for (const bar of hybrids) {
-      expect(
-        bar.slots.length,
-        `${bar.id}: hybrid must expose manual tail beyond revo window`,
-      ).toBeGreaterThan(bar.revolutionSize);
-    }
-  });
-
-  it("when multi-target bars exist, at least one is present and well-formed", () => {
-    const multi = bars().filter((bar) => bar.target === "multi");
-    if (multi.length === 0) return;
-    expect(multi.length).toBeGreaterThanOrEqual(1);
-    for (const bar of multi) {
-      expect(bar.revolutionSize).toBeGreaterThanOrEqual(1);
-      expect(bar.slots.length).toBeGreaterThan(0);
-      expect(bar.style).toBeTruthy();
-    }
-  });
-
-  it("hybrid revo window is resolveBar(...).slice(0, revolutionSize)", () => {
-    const hybrids = bars().filter((bar) => bar.mode === "hybrid");
-    if (hybrids.length === 0) return;
-    for (const bar of hybrids) {
-      const resolved = resolveBar(bar, ENGINE_SPECS);
-      expect(resolved).toHaveLength(bar.slots.length);
-      const revoWindow = resolved.slice(0, bar.revolutionSize);
-      expect(revoWindow).toHaveLength(bar.revolutionSize);
-      // Manual tail is the remainder — structural only, no damage pins.
-      expect(resolved.slice(bar.revolutionSize).length).toBe(bar.slots.length - bar.revolutionSize);
-      expect(revoWindow.every((slot, i) => slot.name === bar.slots[i].name)).toBe(true);
     }
   });
 });

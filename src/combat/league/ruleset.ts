@@ -12,8 +12,7 @@ export interface LeagueLoadout {
 /**
  * League modifiers for a loadout. Empty until relic/blessing effects are verified —
  * see data/reference/unknowns.json ("equilibrium_blessing_effects",
- * "equilibrium_relic_tiers_2_to_7"). The layer exists and is wired; it contributes
- * nothing rather than faking numbers.
+ * "equilibrium_relic_tiers_2_to_7").
  */
 export function leagueModifiers(_loadout: LeagueLoadout): CombatModifier[] {
   return [];

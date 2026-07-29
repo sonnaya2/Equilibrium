@@ -1,18 +1,6 @@
 /**
- * Where a plate sits, in world y. Shared because the plate and the markers on
- * it need the same answer — a copy that drifted would float pins off the surface.
- *
- * Sea level is y = 0, and at rest every coast meets it. A plate's cap clears the
- * water by `REST_CLEARANCE`, which is a couple of screen pixels at the overview:
- * enough that no wave washes over Gielinor, not enough to read as anything but
- * flush. That is the point — at rest this has to be the RuneScape world map,
- * with the sea where the sea is.
- *
- * The thickness is real the whole time; it is just underwater. Framing a region
- * lifts it out, and the cut earth under it is what makes the board physical.
- * Nothing else moves in y — a sidelined region recedes through its material, not
- * by sinking, or the shoreline would come unstuck from the map everywhere at
- * once.
+ * Shared plate and marker height. Rest clearance exceeds ocean swell; framing
+ * lifts one plate while all other shorelines remain fixed.
  */
 
 import { isRegionUnlocked, type BuildState, type RegionId } from "@/league";
@@ -21,16 +9,12 @@ import { isRegionUnlocked, type BuildState, type RegionId } from "@/league";
 export const REST_CLEARANCE = 0.009;
 /** How far the framed region rises out of the sea. */
 export const FOCUS_LIFT = 0.02;
-/** A sealed region settles just into the waterline. Barely, on purpose. */
+/** A sealed region settles just below the waterline. */
 export const LOCKED_DROP = 0.0015;
 /** ExtrudeGeometry adds its bevel outside the requested depth. */
 export const BEVEL = 0.0035;
 
-/**
- * Plate thickness — what you see when a region lifts. Islands are thinner than
- * the continent for the same reason a relief map's islands are: a thick slab
- * under a small silhouette reads as a chess piece.
- */
+/** Plate thickness, reduced for small islands to preserve relief-map proportions. */
 export const PLATE_DEPTH: Record<RegionId, number> = {
   misthalin: 0.031,
   asgarnia: 0.031,

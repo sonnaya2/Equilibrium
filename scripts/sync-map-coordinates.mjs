@@ -1,26 +1,10 @@
 /**
- * Check every board pin against the RuneScape Wiki's own coordinate.
+ * Checks board pins against RuneScape Wiki coordinates. Pass `--write` to apply
+ * surface-coordinate corrections; report mode is the default.
  *
- *   node scripts/sync-map-coordinates.mjs            report only
- *   node scripts/sync-map-coordinates.mjs --write    apply the safe corrections
- *
- * The pins in gameCoords.ts were placed by hand and a good number of them are
- * tens or hundreds of tiles out. The Wiki carries the real number in the
- * location infobox, so this reads it rather than anyone re-guessing:
- *
- *   {{Map|x=3212|y=3443}}                  surface, straight from the infobox
- *   {{Maplink|mapID=669|x=4487|y=6265}}    a dungeon's own space — not surface
- *
- * The discriminator is MAP_BOUNDS. An instanced or underground map numbers its
- * tiles in its own space, and those numbers land nowhere near the surface crop,
- * so anything outside the board's own bounds is rejected rather than pasted in.
- * Places that only *have* such a coordinate (Araxxor, the Blood altar, City of
- * Um) need a surface *entrance*, which is a judgement call and is reported for a
- * human rather than invented here.
- *
- * Responses are cached under .wiki-cache/ (untracked) so a re-run costs nothing
- * and the wiki gets hit once per page. One request a second, real User-Agent —
- * runescape.wiki asks for both.
+ * MAP_BOUNDS rejects dungeon and instance coordinate spaces. Entrance placement
+ * remains manual when a page has no surface coordinate. Responses use the
+ * untracked .wiki-cache directory and the Wiki's one-request-per-second limit.
  */
 
 import fs from "node:fs";
@@ -34,7 +18,7 @@ const CACHE = path.join(ROOT, ".wiki-cache/coords");
 
 /** Mirrors MAP_BOUNDS. A coordinate outside this is not on the surface map. */
 const BOUNDS = { minX: 1792, minY: 2560, maxX: 4864, maxY: 4608 };
-/** Report anything further than this from what we ship. */
+/** Maximum drift from the committed coordinate. */
 const DRIFT_TILES = 40;
 /** Below this the wiki and the table are saying the same thing. */
 const AGREE_TILES = 12;
@@ -99,7 +83,6 @@ const leagueRegion = (text) => {
   return m ? m[1].trim() : null;
 };
 
-// ------------------------------------------------------------------ run ----
 
 const agreed = [];
 const drifted = [];
@@ -162,15 +145,8 @@ console.log(`\nNO PAGE (${noPage.length}):`);
 for (const n of noPage) console.log(`  ${n.region}/${n.area}`);
 
 /**
- * The wiki carries a `leagueRegion` on most location infoboxes — its own answer
- * to which League region a place belongs to. That is the closest thing to
- * authoritative region data that exists, so it is worth diffing against our
- * tags rather than trusting either side blindly.
- *
- * Names differ between the two: the wiki writes "Wilderness" for what the
- * catalog calls forinthry, and "Desert" or "Kharidian Desert" interchangeably.
- * The alias table is a naming bridge, not a judgement — a disagreement it does
- * not cover is a real one.
+ * Normalizes Wiki `leagueRegion` values for comparison with local region tags.
+ * Unaliased disagreements remain audit failures.
  */
 const ALIASES = {
   forinthry: ["wilderness", "forinthry"],
@@ -198,13 +174,7 @@ for (const m of mismatched) {
   console.log(`  ${(m.region + "/" + m.area).padEnd(40)} wiki says "${m.league}"`);
 }
 
-/**
- * Commit what the wiki said, so the border gate can run offline.
- *
- * This is the only sourced statement of region membership that exists, and it
- * is what makes "did the partition put this place in the right region" a test
- * rather than an opinion. plates.test.ts reads it; nothing at runtime does.
- */
+/** Writes sourced Wiki region membership for the offline border audit. */
 const LEAGUE_OUT = path.join(ROOT, "data/map/wiki-league-regions.json");
 fs.writeFileSync(
   LEAGUE_OUT,
@@ -227,18 +197,10 @@ fs.writeFileSync(
 );
 console.log(`\n[coords] wrote ${withLeague.length} sourced league regions to data/map/`);
 
-// ---------------------------------------------------------------- write ----
-
 if (process.argv.includes("--write")) {
   /**
-   * Bounds alone are not enough to prove a coordinate is on the surface. Some
-   * instanced maps number their tiles right through the surface range —
-   * Zanaris reads 2433,4432 and the Corporeal Beast's cave 2971,4382, both of
-   * which look perfectly plausible and are both 600+ tiles from the real place.
-   *
-   * So a rewrite also has to land on actual land, inside the plate of the region
-   * that owns the pin. That is cheap, objective, and rejects exactly the class
-   * of coordinate that would otherwise sail through.
+   * Bounds overlap some instanced maps, so writable coordinates must also land
+   * on terrain inside their region plate.
    */
   const plates = JSON.parse(
     fs.readFileSync(path.join(ROOT, "public/map/region-plates.json"), "utf8"),
@@ -258,13 +220,7 @@ if (process.argv.includes("--write")) {
   const inOwnRegion = (region, c) =>
     (plates.regions[region]?.rings ?? []).some((ring) => inRing(c.x, c.y, ring));
 
-  /**
-   * Where a place has no map of its own, the wiki hands back its parent's
-   * anchor — Troll Stronghold answers with Death Plateau's point. Taking that
-   * stacks two pins on one tile and makes one of them unclickable, which is the
-   * same defect the audit flags. A rewrite may not land on a point already in
-   * use.
-   */
+  /** Rejects parent-page coordinates already occupied by another pin. */
   const taken = new Map();
   for (const row of rows) {
     const p = placeMapCoord(row.region, row.area);

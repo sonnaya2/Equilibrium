@@ -40,7 +40,7 @@
     "test:e2e": "playwright test",
     "sync:combat": "node scripts/sync-combat-data.ts",
     "sync:league:disabled": "node scripts/sync-league-data.ts",
-    "sync:assets": "node scripts/sync-assets-expanded.mjs && node scripts/publish-assets.mjs",
+    "sync:assets": "node scripts/sync-assets.mjs && node scripts/publish-assets.mjs",
     "sync:quests": "node scripts/sync-quest-regions.mjs",
     "sync:quests:auto": "node scripts/sync-equilibrium-auto-quests.mjs",
     "sync:planner": "node scripts/sync-planner-expansions.mjs && node scripts/sync-planner-supplements.mjs",
@@ -49,7 +49,6 @@
     "sync:map:coords": "node scripts/sync-map-coordinates.mjs",
     "audit:map:anchors": "node scripts/audit-map-anchors.mjs",
     "audit:assets-provenance": "node scripts/audit-public-game-provenance.mjs",
-    "register:assets-provenance": "node scripts/register-local-assets-provenance.mjs",
     "optimize:images": "node scripts/optimize-game-images.mjs",
     "build:icon-maps": "node scripts/_build-icon-maps.mjs && node scripts/_emit-data-icon-index.mjs",
     "optimize:map": "node scripts/optimize-map-images.mjs"

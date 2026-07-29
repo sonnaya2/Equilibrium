@@ -29,8 +29,6 @@ function orderings(picks: Triple): Triple[] {
 
 describe("canonical blessings data contract", () => {
   it("pins god tiers and reset count to confirmed Equilibrium structure", () => {
-    // Absolute pins — not only equality with JSON, so a bad normalize cannot
-    // silently redefine the God Tier positions or reset budget.
     expect(GOD_TIERS).toEqual([4, 8]);
     expect(BLESSING_RESET_COUNT).toBe(3);
   });

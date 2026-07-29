@@ -36,7 +36,6 @@ describe("calculateHit", () => {
     const r = calculateHit({ ...baseInput, accuracy: 0.7 });
     expect(r.potential).toBeCloseTo(0.7);
     expect(r.min).toBe(770);
-    // floor(1300 * 0.7): the float product is 909.999..., so the scaled hit floors to 909.
     expect(r.max).toBe(909);
   });
 
@@ -59,7 +58,6 @@ describe("calculateHit", () => {
       modifiers: [berserk],
       crit: { chance: 0, guaranteed: true },
     });
-    // floor(1100 * 1.75) = 1925 -> crit floor(1925 * 1.5) = 2887
     expect(r.critMin).toBe(2887);
   });
 });

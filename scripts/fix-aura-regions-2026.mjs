@@ -122,7 +122,6 @@ const REDISTRIBUTED = {
   },
 };
 
-// ─── equipment: DELETE historical combat auras (do not mark/keep for loadout) ─
 const eqPath = "data/combat/equipment.json";
 const eq = read(eqPath);
 const beforeEq = (eq.records || []).length;
@@ -140,7 +139,6 @@ if (existsSync(aurasPath)) {
   aurasDeleted = true;
 }
 
-// ─── equipment-icons / slugs ─────────────────────────────────────────────────
 const iconsPath = "data/combat/equipment-icons.json";
 let iconN = 0;
 try {
@@ -185,7 +183,6 @@ try {
   /* optional */
 }
 
-// ─── equipment-region-index: drop aura keys ──────────────────────────────────
 const idxPath = "data/research/equipment-region-index.json";
 let idxN = 0;
 try {
@@ -220,7 +217,6 @@ try {
   /* optional file */
 }
 
-// ─── progression redistributed unlocks ───────────────────────────────────────
 const progPath = "data/reference/progression-unlocks.json";
 const prog = read(progPath);
 let progN = 0;
@@ -241,7 +237,6 @@ for (const section of Object.keys(prog)) {
 }
 write(progPath, prog);
 
-// ─── skilling invent augmentor: never region-lock ────────────────────────────
 const skPath = "data/research/regional-skilling-unlocks.json";
 const sk = read(skPath);
 let skN = 0;
@@ -275,7 +270,6 @@ for (const region of cat.regions || []) {
 }
 write(catPath, cat);
 
-// ─── Emit /data Browse + Unlocks surface rows into skilling + catalog ────────
 /** Player-facing rows for the Data workbench region rail. */
 const BROWSE_ROWS = [
   {

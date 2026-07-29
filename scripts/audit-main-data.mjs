@@ -1,9 +1,8 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
 const TODAY = new Date().toISOString().slice(0, 10);
-const REPORT_PATH = "data/reference/data-audit-report.json";
 const failures = [];
 const stats = {
   files: 0,
@@ -90,7 +89,7 @@ function inspect(file, value, path = "$", key = "") {
   }
 }
 
-/** One-shot agent dumps / gap reports — not normalize inputs. Skip so audits stay green. */
+/** Exclude ad hoc audit dumps and gap reports from normalization inputs. */
 function isScrapedEphemeral(file) {
   if (!file.startsWith("scraped-data/")) return false;
   if (file.startsWith("scraped-data/archive/")) return true;
@@ -104,14 +103,12 @@ function isScrapedEphemeral(file) {
   if (/\/data-icon-audit\.json$/i.test(file)) return true;
   if (/\/equipment-sync-report-/i.test(file)) return true;
   if (/\/audit-schema-hygiene-/i.test(file)) return true;
-  if (/\/bench-tasks-wiki-/i.test(file)) return true;
   return false;
 }
 
 const jsonFiles = [...walk(join(ROOT, "data")), ...walk(join(ROOT, "scraped-data"))]
   .filter((absolute) => {
     const file = relative(ROOT, absolute).replaceAll("\\", "/");
-    if (file === REPORT_PATH) return false;
     if (isScrapedEphemeral(file)) return false;
     return true;
   })
@@ -195,29 +192,6 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-const report = {
-  snapshot_date: TODAY,
-  status: "passed",
-  scope: ["data/**/*.json", "scraped-data/**/*.json"],
-  checks: [
-    "JSON parse integrity",
-    "duplicate stable IDs within arrays",
-    "HTTPS and non-placeholder source URLs",
-    "canonical Asgarnia naming in generated data",
-    "unresolved and unrevealed state truthfulness",
-    "Relic and Blessing tier shapes",
-    "Blessing paths, God Tiers and reset count",
-    "task-record array shape",
-    "permanent-unlock section shape, IDs and provenance",
-    "removed combat unlocks excluded from active progression"
-  ],
-  stats,
-  note: "Domain-specific progression, 2026 remaster, Aura overhaul, reference, boundary, Masterwork and supplement audits run through npm run audit:all-data."
-};
-const target = join(ROOT, REPORT_PATH);
-mkdirSync(dirname(target), { recursive: true });
-writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`);
-
 console.log([
   "MAIN DATA AUDIT PASSED",
   `JSON files: ${stats.files}`,
@@ -227,5 +201,4 @@ console.log([
   `Source URLs inspected: ${stats.sourceUrls}`,
   `Unresolved/provisional rows preserved: ${stats.unresolvedRows}`,
   `Explicitly unverified rows preserved: ${stats.unverifiedRows}`,
-  `Report: ${REPORT_PATH}`,
 ].join("\n"));

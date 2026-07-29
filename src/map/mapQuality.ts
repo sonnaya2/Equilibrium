@@ -1,12 +1,7 @@
 "use client";
 
 /**
- * Development switches, read once from the query string.
- *
- * Deliberately not a settings panel: these exist so geometry can be proved
- * correct and a suspect layer can be turned off in isolation, not so a visitor
- * can detune their own map. Nothing here is persisted and nothing renders UI.
- *
+ * Development-only query switches, read once and never persisted:
  *   /map?debugGeometry=1   plate outlines, seams, anchors, region ids
  *   /map?topDown=1         lock the camera overhead, for comparing with the raster
  *   /map?no=water,relief,markers,bloom

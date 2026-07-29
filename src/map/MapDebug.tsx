@@ -1,16 +1,8 @@
 "use client";
 
 /**
- * Proof that the geometry agrees with the map — `/map?debugGeometry=1`.
- *
- * Everything the board is built from, drawn flat over the raster it was cut
- * from: the plate outlines, the shared seams, the region anchors and every place
- * pin. If an outline does not sit on a coast here, the fix is the geometry, and
- * no amount of lighting will hide it. Pair with `?topDown=1` to compare against
- * the raster without perspective in the way.
- *
- * Dev aid, not a feature: no styling, no controls, and it only exists when the
- * query flag asks for it.
+ * Draws plate outlines, seams, anchors, and pins over the source raster for
+ * `/map?debugGeometry=1`. Pair with `?topDown=1` for orthographic comparison.
  */
 
 import { useEffect, useMemo } from "react";

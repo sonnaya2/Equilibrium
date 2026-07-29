@@ -12,7 +12,6 @@ describe("decodeHtmlEntities", () => {
     expect(() => decodeHtmlEntities("&#1114112;")).not.toThrow();
     expect(decodeHtmlEntities("&#1114112;")).toBe("");
     expect(decodeHtmlEntities("&#x110000;")).toBe("");
-    // Leading zeros / max+1 still must not throw.
     expect(decodeHtmlEntities("&#0000000;")).toBe("\u0000");
   });
 

@@ -14,8 +14,8 @@ import {
   VOLLEY_MIN_SOULS,
   deathGrasp,
   fingerOfDeath,
+  isNecromancyAbility,
   volleyOfSouls,
-  type NecromancyAbilitySpec,
 } from "./abilities";
 import { FINGER_OF_DEATH_MAX_STACKS, NECROSIS_CAP, TOUCH_OF_DEATH_NECROSIS } from "./necrosis";
 import { RESIDUAL_SOUL_CAP, SOULBOUND_LANTERN_BONUS_CAP } from "./souls";
@@ -28,27 +28,14 @@ import {
 } from "./conjures";
 
 /**
- * Necromancy rotation resources + Living Death window + conjure summons.
- *
- * Caps (wiki Residual Soul / Necrosis, verified 2026-07-26):
+ * Necromancy state limits verified on 2026-07-26:
  *   residualSouls  0..3 (0..5 with soulbound lantern)
  *   necrosisStacks 0..12
  *   livingDeath    30s / 50 ticks from cast tick (active while tick < until)
  *
- * On cast (applyNecroOnCast): soulGain / necrosisGain / soulCost, FoD spends up
- * to 6 Necrosis, Death Grasp spends all, Living Death activates and resets
- * Touch of Death + Death Skulls CDs, conjure_* summons spirits (SP3 timers).
- * Under LD: basic +2 Necrosis, ToD +6% adren, FoD 1.5× band, Death Skulls CD → 17 ticks.
- * Command Putrid Zombie dismisses the zombie (explosion sacrifices duration).
- *
- * Call site (simulate performCast):
- *   1. resolveNecromancyAbility(ability, necro, tick) before damage
- *   2. necroCanCast / necroAdrenalineCost for gates (souls + conjure presence)
- *   3. applyNecroOnCast → patch necro + conjures + adren bonus + clear ToD/DS CDs
- *   4. deathSkullsCooldownTicks when starting Death Skulls CD
- *
- * Spectral Scythe soulChance is not rolled here (deterministic EV sim — no free
- * 0.25 soul injection without a documented EV policy).
+ * Living Death grants +2 Necrosis on basics, +6% adrenaline on Touch of Death,
+ * 1.5× Finger of Death damage, and a 17-tick Death Skulls cooldown.
+ * Spectral Scythe soul chance is excluded from the deterministic simulation.
  */
 
 export interface NecroRotationState {
@@ -149,66 +136,45 @@ export function necroAdrenalineCost(
   return ability.adrenaline?.cost ?? 0;
 }
 
-/**
- * Soul Strike / Volley soul gate + conjure presence gates.
- * Commands require their spirit; conjure_* only when that spirit is down.
- * Pass conjures + tick when available (simulate / revo); omitted → soul-only gate.
- */
 export function necroCanCast(
   ability: AbilitySpec,
   necro: NecroRotationState,
   conjures?: ConjureState,
   tick = 0,
 ): boolean {
-  if (ability.style !== "necromancy") return true;
-  const n = ability as NecromancyAbilitySpec;
-  if (n.id === "volley_of_souls") {
+  if (!isNecromancyAbility(ability)) return true;
+  if (ability.id === "volley_of_souls") {
     if (necro.residualSouls < VOLLEY_MIN_SOULS) return false;
   } else {
-    const cost = n.soulCost ?? 0;
+    const cost = ability.soulCost ?? 0;
     if (cost > 0 && necro.residualSouls < cost) return false;
   }
   if (conjures !== undefined) {
-    if (!conjureCanCast(n.id, conjures, tick)) return false;
-  } else if (COMMAND_REQUIRES_CONJURE[n.id]) {
-    // Without conjure state, command casts are gated closed (no free phantom damage).
+    if (!conjureCanCast(ability.id, conjures, tick)) return false;
+  } else if (COMMAND_REQUIRES_CONJURE[ability.id]) {
     return false;
   }
   return true;
 }
 
-/**
- * Resource + Living Death + conjure transitions for one successful necromancy cast.
- *
- * Order: gains → spends → Living Death activate + ToD/DS CD clear list → conjure
- * summon / command dismiss → ToD LD adren bonus.
- * Ability adrenaline gain/cost stays in simulate; only the +6% ToD Living Death
- * bonus is returned here as adrenalineBonus.
- *
- * Wire from createCastContext.performCast after adren accounting:
- *   const patch = applyNecroOnCast(state.necro, ability, readyTick, state.conjures);
- *   state = { ...state, necro: patch.necro, conjures: patch.conjures ?? state.conjures, ... };
- */
 export function applyNecroOnCast(
   necroIn: NecroRotationState,
   ability: AbilitySpec,
   castTick: number,
   conjuresIn?: ConjureState,
 ): NecroOnCastPatch {
-  if (ability.style !== "necromancy") {
+  if (!isNecromancyAbility(ability)) {
     return { necro: necroIn, adrenalineBonus: 0, clearCooldownIds: [] };
   }
 
-  const spec = ability as NecromancyAbilitySpec;
   let necro = { ...necroIn };
   let adrenalineBonus = 0;
   let clearCooldownIds: string[] = [];
   let conjures = conjuresIn;
   const underLd = livingDeathActive(necro, castTick);
 
-  // --- gains ---
-  let necrosisGain = spec.necrosisGain ?? 0;
-  if (underLd && (spec.autoAttack || spec.id === "necromancy_basic")) {
+  let necrosisGain = ability.necrosisGain ?? 0;
+  if (underLd && (ability.autoAttack || ability.id === "necromancy_basic")) {
     necrosisGain += LIVING_DEATH_BASIC_NECROSIS;
   }
   if (necrosisGain > 0) {
@@ -217,48 +183,43 @@ export function applyNecroOnCast(
       necrosisStacks: Math.min(NECROSIS_CAP, necro.necrosisStacks + necrosisGain),
     };
   }
-  if (spec.soulGain) {
+  if (ability.soulGain) {
     necro = {
       ...necro,
-      residualSouls: Math.min(residualSoulCapFor(necro), necro.residualSouls + spec.soulGain),
+      residualSouls: Math.min(residualSoulCapFor(necro), necro.residualSouls + ability.soulGain),
     };
   }
 
-  // --- spends ---
-  if (spec.id === "finger_of_death") {
+  if (ability.id === "finger_of_death") {
     necro = {
       ...necro,
       necrosisStacks: Math.max(0, necro.necrosisStacks - FINGER_OF_DEATH_MAX_STACKS),
     };
-  } else if (spec.id === "death_grasp") {
+  } else if (ability.id === "death_grasp") {
     necro = { ...necro, necrosisStacks: 0 };
-  } else if (spec.id === "volley_of_souls") {
+  } else if (ability.id === "volley_of_souls") {
     necro = { ...necro, residualSouls: 0 };
-  } else if (spec.soulCost && spec.soulCost > 0) {
+  } else if (ability.soulCost && ability.soulCost > 0) {
     necro = {
       ...necro,
-      residualSouls: Math.max(0, necro.residualSouls - spec.soulCost),
+      residualSouls: Math.max(0, necro.residualSouls - ability.soulCost),
     };
   }
 
-  // --- Living Death cast ---
-  if (spec.buff === "living_death") {
+  if (ability.stateEffect === "living_death") {
     necro = activateLivingDeath(necro, castTick);
     clearCooldownIds = ["touch_of_death", "death_skulls"];
   }
 
-  // --- conjure summon / command dismiss ---
   if (conjures !== undefined) {
-    const afterSummon = applyConjureCast(conjures, spec.id, castTick);
+    const afterSummon = applyConjureCast(conjures, ability.id, castTick);
     if (afterSummon !== conjures) conjures = afterSummon;
-    // Command Putrid Zombie: explosion sacrifices the spirit.
-    if (spec.id === "command_putrid_zombie") {
+    if (ability.id === "command_putrid_zombie") {
       conjures = dismissConjure(conjures, "putrid_zombie");
     }
   }
 
-  // ToD under LD: +6% adrenaline (wiki).
-  if (underLd && spec.id === "touch_of_death") {
+  if (underLd && ability.id === "touch_of_death") {
     adrenalineBonus = TOUCH_OF_DEATH_LIVING_DEATH_ADRENALINE_BONUS;
   }
 

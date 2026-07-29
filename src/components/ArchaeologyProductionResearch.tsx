@@ -21,7 +21,6 @@ import {
 } from "@/research/archaeologyPlanner";
 import { MASTERWORK_CHAIN_TABS } from "./MasterworkChainResearch";
 
-// Loader drops the stale guildmaster-second-loadout claim (see guild stale_data_correction).
 const relicSystemRows = researchRows(
   getRelicSystemProgression().map((row) => ({
     ...row,

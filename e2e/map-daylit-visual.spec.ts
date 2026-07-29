@@ -1,10 +1,6 @@
 import { expect, test } from "@playwright/test";
 import path from "node:path";
 
-/**
- * Visual capture for production /map vs Daylit remaster lab.
- * Screenshots land under test-results/daylit/ — not pinned dates, no golden pixel assert.
- */
 
 const SHOT_DIR = path.join("test-results", "daylit");
 
@@ -38,10 +34,8 @@ test.describe("map daylit visual", () => {
     await page.reload();
 
     const mode = await waitBoard(page);
-    // Soft: canvas when WebGPU works; fallback is also a valid honest state.
     expect(mode === "canvas" || mode === "fallback").toBeTruthy();
 
-    // Let intro / first paint settle when WebGPU mounts.
     if (mode === "canvas") await page.waitForTimeout(2500);
 
     await page.screenshot({
@@ -55,7 +49,6 @@ test.describe("map daylit visual", () => {
       });
     }
 
-    // Production defaults focus to Misthalin (useMapFocus INITIAL).
     const detail = page.locator('section[aria-label="Region detail"]');
     const misthalin = page.getByRole("button", { name: /^Misthalin/ });
     await expect(misthalin).toBeVisible();
@@ -66,10 +59,6 @@ test.describe("map daylit visual", () => {
       fullPage: true,
     });
 
-    // After the board mounts, the side detail panel often intercepts pointer
-    // events over the ledger (actionability fail). Dispatch click on the
-    // button node so focusRegion still runs without a force-hit that can
-    // blank the WebGPU surface.
     const asgarnia = page.getByRole("button", { name: /^Asgarnia/ });
     await asgarnia.evaluate((el) => (el as HTMLButtonElement).click());
     await expect(detail.locator(".panel-head")).toContainText("Asgarnia", { timeout: 10_000 });
@@ -80,11 +69,9 @@ test.describe("map daylit visual", () => {
       fullPage: true,
     });
 
-    // Page must stay usable — no crash overlay, main content still present.
     await expect(page.getByRole("navigation")).toBeVisible();
     await expect(page.getByRole("button", { name: /^Misthalin/ })).toBeVisible();
 
-    // Soft canvas presence when available (do not fail headless without WebGPU).
     if (mode === "canvas") {
       await expect(page.locator("canvas").first()).toBeVisible();
     }

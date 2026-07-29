@@ -1,19 +1,6 @@
 /**
- * Everything the catalog knows about one region, sorted into buckets you can
- * put behind tabs.
- *
- * The catalog's `kind` and `category` are freeform prose written by the sync
- * scripts — 44 distinct content kinds and over 100 upgrade categories across
- * eleven regions, things like "Elder God Wars Dungeon / skilling boss" and
- * "tier-90 augmentable Woodcutting tool cross-region chain". That is good
- * provenance and useless as a facet: a filter built straight off it gives you
- * twelve one-row options. So classify here, and keep the original string on the
- * row so the table can still show what the source actually said.
- *
- * Classification is deliberately keyword-order-sensitive and every rule is
- * listed rather than inferred. A row lands in exactly one bucket;
- * regionDetail.test.ts holds that, so a new kind from a future sync shows up as
- * a failing test rather than silently vanishing from a tab.
+ * Maps freeform catalog kinds and categories into exclusive UI buckets.
+ * Original values remain on each row; tests reject unclassified synced values.
  */
 
 import type { RegionId } from "@/league";
@@ -88,13 +75,10 @@ const SKILL_NAMES = new Set(
 
 function classifyContent(kind: string): ContentBucket {
   const k = kind.toLowerCase();
-  // Bossing wins over skilling: "Elder God Wars Dungeon / skilling boss" is a
-  // boss you fight, not a skilling method, and the Slayer/combat hybrids read
-  // the same way to a player planning a kill.
+  // Boss terms take precedence in mixed labels such as "skilling boss".
   if (BOSS_WORDS.some((word) => k.includes(word))) return "boss";
   if (k.includes("skilling") || SKILL_NAMES.has(k)) return "skilling";
   if (SKILL_NAMES.has(k.split(/[/ ]/)[0])) return "skilling";
-  // Everything left is a place or a hub — Falador, Brimhaven area, City of Um.
   return "area";
 }
 

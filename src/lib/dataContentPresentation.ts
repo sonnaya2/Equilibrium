@@ -1,9 +1,3 @@
-/**
- * /data Browse presentation helpers — pure, no React.
- * Type vs Location split, reward token icons, map deep links.
- * Never invent places; unpinned rows stay unlinked (no region-centroid fallback).
- */
-
 import type { RegionId } from "@/league";
 import { isRegionId } from "@/league";
 import {
@@ -17,21 +11,16 @@ import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import { pinForHighlight } from "@/map/data/placeAnchors";
 import { hasRewardIconAlias, resolveRewardIconLabel } from "@/lib/rewardIconAliases";
 
-/** Default chip cap; Chaotic/Ruinous weapon rows need room for the full set. */
-/** Chip strip capacity — high enough for full brawling-glove sets (13) + overflow. */
+/** Allows the complete 13-piece brawling-glove set plus overflow. */
 export const REWARD_ICON_CAP = 14;
-/** Display clip for Rewards/access prose — icons always resolve from full source. */
 export const REWARD_DISPLAY_MAX = 96;
 
-/** Trailing noise stripped before resolve (label kept for tooltip). */
 const TRAILING_NOISE =
   /\s+(?:components?|equipment|upgrades?|armour sets?|armor sets?|armours?|armors?|weapons?|sets?|materials?|path|ladder|residual)$/i;
 
-/** Tokens that must never become reward chips. */
 const TOKEN_NOISE =
   /^(?:including|plus|source|see|also|etc|unlocks|effects|level|t\d+|divination\s+\d|enhanced glove(?:s)?|glove path|materials?|components?|equipment|upgrades?|uniques?|progression|access|and more)$/i;
 
-/** Closed skill / type tokens that must never become Location labels. */
 const SKILL_TYPES = new Set([
   "agility",
   "archaeology",
@@ -61,7 +50,6 @@ const SKILL_TYPES = new Set([
   "woodcutting",
 ]);
 
-/** kind → display Type when kind is purely taxonomic. */
 const PURE_TYPE: Record<string, string> = {
   boss: "Boss",
   bossing: "Boss",
@@ -101,18 +89,12 @@ export function mapRegionHref(regionId: RegionId): string {
   return `/map#region=${regionId}`;
 }
 
-/**
- * Normalize reward/access prose for tokenization.
- * Prefer **Unlocks:** (item lists) over **Effects:** (prose) when both exist.
- * Does **not** clip — callers clip display text separately.
- */
 export function contentRewardsSource(text: string): string {
   let s = String(text ?? "")
     .replace(/\s+/g, " ")
     .trim();
   if (!s || s === "—") return "—";
 
-  // Highest ROI: Unlocks lists beat Effects sentences (Bandos/Armadyl residuals).
   const unlocksHit = s.match(/(?:^|\s·\s)Unlocks:\s*([^·]+)/i);
   const effectsHit = s.match(/(?:^|\s·\s)Effects:\s*([^·]+)/i);
   if (unlocksHit?.[1]?.trim()) {
@@ -120,8 +102,6 @@ export function contentRewardsSource(text: string): string {
   } else if (effectsHit?.[1]?.trim()) {
     s = effectsHit[1].trim();
   } else if (s.includes(" · ")) {
-    // No Unlocks/Effects label: prefer a middot clause that looks like a comma item list
-    // (GWD2 "reputation prose · Dragon Rider lance, Cywir…").
     const parts = s
       .split(/\s·\s/)
       .map((p) => p.trim())
@@ -138,7 +118,6 @@ export function contentRewardsSource(text: string): string {
     if (listish) s = listish;
   }
 
-  // Drop trailing status / region-pressure clauses after a middot.
   const stop = s.search(
     /\s·\s(?:Region status|Region pressure|Confidence|Notes?|Working taxonomy|Hard |Soft )\b/i,
   );
@@ -147,13 +126,11 @@ export function contentRewardsSource(text: string): string {
   s = s
     .replace(/\s*·?\s*Source:.*$/i, "")
     .replace(/^(?:Unlocks|Effects):\s*/i, "")
-    // Telos-style "Location: Heart of Gielinor · Seren godbow, …"
     .replace(/^Location:\s*[^·,;]+(?:\s·\s)?/i, "")
     .trim();
   return s || "—";
 }
 
-/** Soft display clip for Rewards/access cell text (icons use full source). */
 export function clipRewardDisplay(text: string, max = REWARD_DISPLAY_MAX): string {
   const s = String(text ?? "")
     .replace(/\s+/g, " ")
@@ -168,23 +145,16 @@ export function clipRewardDisplay(text: string, max = REWARD_DISPLAY_MAX): strin
   return `${base}${ellipsis}`;
 }
 
-/**
- * Split reward/access prose into icon-resolvable labels.
- * Commas / middots / semicolons / pipes; " and " for short list style.
- * Refuses to explode long prose without list separators into garbage tokens.
- */
 export function contentRewardTokens(text: string): string[] {
   const raw = contentRewardsSource(text);
   if (!raw || raw === "—") return [];
 
   const hasListSep = /[,;·|]/.test(raw) || /\s+and\s+/i.test(raw);
-  // Long narrative without list separators → no icon spam (prefer empty chips).
   if (!hasListSep) {
     if (raw.length > 72 || raw.split(/\s+/).length > 10) return [];
     return cleanTokenParts([raw]);
   }
 
-  // Prefer comma/middot splits; only use " and " on short list-like strings.
   const useAnd = raw.length <= 140 && (raw.match(/,/g) ?? []).length <= 6;
   const splitter = useAnd ? /\s*[,;·|]\s*|\s+and\s+/i : /\s*[,;·|]\s*/;
   const parts = raw
@@ -204,7 +174,6 @@ export function contentRewardTokens(text: string): string[] {
   return cleanTokenParts(parts);
 }
 
-/** Expand "Bandos helmet / chestplate / tassets" into separate short item labels. */
 function expandSlashList(label: string): string[] {
   if (!label.includes(" / ")) return [label];
   const parts = label
@@ -212,20 +181,17 @@ function expandSlashList(label: string): string[] {
     .map((p) => p.trim())
     .filter((p) => p.length >= 2);
   if (parts.length < 2) return [label];
-  // Long prose with slashes (not armour pieces) — keep first segment only.
   if (parts.some((p) => p.split(/\s+/).length > 5) || parts.length > 8) {
     return [parts[0]!];
   }
   const head = parts[0]!;
   const headWords = head.split(/\s+/);
-  // "Bandos helmet" → prefix "Bandos" for bare "chestplate" / "tassets".
   if (headWords.length >= 2) {
     const prefix = headWords.slice(0, -1).join(" ");
     return parts.map((p) =>
       p.toLowerCase().startsWith(prefix.toLowerCase()) ? p : `${prefix} ${p}`,
     );
   }
-  // "Hood / garb / boots of subjugation" → shared trailing "of <set>" on bare heads.
   const last = parts[parts.length - 1]!;
   const ofSuffix = last.match(/\s+(of\s+\S+(?:\s+\S+)?)$/i);
   if (ofSuffix) {
@@ -246,11 +212,9 @@ function cleanTokenParts(parts: string[]): string[] {
       const key = label.toLowerCase();
       if (seen.has(key)) continue;
       if (TOKEN_NOISE.test(key)) continue;
-      // Drop pure noise after stripping "upgrades/components/…"
       const strippedKey = label.replace(TRAILING_NOISE, "").trim().toLowerCase();
       if (!strippedKey || TOKEN_NOISE.test(strippedKey)) continue;
       if (/^(?:level|t\d+)/i.test(label)) continue;
-      // Pure prose clause (too many small words, no known reward alias).
       if (
         label.split(/\s+/).length >= 8 &&
         !hasRewardIconAlias(key) &&
@@ -265,10 +229,6 @@ function cleanTokenParts(parts: string[]): string[] {
   return out;
 }
 
-/**
- * Resolve one reward token to a published icon path, or null.
- * Prefer explicit reward path aliases, then upgrade / equipment. Reject skill glyphs and scenery.
- */
 export function resolveRewardIcon(label: string): string | null {
   const raw = label.replace(/\s+/g, " ").trim();
   if (!raw) return null;
@@ -278,7 +238,6 @@ export function resolveRewardIcon(label: string): string | null {
   if (stripped && stripped.toLowerCase() !== raw.toLowerCase()) attempts.push(stripped);
 
   for (const attempt of attempts) {
-    // Full-path alias map (inventory art only; equipment must be in EQUIPMENT_OK).
     const aliased = acceptRewardPath(resolveRewardIconLabel(attempt));
     if (aliased) return aliased;
 
@@ -288,17 +247,12 @@ export function resolveRewardIcon(label: string): string | null {
     const equip = equipmentIconPath(slugifyIconLabel(attempt));
     if (equip) return equip;
 
-    // Last resort: entity resolver, then reject weak skill/scenery hits.
     const entity = dataEntityIconPath({ name: attempt });
     if (entity && isStrictRewardPath(entity)) return entity;
   }
   return null;
 }
 
-/**
- * Accept a mapped path only when it is reward-safe.
- * Equipment paths must also exist in the closed EQUIPMENT_OK set (no 404 chips).
- */
 function acceptRewardPath(src: string | null): string | null {
   if (!src || !isStrictRewardPath(src)) return null;
   const equipMatch = src.match(/^\/game\/combat\/equipment\/([^/]+)\.png$/i);
@@ -308,14 +262,11 @@ function acceptRewardPath(src: string | null): string | null {
   return src;
 }
 
-/** Reward chips: inventory / upgrade art only — never skill caps or place scenery. */
 function isStrictRewardPath(src: string): boolean {
-  // Multi-MB place dumps under permanent-unlocks look broken as tiny chips.
   if (isSceneryPermanentUnlock(src)) return false;
   if (src.startsWith("/game/upgrades/")) return true;
   if (src.startsWith("/game/combat/equipment/")) return true;
   if (src.startsWith("/game/combat/abilities/")) return true;
-  // Explicit combat utility icons sometimes live under combat/ without equipment/
   if (src.startsWith("/game/combat/") && !src.includes("/abilities/")) return true;
   return false;
 }
@@ -338,22 +289,15 @@ export function contentRewardIcons(
 }
 
 export type PresentedContentRewards = {
-  /** Full normalized reward source (unclipped). */
   sourceText: string;
-  /** Clipped prose for the table cell. */
   displayText: string;
   tokens: string[];
   icons: { label: string; src: string }[];
-  /** Count of successfully resolved icons beyond the display cap. Unresolved never inflate this. */
   overflowResolved: number;
   /** @deprecated alias of overflowResolved for older call sites */
   moreCount: number;
 };
 
-/**
- * Present reward/access prose as icons + overflow.
- * Pass the **full** (unclipped) reward text so the last unique is not truncated away.
- */
 export function presentContentRewards(
   textFull: string,
   cap = REWARD_ICON_CAP,
@@ -390,17 +334,12 @@ function inferTypeFromName(name: string): string {
   if (/\b(course|wisps?|farming|fishing|hunter|dig site|altar|ritual)\b/.test(n)) return "Skilling";
   if (/\b(slayer master|master)\b/.test(n)) return "Slayer";
   if (/\b(dungeon|sanctum|gate of|elite)\b/.test(n)) return "Dungeon";
-  // Boss epithets / comma names (Kerapac, the bound).
   if (/,\s*the\b/.test(name) || /\b(king|queen|beast|general|commander)\b/i.test(name)) {
     return "Boss";
   }
   return "Content";
 }
 
-/**
- * Split catalog `kind` into a short Type label and optional location hint text.
- * Location may still be refined via place anchors in resolveContentLocation.
- */
 export function splitContentKind(
   kind: string,
   name = "",
@@ -415,13 +354,11 @@ export function splitContentKind(
     return { type: titleCaseWords(raw), locationHint: null };
   }
 
-  // "Slayer/combat" style already covered; skill with extra words.
   if (SKILL_TYPES.has(lower.split(/[\s/]/)[0] ?? "")) {
     const skill = lower.split(/[\s/]/)[0]!;
     return { type: titleCaseWords(skill), locationHint: null };
   }
 
-  // Mixed: "Elder God Wars Dungeon / skilling boss"
   if (raw.includes("/")) {
     const [left, right] = raw.split("/").map((s) => s.trim());
     const leftL = left.toLowerCase();
@@ -444,21 +381,16 @@ export function splitContentKind(
         locationHint: right || null,
       };
     }
-    // Both place-like: prefer name-based type, whole kind as location hint (left wins).
     return { type: inferTypeFromName(name), locationHint: left || raw };
   }
 
-  // Place-like kind (contains dungeon/hub/place capital words) → location.
   if (
     /\b(dungeon|sanctum|falador|port sarim|grotworm|borehole|fort forinthry|city of um|underworld|brimhaven|wilderness|menaphos|prif|god wars|heart of gielinor|barrows|lost grove|monastery|lunar|keldagrim|anachronia|havenhythe)\b/i.test(
       raw,
     ) ||
-    // Multi-word proper place without pure-type match.
     (/[A-Z]/.test(raw[0] ?? "") && raw.split(/\s+/).length >= 1 && !PURE_TYPE[lower])
   ) {
-    // Single capitalized skill already handled. Place names:
     if (!SKILL_TYPES.has(lower) && !PURE_TYPE[lower]) {
-      // Skill-looking single words already returned. Multiword / place:
       if (raw.split(/\s+/).length >= 1) {
         return { type: inferTypeFromName(name), locationHint: raw };
       }
@@ -474,9 +406,6 @@ export type ContentLocation = {
   href: string | null;
 };
 
-/**
- * Resolve a content row to a map location. Only links when a real place anchor exists.
- */
 export function resolveContentLocation(
   regionId: RegionId,
   name: string,
@@ -512,10 +441,6 @@ export function resolveContentLocation(
   return { label: null, place: null, href: null };
 }
 
-/**
- * Training method location → map link when the place is anchored in the active region
- * (or a regionHint that is a valid RegionId).
- */
 export function resolveTrainingLocation(
   regionId: RegionId,
   location: string,
@@ -541,7 +466,6 @@ export function resolveTrainingLocation(
     }
   }
 
-  // Show cleaned location text without inventing a pin.
   return {
     label: loc.replaceAll("_", " "),
     place: null,
@@ -549,14 +473,11 @@ export function resolveTrainingLocation(
   };
 }
 
-/** Display Type for a content row. */
 export function contentTypeLabel(kind: string, name: string): string {
   return splitContentKind(kind, name).type;
 }
 
-/** Light cleanup shared by interest display helpers. */
 function cleanInterestText(value: string): string {
-  // Decode before display — wiki/source titles often ship First Necromancer&#039;s …
   return decodeHtmlEntities(String(value ?? ""))
     .replace(/\u00a0/g, " ")
     .replace(/\[(?:edit|citation needed|source|note\s*\d*)\]/gi, "")
@@ -566,17 +487,10 @@ function cleanInterestText(value: string): string {
     .trim();
 }
 
-/**
- * Player-facing unlock / POI title. Drops planner suffixes ("skilling hub",
- * "on-ramp hub", residual/package/infrastructure) while keeping place names.
- */
 export function presentInterestName(value: string): string {
   const raw = cleanInterestText(value).replace(/\s+/g, " ").trim();
   if (!raw) return "";
 
-  // Exact / prefix rewrites BEFORE paren strip + generic trailing strips.
-  // Icons still resolve from raw names elsewhere.
-  // RC / altars
   if (/^Misthalin Runecrafting altars\b/i.test(raw)) return "Water & Earth altars";
   if (/^Asgarnia Runecrafting altars\b/i.test(raw)) return "Mind, Body & Law altars";
   if (/^Entrana Law altar\b/i.test(raw)) return "Law altar (Entrana)";
@@ -589,7 +503,6 @@ export function presentInterestName(value: string): string {
   if (/^Runecrafting essence pouches\b/i.test(raw)) return "Essence pouches";
   if (/^Abyss Runecrafting stack$/i.test(raw)) return "Abyss Runecrafting";
 
-  // Access / geography dumps
   if (/^Ardougne farming patches\b/i.test(raw)) return "Ardougne farm patches";
   if (/^Highweald\s*\/\s*Deserted Mine mining access$/i.test(raw)) return "Highweald mines";
   if (/^The Arc skilling destinations\b/i.test(raw)) return "The Arc islands";
@@ -597,7 +510,6 @@ export function presentInterestName(value: string): string {
     return "Ports skilling rewards";
   }
 
-  // Package / densify leftovers
   if (/^Decorated and exquisite urn craft infrastructure$/i.test(raw)) {
     return "Urn crafting";
   }
@@ -622,7 +534,6 @@ export function presentInterestName(value: string): string {
   if (/^Hefin Agility Course$/i.test(raw)) return "Hefin Agility Course";
   if (/^Skillcape shop$/i.test(raw)) return "Skillcape shop";
 
-  // City of Um / Necromancy / prayer
   if (/^Soul Supplies\b/i.test(raw)) return "Soul Supplies";
   if (/^City of Um ritual site\b/i.test(raw)) return "Um ritual site";
   if (/^Selene Necromancy\b/i.test(raw)) return "Selene prayers";
@@ -693,7 +604,6 @@ export function presentInterestName(value: string): string {
 
   if (!name) return "";
 
-  // Non-Archaeology keepers (must stay ahead of generic trailing strips)
   if (/^Binding contract\b/i.test(name)) return "Ancient Summoning";
   if (/^Master thief's lockpick \+ stethoscope\b/i.test(name)) return "Master thief's tools";
   if (/^Ava's device chain$/i.test(name)) return "Ava's devices";
@@ -701,7 +611,6 @@ export function presentInterestName(value: string): string {
   if (/^Prayer training infrastructure stack$/i.test(name)) return "Prayer training";
   if (/^War's Retreat hub amenities$/i.test(name)) return "War's Retreat";
 
-  // Archaeology — exact / prefix renames
   if (/^Chronotes currency economy\b/i.test(name)) return "Chronotes";
   if (/^Archaeology (Guild )?shop\b/i.test(name)) {
     return "Archaeology shop";
@@ -743,7 +652,6 @@ export function presentInterestName(value: string): string {
   if (/^It Belongs in a Museum!/i.test(name)) return "Museum log";
   if (/^Archaeology culture Expert titles$/i.test(name)) return "Expert titles";
 
-  // Place hubs — keep the place, drop planner speak
   if (/^Edgeville\b/i.test(name) && /wilderness|on-ramp|skilling/i.test(name)) {
     return "Edgeville";
   }
@@ -786,7 +694,6 @@ export function presentInterestName(value: string): string {
       .replace(/\s+network$/i, "")
       .replace(/\s+circuit$/i, "")
       .replace(/\s+overview$/i, "")
-      // "Foo altar Runecrafting" → "Foo altar" (only when preceded by altar)
       .replace(/(?<=\baltar)\s+Runecrafting$/i, "")
       .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
       .replace(/\s+docks and skilling hub$/i, "")
@@ -805,10 +712,6 @@ export function presentInterestName(value: string): string {
   );
 }
 
-/**
- * Short subtitle under a POI name. Strips "regional multi-skill … infrastructure"
- * planner taxonomy into something a player would skim.
- */
 export function presentInterestMeta(value: string, maxLen = 48): string {
   let s = cleanInterestText(value);
   if (!s) return "";
@@ -936,7 +839,6 @@ export function presentInterestMeta(value: string, maxLen = 48): string {
 
   if (!s) return "Skilling";
 
-  // Sentence-case the first letter only — keep wiki proper nouns as-is mid-string.
   s = s.charAt(0).toUpperCase() + s.slice(1);
 
   if (s.length <= maxLen) return s;

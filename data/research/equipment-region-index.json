@@ -1,6 +1,6 @@
 {
   "snapshotDate": "2026-07-27",
-  "purpose": "Equipment id/name → required regions map stamped from regional combat corpus. Reuse in merge-equipment-sync; never invent regions.",
+  "purpose": "Equipment id/name to required regions map stamped from regional combat corpus; never invent regions.",
   "validRegions": [
     "misthalin",
     "havenhythe",
@@ -3418,29 +3418,29 @@
       "havenhythe"
     ],
     "Masterwork ranged cowl": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Masterwork ranged body": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Masterwork ranged chaps": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Masterwork ranged vambraces": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Masterwork ranged boots": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Masterwork magic hat": [
       "asgarnia",
@@ -3533,29 +3533,29 @@
       "kandarin"
     ],
     "Custom-fit masterwork ranged cowl": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Custom-fit masterwork ranged body": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Custom-fit masterwork ranged chaps": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Custom-fit masterwork ranged vambraces": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Custom-fit masterwork ranged boots": [
-      "anachronia",
-      "forinthry",
-      "kandarin"
+      "asgarnia",
+      "tirannwn",
+      "anachronia"
     ],
     "Morrigan's javelin": [
       "forinthry"

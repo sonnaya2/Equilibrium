@@ -335,7 +335,7 @@ function WikiBody({
   // Notable strip + unique summary table were the same items twice (see Gate of Elidinis).
   // Prefer the rate table when structured uniques exist; strip only when no table.
   const showNotableStrip = notable.length > 0 && !hasStructuredDrops;
-  // Icon rail mostly repeats drop glyphs — keep only when we have no drop tables.
+  // Drop tables supersede the duplicate icon rail.
   const showAssetRail = railAssets.length > 0 && !hasStructuredDrops;
 
   return (

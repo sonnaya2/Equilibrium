@@ -76,9 +76,7 @@ describe("gameArt", () => {
   });
 
   it("returns null for abstract package labels without a safe alias", () => {
-    // Boss containment may still resolve on dataEntity; upgrade-only stays empty.
     expect(upgradeIconPath("Kerapac progression")).toBeNull();
-    // Multi-word packages without a real item → empty well (not a weak skill/scenery icon).
     expect(dataEntityIconPath({ name: "Random abstract skilling package ladder" })).toBeNull();
     expect(
       dataEntityIconPath({ name: "Elite package without item", kind: "elite skilling" }),
@@ -98,7 +96,6 @@ describe("gameArt", () => {
         true,
       );
     }
-    // Inventory-sized permanents stay allowed as reward chips.
     expect(
       isSceneryPermanentUnlock("/game/upgrades/permanent-unlocks/menaphos-reputation.webp"),
     ).toBe(false);
@@ -109,7 +106,6 @@ describe("gameArt", () => {
   });
 
   it("prefers Archaeology inventory/skill over scenery for abstract arch rows", () => {
-    // Monolith packages → inventory monolith (or skill if unpublished).
     expect(
       dataEntityIconPath({ name: "Mysterious monolith energy + relic loadout ladder" }),
     ).toMatch(
@@ -118,27 +114,22 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Hireable research team recruitment ladder" })).toMatch(
       /archaeology-research\.(webp|png)$/,
     );
-    // kind-only archaeology with no name hit → empty well (not forced skill icon).
     expect(
       dataEntityIconPath({ name: "Abstract package checklist", kind: "archaeology progression" }),
     ).toBeNull();
-    // Published dig-site map icons resolve via activity; unpublished dig-site aliases fall to skill.
     expect(dataEntityIconPath({ name: "Kharid-et dig site" })).toBe(
       "/game/activities/kharid-et-dig-site.webp",
     );
-    // varrock-dig-site art may land with expansion-41 publish; until then skill fallback is correct.
     expect(dataEntityIconPath({ name: "Varrock dig site / early archaeology" })).toMatch(
       /\/(activities\/varrock-dig-site|skills\/archaeology)\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Archaeology campus and varrock dig site hub" })).toMatch(
       /\/(activities\/varrock-dig-site|skills\/archaeology)\.(webp|png)$/,
     );
-    // Named inventory / unlock art still wins before skill fallback.
     expect(dataEntityIconPath({ name: "Chronotes currency economy (earn + spend sinks)" })).toMatch(
       /chronotes\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Dragon mattock" })).toMatch(/dragon-mattock\.(webp|png)$/);
-    // Abstract collector package with no specific inventory art → empty well.
     expect(dataEntityIconPath({ name: "Collectors Assemble unique-collection ladder" })).toBeNull();
     expect(dataEntityIconPath({ name: "Archaeology shop" })).toMatch(/master-archaeologist/);
     expect(
@@ -154,7 +145,6 @@ describe("gameArt", () => {
       /master-archaeologist/,
     );
     expect(dataEntityIconPath({ name: "Master runecrafter robes" })).toMatch(/master-runecrafter/);
-    // hermod.png may not be published yet; alias still targets hermod.
     const hermod = dataEntityIconPath({ name: "Hermod, the Spirit of War" });
     expect(hermod === null || /hermod/.test(hermod)).toBe(true);
   });
@@ -169,7 +159,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Necromantic Rune Temple" })).toMatch(
       /necromantic-rune-temple\.(webp|png)$/,
     );
-    // Place plates preferred over bare skill glyphs when published art exists.
     expect(dataEntityIconPath({ name: "Draynor willow trees" })).toMatch(
       /draynor-willow-trees\.(webp|png)$/,
     );
@@ -202,7 +191,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Well of Souls talent infrastructure" })).toBe(
       "/game/activities/well-of-souls.webp",
     );
-    // Named items / boss packages that must resolve to real published art.
     expect(dataEntityIconPath({ name: "Bow of the Last Guardian (Bolg)" })).toMatch(
       /bow-of-the-last-guardian\.(webp|png)$/,
     );
@@ -243,26 +231,21 @@ describe("gameArt", () => {
   });
 
   it("does not pick short/generic containment matches", () => {
-    // "tools" must not resolve to a random tools icon via weak containment.
     expect(dataEntityIconPath({ name: "Augmentable gather tools research" })).toBeNull();
-    // Exact boss still works.
     expect(bossIconPath("Kerapac")).toBe("/game/bosses/kerapac.webp");
   });
 
   it("uses disk-backed non-png boss extensions and word-ish boss kinds", () => {
     expect(bossIconPath("Zamorak")).toBe("/game/bosses/zamorak.webp");
-    // "elite skilling" must not force bossish routing (no random boss/activity).
     expect(
       dataEntityIconPath({ name: "Augmentable gather tools research", kind: "elite skilling" }),
     ).toBeNull();
-    // Kind-only archaeology tag must not dump skill art on an abstract package name.
     expect(
       dataEntityIconPath({
         name: "Settlement hub without excavation tokens",
         kind: "archaeology progression",
       }),
     ).toBeNull();
-    // Hyphenated dig-site names stay whole (not split into "kharid" alone).
     expect(dataEntityIconPath({ name: "Kharid-et dig site" })).toBe(
       "/game/activities/kharid-et-dig-site.webp",
     );
@@ -302,7 +285,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Anachronia totems (permanent multi-skill buffs)" })).toMatch(
       /totem-of-vitality\.(webp|png)$/,
     );
-    // Multi-MB course plates are scenery — skill glyph is intentional.
     expect(dataEntityIconPath({ name: "Anachronia Agility Course", kind: "Agility course" })).toBe(
       "/game/skills/agility.webp",
     );
@@ -318,7 +300,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Anachronia Big Game Hunter" })).toMatch(
       /big-game-hunter\.(webp|png)$/,
     );
-    // Never reuse Anachronia dinosaur BGH art for Havenhythe
     expect(dataEntityIconPath({ name: "Havenhythe Big Game Hunter" })).not.toMatch(
       /^\/game\/activities\/big-game-hunter\.(webp|png)$/,
     );
@@ -339,16 +320,13 @@ describe("gameArt", () => {
       /jackalopes?\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Jackalopes" })).toMatch(/jackalopes?\.(webp|png)$/);
-    // Multi-MB fish-farm scenery → fishing skill (not POF).
     expect(dataEntityIconPath({ name: "Fish farming" })).toBe("/game/skills/fishing.webp");
     expect(dataEntityIconPath({ name: "Wendlewick fish farm" })).toBe("/game/skills/fishing.webp");
     expect(dataEntityIconPath({ name: "Wendlewick fish farm (Havenhythe)" })).toBe(
       "/game/skills/fishing.webp",
     );
-    // Fish farm must not resolve to Player-Owned Farm
     expect(dataEntityIconPath({ name: "Wendlewick fish farm" })).not.toMatch(/player-owned-farm/);
     expect(dataEntityIconPath({ name: "Fish farming" })).not.toMatch(/player-owned-farm/);
-    // Content boss rows use official plates; "… uniques" packages keep inventory art.
     expect(dataEntityIconPath({ name: "Ivar, King of Bones" })).toMatch(/\/bosses\/ivar\./);
     expect(dataEntityIconPath({ name: "Ivar, King of Bones uniques" })).toMatch(/ivar-uniques/);
     expect(dataEntityIconPath({ name: "Silverquill, the Dreadhog" })).toMatch(
@@ -429,7 +407,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Astral altar (Lunar Isle)" })).toMatch(
       /astral-altar\.(webp|png)$/,
     );
-    // Multi-MB Livid/Lunar place plates → Magic skill glyph (readable at 3rem).
     expect(dataEntityIconPath({ name: "Livid Farm Lunar spell unlocks" })).toBe(
       "/game/skills/magic.webp",
     );
@@ -456,7 +433,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Rasial, the First Necromancer", kind: "boss" })).toBe(
       "/game/bosses/rasial.webp",
     );
-    // Boss plate wins even when kind is a place/dungeon tag (Major unlocks Name column).
     expect(
       dataEntityIconPath({ name: "Kerapac, the bound", kind: "Elder God Wars Dungeon" }),
     ).toMatch(/\/bosses\/kerapac\./);
@@ -478,7 +454,6 @@ describe("gameArt", () => {
   });
 
   it("prefers published activity plates over skill-hub inference", () => {
-    // Kind mentions Mining / is Runecrafting — must not steal place art into skill glyphs.
     expect(
       dataEntityIconPath({
         name: "The Empty Throne Room",
@@ -491,7 +466,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Empty Throne Room", kind: "Mining" })).toBe(
       "/game/activities/empty-throne-room.webp",
     );
-    // skill= used to short-circuit pureSkillKind before activity lookup.
     expect(dataEntityIconPath({ name: "The Empty Throne Room", skill: "Mining" })).toBe(
       "/game/activities/empty-throne-room.webp",
     );
@@ -501,21 +475,18 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Necromantic Rune Temple", skill: "Runecrafting" })).toBe(
       "/game/activities/necromantic-rune-temple.webp",
     );
-    // Not skill glyphs.
     expect(dataEntityIconPath({ name: "The Empty Throne Room", kind: "Mining" })).not.toMatch(
       /\/skills\/mining\.(webp|png)$/,
     );
     expect(
       dataEntityIconPath({ name: "Necromantic Rune Temple", kind: "Runecrafting" }),
     ).not.toMatch(/\/skills\/runecrafting\.(webp|png)$/);
-    // Real skill-training / pure skill rows still use skill glyphs.
     expect(dataEntityIconPath({ name: "Mining", kind: "skill", skill: "Mining" })).toBe(
       "/game/skills/mining.webp",
     );
     expect(dataEntityIconPath({ name: "Runecrafting", kind: "skill", skill: "Runecrafting" })).toBe(
       "/game/skills/runecrafting.webp",
     );
-    // Place plates for other named hubs still beat kind-derived skill glyphs.
     expect(dataEntityIconPath({ name: "Draynor willows", kind: "Woodcutting" })).toMatch(
       /draynor-willow-trees\.(webp|png)$/,
     );
@@ -564,7 +535,6 @@ describe("gameArt", () => {
       ["Zamorak, Lord of Chaos (Undercity)", "zamorak"],
       ["The Magister", "magister"],
       ["Ambassador (ED3)", "ambassador"],
-      // Elite dungeon content rows → final boss plates (not activity scenery).
       ["Dragonkin Laboratory (ED2)", "black-stone-dragon"],
       ["Dragonkin Laboratory", "black-stone-dragon"],
       ["The Shadow Reef (ED3)", "ambassador"],
@@ -582,9 +552,7 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "The Shadow Reef (ED3)", kind: "Elite Dungeon" })).toBe(
       "/game/bosses/ambassador.webp",
     );
-    // Full containment still works for package labels without inventory art.
     expect(bossIconPath("Kerapac progression")).toBe("/game/bosses/kerapac.webp");
-    // Inventory unique packs keep upgrade art (reward/POI chips), not boss plates.
     expect(dataEntityIconPath({ name: "Ivar, King of Bones uniques" })).toMatch(
       /ivar-uniques\.(webp|png)$/,
     );
@@ -592,7 +560,6 @@ describe("gameArt", () => {
   });
 
   it("critical upgrade aliases resolve to published full slugs (not short junk)", () => {
-    // Short harvest tokens used to poison alias resolution; targets must be real files.
     const critical: Array<[string, RegExp]> = [
       ["Five-finger discount passive", /five-finger-discount\.(webp|png)$/],
       ["Pyro-matic", /pyro-matic\.(webp|png)$/],
@@ -676,7 +643,6 @@ describe("gameArt", () => {
   });
 
   it("multi-region key hubs resolve to existing public paths when art exists", () => {
-    // Durable smoke across region hubs — empty well ok only until conventional art lands.
     const hubs = [
       "Prifddinas",
       "Fishing Guild",

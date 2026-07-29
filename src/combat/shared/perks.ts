@@ -21,7 +21,6 @@ function wikiPerk(title: string, page: string): SourceReference {
   };
 }
 
-// --- Equilibrium (reworked 9 Mar 2026; former AD-range perk is now Eruptive) ---
 
 /**
  * Equilibrium perk (wiki). Rank 1 is +8% ability damage; each higher rank adds +2%
@@ -54,7 +53,6 @@ export function equilibriumBlocksCrits(rank: number): boolean {
   return Number.isInteger(rank) && rank >= 1;
 }
 
-// --- Eruptive (formerly Equilibrium pre-2024 rework; current flat AD perk) ---
 
 /**
  * Eruptive: rank 1 +0.5% ability damage; +0.5% per rank (R4 +2%).
@@ -80,7 +78,6 @@ export function eruptivePerkModifier(rank: number): CombatModifier {
   };
 }
 
-// --- Biting (crit chance) ---
 
 /**
  * Biting: rank 1 +2% crit chance; +2% per rank (lvl20 gear: rank 1 +2.2%, +2.2%/rank).
@@ -95,7 +92,6 @@ export function bitingCritChanceBonus(rank: number, level20Gear = false): number
   return perRank + perRank * (rank - 1);
 }
 
-// --- Precise (min-hit raise; band-side, not a CombatModifier mult) ---
 
 /**
  * Precise raises minimum ability damage by 1.5% of maximum damage per rank.
@@ -113,7 +109,6 @@ export function preciseMinHitAddition(maxDamage: number, rank: number): number {
   return 0.015 * rank * maxDamage;
 }
 
-// --- Ultimatums / Lunging / Energising ---
 
 /** Ultimatums: rank 1 +4% ultimate damage; +1% per rank (R4 +7%). */
 export function ultimatumsDamageBonus(rank: number): number {
@@ -166,7 +161,6 @@ export function energisingAccuracyBonus(rank: number): number {
   return 75 + 25 * (rank - 1);
 }
 
-// --- Race slayers (rankless; +7% vs matching race) ---
 
 /** Undead / Demon / Dragon Slayer: +7% damage to matching race. Rankless. */
 export const SLAYER_PERK_DAMAGE_BONUS = 0.07;
@@ -200,7 +194,6 @@ export function raceSlayerPerkModifier(
   };
 }
 
-// --- Ruthless (stacking kill buff) ---
 
 /**
  * Ruthless: +0.5% damage per rank per kill stack, max 5 stacks, 20s (not on bleeds).
@@ -227,7 +220,6 @@ export function ruthlessPerkModifier(rank: number, stacks: number): CombatModifi
   };
 }
 
-// --- Genocidal (task progress) ---
 
 /**
  * Genocidal: up to +4.9% damage on current Slayer task, linear in progress.
@@ -242,7 +234,6 @@ export function genocidalDamageBonus(remaining: number, original: number): numbe
   return Math.floor(5 * (1 - a / original) * 10) / 10 / 100;
 }
 
-// --- Crackling / Aftershock (proc damage; not per-cast modifiers) ---
 
 /** Crackling PvM zap: 50% ability damage x rank, 60s cooldown. Max rank 4. */
 export function cracklingDamageFraction(rank: number): number {
@@ -306,7 +297,6 @@ export function expectedAftershockDamage(
   return procs * AFTERSHOCK_MAX_AD_FRACTION_PER_RANK * rank * base;
 }
 
-// --- Adrenaline / utility (formula exports; no damage pipeline) ---
 
 /** Impatient: 9% chance per rank for basics to grant +3 adrenaline (base 9 -> 12). Max 4. */
 export function impatientProcChance(rank: number, level20Gear = false): number {
@@ -380,7 +370,6 @@ export function flankingDamageBonus(rank: number): number {
   return 0.4 * rank;
 }
 
-// --- Skillcapes (Beta Update 4; still cited from update notes) ---
 
 /** 120 skillcape perks. Only damage-relevant constants; Magic/Ranged feed style systems. */
 export const ATTACK_CAPE_MELEE_HIT_CHANCE = 0.02;

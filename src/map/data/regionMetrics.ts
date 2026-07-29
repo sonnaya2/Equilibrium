@@ -3,7 +3,7 @@
  * quests = quests touching the region (quests.json region_group_counts) — the
  * auto-completion-relevant count and the only number with enough spread to
  * make the board read as data. content/upgrades/training/areas come from the
- * research catalog. Never invent a number: a missing join is 0, and 0 shows.
+ * research catalog. Missing joins render as 0.
  */
 
 import questsData from "#data/league/quests.json";

@@ -25,9 +25,6 @@ export function activePuncture(state: PunctureState, tick: number): PunctureStat
   return tick < state.expiresAtTick ? state : { stacks: 0, expiresAtTick: 0 };
 }
 
-/** ponytail: applying a stack refreshes the 30s window (standard RS3 duration
- *  behaviour); the corpus confirms the duration but not the refresh rule.
- *  Upgrade trigger: wiki-confirmed expiry semantics. */
 export function applyPuncture(state: PunctureState, tick: number, stacks = 1): PunctureState {
   const current = activePuncture(state, tick);
   return {
@@ -71,9 +68,8 @@ export function spendDeathspore(state: DeathsporeState): DeathsporeState {
 export const DEATHSPORE_SOURCE: SourceReference = MODERNISATION_WIKI;
 
 /**
- * Searing Winds (from Galeshot, changelog §5.9): 10-tick window in which every
- * ranged hit deals a bonus +20% ability-damage hit. Rapid Fire extends the
- * window by 1 tick per hit.
+ * Searing Winds lasts 10 ticks, adds a 20% ability-damage hit to each ranged
+ * hit, and gains one tick per Rapid Fire hit.
  */
 export const SEARING_WINDS_DURATION_TICKS = 10;
 export const SEARING_WINDS_BONUS_HIT_PCT = 20;
@@ -99,9 +95,8 @@ export function searingWindsBonusPct(state: SearingWindsState, tick: number): nu
 }
 
 /**
- * Shadow Imbued (from Imbue: Shadows, §5.9): 50-tick window in which ranged hits
- * on your target generate +5% adrenaline per hit. Shadow Tendrils extends it by
- * 6 ticks.
+ * Shadow Imbued lasts 50 ticks and grants 5% adrenaline per ranged hit.
+ * Shadow Tendrils extends the active window by 6 ticks.
  */
 export const SHADOW_IMBUED_DURATION_TICKS = 50;
 export const SHADOW_IMBUED_ADRENALINE_PER_HIT_PCT = 5;
@@ -117,7 +112,6 @@ export function activateShadowImbued(tick: number): ShadowImbuedState {
   return { expiresAtTick: tick + SHADOW_IMBUED_DURATION_TICKS };
 }
 
-/** Tendrils extends an active window only — never creates one. */
 export function extendShadowImbued(state: ShadowImbuedState, tick: number): ShadowImbuedState {
   if (tick >= state.expiresAtTick) return state;
   return { expiresAtTick: state.expiresAtTick + SHADOW_TENDRILS_IMBUED_EXTENSION_TICKS };

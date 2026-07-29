@@ -11,7 +11,6 @@ import {
 import { CONJURES_CANNOT_CRIT } from "./conjures";
 import { SPECTRAL_SCYTHE_SOUL_CHANCE, VOLLEY_OF_SOULS_BAND } from "./souls";
 
-// Re-export conjure timing constants used by tests / parent agents.
 export {
   CONJURE_UNTIL_OFFSET_TICKS,
   SKELETON_AUTO_BAND,
@@ -25,10 +24,8 @@ export {
 } from "./conjures";
 
 /**
- * Post-modernisation Necromancy kit. Bands verified on current wiki ability pages
- * (2026-07-26). Necromancy was the modernisation template (changelog §5.10): only
- * Death Skulls adrenaline/cost and Living Death's Death Skulls CD were retuned.
- * Resource machines (Necrosis / Residual Souls / conjures) stay as launched.
+ * Necromancy bands verified against current Wiki ability pages on 2026-07-26.
+ * Death Skulls and Living Death use their post-modernisation values.
  */
 
 const VERIFIED = "2026-07-26";
@@ -74,7 +71,11 @@ export interface NecromancyAbilitySpec extends AbilitySpec {
   source: SourceReference;
 }
 
-/** Residual Soul cap is 3, +2 with a soulbound lantern (§1.8). */
+export function isNecromancyAbility(ability: AbilitySpec): ability is NecromancyAbilitySpec {
+  return ability.style === "necromancy";
+}
+
+/** Residual Soul cap is 3, or 5 with a soulbound lantern. */
 export const MAX_SOULS = 5;
 /** Volley requires at least 2 Residual Souls to activate (wiki). */
 export const VOLLEY_MIN_SOULS = 2;
@@ -264,7 +265,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 100 },
     cooldownSeconds: LIVING_DEATH_COOLDOWN_SECONDS,
-    buff: "living_death",
+    stateEffect: "living_death",
     source: LIVING_DEATH_WIKI,
   },
   {
@@ -337,7 +338,6 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     cooldownSeconds: DEATH_GRASP_COOLDOWN_SECONDS,
     source: DEATH_GRASP_WIKI,
   },
-  // --- Conjure casts: 0 adren, no hits — summon only (spirit autos in conjures.ts) ---
   {
     id: "conjure_skeleton_warrior",
     name: "Conjure Skeleton Warrior",
@@ -345,7 +345,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     category: "enhanced",
     hits: [],
     adrenaline: { cost: 0 },
-    buff: "conjure_skeleton_warrior",
+    stateEffect: "conjure_skeleton_warrior",
     source: CONJURE_SKELETON_WIKI,
   },
   {
@@ -355,7 +355,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     category: "enhanced",
     hits: [],
     adrenaline: { cost: 0 },
-    buff: "conjure_vengeful_ghost",
+    stateEffect: "conjure_vengeful_ghost",
     source: CONJURE_GHOST_WIKI,
   },
   {
@@ -365,7 +365,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     category: "enhanced",
     hits: [],
     adrenaline: { cost: 0 },
-    buff: "conjure_putrid_zombie",
+    stateEffect: "conjure_putrid_zombie",
     source: CONJURE_ZOMBIE_WIKI,
   },
   {
@@ -375,7 +375,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     category: "enhanced",
     hits: [],
     adrenaline: { cost: 0 },
-    buff: "conjure_phantom_guardian",
+    stateEffect: "conjure_phantom_guardian",
     source: CONJURE_PHANTOM_WIKI,
   },
   {
@@ -386,7 +386,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     category: "enhanced",
     hits: [],
     adrenaline: { cost: 0 },
-    buff: "conjure_undead_army",
+    stateEffect: "conjure_undead_army",
     source: CONJURE_ARMY_WIKI,
   },
 ];
@@ -614,7 +614,7 @@ export const NECROMANCY_EFFECTS = [
     id: "conjures",
     name: "Conjures",
     notes:
-      "SP3: untilTick = ready+105. Skeleton auto 22–28% first@+7 / 5 ticks + rage +3%/stack max 25; Zombie auto 18–22% first@+7 / 6 ticks + poison 8–12% first@+9 / 3 ticks; Ghost auto 18–22% first@+6 / 7 ticks (heal unmodelled); Phantom no auto. Army default skel+ghost+zombie. Spirits cannot crit. See conjures.ts.",
+      "Undead Army summons Skeleton Warrior, Vengeful Ghost, and Putrid Zombie for 63 seconds. Their attacks use sourced timings and cannot crit. Ghost healing and Phantom customisation are not included.",
     source: MODERNISATION_WIKI,
   },
   {

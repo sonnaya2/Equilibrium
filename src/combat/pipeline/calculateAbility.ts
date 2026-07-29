@@ -4,33 +4,49 @@ import { calculateHit, type HitInput, type HitResult } from "./calculateHit";
 
 export interface AbilityHit {
   band: DamageBand;
-  /** Per-hit crit eligibility inside a multi-hit ability; bleed tails set false. */
   critEligible?: boolean;
-  /** Ticks after the cast this hit lands on. Absent = cast tick; bleed/burn tails
-   *  carry their sourced interval here. */
   tickOffset?: number;
 }
+
+export type StateEffectId =
+  | "berserk"
+  | "conjure_phantom_guardian"
+  | "conjure_putrid_zombie"
+  | "conjure_skeleton_warrior"
+  | "conjure_undead_army"
+  | "conjure_vengeful_ghost"
+  | "deaths_swiftness"
+  | "greater_deaths_swiftness"
+  | "living_death"
+  | "runic_charge"
+  | "shadow_imbued";
+
+export type AppliedEffectId =
+  | "chaos_roar"
+  | "fury"
+  | "greater_barge"
+  | "greater_flurry"
+  | "greater_fury"
+  | "greater_sunshine"
+  | "instability"
+  | "meteor_strike"
+  | "pulverise"
+  | "searing_winds"
+  | "sunshine";
 
 export interface AbilitySpec {
   id: string;
   name: string;
   style: "melee" | "ranged" | "magic" | "necromancy";
-  /** Post-modernisation categories; legacy "threshold" semantics are not assumed. */
   category: "basic" | "enhanced" | "ultimate" | "utility";
   hits: AbilityHit[];
-  /** Per-ability data — adrenaline is never a magic global. */
   adrenaline?: { gain?: number; cost?: number };
   cooldownSeconds?: number;
-  /** Self-buff marker: the cast applies state through a style machine, no damage band. */
-  buff?: string;
-  /** Damaging cast that also applies a buff (Galeshot → Searing Winds). */
-  appliesBuff?: string;
-  /** Off-GCD cast (Runic Charge): does not consume or advance the global cooldown. */
+  stateEffect?: StateEffectId;
+  appliesEffect?: AppliedEffectId;
   offGcd?: boolean;
-  /** The style's basic attack ability — the cast the sim auto-weaves into GCD gaps
-   *  and adrenaline shortfalls when autoWeave is on (§5.6: basics auto-used when
-   *  nothing else is queued). Exactly one spec per style should carry this. */
   autoAttack?: boolean;
+  guaranteedCrit?: boolean;
 }
 
 export interface AbilityResult {
@@ -38,11 +54,9 @@ export interface AbilityResult {
   min: number;
   max: number;
   expected: number;
-  /** Net adrenaline after the cast: gain minus cost. */
   adrenalineDelta: number;
 }
 
-/** Multi-hit rollup; the single-hit path stays the only hit math. */
 export function calculateAbility(
   ability: AbilitySpec,
   input: Omit<HitInput, "band" | "crit"> & { crit: Omit<CritLayers, "eligible"> },

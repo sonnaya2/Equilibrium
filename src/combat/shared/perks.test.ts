@@ -80,13 +80,11 @@ describe("shared/perks", () => {
     expect(SLAYER_PERK_DAMAGE_BONUS).toBeCloseTo(0.07, 10);
     expect(ruthlessDamageBonus(3, 5)).toBeCloseTo(0.075, 10);
     expect(cracklingDamageFraction(4)).toBeCloseTo(2.0, 10);
-    // full task remaining -> 0; almost done remaining 1 of 100
     expect(genocidalDamageBonus(100, 100)).toBe(0);
     expect(genocidalDamageBonus(1, 100)).toBeCloseTo(0.049, 10);
   });
 
   it("Crackling EV is fraction × base × (H / 60)", () => {
-    // R4: 2.0 * 1000 * (60/60) = 2000
     expect(expectedCracklingDamage(4, 1000, 60)).toBeCloseTo(2000, 10);
     expect(expectedCracklingDamage(4, 1000, 30)).toBeCloseTo(1000, 10);
     expect(expectedCracklingDamage(0, 1000, 60)).toBe(0);
@@ -94,11 +92,8 @@ describe("shared/perks", () => {
   });
 
   it("Aftershock EV is min(floor(dmg/50k), floor(H/6)) × 0.4 × rank × base", () => {
-    // 100k dmg, rank 1, base 1000, H>=12s → 2 procs * 0.4 * 1000 = 800
     expect(expectedAftershockDamage(1, 1000, 100_000, 12)).toBeCloseTo(800, 10);
-    // horizon-limited: H=5s → floor(5/6)=0
     expect(expectedAftershockDamage(1, 1000, 100_000, 5)).toBe(0);
-    // damage-limited: 49_999 → 0 procs
     expect(expectedAftershockDamage(1, 1000, 49_999, 60)).toBe(0);
     expect(expectedAftershockDamage(0, 1000, 100_000, 12)).toBe(0);
   });
@@ -111,7 +106,6 @@ describe("shared/perks", () => {
     expect(relentlessProcChance(1)).toBeCloseTo(0.01, 10);
     expect(relentlessProcChance(5)).toBeCloseTo(0.05, 10);
     expect(relentlessProcChance(5, true)).toBeCloseTo(0.055, 10);
-    // R5 non-l20 on a 60-cost ultimate: 60 * 0.05 = 3
     expect(expectedRelentlessRefund(60, 5)).toBeCloseTo(3, 10);
     expect(expectedRelentlessRefund(60, 5, true)).toBeCloseTo(3.3, 10);
     expect(expectedRelentlessRefund(0, 5)).toBe(0);

@@ -1,17 +1,9 @@
 "use client";
 
 /**
- * The board's one heartbeat.
- *
- * `frameloop="demand"` means the loop sleeps unless something asks for a frame,
- * which is the whole reason this route is cheap. The sea is the single exception
- * — it has to move at rest — so exactly one timer exists and everything else
- * that animates rides the frames it produces.
- *
- * Idle holds at MAP_IDLE_HZ (30). Real interaction (drag, wheel, WASD, unlock)
- * raises to MAP_ACTIVE_HZ (120) briefly. Hover alone does not.
- *
- * It stops for reduced motion, for an offscreen canvas, and for a hidden tab.
+ * Sole driver for the demand-rendered map. Water idles at MAP_IDLE_HZ; drag,
+ * wheel, WASD, and unlock motion briefly use MAP_ACTIVE_HZ. Reduced motion,
+ * hidden tabs, and offscreen canvases stop the loop.
  */
 
 import { useEffect, useRef } from "react";
@@ -41,7 +33,6 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
     // permanently freeze the demand loop before flex assigns size.
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Only flip off when we have a real box and it is off-screen.
         const box = entry.boundingClientRect;
         const hasBox = box.width > 2 && box.height > 2;
         if (!hasBox) return;

@@ -1,7 +1,4 @@
-/**
- * Dev-only structured logging. Silent in production builds so we never spam
- * user consoles or ship internal diagnostics.
- */
+/** Development-only structured logging; production builds remain silent. */
 
 type LogLevel = "debug" | "info" | "warn" | "error";
 

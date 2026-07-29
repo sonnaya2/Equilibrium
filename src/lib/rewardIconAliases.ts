@@ -1,7 +1,7 @@
 /**
  * Reward unique label → local inventory icon path for Major unlock chips.
  * Keys: lowercase trimmed tokens (as after contentRewardTokens).
- * Values: published paths under public/game/ only — never invent files.
+ * Values are published paths under public/game.
  * Prefer square inventory art over boss plate photos.
  */
 
@@ -22,13 +22,11 @@ const rootUp = (slug: string) => `/game/upgrades/${slug}.webp`;
 const skProd = (slug: string) => `/game/upgrades/skilling-production/${slug}.webp`;
 
 export const REWARD_ICON_BY_LABEL: Record<string, string> = {
-  // --- Necrotic runes (Necromantic Rune Temple) ---
   "spirit rune": skProd("spirit-rune"),
   "bone rune": skProd("bone-rune"),
   "flesh rune": skProd("flesh-rune"),
   "miasma rune": skProd("miasma-rune"),
 
-  // --- Bloodweed / aggression pots (Forinthry) ---
   "clean bloodweed": skProd("clean-bloodweed"),
   "grimy bloodweed": skProd("grimy-bloodweed"),
   "bloodweed seed": skProd("bloodweed-seed"),
@@ -38,7 +36,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "aggression potions": skProd("aggression-potion"),
   "aggression pot": skProd("aggression-potion"),
 
-  // --- Forinthry chaotics / ruinous / corp / dark facets ---
   "off-hand chaotic rapier": equip("off-hand-chaotic-rapier"),
   "chaotic longsword": equip("chaotic-longsword"),
   "off-hand chaotic longsword": equip("off-hand-chaotic-longsword"),
@@ -115,7 +112,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   chaotics: equip("chaotic-rapier"),
   "ruinous weapons": equip("ruinous-rapier"),
 
-  // --- Havenhythe uniques ---
   "bonecrusher maul": perm("bonecrusher-maul"),
   "magic skull mask": perm("magic-skull-mask"),
   "colossal bone": perm("colossal-bone"),
@@ -126,7 +122,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "tainted seed": perm("tainted-seed"),
   "sanguine matter": skProd("sanguine-matter"),
 
-  // --- Kerapac ---
   "fractured staff of armadyl": prog("fractured-staff-of-armadyl"),
   "fractured staff of armadyl components": prog("fractured-staff-of-armadyl"),
   fsoa: prog("fractured-staff-of-armadyl"),
@@ -139,7 +134,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "leng gloves": prog("leng-artefact"),
   "scripture of jas": prog("scripture-of-jas"),
 
-  // --- Arch-Glacor / Leng ---
   "frozen core of leng": prog("frozen-core-of-leng"),
   "dark nilas": prog("dark-nilas"),
   "leng artefact": prog("leng-artefact"),
@@ -151,7 +145,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "dark ice shard": equip("dark-ice-shard"),
   "dark ice sliver": equip("dark-ice-sliver"),
 
-  // --- Croesus ---
   "cryptbloom armour": equip("cryptbloom-body"),
   cryptbloom: equip("cryptbloom-body"),
   "scripture of bik": prog("scripture-of-bik"),
@@ -162,7 +155,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "croesus foultorch": prog("croesus-foultorch"),
   "croesus sporehammer": prog("croesus-sporehammer"),
 
-  // --- TzKal-Zuk ---
   "ek-zekkil": prog("ek-zekkil"),
   "ek zekkil": prog("ek-zekkil"),
   "magma tempest": codex("magma-tempest"),
@@ -180,7 +172,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "igneous kal-mor": equip("igneous-kal-mor"),
   "igneous kal mor": equip("igneous-kal-mor"),
 
-  // --- Rasial / First Necromancer ---
   "omni guard": prog("omni-guard"),
   "soulbound lantern": prog("soulbound-lantern"),
   "robes of the first necromancer": prog("first-necromancer-robe-top"),
@@ -194,14 +185,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "hand wrap of the first necromancer": equip("first-necromancer-gloves"),
   "foot wraps of the first necromancer": equip("first-necromancer-boots"),
 
-  // --- Gate of Elidinis ---
   "eclipsed soul prayer codex": perm("eclipsed-soul-prayer-codex"),
   "eclipsed soul": codex("eclipsed-soul"),
   "memory dowser": prog("memory-dowser"),
   "runic attuner": prog("runic-attuner"),
   "scripture of elidinis": prog("scripture-of-elidinis"),
 
-  // --- Sanctum of Rebirth / Nakatra ---
   "roar of awakening": prog("roar-of-awakening"),
   "ode to deceit": prog("ode-to-deceit"),
   "divine rage prayer codex": perm("divine-rage-prayer-codex"),
@@ -209,12 +198,10 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "scripture of amascut": prog("scripture-of-amascut"),
   "shard of genesis essence": prog("shard-of-genesis-essence"),
 
-  // --- Zemouregal & Vorkath ---
   "dracolich armour": prog("dracolich-hauberk"),
   "elite dracolich armour": prog("elite-dracolich-hauberk"),
   "invoke lord of bones": codex("invoke-lord-of-bones"),
 
-  // --- GWD1 ---
   "bandos equipment": rootUp("bandos-chestplate"),
   "armadyl equipment": rootUp("armadyl-chestplate"),
   "subjugation equipment": rootUp("subjugation-robe-top"),
@@ -231,7 +218,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "offhand armadyl crossbow": equip("off-hand-armadyl-crossbow"),
   "zamorak godsword": equip("zamorak-godsword"),
 
-  // --- Nex t80 ---
   torva: equip("torva-platebody"),
   "torva armour": equip("torva-platebody"),
   "torva set": equip("torva-platebody"),
@@ -243,23 +229,19 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "virtus set": prog("virtus-robe-top"),
   "virtus equipment": prog("virtus-robe-top"),
 
-  // --- Queen Black Dragon ---
   "royal crossbow": prog("royal-crossbow"),
 
-  // --- Vorago ---
   "seismic wand": prog("seismic-wand"),
   "seismic singularity": prog("seismic-singularity"),
   "tectonic energy": prog("tectonic-energy"),
   "tectonic robe armour": prog("tectonic-robe-top"),
   "tectonic armour": prog("tectonic-robe-top"),
 
-  // --- Nex: Angel of Death ---
   "wand of the praesul": prog("wand-of-the-praesul"),
   "wand of praesul": prog("wand-of-praesul"),
   "imperium core": prog("imperium-core"),
   "praesul codex": prog("praesul-codex"),
 
-  // --- Dagannoth Kings ---
   "berserker ring": prog("berserker-ring"),
   "dragon hatchet": prog("dragon-hatchet"),
   "warrior ring": equip("warrior-ring"),
@@ -268,7 +250,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "seers' ring": equip("seers-ring"),
   "seers ring": equip("seers-ring"),
 
-  // --- GWD2 / Heart of Gielinor ---
   "dragon rider lance": prog("dragon-rider-lance"),
   "wand of the cywir elders": prog("wand-of-the-cywir-elders"),
   "orb of the cywir elders": equip("orb-of-the-cywir-elders"),
@@ -279,16 +260,13 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "anima core equipment": prog("anima-core-body-of-zaros"),
   "anima core armour": prog("anima-core-body-of-zaros"),
 
-  // --- Telos ---
   "seren godbow": prog("seren-godbow"),
   "staff of sliske": prog("staff-of-sliske"),
   "zaros godsword": prog("zaros-godsword"),
   zgs: prog("zaros-godsword"),
 
-  // --- Kalphite King ---
   "drygore weapons": perm("drygore-weapons"),
 
-  // --- Amascut, the Devourer ---
   "devourer's guard": prog("devourers-guard"),
   "devourers guard": prog("devourers-guard"),
   "tumeken's light": prog("tumekens-light"),
@@ -297,7 +275,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "tumekens resplendence equipment": prog("tumekens-resplendence-robe-top"),
   "tumeken's resplendence": prog("tumekens-resplendence-robe-top"),
 
-  // --- Araxxor / Araxxi ---
   "noxious scythe": prog("noxious-scythe"),
   "noxious staff": equip("noxious-staff"),
   "noxious longbow": prog("noxious-longbow"),
@@ -308,7 +285,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "noxious staff components": equip("noxious-staff"),
   "noxious longbow components": prog("noxious-longbow"),
 
-  // --- Solak / Lost Grove / Prif ---
   "blightbound crossbow": prog("blightbound-crossbow"),
   "off-hand blightbound crossbow": equip("off-hand-blightbound-crossbow"),
   "offhand blightbound crossbow": prog("offhand-blightbound-crossbow"),
@@ -350,7 +326,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "clan districts": perm("max-cape"),
   "spirit trees": perm("crystal-teleport-seed"),
 
-  // --- Raksha ---
   "greater ricochet": codex("greater-ricochet"),
   "greater chain": codex("greater-chain"),
   divert: codex("divert"),
@@ -359,27 +334,22 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "shadow spike": prog("shadow-spike"),
   "shadow spike upgrades to tier 90": prog("shadow-spike"),
 
-  // --- Barrows: Rise of the Six ---
   "malevolent energy": prog("malevolent-energy"),
   "malevolent armour": prog("malevolent-cuirass"),
   "malevolent cuirass": prog("malevolent-cuirass"),
 
-  // --- ED2 Dragonkin Laboratory ---
   "greater fury": codex("greater-fury"),
   "greater flurry": codex("greater-flurry"),
   "greater barge": codex("greater-barge"),
   "draconic energy": prog("draconic-energy"),
 
-  // --- ED3 Shadow Reef ---
   "eldritch crossbow": prog("eldritch-crossbow"),
   "eldritch crossbow components": prog("eldritch-crossbow"),
 
-  // --- Legiones / Monastery of Ascension ---
   "ascension crossbow": prog("ascension-crossbow"),
   "off-hand ascension crossbow": equip("off-hand-ascension-crossbow"),
   "ascension grips": equip("ascension-grips"),
 
-  // --- Magister / Sophanem Slayer Dungeon ---
   "gloves of passage": equip("gloves-of-passage"),
   "enhanced gloves of passage": equip("enhanced-gloves-of-passage"),
   phylactery: perm("phylactery"),
@@ -500,7 +470,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "kalphite queen head": skProd("kalphite-queen-head"),
   "dragon 2h sword": skProd("dragon-2h-sword"),
 
-  // --- Access / materials (inventory or permanent-unlock art only) ---
   "pale energy": "/game/upgrades/skilling-production/pale-energy.webp",
   monolith: perm("mysterious-monolith"),
   "mysterious monolith": perm("mysterious-monolith"),
@@ -514,7 +483,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "necromancy power armour": equip("deathdealer-robe-top"),
   "deathdealer armour": equip("deathdealer-robe-top"),
 
-  // --- GWD1 piece lists (slash expansion) ---
   "bandos helmet": equip("bandos-helmet"),
   "bandos chestplate": rootUp("bandos-chestplate"),
   "bandos tassets": equip("bandos-tassets"),
@@ -531,14 +499,12 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "gloves of subjugation": equip("gloves-of-subjugation"),
   "boots of subjugation": equip("boots-of-subjugation"),
 
-  // --- Hermod: hermodic plate asset missing; power armour → deathdealer / deathwarden ---
   "deathwarden robe armour": prog("deathwarden-robe-top"),
   "deathwarden armour": prog("deathwarden-robe-top"),
   "deathwarden robes": prog("deathwarden-robe-top"),
   deathwarden: prog("deathwarden-robe-top"),
   deathdealer: equip("deathdealer-robe-top"),
 
-  // --- Corporeal Beast ---
   "holy elixir": skProd("holy-elixir"),
   "spirit shield": perm("spirit-shield"),
   "blessed spirit shield": perm("blessed-spirit-shield"),
@@ -548,7 +514,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "divine spirit shield": equip("divine-spirit-shield"),
   // sigils: no inventory icons published — omit (wrong finished-shield art worse than none)
 
-  // --- Rex Matriarchs / Osseous ---
   "skeka's hypnowand": offhand("skekas-hypnowand"),
   "skekas hypnowand": offhand("skekas-hypnowand"),
   "champion's ring": util("champions-ring"),
@@ -558,7 +523,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "stalker's ring": util("stalkers-ring"),
   "stalkers ring": util("stalkers-ring"),
 
-  // --- Anachronia (gemstone / terrasaur / totems / mattock / double surge) ---
+  // Anachronia (gemstone / terrasaur / totems / mattock / double surge)
   // inventory under upgrades/progression (equipment/ copies not published)
   "gemstone helm": prog("gemstone-helm"),
   "gemstone hauberk": prog("gemstone-hauberk"),
@@ -575,11 +540,9 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "crystal mattock": prog("crystal-mattock"),
   "gemstone golem outfit": prog("gemstone-golem-outfit"),
 
-  // --- Fremennik / Lunar ---
   "lunar spellbook": perm("lunar-spellbook"),
   lunar: perm("lunar-spellbook"),
 
-  // --- Desert drygore / khopesh pieces ---
   "off-hand drygore mace": equip("off-hand-drygore-mace"),
   "offhand drygore mace": equip("off-hand-drygore-mace"),
   "off-hand drygore longsword": equip("off-hand-drygore-longsword"),
@@ -592,7 +555,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "off-hand khopesh of the kharidian": equip("off-hand-khopesh-of-the-kharidian"),
   "offhand khopesh of the kharidian": equip("off-hand-khopesh-of-the-kharidian"),
 
-  // --- GWD2 refined + style splits ---
   "refined anima core armour": prog("refined-anima-core-body-of-zaros"),
   "refined anima core equipment": prog("refined-anima-core-body-of-zaros"),
   "refined anima core": prog("refined-anima-core-body-of-zaros"),
@@ -607,7 +569,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "off-hand shadow glaive": equip("off-hand-shadow-glaive"),
   "offhand shadow glaive": equip("off-hand-shadow-glaive"),
 
-  // --- TokHaar-Kal (Fight Kiln) + Fire cape (Fight Cave) ---
+  // TokHaar-Kal (Fight Kiln) + Fire cape (Fight Cave)
   // Igneous style aliases live under TzKal-Zuk above (no dup keys).
   "tokhaar-kal-ket": equip("tokhaar-kal-ket"),
   "tokhaar kal-ket": equip("tokhaar-kal-ket"),
@@ -627,10 +589,8 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "tokhaar kal capes": equip("tokhaar-kal-ket"),
   "fire cape": prog("fire-cape"),
 
-  // --- QBD / nightmare ---
   "enhanced nightmare gauntlets": equip("enhanced-nightmare-gauntlets"),
 
-  // --- Other high-profile combat uniques ---
   "hexhunter bow": equip("hexhunter-bow"),
   "bloodwood logs": perm("bloodwood-logs"),
   "bakriminel bolt tips": skProd("bakriminel-bolts"),
@@ -732,7 +692,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "masuta's warspear": equip("masutas-warspear"),
   "masutas warspear": equip("masutas-warspear"),
 
-  // --- Permanent unlocks / access tokens (honest inventory or unlock art) ---
   "artificer's measure": perm("artificers-measure"),
   "artificers measure": perm("artificers-measure"),
   hexcrest: perm("hexcrest"),

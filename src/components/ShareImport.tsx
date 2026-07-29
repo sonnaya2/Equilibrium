@@ -6,7 +6,7 @@ import { applyBuild, buildHasContent, buildsEqual, hydrateLocalBuild } from "@/l
 import type { BuildState } from "@/league/index";
 
 /**
- * Layout-mounted one-shot for #b= share links. Works on every route — not only
+ * Layout-mounted handler for #b= share links. Works on every route, not only
  * pages that call useBuild. Conflict with a non-empty local build opens a carved
  * panel; empty (or identical) local imports immediately.
  */

@@ -1,35 +1,15 @@
 /**
- * Cut the 3D board out of the HD Wiki surface raster.
+ * Builds committed 3D board geometry and terrain data from the HD Wiki raster.
+ * Run with `npm run build:map`.
  *
- * The Wiki draws open water as one flat colour, which makes the real coastline
- * recoverable exactly rather than approximately — so the board's silhouette is
- * the map's own silhouette, tiny islets and all, not a hand-drawn polygon that
- * drifts off it. Everything this writes is committed; the app never does any of
- * this work at runtime.
- *
- *   npm run build:map
- *
- * Outputs
- *   public/map/terrain-field.webp  RGBA data texture (see FIELD CHANNELS below)
- *   public/map/region-plates.json  per-region rings + seam polylines, map coords
- *   scripts/.map-terrain-debug.png overlay for eyeballing the partition (untracked)
- *
- * FIELD CHANNELS (linear data, never sRGB-decoded)
+ * terrain-field.webp channels, decoded as linear data:
  *   R  land coverage         0 open water .. 255 solid land
  *   G  signed coast distance 128 = waterline, one step per SD_STEP game units
  *   B  inland water          the rivers and lakes the coastline encloses
  *   A  relief                low-passed raster luminance, for micro-emboss
  *
- * Region ownership is a Euclidean partition seeded from real place coordinates
- * (src/map/data/gameCoords.ts, via the region tags in placeAnchors.ts) plus the
- * supplemental seeds in data/map/region-seeds.json. Nothing here invents a
- * coordinate: a border falls where it falls between two towns we have verified
- * positions for.
- *
- * A seam is then a run of shared lattice edges, and both neighbours simplify
- * that run from the same canonical key — so they get byte-identical points,
- * plates cannot crack apart, and the vine that seals a locked border is that
- * very polyline.
+ * Region ownership uses verified place coordinates plus region-seeds.json.
+ * Neighbours simplify shared seam keys into byte-identical polylines.
  */
 
 import fs from "node:fs";
@@ -89,7 +69,6 @@ const MIN_PLATE_AREA = 24;
 const sharp = await import("sharp").then((m) => m.default).catch(() => null);
 if (!sharp) throw new Error("sharp is required (it ships with next). Run `npm ci` first.");
 
-// ----------------------------------------------------------------- seeds ----
 
 const { placeMapCoord } = await import("../src/map/data/gameCoords.ts");
 const seedFile = JSON.parse(fs.readFileSync(SEEDS_JSON, "utf8"));
@@ -137,7 +116,6 @@ const px2map = ([x, y]) => [
   Math.round(BOUNDS.maxY - (y / H) * SPAN_Y),
 ];
 
-// ----------------------------------------------------------------- masks ----
 
 console.log(`[terrain] reading ${path.relative(ROOT, SRC)} at ${W}x${H}`);
 const { data: rgb } = await sharp(SRC)
@@ -238,7 +216,6 @@ console.log(
   `[terrain] land ${((100 * landPx) / N).toFixed(1)}% · inland water ${((100 * inlandPx) / N).toFixed(2)}% · dropped ${islets} sub-${MIN_ISLET}px blobs`,
 );
 
-// -------------------------------------------------------- distance field ----
 
 /** Felzenszwalb exact squared-EDT, one axis. */
 function edt1d(f, n, d, v, z) {
@@ -290,21 +267,8 @@ const distToWater = distanceTo((i) => land[i] === 0);
 const distToLand = distanceTo((i) => land[i] === 1);
 
 /**
- * Rivers, by shape rather than by colour or by width.
- *
- * The Wiki paints rivers in the open-sea colour, so the flood from the frame
- * edge runs up the Lum and the Salve and calls them ocean — which is why the
- * enclosed-water channel is nearly empty and nothing on the board flowed.
- *
- * Width alone does not separate them either: land on opposing banks within a
- * few tiles catches the Lum and the Elid correctly and outlines every cove with
- * them, because a bay is narrow too.
- *
- * What actually separates a river from a bay is how far it is from open water.
- * A cove is a narrow notch a few tiles off the sea; a river is narrow for its
- * whole length and runs a long way inland. So: find water open enough to be sea,
- * measure every water tile's distance from that, and call a tile a river when it
- * is both narrow and a long way from anywhere the sea reaches.
+ * Classifies rivers as narrow water far from open sea. Colour cannot distinguish
+ * them from the ocean, and width alone also selects narrow coves.
  */
 const river = new Uint8Array(N);
 {
@@ -324,7 +288,6 @@ const river = new Uint8Array(N);
   );
 }
 
-// ----------------------------------------------------- region ownership -----
 
 console.log("[terrain] region partition");
 /** 0 = water, otherwise region index + 1. */
@@ -394,7 +357,7 @@ const owner = new Uint8Array(N);
       if (!land[i]) continue;
       const [gx, gy] = px2map([px, py]);
 
-      // --- Fort Forinthry campus = Misthalin (league hardRule) ---
+      // Fort Forinthry campus = Misthalin (league hardRule)
       // Keep/campus [3308,3553]. Prior y≤3572 painted the fort plate too far
       // into wildy north — cap at ~3558. Stay joined to ditch S bank (y≤3522)
       // so mist is one body, not a wildy island.
@@ -403,7 +366,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Forinthry ditch: S bank = Misthalin; N bank = Forinthry ---
+      // Forinthry ditch: S bank = Misthalin; N bank = Forinthry
       // Ditch ~y 3521–3525 Edgeville→Silvarea. Ice Mountain / Black Knights stay
       // Asgarnia *south* of the ditch; the hard dark-gray floor north of it is
       // wilderness even west of Edgeville. Skip fort (handled above).
@@ -422,7 +385,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Salve: west bank = Misthalin; east bank = Mory ---
+      // Salve: west bank = Misthalin; east bank = Mory
       // Temple ~[3405,3488]; bridge ~[3425,3485].
       // Split the old full rectangle (x 3300–3416, y≥3360) — it painted the whole
       // northern Kharidian sand top as Misthalin. River bank stays low-y mist;
@@ -443,7 +406,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Dig Site hill + Exam Centre = Misthalin (connected, not a sand blanket) ---
+      // Dig Site hill + Exam Centre = Misthalin (connected, not a sand blanket)
       // Dig Site [3360,3420]; Exam Centre ~[3362,3339]. Prior campus y≥3345 across
       // a wide x band stole the desert *top*. Keep a narrow N–S corridor so Exam
       // Centre stays mist without painting the whole northern sand, and so the
@@ -457,7 +420,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Mory–Desert river / sand contact (piecewise diagonal, not sawtooth) ---
+      // Mory–Desert river / sand contact (piecewise diagonal, not sawtooth)
       // Band ~x 3405–3525, y 3175–3324. Desert west/south (Het's, Uzer dunes,
       // northern Kharidian sand). Mory east/north (Abandoned Mine [3441,3233],
       // Burgh de Rott, Mort'ton, Mort Myre SW).
@@ -486,7 +449,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Al Kharid west approach = Misthalin (Lumbridge side of the gate) ---
+      // Al Kharid west approach = Misthalin (Lumbridge side of the gate)
       // Gate desert ~[3290,3225]; Lumbridge-side land west of the wall is mist.
       // North scrub toward Dig Site (x≥3295) stays desert until the dig band.
       if (gx >= 3235 && gx <= 3275 && gy >= 3215 && gy <= 3275) {
@@ -494,7 +457,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Northern desert sand (top of Kharidian) = Desert ---
+      // Northern desert sand (top of Kharidian) = Desert
       // Al Kharid [3293,3184], Het's Oasis [3360,3120], sand north of the city.
       // Holds up to y 3382 under the dig hill (y≥3385) and around the Exam Centre
       // blob (forced mist above). East of x3405: mory contact box.
@@ -508,7 +471,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Falador–Varrock / Draynor–Sarim: latitude-split vertical cut ---
+      // Falador–Varrock / Draynor–Sarim: latitude-split vertical cut
       // South (Draynor y≤3360): Port Sarim asg, Draynor mist — cut ~3065.
       // Mid (Barb y 3360–3470): Barb Village [3080,3420] asg — cut ~3086.
       // North (Edgeville y≥3470): monastery asg ≤3065, Edgeville mist ≥3070.
@@ -522,10 +485,7 @@ const owner = new Uint8Array(N);
           continue;
         }
       } else if (gy >= 3360 && gy < 3470) {
-        // Cut on the River Lum, not through the village. Barbarian Village runs
-        // x3072-3098, so the old ~3086 line sliced it down the middle; the river
-        // at x~3100 is the feature the border should have been on all along, and
-        // it keeps the whole village in Asgarnia as intended.
+        // The River Lum at x≈3100 keeps Barbarian Village in Asgarnia.
         if (gx >= 2920 && gx <= 3100 && either(i, mistId, asgId)) {
           force(i, asgId);
           continue;
@@ -545,7 +505,7 @@ const owner = new Uint8Array(N);
         }
       }
 
-      // --- White Wolf Mountain: Asgarnia E / Kandarin W ---
+      // White Wolf Mountain: Asgarnia E / Kandarin W
       // Summit [2870,3480] asg; Catherby [2809,3434] + NE ridge [2845,3450] kand.
       // Cut between 2846 and 2849.
       if (gx >= 2780 && gx <= 2846 && gy >= 3380 && gy <= 3565 && either(i, asgId, kandId)) {
@@ -557,10 +517,10 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Fremennik / Asgarnia mountain + NE snow ---
+      // Fremennik / Asgarnia mountain + NE snow
       // HardRules: Death Plateau, Trollheim, Troll Stronghold, GWD = Asgarnia.
       // Fremennik: Rellekka, Mountain Camp path, Keldagrim, NE snow west of trolls.
-      // Bad fre seed [2960,3620] used to stab fre through Ice Mountain; kill that tongue.
+      // The [2960,3620] seed cannot cross Ice Mountain.
       // Keldagrim [2850,3580] fre pocket — keep clear of Death Plateau [2865,3595].
       if (gx >= 2838 && gx <= 2868 && gy >= 3565 && gy <= 3590) {
         force(i, fremId);
@@ -599,7 +559,7 @@ const owner = new Uint8Array(N);
         }
       }
 
-      // --- Western hard-dark-gray wilderness (after asg mountain forces) ---
+      // Western hard-dark-gray wilderness (after asg mountain forces)
       // Wiki paints the wildy floor as hard dark gray. Asgarnia keeps the brown
       // troll ridge above; this reclaim takes dark wildy west of Edgeville that
       // Voronoi / the old ice-mountain box left as asgarnia. Fort is mist above.
@@ -610,7 +570,7 @@ const owner = new Uint8Array(N);
         }
       }
 
-      // --- Crandor (volcanic islet N of Musa / W of Rimmington) = Karamja ---
+      // Crandor (volcanic islet N of Musa / W of Rimmington) = Karamja
       // Without a seed, Entrana/Rimmington Asgarnia Voronoi steals the whole island.
       // Crandor center ~[2835,3255]; keep Entrana [2834,3335] (asg) outside this box.
       if (gx >= 2805 && gx <= 2875 && gy >= 3220 && gy <= 3295) {
@@ -618,7 +578,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Musa channel: Karamja island W / Asgarnia mainland E ---
+      // Musa channel: Karamja island W / Asgarnia mainland E
       // Musa Point [2950,3145] kara; Port Sarim / Mudskipper mainland asg.
       if (gx >= 2860 && gx <= 2975 && gy >= 3100 && gy <= 3188 && either(i, asgId, karaId)) {
         force(i, karaId);
@@ -629,7 +589,6 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Yanille (Kandarin) / Brimhaven (Karamja) ---
       if (gx >= 2520 && gx <= 2685 && gy >= 3000 && gy <= 3185 && either(i, kandId, karaId)) {
         force(i, kandId);
         continue;
@@ -639,7 +598,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Arandar pass: Kandarin owns gate + pass; Tirannwn west of pass ---
+      // Arandar pass: Kandarin owns gate + pass; Tirannwn west of pass
       // Gate [2345,3283] kand; W of pass [2305,3275] tir.
       if (gx >= 2325 && gx <= 2380 && gy >= 3260 && gy <= 3315 && either(i, kandId, tirId)) {
         force(i, kandId);
@@ -650,7 +609,7 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // --- Tirannwn SE brown-rock edge of Isafdar ---
+      // Tirannwn SE brown-rock edge of Isafdar
       // Brown cliff / rock mass SE of Isafdar. Kandarin keeps Castle Wars
       // (~2440,3090) and Arandar; stop short of both.
       if (gx >= 2260 && gx <= 2390 && gy >= 3030 && gy <= 3155 && either(i, kandId, tirId)) {
@@ -661,19 +620,8 @@ const owner = new Uint8Array(N);
   console.log(`[terrain] frontier corridors forced ${forced} tiles`);
 
   /**
-   * Only the mainland may be split between regions. Every island is awarded whole.
-   *
-   * The partition measures straight-line distance and does not care that the line
-   * crosses open sea, so an island ends up divided between whichever mainland
-   * towns happen to lie nearest its two ends — Entrana was cut in half between
-   * Kandarin and Asgarnia, Crandor went to Asgarnia, and Karamja lost its western
-   * tip to Kandarin's pin at Port Khazard. Exempting islands that merely *contain*
-   * a seed did not help: Karamja contains sixteen and was sliced anyway.
-   *
-   * So the rule is by landmass rather than by seed. The largest component is the
-   * continent and keeps its internal frontiers; everything else goes to one
-   * region, chosen by the seeds standing on it — those are real places with
-   * sourced coordinates — falling back to pixel plurality only when it holds none.
+   * Only the mainland may split across regions. Each island uses its local seeds,
+   * falling back to pixel plurality when it has none.
    */
   let mainland = -1;
   let mainlandSize = 0;
@@ -714,7 +662,6 @@ const owner = new Uint8Array(N);
   );
 }
 
-// --------------------------------------------------------- ring tracing -----
 
 /**
  * The lattice boundary of one region's land, as closed rings that carry what
@@ -816,10 +763,8 @@ function simplifyOpen(points, eps) {
 }
 
 /**
- * A run that returns to where it started (a whole island coast) degenerates
- * Douglas-Peucker: with the two pinned endpoints on the same point every
- * perpendicular distance is zero, and the entire island collapses to a dot.
- * Split it at the point furthest from the start and simplify the two halves.
+ * Duplicate endpoints collapse a closed ring under Douglas-Peucker. Split at
+ * the farthest point and simplify each half.
  */
 function simplifyRing(points, eps) {
   const a = points[0];
@@ -924,16 +869,11 @@ for (let r = 0; r < REGIONS.length; r++) {
       const shared = run.side > 0 && run.side !== r + 1;
       const key = shared ? runKey(points, r + 1, run.side) : null;
 
-      // Sharing is checked before anything else. Sending a shared run down the
-      // closed-ring path was quietly costing three borders their parity: a run
-      // that happens to return to its own start took a simplification neither
-      // neighbour could agree on, and the two plates stopped meeting.
+      // Shared runs must use identical simplification on both plates.
       let simple;
       let bothSidesDrewIt = false;
       if (shared) {
-        // Count 1 means the neighbour's land here was a sliver small enough to be
-        // filtered out, so it has no plate to meet — that is a coast facing a
-        // ghost, not a border, and it must not grow a vine.
+        // A run seen once borders a filtered sliver and is coastline, not a seam.
         const canonicalisable = !closed && runSeen.get(key) === 2;
         bothSidesDrewIt = canonicalisable;
         if (canonicalisable) {
@@ -948,9 +888,7 @@ for (let r = 0; r < REGIONS.length; r++) {
           }
           simple = flipped ? [...canonical].reverse() : canonical;
         } else {
-          // Either the two sides cut this border differently, or it closes on
-          // itself and has no canonical direction. Ship the lattice path: denser,
-          // but both plates then walk exactly the same staircase and cannot crack.
+          // Unsimplified lattice paths keep unreconciled borders watertight.
           unreconciled++;
           simple = points;
         }
@@ -962,8 +900,7 @@ for (let r = 0; r < REGIONS.length; r++) {
 
       for (let i = 0; i < simple.length - 1; i++) pts.push(simple[i]);
 
-      // A run whose far side is another region, and which that region also drew,
-      // is a border — entire, and identical on both plates.
+      // Record only borders drawn by both adjacent plates.
       if (bothSidesDrewIt && simple.length >= 3) {
         const pair = [r, run.side - 1].sort((a, b) => a - b);
         if (r === pair[0]) {
@@ -991,10 +928,8 @@ if (unreconciled) {
 }
 
 /**
- * The gate. Scan-convert what we are about to ship and compare it to the mask
- * it came from: a ring chained through a pinch point, or a hole the tracer
- * dropped, shows up here as missing area and nowhere else. Even-odd fill,
- * because that is what earcut will do with the same ring in the browser.
+ * Scan-converts output rings and compares them to the source mask using
+ * earcut's even-odd fill rule.
  */
 {
   const painted = new Uint8Array(N);
@@ -1029,8 +964,7 @@ if (unreconciled) {
     if (owner[i] === painted[i] && owner[i]) both++;
     if (owner[i] || painted[i]) either++;
   }
-  // A thin halo along every coast is simplification and is fine. One big blob is
-  // a ring chained through a pinch point, and that is a hole in the board.
+  // Small coastal differences are expected; a large component indicates a hole.
   let biggest = 0;
   let at = -1;
   components(
@@ -1082,7 +1016,6 @@ console.log(
   ).toFixed(0)} KB`,
 );
 
-// --------------------------------------------------------- field texture ----
 
 console.log("[terrain] field texture");
 const { data: luma } = await sharp(SRC)
@@ -1126,7 +1059,6 @@ console.log(
   ).toFixed(0)} KB`,
 );
 
-// ----------------------------------------------------------- debug plate ----
 
 const DBG_W = 1536;
 const DBG_H = 1024;
@@ -1141,7 +1073,6 @@ const HUES = [
   [128, 255, 255], [255, 160, 64], [176, 255, 96], [224, 128, 255], [96, 208, 128],
   [255, 96, 176],
 ];
-// Ownership wash, so a region that swallowed its neighbour is obvious.
 for (let y = 0; y < DBG_H; y++) {
   for (let x = 0; x < DBG_W; x++) {
     const o = owner[((y * H / DBG_H) | 0) * W + ((x * W / DBG_W) | 0)];
@@ -1162,7 +1093,6 @@ const dot = (x, y, c, w = 0) => {
     }
   }
 };
-// Simplified plate outlines: if these do not sit on the coast, the geometry is wrong.
 for (const id of REGIONS) {
   for (const flat of plates[id].rings) {
     for (let i = 0; i < flat.length; i += 2) {

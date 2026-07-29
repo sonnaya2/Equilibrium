@@ -405,7 +405,6 @@ export function expandGapFile(file) {
   for (const raw of list(file.data.supply_routes)) {
     const methodName = pickMethodName(raw);
     if (!methodName) {
-      // Skip slug-only / id-only supply rows — do not invent titles from item_family.
       continue;
     }
     const asMethod = {

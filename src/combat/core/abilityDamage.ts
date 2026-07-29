@@ -1,11 +1,6 @@
 import { damagePerLevel } from "./damagePerLevel";
 import { percentFloor } from "./rounding";
 
-/**
- * Ability damage as percent-of-base bands. The engine consumes bands; the base ability
- * damage itself is composed by baseAbilityDamage below from level + weapon tiers, per
- * docs/combat-changelog.md §1.2 (pre-2026 form) with the 2 Mar 2026 DPL replacement (§5.1).
- */
 export interface DamageBand {
   minPct: number;
   maxPct: number;
@@ -14,7 +9,7 @@ export interface DamageBand {
 export interface BandResult {
   min: number;
   max: number;
-  /** Uniform-band mean, pending RS Analysis fixture validation of the in-band shape. */
+  /** Uniform-band arithmetic mean. */
   expected: number;
 }
 
@@ -28,23 +23,15 @@ export function bandOf(base: number, band: DamageBand): BandResult {
 }
 
 /**
- * Base ability damage composition (current game, all four styles).
+ * Current base ability damage formulas. Intermediate floors are part of the mechanic.
  *
  *   main-hand:  floor(DPL(level)) + floor(9.6 × tier + styleBonus)
  *   off-hand:   floor(main-hand / 2)                     (dual wield totals MH + OH)
  *   two-handed melee/ranged: MH + floor(4.8 × tier + 0.5 × styleBonus)
  *   two-handed magic: floor(DPL(level)) + floor(1.25 × level) + floor(14.4 × tier + 1.5 × styleBonus)
  *
- * Sources: docs/combat-changelog.md §1.2 (Ability damage, rev. 30 Dec 2023) with §5.1
- * (2 Mar 2026: the linear 2.5×level term becomes DPL in every formula; weapon-tier
- * terms 9.6 / 14.4 / halved OH unchanged). The magic 2H floor(1.25×level) second level
- * term is retained from §1.2 — §5.1 names only the 2.5×level term as replaced; derived,
- * not verbatim, so it is covered by RS Analysis fixtures before reliance.
- *
- * `tierCap` applies the documented spell-tier (magic) and ammo-tier (ranged) caps to the
- * weapon-tier term. ponytail: the Ability damage page also caps the weapon term by
- * wielder level (min(tier, level)) — the introduction date is UNVERIFIED (changelog §10),
- * so it is not modelled; add it once a source lands.
+ * `tierCap` applies spell-tier and ammo-tier caps to the weapon term. The
+ * wielder-level cap is excluded because its start date is unverified.
  */
 export interface WeaponProfile {
   tier: number;

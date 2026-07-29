@@ -1,7 +1,3 @@
-/**
- * Audit /data icon wells — blank vs garbage. Writes tmp-data-icon-audit.json (gitignored).
- * Run: npx vitest run src/lib/dataIconAudit.test.ts
- */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -32,12 +28,6 @@ function slugify(s: string): string {
     .replace(/-+/g, "-");
 }
 
-/**
- * Heuristic for weakly related icons. Documented intentional cases that are NOT garbage:
- * - Skill icons when name/kind mentions that skill (deliberate skill fallback / alias)
- * - Stem-related inventory (archaeology ↔ archaeologist, book ↔ books, war segment match)
- * - Short shared segments (length ≥ 3) that appear as whole slug parts (e.g. war in altar-of-war)
- */
 function looksGarbage(name: string, webPath: string, kind = ""): boolean {
   const file = basename(webPath).replace(/\.(png|jpg|jpeg|gif|webp)$/i, "");
   const nameSlug = slugify(name);
@@ -46,7 +36,6 @@ function looksGarbage(name: string, webPath: string, kind = ""): boolean {
   const fileTokens = file.split("-").filter((t) => t.length >= 3);
   if (!nameTokens.length || !fileTokens.length) return false;
 
-  // Intentional skill fallbacks: /game/skills/<skill>.webp when name or kind names that skill.
   const skillHit = webPath.match(/\/skills\/([a-z0-9-]+)\./i);
   if (skillHit) {
     const skill = skillHit[1]!;
@@ -71,7 +60,6 @@ function looksGarbage(name: string, webPath: string, kind = ""): boolean {
       file.includes(t) ||
       fileTokens.some((ft) => ft === t || ft.includes(t) || t.includes(ft) || shareStem(t, ft)),
   );
-  // Also allow kind tokens to explain intentional aliases (e.g. kind "Archaeology …").
   const kindTokens = kindSlug.split("-").filter((t) => t.length >= 4);
   const kindShared =
     kindTokens.length > 0 &&
@@ -185,16 +173,14 @@ describe("data icon audit", () => {
       garbage: dedupe(garbage),
       missingFile: dedupe(missingFile),
     };
-    // Optional local dump (gitignored tmp-*.json); do not require scraped-data/.
     writeFileSync("tmp-data-icon-audit.json", `${JSON.stringify(report, null, 2)}\n`);
-    // Sanity: bosses still resolve
     expect(bossIconPath("Kerapac")).toBeTruthy();
     expect(activityIconPath("Prifddinas") || true).toBeTruthy();
-    // eslint-disable-next-line no-console -- this audit prints its local report
+    // eslint-disable-next-line no-console
     console.log("AUDIT", report.counts);
-    // eslint-disable-next-line no-console -- this audit prints its local report
+    // eslint-disable-next-line no-console
     console.log("garbage sample", report.garbage.slice(0, 15));
-    // eslint-disable-next-line no-console -- this audit prints its local report
+    // eslint-disable-next-line no-console
     console.log("blank sample", report.blank.slice(0, 15));
   });
 });

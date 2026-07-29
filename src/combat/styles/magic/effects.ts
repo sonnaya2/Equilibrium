@@ -116,7 +116,7 @@ export const GREATER_SUNSHINE_SOURCE: SourceReference = {
  * Instability (FSOA special, wiki): grants a 30s (50-tick) self-buff. While active,
  * a Magic critical strike on the primary target fires Lightning Surge dealing
  * 70–90% ability damage, landing 1 tick after the source hit. Lightning Surge
- * crits do not chain further surges. Magic weapons only (sim: magic-style casts).
+ * crits do not chain further surges. Magic weapons only.
  * PvP: no crit effect and no cooldown — out of scope for this PvM EV sim.
  *
  * Wiki EV for one source hit under Instability:

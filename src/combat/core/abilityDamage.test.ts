@@ -24,7 +24,6 @@ describe("baseAbilityDamage", () => {
     const level = 99;
     const expected = Math.floor(damagePerLevel(level)) + Math.floor(9.6 * 90);
     expect(baseAbilityDamage(level, { kind: "mainhand", weapon: t90 })).toBe(expected);
-    // A combined floor would round the sum once; the chain floors each term first.
     expect(expected).toBeLessThanOrEqual(Math.floor(damagePerLevel(level) + 9.6 * 90));
   });
 
@@ -67,7 +66,6 @@ describe("baseAbilityDamage", () => {
   });
 
   it("meets the pre-2026 linear total at level 145 for the level term", () => {
-    // DPL(145) = 362.5 = old 2.5 × 145 — the curve's documented anchor (changelog §5.1).
     const modern = baseAbilityDamage(145, { kind: "mainhand", weapon: t90 });
     expect(modern).toBe(362 + Math.floor(9.6 * 90));
   });

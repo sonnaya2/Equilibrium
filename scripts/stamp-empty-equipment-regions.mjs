@@ -1,9 +1,3 @@
-/**
- * Post-pass reaffirm for items that may still need a durable unlock stamp.
- * pass10 (2026-07-26): no intentional empties for combat residual —
- * second-age + skilling bows are REMOVE_IDS in stamp-equipment-regions.mjs.
- * This script only reaffirms multi-source / late stamps if still present.
- */
 import { readFileSync, writeFileSync } from "node:fs";
 
 const eqPath = "data/combat/equipment.json";

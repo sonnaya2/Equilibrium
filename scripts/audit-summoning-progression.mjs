@@ -44,7 +44,7 @@ const nihilStyles = Object.fromEntries((nihil.variants || []).map((row) => [row.
 for (const style of ["melee", "ranged", "magic", "necromancy"]) {
   if (nihilStyles[style]?.accuracy_bonus_percent !== 5) fail(`${style} nihil accuracy bonus drifted`);
 }
-// User rule 2026-07-26: Freneskae packages under Kandarin (World Gate / Eagles Peak).
+// Freneskae packages under Kandarin through the World Gate and Eagles' Peak.
 const nihilRegions = [...(nihil.required_regions || []), ...(nihil.region_hints || []), nihil.region_hint]
   .filter(Boolean)
   .map(String);

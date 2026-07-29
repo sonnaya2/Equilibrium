@@ -1,6 +1,6 @@
 /**
  * Presentation-only drop grouping + rarity display for the wiki article modal.
- * Pure (no React). Never invents items or rates — only buckets, cleans labels,
+ * Pure (no React). Buckets sourced items and rates, cleans labels,
  * and merges mechanic-scaled duplicates so long tables stay usable.
  */
 
@@ -202,7 +202,7 @@ export function mergeDropVariants(rows: PresentedDrop[]): PresentedDrop[] {
     row: PresentedDrop;
     min: number | null;
     max: number | null;
-    /** Non-numeric qtys seen — if any, don't invent a range. */
+    /** Non-numeric quantities leave the range unset. */
     opaque: string[];
     rates: string[];
   };
@@ -358,7 +358,7 @@ export function pickHeroFacts(
     const key = f.label.toLowerCase();
     if (seen.has(key)) continue;
     if (!f.value.trim()) continue;
-    // Skip giant JSON-looking or edit-placeholder junk.
+    // Exclude JSON-looking and edit-placeholder text.
     if (f.value.length > 80) continue;
     if (/\{\s*"/.test(f.value) || /^\?\s*\(edit\)/i.test(f.value)) continue;
     // Bare "Level" is usually Slayer level — skip once combat level is shown.

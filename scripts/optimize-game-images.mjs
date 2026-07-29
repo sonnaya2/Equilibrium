@@ -163,7 +163,7 @@ async function optimizeOne(absPath, treeRoot) {
     return { rel, status: "skip-encode", error: String(err?.message || err), before, after: before };
   }
 
-  // Keep original if webp would be larger and we did not resize (icons sometimes).
+  // Preserve smaller originals when no resize occurred.
   if (!needsResize && alreadyWebp && buf.length >= before * 0.98) {
     return { rel, status: "skip-no-gain", before, after: before, w, h };
   }

@@ -68,7 +68,6 @@ test("data region rail owns every downstream filter", async ({ page }) => {
 
   const kerapac = contentTable.locator("tbody tr").filter({ hasText: "Kerapac" });
   await expect(kerapac).toContainText("Fractured Staff of Armadyl");
-  // Reward icons at a glance (at least one resolved game icon in the rewards cell).
   await expect(kerapac.locator(".data-reward-icons img").first()).toBeVisible();
 
   const digSite = contentTable.locator("tbody tr").filter({ hasText: "Varrock Dig Site" });

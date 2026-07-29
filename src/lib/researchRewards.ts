@@ -1,14 +1,8 @@
-/**
- * Content-row → upgrade unique-list resolution for /data Browse.
- * Pure (no React) so unit tests can pin boss → package mapping.
- */
-
 import { clipRewardDisplay, contentRewardsSource } from "./dataContentPresentation";
 
 export type RewardUpgrade = { name: string; detail?: string | null };
 export type RewardContentRow = { name: string; detail?: string | null };
 
-/** Light wiki/display cleanup — not a full sanitizer. */
 export function cleanRewardText(value: string): string {
   if (!value) return "";
   return value
@@ -21,7 +15,6 @@ export function cleanRewardText(value: string): string {
     .trim();
 }
 
-/** Strip parenthetical / hub suffixes used when matching reward keys. */
 export function contentRewardBaseName(value: string): string {
   return cleanRewardText(value)
     .replace(/\s*\([^)]*\)/g, "")
@@ -34,72 +27,55 @@ export function contentRewardBaseName(value: string): string {
     .trim();
 }
 
-/** Hubs with honest text-only access (no wrong inventory icons). */
 export const CONTENT_ACCESS: Record<string, string> = {
   "Varrock Dig Site / early Archaeology":
     "Archaeology Guild shop · Mysterious monolith · Museum donation bin",
   "Pale wisps near Draynor": "Pale, bright, brilliant wisps",
   "Misthalin wisp colonies": "Pale, bright, brilliant wisps",
   "Wisps near Draynor": "Pale, bright, brilliant wisps",
-  // Catalog content name is "Fort Forinthry" (not the long construction label).
   "Fort Forinthry": "Fort buildings · chapel · Slayer hub",
   "Fort Forinthry construction and Slayer hub": "Fort buildings · chapel · Slayer hub",
   "City of Um / Underworld": "Ritual site · City of Um",
-  // Hermodic plates have no local inventory art — Deathdealer is the power-armour craft path.
   "Hermod, the Spirit of War": "Deathdealer robe armour",
-  // GWD1 hub is approach only — Bandos/Armadyl/Subjugation/godswords live on boss rows.
   "God Wars Dungeon 1": "God camps · killcount · altar healing",
 };
 
-/**
- * Explicit full reward lists when the upgrade package omits key uniques
- * (cape chains indexed separately, minigame path rows with prose-only detail).
- * Same short-circuit as CONTENT_ACCESS — icons resolve via presentContentRewards.
- * Cap-5 chip order for Zuk: weapon, ability, scripture, BiS cape, one style cape.
- */
 export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Fort Forinthry Chapel": "Prayer altar",
   "H.A.M. Hideout pickpocketing and store rooms": "Clue scroll",
   "Expansive essence pouch (70 essence, non-degrading)": "Expansive essence pouch",
-  // Main Zuk uniques + BiS igneous cape only (no +N from listing every style stone).
+  "Kerapac, the bound": "Fractured Staff of Armadyl components, Greater Concentrated Blast, Kerapac's wrist wraps, Scripture of Jas",
+  "Arch-Glacor": "Frozen core of Leng, Dark nilas, Leng artefact, Scripture of Wen, enhanced glove upgrades",
+  Croesus: "Cryptbloom armour, Scripture of Bik, Sana's fyrtorch, Tagga's corehammer",
+  "Sanctum of Rebirth": "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
+  "Vermyx, Brood Mother": "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
+  "Kezalam, the Wanderer": "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
+  "Nakatra, Devourer Eternal": "Roar of Awakening, Ode to Deceit, Divine Rage prayer codex, Scripture of Amascut, Shard of Genesis Essence",
   "TzKal-Zuk": "Ek-ZekKil, Magma Tempest, Scripture of Ful, Igneous Kal-Zuk",
   "TzHaar Fight Cave": "Fire cape",
   "Fight Kiln": "TokHaar-Kal-Ket, TokHaar-Kal-Xil, TokHaar-Kal-Mej, TokHaar-Kal-Mor",
-  // Catalog Unlocks essay is huge — keep the two things players need.
-  // Empty Throne Room mine is dark animica only (not light — light is Anachronia Swamp mine).
   "The Empty Throne Room": "Manual Auto-cycle, Dark animica",
   "Empty Throne Room": "Manual Auto-cycle, Dark animica",
-  // Infernal Source: Ancient Summoning pipeline + dig-site relics / tetras.
   "Infernal Source Dig Site":
     "Ancient Summoning, Binding contract, Tetracompass, Inspire Love, Slayer Introspection",
   "Infernal Source Dig Site (Zamorakian)":
     "Ancient Summoning, Binding contract, Tetracompass, Inspire Love, Slayer Introspection",
-  // Abilities + boots would overflow the 5-chip strip (+2).
   Raksha: "Greater Ricochet, Divert, Fleeting boots, Laceration boots, Blast diffusion boots",
-  // GWD1 K'ril: package Unlocks use "Hood / garb / … of subjugation" (suffix form) —
-  // expandSlashList prefix path only handles "Bandos helmet / chestplate". Explicit pieces.
   "K'ril Tsutsaroth":
     "Hood of subjugation, Garb of subjugation, Gown of subjugation, Gloves of subjugation, Boots of subjugation",
-  // GWD2 generals (Heart of Gielinor) — one major per boss; Telos is separate.
   "Vindicta & Gorvek": "Dragon Rider lance, Anima core of Zaros",
   Vindicta: "Dragon Rider lance, Anima core of Zaros",
   Helwyr: "Wand of the Cywir elders, Orb of the Cywir elders, Anima core of Seren",
   "Twin Furies": "Blade of Avaryss, Blade of Nymora, Anima core of Zamorak",
   Gregorovic: "Shadow glaives, Off-hand shadow glaive, Anima core of Sliske",
   "Telos, the Warden": "Seren godbow, Staff of Sliske, Zaros godsword",
-  // Zilyana uniques with published inventory icons (murmur/hiss/whisper have none).
   "Commander Zilyana":
     "Saradomin sword, Saradomin godsword, Armadyl crossbow, Off-hand Armadyl crossbow",
-  // No upgrade package in catalog — short honest label.
   "Kalphite Queen": "Dragon chainbody, Kalphite queen head, Dragon 2h sword",
-  // Giant Mole — claw/skin lack inventory art; dragon 2h is the chase unique with art.
   "Giant Mole": "Dragon 2h sword",
-  // QBD — royal crossbow path + shared dragon uniques with local art.
   "Queen Black Dragon": "Royal crossbow, Dragon 2h sword, Dragon chainbody",
-  // Legiones — dual ACB + grips.
   Legiones: "Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
   "Monastery of Ascension": "Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
-  // ED3 — eldritch + black stone ammo. Hexhunter is Soulgazers (not Shadow Reef).
   "The Shadow Reef (ED3)": "Eldritch crossbow, Black stone arrow",
   "The Shadow Reef": "Eldritch crossbow, Black stone arrow",
   Soulgazers: "Hexhunter bow",
@@ -111,42 +87,32 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Lava strykewyrms": "Wyrm spike, Wyrm scalp, Wyrm heart",
   Glacors: "Steadfast boots, Ragefire boots, Glaiven boots",
   "Acheron mammoths": "Mammoth tusk, Pack mammoth",
-  // Mazcab — one piece per Achto style (melee / mage / range).
   "Beastmaster Durzag": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   Yakamaru: "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   "Liberation of Mazcab": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
-  // Barrows brothers — five headline weapons.
   Barrows: "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail",
-  // Slayer hubs / resource dungeons with resolvable chips.
   "Kuradal's Dungeon and ferocious ring hub": "Ferocious ring",
   "Polypore Dungeon (spore and stick resources)": "Polypore staff",
   "Rex Matriarchs": "Occultist's ring, Reaver's ring, Skeka's hypnowand",
-  // Farming / woodcutting majors — avoid wrong upgrade binds.
   "Varrock Palace tree patch": "Tree patch",
   "Lumbridge hops patch": "Hops patch",
   "Draynor willow trees": "Willow trees",
   "City of Um mushroom patch": "Mushroom patch · disease-free with UG3",
-  // ED4 uniques — Vestments, Bolg, Chaos Roar, Lost Knowledge codices (Greater Sun / GDS).
   "Zamorak, Lord of Chaos":
     "Vestments of havoc, Bow of the Last Guardian, Chaos Roar, Greater Sunshine, Greater Death's Swiftness",
   "Zamorak, Lord of Chaos (Undercity)":
     "Vestments of havoc, Bow of the Last Guardian, Chaos Roar, Greater Sunshine, Greater Death's Swiftness",
-  // Necrotic altars — four runes + max RC rate (20 XP/ess Miasma · ~2.5k ess/h pouches).
   "Necromantic Rune Temple":
     "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
   "Necrotic altars": "Spirit rune, Bone rune, Flesh rune, Miasma rune · Max ~50k XP/h at Miasma",
-  // Havenhythe bosses — packages were stubs without Unlocks lists.
   "Ivar, King of Bones": "Bonecrusher maul, Magic skull mask, Colossal bone",
   "Silverquill, the Dreadhog": "Silver spines, Sanguine spines",
   "Sanguine Crawler": "Vampyrism gloves, Tainted seed, Sanguine matter",
-  // Forinthry bloodweed — pot row is the payoff; herb patch is the farm + core roll.
   "Bloodweed & aggression potions": "Clean bloodweed, Searing ashes, Aggression potion",
   "Wilderness herb patch": "Bloodweed seeds, Dark onyx core",
 
-  // Forinthry majors — short reward chips, no essay.
   "Abyss Runecrafting": "Multi-altar rifts, Magical thread, Pouch repair",
   "Abyss entrance": "Multi-altar rifts, Magical thread, Pouch repair",
-  // Item chips only (mob labels share icon src and would collapse).
   "Edgeville resource dungeons": "Limpwurt roots, Grimy ranarr",
   "Edgeville Dungeon resource dungeons": "Limpwurt roots, Grimy ranarr",
   "Edgeville Dungeon combat": "Hill giants, Chaos druids",
@@ -167,14 +133,12 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Wilderness Chaos altars (Prayer Offer)": "Prayer Offer XP, Wilderness achievement bonus",
   "Chaos Altar": "Prayer Offer XP, Wilderness achievement bonus",
 
-  // Resource / wildy dungeons — prefer resolvable chips over essay prose.
   Revenants:
     "Statius's warhammer, Vesta's longsword, Morrigan's javelin, Zuriel's staff, Ancient statuette",
   "Ripper Demons": "Ripper claw, Off-hand ripper claw",
   "Abyssal beasts": "Jaws of the Abyss",
   "Abyssal lords": "Abyssal scourge",
 
-  // Hub / activity majors — short chips instead of Unlocks essays.
   "Invention Guild": "Workbenches, machines, blueprints, generators",
   Prifddinas: "Max cape, Crystal pickaxe, Crystal hatchet, Crystal mattock",
   "Empowered Summoning obelisks": "Spirit Plane Connection XP / mat save",
@@ -218,7 +182,6 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Troll Stronghold disease-free herb patch": "Disease-free herb patch",
   "Ardougne farming patches and Manor Farm": "Ardougne patches · Manor Farm access",
   "Fruit tree patch hubs": "Fruit tree patches",
-  // Freneskae via Kandarin World Gate packaging.
   "Freneskae via World Gate": "Nightmare gauntlets, Muspah, Rune dragons",
   "Nightmare creatures": "Nightmare gauntlets",
   Muspah: "Muspah",
@@ -258,7 +221,6 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Shilo Village": "Gems, cart, Karamja gloves adjacency",
   "Nature altar": "Nature runes",
   "Gleaming wisp colony": "Gleaming wisps / energy",
-  // Pyramid Plunder full chips defined under Desert block (ibis + sceptres).
   "Soul altar": "Soul runes",
   "Slayer Tower": "Abyssal scourge, Abyssal whip, Ghost hunter gear, Cremation",
   Darkmeyer: "Vyres, bank, shops",
@@ -315,7 +277,6 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Ruinous rapier, Off-hand ruinous rapier, Ruinous maul, Ruinous staff, Ruinous crossbow, Off-hand ruinous crossbow, Ruinous guard, Ruinous lantern",
   "Dark facets":
     "Grace of the Elves, Dark Facet of Grace, Dark Facet of Luck, Dark Facet of Passage",
-  // Every Wilderness brawling glove (no parentheses — tokeniser strips parentheticals).
   "Brawling gloves":
     "Melee brawling gloves, Ranged brawling gloves, Magic brawling gloves, Agility brawling gloves, Cooking brawling gloves, Firemaking brawling gloves, Fishing brawling gloves, Hunter brawling gloves, Mining brawling gloves, Prayer brawling gloves, Smithing brawling gloves, Thieving brawling gloves, Woodcutting brawling gloves",
   "Balarak's sash brush": "Balarak's sash brush",
@@ -324,7 +285,6 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Primal ores": "Primal ores",
   "Daemonheim Dig Site": "Dragonkin collections, Aged journal, Balarak pieces",
 
-  // —— Desert ——
   "Kalphite King":
     "Drygore rapier, Off-hand drygore rapier, Drygore longsword, Off-hand drygore longsword, Drygore mace, Off-hand drygore mace",
   "Sophanem Slayer Dungeon / The Magister":
@@ -350,12 +310,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   Menaphos: "City quests, VIP area, Acadia trees, Marketeers, Port fishing, Soul altar",
   "Mage Training Arena": "Bones to Peaches, Infinity robes",
   "Mage Training Arena (bones to peaches + reward shop)": "Bones to Peaches, Infinity robes",
-  // GWD1 ability drops moved here (18 Aug 2025) via One Piercing Note.
   "Citharede Abbey": "Sacrifice, Devotion, Transfigure, Illuminated god books",
   "Citharede Abbey illuminated god books":
     "Sacrifice, Devotion, Transfigure, Illuminated god books",
 
-  // Remaining long hub essays — short chips.
   "Ourania Runecrafting Altar (ZMI)": "1.5× RC XP, random runes",
   "Ourania Runecrafting Altar": "1.5× RC XP, random runes",
   "Jadinko Favour offering stone": "Favour shop · seeds / fruits / outfits",
@@ -371,7 +329,6 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Dundee's Crocodile Upgrades": "Crocodile upgrades",
   "Hard Desert Keris upgrade": "Keris",
   "Desert amulet": "Desert amulet",
-  // Wilderness Slayer rewards defined earlier (dark onyx core + chest).
   "Everlight Dig Site":
     "Porcelain clay, Inspire Effort, Sticky Fingers, Heightened Senses, Tetracompass",
   "Jadinko Lair curly roots": "Curly roots WC + FM",
@@ -439,27 +396,12 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Fort Forinthry construction and Slayer hub": "Fort buildings · chapel · Slayer hub",
 };
 
-/**
- * Content row name → preferred upgrade name key (prefix / token).
- * Prefer exact clean packages: * uniques / equipment / progression / ability|boot upgrades.
- */
 export const CONTENT_REWARD_KEYS: Record<string, string> = {
-  // —— Misthalin / EGWD / Um ——
-  "Sanctum of Rebirth": "Sanctum of Rebirth uniques",
-  "Rasial, the First Necromancer": "First Necromancer's equipment",
   "The Gate of Elidinis": "Gate of Elidinis uniques",
-  "Vermyx, Brood Mother": "Sanctum of Rebirth uniques",
-  "Kezalam, the Wanderer": "Sanctum of Rebirth uniques",
-  "Nakatra, Devourer Eternal": "Sanctum of Rebirth uniques",
-  "Kerapac, the bound": "Kerapac progression",
-  "Arch-Glacor": "Arch-Glacor progression",
-  Croesus: "Croesus progression",
-  "TzKal-Zuk": "TzKal-Zuk progression",
   "Zemouregal & Vorkath": "Zemouregal & Vorkath progression",
   "Zamorak, Lord of Chaos": "Zamorak, Lord of Chaos",
   "Zamorak, Lord of Chaos (Undercity)": "Zamorak, Lord of Chaos",
 
-  // —— Asgarnia / GWD1 ——
   Nex: "Nex equipment",
   "Nex: Angel of Death": "Nex: Angel of Death progression",
   "Nex tier-80 armour sets": "Nex equipment",
@@ -467,7 +409,6 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "General Graardor": "Bandos equipment",
   "Kree'arra": "Armadyl equipment",
   "K'ril Tsutsaroth": "Robes of subjugation",
-  // Prefer CONTENT_REWARD_OVERRIDES for Zilyana (sword + ACB pack); key is fallback only.
   "Commander Zilyana": "Saradomin godsword",
   "Bandos equipment": "Bandos equipment",
   "Armadyl equipment": "Armadyl equipment",
@@ -476,12 +417,10 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "Temple of Aminishi (ED1)": "Temple of Aminishi",
   "Temple of Aminishi": "Temple of Aminishi",
 
-  // —— Forinthry / ED / Corp ——
   "Dragonkin Laboratory (ED2)": "Dragonkin Laboratory",
   "Dragonkin Laboratory": "Dragonkin Laboratory",
   "The Shadow Reef (ED3)": "Eldritch crossbow",
   "The Shadow Reef": "Eldritch crossbow",
-  // Corp uniques live in the early override (Spirit shield + Holy elixir + four sigils).
   "Corporeal Beast holy-elixir / spirit shield path":
     "Spirit shield, Holy elixir, Arcane sigil, Elysian sigil, Divine sigil, Spectral sigil",
   "Daemonheim Rewards shop (Marmaros)": "Chaotic equipment",
@@ -489,16 +428,12 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "Chaotic weapons": "Chaotic equipment",
   "Ruinous weapons": "Ruinous",
 
-  // —— Fremennik ——
   "Dagannoth Kings": "Dagannoth Kings uniques",
 
-  // —— Kandarin ——
   Legiones: "Legiones",
   "Monastery of Ascension": "Legiones",
   Abomination: "Abomination progression",
 
-  // —— Desert / GWD2 ——
-  // Heart generals: early overrides (Vindicta / Helwyr / Twin Furies / Gregorovic).
   "Telos, the Warden": "Seren godbow, Staff of Sliske, Zaros godsword",
   "Amascut, the Devourer": "Amascut, the Devourer progression",
   "Kalphite King": "Drygore",
@@ -506,46 +441,33 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "The Magister": "The Magister",
   "Liberation of Mazcab": "Achto",
 
-  // —— Morytania ——
   "Araxxor / Araxxi": "Noxious weapons",
   "Barrows: Rise of the Six": "Rise of the Six progression",
 
-  // —— Anachronia ——
   Raksha: "Raksha ability upgrades",
-  // Rex Matriarchs: no single clean uniques package (hearts feed multi-region rings).
 
-  // —— Havenhythe ——
   "Ivar, King of Bones": "Ivar, King of Bones uniques",
   "Silverquill, the Dreadhog": "Silverquill, the Dreadhog uniques",
   "Sanguine Crawler": "Sanguine Crawler uniques",
 
-  // —— Karamja ——
   "TzHaar Fight Cave": "Fire cape",
   "Fight Kiln": "TokHaar-Kal capes",
 };
 
-/**
- * Extra chips appended only when primary package lookup is used (not OVERRIDES).
- * Prefer CONTENT_REWARD_OVERRIDES for full explicit lists (Zuk / Kiln / Cave).
- */
 export const CONTENT_REWARD_APPEND: Record<string, string> = {};
 
-/** Score upgrade detail for "looks like a unique/item list". Higher wins. */
 export function upgradeListScore(name: string, detail: string): number {
   const n = name.toLowerCase();
   const d = detail.toLowerCase();
   let score = 0;
-  // Exact clean progression/uniques packages win hard over residual essays.
   if (/^[^()]{3,50} progression$/i.test(name.trim())) score += 45;
   if (/\buniques?\b/.test(n)) score += 50;
   if (/\bequipment\b/.test(n) && !/ladder|residual|package/.test(n)) score += 30;
   if (/\bprogression\b/.test(n)) score += 15;
   if (/unlocks:\s*/i.test(detail)) score += 55;
-  // Slash piece lists (Bandos helmet / chestplate / tassets) are item lists.
   if (/unlocks:\s*[^·]*\//i.test(detail)) score += 20;
   if ((detail.match(/,/g) ?? []).length >= 1) score += 15;
   if ((detail.match(/,/g) ?? []).length >= 3) score += 15;
-  // Pure short comma list with no Effects wrapper = ideal.
   if (
     detail.length > 0 &&
     detail.length < 160 &&
@@ -554,7 +476,6 @@ export function upgradeListScore(name: string, detail: string): number {
   ) {
     score += 40;
   }
-  // Short whole-detail list (no Unlocks: prefix needed).
   if (
     detail.length > 0 &&
     detail.length < 120 &&
@@ -594,30 +515,22 @@ function matchRank(nameLower: string, keyLower: string): number {
   if (!keyLower) return 0;
   if (nameLower === keyLower) return 100;
   if (nameLower.startsWith(keyLower)) return 70;
-  // "Bandos equipment (GWD1…)" already covered by startsWith when key is "Bandos equipment".
   if (keyEmbeddedInName(nameLower, keyLower)) return 45;
   return 0;
 }
 
 function packageStem(keyLower: string): string {
-  // Prefer first token; drop leading articles.
   const tokens = keyLower.split(/\s+/).filter(Boolean);
   const first = (tokens[0] ?? keyLower).replace(/,$/, "");
   if (/^(?:the|a|an)$/i.test(first) && tokens[1]) return tokens[1]!.replace(/,$/, "");
   return first;
 }
 
-/** True when name looks like a sibling package of the same boss stem (ability + boots). */
 function isSiblingPackage(nameLower: string, stem: string): boolean {
   if (stem.length < 4 || !nameLower.startsWith(stem)) return false;
   return /\b(uniques?|equipment|progression|upgrades?|ability|boot|weapons?)\b/i.test(nameLower);
 }
 
-/**
- * Subtitle under a content major name: prefer catalog `detail` prose; when empty
- * (common on majors), fall back to clipped rewards/access from contentRewardsFull.
- * Never invents text — returns "" when both detail and rewards are blank/"—".
- */
 export function contentDetailOrRewards(
   row: RewardContentRow,
   upgrades: readonly RewardUpgrade[] = [],
@@ -629,10 +542,6 @@ export function contentDetailOrRewards(
   return clipRewardDisplay(source);
 }
 
-/**
- * Full reward/access source (unclipped). Icons + display clip via presentContentRewards.
- * Merges multiple high-scoring upgrade packages (e.g. Raksha abilities + boots).
- */
 export function contentRewardsFull(
   row: RewardContentRow,
   upgrades: readonly RewardUpgrade[],
@@ -662,12 +571,9 @@ export function contentRewardsFull(
       if (!detail) return null;
 
       let rank = matchRank(nameLower, keyLower);
-      // Sibling packages under same boss stem (Raksha ability + boots).
       if (rank === 0 && isSiblingPackage(nameLower, stem)) {
-        // With an explicit key, allow stem siblings; without, only package-shaped names.
         rank = hasExplicit ? 25 : 15;
       }
-      // Fallback: try synthetic package suffixes when no explicit map.
       if (rank === 0 && !hasExplicit && fallback.length >= 4) {
         for (const suffix of [" progression", " uniques", " equipment", " upgrades"]) {
           const synth = `${fallback.toLocaleLowerCase()}${suffix}`;
@@ -678,13 +584,7 @@ export function contentRewardsFull(
       if (rank === 0) return null;
 
       let score = upgradeListScore(name, detail) + rank;
-      // Explicit CONTENT_REWARD_KEYS / exact prefix beats residual stem hits.
-      if (rank >= 70) {
-        /* prefix / exact already strong */
-      } else if (rank <= 25) {
-        score -= 15; // stem-only / synthetic
-      }
-      // Never let residual prose win when Unlocks packages exist for the same stem.
+      if (rank <= 25) score -= 15;
       if (/densify|residual|thin hub|working taxonomy/i.test(detail) && rank < 70) {
         score -= 40;
       }
@@ -694,25 +594,17 @@ export function contentRewardsFull(
     .sort((a, b) => b.score - a.score);
 
   if (matches.length) {
-    // Prefer the highest-scoring package (short comma unique lists / Unlocks:).
-    // Only merge sibling packages that are also list-like (Raksha ability + boots),
-    // never residual prose rows — those pollute Effects extraction.
     const best = matches[0]!;
-    // Drop low-quality sole hits that are residual essays with no list shape.
-    if (
-      best.score < 20 &&
-      !/unlocks:/i.test(best.detail) &&
-      (best.detail.match(/,/g) ?? []).length < 1
-    ) {
-      // fall through to row.detail
-    } else {
+    const usable =
+      best.score >= 20 ||
+      /unlocks:/i.test(best.detail) ||
+      (best.detail.match(/,/g) ?? []).length >= 1;
+    if (usable) {
       const picked: typeof matches = [best];
       for (const m of matches.slice(1)) {
         if (picked.length >= 3) break;
         const mName = m.name.toLocaleLowerCase();
         const sibling = isSiblingPackage(mName, stem);
-        // Explicit-key bonus can put the primary package ~100pts above siblings
-        // (Raksha ability vs boots) — still merge list-like stem siblings.
         if (m.score < 35) continue;
         if (!sibling && m.score < best.score - 20) continue;
         if (sibling && m.score < 40) continue;
@@ -725,7 +617,6 @@ export function contentRewardsFull(
         }
         picked.push(m);
       }
-      // Normalize each package separately (Unlocks > Effects), then join pure lists.
       const lists: string[] = [];
       const seen = new Set<string>();
       for (const m of picked) {
@@ -755,7 +646,6 @@ function withRewardAppend(rowName: string, base: string): string {
     CONTENT_REWARD_APPEND[rowName] ?? CONTENT_REWARD_APPEND[contentRewardBaseName(rowName)];
   if (!extra) return base;
   if (!base || base === "—") return extra;
-  // Dedupe tokens already present in the primary list.
   const have = new Set(
     base
       .toLowerCase()
@@ -771,10 +661,7 @@ function withRewardAppend(rowName: string, base: string): string {
   return `${base}, ${add.join(", ")}`;
 }
 
-/**
- * Parent rows that own multi-boss unique packages (Sanctum, EGWD fronts…).
- * Place hubs (Lost Grove, City of Um) must NOT collapse their boss (Solak, Rasial).
- */
+/** Only multi-boss content can collapse child rows sharing its rewards. */
 export function isMajorCollapseParent(parent: { name: string; kind?: string | null }): boolean {
   const k = `${parent.kind ?? ""} ${parent.name}`.toLowerCase();
   return (
@@ -790,11 +677,6 @@ export function isMajorCollapseParent(parent: { name: string; kind?: string | nu
   );
 }
 
-/**
- * Major unlocks list: hide sub-boss children of multi-boss packages that share
- * the same unique list (Vermyx under Sanctum). Keeps Solak under Tirannwn —
- * kind "The Lost Grove" must not hide the boss behind a place hub.
- */
 export function majorContentRows<T extends { name: string; kind?: string | null }>(
   content: readonly T[],
   upgrades: readonly RewardUpgrade[],

@@ -1,21 +1,6 @@
 /**
- * The sea the board floats on.
- *
- * Stylised and cartographic, not an engine demo: the swell is a few tiles high,
- * the palette stays in the Wiki map's own blue-grey, and almost all of the life
- * comes from light moving across the surface rather than from geometry. If the
- * water ever competes with the map for attention it is wrong.
- *
- * Unlit on purpose. Swell, normal, fresnel, sky term, glint and shore all come
- * out of the same handful of waves, so the result is exactly as stylised as
- * intended and there is no lighting model to argue with. The key direction is
- * passed in so the water still agrees with the rest of the scene.
- *
- * Three crossed waves, not fractal noise: this plane covers most of the viewport
- * once the camera descends, so its fragment cost is paid on nearly every pixel
- * at whatever dpr the display has. Only the long pair displace the mesh; the
- * short detail lives in the normal, which is what keeps the plane at a hundred
- * segments instead of a thousand.
+ * Unlit cartographic water built from three crossed waves. Only the long pair
+ * displace geometry; short detail modifies normals to bound high-DPR cost.
  */
 
 import * as THREE from "three/webgpu";
@@ -113,7 +98,7 @@ export function createWaterMaterial(
   keyDirection: THREE.Vector3,
 ): WaterMaterial {
   // Unlit + toneMapped false: the sea is authored colour, not a lit surface,
-  // and must not pick up any future filmic curve the land opts into.
+  // Keep water outside the land's filmic tone mapping.
   const material = new THREE.MeshBasicNodeMaterial({ toneMapped: false });
   // keyDirection retained for call-site API; specular path currently disabled.
   void keyDirection;

@@ -26,7 +26,7 @@ function hasNonZeroBonus(bonuses) {
   return Object.values(bonuses).some((v) => typeof v === "number" && v !== 0);
 }
 
-/** Keep only known combat stat keys with non-zero numbers — never invent. */
+/** Keeps known combat stat keys with non-zero sourced values. */
 function pickBonuses(bonuses) {
   if (!bonuses || typeof bonuses !== "object") return null;
   const out = {};
@@ -101,7 +101,6 @@ function loadScrapeFiles() {
   return { byId, fileStats, names };
 }
 
-// --- snapshot regions so we can prove we never wipe them ---
 const eq = JSON.parse(fs.readFileSync(eqPath, "utf8"));
 const regionBefore = new Map(
   eq.records.map((r) => [r.id, JSON.stringify(r.unlock?.regions ?? null)]),

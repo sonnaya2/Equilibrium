@@ -50,8 +50,7 @@ const ALIASES = {
   // Wilderness Chaos Temple surface fort — not the old underground altar plate.
   "chaos-temple-wilderness": "chaos-temple-wilderness",
   "chaos-temple": "chaos-temple-wilderness",
-  // Lava Maze / Wilderness Crater have their own activity plates — do not alias
-  // to runite/slayer art (those made crater "gone" and maze wrong).
+  // Lava Maze and Wilderness Crater use their own activity plates.
   "bandit-camp": "bandit-camp",
   "demonic-ruins": "demonic-ruins",
   "rogues-castle": "rogues-castle",
@@ -94,15 +93,7 @@ async function pixelArea(file) {
   }
 }
 
-/**
- * Walked, not listed.
- *
- * `public/game/upgrades` has twenty entries at the top and over a thousand files
- * below it — the art lives in `permanent-unlocks/`, `progression/`,
- * `skilling-tools/` and a dozen more. A flat readdir found twenty of them, which
- * is why Musa Point drew its region's crest while its own icon sat published one
- * directory down.
- */
+/** Recurses because upgrade art is grouped into nested category directories. */
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);

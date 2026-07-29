@@ -14,15 +14,10 @@ export type ResearchRow = Record<string, unknown>;
 export interface ResearchTab {
   key: string;
   label: string;
-  /** Optional one-liner under the tab; omit or "" when the label is enough. */
   description?: string;
   rows: ResearchRow[];
 }
 
-/**
- * Keys that never become detail lines: identity, region-combo plumbing,
- * provenance, and meta status. Region display uses its own helpers.
- */
 const STRUCTURAL_KEYS = new Set([
   "id",
   "name",
@@ -102,16 +97,10 @@ const STRUCTURAL_KEYS = new Set([
   "hardRegionRequirement",
 ]);
 
-/** Prefer these as bare lead sentences (no "Detail:" label). */
 const LEAD_KEYS = ["detail", "description", "summary"] as const;
 
-/** Always considered after the lead even when detail is present. */
 const REQ_KEYS = ["requirements", "access_requirements", "access_requirement"] as const;
 
-/**
- * Known useful body fields when detail/description is empty.
- * Order is display order. Unknown remaining keys still append after these.
- */
 const KNOWN_BODY_KEYS = [
   "league_note",
   "requirements",
@@ -225,7 +214,6 @@ const KNOWN_BODY_KEYS = [
   "wiki_note",
 ] as const;
 
-/** Short player-facing labels for research detail keys. Unknown keys title-case. */
 const FIELD_LABELS: Record<string, string> = {
   archaeology_level: "Arch level",
   collector: "Collector",
@@ -357,7 +345,6 @@ function fieldLabel(value: string): string {
     .replace(/\bxp\b/gi, "XP")
     .replace(/\s+/g, " ")
     .trim();
-  // Title-case; trim long underscore dumps to first three words.
   if (cleaned.length > 28) {
     const short = cleaned.split(" ").slice(0, 3).join(" ");
     return short.replace(/\b\w/g, (c) => c.toUpperCase());
@@ -369,7 +356,6 @@ function isSourceRef(value: unknown): boolean {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const row = value as ResearchRow;
   if (typeof row.url === "string" && row.url.startsWith("https://")) return true;
-  // SourceKind + optional url envelope without forcing https on every fixture.
   if (
     typeof row.source === "string" &&
     ("url" in row || "verifiedAt" in row || "verified_at" in row)
@@ -390,14 +376,12 @@ export function researchRows(rows: readonly unknown[]): ResearchRow[] {
   return [...rows];
 }
 
-/** Hard cap for any body line. Audit notes in JSON run 1–2k chars — never show that. */
 const LINE_MAX = 120;
 const BODY_MAX_LINES = 2;
 
 const AUDIT_NOISE =
   /\b(wave[-\s]?\d|final pass|audit rank|rank-\d|first-class row|first-class residual|dual-claim|do not re-emit|does not re-emit|do not invent|do not dual|do not claim|do not hard-require|canonical emit|supersedes dual|residual-?[ab]|economy residual|infrastructure residual|residual package|explicitly requested|named list expansion|named residual|planner checklists?|still-fucked|enrichment|planner stop|missing from regional-skilling|cross-region:|combat:|anachronia:|asgarnia:|kandarin:|tirannwn:|fremennik:|desert:|prifddinas:|slayer:|firemaking:)\b/i;
 
-/** One short human sentence — never the full audit dump. */
 export function clipProse(raw: string, max = LINE_MAX): string {
   let s = raw
     .replace(/\s+/g, " ")
@@ -406,7 +390,6 @@ export function clipProse(raw: string, max = LINE_MAX): string {
     .replace(/\s+—\s+/g, "; ");
   if (!s) return "";
 
-  // Prefer a sentence that is not maintainance/audit meta.
   const parts = s
     .split(/(?<=[.!?])\s+/)
     .map((p) => p.trim())
@@ -418,7 +401,6 @@ export function clipProse(raw: string, max = LINE_MAX): string {
     if (next) s = next;
   }
 
-  // Pure audit noise with no clean sentence — hide rather than show 120 chars of meta.
   if (AUDIT_NOISE.test(s) && !parts.some((p) => !AUDIT_NOISE.test(p) && p.length >= 20)) {
     return "";
   }
@@ -451,13 +433,11 @@ function text(value: unknown, depth = 0): string {
       (typeof row.title === "string" && row.title) ||
       "";
     if (label) return clipProse(label, 80);
-    // Never explode nested bags into multi-field essays.
     return "";
   }
   return clipProse(String(value));
 }
 
-/** Only string/number scalars — never a SourceReference or nested object. */
 function scalarTitle(value: unknown): string {
   if (typeof value === "string") {
     const trimmed = value.trim();
@@ -482,7 +462,6 @@ const TITLE_KEYS = [
   "id",
 ] as const;
 
-/** Unit-testable raw row title — never stringifies a source object. Icons use this. */
 export function researchRowTitle(row: ResearchRow): string {
   for (const key of TITLE_KEYS) {
     const title = scalarTitle(row[key]);
@@ -491,7 +470,6 @@ export function researchRowTitle(row: ResearchRow): string {
   return "—";
 }
 
-/** Display title only — presentInterestName trims planner hub suffixes; icons stay on raw. */
 function title(row: ResearchRow): string {
   const raw = researchRowTitle(row);
   if (raw === "—") return raw;
@@ -501,7 +479,6 @@ function title(row: ResearchRow): string {
 function subtitle(row: ResearchRow): string {
   const head = researchRowTitle(row);
   const presented = title(row);
-  // Category is meta chrome — presentInterestMeta before other candidates.
   if (typeof row.category === "string" && row.category.trim()) {
     const meta = presentInterestMeta(row.category, 80);
     if (meta && meta !== head && meta !== presented) return meta;
@@ -539,7 +516,6 @@ function nestedRegion(side: unknown): unknown {
 }
 
 function region(row: ResearchRow): string {
-  // Combat/skilling sync rows use camelCase comboLabel + requiredRegions.
   if (typeof row.comboLabel === "string" && row.comboLabel.trim()) {
     return row.comboLabel;
   }
@@ -593,7 +569,6 @@ function region(row: ResearchRow): string {
     return `From ${regionList(row.acquisition_regions, " / ")}`;
   }
 
-  // Combo datasets put hard locks in `regions` and soft pressure in optionalRegions.
   if (Array.isArray(row.regions) && row.regions.length) {
     const hard = regionList(row.regions, " + ");
     if (Array.isArray(row.optionalRegions) && row.optionalRegions.length) {
@@ -633,12 +608,10 @@ function region(row: ResearchRow): string {
     row.required_region ||
     (hints && hints.length === 1 ? hints[0] : null) ||
     row.region;
-  // Never fall back to region_status / confidence meta — those are not place labels.
   if (!direct) return "—";
   return regionName(direct);
 }
 
-/** Hard elective locks — when present, these alone decide region filter membership. */
 const HARD_REGION_KEYS = [
   "requiredRegions",
   "required_regions",
@@ -646,12 +619,7 @@ const HARD_REGION_KEYS = [
   "required_regions_for_collection_loop",
 ] as const;
 
-/**
- * Host / geography labels used only when there is no hard requiredRegions list.
- * Soft pressure fields (region_pressure, supporting_regions, optionalRegions, comboLabel)
- * must NOT expand filter membership — that was parking invent/support trash under every
- * region that appeared as a soft hint.
- */
+/** Host geography applies only when no hard region requirement exists. */
 const HOST_REGION_KEYS = [
   "region",
   "regionId",
@@ -667,7 +635,6 @@ const HOST_REGION_KEYS = [
   "collector_regions",
 ] as const;
 
-/** Id prefixes that are not Equilibrium elective region ids. */
 const NON_REGION_ID_PREFIXES = new Set([
   "invention",
   "crossregion",
@@ -705,28 +672,19 @@ function scopeMatchesAliases(scope: string[], aliases: string[]): boolean {
     (value) =>
       !value.includes("global") && !value.includes("allregions") && !value.includes("anyregion"),
   );
-  // Pure global markers (global_once_unlocked) match every region filter.
   if (!concrete.length) return normalized.length > 0;
   return concrete.some((value) =>
     aliases.some((alias) => value.includes(alias) || alias.includes(value)),
   );
 }
 
-/**
- * Region filter membership.
- * - Hard requiredRegions (when non-empty) are the only match keys.
- * - Soft support hints / combo labels / pressure fields do not expand membership.
- * - Empty hard reqs fall back to host geography (hints + real region id prefix).
- * - Explicit `no_region_requirement` is global (standard prayers, etc.).
- * - Unmapped rows stay out. Explicit global markers still match all regions.
- */
+/** Hard requirements override host geography; global rows match every region. */
 export function researchRowMatchesRegion(
   row: ResearchRow,
   selectedRegion: Pick<ResearchRegion, "id" | "name" | "aliases"> | null,
 ): boolean {
   if (!selectedRegion) return true;
 
-  // Catalogue mark for items available with no elective-region lock.
   if (row.region_requirement_type === "no_region_requirement") return true;
 
   const aliases = regionAliases(selectedRegion);
@@ -763,7 +721,6 @@ function pullUrl(value: unknown): string | null {
   return null;
 }
 
-/** Accept string URLs or SourceReference objects (`source: { url }`). */
 export function researchRowLinks(row: ResearchRow): string[] {
   const raw: unknown[] = [
     row.source,
@@ -799,11 +756,9 @@ function leadSentence(row: ResearchRow): string {
 function formatBodyLine(key: string, value: unknown): string {
   const rendered = text(value);
   if (!rendered) return "";
-  // Requirements / access lists read better as labeled short lines.
   if ((REQ_KEYS as readonly string[]).includes(key)) {
     return `${fieldLabel(key)}: ${rendered}`;
   }
-  // Long prose-ish strings from known narrative keys stay bare when they weren't the lead.
   if (
     (key === "note" ||
       key === "notes" ||
@@ -828,10 +783,6 @@ function pushLine(lines: string[], used: Set<string>, key: string, value: unknow
   used.add(key);
 }
 
-/**
- * Unit-testable detail lines — dense tool chrome only.
- * At most two short lines. Never the 1–2k char audit essay in `detail`.
- */
 export function researchRowDetails(row: ResearchRow): string[] {
   const lines: string[] = [];
   const used = new Set<string>();
@@ -845,12 +796,10 @@ export function researchRowDetails(row: ResearchRow): string[] {
     }
   }
 
-  // One short reqs line if present (capped).
   for (const key of REQ_KEYS) {
     if (key in row && lines.length < BODY_MAX_LINES) pushLine(lines, used, key, row[key]);
   }
 
-  // No essay lead: at most one extra known short field (role, recipe, level…).
   if (!lead) {
     for (const key of KNOWN_BODY_KEYS) {
       if (lines.length >= BODY_MAX_LINES) break;
@@ -867,7 +816,6 @@ export function researchRowDetails(row: ResearchRow): string[] {
           continue;
         }
       }
-      // Skip long narrative keys when they smell like audit notes.
       if (
         (key === "notes" || key === "note" || key === "planner_value" || key === "league_note") &&
         typeof row[key] === "string" &&
@@ -880,7 +828,6 @@ export function researchRowDetails(row: ResearchRow): string[] {
     }
   }
 
-  // Hard stop — never scan remaining keys (that was the wall-of-text path).
   const seen = new Set<string>();
   return lines
     .map((line) => clipProse(line, LINE_MAX))
@@ -922,7 +869,6 @@ export function ResearchSection({
       researchRowMatchesRegion(row, selectedRegion),
     );
     if (!needle) return regionalRows;
-    // Title + region + clipped details only — never stringify full audit bags.
     return regionalRows.filter((row) => {
       const hay = [
         researchRowTitle(row),
@@ -1004,7 +950,6 @@ export function ResearchSection({
               const rowDetails = details(row);
               const rowSubtitle = clipProse(subtitle(row), 80);
               const rowTitle = title(row);
-              // Icon resolve from RAW title keys — never presentInterestName output.
               const rawTitle = researchRowTitle(row);
               const iconSrc = dataEntityIconPath({
                 name: rawTitle !== "—" ? rawTitle : typeof row.name === "string" ? row.name : null,

@@ -4,9 +4,8 @@ import type { SourceReference } from "../../types";
 /**
  * Ammunition under the modernisation: abilities require ammo; each shot rolls
  * destruction — 15% since 9 Mar (was 20% at release), rolled per shot, not per
- * hit. Unbroken ammo drops to the ground (Ava's devices auto-return it, no fail
- * chance since 9 Mar). Chinchompas explode by design; previously always-consumed
- * ammo now conserves 85%.
+ * hit. Unbroken ammo drops to the ground and Ava's devices return it without a
+ * failure roll. Chinchompas always explode.
  */
 export const AMMO_DESTROY_CHANCE = 0.15;
 

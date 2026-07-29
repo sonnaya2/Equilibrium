@@ -137,7 +137,6 @@ describe("loadoutStats", () => {
       affinity: "same",
     });
     expect(withPerk.dp).toBeCloseTo(expected, 10);
-    // Without a target the accuracy% input stays authoritative.
     expect(loadoutStats({ ...base, perks: { ...base.perks, energising: 4 } }).dp).toBe(1);
   });
 
@@ -212,7 +211,6 @@ describe("loadoutStats", () => {
   });
 
   it("Math.max(gear, perk) does not double-count tectonic", () => {
-    // 3 gear + perk 3 → still 3% not 6%
     const stats = loadoutStats({
       ...base,
       critChance: 10,
@@ -253,7 +251,6 @@ describe("loadoutStats", () => {
       expect(stats.critChance).toBe(0);
       const mod = stats.globalModifiers.find((m) => m.id === `perk:equilibrium:${rank}`);
       expect(mod).toBeDefined();
-      // R1 +8% … R4 +14% → mult 1.08–1.14 (wiki Equilibrium perk).
       const mult = 1 + equilibriumDamageBonus(rank);
       expect(mult).toBeCloseTo(1.06 + 0.02 * rank, 10);
       expect(runPipeline({ damage: 1000 }, [mod!], { style: "melee" }).damage).toBe(
@@ -289,7 +286,6 @@ describe("loadoutStats", () => {
     );
     expect(stats.globalModifiers.some((m) => m.id === "vulnerability")).toBe(true);
     expect(stats.globalModifiers.some((m) => m.id === "prayer:turmoil")).toBe(true);
-    // Overload is accuracy-only (not a damage global).
     expect(stats.globalModifiers.some((m) => m.id.includes("overload"))).toBe(false);
     expect(runPipeline({ damage: 1000 }, stats.globalModifiers, { style: "melee" }).damage).toBe(
       Math.floor(Math.floor(1000 * 1.1) * 1.1),
@@ -308,7 +304,6 @@ describe("loadoutStats", () => {
   });
 
   it("equippedWeaponTier prefers twohand then mainhand when record.tier is set", () => {
-    // Corpus: item:omni-guard has tier 95 (slot may be absent — slotted path still reads tier).
     const twohand: Loadout = {
       ...base,
       equipmentSlots: { twohand: "item:omni-guard", mainhand: "item:roar-of-awakening" },
@@ -329,7 +324,6 @@ describe("loadoutStats", () => {
       equipmentSlots: { pocket: "item:scripture-of-amascut" },
       weaponTier: 90,
     };
-    // Pocket with tier must not win — only twohand/mainhand (or legacy weapon slots).
     expect(equippedWeaponTier(none)).toBeNull();
     expect(loadoutWeaponTier(none)).toBe(90);
 
@@ -337,14 +331,12 @@ describe("loadoutStats", () => {
   });
 
   it("equippedBonuses sums wiki damage/accuracy from slotted pieces", () => {
-    // Omni guard: dmg 1415.5 acc 2765; Soulbound lantern: dmg 707.7 acc 2765 (wiki 2026-07-26).
     const dual: Loadout = {
       ...base,
       equipmentSlots: { mainhand: "item:omni-guard", offhand: "item:soulbound-lantern" },
     };
     expect(equippedBonuses(dual)).toEqual({ damage: 1415.5 + 707.7, accuracy: 2765 + 2765 });
 
-    // Seismic wand has accuracy only (tooltip damage 0 — not stored).
     const seismic: Loadout = {
       ...base,
       equipmentSlots: { mainhand: "item:seismic-wand" },
@@ -381,7 +373,6 @@ describe("loadoutStats", () => {
       }),
     ).toBe(150);
 
-    // Weapon-only loadout contributes 0 flat accessory accuracy (tier covers weapon).
     expect(
       nonWeaponAccuracyBonus({
         ...base,
@@ -398,8 +389,6 @@ describe("loadoutStats", () => {
   });
 
   it("accessory accuracy 100 raises DP vs target vs same loadout without it", () => {
-    // High defence so base hit chance is not already 100%.
-    // mock:weapon-main has tier 90 (and 9999 wiki accuracy that must not enter DP).
     const target = { defenceLevel: 120, affinity: "strong" as const };
     const without = loadoutStats({
       ...base,
@@ -421,13 +410,11 @@ describe("loadoutStats", () => {
     });
     expect(without.dp).toBeLessThan(1);
     expect(withRing.dp).toBeGreaterThan(without.dp);
-    // Tier from mock weapon (90); wiki accuracy 9999 excluded from flat accessory sum.
     expect(without.dp).toBeCloseTo(targetDamagePotential(playerAccuracy(70, 90), target), 10);
     expect(withRing.dp).toBeCloseTo(
       targetDamagePotential(playerAccuracy(70, 90) + 100, target),
       10,
     );
-    // Energising still stacks on top of accessory flat accuracy.
     const withBoth = loadoutStats({
       ...base,
       weaponTier: 90,
@@ -451,11 +438,9 @@ describe("loadoutStats", () => {
     const inv4 = loadoutStats({ ...base, perks: { ...base.perks, invigorating: 4 } });
     expect(inv4.adrenaline?.basicGainMultiplier).toBeCloseTo(1.2, 10);
 
-    // R4 non-l20: 0.09*4 * 3 = 1.08
     const imp4 = loadoutStats({ ...base, perks: { ...base.perks, impatient: 4 } });
     expect(imp4.adrenaline?.impatientExpectedExtra).toBeCloseTo(1.08, 10);
 
-    // R4 l20: 0.099*4 * 3 = 1.188
     const imp4l20 = loadoutStats({
       ...base,
       perks: { ...base.perks, impatient: 4, impatientLevel20: true },

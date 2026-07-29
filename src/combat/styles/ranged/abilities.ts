@@ -13,8 +13,6 @@ import { MODERNISATION_WIKI } from "../../data/sources";
  */
 export interface RangedAbilitySpec extends AbilitySpec {
   style: "ranged";
-  /** Casts always crit; callers pass this into the crit layer as guaranteed. */
-  guaranteedCrit?: boolean;
   source: SourceReference;
 }
 
@@ -86,7 +84,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     hits: [{ band: { minPct: 90, maxPct: 110 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 20.4,
-    appliesBuff: "searing_winds",
+    appliesEffect: "searing_winds",
     source: wiki("Galeshot", "Galeshot"),
   },
   {
@@ -202,7 +200,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 40 },
     cooldownSeconds: 60,
-    buff: "shadow_imbued",
+    stateEffect: "shadow_imbued",
     source: wiki("Imbue: Shadows", "Imbue:_Shadows"),
   },
   {
@@ -233,7 +231,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     style: "ranged",
     category: "ultimate",
     hits: [],
-    buff: "deaths_swiftness",
+    stateEffect: "deaths_swiftness",
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
     source: wiki("Death's Swiftness", "Death%27s_Swiftness"),
@@ -246,7 +244,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     style: "ranged",
     category: "ultimate",
     hits: [],
-    buff: "greater_deaths_swiftness",
+    stateEffect: "greater_deaths_swiftness",
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
     source: wiki("Greater Death's Swiftness", "Greater_Death%27s_Swiftness"),

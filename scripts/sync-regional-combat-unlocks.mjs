@@ -103,13 +103,14 @@ function detail(row, combo) {
 }
 
 function normalizeRow(row, recordType, sourceFile) {
-  const hints = regionHints(row);
-  const required = [...new Set(list(row.required_regions).map(normalizeRegionToken).filter(Boolean))];
-  let type = String(row.region_requirement_type || "").toLowerCase();
+  const override = REGION_OVERRIDES.get(row.id) || {};
+  const hints = override.regionHints || regionHints(row);
+  const required = override.requiredRegions || [...new Set(list(row.required_regions).map(normalizeRegionToken).filter(Boolean))];
+  let type = override.regionRequirementType || String(row.region_requirement_type || "").toLowerCase();
   if (type === "acquisition_region" && required.length <= 1) type = "single";
   if (!type) type = required.length > 1 ? "all_required" : hints.length > 1 ? "support" : "single";
   if (type === "all_required" && required.length <= 1 && hints.length <= 1) type = "single";
-  const combo = comboLabel(required.length ? required : hints, type === "all_required" ? "all_required" : "support");
+  const combo = override.comboLabel || comboLabel(required.length ? required : hints, type === "all_required" ? "all_required" : "support");
   return {
     id: row.id,
     name: row.name,
@@ -120,7 +121,7 @@ function normalizeRow(row, recordType, sourceFile) {
     regionRequirementType: type,
     comboLabel: combo,
     isRegionCombo: required.length > 1,
-    detail: detail(row, combo),
+    detail: override.detail ? `${override.detail} · ${detail(row, combo)}` : detail(row, combo),
     requirements: [...new Set([
       ...list(row.requirements).map(String),
       ...list(row.access_requirements).map(String),
@@ -147,6 +148,32 @@ const DROP_IDS = new Set([
   "karamja:tokkul-zo", // keep skilling karamja:tokkul-zo
   "cross-region:eof-hydrix-component-pressure", // meta checklist; EoF equipment remains
   "cross-region:blessed-flask", // user remove 2026-07-26; keep skilling tirannwn:blessed-flask if present
+]);
+
+const DROP_CATALOG_UPGRADE_NAMES = new Set([
+  "Kerapac, the bound",
+  "Kerapac hard mode FSoA farm",
+  "Kerapac Magic residual progression",
+  "Arch-Glacor",
+  "Croesus",
+  "First Necromancer's equipment (Rasial)",
+  "Rasial Necromancy BiS farm",
+  "Rasial, the First Necromancer",
+  "Sanctum of Rebirth (Nakatra)",
+  "Sanctum of Rebirth (Nakatra residual)",
+  "Scripture of Bik",
+  "TzKal-Zuk",
+  "War's Blessing combat mastery",
+]);
+
+const REGION_OVERRIDES = new Map([
+  ["anachronia:masterwork-ranged-pressure", {
+    regionHints: ["havenhythe", "asgarnia", "tirannwn", "anachronia", "forinthry"],
+    requiredRegions: ["asgarnia", "tirannwn", "anachronia"],
+    regionRequirementType: "all_required",
+    comboLabel: "Region combo (all required): Asgarnia + Tirannwn + Anachronia · Wilderness*",
+    detail: "Hard Asgarnia + Tirannwn + Anachronia for Masterwork ranged armour. Wilderness* is optional pressure.",
+  }],
 ]);
 
 const recordMap = new Map();
@@ -182,6 +209,7 @@ for (const region of catalog.regions || []) {
   const additions = records.filter((row) => row.regionHints.includes(region.id));
   const existingByName = new Map(region.upgrades.map((row) => [row.name, row]));
   for (const row of additions) {
+    if (DROP_CATALOG_UPGRADE_NAMES.has(row.name)) continue;
     const prior = existingByName.get(row.name);
     if (prior) {
       // Backfill combo metadata — earlier syncs skipped existing names, so

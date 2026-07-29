@@ -1,17 +1,6 @@
 /**
- * The land: a cap carrying the HD Wiki raster, and a wall of cut earth under it.
- *
- * The raster is the artwork and everything here defers to it. The cap samples it
- * at map uv derived from world position — never from per-plate geometry uv —
- * which is what keeps Varrock on the same pixel whether its plate is resting,
- * raised or framed, and what makes eleven plates read as one printed sheet
- * rather than eleven decals.
- *
- * What the shader adds on top is deliberately small: an emboss driven by the
- * raster's own luminance so large flats stop being perfectly flat, a shore
- * darkening keyed to real coast distance, and movement on the water the
- * coastline encloses. Region atmospheres (desert heat, Prif blue, Mory green)
- * and tight lava discs are soft UV overlays — never full-plate washes.
+ * Samples the HD raster from world-derived map UVs so plate movement cannot
+ * shift the texture. Emboss, shore, inland-water, and atmosphere remain overlays.
  */
 
 import * as THREE from "three/webgpu";

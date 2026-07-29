@@ -1,6 +1,4 @@
 import plannerSource from "../../data/research/planner-expansions.json";
-// Dated audit overlay — not absorbed into the monolithic planner JSON yet.
-// Keep the import here so UI never opens the support file raw.
 import supportSource from "../../data/research/planner-support-items-2026-07-25.json";
 
 export type PlannerExpansionData = typeof plannerSource;

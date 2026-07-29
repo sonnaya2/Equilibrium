@@ -2,14 +2,6 @@ import { expect, test } from "@playwright/test";
 import path from "node:path";
 import sharp from "sharp";
 
-/**
- * The board, at the sizes people actually run.
- *
- * No golden pixels: the sea moves, so any exact snapshot is a coin flip. What is
- * worth asserting is that the board is *there* — a WebGPU canvas that renders a
- * flat fill looks identical to a working one in every structural check, and that
- * is the failure this catches. Shots land under test-results/board/ for eyes.
- */
 
 const SHOT_DIR = path.join("test-results", "board");
 
@@ -30,19 +22,10 @@ async function openBoard(page: import("@playwright/test").Page, url = "/map"): P
     .then(() => true)
     .catch(() => false);
   if (!mounted) return "fallback";
-  // Intro descent plus texture decode; the raster alone is a few megabytes.
   await page.waitForTimeout(5000);
   return "canvas";
 }
 
-/**
- * How many distinct colours the board is made of — a blank canvas has ~1.
- *
- * Read from Playwright's screenshot rather than from inside the page: a WebGPU
- * canvas cannot be `drawImage`d into a 2D context, so the obvious in-page
- * version returns one flat colour for a board that is rendering perfectly, and
- * would fail this suite for the exact thing it exists to prove.
- */
 async function paletteSize(page: import("@playwright/test").Page): Promise<number> {
   const shot = await page.locator("canvas").first().screenshot();
   const { data } = await sharp(shot)
@@ -71,8 +54,6 @@ for (const size of SIZES) {
     await page.screenshot({ path: path.join(SHOT_DIR, `${size.name}.png`) });
 
     if (mode === "canvas") {
-      // A canvas that mounted and then drew nothing is the WebGPU failure that
-      // every structural assertion sails straight past.
       expect(await paletteSize(page), "board looks blank").toBeGreaterThan(200);
       const box = await page.locator("canvas").first().boundingBox();
       expect(box!.width).toBeGreaterThan(size.width * 0.6);
@@ -93,8 +74,6 @@ test("geometry debug mode renders the boundaries it is there to prove", async ({
 });
 
 test("the board still plans regions with every 3D layer switched off", async ({ page }) => {
-  // The layers are independent by design; losing one must not take the planner
-  // with it. This is also the cheapest smoke test for the flag plumbing.
   const mode = await openBoard(page, "/map?no=water,relief,markers,bloom");
   test.skip(mode === "fallback", "no WebGPU in this browser");
   await expect(page.getByRole("button", { name: /^Kandarin/ })).toBeVisible();

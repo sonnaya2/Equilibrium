@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DPL_ANCHOR_LEVEL, damagePerLevel, legacyDamagePerLevel } from "./damagePerLevel";
 
-/** Golden table, 6dp, frozen from the AGENTS.md formula. Guards against refactor drift. */
 const GOLDEN: Array<[level: number, dpl: number]> = [
   [1, 3.18488],
   [20, 61.32532],
@@ -22,7 +21,6 @@ describe("damagePerLevel", () => {
     expect(damagePerLevel(level)).toBeCloseTo(expected, 5);
   });
 
-  // Non-circular checks: these hold because of what the curve *is*, not because of its literals.
   it("is zero at level 0", () => {
     expect(damagePerLevel(0)).toBe(0);
   });

@@ -20,6 +20,10 @@ export interface MeleeAbilitySpec extends AbilitySpec {
   source: SourceReference;
 }
 
+export function isMeleeAbility(ability: AbilitySpec): ability is MeleeAbilitySpec {
+  return ability.style === "melee";
+}
+
 const wikiAbility = (title: string, path: string, verifiedAt = "2026-07-26"): SourceReference => ({
   source: "runescape-wiki",
   url: `https://runescape.wiki/w/${path}`,
@@ -89,7 +93,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
     bloodlustGain: 1,
-    appliesBuff: "fury",
+    appliesEffect: "fury",
     source: wikiAbility("Fury", "Fury"),
   },
   {
@@ -102,7 +106,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
     bloodlustGain: 1,
-    appliesBuff: "greater_fury",
+    appliesEffect: "greater_fury",
     source: wikiAbility("Greater Fury", "Greater_Fury"),
   },
   {
@@ -151,7 +155,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 20.4,
     bloodlustGain: 1,
-    appliesBuff: "greater_barge",
+    appliesEffect: "greater_barge",
     source: wikiAbility("Greater Barge", "Greater_Barge"),
   },
   {
@@ -164,7 +168,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 60,
     bloodlustGain: 1,
-    appliesBuff: "chaos_roar",
+    appliesEffect: "chaos_roar",
     source: wikiAbility("Chaos Roar", "Chaos_Roar"),
   },
   {
@@ -256,7 +260,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
-    appliesBuff: "greater_flurry",
+    appliesEffect: "greater_flurry",
     source: wikiAbility("Greater Flurry", "Greater_Flurry"),
   },
   {
@@ -304,7 +308,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 300, maxPct: 340 } }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 60,
-    appliesBuff: "pulverise",
+    appliesEffect: "pulverise",
     source: wikiAbility("Pulverise", "Pulverise"),
   },
   {
@@ -316,7 +320,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
-    buff: "berserk",
+    stateEffect: "berserk",
     source: wikiAbility("Berserk", "Berserk"),
   },
   {
@@ -328,7 +332,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 220, maxPct: 250 } }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 60,
-    appliesBuff: "meteor_strike",
+    appliesEffect: "meteor_strike",
     source: wikiAbility("Meteor Strike", "Meteor_Strike"),
   },
 ];
@@ -369,7 +373,7 @@ export const MELEE_EFFECTS = [
     category: "ultimate" as const,
     durationSeconds: METEOR_STRIKE_ADREN_BUFF_SECONDS,
     notes:
-      "SIM: melee basics generate 1.5x adren; +4.5% adren every tick for 30s (wired in rotation/simulate). Wiki: while a melee weapon is equipped.",
+      "Melee basics generate 1.5× adrenaline, plus 4.5% each tick for 30 seconds while a melee weapon is equipped.",
     source: wikiAbility("Meteor Strike", "Meteor_Strike"),
   },
   {
@@ -385,7 +389,7 @@ export const MELEE_EFFECTS = [
     name: "Greater Flurry",
     category: "enhanced" as const,
     notes:
-      "SIM: each of 8 hits extends active Berserk by 0.6s (wired). Bloodlust empower (missing-LP scale, cap +65%) is target-stage — not a fixed band.",
+      "Each of its eight hits extends active Berserk by 0.6 seconds. At 4+ Bloodlust, it gains up to 65% damage from the target's missing life points.",
     source: wikiAbility("Greater Flurry", "Greater_Flurry"),
   },
   {
@@ -394,7 +398,7 @@ export const MELEE_EFFECTS = [
     category: "basic" as const,
     durationSeconds: 6,
     notes:
-      "SIM: last-attack idle (readyTick - lastMeleeCastTick) scales this cast's band +5 min / +7 max AD% per idle tick, cap 10. After >= 8 idle ticks grants Endless Assault for 6s — next channelled melee (Assault / Flurry / Greater Flurry) consumes the window; multi-hit offsets already model channel timings as DoT-style. Off-target movement idle (Surge / Escape / Bladed Dive) is unmodelled on generic target.",
+      "Each idle tick since the last damaging melee attack adds 5–7% ability damage, capped at 10 ticks. Eight idle ticks also grant Endless Assault for 6 seconds. Off-target movement is not included.",
     source: wikiAbility("Greater Barge", "Greater_Barge"),
   },
   {
@@ -403,7 +407,7 @@ export const MELEE_EFFECTS = [
     category: "ultimate" as const,
     durationSeconds: 30,
     notes:
-      "NOT modelled in outgoing DPS sim: applies Pulverised 30s (target deals 25% less damage — defensive). On killing blow +50% adren (kill-gated; generic target has no kill). Two-handed only. Hit band 300-340 is modelled.",
+      "The 300–340% hit is included. Pulverised reduces the target's damage by 25% for 30 seconds; the defensive effect and killing-blow adrenaline are not included.",
     source: wikiAbility("Pulverise", "Pulverise"),
   },
   {
@@ -412,7 +416,7 @@ export const MELEE_EFFECTS = [
     category: "basic" as const,
     durationSeconds: GREATER_FURY_CRIT_WINDOW_SECONDS,
     notes:
-      "SIM: next crit-eligible melee gains +25% critical strike chance (wired; bleeds do not consume). Wiki: next Melee attack.",
+      "The next crit-eligible melee attack gains 25% critical strike chance. Bleeds do not consume it.",
     source: wikiAbility("Fury", "Fury"),
   },
   {

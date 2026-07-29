@@ -1,19 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-/**
- * The idle frame budget, both directions.
- *
- * Two real regressions live here and neither is visible in a screenshot:
- *
- *  - the sea froze at rest, because its 30Hz throttle accumulated delta inside
- *    useFrame and so could only stay awake while something else drove frames;
- *  - reduced motion *pinned* the loop at the display's refresh rate forever,
- *    because CameraRig only cleared `moving` in its animated branch.
- *
- * Both were silent. The only way to catch either is to count loop ticks and
- * diff pixels, so that is what this does. Needs a real GPU — headless Chromium
- * has no WebGPU adapter, and the whole file skips rather than lying.
- */
 
 type Diag = { ticks: number };
 
@@ -26,7 +12,6 @@ async function settle(page: import("@playwright/test").Page): Promise<boolean> {
     .then(() => true)
     .catch(() => false);
   if (!ok) return false;
-  // Intro descent finished, and deliberately no pointer input afterwards.
   await page.waitForTimeout(4500);
   return await page.evaluate(
     () => typeof (window as never as { __mapDiag?: unknown }).__mapDiag === "function",
@@ -42,7 +27,6 @@ async function idleTicks(page: import("@playwright/test").Page) {
   });
 }
 
-/** Two shots of an untouched canvas — did anything move? */
 async function movesAtRest(page: import("@playwright/test").Page) {
   const canvas = page.locator("canvas").first();
   const a = await canvas.screenshot();
@@ -54,7 +38,6 @@ test("sea animates at rest without pinning the frameloop", async ({ page }) => {
   test.skip(!(await settle(page)), "no WebGPU / dev probe (production build)");
   const ticks = await idleTicks(page);
   expect(await movesAtRest(page), "sea should move with no pointer input").toBe(true);
-  // ~30Hz idle by design. Near full refresh (90+) means the demand loop is pinned.
   expect(ticks).toBeGreaterThan(20);
   expect(ticks).toBeLessThan(45);
 });

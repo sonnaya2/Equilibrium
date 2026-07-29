@@ -1,5 +1,5 @@
 /**
- * One-shot / rare refresh: fetch Catalyst League tasks from the Wiki, parse,
+ * Refresh Catalyst League tasks from the Wiki, parse,
  * integrity-check, write data/league/catalyst-tasks-snapshot.json.
  * Production /tasks imports the snapshot — do not call this on every request.
  *

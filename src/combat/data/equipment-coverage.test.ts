@@ -5,7 +5,6 @@ import type { CombatStyle } from "../types";
 import { combatEquipment, equipmentById } from "./index";
 import type { EquipmentSlot } from "./records";
 
-/** Closed set of wear slots — must stay aligned with EquipmentSlot. */
 const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
   "mainhand",
   "offhand",
@@ -24,10 +23,6 @@ const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
 
 const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);
 
-/**
- * Known craft/unlock material id patterns that must never carry a wear slot.
- * Matches `item:…-energy`, `…-codex`, `…-components` (not prose in displayDescription).
- */
 const MATERIAL_ID_RE = /-(?:energy|codex|components)$/;
 
 const STYLES: readonly CombatStyle[] = ["melee", "ranged", "magic", "necromancy"];
@@ -60,8 +55,6 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
   });
 
   it("each style has ≥1 mainhand or twohand at tier ≥ 70", () => {
-    // Soft: skip a style only when the corpus has zero weapons for it at any tier
-    // (seed still thin). Once any MH/2H lands for the style, the t70+ bar is hard.
     for (const style of STYLES) {
       const weapons = combatEquipment.records.filter(
         (r) => r.style === style && (r.slot === "mainhand" || r.slot === "twohand"),
@@ -101,7 +94,6 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
     const expectedDamage = (omni!.bonuses.damage ?? 0) + (lantern!.bonuses.damage ?? 0);
     const expectedAccuracy = (omni!.bonuses.accuracy ?? 0) + (lantern!.bonuses.accuracy ?? 0);
     expect(totals).toEqual({ damage: expectedDamage, accuracy: expectedAccuracy });
-    // Pin known wiki face values so silent zeroing fails loudly.
     expect(totals.damage).toBeCloseTo(1415.5 + 707.7, 5);
     expect(totals.accuracy).toBe(2765 + 2765);
   });

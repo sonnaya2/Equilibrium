@@ -11,14 +11,13 @@ import { mulFloor } from "../core/rounding";
 /**
  * Equipment set effects with sourced current numbers. Per-item combat stats live on
  * EquipmentRecord.bonuses (wiki-sourced where filled). Weapon tier still drives base
- * AD and playerAccuracy; do not add weapon Accuracy ratings into playerAccuracy or
- * you double-count the tier curve.
+ * AD and playerAccuracy; adding weapon Accuracy would count the tier curve twice.
  *
  * Style damage on armour / accessories is not folded into base AD either — ability
  * damage stays level+tier driven (wiki weapon Damage is the face of that tier).
  *
  * Set crit bonuses feed CritLayers.chance, not the modifier pipeline.
- * Catalogue: data/combat/equipment-sets.json (combat-relevant only; no invented numbers).
+ * Catalogue: data/combat/equipment-sets.json contains combat-relevant facts only.
  */
 
 /** Slots whose Accuracy rating is already encoded by playerAccuracy(level, weaponTier). */
@@ -298,13 +297,11 @@ export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): Se
   return effect;
 }
 
-// --- Facts-only helpers (no player AD / crit modifiers) ---
 
 export interface SetFactsResult {
   setId: string;
   pieces: number;
   facts: string[];
-  /** Always empty for facts-only sets — no invented AD/crit mods. */
   modifiers: CombatModifier[];
   source: SourceReference;
 }

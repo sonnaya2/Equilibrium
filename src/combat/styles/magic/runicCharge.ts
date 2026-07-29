@@ -6,8 +6,7 @@ import type { SourceReference } from "../../types";
  * Runic Charge (added 2 Mar 2026): level 26 Utility, 0% adrenaline, off-GCD,
  * 30s cooldown; applies Anima Charged for 15s. The next empowered cast consumes
  * the window. Empowerments per the wiki page; the Concentrated Blast crit grant
- * uses the current Critical strike page's values — the CSM table's +20% is an
- * unresolved discrepancy (docs/combat-changelog.md §10).
+ * uses the current Critical strike page's values. The CSM table still lists +20%.
  */
 export const RUNIC_CHARGE_COOLDOWN_SECONDS = 30;
 export const ANIMA_CHARGED_DURATION_SECONDS = 15;

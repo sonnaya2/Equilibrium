@@ -12,7 +12,6 @@
  *   data/research/catalog.json                    (region upgrades + clear method regionHints)
  *
  * Policy: Leagues = ironman / no trade. Prefer self-sufficient unlocks and region combos.
- * No combat files. No inventing numbers.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -48,10 +47,6 @@ const write = (path, value) => {
   writeFileSync(target, `${JSON.stringify(value, null, 2)}\n`);
 };
 
-// ---------------------------------------------------------------------------
-// Curated product rows for audit missing_unlocks (wiki-backed, no invented rates)
-// Only rows whose id is absent from regional-skilling-unlocks get inserted.
-// ---------------------------------------------------------------------------
 const PRODUCT_ROWS = [
   {
     id: "multi-region:slayer-helmet-craft-chain",
@@ -198,20 +193,6 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Ore_box",
   },
   {
-    id: "misthalin:wood-box-tier-upgrades",
-    name: "Wood box tier upgrades",
-    recordType: "equipment",
-    regionHints: ["asgarnia", "kandarin", "misthalin"],
-    category: "Woodcutting inventory tool progression",
-    detail:
-      "Ironman Woodcutting Tips: wood box stores hundreds of logs. Tool-chain permanent upgrade path parallel to ore box for no-trade inventory pressure.",
-    requirements: ["Fletching / Construction materials per tier as wiki"],
-    confidence: "confirmed_wiki",
-    skill: "Woodcutting",
-    importance: "medium",
-    wiki: "https://runescape.wiki/w/Wood_box",
-  },
-  {
     id: "kandarin:ferocious-ring-helmet-fuse",
     name: "Ferocious ring fuse to full slayer helmet",
     recordType: "equipment",
@@ -347,9 +328,7 @@ function alreadyCovered(unlockName, records) {
   });
 }
 
-// ---------------------------------------------------------------------------
 // 1) Merge permanent unlocks into regional-skilling-unlocks.json
-// ---------------------------------------------------------------------------
 const auditUnlocks = read(AUDIT_UNLOCKS);
 const skilling = read(SKILLING_PATH);
 const catalog = read(CATALOG_PATH);
@@ -383,7 +362,6 @@ for (const u of auditUnlocks.missing_unlocks || []) {
   if (!alreadyCovered(u.unlock_name, skilling.records) && !byId.has(
     PRODUCT_ROWS.find((p) => p.name.toLowerCase() === u.unlock_name.toLowerCase() || p.wiki === u.wiki_url)?.id,
   )) {
-    // If we have a product row now in byId, fine
     const prod = PRODUCT_ROWS.find(
       (p) => p.wiki === u.wiki_url || p.name.toLowerCase() === u.unlock_name.toLowerCase(),
     );
@@ -409,9 +387,6 @@ skilling.purpose =
   skilling.purpose ||
   "Region-defining skilling activities, shops, outfits, off-hands, tool chains and production infrastructure for Equilibrium planning.";
 
-// ---------------------------------------------------------------------------
-// 2) Patch catalog region upgrades carefully (by region id + name)
-// ---------------------------------------------------------------------------
 let upgradesAdded = 0;
 for (const region of catalog.regions || []) {
   region.upgrades ||= [];
@@ -436,9 +411,7 @@ for (const region of catalog.regions || []) {
   }
 }
 
-// ---------------------------------------------------------------------------
 // 3) Region combos product file
-// ---------------------------------------------------------------------------
 const auditCombos = read(AUDIT_COMBOS);
 const auditGaps = read(AUDIT_GAPS);
 
@@ -508,9 +481,7 @@ const regionCombos = {
   },
 };
 
-// ---------------------------------------------------------------------------
 // 4) Clear catalog method regionHints fixes only (no invention)
-// ---------------------------------------------------------------------------
 const METHOD_FIXES = [
   {
     id: "runecrafting:time-runes-through-the-abyss",

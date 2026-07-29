@@ -70,7 +70,7 @@ function auditRecord(style, entry, verifiedAt = "2026-07-24") {
     : entry.adrenaline_delta_percent != null
       ? { kind: "gain", percent: entry.adrenaline_delta_percent }
       : category === "basic"
-        ? { kind: "gain", percent: 9 } // §5.4: all basics generate 9%
+        ? { kind: "gain", percent: 9 }
         : undefined;
   const rangeSource = entry.damage_range_percent ?? entry.damage_per_hit_percent ?? entry.damage_percent;
   const range = rangeSource ? parseRange(rangeSource) : null;
@@ -101,9 +101,6 @@ function auditRecord(style, entry, verifiedAt = "2026-07-24") {
   return record;
 }
 
-/** Engine-verified melee categories, mirrored from src/combat/styles/melee/abilities.ts —
- *  the engine holds the verified rules; the corpus only types the basics.
- *  Punish and Chaos Roar are basics per Beta Update 3 (changelog §4.4). */
 const MELEE_CATEGORY = {
   Attack: "basic",
   "Adaptive Strike": "basic",
@@ -119,9 +116,6 @@ const MELEE_CATEGORY = {
   "Meteor Strike": "ultimate",
 };
 
-/** Adrenaline per ability is data, never a global default. §5.4 documents the rule:
- *  all basics generate 9%, with named exceptions — Adaptive Strike +12% (§5.4),
- *  Dismember 0% (§5.7). Non-basics without a corpus cost are omitted, not guessed. */
 const MELEE_BASIC_GAIN_OVERRIDE = { "Adaptive Strike": 12, Dismember: 0 };
 
 function meleeAdrenaline(entry, category) {
@@ -194,9 +188,7 @@ const regionalCombat = await readJson("data/research/regional-combat-unlocks.jso
 const abilitySupplement = await readJson("scraped-data/combat-ability-supplement-2026-07-25.json");
 const revolutionBars = await readJson("scraped-data/combat-revolution-bars-2026-07-25.json");
 
-/** Region join for abilities: codex packages, major-upgrade ability entries and quest
- *  unlocks stamp `unlock.regions` onto existing records. Corpus abilities with no matching
- *  record stay out — they belong to the update-index backlog, not to invented rows. */
+/** Joins sourced regional unlocks onto existing ability records. */
 function applyAbilityRegionJoins(records) {
   const byName = new Map(records.map((r) => [r.name.toLowerCase(), r]));
   const joins = [];

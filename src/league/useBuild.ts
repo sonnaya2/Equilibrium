@@ -22,7 +22,7 @@ import type { BlessingPath } from "./blessings";
  * always see the empty build.
  *
  * Share links are owned by ShareImport (layout). This module only hydrates
- * localStorage and exposes applyBuild for that one-shot import path.
+ * localStorage and exposes applyBuild for share imports.
  */
 
 let state: BuildState = emptyBuild();

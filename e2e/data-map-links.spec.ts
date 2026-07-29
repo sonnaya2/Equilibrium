@@ -1,9 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-/**
- * /data Major unlocks → /map deep links.
- * Place names are structural anchors, not scraped dates.
- */
 
 test("data location link opens the map on the place", async ({ page }) => {
   await page.goto("/data");
@@ -17,7 +13,6 @@ test("data location link opens the map on the place", async ({ page }) => {
   await link.click();
   await expect(page).toHaveURL(/\/map#region=misthalin&place=/);
 
-  // Map hydrates and inspector subject is Misthalin.
   const panel = page.locator('section[aria-label="Region detail"]');
   await expect(panel.locator(".panel-head")).toContainText("Misthalin", { timeout: 20_000 });
 });

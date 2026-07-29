@@ -82,7 +82,6 @@ describe("shared/equipment set effects", () => {
       },
       perks: { tectonicPieces: 5 },
     };
-    // gear 3 + perk 5 → 5 pieces @ +1% = 5%
     expect(loadoutSetCritChance(gear3)).toBeCloseTo(0.05, 10);
 
     const perkOnly = { equipmentSlots: {}, perks: { tectonicPieces: 3, eliteTectonic: true } };
@@ -149,7 +148,6 @@ describe("shared/equipment set effects", () => {
     };
     expect(equippedSetCounts(loadout).get("first-necromancer")).toBe(5);
     expect(loadoutFirstNecromancerConjureDamageMult(loadout)).toBeCloseTo(1.35, 10);
-    // Conjure mult is not a player ability AD set modifier.
     expect(setDamageModifiers(equippedSetCounts(loadout))).toEqual([]);
     expect(equipmentSetById("first-necromancer")?.effects).toEqual([]);
   });

@@ -1,11 +1,6 @@
 /**
- * User ruling: Invention does NOT require Asgarnia.
- *
- * Skill unlock, research discovery, workbench manufacture, and device blueprints
- * are global. Asgarnia remains valid only as place geography (Guild machine room,
- * Arc/Waiko shops, Artisans, etc.) — never as "you need Asgarnia to have Invention".
- *
- * Runs after sync-regional-skilling-unlocks so normalize cannot re-poison the UI.
+ * Treats Invention progression as global. Asgarnia remains only on geographic
+ * place rows such as the Guild machine room.
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -175,7 +170,6 @@ function scrubText(text) {
     /Stormguard Citadel is Armadylean dig-site geography under Asgarnia in current Equilibrium mapping\.?/gi,
     "Stormguard Citadel is Armadylean dig-site geography under Kandarin in current Equilibrium mapping. ",
   );
-  // Stale "Region combo (all required): asgarnia + …" buried in detail after req cleared
   out = out.replace(
     /Region combo \(all required\):\s*asgarnia\s*\+\s*/gi,
     "Region combo (all required): ",
@@ -184,7 +178,6 @@ function scrubText(text) {
     /Region chain \(support pressure\):\s*asgarnia\s*\/\s*/gi,
     "Region chain (support pressure): ",
   );
-  // Clean empty combo leftovers like "Region combo (all required): " with nothing useful
   out = out.replace(/Region combo \(all required\):\s*·/gi, "·");
   out = out.replace(/Region combo \(all required\):\s*$/gi, "");
   out = out.replace(
@@ -479,7 +472,6 @@ function rehomeOffAsgarnia(row, sourceLabel) {
       ? row.required_regions
       : [];
 
-  // Hints: no false Asgarnia host; prefer hard reqs when present
   for (const key of ["regionHints", "region_hints"]) {
     if (!Array.isArray(row[key])) continue;
     const stripped = row[key].filter((r) => r && r !== "asgarnia");
@@ -499,7 +491,7 @@ function rehomeOffAsgarnia(row, sourceLabel) {
     changed = true;
   }
 
-  // Id rehome: asgarnia:foo must not match Asgarnia region filter via id prefix
+  // Rehome ids as well as region fields because filtering also matches id prefixes.
   if (id.startsWith("asgarnia:")) {
     const slug = slugOf(id);
     let newId;
@@ -523,7 +515,6 @@ function patchRow(row, sourceLabel) {
   const name = String(row.name || "");
   let changed = false;
 
-  // Always scrub invent-asgarnia lies in copy even on keep-asgarnia place rows
   if (typeof row.detail === "string") {
     const scrubbed = scrubText(row.detail);
     if (scrubbed !== row.detail) {
@@ -568,7 +559,6 @@ function patchRow(row, sourceLabel) {
   }
 
   if (keepAsgarniaPlace(id)) {
-    // Ensure place rows don't claim skill unlock requires Asgarnia
     if (typeof row.detail === "string" && /Invention unlocked|skill home/i.test(row.detail)) {
       const next = scrubText(row.detail);
       if (next !== row.detail) {
@@ -598,7 +588,6 @@ function patchRow(row, sourceLabel) {
 
   if (rehomeOffAsgarnia(row, sourceLabel)) changed = true;
 
-  // Ensure invent manufacture rows carry at most one global note (via scrubText)
   if (
     (isInventionManufactureRow(row) || forceReqFor(row.id || id)) &&
     typeof row.detail === "string" &&
@@ -618,7 +607,6 @@ function patchRow(row, sourceLabel) {
   return changed;
 }
 
-// ─── 1. regional-skilling-unlocks.json ───────────────────────────────────────
 const skillingPath = "data/research/regional-skilling-unlocks.json";
 const skilling = read(skillingPath);
 let skillingChanged = 0;
@@ -726,12 +714,10 @@ function rewriteAllIdRefs(value) {
   return value;
 }
 
-// Second detail scrub after rehome (stale combos / Hard Asgarnia remnants)
 for (const row of skilling.records || []) {
   if (typeof row.detail === "string") {
     let next = scrubText(rewriteIdRefs(row.detail));
     const req = row.requiredRegions || [];
-    // Global invent manufacture: drop stale "Region combo (all required): …" blocks
     // left over after Asgarnia was stripped from hard reqs.
     if (
       (String(row.id || "").startsWith("invention:") || forceReqFor(row.id)) &&
@@ -763,7 +749,6 @@ write(skillingPath, skilling);
 log.push(`skilling rows touched: ${skillingChanged}`);
 log.push(`id renames: ${idRenames.size}`);
 
-// ─── 2. catalog.json — drop false Asgarnia invent hosts; rehost by hard req ─
 const catalogPath = "data/research/catalog.json";
 const catalog = read(catalogPath);
 const skillingByName = new Map((skilling.records || []).map((r) => [r.name, r]));
@@ -805,7 +790,6 @@ for (const region of catalog.regions || []) {
         Object.assign(u, inventCatalogPayload(match, "asgarnia"));
         return true;
       }
-      // Don't clone Guild machines onto other region hosts via stale catalog
       if (region.id !== "asgarnia" && String(match.id).startsWith("asgarnia:")) {
         return false;
       }
@@ -826,7 +810,6 @@ for (const region of catalog.regions || []) {
   }
 }
 
-// Ensure invent rows with hard reqs exist on those host regions
 for (const match of skilling.records || []) {
   if (keepAsgarniaPlace(match.id)) continue;
   if (!isInventionManufactureRow(match) && !forceReqFor(match.id)) continue;
@@ -842,7 +825,6 @@ for (const match of skilling.records || []) {
   }
 }
 
-// Catalog-only invent leftovers (no skilling twin): drop false Asgarnia hosts
 const asgRegion = (catalog.regions || []).find((r) => r.id === "asgarnia");
 if (asgRegion) {
   const before = asgRegion.upgrades.length;
@@ -864,7 +846,6 @@ if (asgRegion) {
     }
     const req = u.requiredRegions || [];
     if (req.includes("asgarnia")) return true;
-    // Invent manufacture residual still parked on Asgarnia with empty/other reqs
     if (
       isInventionManufactureRow(synthetic) ||
       /Invention|gizmo shell|gizmo perk|augmentor|siphon|divine charge|junk refin/i.test(
@@ -904,7 +885,6 @@ dedupeRegionUpgrades(catalog);
 write(catalogPath, catalog);
 log.push(`catalog upgrades touched: ${catalogChanged}`);
 
-// ─── 3. progression-unlocks.json (nested section arrays) ─────────────────────
 const progPath = "data/reference/progression-unlocks.json";
 const prog = read(progPath);
 let progChanged = 0;
@@ -923,7 +903,6 @@ for (const section of PROG_SECTIONS) {
     if (patchRow(row, `progression:${section}`)) progChanged++;
   }
 }
-// Rewrite stale asgarnia: invent links + scrub notes across whole progression tree
 const progBefore = JSON.stringify(prog);
 rewriteAllIdRefs(prog);
 // scrub string fields on invent-related rows again
@@ -955,7 +934,6 @@ log.push(`progression rows touched: ${progChanged}`);
 rewriteAllIdRefs(catalog);
 write(catalogPath, catalog);
 
-// ─── 4. Enrichment sources (prevent re-poison on next skilling sync) ─────────
 const enrDir = join(ROOT, "scraped-data");
 const enrFiles = readdirSync(enrDir).filter((f) =>
   /^progression-enrichment-regional-skilling.*\.json$/.test(f),
@@ -974,7 +952,6 @@ for (const file of enrFiles) {
       const forced = forceReqFor(id);
       if (forced) {
         row.required_regions = [...forced];
-        // Drop false Asgarnia host from enrichment hints
         if (Array.isArray(row.region_hints)) {
           row.region_hints = forced.length
             ? [...forced]
@@ -1000,7 +977,6 @@ for (const file of enrFiles) {
         continue;
       }
       if (!isInventionManufactureRow({ ...row, requiredRegions: row.required_regions })) {
-        // Still scrub invent-asgarnia lies
         for (const field of ["notes", "detail", "league_treatment"]) {
           if (typeof row[field] === "string") {
             const scrubbed = scrubText(row[field]);
@@ -1044,7 +1020,6 @@ for (const file of enrFiles) {
 }
 log.push(`enrichment fields touched: ${enrChanged}`);
 
-// ─── 5. planner-expansions invention unlock note ─────────────────────────────
 const pePath = "data/research/planner-expansions.json";
 try {
   const pe = read(pePath);
@@ -1074,7 +1049,6 @@ try {
   log.push("planner-expansions skip");
 }
 
-// ─── Verify ──────────────────────────────────────────────────────────────────
 const after = read(skillingPath);
 const bad = [];
 for (const row of after.records || []) {

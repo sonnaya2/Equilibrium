@@ -1,6 +1,6 @@
 /**
  * Scrape RS Wiki armour/weapon list pages into equipment *candidates* under scraped-data/.
- * Does NOT write data/combat/equipment.json (merge is a separate agent).
+ * The merge step owns data/combat/equipment.json.
  *
  * Usage:
  *   node scripts/sync-combat-equipment.mjs

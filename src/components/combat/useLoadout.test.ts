@@ -158,7 +158,6 @@ describe("pruneUnknownEquipment", () => {
     const raw = {
       ...DEFAULT_LOADOUT,
       equipmentSlots: {
-        // Historical combat auras were stripped from equipment.json entirely.
         pocket: "item:berserker-aura",
         helmet: "item:sirenic-mask",
       },

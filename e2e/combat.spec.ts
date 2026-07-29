@@ -112,8 +112,6 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
 test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
-  // Scoped to the doll: every item row in the picker also names its slot, so
-  // an unscoped "Main-hand" matches seven elements and fails strict mode.
   const doll = page.getByRole("group", { name: "Equipment slots" });
   await expect(doll.getByText("Main-hand")).toBeVisible();
   await expect(doll.getByText("Empty").first()).toBeVisible();
@@ -133,13 +131,10 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
 test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
 
-  // Revolution is the default Rotation mode — no need to switch away from manual.
   await expect(page.getByRole("button", { name: "Run bar" })).toBeVisible();
   await expect(page.getByText("Hit Run to see how the bar plays out.")).toBeVisible();
   await expect(page.getByTestId("revo-horizon-plan")).toHaveText(/100 ticks/);
 
-  // Default melee dual-wield bar is fully engine-mapped post-audit.
-  // Count is variable; assert the full-bar ready line rather than a hard slot total.
   await expect(page.getByText(/All \d+ revo slots ready/)).toBeVisible();
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
@@ -149,7 +144,6 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await expect(page.getByTestId("revo-horizon")).toHaveText(/^100$/);
   await expect(page.getByTestId("revo-casts")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Timeline" })).toBeVisible();
-  // Basics are auto-woven into the horizon; at least one basic row or the timeline table.
   const basics = page.locator("[data-basic='true']");
   const timeline = page.getByTestId("revo-cast-timeline");
   await expect(timeline).toBeVisible();

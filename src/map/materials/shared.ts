@@ -1,12 +1,4 @@
-/**
- * One clock, one colour helper, one field sampler — shared by every material on
- * the board.
- *
- * The clock is module-level on purpose. Water, rivers, lock glow and marker
- * gems all move against the same second, and a per-material clock advanced from
- * a per-material `useFrame` is how two layers end up visibly out of phase after
- * a tab has been backgrounded. `MotionDriver` owns the only writer.
- */
+/** Module-level clock keeps every material in phase; MotionDriver is its sole writer. */
 
 import * as THREE from "three/webgpu";
 import { float, uniform, vec2, vec3 } from "three/tsl";

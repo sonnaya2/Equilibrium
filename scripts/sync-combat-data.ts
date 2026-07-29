@@ -1,19 +1,7 @@
 /**
- * Tracked-entity sync for the canonical combat store.
- *
- * The record datasets (data/combat/{abilities,equipment,prayers,perks,effects}.json) are
- * built by scripts/sync-combat-records.mjs from the curated corpus. This script maintains
- * the tracked-entity ledger (data/combat/update-index.json) and checks every entity's
- * RuneScape Wiki page for revisions newer than the record's verifiedAt — surfacing drift
- * loudly instead of serving stale numbers silently. It never scrapes values into records:
- * tooltip text is not a formula, and re-verification is a deliberate act.
- *
- * Report format:
- *   COMBAT SYNC
- *   Abilities checked: N   Items checked: N   Changed since dataset: N   New entities: N   Warnings: N
- *
- * Exit 1 when any tracked entity's Wiki page was revised after its record was verified.
- * Run: npm run sync:combat
+ * Updates data/combat/update-index.json and reports Wiki revisions newer than
+ * each record's verifiedAt. It does not import gameplay values.
+ * Exits 1 when any tracked entity needs re-verification.
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";

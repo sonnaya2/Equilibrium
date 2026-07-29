@@ -2,8 +2,8 @@
  * Longtail scrape: Infobox Bonuses for wearables that still have empty / all-zero
  * combat bonuses in data/combat/equipment.json.
  *
- * Writes ONLY scraped-data/equipment-stats-longtail-2026-07-26.json
- * Does NOT touch data/combat/equipment.json (parent merges).
+ * Writes only scraped-data/equipment-stats-longtail-2026-07-26.json.
+ * The merge script owns data/combat/equipment.json.
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
@@ -252,7 +252,7 @@ function tryAuraStaticDamage(wikitext, params) {
   );
   if (staticPct) {
     // Store as prayer-less empty combat bag — auras aren't style accuracy/armour.
-    // We do NOT invent a damage flat number from %; mark reason instead.
+    // Percent-only damage remains unresolved.
     return { __auraPct: Number(staticPct[1]) };
   }
   return {};

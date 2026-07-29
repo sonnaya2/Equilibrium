@@ -138,8 +138,8 @@ export interface ResolvedSlot {
   spec: AbilitySpec | null;
 }
 
-/** Resolves one bar slot: engine spec first (verified rules), record adapter second
- *  (sourced candidate data), unmodelled last (never invented). Shared-style records
+/** Resolves one bar slot: engine spec first, record adapter second, then unmodelled.
+ *  Shared-style records
  *  (Sacrifice) take the bar's style. */
 export function resolveBarSlot(
   slot: { name: string; abilityId: string | null },

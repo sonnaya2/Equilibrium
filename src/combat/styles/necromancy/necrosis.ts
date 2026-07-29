@@ -2,10 +2,9 @@ import { NECROSIS_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 
 /**
- * Necrosis (unchanged by the modernisation — changelog §5.10): max 12 stacks.
- * Touch of Death grants 4. Consumed by Finger of Death (−10% adrenaline cost
- * per stack, up to 6) and the Death Grasp special (+40% damage per stack,
- * consumes all).
+ * Necrosis caps at 12 stacks. Touch of Death grants 4. Finger of Death consumes
+ * up to 6 for −10% adrenaline cost per stack; Death Grasp consumes all for
+ * +40% damage per stack.
  */
 export const NECROSIS_CAP = 12;
 export const TOUCH_OF_DEATH_NECROSIS = 4;

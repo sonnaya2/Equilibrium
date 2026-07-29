@@ -76,7 +76,7 @@ export type WikiDropRow = {
   iconUrl?: string | null;
   /**
    * Wiki section heading this row was harvested under (e.g. "Unique (5 mechanics)", "Charms").
-   * Presentation-only — never invent mechanics; omit when unknown.
+   * Presentation-only; unknown mechanics are omitted.
    */
   group?: string | null;
   /** True when the wiki marks the drop as noted — UI shows a note badge, not "(noted)" text. */
@@ -491,7 +491,7 @@ function cellItemText(cellHtml: string): string {
 
 /**
  * Strip wiki footnote / citation markers from user-facing text.
- * We don't render a references section, so [1] / [ 2 ] / [d 3] go nowhere.
+ * Citation markers have no destination because article previews omit references.
  *
  * Also heals tag-strip residue: `Fire</b>)` → `Fire )` after stripTags
  * (TzKal-Zuk meaning parenthetical). Collapse empty italic/lang shells and
@@ -684,7 +684,7 @@ export function extractDropRows(html: string, options?: { group?: string | null 
           cols = mapped;
           continue;
         }
-        // No usable headers — skip until we see one (don't invent combat-stat tables).
+        // Rows without usable headers are excluded.
         continue;
       }
 
@@ -757,7 +757,7 @@ function extractLeadHtml(leadChunk: string): string {
   const pRe = /<p\b[^>]*>([\s\S]*?)<\/p>/gi;
   let m: RegExpExecArray | null;
   while ((m = pRe.exec(cleaned)) !== null) {
-    // Kill cite markers — we have no references panel for [1] to land on.
+    // Article previews omit the references panel.
     const text = cleanWikiFootnotes(stripTags(m[1]));
     if (text.length < 12) continue;
     if (/^(?:coordinates|released|update)/i.test(text)) continue;

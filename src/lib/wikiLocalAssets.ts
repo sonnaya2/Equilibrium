@@ -111,7 +111,7 @@ function attemptLabels(raw: string): string[] {
 }
 
 /**
- * Resolve one label to a local path or null (never invent wrong icons; null ok).
+ * Resolves one label to a published local path or null.
  */
 export function resolveLocalAsset(label: string): LocalAsset | null {
   const raw = cleanLabel(label);

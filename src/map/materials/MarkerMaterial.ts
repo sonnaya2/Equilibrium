@@ -1,9 +1,6 @@
 /**
- * POI crest stakes: planted on the plate, not HUD medallions.
- *
- * Face is unlit MeshBasic so atlas icons keep full chroma (Standard ÷π muddied
- * them). Icon-first disc with a thin brass rim; binary alpha + depthWrite so
- * they do not flicker under the demand loop. Gem emissive only when lit.
+ * Unlit POI faces preserve atlas chroma. Binary alpha and depthWrite prevent
+ * demand-loop flicker; gem emissive activates only for lit markers.
  *
  * `aState` on the face geometry:
  *   x  1 when this is a site rather than a named area

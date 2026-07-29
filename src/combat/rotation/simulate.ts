@@ -14,7 +14,11 @@ import {
   BERSERK_DURATION_SECONDS,
   endBerserk,
 } from "../styles/melee/bloodlust";
-import type { MeleeAbilitySpec } from "../styles/melee/abilities";
+import {
+  CHAOS_ROAR_DAMAGE_MULTIPLIER,
+  CHAOS_ROAR_DURATION_SECONDS,
+  isMeleeAbility,
+} from "../styles/melee/abilities";
 import {
   FURY_CRIT_CHANCE_BONUS,
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
@@ -53,8 +57,7 @@ import {
   consumeAnima,
   runicChargeReady,
 } from "../styles/magic/runicCharge";
-import type { RangedAbilitySpec } from "../styles/ranged/abilities";
-import type { MagicAbilitySpec } from "../styles/magic/abilities";
+import { isMagicAbility } from "../styles/magic/abilities";
 import {
   applyNecroOnCast,
   deathSkullsCooldownTicks,
@@ -83,52 +86,37 @@ import {
 } from "./state";
 import { GLOBAL_COOLDOWN_TICKS, secondsToTicks, TICK_SECONDS } from "./timeline";
 
-/** Invigorating / Impatient / Relentless — adren gain and EV refund rules. */
 export interface AdrenalineRules {
-  /** Multiplier on basic-category adrenaline gains (Invigorating). Default 1. */
   basicGainMultiplier?: number;
-  /** EV extra adrenaline on each basic gain cast (Impatient chance × 3). Default 0. */
   impatientExpectedExtra?: number;
-  /**
-   * Relentless EV: fraction of spent cost refunded after spend (proc chance).
-   * Applied once per cast with cost > 0; no 30s internal CD model. Default 0.
-   */
   relentlessRefundChance?: number;
 }
 
-/** Crackling / Aftershock EV procs — ranks 0 = off, 1-4 wiki max. */
 export interface ProcRules {
   cracklingRank?: number;
   aftershockRank?: number;
 }
 
 export interface SimulateInput {
-  /** Caller-supplied base ability damage, as with the single-hit pipeline. */
   base: number;
   level: number;
   accuracy: number;
   crit: Omit<CritLayers, "eligible">;
   abilities: readonly AbilitySpec[];
   rotation: readonly RotationAction[];
-  /** Static modifiers for every cast, or a per-ability builder (loadout perks). */
   modifiers?: CombatModifier[] | ((ability: AbilitySpec) => CombatModifier[]);
   context?: CombatContext;
   cap?: HitCapRule;
-  /** Ammo family; "splintering" is accepted but unwired — the Puncture
-   *  application rule is unverified (see styles/ranged/onHit.ts). */
+  /** Puncture damage is outside the current model. */
   ammo?: "deathspore" | "splintering";
-  /** When true, the style's autoAttack basic is woven into GCD gaps and
-   *  adrenaline shortfalls before each queued cast (§5.6: basics auto-used
-   *  when nothing else is queued). When false, a shortfall fails the run. */
+  /** Weave the style auto-attack through idle GCDs and adrenaline shortfalls. */
   autoWeave?: boolean;
-  /** Perk-driven basic adrenaline rules (Invigorating, Impatient EV). */
   adrenaline?: AdrenalineRules;
   /**
    * Planted Feet: base Sunshine / Death's Swiftness duration ×1.25 (→ 63 ticks).
    * Does not apply to greater variants.
    */
   plantedFeet?: boolean;
-  /** Crackling / Aftershock EV over the sim horizon (applied in finish). */
   procs?: ProcRules;
   /**
    * Mult on conjure spirit *basic autos* only (not putrid poison, not commands).
@@ -160,9 +148,7 @@ export interface RotationSummary {
   totalMin: number;
   totalMax: number;
   totalExpected: number;
-  /** Expected damage per second over the horizon (or elapsed ticks if no horizon). */
   dps: number;
-  /** Expected damage summed per ability id — the contribution split. */
   perAbility: Record<string, number>;
   /** Expected damage landing on each tick — DoT tails land on their sourced ticks. */
   damageByTick: Record<number, number>;
@@ -170,8 +156,7 @@ export interface RotationSummary {
 
 const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
 
-/** Flat damage windows (Berserk, Death's Swiftness) compose at onCast — an engine
- *  stage choice; multiplication order is immaterial while only one applies. */
+/** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 function buffMultiplier(id: string, multiplier: number, source: SourceReference): CombatModifier {
   return {
     id,
@@ -196,11 +181,6 @@ export interface CastContext {
   basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
 }
 
-/**
- * The shared cast machinery behind simulate and simulateRevolution: state, cost
- * evaluation, the single cast path, and summary assembly. Behaviour is identical
- * for queued and priority-driven rotations — only the driver differs.
- */
 export function createCastContext(
   input: Omit<SimulateInput, "rotation" | "autoWeave">,
 ): CastContext {
@@ -213,11 +193,9 @@ export function createCastContext(
   const damageByTick: Record<number, number> = {};
   let state = newRotationState();
   let endTick = 0;
-  /** Spirit auto EV outside ability casts (conjure passive damage). */
   let spiritMin = 0;
   let spiritMax = 0;
   let spiritExpected = 0;
-  /** Inclusive upper bound of ticks already processed for spirit autos. */
   let spiritCursor = 0;
 
   function landSpiritEvents(events: SpiritAutoEvent[]): void {
@@ -252,7 +230,6 @@ export function createCastContext(
     }
   }
 
-  /** Advance spirit autos from spiritCursor through toTick inclusive. */
   function advanceSpirits(toTick: number): void {
     if (toTick <= spiritCursor) return;
     const { state: next, events } = processSpiritAutos(state.conjures, spiritCursor, toTick);
@@ -262,7 +239,6 @@ export function createCastContext(
   }
 
   function finish(error?: string, horizonTicks?: number): RotationSummary {
-    // Drain remaining spirit autos (tails past horizon still count, like DoT tails).
     const spiritEnd = state.conjures.spirits.reduce(
       (m, s) => Math.max(m, s.untilTick + 3),
       spiritCursor,
@@ -314,7 +290,6 @@ export function createCastContext(
     };
   }
 
-  /** Adrenaline cost against current state (Deathspore free casts, FoD Necrosis discount). */
   function costOf(ability: AbilitySpec): number {
     if (ability.style === "necromancy") {
       return necroAdrenalineCost(ability, state.necro, state.tick);
@@ -328,7 +303,6 @@ export function createCastContext(
       : listed;
   }
 
-  /** Meteor Strike passive: +4.5% adren per tick while the buff window is open. */
   function grantMeteorPassive(fromTick: number, toTickExclusive: number): void {
     if (state.meteorStrikeUntilTick <= 0 || toTickExclusive <= fromTick) return;
     let gain = 0;
@@ -337,10 +311,7 @@ export function createCastContext(
     if (gain > 0) state = gainAdrenaline(state, gain);
   }
 
-  /** Everything a real cast does at a fixed tick: damage, resources, buffs, style
-   *  on-hit effects, and the GCD advance. Queued and woven casts share this path. */
-  function performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void {
-    // Spirit autos due while waiting on GCD / ability CD, then passive adren.
+  function prepareCast(ability: AbilitySpec, readyTick: number): AbilitySpec {
     advanceSpirits(readyTick);
     grantMeteorPassive(state.tick, readyTick);
     state = { ...state, tick: readyTick };
@@ -348,26 +319,25 @@ export function createCastContext(
       state = { ...state, melee: endBerserk(state.melee), berserkUntilTick: 0 };
     }
 
-    const melee = ability.style === "melee" ? (ability as MeleeAbilitySpec) : null;
-    let working: AbilitySpec =
+    const melee = isMeleeAbility(ability) ? ability : null;
+    const bloodlustBand =
       melee?.bloodlustScale && state.melee.stacks >= melee.bloodlustScale.threshold
-        ? {
-            ...ability,
-            hits: ability.hits.map((h) => ({ ...h, band: melee.bloodlustScale!.band })),
-          }
-        : ability;
-    // FoD (Necrosis cost + Living Death 1.5×), Death Grasp stacks, Volley soul count.
+        ? melee.bloodlustScale.band
+        : null;
+    let working: AbilitySpec = bloodlustBand
+      ? {
+          ...ability,
+          hits: ability.hits.map((hit) => ({ ...hit, band: bloodlustBand })),
+        }
+      : ability;
     if (ability.style === "necromancy") {
       working = resolveNecromancyAbility(working, state.necro, readyTick);
     }
 
-    // Greater Barge last-attack idle (generic target): ticks since last melee damaging cast.
-    // Off-target movement is unmodelled. First damaging melee (last < 0) has 0 idle.
     const meleeIdleTicks =
       ability.style === "melee" && working.hits.length > 0 && state.lastMeleeCastTick >= 0
         ? readyTick - state.lastMeleeCastTick
         : 0;
-    // Greater Barge: rewrite this cast's hit bands from idle ticks; grant Endless Assault at >= 8.
     if (ability.id === "greater_barge" && working.hits.length > 0) {
       working = {
         ...working,
@@ -384,8 +354,6 @@ export function createCastContext(
         };
       }
     }
-    // Endless Assault: next channelled melee inside the window (Assault / Flurry / GFlurry).
-    // Hits already multi-tick; clear the window without inventing a damage mult.
     if (
       melee?.channelled &&
       working.hits.length > 0 &&
@@ -395,20 +363,28 @@ export function createCastContext(
       state = { ...state, endlessAssaultUntilTick: 0 };
     }
 
+    return working;
+  }
+
+  function calculateCastResult(
+    ability: AbilitySpec,
+    working: AbilitySpec,
+    readyTick: number,
+  ): { result: AbilityResult; working: AbilitySpec } {
     const baseMods =
       typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []);
     const modifiers = [...baseMods];
-    // Chaos Roar: ×1.75 on the next damaging melee cast inside the window.
     const chaosRoarActive =
       ability.style === "melee" &&
       working.hits.length > 0 &&
       state.chaosRoarUntilTick > 0 &&
       readyTick < state.chaosRoarUntilTick;
     if (chaosRoarActive) {
-      modifiers.push(buffMultiplier("buff:chaos_roar", 1.75, MODERNISATION_WIKI));
+      modifiers.push(
+        buffMultiplier("buff:chaos_roar", CHAOS_ROAR_DAMAGE_MULTIPLIER, MODERNISATION_WIKI),
+      );
       state = { ...state, chaosRoarUntilTick: 0 };
     }
-    // Greater Fury: next non-bleed melee is a guaranteed crit.
     const furyCrit =
       ability.style === "melee" &&
       state.greaterFuryCrit &&
@@ -416,7 +392,6 @@ export function createCastContext(
     if (furyCrit) {
       state = { ...state, greaterFuryCrit: false };
     }
-    // Fury: next crit-eligible melee gains +25% crit chance (consumed on use).
     const furyBonus =
       ability.style === "melee" &&
       state.furyCritBonus &&
@@ -435,7 +410,6 @@ export function createCastContext(
         modifiers.push(buffMultiplier("buff:deaths_swiftness", mult, MODERNISATION_WIKI));
       const bonusPct = searingWindsBonusPct(state.ranged.searingWinds, readyTick);
       if (bonusPct > 0 && working.hits.length > 0) {
-        // ponytail: the bonus hit's crit behaviour is unsourced — modelled ineligible.
         working = {
           ...working,
           hits: working.hits.flatMap((h) => [
@@ -456,8 +430,7 @@ export function createCastContext(
     const critLayers = {
       ...input.crit,
       chance: input.crit.chance + (furyBonus ? FURY_CRIT_CHANCE_BONUS : 0),
-      guaranteed:
-        furyCrit || (ability as RangedAbilitySpec).guaranteedCrit || input.crit.guaranteed,
+      guaranteed: furyCrit || ability.guaranteedCrit || input.crit.guaranteed,
     };
 
     let result: AbilityResult =
@@ -479,13 +452,10 @@ export function createCastContext(
       endTick = Math.max(endTick, landTick + 1);
     });
 
-    // Instability Lightning Surge (wiki): while buff active — or this cast applies
-    // Instability — each Magic crit-eligible hit adds p * E[70–90%] one tick later.
-    // Surge crits do not chain (only source ability hits feed surges).
     const procInstability =
       ability.style === "magic" &&
       working.hits.length > 0 &&
-      (instabilityActive(state.instability, readyTick) || ability.appliesBuff === "instability");
+      (instabilityActive(state.instability, readyTick) || ability.appliesEffect === "instability");
     if (procInstability) {
       const surgeHit = calculateHit({
         base: input.base,
@@ -508,14 +478,15 @@ export function createCastContext(
         surgeTotal += contrib;
       });
       if (surgeTotal > 0) {
-        // EV-only: min/max stay source-hit bounds (surge is probabilistic).
         result = { ...result, expected: result.expected + surgeTotal };
       }
     }
 
+    return { result, working };
+  }
+
+  function applyCastState(ability: AbilitySpec, working: AbilitySpec, readyTick: number): void {
     const cost = costOf(ability);
-    // Meteor Strike: melee basics generate 1.5x listed adrenaline while buffed.
-    // Invigorating multiplies basic gains; Impatient adds EV extra on basic gains.
     if (ability.adrenaline?.gain) {
       const isBasic = ability.category === "basic" || !!ability.autoAttack;
       const meteorBasic =
@@ -534,13 +505,11 @@ export function createCastContext(
     }
     if (cost) {
       state = spendAdrenaline(state, cost);
-      // Relentless EV: refund cost × proc chance once per cast (no internal CD model).
       const relentlessChance = input.adrenaline?.relentlessRefundChance ?? 0;
       if (relentlessChance > 0) {
         state = gainAdrenaline(state, cost * relentlessChance);
       }
     }
-    // Deathspore free-cast only — FoD Necrosis free casts must not consume stacks.
     if (
       cost === 0 &&
       (ability.adrenaline?.cost ?? 0) > 0 &&
@@ -549,7 +518,9 @@ export function createCastContext(
     ) {
       state = patchRanged(state, { deathspore: spendDeathspore(state.ranged.deathspore) });
     }
-    if (melee?.bloodlustGain) state = gainMeleeBloodlust(state, melee.bloodlustGain);
+    if (isMeleeAbility(ability) && ability.bloodlustGain) {
+      state = gainMeleeBloodlust(state, ability.bloodlustGain);
+    }
     if (ability.cooldownSeconds) {
       const cdTicks =
         ability.id === "death_skulls"
@@ -558,9 +529,6 @@ export function createCastContext(
       state = startCooldown(state, ability.id, cdTicks);
     }
 
-    // Necromancy: souls / necrosis / Living Death / conjure summon + ToD LD adren + CD resets.
-    // Uses the bar ability (not the resolved FoD/volley rewrite) so declared
-    // soulGain/necrosisGain/soulCost fields apply; id-based spends cover FoD/DG/Volley.
     if (ability.style === "necromancy") {
       const patch = applyNecroOnCast(state.necro, ability, readyTick, state.conjures);
       state = {
@@ -572,53 +540,54 @@ export function createCastContext(
       state = clearCooldowns(state, patch.clearCooldownIds);
     }
 
-    if (ability.buff === "berserk") {
+    if (ability.stateEffect === "berserk") {
       state = {
         ...state,
         melee: activateBerserk(state.melee),
         berserkUntilTick: readyTick + secondsToTicks(BERSERK_DURATION_SECONDS),
       };
-    } else if (ability.buff === "deaths_swiftness") {
+    } else if (ability.stateEffect === "deaths_swiftness") {
       state = patchRanged(state, {
         swiftness: activateDeathsSwiftness(readyTick, false, input.plantedFeet === true),
       });
-    } else if (ability.buff === "greater_deaths_swiftness") {
+    } else if (ability.stateEffect === "greater_deaths_swiftness") {
       state = patchRanged(state, { swiftness: activateDeathsSwiftness(readyTick, true) });
-    } else if (ability.buff === "shadow_imbued") {
+    } else if (ability.stateEffect === "shadow_imbued") {
       state = patchRanged(state, { shadowImbued: activateShadowImbued(readyTick) });
     }
-    if (ability.appliesBuff === "searing_winds") {
+    if (ability.appliesEffect === "searing_winds") {
       state = patchRanged(state, { searingWinds: activateSearingWinds(readyTick) });
     }
-    if (ability.appliesBuff === "sunshine" || ability.appliesBuff === "greater_sunshine") {
-      const greater = ability.appliesBuff === "greater_sunshine";
+    if (ability.appliesEffect === "sunshine" || ability.appliesEffect === "greater_sunshine") {
+      const greater = ability.appliesEffect === "greater_sunshine";
       state = {
         ...state,
         sunshine: activateSunshine(readyTick, greater, !greater && input.plantedFeet === true),
       };
     }
-    if (ability.appliesBuff === "instability") {
+    if (ability.appliesEffect === "instability") {
       state = { ...state, instability: activateInstability(readyTick) };
     }
-    if (ability.appliesBuff === "chaos_roar") {
-      // 7.2s empower window (12 ticks) for the next damaging melee.
-      state = { ...state, chaosRoarUntilTick: readyTick + secondsToTicks(7.2) };
+    if (ability.appliesEffect === "chaos_roar") {
+      state = {
+        ...state,
+        chaosRoarUntilTick: readyTick + secondsToTicks(CHAOS_ROAR_DURATION_SECONDS),
+      };
     }
-    if (ability.appliesBuff === "greater_fury") {
+    if (ability.appliesEffect === "greater_fury") {
       state = { ...state, greaterFuryCrit: true };
     }
-    if (ability.appliesBuff === "fury") {
+    if (ability.appliesEffect === "fury") {
       state = { ...state, furyCritBonus: true };
     }
-    if (ability.appliesBuff === "meteor_strike") {
+    if (ability.appliesEffect === "meteor_strike") {
       state = {
         ...state,
         meteorStrikeUntilTick: readyTick + secondsToTicks(METEOR_STRIKE_DURATION_SECONDS),
       };
     }
-    // Greater Flurry: each hit extends active Berserk by 0.6s (1 tick).
     if (
-      ability.appliesBuff === "greater_flurry" &&
+      ability.appliesEffect === "greater_flurry" &&
       state.melee.berserk &&
       readyTick < state.berserkUntilTick
     ) {
@@ -626,9 +595,7 @@ export function createCastContext(
         working.hits.length * secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS);
       state = { ...state, berserkUntilTick: state.berserkUntilTick + extendTicks };
     }
-    // pulverise: target -25% outgoing + on-kill adren — not modelled (defensive / kill-gated).
 
-    // Last-attack idle clock: any melee damaging cast advances the GBarge reference.
     if (ability.style === "melee" && working.hits.length > 0) {
       state = { ...state, lastMeleeCastTick: readyTick };
     }
@@ -649,12 +616,18 @@ export function createCastContext(
         state = gainAdrenaline(state, perHit * working.hits.length);
       }
     }
-    if ((ability as MagicAbilitySpec).requiresAnima) {
+    if (isMagicAbility(ability) && ability.requiresAnima) {
       state = { ...state, magic: consumeAnima(state.magic) };
     }
+  }
 
+  function completeCast(
+    ability: AbilitySpec,
+    result: AbilityResult,
+    readyTick: number,
+    auto: boolean,
+  ): void {
     const gcdEnd = readyTick + GLOBAL_COOLDOWN_TICKS;
-    // Passive adren across the GCD the cast occupies (buff may start this cast).
     grantMeteorPassive(readyTick, gcdEnd);
     casts.push({
       tick: readyTick,
@@ -665,13 +638,19 @@ export function createCastContext(
     });
     perAbility[ability.id] = (perAbility[ability.id] ?? 0) + result.expected;
     state = { ...state, tick: gcdEnd };
-    // Spirit autos that land during this GCD (e.g. first skeleton hit at cast+7).
     advanceSpirits(gcdEnd);
     endTick = Math.max(endTick, state.tick);
   }
 
+  function performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void {
+    const prepared = prepareCast(ability, readyTick);
+    const { result, working } = calculateCastResult(ability, prepared, readyTick);
+    applyCastState(ability, working, readyTick);
+    completeCast(ability, result, readyTick, auto);
+  }
+
   function performOffGcdCast(ability: AbilitySpec): void {
-    if (ability.buff === "runic_charge") {
+    if (ability.stateEffect === "runic_charge") {
       state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
     }
     casts.push({
@@ -695,13 +674,7 @@ export function createCastContext(
   };
 }
 
-/**
- * Deterministic rotation run: expected values only, casts advance to their first
- * legal tick, and an unpayable adrenaline cost fails the run instead of silently
- * skipping — a rotation the game cannot perform is invalid input, not zero damage.
- * Channelled hits use hit.tickOffset when present; bleed tails use their sourced
- * intervals.
- */
+/** Deterministic expected-value run; unpayable casts return an error summary. */
 export function simulate(input: SimulateInput): RotationSummary {
   const ctx = createCastContext(input);
 
@@ -709,7 +682,7 @@ export function simulate(input: SimulateInput): RotationSummary {
     const ability = ctx.byId.get(action.abilityId);
     if (!ability) return ctx.finish(`unknown ability: ${action.abilityId}`);
 
-    if (ability.buff === "runic_charge") {
+    if (ability.stateEffect === "runic_charge") {
       if (!runicChargeReady(ctx.getState().magic, ctx.getState().tick)) {
         return ctx.finish(`runic_charge is on cooldown at tick ${ctx.getState().tick}`);
       }
@@ -741,7 +714,8 @@ export function simulate(input: SimulateInput): RotationSummary {
 
     const readyTick = ctx.firstLegalTick(ability.id);
     if (
-      (ability as MagicAbilitySpec).requiresAnima &&
+      isMagicAbility(ability) &&
+      ability.requiresAnima &&
       !animaCharged(ctx.getState().magic, readyTick)
     ) {
       return ctx.finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);

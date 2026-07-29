@@ -20,7 +20,7 @@ export type WikiArticleTarget = {
 
 export type WikiDropRow = WikiDropTableRow;
 
-/** Client view: base contract + optional structured drops from future API. */
+/** Client view with optional structured drops. */
 export type WikiArticleClientView = WikiArticleView & {
   drops?: WikiDropRow[];
 };

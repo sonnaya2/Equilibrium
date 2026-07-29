@@ -43,7 +43,6 @@ export default function MapPage() {
       warnings: r.warnings,
       combatUnlocks,
       multiRegionUnlocks,
-      // Region row + every content / upgrade / training row that carries a SourceReference.
       sourceCount:
         (r.source ? 1 : 0) +
         r.content.filter((c) => c.source).length +
@@ -54,7 +53,6 @@ export default function MapPage() {
   });
 
   return (
-    // The map needs the full content width and a shrinkable flex parent.
     <Page wide className="map-shell flex min-h-0 flex-1 flex-col">
       <RegionPlanner regions={plannerRegions} boundaryRules={catalog.hardRules} />
     </Page>

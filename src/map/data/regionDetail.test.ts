@@ -11,8 +11,6 @@ describe("regionDetail", () => {
   });
 
   it("puts every content and upgrade row in exactly one bucket", () => {
-    // The point of the test: a future sync inventing a new kind cannot silently
-    // drop rows out of every tab. Totals have to reconcile, per region.
     for (const region of catalog.regions) {
       const detail = REGION_DETAIL.get(region.id as never);
       expect(detail, region.id).toBeDefined();
@@ -29,8 +27,6 @@ describe("regionDetail", () => {
       const detail = REGION_DETAIL.get(region.id as never)!;
       expect(detail.training.length, `${region.id} training`).toBe(region.training.length);
       total += detail.training.length;
-      // getResearchCatalog drops which skill a method belongs to; without it
-      // the training tab cannot group, so check it came back.
       for (const row of detail.training) expect(row.skill, `${region.id}/${row.id}`).not.toBe("");
     }
     expect(total, "the catalog carries training methods to show").toBeGreaterThan(50);

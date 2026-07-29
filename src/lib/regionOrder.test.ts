@@ -33,7 +33,6 @@ describe("sortByRegionOrder", () => {
   });
 
   it("does not promote unknowns ahead of known ids (indexOf -1 bug)", () => {
-    // indexOf("unknown") === -1 used to sort before index 0.
     const sorted = sortByRegionOrder([{ id: "unknown_future" }, { id: "misthalin" }], ORDER);
     expect(sorted[0]?.id).toBe("misthalin");
     expect(sorted[1]?.id).toBe("unknown_future");

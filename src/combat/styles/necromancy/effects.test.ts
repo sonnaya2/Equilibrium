@@ -122,7 +122,6 @@ describe("necro rotation state machine", () => {
     const necro = newNecroRotationState();
     const empty = newConjures();
     expect(necroCanCast(byId("command_skeleton_warrior"), necro, empty, 0)).toBe(false);
-    // Without conjure state, commands are closed.
     expect(necroCanCast(byId("command_skeleton_warrior"), necro)).toBe(false);
 
     const skel = summonConjure(empty, "skeleton_warrior", 0);

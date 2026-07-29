@@ -1,20 +1,8 @@
 "use client";
 
 /**
- * One region, lifted out of the map.
- *
- * The silhouette is the raster's own coastline — every ring in `plates` came out
- * of the land mask, so a plate has the real islets and the real inlets and not a
- * ten-point approximation of them. All of a region's landmasses go into a single
- * ExtrudeGeometry, which keeps forty islands at two draw calls.
- *
- * Lock and focus are properties of the geometry, not badges: a sealed region
- * sits lower and drained, the framed one rises and the rest settle back. Nothing
- * about the HD texture changes, because the texture is the map.
- *
- * Clicking a plate frames it and never edits the build. Picking is an explicit
- * button in the ledger and the inspector — a board click that also toggled meant
- * every misaimed poke at a marker silently rewrote persisted state.
+ * Extruded region geometry generated from coastline rings. Plate clicks change
+ * focus only; build picks remain explicit ledger or inspector actions.
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
@@ -218,9 +206,7 @@ export function RegionPlate({
       />
 
       {label ? (
-        // Decorative only. The ledger owns every accessible region name, and a
-        // second match here is a Playwright strict-mode failure, so this is
-        // aria-hidden and never takes a pointer.
+        // The ledger owns accessible region controls; this label is decorative.
         <Html
           position={[label[0], depth + BEVEL + 0.006, label[1]]}
           center

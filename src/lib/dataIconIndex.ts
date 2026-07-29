@@ -341,7 +341,7 @@ export const UPGRADE_ICON_BY_SLUG: Record<string, string> = {
   "equipment-separator": "permanent-unlocks/equipment-separator.webp",
   "equipment-siphon": "permanent-unlocks/equipment-siphon.webp",
   "essential-oils": "permanent-unlocks/essential-oils.webp",
-  "expansive-essence-pouch": "permanent-unlocks/expansive-essence-pouch.webp",
+  "expansive-essence-pouch": "skilling-utility/expansive-essence-pouch.webp",
   "expeditious-bracelet": "permanent-unlocks/expeditious-bracelet.webp",
   "explorers-ring-1": "permanent-unlocks/explorers-ring-1.webp",
   "explorers-ring-2": "permanent-unlocks/explorers-ring-2.webp",

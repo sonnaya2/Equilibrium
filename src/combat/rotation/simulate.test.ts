@@ -8,8 +8,32 @@ import {
   volleyOfSouls,
 } from "../styles/necromancy/abilities";
 import { rotationOf } from "./actions";
-import { simulate, type SimulateInput } from "./simulate";
+import { simulate, type CastRecord, type RotationSummary, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
+
+function required<T>(value: T | null | undefined, label: string): T {
+  if (value == null) throw new Error(label);
+  return value;
+}
+
+function abilityById<T extends { id: string }>(abilities: readonly T[], id: string): T {
+  return required(
+    abilities.find((ability) => ability.id === id),
+    `Missing engine ability: ${id}`,
+  );
+}
+
+function lastCast(summary: RotationSummary): CastRecord {
+  return required(summary.casts.at(-1), "Expected at least one cast");
+}
+
+function findCast(
+  summary: RotationSummary,
+  predicate: (cast: CastRecord) => boolean,
+  label: string,
+): CastRecord {
+  return required(summary.casts.find(predicate), label);
+}
 
 const baseInput: Omit<SimulateInput, "rotation"> = {
   base: 1000,
@@ -35,13 +59,13 @@ describe("simulate", () => {
       ...baseInput,
       rotation: rotationOf("attack", "attack", "attack", "assault"),
     });
-    expect(low.casts.at(-1)!.result.expected).toBeCloseTo(4 * 1400);
+    expect(lastCast(low).result.expected).toBeCloseTo(4 * 1400);
 
     const high = simulate({
       ...baseInput,
       rotation: rotationOf("attack", "attack", "attack", "attack", "assault"),
     });
-    const assault = high.casts.at(-1)!;
+    const assault = lastCast(high);
     expect(assault.tick).toBe(12);
     expect(assault.result.expected).toBeCloseTo(4 * 1800);
     expect(assault.adrenalineAfter).toBe(36 - 25);
@@ -95,17 +119,14 @@ describe("simulate — Crackling / Aftershock EV procs", () => {
       ...baseInput,
       procs: { cracklingRank: 4 },
     });
-    // 60s = 100 ticks @ 0.6s
     const s = ctx.finish(undefined, 100);
     expect(s.ok).toBe(true);
     expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
     expect(s.totalExpected).toBeCloseTo(2000, 5);
-    // Mid-horizon damageByTick entry
     expect(s.damageByTick[50]).toBeCloseTo(2000, 5);
   });
 
   it("Aftershock: 100k ability damage, rank 1, base 1000 → 2 procs × 400 = 800 when H allows", () => {
-    // attack expected = 1200 @ base 1000; need ≥100k → ≥84 attacks
     const n = 84;
     const s = simulate({
       ...baseInput,
@@ -115,18 +136,15 @@ describe("simulate — Crackling / Aftershock EV procs", () => {
     expect(s.ok).toBe(true);
     const abilityExpected = n * 1200;
     expect(abilityExpected).toBeGreaterThanOrEqual(100_000);
-    // elapsed horizon = n * 3 ticks * 0.6s ≥ 151s → room for many 6s gaps
     expect(s.perAbility.aftershock).toBeCloseTo(800, 5);
     expect(s.totalExpected).toBeCloseTo(abilityExpected + 800, 5);
   });
 
   it("Aftershock does not recurse on Crackling damage", () => {
-    // Ability damage alone below 50k, but crackling on a long horizon would not count.
     const ctx = createCastContext({
       ...baseInput,
       procs: { cracklingRank: 4, aftershockRank: 4 },
     });
-    // No casts: abilityExpected = 0 → aftershock 0; crackling alone over 60s
     const s = ctx.finish(undefined, 100);
     expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
     expect(s.perAbility.aftershock).toBeUndefined();
@@ -174,13 +192,11 @@ describe("simulate — Invigorating / Impatient adrenaline", () => {
       rotation: rotationOf("attack", "attack"),
     });
     expect(s.ok).toBe(true);
-    // Per cast: 9*1.2 + 1.08 = 11.88
     expect(s.casts[0].adrenalineAfter).toBeCloseTo(11.88);
     expect(s.casts[1].adrenalineAfter).toBeCloseTo(23.76);
   });
 
   it("does not apply Invigorating/Impatient when there is no adrenaline gain", () => {
-    // Rules only fire inside ability.adrenaline?.gain for basic/autoAttack casts.
     const plain = simulate({
       ...baseInput,
       rotation: rotationOf("attack"),
@@ -197,7 +213,6 @@ describe("simulate — Invigorating / Impatient adrenaline", () => {
 
 describe("simulate — Relentless EV cost refund", () => {
   it("refunds cost × chance after spend (R5: 25 cost → +1.25 EV)", () => {
-    // 4× attack → 36 adren; Assault costs 25 → 11 without Relentless, 12.25 with R5.
     const plain = simulate({
       ...baseInput,
       rotation: rotationOf("attack", "attack", "attack", "attack", "assault"),
@@ -209,8 +224,8 @@ describe("simulate — Relentless EV cost refund", () => {
     });
     expect(plain.ok).toBe(true);
     expect(withR.ok).toBe(true);
-    const plainAssault = plain.casts.at(-1)!;
-    const rAssault = withR.casts.at(-1)!;
+    const plainAssault = lastCast(plain);
+    const rAssault = lastCast(withR);
     expect(plainAssault.abilityId).toBe("assault");
     expect(plainAssault.adrenalineAfter).toBeCloseTo(36 - 25, 10);
     expect(rAssault.adrenalineAfter).toBeCloseTo(36 - 25 + 25 * 0.05, 10);
@@ -255,7 +270,6 @@ describe("simulate — berserk", () => {
     expect(s.ok).toBe(true);
     const rends = s.casts.filter((c) => c.abilityId === "rend");
     expect(rends[0].tick).toBe(39);
-    // floor(1350×1.75)+floor(2887.5…): the band ends floor before averaging.
     expect(rends[0].result.expected).toBeCloseTo(2624.5);
     expect(rends[1].tick).toBe(72);
     expect(rends[1].result.expected).toBeCloseTo(1500);
@@ -270,13 +284,10 @@ describe("simulate — fury", () => {
       rotation: rotationOf("fury", "attack", "attack"),
     });
     expect(s.ok).toBe(true);
-    // Fury itself is unbuffed (110-130 mid).
     expect(s.casts[0].result.expected).toBeCloseTo(1200);
     expect(s.casts[0].result.hits[0].critChance).toBe(0);
-    // Next attack: 0.75*1200 + 0.25*1800 = 1350 at level 99 (+50% crit dmg).
     expect(s.casts[1].result.hits[0].critChance).toBeCloseTo(0.25);
     expect(s.casts[1].result.expected).toBeCloseTo(1350);
-    // Consumed after one attack.
     expect(s.casts[2].result.hits[0].critChance).toBe(0);
     expect(s.casts[2].result.expected).toBeCloseTo(1200);
   });
@@ -295,7 +306,6 @@ describe("simulate — fury", () => {
 
 describe("simulate — greater_flurry", () => {
   it("extends an active Berserk window by 0.6s per hit (8 ticks)", () => {
-    // 12 attacks -> berserk (until tick 36+33=69) -> 3 attacks -> gflurry (+8) -> attacks through 69.
     const rotation = rotationOf(
       ...Array(12).fill("attack"),
       "berserk",
@@ -305,11 +315,9 @@ describe("simulate — greater_flurry", () => {
     );
     const s = simulate({ ...baseInput, rotation });
     expect(s.ok).toBe(true);
-    const last = s.casts.at(-1)!;
+    const last = lastCast(s);
     expect(last.abilityId).toBe("attack");
     expect(last.tick).toBe(69);
-    // Without the +8 tick extend, berserk would end at 69 (readyTick >= until).
-    // With extend, tick 69 still multiplies: floor(1100*1.75)+floor(1300*1.75) avg.
     expect(last.result.expected).toBeCloseTo(2100);
   });
 
@@ -319,7 +327,7 @@ describe("simulate — greater_flurry", () => {
       rotation: rotationOf(...Array(3).fill("attack"), "greater_flurry", "rend"),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.at(-1)!.result.expected).toBeCloseTo(1500);
+    expect(lastCast(s).result.expected).toBeCloseTo(1500);
   });
 });
 
@@ -330,17 +338,17 @@ describe("simulate — meteor_strike", () => {
       rotation: rotationOf(...Array(7).fill("attack"), "meteor_strike", "attack"),
     });
     expect(s.ok).toBe(true);
-    const meteor = s.casts.find((c) => c.abilityId === "meteor_strike")!;
-    // 63 - 60 + 3 ticks * 4.5 passive across the GCD after cast.
+    const meteor = findCast(
+      s,
+      (cast) => cast.abilityId === "meteor_strike",
+      "Missing Meteor Strike cast",
+    );
     expect(meteor.adrenalineAfter).toBeCloseTo(3 + 3 * 4.5);
-    const follow = s.casts.at(-1)!;
-    // Prior adren + 9*1.5 basic + 3 ticks * 4.5 passive on this GCD.
+    const follow = lastCast(s);
     expect(follow.adrenalineAfter).toBeCloseTo(meteor.adrenalineAfter + 13.5 + 3 * 4.5);
   });
 
   it("does not 1.5x non-basic adrenaline costs or gains", () => {
-    // Assault is enhanced (no adren gain); cost stays 25 — not multiplied.
-    // GCD still accrues Meteor passive (+4.5 x 3) after the spend.
     const s = simulate({
       ...baseInput,
       rotation: rotationOf(
@@ -351,13 +359,13 @@ describe("simulate — meteor_strike", () => {
       ),
     });
     expect(s.ok).toBe(true);
-    const assault = s.casts.at(-1)!;
+    const assault = lastCast(s);
     const beforeAssault = s.casts[s.casts.length - 2].adrenalineAfter;
     expect(assault.adrenalineAfter).toBeCloseTo(beforeAssault - 25 + 3 * 4.5);
   });
 });
 
-describe("simulate — greater_fury / chaos_roar (already wired)", () => {
+describe("simulate — Greater Fury and Chaos Roar", () => {
   it("greater fury guarantees crit on the next non-bleed melee", () => {
     const s = simulate({
       ...baseInput,
@@ -365,23 +373,20 @@ describe("simulate — greater_fury / chaos_roar (already wired)", () => {
       rotation: rotationOf("greater_fury", "attack"),
     });
     expect(s.ok).toBe(true);
-    // Guaranteed crit at level 99: mid of floor(1100*1.5)..floor(1300*1.5) = 1800.
     expect(s.casts[1].result.expected).toBeCloseTo(1800);
   });
 });
 
 describe("simulate — greater_barge idle + Endless Assault", () => {
-  const byId = (id: string) => MELEE_ABILITIES.find((a) => a.id === id)!;
+  const byId = (id: string) => abilityById(MELEE_ABILITIES, id);
 
   it("after 10 idle ticks, min/max gain +5*10 / +7*10 AD%", () => {
-    // last-attack idle: attack at 0, GBarge at 10 → idleTicks = 10 (cap).
     const ctx = createCastContext(baseInput);
     ctx.performCast(byId("attack"), 0, false);
     ctx.performCast(byId("greater_barge"), 10, false);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
     const g = s.casts[1];
-    // Base 75-95 + 50/70 → 125-165 @ base 1000 → min 1250 max 1650 mid 1450.
     expect(g.result.min).toBe(1250);
     expect(g.result.max).toBe(1650);
     expect(g.result.expected).toBeCloseTo(1450);
@@ -390,7 +395,6 @@ describe("simulate — greater_barge idle + Endless Assault", () => {
   it("caps idle scale at 10 ticks", () => {
     const ctx = createCastContext(baseInput);
     ctx.performCast(byId("attack"), 0, false);
-    // 20 idle ticks still cap at 10 → same band as the 10-tick case.
     ctx.performCast(byId("greater_barge"), 20, false);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
@@ -405,7 +409,6 @@ describe("simulate — greater_barge idle + Endless Assault", () => {
       rotation: rotationOf("greater_barge"),
     });
     expect(s.ok).toBe(true);
-    // Unscaled 75-95 @ base 1000.
     expect(s.casts[0].result.min).toBe(750);
     expect(s.casts[0].result.max).toBe(950);
   });
@@ -413,15 +416,12 @@ describe("simulate — greater_barge idle + Endless Assault", () => {
   it("grants Endless Assault after 8 idle ticks and consumes on next channelled melee", () => {
     const ctx = createCastContext(baseInput);
     ctx.performCast(byId("attack"), 0, false);
-    // 8 idle → Endless Assault until tick 8 + 10 = 18.
     ctx.performCast(byId("greater_barge"), 8, false);
     expect(ctx.getState().endlessAssaultUntilTick).toBe(18);
-    // Assault inside the window clears Endless Assault (multi-hit already DoT-style).
     ctx.performCast(byId("assault"), 11, false);
     expect(ctx.getState().endlessAssaultUntilTick).toBe(0);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
-    // GBarge at 8 idle: 75+40 / 95+56 = 115-151.
     expect(s.casts[1].result.min).toBe(1150);
     expect(s.casts[1].result.max).toBe(1510);
   });
@@ -438,10 +438,10 @@ describe("simulate — ranged", () => {
     const rotation = rotationOf(...Array(12).fill("ranged_attack"), "imbue_shadows");
     const withAmmo = simulate({ ...rangedInput, ammo: "deathspore", rotation });
     expect(withAmmo.ok).toBe(true);
-    expect(withAmmo.casts.at(-1)!.adrenalineAfter).toBe(100);
+    expect(lastCast(withAmmo).adrenalineAfter).toBe(100);
 
     const without = simulate({ ...rangedInput, rotation });
-    expect(without.casts.at(-1)!.adrenalineAfter).toBe(60);
+    expect(lastCast(without).adrenalineAfter).toBe(60);
   });
 
   it("searing winds adds its bonus hit inside the window only", () => {
@@ -457,7 +457,6 @@ describe("simulate — ranged", () => {
     });
     expect(s.casts[1].result.expected).toBeCloseTo(1000 + 200);
     expect(s.casts[2].result.expected).toBeCloseTo(1000 + 200);
-    // Tick 9 is still inside the 10-tick window; tick 12 is outside it.
     expect(s.casts[3].result.expected).toBeCloseTo(1000 + 200);
     expect(s.casts[4].result.expected).toBeCloseTo(1000);
   });
@@ -465,9 +464,15 @@ describe("simulate — ranged", () => {
   it("shadow imbued grants adrenaline per ranged hit", () => {
     const s = simulate({
       ...rangedInput,
-      rotation: rotationOf(...Array(5).fill("ranged_attack"), "imbue_shadows", "galeshot"),
+      rotation: rotationOf(
+        ...Array(5).fill("ranged_attack"),
+        "imbue_shadows",
+        "galeshot",
+        "ranged_attack",
+      ),
     });
-    expect(s.casts.at(-1)!.adrenalineAfter).toBe(5 + 9 + 5);
+    expect(lastCast(s).result.hits).toHaveLength(2);
+    expect(lastCast(s).adrenalineAfter).toBe(5 + 9 + 5 + 9 + 10);
   });
 
   it("shadow tendrils without an active imbue grants no phantom adrenaline", () => {
@@ -479,7 +484,6 @@ describe("simulate — ranged", () => {
   });
 
   it("Planted Feet extends base Death's Swiftness buff window to 63 ticks", () => {
-    // Fund 12 basics → DS@36; base expires 86, PF expires 99.
     const setup = [
       ...Array(12).fill("ranged_attack"),
       "deaths_swiftness",
@@ -492,10 +496,18 @@ describe("simulate — ranged", () => {
       rotation: rotationOf(...setup),
     });
     expect(plain.ok && pf.ok).toBe(true);
-    const plainAt87 = plain.casts.find((c) => c.abilityId === "ranged_attack" && c.tick === 87);
-    const pfAt87 = pf.casts.find((c) => c.abilityId === "ranged_attack" && c.tick === 87);
-    expect(plainAt87!.result.expected).toBeCloseTo(1000);
-    expect(pfAt87!.result.expected).toBeCloseTo(1500);
+    const plainAt87 = findCast(
+      plain,
+      (cast) => cast.abilityId === "ranged_attack" && cast.tick === 87,
+      "Missing plain ranged attack at tick 87",
+    );
+    const pfAt87 = findCast(
+      pf,
+      (cast) => cast.abilityId === "ranged_attack" && cast.tick === 87,
+      "Missing Planted Feet ranged attack at tick 87",
+    );
+    expect(plainAt87.result.expected).toBeCloseTo(1000);
+    expect(pfAt87.result.expected).toBeCloseTo(1500);
   });
 
   it("shadow tendrils crits guaranteed even at 0% crit chance", () => {
@@ -542,7 +554,6 @@ describe("simulate — magic", () => {
   });
 
   it("base sunshine multiplies magic damage after the 1-tick delay", () => {
-    // Fund 100 adren, cast sunshine@30, basic@33 (inside window), long tail outside.
     const setup = [
       ...Array(12).fill("magic_attack"),
       "sunshine",
@@ -551,12 +562,10 @@ describe("simulate — magic", () => {
     ];
     const s = simulate({ ...magicInput, rotation: rotationOf(...setup) });
     expect(s.ok).toBe(true);
-    const sun = s.casts.find((c) => c.abilityId === "sunshine")!;
+    const sun = findCast(s, (cast) => cast.abilityId === "sunshine", "Missing Sunshine cast");
     expect(sun.tick).toBe(36);
-    // First basic after sunshine is at 39; buff starts at 37 → active.
     const inside = s.casts.filter((c) => c.abilityId === "magic_attack" && c.tick === 39)[0];
     expect(inside.result.expected).toBeCloseTo(1500); // 1000 × 1.5
-    // Tick 36+50=86 is first inactive; cast at 87 (GCD grid) is outside.
     const outside = s.casts.filter((c) => c.abilityId === "magic_attack" && c.tick >= 87)[0];
     expect(outside).toBeDefined();
     expect(outside.result.expected).toBeCloseTo(1000);
@@ -566,14 +575,20 @@ describe("simulate — magic", () => {
     const setup = [...Array(12).fill("magic_attack"), "greater_sunshine", "magic_attack"];
     const s = simulate({ ...magicInput, rotation: rotationOf(...setup) });
     expect(s.ok).toBe(true);
-    const gs = s.casts.find((c) => c.abilityId === "greater_sunshine")!;
-    const next = s.casts.find((c) => c.abilityId === "magic_attack" && c.tick > gs.tick)!;
+    const gs = findCast(
+      s,
+      (cast) => cast.abilityId === "greater_sunshine",
+      "Missing Greater Sunshine cast",
+    );
+    const next = findCast(
+      s,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick > gs.tick,
+      "Missing magic attack after Greater Sunshine",
+    );
     expect(next.result.expected).toBeCloseTo(1500);
   });
 
   it("Planted Feet extends base Sunshine buff window to 63 ticks", () => {
-    // Fund → sunshine@36 → pack casts so one lands at tick 98 (active under PF 63, dead under base 50).
-    // Base: expires cast+50 = 86; PF: expires cast+63 = 99. Active on [37, 99).
     const setup = [
       ...Array(12).fill("magic_attack"),
       "sunshine",
@@ -586,17 +601,24 @@ describe("simulate — magic", () => {
       rotation: rotationOf(...setup),
     });
     expect(plain.ok && pf.ok).toBe(true);
-    // Tick 87 is first base-outside on GCD grid (36+50=86 exclusive → 87 inactive).
-    const plainAt87 = plain.casts.find((c) => c.abilityId === "magic_attack" && c.tick === 87);
-    const pfAt87 = pf.casts.find((c) => c.abilityId === "magic_attack" && c.tick === 87);
-    expect(plainAt87).toBeDefined();
-    expect(pfAt87).toBeDefined();
-    expect(plainAt87!.result.expected).toBeCloseTo(1000);
-    expect(pfAt87!.result.expected).toBeCloseTo(1500);
-    // Tick 99 is exclusive end of PF window (36+63).
-    const pfAt99 = pf.casts.find((c) => c.abilityId === "magic_attack" && c.tick === 99);
-    expect(pfAt99).toBeDefined();
-    expect(pfAt99!.result.expected).toBeCloseTo(1000);
+    const plainAt87 = findCast(
+      plain,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick === 87,
+      "Missing plain magic attack at tick 87",
+    );
+    const pfAt87 = findCast(
+      pf,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick === 87,
+      "Missing Planted Feet magic attack at tick 87",
+    );
+    expect(plainAt87.result.expected).toBeCloseTo(1000);
+    expect(pfAt87.result.expected).toBeCloseTo(1500);
+    const pfAt99 = findCast(
+      pf,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick === 99,
+      "Missing Planted Feet magic attack at tick 99",
+    );
+    expect(pfAt99.result.expected).toBeCloseTo(1000);
   });
 
   it("Planted Feet does not extend Greater Sunshine", () => {
@@ -607,16 +629,26 @@ describe("simulate — magic", () => {
       plantedFeet: true,
       rotation: rotationOf(...setup),
     });
-    const plainNext = plain.casts.find(
-      (c) =>
-        c.abilityId === "magic_attack" &&
-        c.tick > plain.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
-    )!;
-    const pfNext = pf.casts.find(
-      (c) =>
-        c.abilityId === "magic_attack" &&
-        c.tick > pf.casts.find((x) => x.abilityId === "greater_sunshine")!.tick,
-    )!;
+    const plainSunshine = findCast(
+      plain,
+      (cast) => cast.abilityId === "greater_sunshine",
+      "Missing plain Greater Sunshine cast",
+    );
+    const plantedSunshine = findCast(
+      pf,
+      (cast) => cast.abilityId === "greater_sunshine",
+      "Missing Planted Feet Greater Sunshine cast",
+    );
+    const plainNext = findCast(
+      plain,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick > plainSunshine.tick,
+      "Missing plain follow-up magic attack",
+    );
+    const pfNext = findCast(
+      pf,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick > plantedSunshine.tick,
+      "Missing Planted Feet follow-up magic attack",
+    );
     expect(plainNext.result.expected).toBeCloseTo(pfNext.result.expected);
   });
 
@@ -628,10 +660,17 @@ describe("simulate — magic", () => {
       rotation: rotationOf(...fund),
     });
     expect(noCrit.ok).toBe(true);
-    const inst = noCrit.casts.find((c) => c.abilityId === "instability")!;
-    // 120-140% of 1000, no crit, no surge.
+    const inst = findCast(
+      noCrit,
+      (cast) => cast.abilityId === "instability",
+      "Missing Instability cast",
+    );
     expect(inst.result.expected).toBeCloseTo(1300);
-    const follow = noCrit.casts.find((c) => c.abilityId === "magic_attack" && c.tick > inst.tick)!;
+    const follow = findCast(
+      noCrit,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick > inst.tick,
+      "Missing magic attack after Instability",
+    );
     expect(follow.result.expected).toBeCloseTo(1000);
 
     const allCrit = simulate({
@@ -639,15 +678,18 @@ describe("simulate — magic", () => {
       crit: { chance: 1 },
       rotation: rotationOf(...fund),
     });
-    const instCrit = allCrit.casts.find((c) => c.abilityId === "instability")!;
-    // Cast hit always crits + full Lightning Surge EV (p=1).
+    const instCrit = findCast(
+      allCrit,
+      (cast) => cast.abilityId === "instability",
+      "Missing crit Instability cast",
+    );
     expect(instCrit.result.expected).toBeGreaterThan(1300 * 1.4); // well above non-crit cast
-    const followCrit = allCrit.casts.find(
-      (c) => c.abilityId === "magic_attack" && c.tick > instCrit.tick,
-    )!;
-    // Follow-up basic also gets surge while buff is up.
+    const followCrit = findCast(
+      allCrit,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick > instCrit.tick,
+      "Missing crit follow-up magic attack",
+    );
     expect(followCrit.result.expected).toBeGreaterThan(1000);
-    // Surge lands +1 tick after the source hit.
     expect(allCrit.damageByTick[instCrit.tick + 1]).toBeGreaterThan(0);
   });
 });
@@ -677,8 +719,6 @@ describe("simulate auto-weave", () => {
       rotation: rotationOf("assault", "assault"),
     });
     expect(s.ok).toBe(true);
-    // Second assault's cooldown ends at 19, mid-GCD after the tick-18 basic — it
-    // fires on the next grid slot, exactly as in game.
     expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
       "attack@0",
       "attack@3",
@@ -689,7 +729,6 @@ describe("simulate auto-weave", () => {
       "attack@18",
       "assault@21",
     ]);
-    // First assault at 3 stacks uses the base band; the second, at 6, is empowered.
     expect(s.casts[3].result.expected).toBeCloseTo(4 * 1400);
     expect(s.casts[7].result.expected).toBeCloseTo(4 * 1800);
   });
@@ -703,9 +742,9 @@ describe("simulate auto-weave", () => {
     });
     expect(s.ok).toBe(true);
     expect(s.casts.slice(0, 5).every((c) => c.abilityId === "ranged_attack" && c.auto)).toBe(true);
-    expect(s.casts.at(-1)!.abilityId).toBe("imbue_shadows");
-    expect(s.casts.at(-1)!.tick).toBe(15);
-    expect(s.casts.at(-1)!.adrenalineAfter).toBe(45 - 40);
+    expect(lastCast(s).abilityId).toBe("imbue_shadows");
+    expect(lastCast(s).tick).toBe(15);
+    expect(lastCast(s).adrenalineAfter).toBe(45 - 40);
   });
 
   it("stops with an honest error when no weave can ever afford the cast", () => {
@@ -738,23 +777,12 @@ describe("simulate — necromancy resources", () => {
 
   it("Soul Sap builds residual souls and Soul Strike spends one", () => {
     const ctx = createCastContext(necroInput);
-    ctx.performCast(
-      NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!,
-      0,
-      false,
-    );
+    const soulSap = abilityById(NECROMANCY_ABILITIES, "soul_sap");
+    ctx.performCast(soulSap, 0, false);
     expect(ctx.getState().necro.residualSouls).toBe(1);
-    ctx.performCast(
-      NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!,
-      3,
-      false,
-    );
+    ctx.performCast(soulSap, 3, false);
     expect(ctx.getState().necro.residualSouls).toBe(2);
-    ctx.performCast(
-      NECROMANCY_ABILITIES.find((a) => a.id === "soul_strike")!,
-      6,
-      false,
-    );
+    ctx.performCast(abilityById(NECROMANCY_ABILITIES, "soul_strike"), 6, false);
     expect(ctx.getState().necro.residualSouls).toBe(1);
   });
 
@@ -766,8 +794,8 @@ describe("simulate — necromancy resources", () => {
 
   it("Touch of Death builds Necrosis; FoD discounts cost and spends stacks", () => {
     const ctx = createCastContext(necroInput);
-    const tod = NECROMANCY_ABILITIES.find((a) => a.id === "touch_of_death")!;
-    const fod = NECROMANCY_ABILITIES.find((a) => a.id === "finger_of_death")!;
+    const tod = abilityById(NECROMANCY_ABILITIES, "touch_of_death");
+    const fod = abilityById(NECROMANCY_ABILITIES, "finger_of_death");
     ctx.performCast(tod, 0, false);
     ctx.performCast(tod, 3, false);
     expect(ctx.getState().necro.necrosisStacks).toBe(8);
@@ -780,7 +808,7 @@ describe("simulate — necromancy resources", () => {
       rotation: rotationOf("touch_of_death", "touch_of_death", "finger_of_death"),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.at(-1)!.result.expected).toBeCloseTo(3000); // 270–330 mid, no LD
+    expect(lastCast(s).result.expected).toBeCloseTo(3000);
   });
 
   it("Volley spends all souls and deals one hit per residual soul held", () => {
@@ -789,10 +817,9 @@ describe("simulate — necromancy resources", () => {
       rotation: rotationOf("soul_sap", "soul_sap", "soul_sap", "volley_of_souls"),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.at(-1)!.result.expected).toBeCloseTo(3 * 1500);
-    // Final state not on summary — re-check via context path.
+    expect(lastCast(s).result.expected).toBeCloseTo(3 * 1500);
     const ctx = createCastContext(necroInput);
-    const sap = NECROMANCY_ABILITIES.find((a) => a.id === "soul_sap")!;
+    const sap = abilityById(NECROMANCY_ABILITIES, "soul_sap");
     for (let i = 0; i < 3; i++) ctx.performCast(sap, i * 3, false);
     ctx.performCast(volleyOfSouls(3), 9, false);
     expect(ctx.getState().necro.residualSouls).toBe(0);
@@ -800,11 +827,11 @@ describe("simulate — necromancy resources", () => {
 
   it("Living Death resets ToD/DS CDs, buffs FoD, and shortens Death Skulls CD", () => {
     const ctx = createCastContext(necroInput);
-    const basic = NECROMANCY_ABILITIES.find((a) => a.id === "necromancy_basic")!;
-    const tod = NECROMANCY_ABILITIES.find((a) => a.id === "touch_of_death")!;
-    const ld = NECROMANCY_ABILITIES.find((a) => a.id === "living_death")!;
-    const fod = NECROMANCY_ABILITIES.find((a) => a.id === "finger_of_death")!;
-    const ds = NECROMANCY_ABILITIES.find((a) => a.id === "death_skulls")!;
+    const basic = abilityById(NECROMANCY_ABILITIES, "necromancy_basic");
+    const tod = abilityById(NECROMANCY_ABILITIES, "touch_of_death");
+    const ld = abilityById(NECROMANCY_ABILITIES, "living_death");
+    const fod = abilityById(NECROMANCY_ABILITIES, "finger_of_death");
+    const ds = abilityById(NECROMANCY_ABILITIES, "death_skulls");
 
     for (let i = 0; i < 12; i++) ctx.performCast(basic, i * 3, false);
     ctx.performCast(tod, 36, false);
@@ -816,14 +843,12 @@ describe("simulate — necromancy resources", () => {
     expect(ctx.getState().cooldowns["touch_of_death"]).toBeUndefined();
     expect(ctx.getState().cooldowns["death_skulls"]).toBeUndefined();
 
-    // Basic under LD → +2 Necrosis (prior ToD left 4 → 6).
     ctx.performCast(basic, 42, false);
     expect(ctx.getState().necro.necrosisStacks).toBe(6);
 
     ctx.performCast(fod, 45, false);
     expect(ctx.getState().necro.necrosisStacks).toBe(0);
 
-    // Rebuild adren for Death Skulls (60%).
     for (let i = 0; i < 7; i++) ctx.performCast(basic, 48 + i * 3, false);
     const dsTick = 48 + 7 * 3;
     ctx.performCast(ds, dsTick, false);
@@ -833,7 +858,6 @@ describe("simulate — necromancy resources", () => {
   });
 
   it("Living Death multiplies Finger of Death damage in the full sim path", () => {
-    // 12 basics → 100 adren + free weave room; ToD for stacks; LD; basic; FoD.
     const s = simulate({
       ...necroInput,
       rotation: rotationOf(
@@ -845,8 +869,12 @@ describe("simulate — necromancy resources", () => {
       ),
     });
     expect(s.ok).toBe(true);
-    const fodCast = s.casts.find((c) => c.abilityId === "finger_of_death")!;
-    expect(fodCast.result.expected).toBeCloseTo(4500); // 1.5× of 3000
+    const fodCast = findCast(
+      s,
+      (cast) => cast.abilityId === "finger_of_death",
+      "Missing Finger of Death cast",
+    );
+    expect(fodCast.result.expected).toBeCloseTo(4500);
   });
 
   it("conjure skeleton summons and spirit autos contribute EV (never crit)", () => {
@@ -855,12 +883,10 @@ describe("simulate — necromancy resources", () => {
       rotation: rotationOf("conjure_skeleton_warrior", ...Array(20).fill("necromancy_basic")),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts[0]!.abilityId).toBe("conjure_skeleton_warrior");
-    expect(s.casts[0]!.result.expected).toBe(0);
+    expect(s.casts[0].abilityId).toBe("conjure_skeleton_warrior");
+    expect(s.casts[0].result.expected).toBe(0);
     expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
-    // First auto at tick 7 lands during the basic weave.
     expect(s.damageByTick[7]).toBeGreaterThan(0);
-    // Spirit damage is in the total.
     expect(s.totalExpected).toBeGreaterThan(s.casts.reduce((n, c) => n + c.result.expected, 0));
   });
 
@@ -878,20 +904,17 @@ describe("simulate — necromancy resources", () => {
     expect(baseSpirit).toBeGreaterThan(0);
     expect(boostSpirit / baseSpirit).toBeCloseTo(1.35, 5);
 
-    // Poison path: set mult must not apply to spirit_putrid_zombie_poison.
     const zRot = rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic"));
     const zBase = simulate({ ...necroInput, rotation: zRot });
     const zBoost = simulate({ ...necroInput, rotation: zRot, conjureBasicDamageMult: 1.35 });
     const poisonBase = zBase.perAbility["spirit_putrid_zombie_poison"] ?? 0;
     const poisonBoost = zBoost.perAbility["spirit_putrid_zombie_poison"] ?? 0;
-    if (poisonBase > 0) {
-      expect(poisonBoost / poisonBase).toBeCloseTo(1, 5);
-    }
+    expect(poisonBase).toBeGreaterThan(0);
+    expect(poisonBoost / poisonBase).toBeCloseTo(1, 5);
     const autoBase = zBase.perAbility["spirit_putrid_zombie"] ?? 0;
     const autoBoost = zBoost.perAbility["spirit_putrid_zombie"] ?? 0;
-    if (autoBase > 0) {
-      expect(autoBoost / autoBase).toBeCloseTo(1.35, 5);
-    }
+    expect(autoBase).toBeGreaterThan(0);
+    expect(autoBoost / autoBase).toBeCloseTo(1.35, 5);
   });
 
   it("command skeleton requires an active conjure", () => {
@@ -906,14 +929,13 @@ describe("simulate — necromancy resources", () => {
       rotation: rotationOf("conjure_skeleton_warrior", "command_skeleton_warrior"),
     });
     expect(ok.ok).toBe(true);
-    expect(ok.casts.at(-1)!.abilityId).toBe("command_skeleton_warrior");
-    // Command hits are spirit damage — critEligible false on every hit.
-    expect(ok.casts.at(-1)!.result.hits.every((h) => h.critChance === 0)).toBe(true);
+    expect(lastCast(ok).abilityId).toBe("command_skeleton_warrior");
+    expect(lastCast(ok).result.hits.every((h) => h.critChance === 0)).toBe(true);
   });
 
   it("conjure undead army summons three spirits with auto EV", () => {
     const ctx = createCastContext(necroInput);
-    const army = NECROMANCY_ABILITIES.find((a) => a.id === "conjure_undead_army")!;
+    const army = abilityById(NECROMANCY_ABILITIES, "conjure_undead_army");
     ctx.performCast(army, 0, false);
     const ids = ctx
       .getState()

@@ -33,7 +33,6 @@ describe("regionsInTaskData", () => {
     expect(rail).toContain("karamja");
     expect(rail).toContain("anachronia");
     expect(rail).toContain("tirannwn");
-    // Full data rail — electives are not filtered out here
     expect(rail).toEqual(
       expect.arrayContaining(["global", "misthalin", "karamja", "anachronia", "tirannwn"]),
     );
@@ -179,7 +178,6 @@ describe("task page view model", () => {
       { id: "full", name: "Full", tier: "easy", catalystCompletionRate: 100 },
     ]);
 
-    // Highest completion first; 0 is valid and before missing.
     expect(sortTasks(records, "completion", {}).map(taskId)).toEqual([
       "full",
       "high",
@@ -188,7 +186,6 @@ describe("task page view model", () => {
       "missing",
     ]);
 
-    // Rarest first: 0% is rarest real rate; missing last.
     expect(sortTasks(records, "rarest", {}).map(taskId)).toEqual([
       "zero",
       "decimal",
@@ -212,7 +209,6 @@ describe("task page view model", () => {
       { id: "high", name: "High", tier: "easy", points: 10, catalystCompletionRate: 80 },
       { id: "none", name: "None", tier: "easy", points: 10 },
     ]);
-    // Same points: higher completion first; 0 before missing.
     expect(sortTasks(records, "points", {}).map(taskId)).toEqual(["high", "zero", "none"]);
   });
 

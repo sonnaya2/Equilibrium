@@ -49,7 +49,6 @@ describe("classifyDropGroup", () => {
         group: "Charms",
       }),
     ).toBe("valuable");
-    // Main is high-volume filler — common, not valuable.
     expect(
       classifyDropGroup({
         item: "Uncut dragonstone",
@@ -86,7 +85,6 @@ describe("classifyDropGroup", () => {
         item,
       ).toBe("unique");
     }
-    // Common sanctum mats under "Rare drops" heading stay common via name.
     expect(
       classifyDropGroup({
         item: "Sanctum of rebirth relic (common)",
@@ -342,7 +340,6 @@ describe("presentDrop", () => {
   });
 
   it("falls back to local inventory art when wiki iconUrl is missing", () => {
-    // Wiki table cells sometimes omit <img>; presentation resolves local /game art.
     const p = presentDrop({
       item: "Bonecrusher",
       quantity: "1",

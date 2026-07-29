@@ -16,7 +16,6 @@ import {
 
 describe("click-only wiki boundary", () => {
   it("safeWikiPage is pure resolution — no network", () => {
-    // Guard: helpers used at click time must not fetch.
     expect(typeof safeWikiPage).toBe("function");
     expect(safeWikiPage("https://runescape.wiki/w/Home")?.pageTitle).toBe("Home");
   });
@@ -469,7 +468,6 @@ describe("processWikiHtml", () => {
     expect(view.dropsHtml).toMatch(/Coin|Rarity|Always/i);
     expect(view.dropsHtml).not.toMatch(/<img/i);
     expect(view.bodyHtml).not.toMatch(/Strategy|Trivia|sandwich/i);
-    // Fuller lead fills the modal hero; still bounded (LEAD_MAX ≈ 1600).
     expect(stripTagsApprox(view.leadHtml).length).toBeLessThanOrEqual(1700);
     expect(stripTagsApprox(view.leadHtml).length).toBeGreaterThan(100);
     expect(view.drops).toEqual([
@@ -497,7 +495,6 @@ describe("processWikiHtml", () => {
       </table>`;
     const view = processWikiHtml(html, meta);
     expect(view.hasDrops).toBe(true);
-    // Preferred unique section is parsed before the generic Drops section.
     expect(view.drops[0]).toEqual({
       item: "Staff of Armadyl",
       quantity: "1",
@@ -515,9 +512,6 @@ describe("processWikiHtml", () => {
   });
 
   it("prefers bare Uniques + nested weapon/shard tables before commons fill the cap", () => {
-    // Amascut-shaped outline: Commons child tables first in document order,
-    // then Uniques with weapon/shard children. Cap is 80 — without preferred
-    // ordering, potions alone would crowd out chase uniques.
     const potionRows = Array.from(
       { length: 90 },
       (_, i) => `<tr><td>Potion ${i}</td><td>1</td><td>Common</td></tr>`,
@@ -551,10 +545,8 @@ describe("processWikiHtml", () => {
     expect(items).toContain("Devourer's Guard");
     expect(items).toContain("Mask of Tumeken's resplendence");
     expect(items).toContain("Shard of Genesis Essence");
-    // Preferred uniques claim budget before potions; cap still 80.
     expect(items.indexOf("Tumeken's Light")).toBeLessThan(items.indexOf("Potion 0"));
     expect(view.drops).toHaveLength(80);
-    // Last potion slots are truncated (90 commons - only 76 fit after 4 uniques).
     expect(items).not.toContain("Potion 89");
   });
 
@@ -582,7 +574,6 @@ describe("processWikiHtml", () => {
     expect(view.drops).toEqual([]);
     expect(view.hasDrops).toBe(false);
     expect(view.dropsHtml.trim()).toBe("");
-    // Non-drop recipe chrome stays available under body, not drops spam.
     expect(view.bodyHtml).not.toMatch(/Forged long ago/);
   });
 
@@ -688,8 +679,6 @@ describe("processWikiHtml", () => {
   });
 
   it("heals TzKal-Zuk-style meaning parenthetical after bold/italic strip", () => {
-    // Live wiki: <b>TzKal-Zuk</b> (meaning <b>Zuk, Champion of the Fire</b>) …
-    // stripTags used to turn Fire</b>) into "Fire )" with a space before ).
     const html = `
       <p><b>TzKal-Zuk</b> (meaning <b>Zuk, Champion of the Fire</b>) is a demigod warlord who leads the TzekHaar Front.</p>
       <p>Second paragraph with enough text to stay in the lead bucket for coverage.</p>`;

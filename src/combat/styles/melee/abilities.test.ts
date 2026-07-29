@@ -51,18 +51,13 @@ describe("melee ability data", () => {
   });
 
   it("channel and bleed multi-hits carry wiki tickOffsets", () => {
-    // Assault hit timings table: cast 0 → hits at 1, 3, 5, 7.
     expect(byId("assault").hits.map((h) => h.tickOffset)).toEqual([1, 3, 5, 7]);
 
-    // Flurry / Greater Flurry: 8 hits over 4.8s (8 ticks), every 0.6s → 0..7.
     expect(byId("flurry").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
     expect(byId("greater_flurry").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
 
-    // Dismember: 8x every 1.2s (2 ticks); first hit delayed one interval.
     expect(byId("dismember").hits.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
-    // Slaughter: 6x every 1.8s (3 ticks).
     expect(byId("slaughter").hits.map((h) => h.tickOffset)).toEqual([3, 6, 9, 12, 15, 18]);
-    // Massacre: initial hit at cast + 6 bleed hits every 2.4s (4 ticks).
     expect(byId("massacre").hits.map((h) => h.tickOffset)).toEqual([
       undefined,
       4,
@@ -73,9 +68,7 @@ describe("melee ability data", () => {
       24,
     ]);
 
-    // Overpower igneous: simultaneous twin hits — no invented inter-hit offsets.
     expect(byId("overpower_igneous").hits.every((h) => h.tickOffset === undefined)).toBe(true);
-    // Hurricane: multi-hit non-channel; wiki has no inter-hit schedule.
     expect(byId("hurricane").hits.every((h) => h.tickOffset === undefined)).toBe(true);
   });
 
@@ -92,7 +85,7 @@ describe("melee ability data", () => {
     expect(byId("greater_fury").hits[0].band).toEqual({ minPct: 120, maxPct: 140 });
     expect(byId("greater_fury").adrenaline?.gain).toBe(9);
     expect(byId("greater_fury").cooldownSeconds).toBe(15);
-    expect(byId("greater_fury").appliesBuff).toBe("greater_fury");
+    expect(byId("greater_fury").appliesEffect).toBe("greater_fury");
 
     const flurry = byId("flurry");
     expect(flurry.hits).toHaveLength(8);
@@ -104,7 +97,7 @@ describe("melee ability data", () => {
 
     const chaosRoar = byId("chaos_roar");
     expect(chaosRoar.hits[0].band).toEqual({ minPct: 100, maxPct: 120 });
-    expect(chaosRoar.appliesBuff).toBe("chaos_roar");
+    expect(chaosRoar.appliesEffect).toBe("chaos_roar");
     expect(chaosRoar.cooldownSeconds).toBe(60);
     expect(CHAOS_ROAR_DAMAGE_MULTIPLIER).toBe(1.75);
     expect(CHAOS_ROAR_DURATION_SECONDS).toBe(7.2);
@@ -150,7 +143,7 @@ describe("melee ability data", () => {
       expect(byId(id).adrenaline?.gain).toBe(9);
       expect(byId(id).cooldownSeconds).toBe(20.4);
     }
-    expect(byId("greater_barge").appliesBuff).toBe("greater_barge");
+    expect(byId("greater_barge").appliesEffect).toBe("greater_barge");
 
     const gflurry = byId("greater_flurry");
     expect(gflurry.hits).toHaveLength(8);
@@ -158,14 +151,14 @@ describe("melee ability data", () => {
     expect(gflurry.adrenaline?.cost).toBe(25);
     expect(gflurry.cooldownSeconds).toBe(20.4);
     expect(gflurry.channelled).toBe(true);
-    expect(gflurry.appliesBuff).toBe("greater_flurry");
+    expect(gflurry.appliesEffect).toBe("greater_flurry");
 
     const pulverise = byId("pulverise");
     expect(pulverise.hits[0].band).toEqual({ minPct: 300, maxPct: 340 });
     expect(pulverise.adrenaline?.cost).toBe(60);
     expect(pulverise.cooldownSeconds).toBe(60);
     expect(pulverise.category).toBe("ultimate");
-    expect(pulverise.appliesBuff).toBe("pulverise");
+    expect(pulverise.appliesEffect).toBe("pulverise");
   });
 
   it("effect records stay sourced", () => {

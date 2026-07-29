@@ -340,12 +340,10 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Spirit moths (Highweald charm supply)" })).toMatch(
       /charming-moths\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Uncommon gem rocks", kind: "Mining / Wendlewick Deserted Mine" })).toMatch(
-      /wendlewick-deserted-mine\.(webp|png)$/,
-    );
-    expect(dataEntityIconPath({ name: "Tear of Inanna" })).toMatch(
-      /tear-of-inanna\.(webp|png)$/,
-    );
+    expect(
+      dataEntityIconPath({ name: "Uncommon gem rocks", kind: "Mining / Wendlewick Deserted Mine" }),
+    ).toMatch(/wendlewick-deserted-mine\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Tear of Inanna" })).toMatch(/tear-of-inanna\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Masterwork Ranged Armour materials" })).toMatch(
       /masterwork-ranged-body\.(webp|png)$/,
     );

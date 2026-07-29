@@ -35,7 +35,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "grimy bloodweed": skProd("grimy-bloodweed"),
   "bloodweed seed": skProd("bloodweed-seed"),
   "infernal puzzle box": perm("infernal-puzzle-box"),
-  "karambwans": perm("karambwan-vessel"),
+  karambwans: perm("karambwan-vessel"),
   "marble block": perm("marble-blocks"),
   "rune hatchet": "/game/upgrades/skilling-tools/rune-hatchet.webp",
   "trading sticks": perm("trading-sticks"),

@@ -67,6 +67,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -C audit/main-data-result
-          git add MAIN_DATA_AUDIT_RESULT.json main-data-audit.log data/
+          git add MAIN_DATA_AUDIT_RESULT.json data/
+          git add -f main-data-audit.log
           git commit -m "Capture main data audit result" || true
           git push --force origin HEAD:audit/main-data-result

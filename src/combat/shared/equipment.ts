@@ -297,7 +297,6 @@ export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): Se
   return effect;
 }
 
-
 export interface SetFactsResult {
   setId: string;
   pieces: number;

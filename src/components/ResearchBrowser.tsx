@@ -13,12 +13,7 @@ import { isRegionId, isRegionUnlocked, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "@/components/GameIcon";
 
-import {
-  dataEntityIconPath,
-  regionCrestPath,
-  skillIconPath,
-  upgradeIconPath,
-} from "@/lib/gameArt";
+import { dataEntityIconPath, regionCrestPath, skillIconPath, upgradeIconPath } from "@/lib/gameArt";
 import {
   contentRewardTokens,
   contentTypeLabel,

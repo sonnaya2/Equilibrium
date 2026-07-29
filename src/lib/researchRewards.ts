@@ -83,8 +83,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Kalphite Queen": "Dragon chainbody, Kalphite queen head, Dragon 2h sword",
   "Giant Mole": "Dragon 2h sword",
   "Queen Black Dragon": "Dragon kiteshield",
-  Legiones:
-    "Ascension signets, Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
+  Legiones: "Ascension signets, Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
   "Monastery of Ascension":
     "Ascension signets, Ascension crossbow, Off-hand Ascension crossbow, Ascension grips",
   "The Shadow Reef (ED3)": "Eldritch crossbow, Black stone arrow",

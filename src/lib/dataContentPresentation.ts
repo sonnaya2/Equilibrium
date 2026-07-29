@@ -678,38 +678,36 @@ export function presentInterestName(value: string): string {
   if (/^Fort Forinthry Kitchen\b/i.test(name)) return "Fort Kitchen";
   if (/^Fort Forinthry Town Hall\b/i.test(name)) return "Fort Town Hall";
 
-  return (
-    name
-      .replace(
-        /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
-        "",
-      )
-      .replace(/\s+and essence access$/i, "")
-      .replace(/\s+access geography$/i, "")
-      .replace(/\s+and island skilling access$/i, "")
-      .replace(/\s+Runecrafting geography$/i, "")
-      .replace(/\s+access$/i, "")
-      .replace(/\s+pressure stack$/i, "")
-      .replace(/\s+stack$/i, "")
-      .replace(/\s+network$/i, "")
-      .replace(/\s+circuit$/i, "")
-      .replace(/\s+overview$/i, "")
-      .replace(/(?<=\baltar)\s+Runecrafting$/i, "")
-      .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
-      .replace(/\s+docks and skilling hub$/i, "")
-      .replace(/\s+early[–\-]?mid skilling hub$/i, "")
-      .replace(/\s+early skilling hub$/i, "")
-      .replace(/\s+skilling hub$/i, "")
-      .replace(/\s+multi-skill hub$/i, "")
-      .replace(/\s+production hub$/i, "")
-      .replace(/\s+on-ramp hub$/i, "")
-      .replace(/\s+skilling boss hub$/i, "")
-      .replace(/\s+hub amenities$/i, "")
-      .replace(/\s+hubs$/i, "")
-      .replace(/\s+hub$/i, "")
-      .replace(/\s+/g, " ")
-      .trim()
-  );
+  return name
+    .replace(
+      /\s+(?:unique-collection ladder|currency economy|follow-on chain|densify|residual|ladder|package|infrastructure|permanent|family)$/i,
+      "",
+    )
+    .replace(/\s+and essence access$/i, "")
+    .replace(/\s+access geography$/i, "")
+    .replace(/\s+and island skilling access$/i, "")
+    .replace(/\s+Runecrafting geography$/i, "")
+    .replace(/\s+access$/i, "")
+    .replace(/\s+pressure stack$/i, "")
+    .replace(/\s+stack$/i, "")
+    .replace(/\s+network$/i, "")
+    .replace(/\s+circuit$/i, "")
+    .replace(/\s+overview$/i, "")
+    .replace(/(?<=\baltar)\s+Runecrafting$/i, "")
+    .replace(/\s+skilling and Wilderness on-ramp hub$/i, "")
+    .replace(/\s+docks and skilling hub$/i, "")
+    .replace(/\s+early[–\-]?mid skilling hub$/i, "")
+    .replace(/\s+early skilling hub$/i, "")
+    .replace(/\s+skilling hub$/i, "")
+    .replace(/\s+multi-skill hub$/i, "")
+    .replace(/\s+production hub$/i, "")
+    .replace(/\s+on-ramp hub$/i, "")
+    .replace(/\s+skilling boss hub$/i, "")
+    .replace(/\s+hub amenities$/i, "")
+    .replace(/\s+hubs$/i, "")
+    .replace(/\s+hub$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export function presentInterestMeta(value: string, maxLen = 48): string {

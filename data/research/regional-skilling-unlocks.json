@@ -65,9 +65,9 @@
     "progression-enrichment-regional-skilling-wave5-residual-b-2026-07-26.json"
   ],
   "stats": {
-    "total": 671,
-    "activities": 459,
-    "equipment": 212,
+    "total": 647,
+    "activities": 441,
+    "equipment": 206,
     "regionCombos": 106,
     "comboLabeled": 210
   },
@@ -1203,6 +1203,33 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
+    },
+    {
+      "id": "anachronia:totem-of-vitality-browse",
+      "name": "Totem of Vitality (ex-Might of Het aura)",
+      "recordType": "activity",
+      "regionHints": [
+        "anachronia"
+      ],
+      "requiredRegions": [
+        "anachronia"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Anachronia totem",
+      "detail": "+25% maximum life points (cap +1,500). Replaces the Desert Pantheon / Might of Het aura effect. Anachronia totems no longer need weekly charging",
+      "requirements": [
+        "Anachronia base camp / totem system"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
     },
     {
       "id": "anachronia:totems",
@@ -4683,40 +4710,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave-final-godbooks-luck-2026-07-26.json"
     },
     {
-      "id": "cross-region:ring-of-wealth-relic",
-      "name": "Ring of Wealth (relic power)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "morytania",
-        "forinthry",
-        "desert",
-        "kandarin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + morytania + forinthry + desert + kandarin",
-      "isRegionCombo": true,
-      "category": "Archaeology monolith luck-ladder relic power",
-      "detail": "Permanent Archaeology luck ladder tier 2. Intermediate rung only — end state for planners is usually · Misthalin for monolith. Dig-site hands are optional multi-region pressure (player may use any of the four hands) · Unlocks: Ring of Wealth relic power — always gain tier 2 luck while harnessed (frees the ring slot), Tier 2 rare-drop / skilling luck ladder (mid bosses, Barrows pieces at T2+, Pyramid Plunder jewelled statuettes / Pharaoh's sceptre, Rogue outfit, easy–medium clues, crystal chest / Triskelion +1%), Does not grant Ring of Wealth teleports, Required permanent rung before Ring of Fortune and Luck of the Dwarves relic powers · Region pressure: Misthalin monolith harness and Archaeology campus reclaim (Easty)., Hands of glory are multi dig-site (Forinthry Infernal Source, Morytania Everlight, Desert Kharid-et, Kandarin Warforge) — any unused hand works., Physical Ring of Wealth is craft/enchant supply pressure, not a region hard gate",
-      "requirements": [
-        "Hand of Glory (Ring of Luck) already created at some point (tier-1 ladder prereq)",
-        "Any unused hand of glory (Infernal Source 24 / Everlight 51 / Kharid-et 58 / Warforge 83) + fully charged Ring of Wealth → Hand of Glory (Ring of Wealth)",
-        "51 Archaeology (boostable) to harness",
-        "2,000 chronotes and 100 monolith energy to harness"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Ring_of_Wealth_(relic_power)",
-        "title": "Ring of Wealth (relic power)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-final-godbooks-luck-2026-07-26.json"
-    },
-    {
       "id": "cross-region:rune-pouch-ladder",
       "name": "Rune pouch craft ladder (large → grasping + expansive essence path)",
       "recordType": "activity",
@@ -5036,44 +5029,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave-final-polish-2026-07-26.json"
-    },
-    {
-      "id": "cross-region:tetracompass-and-tomes",
-      "name": "Tetracompass pieces → ancient caskets → complete tomes",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "kandarin",
-        "desert",
-        "morytania",
-        "forinthry",
-        "anachronia",
-        "havenhythe"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + kandarin + desert + morytania + forinthry + anachronia + havenhythe",
-      "isRegionCombo": true,
-      "category": "Archaeology material-sink progression loop",
-      "detail": "Misthalin required for power + tome study + reclaim. Piece farming and colour materials pressure elective dig-site regions (especially Kandarin Warforge for efficient ironman piece loops) · Unlocks: Account progression loop: tetracompass pieces → tetracompass (unpowered) → tetracompass (powered) → ancient casket dig, Ancient casket rolls: 3–5 damaged artefacts, materials, Archaeology supplies, 1–2 complete tomes, elite or master clue, and rare dragon mattock (1%) / shadowy key (Guildmaster Tony's mattock path), Complete tome: large Archaeology XP by base level when studied at Guild desk (e.g. wiki table 45,002 XP at 99; 86,561 XP at 120) — cannot bank tomes, Collection-repeat piece sources include Urns of the Empire (67), Green Gobbo Goodies I–III, Red Rum Relics I–III, Saradominist II–IV, Zamorakian II–IV, Guthixian I–II, Dragonkin VII, Overflow casket loot reclaimable from ancient casket scenery next to research desk if backpack/bank full (tomes stay in Guild casket until reclaim) · Region pressure: Misthalin monolith powering, Guild study desk for complete tomes, and casket reclaim scenery — the loop endpoint is starting-region campus., Desert / Morytania / Forinthry / Anachronia /, Tier-2+ luck (Luck of the Dwarves) increases chance of tetracompass pieces and complete tomes while excavating — link",
-      "requirements": [
-        "50 Archaeology to restore tetracompass (unpowered) and to excavate the ancient-casket dig location pointed by a powered tetracompass",
-        "Four ordered pieces: left → right → dial → needle (excavation rare drops, guaranteed from listed collection repeats, or Mr Mordaut research Treasure Hoarder / 24h expedition guarantee)",
-        "Restore costs: 30 malachite green + 30 cadmium red + 30 cobalt blue + 30 Armadylean yellow + 30 Tyrian purple + the four pieces",
-        "Ironman self-source of malachite green and Armadylean yellow requires 76 Archaeology (boostable) — Warforge / Stormguard material access",
-        "Power unpowered tetracompass at the mysterious monolith (970 Archaeology XP each; up to ten at a time)",
-        "Complete tomes studied only at the study desk upstairs in the Archaeology Guild (base Archaeology level only — boosts do not raise tome XP)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Tetracompass_(unpowered)",
-        "title": "Tetracompass pieces → ancient caskets → complete tomes",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-final-archaeology-2026-07-26.json"
     },
     {
       "id": "cross-region:thaler-skilling-rewards",
@@ -5409,33 +5364,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json"
     },
     {
-      "id": "desert:enchanted-water-tiara",
-      "name": "Enchanted water tiara",
-      "recordType": "activity",
-      "regionHints": [
-        "desert"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent desert heat headgear tool",
-      "detail": "Pre–Crocodile Tears desert logistics staple for granite/sandstone quarry, necrite Uzer, crimson skillchompas, and Agility Pyramid. Becomes obsolete after Crocodile Tears heat immunity. Only one enchanted water tiara may be owned; falling below 50 RC reverts it to a normal water tiara. Cannot be used on the wicked hood · After Crocodile Tears, prefer heat immunity over charging this tiara · Unlocks: Head-slot replacement for waterskins while worn — 1 charge consumed per desert heat drink trigger, Up to 500,000 stored charges for multi-hour desert Mining / Hunter / Agility without waterskin inventory, Prayer bonus 2 as minor side stat, Destroyed form returns water tiara + unused water runes to the floor",
-      "requirements": [
-        "Dealing with Scabaras completed",
-        "50 Runecrafting and 50 Magic (RC may be boosted; Assist System cannot create the tiara)",
-        "Water tiara + at least 3 water runes (1 charge per 3 water runes; up to 500,000 charges)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Enchanted_water_tiara",
-        "title": "Enchanted water tiara",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-desert-morytania-2026-07-26.json"
-    },
-    {
       "id": "desert:farmers-outfit",
       "name": "Farmer's outfit",
       "recordType": "equipment",
@@ -5535,6 +5463,34 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-25.json"
+    },
+    {
+      "id": "desert:greenfingers-passive",
+      "name": "Greenfingers passive",
+      "recordType": "activity",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [
+        "desert"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — permanent Farming unlock",
+      "detail": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields. Bought from Sydekix's Shop of Balance in the Garden of Kharid for 30,000 Crux Eqal favour. Replaces the old Greenfingers aura",
+      "requirements": [
+        "30,000 Crux Eqal favour",
+        "Garden of Kharid access (Desert)"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
     },
     {
       "id": "desert:hets-oasis-agility-course",
@@ -5998,91 +5954,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-ironman-unlocks-2026-07-26.json"
     },
     {
-      "id": "desert:powder-of-burials",
-      "name": "Powder of burials",
-      "recordType": "equipment",
-      "regionHints": [
-        "desert"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Prayer training consumable supply",
-      "detail": "Flagship Het's Oasis product for no-trade Prayer. Production is Desert; bone volume is multi-region. Other prayer powders (pulverising/penance/etc.) share the whirligig pipeline · Desert resource_region for powder creation. Training method itself is global once powders and bones are banked · Effects: On scatter: 30 minutes of +250% base Prayer XP when burying bones (350% total base XP), Duration stackable up to 1 hour; buff persists through death, Works with bonecrusher-crushed bones, Does not work with demonic ashes, ectoplasmator, Double XP Prayer, altar bury multipliers, or Dragon Rider amulet",
-      "requirements": [
-        "90 Hunter to catch speedy whirligigs (hollyhock lure at Het's Oasis)",
-        "15 speedy whirligig shells ground per powder"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Powder_of_burials",
-        "title": "Powder of burials",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-desert-2026-07-26.json"
-    },
-    {
-      "id": "desert:powder-of-penance",
-      "name": "Powder of penance",
-      "recordType": "equipment",
-      "regionHints": [
-        "desert"
-      ],
-      "requiredRegions": [
-        "desert"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Prayer point sustain consumable supply",
-      "detail": "Hard Desert for Het's Oasis powder production. Use is global once banked · Effects: Scatter: 30 minutes restore prayer points equal to 2.5% of damage taken (max 100 pp from a single hit = 2.5% of 4,000 damage), Does not work in PvP, 0.5 Prayer XP on scatter, Identical behaviour family to Penance aspect at half the restoration percentage, Sibling of powder of burials in the whirligig pipeline — penance is prayer-point sustain, burials is bury XP",
-      "requirements": [
-        "Het's Oasis access (Desert)",
-        "Dazzling whirligig shells from dazzling whirligigs (golden rose / shimmering honeycomb lure path at Het's Oasis)",
-        "1 dazzling whirligig shell ground per powder (pestle/mortar or Telekinetic Grind)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Powder_of_penance",
-        "title": "Powder of penance",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-combat-adjacent-2026-07-26.json"
-    },
-    {
-      "id": "desert:powder-of-pulverising",
-      "name": "Powder of pulverising",
-      "recordType": "equipment",
-      "regionHints": [
-        "desert",
-        "morytania"
-      ],
-      "requiredRegions": [
-        "desert"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): desert + morytania",
-      "isRegionCombo": true,
-      "category": "Prayer training consumable supply",
-      "detail": "hets-oasis-prayer-powders and ectofuntus-prayer-worship list pulverising as a bullet only; burials and penance already have rows. Surface pulverising for ironman Ectofuntus planners · Desert resource_region for powder creation. Ectofuntus use values Morytania once powders are banked · Unlocks: On scatter: 30 minutes of inventory-wide grind of one bone type at the Ectofuntus bone grinder (destroys the powder), Duration stackable up to 1 hour; buff persists through death, 0.5 Prayer XP on scatter, Pairs with for high-volume bonemeal throughput without clicking each bone, Sibling of (bury XP) and (pp sustain) in the whirligig pipeline · Region pressure: Desert powder production (Het's Oasis hasty whirligigs + hydrangea bushes)., Morytania optional use-site: Ectofuntus is where the grind effect applies — not a hard second production gate",
-      "requirements": [
-        "70 Hunter to catch hasty whirligigs (hydrangea lure at Het's Oasis flower baskets)",
-        "70 Farming to cultivate/harvest hydrangea bushes that supply lure flowers",
-        "15 hasty whirligig shells ground per powder (pestle and mortar or Telekinetic Grind)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Powder_of_pulverising",
-        "title": "Powder of pulverising",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-scriptures-2026-07-26.json"
-    },
-    {
       "id": "desert:pyramid-plunder",
       "name": "Pyramid Plunder (Jalsavrah / Sophanem)",
       "recordType": "activity",
@@ -6451,6 +6322,34 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-archaeology-2026-07-26.json"
+    },
+    {
+      "id": "desert:vampyrism-aspect",
+      "name": "Vampyrism Aspect",
+      "recordType": "activity",
+      "regionHints": [
+        "desert"
+      ],
+      "requiredRegions": [
+        "desert"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Ancient Magicks combat Aspect",
+      "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks",
+      "requirements": [
+        "69 Magic",
+        "Ancient Magicks spellbook (Desert Treasure path)"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
     },
     {
       "id": "desert:vault-of-hereditas-heist",
@@ -9244,6 +9143,120 @@
       "sourceFile": "progression-enrichment-regional-skilling-fremennik-2026-07-26.json"
     },
     {
+      "id": "global:aura-system-removed",
+      "name": "Combat auras removed (Berserker / Maniacal / Reckless…)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — system removal",
+      "detail": "The aura equipment slot's timed combat powers were removed on 13 April 2026. Berserker, Maniacal, Reckless, Mahjarrat, Equilibrium, Dark Magic and many others have no 1:1 replacement. Plan Equilibrium combat without those auras",
+      "requirements": [],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:divination-enrichment-progression",
+      "name": "Enriched memory chance (ex-Enrichment aura)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Divination level passive",
+      "detail": "Enriched memory chance scales with Divination level: 2% at 39, 4% at 59, 7% at 79, 10% at 99. Not region-gated",
+      "requirements": [
+        "Divination level thresholds"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:material-cache-consistency",
+      "name": "Material cache consistency (ex-Resourceful aura)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Archaeology gathering passive",
+      "detail": "An Archaeology material cache cannot expire on the first two gathers. Not region-gated",
+      "requirements": [
+        "Archaeology material caches"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:mining-critical-progression",
+      "name": "Mining critical chance (ex-Quarrymaster aura)",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Mining level passive",
+      "detail": "+5% Mining critical chance at 59, another +5% at 85 (10% total). Not region-gated",
+      "requirements": [
+        "Mining 59 / 85"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "global:penance-aspect",
+      "name": "Penance Aspect",
+      "recordType": "activity",
+      "regionHints": [],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Standard spellbook combat Aspect",
+      "detail": "Standard spellbook Aspect (Magic 67): restores Prayer equal to 5% of damage taken (cap 100) for 12 minutes. Only one Aspect can be active. Replaces the Penance combat aura — not elective-region gated",
+      "requirements": [
+        "67 Magic",
+        "Standard spellbook"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
       "id": "havenhythe:altar-of-inanna",
       "name": "Altar of Inanna",
       "recordType": "activity",
@@ -9456,34 +9469,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-anachronia-havenhythe-2026-07-26.json"
     },
     {
-      "id": "kandarin:eternal-magic-trees",
-      "name": "Eternal magic trees",
-      "recordType": "activity",
-      "regionHints": [
-        "kandarin"
-      ],
-      "requiredRegions": [
-        "kandarin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Woodcutting resource supply",
-      "detail": "Kandarin's Piscatoris grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement · Hard Kandarin for the Piscatoris eternal magic tree grove · Unlocks: Kandarin eternal magic log supply from the Piscatoris grove, Perfect eternal magic branch chance at 110 Woodcutting",
-      "requirements": [
-        "Piscatoris Hunter area access in Kandarin",
-        "100 Woodcutting for eternal magic trees"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Eternal_magic_tree",
-        "title": "Eternal magic trees",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-kandarin-2026-07-26.json"
-    },
-    {
       "id": "havenhythe:fang-of-mohegan",
       "name": "Fang of Mohegan",
       "recordType": "activity",
@@ -9614,29 +9599,6 @@
       "sourceFile": "manual"
     },
     {
-      "id": "havenhythe:marigold-farm-herb-patch",
-      "name": "Herb patch",
-      "recordType": "activity",
-      "regionHints": [
-        "havenhythe"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Farming / Marigold Farm",
-      "detail": "Unlocks: One herb patch at Marigold Farm",
-      "requirements": [],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Herb_patch",
-        "title": "Herb patch",
-        "verifiedAt": "2026-07-28"
-      },
-      "sourceFile": "manual"
-    },
-    {
       "id": "havenhythe:marigold-farm-flower-patch",
       "name": "Flower patch",
       "recordType": "activity",
@@ -9655,6 +9617,29 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Flower_patch",
         "title": "Flower patch",
+        "verifiedAt": "2026-07-28"
+      },
+      "sourceFile": "manual"
+    },
+    {
+      "id": "havenhythe:marigold-farm-herb-patch",
+      "name": "Herb patch",
+      "recordType": "activity",
+      "regionHints": [
+        "havenhythe"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Farming / Marigold Farm",
+      "detail": "Unlocks: One herb patch at Marigold Farm",
+      "requirements": [],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Herb_patch",
+        "title": "Herb patch",
         "verifiedAt": "2026-07-28"
       },
       "sourceFile": "manual"
@@ -11374,6 +11359,34 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-diaries-outfits-2026-07-26.json"
     },
     {
+      "id": "kandarin:eternal-magic-trees",
+      "name": "Eternal magic trees",
+      "recordType": "activity",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "kandarin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Woodcutting resource supply",
+      "detail": "Kandarin's Piscatoris grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement · Hard Kandarin for the Piscatoris eternal magic tree grove · Unlocks: Kandarin eternal magic log supply from the Piscatoris grove, Perfect eternal magic branch chance at 110 Woodcutting",
+      "requirements": [
+        "Piscatoris Hunter area access in Kandarin",
+        "100 Woodcutting for eternal magic trees"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Eternal_magic_tree",
+        "title": "Eternal magic trees",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-kandarin-2026-07-26.json"
+    },
+    {
       "id": "kandarin:extreme-invention-boost-path",
       "name": "Extreme invention potion boost path",
       "recordType": "activity",
@@ -11772,6 +11785,32 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-kandarin-2026-07-26.json"
+    },
+    {
+      "id": "kandarin:hexcrest",
+      "name": "Hexcrest",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Slayer helmet Magic component",
+      "detail": "Unlocks: Magic component for the full Slayer helmet with the focus sight",
+      "requirements": [
+        "73 Slayer to fight jungle strykewyrms",
+        "20 Magic and 20 Defence to wear"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Hexcrest",
+        "title": "Hexcrest",
+        "verifiedAt": "2026-07-28"
+      },
+      "sourceFile": "manual"
     },
     {
       "id": "kandarin:imcando-mattock",
@@ -12524,6 +12563,42 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-restore-wave3-2026-07-26.json"
     },
     {
+      "id": "kandarin:spottier-cape",
+      "name": "Spottier cape (Hunter weight-reduction cape)",
+      "recordType": "equipment",
+      "regionHints": [
+        "kandarin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "all_required",
+      "comboLabel": "Region combo (all required): misthalin + kandarin",
+      "isRegionCombo": true,
+      "category": "permanent Hunter weight-reduction equipment",
+      "detail": "Weight-reducing clothing still missing while agile top/legs are. Outclassed later by wicked cape (−6 kg) and endgame capes — keep as midgame Hunter/Agility QoL, not BiS forever · Hard Misthalin for craft. Kandarin when self-sourcing dashing furs · Unlocks: Worn weight reduction of 4.5 kg (strong early–mid permanent run-energy / Agility QoL cape before wicked cape / endgame capes), Ironman-craftable Hunter prestige gear from Falconry fur supply, Lighten Up achievement touchpoint when traded to the fancy-dress seller, Spotted cape is the lower 40 Hunter / 2.2 kg tier from spotted kebbit furs — do not emit a second thin row; this is the upgrade · Region pressure: Misthalin Fancy Clothes Store craft NPC",
+      "requirements": [
+        "66 Hunter to wear",
+        "2 dashing kebbit furs (Falconry / dashing kebbits) + 800 coins",
+        "Craft at Fancy Clothes Store (south-east Varrock, past the wooden gate)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Spottier_cape",
+        "title": "Spottier cape (Hunter weight-reduction cape)",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-capes-boots-2026-07-26.json",
+      "region_hint": "kandarin",
+      "required_regions": [
+        "kandarin"
+      ],
+      "region_hints": [
+        "kandarin"
+      ]
+    },
+    {
       "id": "kandarin:stormguard-citadel-dig-site",
       "name": "Stormguard Citadel Dig Site (Armadylean)",
       "recordType": "activity",
@@ -12659,32 +12734,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-kandarin-fremennik-2026-07-26.json"
     },
     {
-      "id": "karamja:agility-arena-ticket-exchange",
-      "name": "Agility Arena Ticket Exchange (Pirate Jackie)",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Brimhaven Agility reward shop",
-      "detail": "Brimhaven: arena row covers minigame play; pirates-hook covers the hand-slot item. This id is the permanent ticket-economy shop checklist for iron Herblore herbs and Agility lamps · Diary gloves amplify XP/tickets on separate area-tasks row · Unlocks: Ticket shop: small/medium/large/huge Agility lamps (1 / 10 / 100 / 1000 tickets; base 240 / 2,480 / 28,000 / 320,000 Agility XP — Karamja gloves 2+ add 10% to lamp XP), Ironman herb sink: toadflax (1 ticket), wergali (5), snapdragon (10) noted or unnoted, Pirate hook (left) at 800 tickets — equipment detail stays",
-      "requirements": [
-        "Brimhaven Agility Arena access (200 coin entry; waived after Rocking Out)",
-        "Agility Arena tickets from tagging active pillars"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Agility_Arena_Ticket_Exchange",
-        "title": "Agility Arena Ticket Exchange (Pirate Jackie)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-starting-regions-2026-07-26.json"
-    },
-    {
       "id": "karamja:area-tasks-karamja-gloves",
       "name": "Karamja gloves 1-4",
       "recordType": "equipment",
@@ -12709,32 +12758,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-diaries-2026-07-26.json"
-    },
-    {
-      "id": "karamja:banana-plantation",
-      "name": "Musa Point banana plantation",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "early gather and Cooking fruit supply",
-      "detail": "Automatic-early Karamja landmark, not a late-game method. Synergy with and on the same peninsula · Unlocks: 33 banana trees (5 bananas each) at Luthas plantation opposite Zembo's bar, Luthas crate job: fill 10 bananas for 30 coins (quest logistics more important than wage), Pirate's Treasure rum-smuggle crate path (Karamja half of the quest loop), Free fruit for early Cooking / quests adjacent to Musa teaks and Stiles dock",
-      "requirements": [
-        "Musa Point access (glory Karamja teleport, Port Sarim boat, or overland)",
-        "No skill gate to pick bananas from plantation trees"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Banana_plantation",
-        "title": "Musa Point banana plantation",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
     },
     {
       "id": "karamja:base-juju-potion-family",
@@ -12785,60 +12808,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Brimhaven_Agility_Arena",
         "title": "Brimhaven Agility Arena",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-karamja-2026-07-26.json"
-    },
-    {
-      "id": "karamja:calquat-farming-patch",
-      "name": "Calquat farming patch (Tai Bwo Wannai)",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "unique Farming tree patch",
-      "detail": "Buried inside tai-bwo-wannai-cleanup notes previously — Farming unlock for region planners. Protection payment needs Jungle Potion; planting itself has no quest gate. Teleports: Tai Bwo Wannai teleport, Karamja lodestone, fairy ring CKR, Brimhaven house tablet · Unlocks: Sole classic calquat patch on Karamja (calquat tree crop at 72 Farming), Six calquat fruit harvests per fully grown tree; clear with spade like a bush, Calquat fruit for keg crafting and Farming run completeness",
-      "requirements": [
-        "72 Farming to plant a calquat sapling",
-        "Patch north of Tai Bwo Wannai",
-        "Jungle Potion completed to pay Imiago eight poison ivy berries for disease protection"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Calquat_patch",
-        "title": "Calquat farming patch (Tai Bwo Wannai)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
-    },
-    {
-      "id": "karamja:deadliest-catch-deposit-boxes",
-      "name": "Deadliest Catch skilling deposit boxes",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja",
-        "kandarin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): karamja / kandarin",
-      "isRegionCombo": false,
-      "category": "banking QoL from quest reward",
-      "detail": "Quest is Kandarin-started but the Brimhaven and Ape Atoll deposit boxes are the Karamja-relevant skilling unlocks called out by ironman Woodcutting guidance (teak banking + Ape Atoll). Do not reclassify the whole quest as Karamja; mark dual pressure: Kandarin to unlock, Karamja to spend the local boxes · Quest completion is Kandarin-gated in start location; Brimhaven box is the Hardwood Grove partner. Ape Atoll sits under Karamja terms in quest-region-rules · Unlocks: South of Brimhaven deposit box (Hardwood Grove teak banking path), South coast of Ape Atoll deposit box (Ape Atoll woodcutting / bank pressure under Karamja quest taxonomy), Six further deposit boxes outside Karamja (Bedabin Camp, Elf Camp, Harmony Island, Mort Myre, Piscatoris, Pollnivneach) as global quest reward",
-      "requirements": [
-        "Deadliest Catch completed (quest starts at Fishing Guild / Kandarin; skill reqs 70 Fishing, 67 Hunter, 70 Thieving, 3 Herblore, Tower of Life)",
-        "Local access to each deposit location after unlock"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Deadliest_Catch",
-        "title": "Deadliest Catch skilling deposit boxes",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-karamja-2026-07-26.json"
@@ -12986,35 +12955,8 @@
       "sourceFile": "progression-enrichment-regional-skilling-karamja-2026-07-26.json"
     },
     {
-      "id": "karamja:hexcrest",
-      "name": "Hexcrest",
-      "recordType": "equipment",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Slayer helmet Magic component",
-      "detail": "Jungle strykewyrms south of Shilo Village · Effects: On task: +7.5% Magic damage and +12.5% Magic accuracy, Required with focus sight to upgrade slayer helmet to full slayer helmet",
-      "requirements": [
-        "73 Slayer to fight jungle strykewyrms",
-        "20 Magic and 20 Defence to wear",
-        "On-task drop rate better than off-task"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Hexcrest",
-        "title": "Hexcrest",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
-    },
-    {
-      "id": "karamja:jadinko-favour-offering-stone",
-      "name": "Jadinko Favour offering stone",
+      "id": "karamja:jadinko-lair",
+      "name": "Jadinko Lair",
       "recordType": "activity",
       "regionHints": [
         "karamja"
@@ -13023,80 +12965,17 @@
       "regionRequirementType": "single",
       "comboLabel": "",
       "isRegionCombo": false,
-      "category": "Habitat seed and spiritbag infrastructure",
-      "detail": "Habitat: curly-roots and herblore-habitat only footnote favour · Unlocks: Spend favour at the offering stone east of Jadinko Queen: random mix (10 favour), fruits only (13), or seeds + juju teleport spiritbags (40 per seed / 80 per bag), Ironman Habitat seed top-up path independent of Papa Mambo coin stock (seed pool mirrors currently attracted surface jadinkos), Juju teleport spiritbag supply for Habitat teleports without witchdoctor mask, Deposit box via 40 Woodcutting shortcut past the Queen for banking favour rewards",
-      "requirements": [
-        "Jadinko Lair access (south-eastern Karamja; speak to Dotmatrix at first entry)",
-        "Earn Jadinko Favour: burn curly roots on dry-patch firepits (2 favour; inferno adze auto-burn grants none), light firepits (3), chop mutated roots (2), or kill mutated jadinkos (3/7/10 by tier)",
-        "Cap 2000 Jadinko Favour — spend near cap"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Offering_stone",
-        "title": "Jadinko Favour offering stone",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-starting-regions-2026-07-26.json"
-    },
-    {
-      "id": "karamja:jadinko-lair-curly-roots",
-      "name": "Jadinko Lair curly roots",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja",
-        "tirannwn"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): karamja / tirannwn",
-      "isRegionCombo": false,
-      "category": "Firemaking and Woodcutting regional method",
-      "detail": "Core free high-end Firemaking site on automatic-early Karamja. Baseline is chop curly roots then burn on lair dry-patch firepits. Superheat Form (Tirannwn Seren prayer / The Light Within, 91 Prayer) or Always Adze relic is the XP ceiling and yields no Jadinko Favour on that variant. Inferno adze / Nature's sentinel incinerate also burn roots on chop. Training rates live in training-gap-artisan; this row is the regional unlock pointer · Karamja owns the method site and favour loop. Tirannwn is optional ceiling pressure via Superheat Form; Anachronia Orthen furnace core can sustain Superheat Form drain but is not required to name the Karamja method · Unlocks: Curly root chop/collect loop (161.6 Woodcutting XP per root cycle; 4 roots per collect), Firepit burning of curly roots (378.7 Firemaking XP per root), Jadinko Favour from lighting firepits and adding roots (favour spendable at offering stone for Habitat seeds/fruits/spiritbags), Optional Superheat Form / Always Adze ceiling that auto-burns roots while chopping",
-      "requirements": [
-        "83 Woodcutting to chop and collect curly jade roots",
-        "83 Firemaking to light dry-patch firepits and burn curly roots",
-        "Jadinko Lair access (south-eastern Karamja; speak to Dotmatrix at first entry)"
-      ],
+      "category": "Woodcutting / Jadinko Lair",
+      "detail": "Unlocks: Curly roots for Woodcutting and Firemaking; Jadinko Favour shop for seeds, fruits and outfits",
+      "requirements": [],
       "confidence": "confirmed_wiki",
       "source": {
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Curly_root",
-        "title": "Jadinko Lair curly roots",
-        "verifiedAt": "2026-07-26"
+        "title": "Curly root",
+        "verifiedAt": "2026-07-28"
       },
-      "sourceFile": "progression-enrichment-regional-skilling-karamja-2026-07-26.json"
-    },
-    {
-      "id": "karamja:juju-farming-potion-path",
-      "name": "Juju farming potion path (Herblore Habitat)",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja",
-        "tirannwn"
-      ],
-      "requiredRegions": [
-        "karamja"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): karamja + tirannwn",
-      "isRegionCombo": true,
-      "category": "Herblore and Farming supply chain",
-      "detail": "Specialises the farming-potion path out of and. Prefer Habitat row for multi-skill hub; this row for Herblore→Farming potion checklist · Hard Karamja. Perfect tier needs Tirannwn moss · Unlocks: Juju farming potion production (herb-run yield QoL), Broader juju family path (woodcutting, mining, hunter, fishing, etc.) from Habitat ingredients, Bridge into perfect juju farming via harmony moss (Tirannwn) on juju farming (3), Self-sufficient ironman Habitat seed + secondary loop · Region pressure: Karamja owns Habitat and base juju craft geography., Tirannwn harmony moss upgrades juju farming into perfect juju farming",
-      "requirements": [
-        "Herblore Habitat access and jadinko attraction setup (Farming + Construction features)",
-        "Herblore levels for juju farming potion and related juju mixes",
-        "Vine herb / secondary ingredients from Habitat hunter-farm loop",
-        "Optional: Papa Mambo seed shop for ironman seed top-ups"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Juju_farming_potion",
-        "title": "Juju farming potion path (Herblore Habitat)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-thieving-hunter-farming-2026-07-26.json"
+      "sourceFile": "manual"
     },
     {
       "id": "karamja:karambwan-vessel-fishing",
@@ -13122,32 +13001,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Karambwan_vessel",
         "title": "Karambwan vessel fishing",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
-    },
-    {
-      "id": "karamja:karamja-volcano-resource-dungeon",
-      "name": "Karamja Volcano resource dungeon",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Dungeoneering resource dungeon (imp/lesser demon camp)",
-      "detail": "Site detail. League badge is Karamja. Not a tree/ore room — value is monster density and first-entry XP on automatic-early Karamja · DG level is account-wide · Unlocks: Permanent resource-dungeon access: 14 lesser demons and 11 imps, 2,100 Dungeoneering XP on first entry (F2P-eligible resource dungeon), Champion scroll and imp-in-a-box hunting density; urn / Death Note ash collection path, Hoardstalker ring / DG cape teleports after unlock",
-      "requirements": [
-        "25 Dungeoneering (boosts cannot bypass entry)",
-        "Enter Crandor and Karamja Dungeon via Karamja Volcano; portal in south-west lesser-demon room near TzHaar City entrance"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Karamja_Volcano_resource_dungeon",
-        "title": "Karamja Volcano resource dungeon",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
@@ -13321,33 +13174,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave-final-karamja-herblore-2026-07-26.json"
     },
     {
-      "id": "karamja:pirates-hook",
-      "name": "Pirate hook (left)",
-      "recordType": "equipment",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Brimhaven Agility Arena hand-slot reward",
-      "detail": "equipment split from ticket-shop blurb. Not core combat gear; tracks Arena completion depth and ticket economy. Minimum ~800 minutes of perfect pillars without gloves 4 (~640 with double-ticket proc average) · Effects: Hand-slot melee tank gloves (tier 5 class stats; prestige/cosmetic primary value), Combinable with crab claw (Patchy) into crabclaw and hook, or with pirate hook (right) into double pirate hooks, Tradeable GE sink after self-farm — iron prestige + completionist checklist item",
-      "requirements": [
-        "Brimhaven Agility Arena access (200 coin entry; waived after Rocking Out)",
-        "800 Agility Arena tickets exchanged with Pirate Jackie the Fruit",
-        "Karamja gloves 4 optional (25% double-ticket chance) to cut grind time"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Pirate_hook_(left)",
-        "title": "Pirate hook (left)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
-    },
-    {
       "id": "karamja:shilo-gem-mine",
       "name": "Shilo Village underground gem mine",
       "recordType": "activity",
@@ -13428,60 +13254,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-critical-tools-2026-07-26.json"
-    },
-    {
-      "id": "karamja:tzhaar-city-skilling-hub",
-      "name": "TzHaar City skilling hub",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "regional city bank, furnace, and TokKul shop infrastructure",
-      "detail": "Skilling half of TzHaar City for ironman banking, smelting, onyx sink, and BLP on-ramp. Combat minigames (Fight Cave/Pit/Kiln/Cauldron) stay in combat enrichment; this row is the city infrastructure checklist. Do not conflate Crafteneering (Daemonheim leather loop — ) with TzHaar shops · Unlocks: Plaza bank (TzHaar-Hur-Zuh) plus minigame lobby banks; bank areas heal like surface banks, Lava furnace for Smithing/Crafting smelt loops, Sulphur vents usable as cooking ranges across the city, TzHaar-Hur-Lek ore and gem store including uncut onyx for TokKul, TzHaar-Mej-Roh rune store and TzHaar-Hur-Tel equipment store (obsidian stock), Small Summoning obelisk; fairy ring BLP near Fight Cave, City gold/silver mine plus post-TokTz-Ket-Dill coal/mithril/adamant mine",
-      "requirements": [
-        "Access under Karamja Volcano (members city; volcano surface is free-to-play approach)",
-        "TokKul currency for shops (no coin buy-back from TzHaar merchants)",
-        "TokTz-Ket-Dill for deeper TzHaar mine (coal/mithril/adamant rocks)",
-        "The Elder Kiln for TokKul-Zo travel ring (separate equipment row karamja:tokkul-zo)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/TzHaar_City",
-        "title": "TzHaar City skilling hub",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-karamja-haven-forinthry-2026-07-26.json"
-    },
-    {
-      "id": "karamja:tzhaar-onyx-gem-store",
-      "name": "TzHaar-Hur-Lek Ore and Gem Store (uncut onyx)",
-      "recordType": "activity",
-      "regionHints": [
-        "karamja"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "TzHaar TokKul shop permanent",
-      "detail": "TzHaar: tzhaar-city-skilling-hub already lists banks/furnace/shops as a checklist. This id is the ironman-critical onyx sink as a shop row. Prefer hub for plaza logistics; prefer tokkul-zo for tele network; prefer this for onyx procurement · TokKul farming remains combat-adjacent pressure · Unlocks: Only permanent shop source of uncut onyx for 2,700,000 TokKul (ironman jewellery / hydrix path sink), Ore and gem stock for self-sufficient Crafting alongside city lava furnace",
-      "requirements": [
-        "TzHaar City access under Karamja Volcano",
-        "TokKul currency (no coin purchases; TzHaar merchants do not buy-back for TokKul)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/TzHaar-Hur-Lek%27s_Ore_and_Gem_Store",
-        "title": "TzHaar-Hur-Lek Ore and Gem Store (uncut onyx)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-starting-regions-2026-07-26.json"
     },
     {
       "id": "karamja:witchdoctor-camo-outfit",
@@ -13890,6 +13662,62 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:five-finger-discount-passive",
+      "name": "Five-Finger Discount passive",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — permanent Thieving unlock",
+      "detail": "Up to five ranks (+2% pickpocket success each, max +10%) from the Thieves' Guild for pilfer points (also from Heists). Replaces the old Five-Finger Discount aura",
+      "requirements": [
+        "Thieves' Guild (Misthalin)",
+        "1,000 pilfer points per rank"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
+      "id": "misthalin:focused-siphoning-passive",
+      "name": "Focused Siphoning passive",
+      "recordType": "activity",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — permanent Runespan unlock",
+      "detail": "7.5% increased Runespan siphoning success. Bought from Wizard Rinsit's Runecrafting Shop on the Wizards' Tower roof for 20,000 Runespan points. Replaces the old Focused Siphoning aura",
+      "requirements": [
+        "20,000 Runespan points",
+        "Wizards' Tower (Misthalin)"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
     },
     {
       "id": "misthalin:gate-of-elidinis",
@@ -14376,32 +14204,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-outfits-2026-07-26.json"
     },
     {
-      "id": "misthalin:runespan-portal",
-      "name": "Runespan portals at Wizards' Tower",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Runecrafting activity hub access",
-      "detail": "Access activity row separate from the master-robe outfit already catalogued. Alternate teleports (wicked hood, Max Guild high-level portal, Runecrafting Guild exit re-entry) exist, but Wizards' Tower is the native Misthalin route · Surface Misthalin as the natural access route without forcing a mandatory region claim for every RC method · Unlocks: Runespan pocket-dimension training and Runespan points, Wizard Finix and Wizard Rinsit reward shops (including massive pouch and other RC utility), Direct self-sufficient path to master runecrafter robes ( · Region status: misthalin_accessible_not_region_exclusive",
-      "requirements": [
-        "Talk to Wizard Finix to enable portal use",
-        "Runecrafting 1 / 33 / 66 for lower / middle / upper level access thresholds"
-      ],
-      "confidence": "confirmed_wiki_access_route_not_exclusive",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Runespan",
-        "title": "Runespan portals at Wizards' Tower",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
       "id": "misthalin:runic-attuner",
       "name": "Runic attuner",
       "recordType": "equipment",
@@ -14448,32 +14250,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
-    },
-    {
-      "id": "misthalin:screening-station",
-      "name": "Screening station (Archaeology Campus)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Archaeology campus infrastructure",
-      "detail": "Baseline campus soil processing. Auto-screener and Sift Soil are alternatives — auto-screener is the permanent device upgrade path · Starting Misthalin campus infrastructure · Unlocks: Screen up to 100 soil at a time for materials (+ rare 1/1,000 damaged artefacts), 1.8s per soil (1.2s with full master outfit), Wet vs dry meshes are visual-only; XP per soil scales with Archaeology level bands",
-      "requirements": [
-        "Archaeology tutorial / soil box access",
-        "Soil gathered from excavation or caches"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Screening_station",
-        "title": "Screening station (Archaeology Campus)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-invention-arch-2026-07-26.json"
     },
     {
       "id": "misthalin:scripture-of-bik",
@@ -14592,36 +14368,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
     },
     {
-      "id": "misthalin:skull-sceptre",
-      "name": "Skull sceptre",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "permanent unlimited Stronghold of Security travel tool",
-      "detail": "High-value free unlimited tele. Pairs with for part rates. Combat staff stats are negligible — travel is the planner value · Hard Misthalin · Effects: Unlimited teleports (post-28-November-2016 no charges) to Barbarian Village entrance and each unlocked Stronghold floor, Early ironman free travel near Edgeville / Grand Exchange / Varrock west bank, One assembled sceptre at a time (unless keepsaked); parts still drop while owned · Region pressure: Hard Misthalin: Stronghold of Security and Barbarian Village claim geography",
-      "requirements": [
-        "Stronghold of Security under Gunnarsgrunn (Barbarian Village)",
-        "Combine right/left skull halves + top/bottom of sceptre drops from minotaurs, flesh crawlers, catablepon, ankou",
-        "Floor teleports unlock after claiming that floor's end reward (any order)",
-        "Varrock armour worn increases part drop chance"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Skull_sceptre",
-        "title": "Skull sceptre",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave5-residual-a-2026-07-26.json"
-    },
-    {
       "id": "misthalin:smelting-gauntlets",
       "name": "Smelting gauntlets",
       "recordType": "equipment",
@@ -14647,68 +14393,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-asgarnia-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:soul-supplies-and-um-shops",
-      "name": "Soul Supplies and City of Um skilling shops",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Necromancy supply shops",
-      "detail": "Shop infrastructure for self-sufficient ritual upkeep. Prefer Underworld Grimoire equipment row for automatic bone deposit and extra necroplasm/RC effects. Do not mirror full stock lists · City of Um supply hub under Misthalin working map · Unlocks: Lupe's Soul Supplies for ritual candles, ghostly ink, bones, and related consumables, Weekly free bone/ink/candle bundles scaling with Underworld Grimoire tier, Austin's Place ritualist outfit shop path ( · Region status: historical_city_of_um_working_taxonomy",
-      "requirements": [
-        "Necromancy! for base city access",
-        "Underworld achievements for improved weekly Lupe supplies via Underworld Grimoire"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Soul_Supplies",
-        "title": "Soul Supplies and City of Um skilling shops",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
-    },
-    {
-      "id": "kandarin:spottier-cape",
-      "name": "Spottier cape (Hunter weight-reduction cape)",
-      "recordType": "equipment",
-      "regionHints": [
-        "kandarin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): misthalin + kandarin",
-      "isRegionCombo": true,
-      "category": "permanent Hunter weight-reduction equipment",
-      "detail": "Weight-reducing clothing still missing while agile top/legs are. Outclassed later by wicked cape (−6 kg) and endgame capes — keep as midgame Hunter/Agility QoL, not BiS forever · Hard Misthalin for craft. Kandarin when self-sourcing dashing furs · Unlocks: Worn weight reduction of 4.5 kg (strong early–mid permanent run-energy / Agility QoL cape before wicked cape / endgame capes), Ironman-craftable Hunter prestige gear from Falconry fur supply, Lighten Up achievement touchpoint when traded to the fancy-dress seller, Spotted cape is the lower 40 Hunter / 2.2 kg tier from spotted kebbit furs — do not emit a second thin row; this is the upgrade · Region pressure: Misthalin Fancy Clothes Store craft NPC",
-      "requirements": [
-        "66 Hunter to wear",
-        "2 dashing kebbit furs (Falconry / dashing kebbits) + 800 coins",
-        "Craft at Fancy Clothes Store (south-east Varrock, past the wooden gate)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Spottier_cape",
-        "title": "Spottier cape (Hunter weight-reduction cape)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave-continue-capes-boots-2026-07-26.json",
-      "region_hint": "kandarin",
-      "required_regions": [
-        "kandarin"
-      ],
-      "region_hints": [
-        "kandarin"
-      ]
     },
     {
       "id": "misthalin:taggas-corehammer",
@@ -14760,6 +14444,34 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-asgarnia-misthalin-2026-07-26.json"
+    },
+    {
+      "id": "misthalin:thieves-guild-master-tools",
+      "name": "Master thief's tools",
+      "recordType": "equipment",
+      "regionHints": [
+        "misthalin"
+      ],
+      "requiredRegions": [
+        "misthalin"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Thieving permanent toolbelt tools",
+      "detail": "Wiki League region for Dodgy Derek / Thieves' Guild is Misthalin (Lumbridge). Required for efficient high-level chests and safecracking/heists. Trahaearn exoskeleton and master camouflage · Not Asgarnia · Effects: Master thief's lockpick: unbreakable lockpick; toolbelt-eligible; +7% chest lock success (vs 3% ordinary lockpick), Master thief's stethoscope: permanent safecracking QoL toolbelt path",
+      "requirements": [
+        "Thieves' Guild access (Buyers and Cellars series)",
+        "Pilfer points for Dodgy Derek purchases (2,500 each for lockpick and stethoscope per wiki shops)"
+      ],
+      "confidence": "confirmed_wiki",
+      "source": {
+        "source": "runescape-wiki",
+        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
+        "title": "Master thief's lockpick + master thief's stethoscope",
+        "verifiedAt": "2026-07-26"
+      },
+      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     },
     {
       "id": "misthalin:um-mushroom-patch",
@@ -14979,33 +14691,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave-longtail-combat-adjacent-2026-07-26.json"
-    },
-    {
-      "id": "misthalin:woodcutters-grove-facilities",
-      "name": "Woodcutters' Grove",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Woodcutting hub and Imcando hatchet progression",
-      "detail": "Single Woodcutters' Grove row: tiered tree, storage, banking, fairy-ring and farming facilities plus the tier-3 Imcando hatchet fragment nest gate",
-      "requirements": [
-        "Unwelcome Guests and eastern border wall progression to unlock Grove cabin blueprints",
-        "Construction 50 for Grove tiers 1-2; Construction 60 for tier 3",
-        "Tier 3 Woodcutter's Grove for Imcando hatchet fragment nests"
-      ],
-      "confidence": "confirmed_wiki_method_working_league_taxonomy",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Woodcutters%27_Grove",
-        "title": "Woodcutters' Grove",
-        "verifiedAt": "2026-07-28"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     },
     {
       "id": "morytania:abandoned-mine-salve-shards",
@@ -16144,6 +15829,34 @@
       "sourceFile": "progression-enrichment-regional-skilling-morytania-2026-07-26.json"
     },
     {
+      "id": "morytania:sunspear-prayer-sustain",
+      "name": "Sunspear Vyre prayer sustain",
+      "recordType": "activity",
+      "regionHints": [
+        "morytania"
+      ],
+      "requiredRegions": [
+        "morytania"
+      ],
+      "regionRequirementType": "single",
+      "comboLabel": "",
+      "isRegionCombo": false,
+      "category": "Aura Overhaul — Morytania combat passive",
+      "detail": "Cremating Vyres with Sunspear unlocks prayer restore on Vyre kills (1–5% by cremation ladder). Replaces Harmony / Corruption / Salvation aura prayer sustain",
+      "requirements": [
+        "Sunspear",
+        "Vyre cremation / Columbarium (Morytania)"
+      ],
+      "confidence": "confirmed_official_2026",
+      "source": {
+        "source": "jagex",
+        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
+        "title": "Patch Notes: Aura Overhaul",
+        "verifiedAt": "2026-04-13"
+      },
+      "sourceFile": "fix-aura-regions-2026.mjs"
+    },
+    {
       "id": "morytania:temple-trekking-permanent-rewards",
       "name": "Temple Trekking permanent reward package",
       "recordType": "activity",
@@ -16248,88 +15961,6 @@
       "sourceFile": "progression-enrichment-regional-skilling-wave4-restore-wave3-2026-07-26.json"
     },
     {
-      "id": "multi-region:elite-skilling-outfits-core-set",
-      "name": "Elite skilling outfits core set (ironman fragment paths)",
-      "recordType": "activity",
-      "regionHints": [
-        "desert",
-        "tirannwn",
-        "fremennik",
-        "asgarnia",
-        "kandarin",
-        "misthalin",
-        "morytania",
-        "forinthry",
-        "anachronia"
-      ],
-      "requiredRegions": [
-        "desert",
-        "tirannwn",
-        "fremennik",
-        "asgarnia",
-        "kandarin"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): desert + tirannwn + fremennik + asgarnia + kandarin",
-      "isRegionCombo": true,
-      "category": "multi-region elite skilling outfit portfolio package",
-      "detail": "Portfolio stack, not a single craft. Prefer individual equipment rows for effects (, etc.). This multi-region id exists so region combos score the elite-outfit ironman core set as a unit. Skip Treasure Hunter as acquisition path · all_required means every listed region contributes a hard piece of the ironman elite-outfit portfolio. League may drop individual outfits if fragment rules change — keep per-outfit rows authoritative for effects · Region combo (all required): desert + tirannwn + fremennik + asgarnia + kandarin · Unlocks: Portfolio checklist of gameplay-obtainable elite skilling outfits ironmen actually chase: Nature's sentinel (WC), magic golem (Mining), fury shark (Fishing), elder divination (Divination), master camouflage (Thieving), master farmer (Farming), infinity ethereal (RC — often Misthalin Runespan support), Shared pattern: three base outfits → combine into elite; inherit lower XP outfits after worn once, Region scoring: missing any listed required region knocks out a major elite-outfit acquisition or inheritance leg · Region pressure: Desert hard: farmer's outfit / Garden of Kharid ironman Farming XP base., Tirannwn hard: camouflage elite path + late skilling density., Fremennik hard: golden mining suit inheritance for magic golem., Kandarin hard: shark/diviner/sous-chef/master-farmer gameplay routes · Invention workbench craft is global (not region-locked)",
-      "requirements": [
-        "Invention 20+ and skill-specific fragment collection while training (typically 70+ in the skill; 80+ to craft many pieces); 54,000 fragments per finished elite set across three base outfits",
-        "Desert: farmer's outfit (Garden of Kharid favour) as base XP layer inherited by master farmer elite path",
-        "Tirannwn: Prifddinas camouflage pieces / master camouflage elite Thieving path; crystal training density for fragment volume",
-        "Fremennik: golden mining suit XP inheritance layer for magic golem elite Mining set",
-        "Asgarnia: Invention Guild craft hub; blacksmith / botanist / factory non-elite sets that pair with elite production planning",
-        "Kandarin: fury shark (Fishing), elder divination (Divination), sous chef (Cooking), master farmer POF beans path, Deep Sea / Cache fragment volume"
-      ],
-      "confidence": "confirmed_wiki_multi_region_portfolio",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Elite_skilling_outfit",
-        "title": "Elite skilling outfits core set (ironman fragment paths)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-cross-stacks-2026-07-26.json"
-    },
-    {
-      "id": "multi-region:full-slayer-helmet-and-upgrades",
-      "name": "Full slayer helmet and point upgrades (reinforced through corrupted)",
-      "recordType": "equipment",
-      "regionHints": [
-        "karamja",
-        "desert",
-        "morytania",
-        "anachronia"
-      ],
-      "requiredRegions": [
-        "karamja",
-        "desert",
-        "morytania",
-        "anachronia"
-      ],
-      "regionRequirementType": "all_required",
-      "comboLabel": "Region combo (all required): karamja + desert + morytania + anachronia",
-      "isRegionCombo": true,
-      "category": "permanent multi-style Slayer helmet ladder",
-      "detail": "Single planner ladder for full → reinforced → strong → mighty → corrupted. Corrupted gem is a Desert / Sophanem-style pressure on the final step — verify current gem sources in-league. Anachronia Slayer Lodge stand accepts placed helmets for passive bonuses without worn stats/teleports/ring effects · Multi-region: Karamja hexcrest + Desert focus sight (and spectral lens) feed full; point upgrades are global; stand is Anachronia · Region combo (all required): karamja + desert + morytania + anachronia · Effects: Full: on-task +7.5% damage / +12.5% accuracy for Melee, Magic, and Ranged (Necromancy with ensouled lens), Reinforced: +8% damage / +13% accuracy, Strong: +8.5% / +13.5%, Mighty: +9% / +14%, Corrupted: +9.5% / +14.5% (highest helm tier), Higher tiers improve Defence armour tier and unlock more ferocious-ring fuse capacity",
-      "requirements": [
-        "Base slayer helmet owned",
-        "Hexcrest + focus sight for full slayer helmet (all combat styles at base 7.5%/12.5%)",
-        "Optional ensouled spectral lens for Necromancy on full+",
-        "First upgrades: reinforced 100 pts, strong 400, mighty 600, corrupted 1,000 (+ corrupted gem)",
-        "Re-upgrade costs are 10% of first-upgrade cost after initial purchase",
-        "Defence gates: full 20, reinforced 30, strong 50, mighty/corrupted 70"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Full_slayer_helmet",
-        "title": "Full slayer helmet and point upgrades (reinforced through corrupted)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-slayer-toolbelt-2026-07-26.json"
-    },
-    {
       "id": "multi-region:poh-gilded-altar",
       "name": "POH gilded altar (Chapel offering)",
       "recordType": "activity",
@@ -16360,42 +15991,6 @@
         "source": "runescape-wiki",
         "url": "https://runescape.wiki/w/Gilded_altar",
         "title": "POH gilded altar (Chapel offering)",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-wave4-slayer-rc-prayer-2026-07-26.json"
-    },
-    {
-      "id": "multi-region:prayer-training-infrastructure-stack",
-      "name": "Prayer training infrastructure stack (altars + powders + books)",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin",
-        "forinthry",
-        "desert",
-        "morytania",
-        "asgarnia",
-        "kandarin",
-        "tirannwn"
-      ],
-      "requiredRegions": [],
-      "regionRequirementType": "support",
-      "comboLabel": "Region chain (support pressure): misthalin / forinthry / desert / morytania / asgarnia / kandarin / tirannwn",
-      "isRegionCombo": true,
-      "category": "multi-region Prayer progression package",
-      "detail": "Meta-row for planners. Powder of burials and chaos altar still beat pure bury even when altar access is region-locked · Score each Prayer path by the region that owns its hard gate; this package is the comparison edge, not a free global unlock · Region pressure: Misthalin: Senntisten temple, Fort Forinthry chapel (working taxonomy), Dig Site., Forinthry: Wilderness chaos altars + diary multiplier ladder., Desert: powder of burials / Het's Oasis; Senntisten quest start pressure., Morytania: Ectofuntus classic path + ectophial logistics., Asgarnia/Taverley: open gilded world logistics., Tirannwn: Superheat Form / Elven grimoire book switch",
-      "requirements": [
-        "Piecewise: none for the package itself — each component has its own gates",
-        "POH gilded path: multi-region:poh-gilded-altar",
-        "Ancient Curses combat prayers: misthalin:ancient-curses-senntisten",
-        "Wilderness chaos Offer ladder: Forinthry achievements (see forinthry chaos-altar rows)",
-        "Powder of burials: Desert Het's Oasis whirligig shells",
-        "Ectofuntus / ectophial: Morytania"
-      ],
-      "confidence": "confirmed_wiki_stack",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Gilded_altar",
-        "title": "Prayer training infrastructure stack (altars + powders + books)",
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-wave4-slayer-rc-prayer-2026-07-26.json"
@@ -18690,315 +18285,6 @@
         "verifiedAt": "2026-07-26"
       },
       "sourceFile": "progression-enrichment-regional-skilling-2026-07-25.json"
-    },
-    {
-      "id": "desert:greenfingers-passive",
-      "name": "Greenfingers passive",
-      "recordType": "activity",
-      "regionHints": [
-        "desert"
-      ],
-      "requiredRegions": [
-        "desert"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — permanent Farming unlock",
-      "detail": "7% chance to increase herb, allotment, hops, mushroom and nightshade crop yields. Bought from Sydekix's Shop of Balance in the Garden of Kharid for 30,000 Crux Eqal favour. Replaces the old Greenfingers aura",
-      "requirements": [
-        "30,000 Crux Eqal favour",
-        "Garden of Kharid access (Desert)"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "misthalin:focused-siphoning-passive",
-      "name": "Focused Siphoning passive",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — permanent Runespan unlock",
-      "detail": "7.5% increased Runespan siphoning success. Bought from Wizard Rinsit's Runecrafting Shop on the Wizards' Tower roof for 20,000 Runespan points. Replaces the old Focused Siphoning aura",
-      "requirements": [
-        "20,000 Runespan points",
-        "Wizards' Tower (Misthalin)"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "misthalin:five-finger-discount-passive",
-      "name": "Five-Finger Discount passive",
-      "recordType": "activity",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — permanent Thieving unlock",
-      "detail": "Up to five ranks (+2% pickpocket success each, max +10%) from the Thieves' Guild for pilfer points (also from Heists). Replaces the old Five-Finger Discount aura",
-      "requirements": [
-        "Thieves' Guild (Misthalin)",
-        "1,000 pilfer points per rank"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "desert:vampyrism-aspect",
-      "name": "Vampyrism Aspect",
-      "recordType": "activity",
-      "regionHints": [
-        "desert"
-      ],
-      "requiredRegions": [
-        "desert"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Ancient Magicks combat Aspect",
-      "detail": "Ancient Magicks Aspect (Magic 69): heals 5% of damage dealt (cap 50 LP per hit) for 12 minutes. Only one Aspect can be active. Replaces the Vampyrism combat aura — requires Ancient Magicks",
-      "requirements": [
-        "69 Magic",
-        "Ancient Magicks spellbook (Desert Treasure path)"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:penance-aspect",
-      "name": "Penance Aspect",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Standard spellbook combat Aspect",
-      "detail": "Standard spellbook Aspect (Magic 67): restores Prayer equal to 5% of damage taken (cap 100) for 12 minutes. Only one Aspect can be active. Replaces the Penance combat aura — not elective-region gated",
-      "requirements": [
-        "67 Magic",
-        "Standard spellbook"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "morytania:sunspear-prayer-sustain",
-      "name": "Sunspear Vyre prayer sustain",
-      "recordType": "activity",
-      "regionHints": [
-        "morytania"
-      ],
-      "requiredRegions": [
-        "morytania"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Morytania combat passive",
-      "detail": "Cremating Vyres with Sunspear unlocks prayer restore on Vyre kills (1–5% by cremation ladder). Replaces Harmony / Corruption / Salvation aura prayer sustain",
-      "requirements": [
-        "Sunspear",
-        "Vyre cremation / Columbarium (Morytania)"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "anachronia:totem-of-vitality-browse",
-      "name": "Totem of Vitality (ex-Might of Het aura)",
-      "recordType": "activity",
-      "regionHints": [
-        "anachronia"
-      ],
-      "requiredRegions": [
-        "anachronia"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Anachronia totem",
-      "detail": "+25% maximum life points (cap +1,500). Replaces the Desert Pantheon / Might of Het aura effect. Anachronia totems no longer need weekly charging",
-      "requirements": [
-        "Anachronia base camp / totem system"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:divination-enrichment-progression",
-      "name": "Enriched memory chance (ex-Enrichment aura)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Divination level passive",
-      "detail": "Enriched memory chance scales with Divination level: 2% at 39, 4% at 59, 7% at 79, 10% at 99. Not region-gated",
-      "requirements": [
-        "Divination level thresholds"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:mining-critical-progression",
-      "name": "Mining critical chance (ex-Quarrymaster aura)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Mining level passive",
-      "detail": "+5% Mining critical chance at 59, another +5% at 85 (10% total). Not region-gated",
-      "requirements": [
-        "Mining 59 / 85"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:material-cache-consistency",
-      "name": "Material cache consistency (ex-Resourceful aura)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — Archaeology gathering passive",
-      "detail": "An Archaeology material cache cannot expire on the first two gathers. Not region-gated",
-      "requirements": [
-        "Archaeology material caches"
-      ],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "global:aura-system-removed",
-      "name": "Combat auras removed (Berserker / Maniacal / Reckless…)",
-      "recordType": "activity",
-      "regionHints": [],
-      "requiredRegions": [],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Aura Overhaul — system removal",
-      "detail": "The aura equipment slot's timed combat powers were removed on 13 April 2026. Berserker, Maniacal, Reckless, Mahjarrat, Equilibrium, Dark Magic and many others have no 1:1 replacement. Plan Equilibrium combat without those auras",
-      "requirements": [],
-      "confidence": "confirmed_official_2026",
-      "source": {
-        "source": "jagex",
-        "url": "https://secure.runescape.com/m=news/patch-notes-aura-overhaul",
-        "title": "Patch Notes: Aura Overhaul",
-        "verifiedAt": "2026-04-13"
-      },
-      "sourceFile": "fix-aura-regions-2026.mjs"
-    },
-    {
-      "id": "misthalin:thieves-guild-master-tools",
-      "name": "Master thief's tools",
-      "recordType": "equipment",
-      "regionHints": [
-        "misthalin"
-      ],
-      "requiredRegions": [
-        "misthalin"
-      ],
-      "regionRequirementType": "single",
-      "comboLabel": "",
-      "isRegionCombo": false,
-      "category": "Thieving permanent toolbelt tools",
-      "detail": "Wiki League region for Dodgy Derek / Thieves' Guild is Misthalin (Lumbridge). Required for efficient high-level chests and safecracking/heists. Trahaearn exoskeleton and master camouflage · Not Asgarnia · Effects: Master thief's lockpick: unbreakable lockpick; toolbelt-eligible; +7% chest lock success (vs 3% ordinary lockpick), Master thief's stethoscope: permanent safecracking QoL toolbelt path",
-      "requirements": [
-        "Thieves' Guild access (Buyers and Cellars series)",
-        "Pilfer points for Dodgy Derek purchases (2,500 each for lockpick and stethoscope per wiki shops)"
-      ],
-      "confidence": "confirmed_wiki",
-      "source": {
-        "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Master_thief%27s_lockpick",
-        "title": "Master thief's lockpick + master thief's stethoscope",
-        "verifiedAt": "2026-07-26"
-      },
-      "sourceFile": "progression-enrichment-regional-skilling-misthalin-2026-07-26.json"
     }
   ]
 }

@@ -771,11 +771,6 @@ describe("contentRewardsFull — catalog boss packages", () => {
       },
       { name: "Ruinous weapons", must: [/Ruinous rapier/i, /Ruinous staff/i] },
       {
-        name: "Edgeville resource dungeons",
-        must: [/Limpwurt/i, /ranarr/i],
-        minIcons: 2,
-      },
-      {
         name: "Revenants",
         must: [/Statius/i, /Vesta/i, /Morrigan/i, /Zuriel/i],
         minIcons: 4,
@@ -816,6 +811,12 @@ describe("contentRewardsFull — catalog boss packages", () => {
       for_.upgrades.some((u) => /holy-elixir supply|Resource dungeon unlock map/i.test(u.name)),
     ).toBe(false);
     const region = regionById("forinthry");
+    expect(region.content.some((c) => /Edgeville Dungeon combat|Edgeville resource dungeons/.test(c.name))).toBe(
+      false,
+    );
+    expect(region.upgrades.find((u) => u.name === "Edgeville resource dungeons")?.detail).toMatch(
+      /grimy ranarr.*limpwurt roots/i,
+    );
     expect(region.content.some((c) => c.name === "Forinthry Dungeon")).toBe(false);
   });
 
@@ -930,9 +931,11 @@ describe("contentRewardsFull — catalog boss packages", () => {
 
   it("Infernal Source shows Ancient Summoning, contracts, tetras, and relics", () => {
     const cases: Array<{ region: string; name: string | RegExp }> = [
-      { region: "misthalin", name: "Infernal Source Dig Site" },
       { region: "forinthry", name: /Infernal Source Dig Site/ },
     ];
+    expect(regionById("misthalin").content.some((row) => row.name === "Infernal Source Dig Site")).toBe(
+      false,
+    );
     for (const { region, name } of cases) {
       const { row, upgrades } = contentRow(region, name);
       const full = contentRewardsFull(row, upgrades);
@@ -1037,16 +1040,16 @@ describe("contentRewardsFull — catalog boss packages", () => {
     }
   });
 
-  it("Kandarin PoF, dig-site relics, Freneskae portal, Wizards Guild; Yanille hub gone", () => {
+  it("Kandarin Manor Farm, dig-site relics, Freneskae portal, Wizards Guild; Yanille hub gone", () => {
     const kan = regionById("kandarin");
     expect(kan.content.some((c) => /yanille multi/i.test(c.name))).toBe(false);
     expect(kan.content.some((c) => /Wizards' Guild/i.test(c.name))).toBe(true);
-    expect(kan.content.some((c) => c.name === "Manor Farm animal perks")).toBe(true);
+    expect(kan.content.some((c) => c.name === "Manor Farm")).toBe(true);
     expect(
       kan.content.some((c) => /Freneskae|Nightmare creatures|Muspah|Rune dragons/i.test(c.name)),
     ).toBe(true);
 
-    const pof = contentRow("kandarin", "Player-Owned Farm / Manor Farm");
+    const pof = contentRow("kandarin", "Manor Farm");
     const pofP = presentContentRewards(contentRewardsFull(pof.row, pof.upgrades));
     expect(pofP.icons.length).toBeGreaterThanOrEqual(3);
     expect(pofP.icons.every((i) => publicOk(i.src))).toBe(true);
@@ -1067,7 +1070,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(frenP.icons.length).toBeGreaterThanOrEqual(3);
     expect(frenP.icons.every((i) => publicOk(i.src))).toBe(true);
 
-    const kd = contentRow("kandarin", /Kuradal's Dungeon/);
+    const kd = contentRow("kandarin", "Kuradal");
     const kdP = presentContentRewards(contentRewardsFull(kd.row, kd.upgrades));
     expect(kdP.icons.some((i) => /ferocious-ring/i.test(i.src))).toBe(true);
   });
@@ -1125,7 +1128,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
       { region: "desert", name: "Beastmaster Durzag", min: 3, re: /Achto/i },
       { region: "desert", name: "Yakamaru", min: 3, re: /Achto/i },
       { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil/i },
-      { region: "kandarin", name: /Kuradal's Dungeon/, min: 1, re: /Ferocious ring/i },
+      { region: "kandarin", name: "Kuradal", min: 1, re: /Ferocious ring/i },
       { region: "morytania", name: /Polypore Dungeon/, min: 1, re: /Polypore staff/i },
       { region: "anachronia", name: "Rex Matriarchs", min: 1, re: /Skeka/i },
     ];

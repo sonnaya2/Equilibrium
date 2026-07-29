@@ -327,6 +327,24 @@ const DROP_IDS = new Set([
   "anachronia:herb-bag-skilling-pointer",
   "seedicide-not-daemonheim",
   "desert:no-master-farmer-outfit",
+  "karamja:agility-arena-ticket-exchange",
+  "karamja:banana-plantation",
+  "karamja:calquat-farming-patch",
+  "karamja:deadliest-catch-deposit-boxes",
+  "karamja:hexcrest",
+  "karamja:jadinko-favour-offering-stone",
+  "karamja:jadinko-lair-curly-roots",
+  "karamja:juju-farming-potion-path",
+  "karamja:karamja-volcano-resource-dungeon",
+  "karamja:pirates-hook",
+  "karamja:tzhaar-city-skilling-hub",
+  "karamja:tzhaar-onyx-gem-store",
+  "multi-region:full-slayer-helmet-and-upgrades",
+  "desert:enchanted-water-tiara",
+  "desert:powder-of-burials",
+  "desert:powder-of-penance",
+  "desert:powder-of-pulverising",
+  "multi-region:elite-skilling-outfits-core-set",
   // Area-task overviews retain their multi-region all-required frame.
   "kandarin:warforge-dig-site-boundary",
   "kandarin:fishing-trawler-boundary",
@@ -414,6 +432,15 @@ const DROP_IDS = new Set([
   "misthalin:it-belongs-in-a-museum-log",
   "misthalin:runespan-ethereal-outfits",
   "misthalin:um-ritual-site-infrastructure",
+  "cross-region:ring-of-wealth-relic",
+  "cross-region:prayer-training-infrastructure-stack",
+  "multi-region:prayer-training-infrastructure-stack",
+  "cross-region:tetracompass-and-tomes",
+  "misthalin:runespan-portal",
+  "misthalin:screening-station",
+  "misthalin:skull-sceptre",
+  "misthalin:soul-supplies-and-um-shops",
+  "misthalin:woodcutters-grove-facilities",
   "cross-region:imcando-tools-family",
   "cross-region:poh-portal-towns",
   "misthalin:monolith-energy-research-ladder",
@@ -488,6 +515,26 @@ const DROP_UPGRADE_NAMES = new Set([
   "Jackalope hunting (antler tertiary)",
   "Trader Woes shrine bank chest",
   "Old Meats (Hollow Hill meat shop)",
+  "Agility Arena Ticket Exchange (Pirate Jackie)",
+  "Brimhaven Agility Arena",
+  "Calquat farming patch (Tai Bwo Wannai)",
+  "Classic TzHaar obsidian weapons",
+  "Deadliest Catch skilling deposit boxes",
+  "Fight Cauldron obsidian armour progression",
+  "Full slayer helmet and point upgrades (reinforced through corrupted)",
+  "Herblore Habitat",
+  "Jadinko Favour offering stone",
+  "Jadinko Lair curly roots",
+  "Juju farming potion path (Herblore Habitat)",
+  "Karambwan vessel fishing",
+  "Karamja Volcano resource dungeon",
+  "Musa Point banana plantation",
+  "Musa Point fishing dock and Stiles",
+  "Musa Point free teaks",
+  "Pirate hook (left)",
+  "TokHaar-Kal capes",
+  "TzHaar City skilling hub",
+  "TzHaar-Hur-Lek Ore and Gem Store (uncut onyx)",
   "Shrine of Inanna and Spirit Wolves Summoning hub",
   "Modified artisan's bandana",
   "Modified ritualist's mask",
@@ -504,9 +551,38 @@ const DROP_UPGRADE_NAMES = new Set([
   "Wood box tier upgrades",
   "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
   "Woodcutters' Grove facility tiers",
+  "Ring of Wealth (relic power)",
+  "Tetracompass pieces → ancient caskets → complete tomes",
+  "Runespan portals at Wizards' Tower",
+  "Screening station (Archaeology Campus)",
+  "Skull sceptre",
+  "Soul Supplies and City of Um skilling shops",
+  "Woodcutters' Grove",
+  "Prayer training infrastructure stack (altars + powders + books)",
+  "Deathdealer robe armour (necro power)",
+  "Deathwarden robe armour (necro tank)",
+  "Drygore weapons",
+  "Enchanted water tiara",
+  "Full slayer helmet and point upgrades (reinforced through corrupted)",
+  "Powder of burials",
+  "Powder of penance",
+  "Powder of pulverising",
+  "Elite skilling outfits core set (ironman fragment paths)",
 ]);
 
 const MANUAL_ACTIVITY_ADDITIONS = [
+  {
+    id: "karamja:jadinko-lair",
+    name: "Jadinko Lair",
+    category: "Woodcutting / Jadinko Lair",
+    region_hint: "karamja",
+    unlocks: ["Curly roots for Woodcutting and Firemaking; Jadinko Favour shop for seeds, fruits and outfits"],
+    source_urls: [
+      "https://runescape.wiki/w/Curly_root",
+      "https://runescape.wiki/w/Offering_stone",
+    ],
+    confidence: "confirmed_wiki",
+  },
   {
     id: "havenhythe:marigold-farm-allotments",
     name: "Allotment patches",
@@ -557,6 +633,20 @@ const MANUAL_ACTIVITY_ADDITIONS = [
   },
 ];
 
+const MANUAL_EQUIPMENT_ADDITIONS = [{
+  id: "kandarin:hexcrest",
+  name: "Hexcrest",
+  category: "Slayer helmet Magic component",
+  region_hint: "kandarin",
+  requirements: [
+    "73 Slayer to fight jungle strykewyrms",
+    "20 Magic and 20 Defence to wear",
+  ],
+  unlocks: ["Magic component for the full Slayer helmet with the focus sight"],
+  source_urls: ["https://runescape.wiki/w/Hexcrest"],
+  confidence: "confirmed_wiki",
+}];
+
 const activityMap = new Map();
 const equipmentMap = new Map();
 for (const { name, data } of enrichments) {
@@ -576,6 +666,10 @@ for (const row of MANUAL_ACTIVITY_ADDITIONS) {
   activityMap.set(row.id, normalizeRow(row, "activity", "progression-enrichment-regional-skilling-kandarin-2026-07-26.json"));
 }
 
+for (const row of MANUAL_EQUIPMENT_ADDITIONS) {
+  equipmentMap.set(row.id, normalizeRow(row, "equipment", "manual"));
+}
+
 function mergeMaps(...maps) {
   const out = new Map();
   for (const map of maps) {
@@ -593,6 +687,9 @@ for (const row of mergedById.values()) {
   if (row.id === "misthalin:scripture-of-bik") row.name = "Scripture of Bik";
   if (row.id === "misthalin:thieves-guild-master-tools") row.name = "Master thief's tools";
   if (row.id === "misthalin:five-finger-discount-passive") row.name = "Five-Finger Discount passive";
+  if (row.id === "karamja:brimhaven-agility-arena") {
+    row.detail = "Brimhaven Agility minigame and ticket exchange for Agility lamps, herbs and rewards";
+  }
   if (row.id === "misthalin:woodcutters-grove-facilities") {
     row.name = "Woodcutters' Grove";
     row.category = "Woodcutting hub and Imcando hatchet progression";
@@ -669,6 +766,7 @@ for (const region of catalog.regions || []) {
   const skillingIds = new Set(records.map((r) => r.id));
   region.upgrades = region.upgrades.filter((u) => {
     if (DROP_UPGRADE_NAMES.has(u.name)) return false;
+    if (region.id === "karamja" && u.name === "Hexcrest") return false;
     if (skillingNames.has(u.name)) return false;
     const canon = NAME_CANONICAL.get(String(u.name || "").toLowerCase().trim());
     if (canon && skillingIds.has(canon) && !skillingNames.has(u.name)) return false;

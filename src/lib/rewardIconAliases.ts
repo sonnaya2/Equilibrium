@@ -26,6 +26,10 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "bone rune": skProd("bone-rune"),
   "flesh rune": skProd("flesh-rune"),
   "miasma rune": skProd("miasma-rune"),
+  "artisan's outfit": "/game/upgrades/skilling-outfits/artisans.webp",
+  "modified artisan's bandana": "/game/upgrades/skilling-outfits/modified-artisans-bandana.webp",
+  "ritualist's outfit": "/game/upgrades/skilling-outfits/ritualists.webp",
+  "modified ritualist's mask": perm("modified-ritualists-mask"),
 
   "clean bloodweed": skProd("clean-bloodweed"),
   "grimy bloodweed": skProd("grimy-bloodweed"),
@@ -235,6 +239,19 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
 
   "royal crossbow": prog("royal-crossbow"),
 
+  "seer's headband 4": perm("seers-headband-4"),
+  "enhanced excalibur": perm("enhanced-excalibur"),
+
+  "scrimshaw of cruelty": equip("scrimshaw-of-cruelty"),
+  "scrimshaw of the elements": equip("scrimshaw-of-the-elements"),
+  "scrimshaw of vampyrism": equip("scrimshaw-of-vampyrism"),
+  "scrimshaw of sacrifice": perm("scrimshaw-of-sacrifice"),
+  "gem-finding scrimshaw": perm("gem-finding-gloves"),
+
+  "tetsu armour": equip("tetsu-body"),
+  "death lotus armour": equip("death-lotus-chestplate"),
+  "seasinger's robes": equip("seasingers-robe-top"),
+
   "seismic wand": prog("seismic-wand"),
   "seismic singularity": prog("seismic-singularity"),
   "tectonic energy": prog("tectonic-energy"),
@@ -300,6 +317,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "harmony moss": skProd("harmony-moss"),
   "perfect juju potions": perm("perfect-juju"),
   "perfect juju potion": perm("perfect-juju"),
+  "juju potions": perm("juju-farming"),
   "harmonic dust": skProd("harmonic-dust"),
   "crystal tools": perm("crystal-pickaxe"),
   "crystal pickaxe": perm("crystal-pickaxe"),

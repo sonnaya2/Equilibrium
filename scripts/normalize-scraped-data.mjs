@@ -131,6 +131,23 @@ const DROP_HAVENHYTHE_UPGRADE_NAMES = new Set([
   "Wood box tier upgrades",
   "Tier 3 Woodcutter's Grove and Imcando hatchet fragments",
   "Woodcutters' Grove facility tiers",
+  "Ring of Wealth (relic power)",
+  "Tetracompass pieces → ancient caskets → complete tomes",
+  "Runespan portals at Wizards' Tower",
+  "Screening station (Archaeology Campus)",
+  "Skull sceptre",
+  "Soul Supplies and City of Um skilling shops",
+  "Woodcutters' Grove",
+  "Prayer training infrastructure stack (altars + powders + books)",
+  "Deathdealer robe armour (necro power)",
+  "Deathwarden robe armour (necro tank)",
+  "Drygore weapons",
+  "Enchanted water tiara",
+  "Full slayer helmet and point upgrades (reinforced through corrupted)",
+  "Powder of burials",
+  "Powder of penance",
+  "Powder of pulverising",
+  "Elite skilling outfits core set (ironman fragment paths)",
   "Jackalope familiar (Archaeology soil BoB)",
   "Jackalope hunting (antler tertiary)",
   "Trader Woes shrine bank chest",
@@ -148,6 +165,49 @@ const DROP_HAVENHYTHE_UPGRADE_NAMES = new Set([
 ]);
 
 const DROP_HAVENHYTHE_CONTENT_NAMES = new Set(["Marigold Farm patch cluster"]);
+
+const DROP_MISTHALIN_CONTENT_NAMES = new Set(["Infernal Source Dig Site"]);
+
+const DROP_FORINTHRY_CONTENT_NAMES = new Set([
+  "Edgeville Dungeon combat",
+  "Edgeville resource dungeons",
+  "Green dragons",
+  "Lesser demons",
+]);
+
+const DROP_KARAMJA_CONTENT_NAMES = new Set([
+  "Calquat farming patch",
+  "Jadinko Favour offering stone",
+  "Karamja Volcano resource dungeon",
+  "Musa Point banana plantation",
+  "Shilo Village",
+  "TzHaar City skilling hub",
+]);
+
+const DROP_KARAMJA_UPGRADE_NAMES = new Set([
+  "Agility Arena Ticket Exchange (Pirate Jackie)",
+  "Brimhaven Agility Arena",
+  "Calquat farming patch (Tai Bwo Wannai)",
+  "Classic TzHaar obsidian weapons",
+  "Deadliest Catch skilling deposit boxes",
+  "Fight Cauldron obsidian armour progression",
+  "Full slayer helmet and point upgrades (reinforced through corrupted)",
+  "Hexcrest",
+  "Herblore Habitat",
+  "Jadinko Favour offering stone",
+  "Jadinko Lair curly roots",
+  "Juju farming potion path (Herblore Habitat)",
+  "Karamja overgrown idols (Gara-Dul)",
+  "Karambwan vessel fishing",
+  "Karamja Volcano resource dungeon",
+  "Musa Point banana plantation",
+  "Musa Point fishing dock and Stiles",
+  "Musa Point free teaks",
+  "Pirate hook (left)",
+  "TokHaar-Kal capes",
+  "TzHaar City skilling hub",
+  "TzHaar-Hur-Lek Ore and Gem Store (uncut onyx)",
+]);
 
 const MANUAL_MAJOR_CONTENT = {
   misthalin: [{
@@ -239,6 +299,40 @@ const MANUAL_MAJOR_CONTENT = {
       source: "runescape-wiki",
       url: "https://runescape.wiki/w/Flower_patch",
       title: "Flower patch",
+      verifiedAt: "2026-07-28",
+    },
+  }],
+  karamja: [{
+    name: "Fruit tree patch",
+    kind: "Farming / Herblore Habitat",
+    detail: "Fruit tree patch at Herblore Habitat",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Herblore_Habitat",
+      title: "Herblore Habitat",
+      verifiedAt: "2026-07-28",
+    },
+  }, {
+    name: "Karamja overgrown idols",
+    kind: "Woodcutting / Karamja",
+    detail: "Woodcutting method at overgrown idols with a temporary Woodcutting buff",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Overgrown_idol",
+      title: "Overgrown idol",
+      verifiedAt: "2026-07-28",
+    },
+  }, {
+    name: "Obsidian armour",
+    kind: "Combat / Fight Cauldron",
+    detail: "Obsidian armour crafted from Fight Cauldron shards, with damage reduction against TzHaar, TokHaar and TzekHaar encounters",
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Obsidian_equipment",
+      title: "Obsidian equipment",
       verifiedAt: "2026-07-28",
     },
   }],
@@ -638,13 +732,22 @@ const normalizedRegions = rawRegions.regions.map((region) => {
     ...list(region.bosses_and_combat).map((row) => normalizeContent(region, row, "combat")),
     ...list(region.skilling).map((row) => normalizeContent(region, row, "skilling")),
     ...list(region.power_upgrades).map((row) => normalizeContent(region, row, "upgrade")),
-  ].filter((row) => !DROP_HAVENHYTHE_CONTENT_NAMES.has(row.name));
+  ].filter((row) => {
+    if (regionId === "havenhythe") return !DROP_HAVENHYTHE_CONTENT_NAMES.has(row.name);
+    if (regionId === "misthalin") return !DROP_MISTHALIN_CONTENT_NAMES.has(row.name);
+    if (regionId === "forinthry") return !DROP_FORINTHRY_CONTENT_NAMES.has(row.name);
+    if (regionId === "karamja") return !DROP_KARAMJA_CONTENT_NAMES.has(row.name);
+    return true;
+  });
   for (const row of MANUAL_MAJOR_CONTENT[regionId] ?? []) {
     if (!content.some((existing) => existing.name === row.name)) content.push(row);
   }
   const regionUpgrades = list(upgrades.regions?.[regionId])
     .map((row) => normalizeUpgrade(regionId, row))
-    .filter((row) => !DROP_HAVENHYTHE_UPGRADE_NAMES.has(row.name));
+    .filter((row) => {
+      if (DROP_HAVENHYTHE_UPGRADE_NAMES.has(row.name)) return false;
+      return regionId !== "karamja" || !DROP_KARAMJA_UPGRADE_NAMES.has(row.name);
+    });
   const hardRules = dependencyRows
     .filter((row) => row.required_region === regionId)
     .map((row) => row.planner_rule)
@@ -678,6 +781,77 @@ const normalizedRegions = rawRegions.regions.map((region) => {
     verified: false,
   };
 });
+
+const karamja = normalizedRegions.find((region) => region.id === "karamja");
+if (karamja) {
+  const calquat = karamja.content.find((row) => /Calquat tree patch/i.test(row.name));
+  if (calquat) {
+    calquat.name = "Calquat tree patch";
+    calquat.kind = "Farming / Tai Bwo Wannai";
+    calquat.detail = "The only calquat patch, north of Tai Bwo Wannai";
+    calquat.source = {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Calquat_patch",
+      title: "Calquat patch",
+      verifiedAt,
+    };
+  }
+
+  const habitat = karamja.content.find((row) => row.name === "Herblore Habitat");
+  if (habitat) {
+    habitat.detail = "Southern Karamja hub for Juju potions, Jadinko patches, vine herbs and Papa Mambo's shop";
+  }
+
+  const jadinko = karamja.content.find((row) => /Jadinko Lair curly roots/i.test(row.name));
+  if (jadinko) {
+    jadinko.name = "Jadinko Lair";
+    jadinko.kind = "Woodcutting / Jadinko Lair";
+    jadinko.detail = "Curly roots for Woodcutting and Firemaking; Jadinko Favour shop for seeds, fruits and outfits";
+    jadinko.source = {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Curly_root",
+      title: "Curly root",
+      verifiedAt,
+    };
+  }
+
+  const arena = karamja.content.find((row) => row.name === "Brimhaven Agility Arena");
+  if (arena) arena.detail = "Brimhaven Agility minigame and ticket exchange for Agility lamps, herbs and rewards";
+
+  const obsidian = karamja.content.find((row) => /Fight Cauldron obsidian armour/i.test(row.name));
+  if (obsidian) {
+    obsidian.name = "Obsidian armour";
+    obsidian.kind = "Combat / Fight Cauldron";
+    obsidian.detail = "Obsidian armour crafted from Fight Cauldron shards, with damage reduction against TzHaar, TokHaar and TzekHaar encounters";
+    obsidian.source = {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Obsidian_equipment",
+      title: "Obsidian equipment",
+      verifiedAt,
+    };
+  }
+
+  const harAken = karamja.upgrades.find((row) => row.name === "Har-Aken (Fight Kiln)");
+  if (harAken) harAken.detail = `${harAken.detail} · Unlocks: TokHaar-Kal combat capes from Fight Kiln`;
+}
+
+const kandarin = normalizedRegions.find((region) => region.id === "kandarin");
+if (kandarin && !kandarin.upgrades.some((row) => row.name === "Hexcrest")) {
+  kandarin.upgrades.push({
+    name: "Hexcrest",
+    category: "Slayer helmet Magic component",
+    detail: "Jungle strykewyrm drop used with the focus sight for the full Slayer helmet",
+    requirements: ["73 Slayer to fight jungle strykewyrms", "20 Magic and 20 Defence to wear"],
+    confidence: "confirmed_wiki",
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Hexcrest",
+      title: "Hexcrest",
+      verifiedAt,
+    },
+    regionId: "kandarin",
+  });
+}
 
 const skillMap = new Map();
 for (const method of allTraining) {

@@ -80,7 +80,7 @@ export default function BuildPage() {
 
   return (
     <Page className="!max-w-none !px-0 !py-0">
-      <div className="workbench-fill">
+      <div className="route-fill">
         <BuildPlanner regions={regions} relicTiers={relicTiers} blessingTiers={blessingTiers} />
       </div>
     </Page>

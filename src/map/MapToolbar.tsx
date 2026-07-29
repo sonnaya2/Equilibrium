@@ -26,7 +26,7 @@ function wikiUrlFor(name: string): string {
   return `https://runescape.wiki/w/${encodeURIComponent(name.replace(/ /g, "_"))}`;
 }
 
-export function MapLookChrome() {
+export function MapToolbar() {
   const { focus, nudgeZoom, unframe, setFlatBoard } = useMapFocus();
   const [wiki, setWiki] = useState<WikiArticleTarget | null>(null);
 
@@ -53,20 +53,20 @@ export function MapLookChrome() {
 
   return (
     <>
-      <div className="board-sky__look" aria-live="polite">
-        <div className="board-sky__look-main">
+      <div className="map-layout__look" aria-live="polite">
+        <div className="map-layout__look-main">
           {art ? (
-            <img src={art} alt="" className="board-sky__look-art" width={36} height={36} />
+            <img src={art} alt="" className="map-layout__look-art" width={36} height={36} />
           ) : null}
-          <div className="board-sky__look-copy">
-            <span className="board-sky__look-kicker">{subtitle}</span>
-            <strong className="board-sky__look-title">{lookingAt}</strong>
+          <div className="map-layout__look-copy">
+            <span className="map-layout__look-kicker">{subtitle}</span>
+            <strong className="map-layout__look-title">{lookingAt}</strong>
           </div>
         </div>
-        <div className="board-sky__look-actions" title="WASD pan · drag orbit · scroll zoom">
+        <div className="map-layout__look-actions" title="WASD pan · drag orbit · scroll zoom">
           <button
             type="button"
-            className="board-sky__zoom"
+            className="map-layout__zoom"
             onClick={() => nudgeZoom(-1)}
             disabled={focus.zoom <= ZOOM_MIN}
             title="Zoom out (or scroll)"
@@ -76,7 +76,7 @@ export function MapLookChrome() {
           </button>
           <button
             type="button"
-            className="board-sky__zoom"
+            className="map-layout__zoom"
             onClick={() => nudgeZoom(1)}
             disabled={focus.zoom >= ZOOM_MAX}
             title="Zoom in (or scroll)"
@@ -85,7 +85,7 @@ export function MapLookChrome() {
             +
           </button>
           {focus.framed ? (
-            <button type="button" className="board-sky__look-btn" onClick={() => unframe()}>
+            <button type="button" className="map-layout__look-btn" onClick={() => unframe()}>
               Table
             </button>
           ) : null}
@@ -93,7 +93,7 @@ export function MapLookChrome() {
               aria-pressed carries the "would switch" meaning for a reader. */}
           <button
             type="button"
-            className={`board-sky__look-btn${focus.flat ? " is-on" : ""}`}
+            className={`map-layout__look-btn${focus.flat ? " is-on" : ""}`}
             onClick={() => setFlatBoard(!focus.flat)}
             aria-pressed={focus.flat}
             title={focus.flat ? "Switch to the 3D board" : "Switch to the flat 2D map"}
@@ -102,7 +102,7 @@ export function MapLookChrome() {
           </button>
           <button
             type="button"
-            className="board-sky__look-btn board-sky__look-btn--gem"
+            className="map-layout__look-btn map-layout__look-btn--gem"
             onClick={openWiki}
           >
             Wiki

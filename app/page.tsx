@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import tasksData from "#data/league/tasks.json";
 import catalogData from "#data/research/catalog.json";
 import { Page } from "@/components/Page";
-import { OverviewCourtyard } from "@/components/OverviewCourtyard";
+import { OverviewPlan } from "@/components/OverviewPlan";
 
 export const metadata: Metadata = {
   title: { absolute: "RS3 Equilibrium" },
@@ -30,7 +30,7 @@ function catalogRegionCount(): number {
 export default function OverviewPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
-      <OverviewCourtyard taskTotal={taskListTotal()} catalogCount={catalogRegionCount()} />
+      <OverviewPlan taskTotal={taskListTotal()} catalogCount={catalogRegionCount()} />
     </Page>
   );
 }

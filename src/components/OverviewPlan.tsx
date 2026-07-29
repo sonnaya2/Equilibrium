@@ -20,7 +20,7 @@ function regionLabel(id: string): string {
   return REGION_ANCHOR_BY_ID.get(id as RegionId)?.name ?? id;
 }
 
-export function OverviewCourtyard({
+export function OverviewPlan({
   taskTotal,
   catalogCount,
 }: {
@@ -47,33 +47,33 @@ export function OverviewCourtyard({
 
   return (
     <div className="overview">
-      <header className="overview__lintel">
-        <h2 className="overview__lintel-title">Plan</h2>
-        <p className="overview__lintel-meta">
+      <header className="overview-header">
+        <h2 className="overview-header__title">Plan</h2>
+        <p className="overview-header__meta">
           T1 {t1Fig}
           {" · "}
           tasks {taskFig}
         </p>
       </header>
 
-      <div className="overview__gate">
-        <aside className="overview__jamb overview__jamb--west" aria-label="Region picks">
-          <p className="overview__jamb-label">Picks</p>
+      <div className="overview-summary">
+        <aside className="overview-side overview-side--regions" aria-label="Region picks">
+          <p className="overview-side__label">Picks</p>
           {slots.map((id, i) =>
             id ? (
-              <div key={id} className="overview__standing">
+              <div key={id} className="region-slot">
                 <GameIcon src={regionCrestPath(id)} size={22} className="shrink-0" />
-                <p className="overview__standing-name">{regionLabel(id)}</p>
+                <p className="region-slot__name">{regionLabel(id)}</p>
               </div>
             ) : (
-              <div key={`empty-${i}`} className="overview__standing is-empty">
+              <div key={`empty-${i}`} className="region-slot is-empty">
                 Slot {i + 1}
               </div>
             ),
           )}
         </aside>
 
-        <div className="overview__aperture">
+        <div className="overview-art">
           {/* Keyart fills the aperture; cover + object-position crop for faces. */}
           <img
             src="/brand/keyart-2026.jpg"
@@ -85,35 +85,35 @@ export function OverviewCourtyard({
           />
         </div>
 
-        <aside className="overview__jamb overview__jamb--east" aria-label="Plan milestones">
-          <div className="overview__milestone">
-            <p className="overview__milestone-k">Tasks</p>
-            <p className="overview__milestone-v">
+        <aside className="overview-side overview-side--stats" aria-label="Plan milestones">
+          <div className="overview-stat">
+            <p className="overview-stat__label">Tasks</p>
+            <p className="overview-stat__value">
               {taskDone}
               {taskTotal > 0 ? `/${taskTotal}` : ""}
             </p>
           </div>
-          <div className="overview__milestone">
-            <p className="overview__milestone-k">Catalog</p>
-            <p className="overview__milestone-v">{catalogCount > 0 ? catalogCount : "—"}</p>
+          <div className="overview-stat">
+            <p className="overview-stat__label">Catalog</p>
+            <p className="overview-stat__value">{catalogCount > 0 ? catalogCount : "—"}</p>
           </div>
-          <div className="overview__milestone">
-            <p className="overview__milestone-k">T1</p>
-            <p className={`overview__milestone-v${relicMono ? "" : " is-quiet"}`}>{t1Fig}</p>
+          <div className="overview-stat">
+            <p className="overview-stat__label">T1</p>
+            <p className={`overview-stat__value${relicMono ? "" : " is-quiet"}`}>{t1Fig}</p>
           </div>
-          <div className="overview__milestone">
-            <p className="overview__milestone-k">Blessings</p>
-            <p className="overview__milestone-v is-quiet">—</p>
+          <div className="overview-stat">
+            <p className="overview-stat__label">Blessings</p>
+            <p className="overview-stat__value is-quiet">—</p>
           </div>
         </aside>
       </div>
 
-      <div className="overview__desk">
-        <div className="overview__desk-grid">
-          <div className="slab slab--slate">
-            <div className="slab__head">Ledger</div>
-            <div className="slab__body">
-              <dl className="overview__ledger">
+      <div className="overview-details">
+        <div className="overview-details__grid">
+          <div className="surface-panel surface-panel--muted">
+            <div className="surface-panel__header">Ledger</div>
+            <div className="surface-panel__body">
+              <dl className="overview-facts">
                 <dt>Regions</dt>
                 <dd>
                   {pickNames.length > 0 ? (
@@ -137,17 +137,17 @@ export function OverviewCourtyard({
             </div>
           </div>
 
-          <div className="slab slab--carved">
-            <div className="slab__head">Next</div>
-            <div className="slab__body text-[13px]">
-              <ul className="overview__checks m-0 list-none p-0">
+          <div className="surface-panel surface-panel--emphasized">
+            <div className="surface-panel__header">Next</div>
+            <div className="surface-panel__body text-[13px]">
+              <ul className="overview-details__checks m-0 list-none p-0">
                 {(
                   [
                     [regionsFull, `Regions ${loaded ? picks.length : "…"}/${ELECTIVE_CAP}`],
                     [Boolean(t1Relic), t1Relic ? `T1 ${t1Relic}` : "T1"],
                   ] as const
                 ).map(([ok, label]) => (
-                  <li key={label} className="overview__check">
+                  <li key={label} className="overview-details__check">
                     <span
                       className="font-mono text-[11px]"
                       style={{
@@ -160,7 +160,7 @@ export function OverviewCourtyard({
                   </li>
                 ))}
               </ul>
-              <p className="overview__note">
+              <p className="overview-links">
                 <Link href="/map" className="text-gem-300 hover:underline">
                   Map
                 </Link>
@@ -180,10 +180,10 @@ export function OverviewCourtyard({
             </div>
           </div>
 
-          <div className="slab">
-            <div className="slab__head">Structure</div>
-            <div className="slab__body">
-              <dl className="overview__ledger">
+          <div className="surface-panel">
+            <div className="surface-panel__header">Structure</div>
+            <div className="surface-panel__body">
+              <dl className="overview-facts">
                 <dt>Regions</dt>
                 <dd>2 start + Karamja + 3 electives</dd>
                 <dt>Relics</dt>

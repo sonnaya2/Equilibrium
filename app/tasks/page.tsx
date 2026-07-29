@@ -59,7 +59,7 @@ export default async function TasksPage() {
 
   return (
     <Page className="!max-w-none !px-0 !py-0">
-      <div className="workbench-fill">
+      <div className="route-fill">
         <TaskRecords
           records={records}
           tiers={tasksData.tiers}

@@ -110,16 +110,15 @@ carries its own `SourceReference`.
 Read `skills/equilibrium-ui/SKILL.md` before UI work. Use anti-slop skills as a final fingerprint
 audit, not as a layout generator or a reason to flatten hierarchy and depth.
 
-Visual identity is a **premium public game companion site** (not a developer console). Hybrid
-composition champion (tournament 9.2):
+Visual identity is a **premium public game companion site** (not a developer console):
 
-| Layer | DNA |
+| Area | Direction |
 |---|---|
 | Colors | Editorial (Echo ladder in `@theme`) |
-| Overview | Daylight courtyard / keyart aperture |
-| Map | Editorial Board Sky — 3D top, detail under board, no side inspector |
+| Overview | plan overview / keyart aperture |
+| Map | interactive map board — 3D top, detail under board, no side inspector |
 | Tasks | Reference-led League browser: summary cards · planner filters · spacious task cards · progress rail |
-| Build | Editorial Relic Court (monogram frames until Jagex icons land) |
+| Build | region, relic, and blessing planner (monogram frames until Jagex icons land) |
 | Combat | Crystal desk + Editorial chrome |
 | Data | Lattice + Daylight browse rail + full sources inspector |
 

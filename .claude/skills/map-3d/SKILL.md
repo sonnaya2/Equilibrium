@@ -208,7 +208,7 @@ R3F raycasts in NDC with fresh rects. Hit-testing bugs here are never stale
   flag; the painted face itself does not take rays.
 - Marker handlers must `stopPropagation()`, or the click falls through to the plate.
 - **A board click focuses. It never mutates the build.** Picking a region is an explicit
-  button, in `RegionLedger` and in the inspector header. A click that both framed and
+  button, in `RegionPicker` and in the inspector header. A click that both framed and
   toggled meant every misaimed poke at a marker silently edited persisted state.
   `e2e/map-places.spec.ts` pins this.
 - Anything the frame loop owns (`position.y`, `visible`, `scale`) must **not** also be a
@@ -252,7 +252,7 @@ Prove geometry with `debugGeometry` before polishing anything.
 
 ## Accessibility surface
 
-`RegionLedger` owns the route's keyboard and screen-reader surface, and every assertion
+`RegionPicker` owns the route's keyboard and screen-reader surface, and every assertion
 in `e2e/map.spec.ts`. Nothing inside the canvas is focusable and nothing there carries a
 region's accessible name — a second match is a Playwright strict-mode failure. The
 inspector's place chips are the keyboard route to every pin; do not build a third list.

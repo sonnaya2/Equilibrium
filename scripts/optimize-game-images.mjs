@@ -109,11 +109,15 @@ function pool(items, limit, worker) {
   });
 }
 
+function webpDestination(absPath) {
+  const ext = extname(absPath).toLowerCase();
+  return join(dirname(absPath), `${basename(absPath, ext)}.webp`);
+}
+
 async function optimizeOne(absPath, treeRoot) {
   const rel = relative(treeRoot, absPath).split(sep).join("/");
   const ext = extname(absPath).toLowerCase();
-  const base = basename(absPath, ext);
-  const dest = join(dirname(absPath), `${base}.webp`);
+  const dest = webpDestination(absPath);
   const before = statSync(absPath).size;
   const cap = maxEdge(rel);
 
@@ -247,6 +251,22 @@ async function main() {
     const files = walk(tree);
     console.log(`${r}: ${files.length} rasters`);
     for (const f of files) all.push({ f, tree });
+  }
+
+  const sourceByDestination = new Map();
+  for (const { f } of all) {
+    const destination = webpDestination(f).toLowerCase();
+    const sources = sourceByDestination.get(destination) || [];
+    sources.push(f);
+    sourceByDestination.set(destination, sources);
+  }
+  const collisions = [...sourceByDestination.values()].filter((sources) => sources.length > 1);
+  if (collisions.length) {
+    throw new Error(
+      `Multiple source images target the same WebP:\n${collisions
+        .map((sources) => sources.map((source) => `  ${relative(ROOT, source)}`).join("\n"))
+        .join("\n")}\nRename portrait and icon sources before optimizing.`,
+    );
   }
 
   console.log(

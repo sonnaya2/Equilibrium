@@ -170,3 +170,4 @@ scripts/_*.py
 # Restore a local copy if you need npm run normalize:data.
 # ---------------------------------------------------------------------------
 scraped-data/
+assets/manifest.generated.json

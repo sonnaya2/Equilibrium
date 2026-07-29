@@ -1,4 +1,4 @@
-.board-sky {
+.map-layout {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -6,7 +6,7 @@
   min-height: 0;
 }
 
-.board-sky__board {
+.map-layout__board {
   position: relative;
   display: flex;
   flex: 1 1 auto;
@@ -20,7 +20,7 @@
   box-shadow: inset 0 0 0 1px rgb(224 178 100 / 7%);
 }
 
-.board-sky__scene-slot {
+.map-layout__scene-slot {
   position: relative;
   display: flex;
   flex: 1 1 auto;
@@ -28,7 +28,7 @@
   min-height: 0;
 }
 
-.board-sky__scene {
+.map-layout__scene {
   position: relative;
   display: flex;
   flex: 1 1 auto;
@@ -36,21 +36,21 @@
   min-height: 0;
 }
 
-.board-sky__canvas-host {
+.map-layout__canvas-host {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
 
-.board-sky__canvas-host > :first-child {
+.map-layout__canvas-host > :first-child {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.board-sky__credit {
+.map-layout__credit {
   position: absolute;
   right: 0.45rem;
   bottom: 0.35rem;
@@ -64,7 +64,7 @@
   pointer-events: none;
 }
 
-.board-sky__look {
+.map-layout__look {
   position: absolute;
   left: 0.5rem;
   top: 0.5rem;
@@ -82,14 +82,14 @@
   pointer-events: auto;
 }
 
-.board-sky__look-main {
+.map-layout__look-main {
   display: flex;
   align-items: center;
   gap: 0.45rem;
   min-width: 0;
 }
 
-.board-sky__look-art {
+.map-layout__look-art {
   width: 36px;
   height: 36px;
   flex-shrink: 0;
@@ -98,20 +98,20 @@
   object-fit: contain;
 }
 
-.board-sky__look-copy {
+.map-layout__look-copy {
   display: grid;
   gap: 0.05rem;
   min-width: 0;
 }
 
-.board-sky__look-kicker {
+.map-layout__look-kicker {
   color: var(--color-parch-400);
   font-size: 0.625rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.board-sky__look-title {
+.map-layout__look-title {
   overflow: hidden;
   color: var(--color-parch-50);
   font-family: var(--font-display);
@@ -122,14 +122,14 @@
   white-space: nowrap;
 }
 
-.board-sky__look-actions {
+.map-layout__look-actions {
   display: flex;
   align-items: center;
   gap: 0.3rem;
   margin-left: auto;
 }
 
-.board-sky__zoom {
+.map-layout__zoom {
   width: 1.75rem;
   height: 1.75rem;
   border: 1px solid var(--color-stone-750);
@@ -141,17 +141,17 @@
   cursor: pointer;
 }
 
-.board-sky__zoom:hover:not(:disabled) {
+.map-layout__zoom:hover:not(:disabled) {
   border-color: var(--color-gem-600);
   color: var(--color-gem-200);
 }
 
-.board-sky__zoom:disabled {
+.map-layout__zoom:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.board-sky__look-btn {
+.map-layout__look-btn {
   height: 1.75rem;
   padding: 0 0.55rem;
   border: 1px solid var(--color-stone-750);
@@ -165,25 +165,25 @@
   cursor: pointer;
 }
 
-.board-sky__look-btn:hover {
+.map-layout__look-btn:hover {
   color: var(--color-parch-50);
 }
 
-.board-sky__look-btn.is-on {
+.map-layout__look-btn.is-on {
   border-color: var(--color-gem-500);
   background: rgb(12 34 30 / 88%);
 }
 
-.board-sky__look-btn--gem {
+.map-layout__look-btn--gem {
   border-color: rgb(46 160 110 / 45%);
   color: var(--color-gem-200);
 }
 
-.board-sky__look-btn--gem:hover {
+.map-layout__look-btn--gem:hover {
   border-color: var(--color-gem-500);
 }
 
-.board-sky__under {
+.map-layout__under {
   display: flex;
   flex: 0 1 auto;
   flex-direction: column;
@@ -196,11 +196,11 @@
   background: var(--color-stone-950);
 }
 
-.board-sky__ledger {
+.map-layout__ledger {
   max-height: none;
 }
 
-.board-sky__rail-label {
+.map-layout__rail-label {
   margin: 0;
   color: var(--color-parch-400);
   font-size: 0.65rem;
@@ -209,7 +209,7 @@
   text-transform: uppercase;
 }
 
-.board-sky__regions-head {
+.map-layout__regions-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -217,7 +217,7 @@
   margin-bottom: 0.4rem;
 }
 
-.board-sky__clear {
+.map-layout__clear {
   margin-left: auto;
   padding: 0.22rem 0.48rem;
   border: 1px solid var(--color-stone-750);
@@ -230,17 +230,17 @@
   cursor: pointer;
 }
 
-.board-sky__clear:hover:not(:disabled) {
+.map-layout__clear:hover:not(:disabled) {
   border-color: var(--color-stone-carve);
   color: var(--color-parch-50);
 }
 
-.board-sky__clear:disabled {
+.map-layout__clear:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.board-sky__region-chips {
+.map-layout__region-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.28rem;
@@ -249,11 +249,11 @@
   list-style: none;
 }
 
-.board-sky__region-chips li {
+.map-layout__region-chips li {
   min-width: 0;
 }
 
-.board-sky__region-chip {
+.map-layout__region-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
@@ -271,11 +271,11 @@
   cursor: pointer;
 }
 
-.board-sky__region-crest {
+.map-layout__region-crest {
   opacity: 0.92;
 }
 
-.board-sky__region-name {
+.map-layout__region-name {
   min-width: 0;
   overflow: hidden;
   font-weight: 500;
@@ -283,16 +283,16 @@
   white-space: nowrap;
 }
 
-.board-sky__region-chip:hover:not([aria-disabled="true"]) {
+.map-layout__region-chip:hover:not([aria-disabled="true"]) {
   border-color: var(--color-stone-carve);
   color: var(--color-parch-50);
 }
 
-.board-sky__region-chip:hover:not([aria-disabled="true"]) .board-sky__region-crest {
+.map-layout__region-chip:hover:not([aria-disabled="true"]) .map-layout__region-crest {
   opacity: 1;
 }
 
-.board-sky__region-chip.is-picked {
+.map-layout__region-chip.is-picked {
   border-color: var(--color-gem-500);
   background: color-mix(in srgb, var(--color-stone-800) 88%, var(--color-gem-500) 12%);
   box-shadow:
@@ -301,38 +301,38 @@
   color: var(--color-gem-300);
 }
 
-.board-sky__region-chip.is-picked .board-sky__region-crest {
+.map-layout__region-chip.is-picked .map-layout__region-crest {
   opacity: 1;
 }
 
-.board-sky__region-chip.is-focus {
+.map-layout__region-chip.is-focus {
   box-shadow:
     inset 0 0 0 1px var(--color-gem-400),
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
 }
 
-.board-sky__region-chip.is-picked.is-focus {
+.map-layout__region-chip.is-picked.is-focus {
   border-color: var(--color-gem-400);
   box-shadow:
     inset 0 0 0 1px var(--color-gem-400),
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 22%, transparent);
 }
 
-.board-sky__region-chip[aria-disabled="true"]:not(.is-picked) {
+.map-layout__region-chip[aria-disabled="true"]:not(.is-picked) {
   opacity: 0.55;
   cursor: not-allowed;
 }
 
-.board-sky__region-chip[aria-disabled="true"].is-picked {
+.map-layout__region-chip[aria-disabled="true"].is-picked {
   cursor: pointer;
 }
 
-.board-sky__region-chip.is-locked:not(.is-picked) {
+.map-layout__region-chip.is-locked:not(.is-picked) {
   color: var(--color-parch-300);
   opacity: 0.72;
 }
 
-.board-sky__lock {
+.map-layout__lock {
   flex-shrink: 0;
   color: var(--color-parch-400);
   font-size: 0.58rem;
@@ -341,7 +341,7 @@
   text-transform: uppercase;
 }
 
-.board-sky__places {
+.map-layout__places {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
@@ -350,12 +350,12 @@
   padding: 0.1rem 0;
 }
 
-.board-sky__places .board-sky__rail-label {
+.map-layout__places .map-layout__rail-label {
   flex: 0 0 auto;
   line-height: 1.4;
 }
 
-.board-sky__place-chips {
+.map-layout__place-chips {
   display: flex;
   gap: 0.3rem;
   min-width: 0;
@@ -363,7 +363,7 @@
   scrollbar-width: thin;
 }
 
-.board-sky__place-chip {
+.map-layout__place-chip {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   overflow: hidden;
@@ -382,20 +382,20 @@
     background-color 120ms ease;
 }
 
-.board-sky__place-chip:hover,
-.board-sky__place-chip.is-lit {
+.map-layout__place-chip:hover,
+.map-layout__place-chip.is-lit {
   border-color: var(--color-stone-carve);
   color: var(--color-parch-50);
 }
 
-.board-sky__place-chip.is-on,
-.board-sky__place-chip[aria-pressed="true"] {
+.map-layout__place-chip.is-on,
+.map-layout__place-chip[aria-pressed="true"] {
   border-color: var(--color-gem-500);
   background: var(--color-stone-800);
   color: var(--color-gem-300);
 }
 
-.board-sky__dossier-band {
+.map-layout__dossier-band {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -406,32 +406,32 @@
   background: var(--color-stone-900);
 }
 
-.board-sky__dossier-copy {
+.map-layout__dossier-copy {
   flex: 1 1 14rem;
   min-width: 0;
 }
 
-.board-sky__pin-meter {
+.map-layout__pin-meter {
   flex: 0 0 auto;
   min-width: 7.5rem;
   text-align: right;
 }
 
-.board-sky__pin-track {
+.map-layout__pin-track {
   display: flex;
   gap: 0.2rem;
   justify-content: flex-end;
   margin-top: 0.35rem;
 }
 
-.board-sky__pin-seg {
+.map-layout__pin-seg {
   width: 0.55rem;
   height: 0.22rem;
   border-radius: 1px;
   background: var(--color-stone-750);
 }
 
-.board-sky__pin-seg.is-on {
+.map-layout__pin-seg.is-on {
   background: var(--color-gem-400);
 }
 

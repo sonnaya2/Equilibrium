@@ -226,14 +226,14 @@ textarea {
     padding: 0.55rem 0.65rem;
   }
 
-  .slab {
+  .surface-panel {
     border: 1px solid var(--color-stone-750);
     border-radius: 2px;
     background: var(--color-stone-850);
     box-shadow: inset 0 1px 0 var(--color-stone-carve);
   }
 
-  .slab--carved {
+  .surface-panel--emphasized {
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-toplight) 14%, var(--color-stone-raised)) 0%,
@@ -247,11 +247,11 @@ textarea {
       inset 0 -1px 0 color-mix(in srgb, var(--color-stone-950) 50%, transparent);
   }
 
-  .slab--slate {
+  .surface-panel--muted {
     background: color-mix(in srgb, var(--color-stone-inset) 40%, var(--color-stone-850));
   }
 
-  .slab__head {
+  .surface-panel__header {
     padding: 0.4rem 0.65rem;
     border-bottom: 1px solid var(--color-stone-750);
     background: color-mix(in srgb, var(--color-stone-900) 55%, transparent);
@@ -260,11 +260,11 @@ textarea {
     font-weight: 500;
   }
 
-  .slab__body {
+  .surface-panel__body {
     padding: 0.55rem 0.65rem;
   }
 
-  .seg {
+  .ui-seg {
     display: flex;
     flex-wrap: wrap;
     gap: 0;
@@ -272,7 +272,7 @@ textarea {
     background: var(--color-stone-900);
   }
 
-  .seg__btn {
+  .ui-seg__btn {
     padding: 0.5rem 0.85rem;
     border: 0;
     border-bottom: 2px solid transparent;
@@ -282,7 +282,7 @@ textarea {
     cursor: pointer;
   }
 
-  .seg__btn.is-active {
+  .ui-seg__btn.is-active {
     border-bottom-color: var(--color-gem-400);
     background: color-mix(in srgb, var(--color-stone-850) 80%, var(--color-interactive-surface));
     color: var(--color-gem-300);
@@ -408,7 +408,7 @@ textarea {
     text-transform: uppercase;
   }
 
-  .field-inset {
+  .ui-field {
     border: 1px solid var(--color-stone-750);
     background: var(--color-stone-inset);
     color: var(--color-parch-50);
@@ -535,7 +535,7 @@ textarea {
   }
 }
 
-.workbench-fill {
+.route-fill {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -545,17 +545,17 @@ textarea {
   padding: clamp(0.75rem, 1.25vw, 1.5rem);
 }
 
-.workbench-fill:has(> .tasks-page) {
+.route-fill:has(> .tasks-page) {
   max-width: 1920px;
 }
 
-.workbench-fill:has(> .data-screen) {
+.route-fill:has(> .data-screen) {
   height: calc(100svh - 3.25rem);
   min-height: calc(100svh - 3.25rem);
   overflow: hidden;
 }
 
-.workbench-fill:has(> .combat-screen) {
+.route-fill:has(> .combat-screen) {
   width: 100%;
   max-width: min(1840px, 100%);
   height: calc(100svh - 3.25rem);
@@ -564,28 +564,28 @@ textarea {
   overflow: hidden;
 }
 
-.workbench-fill > .tasks-gallery,
-.workbench-fill > .combat-screen,
-.workbench-fill > .data-screen {
+.route-fill > .tasks-gallery,
+.route-fill > .combat-screen,
+.route-fill > .data-screen {
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: 0;
 }
 
-.workbench-fill:has(> .data-screen) > .data-screen {
+.route-fill:has(> .data-screen) > .data-screen {
   flex: 1 1 0;
   overflow: hidden;
 }
 
-.workbench-fill:has(> .combat-screen) > .combat-screen {
+.route-fill:has(> .combat-screen) > .combat-screen {
   flex: 1 1 0;
   min-height: 0;
   overflow: hidden;
 }
 
 @media (max-width: 850px) {
-  .workbench-fill:has(> .combat-screen) {
+  .route-fill:has(> .combat-screen) {
     height: auto;
     min-height: calc(100svh - 3.25rem);
     max-height: none;
@@ -603,7 +603,7 @@ textarea {
     padding-inline: 0.62rem;
   }
 
-  .workbench-fill:has(> .combat-screen) {
+  .route-fill:has(> .combat-screen) {
     padding-inline: 0.35rem;
   }
 }
@@ -622,7 +622,7 @@ textarea {
     overflow: hidden;
   }
 
-  .map-shell > :not(.board-sky) {
+  .map-shell > :not(.map-layout) {
     flex-shrink: 0;
   }
 }

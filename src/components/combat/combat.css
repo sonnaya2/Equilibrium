@@ -67,7 +67,7 @@ body:has(.combat-screen) {
   height: 100%;
 }
 
-.combat-screen > .seg {
+.combat-screen > .ui-seg {
   flex-wrap: nowrap;
   padding-inline: 0.35rem;
   border: 1px solid var(--combat-gold-mid);
@@ -78,7 +78,7 @@ body:has(.combat-screen) {
     inset 0 1px 0 rgb(201 154 89 / 12%);
 }
 
-.combat-screen > .seg .seg__btn {
+.combat-screen > .ui-seg .ui-seg__btn {
   min-width: 6.5rem;
   padding: 0.75rem 1.25rem 0.68rem;
   border-right: 1px solid var(--combat-gold-dim);
@@ -90,7 +90,7 @@ body:has(.combat-screen) {
   color: var(--combat-text);
 }
 
-.combat-screen > .seg .seg__btn.is-active {
+.combat-screen > .ui-seg .ui-seg__btn.is-active {
   border-bottom-color: var(--combat-teal);
   background: linear-gradient(180deg, rgb(37 205 181 / 10%), transparent 75%), var(--combat-raised);
   box-shadow:
@@ -1471,7 +1471,7 @@ body:has(.combat-screen) {
 }
 
 @media (max-width: 720px) {
-  .combat-screen > .seg .seg__btn {
+  .combat-screen > .ui-seg .ui-seg__btn {
     min-width: auto;
     padding-inline: 0.85rem;
   }

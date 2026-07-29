@@ -1,10 +1,6 @@
 import type { ReactNode } from "react";
 
-/**
- * Workbench shell (Control Surface winner): fluid width, not a blog column.
- * max-w-[1600px] keeps lines readable on ultra-wide while filling 1440p.
- * `wide` drops the cap for routes whose subject is the width (the map board).
- */
+/** Shared route width and gutters. */
 export function Page({
   children,
   className = "",
@@ -12,8 +8,7 @@ export function Page({
 }: {
   children: ReactNode;
   className?: string;
-  /** Drops the reading cap. For routes whose subject *is* the width — the map
-   *  board is the product's centrepiece and every pixel of it is information. */
+  /** Drops the reading cap for full-width routes such as the map. */
   wide?: boolean;
 }) {
   return (

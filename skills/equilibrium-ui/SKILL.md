@@ -47,12 +47,12 @@ Catch recognizable generated shortcuts without flattening the product into a wir
 
 | Route | Production direction |
 |---|---|
-| `/` | Daylight courtyard and working plan status; no marketing hero |
-| `/map` | Editorial Board Sky; 3D board above ledger and detail; no side inspector |
+| `/` | plan overview and working plan status; no marketing hero |
+| `/map` | interactive map board; 3D board above ledger and detail; no side inspector |
 | `/tasks` | Modern League task browser described below |
-| `/build` | Editorial Relic Court with real art or honest monograms |
-| `/combat` | Crystal workbench with clear calculation hierarchy |
-| `/data` | Research lattice and browse rail with a complete sources inspector |
+| `/build` | region, relic, and blessing planner with real art or honest monograms |
+| `/combat` | combat calculator with clear calculation hierarchy |
+| `/data` | regional research browser with a complete sources inspector |
 | `/sources` | Quiet provenance and credits |
 
 Do not force one route's composition onto another. In particular, Data's twin-desk/table language does not constrain Tasks.

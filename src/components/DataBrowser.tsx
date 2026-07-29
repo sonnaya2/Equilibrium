@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react";
 import type { ResearchRegion } from "@/research/catalog";
-import { WorkbenchPanel, WorkbenchTabs } from "./WorkbenchTabs";
+import { WorkbenchPanel, SectionTabs } from "./SectionTabs";
 import "./data.css";
 
 const DataRegionContext = createContext<ResearchRegion | null>(null);
@@ -57,7 +57,7 @@ const TABS = [
 type TabId = (typeof TABS)[number]["id"];
 
 /** Active tab only. */
-export function DataWorkbench({
+export function DataBrowser({
   browse,
   quests,
   progression,
@@ -89,10 +89,10 @@ export function DataWorkbench({
   return (
     <div className="data-screen flex min-h-0 flex-1 flex-col">
       {regionRail}
-      <WorkbenchTabs aria-label="Data" tabs={TABS} active={tab} onChange={setTab} />
+      <SectionTabs aria-label="Data" tabs={TABS} active={tab} onChange={setTab} />
 
       <DataRegionContext.Provider value={region}>
-        <div className="data-workbench__panels flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="data-browser__panels flex min-h-0 flex-1 flex-col overflow-hidden">
           <WorkbenchPanel id="browse" active={tab} clip>
             {browse}
           </WorkbenchPanel>

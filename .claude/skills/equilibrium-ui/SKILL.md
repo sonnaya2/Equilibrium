@@ -104,7 +104,7 @@ One chrome accent. Order blue in particular must never become a button or active
 | Piece | Path | Job |
 |---|---|---|
 | `Page` | `src/components/Page.tsx` | Fluid workbench shell (`max-w-[1600px]`) |
-| `WorkbenchTabs` | `src/components/WorkbenchTabs.tsx` | Gem-active tablist for Data/Build/etc. |
+| `SectionTabs` | `src/components/SectionTabs.tsx` | Gem-active tablist for Data/Build/etc. |
 | Concepts lab | `app/concepts/` | Design tournament only — not primary nav |
 | `PageHeading` | `src/components/Heading.tsx` | Gold display title + optional note |
 | `Nav` | `src/components/Nav.tsx` | Brand + six primary links |
@@ -133,7 +133,7 @@ EQUILIBRIUM   Overview  Map  Tasks  Build  Combat  Data   (+ /sources footer)
 | Route | Working surface |
 |---|---|
 | `/` | League status + planner link list + systems table (opens on facts, not a pitch) |
-| `/map` | `RegionPlanner`: board (`MapLoader`→3D/`FlatBoard`) + `RegionLedger` rail + `RegionInspector` |
+| `/map` | `RegionPlanner`: board (`MapLoader`→3D/`FlatBoard`) + `RegionPicker` rail + `RegionDetails` |
 | `/tasks` | Task records (empty Equilibrium list may fall back to Catalyst test data when enabled) |
 | `/build` | `BuildPlanner`: region hexes, relic/blessing lattices, share link — same `useBuild` as map |
 | `/combat` | Tabs: Quick · Build · Rotation · Analysis · Reference |
@@ -256,7 +256,7 @@ Verdicts so losses are not rebuilt.
 - **Honeycomb offset harms tabular meaning** on blessing columns — keep tiers aligned; offset only the region hive.
 - **Vine frame — instrument, not décor.** Bound to pick count; one transition on change.
 - **Overview is status + systems table**, not a marketing landing.
-- **Control Surface shell — tournament winner (9.1/10, round 1).** Fluid `max-w-[1600px]` workbench; Data/Build use gem-active tabs with mount-active-only panels; tree+table+inspector DNA. Ship debt: more crests in dense trees. Lab archive: `/concepts`.
+- **Control Surface shell — tournament winner (9.1/10, round 1).** Fluid `max-w-[1600px]` workbench; Data/Build use gem-active tabs with mount-active-only panels; tree+table+inspector structure. Ship debt: more crests in dense trees. Lab archive: `/concepts`.
 
 
 ## What not to do

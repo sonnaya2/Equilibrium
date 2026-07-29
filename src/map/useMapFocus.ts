@@ -247,7 +247,7 @@ export function useMapFocus() {
     () => state,
     () => SERVER_SNAPSHOT,
   );
-  // Module-level actions stay identity-stable for effect deps (PlaceRail hover clear).
+  // Module-level actions stay identity-stable for effect deps (PlaceList hover clear).
   return {
     focus,
     focusRegion,

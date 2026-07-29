@@ -58,7 +58,7 @@ test("region detail joins against verified data", async ({ page }) => {
   await expect(panel.getByRole("columnheader", { name: "Boss" })).toBeVisible();
   await expect(panel.locator("tbody tr").first()).toBeVisible();
   // Date stays a pattern: pinning it makes every data sync fail this test.
-  // RegionInspector is section[aria-label="Region detail"][aria-live] under the board stack.
+  // RegionDetails is section[aria-label="Region detail"][aria-live] under the board stack.
   await expect(
     page.locator("section[aria-live]").getByText(/sources? · verified \d{4}-\d{2}-\d{2}/),
   ).toBeVisible();

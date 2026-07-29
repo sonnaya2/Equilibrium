@@ -34,7 +34,7 @@ import { safeWikiPage } from "@/lib/wikiArticle";
 import { WikiArticleDialog, type WikiArticleTarget } from "@/components/WikiArticleDialog";
 import { compareLocale, type SortDir } from "./DataTableOrganize";
 import { clipProse } from "./ResearchSection";
-import { useDataRegion } from "./DataWorkbench";
+import { useDataRegion } from "./DataBrowser";
 
 const SOURCE_LABEL: Record<SourceReference["source"], string> = {
   "runescape-wiki": "Wiki",
@@ -743,13 +743,13 @@ export function ResearchBrowser({
             onChange={(event) => setQuery(event.target.value)}
             placeholder={`Search ${selectedRegion?.name ?? "region"}`}
             aria-label="Search this region"
-            className="field-inset data-browser__search"
+            className="ui-field data-browser__search"
           />
           <select
             value={sortMode}
             onChange={(event) => setSortMode(event.target.value as "name" | "catalog")}
             aria-label="Sort mode"
-            className="field-inset data-browser__sort"
+            className="ui-field data-browser__sort"
           >
             <option value="name">Name</option>
             <option value="catalog">As listed</option>

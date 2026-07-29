@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { DataWorkbench } from "@/components/DataWorkbench";
+import { DataBrowser } from "@/components/DataBrowser";
 import { DataRegionRail, ResearchBrowser } from "@/components/ResearchBrowser";
 import type { ResearchCatalog } from "@/research/catalog";
 
@@ -97,7 +97,7 @@ const ArchaeologyProductionResearch = dynamic(
     })),
   { ssr: false, loading: panelFallback },
 );
-export function DataWorkbenchHost({
+export function DataBrowserHost({
   catalog,
 }: {
   catalog: ResearchCatalog;
@@ -106,7 +106,7 @@ export function DataWorkbenchHost({
   const region = catalog.regions.find((item) => item.id === regionId) ?? catalog.regions[0] ?? null;
 
   return (
-    <DataWorkbench
+    <DataBrowser
       region={region}
       regionRail={
         <DataRegionRail catalog={catalog} regionId={region?.id ?? ""} onChange={setRegionId} />

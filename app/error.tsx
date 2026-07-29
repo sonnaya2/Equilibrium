@@ -16,9 +16,9 @@ export default function Error({
 
   return (
     <div className="px-3 py-3">
-      <section className="slab max-w-sm">
-        <div className="slab__head">Page error</div>
-        <div className="slab__body space-y-2">
+      <section className="surface-panel max-w-sm">
+        <div className="surface-panel__header">Page error</div>
+        <div className="surface-panel__body space-y-2">
           <p className="text-sm text-parch-300">Try again, or open Overview or Map.</p>
           {error.digest ? (
             <p className="font-mono text-xs text-parch-500">Ref {error.digest}</p>

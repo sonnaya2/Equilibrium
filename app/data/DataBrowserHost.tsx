@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { DataBrowser } from "@/components/DataBrowser";
 import { DataRegionRail, ResearchBrowser } from "@/components/ResearchBrowser";
-import type { ResearchCatalog } from "@/research/catalog";
+import type { ResearchCatalogIndex } from "@/research/catalog";
+import { useResearchRegion } from "@/research/regionStore";
 
 const panelFallback = () => (
   <p className="py-6 text-xs text-parch-300" aria-busy="true">
@@ -100,26 +101,30 @@ const ArchaeologyProductionResearch = dynamic(
 export function DataBrowserHost({
   catalog,
 }: {
-  catalog: ResearchCatalog;
+  catalog: ResearchCatalogIndex;
 }) {
   const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
-  const region = catalog.regions.find((item) => item.id === regionId) ?? catalog.regions[0] ?? null;
+  const { region, error } = useResearchRegion(regionId);
 
   return (
     <DataBrowser
       region={region}
       regionRail={
-        <DataRegionRail catalog={catalog} regionId={region?.id ?? ""} onChange={setRegionId} />
+        <DataRegionRail regions={catalog.regions} regionId={regionId} onChange={setRegionId} />
       }
       browse={
-        <ResearchBrowser
-          catalog={catalog}
-          skillDetails={{
-            archaeology: <ArchaeologyProductionResearch />,
-            magic: <MagicResearch />,
-            prayer: <PrayerResearch />,
-          }}
-        />
+        error ? (
+          <p className="px-4 py-6 text-sm text-red-300">{error}</p>
+        ) : (
+          <ResearchBrowser
+            skills={catalog.skills}
+            skillDetails={{
+              archaeology: <ArchaeologyProductionResearch />,
+              magic: <MagicResearch />,
+              prayer: <PrayerResearch />,
+            }}
+          />
+        )
       }
       quests={<QuestBrowser />}
       progression={<ProgressionResearch />}

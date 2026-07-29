@@ -4,7 +4,8 @@
  */
 
 import type { RegionId } from "@/league";
-import { getResearchCatalog } from "@/research/catalog";
+import { SKILL_ICON_SLUGS } from "@/lib/dataIconIndex";
+import type { ResearchRegion } from "@/research/catalog";
 
 export type ContentBucket = "boss" | "skilling" | "area";
 export type UpgradeBucket = "gear" | "skillItem";
@@ -68,17 +69,12 @@ const BOSS_WORDS = [
   "wilderness",
 ];
 
-/** Skill names double as content kinds ("Hunter", "Fishing", "Agility", ...). */
-const SKILL_NAMES = new Set(
-  getResearchCatalog().skills.map((skill) => skill.name.toLowerCase()),
-);
-
 function classifyContent(kind: string): ContentBucket {
   const k = kind.toLowerCase();
   // Boss terms take precedence in mixed labels such as "skilling boss".
   if (BOSS_WORDS.some((word) => k.includes(word))) return "boss";
-  if (k.includes("skilling") || SKILL_NAMES.has(k)) return "skilling";
-  if (SKILL_NAMES.has(k.split(/[/ ]/)[0])) return "skilling";
+  if (k.includes("skilling") || SKILL_ICON_SLUGS.has(k)) return "skilling";
+  if (SKILL_ICON_SLUGS.has(k.split(/[/ ]/)[0])) return "skilling";
   return "area";
 }
 
@@ -132,59 +128,52 @@ function row(entry: {
   };
 }
 
-const catalog = getResearchCatalog();
+export function makeRegionDetail(region: ResearchRegion): RegionDetail {
+  const skillNames = new Set(region.skills.map((skill) => skill.toLowerCase()));
+  const content = region.content.map(row);
+  const buckets = region.content.map((entry) => {
+    const kind = entry.kind ?? "";
+    const bucket = classifyContent(kind);
+    if (bucket !== "area") return bucket;
+    const normalized = kind.toLowerCase();
+    return skillNames.has(normalized) || skillNames.has(normalized.split(/[/ ]/)[0])
+      ? "skilling"
+      : "area";
+  });
+  const upgrades = region.upgrades.map(row);
+  const upgradeBuckets = region.upgrades.map((entry) => classifyUpgrade(entry.category ?? ""));
+  const training: TrainingRow[] = region.training.map((method) => ({
+    id: method.id,
+    skill: method.skill,
+    method: method.method,
+    levelRange: method.levelRange ?? "",
+    xpRate: method.xpRate ?? "",
+    intensity: method.intensity ?? "",
+    location: method.location ?? "",
+    requirements: method.requirements ?? [],
+    regionLocked: Boolean(method.hardRegionRequirement),
+    note: method.note ?? "",
+    warning: method.warning ?? "",
+    confidence: method.confidence ?? "",
+    sourceUrl: method.source?.url ?? null,
+  }));
 
-/** getResearchCatalog already resolves trainingMethodIds into region.training,
- *  but drops which skill each method belongs to; recover it from the skill tree. */
-const SKILL_BY_METHOD_ID = new Map(
-  catalog.skills.flatMap((skill) => (skill.methods ?? []).map((method) => [method.id, skill.name])),
-);
-
-export const REGION_DETAIL: ReadonlyMap<RegionId, RegionDetail> = new Map(
-  catalog.regions.map((region) => {
-    const content = region.content.map(row);
-    const buckets = region.content.map((entry) => classifyContent(entry.kind ?? ""));
-    const upgrades = region.upgrades.map(row);
-    const upgradeBuckets = region.upgrades.map((entry) => classifyUpgrade(entry.category ?? ""));
-
-    const training: TrainingRow[] = (region.training ?? []).map((m) => {
-      return (
-        {
-          id: m.id,
-          skill: SKILL_BY_METHOD_ID.get(m.id) ?? "",
-          method: m.method,
-          levelRange: m.levelRange ?? "",
-          xpRate: m.xpRate ?? "",
-          intensity: m.intensity ?? "",
-          location: m.location ?? "",
-          requirements: m.requirements ?? [],
-          regionLocked: Boolean(m.hardRegionRequirement),
-          note: m.note ?? "",
-          warning: m.warning ?? "",
-          confidence: m.confidence ?? "",
-          sourceUrl: m.source?.url ?? null,
-        }
-      );
-    });
-
-    const detail: RegionDetail = {
-      id: region.id as RegionId,
-      bosses: content.filter((_, i) => buckets[i] === "boss"),
-      skilling: content.filter((_, i) => buckets[i] === "skilling"),
-      otherContent: content.filter((_, i) => buckets[i] === "area"),
-      gear: upgrades.filter((_, i) => upgradeBuckets[i] === "gear"),
-      skillItems: upgrades.filter((_, i) => upgradeBuckets[i] === "skillItem"),
-      training,
-      areas: region.areas ?? [],
-      skills: region.skills ?? [],
-      hardRules: region.hardRules ?? [],
-      warnings: region.warnings ?? [],
-      sourceCount: (region.source ? 1 : 0) + region.content.filter((c) => c.source).length,
-      verifiedAt: region.source?.verifiedAt ?? null,
-    };
-    return [detail.id, detail];
-  }),
-);
+  return {
+    id: region.id as RegionId,
+    bosses: content.filter((_, index) => buckets[index] === "boss"),
+    skilling: content.filter((_, index) => buckets[index] === "skilling"),
+    otherContent: content.filter((_, index) => buckets[index] === "area"),
+    gear: upgrades.filter((_, index) => upgradeBuckets[index] === "gear"),
+    skillItems: upgrades.filter((_, index) => upgradeBuckets[index] === "skillItem"),
+    training,
+    areas: region.areas,
+    skills: region.skills,
+    hardRules: region.hardRules,
+    warnings: region.warnings,
+    sourceCount: (region.source ? 1 : 0) + region.content.filter((entry) => entry.source).length,
+    verifiedAt: region.source?.verifiedAt ?? null,
+  };
+}
 
 /** Exposed for the test, which checks the rules cover every kind in the store. */
 export const _classify = { classifyContent, classifyUpgrade };

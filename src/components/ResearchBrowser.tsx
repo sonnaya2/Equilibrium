@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type {
-  ResearchCatalog,
   ResearchRegion,
+  ResearchRegionSummary,
   ResearchSkill,
+  ResearchSkillSummary,
   ResearchTrainingMethod,
   SourceReference,
 } from "@/research/catalog";
@@ -13,7 +14,6 @@ import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "@/components/GameIcon";
 
 import {
-  bossIconPath,
   dataEntityIconPath,
   regionCrestPath,
   skillIconPath,
@@ -286,13 +286,8 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
                 </thead>
                 <tbody>
                   {region.content.map((row, index) => {
-                    // Major unlocks Name column: official boss plates when the row is a boss
-                    // (kind is often "Elder God Wars Dungeon" / place tags, not "boss").
                     const displayName = contentName(row.name);
-                    const iconSrc =
-                      bossIconPath(row.name) ??
-                      bossIconPath(displayName) ??
-                      dataEntityIconPath({ name: row.name, kind: row.kind });
+                    const iconSrc = dataEntityIconPath({ name: row.name, kind: row.kind });
                     // Icons from full Unlocks/Effects; +N only for capped resolved overflow.
                     const presented = presentContentRewards(
                       contentRewardsFull(row, region.upgrades),
@@ -532,11 +527,11 @@ function methodSearchText(method: ResearchTrainingMethod): string {
 }
 
 export function DataRegionRail({
-  catalog,
+  regions,
   regionId,
   onChange,
 }: {
-  catalog: ResearchCatalog;
+  regions: ResearchRegionSummary[];
   regionId: string;
   onChange: (regionId: string) => void;
 }) {
@@ -546,22 +541,20 @@ export function DataRegionRail({
   const unlockedIds = useMemo(() => {
     if (!loaded || !mineOnly) return null;
     return new Set(
-      catalog.regions.map((r) => r.id as RegionId).filter((id) => isRegionUnlocked(build, id)),
+      regions.map((r) => r.id as RegionId).filter((id) => isRegionUnlocked(build, id)),
     );
-  }, [build, catalog.regions, loaded, mineOnly]);
+  }, [build, loaded, mineOnly, regions]);
 
   const filteredRegions = useMemo(() => {
-    if (!unlockedIds) return catalog.regions;
-    return catalog.regions.filter((region) => unlockedIds.has(region.id as RegionId));
-  }, [catalog.regions, unlockedIds]);
+    if (!unlockedIds) return regions;
+    return regions.filter((region) => unlockedIds.has(region.id as RegionId));
+  }, [regions, unlockedIds]);
 
   const toggleMineOnly = () => {
     const next = !mineOnly;
     setMineOnly(next);
     if (next && loaded && !isRegionUnlocked(build, regionId as RegionId)) {
-      const first = catalog.regions.find((region) =>
-        isRegionUnlocked(build, region.id as RegionId),
-      );
+      const first = regions.find((region) => isRegionUnlocked(build, region.id as RegionId));
       if (first) onChange(first.id);
     }
   };
@@ -577,13 +570,13 @@ export function DataRegionRail({
               type="button"
               role="option"
               aria-selected={active}
-              aria-label={`${cleanText(region.name)}, ${region.training.length} training methods`}
+              aria-label={`${cleanText(region.name)}, ${region.training} training methods`}
               onClick={() => onChange(region.id)}
               className={`data-region-tile${active ? " is-on" : ""}`}
             >
               <GameIcon src={regionCrestPath(region.id)} size={26} />
               <span className="data-region-tile__name">{cleanText(region.name)}</span>
-              <span className="data-region-tile__count">{region.training.length}</span>
+              <span className="data-region-tile__count">{region.training}</span>
             </button>
           );
         })}
@@ -606,13 +599,13 @@ export function DataRegionRail({
 }
 
 export function ResearchBrowser({
-  catalog,
+  skills,
   skillDetails,
 }: {
-  catalog: ResearchCatalog;
+  skills: ResearchSkillSummary[];
   skillDetails: Partial<Record<string, ReactNode>>;
 }) {
-  const selectedRegion = useDataRegion() ?? catalog.regions[0];
+  const selectedRegion = useDataRegion();
   const [query, setQuery] = useState("");
   const [skillId, setSkillId] = useState("");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -629,13 +622,13 @@ export function ResearchBrowser({
     for (const method of selectedRegion.training) {
       if (method.skill) names.add(method.skill.toLowerCase());
     }
-    return catalog.skills.filter(
+    return skills.filter(
       (skill) =>
         names.has(skill.name.toLowerCase()) ||
         names.has(skill.id.toLowerCase()) ||
         skill.id in skillDetails,
     );
-  }, [catalog.skills, selectedRegion, skillDetails]);
+  }, [selectedRegion, skillDetails, skills]);
 
   const selectedSkill = regionSkills.find((skill) => skill.id === skillId) ?? null;
 
@@ -683,6 +676,7 @@ export function ResearchBrowser({
     if (!selectedRegion || !selectedSkill || !filteredRegion) return null;
     return {
       ...selectedSkill,
+      regions: [selectedRegion.id],
       methods: filteredRegion.training.filter(
         (method) => method.skill.toLowerCase() === selectedSkill.name.toLowerCase(),
       ),

@@ -171,9 +171,6 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Necromantic Rune Temple" })).toMatch(
       /necromantic-rune-temple\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Fairy ring network (Zanaris hub)" })).toBe(
-      "/game/activities/zanaris.webp",
-    );
     expect(dataEntityIconPath({ name: "Sanctum of Rebirth uniques" })).toBe(
       "/game/bosses/nakatra.webp",
     );
@@ -251,6 +248,37 @@ describe("gameArt", () => {
     );
   });
 
+  it("uses Desert reward icons instead of place screenshots", () => {
+    const cases = [
+      [
+        "Citharede Abbey",
+        "Quest / combat abilities",
+        "/game/upgrades/skilling-production/illuminated-book-of-wisdom.webp",
+      ],
+      ["Het's Oasis", "skilling hub", "/game/upgrades/permanent-unlocks/powder-of-burials.webp"],
+      [
+        "Kharid-et Dig Site",
+        "Archaeology dig site progression",
+        "/game/upgrades/permanent-unlocks/pontifex-observation-ring.webp",
+      ],
+      ["Liberation of Mazcab", "Raid", "/game/combat/equipment/achto-teralith-cuirass.webp"],
+      [
+        "Mage Training Arena",
+        "Magic minigame",
+        "/game/upgrades/skilling-production/bones-to-peaches.webp",
+      ],
+      [
+        "Mazcab Emergency Merchants",
+        "combat supply shop",
+        "/game/upgrades/permanent-unlocks/super-restore.webp",
+      ],
+    ] as const;
+
+    for (const [name, kind, expected] of cases) {
+      expect(dataEntityIconPath({ name, kind })).toBe(expected);
+    }
+  });
+
   it("resolves Anachronia major unlocks without skill-glyph theft", () => {
     expect(
       dataEntityIconPath({
@@ -264,7 +292,7 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Dream of Iaia" })).toMatch(/dream-of-iaia\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Orthen Dig Site" })).toMatch(/orthen-dig/);
     expect(dataEntityIconPath({ name: "Ranch Out of Time (Anachronia Dinosaur Farm)" })).toMatch(
-      /ranch-out-of-time\.(webp|png)$/,
+      /big-game-hunter\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Herby Werby herb bag skilling unlock" })).toMatch(
       /herby-werby\.(webp|png)$/,
@@ -308,6 +336,15 @@ describe("gameArt", () => {
     );
     expect(dataEntityIconPath({ name: "Moonrise Dig Site" })).toMatch(
       /moonrise-dig-site\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Spirit moths (Highweald charm supply)" })).toMatch(
+      /charming-moths\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Uncommon gem rocks", kind: "Mining / Wendlewick Deserted Mine" })).toMatch(
+      /wendlewick-deserted-mine\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Tear of Inanna" })).toMatch(
+      /tear-of-inanna\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Masterwork Ranged Armour materials" })).toMatch(
       /masterwork-ranged-body\.(webp|png)$/,
@@ -595,6 +632,7 @@ describe("gameArt", () => {
     const must: Array<[string, RegExp]> = [
       ["Nature's sentinel outfit", /natures-sentinel\.(webp|png)$/],
       ["Master camouflage outfit", /master-camouflage\.(webp|png)$/],
+      ["Constructor's outfit", /constructors-outfit\.(webp|png)$/],
       ["Master constructor's outfit", /master-constructors-outfit\.(webp|png)$/],
       ["Master farmer outfit", /master-farmer\.(webp|png)$/],
       ["First age outfit", /first-age\.(webp|png)$/],

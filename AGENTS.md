@@ -34,6 +34,10 @@ Global anti-slop skills now multi-product route: EverSense Print/pink notes do n
 v4 `@theme` is correct. Claude `frontend-design` is craft only (no marketing hero). Context7 for
 library APIs (Next/Tailwind/R3F), not palette.
 
+**Comment hygiene.** Keep comments for non-obvious mechanics, compatibility, safety, provenance, or
+tool directives. Remove agent/prompt/pass/reviewer notes, implementation history, decorative
+headings, and prose that only restates the code.
+
 ## Gotchas
 
 **Deploys are automatic.** The Vercel project is git-connected, so any push to `main` ships to
@@ -114,19 +118,19 @@ Visual identity is a **premium public game companion site** (not a developer con
 
 | Area | Direction |
 |---|---|
-| Colors | Editorial (Echo ladder in `@theme`) |
+| Colors | Warm Editorial tokens in `@theme` |
 | Overview | plan overview / keyart aperture |
 | Map | interactive map board — 3D top, detail under board, no side inspector |
 | Tasks | Reference-led League browser: summary cards · planner filters · spacious task cards · progress rail |
 | Build | region, relic, and blessing planner (monogram frames until Jagex icons land) |
-| Combat | Crystal desk + Editorial chrome |
-| Data | Lattice + Daylight browse rail + full sources inspector |
+| Combat | combat calculator with clear calculation hierarchy |
+| Data | regional research browser with full sources inspector |
 
-Gem = interactive chrome only; gold = display; path triad = data. Route references may expand
-surface depth and spacing without inheriting obsolete concept-lab compositions.
+Gem marks interactive state; gold marks display headings; path colors carry data meaning only.
+Keep route-specific spacing and depth without reviving retired layouts.
 
-Three references, zero clones: **2026 RS keyart / stone UI**, **RuneScape Wiki** density, **game
-crests/icons**. No third-party tool layout clones.
+Visual references: **2026 RS keyart / stone UI**, **RuneScape Wiki** density, and **game
+crests/icons**. Do not clone third-party tool layouts.
 
 **Art and design are separate rules, and only one of them is a ban.**
 
@@ -153,7 +157,7 @@ EQUILIBRIUM     Overview  Map  Tasks  Build  Combat  Data
 ```
 
 `Build` holds Regions, Relics and Blessings (no Gear tab). `Combat` holds Quick, Setup, Analysis,
-Rotation. Tasks uses a wide, polished card browser—not a dense table, twin desk, or generic checklist.
+Rotation. Tasks uses a wide, polished card browser—not a dense table or generic checklist.
 While Equilibrium has no published list it may show Catalyst stand-in data, unmistakably marked as
 temporary test data. Do not fabricate categories, milestones, rewards, or unlock rules.
 

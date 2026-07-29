@@ -1,8 +1,3 @@
-/**
- * Gem-pip progress in the league's hexagon motif.
- * mode="progress"  — filled pips glow gem (things earned).
- * mode="structure" — all pips dim (tiers that exist in the league).
- */
 export function Pips({
   total,
   filled = 0,

@@ -19,11 +19,11 @@ import { BEVEL, PLATE_DEPTH, plateBaseY } from "./plateHeight";
 import { useMapFocus } from "./useMapFocus";
 import { pokeMapActivity, pokeMapBloom } from "./mapPerf";
 
-/** Chamfer on the top edge — a fabricated relief map, not a cut of foamboard. */
+/** Top-edge chamfer in world units. */
 const BEVEL_SIZE = 0.0012;
-/** Unlock: grey peels out from centre with a green ring — seconds for full cover. */
+/** Unlock sweep duration. */
 const SWEEP_SECONDS = 3.2;
-/** Rings under this world area are lattice dust; drawing them costs more than they read. */
+/** Cull sub-pixel coastline rings. */
 const MIN_RING_AREA = 2e-6;
 
 function buildPlateGeometry(rings: PlateRing[], depth: number) {

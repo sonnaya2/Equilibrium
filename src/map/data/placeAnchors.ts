@@ -207,7 +207,6 @@ export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "karamja", area: "Duradel", site: true },
   { region: "karamja", area: "TzHaar Fight Cave", site: true },
   { region: "karamja", area: "Fight Kiln", site: true },
-  { region: "karamja", area: "Fight Cauldron", site: true },
   { region: "karamja", area: "Brimhaven Agility Arena", site: true },
   { region: "karamja", area: "Nature altar", site: true },
   { region: "karamja", area: "Jadinko Lair", site: true },

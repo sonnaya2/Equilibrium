@@ -26,7 +26,6 @@ const KEEP_ASGARNIA_HARD = new Set([
   "asgarnia:plank-maker-machine",
   "asgarnia:automatic-hide-tanner",
   "asgarnia:crystal-tool-siphon-blueprint",
-  "asgarnia:arc-journal-teletabs",
   "asgarnia:waiko-grill",
   "asgarnia:arc-skilling-access",
 ]);
@@ -123,7 +122,7 @@ function isInventionManufactureRow(row) {
     )
   ) {
     // Exclude pure Arc / diary / non-invent host rows that only mention invent in passing
-    if (/arc journal|waiko grill|scrimshaw|essence of finality/i.test(name)) return false;
+    if (/waiko grill|scrimshaw|essence of finality/i.test(name)) return false;
     return /invention|gizmo|augment|siphon|workbench|blueprint/i.test(name + cat + detail);
   }
   return false;
@@ -838,7 +837,7 @@ if (asgRegion) {
     };
     // Keep real Asgarnia place names / guild
     if (
-      /Invention Guild|Alchemiser|Auto disassembler|hide tanner|Plank maker|Partial potion producer|generators|crystal tool siphon|Waiko|Arc journal/i.test(
+      /Invention Guild|Alchemiser|Auto disassembler|hide tanner|Plank maker|Partial potion producer|generators|crystal tool siphon|Waiko/i.test(
         u.name || "",
       )
     ) {

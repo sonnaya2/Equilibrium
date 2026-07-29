@@ -115,12 +115,44 @@ export interface ResearchCatalog {
   skills: ResearchSkill[];
 }
 
+export interface ResearchRegionSummary {
+  id: string;
+  name: string;
+  availability: string;
+  training: number;
+}
+
+export interface ResearchSkillSummary {
+  id: string;
+  name: string;
+}
+
+export interface ResearchCatalogIndex {
+  snapshotDate: string;
+  regions: ResearchRegionSummary[];
+  skills: ResearchSkillSummary[];
+}
+
 interface NormalizedRegion extends Omit<ResearchRegion, "training"> {
   trainingMethodIds: string[];
 }
 
 interface NormalizedCatalog extends Omit<ResearchCatalog, "regions"> {
   regions: NormalizedRegion[];
+}
+
+export function getResearchCatalogIndex(): ResearchCatalogIndex {
+  const source = normalizedSource as NormalizedCatalog;
+  return {
+    snapshotDate: source.snapshotDate,
+    regions: source.regions.map((region) => ({
+      id: region.id,
+      name: region.name,
+      availability: region.availability,
+      training: region.trainingMethodIds.length,
+    })),
+    skills: source.skills.map(({ id, name }) => ({ id, name })),
+  };
 }
 
 export function getResearchCatalog(): ResearchCatalog {

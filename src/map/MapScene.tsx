@@ -36,8 +36,7 @@ function rendererFor(
       await r.init();
       return r;
     } catch (err) {
-      // A rejected promise stuck in the WeakMap permanently poisons this canvas
-      // — adapter present, init dead. Drop it so a remount can retry or fall back.
+      // Remove failed initialization so a remount can retry or use the flat fallback.
       if (canvas) RENDERERS.delete(canvas);
       onFail?.();
       throw err;
@@ -47,7 +46,6 @@ function rendererFor(
   return made;
 }
 
-/** Re-render the demand-driven canvas when the build changes. */
 function InvalidateOnBuild() {
   const invalidate = useThree((s) => s.invalidate);
   const { build } = useBuild();
@@ -57,7 +55,6 @@ function InvalidateOnBuild() {
   return null;
 }
 
-/** Starts the demand loop on mount. */
 function KickFirstFrame() {
   const invalidate = useThree((s) => s.invalidate);
   useEffect(() => {
@@ -69,18 +66,13 @@ function KickFirstFrame() {
 }
 
 export default function MapScene() {
-  // Require a real WebGPU adapter; Three otherwise falls back to WebGL2.
   const [supported, setSupported] = useState<boolean | null>(null);
-  // Renderer initialization failures use the flat fallback.
   const failRef = useRef(() => setSupported(false));
   failRef.current = () => setSupported(false);
   const { focus, unframe } = useMapFocus();
   const reducedMotion = useReducedMotion();
-  // Cache the renderer promise per R3F canvas. StrictMode can replay mounts while
-  // init is pending; a second init on the same canvas leaves events on a stale root.
-  // R3F does not dispose custom WebGPU renderers, so the WeakMap owns the lifetime.
+  // Reuse the renderer during StrictMode remounts; parallel initialization breaks R3F events.
 
-  // Skip WebGPU when the flat board is the active mobile planner.
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 760px)");
@@ -106,7 +98,6 @@ export default function MapScene() {
       .catch(() => setSupported(false));
   }, [narrow]);
 
-  // Explicit flat mode bypasses adapter probing and fallback messaging.
   if (focus.flat) {
     return (
       <div className="map-layout__scene">
@@ -118,8 +109,7 @@ export default function MapScene() {
   }
 
   if (supported === null) {
-    // Flat raster during the adapter probe so the cell is never an empty void
-    // if the probe stalls. WebGPU path replaces this once the adapter resolves.
+    // Keep the flat board visible while WebGPU adapter detection is pending.
     return (
       <div className="map-layout__scene" aria-hidden="true">
         <div className="map-layout__canvas-host">
@@ -160,15 +150,9 @@ export default function MapScene() {
           // aliasing into visible shimmer under the demand loop.
           dpr={[1, 1.5]}
           frameloop="demand"
-          // Printed map, not outdoor HDR. R3F defaults to ACES filmic which
-          // crushed midtones on LDR wiki albedos under the sparse light rig —
-          // FlatBoard stayed bright while the 3D path went muddy.
+          // Flat tone mapping preserves the LDR Wiki raster's midtones.
           flat
-          // Opens wide and a little low; CameraRig settles it onto the table
-          // shot as the intro descent, or cuts straight there under reduced
-          // motion. Perspective, because a straight-down orthographic board
-          // hides every bit of the depth this map is built out of.
-          // near 0.02 — deep zoom (ZOOM_MAX 10) shortens the sphere; 0.05 clipped.
+          // Perspective preserves relief; near 0.02 prevents clipping at maximum zoom.
           camera={{ position: [0.6, 1.9, 2.1], fov: 34, near: 0.02, far: 20 }}
           onPointerMissed={unframe}
           gl={(props) =>
@@ -177,9 +161,7 @@ export default function MapScene() {
         >
           <color attach="background" args={[OCEAN_HORIZON]} />
 
-          {/* The raster, the field, the atlas and the plate rings all suspend.
-              Without a boundary inside the canvas that throw escapes to the
-              route and takes the whole page down instead of the board. */}
+          {/* Keep map-asset suspension inside the canvas. */}
           <Suspense fallback={null}>
             <MapTable reducedMotion={reducedMotion} />
           </Suspense>

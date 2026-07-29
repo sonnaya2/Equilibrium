@@ -200,7 +200,7 @@ const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "tool_bonuses", label: "Tools" },
   { key: "familiar_bonuses", label: "Familiars" },
   { key: "migration", label: "If you owned the aura" },
-  { key: "rules", label: "How it works" },
+  { key: "rules", label: "Rules" },
   { key: "account_rule", label: "Account" },
   { key: "stand_rule", label: "Stand" },
   { key: "tier_1_rule", label: "Tier 1" },

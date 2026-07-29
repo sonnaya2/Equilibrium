@@ -1044,15 +1044,6 @@
       "fileTitle": "Frozen Waste Plateau.png"
     },
     {
-      "id": "activities-ghouls",
-      "label": "Ghouls",
-      "category": "rs3/activities",
-      "path": "assets/rs3/activities/ghouls",
-      "search": "Ghouls inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Ghouls",
-      "fileTitle": "Ghouls.png"
-    },
-    {
       "id": "activities-gilded-altar",
       "label": "Gilded Altar",
       "category": "rs3/activities",
@@ -1949,14 +1940,6 @@
       "path": "assets/rs3/activities/prifddinas",
       "search": "Prifddinas image",
       "canonicalPage": "https://runescape.wiki/w/Prifddinas"
-    },
-    {
-      "id": "activity-ranch-out-of-time",
-      "label": "Ranch Out of Time",
-      "category": "rs3/activities",
-      "path": "assets/rs3/activities/ranch-out-of-time",
-      "search": "Ranch Out of Time image",
-      "canonicalPage": "https://runescape.wiki/w/Ranch_Out_of_Time"
     },
     {
       "id": "activity-rise-of-the-six",
@@ -4328,24 +4311,6 @@
           "search": "Rewards Trader inventory icon",
           "canonicalPage": "https://runescape.wiki/w/Rewards_Trader",
           "fileTitle": "Rewards Trader.png"
-        }
-      ]
-    },
-    {
-      "id": "u40-sacred-forge",
-      "label": "Sacred Forge",
-      "category": "rs3/activities",
-      "path": "assets/rs3/activities/sacred-forge",
-      "fileTitle": "Sacred Forge.png",
-      "canonicalPage": "https://runescape.wiki/w/Sacred_Forge",
-      "search": "Sacred Forge Camdozaal",
-      "aliases": [
-        "activities-sacred-forge"
-      ],
-      "provenanceAlternates": [
-        {
-          "id": "activities-sacred-forge",
-          "search": "Sacred Forge inventory icon"
         }
       ]
     },
@@ -14788,16 +14753,6 @@
       "search": "Ragefire Boots inventory icon"
     },
     {
-      "id": "bulk42-upgrades-permanent-unlocks-ranch-out-of-time",
-      "label": "Ranch Out of Time",
-      "category": "rs3/upgrades/permanent-unlocks",
-      "path": "assets/rs3/upgrades/permanent-unlocks/ranch-out-of-time",
-      "fileTitle": "Ranch Out of Time.png",
-      "canonicalPage": "https://runescape.wiki/w/Ranch_Out_of_Time",
-      "sourcePage": "https://runescape.wiki/w/File:Ranch_Out_of_Time.png",
-      "search": "Ranch Out of Time inventory icon"
-    },
-    {
       "id": "bulk42-upgrades-permanent-unlocks-rapid-renewal",
       "label": "Rapid Renewal",
       "category": "rs3/upgrades/permanent-unlocks",
@@ -17090,15 +17045,6 @@
       "fileTitle": "Antipoison Totem.png"
     },
     {
-      "id": "upgrades-permanent-unlocks-arc-journal",
-      "label": "Arc Journal",
-      "category": "rs3/upgrades/permanent-unlocks",
-      "path": "assets/rs3/upgrades/permanent-unlocks/arc-journal",
-      "search": "Arc Journal inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Arc_Journal",
-      "fileTitle": "Arc Journal.png"
-    },
-    {
       "id": "upgrades-permanent-unlocks-arcane-sigil",
       "label": "Arcane Sigil",
       "category": "rs3/upgrades/permanent-unlocks",
@@ -17142,15 +17088,6 @@
       "search": "Ardougne Cloak 1 inventory icon",
       "canonicalPage": "https://runescape.wiki/w/Ardougne_Cloak_1",
       "fileTitle": "Ardougne Cloak 1.png"
-    },
-    {
-      "id": "upgrades-permanent-unlocks-artisans-workshop-reward-shop",
-      "label": "Artisans Workshop Reward Shop",
-      "category": "rs3/upgrades/permanent-unlocks",
-      "path": "assets/rs3/upgrades/permanent-unlocks/artisans-workshop-reward-shop",
-      "search": "Artisans Workshop Reward Shop inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Artisans_Workshop_Reward_Shop",
-      "fileTitle": "Artisans Workshop Reward Shop.png"
     },
     {
       "id": "upgrades-permanent-unlocks-asgarnia-safecracking",
@@ -17367,15 +17304,6 @@
       "search": "Bonecrusher Maul inventory icon",
       "canonicalPage": "https://runescape.wiki/w/Bonecrusher_Maul",
       "fileTitle": "Bonecrusher Maul.png"
-    },
-    {
-      "id": "upgrades-permanent-unlocks-botanists-amulet",
-      "label": "Botanists Amulet",
-      "category": "rs3/upgrades/permanent-unlocks",
-      "path": "assets/rs3/upgrades/permanent-unlocks/botanists-amulet",
-      "search": "Botanists Amulet inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Botanists_Amulet",
-      "fileTitle": "Botanists Amulet.png"
     },
     {
       "id": "upgrades-permanent-unlocks-botanists-outfit",
@@ -17712,12 +17640,12 @@
     },
     {
       "id": "upgrades-permanent-unlocks-constructors-outfit",
-      "label": "Constructors Outfit",
+      "label": "Constructor's hat",
       "category": "rs3/upgrades/permanent-unlocks",
       "path": "assets/rs3/upgrades/permanent-unlocks/constructors-outfit",
-      "search": "Constructors Outfit inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Constructors_Outfit",
-      "fileTitle": "Constructors Outfit.png"
+      "search": "Constructor's hat inventory icon",
+      "canonicalPage": "https://runescape.wiki/w/Constructor%27s_outfit",
+      "fileTitle": "Constructor's hat.png"
     },
     {
       "id": "upgrades-permanent-unlocks-contraband-yak",
@@ -17815,8 +17743,8 @@
       "category": "rs3/upgrades/permanent-unlocks",
       "path": "assets/rs3/upgrades/permanent-unlocks/crystal-tool-siphon-blueprint",
       "search": "Crystal Tool Siphon Blueprint inventory icon",
-      "canonicalPage": "https://runescape.wiki/w/Crystal_Tool_Siphon_Blueprint",
-      "fileTitle": "Crystal Tool Siphon Blueprint.png"
+      "canonicalPage": "https://runescape.wiki/w/Crystal_tool_siphon",
+      "fileTitle": "Crystal tool siphon.png"
     },
     {
       "id": "upgrades-permanent-unlocks-crystal-tree",
@@ -24657,6 +24585,16 @@
       "search": "Dragon Chainbody inventory icon"
     },
     {
+      "id": "bulk42-upgrades-skilling-production-dragon-kiteshield",
+      "label": "Dragon Kiteshield",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/dragon-kiteshield",
+      "fileTitle": "Dragon kiteshield.png",
+      "canonicalPage": "https://runescape.wiki/w/Dragon_kiteshield",
+      "sourcePage": "https://runescape.wiki/w/File:Dragon_kiteshield.png",
+      "search": "Dragon kiteshield inventory icon"
+    },
+    {
       "id": "bulk42-upgrades-skilling-production-drygore-longsword",
       "label": "Drygore Longsword",
       "category": "rs3/upgrades/skilling-production",
@@ -27739,6 +27677,87 @@
       "fileTitle": "Havensilver ore.png",
       "canonicalPage": "https://runescape.wiki/w/Havensilver_ore",
       "sourcePage": "https://runescape.wiki/w/File:Havensilver_ore.png"
+    },
+    {
+      "id": "skilling-production-extreme-attack",
+      "label": "Extreme attack",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-attack",
+      "fileTitle": "Extreme attack (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_attack",
+      "sourcePage": "https://runescape.wiki/w/File:Extreme_attack_(1).png"
+    },
+    {
+      "id": "skilling-production-extreme-strength",
+      "label": "Extreme strength",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-strength",
+      "fileTitle": "Extreme strength (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_strength",
+      "sourcePage": "https://runescape.wiki/w/File:Extreme_strength_(1).png"
+    },
+    {
+      "id": "skilling-production-extreme-defence",
+      "label": "Extreme defence",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-defence",
+      "fileTitle": "Extreme defence (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_defence",
+      "sourcePage": "https://runescape.wiki/w/File:Extreme_defence_(1).png"
+    },
+    {
+      "id": "skilling-production-extreme-magic",
+      "label": "Extreme magic",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-magic",
+      "fileTitle": "Extreme magic (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_magic",
+      "sourcePage": "https://runescape.wiki/w/File:Extreme_magic_(1).png"
+    },
+    {
+      "id": "skilling-production-extreme-ranging",
+      "label": "Extreme ranging",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-ranging",
+      "fileTitle": "Extreme ranging (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_ranging",
+      "sourcePage": "https://runescape.wiki/w/File:Extreme_ranging_(1).png"
+    },
+    {
+      "id": "skilling-production-extreme-necromancy",
+      "label": "Extreme necromancy",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/extreme-necromancy",
+      "fileTitle": "Extreme necromancy (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Extreme_necromancy",
+      "sourcePage": "https://runescape.wiki/w/File:Extreme_necromancy_(1).png"
+    },
+    {
+      "id": "skilling-production-spirit-attraction-potion",
+      "label": "Spirit attraction potion",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/spirit-attraction-potion",
+      "fileTitle": "Spirit attraction potion (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Spirit_attraction_potion",
+      "sourcePage": "https://runescape.wiki/w/File:Spirit_attraction_potion_(1).png"
+    },
+    {
+      "id": "skilling-production-summoning-potion",
+      "label": "Summoning potion",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/summoning-potion",
+      "fileTitle": "Summoning potion (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Summoning_potion",
+      "sourcePage": "https://runescape.wiki/w/File:Summoning_potion_(1).png"
+    },
+    {
+      "id": "skilling-production-super-zamorak-brew",
+      "label": "Super Zamorak brew",
+      "category": "rs3/upgrades/skilling-production",
+      "path": "assets/rs3/upgrades/skilling-production/super-zamorak-brew",
+      "fileTitle": "Super Zamorak brew (1).png",
+      "canonicalPage": "https://runescape.wiki/w/Super_Zamorak_brew",
+      "sourcePage": "https://runescape.wiki/w/File:Super_Zamorak_brew_(1).png"
     },
     {
       "id": "util-rune-pouch",

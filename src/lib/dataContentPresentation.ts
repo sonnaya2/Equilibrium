@@ -13,7 +13,7 @@ import { hasRewardIconAlias, resolveRewardIconLabel } from "@/lib/rewardIconAlia
 
 /** Allows the complete 13-piece brawling-glove set plus overflow. */
 export const REWARD_ICON_CAP = 14;
-export const REWARD_DISPLAY_MAX = 96;
+export const REWARD_DISPLAY_MAX = 240;
 
 const TRAILING_NOISE =
   /\s+(?:components?|equipment|upgrades?|armour sets?|armor sets?|armours?|armors?|weapons?|sets?|materials?|path|ladder|residual)$/i;

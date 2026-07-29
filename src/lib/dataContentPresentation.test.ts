@@ -629,6 +629,15 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.some((i) => /saradomin-sword/i.test(i.src))).toBe(true);
   });
 
+  it("Queen Black Dragon uses Dragon kiteshield, not Kalphite Queen drops", () => {
+    const { row, upgrades } = contentRow("asgarnia", "Queen Black Dragon");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toBe("Royal crossbow, Dragon kiteshield, Draconic visage, Dragonbone upgrade kit");
+    expect(full).not.toMatch(/Dragon chainbody|Dragon 2h sword/i);
+    expect(resolveRewardIcon("Dragon kiteshield")).toMatch(/dragon-kiteshield\.webp$/);
+    expect(publicOk(resolveRewardIcon("Dragon kiteshield"))).toBe(true);
+  });
+
   it("Empty Throne Room is dark animica (not light) with auto-cycle chips", () => {
     const { row, upgrades } = contentRow("misthalin", /Empty Throne Room/);
     const full = contentRewardsFull(row, upgrades);
@@ -811,9 +820,11 @@ describe("contentRewardsFull — catalog boss packages", () => {
       for_.upgrades.some((u) => /holy-elixir supply|Resource dungeon unlock map/i.test(u.name)),
     ).toBe(false);
     const region = regionById("forinthry");
-    expect(region.content.some((c) => /Edgeville Dungeon combat|Edgeville resource dungeons/.test(c.name))).toBe(
-      false,
-    );
+    expect(
+      region.content.some((c) =>
+        /Edgeville Dungeon combat|Edgeville resource dungeons/.test(c.name),
+      ),
+    ).toBe(false);
     expect(region.upgrades.find((u) => u.name === "Edgeville resource dungeons")?.detail).toMatch(
       /grimy ranarr.*limpwurt roots/i,
     );
@@ -933,9 +944,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const cases: Array<{ region: string; name: string | RegExp }> = [
       { region: "forinthry", name: /Infernal Source Dig Site/ },
     ];
-    expect(regionById("misthalin").content.some((row) => row.name === "Infernal Source Dig Site")).toBe(
-      false,
-    );
+    expect(
+      regionById("misthalin").content.some((row) => row.name === "Infernal Source Dig Site"),
+    ).toBe(false);
     for (const { region, name } of cases) {
       const { row, upgrades } = contentRow(region, name);
       const full = contentRewardsFull(row, upgrades);
@@ -1020,7 +1031,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
         re: /King of Beasts|No Fear|Armoured Hide/i,
       },
       { name: /Rex Matriarchs/, min: 2, re: /Occultist|Reaver|Skeka/i },
-      { name: "Raksha", min: 4, re: /Blast diffusion|Laceration|Fleeting/i },
+      { name: "Raksha", min: 7, re: /Blast diffusion|Laceration|Fleeting/i },
       { name: /Laniakea \(Anachronia/, min: 1, re: /Laniakea's spear/i },
       { name: "Volcanic trapper outfit", min: 1, re: /Volcanic trapper/i },
       { name: "Dream of Iaia", min: 1, re: /Dream of Iaia/i },
@@ -1170,11 +1181,14 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(publicOk(resolveRewardIcon("Robes of subjugation"))).toBe(true);
   });
 
-  it("Raksha merges ability codices and boot upgrades", () => {
+  it("Raksha lists every unique under one boss", () => {
     const { row, upgrades } = contentRow("anachronia", "Raksha");
     const full = contentRewardsFull(row, upgrades);
-    expect(full).toMatch(/Greater Ricochet/i);
-    expect(full).toMatch(/Fleeting boots|Laceration boots|Blast diffusion/i);
+    expect(full).toBe(
+      "Greater Ricochet, Greater Chain, Divert, Fleeting boots, Laceration boots, Blast diffusion boots, Shadow spike, Broken shackle",
+    );
+    expect(upgrades.some((upgrade) => upgrade.name.startsWith("Raksha"))).toBe(false);
+    expect(presentContentRewards(full, 10).icons).toHaveLength(7);
   });
 
   it("maps GWD generals and major bosses to clean unique packages", () => {

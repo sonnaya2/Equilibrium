@@ -78,10 +78,8 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
     .add(float(0.5));
   const brass = mix(linear(BRASS_DEEP), linear(BRASS), facing.pow(float(1.3)));
   colour = mix(colour, brass, inRim);
-  // Site pip on the rim only when unlit; lit gem goes through emissive… but
-  // Basic has no emissive, so brighten the rim with gem when lit.
+  // MeshBasicNodeMaterial has no emissive channel; lit rims brighten through color.
   colour = mix(colour, linear(GEM), inRim.mul(state.y.mul(float(1)).add(state.x.mul(float(0.3)))));
-  // Lit faces punch harder so small pins still read as selected.
   colour = colour.mul(float(1).add(state.y.mul(float(0.22))));
 
   material.colorNode = colour;
@@ -122,14 +120,12 @@ export function createMarkerBeamMaterial(): MarkerMaterial {
   const vertical = smoothstep(float(0), float(0.1), y).mul(
     float(1).sub(smoothstep(float(0.7), float(1), y)),
   );
-  // Stronger pulse so small stakes still read as living glow, not static sticks.
   const pulse = mapClock.mul(float(1.9)).sin().mul(float(0.18)).add(float(0.82));
   const brass = mix(linear(BRASS_DEEP), linear(BRASS), y.mul(float(0.6)).add(float(0.2)));
   const gem = mix(linear(0x1a6b52), linear(GEM), y.mul(float(0.5)).add(float(0.35)));
   material.colorNode = mix(brass, gem, lit).mul(core.mul(pulse));
   // Avoid mix(a, b, lit): when lit folds to a literal, naga emits abstract
   // floats inside a runtime expression and the WebGPU pipeline fails validation.
-  // Opacity lifted so glow survives the smaller face/beam scale.
   const opacity = float(0.2).add(lit.mul(float(0.18)));
   material.opacityNode = core.mul(vertical).mul(opacity).mul(pulse);
 

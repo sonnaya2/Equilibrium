@@ -1,18 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { REGION_IDS } from "@/league";
 import { getResearchCatalog } from "@/research/catalog";
-import { REGION_DETAIL, _classify } from "./regionDetail";
+import { makeRegionDetail, _classify } from "./regionDetail";
 
 const catalog = getResearchCatalog();
+const regionDetail = new Map(
+  catalog.regions.map((region) => [region.id, makeRegionDetail(region)]),
+);
 
 describe("regionDetail", () => {
   it("covers all 11 regions", () => {
-    expect([...REGION_DETAIL.keys()].sort()).toEqual([...REGION_IDS].sort());
+    expect([...regionDetail.keys()].sort()).toEqual([...REGION_IDS].sort());
   });
 
   it("puts every content and upgrade row in exactly one bucket", () => {
     for (const region of catalog.regions) {
-      const detail = REGION_DETAIL.get(region.id as never);
+      const detail = regionDetail.get(region.id);
       expect(detail, region.id).toBeDefined();
       const content = detail!.bosses.length + detail!.skilling.length + detail!.otherContent.length;
       expect(content, `${region.id} content`).toBe(region.content.length);
@@ -24,7 +27,7 @@ describe("regionDetail", () => {
   it("carries the training methods through, with their skill recovered", () => {
     let total = 0;
     for (const region of catalog.regions) {
-      const detail = REGION_DETAIL.get(region.id as never)!;
+      const detail = regionDetail.get(region.id)!;
       expect(detail.training.length, `${region.id} training`).toBe(region.training.length);
       total += detail.training.length;
       for (const row of detail.training) expect(row.skill, `${region.id}/${row.id}`).not.toBe("");
@@ -55,9 +58,9 @@ describe("regionDetail", () => {
   });
 
   it("finds real bosses and real training in the regions that have them", () => {
-    const desert = REGION_DETAIL.get("desert")!;
+    const desert = regionDetail.get("desert")!;
     expect(desert.training.length, "desert training methods").toBeGreaterThan(5);
-    const asgarnia = REGION_DETAIL.get("asgarnia")!;
+    const asgarnia = regionDetail.get("asgarnia")!;
     expect(asgarnia.bosses.map((b) => b.name).join(" ")).toContain("Graardor");
   });
 });

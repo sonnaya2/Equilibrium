@@ -74,8 +74,6 @@ export function WikiArticleDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [pixelated, setPixelated] = useState(false);
   const [load, setLoad] = useState<WikiLoadState>({ status: "idle" });
-  // Full drop table lives in a nested dialog — keeps the article modal short.
-
   // Resolved only from the click-set target — never from row mount / hover.
   const wiki = target?.wikiUrl ? safeWikiPage(target.wikiUrl) : null;
   const imageOnly = Boolean(target && !wiki);
@@ -352,7 +350,6 @@ function WikiBody({
         </button>
       </header>
 
-      {/* Hero: art sized to content · summary shares the row without stretch voids. */}
       <div className="data-wiki-article__hero">
         <div className="data-wiki-article__stage">
           <div className="data-wiki-article__art-primary">
@@ -407,7 +404,6 @@ function WikiBody({
         </div>
       </div>
 
-      {/* Summary drops — full table opens in a nested dialog. */}
       {showDrops ? (
         <section className="data-wiki-article__drops" aria-label="Drops">
           {hasStructuredDrops ? (
@@ -455,7 +451,6 @@ function WikiBody({
         <span className="data-wiki-article__credit">RuneScape Wiki · CC BY-NC-SA 3.0</span>
       </footer>
 
-      {/* Full drop table popup — separate scroll surface from the article shell. */}
       <dialog
         ref={dropsDialogRef}
         className="data-wiki-drops-popup"

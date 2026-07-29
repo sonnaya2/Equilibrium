@@ -180,6 +180,7 @@ const DROP_KARAMJA_CONTENT_NAMES = new Set([
   "Jadinko Favour offering stone",
   "Karamja Volcano resource dungeon",
   "Musa Point banana plantation",
+  "Musa Point fishing dock and Stiles",
   "Shilo Village",
   "TzHaar City skilling hub",
 ]);
@@ -222,18 +223,58 @@ const MANUAL_MAJOR_CONTENT = {
       verifiedAt: "2026-07-28",
     },
   }],
-  forinthry: [{
-    name: "Dragon harpoon",
-    kind: "Fishing tool",
-    detail: "Wilderness Fishing tool with a 9% catch-rate boost at harpoon fishing spots",
-    confidence: "confirmed_wiki_2026",
-    source: {
-      source: "runescape-wiki",
-      url: "https://runescape.wiki/w/Dragon_harpoon",
-      title: "Dragon harpoon",
-      verifiedAt: "2026-07-28",
+  forinthry: [
+    {
+      name: "Dragon harpoon",
+      kind: "Fishing tool",
+      detail: "Wilderness Fishing tool with a 9% catch-rate boost at harpoon fishing spots",
+      confidence: "confirmed_wiki_2026",
+      source: {
+        source: "runescape-wiki",
+        url: "https://runescape.wiki/w/Dragon_harpoon",
+        title: "Dragon harpoon",
+        verifiedAt: "2026-07-28",
+      },
     },
-  }],
+    {
+      name: "Magic axe hut chest",
+      kind: "Thieving",
+      detail: "Deep Wilderness chest with muddy keys and rune hatchets.",
+      confidence: "confirmed_wiki",
+      source: {
+        source: "runescape-wiki",
+        url: "https://runescape.wiki/w/Chest_(magic_axe_hut)",
+        title: "Chest (magic axe hut)",
+        verifiedAt: "2026-07-29",
+      },
+    },
+    {
+      name: "Bandit Camp shops",
+      kind: "Shops",
+      detail:
+        "Skulled-only Wilderness camp with Bandit Duty Free and Tony's Pizza Bases.",
+      confidence: "confirmed_wiki",
+      source: {
+        source: "runescape-wiki",
+        url: "https://runescape.wiki/w/Bandit_Duty_Free",
+        title: "Bandit Duty Free",
+        verifiedAt: "2026-07-29",
+      },
+    },
+    {
+      name: "Infernal Puzzle Box",
+      kind: "Combat unlock",
+      detail:
+        "Upgradeable box with Wilderness and Infernus effects, adrenaline retention, bloodwood bonuses, and tier-6 tool-belt storage.",
+      confidence: "confirmed_wiki",
+      source: {
+        source: "runescape-wiki",
+        url: "https://runescape.wiki/w/Infernal_Puzzle_Box",
+        title: "Infernal Puzzle Box",
+        verifiedAt: "2026-07-29",
+      },
+    },
+  ],
   anachronia: [{
     name: "Effigy Incubator",
     kind: "Distraction and Diversion",

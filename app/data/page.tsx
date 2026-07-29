@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Page } from "@/components/Page";
-import { getResearchCatalog } from "@/research/catalog";
+import { getResearchCatalogIndex } from "@/research/catalog";
 import { DataBrowserHost } from "./DataBrowserHost";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function DataPage() {
-  const catalog = getResearchCatalog();
+  const catalog = getResearchCatalogIndex();
 
   return (
     <Page className="!max-w-none !px-0 !py-0">

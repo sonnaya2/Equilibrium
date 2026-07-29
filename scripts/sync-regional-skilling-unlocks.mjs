@@ -49,10 +49,10 @@ if (enrichmentFiles.length === 0) {
 
 const enrichments = enrichmentFiles.map((name) => ({ name, data: read(`scraped-data/${name}`) }));
 const catalog = read(CATALOG_PATH);
-const verifiedAt = [
-  catalog.snapshotDate,
-  ...enrichments.map(({ data }) => data.snapshot_date),
-].filter(Boolean).sort().at(-1);
+const verifiedAt = [catalog.snapshotDate, ...enrichments.map(({ data }) => data.snapshot_date)]
+  .filter(Boolean)
+  .sort()
+  .at(-1);
 
 function list(value) {
   return Array.isArray(value) ? value : [];
@@ -89,7 +89,10 @@ function sourceReference(row) {
 }
 
 function normalizeRegionToken(raw) {
-  const token = String(raw || "").trim().toLowerCase().replaceAll(" ", "_");
+  const token = String(raw || "")
+    .trim()
+    .toLowerCase()
+    .replaceAll(" ", "_");
   if (!token || INVALID_REGION_TOKENS.has(token)) return "";
   if (token === "wilderness" || token === "wildy") return "forinthry";
   if (token.startsWith("cross-region:") || token.startsWith("multi-region:")) return "";
@@ -157,7 +160,8 @@ function comboLabel(required, hints, type, id = "") {
   const regions = required.length > 1 ? required : hints.length > 1 ? hints : [];
   if (regions.length >= 2) {
     const joiner = type === "all_required" ? " + " : " / ";
-    const prefix = type === "all_required" ? "Region combo (all required)" : "Region chain (support pressure)";
+    const prefix =
+      type === "all_required" ? "Region combo (all required)" : "Region chain (support pressure)";
     return `${prefix}: ${regions.join(joiner)}`;
   }
   // multi/cross id with only one concrete region after token filter still needs a label
@@ -202,7 +206,6 @@ function scoreRow(row) {
   return score;
 }
 
-
 /** Catalog emit hosts only. Pressure stays on row.regionHints for labels; do not clone there. */
 function emitHostRegions(row) {
   const req = list(row.requiredRegions).filter(Boolean);
@@ -235,10 +238,12 @@ function normalizeRow(row, recordType, sourceFile) {
       (multiId && Boolean(combo)),
     category: row.category || "skilling unlock",
     detail: detail(row, combo),
-    requirements: [...new Set([
-      ...list(row.requirements).map(String),
-      ...list(row.access_requirements).map(String),
-    ])],
+    requirements: [
+      ...new Set([
+        ...list(row.requirements).map(String),
+        ...list(row.access_requirements).map(String),
+      ]),
+    ],
     confidence: row.confidence || "unclassified",
     source: sourceReference(row),
     sourceFile,
@@ -305,6 +310,7 @@ const NAME_CANONICAL = new Map([
 ]);
 
 const DROP_IDS = new Set([
+  "cross-region:bait-and-switch-always-adze-dual-paths",
   "havenhythe:apex-hide-masterwork-ranged-path",
   "havenhythe:canoe-network",
   "havenhythe:open-water-fishing-spots",
@@ -315,6 +321,13 @@ const DROP_IDS = new Set([
   "havenhythe:old-meats",
   "havenhythe:marigold-farm-patches",
   "havenhythe:shrine-of-inanna-summoning-hub",
+  "havenhythe:empowered-summoning-obelisks",
+  "havenhythe:giant-crayfish-fishing",
+  "havenhythe:highweald-mining",
+  "havenhythe:altar-of-inanna",
+  "havenhythe:amberfell-hub",
+  "havenhythe:eastfold-farm",
+  "havenhythe:volatile-chinchompas",
   "asgarnia:modified-blacksmiths-helmet",
   "asgarnia:modified-botanists-mask",
   "havenhythe:modified-shamans-headdress",
@@ -331,6 +344,8 @@ const DROP_IDS = new Set([
   "karamja:banana-plantation",
   "karamja:calquat-farming-patch",
   "karamja:deadliest-catch-deposit-boxes",
+  "karamja:musa-point-fishing-stiles",
+  "karamja:shilo-gem-mine",
   "karamja:hexcrest",
   "karamja:jadinko-favour-offering-stone",
   "karamja:jadinko-lair-curly-roots",
@@ -360,7 +375,6 @@ const DROP_IDS = new Set([
   "anachronia:always-adze-relic",
   // skillchompa-supply RESTORED as first-class supply hub (continue pass; equipment row stays)
   // orthen-superheat-autoheater RESTORED as canonical 3-region AFK stack (final pass B5)
-  "asgarnia:artisans-workshop-rewards",
   "forinthry:daemonheim-skilling-rewards",
   "desert:pyramid-plunder-black-ibis",
   "morytania:ectofuntus-first-age-outfit",
@@ -375,6 +389,8 @@ const DROP_IDS = new Set([
   "havenhythe:no-area-tasks-diary",
   "misthalin:infernal-source-dig-site",
   "misthalin:rune-goldberg-vis-wax", // removed from game 2026-03-16
+  "morytania:canifis-farming-and-slayer-hub",
+  "morytania:mazchna-slayer-master",
   // FINAL PASS near-dup collapses
   "karamja:calquat-patch",
   "asgarnia:thieves-guild-master-tools",
@@ -455,6 +471,7 @@ const DROP_IDS = new Set([
 ]);
 
 const DROP_UPGRADE_NAMES = new Set([
+  "Bait and Switch + Always Adze dual monolith skilling paths",
   "Kerapac progression",
   "Kerapac hard mode FSoA farm",
   "Kerapac, the bound",
@@ -482,6 +499,9 @@ const DROP_UPGRADE_NAMES = new Set([
   "Master thief's tools",
   "Misthalin Runecrafting altars (Water, Earth) and essence access",
   "Museum donation bin (40% chronote overflow)",
+  "Amberfell village hub",
+  "Eastfold Farm (sheep and spinning)",
+  "Volatile chinchompas",
   "Necromantic Rune Temple",
   "Professor additional relic loadout (80k chronotes)",
   "Mysterious monolith energy + relic loadout ladder",
@@ -511,6 +531,11 @@ const DROP_UPGRADE_NAMES = new Set([
   "Havenhythe canoe network",
   "Havenhythe open-water fishing spots (beyond fish farm)",
   "Shrine of the Spirit Wolves (Blessings of the Wolf shop)",
+  "Shrine of Inanna and Spirit Wolves Summoning hub",
+  "Havenhythe empowered Summoning obelisks (Spirit Plane Connection)",
+  "Giant crayfish fishing and cooking",
+  "Highweald / Deserted Mine mining access",
+  "Altar of Inanna",
   "Jackalope familiar (Archaeology soil BoB)",
   "Jackalope hunting (antler tertiary)",
   "Trader Woes shrine bank chest",
@@ -535,7 +560,6 @@ const DROP_UPGRADE_NAMES = new Set([
   "TokHaar-Kal capes",
   "TzHaar City skilling hub",
   "TzHaar-Hur-Lek Ore and Gem Store (uncut onyx)",
-  "Shrine of Inanna and Spirit Wolves Summoning hub",
   "Modified artisan's bandana",
   "Modified ritualist's mask",
   "Modified shaman's headdress",
@@ -570,17 +594,22 @@ const DROP_UPGRADE_NAMES = new Set([
   "Elite skilling outfits core set (ironman fragment paths)",
 ]);
 
+const CONTENT_RECORD_IDS = new Set([
+  "havenhythe:spirit-moths",
+  "havenhythe:fern-finds",
+  "havenhythe:heathers-crafting-supplies",
+]);
+
 const MANUAL_ACTIVITY_ADDITIONS = [
   {
     id: "karamja:jadinko-lair",
     name: "Jadinko Lair",
     category: "Woodcutting / Jadinko Lair",
     region_hint: "karamja",
-    unlocks: ["Curly roots for Woodcutting and Firemaking; Jadinko Favour shop for seeds, fruits and outfits"],
-    source_urls: [
-      "https://runescape.wiki/w/Curly_root",
-      "https://runescape.wiki/w/Offering_stone",
+    unlocks: [
+      "Curly roots for Woodcutting and Firemaking; Jadinko Favour shop for seeds, fruits and outfits",
     ],
+    source_urls: ["https://runescape.wiki/w/Curly_root", "https://runescape.wiki/w/Offering_stone"],
     confidence: "confirmed_wiki",
   },
   {
@@ -623,7 +652,8 @@ const MANUAL_ACTIVITY_ADDITIONS = [
       "Kandarin eternal magic log supply from the Piscatoris grove",
       "Perfect eternal magic branch chance at 110 Woodcutting",
     ],
-    notes: "The Kandarin grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement",
+    notes:
+      "The Kandarin grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement",
     source_urls: [
       "https://runescape.wiki/w/Eternal_magic_tree",
       "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
@@ -633,19 +663,18 @@ const MANUAL_ACTIVITY_ADDITIONS = [
   },
 ];
 
-const MANUAL_EQUIPMENT_ADDITIONS = [{
-  id: "kandarin:hexcrest",
-  name: "Hexcrest",
-  category: "Slayer helmet Magic component",
-  region_hint: "kandarin",
-  requirements: [
-    "73 Slayer to fight jungle strykewyrms",
-    "20 Magic and 20 Defence to wear",
-  ],
-  unlocks: ["Magic component for the full Slayer helmet with the focus sight"],
-  source_urls: ["https://runescape.wiki/w/Hexcrest"],
-  confidence: "confirmed_wiki",
-}];
+const MANUAL_EQUIPMENT_ADDITIONS = [
+  {
+    id: "kandarin:hexcrest",
+    name: "Hexcrest",
+    category: "Slayer helmet Magic component",
+    region_hint: "kandarin",
+    requirements: ["73 Slayer to fight jungle strykewyrms", "20 Magic and 20 Defence to wear"],
+    unlocks: ["Magic component for the full Slayer helmet with the focus sight"],
+    source_urls: ["https://runescape.wiki/w/Hexcrest"],
+    confidence: "confirmed_wiki",
+  },
+];
 
 const activityMap = new Map();
 const equipmentMap = new Map();
@@ -663,7 +692,14 @@ for (const { name, data } of enrichments) {
 }
 
 for (const row of MANUAL_ACTIVITY_ADDITIONS) {
-  activityMap.set(row.id, normalizeRow(row, "activity", "progression-enrichment-regional-skilling-kandarin-2026-07-26.json"));
+  activityMap.set(
+    row.id,
+    normalizeRow(
+      row,
+      "activity",
+      "progression-enrichment-regional-skilling-kandarin-2026-07-26.json",
+    ),
+  );
 }
 
 for (const row of MANUAL_EQUIPMENT_ADDITIONS) {
@@ -686,14 +722,35 @@ const mergedById = mergeMaps(activityMap, equipmentMap);
 for (const row of mergedById.values()) {
   if (row.id === "misthalin:scripture-of-bik") row.name = "Scripture of Bik";
   if (row.id === "misthalin:thieves-guild-master-tools") row.name = "Master thief's tools";
-  if (row.id === "misthalin:five-finger-discount-passive") row.name = "Five-Finger Discount passive";
+  if (row.id === "misthalin:five-finger-discount-passive")
+    row.name = "Five-Finger Discount passive";
   if (row.id === "karamja:brimhaven-agility-arena") {
-    row.detail = "Brimhaven Agility minigame and ticket exchange for Agility lamps, herbs and rewards";
+    row.detail =
+      "Brimhaven Agility minigame and ticket exchange for Agility lamps, herbs and rewards";
+  }
+  if (row.id === "anachronia:farm-animal-buyers") {
+    Object.assign(row, {
+      name: "Dinosaur Farm animal buyers",
+      category: "Farming",
+      detail:
+        "Sell raised frogs, salamanders, jadinkos and dinosaurs for beans. Choose one small, medium and large buyer from the advertisement board",
+      requirements: [
+        "Anachronia Dinosaur Farm access",
+        "Raised animals accepted by the selected buyer",
+      ],
+      source: {
+        source: "runescape-wiki",
+        url: "https://runescape.wiki/w/Animal_buyer",
+        title: "Dinosaur Farm animal buyers",
+        verifiedAt,
+      },
+    });
   }
   if (row.id === "misthalin:woodcutters-grove-facilities") {
     row.name = "Woodcutters' Grove";
     row.category = "Woodcutting hub and Imcando hatchet progression";
-    row.detail = "Single Woodcutters' Grove row: tiered tree, storage, banking, fairy-ring and farming facilities plus the tier-3 Imcando hatchet fragment nest gate";
+    row.detail =
+      "Single Woodcutters' Grove row: tiered tree, storage, banking, fairy-ring and farming facilities plus the tier-3 Imcando hatchet fragment nest gate";
     row.requirements = [
       "Unwelcome Guests and eastern border wall progression to unlock Grove cabin blueprints",
       "Construction 50 for Grove tiers 1-2; Construction 60 for tier 3",
@@ -710,7 +767,9 @@ for (const row of mergedById.values()) {
 
 const byName = new Map();
 for (const row of mergedById.values()) {
-  const key = String(row.name || "").toLowerCase().trim();
+  const key = String(row.name || "")
+    .toLowerCase()
+    .trim();
   if (!key) continue;
   const canonicalId = NAME_CANONICAL.get(key);
   if (canonicalId && row.id !== canonicalId && mergedById.has(canonicalId)) {
@@ -728,7 +787,9 @@ for (const row of mergedById.values()) {
 const seenNames = new Map();
 for (const row of mergedById.values()) {
   if (DROP_IDS.has(row.id)) continue;
-  const key = String(row.name || "").toLowerCase().trim();
+  const key = String(row.name || "")
+    .toLowerCase()
+    .trim();
   if (NAME_CANONICAL.has(key) && row.id !== NAME_CANONICAL.get(key)) continue;
   const prev = seenNames.get(key);
   if (!prev || scoreRow(row) > scoreRow(prev)) seenNames.set(key, row);
@@ -737,7 +798,9 @@ for (const row of mergedById.values()) {
 const winners = new Set([...seenNames.values()].map((r) => r.id));
 let records = [...mergedById.values()].filter((row) => {
   if (DROP_IDS.has(row.id)) return false;
-  const key = String(row.name || "").toLowerCase().trim();
+  const key = String(row.name || "")
+    .toLowerCase()
+    .trim();
   if (NAME_CANONICAL.has(key) && row.id !== NAME_CANONICAL.get(key)) return false;
   if (seenNames.has(key)) return winners.has(row.id);
   return keepIds.has(row.id);
@@ -768,12 +831,18 @@ for (const region of catalog.regions || []) {
     if (DROP_UPGRADE_NAMES.has(u.name)) return false;
     if (region.id === "karamja" && u.name === "Hexcrest") return false;
     if (skillingNames.has(u.name)) return false;
-    const canon = NAME_CANONICAL.get(String(u.name || "").toLowerCase().trim());
+    const canon = NAME_CANONICAL.get(
+      String(u.name || "")
+        .toLowerCase()
+        .trim(),
+    );
     if (canon && skillingIds.has(canon) && !skillingNames.has(u.name)) return false;
     return true;
   });
 
-  const additions = records.filter((row) => emitHostRegions(row).includes(region.id));
+  const additions = records.filter(
+    (row) => emitHostRegions(row).includes(region.id) && !CONTENT_RECORD_IDS.has(row.id),
+  );
   const existing = new Set(region.upgrades.map((row) => row.name));
 
   for (const row of additions) {
@@ -826,7 +895,8 @@ if (havenhythe) {
   if (highwealdRocks) {
     highwealdRocks.name = "Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock";
     highwealdRocks.kind = "Mining / Highweald Forest";
-    highwealdRocks.detail = "Unlocks: Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock · Hearts of Sanguine opens the Highweald Ruins mine · 104 Mining (boostable) and the Oh Yeah! achievement open the platinum rocks behind the primeval slabs";
+    highwealdRocks.detail =
+      "Unlocks: Necrite rocks, Phasmatite rocks, Platinum rocks and Havensilver rock · Hearts of Sanguine opens the Highweald Ruins mine · 104 Mining (boostable) and the Oh Yeah! achievement open the platinum rocks behind the primeval slabs";
     highwealdRocks.source = {
       source: "runescape-wiki",
       url: "https://runescape.wiki/w/Highweald_Ruins_mine",
@@ -835,42 +905,64 @@ if (havenhythe) {
     };
   }
 
-  const shrine = havenhythe.content?.find((row) =>
-    /Shrine of Inanna Summoning|Shrine of Inanna and Spirit Wolves/i.test(row.name),
-  );
-  if (shrine) {
-    shrine.name = "Shrine of Inanna and Spirit Wolves Summoning hub";
-    shrine.kind = "regional Summoning production and reward-shop hub";
-    shrine.detail = "Empowered Summoning obelisks, Spirit Plane Connection, Blessings of the Wolf shop, shaman outfit stock and local pouch logistics in one Havenhythe shrine complex";
-    shrine.source = records.find((row) => row.id === "havenhythe:shrine-of-inanna-summoning-hub")?.source ?? shrine.source;
-  }
-
   const shaman = records.find((row) => row.id === "havenhythe:shaman-outfit");
   if (shaman && !havenhythe.content.some((row) => row.name === "Shaman's outfit")) {
     havenhythe.content.push({
       name: "Shaman's outfit",
       kind: "Summoning major unlock",
-      detail: "Havenhythe's Shrine of the Spirit Wolves shop supplies the full Summoning outfit. Each piece grants Summoning XP and the complete set adds the set bonus",
+      detail:
+        "Havenhythe's Shrine of the Spirit Wolves shop supplies the full Summoning outfit. Each piece grants Summoning XP and the complete set adds the set bonus",
       confidence: shaman.confidence,
       source: shaman.source,
     });
+  }
+
+  const spiritMoths = records.find((row) => row.id === "havenhythe:spirit-moths");
+  if (spiritMoths && !havenhythe.content.some((row) => row.name === spiritMoths.name)) {
+    havenhythe.content.push({
+      name: spiritMoths.name,
+      kind: "Hunter / Summoning charm supply",
+      detail: spiritMoths.detail,
+      requirements: spiritMoths.requirements,
+      confidence: spiritMoths.confidence,
+      source: spiritMoths.source,
+    });
+  }
+
+  for (const id of ["havenhythe:fern-finds", "havenhythe:heathers-crafting-supplies"]) {
+    const shop = records.find((row) => row.id === id);
+    if (shop && !havenhythe.content.some((row) => row.name === shop.name)) {
+      havenhythe.content.push({
+        name: shop.name,
+        kind: shop.category,
+        location: "Amberfell",
+        detail: shop.detail,
+        confidence: shop.confidence,
+        source: shop.source,
+      });
+    }
   }
 }
 
 const misthalin = catalog.regions?.find((region) => region.id === "misthalin");
 if (misthalin) {
-  misthalin.content = (misthalin.content || []).filter((row) => row.name !== "Fort Forinthry Chapel");
+  misthalin.content = (misthalin.content || []).filter(
+    (row) => row.name !== "Fort Forinthry Chapel",
+  );
   const archGlacor = misthalin.content.find((row) => row.name === "Arch-Glacor");
   if (archGlacor) {
-    archGlacor.detail = "Arch-Glacor boss uniques and melee progression: Leng artefact, dark nilas, Frozen core of Leng, Blade of Leng, Off-hand Blade of Leng, Scripture of Wen and enhanced glove upgrade materials";
+    archGlacor.detail =
+      "Arch-Glacor boss uniques and melee progression: Leng artefact, dark nilas, Frozen core of Leng, Blade of Leng, Off-hand Blade of Leng, Scripture of Wen and enhanced glove upgrade materials";
   }
   const croesus = misthalin.content.find((row) => row.name === "Croesus");
   if (croesus) {
-    croesus.detail = "Croesus Front gather nodes and skilling-boss rewards: fungal algae, spores, calcified fungus and timber fungus, Cryptbloom armour, Scripture of Bik, Sana's fyrtorch, Tagga's corehammer and seed-bag materials";
+    croesus.detail =
+      "Croesus Front gather nodes and skilling-boss rewards: fungal algae, spores, calcified fungus and timber fungus, Cryptbloom armour, Scripture of Bik, Sana's fyrtorch, Tagga's corehammer and seed-bag materials";
   }
   const fort = misthalin.content.find((row) => row.name === "Fort Forinthry");
   if (fort) {
-    fort.detail = "Fort Forinthry's single Misthalin infrastructure line: Botanist's Workbench Herblore batching, Command Centre operations and Archaeology research, Guardhouse Slayer bonuses, Kitchen Cooking bonuses, Ranger's Workroom Fletching bonuses, Town Hall bank/rested XP, Workshop Construction/Invention/Archaeology/Smithing facilities and chapel Prayer support";
+    fort.detail =
+      "Fort Forinthry's single Misthalin infrastructure line: Botanist's Workbench Herblore batching, Command Centre operations and Archaeology research, Guardhouse Slayer bonuses, Kitchen Cooking bonuses, Ranger's Workroom Fletching bonuses, Town Hall bank/rested XP, Workshop Construction/Invention/Archaeology/Smithing facilities and chapel Prayer support";
     fort.kind = "Construction, skilling and operations hub";
     fort.source = {
       source: "runescape-wiki",

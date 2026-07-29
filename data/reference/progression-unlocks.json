@@ -2093,25 +2093,6 @@
       "league_treatment": "Keep this as a utility and AFK route, separate from pure XP/hour rankings"
     },
     {
-      "id": "asgarnia:artisans-workshop-rewards",
-      "name": "Artisans' Workshop Reward Shop",
-      "category": "Smithing outfit and workshop upgrades",
-      "region_hint": "asgarnia",
-      "unlocks": [
-        "Blacksmith's outfit, up to 6% Smithing XP",
-        "Luminite injector",
-        "Ceremonial sword reward upgrades",
-        "Cannon upgrade progression"
-      ],
-      "notes": "Blacksmith outfit pieces cost respect at the Reward Shop. Luminite injectors overload the workshop and add progress per smithing swing for players in the workshop",
-      "source_urls": [
-        "https://runescape.wiki/w/Artisans%27_Workshop",
-        "https://runescape.wiki/w/Artisans%27_Workshop_Reward_Shop"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "This is a real Asgarnia skilling unlock bundle, not just the burial-smithing training method"
-    },
-    {
       "id": "kandarin:deep-sea-fishing-hub",
       "name": "Deep Sea Fishing hub",
       "category": "Fishing activity and shop hub",
@@ -2726,42 +2707,24 @@
       "league_treatment": "Hard Kandarin for the Piscatoris eternal magic tree grove"
     },
     {
-      "id": "havenhythe:volatile-chinchompas",
-      "name": "Volatile chinchompas",
-      "category": "Hunter black-chin supply",
-      "region_hint": "havenhythe",
-      "requirements": [
-        "73 Hunter",
-        "Box traps; spicy tomato bait optional",
-        "Highweald Forest catch sites"
-      ],
-      "unlocks": [
-        "270 Hunter XP per catch",
-        "Caught creatures become stackable black chinchompas (Ranged weapon from 65 Ranged)",
-        "Unchecked volatile chinchompa rare farm drop",
-        "Safe black-chin supply without Wilderness/Forinthry risk"
-      ],
-      "notes": "Explode if attacked/killed in combat — use box traps and disable left-click attack on NPCs while hunting. Guaranteed minimum 2 black chins at 87 Agility. Distinct from Wilderness black chin hunting",
-      "source_urls": [
-        "https://runescape.wiki/w/Volatile_chinchompa",
-        "https://runescape.wiki/w/Black_chinchompa",
-        "https://runescape.wiki/w/Highweald_Forest"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "league_treatment": "Starting-region black-chin path. Strong no-trade Ranged ammo/self-supply value"
-    },
-    {
-      "id": "asgarnia:artisans-workshop-full-rewards",
-      "name": "Artisans' Workshop full permanent reward stack",
-      "category": "Smithing reward shop permanent unlocks",
+      "id": "asgarnia:artisans-workshop-burial-smithing",
+      "name": "Artisans' Workshop burial equipment hub",
+      "category": "Smithing training, Respect, and permanent reward shop",
       "region_hint": "asgarnia",
-      "location": "Falador south-east — Egil's Artisans' Workshop Reward Shop",
+      "location": "Artisans' Workshop burial forge and anvil, Falador",
       "requirements": [
+        "40+ Smithing for burial equipment path (higher metals scale to Primal)",
+        "Highest +X upgrade tier for the metal before burial conversion",
         "Smithing activity inside Artisans' Workshop to earn Respect (about 1% Respect per 10,000 Smithing XP while smithing there; max 100% banked at once)",
         "Prior Solemn Smith / Ceremonial Swordsmith tiers to buy the next tier",
         "Golden Cannon before Royale Cannon; Royale Cannon before Restocking Cannon"
       ],
       "unlocks": [
+        "Burial equipment conversion (destroys finished +X gear for high Smithing XP with no extra bars)",
+        "Burial armour sets for +5% base XP on full suits",
+        "Ceremonial sword design random events while smithing in the workshop",
+        "Burst-pipe repair side content for Respect and Smithing XP",
+        "Bank chest and forges/furnaces colocated with Mining Guild metal-bank loop",
         "Quick repairs (burst pipes 50% faster)",
         "Repair expert (+50 Smithing XP on burst-pipe repairs)",
         "Solemn Smith I–V (+1% burial-armour set XP each; stacks to +5%)",
@@ -2773,40 +2736,17 @@
         "Luminite injectors (consumable workshop overload: +1 progress per swing for all players in the workshop)",
         "Sword Polishing Kit consumables for ceremonial swords"
       ],
-      "notes": "Full Artisans' Workshop reward shop clearance. Cosmetic Necturion/Invictum/Aetherium wardrobe unlocks are not planner-critical. Work on Your Artisan / II track full shop clearance. Respect only from smithing (not smelting, cannonballs, or protean bars)",
+      "notes": "This is the primary high-level Smithing XP infrastructure for ironmen. Pair with Solemn Smith permanent upgrades and luminite injectors. Mining Guild sits across the street for ore-to-metal-bank throughput · Full reward shop clearance is permanent no-trade Smithing pressure; cosmetic Necturion/Invictum/Aetherium wardrobe unlocks are not planner-critical. Respect comes from smithing, not smelting, cannonballs, or protean bars",
       "source_urls": [
-        "https://runescape.wiki/w/Artisans%27_Workshop_Reward_Shop",
         "https://runescape.wiki/w/Artisans%27_Workshop",
+        "https://runescape.wiki/w/Burial_equipment",
+        "https://runescape.wiki/w/Ceremonial_sword",
+        "https://runescape.wiki/w/Artisans%27_Workshop_Reward_Shop",
         "https://runescape.wiki/w/Respect_(Artisans%27_Workshop)",
         "https://runescape.wiki/w/Equilibrium_League/Areas/Asgarnia"
       ],
       "confidence": "confirmed_wiki_plus_official_region_example",
-      "league_treatment": "Hard Asgarnia infrastructure. Burial XP multipliers and blacksmith outfit are permanent no-trade Smithing pressure, not only a training method label"
-    },
-    {
-      "id": "asgarnia:artisans-workshop-burial-smithing",
-      "name": "Artisans' Workshop burial equipment hub",
-      "category": "Smithing training and respect infrastructure",
-      "region_hint": "asgarnia",
-      "requirements": [
-        "40+ Smithing for burial equipment path (higher metals scale to Primal)",
-        "Highest +X upgrade tier for the metal before burial conversion"
-      ],
-      "unlocks": [
-        "Burial equipment conversion (destroys finished +X gear for high Smithing XP with no extra bars)",
-        "Burial armour sets for +5% base XP on full suits",
-        "Ceremonial sword design random events while smithing in the workshop",
-        "Burst-pipe repair side content for Respect and Smithing XP",
-        "Bank chest and forges/furnaces colocated with Mining Guild metal-bank loop"
-      ],
-      "notes": "This is the primary high-level Smithing XP infrastructure for ironmen. Pair with Solemn Smith permanent upgrades and luminite injectors. Mining Guild sits across the street for ore-to-metal-bank throughput",
-      "source_urls": [
-        "https://runescape.wiki/w/Artisans%27_Workshop",
-        "https://runescape.wiki/w/Burial_equipment",
-        "https://runescape.wiki/w/Ceremonial_sword"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Asgarnia owns the hub. Ore and bar supply may still pull other regions"
+      "league_treatment": "Asgarnia owns the hub. Ore and bar supply may still pull other regions; burial XP multipliers and the Blacksmith's outfit remain permanent no-trade pressure"
     },
     {
       "id": "asgarnia:masterwork-smithing-chain",
@@ -2899,10 +2839,7 @@
         "60 Mining to enter (boostable; e.g. dwarven stout from 59)"
       ],
       "unlocks": [
-        "Guild coal, runite, and orichalcite rock cluster",
-        "Colocation with Artisans' Workshop for metal-bank smithing loop",
-        "Gadrin Mining skillcape seller at 99 Mining",
-        "Skills necklace / Dungeoneering cape access patterns into the guild"
+        "Coal rocks, runite rocks, orichalcite rocks, luminite rocks, and drakolith rocks"
       ],
       "notes": "Core mid-game Mining geography for Asgarnia ironmen. Not the highest AFK method forever, but the Falador metal-bank adjacency is permanent infrastructure value",
       "source_urls": [
@@ -4772,30 +4709,6 @@
       ]
     },
     {
-      "id": "misthalin:screening-station",
-      "name": "Screening station (Archaeology Campus)",
-      "category": "Archaeology campus infrastructure",
-      "region_hint": "misthalin",
-      "location": "Archaeology Campus",
-      "requirements": [
-        "Archaeology tutorial / soil box access",
-        "Soil gathered from excavation or caches"
-      ],
-      "unlocks": [
-        "Screen up to 100 soil at a time for materials (+ rare 1/1,000 damaged artefacts)",
-        "1.8s per soil (1.2s with full master outfit)",
-        "Wet vs dry meshes are visual-only; XP per soil scales with Archaeology level bands"
-      ],
-      "notes": "Baseline campus soil processing. Auto-screener and Sift Soil are alternatives — auto-screener is the permanent device upgrade path",
-      "source_urls": [
-        "https://runescape.wiki/w/Screening_station",
-        "https://runescape.wiki/w/Archaeology_Campus",
-        "https://runescape.wiki/w/Soil"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Starting Misthalin campus infrastructure"
-    },
-    {
       "id": "misthalin:auto-screener",
       "name": "Auto-screener v1.080",
       "category": "Archaeology Invention device permanent unlock",
@@ -5832,33 +5745,6 @@
       ],
       "confidence": "confirmed_wiki_method_working_league_taxonomy",
       "league_treatment": "Keep Fort Forinthry under Misthalin working taxonomy"
-    },
-    {
-      "id": "misthalin:runespan-portal",
-      "name": "Runespan portals at Wizards' Tower",
-      "category": "Runecrafting activity hub access",
-      "region_hint": "misthalin",
-      "region_status": "misthalin_accessible_not_region_exclusive",
-      "location": "Top of Wizards' Tower (south of Draynor)",
-      "requirements": [
-        "Talk to Wizard Finix to enable portal use",
-        "Runecrafting 1 / 33 / 66 for lower / middle / upper level access thresholds"
-      ],
-      "unlocks": [
-        "Runespan pocket-dimension training and Runespan points",
-        "Wizard Finix and Wizard Rinsit reward shops (including massive pouch and other RC utility)",
-        "Direct self-sufficient path to master runecrafter robes (see misthalin:master-runecrafter-robes)",
-        "Runespan permanent success upgrades purchasable with points"
-      ],
-      "notes": "Access activity row separate from the master-robe outfit already catalogued. Alternate teleports (wicked hood, Max Guild high-level portal, Runecrafting Guild exit re-entry) exist, but Wizards' Tower is the native Misthalin route",
-      "source_urls": [
-        "https://runescape.wiki/w/Runespan",
-        "https://runescape.wiki/w/Runespan_portal",
-        "https://runescape.wiki/w/Wizards%27_Tower",
-        "https://runescape.wiki/w/Wizard_Finix"
-      ],
-      "confidence": "confirmed_wiki_access_route_not_exclusive",
-      "league_treatment": "Surface Misthalin as the natural access route without forcing a mandatory region claim for every RC method"
     },
     {
       "id": "misthalin:um-mushroom-patch",
@@ -7744,39 +7630,6 @@
       ]
     },
     {
-      "id": "misthalin:um-soul-forge",
-      "name": "City of Um soul forge (ensoul production hub)",
-      "category": "Necromancy craft/smith infrastructure",
-      "region_hint": "misthalin",
-      "region_status": "historical_city_of_um_working_taxonomy",
-      "location": "Um smithy, north-east City of Um near Kili",
-      "requirements": [
-        "Necromancy! for City of Um access",
-        "Kili Row for full smithy resident/progression context",
-        "Ensoul material rituals for unensouled → ensouled bars/cloth/thread supply"
-      ],
-      "unlocks": [
-        "Soul forge station for upgrading Necromancy equipment with ensouled materials and necrotic runes",
-        "Also functions as a normal forge (heat / metal bank deposit-withdraw / smithing interface) with nearby anvils",
-        "Primary Underworld Grimoire smithy teleport destination for bank-adjacent forge loops"
-      ],
-      "notes": "High-value Um still only footnoted via UG smithy teles and shop blurbs — no facility row. Combat gear product ladders (deathwarden/deathdealer tiers) stay combat catalogs; Um craft station + ensoul consumer. Pair with um-ritual-site for ensoul rituals and necromantic-rune-temple for rune inputs",
-      "source_urls": [
-        "https://runescape.wiki/w/Soul_forge",
-        "https://runescape.wiki/w/Kili",
-        "https://runescape.wiki/w/Kili_Row",
-        "https://runescape.wiki/w/City_of_Um",
-        "https://runescape.wiki/w/Underworld_Grimoire"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "City of Um / Misthalin working taxonomy. Combat equipment outputs are separate planner rows",
-      "links_existing_ids": [
-        "misthalin:underworld-grimoire",
-        "misthalin:um-ritual-site-infrastructure",
-        "misthalin:soul-supplies-and-um-shops"
-      ]
-    },
-    {
       "id": "misthalin:um-selene-necromancy-prayers",
       "name": "Selene Necromancy prayer and curse unlocks (City of Um)",
       "category": "Prayer unlock infrastructure",
@@ -8343,8 +8196,7 @@
         "invention:charge-pack-infrastructure",
         "invention:divine-charge-crafting",
         "invention:augmentor",
-        "invention:ancient-tools-enhanced",
-        "asgarnia:artisans-workshop-full-rewards"
+        "invention:ancient-tools-enhanced"
       ],
       "requiredRegions": [],
       "regionRequirementType": "single",
@@ -8911,7 +8763,6 @@
         "forinthry:abyss-entrance",
         "forinthry:pouch-protector-relic",
         "cross-region:expansive-essence-pouch",
-        "misthalin:runespan-portal",
         "asgarnia:wicked-hood"
       ]
     },
@@ -8941,26 +8792,26 @@
       "confidence": "confirmed_wiki_2026",
       "league_treatment": "Hard Havenhythe Mining. Hearts of Sanguine is the permanent gate",
       "links_existing_ids": [
-        "havenhythe:highweald-mining",
         "havenhythe:canoe-network",
-        "havenhythe:amberfell-hub"
+        "havenhythe:fern-finds"
       ]
     },
     {
       "id": "havenhythe:wendlewick-deserted-mine",
-      "name": "Wendlewick Deserted Mine (clay and uncommon gems)",
-      "category": "regional Mining infrastructure residual",
+      "name": "Uncommon gem rocks",
+      "category": "Mining / Wendlewick Deserted Mine",
       "region_hint": "havenhythe",
       "requirements": [
         "Partial completion of Visions of Havenhythe",
         "Path to Deserted Mine south Havenhythe (canoe Grotto station optional)"
       ],
       "unlocks": [
-        "3 clay rocks and 3 uncommon gem rocks at the named Deserted Mine landmark",
-        "Early Crafting clay + gem supply colocated with giant crayfish / big-net fishing spots",
+        "Location: Wendlewick Deserted Mine",
+        "3 uncommon gem rocks and 3 clay rocks at the named mine landmark",
+        "Early Crafting clay + gem supply and nearby birdhouse/canoe logistics",
         "Birdhouse plot and dilapidated canoe station logistics at the same sub-area"
       ],
-      "notes": "Fills the ore table the highweald-mining blob never listed",
+      "notes": "Wendlewick Deserted Mine uncommon gem and clay supply",
       "source_urls": [
         "https://runescape.wiki/w/Wendlewick_Deserted_Mine",
         "https://runescape.wiki/w/Deserted_Mine",
@@ -8970,9 +8821,7 @@
       "confidence": "confirmed_wiki_2026",
       "league_treatment": "Hard Havenhythe Mining/Crafting supply",
       "links_existing_ids": [
-        "havenhythe:highweald-mining",
         "havenhythe:canoe-network",
-        "havenhythe:giant-crayfish-fishing",
         "havenhythe:birdhouses"
       ]
     },
@@ -9000,7 +8849,6 @@
       "league_treatment": "Hard Havenhythe limestone supply",
       "links_existing_ids": [
         "havenhythe:wendlewick-lodestone",
-        "havenhythe:highweald-mining",
         "havenhythe:canoe-network"
       ]
     },
@@ -9029,7 +8877,7 @@
       "league_treatment": "Hard Havenhythe meat shop. Anachronia Ranch pressure is optional consumer, not a second home region",
       "links_existing_ids": [
         "havenhythe:big-game-hunter",
-        "havenhythe:amberfell-hub",
+        "havenhythe:fern-finds",
         "kandarin:oo-glog-spa"
       ]
     },
@@ -9590,60 +9438,6 @@
       ]
     },
     {
-      "id": "cross-region:ring-of-wealth-relic",
-      "name": "Ring of Wealth (relic power)",
-      "category": "Archaeology monolith luck-ladder relic power",
-      "region_hint": "misthalin",
-      "region_hints": [
-        "misthalin",
-        "morytania",
-        "forinthry",
-        "desert",
-        "kandarin"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "morytania",
-        "forinthry",
-        "desert",
-        "kandarin"
-      ],
-      "location": "Mysterious monolith, Archaeology Campus (Varrock Dig Site)",
-      "requirements": [
-        "Hand of Glory (Ring of Luck) already created at some point (tier-1 ladder prereq)",
-        "Any unused hand of glory (Infernal Source 24 / Everlight 51 / Kharid-et 58 / Warforge 83) + fully charged Ring of Wealth → Hand of Glory (Ring of Wealth)",
-        "51 Archaeology (boostable) to harness",
-        "2,000 chronotes and 100 monolith energy to harness"
-      ],
-      "unlocks": [
-        "Ring of Wealth relic power — always gain tier 2 luck while harnessed (frees the ring slot)",
-        "Tier 2 rare-drop / skilling luck ladder (mid bosses, Barrows pieces at T2+, Pyramid Plunder jewelled statuettes / Pharaoh's sceptre, Rogue outfit, easy–medium clues, crystal chest / Triskelion +1%)",
-        "Does not grant Ring of Wealth teleports",
-        "Required permanent rung before Ring of Fortune and Luck of the Dwarves relic powers"
-      ],
-      "region_pressure": [
-        "Misthalin hard-owns monolith harness and Archaeology campus reclaim (Easty).",
-        "Hands of glory are multi dig-site (Forinthry Infernal Source, Morytania Everlight, Desert Kharid-et, Kandarin Warforge) — any unused hand works.",
-        "Physical Ring of Wealth is craft/enchant supply pressure, not a region hard gate."
-      ],
-      "notes": "Permanent Archaeology luck ladder tier 2. Intermediate rung only — end state for planners is usually",
-      "source_urls": [
-        "https://runescape.wiki/w/Ring_of_Wealth_(relic_power)",
-        "https://runescape.wiki/w/Hand_of_Glory_(Ring_of_Wealth)",
-        "https://runescape.wiki/w/Hand_of_glory"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Misthalin for monolith. Dig-site hands are optional multi-region pressure (player may use any of the four hands)",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "misthalin:archaeology-campus-hub",
-        "cross-region:ring-of-fortune-relic",
-        "cross-region:luck-of-the-dwarves"
-      ]
-    },
-    {
       "id": "cross-region:ring-of-fortune-relic",
       "name": "Ring of Fortune (relic power)",
       "category": "Archaeology monolith luck-ladder relic power",
@@ -9692,7 +9486,6 @@
       "league_treatment": "Misthalin for monolith. Hands remain multi dig-site optional pressure",
       "region_requirement_type": "all_required",
       "links_existing_ids": [
-        "cross-region:ring-of-wealth-relic",
         "cross-region:luck-of-the-dwarves",
         "desert:kharid-et-dig-site"
       ]
@@ -10860,90 +10653,6 @@
       ]
     },
     {
-      "id": "asgarnia:arc-journal",
-      "name": "Arc journal (permanent Arc travel tracker)",
-      "category": "permanent Arc logistics and collection journal",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia"
-      ],
-      "required_regions": [
-        "asgarnia"
-      ],
-      "optional_pressure_regions": [],
-      "requirements": [
-        "Impressing the Locals completed",
-        "Speak to Sharkborne on Waiko northern dock (free reclaim if destroyed)"
-      ],
-      "unlocks": [
-        "Permanent pocket journal tracking Arc birds, mushrooms, berries, kami, castaways, and Tales of the Arc miniquests",
-        "Unlimited free teleport to Port Sarim dock / Quartermaster Gully (no teletab consumed)",
-        "Stores active contract info and up to 25 contract contacts for uncharted hand-in without carrying the list",
-        "Full journal completion unlocks the Voyager title and uncharted treasure-chest minimap icon; Salty title needs journal + all permanent Boni unlocks"
-      ],
-      "region_pressure": [
-        "Hard Asgarnia: free journal from Waiko and free Port Sarim teleport close the docks↔Arc logistics loop with asgarnia:port-sarim-skilling-hub."
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Arc_journal",
-        "https://runescape.wiki/w/Sharkborne",
-        "https://runescape.wiki/w/The_Arc",
-        "https://runescape.wiki/w/Salty"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia permanent logistics tool",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "asgarnia:arc-journal-teletabs",
-        "asgarnia:port-sarim-skilling-hub",
-        "asgarnia:arc-skilling-access",
-        "asgarnia:flag-fall-claimed-island"
-      ]
-    },
-    {
-      "id": "asgarnia:arc-journal-teletabs",
-      "name": "Arc journal teletabs feature unlock",
-      "category": "permanent Arc teleport storage unlock",
-      "region_hint": "asgarnia",
-      "region_hints": [
-        "asgarnia"
-      ],
-      "required_regions": [
-        "asgarnia"
-      ],
-      "optional_pressure_regions": [],
-      "requirements": [
-        "Arc journal owned (asgarnia:arc-journal)",
-        "1,000 chimes from Boni Waiko Reward Shop (feature unlock)",
-        "Arc island teletabs purchased from Boni consumable stock and used on the journal (up to 1,000 charges per island destination)"
-      ],
-      "unlocks": [
-        "Permanent account feature: remotely cast stored Arc teletabs from the Arc journal without carrying the tablets",
-        "Covers Waiko, Aminishi, Whale's Maw, Cyclosis, Tuai Leit, Islands That Once Were Turtles, Goshima after each island teletab is unlocked via miniquests / stock",
-        "Stored charges survive journal destroy/reclaim; free Port Sarim teleport remains even without this unlock",
-        "Completionist cape requirement (with tier-1 upgrades, grill, Whale's Maw scenery, crystal tool siphon blueprint)"
-      ],
-      "region_pressure": [
-        "Hard Asgarnia Boni purchase. Island destination tabs still need the corresponding Arc island unlocks."
-      ],
-      "notes": "The teletab tablets themselves are consumables — only the storage/use-from-journal feature is the permanent row. Comp cape cost note on wiki: 24,750 chimes + 21 taijitu for the listed permanent set",
-      "source_urls": [
-        "https://runescape.wiki/w/Arc_journal",
-        "https://runescape.wiki/w/Waiko_Reward_Shop",
-        "https://runescape.wiki/w/Magic_tablet#The_Arc"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Asgarnia permanent. QoL",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "asgarnia:arc-journal",
-        "asgarnia:the-arc-waiko-shop",
-        "asgarnia:waiko-grill",
-        "asgarnia:crystal-tool-siphon-blueprint"
-      ]
-    },
-    {
       "id": "asgarnia:flag-fall-claimed-island",
       "name": "Flag Fall + claimed Uncharted Isle permanence",
       "category": "permanent Uncharted Isles personal island unlock",
@@ -11062,7 +10771,7 @@
       "unlocks": [
         "Daily Arc skilling contract assignments as primary structured chime income alongside commodity selling",
         "Contract-only uncharted isle features when the assignment requires them",
-        "Contract contact pocket item + Arc journal storage for remote hand-in on uncharted isles (consumable contacts; journal storage is permanent capacity)"
+        "Contract contact pocket item for remote hand-in on uncharted isles"
       ],
       "region_pressure": [
         "Hard Asgarnia Waiko NPC hub. Throughput multiplies with asgarnia:waiko-contracts-per-day permanent tiers."
@@ -11079,7 +10788,6 @@
       "region_requirement_type": "all_required",
       "links_existing_ids": [
         "asgarnia:waiko-contracts-per-day",
-        "asgarnia:arc-journal",
         "asgarnia:arc-skilling-access",
         "asgarnia:the-arc-waiko-shop"
       ]
@@ -11922,7 +11630,7 @@
         "Entrana boat for Law ruins surface access and Entrana skilling (sandpit, glassblowing, herb shop)",
         "Bank deposit box at Monks of Entrana on the docks (early ore/fish deposit without full bank walk)",
         "Fishing spots, Gerrant's Fishy Business, Betty's Magic Emporium, Brian's Battleaxe Bazaar, food and general shops",
-        "Captain's Log / Arc journal / Port Sarim lodestone access patterns into the hub",
+        "Captain's Log / Port Sarim lodestone access patterns into the hub",
         "Void Knights' Outpost boat adjacency for pest-control travel (combat-adjacent; skilling value is dock logistics only)"
       ],
       "notes": "Equilibrium Area Asgarnia explicitly lists Port Sarim",
@@ -12115,36 +11823,6 @@
       ]
     },
     {
-      "id": "misthalin:varrock-lumber-yard-sawmill",
-      "name": "Varrock Lumber Yard sawmill operator",
-      "category": "Construction plank production infrastructure",
-      "region_hint": "misthalin",
-      "location": "Lumber Yard north-east of Varrock (sawmill operator)",
-      "requirements": [
-        "Logs and coins for operator plank conversion",
-        "No Construction level gate for basic plank purchase conversion"
-      ],
-      "unlocks": [
-        "Classic sawmill operator: convert full backpack of logs to planks for a coin fee (instant batch vs Fort sequential free sawmill)",
-        "Primary early-game plank source for POH and Construction Contracts before Fort free sawmill / Rimmington free sawmill / Lunar Plank Make",
-        "Dig Site / Earth altar / Senntisten door adjacency for multi-stop Misthalin loops",
-        "Transporter / cart patterns used by ironman Construction logistics guides"
-      ],
-      "notes": "Paid batch conversion — different product profile from free Fort/Rimmington sawmills (XP + free, one-at-a-time) and Invention plank-maker (offline charge). Keep all three modeled separately",
-      "source_urls": [
-        "https://runescape.wiki/w/Lumber_Yard",
-        "https://runescape.wiki/w/Sawmill_operator",
-        "https://runescape.wiki/w/Plank"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin Construction supply",
-      "links_existing_ids": [
-        "misthalin:construction-contracts",
-        "asgarnia:rimmington-construction-supply",
-        "fremennik:plank-make"
-      ]
-    },
-    {
       "id": "misthalin:construction-contracts",
       "name": "Construction Contracts (estate agents)",
       "category": "Construction training method and permanent reward currency",
@@ -12182,7 +11860,6 @@
       ],
       "links_existing_ids": [
         "misthalin:plank-box",
-        "misthalin:varrock-lumber-yard-sawmill",
         "misthalin:fort-forinthry-workshop"
       ]
     },
@@ -12217,42 +11894,7 @@
       "confidence": "confirmed_wiki_plus_official_region_example",
       "league_treatment": "Hard Misthalin Thieving guild",
       "links_existing_ids": [
-        "misthalin:lumbridge-skilling-hub",
         "asgarnia:rogues-den"
-      ]
-    },
-    {
-      "id": "misthalin:lumbridge-skilling-hub",
-      "name": "Lumbridge early skilling hub",
-      "category": "regional starter multi-skill infrastructure",
-      "region_hint": "misthalin",
-      "location": "Lumbridge and Lumbridge Swamp",
-      "requirements": [
-        "No gate for town access",
-        "Buyers and Cellars for Thieves' Guild facilities",
-        "Area Tasks (Lumbridge) for Explorer's ring progression (separate diary row)"
-      ],
-      "unlocks": [
-        "Starter banks, general store, furnace, anvil, spinning wheel, cooking range, and Combat Academy adjacency",
-        "Water altar ruins in Lumbridge Swamp; cow/chicken early Gathering; goblin fishing spots",
-        "Thieves' Guild trapdoor (see misthalin:thieves-guild)",
-        "Explorer's ring claim geography (Lumbridge achievements) and cabbage-port farming utility",
-        "Death's office / Underworld portal north of Draynor lodestone adjacency for City of Um access",
-        "Lodestone Network hub for free teleports once activated"
-      ],
-      "notes": "Starter-region multi-skill cluster for Equilibrium Misthalin. Prefer specific rows for Thieves' Guild, Water altar, and Explorer's ring effects",
-      "source_urls": [
-        "https://runescape.wiki/w/Lumbridge",
-        "https://runescape.wiki/w/Lumbridge_Swamp",
-        "https://runescape.wiki/w/Explorer%27s_ring",
-        "https://runescape.wiki/w/Equilibrium_League/Areas/Misthalin"
-      ],
-      "confidence": "confirmed_wiki_plus_official_region_example",
-      "league_treatment": "Core Misthalin early hub",
-      "links_existing_ids": [
-        "misthalin:thieves-guild",
-        "misthalin:area-tasks-explorers-ring",
-        "misthalin:explorers-ring"
       ]
     },
     {
@@ -12574,63 +12216,6 @@
         "asgarnia:inferno-adze",
         "cross-region:natures-sentinel-outfit",
         "tirannwn:superheat-form"
-      ]
-    },
-    {
-      "id": "cross-region:bait-and-switch-always-adze-dual-paths",
-      "name": "Bait and Switch + Always Adze dual monolith skilling paths",
-      "category": "cross-region dual gatherer-relic path package",
-      "region_hints": [
-        "anachronia",
-        "kandarin",
-        "karamja",
-        "asgarnia"
-      ],
-      "required_regions": [
-        "anachronia",
-        "kandarin"
-      ],
-      "optional_pressure_regions": [
-        "karamja",
-        "asgarnia"
-      ],
-      "requirements": [
-        "Bait and Switch: 99 Archaeology (boostable path for death mask), Orthen Dig Site death mask, catspeak amulet / cramulet to speak with Bob the cat → Evil Bob's Catspaw → harness at mysterious monolith (2,000 chronotes + 100 monolith energy)",
-        "Always Adze: 83 Archaeology (boostable), inactive Seed of the Charyou Tree from Thalmund's Forge / Into the Forge (Warforge), activate seed while wearing flame gloves (79 Firemaking), harness at monolith (2,000 chronotes + 100 monolith energy)",
-        "Both relics cost 100 monolith energy while harnessed — plan monolith budget when dual-pathing",
-        "Kandarin Deep Sea Fishing hub is the primary high-volume Fishing payoff for Bait and Switch dual Fishing+Cooking"
-      ],
-      "unlocks": [
-        "Bait and Switch: cookable fish auto-cook on catch at 50% Cooking XP, never burn, any Cooking level; porters transport cooked fish after cook; works with shark outfit consume-all (still consumes fish); extra Fury shark catch cooks without extra Cooking XP",
-        "Bait exclusions: Arc fish, divine locations, Daemonheim vile fish, uncookable catches (crystal urchins)",
-        "Always Adze: logs cut while Woodcutting auto-burn for full Firemaking XP with no prayer drain; also burns curly roots and timber fungus (documented exclusions: divine locations, BGH jungle logs, bloodwood, Arc bamboo, ivy, Daemonheim logs)",
-        "Dual-path planner meaning: permanent dual-skill gatherer relics for Fishing/Cooking and Woodcutting/Firemaking without competing for the same method site"
-      ],
-      "region_pressure": [
-        "Anachronia hard: Orthen death mask self-source for Bait and Switch.",
-        "Kandarin hard for this dual-path package: Deep Sea Fishing hub is the self-sufficient high-volume Bait and Switch fishing geography and a primary dual-skill training hub planners pair with Always Adze WC routes.",
-        "Karamja optional: Warforge / Thalmund's Forge seed geography for Always Adze (other enrichment files tag the seed under Karamja or Anachronia planning — keep as seed-site pressure).",
-        "Asgarnia optional: flame gloves to activate the inactive seed (All Fired Up)."
-      ],
-      "notes": "Links and Always Adze rows into one dual-path edge so region pickers surface both gatherer relics together. Flame gloves remain Asgarnia support for seed activation · Region combo (all required): anachronia + kandarin",
-      "source_urls": [
-        "https://runescape.wiki/w/Bait_and_Switch",
-        "https://runescape.wiki/w/Evil_Bob%27s_Catspaw",
-        "https://runescape.wiki/w/Death_mask",
-        "https://runescape.wiki/w/Always_Adze",
-        "https://runescape.wiki/w/Seed_of_the_Charyou_Tree",
-        "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
-        "https://runescape.wiki/w/Flame_gloves"
-      ],
-      "confidence": "confirmed_wiki_cross_region_stack",
-      "league_treatment": "Require Anachronia for Bait and Switch. Require Kandarin when scoring the dual-path Fishing hub half. Tag Karamja if League maps Warforge seed exclusively there; tag Asgarnia when flame gloves are not auto-completed · Region combo (all required): anachronia + kandarin",
-      "region_requirement_type": "all_required",
-      "links_existing_ids": [
-        "anachronia:bait-and-switch-relic",
-        "kandarin:always-adze-relic",
-        "asgarnia:flame-gloves",
-        "kandarin:fury-shark-outfit",
-        "kandarin:shark-outfit-deep-sea"
       ]
     },
     {
@@ -14366,68 +13951,47 @@
       "confidence": "confirmed_wiki_2026",
       "league_treatment": "Hard Havenhythe Hunter/Summoning-supply activity",
       "links_existing_ids": [
-        "havenhythe:volatile-chinchompas",
         "havenhythe:shaman-outfit",
         "forinthry:charming-moths"
       ]
     },
     {
-      "id": "havenhythe:amberfell-hub",
-      "name": "Amberfell village hub",
-      "category": "regional settlement and dig-site gateway",
+      "id": "havenhythe:fern-finds",
+      "name": "Fern's Finds",
+      "category": "Mushroom shop",
       "region_hint": "havenhythe",
       "requirements": [
-        "Secrets of Amberfell progress to repair the bridge south of Hollow Hill",
-        "First visit unlocks fairy ring DLP; canoe station repair for network link"
+        "Amberfell access"
       ],
       "unlocks": [
-        "Amberfell bank and three shops (Butcher of Amberfell, Fern's Finds, Heather's Crafting Supplies)",
-        "Maple tree density and lure/bait fishing spots in/near the village",
-        "Gateway settlement for Moonrise Temple exterior and Moonrise Dig Site (havenhythe:moonrise-dig-site)",
-        "Sister-village logistics toward Heathervein mining folk"
+        "Amberfell mushroom shop and local mushroom supplies"
       ],
-      "notes": "Members village released 1 June 2026. Hub row for bank/shops/travel — Werewolf post-quest flavour is not a skilling gate",
+      "notes": "Major Havenhythe shop unlock at Amberfell",
       "source_urls": [
-        "https://runescape.wiki/w/Amberfell",
-        "https://runescape.wiki/w/Secrets_of_Amberfell",
-        "https://runescape.wiki/w/Moonrise_Dig_Site"
+        "https://runescape.wiki/w/Fern%27s_Finds"
       ],
       "confidence": "confirmed_wiki_2026",
-      "league_treatment": "Hard Havenhythe. Moonrise Archaeology remains the specialised dig-site row",
-      "links_existing_ids": [
-        "havenhythe:moonrise-dig-site",
-        "havenhythe:canoe-network",
-        "havenhythe:ring-of-kayazu"
-      ]
+      "league_treatment": "Hard Havenhythe; location Amberfell",
+      "links_existing_ids": []
     },
     {
-      "id": "havenhythe:highweald-mining",
-      "name": "Highweald / Deserted Mine mining access",
-      "category": "regional Mining infrastructure",
+      "id": "havenhythe:heathers-crafting-supplies",
+      "name": "Heather's Crafting Supplies",
+      "category": "Gem shop",
       "region_hint": "havenhythe",
       "requirements": [
-        "Havenhythe access; path toward Highweald Forest and Deserted Mine",
-        "Mining levels for rocks present at local sites (do not invent ore tables beyond wiki live state)",
-        "Canoe Grotto station optional for Deserted Mine approach"
+        "Amberfell access"
       ],
       "unlocks": [
-        "Deserted Mine as the named Havenhythe mining landmark on the regional map",
-        "Heathervein sister-settlement mining culture / quarry approach east of Amberfell for late map expansion",
-        "Local Mining pressure so Havenhythe region picks are not Hunter/Farming-only on the checklist"
+        "Amberfell gem shop selling emeralds, rubies, red topaz and opals"
       ],
-      "notes": "Wiki Mining section on Havenhythe is still filling in post-launch; row records geography and access rather than stale XP/h. Pair with canoe Grotto station and Amberfell logistics. Not a dual-claim on Misthalin or Forinthry mines",
+      "notes": "Major Havenhythe shop unlock at Amberfell",
       "source_urls": [
-        "https://runescape.wiki/w/Deserted_Mine",
-        "https://runescape.wiki/w/Havenhythe",
-        "https://runescape.wiki/w/Heathervein",
-        "https://runescape.wiki/w/Highweald_Forest"
+        "https://runescape.wiki/w/Heather%27s_Crafting_Supplies"
       ],
-      "confidence": "confirmed_wiki_2026_partial_detail",
-      "league_treatment": "Hard Havenhythe Mining geography",
-      "links_existing_ids": [
-        "havenhythe:canoe-network",
-        "havenhythe:amberfell-hub"
-      ]
+      "confidence": "confirmed_wiki_2026",
+      "league_treatment": "Hard Havenhythe; location Amberfell",
+      "links_existing_ids": []
     },
     {
       "id": "forinthry:dark-onyx-core-sources",
@@ -14884,7 +14448,7 @@
     },
     {
       "id": "havenhythe:wendlewick-fish-farm",
-      "name": "Wendlewick fish farm (Havenhythe)",
+      "name": "Wendlewick fish farm",
       "category": "starting-region Fishing infrastructure",
       "region_hint": "havenhythe",
       "requirements": [
@@ -14892,6 +14456,7 @@
         "Wendlewick multi-pool fish farm"
       ],
       "unlocks": [
+        "High XP/h Active Fishing method",
         "Multi-pool fish farm Fishing training infrastructure",
         "Early self-sufficient fish supply on Havenhythe"
       ],
@@ -15505,65 +15070,7 @@
       "league_treatment": "Hard Morytania mid master",
       "region_requirement_type": "support",
       "links_existing_ids": [
-        "desert:smoking-kills-slayer-points",
-        "misthalin:chaeldar-slayer-master"
-      ]
-    },
-    {
-      "id": "misthalin:chaeldar-slayer-master",
-      "name": "Chaeldar (Zanaris Slayer Master)",
-      "category": "regional hard Slayer master hub",
-      "region_hint": "misthalin",
-      "region_status": "confirmed_wiki_league_region",
-      "region_hints": [
-        "misthalin",
-        "morytania",
-        "kandarin",
-        "desert",
-        "karamja"
-      ],
-      "required_regions": [
-        "misthalin"
-      ],
-      "optional_pressure_regions": [
-        "morytania",
-        "kandarin",
-        "desert",
-        "karamja",
-        "asgarnia"
-      ],
-      "requirements": [
-        "Combat level 75 for assignments (no separate Slayer level gate)",
-        "Lost City completed for Zanaris access (indirect requirement)",
-        "Fairy Queen's house in Zanaris; dramen/lunar staff until Fairy Tale III"
-      ],
-      "unlocks": [
-        "10 points/task with Smoking Kills; 50/150 on 10th/50th; long-term avg ~16",
-        "Highest master without a Slayer-level requirement",
-        "4 co-op points on social tasks; Slayer Rewards shop"
-      ],
-      "region_pressure": [
-        "Misthalin taxonomy owns Zanaris / Lost City hub (wiki League badge: Misthalin).",
-        "Task list still multi-region — fairy network is travel, not a free second master region."
-      ],
-      "combo_edges": [
-        "combo:slayer-masters-vs-task-regions",
-        "cross-region:fairy-ring-network"
-      ],
-      "notes": "",
-      "source_urls": [
-        "https://runescape.wiki/w/Chaeldar",
-        "https://runescape.wiki/w/Zanaris",
-        "https://runescape.wiki/w/Slayer_Masters",
-        "https://runescape.wiki/w/Slayer_points"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Misthalin (Zanaris) master via Lost City",
-      "region_requirement_type": "support",
-      "links_existing_ids": [
-        "cross-region:fairy-ring-network",
-        "desert:smoking-kills-slayer-points",
-        "morytania:mazchna-slayer-master"
+        "desert:smoking-kills-slayer-points"
       ]
     },
     {
@@ -15958,7 +15465,6 @@
       "category": "permanent multi-region Prayer training infrastructure",
       "region_hints": [
         "asgarnia",
-        "misthalin",
         "kandarin",
         "desert",
         "karamja",
@@ -15969,7 +15475,6 @@
       "required_regions": [],
       "optional_pressure_regions": [
         "asgarnia",
-        "misthalin",
         "kandarin",
         "desert",
         "tirannwn"
@@ -17384,23 +16889,19 @@
     },
     {
       "id": "anachronia:farm-animal-buyers",
-      "name": "Anachronia Dinosaur Farm animal buyers",
-      "category": "player-owned farm bean sink/source NPCs",
+      "name": "Dinosaur Farm animal buyers",
+      "category": "Farming",
       "region_hint": "anachronia",
       "required_regions": [
         "anachronia"
       ],
       "requirements": [
-        "Corresponding dinosaur pens unlocked and animals raised to buyer-accepted stages",
-        "Anachronia Dinosaur Farm access"
+        "Anachronia Dinosaur Farm access",
+        "Raised animals accepted by the selected buyer"
       ],
       "unlocks": [
-        "Specialist buyers for frogs (Anphi), salamanders (Steven), jadinkos (Papa Mambo), varanusaurs (Laniakea), brutish (General Bentnoze), arcane/spicati associates (Glout/Ilona), birds (Odd Billy), scimitops (Doric), asciatops (Evil Dave), malletops (Moia), bagrada (Daya), rex buyers (Thok, Irwinsson)",
-        "Primary high-value bean generation path from selling farmed dinosaurs beyond base produce",
-        "Ties BGH/Slayer/Dream of Iaia unchecked animal supply into the bean economy"
-      ],
-      "region_pressure": [
-        "Anachronia owns all dinosaur-farm buyers and animal species."
+        "Sell raised frogs, salamanders, jadinkos and dinosaurs for beans",
+        "Choose one small, medium and large buyer from the advertisement board"
       ],
       "notes": "",
       "source_urls": [
@@ -17409,7 +16910,7 @@
         "https://runescape.wiki/w/Player-owned_farm"
       ],
       "confidence": "confirmed_wiki",
-      "league_treatment": "Hard Anachronia farm economy depth",
+      "league_treatment": "",
       "region_requirement_type": "single",
       "links_existing_ids": [
         "anachronia:dinosaur-farm-beans-market",
@@ -17830,78 +17331,6 @@
       ]
     },
     {
-      "id": "havenhythe:empowered-summoning-obelisks",
-      "name": "Havenhythe empowered Summoning obelisks (Spirit Plane Connection)",
-      "category": "regional pouch-production infrastructure",
-      "region_hint": "havenhythe",
-      "location": "Shrine of Inanna",
-      "base_access": [
-        "Start and progress Visions of Havenhythe",
-        "Reach Havenhythe from Port Sarim",
-        "Fairy ring BKS provides later Shrine access"
-      ],
-      "spirit_plane_connection": {
-        "gain": "Gain 1% connection when infusing a pouch at an empowered obelisk.",
-        "loss": [
-          "Lose 1% when infusing at a non-empowered obelisk.",
-          "Lose 1% every 20 seconds while no pouches are being infused."
-        ],
-        "maximum_percent": 100,
-        "maximum_summoning_xp_bonus_percent": 50,
-        "xp_scaling": "+1% Summoning XP per 2% connection",
-        "maximum_material_save_chance_percent": 10,
-        "material_save_scaling": "+1 percentage point per 10% connection"
-      },
-      "spirit_communion": {
-        "trigger": "Offer 100 spirit shards to a visiting Spirit Wolf at the empowered obelisks.",
-        "protected_pouch_infusions": 100,
-        "effect": "Connection percentage does not decay from pouch creation for the protected infusions and pouch creation is reduced from 4 ticks to 3 ticks."
-      },
-      "achievements": [
-        {
-          "name": "Dialed In",
-          "requirement": "Reach 100% Spirit Plane Connection by infusing pouches at empowered obelisks."
-        },
-        {
-          "name": "Getting Familiar",
-          "requirement": "Offer 100 spirit shards to the visiting Spirit Wolf."
-        }
-      ],
-      "source_urls": [
-        "https://runescape.wiki/w/Empowered_obelisk",
-        "https://runescape.wiki/w/Spirit_Plane_Connection",
-        "https://runescape.wiki/w/Spirit_Communion",
-        "https://runescape.wiki/w/Shrine_of_Inanna",
-        "https://runescape.wiki/w/Dialed_In",
-        "https://runescape.wiki/w/Getting_Familiar",
-        "https://runescape.wiki/w/Summoning_training",
-        "https://runescape.wiki/w/Visions_of_Havenhythe/Quick_guide"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "league_treatment": "Hard Havenhythe Summoning production advantage. Not global access to Havenhythe familiars or ingredients",
-      "requirements": [
-        "Havenhythe access via Visions of Havenhythe progression",
-        "Reach Shrine of Inanna (south of Wendlewick; fairy ring BKS later access)",
-        "Summoning materials for pouch infusion at the currently empowered obelisk"
-      ],
-      "unlocks": [
-        "Three Shrine of Inanna obelisks; exactly one is empowered at any time for Spirit Plane Connection training",
-        "Spirit Plane Connection: gain 2% when infusing a pouch at the empowered obelisk; lose 2% when infusing at a non-empowered obelisk; lose 1% every 20 seconds if no pouches are being infused",
-        "Connection effects at empowered obelisks: 23–50% Summoning XP (+3% XP per 10% connection) and 1–10% chance to save materials (+1 percentage point per 10% connection); max 100% connection",
-        "Spirit Communion: offer 100 spirit shards to the visiting Spirit Wolf — speeds pouch infusion by 0.6 seconds (4→3 ticks) and stops connection decay from pouch creation for the next 100 infusions",
-        "Each pouch infused at any of the three shrine obelisks grants 1 Blessings of the Wolf toward Pikkenflix shop unlocks",
-        "Achievements: Dialed In (100% connection), Getting Familiar (offer shards to Spirit Wolf)",
-        "Binding contracts do not receive empowered bonuses; Spirit Weaver relic has no effect here"
-      ],
-      "notes": "CANONICAL Spirit Plane Connection math row — shrine hub is pointer only and must keep linking this id. Connection state is separate from Amlodd Voice of Seren and from Desert Holy scarab. Buffs clear when leaving vicinity after slow Summoning (26 May 2026 patch)",
-      "links_existing_ids": [
-        "havenhythe:shaman-outfit",
-        "havenhythe:shrine-of-the-spirit-wolves",
-        "asgarnia:pikkupstix-summoning-obelisk",
-        "prifddinas:amlodd-district"
-      ]
-    },
-    {
       "id": "havenhythe:fang-of-mohegan",
       "name": "Fang of Mohegan",
       "category": "Summoning tele necklace and charm double",
@@ -17926,41 +17355,8 @@
       "links_existing_ids": [
         "havenhythe:shrine-of-the-spirit-wolves",
         "havenhythe:shaman-outfit",
-        "havenhythe:empowered-summoning-obelisks",
         "asgarnia:pikkupstix-summoning-obelisk",
         "asgarnia:familiarisation"
-      ]
-    },
-    {
-      "id": "havenhythe:giant-crayfish-fishing",
-      "name": "Giant crayfish fishing and cooking",
-      "category": "regional Fishing and Cooking food ladder",
-      "region_hint": "havenhythe",
-      "requirements": [
-        "82 Fishing with lobster pot for raw giant crayfish",
-        "86 Cooking to cook giant crayfish (never stop burning without cooking gauntlets at 94 or Cooking cape)",
-        "Havenhythe giant crayfish spots (Highweald Forest, north of Deserted Mine, west Havenhythe fish-farm giant crayfish pool after pool construction)"
-      ],
-      "unlocks": [
-        "Raw giant crayfish: 270 Fishing XP per catch — Havenhythe-native high food fish",
-        "Cooked giant crayfish: 212 Cooking XP; heals 2,150 life points",
-        "Fish-farm giant crayfish pool construction path as optional active method beyond open water spots",
-        "Cray-zy for Crayfish achievement (catch and cook one)"
-      ],
-      "notes": "Beyond the multi-pool fish farm blob (wendlewick-fish-farm). This is the named high-tier fish unique to Havenhythe geography. fish farm without re-emitting lobster/swordfish/shark farm management",
-      "source_urls": [
-        "https://runescape.wiki/w/Giant_crayfish",
-        "https://runescape.wiki/w/Raw_giant_crayfish",
-        "https://runescape.wiki/w/Giant_crayfish_(fishing_spot)",
-        "https://runescape.wiki/w/Havenhythe",
-        "https://runescape.wiki/w/Wendlewick_fish_farm"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "league_treatment": "Hard Havenhythe Fishing/Cooking food ladder",
-      "links_existing_ids": [
-        "havenhythe:wendlewick-fish-farm",
-        "havenhythe:highweald-mining",
-        "havenhythe:canoe-network"
       ]
     },
     {
@@ -18021,64 +17417,6 @@
       "links_existing_ids": [
         "havenhythe:wendlewick-lodestone",
         "havenhythe:marigold-farm-patches"
-      ]
-    },
-    {
-      "id": "havenhythe:altar-of-inanna",
-      "name": "Altar of Inanna",
-      "category": "regional Prayer infrastructure",
-      "region_hint": "havenhythe",
-      "requirements": [
-        "Access to Shrine of Inanna (south of Wendlewick)",
-        "Visions of Havenhythe visits the altar; Secrets of Amberfell uses a temporary Inanna's Den pray path (not permanent post-quest)"
-      ],
-      "unlocks": [
-        "Starting-region Prayer altar for point restore at the Summoning hub",
-        "Bones and ashes can be offered on the altar for Prayer XP (no Offer option — use-item on altar)",
-        "Colocated with empowered obelisks, birdhouse plot, and magic trees for multi-skill shrine days"
-      ],
-      "notes": "Normal prayer altar, not a second ectofuntus. Quest-only Inanna's Den access is not a permanent skilling unlock after Secrets of Amberfell",
-      "source_urls": [
-        "https://runescape.wiki/w/Altar_of_Inanna",
-        "https://runescape.wiki/w/Shrine_of_Inanna",
-        "https://runescape.wiki/w/Visions_of_Havenhythe"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "league_treatment": "Hard Havenhythe Prayer convenience at the Summoning shrine",
-      "links_existing_ids": [
-        "havenhythe:empowered-summoning-obelisks",
-        "havenhythe:birdhouses"
-      ]
-    },
-    {
-      "id": "havenhythe:eastfold-farm",
-      "name": "Eastfold Farm (sheep and spinning)",
-      "category": "regional Crafting and Farming support hub",
-      "region_hint": "havenhythe",
-      "requirements": [
-        "Havenhythe access; farm is south-east of Marigold Farm / Wendlewick",
-        "Fairy ring BKS then north-east, or Wendlewick Teleport → Marigold Farm then south-east"
-      ],
-      "unlocks": [
-        "Two sheep pens (six white sheep, three black sheep) for early Crafting wool supply",
-        "Spinning wheel inside Farmer Rachel's house",
-        "Birdhouse plot on Eastfold Farm (part of the eight-plot Havenhythe birdhouse network)",
-        "Quest touchpoint for Hearts of Sanguine (missing-sheep investigation) — not a skilling gate"
-      ],
-      "notes": "Fills Farming/Crafting density beyond Marigold allotment/herb and Dalia nursery",
-      "source_urls": [
-        "https://runescape.wiki/w/Eastfold_Farm",
-        "https://runescape.wiki/w/Farmer_Rachel",
-        "https://runescape.wiki/w/Birdhouses",
-        "https://runescape.wiki/w/Havenhythe"
-      ],
-      "confidence": "confirmed_wiki_2026",
-      "league_treatment": "Hard Havenhythe Crafting/Farming support geography",
-      "links_existing_ids": [
-        "havenhythe:marigold-farm-patches",
-        "havenhythe:birdhouses",
-        "havenhythe:wendlewick-teleport",
-        "havenhythe:eternal-magic-nursery"
       ]
     },
     {
@@ -18297,8 +17635,7 @@
       "region_requirement_type": "support",
       "links_existing_ids": [
         "morytania:games-necklace-burgh-teleport",
-        "kandarin:barbarian-outpost-agility",
-        "misthalin:runespan-portal"
+        "kandarin:barbarian-outpost-agility"
       ]
     },
     {
@@ -26303,7 +25640,7 @@
     },
     {
       "id": "havenhythe:tear-of-inanna-hungry-like-the-wolf",
-      "name": "Tear of Inanna / Hungry Like the Wolf",
+      "name": "Tear of Inanna",
       "category": "Archaeology monolith relic power",
       "region_hint": "havenhythe",
       "requirements": [
@@ -28328,26 +27665,6 @@
         "kandarin:shark-outfit-deep-sea",
         "kandarin:fish-flingers"
       ]
-    },
-    {
-      "id": "asgarnia:botanists-amulet",
-      "name": "Botanist's amulet",
-      "category": "Herblore production amulet",
-      "region_hint": "asgarnia",
-      "requirements": [
-        "Jade amulet + Lvl-2 Enchant (or craft silver + jade + wool then enchant)",
-        "Charges consumed when the 4-dose effect triggers (5 charges per new amulet)"
-      ],
-      "effects": [
-        "Approximately 5% chance to brew a 4-dose potion instead of 3-dose while worn",
-        "Stacks with factory outfit 4-dose chance and related Herblore production bonuses"
-      ],
-      "notes": "Ironman Herblore ideal-setup amulet. Craft is global once materials exist; Asgarnia is the practical association via Flash Powder Factory / botanist+factory outfit stack planning",
-      "source_urls": [
-        "https://runescape.wiki/w/Botanist%27s_amulet"
-      ],
-      "confidence": "confirmed_wiki",
-      "league_treatment": "Materials multi-region; Asgarnia is production-stack geography"
     },
     {
       "id": "misthalin:passing-bracelet",
@@ -31500,7 +30817,7 @@
         "Tier 3 (hard) worn: +50% Prayer XP from burning shades; improved shade key chance; 50% chance Blood altar teleports do not break",
         "Tier 3 operated: slime-pit teleports increased to 10 per day",
         "Tier 3 always: Robin 26 bones + 26 slime daily; all ghosts speak as if ghostspeak is equipped; halved Barrows prayer drain; double runes from Barrows chests; bank Barrows chest loot from the reward chest; +10% Temple Trekking rewards; Abandoned Mine crystal outcrop shortcut; Big Book o' Piracy charge cap 20",
-        "Tier 4 (elite) worn: +50% Firemaking and Prayer XP from cremating vyre corpses (including with Sunspear); +10% Slayer XP for Slayer Tower task kills; 20% chance of 4-dose prayer renewal instead of 3-dose when making them in Morytania (stacks with botanist's amulet and factory outfit)",
+        "Tier 4 (elite) worn: +50% Firemaking and Prayer XP from cremating vyre corpses (including with Sunspear); +10% Slayer XP for Slayer Tower task kills; 20% chance of 4-dose prayer renewal instead of 3-dose when making them in Morytania (stacks with factory outfit)",
         "Tier 4 operated: unlimited slime-pit teleports under the Ectofuntus (post-16-March-2026 Dailyscape line)",
         "Tier 4 always: Robin 39 bones + 39 slime daily; double mushroom yield at Canifis, Isafdar, and City of Um patches (XP not doubled); Big Book o' Piracy charge cap 60; Mune sightings in Morytania on Thursdays (and sometimes weekends) after all rewards claimed"
       ],
@@ -31722,7 +31039,6 @@
       "links_existing_ids": [
         "asgarnia:the-arc-waiko-shop",
         "asgarnia:invention-guild",
-        "asgarnia:arc-journal-teletabs",
         "tirannwn:crystal-tools-pointer"
       ]
     },

@@ -394,10 +394,7 @@ body:has(.combat-screen) {
 
 .quick-table tbody tr.is-selected td,
 .quick-table tbody tr[aria-selected="true"] td {
-  background:
-    linear-gradient(90deg, rgb(37 205 181 / 15%), transparent 65%),
-    color-mix(in srgb, var(--combat-teal-dark) 35%, var(--combat-raised));
-  box-shadow: inset 2px 0 0 var(--combat-teal);
+  background: color-mix(in srgb, var(--combat-teal-dark) 35%, var(--combat-raised));
   color: var(--color-parch-50);
 }
 
@@ -1262,13 +1259,13 @@ body:has(.combat-screen) {
   color: var(--combat-text);
 }
 
-.analysis-ability:hover,
-.analysis-ability[aria-pressed="true"] {
+.analysis-ability:hover {
   background: color-mix(in srgb, var(--combat-gold-dim) 24%, var(--combat-panel));
 }
 
 .analysis-ability[aria-pressed="true"] {
-  box-shadow: inset 2px 0 0 var(--combat-teal);
+  background: color-mix(in srgb, var(--combat-teal-dark) 30%, var(--combat-panel));
+  box-shadow: inset 0 0 0 1px var(--combat-teal-dark);
   color: var(--combat-teal-bright);
 }
 
@@ -1280,7 +1277,7 @@ body:has(.combat-screen) {
   margin: -0.25rem -0.15rem 0;
   padding: 0.7rem 0.85rem;
   border-bottom: 1px solid var(--combat-gold-mid);
-  background: linear-gradient(90deg, rgb(37 205 181 / 10%), transparent 70%);
+  background: color-mix(in srgb, var(--combat-teal-dark) 14%, var(--combat-inset));
 }
 
 .analysis-lines {

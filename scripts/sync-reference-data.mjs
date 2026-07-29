@@ -21,7 +21,8 @@ function write(path, value) {
 }
 
 function mergeAddition(target, addition) {
-  if (typeof addition?.id !== "string" || !addition.id) throw new Error("Progression enrichment addition is missing id");
+  if (typeof addition?.id !== "string" || !addition.id)
+    throw new Error("Progression enrichment addition is missing id");
   const index = target.findIndex((row) => row.id === addition.id);
   if (index < 0) {
     target.push(addition);
@@ -48,23 +49,37 @@ function applyEnrichment(progressionUnlocks, enrichment, sourceName) {
   progressionUnlocks.prayer_unlocks ||= [];
 
   const excluded = new Set(enrichment.policy?.activity_exclusions ?? []);
-  progressionUnlocks.activity_unlocks = progressionUnlocks.activity_unlocks.filter((row) => !excluded.has(row.id));
+  progressionUnlocks.activity_unlocks = progressionUnlocks.activity_unlocks.filter(
+    (row) => !excluded.has(row.id),
+  );
 
   for (const patch of enrichment.activity_patches ?? []) {
     const row = progressionUnlocks.activity_unlocks.find((entry) => entry.id === patch.id);
-    if (!row) throw new Error(`Progression enrichment patch target not found in ${sourceName}: ${patch.id}`);
+    if (!row)
+      throw new Error(
+        `Progression enrichment patch target not found in ${sourceName}: ${patch.id}`,
+      );
     Object.assign(row, patch.set ?? {});
     if (Array.isArray(row.source_urls) && row.source_url) delete row.source_url;
   }
 
-  for (const addition of enrichment.activity_additions ?? []) mergeAddition(progressionUnlocks.activity_unlocks, addition);
-  for (const addition of enrichment.account_additions ?? []) mergeAddition(progressionUnlocks.account_unlocks, addition);
-  for (const addition of enrichment.equipment_additions ?? []) mergeAddition(progressionUnlocks.equipment_models, addition);
-  for (const addition of enrichment.consumable_additions ?? []) mergeAddition(progressionUnlocks.consumable_unlocks, addition);
-  for (const addition of enrichment.ability_additions ?? []) mergeAddition(progressionUnlocks.ability_unlocks, addition);
-  for (const addition of enrichment.prayer_additions ?? []) mergeAddition(progressionUnlocks.prayer_unlocks, addition);
+  for (const addition of enrichment.activity_additions ?? [])
+    mergeAddition(progressionUnlocks.activity_unlocks, addition);
+  for (const addition of enrichment.account_additions ?? [])
+    mergeAddition(progressionUnlocks.account_unlocks, addition);
+  for (const addition of enrichment.equipment_additions ?? [])
+    mergeAddition(progressionUnlocks.equipment_models, addition);
+  for (const addition of enrichment.consumable_additions ?? [])
+    mergeAddition(progressionUnlocks.consumable_unlocks, addition);
+  for (const addition of enrichment.ability_additions ?? [])
+    mergeAddition(progressionUnlocks.ability_unlocks, addition);
+  for (const addition of enrichment.prayer_additions ?? [])
+    mergeAddition(progressionUnlocks.prayer_unlocks, addition);
 
-  progressionUnlocks.snapshot_date = [progressionUnlocks.snapshot_date, enrichment.snapshot_date].filter(Boolean).sort().at(-1);
+  progressionUnlocks.snapshot_date = [progressionUnlocks.snapshot_date, enrichment.snapshot_date]
+    .filter(Boolean)
+    .sort()
+    .at(-1);
 }
 
 const MANUAL_ACTIVITY_ADDITIONS = [
@@ -83,8 +98,13 @@ const MANUAL_ACTIVITY_ADDITIONS = [
     name: "Effigy Incubator",
     category: "monthly Distraction and Diversion",
     region_hint: "anachronia",
-    requirements: ["Desperate Measures and level 85 in Crafting, RuneCrafting, Invention, or Smithing"],
-    unlocks: ["Create monthly effigies from gathered materials and casings", "Filled effigies award skill XP lamps or stars"],
+    requirements: [
+      "Desperate Measures and level 85 in Crafting, RuneCrafting, Invention, or Smithing",
+    ],
+    unlocks: [
+      "Create monthly effigies from gathered materials and casings",
+      "Filled effigies award skill XP lamps or stars",
+    ],
     source_urls: ["https://runescape.wiki/w/Effigy_Incubator"],
     confidence: "confirmed_wiki",
     league_treatment: "Major Anachronia monthly skilling unlock",
@@ -100,11 +120,9 @@ const MANUAL_ACTIVITY_ADDITIONS = [
       "Archmage Sedridor's Rune chest supplies up to 24,750 pure essence in total",
       "The amount is 5 × each Runecrafting level gained through level 99",
     ],
-    notes: "One-time scalable pure essence source; the full level-99 claim totals 24,750 pure essence",
-    source_urls: [
-      "https://runescape.wiki/w/Rune_chest",
-      "https://runescape.wiki/w/Rune_Memories",
-    ],
+    notes:
+      "One-time scalable pure essence source; the full level-99 claim totals 24,750 pure essence",
+    source_urls: ["https://runescape.wiki/w/Rune_chest", "https://runescape.wiki/w/Rune_Memories"],
     confidence: "confirmed_wiki",
     league_treatment: "Major Misthalin Runecrafting supply unlock",
   },
@@ -115,19 +133,20 @@ const MANUAL_ACTIVITY_ADDITIONS = [
     region_hint: "kandarin",
     requirements: [
       "Piscatoris Hunter area access in Kandarin",
-      "100 Woodcutting for eternal magic trees"
+      "100 Woodcutting for eternal magic trees",
     ],
     unlocks: [
       "Kandarin eternal magic log supply from the Piscatoris grove",
-      "Perfect eternal magic branch chance at 110 Woodcutting"
+      "Perfect eternal magic branch chance at 110 Woodcutting",
     ],
-    notes: "The Kandarin grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement",
+    notes:
+      "The Kandarin grove is a complete eternal magic tree route. Dalia's Havenhythe nursery is an optional alternate plot, not a requirement",
     source_urls: [
       "https://runescape.wiki/w/Eternal_magic_tree",
-      "https://runescape.wiki/w/Pay-to-play_Woodcutting_training"
+      "https://runescape.wiki/w/Pay-to-play_Woodcutting_training",
     ],
     confidence: "confirmed_wiki",
-    league_treatment: "Hard Kandarin for the Piscatoris eternal magic tree grove"
+    league_treatment: "Hard Kandarin for the Piscatoris eternal magic tree grove",
   },
   {
     id: "misthalin:fort-forinthry",
@@ -154,8 +173,9 @@ const MANUAL_ACTIVITY_ADDITIONS = [
       "https://runescape.wiki/w/Workshop_(Fort_Forinthry)",
     ],
     confidence: "confirmed_wiki",
-    league_treatment: "Hard Misthalin for Fort Forinthry infrastructure under the current working taxonomy",
-  }
+    league_treatment:
+      "Hard Misthalin for Fort Forinthry infrastructure under the current working taxonomy",
+  },
 ];
 
 const REMOVED_ACTIVITY_IDS = new Set([
@@ -188,9 +208,13 @@ const REMOVED_ACTIVITY_IDS = new Set([
   "misthalin:velucia-museum-chronote-tiers",
   "misthalin:velucia-museum-collections",
   "asgarnia:thieves-guild-master-tools",
+  "karamja:musa-point-fishing-stiles",
+  "karamja:shilo-gem-mine",
   "misthalin:kerapac-hard-mode-fsoa-farm",
   "misthalin:rasial-necro-bis-farm",
   "misthalin:wars-blessing-combat-mastery",
+  "morytania:canifis-farming-and-slayer-hub",
+  "morytania:mazchna-slayer-master",
   "havenhythe:apex-hide-masterwork-ranged-path",
   "havenhythe:canoe-network",
   "havenhythe:open-water-fishing-spots",
@@ -243,22 +267,28 @@ const REMOVED_EQUIPMENT_IDS = new Set([
 
 function enrichPrayerCatalogue(prayerSource, details) {
   const enriched = structuredClone(prayerSource);
-  enriched.purpose = "Complete current prayer catalogue with effects and normal-game region dependencies for Equilibrium planning.";
+  enriched.purpose =
+    "Complete current prayer catalogue with effects and normal-game region dependencies for Equilibrium planning.";
   enriched.region_methodology = details.region_methodology;
   enriched.sources = details.sources;
   enriched.unlock_profiles = details.unlock_profiles;
 
   for (const book of enriched.books) {
     const defaultProfileId = details.default_profile_by_book?.[book.id];
-    if (!defaultProfileId) throw new Error(`Prayer details are missing a default unlock profile for ${book.id}`);
+    if (!defaultProfileId)
+      throw new Error(`Prayer details are missing a default unlock profile for ${book.id}`);
 
     for (const prayer of book.prayers) {
       const overrideKey = `${book.id}:${prayer.name}`;
       const profileId = details.profile_overrides?.[overrideKey] ?? defaultProfileId;
       const profile = details.unlock_profiles?.[profileId];
       const effect = details.effects?.[prayer.name];
-      if (!profile) throw new Error(`Prayer details are missing unlock profile ${profileId} for ${overrideKey}`);
-      if (typeof effect !== "string" || !effect.trim()) throw new Error(`Prayer details are missing an effect for ${overrideKey}`);
+      if (!profile)
+        throw new Error(
+          `Prayer details are missing unlock profile ${profileId} for ${overrideKey}`,
+        );
+      if (typeof effect !== "string" || !effect.trim())
+        throw new Error(`Prayer details are missing an effect for ${overrideKey}`);
 
       const baseSourceRef = book.id === "standard-prayers" ? "prayer" : "curses";
       prayer.effect = effect;
@@ -267,7 +297,8 @@ function enrichPrayerCatalogue(prayerSource, details) {
       prayer.unlock_profile_id = profileId;
       prayer.unlock_requirements = [...profile.requirements];
       prayer.source_refs = [...new Set([baseSourceRef, ...(profile.source_refs ?? [])])];
-      if (profile.acquisition_location_region) prayer.acquisition_location_region = profile.acquisition_location_region;
+      if (profile.acquisition_location_region)
+        prayer.acquisition_location_region = profile.acquisition_location_region;
     }
   }
 
@@ -297,7 +328,8 @@ if (existsSync(progressionAuditPath)) {
   const knownActivityIds = new Set(progressionUnlocks.activity_unlocks.map((row) => row.id));
 
   for (const addition of progressionAudit.quest_unlock_additions ?? []) {
-    if (typeof addition.id !== "string" || !addition.id) throw new Error("Progression quest unlock audit addition is missing id");
+    if (typeof addition.id !== "string" || !addition.id)
+      throw new Error("Progression quest unlock audit addition is missing id");
     if (!knownQuestIds.has(addition.id)) {
       progressionUnlocks.quest_unlocks.push(addition);
       knownQuestIds.add(addition.id);
@@ -305,7 +337,8 @@ if (existsSync(progressionAuditPath)) {
   }
 
   for (const addition of progressionAudit.activity_unlock_additions ?? []) {
-    if (typeof addition.id !== "string" || !addition.id) throw new Error("Progression activity unlock audit addition is missing id");
+    if (typeof addition.id !== "string" || !addition.id)
+      throw new Error("Progression activity unlock audit addition is missing id");
     if (!knownActivityIds.has(addition.id)) {
       progressionUnlocks.activity_unlocks.push(addition);
       knownActivityIds.add(addition.id);
@@ -343,7 +376,8 @@ if (woodcuttersGrove) {
       "One guaranteed first Imcando fragment from Oak and bad-luck mitigation on fragment nests",
       "Counts as in-fort for Town Hall rested experience",
     ],
-    notes: "Single Woodcutters' Grove row combines facility tiers, Woodcutting access, storage, and the Imcando hatchet fragment gate",
+    notes:
+      "Single Woodcutters' Grove row combines facility tiers, Woodcutting access, storage, and the Imcando hatchet fragment gate",
     source_urls: [
       "https://runescape.wiki/w/Woodcutters%27_Grove",
       "https://runescape.wiki/w/Woodcutter%27s_Grove",
@@ -352,15 +386,23 @@ if (woodcuttersGrove) {
   });
 }
 
-const shrine = progressionUnlocks.activity_unlocks.find(
-  (row) => row.id === "havenhythe:shrine-of-inanna-summoning-hub",
+const dinosaurFarmBuyers = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "anachronia:farm-animal-buyers",
 );
-if (shrine) {
-  Object.assign(shrine, {
-    name: "Shrine of Inanna and Spirit Wolves Summoning hub",
-    category: "regional Summoning production and reward-shop hub",
-    notes: "One Havenhythe shrine complex combines the empowered Summoning obelisks, Spirit Plane Connection, Blessings of the Wolf shop, shaman outfit stock and local pouch logistics",
-    league_treatment: "Hard Havenhythe Summoning shrine and shop path",
+if (dinosaurFarmBuyers) {
+  Object.assign(dinosaurFarmBuyers, {
+    name: "Dinosaur Farm animal buyers",
+    category: "Farming",
+    requirements: [
+      "Anachronia Dinosaur Farm access",
+      "Raised animals accepted by the selected buyer",
+    ],
+    unlocks: [
+      "Sell raised frogs, salamanders, jadinkos and dinosaurs for beans",
+      "Choose one small, medium and large buyer from the advertisement board",
+    ],
+    region_pressure: [],
+    league_treatment: "Anachronia",
   });
 }
 
@@ -387,6 +429,43 @@ if (highwealdRocks) {
 progressionUnlocks.activity_unlocks = progressionUnlocks.activity_unlocks.filter(
   (row) => !REMOVED_ACTIVITY_IDS.has(row.id),
 );
+mergeAddition(progressionUnlocks.activity_unlocks, {
+  id: "morytania:canifis-mushroom-patch",
+  name: "Canifis mushroom patch",
+  category: "Farming",
+  region_hint: "morytania",
+  unlocks: ["Mushroom patch west of Canifis"],
+  notes: "The Morytania medium achievements prevent disease; elite achievements double yield.",
+  source_urls: ["https://runescape.wiki/w/Mushroom_patch"],
+  confidence: "confirmed_wiki",
+});
+const gemstoneCavern = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "karamja:gemstone-cavern",
+);
+if (gemstoneCavern) {
+  gemstoneCavern.name = "Shilo Village gem mine and Gemstone cavern";
+  gemstoneCavern.category = "Mining and Slayer";
+  gemstoneCavern.notes =
+    "The Shilo Village mine supplies gem rocks; Karamja gloves 3 open the underground Gemstone cavern and teleport to the mine.";
+  gemstoneCavern.source_urls = [
+    "https://runescape.wiki/w/Shilo_Village_mine",
+    "https://runescape.wiki/w/Gemstone_cavern",
+  ];
+  gemstoneCavern.links_existing_ids = (gemstoneCavern.links_existing_ids ?? []).filter(
+    (id) => id !== "karamja:shilo-gem-mine",
+  );
+}
+const karambwanVessel = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "karamja:karambwan-vessel-fishing",
+);
+if (karambwanVessel) {
+  karambwanVessel.notes =
+    "Post-quest fishing spots use a karambwan vessel loaded with raw karambwanji.";
+}
+const sumona = progressionUnlocks.activity_unlocks.find(
+  (row) => row.id === "desert:sumona-slayer-master",
+);
+if (sumona) sumona.notes = "Slayer master in Pollnivneach.";
 progressionUnlocks.equipment_models = progressionUnlocks.equipment_models.filter(
   (row) => !REMOVED_EQUIPMENT_IDS.has(row.id),
 );
@@ -405,17 +484,29 @@ for (const rows of Object.values(progressionUnlocks)) {
 // consumables pass (ids, recipe unlock flag, boost effect, provenance).
 // Existing canonical values win; a numeric disagreement is drift and throws.
 const consumablesPass = read("scraped-data/combat-consumables-pass-1.json");
-const overloadChain = progressionUnlocks.consumable_unlocks?.find((row) => row.id === "herblore:overload-chain");
+const overloadChain = progressionUnlocks.consumable_unlocks?.find(
+  (row) => row.id === "herblore:overload-chain",
+);
 if (overloadChain && Array.isArray(consumablesPass.overload_chain?.records)) {
   for (const researched of consumablesPass.overload_chain.records) {
-    if (typeof researched?.id !== "string" || !researched.id) throw new Error("Consumables pass overload record is missing id");
+    if (typeof researched?.id !== "string" || !researched.id)
+      throw new Error("Consumables pass overload record is missing id");
     const record = overloadChain.records.find((entry) => entry.name === researched.name);
-    if (!record) throw new Error(`Consumables pass overload record not found in progression unlocks: ${researched.name}`);
+    if (!record)
+      throw new Error(
+        `Consumables pass overload record not found in progression unlocks: ${researched.name}`,
+      );
     for (const [key, value] of Object.entries(researched)) {
       if (key === "name") continue;
       if (record[key] == null) record[key] = value;
-      else if (Object(record[key]) !== record[key] && Object(value) !== value && record[key] !== value) {
-        throw new Error(`Overload chain drift on ${researched.id}.${key}: ${JSON.stringify(record[key])} vs ${JSON.stringify(value)}`);
+      else if (
+        Object(record[key]) !== record[key] &&
+        Object(value) !== value &&
+        record[key] !== value
+      ) {
+        throw new Error(
+          `Overload chain drift on ${researched.id}.${key}: ${JSON.stringify(record[key])} vs ${JSON.stringify(value)}`,
+        );
       }
     }
   }

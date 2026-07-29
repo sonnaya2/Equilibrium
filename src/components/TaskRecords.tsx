@@ -156,7 +156,7 @@ export function TaskRecords({
           </div>
           <div className="tasks-page__source">
             <strong className="tasks-page__dataset">
-              {dataset.provisional ? `${dataset.label} baseline` : dataset.label}
+              {dataset.provisional ? `${dataset.label} reference` : dataset.label}
             </strong>
             <span>
               {records.length.toLocaleString()} tasks

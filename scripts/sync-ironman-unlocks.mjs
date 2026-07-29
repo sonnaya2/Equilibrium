@@ -151,20 +151,6 @@ const PRODUCT_ROWS = [
     wiki: "https://runescape.wiki/w/Aquarium",
   },
   {
-    id: "asgarnia:botanists-amulet",
-    name: "Botanist's amulet",
-    recordType: "equipment",
-    regionHints: ["asgarnia", "kandarin"],
-    category: "Herblore production amulet",
-    detail:
-      "Ironman Herblore ideal setup: 5% chance of 4-dose potions (5 charges). Stacks with factory/botanist outfits. Crafted/charged utility for no-trade potion production.",
-    requirements: ["Botanist's amulet craft + charge materials"],
-    confidence: "confirmed_wiki",
-    skill: "Herblore",
-    importance: "medium-high",
-    wiki: "https://runescape.wiki/w/Botanist%27s_amulet",
-  },
-  {
     id: "misthalin:passing-bracelet",
     name: "Passing bracelet",
     recordType: "equipment",

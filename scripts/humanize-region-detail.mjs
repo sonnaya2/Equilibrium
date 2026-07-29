@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { dedupeRegionUpgrades } from "./lib/dedupe-region-upgrades.mjs";
 
 const ROOT = process.cwd();
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
@@ -448,6 +449,7 @@ const ASGARNIA_CONTENT_DROP = new Set(["Player-owned port", "Rimmington Construc
 
 const ASGARNIA_UPGRADE_DROP = new Set([
   "Bandos equipment (GWD1 melee power ladder)",
+  "Combat scrimshaw pocket package (POP)",
   "Essence of Finality amulet (neck BiS chain)",
   "Essence of Finality ornament kit (style bonus)",
   "Familiarisation (weekly triple-charm D&D)",
@@ -478,21 +480,157 @@ const ASGARNIA_UPGRADE_DROP = new Set([
   "Player-owned house Aquarium and Prawnbroker",
   "Player-owned house portal towns and Construction utilities",
   "Player-owned ports skilling rewards (Asgarnia Arc mapping)",
+  "Ports Reward Shop (Boni Waiko) permanent scrolls + trade-goods access",
   "POH gilded altar (Chapel offering)",
   "Praesul codex style curses (Malevolence / Desolation / Affliction / Ruination)",
   "Rimmington Construction supply loop",
+  "Rogue equipment",
+  "Rogue equipment (Flash Powder Factory rubble)",
+  "Rogues' Den banking, safes, and Thieving",
   "Rogues' Den banking, safes, and Thieving hub",
   "Saradomin godsword special (heal switch)",
+  "Scrimshaw Crafter (Player-owned port workshop)",
+  "Scrimshaw of sacrifice (+ superior POP upgrade)",
+  "Scrimshaw of the elements",
+  "Scroll of cleansing + herb bag + botanist/factory Herblore stack",
+  "Seasinger (Ports / Arc)",
+  "Silverhawk boots (Agility XP from feathers/down)",
+  "Skilling scrimshaw craft package (Player-owned port)",
+  "Sojobo Arc contracts hub (Waiko)",
+  "Taverley / Burthorpe early–mid skilling hub",
   "Temple of Aminishi (ED1)",
+  "Thaler skilling rewards hub (Stanley Limelight Traders)",
   "The Arc skilling destinations (Equilibrium Asgarnia mapping)",
   "The Arc Waiko reward shop (chime economy)",
+  "Toolbelt attach: Seedicide",
+  "Torva armour and praesulic essence (melee)",
   "Trimmed / custom-fit trimmed masterwork melee armour",
+  "Turael / Spria (Burthorpe starter Slayer Masters)",
+  "Turtling perk (tank gizmo)",
+  "Virtus equipment and Praesulic essence",
+  "Vorago",
+  "Vorago progression",
+  "Waiko commodity sell permanent upgrades",
+  "Waiko contracts-per-day permanent upgrades",
+  "Waiko grill (permanent Arc Cooking station)",
+  "Waiko uncharted supplies permanent upgrades (cap + cost)",
+  "Whale's Maw campfire + deposit box permanent unlocks",
+  "Wicked hood (Runecrafting talisman storage + altar teleports)",
+]);
+
+const KANDARIN_CONTENT_DROP = new Set([
+  "Ardougne farming patches and Manor Farm access geography",
+  "Catherby fishing and farming hub",
+  "Fishing Guild",
+  "Kuradal's Dungeon and ferocious ring hub",
+  "Manor Farm (Farming Guild) and reputation rewards",
+  "Manor Farm animal perks",
+  "Player-Owned Farm / Manor Farm",
+]);
+
+const KANDARIN_UPGRADE_DROP = new Set([
+  "Ardougne farming patches and Manor Farm access geography",
+  "Catherby fishing and farming hub",
+  "Farmers' Market and master farmer outfit",
+  "Ferocious ring",
+  "Fish Flingers (Isla Anglerine D&D)",
+  "Fishing Guild",
+  "Gnome Restaurant and sous chef's outfit",
+  "Kuradal (Ancient Cavern Slayer Master)",
+  "Kuradal's Dungeon and ferocious ring hub",
+  "Manor Farm (Farming Guild) and reputation rewards",
+  "Master farmer outfit",
+  "Oo'glog spa pools (As a First Resort)",
+  "Player-Owned Farm",
+  "Seer's headband",
+  "Seers' Village combat achievement rewards",
+  "Seers' Village skilling hub",
+  "Shark / fury shark fishing outfits",
+  "Skillchompa supply hub (wild + PoF ladder)",
+  "Skillchompas",
+  "Skills necklace (guild teleports)",
+  "Sous chef's outfit",
+  "Spottier cape (Hunter weight-reduction cape)",
+]);
+
+const FREMENNIK_CONTENT_DROP = new Set([
+  "Blast Furnace (Keldagrim)",
+  "Keldagrim brewery (Laughing Miner Pub)",
+  "Keldagrim dwarven hub",
+  "Lava Flow Mine skilling unlocks",
+  "Livid Farm Lunar spell unlocks",
+  "Lunar Isle skilling hub",
+  "Lunar spellbook and Lunar utility",
+  "Neitiznot yak Crafting and Cooking loop",
+  "Penguin Agility Course (Iceberg)",
+  "Rellekka Fremennik hub",
+]);
+
+const FREMENNIK_UPGRADE_DROP = new Set([
+  "Bake Pie (Lunar)",
+  "Blast Furnace (Keldagrim)",
+  "Cooking dual-brewery network (Keldagrim + Phasmatys)",
+  "Dagannoth Kings",
+  "Dagannoth Kings uniques",
+  "Elite Fremennik combat rewards",
+  "Elite skilling outfits core set (ironman fragment paths)",
+  "Enchanted lyre",
+  "Fremennik sea boots",
+  "Fremennik sea boots 1-4",
+  "Humidify (Lunar)",
+  "Keldagrim brewery (Laughing Miner Pub)",
+  "Keldagrim dwarven hub",
+  "Keldagrim dwarven traders and multi-step chests",
+  "Lava Flow Mine skilling unlocks",
+  "Lava geyser Imcando fragment path",
+  "Liquid Gold Nymph golden mining suit path",
+  "Livid Farm Lunar spell unlocks",
+  "Lunar Isle skilling hub",
+  "Lunar spellbook",
+  "Lunar spellbook unlock",
+  "Magic golem outfit",
+  "Magic Imbue (Lunar)",
+  "Make Leather (Lunar)",
+  "Neitiznot yak Crafting and Cooking loop",
+  "NPC Contact (Lunar)",
+  "Penguin Agility Course (Iceberg)",
+  "Plank Make (Lunar)",
+  "Player-owned house Aquarium and Prawnbroker",
+  "Rellekka Fremennik hub",
+  "Repair Rune Pouch (Livid Farm Lunar)",
+  "Ring of slaying (craft unlock)",
+  "Sparkling wisp colony",
+  "String Jewellery (Lunar)",
+  "Superglass Make (Lunar)",
+  "Telekinetic Grind (Lunar)",
+  "Ungael ritual site pressure",
 ]);
 
 function applyRegionCorrections(catalog) {
+  const anachronia = catalog.regions?.find((region) => region.id === "anachronia");
   const asgarnia = catalog.regions?.find((region) => region.id === "asgarnia");
+  const desert = catalog.regions?.find((region) => region.id === "desert");
+  const fremennik = catalog.regions?.find((region) => region.id === "fremennik");
+  const forinthry = catalog.regions?.find((region) => region.id === "forinthry");
+  const karamja = catalog.regions?.find((region) => region.id === "karamja");
+  const kandarin = catalog.regions?.find((region) => region.id === "kandarin");
   const misthalin = catalog.regions?.find((region) => region.id === "misthalin");
-  if (!asgarnia || !misthalin) throw new Error("Missing Asgarnia or Misthalin catalog region");
+  const morytania = catalog.regions?.find((region) => region.id === "morytania");
+  if (
+    !anachronia ||
+    !asgarnia ||
+    !desert ||
+    !fremennik ||
+    !forinthry ||
+    !karamja ||
+    !kandarin ||
+    !misthalin ||
+    !morytania
+  ) {
+    throw new Error(
+      "Missing a catalog region required by the final correction pass",
+    );
+  }
 
   const verifiedAt = catalog.snapshotDate;
   const wikiSource = (title, page) => ({
@@ -501,6 +639,344 @@ function applyRegionCorrections(catalog) {
     title,
     verifiedAt,
   });
+  for (const region of [anachronia, kandarin]) {
+    region.upgrades = region.upgrades.filter(
+      (row) => row.name !== "Bait and Switch + Always Adze dual monolith skilling paths",
+    );
+  }
+
+  const agilityCourse = anachronia.content.find((row) => row.name === "Anachronia Agility Course");
+  if (agilityCourse) {
+    Object.assign(agilityCourse, {
+      kind: "Agility course",
+      detail:
+        "Seven-section island course and transit route. Full laps award codex pages for Double Surge and Double Escape, plus totem pieces and base-camp resources.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Anachronia Agility Course", "Anachronia_Agility_Course"),
+    });
+  }
+  const timeAltar = anachronia.content.find((row) => row.name === "Time altar");
+  if (timeAltar) {
+    Object.assign(timeAltar, {
+      kind: "Runecrafting altar",
+      detail:
+        "North-west Anachronia altar for crafting time runes. Requires 100 Runecrafting and an enchanted key",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Time altar", "Time_altar"),
+    });
+  }
+  const dinosaurFarmBuyers = anachronia.upgrades.find(
+    (row) =>
+      row.name === "Anachronia Dinosaur Farm animal buyers" ||
+      row.name === "Dinosaur Farm animal buyers",
+  );
+  if (dinosaurFarmBuyers) {
+    Object.assign(dinosaurFarmBuyers, {
+      name: "Dinosaur Farm animal buyers",
+      category: "Farming",
+      detail:
+        "Sell raised frogs, salamanders, jadinkos and dinosaurs for beans. Choose one small, medium and large buyer from the advertisement board",
+      requirements: [
+        "Anachronia Dinosaur Farm access",
+        "Raised animals accepted by the selected buyer",
+      ],
+      source: wikiSource("Dinosaur Farm animal buyers", "Animal_buyer"),
+    });
+  }
+  anachronia.upgrades = anachronia.upgrades.filter(
+    (row) =>
+      ![
+        "Anachronia Agility codex-page progression",
+        "Anachronia Agility Course",
+        "Anachronia Agility Course section ladder",
+        "Artificer's measure component region map",
+        "Essential oils (base-camp spa tier 3)",
+        "Hunter Lodge (base-camp BGH permanent)",
+        "Quick traps (BGH permanent trap speed)",
+        "Ring of imbuing",
+        "Skeka hypnowand Anachronia piece sources",
+        "Terrasaur maul components",
+        "Time altar",
+        "Time altar / 110 Runecrafting",
+      ].includes(row.name),
+  );
+  const anachroniaHypnowand = anachronia.upgrades.find((row) => row.name === "Skeka's hypnowand");
+  if (anachroniaHypnowand) {
+    Object.assign(anachroniaHypnowand, {
+      category: "Hunter skilling off-hand",
+      detail:
+        "Requires the aged journal from Daemonheim Dig Site. Pieces drop from Anachronia Big Game Hunter, Rex Matriarchs, vile blooms, and the Agility Course · Region combo (all required): forinthry + anachronia",
+      source: wikiSource("Skeka's hypnowand", "Skeka%27s_hypnowand"),
+    });
+  }
+  const terrasaurMaul = anachronia.upgrades.find((row) => row.name === "Terrasaur maul");
+  if (terrasaurMaul) {
+    Object.assign(terrasaurMaul, {
+      category: "Tier 80 two-handed melee weapon",
+      detail:
+        "Assembled from the tribal fin, superior long bone, and volcanic fragments dropped by tier-3 Anachronia Big Game Hunter dinosaurs. Stronger against ranged-classed enemies",
+      requirements: ["80 Strength", "93 Crafting and Smithing", "Tier-3 Big Game Hunter"],
+      source: wikiSource("Terrasaur maul", "Terrasaur_maul"),
+    });
+  }
+  const gemstoneArmour =
+    anachronia.upgrades.find((row) => row.name === "Gemstone armour") ??
+    anachronia.upgrades.find((row) => row.name.startsWith("Gemstone armour ("));
+  anachronia.upgrades = anachronia.upgrades.filter(
+    (row) => !row.name.startsWith("Gemstone armour"),
+  );
+  if (gemstoneArmour) {
+    Object.assign(gemstoneArmour, {
+      name: "Gemstone armour",
+      category: "Tier 80 hybrid armour",
+      detail:
+        "Five-piece hybrid set dropped by Anachronia gemstone dragons. Wearing three or more pieces enables the Enchanted Touch set effect",
+      source: wikiSource("Gemstone armour", "Gemstone_armour"),
+    });
+    anachronia.upgrades.push(gemstoneArmour);
+  }
+  const orthen = anachronia.content.find((row) => row.name === "Orthen Dig Site");
+  if (orthen) {
+    Object.assign(orthen, {
+      kind: "Archaeology dig site",
+      detail:
+        "Four excavation sites, an island teleport network, dragonkin potion recipes, Orthen furnace core, Flow State, Death Note, and the full-mastery monolith power upgrade",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Orthen Dig Site", "Orthen_Dig_Site"),
+    });
+  }
+  anachronia.upgrades = anachronia.upgrades.filter(
+    (row) =>
+      !["Orthen Dig Site", "Orthen Dig Site full mastery (monolith + recipes)"].includes(row.name),
+  );
+  const raksha = anachronia.content.find((row) => row.name === "Raksha");
+  if (raksha) {
+    Object.assign(raksha, {
+      kind: "Boss",
+      detail: "Solo or duo boss beneath the Orthen ruins",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Raksha, the Shadow Colossus", "Raksha,_the_Shadow_Colossus"),
+    });
+  }
+  anachronia.upgrades = anachronia.upgrades.filter(
+    (row) =>
+      !["Raksha ability upgrades", "Raksha boot upgrades", "Raksha, the Shadow Colossus"].includes(
+        row.name,
+      ),
+  );
+
+  desert.content = desert.content.filter(
+    (row) =>
+      !["Dundee's Crocodile Upgrades", "Sunken Pyramid / player-owned Slayer dungeon"].includes(
+        row.name,
+      ),
+  );
+  const whirligigs = {
+    name: "Whirligigs",
+    kind: "Hunter",
+    detail: "Crocodile Hunter activity for whirligig shells and prayer powders.",
+    confidence: "confirmed_wiki",
+    source: wikiSource("Whirligig", "Whirligig"),
+  };
+  const currentWhirligigs = desert.content.find((row) => row.name === whirligigs.name);
+  if (currentWhirligigs) Object.assign(currentWhirligigs, whirligigs);
+  else desert.content.push(whirligigs);
+
+  const sophanemDungeon = desert.content.find(
+    (row) => row.name === "Corrupted creatures & soul devourers",
+  );
+  if (sophanemDungeon) {
+    sophanemDungeon.kind = "Slayer dungeon";
+    sophanemDungeon.detail = "Sophanem Slayer Dungeon for corrupted creatures and soul devourers.";
+    sophanemDungeon.source.title = "Sophanem Slayer Dungeon";
+  }
+  const sumona = desert.content.find((row) => row.name === "Sumona (Pollnivneach Slayer Master)");
+  if (sumona) {
+    sumona.name = "Sumona";
+    sumona.kind = "Slayer master";
+    sumona.detail = "Slayer master in Pollnivneach.";
+    sumona.source.title = "Sumona";
+  }
+
+  karamja.content = karamja.content.filter(
+    (row) =>
+      ![
+        "Musa Point fishing dock and Stiles",
+        "Gemstone cavern (Shilo underground)",
+        "Shilo Village underground gem mine",
+      ].includes(row.name),
+  );
+  karamja.upgrades = karamja.upgrades.filter(
+    (row) =>
+      ![
+        "Gemstone cavern (Shilo underground)",
+        "Hardwood Grove teaks and mahoganies",
+        "Shilo Village underground gem mine",
+        "Tai Bwo Wannai Cleanup and trading sticks",
+      ].includes(row.name),
+  );
+
+  const karamjaContent = [
+    {
+      name: "Shilo Village gem mine and Gemstone cavern",
+      kind: "Mining and Slayer",
+      detail:
+        "Gem rocks in the Shilo Village mine and the underground Gemstone cavern reached with Karamja gloves 3.",
+      source: wikiSource("Shilo Village mine", "Shilo_Village_mine"),
+    },
+    {
+      name: "Hardwood Grove",
+      kind: "Woodcutting",
+      detail: "Nine teak trees and four mahogany trees. Entry costs 100 trading sticks.",
+      source: wikiSource("Hardwood grove", "Hardwood_grove"),
+    },
+    {
+      name: "Tai Bwo Wannai Cleanup",
+      kind: "Woodcutting",
+      detail: "Earn trading sticks for Hardwood Grove and village shops.",
+      source: wikiSource("Tai Bwo Wannai Cleanup", "Tai_Bwo_Wannai_Cleanup"),
+    },
+  ];
+  for (const correction of karamjaContent) {
+    const current = karamja.content.find(
+      (row) =>
+        row.name === correction.name ||
+        (correction.name === "Hardwood Grove" &&
+          row.name === "Hardwood Grove teaks and mahoganies") ||
+        (correction.name === "Tai Bwo Wannai Cleanup" &&
+          row.name === "Tai Bwo Wannai Cleanup and trading sticks"),
+    );
+    const next = { ...correction, confidence: "confirmed_wiki" };
+    if (current) Object.assign(current, next);
+    else karamja.content.push(next);
+  }
+
+  const fightKiln = karamja.content.find((row) => row.name === "Fight Kiln");
+  if (fightKiln) {
+    fightKiln.kind = "Combat";
+    fightKiln.detail = "Wave challenge awarding the four TokHaar-Kal capes.";
+  }
+  const karambwan = karamja.content.find((row) => row.name === "Karambwan vessel fishing");
+  if (karambwan) {
+    karambwan.kind = "Fishing";
+    karambwan.detail = "Catch raw karambwans with a vessel baited with raw karambwanji.";
+  }
+  const overgrownIdols = karamja.content.find((row) => row.name === "Karamja overgrown idols");
+  if (overgrownIdols) {
+    overgrownIdols.kind = "Woodcutting";
+    overgrownIdols.detail = "Clear the Gara-Dul idols for a temporary Woodcutting buff.";
+  }
+  const abomination = karamja.content.find((row) => row.name === "Abomination");
+  if (abomination) {
+    abomination.kind = "Boss";
+    abomination.detail = "Brimhaven Dungeon boss that drops the Abomination cape.";
+  }
+
+  const darkmeyer = morytania.content.find((row) =>
+    ["Darkmeyer", "Darkmeyer Thieving"].includes(row.name),
+  );
+  const darkmeyerMajor = {
+    ...(darkmeyer ?? {}),
+    name: "Darkmeyer Thieving",
+    kind: "Thieving",
+    detail:
+      "Darkmeyer meat, magic, and potion stalls plus Vyrewatch tither and vyrelord/vyrelady consumer pickpockets.",
+    confidence: "confirmed_wiki",
+    source: wikiSource(
+      "Heists & Thieving Level increase - New Skilling Update",
+      "Update:Heists_%26_Thieving_Level_increase_-_New_Skilling_Update",
+    ),
+  };
+  if (darkmeyer) Object.assign(darkmeyer, darkmeyerMajor);
+  else morytania.content.push(darkmeyerMajor);
+
+  for (const region of [misthalin, morytania]) {
+    region.upgrades = region.upgrades.filter(
+      (row) => row.name !== "Fairy ring network (Zanaris hub)",
+    );
+  }
+
+  const sunspear =
+    morytania.upgrades.find((row) => row.name === "Sunspear") ??
+    morytania.upgrades.find((row) => row.name === "Blisterwood and Sunspear weapon chain");
+  morytania.content = morytania.content.filter(
+    (row) =>
+      ![
+        "Burgh de Rott skilling hub",
+        "Mort Myre fungi Bloom harvest",
+        "Nature Grotto altar of nature",
+        "Port Phasmatys",
+      ].includes(row.name),
+  );
+  const canifisPatch = morytania.content.find(
+    (row) =>
+      row.name === "Canifis" ||
+      row.name === "Canifis farming and Slayer Tower hub" ||
+      row.name === "Canifis mushroom patch",
+  );
+  const canifisPatchData = {
+    name: "Canifis mushroom patch",
+    kind: "Farming",
+    detail:
+      "Mushroom patch west of Canifis. Morytania medium prevents disease; elite doubles the yield.",
+    confidence: "confirmed_wiki",
+    source: wikiSource("Mushroom patch", "Mushroom_patch"),
+  };
+  if (canifisPatch) Object.assign(canifisPatch, canifisPatchData);
+  else morytania.content.push(canifisPatchData);
+
+  const phasmatysPatches = morytania.content.find(
+    (row) => row.name === "Port Phasmatys farming patches",
+  );
+  const phasmatysPatchData = {
+    name: "Port Phasmatys farming patches",
+    kind: "Farming",
+    detail: "Two allotment patches, one flower patch, and one herb patch west of Port Phasmatys.",
+    confidence: "confirmed_wiki",
+    source: wikiSource("Farming patch", "Farming_patch"),
+  };
+  if (phasmatysPatches) Object.assign(phasmatysPatches, phasmatysPatchData);
+  else morytania.content.push(phasmatysPatchData);
+  morytania.upgrades = morytania.upgrades.filter(
+    (row) =>
+      ![
+        "Barrows chest diary skilling utility",
+        "Barrows defenders / shields progression",
+        "Blisterwood and Sunspear weapon chain",
+        "Burgh de Rott skilling hub",
+        "Canifis farming and Slayer Tower hub",
+        "Canifis–Mort'ton trapdoor shortcut",
+        "Columbarium ring",
+        "Darkmeyer Thieving and Ring of Vitur",
+        "Ectophial",
+        "Ectofuntus Pool of Slime (slime pit)",
+        "Ectofuntus Prayer worship",
+        "Full slayer helmet and point upgrades (reinforced through corrupted)",
+        "Games necklace Burgh de Rott teleport",
+        "Ghast familiar (Temple Trekking)",
+        "Ghostly essence (attuned ectoplasmator supply)",
+        "Hard Morytania Barrows rewards",
+        "Mazchna / Achtryn (Canifis Slayer Masters)",
+        "Modified first age tiara",
+        "Mort Myre fungi Bloom harvest",
+        "Nature Grotto altar of nature",
+        "Port Phasmatys brewery",
+        "Port Phasmatys farming patches",
+        "Port Phasmatys skilling hub",
+        "Ring of Vitur",
+        "Ring of slaying (craft unlock)",
+        "Slayer helmet (craft unlock + base helm)",
+      ].includes(row.name),
+  );
+  if (sunspear) {
+    Object.assign(sunspear, {
+      name: "Sunspear",
+      category: "Hybrid weapon",
+      detail: "Switches between melee, ranged, and magic forms and automatically cremates vyres",
+      source: wikiSource("Sunspear", "Sunspear"),
+    });
+    if (!morytania.upgrades.includes(sunspear)) morytania.upgrades.push(sunspear);
+  }
 
   asgarnia.content = asgarnia.content.filter((row) => !ASGARNIA_CONTENT_DROP.has(row.name));
 
@@ -560,6 +1036,21 @@ function applyRegionCorrections(catalog) {
       confidence: "confirmed_wiki",
       source: wikiSource("Praesul codex", "Praesul_codex"),
     },
+    {
+      name: "Scrimshaws",
+      kind: "Ports pocket items",
+      detail:
+        "Combat and skilling pocket items made from ancient bones at Player-owned Ports, plus the sacrifice line.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Scrimshaw", "Scrimshaw"),
+    },
+    {
+      name: "Ports armour",
+      kind: "Level 85 tank armour",
+      detail: "Tetsu melee armour, Death Lotus ranged armour, and Seasinger's magic robes.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Player-owned port rewards", "Player-owned_port/Rewards"),
+    },
   ];
   for (const major of majors) {
     const current = asgarnia.content.find((row) => row.name === major.name);
@@ -567,11 +1058,48 @@ function applyRegionCorrections(catalog) {
     else asgarnia.content.push(major);
   }
 
-  const deathtouch = asgarnia.upgrades.find((row) => row.name.startsWith("Deathtouch bracelet"));
+  const hydrixMoves = [
+    {
+      prefix: "Amulet of souls",
+      name: "Amulet of souls",
+      category: "Combat necklace",
+      detail:
+        "Improves Soul Split healing and protection prayers. A fully charged amulet is required for Essence of Finality",
+    },
+    {
+      prefix: "Deathtouch bracelet",
+      name: "Deathtouch bracelet",
+      category: "Hybrid power gloves",
+      detail: "Hydrix gloves with a chance to reflect part of incoming damage",
+    },
+    {
+      prefix: "Reaper necklace",
+      name: "Reaper necklace",
+      category: "Combat necklace",
+      detail:
+        "Successful hits build hit chance. A fully charged necklace is required for Essence of Finality",
+    },
+    {
+      prefix: "Ring of death",
+      name: "Ring of death",
+      category: "Hybrid combat ring",
+      detail:
+        "Restores adrenaline after some kills and can revive the wearer with a damaging bleed",
+    },
+  ];
+  const asgarniaHydrix = asgarnia.upgrades.filter((row) =>
+    hydrixMoves.some((move) => row.name.startsWith(move.prefix)),
+  );
+  const combatBracelet = asgarnia.upgrades.find((row) => row.name === "Combat bracelet");
   asgarnia.upgrades = asgarnia.upgrades.filter(
     (row) =>
-      row !== deathtouch &&
+      row !== combatBracelet &&
+      !asgarniaHydrix.includes(row) &&
       !ASGARNIA_UPGRADE_DROP.has(row.name) &&
+      !/scrimshaw/i.test(row.name) &&
+      !/^(?:Seasinger|Tetsu (?:armour|equipment)|Death Lotus (?:armour|equipment))/i.test(
+        row.name,
+      ) &&
       !/Invention Guild machine infrastructure/i.test(row.category),
   );
 
@@ -607,16 +1135,37 @@ function applyRegionCorrections(catalog) {
       "Three pieces can produce four-dose potions. The full set also grants herb-cleaning XP when making unfinished potions";
   }
 
-  const rogueEquipment = asgarnia.upgrades.find((row) => row.name.startsWith("Rogue equipment"));
-  if (rogueEquipment) {
-    rogueEquipment.detail =
-      "Fallen rubble in Flash Powder Factory can award the five-piece Rogue equipment set";
-  }
-
   const angelOfDeath = asgarnia.upgrades.find((row) => row.name === "Nex: Angel of Death");
   if (angelOfDeath) {
     angelOfDeath.category = "Boss rewards";
     angelOfDeath.detail = "Wand of the praesul, Imperium core, and the Praesul codex";
+  }
+
+  const vorago = asgarnia.content.find((row) => row.name === "Vorago");
+  if (vorago) {
+    vorago.kind = "Boss";
+    vorago.detail = "Group boss that drops seismic weapons and tectonic energy.";
+  }
+
+  const royalCrossbow = asgarnia.upgrades.find((row) => row.name === "Royal crossbow");
+  if (royalCrossbow) {
+    royalCrossbow.category = "Tier 80 two-handed crossbow";
+    royalCrossbow.detail =
+      "Completed from the four royal components dropped by the Queen Black Dragon";
+  }
+
+  const lumberjackShard = asgarnia.upgrades.find((row) => row.name === "Shard of the Lumberjack");
+  if (lumberjackShard) {
+    lumberjackShard.category = "Hatchet upgrade component";
+    lumberjackShard.detail =
+      "Required with a crystal hatchet and Imcando hatchet to make the Hatchet of ember and glade";
+  }
+
+  const livingRockCaverns = asgarnia.upgrades.find((row) => row.name === "Living Rock Caverns");
+  if (livingRockCaverns) {
+    livingRockCaverns.category = "Mining and Fishing cavern";
+    livingRockCaverns.detail =
+      "Rocktail and cavefish fishing, concentrated coal and gold deposits, and living rock creatures";
   }
 
   const customFit = asgarnia.upgrades.find((row) =>
@@ -643,15 +1192,243 @@ function applyRegionCorrections(catalog) {
       "Combines the amulet of souls and reaper necklace, and stores one weapon special attack";
   }
 
-  if (deathtouch && !misthalin.upgrades.some((row) => row.name.startsWith("Deathtouch bracelet"))) {
-    misthalin.upgrades.push({
-      ...deathtouch,
-      name: "Deathtouch bracelet",
-      category: "Hybrid power gloves",
-      detail: "Hydrix gloves with a chance to reflect part of incoming damage.",
+  for (const move of hydrixMoves) {
+    const source = asgarniaHydrix.find((row) => row.name.startsWith(move.prefix));
+    const current = misthalin.upgrades.find((row) => row.name.startsWith(move.prefix));
+    if (!source && !current) continue;
+    const row = {
+      ...(source ?? current),
+      ...move,
       regionId: "misthalin",
       regionHints: ["misthalin"],
       requiredRegions: ["misthalin"],
+      regionRequirementType: "single",
+      comboLabel: "",
+      isRegionCombo: false,
+    };
+    delete row.prefix;
+    if (current) Object.assign(current, row);
+    else misthalin.upgrades.push(row);
+  }
+
+  kandarin.content = kandarin.content.filter((row) => !KANDARIN_CONTENT_DROP.has(row.name));
+
+  const kuradal = kandarin.content.find((row) => row.name.startsWith("Kuradal ("));
+  if (kuradal) {
+    kuradal.name = "Kuradal";
+    kuradal.kind = "Slayer master";
+    kuradal.detail = "Slayer master, Slayer points, Kuradal's Dungeon, and ferocious ring access.";
+    kuradal.source.title = "Kuradal";
+  }
+  const legiones = kandarin.content.find((row) => row.name === "Legiones");
+  if (legiones) {
+    legiones.kind = "Bosses";
+    legiones.detail =
+      "Six Monastery of Ascension bosses whose signets assemble the Ascension crossbows.";
+  }
+  const muspah = kandarin.content.find((row) => row.name === "Muspah");
+  if (muspah) {
+    muspah.kind = "Freneskae combat";
+    muspah.detail = "Freneskae creatures that drop muspah spines, dragon wards, and dragon knives.";
+  }
+
+  const seersVillage = kandarin.content.find((row) => row.name === "Seers' Village skilling hub");
+  if (seersVillage) {
+    seersVillage.name = "Seers' Village";
+    seersVillage.kind = "Skilling town";
+    seersVillage.detail =
+      "Flax and a spinning wheel, maple and yew trees, coal trucks, Elemental Workshop, and Area Task rewards";
+    seersVillage.source.title = "Seers' Village";
+  }
+
+  const manorFarm = {
+    name: "Manor Farm",
+    kind: "Farming",
+    detail: "Animal pens, buyers, beans, Farmers' Market rewards, reputation, and animal perks.",
+    confidence: "confirmed_wiki",
+    source: wikiSource("Player-owned farm", "Player-owned_farm"),
+  };
+  const currentManorFarm = kandarin.content.find((row) => row.name === manorFarm.name);
+  if (currentManorFarm) Object.assign(currentManorFarm, manorFarm);
+  else kandarin.content.push(manorFarm);
+
+  const existingSousChef = kandarin.upgrades.find(
+    (row) =>
+      row.name === "Sous chef's outfit" || row.name === "Gnome Restaurant and sous chef's outfit",
+  );
+  kandarin.upgrades = kandarin.upgrades.filter((row) => !KANDARIN_UPGRADE_DROP.has(row.name));
+
+  const divinersOutfit = kandarin.upgrades.find((row) => row.name === "Diviner's outfit");
+  const divinersRow = {
+    ...(divinersOutfit ?? {}),
+    name: "Diviner's outfit",
+    category: "Divination XP outfit",
+    detail:
+      "Up to 6% Divination XP. The modified headwear adds colony teleports and a chance to save half the energy used when weaving or transmuting",
+    requirements: [],
+    confidence: "confirmed_wiki",
+    source: wikiSource("Diviner's outfit", "Diviner%27s_outfit"),
+    regionId: "kandarin",
+    regionHints: ["kandarin"],
+    requiredRegions: [],
+    regionRequirementType: "single",
+    comboLabel: "",
+    isRegionCombo: false,
+  };
+  if (divinersOutfit) Object.assign(divinersOutfit, divinersRow);
+  else kandarin.upgrades.push(divinersRow);
+
+  kandarin.upgrades.push({
+    ...(existingSousChef ?? {}),
+    name: "Gnome Restaurant and sous chef's outfit",
+    category: "Cooking XP outfit",
+    detail:
+      "Earned from hard Gnome Restaurant deliveries. Up to 6% Cooking XP; the modified toque adds three daily Cooking Guild teleports and a 5% chance to bank duplicate food",
+    requirements: ["Hard Gnome Restaurant deliveries"],
+    confidence: "confirmed_wiki",
+    source: wikiSource("Sous chef's outfit", "Sous_chef%27s_outfit"),
+    regionId: "kandarin",
+    regionHints: ["kandarin"],
+    requiredRegions: [],
+    regionRequirementType: "single",
+    comboLabel: "",
+    isRegionCombo: false,
+  });
+
+  const legendsRecharge = kandarin.upgrades.find(
+    (row) => row.name === "Legends' Guild totem jewellery recharge",
+  );
+  const legendsRow = {
+    ...(legendsRecharge ?? combatBracelet ?? {}),
+    name: "Legends' Guild totem jewellery recharge",
+    category: "Jewellery recharge",
+    detail: "The Legends' Guild totem recharges skills necklaces and combat bracelets",
+    requirements: ["Partial completion of Legends' Quest"],
+    confidence: "confirmed_wiki",
+    source: wikiSource("Legends' Guild", "Legends%27_Guild"),
+    regionId: "kandarin",
+    regionHints: ["kandarin"],
+    requiredRegions: ["kandarin"],
+    regionRequirementType: "single",
+    comboLabel: "",
+    isRegionCombo: false,
+  };
+  if (legendsRecharge) Object.assign(legendsRecharge, legendsRow);
+  else kandarin.upgrades.push(legendsRow);
+
+  fremennik.content = fremennik.content.filter((row) => !FREMENNIK_CONTENT_DROP.has(row.name));
+
+  const fremennikMajors = [
+    {
+      name: "Lunar Isle",
+      kind: "Magic hub",
+      detail: "Lunar spellbook and astral altar.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Lunar Isle", "Lunar_Isle"),
+    },
+    {
+      name: "Livid Farm",
+      kind: "Magic rewards",
+      detail: "Produce points unlock the Livid Farm Lunar spells and wishes.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Rewards (Livid Farm)", "Rewards_(Livid_Farm)"),
+    },
+    {
+      name: "Penguin Agility Course",
+      kind: "Agility",
+      detail: "Agility course on the Iceberg.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Penguin Agility Course", "Penguin_Agility_Course"),
+    },
+    {
+      name: "Blast Furnace",
+      kind: "Smithing",
+      detail: "Coal-free bars and a nearby bank chest.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Blast Furnace", "Blast_Furnace"),
+    },
+    {
+      name: "Sparkling wisp colony",
+      kind: "Divination",
+      detail: "Level 40 Divination colony south-east of Rellekka.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Sparkling wisp", "Sparkling_wisp"),
+    },
+    {
+      name: "Dagannoth Kings",
+      kind: "Boss",
+      detail: "Waterbirth Island bosses that drop combat rings and the dragon hatchet.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Dagannoth Kings", "Dagannoth_Kings"),
+    },
+    {
+      name: "Keldagrim",
+      kind: "Thieving",
+      detail: "Dwarven traders.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Keldagrim", "Keldagrim"),
+    },
+    {
+      name: "Lava Flow Mine",
+      kind: "Mining",
+      detail: "Golden mining suit and Imcando pickaxe fragments.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Lava Flow Mine", "Lava_Flow_Mine"),
+    },
+    {
+      name: "Neitiznot yaks",
+      kind: "Crafting and Cooking",
+      detail: "Yak-hide armour materials, yak hair, and raw yak meat.",
+      confidence: "confirmed_wiki",
+      source: wikiSource("Neitiznot", "Neitiznot"),
+    },
+  ];
+  for (const major of fremennikMajors) {
+    const current = fremennik.content.find((row) => row.name === major.name);
+    if (current) Object.assign(current, major);
+    else fremennik.content.push(major);
+  }
+
+  const seaBoots = fremennik.upgrades.find((row) =>
+    ["Fremennik sea boots", "Fremennik sea boots 1-4"].includes(row.name),
+  );
+  fremennik.upgrades = fremennik.upgrades.filter((row) => !FREMENNIK_UPGRADE_DROP.has(row.name));
+
+  fremennik.upgrades.push({
+    ...(seaBoots ?? {}),
+    name: "Fremennik sea boots",
+    category: "Achievement rewards",
+    detail:
+      "Lyre teleports, Miscellania utility, noted Dagannoth bones, and bonus damage against the Dagannoth Kings",
+    requirements: ["Fremennik achievements"],
+    confidence: "confirmed_wiki",
+    source: wikiSource("Fremennik sea boots", "Fremennik_sea_boots"),
+    regionId: "fremennik",
+    regionHints: ["fremennik"],
+    requiredRegions: ["fremennik"],
+    regionRequirementType: "single",
+    comboLabel: "",
+    isRegionCombo: false,
+  });
+
+  const goldenMiningSuit = fremennik.upgrades.find((row) => row.name === "Golden mining suit");
+  if (goldenMiningSuit) {
+    goldenMiningSuit.category = "Mining XP outfit";
+    goldenMiningSuit.detail =
+      "The five-piece outfit grants 6% Mining XP and is awarded by the Liquid Gold Nymph";
+  }
+
+  if (!fremennik.upgrades.some((row) => row.name === "Hand cannon")) {
+    fremennik.upgrades.push({
+      name: "Hand cannon",
+      category: "Tier 75 two-handed ranged weapon",
+      detail: "Dropped by hand cannoneers after Forgiveness of a Chaos Dwarf",
+      requirements: ["Forgiveness of a Chaos Dwarf"],
+      confidence: "confirmed_wiki",
+      source: wikiSource("Hand cannon", "Hand_cannon"),
+      regionId: "fremennik",
+      regionHints: ["fremennik"],
+      requiredRegions: ["fremennik"],
       regionRequirementType: "single",
       comboLabel: "",
       isRegionCombo: false,
@@ -720,6 +1497,7 @@ for (const region of cat.regions || []) {
     if (changed) catChanged++;
   }
 }
+dedupeRegionUpgrades(cat);
 write(catPath, cat);
 
 const progPath = "data/reference/progression-unlocks.json";

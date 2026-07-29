@@ -4,9 +4,10 @@
 
 import { useMemo, useState } from "react";
 import { contentDetailOrRewards } from "@/lib/researchRewards";
+import { useResearchRegion } from "@/research/regionStore";
 import { PLACES_BY_REGION } from "./data/placeAnchors";
 import type { DetailRow, RegionDetail, TrainingRow } from "./data/regionDetail";
-import { REGION_DETAIL } from "./data/regionDetail";
+import { makeRegionDetail } from "./data/regionDetail";
 import type { PlannerRegion } from "./data/plannerRegion";
 import { useMapFocus } from "./useMapFocus";
 
@@ -144,7 +145,8 @@ export function RegionDetails({
   const [confirmedOnly, setConfirmedOnly] = useState(false);
 
   const planner = regions.find((r) => r.id === focus.region);
-  const detail = REGION_DETAIL.get(focus.region);
+  const { region } = useResearchRegion(focus.region);
+  const detail = useMemo(() => (region ? makeRegionDetail(region) : null), [region]);
   // Names on the board (catalog areas + content-row sites). Sites never pad the
   // places-pinned ratio — that meter is catalog areas only.
   const anchored = useMemo(
@@ -327,8 +329,7 @@ export function RegionDetails({
         {tab === "places" ? (
           places.length ? (
             <div className="flex flex-wrap gap-1.5 py-1">
-              {/* Hovering a place lights its marker on the board, and the
-                      marker lights this back. That link is the point of the route. */}
+              {/* Hover state is shared with the matching map marker. */}
               {places.map((area) => {
                 const pinned = anchored.has(area);
                 const on = focus.place === area;

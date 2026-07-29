@@ -1,13 +1,8 @@
 "use client";
 
 /**
- * The sea, and the only thing on this route that moves at rest.
- *
- * Long swell displaces the mesh, so the plane is subdivided just enough to carry
- * it — the short detail is normal-only and costs no vertices. Everything else
- * about how it looks lives in WaterMaterial; everything about when it is allowed
- * to move lives in MotionDriver (30 idle / 120 active), the whole board's one
- * heartbeat.
+ * Long swell uses mesh displacement; short-wave detail stays in WaterMaterial.
+ * MotionDriver owns the frame cadence.
  */
 
 import { useEffect, useMemo } from "react";
@@ -15,9 +10,9 @@ import * as THREE from "three/webgpu";
 import { MAP_WORLD } from "./data/regionAnchors";
 import { createWaterMaterial } from "./materials/WaterMaterial";
 
-/** Wide enough that the swell never shows an edge inside any legal framing. */
+/** Covers every legal camera framing. */
 const EXTENT = MAP_WORLD.width * 3;
-/** Segments across that extent. Long swell ~1.2 units; 80 reads the same at table distance. */
+/** Resolves the 1.2-unit swell at table distance. */
 const SEGMENTS = 80;
 
 export function Ocean({

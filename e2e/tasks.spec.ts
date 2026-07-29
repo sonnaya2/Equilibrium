@@ -9,7 +9,7 @@ test("tasks keeps temporary task provenance visible", async ({ page }) => {
   await page.goto("/tasks");
 
   await expect(page.getByRole("heading", { name: "Tasks", exact: true })).toBeVisible();
-  await expect(page.getByText(/Catalyst League baseline/i)).toBeVisible();
+  await expect(page.getByText(/Catalyst League reference/i)).toBeVisible();
   await expect(page.getByText(/[\d,]+ tasks · completion/)).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",

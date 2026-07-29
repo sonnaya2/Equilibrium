@@ -33,8 +33,7 @@ mechanics stack on top as their own layers.
 **Hit caps are metadata.** Standard cap is 30,000, but model it as per-effect rules - some effects
 alter, bypass, or split it. No single hardcoded global.
 
-**Levels run 1-120** for Attack/Strength/Ranged/Magic/Necromancy, with valid temporary boosts above
-120. No slider caps at 99.
+**Levels run 1-120** for Attack/Strength/Ranged/Magic/Necromancy, with valid temporary boosts above 120. No slider caps at 99.
 
 **Ability categories** are Basic / Enhanced / Ultimate / Utility for the three original styles.
 Do not assume a pre-2026 "threshold" ability still needs 50% adrenaline or costs 15%. Constitution and
@@ -54,7 +53,7 @@ carries its own source and verification date.
 
 They are not palette swaps of one another. Shared infrastructure is good, shared fake mechanics are not.
 
-- **Melee** - Bloodlust as *state* (generation, consumption, cap typically 4, Berserk can alter
+- **Melee** - Bloodlust as _state_ (generation, consumption, cap typically 4, Berserk can alter
   capacity), bleeds, empowered abilities, on-next-attack and on-kill effects, dual-wield vs 2H.
 - **Ranged** - on-hit effects, hit frequency, ammo and weapon interactions, proc frequency, multi-hit,
   per-hit adrenaline where relevant.
@@ -74,15 +73,15 @@ output rather than guessing.
 ## Isolation rules
 
 - Core has **zero React dependency**. If a file under `src/combat/` imports React, that is a bug.
-- League modifiers layer on top via `calculateCombat(baseState, { ruleset, relics, blessings, regions })`.
-  Never bake a relic or blessing into a core formula.
+- League modifiers enter through `leagueModifiers(loadout)` in `src/combat/league/ruleset.ts` and
+  feed the existing `CombatModifier[]` pipeline. Never bake a relic or blessing into a core formula.
 - **Generic target only.** No boss calculators, phase sims, kill-time or enrage math. Target settings
   stop at Defence, accuracy-relevant values, Damage Potential override, size, HP%, vulnerability,
   poisonable, Slayer category, and undead/dragon/demon flags.
 
 ## Verifying a number
 
-1. **RuneScape Wiki** current page *and* its update history, scanning forward from 2024-03-04 - not
+1. **RuneScape Wiki** current page _and_ its update history, scanning forward from 2024-03-04 - not
    stopping at 2026-03-02.
 2. **RS Analysis** (rs-analysis.xyz) as an external reference implementation for expected value,
    crit/no-crit splits, and modifier ordering. Read its results, never its source or UI.

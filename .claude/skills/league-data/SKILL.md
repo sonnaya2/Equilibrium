@@ -1,63 +1,45 @@
 ---
 name: league-data
-description: The Leagues II Equilibrium domain model for this repo - region locking and unlock milestones, the 7 relic tiers, the 8 blessing tiers with Order/Chaos/Balance path tracking and God Tier derivation at tiers 4 and 8, blessing resets, and task tiers and League Points. Use when modelling league content in src/league/, data/league/, or the Map, Tasks and Build routes, or when deciding whether a league number is safe to hardcode.
+description: Domain model for RuneScape 3 Leagues II Equilibrium. Use when changing regions, relics, blessings, task records, League Points, provisional data, or the Map, Tasks, and Build routes. Distinguishes verified Equilibrium rules from temporary Catalyst test data.
 ---
 
-# Leagues II: Equilibrium domain model
+# Equilibrium league data
 
-Launches 10 Aug 2026. Fresh league character on dedicated league worlds, separate from the main
-account; Account Nomination sends final rewards to a chosen account. No player trading this league.
+Model only sourced League rules. Keep unknown content empty and visibly provisional rather than filling gaps with plausible values.
 
 ## Regions
 
-Start in **Misthalin + Havenhythe**. The first task milestone unlocks **Karamja**. Further milestones
-unlock 3 more from: Asgarnia, Kandarin, Fremennik Province, Forinthry (Wilderness), Desert, Morytania,
-Tirannwn, Anachronia. You cannot unlock everything - the tradeoff *is* the build. Unlocking a region
-auto-completes a large slate of its quests.
+Start with Misthalin and Havenhythe. The first task milestone unlocks Karamja. Later milestones allow three elective regions from Asgarnia, Kandarin, Fremennik Province, Forinthry, Desert, Morytania, Tirannwn, and Anachronia.
 
-Model regions as a graph of unlock milestones, not a flat checklist: what a region gates (content,
-skills, tasks, bosses-as-unlocks) is what the planner needs to answer.
+Treat regions as a graph of content and unlock dependencies, not a flat checklist. Planning is ironman and self-sufficient; do not add a Grand Exchange mode.
 
-## Relics
+## Relics and blessings
 
-7 tiers, returning from Leagues: Catalyst, rebalanced to avoid obvious best-in-slot picks. Each tier
-also grants enhanced passive bonuses (XP, drop rates, run energy, skillcape perks, free Invention
-materials, and so on). F2P gets the first 3 tiers.
+The League has seven relic tiers. Keep exact effects and unlock costs provisional until a current official or Wiki source verifies them.
 
-## Blessings
+Blessings are combat-only, use eight tiers, and track Order, Chaos, and Balance choices. Derive God Tier at tiers four and eight from ordered path history:
 
-New this league, combat-only, 8 tiers, unlocked via Blessing Tasks inside unlocked regions.
-Three paths per tier: **Order / Chaos / Balance**.
+- two or more Chaos choices: Chaos God;
+- two or more Order choices: Order God;
+- two or more Balance choices, or one of each: Balance God.
 
-God Tier Blessings are granted at **tier 4** and **tier 8**, derived from path choices so far:
-
-- 2 or more Chaos -> Chaos God
-- 2 or more Order -> Order God
-- 2 or more Balance, or one of each -> Balance God
-
-Up to 3 resets: one from Tier 1, two more as you progress. Model path history as an ordered list -
-derivation needs the counts, and resets rewrite history.
+Model resets by rewriting path history. Do not merge League effects into base RS3 formulas. `src/combat/league/ruleset.ts` exposes `LeagueLoadout` and `leagueModifiers(loadout): CombatModifier[]`; keep that function empty until each modifier has a verified source.
 
 ## Tasks
 
-Easy through Master, worth 10-400 League Points each. Points drive the League Trophy tier and relic
-unlocks. Tasks get their own purpose-built interface, not a generic checklist grid.
+Tasks span Easy through Master and award League Points. Preserve point values, completion-rate qualifiers, region and build availability, provenance, and local completion state.
 
-## The provisional rule
+Catalyst records are temporary test data:
 
-Everything above comes from the 23 Jul 2026 countdown post. **It is flavour and structure, not final
-numbers.** Do not hardcode task point values, exact relic or blessing effects, or region unlock costs
-from that post. Verify against the RuneScape Wiki and the official reveal blogs as they publish daily
-through launch. Records in `data/league/` stay `verified: false` until Wiki-confirmed, and the UI
-should be able to say which numbers are still provisional.
+- label them on every Tasks render;
+- preserve live versus snapshot status and `<0.1%` qualifiers;
+- never import Catalyst rewards, milestones, categories, or unlock rules;
+- replace them when official Equilibrium tasks publish.
 
-## Where this plugs into combat
+Use the purpose-built Tasks card browser. Do not force tasks into Data's table layout.
 
-Relics and Blessings are combat modifiers like any other - same `CombatModifier` stage/priority
-architecture - but they enter through the ruleset boundary:
+## Provisional rule
 
-```ts
-calculateCombat(baseState, { ruleset: "equilibrium", relics, blessings, regions })
-```
+Do not hardcode task points, relic effects, blessing effects, or unlock costs from countdown copy. A record stays unverified until its own `SourceReference` supports it.
 
-Never merged into base formulas. Base RS3 math must stay independently validatable and toggleable off.
+Base combat math must remain independently testable with `leagueModifiers(loadout)` omitted. Add League modifiers through the existing ordered modifier pipeline only.

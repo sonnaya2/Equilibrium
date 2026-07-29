@@ -16,18 +16,6 @@ on:
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/validate.yml"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "app/**"
-      - "src/**"
-      - "data/**"
-      - "public/data/**"
-      - "scripts/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/validate.yml"
   workflow_dispatch:
 
 permissions:
@@ -41,16 +29,15 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       # data/ is the shipped store. audit:data is the CI gate (schema / IDs / sources).
-      # normalize:data needs a local scraped-data/ checkout (gitignored) and is
-      # manual-only — see normalize-data.yml. Before large research PRs, run
-      # normalize + git diff -- data/ locally so generated files stay committed.
+      # normalize:data needs the ignored local scraped-data/ workspace. Before
+      # large research updates, normalize locally and commit the resulting data/ diff.
       - name: Audit shipped data/
         run: npm run audit:data
       - run: npm run typecheck

@@ -3,11 +3,11 @@
 Equilibrium now builds queryable data instead of mutating large JSON files in place:
 
 ```text
-tracked legacy evidence + raw snapshots
+one compressed seed
   -> schema migrations
   -> normalized SQLite + transactional content patches
   -> validation and bounded query CLI
-  -> hashed domain indexes and page-sized frontend shards
+  -> versioned manifest, bounded indexes, and page-sized frontend shards
 ```
 
 ## SQLite decision
@@ -17,19 +17,18 @@ The implementation uses Node's built-in `node:sqlite` `DatabaseSync`. The projec
 ## Ownership
 
 - `data/migrations/`: deterministic relational schema changes.
+- `data/seed-v1.json.gz`: immutable consolidated baseline.
 - `data/patches/`: small immutable content operations with stable targets.
-- tracked `data/**/*.json`: compatibility seed evidence until each consumer migrates.
 - `.cache/equilibrium.sqlite`: generated query/build cache; never edit or commit it.
-- `public/data/v2/`: generated, hashed frontend exports; never edit them.
-- `reports/data-quarantine.json`: conflicts preserved for explicit resolution, never fuzzy-merged.
+- `.cache/data/`: generated compatibility shapes for existing TypeScript imports.
+- `public/data/v2/`: generated frontend exports with size and SHA-256 metadata; never edit or commit them.
+- `reports/data-quarantine.json`: generated conflict report; conflicts are never fuzzy-merged.
 
 The schema has a shared entity/source/region core plus domain tables for quests, tasks, training methods, equipment and stats, abilities, prayers, spells, invention perks, activities, unlocks, effects, requirements, relationships, and map points. Foreign keys, checks, uniqueness constraints, indexes, and FTS5 enforce the common invariants. Rare source-specific fields remain in validated JSON columns; regions, sources, requirements, effects, and relationships are also materialized relationally.
 
 ## Pipeline
 
-`scripts/data/platform.mjs` owns five declared transforms: ingest, normalize, enrich, validate, and export. Each records its version, dependencies, input hash, output count, and validation contract in `transform_runs`. A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports tracked evidence, applies patches transactionally, rebuilds search, validates, checks v1 research parity, and rewrites only changed v2 artifacts.
-
-The former broad mutation chain remains temporarily as `npm run normalize:data:legacy`. It requires ignored scrape inputs and is not part of normal builds. It stays only until the remaining server-side research, combat, map, and planner consumers have domain-specific compatibility tests.
+`scripts/data/platform.mjs` owns five declared transforms: ingest, normalize, enrich, validate, and export. Each records its version, dependencies, input hash, output count, and validation contract in `transform_runs`. A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports the seed, applies patches transactionally, rebuilds search, validates exact research parity, materializes compatibility data, and rewrites only changed v2 artifacts.
 
 ## Normal editing
 
@@ -44,10 +43,12 @@ npm run data:export:changed
 npm run data:diff
 ```
 
-`data:query` accepts one read-only `SELECT` or `WITH` statement, applies a row limit, and rejects writes, PRAGMA, attachment, DDL, and multiple statements. `data:context` defaults to a 16 KB output ceiling and reports truncation.
+`data:query` accepts one bounded read-only `SELECT` or `WITH` statement and rejects writes, PRAGMA, attachment, DDL, and multiple statements. `data:context` defaults to a 16 KB output ceiling and reports truncation.
 
 Schema or broad taxonomy work uses `data:rebuild`. Normal record work does not.
 
 ## Frontend compatibility
 
-`/data` loads the small v2 research index and one region shard at a time. Domain artifacts are chunked near 220 KiB, content-hashed in their filenames, and resolved through bounded ID index shards. The old v1 research store remains committed as a parity oracle; every rebuild compares all 11 region payloads exactly before v2 export succeeds.
+`/data` loads the small v2 research index and one region shard at a time. The regional and permanent-unlock panels then fetch only the active region/tab payload. Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID index shards. Every rebuild independently reconstructs the 11 research payloads from the consolidated seed and requires exact parity before export succeeds.
+
+The production build moved the permanent-unlock client data from 1,115,254 bytes to about 27 KiB of component code and the regional-unlock data from 731,860 bytes to about 20 KiB. The largest generated panel payload is 170,035 bytes; the manifest regression test rejects any frontend artifact at or above 500 KiB.

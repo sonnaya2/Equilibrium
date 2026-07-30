@@ -261,7 +261,7 @@ CREATE TABLE map_points (
 
 CREATE INDEX map_points_region ON map_points(region_id, point_type);
 
-CREATE TABLE legacy_records (
+CREATE TABLE source_records (
   source_file TEXT NOT NULL REFERENCES source_files(path) ON DELETE CASCADE,
   record_path TEXT NOT NULL,
   stable_id TEXT,
@@ -271,8 +271,8 @@ CREATE TABLE legacy_records (
   PRIMARY KEY (source_file, record_path)
 ) STRICT;
 
-CREATE INDEX legacy_records_stable_id ON legacy_records(stable_id);
-CREATE INDEX legacy_records_entity ON legacy_records(entity_id);
+CREATE INDEX source_records_stable_id ON source_records(stable_id);
+CREATE INDEX source_records_entity ON source_records(entity_id);
 
 CREATE TABLE quarantine (
   id INTEGER PRIMARY KEY,

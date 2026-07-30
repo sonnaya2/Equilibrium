@@ -1,5 +1,5 @@
-import plannerSource from "../../data/research/planner-expansions.json";
-import supportSource from "../../data/research/planner-support-items-2026-07-25.json";
+import plannerSource from "#data/research/planner-expansions.json";
+import supportSource from "#data/research/planner-support-items-2026-07-25.json";
 
 export type PlannerExpansionData = typeof plannerSource;
 export type CombatTrainingSpot = PlannerExpansionData["combat_training_spots"][number];

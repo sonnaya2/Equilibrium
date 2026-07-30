@@ -1,10 +1,10 @@
-import archaeologySource from "../../data/research/planner-expansions-invention-archaeology.json";
-import invention2026Source from "../../data/research/planner-expansions-invention-2026.json";
-import perkSource from "../../data/research/planner-expansions-invention-perks.json";
-import utilityPerkSource from "../../data/research/planner-expansions-invention-utility-perks.json";
-import activePerkSource from "../../data/research/planner-expansions-invention-active-perks.json";
-import coverageSource from "../../data/research/planner-expansions-invention-component-coverage.json";
-import bottleneckSource from "../../data/research/planner-expansions-invention-material-bottlenecks.json";
+import archaeologySource from "#data/research/planner-expansions-invention-archaeology.json";
+import invention2026Source from "#data/research/planner-expansions-invention-2026.json";
+import perkSource from "#data/research/planner-expansions-invention-perks.json";
+import utilityPerkSource from "#data/research/planner-expansions-invention-utility-perks.json";
+import activePerkSource from "#data/research/planner-expansions-invention-active-perks.json";
+import coverageSource from "#data/research/planner-expansions-invention-component-coverage.json";
+import bottleneckSource from "#data/research/planner-expansions-invention-material-bottlenecks.json";
 
 export type AncientInventionMaterial =
   (typeof archaeologySource)["ancient_invention_materials"][number];

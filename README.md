@@ -64,19 +64,16 @@ that server if you've got a dev server running from the same checkout, so stop y
 ## Data jobs
 
 ```bash
-npm run normalize:data   # research-only: needs a local scraped-data/ checkout (not shipped)
-npm run sync:combat      # refresh combat data
-npm run sync:league:disabled  # exits 1 on purpose; use normalize:data for data/league/*
+npm run data:rebuild     # recreate SQLite, compatibility cache, and frontend shards
+npm run data:find -- --query "Seismic wand"
+npm run data:context -- --id item:seismic-wand --format markdown
+npm run audit:data       # rebuild plus architecture/provenance gates
 npm run sync:assets      # refresh sourced RS3 and League media
-npm run sync:quests      # rebuild quest and region data from the Wiki
-npm run sync:quests:auto # apply official auto-completion lists when published
-npm run sync:planner     # rebuild region-value and progression research
-npm run audit:all-data   # run the full data audit set
 ```
 
-`data/` is what the app reads and ships. Research scrapes (`scraped-data/`) are gitignored;
-restore them only when regenerating from the Wiki pipeline.
-`src/combat/data/` reads and types the canonical combat JSON — it is not a second copy to hand-edit.
+Tracked data is one compressed seed, SQL migrations, and small JSONL patches. The generated SQLite
+database, compatibility JSON, reports, and frontend shards are ignored. See
+`.claude/skills/data-sync/SKILL.md` before changing sourced facts.
 
 ## Layout
 
@@ -88,11 +85,9 @@ src/research/        typed access to normalized research
 src/components/      shared UI
 src/lib/             browser persistence
 
-data/combat/         canonical combat JSON
-data/league/         canonical League and generated quest data
-data/research/       normalized research and progression data
+data/                compressed seed, migrations, and content patches
 assets/              sourced game media and provenance manifest
-scripts/             optional research sync / normalize (needs local scraped-data/)
+scripts/data/        SQLite pipeline, bounded query CLI, and architecture audit
 ```
 
 ## House rules

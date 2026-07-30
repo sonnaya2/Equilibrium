@@ -12,7 +12,7 @@ import {
   getRemainingRareComponentRoutes,
   getUtilityPerkRecipes,
 } from "@/research/inventionPlanner";
-import activePerkData from "../../data/research/planner-expansions-invention-active-perks.json";
+import activePerkData from "#data/research/planner-expansions-invention-active-perks.json";
 
 const activeSourceUrls = (activePerkData.source_urls ?? []).filter(
   (url): url is string => typeof url === "string" && url.startsWith("https://"),

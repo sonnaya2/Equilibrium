@@ -87,12 +87,16 @@ type Row = {
 
 describe("data icon audit", () => {
   it("writes blank/garbage report for /data entities", () => {
-    const catalog = JSON.parse(readFileSync("data/research/catalog.json", "utf8"));
-    const combat = JSON.parse(readFileSync("data/research/regional-combat-unlocks.json", "utf8"));
-    const skilling = JSON.parse(
-      readFileSync("data/research/regional-skilling-unlocks.json", "utf8"),
+    const catalog = JSON.parse(readFileSync(".cache/data/research/catalog.json", "utf8"));
+    const combat = JSON.parse(
+      readFileSync(".cache/data/research/regional-combat-unlocks.json", "utf8"),
     );
-    const unlocks = JSON.parse(readFileSync("data/reference/progression-unlocks.json", "utf8"));
+    const skilling = JSON.parse(
+      readFileSync(".cache/data/research/regional-skilling-unlocks.json", "utf8"),
+    );
+    const unlocks = JSON.parse(
+      readFileSync(".cache/data/reference/progression-unlocks.json", "utf8"),
+    );
 
     const blank: Row[] = [];
     const garbage: Row[] = [];

@@ -109,7 +109,7 @@ export function CombatReference({
         <p className="mt-2 text-xs text-parch-300">
           Wiki check:{" "}
           {updateIndex.records.some((entry) => entry.stale === true)
-            ? "stale rows. Run npm run sync:combat"
+            ? "stale rows need a sourced data patch"
             : "no tracked page revised since last verify"}
           {" · since "}
           {updateIndex.trackedSince}

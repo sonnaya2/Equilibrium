@@ -13,11 +13,14 @@ import {
 } from "node:fs";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { gunzipSync } from "node:zlib";
 
 const ROOT = process.cwd();
 const CACHE = join(ROOT, ".cache");
 const DATABASE = join(CACHE, "equilibrium.sqlite");
 const CHANGED = join(CACHE, "data-changed.json");
+const COMPAT_DATA = join(CACHE, "data");
+const SEED = join(ROOT, "data/seed-v1.json.gz");
 const MIGRATIONS = join(ROOT, "data/migrations");
 const PATCHES = join(ROOT, "data/patches");
 const EXPORT_ROOT = join(ROOT, "public/data/v2");
@@ -63,11 +66,11 @@ const DOMAIN_TABLES = new Map([
 ]);
 const TRANSFORMS = [
   {
-    name: "legacy-json-ingest",
+    name: "seed-ingest",
     stage: "ingest",
     version: 1,
-    inputs: ["data/**/*.json"],
-    outputs: ["source_files", "legacy_records"],
+    inputs: ["data/seed-v1.json.gz"],
+    outputs: ["source_files", "source_records", ".cache/data/**"],
     dependencies: [],
     incremental: false,
     validation: "parseable JSON and stable file hashes",
@@ -76,9 +79,9 @@ const TRANSFORMS = [
     name: "relational-core",
     stage: "normalize",
     version: 1,
-    inputs: ["legacy_records"],
+    inputs: ["source_records"],
     outputs: ["entities", "domain tables", "normalized relationships"],
-    dependencies: ["legacy-json-ingest"],
+    dependencies: ["seed-ingest"],
     incremental: false,
     validation: "constraints, taxonomy, and conflict quarantine",
   },
@@ -110,7 +113,7 @@ const TRANSFORMS = [
     outputs: ["public/data/v2/**"],
     dependencies: ["relational-validation"],
     incremental: true,
-    validation: "content hashes, size budgets, legacy research parity",
+    validation: "content hashes, size budgets, exact research parity",
   },
 ];
 
@@ -217,24 +220,13 @@ function migrate(db) {
   return files.length;
 }
 
-function dataFiles() {
-  return walkFiles(join(ROOT, "data"), (path) => {
-    const rel = slash(relative(ROOT, path));
-    return (
-      extname(path) === ".json" &&
-      !rel.startsWith("data/patches/") &&
-      !rel.startsWith("data/migrations/")
-    );
-  });
-}
-
 function fileClassification(file) {
   if (file.startsWith("data/research/planner-") || /regional-|region-combos|equipment-region-index/.test(file)) {
-    return "legacy-overlay";
+    return "snapshot-overlay";
   }
   if (/audit|review|unknowns|update-index/.test(file)) return "reference-evidence";
   if (file.startsWith("data/map/")) return "map-source";
-  return "legacy-canonical";
+  return "seed-content";
 }
 
 function compactMetadata(value) {
@@ -429,7 +421,7 @@ function insertEntity(db, fields, record) {
       fields.id,
       `Stable ID conflicts with ${existing.entity_type}:${existing.name}`,
       stableJson(existing),
-      "Resolve the legacy ID collision with an explicit content patch; no fuzzy merge was attempted.",
+      "Resolve the seed ID collision with an explicit content patch; no fuzzy merge was attempted.",
       fields.extra,
     );
     return null;
@@ -741,18 +733,66 @@ function recordTransform(db, transform, inputHash, outputCount) {
   ).run(transform.name, transform.version, transform.stage, inputHash, outputCount, FIXED_TIME);
 }
 
-function importLegacy(db) {
-  const documents = dataFiles().map((path) => {
-    const file = slash(relative(ROOT, path));
-    const text = readFileSync(path, "utf8");
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (error) {
-      throw new Error(`${file}: ${error.message}`);
+function seedDocuments() {
+  if (!existsSync(SEED)) throw new Error("Data seed is missing: data/seed-v1.json.gz");
+  let seed;
+  try {
+    seed = JSON.parse(gunzipSync(readFileSync(SEED)));
+  } catch (error) {
+    throw new Error(`Invalid data seed: ${error.message}`);
+  }
+  if (seed.schemaVersion !== 1 || !Array.isArray(seed.files) || seed.files.length === 0) {
+    throw new Error("Unsupported or empty data seed");
+  }
+  const paths = new Set();
+  return seed.files.map((entry) => {
+    const file = slash(entry.path ?? "");
+    if (!/^data\/[a-z0-9/_-]+\.json$/i.test(file) || paths.has(file)) {
+      throw new Error(`Invalid or duplicate seed path: ${file}`);
     }
-    return { file, text, data, records: collectArrayRecords(data) };
+    paths.add(file);
+    const text = stableJson(entry.data);
+    return { file, text, data: entry.data, records: collectArrayRecords(entry.data) };
   });
+}
+
+function setRecordAtPath(document, recordPath, value) {
+  const tokens = [...recordPath.matchAll(/\.([^.[\]]+)|\[(\d+)\]/g)].map((match) =>
+    match[1] === undefined ? Number(match[2]) : match[1],
+  );
+  let target = document;
+  for (const token of tokens.slice(0, -1)) target = target[token];
+  target[tokens.at(-1)] = value;
+}
+
+function materializeCompatibilityData(db) {
+  const documents = seedDocuments();
+  const byFile = new Map(documents.map((document) => [document.file, document]));
+  for (const row of db
+    .prepare("SELECT source_file, record_path, raw_json FROM source_records ORDER BY source_file, record_path")
+    .all()) {
+    const document = byFile.get(row.source_file);
+    if (!document) throw new Error(`Seed document disappeared: ${row.source_file}`);
+    setRecordAtPath(document.data, row.record_path, JSON.parse(row.raw_json));
+  }
+  const target = resolve(COMPAT_DATA);
+  if (dirname(target) !== resolve(CACHE) || basename(target) !== "data") {
+    throw new Error(`Refusing to replace unexpected compatibility path: ${target}`);
+  }
+  mkdirSync(target, { recursive: true });
+  const expected = new Set();
+  for (const document of documents) {
+    const path = join(CACHE, document.file);
+    expected.add(resolve(path));
+    atomicWrite(path, `${stableJson(document.data)}\n`);
+  }
+  for (const path of walkFiles(target, () => true)) {
+    if (!expected.has(resolve(path))) rmSync(path, { force: true });
+  }
+}
+
+function importSeed(db) {
+  const documents = seedDocuments();
   const inputHash = hash(documents.map(({ file, text }) => `${file}:${hash(text)}`).join("\n"));
   transaction(db, () => {
     for (const document of documents) {
@@ -795,7 +835,7 @@ function importLegacy(db) {
           }
         }
         db.prepare(
-          `INSERT INTO legacy_records(source_file, record_path, stable_id, entity_id, record_hash, raw_json)
+          `INSERT INTO source_records(source_file, record_path, stable_id, entity_id, record_hash, raw_json)
            VALUES (?, ?, ?, ?, ?, ?)`,
         ).run(
           document.file,
@@ -871,6 +911,31 @@ function requireEntity(db, id, context) {
   return entity;
 }
 
+function syncSourceEntityFields(db, id, fields) {
+  const keyChoices = {
+    name: ["name", "title", "label", "item", "ability", "quest", "activity", "method", "perk"],
+    short_description: ["shortDescription", "summary", "description"],
+    detailed_description: ["detailedDescription", "detail", "description"],
+    verified_at: ["verifiedAt", "verified_at"],
+    sort_key: ["sortKey", "sort_key"],
+  };
+  const select = db.prepare("SELECT source_file, record_path, raw_json FROM source_records WHERE entity_id = ?");
+  const update = db.prepare(
+    "UPDATE source_records SET raw_json = ?, record_hash = ? WHERE source_file = ? AND record_path = ?",
+  );
+  for (const record of select.all(id)) {
+    const row = JSON.parse(record.raw_json);
+    for (const [field, value] of Object.entries(fields)) {
+      if (field === "entity_type") continue;
+      const candidates = keyChoices[field] ?? [field];
+      const key = candidates.find((candidate) => Object.hasOwn(row, candidate)) ?? candidates[0];
+      row[key] = value;
+    }
+    const raw = stableJson(row);
+    update.run(raw, hash(raw), record.source_file, record.record_path);
+  }
+}
+
 function applyOperation(db, operation, context, changed) {
   if (!operation || typeof operation !== "object" || Array.isArray(operation)) {
     throw new Error(`${context}: operation must be an object`);
@@ -929,6 +994,7 @@ function applyOperation(db, operation, context, changed) {
       db.prepare(
         `UPDATE entities SET ${assignments.map((key) => `${key} = ?`).join(", ")}, updated_source = ? WHERE id = ?`,
       ).run(...assignments.map((key) => operation.set[key]), `patch:${context.split(":")[0]}`, id);
+      syncSourceEntityFields(db, id, operation.set);
     }
   } else if (operation.op === "upsert-source") {
     const allowed = new Set([
@@ -1050,6 +1116,7 @@ function applyOperation(db, operation, context, changed) {
       `patch:${context.split(":")[0]}`,
       id,
     );
+    syncSourceEntityFields(db, id, { status: "removed" });
   } else {
     throw new Error(`${context}: unsupported operation: ${operation.op}`);
   }
@@ -1168,19 +1235,19 @@ function validate(db, changedOnly = false) {
     checkRows(db, `SELECT max(version) AS version FROM schema_migrations HAVING version != ${SCHEMA_VERSION}`),
   );
   addFailure(
-    "unmapped stable legacy records without quarantine",
+    "unmapped stable seed records without quarantine",
     checkRows(
       db,
-      `SELECT legacy_records.source_file, legacy_records.record_path, legacy_records.stable_id
-       FROM legacy_records
-       WHERE legacy_records.stable_id IS NOT NULL
-         AND legacy_records.entity_id IS NULL
+      `SELECT source_records.source_file, source_records.record_path, source_records.stable_id
+       FROM source_records
+       WHERE source_records.stable_id IS NOT NULL
+         AND source_records.entity_id IS NULL
          AND NOT EXISTS (
            SELECT 1 FROM quarantine
-           WHERE quarantine.source_file = legacy_records.source_file
-             AND quarantine.record_path = legacy_records.record_path
+           WHERE quarantine.source_file = source_records.source_file
+             AND quarantine.record_path = source_records.record_path
          )
-       ORDER BY legacy_records.source_file, legacy_records.record_path`,
+       ORDER BY source_records.source_file, source_records.record_path`,
     ),
   );
   const missingSources = checkRows(
@@ -1200,7 +1267,7 @@ function validate(db, changedOnly = false) {
     "SELECT source_file, record_path, stable_id, error FROM quarantine ORDER BY source_file, record_path",
   );
   addWarning(
-    "quarantined legacy records",
+    "quarantined seed records",
     changedOnly ? quarantined.filter(({ stable_id }) => changedIds.has(stable_id)) : quarantined,
   );
   const counts = Object.fromEntries(
@@ -1263,11 +1330,130 @@ function entityExport(entity, regionsByEntity, sourcesByEntity) {
   };
 }
 
+const HARD_REGION_KEYS = ["requiredRegions", "required_regions", "required_region", "required_regions_for_collection_loop"];
+const HOST_REGION_KEYS = [
+  "region",
+  "regionId",
+  "region_hint",
+  "region_hints",
+  "regionHints",
+  "regions",
+  "working_region",
+  "geographic_region",
+  "acquisition_region",
+  "acquisition_regions",
+  "collector_region",
+  "collector_regions",
+];
+const NON_REGION_ID_PREFIXES = new Set([
+  "invention",
+  "crossregion",
+  "cross-region",
+  "multiregion",
+  "multi-region",
+  "global",
+  "combat",
+  "boss",
+  "item",
+  "prifddinas",
+]);
+
+function collectRegionScope(value, out) {
+  if (typeof value === "string" && value.trim()) out.push(value);
+  else if (Array.isArray(value)) value.forEach((item) => collectRegionScope(item, out));
+  else if (value && typeof value === "object") Object.values(value).forEach((item) => collectRegionScope(item, out));
+}
+
+function normalizeRegionScope(value) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function rowMatchesRegion(row, region) {
+  if (row.region_requirement_type === "no_region_requirement") return true;
+  const aliases = [region.id, region.name, ...asArray(region.aliases)].map(normalizeRegionScope).filter(Boolean);
+  const matches = (scope) => {
+    const normalized = scope.map(normalizeRegionScope).filter(Boolean);
+    const concrete = normalized.filter(
+      (value) => !value.includes("global") && !value.includes("allregions") && !value.includes("anyregion"),
+    );
+    if (!concrete.length) return normalized.length > 0;
+    return concrete.some((value) => aliases.some((alias) => value.includes(alias) || alias.includes(value)));
+  };
+  const hard = [];
+  HARD_REGION_KEYS.forEach((key) => collectRegionScope(row[key], hard));
+  if (hard.length) return matches(hard);
+  const host = [];
+  HOST_REGION_KEYS.forEach((key) => collectRegionScope(row[key], host));
+  if (typeof row.id === "string" && row.id.includes(":")) {
+    const prefix = row.id.split(":", 1)[0];
+    const normalized = normalizeRegionScope(prefix);
+    if (normalized && !NON_REGION_ID_PREFIXES.has(normalized) && !NON_REGION_ID_PREFIXES.has(prefix)) host.push(prefix);
+  }
+  return matches(host);
+}
+
+function sourceRows(db, file, pattern) {
+  return db
+    .prepare("SELECT record_path, raw_json FROM source_records WHERE source_file = ? ORDER BY record_path")
+    .all(file)
+    .filter(({ record_path }) => pattern.test(record_path))
+    .sort((a, b) => Number(a.record_path.match(/\[(\d+)\]$/)?.[1] ?? 0) - Number(b.record_path.match(/\[(\d+)\]$/)?.[1] ?? 0))
+    .map(({ raw_json }) => JSON.parse(raw_json));
+}
+
+function sourceSection(db, file, section) {
+  return sourceRows(db, file, new RegExp(`^\\$\\.${section}\\[\\d+\\]$`));
+}
+
+function rowKey(row, index, prefix) {
+  if (row.id != null && row.id !== "") return String(row.id);
+  if (typeof row.name === "string" && row.name) return `${prefix}:${row.name}`;
+  if (typeof row.quest === "string" && row.quest) return `${prefix}:${row.quest}`;
+  return `${prefix}:${index}`;
+}
+
+function researchPanels(db, region) {
+  const skilling = sourceSection(db, "data/research/regional-skilling-unlocks.json", "records");
+  const combat = sourceSection(db, "data/research/regional-combat-unlocks.json", "records");
+  const regional = {
+    skillingActivities: skilling.filter((row) => row.recordType === "activity" && rowMatchesRegion(row, region)),
+    skillingEquipment: skilling.filter((row) => row.recordType === "equipment" && rowMatchesRegion(row, region)),
+    combatAccounts: combat.filter((row) => row.recordType === "account" && rowMatchesRegion(row, region)),
+    combatActivities: combat.filter((row) => row.recordType === "activity" && rowMatchesRegion(row, region)),
+    combatEquipment: combat.filter((row) => row.recordType === "equipment" && rowMatchesRegion(row, region)),
+  };
+  const unlocks = {};
+  for (const section of [
+    "quest_unlocks",
+    "ability_unlocks",
+    "prayer_unlocks",
+    "account_unlocks",
+    "activity_unlocks",
+    "equipment_models",
+    "consumable_unlocks",
+  ]) {
+    const rows = new Map();
+    sourceSection(db, "data/reference/progression-unlocks.json", section).forEach((row, index) =>
+      rows.set(rowKey(row, index, "base"), row),
+    );
+    if (section === "equipment_models") {
+      [
+        "data/reference/progression-support-items-2026-07-25.json",
+        "data/reference/progression-container-bags-2026-07-25.json",
+      ].forEach((file) =>
+        sourceSection(db, file, section).forEach((row, index) => rows.set(rowKey(row, index, "supplement"), row)),
+      );
+    }
+    unlocks[section] = [...rows.values()].filter((row) => rowMatchesRegion(row, region));
+  }
+  return { regional, unlocks };
+}
+
 function researchExport(db) {
   const raw = (pattern) =>
     db
       .prepare(
-        "SELECT record_path, raw_json FROM legacy_records WHERE source_file = 'data/research/catalog.json' ORDER BY record_path",
+        "SELECT record_path, raw_json FROM source_records WHERE source_file = 'data/research/catalog.json' ORDER BY record_path",
       )
       .all()
       .filter(({ record_path }) => pattern.test(record_path))
@@ -1287,9 +1473,28 @@ function researchExport(db) {
   const regionIndex = [];
   for (const region of regions) {
     const { trainingMethodIds = [], ...base } = region;
+    const panels = researchPanels(db, base);
+    const regionalPath = `research/panels/regional/${region.id}.json`;
+    const regionalBody = jsonLine({ schemaVersion: EXPORT_VERSION, region: region.id, ...panels.regional });
+    outputs.set(regionalPath, regionalBody);
+    const unlocks = {};
+    const unlockManifest = {};
+    for (const [section, records] of Object.entries(panels.unlocks)) {
+      const path = `research/panels/unlocks/${region.id}/${section}.json`;
+      const panelBody = jsonLine({ schemaVersion: EXPORT_VERSION, region: region.id, section, records });
+      outputs.set(path, panelBody);
+      unlocks[section] = `/data/v2/${path}`;
+      unlockManifest[section] = {
+        href: unlocks[section],
+        bytes: Buffer.byteLength(panelBody),
+        sha256: hash(panelBody),
+        records: records.length,
+      };
+    }
     const body = jsonLine({
       ...base,
       training: trainingMethodIds.map((id) => methods.get(id)).filter(Boolean),
+      panelHrefs: { regional: `/data/v2/${regionalPath}`, unlocks },
     });
     const path = `research/regions/${region.id}.json`;
     outputs.set(path, body);
@@ -1301,6 +1506,15 @@ function researchExport(db) {
       href: `/data/v2/${path}`,
       bytes: Buffer.byteLength(body),
       sha256: hash(body),
+      panels: {
+        regional: {
+          href: `/data/v2/${regionalPath}`,
+          bytes: Buffer.byteLength(regionalBody),
+          sha256: hash(regionalBody),
+          records: Object.values(panels.regional).reduce((sum, rows) => sum + rows.length, 0),
+        },
+        unlocks: unlockManifest,
+      },
     });
   }
   const index = {
@@ -1357,7 +1571,7 @@ function buildOutputs(db) {
   const manifest = {
     schemaVersion: SCHEMA_VERSION,
     exportVersion: EXPORT_VERSION,
-    databaseInputHash: db.prepare("SELECT input_hash FROM transform_runs WHERE name = 'legacy-json-ingest'").get().input_hash,
+    databaseInputHash: db.prepare("SELECT input_hash FROM transform_runs WHERE name = 'seed-ingest'").get().input_hash,
     recordCount: entities.length,
     domains: {},
     regions: Object.fromEntries(research.index.regions.map((region) => [region.id, region])),
@@ -1458,22 +1672,32 @@ function gitDataStatus() {
 }
 
 function researchParity(outputs) {
+  const catalog = JSON.parse(readFileSync(join(COMPAT_DATA, "research/catalog.json"), "utf8"));
+  const methods = new Map(
+    asArray(catalog.skills).flatMap((skill) => asArray(skill.methods).map((method) => [method.id, method])),
+  );
   const regions = [];
   for (const region of REGION_IDS) {
-    const legacyPath = join(ROOT, `public/data/v1/research/regions/${region}.json`);
+    const source = asArray(catalog.regions).find(({ id }) => id === region);
     const nextBody = outputs.get(`research/regions/${region}.json`);
-    if (!existsSync(legacyPath) || !nextBody) {
+    if (!source || !nextBody) {
       regions.push({ region, equal: false, reason: "missing shard" });
       continue;
     }
-    const oldValue = JSON.parse(readFileSync(legacyPath, "utf8"));
+    const { trainingMethodIds = [], ...base } = source;
+    const expected = {
+      ...base,
+      training: trainingMethodIds.map((id) => methods.get(id)).filter(Boolean),
+    };
     const newValue = JSON.parse(nextBody);
+    const comparable = { ...newValue };
+    delete comparable.panelHrefs;
     regions.push({
       region,
-      equal: stableJson(oldValue) === stableJson(newValue),
-      oldHash: hash(stableJson(oldValue)),
-      newHash: hash(stableJson(newValue)),
-      oldTraining: oldValue.training?.length ?? 0,
+      equal: stableJson(expected) === stableJson(comparable),
+      sourceHash: hash(stableJson(expected)),
+      newHash: hash(stableJson(comparable)),
+      sourceTraining: expected.training.length,
       newTraining: newValue.training?.length ?? 0,
     });
   }
@@ -1523,7 +1747,7 @@ function exportData(db, checkOnly = false) {
   }
   const parityReport = {
     schemaVersion: SCHEMA_VERSION,
-    legacyResearchRegions: parity,
+    researchRegions: parity,
     exactRegionParity: mismatch.length === 0,
     entityCounts: Object.fromEntries(
       db
@@ -1531,22 +1755,22 @@ function exportData(db, checkOnly = false) {
         .all()
         .map(({ entity_type, count }) => [entity_type, Number(count)]),
     ),
-    explicitLegacyIds: Number(
-      db.prepare("SELECT count(DISTINCT stable_id) AS count FROM legacy_records WHERE stable_id IS NOT NULL").get().count,
+    explicitSeedIds: Number(
+      db.prepare("SELECT count(DISTINCT stable_id) AS count FROM source_records WHERE stable_id IS NOT NULL").get().count,
     ),
-    mappedLegacyRecords: Number(
-      db.prepare("SELECT count(*) AS count FROM legacy_records WHERE entity_id IS NOT NULL").get().count,
+    mappedSeedRecords: Number(
+      db.prepare("SELECT count(*) AS count FROM source_records WHERE entity_id IS NOT NULL").get().count,
     ),
     quarantinedRecords: Number(db.prepare("SELECT count(*) AS count FROM quarantine").get().count),
     unmappedStableRecordsWithoutQuarantine: Number(
       db
         .prepare(
-          `SELECT count(*) AS count FROM legacy_records
+          `SELECT count(*) AS count FROM source_records
            WHERE stable_id IS NOT NULL AND entity_id IS NULL
              AND NOT EXISTS (
                SELECT 1 FROM quarantine
-               WHERE quarantine.source_file = legacy_records.source_file
-                 AND quarantine.record_path = legacy_records.record_path
+               WHERE quarantine.source_file = source_records.source_file
+                 AND quarantine.record_path = source_records.record_path
              )`,
         )
         .get().count,
@@ -1618,8 +1842,9 @@ function rebuild(log = true) {
   const db = openDatabase(DATABASE, false);
   try {
     const migrations = migrate(db);
-    const ingest = importLegacy(db);
+    const ingest = importSeed(db);
     const changed = applyAllPatches(db);
+    materializeCompatibilityData(db);
     rebuildSearch(db);
     const validation = validate(db);
     const exported = exportData(db);
@@ -1823,7 +2048,7 @@ function entityContext(db, id, maxRelated = 30) {
       id,
     ),
     responsibility: select(
-      "SELECT source_file, record_path, record_hash FROM legacy_records WHERE entity_id = ? ORDER BY source_file, record_path",
+      "SELECT source_file, record_path, record_hash FROM source_records WHERE entity_id = ? ORDER BY source_file, record_path",
       id,
     ),
     patches: select(
@@ -1912,7 +2137,7 @@ function doctor(db) {
   const fts5 = Number(
     db.prepare("SELECT sqlite_compileoption_used('ENABLE_FTS5') AS enabled").get().enabled,
   );
-  const currentHashes = new Map(dataFiles().map((path) => [slash(relative(ROOT, path)), hash(readFileSync(path))]));
+  const currentHashes = new Map(seedDocuments().map(({ file, text }) => [file, hash(text)]));
   const stale = db
     .prepare("SELECT path, content_hash FROM source_files ORDER BY path")
     .all()
@@ -1975,6 +2200,7 @@ function applyOne(pathArg) {
   const db = openDatabase();
   try {
     const changed = applyPatch(db, path, false);
+    materializeCompatibilityData(db);
     rebuildSearch(db);
     writeChanged(db, changed);
     const validation = validate(db, true);
@@ -2037,7 +2263,7 @@ function command() {
             frontendShard: buildOutputs(db).idMap[id] ?? null,
             sources: context.sources.map(({ id: sourceId }) => sourceId),
             responsibility: context.responsibility,
-            validation: ["foreign keys", "source URLs", "region taxonomy", "search index", "legacy parity"],
+            validation: ["foreign keys", "source URLs", "region taxonomy", "search index", "seed parity"],
           },
           maxBytes,
         );

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -21,6 +22,7 @@ const EXTENSIONS = new Set([
   ".yml",
   ".sqlite",
   ".db",
+  ".gz",
   ".ts",
   ".tsx",
   ".js",
@@ -39,7 +41,7 @@ const EXCLUDED = new Set([
   ".cache",
 ]);
 const SOURCE_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".mjs"]);
-const DATA_EXTENSIONS = new Set([".json", ".jsonl", ".csv", ".yaml", ".yml", ".sqlite", ".db"]);
+const DATA_EXTENSIONS = new Set([".json", ".jsonl", ".csv", ".yaml", ".yml", ".sqlite", ".db", ".gz"]);
 
 const slash = (value) => value.replaceAll("\\", "/");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
@@ -68,6 +70,7 @@ function walk(directory) {
 
 function classify(file) {
   if (file.startsWith("scraped-data/")) return "raw-source-evidence";
+  if (file === "data/seed-v1.json.gz") return "consolidated-seed";
   if (file.startsWith("public/data/")) return "generated-frontend-data";
   if (file.startsWith("public/map/")) return "generated-map-data";
   if (/^(assets\/.*manifest|data\/combat\/.*-icons\.json)/.test(file)) return "asset-metadata";
@@ -188,7 +191,7 @@ for (const absolute of absoluteFiles) {
   const file = slash(relative(ROOT, absolute));
   const extension = extname(file).toLowerCase();
   const stat = statSync(absolute);
-  const binary = extension === ".sqlite" || extension === ".db";
+  const binary = extension === ".sqlite" || extension === ".db" || extension === ".gz";
   const text = binary ? null : readFileSync(absolute, "utf8");
   const info = text == null ? {} : jsonInfo(file, text);
   const entry = {
@@ -290,6 +293,16 @@ const splitStages = (script) =>
     .filter((stage) => stage.command);
 const normalizeStages = splitStages(packageJson.scripts?.["normalize:data"]);
 const legacyNormalizeStages = splitStages(packageJson.scripts?.["normalize:data:legacy"]);
+const tracked = (...paths) =>
+  execFileSync("git", ["ls-files", "--", ...paths], { cwd: ROOT, encoding: "utf8" })
+    .split(/\r?\n/)
+    .filter(Boolean);
+const architectureFailures = [];
+const trackedDataJson = tracked("data/**/*.json");
+const trackedFrontend = tracked("public/data/v1/**", "public/data/v2/**");
+if (trackedDataJson.length) architectureFailures.push(`${trackedDataJson.length} per-domain data JSON files remain tracked`);
+if (trackedFrontend.length) architectureFailures.push(`${trackedFrontend.length} generated frontend files remain tracked`);
+if (legacyNormalizeStages.length) architectureFailures.push("normalize:data:legacy still exists");
 
 const report = {
   schemaVersion: 1,
@@ -307,6 +320,7 @@ const report = {
     clientDataImports: clientDataImports.length,
     normalizeStages: normalizeStages.length,
     legacyNormalizeStages: legacyNormalizeStages.length,
+    architectureFailures: architectureFailures.length,
   },
   classifications: Object.fromEntries(
     [...new Set(inventory.map((entry) => entry.classification))]
@@ -325,6 +339,7 @@ const report = {
   hardcodedCollections,
   wholeDatasetReads,
   nondeterministicWriters,
+  architectureFailures,
   files: inventory,
 };
 
@@ -342,7 +357,7 @@ const architecture = [
   "",
   `- ${report.summary.files} relevant project files (${report.summary.dataFiles} data files), ${kib(report.summary.bytes)} total.`,
   `- ${report.summary.over250KiB} files exceed 250 KiB; ${report.summary.over1MiB} exceed 1 MiB.`,
-  `- \`normalize:data\` is now ${report.summary.normalizeStages} staged entrypoint; the retained compatibility chain has ${report.summary.legacyNormalizeStages} commands.`,
+  `- \`normalize:data\` has ${report.summary.normalizeStages} staged entrypoint; the retired compatibility chain has ${report.summary.legacyNormalizeStages} commands.`,
   `- ${report.summary.filesWithMultipleWriters} files have multiple statically detected writers.`,
   `- ${report.summary.duplicateStableIdsAcrossFiles} stable IDs and ${report.summary.duplicateRecordsAcrossFiles} exact records repeat across files.`,
   `- ${report.summary.clientDataImports} data files are imported directly by client modules.`,
@@ -365,21 +380,20 @@ const architecture = [
     ]),
   ),
   "",
-  "## Current normalize dependency chain",
+  "## Current data entrypoint",
   "",
-  ...legacyNormalizeStages.map((stage) => `${stage.index}. \`${stage.command}\``),
+  ...normalizeStages.map((stage) => `${stage.index}. \`${stage.command}\``),
   "",
   "## Confirmed architecture pressure",
   "",
   `- ${wholeDatasetReads.length} large datasets are loaded wholesale by at least one script or module.`,
   `- ${hardcodedCollections.length} large scripts contain at least 20 embedded named records or mappings.`,
   `- ${nondeterministicWriters.length} writer scripts contain wall-clock or random calls and require deterministic-output review.`,
-  "- `data/research/catalog.json` is both a broad normalization target and a server-side compatibility source; generated region shards are already the browser-facing seam.",
-  "- Raw `scraped-data/` inputs are absent from a clean checkout, so legacy normalization cannot be the only reproducible build path.",
+  `- Architecture gate: ${architectureFailures.length ? `FAIL (${architectureFailures.join("; ")})` : "PASS"}.`,
   "",
   "## Migration boundary",
   "",
-  "Treat tracked `data/` JSON as immutable legacy seed evidence during migration. Import it into an ignored generated SQLite database, apply small versioned patches transactionally, validate relational constraints, then export hashed shards. Keep existing consumers on compatibility exports until parity passes; do not delete raw evidence or the legacy path early.",
+  "The immutable compressed seed, migrations, and JSONL patches rebuild an ignored SQLite database. Existing TypeScript shapes are materialized from SQLite under `.cache/data/`; browser exports are regenerated under `public/data/v2/`.",
   "",
   "## Reports",
   "",
@@ -392,3 +406,4 @@ mkdirSync(REPORTS, { recursive: true });
 writeFileSync(INVENTORY_PATH, `${JSON.stringify(report)}\n`);
 writeFileSync(REPORT_PATH, architecture);
 console.log(`Data architecture audit: ${report.summary.files} files, ${largeFiles.length} over 250 KiB, ${normalizeStages.length} normalize stages`);
+if (architectureFailures.length) process.exitCode = 1;

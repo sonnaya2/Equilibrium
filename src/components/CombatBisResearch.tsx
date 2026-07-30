@@ -1,5 +1,5 @@
 import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
-import combat from "../../data/research/regional-combat-unlocks.json";
+import combat from "#data/research/regional-combat-unlocks.json";
 
 const combatRows = researchRows(combat.records);
 

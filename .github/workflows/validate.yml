@@ -35,10 +35,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # data/ is the shipped store. audit:data is the CI gate (schema / IDs / sources).
-      # normalize:data needs the ignored local scraped-data/ workspace. Before
-      # large research updates, normalize locally and commit the resulting data/ diff.
-      - name: Audit shipped data/
+      # Rebuild the generated database and exports from the tracked seed, migrations, and patches.
+      - name: Audit data platform
         run: npm run audit:data
       - run: npm run typecheck
       - name: Lint

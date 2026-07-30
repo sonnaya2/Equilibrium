@@ -1,9 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import unlockData from "../../data/reference/progression-unlocks.json";
-import supportItems from "../../data/reference/progression-support-items-2026-07-25.json";
-import containerBags from "../../data/reference/progression-container-bags-2026-07-25.json";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
 import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";
@@ -31,19 +28,6 @@ const SECTIONS: Array<{ key: SectionKey; label: string }> = [
   { key: "equipment_models", label: "Gear" },
   { key: "consumable_unlocks", label: "Consumables" },
 ];
-
-const SUPPLEMENTS: Record<SectionKey, Row[]> = {
-  quest_unlocks: [],
-  ability_unlocks: [],
-  prayer_unlocks: [],
-  account_unlocks: [],
-  activity_unlocks: [],
-  equipment_models: [
-    ...researchRows(supportItems.equipment_models),
-    ...researchRows(containerBags.equipment_models),
-  ],
-  consumable_unlocks: [],
-};
 
 /** Plain player-facing string — never a URL, never a SourceReference dump. */
 function humanString(value: unknown): string {
@@ -237,33 +221,51 @@ function mapKey(row: Row, index: number, prefix: string): string {
   return `${prefix}:${index}`;
 }
 
-function rowsFor(section: SectionKey): Row[] {
-  const base = researchRows(unlockData[section]);
-  const rows = new Map<string, Row>();
-  // Base first, then supplements — on id collision the newer supplement wins.
-  base.forEach((row, index) => {
-    rows.set(mapKey(row, index, "base"), row);
-  });
-  SUPPLEMENTS[section].forEach((row, index) => {
-    rows.set(mapKey(row, index, "supplement"), row);
-  });
-  return [...rows.values()];
-}
-
 export function PermanentUnlockResearch() {
   const selectedRegion = useDataRegion();
   const [section, setSection] = useState<SectionKey>("quest_unlocks");
   const [query, setQuery] = useState("");
+  const [sectionRows, setSectionRows] = useState<Row[]>([]);
+  const [loadError, setLoadError] = useState("");
+
+  useEffect(() => {
+    const href = selectedRegion?.panelHrefs?.unlocks[section];
+    if (!href) {
+      setSectionRows([]);
+      setLoadError("");
+      return;
+    }
+    let live = true;
+    setSectionRows([]);
+    setLoadError("");
+    fetch(href, { cache: "force-cache" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Unlock data returned ${response.status}`);
+        return response.json() as Promise<{ region: string; section: string; records: Row[] }>;
+      })
+      .then((data) => {
+        if (live && data.region === selectedRegion.id && data.section === section) {
+          setSectionRows(researchRows(data.records));
+        }
+      })
+      .catch((reason) => {
+        if (live)
+          setLoadError(reason instanceof Error ? reason.message : "Unlock data failed to load");
+      });
+    return () => {
+      live = false;
+    };
+  }, [section, selectedRegion]);
 
   const filtered = useMemo(() => {
-    const source = rowsFor(section).filter((row) => researchRowMatchesRegion(row, selectedRegion));
+    const source = sectionRows.filter((row) => researchRowMatchesRegion(row, selectedRegion));
     const needle = query.trim().toLowerCase();
     if (!needle) return source;
     return source.filter((row) => {
       const hay = [title(row), region(row), ...details(row), ...links(row)].join(" ").toLowerCase();
       return hay.includes(needle);
     });
-  }, [query, section, selectedRegion]);
+  }, [query, sectionRows, selectedRegion]);
   const labelOf = useCallback((row: Row) => title(row), []);
   const typeOf = useCallback(
     (row: Row) =>
@@ -392,9 +394,11 @@ export function PermanentUnlockResearch() {
             })
           ) : (
             <p className="data-empty">
-              {query
-                ? "Nothing matches."
-                : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}
+              {loadError
+                ? loadError
+                : query
+                  ? "Nothing matches."
+                  : `No ${sectionLabel.toLowerCase()} in ${selectedRegion?.name ?? "this region"}.`}
             </p>
           )}
         </div>

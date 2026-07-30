@@ -104,7 +104,10 @@ describe("region membership against the wiki", () => {
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
 
   const sourced = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), "data/map/wiki-league-regions.json"), "utf8"),
+    fs.readFileSync(
+      path.join(process.cwd(), ".cache/data/map/wiki-league-regions.json"),
+      "utf8",
+    ),
   ) as { places: Record<string, string> };
 
   it("puts every place the wiki names inside that region's plate", () => {

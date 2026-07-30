@@ -10,7 +10,7 @@ Apply the normal Ponytail ladder after tracing the real flow. This repo layer id
 ## Whole-app defaults
 
 - Extend existing files and helpers before adding files, libraries, stores, workflows, or abstractions.
-- Root `data/` is the one shipped store. Do not add a database, API, CMS, or duplicate data tree.
+- The generated SQLite database is the runtime data store; tracked authoring stays limited to one compressed seed, migrations, and small patches. Do not add an API, CMS, committed database, or duplicate authoring tree.
 - Publish from the primary `main` checkout. Do not create branches, worktrees, or pull requests unless the user asks.
 - Reuse the current test framework and scripts. Non-trivial behavior gets the smallest focused regression check that proves it.
 - Delete stale automation and duplicated guidance instead of building synchronization machinery around it.

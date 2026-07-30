@@ -71,15 +71,17 @@ pnpm-debug.log*
 .dev-*.log
 .codex-*.log
 
-# Local scratch / scraped intermediates.
-# Canonical datasets under data/combat/ and data/league/ ARE tracked - only
-# raw scraper dumps and caches stay out.
+# Local scratch and generated data.
 /scratch/
 /exports/
 /logs/
 .wiki-cache/
 data/**/*.raw.json
 data/**/.cache/
+/public/data/v*/
+/reports/data-*.json
+/reports/data-*.md
+/docs/data-catalog.md
 
 # ---------------------------------------------------------------------------
 # Playwright / E2E artifacts (configs in repo root stay tracked)
@@ -166,8 +168,7 @@ scripts/_*.cmd
 scripts/_*.py
 
 # ---------------------------------------------------------------------------
-# scraped-data: research ingest only — not shipped. App reads data/ alone.
-# Restore a local copy if you need npm run normalize:data.
+# Local research and asset-provenance scratch; never a build input.
 # ---------------------------------------------------------------------------
 scraped-data/
 assets/manifest.generated.json

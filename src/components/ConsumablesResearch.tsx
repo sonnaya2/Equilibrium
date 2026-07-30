@@ -1,5 +1,5 @@
 import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
-import consumables from "../../data/reference/combat-consumables-pass-1.json";
+import consumables from "#data/reference/combat-consumables-pass-1.json";
 
 const chain = consumables.overload_chain;
 

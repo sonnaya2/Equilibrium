@@ -10,7 +10,7 @@ import {
   UPGRADE_ICON_BY_SLUG,
 } from "./dataIconIndex";
 import { decodeHtmlEntities } from "./htmlEntities";
-import equipmentIconSlugs from "../../data/combat/equipment-icon-slugs.json";
+import equipmentIconSlugs from "#data/combat/equipment-icon-slugs.json";
 
 /** Slugs with a verified local equipment inventory icon (no 404 wells). */
 const EQUIPMENT_OK = new Set(equipmentIconSlugs as string[]);

@@ -1,6 +1,6 @@
 import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
-import harvest from "../../data/research/reference-site-harvest.json";
-import midgame from "../../data/reference/midgame-rebalance-2026-07-20.json";
+import harvest from "#data/research/reference-site-harvest.json";
+import midgame from "#data/reference/midgame-rebalance-2026-07-20.json";
 
 function asRows(value: unknown): ResearchRow[] {
   if (!Array.isArray(value)) return [];

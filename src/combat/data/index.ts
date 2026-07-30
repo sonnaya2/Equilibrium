@@ -19,10 +19,8 @@ import type {
 export type * from "./records";
 
 /**
- * Typed accessors over the canonical combat store at repo-root `data/combat/`.
- * The sync scripts own those files; nothing here hand-edits them. The integrity
- * contract (provenance, unique ids, valid regions) is enforced by the contract
- * test in index.test.ts and by scripts/audit-combat-data.mjs — accessors trust it.
+ * Typed accessors over the generated compatibility view. The SQLite rebuild owns
+ * these shapes; provenance, unique IDs, and region constraints are validated there.
  */
 
 export const combatAbilities = abilitiesData as CombatDataset<AbilityRecord>;

@@ -1,44 +1,41 @@
 ---
 name: data-sync
-description: Data ingestion and provenance for RS3 Equilibrium. Use when changing scripts, canonical data under data/, generated research shards, assets, SourceReference fields, Wiki revision tracking, or data audit and normalization commands.
+description: Data ingestion and provenance for RS3 Equilibrium. Use when changing the generated SQLite platform, migrations, content patches, frontend exports, SourceReference fields, or data validation commands.
 ---
 
 # Data sync and provenance
 
-Keep one shipped source of truth: tracked JSON under `data/`.
+The tracked data source is deliberately small:
 
-## Data flow
+- `data/seed-v1.json.gz` is the immutable compressed baseline. Agents do not edit or open it for routine work.
+- `data/migrations/*.sql` defines the relational schema.
+- `data/patches/*.jsonl` contains reviewable content changes.
+- `.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and `reports/data-*` are generated and ignored.
 
-- `scraped-data/` is an ignored local research workspace. Components never read it.
-- `npm run normalize:data` converts that workspace into canonical `data/`. It is local-only because a fresh clone does not contain `scraped-data/`.
-- `npm run build:data` generates `public/data/v1/research/` from `data/research/catalog.json`. Never hand-edit the generated shards.
-- `npm run audit:data` checks the shipped data and generated research store.
-- `npm run sync:combat` updates the Wiki revision ledger in `data/combat/update-index.json`; it detects stale tracked pages but does not scrape combat values into records.
-- `npm run sync:league:disabled` intentionally exits 1. Do not use it; the old writer produced an incompatible shape.
-- `npm run sync:assets` publishes attributed source art from `assets/` to `public/game/`. Use `node scripts/sync-assets.mjs --check` as the manifest gate.
+`npm run data:rebuild` must work from a clean checkout. It deletes and recreates SQLite, imports the seed, applies every patch transactionally, validates the result, materializes compatibility JSON for existing TypeScript imports, and exports hashed frontend shards. Never commit the database, compatibility cache, generated reports, or frontend shards.
 
-Do not add a database, API, CMS, client-side mirror, or parallel authoring copy under `src/`.
+Do not restore the retired `scraped-data` mutation chain, per-domain JSON authoring files, v1 research store, API, CMS, or a second source of truth. New facts arrive as the smallest sourced JSONL patch that expresses the change. Schema changes arrive as a forward-only migration.
+
+## Normal workflow
+
+1. `npm run data:find -- --query "name"`
+2. `npm run data:context -- --id stable:id --format markdown`
+3. `npm run data:impact -- --id stable:id`
+4. Add a dated JSONL patch under `data/patches/`.
+5. `npm run data:apply -- data/patches/<file>.jsonl`
+6. `npm run data:validate:changed && npm run data:export:changed`
+7. Run `npm run audit:data`, tests, and the production build before publishing.
+
+Use `data:query` only for bounded read-only `SELECT`, `WITH`, `EXPLAIN`, or `PRAGMA` statements. Use `data:doctor`, `data:stats`, and `data:transforms` to diagnose the platform instead of scanning the seed or generated JSON.
 
 ## Provenance
 
 Use the actual `SourceReference` type in `src/combat/types.ts` or `src/research/catalog.ts`; do not duplicate its union in documentation. Every shipped factual record needs a usable source URL and `verifiedAt`. Derived values identify their inputs.
 
-Source policy:
-
 - RuneScape Wiki is the default current-game source.
 - Jagex posts are authoritative for official announcements, but unreleased League details stay provisional until confirmed by a current source.
 - RS Analysis may support combat math or state modelling; keep its provenance rather than promoting one calculator configuration into a universal constant.
 - PvME is discovery material until a current Wiki or Jagex source verifies mechanics affected by the 2 March 2026 combat update.
-- When sources disagree, retain the claims in the audit layer and choose the app-facing value deliberately. Never blend them silently.
+- When sources disagree, retain the claims in quarantine or patch context and choose the app-facing value deliberately. Never blend them silently.
 
-Write facts in this app's words. Do not copy source prose or strip attribution.
-
-## Patch-day loop
-
-1. Run `npm run sync:combat`; changed tracked revisions are a review queue.
-2. Verify only records the app uses and update their canonical source data.
-3. Run `npm run normalize:data` when the ignored local source workspace changed.
-4. Inspect the `data/` diff.
-5. Run `npm run audit:data`, `npm run audit:combat`, tests, and build.
-
-Never invent a value to fill an empty record. Empty unrevealed data is valid.
+Write facts in this app's words. Do not copy source prose, invent a value to fill an empty record, or strip attribution.

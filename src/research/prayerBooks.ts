@@ -1,4 +1,4 @@
-import prayerBookSource from "../../data/reference/prayer-books.json";
+import prayerBookSource from "#data/reference/prayer-books.json";
 
 export type PrayerBookRecord = (typeof prayerBookSource)["prayer_books"][number];
 

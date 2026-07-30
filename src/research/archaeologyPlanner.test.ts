@@ -7,8 +7,8 @@ import {
   getRelicSystemProgression,
   getUnobtainableMuseumCollections,
 } from "./archaeologyPlanner";
-import guildSource from "../../data/research/planner-expansions-archaeology-guild.json";
-import museumMatrixSource from "../../data/research/planner-expansions-archaeology-museum-collections-matrix.json";
+import guildSource from "#data/research/planner-expansions-archaeology-guild.json";
+import museumMatrixSource from "#data/research/planner-expansions-archaeology-museum-collections-matrix.json";
 
 describe("archaeologyPlanner loaders", () => {
   it("filters the stale guildmaster second-loadout claim", () => {

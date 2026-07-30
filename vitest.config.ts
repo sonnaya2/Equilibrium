@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     alias: {
-      "#data": fileURLToPath(new URL("./data", import.meta.url)),
+      "#data": fileURLToPath(new URL("./.cache/data", import.meta.url)),
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },

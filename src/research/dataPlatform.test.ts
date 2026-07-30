@@ -1,8 +1,11 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
 import { REGION_IDS } from "@/league";
+import { researchRowMatchesRegion } from "@/components/ResearchSection";
+import { getResearchCatalog } from "./catalog";
 
 const root = process.cwd();
 const readJson = <T>(path: string): T => JSON.parse(readFileSync(join(root, path), "utf8")) as T;
@@ -11,11 +14,24 @@ const digest = (path: string) =>
     .update(readFileSync(join(root, path)))
     .digest("hex");
 
-interface Shard {
+interface Artifact {
   href: string;
   sha256: string;
   bytes: number;
+}
+
+interface Shard extends Artifact {
   records: number;
+}
+
+interface RegionArtifacts extends Artifact {
+  indexHref: string;
+  indexSha256: string;
+  indexBytes: number;
+  panels: {
+    regional: Shard;
+    unlocks: Record<string, Shard>;
+  };
 }
 
 interface Manifest {
@@ -23,7 +39,7 @@ interface Manifest {
   exportVersion: number;
   recordCount: number;
   domains: Record<string, { records: number; shards: Shard[] }>;
-  regions: Record<string, { sha256: string }>;
+  regions: Record<string, RegionArtifacts>;
   idIndexes: Array<Shard & { firstId: string; lastId: string }>;
 }
 
@@ -33,17 +49,24 @@ describe("generated data platform", () => {
   it("keeps every frontend artifact bounded and content-addressed", () => {
     expect(manifest.schemaVersion).toBe(1);
     expect(manifest.exportVersion).toBe(2);
-    const shards = [
+    const regionArtifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
+      region,
+      { href: region.indexHref, sha256: region.indexSha256, bytes: region.indexBytes },
+      region.panels.regional,
+      ...Object.values(region.panels.unlocks),
+    ]);
+    const artifacts: Artifact[] = [
       ...Object.values(manifest.domains).flatMap((domain) => domain.shards),
       ...manifest.idIndexes,
+      ...regionArtifacts,
     ];
-    for (const shard of shards) {
-      const path = shard.href.replace(/^\//, "");
+    for (const artifact of artifacts) {
+      const path = artifact.href.replace(/^\//, "");
       expect(existsSync(join(root, "public", path.replace(/^data\//, "data/"))), path).toBe(true);
       const repoPath = `public/${path}`;
-      expect(statSync(join(root, repoPath)).size, repoPath).toBe(shard.bytes);
-      expect(digest(repoPath), repoPath).toBe(shard.sha256);
-      expect(shard.bytes, repoPath).toBeLessThan(500 * 1024);
+      expect(statSync(join(root, repoPath)).size, repoPath).toBe(artifact.bytes);
+      expect(digest(repoPath), repoPath).toBe(artifact.sha256);
+      expect(artifact.bytes, repoPath).toBeLessThan(500 * 1024);
     }
   });
 
@@ -68,16 +91,113 @@ describe("generated data platform", () => {
     }
   });
 
-  it("preserves every legacy research region exactly", () => {
+  it("materializes compatibility records from SQLite", () => {
+    const database = new DatabaseSync(join(root, ".cache/equilibrium.sqlite"), { readOnly: true });
+    try {
+      const stored = database
+        .prepare(
+          "SELECT raw_json FROM source_records WHERE source_file = 'data/combat/equipment.json' AND entity_id = 'item:seismic-wand'",
+        )
+        .get() as { raw_json: string };
+      const cache = readJson<{ records: Array<{ id: string }> }>(
+        ".cache/data/combat/equipment.json",
+      );
+      expect(cache.records.find(({ id }) => id === "item:seismic-wand")).toEqual(
+        JSON.parse(stored.raw_json),
+      );
+    } finally {
+      database.close();
+    }
+  });
+
+  it("keeps regional and unlock panel exports equal to the compatibility view", () => {
+    type Row = Record<string, unknown>;
+    const skilling = readJson<{ records: Row[] }>(
+      ".cache/data/research/regional-skilling-unlocks.json",
+    ).records;
+    const combat = readJson<{ records: Row[] }>(
+      ".cache/data/research/regional-combat-unlocks.json",
+    ).records;
+    const progression = readJson<Record<string, Row[]>>(
+      ".cache/data/reference/progression-unlocks.json",
+    );
+    const supplements = [
+      readJson<Record<string, Row[]>>(
+        ".cache/data/reference/progression-support-items-2026-07-25.json",
+      ),
+      readJson<Record<string, Row[]>>(
+        ".cache/data/reference/progression-container-bags-2026-07-25.json",
+      ),
+    ];
+    const key = (row: Row, index: number, prefix: string) =>
+      row.id != null && row.id !== ""
+        ? String(row.id)
+        : typeof row.name === "string" && row.name
+          ? `${prefix}:${row.name}`
+          : typeof row.quest === "string" && row.quest
+            ? `${prefix}:${row.quest}`
+            : `${prefix}:${index}`;
+
+    for (const region of getResearchCatalog().regions) {
+      const exported = readJson<{
+        panelHrefs: { regional: string; unlocks: Record<string, string> };
+      }>(`public/data/v2/research/regions/${region.id}.json`);
+      const regional = readJson<Record<string, unknown>>(`public${exported.panelHrefs.regional}`);
+      expect(regional.skillingActivities).toEqual(
+        skilling.filter(
+          (row) => row.recordType === "activity" && researchRowMatchesRegion(row, region),
+        ),
+      );
+      expect(regional.skillingEquipment).toEqual(
+        skilling.filter(
+          (row) => row.recordType === "equipment" && researchRowMatchesRegion(row, region),
+        ),
+      );
+      expect(regional.combatAccounts).toEqual(
+        combat.filter(
+          (row) => row.recordType === "account" && researchRowMatchesRegion(row, region),
+        ),
+      );
+      expect(regional.combatActivities).toEqual(
+        combat.filter(
+          (row) => row.recordType === "activity" && researchRowMatchesRegion(row, region),
+        ),
+      );
+      expect(regional.combatEquipment).toEqual(
+        combat.filter(
+          (row) => row.recordType === "equipment" && researchRowMatchesRegion(row, region),
+        ),
+      );
+
+      for (const [section, href] of Object.entries(exported.panelHrefs.unlocks)) {
+        const rows = new Map<string, Row>();
+        (progression[section] ?? []).forEach((row, index) =>
+          rows.set(key(row, index, "base"), row),
+        );
+        if (section === "equipment_models") {
+          supplements.forEach((document) =>
+            (document[section] ?? []).forEach((row, index) =>
+              rows.set(key(row, index, "supplement"), row),
+            ),
+          );
+        }
+        expect(readJson<{ records: Row[] }>(`public${href}`).records).toEqual(
+          [...rows.values()].filter((row) => researchRowMatchesRegion(row, region)),
+        );
+      }
+    }
+  });
+
+  it("preserves every seeded research region exactly", () => {
     const parity = readJson<{
       exactRegionParity: boolean;
-      legacyResearchRegions: Array<{ region: string; equal: boolean }>;
+      researchRegions: Array<{ region: string; equal: boolean }>;
       quarantinedRecords: number;
     }>("reports/data-migration-parity.json");
     expect(parity.exactRegionParity).toBe(true);
-    expect(parity.legacyResearchRegions).toHaveLength(REGION_IDS.length);
-    expect(parity.legacyResearchRegions.every((region) => region.equal)).toBe(true);
-    expect(new Set(parity.legacyResearchRegions.map((region) => region.region))).toEqual(
+    expect(parity.researchRegions).toHaveLength(REGION_IDS.length);
+    expect(parity.researchRegions.every((region) => region.equal)).toBe(true);
+    expect(new Set(parity.researchRegions.map((region) => region.region))).toEqual(
       new Set(REGION_IDS),
     );
     const index = readJson<{ regions: Array<{ id: string }> }>(

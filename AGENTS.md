@@ -3,8 +3,8 @@
 Companion webapp for RuneScape 3's **Leagues II: Equilibrium** (launches 10 Aug 2026): build planner,
 task tracker, and a from-scratch current-RS3 combat calculator with League modifiers layered on top.
 
-Next.js App Router + TypeScript + Tailwind on Vercel. No backend and no database — game data ships as
-static JSON in `data/`, user progress lives in `localStorage`.
+Next.js App Router + TypeScript + Tailwind on Vercel. Game data is rebuilt into local SQLite and
+static frontend shards during the build; user progress lives in `localStorage`.
 
 - Remote `https://github.com/sonnaya2/Equilibrium`, public, default branch `main`
 - Live `https://equilibrium-ruddy.vercel.app`, Vercel project `ever-sense/equilibrium`
@@ -58,8 +58,8 @@ Run `npm run test:e2e` locally before pushing; a broken selector ships silently 
 in the same directory, so a dev server you started yourself blocks `test:e2e` from booting its own;
 stop it first.
 
-**Do not pin scraped values in e2e.** `verifiedAt` dates and rule wording move whenever the sync
-scripts run, and a hardcoded date turns every data refresh into a red suite. Match a pattern.
+**Do not pin sourced values in e2e.** `verifiedAt` dates and rule wording move with content patches,
+and a hardcoded date turns every data refresh into a red suite. Match a pattern.
 
 **Tailwind v4 is CSS-first.** There is no `tailwind.config`; design tokens live in the `@theme` block
 of `app/globals.css`.
@@ -68,8 +68,8 @@ of `app/globals.css`.
 
 **The 3D map's geometry is generated from the HD Wiki raster and committed.** `npm run build:map`
 cuts `public/map/world-surface-wiki.webp` into region plates, a terrain field and a POI atlas; the
-app never does that work at runtime. Re-run it after editing `data/map/region-seeds.json` or
-swapping the raster, and commit the outputs. Never hand-author region polygons — a previous set,
+app never does that work at runtime. Re-run it after patching the map seed data or swapping the
+raster, and commit the outputs. Never hand-author region polygons — a previous set,
 authored in uv against an older base image, ended up drawing borders in open ocean. See the
 `map-3d` skill.
 
@@ -77,9 +77,6 @@ authored in uv against an older base image, ended up drawing borders in open oce
 board goes unverified. `npx playwright test -c playwright.webgpu.config.ts e2e/map-board.spec.ts`
 runs the same specs in a headed off-screen Edge on port 3101, where the adapter is real. Use
 Playwright for browser work here, and do not leave a dev server running in the background.
-
-**`npm run sync:league:disabled` (was `sync:league`) exits 1** — it used to write a blessings/relics
-envelope the app cannot read. League planner JSON is produced by `npm run normalize:data`.
 
 **`assets/` is not web-served.** It is the source library managed by `scripts/sync-assets.mjs`;
 generated web assets live under `public/game/`. Run `node scripts/sync-assets.mjs --check` instead of
@@ -89,21 +86,21 @@ pinning a count in documentation.
 
 **League planning is ironman / self-sufficient.** No GE dual mode and no trade-path splits — region picks, unlocks, and combos assume you source everything yourself. Blessings stay empty until official reveals.
 
-**One editable data system.** Root `data/` holds tracked legacy evidence, migrations, and content
-patches. `scraped-data/` is ignored raw research input; `.cache/equilibrium.sqlite` and
-`public/data/` are generated build artifacts, never parallel authoring stores. Do not add a hosted
-database, API, CMS, or data copy under `src/`.
+**One editable data system.** Root `data/` contains one immutable compressed seed, SQL migrations,
+and small JSONL content patches. `.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and
+data reports are ignored build artifacts. Do not add a hosted database, API, CMS, or second
+authoring tree.
 
 ### Data editing rules
 
-The generated SQLite cache replaces broad JSON rewrites; it is not a second source of truth.
+The generated SQLite database replaces broad JSON rewrites; it is never committed.
 
 1. Never open or rewrite a complete generated dataset to change one record.
 2. Never edit `.cache/equilibrium.sqlite` or `public/data/` manually.
 3. Search with `npm run data:find`, inspect with `data:context`, and check `data:impact` first.
 4. Make factual changes as validated JSONL operations under `data/patches/` with stable IDs and sources.
 5. Run changed validation/export for record work; use `data:rebuild` for schema, pipeline, or taxonomy changes.
-6. Do not remove legacy evidence or compatibility exports until their documented parity gate passes.
+6. Do not replace the immutable seed unless a separately verified compaction migration requires it.
 
 **Combat core has zero React dependency** and is unit-testable standalone. League Relics and Blessings
 enter through the ruleset boundary rather than being baked into base formulas, so base RS3 math stays
@@ -204,8 +201,8 @@ npm test             # vitest run
 npm run test:e2e     # playwright, boots its own server on 3100
 npm run build
 npm run audit:data   # shipped-data gate
-npm run build:data   # rebuild generated research shards
-npm run normalize:data # local only; requires ignored scraped-data/
+npm run build:data   # rebuild SQLite, compatibility cache, and frontend shards
+npm run normalize:data # alias for a clean data rebuild
 ```
 
 `scripts/shots.mjs` and `scripts/shot-map3d.mjs` capture routes for before/after diffing; neither is

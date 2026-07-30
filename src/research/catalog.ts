@@ -1,4 +1,4 @@
-import normalizedSource from "../../data/research/catalog.json";
+import normalizedSource from "#data/research/catalog.json";
 import generatedIndex from "../../public/data/v2/research/index.json";
 
 export type SourceKind = "runescape-wiki" | "jagex" | "rs-analysis" | "pvme" | "derived";
@@ -55,6 +55,21 @@ export interface ResearchUpgrade {
   isRegionCombo?: boolean;
 }
 
+export type ResearchRawRow = Record<string, unknown>;
+
+export interface ResearchRegionalPanel {
+  skillingActivities: ResearchRawRow[];
+  skillingEquipment: ResearchRawRow[];
+  combatAccounts: ResearchRawRow[];
+  combatActivities: ResearchRawRow[];
+  combatEquipment: ResearchRawRow[];
+}
+
+export interface ResearchPanelHrefs {
+  regional: string;
+  unlocks: Record<string, string>;
+}
+
 export interface ResearchRegion {
   id: string;
   name: string;
@@ -69,6 +84,7 @@ export interface ResearchRegion {
   warnings: string[];
   source: SourceReference | null;
   verified: boolean;
+  panelHrefs?: ResearchPanelHrefs;
 }
 
 export interface ResearchSkill {

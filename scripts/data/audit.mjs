@@ -300,9 +300,20 @@ const tracked = (...paths) =>
 const architectureFailures = [];
 const trackedDataJson = tracked("data/**/*.json");
 const trackedFrontend = tracked("public/data/v1/**", "public/data/v2/**");
+const activeCatalogReaders = sources
+  .filter(
+    ({ file, text }) =>
+      (file.startsWith("app/") ||
+        (file.startsWith("src/") && !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(file))) &&
+      /(?:from\s+|import\s*\()\s*["']#data\/research\/catalog\.json["']/.test(text),
+  )
+  .map(({ file }) => file);
 if (trackedDataJson.length) architectureFailures.push(`${trackedDataJson.length} per-domain data JSON files remain tracked`);
 if (trackedFrontend.length) architectureFailures.push(`${trackedFrontend.length} generated frontend files remain tracked`);
 if (legacyNormalizeStages.length) architectureFailures.push("normalize:data:legacy still exists");
+if (existsSync(join(ROOT, "data/research/catalog.json"))) architectureFailures.push("legacy research catalog exists in data/");
+if (existsSync(join(ROOT, ".cache/data/research/catalog.json"))) architectureFailures.push("legacy research catalog was materialized in .cache/data/");
+if (activeCatalogReaders.length) architectureFailures.push(`runtime research catalog imports remain: ${activeCatalogReaders.join(", ")}`);
 
 const report = {
   schemaVersion: 1,
@@ -393,7 +404,7 @@ const architecture = [
   "",
   "## Migration boundary",
   "",
-  "The immutable compressed seed, migrations, and JSONL patches rebuild an ignored SQLite database. Existing TypeScript shapes are materialized from SQLite under `.cache/data/`; browser exports are regenerated under `public/data/v2/`.",
+  "The immutable compressed seed, migrations, and JSONL patches rebuild an ignored SQLite database. Remaining TypeScript compatibility shapes are materialized under `.cache/data/`, except the normalized research catalog; browser exports are regenerated under `public/data/v2/`.",
   "",
   "## Reports",
   "",

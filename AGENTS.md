@@ -201,7 +201,7 @@ npm test             # vitest run
 npm run test:e2e     # playwright, boots its own server on 3100
 npm run build
 npm run audit:data   # shipped-data gate
-npm run build:data   # rebuild SQLite, compatibility cache, and frontend shards
+npm run build:data   # rebuild SQLite, remaining compatibility cache, and frontend shards
 npm run normalize:data # alias for a clean data rebuild
 ```
 

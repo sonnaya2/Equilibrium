@@ -1,12 +1,51 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 import { REGION_IDS } from "@/league";
 import { presentContentRewards } from "@/lib/dataContentPresentation";
 import { dataEntityIconPath } from "@/lib/gameArt";
 import { contentRewardsFull } from "@/lib/researchRewards";
-import catalogSource from "#data/research/catalog.json";
-import { getResearchCatalog } from "./catalog";
+import {
+  getResearchCatalog,
+  type ResearchCatalog,
+  type ResearchRegion,
+  type ResearchTrainingMethod,
+} from "./catalog";
+
+type SeedCatalog = Omit<ResearchCatalog, "regions"> & {
+  regions: Array<
+    Omit<ResearchRegion, "training"> & {
+      trainingMethodIds: string[];
+    }
+  >;
+};
+
+const seed = JSON.parse(
+  gunzipSync(readFileSync(join(process.cwd(), "data/seed-v1.json.gz"))).toString("utf8"),
+) as { files: Array<{ path: string; data: unknown }> };
+const catalogSeed = seed.files.find(({ path }) => path === "data/research/catalog.json")?.data as
+  SeedCatalog | undefined;
+if (!catalogSeed) throw new Error("Immutable research catalog seed is missing");
+
+const methods = new Map<string, ResearchTrainingMethod>(
+  catalogSeed.skills.flatMap((skill) => skill.methods.map((method) => [method.id, method])),
+);
+const catalogSource: ResearchCatalog = {
+  ...catalogSeed,
+  regions: catalogSeed.regions.map(({ trainingMethodIds, ...region }) => ({
+    ...region,
+    training: trainingMethodIds
+      .map((id) => methods.get(id))
+      .filter((method): method is ResearchTrainingMethod => Boolean(method)),
+  })),
+};
 
 describe("research catalog", () => {
+  it("reconstructs the immutable catalog exactly from normalized SQLite tables", () => {
+    expect(getResearchCatalog()).toEqual(catalogSource);
+  });
+
   it("has 11 regions whose ids match REGION_IDS", () => {
     const catalog = getResearchCatalog();
     expect(catalog.regions).toHaveLength(11);
@@ -31,8 +70,8 @@ describe("research catalog", () => {
       catalogSource.skills.flatMap((skill) => skill.methods.map((m) => m.id)),
     );
     const orphans: string[] = [];
-    for (const region of catalogSource.regions) {
-      for (const id of region.trainingMethodIds ?? []) {
+    for (const region of catalogSeed.regions) {
+      for (const id of region.trainingMethodIds) {
         if (!methodIds.has(id)) orphans.push(`${region.id}:${id}`);
       }
     }

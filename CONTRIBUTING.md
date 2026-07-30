@@ -8,7 +8,7 @@ Not affiliated with Jagex.
 | Material                                                      | Terms                                         |
 | ------------------------------------------------------------- | --------------------------------------------- |
 | Original app code (`app/`, `src/`, most `scripts/`)           | MIT — see `LICENSE`                           |
-| Wiki-derived data/prose (`data/`, much of `scraped-data/`)    | **CC BY-NC-SA 3.0** — not MIT                 |
+| Wiki-derived data/prose (`data/seed-v1.json.gz`, patches)     | **CC BY-NC-SA 3.0** — not MIT                 |
 | PvME-derived research notes                                   | **CC BY-NC-SA 4.0** (pvme-guides) — not MIT   |
 | Jagex art/icons/screenshots (`assets/`, `public/game/`, refs) | Jagex property / Fan Content Policy — not MIT |
 
@@ -30,13 +30,14 @@ Details: root **`NOTICE`** (authoritative) and **`LICENSE`** (MIT code only, wit
 
 ## Data ownership
 
-| Path                          | Owner                              | Notes                                                                                                          |
-| ----------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `scraped-data/`               | Research inputs                    | Source-shaped; not read at runtime                                                                             |
-| `npm run normalize:data`      | Regenerates many `data/**` mirrors | Do not hand-edit those outputs expecting them to stick                                                         |
-| `data/research/catalog.json`  | **Hand-owned majors**              | Region major unlocks / POI rows are curated in-app; re-normalize carefully so you do not clobber recent majors |
-| `data/league/*`               | Normalize + official reveals       | Empty tasks / unrevealed relics are correct until sourced                                                      |
-| `assets/source-manifest.json` | Art provenance catalog             | New icons must register here, then `npm run sync:assets`                                                       |
+| Path                          | Owner                     | Notes                                                                            |
+| ----------------------------- | ------------------------- | -------------------------------------------------------------------------------- |
+| `data/seed-v1.json.gz`        | Immutable baseline        | Never edit or broadly inspect it for routine data work                           |
+| `data/migrations/`            | Relational schema         | Forward-only schema changes                                                      |
+| `data/patches/`               | Reviewable content edits  | Use stable IDs and validated transactional operations                            |
+| `.cache/`                     | Generated local data      | Never edit or commit; the research catalog exists only as normalized SQLite rows |
+| `public/data/v2/`             | Generated browser exports | Never edit or commit; regenerate through the data platform                       |
+| `assets/source-manifest.json` | Art provenance catalog    | New icons must register here, then run `npm run sync:assets`                     |
 
 ## Scripts
 

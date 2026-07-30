@@ -12,7 +12,7 @@ The tracked data source is deliberately small:
 - `data/patches/*.jsonl` contains reviewable content changes.
 - `.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and `reports/data-*` are generated and ignored.
 
-`npm run data:rebuild` must work from a clean checkout. It deletes and recreates SQLite, imports the seed, applies every patch transactionally, validates the result, materializes compatibility JSON for existing TypeScript imports, and exports hashed frontend shards. Never commit the database, compatibility cache, generated reports, or frontend shards.
+`npm run data:rebuild` must work from a clean checkout. It deletes and recreates SQLite, imports the seed, applies every patch transactionally, validates the result, materializes temporary compatibility JSON for remaining TypeScript imports, and exports hashed frontend shards. The research catalog is fully normalized and server-only: never recreate `data/research/catalog.json` or `.cache/data/research/catalog.json`. Never commit the database, compatibility cache, generated reports, or frontend shards.
 
 Do not restore the retired `scraped-data` mutation chain, per-domain JSON authoring files, v1 research store, API, CMS, or a second source of truth. New facts arrive as the smallest sourced JSONL patch that expresses the change. Schema changes arrive as a forward-only migration.
 
@@ -26,7 +26,7 @@ Do not restore the retired `scraped-data` mutation chain, per-domain JSON author
 6. `npm run data:validate:changed && npm run data:export:changed`
 7. Run `npm run audit:data`, tests, and the production build before publishing.
 
-Use `data:query` only for bounded read-only `SELECT`, `WITH`, `EXPLAIN`, or `PRAGMA` statements. Use `data:doctor`, `data:stats`, and `data:transforms` to diagnose the platform instead of scanning the seed or generated JSON.
+Use `data:query` only for bounded read-only `SELECT` or `WITH` statements. It rejects `EXPLAIN`, `PRAGMA`, writes, and multiple statements. Use `data:doctor`, `data:stats`, and `data:transforms` to diagnose the platform instead of scanning the seed or generated JSON.
 
 ## Provenance
 

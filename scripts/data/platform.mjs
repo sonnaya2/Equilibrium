@@ -25,7 +25,7 @@ const MIGRATIONS = join(ROOT, "data/migrations");
 const PATCHES = join(ROOT, "data/patches");
 const EXPORT_ROOT = join(ROOT, "public/data/v2");
 const REPORTS = join(ROOT, "reports");
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 const EXPORT_VERSION = 2;
 const SHARD_TARGET_BYTES = 220 * 1024;
 const DEFAULT_MAX_BYTES = 16_000;
@@ -35,14 +35,14 @@ const FIXED_TIME = "1970-01-01T00:00:00.000Z";
 const REGION_IDS = [
   "misthalin",
   "havenhythe",
+  "karamja",
   "asgarnia",
   "kandarin",
-  "karamja",
+  "fremennik",
+  "forinthry",
   "desert",
   "morytania",
-  "fremennik",
   "tirannwn",
-  "forinthry",
   "anachronia",
 ];
 const REGION_SET = new Set([...REGION_IDS, "global"]);
@@ -389,6 +389,7 @@ function sourceFamily(source) {
 function entityFields(candidate, row, file) {
   const short = scalar(row.displayDescription ?? row.summary ?? row.note ?? row.warning);
   const detail = scalar(row.detail ?? row.description ?? row.league_treatment ?? row.purpose, short);
+  const extra = candidate.type === "skill" ? Object.fromEntries(Object.entries(row).filter(([key]) => key !== "methods")) : row;
   return {
     id: candidate.id,
     slug: slugify(candidate.id),
@@ -401,7 +402,7 @@ function entityFields(candidate, row, file) {
     status: scalar(row.status, "active"),
     sortKey: scalar(row.sortKey ?? row.sort_key, candidate.name.toLocaleLowerCase("en")),
     file,
-    extra: stableJson(row),
+    extra: stableJson(extra),
   };
 }
 
@@ -766,10 +767,13 @@ function setRecordAtPath(document, recordPath, value) {
 }
 
 function materializeCompatibilityData(db) {
-  const documents = seedDocuments();
+  const documents = seedDocuments().filter(({ file }) => file !== "data/research/catalog.json");
   const byFile = new Map(documents.map((document) => [document.file, document]));
   for (const row of db
-    .prepare("SELECT source_file, record_path, raw_json FROM source_records ORDER BY source_file, record_path")
+    .prepare(
+      `SELECT source_file, record_path, raw_json FROM source_records
+       WHERE source_file <> 'data/research/catalog.json' ORDER BY source_file, record_path`,
+    )
     .all()) {
     const document = byFile.get(row.source_file);
     if (!document) throw new Error(`Seed document disappeared: ${row.source_file}`);
@@ -789,6 +793,84 @@ function materializeCompatibilityData(db) {
   for (const path of walkFiles(target, () => true)) {
     if (!expected.has(resolve(path))) rmSync(path, { force: true });
   }
+}
+
+function normalizeResearchCatalog(db, documents) {
+  const catalog = documents.find(({ file }) => file === "data/research/catalog.json")?.data;
+  if (!catalog) throw new Error("Research catalog is missing from the seed");
+
+  db.prepare(
+    `INSERT INTO research_catalog
+     (id, snapshot_date, source_policy_json, coverage_json, hard_rules_json, datasets_json)
+     VALUES (1, ?, ?, ?, ?, ?)`,
+  ).run(
+    scalar(catalog.snapshotDate),
+    stableJson(catalog.sourcePolicy ?? {}),
+    stableJson(catalog.coverage ?? {}),
+    stableJson(asArray(catalog.hardRules)),
+    stableJson(catalog.datasets ?? {}),
+  );
+
+  const sourceEntity = db.prepare(
+    "SELECT entity_id FROM source_records WHERE source_file = 'data/research/catalog.json' AND record_path = ?",
+  );
+  const entityAt = (path) => {
+    const entityId = sourceEntity.get(path)?.entity_id;
+    if (!entityId) throw new Error(`Research catalog record has no normalized entity: ${path}`);
+    return entityId;
+  };
+
+  asArray(catalog.regions).forEach((region, regionIndex) => {
+    const regionId = normalizeRegion(region.id);
+    if (!regionId) throw new Error(`Research catalog has unknown region: ${region.id}`);
+    db.prepare(
+      `INSERT INTO research_regions
+       (region_id, ordinal, areas_json, hard_rules_json, warnings_json, source_json)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+    ).run(
+      regionId,
+      regionIndex,
+      stableJson(asArray(region.areas)),
+      stableJson(asArray(region.hardRules)),
+      stableJson(asArray(region.warnings)),
+      stableJson(region.source ?? null),
+    );
+
+    for (const section of ["content", "upgrades"]) {
+      asArray(region[section]).forEach((_, ordinal) => {
+        const entityId = entityAt(`$.regions[${regionIndex}].${section}[${ordinal}]`);
+        db.prepare(
+          `INSERT INTO research_region_entries(region_id, entity_id, section, ordinal)
+           VALUES (?, ?, ?, ?)`,
+        ).run(regionId, entityId, section, ordinal);
+      });
+    }
+
+    asArray(region.skills).forEach((skill, ordinal) => {
+      const entityId = `skill:${slugify(skill)}`;
+      requireEntity(db, entityId, `research region ${regionId}`);
+      db.prepare(
+        "INSERT INTO research_region_skills(region_id, skill_entity_id, ordinal) VALUES (?, ?, ?)",
+      ).run(regionId, entityId, ordinal);
+    });
+
+    asArray(region.trainingMethodIds).forEach((methodId, ordinal) => {
+      requireEntity(db, methodId, `research region ${regionId}`);
+      db.prepare(
+        "INSERT INTO research_region_training(region_id, method_entity_id, ordinal) VALUES (?, ?, ?)",
+      ).run(regionId, methodId, ordinal);
+    });
+  });
+
+  asArray(catalog.skills).forEach((skill, skillIndex) => {
+    const skillEntityId = entityAt(`$.skills[${skillIndex}]`);
+    asArray(skill.methods).forEach((_, ordinal) => {
+      const methodEntityId = entityAt(`$.skills[${skillIndex}].methods[${ordinal}]`);
+      db.prepare(
+        "INSERT INTO research_skill_methods(skill_entity_id, method_entity_id, ordinal) VALUES (?, ?, ?)",
+      ).run(skillEntityId, methodEntityId, ordinal);
+    });
+  });
 }
 
 function importSeed(db) {
@@ -847,6 +929,7 @@ function importSeed(db) {
         );
       }
     }
+    normalizeResearchCatalog(db, documents);
     addMapPoints(db, documents);
     resolveRelationships(db, imported);
     recordTransform(db, TRANSFORMS[0], inputHash, documents.length);
@@ -1449,26 +1532,104 @@ function researchPanels(db, region) {
   return { regional, unlocks };
 }
 
-function researchExport(db) {
-  const raw = (pattern) =>
-    db
+function normalizedResearchCatalog(db) {
+  const metadata = db.prepare("SELECT * FROM research_catalog WHERE id = 1").get();
+  if (!metadata) throw new Error("Normalized research catalog is missing");
+  const regions = REGION_IDS.map((regionId) => {
+    const row = db
       .prepare(
-        "SELECT record_path, raw_json FROM source_records WHERE source_file = 'data/research/catalog.json' ORDER BY record_path",
+        `SELECT regions.entity_id, regions.name, regions.availability, regions.verified,
+                research_regions.areas_json, research_regions.hard_rules_json,
+                research_regions.warnings_json, research_regions.source_json,
+                entities.extra_json
+         FROM research_regions
+         JOIN regions ON regions.id = research_regions.region_id
+         JOIN entities ON entities.id = regions.entity_id
+         WHERE research_regions.region_id = ?`,
       )
-      .all()
-      .filter(({ record_path }) => pattern.test(record_path))
-      .sort((a, b) => {
-        const left = Number(a.record_path.match(/\[(\d+)\]$/)?.[1] ?? 0);
-        const right = Number(b.record_path.match(/\[(\d+)\]$/)?.[1] ?? 0);
-        return left - right;
-      })
-      .map(({ raw_json }) => JSON.parse(raw_json));
-  const regions = raw(/^\$\.regions\[\d+\]$/).filter((region) => region.id);
-  const skills = raw(/^\$\.skills\[\d+\]$/).filter((skill) => skill.id && Array.isArray(skill.methods));
+      .get(regionId);
+    if (!row) throw new Error(`Normalized research region is missing: ${regionId}`);
+    const base = JSON.parse(row.extra_json);
+    const entries = (section) =>
+      db
+        .prepare(
+          `SELECT entities.extra_json
+           FROM research_region_entries
+           JOIN entities ON entities.id = research_region_entries.entity_id
+           WHERE research_region_entries.region_id = ? AND research_region_entries.section = ?
+           ORDER BY research_region_entries.ordinal`,
+        )
+        .all(regionId, section)
+        .map(({ extra_json }) => JSON.parse(extra_json));
+    const skills = db
+      .prepare(
+        `SELECT entities.name
+         FROM research_region_skills
+         JOIN entities ON entities.id = research_region_skills.skill_entity_id
+         WHERE research_region_skills.region_id = ? ORDER BY research_region_skills.ordinal`,
+      )
+      .all(regionId)
+      .map(({ name }) => name);
+    const trainingMethodIds = db
+      .prepare(
+        `SELECT research_region_training.method_entity_id AS id
+         FROM research_region_training
+         WHERE research_region_training.region_id = ? ORDER BY research_region_training.ordinal`,
+      )
+      .all(regionId)
+      .map(({ id }) => id);
+    return {
+      id: regionId,
+      name: row.name,
+      availability: row.availability,
+      aliases: asArray(base.aliases),
+      areas: JSON.parse(row.areas_json),
+      skills,
+      content: entries("content"),
+      upgrades: entries("upgrades"),
+      trainingMethodIds,
+      hardRules: JSON.parse(row.hard_rules_json),
+      warnings: JSON.parse(row.warnings_json),
+      source: JSON.parse(row.source_json),
+      verified: Boolean(row.verified),
+    };
+  });
+  const skills = db
+    .prepare(
+      `SELECT entities.id, entities.extra_json
+       FROM entities
+       WHERE entities.entity_type = 'skill'
+         AND EXISTS (SELECT 1 FROM research_skill_methods WHERE skill_entity_id = entities.id)
+       ORDER BY entities.id`,
+    )
+    .all()
+    .map(({ id, extra_json }) => ({
+      ...JSON.parse(extra_json),
+      methods: db
+        .prepare(
+          `SELECT entities.extra_json
+           FROM research_skill_methods
+           JOIN entities ON entities.id = research_skill_methods.method_entity_id
+           WHERE research_skill_methods.skill_entity_id = ? ORDER BY research_skill_methods.ordinal`,
+        )
+        .all(id)
+        .map(({ extra_json: method }) => JSON.parse(method)),
+    }));
+  return {
+    snapshotDate: metadata.snapshot_date,
+    sourcePolicy: JSON.parse(metadata.source_policy_json),
+    coverage: JSON.parse(metadata.coverage_json),
+    hardRules: JSON.parse(metadata.hard_rules_json),
+    datasets: JSON.parse(metadata.datasets_json),
+    regions,
+    skills,
+  };
+}
+
+function researchExport(db) {
+  const catalog = normalizedResearchCatalog(db);
+  const { regions, skills } = catalog;
   const methods = new Map(skills.flatMap((skill) => skill.methods.map((method) => [method.id, method])));
-  const metadata = JSON.parse(
-    db.prepare("SELECT metadata_json FROM source_files WHERE path = 'data/research/catalog.json'").get().metadata_json,
-  );
   const outputs = new Map();
   const regionIndex = [];
   for (const region of regions) {
@@ -1519,7 +1680,7 @@ function researchExport(db) {
   }
   const index = {
     schemaVersion: EXPORT_VERSION,
-    snapshotDate: metadata.snapshotDate,
+    snapshotDate: catalog.snapshotDate,
     regions: regionIndex,
     skills: skills.map(({ id, name }) => ({ id, name })).sort((a, b) => a.id.localeCompare(b.id)),
   };
@@ -1671,8 +1832,8 @@ function gitDataStatus() {
   }
 }
 
-function researchParity(outputs) {
-  const catalog = JSON.parse(readFileSync(join(COMPAT_DATA, "research/catalog.json"), "utf8"));
+function researchParity(db, outputs) {
+  const catalog = normalizedResearchCatalog(db);
   const methods = new Map(
     asArray(catalog.skills).flatMap((skill) => asArray(skill.methods).map((method) => [method.id, method])),
   );
@@ -1738,7 +1899,7 @@ function writeCatalog(db, manifest) {
 
 function exportData(db, checkOnly = false) {
   const { outputs, manifest } = buildOutputs(db);
-  const parity = researchParity(outputs);
+  const parity = researchParity(db, outputs);
   const mismatch = parity.filter(({ equal }) => !equal);
   const comparison = compareOutputs(outputs);
   const oversized = [...outputs].filter(([, body]) => Buffer.byteLength(body) > 500 * 1024);

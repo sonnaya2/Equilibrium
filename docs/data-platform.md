@@ -20,11 +20,11 @@ The implementation uses Node's built-in `node:sqlite` `DatabaseSync`. The projec
 - `data/seed-v1.json.gz`: immutable consolidated baseline.
 - `data/patches/`: small immutable content operations with stable targets.
 - `.cache/equilibrium.sqlite`: generated query/build cache; never edit or commit it.
-- `.cache/data/`: generated compatibility shapes for existing TypeScript imports.
+- `.cache/data/`: generated compatibility shapes for remaining small TypeScript imports. The former 1.2 MB research catalog is never materialized here.
 - `public/data/v2/`: generated frontend exports with size and SHA-256 metadata; never edit or commit them.
 - `reports/data-quarantine.json`: generated conflict report; conflicts are never fuzzy-merged.
 
-The schema has a shared entity/source/region core plus domain tables for quests, tasks, training methods, equipment and stats, abilities, prayers, spells, invention perks, activities, unlocks, effects, requirements, relationships, and map points. Foreign keys, checks, uniqueness constraints, indexes, and FTS5 enforce the common invariants. Rare source-specific fields remain in validated JSON columns; regions, sources, requirements, effects, and relationships are also materialized relationally.
+The schema has a shared entity/source/region core plus domain tables for quests, tasks, training methods, equipment and stats, abilities, prayers, spells, invention perks, activities, unlocks, effects, requirements, relationships, map points, and the research catalog's region entries, skills, and training links. Foreign keys, checks, uniqueness constraints, indexes, and FTS5 enforce the common invariants. Rare source-specific fields remain in validated JSON columns; regions, sources, requirements, effects, and relationships are also materialized relationally.
 
 ## Pipeline
 
@@ -49,6 +49,6 @@ Schema or broad taxonomy work uses `data:rebuild`. Normal record work does not.
 
 ## Frontend compatibility
 
-`/data` loads the small v2 research index and one region shard at a time. The regional and permanent-unlock panels then fetch only the active region/tab payload. Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID index shards. Every rebuild independently reconstructs the 11 research payloads from the consolidated seed and requires exact parity before export succeeds.
+Server-rendered catalog summaries query normalized SQLite tables. `/data` loads the small v2 research index and one region shard at a time; no source or compatibility `catalog.json` exists. The regional and permanent-unlock panels then fetch only the active region/tab payload. Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID index shards. Every rebuild independently reconstructs the 11 research payloads from normalized tables and requires exact parity with the immutable seed before export succeeds.
 
 The production build moved the permanent-unlock client data from 1,115,254 bytes to about 27 KiB of component code and the regional-unlock data from 731,860 bytes to about 20 KiB. The largest generated panel payload is 170,035 bytes; the manifest regression test rejects any frontend artifact at or above 500 KiB.

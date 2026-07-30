@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { getResearchCatalog } from "@/research/catalog";
 import {
   activityIconPath,
   bossIconPath,
@@ -87,7 +88,7 @@ type Row = {
 
 describe("data icon audit", () => {
   it("writes blank/garbage report for /data entities", () => {
-    const catalog = JSON.parse(readFileSync(".cache/data/research/catalog.json", "utf8"));
+    const catalog = getResearchCatalog();
     const combat = JSON.parse(
       readFileSync(".cache/data/research/regional-combat-unlocks.json", "utf8"),
     );

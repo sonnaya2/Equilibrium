@@ -64,7 +64,7 @@ that server if you've got a dev server running from the same checkout, so stop y
 ## Data jobs
 
 ```bash
-npm run data:rebuild     # recreate SQLite, compatibility cache, and frontend shards
+npm run data:rebuild     # recreate SQLite, remaining compatibility cache, and frontend shards
 npm run data:find -- --query "Seismic wand"
 npm run data:context -- --id item:seismic-wand --format markdown
 npm run audit:data       # rebuild plus architecture/provenance gates
@@ -72,7 +72,8 @@ npm run sync:assets      # refresh sourced RS3 and League media
 ```
 
 Tracked data is one compressed seed, SQL migrations, and small JSONL patches. The generated SQLite
-database, compatibility JSON, reports, and frontend shards are ignored. See
+database, temporary compatibility JSON, reports, and frontend shards are ignored. The research
+catalog is normalized in SQLite and is never recreated as `catalog.json`. See
 `.claude/skills/data-sync/SKILL.md` before changing sourced facts.
 
 ## Layout

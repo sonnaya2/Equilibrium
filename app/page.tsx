@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import tasksData from "#data/league/tasks.json";
-import catalogData from "#data/research/catalog.json";
 import { Page } from "@/components/Page";
 import { OverviewPlan } from "@/components/OverviewPlan";
+import { getResearchCatalogIndex } from "@/research/catalog";
 
 export const metadata: Metadata = {
   title: { absolute: "RS3 Equilibrium" },
@@ -23,8 +23,7 @@ function taskListTotal(): number {
 }
 
 function catalogRegionCount(): number {
-  const regions = (catalogData as { regions?: unknown[] }).regions;
-  return Array.isArray(regions) ? regions.length : 0;
+  return getResearchCatalogIndex().regions.length;
 }
 
 export default function OverviewPage() {

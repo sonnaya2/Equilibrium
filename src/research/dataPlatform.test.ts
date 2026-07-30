@@ -47,7 +47,7 @@ describe("generated data platform", () => {
   const manifest = readJson<Manifest>("public/data/v2/manifest.json");
 
   it("keeps every frontend artifact bounded and content-addressed", () => {
-    expect(manifest.schemaVersion).toBe(1);
+    expect(manifest.schemaVersion).toBe(2);
     expect(manifest.exportVersion).toBe(2);
     const regionArtifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
       region,
@@ -92,6 +92,7 @@ describe("generated data platform", () => {
   });
 
   it("materializes compatibility records from SQLite", () => {
+    expect(existsSync(join(root, ".cache/data/research/catalog.json"))).toBe(false);
     const database = new DatabaseSync(join(root, ".cache/equilibrium.sqlite"), { readOnly: true });
     try {
       const stored = database

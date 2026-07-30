@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "legacyResearchRegions": [
+    {
+      "region": "misthalin",
+      "equal": true,
+      "oldHash": "deaaf6fcc4afb90d5677207eb0b23fe79bb35394d271408c54936a96951161c7",
+      "newHash": "deaaf6fcc4afb90d5677207eb0b23fe79bb35394d271408c54936a96951161c7",
+      "oldTraining": 60,
+      "newTraining": 60
+    },
+    {
+      "region": "havenhythe",
+      "equal": true,
+      "oldHash": "b844284bb665c9b2b88b61dee4526e1cc8255a9380878dbd59031fc894207c81",
+      "newHash": "b844284bb665c9b2b88b61dee4526e1cc8255a9380878dbd59031fc894207c81",
+      "oldTraining": 19,
+      "newTraining": 19
+    },
+    {
+      "region": "asgarnia",
+      "equal": true,
+      "oldHash": "27cad09ec6da3c069c5bf39354bbe0837ed084cfa2fe356c1aa777cd9d91d348",
+      "newHash": "27cad09ec6da3c069c5bf39354bbe0837ed084cfa2fe356c1aa777cd9d91d348",
+      "oldTraining": 37,
+      "newTraining": 37
+    },
+    {
+      "region": "kandarin",
+      "equal": true,
+      "oldHash": "3ad89d525856128c14be154b893277e54f0a80867471cffbf5f59bc701f4e1a5",
+      "newHash": "3ad89d525856128c14be154b893277e54f0a80867471cffbf5f59bc701f4e1a5",
+      "oldTraining": 40,
+      "newTraining": 40
+    },
+    {
+      "region": "karamja",
+      "equal": true,
+      "oldHash": "4179a6120aba0ea3090ce0b7d288d61cdc46dd1bb62d04b04a9fd581de825804",
+      "newHash": "4179a6120aba0ea3090ce0b7d288d61cdc46dd1bb62d04b04a9fd581de825804",
+      "oldTraining": 14,
+      "newTraining": 14
+    },
+    {
+      "region": "desert",
+      "equal": true,
+      "oldHash": "516dabfc75741c4d1f43d48c7634ff83ac074d0ee787210610241e690d9c5e98",
+      "newHash": "516dabfc75741c4d1f43d48c7634ff83ac074d0ee787210610241e690d9c5e98",
+      "oldTraining": 46,
+      "newTraining": 46
+    },
+    {
+      "region": "morytania",
+      "equal": true,
+      "oldHash": "6dc784fe1fb34ecd789f535d48c37fd7d9ddf3abc4d6c6387ba914e1c3018810",
+      "newHash": "6dc784fe1fb34ecd789f535d48c37fd7d9ddf3abc4d6c6387ba914e1c3018810",
+      "oldTraining": 30,
+      "newTraining": 30
+    },
+    {
+      "region": "fremennik",
+      "equal": true,
+      "oldHash": "dd41ea988457a9aeaadf390ca58a4d25786fbfe81723c785bbc667a164c2750c",
+      "newHash": "dd41ea988457a9aeaadf390ca58a4d25786fbfe81723c785bbc667a164c2750c",
+      "oldTraining": 24,
+      "newTraining": 24
+    },
+    {
+      "region": "tirannwn",
+      "equal": true,
+      "oldHash": "949e526950d15a0ef1f0008a57017ba483ac61537f8e727e74fe9192578a9f8f",
+      "newHash": "949e526950d15a0ef1f0008a57017ba483ac61537f8e727e74fe9192578a9f8f",
+      "oldTraining": 56,
+      "newTraining": 56
+    },
+    {
+      "region": "forinthry",
+      "equal": true,
+      "oldHash": "f8a143bc822c17cf20fb13f6d8ed334d2a87e767390df441ddec7aa98396b36e",
+      "newHash": "f8a143bc822c17cf20fb13f6d8ed334d2a87e767390df441ddec7aa98396b36e",
+      "oldTraining": 50,
+      "newTraining": 50
+    },
+    {
+      "region": "anachronia",
+      "equal": true,
+      "oldHash": "3b33c219b75e809c22565136fae5500d832caa873bf188ea0f265240a4933b18",
+      "newHash": "3b33c219b75e809c22565136fae5500d832caa873bf188ea0f265240a4933b18",
+      "oldTraining": 44,
+      "newTraining": 44
+    }
+  ],
+  "exactRegionParity": true,
+  "entityCounts": {
+    "ability": 100,
+    "activity": 669,
+    "effect": 31,
+    "equipment": 929,
+    "invention-perk": 106,
+    "prayer": 195,
+    "quest": 294,
+    "reference": 207,
+    "region": 12,
+    "relic": 3,
+    "skill": 29,
+    "spell": 3,
+    "task": 1117,
+    "training-method": 428,
+    "unlock": 667
+  },
+  "explicitLegacyIds": 4783,
+  "mappedLegacyRecords": 5473,
+  "quarantinedRecords": 60,
+  "unmappedStableRecordsWithoutQuarantine": 0,
+  "sourceUrls": 2636,
+  "relationships": 269,
+  "crossRegionEntities": 543,
+  "recordsByRegion": {
+    "anachronia": 339,
+    "asgarnia": 695,
+    "desert": 623,
+    "forinthry": 591,
+    "fremennik": 353,
+    "global": 438,
+    "havenhythe": 98,
+    "kandarin": 617,
+    "karamja": 221,
+    "misthalin": 932,
+    "morytania": 398,
+    "tirannwn": 447
+  },
+  "domainTables": {
+    "ability": 100,
+    "activity": 669,
+    "equipment": 929,
+    "invention-perk": 106,
+    "prayer": 195,
+    "quest": 294,
+    "spell": 3,
+    "task": 1117,
+    "training-method": 428,
+    "unlock": 667
+  },
+  "representativeIds": {
+    "item:seismic-wand": true,
+    "magic:sonic-wave": true,
+    "prayer:clarity-of-thought": true,
+    "perk:biting": true,
+    "wiki:462": true
+  }
+}

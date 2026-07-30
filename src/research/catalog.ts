@@ -1,4 +1,5 @@
 import normalizedSource from "../../data/research/catalog.json";
+import generatedIndex from "../../public/data/v2/research/index.json";
 
 export type SourceKind = "runescape-wiki" | "jagex" | "rs-analysis" | "pvme" | "derived";
 
@@ -142,17 +143,7 @@ interface NormalizedCatalog extends Omit<ResearchCatalog, "regions"> {
 }
 
 export function getResearchCatalogIndex(): ResearchCatalogIndex {
-  const source = normalizedSource as NormalizedCatalog;
-  return {
-    snapshotDate: source.snapshotDate,
-    regions: source.regions.map((region) => ({
-      id: region.id,
-      name: region.name,
-      availability: region.availability,
-      training: region.trainingMethodIds.length,
-    })),
-    skills: source.skills.map(({ id, name }) => ({ id, name })),
-  };
+  return generatedIndex as ResearchCatalogIndex;
 }
 
 export function getResearchCatalog(): ResearchCatalog {

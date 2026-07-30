@@ -11,8 +11,8 @@ Build a premium public RuneScape 3 companion: a player tool, not a developer con
 
 1. Follow the user's supplied reference and explicit requirements.
 2. Preserve real data, state, accessibility, and provenance while replacing weak presentation.
-3. This skill defines this product. Global anti-slop skills are detectors, not palette or layout authority.
-4. `rs3-ponytail` limits dependencies, abstractions, and file count—not visual quality or rendered iteration.
+3. This skill defines this product. General interface-review checklists are detectors, not palette or layout authority.
+4. `lean-implementation` limits dependencies, abstractions, and file count—not visual quality or rendered iteration.
 5. Remove obsolete rules instead of stacking exceptions around them.
 
 ## Product character
@@ -24,7 +24,7 @@ Build a premium public RuneScape 3 companion: a player tool, not a developer con
 - Real RuneScape icons, crests, and art as the strongest decoration.
 - Square or nearly square corners, thin quiet borders, restrained depth.
 
-Avoid SaaS cards, raw controls, brown spreadsheet matrices, glassmorphism, giant gradients, glowing blobs, fake-material texture spam, generated art, and cloned third-party layouts. Do not flatten hierarchy just to satisfy an anti-slop checklist.
+Avoid SaaS cards, raw controls, brown spreadsheet matrices, glassmorphism, giant gradients, glowing blobs, fake-material texture spam, generated art, and cloned third-party layouts. Do not flatten hierarchy just to satisfy a checklist.
 
 Use Tailwind v4 CSS-first tokens in `app/globals.css`; there is no `tailwind.config`. Use Cinzel selectively through `--font-display`, system sans for reading, and mono or tabular numerals only when comparison benefits. Keep JSX free of inline hex.
 
@@ -76,7 +76,7 @@ Do not pin scraped dates or changing Wiki copy in tests.
 
 ## Rendered QA
 
-For visual changes: render desktop, inspect and fix the five largest mismatches, render again, then verify phone width. Run a final anti-slop fingerprint audit after the reference match.
+For visual changes: render desktop, inspect and fix the five largest mismatches, render again, then verify phone width. Run the interface review checklist once the reference match is done, not before.
 
 Before a direct `main` push, run typecheck, unit tests, affected Playwright stories, full e2e, and build. Confirm screenshots have no overflow or unreadable controls.
 

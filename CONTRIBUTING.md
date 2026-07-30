@@ -30,20 +30,24 @@ Details: root **`NOTICE`** (authoritative) and **`LICENSE`** (MIT code only, wit
 
 ## Data ownership
 
-| Path                          | Owner                     | Notes                                                                            |
-| ----------------------------- | ------------------------- | -------------------------------------------------------------------------------- |
-| `data/seed-v1.json.gz`        | Immutable baseline        | Never edit or broadly inspect it for routine data work                           |
-| `data/migrations/`            | Relational schema         | Forward-only schema changes                                                      |
-| `data/patches/`               | Reviewable content edits  | Use stable IDs and validated transactional operations                            |
-| `.cache/`                     | Generated local data      | Never edit or commit; the research catalog exists only as normalized SQLite rows |
-| `public/data/v2/`             | Generated browser exports | Never edit or commit; regenerate through the data platform                       |
-| `assets/source-manifest.json` | Art provenance catalog    | New icons must register here, then run `npm run sync:assets`                     |
+Only the first three rows are tracked. Everything else on this list is rebuilt by
+`npm run data:rebuild`; see [`docs/data-platform.md`](docs/data-platform.md).
+
+| Path                          | Owner                     | Notes                                                        |
+| ----------------------------- | ------------------------- | ------------------------------------------------------------ |
+| `data/seed-v1.json.gz`        | Immutable baseline        | Never edit or broadly inspect it for routine data work       |
+| `data/migrations/`            | Relational schema         | Forward-only schema changes                                  |
+| `data/patches/`               | Reviewable content edits  | Use stable IDs and validated transactional operations        |
+| `assets/source-manifest.json` | Art provenance catalog    | New icons must register here, then run `npm run sync:assets` |
+| `.cache/`                     | Generated SQLite and JSON | Never edit or commit                                         |
+| `public/data/v2/`             | Generated browser exports | Never edit or commit; regenerate with `data:export`          |
+| `reports/`                    | Generated run reports     | Never edit or commit                                         |
 
 ## Scripts
 
-- Prefer documented npm scripts in `package.json`.
-- `sync:league:disabled` exits 1 on purpose (wrong schema).
-- Product scripts live under `scripts/` and are wired from `package.json` or CI. One-shot agent passes are not kept in the tree.
+- Prefer the documented npm scripts in `package.json`.
+- Scripts under `scripts/` are the ones wired to those npm scripts or to CI. Local one-off tooling
+  stays untracked — `.gitignore` reserves the `scripts/_*` prefix for it.
 
 ## House rules
 
@@ -53,11 +57,23 @@ Details: root **`NOTICE`** (authoritative) and **`LICENSE`** (MIT code only, wit
 - No cloning pvme / rs-analysis / leagues.build UI.
 - Pushes to `main` deploy production — run `npm test` / `npm run build` / local e2e first.
 
-## Before a data PR
+## Changing data
+
+Correct one record with one patch file rather than rewriting a dataset:
 
 ```bash
-node scripts/audit-main-data.mjs
-npm run audit:data   # or broader audit:all-data when changing research feeds
+npm run data:find -- --query "Seismic wand"
+npm run data:context -- --id item:seismic-wand
+npm run data:impact -- --id item:seismic-wand
+# write data/patches/YYYY-MM-DD-description.jsonl
+npm run data:apply -- data/patches/YYYY-MM-DD-description.jsonl
+npm run data:validate:changed && npm run data:export:changed
+```
+
+Then, before pushing:
+
+```bash
+npm run audit:data
 npm run typecheck
 npm test
 ```

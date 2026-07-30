@@ -11,31 +11,29 @@ static frontend shards during the build; user progress lives in `localStorage`.
 - `CLAUDE.md` imports this file, so edit this one only
 - Not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.
 
-## Detail lives in skills, not here
+## Detail lives in the area guides, not here
 
-Load these when working in their area. They hold the working model this file deliberately does not
-repeat.
+Read the guide for the area you are touching. They hold the working model this file deliberately does
+not repeat.
 
-| Skill                                                                                          | Covers                                                                                                            |
-| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `combat-math`                                                                                  | Damage Potential, the 2026 DPL curve, crit layers, hit caps, style state, modifier pipeline, rounding             |
-| `league-data`                                                                                  | Regions, relics, blessings, task presentation/data boundaries, Catalyst test-data law, provisional rules          |
-| `data-sync`                                                                                    | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format                          |
-| `equilibrium-ui`                                                                               | Authoritative UI law: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA |
-| `map-3d`                                                                                       | Generated map data, WebGPU fence, controls, fallback, and rendered verification                                   |
-| `no-slop-ui`, `human-grade`, `ui-humanizer`, `text-humanizer`, `bot-audit`, `data-readability` | Optional audit companions; use as detectors, never as authority over a supplied visual reference                  |
-| `rs3-ponytail`                                                                                 | Lean-code intensity per domain                                                                                    |
+| Guide                 | Covers                                                                                                   |
+| --------------------- | -------------------------------------------------------------------------------------------------------- |
+| `combat-math`         | Damage Potential, the 2026 DPL curve, crit layers, hit caps, style state, modifier order, rounding       |
+| `league-data`         | Regions, relics, blessings, task presentation and data boundaries, Catalyst test data, provisional rules |
+| `data-sync`           | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format                 |
+| `equilibrium-ui`      | UI rules: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA    |
+| `map-3d`              | Generated map data, WebGPU fence, controls, fallback, and rendered verification                          |
+| `lean-implementation` | How much implementation a change deserves, and which complexity is load-bearing                          |
 
-Canonical repo skills live in `.claude/skills/`; tracked `skills/` files are small pointers to them.
-Protected `.agents/skills/` files are local discovery copies only: treat a match there as a trigger,
-then read the same-named `.claude/skills/<name>/SKILL.md` completely and follow the canonical file.
-Supplied references and explicit user requirements override historical tournament treatments;
-remove obsolete rules instead of stacking exceptions around them. `rs3-ponytail` limits code and
-dependency weight, not visual quality or rendered iteration.
+The full text lives in `.claude/skills/`; the tracked `skills/` files are one-line pointers to it.
+A supplied reference and an explicit requirement both outrank anything written here — remove an
+obsolete rule instead of stacking exceptions around it. General interface-review checklists are
+detectors, never authority over a supplied visual reference, and `lean-implementation` limits code
+and dependency weight, not visual quality or rendered iteration.
 
 **Comment hygiene.** Keep comments for non-obvious mechanics, compatibility, safety, provenance, or
-tool directives. Remove agent/prompt/pass/reviewer notes, implementation history, decorative
-headings, and prose that only restates the code.
+tool directives. Cut implementation history, decorative headings, notes about how the code was
+produced, and prose that only restates the line below it.
 
 ## Gotchas
 
@@ -87,13 +85,12 @@ pinning a count in documentation.
 **League planning is ironman / self-sufficient.** No GE dual mode and no trade-path splits — region picks, unlocks, and combos assume you source everything yourself. Blessings stay empty until official reveals.
 
 **One editable data system.** Root `data/` contains one immutable compressed seed, SQL migrations,
-and small JSONL content patches. `.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and
-data reports are ignored build artifacts. Do not add a hosted database, API, CMS, or second
-authoring tree.
+and small JSONL content patches — that is the whole of the tracked authoring surface.
+`.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and the data reports are generated
+build artifacts and are never committed. Do not add a hosted database, API, CMS, or second authoring
+tree. Architecture and commands: `docs/data-platform.md`.
 
 ### Data editing rules
-
-The generated SQLite database replaces broad JSON rewrites; it is never committed.
 
 1. Never open or rewrite a complete generated dataset to change one record.
 2. Never edit `.cache/equilibrium.sqlite` or `public/data/` manually.
@@ -122,8 +119,8 @@ carries its own `SourceReference`.
 
 ## Design
 
-Load `equilibrium-ui` before UI work. Use anti-slop skills as a final fingerprint
-audit, not as a layout generator or a reason to flatten hierarchy and depth.
+Read `equilibrium-ui` before UI work. Interface review checklists are a final pass, not a layout
+generator or a reason to flatten hierarchy and depth.
 
 Visual identity is a **premium public game companion site** (not a developer console):
 

@@ -1,6 +1,6 @@
 # Equilibrium data platform
 
-Equilibrium now builds queryable data instead of mutating large JSON files in place:
+Game data is built into a queryable database rather than maintained as large JSON files:
 
 ```text
 one compressed seed
@@ -10,27 +10,65 @@ one compressed seed
   -> versioned manifest, bounded indexes, and page-sized frontend shards
 ```
 
-## SQLite decision
+Three things are tracked. Everything downstream of them is generated and ignored by Git.
 
-The implementation uses Node's built-in `node:sqlite` `DatabaseSync`. The project and GitHub Actions already target Node 22, `node:sqlite` has been available since Node 22.5, and it stopped requiring the experimental flag in Node 22.13. Local verification also confirms foreign keys and FTS5. This avoids a native addon install during Windows development and Vercel builds. The generated database is `.cache/equilibrium.sqlite`, which is ignored by Git and never treated as source of truth. See the [Node SQLite API](https://nodejs.org/download/release/latest-v22.x/docs/api/sqlite.html).
+| Path                          | Tracked | Role                                                                        |
+| ----------------------------- | ------- | --------------------------------------------------------------------------- |
+| `data/seed-v1.json.gz`        | yes     | Immutable consolidated baseline of the 65 original source documents         |
+| `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
+| `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
+| `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
+| `.cache/data/`                | no      | Seed-shaped JSON for the few TypeScript modules that still import documents |
+| `public/data/v2/`             | no      | Browser exports with size and SHA-256 metadata                              |
+| `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |
 
-## Ownership
+There is no hosted database, API or CMS. The site is static; user progress lives in `localStorage`.
 
-- `data/migrations/`: deterministic relational schema changes.
-- `data/seed-v1.json.gz`: immutable consolidated baseline.
-- `data/patches/`: small immutable content operations with stable targets.
-- `.cache/equilibrium.sqlite`: generated query/build cache; never edit or commit it.
-- `.cache/data/`: generated compatibility shapes for remaining small TypeScript imports. The former 1.2 MB research catalog is never materialized here.
-- `public/data/v2/`: generated frontend exports with size and SHA-256 metadata; never edit or commit them.
-- `reports/data-quarantine.json`: generated conflict report; conflicts are never fuzzy-merged.
+## Why `node:sqlite`
 
-The schema has a shared entity/source/region core plus domain tables for quests, tasks, training methods, equipment and stats, abilities, prayers, spells, invention perks, activities, unlocks, effects, requirements, relationships, map points, and the research catalog's region entries, skills, and training links. Foreign keys, checks, uniqueness constraints, indexes, and FTS5 enforce the common invariants. Rare source-specific fields remain in validated JSON columns; regions, sources, requirements, effects, and relationships are also materialized relationally.
+The implementation uses Node's built-in `node:sqlite` `DatabaseSync`. The build targets Node 22 or
+newer, where `node:sqlite` is available without an experimental flag and ships with foreign keys and
+FTS5 enabled. That avoids a native addon install during Windows development and Vercel builds. See
+the [Node SQLite API](https://nodejs.org/download/release/latest-v22.x/docs/api/sqlite.html).
+
+## Schema
+
+A shared entity/source/region core plus domain tables for quests, tasks, training methods, equipment
+and stats, abilities, prayers, spells, invention perks, activities, unlocks, effects, requirements,
+relationships, map points, and the research catalog's region entries, skills and training links.
+Foreign keys, checks, uniqueness constraints, indexes and FTS5 enforce the common invariants. Rare
+source-specific fields stay in validated JSON columns; regions, sources, requirements, effects and
+relationships are also materialized relationally.
+
+The research catalog is normalized into those tables and is never written back out as a
+`catalog.json`.
 
 ## Pipeline
 
-`scripts/data/platform.mjs` owns five declared transforms: ingest, normalize, enrich, validate, and export. Each records its version, dependencies, input hash, output count, and validation contract in `transform_runs`. A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports the seed, applies patches transactionally, rebuilds search, validates exact research parity, materializes compatibility data, and rewrites only changed v2 artifacts.
+`scripts/data/` declares five transforms — ingest, normalize, enrich, validate, export. Each records
+its version, dependencies, input hash, output count and validation contract in `transform_runs`.
 
-## Normal editing
+A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports
+the seed, applies patches transactionally, rebuilds search, validates exact research parity,
+materializes compatibility data, and rewrites only the frontend artifacts whose bytes changed.
+
+| Module          | Responsibility                                                     |
+| --------------- | ------------------------------------------------------------------ |
+| `platform.mjs`  | CLI entry point and command dispatch                               |
+| `config.mjs`    | Paths, limits, region taxonomy, transform declarations             |
+| `utilities.mjs` | Deterministic JSON, hashing, slugs, file walking, atomic writes    |
+| `database.mjs`  | Connections, transactions, statement cache, migrations             |
+| `ingest.mjs`    | Seed parsing, import, compatibility materialization, search index  |
+| `normalize.mjs` | Record-to-entity mapping, sources, regions, domain tables          |
+| `patches.mjs`   | JSONL parsing, operation handlers, patch ledger                    |
+| `validate.mjs`  | Invariant checks and the validation/quarantine reports             |
+| `research.mjs`  | Research catalog reconstruction, region panels, seed parity        |
+| `export.mjs`    | Domain shards, ID indexes, manifest, byte-diffed writes            |
+| `queries.mjs`   | Bounded read commands: find, context, query, doctor, stats         |
+| `pipeline.mjs`  | `rebuild` and single-patch `apply` sequencing                      |
+| `benchmark.mjs` | Scoped patch and rebuild measurements                              |
+
+## Editing a record
 
 ```text
 npm run data:find -- --query "Seismic wand" --limit 20
@@ -43,12 +81,20 @@ npm run data:export:changed
 npm run data:diff
 ```
 
-`data:query` accepts one bounded read-only `SELECT` or `WITH` statement and rejects writes, PRAGMA, attachment, DDL, and multiple statements. `data:context` defaults to a 16 KB output ceiling and reports truncation.
+Schema or broad taxonomy work uses `data:rebuild`; normal record work does not.
 
-Schema or broad taxonomy work uses `data:rebuild`. Normal record work does not.
+Guard rails worth knowing about: a patch file is capped at 1 MiB and 1,000 operations and applies in
+a single transaction, so a rejected operation leaves nothing behind. An applied migration or patch
+whose content later changes is an error rather than a silent re-run. `data:query` accepts one bounded
+read-only `SELECT` or `WITH` and rejects writes, PRAGMA, attachment, DDL and multiple statements.
+`data:context` defaults to a 16 KB output ceiling and reports truncation.
 
-## Frontend compatibility
+## Frontend consumption
 
-Server-rendered catalog summaries query normalized SQLite tables. `/data` loads the small v2 research index and one region shard at a time; no source or compatibility `catalog.json` exists. The regional and permanent-unlock panels then fetch only the active region/tab payload. Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID index shards. Every rebuild independently reconstructs the 11 research payloads from normalized tables and requires exact parity with the immutable seed before export succeeds.
+Server-rendered catalog summaries query the normalized tables directly. `/data` loads the small v2
+research index and one region shard at a time, then fetches only the active region/tab payload.
+Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID
+index shards; the manifest regression test rejects any frontend artifact at or above 500 KiB.
 
-The production build moved the permanent-unlock client data from 1,115,254 bytes to about 27 KiB of component code and the regional-unlock data from 731,860 bytes to about 20 KiB. The largest generated panel payload is 170,035 bytes; the manifest regression test rejects any frontend artifact at or above 500 KiB.
+Every rebuild independently reconstructs the 11 research payloads from the normalized tables and
+requires exact parity with the immutable seed before export succeeds.

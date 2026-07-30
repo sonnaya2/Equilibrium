@@ -14,6 +14,9 @@ const config = [
   {
     ignores: [
       ".next/**",
+      // Sibling git worktrees carry their own .next output; without this, a
+      // local lint run reports thousands of errors from generated bundles.
+      ".claude/worktrees/**",
       "node_modules/**",
       "dist/**",
       "public/**",

@@ -11,9 +11,6 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { mapClock } from "./materials/shared";
 import { MAP_ACTIVE_HZ, MAP_IDLE_HZ, mapActivityHz, pokeMapActivity } from "./mapPerf";
 
-/** @deprecated Prefer MAP_IDLE_HZ — kept for Ocean comments / external imports. */
-export const MOTION_HZ = MAP_IDLE_HZ;
-
 export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
   const invalidate = useThree((s) => s.invalidate);
   const gl = useThree((s) => s.gl);

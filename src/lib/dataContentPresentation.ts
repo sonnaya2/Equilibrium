@@ -294,8 +294,6 @@ export type PresentedContentRewards = {
   tokens: string[];
   icons: { label: string; src: string }[];
   overflowResolved: number;
-  /** @deprecated alias of overflowResolved for older call sites */
-  moreCount: number;
 };
 
 export function presentContentRewards(
@@ -316,7 +314,6 @@ export function presentContentRewards(
     tokens,
     icons,
     overflowResolved,
-    moreCount: overflowResolved,
   };
 }
 

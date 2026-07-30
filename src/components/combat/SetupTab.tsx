@@ -91,7 +91,6 @@ export function SetupTab() {
       </div>
 
       <div className="setup-layout mt-3 grid gap-4 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
-        {/* Sub-tabs — vertical on lg */}
         <nav
           className="combat-frame setup-nav flex flex-row flex-wrap gap-1 lg:flex-col"
           aria-label="Loadout sections"
@@ -114,7 +113,6 @@ export function SetupTab() {
           ))}
         </nav>
 
-        {/* Active panel */}
         <div
           className={`setup-stage min-w-0${subTab === "Gear" ? "" : " combat-frame loadout-editor"}`}
         >

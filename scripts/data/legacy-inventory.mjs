@@ -527,10 +527,16 @@ export function conflictReports(db) {
 // `prayer:protect-item` and the other `prayer:standard-prayers:protect-item`, so
 // they never group and never appear as a conflict. Grouping on type + name
 // instead is what makes two files claiming one domain visible.
+// A removed entity is no longer a claim on the domain - resolving an overlap by
+// removing the superseded side has to make the overlap stop counting, or the
+// gate can never ratchet down.
 export function entityOverlaps(db) {
   const groups = new Map();
   for (const row of db
-    .prepare("SELECT id, entity_type, name, created_source FROM entities WHERE name IS NOT NULL AND name <> ''")
+    .prepare(
+      `SELECT id, entity_type, name, created_source FROM entities
+       WHERE name IS NOT NULL AND name <> '' AND status <> 'removed'`,
+    )
     .all()) {
     const key = `${row.entity_type}|${row.name.trim().toLocaleLowerCase("en")}`;
     if (!groups.has(key)) groups.set(key, []);
@@ -563,6 +569,68 @@ export function entityOverlaps(db) {
   };
 }
 
+// --- Stage 1 adjudication ledger --------------------------------------------
+
+// Why each unresolved overlap is still unresolved. Both reasons are refusals to
+// guess, not missing work:
+//
+//   authority-vs-completeness - the authority order picks one file and the
+//     richer record is in the other. Picking either silently overrides a rule
+//     the project wrote down.
+//   requirements-would-be-lost - the superseded record holds requirements or
+//     effects the survivor lacks, and a patch can move sources and regions but
+//     not those. Unioning them is what produced the blended entities this audit
+//     exists to report, so it is not the fix.
+const DEFERRAL_REASONS = new Map([
+  ["data/reference/progression-unlocks.json + data/research/catalog.json", "authority-vs-completeness"],
+  ["data/combat/equipment.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
+  ["data/research/catalog.json + data/research/regional-skilling-unlocks.json", "authority-vs-completeness"],
+  ["data/combat/abilities.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
+  ["data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", "no-consistent-winner"],
+  ["data/combat/equipment.json + data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
+  ["data/combat/equipment.json + data/research/regional-combat-unlocks.json", "authority-vs-completeness"],
+  ["data/reference/progression-container-bags-2026-07-25.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
+  ["data/reference/progression-unlocks.json + data/research/catalog.json + data/research/planner-expansions.json", "authority-vs-completeness"],
+]);
+
+// Resolved overlaps are recoverable from the database: a patch set status to
+// 'removed' and patch_changes records which patch did it, so the ledger is
+// derived rather than hand-maintained.
+export function adjudicationLedger(db, overlaps) {
+  const resolved = db
+    .prepare(
+      `SELECT e.id, e.name, e.entity_type, e.created_source, c.patch_id
+       FROM entities e JOIN patch_changes c ON c.entity_id = e.id
+       WHERE e.status = 'removed' AND c.operation = 'remove'
+       ORDER BY e.id`,
+    )
+    .all();
+  const byPatch = new Map();
+  for (const row of resolved) byPatch.set(row.patch_id, (byPatch.get(row.patch_id) ?? 0) + 1);
+  const deferred = overlaps.filePairs.map(({ files, records }) => ({
+    files,
+    records,
+    reason: DEFERRAL_REASONS.get(files) ?? "unclassified",
+    humanAdjudicationRequired: true,
+  }));
+  return {
+    resolvedRecords: resolved.length,
+    resolvedByPatch: [...byPatch].map(([patch, records]) => ({ patch, records })).sort((a, b) => b.records - a.records),
+    deferredRecords: overlaps.overlaps.length,
+    deferredPairs: deferred,
+    deferredByReason: [...deferred.reduce((map, entry) => map.set(entry.reason, (map.get(entry.reason) ?? 0) + entry.records), new Map())]
+      .map(([reason, records]) => ({ reason, records }))
+      .sort((a, b) => b.records - a.records),
+    resolved: resolved.map(({ id, name, entity_type, created_source, patch_id }) => ({
+      entity: id,
+      name,
+      entityType: entity_type,
+      supersededSource: created_source,
+      patch: `data/patches/${patch_id}.jsonl`,
+    })),
+  };
+}
+
 // Repository authority order, applied to the file a record came from.
 const AUTHORITY_ORDER = [
   [/^data\/league\//, "official League material (Jagex reveal documents)"],
@@ -592,7 +660,7 @@ const DISPOSITIONS = [
   "unknown",
 ];
 
-function auditMarkdown(inventory, files, conflicts, duplicates, overlaps) {
+function auditMarkdown(inventory, files, conflicts, duplicates, overlaps, ledger) {
   const byDomain = new Map();
   for (const entry of inventory) {
     if (!byDomain.has(entry.domain)) byDomain.set(entry.domain, []);
@@ -678,11 +746,16 @@ function auditMarkdown(inventory, files, conflicts, duplicates, overlaps) {
     "records resolve to *different* entity ids, so they never group, yet they describe the same thing",
     "and both are live.",
     "",
-    `${overlaps.overlaps.length} logical records exist in more than one source file (\`reports/research-overlaps.json\`).`,
+    `${ledger.resolvedRecords} have been resolved and ${overlaps.overlaps.length} remain`,
+    "(`reports/research-overlaps.json`, `reports/research-adjudication.json`).",
     "",
-    "| Files | Records |",
+    "| Files | Records | Still open because |",
+    "| --- | ---: | --- |",
+    ...ledger.deferredPairs.slice(0, 12).map(({ files: pair, records, reason }) => `| \`${pair}\` | ${records} | ${reason} |`),
+    "",
+    "| Resolved by | Records |",
     "| --- | ---: |",
-    ...overlaps.filePairs.slice(0, 12).map(({ files: pair, records }) => `| \`${pair}\` | ${records} |`),
+    ...ledger.resolvedByPatch.map(({ patch, records }) => `| \`data/patches/${patch}.jsonl\` | ${records} |`),
     "",
     "## Queued for Stage 1 adjudication",
     "",
@@ -700,6 +773,7 @@ export function runLegacyInventory() {
   try {
     const { conflicts, duplicates } = conflictReports(db);
     const overlaps = entityOverlaps(db);
+    const ledger = adjudicationLedger(db, overlaps);
     const files = fileLayer();
     const orphans = inventory.filter((entry) => entry.disposition === "orphaned");
     mkdirSync(REPORTS, { recursive: true });
@@ -730,13 +804,14 @@ export function runLegacyInventory() {
       filePairs: overlaps.filePairs,
       records: overlaps.overlaps,
     });
+    write("research-adjudication.json", ledger);
     write("research-orphans.json", {
       orphans: orphans.length,
       bytes: orphans.reduce((sum, entry) => sum + entry.bytes, 0),
       note: "Inside the immutable seed. Removal needs a verified compaction migration, which is Stage 1+ work, not Stage 0.",
       records: orphans,
     });
-    atomicWrite(join(REPORTS, "legacy-data-audit.md"), auditMarkdown(inventory, files, conflicts, duplicates, overlaps));
+    atomicWrite(join(REPORTS, "legacy-data-audit.md"), auditMarkdown(inventory, files, conflicts, duplicates, overlaps, ledger));
     return {
       documents: inventory.length,
       files: files.length,
@@ -750,6 +825,7 @@ export function runLegacyInventory() {
       humanAdjudicationRequired: conflicts.filter((entry) => entry.humanAdjudicationRequired).length,
       duplicateRecords: duplicates.length,
       overlappingRecords: overlaps.overlaps.length,
+      resolvedOverlaps: ledger.resolvedRecords,
       topOverlapPairs: overlaps.filePairs.slice(0, 3),
       reports: [
         "reports/legacy-data-inventory.json",
@@ -757,6 +833,7 @@ export function runLegacyInventory() {
         "reports/research-conflicts.json",
         "reports/research-duplicates.json",
         "reports/research-overlaps.json",
+        "reports/research-adjudication.json",
         "reports/research-orphans.json",
       ],
     };

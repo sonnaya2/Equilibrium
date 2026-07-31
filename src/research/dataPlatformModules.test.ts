@@ -178,14 +178,16 @@ describe("patch parsing limits", () => {
 describe("overlapping domains", () => {
   const db = new DatabaseSync(":memory:");
   db.exec(
-    `CREATE TABLE entities(id TEXT PRIMARY KEY, entity_type TEXT, name TEXT, created_source TEXT);
+    `CREATE TABLE entities(id TEXT PRIMARY KEY, entity_type TEXT, name TEXT, created_source TEXT, status TEXT);
      INSERT INTO entities VALUES
-       ('prayer:protect-item', 'prayer', 'Protect Item', 'data/combat/prayers.json'),
-       ('prayer:standard-prayers:protect-item', 'prayer', 'Protect Item', 'data/reference/prayers.json'),
-       ('prayer:piety', 'prayer', 'Piety', 'data/combat/prayers.json'),
-       ('ability:protect-item', 'ability', 'Protect Item', 'data/combat/abilities.json'),
-       ('equipment:bandos', 'equipment', 'Bandos', 'data/combat/equipment.json'),
-       ('equipment:bandos-dup', 'equipment', 'bandos', 'data/reference/progression-unlocks.json');`,
+       ('prayer:protect-item', 'prayer', 'Protect Item', 'data/combat/prayers.json', 'active'),
+       ('prayer:standard-prayers:protect-item', 'prayer', 'Protect Item', 'data/reference/prayers.json', 'active'),
+       ('prayer:piety', 'prayer', 'Piety', 'data/combat/prayers.json', 'active'),
+       ('ability:protect-item', 'ability', 'Protect Item', 'data/combat/abilities.json', 'active'),
+       ('equipment:bandos', 'equipment', 'Bandos', 'data/combat/equipment.json', 'active'),
+       ('equipment:bandos-dup', 'equipment', 'bandos', 'data/reference/progression-unlocks.json', 'active'),
+       ('spell:wind-rush', 'spell', 'Wind Rush', 'data/reference/spellbooks.json', 'active'),
+       ('spell:wind-rush-dup', 'spell', 'Wind Rush', 'data/combat/abilities.json', 'removed');`,
   );
   afterAll(() => db.close());
 
@@ -213,6 +215,13 @@ describe("overlapping domains", () => {
       { files: "data/combat/equipment.json + data/reference/progression-unlocks.json", records: 1 },
       { files: "data/combat/prayers.json + data/reference/prayers.json", records: 1 },
     ]);
+  });
+
+  // Resolving an overlap means removing the superseded side, so a removed entity
+  // has to stop counting or the gate could never ratchet down.
+  it("stops counting an overlap once the superseded side is removed", () => {
+    const { overlaps } = legacy.entityOverlaps(db);
+    expect(overlaps.map(({ logicalRecord }) => logicalRecord)).not.toContain("spell|wind rush");
   });
 });
 

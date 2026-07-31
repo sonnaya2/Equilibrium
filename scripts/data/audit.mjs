@@ -410,29 +410,22 @@ if (missingScriptFiles.length) {
 }
 
 // Two files claiming one domain: the same entity type and name produced by more
-// than one source file, as separate entities. Stage 0 measured 253 of these and
-// does not fix them - the gate is a ratchet, so a *new* pair of files, or an
-// existing pair growing, fails while the known backlog stays visible in
-// reports/research-overlaps.json. Counts are per file pair, matching that report.
+// than one source file, as separate entities. Stage 0 measured 253 across 18
+// pairs; Stage 1 has resolved 119, leaving 134 across the 9 pairs below. The gate
+// is a ratchet - a *new* pair of files, or an existing pair growing, fails, while
+// the remaining backlog stays visible in reports/research-overlaps.json. Lower an
+// entry as its pair is adjudicated and delete it at zero; counts match that
+// report, and reports/research-adjudication.json says why each one is still here.
 const OVERLAP_BASELINE = new Map([
-  ["data/combat/prayers.json + data/reference/prayers.json", 87],
   ["data/reference/progression-unlocks.json + data/research/catalog.json", 86],
   ["data/combat/equipment.json + data/reference/progression-unlocks.json", 33],
-  ["data/league/quests.json + data/reference/progression-unlocks.json", 9],
-  ["data/combat/perks.json + data/research/planner-expansions-invention-active-perks.json", 8],
-  ["data/research/catalog.json + data/research/planner-expansions.json", 5],
   ["data/research/catalog.json + data/research/regional-skilling-unlocks.json", 5],
-  ["data/combat/abilities.json + data/combat/modernisation-2026.json", 3],
   ["data/combat/abilities.json + data/reference/progression-unlocks.json", 3],
-  ["data/combat/prayers.json + data/reference/prayers.json + data/reference/progression-unlocks.json", 3],
   ["data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", 3],
-  ["data/league/quests.json + data/reference/permanent-unlocks-pass-3.json", 2],
   ["data/combat/equipment.json + data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", 1],
   ["data/combat/equipment.json + data/research/regional-combat-unlocks.json", 1],
-  ["data/league/quests.json + data/reference/permanent-unlocks-pass-3.json + data/reference/progression-unlocks.json", 1],
   ["data/reference/progression-container-bags-2026-07-25.json + data/reference/progression-unlocks.json", 1],
   ["data/reference/progression-unlocks.json + data/research/catalog.json + data/research/planner-expansions.json", 1],
-  ["data/reference/progression-unlocks.json + data/research/regional-skilling-unlocks.json", 1],
 ]);
 if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
   const { openDatabase } = await import("./database.mjs");

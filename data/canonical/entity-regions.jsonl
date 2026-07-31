@@ -2417,6 +2417,7 @@
 {"entityId":"karamja:gemstone-cavern","regionId":"karamja","relation":"hint"}
 {"entityId":"karamja:gleaming-wisps","regionId":"karamja","relation":"hint"}
 {"entityId":"karamja:herblore-habitat","regionId":"karamja","relation":"hint"}
+{"entityId":"karamja:hexcrest","regionId":"kandarin","relation":"hint"}
 {"entityId":"karamja:hexcrest","regionId":"karamja","relation":"hint"}
 {"entityId":"karamja:jadinko-favour-offering-stone","regionId":"karamja","relation":"hint"}
 {"entityId":"karamja:jadinko-lair","regionId":"karamja","relation":"hint","requirementGroup":"single"}
@@ -3135,8 +3136,10 @@
 {"entityId":"prayer:curly-roots-ceiling-is-karamja-site-tirannwn-prayer","regionId":"karamja","relation":"hint"}
 {"entityId":"prayer:curly-roots-ceiling-is-karamja-site-tirannwn-prayer","ordinal":1,"regionId":"tirannwn","relation":"hint"}
 {"entityId":"prayer:decay","regionId":"misthalin","relation":"required"}
+{"entityId":"prayer:divine-rage","regionId":"misthalin","relation":"hint"}
 {"entityId":"prayer:divine-rage","regionId":"misthalin","relation":"required"}
 {"entityId":"prayer:eclipsed-soul","regionId":"desert","relation":"required"}
+{"entityId":"prayer:eclipsed-soul","regionId":"misthalin","relation":"hint"}
 {"entityId":"prayer:eclipsed-soul","ordinal":1,"regionId":"misthalin","relation":"required"}
 {"entityId":"prayer:eclipsed-soul","ordinal":2,"regionId":"morytania","relation":"required"}
 {"entityId":"prayer:ectofuntus","regionId":"morytania","relation":"hint"}
@@ -3150,6 +3153,7 @@
 {"entityId":"prayer:piety","ordinal":1,"regionId":"karamja","relation":"required"}
 {"entityId":"prayer:powder-of-burials-banked-bones","ordinal":1,"regionId":"desert","relation":"hint"}
 {"entityId":"prayer:protect-from-necromancy","regionId":"misthalin","relation":"required"}
+{"entityId":"prayer:rapid-renewal","regionId":"forinthry","relation":"hint"}
 {"entityId":"prayer:rapid-renewal","regionId":"forinthry","relation":"required"}
 {"entityId":"prayer:rigour","regionId":"kandarin","relation":"required"}
 {"entityId":"prayer:rigour","ordinal":1,"regionId":"karamja","relation":"required"}
@@ -3546,6 +3550,7 @@
 {"entityId":"quest:fremennik:children-of-mah","ordinal":3,"regionId":"kandarin","relation":"required"}
 {"entityId":"quest:fremennik:children-of-mah","ordinal":4,"regionId":"misthalin","relation":"required"}
 {"entityId":"quest:fremennik:children-of-mah","ordinal":5,"regionId":"tirannwn","relation":"required"}
+{"entityId":"quest:fremennik:dream-mentor","regionId":"fremennik","relation":"hint"}
 {"entityId":"quest:fremennik:dream-mentor","regionId":"fremennik","relation":"primary"}
 {"entityId":"quest:fremennik:dream-mentor","regionId":"fremennik","relation":"required"}
 {"entityId":"quest:fremennik:dream-mentor","ordinal":1,"regionId":"misthalin","relation":"required"}
@@ -3568,6 +3573,7 @@
 {"entityId":"quest:fremennik:king-of-the-dwarves","ordinal":1,"regionId":"fremennik","relation":"required"}
 {"entityId":"quest:fremennik:king-of-the-dwarves","ordinal":2,"regionId":"kandarin","relation":"required"}
 {"entityId":"quest:fremennik:king-of-the-dwarves","ordinal":3,"regionId":"karamja","relation":"required"}
+{"entityId":"quest:fremennik:lunar-diplomacy","regionId":"fremennik","relation":"hint"}
 {"entityId":"quest:fremennik:lunar-diplomacy","regionId":"fremennik","relation":"primary"}
 {"entityId":"quest:fremennik:lunar-diplomacy","regionId":"fremennik","relation":"required"}
 {"entityId":"quest:fremennik:lunar-diplomacy","ordinal":1,"regionId":"misthalin","relation":"required"}
@@ -3967,6 +3973,7 @@
 {"entityId":"quest:misthalin:the-chosen-commander","ordinal":1,"regionId":"fremennik","relation":"required"}
 {"entityId":"quest:misthalin:the-chosen-commander","regionId":"misthalin","relation":"primary"}
 {"entityId":"quest:misthalin:the-chosen-commander","ordinal":2,"regionId":"misthalin","relation":"required"}
+{"entityId":"quest:misthalin:the-dig-site","regionId":"misthalin","relation":"hint"}
 {"entityId":"quest:misthalin:the-dig-site","regionId":"misthalin","relation":"primary"}
 {"entityId":"quest:misthalin:the-dig-site","regionId":"misthalin","relation":"required"}
 {"entityId":"quest:misthalin:the-lost-tribe","regionId":"misthalin","relation":"primary"}

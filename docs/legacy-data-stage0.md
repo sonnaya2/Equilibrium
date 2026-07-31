@@ -178,6 +178,27 @@ Two rules constrain that order:
 Where the order does not settle it, the record is marked `humanAdjudicationRequired` and stays
 unresolved rather than being quietly picked.
 
+**The importer now applies this order itself.** `ingest.mjs` sorts documents by authority before
+importing records, so when several resolve to one entity the winner of the scalar fields is the
+source the project trusts most, not whichever the seed happened to store first. Ties break on path,
+so the order is total and a rebuild is reproducible.
+
+Worth being precise about what that changed: **nothing, today.** Zero entities and zero exported
+files differ. The seed's natural order already matched the policy on every conflict, so the right
+record was already winning — by luck. The ordering makes it true by construction instead.
+
+### Two things the conflicts are not
+
+- **Not a `residual` bug.** 27 of the 47 `category` conflicts differ only by the word `residual`
+  (`Orthen Archaeology Herblore recipe residual` vs `Orthen Archaeology Herblore recipe`), which
+  looks exactly like a processing artifact. It is not safe to strip: **Residual Soul** is a real
+  Necromancy mechanic, and the token appears in 38 record names and 19 IDs. Rewriting those values
+  would corrupt game data to tidy a category string.
+- **Not always a real disagreement.** The first pass of the conflict detector reported 108; the true
+  figure is 70. It was grouping an equipment record with its own `sources[]` entry, because a
+  citation's `title` repeats the name of the thing it cites, and grouping parent records with the
+  records nested inside them. Both are now excluded.
+
 ## Future owner per domain
 
 There must not be two active editable sources for one fact after the cleanup.

@@ -339,6 +339,25 @@ function importResearchCatalog(db, documents) {
   });
 }
 
+// When several records resolve to one entity the first one imported wins its
+// scalar fields, and the rest contribute only relations. That "first" used to
+// mean whatever order the seed happened to store, so 682 entities were a blend
+// nobody chose. Importing in authority order makes the winner the source the
+// project actually trusts most, per docs/legacy-data-stage0.md.
+const AUTHORITY = [
+  [/^data\/league\//, 0], // official Jagex League material
+  [/^data\/combat\//, 1], // RuneScape Wiki game data
+  [/^data\/reference\//, 1],
+  [/^data\/research\/catalog\.json$/, 2], // specialized verified research
+  [/^data\/map\//, 3],
+  [/^data\/research\//, 4], // overlays: snapshots and project inference
+];
+const authorityRank = (file) => AUTHORITY.find(([pattern]) => pattern.test(file))?.[1] ?? 5;
+
+// Ties break on path so the order is total and a rebuild is reproducible.
+const byAuthority = (a, b) =>
+  authorityRank(a.file) - authorityRank(b.file) || (a.file < b.file ? -1 : a.file > b.file ? 1 : 0);
+
 export function importSeed(db) {
   const documents = seedDocuments();
   const inputHash = hash(documents.map(({ file, text }) => `${file}:${hash(text)}`).join("\n"));
@@ -357,7 +376,7 @@ export function importSeed(db) {
     }
     seedRegions(db, documents);
     const imported = [];
-    for (const document of documents) {
+    for (const document of [...documents].sort(byAuthority)) {
       const inheritedSources = sourceObjects(document.data);
       for (const record of document.records) {
         const candidate = entityCandidate(document.file, record);

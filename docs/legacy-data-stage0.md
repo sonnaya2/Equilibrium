@@ -323,12 +323,12 @@ The domain gate is a **ratchet, not a fix**. Every overlapping file pair is base
 record count, so the backlog stays visible in the report while a new pair — or an existing pair
 gaining a record — fails the build. Stage 0 did not adjudicate them; it stopped the problem growing.
 Stage 1 lowers the baseline as pairs are resolved: 18 pairs / 253 records at the end of Stage 0,
-9 pairs / 134 records now.
+7 pairs / 41 records now.
 
 ## Stage 1 — overlap adjudication
 
-**131 of the 253 overlaps are resolved.** 134 remain, and the ledger for both is
-`reports/research-adjudication.json`.
+**225 of the 253 overlaps are resolved.** 41 remain, all blocked on one thing, and the ledger for
+both is `reports/research-adjudication.json`.
 
 ### How a resolution is made
 
@@ -365,35 +365,47 @@ relational layer and retiring the document are different jobs, and the second on
 
 ### Round 2 — 33 records across ten pairs
 
-`data/patches/2026-07-31-overlap-authority-round-1.jsonl` resolves every remaining record where the
-authority order and the richer record agree and nothing would be lost: 74 operations, of which 34
-migrate sources and 7 migrate region links before 33 removals.
+`data/patches/2026-07-31-overlap-authority-round-1.jsonl` resolves every record where the authority
+order and the richer record agree and nothing would be lost: 74 operations, of which 34 migrate
+sources and 7 migrate region links before 33 removals.
 
-### Why the remaining 134 are not resolved
+### Round 3 — 94 records, applying the policy's exception as written
 
-Deferring these is a refusal to guess, not unfinished mechanics:
+The first pass deferred 93 records as "authority versus completeness", on the grounds that the order
+picked one file while the richer record sat in the other. That was reading the policy too loosely.
+The exception is conditional: rank 2 beating rank 3 is wrong *when rank 3 is verified and more
+precise*. Whether the specialized record is the more precise one is measurable, not a judgement call,
+so the rule decides these after all.
 
-| Reason | Records |
-| --- | ---: |
-| authority-vs-completeness | 93 |
-| requirements-would-be-lost | 38 |
-| no-consistent-winner | 3 |
+`data/patches/2026-07-31-overlap-authority-round-2.jsonl` applies the order strictly, with that
+exception evaluated per record — 117 operations, 15 source and 8 region migrations ahead of 94
+removals. The exception fires in both directions, which is the point:
 
-- **authority-vs-completeness** — the authority order selects one file and the richer record is in
-  the other. The largest is the 86 shared by `progression-unlocks.json` and `catalog.json`: the
-  policy explicitly protects a verified specialized record from being replaced by a less-specific
-  Wiki summary, which points at `catalog.json`, while `progression-unlocks.json` holds the richer
-  record on 83 of the 86. Picking either silently overrides a rule the project wrote down.
-- **requirements-would-be-lost** — the superseded record holds requirements or effects the survivor
-  lacks, and a patch can move sources and regions but not those. `item:abyssal-scourge` carries
-  `League self-supply: misthalin + forinthry`, which `misthalin:abyssal-scourge` does not have at
-  all. Unioning the two requirement lists would rebuild precisely the composite-that-matches-no-source
-  problem, so it is not the fix; a human deciding which list is correct is.
-- **no-consistent-winner** — the pair splits, with each file richer on some records.
+| Winner ← superseded | Records | Rule |
+| --- | ---: | --- |
+| `progression-unlocks.json` ← `catalog.json` | 84 | rank 2 over rank 3; the catalog record is not the more precise one |
+| `catalog.json` ← `regional-skilling-unlocks.json` | 4 | rank 3 over rank 4 |
+| `catalog.json` ← `progression-unlocks.json` | 3 | the exception firing — here the catalog record *is* richer |
+| `progression-unlocks.json` ← `progression-support-items` | 2 | same rank, richer record |
+| `progression-unlocks.json` ← `planner-expansions.json` | 1 | rank 2 over rank 4 |
+
+### Why the last 41 are not resolved
+
+All 41 are blocked on one thing, and deferring them is a refusal to guess rather than unfinished
+mechanics: **the superseded record holds requirements or effects the survivor lacks, and a patch can
+move sources and region links but not those.**
+
+`item:abyssal-scourge` carries `League self-supply: misthalin + forinthry`, which
+`misthalin:abyssal-scourge` does not have at all. Unioning the two requirement lists would rebuild
+precisely the composite-that-matches-no-source problem this audit exists to report, so it is not the
+fix. Either a human decides which list is right, or the patch vocabulary grows a requirement
+operation and the same authority pass runs again — and the second option is only safe once someone
+has confirmed that a union is ever the right answer here.
 
 ### What Stage 1 still has to do
 
-1. Adjudicate the 134 in `reports/research-adjudication.json`, largest reason first.
+1. Adjudicate the 41 in `reports/research-adjudication.json` — decide, per record, which requirement
+   list is correct, then either remove the superseded record or keep both deliberately.
 2. Resolve the 70 conflicts in `reports/research-conflicts.json`, starting with the 49 between
    `progression-unlocks.json` and `regional-skilling-unlocks.json`. Every intentional difference from
    the current database needs a written justification.

@@ -3,6 +3,10 @@
 {"entityId":"achievements:morytania-barrows","regionId":"morytania","relation":"hint"}
 {"entityId":"achievements:seers-combat","regionId":"kandarin","relation":"hint"}
 {"entityId":"achievements:tirannwn-combat","regionId":"tirannwn","relation":"hint"}
+{"entityId":"activity:content:allotment-patches","regionId":"havenhythe","relation":"hint"}
+{"entityId":"activity:content:flower-patch","regionId":"havenhythe","relation":"hint"}
+{"entityId":"activity:content:herb-patch","regionId":"havenhythe","relation":"hint"}
+{"entityId":"activity:content:jadinko-lair","regionId":"karamja","relation":"hint"}
 {"entityId":"activity:misthalin:zamorak-lord-of-chaos","regionId":"misthalin","relation":"hint","requirementGroup":"single"}
 {"entityId":"activity:misthalin:zamorak-lord-of-chaos","regionId":"misthalin","relation":"primary","requirementGroup":"single"}
 {"entityId":"activity:misthalin:zamorak-lord-of-chaos","regionId":"misthalin","relation":"required","requirementGroup":"single"}
@@ -1251,9 +1255,11 @@
 {"entityId":"dungeoneering:advanced-gold-accumulator-current","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:amulet-of-zealots-current","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:bonecrusher-current","regionId":"forinthry","relation":"hint","requirementGroup":"acquisition_region"}
+{"entityId":"dungeoneering:bonecrusher-current","regionId":"forinthry","relation":"primary"}
 {"entityId":"dungeoneering:bonecrusher-current","regionId":"forinthry","relation":"required","requirementGroup":"acquisition_region"}
 {"entityId":"dungeoneering:chaotic-grimoire","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:charming-imp-current","regionId":"forinthry","relation":"hint","requirementGroup":"acquisition_region"}
+{"entityId":"dungeoneering:charming-imp-current","regionId":"forinthry","relation":"primary"}
 {"entityId":"dungeoneering:charming-imp-current","regionId":"forinthry","relation":"required","requirementGroup":"acquisition_region"}
 {"entityId":"dungeoneering:daemonheim-floors","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:daemonheim-floors-small-rush-optimal-complexity","regionId":"forinthry","relation":"hint"}
@@ -1268,10 +1274,12 @@
 {"entityId":"dungeoneering:rapid-renewal-current","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:remaster-floor-progression","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:ring-of-vigour","regionId":"forinthry","relation":"hint","requirementGroup":"single"}
+{"entityId":"dungeoneering:ring-of-vigour","regionId":"forinthry","relation":"primary"}
 {"entityId":"dungeoneering:ring-of-vigour","regionId":"forinthry","relation":"required","requirementGroup":"single"}
 {"entityId":"dungeoneering:ring-of-vigour-passive","ordinal":1,"regionId":"anachronia","relation":"hint","requirementGroup":"all_required"}
 {"entityId":"dungeoneering:ring-of-vigour-passive","ordinal":1,"regionId":"anachronia","relation":"required","requirementGroup":"all_required"}
 {"entityId":"dungeoneering:ring-of-vigour-passive","regionId":"forinthry","relation":"hint","requirementGroup":"all_required"}
+{"entityId":"dungeoneering:ring-of-vigour-passive","regionId":"forinthry","relation":"primary"}
 {"entityId":"dungeoneering:ring-of-vigour-passive","regionId":"forinthry","relation":"required","requirementGroup":"all_required"}
 {"entityId":"dungeoneering:ruinous-weapons","regionId":"forinthry","relation":"hint"}
 {"entityId":"dungeoneering:scroll-of-restoration","regionId":"forinthry","relation":"hint"}

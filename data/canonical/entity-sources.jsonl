@@ -551,6 +551,7 @@
 {"entityId":"asgarnia:factory-outfit","sourceId":"source:runescape-wiki:c182cb3e94076a24"}
 {"entityId":"asgarnia:falador-farm","ordinal":2,"sourceId":"source:runescape-wiki:0806907277d7c50d"}
 {"entityId":"asgarnia:falador-farm","ordinal":1,"sourceId":"source:runescape-wiki:085ba847f68d82b1"}
+{"entityId":"asgarnia:falador-farm","sourceId":"source:runescape-wiki:67dc19d3f3810462"}
 {"entityId":"asgarnia:falador-farm","sourceId":"source:runescape-wiki:f05f087bbd8d2e15"}
 {"entityId":"asgarnia:flag-fall-claimed-island","sourceId":"source:runescape-wiki:2df56f2588e7877e"}
 {"entityId":"asgarnia:flag-fall-claimed-island","ordinal":3,"sourceId":"source:runescape-wiki:3b0bc9c32fc1fa9a"}
@@ -1742,6 +1743,7 @@
 {"entityId":"dungeoneering:amulet-of-zealots-current","ordinal":1,"sourceId":"source:runescape-wiki:4c1547afeaece14f"}
 {"entityId":"dungeoneering:bonecrusher-current","sourceId":"source:jagex:fa2260d53657805b"}
 {"entityId":"dungeoneering:bonecrusher-current","ordinal":1,"sourceId":"source:runescape-wiki:131d66a939ed4443"}
+{"entityId":"dungeoneering:bonecrusher-current","sourceId":"source:runescape-wiki:25835d738ace2de6"}
 {"entityId":"dungeoneering:bonecrusher-current","ordinal":2,"sourceId":"source:runescape-wiki:904e42c481c07d27"}
 {"entityId":"dungeoneering:chaotic-grimoire","sourceId":"source:jagex:fa2260d53657805b"}
 {"entityId":"dungeoneering:chaotic-grimoire","ordinal":1,"sourceId":"source:runescape-wiki:b58d28518d1373e8"}
@@ -1891,6 +1893,7 @@
 {"entityId":"forinthry:abyssal-wand-orb","sourceId":"source:runescape-wiki:6bbda55fcee98f1c"}
 {"entityId":"forinthry:advanced-gold-accumulator","ordinal":1,"sourceId":"source:runescape-wiki:06bd80315fc6e280"}
 {"entityId":"forinthry:advanced-gold-accumulator","sourceId":"source:runescape-wiki:b610f27d00f0649c"}
+{"entityId":"forinthry:advanced-gold-accumulator","sourceId":"source:runescape-wiki:c145f70ca3283223"}
 {"entityId":"forinthry:advanced-gold-accumulator","ordinal":2,"sourceId":"source:runescape-wiki:dade7458d3ca9002"}
 {"entityId":"forinthry:advanced-smithing-autoheater","ordinal":2,"sourceId":"source:runescape-wiki:06bd80315fc6e280"}
 {"entityId":"forinthry:advanced-smithing-autoheater","sourceId":"source:runescape-wiki:67b0e583f26f5b58"}
@@ -2182,6 +2185,7 @@
 {"entityId":"global:penance-aspect","sourceId":"source:jagex:0b33e8b52f8aea71"}
 {"entityId":"havenhythe:big-game-hunter","ordinal":1,"sourceId":"source:runescape-wiki:54cc4b5ae92e3554"}
 {"entityId":"havenhythe:big-game-hunter","sourceId":"source:runescape-wiki:a76538a67ad53c4c"}
+{"entityId":"havenhythe:birdhouses","sourceId":"source:runescape-wiki:7801ec88e4d2a048"}
 {"entityId":"havenhythe:birdhouses","ordinal":2,"sourceId":"source:runescape-wiki:94d1d69e3a9928dd"}
 {"entityId":"havenhythe:birdhouses","ordinal":1,"sourceId":"source:runescape-wiki:db31c4e097078c7b"}
 {"entityId":"havenhythe:birdhouses","sourceId":"source:runescape-wiki:eed2ff7cf268d1c1"}
@@ -2189,6 +2193,7 @@
 {"entityId":"havenhythe:charming-moths-highweald","ordinal":1,"sourceId":"source:runescape-wiki:112dc3bba1b579c3"}
 {"entityId":"havenhythe:charming-moths-highweald","sourceId":"source:runescape-wiki:dd5f99fdd04c4ca0"}
 {"entityId":"havenhythe:clockwork-box-traps","sourceId":"source:runescape-wiki:ac80de7e0039c23b"}
+{"entityId":"havenhythe:clockwork-box-traps","sourceId":"source:runescape-wiki:d045d31cf853c059"}
 {"entityId":"havenhythe:clockwork-box-traps","ordinal":1,"sourceId":"source:runescape-wiki:faff83ca9e6a0733"}
 {"entityId":"havenhythe:creeping-ivy","ordinal":1,"sourceId":"source:runescape-wiki:4fe4c5230b926e87"}
 {"entityId":"havenhythe:creeping-ivy","sourceId":"source:runescape-wiki:f6039188a3123902"}
@@ -2211,6 +2216,7 @@
 {"entityId":"havenhythe:marigold-farm-patches","ordinal":1,"sourceId":"source:runescape-wiki:0b73a19c7207b72c"}
 {"entityId":"havenhythe:marigold-farm-patches","sourceId":"source:runescape-wiki:1f711b79cc78ba47"}
 {"entityId":"havenhythe:marigold-farm-patches","ordinal":2,"sourceId":"source:runescape-wiki:5c801525cec11fe7"}
+{"entityId":"havenhythe:moonrise-dig-site","sourceId":"source:jagex:d29b92bd8da01109"}
 {"entityId":"havenhythe:moonrise-dig-site","ordinal":3,"sourceId":"source:runescape-wiki:9424b0f0452ff8fe"}
 {"entityId":"havenhythe:moonrise-dig-site","sourceId":"source:runescape-wiki:aa524ba09468fb81"}
 {"entityId":"havenhythe:moonrise-dig-site","ordinal":2,"sourceId":"source:runescape-wiki:ab03561c7e3920a2"}
@@ -2242,6 +2248,7 @@
 {"entityId":"havenhythe:wendlewick-deserted-mine","ordinal":1,"sourceId":"source:runescape-wiki:da5964db5a88943b"}
 {"entityId":"havenhythe:wendlewick-fish-farm","ordinal":1,"sourceId":"source:runescape-wiki:0b73a19c7207b72c"}
 {"entityId":"havenhythe:wendlewick-fish-farm","sourceId":"source:runescape-wiki:bfcaa34a2fe24ee7"}
+{"entityId":"havenhythe:wendlewick-fish-farm","sourceId":"source:runescape-wiki:c03419f93525de35"}
 {"entityId":"havenhythe:wendlewick-limestone-mine","ordinal":1,"sourceId":"source:runescape-wiki:5c801525cec11fe7"}
 {"entityId":"havenhythe:wendlewick-limestone-mine","ordinal":3,"sourceId":"source:runescape-wiki:849e4a0547305057"}
 {"entityId":"havenhythe:wendlewick-limestone-mine","sourceId":"source:runescape-wiki:c43ede05f0750065"}
@@ -3315,6 +3322,7 @@
 {"entityId":"kandarin:cobalt-skillchompa-hunter-site","ordinal":2,"sourceId":"source:runescape-wiki:be53ecd7dc2b6ef6"}
 {"entityId":"kandarin:deep-sea-fishing-hub","sourceId":"source:runescape-wiki:39c0e84b9c9eafb8"}
 {"entityId":"kandarin:deep-sea-fishing-hub","ordinal":1,"sourceId":"source:runescape-wiki:43c8d568d51387db"}
+{"entityId":"kandarin:deep-sea-fishing-hub","sourceId":"source:runescape-wiki:4532868a26a9682d"}
 {"entityId":"kandarin:deep-sea-fishing-hub","ordinal":2,"sourceId":"source:runescape-wiki:851a7af677723abe"}
 {"entityId":"kandarin:deep-sea-fishing-methods","sourceId":"source:runescape-wiki:39c0e84b9c9eafb8"}
 {"entityId":"kandarin:deep-sea-fishing-methods","ordinal":1,"sourceId":"source:runescape-wiki:43c8d568d51387db"}
@@ -3915,6 +3923,7 @@
 {"entityId":"morytania:area-tasks-morytania-legs","ordinal":2,"sourceId":"source:runescape-wiki:5790e41361f6b46b"}
 {"entityId":"morytania:area-tasks-morytania-legs","ordinal":1,"sourceId":"source:runescape-wiki:92ce14e4d89b50b9"}
 {"entityId":"morytania:attuned-ectoplasmator","ordinal":2,"sourceId":"source:runescape-wiki:518fcaf4ad1db72c"}
+{"entityId":"morytania:attuned-ectoplasmator","sourceId":"source:runescape-wiki:628f703e8e3a8757"}
 {"entityId":"morytania:attuned-ectoplasmator","ordinal":1,"sourceId":"source:runescape-wiki:9874e0e0fc57b48d"}
 {"entityId":"morytania:attuned-ectoplasmator","sourceId":"source:runescape-wiki:b2fcd26af2af89a4"}
 {"entityId":"morytania:berserkers-fury-relic","ordinal":1,"sourceId":"source:runescape-wiki:35cda2d40ee153c4"}
@@ -4022,6 +4031,7 @@
 {"entityId":"morytania:temple-trekking-skilling-outfits","ordinal":1,"sourceId":"source:runescape-wiki:43b9b6f3e3946a86"}
 {"entityId":"morytania:temple-trekking-skilling-outfits","sourceId":"source:runescape-wiki:c1590cb77ea6d30c"}
 {"entityId":"morytania:vyre-combat-infrastructure","sourceId":"source:runescape-wiki:50d5c50f6467140c"}
+{"entityId":"morytania:vyre-combat-infrastructure","sourceId":"source:runescape-wiki:7d06aac71ec560df"}
 {"entityId":"morytania:vyre-combat-infrastructure","ordinal":1,"sourceId":"source:runescape-wiki:92ce14e4d89b50b9"}
 {"entityId":"morytania:vyre-cremation-sunspear","ordinal":2,"sourceId":"source:runescape-wiki:5790e41361f6b46b"}
 {"entityId":"morytania:vyre-cremation-sunspear","sourceId":"source:runescape-wiki:7d06aac71ec560df"}
@@ -6822,6 +6832,7 @@
 {"entityId":"tirannwn:max-guild-teleport-spell","sourceId":"source:runescape-wiki:102ecee09d673200"}
 {"entityId":"tirannwn:max-guild-teleport-spell","ordinal":2,"sourceId":"source:runescape-wiki:c5dac1c2178c0366"}
 {"entityId":"tirannwn:max-guild-teleport-spell","ordinal":1,"sourceId":"source:runescape-wiki:cc56b24d924354a3"}
+{"entityId":"tirannwn:morvran-slayer-master","sourceId":"source:runescape-wiki:76760f38356d8b9f"}
 {"entityId":"tirannwn:morvran-slayer-master","ordinal":1,"sourceId":"source:runescape-wiki:7fb5c1f6ff6c68d7"}
 {"entityId":"tirannwn:morvran-slayer-master","sourceId":"source:runescape-wiki:a9c56e02f3addd91"}
 {"entityId":"tirannwn:morvran-slayer-master","ordinal":2,"sourceId":"source:runescape-wiki:c8125dc77dbf654d"}
@@ -7035,7 +7046,9 @@
 {"entityId":"unlock:forinthry:grace-of-the-elves-gote","sourceId":"source:runescape-wiki:1c35d80c34d299da"}
 {"entityId":"unlock:forinthry:grasping-rune-pouch","sourceId":"source:runescape-wiki:02b32edf0a4a6ab5"}
 {"entityId":"unlock:forinthry:guthix-staff-and-claws-of-guthix-access","sourceId":"source:runescape-wiki:4a9d9e4e501dc8ad"}
+{"entityId":"unlock:forinthry:herbicide","sourceId":"source:jagex:fa2260d53657805b"}
 {"entityId":"unlock:forinthry:herbicide","sourceId":"source:runescape-wiki:07d2ae979d4daa09"}
+{"entityId":"unlock:forinthry:herbicide","sourceId":"source:runescape-wiki:131d66a939ed4443"}
 {"entityId":"unlock:forinthry:hexhunter-bow","sourceId":"source:runescape-wiki:650043e8fcd7914e"}
 {"entityId":"unlock:forinthry:infernal-source-dig-site-zamorakian","sourceId":"source:runescape-wiki:5e93b8892e7abaf9"}
 {"entityId":"unlock:forinthry:inspire-love-ariadnes-diadem","sourceId":"source:runescape-wiki:5afe108d9ef7931c"}
@@ -7063,6 +7076,8 @@
 {"entityId":"unlock:forinthry:scroll-of-proficiency","sourceId":"source:runescape-wiki:616d69bb74751b8d"}
 {"entityId":"unlock:forinthry:scroll-of-quick-teleportation-daemonheim-permanent","sourceId":"source:runescape-wiki:adbdc1e371261fde"}
 {"entityId":"unlock:forinthry:scroll-of-renewal","sourceId":"source:runescape-wiki:f00b4f92cef1d56d"}
+{"entityId":"unlock:forinthry:scroll-of-restoration","sourceId":"source:jagex:fa2260d53657805b"}
+{"entityId":"unlock:forinthry:scroll-of-restoration","sourceId":"source:runescape-wiki:b58d28518d1373e8"}
 {"entityId":"unlock:forinthry:scroll-of-restoration","sourceId":"source:runescape-wiki:ff87647bb8055e44"}
 {"entityId":"unlock:forinthry:sealed-large-rune-pouch-combat-rune-storage","sourceId":"source:runescape-wiki:22da1605f477e8d2"}
 {"entityId":"unlock:forinthry:sealed-small-rune-pouch-combat-rune-storage","sourceId":"source:runescape-wiki:48b0d435f0cc1768"}

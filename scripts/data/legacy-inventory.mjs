@@ -571,27 +571,23 @@ export function entityOverlaps(db) {
 
 // --- Stage 1 adjudication ledger --------------------------------------------
 
-// Why each unresolved overlap is still unresolved. Both reasons are refusals to
-// guess, not missing work:
-//
-//   authority-vs-completeness - the authority order picks one file and the
-//     richer record is in the other. Picking either silently overrides a rule
-//     the project wrote down.
-//   requirements-would-be-lost - the superseded record holds requirements or
-//     effects the survivor lacks, and a patch can move sources and regions but
-//     not those. Unioning them is what produced the blended entities this audit
-//     exists to report, so it is not the fix.
-const DEFERRAL_REASONS = new Map([
-  ["data/reference/progression-unlocks.json + data/research/catalog.json", "authority-vs-completeness"],
-  ["data/combat/equipment.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
-  ["data/research/catalog.json + data/research/regional-skilling-unlocks.json", "authority-vs-completeness"],
-  ["data/combat/abilities.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
-  ["data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", "no-consistent-winner"],
-  ["data/combat/equipment.json + data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
-  ["data/combat/equipment.json + data/research/regional-combat-unlocks.json", "authority-vs-completeness"],
-  ["data/reference/progression-container-bags-2026-07-25.json + data/reference/progression-unlocks.json", "requirements-would-be-lost"],
-  ["data/reference/progression-unlocks.json + data/research/catalog.json + data/research/planner-expansions.json", "authority-vs-completeness"],
-]);
+// Why each unresolved overlap is still unresolved. Every remaining pair is
+// blocked on the same thing, and it is a refusal to guess rather than missing
+// mechanics: the superseded record holds requirements or effects the survivor
+// lacks, and a patch can move sources and region links but not those. Unioning
+// the two lists is what produced the blended entities this audit exists to
+// report, so it is not the fix - a human deciding which list is right is.
+const DEFERRAL_REASONS = new Map(
+  [
+    "data/combat/equipment.json + data/reference/progression-unlocks.json",
+    "data/combat/abilities.json + data/reference/progression-unlocks.json",
+    "data/combat/equipment.json + data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json",
+    "data/combat/equipment.json + data/research/regional-combat-unlocks.json",
+    "data/reference/progression-container-bags-2026-07-25.json + data/reference/progression-unlocks.json",
+    "data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json",
+    "data/research/catalog.json + data/research/regional-skilling-unlocks.json",
+  ].map((pair) => [pair, "requirements-would-be-lost"]),
+);
 
 // Resolved overlaps are recoverable from the database: a patch set status to
 // 'removed' and patch_changes records which patch did it, so the ledger is

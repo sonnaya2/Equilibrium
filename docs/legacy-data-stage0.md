@@ -8,8 +8,9 @@ npm run data:legacy-inventory
 ```
 
 into `reports/legacy-data-inventory.json`, `reports/legacy-data-audit.md`,
-`reports/research-conflicts.json`, `reports/research-duplicates.json` and
-`reports/research-orphans.json`. Those are generated and git-ignored, like every other report here.
+`reports/research-conflicts.json`, `reports/research-duplicates.json`,
+`reports/research-overlaps.json` and `reports/research-orphans.json`. Those are generated and
+git-ignored, like every other report here.
 
 ## The thing that makes this audit non-obvious
 
@@ -70,6 +71,45 @@ Three rules keep it safe, each learned by breaking something:
 representations. It does not mean the document is worthless: it still carries fields the relational
 schema never modelled (529 such keys, per `reports/canonical-unmodelled-fields.json`).
 
+### The second layer: files on disk
+
+The table above is documents *inside* the seed. The inventory also classifies the 242 data files
+that carry them — the seed, migrations, patches, the tracked canonical export, and every generated
+shard and report:
+
+| Disposition | Files | Bytes |
+| --- | ---: | ---: |
+| active-generated | 233 | 23,759 KiB |
+| active-authoritative | 9 | 2,095 KiB |
+
+Nine authored files against 233 generated ones is the shape the architecture is supposed to have.
+The nine are the seed, four migrations, two patches and two asset manifests. The only generated
+files that are tracked are the 32 under `data/canonical/`, tracked deliberately so the dataset is
+reviewable in a diff. Scripts and components get no disposition of their own — the eight
+dispositions describe data, not the code that moves it, so those appear as the producers, readers
+and tests of these paths.
+
+Every generated file now has an identified producer. One did not at first:
+`reports/data-icon-audit.json` is written by `src/lib/dataIconAudit.test.ts`, not by any script — a
+test that emits a report is worth knowing about, because nothing in the build pipeline regenerates
+it.
+
+### Provenance, measured rather than assumed
+
+Each document is scored by the share of its entities carrying at least one citation:
+
+| Quality | Documents |
+| --- | ---: |
+| cited (≥90%) | 27 |
+| not-applicable (no entities) | 23 |
+| partial | 5 |
+| uncited | 1 |
+
+The single uncited document is `data/combat/modernisation-2026.json` (3 entities). The five partial
+ones are `permanent-unlocks-pass-3.json` (10 of 34), `region-combos.json` (16 of 25),
+`spellbooks.json` (5 of 14), `planner-expansions.json` (5 of 15) and `prayer-books.json` (3 of 10).
+None is a defect on its own; they are where Stage 1 should expect to do citation work.
+
 ### Largest domains
 
 | Domain | Docs | Bytes | Notes |
@@ -114,17 +154,17 @@ none are imported only by unreachable ones.
 
 ## Conflicts queued for Stage 1
 
-78 logical records disagree. The grouping key is the entity the importer resolved a record to — not
+70 logical records disagree. The grouping key is the entity the importer resolved a record to — not
 the raw `id` field, which is unique only *within* a document and would match a revolution bar against
 the Ranged skill.
 
 - **64 disagree across two files.** The top pair is
   `progression-unlocks.json` + `regional-skilling-unlocks.json` with 49 conflicts: two generations of
-  the same unlock research, both live. By type: 36 activities, 26 equipment, 1 prayer, 1 unlock.
-- **14 disagree inside one document.**
+  the same unlock research, both live. By type: 33 activities and 16 equipment.
+- **6 disagree inside one document.**
 
-682 entities are built from more than one source record; those 64 are the ones whose records
-actually disagree. 56 further logical records are stored byte-identically more than once.
+674 entities are built from more than one source record; those 64 are the ones whose records
+actually disagree. 62 further logical records are stored byte-identically more than once.
 
 ### What the importer actually does with them
 
@@ -137,23 +177,66 @@ Not a drop — a **merge**, and the halves come from different records:
 | domain row | first record wins (`INSERT OR IGNORE`) |
 | regions, requirements, effects, tags, sources | **union of every contributing record** |
 
-So a conflicted entity is a composite that matches no single source. `prayer:prayers:protect-item`
-carries the *standard* book's scalar fields and the *ancient* book's region requirements, and its
-`book` column is empty, so nothing records which book it came from.
+So a conflicted entity is a composite that matches no single source. `anachronia:herb-bag-current`
+takes its `league_treatment` from `progression-container-bags-2026-07-25.json` and silently drops
+the value `progression-unlocks.json` gives for the same field, while keeping the relations from
+both.
 
 **This is the finding that most justifies the four-stage plan.** The current SQLite database is not
 clean ground truth: on 64 records it shows a blend of disagreeing sources rather than any one of
 them.
 
-### Colliding identities, separate from disagreeing values
+### Colliding identities, separate from disagreeing values — fixed
 
-Eight prayers exist in two different prayer books under the same name. `entityCandidate` builds a
-prayer's ID from `prayer:<key>:<name>` where `<key>` is the array key `prayers` in both cases, so the
-book never reaches the ID and the two records collapse into one entity. 94 of 195 prayers have an
-empty `book` column, so the model cannot express the difference either.
+Eight prayers existed in two different prayer books under the same name. `entityCandidate` built a
+prayer's ID from `prayer:<key>:<name>` where `<key>` was the array key `prayers` in both books, so
+the book never reached the ID and the two records collapsed into one entity.
 
-Fixing that means changing entity IDs, which breaks `data/patches/` references and any deep link, so
-it is queued for Stage 1 rather than done here.
+This is now fixed. Records carry their enclosing record, a prayer is scoped by its book, and
+`prayer:standard-prayers:protect-item` and `prayer:ancient-curses:protect-item` are separate
+entities. 4,790 entities became 4,798 — exactly the eight that were merged — and the empty `book`
+column went from 94 of 195 to 4 of 203. None of the 90 renamed `prayer:prayers:*` IDs were
+referenced in patches, tests, e2e or app code.
+
+The scope stayed on prayers deliberately: a general parent-aware scope would have renamed 442
+records across four files, 262 of them in the research catalog, to fix nine collisions.
+
+## The duplication the conflict report cannot see
+
+**This is the largest finding in the audit, and it was missed until now.**
+
+`research-conflicts.json` groups records by the entity the importer resolved them to. By
+construction, that cannot see two files describing the same thing under *different* entity IDs —
+those records never group, so they never appear as a conflict, and the earlier passes reported them
+as clean.
+
+Grouping by entity type and name instead finds **253 logical records that exist in more than one
+source file as separate entities**, across 18 file pairs. `reports/research-overlaps.json` has them.
+
+| Files | Records |
+| --- | ---: |
+| `data/combat/prayers.json` + `data/reference/prayers.json` | 87 |
+| `data/reference/progression-unlocks.json` + `data/research/catalog.json` | 86 |
+| `data/combat/equipment.json` + `data/reference/progression-unlocks.json` | 33 |
+| `data/league/quests.json` + `data/reference/progression-unlocks.json` | 9 |
+| `data/combat/perks.json` + `planner-expansions-invention-active-perks.json` | 8 |
+
+The prayers pair is the clearest case. `data/combat/prayers.json` and `data/reference/prayers.json`
+describe the same 90 prayers — every name in one is in the other, and neither has a single prayer the
+other lacks. They produce 180 entities where the game has 90, because one file's records are keyed
+`prayer:protect-item` and the other's `prayer:standard-prayers:protect-item`. (The table says 87
+because 3 of the 90 also appear in `progression-unlocks.json` and are counted under that three-file
+group.) The two files also disagree on how to spell a book: `standard` / `ancient` / `seren` against
+`Standard Prayers` / `Ancient Curses` / `Seren Prayers`.
+
+Two things this is **not**:
+
+- **Not caused by the prayer-book split.** `data/combat/prayers.json` always produced unqualified
+  IDs, so the two sets were already separate entities before that change. The split fixed a
+  collision *within* `data/reference/prayers.json`; it neither created nor widened this overlap.
+- **Not automatically a duplicate to delete.** Two files describing one prayer may still disagree
+  about its values, and the authority order decides which value wins, not which file is deleted.
+  Every one of the 253 is marked `humanAdjudicationRequired`.
 
 ## Source authority policy for Stage 1
 
@@ -189,11 +272,11 @@ record was already winning — by luck. The ordering makes it true by constructi
 
 ### Two things the conflicts are not
 
-- **Not a `residual` bug.** 27 of the 47 `category` conflicts differ only by the word `residual`
-  (`Orthen Archaeology Herblore recipe residual` vs `Orthen Archaeology Herblore recipe`), which
-  looks exactly like a processing artifact. It is not safe to strip: **Residual Soul** is a real
-  Necromancy mechanic, and the token appears in 38 record names and 19 IDs. Rewriting those values
-  would corrupt game data to tidy a category string.
+- **Not a `residual` bug.** 31 of the 47 `category` conflicts differ only by the word `residual`
+  (`player-owned farm permanent perk residual` vs `player-owned farm permanent perk`), which looks
+  exactly like a processing artifact. It is not safe to strip: **Residual Soul** is a real Necromancy
+  mechanic, and the token appears in 18 entity names and 16 IDs. Rewriting those values would
+  corrupt game data to tidy a category string.
 - **Not always a real disagreement.** The first pass of the conflict detector reported 108; the true
   figure is 70. It was grouping an equipment record with its own `sources[]` entry, because a
   citation's `title` repeats the name of the thing it cites, and grouping parent records with the
@@ -228,23 +311,40 @@ Added to `npm run audit:data`, which already fails the build:
 | dead package scripts | a package script names a `scripts/…` file that does not exist |
 | undocumented data roots | `data/` grows a directory outside seed / migrations / patches / canonical |
 | oversized client data | a document over 250 KiB is reachable from a `"use client"` module (pre-existing) |
+| two files claiming one domain | a **new** file pair overlaps, or an existing pair grows |
 
 The dead-script gate caught `build:icon-maps` on its first run: it invoked
 `scripts/_build-icon-maps.mjs` and `scripts/_emit-data-icon-index.mjs`, neither of which exists.
 Removing that entry is the only deletion in this stage.
 
+The domain gate is a **ratchet, not a fix**. All 18 of today's overlapping file pairs are baselined
+with their exact record counts, so the 253-record backlog stays visible in the report while a new
+pair — or an existing pair gaining a record — fails the build. Stage 0 does not adjudicate them;
+it stops the problem growing while Stage 1 does.
+
 ## What Stage 1 must do
 
-1. Resolve the 78 conflicts in `reports/research-conflicts.json`, starting with the 49 between
+1. Resolve the 253 overlaps in `reports/research-overlaps.json` **first**, starting with the 87
+   prayers and the 86 records shared by `progression-unlocks.json` and `catalog.json`. These are
+   larger than the conflict set and were invisible to every earlier pass, so treat any prior
+   "no duplicates found" conclusion as unproven rather than reassuring. Deciding an overlap means
+   choosing which file owns the record, not merging the two rows.
+2. Resolve the 70 conflicts in `reports/research-conflicts.json`, starting with the 49 between
    `progression-unlocks.json` and `regional-skilling-unlocks.json`. Every intentional difference from
    the current database needs a written justification.
-2. Decide each conflicted entity as a whole rather than inheriting the current blend of first-wins
-   scalars and unioned relations, and give the 8 colliding prayers book-qualified IDs.
-3. Keep the best available provenance per record; never re-label a source.
-4. Label provisional and inferred records explicitly.
-5. Treat the current SQLite database as a **comparison reference, not ground truth**, and emit
+3. Decide each conflicted entity as a whole rather than inheriting the current blend of first-wins
+   scalars and unioned relations.
+4. Normalize book, spellbook and category labels while doing so — `standard` and `Standard Prayers`
+   are the same book written two ways, and whichever survives must be the same in both files.
+5. Keep the best available provenance per record; never re-label a source. `modernisation-2026.json`
+   is uncited and the five partial documents listed above are where citation work is owed.
+6. Label provisional and inferred records explicitly.
+7. Treat the current SQLite database as a **comparison reference, not ground truth**, and emit
    `reports/canonical-vs-current-db.json`, `reports/canonical-source-coverage.json` and
    `reports/canonical-retired-files.json`.
+8. Lower each baseline in `OVERLAP_BASELINE` (`scripts/data/audit.mjs`) as pairs are resolved, and
+   delete the entry when a pair reaches zero. The gate only ratchets if the baseline follows the
+   work down.
 
 The canonical exporter, schema, validator and parity harness from the parked Stage 1 attempt already
 exist under `scripts/data/canonical/` with 29 passing tests. They are the mechanism; what changes is

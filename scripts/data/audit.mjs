@@ -409,6 +409,49 @@ if (missingScriptFiles.length) {
   );
 }
 
+// Two files claiming one domain: the same entity type and name produced by more
+// than one source file, as separate entities. Stage 0 measured 253 of these and
+// does not fix them - the gate is a ratchet, so a *new* pair of files, or an
+// existing pair growing, fails while the known backlog stays visible in
+// reports/research-overlaps.json. Counts are per file pair, matching that report.
+const OVERLAP_BASELINE = new Map([
+  ["data/combat/prayers.json + data/reference/prayers.json", 87],
+  ["data/reference/progression-unlocks.json + data/research/catalog.json", 86],
+  ["data/combat/equipment.json + data/reference/progression-unlocks.json", 33],
+  ["data/league/quests.json + data/reference/progression-unlocks.json", 9],
+  ["data/combat/perks.json + data/research/planner-expansions-invention-active-perks.json", 8],
+  ["data/research/catalog.json + data/research/planner-expansions.json", 5],
+  ["data/research/catalog.json + data/research/regional-skilling-unlocks.json", 5],
+  ["data/combat/abilities.json + data/combat/modernisation-2026.json", 3],
+  ["data/combat/abilities.json + data/reference/progression-unlocks.json", 3],
+  ["data/combat/prayers.json + data/reference/prayers.json + data/reference/progression-unlocks.json", 3],
+  ["data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", 3],
+  ["data/league/quests.json + data/reference/permanent-unlocks-pass-3.json", 2],
+  ["data/combat/equipment.json + data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", 1],
+  ["data/combat/equipment.json + data/research/regional-combat-unlocks.json", 1],
+  ["data/league/quests.json + data/reference/permanent-unlocks-pass-3.json + data/reference/progression-unlocks.json", 1],
+  ["data/reference/progression-container-bags-2026-07-25.json + data/reference/progression-unlocks.json", 1],
+  ["data/reference/progression-unlocks.json + data/research/catalog.json + data/research/planner-expansions.json", 1],
+  ["data/reference/progression-unlocks.json + data/research/regional-skilling-unlocks.json", 1],
+]);
+if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
+  const { openDatabase } = await import("./database.mjs");
+  const { entityOverlaps } = await import("./legacy-inventory.mjs");
+  const db = openDatabase();
+  try {
+    for (const { files, records } of entityOverlaps(db).filePairs) {
+      const baseline = OVERLAP_BASELINE.get(files);
+      if (baseline === undefined) {
+        architectureFailures.push(`new file pair claims one domain: ${files} (${records} records)`);
+      } else if (records > baseline) {
+        architectureFailures.push(`overlap grew for ${files}: ${baseline} -> ${records} records`);
+      }
+    }
+  } finally {
+    db.close();
+  }
+}
+
 // data/ holds one seed, forward-only migrations and content patches. A new root
 // here means a second authoring surface arrived without a decision.
 const DATA_ROOTS = new Set(["migrations", "patches", "seed-v1.json.gz", "README.md", "canonical"]);

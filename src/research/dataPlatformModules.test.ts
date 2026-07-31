@@ -41,6 +41,13 @@ const queries = await load<{
   runReadOnlyQuery: (db: DatabaseSync, options: { sql: string; limit: number }) => unknown[];
 }>("queries.mjs");
 
+const legacy = await load<{
+  entityOverlaps: (db: DatabaseSync) => {
+    overlaps: Array<{ logicalRecord: string; files: string[]; entityIds: string[] }>;
+    filePairs: Array<{ files: string; records: number }>;
+  };
+}>("legacy-inventory.mjs");
+
 const scratch = mkdtempSync(join(tmpdir(), "equilibrium-patch-"));
 afterAll(() => rmSync(scratch, { recursive: true, force: true }));
 
@@ -165,6 +172,47 @@ describe("patch parsing limits", () => {
       `${Array.from({ length: 1001 }, () => line).join("\n")}\n`,
     );
     expect(() => patches.parsePatch(path)).toThrow(/1,000-operation safety limit/);
+  });
+});
+
+describe("overlapping domains", () => {
+  const db = new DatabaseSync(":memory:");
+  db.exec(
+    `CREATE TABLE entities(id TEXT PRIMARY KEY, entity_type TEXT, name TEXT, created_source TEXT);
+     INSERT INTO entities VALUES
+       ('prayer:protect-item', 'prayer', 'Protect Item', 'data/combat/prayers.json'),
+       ('prayer:standard-prayers:protect-item', 'prayer', 'Protect Item', 'data/reference/prayers.json'),
+       ('prayer:piety', 'prayer', 'Piety', 'data/combat/prayers.json'),
+       ('ability:protect-item', 'ability', 'Protect Item', 'data/combat/abilities.json'),
+       ('equipment:bandos', 'equipment', 'Bandos', 'data/combat/equipment.json'),
+       ('equipment:bandos-dup', 'equipment', 'bandos', 'data/reference/progression-unlocks.json');`,
+  );
+  afterAll(() => db.close());
+
+  it("groups two files describing one record under different ids", () => {
+    const { overlaps } = legacy.entityOverlaps(db);
+    const prayer = overlaps.find(({ logicalRecord }) => logicalRecord === "prayer|protect item");
+    expect(prayer?.files).toEqual(["data/combat/prayers.json", "data/reference/prayers.json"]);
+    expect(prayer?.entityIds).toEqual([
+      "prayer:protect-item",
+      "prayer:standard-prayers:protect-item",
+    ]);
+  });
+
+  it("matches on name case-insensitively but never across entity types", () => {
+    const { overlaps } = legacy.entityOverlaps(db);
+    expect(overlaps.map(({ logicalRecord }) => logicalRecord)).toEqual([
+      "equipment|bandos",
+      "prayer|protect item",
+    ]);
+  });
+
+  it("ignores a name that appears once and counts each file pair", () => {
+    const { filePairs } = legacy.entityOverlaps(db);
+    expect(filePairs).toEqual([
+      { files: "data/combat/equipment.json + data/reference/progression-unlocks.json", records: 1 },
+      { files: "data/combat/prayers.json + data/reference/prayers.json", records: 1 },
+    ]);
   });
 });
 

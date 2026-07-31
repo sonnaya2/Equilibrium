@@ -14,6 +14,7 @@ import {
   EXCLUDED_COLUMNS,
   EXCLUDED_TABLES,
   REFERENCE_KEY,
+  collectionDefaults,
   recordRef,
 } from "./schema.mjs";
 
@@ -110,7 +111,7 @@ export function validateCanonical(root = CANONICAL_ROOT) {
     });
     // Compacting first means a line that spells out a default cannot slip past
     // the ordering check by carrying a different key set.
-    const normalized = records.map((record) => compact(collection, { ...defaults(collection), ...record }));
+    const normalized = records.map((record) => compact(collection, { ...collectionDefaults(collection), ...record }));
     counts[collection.name] = normalized.length;
     parsed.set(collection.name, normalized);
 
@@ -176,14 +177,6 @@ export function validateCanonical(root = CANONICAL_ROOT) {
   }
 
   return { valid: failures.length === 0, counts, failures, records: parsed };
-}
-
-function defaults(collection) {
-  const out = {};
-  for (const [field, declaration] of Object.entries(collection.fields)) {
-    if (isOptional(declaration)) out[field] = declaration[1];
-  }
-  return out;
 }
 
 // --- parity ----------------------------------------------------------------

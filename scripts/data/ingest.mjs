@@ -98,6 +98,18 @@ export function seedDocuments() {
   });
 }
 
+// The document with every top-level array record blanked. Nested records are
+// carried inside their parent's stored body, and documentOutputs replays record
+// paths parent-before-child, so blanking the outermost ones is enough to make
+// the skeleton the smallest thing the rebuild still needs.
+export function documentSkeleton(document) {
+  const skeleton = JSON.parse(document.text);
+  for (const record of document.records) {
+    if (record.parent === null) setRecordAtPath(skeleton, record.path, null);
+  }
+  return skeleton;
+}
+
 function setRecordAtPath(document, recordPath, value) {
   const tokens = [...recordPath.matchAll(/\.([^.[\]]+)|\[(\d+)\]/g)].map((match) =>
     match[1] === undefined ? Number(match[2]) : match[1],
@@ -122,35 +134,42 @@ function documentConsumers() {
   return wanted;
 }
 
-// Replays normalized records back over the seed shape for the modules that load
-// a whole document. The research catalog is excluded — it is served from
-// relational tables instead. Returned as export outputs so the same byte
-// comparison and stale sweep covers them.
+// Replays normalized records back over each document's skeleton for the modules
+// that load a whole document. The research catalog is excluded — it is served
+// from relational tables instead. Returned as export outputs so the same byte
+// comparison and stale sweep covers them. Reads only the database, so the
+// artifacts are the same whichever ingestion path filled it.
 export function documentOutputs(db) {
   const wanted = documentConsumers();
-  const documents = seedDocuments().filter(
-    // data/combat/equipment.json -> combat/equipment.json
-    ({ file }) => !DOCUMENT_SKIP.has(file) && wanted.has(file.slice("data/".length)),
+  const skeletons = new Map(
+    prepared(db, "SELECT path, skeleton_json FROM source_documents ORDER BY path")
+      .all()
+      .map(({ path, skeleton_json }) => [path, skeleton_json]),
   );
-  const missing = [...wanted].filter(
-    (name) => !documents.some(({ file }) => file === `data/${name}`),
-  );
+  const missing = [...wanted].filter((name) => !skeletons.has(`data/${name}`));
   if (missing.length) {
-    throw new Error(`#shard imports name documents the seed does not contain: ${missing.join(", ")}`);
+    throw new Error(`#shard imports name documents the database does not contain: ${missing.join(", ")}`);
   }
-  const byFile = new Map(documents.map((document) => [document.file, document]));
+  const documents = new Map(
+    [...wanted]
+      // combat/equipment.json -> data/combat/equipment.json
+      .map((name) => `data/${name}`)
+      .filter((file) => !DOCUMENT_SKIP.has(file))
+      .sort()
+      .map((file) => [file, JSON.parse(skeletons.get(file))]),
+  );
   for (const row of prepared(
     db,
     "SELECT source_file, record_path, raw_json FROM source_records ORDER BY source_file, record_path",
   ).all()) {
-    const document = byFile.get(row.source_file);
+    const document = documents.get(row.source_file);
     if (!document) continue;
-    setRecordAtPath(document.data, row.record_path, JSON.parse(row.raw_json));
+    setRecordAtPath(document, row.record_path, JSON.parse(row.raw_json));
   }
   return new Map(
-    documents.map((document) => [
-      `${DOCUMENTS_PREFIX}/${document.file.slice("data/".length)}`,
-      `${stableJson(document.data)}\n`,
+    [...documents].map(([file, data]) => [
+      `${DOCUMENTS_PREFIX}/${file.slice("data/".length)}`,
+      `${stableJson(data)}\n`,
     ]),
   );
 }
@@ -372,6 +391,10 @@ export function importSeed(db) {
         hash(document.text),
         Buffer.byteLength(document.text),
         stableJson(compactMetadata(document.data)),
+      );
+      prepared(db, "INSERT INTO source_documents(path, skeleton_json) VALUES (?, ?)").run(
+        document.file,
+        stableJson(documentSkeleton(document)),
       );
     }
     seedRegions(db, documents);

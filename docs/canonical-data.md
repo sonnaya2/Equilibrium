@@ -1,19 +1,23 @@
 # Canonical data
 
-`data/canonical/` is an explicit, reviewable representation of the validated database. It is
-generated, not authored:
+`data/canonical/` is an explicit, reviewable representation of the validated database, and since
+Stage 2 it is also what the database is built from:
 
 ```text
-data/seed-v1.json.gz + data/patches/
-  -> existing importer and normalizer
+data/canonical/ + data/patches/
+  -> scripts/data/canonical/import.mjs
   -> .cache/equilibrium.sqlite   (validated)
-  -> data/canonical/             (this document)
+  -> data/canonical/             (re-exported, and byte-compared against itself)
 ```
 
-The production pipeline is unchanged: nothing in `npm run data:rebuild`, the frontend shards, or the
-site reads these files yet. They exist so a later cutover can drop the seed's filename heuristics,
-key-name guessing and camelCase/snake_case alias handling in favour of a format that says what it
-means.
+It is generated, not authored: `data:canonical:export` writes it from the database, and a record is
+changed through a patch under `data/patches/`, never by editing these files. The loop closes because
+the export is deterministic — the files a rebuild produces from canonical data export back to the
+same bytes.
+
+The legacy seed still exists behind `npm run data:rebuild:legacy-seed`, but only so
+`npm run data:parity:legacy-canonical` can prove the two paths build the same database. See
+[`data-platform.md`](data-platform.md).
 
 ```bash
 npm run data:canonical:export
@@ -81,6 +85,7 @@ means the field may be null.
 | `research/region-training.jsonl`         | `regionId`, `ordinal`                  |     420 |
 | `research/skill-methods.jsonl`           | `skillEntityId`, `ordinal`             |     428 |
 | `provenance/source-files.jsonl`          | `path`                                 |      56 |
+| `provenance/source-documents.jsonl`      | `path`                                 |      56 |
 | `provenance/source-records.jsonl`        | `sourceFile`, `recordPath`             |   7,855 |
 
 `scripts/data/canonical/schema.mjs` is the executable version of this table. It is the single
@@ -172,9 +177,16 @@ normalizable relation. The three link files carry the orderings the site renders
 
 ### `provenance/*.jsonl`
 
-`source-files.jsonl` records each of the 56 seed documents with its classification, content hash and
-byte count. `source-records.jsonl` is the addressable body of every record found in them, including
-the 2,382 that never became entities. `record` is the one place a source-shaped object is stored.
+`source-files.jsonl` records each of the 56 source documents with its classification, content hash
+and byte count. `source-records.jsonl` is the addressable body of every record found in them,
+including the 2,382 that never became entities. `record` is the one place a source-shaped object is
+stored.
+
+`source-documents.jsonl` holds each document's `skeleton`: its shape with every top-level array
+record replaced by `null`. Export writes each source record back over its own `recordPath` to rebuild
+`public/data/v2/documents/**`, and record paths sort parent-before-child, so a nested record lands
+inside the parent body that was just restored. Ninety-four KB of scaffolding stands in for 1.5 MB of
+documents, and it is the last thing the frontend artifacts needed the seed for.
 
 ## What is not exported
 
@@ -184,7 +196,7 @@ fails if a single row disagrees. The current run reports zero mismatches across 
 
 | Table            | Reason                                                        | Evidence                                                              |
 | ---------------- | ------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `schema_migrations` | Applied-migration ledger for the SQLite build              | Read only by `database.mjs:migrate` and the schema-version check      |
+| `schema_migrations` | Applied-migration ledger for the SQLite build              | Rewritten by `database.mjs:migrate` on every rebuild                  |
 | `transform_runs` | Per-run transform bookkeeping                                  | Written by `recordTransform`; only `databaseInputHash` reads it back  |
 | `patch_ledger`   | Which `data/patches/*.jsonl` were applied                      | Read only to refuse a re-application; canonical data is post-patch    |
 | `patch_changes`  | Per-patch changed-entity log                                   | Written by `applyPatch`, never read                                   |
@@ -244,6 +256,10 @@ npm run data:rebuild
 npm run data:canonical:export
 npm run data:canonical:validate
 ```
+
+Because the rebuild now reads these files, a regeneration is a fixed point rather than a one-way
+export: the database built from `data/canonical/` exports back to the same bytes, and
+`data:canonical:validate` is what says so.
 
 The export is deterministic: given the same database it produces the same bytes, so the second run
 of a pair reports an empty `written` list. If it does not, something in the pipeline became

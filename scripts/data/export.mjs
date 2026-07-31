@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
 import {
+  DATA_CATALOG,
   DOCUMENTS_PREFIX,
   DOMAIN_TABLES,
   EXPORT_ROOT,
@@ -235,7 +236,7 @@ function writeCatalog(db, manifest) {
     "Schema: [`data/migrations/001-data-core.sql`](../data/migrations/001-data-core.sql). Architecture: [`docs/data-platform.md`](data-platform.md).",
     "",
   ];
-  atomicWrite(join(ROOT, "docs/data-catalog.md"), lines.join("\n"));
+  atomicWrite(DATA_CATALOG, lines.join("\n"));
 }
 
 const countOf = (db, sql, ...params) => Number(prepared(db, sql).get(...params).count);

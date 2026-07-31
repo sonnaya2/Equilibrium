@@ -89,7 +89,7 @@ describe("generated data platform", () => {
   const manifest = readJson<Manifest>("public/data/v2/manifest.json");
 
   it("keeps every frontend artifact bounded and content-addressed", () => {
-    expect(manifest.schemaVersion).toBe(4);
+    expect(manifest.schemaVersion).toBe(5);
     expect(manifest.exportVersion).toBe(2);
     const regionArtifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
       region,

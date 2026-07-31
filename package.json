@@ -15,6 +15,8 @@
     "normalize:data": "npm run data:rebuild",
     "data:audit": "node scripts/data/audit.mjs",
     "data:rebuild": "node scripts/data/platform.mjs rebuild",
+    "data:rebuild:legacy-seed": "node scripts/data/platform.mjs rebuild-legacy-seed",
+    "data:parity:legacy-canonical": "node scripts/data/platform.mjs parity-legacy-canonical",
     "data:migrate": "node scripts/data/platform.mjs migrate",
     "data:import": "node scripts/data/platform.mjs import",
     "data:apply": "node scripts/data/platform.mjs apply",

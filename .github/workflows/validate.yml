@@ -35,7 +35,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Rebuild the generated database and exports from the tracked seed, migrations, and patches.
+      # Rebuild the generated database and exports from data/canonical/, the
+      # migrations, and the patches. The retired seed is not an input here.
       - name: Audit data platform
         run: npm run audit:data
       - run: npm run typecheck

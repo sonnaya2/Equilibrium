@@ -3,21 +3,21 @@
 Game data is built into a queryable database rather than maintained as large JSON files:
 
 ```text
-one compressed seed
+data/canonical/*.jsonl
   -> schema migrations
-  -> normalized SQLite + transactional content patches
+  -> validated direct import into SQLite + transactional content patches
   -> validation and bounded query CLI
   -> versioned manifest, bounded indexes, and page-sized frontend shards
 ```
 
-Three things are tracked. Everything downstream of them is generated and ignored by Git.
+Four things are tracked. Everything downstream of them is generated and ignored by Git.
 
 | Path                          | Tracked | Role                                                                        |
 | ----------------------------- | ------- | --------------------------------------------------------------------------- |
-| `data/seed-v1.json.gz`        | yes     | Immutable consolidated baseline of the 65 original source documents         |
+| `data/canonical/`             | yes     | The build input: explicit JSONL, one record per line; see `canonical-data.md` |
 | `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
 | `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
-| `data/canonical/`             | yes     | Generated JSONL mirror of the database; see `canonical-data.md`            |
+| `data/seed-v1.json.gz`        | yes     | Retired baseline of the 65 original source documents; comparison path only  |
 | `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
 | `public/data/v2/`             | no      | Every generated artifact, with size and SHA-256 metadata in the manifest    |
 | `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |
@@ -57,29 +57,83 @@ The research catalog is normalized into those tables and is never written back o
 its version, dependencies, input hash, output count and validation contract in `transform_runs`.
 
 A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports
-the seed, applies patches transactionally, rebuilds search, validates exact research parity, and
-rewrites only the artifacts whose bytes changed.
+`data/canonical/`, applies patches transactionally, rebuilds search, validates exact research parity,
+and rewrites only the artifacts whose bytes changed.
 
-| Module          | Responsibility                                                     |
-| --------------- | ------------------------------------------------------------------ |
-| `platform.mjs`  | CLI entry point and command dispatch                               |
-| `config.mjs`    | Paths, limits, region taxonomy, transform declarations             |
-| `utilities.mjs` | Deterministic JSON, hashing, slugs, file walking, atomic writes    |
-| `database.mjs`  | Connections, transactions, statement cache, migrations             |
-| `ingest.mjs`    | Seed parsing, import, document rebuild, search index               |
-| `normalize.mjs` | Record-to-entity mapping, sources, regions, domain tables          |
-| `patches.mjs`   | JSONL parsing, operation handlers, patch ledger                    |
-| `validate.mjs`  | Invariant checks and the validation/quarantine reports             |
-| `research.mjs`  | Research catalog reconstruction, region panels, seed parity        |
-| `export.mjs`    | Domain shards, ID indexes, manifest, byte-diffed writes            |
-| `queries.mjs`   | Bounded read commands: find, context, query, doctor, stats         |
-| `pipeline.mjs`  | `rebuild` and single-patch `apply` sequencing                      |
-| `benchmark.mjs` | Scoped patch and rebuild measurements                              |
-| `canonical/`    | Canonical JSONL schema, exporter, validator and parity report      |
+| Module              | Responsibility                                                     |
+| ------------------- | ------------------------------------------------------------------ |
+| `platform.mjs`      | CLI entry point and command dispatch                               |
+| `config.mjs`        | Paths, limits, region taxonomy, transform declarations             |
+| `utilities.mjs`     | Deterministic JSON, hashing, slugs, file walking, atomic writes    |
+| `database.mjs`      | Connections, transactions, statement cache, migrations             |
+| `canonical/import.mjs` | Canonical JSONL -> SQLite, in one transaction                   |
+| `ingest.mjs`        | Legacy seed parsing and import; document rebuild, search index     |
+| `normalize.mjs`     | Legacy record-to-entity mapping, sources, regions, domain tables   |
+| `patches.mjs`       | JSONL parsing, operation handlers, patch ledger                    |
+| `validate.mjs`      | Invariant checks and the validation/quarantine reports             |
+| `research.mjs`      | Research catalog reconstruction, region panels, seed parity        |
+| `export.mjs`        | Domain shards, ID indexes, manifest, byte-diffed writes            |
+| `queries.mjs`       | Bounded read commands: find, context, query, doctor, stats         |
+| `pipeline.mjs`      | `rebuild` and single-patch `apply` sequencing                      |
+| `parity.mjs`        | Temporary legacy/canonical dual-build comparison                   |
+| `benchmark.mjs`     | Scoped patch and rebuild measurements                              |
+| `canonical/`        | Canonical JSONL schema, importer, exporter, validator, parity report |
 
-`canonical/` sits downstream of every transform above and feeds none of them. It reads the validated
-database and writes `data/canonical/`; no production path reads those files yet. See
-[`canonical-data.md`](canonical-data.md).
+See [`canonical-data.md`](canonical-data.md) for the file format itself.
+
+### Importing canonical data
+
+`canonical/import.mjs` validates `data/canonical/`, then writes it into a freshly migrated database
+in one transaction, in an explicit dependency order:
+
+1. entities
+2. sources
+3. tags
+4. regions — carries the region entity's own ID and name, so it follows entities
+5. domain tables (equipment before equipment stats; tasks and quests reference regions)
+6. entity-source links
+7. entity-region links
+8. requirements, then effects
+9. relationships
+10. entity-tag links
+11. aliases and map points
+12. provenance: source files, document skeletons, source records
+13. the research catalog and its orderings
+14. quarantine
+
+Foreign keys are on throughout, so a step that ran too early fails on the row that needed the missing
+parent; `PRAGMA foreign_key_check` runs before the transaction commits. A rejected record names the
+file, line, record key and reason, and leaves no partially built database.
+
+The importer does not infer an entity type from a filename, derive an ID from a name, search
+arbitrary key paths, accept a second spelling of a field, or classify anything by keyword. Everything
+it needs is a declared field.
+
+Three columns are recomputed rather than stored twice: `entities.slug` and `regions.entity_id` from
+the ID, and `entities.extra_json` from the entity's provenance record. `source_documents` holds each
+seed document's shape with its records removed, which is what lets `public/data/v2/documents/**` be
+rebuilt without the seed.
+
+### The retired seed path
+
+`data/seed-v1.json.gz` and the normalizer that reads it are still in the tree, reachable only from:
+
+```bash
+npm run data:rebuild:legacy-seed
+```
+
+```bash
+npm run data:parity:legacy-canonical
+```
+
+The parity command builds both databases side by side under `.cache/parity/`, then compares the
+sorted logical rows of all 37 tables, the search index and the results of real queries against it,
+every generated frontend artifact, the manifest, the data reports and the catalog. Raw SQLite files
+are not compared — page layout follows insert order — and `requirements`, `effects` and `quarantine`
+are compared without their surrogate `id`, which the database hands out in insert order. Any other
+mismatch fails the command with a bounded diff in
+`reports/data-parity-legacy-canonical.json`. Nothing else may build from the seed; `npm run
+audit:data` fails if a package script does.
 
 ## Editing a record
 
@@ -96,6 +150,14 @@ npm run data:diff
 
 Schema or broad taxonomy work uses `data:rebuild`; normal record work does not.
 
+`data/canonical/` mirrors the database *after* patches, and every rebuild replays every patch, so a
+new patch is not lost — but the tracked mirror is stale until it is re-exported, and
+`data:canonical:validate` fails while it is. Commit the two together:
+
+```bash
+npm run data:canonical:export && npm run data:canonical:validate
+```
+
 Guard rails worth knowing about: a patch file is capped at 1 MiB and 1,000 operations and applies in
 a single transaction, so a rejected operation leaves nothing behind. An applied migration or patch
 whose content later changes is an error rather than a silent re-run. `data:query` accepts one bounded
@@ -110,4 +172,4 @@ Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved 
 index shards; the manifest regression test rejects any browser-fetched shard at or above 500 KiB.
 
 Every rebuild independently reconstructs the 11 research payloads from the normalized tables and
-requires exact parity with the immutable seed before export succeeds.
+requires exact parity with the shipped shards before export succeeds.

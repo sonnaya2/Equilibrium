@@ -3,18 +3,25 @@ import { DATABASE, PATCHES, ROOT } from "./config.mjs";
 import { cleanDatabase, migrate, openDatabase } from "./database.mjs";
 import { exportData } from "./export.mjs";
 import { importSeed, rebuildSearch } from "./ingest.mjs";
+import { importCanonical } from "./canonical/import.mjs";
 import { applyAllPatches, applyPatch, writeChanged } from "./patches.mjs";
 import { validate } from "./validate.mjs";
 import { slash } from "./utilities.mjs";
 
-export function rebuild(log = true) {
+// "canonical" is the shipped path. "legacy-seed" exists only so
+// data:parity:legacy-canonical can build the same database the old way and
+// compare; Stage 3 deletes it.
+export const INGEST_SOURCES = new Set(["canonical", "legacy-seed"]);
+
+export function rebuild(log = true, source = "canonical") {
+  if (!INGEST_SOURCES.has(source)) throw new Error(`Unknown ingestion source: ${source}`);
   const start = process.hrtime.bigint();
   const before = process.resourceUsage();
   cleanDatabase();
   const db = openDatabase(DATABASE, false);
   try {
     const migrations = migrate(db);
-    const ingest = importSeed(db);
+    const ingest = source === "legacy-seed" ? importSeed(db) : importCanonical(db);
     const changed = applyAllPatches(db);
     rebuildSearch(db);
     const validation = validate(db);
@@ -22,6 +29,7 @@ export function rebuild(log = true) {
     writeChanged(db, changed);
     const usage = process.resourceUsage();
     const result = {
+      source,
       migrations,
       inputFiles: ingest.files,
       inputBytes: ingest.bytes,

@@ -599,6 +599,18 @@ export const COLLECTIONS = [
     }),
   },
   {
+    // The shape each document keeps once its records are lifted out. Export
+    // replays source-records over this to rebuild public/data/v2/documents/**,
+    // which is what lets the frontend artifacts be built without the seed.
+    name: "source-documents",
+    file: "provenance/source-documents.jsonl",
+    key: ["path"],
+    refs: { path: "source-files" },
+    fields: { path: "string", skeleton: "json" },
+    sql: "SELECT path, skeleton_json FROM source_documents",
+    map: (row) => ({ path: row.path, skeleton: json(row.skeleton_json) }),
+  },
+  {
     name: "source-records",
     file: "provenance/source-records.jsonl",
     key: ["sourceFile", "recordPath"],
@@ -622,6 +634,18 @@ export const COLLECTIONS = [
 ];
 
 export const COLLECTION_BY_NAME = new Map(COLLECTIONS.map((collection) => [collection.name, collection]));
+
+export const isOptionalField = (declaration) => Array.isArray(declaration);
+
+// The value every omitted field carries. A reader that skips this sees `status`
+// as undefined on most entities rather than "active".
+export function collectionDefaults(collection) {
+  const out = {};
+  for (const [field, declaration] of Object.entries(collection.fields)) {
+    if (isOptionalField(declaration)) out[field] = declaration[1];
+  }
+  return out;
+}
 
 // Sets a reference can point into, keyed by collection name.
 export const REFERENCE_KEY = new Map([

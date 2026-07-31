@@ -3,7 +3,7 @@ import { join, relative } from "node:path";
 import { DATABASE, PATCHES, ROOT } from "./config.mjs";
 import { prepared } from "./database.mjs";
 import { buildOutputs, compareOutputs } from "./export.mjs";
-import { seedDocuments } from "./ingest.mjs";
+import { readCollectionRecords } from "./canonical/import.mjs";
 import { hash, slash } from "./utilities.mjs";
 
 export function entityContext(db, id, maxRelated = 30) {
@@ -121,7 +121,12 @@ export function runReadOnlyQuery(db, { sql, limit }) {
 
 export function doctor(db) {
   const fts5 = Number(db.prepare("SELECT sqlite_compileoption_used('ENABLE_FTS5') AS enabled").get().enabled);
-  const currentHashes = new Map(seedDocuments().map(({ file, text }) => [file, hash(text)]));
+  // Drift between the tracked input and the built database. That input is
+  // data/canonical/ now, so this reads the file hashes canonical carries rather
+  // than reopening the seed.
+  const currentHashes = new Map(
+    readCollectionRecords("source-files").map(({ path, contentHash }) => [path, contentHash]),
+  );
   const stale = db
     .prepare("SELECT path, content_hash FROM source_files ORDER BY path")
     .all()

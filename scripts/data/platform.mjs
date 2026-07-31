@@ -9,6 +9,7 @@ import { applyOne, rebuild } from "./pipeline.mjs";
 import { benchmark } from "./benchmark.mjs";
 import { exportCanonical } from "./canonical/export.mjs";
 import { canonicalParity } from "./canonical/validate.mjs";
+import { legacyCanonicalParity } from "./parity.mjs";
 import { runLegacyInventory } from "./legacy-inventory.mjs";
 import { compactSeed } from "./compact-seed.mjs";
 import { doctor, entityContext, findEntities, formatContextMarkdown, runReadOnlyQuery, stats } from "./queries.mjs";
@@ -72,6 +73,10 @@ function entityCommand(db, name) {
 const COMMANDS = new Map([
   ["rebuild", () => rebuild(false)],
   ["import", () => rebuild(false)],
+  // Temporary: the pre-canonical build, kept only so data:parity:legacy-canonical
+  // has something to compare against. Stage 3 removes it.
+  ["rebuild-legacy-seed", () => rebuild(false, "legacy-seed")],
+  ["parity-legacy-canonical", () => legacyCanonicalParity()],
   ["benchmark", () => benchmark()],
   [
     "migrate",

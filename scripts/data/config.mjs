@@ -1,16 +1,25 @@
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 export const ROOT = process.cwd();
-export const CACHE = join(ROOT, ".cache");
+
+// Everything a build writes moves together when EQUILIBRIUM_BUILD_ROOT is set,
+// so `data:parity:legacy-canonical` can build two whole databases side by side
+// without either one touching the working tree. Unset in every normal run.
+const BUILD_ROOT = process.env.EQUILIBRIUM_BUILD_ROOT
+  ? resolve(ROOT, process.env.EQUILIBRIUM_BUILD_ROOT)
+  : null;
+
+export const CACHE = BUILD_ROOT ? join(BUILD_ROOT, "cache") : join(ROOT, ".cache");
 export const DATABASE = join(CACHE, "equilibrium.sqlite");
 export const CHANGED = join(CACHE, "data-changed.json");
 export const SEED = join(ROOT, "data/seed-v1.json.gz");
 export const MIGRATIONS = join(ROOT, "data/migrations");
 export const PATCHES = join(ROOT, "data/patches");
-export const EXPORT_ROOT = join(ROOT, "public/data/v2");
-export const REPORTS = join(ROOT, "reports");
+export const EXPORT_ROOT = BUILD_ROOT ? join(BUILD_ROOT, "data/v2") : join(ROOT, "public/data/v2");
+export const REPORTS = BUILD_ROOT ? join(BUILD_ROOT, "reports") : join(ROOT, "reports");
+export const DATA_CATALOG = BUILD_ROOT ? join(BUILD_ROOT, "data-catalog.md") : join(ROOT, "docs/data-catalog.md");
 
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 export const EXPORT_VERSION = 2;
 export const SHARD_TARGET_BYTES = 220 * 1024;
 export const SHARD_LIMIT_BYTES = 500 * 1024;
@@ -74,11 +83,14 @@ export const DOMAIN_TABLES = new Map([
 
 export const TRANSFORMS = [
   {
+    // Named for the legacy seed it used to be the only reader of. Both
+    // ingestion paths still record this row, and manifest.databaseInputHash
+    // reads its input_hash, so the name outlives the seed until Stage 3.
     name: "seed-ingest",
     stage: "ingest",
     version: 1,
-    inputs: ["data/seed-v1.json.gz"],
-    outputs: ["source_files", "source_records"],
+    inputs: ["data/canonical/**", "data/seed-v1.json.gz (legacy comparison path only)"],
+    outputs: ["source_files", "source_documents", "source_records"],
     dependencies: [],
     incremental: false,
     validation: "parseable JSON and stable file hashes",

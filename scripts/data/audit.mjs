@@ -445,8 +445,29 @@ if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
   }
 }
 
-// data/ holds one seed, forward-only migrations and content patches. A new root
-// here means a second authoring surface arrived without a decision.
+// The default build reads data/canonical/. The seed survives only behind
+// data:rebuild:legacy-seed, which exists so data:parity:legacy-canonical has
+// something to compare against; if the default rebuild ever names it again, or
+// canonical stops being complete, the switch has silently come undone.
+const canonicalFiles = (await import("./canonical/schema.mjs")).COLLECTIONS.map(({ file }) => file);
+const missingCanonical = canonicalFiles.filter((file) => !existsSync(join(ROOT, "data/canonical", file)));
+if (missingCanonical.length) {
+  architectureFailures.push(`canonical dataset is incomplete: ${missingCanonical.join(", ")}`);
+}
+const LEGACY_SEED_COMMANDS = new Set(["data:rebuild:legacy-seed", "data:parity:legacy-canonical"]);
+const seedBuilders = Object.entries(packageJson.scripts ?? {})
+  .filter(([name, script]) => /rebuild-legacy-seed/.test(String(script)) && !LEGACY_SEED_COMMANDS.has(name))
+  .map(([name]) => name);
+if (seedBuilders.length) {
+  architectureFailures.push(`scripts build from the legacy seed outside the comparison path: ${seedBuilders.join(", ")}`);
+}
+for (const name of LEGACY_SEED_COMMANDS) {
+  if (!packageJson.scripts?.[name]) architectureFailures.push(`missing temporary comparison command: ${name}`);
+}
+
+// data/ holds the canonical dataset, forward-only migrations, content patches
+// and the retired seed. A new root here means a second authoring surface
+// arrived without a decision.
 const DATA_ROOTS = new Set(["migrations", "patches", "seed-v1.json.gz", "README.md", "canonical"]);
 const undocumentedDataRoots = readdirSync(join(ROOT, "data")).filter((name) => !DATA_ROOTS.has(name));
 if (undocumentedDataRoots.length) {

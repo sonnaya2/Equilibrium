@@ -52,10 +52,15 @@ function maxEdge(rel) {
     if (r.includes("leagues")) return 1024;
   }
   if (/\/relics\//.test(r)) return 512;
+  // Landing-page key art fills a 1600px aperture; 1920 covers it with headroom.
+  if (/(^|\/)keyart-/.test(r)) return 1920;
   return 1024;
 }
 
-function qualityFor(edge) {
+function qualityFor(edge, rel = "") {
+  // The key art is the largest contentful paint on `/` and is looked at
+  // directly, so it does not ride the icon ladder down to 78.
+  if (/(^|\/)keyart-/.test(rel.replace(/\\/g, "/").toLowerCase())) return 86;
   if (edge <= 96) return 92;
   if (edge <= 256) return 88;
   if (edge <= 768) return 82;
@@ -138,7 +143,7 @@ async function optimizeOne(absPath, treeRoot) {
     return { rel, status: "skip-ok", before, after: before, w, h };
   }
 
-  const q = qualityFor(needsResize ? cap : edge);
+  const q = qualityFor(needsResize ? cap : edge, rel);
   let pipeline = sharp(absPath, { animated: false, pages: 1, failOn: "none" }).rotate();
   if (needsResize) {
     pipeline = pipeline.resize({

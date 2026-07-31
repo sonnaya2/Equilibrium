@@ -76,7 +76,7 @@ export function OverviewPlan({
         <div className="overview-art">
           {/* Keyart fills the aperture; cover + object-position crop for faces. */}
           <img
-            src="/brand/keyart-2026.jpg"
+            src="/brand/keyart-2026.webp"
             alt="RuneScape 2026 key art"
             width={1600}
             height={900}

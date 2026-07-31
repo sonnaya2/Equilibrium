@@ -10,6 +10,7 @@ import { benchmark } from "./benchmark.mjs";
 import { exportCanonical } from "./canonical/export.mjs";
 import { canonicalParity } from "./canonical/validate.mjs";
 import { runLegacyInventory } from "./legacy-inventory.mjs";
+import { compactSeed } from "./compact-seed.mjs";
 import { doctor, entityContext, findEntities, formatContextMarkdown, runReadOnlyQuery, stats } from "./queries.mjs";
 import { validate } from "./validate.mjs";
 import { boundedPrint, scalar, slash } from "./utilities.mjs";
@@ -115,6 +116,7 @@ const COMMANDS = new Map([
   ["canonical-export", () => withDatabase(exportCanonical)],
   ["canonical-validate", () => withDatabase(canonicalParity)],
   ["legacy-inventory", () => runLegacyInventory()],
+  ["compact-seed", () => compactSeed({ dryRun: hasArg("dry-run") })],
   ["doctor", () => withDatabase(doctor)],
   ["transforms", () => TRANSFORMS],
 ]);

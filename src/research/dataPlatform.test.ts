@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
@@ -9,6 +9,26 @@ import { getResearchCatalog } from "./catalog";
 
 const root = process.cwd();
 const readJson = <T>(path: string): T => JSON.parse(readFileSync(join(root, path), "utf8")) as T;
+
+// Every document named by a `#shard/…` import, plus the two loaded by path
+// rather than through the alias. The export ships exactly this set.
+function shardImportedDocuments(): string[] {
+  const walk = (directory: string, out: string[] = []): string[] => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) walk(path, out);
+      else if (/\.tsx?$/.test(entry.name)) out.push(path);
+    }
+    return out;
+  };
+  const found = new Set(["data/map/region-seeds.json", "data/map/wiki-league-regions.json"]);
+  for (const file of [...walk(join(root, "app")), ...walk(join(root, "src"))]) {
+    for (const match of readFileSync(file, "utf8").matchAll(/#shard\/([a-zA-Z0-9/_.-]+\.json)/g)) {
+      found.add(`data/${match[1]}`);
+    }
+  }
+  return [...found];
+}
 const digest = (path: string) =>
   createHash("sha256")
     .update(readFileSync(join(root, path)))
@@ -117,7 +137,9 @@ describe("generated data platform", () => {
   // are content-addressed but exempt from the shard size budget.
   it("content-addresses every exported source document", () => {
     const entries = Object.entries(manifest.documents);
-    expect(entries.length).toBeGreaterThan(50);
+    // Exactly the documents something still imports - not a magic floor, which
+    // would turn every retired document into a red suite.
+    expect(new Set(entries.map(([source]) => source))).toEqual(new Set(shardImportedDocuments()));
     for (const [source, artifact] of entries) {
       expect(source.startsWith("data/"), source).toBe(true);
       const repoPath = `public${artifact.href}`;

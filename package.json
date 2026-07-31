@@ -21,6 +21,7 @@
     "data:validate": "node scripts/data/platform.mjs validate",
     "data:validate:changed": "node scripts/data/platform.mjs validate --changed",
     "data:export": "node scripts/data/platform.mjs export",
+    "data:compact-seed": "node scripts/data/platform.mjs compact-seed",
     "data:legacy-inventory": "node scripts/data/platform.mjs legacy-inventory",
     "data:canonical:export": "node scripts/data/platform.mjs canonical-export",
     "data:canonical:validate": "node scripts/data/platform.mjs canonical-validate",

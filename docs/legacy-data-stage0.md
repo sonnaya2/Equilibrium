@@ -14,7 +14,7 @@ into `reports/legacy-data-inventory.json`, `reports/legacy-data-audit.md`,
 ## The thing that makes this audit non-obvious
 
 **The research documents are not files.** `data/research/`, `data/combat/` and `data/reference/` do
-not exist on disk — all 65 documents live inside `data/seed-v1.json.gz`. A filesystem walk finds
+not exist on disk — every document lives inside `data/seed-v1.json.gz`. A filesystem walk finds
 none of them, and neither did any previous review. That is how several generations of overlays,
 audits and snapshots survived unexamined.
 
@@ -25,18 +25,46 @@ seed document ─┬─> importer ─> SQLite ─> public/data/v2 shards ─> br
                └─> documents/ ─> #shard/… whole-document import ─> server bundle
 ```
 
-52 of the 65 documents are imported *whole* through `#shard`. So "produces no database rows" does
+Most documents are imported *whole* through `#shard`. So "produces no database rows" does
 not mean dead, and "produces database rows" does not mean it is the only representation.
 
-## Disposition
+## Compaction
+
+The audit found 65 documents; 9 are gone and the rest lost every field nothing reads.
+
+| | Before | After |
+| --- | ---: | ---: |
+| documents | 65 | 56 |
+| seed (compressed) | 1,100,044 B | 1,010,967 B |
+| record keys | — | 226 removed, 2,739 occurrences |
+
+`npm run data:compact-seed` performs it and writes `reports/seed-compaction.json`. It is the
+"separately verified compaction migration" `AGENTS.md` requires before the immutable seed may be
+replaced, and the verification is the rebuild after it: **4,790 entities before and after, zero
+gained, zero lost, all 29 table counts identical, `equipment_stats` and every region link
+byte-identical.** Everything removed was already unreachable.
+
+Three rules keep it safe, each learned by breaking something:
+
+- **Only a record's own keys are schema.** Deeper keys can be data — `bonuses` children are stat
+  names like `accuracy` and `life_points` that become `equipment_stats.stat` values. Stripping by
+  name at any depth deletes 1,042 equipment stats.
+- **A key nobody names can still hold records.** `unlock_profiles` and `historical_removed_unlocks`
+  appear in no source file, but the importer finds objects inside arrays at any depth, so those
+  arrays are 19 entities. The first run of this migration deleted them; 131 keys are now protected
+  for holding records.
+- **Provenance stays, read or not.** 57 keys are kept purely because they are the attribution trail
+  `AGENTS.md` protects. An unread wiki revision id is still the evidence for a value.
+
+## Disposition after compaction
 
 | Disposition | Documents | Bytes |
 | --- | ---: | ---: |
-| active-authoritative | 5 | 2,992 KiB |
-| duplicate | 28 | 1,498 KiB |
-| active-raw-source | 23 | 168 KiB |
-| orphaned | 7 | 315 KiB |
+| active-authoritative | 6 | 2,947 KiB |
+| duplicate | 27 | 1,374 KiB |
+| active-raw-source | 21 | 139 KiB |
 | legacy-needed-for-migration | 2 | 10 KiB |
+| orphaned | 0 | 0 |
 
 `duplicate` means the records reach SQLite **and** the document is imported whole — two live
 representations. It does not mean the document is worthless: it still carries fields the relational
@@ -51,9 +79,10 @@ schema never modelled (529 such keys, per `reports/canonical-unmodelled-fields.j
 | equipment and combat | 22 | 790 KiB | Most fragmented: 13 duplicate, 3 orphaned |
 | quests and tasks | 6 | 602 KiB | |
 
-## Orphaned documents
+## Documents removed
 
-Seven documents reach neither the database nor the browser — 315 KiB, 6.5% of the seed:
+Nine documents reached neither the database nor the browser — 330 KiB of seed content. All are
+deleted. The first seven were unreachable outright:
 
 | Document | Bytes | Evidence |
 | --- | ---: | --- |
@@ -65,10 +94,23 @@ Seven documents reach neither the database nor the browser — 315 KiB, 6.5% of 
 | `data/league/equilibrium-auto-quests.json` | 1 KiB | Empty of records |
 | `data/league/quest-region-review.json` | 0 KiB | Empty |
 
-**None were deleted.** They live inside the immutable seed, so removing them means rewriting
-`seed-v1.json.gz` — which `AGENTS.md` allows only behind a separately verified compaction migration,
-and which would change the `documents/` output. That is Stage 1+ work. `reports/research-orphans.json`
-carries the evidence so the decision is a one-liner later.
+Two more were reachable only from React components that no route renders. `ReferenceNotesResearch`
+and `RegionBoundariesResearch` — along with `researchStatus.ts`, which only they imported — were
+deleted, taking `reference/midgame-rebalance-2026-07-20.json` and `league/region-dependencies.json`
+with them.
+
+`research/reference-site-harvest.json` was in the same position but contributes 20 entities, so it
+stays in the seed and merely stops being exported as a document. Removing it would silently drop 20
+records from `/data`, which is a content decision, not cleanup.
+
+### Why `documents/research/` is still large
+
+23 research documents remain in `public/data/v2/documents/research/` (536 KiB). They are not dead
+weight — the `/data` research browser imports each of them whole through `#shard`, so they are the
+live backing store for that route. Deleting them means porting those panels onto the normalized
+shards, which is the Stage 3 cutover, not a deletion. The reachability trace that proves this lives
+in the inventory: 48 documents are imported by modules reachable from `app/`, and after this cleanup
+none are imported only by unreachable ones.
 
 ## Conflicts queued for Stage 1
 

@@ -41,9 +41,11 @@ produced, and prose that only restates the line below it.
 production. There is no staging gate — run `npm run build`, `npm test` and `npm run test:e2e` locally
 first.
 
-**Publish directly from the primary `main` checkout.** Do not create feature branches, extra
-worktrees, or pull requests unless the user explicitly asks for one. Fetch and reconcile
-`origin/main`, validate, commit on `main`, then push `main` directly.
+**Work on `main`, in the primary checkout.** Not just publish from it — start there. Do not create
+feature branches, extra worktrees, or pull requests unless the user explicitly asks for one, and if a
+session hands you a worktree without being asked, move to the primary `main` checkout before doing
+anything else. Parallel checkouts re-derive the same context and then conflict with each other. Fetch
+and reconcile `origin/main`, validate, commit on `main`, then push `main` directly.
 
 **The repo is public.** Git identity here is the noreply address
 (`299354192+sonnaya2@users.noreply.github.com`), set repo-locally because GitHub blocks pushes that

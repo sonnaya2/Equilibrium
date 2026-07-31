@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { gunzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 import { REGION_IDS } from "@/league";
 import { presentContentRewards } from "@/lib/dataContentPresentation";
@@ -21,12 +20,40 @@ type SeedCatalog = Omit<ResearchCatalog, "regions"> & {
   >;
 };
 
-const seed = JSON.parse(
-  gunzipSync(readFileSync(join(process.cwd(), "data/seed-v1.json.gz"))).toString("utf8"),
-) as { files: Array<{ path: string; data: unknown }> };
-const catalogSeed = seed.files.find(({ path }) => path === "data/research/catalog.json")?.data as
-  SeedCatalog | undefined;
-if (!catalogSeed) throw new Error("Immutable research catalog seed is missing");
+// The catalog document, rebuilt from the canonical provenance files rather than
+// from the database: its skeleton with every record written back over its own
+// record path. Record paths sort parent-before-child, because a parent's path is
+// a prefix of its children's, so a nested record lands inside the parent body
+// that was just restored. Reading the JSONL directly is what keeps this an
+// independent check on the normalized tables.
+const CATALOG_FILE = "data/research/catalog.json";
+const canonical = (name: string): Array<Record<string, unknown>> =>
+  readFileSync(join(process.cwd(), "data/canonical/provenance", name), "utf8")
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => JSON.parse(line) as Record<string, unknown>);
+
+function reconstructCatalog(): SeedCatalog {
+  const document = canonical("source-documents.jsonl").find(({ path }) => path === CATALOG_FILE);
+  if (!document) throw new Error(`Canonical provenance is missing ${CATALOG_FILE}`);
+  const catalog = structuredClone(document.skeleton) as Record<string, unknown>;
+  const records = canonical("source-records.jsonl")
+    .filter(({ sourceFile }) => sourceFile === CATALOG_FILE)
+    .sort((a, b) => String(a.recordPath).localeCompare(String(b.recordPath), "en"));
+  if (!records.length) throw new Error(`Canonical provenance holds no ${CATALOG_FILE} records`);
+  for (const { recordPath, record } of records) {
+    const tokens = [...String(recordPath).matchAll(/\.([^.[\]]+)|\[(\d+)\]/g)].map((match) =>
+      match[1] === undefined ? Number(match[2]) : match[1],
+    );
+    let target = catalog as Record<string | number, unknown>;
+    for (const token of tokens.slice(0, -1))
+      target = target[token] as Record<string | number, unknown>;
+    target[tokens.at(-1)!] = record;
+  }
+  return catalog as unknown as SeedCatalog;
+}
+
+const catalogSeed = reconstructCatalog();
 
 const methods = new Map<string, ResearchTrainingMethod>(
   catalogSeed.skills.flatMap((skill) => skill.methods.map((method) => [method.id, method])),

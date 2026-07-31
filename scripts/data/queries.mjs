@@ -3,7 +3,7 @@ import { join, relative } from "node:path";
 import { DATABASE, PATCHES, ROOT } from "./config.mjs";
 import { prepared } from "./database.mjs";
 import { buildOutputs, compareOutputs } from "./export.mjs";
-import { readCollectionRecords } from "./canonical/import.mjs";
+import { readCollectionRecords } from "./canonical/read.mjs";
 import { hash, slash } from "./utilities.mjs";
 
 export function entityContext(db, id, maxRelated = 30) {
@@ -123,7 +123,7 @@ export function doctor(db) {
   const fts5 = Number(db.prepare("SELECT sqlite_compileoption_used('ENABLE_FTS5') AS enabled").get().enabled);
   // Drift between the tracked input and the built database. That input is
   // data/canonical/ now, so this reads the file hashes canonical carries rather
-  // than reopening the seed.
+  // than reopening any original document.
   const currentHashes = new Map(
     readCollectionRecords("source-files").map(({ path, contentHash }) => [path, contentHash]),
   );
@@ -154,6 +154,47 @@ export function doctor(db) {
   };
   if (!result.ok) process.exitCode = 1;
   return result;
+}
+
+// Two source documents claiming one domain: the same entity type and name
+// produced by more than one document, as separate entities. Grouping on type +
+// name is what makes that visible - two documents holding the same 90 prayers
+// under `prayer:protect-item` and `prayer:standard-prayers:protect-item` share
+// no ID, so nothing keyed on IDs notices them. A removed entity is no longer a
+// claim on the domain, or the audit ratchet in audit.mjs could never come down.
+export function entityOverlaps(db) {
+  const groups = new Map();
+  for (const row of db
+    .prepare(
+      `SELECT id, entity_type, name, created_source FROM entities
+       WHERE name IS NOT NULL AND name <> '' AND status <> 'removed'`,
+    )
+    .all()) {
+    const key = `${row.entity_type}|${row.name.trim().toLocaleLowerCase("en")}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  }
+  const overlaps = [];
+  const pairs = new Map();
+  for (const [key, rows] of groups) {
+    const files = [...new Set(rows.map(({ created_source }) => created_source))].sort();
+    if (files.length < 2) continue;
+    const pair = files.join(" + ");
+    pairs.set(pair, (pairs.get(pair) ?? 0) + 1);
+    overlaps.push({
+      logicalRecord: key,
+      entityType: rows[0].entity_type,
+      name: rows[0].name,
+      files,
+      entityIds: rows.map(({ id }) => id).sort(),
+    });
+  }
+  return {
+    overlaps: overlaps.sort((a, b) => (a.logicalRecord < b.logicalRecord ? -1 : 1)),
+    filePairs: [...pairs]
+      .map(([files, records]) => ({ files, records }))
+      .sort((a, b) => b.records - a.records || a.files.localeCompare(b.files)),
+  };
 }
 
 export function stats(db) {

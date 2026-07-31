@@ -45,13 +45,6 @@ const canonicalValidate = await load<{
     failures: Array<{ collection: string; detail: string; sample?: string }>;
     records: Map<string, Row[]>;
   };
-  unmodelledFields: (records: Map<string, Row[]>) => {
-    distinctKeys: number;
-    modelledKeys: number;
-    provenanceOnlyKeys: number;
-    singletonKeys: number;
-    fields: Array<{ key: string; records: number; example: string }>;
-  };
 }>("canonical/validate.mjs");
 
 const { stableJson } = await load<{ stableJson: (value: unknown) => string }>("utilities.mjs");
@@ -347,32 +340,26 @@ describe("canonical round trip", () => {
     }
   });
 
-  it("reports unmodelled record keys instead of discarding them", () => {
-    const report = canonicalValidate.unmodelledFields(shipped.records);
-    expect(report.modelledKeys + report.provenanceOnlyKeys).toBe(report.distinctKeys);
-    expect(report.fields.length).toBe(report.provenanceOnlyKeys);
-    // Sorted by frequency so the columns worth promoting sit at the top.
-    for (let index = 1; index < report.fields.length; index += 1) {
-      expect(report.fields[index - 1].records).toBeGreaterThanOrEqual(report.fields[index].records);
-    }
-    // A reported key has to be findable: the example must resolve to a record
-    // that really carries it.
-    const provenance = new Map(
-      rows("source-records").map((record) => [
-        schema.recordRef(record.sourceFile as string, record.recordPath as string),
-        record.record as Record<string, unknown>,
-      ]),
+  // A patch writes database columns, never the record body it came from, so an
+  // entity's stored body stays the source document's own. Every provenance
+  // record is referenced rather than copied, and the only inline bodies are the
+  // skill entities whose `methods` key is exported separately.
+  it("keeps entity bodies in provenance rather than copying them", () => {
+    const entities = rows("entities");
+    const inline = entities.filter((entity) => entity.record != null);
+    expect(entities.filter((entity) => entity.recordRef != null).length).toBe(
+      entities.length - inline.length - 1,
     );
-    for (const field of report.fields.slice(0, 25)) {
-      expect(
-        Object.hasOwn(provenance.get(field.example)!, field.key),
-        `${field.key} is not on ${field.example}`,
-      ).toBe(true);
-    }
-    // Nothing the normalizer consumes may be listed as unmodelled.
-    const listed = new Set(report.fields.map(({ key }) => key));
-    for (const key of ["name", "id", "requirements", "tier", "points", "url"])
-      expect(listed.has(key)).toBe(false);
+    expect(inline.every((entity) => entity.type === "skill")).toBe(true);
+    const removed = entities.filter((entity) => entity.status === "removed");
+    expect(removed.length).toBeGreaterThan(0);
+    expect(removed.every((entity) => entity.recordRef != null)).toBe(true);
+    // No provenance body carries a status a source document never wrote.
+    expect(
+      rows("source-records").filter(
+        (record) => (record.record as Row | null)?.status === "removed",
+      ),
+    ).toEqual([]);
   });
 
   it("preserves the quarantine and its meaning", () => {

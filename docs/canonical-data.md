@@ -1,11 +1,11 @@
 # Canonical data
 
-`data/canonical/` is an explicit, reviewable representation of the validated database, and since
-Stage 2 it is also what the database is built from:
+`data/canonical/` is an explicit, reviewable representation of the validated database, and it is the
+only thing the database is built from:
 
 ```text
 data/canonical/ + data/patches/
-  -> scripts/data/canonical/import.mjs
+  -> scripts/data/ingest.mjs
   -> .cache/equilibrium.sqlite   (validated)
   -> data/canonical/             (re-exported, and byte-compared against itself)
 ```
@@ -15,9 +15,8 @@ changed through a patch under `data/patches/`, never by editing these files. The
 the export is deterministic — the files a rebuild produces from canonical data export back to the
 same bytes.
 
-The legacy seed still exists behind `npm run data:rebuild:legacy-seed`, but only so
-`npm run data:parity:legacy-canonical` can prove the two paths build the same database. See
-[`data-platform.md`](data-platform.md).
+[`data-platform.md`](data-platform.md) has the module layout and the rules for when a change is a
+patch, a migration, or a baseline re-export.
 
 ```bash
 npm run data:canonical:export
@@ -113,8 +112,9 @@ between them.
 
 `recordRef` and `record` are mutually exclusive, and both are absent for the synthetic
 `region:global` entity, which has no body. 4,768 entities reference a provenance record; 29 skill
-entities carry an inline body because normalization strips their `methods` key, which is exported
-separately as `research/skill-methods.jsonl`.
+entities carry an inline body because their `methods` key is stripped — those methods are entities of
+their own, exported as `research/skill-methods.jsonl`. A patched entity still references its
+provenance record, because a patch writes database columns and never the record body.
 
 ### `sources.jsonl`
 
@@ -199,7 +199,7 @@ fails if a single row disagrees. The current run reports zero mismatches across 
 | `schema_migrations` | Applied-migration ledger for the SQLite build              | Rewritten by `database.mjs:migrate` on every rebuild                  |
 | `transform_runs` | Per-run transform bookkeeping                                  | Written by `recordTransform`; only `databaseInputHash` reads it back  |
 | `patch_ledger`   | Which `data/patches/*.jsonl` were applied                      | Read only to refuse a re-application; canonical data is post-patch    |
-| `patch_changes`  | Per-patch changed-entity log                                   | Written by `applyPatch`, never read                                   |
+| `patch_changes`  | Per-patch changed-entity log                                   | Written by `patching/apply.mjs`; read only by `data:context`          |
 | `entity_search`  | FTS5 index and its shadow tables                               | Rebuilt from entities + aliases by `ingest.mjs:rebuildSearch`         |
 
 | Column                                    | Reason                                          | Evidence                                                        |
@@ -213,24 +213,14 @@ fails if a single row disagrees. The current run reports zero mismatches across 
 
 ## Unknown and rare fields
 
-The 56 seed documents were written over two years with no shared schema, and their records carry 374
-distinct top-level keys. Seventy-seven of them feed a canonical column; the other 297 are kept verbatim
-in `provenance/source-records.jsonl` and promoted nowhere. That is retention, not modelling, so the
-validator writes the full list to `reports/canonical-unmodelled-fields.json` rather than letting
-those keys disappear quietly into a blob:
+The 56 source documents were written over two years with no shared schema, and their records carry
+374 distinct top-level keys. Only some feed a canonical column; the rest are kept verbatim in
+`provenance/source-records.jsonl` and promoted nowhere. That is retention, not modelling — the key is
+still there to read, it just has no column of its own.
 
-```json
-{ "key": "wikiTaskId", "records": 1117, "example": "data/league/catalyst-tasks-snapshot.json#$.records[0]" }
-```
-
-It is a report, not a gate — an unmodelled key is not a defect. The count matters, though: a key on
-one record is a one-off note, while `catalystCompletionRate`, `localityKey`, `localityLabel` and
-`wikiTaskId` on all 1,117 tasks are columns `domains/tasks.jsonl` is missing. Seventy-five keys appear exactly once.
-
-`CONSUMED_RECORD_KEYS` in `scripts/data/canonical/schema.mjs` is the list of keys the normalizer
-reads, grouped by where `normalize.mjs` reads each one. It is maintained by hand and has to move
-when the normalizer does; an entry that drifts out of date is worse than no entry, because it hides
-a key instead of surfacing it.
+Promoting one is a schema migration plus a re-export, and the case for it is frequency: a key on one
+record is a one-off note, while `catalystCompletionRate`, `localityKey`, `localityLabel` and
+`wikiTaskId` on all 1,117 tasks are columns `domains/tasks.jsonl` is missing.
 
 ## Parity report
 

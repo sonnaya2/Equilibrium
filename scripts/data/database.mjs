@@ -76,9 +76,10 @@ export function migrate(db) {
   return files.length;
 }
 
-export function requireEntity(db, id, context) {
+// Callers add the file and line; the message stays about the data.
+export function requireEntity(db, id) {
   const entity = prepared(db, "SELECT id, entity_type FROM entities WHERE id = ?").get(id);
-  if (!entity) throw new Error(`${context}: entity not found: ${id}`);
+  if (!entity) throw new Error(`entity not found: ${id}`);
   return entity;
 }
 

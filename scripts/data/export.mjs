@@ -4,6 +4,8 @@ import { join, relative } from "node:path";
 import {
   DATA_CATALOG,
   DOCUMENTS_PREFIX,
+  DOCUMENT_EXTRA_CONSUMERS,
+  DOCUMENT_SKIP,
   DOMAIN_TABLES,
   EXPORT_ROOT,
   EXPORT_VERSION,
@@ -16,9 +18,72 @@ import {
   TRANSFORM_BY_NAME,
 } from "./config.mjs";
 import { prepared, recordTransform } from "./database.mjs";
-import { documentOutputs } from "./ingest.mjs";
 import { researchExport, researchParity } from "./research.mjs";
-import { atomicWrite, hash, jsonLine, slash, slugify, walkFiles } from "./utilities.mjs";
+import { atomicWrite, hash, jsonLine, slash, slugify, stableJson, walkFiles } from "./utilities.mjs";
+
+function setRecordAtPath(document, recordPath, value) {
+  const tokens = [...recordPath.matchAll(/\.([^.[\]]+)|\[(\d+)\]/g)].map((match) =>
+    match[1] === undefined ? Number(match[2]) : match[1],
+  );
+  let target = document;
+  for (const token of tokens.slice(0, -1)) target = target[token];
+  target[tokens.at(-1)] = value;
+}
+
+// A document is only worth writing if something loads it. Everything else is
+// reachable through the database or the bounded shards, so emitting it would
+// just park a second copy of the dataset in the deploy.
+function documentConsumers() {
+  const wanted = new Set(DOCUMENT_EXTRA_CONSUMERS);
+  for (const path of walkFiles(join(ROOT, "app"), (file) => /\.tsx?$/.test(file)).concat(
+    walkFiles(join(ROOT, "src"), (file) => /\.tsx?$/.test(file)),
+  )) {
+    for (const match of readFileSync(path, "utf8").matchAll(/#shard\/([a-zA-Z0-9/_.-]+\.json)/g)) {
+      wanted.add(match[1]);
+    }
+  }
+  return wanted;
+}
+
+// Rebuilds the whole-document artifacts for the modules that import one at build
+// time: each source document's skeleton with its records written back over their
+// own record paths. Record paths sort parent-before-child, so a nested record
+// lands inside the parent body that was just restored. The research catalog is
+// excluded — it is served from relational tables instead.
+export function documentOutputs(db) {
+  const wanted = documentConsumers();
+  const skeletons = new Map(
+    prepared(db, "SELECT path, skeleton_json FROM source_documents ORDER BY path")
+      .all()
+      .map(({ path, skeleton_json }) => [path, skeleton_json]),
+  );
+  const missing = [...wanted].filter((name) => !skeletons.has(`data/${name}`));
+  if (missing.length) {
+    throw new Error(`#shard imports name documents the database does not contain: ${missing.join(", ")}`);
+  }
+  const documents = new Map(
+    [...wanted]
+      // combat/equipment.json -> data/combat/equipment.json
+      .map((name) => `data/${name}`)
+      .filter((file) => !DOCUMENT_SKIP.has(file))
+      .sort()
+      .map((file) => [file, JSON.parse(skeletons.get(file))]),
+  );
+  for (const row of prepared(
+    db,
+    "SELECT source_file, record_path, raw_json FROM source_records ORDER BY source_file, record_path",
+  ).all()) {
+    const document = documents.get(row.source_file);
+    if (!document) continue;
+    setRecordAtPath(document, row.record_path, JSON.parse(row.raw_json));
+  }
+  return new Map(
+    [...documents].map(([file, data]) => [
+      `${DOCUMENTS_PREFIX}/${file.slice("data/".length)}`,
+      `${stableJson(data)}\n`,
+    ]),
+  );
+}
 
 function rowsByEntity(rows) {
   const grouped = new Map();
@@ -151,7 +216,8 @@ export function buildOutputs(db) {
   const manifest = {
     schemaVersion: SCHEMA_VERSION,
     exportVersion: EXPORT_VERSION,
-    databaseInputHash: db.prepare("SELECT input_hash FROM transform_runs WHERE name = 'seed-ingest'").get().input_hash,
+    databaseInputHash: db.prepare("SELECT input_hash FROM transform_runs WHERE name = 'canonical-ingest'").get()
+      .input_hash,
     recordCount: entities.length,
     documents,
     domains: {},

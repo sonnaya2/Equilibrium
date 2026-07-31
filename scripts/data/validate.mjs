@@ -58,7 +58,7 @@ export function validate(db, changedOnly = false) {
     "schema version mismatch",
     rows(`SELECT max(version) AS version FROM schema_migrations HAVING version != ${SCHEMA_VERSION}`),
   );
-  addFailure("unmapped stable seed records without quarantine", rows(UNMAPPED_STABLE_RECORDS));
+  addFailure("unmapped stable source records without quarantine", rows(UNMAPPED_STABLE_RECORDS));
 
   const missingSources = rows(
     `SELECT id, entity_type FROM entities
@@ -68,15 +68,13 @@ export function validate(db, changedOnly = false) {
      ORDER BY id`,
   );
   addWarning(
-    "active factual entities without a normalized source",
+    "active factual entities without a source",
     changedOnly ? missingSources.filter(({ id }) => changedIds.has(id)) : missingSources,
   );
-  // When two records resolve to one entity the importer takes scalar fields and
-  // the body from whichever it reached first, but unions their regions,
-  // requirements, effects, tags and sources. The result matches no single
-  // source. That used to happen without a word; this is the word.
-  // `npm run data:legacy-inventory` narrows these to the ones whose scalar
-  // fields actually disagree, which is the set worth adjudicating.
+  // Several source records can point at one entity, contributing their regions,
+  // requirements, effects, tags and sources to it while only one of them supplied
+  // its scalar fields and body. Where those records disagree, the entity matches
+  // no single source. That used to happen without a word; this is the word.
   const blended = rows(
     `SELECT entity_id, count(DISTINCT raw_json) AS variants
      FROM source_records WHERE entity_id IS NOT NULL
@@ -91,7 +89,7 @@ export function validate(db, changedOnly = false) {
     "SELECT source_file, record_path, stable_id, error FROM quarantine ORDER BY source_file, record_path",
   );
   addWarning(
-    "quarantined seed records",
+    "quarantined source records",
     changedOnly ? quarantined.filter(({ stable_id }) => changedIds.has(stable_id)) : quarantined,
   );
 

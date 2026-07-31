@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { CACHE, DATABASE, EXPORT_VERSION, REGION_IDS, REPORTS } from "./config.mjs";
 import { openDatabase } from "./database.mjs";
 import { buildOutputs, compareOutputs } from "./export.mjs";
-import { applyPatch } from "./patches.mjs";
+import { applyPatch } from "./patching/apply.mjs";
 import { rebuild } from "./pipeline.mjs";
 import { entityContext, formatContextMarkdown } from "./queries.mjs";
 import { atomicWrite, jsonLine, slugify } from "./utilities.mjs";

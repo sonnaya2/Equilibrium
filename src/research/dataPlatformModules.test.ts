@@ -15,16 +15,8 @@ const utilities = await load<{
   stableJson: (value: unknown) => string;
   slugify: (value: unknown) => string;
   scalar: (value: unknown, fallback?: string) => string;
-}>("utilities.mjs");
-
-const normalize = await load<{
   normalizeRegion: (value: unknown) => string | null;
-  regionLinks: (row: Record<string, unknown>) => Array<{ region: string; relation: string }>;
-  entityCandidate: (
-    file: string,
-    record: { row: Record<string, unknown>; path: string; key: string },
-  ) => { id: string; type: string; name: string } | null;
-}>("normalize.mjs");
+}>("utilities.mjs");
 
 const research = await load<{
   rowMatchesRegion: (
@@ -33,20 +25,24 @@ const research = await load<{
   ) => boolean;
 }>("research.mjs");
 
-const patches = await load<{
-  parsePatch: (path: string) => { operations: Array<{ line: number; operation: unknown }> };
-}>("patches.mjs");
+const parse = await load<{
+  parsePatch: (path: string) => {
+    body: string;
+    operations: Array<{ line: number; operation: Record<string, unknown> }>;
+  };
+}>("patching/parse.mjs");
+
+const validation = await load<{
+  validateOperation: (operation: unknown, context: string) => Record<string, unknown>;
+}>("patching/validate.mjs");
 
 const queries = await load<{
   runReadOnlyQuery: (db: DatabaseSync, options: { sql: string; limit: number }) => unknown[];
-}>("queries.mjs");
-
-const legacy = await load<{
   entityOverlaps: (db: DatabaseSync) => {
     overlaps: Array<{ logicalRecord: string; files: string[]; entityIds: string[] }>;
     filePairs: Array<{ files: string; records: number }>;
   };
-}>("legacy-inventory.mjs");
+}>("queries.mjs");
 
 const scratch = mkdtempSync(join(tmpdir(), "equilibrium-patch-"));
 afterAll(() => rmSync(scratch, { recursive: true, force: true }));
@@ -78,49 +74,14 @@ describe("deterministic serialisation", () => {
 
 describe("region taxonomy", () => {
   it("folds retired area names into the canonical region", () => {
-    expect(normalize.normalizeRegion("Troll Country")).toBe("asgarnia");
-    expect(normalize.normalizeRegion("The Wilderness")).toBe("forinthry");
-    expect(normalize.normalizeRegion("Misthalin")).toBe("misthalin");
+    expect(utilities.normalizeRegion("Troll Country")).toBe("asgarnia");
+    expect(utilities.normalizeRegion("The Wilderness")).toBe("forinthry");
+    expect(utilities.normalizeRegion("Misthalin")).toBe("misthalin");
   });
 
   it("rejects anything outside the taxonomy instead of guessing", () => {
-    expect(normalize.normalizeRegion("Zeah")).toBeNull();
-    expect(normalize.normalizeRegion("")).toBeNull();
-  });
-
-  it("keeps one link per region and relation", () => {
-    const links = normalize.regionLinks({
-      primary_region: "karamja",
-      requiredRegions: ["karamja", "Troll Country"],
-      regions: ["karamja"],
-    });
-    expect(links).toEqual([
-      { region: "karamja", relation: "primary", ordinal: 0 },
-      { region: "karamja", relation: "required", ordinal: 0 },
-      { region: "asgarnia", relation: "required", ordinal: 1 },
-    ]);
-  });
-});
-
-describe("stable entity identity", () => {
-  it("derives an ID from scope and name when a record has none", () => {
-    expect(
-      normalize.entityCandidate("data/research/regional-skilling-unlocks.json", {
-        row: { name: "Herby Werby", recordType: "activity", regionId: "kandarin" },
-        path: "$.records[0]",
-        key: "records",
-      }),
-    ).toEqual({ id: "activity:kandarin:herby-werby", type: "activity", name: "Herby Werby" });
-  });
-
-  it("keeps an authored ID untouched when it is already namespaced", () => {
-    expect(
-      normalize.entityCandidate("data/combat/equipment.json", {
-        row: { id: "item:seismic-wand", name: "Seismic wand" },
-        path: "$.records[0]",
-        key: "records",
-      })?.id,
-    ).toBe("item:seismic-wand");
+    expect(utilities.normalizeRegion("Zeah")).toBeNull();
+    expect(utilities.normalizeRegion("")).toBeNull();
   });
 });
 
@@ -155,14 +116,14 @@ describe("patch parsing limits", () => {
       "2026-01-01-comments.jsonl",
       ["# a note", "", '{"op":"remove","entity":"item:x","reason":"merged"}', ""].join("\n"),
     );
-    const { operations } = patches.parsePatch(path);
+    const { operations } = parse.parsePatch(path);
     expect(operations).toHaveLength(1);
     expect(operations[0].line).toBe(3);
   });
 
   it("reports the failing line number on malformed JSON", () => {
     const path = writePatch("2026-01-01-broken.jsonl", '{"op":"remove"}\n{not json}\n');
-    expect(() => patches.parsePatch(path)).toThrow(/2026-01-01-broken\.jsonl:2:/);
+    expect(() => parse.parsePatch(path)).toThrow(/2026-01-01-broken\.jsonl:2:/);
   });
 
   it("refuses a patch above the operation-count limit", () => {
@@ -171,7 +132,118 @@ describe("patch parsing limits", () => {
       "2026-01-01-huge.jsonl",
       `${Array.from({ length: 1001 }, () => line).join("\n")}\n`,
     );
-    expect(() => patches.parsePatch(path)).toThrow(/1,000-operation safety limit/);
+    expect(() => parse.parsePatch(path)).toThrow(/1,000-operation safety limit/);
+  });
+
+  // The content hash is the patch's identity, so parsing may not touch what it
+  // read: a normalised URL written back onto the operation would mean the file
+  // and the applied operation no longer say the same thing.
+  it("returns the operations exactly as written", () => {
+    const line =
+      '{"op":"upsert-source","source":"source:x","set":{"url":"https://runescape.wiki/w/A"}}';
+    const path = writePatch("2026-01-01-verbatim.jsonl", `${line}\n`);
+    const { body, operations } = parse.parsePatch(path);
+    expect(body).toBe(`${line}\n`);
+    expect(operations[0].operation).toEqual(JSON.parse(line));
+  });
+});
+
+describe("patch validation", () => {
+  const validate = (operation: unknown) => validation.validateOperation(operation, "patch:1");
+
+  it("returns a validated copy and never mutates the parsed operation", () => {
+    const operation = {
+      op: "upsert-source",
+      source: "source:x",
+      set: { url: "https://runescape.wiki/w/Seismic_wand" },
+    };
+    const snapshot = utilities.stableJson(operation);
+    const validated = validate(operation);
+    expect(utilities.stableJson(operation)).toBe(snapshot);
+    expect(validated).not.toBe(operation);
+    expect(Object.isFrozen(validated)).toBe(true);
+  });
+
+  it("applies declared defaults", () => {
+    expect(validate({ op: "link-source", entity: "item:x", source: "source:y" })).toMatchObject({
+      role: "verification",
+      order: 0,
+    });
+    expect(validate({ op: "link-region", entity: "item:x", region: "karamja" })).toMatchObject({
+      relation: "required",
+      group: "",
+    });
+  });
+
+  it("rejects an unknown operation and an unknown field", () => {
+    expect(() => validate({ op: "merge", entity: "item:x" })).toThrow(/unsupported operation/);
+    expect(() => validate({ op: "remove", entity: "item:x", reason: "r", extra: 1 })).toThrow(
+      /unsupported fields for remove: extra/,
+    );
+  });
+
+  it("names the missing required field", () => {
+    expect(() => validate({ op: "remove", entity: "item:x" })).toThrow(/remove requires reason/);
+    expect(() => validate({ op: "relate", entity: "item:x", target: "item:y" })).toThrow(
+      /relate requires relation/,
+    );
+  });
+
+  it("allows only canonical column names in a set", () => {
+    expect(() => validate({ op: "upsert", entity: "item:x", set: { title: "A" } })).toThrow(
+      /unsupported set fields: title/,
+    );
+    expect(() => validate({ op: "upsert", entity: "item:x", set: { name: ["A"] } })).toThrow(
+      /set.name must be a scalar/,
+    );
+    expect(() => validate({ op: "upsert", entity: "item:x", set: {} })).toThrow(
+      /set cannot be empty/,
+    );
+  });
+
+  it("normalizes a region and rejects one outside the taxonomy", () => {
+    expect(
+      validate({ op: "link-region", entity: "item:x", region: "Troll Country" }),
+    ).toMatchObject({
+      region: "asgarnia",
+    });
+    expect(() => validate({ op: "link-region", entity: "item:x", region: "Zeah" })).toThrow(
+      /unknown region: Zeah/,
+    );
+    expect(() =>
+      validate({ op: "link-region", entity: "item:x", region: "karamja", relation: "adjacent" }),
+    ).toThrow(/invalid region relation/);
+  });
+
+  // A global link is global whatever relation the patch named.
+  it("forces the global relation for the global region", () => {
+    expect(
+      validate({ op: "link-region", entity: "item:x", region: "global", relation: "primary" }),
+    ).toMatchObject({ region: "global", relation: "global" });
+  });
+
+  it("requires a source URL to be HTTP or HTTPS", () => {
+    expect(
+      validate({
+        op: "upsert-source",
+        source: "source:x",
+        set: { url: "https://runescape.wiki/w/A" },
+      }),
+    ).toMatchObject({ set: { url: "https://runescape.wiki/w/A" } });
+    for (const url of ["javascript:alert(1)", "ftp://example.com/a", "not a url"]) {
+      expect(
+        () => validate({ op: "upsert-source", source: "source:x", set: { url } }),
+        url,
+      ).toThrow();
+    }
+  });
+
+  it("rejects a negative or fractional order", () => {
+    for (const order of [-1, 1.5, "2"]) {
+      expect(() =>
+        validate({ op: "link-source", entity: "item:x", source: "source:y", order }),
+      ).toThrow(/non-negative integer/);
+    }
   });
 });
 
@@ -192,7 +264,7 @@ describe("overlapping domains", () => {
   afterAll(() => db.close());
 
   it("groups two files describing one record under different ids", () => {
-    const { overlaps } = legacy.entityOverlaps(db);
+    const { overlaps } = queries.entityOverlaps(db);
     const prayer = overlaps.find(({ logicalRecord }) => logicalRecord === "prayer|protect item");
     expect(prayer?.files).toEqual(["data/combat/prayers.json", "data/reference/prayers.json"]);
     expect(prayer?.entityIds).toEqual([
@@ -202,7 +274,7 @@ describe("overlapping domains", () => {
   });
 
   it("matches on name case-insensitively but never across entity types", () => {
-    const { overlaps } = legacy.entityOverlaps(db);
+    const { overlaps } = queries.entityOverlaps(db);
     expect(overlaps.map(({ logicalRecord }) => logicalRecord)).toEqual([
       "equipment|bandos",
       "prayer|protect item",
@@ -210,7 +282,7 @@ describe("overlapping domains", () => {
   });
 
   it("ignores a name that appears once and counts each file pair", () => {
-    const { filePairs } = legacy.entityOverlaps(db);
+    const { filePairs } = queries.entityOverlaps(db);
     expect(filePairs).toEqual([
       { files: "data/combat/equipment.json + data/reference/progression-unlocks.json", records: 1 },
       { files: "data/combat/prayers.json + data/reference/prayers.json", records: 1 },
@@ -220,7 +292,7 @@ describe("overlapping domains", () => {
   // Resolving an overlap means removing the superseded side, so a removed entity
   // has to stop counting or the gate could never ratchet down.
   it("stops counting an overlap once the superseded side is removed", () => {
-    const { overlaps } = legacy.entityOverlaps(db);
+    const { overlaps } = queries.entityOverlaps(db);
     expect(overlaps.map(({ logicalRecord }) => logicalRecord)).not.toContain("spell|wind rush");
   });
 });

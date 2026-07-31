@@ -3,8 +3,8 @@ import { join, resolve } from "node:path";
 export const ROOT = process.cwd();
 
 // Everything a build writes moves together when EQUILIBRIUM_BUILD_ROOT is set,
-// so `data:parity:legacy-canonical` can build two whole databases side by side
-// without either one touching the working tree. Unset in every normal run.
+// so a whole database can be built somewhere other than the working tree.
+// Unset in every normal run.
 const BUILD_ROOT = process.env.EQUILIBRIUM_BUILD_ROOT
   ? resolve(ROOT, process.env.EQUILIBRIUM_BUILD_ROOT)
   : null;
@@ -12,7 +12,6 @@ const BUILD_ROOT = process.env.EQUILIBRIUM_BUILD_ROOT
 export const CACHE = BUILD_ROOT ? join(BUILD_ROOT, "cache") : join(ROOT, ".cache");
 export const DATABASE = join(CACHE, "equilibrium.sqlite");
 export const CHANGED = join(CACHE, "data-changed.json");
-export const SEED = join(ROOT, "data/seed-v1.json.gz");
 export const MIGRATIONS = join(ROOT, "data/migrations");
 export const PATCHES = join(ROOT, "data/patches");
 export const EXPORT_ROOT = BUILD_ROOT ? join(BUILD_ROOT, "data/v2") : join(ROOT, "public/data/v2");
@@ -83,27 +82,24 @@ export const DOMAIN_TABLES = new Map([
 
 export const TRANSFORMS = [
   {
-    // Named for the legacy seed it used to be the only reader of. Both
-    // ingestion paths still record this row, and manifest.databaseInputHash
-    // reads its input_hash, so the name outlives the seed until Stage 3.
-    name: "seed-ingest",
+    name: "canonical-ingest",
     stage: "ingest",
-    version: 1,
-    inputs: ["data/canonical/**", "data/seed-v1.json.gz (legacy comparison path only)"],
+    version: 2,
+    inputs: ["data/canonical/**"],
     outputs: ["source_files", "source_documents", "source_records"],
     dependencies: [],
     incremental: false,
-    validation: "parseable JSON and stable file hashes",
+    validation: "declared canonical shapes, keys, references and ordering",
   },
   {
     name: "relational-core",
-    stage: "normalize",
-    version: 1,
-    inputs: ["source_records"],
-    outputs: ["entities", "domain tables", "normalized relationships"],
-    dependencies: ["seed-ingest"],
+    stage: "ingest",
+    version: 2,
+    inputs: ["data/canonical/**"],
+    outputs: ["entities", "domain tables", "links and relationships"],
+    dependencies: ["canonical-ingest"],
     incremental: false,
-    validation: "constraints, taxonomy, and conflict quarantine",
+    validation: "foreign keys and table constraints, in one transaction",
   },
   {
     name: "search-index",

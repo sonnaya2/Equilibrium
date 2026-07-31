@@ -9,9 +9,6 @@ import { applyOne, rebuild } from "./pipeline.mjs";
 import { benchmark } from "./benchmark.mjs";
 import { exportCanonical } from "./canonical/export.mjs";
 import { canonicalParity } from "./canonical/validate.mjs";
-import { legacyCanonicalParity } from "./parity.mjs";
-import { runLegacyInventory } from "./legacy-inventory.mjs";
-import { compactSeed } from "./compact-seed.mjs";
 import { doctor, entityContext, findEntities, formatContextMarkdown, runReadOnlyQuery, stats } from "./queries.mjs";
 import { validate } from "./validate.mjs";
 import { boundedPrint, scalar, slash } from "./utilities.mjs";
@@ -64,7 +61,7 @@ function entityCommand(db, name) {
       frontendShard: buildOutputs(db).idMap[id] ?? null,
       sources: context.sources.map(({ id: sourceId }) => sourceId),
       responsibility: context.responsibility,
-      validation: ["foreign keys", "source URLs", "region taxonomy", "search index", "seed parity"],
+      validation: ["foreign keys", "source URLs", "region taxonomy", "search index", "research parity"],
     };
   }
   return getArg("format", "json") === "markdown" ? formatContextMarkdown(context) : context;
@@ -73,10 +70,6 @@ function entityCommand(db, name) {
 const COMMANDS = new Map([
   ["rebuild", () => rebuild(false)],
   ["import", () => rebuild(false)],
-  // Temporary: the pre-canonical build, kept only so data:parity:legacy-canonical
-  // has something to compare against. Stage 3 removes it.
-  ["rebuild-legacy-seed", () => rebuild(false, "legacy-seed")],
-  ["parity-legacy-canonical", () => legacyCanonicalParity()],
   ["benchmark", () => benchmark()],
   [
     "migrate",
@@ -120,8 +113,6 @@ const COMMANDS = new Map([
   ["diff", () => withDatabase((db) => ({ generated: compareOutputs(buildOutputs(db).outputs), git: gitDataStatus() }))],
   ["canonical-export", () => withDatabase(exportCanonical)],
   ["canonical-validate", () => withDatabase(canonicalParity)],
-  ["legacy-inventory", () => runLegacyInventory()],
-  ["compact-seed", () => compactSeed({ dryRun: hasArg("dry-run") })],
   ["doctor", () => withDatabase(doctor)],
   ["transforms", () => TRANSFORMS],
 ]);

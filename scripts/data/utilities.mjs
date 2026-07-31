@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
-import { ROOT } from "./config.mjs";
+import { REGION_ALIASES, REGION_SET, ROOT } from "./config.mjs";
 
 export const slash = (value) => value.replaceAll("\\", "/");
 export const hash = (value) => createHash("sha256").update(value).digest("hex");
@@ -38,6 +38,15 @@ export const parseBoolean = (value) =>
     : value === false || String(value).toLowerCase() === "no"
       ? 0
       : null;
+
+// Canonical records already carry a taxonomy region id. This exists for patches,
+// which may name a region the way the game or the Wiki still does.
+export const normalizeRegion = (value) => {
+  const raw = scalar(value).trim();
+  if (!raw) return null;
+  const slug = slugify(raw);
+  return REGION_ALIASES.get(raw.toLowerCase()) ?? REGION_ALIASES.get(slug) ?? (REGION_SET.has(slug) ? slug : null);
+};
 
 export function walkFiles(directory, predicate) {
   if (!existsSync(directory)) return [];

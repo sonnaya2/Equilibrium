@@ -72,7 +72,7 @@ function walk(directory) {
 
 function classify(file) {
   if (file.startsWith("scraped-data/")) return "raw-source-evidence";
-  if (file === "data/seed-v1.json.gz") return "consolidated-seed";
+  if (file.startsWith("data/canonical/")) return "canonical-dataset";
   if (file.startsWith("public/data/")) return "generated-frontend-data";
   if (file.startsWith("public/map/")) return "generated-map-data";
   if (/^(assets\/.*manifest|data\/combat\/.*-icons\.json)/.test(file)) return "asset-metadata";
@@ -331,13 +331,6 @@ const nondeterministicWriters = sources
   .sort();
 
 const packageJson = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
-const splitStages = (script) =>
-  String(script ?? "")
-    .split(/\s*&&\s*/)
-    .map((command, index) => ({ index: index + 1, command }))
-    .filter((stage) => stage.command);
-const normalizeStages = splitStages(packageJson.scripts?.["normalize:data"]);
-const legacyNormalizeStages = splitStages(packageJson.scripts?.["normalize:data:legacy"]);
 const tracked = (...paths) =>
   execFileSync("git", ["ls-files", "--", ...paths], { cwd: ROOT, encoding: "utf8" })
     .split(/\r?\n/)
@@ -356,41 +349,19 @@ const legacyReaders = sources
   .map(({ file }) => file);
 if (trackedDataJson.length) architectureFailures.push(`${trackedDataJson.length} per-domain data JSON files remain tracked`);
 if (trackedFrontend.length) architectureFailures.push(`${trackedFrontend.length} generated frontend files remain tracked`);
-if (legacyNormalizeStages.length) architectureFailures.push("normalize:data:legacy still exists");
 if (existsSync(join(ROOT, "data/research/catalog.json"))) architectureFailures.push("legacy research catalog exists in data/");
 if (existsSync(join(ROOT, ".cache/data"))) architectureFailures.push("legacy .cache/data tree exists");
 if (legacyReaders.length) architectureFailures.push(`legacy data readers remain: ${legacyReaders.join(", ")}`);
 if (readFileSync(join(ROOT, "tsconfig.json"), "utf8").includes('"#data/*"')) architectureFailures.push("legacy #data TypeScript alias remains");
 if (oversizedClientShards.length) architectureFailures.push(`client shards exceed 250 KiB: ${oversizedClientShards.map(({ file }) => file).join(", ")}`);
 
-// --- Stage 0 architecture gates ---------------------------------------------
-
 // Generated trees must never become tracked. data/canonical/ is the deliberate
 // exception - it is generated *and* committed, because the whole point of it is
 // to be reviewable in a diff; `data:canonical:validate` is what stops a stale
 // copy from surviving.
-const trackedGenerated = tracked("reports/data-*.json", "reports/data-*.md", "reports/canonical-*.json", "reports/legacy-data-*", "reports/research-*.json", ".cache/**");
+const trackedGenerated = tracked("reports/data-*.json", "reports/data-*.md", "reports/canonical-*.json", ".cache/**");
 if (trackedGenerated.length) {
   architectureFailures.push(`generated files are tracked: ${trackedGenerated.slice(0, 5).join(", ")}`);
-}
-
-// Seed documents that reach neither the database nor the browser. Importing one
-// would revive a format Stage 0 classified as dead; see
-// reports/research-orphans.json for how each was proven unreachable.
-const ORPHANED_SEED_DOCUMENTS = [
-  "combat/ability-audit-2026-07-24.json",
-  "combat/ability-icons.json",
-  "combat/equipment-icons.json",
-  "league/equilibrium-auto-quests.json",
-  "league/quest-region-review.json",
-  "league/quest-region-rules.json",
-  "research/equipment-region-index.json",
-];
-const revivedOrphans = ORPHANED_SEED_DOCUMENTS.filter((document) =>
-  sources.some(({ text }) => text.includes(`#shard/${document}`)),
-);
-if (revivedOrphans.length) {
-  architectureFailures.push(`orphaned legacy documents were imported again: ${revivedOrphans.join(", ")}`);
 }
 
 // A package script naming a file that does not exist is dead on arrival; the
@@ -411,13 +382,12 @@ if (missingScriptFiles.length) {
 
 // Two files claiming one domain: the same entity type and name produced by more
 // than one source file, as separate entities. Stage 0 measured 253 across 18
-// pairs; Stage 1 has resolved 225, leaving 41 across the 7 pairs below - all of
-// them blocked on the same thing, a superseded record holding requirements a
-// patch cannot move. The gate is a ratchet - a *new* pair of files, or an
-// existing pair growing, fails, while the remaining backlog stays visible in
-// reports/research-overlaps.json. Lower an entry as its pair is adjudicated and
-// delete it at zero; counts match that report, and
-// reports/research-adjudication.json says why each one is still here.
+// pairs; Stage 1 resolved 225, leaving 41 across the 7 pairs below - all of them
+// blocked on the same thing, a superseded record holding requirements a patch
+// cannot move. The gate is a ratchet: a *new* pair of files, or an existing pair
+// growing, fails. Lower an entry as its pair is adjudicated and delete it at
+// zero.
+//
 const OVERLAP_BASELINE = new Map([
   ["data/combat/equipment.json + data/reference/progression-unlocks.json", 33],
   ["data/combat/abilities.json + data/reference/progression-unlocks.json", 3],
@@ -429,7 +399,7 @@ const OVERLAP_BASELINE = new Map([
 ]);
 if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
   const { openDatabase } = await import("./database.mjs");
-  const { entityOverlaps } = await import("./legacy-inventory.mjs");
+  const { entityOverlaps } = await import("./queries.mjs");
   const db = openDatabase();
   try {
     for (const { files, records } of entityOverlaps(db).filePairs) {
@@ -445,30 +415,18 @@ if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
   }
 }
 
-// The default build reads data/canonical/. The seed survives only behind
-// data:rebuild:legacy-seed, which exists so data:parity:legacy-canonical has
-// something to compare against; if the default rebuild ever names it again, or
-// canonical stops being complete, the switch has silently come undone.
+// data/canonical/ is the only build input, so an incomplete one is a broken
+// build rather than a missing optional file.
 const canonicalFiles = (await import("./canonical/schema.mjs")).COLLECTIONS.map(({ file }) => file);
 const missingCanonical = canonicalFiles.filter((file) => !existsSync(join(ROOT, "data/canonical", file)));
 if (missingCanonical.length) {
   architectureFailures.push(`canonical dataset is incomplete: ${missingCanonical.join(", ")}`);
 }
-const LEGACY_SEED_COMMANDS = new Set(["data:rebuild:legacy-seed", "data:parity:legacy-canonical"]);
-const seedBuilders = Object.entries(packageJson.scripts ?? {})
-  .filter(([name, script]) => /rebuild-legacy-seed/.test(String(script)) && !LEGACY_SEED_COMMANDS.has(name))
-  .map(([name]) => name);
-if (seedBuilders.length) {
-  architectureFailures.push(`scripts build from the legacy seed outside the comparison path: ${seedBuilders.join(", ")}`);
-}
-for (const name of LEGACY_SEED_COMMANDS) {
-  if (!packageJson.scripts?.[name]) architectureFailures.push(`missing temporary comparison command: ${name}`);
-}
 
-// data/ holds the canonical dataset, forward-only migrations, content patches
-// and the retired seed. A new root here means a second authoring surface
-// arrived without a decision.
-const DATA_ROOTS = new Set(["migrations", "patches", "seed-v1.json.gz", "README.md", "canonical"]);
+// data/ holds the canonical dataset, forward-only migrations and content
+// patches. A new root here means a second authoring surface arrived without a
+// decision.
+const DATA_ROOTS = new Set(["migrations", "patches", "README.md", "canonical"]);
 const undocumentedDataRoots = readdirSync(join(ROOT, "data")).filter((name) => !DATA_ROOTS.has(name));
 if (undocumentedDataRoots.length) {
   architectureFailures.push(`undocumented data roots: ${undocumentedDataRoots.join(", ")}`);
@@ -489,8 +447,6 @@ const report = {
     filesWithMultipleWriters: multipleWriters.length,
     clientDataImports: clientDataImports.length,
     oversizedClientShards: oversizedClientShards.length,
-    normalizeStages: normalizeStages.length,
-    legacyNormalizeStages: legacyNormalizeStages.length,
     architectureFailures: architectureFailures.length,
   },
   classifications: Object.fromEntries(
@@ -498,8 +454,6 @@ const report = {
       .sort()
       .map((classification) => [classification, inventory.filter((entry) => entry.classification === classification).length]),
   ),
-  normalizeStages,
-  legacyNormalizeStages,
   largeFiles,
   veryLargeFiles,
   duplicateIds,
@@ -529,7 +483,6 @@ const architecture = [
   "",
   `- ${report.summary.files} relevant project files (${report.summary.dataFiles} data files), ${kib(report.summary.bytes)} total.`,
   `- ${report.summary.over250KiB} files exceed 250 KiB; ${report.summary.over1MiB} exceed 1 MiB.`,
-  `- \`normalize:data\` has ${report.summary.normalizeStages} staged entrypoint; the retired compatibility chain has ${report.summary.legacyNormalizeStages} commands.`,
   `- ${report.summary.filesWithMultipleWriters} files have multiple statically detected writers.`,
   `- ${report.summary.duplicateStableIdsAcrossFiles} stable IDs and ${report.summary.duplicateRecordsAcrossFiles} exact records repeat across files.`,
   `- ${report.summary.clientDataImports} data files are imported directly by client modules.`,
@@ -552,10 +505,6 @@ const architecture = [
     ]),
   ),
   "",
-  "## Current data entrypoint",
-  "",
-  ...normalizeStages.map((stage) => `${stage.index}. \`${stage.command}\``),
-  "",
   "## Confirmed architecture pressure",
   "",
   `- ${wholeDatasetReads.length} large datasets are loaded wholesale by at least one script or module.`,
@@ -565,7 +514,7 @@ const architecture = [
   "",
   "## Migration boundary",
   "",
-  "The immutable compressed seed, migrations, and JSONL patches rebuild an ignored SQLite database. Client consumers use bounded, hashed documents under `public/data/v2/`; larger data is server-only. No compatibility tree is materialized.",
+  "The canonical JSONL dataset, migrations, and JSONL patches rebuild an ignored SQLite database. Client consumers use bounded, hashed documents under `public/data/v2/`; larger data is server-only. No compatibility tree is materialized.",
   "",
   "## Reports",
   "",
@@ -577,5 +526,5 @@ const architecture = [
 mkdirSync(REPORTS, { recursive: true });
 writeFileSync(INVENTORY_PATH, `${JSON.stringify(report)}\n`);
 writeFileSync(REPORT_PATH, architecture);
-console.log(`Data architecture audit: ${report.summary.files} files, ${largeFiles.length} over 250 KiB, ${normalizeStages.length} normalize stages`);
+console.log(`Data architecture audit: ${report.summary.files} files, ${largeFiles.length} over 250 KiB`);
 if (architectureFailures.length) process.exitCode = 1;

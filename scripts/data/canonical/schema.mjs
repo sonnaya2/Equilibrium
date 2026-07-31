@@ -65,9 +65,9 @@ export const COLLECTIONS = [
         createdSource: row.created_source,
         updatedSource: row.updated_source,
         recordRef: ref,
-        // Skill entities drop their `methods` key during normalization and a
-        // patched entity can outrun the record it came from, so 30 of 4,790
-        // bodies match no provenance record and are carried inline.
+        // A skill entity's body has its `methods` key stripped, because those
+        // methods are entities of their own, so it matches no provenance record
+        // and is carried inline instead.
         record: ref || row.extra_json === "{}" ? null : json(row.extra_json),
       };
     },
@@ -601,7 +601,7 @@ export const COLLECTIONS = [
   {
     // The shape each document keeps once its records are lifted out. Export
     // replays source-records over this to rebuild public/data/v2/documents/**,
-    // which is what lets the frontend artifacts be built without the seed.
+    // which is what lets the frontend documents be rebuilt from the database alone.
     name: "source-documents",
     file: "provenance/source-documents.jsonl",
     key: ["path"],
@@ -672,7 +672,7 @@ export const EXCLUDED_TABLES = [
   {
     table: "patch_ledger",
     reason: "Records which data/patches/*.jsonl files were applied to this build.",
-    evidence: "Read only by patches.mjs to refuse a re-application; canonical data is post-patch.",
+    evidence: "Read only by patching/apply.mjs to refuse a re-application; canonical data is post-patch.",
   },
   {
     table: "patch_changes",
@@ -682,60 +682,20 @@ export const EXCLUDED_TABLES = [
   {
     table: "entity_search",
     reason: "FTS5 index over entity name, descriptions and aliases, plus its shadow tables.",
-    evidence: "Fully rebuilt from entities + aliases by ingest.mjs:rebuildSearch on every run.",
+    evidence: "Fully rebuilt from entities + aliases by ingest.mjs:rebuildSearch after ingestion and every patch.",
   },
 ];
-
-// Every top-level key the normalizer reads out of a legacy record to build a
-// canonical column, grouped by where normalize.mjs reads it. Keys outside this
-// set are not lost - they stay in provenance/source-records.jsonl `record` - but
-// no canonical field carries them, which is what
-// reports/canonical-unmodelled-fields.json reports.
-//
-// Keep this in step with normalize.mjs. It is the map Stage 2 needs to decide
-// what to promote into a column next, so an entry that drifts out of date is
-// worse than no entry.
-export const CONSUMED_RECORD_KEYS = new Set([
-  // recordName + entityCandidate
-  "name", "title", "method", "quest", "tool", "perk", "component", "collection", "summary",
-  "id", "recordType",
-  // entityFields
-  "displayDescription", "note", "warning", "detail", "description", "league_treatment", "purpose",
-  "verifiedAt", "verified_at", "snapshotDate", "snapshot_date", "status", "sortKey", "sort_key",
-  // regionLinks + addRegions
-  "primary_region", "primaryRegion", "regionId", "region_id", "region", "regions",
-  "requiredRegions", "required_regions", "regionHints", "region_hints", "region_hint",
-  "optionalRegions", "optional_regions", "region_options", "excludedRegions", "excluded_regions",
-  "regionRequirementType", "region_requirement_type", "unlock",
-  // sourceObjects
-  "sources", "source", "source_url", "sourceUrl", "source_urls", "official_source_urls",
-  "primary_source_url", "primarySourceUrl", "secondary_source_urls", "secondarySourceUrls",
-  "secondary_source_url",
-  // linkSource reads these off a source object, which collectArrayRecords also
-  // files as a provenance record in its own right.
-  "url", "page_title", "publisher", "retrievedAt", "retrieved_at", "role", "content_hash",
-  // requirements, effects, tags, aliases, relationships
-  "requirements", "access_requirements", "effects", "facts", "style", "category", "skill",
-  "target_tags", "tags", "aliases", "direct_prerequisites",
-  // domain writers
-  "slot", "tier", "bonuses", "level", "cooldownTicks", "book", "book_type", "prayer_requirement",
-  "spellbook", "maxRank", "location", "type", "points", "sourceLeague", "quest_type", "series",
-  "members", "release", "levelRange", "level_range", "xpRate", "xp_rate", "intensity",
-  "hardRegionRequirement", "hard_region_requirement",
-  // research catalog
-  "methods",
-]);
 
 export const EXCLUDED_COLUMNS = [
   {
     column: "entities.slug",
     reason: "Always slugify(entities.id).",
-    evidence: "4,790 of 4,790 rows match; the only writers (normalize.mjs, patches.mjs) call slugify(id).",
+    evidence: "Every row matches; the only writers (canonical/insert.mjs, patching/operations.mjs) call slugify(id).",
   },
   {
     column: "entities.extra_json",
     reason: "The entity body, carried once as entities.recordRef -> provenance/source-records.jsonl.",
-    evidence: "4,760 of 4,790 bodies are byte-identical to a provenance record; the other 30 use `record`.",
+    evidence: "Almost every body is byte-identical to a provenance record; the rest carry `record` inline.",
   },
   {
     column: "regions.entity_id",
@@ -750,7 +710,7 @@ export const EXCLUDED_COLUMNS = [
   {
     column: "source_records.record_hash",
     reason: "Always sha256 of the key-sorted record body.",
-    evidence: "7,920 of 7,920 rows match hash(stableJson(record)).",
+    evidence: "Every row matches hash(stableJson(record)).",
   },
   {
     column: "effects.metadata_json (effect_key = 'record')",

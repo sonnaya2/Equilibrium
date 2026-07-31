@@ -135,8 +135,8 @@ function researchPanels(db, region) {
   return { regional, unlocks };
 }
 
-// Reconstructs the seeded catalog shape from relational tables. Export refuses
-// to ship unless this matches the seed exactly, so it is also the parity source.
+// Reconstructs the catalog document shape from relational tables. Export refuses
+// to ship unless this matches the shipped shards exactly, so it is also the parity source.
 export function readResearchCatalog(db) {
   const metadata = db.prepare("SELECT * FROM research_catalog WHERE id = 1").get();
   if (!metadata) throw new Error("Normalized research catalog is missing");
@@ -306,7 +306,7 @@ export function researchParity(db, outputs) {
     const { trainingMethodIds = [], ...base } = source;
     const expected = { ...base, training: trainingMethodIds.map((id) => methods.get(id)).filter(Boolean) };
     const newValue = JSON.parse(nextBody);
-    // panelHrefs are export-only addressing, not seeded content.
+    // panelHrefs are export-only addressing, not source content.
     const comparable = { ...newValue };
     delete comparable.panelHrefs;
     regions.push({

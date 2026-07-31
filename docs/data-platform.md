@@ -10,14 +10,13 @@ data/canonical/*.jsonl
   -> versioned manifest, bounded indexes, and page-sized frontend shards
 ```
 
-Four things are tracked. Everything downstream of them is generated and ignored by Git.
+Three things are tracked. Everything downstream of them is generated and ignored by Git.
 
 | Path                          | Tracked | Role                                                                        |
 | ----------------------------- | ------- | --------------------------------------------------------------------------- |
 | `data/canonical/`             | yes     | The build input: explicit JSONL, one record per line; see `canonical-data.md` |
 | `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
 | `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
-| `data/seed-v1.json.gz`        | yes     | Retired baseline of the 65 original source documents; comparison path only  |
 | `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
 | `public/data/v2/`             | no      | Every generated artifact, with size and SHA-256 metadata in the manifest    |
 | `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |
@@ -53,38 +52,45 @@ The research catalog is normalized into those tables and is never written back o
 
 ## Pipeline
 
-`scripts/data/` declares five transforms — ingest, normalize, enrich, validate, export. Each records
-its version, dependencies, input hash, output count and validation contract in `transform_runs`.
+`scripts/data/` declares five transforms — ingest, relational core, enrich, validate, export. Each
+records its version, dependencies, input hash, output count and validation contract in
+`transform_runs`.
 
 A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports
 `data/canonical/`, applies patches transactionally, rebuilds search, validates exact research parity,
 and rewrites only the artifacts whose bytes changed.
 
-| Module              | Responsibility                                                     |
-| ------------------- | ------------------------------------------------------------------ |
-| `platform.mjs`      | CLI entry point and command dispatch                               |
-| `config.mjs`        | Paths, limits, region taxonomy, transform declarations             |
-| `utilities.mjs`     | Deterministic JSON, hashing, slugs, file walking, atomic writes    |
-| `database.mjs`      | Connections, transactions, statement cache, migrations             |
-| `canonical/import.mjs` | Canonical JSONL -> SQLite, in one transaction                   |
-| `ingest.mjs`        | Legacy seed parsing and import; document rebuild, search index     |
-| `normalize.mjs`     | Legacy record-to-entity mapping, sources, regions, domain tables   |
-| `patches.mjs`       | JSONL parsing, operation handlers, patch ledger                    |
-| `validate.mjs`      | Invariant checks and the validation/quarantine reports             |
-| `research.mjs`      | Research catalog reconstruction, region panels, seed parity        |
-| `export.mjs`        | Domain shards, ID indexes, manifest, byte-diffed writes            |
-| `queries.mjs`       | Bounded read commands: find, context, query, doctor, stats         |
-| `pipeline.mjs`      | `rebuild` and single-patch `apply` sequencing                      |
-| `parity.mjs`        | Temporary legacy/canonical dual-build comparison                   |
-| `benchmark.mjs`     | Scoped patch and rebuild measurements                              |
-| `canonical/`        | Canonical JSONL schema, importer, exporter, validator, parity report |
+| Module                     | Responsibility                                                   |
+| -------------------------- | ---------------------------------------------------------------- |
+| `platform.mjs`             | CLI entry point and command dispatch                             |
+| `config.mjs`               | Paths, limits, region taxonomy, transform declarations           |
+| `utilities.mjs`            | Deterministic JSON, hashing, slugs, region taxonomy, atomic writes |
+| `database.mjs`             | Connections, transactions, statement cache, migrations           |
+| `ingest.mjs`               | The ingestion entry: validate, read, insert, search index        |
+| `canonical/schema.mjs`     | The one declaration of the canonical files and their fields      |
+| `canonical/read.mjs`       | Canonical JSONL -> records, with declared defaults               |
+| `canonical/insert.mjs`     | Records -> SQLite rows, in one ordered list of direct inserts    |
+| `canonical/validate.mjs`   | Structural validation and the parity report                      |
+| `canonical/export.mjs`     | Database -> `data/canonical/`, byte-diffed                       |
+| `patching/parse.mjs`       | Patch file reading, limits, line numbers                         |
+| `patching/validate.mjs`    | Allowed and required fields per operation                        |
+| `patching/operations.mjs`  | One handler per operation, writing canonical columns             |
+| `patching/apply.mjs`       | Patch identity, transaction, dispatch, ledger, changed entities  |
+| `validate.mjs`             | Invariant checks and the validation/quarantine reports           |
+| `research.mjs`             | Research catalog reconstruction, region panels, export parity    |
+| `export.mjs`               | Domain shards, whole documents, ID indexes, manifest             |
+| `queries.mjs`              | Bounded read commands: find, context, query, doctor, stats       |
+| `pipeline.mjs`             | `rebuild` and single-patch `apply` sequencing                    |
+| `benchmark.mjs`            | Scoped patch and rebuild measurements                            |
+| `audit.mjs`                | Shipped-data gate and the architecture ratchets                  |
 
 See [`canonical-data.md`](canonical-data.md) for the file format itself.
 
 ### Importing canonical data
 
-`canonical/import.mjs` validates `data/canonical/`, then writes it into a freshly migrated database
-in one transaction, in an explicit dependency order:
+`ingest.mjs` validates `data/canonical/`, reads it through `canonical/read.mjs`, and writes it into a
+freshly migrated database in one transaction. `canonical/insert.mjs` holds the whole import as a
+single ordered list, so the dependency order is one readable thing:
 
 1. entities
 2. sources
@@ -111,29 +117,27 @@ it needs is a declared field.
 
 Three columns are recomputed rather than stored twice: `entities.slug` and `regions.entity_id` from
 the ID, and `entities.extra_json` from the entity's provenance record. `source_documents` holds each
-seed document's shape with its records removed, which is what lets `public/data/v2/documents/**` be
-rebuilt without the seed.
+source document's shape with its records removed, which is what lets `public/data/v2/documents/**` be
+rebuilt from the database alone.
 
-### The retired seed path
+### Applying a patch
 
-`data/seed-v1.json.gz` and the normalizer that reads it are still in the tree, reachable only from:
+`patching/` splits the four things a patch does, so each is inspectable on its own:
 
-```bash
-npm run data:rebuild:legacy-seed
-```
+- **parse** reads the file, enforces the 1 MiB and 1,000-operation limits, and returns the operations
+  exactly as written. It never mutates one — the content hash is the patch's identity, so the file
+  and the applied operation have to say the same thing.
+- **validate** holds one table of the fields every operation accepts and requires, and returns a
+  frozen validated copy with defaults applied, regions folded into the taxonomy and URLs normalized.
+  Assignment keys are copied out of a fixed allowlist of column names, which is why the handlers can
+  interpolate them into `SET`.
+- **operations** is one handler per operation. Each writes canonical database columns and returns the
+  entity IDs it changed. Handlers own no transaction and no ledger.
+- **apply** owns identity, one transaction per file, dispatch, the changed-entity set, the
+  `patch_changes` rows and the `patch_ledger` entry.
 
-```bash
-npm run data:parity:legacy-canonical
-```
-
-The parity command builds both databases side by side under `.cache/parity/`, then compares the
-sorted logical rows of all 37 tables, the search index and the results of real queries against it,
-every generated frontend artifact, the manifest, the data reports and the catalog. Raw SQLite files
-are not compared — page layout follows insert order — and `requirements`, `effects` and `quarantine`
-are compared without their surrogate `id`, which the database hands out in insert order. Any other
-mismatch fails the command with a bounded diff in
-`reports/data-parity-legacy-canonical.json`. Nothing else may build from the seed; `npm run
-audit:data` fails if a package script does.
+A patch writes the database. It does not write back into the provenance record the entity came from:
+`source_records.raw_json` is what the source document said, and stays that way.
 
 ## Editing a record
 
@@ -163,6 +167,44 @@ a single transaction, so a rejected operation leaves nothing behind. An applied 
 whose content later changes is an error rather than a silent re-run. `data:query` accepts one bounded
 read-only `SELECT` or `WITH` and rejects writes, PRAGMA, attachment, DDL and multiple statements.
 `data:context` defaults to a 16 KB output ceiling and reports truncation.
+
+## How canonical data changes
+
+The model is an immutable baseline plus ordered immutable patches:
+
+```text
+data/canonical/  +  data/patches/*.jsonl  ->  .cache/equilibrium.sqlite  ->  data/canonical/
+```
+
+The loop closes: the database built from the baseline and the patches exports back to a baseline, and
+`data:canonical:validate` is what says the two agree. That gives four moves, and which one a change
+needs is not a judgement call.
+
+**Add a patch** for any factual change to a record that already exists, or for a record that should:
+a corrected value, a new source, a region link, a duplicate to retire. This is the normal case and it
+is the only one that needs no rebuild. A patch is immutable once applied — a later correction is a
+new patch, never an edit to an old one.
+
+**Write a migration** when the shape changes rather than the content: a new column, table, index or
+constraint. Migrations are forward-only and numbered, and an applied one whose bytes later change is
+an error. One migration per schema change, never one per content correction.
+
+**Regenerate the baseline** — that is, re-export `data/canonical/` and commit it — after every patch,
+because the tracked mirror is stale until you do and `data:canonical:validate` fails while it is.
+That is a re-export of what the database already says, not an authoring act, and it never rewrites a
+record: `data:canonical:export` writes only the files whose bytes changed. Nothing else may write
+these files by hand.
+
+**Squash the patch history** only at a major data version. Replaying every patch on every rebuild
+costs nothing at this size, and the ledger is how `data:context` answers which patch changed a record
+and why. When the replay does become the slow part of a rebuild, or a patch names entities that no
+longer exist, fold the applied patches into a fresh baseline in one commit: export canonical, delete
+the folded patch files, rebuild from empty, and confirm the export is byte-identical to the one you
+started from. Until then, keep them.
+
+The one thing not to do is rewrite the baseline to express an edit. Hand-editing `data/canonical/`
+loses the record of who changed what and why, and the export would overwrite it on the next rebuild
+anyway.
 
 ## Frontend consumption
 

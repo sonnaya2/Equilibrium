@@ -10,7 +10,6 @@ import {
   CANONICAL_ROOT,
   CANONICAL_VERSION,
   COLLECTIONS,
-  CONSUMED_RECORD_KEYS,
   EXCLUDED_COLUMNS,
   EXCLUDED_TABLES,
   REFERENCE_KEY,
@@ -309,36 +308,6 @@ function excludedColumnChecks(db, records) {
   return checks;
 }
 
-// Every legacy record key survives inside provenance/source-records.jsonl, but
-// only some of them feed a canonical column. This names the rest rather than
-// letting them disappear quietly into a blob, and is the list Stage 2 works
-// from when deciding what to promote next.
-export function unmodelledFields(records) {
-  const counts = new Map();
-  const example = new Map();
-  for (const row of records.get("source-records") ?? []) {
-    const record = row.record;
-    if (!record || typeof record !== "object" || Array.isArray(record)) continue;
-    for (const key of Object.keys(record)) {
-      counts.set(key, (counts.get(key) ?? 0) + 1);
-      if (!example.has(key)) example.set(key, recordRef(row.sourceFile, row.recordPath));
-    }
-  }
-  const fields = [...counts]
-    .filter(([key]) => !CONSUMED_RECORD_KEYS.has(key))
-    .map(([key, records_]) => ({ key, records: records_, example: example.get(key) }))
-    .sort((a, b) => b.records - a.records || (a.key < b.key ? -1 : 1));
-  return {
-    distinctKeys: counts.size,
-    modelledKeys: counts.size - fields.length,
-    provenanceOnlyKeys: fields.length,
-    // A key on one record is usually a one-off note; a key on thousands is a
-    // column the schema is missing.
-    singletonKeys: fields.filter(({ records: seen }) => seen === 1).length,
-    fields,
-  };
-}
-
 export function canonicalParity(db, root = CANONICAL_ROOT) {
   const validation = validateCanonical(root);
   const generated = buildCanonical(db);
@@ -400,12 +369,6 @@ export function canonicalParity(db, root = CANONICAL_ROOT) {
   );
 
   const excludedColumns = excludedColumnChecks(db, validation.records);
-  const { fields, ...unmodelled } = unmodelledFields(validation.records);
-  mkdirSync(REPORTS, { recursive: true });
-  atomicWrite(
-    join(REPORTS, "canonical-unmodelled-fields.json"),
-    `${JSON.stringify({ canonicalVersion: CANONICAL_VERSION, ...unmodelled, fields }, null, 2)}\n`,
-  );
   const match =
     validation.valid &&
     collections.every(({ equal }) => equal) &&
@@ -420,9 +383,6 @@ export function canonicalParity(db, root = CANONICAL_ROOT) {
     validation: { valid: validation.valid, failures: validation.failures.slice(0, 50) },
     collections,
     checks: equality,
-    // Not a gate: an unmodelled key is retained, just not promoted to a column.
-    // The full table is reports/canonical-unmodelled-fields.json.
-    unmodelledFields: unmodelled,
     excludedColumns: excludedColumns.map((check) => ({
       ...check,
       ...EXCLUDED_COLUMNS.find(({ column }) => column === check.column),

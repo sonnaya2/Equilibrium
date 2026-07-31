@@ -31,22 +31,15 @@ const importer = await load<{
     db: DatabaseSync,
     root: string,
   ) => { files: number; bytes: number; inputHash: string };
+}>("ingest.mjs");
+
+const reader = await load<{
   readCollectionRecords: (name: string, root?: string) => Array<Record<string, unknown>>;
-}>("canonical/import.mjs");
+}>("canonical/read.mjs");
 
 const patches = await load<{
   applyPatch: (db: DatabaseSync, path: string, allowApplied: boolean) => Set<string>;
-}>("patches.mjs");
-
-const parity = await load<{
-  legacyCanonicalParity: () => {
-    match: boolean;
-    tables: Array<{ table: string; equal: boolean; legacyRows?: number }>;
-    search: { equal: boolean; results: Array<{ query: string; equal: boolean }> };
-    artifacts: Array<{ name: string; files: number; equal: boolean }>;
-    files: Array<{ name: string; equal: boolean }>;
-  };
-}>("parity.mjs");
+}>("patching/apply.mjs");
 
 const root = process.cwd();
 const scratch = mkdtempSync(join(tmpdir(), "equilibrium-import-"));
@@ -214,10 +207,174 @@ describe("canonical importer", () => {
   });
 
   it("reads the shipped provenance without a database", () => {
-    const files = importer.readCollectionRecords("source-files");
+    const files = reader.readCollectionRecords("source-files");
     expect(files).toHaveLength(56);
     // Defaults are filled in, so an omitted field is not undefined.
     expect(files.every((file) => typeof file.metadata === "object")).toBe(true);
+  });
+
+  // Two imports of the same files produce the same database, and the input hash
+  // is a function of the dataset rather than of when it ran.
+  it("imports deterministically", () => {
+    const root = fixture();
+    const digest = (db: DatabaseSync) =>
+      JSON.stringify(
+        db
+          .prepare(
+            "SELECT id, slug, entity_type, name, sort_key, extra_json FROM entities ORDER BY id",
+          )
+          .all(),
+      );
+    const first = migrated();
+    const second = migrated();
+    try {
+      const a = importer.importCanonical(first, root);
+      const b = importer.importCanonical(second, root);
+      expect(a.inputHash).toBe(b.inputHash);
+      expect(digest(first)).toBe(digest(second));
+    } finally {
+      first.close();
+      second.close();
+    }
+  });
+
+  // A stable ID is carried, never derived: the slug follows the ID and the ID
+  // follows the file, so a renamed entity keeps its identity.
+  it("keeps stable IDs and derives the slug from them", () => {
+    const db = migrated();
+    try {
+      importer.importCanonical(db, fixture());
+      expect(
+        db.prepare("SELECT slug FROM entities WHERE id = 'training-method:mining'").get(),
+      ).toEqual({ slug: "training-method-mining" });
+      const path = join(scratch, "2026-01-02-rename.jsonl");
+      writeFileSync(path, '{"op":"upsert","entity":"task:alpha","set":{"name":"Renamed"}}\n');
+      patches.applyPatch(db, path, false);
+      expect(
+        db.prepare("SELECT id, slug, name FROM entities WHERE id = 'task:alpha'").get(),
+      ).toEqual({
+        id: "task:alpha",
+        slug: "task-alpha",
+        name: "Renamed",
+      });
+    } finally {
+      db.close();
+    }
+  });
+});
+
+describe("patch identity and change tracking", () => {
+  const patched = (): DatabaseSync => {
+    const db = migrated();
+    importer.importCanonical(db, fixture());
+    return db;
+  };
+
+  it("records every changed entity against the patch that changed it", () => {
+    const db = patched();
+    try {
+      const path = join(scratch, "2026-01-03-changes.jsonl");
+      writeFileSync(
+        path,
+        [
+          '{"op":"upsert","entity":"task:alpha","set":{"name":"Renamed"}}',
+          '{"op":"link-region","entity":"training-method:mining","region":"karamja"}',
+        ].join("\n"),
+      );
+      expect([...patches.applyPatch(db, path, false)].sort()).toEqual([
+        "task:alpha",
+        "training-method:mining",
+      ]);
+      expect(
+        db.prepare("SELECT entity_id, operation, line FROM patch_changes ORDER BY entity_id").all(),
+      ).toEqual([
+        { entity_id: "task:alpha", operation: "upsert", line: 1 },
+        { entity_id: "training-method:mining", operation: "link-region", line: 2 },
+      ]);
+    } finally {
+      db.close();
+    }
+  });
+
+  // The patch's identity is the hash of its bytes. Re-applying the same file is
+  // a no-op; the same name over different bytes is an error, never a silent
+  // second run.
+  it("treats an applied patch as immutable", () => {
+    const db = patched();
+    try {
+      const path = join(scratch, "2026-01-04-immutable.jsonl");
+      writeFileSync(path, '{"op":"upsert","entity":"task:alpha","set":{"name":"First"}}\n');
+      patches.applyPatch(db, path, false);
+      expect(patches.applyPatch(db, path, true)).toEqual(new Set());
+      expect(() => patches.applyPatch(db, path, false)).toThrow(/already applied/);
+      writeFileSync(path, '{"op":"upsert","entity":"task:alpha","set":{"name":"Second"}}\n');
+      expect(() => patches.applyPatch(db, path, true)).toThrow(/different content hash/);
+      expect(db.prepare("SELECT name FROM entities WHERE id = 'task:alpha'").get()).toEqual({
+        name: "First",
+      });
+    } finally {
+      db.close();
+    }
+  });
+
+  // A patch writes database columns. The record it came from is provenance and
+  // stays exactly as the source document wrote it.
+  it("leaves the provenance record untouched", () => {
+    const db = patched();
+    try {
+      db.prepare(
+        `INSERT INTO source_files(path, classification, content_hash, bytes, metadata_json)
+         VALUES ('data/fixture.json', 'seed-content', 'hash', 1, '{}')`,
+      ).run();
+      db.prepare(
+        `INSERT INTO source_records(source_file, record_path, stable_id, entity_id, record_hash, raw_json)
+         VALUES ('data/fixture.json', '$.records[0]', 'task:alpha', 'task:alpha', 'hash', '{"name":"Alpha"}')`,
+      ).run();
+      const path = join(scratch, "2026-01-05-provenance.jsonl");
+      writeFileSync(
+        path,
+        [
+          '{"op":"upsert","entity":"task:alpha","set":{"name":"Renamed"}}',
+          '{"op":"remove","entity":"training-method:mining","reason":"superseded"}',
+        ].join("\n"),
+      );
+      patches.applyPatch(db, path, false);
+      expect(
+        db.prepare("SELECT raw_json FROM source_records WHERE entity_id = 'task:alpha'").get(),
+      ).toEqual({ raw_json: '{"name":"Alpha"}' });
+      expect(
+        db.prepare("SELECT status FROM entities WHERE id = 'training-method:mining'").get(),
+      ).toEqual({ status: "removed" });
+    } finally {
+      db.close();
+    }
+  });
+
+  it("refuses an invalid operation before it reaches the database", () => {
+    const db = patched();
+    try {
+      for (const [body, message] of [
+        ['{"op":"link-region","entity":"task:alpha","region":"Zeah"}', /unknown region/],
+        ['{"op":"upsert","entity":"task:alpha","set":{"title":"A"}}', /unsupported set fields/],
+        ['{"op":"remove","entity":"task:alpha"}', /requires reason/],
+        [
+          '{"op":"upsert-source","source":"source:x","set":{"url":"javascript:alert(1)","source_family":"x"}}',
+          /HTTP or HTTPS/,
+        ],
+      ] as Array<[string, RegExp]>) {
+        const path = join(scratch, `2026-01-06-${(fixtures += 1)}.jsonl`);
+        writeFileSync(path, `${body}\n`);
+        expect(() => patches.applyPatch(db, path, false), body).toThrow(message);
+        expect(db.prepare("SELECT count(*) AS count FROM patch_ledger").get()).toEqual({
+          count: 0,
+        });
+      }
+      expect(db.prepare("SELECT name FROM entities WHERE id = 'task:alpha'").get()).toEqual({
+        name: "Alpha",
+      });
+    } finally {
+      db.close();
+    }
   });
 });
 
@@ -270,47 +427,28 @@ describe("clean-checkout rebuild from canonical files only", () => {
       );
     }
   });
-});
 
-// The whole point of the stage: the two ingestion paths are interchangeable.
-describe("legacy and canonical builds are the same database", () => {
-  const report = parity.legacyCanonicalParity();
-
-  it("matches every table logically", () => {
-    expect(report.tables.filter(({ equal }) => !equal)).toEqual([]);
-    expect(report.tables.length).toBeGreaterThan(30);
-    for (const table of [
-      "entities",
-      "sources",
-      "regions",
-      "requirements",
-      "effects",
-      "tags",
-      "relationships",
-    ]) {
-      expect(report.tables.find((row) => row.table === table)?.legacyRows, table).toBeGreaterThan(
-        0,
+  // Every patch in data/patches/ replays on a clean build, so the ledger is the
+  // record of the whole tracked patch set rather than of one session.
+  it("replays every tracked patch", () => {
+    const db = new DatabaseSync(join(checkout, ".cache/equilibrium.sqlite"), { readOnly: true });
+    try {
+      expect(
+        Number(
+          (db.prepare("SELECT count(*) AS count FROM patch_ledger").get() as { count: number })
+            .count,
+        ),
+      ).toBe(
+        readdirSync(join(root, "data/patches")).filter((name) => name.endsWith(".jsonl")).length,
       );
+      expect(
+        Number(
+          (db.prepare("SELECT count(*) AS count FROM patch_changes").get() as { count: number })
+            .count,
+        ),
+      ).toBeGreaterThan(0);
+    } finally {
+      db.close();
     }
-    // The patch ledger and its change log survive canonical ingestion unchanged.
-    expect(report.tables.find(({ table }) => table === "patch_ledger")?.legacyRows).toBe(
-      readdirSync(join(root, "data/patches")).filter((name) => name.endsWith(".jsonl")).length,
-    );
-    expect(
-      report.tables.find(({ table }) => table === "patch_changes")?.legacyRows,
-    ).toBeGreaterThan(0);
-  });
-
-  it("returns the same search results", () => {
-    expect(report.search.results.filter(({ equal }) => !equal)).toEqual([]);
-    expect(report.search.equal).toBe(true);
-  });
-
-  it("produces byte-identical frontend artifacts", () => {
-    const exports = report.artifacts.find(({ name }) => name === "frontend exports");
-    expect(exports?.files).toBeGreaterThan(100);
-    expect(report.artifacts.filter(({ equal }) => !equal)).toEqual([]);
-    expect(report.files.filter(({ equal }) => !equal)).toEqual([]);
-    expect(report.match).toBe(true);
   });
 });

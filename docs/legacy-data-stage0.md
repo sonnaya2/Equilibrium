@@ -408,12 +408,27 @@ has confirmed that a union is ever the right answer here.
    list is correct, then either remove the superseded record or keep both deliberately.
 2. Resolve the 70 conflicts in `reports/research-conflicts.json`, starting with the 49 between
    `progression-unlocks.json` and `regional-skilling-unlocks.json`. Every intentional difference from
-   the current database needs a written justification.
+   the current database needs a written justification. **These cannot be resolved the way the
+   overlaps were.** An overlap is two records for one thing, so the authority order can pick the
+   owner; a conflict is two records that disagree about a *value*, and picking a category or a
+   region-requirement type is a claim about the game that has to be checked against the Wiki, not
+   derived from which file it sits in. Inventing one would breach the rule against presenting an
+   unverified value as current.
+
+   Worth ruling out explicitly: none of the 70 is inert. The differing fields are 47 `category`,
+   13 `regionRequirementType`, 8 `league_treatment`, 6 `confidence`, 4 `effect` and a tail of
+   singles. `confidence` looks retired — migration `003-drop-confidence.sql` removed the column —
+   but that migration's own note records that the value players see is read from the record's
+   `confidence` in `entities.extra_json`, which survives. `comboLabel` and `isRegionCombo` are read
+   by `ArchaeologyProductionResearch` and `CombatBisResearch`. Every differing field still reaches
+   something.
 3. Decide each conflicted entity as a whole rather than inheriting the current blend of first-wins
    scalars and unioned relations.
-4. Normalize book, spellbook and category labels — `standard` and `Standard Prayers` are the same
-   book written two ways. The prayer case is now moot, since only `combat`'s spelling survives, but
-   the spellbook and category equivalents are not.
+4. ~~Normalize book, spellbook and category labels.~~ Done for prayers, as a side effect of round 1:
+   only `combat`'s spelling survives, so the active `prayers.book` values are now `standard`,
+   `ancient` and `seren` with no title-case twins. There is no spellbook equivalent to fix — the
+   `spells` table has no `book` column. The remaining `category` disagreements are not a labelling
+   problem; they are 47 of the 70 conflicts above, and belong to that item.
 5. Keep the best available provenance per record; never re-label a source. `modernisation-2026.json`
    is uncited and the five partial documents listed above are where citation work is owed.
 6. Label provisional and inferred records explicitly.

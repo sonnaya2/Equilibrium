@@ -4,8 +4,8 @@ import {
   type ResearchRow,
   type ResearchTab,
 } from "./ResearchSection";
-import production from "#data/research/planner-expansions-archaeology-production.json";
-import specialRelics from "#data/research/planner-expansions-archaeology-special-relics.json";
+import production from "#shard/research/planner-expansions-archaeology-production.json";
+import specialRelics from "#shard/research/planner-expansions-archaeology-special-relics.json";
 import {
   getArchaeologyCollectionCompletionTools,
   getArchaeologyDataCorrections,

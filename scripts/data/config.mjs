@@ -4,17 +4,30 @@ export const ROOT = process.cwd();
 export const CACHE = join(ROOT, ".cache");
 export const DATABASE = join(CACHE, "equilibrium.sqlite");
 export const CHANGED = join(CACHE, "data-changed.json");
-export const COMPAT_DATA = join(CACHE, "data");
 export const SEED = join(ROOT, "data/seed-v1.json.gz");
 export const MIGRATIONS = join(ROOT, "data/migrations");
 export const PATCHES = join(ROOT, "data/patches");
 export const EXPORT_ROOT = join(ROOT, "public/data/v2");
 export const REPORTS = join(ROOT, "reports");
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 export const EXPORT_VERSION = 2;
 export const SHARD_TARGET_BYTES = 220 * 1024;
 export const SHARD_LIMIT_BYTES = 500 * 1024;
+
+// Seed-shaped documents for the TypeScript modules that import whole files
+// through the `#shard/*` alias. They are build inputs, not browser payloads, so
+// the shard size budget does not apply; `data:audit` is what fails if one of
+// them becomes reachable from a client component.
+export const DOCUMENTS_PREFIX = "documents";
+export const DOCUMENT_SKIP = new Set(["data/research/catalog.json"]);
+
+// Loaded by path rather than through a `#shard/*` import, so the import scan
+// cannot see them.
+export const DOCUMENT_EXTRA_CONSUMERS = [
+  "map/region-seeds.json", // scripts/build-map-terrain.mjs
+  "map/wiki-league-regions.json", // src/map/data/plates.test.ts
+];
 export const PATCH_LIMIT_BYTES = 1024 * 1024;
 export const PATCH_LIMIT_OPERATIONS = 1000;
 export const DEFAULT_MAX_BYTES = 16_000;
@@ -65,7 +78,7 @@ export const TRANSFORMS = [
     stage: "ingest",
     version: 1,
     inputs: ["data/seed-v1.json.gz"],
-    outputs: ["source_files", "source_records", ".cache/data/**"],
+    outputs: ["source_files", "source_records"],
     dependencies: [],
     incremental: false,
     validation: "parseable JSON and stable file hashes",

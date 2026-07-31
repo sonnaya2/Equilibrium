@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import tasksData from "#data/league/tasks.json";
-import unknownsData from "#data/reference/unknowns.json";
+import tasksData from "#shard/league/tasks.json";
+import unknownsData from "#shard/reference/unknowns.json";
 import { Page } from "@/components/Page";
 import { TaskRecords } from "@/components/TaskRecords";
 import {

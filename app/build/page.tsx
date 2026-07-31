@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import blessingsData from "#data/league/blessings.json";
-import questsData from "#data/league/quests.json";
-import relicsData from "#data/league/relics.json";
+import blessingsData from "#shard/league/blessings.json";
+import questsData from "#shard/league/quests.json";
+import relicsData from "#shard/league/relics.json";
 import { Page } from "@/components/Page";
 import { BuildPlanner } from "@/components/BuildPlanner";
 import type { RegionId } from "@/league";

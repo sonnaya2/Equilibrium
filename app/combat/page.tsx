@@ -1,8 +1,8 @@
-import combatData from "#data/combat/modernisation-2026.json";
-import updateIndexData from "#data/combat/update-index.json";
-import catalystData from "#data/league/catalyst.json";
-import changesData from "#data/reference/changes-2026.json";
-import sourcesData from "#data/research/sources.json";
+import combatData from "#shard/combat/modernisation-2026.json";
+import updateIndexData from "#shard/combat/update-index.json";
+import catalystData from "#shard/league/catalyst.json";
+import changesData from "#shard/reference/changes-2026.json";
+import sourcesData from "#shard/research/sources.json";
 import { Page } from "@/components/Page";
 import { CombatTabs } from "@/components/combat/CombatTabs";
 import { CombatReference } from "@/components/combat/CombatReference";

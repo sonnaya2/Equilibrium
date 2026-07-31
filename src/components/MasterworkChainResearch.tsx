@@ -1,5 +1,5 @@
 import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
-import chain from "#data/research/masterwork-staff-chain.json";
+import chain from "#shard/research/masterwork-staff-chain.json";
 
 function urlsFrom(...values: unknown[]): string[] {
   const out: string[] = [];

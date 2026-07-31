@@ -8,7 +8,7 @@
  */
 
 import { useCallback, useMemo, useState } from "react";
-import questsData from "#data/league/quests.json";
+import questsData from "#shard/league/quests.json";
 import { safeExternalHref } from "@/lib/safeHref";
 import { DataTableOrganizeBar, useDataTableOrganize } from "./DataTableOrganize";
 import { DataViewHeader, useDataRegion } from "./DataBrowser";

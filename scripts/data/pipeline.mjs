@@ -2,7 +2,7 @@ import { extname, relative, resolve } from "node:path";
 import { DATABASE, PATCHES, ROOT } from "./config.mjs";
 import { cleanDatabase, migrate, openDatabase } from "./database.mjs";
 import { exportData } from "./export.mjs";
-import { importSeed, materializeCompatibilityData, rebuildSearch } from "./ingest.mjs";
+import { importSeed, rebuildSearch } from "./ingest.mjs";
 import { applyAllPatches, applyPatch, writeChanged } from "./patches.mjs";
 import { validate } from "./validate.mjs";
 import { slash } from "./utilities.mjs";
@@ -16,7 +16,6 @@ export function rebuild(log = true) {
     const migrations = migrate(db);
     const ingest = importSeed(db);
     const changed = applyAllPatches(db);
-    materializeCompatibilityData(db);
     rebuildSearch(db);
     const validation = validate(db);
     const exported = exportData(db);
@@ -48,7 +47,6 @@ export function applyOne(pathArg) {
   const db = openDatabase();
   try {
     const changed = applyPatch(db, path, false);
-    materializeCompatibilityData(db);
     rebuildSearch(db);
     writeChanged(db, changed);
     const validation = validate(db, true);

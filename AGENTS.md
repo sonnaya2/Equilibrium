@@ -86,7 +86,7 @@ pinning a count in documentation.
 
 **One editable data system.** Root `data/` contains one immutable compressed seed, SQL migrations,
 and small JSONL content patches — that is the whole of the tracked authoring surface.
-`.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and the data reports are generated
+`.cache/equilibrium.sqlite`, `public/data/v2/`, and the data reports are generated
 build artifacts and are never committed. Do not add a hosted database, API, CMS, or second authoring
 tree. Architecture and commands: `docs/data-platform.md`.
 
@@ -198,7 +198,7 @@ npm test             # vitest run
 npm run test:e2e     # playwright, boots its own server on 3100
 npm run build
 npm run audit:data   # shipped-data gate
-npm run build:data   # rebuild SQLite, remaining compatibility cache, and frontend shards
+npm run build:data   # rebuild SQLite and every generated frontend artifact
 npm run normalize:data # alias for a clean data rebuild
 ```
 

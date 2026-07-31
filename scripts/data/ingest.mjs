@@ -1,7 +1,15 @@
-import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
-import { basename, dirname, join, resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
-import { CACHE, COMPAT_DATA, REGION_IDS, SEED, TRANSFORM_BY_NAME } from "./config.mjs";
+import {
+  DOCUMENTS_PREFIX,
+  DOCUMENT_EXTRA_CONSUMERS,
+  DOCUMENT_SKIP,
+  REGION_IDS,
+  ROOT,
+  SEED,
+  TRANSFORM_BY_NAME,
+} from "./config.mjs";
 import { prepared, recordTransform, requireEntity, transaction } from "./database.mjs";
 import {
   addDomainRow,
@@ -16,7 +24,7 @@ import {
   normalizeRegion,
   sourceObjects,
 } from "./normalize.mjs";
-import { asArray, atomicWrite, hash, scalar, slash, slugify, stableJson, walkFiles } from "./utilities.mjs";
+import { asArray, hash, scalar, slash, slugify, stableJson, walkFiles } from "./utilities.mjs";
 
 // Documents keep their original role so provenance survives consolidation:
 // overlays and evidence files are not treated as primary seed content.
@@ -97,35 +105,52 @@ function setRecordAtPath(document, recordPath, value) {
   target[tokens.at(-1)] = value;
 }
 
-// Replays normalized records over the seed shape so the handful of TypeScript
-// modules that still import whole documents keep working. The research catalog
-// is excluded: it is served from relational tables instead.
-export function materializeCompatibilityData(db) {
-  const documents = seedDocuments().filter(({ file }) => file !== "data/research/catalog.json");
+// A document is only worth writing if something loads it. Everything else is
+// reachable through the database or the bounded shards, so emitting it would
+// just park a copy of the seed in the deploy.
+function documentConsumers() {
+  const wanted = new Set(DOCUMENT_EXTRA_CONSUMERS);
+  for (const path of walkFiles(join(ROOT, "app"), (file) => /\.tsx?$/.test(file)).concat(
+    walkFiles(join(ROOT, "src"), (file) => /\.tsx?$/.test(file)),
+  )) {
+    for (const match of readFileSync(path, "utf8").matchAll(/#shard\/([a-zA-Z0-9/_.-]+\.json)/g)) {
+      wanted.add(match[1]);
+    }
+  }
+  return wanted;
+}
+
+// Replays normalized records back over the seed shape for the modules that load
+// a whole document. The research catalog is excluded — it is served from
+// relational tables instead. Returned as export outputs so the same byte
+// comparison and stale sweep covers them.
+export function documentOutputs(db) {
+  const wanted = documentConsumers();
+  const documents = seedDocuments().filter(
+    // data/combat/equipment.json -> combat/equipment.json
+    ({ file }) => !DOCUMENT_SKIP.has(file) && wanted.has(file.slice("data/".length)),
+  );
+  const missing = [...wanted].filter(
+    (name) => !documents.some(({ file }) => file === `data/${name}`),
+  );
+  if (missing.length) {
+    throw new Error(`#shard imports name documents the seed does not contain: ${missing.join(", ")}`);
+  }
   const byFile = new Map(documents.map((document) => [document.file, document]));
   for (const row of prepared(
     db,
-    `SELECT source_file, record_path, raw_json FROM source_records
-     WHERE source_file <> 'data/research/catalog.json' ORDER BY source_file, record_path`,
+    "SELECT source_file, record_path, raw_json FROM source_records ORDER BY source_file, record_path",
   ).all()) {
     const document = byFile.get(row.source_file);
-    if (!document) throw new Error(`Seed document disappeared: ${row.source_file}`);
+    if (!document) continue;
     setRecordAtPath(document.data, row.record_path, JSON.parse(row.raw_json));
   }
-  const target = resolve(COMPAT_DATA);
-  if (dirname(target) !== resolve(CACHE) || basename(target) !== "data") {
-    throw new Error(`Refusing to replace unexpected compatibility path: ${target}`);
-  }
-  mkdirSync(target, { recursive: true });
-  const expected = new Set();
-  for (const document of documents) {
-    const path = join(CACHE, document.file);
-    expected.add(resolve(path));
-    atomicWrite(path, `${stableJson(document.data)}\n`);
-  }
-  for (const path of walkFiles(target, () => true)) {
-    if (!expected.has(resolve(path))) rmSync(path, { force: true });
-  }
+  return new Map(
+    documents.map((document) => [
+      `${DOCUMENTS_PREFIX}/${document.file.slice("data/".length)}`,
+      `${stableJson(document.data)}\n`,
+    ]),
+  );
 }
 
 function seedRegions(db, documents) {
@@ -142,14 +167,13 @@ function seedRegions(db, documents) {
     prepared(
       db,
       `INSERT INTO entities
-       (id, slug, entity_type, name, short_description, detailed_description, confidence, verified_at,
+       (id, slug, entity_type, name, short_description, detailed_description, verified_at,
         status, sort_key, created_source, updated_source, extra_json)
-       VALUES (?, ?, 'region', ?, '', '', ?, ?, 'active', ?, ?, ?, ?)`,
+       VALUES (?, ?, 'region', ?, '', '', ?, 'active', ?, ?, ?, ?)`,
     ).run(
       entityId,
       slugify(entityId),
       row.name,
-      row.verified ? "verified" : "provisional",
       row.source?.verifiedAt ?? null,
       String(index).padStart(2, "0"),
       regionDocument.file,
@@ -175,8 +199,8 @@ function seedRegions(db, documents) {
   // Records that apply everywhere hang off a synthetic global region.
   db.prepare(
     `INSERT INTO entities
-     (id, slug, entity_type, name, confidence, status, sort_key, created_source, updated_source)
-     VALUES ('region:global', 'region-global', 'region', 'Global', 'taxonomy', 'active', '99', 'schema', 'schema')`,
+     (id, slug, entity_type, name, status, sort_key, created_source, updated_source)
+     VALUES ('region:global', 'region-global', 'region', 'Global', 'active', '99', 'schema', 'schema')`,
   ).run();
   db.prepare(
     "INSERT INTO regions(id, entity_id, name, availability, verified, taxonomy_order) VALUES ('global', 'region:global', 'Global', 'global', 1, 99)",

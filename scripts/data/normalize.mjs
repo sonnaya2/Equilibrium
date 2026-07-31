@@ -146,7 +146,6 @@ export function entityFields(candidate, row, file) {
     name: candidate.name,
     short,
     detail,
-    confidence: scalar(row.confidence, "unspecified"),
     verifiedAt: scalar(row.verifiedAt ?? row.verified_at ?? row.snapshotDate ?? row.snapshot_date) || null,
     status: scalar(row.status, "active"),
     sortKey: scalar(row.sortKey ?? row.sort_key, candidate.name.toLocaleLowerCase("en")),
@@ -187,9 +186,9 @@ export function insertEntity(db, fields, record) {
   prepared(
     db,
     `INSERT INTO entities
-     (id, slug, entity_type, name, short_description, detailed_description, confidence, verified_at,
+     (id, slug, entity_type, name, short_description, detailed_description, verified_at,
       status, sort_key, created_source, updated_source, extra_json)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     fields.id,
     fields.slug,
@@ -197,7 +196,6 @@ export function insertEntity(db, fields, record) {
     fields.name,
     fields.short,
     fields.detail,
-    fields.confidence,
     fields.verifiedAt,
     fields.status,
     fields.sortKey,
@@ -231,8 +229,8 @@ export function linkSource(db, entityId, source, ordinal, context) {
   prepared(
     db,
     `INSERT OR IGNORE INTO sources
-     (id, url, page_title, publisher, source_family, verified_at, retrieved_at, confidence, source_role, content_hash)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+     (id, url, page_title, publisher, source_family, verified_at, retrieved_at, source_role, content_hash)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     sourceId,
     url,
@@ -241,7 +239,6 @@ export function linkSource(db, entityId, source, ordinal, context) {
     family,
     scalar(source.verifiedAt ?? source.verified_at) || null,
     scalar(source.retrievedAt ?? source.retrieved_at) || null,
-    scalar(source.confidence, "unspecified"),
     scalar(source.role, "verification"),
     scalar(source.content_hash) || null,
   );

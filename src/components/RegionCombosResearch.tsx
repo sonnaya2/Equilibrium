@@ -1,6 +1,6 @@
 import { ResearchSection, type ResearchRow, type ResearchTab } from "./ResearchSection";
-import combosData from "#data/research/region-combos.json";
-import combat from "#data/research/regional-combat-unlocks.json";
+import combosData from "#shard/research/region-combos.json";
+import combat from "#shard/research/regional-combat-unlocks.json";
 import {
   getMuseumCollectionMatrix,
   type MuseumCollectionMatrixRow,

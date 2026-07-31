@@ -18,11 +18,18 @@ Three things are tracked. Everything downstream of them is generated and ignored
 | `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
 | `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
 | `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
-| `.cache/data/`                | no      | Seed-shaped JSON for the few TypeScript modules that still import documents |
-| `public/data/v2/`             | no      | Browser exports with size and SHA-256 metadata                              |
+| `public/data/v2/`             | no      | Every generated artifact, with size and SHA-256 metadata in the manifest    |
 | `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |
 
 There is no hosted database, API or CMS. The site is static; user progress lives in `localStorage`.
+
+`public/data/v2/` holds two kinds of artifact. **Shards** (`domains/`, `indexes/`, `regions/`,
+`research/`) are fetched by the browser and are capped at 500 KiB each. **Documents**
+(`documents/…`, addressed as `#shard/…`) are seed-shaped JSON that a module imports whole at build
+time; Next inlines them into the server bundle, so they are build inputs rather than payloads and the
+shard cap does not apply. Two of them are around 1 MiB. What keeps that honest is `npm run
+audit:data`, which walks imports transitively from every `"use client"` file and fails if a document
+over 250 KiB is reachable from the client.
 
 ## Why `node:sqlite`
 
@@ -49,8 +56,8 @@ The research catalog is normalized into those tables and is never written back o
 its version, dependencies, input hash, output count and validation contract in `transform_runs`.
 
 A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports
-the seed, applies patches transactionally, rebuilds search, validates exact research parity,
-materializes compatibility data, and rewrites only the frontend artifacts whose bytes changed.
+the seed, applies patches transactionally, rebuilds search, validates exact research parity, and
+rewrites only the artifacts whose bytes changed.
 
 | Module          | Responsibility                                                     |
 | --------------- | ------------------------------------------------------------------ |
@@ -58,7 +65,7 @@ materializes compatibility data, and rewrites only the frontend artifacts whose 
 | `config.mjs`    | Paths, limits, region taxonomy, transform declarations             |
 | `utilities.mjs` | Deterministic JSON, hashing, slugs, file walking, atomic writes    |
 | `database.mjs`  | Connections, transactions, statement cache, migrations             |
-| `ingest.mjs`    | Seed parsing, import, compatibility materialization, search index  |
+| `ingest.mjs`    | Seed parsing, import, document rebuild, search index               |
 | `normalize.mjs` | Record-to-entity mapping, sources, regions, domain tables          |
 | `patches.mjs`   | JSONL parsing, operation handlers, patch ledger                    |
 | `validate.mjs`  | Invariant checks and the validation/quarantine reports             |
@@ -94,7 +101,7 @@ read-only `SELECT` or `WITH` and rejects writes, PRAGMA, attachment, DDL and mul
 Server-rendered catalog summaries query the normalized tables directly. `/data` loads the small v2
 research index and one region shard at a time, then fetches only the active region/tab payload.
 Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID
-index shards; the manifest regression test rejects any frontend artifact at or above 500 KiB.
+index shards; the manifest regression test rejects any browser-fetched shard at or above 500 KiB.
 
 Every rebuild independently reconstructs the 11 research payloads from the normalized tables and
 requires exact parity with the immutable seed before export succeeds.

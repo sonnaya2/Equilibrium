@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import tasksData from "#data/league/tasks.json";
+import tasksData from "#shard/league/tasks.json";
 import { Page } from "@/components/Page";
 import { OverviewPlan } from "@/components/OverviewPlan";
 import { getResearchCatalogIndex } from "@/research/catalog";

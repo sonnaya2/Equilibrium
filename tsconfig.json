@@ -27,8 +27,8 @@
       "@/*": [
         "./src/*"
       ],
-      "#data/*": [
-        "./.cache/data/*"
+      "#shard/*": [
+        "./public/data/v2/documents/*"
       ]
     }
   },

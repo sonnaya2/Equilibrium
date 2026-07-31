@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
 import { getResearchCatalog } from "@/research/catalog";
 import {
@@ -11,6 +12,30 @@ import {
 } from "./gameArt";
 
 const ROOT = process.cwd();
+
+// Documents nothing imports are not exported, so the arrays behind them are
+// read back out of the database in their original order.
+function sourceArrays(file: string): Record<string, Array<Record<string, string>>> {
+  const database = new DatabaseSync(join(ROOT, ".cache/equilibrium.sqlite"), { readOnly: true });
+  try {
+    const sections: Record<string, Array<Record<string, string>>> = {};
+    for (const { record_path, raw_json } of database
+      .prepare(
+        "SELECT record_path, raw_json FROM source_records WHERE source_file = ? ORDER BY record_path",
+      )
+      .all(file) as unknown as Array<{ record_path: string; raw_json: string }>) {
+      const match = record_path.match(/^\$\.([^.[\]]+)\[(\d+)\]$/);
+      if (!match) continue;
+      (sections[match[1]] ??= [])[Number(match[2])] = JSON.parse(raw_json) as Record<
+        string,
+        string
+      >;
+    }
+    return sections;
+  } finally {
+    database.close();
+  }
+}
 
 function publicExists(webPath: string | null): boolean {
   if (!webPath || !webPath.startsWith("/game/")) return false;
@@ -90,14 +115,10 @@ describe("data icon audit", () => {
   it("writes blank/garbage report for /data entities", () => {
     const catalog = getResearchCatalog();
     const combat = JSON.parse(
-      readFileSync(".cache/data/research/regional-combat-unlocks.json", "utf8"),
+      readFileSync("public/data/v2/documents/research/regional-combat-unlocks.json", "utf8"),
     );
-    const skilling = JSON.parse(
-      readFileSync(".cache/data/research/regional-skilling-unlocks.json", "utf8"),
-    );
-    const unlocks = JSON.parse(
-      readFileSync(".cache/data/reference/progression-unlocks.json", "utf8"),
-    );
+    const skilling = sourceArrays("data/research/regional-skilling-unlocks.json");
+    const unlocks = sourceArrays("data/reference/progression-unlocks.json");
 
     const blank: Row[] = [];
     const garbage: Row[] = [];

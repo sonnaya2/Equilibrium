@@ -1,9 +1,9 @@
-import abilitiesData from "#data/combat/abilities.json";
-import effectsData from "#data/combat/effects.json";
-import equipmentData from "#data/combat/equipment.json";
-import perksData from "#data/combat/perks.json";
-import prayersData from "#data/combat/prayers.json";
-import revolutionBarsData from "#data/combat/revolution-bars.json";
+import abilitiesData from "#shard/combat/abilities.json";
+import effectsData from "#shard/combat/effects.json";
+import equipmentData from "#shard/combat/equipment.json";
+import perksData from "#shard/combat/perks.json";
+import prayersData from "#shard/combat/prayers.json";
+import revolutionBarsData from "#shard/combat/revolution-bars.json";
 import type { RegionId } from "../../league";
 import type { CombatStyle } from "../types";
 import type {

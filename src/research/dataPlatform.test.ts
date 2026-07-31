@@ -14,6 +14,27 @@ const digest = (path: string) =>
     .update(readFileSync(join(root, path)))
     .digest("hex");
 
+// Documents nothing imports are not exported, so the arrays behind them are
+// read back out of the database in their original order.
+function sourceArrays<T>(file: string): Record<string, T[]> {
+  const database = new DatabaseSync(join(root, ".cache/equilibrium.sqlite"), { readOnly: true });
+  try {
+    const sections: Record<string, T[]> = {};
+    for (const { record_path, raw_json } of database
+      .prepare(
+        "SELECT record_path, raw_json FROM source_records WHERE source_file = ? ORDER BY record_path",
+      )
+      .all(file) as unknown as Array<{ record_path: string; raw_json: string }>) {
+      const match = record_path.match(/^\$\.([^.[\]]+)\[(\d+)\]$/);
+      if (!match) continue;
+      (sections[match[1]] ??= [])[Number(match[2])] = JSON.parse(raw_json) as T;
+    }
+    return sections;
+  } finally {
+    database.close();
+  }
+}
+
 interface Artifact {
   href: string;
   sha256: string;
@@ -38,6 +59,7 @@ interface Manifest {
   schemaVersion: number;
   exportVersion: number;
   recordCount: number;
+  documents: Record<string, Artifact>;
   domains: Record<string, { records: number; shards: Shard[] }>;
   regions: Record<string, RegionArtifacts>;
   idIndexes: Array<Shard & { firstId: string; lastId: string }>;
@@ -47,7 +69,7 @@ describe("generated data platform", () => {
   const manifest = readJson<Manifest>("public/data/v2/manifest.json");
 
   it("keeps every frontend artifact bounded and content-addressed", () => {
-    expect(manifest.schemaVersion).toBe(2);
+    expect(manifest.schemaVersion).toBe(3);
     expect(manifest.exportVersion).toBe(2);
     const regionArtifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
       region,
@@ -91,8 +113,24 @@ describe("generated data platform", () => {
     }
   });
 
-  it("materializes compatibility records from SQLite", () => {
-    expect(existsSync(join(root, ".cache/data/research/catalog.json"))).toBe(false);
+  // Documents are build inputs for `#shard/*`, not browser payloads, so they
+  // are content-addressed but exempt from the shard size budget.
+  it("content-addresses every exported source document", () => {
+    const entries = Object.entries(manifest.documents);
+    expect(entries.length).toBeGreaterThan(50);
+    for (const [source, artifact] of entries) {
+      expect(source.startsWith("data/"), source).toBe(true);
+      const repoPath = `public${artifact.href}`;
+      expect(existsSync(join(root, repoPath)), repoPath).toBe(true);
+      expect(statSync(join(root, repoPath)).size, repoPath).toBe(artifact.bytes);
+      expect(digest(repoPath), repoPath).toBe(artifact.sha256);
+    }
+  });
+
+  it("exports source documents without a legacy compatibility tree", () => {
+    expect(existsSync(join(root, ".cache/data"))).toBe(false);
+    expect(manifest.documents["data/research/catalog.json"]).toBeUndefined();
+    expect(existsSync(join(root, "public/data/v2/documents/research/catalog.json"))).toBe(false);
     const database = new DatabaseSync(join(root, ".cache/equilibrium.sqlite"), { readOnly: true });
     try {
       const stored = database
@@ -101,7 +139,7 @@ describe("generated data platform", () => {
         )
         .get() as { raw_json: string };
       const cache = readJson<{ records: Array<{ id: string }> }>(
-        ".cache/data/combat/equipment.json",
+        "public/data/v2/documents/combat/equipment.json",
       );
       expect(cache.records.find(({ id }) => id === "item:seismic-wand")).toEqual(
         JSON.parse(stored.raw_json),
@@ -111,24 +149,16 @@ describe("generated data platform", () => {
     }
   });
 
-  it("keeps regional and unlock panel exports equal to the compatibility view", () => {
+  it("keeps regional and unlock panel exports equal to their normalized records", () => {
     type Row = Record<string, unknown>;
-    const skilling = readJson<{ records: Row[] }>(
-      ".cache/data/research/regional-skilling-unlocks.json",
-    ).records;
+    const skilling = sourceArrays<Row>("data/research/regional-skilling-unlocks.json").records;
     const combat = readJson<{ records: Row[] }>(
-      ".cache/data/research/regional-combat-unlocks.json",
+      "public/data/v2/documents/research/regional-combat-unlocks.json",
     ).records;
-    const progression = readJson<Record<string, Row[]>>(
-      ".cache/data/reference/progression-unlocks.json",
-    );
+    const progression = sourceArrays<Row>("data/reference/progression-unlocks.json");
     const supplements = [
-      readJson<Record<string, Row[]>>(
-        ".cache/data/reference/progression-support-items-2026-07-25.json",
-      ),
-      readJson<Record<string, Row[]>>(
-        ".cache/data/reference/progression-container-bags-2026-07-25.json",
-      ),
+      sourceArrays<Row>("data/reference/progression-support-items-2026-07-25.json"),
+      sourceArrays<Row>("data/reference/progression-container-bags-2026-07-25.json"),
     ];
     const key = (row: Row, index: number, prefix: string) =>
       row.id != null && row.id !== ""

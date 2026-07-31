@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import regionsData from "#data/league/regions.json";
+import regionsData from "#shard/league/regions.json";
 import { combatEquipment, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";

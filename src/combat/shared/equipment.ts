@@ -1,4 +1,4 @@
-import equipmentSetsData from "#data/combat/equipment-sets.json";
+import equipmentSetsData from "#shard/combat/equipment-sets.json";
 import { equipmentById } from "../data";
 import {
   AMASCUT_MASTERIES_WIKI_2025_09_29,

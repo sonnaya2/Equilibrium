@@ -2,7 +2,7 @@ import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSecti
 import { getPrayerCatalogueBooks } from "@/research/prayers";
 import { getPrayerBooks } from "@/research/prayerBooks";
 import { getSpellbooks } from "@/research/spellbooks";
-import prayerSource from "#data/reference/prayers.json";
+import prayerSource from "#shard/reference/prayers.json";
 
 const books = getPrayerCatalogueBooks();
 const prayerBooks = getPrayerBooks();

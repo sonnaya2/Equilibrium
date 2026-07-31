@@ -6,8 +6,8 @@
  * Blessing paths, god tiers and the reset count derive from data/league/blessings.json.
  */
 
-import regionsData from "#data/league/regions.json";
-import relicsData from "#data/league/relics.json";
+import regionsData from "#shard/league/regions.json";
+import relicsData from "#shard/league/relics.json";
 import { BLESSING_PATHS, BLESSING_RESET_COUNT, PATH_TIERS, type BlessingPath } from "./blessings";
 
 /** Revealed tiers with published choices only — unrevealed empty tiers stay open. */

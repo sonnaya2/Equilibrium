@@ -16,7 +16,6 @@ const ENTITY_FIELDS = new Set([
   "entity_type",
   "short_description",
   "detailed_description",
-  "confidence",
   "verified_at",
   "status",
   "sort_key",
@@ -28,7 +27,6 @@ const SOURCE_FIELDS = new Set([
   "source_family",
   "verified_at",
   "retrieved_at",
-  "confidence",
   "source_role",
   "content_hash",
 ]);
@@ -111,9 +109,9 @@ function upsertEntity(db, { operation, id, context }) {
     const name = scalar(operation.set.name);
     db.prepare(
       `INSERT INTO entities
-       (id, slug, entity_type, name, short_description, detailed_description, confidence, verified_at,
+       (id, slug, entity_type, name, short_description, detailed_description, verified_at,
         status, sort_key, created_source, updated_source)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).run(
       id,
       slugify(id),
@@ -121,7 +119,6 @@ function upsertEntity(db, { operation, id, context }) {
       name,
       scalar(operation.set.short_description),
       scalar(operation.set.detailed_description),
-      scalar(operation.set.confidence, "unspecified"),
       operation.set.verified_at ?? null,
       scalar(operation.set.status, "active"),
       scalar(operation.set.sort_key, name.toLocaleLowerCase("en")),
@@ -175,8 +172,8 @@ function upsertSource(db, { operation, context, changed }) {
   } else {
     db.prepare(
       `INSERT INTO sources
-       (id, url, page_title, publisher, source_family, verified_at, retrieved_at, confidence, source_role, content_hash)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       (id, url, page_title, publisher, source_family, verified_at, retrieved_at, source_role, content_hash)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).run(
       sourceId,
       operation.set.url,
@@ -185,7 +182,6 @@ function upsertSource(db, { operation, context, changed }) {
       operation.set.source_family,
       operation.set.verified_at ?? null,
       operation.set.retrieved_at ?? null,
-      scalar(operation.set.confidence, "unspecified"),
       scalar(operation.set.source_role, "reference"),
       operation.set.content_hash ?? null,
     );

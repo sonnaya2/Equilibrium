@@ -1,6 +1,6 @@
-import slayerSource from "#data/research/planner-expansions-slayer.json";
-import collectionSource from "#data/research/planner-expansions-slayer-collection.json";
-import edgeSource from "#data/research/planner-expansions-slayer-edge.json";
+import slayerSource from "#shard/research/planner-expansions-slayer.json";
+import collectionSource from "#shard/research/planner-expansions-slayer-collection.json";
+import edgeSource from "#shard/research/planner-expansions-slayer-edge.json";
 
 export type SlayerMethod =
   | (typeof slayerSource)["slayer_methods"][number]

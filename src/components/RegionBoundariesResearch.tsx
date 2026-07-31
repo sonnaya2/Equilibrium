@@ -1,5 +1,5 @@
 import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
-import dependencies from "#data/league/region-dependencies.json";
+import dependencies from "#shard/league/region-dependencies.json";
 
 const TABS: ResearchTab[] = [
   {

@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
 import {
+  DOCUMENTS_PREFIX,
   DOMAIN_TABLES,
   EXPORT_ROOT,
   EXPORT_VERSION,
@@ -14,6 +15,7 @@ import {
   TRANSFORM_BY_NAME,
 } from "./config.mjs";
 import { prepared, recordTransform } from "./database.mjs";
+import { documentOutputs } from "./ingest.mjs";
 import { researchExport, researchParity } from "./research.mjs";
 import { atomicWrite, hash, jsonLine, slash, slugify, walkFiles } from "./utilities.mjs";
 
@@ -33,7 +35,6 @@ function entityExport(entity, regionsByEntity, sourcesByEntity) {
     type: entity.entity_type,
     name: entity.name,
     description: entity.short_description || entity.detailed_description,
-    confidence: entity.confidence,
     verifiedAt: entity.verified_at,
     status: entity.status,
     regions: regionsByEntity.get(entity.id) ?? [],
@@ -117,7 +118,7 @@ export function buildOutputs(db) {
   for (const [path, body] of research.outputs) outputs.set(path, body);
   const entities = db
     .prepare(
-      "SELECT id, entity_type, name, short_description, detailed_description, confidence, verified_at, status FROM entities ORDER BY entity_type, id",
+      "SELECT id, entity_type, name, short_description, detailed_description, verified_at, status FROM entities ORDER BY entity_type, id",
     )
     .all();
   const regionsByEntity = rowsByEntity(
@@ -131,17 +132,27 @@ export function buildOutputs(db) {
     db
       .prepare(
         `SELECT entity_sources.entity_id, sources.id, sources.url, sources.page_title AS title,
-                sources.verified_at AS verifiedAt, sources.confidence, entity_sources.role
+                sources.verified_at AS verifiedAt, entity_sources.role
          FROM entity_sources JOIN sources ON sources.id = entity_sources.source_id
          ORDER BY entity_sources.entity_id, entity_sources.ordinal, sources.id`,
       )
       .all(),
   );
+  const documents = {};
+  for (const [path, body] of documentOutputs(db)) {
+    outputs.set(path, body);
+    documents[`data/${path.slice(DOCUMENTS_PREFIX.length + 1)}`] = {
+      href: `/data/v2/${path}`,
+      sha256: hash(body),
+      bytes: Buffer.byteLength(body),
+    };
+  }
   const manifest = {
     schemaVersion: SCHEMA_VERSION,
     exportVersion: EXPORT_VERSION,
     databaseInputHash: db.prepare("SELECT input_hash FROM transform_runs WHERE name = 'seed-ingest'").get().input_hash,
     recordCount: entities.length,
+    documents,
     domains: {},
     regions: Object.fromEntries(research.index.regions.map((region) => [region.id, region])),
     idIndexes: [],
@@ -292,7 +303,12 @@ export function exportData(db, checkOnly = false) {
   const parity = researchParity(db, outputs);
   const mismatch = parity.filter(({ equal }) => !equal);
   const comparison = compareOutputs(outputs);
-  const oversized = [...outputs].filter(([, body]) => Buffer.byteLength(body) > SHARD_LIMIT_BYTES);
+  // Documents are build inputs, not browser payloads; data:audit is what fails
+  // if one becomes reachable from a client component.
+  const oversized = [...outputs].filter(
+    ([path, body]) =>
+      !path.startsWith(`${DOCUMENTS_PREFIX}/`) && Buffer.byteLength(body) > SHARD_LIMIT_BYTES,
+  );
   if (oversized.length) {
     throw new Error(`Frontend shards exceed 500 KiB: ${oversized.map(([path]) => path).join(", ")}`);
   }

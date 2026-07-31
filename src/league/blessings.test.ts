@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import blessingsData from "#data/league/blessings.json";
+import blessingsData from "#shard/league/blessings.json";
 import {
   BLESSING_PATHS,
   BLESSING_RESET_COUNT,

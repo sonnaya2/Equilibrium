@@ -1,4 +1,4 @@
-import combatUnlocks from "#data/research/regional-combat-unlocks.json";
+import combatUnlocks from "#shard/research/regional-combat-unlocks.json";
 
 interface CombatUnlockRegions {
   requiredRegions?: readonly string[];

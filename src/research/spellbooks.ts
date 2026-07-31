@@ -1,4 +1,4 @@
-import spellbookSource from "#data/reference/spellbooks.json";
+import spellbookSource from "#shard/reference/spellbooks.json";
 
 export type SpellbookRecord = (typeof spellbookSource)["spellbooks"][number];
 export type SpecialMagicSystem = (typeof spellbookSource)["special_magic_systems"][number];

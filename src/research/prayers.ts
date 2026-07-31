@@ -1,4 +1,4 @@
-import prayerSource from "#data/reference/prayers.json";
+import prayerSource from "#shard/reference/prayers.json";
 
 export type PrayerCatalogueBook = (typeof prayerSource)["books"][number];
 export type PrayerCatalogueEntry = PrayerCatalogueBook["prayers"][number];

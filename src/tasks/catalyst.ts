@@ -1,7 +1,7 @@
 import type { TaskRecord, TaskTier } from "./index";
 import { mapCatalystLocality, regionDisplayName } from "./regionMap";
 import { decodeHtmlEntities } from "@/lib/htmlEntities";
-import snapshot from "#data/league/catalyst-tasks-snapshot.json";
+import snapshot from "#shard/league/catalyst-tasks-snapshot.json";
 
 export {
   CATALYST_LOCALITY_TO_REGION,

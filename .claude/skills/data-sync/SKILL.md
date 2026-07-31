@@ -10,9 +10,9 @@ The tracked data source is deliberately small:
 - `data/seed-v1.json.gz` is the immutable compressed baseline. Do not edit or open it for routine work.
 - `data/migrations/*.sql` defines the relational schema.
 - `data/patches/*.jsonl` contains reviewable content changes.
-- `.cache/equilibrium.sqlite`, `.cache/data/`, `public/data/v2/`, and `reports/data-*` are generated and ignored.
+- `.cache/equilibrium.sqlite`, `public/data/v2/`, and `reports/data-*` are generated and ignored.
 
-`npm run data:rebuild` must work from a clean checkout. It deletes and recreates SQLite, imports the seed, applies every patch transactionally, validates the result, materializes temporary compatibility JSON for remaining TypeScript imports, and exports hashed frontend shards. The research catalog is fully normalized and server-only: never recreate `data/research/catalog.json` or `.cache/data/research/catalog.json`. Never commit the database, compatibility cache, generated reports, or frontend shards.
+`npm run data:rebuild` must work from a clean checkout. It deletes and recreates SQLite, imports the seed, applies every patch transactionally, validates the result, and exports hashed artifacts under `public/data/v2/`: browser shards, plus the seed-shaped documents that back the `#shard/*` imports. The research catalog is fully normalized and server-only: never recreate `data/research/catalog.json` as a file. Never commit the database, generated reports, or anything under `public/data/v2/`.
 
 Do not restore the retired `scraped-data` mutation chain, per-domain JSON authoring files, v1 research store, API, CMS, or a second source of truth. New facts arrive as the smallest sourced JSONL patch that expresses the change. Schema changes arrive as a forward-only migration.
 

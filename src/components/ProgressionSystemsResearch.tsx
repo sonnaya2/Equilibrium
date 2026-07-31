@@ -1,6 +1,6 @@
 import { researchRows, ResearchSection, type ResearchTab } from "./ResearchSection";
-import pass3 from "#data/reference/permanent-unlocks-pass-3.json";
-import pass5 from "#data/reference/permanent-unlocks-pass-5.json";
+import pass3 from "#shard/reference/permanent-unlocks-pass-3.json";
+import pass5 from "#shard/reference/permanent-unlocks-pass-5.json";
 
 const necromancyTiers = pass3.necromancy.tiers.map((tier) => ({
   name: `Tier ${tier.tier} · Necromancy ${tier.necromancy_level}`,

@@ -59,7 +59,6 @@ export function formatContextMarkdown(context) {
     `- ID: \`${context.entity.id}\``,
     `- Type: ${context.entity.entity_type}`,
     `- Status: ${context.entity.status}`,
-    `- Confidence: ${context.entity.confidence}`,
     `- Regions: ${context.regions.map(({ region_id, relation }) => `${region_id} (${relation})`).join(", ") || "none"}`,
     "",
     context.entity.detailed_description || context.entity.short_description || "No description.",

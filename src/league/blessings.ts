@@ -1,4 +1,4 @@
-import blessingsData from "#data/league/blessings.json";
+import blessingsData from "#shard/league/blessings.json";
 
 /**
  * Blessing domain. Canonical structure (paths, god tiers, reset count) lives in

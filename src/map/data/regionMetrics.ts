@@ -6,7 +6,7 @@
  * research catalog. Missing joins render as 0.
  */
 
-import questsData from "#data/league/quests.json";
+import questsData from "#shard/league/quests.json";
 import { getResearchCatalog } from "@/research/catalog";
 import type { RegionId } from "@/league";
 

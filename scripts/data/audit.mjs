@@ -30,6 +30,8 @@ const EXTENSIONS = new Set([
 ]);
 const EXCLUDED = new Set([
   ".git",
+  // Sibling git worktrees are separate checkouts, not part of this inventory.
+  ".claude",
   ".next",
   "node_modules",
   "build",
@@ -159,7 +161,7 @@ function inspectValues(value, file, path, collections) {
 }
 
 function referencedPath(sourceFile, literal) {
-  if (literal.startsWith("#data/")) return `data/${literal.slice(6)}`;
+  if (literal.startsWith("#shard/")) return `public/data/v2/documents/${literal.slice(7)}`;
   if (/^(data|public|assets|reports|scraped-data)\//.test(literal)) return slash(literal);
   if (!literal.startsWith(".")) return null;
   const absolute = resolve(ROOT, dirname(sourceFile), literal);
@@ -220,10 +222,49 @@ for (const absolute of absoluteFiles) {
 }
 
 const byFile = new Map(inventory.map((entry) => [entry.file, entry]));
+const sourceFiles = new Set(sources.map(({ file }) => file));
+const resolveSourceImport = (sourceFile, literal) => {
+  let base;
+  if (literal.startsWith("@/")) base = `src/${literal.slice(2)}`;
+  else if (literal.startsWith(".")) {
+    base = slash(relative(ROOT, resolve(ROOT, dirname(sourceFile), literal)));
+  } else return null;
+  return [
+    base,
+    `${base}.ts`,
+    `${base}.tsx`,
+    `${base}.js`,
+    `${base}.mjs`,
+    `${base}/index.ts`,
+    `${base}/index.tsx`,
+    `${base}/index.js`,
+    `${base}/index.mjs`,
+  ].find((candidate) => sourceFiles.has(candidate));
+};
+const dependencies = new Map(
+  sources.map(({ file, text }) => [
+    file,
+    [...text.matchAll(/(?:from\s+|import\s*\()\s*["']([^"']+)["']/g)]
+      .map((match) => resolveSourceImport(file, match[1]))
+      .filter(Boolean),
+  ]),
+);
+const clientReach = new Set(
+  sources.filter(({ text }) => /^\s*["']use client["'];/m.test(text)).map(({ file }) => file),
+);
+const clientQueue = [...clientReach];
+while (clientQueue.length) {
+  const file = clientQueue.shift();
+  for (const dependency of dependencies.get(file) ?? []) {
+    if (clientReach.has(dependency)) continue;
+    clientReach.add(dependency);
+    clientQueue.push(dependency);
+  }
+}
 for (const source of sources) {
   const reads = /\b(readFile|readFileSync|JSON\.parse|import\s+.+\s+from|fetch\s*\()/m.test(source.text);
   const writes = /\b(writeFile|writeFileSync|renameSync|cpSync|copyFile|rmSync)\b/m.test(source.text);
-  const client = /^\s*["']use client["'];/m.test(source.text);
+  const client = clientReach.has(source.file);
   for (const ref of source.refs) {
     const target = byFile.get(ref);
     if (!target) continue;
@@ -269,6 +310,9 @@ const largeFiles = inventory.filter((entry) => entry.bytes > 250 * 1024);
 const veryLargeFiles = inventory.filter((entry) => entry.bytes > 1024 * 1024);
 const multipleWriters = inventory.filter((entry) => entry.writers.length > 1);
 const clientDataImports = inventory.filter((entry) => entry.clientImports.length > 0);
+const oversizedClientShards = clientDataImports.filter(
+  (entry) => entry.file.startsWith("public/data/v2/documents/") && entry.bytes > 250 * 1024,
+);
 const hardcodedCollections = sources
   .map(({ file, text }) => ({
     file,
@@ -300,20 +344,23 @@ const tracked = (...paths) =>
 const architectureFailures = [];
 const trackedDataJson = tracked("data/**/*.json");
 const trackedFrontend = tracked("public/data/v1/**", "public/data/v2/**");
-const activeCatalogReaders = sources
+const legacyReaders = sources
   .filter(
     ({ file, text }) =>
       (file.startsWith("app/") ||
         (file.startsWith("src/") && !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(file))) &&
-      /(?:from\s+|import\s*\()\s*["']#data\/research\/catalog\.json["']/.test(text),
+      (/#data\//.test(text) ||
+        /(?:readFile(?:Sync)?|path\.join)\s*\([^)]*["'][^"']*\.cache[\\/]data/.test(text)),
   )
   .map(({ file }) => file);
 if (trackedDataJson.length) architectureFailures.push(`${trackedDataJson.length} per-domain data JSON files remain tracked`);
 if (trackedFrontend.length) architectureFailures.push(`${trackedFrontend.length} generated frontend files remain tracked`);
 if (legacyNormalizeStages.length) architectureFailures.push("normalize:data:legacy still exists");
 if (existsSync(join(ROOT, "data/research/catalog.json"))) architectureFailures.push("legacy research catalog exists in data/");
-if (existsSync(join(ROOT, ".cache/data/research/catalog.json"))) architectureFailures.push("legacy research catalog was materialized in .cache/data/");
-if (activeCatalogReaders.length) architectureFailures.push(`runtime research catalog imports remain: ${activeCatalogReaders.join(", ")}`);
+if (existsSync(join(ROOT, ".cache/data"))) architectureFailures.push("legacy .cache/data tree exists");
+if (legacyReaders.length) architectureFailures.push(`legacy data readers remain: ${legacyReaders.join(", ")}`);
+if (readFileSync(join(ROOT, "tsconfig.json"), "utf8").includes('"#data/*"')) architectureFailures.push("legacy #data TypeScript alias remains");
+if (oversizedClientShards.length) architectureFailures.push(`client shards exceed 250 KiB: ${oversizedClientShards.map(({ file }) => file).join(", ")}`);
 
 const report = {
   schemaVersion: 1,
@@ -329,6 +376,7 @@ const report = {
     duplicateRecordsAcrossFiles: duplicateRecords.length,
     filesWithMultipleWriters: multipleWriters.length,
     clientDataImports: clientDataImports.length,
+    oversizedClientShards: oversizedClientShards.length,
     normalizeStages: normalizeStages.length,
     legacyNormalizeStages: legacyNormalizeStages.length,
     architectureFailures: architectureFailures.length,
@@ -347,6 +395,7 @@ const report = {
   duplicateRecords,
   multipleWriters,
   clientDataImports,
+  oversizedClientShards,
   hardcodedCollections,
   wholeDatasetReads,
   nondeterministicWriters,
@@ -404,7 +453,7 @@ const architecture = [
   "",
   "## Migration boundary",
   "",
-  "The immutable compressed seed, migrations, and JSONL patches rebuild an ignored SQLite database. Remaining TypeScript compatibility shapes are materialized under `.cache/data/`, except the normalized research catalog; browser exports are regenerated under `public/data/v2/`.",
+  "The immutable compressed seed, migrations, and JSONL patches rebuild an ignored SQLite database. Client consumers use bounded, hashed documents under `public/data/v2/`; larger data is server-only. No compatibility tree is materialized.",
   "",
   "## Reports",
   "",

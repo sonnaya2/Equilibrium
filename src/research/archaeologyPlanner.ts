@@ -1,8 +1,8 @@
-import collectionSource from "#data/research/planner-expansions-archaeology-collections.json";
-import repeatableSource from "#data/research/planner-expansions-archaeology-repeatables.json";
-import guildSource from "#data/research/planner-expansions-archaeology-guild.json";
-import utilitySource from "#data/research/planner-expansions-archaeology-utilities.json";
-import museumCollectionMatrix from "#data/research/planner-expansions-archaeology-museum-collections-matrix.json";
+import collectionSource from "#shard/research/planner-expansions-archaeology-collections.json";
+import repeatableSource from "#shard/research/planner-expansions-archaeology-repeatables.json";
+import guildSource from "#shard/research/planner-expansions-archaeology-guild.json";
+import utilitySource from "#shard/research/planner-expansions-archaeology-utilities.json";
+import museumCollectionMatrix from "#shard/research/planner-expansions-archaeology-museum-collections-matrix.json";
 
 export type ArchaeologyQualificationMilestone =
   (typeof collectionSource)["qualification_milestones"][number];

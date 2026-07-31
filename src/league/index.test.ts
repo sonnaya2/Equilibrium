@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import regionsData from "#data/league/regions.json";
+import regionsData from "#shard/league/regions.json";
 import { BLESSING_RESET_COUNT, PATH_TIERS } from "./blessings";
 import {
   blessingResetsLeft,

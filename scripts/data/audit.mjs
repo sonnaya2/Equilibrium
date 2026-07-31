@@ -79,6 +79,7 @@ function classify(file) {
   if (/\/(archive|history)\//i.test(file) || /(^|[-_.])(obsolete|legacy|disabled)([-_.]|$)/i.test(file)) {
     return "historical-or-obsolete";
   }
+  if (file.startsWith("data/canonical/")) return "generated-canonical-data";
   if (file.startsWith("data/")) {
     if (/\/(planner-expansions|regional-|reference-site-harvest|equipment-region-index|region-combos|.*review)/.test(file)) {
       return "temporary-overlay";
@@ -361,6 +362,58 @@ if (existsSync(join(ROOT, ".cache/data"))) architectureFailures.push("legacy .ca
 if (legacyReaders.length) architectureFailures.push(`legacy data readers remain: ${legacyReaders.join(", ")}`);
 if (readFileSync(join(ROOT, "tsconfig.json"), "utf8").includes('"#data/*"')) architectureFailures.push("legacy #data TypeScript alias remains");
 if (oversizedClientShards.length) architectureFailures.push(`client shards exceed 250 KiB: ${oversizedClientShards.map(({ file }) => file).join(", ")}`);
+
+// --- Stage 0 architecture gates ---------------------------------------------
+
+// Generated trees must never become tracked. Each of these is rebuilt from the
+// seed and the database, so a committed copy is a second source of truth.
+const trackedGenerated = tracked("data/canonical/**", "reports/data-*.json", "reports/data-*.md", "reports/canonical-*.json", "reports/legacy-data-*", "reports/research-*.json", ".cache/**");
+if (trackedGenerated.length) {
+  architectureFailures.push(`generated files are tracked: ${trackedGenerated.slice(0, 5).join(", ")}`);
+}
+
+// Seed documents that reach neither the database nor the browser. Importing one
+// would revive a format Stage 0 classified as dead; see
+// reports/research-orphans.json for how each was proven unreachable.
+const ORPHANED_SEED_DOCUMENTS = [
+  "combat/ability-audit-2026-07-24.json",
+  "combat/ability-icons.json",
+  "combat/equipment-icons.json",
+  "league/equilibrium-auto-quests.json",
+  "league/quest-region-review.json",
+  "league/quest-region-rules.json",
+  "research/equipment-region-index.json",
+];
+const revivedOrphans = ORPHANED_SEED_DOCUMENTS.filter((document) =>
+  sources.some(({ text }) => text.includes(`#shard/${document}`)),
+);
+if (revivedOrphans.length) {
+  architectureFailures.push(`orphaned legacy documents were imported again: ${revivedOrphans.join(", ")}`);
+}
+
+// A package script naming a file that does not exist is dead on arrival; the
+// icon-map pair sat in package.json long after the scripts were deleted.
+const missingScriptFiles = Object.entries(packageJson.scripts ?? {})
+  .flatMap(([name, script]) =>
+    [...String(script).matchAll(/(?:^|\s)((?:scripts|tools)\/[\w./-]+\.(?:mjs|js|ts|py))/g)].map((match) => ({
+      name,
+      file: match[1],
+    })),
+  )
+  .filter(({ file }) => !existsSync(join(ROOT, file)));
+if (missingScriptFiles.length) {
+  architectureFailures.push(
+    `package scripts reference missing files: ${missingScriptFiles.map(({ name, file }) => `${name} -> ${file}`).join(", ")}`,
+  );
+}
+
+// data/ holds one seed, forward-only migrations and content patches. A new root
+// here means a second authoring surface arrived without a decision.
+const DATA_ROOTS = new Set(["migrations", "patches", "seed-v1.json.gz", "README.md", "canonical"]);
+const undocumentedDataRoots = readdirSync(join(ROOT, "data")).filter((name) => !DATA_ROOTS.has(name));
+if (undocumentedDataRoots.length) {
+  architectureFailures.push(`undocumented data roots: ${undocumentedDataRoots.join(", ")}`);
+}
 
 const report = {
   schemaVersion: 1,

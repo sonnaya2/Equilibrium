@@ -7,6 +7,9 @@ import { migrate, openDatabase } from "./database.mjs";
 import { buildOutputs, compareOutputs, exportData, gitDataStatus } from "./export.mjs";
 import { applyOne, rebuild } from "./pipeline.mjs";
 import { benchmark } from "./benchmark.mjs";
+import { exportCanonical } from "./canonical/export.mjs";
+import { canonicalParity } from "./canonical/validate.mjs";
+import { runLegacyInventory } from "./legacy-inventory.mjs";
 import { doctor, entityContext, findEntities, formatContextMarkdown, runReadOnlyQuery, stats } from "./queries.mjs";
 import { validate } from "./validate.mjs";
 import { boundedPrint, scalar, slash } from "./utilities.mjs";
@@ -109,6 +112,9 @@ const COMMANDS = new Map([
   ["validate", () => withDatabase((db) => validate(db, hasArg("changed")))],
   ["export", () => withDatabase((db) => exportData(db))],
   ["diff", () => withDatabase((db) => ({ generated: compareOutputs(buildOutputs(db).outputs), git: gitDataStatus() }))],
+  ["canonical-export", () => withDatabase(exportCanonical)],
+  ["canonical-validate", () => withDatabase(canonicalParity)],
+  ["legacy-inventory", () => runLegacyInventory()],
   ["doctor", () => withDatabase(doctor)],
   ["transforms", () => TRANSFORMS],
 ]);

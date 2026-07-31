@@ -87,8 +87,11 @@ pinning a count in documentation.
 **One editable data system.** Root `data/` contains one immutable compressed seed, SQL migrations,
 and small JSONL content patches — that is the whole of the tracked authoring surface.
 `.cache/equilibrium.sqlite`, `public/data/v2/`, and the data reports are generated
-build artifacts and are never committed. Do not add a hosted database, API, CMS, or second authoring
-tree. Architecture and commands: `docs/data-platform.md`.
+build artifacts and are never committed. `data/canonical/` is generated and ignored too: the
+canonical exporter exists (`docs/canonical-data.md`) but its dataset is parked until Stage 1 builds
+it from adjudicated records rather than from the current database. Do not add a hosted database,
+API, CMS, or second authoring tree. Architecture and commands: `docs/data-platform.md`; the legacy
+audit that gates it: `docs/legacy-data-stage0.md`.
 
 ### Data editing rules
 
@@ -200,6 +203,8 @@ npm run build
 npm run audit:data   # shipped-data gate
 npm run build:data   # rebuild SQLite and every generated frontend artifact
 npm run normalize:data # alias for a clean data rebuild
+npm run data:canonical:export    # regenerate data/canonical/ from the validated database
+npm run data:canonical:validate  # structural checks + reports/canonical-parity.json
 ```
 
 `scripts/shots.mjs` and `scripts/shot-map3d.mjs` capture routes for before/after diffing; neither is

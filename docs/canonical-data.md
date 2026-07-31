@@ -1,11 +1,5 @@
 # Canonical data
 
-> **Parked.** The exporter, schema, validator and parity harness below are built and tested, but
-> `data/canonical/` is git-ignored and no production path reads it. Stage 0
-> (`legacy-data-stage0.md`) found 78 conflicting records the current database resolves by keeping
-> whichever source was read first, so Stage 1 will rebuild this dataset from adjudicated records
-> rather than from the database as-is. What changes then is the *input*, not this machinery.
-
 `data/canonical/` is an explicit, reviewable representation of the validated database. It is
 generated, not authored:
 
@@ -56,23 +50,23 @@ means the field may be null.
 
 | File                                     | Key                                    | Records |
 | ---------------------------------------- | -------------------------------------- | ------: |
-| `entities.jsonl`                         | `id`                                   |   4,790 |
+| `entities.jsonl`                         | `id`                                   |   4,798 |
 | `entity-aliases.jsonl`                   | `entityId`, `alias`                    |       5 |
 | `sources.jsonl`                          | `id`                                   |   2,636 |
-| `entity-sources.jsonl`                   | `entityId`, `sourceId`, `role`         |   8,498 |
+| `entity-sources.jsonl`                   | `entityId`, `sourceId`, `role`         |   8,530 |
 | `regions.jsonl`                          | `id`                                   |      12 |
-| `entity-regions.jsonl`                   | `entityId`, `regionId`, `relation`     |   7,400 |
+| `entity-regions.jsonl`                   | `entityId`, `regionId`, `relation`     |   7,442 |
 | `requirements.jsonl`                     | `entityId`, `kind`, `description`      |   5,344 |
 | `effects.jsonl`                          | `entityId`, `key`, `ordinal`           |   1,311 |
 | `relationships.jsonl`                    | `subjectId`, `predicate`, `objectId`   |     269 |
 | `tags.jsonl`                             | `id`                                   |     918 |
-| `entity-tags.jsonl`                      | `entityId`, `tagId`                    |   2,766 |
+| `entity-tags.jsonl`                      | `entityId`, `tagId`                    |   2,774 |
 | `map-points.jsonl`                       | `id`                                   |     384 |
 | `quarantine.jsonl`                       | `sourceFile`, `recordPath`, `error`    |      60 |
 | `domains/equipment.jsonl`                | `entityId`                             |     929 |
 | `domains/equipment-stats.jsonl`          | `entityId`, `stat`                     |   1,042 |
 | `domains/abilities.jsonl`                | `entityId`                             |     100 |
-| `domains/prayers.jsonl`                  | `entityId`                             |     195 |
+| `domains/prayers.jsonl`                  | `entityId`                             |     203 |
 | `domains/spells.jsonl`                   | `entityId`                             |       3 |
 | `domains/invention-perks.jsonl`          | `entityId`                             |     106 |
 | `domains/activities.jsonl`               | `entityId`                             |     669 |
@@ -86,8 +80,8 @@ means the field may be null.
 | `research/region-skills.jsonl`           | `regionId`, `ordinal`                  |     165 |
 | `research/region-training.jsonl`         | `regionId`, `ordinal`                  |     420 |
 | `research/skill-methods.jsonl`           | `skillEntityId`, `ordinal`             |     428 |
-| `provenance/source-files.jsonl`          | `path`                                 |      65 |
-| `provenance/source-records.jsonl`        | `sourceFile`, `recordPath`             |   7,920 |
+| `provenance/source-files.jsonl`          | `path`                                 |      56 |
+| `provenance/source-records.jsonl`        | `sourceFile`, `recordPath`             |   7,855 |
 
 `scripts/data/canonical/schema.mjs` is the executable version of this table. It is the single
 declaration the exporter, the validator and the parity report all read, so a field cannot drift
@@ -113,7 +107,7 @@ between them.
 | `record`              | json?     | `null`  | Inline body when no provenance record matches            |
 
 `recordRef` and `record` are mutually exclusive, and both are absent for the synthetic
-`region:global` entity, which has no body. 4,760 entities reference a provenance record; 29 skill
+`region:global` entity, which has no body. 4,768 entities reference a provenance record; 29 skill
 entities carry an inline body because normalization strips their `methods` key, which is exported
 separately as `research/skill-methods.jsonl`.
 
@@ -178,15 +172,15 @@ normalizable relation. The three link files carry the orderings the site renders
 
 ### `provenance/*.jsonl`
 
-`source-files.jsonl` records each of the 65 seed documents with its classification, content hash and
+`source-files.jsonl` records each of the 56 seed documents with its classification, content hash and
 byte count. `source-records.jsonl` is the addressable body of every record found in them, including
-the 2,447 that never became entities. `record` is the one place a source-shaped object is stored.
+the 2,382 that never became entities. `record` is the one place a source-shaped object is stored.
 
 ## What is not exported
 
 Five tables and six columns are left out. Each is either build bookkeeping or recomputable, and
 `npm run data:canonical:validate` recomputes every excluded column from the canonical files and
-fails if a single row disagrees. The current run reports zero mismatches across 17,543 checked rows.
+fails if a single row disagrees. The current run reports zero mismatches across 17,494 checked rows.
 
 | Table            | Reason                                                        | Evidence                                                              |
 | ---------------- | ------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -198,17 +192,17 @@ fails if a single row disagrees. The current run reports zero mismatches across 
 
 | Column                                    | Reason                                          | Evidence                                                        |
 | ----------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------- |
-| `entities.slug`                           | Always `slugify(entities.id)`                   | 4,790 of 4,790 rows match                                        |
-| `entities.extra_json`                     | The entity body, carried once via `recordRef`   | 4,760 referenced, 29 inline, 1 empty; 4,790 of 4,790 reconstruct |
+| `entities.slug`                           | Always `slugify(entities.id)`                   | 4,798 of 4,798 rows match                                        |
+| `entities.extra_json`                     | The entity body, carried once via `recordRef`   | 4,768 referenced, 29 inline, 1 empty; 4,798 of 4,798 reconstruct |
 | `regions.entity_id`                       | Always `'region:' \|\| regions.id`              | 12 of 12 rows match                                              |
 | `regions.name`                            | Duplicate of the region entity's name           | 12 of 12 rows match                                              |
-| `source_records.record_hash`              | `sha256` of the key-sorted record body          | 7,920 of 7,920 rows match                                        |
+| `source_records.record_hash`              | `sha256` of the key-sorted record body          | 7,855 of 7,855 rows match                                        |
 | `effects.metadata_json` (`key = 'record'`)| A second copy of the effect entity's own body   | 31 of 31 rows match                                              |
 
 ## Unknown and rare fields
 
-The 65 seed documents were written over two years with no shared schema, and their records carry 606
-distinct top-level keys. Seventy-seven of them feed a canonical column; the other 529 are kept verbatim
+The 56 seed documents were written over two years with no shared schema, and their records carry 374
+distinct top-level keys. Seventy-seven of them feed a canonical column; the other 297 are kept verbatim
 in `provenance/source-records.jsonl` and promoted nowhere. That is retention, not modelling, so the
 validator writes the full list to `reports/canonical-unmodelled-fields.json` rather than letting
 those keys disappear quietly into a blob:
@@ -219,8 +213,7 @@ those keys disappear quietly into a blob:
 
 It is a report, not a gate — an unmodelled key is not a defect. The count matters, though: a key on
 one record is a one-off note, while `catalystCompletionRate`, `localityKey`, `localityLabel` and
-`wikiTaskId` on all 1,117 tasks are columns `domains/tasks.jsonl` is missing. One hundred and seventy
-keys appear exactly once.
+`wikiTaskId` on all 1,117 tasks are columns `domains/tasks.jsonl` is missing. Seventy-five keys appear exactly once.
 
 `CONSUMED_RECORD_KEYS` in `scripts/data/canonical/schema.mjs` is the list of keys the normalizer
 reads, grouped by where `normalize.mjs` reads each one. It is maintained by hand and has to move

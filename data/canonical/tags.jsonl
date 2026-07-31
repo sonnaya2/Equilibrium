@@ -1,0 +1,918 @@
+{"id":"ability-and-cooldown","name":"ability_and_cooldown"}
+{"id":"ability-unlock","name":"ability unlock"}
+{"id":"ability-upgrade","name":"ability upgrade"}
+{"id":"ability-upgrades","name":"ability upgrades"}
+{"id":"absence-note","name":"absence note"}
+{"id":"account-passive","name":"account passive"}
+{"id":"account-passive-plus-farm-totem-state","name":"account passive plus farm-totem state"}
+{"id":"account-perk-infrastructure","name":"account perk infrastructure"}
+{"id":"achievement-diary-agility-mining-supply-utility","name":"achievement diary Agility Mining supply utility"}
+{"id":"achievement-diary-crafting-farming-glass-utility","name":"achievement diary Crafting Farming glass utility"}
+{"id":"achievement-diary-farming-and-artisans-utility","name":"achievement diary Farming and Artisans utility"}
+{"id":"achievement-diary-farming-hunter-divination-utility","name":"achievement diary Farming Hunter Divination utility"}
+{"id":"achievement-diary-mining-and-smithing-doubling-package","name":"achievement diary Mining and Smithing doubling package"}
+{"id":"achievement-diary-mining-and-smithing-utility","name":"achievement diary Mining and Smithing utility"}
+{"id":"achievement-diary-necromancy-rc-ritual-utility","name":"achievement diary Necromancy RC ritual utility"}
+{"id":"achievement-diary-passive-dungeoneering-unlocks","name":"achievement diary passive Dungeoneering unlocks"}
+{"id":"achievement-diary-prayer-rc-farming-utility","name":"achievement diary Prayer RC Farming utility"}
+{"id":"achievement-diary-prayer-rc-farming-utility-ladder","name":"achievement diary Prayer RC Farming utility ladder"}
+{"id":"achievement-diary-runecrafting-prayer-agility-utility","name":"achievement diary Runecrafting Prayer Agility utility"}
+{"id":"achievement-diary-skilling-utility","name":"achievement diary skilling utility"}
+{"id":"achievement-diary-skilling-utility-ring","name":"achievement diary skilling utility ring"}
+{"id":"achievement-diary-thieving-rc-farming-utility","name":"achievement diary Thieving RC Farming utility"}
+{"id":"achievement-diary-woodcutting-crafting-coal-utility","name":"achievement diary Woodcutting Crafting coal utility"}
+{"id":"achievement-rewards","name":"Achievement rewards"}
+{"id":"activity-ability-unlocks","name":"activity ability unlocks"}
+{"id":"additional-items","name":"additional_items"}
+{"id":"adrenaline","name":"Adrenaline"}
+{"id":"adrenaline-account-infrastructure","name":"adrenaline/account infrastructure"}
+{"id":"afk-mining-and-smithing-supply-loop","name":"AFK Mining and Smithing supply loop"}
+{"id":"agility","name":"Agility"}
+{"id":"agility-activity-infrastructure","name":"Agility activity infrastructure"}
+{"id":"agility-codex-craft-infrastructure","name":"Agility codex craft infrastructure"}
+{"id":"agility-course-and-incidental-prayer","name":"Agility course and incidental Prayer"}
+{"id":"agility-course-and-island-transit","name":"Agility course and island transit"}
+{"id":"agility-course-and-menaphos-reputation-supply","name":"Agility course and Menaphos reputation supply"}
+{"id":"agility-course-and-outfit-progression","name":"Agility course and outfit progression"}
+{"id":"agility-course-and-permanent-weight-reducing-clothing-unlock","name":"Agility course and permanent weight-reducing clothing unlock"}
+{"id":"agility-course-infrastructure","name":"Agility course infrastructure"}
+{"id":"agility-course-permanent-outfit","name":"Agility course permanent outfit"}
+{"id":"agility-course-permanent-outfit-residual","name":"Agility course permanent outfit residual"}
+{"id":"agility-divination-mining-multi-skill-excavation-hub","name":"Agility / Divination / Mining multi-skill excavation hub"}
+{"id":"agility-minigame-and-ticket-shop","name":"Agility minigame and ticket shop"}
+{"id":"agility-training-activity","name":"Agility training activity"}
+{"id":"agility-weight-reducing-outfit-piece","name":"Agility weight-reducing outfit piece"}
+{"id":"all-fired-up-dual-hatchet-pickaxe-equipment","name":"All Fired Up dual hatchet-pickaxe equipment"}
+{"id":"ancient-invention-component-economy","name":"Ancient Invention component economy"}
+{"id":"ancient-invention-component-economy-residual","name":"Ancient Invention component economy residual"}
+{"id":"ancient-invention-equipment-shells","name":"Ancient Invention equipment shells"}
+{"id":"ancient-invention-permanent-unlock-path","name":"Ancient Invention permanent unlock path"}
+{"id":"ancient-invention-production","name":"Ancient Invention production"}
+{"id":"ancient-invention-production-residual","name":"Ancient Invention production residual"}
+{"id":"ancient-magicks-spell-additions","name":"Ancient Magicks spell additions"}
+{"id":"ancient-only","name":"ancient_only"}
+{"id":"archaeology","name":"Archaeology"}
+{"id":"archaeology-and-slayer-familiar-production-system","name":"Archaeology and Slayer familiar-production system"}
+{"id":"archaeology-dig-site-and-ancient-summoning-materials","name":"Archaeology dig site and Ancient Summoning materials"}
+{"id":"archaeology-dig-site-hub","name":"Archaeology dig-site hub"}
+{"id":"archaeology-dig-site-hub-and-imcando-forge-progression","name":"Archaeology dig site hub and Imcando forge progression"}
+{"id":"archaeology-dig-site-hub-first-age-guthixian","name":"Archaeology dig-site hub (First Age / Guthixian)"}
+{"id":"archaeology-dig-site-infrastructure","name":"Archaeology dig site infrastructure"}
+{"id":"archaeology-dig-site-progression","name":"Archaeology dig site progression"}
+{"id":"archaeology-dig-site-region-boundary","name":"Archaeology dig site region boundary"}
+{"id":"archaeology-gathering-passive","name":"Archaeology gathering passive"}
+{"id":"archaeology-guild-rank-permanent-progression","name":"Archaeology Guild rank permanent progression"}
+{"id":"archaeology-guild-shop","name":"Archaeology Guild shop"}
+{"id":"archaeology-invention-device-permanent-unlock","name":"Archaeology Invention device permanent unlock"}
+{"id":"archaeology-material-sink-progression-loop","name":"Archaeology material-sink progression loop"}
+{"id":"archaeology-monolith-luck-ladder-relic-power","name":"Archaeology monolith luck-ladder relic power"}
+{"id":"archaeology-monolith-relic-power","name":"Archaeology monolith relic power"}
+{"id":"archaeology-relic-power","name":"Archaeology relic power"}
+{"id":"archaeology-skilling-off-hand-cross-region-chain","name":"Archaeology skilling off-hand cross-region chain"}
+{"id":"archaeology-spear-base-for-masterwork-spear","name":"archaeology spear base for masterwork spear"}
+{"id":"archaeology-spear-base-residual-for-masterwork-spear","name":"archaeology spear base residual for masterwork spear"}
+{"id":"archaeology-tool-base-and-crystal-imcando-mattock-feedstock","name":"Archaeology tool base and crystal/Imcando mattock feedstock"}
+{"id":"archaeology-tool-permanent-craft","name":"Archaeology tool permanent craft"}
+{"id":"archaeology-travel-infrastructure","name":"Archaeology travel infrastructure"}
+{"id":"archaeology-travel-infrastructure-residual","name":"Archaeology travel infrastructure residual"}
+{"id":"area-tasks-permanent-skilling-rewards","name":"Area Tasks permanent skilling rewards"}
+{"id":"area-tasks-utility-for-runecrafting-at-ourania","name":"Area Tasks utility for Runecrafting at Ourania"}
+{"id":"attack","name":"Attack"}
+{"id":"augmentable-crystal-archaeology-tool","name":"augmentable crystal Archaeology tool"}
+{"id":"augmentable-crystal-mining-tool","name":"augmentable crystal Mining tool"}
+{"id":"augmentable-crystal-woodcutting-tool","name":"augmentable crystal Woodcutting tool"}
+{"id":"augmentable-firemaking-tool","name":"augmentable Firemaking tool"}
+{"id":"augmentable-fishing-tool","name":"augmentable Fishing tool"}
+{"id":"augmentable-mining-tool-progression","name":"augmentable Mining tool progression"}
+{"id":"augmentable-smithing-tool","name":"augmentable Smithing tool"}
+{"id":"augmentable-woodcutting-tool-progression","name":"augmentable Woodcutting tool progression"}
+{"id":"aura-overhaul-anachronia-totem","name":"Aura Overhaul — Anachronia totem"}
+{"id":"aura-overhaul-ancient-magicks-combat-aspect","name":"Aura Overhaul — Ancient Magicks combat Aspect"}
+{"id":"aura-overhaul-archaeology-gathering-passive","name":"Aura Overhaul — Archaeology gathering passive"}
+{"id":"aura-overhaul-divination-level-passive","name":"Aura Overhaul — Divination level passive"}
+{"id":"aura-overhaul-mining-level-passive","name":"Aura Overhaul — Mining level passive"}
+{"id":"aura-overhaul-morytania-combat-passive","name":"Aura Overhaul — Morytania combat passive"}
+{"id":"aura-overhaul-permanent-farming-unlock","name":"Aura Overhaul — permanent Farming unlock"}
+{"id":"aura-overhaul-permanent-runespan-unlock","name":"Aura Overhaul — permanent Runespan unlock"}
+{"id":"aura-overhaul-permanent-thieving-unlock","name":"Aura Overhaul — permanent Thieving unlock"}
+{"id":"aura-overhaul-standard-spellbook-combat-aspect","name":"Aura Overhaul — Standard spellbook combat Aspect"}
+{"id":"aura-overhaul-system-removal","name":"Aura Overhaul — system removal"}
+{"id":"banking-qol-from-quest-reward","name":"banking QoL from quest reward"}
+{"id":"basic","name":"basic"}
+{"id":"best-in-slot-combat-cape-cross-region-chain","name":"best-in-slot combat cape cross-region chain"}
+{"id":"best-in-slot-combat-necklace-with-stored-specials","name":"best-in-slot combat necklace with stored specials"}
+{"id":"best-in-slot-dual-wield-melee-weapons","name":"best-in-slot dual-wield melee weapons"}
+{"id":"best-in-slot-hybrid-crit-ring-melee-heavy","name":"best-in-slot hybrid crit ring (melee-heavy)"}
+{"id":"best-in-slot-hybrid-poison-combat-gloves","name":"best-in-slot hybrid poison combat gloves"}
+{"id":"best-in-slot-magic-power-gloves","name":"best-in-slot magic power gloves"}
+{"id":"best-in-slot-magic-power-gloves-residual","name":"best-in-slot magic power gloves residual"}
+{"id":"best-in-slot-melee-power-armour-cross-region-chain","name":"best-in-slot melee power armour cross-region chain"}
+{"id":"best-in-slot-ranged-oriented-upgraded-fremennik-ring","name":"best-in-slot ranged-oriented upgraded Fremennik ring"}
+{"id":"best-in-slot-ranged-power-armour-craft-chain","name":"best-in-slot ranged power armour craft chain"}
+{"id":"best-in-slot-ranged-power-gloves","name":"best-in-slot ranged power gloves"}
+{"id":"best-in-slot-ranged-power-gloves-residual","name":"best-in-slot ranged power gloves residual"}
+{"id":"best-in-slot-two-handed-melee-weapon","name":"best-in-slot two-handed melee weapon"}
+{"id":"best-in-slot-two-handed-ranged-weapon","name":"best-in-slot two-handed ranged weapon"}
+{"id":"big-game-hunter-combat-skilling-mechanic","name":"Big Game Hunter combat-skilling mechanic"}
+{"id":"bis-armour-permanent-upgrade-t92-masterwork","name":"BiS armour permanent upgrade / T92 masterwork"}
+{"id":"bis-power-armour-craft-t90-magic","name":"BiS power armour craft / T90 magic"}
+{"id":"bis-power-armour-craft-t90-melee","name":"BiS power armour craft / T90 melee"}
+{"id":"bis-power-armour-craft-t90-ranged","name":"BiS power armour craft / T90 ranged"}
+{"id":"bis-power-armour-craft-t90-ranged-bow","name":"BiS power armour craft / T90 ranged bow"}
+{"id":"bis-power-armour-craft-t90-ranged-bow-residual","name":"BiS power armour craft / T90 ranged bow residual"}
+{"id":"bis-power-armour-craft-t92-magic","name":"BiS power armour craft / T92 magic"}
+{"id":"bis-power-armour-craft-t92-ranged","name":"BiS power armour craft / T92 ranged"}
+{"id":"bis-power-armour-craft-t92-ranged-bow","name":"BiS power armour craft / T92 ranged bow"}
+{"id":"bis-power-armour-craft-t92-ranged-bow-residual","name":"BiS power armour craft / T92 ranged bow residual"}
+{"id":"bis-power-armour-drop-t95-melee","name":"BiS power armour drop / T95 melee"}
+{"id":"bis-tank-armour-magic","name":"BiS tank armour / magic"}
+{"id":"bloodweed-farm-aggression-potion-craft","name":"Bloodweed farm + aggression potion craft"}
+{"id":"boss-rewards","name":"Boss rewards"}
+{"id":"boss-uniques","name":"boss uniques"}
+{"id":"brimhaven-agility-arena-hand-slot-reward","name":"Brimhaven Agility Arena hand-slot reward"}
+{"id":"brimhaven-residual-agility-reward-shop","name":"Brimhaven residual Agility reward shop"}
+{"id":"charge-drain","name":"charge_drain"}
+{"id":"charged-coin-drop-cleaner-daemonheim-rewards","name":"charged coin drop cleaner (Daemonheim Rewards)"}
+{"id":"city-wide-skilling-blessing","name":"city-wide skilling blessing"}
+{"id":"combat","name":"combat"}
+{"id":"combat-abilities","name":"combat abilities"}
+{"id":"combat-ability-unlock","name":"combat ability unlock"}
+{"id":"combat-adrenaline-consumable","name":"combat adrenaline consumable"}
+{"id":"combat-and-multi-skill-support-infrastructure","name":"combat and multi-skill support infrastructure"}
+{"id":"combat-archaeology-and-invention-relic-cross-region-chain","name":"combat Archaeology and Invention relic cross-region chain"}
+{"id":"combat-archaeology-relic","name":"combat Archaeology relic"}
+{"id":"combat-archaeology-relic-cross-region-chain","name":"combat Archaeology relic cross-region chain"}
+{"id":"combat-aspect-spell","name":"combat Aspect spell"}
+{"id":"combat-cape","name":"combat cape"}
+{"id":"combat-mastery-permanent-combat-utilities","name":"Combat Mastery permanent combat utilities"}
+{"id":"combat-mastery-permanent-utilities-and-prayer-book-swap","name":"Combat Mastery permanent utilities and prayer-book swap"}
+{"id":"combat-minigame-regional-pointer","name":"combat minigame regional pointer"}
+{"id":"combat-neck-ornament-residual-master-clue","name":"combat neck ornament residual / master clue"}
+{"id":"combat-neck-production-pressure-checklist","name":"combat neck production pressure checklist"}
+{"id":"combat-necklace","name":"Combat necklace"}
+{"id":"combat-necklace-and-archaeology-relic-ingredient","name":"combat necklace and Archaeology relic ingredient"}
+{"id":"combat-neckwear-residual-and-eof-ingredient","name":"combat neckwear residual and EoF ingredient"}
+{"id":"combat-pocket-grimoire","name":"combat pocket grimoire"}
+{"id":"combat-pocket-scripture","name":"combat pocket scripture"}
+{"id":"combat-poison-consumable","name":"combat poison consumable"}
+{"id":"combat-support-and-blessed-flask-ingredient-supply","name":"combat-support and Blessed flask ingredient supply"}
+{"id":"combat-uniques","name":"combat uniques"}
+{"id":"combination-potion-flask-infrastructure","name":"combination-potion flask infrastructure"}
+{"id":"constitution","name":"Constitution"}
+{"id":"construction","name":"Construction"}
+{"id":"construction-and-woodcutting-outfit-progression","name":"Construction and Woodcutting outfit progression"}
+{"id":"construction-elite-skilling-outfit","name":"Construction elite skilling outfit"}
+{"id":"construction-outfit-activity-pointer","name":"Construction outfit activity pointer"}
+{"id":"construction-skilling-and-operations-hub","name":"Construction, skilling and operations hub"}
+{"id":"construction-supply-container","name":"Construction supply container"}
+{"id":"construction-training-method-and-permanent-reward-currency","name":"Construction training method and permanent reward currency"}
+{"id":"construction-xp-outfit","name":"Construction XP outfit"}
+{"id":"consumable-multi-skill-gatherer-tools","name":"consumable multi-skill gatherer tools"}
+{"id":"cooking","name":"Cooking"}
+{"id":"cooking-burn-reduction-gloves","name":"Cooking burn-reduction gloves"}
+{"id":"cooking-guild-infrastructure","name":"Cooking guild infrastructure"}
+{"id":"cooking-xp-outfit","name":"Cooking XP outfit"}
+{"id":"crafted-ability-codex","name":"crafted ability codex"}
+{"id":"crafted-slayer-ability-codices","name":"crafted Slayer ability codices"}
+{"id":"crafting","name":"Crafting"}
+{"id":"crafting-and-construction-harmonic-dust-activity","name":"Crafting and Construction harmonic-dust activity"}
+{"id":"crafting-and-construction-skilling-off-hand-cross-region-chain","name":"Crafting and Construction skilling off-hand cross-region chain"}
+{"id":"crafting-and-fletching-processing-spell","name":"Crafting and Fletching processing spell"}
+{"id":"crafting-guild-infrastructure","name":"Crafting guild infrastructure"}
+{"id":"crafting-smithing-crystal-equipment-infrastructure","name":"Crafting/Smithing crystal-equipment infrastructure"}
+{"id":"crafting-supply-shop","name":"Crafting supply shop"}
+{"id":"crafting-training-method-region-boundary","name":"Crafting training method region boundary"}
+{"id":"crafting-xp-outfit","name":"Crafting XP outfit"}
+{"id":"cross-region-archaeology-tool-chain-residual-checklist","name":"cross-region Archaeology tool chain residual checklist"}
+{"id":"cross-region-augmentable-mining-tool","name":"cross-region augmentable Mining tool"}
+{"id":"cross-region-crystal-tool-progression-family","name":"cross-region crystal tool progression family"}
+{"id":"cross-region-divination-elite-outfit-acquisition-stack","name":"cross-region Divination elite outfit acquisition stack"}
+{"id":"cross-region-farming-travel-infrastructure","name":"cross-region Farming travel infrastructure"}
+{"id":"cross-region-firemaking-and-woodcutting-method-stack","name":"cross-region Firemaking and Woodcutting method stack"}
+{"id":"cross-region-firemaking-minigame-full-reward-chain","name":"cross-region Firemaking minigame full reward chain"}
+{"id":"cross-region-fishing-elite-outfit-and-auto-cook-stack","name":"cross-region Fishing elite outfit and auto-cook stack"}
+{"id":"cross-region-gathering-necklace-and-porter-charge-supply","name":"cross-region gathering necklace and porter charge supply"}
+{"id":"cross-region-invention-boost-supply-stack","name":"cross-region Invention boost supply stack"}
+{"id":"cross-region-late-fishing-tool-and-method-stack","name":"cross-region late Fishing tool and method stack"}
+{"id":"cross-region-mining-tool-chain-residual-checklist","name":"cross-region Mining tool chain residual checklist"}
+{"id":"cross-region-prayer-afk-restore-package","name":"cross-region Prayer AFK restore package"}
+{"id":"cross-region-seren-prayer-and-porter-sustain-stack","name":"cross-region Seren prayer and porter sustain stack"}
+{"id":"cross-region-smithing-and-firemaking-full-afk-stack","name":"cross-region Smithing and Firemaking full AFK stack"}
+{"id":"cross-region-smithing-and-firemaking-stack","name":"cross-region Smithing and Firemaking stack"}
+{"id":"cross-region-smithing-production-dependency-stack","name":"cross-region Smithing production dependency stack"}
+{"id":"cross-region-thieving-spell-and-prayer-stack","name":"cross-region Thieving spell and prayer stack"}
+{"id":"cross-region-thieving-stack","name":"cross-region Thieving stack"}
+{"id":"cross-region-tier-100-augmentable-mining-tool-follow-on","name":"cross-region tier-100 augmentable Mining tool follow-on"}
+{"id":"cross-region-tier-99-augmentable-archaeology-tool","name":"cross-region tier-99 augmentable Archaeology tool"}
+{"id":"cross-region-woodcutting-and-firemaking-auto-burn-path-package","name":"cross-region Woodcutting and Firemaking auto-burn path package"}
+{"id":"cross-region-woodcutting-tool-chain-residual-checklist","name":"cross-region Woodcutting tool chain residual checklist"}
+{"id":"crystal-tool-currency-supply-package","name":"crystal-tool currency supply package"}
+{"id":"current-daemonheim-training-and-storage-state","name":"current Daemonheim training and storage state"}
+{"id":"daemonheim-ring","name":"Daemonheim ring"}
+{"id":"damage-and-accuracy","name":"damage_and_accuracy"}
+{"id":"damage-reduction","name":"damage_reduction"}
+{"id":"defence","name":"Defence"}
+{"id":"desert-elite-diary-reward","name":"Desert elite diary reward"}
+{"id":"dinosaur-combat-and-drop-support-necklace","name":"dinosaur combat and drop support necklace"}
+{"id":"district-mining-smithing-infrastructure","name":"district Mining/Smithing infrastructure"}
+{"id":"district-skilling-and-utility-hub","name":"district skilling and utility hub"}
+{"id":"district-skilling-hub-infrastructure","name":"district skilling hub infrastructure"}
+{"id":"district-skilling-hub-infrastructure-residual","name":"district skilling hub infrastructure residual"}
+{"id":"district-slayer-and-skilling-support-hub","name":"district Slayer and skilling-support hub"}
+{"id":"divination","name":"Divination"}
+{"id":"divination-bank-transport-supply-chain","name":"Divination bank-transport supply chain"}
+{"id":"divination-d-d-and-passive-buff-infrastructure","name":"Divination D&D and passive-buff infrastructure"}
+{"id":"divination-d-d-infrastructure","name":"Divination D&D infrastructure"}
+{"id":"divination-elite-skilling-outfit","name":"Divination elite skilling outfit"}
+{"id":"divination-fragment-utility-infrastructure","name":"Divination fragment utility infrastructure"}
+{"id":"divination-gathering-colony","name":"Divination gathering colony"}
+{"id":"divination-level-passive","name":"Divination level passive"}
+{"id":"divination-permanent-passive-unlocks","name":"Divination permanent passive unlocks"}
+{"id":"divination-skilling-off-hand","name":"Divination skilling off-hand"}
+{"id":"divination-training-dungeon-and-permanent-bot-unlocks","name":"Divination training dungeon and permanent bot unlocks"}
+{"id":"divination-utility-device","name":"Divination utility device"}
+{"id":"divination-xp-and-chronicle-utility-ring","name":"Divination XP and chronicle utility ring"}
+{"id":"divination-xp-outfit","name":"Divination XP outfit"}
+{"id":"divination-xp-outfit-acquisition","name":"Divination XP outfit acquisition"}
+{"id":"dominion-tower-permanent-combat-reward","name":"Dominion Tower permanent combat reward"}
+{"id":"dominion-tower-permanent-reward-access","name":"Dominion Tower permanent reward access"}
+{"id":"dungeoneering","name":"Dungeoneering"}
+{"id":"dungeoneering-elite-skilling-outfit","name":"Dungeoneering elite skilling outfit"}
+{"id":"dungeoneering-party-ring-and-role-upgrades","name":"Dungeoneering party ring and role upgrades"}
+{"id":"dungeoneering-prayer-restore-necklace-entry","name":"Dungeoneering Prayer restore necklace (entry)"}
+{"id":"dungeoneering-prayer-restore-necklace-mid","name":"Dungeoneering Prayer restore necklace (mid)"}
+{"id":"dungeoneering-prayer-restore-necklace-top","name":"Dungeoneering Prayer restore necklace (top)"}
+{"id":"dungeoneering-resource-dungeon-imp-lesser-demon-camp","name":"Dungeoneering resource dungeon (imp/lesser demon camp)"}
+{"id":"dungeoneering-resource-dungeon-trees-promethium","name":"Dungeoneering resource dungeon (trees + promethium)"}
+{"id":"dungeoneering-resource-dungeons-chaos-druids-hill-giants","name":"Dungeoneering resource dungeons (chaos druids + hill giants)"}
+{"id":"dungeoneering-reward-gear","name":"Dungeoneering reward gear"}
+{"id":"dungeoneering-reward-shop-and-utility-unlocks","name":"Dungeoneering reward shop and utility unlocks"}
+{"id":"dungeoneering-token-shop-hub","name":"Dungeoneering token shop hub"}
+{"id":"early-crafting-product","name":"early Crafting product"}
+{"id":"early-gather-and-cooking-fruit-supply","name":"early gather and Cooking fruit supply"}
+{"id":"easy-achievement-skilling-utility","name":"easy achievement skilling utility"}
+{"id":"elite-achievement-skilling-utility","name":"elite achievement skilling utility"}
+{"id":"end-game-archaeology-mattock","name":"end-game Archaeology mattock"}
+{"id":"endgame-skilling-teleport-hub","name":"endgame skilling teleport hub"}
+{"id":"enhanced","name":"enhanced"}
+{"id":"entire-skill-infrastructure-dependency","name":"entire skill/infrastructure dependency"}
+{"id":"eof-special-attack-ancient-warrior","name":"EoF special-attack ancient warrior"}
+{"id":"eof-special-attack-ancient-warrior-residual","name":"EoF special-attack ancient warrior residual"}
+{"id":"eof-special-attack-magic-weapon","name":"EoF special-attack magic weapon"}
+{"id":"eof-special-attack-magic-weapon-residual","name":"EoF special-attack magic weapon residual"}
+{"id":"eof-special-attack-melee-upgrade","name":"EoF special-attack melee upgrade"}
+{"id":"eof-special-attack-melee-upgrade-residual","name":"EoF special-attack melee upgrade residual"}
+{"id":"eof-special-attack-melee-weapon","name":"EoF special-attack melee weapon"}
+{"id":"eof-special-attack-melee-weapon-residual","name":"EoF special-attack melee weapon residual"}
+{"id":"equipment-interaction","name":"equipment interaction"}
+{"id":"experience","name":"experience"}
+{"id":"explicit-non-claim","name":"explicit non-claim"}
+{"id":"farming","name":"Farming"}
+{"id":"farming-activity-and-pof-supply-infrastructure","name":"Farming activity and POF supply infrastructure"}
+{"id":"farming-allotment-network-package","name":"Farming allotment network package"}
+{"id":"farming-and-perfect-juju-supply-infrastructure","name":"Farming and perfect-juju supply infrastructure"}
+{"id":"farming-crafting-supply-infrastructure","name":"Farming / Crafting supply infrastructure"}
+{"id":"farming-drop-cleaner","name":"Farming drop cleaner"}
+{"id":"farming-drop-cleaner-acquisition-correction","name":"Farming drop cleaner — acquisition correction"}
+{"id":"farming-drop-cleaner-pickup-mode","name":"Farming drop-cleaner pickup mode"}
+{"id":"farming-experience-drop-cleaner","name":"Farming experience drop cleaner"}
+{"id":"farming-marigold-farm","name":"Farming / Marigold Farm"}
+{"id":"farming-patch-cluster","name":"Farming patch cluster"}
+{"id":"farming-patch-infrastructure","name":"Farming patch infrastructure"}
+{"id":"farming-patch-network-infrastructure","name":"Farming patch network infrastructure"}
+{"id":"farming-patch-unlock","name":"Farming patch unlock"}
+{"id":"farming-permanent-patch-unlock","name":"Farming permanent patch unlock"}
+{"id":"farming-permanent-unlock-shop-and-xp-outfit","name":"Farming permanent unlock shop and XP outfit"}
+{"id":"farming-produce-and-herblore-supply","name":"Farming produce and Herblore supply"}
+{"id":"farming-produce-and-herblore-supply-residual","name":"Farming produce and Herblore supply residual"}
+{"id":"farming-seed-self-supply-infrastructure","name":"Farming seed self-supply infrastructure"}
+{"id":"farming-skilling-spell-bundle","name":"Farming skilling spell bundle"}
+{"id":"farming-special-patch-and-perfect-juju-supply","name":"Farming special patch and perfect-juju supply"}
+{"id":"farming-travel-infrastructure","name":"Farming travel infrastructure"}
+{"id":"farming-unique-patch","name":"Farming unique patch"}
+{"id":"farming-xp-outfit","name":"Farming XP outfit"}
+{"id":"firemaking","name":"Firemaking"}
+{"id":"firemaking-and-woodcutting-regional-method","name":"Firemaking and Woodcutting regional method"}
+{"id":"firemaking-minigame-reward-infrastructure","name":"Firemaking minigame reward infrastructure"}
+{"id":"firemaking-xp-gloves","name":"Firemaking XP gloves"}
+{"id":"firemaking-xp-ring","name":"Firemaking XP ring"}
+{"id":"fishing","name":"Fishing"}
+{"id":"fishing-activity-and-permanent-tool-unlock","name":"Fishing activity and permanent tool unlock"}
+{"id":"fishing-activity-and-shop-hub","name":"Fishing activity and shop hub"}
+{"id":"fishing-activity-method-bundle","name":"Fishing activity method bundle"}
+{"id":"fishing-and-cooking-supply-infrastructure","name":"Fishing and Cooking supply infrastructure"}
+{"id":"fishing-elite-skilling-outfit","name":"Fishing elite skilling outfit"}
+{"id":"fishing-familiar-tool-catch-rate-progression","name":"Fishing familiar/tool catch-rate progression"}
+{"id":"fishing-method-and-bait-tool-unlock","name":"Fishing method and bait tool unlock"}
+{"id":"fishing-minigame-and-high-tier-raw-fish-supply","name":"Fishing minigame and high-tier raw fish supply"}
+{"id":"fishing-minigame-region-boundary","name":"Fishing minigame region boundary"}
+{"id":"fishing-permanent-storage-and-telebank-tool","name":"Fishing permanent storage and telebank tool"}
+{"id":"fishing-settlement-and-food-infrastructure","name":"Fishing settlement and food infrastructure"}
+{"id":"fishing-tool-progression","name":"Fishing tool progression"}
+{"id":"fishing-xp-outfit","name":"Fishing XP outfit"}
+{"id":"fletching","name":"Fletching"}
+{"id":"fletching-and-firemaking-production-activity","name":"Fletching and Firemaking production activity"}
+{"id":"fletching-facility-residual-densify","name":"Fletching facility residual densify"}
+{"id":"fletching-xp-outfit","name":"Fletching XP outfit"}
+{"id":"gathering-xp-spell","name":"gathering XP spell"}
+{"id":"gem-shop","name":"Gem shop"}
+{"id":"global-boss-completion-passive","name":"global boss-completion passive"}
+{"id":"grace-of-the-elves-gather-residual-checklist","name":"Grace of the Elves gather residual checklist"}
+{"id":"grace-of-the-elves-permanent-upgrade","name":"Grace of the Elves permanent upgrade"}
+{"id":"grimy-herb-inventory-container","name":"grimy-herb inventory container"}
+{"id":"gwd1-special-attack-utility-residual","name":"GWD1 special-attack utility residual"}
+{"id":"gwd2-residual-dual-wield-magic-weapons","name":"GWD2 residual dual-wield Magic weapons"}
+{"id":"gwd2-residual-dual-wield-melee-weapons","name":"GWD2 residual dual-wield melee weapons"}
+{"id":"gwd2-residual-dual-wield-ranged-weapons","name":"GWD2 residual dual-wield Ranged weapons"}
+{"id":"gwd2-residual-two-handed-melee-polearm","name":"GWD2 residual two-handed melee polearm"}
+{"id":"habitat-residual-seed-and-spiritbag-infrastructure","name":"Habitat residual seed and spiritbag infrastructure"}
+{"id":"hard-achievement-skilling-utility","name":"hard achievement skilling utility"}
+{"id":"hatchet-upgrade-component","name":"Hatchet upgrade component"}
+{"id":"herblore","name":"Herblore"}
+{"id":"herblore-and-farming-supply-chain","name":"Herblore and Farming supply chain"}
+{"id":"herblore-combination-recipe-permanent-unlock","name":"Herblore combination recipe permanent unlock"}
+{"id":"herblore-dose-and-unfinished-potion-xp-outfit","name":"Herblore dose and unfinished-potion XP outfit"}
+{"id":"herblore-flask-infrastructure","name":"Herblore flask infrastructure"}
+{"id":"herblore-inventory-container-activity","name":"Herblore inventory container activity"}
+{"id":"herblore-inventory-container-pointer","name":"Herblore inventory container pointer"}
+{"id":"herblore-perfect-juju-production-hub","name":"Herblore perfect-juju production hub"}
+{"id":"herblore-perfect-juju-production-infrastructure","name":"Herblore perfect-juju production infrastructure"}
+{"id":"herblore-product-chain-from-habitat","name":"Herblore product chain from Habitat"}
+{"id":"herblore-production-non-perfect","name":"Herblore production (non-perfect)"}
+{"id":"herblore-production-residual-non-perfect","name":"Herblore production residual (non-perfect)"}
+{"id":"herblore-recipe-and-shop-infrastructure","name":"Herblore recipe and shop infrastructure"}
+{"id":"herblore-training-utility","name":"Herblore training utility"}
+{"id":"herblore-xp-outfit","name":"Herblore XP outfit"}
+{"id":"high-end-combat-weapons-armour-endgame-upgrade-material","name":"high-end combat weapons / armour / endgame upgrade material"}
+{"id":"high-level-archaeology-site","name":"high-level Archaeology site"}
+{"id":"high-level-fishing-activity-depth","name":"high-level Fishing activity depth"}
+{"id":"high-level-gem-container-and-skilling-off-hand","name":"high-level gem container and skilling off-hand"}
+{"id":"high-level-mining-and-fishing-hub","name":"high-level Mining and Fishing hub"}
+{"id":"high-level-mining-ore-site","name":"high-level Mining ore site"}
+{"id":"high-level-mining-supply","name":"high-level Mining supply"}
+{"id":"high-level-resource-dungeon-access","name":"high-level resource dungeon access"}
+{"id":"high-level-thieving-activity","name":"high-level Thieving activity"}
+{"id":"high-level-untradeable-prayer-consumable","name":"high-level untradeable prayer consumable"}
+{"id":"high-tier-divination-outfit","name":"high-tier Divination outfit"}
+{"id":"hub","name":"hub"}
+{"id":"hunter","name":"Hunter"}
+{"id":"hunter-activity-and-slayer-supply-adjacency","name":"Hunter activity and Slayer supply adjacency"}
+{"id":"hunter-and-agility-activity-with-summoning-supply","name":"Hunter and Agility activity with Summoning supply"}
+{"id":"hunter-and-prayer-training-supply","name":"Hunter and Prayer training supply"}
+{"id":"hunter-apex-encounters","name":"Hunter apex encounters"}
+{"id":"hunter-apex-encounters-havenhythe","name":"Hunter apex encounters (Havenhythe)"}
+{"id":"hunter-camouflage-outfit-and-habitat-teleport","name":"Hunter camouflage outfit and Habitat teleport"}
+{"id":"hunter-catch-site-for-consumable-skilling-tools","name":"Hunter catch site for consumable skilling tools"}
+{"id":"hunter-charm-gathering","name":"Hunter charm gathering"}
+{"id":"hunter-charm-training-method","name":"Hunter charm training method"}
+{"id":"hunter-currency-shop-infrastructure","name":"Hunter currency shop infrastructure"}
+{"id":"hunter-d-d-permanent-access-package","name":"Hunter D&D permanent access package"}
+{"id":"hunter-dinosaur-encounters","name":"Hunter dinosaur encounters"}
+{"id":"hunter-elite-outfit","name":"Hunter elite outfit"}
+{"id":"hunter-elite-skilling-outfit","name":"Hunter elite skilling outfit"}
+{"id":"hunter-farming-herblore-travel-equipment","name":"Hunter–Farming–Herblore travel equipment"}
+{"id":"hunter-farming-herblore-travel-equipment-residual","name":"Hunter–Farming–Herblore travel equipment residual"}
+{"id":"hunter-gather-tool-supply","name":"Hunter gather-tool supply"}
+{"id":"hunter-method","name":"Hunter method"}
+{"id":"hunter-minigame-and-high-value-impling-supply","name":"Hunter minigame and high-value impling supply"}
+{"id":"hunter-net-trap-method-and-onyx-core-source","name":"Hunter net-trap method and onyx-core source"}
+{"id":"hunter-passive-birdhouse-route","name":"Hunter passive birdhouse route"}
+{"id":"hunter-passive-route","name":"Hunter passive route"}
+{"id":"hunter-permanent-xp-and-charm-sprite-tool","name":"Hunter permanent XP and charm-sprite tool"}
+{"id":"hunter-skillchompa-supply","name":"Hunter skillchompa supply"}
+{"id":"hunter-skillchompa-supply-residual","name":"Hunter skillchompa supply residual"}
+{"id":"hunter-skilling-off-hand","name":"Hunter skilling off-hand"}
+{"id":"hunter-skilling-off-hand-cross-region-chain","name":"Hunter skilling off-hand cross-region chain"}
+{"id":"hunter-training-area","name":"Hunter training area"}
+{"id":"hunter-trapping-infrastructure","name":"Hunter trapping infrastructure"}
+{"id":"hunter-xp-outfit","name":"Hunter XP outfit"}
+{"id":"hybrid","name":"hybrid"}
+{"id":"hybrid-combat-ring","name":"Hybrid combat ring"}
+{"id":"hybrid-combat-ring-residual-hydrix-jewellery","name":"hybrid combat ring residual / hydrix jewellery"}
+{"id":"hybrid-critical-strike-ring-residual","name":"hybrid critical-strike ring residual"}
+{"id":"hybrid-power-gloves","name":"Hybrid power gloves"}
+{"id":"hybrid-power-gloves-residual-hydrix-jewellery","name":"hybrid power gloves residual / hydrix jewellery"}
+{"id":"hybrid-weapon","name":"Hybrid weapon"}
+{"id":"incantation-unlock","name":"incantation unlock"}
+{"id":"invention","name":"Invention"}
+{"id":"invention-charge-infrastructure","name":"Invention charge infrastructure"}
+{"id":"invention-device-discovery-package","name":"Invention device discovery package"}
+{"id":"invention-device-permanent-unlocks","name":"Invention device permanent unlocks"}
+{"id":"invention-farming-device-discovery","name":"Invention Farming device discovery"}
+{"id":"invention-gizmo-economy-permanent","name":"Invention gizmo economy permanent"}
+{"id":"invention-guild-machine-infrastructure","name":"Invention Guild machine infrastructure"}
+{"id":"invention-guild-machine-infrastructure-residual","name":"Invention Guild machine infrastructure residual"}
+{"id":"invention-herblore-boost-infrastructure","name":"Invention Herblore boost infrastructure"}
+{"id":"invention-permanent-blueprint-unlock","name":"Invention permanent blueprint unlock"}
+{"id":"invention-permanent-research-infrastructure","name":"Invention permanent research infrastructure"}
+{"id":"invention-prayer-xp-device-dwarven-technology-tree","name":"Invention Prayer XP device (Dwarven technology tree)"}
+{"id":"invention-production-infrastructure","name":"Invention production infrastructure"}
+{"id":"invention-production-infrastructure-residual","name":"Invention production infrastructure residual"}
+{"id":"invention-upgrade","name":"Invention upgrade"}
+{"id":"invention-workshop-and-machine-infrastructure","name":"Invention workshop and machine infrastructure"}
+{"id":"invention-workshop-and-machines","name":"Invention workshop and machines"}
+{"id":"invisible-divination-level-ring","name":"invisible Divination level ring"}
+{"id":"island-permanent-passive-buff-system","name":"island permanent passive buff system"}
+{"id":"jewellery-recharge","name":"Jewellery recharge"}
+{"id":"karamja-tzhaar-teleport-ring-and-skilling-travel-tool","name":"Karamja TzHaar teleport ring and skilling travel tool"}
+{"id":"kerapac-magic-component","name":"Kerapac magic component"}
+{"id":"kerapac-magic-component-residual","name":"Kerapac magic component residual"}
+{"id":"knight-waves","name":"Knight Waves"}
+{"id":"late-mining-woodcutting-toolcraft-infrastructure","name":"late Mining / Woodcutting toolcraft infrastructure"}
+{"id":"low-input-fishing-unlock","name":"low-input Fishing unlock"}
+{"id":"lumbridge-achievement-skilling-utility-ring","name":"Lumbridge achievement skilling utility ring"}
+{"id":"lunar-spell-additions","name":"Lunar spell additions"}
+{"id":"magic","name":"magic"}
+{"id":"magic-ability-codex-gloves-and-scripture-residual","name":"Magic ability codex gloves and scripture residual"}
+{"id":"magic-anti-melee-niche-bis-staff","name":"Magic anti-melee niche BiS staff"}
+{"id":"magic-armour-component-residual","name":"Magic armour component residual"}
+{"id":"magic-armour-material","name":"Magic armour material"}
+{"id":"magic-armour-material-residual","name":"Magic armour material residual"}
+{"id":"magic-attack","name":"Magic attack"}
+{"id":"magic-best-in-slot-power-armour-cross-region-chain","name":"Magic best-in-slot power armour cross-region chain"}
+{"id":"magic-best-in-slot-ring-residual","name":"Magic best-in-slot ring residual"}
+{"id":"magic-best-in-slot-staff-farming-activity","name":"Magic best-in-slot staff farming activity"}
+{"id":"magic-best-in-slot-two-handed-staff","name":"Magic best-in-slot two-handed staff"}
+{"id":"magic-boost","name":"Magic boost"}
+{"id":"magic-dual-wield-best-in-slot-residual-weapons","name":"Magic dual-wield best-in-slot residual weapons"}
+{"id":"magic-dual-wield-best-in-slot-weapons","name":"Magic dual-wield best-in-slot weapons"}
+{"id":"magic-dual-wield-mid-high-residual-weapons","name":"Magic dual-wield mid-high residual weapons"}
+{"id":"magic-dual-wield-mid-high-weapons","name":"Magic dual-wield mid-high weapons"}
+{"id":"magic-guild-infrastructure-and-rune-essence-logistics","name":"Magic guild infrastructure and rune-essence logistics"}
+{"id":"magic-pocket-slot-residual-scripture","name":"Magic pocket-slot residual scripture"}
+{"id":"magic-pocket-slot-scripture","name":"Magic pocket-slot scripture"}
+{"id":"magic-power-armour","name":"Magic power armour"}
+{"id":"magic-skillcape-combat-equipment","name":"Magic skillcape combat equipment"}
+{"id":"magic-skillcape-residual-combat-equipment","name":"Magic skillcape residual combat equipment"}
+{"id":"magic-skilling-pocket-scripture","name":"Magic / skilling pocket scripture"}
+{"id":"magic-strength","name":"Magic strength"}
+{"id":"magic-tank-armour","name":"Magic tank armour"}
+{"id":"magic-two-handed-residual-staff","name":"Magic two-handed residual staff"}
+{"id":"magic-two-handed-staff","name":"Magic two-handed staff"}
+{"id":"magic-utility-minigame-and-permanent-unlock-shop","name":"Magic utility minigame and permanent unlock shop"}
+{"id":"major-high-level-hub","name":"major high-level hub"}
+{"id":"material","name":"material"}
+{"id":"medium-achievement-skilling-utility","name":"medium achievement skilling utility"}
+{"id":"melee","name":"melee"}
+{"id":"melee-abilities-elite-tectonic-materials","name":"Melee abilities / elite tectonic materials"}
+{"id":"melee-armour-shields","name":"Melee armour / shields"}
+{"id":"melee-attack","name":"Melee attack"}
+{"id":"melee-boost","name":"Melee boost"}
+{"id":"melee-power-gloves-residual-with-bleed-passive","name":"melee power gloves residual with bleed passive"}
+{"id":"melee-power-gloves-with-bleed-passive","name":"melee power gloves with bleed passive"}
+{"id":"melee-strength","name":"Melee strength"}
+{"id":"mid-game-magic-and-farming-resource-dungeon","name":"mid-game Magic and Farming resource dungeon"}
+{"id":"mid-high-hybrid-armour-residual-gemstone-dragons","name":"mid-high hybrid armour residual / gemstone dragons"}
+{"id":"mid-high-power-armour-gwd2","name":"mid-high power armour / GWD2"}
+{"id":"mid-high-power-armour-upgrade-gwd2","name":"mid-high power armour upgrade / GWD2"}
+{"id":"mid-high-style-tank-boots","name":"mid-high style tank boots"}
+{"id":"mid-high-style-tank-boots-residual","name":"mid-high style tank boots residual"}
+{"id":"midgame-gwd1-magic-power-armour","name":"midgame GWD1 magic power armour"}
+{"id":"midgame-gwd1-magic-power-armour-residual","name":"midgame GWD1 magic power armour residual"}
+{"id":"midgame-gwd1-ranged-power-armour","name":"midgame GWD1 ranged power armour"}
+{"id":"midgame-gwd1-ranged-power-armour-residual","name":"midgame GWD1 ranged power armour residual"}
+{"id":"mining","name":"Mining"}
+{"id":"mining-activity-and-crafting-glass-supply","name":"Mining activity and Crafting glass supply"}
+{"id":"mining-and-fishing-cavern","name":"Mining and Fishing cavern"}
+{"id":"mining-and-slayer","name":"Mining and Slayer"}
+{"id":"mining-and-smithing-hub","name":"Mining and Smithing hub"}
+{"id":"mining-and-undead-combat-tool-source","name":"Mining and undead-combat tool source"}
+{"id":"mining-crafting-inventory-container-daemonheim-rewards","name":"Mining/Crafting inventory container (Daemonheim Rewards)"}
+{"id":"mining-guild-infrastructure","name":"Mining guild infrastructure"}
+{"id":"mining-highweald-forest","name":"Mining / Highweald Forest"}
+{"id":"mining-level-passive","name":"Mining level passive"}
+{"id":"mining-resource-dungeon-and-elite-banite-extension","name":"Mining resource dungeon and elite banite extension"}
+{"id":"mining-skilling-off-hand","name":"Mining skilling off-hand"}
+{"id":"mining-tool-base-and-crystal-imcando-pickaxe-feedstock","name":"Mining tool base and crystal/Imcando pickaxe feedstock"}
+{"id":"mining-tool-progression","name":"Mining tool progression"}
+{"id":"mining-wendlewick-deserted-mine","name":"Mining / Wendlewick Deserted Mine"}
+{"id":"mining-xp-outfit","name":"Mining XP outfit"}
+{"id":"miscellaneous","name":"Miscellaneous"}
+{"id":"monthly-distraction-and-diversion","name":"monthly Distraction and Diversion"}
+{"id":"monthly-fishing-farming-xp-and-treasure-infrastructure","name":"monthly Fishing / Farming XP and treasure infrastructure"}
+{"id":"morytania-combat-account-passive","name":"Morytania combat account passive"}
+{"id":"morytania-teleport-network-equipment","name":"Morytania teleport network equipment"}
+{"id":"movement-ability","name":"movement ability"}
+{"id":"multi-region-prayer-progression-package","name":"multi-region Prayer progression package"}
+{"id":"mushroom-shop","name":"Mushroom shop"}
+{"id":"near-bis-two-handed-melee-weapon-with-combat-special","name":"near-BiS two-handed melee weapon with combat special"}
+{"id":"necromancy","name":"necromancy"}
+{"id":"necromancy-attack","name":"Necromancy attack"}
+{"id":"necromancy-best-in-slot-farming-activity","name":"Necromancy best-in-slot farming activity"}
+{"id":"necromancy-best-in-slot-ring","name":"Necromancy best-in-slot ring"}
+{"id":"necromancy-best-in-slot-ring-residual","name":"Necromancy best-in-slot ring residual"}
+{"id":"necromancy-best-in-slot-weapons-and-power-armour","name":"Necromancy best-in-slot weapons and power armour"}
+{"id":"necromancy-boost","name":"Necromancy boost"}
+{"id":"necromancy-combat-progression-tree","name":"Necromancy combat progression tree"}
+{"id":"necromancy-conjure-ability-residual-progression","name":"Necromancy conjure ability residual progression"}
+{"id":"necromancy-crafted-armour-progression","name":"Necromancy crafted armour progression"}
+{"id":"necromancy-crafted-armour-residual-progression","name":"Necromancy crafted armour residual progression"}
+{"id":"necromancy-power-armour-residual","name":"Necromancy power armour residual"}
+{"id":"necromancy-ritual-skilling-ring","name":"Necromancy ritual skilling ring"}
+{"id":"necromancy-skilling-outfit-and-ritual-support","name":"Necromancy skilling outfit and ritual support"}
+{"id":"necromancy-strength","name":"Necromancy strength"}
+{"id":"necromancy-supply-shops","name":"Necromancy supply shops"}
+{"id":"necromancy-tank-armour-residual","name":"Necromancy tank armour residual"}
+{"id":"necromancy-weapon-chain","name":"Necromancy weapon chain"}
+{"id":"necromancy-weapon-residual-chain","name":"Necromancy weapon residual chain"}
+{"id":"necromancy-xp-outfit","name":"Necromancy XP outfit"}
+{"id":"niche-anti-magic-t80-ranged-weapon","name":"niche anti-magic T80 ranged weapon"}
+{"id":"niche-anti-magic-t80-ranged-weapon-residual","name":"niche anti-magic T80 ranged weapon residual"}
+{"id":"niche-anti-ranged-t80-melee-weapon-residual","name":"niche anti-ranged T80 melee weapon residual"}
+{"id":"optional-herblore-batch-production-infrastructure","name":"optional Herblore batch-production infrastructure"}
+{"id":"orthen-archaeology-herblore-recipe","name":"Orthen Archaeology Herblore recipe"}
+{"id":"orthen-archaeology-herblore-recipe-residual","name":"Orthen Archaeology Herblore recipe residual"}
+{"id":"orthen-archaeology-island-buff","name":"Orthen Archaeology island buff"}
+{"id":"orthen-archaeology-island-buff-residual","name":"Orthen Archaeology island buff residual"}
+{"id":"passive-combat-effect","name":"passive combat effect"}
+{"id":"passive-multi-skill-xp-stations","name":"passive multi-skill XP stations"}
+{"id":"passive-resource-kingdom-supply","name":"passive resource kingdom supply"}
+{"id":"permanent-account-equipment-upgrades","name":"permanent account equipment upgrades"}
+{"id":"permanent-agility-experience-boosting-outfit","name":"permanent Agility experience-boosting outfit"}
+{"id":"permanent-anachronia-base-camp-skillcape-passive-infrastructure","name":"permanent Anachronia base-camp skillcape passive infrastructure"}
+{"id":"permanent-anachronia-spa-duration-infrastructure","name":"permanent Anachronia spa duration infrastructure"}
+{"id":"permanent-ancient-invention-fishing-tool-upgrade","name":"permanent Ancient Invention Fishing tool upgrade"}
+{"id":"permanent-ancient-summoning-slayer-bind-infrastructure","name":"permanent Ancient Summoning + Slayer bind infrastructure"}
+{"id":"permanent-archaeology-and-curses-travel-jewellery","name":"permanent Archaeology and Curses travel jewellery"}
+{"id":"permanent-archaeology-scroll-daemonheim-rewards","name":"permanent Archaeology scroll (Daemonheim Rewards)"}
+{"id":"permanent-coin-drop-cleaner","name":"permanent coin drop cleaner"}
+{"id":"permanent-coin-drop-cleaner-daemonheim-rewards","name":"permanent coin drop cleaner (Daemonheim Rewards)"}
+{"id":"permanent-combat-mastery-hub-prayer-book-swap-gate","name":"permanent Combat Mastery hub (prayer-book swap gate)"}
+{"id":"permanent-combat-mastery-hub-residual-prayer-book-swap-gate","name":"permanent Combat Mastery hub residual (prayer-book swap gate)"}
+{"id":"permanent-construction-scroll-daemonheim-rewards","name":"permanent Construction scroll (Daemonheim Rewards)"}
+{"id":"permanent-crafting-scroll-daemonheim-rewards","name":"permanent Crafting scroll (Daemonheim Rewards)"}
+{"id":"permanent-crystal-artisan-tool-package","name":"permanent crystal artisan tool package"}
+{"id":"permanent-crystal-artisan-tool-residual-package","name":"permanent crystal artisan tool residual package"}
+{"id":"permanent-crystal-tool-seed-supply","name":"permanent crystal tool seed supply"}
+{"id":"permanent-crystal-tool-seed-supply-residual","name":"permanent crystal tool seed supply residual"}
+{"id":"permanent-daemonheim-gathering-xp-scroll-daemonheim-rewards","name":"permanent Daemonheim gathering XP scroll (Daemonheim Rewards)"}
+{"id":"permanent-desert-agility-infrastructure","name":"permanent Desert Agility infrastructure"}
+{"id":"permanent-desert-heat-headgear-tool","name":"permanent desert heat headgear tool"}
+{"id":"permanent-desert-logistics-unlock","name":"permanent desert logistics unlock"}
+{"id":"permanent-drop-cleaner-upgrade-unlock","name":"permanent drop-cleaner upgrade unlock"}
+{"id":"permanent-dungeoneering-crafting-training-method","name":"permanent Dungeoneering Crafting training method"}
+{"id":"permanent-dungeoneering-gather-infrastructure-package","name":"permanent Dungeoneering gather infrastructure package"}
+{"id":"permanent-dungeoneering-prayer-unlock","name":"permanent Dungeoneering prayer unlock"}
+{"id":"permanent-dungeoneering-qol-scroll","name":"permanent Dungeoneering QoL scroll"}
+{"id":"permanent-early-multi-tool-and-flat-xp-tool","name":"permanent early multi-tool and flat XP tool"}
+{"id":"permanent-endgame-rc-essence-storage-pouch","name":"permanent endgame RC essence-storage pouch"}
+{"id":"permanent-endgame-skilling-cape","name":"permanent endgame skilling cape"}
+{"id":"permanent-endgame-skilling-cape-residual","name":"permanent endgame skilling cape residual"}
+{"id":"permanent-farming-pof-perk-unlocks","name":"permanent Farming / POF perk unlocks"}
+{"id":"permanent-farming-scroll-daemonheim-rewards","name":"permanent Farming scroll (Daemonheim Rewards)"}
+{"id":"permanent-farming-seed-storage-tool","name":"permanent Farming seed storage tool"}
+{"id":"permanent-farming-yield-unlock","name":"permanent Farming yield unlock"}
+{"id":"permanent-free-magic-teleport-unlock","name":"permanent free Magic teleport unlock"}
+{"id":"permanent-guild-travel-jewellery-with-slayer-counter","name":"permanent guild travel jewellery with Slayer counter"}
+{"id":"permanent-habitat-ironman-seed-and-supply-shop","name":"permanent Habitat ironman seed and supply shop"}
+{"id":"permanent-herblore-combination-recipe","name":"permanent Herblore combination recipe"}
+{"id":"permanent-herblore-daemonheim-reward","name":"permanent Herblore Daemonheim reward"}
+{"id":"permanent-herblore-drop-cleaner-daemonheim-rewards","name":"permanent Herblore drop cleaner (Daemonheim Rewards)"}
+{"id":"permanent-herblore-recipe-progression","name":"permanent Herblore recipe progression"}
+{"id":"permanent-herblore-scroll-daemonheim-rewards","name":"permanent Herblore scroll (Daemonheim Rewards)"}
+{"id":"permanent-hets-oasis-skilling-buff-infrastructure","name":"permanent Het's Oasis skilling buff infrastructure"}
+{"id":"permanent-hunter-bgh-infrastructure-package","name":"permanent Hunter BGH infrastructure package"}
+{"id":"permanent-hunter-xp-tool","name":"permanent Hunter XP tool"}
+{"id":"permanent-infinite-rune-staff-craft-ladder","name":"permanent infinite-rune staff craft ladder"}
+{"id":"permanent-invention-blueprint-and-craft-path","name":"permanent Invention blueprint and craft path"}
+{"id":"permanent-invention-craft-blueprint","name":"permanent Invention craft blueprint"}
+{"id":"permanent-invention-craft-blueprint-residual","name":"permanent Invention craft blueprint residual"}
+{"id":"permanent-invention-device-discovery","name":"permanent Invention device discovery"}
+{"id":"permanent-invention-equipment-state-skilling-perk-ladder","name":"permanent Invention equipment-state skilling perk ladder"}
+{"id":"permanent-invention-firemaking-tool","name":"permanent Invention Firemaking tool"}
+{"id":"permanent-invention-fishing-tool","name":"permanent Invention Fishing tool"}
+{"id":"permanent-invention-gather-tool-augmentation-package","name":"permanent Invention gather-tool augmentation package"}
+{"id":"permanent-invention-manufactured-drop-cleaner","name":"permanent Invention-manufactured drop cleaner"}
+{"id":"permanent-invention-skilling-device","name":"permanent Invention skilling device"}
+{"id":"permanent-invention-smithing-tool","name":"permanent Invention Smithing tool"}
+{"id":"permanent-invention-teleport-pocket","name":"permanent Invention teleport pocket"}
+{"id":"permanent-invention-teleport-pocket-residual","name":"permanent Invention teleport pocket residual"}
+{"id":"permanent-jewellery-recharge-infrastructure","name":"permanent jewellery recharge infrastructure"}
+{"id":"permanent-luck-enhancer-enchantment","name":"permanent luck enhancer enchantment"}
+{"id":"permanent-magic-travel-unlock","name":"permanent Magic travel unlock"}
+{"id":"permanent-meilyr-combination-potion-recipe","name":"permanent Meilyr combination-potion recipe"}
+{"id":"permanent-menaphos-daily-reputation-and-runecrafting-prayer-infrastructure","name":"permanent Menaphos daily reputation and Runecrafting/Prayer infrastructure"}
+{"id":"permanent-menaphos-reputation-and-supply-activity","name":"permanent Menaphos reputation and supply activity"}
+{"id":"permanent-minigame-reward-infrastructure-package","name":"permanent minigame reward infrastructure package"}
+{"id":"permanent-multi-destination-travel-infrastructure","name":"permanent multi-destination travel infrastructure"}
+{"id":"permanent-multi-destination-travel-ring","name":"permanent multi-destination travel ring"}
+{"id":"permanent-multi-region-rc-essence-storage-ladder","name":"permanent multi-region RC essence-storage ladder"}
+{"id":"permanent-multi-region-slayer-task-list-capacity","name":"permanent multi-region Slayer task-list capacity"}
+{"id":"permanent-multi-region-slayer-task-list-capacity-residual","name":"permanent multi-region Slayer task-list capacity residual"}
+{"id":"permanent-multi-region-slayer-task-list-control","name":"permanent multi-region Slayer task list control"}
+{"id":"permanent-multi-skill-unlock-package","name":"permanent multi-skill unlock package"}
+{"id":"permanent-passage-of-the-abyss-enchantment","name":"permanent Passage of the Abyss enchantment"}
+{"id":"permanent-player-owned-farm-infrastructure","name":"permanent Player-owned Farm infrastructure"}
+{"id":"permanent-pocket-skilling-amplifier","name":"permanent pocket skilling amplifier"}
+{"id":"permanent-prayer-and-life-restore-shrine","name":"permanent Prayer and life restore shrine"}
+{"id":"permanent-prayer-and-spellbook-swap-facility","name":"permanent Prayer and spellbook swap facility"}
+{"id":"permanent-prayer-ash-ghost-drop-cleaner","name":"permanent Prayer ash/ghost drop cleaner"}
+{"id":"permanent-prayer-book-switch-and-restore-facility","name":"permanent Prayer book switch and restore facility"}
+{"id":"permanent-prayer-book-unlock","name":"permanent Prayer book unlock"}
+{"id":"permanent-prayer-drop-cleaner-daemonheim-rewards","name":"permanent Prayer drop cleaner (Daemonheim Rewards)"}
+{"id":"permanent-prayer-flask-production-shell","name":"permanent Prayer flask production shell"}
+{"id":"permanent-prayer-pocket-book-progression","name":"permanent Prayer pocket-book progression"}
+{"id":"permanent-prayer-pocket-slot-unlock","name":"permanent Prayer pocket-slot unlock"}
+{"id":"permanent-prayer-unlock-scroll-daemonheim-rewards","name":"permanent Prayer unlock scroll (Daemonheim Rewards)"}
+{"id":"permanent-pyramid-plunder-tool-and-desert-teleport-network","name":"permanent Pyramid Plunder tool and desert teleport network"}
+{"id":"permanent-ranged-ammo-recovery-and-cape-rack-utility-chain","name":"permanent Ranged ammo-recovery and cape-rack utility chain"}
+{"id":"permanent-rc-magic-combat-rune-pouch-early-thread-sink","name":"permanent RC/Magic combat-rune pouch (early thread sink)"}
+{"id":"permanent-rc-magic-combat-rune-pouch-mid-thread-sink","name":"permanent RC/Magic combat-rune pouch (mid thread sink)"}
+{"id":"permanent-rc-magic-combat-skilling-pouch-upgrade","name":"permanent RC/Magic combat-skilling pouch upgrade"}
+{"id":"permanent-rc-magic-pouch-progression-ladder","name":"permanent RC/Magic pouch progression ladder"}
+{"id":"permanent-rc-material-combat-essence-pouch-crafts","name":"permanent RC material — combat + essence pouch crafts"}
+{"id":"permanent-rc-material-residual-combat-essence-pouch-crafts","name":"permanent RC material residual — combat + essence pouch crafts"}
+{"id":"permanent-regional-food-and-farm-supply-shop","name":"permanent regional food and farm-supply shop"}
+{"id":"permanent-regional-travel-infrastructure","name":"permanent regional travel infrastructure"}
+{"id":"permanent-regional-travel-infrastructure-package","name":"permanent regional travel infrastructure package"}
+{"id":"permanent-runecrafting-pouch-economy-supply-package","name":"permanent Runecrafting pouch-economy supply package"}
+{"id":"permanent-runespan-success-unlock","name":"permanent Runespan success unlock"}
+{"id":"permanent-skilling-boss-infrastructure","name":"permanent skilling boss infrastructure"}
+{"id":"permanent-skilling-pocket-scripture","name":"permanent skilling pocket scripture"}
+{"id":"permanent-slayer-equipment-unlock","name":"permanent Slayer equipment unlock"}
+{"id":"permanent-slayer-helmet-utility-unlock","name":"permanent Slayer helmet utility unlock"}
+{"id":"permanent-slayer-point-economy-quest","name":"permanent Slayer point economy quest"}
+{"id":"permanent-slayer-rewards-buy-unlock-personal-dungeon-capacity","name":"permanent Slayer Rewards Buy unlock — personal dungeon capacity"}
+{"id":"permanent-slayer-rewards-learn-unlock","name":"permanent Slayer Rewards Learn unlock"}
+{"id":"permanent-slayer-rewards-learn-unlock-dungeon-layout-qol","name":"permanent Slayer Rewards Learn unlock — dungeon layout QoL"}
+{"id":"permanent-slayer-rewards-toolbelt-unlock","name":"permanent Slayer Rewards toolbelt unlock"}
+{"id":"permanent-slayer-teleport-jewellery-equipment","name":"permanent Slayer teleport jewellery equipment"}
+{"id":"permanent-slayer-utility-book","name":"permanent Slayer utility book"}
+{"id":"permanent-smithing-daemonheim-reward","name":"permanent Smithing Daemonheim reward"}
+{"id":"permanent-smithing-heat-tool-daemonheim-rewards","name":"permanent Smithing heat tool (Daemonheim Rewards)"}
+{"id":"permanent-smithing-heat-tool-upgrade-daemonheim-rewards","name":"permanent Smithing heat tool upgrade (Daemonheim Rewards)"}
+{"id":"permanent-smithing-scroll-daemonheim-rewards","name":"permanent Smithing scroll (Daemonheim Rewards)"}
+{"id":"permanent-summoning-account-buff","name":"permanent Summoning account buff"}
+{"id":"permanent-summoning-combat-support","name":"permanent Summoning combat support"}
+{"id":"permanent-summoning-drop-cleaner-daemonheim-rewards","name":"permanent Summoning drop cleaner (Daemonheim Rewards)"}
+{"id":"permanent-thieving-success-progression","name":"permanent Thieving success progression"}
+{"id":"permanent-toolbelt-druid-pouch-upgrade","name":"permanent toolbelt druid pouch upgrade"}
+{"id":"permanent-uncharted-isles-personal-island-unlock","name":"permanent Uncharted Isles personal island unlock"}
+{"id":"permanent-unlimited-stronghold-of-security-travel-tool","name":"permanent unlimited Stronghold of Security travel tool"}
+{"id":"permanent-unlimited-tirannwn-teleport-pocket-item","name":"permanent unlimited Tirannwn teleport pocket item"}
+{"id":"persistent-familiar-duration-support","name":"persistent familiar-duration support"}
+{"id":"persistent-maximum-life-point-buff","name":"persistent maximum-life-point buff"}
+{"id":"persistent-maximum-life-point-combat-buff","name":"persistent maximum-life-point combat buff"}
+{"id":"player-owned-farm-combat-passive","name":"Player-Owned Farm combat passive"}
+{"id":"player-owned-farm-currency-shop","name":"player-owned farm currency shop"}
+{"id":"player-owned-farm-expansion","name":"player-owned farm expansion"}
+{"id":"player-owned-farm-permanent-perk","name":"player-owned farm permanent perk"}
+{"id":"player-owned-farm-permanent-perk-residual","name":"player-owned farm permanent perk residual"}
+{"id":"poison-damage-incense","name":"poison-damage incense"}
+{"id":"poison-immunity-pocket-item","name":"Poison-immunity pocket item"}
+{"id":"post-remaster-archaeology-resource-passive","name":"post-remaster Archaeology resource passive"}
+{"id":"post-remaster-critical-strike-pocket-item","name":"post-remaster critical-strike pocket item"}
+{"id":"post-remaster-cross-region-necromancy-equipment-chain","name":"post-remaster cross-region Necromancy equipment chain"}
+{"id":"post-remaster-dungeoneering-drop-cleaner-unlock","name":"post-remaster Dungeoneering drop-cleaner unlock"}
+{"id":"post-remaster-herblore-drop-cleaner-unlock","name":"post-remaster Herblore drop-cleaner unlock"}
+{"id":"post-remaster-necromancy-weapon-progression","name":"post-remaster Necromancy weapon progression"}
+{"id":"post-remaster-permanent-combination-potion-recipe-page-route","name":"post-remaster permanent combination-potion recipe-page route"}
+{"id":"post-remaster-prayer-equipment-unlock","name":"post-remaster prayer equipment unlock"}
+{"id":"post-remaster-prayer-sustain-equipment-unlock","name":"post-remaster prayer-sustain equipment unlock"}
+{"id":"post-remaster-summoning-drop-cleaner-unlock","name":"post-remaster Summoning drop-cleaner unlock"}
+{"id":"post-remaster-untradeable-tier-90-weapon-progression","name":"post-remaster untradeable tier-90 weapon progression"}
+{"id":"pouch-production-supply-modifiers","name":"pouch-production supply modifiers"}
+{"id":"prayer","name":"Prayer"}
+{"id":"prayer-activity-and-xp-outfit","name":"Prayer activity and XP outfit"}
+{"id":"prayer-and-death","name":"prayer_and_death"}
+{"id":"prayer-and-firemaking-activity","name":"Prayer and Firemaking activity"}
+{"id":"prayer-book","name":"prayer book"}
+{"id":"prayer-combat-firemaking-farming-training","name":"Prayer/combat/Firemaking/Farming training"}
+{"id":"prayer-drain-support-familiar","name":"Prayer-drain support familiar"}
+{"id":"prayer-drop-cleaner-for-ghosts-pre-attuned","name":"Prayer drop cleaner for ghosts (pre-attuned)"}
+{"id":"prayer-firemaking-multi-skill-activity","name":"Prayer Firemaking multi-skill activity"}
+{"id":"prayer-permanent-ability-unlock","name":"Prayer permanent ability unlock"}
+{"id":"prayer-point-sustain-consumable-supply","name":"Prayer point sustain consumable supply"}
+{"id":"prayer-potion-and-dg-necklace-restore-amplifier","name":"Prayer potion and DG necklace restore amplifier"}
+{"id":"prayer-restoration-support-item","name":"Prayer restoration support item"}
+{"id":"prayer-skilling-off-hands-scripture","name":"prayer / skilling off-hands / scripture"}
+{"id":"prayer-sustain-off-hand-utility-for-seren-skilling-prayers","name":"Prayer sustain off-hand utility for Seren skilling prayers"}
+{"id":"prayer-training-consumable-supply","name":"Prayer training consumable supply"}
+{"id":"prayer-training-infrastructure","name":"Prayer training infrastructure"}
+{"id":"prayer-unlock","name":"prayer unlock"}
+{"id":"prayer-unlock-infrastructure","name":"Prayer unlock infrastructure"}
+{"id":"prayer-unlocks","name":"prayer unlocks"}
+{"id":"prayer-xp-outfit-equipment","name":"Prayer XP outfit equipment"}
+{"id":"prifddinas-farming-unique-content","name":"Prifddinas Farming unique content"}
+{"id":"protection","name":"Protection"}
+{"id":"pvm-hub-combat-infrastructure","name":"PvM hub combat infrastructure"}
+{"id":"quest-challenge-combat-equipment","name":"quest-challenge combat equipment"}
+{"id":"quest-challenge-equipment-unlock","name":"quest-challenge equipment unlock"}
+{"id":"quest-city-access-skilling-gate","name":"quest city-access skilling gate"}
+{"id":"quest-gated-accuracy-familiars","name":"quest-gated accuracy familiars"}
+{"id":"quest-prayer-restoration-support-item","name":"quest prayer-restoration support item"}
+{"id":"ranch-out-of-time-combat-passive","name":"Ranch Out of Time combat passive"}
+{"id":"ranged","name":"ranged"}
+{"id":"ranged-armour-necromancy-invocation","name":"Ranged armour / Necromancy invocation"}
+{"id":"ranged-attack","name":"Ranged attack"}
+{"id":"ranged-boost","name":"Ranged boost"}
+{"id":"ranged-guild-infrastructure-shops-and-archery-competition","name":"Ranged guild infrastructure, shops, and archery competition"}
+{"id":"ranged-power-gloves","name":"ranged power gloves"}
+{"id":"ranged-power-gloves-residual","name":"ranged power gloves residual"}
+{"id":"ranged-strength","name":"Ranged strength"}
+{"id":"rare-hero-fishing-tool","name":"rare hero Fishing tool"}
+{"id":"refillable-prayer-storage-account-item","name":"refillable prayer-storage account item"}
+{"id":"regional-and-global-combat-infrastructure","name":"regional and global combat infrastructure"}
+{"id":"regional-boss-bis-drop-source","name":"regional boss BiS drop source"}
+{"id":"regional-boss-bis-drop-source-residual","name":"regional boss BiS drop source residual"}
+{"id":"regional-boss-unique-progression","name":"regional boss unique progression"}
+{"id":"regional-city-bank-furnace-and-tokkul-shop-infrastructure","name":"regional city bank, furnace, and TokKul shop infrastructure"}
+{"id":"regional-farming-infrastructure","name":"regional Farming infrastructure"}
+{"id":"regional-mining-and-construction-supply","name":"regional Mining and Construction supply"}
+{"id":"regional-mining-and-construction-supply-residual","name":"regional Mining and Construction supply residual"}
+{"id":"regional-multi-skill-settlement-infrastructure","name":"regional multi-skill settlement infrastructure"}
+{"id":"regional-multi-skill-transport-and-shop-infrastructure","name":"regional multi-skill transport and shop infrastructure"}
+{"id":"regional-passive-resource-and-structure-hub","name":"regional passive resource and structure hub"}
+{"id":"regional-pouch-and-scroll-conversion-modifier","name":"regional pouch and scroll conversion modifier"}
+{"id":"regional-prayer-unlock-residual-standard-book","name":"regional prayer unlock residual / standard book"}
+{"id":"regional-prayer-unlock-standard-book","name":"regional prayer unlock / standard book"}
+{"id":"regional-reputation-skilling-unlocks","name":"regional reputation skilling unlocks"}
+{"id":"regional-runecrafting-altar-infrastructure","name":"regional Runecrafting altar infrastructure"}
+{"id":"regional-skilling-infrastructure","name":"regional skilling infrastructure"}
+{"id":"regional-slayer-assignment-infrastructure","name":"regional Slayer assignment infrastructure"}
+{"id":"regional-slayer-boss-unique-progression","name":"regional Slayer boss unique progression"}
+{"id":"regional-slayer-master-hub","name":"regional Slayer master hub"}
+{"id":"regional-structure-permanent-infrastructure","name":"regional structure permanent infrastructure"}
+{"id":"regional-structure-permanent-infrastructure-residual","name":"regional structure permanent infrastructure residual"}
+{"id":"regional-structure-reward-detail","name":"regional structure reward detail"}
+{"id":"removed-daily-rc-utility-residual-item-economy","name":"removed daily RC utility — residual item economy"}
+{"id":"removed-wilderness-xp-item-planner-hazard","name":"removed Wilderness XP item — planner hazard"}
+{"id":"residual-high-level-magic-leaning-ports-armour-note-for-combat-planners","name":"residual high-level magic-leaning Ports armour note for combat planners"}
+{"id":"residual-invention-armour-perk","name":"residual Invention armour perk"}
+{"id":"residual-power-armour-t80-nex","name":"residual power armour / T80 Nex"}
+{"id":"residual-tank-armour-raids","name":"residual tank armour / raids"}
+{"id":"runecrafting","name":"Runecrafting"}
+{"id":"runecrafting-access-and-efficiency-stack","name":"Runecrafting access and efficiency stack"}
+{"id":"runecrafting-access-infrastructure","name":"Runecrafting access infrastructure"}
+{"id":"runecrafting-altar-and-catalytic-supply","name":"Runecrafting altar and catalytic supply"}
+{"id":"runecrafting-altar-and-island-infrastructure","name":"Runecrafting altar and island infrastructure"}
+{"id":"runecrafting-altar-and-lunar-spellbook-switch","name":"Runecrafting altar and Lunar spellbook switch"}
+{"id":"runecrafting-altar-infrastructure","name":"Runecrafting altar infrastructure"}
+{"id":"runecrafting-geography","name":"Runecrafting geography"}
+{"id":"runecrafting-outfit-and-reward-shop","name":"Runecrafting outfit and reward shop"}
+{"id":"runecrafting-pure-essence-supply","name":"Runecrafting pure essence supply"}
+{"id":"runecrafting-skilling-off-hand","name":"Runecrafting skilling off-hand"}
+{"id":"runecrafting-xp-outfit","name":"Runecrafting XP outfit"}
+{"id":"seren-prayer-drain-and-porter-necklace","name":"Seren prayer drain and porter necklace"}
+{"id":"shared","name":"shared"}
+{"id":"six-dose-combat-container-access","name":"six-dose combat container access"}
+{"id":"skilling","name":"Skilling"}
+{"id":"skilling-familiar-pet-utility","name":"skilling familiar / pet utility"}
+{"id":"skilling-minigame-and-regional-supply","name":"skilling minigame and regional supply"}
+{"id":"skilling-prayer-unlock","name":"skilling prayer unlock"}
+{"id":"skilling-tool","name":"skilling tool"}
+{"id":"skilling-tool-progression","name":"skilling tool progression"}
+{"id":"slayer","name":"Slayer"}
+{"id":"slayer-boss-uniques","name":"Slayer boss uniques"}
+{"id":"slayer-combat-and-charm-supply-hub","name":"Slayer combat and charm supply hub"}
+{"id":"slayer-consumable-supply-from-skilling-minigame","name":"Slayer consumable supply from skilling minigame"}
+{"id":"slayer-helmet-magic-component","name":"Slayer helmet Magic component"}
+{"id":"slayer-helmet-melee-component","name":"Slayer helmet melee component"}
+{"id":"slayer-helmet-necromancy-component","name":"Slayer helmet Necromancy component"}
+{"id":"slayer-helmet-ranged-component","name":"Slayer helmet Ranged component"}
+{"id":"slayer-permanent-utility-and-reputation","name":"Slayer permanent utility and reputation"}
+{"id":"slayer-unique","name":"Slayer unique"}
+{"id":"smithing","name":"Smithing"}
+{"id":"smithing-and-crafting-quest-chain-infrastructure","name":"Smithing and Crafting quest-chain infrastructure"}
+{"id":"smithing-and-firemaking-skilling-off-hand","name":"Smithing and Firemaking skilling off-hand"}
+{"id":"smithing-from-seren-stone-mining","name":"Smithing from Seren-stone Mining"}
+{"id":"smithing-metal-bank-gloves","name":"Smithing metal-bank gloves"}
+{"id":"smithing-training-respect-and-permanent-reward-shop","name":"Smithing training, Respect, and permanent reward shop"}
+{"id":"smithing-xp-outfit","name":"Smithing XP outfit"}
+{"id":"spell-and-prayer-additions","name":"spell and prayer additions"}
+{"id":"spellbook","name":"spellbook"}
+{"id":"spellbook-and-regional-utility","name":"spellbook and regional utility"}
+{"id":"standard-summoning-pouch-progression","name":"standard Summoning pouch progression"}
+{"id":"starting-region-fishing-infrastructure","name":"starting-region Fishing infrastructure"}
+{"id":"strength","name":"Strength"}
+{"id":"style-glove-t90-upgrade-hub","name":"style glove T90 upgrade hub"}
+{"id":"style-glove-t90-upgrade-hub-residual","name":"style glove T90 upgrade hub residual"}
+{"id":"style-specific-bis-combat-boots","name":"style-specific BiS combat boots"}
+{"id":"style-specific-bis-magic-combat-boots","name":"style-specific BiS Magic combat boots"}
+{"id":"style-specific-bis-magic-combat-boots-residual","name":"style-specific BiS Magic combat boots residual"}
+{"id":"summoning","name":"Summoning"}
+{"id":"summoning-and-divination-district-infrastructure","name":"Summoning and Divination district infrastructure"}
+{"id":"summoning-experience-boosting-set","name":"Summoning experience-boosting set"}
+{"id":"summoning-familiar-from-hets-oasis-materials","name":"Summoning familiar from Het's Oasis materials"}
+{"id":"summoning-tele-necklace-and-charm-double","name":"Summoning tele necklace and charm double"}
+{"id":"t90-glacor-boot-upgrade-material","name":"T90 glacor-boot upgrade material"}
+{"id":"t90-glacor-boot-upgrade-material-residual","name":"T90 glacor-boot upgrade material residual"}
+{"id":"tank-shield-residual-corporeal-beast-chain","name":"tank shield residual / Corporeal Beast chain"}
+{"id":"temporary-charm-drop-modifier","name":"temporary charm-drop modifier"}
+{"id":"thieving","name":"Thieving"}
+{"id":"thieving-activity-and-pilfer-point-infrastructure","name":"Thieving activity and pilfer-point infrastructure"}
+{"id":"thieving-activity-and-summoning-utility","name":"Thieving activity and Summoning utility"}
+{"id":"thieving-activity-and-xp-outfit","name":"Thieving activity and XP outfit"}
+{"id":"thieving-early-game-activity-infrastructure","name":"Thieving early-game activity infrastructure"}
+{"id":"thieving-elite-skilling-outfit","name":"Thieving elite skilling outfit"}
+{"id":"thieving-guild-infrastructure","name":"Thieving guild infrastructure"}
+{"id":"thieving-heist-activity-post-2025","name":"Thieving heist activity (post-2025)"}
+{"id":"thieving-minigame-infrastructure","name":"Thieving minigame infrastructure"}
+{"id":"thieving-permanent-toolbelt-tools","name":"Thieving permanent toolbelt tools"}
+{"id":"thieving-seed-supply","name":"Thieving seed supply"}
+{"id":"thieving-skilling-outfit","name":"Thieving skilling outfit"}
+{"id":"thieving-skilling-spell","name":"Thieving skilling spell"}
+{"id":"thieving-xp-outfit","name":"Thieving XP outfit"}
+{"id":"thrown-combat-debuff","name":"thrown combat debuff"}
+{"id":"tier-100-augmentable-woodcutting-tool-follow-on-chain","name":"tier-100 augmentable Woodcutting tool follow-on chain"}
+{"id":"tier-100-ranged-armour-region-pressure","name":"tier-100 ranged armour region pressure"}
+{"id":"tier-100-runecrafted-two-handed-magic-weapon","name":"tier-100 runecrafted two-handed magic weapon"}
+{"id":"tier-75-daemonheim-magic","name":"tier-75 Daemonheim magic"}
+{"id":"tier-75-daemonheim-magic-residual","name":"tier-75 Daemonheim magic residual"}
+{"id":"tier-75-two-handed-ranged-weapon","name":"Tier 75 two-handed ranged weapon"}
+{"id":"tier-80-85-combat-gear-region-package","name":"tier-80/85 combat gear region package"}
+{"id":"tier-80-dungeoneering-residual-combat-weapons","name":"tier-80 Dungeoneering residual combat weapons"}
+{"id":"tier-80-hybrid-armour","name":"Tier 80 hybrid armour"}
+{"id":"tier-80-nex-chargebow","name":"tier-80 Nex chargebow"}
+{"id":"tier-80-nex-chargebow-residual","name":"tier-80 Nex chargebow residual"}
+{"id":"tier-80-residual-two-handed-magic-weapon","name":"tier-80 residual two-handed Magic weapon"}
+{"id":"tier-80-residual-two-handed-ranged-weapon","name":"tier-80 residual two-handed ranged weapon"}
+{"id":"tier-80-two-handed-crossbow","name":"Tier 80 two-handed crossbow"}
+{"id":"tier-80-two-handed-melee-weapon","name":"Tier 80 two-handed melee weapon"}
+{"id":"tier-82-anachronia-slayer-spear","name":"tier-82 Anachronia slayer spear"}
+{"id":"tier-82-anachronia-slayer-spear-residual","name":"tier-82 Anachronia slayer spear residual"}
+{"id":"tier-82-two-handed-spear-halberd","name":"tier-82 two-handed spear / halberd"}
+{"id":"tier-82-two-handed-spear-halberd-residual","name":"tier-82 two-handed spear / halberd residual"}
+{"id":"tier-85-dual-wield-melee","name":"tier-85 dual-wield melee"}
+{"id":"tier-85-dual-wield-melee-residual","name":"tier-85 dual-wield melee residual"}
+{"id":"tier-85-two-handed-magic","name":"tier-85 two-handed magic"}
+{"id":"tier-85-two-handed-magic-residual","name":"tier-85 two-handed magic residual"}
+{"id":"tier-85-two-handed-ranged-poison","name":"tier-85 two-handed ranged poison"}
+{"id":"tier-85-two-handed-ranged-poison-residual","name":"tier-85 two-handed ranged poison residual"}
+{"id":"tier-87-wilderness-slayer-chest-style-weapons","name":"tier-87 Wilderness slayer chest style weapons"}
+{"id":"tier-87-wilderness-slayer-chest-style-weapons-residual","name":"tier-87 Wilderness slayer chest style weapons residual"}
+{"id":"tier-90-augmentable-woodcutting-tool-cross-region-chain","name":"tier-90 augmentable Woodcutting tool cross-region chain"}
+{"id":"tier-90-dual-wield-melee-weapons","name":"tier-90 dual-wield melee weapons"}
+{"id":"tier-90-dual-wield-ranged-weapons","name":"tier-90 dual-wield ranged weapons"}
+{"id":"tier-90-melee-power-armour-and-trim-material","name":"tier-90 melee power armour and trim material"}
+{"id":"tier-90-prifddinas-crystal-singing-weapons","name":"tier-90 Prifddinas crystal singing weapons"}
+{"id":"tier-90-prifddinas-crystal-singing-weapons-residual","name":"tier-90 Prifddinas crystal singing weapons residual"}
+{"id":"tier-90-ranged-weapons","name":"tier-90 Ranged weapons"}
+{"id":"tier-90-residual-dual-wield-melee-weapons","name":"tier-90 residual dual-wield melee weapons"}
+{"id":"tier-90-residual-two-handed-magic-weapon","name":"tier-90 residual two-handed Magic weapon"}
+{"id":"tier-90-residual-two-handed-melee-and-ranged-weapons","name":"tier-90 residual two-handed melee and ranged weapons"}
+{"id":"tier-90-style-power-boots-cross-region","name":"tier-90 style power boots cross-region"}
+{"id":"tier-90-style-power-boots-cross-region-residual","name":"tier-90 style power boots cross-region residual"}
+{"id":"tier-90-two-handed-magic-weapon","name":"tier-90 two-handed Magic weapon"}
+{"id":"tier-90-two-handed-melee-and-ranged-weapons","name":"tier-90 two-handed melee and ranged weapons"}
+{"id":"tier-90-weapons","name":"tier-90 weapons"}
+{"id":"tier-92-dual-wield-melee","name":"tier-92 dual-wield melee"}
+{"id":"tier-92-dual-wield-melee-residual","name":"tier-92 dual-wield melee residual"}
+{"id":"tier-92-dual-wield-melee-whip","name":"tier-92 dual-wield melee whip"}
+{"id":"tier-92-dual-wield-melee-whip-residual","name":"tier-92 dual-wield melee whip residual"}
+{"id":"tier-92-dual-wield-ranged-weapons","name":"tier-92 dual-wield ranged weapons"}
+{"id":"tier-92-melee-armour-upgrade","name":"Tier 92 melee armour upgrade"}
+{"id":"tier-92-melee-dot-spear","name":"tier-92 melee DoT spear"}
+{"id":"tier-92-two-handed-ranged-weapon","name":"tier-92 two-handed ranged weapon"}
+{"id":"tier-92-two-handed-ranged-weapon-and-eof-special","name":"tier-92 two-handed ranged weapon and EoF special"}
+{"id":"tier-95-necromancy-main-hand-weapon","name":"tier-95 Necromancy main-hand weapon"}
+{"id":"tier-95-necromancy-main-hand-weapon-residual","name":"tier-95 Necromancy main-hand weapon residual"}
+{"id":"tier-95-two-handed-melee-aoe-weapon","name":"tier-95 two-handed melee AoE weapon"}
+{"id":"tier-99-100-fletchable-two-handed-ranged-weapon","name":"tier-99/100 fletchable two-handed ranged weapon"}
+{"id":"tier-99-100-smithable-two-handed-melee-weapon","name":"tier-99/100 smithable two-handed melee weapon"}
+{"id":"tirannwn-seren-skilling-prayer-unlock-package","name":"Tirannwn Seren skilling prayer unlock package"}
+{"id":"tzekhaar-combat-support-and-cape-progression","name":"TzekHaar combat support and cape progression"}
+{"id":"tzhaar-and-tzekhaar-combat-support-ring","name":"TzHaar and TzekHaar combat support ring"}
+{"id":"tzhaar-residual-tokkul-shop-permanent","name":"TzHaar residual TokKul shop permanent"}
+{"id":"ultimate","name":"ultimate"}
+{"id":"uncut-gem-inventory-container","name":"uncut-gem inventory container"}
+{"id":"undead-combat-necklace-enchanted-permanent","name":"undead combat necklace (enchanted permanent)"}
+{"id":"undead-combat-necklace-mining-craft-path","name":"undead combat necklace (Mining craft path)"}
+{"id":"undead-combat-support","name":"undead combat support"}
+{"id":"underworld-achievement-skilling-breakpoint-densify","name":"Underworld achievement skilling breakpoint densify"}
+{"id":"underworld-achievement-skilling-utility-pocket","name":"Underworld achievement skilling utility pocket"}
+{"id":"underworld-teleport-jewelry","name":"Underworld teleport jewelry"}
+{"id":"unique-farming-tree-patch","name":"unique Farming tree patch"}
+{"id":"upgradeable-prayer-drop-cleaner","name":"upgradeable Prayer drop cleaner"}
+{"id":"upgradeable-salvage-and-drop-cleaner","name":"upgradeable salvage and drop cleaner"}
+{"id":"upgraded-fremennik-ring-channel-crit-support","name":"upgraded Fremennik ring (channel/crit support)"}
+{"id":"upgraded-gem-inventory-container-daemonheim-rewards","name":"upgraded gem inventory container (Daemonheim Rewards)"}
+{"id":"utility","name":"utility"}
+{"id":"varrock-achievement-mining-and-smithing-utility","name":"Varrock achievement Mining and Smithing utility"}
+{"id":"vital-spark-ability-codices","name":"vital-spark ability codices"}
+{"id":"vyre-multi-skill-weapon","name":"vyre multi-skill weapon"}
+{"id":"weekly-charm-acquisition-modifier","name":"weekly charm-acquisition modifier"}
+{"id":"weight-reducing-agility-reward","name":"weight-reducing Agility reward"}
+{"id":"wilderness-combat-unlock","name":"Wilderness combat unlock"}
+{"id":"wilderness-minigame-combat-unlock","name":"Wilderness minigame combat unlock"}
+{"id":"wilderness-rare-material-package","name":"Wilderness rare material package"}
+{"id":"wilderness-slayer-master-and-artefact-sink","name":"Wilderness Slayer master and artefact sink"}
+{"id":"woodcutting","name":"Woodcutting"}
+{"id":"woodcutting-activity-and-reputation-supply","name":"Woodcutting activity and reputation supply"}
+{"id":"woodcutting-activity-and-temporary-boost-source","name":"Woodcutting activity and temporary boost source"}
+{"id":"woodcutting-and-farming-supply-infrastructure","name":"Woodcutting and Farming supply infrastructure"}
+{"id":"woodcutting-and-firemaking-skilling-off-hand","name":"Woodcutting and Firemaking skilling off-hand"}
+{"id":"woodcutting-bakriminel-supply","name":"Woodcutting bakriminel supply"}
+{"id":"woodcutting-early-teak-access","name":"Woodcutting early teak access"}
+{"id":"woodcutting-elite-skilling-outfit","name":"Woodcutting elite skilling outfit"}
+{"id":"woodcutting-hub-and-imcando-hatchet-progression","name":"Woodcutting hub and Imcando hatchet progression"}
+{"id":"woodcutting-inventory-permanent-residual-from-grove","name":"Woodcutting inventory permanent residual from Grove"}
+{"id":"woodcutting-jadinko-lair","name":"Woodcutting / Jadinko Lair"}
+{"id":"woodcutting-permanent-method-and-temporary-buff-infrastructure","name":"Woodcutting permanent method and temporary buff infrastructure"}
+{"id":"woodcutting-resource-and-split-log-production","name":"Woodcutting resource and split-log production"}
+{"id":"woodcutting-resource-supply","name":"Woodcutting resource supply"}
+{"id":"woodcutting-tool-base-and-crystal-imcando-hatchet-feedstock","name":"Woodcutting tool base and crystal/Imcando hatchet feedstock"}
+{"id":"woodcutting-tool-chain-component","name":"Woodcutting tool-chain component"}
+{"id":"woodcutting-tool-progression","name":"Woodcutting tool progression"}
+{"id":"woodcutting-vine-training","name":"Woodcutting vine training"}
+{"id":"woodcutting-xp-outfit","name":"Woodcutting XP outfit"}

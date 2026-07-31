@@ -17,7 +17,7 @@ Three things are tracked. Everything downstream of them is generated and ignored
 | `data/seed-v1.json.gz`        | yes     | Immutable consolidated baseline of the 65 original source documents         |
 | `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
 | `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
-| `data/canonical/`             | no      | Generated JSONL mirror; parked until Stage 1, see `canonical-data.md`      |
+| `data/canonical/`             | yes     | Generated JSONL mirror of the database; see `canonical-data.md`            |
 | `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
 | `public/data/v2/`             | no      | Every generated artifact, with size and SHA-256 metadata in the manifest    |
 | `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |

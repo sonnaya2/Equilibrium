@@ -1,0 +1,669 @@
+{"entityId":"activity:content:abandoned-mine-salve-shard-mining"}
+{"entityId":"activity:content:abomination"}
+{"entityId":"activity:content:abyss-runecrafting"}
+{"entityId":"activity:content:abyssal-beasts"}
+{"entityId":"activity:content:abyssal-lords"}
+{"entityId":"activity:content:acheron-mammoths"}
+{"entityId":"activity:content:advanced-gnome-stronghold-course"}
+{"entityId":"activity:content:agility-pyramid"}
+{"entityId":"activity:content:allotment-patches"}
+{"entityId":"activity:content:amascut-the-devourer"}
+{"entityId":"activity:content:anachronia-agility-course"}
+{"entityId":"activity:content:anachronia-base-camp"}
+{"entityId":"activity:content:anachronia-big-game-hunter"}
+{"entityId":"activity:content:anachronia-totems-permanent-multi-skill-buffs"}
+{"entityId":"activity:content:ancient-elven-ritual-shard"}
+{"entityId":"activity:content:araxxor-araxxi"}
+{"entityId":"activity:content:arch-glacor"}
+{"entityId":"activity:content:arctic-pine-woodcutting-neitiznot"}
+{"entityId":"activity:content:artisans-workshop"}
+{"entityId":"activity:content:balaraks-sash-brush"}
+{"entityId":"activity:content:bandit-camp-shops"}
+{"entityId":"activity:content:barbarian-outpost-agility-course"}
+{"entityId":"activity:content:barrows"}
+{"entityId":"activity:content:beastmaster-durzag"}
+{"entityId":"activity:content:black-chinchompas"}
+{"entityId":"activity:content:black-salamanders"}
+{"entityId":"activity:content:blast-furnace"}
+{"entityId":"activity:content:blood-altar"}
+{"entityId":"activity:content:bloodweed-aggression-potions"}
+{"entityId":"activity:content:brawling-gloves"}
+{"entityId":"activity:content:brimhaven-agility-arena"}
+{"entityId":"activity:content:calquat-tree-patch"}
+{"entityId":"activity:content:canifis-mushroom-patch"}
+{"entityId":"activity:content:chaos-elemental"}
+{"entityId":"activity:content:chaos-tunnels"}
+{"entityId":"activity:content:chaotic-weapons"}
+{"entityId":"activity:content:charming-moths"}
+{"entityId":"activity:content:charming-moths-highweald-charm-training"}
+{"entityId":"activity:content:citharede-abbey"}
+{"entityId":"activity:content:city-of-um-mushroom-patch"}
+{"entityId":"activity:content:city-of-um-underworld"}
+{"entityId":"activity:content:clockwork-box-traps"}
+{"entityId":"activity:content:commander-zilyana"}
+{"entityId":"activity:content:corporeal-beast"}
+{"entityId":"activity:content:corrupted-creatures-soul-devourers"}
+{"entityId":"activity:content:corrupted-seren-stone-cleansing-hefin-cathedral"}
+{"entityId":"activity:content:crafting-guild"}
+{"entityId":"activity:content:crimson-skillchompas"}
+{"entityId":"activity:content:croesus"}
+{"entityId":"activity:content:crystal-sandstone-and-crystal-flasks"}
+{"entityId":"activity:content:crystal-skillchompas"}
+{"entityId":"activity:content:crystal-tools"}
+{"entityId":"activity:content:crystal-tree-farming-crystal-acorns"}
+{"entityId":"activity:content:daemonheim-dig-site"}
+{"entityId":"activity:content:daemonheim-divination"}
+{"entityId":"activity:content:daemonheim-rewards-shop"}
+{"entityId":"activity:content:dagannoth-kings"}
+{"entityId":"activity:content:dark-facets"}
+{"entityId":"activity:content:darkmeyer-thieving"}
+{"entityId":"activity:content:death-altar-temple-of-light-runecrafting"}
+{"entityId":"activity:content:deep-sea-fishing-hub"}
+{"entityId":"activity:content:desert-amulet"}
+{"entityId":"activity:content:desert-cactus-farming-patches"}
+{"entityId":"activity:content:desert-strykewyrm"}
+{"entityId":"activity:content:dinosaur-and-plant-slayer-laniakea-anachronia"}
+{"entityId":"activity:content:dragon-harpoon"}
+{"entityId":"activity:content:dragon-mattock"}
+{"entityId":"activity:content:dragonkin-laboratory-ed2"}
+{"entityId":"activity:content:dream-of-iaia"}
+{"entityId":"activity:content:duradel"}
+{"entityId":"activity:content:ectofuntus"}
+{"entityId":"activity:content:edimmu-resource-dungeon"}
+{"entityId":"activity:content:effigy-incubator"}
+{"entityId":"activity:content:elite-dungeon-1"}
+{"entityId":"activity:content:elven-clan-worker-pickpocketing"}
+{"entityId":"activity:content:everlight-dig-site"}
+{"entityId":"activity:content:falador-farm-allotment-flower-herb-patches"}
+{"entityId":"activity:content:farmers-outfit"}
+{"entityId":"activity:content:ferns-finds","location":"Amberfell"}
+{"entityId":"activity:content:fight-kiln"}
+{"entityId":"activity:content:flash-powder-factory-minigame-and-reward-shop"}
+{"entityId":"activity:content:flower-patch"}
+{"entityId":"activity:content:fort-forinthry"}
+{"entityId":"activity:content:freneskae-via-world-gate"}
+{"entityId":"activity:content:fruit-tree-patch"}
+{"entityId":"activity:content:fruit-tree-patch-hubs"}
+{"entityId":"activity:content:general-graardor"}
+{"entityId":"activity:content:giant-mole"}
+{"entityId":"activity:content:glacors"}
+{"entityId":"activity:content:gleaming-wisp-colony"}
+{"entityId":"activity:content:goebie-scavengers"}
+{"entityId":"activity:content:gregorovic"}
+{"entityId":"activity:content:grenwalls"}
+{"entityId":"activity:content:h-a-m-hideout-pickpocketing-and-store-rooms"}
+{"entityId":"activity:content:hall-of-memories"}
+{"entityId":"activity:content:hard-desert-keris-upgrade"}
+{"entityId":"activity:content:hardwood-grove"}
+{"entityId":"activity:content:harmony-moss"}
+{"entityId":"activity:content:havenhythe-big-game-hunter"}
+{"entityId":"activity:content:havenhythe-birdhouses"}
+{"entityId":"activity:content:heathers-crafting-supplies","location":"Amberfell"}
+{"entityId":"activity:content:hefin-agility-course"}
+{"entityId":"activity:content:hefin-serenity-posts-afk-agility"}
+{"entityId":"activity:content:helwyr"}
+{"entityId":"activity:content:herb-patch"}
+{"entityId":"activity:content:herblore-habitat"}
+{"entityId":"activity:content:herby-werby"}
+{"entityId":"activity:content:hermod-the-spirit-of-war"}
+{"entityId":"activity:content:hets-oasis"}
+{"entityId":"activity:content:hunter-mark-shop-irwinsson"}
+{"entityId":"activity:content:ice-strykewyrms"}
+{"entityId":"activity:content:infernal-puzzle-box"}
+{"entityId":"activity:content:infernal-source-dig-site-zamorakian"}
+{"entityId":"activity:content:invention-guild"}
+{"entityId":"activity:content:ithell-harps"}
+{"entityId":"activity:content:ivar-king-of-bones"}
+{"entityId":"activity:content:jackalope-familiar"}
+{"entityId":"activity:content:jadinko-lair"}
+{"entityId":"activity:content:jatizso-dungeon-mine"}
+{"entityId":"activity:content:kalphite-king"}
+{"entityId":"activity:content:kalphite-queen"}
+{"entityId":"activity:content:karambwan-vessel-fishing"}
+{"entityId":"activity:content:karamja-overgrown-idols"}
+{"entityId":"activity:content:keldagrim"}
+{"entityId":"activity:content:kerapac-the-bound"}
+{"entityId":"activity:content:kezalam-the-wanderer"}
+{"entityId":"activity:content:kharid-et-dig-site"}
+{"entityId":"activity:content:kreearra"}
+{"entityId":"activity:content:kril-tsutsaroth"}
+{"entityId":"activity:content:kuradal"}
+{"entityId":"activity:content:laniakea-anachronia-highest-standard-slayer-master"}
+{"entityId":"activity:content:lava-flow-mine"}
+{"entityId":"activity:content:lava-strykewyrms"}
+{"entityId":"activity:content:legiones"}
+{"entityId":"activity:content:liberation-of-mazcab"}
+{"entityId":"activity:content:livid-farm"}
+{"entityId":"activity:content:lumbridge-hops-patch"}
+{"entityId":"activity:content:lunar-isle"}
+{"entityId":"activity:content:mage-arena"}
+{"entityId":"activity:content:mage-training-arena"}
+{"entityId":"activity:content:magic-axe-hut-chest"}
+{"entityId":"activity:content:manor-farm"}
+{"entityId":"activity:content:masterwork-ranged-armour-materials"}
+{"entityId":"activity:content:max-guild"}
+{"entityId":"activity:content:mazcab-emergency-merchants"}
+{"entityId":"activity:content:meilyr-recipe-shop"}
+{"entityId":"activity:content:memorial-to-guthix"}
+{"entityId":"activity:content:menaphos"}
+{"entityId":"activity:content:mining-guild"}
+{"entityId":"activity:content:misthalin-wisp-colonies"}
+{"entityId":"activity:content:moonrise-dig-site"}
+{"entityId":"activity:content:morvran-prifddinas-slayer-master"}
+{"entityId":"activity:content:musa-point-free-teaks"}
+{"entityId":"activity:content:muspah"}
+{"entityId":"activity:content:nakatra-devourer-eternal"}
+{"entityId":"activity:content:nature-altar"}
+{"entityId":"activity:content:necromantic-rune-temple"}
+{"entityId":"activity:content:neitiznot-yaks"}
+{"entityId":"activity:content:nex"}
+{"entityId":"activity:content:nightmare-creatures"}
+{"entityId":"activity:content:obsidian-armour"}
+{"entityId":"activity:content:old-meats"}
+{"entityId":"activity:content:orthen-dig-site"}
+{"entityId":"activity:content:ourania-runecrafting-altar-zmi"}
+{"entityId":"activity:content:penguin-agility-course"}
+{"entityId":"activity:content:perfect-juju-potions"}
+{"entityId":"activity:content:piscatoris-fishing-colony"}
+{"entityId":"activity:content:piscatoris-hunter-area"}
+{"entityId":"activity:content:polypore-dungeon-spore-and-stick-resources"}
+{"entityId":"activity:content:pontifex-observation-ring"}
+{"entityId":"activity:content:port-phasmatys-farming-patches"}
+{"entityId":"activity:content:port-sarim-docks-and-skilling-hub"}
+{"entityId":"activity:content:ports-armour"}
+{"entityId":"activity:content:praesul-codex"}
+{"entityId":"activity:content:prehistoric-potteringtons-accidental-fletching-and-firemaking"}
+{"entityId":"activity:content:prifddinas"}
+{"entityId":"activity:content:primal-ores"}
+{"entityId":"activity:content:pure-essence-chest"}
+{"entityId":"activity:content:pyramid-plunder"}
+{"entityId":"activity:content:queen-black-dragon"}
+{"entityId":"activity:content:raksha"}
+{"entityId":"activity:content:ranch-out-of-time-anachronia-dinosaur-farm"}
+{"entityId":"activity:content:ranging-guild"}
+{"entityId":"activity:content:rasial-the-first-necromancer"}
+{"entityId":"activity:content:revenants"}
+{"entityId":"activity:content:rex-matriarchs"}
+{"entityId":"activity:content:ripper-demons"}
+{"entityId":"activity:content:roar-of-osseous-rex-skeleton-island-buff"}
+{"entityId":"activity:content:rogues-castle-safes"}
+{"entityId":"activity:content:rogues-den"}
+{"entityId":"activity:content:ruinous-weapons"}
+{"entityId":"activity:content:rune-dragons"}
+{"entityId":"activity:content:safecracking-route"}
+{"entityId":"activity:content:sanctum-of-rebirth"}
+{"entityId":"activity:content:sanguine-crawler"}
+{"entityId":"activity:content:scrimshaws"}
+{"entityId":"activity:content:seers-village"}
+{"entityId":"activity:content:seren-spells-and-prayers"}
+{"entityId":"activity:content:seren-stones"}
+{"entityId":"activity:content:shades-of-mortton-cremation"}
+{"entityId":"activity:content:shamans-outfit"}
+{"entityId":"activity:content:shifting-tombs"}
+{"entityId":"activity:content:shilo-village-gem-mine-and-gemstone-cavern"}
+{"entityId":"activity:content:silverquill-the-dreadhog"}
+{"entityId":"activity:content:skekas-hypnowand"}
+{"entityId":"activity:content:skillcape-rack"}
+{"entityId":"activity:content:skillcape-shop"}
+{"entityId":"activity:content:slayer-tower"}
+{"entityId":"activity:content:slayer-tower-early-floors"}
+{"entityId":"activity:content:solak"}
+{"entityId":"activity:content:soul-altar"}
+{"entityId":"activity:content:soulgazers"}
+{"entityId":"activity:content:sparkling-wisp-colony"}
+{"entityId":"activity:content:spectral-lens"}
+{"entityId":"activity:content:spirit-moths-highweald-charm-supply"}
+{"entityId":"activity:content:starbloom-armour"}
+{"entityId":"activity:content:stormguard-citadel-dig-site-armadylean"}
+{"entityId":"activity:content:sumona"}
+{"entityId":"activity:content:tai-bwo-wannai-cleanup"}
+{"entityId":"activity:content:telos-the-warden"}
+{"entityId":"activity:content:the-arc"}
+{"entityId":"activity:content:the-empty-throne-room"}
+{"entityId":"activity:content:the-gate-of-elidinis"}
+{"entityId":"activity:content:the-lost-grove"}
+{"entityId":"activity:content:the-magister"}
+{"entityId":"activity:content:the-shadow-reef-ed3"}
+{"entityId":"activity:content:time-altar"}
+{"entityId":"activity:content:troll-stronghold-disease-free-herb-patch"}
+{"entityId":"activity:content:twin-furies"}
+{"entityId":"activity:content:tzhaar-fight-cave"}
+{"entityId":"activity:content:tzkal-zuk"}
+{"entityId":"activity:content:unexpected-diplomacy"}
+{"entityId":"activity:content:vampyrism-aspect"}
+{"entityId":"activity:content:varrock-dig-site-early-archaeology"}
+{"entityId":"activity:content:varrock-palace-tree-patch"}
+{"entityId":"activity:content:vault-of-hereditas"}
+{"entityId":"activity:content:vermyx-brood-mother"}
+{"entityId":"activity:content:vindicta-gorvek"}
+{"entityId":"activity:content:volcanic-trapper-outfit"}
+{"entityId":"activity:content:vorago"}
+{"entityId":"activity:content:vyre-combat-and-sunspear-progression"}
+{"entityId":"activity:content:warforge-dig-site-bandosian"}
+{"entityId":"activity:content:warriors-guild"}
+{"entityId":"activity:content:waterbirth-island"}
+{"entityId":"activity:content:waterfall-fishing"}
+{"entityId":"activity:content:wendlewick-fish-farm"}
+{"entityId":"activity:content:werewolf-agility-course"}
+{"entityId":"activity:content:whirligigs"}
+{"entityId":"activity:content:wilderness-agility-course"}
+{"entityId":"activity:content:wilderness-bloodwood-trees"}
+{"entityId":"activity:content:wilderness-chaos-altars-prayer-offer"}
+{"entityId":"activity:content:wilderness-herb-patch"}
+{"entityId":"activity:content:wilderness-slayer"}
+{"entityId":"activity:content:wizards-guild-magic-guild-yanille"}
+{"entityId":"activity:content:yakamaru"}
+{"entityId":"activity:content:zemouregal-vorkath"}
+{"entityId":"activity:misthalin:zamorak-lord-of-chaos"}
+{"category":"regional pouch and scroll conversion modifier","entityId":"amlodd:summoning-conversion-efficiency"}
+{"category":"Fletching and Firemaking production activity","entityId":"anachronia:accidental-fletching-firemaking"}
+{"category":"Agility course and island transit","entityId":"anachronia:agility-course"}
+{"category":"Archaeology monolith relic power","entityId":"anachronia:always-adze-relic"}
+{"category":"Thieving heist activity (post-2025)","entityId":"anachronia:asuran-arsenal-heist","location":"South-east Anachronia near Swamp Fortress shore (speak to Liara)"}
+{"category":"Archaeology monolith relic power","entityId":"anachronia:bait-and-switch-relic"}
+{"category":"regional passive resource and structure hub","entityId":"anachronia:base-camp"}
+{"category":"regional structure permanent infrastructure residual","entityId":"anachronia:base-camp-buildings"}
+{"category":"regional structure reward detail","entityId":"anachronia:base-camp-structure-rewards"}
+{"category":"permanent Hunter BGH infrastructure package","entityId":"anachronia:bgh-permanent-unlocks"}
+{"category":"Big Game Hunter combat-skilling mechanic","entityId":"anachronia:bgh-poison-frog-system"}
+{"category":"Hunter dinosaur encounters","entityId":"anachronia:big-game-hunter"}
+{"category":"Agility codex craft infrastructure","entityId":"anachronia:codex-lectern"}
+{"category":"player-owned farm currency shop","entityId":"anachronia:dinosaur-farm-beans-market"}
+{"category":"player-owned farm permanent perk residual","entityId":"anachronia:dinosaur-farm-perks"}
+{"category":"Farming produce and Herblore supply residual","entityId":"anachronia:dinosaur-farm-produce"}
+{"category":"regional Slayer assignment infrastructure","entityId":"anachronia:dinosaur-plant-slayer"}
+{"category":"Orthen Archaeology Herblore recipe residual","entityId":"anachronia:dragonkin-potion-recipes"}
+{"category":"passive multi-skill XP stations","entityId":"anachronia:dream-of-iaia"}
+{"category":"monthly Distraction and Diversion","entityId":"anachronia:effigy-incubator"}
+{"category":"Farming","entityId":"anachronia:farm-animal-buyers"}
+{"category":"Archaeology monolith relic power","entityId":"anachronia:flow-state-relic"}
+{"category":"Herblore inventory container activity","entityId":"anachronia:herby-werby-herb-bag"}
+{"category":"Hunter currency shop infrastructure","entityId":"anachronia:hunter-mark-shop"}
+{"category":"regional Slayer master hub","entityId":"anachronia:laniakea-slayer-master"}
+{"category":"absence note","entityId":"anachronia:no-area-tasks-diary"}
+{"category":"Archaeology dig-site hub","entityId":"anachronia:orthen-dig-site"}
+{"category":"Archaeology travel infrastructure residual","entityId":"anachronia:orthen-teleport-network"}
+{"category":"Woodcutting activity and temporary boost source","entityId":"anachronia:overgrown-idols"}
+{"category":"player-owned farm expansion","entityId":"anachronia:ranch-out-of-time"}
+{"category":"Orthen Archaeology island buff residual","entityId":"anachronia:roar-of-osseous"}
+{"category":"permanent Anachronia base-camp skillcape passive infrastructure","entityId":"anachronia:skillcape-rack"}
+{"category":"Runecrafting altar infrastructure","entityId":"anachronia:time-altar"}
+{"category":"Aura Overhaul — Anachronia totem","entityId":"anachronia:totem-of-vitality-browse"}
+{"category":"island permanent passive buff system","entityId":"anachronia:totems"}
+{"category":"Archaeology and Slayer familiar-production system","entityId":"archaeology:ancient-summoning-binding-contracts"}
+{"category":"Invention Guild machine infrastructure","entityId":"asgarnia:alchemiser","location":"Invention Guild basement machine hotspots"}
+{"category":"Firemaking minigame reward infrastructure","entityId":"asgarnia:all-fired-up-beacons"}
+{"category":"Smithing training, Respect, and permanent reward shop","entityId":"asgarnia:artisans-workshop-burial-smithing","location":"Artisans' Workshop burial forge and anvil, Falador"}
+{"category":"Invention Guild machine infrastructure","entityId":"asgarnia:auto-disassembler","location":"Invention Guild basement machine hotspots, north-east of Falador"}
+{"category":"Invention Guild machine infrastructure","entityId":"asgarnia:automatic-hide-tanner"}
+{"category":"late Mining / Woodcutting toolcraft infrastructure","entityId":"asgarnia:camdozaal-sacred-forge","location":"Camdozaal cavern under Ice Mountain (Oracle trapdoor); world map label Ramarno's forge"}
+{"category":"Crafting guild infrastructure","entityId":"asgarnia:crafting-guild","location":"South-west of Falador / north of Rimmington"}
+{"category":"Archaeology monolith relic power","entityId":"asgarnia:divine-conversion-relic"}
+{"category":"Runecrafting altar and island infrastructure","entityId":"asgarnia:entrana-law-altar","location":"Law ruins, north-east Entrana (boat from Port Sarim)"}
+{"category":"Farming patch infrastructure","entityId":"asgarnia:falador-farm","location":"South of Falador (Elstan)"}
+{"category":"permanent Uncharted Isles personal island unlock","entityId":"asgarnia:flag-fall-claimed-island"}
+{"category":"Archaeology monolith relic power","entityId":"asgarnia:inspire-genius-relic"}
+{"category":"Invention Guild machine infrastructure residual","entityId":"asgarnia:invention-generators","location":"Invention Guild basement generator hotspot (cannot be removed; powers all machine hotspots)"}
+{"category":"Invention workshop and machine infrastructure","entityId":"asgarnia:invention-guild","location":"North-east of Falador, south-west of Dwarven Mine entrance"}
+{"category":"high-level Mining and Fishing hub","entityId":"asgarnia:living-rock-caverns","location":"Below Dwarven mines / Ice Mountain"}
+{"category":"Mining guild infrastructure","entityId":"asgarnia:mining-guild","location":"South-east Falador surface complex + southern Dwarven Mine underground"}
+{"category":"Invention Guild machine infrastructure","entityId":"asgarnia:partial-potion-producer"}
+{"category":"Invention Guild machine infrastructure","entityId":"asgarnia:plank-maker-machine","location":"Invention Guild basement machine hotspots"}
+{"category":"regional multi-skill transport and shop infrastructure","entityId":"asgarnia:port-sarim-skilling-hub","location":"Port Sarim (south-east Asgarnia coast)"}
+{"category":"Runecrafting geography","entityId":"asgarnia:runecrafting-altars"}
+{"category":"Thieving activity and pilfer-point infrastructure","entityId":"asgarnia:safecracking","location":"Falador / Burthorpe / Port Sarim / Black Knights' Fortress safes"}
+{"category":"Farming permanent patch unlock","entityId":"asgarnia:trollheim-disease-free-herb-patch","location":"Roof of Troll Stronghold (My Arm)"}
+{"category":"Aura Overhaul — system removal","entityId":"aura-overhaul:system-removal-guard"}
+{"category":"Archaeology monolith relic power","entityId":"cross-region:abyssal-link-relic"}
+{"category":"Farming allotment network package","entityId":"cross-region:allotment-hub-package"}
+{"category":"cross-region Woodcutting and Firemaking auto-burn path package","entityId":"cross-region:auto-burn-woodcutting-paths"}
+{"category":"permanent Ancient Summoning + Slayer bind infrastructure","entityId":"cross-region:binding-contract-ancient-summoning"}
+{"category":"Divination fragment utility infrastructure","entityId":"cross-region:chronicle-fragment-utility"}
+{"category":"combat Archaeology and Invention relic cross-region chain","entityId":"cross-region:conservation-of-energy-relic"}
+{"category":"cross-region late Fishing tool and method stack","entityId":"cross-region:crystal-rod-waterfall-fury-stack"}
+{"category":"permanent regional travel infrastructure package","entityId":"cross-region:crystal-teleport-seed-network"}
+{"category":"cross-region Firemaking and Woodcutting method stack","entityId":"cross-region:curly-roots-fm-ceiling-stack"}
+{"category":"combat Archaeology relic cross-region chain","entityId":"cross-region:death-ward-relic"}
+{"category":"Archaeology monolith relic power","entityId":"cross-region:deathless-relic"}
+{"category":"cross-region Divination elite outfit acquisition stack","entityId":"cross-region:elder-divination-outfit-path"}
+{"category":"combat neck production pressure checklist","entityId":"cross-region:eof-hydrix-component-pressure"}
+{"category":"cross-region Invention boost supply stack","entityId":"cross-region:extreme-invention-supply"}
+{"category":"cross-region Firemaking minigame full reward chain","entityId":"cross-region:fired-up-inferno-adze-chain"}
+{"category":"combat Archaeology relic cross-region chain","entityId":"cross-region:fury-of-the-small-relic"}
+{"category":"cross-region Fishing elite outfit and auto-cook stack","entityId":"cross-region:fury-shark-bait-and-switch-stack"}
+{"category":"cross-region Seren prayer and porter sustain stack","entityId":"cross-region:gote-dark-facet-ritual-shard-sustain"}
+{"category":"Grace of the Elves gather residual checklist","entityId":"cross-region:gote-gather-porter-checklist"}
+{"category":"cross-region Woodcutting tool chain residual checklist","entityId":"cross-region:hatchet-progression-checklist"}
+{"category":"cross-region Smithing production dependency stack","entityId":"cross-region:masterwork-orthen-plate-pressure"}
+{"category":"cross-region Archaeology tool chain residual checklist","entityId":"cross-region:mattock-progression-checklist"}
+{"category":"cross-region Mining tool chain residual checklist","entityId":"cross-region:pickaxe-progression-checklist"}
+{"category":"Archaeology monolith luck-ladder relic power","entityId":"cross-region:ring-of-fortune-relic","location":"Mysterious monolith, Archaeology Campus (Varrock Dig Site)"}
+{"category":"permanent RC/Magic pouch progression ladder","entityId":"cross-region:rune-pouch-ladder"}
+{"category":"permanent multi-region RC essence-storage ladder","entityId":"cross-region:runecrafting-essence-pouch-set"}
+{"category":"Divination bank-transport supply chain","entityId":"cross-region:signs-of-the-porter-supply"}
+{"category":"Invention device discovery package","entityId":"cross-region:skilling-accumulators-package"}
+{"category":"Archaeology monolith relic power","entityId":"cross-region:slayer-introspection-relic"}
+{"category":"Archaeology monolith relic power","entityId":"cross-region:spirit-weaver-relic"}
+{"category":"permanent infinite-rune staff craft ladder","entityId":"cross-region:staff-of-limitless-family"}
+{"category":"Archaeology material-sink progression loop","entityId":"cross-region:tetracompass-and-tomes","location":"Piece drops / collection hand-ins at multi-region dig sites; restore + power at Archaeology Campus mysterious monolith; dig ancient casket at compass tip; study complete tomes at Guild upstairs desk"}
+{"category":"Agility course and Menaphos reputation supply","entityId":"desert:agility-pyramid","location":"Between Sophanem and Nardah, Kharidian Desert"}
+{"category":"Farming patch infrastructure","entityId":"desert:cactus-farming-patches","location":"Al Kharid, Menaphos Imperial, Het's Oasis (Anachronia cactus is Anachronia — not claimed here)"}
+{"category":"Hunter skillchompa supply residual","entityId":"desert:crimson-skillchompas","location":"Desert Quarry Hunter area (crimson skillchompa creatures)"}
+{"category":"permanent desert logistics unlock","entityId":"desert:crocodile-tears-heat-immunity","location":"Kharidian Desert (quest reward; immunity is account-wide in desert)"}
+{"category":"combat minigame regional pointer","entityId":"desert:dominion-tower-combat-pointer"}
+{"category":"permanent desert heat headgear tool","entityId":"desert:enchanted-water-tiara","location":"Player-crafted after Dealing with Scabaras (Desert quest)"}
+{"category":"Farming permanent unlock shop and XP outfit","entityId":"desert:garden-of-kharid-rewards","location":"Garden of Kharid near Al Kharid"}
+{"category":"Aura Overhaul — permanent Farming unlock","entityId":"desert:greenfingers-passive"}
+{"category":"permanent Desert Agility infrastructure","entityId":"desert:hets-oasis-agility-course"}
+{"category":"Farming activity and POF supply infrastructure","entityId":"desert:hets-oasis-farming","location":"Het's Oasis (former Duel Arena)"}
+{"category":"Hunter and Prayer training supply","entityId":"desert:hets-oasis-prayer-powders"}
+{"category":"Archaeology dig site progression","entityId":"desert:kharid-et-dig-site"}
+{"category":"Magic utility minigame and permanent unlock shop","entityId":"desert:mage-training-arena"}
+{"category":"permanent Menaphos reputation and supply activity","entityId":"desert:menaphos-city-quests"}
+{"category":"Woodcutting activity and reputation supply","entityId":"desert:menaphos-imperial-acadia","location":"Menaphos Imperial district and VIP skilling area"}
+{"category":"Thieving activity and Summoning utility","entityId":"desert:menaphos-merchant-thieving"}
+{"category":"Fishing and Cooking supply infrastructure","entityId":"desert:menaphos-port-fish-cook"}
+{"category":"regional reputation skilling unlocks","entityId":"desert:menaphos-reputation-vip"}
+{"category":"regional skilling infrastructure","entityId":"desert:menaphos-skilling-hub"}
+{"category":"permanent Menaphos daily reputation and Runecrafting/Prayer infrastructure","entityId":"desert:menaphos-soul-obelisks"}
+{"category":"Mining activity and Crafting glass supply","entityId":"desert:menaphos-worker-mineral-deposits"}
+{"category":"permanent Prayer and life restore shrine","entityId":"desert:nardah-elidinis-statuette","location":"Nardah shrine, slightly north of the city fountain"}
+{"category":"explicit non-claim","entityId":"desert:no-master-farmer-outfit"}
+{"category":"Thieving minigame infrastructure","entityId":"desert:pyramid-plunder","location":"Jalsavrah Pyramid, Sophanem"}
+{"category":"Thieving activity and XP outfit","entityId":"desert:pyramid-plunder-black-ibis","location":"Jalsavrah Pyramid / Pyramid Plunder (Sophanem)"}
+{"category":"Herblore flask infrastructure","entityId":"desert:red-sandstone-potion-flasks"}
+{"category":"permanent Pyramid Plunder tool and desert teleport network","entityId":"desert:sceptre-of-the-gods","location":"Pyramid Plunder room 8 engraved sarcophagus (Sophanem)"}
+{"category":"skilling minigame and regional supply","entityId":"desert:shifting-tombs"}
+{"category":"Slayer permanent utility and reputation","entityId":"desert:slayer-codex-and-sunken-pyramid"}
+{"category":"permanent Slayer point economy quest","entityId":"desert:smoking-kills-slayer-points"}
+{"category":"Hunter activity and Slayer supply adjacency","entityId":"desert:sophanem-plover-and-slayer-support"}
+{"category":"Runecrafting altar infrastructure","entityId":"desert:soul-altar"}
+{"category":"permanent Het's Oasis skilling buff infrastructure","entityId":"desert:statue-of-het-oasis-blessing"}
+{"category":"regional Slayer master hub","entityId":"desert:sumona-slayer-master"}
+{"category":"Archaeology monolith relic power","entityId":"desert:unexpected-diplomacy-relic"}
+{"category":"Aura Overhaul — Ancient Magicks combat Aspect","entityId":"desert:vampyrism-aspect"}
+{"category":"Thieving heist activity (post-2025)","entityId":"desert:vault-of-hereditas-heist","location":"Kharid-et Dig Site sealed vault wing (speak to Liara)"}
+{"category":"Dominion Tower permanent reward access","entityId":"dominion-tower:dreadnips"}
+{"category":"current Daemonheim training and storage state","entityId":"dungeoneering:remaster-floor-progression"}
+{"category":"weekly charm-acquisition modifier","entityId":"familiarisation:triple-charm-throughput"}
+{"category":"quest-gated accuracy familiars","entityId":"fate-of-the-gods:nihil-familiars"}
+{"category":"Runecrafting access infrastructure","entityId":"forinthry:abyss-entrance"}
+{"category":"Runecrafting access and efficiency stack","entityId":"forinthry:abyss-runecrafting-stack"}
+{"category":"achievement diary passive Dungeoneering unlocks","entityId":"forinthry:area-tasks-daemonheim-passives","location":"Daemonheim (Equilibrium: Forinthry)"}
+{"category":"Hunter net-trap method and onyx-core source","entityId":"forinthry:black-salamanders"}
+{"category":"Prayer training infrastructure","entityId":"forinthry:chaos-altar-prayer"}
+{"category":"Hunter and Agility activity with Summoning supply","entityId":"forinthry:charming-moths"}
+{"category":"permanent Dungeoneering Crafting training method","entityId":"forinthry:crafteneering"}
+{"category":"Crafting training method region boundary","entityId":"forinthry:crafteneering-boundary"}
+{"category":"Archaeology dig-site hub","entityId":"forinthry:daemonheim-dig-site","location":"Daemonheim peninsula castle + Warped Depths"}
+{"category":"Dungeoneering resource dungeon (trees + promethium)","entityId":"forinthry:daemonheim-peninsula-resource-island"}
+{"category":"Dungeoneering token shop hub","entityId":"forinthry:daemonheim-rewards-shop-hub"}
+{"category":"Dungeoneering reward shop and utility unlocks","entityId":"forinthry:daemonheim-skilling-rewards"}
+{"category":"Wilderness rare material package","entityId":"forinthry:dark-onyx-core-sources"}
+{"category":"removed Wilderness XP item — planner hazard","entityId":"forinthry:demonic-skull-removed"}
+{"category":"Fishing tool progression","entityId":"forinthry:dragon-harpoon"}
+{"category":"Dungeoneering resource dungeons (chaos druids + hill giants)","entityId":"forinthry:edgeville-resource-dungeons"}
+{"category":"Archaeology dig-site hub","entityId":"forinthry:infernal-source-dig-site","location":"Surface west of Jolly Boar Inn → Star Lodge cellar → Dungeon of Disorder → The Source (under Wilderness Crater)"}
+{"category":"Archaeology monolith relic power","entityId":"forinthry:inspire-love-relic"}
+{"category":"permanent Runecrafting pouch-economy supply package","entityId":"forinthry:magical-thread-abyss-supply"}
+{"category":"Wilderness Slayer master and artefact sink","entityId":"forinthry:mandrith-wilderness-slayer"}
+{"category":"Archaeology monolith relic power","entityId":"forinthry:nexus-mod-relic"}
+{"category":"Herblore combination recipe permanent unlock","entityId":"forinthry:perfect-plus-recipe"}
+{"category":"Archaeology monolith relic power","entityId":"forinthry:pouch-protector-relic"}
+{"category":"high-level Mining supply","entityId":"forinthry:primal-ores"}
+{"category":"permanent Dungeoneering gather infrastructure package","entityId":"forinthry:resource-dungeon-unlocks"}
+{"category":"permanent Summoning account buff","entityId":"forinthry:spirit-cape"}
+{"category":"high-level Archaeology site","entityId":"forinthry:warped-depths"}
+{"category":"Agility training activity","entityId":"forinthry:wilderness-agility-course"}
+{"category":"Woodcutting bakriminel supply","entityId":"forinthry:wilderness-bloodwood"}
+{"category":"Bloodweed farm + aggression potion craft","entityId":"forinthry:wilderness-herb-patch","location":"Wilderness herb patch (north of the Wilderness Crater / Chaos Temple area logistics)"}
+{"category":"high-level Mining ore site","entityId":"forinthry:wilderness-runite-mine"}
+{"category":"Woodcutting resource and split-log production","entityId":"fremennik:arctic-pine-woodcutting"}
+{"category":"Runecrafting altar and Lunar spellbook switch","entityId":"fremennik:astral-altar"}
+{"category":"Hunter gather-tool supply","entityId":"fremennik:azure-skillchompas"}
+{"category":"permanent Prayer pocket-slot unlock","entityId":"fremennik:god-books-horror-from-the-deep","location":"Lighthouse (north of Barbarian Outpost / Fremennik coast) — Jossik after Horror from the Deep"}
+{"category":"Mining resource dungeon and elite banite extension","entityId":"fremennik:jatizso-mine"}
+{"category":"Farming skilling spell bundle","entityId":"fremennik:lunar-farming-utility"}
+{"category":"passive resource kingdom supply","entityId":"fremennik:managing-miscellania"}
+{"category":"Crafting and Fletching processing spell","entityId":"fremennik:spin-flax"}
+{"category":"Slayer combat and charm supply hub","entityId":"fremennik:waterbirth-island"}
+{"category":"Crafting supply shop","entityId":"fremennik:yak-hide-shop"}
+{"category":"Farming / Crafting supply infrastructure","entityId":"fremennik:yak-pof-babies"}
+{"category":"Aura Overhaul — system removal","entityId":"global:aura-system-removed"}
+{"category":"Aura Overhaul — Divination level passive","entityId":"global:divination-enrichment-progression"}
+{"category":"Aura Overhaul — Archaeology gathering passive","entityId":"global:material-cache-consistency"}
+{"category":"Aura Overhaul — Mining level passive","entityId":"global:mining-critical-progression"}
+{"category":"Aura Overhaul — Standard spellbook combat Aspect","entityId":"global:penance-aspect"}
+{"category":"Hunter apex encounters (Havenhythe)","entityId":"havenhythe:big-game-hunter"}
+{"category":"Hunter passive birdhouse route","entityId":"havenhythe:birdhouses"}
+{"category":"Hunter charm training method","entityId":"havenhythe:charming-moths-highweald"}
+{"category":"Hunter trapping infrastructure","entityId":"havenhythe:clockwork-box-traps"}
+{"category":"Woodcutting vine training","entityId":"havenhythe:creeping-ivy"}
+{"category":"Woodcutting and Farming supply infrastructure","entityId":"havenhythe:eternal-magic-nursery"}
+{"category":"Summoning tele necklace and charm double","entityId":"havenhythe:fang-of-mohegan"}
+{"category":"Mushroom shop","entityId":"havenhythe:fern-finds"}
+{"category":"Gem shop","entityId":"havenhythe:heathers-crafting-supplies"}
+{"category":"Mining / Highweald Forest","entityId":"havenhythe:highweald-ruins-mine"}
+{"category":"regional boss unique progression","entityId":"havenhythe:ivar-uniques"}
+{"category":"Farming / Marigold Farm","entityId":"havenhythe:marigold-farm-allotments"}
+{"category":"Farming / Marigold Farm","entityId":"havenhythe:marigold-farm-flower-patch"}
+{"category":"Farming / Marigold Farm","entityId":"havenhythe:marigold-farm-herb-patch"}
+{"category":"regional Farming infrastructure","entityId":"havenhythe:marigold-farm-patches"}
+{"category":"Archaeology dig-site hub (First Age / Guthixian)","entityId":"havenhythe:moonrise-dig-site"}
+{"category":"absence note","entityId":"havenhythe:no-area-tasks-diary"}
+{"category":"permanent regional food and farm-supply shop","entityId":"havenhythe:old-meats"}
+{"category":"regional Slayer boss unique progression","entityId":"havenhythe:sanguine-crawler-uniques"}
+{"category":"regional boss unique progression","entityId":"havenhythe:silverquill-uniques"}
+{"category":"Hunter charm gathering","entityId":"havenhythe:spirit-moths"}
+{"category":"Mining / Wendlewick Deserted Mine","entityId":"havenhythe:wendlewick-deserted-mine"}
+{"category":"starting-region Fishing infrastructure","entityId":"havenhythe:wendlewick-fish-farm"}
+{"category":"regional Mining and Construction supply residual","entityId":"havenhythe:wendlewick-limestone-mine"}
+{"category":"permanent regional travel infrastructure","entityId":"havenhythe:wendlewick-lodestone"}
+{"category":"permanent Magic travel unlock","entityId":"havenhythe:wendlewick-teleport"}
+{"category":"Prayer-drain support familiar","entityId":"hets-oasis:holy-scarab-familiar","location":"Het's Oasis"}
+{"category":"Ancient Invention component economy residual","entityId":"invention:ancient-components-discovery","location":"Inventor's workbench discovery; components from disassembling restored Archaeology artefacts"}
+{"category":"Ancient Invention production residual","entityId":"invention:ancient-tools-enhanced","location":"Inventor's workbench after 'Ancient tools' blueprint (Howl / GE tradeable path)"}
+{"category":"Invention production infrastructure","entityId":"invention:augmentor","location":"Inventor's workbench manufacture after blueprint discovery (Invention tutorial / Guild hub taxonomy)"}
+{"category":"Invention charge infrastructure","entityId":"invention:charge-pack-infrastructure"}
+{"category":"Invention production infrastructure","entityId":"invention:divine-charge-crafting","location":"Inventor's workbench discovery (Invention Guild / multi-city workbenches); weave is remote — no workbench required after discovery"}
+{"category":"Invention production infrastructure residual","entityId":"invention:empty-divine-charge","location":"Inventor's workbench — shared blueprint 'Divine-o-matic vacuum and empty Divine charge' at 101 Invention"}
+{"category":"Invention production infrastructure","entityId":"invention:equipment-dissolver","location":"Inventor's workbench discovery/manufacture (Invention Guild / multi-city workbenches)"}
+{"category":"Invention gizmo economy permanent","entityId":"invention:equipment-separator","location":"Inventor's workbench discovery/manufacture"}
+{"category":"Invention production infrastructure","entityId":"invention:equipment-siphon","location":"Inventor's workbench discovery/manufacture after equipment dissolver"}
+{"category":"Invention gizmo economy permanent","entityId":"invention:gizmo-dissolver","location":"Inventor's workbench discovery/manufacture"}
+{"category":"Invention Farming device discovery","entityId":"invention:herb-protector"}
+{"category":"Invention device permanent unlocks","entityId":"invention:invention-gizmo-shells"}
+{"category":"permanent Invention equipment-state skilling perk ladder","entityId":"invention:invention-skilling-perk-ladder"}
+{"category":"Invention production infrastructure","entityId":"invention:invention-skilling-tools","location":"Inventor's workbench discovery/manufacture at 22 Invention"}
+{"category":"Invention permanent research infrastructure","entityId":"invention:junk-chance-reduction","location":"Invention research interface (account-permanent ranks; Guild/workbench taxonomy)"}
+{"category":"Invention production infrastructure","entityId":"invention:junk-refiner","location":"Inventor's workbench discovery/manufacture; refine is inventory device (usable remotely, including AFK side-activities)"}
+{"category":"Invention production infrastructure","entityId":"invention:mechanised-siphon","location":"Inventor's workbench manufacture; worn in pocket slot or carried"}
+{"category":"Ancient Invention production residual","entityId":"invention:xp-capacitor-5000","location":"Inventor's workbench after 'XP Capacitor' blueprint"}
+{"category":"Archaeology monolith relic power","entityId":"kandarin:always-adze-relic"}
+{"category":"Ancient Invention permanent unlock path","entityId":"kandarin:ancient-invention-blueprints"}
+{"category":"Agility course and outfit progression","entityId":"kandarin:barbarian-outpost-agility","location":"Barbarian Outpost, northern Kandarin"}
+{"category":"permanent multi-skill unlock package","entityId":"kandarin:barbarian-training"}
+{"category":"Hunter D&D permanent access package","entityId":"kandarin:big-chinchompa-private-hunting-grounds","location":"Tree Gnome Stronghold (Nyriki / Mieliki house + private portals)"}
+{"category":"Farming patch network infrastructure","entityId":"kandarin:bush-patch-network","location":"Etcetera / Champions' Guild / Rimmington / Ardougne / Etc. bush patches with Kandarin anchors"}
+{"category":"Hunter catch site for consumable skilling tools","entityId":"kandarin:cobalt-skillchompa-hunter-site","location":"Tree Gnome Stronghold Hunter area (north of Grand Tree)"}
+{"category":"Fishing activity and shop hub","entityId":"kandarin:deep-sea-fishing-hub"}
+{"category":"Fishing activity method bundle","entityId":"kandarin:deep-sea-fishing-methods","location":"Deep Sea Fishing hub (via Fishing Guild / Goomah)"}
+{"category":"Divination XP outfit acquisition","entityId":"kandarin:diviners-outfit-guthixian-cache"}
+{"category":"high-tier Divination outfit","entityId":"kandarin:elder-divination-outfit","location":"Guthixian Cache / Memorial to Guthix geography (Kandarin) + Invention outfit blueprints"}
+{"category":"Smithing and Crafting quest-chain infrastructure","entityId":"kandarin:elemental-workshop","location":"Under Seers' Village (anvil building)"}
+{"category":"permanent Hunter XP tool","entityId":"kandarin:enhanced-yaktwee-stick","location":"Yaktwee Swinmari Cianta, charm sprite Hunter area (north-west of Outpost / south-west Gnome Stronghold)"}
+{"category":"Woodcutting resource supply","entityId":"kandarin:eternal-magic-trees"}
+{"category":"Invention Herblore boost infrastructure","entityId":"kandarin:extreme-invention-boost-path"}
+{"category":"Fishing minigame and high-tier raw fish supply","entityId":"kandarin:fishing-trawler"}
+{"category":"Fishing minigame region boundary","entityId":"kandarin:fishing-trawler-boundary"}
+{"category":"Farming patch network infrastructure","entityId":"kandarin:fruit-tree-patch-hubs","location":"Tree Gnome Stronghold, Catherby, Brimhaven-adjacent routes, and other fruit tree patches"}
+{"category":"permanent multi-destination travel infrastructure","entityId":"kandarin:gnome-glider-network"}
+{"category":"Agility course and permanent weight-reducing clothing unlock","entityId":"kandarin:gnome-stronghold-agility"}
+{"category":"Divination D&D infrastructure","entityId":"kandarin:guthixian-cache"}
+{"category":"Divination training dungeon and permanent bot unlocks","entityId":"kandarin:hall-of-memories","location":"Under Memorial to Guthix (pool entrance)"}
+{"category":"Archaeology tool permanent craft","entityId":"kandarin:imcando-mattock"}
+{"category":"Archaeology monolith relic power","entityId":"kandarin:inspire-awe-relic"}
+{"category":"permanent jewellery recharge infrastructure","entityId":"kandarin:legends-guild-jewellery-recharge"}
+{"category":"Farming seed self-supply infrastructure","entityId":"kandarin:master-farmer-seed-shop"}
+{"category":"Thieving seed supply","entityId":"kandarin:master-farmer-seed-thieving","location":"Catherby docks area; west of Ardougne lodestone near wheat fields; Manor Farm vicinity"}
+{"category":"Divination D&D and passive-buff infrastructure","entityId":"kandarin:memorial-to-guthix","location":"Piscatoris Hunter area (north-west Kandarin)"}
+{"category":"Divination permanent passive unlocks","entityId":"kandarin:memorial-to-guthix-boons"}
+{"category":"Runecrafting altar infrastructure","entityId":"kandarin:ourania-altar","location":"Ourania Cave, west of the Battlefield / south of West Ardougne"}
+{"category":"Archaeology monolith relic power","entityId":"kandarin:pharm-ecology-relic"}
+{"category":"Fishing settlement and food infrastructure","entityId":"kandarin:piscatoris-fishing-colony","location":"North-western Kandarin coast"}
+{"category":"Hunter training area","entityId":"kandarin:piscatoris-hunter-area","location":"South of Piscatoris Fishing Colony / around Memorial to Guthix"}
+{"category":"permanent Farming / POF perk unlocks","entityId":"kandarin:pof-breeding-log-tier1-perks","location":"Manor Farm (Granny Potterington) — breeding log on dining table; Sam the sheepdog"}
+{"category":"permanent Player-owned Farm infrastructure","entityId":"kandarin:pof-farm-totems-tier2"}
+{"category":"Ranged guild infrastructure, shops, and archery competition","entityId":"kandarin:ranging-guild"}
+{"category":"Area Tasks permanent skilling rewards","entityId":"kandarin:seers-village-achievements","location":"Seers' Village, coal trucks, Camelot"}
+{"category":"Farming travel infrastructure","entityId":"kandarin:spirit-tree-network"}
+{"category":"Archaeology dig-site hub","entityId":"kandarin:stormguard-citadel-dig-site","location":"Temple of Ikov portal entrance; floating aviansie citadel (Kandarin League badge)"}
+{"category":"Archaeology dig-site hub","entityId":"kandarin:warforge-dig-site","location":"South Feldip Hills / Oo'glog approach (Kandarin League badge)"}
+{"category":"Archaeology dig site region boundary","entityId":"kandarin:warforge-dig-site-boundary"}
+{"category":"Magic guild infrastructure and rune-essence logistics","entityId":"kandarin:wizards-guild"}
+{"category":"regional multi-skill settlement infrastructure","entityId":"kandarin:yanille-skilling-hub"}
+{"category":"Brimhaven residual Agility reward shop","entityId":"karamja:agility-arena-ticket-exchange"}
+{"category":"early gather and Cooking fruit supply","entityId":"karamja:banana-plantation"}
+{"category":"Herblore production residual (non-perfect)","entityId":"karamja:base-juju-potion-family"}
+{"category":"Agility minigame and ticket shop","entityId":"karamja:brimhaven-agility-arena"}
+{"category":"unique Farming tree patch","entityId":"karamja:calquat-farming-patch"}
+{"category":"Farming unique patch","entityId":"karamja:calquat-patch","location":"Tai Bwo Wannai calquat patch (Imiago)"}
+{"category":"banking QoL from quest reward","entityId":"karamja:deadliest-catch-deposit-boxes"}
+{"category":"regional Slayer master hub","entityId":"karamja:duradel-lapalok-slayer-master"}
+{"category":"TzekHaar combat support and cape progression","entityId":"karamja:fight-cauldron-obsidian-support"}
+{"category":"Mining and Slayer","entityId":"karamja:gemstone-cavern"}
+{"category":"Divination gathering colony","entityId":"karamja:gleaming-wisps"}
+{"category":"regional skilling infrastructure","entityId":"karamja:herblore-habitat"}
+{"category":"Habitat residual seed and spiritbag infrastructure","entityId":"karamja:jadinko-favour-offering-stone"}
+{"category":"Woodcutting / Jadinko Lair","entityId":"karamja:jadinko-lair"}
+{"category":"Firemaking and Woodcutting regional method","entityId":"karamja:jadinko-lair-curly-roots"}
+{"category":"Herblore and Farming supply chain","entityId":"karamja:juju-farming-potion-path","location":"Herblore Habitat, south-east Karamja"}
+{"category":"Fishing method and bait tool unlock","entityId":"karamja:karambwan-vessel-fishing"}
+{"category":"Dungeoneering resource dungeon (imp/lesser demon camp)","entityId":"karamja:karamja-volcano-resource-dungeon"}
+{"category":"Woodcutting early teak access","entityId":"karamja:musa-point-teaks"}
+{"category":"Runecrafting altar and catalytic supply","entityId":"karamja:nature-altar"}
+{"category":"Woodcutting permanent method and temporary buff infrastructure","entityId":"karamja:overgrown-idols"}
+{"category":"permanent Habitat ironman seed and supply shop","entityId":"karamja:papa-mambo-shop"}
+{"category":"Herblore perfect-juju production infrastructure","entityId":"karamja:perfect-juju-potions"}
+{"category":"Herblore perfect-juju production hub","entityId":"karamja:perfect-juju-recipe-hub"}
+{"category":"regional city bank, furnace, and TokKul shop infrastructure","entityId":"karamja:tzhaar-city-skilling-hub"}
+{"category":"TzHaar residual TokKul shop permanent","entityId":"karamja:tzhaar-onyx-gem-store"}
+{"category":"Hunter–Farming–Herblore travel equipment residual","entityId":"karamja:witchdoctor-mask"}
+{"category":"Wilderness minigame combat unlock","entityId":"mage-arena:guthix-staff"}
+{"category":"activity ability unlocks","entityId":"mazcab:teci-combat-ability-unlocks"}
+{"category":"permanent Prayer book switch and restore facility","entityId":"misthalin:altar-of-zaros"}
+{"category":"permanent Prayer book unlock","entityId":"misthalin:ancient-curses-senntisten"}
+{"category":"Archaeology Invention device permanent unlock","entityId":"misthalin:auto-screener"}
+{"category":"Necromancy skilling outfit and ritual support","entityId":"misthalin:city-of-um-ritualist-outfit","location":"City of Um"}
+{"category":"Construction training method and permanent reward currency","entityId":"misthalin:construction-contracts","location":"Estate agents (Varrock primary; Falador, Ardougne, Seers, Prifddinas Ithell also serve contracts)"}
+{"category":"Cooking guild infrastructure","entityId":"misthalin:cooks-guild","location":"Northwest Varrock windmill complex"}
+{"category":"Agility / Divination / Mining multi-skill excavation hub","entityId":"misthalin:empty-throne-room","location":"Entrance east of Varrock Dig Site (Senntisten throne room remains)"}
+{"category":"Aura Overhaul — permanent Thieving unlock","entityId":"misthalin:five-finger-discount-passive"}
+{"category":"Aura Overhaul — permanent Runespan unlock","entityId":"misthalin:focused-siphoning-passive"}
+{"category":"Construction, skilling and operations hub","entityId":"misthalin:fort-forinthry"}
+{"category":"Woodcutting inventory permanent residual from Grove","entityId":"misthalin:fort-grove-wood-spirit-and-box-storage","location":"Woodcutters' Grove / Grove cabin tiers"}
+{"category":"Fletching facility residual densify","entityId":"misthalin:fort-rangers-workroom-fletch-save","location":"Fort Forinthry Ranger's Workroom (bonuses while standing inside)"}
+{"category":"permanent skilling boss infrastructure","entityId":"misthalin:gate-of-elidinis","location":"Top of the Sanctum of Rebirth (Underworld / City of Um access) — wiki League region badge Misthalin"}
+{"category":"low-input Fishing unlock","entityId":"misthalin:ghostly-sole-fishing"}
+{"category":"monthly Fishing / Farming XP and treasure infrastructure","entityId":"misthalin:giant-oyster","location":"Sunken Tutorial Island via Wizard Myrtle (Wizards' Tower entrance)"}
+{"category":"end-game Archaeology mattock","entityId":"misthalin:guildmaster-tonys-mattock"}
+{"category":"Thieving early-game activity infrastructure","entityId":"misthalin:ham-hideout-thieving","location":"Lumbridge forest trapdoor north-west of Lumbridge Castle"}
+{"category":"Archaeology dig site and Ancient Summoning materials","entityId":"misthalin:infernal-source-dig-site","location":"West of the Jolly Boar Inn, north of Varrock / near Fort Forinthry approach"}
+{"category":"Magic best-in-slot staff farming activity","entityId":"misthalin:kerapac-hard-mode-fsoa-farm"}
+{"category":"achievement diary Mining and Smithing doubling package","entityId":"misthalin:new-varrock-achievements-doubling","location":"New Varrock (Dimension of Disaster) — taskmaster Tiny Zemouregal"}
+{"category":"Runecrafting pure essence supply","entityId":"misthalin:pure-essence-chest","location":"Wizards' Tower beside Archmage Sedridor"}
+{"category":"Hunter minigame and high-value impling supply","entityId":"misthalin:puro-puro-dragon-implings","location":"Puro-Puro (permanent Zanaris wheat crop circle; temporary crop circles worldwide)"}
+{"category":"Archaeology Guild rank permanent progression","entityId":"misthalin:qualification-ladder-intern-professor","location":"Acting Guildmaster Reiniger ceremony at Archaeology Guild (campus)"}
+{"category":"Necromancy best-in-slot farming activity","entityId":"misthalin:rasial-necro-bis-farm"}
+{"category":"removed daily RC utility — residual item economy","entityId":"misthalin:rune-goldberg-vis-wax"}
+{"category":"Runecrafting outfit and reward shop","entityId":"misthalin:runespan-master-runecrafter-robes","location":"Runespan access from the Wizards' Tower"}
+{"category":"Archaeology dig-site hub","entityId":"misthalin:senntisten-dig-site","location":"Senntisten city / Azzanadra's Cathedral and Nodon Front fringes"}
+{"category":"Necromancy supply shops","entityId":"misthalin:soul-supplies-and-um-shops","location":"City of Um main plaza and smithy district"}
+{"category":"Thieving guild infrastructure","entityId":"misthalin:thieves-guild","location":"Trapdoor north-east of Lumbridge Market / north of Lumbridge furnace (Zamorakian herbalists' house)"}
+{"category":"Farming patch unlock","entityId":"misthalin:um-mushroom-patch","location":"Hanging Gardens, City of Um"}
+{"category":"Prayer unlock infrastructure","entityId":"misthalin:um-selene-necromancy-prayers","location":"Selene in City of Um chapel / graveyard shrine house"}
+{"category":"Underworld achievement skilling breakpoint densify","entityId":"misthalin:underworld-grimoire-skilling-milestones"}
+{"category":"permanent Combat Mastery hub residual (prayer-book swap gate)","entityId":"misthalin:wars-blessing"}
+{"category":"Combat Mastery permanent combat utilities","entityId":"misthalin:wars-blessing-combat-mastery"}
+{"category":"PvM hub combat infrastructure","entityId":"misthalin:wars-retreat-combat-hub"}
+{"category":"Woodcutting hub and Imcando hatchet progression","entityId":"misthalin:woodcutters-grove-facilities","location":"Woodcutters' Grove east of Fort Forinthry"}
+{"category":"Mining and undead-combat tool source","entityId":"morytania:abandoned-mine-salve-shards","location":"Abandoned Mine / Haunted Mine"}
+{"category":"combat Archaeology relic","entityId":"morytania:berserkers-fury-relic"}
+{"category":"Runecrafting altar infrastructure","entityId":"morytania:blood-altar-runecrafting","location":"Blood Rune Temple / Meiyerditch tunnels"}
+{"category":"Farming","entityId":"morytania:canifis-mushroom-patch"}
+{"category":"Prayer permanent ability unlock","entityId":"morytania:cremation-ability"}
+{"category":"Prayer activity and XP outfit","entityId":"morytania:ectofuntus-first-age-outfit","location":"Ectofuntus"}
+{"category":"Archaeology monolith relic power","entityId":"morytania:endurance-relic"}
+{"category":"Archaeology dig site infrastructure","entityId":"morytania:everlight-dig-site","location":"East of Meiyerditch / Hallowvale peninsula"}
+{"category":"combat Archaeology relic","entityId":"morytania:heightened-senses-relic"}
+{"category":"Archaeology monolith relic power","entityId":"morytania:inspire-effort-relic"}
+{"category":"permanent toolbelt druid pouch upgrade","entityId":"morytania:ouroboros-pouch","location":"Temple Trekking noticeboard reward (Burgh de Rott / Paterdomus)"}
+{"category":"Farming patch cluster","entityId":"morytania:phasmatys-farming-patches","location":"Farming patches south/west of Port Phasmatys (Ectophial / fairy ALQ approach)"}
+{"category":"mid-game Magic and Farming resource dungeon","entityId":"morytania:polypore-dungeon"}
+{"category":"Prayer and Firemaking activity","entityId":"morytania:shades-of-mortton-cremation","location":"Mort'ton / Temple of Mort'ton"}
+{"category":"Archaeology monolith relic power","entityId":"morytania:sticky-fingers-relic"}
+{"category":"Aura Overhaul — Morytania combat passive","entityId":"morytania:sunspear-prayer-sustain"}
+{"category":"Construction outfit activity pointer","entityId":"morytania:temple-trekking-construction-dependency"}
+{"category":"permanent minigame reward infrastructure package","entityId":"morytania:temple-trekking-permanent-rewards","location":"Burgh de Rott ↔ Paterdomus (Temple Trekking / Burgh de Rott Ramble)"}
+{"category":"Construction and Woodcutting outfit progression","entityId":"morytania:temple-trekking-skilling-outfits"}
+{"category":"combat and multi-skill support infrastructure","entityId":"morytania:vyre-combat-infrastructure"}
+{"category":"Prayer Firemaking multi-skill activity","entityId":"morytania:vyre-cremation-sunspear","location":"Darkmeyer / vyrelords and vyreladies"}
+{"category":"Agility course infrastructure","entityId":"morytania:werewolf-agility"}
+{"category":"multi-region Prayer progression package","entityId":"multi-region:prayer-training-infrastructure-stack"}
+{"category":"permanent Slayer Rewards Learn unlock","entityId":"multi-region:slayer-broad-fletching"}
+{"category":"permanent multi-region Slayer task list control","entityId":"multi-region:slayer-prefer-block-extend"}
+{"category":"permanent multi-region Slayer task-list capacity residual","entityId":"multi-region:slayer-prefer-block-slots"}
+{"category":"permanent Slayer Rewards Learn unlock","entityId":"multi-region:slayer-quick-killing-blows"}
+{"category":"permanent Slayer Rewards Buy unlock — personal dungeon capacity","entityId":"multi-region:sunken-pyramid-fourth-room"}
+{"category":"permanent Slayer Rewards Learn unlock — dungeon layout QoL","entityId":"multi-region:sunken-pyramid-soul-reposition"}
+{"category":"Necromancy combat progression tree","entityId":"necromancy:well-of-souls-talents"}
+{"category":"Summoning and Divination district infrastructure","entityId":"prifddinas:amlodd-district"}
+{"category":"district skilling hub infrastructure residual","entityId":"prifddinas:amlodd-skilling-hub","location":"Amlodd Clan district, north-west of Tower of Voices (Prifddinas)"}
+{"category":"district skilling and utility hub","entityId":"prifddinas:cadarn-skilling-hub"}
+{"category":"Smithing from Seren-stone Mining","entityId":"prifddinas:corrupted-ore-smithing"}
+{"category":"district skilling hub infrastructure","entityId":"prifddinas:crwys-district"}
+{"category":"district skilling hub infrastructure residual","entityId":"prifddinas:crwys-skilling-hub","location":"Crwys Clan district, north-east of Tower of Voices (Prifddinas)"}
+{"category":"combination-potion flask infrastructure","entityId":"prifddinas:crystal-flasks"}
+{"category":"skilling tool progression","entityId":"prifddinas:crystal-tool-workshop"}
+{"category":"high-level resource dungeon access","entityId":"prifddinas:edimmu-resource-dungeon"}
+{"category":"high-level Thieving activity","entityId":"prifddinas:elven-clan-thieving"}
+{"category":"crystal-tool currency supply package","entityId":"prifddinas:harmonic-dust-economy"}
+{"category":"Agility course and incidental Prayer","entityId":"prifddinas:hefin-agility-course"}
+{"category":"Prayer training infrastructure","entityId":"prifddinas:hefin-corrupted-seren-stone"}
+{"category":"district skilling hub infrastructure residual","entityId":"prifddinas:hefin-district"}
+{"category":"district Slayer and skilling-support hub","entityId":"prifddinas:iorwerth-district-skilling"}
+{"category":"Crafting/Smithing crystal-equipment infrastructure","entityId":"prifddinas:ithell-crystal-singing"}
+{"category":"district skilling hub infrastructure residual","entityId":"prifddinas:ithell-district"}
+{"category":"Crafting and Construction harmonic-dust activity","entityId":"prifddinas:ithell-harps"}
+{"category":"district skilling hub infrastructure residual","entityId":"prifddinas:meilyr-district"}
+{"category":"Farming and perfect-juju supply infrastructure","entityId":"prifddinas:meilyr-harmony-pillars"}
+{"category":"Herblore recipe and shop infrastructure","entityId":"prifddinas:meilyr-recipe-shop"}
+{"category":"cross-region Farming travel infrastructure","entityId":"prifddinas:prif-spirit-tree-network"}
+{"category":"Agility course permanent outfit residual","entityId":"prifddinas:prifddinian-worker-outfit"}
+{"category":"AFK Mining and Smithing supply loop","entityId":"prifddinas:seren-stones"}
+{"category":"Agility activity infrastructure","entityId":"prifddinas:serenity-posts"}
+{"category":"regional skilling infrastructure","entityId":"prifddinas:skilling-hub"}
+{"category":"district Mining/Smithing infrastructure","entityId":"prifddinas:trahaearn-mining-hub"}
+{"category":"district skilling hub infrastructure residual","entityId":"prifddinas:trahaearn-skilling-hub","location":"Trahaearn Clan district, south-east of Tower of Voices (Prifddinas)"}
+{"category":"city-wide skilling blessing","entityId":"prifddinas:voice-of-seren"}
+{"category":"high-level Fishing activity depth","entityId":"prifddinas:waterfall-fishing-depth"}
+{"category":"Fishing activity and permanent tool unlock","entityId":"prifddinas:waterfall-fishing-shop"}
+{"category":"activity ability unlocks","entityId":"shattered-worlds:current-permanent-abilities","location":"Void Knights' Outpost"}
+{"category":"standard Summoning pouch progression","entityId":"summoning:combat-and-burden-milestones"}
+{"category":"skilling prayer unlock","entityId":"tirannwn:chronicle-attraction"}
+{"category":"Thieving skilling spell","entityId":"tirannwn:crystal-mask"}
+{"category":"consumable multi-skill gatherer tools","entityId":"tirannwn:crystal-skillchompas","location":"Isafdar forest north of Tyras Camp (wild); crystal chinchompa POF produce (Manor Farm)"}
+{"category":"permanent crystal tool seed supply residual","entityId":"tirannwn:crystal-tool-seed-acquisition"}
+{"category":"Prifddinas Farming unique content","entityId":"tirannwn:crystal-tree-farming"}
+{"category":"gathering XP spell","entityId":"tirannwn:crystallise"}
+{"category":"regional Runecrafting altar infrastructure","entityId":"tirannwn:death-altar-runecrafting"}
+{"category":"permanent Prayer and spellbook swap facility","entityId":"tirannwn:elven-grimoire","location":"Haf's Battlestaves, Cadarn Clan district, Prifddinas"}
+{"category":"Farming special patch and perfect-juju supply","entityId":"tirannwn:harmony-pillars","location":"Meilyr Clan district, Prifddinas (4 pillars)"}
+{"category":"skilling prayer unlock","entityId":"tirannwn:light-form"}
+{"category":"endgame skilling teleport hub","entityId":"tirannwn:max-guild","location":"Cadarn district outer circle, Prifddinas"}
+{"category":"permanent free Magic teleport unlock","entityId":"tirannwn:max-guild-teleport-spell"}
+{"category":"regional Slayer master hub","entityId":"tirannwn:morvran-slayer-master"}
+{"category":"quest city-access skilling gate","entityId":"tirannwn:plagues-end-unlocks"}
+{"category":"Tirannwn Seren skilling prayer unlock package","entityId":"tirannwn:seren-skilling-prayers-package"}
+{"category":"skilling prayer unlock","entityId":"tirannwn:superheat-form"}
+{"category":"combat ability unlock","entityId":"tuskas-wrath:current-acquisition"}

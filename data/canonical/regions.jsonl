@@ -1,0 +1,12 @@
+{"availability":"elective","id":"anachronia","taxonomyOrder":10}
+{"availability":"elective","id":"asgarnia","taxonomyOrder":3}
+{"availability":"elective","id":"desert","taxonomyOrder":7}
+{"availability":"elective","id":"forinthry","taxonomyOrder":6}
+{"availability":"elective","id":"fremennik","taxonomyOrder":5}
+{"availability":"global","id":"global","taxonomyOrder":99,"verified":true}
+{"availability":"starting","id":"havenhythe","taxonomyOrder":1}
+{"availability":"elective","id":"kandarin","taxonomyOrder":4}
+{"availability":"automatic_early","id":"karamja","taxonomyOrder":2}
+{"availability":"starting","id":"misthalin","taxonomyOrder":0}
+{"availability":"elective","id":"morytania","taxonomyOrder":8}
+{"availability":"elective","id":"tirannwn","taxonomyOrder":9}

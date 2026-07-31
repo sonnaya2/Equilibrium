@@ -1,0 +1,100 @@
+{"entityId":"ability:important-ability-changes:bombardment"}
+{"entityId":"ability:important-ability-changes:deaths-swiftness"}
+{"entityId":"ability:important-ability-changes:shadow-tendrils"}
+{"category":"combat Aspect spell","entityId":"aura-overhaul:penance-aspect"}
+{"category":"combat Aspect spell","entityId":"aura-overhaul:vampyrism-aspect"}
+{"category":"ability upgrades","entityId":"dragonkin-laboratory:greater-melee-codices"}
+{"category":"crafted Slayer ability codices","entityId":"elite-dungeons:slayer-ability-codices"}
+{"category":"ability upgrade","entityId":"fort-forinthry:greater-sonic-wave"}
+{"category":"incantation unlock","entityId":"fort-forinthry:invoke-lord-of-bones"}
+{"category":"crafted ability codex","entityId":"invention:ingenuity-of-the-humans"}
+{"category":"enhanced","cooldownTicks":34,"entityId":"magic:asphyxiate","level":59,"style":"magic"}
+{"category":"enhanced","cooldownTicks":34,"entityId":"magic:asphyxiate-resplendence","level":59,"style":"magic"}
+{"category":"basic","cooldownTicks":17,"entityId":"magic:chain","level":51,"style":"magic"}
+{"category":"enhanced","entityId":"magic:claws-of-guthix","level":60,"style":"magic"}
+{"category":"basic","cooldownTicks":30,"entityId":"magic:combust","level":38,"style":"magic"}
+{"category":"basic","cooldownTicks":9,"entityId":"magic:concentrated-blast","level":66,"style":"magic"}
+{"category":"enhanced","cooldownTicks":25,"entityId":"magic:corruption-blast","level":70,"style":"magic"}
+{"category":"basic","cooldownTicks":12,"entityId":"magic:dragon-breath","level":19,"style":"magic"}
+{"category":"enhanced","entityId":"magic:dragon-breath-empowered","level":19,"style":"magic"}
+{"category":"basic","cooldownTicks":17,"entityId":"magic:greater-chain","level":51,"style":"magic"}
+{"category":"basic","cooldownTicks":9,"entityId":"magic:greater-concentrated-blast","level":66,"style":"magic"}
+{"category":"basic","cooldownTicks":25,"entityId":"magic:greater-sonic-wave","level":6,"style":"magic"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"magic:greater-sunshine","level":76,"style":"magic"}
+{"category":"basic","cooldownTicks":25,"entityId":"magic:impact","level":31,"style":"magic"}
+{"category":"enhanced","cooldownTicks":100,"entityId":"magic:instability","level":95,"style":"magic"}
+{"category":"basic","entityId":"magic:magic-attack","level":1,"style":"magic"}
+{"category":"enhanced","cooldownTicks":35,"entityId":"magic:magma-tempest","level":85,"style":"magic"}
+{"category":"ultimate","cooldownTicks":50,"entityId":"magic:omnipower","level":12,"style":"magic"}
+{"category":"ultimate","cooldownTicks":50,"entityId":"magic:omnipower-igneous","level":12,"style":"magic"}
+{"category":"utility","cooldownTicks":50,"entityId":"magic:runic-charge","level":26,"style":"magic"}
+{"category":"enhanced","cooldownTicks":75,"entityId":"magic:smoke-tendrils","level":75,"style":"magic"}
+{"category":"basic","cooldownTicks":25,"entityId":"magic:sonic-wave","level":6,"style":"magic"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"magic:sunshine","level":76,"style":"magic"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"magic:tsunami","level":90,"style":"magic"}
+{"category":"enhanced","cooldownTicks":9,"entityId":"magic:wild-magic","level":3,"style":"magic"}
+{"category":"basic","cooldownTicks":9,"entityId":"melee:adaptive-strike","level":7,"style":"melee"}
+{"category":"enhanced","cooldownTicks":10,"entityId":"melee:assault","level":3,"style":"melee"}
+{"category":"basic","entityId":"melee:attack","level":1,"style":"melee"}
+{"category":"basic","cooldownTicks":25,"entityId":"melee:backhand","level":31,"style":"melee"}
+{"category":"basic","cooldownTicks":34,"entityId":"melee:barge","level":65,"style":"melee"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"melee:berserk","level":76,"style":"melee"}
+{"category":"basic","cooldownTicks":100,"entityId":"melee:chaos-roar","level":92,"style":"melee"}
+{"category":"enhanced","cooldownTicks":40,"entityId":"melee:dismember","level":50,"style":"melee"}
+{"category":"enhanced","cooldownTicks":34,"entityId":"melee:flurry","level":45,"style":"melee"}
+{"category":"basic","cooldownTicks":25,"entityId":"melee:fury","level":21,"style":"melee"}
+{"category":"basic","cooldownTicks":34,"entityId":"melee:greater-barge","level":65,"style":"melee"}
+{"category":"enhanced","cooldownTicks":34,"entityId":"melee:greater-flurry","level":45,"style":"melee"}
+{"category":"basic","cooldownTicks":25,"entityId":"melee:greater-fury","level":21,"style":"melee"}
+{"category":"enhanced","cooldownTicks":34,"entityId":"melee:hurricane","level":37,"style":"melee"}
+{"category":"enhanced","entityId":"melee:massacre","level":75,"style":"melee"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"melee:meteor-strike","level":90,"style":"melee"}
+{"category":"ultimate","cooldownTicks":50,"entityId":"melee:overpower","level":15,"style":"melee"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"melee:pulverise","level":71,"style":"melee"}
+{"category":"basic","cooldownTicks":40,"entityId":"melee:punish","level":60,"style":"melee"}
+{"category":"basic","cooldownTicks":17,"entityId":"melee:rend","level":18,"style":"melee"}
+{"category":"enhanced","entityId":"melee:slaughter","level":60,"style":"melee"}
+{"category":"enhanced","entityId":"necromancy:bloat","level":48,"style":"necromancy"}
+{"category":"enhanced","cooldownTicks":75,"entityId":"necromancy:blood-siphon","level":36,"style":"necromancy"}
+{"category":"enhanced","cooldownTicks":15,"entityId":"necromancy:command-phantom-guardian","level":80,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:command-putrid-zombie","level":60,"style":"necromancy"}
+{"category":"enhanced","cooldownTicks":25,"entityId":"necromancy:command-skeleton-warrior","level":20,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:conjure-phantom-guardian","level":70,"style":"necromancy"}
+{"category":"enhanced","cooldownTicks":50,"entityId":"necromancy:conjure-putrid-zombie","level":40,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:conjure-skeleton-warrior","level":2,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:conjure-undead-army","level":99,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:conjure-vengeful-ghost","level":40,"style":"necromancy"}
+{"category":"enhanced","cooldownTicks":50,"entityId":"necromancy:death-grasp","level":70,"style":"necromancy"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"necromancy:death-skulls","level":28,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:finger-of-death","level":8,"style":"necromancy"}
+{"category":"ultimate","cooldownTicks":150,"entityId":"necromancy:living-death","level":76,"style":"necromancy"}
+{"category":"basic","cooldownTicks":3,"entityId":"necromancy:necromancy","level":1,"style":"necromancy"}
+{"category":"basic","cooldownTicks":9,"entityId":"necromancy:soul-sap","level":54,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:soul-strike","level":54,"style":"necromancy"}
+{"category":"enhanced","cooldownTicks":25,"entityId":"necromancy:spectral-scythe","level":62,"style":"necromancy"}
+{"category":"basic","cooldownTicks":24,"entityId":"necromancy:touch-of-death","level":13,"style":"necromancy"}
+{"category":"enhanced","entityId":"necromancy:volley-of-souls","level":66,"style":"necromancy"}
+{"category":"basic","entityId":"ranged:attack","level":1,"style":"ranged"}
+{"category":"basic","cooldownTicks":25,"entityId":"ranged:binding-shot","level":31,"style":"ranged"}
+{"category":"enhanced","cooldownTicks":3,"entityId":"ranged:bombardment","level":36,"style":"ranged"}
+{"category":"enhanced","cooldownTicks":25,"entityId":"ranged:corruption-shot","level":70,"style":"ranged"}
+{"category":"ultimate","cooldownTicks":50,"entityId":"ranged:deadshot","level":21,"style":"ranged"}
+{"category":"ultimate","cooldownTicks":50,"entityId":"ranged:deadshot-igneous","level":21,"style":"ranged"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"ranged:deaths-swiftness","level":76,"style":"ranged"}
+{"category":"basic","cooldownTicks":34,"entityId":"ranged:galeshot","level":58,"style":"ranged"}
+{"category":"ultimate","cooldownTicks":100,"entityId":"ranged:greater-deaths-swiftness","level":76,"style":"ranged"}
+{"category":"basic","cooldownTicks":17,"entityId":"ranged:greater-ricochet","style":"ranged"}
+{"category":"enhanced","cooldownTicks":100,"entityId":"ranged:imbue-shadows","level":90,"style":"ranged"}
+{"category":"basic","cooldownTicks":5,"entityId":"ranged:piercing-shot","level":13,"style":"ranged"}
+{"category":"enhanced","cooldownTicks":34,"entityId":"ranged:rapid-fire","level":62,"style":"ranged"}
+{"category":"basic","cooldownTicks":17,"entityId":"ranged:ricochet","level":67,"style":"ranged"}
+{"category":"enhanced","cooldownTicks":75,"entityId":"ranged:shadow-tendrils","level":75,"style":"ranged"}
+{"category":"enhanced","cooldownTicks":3,"entityId":"ranged:snap-shot","level":2,"style":"ranged"}
+{"category":"enhanced","cooldownTicks":100,"entityId":"ranged:snipe","level":7,"style":"ranged"}
+{"category":"ability upgrade","entityId":"senntisten:greater-concentrated-blast"}
+{"category":"ability unlock","entityId":"senntisten:magma-tempest"}
+{"category":"basic","cooldownTicks":50,"entityId":"shared:sacrifice","level":1,"style":"shared"}
+{"category":"vital-spark ability codices","entityId":"sophanem:golden-touch-unsullied"}
+{"category":"ability unlock","entityId":"sophanem:limitless"}
+{"category":"ability unlock","entityId":"telos:reprisal"}
+{"category":"ability upgrades","entityId":"zamorak-undercity:ability-codices"}

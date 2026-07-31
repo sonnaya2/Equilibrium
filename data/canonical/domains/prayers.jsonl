@@ -1,0 +1,203 @@
+{"book":"ancient","entityId":"curse:affliction","level":99}
+{"book":"ancient","entityId":"curse:anguish"}
+{"book":"ancient","entityId":"curse:berserker"}
+{"book":"ancient","entityId":"curse:chronicle-attraction"}
+{"book":"ancient","entityId":"curse:dark-form"}
+{"book":"ancient","entityId":"curse:deflect-magic"}
+{"book":"ancient","entityId":"curse:deflect-melee"}
+{"book":"ancient","entityId":"curse:deflect-necromancy"}
+{"book":"ancient","entityId":"curse:deflect-ranged"}
+{"book":"ancient","entityId":"curse:deflect-summoning"}
+{"book":"ancient","entityId":"curse:desolation","level":99}
+{"book":"ancient","entityId":"curse:fortitude"}
+{"book":"ancient","entityId":"curse:leech-adrenaline"}
+{"book":"ancient","entityId":"curse:leech-defence"}
+{"book":"ancient","entityId":"curse:leech-magic-attack"}
+{"book":"ancient","entityId":"curse:leech-magic-strength"}
+{"book":"ancient","entityId":"curse:leech-melee-attack"}
+{"book":"ancient","entityId":"curse:leech-melee-strength"}
+{"book":"ancient","entityId":"curse:leech-necromancy-attack"}
+{"book":"ancient","entityId":"curse:leech-necromancy-strength"}
+{"book":"ancient","entityId":"curse:leech-ranged-attack"}
+{"book":"ancient","entityId":"curse:leech-ranged-strength"}
+{"book":"ancient","entityId":"curse:leech-run-energy"}
+{"book":"ancient","entityId":"curse:light-form"}
+{"book":"ancient","entityId":"curse:malevolence","level":99}
+{"book":"ancient","entityId":"curse:protect-item"}
+{"book":"ancient","entityId":"curse:ruination","level":99}
+{"book":"ancient","entityId":"curse:sap-adrenaline"}
+{"book":"ancient","entityId":"curse:sap-defence"}
+{"book":"ancient","entityId":"curse:sap-magic-attack"}
+{"book":"ancient","entityId":"curse:sap-magic-strength"}
+{"book":"ancient","entityId":"curse:sap-melee-attack"}
+{"book":"ancient","entityId":"curse:sap-melee-strength"}
+{"book":"ancient","entityId":"curse:sap-necromancy-attack"}
+{"book":"ancient","entityId":"curse:sap-necromancy-strength"}
+{"book":"ancient","entityId":"curse:sap-ranged-attack"}
+{"book":"ancient","entityId":"curse:sap-ranged-strength"}
+{"book":"ancient","entityId":"curse:sorrow"}
+{"book":"ancient","entityId":"curse:soul-link"}
+{"book":"ancient","entityId":"curse:soul-split"}
+{"book":"ancient","entityId":"curse:superheat-form"}
+{"book":"ancient","entityId":"curse:teamwork-protection"}
+{"book":"ancient","entityId":"curse:torment"}
+{"book":"ancient","entityId":"curse:turmoil"}
+{"book":"ancient","entityId":"curse:wrath"}
+{"entityId":"dungeoneering:rapid-renewal-current"}
+{"entityId":"gate-of-elidinis:eclipsed-soul"}
+{"entityId":"nex-aod:praesul-curses"}
+{"book":"standard","entityId":"prayer:accelerated-decay"}
+{"book":"switchable_book","entityId":"prayer:ancient-curses"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:affliction"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:anguish"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:berserker"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:chronicle-attraction"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:dark-form"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:deflect-magic"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:deflect-melee"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:deflect-necromancy"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:deflect-ranged"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:deflect-summoning"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:desolation"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:fortitude"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-adrenaline"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-defence"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-magic-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-magic-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-melee-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-melee-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-necromancy-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-necromancy-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-ranged-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-ranged-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:leech-run-energy"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:light-form"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:malevolence"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:protect-item"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:ruination"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-adrenaline"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-defence"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-magic-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-magic-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-melee-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-melee-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-necromancy-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-necromancy-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-ranged-attack"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sap-ranged-strength"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:sorrow"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:soul-link"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:soul-split"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:superheat-form"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:teamwork-protection"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:torment"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:turmoil"}
+{"book":"Ancient Curses","entityId":"prayer:ancient-curses:wrath"}
+{"book":"standard","entityId":"prayer:augury"}
+{"book":"standard","entityId":"prayer:burst-of-strength"}
+{"book":"standard","entityId":"prayer:charge"}
+{"book":"standard","entityId":"prayer:chivalry"}
+{"book":"standard","entityId":"prayer:clarity-of-thought"}
+{"book":"standard","entityId":"prayer:decay"}
+{"book":"standard","entityId":"prayer:divine-rage"}
+{"book":"standard","entityId":"prayer:eagle-eye"}
+{"book":"standard","entityId":"prayer:eclipsed-soul"}
+{"book":"standard","entityId":"prayer:hand-of-doom"}
+{"book":"standard","entityId":"prayer:hand-of-fate"}
+{"book":"standard","entityId":"prayer:hand-of-judgement"}
+{"book":"standard","entityId":"prayer:hastened-decay"}
+{"book":"standard","entityId":"prayer:hawk-eye"}
+{"book":"standard","entityId":"prayer:improved-reflexes"}
+{"book":"standard","entityId":"prayer:incredible-reflexes"}
+{"book":"standard","entityId":"prayer:mystic-lore"}
+{"book":"standard","entityId":"prayer:mystic-might"}
+{"book":"standard","entityId":"prayer:mystic-will"}
+{"book":"standard","entityId":"prayer:overcharge"}
+{"book":"standard","entityId":"prayer:overpowering-force"}
+{"book":"standard","entityId":"prayer:piety"}
+{"book":"standard","entityId":"prayer:protect-from-magic"}
+{"book":"standard","entityId":"prayer:protect-from-melee"}
+{"book":"standard","entityId":"prayer:protect-from-necromancy"}
+{"book":"standard","entityId":"prayer:protect-from-ranged"}
+{"book":"standard","entityId":"prayer:protect-from-summoning"}
+{"book":"standard","entityId":"prayer:protect-item"}
+{"book":"standard","entityId":"prayer:rapid-heal"}
+{"book":"standard","entityId":"prayer:rapid-renewal"}
+{"book":"standard","entityId":"prayer:rapid-restore"}
+{"book":"standard","entityId":"prayer:redemption"}
+{"book":"standard","entityId":"prayer:retribution"}
+{"book":"standard","entityId":"prayer:rigour"}
+{"book":"standard","entityId":"prayer:rock-skin"}
+{"book":"standard","entityId":"prayer:sanctity"}
+{"book":"book_extension","entityId":"prayer:seren-prayers"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:chronicle-attraction"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:dark-form"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:fortitude"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:light-form"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:soul-link"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:superheat-form"}
+{"book":"Seren Prayers","entityId":"prayer:seren-prayers:teamwork-protection"}
+{"book":"standard","entityId":"prayer:sharp-eye"}
+{"book":"standard","entityId":"prayer:smite"}
+{"book":"switchable_book","entityId":"prayer:standard-prayers"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:accelerated-decay"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:augury"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:burst-of-strength"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:charge"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:chivalry"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:clarity-of-thought"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:decay"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:divine-rage"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:eagle-eye"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:eclipsed-soul"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:hand-of-doom"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:hand-of-fate"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:hand-of-judgement"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:hastened-decay"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:hawk-eye"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:improved-reflexes"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:incredible-reflexes"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:mystic-lore"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:mystic-might"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:mystic-will"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:overcharge"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:overpowering-force"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:piety"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:protect-from-magic"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:protect-from-melee"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:protect-from-necromancy"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:protect-from-ranged"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:protect-from-summoning"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:protect-item"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:rapid-heal"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:rapid-renewal"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:rapid-restore"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:redemption"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:retribution"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:rigour"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:rock-skin"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:sanctity"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:sharp-eye"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:smite"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:steel-skin"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:super-charge"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:superhuman-strength"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:thick-skin"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:ultimate-strength"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:unrelenting-force"}
+{"book":"Standard Prayers","entityId":"prayer:standard-prayers:unstoppable-force"}
+{"book":"standard","entityId":"prayer:steel-skin"}
+{"book":"standard","entityId":"prayer:super-charge"}
+{"book":"standard","entityId":"prayer:superhuman-strength"}
+{"book":"standard","entityId":"prayer:thick-skin"}
+{"book":"standard","entityId":"prayer:ultimate-strength"}
+{"book":"standard","entityId":"prayer:unrelenting-force"}
+{"book":"standard","entityId":"prayer:unstoppable-force"}
+{"entityId":"sanctum-of-rebirth:divine-rage"}
+{"book":"seren","entityId":"seren:chronicle-attraction"}
+{"book":"seren","entityId":"seren:dark-form"}
+{"book":"seren","entityId":"seren:fortitude"}
+{"book":"seren","entityId":"seren:light-form"}
+{"book":"seren","entityId":"seren:soul-link"}
+{"book":"seren","entityId":"seren:superheat-form"}
+{"book":"seren","entityId":"seren:teamwork-protection"}

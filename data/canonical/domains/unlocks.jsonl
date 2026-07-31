@@ -1,0 +1,667 @@
+{"category":"movement ability","entityId":"agility:dive"}
+{"category":"persistent familiar-duration support","entityId":"anachronia:totem-of-summoning"}
+{"category":"Divination level passive","entityId":"aura-overhaul:divination-enrichment-progression"}
+{"category":"permanent Thieving success progression","entityId":"aura-overhaul:five-finger-discount-passive"}
+{"category":"permanent Runespan success unlock","entityId":"aura-overhaul:focused-siphoning-passive"}
+{"category":"permanent Farming yield unlock","entityId":"aura-overhaul:greenfingers-passive"}
+{"category":"Mining level passive","entityId":"aura-overhaul:mining-critical-progression"}
+{"category":"Archaeology gathering passive","entityId":"aura-overhaul:resourceful-material-cache-rule"}
+{"category":"Morytania combat account passive","entityId":"aura-overhaul:sunspear-prayer-sustain"}
+{"category":"six-dose combat container access","entityId":"crafting:combat-flask-infrastructure"}
+{"category":"post-remaster Dungeoneering drop-cleaner unlock","entityId":"dungeoneering:bonecrusher-current"}
+{"category":"post-remaster Summoning drop-cleaner unlock","entityId":"dungeoneering:charming-imp-current"}
+{"category":"post-remaster Herblore drop-cleaner unlock","entityId":"dungeoneering:herbicide-current"}
+{"category":"post-remaster permanent combination-potion recipe-page route","entityId":"dungeoneering:meilyr-recipe-page-purchase"}
+{"category":"Daemonheim ring","entityId":"dungeoneering:ring-of-vigour"}
+{"category":"account passive","entityId":"dungeoneering:ring-of-vigour-passive"}
+{"category":"post-remaster Archaeology resource passive","entityId":"dungeoneering:scroll-of-restoration"}
+{"category":"account passive plus farm-totem state","entityId":"farms:combat-perk-state"}
+{"category":"permanent Herblore recipe progression","entityId":"herblore:overload-chain"}
+{"category":"temporary charm-drop modifier","entityId":"potion:charming"}
+{"category":"high-level untradeable prayer consumable","entityId":"potion:extreme-prayer"}
+{"category":"permanent Meilyr combination-potion recipe","entityId":"potion:holy-overload"}
+{"category":"permanent Meilyr combination-potion recipe","entityId":"potion:spiritual-prayer"}
+{"category":"permanent Anachronia spa duration infrastructure","entityId":"unlock:anachronia:anachronia-base-camp-spa-pools"}
+{"category":"Woodcutting activity and temporary boost source","entityId":"unlock:anachronia:anachronia-overgrown-idols-woodcutting"}
+{"category":"island permanent passive buff system","entityId":"unlock:anachronia:anachronia-totems-permanent-multi-skill-buffs"}
+{"category":"Ranch Out of Time combat passive","entityId":"unlock:anachronia:armoured-hide-barricade-perk"}
+{"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"unlock:anachronia:artificers-measure"}
+{"category":"Thieving heist activity (post-2025)","entityId":"unlock:anachronia:asuran-arsenal-heist"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:anachronia:bait-and-switch-evil-bobs-catspaw"}
+{"category":"Archaeology skilling off-hand cross-region chain","entityId":"unlock:anachronia:balaraks-sash-brush"}
+{"category":"style-specific BiS Magic combat boots","entityId":"unlock:anachronia:blast-diffusion-enhanced-blast-diffusion-boots"}
+{"category":"upgraded Fremennik ring (channel/crit support)","entityId":"unlock:anachronia:channellers-ring"}
+{"category":"Archaeology relic power","entityId":"unlock:anachronia:death-note-relic-power"}
+{"category":"Farming","entityId":"unlock:anachronia:dinosaur-farm-animal-buyers"}
+{"category":"Orthen Archaeology Herblore recipe","entityId":"unlock:anachronia:dragonkin-potion-recipe-fragments-orthen"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:anachronia:flow-state-soma"}
+{"category":"Tier 80 hybrid armour","entityId":"unlock:anachronia:gemstone-armour"}
+{"category":"Hunter currency shop infrastructure","entityId":"unlock:anachronia:hunter-mark-shop-irwinsson"}
+{"category":"Ranch Out of Time combat passive","entityId":"unlock:anachronia:king-of-beasts-bomb-conservation-perk"}
+{"category":"style-specific BiS combat boots","entityId":"unlock:anachronia:laceration-fleeting-boots-shadow-spike-t90"}
+{"category":"tier-82 Anachronia slayer spear","entityId":"unlock:anachronia:laniakeas-spear"}
+{"category":"tier-100 ranged armour region pressure","entityId":"unlock:anachronia:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter"}
+{"category":"tier-92 melee DoT spear","entityId":"unlock:anachronia:masterwork-spear-of-annihilation"}
+{"category":"dinosaur combat and drop support necklace","entityId":"unlock:anachronia:necklace-of-salamancy"}
+{"category":"Ranch Out of Time combat passive","entityId":"unlock:anachronia:no-fear-meteor-strike-perk"}
+{"category":"Necromancy best-in-slot ring","entityId":"unlock:anachronia:occultists-ring"}
+{"category":"Archaeology travel infrastructure","entityId":"unlock:anachronia:orthen-teleportation-device-network"}
+{"category":"Fletching and Firemaking production activity","entityId":"unlock:anachronia:prehistoric-potteringtons-accidental-fletching-and-firemaking"}
+{"category":"best-in-slot hybrid crit ring (melee-heavy)","entityId":"unlock:anachronia:reavers-ring"}
+{"category":"regional boss BiS drop source","entityId":"unlock:anachronia:rex-matriarchs-osseous"}
+{"category":"Hunter skilling off-hand","entityId":"unlock:anachronia:skekas-hypnowand"}
+{"category":"regional and global combat infrastructure","entityId":"unlock:anachronia:slayer-lodge-progression"}
+{"category":"best-in-slot ranged-oriented upgraded Fremennik ring","entityId":"unlock:anachronia:stalkers-ring"}
+{"category":"Tier 80 two-handed melee weapon","entityId":"unlock:anachronia:terrasaur-maul"}
+{"category":"persistent maximum-life-point combat buff","entityId":"unlock:anachronia:totem-of-vitality"}
+{"category":"Firemaking minigame reward infrastructure","entityId":"unlock:asgarnia:all-fired-up-beacons-ring-of-fire-flame-gloves"}
+{"category":"cross-region Firemaking minigame full reward chain","entityId":"unlock:asgarnia:all-fired-up-inferno-adze-reward-chain"}
+{"category":"Farming allotment network package","entityId":"unlock:asgarnia:allotment-patch-hub-package"}
+{"category":"EoF special-attack magic weapon","entityId":"unlock:asgarnia:armadyl-battlestaff-storms-end-special"}
+{"category":"midgame GWD1 ranged power armour","entityId":"unlock:asgarnia:armadyl-equipment-gwd1-ranged-power-ladder"}
+{"category":"Smithing training, Respect, and permanent reward shop","entityId":"unlock:asgarnia:artisans-workshop-burial-equipment-hub"}
+{"category":"Runecrafting geography","entityId":"unlock:asgarnia:asgarnia-runecrafting-altars-mind-body-law"}
+{"category":"Thieving activity and pilfer-point infrastructure","entityId":"unlock:asgarnia:asgarnia-safecracking-circuit"}
+{"category":"Smithing XP outfit","entityId":"unlock:asgarnia:blacksmiths-outfit"}
+{"category":"permanent drop-cleaner upgrade unlock","entityId":"unlock:asgarnia:bonecrusher-auto-pickup-upgrade-waiko-boni"}
+{"category":"Herblore XP outfit","entityId":"unlock:asgarnia:botanists-outfit"}
+{"category":"late Mining / Woodcutting toolcraft infrastructure","entityId":"unlock:asgarnia:camdozaal-sacred-forge-ramarno"}
+{"category":"combat Archaeology and Invention relic cross-region chain","entityId":"unlock:asgarnia:conservation-of-energy-relic-chain"}
+{"category":"Crafting guild infrastructure","entityId":"unlock:asgarnia:crafting-guild"}
+{"category":"Invention permanent blueprint unlock","entityId":"unlock:asgarnia:crystal-tool-siphon-blueprint-waiko-permanent"}
+{"category":"cross-region Firemaking and Woodcutting method stack","entityId":"unlock:asgarnia:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear"}
+{"category":"Tier 92 melee armour upgrade","entityId":"unlock:asgarnia:custom-fit-trimmed-masterwork"}
+{"category":"combat Archaeology relic cross-region chain","entityId":"unlock:asgarnia:death-ward-relic-chain"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:asgarnia:divine-conversion-cres-framework"}
+{"category":"permanent early multi-tool and flat XP tool","entityId":"unlock:asgarnia:dwarven-army-axe"}
+{"category":"BiS power armour craft / T92 ranged","entityId":"unlock:asgarnia:elite-sirenic-armour-t92-ranged-power"}
+{"category":"Magic best-in-slot power armour cross-region chain","entityId":"unlock:asgarnia:elite-tectonic-robe-armour"}
+{"category":"Runecrafting altar and island infrastructure","entityId":"unlock:asgarnia:entrana-law-altar-and-island-skilling-access"}
+{"category":"Herblore dose and unfinished-potion XP outfit","entityId":"unlock:asgarnia:factory-outfit-flash-powder-factory"}
+{"category":"Farming patch infrastructure","entityId":"unlock:asgarnia:falador-farm-allotment-flower-herb-patches"}
+{"category":"achievement diary Farming and Artisans utility","entityId":"unlock:asgarnia:falador-shield-1-4"}
+{"category":"permanent Uncharted Isles personal island unlock","entityId":"unlock:asgarnia:flag-fall-claimed-uncharted-isle-permanence"}
+{"category":"Firemaking XP gloves","entityId":"unlock:asgarnia:flame-gloves"}
+{"category":"Hunter XP outfit","entityId":"unlock:asgarnia:hunters-outfit"}
+{"category":"All Fired Up dual hatchet-pickaxe equipment","entityId":"unlock:asgarnia:inferno-adze"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:asgarnia:inspire-genius-howls-thinking-cap"}
+{"category":"Invention workshop and machines","entityId":"unlock:asgarnia:invention-guild"}
+{"category":"Mining and Fishing cavern","entityId":"unlock:asgarnia:living-rock-caverns"}
+{"category":"tier-99/100 smithable two-handed melee weapon","entityId":"unlock:asgarnia:masterwork-2h-sword"}
+{"category":"tier-99/100 fletchable two-handed ranged weapon","entityId":"unlock:asgarnia:masterwork-bow"}
+{"category":"cross-region Smithing production dependency stack","entityId":"unlock:asgarnia:masterwork-plate-orthen-furnace-core-pressure-stack"}
+{"category":"tier-100 runecrafted two-handed magic weapon","entityId":"unlock:asgarnia:masterwork-staff"}
+{"category":"tier-82 two-handed spear / halberd","entityId":"unlock:asgarnia:masutas-warspear"}
+{"category":"Mining and Smithing hub","entityId":"unlock:asgarnia:mining-guild"}
+{"category":"Woodcutting elite skilling outfit","entityId":"unlock:asgarnia:natures-sentinel-outfit"}
+{"category":"Boss rewards","entityId":"unlock:asgarnia:nex-angel-of-death"}
+{"category":"regional multi-skill transport and shop infrastructure","entityId":"unlock:asgarnia:port-sarim-docks-and-skilling-hub"}
+{"category":"Firemaking XP ring","entityId":"unlock:asgarnia:ring-of-fire"}
+{"category":"midgame GWD1 magic power armour","entityId":"unlock:asgarnia:robes-of-subjugation-gwd1-magic-power-ladder"}
+{"category":"Tier 80 two-handed crossbow","entityId":"unlock:asgarnia:royal-crossbow"}
+{"category":"regional boss BiS drop source","entityId":"unlock:asgarnia:seiryu-the-azure-serpent-ed1-final"}
+{"category":"Magic dual-wield mid-high weapons","entityId":"unlock:asgarnia:seismic-wand-and-singularity"}
+{"category":"Hatchet upgrade component","entityId":"unlock:asgarnia:shard-of-the-lumberjack"}
+{"category":"Magic power armour","entityId":"unlock:asgarnia:tectonic-robe-armour"}
+{"category":"Farming permanent patch unlock","entityId":"unlock:asgarnia:troll-stronghold-disease-free-herb-patch"}
+{"category":"Magic dual-wield best-in-slot weapons","entityId":"unlock:asgarnia:wand-of-the-praesul-and-imperium-core"}
+{"category":"tier-85 two-handed ranged poison","entityId":"unlock:asgarnia:wyvern-crossbow"}
+{"category":"tier-80 Nex chargebow","entityId":"unlock:asgarnia:zaryte-bow"}
+{"category":"residual tank armour / raids","entityId":"unlock:desert:achto-raids-armour-mazcab"}
+{"category":"high-end combat weapons / armour / endgame upgrade material","entityId":"unlock:desert:amascut-the-devourer-progression"}
+{"category":"Thieving XP outfit","entityId":"unlock:desert:black-ibis-outfit"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:desert:blessing-of-het-relic-eye-of-het-ii"}
+{"category":"tier-85 two-handed magic","entityId":"unlock:desert:camel-staff"}
+{"category":"achievement diary Crafting Farming glass utility","entityId":"unlock:desert:desert-amulet-1-4"}
+{"category":"tier-95 Necromancy main-hand weapon","entityId":"unlock:desert:devourers-guard"}
+{"category":"Dominion Tower permanent combat reward","entityId":"unlock:desert:dreadnips"}
+{"category":"tier-90 dual-wield melee weapons","entityId":"unlock:desert:drygore-weapon-set"}
+{"category":"Slayer unique","entityId":"unlock:desert:focus-sight"}
+{"category":"Farming permanent unlock shop and XP outfit","entityId":"unlock:desert:garden-of-kharid-and-sydekixs-shop-of-balance"}
+{"category":"melee power gloves with bleed passive","entityId":"unlock:desert:gloves-of-passage-enhanced-gloves-of-passage"}
+{"category":"Summoning familiar from Het's Oasis materials","entityId":"unlock:desert:holy-scarab-familiar"}
+{"category":"Magic anti-melee niche BiS staff","entityId":"unlock:desert:inquisitor-staff"}
+{"category":"tier-92 dual-wield melee","entityId":"unlock:desert:khopesh-of-tumeken-elidinis-magister-dw-melee"}
+{"category":"tier-100 runecrafted two-handed magic weapon","entityId":"unlock:desert:masterwork-staff"}
+{"category":"permanent Menaphos daily reputation and Runecrafting/Prayer infrastructure","entityId":"unlock:desert:menaphos-soul-obelisks-daily-reputation-rc-prayer"}
+{"category":"permanent Prayer and life restore shrine","entityId":"unlock:desert:nardah-elidinis-statuette"}
+{"category":"tier-85 dual-wield melee","entityId":"unlock:desert:ripper-claws"}
+{"category":"permanent Pyramid Plunder tool and desert teleport network","entityId":"unlock:desert:sceptre-of-the-gods"}
+{"category":"tier-92 two-handed ranged weapon and EoF special","entityId":"unlock:desert:seren-godbow"}
+{"category":"Hunter","entityId":"unlock:desert:sophanem-plover-birds"}
+{"category":"Magic two-handed staff","entityId":"unlock:desert:staff-of-sliske"}
+{"category":"permanent Het's Oasis skilling buff infrastructure","entityId":"unlock:desert:statue-of-het-oasis-skilling-xp-blessing"}
+{"category":"tier-95 two-handed melee AoE weapon","entityId":"unlock:desert:tumekens-light"}
+{"category":"near-BiS two-handed melee weapon with combat special","entityId":"unlock:desert:zaros-godsword"}
+{"category":"Runecrafting access and efficiency stack","entityId":"unlock:forinthry:abyss-runecrafting-stack"}
+{"category":"tier-75 Daemonheim magic","entityId":"unlock:forinthry:abyssal-wand-and-abyssal-orb"}
+{"category":"permanent coin drop cleaner (Daemonheim Rewards)","entityId":"unlock:forinthry:advanced-gold-accumulator"}
+{"category":"permanent Smithing heat tool upgrade (Daemonheim Rewards)","entityId":"unlock:forinthry:advanced-smithing-autoheater"}
+{"category":"tier-87 Wilderness slayer chest style weapons","entityId":"unlock:forinthry:annihilation-decimation-obliteration-wilderness-t87-trio"}
+{"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"unlock:forinthry:artificers-measure"}
+{"category":"Archaeology skilling off-hand cross-region chain","entityId":"unlock:forinthry:balaraks-sash-brush"}
+{"category":"Hunter net-trap method and onyx-core source","entityId":"unlock:forinthry:black-salamanders"}
+{"category":"regional boss BiS drop source","entityId":"unlock:forinthry:black-stone-dragon-ed2-final"}
+{"category":"permanent Prayer drop cleaner (Daemonheim Rewards)","entityId":"unlock:forinthry:bonecrusher"}
+{"category":"permanent drop-cleaner upgrade unlock","entityId":"unlock:forinthry:bonecrusher-auto-pickup-upgrade-waiko-boni"}
+{"category":"cross-region Prayer AFK restore package","entityId":"unlock:forinthry:bonecrusher-demon-horn-necklace-prayer-stack"}
+{"category":"regional boss BiS drop source","entityId":"unlock:forinthry:chaos-elemental"}
+{"category":"Dungeoneering reward gear","entityId":"unlock:forinthry:chaotic-weapons"}
+{"category":"permanent Summoning drop cleaner (Daemonheim Rewards)","entityId":"unlock:forinthry:charming-imp"}
+{"category":"Hunter and Agility activity with Summoning supply","entityId":"unlock:forinthry:charming-moths"}
+{"category":"regional boss BiS drop source","entityId":"unlock:forinthry:corporeal-beast"}
+{"category":"permanent Dungeoneering Crafting training method","entityId":"unlock:forinthry:crafteneering-daemonheim-leather-loop"}
+{"category":"achievement diary passive Dungeoneering unlocks","entityId":"unlock:forinthry:daemonheim-area-tasks-passive-rewards"}
+{"category":"Archaeology dig-site hub","entityId":"unlock:forinthry:daemonheim-dig-site-dragonkin-mini-site"}
+{"category":"entire skill/infrastructure dependency","entityId":"unlock:forinthry:daemonheim-dungeoneering"}
+{"category":"Dungeoneering resource dungeon (trees + promethium)","entityId":"unlock:forinthry:daemonheim-peninsula-resource-island"}
+{"category":"Dungeoneering token shop hub","entityId":"unlock:forinthry:daemonheim-rewards-shop-marmaros"}
+{"category":"Grace of the Elves permanent upgrade","entityId":"unlock:forinthry:dark-facet-of-grace-gote-enchantment"}
+{"category":"permanent luck enhancer enchantment","entityId":"unlock:forinthry:dark-facet-of-luck-tier-4-luck-account-permanent"}
+{"category":"permanent Passage of the Abyss enchantment","entityId":"unlock:forinthry:dark-facet-of-passage-passage-of-the-abyss-infinite-charges"}
+{"category":"Wilderness rare material package","entityId":"unlock:forinthry:dark-onyx-core-source-package"}
+{"category":"Dungeoneering Prayer restore necklace (top)","entityId":"unlock:forinthry:demon-horn-necklace"}
+{"category":"Herblore training utility","entityId":"unlock:forinthry:deployable-herb-burner"}
+{"category":"Magic armour material","entityId":"unlock:forinthry:draconic-energy-magic"}
+{"category":"regional boss BiS drop source","entityId":"unlock:forinthry:dragonkin-laboratory-ed2"}
+{"category":"Melee abilities / elite tectonic materials","entityId":"unlock:forinthry:dragonkin-laboratory-upgrades"}
+{"category":"Dungeoneering resource dungeons (chaos druids + hill giants)","entityId":"unlock:forinthry:edgeville-resource-dungeons"}
+{"category":"tier-92 two-handed ranged weapon","entityId":"unlock:forinthry:eldritch-crossbow"}
+{"category":"Magic best-in-slot power armour cross-region chain","entityId":"unlock:forinthry:elite-tectonic-robe-armour"}
+{"category":"tier-90 style power boots cross-region","entityId":"unlock:forinthry:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades"}
+{"category":"permanent Invention blueprint and craft path","entityId":"unlock:forinthry:enchanted-notepaper-blueprint-ironman-note-craft"}
+{"category":"permanent endgame RC essence-storage pouch","entityId":"unlock:forinthry:expansive-essence-pouch-70-essence-non-degrading"}
+{"category":"Mining/Crafting inventory container (Daemonheim Rewards)","entityId":"unlock:forinthry:gem-bag"}
+{"category":"upgraded gem inventory container (Daemonheim Rewards)","entityId":"unlock:forinthry:gem-bag-upgraded"}
+{"category":"Mining XP outfit","entityId":"unlock:forinthry:gemstone-golem-outfit"}
+{"category":"charged coin drop cleaner (Daemonheim Rewards)","entityId":"unlock:forinthry:gold-accumulator"}
+{"category":"cross-region Seren prayer and porter sustain stack","entityId":"unlock:forinthry:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain"}
+{"category":"Seren prayer drain and porter necklace","entityId":"unlock:forinthry:grace-of-the-elves-gote"}
+{"category":"permanent RC/Magic combat-skilling pouch upgrade","entityId":"unlock:forinthry:grasping-rune-pouch"}
+{"category":"Wilderness combat unlock","entityId":"unlock:forinthry:guthix-staff-and-claws-of-guthix-access"}
+{"category":"permanent Herblore drop cleaner (Daemonheim Rewards)","entityId":"unlock:forinthry:herbicide"}
+{"category":"niche anti-magic T80 ranged weapon","entityId":"unlock:forinthry:hexhunter-bow"}
+{"category":"Archaeology dig-site hub","entityId":"unlock:forinthry:infernal-source-dig-site-zamorakian"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:forinthry:inspire-love-ariadnes-diadem"}
+{"category":"regional boss BiS drop source","entityId":"unlock:forinthry:king-black-dragon"}
+{"category":"permanent Runecrafting pouch-economy supply package","entityId":"unlock:forinthry:magical-thread"}
+{"category":"Wilderness Slayer master and artefact sink","entityId":"unlock:forinthry:mandrith-wilderness-slayer-master"}
+{"category":"tier-99/100 smithable two-handed melee weapon","entityId":"unlock:forinthry:masterwork-2h-sword"}
+{"category":"tier-100 runecrafted two-handed magic weapon","entityId":"unlock:forinthry:masterwork-staff"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:forinthry:nexus-mod-abyssal-gatestone"}
+{"category":"cross-region Smithing and Firemaking full AFK stack","entityId":"unlock:forinthry:orthen-furnace-core-superheat-form-smithing-autoheater-stack"}
+{"category":"Herblore combination recipe permanent unlock","entityId":"unlock:forinthry:perfect-plus-potion-recipe"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:forinthry:pouch-protector-threads-of-fate"}
+{"category":"high-level Mining supply","entityId":"unlock:forinthry:primal-ores"}
+{"category":"Dungeoneering party ring and role upgrades","entityId":"unlock:forinthry:ring-of-kinship"}
+{"category":"Daemonheim ring","entityId":"unlock:forinthry:ring-of-vigour"}
+{"category":"account passive","entityId":"unlock:forinthry:ring-of-vigour-passive"}
+{"category":"T90 glacor-boot upgrade material","entityId":"unlock:forinthry:rune-dragon-boot-upgrade-glands"}
+{"category":"permanent RC/Magic pouch progression ladder","entityId":"unlock:forinthry:rune-pouch-craft-ladder-large-grasping-expansive-essence-path"}
+{"category":"permanent multi-region RC essence-storage ladder","entityId":"unlock:forinthry:runecrafting-essence-pouches-small-massive"}
+{"category":"permanent Herblore Daemonheim reward","entityId":"unlock:forinthry:scroll-of-cleansing"}
+{"category":"permanent Crafting scroll (Daemonheim Rewards)","entityId":"unlock:forinthry:scroll-of-dexterity"}
+{"category":"permanent Smithing Daemonheim reward","entityId":"unlock:forinthry:scroll-of-efficiency"}
+{"category":"permanent Daemonheim gathering XP scroll (Daemonheim Rewards)","entityId":"unlock:forinthry:scroll-of-gathering"}
+{"category":"permanent Farming scroll (Daemonheim Rewards)","entityId":"unlock:forinthry:scroll-of-life"}
+{"category":"permanent Construction scroll (Daemonheim Rewards)","entityId":"unlock:forinthry:scroll-of-proficiency"}
+{"category":"permanent Dungeoneering QoL scroll","entityId":"unlock:forinthry:scroll-of-quick-teleportation-daemonheim-permanent"}
+{"category":"permanent Prayer unlock scroll (Daemonheim Rewards)","entityId":"unlock:forinthry:scroll-of-renewal"}
+{"category":"permanent Archaeology scroll (Daemonheim Rewards)","entityId":"unlock:forinthry:scroll-of-restoration"}
+{"category":"permanent RC/Magic combat-rune pouch (mid thread sink)","entityId":"unlock:forinthry:sealed-large-rune-pouch-combat-rune-storage"}
+{"category":"permanent RC/Magic combat-rune pouch (early thread sink)","entityId":"unlock:forinthry:sealed-small-rune-pouch-combat-rune-storage"}
+{"category":"Farming drop cleaner","entityId":"unlock:forinthry:seedicide"}
+{"category":"BiS power armour craft / T90 ranged","entityId":"unlock:forinthry:sirenic-armour-t90-ranged-power-craft"}
+{"category":"best-in-slot ranged power armour craft chain","entityId":"unlock:forinthry:sirenic-elite-sirenic-armour"}
+{"category":"Hunter skilling off-hand cross-region chain","entityId":"unlock:forinthry:skekas-hypnowand"}
+{"category":"permanent Smithing Daemonheim reward","entityId":"unlock:forinthry:smithing-autoheater"}
+{"category":"permanent Summoning combat support","entityId":"unlock:forinthry:spirit-cape-passive"}
+{"category":"permanent Summoning account buff","entityId":"unlock:forinthry:spirit-cape-permanent-familiar-special-discount"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:forinthry:spirit-weaver-pastkeepers-tapestry"}
+{"category":"Dungeoneering Prayer restore necklace (mid)","entityId":"unlock:forinthry:split-dragontooth-necklace"}
+{"category":"EoF special-attack melee upgrade","entityId":"unlock:forinthry:superior-dragon-claws-wilderness-hilt-upgrade"}
+{"category":"EoF special-attack ancient warrior","entityId":"unlock:forinthry:superior-statiuss-warhammer-superior-vestas-longsword-eof-specs"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"unlock:forinthry:toolbelt-attach-advanced-gold-accumulator"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"unlock:forinthry:toolbelt-attach-bonecrusher"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"unlock:forinthry:toolbelt-attach-charming-imp"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"unlock:forinthry:toolbelt-attach-herbicide"}
+{"category":"Dungeoneering Prayer restore necklace (entry)","entityId":"unlock:forinthry:twisted-bird-skull-necklace"}
+{"category":"high-level Archaeology site","entityId":"unlock:forinthry:warped-depths-daemonheim-depths-excavation"}
+{"category":"Dungeoneering elite skilling outfit","entityId":"unlock:forinthry:warped-gorajan-trailblazer-outfit"}
+{"category":"Agility training activity","entityId":"unlock:forinthry:wilderness-agility-course"}
+{"category":"Woodcutting bakriminel supply","entityId":"unlock:forinthry:wilderness-bloodwood-trees"}
+{"category":"Prayer training infrastructure","entityId":"unlock:forinthry:wilderness-chaos-altars-prayer-offer"}
+{"category":"Farming permanent patch unlock","entityId":"unlock:forinthry:wilderness-herb-patch"}
+{"category":"achievement diary Runecrafting Prayer Agility utility","entityId":"unlock:forinthry:wilderness-sword-1-4"}
+{"category":"Woodcutting resource and split-log production","entityId":"unlock:fremennik:arctic-pine-woodcutting-neitiznot"}
+{"category":"Runecrafting altar and Lunar spellbook switch","entityId":"unlock:fremennik:astral-altar-lunar-isle"}
+{"category":"Hunter gather-tool supply","entityId":"unlock:fremennik:azure-skillchompas-rellekka-hunter-area"}
+{"category":"upgraded Fremennik ring (channel/crit support)","entityId":"unlock:fremennik:channellers-ring"}
+{"category":"Crafting supply shop","entityId":"unlock:fremennik:contraband-yak-produce-jatizso"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:fremennik:deathless-koscheis-death-egg"}
+{"category":"Woodcutting tool base and crystal/Imcando hatchet feedstock","entityId":"unlock:fremennik:dragon-hatchet-dagannoth-kings-pressure"}
+{"category":"Mining tool base and crystal/Imcando pickaxe feedstock","entityId":"unlock:fremennik:dragon-pickaxe-chaos-dwarf-battlefield-chaos-giants"}
+{"category":"tier-90 style power boots cross-region","entityId":"unlock:fremennik:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades"}
+{"category":"Achievement rewards","entityId":"unlock:fremennik:fremennik-sea-boots"}
+{"category":"permanent Prayer pocket-book progression","entityId":"unlock:fremennik:god-books-base-unlock-horror-from-the-deep-pages"}
+{"category":"Mining XP outfit","entityId":"unlock:fremennik:golden-mining-suit"}
+{"category":"Tier 75 two-handed ranged weapon","entityId":"unlock:fremennik:hand-cannon"}
+{"category":"tier-100 augmentable Woodcutting tool follow-on chain","entityId":"unlock:fremennik:hatchet-of-bloom-and-blight"}
+{"category":"tier-90 augmentable Woodcutting tool cross-region chain","entityId":"unlock:fremennik:hatchet-of-ember-and-glade"}
+{"category":"Mining resource dungeon and elite banite extension","entityId":"unlock:fremennik:jatizso-dungeon-mine"}
+{"category":"Farming skilling spell bundle","entityId":"unlock:fremennik:lunar-farming-utility-spells"}
+{"category":"passive resource kingdom supply","entityId":"unlock:fremennik:managing-miscellania"}
+{"category":"cross-region augmentable Mining tool","entityId":"unlock:fremennik:pickaxe-of-earth-and-song"}
+{"category":"cross-region tier-100 augmentable Mining tool follow-on","entityId":"unlock:fremennik:pickaxe-of-life-and-death"}
+{"category":"best-in-slot hybrid crit ring (melee-heavy)","entityId":"unlock:fremennik:reavers-ring"}
+{"category":"Crafting and Fletching processing spell","entityId":"unlock:fremennik:spin-flax-lunar"}
+{"category":"best-in-slot ranged-oriented upgraded Fremennik ring","entityId":"unlock:fremennik:stalkers-ring"}
+{"category":"mid-high style tank boots","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank"}
+{"category":"Slayer combat and charm supply hub","entityId":"unlock:fremennik:waterbirth-island-access"}
+{"category":"early Crafting product","entityId":"unlock:fremennik:yak-hide-armour"}
+{"category":"Woodcutting vine training","entityId":"unlock:havenhythe:creeping-ivy"}
+{"category":"Woodcutting and Farming supply infrastructure","entityId":"unlock:havenhythe:dalias-tree-nursery-eternal-magic-plots"}
+{"category":"Summoning tele necklace and charm double","entityId":"unlock:havenhythe:fang-of-mohegan"}
+{"category":"Mushroom shop","entityId":"unlock:havenhythe:ferns-finds"}
+{"category":"Hunter apex encounters","entityId":"unlock:havenhythe:havenhythe-big-game-hunter"}
+{"category":"Hunter passive route","entityId":"unlock:havenhythe:havenhythe-birdhouses"}
+{"category":"Gem shop","entityId":"unlock:havenhythe:heathers-crafting-supplies"}
+{"category":"boss uniques","entityId":"unlock:havenhythe:ivar-king-of-bones-uniques"}
+{"category":"Hunter method","entityId":"unlock:havenhythe:jackalopes-bis-early-mid-hunter-method"}
+{"category":"tier-100 ranged armour region pressure","entityId":"unlock:havenhythe:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter"}
+{"category":"Archaeology dig-site hub","entityId":"unlock:havenhythe:moonrise-dig-site"}
+{"category":"Mining / Highweald Forest","entityId":"unlock:havenhythe:necrite-rocks-phasmatite-rocks-platinum-rocks-and-havensilver-rock"}
+{"category":"Necromancy ritual skilling ring","entityId":"unlock:havenhythe:ring-of-kayazu"}
+{"category":"Slayer boss uniques","entityId":"unlock:havenhythe:sanguine-crawler-uniques"}
+{"category":"boss uniques","entityId":"unlock:havenhythe:silverquill-the-dreadhog-uniques"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:havenhythe:tear-of-inanna"}
+{"category":"Mining / Wendlewick Deserted Mine","entityId":"unlock:havenhythe:uncommon-gem-rocks"}
+{"category":"starting-region Fishing infrastructure","entityId":"unlock:havenhythe:wendlewick-fish-farm"}
+{"category":"regional Mining and Construction supply","entityId":"unlock:havenhythe:wendlewick-limestone-mine"}
+{"category":"permanent regional travel infrastructure","entityId":"unlock:havenhythe:wendlewick-lodestone"}
+{"category":"permanent Magic travel unlock","entityId":"unlock:havenhythe:wendlewick-teleport-standard-spellbook"}
+{"entityId":"unlock:historical-removed-unlocks:blood-tendrils"}
+{"entityId":"unlock:historical-removed-unlocks:greater-dazing-shot"}
+{"entityId":"unlock:historical-removed-unlocks:salt-the-wound"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:abyssal-link-the-subtle-blade"}
+{"category":"weight-reducing Agility reward","entityId":"unlock:kandarin:agile-legs"}
+{"category":"Agility weight-reducing outfit piece","entityId":"unlock:kandarin:agile-top"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree"}
+{"category":"Invention upgrade","entityId":"unlock:kandarin:ancient-invention"}
+{"category":"Ancient Invention permanent unlock path","entityId":"unlock:kandarin:ancient-invention-blueprints-howls-workshop"}
+{"category":"achievement diary Thieving RC Farming utility","entityId":"unlock:kandarin:ardougne-cloak-1-4"}
+{"category":"tier-90 Ranged weapons","entityId":"unlock:kandarin:ascension-crossbows"}
+{"category":"cross-region Woodcutting and Firemaking auto-burn path package","entityId":"unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze"}
+{"category":"Agility course and outfit progression","entityId":"unlock:kandarin:barbarian-outpost-agility-course"}
+{"category":"permanent multi-skill unlock package","entityId":"unlock:kandarin:barbarian-training-otto-multi-skill-package"}
+{"category":"Hunter D&D permanent access package","entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds"}
+{"category":"Farming patch network infrastructure","entityId":"unlock:kandarin:bush-patch-network-kandarin-core"}
+{"category":"Fishing permanent storage and telebank tool","entityId":"unlock:kandarin:champions-tackle-box"}
+{"category":"Divination fragment utility infrastructure","entityId":"unlock:kandarin:chronicle-fragment-utility-post-dailyscape-permanent-rules"}
+{"category":"Hunter catch site for consumable skilling tools","entityId":"unlock:kandarin:cobalt-skillchompa-tree-gnome-stronghold-catch-site"}
+{"category":"combat Archaeology and Invention relic cross-region chain","entityId":"unlock:kandarin:conservation-of-energy-relic-chain"}
+{"category":"combat Archaeology relic cross-region chain","entityId":"unlock:kandarin:death-ward-relic-chain"}
+{"category":"Fishing activity and shop hub","entityId":"unlock:kandarin:deep-sea-fishing-hub"}
+{"category":"Fishing activity method bundle","entityId":"unlock:kandarin:deep-sea-fishing-hub-methods-and-boosts"}
+{"category":"Divination XP outfit","entityId":"unlock:kandarin:diviners-outfit"}
+{"category":"Smithing and Crafting quest-chain infrastructure","entityId":"unlock:kandarin:elemental-workshop"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:endurance-ooglog-wellspring"}
+{"category":"Hunter permanent XP and charm-sprite tool","entityId":"unlock:kandarin:enhanced-yaktwee-stick"}
+{"category":"Woodcutting resource supply","entityId":"unlock:kandarin:eternal-magic-trees"}
+{"category":"Invention Herblore boost infrastructure","entityId":"unlock:kandarin:extreme-invention-potion-boost-path"}
+{"category":"cross-region Invention boost supply stack","entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore"}
+{"category":"Fishing XP outfit","entityId":"unlock:kandarin:fishing-outfit-fish-flingers"}
+{"category":"Fishing minigame and high-tier raw fish supply","entityId":"unlock:kandarin:fishing-trawler-port-khazard"}
+{"category":"Farming patch network infrastructure","entityId":"unlock:kandarin:fruit-tree-patch-hubs-kandarin-core"}
+{"category":"combat Archaeology relic cross-region chain","entityId":"unlock:kandarin:fury-of-the-small-relic-chain"}
+{"category":"permanent multi-destination travel infrastructure","entityId":"unlock:kandarin:gnome-glider-transportation-network"}
+{"category":"Cooking XP outfit","entityId":"unlock:kandarin:gnome-restaurant-and-sous-chefs-outfit"}
+{"category":"Agility course and permanent weight-reducing clothing unlock","entityId":"unlock:kandarin:gnome-stronghold-agility-course-basic-advanced"}
+{"category":"Divination training dungeon and permanent bot unlocks","entityId":"unlock:kandarin:hall-of-memories"}
+{"category":"Slayer helmet Magic component","entityId":"unlock:kandarin:hexcrest"}
+{"category":"Archaeology tool permanent craft","entityId":"unlock:kandarin:imcando-mattock"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:inspire-awe-helm-of-terror"}
+{"category":"Jewellery recharge","entityId":"unlock:kandarin:legends-guild-totem-jewellery-recharge"}
+{"category":"regional boss BiS drop source","entityId":"unlock:kandarin:legiones-monastery-of-ascension"}
+{"category":"Magic skillcape combat equipment","entityId":"unlock:kandarin:magic-cape"}
+{"category":"Thieving seed supply","entityId":"unlock:kandarin:master-farmer-seed-pickpocketing-kandarin-sites"}
+{"category":"Farming seed self-supply infrastructure","entityId":"unlock:kandarin:master-farmer-seed-supply-farmers-market-pickpocket"}
+{"category":"tier-99/100 fletchable two-handed ranged weapon","entityId":"unlock:kandarin:masterwork-bow"}
+{"category":"Woodcutting elite skilling outfit","entityId":"unlock:kandarin:natures-sentinel-outfit"}
+{"category":"ranged power gloves","entityId":"unlock:kandarin:nightmare-gauntlets-ranged"}
+{"category":"Player-Owned Farm combat passive","entityId":"unlock:kandarin:nopenopenope-spider-combat-perk"}
+{"category":"Runecrafting altar infrastructure","entityId":"unlock:kandarin:ourania-runecrafting-altar-zmi"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone"}
+{"category":"Hunter training area","entityId":"unlock:kandarin:piscatoris-hunter-area"}
+{"category":"cross-region Farming travel infrastructure","entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock"}
+{"category":"Ranged guild infrastructure, shops, and archery competition","entityId":"unlock:kandarin:ranging-guild"}
+{"category":"Farming drop-cleaner pickup mode","entityId":"unlock:kandarin:seedicide-collector-upgrade"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:slayer-introspection-amascuts-enchanted-gem"}
+{"category":"Farming travel infrastructure","entityId":"unlock:kandarin:spirit-tree-network-tree-gnome-stronghold"}
+{"category":"Archaeology dig-site hub","entityId":"unlock:kandarin:stormguard-citadel-dig-site-armadylean"}
+{"category":"rare hero Fishing tool","entityId":"unlock:kandarin:tavias-fishing-rod"}
+{"category":"Archaeology dig site hub and Imcando forge progression","entityId":"unlock:kandarin:warforge-dig-site-feldip-hills-archaeology"}
+{"category":"Magic guild infrastructure and rune-essence logistics","entityId":"unlock:kandarin:wizards-guild-magic-guild-yanille"}
+{"category":"regional multi-skill settlement infrastructure","entityId":"unlock:kandarin:yanille-multi-skill-hub"}
+{"category":"combat uniques","entityId":"unlock:karamja:abomination-progression"}
+{"category":"Herblore production (non-perfect)","entityId":"unlock:karamja:base-juju-potion-family-herblore-habitat"}
+{"category":"cross-region Firemaking and Woodcutting method stack","entityId":"unlock:karamja:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear"}
+{"category":"regional Slayer master hub","entityId":"unlock:karamja:duradel-lapalok-shilo-village-slayer-masters"}
+{"category":"combat cape","entityId":"unlock:karamja:fire-cape"}
+{"category":"Divination gathering colony","entityId":"unlock:karamja:gleaming-wisp-colony"}
+{"category":"regional boss BiS drop source","entityId":"unlock:karamja:har-aken-fight-kiln"}
+{"category":"best-in-slot combat cape cross-region chain","entityId":"unlock:karamja:igneous-cape-progression"}
+{"category":"achievement diary Agility Mining supply utility","entityId":"unlock:karamja:karamja-gloves-1-4"}
+{"category":"Runecrafting altar and catalytic supply","entityId":"unlock:karamja:nature-altar"}
+{"category":"permanent Habitat ironman seed and supply shop","entityId":"unlock:karamja:papa-mambos-shop-herblore-habitat"}
+{"category":"Herblore perfect-juju production infrastructure","entityId":"unlock:karamja:perfect-juju-potion-production-path"}
+{"category":"Karamja TzHaar teleport ring and skilling travel tool","entityId":"unlock:karamja:tokkul-zo"}
+{"category":"Hunter camouflage outfit and Habitat teleport","entityId":"unlock:karamja:witchdoctor-camo-outfit"}
+{"category":"Hunter–Farming–Herblore travel equipment","entityId":"unlock:karamja:witchdoctor-mask-habitat-teleport"}
+{"category":"tier-92 dual-wield melee whip","entityId":"unlock:misthalin:abyssal-scourge"}
+{"category":"cross-region Firemaking minigame full reward chain","entityId":"unlock:misthalin:all-fired-up-inferno-adze-reward-chain"}
+{"category":"permanent Prayer book switch and restore facility","entityId":"unlock:misthalin:altar-of-zaros-senntisten-temple-prayer-switch"}
+{"category":"Combat necklace","entityId":"unlock:misthalin:amulet-of-souls"}
+{"category":"permanent Prayer book unlock","entityId":"unlock:misthalin:ancient-curses-the-temple-at-senntisten"}
+{"category":"Archaeology Guild rank permanent progression","entityId":"unlock:misthalin:archaeology-guild-qualifications-intern-professor"}
+{"category":"Archaeology Guild shop","entityId":"unlock:misthalin:archaeology-shop"}
+{"category":"Crafting XP outfit","entityId":"unlock:misthalin:artisans-outfit"}
+{"category":"quest-challenge combat equipment","entityId":"unlock:misthalin:asylum-surgeons-ring"}
+{"category":"permanent Ranged ammo-recovery and cape-rack utility chain","entityId":"unlock:misthalin:avas-device-chain-attractor-accumulator-alerter"}
+{"category":"permanent Ancient Summoning + Slayer bind infrastructure","entityId":"unlock:misthalin:binding-contract-ancient-summoning-craft-bind-loop"}
+{"category":"best-in-slot two-handed ranged weapon","entityId":"unlock:misthalin:bow-of-the-last-guardian-bolg"}
+{"category":"Farming patch unlock","entityId":"unlock:misthalin:city-of-um-mushroom-patch"}
+{"category":"combat Archaeology and Invention relic cross-region chain","entityId":"unlock:misthalin:conservation-of-energy-relic-chain"}
+{"category":"Construction training method and permanent reward currency","entityId":"unlock:misthalin:construction-contracts-estate-agents"}
+{"category":"Cooking burn-reduction gloves","entityId":"unlock:misthalin:cooking-gauntlets"}
+{"category":"Cooking guild infrastructure","entityId":"unlock:misthalin:cooks-guild-cooking-guild"}
+{"category":"Magic tank armour","entityId":"unlock:misthalin:cryptbloom-armour"}
+{"category":"best-in-slot dual-wield melee weapons","entityId":"unlock:misthalin:dark-ice-dark-shard-sliver-of-leng"}
+{"category":"Necromancy weapon chain","entityId":"unlock:misthalin:death-guard-and-skull-lantern-progression"}
+{"category":"Hybrid power gloves","entityId":"unlock:misthalin:deathtouch-bracelet"}
+{"category":"Necromancy crafted armour progression","entityId":"unlock:misthalin:deathwarden-deathdealer-armour"}
+{"category":"permanent Archaeology and Curses travel jewellery","entityId":"unlock:misthalin:dig-site-pendant"}
+{"category":"regional prayer unlock / standard book","entityId":"unlock:misthalin:divine-rage-prayer-codex"}
+{"category":"BiS power armour craft / T90 ranged bow","entityId":"unlock:misthalin:dracolich-armour-t90-ranged-bow-power"}
+{"category":"EoF special-attack melee weapon","entityId":"unlock:misthalin:dragon-claws-slice-dice-eof-weapon-switch"}
+{"category":"regional prayer unlock / standard book","entityId":"unlock:misthalin:eclipsed-soul-prayer-codex"}
+{"category":"best-in-slot two-handed melee weapon","entityId":"unlock:misthalin:ek-zekkil-zuk-2h-melee"}
+{"category":"BiS power armour craft / T92 ranged bow","entityId":"unlock:misthalin:elite-dracolich-armour-t92-ranged-bow-power"}
+{"category":"best-in-slot magic power gloves","entityId":"unlock:misthalin:enhanced-kerapacs-wrist-wraps-t90-magic"}
+{"category":"best-in-slot ranged power gloves","entityId":"unlock:misthalin:enhanced-nightmare-gauntlets-t90-ranged"}
+{"category":"Combat necklace","entityId":"unlock:misthalin:essence-of-finality-amulet"}
+{"category":"permanent endgame RC essence-storage pouch","entityId":"unlock:misthalin:expansive-essence-pouch-70-essence-non-degrading"}
+{"category":"Lumbridge achievement skilling utility ring","entityId":"unlock:misthalin:explorers-ring-1-4"}
+{"category":"permanent Thieving success progression","entityId":"unlock:misthalin:five-finger-discount-passive"}
+{"category":"Fletching XP outfit","entityId":"unlock:misthalin:fletchers-outfit"}
+{"category":"combat Archaeology relic","entityId":"unlock:misthalin:font-of-life-relic-archaeology-tutorial"}
+{"category":"Magic best-in-slot two-handed staff","entityId":"unlock:misthalin:fractured-staff-of-armadyl"}
+{"category":"combat Archaeology relic cross-region chain","entityId":"unlock:misthalin:fury-of-the-small-relic-chain"}
+{"category":"prayer / skilling off-hands / scripture","entityId":"unlock:misthalin:gate-of-elidinis-uniques"}
+{"category":"low-input Fishing unlock","entityId":"unlock:misthalin:ghostly-sole-fishing"}
+{"category":"monthly Fishing / Farming XP and treasure infrastructure","entityId":"unlock:misthalin:giant-oyster-monthly-d-d"}
+{"category":"end-game Archaeology mattock","entityId":"unlock:misthalin:guildmaster-tonys-mattock"}
+{"category":"tier-100 augmentable Woodcutting tool follow-on chain","entityId":"unlock:misthalin:hatchet-of-bloom-and-blight"}
+{"category":"tier-90 augmentable Woodcutting tool cross-region chain","entityId":"unlock:misthalin:hatchet-of-ember-and-glade"}
+{"category":"regional boss BiS drop source","entityId":"unlock:misthalin:hermod-the-spirit-of-war"}
+{"category":"best-in-slot combat cape cross-region chain","entityId":"unlock:misthalin:igneous-cape-progression"}
+{"category":"style glove T90 upgrade hub","entityId":"unlock:misthalin:leng-artefact-t90-glove-upgrades-shared-arch-glacor"}
+{"category":"skilling familiar / pet utility","entityId":"unlock:misthalin:lorehound"}
+{"category":"Construction elite skilling outfit","entityId":"unlock:misthalin:master-constructors-outfit"}
+{"category":"Runecrafting XP outfit","entityId":"unlock:misthalin:master-runecrafter-robes"}
+{"category":"Thieving permanent toolbelt tools","entityId":"unlock:misthalin:master-thiefs-tools"}
+{"category":"cross-region tier-99 augmentable Archaeology tool","entityId":"unlock:misthalin:mattock-of-time-and-space"}
+{"category":"Divination skilling off-hand","entityId":"unlock:misthalin:memory-dowser"}
+{"category":"Woodcutting elite skilling outfit","entityId":"unlock:misthalin:natures-sentinel-outfit"}
+{"category":"achievement diary Mining and Smithing doubling package","entityId":"unlock:misthalin:new-varrock-achievements-varrock-armour-doubling"}
+{"category":"Underworld teleport jewelry","entityId":"unlock:misthalin:passing-bracelet"}
+{"category":"Construction supply container","entityId":"unlock:misthalin:plank-box"}
+{"category":"Hunter minigame and high-value impling supply","entityId":"unlock:misthalin:puro-puro-impetuous-impulses-dragon-implings"}
+{"category":"Combat necklace","entityId":"unlock:misthalin:reaper-necklace"}
+{"category":"Hybrid combat ring","entityId":"unlock:misthalin:ring-of-death"}
+{"category":"Archaeology monolith luck-ladder relic power","entityId":"unlock:misthalin:ring-of-fortune-relic-power"}
+{"category":"invisible Divination level ring","entityId":"unlock:misthalin:ring-of-whispers"}
+{"category":"Necromancy XP outfit","entityId":"unlock:misthalin:ritualists-outfit"}
+{"category":"Magic dual-wield best-in-slot weapons","entityId":"unlock:misthalin:roar-of-awakening-and-ode-to-deceit"}
+{"category":"Runecrafting skilling off-hand","entityId":"unlock:misthalin:runic-attuner"}
+{"category":"Woodcutting and Firemaking skilling off-hand","entityId":"unlock:misthalin:sanas-fyrtorch"}
+{"category":"combat pocket scripture","entityId":"unlock:misthalin:scripture-of-amascut-devourers-corruption-pocket-book"}
+{"category":"Magic / skilling pocket scripture","entityId":"unlock:misthalin:scripture-of-bik"}
+{"category":"permanent skilling pocket scripture","entityId":"unlock:misthalin:scripture-of-elidinis-skilling-pocket-book"}
+{"category":"combat pocket scripture","entityId":"unlock:misthalin:scripture-of-ful-gladiators-rage-pocket-book"}
+{"category":"Magic pocket-slot scripture","entityId":"unlock:misthalin:scripture-of-jas"}
+{"category":"combat pocket scripture","entityId":"unlock:misthalin:scripture-of-wen-sheer-cold-pocket-book"}
+{"category":"permanent Farming seed storage tool","entityId":"unlock:misthalin:seed-bag-croesus-front"}
+{"category":"Prayer unlock infrastructure","entityId":"unlock:misthalin:selene-necromancy-prayer-and-curse-unlocks-city-of-um"}
+{"category":"Archaeology dig site infrastructure","entityId":"unlock:misthalin:senntisten-dig-site"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:misthalin:slayer-introspection-amascuts-enchanted-gem"}
+{"category":"Smithing metal-bank gloves","entityId":"unlock:misthalin:smelting-gauntlets"}
+{"category":"archaeology spear base for masterwork spear","entityId":"unlock:misthalin:spear-of-annihilation-base-archaeology-spear"}
+{"category":"Kerapac magic component","entityId":"unlock:misthalin:staff-of-armadyl-fsoa-component"}
+{"category":"EoF special-attack melee upgrade","entityId":"unlock:misthalin:superior-dragon-claws-wilderness-hilt-upgrade"}
+{"category":"Mining skilling off-hand","entityId":"unlock:misthalin:taggas-corehammer"}
+{"category":"Agility / Divination / Mining multi-skill excavation hub","entityId":"unlock:misthalin:the-empty-throne-room"}
+{"category":"permanent skilling boss infrastructure","entityId":"unlock:misthalin:the-gate-of-elidinis-skilling-boss-hub"}
+{"category":"Thieving guild infrastructure","entityId":"unlock:misthalin:thieves-guild-lumbridge"}
+{"category":"Underworld achievement skilling utility pocket","entityId":"unlock:misthalin:underworld-grimoire-1-4"}
+{"category":"Varrock achievement Mining and Smithing utility","entityId":"unlock:misthalin:varrock-armour-1-4"}
+{"category":"BiS power armour drop / T95 melee","entityId":"unlock:misthalin:vestments-of-havoc-t95-melee-glass-cannon"}
+{"category":"Combat Mastery permanent utilities and prayer-book swap","entityId":"unlock:misthalin:wars-blessing-1-4-combat-mastery"}
+{"category":"PvM hub combat infrastructure","entityId":"unlock:misthalin:wars-retreat"}
+{"category":"regional boss BiS drop source","entityId":"unlock:misthalin:zamorak-lord-of-chaos-undercity"}
+{"category":"Ranged armour / Necromancy invocation","entityId":"unlock:misthalin:zemouregal-vorkath-progression"}
+{"category":"Mining and undead-combat tool source","entityId":"unlock:morytania:abandoned-mine-salve-shard-mining"}
+{"category":"combat necklace and Archaeology relic ingredient","entityId":"unlock:morytania:amulet-of-the-forsaken-to-berserkers-fury"}
+{"category":"regional boss BiS drop source","entityId":"unlock:morytania:araxxor-araxxi"}
+{"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"unlock:morytania:artificers-measure"}
+{"category":"permanent Prayer ash/ghost drop cleaner","entityId":"unlock:morytania:attuned-ectoplasmator"}
+{"category":"regional boss BiS drop source","entityId":"unlock:morytania:barrows-classic-brothers-akrisae-linza"}
+{"category":"regional boss BiS drop source","entityId":"unlock:morytania:barrows-rise-of-the-six"}
+{"category":"combat Archaeology relic","entityId":"unlock:morytania:berserkers-fury-relic-chain"}
+{"category":"Slayer helmet melee component","entityId":"unlock:morytania:black-mask"}
+{"category":"Runecrafting altar infrastructure","entityId":"unlock:morytania:blood-altar-runecrafting"}
+{"category":"Construction XP outfit","entityId":"unlock:morytania:constructors-outfit"}
+{"category":"Prayer permanent ability unlock","entityId":"unlock:morytania:cremation-ability-unlock"}
+{"category":"Morytania teleport network equipment","entityId":"unlock:morytania:drakans-medallion"}
+{"category":"Prayer drop cleaner for ghosts (pre-attuned)","entityId":"unlock:morytania:ectoplasmator-base"}
+{"category":"Archaeology dig site infrastructure","entityId":"unlock:morytania:everlight-dig-site"}
+{"category":"Prayer XP outfit equipment","entityId":"unlock:morytania:first-age-prayer-outfit-pieces"}
+{"category":"permanent RC/Magic combat-skilling pouch upgrade","entityId":"unlock:morytania:grasping-rune-pouch"}
+{"category":"combat Archaeology relic","entityId":"unlock:morytania:heightened-senses-relic-chain"}
+{"category":"Prayer potion and DG necklace restore amplifier","entityId":"unlock:morytania:holy-wrench"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:morytania:inspire-effort-petasos"}
+{"category":"Woodcutting XP outfit","entityId":"unlock:morytania:lumberjack-outfit"}
+{"category":"tier-90 melee power armour and trim material","entityId":"unlock:morytania:malevolent-armour-and-malevolent-energy"}
+{"category":"tier-99/100 fletchable two-handed ranged weapon","entityId":"unlock:morytania:masterwork-bow"}
+{"category":"tier-92 melee DoT spear","entityId":"unlock:morytania:masterwork-spear-of-annihilation"}
+{"category":"achievement diary Prayer RC Farming utility","entityId":"unlock:morytania:morytania-legs-1-4"}
+{"category":"tier-90 two-handed melee and ranged weapons","entityId":"unlock:morytania:noxious-scythe-and-noxious-longbow"}
+{"category":"tier-90 two-handed Magic weapon","entityId":"unlock:morytania:noxious-staff"}
+{"category":"tier-90 weapons","entityId":"unlock:morytania:noxious-weapons"}
+{"category":"permanent toolbelt druid pouch upgrade","entityId":"unlock:morytania:ouroboros-pouch"}
+{"category":"mid-game Magic and Farming resource dungeon","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources"}
+{"category":"Melee armour / shields","entityId":"unlock:morytania:rise-of-the-six-progression"}
+{"category":"undead combat necklace (Mining craft path)","entityId":"unlock:morytania:salve-amulet-base"}
+{"category":"undead combat necklace (enchanted permanent)","entityId":"unlock:morytania:salve-amulet-e"}
+{"category":"Prayer and Firemaking activity","entityId":"unlock:morytania:shades-of-mortton-cremation"}
+{"category":"BiS power armour craft / T90 ranged","entityId":"unlock:morytania:sirenic-armour-t90-ranged-power-craft"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:morytania:slayer-introspection-amascuts-enchanted-gem"}
+{"category":"Archaeology monolith relic power","entityId":"unlock:morytania:sticky-fingers-andvaranaut"}
+{"category":"Hybrid weapon","entityId":"unlock:morytania:sunspear"}
+{"category":"Prayer Firemaking multi-skill activity","entityId":"unlock:morytania:sunspear-vyre-cremation-multi-skill-training"}
+{"category":"Aura Overhaul — Morytania combat passive","entityId":"unlock:morytania:sunspear-vyre-prayer-sustain"}
+{"category":"permanent minigame reward infrastructure package","entityId":"unlock:morytania:temple-trekking-permanent-reward-package"}
+{"category":"Construction and Woodcutting outfit progression","entityId":"unlock:morytania:temple-trekking-skilling-outfits"}
+{"category":"best-in-slot melee power armour cross-region chain","entityId":"unlock:morytania:trimmed-custom-fit-trimmed-masterwork-melee-armour"}
+{"category":"combat and multi-skill support infrastructure","entityId":"unlock:morytania:vyre-combat-and-sunspear-progression"}
+{"category":"Prayer/combat/Firemaking/Farming training","entityId":"unlock:morytania:vyres-sunspear-multi-skill-training"}
+{"category":"Agility course infrastructure","entityId":"unlock:morytania:werewolf-agility-course"}
+{"entityId":"unlock:recommended-unlocks:500-vyre-corpse-cremation-progression"}
+{"entityId":"unlock:recommended-unlocks:attuned-ectoplasmator"}
+{"entityId":"unlock:recommended-unlocks:blood-essence"}
+{"entityId":"unlock:recommended-unlocks:charming-imp"}
+{"entityId":"unlock:recommended-unlocks:demon-horn-necklace"}
+{"entityId":"unlock:recommended-unlocks:demon-horn-necklace-prayer-sustain-chain"}
+{"entityId":"unlock:recommended-unlocks:morytania-elite-achievements"}
+{"entityId":"unlock:recommended-unlocks:player-owned-slayer-dungeon-route"}
+{"entityId":"unlock:recommended-unlocks:salve-amulet-e"}
+{"entityId":"unlock:recommended-unlocks:sunspear"}
+{"category":"Prayer sustain off-hand utility for Seren skilling prayers","entityId":"unlock:tirannwn:ancient-elven-ritual-shard"}
+{"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"unlock:tirannwn:artificers-measure"}
+{"category":"permanent unlimited Tirannwn teleport pocket item","entityId":"unlock:tirannwn:attuned-crystal-teleport-seed"}
+{"category":"tier-90 Prifddinas crystal singing weapons","entityId":"unlock:tirannwn:attuned-crystal-weapon-family"}
+{"category":"cross-region Woodcutting and Firemaking auto-burn path package","entityId":"unlock:tirannwn:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze"}
+{"category":"permanent Prayer flask production shell","entityId":"unlock:tirannwn:blessed-flask-extreme-prayer-80-dose-permanent-shell"}
+{"category":"tier-92 dual-wield ranged weapons","entityId":"unlock:tirannwn:blightbound-crossbows"}
+{"category":"skilling prayer unlock","entityId":"unlock:tirannwn:chronicle-attraction-seren-skilling-prayer"}
+{"category":"best-in-slot hybrid poison combat gloves","entityId":"unlock:tirannwn:cinderbane-gloves"}
+{"category":"Prayer training infrastructure","entityId":"unlock:tirannwn:corrupted-seren-stone-cleansing-hefin-cathedral"}
+{"category":"district skilling hub infrastructure","entityId":"unlock:tirannwn:crwys-district-woodcutting-and-farming-hub"}
+{"category":"district skilling hub infrastructure","entityId":"unlock:tirannwn:crwys-farming-and-woodcutting-hub"}
+{"category":"augmentable crystal Woodcutting tool","entityId":"unlock:tirannwn:crystal-hatchet"}
+{"category":"cross-region Thieving stack","entityId":"unlock:tirannwn:crystal-mask-light-form-thieving-stack"}
+{"category":"Thieving skilling spell","entityId":"unlock:tirannwn:crystal-mask-seren-skilling-spell"}
+{"category":"augmentable crystal Archaeology tool","entityId":"unlock:tirannwn:crystal-mattock"}
+{"category":"augmentable crystal Mining tool","entityId":"unlock:tirannwn:crystal-pickaxe"}
+{"category":"combination-potion flask infrastructure","entityId":"unlock:tirannwn:crystal-sandstone"}
+{"category":"combination-potion flask infrastructure","entityId":"unlock:tirannwn:crystal-sandstone-and-crystal-flasks"}
+{"category":"consumable multi-skill gatherer tools","entityId":"unlock:tirannwn:crystal-skillchompas"}
+{"category":"permanent regional travel infrastructure package","entityId":"unlock:tirannwn:crystal-teleport-seed-tirannwn-travel-network"}
+{"category":"permanent crystal tool seed supply","entityId":"unlock:tirannwn:crystal-tool-seed-acquisition-re-enchant"}
+{"category":"Prifddinas Farming unique content","entityId":"unlock:tirannwn:crystal-tree-farming-crystal-acorns"}
+{"category":"permanent crystal artisan tool package","entityId":"unlock:tirannwn:crystal-utility-tools-chisel-knife-saw-binding-rod"}
+{"category":"gathering XP spell","entityId":"unlock:tirannwn:crystallise-seren-skilling-spell"}
+{"category":"Grace of the Elves permanent upgrade","entityId":"unlock:tirannwn:dark-facet-of-grace-gote-enchantment"}
+{"category":"regional Runecrafting altar infrastructure","entityId":"unlock:tirannwn:death-altar-temple-of-light-runecrafting"}
+{"category":"high-level resource dungeon access","entityId":"unlock:tirannwn:edimmu-resource-dungeon"}
+{"category":"permanent Herblore combination recipe","entityId":"unlock:tirannwn:elder-overload-potion-recipe-meilyr"}
+{"category":"permanent Herblore combination recipe","entityId":"unlock:tirannwn:elder-overload-salve-recipe-meilyr"}
+{"category":"high-level Thieving activity","entityId":"unlock:tirannwn:elven-clan-worker-pickpocketing"}
+{"category":"permanent Prayer and spellbook swap facility","entityId":"unlock:tirannwn:elven-grimoire-prif-prayer-book-and-spellbook-swap"}
+{"category":"combat pocket grimoire","entityId":"unlock:tirannwn:erethdors-grimoire-crit-pocket-book"}
+{"category":"cross-region Seren prayer and porter sustain stack","entityId":"unlock:tirannwn:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain"}
+{"category":"Seren prayer drain and porter necklace","entityId":"unlock:tirannwn:grace-of-the-elves-gote"}
+{"category":"tier-100 augmentable Woodcutting tool follow-on chain","entityId":"unlock:tirannwn:hatchet-of-bloom-and-blight"}
+{"category":"tier-90 augmentable Woodcutting tool cross-region chain","entityId":"unlock:tirannwn:hatchet-of-ember-and-glade"}
+{"category":"Agility course and incidental Prayer","entityId":"unlock:tirannwn:hefin-agility-course"}
+{"category":"district skilling hub infrastructure","entityId":"unlock:tirannwn:hefin-district-agility-and-prayer-hub"}
+{"category":"Agility activity infrastructure","entityId":"unlock:tirannwn:hefin-serenity-posts-afk-agility"}
+{"category":"district Slayer and skilling-support hub","entityId":"unlock:tirannwn:iorwerth-slayer-and-utility-district"}
+{"category":"Crafting/Smithing crystal-equipment infrastructure","entityId":"unlock:tirannwn:ithell-crystal-singing-bowl-tools-armour-weapons"}
+{"category":"district skilling hub infrastructure","entityId":"unlock:tirannwn:ithell-district-crafting-and-construction-hub"}
+{"category":"skilling prayer unlock","entityId":"unlock:tirannwn:light-form-seren-prayer"}
+{"category":"tier-100 runecrafted two-handed magic weapon","entityId":"unlock:tirannwn:masterwork-staff"}
+{"category":"cross-region tier-99 augmentable Archaeology tool","entityId":"unlock:tirannwn:mattock-of-time-and-space"}
+{"category":"permanent endgame skilling cape","entityId":"unlock:tirannwn:max-cape-skillcape-perk-slots-max-guild-tele"}
+{"category":"permanent free Magic teleport unlock","entityId":"unlock:tirannwn:max-guild-teleport-free-spell"}
+{"category":"district skilling hub infrastructure","entityId":"unlock:tirannwn:meilyr-district-herblore-and-dungeoneering-hub"}
+{"category":"regional Slayer master hub","entityId":"unlock:tirannwn:morvran-prifddinas-slayer-master"}
+{"category":"cross-region Smithing and Firemaking stack","entityId":"unlock:tirannwn:orthen-furnace-core-full-skilling-stack"}
+{"category":"cross-region Smithing and Firemaking full AFK stack","entityId":"unlock:tirannwn:orthen-furnace-core-superheat-form-smithing-autoheater-stack"}
+{"category":"cross-region augmentable Mining tool","entityId":"unlock:tirannwn:pickaxe-of-earth-and-song"}
+{"category":"cross-region tier-100 augmentable Mining tool follow-on","entityId":"unlock:tirannwn:pickaxe-of-life-and-death"}
+{"category":"major high-level hub","entityId":"unlock:tirannwn:prifddinas"}
+{"category":"Agility course permanent outfit","entityId":"unlock:tirannwn:prifddinian-workers-outfit"}
+{"category":"regional boss BiS drop source","entityId":"unlock:tirannwn:solak"}
+{"category":"skilling prayer unlock","entityId":"unlock:tirannwn:superheat-form-seren-prayer"}
+{"category":"permanent Herblore combination recipe","entityId":"unlock:tirannwn:supreme-overload-potion-recipe-meilyr"}
+{"category":"achievement diary Farming Hunter Divination utility","entityId":"unlock:tirannwn:tirannwn-quiver-1-4"}
+{"category":"Thieving skilling outfit","entityId":"unlock:tirannwn:trahaearn-exoskeleton"}
+{"entityId":"unlock:unlocks:affliction"}
+{"entityId":"unlock:unlocks:aggression","unlockType":"ability"}
+{"entityId":"unlock:unlocks:ancient-curses","unlockType":"prayer_book"}
+{"entityId":"unlock:unlocks:ancient-magicks","unlockType":"spellbook"}
+{"entityId":"unlock:unlocks:animate-dead","unlockType":"spell"}
+{"entityId":"unlock:unlocks:astral-altar","unlockType":"runecrafting_access"}
+{"entityId":"unlock:unlocks:balanced-strike","unlockType":"ability"}
+{"entityId":"unlock:unlocks:bladed-dive","unlockType":"ability"}
+{"entityId":"unlock:unlocks:chaos-roar"}
+{"entityId":"unlock:unlocks:claws-of-guthix-special-attack"}
+{"entityId":"unlock:unlocks:command-phantom-guardian"}
+{"entityId":"unlock:unlocks:command-putrid-zombie"}
+{"entityId":"unlock:unlocks:command-skeleton-warrior"}
+{"entityId":"unlock:unlocks:command-vengeful-ghost"}
+{"entityId":"unlock:unlocks:conjure-phantom-guardian"}
+{"entityId":"unlock:unlocks:conjure-putrid-zombie"}
+{"entityId":"unlock:unlocks:conjure-skeleton-warrior"}
+{"entityId":"unlock:unlocks:conjure-undead-army"}
+{"entityId":"unlock:unlocks:conjure-vengeful-ghost"}
+{"entityId":"unlock:unlocks:corruption-blast","unlockType":"ability"}
+{"entityId":"unlock:unlocks:corruption-shot","unlockType":"ability"}
+{"entityId":"unlock:unlocks:darkness"}
+{"entityId":"unlock:unlocks:deaths-swiftness","unlockType":"ability"}
+{"entityId":"unlock:unlocks:desolation"}
+{"entityId":"unlock:unlocks:devotion","unlockType":"ability"}
+{"entityId":"unlock:unlocks:divine-rage"}
+{"entityId":"unlock:unlocks:divine-storm-outside-the-mage-arena"}
+{"entityId":"unlock:unlocks:dream","unlockType":"spell"}
+{"entityId":"unlock:unlocks:eclipsed-soul"}
+{"entityId":"unlock:unlocks:eternal-magic-staff-imbuing"}
+{"entityId":"unlock:unlocks:eternal-magic-wand-orb-imbuing"}
+{"entityId":"unlock:unlocks:expansive-pouch"}
+{"entityId":"unlock:unlocks:exsanguinate","unlockType":"spell"}
+{"entityId":"unlock:unlocks:golden-touch"}
+{"entityId":"unlock:unlocks:greater-barge"}
+{"entityId":"unlock:unlocks:greater-bone-shield"}
+{"entityId":"unlock:unlocks:greater-concentrated-blast"}
+{"entityId":"unlock:unlocks:greater-deaths-swiftness"}
+{"entityId":"unlock:unlocks:greater-flurry"}
+{"entityId":"unlock:unlocks:greater-fury"}
+{"entityId":"unlock:unlocks:greater-sonic-wave"}
+{"entityId":"unlock:unlocks:greater-sunshine"}
+{"entityId":"unlock:unlocks:guthix-staff"}
+{"entityId":"unlock:unlocks:guthixs-blessing","unlockType":"ability"}
+{"entityId":"unlock:unlocks:humidify","unlockType":"spell"}
+{"entityId":"unlock:unlocks:hunter-kit","unlockType":"spell"}
+{"entityId":"unlock:unlocks:ice-asylum","unlockType":"ability"}
+{"entityId":"unlock:unlocks:incite-fear","unlockType":"spell"}
+{"entityId":"unlock:unlocks:invoke-death"}
+{"entityId":"unlock:unlocks:invoke-lord-of-bones"}
+{"entityId":"unlock:unlocks:kuradals-favour","unlockType":"ability"}
+{"entityId":"unlock:unlocks:life-transfer"}
+{"entityId":"unlock:unlocks:limitless"}
+{"entityId":"unlock:unlocks:lunar-isle","unlockType":"area"}
+{"entityId":"unlock:unlocks:lunar-spellbook","unlockType":"spellbook"}
+{"entityId":"unlock:unlocks:magma-tempest"}
+{"entityId":"unlock:unlocks:magma-tempest-targeted"}
+{"entityId":"unlock:unlocks:malevolence"}
+{"entityId":"unlock:unlocks:masterwork-staff"}
+{"entityId":"unlock:unlocks:monster-examine","unlockType":"spell"}
+{"entityId":"unlock:unlocks:natural-instinct","unlockType":"ability"}
+{"entityId":"unlock:unlocks:onslaught","unlockType":"ability"}
+{"entityId":"unlock:unlocks:passive-ring-of-vigour-effect","unlockType":"passive"}
+{"entityId":"unlock:unlocks:plank-make","unlockType":"spell"}
+{"entityId":"unlock:unlocks:reprisal"}
+{"entityId":"unlock:unlocks:ruination"}
+{"entityId":"unlock:unlocks:sacrifice","unlockType":"ability"}
+{"entityId":"unlock:unlocks:seren-prayers","unlockType":"prayer_group"}
+{"entityId":"unlock:unlocks:seren-spells","unlockType":"spell_group"}
+{"entityId":"unlock:unlocks:shadow-tendrils","unlockType":"ability"}
+{"entityId":"unlock:unlocks:shatter","unlockType":"ability"}
+{"entityId":"unlock:unlocks:slayers-insight","unlockType":"ability"}
+{"entityId":"unlock:unlocks:smoke-cloud","unlockType":"spell"}
+{"entityId":"unlock:unlocks:smoke-tendrils","unlockType":"ability"}
+{"entityId":"unlock:unlocks:spectral-scythe"}
+{"entityId":"unlock:unlocks:spectral-scythe-upgrade-1"}
+{"entityId":"unlock:unlocks:spectral-scythe-upgrade-2"}
+{"entityId":"unlock:unlocks:spellbook-swap","unlockType":"spell"}
+{"entityId":"unlock:unlocks:spin-flax","unlockType":"spell"}
+{"entityId":"unlock:unlocks:spirit-pact-i"}
+{"entityId":"unlock:unlocks:spirit-pact-ii"}
+{"entityId":"unlock:unlocks:spirit-pact-iii"}
+{"entityId":"unlock:unlocks:split-soul"}
+{"entityId":"unlock:unlocks:stat-spy","unlockType":"spell"}
+{"entityId":"unlock:unlocks:storm-shards","unlockType":"ability"}
+{"entityId":"unlock:unlocks:sunshine","unlockType":"ability"}
+{"entityId":"unlock:unlocks:superglass-make","unlockType":"spell"}
+{"entityId":"unlock:unlocks:threads-of-fate"}
+{"entityId":"unlock:unlocks:time-rune-time-altar"}
+{"entityId":"unlock:unlocks:transfigure","unlockType":"ability"}
+{"entityId":"unlock:unlocks:tuskas-wrath","unlockType":"ability"}
+{"entityId":"unlock:unlocks:unsullied"}
+{"category":"combat","entityId":"unlock:upgrades:blood-necklace-shard"}
+{"category":"skilling tool","entityId":"unlock:upgrades:crystal-fishing-rod"}
+{"category":"material","entityId":"unlock:upgrades:harmonic-dust"}
+{"category":"Farming","entityId":"unlock:upgrades:harmony-moss"}
+{"category":"hub","entityId":"unlock:upgrades:max-guild"}
+{"category":"Herblore","entityId":"unlock:upgrades:perfect-juju-potions"}

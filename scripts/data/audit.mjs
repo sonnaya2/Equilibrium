@@ -365,9 +365,11 @@ if (oversizedClientShards.length) architectureFailures.push(`client shards excee
 
 // --- Stage 0 architecture gates ---------------------------------------------
 
-// Generated trees must never become tracked. Each of these is rebuilt from the
-// seed and the database, so a committed copy is a second source of truth.
-const trackedGenerated = tracked("data/canonical/**", "reports/data-*.json", "reports/data-*.md", "reports/canonical-*.json", "reports/legacy-data-*", "reports/research-*.json", ".cache/**");
+// Generated trees must never become tracked. data/canonical/ is the deliberate
+// exception - it is generated *and* committed, because the whole point of it is
+// to be reviewable in a diff; `data:canonical:validate` is what stops a stale
+// copy from surviving.
+const trackedGenerated = tracked("reports/data-*.json", "reports/data-*.md", "reports/canonical-*.json", "reports/legacy-data-*", "reports/research-*.json", ".cache/**");
 if (trackedGenerated.length) {
   architectureFailures.push(`generated files are tracked: ${trackedGenerated.slice(0, 5).join(", ")}`);
 }

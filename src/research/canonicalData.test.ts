@@ -63,15 +63,7 @@ afterAll(() => database.close());
 const scratch = mkdtempSync(join(tmpdir(), "equilibrium-canonical-"));
 afterAll(() => rmSync(scratch, { recursive: true, force: true }));
 
-// Stage 1 will decide whether data/canonical/ becomes tracked. Until then the
-// export is materialized into a temporary directory, so these tests exercise the
-// real files without depending on a checked-in copy of them.
-const canonicalRoot = join(scratch, "canonical");
-for (const [file, body] of canonicalExport.buildCanonical(database).outputs) {
-  const path = join(canonicalRoot, file);
-  mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, body);
-}
+const canonicalRoot = join(root, "data/canonical");
 
 const shipped = canonicalValidate.validateCanonical(canonicalRoot);
 const rows = (name: string): Row[] => shipped.records.get(name) ?? [];
@@ -102,7 +94,9 @@ const failuresOf = (directory: string) =>
   canonicalValidate.validateCanonical(directory).failures.map(({ detail }) => detail);
 
 describe("canonical export", () => {
-  it("writes a file for every declared collection", () => {
+  // The committed dataset has to equal a fresh export, or the reviewable form
+  // of the data has quietly drifted from the database it claims to mirror.
+  it("matches the files committed to data/canonical", () => {
     const { outputs } = canonicalExport.buildCanonical(database);
     for (const collection of schema.COLLECTIONS) {
       const body = outputs.get(collection.file);

@@ -1,0 +1,294 @@
+{"entityId":"city-of-senntisten:ancient-spells"}
+{"entityId":"desert-treasure:ancient-magicks"}
+{"entityId":"dream-mentor:lunar-spells"}
+{"entityId":"extinction:ring-of-vigour-passive"}
+{"entityId":"lunar-diplomacy:lunar-spellbook"}
+{"entityId":"one-piercing-note:gwd1-abilities"}
+{"entityId":"quest:anachronia:osseous-rex","members":true,"primaryRegionId":"anachronia","releaseDate":"28 May 2024","series":"None"}
+{"entityId":"quest:anachronia:raksha-the-shadow-colossus-quest","members":true,"primaryRegionId":"anachronia","releaseDate":"7 December 2020","series":"The Elder God Wars"}
+{"entityId":"quest:anachronia:sins-of-the-father","members":true,"primaryRegionId":"anachronia","releaseDate":"14 September 2020","series":"The Elder God Wars"}
+{"entityId":"quest:asgarnia:a-shadow-over-ashdale","members":false,"primaryRegionId":"asgarnia","releaseDate":"22 April 2014","series":"none"}
+{"entityId":"quest:asgarnia:a-tail-of-two-cats","members":true,"primaryRegionId":"asgarnia","releaseDate":"26 September 2005","series":"none"}
+{"entityId":"quest:asgarnia:a-void-dance","members":true,"primaryRegionId":"asgarnia","releaseDate":"10 August 2010","series":"Void Knight"}
+{"entityId":"quest:asgarnia:aftermath","members":true,"primaryRegionId":"asgarnia","releaseDate":"4 July 2022","series":"The Elder God Wars"}
+{"entityId":"quest:asgarnia:azzanadras-quest","members":true,"primaryRegionId":"asgarnia","releaseDate":"22 February 2021","series":"The Elder God Wars"}
+{"entityId":"quest:asgarnia:bringing-home-the-bacon","members":true,"primaryRegionId":"asgarnia","releaseDate":"9 July 2013","series":"none"}
+{"entityId":"quest:asgarnia:daughter-of-chaos","members":true,"primaryRegionId":"asgarnia","releaseDate":"1 August 2022","series":"Legacy of Zamorak"}
+{"entityId":"quest:asgarnia:death-plateau","members":false,"primaryRegionId":"asgarnia","releaseDate":"31 January 2012","series":"Troll"}
+{"entityId":"quest:asgarnia:desperate-creatures","members":true,"primaryRegionId":"asgarnia","releaseDate":"21 September 2020","series":"The Elder God Wars"}
+{"entityId":"quest:asgarnia:desperate-measures","members":true,"primaryRegionId":"asgarnia","releaseDate":"27 July 2020","series":"The Elder God Wars"}
+{"entityId":"quest:asgarnia:desperate-times","members":true,"primaryRegionId":"asgarnia","releaseDate":"13 May 2019","series":"The Elder God Wars"}
+{"entityId":"quest:asgarnia:druidic-ritual","members":false,"primaryRegionId":"asgarnia","releaseDate":"31 January 2012","series":"none"}
+{"entityId":"quest:asgarnia:eadgars-ruse","members":true,"primaryRegionId":"asgarnia","releaseDate":"5 October 2004","series":"Troll"}
+{"entityId":"quest:asgarnia:enlightened-journey","members":true,"primaryRegionId":"asgarnia","releaseDate":"6 November 2006","series":"none"}
+{"entityId":"quest:asgarnia:fishing-contest","members":true,"primaryRegionId":"asgarnia","releaseDate":"28 May 2002","series":"none"}
+{"entityId":"quest:asgarnia:goblin-diplomacy","members":false,"primaryRegionId":"asgarnia","releaseDate":"8 May 2001","series":"none"}
+{"entityId":"quest:asgarnia:grim-tales","members":true,"primaryRegionId":"asgarnia","releaseDate":"4 June 2007","series":"none"}
+{"entityId":"quest:asgarnia:heroes-quest","members":true,"primaryRegionId":"asgarnia","releaseDate":"27 February 2002","series":"none"}
+{"entityId":"quest:asgarnia:impressing-the-locals","members":true,"primaryRegionId":"asgarnia","releaseDate":"11 July 2016","series":"Tales of the Arc"}
+{"entityId":"quest:asgarnia:kindred-spirits","members":true,"primaryRegionId":"asgarnia","releaseDate":"23 May 2016","series":"Sliske's Game"}
+{"entityId":"quest:asgarnia:let-them-eat-pie","members":false,"primaryRegionId":"asgarnia","releaseDate":"31 January 2012","series":"none"}
+{"entityId":"quest:asgarnia:my-arms-big-adventure","members":true,"primaryRegionId":"asgarnia","releaseDate":"23 October 2006","series":"Troll"}
+{"entityId":"quest:asgarnia:once-upon-a-slime","members":false,"primaryRegionId":"asgarnia","releaseDate":"10 February 2020","series":"none"}
+{"entityId":"quest:asgarnia:perils-of-ice-mountain","members":false,"primaryRegionId":"asgarnia","releaseDate":"7 May 2008","series":"none"}
+{"entityId":"quest:asgarnia:pirates-treasure","members":false,"primaryRegionId":"asgarnia","releaseDate":"11 June 2001","series":"Pirate"}
+{"entityId":"quest:asgarnia:quiet-before-the-swarm","members":true,"primaryRegionId":"asgarnia","releaseDate":"24 June 2010","series":"Void Knight"}
+{"entityId":"quest:asgarnia:recruitment-drive","members":true,"primaryRegionId":"asgarnia","releaseDate":"27 June 2005","series":"Temple Knight"}
+{"entityId":"quest:asgarnia:ritual-of-the-mahjarrat","members":true,"primaryRegionId":"asgarnia","releaseDate":"14 September 2011","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:asgarnia:song-from-the-depths","members":false,"primaryRegionId":"asgarnia","releaseDate":"22 May 2012","series":"none"}
+{"entityId":"quest:asgarnia:succession","members":true,"primaryRegionId":"asgarnia","releaseDate":"5 December 2022","series":"Legacy of Zamorak"}
+{"entityId":"quest:asgarnia:the-death-of-chivalry","members":false,"primaryRegionId":"asgarnia","releaseDate":"13 August 2013","series":"Sliske's Game"}
+{"entityId":"quest:asgarnia:the-knights-sword","members":false,"primaryRegionId":"asgarnia","releaseDate":"6 April 2001","series":"none"}
+{"entityId":"quest:asgarnia:the-slug-menace","members":true,"primaryRegionId":"asgarnia","releaseDate":"20 September 2006","series":"Temple Knight"}
+{"entityId":"quest:asgarnia:the-void-stares-back","members":true,"primaryRegionId":"asgarnia","releaseDate":"6 October 2010","series":"Void Knight"}
+{"entityId":"quest:asgarnia:theres-no-place-like-home","members":false,"primaryRegionId":"asgarnia","releaseDate":"13 July 2026","series":"None"}
+{"entityId":"quest:asgarnia:troll-romance","members":true,"primaryRegionId":"asgarnia","releaseDate":"5 January 2005","series":"Troll"}
+{"entityId":"quest:asgarnia:troll-stronghold","members":true,"primaryRegionId":"asgarnia","releaseDate":"24 August 2004","series":"Troll"}
+{"entityId":"quest:asgarnia:violet-is-blue","members":false,"primaryRegionId":"asgarnia","releaseDate":"17 December 2018","series":"Violet Tendencies"}
+{"entityId":"quest:asgarnia:violet-is-blue-too","members":false,"primaryRegionId":"asgarnia","releaseDate":"14 December 2020","series":"Violet Tendencies"}
+{"entityId":"quest:asgarnia:visions-of-havenhythe","members":false,"primaryRegionId":"asgarnia","releaseDate":"23 March 2026","series":"Sanguine"}
+{"entityId":"quest:asgarnia:wanted","members":true,"primaryRegionId":"asgarnia","releaseDate":"17 October 2005","series":"Temple Knight"}
+{"entityId":"quest:asgarnia:whats-mine-is-yours","members":false,"primaryRegionId":"asgarnia","questType":"icon","releaseDate":"17 October 2012","series":"none"}
+{"entityId":"quest:asgarnia:witchs-house","members":false,"primaryRegionId":"asgarnia","releaseDate":"27 February 2002","series":"none"}
+{"entityId":"quest:asgarnia:wolf-whistle","members":false,"primaryRegionId":"asgarnia","releaseDate":"31 January 2012","series":"none"}
+{"entityId":"quest:desert:beneath-scabaras-sands","members":true,"primaryRegionId":"desert","releaseDate":"13 January 2025","series":"Desert"}
+{"entityId":"quest:desert:call-of-the-ancestors","members":true,"primaryRegionId":"desert","releaseDate":"12 October 2015","series":"none"}
+{"entityId":"quest:desert:city-of-senntisten","members":true,"primaryRegionId":"desert","releaseDate":"21 June 2021","series":"The Elder God Wars"}
+{"entityId":"quest:desert:contact","members":true,"primaryRegionId":"desert","releaseDate":"10 January 2007","series":"Desert"}
+{"entityId":"quest:desert:crocodile-tears","members":true,"primaryRegionId":"desert","releaseDate":"5 June 2017","series":"Desert"}
+{"entityId":"quest:desert:dealing-with-scabaras","members":true,"primaryRegionId":"desert","releaseDate":"2 January 2008","series":"Desert"}
+{"entityId":"quest:desert:desert-treasure","members":true,"primaryRegionId":"desert","releaseDate":"18 April 2005","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:desert:diamond-in-the-rough","members":true,"primaryRegionId":"desert","releaseDate":"26 September 2012","series":"Ozan"}
+{"entityId":"quest:desert:do-no-evil","members":true,"primaryRegionId":"desert","releaseDate":"1 December 2010","series":"Desert"}
+{"entityId":"quest:desert:eclipse-of-the-heart","members":true,"primaryRegionId":"desert","releaseDate":"28 July 2025","series":"Desert"}
+{"entityId":"quest:desert:enakhras-lament","members":true,"primaryRegionId":"desert","releaseDate":"23 January 2006","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:desert:eye-of-het-i","members":true,"primaryRegionId":"desert","releaseDate":"4 January 2022","series":"The Elder God Wars"}
+{"entityId":"quest:desert:eye-of-het-ii","members":true,"primaryRegionId":"desert","releaseDate":"10 January 2022","series":"The Elder God Wars"}
+{"entityId":"quest:desert:icthlarins-little-helper","members":true,"primaryRegionId":"desert","releaseDate":"26 April 2005","series":"Desert"}
+{"entityId":"quest:desert:one-piercing-note","members":false,"primaryRegionId":"desert","releaseDate":"7 November 2011","series":"none"}
+{"entityId":"quest:desert:our-man-in-the-north","members":true,"primaryRegionId":"desert","releaseDate":"5 June 2017","series":"Desert"}
+{"entityId":"quest:desert:pharaohs-folly","members":true,"primaryRegionId":"desert","releaseDate":"7 April 2025","series":"Desert"}
+{"entityId":"quest:desert:phite-club","members":true,"primaryRegionId":"desert","releaseDate":"5 June 2017","series":"Desert"}
+{"entityId":"quest:desert:rune-mechanics","members":true,"primaryRegionId":"desert","releaseDate":"1 February 2010","series":"none"}
+{"entityId":"quest:desert:shadow-of-the-storm","members":true,"primaryRegionId":"desert","releaseDate":"14 November 2005","series":"Delrith"}
+{"entityId":"quest:desert:smoking-kills","members":true,"primaryRegionId":"desert","releaseDate":"5 June 2008","series":"Desert"}
+{"entityId":"quest:desert:spirits-of-the-elid","members":true,"primaryRegionId":"desert","releaseDate":"5 December 2005","series":"Desert"}
+{"entityId":"quest:desert:the-curse-of-arrav","members":true,"primaryRegionId":"desert","releaseDate":"21 July 2009","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:desert:the-feud","members":true,"primaryRegionId":"desert","releaseDate":"4 April 2005","series":"none"}
+{"entityId":"quest:desert:the-golem","members":true,"primaryRegionId":"desert","releaseDate":"11 April 2005","series":"none"}
+{"entityId":"quest:desert:the-jack-of-spades","members":true,"primaryRegionId":"desert","releaseDate":"5 June 2017","series":"Ozan"}
+{"entityId":"quest:desert:the-temple-at-senntisten","members":true,"primaryRegionId":"desert","releaseDate":"3 December 2009","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:desert:the-tourist-trap","members":true,"primaryRegionId":"desert","releaseDate":"14 April 2003","series":"none"}
+{"entityId":"quest:desert:the-vault-of-shadows","members":true,"primaryRegionId":"desert","releaseDate":"25 January 2021","series":"The Elder God Wars"}
+{"entityId":"quest:forinthry:curse-of-the-black-stone","members":true,"primaryRegionId":"forinthry","releaseDate":"25 February 2019","series":"none"}
+{"entityId":"quest:forinthry:salt-in-the-wound","members":true,"primaryRegionId":"forinthry","releaseDate":"5 July 2011","series":"Temple Knight"}
+{"entityId":"quest:forinthry:spirit-of-summer","members":true,"primaryRegionId":"forinthry","releaseDate":"29 July 2008","series":"Summer"}
+{"entityId":"quest:forinthry:summers-end","members":true,"primaryRegionId":"forinthry","questType":"dot","releaseDate":"15 September 2008","series":"Summer"}
+{"entityId":"quest:fremennik:between-a-rock","members":true,"primaryRegionId":"fremennik","releaseDate":"21 March 2005","series":"none"}
+{"entityId":"quest:fremennik:birthright-of-the-dwarves","members":true,"primaryRegionId":"fremennik","releaseDate":"2 October 2013","series":"Dwarf (Red Axe)"}
+{"entityId":"quest:fremennik:blood-runs-deep","members":true,"primaryRegionId":"fremennik","releaseDate":"15 December 2009","series":"Fremennik"}
+{"entityId":"quest:fremennik:children-of-mah","members":true,"primaryRegionId":"fremennik","releaseDate":"21 November 2016","series":"Sliske's Game"}
+{"entityId":"quest:fremennik:dream-mentor","members":true,"primaryRegionId":"fremennik","releaseDate":"15 May 2007","series":"Fremennik"}
+{"entityId":"quest:fremennik:forgettable-tale-of-a-drunken-dwarf","members":true,"primaryRegionId":"fremennik","releaseDate":"26 July 2005","series":"Dwarf (Red Axe)"}
+{"entityId":"quest:fremennik:forgiveness-of-a-chaos-dwarf","members":true,"primaryRegionId":"fremennik","releaseDate":"9 September 2009","series":"Dwarf (Red Axe)"}
+{"entityId":"quest:fremennik:glorious-memories","members":true,"primaryRegionId":"fremennik","releaseDate":"1 April 2009","series":"Fremennik"}
+{"entityId":"quest:fremennik:heros-welcome","members":true,"primaryRegionId":"fremennik","releaseDate":"29 June 2015","series":"Sliske's Game"}
+{"entityId":"quest:fremennik:horror-from-the-deep","members":true,"primaryRegionId":"fremennik","releaseDate":"17 November 2004","series":"Fremennik"}
+{"entityId":"quest:fremennik:king-of-the-dwarves","members":true,"primaryRegionId":"fremennik","releaseDate":"4 January 2011","series":"Dwarf (Red Axe)"}
+{"entityId":"quest:fremennik:lunar-diplomacy","members":true,"primaryRegionId":"fremennik","releaseDate":"24 July 2006","series":"Fremennik"}
+{"entityId":"quest:fremennik:mountain-daughter","members":true,"primaryRegionId":"fremennik","releaseDate":"7 March 2005","series":"Fremennik"}
+{"entityId":"quest:fremennik:olafs-quest","members":true,"primaryRegionId":"fremennik","releaseDate":"10 April 2007","series":"none"}
+{"entityId":"quest:fremennik:royal-trouble","members":true,"primaryRegionId":"fremennik","releaseDate":"22 May 2006","series":"Fremennik"}
+{"entityId":"quest:fremennik:the-fremennik-isles","members":true,"primaryRegionId":"fremennik","releaseDate":"6 February 2007","series":"Fremennik"}
+{"entityId":"quest:fremennik:the-fremennik-trials","members":true,"primaryRegionId":"fremennik","releaseDate":"2 November 2004","series":"Fremennik"}
+{"entityId":"quest:fremennik:the-giant-dwarf","members":true,"primaryRegionId":"fremennik","releaseDate":"31 May 2005","series":"Dwarf (Red Axe)"}
+{"entityId":"quest:fremennik:the-tale-of-the-muspah","members":true,"primaryRegionId":"fremennik","releaseDate":"21 April 2009","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:fremennik:throne-of-miscellania","members":true,"primaryRegionId":"fremennik","releaseDate":"29 November 2004","series":"Fremennik"}
+{"entityId":"quest:global:a-christmas-reunion","members":false,"primaryRegionId":"global","releaseDate":"2 December 2024","series":"Christmas Village"}
+{"entityId":"quest:global:a-clockwork-syringe","members":true,"primaryRegionId":"global","releaseDate":"28 March 2011","series":"Pirate"}
+{"entityId":"quest:global:cold-front","members":false,"primaryRegionId":"global","releaseDate":"1 December 2025","series":"Christmas Village"}
+{"entityId":"quest:global:corporate-egg-spionage","members":false,"primaryRegionId":"global","releaseDate":"30 March 2026","series":"Blooming Burrow"}
+{"entityId":"quest:global:great-egg-spectations","members":false,"primaryRegionId":"global","releaseDate":"18 March 2024","series":"Blooming Burrow"}
+{"entityId":"quest:global:guys-and-dolls","members":false,"primaryRegionId":"global","releaseDate":"13 October 2025","series":"Harvest Hollow"}
+{"entityId":"quest:global:pieces-of-hate","members":true,"primaryRegionId":"global","releaseDate":"19 March 2018","series":"Pirate"}
+{"entityId":"quest:havenhythe:hearts-of-sanguine","members":false,"primaryRegionId":"havenhythe","releaseDate":"23 March 2026","series":"Sanguine"}
+{"entityId":"quest:havenhythe:hermit-permits","members":true,"primaryRegionId":"havenhythe","releaseDate":"23 March 2026","series":"None"}
+{"entityId":"quest:havenhythe:secrets-of-amberfell","members":true,"primaryRegionId":"havenhythe","releaseDate":"1 June 2026","series":"Sanguine"}
+{"entityId":"quest:havenhythe:wiz-kid","members":true,"primaryRegionId":"havenhythe","releaseDate":"23 March 2026","series":"No"}
+{"entityId":"quest:kandarin:a-fairy-tale-iii-battle-at-orks-rift","members":true,"primaryRegionId":"kandarin","releaseDate":"13 May 2010","series":"Fairy"}
+{"entityId":"quest:kandarin:as-a-first-resort","members":true,"primaryRegionId":"kandarin","releaseDate":"29 January 2008","series":"Ogre"}
+{"entityId":"quest:kandarin:back-to-my-roots","members":true,"primaryRegionId":"kandarin","releaseDate":"9 October 2007","series":"none"}
+{"entityId":"quest:kandarin:back-to-the-freezer","members":true,"primaryRegionId":"kandarin","releaseDate":"27 February 2017","series":"Penguin"}
+{"entityId":"quest:kandarin:big-chompy-bird-hunting","members":true,"primaryRegionId":"kandarin","releaseDate":"18 May 2004","series":"Ogre"}
+{"entityId":"quest:kandarin:biohazard","members":true,"primaryRegionId":"kandarin","releaseDate":"23 October 2002","series":"Elf (Prifddinas)"}
+{"entityId":"quest:kandarin:carnillean-rising","members":true,"primaryRegionId":"kandarin","releaseDate":"3 July 2012","series":"none"}
+{"entityId":"quest:kandarin:clock-tower","members":true,"primaryRegionId":"kandarin","releaseDate":"17 June 2002","series":"none"}
+{"entityId":"quest:kandarin:cold-war","members":true,"primaryRegionId":"kandarin","releaseDate":"29 January 2007","series":"Penguin"}
+{"entityId":"quest:kandarin:deadliest-catch","members":true,"primaryRegionId":"kandarin","releaseDate":"7 June 2011","series":"none"}
+{"entityId":"quest:kandarin:dwarf-cannon","members":true,"primaryRegionId":"kandarin","releaseDate":"27 May 2003","series":"none"}
+{"entityId":"quest:kandarin:eagles-peak","members":true,"primaryRegionId":"kandarin","releaseDate":"28 November 2006","series":"none"}
+{"entityId":"quest:kandarin:elemental-workshop-i","members":true,"primaryRegionId":"kandarin","releaseDate":"2 June 2004","series":"Elemental Workshop"}
+{"entityId":"quest:kandarin:elemental-workshop-iii","members":true,"primaryRegionId":"kandarin","releaseDate":"25 May 2010","series":"Elemental Workshop"}
+{"entityId":"quest:kandarin:elemental-workshop-iv","members":true,"primaryRegionId":"kandarin","releaseDate":"1 March 2011","series":"Elemental Workshop"}
+{"entityId":"quest:kandarin:fate-of-the-gods","members":true,"primaryRegionId":"kandarin","releaseDate":"24 March 2014","series":"Sliske's Game"}
+{"entityId":"quest:kandarin:fight-arena","members":true,"primaryRegionId":"kandarin","releaseDate":"23 July 2002","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:kandarin:hazeel-cult","members":true,"primaryRegionId":"kandarin","releaseDate":"15 August 2002","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:kandarin:holy-grail","members":true,"primaryRegionId":"kandarin","releaseDate":"23 July 2002","series":"Camelot"}
+{"entityId":"quest:kandarin:hunt-for-red-raktuber","members":true,"primaryRegionId":"kandarin","releaseDate":"2 June 2009","series":"Penguin"}
+{"entityId":"quest:kandarin:in-pyre-need","members":true,"primaryRegionId":"kandarin","releaseDate":"6 January 2009","series":"none"}
+{"entityId":"quest:kandarin:kenniths-concerns","members":true,"primaryRegionId":"kandarin","releaseDate":"11 March 2008","series":"Temple Knight"}
+{"entityId":"quest:kandarin:kings-ransom","members":true,"primaryRegionId":"kandarin","releaseDate":"24 July 2007","series":"Camelot"}
+{"entityId":"quest:kandarin:legends-quest","members":true,"primaryRegionId":"kandarin","releaseDate":"20 August 2003","series":"none"}
+{"entityId":"quest:kandarin:making-history","members":true,"primaryRegionId":"kandarin","releaseDate":"22 November 2005","series":"Enchanted Key"}
+{"entityId":"quest:kandarin:meeting-history","members":true,"primaryRegionId":"kandarin","releaseDate":"5 August 2008","series":"Enchanted Key"}
+{"entityId":"quest:kandarin:merlins-crystal","members":true,"primaryRegionId":"kandarin","releaseDate":"27 February 2002","series":"Camelot"}
+{"entityId":"quest:kandarin:monkey-madness","members":true,"primaryRegionId":"kandarin","releaseDate":"6 December 2004","series":"Gnome"}
+{"entityId":"quest:kandarin:monks-friend","members":true,"primaryRegionId":"kandarin","releaseDate":"28 May 2002","series":"none"}
+{"entityId":"quest:kandarin:mournings-end-part-ii","members":true,"primaryRegionId":"kandarin","releaseDate":"17 October 2005","series":"Elf (Prifddinas)"}
+{"entityId":"quest:kandarin:murder-mystery","members":true,"primaryRegionId":"kandarin","releaseDate":"9 June 2003","series":"none"}
+{"entityId":"quest:kandarin:observatory-quest","members":true,"primaryRegionId":"kandarin","releaseDate":"17 March 2003","series":"none"}
+{"entityId":"quest:kandarin:plague-city","members":true,"primaryRegionId":"kandarin","releaseDate":"27 August 2002","series":"Elf (Prifddinas)"}
+{"entityId":"quest:kandarin:regicide","members":true,"primaryRegionId":"kandarin","releaseDate":"20 September 2004","series":"Elf (Prifddinas)"}
+{"entityId":"quest:kandarin:scorpion-catcher","members":true,"primaryRegionId":"kandarin","releaseDate":"25 March 2002","series":"none"}
+{"entityId":"quest:kandarin:sea-slug","members":true,"primaryRegionId":"kandarin","releaseDate":"9 September 2002","series":"Temple Knight"}
+{"entityId":"quest:kandarin:sheep-herder","members":true,"primaryRegionId":"kandarin","releaseDate":"15 August 2002","series":"none"}
+{"entityId":"quest:kandarin:some-like-it-cold","members":true,"primaryRegionId":"kandarin","releaseDate":"7 August 2012","series":"Penguin"}
+{"entityId":"quest:kandarin:stellar-born","members":true,"primaryRegionId":"kandarin","releaseDate":"6 October 2025","series":"None"}
+{"entityId":"quest:kandarin:swan-song","members":true,"primaryRegionId":"kandarin","releaseDate":"2 May 2006","series":"Wise Old Man"}
+{"entityId":"quest:kandarin:temple-of-ikov","members":true,"primaryRegionId":"kandarin","releaseDate":"17 June 2002","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:kandarin:the-eyes-of-glouphrie","members":true,"primaryRegionId":"kandarin","releaseDate":"15 August 2006","series":"Gnome"}
+{"entityId":"quest:kandarin:the-firemakers-curse","members":true,"primaryRegionId":"kandarin","releaseDate":"11 January 2012","series":"none"}
+{"entityId":"quest:kandarin:the-grand-tree","members":true,"primaryRegionId":"kandarin","releaseDate":"12 December 2002","series":"Gnome"}
+{"entityId":"quest:kandarin:the-hand-in-the-sand","members":true,"primaryRegionId":"kandarin","releaseDate":"10 January 2006","series":"none"}
+{"entityId":"quest:kandarin:the-needle-skips","members":true,"primaryRegionId":"kandarin","releaseDate":"19 November 2018","series":"The Elder God Wars"}
+{"entityId":"quest:kandarin:the-path-of-glouphrie","members":true,"primaryRegionId":"kandarin","releaseDate":"3 September 2007","series":"Gnome"}
+{"entityId":"quest:kandarin:the-prisoner-of-glouphrie","members":true,"primaryRegionId":"kandarin","releaseDate":"9 February 2011","series":"Gnome"}
+{"entityId":"quest:kandarin:the-world-wakes","members":true,"primaryRegionId":"kandarin","releaseDate":"4 March 2013","series":"Sliske's Game"}
+{"entityId":"quest:kandarin:tower-of-life","members":true,"primaryRegionId":"kandarin","releaseDate":"19 February 2007","series":"none"}
+{"entityId":"quest:kandarin:tree-gnome-village","members":true,"primaryRegionId":"kandarin","releaseDate":"23 July 2002","series":"Gnome"}
+{"entityId":"quest:kandarin:underground-pass","members":true,"primaryRegionId":"kandarin","releaseDate":"3 March 2003","series":"Elf (Prifddinas)"}
+{"entityId":"quest:kandarin:watchtower","members":true,"primaryRegionId":"kandarin","releaseDate":"7 May 2003","series":"none"}
+{"entityId":"quest:kandarin:waterfall-quest","members":true,"primaryRegionId":"kandarin","releaseDate":"24 September 2002","series":"none"}
+{"entityId":"quest:kandarin:while-guthix-sleeps","members":true,"primaryRegionId":"kandarin","releaseDate":"26 November 2008","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:kandarin:you-are-it","members":true,"primaryRegionId":"kandarin","releaseDate":"8 May 2018","series":"The Elder God Wars"}
+{"entityId":"quest:kandarin:zogre-flesh-eaters","members":true,"primaryRegionId":"kandarin","releaseDate":"17 May 2005","series":"Ogre"}
+{"entityId":"quest:karamja:jungle-potion","members":true,"primaryRegionId":"karamja","releaseDate":"23 October 2002","series":"none"}
+{"entityId":"quest:karamja:one-small-favour","members":true,"primaryRegionId":"karamja","releaseDate":"28 February 2005","series":"none"}
+{"entityId":"quest:karamja:shilo-village","members":true,"primaryRegionId":"karamja","releaseDate":"27 January 2003","series":"none"}
+{"entityId":"quest:karamja:tai-bwo-wannai-trio","members":true,"primaryRegionId":"karamja","releaseDate":"14 September 2004","series":"none"}
+{"entityId":"quest:karamja:the-brink-of-extinction","members":true,"primaryRegionId":"karamja","releaseDate":"4 December 2012","series":"TzHaar"}
+{"entityId":"quest:karamja:the-elder-kiln","members":true,"primaryRegionId":"karamja","releaseDate":"14 February 2012","series":"TzHaar"}
+{"entityId":"quest:karamja:toktz-ket-dill","members":true,"primaryRegionId":"karamja","releaseDate":"13 May 2008","series":"TzHaar"}
+{"entityId":"quest:karamja:tribal-totem","members":true,"primaryRegionId":"karamja","releaseDate":"30 April 2002","series":"none"}
+{"entityId":"quest:misthalin:a-fairy-tale-i-growing-pains","members":true,"primaryRegionId":"misthalin","releaseDate":"27 February 2006","series":"Fairy"}
+{"entityId":"quest:misthalin:a-fairy-tale-ii-cure-a-queen","members":true,"primaryRegionId":"misthalin","releaseDate":"11 July 2006","series":"Fairy"}
+{"entityId":"quest:misthalin:a-souls-bane","members":false,"primaryRegionId":"misthalin","releaseDate":"3 April 2006","series":"none"}
+{"entityId":"quest:misthalin:all-fired-up","members":true,"primaryRegionId":"misthalin","releaseDate":"26 August 2008","series":"none"}
+{"entityId":"quest:misthalin:alpha-vs-omega","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:ancient-awakening","members":true,"primaryRegionId":"misthalin","releaseDate":"9 October 2023","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:animal-magnetism","members":true,"primaryRegionId":"misthalin","releaseDate":"12 December 2006","series":"none"}
+{"entityId":"quest:misthalin:another-slice-of-h-a-m","members":true,"primaryRegionId":"misthalin","releaseDate":"24 April 2007","series":"Cave Goblin"}
+{"entityId":"quest:misthalin:battle-of-forinthry","members":true,"primaryRegionId":"misthalin","releaseDate":"20 November 2023","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:battle-of-the-monolith","members":true,"primaryRegionId":"misthalin","releaseDate":"24 May 2021","series":"The Elder God Wars"}
+{"entityId":"quest:misthalin:beneath-cursed-tides","members":false,"primaryRegionId":"misthalin","releaseDate":"14 December 2015","series":"none"}
+{"entityId":"quest:misthalin:broken-home","members":false,"primaryRegionId":"misthalin","releaseDate":"27 October 2014","series":"none"}
+{"entityId":"quest:misthalin:buyers-and-cellars","members":true,"primaryRegionId":"misthalin","releaseDate":"28 April 2010","series":"Thieves' Guild"}
+{"entityId":"quest:misthalin:chefs-assistant","members":false,"primaryRegionId":"misthalin","releaseDate":"11 February 2019","series":"none"}
+{"entityId":"quest:misthalin:cooks-assistant","members":false,"primaryRegionId":"misthalin","releaseDate":"4 January 2001","series":"none"}
+{"entityId":"quest:misthalin:dead-and-buried","members":true,"primaryRegionId":"misthalin","releaseDate":"17 July 2023","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:death-to-the-dorgeshuun","members":true,"primaryRegionId":"misthalin","releaseDate":"21 June 2006","series":"Cave Goblin"}
+{"entityId":"quest:misthalin:defender-of-varrock","members":true,"primaryRegionId":"misthalin","releaseDate":"29 September 2008","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:misthalin:demon-slayer","members":false,"primaryRegionId":"misthalin","releaseDate":"28 January 2013","series":"Delrith"}
+{"entityId":"quest:misthalin:devious-minds","members":true,"primaryRegionId":"misthalin","releaseDate":"19 December 2005","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:misthalin:dimension-of-disaster","members":true,"primaryRegionId":"misthalin","releaseDate":"23 March 2015","series":"none"}
+{"entityId":"quest:misthalin:dishonour-among-thieves","members":true,"primaryRegionId":"misthalin","releaseDate":"23 February 2015","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:dragon-slayer","members":false,"primaryRegionId":"misthalin","releaseDate":"23 September 2001","series":"none"}
+{"entityId":"quest:misthalin:duck-quest","members":false,"primaryRegionId":"misthalin","releaseDate":"14 April 2025","series":"None"}
+{"entityId":"quest:misthalin:elemental-workshop-ii","members":true,"primaryRegionId":"misthalin","releaseDate":"2 October 2006","series":"Elemental Workshop"}
+{"entityId":"quest:misthalin:ernest-the-chicken","members":false,"primaryRegionId":"misthalin","releaseDate":"21 January 2001","series":"none"}
+{"entityId":"quest:misthalin:evil-daves-big-day-out","members":true,"primaryRegionId":"misthalin","releaseDate":"27 November 2017","series":"none"}
+{"entityId":"quest:misthalin:extinction","members":true,"primaryRegionId":"misthalin","releaseDate":"4 April 2022","series":"The Elder God Wars"}
+{"entityId":"quest:misthalin:family-crest","members":true,"primaryRegionId":"misthalin","releaseDate":"9 April 2002","series":"none"}
+{"entityId":"quest:misthalin:fur-n-seek","members":true,"primaryRegionId":"misthalin","releaseDate":"10 August 2009","series":"Odd Old Man"}
+{"entityId":"quest:misthalin:garden-of-tranquillity","members":true,"primaryRegionId":"misthalin","releaseDate":"30 August 2005","series":"none"}
+{"entityId":"quest:misthalin:gertrudes-cat","members":false,"primaryRegionId":"misthalin","releaseDate":"28 July 2003","series":"none"}
+{"entityId":"quest:misthalin:gower-quest","members":false,"primaryRegionId":"misthalin","releaseDate":"20 June 2016","series":"none"}
+{"entityId":"quest:misthalin:gunnars-ground","members":false,"primaryRegionId":"misthalin","releaseDate":"21 September 2010","series":"none"}
+{"entityId":"quest:misthalin:heart-of-stone","members":true,"primaryRegionId":"misthalin","releaseDate":"24 November 2014","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:heartstealer","members":false,"primaryRegionId":"misthalin","releaseDate":"8 February 2021","series":"none"}
+{"entityId":"quest:misthalin:housing-of-parliament","members":true,"primaryRegionId":"misthalin","releaseDate":"12 February 2024","series":"City of Um"}
+{"entityId":"quest:misthalin:imp-catcher","members":false,"primaryRegionId":"misthalin","releaseDate":"16 February 2001","series":"none"}
+{"entityId":"quest:misthalin:kili-row","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"City of Um"}
+{"entityId":"quest:misthalin:land-of-the-goblins","members":true,"primaryRegionId":"misthalin","releaseDate":"12 November 2007","series":"Cave Goblin"}
+{"entityId":"quest:misthalin:legacy-of-seergaze","members":true,"primaryRegionId":"misthalin","releaseDate":"22 April 2008","series":"Myreque"}
+{"entityId":"quest:misthalin:lost-city","members":true,"primaryRegionId":"misthalin","releaseDate":"27 February 2002","series":"Fairy"}
+{"entityId":"quest:misthalin:love-story","members":true,"primaryRegionId":"misthalin","releaseDate":"5 July 2010","series":"Wise Old Man"}
+{"entityId":"quest:misthalin:missing-my-mummy","members":true,"primaryRegionId":"misthalin","releaseDate":"19 May 2009","series":"Desert"}
+{"entityId":"quest:misthalin:missing-presumed-death","members":false,"primaryRegionId":"misthalin","releaseDate":"15 October 2013","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:murder-on-the-border","members":true,"primaryRegionId":"misthalin","releaseDate":"20 March 2023","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:myths-of-the-white-lands","members":false,"primaryRegionId":"misthalin","releaseDate":"16 December 2008","series":"none"}
+{"entityId":"quest:misthalin:nature-spirit","members":true,"primaryRegionId":"misthalin","releaseDate":"13 July 2004","series":"Myreque"}
+{"entityId":"quest:misthalin:necromancy","members":false,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:new-foundations","members":true,"primaryRegionId":"misthalin","releaseDate":"13 February 2023","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:nomads-elegy","members":true,"primaryRegionId":"misthalin","releaseDate":"15 February 2016","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:nomads-requiem","members":true,"primaryRegionId":"misthalin","releaseDate":"11 January 2010","series":"none"}
+{"entityId":"quest:misthalin:ode-of-the-devourer","members":true,"primaryRegionId":"misthalin","releaseDate":"16 September 2024","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:once-upon-a-time-in-gielinor","members":true,"primaryRegionId":"misthalin","releaseDate":"22 November 2021","series":"none"}
+{"entityId":"quest:misthalin:one-of-a-kind","members":true,"primaryRegionId":"misthalin","releaseDate":"10 March 2014","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:priest-in-peril","members":false,"primaryRegionId":"misthalin","releaseDate":"29 June 2004","series":"Myreque"}
+{"entityId":"quest:misthalin:princess-and-the-pauper","members":true,"primaryRegionId":"misthalin","releaseDate":"2 February 2026","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:rag-and-bone-man","members":true,"primaryRegionId":"misthalin","releaseDate":"10 April 2006","series":"Odd Old Man"}
+{"entityId":"quest:misthalin:rat-catchers","members":true,"primaryRegionId":"misthalin","releaseDate":"28 November 2005","series":"none"}
+{"entityId":"quest:misthalin:recipe-for-disaster","members":true,"primaryRegionId":"misthalin","releaseDate":"15 March 2006","series":"none"}
+{"entityId":"quest:misthalin:remains-of-the-necrolord","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:requiem-for-a-dragon","members":true,"primaryRegionId":"misthalin","releaseDate":"22 April 2024","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:river-of-blood","members":true,"primaryRegionId":"misthalin","releaseDate":"25 April 2016","series":"Myreque"}
+{"entityId":"quest:misthalin:rune-memories","members":true,"primaryRegionId":"misthalin","releaseDate":"28 November 2012","series":"Ariane"}
+{"entityId":"quest:misthalin:rune-mysteries","members":false,"primaryRegionId":"misthalin","releaseDate":"28 November 2012","series":"Ariane"}
+{"entityId":"quest:misthalin:rune-mythos","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:shield-of-arrav","members":false,"primaryRegionId":"misthalin","releaseDate":"4 January 2001","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:misthalin:sliskes-endgame","members":true,"primaryRegionId":"misthalin","releaseDate":"19 December 2016","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:soul-searching","members":true,"primaryRegionId":"misthalin","releaseDate":"22 July 2024","series":"None"}
+{"entityId":"quest:misthalin:stolen-hearts","members":false,"primaryRegionId":"misthalin","releaseDate":"26 September 2012","series":"Ozan"}
+{"entityId":"quest:misthalin:swept-away","members":false,"primaryRegionId":"misthalin","releaseDate":"28 October 2008","series":"none"}
+{"entityId":"quest:misthalin:tears-of-guthix-quest","members":true,"primaryRegionId":"misthalin","releaseDate":"4 May 2005","series":"none"}
+{"entityId":"quest:misthalin:that-old-black-magic","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"City of Um"}
+{"entityId":"quest:misthalin:the-blood-pact","members":false,"primaryRegionId":"misthalin","releaseDate":"15 March 2010","series":"none"}
+{"entityId":"quest:misthalin:the-chosen-commander","members":true,"primaryRegionId":"misthalin","releaseDate":"17 March 2009","series":"Cave Goblin"}
+{"entityId":"quest:misthalin:the-dig-site","members":true,"primaryRegionId":"misthalin","releaseDate":"9 July 2003","series":"Mahjarrat Mysteries"}
+{"entityId":"quest:misthalin:the-lost-tribe","members":true,"primaryRegionId":"misthalin","releaseDate":"31 May 2005","series":"Cave Goblin"}
+{"entityId":"quest:misthalin:the-mighty-fall","members":true,"primaryRegionId":"misthalin","releaseDate":"2 June 2014","series":"Sliske's Game"}
+{"entityId":"quest:misthalin:the-restless-ghost","members":false,"primaryRegionId":"misthalin","releaseDate":"4 January 2001","series":"none"}
+{"entityId":"quest:misthalin:the-spirit-of-war","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:tomes-of-the-warlock","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:twilight-of-the-gods","members":true,"primaryRegionId":"misthalin","releaseDate":"6 June 2022","series":"The Elder God Wars"}
+{"entityId":"quest:misthalin:unwelcome-guests","members":true,"primaryRegionId":"misthalin","releaseDate":"11 April 2023","series":"Fort Forinthry"}
+{"entityId":"quest:misthalin:vampyre-slayer","members":false,"primaryRegionId":"misthalin","releaseDate":"28 January 2001","series":"none"}
+{"entityId":"quest:misthalin:vessel-of-the-harbinger","members":true,"primaryRegionId":"misthalin","releaseDate":"7 August 2023","series":"The First Necromancer"}
+{"entityId":"quest:misthalin:what-lies-below","members":true,"primaryRegionId":"misthalin","releaseDate":"27 March 2007","series":"none"}
+{"entityId":"quest:morytania:cabin-fever","members":true,"primaryRegionId":"morytania","releaseDate":"7 February 2006","series":"Pirate"}
+{"entityId":"quest:morytania:creature-of-fenkenstrain","members":true,"primaryRegionId":"morytania","releaseDate":"31 January 2005","series":"none"}
+{"entityId":"quest:morytania:ghosts-ahoy","members":true,"primaryRegionId":"morytania","releaseDate":"15 February 2005","series":"none"}
+{"entityId":"quest:morytania:haunted-mine","members":true,"primaryRegionId":"morytania","releaseDate":"21 December 2004","series":"none"}
+{"entityId":"quest:morytania:in-aid-of-the-myreque","members":true,"primaryRegionId":"morytania","releaseDate":"22 March 2006","series":"Myreque"}
+{"entityId":"quest:morytania:in-search-of-the-myreque","members":true,"primaryRegionId":"morytania","releaseDate":"10 January 2005","series":"Myreque"}
+{"entityId":"quest:morytania:rocking-out","members":true,"primaryRegionId":"morytania","releaseDate":"11 June 2008","series":"Pirate"}
+{"entityId":"quest:morytania:rum-deal","members":true,"primaryRegionId":"morytania","releaseDate":"31 October 2005","series":"Pirate"}
+{"entityId":"quest:morytania:shades-of-mortton","members":true,"primaryRegionId":"morytania","releaseDate":"18 October 2004","series":"none"}
+{"entityId":"quest:morytania:the-branches-of-darkmeyer","members":true,"primaryRegionId":"morytania","releaseDate":"31 August 2011","series":"Myreque"}
+{"entityId":"quest:morytania:the-darkness-of-hallowvale","members":true,"primaryRegionId":"morytania","releaseDate":"4 September 2006","series":"Myreque"}
+{"entityId":"quest:morytania:the-great-brain-robbery","members":true,"primaryRegionId":"morytania","releaseDate":"6 March 2007","series":"Pirate"}
+{"entityId":"quest:morytania:the-lord-of-vampyrium","members":true,"primaryRegionId":"morytania","releaseDate":"14 September 2015","series":"Myreque"}
+{"entityId":"quest:quest-gates:rune-mythos"}
+{"entityId":"quest:quest-gates:the-temple-at-senntisten"}
+{"entityId":"quest:quest-gates:tomes-of-the-warlock"}
+{"entityId":"quest:tirannwn:catapult-construction","members":true,"primaryRegionId":"tirannwn","releaseDate":"13 February 2008","series":"none"}
+{"entityId":"quest:tirannwn:mournings-end-part-i","members":true,"primaryRegionId":"tirannwn","releaseDate":"19 July 2005","series":"Elf (Prifddinas)"}
+{"entityId":"quest:tirannwn:plagues-end","members":true,"primaryRegionId":"tirannwn","releaseDate":"11 August 2014","series":"Elf (Prifddinas)"}
+{"entityId":"quest:tirannwn:roving-elves","members":true,"primaryRegionId":"tirannwn","releaseDate":"7 February 2005","series":"Elf (Prifddinas)"}
+{"entityId":"quest:tirannwn:the-light-within","members":true,"primaryRegionId":"tirannwn","releaseDate":"24 August 2015","series":"Sliske's Game"}
+{"entityId":"quest:tirannwn:within-the-light","members":true,"primaryRegionId":"tirannwn","releaseDate":"13 October 2009","series":"Elf (Prifddinas)"}
+{"entityId":"temple-at-senntisten:ancient-curses"}
+{"entityId":"the-dig-site:codex-ultimatus-current-abilities"}
+{"entityId":"the-light-within:seren-spells-prayers"}
+{"entityId":"the-world-wakes:combat-ultimates"}

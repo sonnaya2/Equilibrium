@@ -1,0 +1,929 @@
+{"category":"style-specific BiS Magic combat boots residual","entityId":"anachronia:blast-diffusion-boots"}
+{"category":"Magic best-in-slot ring residual","entityId":"anachronia:channellers-ring"}
+{"category":"Archaeology relic power","entityId":"anachronia:death-note-relic"}
+{"category":"Archaeology tool base and crystal/Imcando mattock feedstock","entityId":"anachronia:dragon-mattock"}
+{"category":"mid-high hybrid armour residual / gemstone dragons","entityId":"anachronia:gemstone-armour"}
+{"category":"grimy-herb inventory container","entityId":"anachronia:herb-bag-current"}
+{"category":"Herblore inventory container pointer","entityId":"anachronia:herb-bag-skilling-pointer"}
+{"category":"tier-82 Anachronia slayer spear residual","entityId":"anachronia:laniakeas-spear"}
+{"category":"tier-100 ranged armour region pressure","entityId":"anachronia:masterwork-ranged-pressure"}
+{"category":"dinosaur combat and drop support necklace","entityId":"anachronia:necklace-of-salamancy"}
+{"category":"Necromancy best-in-slot ring residual","entityId":"anachronia:occultists-ring"}
+{"category":"Smithing and Firemaking skilling off-hand","entityId":"anachronia:orthen-furnace-core"}
+{"category":"hybrid critical-strike ring residual","entityId":"anachronia:reavers-ring"}
+{"category":"permanent Anachronia spa duration infrastructure","entityId":"anachronia:spa-pools"}
+{"category":"style-specific BiS combat boots","entityId":"anachronia:style-boots-shadow-spike"}
+{"category":"niche anti-ranged T80 melee weapon residual","entityId":"anachronia:terrasaur-maul"}
+{"category":"achievement diary Farming and Artisans utility","entityId":"asgarnia:area-tasks-falador-shield"}
+{"category":"EoF special-attack magic weapon residual","entityId":"asgarnia:armadyl-battlestaff-spec"}
+{"category":"Smithing XP outfit","entityId":"asgarnia:blacksmiths-outfit"}
+{"category":"permanent drop-cleaner upgrade unlock","entityId":"asgarnia:bonecrusher-auto-pickup"}
+{"category":"Herblore XP outfit","entityId":"asgarnia:botanists-outfit"}
+{"category":"permanent guild travel jewellery with Slayer counter","entityId":"asgarnia:combat-bracelet"}
+{"category":"Invention permanent blueprint unlock","entityId":"asgarnia:crystal-tool-siphon-blueprint"}
+{"category":"BiS armour permanent upgrade / T92 masterwork","entityId":"asgarnia:custom-fit-trimmed-masterwork"}
+{"category":"permanent early multi-tool and flat XP tool","entityId":"asgarnia:dwarven-army-axe"}
+{"category":"Herblore dose and unfinished-potion XP outfit","entityId":"asgarnia:factory-outfit"}
+{"category":"Firemaking XP gloves","entityId":"asgarnia:flame-gloves"}
+{"category":"midgame GWD1 ranged power armour residual","entityId":"asgarnia:gwd1-armadyl-equipment"}
+{"category":"midgame GWD1 magic power armour residual","entityId":"asgarnia:gwd1-subjugation-equipment"}
+{"category":"Hunter XP outfit","entityId":"asgarnia:hunters-outfit"}
+{"category":"All Fired Up dual hatchet-pickaxe equipment","entityId":"asgarnia:inferno-adze"}
+{"category":"tier-82 two-handed spear / halberd residual","entityId":"asgarnia:masutas-warspear"}
+{"category":"residual power armour / T80 Nex","entityId":"asgarnia:nex-t80-power-armour"}
+{"category":"Firemaking XP ring","entityId":"asgarnia:ring-of-fire"}
+{"category":"tier-80 residual two-handed ranged weapon","entityId":"asgarnia:royal-crossbow"}
+{"category":"GWD1 special-attack utility residual","entityId":"asgarnia:saradomin-godsword-residual"}
+{"category":"Magic dual-wield mid-high residual weapons","entityId":"asgarnia:seismic-weapons"}
+{"category":"Woodcutting tool-chain component","entityId":"asgarnia:shard-of-the-lumberjack"}
+{"category":"BiS power armour craft / T90 magic","entityId":"asgarnia:tectonic-armour"}
+{"category":"residual Invention armour perk","entityId":"asgarnia:turtling-perk-residual"}
+{"category":"Magic armour component residual","entityId":"asgarnia:virtus-praesulic-essence"}
+{"category":"Magic dual-wield best-in-slot residual weapons","entityId":"asgarnia:wand-of-the-praesul"}
+{"category":"tier-85 two-handed ranged poison residual","entityId":"asgarnia:wyvern-crossbow"}
+{"category":"tier-80 Nex chargebow residual","entityId":"asgarnia:zaryte-bow"}
+{"category":"Poison-immunity pocket item","entityId":"aura-overhaul:antipoison-totem","slot":"pocket"}
+{"category":"Fishing familiar/tool catch-rate progression","entityId":"aura-overhaul:fishing-catch-replacements"}
+{"category":"Woodcutting tool progression","entityId":"aura-overhaul:hatchet-chopping-bonuses"}
+{"category":"refillable prayer-storage account item","entityId":"blessed-flask:prayer-storage"}
+{"category":"regional boss BiS drop source","entityId":"boss:amascut"}
+{"category":"regional boss BiS drop source","entityId":"boss:araxxor"}
+{"category":"regional boss BiS drop source","entityId":"boss:arch-glacor"}
+{"category":"regional boss BiS drop source","entityId":"boss:barrows"}
+{"category":"regional boss BiS drop source residual","entityId":"boss:black-stone-dragon"}
+{"category":"regional boss BiS drop source residual","entityId":"boss:chaos-elemental"}
+{"category":"regional boss BiS drop source","entityId":"boss:corporeal-beast"}
+{"category":"regional boss BiS drop source","entityId":"boss:croesus"}
+{"category":"regional boss BiS drop source","entityId":"boss:ed2-dragonkin-laboratory"}
+{"category":"regional boss BiS drop source","entityId":"boss:ed3-shadow-reef"}
+{"category":"regional boss BiS drop source","entityId":"boss:gwd2"}
+{"category":"regional boss BiS drop source","entityId":"boss:har-aken"}
+{"category":"regional boss BiS drop source residual","entityId":"boss:hermod"}
+{"category":"regional boss BiS drop source","entityId":"boss:kalphite-king"}
+{"category":"regional boss BiS drop source","entityId":"boss:kerapac"}
+{"category":"regional boss BiS drop source residual","entityId":"boss:king-black-dragon"}
+{"category":"regional boss BiS drop source","entityId":"boss:legiones"}
+{"category":"regional boss BiS drop source","entityId":"boss:liberation-of-mazcab"}
+{"category":"regional boss BiS drop source","entityId":"boss:magister"}
+{"category":"regional boss BiS drop source","entityId":"boss:nex-angel-of-death"}
+{"category":"regional boss BiS drop source","entityId":"boss:queen-black-dragon"}
+{"category":"regional boss BiS drop source","entityId":"boss:rasial"}
+{"category":"regional boss BiS drop source","entityId":"boss:rex-matriarchs"}
+{"category":"regional boss BiS drop source","entityId":"boss:rise-of-the-six"}
+{"category":"regional boss BiS drop source","entityId":"boss:sanctum-of-rebirth"}
+{"category":"regional boss BiS drop source residual","entityId":"boss:seiryu"}
+{"category":"regional boss BiS drop source","entityId":"boss:solak"}
+{"category":"regional boss BiS drop source","entityId":"boss:telos"}
+{"category":"regional boss BiS drop source","entityId":"boss:tzkal-zuk"}
+{"category":"regional boss BiS drop source","entityId":"boss:zamorak-lord-of-chaos"}
+{"category":"quest-challenge equipment unlock","entityId":"broken-home:asylum-surgeons-ring"}
+{"category":"combat neckwear residual and EoF ingredient","entityId":"combat:amulet-of-souls"}
+{"category":"hybrid power gloves residual / hydrix jewellery","entityId":"combat:deathtouch-bracelet"}
+{"category":"combat neck ornament residual / master clue","entityId":"combat:eof-ornament-kit"}
+{"category":"ranged power gloves residual","entityId":"combat:nightmare-gauntlets"}
+{"category":"combat neckwear residual and EoF ingredient","entityId":"combat:reaper-necklace"}
+{"category":"hybrid combat ring residual / hydrix jewellery","entityId":"combat:ring-of-death"}
+{"category":"high-level gem container and skilling off-hand","entityId":"crafting:artificers-measure"}
+{"category":"residual tank armour / raids","entityId":"cross-region:achto-mazcab-residual"}
+{"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"cross-region:artificers-measure"}
+{"category":"Archaeology skilling off-hand cross-region chain","entityId":"cross-region:balaraks-sash-brush"}
+{"category":"cross-region Prayer AFK restore package","entityId":"cross-region:bonecrusher-necklace"}
+{"category":"upgraded Fremennik ring (channel/crit support)","entityId":"cross-region:channellers-ring"}
+{"category":"cross-region crystal tool progression family","entityId":"cross-region:crystal-tools-dragon-base"}
+{"category":"Grace of the Elves permanent upgrade","entityId":"cross-region:dark-facet-of-grace"}
+{"category":"permanent luck enhancer enchantment","entityId":"cross-region:dark-facet-of-luck"}
+{"category":"best-in-slot two-handed melee weapon","entityId":"cross-region:ek-zekkil"}
+{"category":"best-in-slot ranged power armour craft chain","entityId":"cross-region:elite-sirenic"}
+{"category":"BiS power armour craft / T92 ranged","entityId":"cross-region:elite-sirenic-armour"}
+{"category":"BiS power armour craft / T92 magic","entityId":"cross-region:elite-tectonic-armour"}
+{"category":"best-in-slot combat necklace with stored specials","entityId":"cross-region:essence-of-finality"}
+{"category":"Mining XP outfit","entityId":"cross-region:gemstone-golem-outfit"}
+{"category":"cross-region gathering necklace and porter charge supply","entityId":"cross-region:grace-of-the-elves-porter-chain"}
+{"category":"permanent RC/Magic combat-skilling pouch upgrade","entityId":"cross-region:grasping-rune-pouch"}
+{"category":"tier-100 augmentable Woodcutting tool follow-on chain","entityId":"cross-region:hatchet-of-bloom-and-blight"}
+{"category":"tier-90 augmentable Woodcutting tool cross-region chain","entityId":"cross-region:hatchet-of-ember-and-glade"}
+{"category":"best-in-slot combat cape cross-region chain","entityId":"cross-region:igneous-zuk-capes"}
+{"category":"Thieving elite skilling outfit","entityId":"cross-region:master-camouflage-outfit"}
+{"category":"tier-99/100 smithable two-handed melee weapon","entityId":"cross-region:masterwork-2h-sword"}
+{"category":"tier-99/100 fletchable two-handed ranged weapon","entityId":"cross-region:masterwork-bow"}
+{"category":"tier-100 runecrafted two-handed magic weapon","entityId":"cross-region:masterwork-staff"}
+{"category":"cross-region tier-99 augmentable Archaeology tool","entityId":"cross-region:mattock-of-time-and-space"}
+{"category":"Woodcutting elite skilling outfit","entityId":"cross-region:natures-sentinel-outfit"}
+{"category":"permanent Agility experience-boosting outfit","entityId":"cross-region:nimble-outfit"}
+{"category":"cross-region Smithing and Firemaking stack","entityId":"cross-region:orthen-furnace-core-stack"}
+{"category":"cross-region Smithing and Firemaking full AFK stack","entityId":"cross-region:orthen-superheat-autoheater"}
+{"category":"cross-region augmentable Mining tool","entityId":"cross-region:pickaxe-of-earth-and-song"}
+{"category":"cross-region tier-100 augmentable Mining tool follow-on","entityId":"cross-region:pickaxe-of-life-and-death"}
+{"category":"best-in-slot hybrid crit ring (melee-heavy)","entityId":"cross-region:reavers-ring"}
+{"category":"permanent multi-destination travel ring","entityId":"cross-region:ring-of-duelling"}
+{"category":"BiS power armour craft / T90 ranged","entityId":"cross-region:sirenic-armour"}
+{"category":"Hunter skilling off-hand cross-region chain","entityId":"cross-region:skekas-hypnowand"}
+{"category":"best-in-slot ranged-oriented upgraded Fremennik ring","entityId":"cross-region:stalkers-ring"}
+{"category":"tier-90 style power boots cross-region residual","entityId":"cross-region:t90-glacor-upgraded-boots"}
+{"category":"cross-region Thieving spell and prayer stack","entityId":"cross-region:thieving-crystal-mask-light-form"}
+{"category":"Hunter elite skilling outfit","entityId":"cross-region:volcanic-trapper-outfit"}
+{"category":"mid-high power armour / GWD2","entityId":"desert:anima-core-armour"}
+{"category":"achievement diary Crafting Farming glass utility","entityId":"desert:area-tasks-desert-amulet"}
+{"category":"Thieving XP outfit","entityId":"desert:black-ibis-outfit"}
+{"category":"Archaeology monolith relic power","entityId":"desert:blessing-of-het-relic"}
+{"category":"tier-85 two-handed magic residual","entityId":"desert:camel-staff"}
+{"category":"Desert elite diary reward","entityId":"desert:desert-amulet-4"}
+{"category":"tier-95 Necromancy main-hand weapon residual","entityId":"desert:devourers-guard"}
+{"category":"tier-90 residual dual-wield melee weapons","entityId":"desert:drygore-weapons"}
+{"category":"Farming XP outfit","entityId":"desert:farmers-outfit"}
+{"category":"Slayer consumable supply from skilling minigame","entityId":"desert:feather-of-maat-supply"}
+{"category":"Slayer helmet Ranged component","entityId":"desert:focus-sight"}
+{"category":"melee power gloves residual with bleed passive","entityId":"desert:gloves-of-passage"}
+{"category":"tier-80/85 combat gear region package","entityId":"desert:gwd2-anima-melee-ranged"}
+{"category":"GWD2 residual dual-wield Magic weapons","entityId":"desert:gwd2-cywir-magic-weapons"}
+{"category":"GWD2 residual two-handed melee polearm","entityId":"desert:gwd2-dragon-rider-lance"}
+{"category":"GWD2 residual dual-wield Ranged weapons","entityId":"desert:gwd2-shadow-glaives"}
+{"category":"GWD2 residual dual-wield melee weapons","entityId":"desert:gwd2-twin-fury-blades"}
+{"category":"Summoning familiar from Het's Oasis materials","entityId":"desert:holy-scarab"}
+{"category":"Magic anti-melee niche BiS staff","entityId":"desert:inquisitor-staff"}
+{"category":"tier-92 dual-wield melee residual","entityId":"desert:khopesh-tumeken-elidinis"}
+{"category":"regional boss BiS drop source residual","entityId":"desert:magister-combat-hub"}
+{"category":"Divination XP and chronicle utility ring","entityId":"desert:pontifex-observation-ring"}
+{"category":"Prayer training consumable supply","entityId":"desert:powder-of-burials"}
+{"category":"Prayer point sustain consumable supply","entityId":"desert:powder-of-penance"}
+{"category":"Prayer training consumable supply","entityId":"desert:powder-of-pulverising"}
+{"category":"mid-high power armour upgrade / GWD2","entityId":"desert:refined-anima-core-armour"}
+{"category":"tier-85 dual-wield melee residual","entityId":"desert:ripper-claws"}
+{"category":"tier-92 two-handed ranged weapon and EoF special","entityId":"desert:seren-godbow"}
+{"category":"permanent Slayer utility book","entityId":"desert:slayer-codex"}
+{"category":"Slayer helmet Necromancy component","entityId":"desert:spectral-lens"}
+{"category":"Magic two-handed residual staff","entityId":"desert:staff-of-sliske"}
+{"category":"tier-95 two-handed melee AoE weapon","entityId":"desert:tumekens-light"}
+{"category":"near-BiS two-handed melee weapon with combat special","entityId":"desert:zaros-godsword"}
+{"category":"upgradeable Prayer drop cleaner","entityId":"drop-cleaner:attuned-ectoplasmator"}
+{"category":"Farming experience drop cleaner","entityId":"drop-cleaner:seedicide"}
+{"category":"permanent coin drop cleaner","entityId":"dungeoneering:advanced-gold-accumulator-current"}
+{"category":"post-remaster prayer equipment unlock","entityId":"dungeoneering:amulet-of-zealots-current"}
+{"category":"post-remaster critical-strike pocket item","entityId":"dungeoneering:chaotic-grimoire"}
+{"category":"post-remaster prayer-sustain equipment unlock","entityId":"dungeoneering:demon-horn-necklace-current"}
+{"category":"uncut-gem inventory container","entityId":"dungeoneering:gem-bag-current"}
+{"category":"post-remaster Necromancy weapon progression","entityId":"dungeoneering:necromancy-gravite-chaotic-current"}
+{"category":"post-remaster cross-region Necromancy equipment chain","entityId":"dungeoneering:occultist-necromancy-necklaces"}
+{"category":"post-remaster untradeable tier-90 weapon progression","entityId":"dungeoneering:ruinous-weapons"}
+{"category":"post-remaster prayer-sustain equipment unlock","entityId":"dungeoneering:split-dragontooth-necklace-current"}
+{"category":"Farming drop cleaner — acquisition correction","entityId":"equipment:seedicide-not-daemonheim"}
+{"category":"equipment interaction","entityId":"essence-of-finality:stored-special-attack"}
+{"category":"tier-75 Daemonheim magic residual","entityId":"forinthry:abyssal-wand-orb"}
+{"category":"permanent coin drop cleaner (Daemonheim Rewards)","entityId":"forinthry:advanced-gold-accumulator"}
+{"category":"permanent Smithing heat tool upgrade (Daemonheim Rewards)","entityId":"forinthry:advanced-smithing-autoheater"}
+{"category":"achievement diary Runecrafting Prayer Agility utility","entityId":"forinthry:area-tasks-wilderness-sword"}
+{"category":"permanent Prayer drop cleaner (Daemonheim Rewards)","entityId":"forinthry:bonecrusher"}
+{"category":"tier-80 Dungeoneering residual combat weapons","entityId":"forinthry:chaotic-melee-ranged"}
+{"category":"tier-80 residual two-handed Magic weapon","entityId":"forinthry:chaotic-staff"}
+{"category":"permanent Summoning drop cleaner (Daemonheim Rewards)","entityId":"forinthry:charming-imp"}
+{"category":"combat-support and Blessed flask ingredient supply","entityId":"forinthry:corporeal-beast-holy-elixir"}
+{"category":"permanent Passage of the Abyss enchantment","entityId":"forinthry:dark-facet-of-passage"}
+{"category":"Dungeoneering Prayer restore necklace (top)","entityId":"forinthry:demon-horn-necklace"}
+{"category":"Magic armour material residual","entityId":"forinthry:draconic-energy-magic"}
+{"category":"tier-92 two-handed ranged weapon","entityId":"forinthry:eldritch-crossbow"}
+{"category":"permanent Invention blueprint and craft path","entityId":"forinthry:enchanted-notepaper-blueprint"}
+{"category":"Mining/Crafting inventory container (Daemonheim Rewards)","entityId":"forinthry:gem-bag"}
+{"category":"upgraded gem inventory container (Daemonheim Rewards)","entityId":"forinthry:gem-bag-upgraded"}
+{"category":"charged coin drop cleaner (Daemonheim Rewards)","entityId":"forinthry:gold-accumulator"}
+{"category":"permanent Herblore drop cleaner (Daemonheim Rewards)","entityId":"forinthry:herbicide"}
+{"category":"Herblore training utility","entityId":"forinthry:herbicide-deployable-herb-burner"}
+{"category":"niche anti-magic T80 ranged weapon residual","entityId":"forinthry:hexhunter-bow"}
+{"category":"permanent RC material residual — combat + essence pouch crafts","entityId":"forinthry:magical-thread"}
+{"category":"Dungeoneering party ring and role upgrades","entityId":"forinthry:ring-of-kinship"}
+{"category":"T90 glacor-boot upgrade material residual","entityId":"forinthry:rune-dragon-boot-glands"}
+{"category":"permanent Herblore scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-cleansing"}
+{"category":"permanent Crafting scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-dexterity"}
+{"category":"permanent Smithing scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-efficiency"}
+{"category":"permanent Daemonheim gathering XP scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-gathering"}
+{"category":"permanent Farming scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-life"}
+{"category":"permanent Construction scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-proficiency"}
+{"category":"permanent Dungeoneering QoL scroll","entityId":"forinthry:scroll-of-quick-teleportation"}
+{"category":"permanent Prayer unlock scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-renewal"}
+{"category":"permanent Archaeology scroll (Daemonheim Rewards)","entityId":"forinthry:scroll-of-restoration"}
+{"category":"permanent RC/Magic combat-rune pouch (mid thread sink)","entityId":"forinthry:sealed-large-rune-pouch"}
+{"category":"permanent RC/Magic combat-rune pouch (early thread sink)","entityId":"forinthry:sealed-small-rune-pouch"}
+{"category":"Farming drop cleaner","entityId":"forinthry:seedicide-named"}
+{"category":"permanent Smithing heat tool (Daemonheim Rewards)","entityId":"forinthry:smithing-autoheater"}
+{"category":"tank shield residual / Corporeal Beast chain","entityId":"forinthry:spirit-shield-sigil-residual"}
+{"category":"Dungeoneering Prayer restore necklace (mid)","entityId":"forinthry:split-dragontooth-necklace"}
+{"category":"EoF special-attack ancient warrior residual","entityId":"forinthry:superior-ancient-warrior-spec-weapons"}
+{"category":"EoF special-attack melee upgrade residual","entityId":"forinthry:superior-dragon-claws-residual"}
+{"category":"Dungeoneering Prayer restore necklace (entry)","entityId":"forinthry:twisted-bird-skull-necklace"}
+{"category":"Dungeoneering elite skilling outfit","entityId":"forinthry:warped-gorajan-trailblazer"}
+{"category":"tier-87 Wilderness slayer chest style weapons residual","entityId":"forinthry:wilderness-t87-style-weapons"}
+{"category":"Woodcutting tool base and crystal/Imcando hatchet feedstock","entityId":"fremennik:dagannoth-kings-dragon-hatchet"}
+{"category":"Mining tool base and crystal/Imcando pickaxe feedstock","entityId":"fremennik:dragon-pickaxe"}
+{"category":"Mining tool base and crystal/Imcando pickaxe feedstock","entityId":"fremennik:dragon-pickaxe-chaos-battlefield"}
+{"category":"mid-high style tank boots residual","entityId":"fremennik:glacor-tank-boots"}
+{"category":"Mining XP outfit","entityId":"fremennik:golden-mining-suit"}
+{"category":"augmentable Mining tool progression","entityId":"fremennik:imcando-pickaxe"}
+{"category":"Mining tool progression","entityId":"fremennik:imcando-pickaxe-major"}
+{"category":"early Crafting product","entityId":"fremennik:yak-hide-armour"}
+{"category":"Necromancy ritual skilling ring","entityId":"havenhythe:ring-of-kayazu"}
+{"category":"Summoning experience-boosting set","entityId":"havenhythe:shaman-outfit"}
+{"category":"Archaeology monolith relic power","entityId":"havenhythe:tear-of-inanna-hungry-like-the-wolf"}
+{"category":"permanent Invention craft blueprint residual","entityId":"invention:alchemical-hydrix"}
+{"category":"permanent Invention craft blueprint residual","entityId":"invention:alchemical-onyx"}
+{"category":"Ancient Invention equipment shells","entityId":"invention:ancient-gizmo-shells"}
+{"category":"permanent Invention gather-tool augmentation package","entityId":"invention:augmentable-gather-tools-research"}
+{"category":"Invention Prayer XP device (Dwarven technology tree)","entityId":"invention:auto-sanctifier"}
+{"category":"permanent pocket skilling amplifier","entityId":"invention:brooch-of-the-gods"}
+{"category":"permanent Ancient Invention Fishing tool upgrade","entityId":"invention:enhanced-fishing-rod-o-matic"}
+{"category":"permanent Invention Fishing tool","entityId":"invention:fishing-rod-o-matic"}
+{"category":"permanent Invention Smithing tool","entityId":"invention:hammer-tron"}
+{"category":"permanent Invention teleport pocket residual","entityId":"invention:passage-of-the-abyss"}
+{"category":"permanent Invention device discovery","entityId":"invention:potion-reservoir"}
+{"category":"permanent Invention Firemaking tool","entityId":"invention:pyro-matic"}
+{"category":"permanent Invention-manufactured drop cleaner","entityId":"invention:spring-cleaner"}
+{"category":"upgradeable salvage and drop cleaner","entityId":"invention:spring-cleaner-current"}
+{"category":"permanent Invention skilling device","entityId":"invention:urn-enhancer"}
+{"entityId":"item:abomination-cape","slot":"cape","style":"melee","tier":75}
+{"entityId":"item:abyssal-orb","slot":"offhand","style":"magic","tier":75}
+{"entityId":"item:abyssal-scourge","slot":"mainhand","style":"melee","tier":92}
+{"entityId":"item:abyssal-vine-whip","slot":"mainhand","style":"melee","tier":75}
+{"entityId":"item:abyssal-wand","slot":"mainhand","style":"magic","tier":75}
+{"entityId":"item:abyssal-whip","slot":"mainhand","style":"melee","tier":70}
+{"entityId":"item:achto-primeval-boots","slot":"boots","style":"magic","tier":90}
+{"entityId":"item:achto-primeval-gloves","slot":"gloves","style":"magic","tier":90}
+{"entityId":"item:achto-primeval-mask","slot":"helmet","style":"magic","tier":90}
+{"entityId":"item:achto-primeval-robe-legs","slot":"legs","style":"magic","tier":90}
+{"entityId":"item:achto-primeval-robe-top","slot":"body","style":"magic","tier":90}
+{"entityId":"item:achto-tempest-body","slot":"body","style":"ranged","tier":90}
+{"entityId":"item:achto-tempest-boots","slot":"boots","style":"ranged","tier":90}
+{"entityId":"item:achto-tempest-chaps","slot":"legs","style":"ranged","tier":90}
+{"entityId":"item:achto-tempest-cowl","slot":"helmet","style":"ranged","tier":90}
+{"entityId":"item:achto-tempest-gloves","slot":"gloves","style":"ranged","tier":90}
+{"entityId":"item:achto-teralith-boots","slot":"boots","style":"melee","tier":90}
+{"entityId":"item:achto-teralith-cuirass","slot":"body","style":"melee","tier":90}
+{"entityId":"item:achto-teralith-gauntlets","slot":"gloves","style":"melee","tier":90}
+{"entityId":"item:achto-teralith-helmet","slot":"helmet","style":"melee","tier":90}
+{"entityId":"item:achto-teralith-leggings","slot":"legs","style":"melee","tier":90}
+{"entityId":"item:ahrims-book-of-magic","slot":"offhand","style":"magic","tier":70}
+{"entityId":"item:ahrims-staff","slot":"twohand","style":"magic","tier":70}
+{"entityId":"item:ahrims-wand","slot":"mainhand","style":"magic","tier":70}
+{"entityId":"item:akrisaes-war-mace","slot":"mainhand","style":"melee","tier":70}
+{"entityId":"item:amulet-of-souls","slot":"amulet","style":"hybrid","tier":90}
+{"entityId":"item:amulet-of-the-forsaken","slot":"amulet","style":"hybrid","tier":70}
+{"entityId":"item:ancient-defender","slot":"offhand","style":"melee","tier":80}
+{"entityId":"item:ancient-lantern","slot":"offhand","style":"magic","tier":80}
+{"entityId":"item:ancient-repriser","slot":"offhand","style":"ranged","tier":80}
+{"entityId":"item:anima-core-body-of-seren","slot":"body","style":"magic","tier":80}
+{"entityId":"item:anima-core-body-of-sliske","slot":"body","style":"hybrid","tier":80}
+{"entityId":"item:anima-core-body-of-zamorak","slot":"body","style":"ranged","tier":80}
+{"entityId":"item:anima-core-body-of-zaros","slot":"body","style":"melee","tier":80}
+{"entityId":"item:anima-core-helm-of-seren","slot":"helmet","style":"magic","tier":80}
+{"entityId":"item:anima-core-helm-of-sliske","slot":"helmet","style":"hybrid","tier":80}
+{"entityId":"item:anima-core-helm-of-zamorak","slot":"helmet","style":"ranged","tier":80}
+{"entityId":"item:anima-core-helm-of-zaros","slot":"helmet","style":"melee","tier":80}
+{"entityId":"item:anima-core-legs-of-seren","slot":"legs","style":"magic","tier":80}
+{"entityId":"item:anima-core-legs-of-sliske","slot":"legs","style":"hybrid","tier":80}
+{"entityId":"item:anima-core-legs-of-zamorak","slot":"legs","style":"ranged","tier":80}
+{"entityId":"item:anima-core-legs-of-zaros","slot":"legs","style":"melee","tier":80}
+{"entityId":"item:annihilation","slot":"twohand","style":"melee","tier":87}
+{"entityId":"item:apex-hide-body","slot":"body","style":"ranged","tier":85}
+{"entityId":"item:apex-hide-boots","slot":"boots","style":"ranged","tier":85}
+{"entityId":"item:apex-hide-chaps","slot":"legs","style":"ranged","tier":85}
+{"entityId":"item:apex-hide-cowl","slot":"helmet","style":"ranged","tier":85}
+{"entityId":"item:apex-hide-vambraces","slot":"gloves","style":"ranged","tier":85}
+{"entityId":"item:arcane-blood-necklace","slot":"amulet","style":"magic","tier":80}
+{"entityId":"item:arcane-spirit-shield","slot":"offhand","style":"magic","tier":75}
+{"entityId":"item:archers-ring","slot":"ring","style":"ranged","tier":1}
+{"entityId":"item:armadyl-battlestaff","slot":"twohand","style":"magic","tier":77}
+{"entityId":"item:armadyl-boots","slot":"boots","style":"ranged","tier":70}
+{"entityId":"item:armadyl-buckler","slot":"offhand","style":"ranged","tier":70}
+{"entityId":"item:armadyl-chainskirt","slot":"legs","style":"ranged","tier":70}
+{"entityId":"item:armadyl-chestplate","slot":"body","style":"ranged","tier":70}
+{"entityId":"item:armadyl-crossbow","slot":"mainhand","style":"ranged","tier":75}
+{"entityId":"item:armadyl-gloves","slot":"gloves","style":"ranged","tier":70}
+{"entityId":"item:armadyl-godsword","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:armadyl-helmet","slot":"helmet","style":"ranged","tier":70}
+{"entityId":"item:ascendri-bolts-e","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:ascension-crossbow","slot":"mainhand","style":"ranged","tier":90}
+{"entityId":"item:ascension-grips","slot":"gloves","style":"ranged","tier":90}
+{"entityId":"item:asylum-surgeons-ring","slot":"ring"}
+{"entityId":"item:attuned-crystal-bow","slot":"twohand","style":"ranged","tier":80}
+{"entityId":"item:attuned-crystal-chakram","slot":"mainhand","style":"ranged","tier":80}
+{"entityId":"item:attuned-crystal-dagger","slot":"mainhand","style":"melee","tier":80}
+{"entityId":"item:attuned-crystal-deflector","slot":"offhand","style":"ranged","tier":80}
+{"entityId":"item:attuned-crystal-halberd","slot":"twohand","style":"melee","tier":80}
+{"entityId":"item:attuned-crystal-orb","slot":"offhand","style":"magic","tier":80}
+{"entityId":"item:attuned-crystal-staff","slot":"twohand","style":"magic","tier":80}
+{"entityId":"item:attuned-crystal-wand","slot":"mainhand","style":"magic","tier":80}
+{"entityId":"item:bandos-boots","slot":"boots","style":"melee","tier":70}
+{"entityId":"item:bandos-chestplate","slot":"body","style":"melee","tier":70}
+{"entityId":"item:bandos-gloves","slot":"gloves","style":"melee","tier":70}
+{"entityId":"item:bandos-godsword","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:bandos-helmet","slot":"helmet","style":"melee","tier":70}
+{"entityId":"item:bandos-tassets","slot":"legs","style":"melee","tier":70}
+{"entityId":"item:bandos-warshield","slot":"offhand","style":"melee","tier":70}
+{"entityId":"item:berserker-ring","slot":"ring","style":"hybrid","tier":1}
+{"entityId":"item:bik-arrows","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:black-salamander","slot":"twohand","style":"ranged","tier":70}
+{"entityId":"item:blade-of-avaryss","slot":"offhand","style":"melee","tier":85}
+{"entityId":"item:blade-of-nymora","slot":"mainhand","style":"melee","tier":85}
+{"entityId":"item:blast-diffusion-boots","slot":"boots","style":"magic","tier":90}
+{"entityId":"item:blessed-spirit-shield","slot":"offhand","style":"hybrid","tier":70}
+{"entityId":"item:blightbound-crossbow","slot":"mainhand","style":"ranged","tier":92}
+{"entityId":"item:blisterwood-orb","slot":"offhand","style":"magic","tier":70}
+{"entityId":"item:blisterwood-staff","slot":"twohand","style":"magic","tier":70}
+{"entityId":"item:blisterwood-stake-thrower-crossbow","slot":"twohand","style":"ranged","tier":70}
+{"entityId":"item:blisterwood-wand","slot":"mainhand","style":"magic","tier":70}
+{"entityId":"item:boots-of-subjugation","slot":"boots","style":"magic","tier":70}
+{"entityId":"item:bow-of-the-last-guardian","slot":"twohand","style":"ranged","tier":95}
+{"entityId":"item:brawlers-knockout-necklace","slot":"amulet","style":"melee","tier":80}
+{"entityId":"item:camel-staff","slot":"twohand","style":"magic","tier":85}
+{"entityId":"item:celestial-handwraps","slot":"gloves","style":"magic","tier":80}
+{"entityId":"item:champions-ring","slot":"ring","style":"melee","tier":85}
+{"entityId":"item:channelers-ring","slot":"ring","style":"magic","tier":85}
+{"entityId":"item:chaotic-claw","slot":"mainhand","style":"melee","tier":80}
+{"entityId":"item:chaotic-crossbow","slot":"mainhand","style":"ranged","tier":80}
+{"entityId":"item:chaotic-kiteshield","slot":"offhand","style":"melee","tier":80}
+{"entityId":"item:chaotic-longsword","slot":"mainhand","style":"melee","tier":80}
+{"entityId":"item:chaotic-maul","slot":"twohand","style":"melee","tier":80}
+{"entityId":"item:chaotic-rapier","slot":"mainhand","style":"melee","tier":80}
+{"entityId":"item:chaotic-spear","slot":"twohand","style":"melee","tier":80}
+{"entityId":"item:chaotic-staff","slot":"twohand","style":"magic","tier":80}
+{"entityId":"item:cinderbane-gloves","slot":"gloves","style":"melee","tier":85}
+{"entityId":"item:corrupted-defender","slot":"offhand","style":"melee","tier":70}
+{"entityId":"item:cryptbloom-body","slot":"body","style":"magic","tier":90}
+{"entityId":"item:cryptbloom-boots","slot":"boots","style":"magic","tier":90}
+{"entityId":"item:cryptbloom-gloves","slot":"gloves","style":"magic","tier":90}
+{"entityId":"item:cryptbloom-helm","slot":"helmet","style":"magic","tier":90}
+{"entityId":"item:cryptbloom-legs","slot":"legs","style":"magic","tier":90}
+{"entityId":"item:crystal-bow","slot":"twohand","style":"ranged","tier":70}
+{"entityId":"item:crystal-dagger","slot":"mainhand","style":"melee","tier":70}
+{"entityId":"item:crystal-deflector","slot":"offhand","style":"ranged","tier":70}
+{"entityId":"item:crystal-halberd","slot":"twohand","style":"melee","tier":70}
+{"entityId":"item:crystal-orb","slot":"offhand","style":"magic","tier":70}
+{"entityId":"item:crystal-staff","slot":"twohand","style":"magic","tier":70}
+{"entityId":"item:crystal-wand","slot":"mainhand","style":"magic","tier":70}
+{"entityId":"item:custom-fit-masterwork-magic-boots","slot":"boots","style":"magic","tier":100}
+{"entityId":"item:custom-fit-masterwork-magic-gloves","slot":"gloves","style":"magic","tier":100}
+{"entityId":"item:custom-fit-masterwork-magic-hat","slot":"helmet","style":"magic","tier":100}
+{"entityId":"item:custom-fit-masterwork-magic-robe-bottom","slot":"legs","style":"magic","tier":100}
+{"entityId":"item:custom-fit-masterwork-magic-robe-top","slot":"body","style":"magic","tier":100}
+{"entityId":"item:custom-fit-masterwork-ranged-body","slot":"body","style":"ranged","tier":100}
+{"entityId":"item:custom-fit-masterwork-ranged-boots","slot":"boots","style":"ranged","tier":100}
+{"entityId":"item:custom-fit-masterwork-ranged-chaps","slot":"legs","style":"ranged","tier":100}
+{"entityId":"item:custom-fit-masterwork-ranged-cowl","slot":"helmet","style":"ranged","tier":100}
+{"entityId":"item:custom-fit-masterwork-ranged-vambraces","slot":"gloves","style":"ranged","tier":100}
+{"entityId":"item:custom-fit-trimmed-masterwork-melee-boots","slot":"boots","style":"melee","tier":92}
+{"entityId":"item:custom-fit-trimmed-masterwork-melee-gloves","slot":"gloves","style":"melee","tier":92}
+{"entityId":"item:custom-fit-trimmed-masterwork-melee-helm","slot":"helmet","style":"melee","tier":92}
+{"entityId":"item:custom-fit-trimmed-masterwork-melee-platebody","slot":"body","style":"melee","tier":92}
+{"entityId":"item:custom-fit-trimmed-masterwork-melee-platelegs","slot":"legs","style":"melee","tier":92}
+{"entityId":"item:dark-bow","slot":"twohand","style":"ranged","tier":70}
+{"entityId":"item:dark-ice-shard","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:dark-ice-sliver","slot":"mainhand","style":"melee","tier":90}
+{"entityId":"item:dark-shard-of-leng","slot":"offhand","style":"melee","tier":95}
+{"entityId":"item:dark-sliver-of-leng","slot":"mainhand","style":"melee","tier":95}
+{"entityId":"item:death-lotus-chaps","slot":"legs","style":"ranged","tier":85}
+{"entityId":"item:death-lotus-chestplate","slot":"body","style":"ranged","tier":85}
+{"entityId":"item:death-lotus-dart","slot":"mainhand","style":"ranged","tier":85}
+{"entityId":"item:death-lotus-hood","slot":"helmet","style":"ranged","tier":85}
+{"entityId":"item:deathdealer-boots-t90","slot":"boots","style":"necromancy","tier":90}
+{"entityId":"item:deathdealer-gloves-t90","slot":"gloves","style":"necromancy","tier":90}
+{"entityId":"item:deathdealer-hood-t90","slot":"helmet","style":"necromancy","tier":90}
+{"entityId":"item:deathdealer-robe-bottom-t90","slot":"legs","style":"necromancy","tier":90}
+{"entityId":"item:deathdealer-robe-top-t90","slot":"body","style":"necromancy","tier":90}
+{"entityId":"item:deathguard-t90","slot":"mainhand","style":"necromancy","tier":90}
+{"entityId":"item:deathspore-arrows","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:deathtouch-bracelet","slot":"gloves","style":"hybrid","tier":90}
+{"entityId":"item:deathwarden-boots-t90","slot":"boots","style":"necromancy","tier":90}
+{"entityId":"item:deathwarden-gloves-t90","slot":"gloves","style":"necromancy","tier":90}
+{"entityId":"item:deathwarden-hood-t90","slot":"helmet","style":"necromancy","tier":90}
+{"entityId":"item:deathwarden-robe-bottom-t90","slot":"legs","style":"necromancy","tier":90}
+{"entityId":"item:deathwarden-robe-top-t90","slot":"body","style":"necromancy","tier":90}
+{"entityId":"item:decimation","slot":"twohand","style":"ranged","tier":87}
+{"entityId":"item:demon-horn-necklace","slot":"amulet"}
+{"entityId":"item:devourers-guard","slot":"mainhand","style":"necromancy","tier":95}
+{"entityId":"item:dharoks-greataxe","slot":"twohand","style":"melee","tier":70}
+{"entityId":"item:divine-spirit-shield","slot":"offhand","style":"melee","tier":75}
+{"entityId":"item:dracolich-body","slot":"body","style":"ranged","tier":90}
+{"entityId":"item:dracolich-boots","slot":"boots","style":"ranged","tier":90}
+{"entityId":"item:dracolich-gloves","slot":"gloves","style":"ranged","tier":90}
+{"entityId":"item:dracolich-helm","slot":"helmet","style":"ranged","tier":90}
+{"entityId":"item:dracolich-legs","slot":"legs","style":"ranged","tier":90}
+{"entityId":"item:dragon-claws","slot":"mainhand","style":"melee","tier":60}
+{"entityId":"item:dragon-defender","slot":"offhand","style":"magic","tier":70}
+{"entityId":"item:dragon-rider-amulet","slot":"amulet","style":"hybrid","tier":70}
+{"entityId":"item:dragon-rider-lance","slot":"twohand","style":"melee","tier":85}
+{"entityId":"item:dragonfire-deflector","slot":"offhand","style":"ranged","tier":70}
+{"entityId":"item:dragonfire-shield","slot":"offhand","style":"hybrid","tier":70}
+{"entityId":"item:drygore-longsword","slot":"mainhand","style":"melee","tier":90}
+{"entityId":"item:drygore-mace","slot":"mainhand","style":"melee","tier":90}
+{"entityId":"item:drygore-rapier","slot":"mainhand","style":"melee","tier":90}
+{"entityId":"item:eagle-eye-kiteshield","slot":"offhand","style":"ranged","tier":80}
+{"entityId":"item:ek-zekkil","slot":"twohand","style":"melee","tier":95}
+{"entityId":"item:eldritch-crossbow","slot":"twohand","style":"ranged","tier":85}
+{"entityId":"item:elite-death-lotus-chaps","slot":"legs","style":"ranged","tier":88}
+{"entityId":"item:elite-death-lotus-chestplate","slot":"body","style":"ranged","tier":88}
+{"entityId":"item:elite-death-lotus-dart","slot":"mainhand","style":"ranged","tier":88}
+{"entityId":"item:elite-death-lotus-hood","slot":"helmet","style":"ranged","tier":88}
+{"entityId":"item:elite-dracolich-body","slot":"body","style":"ranged","tier":92}
+{"entityId":"item:elite-dracolich-boots","slot":"boots","style":"ranged","tier":92}
+{"entityId":"item:elite-dracolich-gloves","slot":"gloves","style":"ranged","tier":92}
+{"entityId":"item:elite-dracolich-helm","slot":"helmet","style":"ranged","tier":92}
+{"entityId":"item:elite-dracolich-legs","slot":"legs","style":"ranged","tier":92}
+{"entityId":"item:elite-seasinger-kiba","slot":"mainhand","style":"magic","tier":88}
+{"entityId":"item:elite-seasinger-makigai","slot":"offhand","style":"magic","tier":88}
+{"entityId":"item:elite-seasingers-hood","slot":"helmet","style":"magic","tier":88}
+{"entityId":"item:elite-seasingers-robe-bottom","slot":"legs","style":"magic","tier":88}
+{"entityId":"item:elite-seasingers-robe-top","slot":"body","style":"magic","tier":88}
+{"entityId":"item:elite-sirenic-chaps","slot":"legs","style":"ranged","tier":92}
+{"entityId":"item:elite-sirenic-hauberk","slot":"body","style":"ranged","tier":92}
+{"entityId":"item:elite-sirenic-mask","slot":"helmet","style":"ranged","tier":92}
+{"entityId":"item:elite-tectonic-mask","slot":"helmet","style":"magic","tier":92}
+{"entityId":"item:elite-tectonic-robe-bottom","slot":"legs","style":"magic","tier":92}
+{"entityId":"item:elite-tectonic-robe-top","slot":"body","style":"magic","tier":92}
+{"entityId":"item:elite-tetsu-body","slot":"body","style":"melee","tier":88}
+{"entityId":"item:elite-tetsu-helm","slot":"helmet","style":"melee","tier":88}
+{"entityId":"item:elite-tetsu-katana","slot":"mainhand","style":"melee","tier":88}
+{"entityId":"item:elite-tetsu-platelegs","slot":"legs","style":"melee","tier":88}
+{"entityId":"item:elite-tetsu-wakizashi","slot":"offhand","style":"melee","tier":88}
+{"entityId":"item:elysian-spirit-shield","slot":"offhand","style":"magic","tier":75}
+{"entityId":"item:emberkeen-boots","slot":"boots","style":"melee","tier":90}
+{"entityId":"item:enhanced-ancient-staff","slot":"twohand","style":"magic","tier":75}
+{"entityId":"item:enhanced-blast-diffusion-boots","slot":"boots","style":"magic","tier":90}
+{"entityId":"item:enhanced-excalibur","slot":"offhand","style":"melee","tier":75}
+{"entityId":"item:enhanced-fleeting-boots","slot":"boots","style":"ranged","tier":90}
+{"entityId":"item:enhanced-gloves-of-passage","slot":"gloves","style":"melee","tier":90}
+{"entityId":"item:enhanced-kerapacs-wrist-wraps","slot":"gloves","style":"magic","tier":90}
+{"entityId":"item:enhanced-laceration-boots","slot":"boots","style":"melee","tier":90}
+{"entityId":"item:enhanced-nightmare-gauntlets","slot":"gloves","style":"ranged","tier":90}
+{"entityId":"item:erethdors-grimoire","slot":"pocket","style":"hybrid","tier":90}
+{"entityId":"item:essence-of-finality","slot":"amulet","style":"hybrid","tier":90}
+{"entityId":"item:eternal-magic-longbow","slot":"twohand","style":"ranged","tier":99}
+{"entityId":"item:eternal-magic-orb-meagre","slot":"offhand","style":"magic","tier":99}
+{"entityId":"item:eternal-magic-orb-saturated","slot":"offhand","style":"magic","tier":99}
+{"entityId":"item:eternal-magic-shortbow-mk-5","slot":"twohand","style":"ranged","tier":99}
+{"entityId":"item:eternal-magic-staff-meagre","slot":"twohand","style":"magic","tier":85}
+{"entityId":"item:eternal-magic-staff-saturated","slot":"twohand","style":"magic","tier":90}
+{"entityId":"item:eternal-magic-wand-meagre","slot":"mainhand","style":"magic","tier":99}
+{"entityId":"item:eternal-magic-wand-saturated","slot":"mainhand","style":"magic","tier":99}
+{"entityId":"item:farseer-kiteshield","slot":"offhand","style":"magic","tier":80}
+{"entityId":"item:farsight-sniper-necklace","slot":"amulet","style":"ranged","tier":80}
+{"entityId":"item:fire-cape","slot":"cape","style":"hybrid","tier":60}
+{"entityId":"item:first-necromancer-body","slot":"body","style":"necromancy","tier":95}
+{"entityId":"item:first-necromancer-boots","slot":"boots","style":"necromancy","tier":95}
+{"entityId":"item:first-necromancer-gloves","slot":"gloves","style":"necromancy","tier":95}
+{"entityId":"item:first-necromancer-helm","slot":"helmet","style":"necromancy","tier":95}
+{"entityId":"item:first-necromancer-legs","slot":"legs","style":"necromancy","tier":95}
+{"entityId":"item:flarefrost-boots","slot":"boots","style":"ranged","tier":90}
+{"entityId":"item:fleeting-boots","slot":"boots","style":"ranged","tier":80}
+{"entityId":"item:fractured-staff-of-armadyl","slot":"twohand","style":"magic","tier":95}
+{"entityId":"item:ful-arrows","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:ganodermic-leggings","slot":"legs","style":"magic","tier":75}
+{"entityId":"item:ganodermic-poncho","slot":"body","style":"magic","tier":75}
+{"entityId":"item:ganodermic-visor","slot":"helmet","style":"magic","tier":75}
+{"entityId":"item:garb-of-subjugation","slot":"body","style":"magic","tier":70}
+{"entityId":"item:gemstone-boots","slot":"boots","style":"hybrid","tier":80}
+{"entityId":"item:gemstone-gauntlets","slot":"gloves","style":"hybrid","tier":80}
+{"entityId":"item:gemstone-greaves","slot":"legs","style":"hybrid","tier":80}
+{"entityId":"item:gemstone-hauberk","slot":"body","style":"hybrid","tier":80}
+{"entityId":"item:gemstone-helm","slot":"helmet","style":"hybrid","tier":80}
+{"entityId":"item:glaiven-boots","slot":"boots","style":"ranged","tier":85}
+{"entityId":"item:gloomfire-bow","slot":"twohand","style":"ranged","tier":90}
+{"entityId":"item:gloves-of-passage","slot":"gloves","style":"melee","tier":85}
+{"entityId":"item:gloves-of-subjugation","slot":"gloves","style":"magic","tier":70}
+{"entityId":"item:goliath-gloves","slot":"gloves","style":"melee","tier":80}
+{"entityId":"item:goliath-gloves-black","slot":"gloves","style":"melee","tier":80}
+{"entityId":"item:gown-of-subjugation","slot":"legs","style":"magic","tier":70}
+{"entityId":"item:greater-runic-staff","slot":"twohand","style":"magic","tier":75}
+{"entityId":"item:guthans-warspear","slot":"twohand","style":"melee","tier":70}
+{"entityId":"item:guthix-staff","slot":"twohand","style":"magic","tier":60}
+{"entityId":"item:hailfire-boots","slot":"boots","style":"magic","tier":90}
+{"entityId":"item:hand-cannon","slot":"twohand","style":"ranged","tier":75}
+{"entityId":"item:hellfire-bow","slot":"twohand","style":"ranged","tier":90}
+{"entityId":"item:hexhunter-bow","slot":"twohand","style":"ranged","tier":80}
+{"entityId":"item:holy-wrench","slot":"pocket"}
+{"entityId":"item:hood-of-subjugation","slot":"helmet","style":"magic","tier":70}
+{"entityId":"item:hydra-bakriminel-bolts-e","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:igneous-kal-ket","slot":"cape","style":"melee","tier":90}
+{"entityId":"item:igneous-kal-mej","slot":"cape","style":"magic","tier":90}
+{"entityId":"item:igneous-kal-mor","slot":"cape","style":"necromancy","tier":90}
+{"entityId":"item:igneous-kal-xil","slot":"cape","style":"ranged","tier":90}
+{"entityId":"item:igneous-kal-zuk","slot":"cape","style":"hybrid","tier":90}
+{"entityId":"item:illuminated-book-of-balance","slot":"pocket","style":"hybrid","tier":80}
+{"entityId":"item:illuminated-book-of-chaos","slot":"pocket","style":"hybrid","tier":80}
+{"entityId":"item:illuminated-book-of-law","slot":"pocket","style":"hybrid","tier":80}
+{"entityId":"item:illuminated-book-of-war","slot":"pocket","style":"hybrid","tier":80}
+{"entityId":"item:illuminated-book-of-wisdom","slot":"pocket","style":"hybrid","tier":80}
+{"entityId":"item:imperium-core","slot":"offhand","style":"magic","tier":92}
+{"entityId":"item:inquisitor-staff","slot":"twohand","style":"magic","tier":80}
+{"entityId":"item:jas-dragonbane-arrows","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:jaws-of-the-abyss","slot":"helmet","style":"melee","tier":85}
+{"entityId":"item:jessikas-sword","slot":"mainhand","style":"melee","tier":78}
+{"entityId":"item:kalphite-defender","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:kalphite-rebounder","slot":"offhand","style":"magic","tier":90}
+{"entityId":"item:kalphite-repriser","slot":"offhand","style":"ranged","tier":90}
+{"entityId":"item:karils-crossbow","slot":"twohand","style":"ranged","tier":70}
+{"entityId":"item:karils-off-hand-pistol-crossbow","slot":"offhand","style":"ranged","tier":70}
+{"entityId":"item:karils-pistol-crossbow","slot":"mainhand","style":"ranged","tier":70}
+{"entityId":"item:kerapacs-wrist-wraps","slot":"gloves","style":"magic","tier":85}
+{"entityId":"item:khopesh-of-elidinis","slot":"offhand","style":"melee","tier":82}
+{"entityId":"item:khopesh-of-the-kharidian","slot":"mainhand","style":"melee","tier":92}
+{"entityId":"item:khopesh-of-tumeken","slot":"mainhand","style":"melee","tier":82}
+{"entityId":"item:korasis-sword","slot":"mainhand","style":"melee","tier":78}
+{"entityId":"item:laceration-boots","slot":"boots","style":"melee","tier":80}
+{"entityId":"item:laniakeas-spear","slot":"twohand","style":"melee","tier":82}
+{"entityId":"item:lava-whip","slot":"mainhand","style":"melee","tier":85}
+{"entityId":"item:legatuss-emberstaff","slot":"twohand","style":"magic","tier":90}
+{"entityId":"item:leviathan-ring","slot":"ring","style":"hybrid","tier":85}
+{"entityId":"item:linzas-hammer","slot":"mainhand","style":"melee","tier":80}
+{"entityId":"item:luck-of-the-dwarves","slot":"ring","style":"hybrid","tier":80}
+{"entityId":"item:malevolent-body","slot":"body","style":"melee","tier":90}
+{"entityId":"item:malevolent-helm","slot":"helmet","style":"melee","tier":90}
+{"entityId":"item:malevolent-kiteshield","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:malevolent-legs","slot":"legs","style":"melee","tier":90}
+{"entityId":"item:masterwork-2h-sword","slot":"twohand","style":"melee","tier":99}
+{"entityId":"item:masterwork-boots","slot":"boots","style":"melee","tier":90}
+{"entityId":"item:masterwork-bow","slot":"twohand","style":"ranged","tier":99}
+{"entityId":"item:masterwork-gloves","slot":"gloves","style":"melee","tier":90}
+{"entityId":"item:masterwork-helm","slot":"helmet","style":"melee","tier":90}
+{"entityId":"item:masterwork-magic-boots","slot":"boots","style":"magic","tier":100}
+{"entityId":"item:masterwork-magic-gloves","slot":"gloves","style":"magic","tier":100}
+{"entityId":"item:masterwork-magic-hat","slot":"helmet","style":"magic","tier":100}
+{"entityId":"item:masterwork-magic-robe-bottom","slot":"legs","style":"magic","tier":100}
+{"entityId":"item:masterwork-magic-robe-top","slot":"body","style":"magic","tier":100}
+{"entityId":"item:masterwork-platebody","slot":"body","style":"melee","tier":90}
+{"entityId":"item:masterwork-platelegs","slot":"legs","style":"melee","tier":90}
+{"entityId":"item:masterwork-ranged-body","slot":"body","style":"ranged","tier":100}
+{"entityId":"item:masterwork-ranged-boots","slot":"boots","style":"ranged","tier":100}
+{"entityId":"item:masterwork-ranged-chaps","slot":"legs","style":"ranged","tier":100}
+{"entityId":"item:masterwork-ranged-cowl","slot":"helmet","style":"ranged","tier":100}
+{"entityId":"item:masterwork-ranged-vambraces","slot":"gloves","style":"ranged","tier":100}
+{"entityId":"item:masterwork-spear-of-annihilation","slot":"twohand","style":"melee","tier":92}
+{"entityId":"item:masterwork-staff","slot":"twohand","style":"magic","tier":100}
+{"entityId":"item:masutas-warspear","slot":"twohand","style":"melee","tier":85}
+{"entityId":"item:max-cape","slot":"cape","style":"hybrid","tier":99}
+{"entityId":"item:mercenarys-gloves","slot":"gloves","style":"ranged","tier":73}
+{"entityId":"item:merciless-kiteshield","slot":"offhand","style":"magic","tier":90}
+{"entityId":"item:misalionars-death-mask","slot":"helmet","style":"necromancy","tier":95}
+{"entityId":"item:mizuyari","slot":"twohand","style":"melee","tier":85}
+{"entityId":"item:morrigans-javelin","slot":"mainhand","style":"ranged","tier":78}
+{"entityId":"item:morrigans-throwing-axe","slot":"mainhand","style":"ranged","tier":78}
+{"entityId":"item:nightmare-gauntlets","slot":"gloves","style":"ranged","tier":85}
+{"entityId":"item:noxious-longbow","slot":"twohand","style":"ranged","tier":90}
+{"entityId":"item:noxious-scythe","slot":"twohand","style":"melee","tier":90}
+{"entityId":"item:noxious-staff","slot":"twohand","style":"magic","tier":90}
+{"entityId":"item:obliteration","slot":"twohand","style":"magic","tier":87}
+{"entityId":"item:obsidian-boots","slot":"boots","style":"hybrid","tier":60}
+{"entityId":"item:obsidian-gloves","slot":"gloves","style":"hybrid","tier":60}
+{"entityId":"item:obsidian-kiteshield","slot":"offhand","style":"hybrid","tier":60}
+{"entityId":"item:obsidian-mage-helm","slot":"helmet","style":"magic","tier":60}
+{"entityId":"item:obsidian-platebody","slot":"body","style":"hybrid","tier":60}
+{"entityId":"item:obsidian-platelegs","slot":"legs","style":"hybrid","tier":60}
+{"entityId":"item:obsidian-ranger-helm","slot":"helmet","style":"ranged","tier":60}
+{"entityId":"item:obsidian-warrior-helm","slot":"helmet","style":"melee","tier":60}
+{"entityId":"item:occultists-ring","slot":"ring","style":"necromancy","tier":85}
+{"entityId":"item:ode-to-deceit","slot":"offhand","style":"magic","tier":95}
+{"entityId":"item:off-hand-armadyl-crossbow","slot":"offhand","style":"ranged","tier":75}
+{"entityId":"item:off-hand-ascension-crossbow","slot":"offhand","style":"ranged","tier":90}
+{"entityId":"item:off-hand-attuned-crystal-chakram","slot":"offhand","style":"ranged","tier":80}
+{"entityId":"item:off-hand-attuned-crystal-dagger","slot":"offhand","style":"melee","tier":80}
+{"entityId":"item:off-hand-blightbound-crossbow","slot":"offhand","style":"ranged","tier":92}
+{"entityId":"item:off-hand-chaotic-claw","slot":"offhand","style":"melee","tier":80}
+{"entityId":"item:off-hand-chaotic-crossbow","slot":"offhand","style":"ranged","tier":80}
+{"entityId":"item:off-hand-chaotic-longsword","slot":"offhand","style":"melee","tier":80}
+{"entityId":"item:off-hand-chaotic-rapier","slot":"offhand","style":"melee","tier":80}
+{"entityId":"item:off-hand-crystal-dagger","slot":"offhand","style":"melee","tier":70}
+{"entityId":"item:off-hand-death-lotus-dart","slot":"offhand","style":"ranged","tier":85}
+{"entityId":"item:off-hand-dragon-claw","slot":"offhand","style":"melee","tier":60}
+{"entityId":"item:off-hand-drygore-longsword","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:off-hand-drygore-mace","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:off-hand-drygore-rapier","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:off-hand-elite-death-lotus-dart","slot":"offhand","style":"ranged","tier":88}
+{"entityId":"item:off-hand-khopesh-of-the-kharidian","slot":"offhand","style":"melee","tier":82}
+{"entityId":"item:off-hand-primal-crossbow-mk-5","slot":"offhand","style":"ranged","tier":99}
+{"entityId":"item:off-hand-ripper-claw","slot":"offhand","style":"melee","tier":85}
+{"entityId":"item:off-hand-ruinous-crossbow","slot":"offhand","style":"ranged","tier":90}
+{"entityId":"item:off-hand-ruinous-rapier","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:off-hand-shadow-glaive","slot":"offhand","style":"ranged","tier":85}
+{"entityId":"item:omni-guard","slot":"mainhand","style":"necromancy","tier":95}
+{"entityId":"item:onyx-bakriminel-bolts-e","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:orb-of-the-cywir-elders","slot":"offhand","style":"magic","tier":85}
+{"entityId":"item:pernix-body","slot":"body","style":"ranged","tier":80}
+{"entityId":"item:pernix-boots","slot":"boots","style":"ranged","tier":80}
+{"entityId":"item:pernix-chaps","slot":"legs","style":"ranged","tier":80}
+{"entityId":"item:pernix-cowl","slot":"helmet","style":"ranged","tier":80}
+{"entityId":"item:pernix-gloves","slot":"gloves","style":"ranged","tier":80}
+{"entityId":"item:pneumatic-gloves","slot":"gloves","style":"melee","tier":85}
+{"entityId":"item:polypore-staff","slot":"twohand","style":"magic","tier":75}
+{"entityId":"item:primal-crossbow-mk-5","slot":"mainhand","style":"ranged","tier":99}
+{"entityId":"item:primeval-boots","slot":"boots","style":"magic","tier":88}
+{"entityId":"item:primeval-gloves","slot":"gloves","style":"magic","tier":88}
+{"entityId":"item:primeval-mask","slot":"helmet","style":"magic","tier":88}
+{"entityId":"item:primeval-robe-legs","slot":"legs","style":"magic","tier":88}
+{"entityId":"item:primeval-robe-top","slot":"body","style":"magic","tier":88}
+{"entityId":"item:ragefire-boots","slot":"boots","style":"magic","tier":80}
+{"entityId":"item:razorback-gauntlets","slot":"gloves","style":"melee","tier":90}
+{"entityId":"item:reaper-necklace","slot":"amulet","style":"hybrid","tier":90}
+{"entityId":"item:reavers-ring","slot":"ring","style":"hybrid","tier":85}
+{"entityId":"item:reefwalkers-cape","slot":"cape","style":"hybrid","tier":85}
+{"entityId":"item:refined-anima-core-body-of-seren","slot":"body","style":"magic","tier":85}
+{"entityId":"item:refined-anima-core-body-of-sliske","slot":"body","style":"hybrid","tier":85}
+{"entityId":"item:refined-anima-core-body-of-zamorak","slot":"body","style":"ranged","tier":85}
+{"entityId":"item:refined-anima-core-body-of-zaros","slot":"body","style":"melee","tier":85}
+{"entityId":"item:refined-anima-core-helm-of-seren","slot":"helmet","style":"magic","tier":85}
+{"entityId":"item:refined-anima-core-helm-of-sliske","slot":"helmet","style":"hybrid","tier":85}
+{"entityId":"item:refined-anima-core-helm-of-zamorak","slot":"helmet","style":"ranged","tier":85}
+{"entityId":"item:refined-anima-core-helm-of-zaros","slot":"helmet","style":"melee","tier":85}
+{"entityId":"item:refined-anima-core-legs-of-seren","slot":"legs","style":"magic","tier":85}
+{"entityId":"item:refined-anima-core-legs-of-sliske","slot":"legs","style":"hybrid","tier":85}
+{"entityId":"item:refined-anima-core-legs-of-zamorak","slot":"legs","style":"ranged","tier":85}
+{"entityId":"item:refined-anima-core-legs-of-zaros","slot":"legs","style":"melee","tier":85}
+{"entityId":"item:ring-of-death","slot":"ring","style":"hybrid","tier":85}
+{"entityId":"item:ring-of-vigour","slot":"ring","style":"hybrid","tier":62}
+{"entityId":"item:ripper-claw","slot":"mainhand","style":"melee","tier":85}
+{"entityId":"item:roar-of-awakening","slot":"mainhand","style":"magic","tier":95}
+{"entityId":"item:royal-crossbow","slot":"twohand","style":"ranged","tier":80}
+{"entityId":"item:ruinous-crossbow","slot":"mainhand","style":"ranged","tier":90}
+{"entityId":"item:ruinous-guard","slot":"mainhand","style":"necromancy","tier":90}
+{"entityId":"item:ruinous-lantern","slot":"offhand","style":"necromancy","tier":90}
+{"entityId":"item:ruinous-maul","slot":"twohand","style":"melee","tier":90}
+{"entityId":"item:ruinous-rapier","slot":"mainhand","style":"melee","tier":90}
+{"entityId":"item:ruinous-staff","slot":"twohand","style":"magic","tier":90}
+{"entityId":"item:salve-amulet-e","slot":"amulet"}
+{"entityId":"item:saradomin-godsword","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:saradomin-sword","slot":"mainhand","style":"melee","tier":75}
+{"entityId":"item:saradomins-hiss","slot":"amulet","style":"magic","tier":70}
+{"entityId":"item:saradomins-murmur","slot":"amulet","style":"melee","tier":70}
+{"entityId":"item:saradomins-whisper","slot":"amulet","style":"ranged","tier":70}
+{"entityId":"item:scrimshaw-of-cruelty","slot":"pocket","style":"ranged","tier":85}
+{"entityId":"item:scrimshaw-of-the-elements","slot":"pocket","style":"magic","tier":85}
+{"entityId":"item:scrimshaw-of-vampyrism","slot":"pocket","style":"melee","tier":85}
+{"entityId":"item:scripture-of-amascut","slot":"pocket","style":"magic","tier":95}
+{"entityId":"item:scripture-of-bik","slot":"pocket","style":"magic"}
+{"entityId":"item:scripture-of-elidinis","slot":"pocket"}
+{"entityId":"item:scripture-of-ful","slot":"pocket","style":"melee","tier":70}
+{"entityId":"item:scripture-of-jas","slot":"pocket","style":"magic","tier":70}
+{"entityId":"item:scripture-of-wen","slot":"pocket","style":"melee","tier":70}
+{"entityId":"item:seasinger-kiba","slot":"mainhand","style":"magic","tier":85}
+{"entityId":"item:seasinger-makigai","slot":"offhand","style":"magic","tier":85}
+{"entityId":"item:seasingers-hood","slot":"helmet","style":"magic","tier":85}
+{"entityId":"item:seasingers-robe-bottom","slot":"legs","style":"magic","tier":85}
+{"entityId":"item:seasingers-robe-top","slot":"body","style":"magic","tier":85}
+{"entityId":"item:seers-ring","slot":"ring","style":"magic","tier":1}
+{"entityId":"item:seismic-singularity","slot":"offhand","style":"magic","tier":90}
+{"entityId":"item:seismic-wand","slot":"mainhand","style":"magic","tier":90}
+{"entityId":"item:seren-godbow","slot":"twohand","style":"ranged","tier":92}
+{"entityId":"item:shadow-glaive","slot":"mainhand","style":"ranged","tier":85}
+{"entityId":"item:sirenic-chaps","slot":"legs","style":"ranged","tier":90}
+{"entityId":"item:sirenic-hauberk","slot":"body","style":"ranged","tier":90}
+{"entityId":"item:sirenic-mask","slot":"helmet","style":"ranged","tier":90}
+{"entityId":"item:skull-lantern-t90","slot":"offhand","style":"necromancy","tier":90}
+{"entityId":"item:slayer-helmet-i","slot":"helmet","style":"hybrid","tier":25}
+{"entityId":"item:soulbound-lantern","slot":"offhand","style":"necromancy","tier":95}
+{"entityId":"item:spear-of-annihilation","slot":"twohand","style":"melee","tier":87}
+{"entityId":"item:spectral-spirit-shield","slot":"offhand","style":"magic","tier":75}
+{"entityId":"item:spellcaster-gloves","slot":"gloves","style":"magic","tier":80}
+{"entityId":"item:spellcaster-gloves-black","slot":"gloves","style":"magic","tier":80}
+{"entityId":"item:spirit-cape","slot":"cape","style":"hybrid","tier":50}
+{"entityId":"item:split-dragontooth-necklace","slot":"amulet"}
+{"entityId":"item:staff-of-darkness","slot":"twohand","style":"magic","tier":85}
+{"entityId":"item:staff-of-light","slot":"twohand","style":"magic","tier":75}
+{"entityId":"item:staff-of-sliske","slot":"twohand","style":"magic","tier":92}
+{"entityId":"item:stalker-arrows","slot":"ammo","style":"ranged","tier":80}
+{"entityId":"item:stalkers-ring","slot":"ring","style":"ranged","tier":85}
+{"entityId":"item:static-gloves","slot":"gloves","style":"magic","tier":85}
+{"entityId":"item:statiuss-warhammer","slot":"mainhand","style":"melee","tier":78}
+{"entityId":"item:steadfast-boots","slot":"boots","style":"melee","tier":80}
+{"entityId":"item:strykebow","slot":"twohand","style":"ranged","tier":85}
+{"entityId":"item:sunspear","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:sunspear-magic","slot":"twohand","style":"magic","tier":78}
+{"entityId":"item:sunspear-melee","slot":"twohand","style":"melee","tier":78}
+{"entityId":"item:sunspear-ranged","slot":"twohand","style":"ranged","tier":78}
+{"entityId":"item:superior-death-lotus-tabi","slot":"boots","style":"ranged","tier":85}
+{"entityId":"item:superior-death-lotus-tekoh","slot":"gloves","style":"ranged","tier":85}
+{"entityId":"item:superior-leviathan-ring","slot":"ring","style":"hybrid","tier":85}
+{"entityId":"item:superior-morrigans-javelin","slot":"mainhand","style":"ranged","tier":88}
+{"entityId":"item:superior-morrigans-throwing-axe","slot":"mainhand","style":"ranged","tier":88}
+{"entityId":"item:superior-reefwalkers-cape","slot":"cape","style":"hybrid","tier":85}
+{"entityId":"item:superior-scrimshaw-of-cruelty","slot":"pocket","style":"ranged","tier":90}
+{"entityId":"item:superior-scrimshaw-of-the-elements","slot":"pocket","style":"magic","tier":90}
+{"entityId":"item:superior-scrimshaw-of-vampyrism","slot":"pocket","style":"melee","tier":90}
+{"entityId":"item:superior-seasinger-aonori","slot":"gloves","style":"magic","tier":85}
+{"entityId":"item:superior-seasinger-asari","slot":"boots","style":"magic","tier":85}
+{"entityId":"item:superior-statiuss-warhammer","slot":"mainhand","style":"melee","tier":88}
+{"entityId":"item:superior-tetsu-kogake","slot":"boots","style":"melee","tier":85}
+{"entityId":"item:superior-tetsu-kote","slot":"gloves","style":"melee","tier":85}
+{"entityId":"item:superior-vestas-longsword","slot":"mainhand","style":"melee","tier":88}
+{"entityId":"item:superior-vestas-spear","slot":"twohand","style":"melee","tier":88}
+{"entityId":"item:superior-zuriels-staff","slot":"twohand","style":"magic","tier":88}
+{"entityId":"item:swift-gloves","slot":"gloves","style":"ranged","tier":80}
+{"entityId":"item:swift-gloves-black","slot":"gloves","style":"ranged","tier":80}
+{"entityId":"item:tainted-repriser","slot":"offhand","style":"ranged","tier":70}
+{"entityId":"item:tectonic-body","slot":"body","style":"magic","tier":90}
+{"entityId":"item:tectonic-helm","slot":"helmet","style":"magic","tier":90}
+{"entityId":"item:tectonic-legs","slot":"legs","style":"magic","tier":90}
+{"entityId":"item:tempest-body","slot":"body","style":"ranged","tier":88}
+{"entityId":"item:tempest-boots","slot":"boots","style":"ranged","tier":88}
+{"entityId":"item:tempest-chaps","slot":"legs","style":"ranged","tier":88}
+{"entityId":"item:tempest-cowl","slot":"helmet","style":"ranged","tier":88}
+{"entityId":"item:tempest-gloves","slot":"gloves","style":"ranged","tier":88}
+{"entityId":"item:teralith-boots","slot":"boots","style":"melee","tier":88}
+{"entityId":"item:teralith-cuirass","slot":"body","style":"melee","tier":88}
+{"entityId":"item:teralith-gauntlets","slot":"gloves","style":"melee","tier":88}
+{"entityId":"item:teralith-helmet","slot":"helmet","style":"melee","tier":88}
+{"entityId":"item:teralith-leggings","slot":"legs","style":"melee","tier":88}
+{"entityId":"item:terrasaur-maul","slot":"twohand","style":"melee","tier":80}
+{"entityId":"item:tetsu-body","slot":"body","style":"melee","tier":85}
+{"entityId":"item:tetsu-helm","slot":"helmet","style":"melee","tier":85}
+{"entityId":"item:tetsu-katana","slot":"mainhand","style":"melee","tier":85}
+{"entityId":"item:tetsu-platelegs","slot":"legs","style":"melee","tier":85}
+{"entityId":"item:tetsu-wakizashi","slot":"offhand","style":"melee","tier":85}
+{"entityId":"item:tokhaar-kal-ket","slot":"cape","style":"melee","tier":90}
+{"entityId":"item:tokhaar-kal-mej","slot":"cape","style":"magic","tier":90}
+{"entityId":"item:tokhaar-kal-mor","slot":"cape","style":"necromancy","tier":90}
+{"entityId":"item:tokhaar-kal-xil","slot":"cape","style":"ranged","tier":90}
+{"entityId":"item:tokkul-zo","slot":"ring"}
+{"entityId":"item:toktz-mej-tal","slot":"twohand","style":"magic","tier":60}
+{"entityId":"item:toktz-xil-ak","slot":"mainhand","style":"melee","tier":60}
+{"entityId":"item:toktz-xil-ul","slot":"mainhand","style":"ranged","tier":60}
+{"entityId":"item:torags-hammer","slot":"twohand","style":"melee","tier":70}
+{"entityId":"item:torva-boots","slot":"boots","style":"melee","tier":80}
+{"entityId":"item:torva-full-helm","slot":"helmet","style":"melee","tier":80}
+{"entityId":"item:torva-gloves","slot":"gloves","style":"melee","tier":80}
+{"entityId":"item:torva-platebody","slot":"body","style":"melee","tier":80}
+{"entityId":"item:torva-platelegs","slot":"legs","style":"melee","tier":80}
+{"entityId":"item:tracking-gloves","slot":"gloves","style":"ranged","tier":85}
+{"entityId":"item:trimmed-masterwork-boots","slot":"boots","style":"melee","tier":92}
+{"entityId":"item:trimmed-masterwork-gloves","slot":"gloves","style":"melee","tier":92}
+{"entityId":"item:trimmed-masterwork-helm","slot":"helmet","style":"melee","tier":92}
+{"entityId":"item:trimmed-masterwork-platebody","slot":"body","style":"melee","tier":92}
+{"entityId":"item:trimmed-masterwork-platelegs","slot":"legs","style":"melee","tier":92}
+{"entityId":"item:tumekens-light","slot":"twohand","style":"melee","tier":95}
+{"entityId":"item:tumekens-resplendence-body","slot":"body","style":"magic","tier":95}
+{"entityId":"item:tumekens-resplendence-boots","slot":"boots","style":"magic","tier":95}
+{"entityId":"item:tumekens-resplendence-gloves","slot":"gloves","style":"magic","tier":95}
+{"entityId":"item:tumekens-resplendence-helm","slot":"helmet","style":"magic","tier":95}
+{"entityId":"item:tumekens-resplendence-legs","slot":"legs","style":"magic","tier":95}
+{"entityId":"item:tzhaar-ket-em","slot":"mainhand","style":"melee","tier":60}
+{"entityId":"item:tzhaar-ket-om","slot":"twohand","style":"melee","tier":60}
+{"entityId":"item:underworld-grimoire-4","slot":"pocket","style":"necromancy","tier":80}
+{"entityId":"item:upgraded-bone-blowpipe","slot":"twohand","style":"ranged","tier":87}
+{"entityId":"item:vanquish-melee","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:vengeful-kiteshield","slot":"offhand","style":"ranged","tier":90}
+{"entityId":"item:veracs-flail","slot":"twohand","style":"melee","tier":70}
+{"entityId":"item:vestas-longsword","slot":"mainhand","style":"melee","tier":78}
+{"entityId":"item:vestas-spear","slot":"twohand","style":"melee","tier":78}
+{"entityId":"item:vestments-of-havoc-boots","slot":"boots","style":"melee","tier":95}
+{"entityId":"item:vestments-of-havoc-hood","slot":"helmet","style":"melee","tier":95}
+{"entityId":"item:vestments-of-havoc-robe-bottom","slot":"legs","style":"melee","tier":95}
+{"entityId":"item:vestments-of-havoc-robe-top","slot":"body","style":"melee","tier":95}
+{"entityId":"item:virtus-book","slot":"offhand","style":"magic","tier":80}
+{"entityId":"item:virtus-boots","slot":"boots","style":"magic","tier":80}
+{"entityId":"item:virtus-gloves","slot":"gloves","style":"magic","tier":80}
+{"entityId":"item:virtus-mask","slot":"helmet","style":"magic","tier":80}
+{"entityId":"item:virtus-robe-legs","slot":"legs","style":"magic","tier":80}
+{"entityId":"item:virtus-robe-top","slot":"body","style":"magic","tier":80}
+{"entityId":"item:virtus-wand","slot":"mainhand","style":"magic","tier":80}
+{"entityId":"item:visage-of-the-first-necromancer","slot":"helmet","style":"necromancy","tier":95}
+{"entityId":"item:wand-of-the-cywir-elders","slot":"mainhand","style":"magic","tier":85}
+{"entityId":"item:wand-of-the-praesul","slot":"mainhand","style":"magic","tier":92}
+{"entityId":"item:wand-of-treachery","slot":"mainhand","style":"magic","tier":70}
+{"entityId":"item:ward-of-subjugation","slot":"offhand","style":"magic","tier":70}
+{"entityId":"item:warrior-ring","slot":"ring","style":"melee","tier":1}
+{"entityId":"item:wen-arrows","slot":"ammo","style":"ranged","tier":90}
+{"entityId":"item:winds-of-waiko","slot":"twohand","style":"ranged","tier":70}
+{"entityId":"item:wyvern-crossbow","slot":"twohand","style":"ranged","tier":85}
+{"entityId":"item:zamorak-godsword","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:zamorakian-spear","slot":"twohand","style":"melee","tier":75}
+{"entityId":"item:zaros-godsword","slot":"twohand","style":"melee","tier":92}
+{"entityId":"item:zaryte-bow","slot":"twohand","style":"ranged","tier":80}
+{"entityId":"item:zuriels-staff","slot":"twohand","style":"magic","tier":78}
+{"category":"weight-reducing Agility reward","entityId":"kandarin:agile-legs"}
+{"category":"Agility weight-reducing outfit piece","entityId":"kandarin:agile-top"}
+{"category":"Area Tasks utility for Runecrafting at Ourania","entityId":"kandarin:ardougne-cloak-ourania"}
+{"category":"achievement diary Thieving RC Farming utility","entityId":"kandarin:area-tasks-ardougne-cloak"}
+{"category":"achievement diary Woodcutting Crafting coal utility","entityId":"kandarin:area-tasks-seers-headband"}
+{"category":"tier-90 dual-wield ranged weapons","entityId":"kandarin:ascension-crossbows"}
+{"category":"Fishing permanent storage and telebank tool","entityId":"kandarin:champions-tackle-box"}
+{"category":"Divination utility device","entityId":"kandarin:divine-o-matic-vacuum"}
+{"category":"Divination XP outfit","entityId":"kandarin:diviners-outfit"}
+{"category":"Divination elite skilling outfit","entityId":"kandarin:elder-divination-elite-outfit"}
+{"category":"best-in-slot ranged power gloves residual","entityId":"kandarin:enhanced-nightmare-gauntlets"}
+{"category":"Fishing XP outfit","entityId":"kandarin:fishing-outfit"}
+{"category":"Fishing elite skilling outfit","entityId":"kandarin:fury-shark-outfit"}
+{"category":"Slayer helmet Magic component","entityId":"kandarin:hexcrest"}
+{"category":"Magic skillcape residual combat equipment","entityId":"kandarin:magic-cape"}
+{"category":"Farming drop-cleaner pickup mode","entityId":"kandarin:seedicide-collector-upgrade"}
+{"category":"archaeology spear base residual for masterwork spear","entityId":"kandarin:spear-of-annihilation-base"}
+{"category":"rare hero Fishing tool","entityId":"kandarin:tavias-fishing-rod"}
+{"category":"achievement diary Agility Mining supply utility","entityId":"karamja:area-tasks-karamja-gloves"}
+{"category":"Slayer helmet Magic component","entityId":"karamja:hexcrest"}
+{"category":"Herblore product chain from Habitat","entityId":"karamja:juju-potions-pointer"}
+{"category":"achievement diary skilling utility","entityId":"karamja:karamja-gloves-skilling"}
+{"category":"Brimhaven Agility Arena hand-slot reward","entityId":"karamja:pirates-hook"}
+{"category":"TzHaar and TzekHaar combat support ring","entityId":"karamja:tokkul-zo"}
+{"category":"Hunter camouflage outfit and Habitat teleport","entityId":"karamja:witchdoctor-camo-outfit"}
+{"category":"tier-92 dual-wield melee whip residual","entityId":"misthalin:abyssal-scourge"}
+{"category":"achievement diary skilling utility ring","entityId":"misthalin:area-tasks-explorers-ring"}
+{"category":"achievement diary Necromancy RC ritual utility","entityId":"misthalin:area-tasks-underworld-grimoire"}
+{"category":"achievement diary Mining and Smithing utility","entityId":"misthalin:area-tasks-varrock-armour"}
+{"category":"Crafting XP outfit","entityId":"misthalin:artisans-outfit"}
+{"category":"permanent Ranged ammo-recovery and cape-rack utility chain","entityId":"misthalin:avas-device-chain"}
+{"category":"best-in-slot two-handed ranged weapon","entityId":"misthalin:bow-of-the-last-guardian"}
+{"category":"Cooking burn-reduction gloves","entityId":"misthalin:cooking-gauntlets"}
+{"category":"BiS tank armour / magic","entityId":"misthalin:cryptbloom-armour"}
+{"category":"best-in-slot dual-wield melee weapons","entityId":"misthalin:dark-leng-melee"}
+{"category":"Necromancy weapon residual chain","entityId":"misthalin:death-guard-skull-lantern"}
+{"category":"Necromancy power armour residual","entityId":"misthalin:deathdealer-armour"}
+{"category":"Necromancy tank armour residual","entityId":"misthalin:deathwarden-armour"}
+{"category":"permanent Archaeology and Curses travel jewellery","entityId":"misthalin:dig-site-pendant"}
+{"category":"regional prayer unlock residual / standard book","entityId":"misthalin:divine-rage-prayer-codex"}
+{"category":"BiS power armour craft / T90 ranged bow residual","entityId":"misthalin:dracolich-armour"}
+{"category":"EoF special-attack melee weapon residual","entityId":"misthalin:dragon-claws-eof-spec"}
+{"category":"regional prayer unlock residual / standard book","entityId":"misthalin:eclipsed-soul-prayer-codex"}
+{"category":"BiS power armour craft / T92 ranged bow residual","entityId":"misthalin:elite-dracolich-armour"}
+{"category":"best-in-slot magic power gloves residual","entityId":"misthalin:enhanced-kerapac-wrist-wraps"}
+{"category":"Lumbridge achievement skilling utility ring","entityId":"misthalin:explorers-ring"}
+{"category":"combat Archaeology relic","entityId":"misthalin:font-of-life-relic"}
+{"category":"Magic best-in-slot two-handed staff","entityId":"misthalin:fractured-staff-of-armadyl"}
+{"category":"augmentable Woodcutting tool progression","entityId":"misthalin:imcando-hatchet"}
+{"category":"Magic ability codex gloves and scripture residual","entityId":"misthalin:kerapac-magic-residuals"}
+{"category":"style glove T90 upgrade hub residual","entityId":"misthalin:leng-artefact-t90-glove-ladder"}
+{"category":"skilling familiar / pet utility","entityId":"misthalin:lorehound"}
+{"category":"Construction elite skilling outfit","entityId":"misthalin:master-constructors-outfit"}
+{"category":"Runecrafting XP outfit","entityId":"misthalin:master-runecrafter-robes"}
+{"category":"Divination skilling off-hand","entityId":"misthalin:memory-dowser"}
+{"category":"Necromancy conjure ability residual progression","entityId":"misthalin:necromancy-conjure-residuals"}
+{"category":"Necromancy crafted armour residual progression","entityId":"misthalin:necromancy-tank-armour-residual"}
+{"category":"Underworld teleport jewelry","entityId":"misthalin:passing-bracelet"}
+{"category":"Construction supply container","entityId":"misthalin:plank-box"}
+{"category":"Necromancy best-in-slot weapons and power armour","entityId":"misthalin:rasial-first-necromancer-equipment"}
+{"category":"invisible Divination level ring","entityId":"misthalin:ring-of-whispers"}
+{"category":"Necromancy XP outfit","entityId":"misthalin:ritualists-outfit"}
+{"category":"Magic dual-wield best-in-slot weapons","entityId":"misthalin:roar-of-awakening-ode-to-deceit"}
+{"category":"Runecrafting skilling off-hand","entityId":"misthalin:runic-attuner"}
+{"category":"Woodcutting and Firemaking skilling off-hand","entityId":"misthalin:sanas-fyrtorch"}
+{"category":"combat pocket scripture","entityId":"misthalin:scripture-of-amascut"}
+{"category":"Magic pocket-slot residual scripture","entityId":"misthalin:scripture-of-bik"}
+{"category":"permanent skilling pocket scripture","entityId":"misthalin:scripture-of-elidinis"}
+{"category":"combat pocket scripture","entityId":"misthalin:scripture-of-ful"}
+{"category":"combat pocket scripture","entityId":"misthalin:scripture-of-jas"}
+{"category":"combat pocket scripture","entityId":"misthalin:scripture-of-wen"}
+{"category":"permanent Farming seed storage tool","entityId":"misthalin:seed-bag"}
+{"category":"permanent unlimited Stronghold of Security travel tool","entityId":"misthalin:skull-sceptre"}
+{"category":"Smithing metal-bank gloves","entityId":"misthalin:smelting-gauntlets"}
+{"category":"Kerapac magic component residual","entityId":"misthalin:staff-of-armadyl-residual"}
+{"category":"Mining skilling off-hand","entityId":"misthalin:taggas-corehammer"}
+{"category":"Thieving permanent toolbelt tools","entityId":"misthalin:thieves-guild-master-tools"}
+{"category":"Underworld achievement skilling utility pocket","entityId":"misthalin:underworld-grimoire"}
+{"category":"Varrock achievement Mining and Smithing utility","entityId":"misthalin:varrock-armour"}
+{"category":"BiS power armour drop / T95 melee","entityId":"misthalin:vestments-of-havoc"}
+{"category":"combat necklace and Archaeology relic ingredient","entityId":"morytania:amulet-of-forsaken-berserkers-fury"}
+{"category":"achievement diary Prayer RC Farming utility","entityId":"morytania:area-tasks-morytania-legs"}
+{"category":"permanent Prayer ash/ghost drop cleaner","entityId":"morytania:attuned-ectoplasmator"}
+{"category":"Slayer helmet melee component","entityId":"morytania:black-mask"}
+{"category":"Construction XP outfit","entityId":"morytania:constructors-outfit"}
+{"category":"Morytania teleport network equipment","entityId":"morytania:drakans-medallion"}
+{"category":"Prayer drop cleaner for ghosts (pre-attuned)","entityId":"morytania:ectoplasmator"}
+{"category":"Prayer XP outfit equipment","entityId":"morytania:first-age-outfit-equipment"}
+{"category":"Prayer potion and DG necklace restore amplifier","entityId":"morytania:holy-wrench"}
+{"category":"Woodcutting XP outfit","entityId":"morytania:lumberjack-outfit"}
+{"category":"BiS power armour craft / T90 melee","entityId":"morytania:malevolent-armour"}
+{"category":"easy achievement skilling utility","entityId":"morytania:morytania-legs-1"}
+{"category":"achievement diary Prayer RC Farming utility ladder","entityId":"morytania:morytania-legs-1-4"}
+{"category":"medium achievement skilling utility","entityId":"morytania:morytania-legs-2"}
+{"category":"hard achievement skilling utility","entityId":"morytania:morytania-legs-3"}
+{"category":"elite achievement skilling utility","entityId":"morytania:morytania-legs-4"}
+{"category":"tier-90 residual two-handed melee and ranged weapons","entityId":"morytania:noxious-scythe-longbow"}
+{"category":"tier-90 residual two-handed Magic weapon","entityId":"morytania:noxious-staff"}
+{"category":"undead combat necklace (Mining craft path)","entityId":"morytania:salve-amulet"}
+{"category":"undead combat necklace (enchanted permanent)","entityId":"morytania:salve-amulet-enchanted"}
+{"category":"vyre multi-skill weapon","entityId":"morytania:sunspear"}
+{"category":"permanent Slayer teleport jewellery equipment","entityId":"multi-region:ring-of-slaying"}
+{"category":"permanent Slayer equipment unlock","entityId":"multi-region:slayer-helmet-craft"}
+{"category":"permanent Slayer helmet utility unlock","entityId":"multi-region:slayer-helmet-ring-fuse"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"multi-region:toolbelt-advanced-gold-accumulator-attach"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"multi-region:toolbelt-bonecrusher-attach"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"multi-region:toolbelt-charming-imp-attach"}
+{"category":"permanent Slayer Rewards toolbelt unlock","entityId":"multi-region:toolbelt-herbicide-attach"}
+{"category":"residual high-level magic-leaning Ports armour note for combat planners","entityId":"ports:seasinger-residual-note"}
+{"category":"permanent Herblore combination recipe","entityId":"prifddinas:elder-overload-recipe"}
+{"category":"permanent Herblore combination recipe","entityId":"prifddinas:elder-overload-salve-recipe"}
+{"category":"permanent Herblore combination recipe","entityId":"prifddinas:supreme-overload-recipe"}
+{"category":"quest prayer-restoration support item","entityId":"rum-deal:holy-wrench"}
+{"category":"undead combat support","entityId":"salve-amulet:enchanted"}
+{"category":"pouch-production supply modifiers","entityId":"summoning:charm-conservation-tools"}
+{"category":"Prayer sustain off-hand utility for Seren skilling prayers","entityId":"tirannwn:ancient-elven-ritual-shard"}
+{"category":"achievement diary Farming Hunter Divination utility","entityId":"tirannwn:area-tasks-tirannwn-quiver"}
+{"category":"permanent unlimited Tirannwn teleport pocket item","entityId":"tirannwn:attuned-crystal-teleport-seed"}
+{"category":"tier-90 Prifddinas crystal singing weapons residual","entityId":"tirannwn:attuned-crystal-weapons"}
+{"category":"permanent Prayer flask production shell","entityId":"tirannwn:blessed-flask"}
+{"category":"tier-92 dual-wield ranged weapons","entityId":"tirannwn:blightbound-crossbows"}
+{"category":"best-in-slot hybrid poison combat gloves","entityId":"tirannwn:cinderbane-gloves"}
+{"category":"augmentable Fishing tool","entityId":"tirannwn:crystal-fishing-rod"}
+{"category":"augmentable Smithing tool","entityId":"tirannwn:crystal-hammer"}
+{"category":"augmentable crystal Woodcutting tool","entityId":"tirannwn:crystal-hatchet"}
+{"category":"augmentable crystal Archaeology tool","entityId":"tirannwn:crystal-mattock"}
+{"category":"augmentable crystal Mining tool","entityId":"tirannwn:crystal-pickaxe"}
+{"category":"augmentable Firemaking tool","entityId":"tirannwn:crystal-tinderbox"}
+{"category":"permanent crystal artisan tool residual package","entityId":"tirannwn:crystal-utility-tools"}
+{"category":"combat pocket grimoire","entityId":"tirannwn:erethdors-grimoire"}
+{"category":"Seren prayer drain and porter necklace","entityId":"tirannwn:grace-of-the-elves"}
+{"category":"permanent endgame skilling cape residual","entityId":"tirannwn:max-cape"}
+{"category":"Thieving skilling outfit","entityId":"tirannwn:trahaearn-exoskeleton"}
+{"category":"permanent account equipment upgrades","entityId":"zamorakian-slivers:enchantments"}

@@ -10,7 +10,7 @@ export const PATCHES = join(ROOT, "data/patches");
 export const EXPORT_ROOT = join(ROOT, "public/data/v2");
 export const REPORTS = join(ROOT, "reports");
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 export const EXPORT_VERSION = 2;
 export const SHARD_TARGET_BYTES = 220 * 1024;
 export const SHARD_LIMIT_BYTES = 500 * 1024;

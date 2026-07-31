@@ -293,11 +293,11 @@ const numeric = (value) => (Number.isFinite(value) ? value : null);
 const DOMAIN_WRITERS = new Map([
   [
     "equipment",
-    (db, entityId, row, extra) => {
+    (db, entityId, row) => {
       prepared(
         db,
-        "INSERT OR IGNORE INTO equipment(entity_id, style, slot, tier, category, extra_json) VALUES (?, ?, ?, ?, ?, ?)",
-      ).run(entityId, scalar(row.style), scalar(row.slot), numeric(row.tier), scalar(row.category), extra);
+        "INSERT OR IGNORE INTO equipment(entity_id, style, slot, tier, category) VALUES (?, ?, ?, ?, ?)",
+      ).run(entityId, scalar(row.style), scalar(row.slot), numeric(row.tier), scalar(row.category));
       for (const [stat, value] of Object.entries(row.bonuses ?? {})) {
         if (typeof value === "number") {
           prepared(db, "INSERT OR IGNORE INTO equipment_stats(entity_id, stat, value) VALUES (?, ?, ?)").run(
@@ -311,77 +311,77 @@ const DOMAIN_WRITERS = new Map([
   ],
   [
     "ability",
-    (db, entityId, row, extra) =>
+    (db, entityId, row) =>
       prepared(
         db,
-        "INSERT OR IGNORE INTO abilities(entity_id, style, category, level, cooldown_ticks, extra_json) VALUES (?, ?, ?, ?, ?, ?)",
-      ).run(entityId, scalar(row.style), scalar(row.category), numeric(row.level), numeric(row.cooldownTicks), extra),
+        "INSERT OR IGNORE INTO abilities(entity_id, style, category, level, cooldown_ticks) VALUES (?, ?, ?, ?, ?)",
+      ).run(entityId, scalar(row.style), scalar(row.category), numeric(row.level), numeric(row.cooldownTicks)),
   ],
   [
     "prayer",
-    (db, entityId, row, extra) =>
-      prepared(db, "INSERT OR IGNORE INTO prayers(entity_id, book, level, extra_json) VALUES (?, ?, ?, ?)").run(
+    (db, entityId, row) =>
+      prepared(db, "INSERT OR IGNORE INTO prayers(entity_id, book, level) VALUES (?, ?, ?)").run(
         entityId,
         scalar(row.book ?? row.book_type),
         numeric(row.level ?? row.prayer_requirement),
-        extra,
       ),
   ],
   [
     "spell",
-    (db, entityId, row, extra) =>
-      prepared(db, "INSERT OR IGNORE INTO spells(entity_id, spellbook, level, extra_json) VALUES (?, ?, ?, ?)").run(
+    (db, entityId, row) =>
+      prepared(db, "INSERT OR IGNORE INTO spells(entity_id, spellbook, level) VALUES (?, ?, ?)").run(
         entityId,
         scalar(row.spellbook ?? row.book ?? row.book_type),
         numeric(row.level),
-        extra,
       ),
   ],
   [
     "invention-perk",
-    (db, entityId, row, extra) =>
-      prepared(
-        db,
-        "INSERT OR IGNORE INTO invention_perks(entity_id, max_rank, category, extra_json) VALUES (?, ?, ?, ?)",
-      ).run(entityId, numeric(row.maxRank), scalar(row.category), extra),
+    (db, entityId, row) =>
+      prepared(db, "INSERT OR IGNORE INTO invention_perks(entity_id, max_rank, category) VALUES (?, ?, ?)").run(
+        entityId,
+        numeric(row.maxRank),
+        scalar(row.category),
+      ),
   ],
   [
     "activity",
-    (db, entityId, row, extra) =>
-      prepared(
-        db,
-        "INSERT OR IGNORE INTO activities(entity_id, category, location, extra_json) VALUES (?, ?, ?, ?)",
-      ).run(entityId, scalar(row.category), scalar(row.location), extra),
+    (db, entityId, row) =>
+      prepared(db, "INSERT OR IGNORE INTO activities(entity_id, category, location) VALUES (?, ?, ?)").run(
+        entityId,
+        scalar(row.category),
+        scalar(row.location),
+      ),
   ],
   [
     "unlock",
-    (db, entityId, row, extra) =>
-      prepared(
-        db,
-        "INSERT OR IGNORE INTO unlocks(entity_id, category, unlock_type, extra_json) VALUES (?, ?, ?, ?)",
-      ).run(entityId, scalar(row.category), scalar(row.type ?? row.recordType), extra),
+    (db, entityId, row) =>
+      prepared(db, "INSERT OR IGNORE INTO unlocks(entity_id, category, unlock_type) VALUES (?, ?, ?)").run(
+        entityId,
+        scalar(row.category),
+        scalar(row.type ?? row.recordType),
+      ),
   ],
   [
     "task",
-    (db, entityId, row, extra) =>
+    (db, entityId, row) =>
       prepared(
         db,
-        "INSERT OR IGNORE INTO tasks(entity_id, tier, points, region_id, source_league, extra_json) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT OR IGNORE INTO tasks(entity_id, tier, points, region_id, source_league) VALUES (?, ?, ?, ?, ?)",
       ).run(
         entityId,
         scalar(row.tier),
         numeric(row.points),
         normalizeRegion(row.regionId ?? row.region),
         scalar(row.sourceLeague),
-        extra,
       ),
   ],
   [
     "quest",
-    (db, entityId, row, extra) =>
+    (db, entityId, row) =>
       prepared(
         db,
-        "INSERT OR IGNORE INTO quests(entity_id, quest_type, series, primary_region_id, members, release_date, extra_json) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT OR IGNORE INTO quests(entity_id, quest_type, series, primary_region_id, members, release_date) VALUES (?, ?, ?, ?, ?, ?)",
       ).run(
         entityId,
         scalar(row.quest_type),
@@ -389,17 +389,16 @@ const DOMAIN_WRITERS = new Map([
         normalizeRegion(row.primary_region),
         parseBoolean(row.members),
         scalar(row.release),
-        extra,
       ),
   ],
   [
     "training-method",
-    (db, entityId, row, extra) =>
+    (db, entityId, row) =>
       prepared(
         db,
         `INSERT OR IGNORE INTO training_methods
-         (entity_id, skill, level_range, xp_rate, intensity, location, hard_region_requirement, extra_json)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         (entity_id, skill, level_range, xp_rate, intensity, location, hard_region_requirement)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
       ).run(
         entityId,
         scalar(row.skill),
@@ -408,7 +407,6 @@ const DOMAIN_WRITERS = new Map([
         scalar(row.intensity),
         scalar(row.location),
         row.hardRegionRequirement ?? row.hard_region_requirement ? 1 : 0,
-        extra,
       ),
   ],
   [

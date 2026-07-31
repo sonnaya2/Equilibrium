@@ -422,7 +422,14 @@ export function BuildPlanner({
                             >
                               <span className="build-board__seat-emblem" aria-hidden>
                                 {icon ? (
-                                  <img src={icon} alt="" width={32} height={32} />
+                                  <img
+                                    src={icon}
+                                    alt=""
+                                    width={32}
+                                    height={32}
+                                    loading="lazy"
+                                    decoding="async"
+                                  />
                                 ) : (
                                   <span className="build-board__seat-mono">{mono}</span>
                                 )}

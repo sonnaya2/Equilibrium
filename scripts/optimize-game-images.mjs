@@ -11,6 +11,7 @@
  */
 import { createReadStream } from "node:fs";
 import {
+  readFileSync,
   readdirSync,
   statSync,
   unlinkSync,
@@ -33,25 +34,33 @@ const ROOTS = (rootsArg ? rootsArg.slice("--roots=".length) : "public/game,asset
   .filter(Boolean);
 
 const SRC_EXT = /\.(png|jpe?g|gif|webp)$/i;
-const CONCURRENCY = 6;
+// Six parallel replaces trip file locks on machines running a sync client or
+// on-access scanner; --concurrency=1 is the escape hatch when that happens.
+const concurrencyArg = process.argv.find((a) => a.startsWith("--concurrency="));
+const CONCURRENCY = Math.max(1, Number(concurrencyArg?.slice("--concurrency=".length)) || 6);
 
-/** Long-edge caps by path (relative to tree root, forward slashes). */
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Long-edge caps by path, relative to the tree root and forward-slashed.
+ *
+ * Each pattern must allow the segment at position zero: a path under
+ * `--roots=public/game` arrives as `bosses/nakatra.webp`, with no leading
+ * slash, so a `/bosses/` pattern silently misses and falls through to the
+ * default. Anchor every rule with `(^|/)`.
+ *
+ * The caps themselves are set from what the app renders: no game art appears in
+ * a box wider than 64px (the region plate on /map; 46px anywhere else), so 256
+ * covers 3x DPI with headroom.
+ */
 function maxEdge(rel) {
   const r = rel.replace(/\\/g, "/").toLowerCase();
-  if (/(^|\/)(skills|regions)\//.test(r) || /(^|\/)skills\/[^/]+$/.test(r)) return 128;
-  if (/(^|\/)regions\/[^/]+$/.test(r)) return 128;
-  if (/\/combat\/(equipment|abilities|spells|prayer)\//.test(r)) return 128;
-  if (/\/combat\/[^/]+\.(webp|png|jpe?g|gif)$/.test(r)) return 256;
-  if (/\/bosses\//.test(r)) return 768;
-  if (/\/activities\//.test(r)) return 1280;
-  if (/\/upgrades\/permanent-unlocks\//.test(r)) return 1280;
-  if (/\/upgrades\//.test(r)) return 256;
-  if (/\/terrain\//.test(r)) return 2048;
-  if (/\/leagues\//.test(r) || r.startsWith("leagues/") || !r.includes("/")) {
-    // assets/leagues flat or public/game/leagues
-    if (r.includes("leagues")) return 1024;
-  }
-  if (/\/relics\//.test(r)) return 512;
+  if (/(^|\/)(skills|regions)\//.test(r)) return 128;
+  if (/(^|\/)combat\/(equipment|abilities|spells|prayer)\//.test(r)) return 128;
+  if (/(^|\/)combat\//.test(r)) return 256;
+  if (/(^|\/)(bosses|activities|upgrades|relics)\//.test(r)) return 256;
+  if (/(^|\/)terrain\//.test(r)) return 2048;
+  if (/(^|\/)leagues\//.test(r)) return 1024;
   // Landing-page key art fills a 1600px aperture; 1920 covers it with headroom.
   if (/(^|\/)keyart-/.test(r)) return 1920;
   return 1024;
@@ -126,9 +135,14 @@ async function optimizeOne(absPath, treeRoot) {
   const before = statSync(absPath).size;
   const cap = maxEdge(rel);
 
+  // Read into memory rather than letting sharp open the path: sharp holds the
+  // input handle until the pipeline finishes, and on Windows that blocks the
+  // write back to the same file with EPERM/UNKNOWN.
+  let input;
   let meta;
   try {
-    meta = await sharp(absPath, { animated: false, pages: 1, failOn: "none" }).metadata();
+    input = readFileSync(absPath);
+    meta = await sharp(input, { animated: false, pages: 1, failOn: "none" }).metadata();
   } catch (err) {
     return { rel, status: "skip-read", error: String(err?.message || err), before, after: before };
   }
@@ -144,7 +158,7 @@ async function optimizeOne(absPath, treeRoot) {
   }
 
   const q = qualityFor(needsResize ? cap : edge, rel);
-  let pipeline = sharp(absPath, { animated: false, pages: 1, failOn: "none" }).rotate();
+  let pipeline = sharp(input, { animated: false, pages: 1, failOn: "none" }).rotate();
   if (needsResize) {
     pipeline = pipeline.resize({
       width: cap,
@@ -190,28 +204,41 @@ async function optimizeOne(absPath, treeRoot) {
     };
   }
 
-  // Write via temp then replace. On Windows, rename over existing can EPERM —
-  // fall back to writeFileSync on dest after unlinking.
+  // Write via temp then replace. On Windows, rename over an existing file can
+  // EPERM, and a freshly unlinked path can come back UNKNOWN/EBUSY for a beat
+  // while an indexer or sync client still holds it — so the replace is retried
+  // before it is treated as a real failure.
   const tmp = `${dest}.tmp-${process.pid}-${Math.random().toString(16).slice(2)}`;
   writeFileSync(tmp, buf);
   try {
-    if (existsSync(dest)) {
+    // rename replaces atomically where it is allowed. Do not unlink first: that
+    // leaves the path pending-delete and the retry reopens as UNKNOWN/EBUSY.
+    // Some environments refuse rename-onto-existing outright but still allow a
+    // truncating write, so fall back to that before giving up.
+    let lastError;
+    for (let attempt = 0; attempt < 8; attempt++) {
+      if (attempt) await sleep(250 * attempt);
       try {
-        unlinkSync(dest);
-      } catch {
-        /* ignore */
+        renameSync(tmp, dest);
+        lastError = undefined;
+        break;
+      } catch (renameError) {
+        lastError = renameError;
+        try {
+          writeFileSync(dest, buf);
+          lastError = undefined;
+          break;
+        } catch (writeError) {
+          lastError = writeError;
+        }
       }
     }
     try {
-      renameSync(tmp, dest);
+      if (existsSync(tmp)) unlinkSync(tmp);
     } catch {
-      writeFileSync(dest, buf);
-      try {
-        unlinkSync(tmp);
-      } catch {
-        /* ignore */
-      }
+      /* ignore */
     }
+    if (lastError) throw lastError;
   } catch (err) {
     try {
       unlinkSync(tmp);

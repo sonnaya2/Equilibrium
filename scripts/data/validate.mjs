@@ -71,6 +71,22 @@ export function validate(db, changedOnly = false) {
     "active factual entities without a normalized source",
     changedOnly ? missingSources.filter(({ id }) => changedIds.has(id)) : missingSources,
   );
+  // When two records resolve to one entity the importer takes scalar fields and
+  // the body from whichever it reached first, but unions their regions,
+  // requirements, effects, tags and sources. The result matches no single
+  // source. That used to happen without a word; this is the word.
+  // `npm run data:legacy-inventory` narrows these to the ones whose scalar
+  // fields actually disagree, which is the set worth adjudicating.
+  const blended = rows(
+    `SELECT entity_id, count(DISTINCT raw_json) AS variants
+     FROM source_records WHERE entity_id IS NOT NULL
+     GROUP BY entity_id HAVING variants > 1
+     ORDER BY variants DESC, entity_id`,
+  );
+  addWarning(
+    "entities blended from disagreeing source records",
+    changedOnly ? blended.filter(({ entity_id }) => changedIds.has(entity_id)) : blended,
+  );
   const quarantined = rows(
     "SELECT source_file, record_path, stable_id, error FROM quarantine ORDER BY source_file, record_path",
   );

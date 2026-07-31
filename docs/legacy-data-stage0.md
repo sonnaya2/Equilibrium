@@ -78,18 +78,40 @@ the Ranged skill.
 
 - **64 disagree across two files.** The top pair is
   `progression-unlocks.json` + `regional-skilling-unlocks.json` with 49 conflicts: two generations of
-  the same unlock research, both live.
+  the same unlock research, both live. By type: 36 activities, 26 equipment, 1 prayer, 1 unlock.
 - **14 disagree inside one document.**
-- **64 have a silently dropped record.** The importer keeps the first record it reaches and discards
-  the rest without a warning. Example: `prayer:prayers:protect-item` appears in both prayer books
-  with different `region_requirement_type` and `unlock_profile_id`; the standard book won because it
-  came first.
 
-56 further logical records are stored byte-identically more than once.
+682 entities are built from more than one source record; those 64 are the ones whose records
+actually disagree. 56 further logical records are stored byte-identically more than once.
+
+### What the importer actually does with them
+
+Not a drop — a **merge**, and the halves come from different records:
+
+| Part of the entity | Behaviour |
+| --- | --- |
+| scalar fields (name, descriptions, status, sortKey, verifiedAt) | first record wins |
+| body (`extra_json`) | first record wins |
+| domain row | first record wins (`INSERT OR IGNORE`) |
+| regions, requirements, effects, tags, sources | **union of every contributing record** |
+
+So a conflicted entity is a composite that matches no single source. `prayer:prayers:protect-item`
+carries the *standard* book's scalar fields and the *ancient* book's region requirements, and its
+`book` column is empty, so nothing records which book it came from.
 
 **This is the finding that most justifies the four-stage plan.** The current SQLite database is not
-clean ground truth: on 64 records it is showing whichever of several disagreeing sources happened to
-be read first.
+clean ground truth: on 64 records it shows a blend of disagreeing sources rather than any one of
+them.
+
+### Colliding identities, separate from disagreeing values
+
+Eight prayers exist in two different prayer books under the same name. `entityCandidate` builds a
+prayer's ID from `prayer:<key>:<name>` where `<key>` is the array key `prayers` in both cases, so the
+book never reaches the ID and the two records collapse into one entity. 94 of 195 prayers have an
+empty `book` column, so the model cannot express the difference either.
+
+Fixing that means changing entity IDs, which breaks `data/patches/` references and any deep link, so
+it is queued for Stage 1 rather than done here.
 
 ## Source authority policy for Stage 1
 
@@ -153,8 +175,8 @@ Removing that entry is the only deletion in this stage.
 1. Resolve the 78 conflicts in `reports/research-conflicts.json`, starting with the 49 between
    `progression-unlocks.json` and `regional-skilling-unlocks.json`. Every intentional difference from
    the current database needs a written justification.
-2. Merge unique information from the fragmented files rather than picking one and dropping the rest —
-   the 64 silently dropped records are unique data today.
+2. Decide each conflicted entity as a whole rather than inheriting the current blend of first-wins
+   scalars and unioned relations, and give the 8 colliding prayers book-qualified IDs.
 3. Keep the best available provenance per record; never re-label a source.
 4. Label provisional and inferred records explicitly.
 5. Treat the current SQLite database as a **comparison reference, not ground truth**, and emit

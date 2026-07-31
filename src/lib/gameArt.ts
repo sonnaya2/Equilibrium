@@ -38,7 +38,8 @@ export const worldMapIconPath = () => "/game/leagues/world-map-icon.webp";
  * Local equipment inventory icons (synced from the wiki, never hotlinked).
  * Path: public/game/combat/equipment/<id-without-item-prefix>.webp
  * Only returns a path when the slug is in equipment-icon-slugs.json (ok:true).
- * Built by scripts/sync-equipment-icons.mjs → equipment-icons.json + equipment-icon-slugs.json.
+ * The sync script that built it is gone; the slug list is now seed data, and
+ * the companion equipment-icons.json it also wrote is read by nothing.
  */
 export function equipmentIconPath(equipmentId: string): string | null {
   const slug = equipmentId.replace(/^(?:item|equipment):/, "");
@@ -49,7 +50,8 @@ export function equipmentIconPath(equipmentId: string): string | null {
 /**
  * Local ability icons (synced from the wiki, never hotlinked).
  * Path: public/game/combat/abilities/<style>/<id-with-underscores-as-hyphens>.webp
- * Built by scripts/sync-ability-icons.mjs → data/combat/ability-icons.json.
+ * The sync script that built it is gone, and data/combat/ability-icons.json is
+ * read by nothing; the paths below are resolved against public/game/ directly.
  */
 export function abilityIconPath(
   abilityId: string,

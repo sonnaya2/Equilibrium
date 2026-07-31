@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
@@ -199,7 +199,10 @@ describe("data icon audit", () => {
       garbage: dedupe(garbage),
       missingFile: dedupe(missingFile),
     };
-    writeFileSync("tmp-data-icon-audit.json", `${JSON.stringify(report, null, 2)}\n`);
+    // reports/ is the ignored home for generated output; writing to the repo
+    // root left tmp-data-icon-audit.json lying around after every run.
+    mkdirSync("reports", { recursive: true });
+    writeFileSync(join("reports", "data-icon-audit.json"), `${JSON.stringify(report, null, 2)}\n`);
     expect(bossIconPath("Kerapac")).toBeTruthy();
     expect(activityIconPath("Prifddinas")).toBeTruthy();
     // eslint-disable-next-line no-console

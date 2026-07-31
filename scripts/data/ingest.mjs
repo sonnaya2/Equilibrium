@@ -54,21 +54,23 @@ function compactMetadata(value) {
 }
 
 // Every object inside an array is a candidate record, at any depth, tagged with
-// the JSON path that can write it back into the compatibility document.
-function collectArrayRecords(value, path = "$", key = "root", records = []) {
+// the JSON path that can write it back into the compatibility document and with
+// the nearest enclosing record, which is sometimes the only thing that tells
+// two same-named records apart.
+function collectArrayRecords(value, path = "$", key = "root", parent = null, records = []) {
   if (Array.isArray(value)) {
     value.forEach((child, index) => {
       if (child && typeof child === "object" && !Array.isArray(child)) {
         const recordPath = `${path}[${index}]`;
-        records.push({ row: child, path: recordPath, key });
-        collectArrayRecords(child, recordPath, key, records);
+        records.push({ row: child, path: recordPath, key, parent });
+        collectArrayRecords(child, recordPath, key, child, records);
       }
     });
     return records;
   }
   if (!value || typeof value !== "object") return records;
   for (const [childKey, child] of Object.entries(value)) {
-    collectArrayRecords(child, `${path}.${childKey}`, childKey, records);
+    collectArrayRecords(child, `${path}.${childKey}`, childKey, parent, records);
   }
   return records;
 }
@@ -365,7 +367,7 @@ export function importSeed(db) {
           entityId = insertEntity(db, fields, record);
           if (entityId) {
             // Regions are already seeded relationally by seedRegions.
-            if (candidate.type !== "region") addDomainRow(db, entityId, candidate.type, record.row);
+            if (candidate.type !== "region") addDomainRow(db, entityId, candidate.type, record.row, record.parent);
             addRegions(db, entityId, record.row);
             addRequirements(db, entityId, record.row);
             addEffects(db, entityId, record.row);

@@ -54,6 +54,14 @@ export function recordName(row) {
     ?.trim();
 }
 
+// A prayer's identity includes its book. data/reference/prayers.json nests
+// prayers under three books that share names - Protect Item, Light Form,
+// Fortitude and five others exist in two of them - and the array key is
+// `prayers` for all of them, so without the book in the scope the ancient
+// Protect Item collapses into the standard one and inherits its region rules.
+const bookScope = (record) =>
+  typeof record.parent?.book_type === "string" && typeof record.parent?.id === "string" ? record.parent.id : null;
+
 export function entityCandidate(file, record) {
   const type = typeFor(file, record.key, record.row, record.path);
   const name = recordName(record.row);
@@ -66,6 +74,7 @@ export function entityCandidate(file, record) {
       record.row.region_id ??
       record.row.primary_region ??
       record.row.skill ??
+      (type === "prayer" ? bookScope(record) : null) ??
       record.key ??
       basename(file, ".json");
     id = `${type}:${slugify(scope)}:${slugify(name)}`;
@@ -319,10 +328,12 @@ const DOMAIN_WRITERS = new Map([
   ],
   [
     "prayer",
-    (db, entityId, row) =>
+    // The book is on the container, not the prayer, so 94 of 195 rows used to
+    // store an empty string for it.
+    (db, entityId, row, _extra, parent) =>
       prepared(db, "INSERT OR IGNORE INTO prayers(entity_id, book, level) VALUES (?, ?, ?)").run(
         entityId,
-        scalar(row.book ?? row.book_type),
+        scalar(row.book ?? row.book_type ?? parent?.name ?? parent?.book_type),
         numeric(row.level ?? row.prayer_requirement),
       ),
   ],
@@ -419,8 +430,8 @@ const DOMAIN_WRITERS = new Map([
   ],
 ]);
 
-export function addDomainRow(db, entityId, type, row) {
-  DOMAIN_WRITERS.get(type)?.(db, entityId, row, stableJson(row));
+export function addDomainRow(db, entityId, type, row, parent = null) {
+  DOMAIN_WRITERS.get(type)?.(db, entityId, row, stableJson(row), parent);
 }
 
 export function addRegions(db, entityId, row) {

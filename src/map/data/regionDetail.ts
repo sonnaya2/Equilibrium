@@ -15,7 +15,6 @@ export interface DetailRow {
   /** The catalog's own wording, kept verbatim for the table. */
   kind: string;
   detail: string;
-  confidence: string;
   sourceUrl: string | null;
 }
 
@@ -33,7 +32,6 @@ export interface TrainingRow {
   regionLocked: boolean;
   note: string;
   warning: string;
-  confidence: string;
   sourceUrl: string | null;
 }
 
@@ -116,14 +114,12 @@ function row(entry: {
   kind?: string;
   category?: string;
   detail?: string;
-  confidence?: string;
   source?: { url?: string } | null;
 }): DetailRow {
   return {
     name: entry.name,
     kind: entry.kind ?? entry.category ?? "",
     detail: entry.detail ?? "",
-    confidence: entry.confidence ?? "",
     sourceUrl: entry.source?.url ?? null,
   };
 }
@@ -154,7 +150,6 @@ export function makeRegionDetail(region: ResearchRegion): RegionDetail {
     regionLocked: Boolean(method.hardRegionRequirement),
     note: method.note ?? "",
     warning: method.warning ?? "",
-    confidence: method.confidence ?? "",
     sourceUrl: method.source?.url ?? null,
   }));
 

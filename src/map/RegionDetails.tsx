@@ -44,14 +44,6 @@ function xpPerHour(raw: string): string {
   return Math.round(value).toLocaleString("en-GB");
 }
 
-function Status({ confidence }: { confidence: string }) {
-  return confidence.startsWith("confirmed") ? (
-    <span className="text-parch-500">confirmed</span>
-  ) : (
-    <span className="tag">inferred</span>
-  );
-}
-
 function RowTable({
   rows,
   header,
@@ -68,7 +60,6 @@ function RowTable({
         <tr>
           <th>{header}</th>
           <th>Kind</th>
-          <th>Status</th>
         </tr>
       </thead>
       <tbody>
@@ -82,9 +73,6 @@ function RowTable({
                 {subtitle ? <span className="block text-xs text-parch-400">{subtitle}</span> : null}
               </td>
               <td>{row.kind || "—"}</td>
-              <td>
-                <Status confidence={row.confidence} />
-              </td>
             </tr>
           );
         })}
@@ -142,7 +130,6 @@ export function RegionDetails({
   const { focus, selectPlace, hoverPlace } = useMapFocus();
   const [tab, setTab] = useState<TabId>("bosses");
   const [query, setQuery] = useState("");
-  const [confirmedOnly, setConfirmedOnly] = useState(false);
 
   const planner = regions.find((r) => r.id === focus.region);
   const { region } = useResearchRegion(focus.region);
@@ -158,8 +145,7 @@ export function RegionDetails({
 
   const needle = query.trim().toLowerCase();
   const keep = (row: DetailRow) =>
-    (!confirmedOnly || row.confidence.startsWith("confirmed")) &&
-    (!needle || row.name.toLowerCase().includes(needle) || row.kind.toLowerCase().includes(needle));
+    !needle || row.name.toLowerCase().includes(needle) || row.kind.toLowerCase().includes(needle);
 
   const bosses = detail.bosses.filter(keep);
   const skilling = [...detail.skilling, ...detail.otherContent].filter(keep);
@@ -277,20 +263,6 @@ export function RegionDetails({
           );
         })}
         <div className="ml-auto flex items-center gap-1.5">
-          {tab !== "training" && tab !== "places" ? (
-            <button
-              type="button"
-              onClick={() => setConfirmedOnly((v) => !v)}
-              aria-pressed={confirmedOnly}
-              className={`rounded-sm border px-2 py-0.5 text-xs transition-colors duration-150 ${
-                confirmedOnly
-                  ? "border-gem-500 bg-stone-800 text-gem-300"
-                  : "border-stone-750 text-parch-300 hover:text-parch-50"
-              }`}
-            >
-              confirmed
-            </button>
-          ) : null}
           <input
             type="search"
             value={query}

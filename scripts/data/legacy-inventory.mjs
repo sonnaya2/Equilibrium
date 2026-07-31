@@ -191,6 +191,15 @@ const normalizedName = (row) => {
   return name ? name.trim().toLocaleLowerCase("en") : null;
 };
 
+// A citation is not a record. Source objects carry a `title` that often repeats
+// the name of the thing they cite, so without this an equipment record and its
+// own sources[] entry group together and "disagree" about `url`.
+const SOURCE_OBJECT_KEYS = new Set([
+  "url", "title", "source", "publisher", "verifiedAt", "verified_at", "retrievedAt", "retrieved_at",
+  "role", "content_hash", "publishedAt", "published_at", "note", "accessed", "revision",
+]);
+const isCitation = (row) => Object.keys(row).every((key) => SOURCE_OBJECT_KEYS.has(key));
+
 function logicalGroups(db) {
   const groups = new Map();
   for (const row of db
@@ -200,6 +209,7 @@ function logicalGroups(db) {
     )
     .all()) {
     const record = JSON.parse(row.raw_json);
+    if (isCitation(record)) continue;
     const name = normalizedName(record);
     const key = row.entity_id
       ? `entity:${row.entity_id}`
@@ -222,6 +232,11 @@ export function conflictReports(db) {
   for (const [key, rows] of groups) {
     const acrossFiles = new Set(rows.map(({ source_file }) => source_file));
     if (rows.length < 2) continue;
+    // A record nested inside another is not a second opinion about it.
+    const nested = rows.some((row) =>
+      rows.some((other) => other !== row && row.record_path.startsWith(`${other.record_path}.`)),
+    );
+    if (nested) continue;
     const bodies = new Set(rows.map(({ record }) => stableJson(record)));
     if (bodies.size === 1) {
       duplicates.push({

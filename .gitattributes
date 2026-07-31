@@ -1,0 +1,5 @@
+# data/canonical/ is byte-compared against a fresh export by
+# `npm run data:canonical:validate`, so it has to keep LF endings in every
+# working tree. Without this, a Windows checkout rewrites the files to CRLF and
+# every parity run fails on files nobody edited.
+data/canonical/** text eol=lf

@@ -1,9 +1,9 @@
-import { expectedAftershockDamage, expectedCracklingDamage } from "../shared/perks";
+import { expectedAftershockDamage, expectedCracklingDamage } from "../../shared/perks";
 import type { Branch } from "./branch";
 import type { RotationSummary, SimulateOptions } from "./contracts";
-import { advanceTo } from "./clock";
-import type { SimulationRuntime } from "./runtime";
-import { TICK_SECONDS } from "./timing";
+import { advanceTo } from "../runtime/clock";
+import type { SimulationRuntime } from "../runtime/runtime";
+import { TICK_SECONDS } from "../../core/ticks";
 
 /**
  * Horizon completion and result assembly. With a horizon, only events landing

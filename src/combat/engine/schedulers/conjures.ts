@@ -1,5 +1,5 @@
-import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { calculateHit } from "../pipeline/calculateHit";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { calculateHit } from "../../pipeline/calculateHit";
 import {
   COMMAND_SKELETON_LAST_HIT_OFFSET,
   COMMAND_SKELETON_RAAAR_DELAY_TICKS,
@@ -16,11 +16,11 @@ import {
   spiritPoisonPending,
   ZOMBIE_POISON_BAND,
   type ActiveConjure,
-} from "../styles/necromancy/conjures";
-import type { CombatModifier } from "../types";
-import type { ScheduledEvent } from "./events";
-import { recordResolved } from "./resolution";
-import { scheduleEvent, withinHorizon, type SimulationRuntime } from "./runtime";
+} from "../../styles/necromancy/conjures";
+import type { CombatModifier } from "../../types";
+import type { ScheduledEvent } from "../runtime/events";
+import { recordResolved } from "../resolution";
+import { scheduleEvent, withinHorizon, type SimulationRuntime } from "../runtime/runtime";
 
 /**
  * Conjure spirit schedulers: each summon instance owns two tracks (autos, and

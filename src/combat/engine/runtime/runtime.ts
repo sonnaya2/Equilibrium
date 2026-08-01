@@ -1,7 +1,7 @@
-import type { AbilitySpec } from "../pipeline/calculateAbility";
-import type { HitResult } from "../pipeline/calculateHit";
-import type { ConjureId } from "../styles/necromancy/conjures";
-import type { CastContextInput, CastRecord } from "./contracts";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import type { HitResult } from "../../pipeline/calculateHit";
+import type { ConjureId } from "../../styles/necromancy/conjures";
+import type { CastContextInput, CastRecord } from "../simulation/contracts";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { newRotationState, type RotationState } from "./state";
 

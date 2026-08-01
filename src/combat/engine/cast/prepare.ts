@@ -1,25 +1,26 @@
-import type { AbilitySpec } from "../pipeline/calculateAbility";
-import type { CritLayers } from "../core/critical";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import type { CritLayers } from "../../core/critical";
 import {
   isMeleeAbility,
   PUNISH_LOW_HP_MULTIPLIER,
   PUNISH_LOW_HP_THRESHOLD_PCT,
-} from "../styles/melee/abilities";
+} from "../../styles/melee/abilities";
 import {
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
-} from "../styles/melee/effects";
-import { searingWindsBonusPct } from "../styles/ranged/onHit";
-import { isMagicAbility } from "../styles/magic/abilities";
-import { isConcentratedBlast } from "../styles/magic/effects";
-import { animaCharged, RUNIC_EMPOWERMENTS } from "../styles/magic/runicCharge";
-import { resolveNecromancyAbility } from "../styles/necromancy/effects";
-import { spectralScythe3 } from "../styles/necromancy/abilities";
-import { costOf, spendOf } from "./castRules";
-import type { CastSnapshot } from "./resolution";
-import type { SimulationRuntime } from "./runtime";
-import { GLOBAL_COOLDOWN_TICKS, secondsToTicks } from "./timing";
+} from "../../styles/melee/effects";
+import { searingWindsBonusPct } from "../../styles/ranged/onHit";
+import { isMagicAbility } from "../../styles/magic/abilities";
+import { isConcentratedBlast } from "../../styles/magic/effects";
+import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge";
+import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
+import { spectralScythe3 } from "../../styles/necromancy/abilities";
+import { costOf, spendOf } from "./rules";
+import type { CastSnapshot } from "../resolution";
+import type { SimulationRuntime } from "../runtime/runtime";
+import { secondsToTicks } from "../../core/ticks";
+import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state

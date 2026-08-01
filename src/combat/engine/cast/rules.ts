@@ -1,10 +1,10 @@
-import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { isMeleeAbility } from "../styles/melee/abilities";
-import { necroAdrenalineCost, necroCanCast } from "../styles/necromancy/effects";
-import { deathsporeFreeCastActive } from "../styles/ranged/onHit";
-import { impatientProcChance, relentlessProcChance } from "../shared/perks";
-import type { AdrenalineRules } from "./contracts";
-import type { RotationState } from "./state";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { isMeleeAbility } from "../../styles/melee/abilities";
+import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effects";
+import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
+import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
+import type { AdrenalineRules } from "../simulation/contracts";
+import type { RotationState } from "../runtime/state";
 
 /**
  * Cast legality rules. Every function takes the explicit state and candidate

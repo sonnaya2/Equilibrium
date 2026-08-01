@@ -27,7 +27,7 @@ import {
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import { equipmentById } from "@/combat/data";
-import type { AdrenalineRules, ProcRules } from "@/combat/rotation/simulate";
+import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { Loadout } from "./useLoadout";

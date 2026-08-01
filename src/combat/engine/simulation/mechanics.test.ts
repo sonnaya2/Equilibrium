@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { MAGIC_ABILITIES } from "../styles/magic/abilities";
-import { NECROMANCY_ABILITIES } from "../styles/necromancy/abilities";
-import { vulnerabilityModifier } from "../shared/vulnerability";
+import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
+import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
+import { vulnerabilityModifier } from "../../shared/vulnerability";
 import { rotationOf } from "./contracts";
 import { simulate, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";

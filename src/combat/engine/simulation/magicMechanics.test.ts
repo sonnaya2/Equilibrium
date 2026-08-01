@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { MAGIC_ABILITIES } from "../styles/magic/abilities";
-import { NECROMANCY_ABILITIES } from "../styles/necromancy/abilities";
+import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
+import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { rotationOf } from "./contracts";
 import { simulate, type CastRecord, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";

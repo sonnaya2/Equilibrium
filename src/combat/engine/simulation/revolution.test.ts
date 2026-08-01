@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { combatRevolutionBars, abilityById } from "../data";
-import type { RevolutionBarRecord } from "../data/records";
-import { resolveBar, specFromRecord } from "../data/specs";
-import { MAGIC_ABILITIES } from "../styles/magic/abilities";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
-import { RANGED_ABILITIES } from "../styles/ranged/abilities";
+import { combatRevolutionBars, abilityById } from "../../data";
+import type { RevolutionBarRecord } from "../../data/records";
+import { resolveBar, specFromRecord } from "../../data/specs";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
+import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { NECROMANCY_ABILITIES, volleyOfSouls } from "../../styles/necromancy/abilities";
+import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
 import { rotationOf } from "./contracts";
 import { simulateRevolution } from "./revolution";
 import { simulate } from "./simulate";
-import { secondsToTicks, TICK_SECONDS } from "./timing";
+import { secondsToTicks, TICK_SECONDS } from "../../core/ticks";
 
 function required<T>(value: T | null | undefined, label: string): T {
   if (value == null) throw new Error(label);

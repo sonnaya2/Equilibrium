@@ -1,12 +1,12 @@
-import type { CritLayers } from "../core/critical";
-import { mulFloor } from "../core/rounding";
-import { MODERNISATION_PATCH_2, MODERNISATION_WIKI } from "../data/sources";
-import type { AbilityHit, AbilitySpec } from "../pipeline/calculateAbility";
-import { calculateHit } from "../pipeline/calculateHit";
-import { BERSERK_DAMAGE_MULTIPLIER } from "../styles/melee/bloodlust";
-import { CHAOS_ROAR_DAMAGE_MULTIPLIER } from "../styles/melee/abilities";
-import { FURY_CRIT_CHANCE_BONUS } from "../styles/melee/effects";
-import { deathsSwiftnessMultiplier } from "../styles/ranged/effects";
+import type { CritLayers } from "../../core/critical";
+import { mulFloor } from "../../core/rounding";
+import { MODERNISATION_PATCH_2, MODERNISATION_WIKI } from "../../data/sources";
+import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
+import { calculateHit } from "../../pipeline/calculateHit";
+import { BERSERK_DAMAGE_MULTIPLIER } from "../../styles/melee/bloodlust";
+import { CHAOS_ROAR_DAMAGE_MULTIPLIER } from "../../styles/melee/abilities";
+import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
+import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
 import {
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
@@ -16,25 +16,25 @@ import {
   sunshineActive,
   SUNSHINE_DAMAGE_MULTIPLIER,
   SUNSHINE_SOURCE,
-} from "../styles/magic/effects";
-import { burnActive, DRAGON_BREATH_COMBUST_BONUS_PCT } from "../styles/magic/burn";
+} from "../../styles/magic/effects";
+import { burnActive, DRAGON_BREATH_COMBUST_BONUS_PCT } from "../../styles/magic/burn";
 import {
   extendSearingWinds,
   onRangedHit,
   SEARING_WINDS_BONUS_HIT_PCT,
   shadowImbuedAdrenalinePerHit,
-} from "../styles/ranged/onHit";
+} from "../../styles/ranged/onHit";
 import {
   COMMAND_REQUIRES_CONJURE,
   CONJURE_DAMAGE_POTENTIAL,
   conjureEligibleModifiers,
   skeletonCommandHitLanded,
   skeletonRageMult,
-} from "../styles/necromancy/conjures";
-import type { CombatModifier, SourceReference } from "../types";
-import type { ResolvedDamage, ScheduledEvent } from "./events";
-import type { SimulationRuntime } from "./runtime";
-import { gainAdrenaline, patchRanged } from "./state";
+} from "../../styles/necromancy/conjures";
+import type { CombatModifier, SourceReference } from "../../types";
+import type { ResolvedDamage, ScheduledEvent } from "../runtime/events";
+import type { SimulationRuntime } from "../runtime/runtime";
+import { gainAdrenaline, patchRanged } from "../runtime/state";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 function buffMultiplier(id: string, multiplier: number, source: SourceReference): CombatModifier {

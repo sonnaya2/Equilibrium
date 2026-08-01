@@ -1,9 +1,9 @@
-import type { CritLayers } from "../core/critical";
-import type { HitCapRule } from "../core/hitCaps";
-import type { AbilityResult, AbilitySpec } from "../pipeline/calculateAbility";
-import type { CombatContext, CombatModifier } from "../types";
-import type { ResolvedEvent } from "./events";
-import type { RotationState } from "./state";
+import type { CritLayers } from "../../core/critical";
+import type { HitCapRule } from "../../core/hitCaps";
+import type { AbilityResult, AbilitySpec } from "../../pipeline/calculateAbility";
+import type { CombatContext, CombatModifier } from "../../types";
+import type { ResolvedEvent } from "../runtime/events";
+import type { RotationState } from "../runtime/state";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {

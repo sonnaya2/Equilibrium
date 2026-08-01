@@ -1,9 +1,9 @@
 import type { CastContext, CastContextInput } from "./contracts";
-import { advanceTo } from "./clock";
-import { costOf, performCast, performOffGcdCast } from "./cast";
-import { createRuntime } from "./runtime";
+import { advanceTo } from "../runtime/clock";
+import { costOf, performCast, performOffGcdCast } from "../cast";
+import { createRuntime } from "../runtime/runtime";
 import { finish } from "./summary";
-import { firstLegalTick } from "./state";
+import { firstLegalTick } from "../runtime/state";
 
 /**
  * Build one simulation's runtime and expose it as the canonical CastContext

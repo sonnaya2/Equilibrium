@@ -1,15 +1,15 @@
-import { critProbability } from "../core/critical";
-import type { AbilityHit } from "../pipeline/calculateAbility";
-import { instabilityActive, LIGHTNING_SURGE_TICK_DELAY } from "../styles/magic/effects";
+import { critProbability } from "../../core/critical";
+import type { AbilityHit } from "../../pipeline/calculateAbility";
+import { instabilityActive, LIGHTNING_SURGE_TICK_DELAY } from "../../styles/magic/effects";
 import {
   COMMAND_REQUIRES_CONJURE,
   COMMAND_SKELETON_EXPIRY_TAIL_TICKS,
-} from "../styles/necromancy/conjures";
-import { isNecromancyAbility } from "../styles/necromancy/abilities";
-import type { PreparedCast } from "./castPreparation";
-import type { CastRecord } from "./contracts";
-import { resolveCastHit, resolveDerivedHit, resolveLightningSurge } from "./resolution";
-import { scheduleEvent, type SimulationRuntime } from "./runtime";
+} from "../../styles/necromancy/conjures";
+import { isNecromancyAbility } from "../../styles/necromancy/abilities";
+import type { PreparedCast } from "./prepare";
+import type { CastRecord } from "../simulation/contracts";
+import { resolveCastHit, resolveDerivedHit, resolveLightningSurge } from "../resolution";
+import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 
 /**
  * Damage-event construction for one prepared cast: sequence allocation, the

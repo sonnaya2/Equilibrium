@@ -1,4 +1,4 @@
-import { secondsToTicks } from "../../rotation/timing";
+import { secondsToTicks } from "../../core/ticks";
 import { MODERNISATION_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 

@@ -2,19 +2,19 @@ import {
   activateBerserk,
   BERSERK_DURATION_SECONDS,
   spendBloodlust,
-} from "../styles/melee/bloodlust";
+} from "../../../styles/melee/bloodlust";
 import {
   BLEED_CHAIN_RECAST_WINDOW_TICKS,
   CHAOS_ROAR_DURATION_SECONDS,
   GREATER_FURY_CRIT_WINDOW_SECONDS,
   isMeleeAbility,
-} from "../styles/melee/abilities";
+} from "../../../styles/melee/abilities";
 import {
   GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS,
   METEOR_STRIKE_BASIC_ADREN_MULTIPLIER,
   METEOR_STRIKE_DURATION_SECONDS,
-} from "../styles/melee/effects";
-import { activateDeathsSwiftness } from "../styles/ranged/effects";
+} from "../../../styles/melee/effects";
+import { activateDeathsSwiftness } from "../../../styles/ranged/effects";
 import {
   activateInstability,
   activateSunshine,
@@ -27,27 +27,27 @@ import {
   isConcentratedBlast,
   RUNIC_FLOW_BONUS,
   SONIC_FLOW_REDUCTION,
-} from "../styles/magic/effects";
-import { applyCombust } from "../styles/magic/burn";
+} from "../../../styles/magic/effects";
+import { applyCombust } from "../../../styles/magic/burn";
 import {
   activateSearingWinds,
   activateShadowImbued,
   extendShadowImbued,
   spendDeathspore,
-} from "../styles/ranged/onHit";
-import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../shared/perks";
-import { animaCharged, consumeAnima } from "../styles/magic/runicCharge";
-import { isMagicAbility } from "../styles/magic/abilities";
-import { applyNecroOnCast, deathSkullsCooldownTicks } from "../styles/necromancy/effects";
+} from "../../../styles/ranged/onHit";
+import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
+import { animaCharged, consumeAnima } from "../../../styles/magic/runicCharge";
+import { isMagicAbility } from "../../../styles/magic/abilities";
+import { applyNecroOnCast, deathSkullsCooldownTicks } from "../../../styles/necromancy/effects";
 import {
   COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS,
   CONJURE_ABILITY_SUMMONS,
   conjureActive,
-} from "../styles/necromancy/conjures";
-import type { PreparedCast } from "./castPreparation";
-import { applySkeletonCommand, scheduleSpiritTracks } from "./conjureScheduler";
-import type { CastRng } from "./contracts";
-import type { SimulationRuntime } from "./runtime";
+} from "../../../styles/necromancy/conjures";
+import type { PreparedCast } from "../prepare";
+import { applySkeletonCommand, scheduleSpiritTracks } from "../../schedulers/conjures";
+import type { CastRng } from "../../simulation/contracts";
+import type { SimulationRuntime } from "../../runtime/runtime";
 import {
   clearCooldowns,
   gainAdrenaline,
@@ -55,8 +55,8 @@ import {
   patchRanged,
   spendAdrenaline,
   startCooldown,
-} from "./state";
-import { secondsToTicks } from "./timing";
+} from "../../runtime/state";
+import { secondsToTicks } from "../../../core/ticks";
 
 /**
  * Every state transition of one atomic cast, in sourced order. Mechanic

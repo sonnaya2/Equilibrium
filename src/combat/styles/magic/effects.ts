@@ -1,4 +1,4 @@
-import { secondsToTicks } from "../../rotation/timing";
+import { secondsToTicks } from "../../core/ticks";
 import { BLOOMING_BURROW_WIKI_2026_03_30 } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import { newBurns, type BurnState } from "./burn";

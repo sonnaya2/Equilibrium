@@ -1,7 +1,7 @@
-import { endBerserk } from "../styles/melee/bloodlust";
-import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../styles/melee/effects";
-import { processSpiritEvent } from "./conjureScheduler";
-import { recordResolved } from "./resolution";
+import { endBerserk } from "../../styles/melee/bloodlust";
+import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
+import { processSpiritEvent } from "../schedulers/conjures";
+import { recordResolved } from "../resolution";
 import { gainAdrenaline } from "./state";
 import type { SimulationRuntime } from "./runtime";
 

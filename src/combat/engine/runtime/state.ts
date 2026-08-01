@@ -1,4 +1,4 @@
-import { gainBloodlust, newBloodlust, type BloodlustState } from "../styles/melee/bloodlust";
+import { gainBloodlust, newBloodlust, type BloodlustState } from "../../styles/melee/bloodlust";
 import {
   newInstability,
   newMagicFx,
@@ -6,7 +6,7 @@ import {
   type InstabilityState,
   type MagicFxState,
   type SunshineState,
-} from "../styles/magic/effects";
+} from "../../styles/magic/effects";
 import {
   newDeathspore,
   newSearingWinds,
@@ -14,11 +14,11 @@ import {
   type DeathsporeState,
   type SearingWindsState,
   type ShadowImbuedState,
-} from "../styles/ranged/onHit";
-import { newDeathsSwiftness, type DeathsSwiftnessState } from "../styles/ranged/effects";
-import { newRunicCharge, type RunicChargeState } from "../styles/magic/runicCharge";
-import { newNecroRotationState, type NecroRotationState } from "../styles/necromancy/effects";
-import { newConjures, type ConjureState } from "../styles/necromancy/conjures";
+} from "../../styles/ranged/onHit";
+import { newDeathsSwiftness, type DeathsSwiftnessState } from "../../styles/ranged/effects";
+import { newRunicCharge, type RunicChargeState } from "../../styles/magic/runicCharge";
+import { newNecroRotationState, type NecroRotationState } from "../../styles/necromancy/effects";
+import { newConjures, type ConjureState } from "../../styles/necromancy/conjures";
 
 export type { NecroRotationState, ConjureState };
 export const ADRENALINE_CAP = 100;

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { RANGED_ABILITIES } from "../styles/ranged/abilities";
-import { rotationOf } from "./contracts";
-import { simulate, type SimulateInput } from "./simulate";
-import { createCastContext } from "./simulate";
+import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import { rotationOf } from "../simulation/contracts";
+import { simulate, type SimulateInput } from "../simulation/simulate";
+import { createCastContext } from "../simulation/simulate";
 
 /**
  * Regression coverage for the cast-branch preparation boundary: future-tick

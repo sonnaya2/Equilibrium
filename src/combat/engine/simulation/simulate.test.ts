@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { RANGED_ABILITIES } from "../styles/ranged/abilities";
-import { MAGIC_ABILITIES } from "../styles/magic/abilities";
+import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import {
   DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS,
   NECROMANCY_ABILITIES,
   volleyOfSouls,
-} from "../styles/necromancy/abilities";
-import { mulFloor } from "../core/rounding";
-import { MODERNISATION_WIKI } from "../data/sources";
-import type { CombatModifier } from "../types";
+} from "../../styles/necromancy/abilities";
+import { mulFloor } from "../../core/rounding";
+import { MODERNISATION_WIKI } from "../../data/sources";
+import type { CombatModifier } from "../../types";
 import { rotationOf } from "./contracts";
 import { simulate, type CastRecord, type RotationSummary, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";

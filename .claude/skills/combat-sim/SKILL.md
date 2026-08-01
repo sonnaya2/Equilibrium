@@ -1,0 +1,221 @@
+---
+name: combat-sim
+description: RS3 Rotation and Revolution simulation semantics for this repo: tick advancement, cast legality, channels, event provenance, per-hit effects, resource and cooldown clocks, state-changing RNG, sequences, conjure scheduling, and horizon accounting. Use before writing, reviewing, or debugging src/combat/rotation/, style on-cast state, scheduled combat events, or any Quick, Rotation, or Revolution result whose timing or state looks wrong.
+---
+
+# Combat simulation semantics
+
+This skill owns **when combat events happen and what state survives between them**.
+
+`combat-math` owns what a hit's damage is: Damage Potential, DPL, crit layers, hit caps, modifier ordering, and rounding. `league-blessings` owns revealed blessing facts, support status, and the routing decision for each blessing effect. Ability and equipment data own sourced mechanic values such as durations, stack thresholds, hit offsets, and cooldowns.
+
+This document describes the simulator's target semantics, not whichever buggy behavior happens to exist today. Fix code to match the rules; do not weaken the rules to preserve a defect.
+
+## Verification and support status
+
+Do not promote the current implementation, a tooltip, or a bug report into mechanical truth.
+
+For exact tick timings, stack counts, trigger scope, cooldown behavior, or effect ordering, follow the source hierarchy and verification rules in `combat-math`. Record provisional assumptions and test them at their boundary. Do not duplicate volatile numeric tables in this skill.
+
+When simulator support is exposed to users, use the same honesty labels as the blessing domain where applicable:
+
+- `modeled` — all mechanics relevant to the shown result are implemented;
+- `partially modeled` — a meaningful component is missing or excluded;
+- `not modeled` — displayed but excluded from calculated totals or cast logic;
+- `mechanics unverified` — implemented behavior depends on a provisional interpretation.
+
+Never label a result complete while a known mechanic can change its damage, timing, resource state, or future cast legality.
+
+## State model
+
+`RotationState` is the complete simulation state. Do not hide combat state in module globals, mutable singletons, UI components, or callbacks with undocumented captured state.
+
+Use the repository's established state idioms:
+
+- `state.tick` is the next tick on which the actor may begin another cast;
+- per-ability cooldown readiness lives in the cooldown state and is combined with cast availability by `firstLegalTick` or its canonical replacement;
+- expiring effects use explicit clocks such as `*UntilTick` rather than parallel booleans and ad hoc timers;
+- per-style state mutates through its existing helpers so caps, spending, and invariants stay centralized.
+
+Unless a sourced mechanic requires different treatment, timed windows are half-open: active from their start tick while `currentTick < untilTick`, and inactive at `untilTick`. Boundary behavior must be covered by tests.
+
+The same input, ruleset, and RNG method must produce the same event log and result. Same-tick event ordering must be explicit and stable; never depend on object-key, map, or incidental insertion order.
+
+## Canonical tick advancement
+
+Time advances through one canonical path. `advanceTo(targetTick)` or its equivalent must:
+
+1. process scheduled events in chronological and stable same-tick order;
+2. apply passive resource generation and other time-based state changes due by the target tick;
+3. expire clocks at their defined boundaries;
+4. stop with state representing the target tick before affordability and requirement checks are finalized.
+
+Do not inspect a future cast against stale pre-advance resources. Waiting may generate adrenaline, expire a lockout, advance a sequence, or change another requirement.
+
+Do not implement separate partial advancement paths for manual rotations, Revolution, Quick estimates, conjures, or league effects. They must share the same clock semantics.
+
+## Atomic cast transitions
+
+A cast is one atomic state transition. The canonical order is:
+
+1. determine the earliest candidate tick from GCD or cast occupancy and ability cooldowns;
+2. advance the simulator to that tick;
+3. re-check requirements, target conditions, and affordability against the advanced state;
+4. resolve any empowered variant and consume its resources in the same transition;
+5. start cooldown and cast occupancy;
+6. schedule hits, channels, damage-over-time events, and other delayed effects with provenance;
+7. apply immediate on-cast grants or windows in their sourced order.
+
+A rejected cast must not leave partial mutations. An empowered cast must not resolve without its spend. After a spender consumes a capped resource, the next spender remains unempowered until the resource is rebuilt.
+
+Bloodlust, Deathspore, Necrosis, Residual Souls, Runic Charge, ammo effects, and league-specific state all follow this rule through their own helpers. Do not special-case them in the outer rotation loop.
+
+## Cast occupancy, GCD, and channels
+
+GCD, cast occupancy, cooldown, and hit timing are separate concepts.
+
+Every channelled ability must declare:
+
+- total channel or occupancy duration;
+- hit offsets within that duration;
+- whether and how it can be cancelled;
+- what happens to unlanded hits after cancellation.
+
+Revolution completes channels. Manual simulation also completes them by default. Cancellation exists only when the caller supplies an explicit cancellation point; all later channel events are then removed or marked cancelled. Never award a full channel while advancing the actor by only one GCD.
+
+A hit scheduled beyond the reporting horizon does not count as landed damage merely because its cast began inside the horizon.
+
+## Event provenance and per-hit scope
+
+Every damaging or state-changing event must preserve enough provenance to answer:
+
+- which cast or scheduler created it;
+- whether it is a real hit, attached damage component, proc, damage-over-time tick, bounce, conjure auto, or command hit;
+- its hit index and scheduled tick;
+- which modifiers and proc families it may trigger;
+- whether it inherits crit or other state from a source event;
+- whether it may recursively create another event of the same family.
+
+Next-hit effects are consumed by the first eligible landed hit, not applied to an entire ability before per-hit resolution. Multi-hit abilities, channels, bounces, and damage-over-time must evaluate eligibility at event scope.
+
+Derived events inherit crit state or other source properties only when the mechanic explicitly says so. Do not assume all tails, bounces, or bonus components are independent, and do not assume they are correlated without a source.
+
+## Hit-count integrity
+
+One `AbilityHit` or equivalent hit event represents one real proc-eligible hit.
+
+Damage added to an existing hit remains an attached component unless the mechanic explicitly creates a separate hit. Attached damage must not inflate:
+
+- on-hit proc rolls;
+- stack generation;
+- adrenaline generation;
+- hit counters;
+- effect extension counts.
+
+A separate-hit mechanic must be represented as a separate event with explicit crit, hit-cap, target-modifier, recursion, and proc-eligibility rules.
+
+## RNG policy
+
+Do not flatten all randomness into expected damage.
+
+Use deterministic expected value only when the random outcome changes damage but does **not** change future state, event topology, or cast legality.
+
+Use probability-weighted state branching when randomness changes any of the following:
+
+- adrenaline or another spendable resource;
+- cooldowns or active windows;
+- stack state;
+- scheduled future events;
+- target state used by later mechanics;
+- future cast requirements or legality.
+
+Merge equivalent states to control growth. Use seeded Monte Carlo only when exact branching is unreasonably expensive. Any approximation must expose its method and assumptions in tests and result metadata.
+
+## Resource clocks and lockouts
+
+A timed resource mechanic owns all state required to model its lifecycle. A typical clocked resource may need:
+
+- current stacks or charges;
+- an active-spend or free-cast window;
+- a rebuild lockout or proc cooldown;
+- an expiration tick;
+- provenance for the event that granted or consumed it.
+
+Keep these fields together in the appropriate style or effect state. Do not represent one lifecycle across unrelated booleans, cooldown maps, and local variables.
+
+Clocks are checked after canonical time advancement. Spending, conversion, and lockout start happen atomically. Stack generation while a sourced lockout is active must be rejected by the state helper, not merely hidden in the UI.
+
+## Sequences and target-dependent mechanics
+
+Enable chains are explicit state machines. Store the current stage, the event or cast that granted it, and its expiration tick. A follow-up without its live predecessor is rejected or skipped according to the rotation mode; it is never silently treated as legal.
+
+Mechanics that depend on target HP%, weakness, size, poisonability, incoming attacks, or another target property require that state in the simulation input. When the required context is unavailable, mark the mechanic partially modeled or not modeled instead of inventing a default that changes the result.
+
+## Conjure and auxiliary schedulers
+
+Conjures, companions, damage-over-time sources, and similar autonomous actors use the same event queue but own their own scheduler state.
+
+A command that pauses, replaces, delays, or resets an autonomous attack schedule must mutate that scheduler. The command and normal auto schedule do not run concurrently unless the sourced mechanic explicitly allows it.
+
+Keep global combat modifiers separate from cast-specific modifiers. Event provenance determines which modifiers apply; the presence of a command or scheduler callback must not erase unrelated global effects.
+
+Damage formulas, accuracy treatment, and sourced hit values remain in `combat-math` and combat data. This skill owns only their scheduling and state interaction.
+
+## Horizon semantics
+
+The canonical DPS metric is **landed damage within the horizon**:
+
+- process casts, channel hits, damage-over-time ticks, procs, conjure events, and delayed tails only through `horizonTicks`;
+- do not drain the remaining lifetime of a conjure, channel, or damage-over-time effect after the horizon;
+- divide only the damage that actually landed within the measured interval by that interval.
+
+A second metric, **damage from casts begun within the horizon**, may include later tails only when explicitly requested. It must be separately named and must never be presented as fixed-window DPS.
+
+## League effect routing
+
+Follow `league-blessings` rather than inventing a parallel lettered routing taxonomy.
+
+- Derived inputs and resolver overrides enter shared combat or loadout context.
+- Per-hit or per-attack blessing damage uses the event and provenance model.
+- Effects that alter adrenaline, cooldowns, active windows, stacks, or future legality enter simulation state.
+- Effects outside outgoing-damage simulation remain displayed but excluded from totals.
+
+Nothing league-specific is baked into base formulas or unconditional simulator state. With the league ruleset and loadout omitted, base-game output, event order, and cast sequence must remain unchanged.
+
+## Implementation workflow
+
+Before changing simulation code:
+
+1. identify whether the mechanic belongs to hit math, event scheduling, persistent state, league routing, or unsupported target/incoming-combat context;
+2. verify its timings, trigger scope, and ordering rather than inferring them from tooltip prose;
+3. define the state fields, clocks, event provenance, and boundary behavior;
+4. write a regression test named for the intended behavior, not a bug number;
+5. implement through the canonical advancement, cast, state-helper, and event paths;
+6. compare the event log and state snapshots before trusting only the final damage total.
+
+Keep bug inventories and temporary backlogs outside this skill. They change; these invariants should not.
+
+## Test requirements
+
+Every simulator change needs focused state and event assertions, not only an aggregate DPS snapshot.
+
+Use relevant cases including:
+
+- GCD versus longer cast occupancy;
+- channel completion and explicit cancellation;
+- single-hit, multi-hit, bounce, and damage-over-time events;
+- first-hit versus per-hit consumption;
+- attached damage versus a true separate hit;
+- resource generation exactly at the ready tick;
+- stack spend, expiry, rebuild, and lockout boundaries;
+- sequence success, missing predecessor, and expiration;
+- simultaneous events with deterministic ordering;
+- state-neutral expected value versus state-changing RNG branches;
+- autonomous scheduler plus command interaction;
+- events landing exactly before, at, and after the horizon;
+- ruleset `"base"` versus `"equilibrium"`;
+- unsupported or provisional mechanics excluded or labeled honestly.
+
+Base-ruleset fixtures must remain identical when league modifiers are absent.
+
+Run `npm run typecheck`, `npm test`, and `npm run build` before claiming a simulator change works. Run rendered or end-to-end verification when the change affects user-visible support labels, rotation controls, or reported metrics.

@@ -1,8 +1,7 @@
 "use client";
 
-import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { NumberField } from "./NumberField";
-import { loadoutDamageLevel, loadoutWeaponTier } from "./loadoutStats";
+import { computedLoadoutBase } from "./loadoutStats";
 import { withAttackLevel, withStrengthLevel, withStyleLevel, type Loadout } from "./useLoadout";
 
 /** Manual combat stats feeding the engine until per-item bonuses are sourced. */
@@ -50,16 +49,7 @@ export function StatsPanel({
         <div className="flex justify-end border-b border-stone-750/70 py-1.5">
           <button
             type="button"
-            onClick={() =>
-              setLoadout({
-                ...loadout,
-                base: baseAbilityDamage(loadoutDamageLevel(loadout), {
-                  kind: "twohand",
-                  weapon: { tier: loadoutWeaponTier(loadout) },
-                  style: loadout.style,
-                }),
-              })
-            }
+            onClick={() => setLoadout({ ...loadout, base: computedLoadoutBase(loadout) })}
             className="combat-button border border-stone-750 px-2 py-1 text-xs text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
           >
             Compute from level + tier

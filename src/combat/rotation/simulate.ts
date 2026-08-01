@@ -261,7 +261,7 @@ export function createCastContext(
       const landTick = Math.max(0, Math.floor(denomTicks / 2));
       damageByTick[landTick] = (damageByTick[landTick] ?? 0) + crackling;
     }
-    // Aftershock: floor(abilityDmg/50k) capped by H/6s; hit = 0.4 * rank * base.
+    // Aftershock: floor(abilityDmg/50k) capped by H/6s; hit = 0.318 * rank * base (PvM avg).
     const aftershock = expectedAftershockDamage(
       input.procs?.aftershockRank ?? 0,
       input.base,
@@ -452,10 +452,12 @@ export function createCastContext(
       endTick = Math.max(endTick, landTick + 1);
     });
 
+    // Lightning Surge fires only while the Instability buff is active (wiki) — the
+    // granting cast's own hits predate the buff and never fire a surge.
     const procInstability =
       ability.style === "magic" &&
       working.hits.length > 0 &&
-      (instabilityActive(state.instability, readyTick) || ability.appliesEffect === "instability");
+      instabilityActive(state.instability, readyTick);
     if (procInstability) {
       const surgeHit = calculateHit({
         base: input.base,

@@ -91,8 +91,8 @@ describe("shared/perks", () => {
     expect(expectedCracklingDamage(4, 1000, 0)).toBe(0);
   });
 
-  it("Aftershock EV is min(floor(dmg/50k), floor(H/6)) × 0.4 × rank × base", () => {
-    expect(expectedAftershockDamage(1, 1000, 100_000, 12)).toBeCloseTo(800, 10);
+  it("Aftershock EV is min(floor(dmg/50k), floor(H/6)) × 0.318 × rank × base (PvM avg)", () => {
+    expect(expectedAftershockDamage(1, 1000, 100_000, 12)).toBeCloseTo(636, 10);
     expect(expectedAftershockDamage(1, 1000, 100_000, 5)).toBe(0);
     expect(expectedAftershockDamage(1, 1000, 49_999, 60)).toBe(0);
     expect(expectedAftershockDamage(0, 1000, 100_000, 12)).toBe(0);

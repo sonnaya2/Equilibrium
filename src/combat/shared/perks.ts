@@ -258,16 +258,18 @@ export function expectedCracklingDamage(
 }
 
 /**
- * Aftershock: after 50_000 damage, AoE up to ~40% AD per rank (wiki table caps slightly lower).
- * Max rank 4; min 6s between procs. Full table is rotation-sim territory - constant only.
+ * Aftershock: after 50_000 damage, AoE averaging 31.8% AD per rank (PvM wiki table:
+ * 31.8 / 63.6 / 95.4 / 127.2% — the tooltip "up to 40%/rank" caps lower).
+ * https://runescape.wiki/w/Aftershock (verified 2026-07-31).
+ * Max rank 4; min 6s between procs.
  */
 export const AFTERSHOCK_DAMAGE_THRESHOLD = 50_000;
-export const AFTERSHOCK_MAX_AD_FRACTION_PER_RANK = 0.4;
+export const AFTERSHOCK_AVG_AD_FRACTION_PER_RANK = 0.318;
 export const AFTERSHOCK_MIN_PROC_INTERVAL_SECONDS = 6;
 
 /**
  * EV Aftershock over a horizon from ability damage only (not recursive on proc damage).
- * procs = min(floor(abilityDamage / 50k), floor(H / 6s)); hit = 0.4 * rank * base.
+ * procs = min(floor(abilityDamage / 50k), floor(H / 6s)); hit = 0.318 * rank * base.
  * Rank 0 / non-positive inputs => 0.
  */
 export function expectedAftershockDamage(
@@ -285,7 +287,7 @@ export function expectedAftershockDamage(
     Math.floor(horizonSeconds / AFTERSHOCK_MIN_PROC_INTERVAL_SECONDS),
   );
   if (procs <= 0) return 0;
-  return procs * AFTERSHOCK_MAX_AD_FRACTION_PER_RANK * rank * base;
+  return procs * AFTERSHOCK_AVG_AD_FRACTION_PER_RANK * rank * base;
 }
 
 /** Impatient: 9% chance per rank for basics to grant +3 adrenaline (base 9 -> 12). Max 4. */

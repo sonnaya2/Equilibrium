@@ -2,14 +2,31 @@ import { describe, expect, it } from "vitest";
 import { baseCritDamageMultiplier, critProbability, rollsCrit } from "./critical";
 
 describe("critical", () => {
-  it("reaches +50% crit damage at level 90 and holds past it", () => {
-    expect(baseCritDamageMultiplier(90)).toBeCloseTo(1.5);
-    expect(baseCritDamageMultiplier(120)).toBeCloseTo(1.5);
+  it("follows the sourced stepwise progression (wiki, verified 2026-07-31)", () => {
+    const expected: [level: number, multiplier: number][] = [
+      [1, 1.1],
+      [19, 1.1],
+      [20, 1.15],
+      [29, 1.15],
+      [30, 1.2],
+      [39, 1.2],
+      [40, 1.25],
+      [59, 1.3],
+      [60, 1.35],
+      [79, 1.4],
+      [80, 1.45],
+      [89, 1.45],
+      [90, 1.5],
+    ];
+    for (const [level, multiplier] of expected) {
+      expect(baseCritDamageMultiplier(level), `level ${level}`).toBeCloseTo(multiplier);
+    }
   });
 
-  it("interpolates below 90 (derived shape, flagged in-module)", () => {
-    expect(baseCritDamageMultiplier(45)).toBeCloseTo(1.25);
-    expect(baseCritDamageMultiplier(0)).toBeCloseTo(1);
+  it("caps at +50% from 90, including boosted levels past 90", () => {
+    expect(baseCritDamageMultiplier(90)).toBeCloseTo(1.5);
+    expect(baseCritDamageMultiplier(91)).toBeCloseTo(1.5);
+    expect(baseCritDamageMultiplier(120)).toBeCloseTo(1.5);
   });
 
   it("stacks ability crit-damage bonuses on top of base", () => {

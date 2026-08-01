@@ -126,7 +126,7 @@ describe("simulate — Crackling / Aftershock EV procs", () => {
     expect(s.damageByTick[50]).toBeCloseTo(2000, 5);
   });
 
-  it("Aftershock: 100k ability damage, rank 1, base 1000 → 2 procs × 400 = 800 when H allows", () => {
+  it("Aftershock: 100k ability damage, rank 1, base 1000 → 2 procs × 318 = 636 when H allows", () => {
     const n = 84;
     const s = simulate({
       ...baseInput,
@@ -136,8 +136,8 @@ describe("simulate — Crackling / Aftershock EV procs", () => {
     expect(s.ok).toBe(true);
     const abilityExpected = n * 1200;
     expect(abilityExpected).toBeGreaterThanOrEqual(100_000);
-    expect(s.perAbility.aftershock).toBeCloseTo(800, 5);
-    expect(s.totalExpected).toBeCloseTo(abilityExpected + 800, 5);
+    expect(s.perAbility.aftershock).toBeCloseTo(636, 5);
+    expect(s.totalExpected).toBeCloseTo(abilityExpected + 636, 5);
   });
 
   it("Aftershock does not recurse on Crackling damage", () => {
@@ -683,14 +683,18 @@ describe("simulate — magic", () => {
       (cast) => cast.abilityId === "instability",
       "Missing crit Instability cast",
     );
-    expect(instCrit.result.expected).toBeGreaterThan(1300 * 1.4); // well above non-crit cast
+    // The granting cast's own hit predates the buff: it crits but fires no surge.
+    expect(instCrit.result.expected).toBeCloseTo(1950); // 120-140% band × 1.5 crit
+    expect(allCrit.damageByTick[instCrit.tick + 1]).toBeUndefined();
+
+    // A magic hit while the buff is active fires a surge 1 tick after the source hit.
     const followCrit = findCast(
       allCrit,
       (cast) => cast.abilityId === "magic_attack" && cast.tick > instCrit.tick,
       "Missing crit follow-up magic attack",
     );
-    expect(followCrit.result.expected).toBeGreaterThan(1000);
-    expect(allCrit.damageByTick[instCrit.tick + 1]).toBeGreaterThan(0);
+    expect(followCrit.result.expected).toBeCloseTo(2700); // 1500 crit hit + 1200 surge EV
+    expect(allCrit.damageByTick[followCrit.tick + 1]).toBeCloseTo(1200);
   });
 });
 

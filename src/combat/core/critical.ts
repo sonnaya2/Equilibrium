@@ -9,11 +9,17 @@ import type { SourceReference } from "../types";
 export const BASE_CRIT_DAMAGE_AT_90 = 0.5;
 export const CRIT_DAMAGE_LEVEL_ANCHOR = 90;
 
-const BASE_CRIT_SOURCE: SourceReference = {
+/**
+ * Base crit damage is sourced stepwise, not interpolated (wiki, 4 Mar 2024 update):
+ * +10% at levels 1–19, +5% per further 10 levels, capped at +50% from 90 —
+ * boosted levels past 90 stay at +50%.
+ * https://runescape.wiki/w/Critical_strike (verified 2026-07-31)
+ */
+export const BASE_CRIT_DERIVATION: SourceReference = {
   source: "runescape-wiki",
-  url: "https://runescape.wiki/w/Combat_Style_Modernisation",
-  title: "Combat Style Modernisation",
-  verifiedAt: "2026-07-24",
+  url: "https://runescape.wiki/w/Critical_strike",
+  title: "Critical strike",
+  verifiedAt: "2026-07-31",
 };
 
 export interface CritLayers {
@@ -28,23 +34,14 @@ export interface CritLayers {
 }
 
 /**
- * Base crit damage multiplier at a style level. The +50% at 90 anchor is verified;
- * the pre-90 shape is a linear interpolation marked derived — replace with the Wiki
- * curve when sourced. Derived values are never presented as verified.
+ * Base crit damage multiplier at a style level: stepwise per BASE_CRIT_DERIVATION.
+ * damageBonus stacks on top as its own layer.
  */
 export function baseCritDamageMultiplier(level: number, damageBonus = 0): number {
   if (!Number.isFinite(level) || level < 0) throw new RangeError(`crit: bad level ${level}`);
-  const progression = Math.min(level / CRIT_DAMAGE_LEVEL_ANCHOR, 1);
-  return 1 + BASE_CRIT_DAMAGE_AT_90 * progression + damageBonus;
+  const step = Math.max(1, Math.floor(level / 10));
+  return 1 + Math.min(BASE_CRIT_DAMAGE_AT_90, 0.05 * (step + 1)) + damageBonus;
 }
-
-export const BASE_CRIT_DERIVATION: SourceReference = {
-  source: "derived",
-  url: "https://runescape.wiki/w/Combat_Style_Modernisation",
-  title: "Pre-90 crit damage shape: linear to the verified level-90 anchor",
-  verifiedAt: "2026-07-24",
-  derivedFrom: [BASE_CRIT_SOURCE],
-};
 
 export function rollsCrit(layers: CritLayers, roll: number): boolean {
   if (layers.eligible === false) return false;

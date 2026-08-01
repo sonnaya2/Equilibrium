@@ -44,8 +44,8 @@ export { equippedSetCounts, setEffectsSummary };
 export interface CalcStats {
   base: number;
   /**
-   * Level feeding crit damage (and base AD when computed). Strength for melee;
-   * style level for Ranged / Magic / Necromancy.
+   * Level feeding the crit damage layer. Strength for melee; style level for
+   * Ranged / Magic / Necromancy. Base AD uses loadoutEffectiveDamageLevel.
    */
   level: number;
   /** Level feeding playerAccuracy when the target model is active. */
@@ -161,13 +161,64 @@ export function loadoutDamageLevel(loadout: Loadout): number {
   return clampLevel(loadout.style === "melee" ? loadout.strengthLevel : loadout.level);
 }
 
+function loadoutOverloadTier(loadout: Loadout): OverloadTier | null {
+  return loadout.buffs?.overload && loadout.buffs.overload !== "none"
+    ? (loadout.buffs.overload as OverloadTier)
+    : null;
+}
+
+/**
+ * Damage level feeding base ability damage: overload-boosted (wiki Ability damage
+ * uses the style level "including boosts", capped at 145 = 120 + potion boosts;
+ * verified 2026-07-31). Prayer stays an ability-stage modifier, never baked in.
+ */
+export function loadoutEffectiveDamageLevel(loadout: Loadout): number {
+  const level = loadoutDamageLevel(loadout);
+  const tier = loadoutOverloadTier(loadout);
+  return clampLevel(tier ? overloadBoostedLevel(level, tier) : level);
+}
+
+function slotWeaponTier(
+  loadout: Loadout,
+  slot: "twohand" | "mainhand" | "offhand",
+): number | null {
+  const id = loadout.equipmentSlots?.[slot];
+  if (typeof id !== "string") return null;
+  const tier = equipmentById(id)?.tier;
+  return tier != null && Number.isFinite(tier) ? tier : null;
+}
+
+type WeaponHand = Parameters<typeof baseAbilityDamage>[1];
+
+/**
+ * Weapon configuration from equipped slots: twohand → 2H formula; mainhand +
+ * offhand → dual wield (a necromancy conduit occupies the offhand slot and
+ * routes here); mainhand only → main hand. No tiered weapon in any slot → the
+ * legacy fallback: weaponTier slider through the twohand formula, as before.
+ */
+export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
+  const twohandTier = slotWeaponTier(loadout, "twohand");
+  if (twohandTier != null) {
+    return { kind: "twohand", weapon: { tier: twohandTier }, style: loadout.style };
+  }
+  const mainhandTier = slotWeaponTier(loadout, "mainhand");
+  if (mainhandTier != null) {
+    const offhandTier = slotWeaponTier(loadout, "offhand");
+    return offhandTier != null
+      ? { kind: "mainhand", weapon: { tier: mainhandTier }, offhand: { tier: offhandTier } }
+      : { kind: "mainhand", weapon: { tier: mainhandTier } };
+  }
+  return { kind: "twohand", weapon: { tier: loadoutWeaponTier(loadout) }, style: loadout.style };
+}
+
+/** Base ability damage computed from the effective level and equipped weapon config. */
+export function computedLoadoutBase(loadout: Loadout): number {
+  return baseAbilityDamage(loadoutEffectiveDamageLevel(loadout), loadoutWeaponConfig(loadout));
+}
+
 export function loadoutBase(loadout: Loadout): number {
   if (Number.isFinite(loadout.base) && loadout.base > 0) return loadout.base;
-  return baseAbilityDamage(loadoutDamageLevel(loadout), {
-    kind: "twohand",
-    weapon: { tier: loadoutWeaponTier(loadout) },
-    style: loadout.style,
-  });
+  return computedLoadoutBase(loadout);
 }
 
 export function loadoutStats(loadout: Loadout): CalcStats {
@@ -175,10 +226,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     loadout.buffs?.styleCurse && loadout.buffs.styleCurse !== "none"
       ? styleCurseById(loadout.buffs.styleCurse)
       : undefined;
-  const overloadTier =
-    loadout.buffs?.overload && loadout.buffs.overload !== "none"
-      ? (loadout.buffs.overload as OverloadTier)
-      : null;
+  const overloadTier = loadoutOverloadTier(loadout);
 
   let attackLevel = loadoutAttackLevel(loadout);
   if (overloadTier) attackLevel = overloadBoostedLevel(attackLevel, overloadTier);

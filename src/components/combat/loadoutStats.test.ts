@@ -7,13 +7,16 @@ import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { prayerBoostedStyleLevel, styleCurseById } from "@/combat/shared/prayers";
 import { hitChance, playerAccuracy, targetDamagePotential } from "@/combat/target/genericTarget";
 import {
+  computedLoadoutBase,
   equippedBonuses,
   equippedSetCounts,
   equippedWeaponTier,
   loadoutAttackLevel,
   loadoutBase,
   loadoutDamageLevel,
+  loadoutEffectiveDamageLevel,
   loadoutStats,
+  loadoutWeaponConfig,
   loadoutWeaponTier,
   nonWeaponAccuracyBonus,
   setEffectsSummary,
@@ -61,10 +64,16 @@ vi.mock("@/combat/data", async (importOriginal) => {
 const base: Loadout = { ...DEFAULT_LOADOUT };
 
 describe("loadoutStats", () => {
-  it("uses the manual base when set, computes from level + weapon tier otherwise", () => {
+  it("uses the manual base when set; no weapon equipped falls back to the tier slider", () => {
     expect(loadoutBase(base)).toBe(1000);
-    const computed = loadoutBase({ ...base, base: NaN, level: 99, weaponTier: 90, style: "melee" });
-    expect(computed).toBe(
+    const fallback: Loadout = { ...base, base: NaN, level: 99, weaponTier: 90, style: "melee" };
+    // Slider fallback keeps the pre-routing twohand assumption.
+    expect(loadoutWeaponConfig(fallback)).toEqual({
+      kind: "twohand",
+      weapon: { tier: 90 },
+      style: "melee",
+    });
+    expect(loadoutBase(fallback)).toBe(
       baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
     );
   });
@@ -82,6 +91,8 @@ describe("loadoutStats", () => {
     };
     expect(loadoutAttackLevel(melee)).toBe(80);
     expect(loadoutDamageLevel(melee)).toBe(110);
+    expect(loadoutBase(melee)).toBe(computedLoadoutBase(melee));
+    // No weapon equipped: twohand slider fallback.
     expect(loadoutBase(melee)).toBe(
       baseAbilityDamage(110, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
     );
@@ -303,14 +314,14 @@ describe("loadoutStats", () => {
     expect(stats.globalModifiers.some((m) => m.id.startsWith("prayer:"))).toBe(false);
   });
 
-  it("equippedWeaponTier prefers twohand then mainhand when record.tier is set", () => {
+  it("equippedWeaponTier (accuracy path) prefers twohand then mainhand record tier", () => {
     const twohand: Loadout = {
       ...base,
-      equipmentSlots: { twohand: "item:omni-guard", mainhand: "item:roar-of-awakening" },
-      weaponTier: 90,
+      equipmentSlots: { twohand: "item:noxious-scythe", mainhand: "item:roar-of-awakening" },
+      weaponTier: 92,
     };
-    expect(equippedWeaponTier(twohand)).toBe(95);
-    expect(loadoutWeaponTier(twohand)).toBe(95);
+    expect(equippedWeaponTier(twohand)).toBe(90);
+    expect(loadoutWeaponTier(twohand)).toBe(90);
 
     const mainhand: Loadout = {
       ...base,
@@ -328,6 +339,94 @@ describe("loadoutStats", () => {
     expect(loadoutWeaponTier(none)).toBe(90);
 
     expect(equippedWeaponTier({ ...base, equipmentSlots: { mainhand: "missing:id" } })).toBeNull();
+  });
+
+  it("routes base AD through the equipped weapon configuration", () => {
+    const twohand: Loadout = {
+      ...base,
+      base: NaN,
+      style: "melee",
+      level: 99,
+      strengthLevel: 99,
+      equipmentSlots: { twohand: "item:noxious-scythe" },
+    };
+    expect(loadoutWeaponConfig(twohand)).toEqual({
+      kind: "twohand",
+      weapon: { tier: 90 },
+      style: "melee",
+    });
+    expect(loadoutBase(twohand)).toBe(
+      baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
+    );
+
+    const dual: Loadout = {
+      ...base,
+      base: NaN,
+      style: "magic",
+      level: 99,
+      equipmentSlots: { mainhand: "item:seismic-wand", offhand: "item:seismic-singularity" },
+    };
+    expect(loadoutWeaponConfig(dual)).toEqual({
+      kind: "mainhand",
+      weapon: { tier: 90 },
+      offhand: { tier: 90 },
+    });
+    expect(loadoutBase(dual)).toBe(
+      baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 90 }, offhand: { tier: 90 } }),
+    );
+
+    const mainOnly: Loadout = {
+      ...base,
+      base: NaN,
+      style: "magic",
+      level: 99,
+      equipmentSlots: { mainhand: "item:seismic-wand" },
+    };
+    expect(loadoutWeaponConfig(mainOnly)).toEqual({ kind: "mainhand", weapon: { tier: 90 } });
+    expect(loadoutBase(mainOnly)).toBe(
+      baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 90 } }),
+    );
+  });
+
+  it("necromancy mainhand + offhand conduit routes through the dual-wield formula", () => {
+    const necro: Loadout = {
+      ...base,
+      base: NaN,
+      style: "necromancy",
+      level: 99,
+      equipmentSlots: { mainhand: "item:omni-guard", offhand: "item:soulbound-lantern" },
+    };
+    expect(loadoutWeaponConfig(necro)).toEqual({
+      kind: "mainhand",
+      weapon: { tier: 95 },
+      offhand: { tier: 95 },
+    });
+    expect(loadoutBase(necro)).toBe(
+      baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 95 }, offhand: { tier: 95 } }),
+    );
+  });
+
+  it("overload-boosted level feeds computed base AD; prayer curse never does", () => {
+    const loadout: Loadout = {
+      ...base,
+      base: NaN,
+      style: "melee",
+      attackLevel: 99,
+      strengthLevel: 99,
+      level: 99,
+      weaponTier: 90,
+      buffs: { vulnerability: false, styleCurse: "turmoil", overload: "elder" },
+    };
+    const boosted = overloadBoostedLevel(99, "elder");
+    expect(loadoutEffectiveDamageLevel(loadout)).toBe(boosted);
+    // Turmoil's level boost is accuracy-only; its damage stays a pipeline modifier.
+    expect(loadoutBase(loadout)).toBe(
+      baseAbilityDamage(boosted, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
+    );
+    const stats = loadoutStats(loadout);
+    expect(stats.base).toBe(loadoutBase(loadout));
+    // Crit damage level stays the natural style level.
+    expect(stats.level).toBe(99);
   });
 
   it("equippedBonuses sums wiki damage/accuracy from slotted pieces", () => {

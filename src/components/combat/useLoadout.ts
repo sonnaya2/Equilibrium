@@ -49,7 +49,7 @@ export interface LoadoutPerks {
   energising: number;
   /** Crackling: PvM zap 50% AD × rank, 60s CD. Rank 0 = off, max 4. */
   crackling: number;
-  /** Aftershock: AoE after 50k damage, 40% AD × rank, 6s min. Rank 0 = off, max 4. */
+  /** Aftershock: AoE after 50k damage, avg 31.8% AD × rank, 6s min. Rank 0 = off, max 4. */
   aftershock: number;
   /** Relentless: EV refund of adren cost (1%/rank, no ICD model). Rank 0 = off, max 5. */
   relentless: number;

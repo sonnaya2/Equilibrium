@@ -338,21 +338,21 @@ const tracked = (...paths) =>
 const architectureFailures = [];
 const trackedDataJson = tracked("data/**/*.json");
 const trackedFrontend = tracked("public/data/v1/**", "public/data/v2/**");
-const legacyReaders = sources
+// The frontend reads generated shards and documents. A module reaching into a
+// data tree or the build cache directly is a second read path, and the site
+// would then depend on files the deploy does not ship.
+const directDataReaders = sources
   .filter(
     ({ file, text }) =>
       (file.startsWith("app/") ||
         (file.startsWith("src/") && !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(file))) &&
       (/#data\//.test(text) ||
-        /(?:readFile(?:Sync)?|path\.join)\s*\([^)]*["'][^"']*\.cache[\\/]data/.test(text)),
+        /(?:readFile(?:Sync)?|path\.join)\s*\([^)]*["'][^"']*\.cache[\\/]/.test(text)),
   )
   .map(({ file }) => file);
 if (trackedDataJson.length) architectureFailures.push(`${trackedDataJson.length} per-domain data JSON files remain tracked`);
 if (trackedFrontend.length) architectureFailures.push(`${trackedFrontend.length} generated frontend files remain tracked`);
-if (existsSync(join(ROOT, "data/research/catalog.json"))) architectureFailures.push("legacy research catalog exists in data/");
-if (existsSync(join(ROOT, ".cache/data"))) architectureFailures.push("legacy .cache/data tree exists");
-if (legacyReaders.length) architectureFailures.push(`legacy data readers remain: ${legacyReaders.join(", ")}`);
-if (readFileSync(join(ROOT, "tsconfig.json"), "utf8").includes('"#data/*"')) architectureFailures.push("legacy #data TypeScript alias remains");
+if (directDataReaders.length) architectureFailures.push(`modules read data outside the shards: ${directDataReaders.join(", ")}`);
 if (oversizedClientShards.length) architectureFailures.push(`client shards exceed 250 KiB: ${oversizedClientShards.map(({ file }) => file).join(", ")}`);
 
 // Generated trees must never become tracked. data/canonical/ is the deliberate
@@ -380,14 +380,14 @@ if (missingScriptFiles.length) {
   );
 }
 
-// Two files claiming one domain: the same entity type and name produced by more
-// than one source file, as separate entities. Stage 0 measured 253 across 18
-// pairs; Stage 1 resolved 225, leaving 41 across the 7 pairs below - all of them
-// blocked on the same thing, a superseded record holding requirements a patch
-// cannot move. The gate is a ratchet: a *new* pair of files, or an existing pair
-// growing, fails. Lower an entry as its pair is adjudicated and delete it at
-// zero.
-//
+// Two source documents claiming one domain: the same entity type and name
+// produced by more than one document, as separate entities. 253 across 18 pairs
+// were found; 225 have been resolved by patch, leaving 41 across the 7 pairs
+// below - all blocked on the same thing, a superseded record holding
+// requirements or effects the survivor lacks, which a patch can neither move nor
+// merge without guessing. The gate is a ratchet: a *new* pair, or an existing
+// pair growing, fails. Lower an entry as its pair is adjudicated, delete it at
+// zero, and delete this map when it empties.
 const OVERLAP_BASELINE = new Map([
   ["data/combat/equipment.json + data/reference/progression-unlocks.json", 33],
   ["data/combat/abilities.json + data/reference/progression-unlocks.json", 3],

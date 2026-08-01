@@ -149,7 +149,7 @@ describe("generated data platform", () => {
     }
   });
 
-  it("exports source documents without a legacy compatibility tree", () => {
+  it("exports source documents without a materialized compatibility tree", () => {
     expect(existsSync(join(root, ".cache/data"))).toBe(false);
     expect(manifest.documents["data/research/catalog.json"]).toBeUndefined();
     expect(existsSync(join(root, "public/data/v2/documents/research/catalog.json"))).toBe(false);

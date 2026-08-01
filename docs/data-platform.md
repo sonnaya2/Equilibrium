@@ -206,6 +206,25 @@ The one thing not to do is rewrite the baseline to express an edit. Hand-editing
 loses the record of who changed what and why, and the export would overwrite it on the next rebuild
 anyway.
 
+### Source authority
+
+When two sources disagree about a value, this is the order, highest first:
+
+1. **Jagex / official League material** — official League rules, reveals and the region taxonomy
+2. **RuneScape Wiki** — general game-data ground truth
+3. **Project specialized research** — where the project deliberately did work the Wiki does not cover
+4. **Project research overlays** — snapshots and inference
+5. **Clearly labelled project inference** — only where no authoritative source exists
+
+Two rules constrain it. Do not replace a verified specialized record with a less-specific Wiki
+summary — rank 2 beating rank 3 is wrong when rank 3 is verified and more precise. And authority
+decides which *value* wins, never which source a surviving value is attributed to: the winning
+record keeps its own `SourceReference`.
+
+Where the order does not settle it, leave the conflict. A record that needs a human to choose stays
+unresolved rather than being quietly picked; the sixty entries in `quarantine.jsonl` are exactly
+that, kept so the collision stays auditable instead of disappearing into a merge.
+
 ## Frontend consumption
 
 Server-rendered catalog summaries query the normalized tables directly. `/data` loads the small v2

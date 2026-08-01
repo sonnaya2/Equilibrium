@@ -378,7 +378,7 @@ describe("patch identity and change tracking", () => {
   });
 });
 
-// A checkout with no build cache and no legacy seed still has to produce the
+// A checkout with no build cache still has to produce the
 // shipped database and the shipped frontend artifacts.
 describe("clean-checkout rebuild from canonical files only", () => {
   const checkout = join(scratch, "checkout");

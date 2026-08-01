@@ -186,7 +186,14 @@ export type BlessingTierRow = {
   revealed: boolean;
   paths: string[];
   godTier: boolean;
-  choices: unknown[];
+  choices: Array<{
+    /** Order, Balance or Chaos — the card names its own path rather than relying on column order. */
+    path: string;
+    name: string;
+    effects: string[];
+    source?: SourceRefShape | null;
+    verified?: boolean;
+  }>;
   source?: SourceRefShape | null;
   verified?: boolean;
 };
@@ -195,12 +202,28 @@ export function parseBlessingTier(raw: unknown): BlessingTierRow | null {
   if (!isRecord(raw)) return null;
   const tier = asNumber(raw.tier);
   if (tier == null) return null;
+  const choicesRaw = Array.isArray(raw.choices) ? raw.choices : [];
+  const choices = choicesRaw
+    .map((c) => {
+      if (!isRecord(c)) return null;
+      const name = asString(c.name);
+      const path = asString(c.path);
+      if (!name || !path) return null;
+      return {
+        path,
+        name,
+        effects: asStringArray(c.effects),
+        source: parseSourceRef(c.source),
+        verified: asBoolean(c.verified),
+      };
+    })
+    .filter((c): c is NonNullable<typeof c> => c != null);
   return {
     tier,
     revealed: asBoolean(raw.revealed) ?? false,
     paths: asStringArray(raw.paths),
     godTier: asBoolean(raw.godTier) ?? false,
-    choices: Array.isArray(raw.choices) ? raw.choices : [],
+    choices,
     source: parseSourceRef(raw.source),
     verified: asBoolean(raw.verified),
   };

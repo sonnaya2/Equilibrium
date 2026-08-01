@@ -13,7 +13,13 @@ import { canSelectElective, ELECTIVE_CAP, type BuildState, type RegionId } from 
 import { godTierAlignments, PATH_TIERS, type BlessingPath } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
 import { useBuild } from "@/league/useBuild";
-import { equipmentIconPath, regionCrestPath, relicIconPath, styleIconPath } from "@/lib/gameArt";
+import {
+  blessingIconPath,
+  equipmentIconPath,
+  regionCrestPath,
+  relicIconPath,
+  styleIconPath,
+} from "@/lib/gameArt";
 import { GameIcon } from "@/components/GameIcon";
 import { useLoadout } from "@/components/combat/useLoadout";
 import "./build-board.css";
@@ -47,12 +53,20 @@ export type RelicTier = {
   choices: RelicChoice[];
 };
 
+export type BlessingChoice = {
+  /** Order, Balance or Chaos — the card names its own path, not its column. */
+  path: string;
+  name: string;
+  effects: string[];
+  verified?: boolean;
+};
+
 export type BlessingTier = {
   tier: number;
   revealed: boolean;
   paths: string[];
   godTier: boolean;
-  choices: unknown[];
+  choices: BlessingChoice[];
   sourceUrl?: string;
   verified?: boolean;
 };
@@ -125,6 +139,16 @@ function shortName(name: string): string {
 
 function relicIcon(name: string): string | undefined {
   return relicIconPath(name) ?? undefined;
+}
+
+/** The card on this path, once the tier is revealed. */
+function blessingFor(tier: BlessingTier, path: string): BlessingChoice | undefined {
+  return tier.choices.find((choice) => choice.path === path);
+}
+
+function blessingTitle(card: BlessingChoice | undefined, fallback: string): string {
+  if (!card) return fallback;
+  return card.effects.length ? `${card.name} — ${card.effects.join(" ")}` : card.name;
 }
 
 function relicMono(name: string): string {
@@ -523,17 +547,25 @@ export function BuildPlanner({
                           if (tier.godTier) {
                             const god = alignments[tier.tier];
                             const lit = god === path;
+                            const card = blessingFor(tier, path);
                             return (
                               <div
                                 key={`${path}-${tier.tier}`}
                                 className={`build-board__lat-cell is-god${lit ? " is-on" : ""}`}
                                 role="img"
-                                title={
-                                  lit ? `God T${tier.tier}: ${path}` : `God T${tier.tier} undecided`
-                                }
-                                aria-label={`${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`}
+                                title={blessingTitle(
+                                  card,
+                                  lit
+                                    ? `God T${tier.tier}: ${path}`
+                                    : `God T${tier.tier} undecided`,
+                                )}
+                                aria-label={`${card ? `${card.name}, ` : ""}${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`}
                               >
-                                <span className="build-board__lat-fill" aria-hidden />
+                                {card ? (
+                                  <GameIcon src={blessingIconPath(card.name)} size={26} />
+                                ) : (
+                                  <span className="build-board__lat-fill" aria-hidden />
+                                )}
                               </div>
                             );
                           }
@@ -549,17 +581,23 @@ export function BuildPlanner({
                           }
                           const locked = pickIndex > build.blessingPicks.length;
                           const selected = build.blessingPicks[pickIndex] === path;
+                          const card = blessingFor(tier, path);
                           return (
                             <button
                               key={`${path}-${tier.tier}`}
                               type="button"
                               disabled={locked}
                               aria-pressed={selected}
-                              aria-label={`${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`}
+                              title={blessingTitle(card, `${path}, tier ${tier.tier}`)}
+                              aria-label={`${card ? `${card.name}, ` : ""}${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`}
                               className={`build-board__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}`}
                               onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
                             >
-                              <span className="build-board__lat-fill" aria-hidden />
+                              {card ? (
+                                <GameIcon src={blessingIconPath(card.name)} size={26} />
+                              ) : (
+                                <span className="build-board__lat-fill" aria-hidden />
+                              )}
                             </button>
                           );
                         })}

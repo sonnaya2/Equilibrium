@@ -70,6 +70,38 @@ describe("dataValidate — league", () => {
     expect(blessing?.paths).toEqual(["order"]);
   });
 
+  it("keeps relic seats and blessing paths, and drops cards missing either", () => {
+    // A tier revealed only at the bottom seat must not slide that relic to the top.
+    const relic = parseRelicTier({
+      tier: 4,
+      revealed: true,
+      choices: [
+        { name: "Crystal Grace", seat: 0 },
+        { name: "Transmutation", seat: 2 },
+        { seat: 1 },
+      ],
+    });
+    expect(relic?.choices.map((c) => [c.name, c.seat])).toEqual([
+      ["Crystal Grace", 0],
+      ["Transmutation", 2],
+    ]);
+
+    // A blessing card names its own path, so a transposed column cannot mis-file it.
+    const blessing = parseBlessingTier({
+      tier: 1,
+      revealed: true,
+      paths: ["Order", "Balance", "Chaos"],
+      godTier: false,
+      choices: [
+        { path: "Chaos", name: "Adrenaline Junkie", effects: ["Maximum adrenaline +50%."] },
+        { name: "No path" },
+        { path: "Order" },
+      ],
+    });
+    expect(blessing?.choices).toHaveLength(1);
+    expect(blessing?.choices[0]).toMatchObject({ path: "Chaos", name: "Adrenaline Junkie" });
+  });
+
   it("reads dataset envelopes gracefully", () => {
     const rows = readDatasetRecords(
       { records: [{ id: "a", name: "A", availability: "starting" }, { bad: true }] },

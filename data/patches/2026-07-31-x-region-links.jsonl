@@ -1,0 +1,116 @@
+# Region links for records that had none.
+#
+# Each line follows a place name in the record's own text - the word that
+# decided it is in the reason. Records whose text names no location keep no
+# region: most are base-game abilities and prayers, which are not region-locked
+# and should not be forced onto a region page.
+#
+# Judged out by hand: an access route rather than a location (Farmer's outfit,
+# "Desert-accessible"), a region named as the source of a supporting unlock
+# rather than of the content (Shark cooking), content outside the taxonomy
+# (Elite Dungeon 1 is the Arc), and one record whose own text says the craft is
+# "global (not region-locked)" (Urn enhancer).
+
+{"entity":"activity:content:herby-werby","op":"link-region","reason":"Its text names anachronia.","region":"anachronia","relation":"required"}
+{"entity":"activity:content:raksha","op":"link-region","reason":"Its text names orthen.","region":"anachronia","relation":"required"}
+{"entity":"activity:content:skekas-hypnowand","op":"link-region","reason":"Its text names anachronia.","region":"anachronia","relation":"required"}
+{"entity":"activity:content:skillcape-rack","op":"link-region","reason":"Its text names anachronia.","region":"anachronia","relation":"required"}
+{"entity":"activity:content:volcanic-trapper-outfit","op":"link-region","reason":"Its text names anachronia.","region":"anachronia","relation":"required"}
+{"entity":"activity:content:artisans-workshop","op":"link-region","reason":"Its text names falador.","region":"asgarnia","relation":"required"}
+{"entity":"activity:content:commander-zilyana","op":"link-region","reason":"Its text names zilyana.","region":"asgarnia","relation":"required"}
+{"entity":"activity:content:general-graardor","op":"link-region","reason":"Its text names graardor.","region":"asgarnia","relation":"required"}
+{"entity":"activity:content:nex","op":"link-region","reason":"Its text names god wars dungeon.","region":"asgarnia","relation":"required"}
+{"entity":"activity:content:starbloom-armour","op":"link-region","reason":"Its text names crafting guild.","region":"asgarnia","relation":"required"}
+{"entity":"activity:content:warriors-guild","op":"link-region","reason":"Its text names burthorpe.","region":"asgarnia","relation":"required"}
+{"entity":"archaeology:bandos-s-sanctum-debris-for-spear-of-annihilation-tip-then-return-to-praetorian-remains","op":"link-region","reason":"Its text names bandos's sanctum.","region":"asgarnia","relation":"required"}
+{"entity":"invention:augmented-equipment-levelling-siphon-disassemble","op":"link-region","reason":"Its text names falador.","region":"asgarnia","relation":"required"}
+{"entity":"invention:invention-gizmo-shells","op":"link-region","reason":"Its text names asgarnia.","region":"asgarnia","relation":"required"}
+{"entity":"activity:content:agility-pyramid","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"activity:content:amascut-the-devourer","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"activity:content:corrupted-creatures-soul-devourers","op":"link-region","reason":"Its text names sophanem.","region":"desert","relation":"required"}
+{"entity":"activity:content:crimson-skillchompas","op":"link-region","reason":"Its text names desert.","region":"desert","relation":"required"}
+{"entity":"activity:content:desert-amulet","op":"link-region","reason":"Its text names desert.","region":"desert","relation":"required"}
+{"entity":"activity:content:desert-strykewyrm","op":"link-region","reason":"Its text names al kharid.","region":"desert","relation":"required"}
+{"entity":"activity:content:hard-desert-keris-upgrade","op":"link-region","reason":"Its text names desert.","region":"desert","relation":"required"}
+{"entity":"activity:content:kalphite-king","op":"link-region","reason":"Its text names kalphite.","region":"desert","relation":"required"}
+{"entity":"activity:content:kalphite-queen","op":"link-region","reason":"Its text names kalphite.","region":"desert","relation":"required"}
+{"entity":"activity:content:mage-training-arena","op":"link-region","reason":"Its text names al kharid.","region":"desert","relation":"required"}
+{"entity":"activity:content:menaphos","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"activity:content:pyramid-plunder","op":"link-region","reason":"Its text names sophanem.","region":"desert","relation":"required"}
+{"entity":"activity:content:shifting-tombs","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"activity:content:soul-altar","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"activity:content:sumona","op":"link-region","reason":"Its text names pollnivneach.","region":"desert","relation":"required"}
+{"entity":"activity:content:the-gate-of-elidinis","op":"link-region","reason":"Its text names elidinis.","region":"desert","relation":"required"}
+{"entity":"activity:content:the-magister","op":"link-region","reason":"Its text names sophanem.","region":"desert","relation":"required"}
+{"entity":"activity:content:unexpected-diplomacy","op":"link-region","reason":"Its text names desert.","region":"desert","relation":"required"}
+{"entity":"activity:content:vault-of-hereditas","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"archaeology:bank-artefacts-from-orcus-altar-for-zarosian-iii-museum-zarosian-iii","op":"link-region","reason":"Its text names desert.","region":"desert","relation":"required"}
+{"entity":"firemaking:permanent-multi-player-equivalent-bonfires-yeti-menaphos-prif-max-guild","op":"link-region","reason":"Its text names menaphos.","region":"desert","relation":"required"}
+{"entity":"activity:content:abyss-runecrafting","op":"link-region","reason":"Its text names mage of zamorak.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:chaotic-weapons","op":"link-region","reason":"Its text names daemonheim.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:daemonheim-rewards-shop","op":"link-region","reason":"Its text names daemonheim.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:ice-strykewyrms","op":"link-region","reason":"Its text names frozen waste plateau.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:primal-ores","op":"link-region","reason":"Its text names daemonheim.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:ruinous-weapons","op":"link-region","reason":"Its text names daemonheim.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:the-shadow-reef-ed3","op":"link-region","reason":"Its text names daemonheim.","region":"forinthry","relation":"required"}
+{"entity":"divination:guthixian-cache","op":"link-region","reason":"Its text names daemonheim.","region":"forinthry","relation":"required"}
+{"entity":"magic:aoe-combat-slayer-routing","op":"link-region","reason":"Its text names forinthry.","region":"forinthry","relation":"required"}
+{"entity":"ranged:aoe-combat-slayer-routing","op":"link-region","reason":"Its text names forinthry.","region":"forinthry","relation":"required"}
+{"entity":"unlock:unlocks:divine-storm-outside-the-mage-arena","op":"link-region","reason":"Its text names mage arena.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:dagannoth-kings","op":"link-region","reason":"Its text names waterbirth.","region":"fremennik","relation":"required"}
+{"entity":"activity:content:keldagrim","op":"link-region","reason":"Its text names keldagrim.","region":"fremennik","relation":"required"}
+{"entity":"activity:content:lunar-isle","op":"link-region","reason":"Its text names lunar isle.","region":"fremennik","relation":"required"}
+{"entity":"activity:content:neitiznot-yaks","op":"link-region","reason":"Its text names neitiznot.","region":"fremennik","relation":"required"}
+{"entity":"activity:content:sparkling-wisp-colony","op":"link-region","reason":"Its text names rellekka.","region":"fremennik","relation":"required"}
+{"entity":"activity:content:waterbirth-island","op":"link-region","reason":"Its text names waterbirth.","region":"fremennik","relation":"required"}
+{"entity":"construction:furniture-workbench-mahogany-round-tables-flatpack-afk","op":"link-region","reason":"Its text names miscellania.","region":"fremennik","relation":"required"}
+{"entity":"construction:prawnbrokers-flatpacks","op":"link-region","reason":"Its text names miscellania.","region":"fremennik","relation":"required"}
+{"entity":"firemaking:bonfire-log-ladder-miscellania-supply","op":"link-region","reason":"Its text names miscellania.","region":"fremennik","relation":"required"}
+{"entity":"firemaking:bonfires-yeti-prif-max","op":"link-region","reason":"Its text names miscellania.","region":"fremennik","relation":"required"}
+{"entity":"unlock:unlocks:lunar-isle","op":"link-region","reason":"Its text names lunar isle.","region":"fremennik","relation":"required"}
+{"entity":"activity:content:ivar-king-of-bones","op":"link-region","reason":"Its text names havenhythe.","region":"havenhythe","relation":"required"}
+{"entity":"activity:content:masterwork-ranged-armour-materials","op":"link-region","reason":"Its text names havenhythe.","region":"havenhythe","relation":"required"}
+{"entity":"activity:content:sanguine-crawler","op":"link-region","reason":"Its text names havenhythe.","region":"havenhythe","relation":"required"}
+{"entity":"activity:content:shamans-outfit","op":"link-region","reason":"Its text names havenhythe.","region":"havenhythe","relation":"required"}
+{"entity":"activity:content:silverquill-the-dreadhog","op":"link-region","reason":"Its text names havenhythe.","region":"havenhythe","relation":"required"}
+{"entity":"hunter:barehanded-butterflies-afk-multi-skill","op":"link-region","reason":"Its text names spirit moths.","region":"havenhythe","relation":"required"}
+{"entity":"activity:content:freneskae-via-world-gate","op":"link-region","reason":"Its text names kandarin.","region":"kandarin","relation":"required"}
+{"entity":"activity:content:seers-village","op":"link-region","reason":"Its text names seers' village.","region":"kandarin","relation":"required"}
+{"entity":"invention:empty-divine-charge","op":"link-region","reason":"Its text names kandarin.","region":"kandarin","relation":"required"}
+{"entity":"activity:content:abomination","op":"link-region","reason":"Its text names brimhaven.","region":"karamja","relation":"required"}
+{"entity":"activity:content:calquat-tree-patch","op":"link-region","reason":"Its text names tai bwo wannai.","region":"karamja","relation":"required"}
+{"entity":"activity:content:duradel","op":"link-region","reason":"Its text names karamja.","region":"karamja","relation":"required"}
+{"entity":"activity:content:fight-kiln","op":"link-region","reason":"Its text names fight kiln.","region":"karamja","relation":"required"}
+{"entity":"activity:content:karamja-overgrown-idols","op":"link-region","reason":"Its text names karamja.","region":"karamja","relation":"required"}
+{"entity":"activity:content:tai-bwo-wannai-cleanup","op":"link-region","reason":"Its text names tai bwo wannai.","region":"karamja","relation":"required"}
+{"entity":"activity:content:city-of-um-underworld","op":"link-region","reason":"Its text names city of um.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:hermod-the-spirit-of-war","op":"link-region","reason":"Its text names city of um.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:lumbridge-hops-patch","op":"link-region","reason":"Its text names lumbridge.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:misthalin-wisp-colonies","op":"link-region","reason":"Its text names varrock.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:necromantic-rune-temple","op":"link-region","reason":"Its text names city of um.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:sanctum-of-rebirth","op":"link-region","reason":"Its text names sanctum of rebirth.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:varrock-dig-site-early-archaeology","op":"link-region","reason":"Its text names varrock.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:varrock-palace-tree-patch","op":"link-region","reason":"Its text names varrock.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:zemouregal-vorkath","op":"link-region","reason":"Its text names vorkath.","region":"misthalin","relation":"required"}
+{"entity":"archaeology:moonrise-dig-site-hotspots-guthixian-i-ii-collections-missing-from-ironman-guide-training-table","op":"link-region","reason":"Its text names dig site.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:barrows","op":"link-region","reason":"Its text names barrows.","region":"morytania","relation":"required"}
+{"entity":"activity:content:darkmeyer-thieving","op":"link-region","reason":"Its text names darkmeyer.","region":"morytania","relation":"required"}
+{"entity":"activity:content:slayer-tower","op":"link-region","reason":"Its text names canifis.","region":"morytania","relation":"required"}
+{"entity":"activity:content:slayer-tower-early-floors","op":"link-region","reason":"Its text names slayer tower.","region":"morytania","relation":"required"}
+{"entity":"farming:seedicide-combat-farming-xp","op":"link-region","reason":"Its text names morytania.","region":"morytania","relation":"required"}
+{"entity":"farming:seedicide-passive-farming-xp","op":"link-region","reason":"Its text names morytania.","region":"morytania","relation":"required"}
+{"entity":"unlock:recommended-unlocks:500-vyre-corpse-cremation-progression","op":"link-region","reason":"Its text names vyre.","region":"morytania","relation":"required"}
+{"entity":"unlock:recommended-unlocks:morytania-elite-achievements","op":"link-region","reason":"Its text names morytania.","region":"morytania","relation":"required"}
+{"entity":"activity:content:crystal-skillchompas","op":"link-region","reason":"Its text names isafdar.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:crystal-tools","op":"link-region","reason":"Its text names ithell.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:grenwalls","op":"link-region","reason":"Its text names isafdar.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:harmony-moss","op":"link-region","reason":"Its text names meilyr.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:ithell-harps","op":"link-region","reason":"Its text names ithell.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:meilyr-recipe-shop","op":"link-region","reason":"Its text names meilyr.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:prifddinas","op":"link-region","reason":"Its text names prifddinas.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:seren-stones","op":"link-region","reason":"Its text names trahaearn.","region":"tirannwn","relation":"required"}
+{"entity":"activity:content:the-lost-grove","op":"link-region","reason":"Its text names isafdar.","region":"tirannwn","relation":"required"}
+{"entity":"invention:hammer-tron","op":"link-region","reason":"Its text names tirannwn.","region":"tirannwn","relation":"required"}
+{"entity":"unlock:upgrades:harmonic-dust","op":"link-region","reason":"Its text names ithell.","region":"tirannwn","relation":"required"}
+{"entity":"unlock:upgrades:harmony-moss","op":"link-region","reason":"Its text names meilyr.","region":"tirannwn","relation":"required"}
+{"entity":"woodcutting:always-adze-relic-while-cutting","op":"link-region","reason":"Its text names tirannwn.","region":"tirannwn","relation":"required"}

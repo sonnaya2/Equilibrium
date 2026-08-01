@@ -1,0 +1,46 @@
+# Region links for records that name several regions.
+#
+# A herb run tours five regions; a material source draws on three. None of
+# them is gated on one region, so each is linked as a hint to every region its
+# text names. That puts the record on each region's page without claiming a
+# hard requirement the text does not support.
+
+{"entity":"activity:content:balaraks-sash-brush","op":"link-region","reason":"Its text names forinthry, alongside 1 other region.","region":"forinthry","relation":"hint"}
+{"entity":"activity:content:balaraks-sash-brush","op":"link-region","reason":"Its text names anachronia, alongside 1 other region.","region":"anachronia","relation":"hint"}
+{"entity":"activity:content:blood-altar","op":"link-region","reason":"Its text names forinthry, alongside 1 other region.","region":"forinthry","relation":"hint"}
+{"entity":"activity:content:blood-altar","op":"link-region","reason":"Its text names morytania, alongside 1 other region.","region":"morytania","relation":"hint"}
+{"entity":"activity:content:daemonheim-divination","op":"link-region","reason":"Its text names kandarin, alongside 1 other region.","region":"kandarin","relation":"hint"}
+{"entity":"activity:content:daemonheim-divination","op":"link-region","reason":"Its text names daemonheim, alongside 1 other region.","region":"forinthry","relation":"hint"}
+{"entity":"archaeology:daemonheim-dig-site-excavation-dragonkin-v-vii-missing-from-ironman-guide-mystery-table","op":"link-region","reason":"Its text names dig site, alongside 1 other region.","region":"misthalin","relation":"hint"}
+{"entity":"archaeology:daemonheim-dig-site-excavation-dragonkin-v-vii-missing-from-ironman-guide-mystery-table","op":"link-region","reason":"Its text names wilderness, alongside 1 other region.","region":"forinthry","relation":"hint"}
+{"entity":"construction:construction-contracts-by-plank-tier-wiki-xp-h-table","op":"link-region","reason":"Its text names fort forinthry, alongside 1 other region.","region":"misthalin","relation":"hint"}
+{"entity":"construction:construction-contracts-by-plank-tier-wiki-xp-h-table","op":"link-region","reason":"Its text names forinthry, alongside 1 other region.","region":"forinthry","relation":"hint"}
+{"entity":"construction:contracts","op":"link-region","reason":"Its text names morytania, alongside 1 other region.","region":"morytania","relation":"hint"}
+{"entity":"construction:contracts","op":"link-region","reason":"Its text names ithell, alongside 1 other region.","region":"tirannwn","relation":"hint"}
+{"entity":"equipment:seedicide-not-daemonheim","op":"link-region","reason":"Its text names asgarnia, alongside 3 other regions.","region":"asgarnia","relation":"hint"}
+{"entity":"equipment:seedicide-not-daemonheim","op":"link-region","reason":"Its text names kandarin, alongside 3 other regions.","region":"kandarin","relation":"hint"}
+{"entity":"equipment:seedicide-not-daemonheim","op":"link-region","reason":"Its text names forinthry, alongside 3 other regions.","region":"forinthry","relation":"hint"}
+{"entity":"equipment:seedicide-not-daemonheim","op":"link-region","reason":"Its text names anachronia, alongside 3 other regions.","region":"anachronia","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-run-summary","op":"link-region","reason":"Its text names draynor, alongside 4 other regions.","region":"misthalin","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-run-summary","op":"link-region","reason":"Its text names karamja, alongside 4 other regions.","region":"karamja","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-run-summary","op":"link-region","reason":"Its text names catherby, alongside 4 other regions.","region":"kandarin","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-run-summary","op":"link-region","reason":"Its text names miscellania, alongside 4 other regions.","region":"fremennik","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-run-summary","op":"link-region","reason":"Its text names crwys, alongside 4 other regions.","region":"tirannwn","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-runs","op":"link-region","reason":"Its text names falador, alongside 4 other regions.","region":"asgarnia","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-runs","op":"link-region","reason":"Its text names ardougne, alongside 4 other regions.","region":"kandarin","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-runs","op":"link-region","reason":"Its text names desert, alongside 4 other regions.","region":"desert","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-runs","op":"link-region","reason":"Its text names phasmatys, alongside 4 other regions.","region":"morytania","relation":"hint"}
+{"entity":"farming:standard-herb-and-tree-patch-runs","op":"link-region","reason":"Its text names tirannwn, alongside 4 other regions.","region":"tirannwn","relation":"hint"}
+{"entity":"firemaking:line-firemaking-log-ladder-magic-elder-eternal-magic","op":"link-region","reason":"Its text names miscellania, alongside 1 other region.","region":"fremennik","relation":"hint"}
+{"entity":"firemaking:line-firemaking-log-ladder-magic-elder-eternal-magic","op":"link-region","reason":"Its text names anachronia, alongside 1 other region.","region":"anachronia","relation":"hint"}
+{"entity":"fletching:material-source-eternal-magic-logs-shafts-end-band-ammo-and-bows","op":"link-region","reason":"Its text names havenhythe, alongside 2 other regions.","region":"havenhythe","relation":"hint"}
+{"entity":"fletching:material-source-eternal-magic-logs-shafts-end-band-ammo-and-bows","op":"link-region","reason":"Its text names piscatoris, alongside 2 other regions.","region":"kandarin","relation":"hint"}
+{"entity":"fletching:material-source-eternal-magic-logs-shafts-end-band-ammo-and-bows","op":"link-region","reason":"Its text names anachronia, alongside 2 other regions.","region":"anachronia","relation":"hint"}
+{"entity":"herblore:overload-base-and-overload-product-chain","op":"link-region","reason":"Its text names salve, alongside 1 other region.","region":"morytania","relation":"hint"}
+{"entity":"herblore:overload-base-and-overload-product-chain","op":"link-region","reason":"Its text names meilyr, alongside 1 other region.","region":"tirannwn","relation":"hint"}
+{"entity":"slayer:slayer-helmet-component-farms","op":"link-region","reason":"Its text names karamja, alongside 1 other region.","region":"karamja","relation":"hint"}
+{"entity":"slayer:slayer-helmet-component-farms","op":"link-region","reason":"Its text names desert, alongside 1 other region.","region":"desert","relation":"hint"}
+{"entity":"smithing:orthen-furnace-core-use","op":"link-region","reason":"Its text names tirannwn, alongside 1 other region.","region":"tirannwn","relation":"hint"}
+{"entity":"smithing:orthen-furnace-core-use","op":"link-region","reason":"Its text names anachronia, alongside 1 other region.","region":"anachronia","relation":"hint"}
+{"entity":"strength:halberd-multi-target-training-hurricane-meteor-strike","op":"link-region","reason":"Its text names tirannwn, alongside 1 other region.","region":"tirannwn","relation":"hint"}
+{"entity":"strength:halberd-multi-target-training-hurricane-meteor-strike","op":"link-region","reason":"Its text names laniakea, alongside 1 other region.","region":"anachronia","relation":"hint"}

@@ -67,7 +67,7 @@ export function landTimeModifiers(
   if (snap.empowerMult !== 1) {
     modifiers.push(buffMultiplier("buff:bloodlust_flurry", snap.empowerMult, MODERNISATION_WIKI));
   }
-  if (ability.style === "melee" && at < state.berserkUntilTick) {
+  if (ability.style === "melee" && at < state.melee.berserkUntilTick) {
     modifiers.push(
       buffMultiplier("buff:berserk", BERSERK_DAMAGE_MULTIPLIER, MODERNISATION_PATCH_2),
     );
@@ -82,13 +82,13 @@ export function landTimeModifiers(
   // DoT is not buffed by its own window).
   if (
     ability.style === "magic" &&
-    state.sunshine.grantedByCast !== snap.castSeq &&
-    sunshineActive(state.sunshine, at)
+    state.magic.sunshine.grantedByCast !== snap.castSeq &&
+    sunshineActive(state.magic.sunshine, at)
   ) {
     modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
   }
   // Dragon Breath deals 1.25x against targets burning from Combust (wiki).
-  if (ability.id === "dragon_breath" && burnActive(state.magicFx.burns, "combust", at)) {
+  if (ability.id === "dragon_breath" && burnActive(state.target.burns, "combust", at)) {
     modifiers.push(
       buffMultiplier(
         "buff:dragon_breath_combust",

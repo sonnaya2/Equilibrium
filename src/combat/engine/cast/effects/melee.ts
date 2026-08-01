@@ -10,8 +10,8 @@ import {
   GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS,
   METEOR_STRIKE_DURATION_SECONDS,
 } from "../../../styles/melee/effects";
-import { gainMeleeBloodlust } from "../../runtime/state";
-import { patchState, type CastEffectContext } from "./context";
+import { gainMeleeBloodlust, patchMelee } from "../../runtime/state";
+import type { CastEffectContext } from "./context";
 
 /**
  * Immediate melee cast-state changes: Bloodlust generation, the Berserk window,
@@ -27,26 +27,26 @@ export function applyMeleeCastEffects(fx: CastEffectContext): void {
     rt.state = gainMeleeBloodlust(rt.state, melee.bloodlustGain);
   }
   if (ability.stateEffect === "berserk") {
-    patchState(fx, {
-      melee: activateBerserk(rt.state.melee),
+    rt.state = patchMelee(rt.state, {
+      bloodlust: activateBerserk(rt.state.melee.bloodlust),
       berserkUntilTick: candidate + secondsToTicks(BERSERK_DURATION_SECONDS),
     });
   }
   if (ability.appliesEffect === "chaos_roar") {
-    patchState(fx, {
+    rt.state = patchMelee(rt.state, {
       chaosRoarUntilTick: candidate + secondsToTicks(CHAOS_ROAR_DURATION_SECONDS),
     });
   }
   if (ability.appliesEffect === "greater_fury") {
-    patchState(fx, {
+    rt.state = patchMelee(rt.state, {
       greaterFuryUntilTick: candidate + secondsToTicks(GREATER_FURY_CRIT_WINDOW_SECONDS),
     });
   }
   if (ability.appliesEffect === "fury") {
-    patchState(fx, { furyCritBonus: true });
+    rt.state = patchMelee(rt.state, { furyCritBonus: true });
   }
   if (ability.appliesEffect === "meteor_strike") {
-    patchState(fx, {
+    rt.state = patchMelee(rt.state, {
       meteorStrikeUntilTick: candidate + secondsToTicks(METEOR_STRIKE_DURATION_SECONDS),
     });
   }
@@ -54,24 +54,26 @@ export function applyMeleeCastEffects(fx: CastEffectContext): void {
   // is the Berserk window at cast time.
   if (
     ability.appliesEffect === "greater_flurry" &&
-    rt.state.melee.berserk &&
-    candidate < rt.state.berserkUntilTick
+    rt.state.melee.bloodlust.berserk &&
+    candidate < rt.state.melee.berserkUntilTick
   ) {
     const extendTicks =
       working.hits.length * secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS);
-    patchState(fx, { berserkUntilTick: rt.state.berserkUntilTick + extendTicks });
+    rt.state = patchMelee(rt.state, {
+      berserkUntilTick: rt.state.melee.berserkUntilTick + extendTicks,
+    });
   }
   if (working.hits.length > 0) {
-    patchState(fx, { lastMeleeCastTick: candidate });
+    rt.state = patchMelee(rt.state, { lastCastTick: candidate });
   }
   // Dismember chain: each stage unlocks the next for 40 ticks; completing
   // Massacre resets it.
   if (melee?.enables === "slaughter" || melee?.enables === "massacre") {
-    patchState(fx, {
+    rt.state = patchMelee(rt.state, {
       bleedChainNext: melee.enables,
       bleedChainUntilTick: candidate + BLEED_CHAIN_RECAST_WINDOW_TICKS,
     });
   } else if (melee?.recastOf) {
-    patchState(fx, { bleedChainNext: null, bleedChainUntilTick: 0 });
+    rt.state = patchMelee(rt.state, { bleedChainNext: null, bleedChainUntilTick: 0 });
   }
 }

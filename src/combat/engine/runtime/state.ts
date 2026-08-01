@@ -1,113 +1,57 @@
-import { gainBloodlust, newBloodlust, type BloodlustState } from "../../styles/melee/bloodlust";
+import { gainBloodlust } from "../../styles/melee/bloodlust";
+import { newMeleeRotationState, type MeleeRotationState } from "../../styles/melee/effects";
+import { newMagicRotationState, type MagicRotationState } from "../../styles/magic/effects";
+import { newBurns, type BurnState } from "../../styles/magic/burn";
+import { newRangedRotationState, type RangedRotationState } from "../../styles/ranged/effects";
 import {
-  newInstability,
-  newMagicFx,
-  newSunshine,
-  type InstabilityState,
-  type MagicFxState,
-  type SunshineState,
-} from "../../styles/magic/effects";
-import {
-  newDeathspore,
-  newSearingWinds,
-  newShadowImbued,
-  type DeathsporeState,
-  type SearingWindsState,
-  type ShadowImbuedState,
-} from "../../styles/ranged/onHit";
-import { newDeathsSwiftness, type DeathsSwiftnessState } from "../../styles/ranged/effects";
-import { newRunicCharge, type RunicChargeState } from "../../styles/magic/runicCharge";
-import { newNecroRotationState, type NecroRotationState } from "../../styles/necromancy/effects";
-import { newConjures, type ConjureState } from "../../styles/necromancy/conjures";
+  newNecromancyRotationState,
+  type NecroRotationState,
+  type NecromancyRotationState,
+} from "../../styles/necromancy/effects";
+import type { ConjureState } from "../../styles/necromancy/conjures";
 
-export type { NecroRotationState, ConjureState };
+export type { MeleeRotationState, RangedRotationState, MagicRotationState };
+export type { NecroRotationState, NecromancyRotationState, ConjureState };
 export const ADRENALINE_CAP = 100;
 
-export interface RangedRotationState {
-  swiftness: DeathsSwiftnessState;
-  searingWinds: SearingWindsState;
-  shadowImbued: ShadowImbuedState;
-  deathspore: DeathsporeState;
+/** Ability id -> first tick it can be cast again. Absent = no individual cooldown. */
+export type CooldownState = Readonly<Record<string, number>>;
+
+/** Dynamic effects the simulation has put on the target, not on the player. */
+export interface TargetRuntimeState {
+  /** Burn debuffs applied to the target (Combust). */
+  burns: BurnState;
+  /**
+   * Cast sequence of the active Bloated debuff (-1 = none). Recasting Bloat
+   * overwrites the previous debuff: its pending tails are cancelled by owner
+   * (wiki: the duration resets on recast).
+   */
+  bloatedByCast: number;
 }
 
+/**
+ * The complete simulation state. Everything mutable lives here — never in
+ * module globals or captured closure state — and every field is replaced rather
+ * than mutated in place, so a branch can share the object safely.
+ *
+ * Genuinely global clocks stay at the top level; everything else belongs to the
+ * style that owns its mechanics, or to the target it was applied to.
+ */
 export interface RotationState {
   /** Next tick free for a cast — the global cooldown is encoded here. */
   tick: number;
   adrenaline: number;
-  /** Ability id -> first tick it can be cast again. Absent = no individual cooldown. */
-  cooldowns: Record<string, number>;
-  melee: BloodlustState;
-  /** Tick Berserk's damage window closes; 0 = inactive. */
-  berserkUntilTick: number;
-  /**
-   * Chaos Roar: next damaging melee ability is ×1.75 until this tick (0 = off).
-   * Wiki window 7.2s (12 ticks) after the roar cast.
-   */
-  chaosRoarUntilTick: number;
-  /**
-   * Greater Fury: the next non-bleed melee attack used before this tick has its
-   * first crit-eligible hit guaranteed crit; bleeds do not consume it.
-   * Wiki window 15s (25 ticks) after the Greater Fury cast (0 = inactive).
-   */
-  greaterFuryUntilTick: number;
-  /**
-   * Fury: next crit-eligible melee hit gains +25% crit chance (consumed on use).
-   * Wiki states no window — it persists until a non-bleed melee hit consumes it.
-   */
-  furyCritBonus: boolean;
+  cooldowns: CooldownState;
   /**
    * Relentless perk lockout: after a proc the perk cannot activate again until
-   * this tick (wiki: 30s internal cooldown; 0 = ready).
+   * this tick (wiki: 30s internal cooldown; 0 = ready). Style-agnostic.
    */
   relentlessUntilTick: number;
-  /**
-   * Meteor Strike: melee basics generate 1.5x adren + 4.5% passive per tick
-   * until this tick (0 = inactive). Wiki duration 30s (50 ticks).
-   */
-  meteorStrikeUntilTick: number;
-  /**
-   * Last-attack idle clock for Greater Barge (generic target / pure revo).
-   * Tick of the previous melee damaging cast; -1 = none yet.
-   * Idle = readyTick - lastMeleeCastTick when last >= 0. Off-target movement
-   * (Surge / Escape / Bladed Dive) is unmodelled.
-   */
-  lastMeleeCastTick: number;
-  /**
-   * Endless Assault window end tick (0 = inactive). Set when Greater Barge is
-   * cast after >= 8 idle ticks; next channelled melee inside the window consumes it.
-   */
-  endlessAssaultUntilTick: number;
-  /**
-   * Dismember recast chain (wiki: "Can be recast within 24s (40 ticks) of the
-   * previous cast"): the unlocked follow-up stage and its window end.
-   * null/0 = no live chain.
-   */
-  bleedChainNext: "slaughter" | "massacre" | null;
-  bleedChainUntilTick: number;
-  /** Sunshine / Greater Sunshine zone buff window (starts 1 tick after cast). */
-  sunshine: SunshineState;
-  /** Instability (FSOA): Lightning Surge on Magic crit while active. */
-  instability: InstabilityState;
-  /** Magic style state beyond Runic Charge: Flow, Concentrated stacks, Channelled Might, burns. */
-  magicFx: MagicFxState;
+  melee: MeleeRotationState;
   ranged: RangedRotationState;
-  magic: RunicChargeState;
-  /**
-   * Necromancy: residual souls, necrosis stacks, Living Death window.
-   * Mutate only via styles/necromancy/effects (applyNecroOnCast / patchNecro).
-   */
-  necro: NecroRotationState;
-  /**
-   * Cast sequence of the active Bloat effect (-1 = none). Recasting Bloat
-   * overwrites the previous Bloated debuff: its pending tails are cancelled
-   * by owner (wiki: the duration resets on recast).
-   */
-  activeBloatCastSeq: number;
-  /**
-   * Active conjured spirits (timers + skeleton rage). Mutate via conjures.ts
-   * helpers and applyNecroOnCast summon hooks.
-   */
-  conjures: ConjureState;
+  magic: MagicRotationState;
+  necromancy: NecromancyRotationState;
+  target: TargetRuntimeState;
 }
 
 export function newRotationState(opts: { lantern?: boolean } = {}): RotationState {
@@ -115,30 +59,12 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     tick: 0,
     adrenaline: 0,
     cooldowns: {},
-    melee: newBloodlust(),
-    berserkUntilTick: 0,
-    chaosRoarUntilTick: 0,
-    greaterFuryUntilTick: 0,
-    furyCritBonus: false,
     relentlessUntilTick: 0,
-    meteorStrikeUntilTick: 0,
-    lastMeleeCastTick: -1,
-    endlessAssaultUntilTick: 0,
-    bleedChainNext: null,
-    bleedChainUntilTick: 0,
-    sunshine: newSunshine(),
-    instability: newInstability(),
-    magicFx: newMagicFx(),
-    ranged: {
-      swiftness: newDeathsSwiftness(),
-      searingWinds: newSearingWinds(),
-      shadowImbued: newShadowImbued(),
-      deathspore: newDeathspore(),
-    },
-    magic: newRunicCharge(),
-    necro: newNecroRotationState({ lantern: opts.lantern }),
-    activeBloatCastSeq: -1,
-    conjures: newConjures(),
+    melee: newMeleeRotationState(),
+    ranged: newRangedRotationState(),
+    magic: newMagicRotationState(),
+    necromancy: newNecromancyRotationState({ lantern: opts.lantern }),
+    target: { burns: newBurns(), bloatedByCast: -1 },
   };
 }
 
@@ -163,8 +89,18 @@ export function startCooldown(
   return { ...state, cooldowns: { ...state.cooldowns, [abilityId]: state.tick + ticks } };
 }
 
-export function gainMeleeBloodlust(state: RotationState, base: number): RotationState {
-  return { ...state, melee: gainBloodlust(state.melee, base) };
+export function clearCooldowns(state: RotationState, ids: readonly string[]): RotationState {
+  if (ids.length === 0) return state;
+  const cooldowns = { ...state.cooldowns };
+  for (const id of ids) delete cooldowns[id];
+  return { ...state, cooldowns };
+}
+
+export function patchMelee(
+  state: RotationState,
+  patch: Partial<MeleeRotationState>,
+): RotationState {
+  return { ...state, melee: { ...state.melee, ...patch } };
 }
 
 export function patchRanged(
@@ -174,21 +110,35 @@ export function patchRanged(
   return { ...state, ranged: { ...state.ranged, ...patch } };
 }
 
-/** Necro fields only — prefer applyNecroOnCast for cast transitions. */
+export function patchMagic(
+  state: RotationState,
+  patch: Partial<MagicRotationState>,
+): RotationState {
+  return { ...state, magic: { ...state.magic, ...patch } };
+}
+
+/** Necro resource fields only — prefer applyNecroOnCast for cast transitions. */
 export function patchNecro(
   state: RotationState,
   patch: Partial<NecroRotationState>,
 ): RotationState {
-  return { ...state, necro: { ...state.necro, ...patch } };
+  return {
+    ...state,
+    necromancy: { ...state.necromancy, resources: { ...state.necromancy.resources, ...patch } },
+  };
 }
 
 export function patchConjures(state: RotationState, conjures: ConjureState): RotationState {
-  return { ...state, conjures };
+  return { ...state, necromancy: { ...state.necromancy, conjures } };
 }
 
-export function clearCooldowns(state: RotationState, ids: readonly string[]): RotationState {
-  if (ids.length === 0) return state;
-  const cooldowns = { ...state.cooldowns };
-  for (const id of ids) delete cooldowns[id];
-  return { ...state, cooldowns };
+export function patchTarget(
+  state: RotationState,
+  patch: Partial<TargetRuntimeState>,
+): RotationState {
+  return { ...state, target: { ...state.target, ...patch } };
+}
+
+export function gainMeleeBloodlust(state: RotationState, base: number): RotationState {
+  return patchMelee(state, { bloodlust: gainBloodlust(state.melee.bloodlust, base) });
 }

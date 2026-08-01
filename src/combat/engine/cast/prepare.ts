@@ -93,7 +93,7 @@ export function prepareCast(
   let empowerMult = 1;
   let bloodlustSpend = 0;
   if (melee) {
-    const stacks = rt.state.melee.stacks;
+    const stacks = rt.state.melee.bloodlust.stacks;
     if (melee.bloodlustScale && stacks >= melee.bloodlustScale.threshold) {
       working = {
         ...ability,
@@ -115,12 +115,12 @@ export function prepareCast(
     }
   }
   if (ability.style === "necromancy") {
-    working = resolveNecromancyAbility(working, rt.state.necro, candidate);
+    working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
   }
   // Runic-charged Dragon Breath: same ability (basic, +9 adrenaline, same
   // cooldown), empowered band while Anima Charged — the charge is consumed at
   // commit (castEffects). Not a separate ability.
-  if (ability.id === "dragon_breath" && animaCharged(rt.state.magic, candidate)) {
+  if (ability.id === "dragon_breath" && animaCharged(rt.state.magic.runicCharge, candidate)) {
     working = {
       ...working,
       hits: working.hits.map((h) => ({ ...h, band: { ...RUNIC_EMPOWERMENTS.dragon_breath.band } })),
@@ -155,8 +155,8 @@ export function prepareCast(
   }
 
   const meleeIdleTicks =
-    ability.style === "melee" && working.hits.length > 0 && rt.state.lastMeleeCastTick >= 0
-      ? candidate - rt.state.lastMeleeCastTick
+    ability.style === "melee" && working.hits.length > 0 && rt.state.melee.lastCastTick >= 0
+      ? candidate - rt.state.melee.lastCastTick
       : 0;
   let endlessAssaultGrantUntilTick: number | undefined;
   if (ability.id === "greater_barge" && working.hits.length > 0) {
@@ -175,8 +175,8 @@ export function prepareCast(
   const endlessAssaultConsume =
     melee?.channelled === true &&
     working.hits.length > 0 &&
-    rt.state.endlessAssaultUntilTick > 0 &&
-    candidate < rt.state.endlessAssaultUntilTick;
+    rt.state.melee.endlessAssaultUntilTick > 0 &&
+    candidate < rt.state.melee.endlessAssaultUntilTick;
 
   // Next-hit buffs are consumed by the next melee cast that can use them; the
   // benefit lands on that cast's FIRST eligible hit only (wiki: "only the
@@ -188,14 +188,14 @@ export function prepareCast(
   const chaosRoarConsume =
     ability.style === "melee" &&
     damaging &&
-    rt.state.chaosRoarUntilTick > 0 &&
-    candidate < rt.state.chaosRoarUntilTick;
+    rt.state.melee.chaosRoarUntilTick > 0 &&
+    candidate < rt.state.melee.chaosRoarUntilTick;
   const greaterFuryConsume =
     ability.style === "melee" &&
     nonBleed &&
-    rt.state.greaterFuryUntilTick > 0 &&
-    candidate < rt.state.greaterFuryUntilTick;
-  const furyConsume = ability.style === "melee" && nonBleed && rt.state.furyCritBonus;
+    rt.state.melee.greaterFuryUntilTick > 0 &&
+    candidate < rt.state.melee.greaterFuryUntilTick;
+  const furyConsume = ability.style === "melee" && nonBleed && rt.state.melee.furyCritBonus;
   // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") —
   // a channel cast inside the window keeps the bonus on hits landing after it.
   const searingWindsAtCast =
@@ -206,7 +206,7 @@ export function prepareCast(
     critLayers: magicCritLayers(
       input.crit,
       ability,
-      (rt.state.magicFx.concCritStacks * rt.state.magicFx.concCritPerStackPct) / 100,
+      (rt.state.magic.concCritStacks * rt.state.magic.concCritPerStackPct) / 100,
     ),
     baseMods:
       typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []),

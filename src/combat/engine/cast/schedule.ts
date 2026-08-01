@@ -44,7 +44,7 @@ export function scheduleCastEvents(
   // command hits are never scheduled.
   const skeletonUntilTick =
     ability.id === "command_skeleton_warrior"
-      ? rt.state.conjures.spirits.find((s) => s.id === "skeleton_warrior")?.untilTick
+      ? rt.state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior")?.untilTick
       : undefined;
   const hitSeqs: number[] = [];
   working.hits.forEach((hitSpec: AbilityHit, hitIndex: number) => {
@@ -106,7 +106,7 @@ export function scheduleCastEvents(
   if (
     ability.style === "magic" &&
     working.hits.length > 0 &&
-    instabilityActive(rt.state.instability, candidate)
+    instabilityActive(rt.state.magic.instability, candidate)
   ) {
     working.hits.forEach((hitSpec, hitIndex) => {
       if (hitSpec.critEligible === false) return;

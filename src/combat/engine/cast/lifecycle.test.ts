@@ -83,8 +83,8 @@ describe("rejected casts spend nothing", () => {
     const slaughter = rt.byId.get("slaughter")!;
     const preparation = prepareSimulationCast(rt, slaughter, 0);
     expect(preparation.ok).toBe(false);
-    expect(rt.state.bleedChainNext).toBeNull();
-    expect(rt.state.bleedChainUntilTick).toBe(0);
+    expect(rt.state.melee.bleedChainNext).toBeNull();
+    expect(rt.state.melee.bleedChainUntilTick).toBe(0);
   });
 });
 
@@ -105,10 +105,10 @@ describe("completion effects wait for the channel", () => {
     scheduleCastEvents(rt, prepared, false);
     applyCastEffects(rt, prepared);
     // Cast-start transitions alone must not award the channel's completion buff.
-    expect(rt.state.magicFx.channelledMight).toEqual(newChannelledMight());
+    expect(rt.state.magic.channelledMight).toEqual(newChannelledMight());
 
     applyCompletionEffects(castEffectContext(rt, prepared));
-    expect(rt.state.magicFx.channelledMight.startsAtTick).toBe(
+    expect(rt.state.magic.channelledMight.startsAtTick).toBe(
       prepared.candidate + prepared.occupancyTicks,
     );
   });

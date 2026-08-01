@@ -24,6 +24,7 @@ import {
   COMMAND_REQUIRES_CONJURE,
   conjureCanCast,
   dismissConjure,
+  newConjures,
   type ConjureState,
 } from "./conjures";
 
@@ -66,6 +67,21 @@ export function newNecroRotationState(opts: { lantern?: boolean } = {}): NecroRo
     lantern: opts.lantern ?? false,
   };
 }
+
+/** Every mutable necromancy state the simulation carries between casts. */
+export interface NecromancyRotationState {
+  /** Residual souls, Necrosis stacks, Living Death window. */
+  resources: NecroRotationState;
+  /** Active conjured spirits and their schedulers. */
+  conjures: ConjureState;
+}
+
+export const newNecromancyRotationState = (
+  opts: { lantern?: boolean } = {},
+): NecromancyRotationState => ({
+  resources: newNecroRotationState(opts),
+  conjures: newConjures(),
+});
 
 export function residualSoulCapFor(necro: NecroRotationState): number {
   return RESIDUAL_SOUL_CAP + (necro.lantern ? SOULBOUND_LANTERN_BONUS_CAP : 0);

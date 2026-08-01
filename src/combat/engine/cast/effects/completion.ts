@@ -1,5 +1,6 @@
 import { grantChannelledMight } from "../../../styles/magic/effects";
-import { patchState, type CastEffectContext } from "./context";
+import { patchMagic } from "../../runtime/state";
+import type { CastEffectContext } from "./context";
 
 /**
  * Effects that require the cast's occupancy to have finished. Applied after the
@@ -14,11 +15,8 @@ import { patchState, type CastEffectContext } from "./context";
 export function applyCompletionEffects(fx: CastEffectContext): void {
   const { rt, ability, candidate } = fx;
   if (ability.id === "asphyxiate" && ability.channelTicks != null) {
-    patchState(fx, {
-      magicFx: {
-        ...rt.state.magicFx,
-        channelledMight: grantChannelledMight(candidate + ability.channelTicks),
-      },
+    rt.state = patchMagic(rt.state, {
+      channelledMight: grantChannelledMight(candidate + ability.channelTicks),
     });
   }
 }

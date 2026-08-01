@@ -4,10 +4,11 @@ import {
   conjureActive,
 } from "../../../styles/necromancy/conjures";
 import { applyNecroOnCast } from "../../../styles/necromancy/effects";
+import { patchConjures, patchNecro, patchTarget } from "../../runtime/state";
 import { applySkeletonCommand, scheduleSpiritTracks } from "../../schedulers/conjures";
 import { resetCooldowns, startLinkedCooldown } from "./cooldowns";
 import { grantBonusAdrenaline } from "./resources";
-import { patchState, type CastEffectContext } from "./context";
+import type { CastEffectContext } from "./context";
 
 /**
  * Immediate necromancy cast-state changes: the resource patch (souls, Necrosis,
@@ -16,17 +17,16 @@ import { patchState, type CastEffectContext } from "./context";
  */
 export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   const { rt, ability, candidate, prepared } = fx;
+  const necromancy = rt.state.necromancy;
 
-  const skeletonWasActive = conjureActive(rt.state.conjures, "skeleton_warrior", candidate);
-  const patch = applyNecroOnCast(rt.state.necro, ability, candidate, rt.state.conjures);
-  patchState(fx, {
-    necro: patch.necro,
-    ...(patch.conjures ? { conjures: patch.conjures } : {}),
-  });
+  const skeletonWasActive = conjureActive(necromancy.conjures, "skeleton_warrior", candidate);
+  const patch = applyNecroOnCast(necromancy.resources, ability, candidate, necromancy.conjures);
+  rt.state = patchNecro(rt.state, patch.necro);
+  if (patch.conjures) rt.state = patchConjures(rt.state, patch.conjures);
   grantBonusAdrenaline(fx, patch.adrenalineBonus);
   resetCooldowns(fx, patch.clearCooldownIds);
 
-  for (const spirit of rt.state.conjures.spirits) scheduleSpiritTracks(rt, spirit);
+  for (const spirit of rt.state.necromancy.conjures.spirits) scheduleSpiritTracks(rt, spirit);
 
   // Wiki: conjuring a skeleton starts the command's initial 3.6s (6-tick)
   // lockout; commanding mutates the skeleton's own auto scheduler.
@@ -43,7 +43,7 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   // previous cast's pending tails and starts a fresh derived set (wiki: "its
   // 19.8-second duration will be reset").
   if (ability.id === "bloat") {
-    if (rt.state.activeBloatCastSeq >= 0) rt.queue.cancelByOwner(rt.state.activeBloatCastSeq);
-    patchState(fx, { activeBloatCastSeq: prepared.snap.castSeq });
+    if (rt.state.target.bloatedByCast >= 0) rt.queue.cancelByOwner(rt.state.target.bloatedByCast);
+    rt.state = patchTarget(rt.state, { bloatedByCast: prepared.snap.castSeq });
   }
 }

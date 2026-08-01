@@ -8,6 +8,7 @@ import { advanceTo } from "../runtime/clock";
 import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
+import { patchMagic } from "../runtime/state";
 
 const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
 
@@ -75,7 +76,9 @@ export function performCast(
 export function performOffGcdCast(rt: SimulationRuntime, ability: AbilitySpec): void {
   rt.nextCastSeq++;
   if (ability.stateEffect === "runic_charge") {
-    rt.state = { ...rt.state, magic: activateRunicCharge(rt.state.magic, rt.state.tick) };
+    rt.state = patchMagic(rt.state, {
+      runicCharge: activateRunicCharge(rt.state.magic.runicCharge, rt.state.tick),
+    });
   }
   const record: CastRecord = {
     tick: rt.state.tick,

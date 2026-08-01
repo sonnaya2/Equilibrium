@@ -30,7 +30,7 @@ export function resolveLightningSurge(
   const sourceCritChance = rt.hitDetails.get(sourceSeq)?.critChance ?? 0;
   if (sourceCritChance <= 0) return NO_DAMAGE;
   const modifiers = [...baseMods];
-  if (state.sunshine.grantedByCast !== castSeq && sunshineActive(state.sunshine, at)) {
+  if (state.magic.sunshine.grantedByCast !== castSeq && sunshineActive(state.magic.sunshine, at)) {
     modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
   }
   const surgeHit = calculateHit({

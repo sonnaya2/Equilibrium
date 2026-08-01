@@ -476,7 +476,7 @@ describe("simulate — greater_barge idle + Endless Assault", () => {
     expect(g.result.max).toBe(1650);
   });
 
-  it("first melee cast has 0 idle (lastMeleeCastTick starts at -1)", () => {
+  it("first melee cast has 0 idle (melee.lastCastTick starts at -1)", () => {
     const s = simulate({
       ...baseInput,
       rotation: rotationOf("greater_barge"),
@@ -490,12 +490,12 @@ describe("simulate — greater_barge idle + Endless Assault", () => {
     const ctx = createCastContext(baseInput);
     ctx.performCast(byId("attack"), 0, false);
     ctx.performCast(byId("greater_barge"), 8, false);
-    expect(ctx.getState().endlessAssaultUntilTick).toBe(18);
+    expect(ctx.getState().melee.endlessAssaultUntilTick).toBe(18);
     // Fund the channel: attack@11 puts adrenaline at 27 so the cast is accepted.
     ctx.performCast(byId("attack"), 11, false);
     const attempt = ctx.performCast(byId("assault"), 14, false);
     expect(attempt.ok).toBe(true);
-    expect(ctx.getState().endlessAssaultUntilTick).toBe(0);
+    expect(ctx.getState().melee.endlessAssaultUntilTick).toBe(0);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
     expect(s.casts[1].result.min).toBe(1150);
@@ -868,11 +868,11 @@ describe("simulate — necromancy resources", () => {
     const ctx = createCastContext(necroInput);
     const soulSap = abilityById(NECROMANCY_ABILITIES, "soul_sap");
     ctx.performCast(soulSap, 0, false);
-    expect(ctx.getState().necro.residualSouls).toBe(1);
+    expect(ctx.getState().necromancy.resources.residualSouls).toBe(1);
     ctx.performCast(soulSap, 3, false);
-    expect(ctx.getState().necro.residualSouls).toBe(2);
+    expect(ctx.getState().necromancy.resources.residualSouls).toBe(2);
     ctx.performCast(abilityById(NECROMANCY_ABILITIES, "soul_strike"), 6, false);
-    expect(ctx.getState().necro.residualSouls).toBe(1);
+    expect(ctx.getState().necromancy.resources.residualSouls).toBe(1);
   });
 
   it("fails Soul Strike without residual souls", () => {
@@ -887,10 +887,10 @@ describe("simulate — necromancy resources", () => {
     const fod = abilityById(NECROMANCY_ABILITIES, "finger_of_death");
     ctx.performCast(tod, 0, false);
     ctx.performCast(tod, 3, false);
-    expect(ctx.getState().necro.necrosisStacks).toBe(8);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(8);
     expect(ctx.costOf(fod)).toBe(0);
     ctx.performCast(fod, 6, false);
-    expect(ctx.getState().necro.necrosisStacks).toBe(2);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(2);
 
     const s = simulate({
       ...necroInput,
@@ -911,7 +911,7 @@ describe("simulate — necromancy resources", () => {
     const sap = abilityById(NECROMANCY_ABILITIES, "soul_sap");
     for (let i = 0; i < 3; i++) ctx.performCast(sap, i * 3, false);
     ctx.performCast(volleyOfSouls(3), 9, false);
-    expect(ctx.getState().necro.residualSouls).toBe(0);
+    expect(ctx.getState().necromancy.resources.residualSouls).toBe(0);
   });
 
   it("Living Death resets ToD/DS CDs, buffs FoD, and shortens Death Skulls CD", () => {
@@ -925,18 +925,18 @@ describe("simulate — necromancy resources", () => {
     for (let i = 0; i < 12; i++) ctx.performCast(basic, i * 3, false);
     ctx.performCast(tod, 36, false);
     expect(ctx.getState().cooldowns["touch_of_death"]).toBeGreaterThan(ctx.getState().tick);
-    expect(ctx.getState().necro.necrosisStacks).toBe(4);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(4);
 
     ctx.performCast(ld, 39, false);
-    expect(ctx.getState().necro.livingDeathUntilTick).toBeGreaterThan(39);
+    expect(ctx.getState().necromancy.resources.livingDeathUntilTick).toBeGreaterThan(39);
     expect(ctx.getState().cooldowns["touch_of_death"]).toBeUndefined();
     expect(ctx.getState().cooldowns["death_skulls"]).toBeUndefined();
 
     ctx.performCast(basic, 42, false);
-    expect(ctx.getState().necro.necrosisStacks).toBe(6);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(6);
 
     ctx.performCast(fod, 45, false);
-    expect(ctx.getState().necro.necrosisStacks).toBe(0);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(0);
 
     for (let i = 0; i < 7; i++) ctx.performCast(basic, 48 + i * 3, false);
     const dsTick = 48 + 7 * 3;
@@ -1028,7 +1028,7 @@ describe("simulate — necromancy resources", () => {
     ctx.performCast(army, 0, false);
     const ids = ctx
       .getState()
-      .conjures.spirits.map((s) => s.id)
+      .necromancy.conjures.spirits.map((s) => s.id)
       .sort();
     expect(ids).toEqual(["putrid_zombie", "skeleton_warrior", "vengeful_ghost"]);
 
@@ -1237,19 +1237,19 @@ describe("simulate — event log", () => {
     const attack = abilityById(MELEE_ABILITIES, "attack");
     for (let i = 0; i < 12; i++) ctx.performCast(attack, i * 3, false);
     ctx.performCast(abilityById(MELEE_ABILITIES, "berserk"), 36, false);
-    expect(ctx.getState().melee.stacks).toBe(8);
-    expect(ctx.getState().berserkUntilTick).toBe(69);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(8);
+    expect(ctx.getState().melee.berserkUntilTick).toBe(69);
     for (let t = 39; t <= 63; t += 3) ctx.performCast(attack, t, false);
     // Still inside the window at tick 66: no clip.
     expect(ctx.getState().tick).toBe(66);
-    expect(ctx.getState().melee.stacks).toBe(8);
-    expect(ctx.getState().melee.berserk).toBe(true);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(8);
+    expect(ctx.getState().melee.bloodlust.berserk).toBe(true);
     ctx.performCast(attack, 66, false);
     // The occupancy advance crosses tick 69 (the exclusive end): stacks clip to the base cap.
     expect(ctx.getState().tick).toBe(69);
-    expect(ctx.getState().melee.berserk).toBe(false);
-    expect(ctx.getState().melee.stacks).toBe(4);
-    expect(ctx.getState().berserkUntilTick).toBe(0);
+    expect(ctx.getState().melee.bloodlust.berserk).toBe(false);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(4);
+    expect(ctx.getState().melee.berserkUntilTick).toBe(0);
   });
 });
 
@@ -1259,13 +1259,13 @@ describe("simulate — Bloodlust spend lifecycle", () => {
     const attack = ctx.byId.get("attack")!;
     const assault = ctx.byId.get("assault")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
-    expect(ctx.getState().melee.stacks).toBe(4);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(4);
     expect(ctx.performCast(assault, ctx.firstLegalTick("assault"), false).ok).toBe(true);
-    expect(ctx.getState().melee.stacks).toBe(0);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(0);
     for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
-    expect(ctx.getState().melee.stacks).toBe(3);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(3);
     expect(ctx.performCast(assault, ctx.firstLegalTick("assault"), false).ok).toBe(true);
-    expect(ctx.getState().melee.stacks).toBe(3); // unempowered: no spend
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(3); // unempowered: no spend
     const s = ctx.finish();
     expect(s.casts[4].result.expected).toBeCloseTo(4 * 1800); // empowered 170-190
     expect(s.casts[8].result.expected).toBeCloseTo(4 * 1400); // normal 130-150
@@ -1277,7 +1277,7 @@ describe("simulate — Bloodlust spend lifecycle", () => {
     const hurricane = ctx.byId.get("hurricane")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.performCast(hurricane, ctx.getState().tick, false).ok).toBe(true);
-    expect(ctx.getState().melee.stacks).toBe(0);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(0);
     const s = ctx.finish();
     const cast = lastCast(s);
     expect(cast.result.hits).toHaveLength(3);
@@ -1294,7 +1294,7 @@ describe("simulate — Bloodlust spend lifecycle", () => {
     const hurricane = ctx.byId.get("hurricane")!;
     for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.performCast(hurricane, ctx.getState().tick, false).ok).toBe(true);
-    expect(ctx.getState().melee.stacks).toBe(3); // below threshold: no spend
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(3); // below threshold: no spend
     const s = ctx.finish();
     expect(lastCast(s).result.hits).toHaveLength(2);
     expect(lastCast(s).result.expected).toBeCloseTo(1500 + 1700);
@@ -1315,7 +1315,7 @@ describe("simulate — Bloodlust spend lifecycle", () => {
     const flurry = ctx.byId.get("flurry")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.performCast(flurry, ctx.getState().tick, false).ok).toBe(true);
-    expect(ctx.getState().melee.stacks).toBe(0);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(0);
     const s = ctx.finish();
     expect(s.casts[4].result.expected).toBeCloseTo(8 * 650);
   });
@@ -1349,10 +1349,10 @@ describe("simulate — next-hit effect scope", () => {
     const greaterFury = ctx.byId.get("greater_fury")!;
     const attack = ctx.byId.get("attack")!;
     ctx.performCast(greaterFury, 0, false);
-    expect(ctx.getState().greaterFuryUntilTick).toBe(25);
+    expect(ctx.getState().melee.greaterFuryUntilTick).toBe(25);
     ctx.performCast(attack, 24, false); // inside the window
     ctx.performCast(greaterFury, ctx.getState().tick, false); // recast: new window from cast tick
-    const secondWindow = ctx.getState().greaterFuryUntilTick;
+    const secondWindow = ctx.getState().melee.greaterFuryUntilTick;
     ctx.performCast(attack, secondWindow, false); // exactly at its end: expired
     const s = ctx.finish();
     expect(s.casts[1].result.expected).toBeCloseTo(1800);
@@ -1401,10 +1401,10 @@ describe("simulate — next-hit effect scope", () => {
     const chaosRoar = ctx.byId.get("chaos_roar")!;
     const attack = ctx.byId.get("attack")!;
     ctx.performCast(chaosRoar, 0, false);
-    expect(ctx.getState().chaosRoarUntilTick).toBe(12);
+    expect(ctx.getState().melee.chaosRoarUntilTick).toBe(12);
     ctx.performCast(attack, 11, false); // inside the window
     ctx.performCast(chaosRoar, ctx.getState().tick, false);
-    const secondWindow = ctx.getState().chaosRoarUntilTick;
+    const secondWindow = ctx.getState().melee.chaosRoarUntilTick;
     ctx.performCast(attack, secondWindow, false); // exactly at its end: expired
     const s = ctx.finish();
     expect(s.casts[1].result.expected).toBeCloseTo(1200 * 1.75);
@@ -1634,7 +1634,7 @@ describe("simulate — Command Skeleton Warrior scheduling", () => {
     expect(ctx.getState().tick).toBe(9);
     while (ctx.getState().tick <= 26) ctx.performCast(basic, ctx.getState().tick, false);
     // Rage after the resumed auto at 24: 1 (auto at 7) + 10 (command) + 2 (autos).
-    expect(ctx.getState().conjures.spirits[0].rageStacks).toBe(13);
+    expect(ctx.getState().necromancy.conjures.spirits[0].rageStacks).toBe(13);
     const s = ctx.finish();
     const { autos, commands } = skeletonEvents(s);
     expect(autos.map((e) => e.tick).slice(0, 3)).toEqual([7, 19, 24]);

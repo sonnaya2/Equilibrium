@@ -21,6 +21,7 @@ import type { CombatModifier } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
 import { scheduleEvent, withinHorizon, type SimulationRuntime } from "../runtime/runtime";
+import { patchConjures } from "../runtime/state";
 
 /**
  * Conjure spirit schedulers: each summon instance owns two tracks (autos, and
@@ -57,7 +58,7 @@ function spiritEventLive(
 ): { spirit: ActiveConjure; kind: "auto" | "poison" } | null {
   const meta = rt.spiritEventMeta.get(event.seq);
   if (!meta) return null;
-  const spirit = rt.state.conjures.spirits.find(
+  const spirit = rt.state.necromancy.conjures.spirits.find(
     (s) => s.id === meta.id && s.untilTick === meta.untilTick,
   );
   if (!spirit) return null; // dismissed, or replaced by a re-summon
@@ -66,12 +67,9 @@ function spiritEventLive(
 }
 
 function patchSpirit(rt: SimulationRuntime, target: ActiveConjure, next: ActiveConjure): void {
-  rt.state = {
-    ...rt.state,
-    conjures: {
-      spirits: rt.state.conjures.spirits.map((s) => (s === target ? next : s)),
-    },
-  };
+  rt.state = patchConjures(rt.state, {
+    spirits: rt.state.necromancy.conjures.spirits.map((s) => (s === target ? next : s)),
+  });
 }
 
 function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void {
@@ -91,7 +89,7 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
       // set mult is post-hit damage so intermediate AD rounding does not distort
       // the exact +7%/piece ratio (wiki: conjure basics only).
       const profile = spiritAutoProfile(spirit.id);
-      const live = eventRt.state.conjures.spirits.find(
+      const live = eventRt.state.necromancy.conjures.spirits.find(
         (s) => s.id === spirit.id && s.untilTick === spirit.untilTick,
       );
       if (!profile || !live) return NO_DAMAGE;
@@ -167,7 +165,7 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
  * then every 5 ticks. Command hits themselves are cast events (see castEvents).
  */
 export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): void {
-  const spirit = rt.state.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+  const spirit = rt.state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior");
   if (!spirit) return;
   const raaarTick = candidate + COMMAND_SKELETON_RAAAR_DELAY_TICKS;
   const resumeTick =

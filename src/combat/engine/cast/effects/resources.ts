@@ -3,7 +3,7 @@ import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../.
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
 import { spendDeathspore } from "../../../styles/ranged/onHit";
 import { gainAdrenaline, patchRanged, spendAdrenaline } from "../../runtime/state";
-import { patchState, type CastEffectContext } from "./context";
+import type { CastEffectContext } from "./context";
 
 /**
  * Adrenaline and free-cast resources for one cast, in sourced order: gain
@@ -25,8 +25,8 @@ export function applyCastResources(fx: CastEffectContext): void {
     const meteorBasic =
       ability.style === "melee" &&
       ability.category === "basic" &&
-      rt.state.meteorStrikeUntilTick > 0 &&
-      candidate < rt.state.meteorStrikeUntilTick;
+      rt.state.melee.meteorStrikeUntilTick > 0 &&
+      candidate < rt.state.melee.meteorStrikeUntilTick;
     let gain = meteorBasic
       ? ability.adrenaline.gain * METEOR_STRIKE_BASIC_ADREN_MULTIPLIER
       : ability.adrenaline.gain;
@@ -47,9 +47,10 @@ export function applyCastResources(fx: CastEffectContext): void {
       candidate >= rt.state.relentlessUntilTick &&
       rng?.relentlessProc
     ) {
-      patchState(fx, {
+      rt.state = {
+        ...rt.state,
         relentlessUntilTick: candidate + secondsToTicks(RELENTLESS_INTERNAL_CD_SECONDS),
-      });
+      };
     } else {
       rt.state = spendAdrenaline(rt.state, spend);
     }

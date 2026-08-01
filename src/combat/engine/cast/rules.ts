@@ -24,13 +24,13 @@ export function candidateTick(state: RotationState, readyTick: number): number {
  */
 export function costOf(state: RotationState, ability: AbilitySpec, tick: number): number {
   if (ability.style === "necromancy") {
-    return necroAdrenalineCost(ability, state.necro, tick);
+    return necroAdrenalineCost(ability, state.necromancy.resources, tick);
   }
   const listed = ability.adrenaline?.cost ?? 0;
   // Flow (Sonic Wave): a flat adrenaline-point reduction while the window is
   // open, never below zero. Defence/Constitution/specials never benefit.
-  if (listed > 0 && ability.style === "magic" && tick < state.magicFx.flowUntilTick) {
-    return Math.max(0, listed - state.magicFx.flowReduction);
+  if (listed > 0 && ability.style === "magic" && tick < state.magic.flowUntilTick) {
+    return Math.max(0, listed - state.magic.flowReduction);
   }
   return listed;
 }
@@ -60,13 +60,16 @@ export function castRejection(
   ability: AbilitySpec,
   candidate: number,
 ): string | null {
-  if (!necroCanCast(ability, state.necro, state.conjures, candidate)) {
-    return `${ability.id} needs residual souls or an active conjure, ${state.necro.residualSouls} souls available at tick ${candidate}`;
+  if (!necroCanCast(ability, state.necromancy.resources, state.necromancy.conjures, candidate)) {
+    return `${ability.id} needs residual souls or an active conjure, ${state.necromancy.resources.residualSouls} souls available at tick ${candidate}`;
   }
   const recastOf = isMeleeAbility(ability) ? ability.recastOf : undefined;
-  if (recastOf && (state.bleedChainNext !== ability.id || candidate >= state.bleedChainUntilTick)) {
+  if (
+    recastOf &&
+    (state.melee.bleedChainNext !== ability.id || candidate >= state.melee.bleedChainUntilTick)
+  ) {
     return `${ability.id} needs ${recastOf} cast within the last 40 ticks (chain ${
-      state.bleedChainNext ?? "none"
+      state.melee.bleedChainNext ?? "none"
     } at tick ${candidate})`;
   }
   const cost = costOf(state, ability, candidate);

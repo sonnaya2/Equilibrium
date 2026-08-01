@@ -41,7 +41,7 @@ export function resolveCastHit(
   // other magic cast consumed them at cast time (baked into snap.critLayers).
   const liveConcChance =
     ability.style === "magic" && isConcentratedBlast(ability.id)
-      ? (state.magicFx.concCritStacks * state.magicFx.concCritPerStackPct) / 100
+      ? (state.magic.concCritStacks * state.magic.concCritPerStackPct) / 100
       : 0;
   const crit: CritLayers = {
     ...snap.critLayers,
@@ -53,7 +53,7 @@ export function resolveCastHit(
     guaranteed: snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
     damageBonus:
       (snap.critLayers.damageBonus ?? 0) +
-      (ability.style === "magic" ? channelledMightCritBonus(state.magicFx.channelledMight, at) : 0),
+      (ability.style === "magic" ? channelledMightCritBonus(state.magic.channelledMight, at) : 0),
   };
 
   // Command abilities are part of the conjure: full Damage Potential, the
@@ -62,7 +62,7 @@ export function resolveCastHit(
   const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
   let band = hitSpec.band;
   if (ability.id === "command_skeleton_warrior") {
-    const spirit = state.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+    const spirit = state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior");
     const mult = skeletonRageMult(spirit?.rageStacks ?? 0);
     if (mult !== 1) band = { minPct: band.minPct * mult, maxPct: band.maxPct * mult };
   }

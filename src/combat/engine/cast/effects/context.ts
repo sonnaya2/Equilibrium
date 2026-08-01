@@ -1,6 +1,5 @@
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
 import type { SimulationRuntime } from "../../runtime/runtime";
-import type { RotationState } from "../../runtime/state";
 import type { CastRng } from "../../simulation/contracts";
 import type { PreparedCast } from "../prepare";
 
@@ -9,6 +8,9 @@ import type { PreparedCast } from "../prepare";
  * the same ability, variant and tick instead of re-destructuring the prepared
  * cast. `rng` carries the driver's enumerated outcome for this cast's single
  * state-changing RNG point (absent = did not proc).
+ *
+ * Effect modules mutate through the runtime/state patch helpers, so no state
+ * object is ever changed in place.
  */
 export interface CastEffectContext {
   rt: SimulationRuntime;
@@ -35,9 +37,4 @@ export function castEffectContext(
     candidate: prepared.candidate,
     ...(rng !== undefined ? { rng } : {}),
   };
-}
-
-/** Replace runtime state with a shallow patch — the old object is never mutated. */
-export function patchState(fx: CastEffectContext, next: Partial<RotationState>): void {
-  fx.rt.state = { ...fx.rt.state, ...next };
 }

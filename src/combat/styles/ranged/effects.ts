@@ -1,6 +1,14 @@
 import { MODERNISATION_WIKI } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import type { SourceReference } from "../../types";
+import {
+  newDeathspore,
+  newSearingWinds,
+  newShadowImbued,
+  type DeathsporeState,
+  type SearingWindsState,
+  type ShadowImbuedState,
+} from "./onHit";
 
 /**
  * Death's Swiftness became a mobile self-buff on 16 Mar 2026: 1.5x ranged
@@ -54,3 +62,18 @@ export function deathsSwiftnessMultiplier(state: DeathsSwiftnessState, tick: num
 }
 
 export const DEATHS_SWIFTNESS_SOURCE: SourceReference = MODERNISATION_WIKI;
+
+/** Every mutable ranged state the simulation carries between casts. */
+export interface RangedRotationState {
+  swiftness: DeathsSwiftnessState;
+  searingWinds: SearingWindsState;
+  shadowImbued: ShadowImbuedState;
+  deathspore: DeathsporeState;
+}
+
+export const newRangedRotationState = (): RangedRotationState => ({
+  swiftness: newDeathsSwiftness(),
+  searingWinds: newSearingWinds(),
+  shadowImbued: newShadowImbued(),
+  deathspore: newDeathspore(),
+});

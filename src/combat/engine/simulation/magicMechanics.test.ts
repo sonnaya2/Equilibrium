@@ -57,7 +57,7 @@ describe("Concentrated Blast crit progression", () => {
     const cb = ctx.byId.get("concentrated_blast")!;
     const attack = ctx.byId.get("magic_attack")!;
     ctx.performCast(cb, 0, false); // hits land 0,1,2 → stacks build to 3
-    expect(ctx.getState().magicFx.concCritStacks).toBe(3);
+    expect(ctx.getState().magic.concCritStacks).toBe(3);
     ctx.performCast(attack, ctx.getState().tick, false);
     const s = ctx.finish();
     const cbCast = s.casts[0];
@@ -67,15 +67,15 @@ describe("Concentrated Blast crit progression", () => {
     expect(s.casts[1].result.hits[0].critChance).toBeCloseTo(0.15);
     expect(s.casts[1].result.expected).toBeCloseTo(1000 * 1.075);
     // The consuming attack reset the stacks.
-    expect(ctx.getState().magicFx.concCritStacks).toBe(0);
+    expect(ctx.getState().magic.concCritStacks).toBe(0);
   });
 
   it("Greater Concentrated Blast stacks +7% per hit", () => {
     const ctx = createCastContext(magicInput);
     const gcb = ctx.byId.get("greater_concentrated_blast")!;
     ctx.performCast(gcb, 0, false);
-    expect(ctx.getState().magicFx.concCritStacks).toBe(3);
-    expect(ctx.getState().magicFx.concCritPerStackPct).toBe(7);
+    expect(ctx.getState().magic.concCritStacks).toBe(3);
+    expect(ctx.getState().magic.concCritPerStackPct).toBe(7);
     const s = ctx.finish();
     expect(s.casts[0].result.hits[1].critChance).toBeCloseTo(0.07);
     expect(s.casts[0].result.hits[2].critChance).toBeCloseTo(0.14);
@@ -85,8 +85,8 @@ describe("Concentrated Blast crit progression", () => {
     const ctx = createCastContext(magicInput);
     ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
     ctx.performCast(ctx.byId.get("concentrated_blast")!, ctx.getState().tick, false);
-    expect(ctx.getState().magicFx.concCritPerStackPct).toBe(15);
-    expect(ctx.getState().magic.animaUntilTick).toBe(0);
+    expect(ctx.getState().magic.concCritPerStackPct).toBe(15);
+    expect(ctx.getState().magic.runicCharge.animaUntilTick).toBe(0);
     const s = ctx.finish();
     expect(s.casts[1].result.hits[1].critChance).toBeCloseTo(0.15);
     expect(s.casts[1].result.hits[2].critChance).toBeCloseTo(0.3);
@@ -100,7 +100,7 @@ describe("Channelled Might", () => {
     for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
     const asphyxiateTick = ctx.getState().tick;
     ctx.performCast(ctx.byId.get("asphyxiate")!, asphyxiateTick, false);
-    const might = ctx.getState().magicFx.channelledMight;
+    const might = ctx.getState().magic.channelledMight;
     expect(might.startsAtTick).toBe(asphyxiateTick + 7);
     expect(might.expiresAtTick).toBe(asphyxiateTick + 7 + 6);
   });
@@ -146,11 +146,11 @@ describe("Sonic Wave Flow", () => {
     ctx.performCast(attack, 3, false);
     // Sonic Wave's hit lands 2 ticks after the cast; Flow runs 15 ticks from there.
     ctx.performCast(sonic, 6, false);
-    expect(ctx.getState().magicFx.flowReduction).toBe(10);
-    expect(ctx.getState().magicFx.flowUntilTick).toBe(8 + 15);
+    expect(ctx.getState().magic.flowReduction).toBe(10);
+    expect(ctx.getState().magic.flowUntilTick).toBe(8 + 15);
     expect(ctx.costOf(wild)).toBe(25 - 10);
     ctx.performCast(wild, ctx.getState().tick, false);
-    expect(ctx.getState().magicFx.flowUntilTick).toBe(0); // consumed
+    expect(ctx.getState().magic.flowUntilTick).toBe(0); // consumed
   });
 
   it("a Sonic Wave whose hit never lands grants no Flow (horizon truncation)", () => {
@@ -159,8 +159,8 @@ describe("Sonic Wave Flow", () => {
     const ctx = createCastContext({ ...magicInput, horizonTicks: 1 });
     const sonic = ctx.byId.get("sonic_wave")!;
     ctx.performCast(sonic, 0, false);
-    expect(ctx.getState().magicFx.flowUntilTick).toBe(0);
-    expect(ctx.getState().magicFx.flowReduction).toBe(0);
+    expect(ctx.getState().magic.flowUntilTick).toBe(0);
+    expect(ctx.getState().magic.flowReduction).toBe(0);
   });
 
   it("flat reductions: 60-cost under Flow costs 50, 25-cost under Greater Flow costs 5", () => {
@@ -182,8 +182,8 @@ describe("Sonic Wave Flow", () => {
     const wild = ctx.byId.get("wild_magic")!;
     ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
     ctx.performCast(sonic, ctx.getState().tick, false);
-    expect(ctx.getState().magic.animaUntilTick).toBe(0);
-    expect(ctx.getState().magicFx.flowReduction).toBe(35);
+    expect(ctx.getState().magic.runicCharge.animaUntilTick).toBe(0);
+    expect(ctx.getState().magic.flowReduction).toBe(35);
     expect(ctx.costOf(wild)).toBe(0);
   });
 
@@ -196,7 +196,7 @@ describe("Sonic Wave Flow", () => {
     ctx.performCast(attack, 3, false);
     ctx.performCast(sonic, 6, false);
     ctx.performCast(attack, 9, false);
-    expect(ctx.getState().magicFx.flowReduction).toBe(10);
+    expect(ctx.getState().magic.flowReduction).toBe(10);
     expect(ctx.costOf(wild)).toBe(15);
   });
 
@@ -270,7 +270,7 @@ describe("Runic-charged Dragon Breath", () => {
     const db = ctx.byId.get("dragon_breath")!;
     ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
     ctx.performCast(db, 0, false);
-    expect(ctx.getState().magic.animaUntilTick).toBe(0);
+    expect(ctx.getState().magic.runicCharge.animaUntilTick).toBe(0);
     expect(ctx.getState().adrenaline).toBe(9);
     ctx.performCast(db, ctx.firstLegalTick("dragon_breath"), false);
     const s = ctx.finish();
@@ -295,7 +295,7 @@ describe("Runic-charged Dragon Breath", () => {
     ctx.performCast(sonic, 0, false); // Flow active from tick 2 (10 points)
     ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
     ctx.performCast(db, 3, false);
-    expect(ctx.getState().magicFx.flowReduction).toBe(10);
-    expect(ctx.getState().magicFx.flowUntilTick).toBeGreaterThan(0);
+    expect(ctx.getState().magic.flowReduction).toBe(10);
+    expect(ctx.getState().magic.flowUntilTick).toBeGreaterThan(0);
   });
 });

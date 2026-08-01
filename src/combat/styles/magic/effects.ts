@@ -1,7 +1,7 @@
 import { secondsToTicks } from "../../core/ticks";
 import { BLOOMING_BURROW_WIKI_2026_03_30 } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
-import { newBurns, type BurnState } from "./burn";
+import { newRunicCharge, type RunicChargeState } from "./runicCharge";
 import type { SourceReference } from "../../types";
 
 /**
@@ -74,8 +74,18 @@ export const GREATER_CONC_BLAST_CRIT_PER_HIT_PCT = 7;
 export const CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 15;
 export const GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 17;
 
-/** Magic rotation state beyond Runic Charge. */
-export interface MagicFxState {
+/**
+ * Every mutable magic state the simulation carries between casts, Runic Charge
+ * included. Combust's burn is deliberately absent: it is a debuff on the
+ * target, so it lives in target state.
+ */
+export interface MagicRotationState {
+  /** Runic Charge / Anima Charged window. */
+  runicCharge: RunicChargeState;
+  /** Sunshine / Greater Sunshine zone buff window (starts 1 tick after cast). */
+  sunshine: SunshineState;
+  /** Instability (FSOA): Lightning Surge on a Magic crit while active. */
+  instability: InstabilityState;
   /** Flow window end (0 = inactive) and the stored reduction in adrenaline points. */
   flowUntilTick: number;
   flowReduction: number;
@@ -88,17 +98,18 @@ export interface MagicFxState {
   concCritStacks: number;
   concCritPerStackPct: number;
   channelledMight: ChannelledMightState;
-  burns: BurnState;
 }
 
-export const newMagicFx = (): MagicFxState => ({
+export const newMagicRotationState = (): MagicRotationState => ({
+  runicCharge: newRunicCharge(),
+  sunshine: newSunshine(),
+  instability: newInstability(),
   flowUntilTick: 0,
   flowReduction: 0,
   pendingFlowReduction: 0,
   concCritStacks: 0,
   concCritPerStackPct: 0,
   channelledMight: newChannelledMight(),
-  burns: newBurns(),
 });
 
 export function isConcentratedBlast(abilityId: string): boolean {

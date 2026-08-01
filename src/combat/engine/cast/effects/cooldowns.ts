@@ -13,7 +13,7 @@ export function applyCastCooldown(fx: CastEffectContext): void {
   if (!ability.cooldownSeconds) return;
   const ticks =
     ability.id === "death_skulls"
-      ? deathSkullsCooldownTicks(rt.state.necro, candidate)
+      ? deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate)
       : secondsToTicks(ability.cooldownSeconds);
   rt.state = startCooldown(rt.state, ability.id, ticks);
 }

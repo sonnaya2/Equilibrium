@@ -132,14 +132,14 @@ describe("Dismember recast chain", () => {
     const massacre = ctx.byId.get("massacre")!;
     for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
     ctx.performCast(dismember, ctx.getState().tick, false);
-    expect(ctx.getState().bleedChainNext).toBe("slaughter");
-    expect(ctx.getState().bleedChainUntilTick).toBe(9 + 40);
+    expect(ctx.getState().melee.bleedChainNext).toBe("slaughter");
+    expect(ctx.getState().melee.bleedChainUntilTick).toBe(9 + 40);
     for (let i = 0; i < 2; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.performCast(slaughter, ctx.getState().tick, false).ok).toBe(true);
-    expect(ctx.getState().bleedChainNext).toBe("massacre");
+    expect(ctx.getState().melee.bleedChainNext).toBe("massacre");
     for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.performCast(massacre, ctx.getState().tick, false).ok).toBe(true);
-    expect(ctx.getState().bleedChainNext).toBeNull(); // reset after completion
+    expect(ctx.getState().melee.bleedChainNext).toBeNull(); // reset after completion
     const s = ctx.finish();
     expect(s.casts.map((c) => c.abilityId)).toContain("slaughter");
     expect(s.casts.map((c) => c.abilityId)).toContain("massacre");
@@ -165,7 +165,7 @@ describe("Dismember recast chain", () => {
     // tick is now 9+3+39 = 51 ≥ 49: the chain lapsed mid-rotation.
     const attempt = ctx.performCast(slaughter, ctx.getState().tick, false);
     expect(attempt.ok).toBe(false);
-    expect(ctx.getState().bleedChainNext).toBe("slaughter"); // rejection mutates nothing
+    expect(ctx.getState().melee.bleedChainNext).toBe("slaughter"); // rejection mutates nothing
   });
 
   it("Revolution skips unavailable chain stages until the predecessor lands", () => {
@@ -235,12 +235,12 @@ describe("Planted Feet", () => {
     for (let i = 0; i < 12; i++) ctx.performCast(basic, ctx.getState().tick, false);
     const castTick = ctx.getState().tick;
     ctx.performCast(ctx.byId.get("sunshine")!, castTick, false);
-    expect(ctx.getState().sunshine.expiresAtTick - castTick).toBe(63);
+    expect(ctx.getState().magic.sunshine.expiresAtTick - castTick).toBe(63);
     const plain = createCastContext(magicInput);
     for (let i = 0; i < 12; i++) plain.performCast(basic, plain.getState().tick, false);
     const plainTick = plain.getState().tick;
     plain.performCast(plain.byId.get("sunshine")!, plainTick, false);
-    expect(plain.getState().sunshine.expiresAtTick - plainTick).toBe(50);
+    expect(plain.getState().magic.sunshine.expiresAtTick - plainTick).toBe(50);
   });
 
   it("Greater Sunshine keeps its beam with Planted Feet (perk is base-only)", () => {

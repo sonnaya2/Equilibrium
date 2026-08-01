@@ -98,7 +98,7 @@ describe("cast boundary — rejection is mutation-free beyond the advance", () =
     expect(after.tick).toBe(30);
     expect({ ...after, tick: before.tick }).toEqual(before);
     expect(after.cooldowns["assault"]).toBeUndefined();
-    expect(after.melee.stacks).toBe(before.melee.stacks);
+    expect(after.melee.bloodlust.stacks).toBe(before.melee.bloodlust.stacks);
     const s = ctx.finish();
     expect(s.casts).toHaveLength(2); // no phantom cast record
   });

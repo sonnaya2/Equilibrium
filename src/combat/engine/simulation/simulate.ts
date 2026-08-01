@@ -35,7 +35,7 @@ function stepManualAction(
 ): Branch[] {
   if (branch.error !== undefined) return [branch];
   if (ability.stateEffect === "runic_charge") {
-    if (!runicChargeReady(branch.rt.state.magic, branch.rt.state.tick)) {
+    if (!runicChargeReady(branch.rt.state.magic.runicCharge, branch.rt.state.tick)) {
       return [{ ...branch, error: `runic_charge is on cooldown at tick ${branch.rt.state.tick}` }];
     }
     performOffGcdCast(branch.rt, ability);

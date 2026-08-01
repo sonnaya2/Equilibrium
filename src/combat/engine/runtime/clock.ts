@@ -2,7 +2,7 @@ import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
 import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
-import { gainAdrenaline } from "./state";
+import { gainAdrenaline, patchMelee } from "./state";
 import type { SimulationRuntime } from "./runtime";
 
 /**
@@ -31,9 +31,9 @@ function grantMeteorPassive(
   fromTick: number,
   toTickExclusive: number,
 ): void {
-  if (rt.state.meteorStrikeUntilTick <= 0 || toTickExclusive <= fromTick) return;
+  if (rt.state.melee.meteorStrikeUntilTick <= 0 || toTickExclusive <= fromTick) return;
   let gain = 0;
-  const end = Math.min(toTickExclusive, rt.state.meteorStrikeUntilTick);
+  const end = Math.min(toTickExclusive, rt.state.melee.meteorStrikeUntilTick);
   for (let t = fromTick; t < end; t++) gain += METEOR_STRIKE_PASSIVE_ADREN_PER_TICK;
   if (gain > 0) rt.state = gainAdrenaline(rt.state, gain);
 }
@@ -43,8 +43,11 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   // A horizon run never lands events at or after the horizon (half-open).
   processDueEvents(rt, rt.horizon != null ? Math.min(targetTick, rt.horizon - 1) : targetTick);
   grantMeteorPassive(rt, rt.state.tick, targetTick);
-  if (rt.state.melee.berserk && targetTick >= rt.state.berserkUntilTick) {
-    rt.state = { ...rt.state, melee: endBerserk(rt.state.melee), berserkUntilTick: 0 };
+  if (rt.state.melee.bloodlust.berserk && targetTick >= rt.state.melee.berserkUntilTick) {
+    rt.state = patchMelee(rt.state, {
+      bloodlust: endBerserk(rt.state.melee.bloodlust),
+      berserkUntilTick: 0,
+    });
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
 }

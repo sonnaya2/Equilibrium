@@ -232,6 +232,24 @@ Where the order does not settle it, leave the conflict. A record that needs a hu
 unresolved rather than being quietly picked; the sixty entries in `quarantine.jsonl` are exactly
 that, kept so the collision stays auditable instead of disappearing into a merge.
 
+### What counts as a duplicate
+
+`npm run audit:data` fails on two live records of one entity type and name when they either come from
+different source documents or land on the same region page. The second case is the one nothing else
+catches: a document can duplicate a record on its own, and `misthalin:explorers-ring` and
+`misthalin:area-tasks-explorers-ring` share no ID for anything to key on.
+
+Same name is not always the same record, though, and three shapes are excluded rather than reported:
+
+- **A prayer that exists in two books.** `curse:dark-form` and `seren:dark-form` are different
+  prayers; merging them loses one.
+- **A training method listed once per skill it trains.** Merging empties a skill's method list.
+- **A League task.** Its identity is Jagex's `wiki:N`, not its label — "Defeat the empowered Barrows
+  Brothers." is legitimately `wiki:740` and `wiki:741`.
+
+The rule is that a group told apart by a domain scope is not a duplicate. `entityOverlaps` in
+`queries.mjs` is where that lives, so a new scope of the same kind is one entry there.
+
 Retiring the losing record is only half of it. Everything it holds that the survivor lacks —
 requirements, effects, region links, sources, tags — moves across first, each carrying the ID of the
 record it came from in its patch `reason`. That is what the requirement, effect and tag operations

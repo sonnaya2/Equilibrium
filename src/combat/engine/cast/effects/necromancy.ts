@@ -3,6 +3,7 @@ import {
   CONJURE_ABILITY_SUMMONS,
   conjureActive,
 } from "../../../styles/necromancy/conjures";
+import { secondsToTicks } from "../../../core/ticks";
 import { applyNecroOnCast } from "../../../styles/necromancy/effects";
 import { patchConjures, patchNecro, patchTarget } from "../../runtime/state";
 import { applySkeletonCommand, scheduleSpiritTracks } from "../../schedulers/conjures";
@@ -20,6 +21,7 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   const necromancy = rt.state.necromancy;
 
   const skeletonWasActive = conjureActive(necromancy.conjures, "skeleton_warrior", candidate);
+  const zombieWasActive = conjureActive(necromancy.conjures, "putrid_zombie", candidate);
   const patch = applyNecroOnCast(necromancy.resources, ability, candidate, necromancy.conjures);
   rt.state = patchNecro(rt.state, patch.necro);
   if (patch.conjures) rt.state = patchConjures(rt.state, patch.conjures);
@@ -36,6 +38,9 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
       "command_skeleton_warrior",
       candidate + COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS,
     );
+  }
+  if (CONJURE_ABILITY_SUMMONS[ability.id]?.includes("putrid_zombie") && !zombieWasActive) {
+    startLinkedCooldown(fx, "conjure_putrid_zombie", candidate + secondsToTicks(30));
   }
   if (ability.id === "command_skeleton_warrior") applySkeletonCommand(rt, candidate);
 

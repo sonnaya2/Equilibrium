@@ -14,7 +14,14 @@ export function createCastContext(input: CastContextInput): CastContext {
   return {
     getState: () => rt.state,
     costOf: (ability) => costOf(rt.state, ability, rt.state.tick),
-    firstLegalTick: (abilityId) => firstLegalTick(rt.state, abilityId),
+    firstLegalTick: (abilityId) => {
+      const ability = rt.byId.get(abilityId);
+      return firstLegalTick(
+        rt.state,
+        abilityId,
+        ability?.cooldownGroup ?? ability?.replacementGroup,
+      );
+    },
     advanceTo: (targetTick) => advanceTo(rt, targetTick),
     performCast: (ability, readyTick, auto, rng) => performCast(rt, ability, readyTick, auto, rng),
     performOffGcdCast: (ability) => performOffGcdCast(rt, ability),

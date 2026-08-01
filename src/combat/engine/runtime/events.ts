@@ -31,6 +31,10 @@ export interface ScheduledEvent<RT = unknown> {
   cancelOwner?: number; // cast sequence whose cancellation removes this event
   /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
   derivedFrom?: number;
+  /** Flow reduction carried by the Sonic hit that can grant it. */
+  flowReduction?: number;
+  /** Greater Barge converted a channel hit into Endless Assault damage over time. */
+  convertedChannel?: boolean;
   /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
   resolve: (rt: RT, landTick: number) => EventResolution;
 }
@@ -114,6 +118,8 @@ export class EventQueue<RT = unknown> {
         e.recursionAllowed,
         e.cancelOwner ?? -1,
         e.derivedFrom ?? -1,
+        e.flowReduction ?? 0,
+        e.convertedChannel ?? false,
       ]),
     );
   }

@@ -398,7 +398,7 @@ export function GearPanel({
         </div>
 
         {(() => {
-          const sets = setEffectsSummary(loadout);
+          const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
           if (sets.length === 0) return null;
           return (
             <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">

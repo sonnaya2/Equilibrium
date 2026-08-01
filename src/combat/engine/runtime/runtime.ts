@@ -42,9 +42,18 @@ export interface SimulationRuntime {
   totalExpected: number;
   nextSeq: number;
   nextCastSeq: number;
+  finalized: boolean;
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
+  if (
+    input.startingAdrenaline != null &&
+    (!Number.isFinite(input.startingAdrenaline) ||
+      input.startingAdrenaline < 0 ||
+      input.startingAdrenaline > 100)
+  ) {
+    throw new RangeError(`startingAdrenaline outside 0-100: ${input.startingAdrenaline}`);
+  }
   if (
     input.targetHpPercent != null &&
     (!Number.isFinite(input.targetHpPercent) ||
@@ -59,7 +68,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     byId: new Map(input.abilities.map((a) => [a.id, a])),
     basicByStyle: new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a])),
     queue: new EventQueue<SimulationRuntime>(),
-    state: newRotationState(),
+    state: newRotationState({ adrenaline: input.startingAdrenaline }),
     casts: [],
     perAbility: {},
     damageByTick: {},
@@ -75,6 +84,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     totalExpected: 0,
     nextSeq: 0,
     nextCastSeq: 0,
+    finalized: false,
   };
 }
 
@@ -86,9 +96,4 @@ export function scheduleEvent(
   const seq = rt.nextSeq++;
   rt.queue.push({ ...event, seq });
   return seq;
-}
-
-/** Runs with a horizon never schedule events at or after it (half-open). */
-export function withinHorizon(rt: SimulationRuntime, tick: number): boolean {
-  return rt.horizon == null || tick < rt.horizon;
 }

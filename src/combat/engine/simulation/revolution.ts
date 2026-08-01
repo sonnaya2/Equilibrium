@@ -26,6 +26,16 @@ export function simulateRevolution(
     { weight: 1, rt: createRuntime({ ...input, horizonTicks: input.durationTicks }) },
   ];
   let sawBranching = false;
+  const selectedGroups = new Map<string, string>();
+  for (const ability of input.bar) {
+    if (!ability.replacementGroup) continue;
+    const existing = selectedGroups.get(ability.replacementGroup);
+    if (existing && existing !== ability.id) {
+      branches[0]!.error = `${existing} and ${ability.id} are mutually exclusive variants`;
+      return combineBranchSummaries(branches, input.durationTicks, options, false);
+    }
+    selectedGroups.set(ability.replacementGroup, ability.id);
+  }
   let guard = 0;
   const maxCasts = Math.max(input.durationTicks * 2, 64);
 
@@ -52,8 +62,15 @@ export function simulateRevolution(
       const state = branch.rt.state;
       const ready = input.bar.find(
         (ability) =>
-          firstLegalTick(state, ability.id) <= state.tick &&
-          castRejection(state, ability, state.tick) === null,
+          firstLegalTick(state, ability.id, ability.cooldownGroup ?? ability.replacementGroup) <=
+            state.tick &&
+          castRejection(
+            state,
+            ability,
+            state.tick,
+            input.weaponConfiguration,
+            input.equipmentIds,
+          ) === null,
       );
       // Basics fill every empty GCD when the bar has nothing ready/affordable.
       const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);

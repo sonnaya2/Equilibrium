@@ -89,11 +89,6 @@ export interface MagicRotationState {
   /** Flow window end (0 = inactive) and the stored reduction in adrenaline points. */
   flowUntilTick: number;
   flowReduction: number;
-  /**
-   * Flow reduction earned by a Sonic Wave cast, pending its hit landing.
-   * Applied (with the window starting at the land tick) only on a landed hit.
-   */
-  pendingFlowReduction: number;
   /** Accumulated Concentrated Blast crit stacks and the granting cast's pct per stack. */
   concCritStacks: number;
   concCritPerStackPct: number;
@@ -106,7 +101,6 @@ export const newMagicRotationState = (): MagicRotationState => ({
   instability: newInstability(),
   flowUntilTick: 0,
   flowReduction: 0,
-  pendingFlowReduction: 0,
   concCritStacks: 0,
   concCritPerStackPct: 0,
   channelledMight: newChannelledMight(),

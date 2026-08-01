@@ -5,7 +5,8 @@
  */
 export function damagePotential(accuracy: number): number {
   if (!Number.isFinite(accuracy)) throw new RangeError(`damagePotential: bad accuracy ${accuracy}`);
-  return Math.min(1, Math.max(0, accuracy));
+  const clamped = Math.min(1, Math.max(0, accuracy));
+  return clamped < 0.01 ? 0 : clamped;
 }
 
 export function applyDamagePotential(damage: number, accuracy: number): number {

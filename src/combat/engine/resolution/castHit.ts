@@ -33,9 +33,10 @@ export function resolveCastHit(
   ability: AbilitySpec,
   snap: CastSnapshot,
   isDot: boolean,
+  convertedChannel = false,
 ): EventResolution {
   const { input, state } = rt;
-  const modifiers = landTimeModifiers(rt, at, ability, snap, hitIndex, isDot);
+  const modifiers = landTimeModifiers(rt, at, ability, snap, hitIndex, isDot, convertedChannel);
 
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
   // Concentrated Blast's own hits read the live accumulating stacks; every
@@ -97,7 +98,7 @@ export function resolveCastHit(
     expected += bonus.expected;
   }
   return {
-    damage: { min, max, expected, critExpected: (hit.critMin + hit.critMax) / 2 },
+    damage: { min, max, expected, critExpected: hit.critExpected },
     hitDetail: hit,
   };
 }

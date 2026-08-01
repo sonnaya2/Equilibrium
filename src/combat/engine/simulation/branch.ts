@@ -36,14 +36,16 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   return {
     ...rt,
     queue: rt.queue.clone(),
-    state: rt.state, // plain data, only ever reassigned — safe to share
+    state: structuredClone(rt.state),
     casts: rt.casts.map(cloneRecord),
     perAbility: { ...rt.perAbility },
     damageByTick: { ...rt.damageByTick },
     events: [...rt.events],
     recordBySeq: new Map([...rt.recordBySeq].map(([k, r]) => [k, cloneRecord(r)])),
-    hitDetails: new Map(rt.hitDetails),
-    spiritEventMeta: new Map(rt.spiritEventMeta),
+    hitDetails: new Map([...rt.hitDetails].map(([key, value]) => [key, structuredClone(value)])),
+    spiritEventMeta: new Map(
+      [...rt.spiritEventMeta].map(([key, value]) => [key, structuredClone(value)]),
+    ),
     scheduledSpiritTracks: new Set(rt.scheduledSpiritTracks),
     spiritHitCounts: new Map(rt.spiritHitCounts),
   };
@@ -51,7 +53,16 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
 
 /** Future evolution is fully determined by state + pending events + counters. */
 function branchKey(rt: SimulationRuntime): string {
-  return JSON.stringify([rt.state, rt.queue.signature(), rt.nextSeq, rt.nextCastSeq]);
+  return JSON.stringify([
+    rt.state,
+    rt.queue.signature(),
+    [...rt.hitDetails],
+    [...rt.spiritEventMeta],
+    [...rt.scheduledSpiritTracks].sort(),
+    [...rt.spiritHitCounts],
+    rt.nextSeq,
+    rt.nextCastSeq,
+  ]);
 }
 
 function mergePair(a: Branch, b: Branch): Branch {

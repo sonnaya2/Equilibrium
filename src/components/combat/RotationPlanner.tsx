@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { rotationOf } from "@/combat/engine/simulation/contracts";
 import { simulate, type RotationSummary } from "@/combat/engine/simulation/simulate";
+import { meetsEquipmentRequirement, meetsWeaponRequirement } from "@/combat/engine/cast/rules";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
@@ -15,6 +16,7 @@ import { loadState, saveState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
+import { CalculationAssumptions } from "./CalculationAssumptions";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { useLoadout } from "./useLoadout";
@@ -83,22 +85,26 @@ export function RotationPlanner() {
 
   const run = () => {
     const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
+    const setup = loadoutStats(loadout);
     if (useBuild) {
-      const stats = loadoutStats(loadout);
       setResult(
         simulate({
-          base: stats.base,
-          level: stats.level,
-          accuracy: stats.dp,
-          crit: { chance: stats.critChance },
+          base: setup.base,
+          level: setup.level,
+          accuracy: setup.dp,
+          crit: { chance: setup.critChance },
           abilities: ALL_ABILITIES,
           rotation: rotationOf(...queue),
-          modifiers: stats.globalModifiers,
-          adrenaline: stats.adrenaline,
-          procs: stats.procs,
-          plantedFeet: stats.plantedFeet,
-          conjureBasicDamageMult: stats.conjureBasicDamageMult,
+          modifiers: setup.globalModifiers,
+          adrenaline: setup.adrenaline,
+          procs: setup.procs,
+          plantedFeet: setup.plantedFeet,
+          conjureBasicDamageMult: setup.conjureBasicDamageMult,
           targetHpPercent: loadout.target?.hpPercent,
+          cap: setup.cap,
+          startingAdrenaline: setup.startingAdrenaline,
+          equipmentIds: setup.equipmentIds,
+          weaponConfiguration: setup.weaponConfiguration,
           autoWeave: weave,
           ammo: ammo === "none" ? undefined : ammo,
         }),
@@ -113,6 +119,8 @@ export function RotationPlanner() {
         crit: { chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100 },
         abilities: ALL_ABILITIES,
         rotation: rotationOf(...queue),
+        cap: setup.cap,
+        startingAdrenaline: setup.startingAdrenaline,
         autoWeave: weave,
         ammo: ammo === "none" ? undefined : ammo,
       }),
@@ -121,13 +129,36 @@ export function RotationPlanner() {
 
   const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
   const buildStats = loadoutStats(loadout);
+  const selectedVariants = new Map<string, string>();
+  for (const id of queue) {
+    const ability = abilityById(id);
+    if (ability?.replacementGroup) selectedVariants.set(ability.replacementGroup, ability.id);
+  }
+  const manualStyles = [...new Set(queue.map((id) => abilityById(id)?.style).filter(Boolean))];
+  const manualCombatStyle =
+    mode === "revolution" ? loadout.style : manualStyles.join(" + ") || paletteStyle;
   const manualStats: CalcStats = {
+    combatStyle: manualCombatStyle,
+    baseDamageMode: "manual",
+    rawBase: Math.max(0, base),
     base: Math.max(0, base),
     level: Math.min(Math.max(1, level), 145),
     attackLevel: Math.min(Math.max(1, level), 145),
     dp: Math.min(Math.max(0, accuracy), 100) / 100,
     critChance: Math.min(Math.max(0, critChance), 100) / 100,
     critDamageBonus: 0,
+    cap: buildStats.cap,
+    startingAdrenaline: buildStats.startingAdrenaline,
+    effectiveDamageLevel: Math.min(Math.max(1, level), 145),
+    mainhandTier: 0,
+    offhandTier: null,
+    spellTier: null,
+    ammunitionTier: null,
+    equipmentStyleDamageBonus: 0,
+    styleDamageBonus: 0,
+    damagePotentialSource: accuracy === 100 ? "100% assumption" : "manual override",
+    equipmentIds: [],
+    weaponConfiguration: manualCombatStyle === "necromancy" ? "necromancy" : "twohand",
     globalModifiers: [],
     castModifiersFor: () => [],
   };
@@ -276,27 +307,52 @@ export function RotationPlanner() {
             </div>
 
             <div className="mt-3 border-t border-stone-750">
-              {palette.map((a) => (
-                <button
-                  key={a.id}
-                  type="button"
-                  onClick={() => updateQueue([...queue, a.id])}
-                  className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-                >
-                  <span className="inline-flex min-w-0 items-center gap-1.5">
-                    <GameIcon src={abilityIconPath(a.id, a.style)} size={16} className="shrink-0" />
-                    <span className="min-w-0 truncate">{a.name}</span>
-                    <AbilityCategoryChip category={a.category} />
-                  </span>
-                  <span className="font-mono">
-                    {a.adrenaline?.gain
-                      ? `+${a.adrenaline.gain}%`
-                      : a.adrenaline?.cost
-                        ? `${a.adrenaline.cost}%`
-                        : ""}
-                  </span>
-                </button>
-              ))}
+              {palette.map((a) => {
+                const selectedVariant = a.replacementGroup
+                  ? selectedVariants.get(a.replacementGroup)
+                  : undefined;
+                const reason =
+                  selectedVariant && selectedVariant !== a.id
+                    ? `Replaced by ${abilityName(selectedVariant)}`
+                    : useBuild && !meetsWeaponRequirement(a, buildStats.weaponConfiguration)
+                      ? `Requires ${
+                          a.weaponRequirement ??
+                          (a.style === "necromancy"
+                            ? "death guard and conduit"
+                            : `${a.style} weapon`)
+                        }`
+                      : useBuild && !meetsEquipmentRequirement(a, buildStats.equipmentIds)
+                        ? "Requires an Igneous cape"
+                        : undefined;
+                return (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => updateQueue([...queue, a.id])}
+                    disabled={reason !== undefined}
+                    title={reason}
+                    className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 enabled:hover:bg-white/[0.02] enabled:hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    <span className="inline-flex min-w-0 items-center gap-1.5">
+                      <GameIcon
+                        src={abilityIconPath(a.id, a.style)}
+                        size={16}
+                        className="shrink-0"
+                      />
+                      <span className="min-w-0 truncate">{a.name}</span>
+                      <AbilityCategoryChip category={a.category} />
+                    </span>
+                    <span className="font-mono">
+                      {reason ??
+                        (a.adrenaline?.gain
+                          ? `+${a.adrenaline.gain}%`
+                          : a.adrenaline?.cost
+                            ? `${a.adrenaline.cost}%`
+                            : "")}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </>
         ) : null}
@@ -380,7 +436,9 @@ export function RotationPlanner() {
                       </dd>
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
-                      <dt className="text-xs text-parch-300">DPS</dt>
+                      <dt className="text-xs text-parch-300">
+                        {result.metric.type === "fixed-window" ? "Fixed-window DPS" : "Natural DPS"}
+                      </dt>
                       <dd className="font-mono text-parch-50">{formatNumber(result.dps)}</dd>
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
@@ -396,6 +454,8 @@ export function RotationPlanner() {
                       </dd>
                     </div>
                   </dl>
+
+                  <CalculationAssumptions stats={activeStats} result={result} />
 
                   <div className="mt-4 overflow-x-auto border-t border-stone-750">
                     <table className="w-full border-collapse text-left text-sm">

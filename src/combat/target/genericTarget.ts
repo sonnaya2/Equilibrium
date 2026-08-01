@@ -45,11 +45,11 @@ export function accuracyCurve(x: number): number {
 }
 
 export function playerAccuracy(styleLevel: number, weaponTier: number): number {
-  return accuracyCurve(styleLevel) + 2.5 * accuracyCurve(weaponTier);
+  return Math.floor(accuracyCurve(styleLevel)) + Math.floor(2.5 * accuracyCurve(weaponTier));
 }
 
 export function targetArmour(target: GenericTarget): number {
-  return (target.armour ?? 0) + accuracyCurve(target.defenceLevel);
+  return Math.floor((target.armour ?? 0) + accuracyCurve(target.defenceLevel));
 }
 
 /** Hit chance as a fraction 0–1. Armour of 0 with 0 Defence is a wall-less target: full connect. */

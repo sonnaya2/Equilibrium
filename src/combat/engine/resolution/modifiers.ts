@@ -56,6 +56,7 @@ export function landTimeModifiers(
   snap: CastSnapshot,
   hitIndex: number,
   isDot: boolean,
+  convertedChannel = false,
 ): CombatModifier[] {
   const { state } = rt;
   const modifiers = [...snap.baseMods];
@@ -97,7 +98,7 @@ export function landTimeModifiers(
       ),
     );
   }
-  if (!isDot) return modifiers;
+  if (!isDot || convertedChannel) return modifiers;
   return modifiers.filter(
     (m) => !m.id.startsWith("prayer:") && !DOT_IGNORED_MODIFIER_IDS.has(m.id),
   );

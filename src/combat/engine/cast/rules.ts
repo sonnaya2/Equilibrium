@@ -59,7 +59,30 @@ export function castRejection(
   state: RotationState,
   ability: AbilitySpec,
   candidate: number,
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "necromancy",
+  equipmentIds?: readonly string[],
 ): string | null {
+  if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
+    const requirement =
+      ability.weaponRequirement ??
+      (ability.style === "necromancy" ? "death guard and conduit" : `${ability.style} weapon`);
+    return `${ability.id} requires ${requirement}`;
+  }
+  if (!meetsEquipmentRequirement(ability, equipmentIds)) {
+    return `${ability.id} requires an equipped Igneous cape`;
+  }
+  if (
+    ability.id === "spectral_scythe_2" &&
+    candidate >= state.necromancy.resources.spectralScythe2UntilTick
+  ) {
+    return `spectral_scythe_2 needs a live stage-1 sequence at tick ${candidate}`;
+  }
+  if (
+    ability.id === "spectral_scythe_3" &&
+    candidate >= state.necromancy.resources.spectralScythe3UntilTick
+  ) {
+    return `spectral_scythe_3 needs a live stage-2 sequence at tick ${candidate}`;
+  }
   if (!necroCanCast(ability, state.necromancy.resources, state.necromancy.conjures, candidate)) {
     return `${ability.id} needs residual souls or an active conjure, ${state.necromancy.resources.residualSouls} souls available at tick ${candidate}`;
   }
@@ -77,6 +100,29 @@ export function castRejection(
     return `${ability.id} needs ${cost}% adrenaline, ${state.adrenaline}% available at tick ${candidate}`;
   }
   return null;
+}
+
+/** Pure equipment-shape check shared by engine validation and ability pickers. */
+export function meetsWeaponRequirement(
+  ability: AbilitySpec,
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "necromancy",
+): boolean {
+  if (weaponConfiguration === undefined) return true;
+  if (ability.style === "necromancy") return weaponConfiguration === "necromancy";
+  if (weaponConfiguration === "necromancy") return false;
+  if (ability.weaponRequirement === undefined) return true;
+  if (ability.weaponRequirement === "death-guard-and-conduit") return false;
+  return weaponConfiguration === ability.weaponRequirement;
+}
+
+export function meetsEquipmentRequirement(
+  ability: AbilitySpec,
+  equipmentIds?: readonly string[],
+): boolean {
+  return (
+    ability.requiredEquipmentAnyOf === undefined ||
+    ability.requiredEquipmentAnyOf.some((id) => equipmentIds?.includes(id))
+  );
 }
 
 /** The one state-changing RNG point a cast may have, with its sourced chance. */

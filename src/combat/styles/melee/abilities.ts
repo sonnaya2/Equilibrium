@@ -109,6 +109,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 110, maxPct: 130 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    replacementGroup: "fury",
     bloodlustGain: 1,
     appliesEffect: "fury",
     source: wikiAbility("Fury", "Fury"),
@@ -122,6 +123,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 120, maxPct: 140 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    replacementGroup: "fury",
     bloodlustGain: 1,
     appliesEffect: "greater_fury",
     source: wikiAbility("Greater Fury", "Greater_Fury"),
@@ -159,6 +161,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 75, maxPct: 95 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 20.4,
+    replacementGroup: "barge",
     bloodlustGain: 1,
     source: wikiAbility("Barge", "Barge"),
   },
@@ -171,6 +174,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 75, maxPct: 95 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 20.4,
+    replacementGroup: "barge",
     bloodlustGain: 1,
     appliesEffect: "greater_barge",
     source: wikiAbility("Greater Barge", "Greater_Barge"),
@@ -256,7 +260,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     source: wikiAbility("Assault", "Assault"),
   },
   {
-    // Wiki Flurry: "Attack 8 times over 4.8s (8 ticks)" every 0.6s — same as Rapid Fire (0..7).
+    // Wiki Flurry: eight hits on ticks 1 through 8 of the 4.8s channel.
     id: "flurry",
     name: "Flurry",
     style: "melee",
@@ -265,10 +269,12 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     channelTicks: 8,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 60, maxPct: 70 },
-      tickOffset: i,
+      tickOffset: i + 1,
     })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
+    replacementGroup: "flurry",
+    weaponRequirement: "dualwield",
     bloodlustMissingHp: { threshold: 4, capPct: 65 },
     source: wikiAbility("Flurry", "Flurry"),
   },
@@ -282,10 +288,12 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     channelTicks: 8,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 60, maxPct: 70 },
-      tickOffset: i,
+      tickOffset: i + 1,
     })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
+    replacementGroup: "flurry",
+    weaponRequirement: "dualwield",
     appliesEffect: "greater_flurry",
     bloodlustMissingHp: { threshold: 4, capPct: 65 },
     source: wikiAbility("Greater Flurry", "Greater_Flurry"),
@@ -300,6 +308,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 135, maxPct: 165 } }, { band: { minPct: 155, maxPct: 185 } }],
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
+    weaponRequirement: "twohand",
     bloodlustExtraHits: {
       threshold: 4,
       hits: [{ band: { minPct: 75, maxPct: 95 } }],
@@ -314,6 +323,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 520, maxPct: 570 } }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
+    replacementGroup: "overpower",
     source: wikiAbility("Overpower", "Overpower"),
   },
   {
@@ -324,6 +334,8 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 280, maxPct: 340 } }, { band: { minPct: 280, maxPct: 340 } }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
+    replacementGroup: "overpower",
+    requiredEquipmentAnyOf: ["item:igneous-kal-ket", "item:igneous-kal-zuk"],
     source: wikiAbility("Overpower", "Overpower"),
   },
   {

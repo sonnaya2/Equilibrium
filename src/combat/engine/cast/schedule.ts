@@ -34,6 +34,12 @@ export function scheduleCastEvents(
       adrenalineDelta: (working.adrenaline?.gain ?? 0) - (working.adrenaline?.cost ?? 0),
     },
     adrenalineAfter: 0,
+    adrenalineBefore: rt.state.adrenaline,
+    listedCost: ability.adrenaline?.cost ?? 0,
+    effectiveCost: prepared.cost,
+    actualSpend: prepared.spend,
+    refund: 0,
+    adrenalineGained: 0,
     ...(auto ? { auto: true as const } : {}),
   };
   rt.recordBySeq.set(castSeq, record);
@@ -60,7 +66,7 @@ export function scheduleCastEvents(
     // Classified once, here, from what the ability declares. Never inferred
     // from timing or crit eligibility: a delayed direct hit stays direct, and a
     // bleed tick landing on the cast tick is still a bleed tick.
-    const isDot = hitSpec.dot === true;
+    const isDot = hitSpec.dot === true || prepared.channelAsDot;
     rt.queue.push({
       tick: landTick,
       seq,
@@ -69,11 +75,13 @@ export function scheduleCastEvents(
       sourceCast: castSeq,
       hitIndex,
       attached: false,
-      procEligible: true,
+      procEligible: !isDot,
       recursionAllowed: false,
       cancelOwner: castSeq,
+      ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
+      ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
       resolve: (eventRt, at) =>
-        resolveCastHit(eventRt, at, hitSpec, hitIndex, ability, snap, isDot),
+        resolveCastHit(eventRt, at, hitSpec, hitIndex, ability, snap, isDot, prepared.channelAsDot),
     });
   });
 

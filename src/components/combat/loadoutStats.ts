@@ -3,8 +3,8 @@ import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTa
 import {
   bitingCritChanceBonus,
   energisingAccuracyBonus,
-  equilibriumPerkModifier,
-  eruptivePerkModifier,
+  equilibriumDamageBonus,
+  eruptiveDamageBonus,
   invigoratingAdrenalineMultiplier,
   lungingPerkModifier,
   ultimatumsPerkModifier,
@@ -26,6 +26,7 @@ import {
 } from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
+import { STANDARD_HIT_CAP, type HitCapRule } from "@/combat/core/hitCaps";
 import { equipmentById } from "@/combat/data";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier } from "@/combat/types";
@@ -39,6 +40,9 @@ export { equippedSetCounts, setEffectsSummary };
  *  resolve "what does this loadout mean numerically". */
 
 export interface CalcStats {
+  combatStyle: string;
+  baseDamageMode: "automatic" | "manual";
+  rawBase: number;
   base: number;
   /**
    * Level feeding the crit damage layer. Strength for melee; style level for
@@ -50,6 +54,18 @@ export interface CalcStats {
   dp: number;
   critChance: number;
   critDamageBonus: number;
+  cap: HitCapRule;
+  startingAdrenaline: number;
+  effectiveDamageLevel: number;
+  mainhandTier: number;
+  offhandTier: number | null;
+  spellTier: number | null;
+  ammunitionTier: number | null;
+  equipmentStyleDamageBonus: number;
+  styleDamageBonus: number;
+  damagePotentialSource: "target stats" | "manual override" | "100% assumption";
+  equipmentIds: readonly string[];
+  weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "necromancy";
   globalModifiers: CombatModifier[];
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
   /** Invigorating / Impatient rules for rotation + revolution sim. */
@@ -68,16 +84,11 @@ export interface CalcStats {
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const clampLevel = (value: number) => Math.min(Math.max(1, value), 145);
 
-/** Unique equipment record ids from slots + legacy flat list. */
+/** Unique records occupying equipment slots. Unlock pins are never equipped. */
 function equippedRecordIds(loadout: Loadout): string[] {
   const seen = new Set<string>();
   const out: string[] = [];
   for (const id of Object.values(loadout.equipmentSlots ?? {})) {
-    if (typeof id !== "string" || seen.has(id)) continue;
-    seen.add(id);
-    out.push(id);
-  }
-  for (const id of loadout.equipmentIds ?? []) {
     if (typeof id !== "string" || seen.has(id)) continue;
     seen.add(id);
     out.push(id);
@@ -89,10 +100,26 @@ function equippedRecordIds(loadout: Loadout): string[] {
  * Sum wiki combat Damage / Accuracy from equipped pieces (display totals).
  * Hit chance does NOT add full weapon Accuracy ratings — those mirror tier and
  * would double-count playerAccuracy(level, weaponTier). See nonWeaponAccuracyBonus.
- * Style damage on armour is not folded into base AD either (tier-driven AD).
+ * Matching armour and jewellery damage is folded into base AD separately.
  */
 export function equippedBonuses(loadout: Loadout): { damage: number; accuracy: number } {
   return sumEquipmentBonuses(equippedRecordIds(loadout).map((id) => equipmentById(id)?.bonuses));
+}
+
+const WEAPON_SLOTS = new Set(["mainhand", "offhand", "twohand", "ammo"]);
+
+/** Style bonus `b`: matching armour/jewellery bonuses, never weapon damage. */
+export function equipmentStyleDamageBonus(loadout: Loadout): number {
+  let bonus = 0;
+  for (const id of equippedRecordIds(loadout)) {
+    const record = equipmentById(id);
+    if (!record?.slot || WEAPON_SLOTS.has(record.slot)) continue;
+    if (record.style && record.style !== "hybrid" && record.style !== loadout.style) continue;
+    if (record.bonuses.damage != null && Number.isFinite(record.bonuses.damage)) {
+      bonus += record.bonuses.damage;
+    }
+  }
+  return bonus;
 }
 
 /**
@@ -110,14 +137,9 @@ export function nonWeaponAccuracyBonus(loadout: Loadout): number {
     }
     if (seen.has(id)) continue;
     seen.add(id);
-    pieces.push({ slot, bonuses: equipmentById(id)?.bonuses });
-  }
-  for (const id of loadout.equipmentIds ?? []) {
-    if (typeof id !== "string" || seen.has(id)) continue;
-    seen.add(id);
     const record = equipmentById(id);
-    if (!record) continue;
-    pieces.push({ slot: record.slot, bonuses: record.bonuses });
+    if (record?.style && record.style !== "hybrid" && record.style !== loadout.style) continue;
+    pieces.push({ slot, bonuses: record?.bonuses });
   }
   return sumNonWeaponAccuracy(pieces);
 }
@@ -129,16 +151,10 @@ export function equippedWeaponTier(loadout: Loadout): number | null {
     const id = slots[slot];
     if (typeof id !== "string") continue;
     const record = equipmentById(id);
-    if (record?.tier != null && Number.isFinite(record.tier)) return record.tier;
-  }
-  // Legacy flat list: first weapon-tier record.
-  for (const id of loadout.equipmentIds ?? []) {
-    const record = equipmentById(id);
     if (
       record?.tier != null &&
       Number.isFinite(record.tier) &&
-      record.slot &&
-      (record.slot === "mainhand" || record.slot === "twohand" || record.slot === "offhand")
+      (!record.style || record.style === "hybrid" || record.style === loadout.style)
     ) {
       return record.tier;
     }
@@ -175,10 +191,15 @@ export function loadoutEffectiveDamageLevel(loadout: Loadout): number {
   return clampLevel(tier ? overloadBoostedLevel(level, tier) : level);
 }
 
-function slotWeaponTier(loadout: Loadout, slot: "twohand" | "mainhand" | "offhand"): number | null {
+function slotWeaponTier(
+  loadout: Loadout,
+  slot: "twohand" | "mainhand" | "offhand" | "ammo",
+): number | null {
   const id = loadout.equipmentSlots?.[slot];
   if (typeof id !== "string") return null;
-  const tier = equipmentById(id)?.tier;
+  const record = equipmentById(id);
+  if (record?.style && record.style !== "hybrid" && record.style !== loadout.style) return null;
+  const tier = record?.tier;
   return tier != null && Number.isFinite(tier) ? tier : null;
 }
 
@@ -191,18 +212,77 @@ type WeaponHand = Parameters<typeof baseAbilityDamage>[1];
  * legacy fallback: weaponTier slider through the twohand formula, as before.
  */
 export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
+  const styleBonus = equipmentStyleDamageBonus(loadout) + loadout.styleDamageBonus;
   const twohandTier = slotWeaponTier(loadout, "twohand");
-  if (twohandTier != null) {
-    return { kind: "twohand", weapon: { tier: twohandTier }, style: loadout.style };
-  }
   const mainhandTier = slotWeaponTier(loadout, "mainhand");
-  if (mainhandTier != null) {
-    const offhandTier = slotWeaponTier(loadout, "offhand");
-    return offhandTier != null
-      ? { kind: "mainhand", weapon: { tier: mainhandTier }, offhand: { tier: offhandTier } }
-      : { kind: "mainhand", weapon: { tier: mainhandTier } };
+  const offhandTier = slotWeaponTier(loadout, "offhand");
+  if (loadout.style === "necromancy") {
+    return {
+      kind: "necromancy",
+      deathGuard: { tier: mainhandTier ?? loadout.weaponTier },
+      conduit: { tier: offhandTier ?? loadout.offhandTier },
+      styleBonus,
+    };
   }
-  return { kind: "twohand", weapon: { tier: loadoutWeaponTier(loadout) }, style: loadout.style };
+  const caps =
+    loadout.style === "ranged"
+      ? { ammunitionTier: slotWeaponTier(loadout, "ammo") ?? loadout.ammunitionTier }
+      : loadout.style === "magic"
+        ? { spellTier: loadout.spellTier }
+        : {};
+  if (twohandTier != null) {
+    return {
+      kind: "twohand",
+      weapon: { tier: twohandTier },
+      style: loadout.style,
+      styleBonus,
+      ...caps,
+    };
+  }
+  if (mainhandTier != null) {
+    return offhandTier != null
+      ? {
+          kind: "mainhand",
+          style: loadout.style,
+          weapon: { tier: mainhandTier },
+          offhand: { tier: offhandTier },
+          styleBonus,
+          ...caps,
+        }
+      : {
+          kind: "mainhand",
+          style: loadout.style,
+          weapon: { tier: mainhandTier },
+          styleBonus,
+          ...caps,
+        };
+  }
+  if (loadout.weaponConfiguration === "mainhand") {
+    return {
+      kind: "mainhand",
+      style: loadout.style,
+      weapon: { tier: loadout.weaponTier },
+      styleBonus,
+      ...caps,
+    };
+  }
+  if (loadout.weaponConfiguration === "dualwield") {
+    return {
+      kind: "mainhand",
+      style: loadout.style,
+      weapon: { tier: loadout.weaponTier },
+      offhand: { tier: loadout.offhandTier },
+      styleBonus,
+      ...caps,
+    };
+  }
+  return {
+    kind: "twohand",
+    weapon: { tier: loadoutWeaponTier(loadout) },
+    style: loadout.style,
+    styleBonus,
+    ...caps,
+  };
 }
 
 /** Base ability damage computed from the effective level and equipped weapon config. */
@@ -211,8 +291,14 @@ export function computedLoadoutBase(loadout: Loadout): number {
 }
 
 export function loadoutBase(loadout: Loadout): number {
-  if (Number.isFinite(loadout.base) && loadout.base > 0) return loadout.base;
-  return computedLoadoutBase(loadout);
+  const raw =
+    loadout.baseDamage.mode === "manual" && loadout.baseDamage.manualValue > 0
+      ? loadout.baseDamage.manualValue
+      : computedLoadoutBase(loadout);
+  const equilibrium =
+    loadout.perks.equilibrium > 0 ? 1 + equilibriumDamageBonus(loadout.perks.equilibrium) : 1;
+  const eruptive = loadout.perks.eruptive > 0 ? 1 + eruptiveDamageBonus(loadout.perks.eruptive) : 1;
+  return Math.floor(Math.floor(raw * equilibrium) * eruptive);
 }
 
 export function loadoutStats(loadout: Loadout): CalcStats {
@@ -239,21 +325,23 @@ export function loadoutStats(loadout: Loadout): CalcStats {
         playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
         {
           defenceLevel: loadout.target.defenceLevel,
+          armour: loadout.target.armour,
           affinity: loadout.target.affinity,
+          additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
+          damagePotentialOverride: loadout.target.damagePotentialOverride,
         },
       )
     : clamp01(loadout.accuracy / 100);
 
   // Equilibrium perk prevents critical strikes (wiki). Biting/set bonuses ignored while active.
   // Set crit: actual gear counts (Math.max with manual perk piece sliders — no double-count).
-  const setCounts = equippedSetCounts(loadout);
+  const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
   const setCrit = loadoutSetCritChance({
     equipmentSlots: loadout.equipmentSlots,
-    equipmentIds: loadout.equipmentIds,
     perks: {
       tectonicPieces: loadout.perks.tectonicPieces,
       eliteTectonic: loadout.perks.eliteTectonic,
@@ -265,12 +353,6 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     loadout.perks.equilibrium > 0 ? 0 : clamp01(loadout.critChance / 100 + biting + setCrit);
 
   const globalModifiers: CombatModifier[] = [];
-  if (loadout.perks.equilibrium > 0) {
-    globalModifiers.push(equilibriumPerkModifier(loadout.perks.equilibrium));
-  }
-  if (loadout.perks.eruptive > 0) {
-    globalModifiers.push(eruptivePerkModifier(loadout.perks.eruptive));
-  }
   // Catalogue damageMult sets (none sourced yet — structure ready).
   globalModifiers.push(
     ...setDamageModifiers(setCounts, {
@@ -297,14 +379,61 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     cracklingRank: loadout.perks.crackling > 0 ? loadout.perks.crackling : 0,
     aftershockRank: loadout.perks.aftershock > 0 ? loadout.perks.aftershock : 0,
   };
+  const weaponConfig = loadoutWeaponConfig(loadout);
+  const equipmentDamage = equipmentStyleDamageBonus(loadout);
+  const mainhandTier =
+    weaponConfig.kind === "necromancy" ? weaponConfig.deathGuard.tier : weaponConfig.weapon.tier;
+  const offhandTier =
+    weaponConfig.kind === "necromancy"
+      ? (weaponConfig.conduit?.tier ?? null)
+      : weaponConfig.kind === "mainhand"
+        ? (weaponConfig.offhand?.tier ?? null)
+        : null;
 
   return {
+    combatStyle: loadout.style,
+    baseDamageMode: loadout.baseDamage.mode,
+    rawBase:
+      loadout.baseDamage.mode === "manual"
+        ? loadout.baseDamage.manualValue
+        : computedLoadoutBase(loadout),
     base: loadoutBase(loadout),
     level,
     attackLevel,
     dp,
     critChance,
     critDamageBonus: 0,
+    cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
+    startingAdrenaline: loadout.startingAdrenaline,
+    effectiveDamageLevel: loadoutEffectiveDamageLevel(loadout),
+    mainhandTier,
+    offhandTier,
+    spellTier:
+      weaponConfig.kind !== "necromancy" && weaponConfig.style === "magic"
+        ? (weaponConfig.spellTier ?? null)
+        : null,
+    ammunitionTier:
+      weaponConfig.kind !== "necromancy" && weaponConfig.style === "ranged"
+        ? (weaponConfig.ammunitionTier ?? null)
+        : null,
+    equipmentStyleDamageBonus: equipmentDamage,
+    styleDamageBonus: equipmentDamage + loadout.styleDamageBonus,
+    damagePotentialSource: loadout.target
+      ? loadout.target.damagePotentialOverride != null
+        ? "manual override"
+        : "target stats"
+      : loadout.accuracy === 100
+        ? "100% assumption"
+        : "manual override",
+    equipmentIds: equippedRecordIds(loadout),
+    weaponConfiguration:
+      weaponConfig.kind === "necromancy"
+        ? "necromancy"
+        : weaponConfig.kind === "twohand"
+          ? "twohand"
+          : weaponConfig.offhand
+            ? "dualwield"
+            : "mainhand",
     globalModifiers,
     castModifiersFor: (ability) => [
       ...globalModifiers,
@@ -320,7 +449,6 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     plantedFeet: loadout.perks.plantedFeet === true,
     conjureBasicDamageMult: loadoutFirstNecromancerConjureDamageMult({
       equipmentSlots: loadout.equipmentSlots,
-      equipmentIds: loadout.equipmentIds,
     }),
   };
 }

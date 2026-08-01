@@ -10,6 +10,7 @@ import { MAX_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import { CalculationAssumptions } from "./CalculationAssumptions";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
@@ -52,6 +53,7 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
     },
     modifiers: stats.castModifiersFor(ability),
     context: { style },
+    cap: stats.cap,
   });
 }
 
@@ -61,7 +63,12 @@ export function AnalysisTab() {
   const [loadout] = useLoadout();
   const [abilityId, setAbilityId] = useState(ALL_ENTRIES[0].ability.id);
   const [souls, setSouls] = useState(3);
-  const [lineB, setLineB] = useState(() => ({ ...loadout }));
+  const [lineB, setLineB] = useState(() => ({
+    base: loadoutStats(loadout).base,
+    level: loadout.level,
+    accuracy: loadout.accuracy,
+    critChance: loadout.critChance,
+  }));
 
   const entry =
     ALL_ENTRIES.find((candidate) => candidate.ability.id === abilityId) ?? ALL_ENTRIES[0];
@@ -156,7 +163,14 @@ export function AnalysisTab() {
               </h3>
               <button
                 type="button"
-                onClick={() => setLineB({ ...loadout })}
+                onClick={() =>
+                  setLineB({
+                    base: statsA.base,
+                    level: statsA.level,
+                    accuracy: statsA.dp * 100,
+                    critChance: statsA.critChance * 100,
+                  })
+                }
                 className="combat-button border border-stone-750 px-2 py-0.5 text-xs text-parch-300"
               >
                 Reset to A
@@ -237,6 +251,7 @@ export function AnalysisTab() {
             </tbody>
           </table>
         </div>
+        <CalculationAssumptions stats={statsA} />
       </section>
     </div>
   );

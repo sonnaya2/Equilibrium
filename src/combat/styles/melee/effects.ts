@@ -27,9 +27,8 @@ export const METEOR_STRIKE_SOURCE = wiki("Meteor Strike", "Meteor_Strike");
  * Wiki tooltip: +5-7% ability damage per idle tick, cap 6s (10 ticks).
  * Analysis table matches +5 min / +7 max per tick.
  *
- * Sim idle clock (last-attack model): ticks since last melee damaging cast
- * (`readyTick - melee.lastCastTick`). Pure revo / generic target has no position
- * — off-target movement (Surge / Escape / Bladed Dive) is unmodelled.
+ * Sim idle clock: ticks since the last damaging cast against this target.
+ * Generic-target simulation has no position, so off-target movement is unmodelled.
  * After >= 8 idle ticks, Greater Barge also grants Endless Assault for 6s
  * (next channelled melee consumes the window; hits already multi-tick).
  */
@@ -73,12 +72,6 @@ export interface MeleeRotationState {
    */
   meteorStrikeUntilTick: number;
   /**
-   * Last-attack idle clock for Greater Barge (generic target / pure revo).
-   * Tick of the previous melee damaging cast; -1 = none yet. Off-target
-   * movement (Surge / Escape / Bladed Dive) is unmodelled.
-   */
-  lastCastTick: number;
-  /**
    * Endless Assault window end tick (0 = inactive). Set when Greater Barge is
    * cast after >= 8 idle ticks; next channelled melee inside it consumes it.
    */
@@ -99,7 +92,6 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   greaterFuryUntilTick: 0,
   furyCritBonus: false,
   meteorStrikeUntilTick: 0,
-  lastCastTick: -1,
   endlessAssaultUntilTick: 0,
   bleedChainNext: null,
   bleedChainUntilTick: 0,

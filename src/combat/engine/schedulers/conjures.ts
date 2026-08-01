@@ -25,15 +25,17 @@ import {
 import type { CombatModifier } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
-import { scheduleEvent, withinHorizon, type SimulationRuntime } from "../runtime/runtime";
+import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 import { patchConjures } from "../runtime/state";
 
 /**
  * Conjure spirit schedulers: each summon instance owns two tracks (autos, and
  * zombie poison), each with exactly one pending event. Landing an event advances
  * its track and queues the next — never past untilTick (plus the sourced poison
- * tail) and never past the run's horizon. Events of a dismissed or re-summoned
- * spirit are identified by (id, untilTick) and die silently.
+ * tail). One next event stays queued past a fixed horizon so an ordered tail
+ * replay can continue the track; the fixed-window clock never lands it.
+ * Events of a dismissed or re-summoned spirit are identified by (id, untilTick)
+ * and die silently.
  */
 
 /**
@@ -152,14 +154,10 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
   const key = `${spirit.id}:${spirit.untilTick}`;
   if (rt.scheduledSpiritTracks.has(key)) return;
   rt.scheduledSpiritTracks.add(key);
-  if (
-    hasAutoTrack(spirit) &&
-    spiritAutoPending(spirit) &&
-    withinHorizon(rt, spirit.auto.nextTick)
-  ) {
+  if (hasAutoTrack(spirit) && spiritAutoPending(spirit)) {
     scheduleSpiritAuto(rt, spirit);
   }
-  if (spiritPoisonPending(spirit) && withinHorizon(rt, spirit.poison.nextTick)) {
+  if (spiritPoisonPending(spirit)) {
     scheduleSpiritPoison(rt, spirit);
   }
 }
@@ -193,7 +191,7 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
   if (pending) rt.spiritEventMeta.delete(pending.seq); // suppressed: the event dies
   const next: ActiveSkeletonWarrior = { ...spirit, auto: { nextTick: resumeTick } };
   patchSpirit(rt, spirit, next);
-  if (spiritAutoPending(next) && withinHorizon(rt, next.auto.nextTick)) {
+  if (spiritAutoPending(next)) {
     scheduleSpiritAuto(rt, next);
   }
 }
@@ -215,14 +213,14 @@ export function processSpiritEvent(
     if (live.spirit.id !== "putrid_zombie") return;
     const next = spiritPoisonFired(live.spirit);
     patchSpirit(rt, live.spirit, next);
-    if (spiritPoisonPending(next) && withinHorizon(rt, next.poison.nextTick)) {
+    if (spiritPoisonPending(next)) {
       scheduleSpiritPoison(rt, next);
     }
     return;
   }
   const next = spiritAutoFired(live.spirit);
   patchSpirit(rt, live.spirit, next);
-  if (hasAutoTrack(next) && spiritAutoPending(next) && withinHorizon(rt, next.auto.nextTick)) {
+  if (hasAutoTrack(next) && spiritAutoPending(next)) {
     scheduleSpiritAuto(rt, next);
   }
 }

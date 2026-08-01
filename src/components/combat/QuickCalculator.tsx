@@ -19,6 +19,9 @@ import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { SupportStatusChip } from "./SupportStatusChip";
 import { NumberField } from "./NumberField";
+import { useLoadout } from "./useLoadout";
+import { loadoutStats } from "./loadoutStats";
+import { CalculationAssumptions } from "./CalculationAssumptions";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
   melee: MELEE_ABILITIES,
@@ -81,6 +84,9 @@ function abilityMeta(ability: AbilitySpec): string {
 }
 
 export function QuickCalculator() {
+  const [loadout] = useLoadout();
+  const setup = loadoutStats(loadout);
+  const [useBuild, setUseBuild] = useState(true);
   const [style, setStyle] = useState<CombatStyle>("melee");
   const [level, setLevel] = useState(99);
   const [base, setBase] = useState(1000);
@@ -88,27 +94,43 @@ export function QuickCalculator() {
   const [critChance, setCritChance] = useState(10);
   const [abilityId, setAbilityId] = useState("attack");
   const [souls, setSouls] = useState(3);
+  const activeStyle = useBuild ? loadout.style : style;
+  const effectiveLevel = useBuild ? setup.level : level;
+  const effectiveBase = useBuild ? setup.base : base;
+  const effectiveAccuracy = useBuild ? setup.dp * 100 : accuracy;
+  const effectiveCritChance = useBuild ? setup.critChance * 100 : critChance;
+
+  const setManual = () => {
+    setStyle(loadout.style);
+    setLevel(setup.level);
+    setBase(setup.base);
+    setAccuracy(setup.dp * 100);
+    setCritChance(setup.critChance * 100);
+    setUseBuild(false);
+  };
 
   // Quick is for damaging casts; buff-only records (e.g. Living Death) live on Rotation.
   // Necromancy: full post-CSM kit + Volley scaled by Residual Souls.
   const palette =
-    style === "necromancy"
+    activeStyle === "necromancy"
       ? necroPalette(souls)
-      : STYLE_ABILITIES[style].filter((a) => a.hits.length > 0);
+      : STYLE_ABILITIES[activeStyle].filter((a) => a.hits.length > 0);
   const ability = palette.find((a) => a.id === abilityId) ?? palette[0];
   const selectedId = ability?.id;
 
   const result =
     ability && ability.hits.length > 0
       ? calculateAbility(ability, {
-          base: Math.max(0, finite(base, 0)),
-          level: Math.min(Math.max(1, finite(level, 99)), 145),
-          accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100) / 100,
+          base: Math.max(0, finite(effectiveBase, 0)),
+          level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
+          accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
           crit: {
-            chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100,
+            chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
             guaranteed: (ability as RangedAbilitySpec).guaranteedCrit,
           },
-          context: { style },
+          modifiers: useBuild ? setup.castModifiersFor(ability) : undefined,
+          context: { style: activeStyle },
+          cap: setup.cap,
         })
       : null;
 
@@ -116,14 +138,23 @@ export function QuickCalculator() {
     <div className="combat-quick">
       <div className="combat-quick-toolbar flex flex-wrap items-center gap-2">
         <h2 className="combat-page-title m-0 text-[15px] font-medium text-parch-50">Abilities</h2>
+        <label className="inline-flex items-center gap-1.5 text-xs text-parch-100">
+          <input
+            type="checkbox"
+            checked={useBuild}
+            onChange={(event) => (event.target.checked ? setUseBuild(true) : setManual())}
+          />
+          Use Loadout
+        </label>
         <div role="group" aria-label="Combat style" className="ml-auto flex flex-wrap gap-1">
           {AVAILABLE_STYLES.map((s) => {
-            const active = style === s;
+            const active = activeStyle === s;
             return (
               <button
                 key={s}
                 type="button"
                 onClick={() => {
+                  if (useBuild) setManual();
                   setStyle(s);
                   setAbilityId(firstDamagingId(s));
                 }}
@@ -142,16 +173,41 @@ export function QuickCalculator() {
         <section className="combat-frame combat-quick-main flex min-h-0 flex-col">
           <CombatFrameCorners />
           <div className="combat-field-strip grid grid-cols-2 gap-x-2 sm:grid-cols-4">
-            <NumberField label={`${STYLE_LABELS[style]} level`} value={level} onChange={setLevel} />
-            <NumberField label="Base ability damage" value={base} onChange={setBase} />
-            <NumberField label="Accuracy" value={accuracy} onChange={setAccuracy} suffix="%" />
             <NumberField
-              label="Crit chance"
-              value={critChance}
-              onChange={setCritChance}
+              label={`${STYLE_LABELS[activeStyle]} level`}
+              value={effectiveLevel}
+              onChange={(value) => {
+                if (useBuild) setManual();
+                setLevel(value);
+              }}
+            />
+            <NumberField
+              label="Base ability damage"
+              value={effectiveBase}
+              onChange={(value) => {
+                if (useBuild) setManual();
+                setBase(value);
+              }}
+            />
+            <NumberField
+              label="Accuracy"
+              value={effectiveAccuracy}
+              onChange={(value) => {
+                if (useBuild) setManual();
+                setAccuracy(value);
+              }}
               suffix="%"
             />
-            {style === "necromancy" && selectedId === "volley_of_souls" ? (
+            <NumberField
+              label="Crit chance"
+              value={effectiveCritChance}
+              onChange={(value) => {
+                if (useBuild) setManual();
+                setCritChance(value);
+              }}
+              suffix="%"
+            />
+            {activeStyle === "necromancy" && selectedId === "volley_of_souls" ? (
               <NumberField
                 label="Residual Souls"
                 value={souls}
@@ -260,13 +316,19 @@ export function QuickCalculator() {
                   </dd>
                 </div>
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
+                  <dt className="text-parch-300">30,000 hit cap</dt>
+                  <dd className="text-right font-mono text-parch-50">
+                    {loadout.hitCapEnabled ? "On" : "Off"}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                   <dt className="text-parch-300">Damage Potential</dt>
                   <dd className="text-right font-mono text-parch-50">
                     {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
                   </dd>
                 </div>
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                  <dt className="text-parch-300">Adrenaline after cast</dt>
+                  <dt className="text-parch-300">Adrenaline change</dt>
                   <dd className="text-right font-mono text-parch-50">
                     {result.adrenalineDelta >= 0 ? "+" : ""}
                     {result.adrenalineDelta}%
@@ -293,6 +355,7 @@ export function QuickCalculator() {
                   </div>
                 ) : null}
               </dl>
+              {useBuild ? <CalculationAssumptions stats={setup} /> : null}
             </div>
           </div>
         ) : ability && ability.hits.length === 0 ? (

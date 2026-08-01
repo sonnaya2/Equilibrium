@@ -148,6 +148,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 90, maxPct: 110 }, tickOffset: 2 }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    replacementGroup: "sonic_wave",
+    weaponRequirement: "twohand",
     source: wikiAbility("Sonic Wave"),
   },
   {
@@ -159,6 +161,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 115, maxPct: 135 }, tickOffset: 2 }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    replacementGroup: "sonic_wave",
+    weaponRequirement: "twohand",
     source: wikiAbility("Greater Sonic Wave"),
   },
   {
@@ -225,6 +229,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: concHits(30, 40),
     adrenaline: { gain: 9 },
     cooldownSeconds: 5.4,
+    replacementGroup: "concentrated_blast",
+    weaponRequirement: "dualwield",
     source: wikiAbility("Concentrated Blast"),
   },
   {
@@ -235,6 +241,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: concHits(40, 50),
     adrenaline: { gain: 9 },
     cooldownSeconds: 5.4,
+    replacementGroup: "concentrated_blast",
+    weaponRequirement: "dualwield",
     source: wikiAbility("Greater Concentrated Blast"),
   },
   {
@@ -312,6 +320,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 420, maxPct: 500 } }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
+    replacementGroup: "omnipower",
     source: wikiAbility("Omnipower"),
   },
   {
@@ -329,6 +338,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     ],
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
+    replacementGroup: "omnipower",
+    requiredEquipmentAnyOf: ["item:igneous-kal-mej", "item:igneous-kal-zuk"],
     source: wikiAbility("Omnipower"),
   },
   {
@@ -342,6 +353,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: sunshineDotHits(16),
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
+    replacementGroup: "sunshine",
     source: wikiAbility("Sunshine"),
   },
   {
@@ -355,6 +367,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: sunshineDotHits(21),
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
+    replacementGroup: "sunshine",
     source: wikiAbility("Greater Sunshine"),
   },
   {

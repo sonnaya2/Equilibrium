@@ -29,10 +29,20 @@ const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);
 
 export interface LoadoutTarget {
   defenceLevel: number;
+  armour?: number;
   affinity: AffinityKind;
+  additiveHitChance?: number;
+  damagePotentialOverride?: number;
   /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
   hpPercent?: number;
 }
+
+export interface BaseDamageSettings {
+  mode: "automatic" | "manual";
+  manualValue: number;
+}
+
+export type LoadoutWeaponConfiguration = "twohand" | "dualwield" | "mainhand";
 
 export interface LoadoutPerks {
   equilibrium: number;
@@ -53,7 +63,7 @@ export interface LoadoutPerks {
   crackling: number;
   /** Aftershock: AoE after 50k damage, avg 31.8% AD × rank, 6s min. Rank 0 = off, max 4. */
   aftershock: number;
-  /** Relentless: EV refund of adren cost (1%/rank, no ICD model). Rank 0 = off, max 5. */
+  /** Relentless: branched cost refund with its 30s lockout. Rank 0 = off, max 5. */
   relentless: number;
   relentlessLevel20: boolean;
   tectonicPieces: number;
@@ -94,8 +104,14 @@ export interface Loadout {
   /** Melee Strength — ability damage + crit damage-from-level. */
   strengthLevel: number;
   weaponTier: number;
-  /** Manual base override; NaN means compute from level + weapon tier. */
-  base: number;
+  offhandTier: number;
+  spellTier: number;
+  ammunitionTier: number;
+  styleDamageBonus: number;
+  weaponConfiguration: LoadoutWeaponConfiguration;
+  baseDamage: BaseDamageSettings;
+  startingAdrenaline: number;
+  hitCapEnabled: boolean;
   accuracy: number;
   critChance: number;
   target: LoadoutTarget | null;
@@ -112,7 +128,14 @@ export const DEFAULT_LOADOUT: Loadout = {
   attackLevel: 99,
   strengthLevel: 99,
   weaponTier: 90,
-  base: 1000,
+  offhandTier: 90,
+  spellTier: 90,
+  ammunitionTier: 90,
+  styleDamageBonus: 0,
+  weaponConfiguration: "twohand",
+  baseDamage: { mode: "automatic", manualValue: 1000 },
+  startingAdrenaline: 0,
+  hitCapEnabled: true,
   accuracy: 100,
   critChance: 10,
   target: null,
@@ -166,6 +189,8 @@ const clampRank = (value: unknown, max: number) =>
   Number.isFinite(value) ? Math.min(Math.max(0, Math.floor(Number(value))), max) : 0;
 const num = (value: unknown, fallback: number) =>
   Number.isFinite(value) ? Number(value) : fallback;
+const clamp = (value: unknown, min: number, max: number, fallback: number) =>
+  Math.min(max, Math.max(min, num(value, fallback)));
 
 /** Non-empty string ids currently in slots (order follows EQUIPMENT_SLOTS). */
 export function equipmentIdList(
@@ -218,6 +243,7 @@ export function equipInSlot(loadout: Loadout, slot: EquipmentSlot, itemId: strin
   const unlocks = unlockOnlyIds(loadout);
   return {
     ...loadout,
+    baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     equipmentSlots: slots,
     equipmentIds: mergeEquipmentIds(slots, unlocks),
   };
@@ -235,7 +261,12 @@ export function toggleUnlockPin(loadout: Loadout, itemId: string): Loadout {
 }
 
 export function clearEquipment(loadout: Loadout): Loadout {
-  return { ...loadout, equipmentSlots: {}, equipmentIds: [] };
+  return {
+    ...loadout,
+    baseDamage: { ...loadout.baseDamage, mode: "automatic" },
+    equipmentSlots: {},
+    equipmentIds: [],
+  };
 }
 
 /** Catalogue id still equippable: present and not unlock.type === "removed". */
@@ -275,6 +306,14 @@ export function withStyleLevel(loadout: Loadout, level: number): Loadout {
   return { ...loadout, level, attackLevel: level, strengthLevel: level };
 }
 
+export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
+  return {
+    ...loadout,
+    style,
+    baseDamage: { ...loadout.baseDamage, mode: "automatic" },
+  };
+}
+
 export function withAttackLevel(loadout: Loadout, attackLevel: number): Loadout {
   return { ...loadout, attackLevel };
 }
@@ -298,6 +337,8 @@ function normalizeEquipmentSlots(raw: unknown): Partial<Record<EquipmentSlot, st
 export function normalizeLoadout(value: unknown): Loadout {
   if (typeof value !== "object" || value === null) return DEFAULT_LOADOUT;
   const raw = value as Partial<Loadout> & {
+    base?: unknown;
+    baseDamage?: unknown;
     level?: unknown;
     attackLevel?: unknown;
     strengthLevel?: unknown;
@@ -307,6 +348,10 @@ export function normalizeLoadout(value: unknown): Loadout {
   const rawPerks = (raw.perks ?? {}) as Partial<LoadoutPerks>;
   const rawBuffs = (raw.buffs ?? {}) as Partial<LoadoutBuffs>;
   const rawTarget = raw.target as Partial<LoadoutTarget> | null | undefined;
+  const rawBaseDamage =
+    typeof raw.baseDamage === "object" && raw.baseDamage !== null
+      ? (raw.baseDamage as Partial<BaseDamageSettings>)
+      : undefined;
   const style = STYLES.includes(raw.style as string)
     ? (raw.style as CombatStyle)
     : DEFAULT_LOADOUT.style;
@@ -314,9 +359,9 @@ export function normalizeLoadout(value: unknown): Loadout {
   const hasAttack = Number.isFinite(raw.attackLevel);
   const hasStrength = Number.isFinite(raw.strengthLevel);
   const hasLevel = Number.isFinite(raw.level);
-  const legacyLevel = num(raw.level, DEFAULT_LOADOUT.level);
-  let attackLevel = hasAttack ? num(raw.attackLevel, legacyLevel) : legacyLevel;
-  let strengthLevel = hasStrength ? num(raw.strengthLevel, legacyLevel) : legacyLevel;
+  const legacyLevel = clamp(raw.level, 1, 145, DEFAULT_LOADOUT.level);
+  let attackLevel = hasAttack ? clamp(raw.attackLevel, 1, 145, legacyLevel) : legacyLevel;
+  let strengthLevel = hasStrength ? clamp(raw.strengthLevel, 1, 145, legacyLevel) : legacyLevel;
   let level = hasLevel ? legacyLevel : strengthLevel;
 
   if (style === "melee") {
@@ -341,15 +386,52 @@ export function normalizeLoadout(value: unknown): Loadout {
     level,
     attackLevel,
     strengthLevel,
-    weaponTier: num(raw.weaponTier, DEFAULT_LOADOUT.weaponTier),
-    base: num(raw.base, DEFAULT_LOADOUT.base),
-    accuracy: num(raw.accuracy, DEFAULT_LOADOUT.accuracy),
-    critChance: num(raw.critChance, DEFAULT_LOADOUT.critChance),
+    weaponTier: clamp(raw.weaponTier, 0, 145, DEFAULT_LOADOUT.weaponTier),
+    offhandTier: clamp(raw.offhandTier, 0, 145, num(raw.weaponTier, DEFAULT_LOADOUT.offhandTier)),
+    spellTier: clamp(raw.spellTier, 0, 145, num(raw.weaponTier, DEFAULT_LOADOUT.spellTier)),
+    ammunitionTier: clamp(
+      raw.ammunitionTier,
+      0,
+      145,
+      num(raw.weaponTier, DEFAULT_LOADOUT.ammunitionTier),
+    ),
+    styleDamageBonus: Math.max(0, num(raw.styleDamageBonus, DEFAULT_LOADOUT.styleDamageBonus)),
+    weaponConfiguration:
+      raw.weaponConfiguration === "dualwield" || raw.weaponConfiguration === "mainhand"
+        ? raw.weaponConfiguration
+        : "twohand",
+    baseDamage: {
+      mode: rawBaseDamage?.mode === "manual" ? "manual" : "automatic",
+      manualValue: Math.max(
+        1,
+        num(rawBaseDamage?.manualValue, num(raw.base, DEFAULT_LOADOUT.baseDamage.manualValue)),
+      ),
+    },
+    startingAdrenaline: Math.min(
+      100,
+      Math.max(0, num(raw.startingAdrenaline, DEFAULT_LOADOUT.startingAdrenaline)),
+    ),
+    hitCapEnabled: raw.hitCapEnabled !== false,
+    accuracy: clamp(raw.accuracy, 0, 100, DEFAULT_LOADOUT.accuracy),
+    critChance: clamp(raw.critChance, 0, 100, DEFAULT_LOADOUT.critChance),
     target:
       rawTarget && AFFINITIES.includes(rawTarget.affinity as string)
         ? {
-            defenceLevel: num(rawTarget.defenceLevel, 80),
+            defenceLevel: Math.max(0, num(rawTarget.defenceLevel, 80)),
+            armour: Math.max(0, num(rawTarget.armour, 0)),
             affinity: rawTarget.affinity as AffinityKind,
+            additiveHitChance: clamp(rawTarget.additiveHitChance, -100, 100, 0),
+            ...(Number.isFinite(rawTarget.damagePotentialOverride)
+              ? {
+                  damagePotentialOverride: Math.min(
+                    1,
+                    Math.max(0, Number(rawTarget.damagePotentialOverride)),
+                  ),
+                }
+              : {}),
+            ...(Number.isFinite(rawTarget.hpPercent)
+              ? { hpPercent: Math.min(100, Math.max(0, Number(rawTarget.hpPercent))) }
+              : {}),
           }
         : null,
     perks: {
@@ -412,12 +494,7 @@ export function useLoadout() {
       next.style === "melee"
         ? { ...next, level: next.strengthLevel }
         : { ...next, attackLevel: next.level, strengthLevel: next.level };
-    const unlocks = unlockOnlyIds(withLevels);
-    const normalized = pruneUnknownEquipment({
-      ...withLevels,
-      equipmentSlots: withLevels.equipmentSlots ?? {},
-      equipmentIds: mergeEquipmentIds(withLevels.equipmentSlots ?? {}, unlocks),
-    });
+    const normalized = pruneUnknownEquipment(normalizeLoadout(withLevels));
     setLoadout(normalized);
     try {
       window.localStorage.setItem(KEY, JSON.stringify(normalized));

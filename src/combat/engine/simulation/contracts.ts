@@ -49,6 +49,11 @@ export interface SimulateInput {
   modifiers?: CombatModifier[] | ((ability: AbilitySpec) => CombatModifier[]);
   context?: CombatContext;
   cap?: HitCapRule;
+  /** Adrenaline available before the first cast. */
+  startingAdrenaline?: number;
+  /** Equipped catalogue ids used by mechanics with verified item requirements. */
+  equipmentIds?: readonly string[];
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "necromancy";
   /** Puncture damage is outside the current model. */
   ammo?: "deathspore" | "splintering";
   /** Weave the style auto-attack through idle GCDs and adrenaline shortfalls. */
@@ -92,6 +97,12 @@ export interface CastRecord {
   abilityId: string;
   result: AbilityResult;
   adrenalineAfter: number;
+  adrenalineBefore: number;
+  listedCost: number;
+  effectiveCost: number;
+  actualSpend: number;
+  refund: number;
+  adrenalineGained: number;
   /** Woven basic-attack cast, not part of the queued rotation. */
   auto?: boolean;
 }
@@ -112,6 +123,12 @@ export interface RotationSummary {
   totalMax: number;
   totalExpected: number;
   dps: number;
+  metric: {
+    type: "fixed-window" | "natural-completion";
+    denominatorTicks: number;
+    damageCounted: number;
+    tails: "excluded" | "included-separately" | "included-in-natural-completion";
+  };
   perAbility: Record<string, number>;
   /** Expected damage landing on each tick — DoT tails land on their sourced ticks. */
   damageByTick: Record<number, number>;
@@ -123,6 +140,7 @@ export interface RotationSummary {
    * Never presented as fixed-window DPS.
    */
   totalExpectedIncludingTails?: number;
+  postWindowTailDamage?: number;
   /**
    * Present only when state-changing RNG perks (Impatient / Relentless) forced
    * probability-weighted branching: totals are branch-weighted means, while

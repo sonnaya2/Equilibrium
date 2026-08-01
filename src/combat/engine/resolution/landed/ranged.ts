@@ -17,6 +17,27 @@ export function onRangedHitLanded(
   event: ScheduledEvent<SimulationRuntime>,
   ability: AbilitySpec,
 ): void {
+  const fleeting = rt.input.equipmentIds?.some(
+    (id) => id === "item:fleeting-boots" || id === "item:enhanced-fleeting-boots",
+  );
+  const snipeReduction =
+    ability.id === "piercing_shot"
+      ? fleeting
+        ? 6
+        : 4
+      : ability.id === "ranged_attack" && fleeting
+        ? 6
+        : 0;
+  const snipeReady = rt.state.cooldowns.snipe;
+  if (snipeReduction > 0 && snipeReady !== undefined && snipeReady > event.tick) {
+    rt.state = {
+      ...rt.state,
+      cooldowns: {
+        ...rt.state.cooldowns,
+        snipe: Math.max(event.tick, snipeReady - snipeReduction),
+      },
+    };
+  }
   if (rt.input.ammo === "deathspore") {
     rt.state = patchRanged(rt.state, {
       deathspore: onRangedHit(rt.state.ranged.deathspore, event.tick),

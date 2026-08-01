@@ -59,6 +59,13 @@ export interface AbilitySpec {
   offGcd?: boolean;
   autoAttack?: boolean;
   guaranteedCrit?: boolean;
+  /** Equivalent variants share one cooldown and cannot coexist in one action list. */
+  replacementGroup?: string;
+  /** Shared logical cooldown when distinct ids represent one live timer. */
+  cooldownGroup?: string;
+  weaponRequirement?: "twohand" | "dualwield" | "mainhand" | "death-guard-and-conduit";
+  /** At least one of these catalogue items must be equipped. */
+  requiredEquipmentAnyOf?: readonly string[];
   /**
    * Channelled cast occupancy in ticks (last hit offset + 1 — the actor is free
    * the tick after the final hit lands). Absent = one global cooldown.

@@ -5,6 +5,7 @@ import { scheduleCastEvents } from "./schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "./effects";
 import { prepareCast, type PreparedCast } from "./prepare";
 import { advanceTo } from "../runtime/clock";
+import { firstLegalTick } from "../runtime/state";
 import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -28,9 +29,18 @@ export function prepareSimulationCast(
   ability: AbilitySpec,
   readyTick: number,
 ): CastPreparation {
-  const candidate = candidateTick(rt.state, readyTick);
+  const candidate = Math.max(
+    candidateTick(rt.state, readyTick),
+    firstLegalTick(rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
+  );
   advanceTo(rt, candidate);
-  const rejection = castRejection(rt.state, ability, candidate);
+  const rejection = castRejection(
+    rt.state,
+    ability,
+    candidate,
+    rt.input.weaponConfiguration,
+    rt.input.equipmentIds,
+  );
   if (rejection) return { ok: false, error: rejection };
   return { ok: true, prepared: prepareCast(rt, ability, candidate) };
 }
@@ -54,6 +64,9 @@ export function commitCast(
   advanceTo(rt, completesAt);
   applyCompletionEffects(castEffectContext(rt, prepared, rng));
   record.adrenalineAfter = rt.state.adrenaline;
+  record.refund = rng?.relentlessProc ? prepared.spend : 0;
+  record.adrenalineGained =
+    record.adrenalineAfter - record.adrenalineBefore + record.actualSpend - record.refund;
   rt.casts.push(record);
 }
 
@@ -85,6 +98,12 @@ export function performOffGcdCast(rt: SimulationRuntime, ability: AbilitySpec): 
     abilityId: ability.id,
     result: EMPTY_RESULT,
     adrenalineAfter: rt.state.adrenaline,
+    adrenalineBefore: rt.state.adrenaline,
+    listedCost: ability.adrenaline?.cost ?? 0,
+    effectiveCost: ability.adrenaline?.cost ?? 0,
+    actualSpend: 0,
+    refund: 0,
+    adrenalineGained: 0,
   };
   rt.casts.push(record);
   rt.endTick = Math.max(rt.endTick, rt.state.tick + 1);

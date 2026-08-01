@@ -15,7 +15,11 @@ export function applyCastCooldown(fx: CastEffectContext): void {
     ability.id === "death_skulls"
       ? deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate)
       : secondsToTicks(ability.cooldownSeconds);
-  rt.state = startCooldown(rt.state, ability.id, ticks);
+  rt.state = startCooldown(
+    rt.state,
+    ability.cooldownGroup ?? ability.replacementGroup ?? ability.id,
+    ticks,
+  );
 }
 
 /** Cooldown resets granted by a cast (Living Death clears ToD and Death Skulls). */

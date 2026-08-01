@@ -12,7 +12,12 @@ import {
 } from "../../styles/melee/effects";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
 import { isMagicAbility } from "../../styles/magic/abilities";
-import { isConcentratedBlast } from "../../styles/magic/effects";
+import {
+  GREATER_FLOW_REDUCTION,
+  isConcentratedBlast,
+  RUNIC_FLOW_BONUS,
+  SONIC_FLOW_REDUCTION,
+} from "../../styles/magic/effects";
 import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge";
 import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
@@ -55,6 +60,8 @@ export interface PreparedCast {
   /** Actual adrenaline spend at the candidate tick (Deathspore-zeroed). */
   spend: number;
   occupancyTicks: number;
+  flowReduction?: number;
+  channelAsDot: boolean;
   snap: CastSnapshot;
   transitions: readonly PreparedTransition[];
 }
@@ -155,9 +162,11 @@ export function prepareCast(
   }
 
   const meleeIdleTicks =
-    ability.style === "melee" && working.hits.length > 0 && rt.state.melee.lastCastTick >= 0
-      ? candidate - rt.state.melee.lastCastTick
-      : 0;
+    ability.style !== "melee" || working.hits.length === 0
+      ? 0
+      : rt.state.target.lastAttackTick < 0
+        ? 0
+        : candidate - rt.state.target.lastAttackTick;
   let endlessAssaultGrantUntilTick: number | undefined;
   if (ability.id === "greater_barge" && working.hits.length > 0) {
     working = {
@@ -229,13 +238,23 @@ export function prepareCast(
   if (greaterFuryConsume) transitions.push({ kind: "consumeGreaterFury" });
   if (furyConsume) transitions.push({ kind: "consumeFury" });
 
+  const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
+  const flowReduction = sonic
+    ? (ability.id === "sonic_wave" ? SONIC_FLOW_REDUCTION : GREATER_FLOW_REDUCTION) +
+      (animaCharged(rt.state.magic.runicCharge, candidate) ? RUNIC_FLOW_BONUS : 0)
+    : undefined;
+
   return {
     ability,
     working,
     candidate,
     cost: costOf(rt.state, ability, candidate),
     spend: spendOf(rt.state, ability, candidate, input.ammo),
-    occupancyTicks: ability.channelTicks ?? GLOBAL_COOLDOWN_TICKS,
+    occupancyTicks: endlessAssaultConsume
+      ? GLOBAL_COOLDOWN_TICKS
+      : (ability.channelTicks ?? GLOBAL_COOLDOWN_TICKS),
+    ...(flowReduction !== undefined ? { flowReduction } : {}),
+    channelAsDot: endlessAssaultConsume,
     snap,
     transitions,
   };

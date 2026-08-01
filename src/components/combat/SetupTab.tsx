@@ -51,6 +51,7 @@ export function SetupTab() {
       setLoadout({
         ...loadout,
         style,
+        baseDamage: { ...loadout.baseDamage, mode: "automatic" },
         // Keep current strength/attack; level alias tracks strength.
         level: loadout.strengthLevel,
       });
@@ -60,6 +61,7 @@ export function SetupTab() {
       setLoadout({
         ...loadout,
         style,
+        baseDamage: { ...loadout.baseDamage, mode: "automatic" },
         level,
         attackLevel: level,
         strengthLevel: level,
@@ -156,16 +158,26 @@ export function SetupTab() {
               <dd className="font-mono text-parch-50">{loadoutWeaponTier(loadout)}</dd>
             </div>
             <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">Base AD</dt>
+              <dt className="text-parch-300">
+                Base AD · {loadout.baseDamage.mode === "automatic" ? "auto" : "manual"}
+              </dt>
               <dd className="font-mono text-parch-50">{formatNum(stats.base)}</dd>
             </div>
             <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">DP</dt>
+              <dt className="text-parch-300">DP · {stats.damagePotentialSource}</dt>
               <dd className="font-mono text-parch-50">{formatPct(stats.dp)}</dd>
             </div>
             <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
               <dt className="text-parch-300">Crit</dt>
               <dd className="font-mono text-parch-50">{formatPct(stats.critChance)}</dd>
+            </div>
+            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
+              <dt className="text-parch-300">Starting adrenaline</dt>
+              <dd className="font-mono text-parch-50">{loadout.startingAdrenaline}%</dd>
+            </div>
+            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
+              <dt className="text-parch-300">30,000 cap</dt>
+              <dd className="font-mono text-parch-50">{loadout.hitCapEnabled ? "On" : "Off"}</dd>
             </div>
             <div className="border-b border-stone-750/70 pb-1.5">
               <dt className="text-parch-300">Buffs</dt>

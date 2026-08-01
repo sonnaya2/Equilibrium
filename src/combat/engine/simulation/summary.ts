@@ -1,5 +1,5 @@
 import { expectedAftershockDamage, expectedCracklingDamage } from "../../shared/perks";
-import type { Branch } from "./branch";
+import { snapshotRuntime, type Branch } from "./branch";
 import type { RotationSummary, SimulateOptions } from "./contracts";
 import { advanceTo } from "../runtime/clock";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -19,6 +19,8 @@ export function finish(
   horizonTicks?: number,
   options?: SimulateOptions,
 ): RotationSummary {
+  if (rt.finalized) throw new Error("simulation runtime already finalized");
+  rt.finalized = true;
   const effectiveHorizon = horizonTicks ?? rt.horizon;
   if (effectiveHorizon != null && effectiveHorizon > 0) {
     advanceTo(rt, effectiveHorizon - 1);
@@ -61,10 +63,17 @@ export function finish(
   }
 
   let totalExpectedIncludingTails: number | undefined;
+  let postWindowTailDamage: number | undefined;
   if (options?.includeTails) {
-    let tails = rt.totalExpected;
-    for (const event of rt.queue.pending()) tails += event.resolve(rt, event.tick).damage.expected;
-    totalExpectedIncludingTails = tails;
+    const preview = snapshotRuntime(rt);
+    Object.assign(preview, {
+      input: { ...preview.input, horizonTicks: undefined },
+      horizon: undefined,
+      finalized: false,
+    });
+    while (preview.queue.length > 0) advanceTo(preview, preview.queue.maxTick());
+    totalExpectedIncludingTails = preview.totalExpected;
+    postWindowTailDamage = preview.totalExpected - rt.totalExpected;
   }
 
   return {
@@ -77,10 +86,23 @@ export function finish(
     totalMax: rt.totalMax,
     totalExpected: rt.totalExpected,
     dps: seconds > 0 ? rt.totalExpected / seconds : 0,
+    metric: {
+      type:
+        effectiveHorizon != null && effectiveHorizon > 0 ? "fixed-window" : "natural-completion",
+      denominatorTicks: denomTicks,
+      damageCounted: rt.totalExpected,
+      tails:
+        effectiveHorizon != null && effectiveHorizon > 0
+          ? options?.includeTails
+            ? "included-separately"
+            : "excluded"
+          : "included-in-natural-completion",
+    },
     perAbility: rt.perAbility,
     damageByTick: rt.damageByTick,
     events: rt.events,
     ...(totalExpectedIncludingTails !== undefined ? { totalExpectedIncludingTails } : {}),
+    ...(postWindowTailDamage !== undefined ? { postWindowTailDamage } : {}),
   };
 }
 
@@ -129,11 +151,18 @@ export function combineBranchSummaries(
     totalMax: mix((s) => s.totalMax),
     totalExpected: mix((s) => s.totalExpected),
     dps: mix((s) => s.dps),
+    metric: {
+      ...modal.metric,
+      damageCounted: mix((s) => s.metric.damageCounted),
+    },
     perAbility,
     damageByTick,
     events: modal.events,
     ...(modal.totalExpectedIncludingTails !== undefined
       ? { totalExpectedIncludingTails: mix((s) => s.totalExpectedIncludingTails ?? 0) }
+      : {}),
+    ...(modal.postWindowTailDamage !== undefined
+      ? { postWindowTailDamage: mix((s) => s.postWindowTailDamage ?? 0) }
       : {}),
     ...(sawBranching
       ? {

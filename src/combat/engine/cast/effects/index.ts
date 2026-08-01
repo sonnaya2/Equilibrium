@@ -9,6 +9,7 @@ import { applyNecromancyCastEffects } from "./necromancy";
 import { applyPreparedTransitions } from "./prepared";
 import { applyCastResources } from "./resources";
 import { applyRangedCastEffects } from "./ranged";
+import { patchTarget } from "../../runtime/state";
 
 export { applyCompletionEffects } from "./completion";
 export { castEffectContext, type CastEffectContext } from "./context";
@@ -31,6 +32,9 @@ export function applyCastEffects(
   applyPreparedTransitions(fx);
   applyCastCooldown(fx);
   applyCastResources(fx);
+  if (prepared.working.hits.length > 0) {
+    rt.state = patchTarget(rt.state, { lastAttackTick: prepared.candidate });
+  }
 
   switch (prepared.ability.style) {
     case "melee":

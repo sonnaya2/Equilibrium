@@ -55,8 +55,18 @@ function stepManualAction(
       }
       const basic = current.rt.basicByStyle.get(ability.style);
       const castable =
-        firstLegalTick(current.rt.state, ability.id) <= current.rt.state.tick &&
-        castRejection(current.rt.state, ability, current.rt.state.tick) === null;
+        firstLegalTick(
+          current.rt.state,
+          ability.id,
+          ability.cooldownGroup ?? ability.replacementGroup,
+        ) <= current.rt.state.tick &&
+        castRejection(
+          current.rt.state,
+          ability,
+          current.rt.state.tick,
+          current.rt.input.weaponConfiguration,
+          current.rt.input.equipmentIds,
+        ) === null;
       if (castable || !basic) {
         done.push(current);
         continue;
@@ -79,7 +89,18 @@ function stepManualAction(
       out.push(woven);
       continue;
     }
-    out.push(...castOutcomes(woven, ability, firstLegalTick(woven.rt.state, ability.id), false));
+    out.push(
+      ...castOutcomes(
+        woven,
+        ability,
+        firstLegalTick(
+          woven.rt.state,
+          ability.id,
+          ability.cooldownGroup ?? ability.replacementGroup,
+        ),
+        false,
+      ),
+    );
   }
   return out;
 }
@@ -92,6 +113,17 @@ function stepManualAction(
 export function simulate(input: SimulateInput, options?: SimulateOptions): RotationSummary {
   let branches: Branch[] = [{ weight: 1, rt: createRuntime(input) }];
   let sawBranching = false;
+  const selectedGroups = new Map<string, string>();
+  for (const action of input.rotation) {
+    const ability = branches[0]!.rt.byId.get(action.abilityId);
+    if (!ability?.replacementGroup) continue;
+    const existing = selectedGroups.get(ability.replacementGroup);
+    if (existing && existing !== ability.id) {
+      branches[0]!.error = `${existing} and ${ability.id} are mutually exclusive variants`;
+      return combineBranchSummaries(branches, undefined, options, false);
+    }
+    selectedGroups.set(ability.replacementGroup, ability.id);
+  }
 
   for (const action of input.rotation) {
     const ability = branches[0]!.rt.byId.get(action.abilityId);

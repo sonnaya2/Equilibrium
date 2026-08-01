@@ -55,7 +55,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: MODERNISATION_WIKI,
   },
   {
-    // Wiki: 2 hits 45–55% each; each hit −2.4s Snipe CD (fleeting boots 3.6s).
+    // Wiki: 2 hits 45–55% each; each hit −2.4s Snipe CD (Fleeting boots 3.6s).
     id: "piercing_shot",
     name: "Piercing Shot",
     style: "ranged",
@@ -101,6 +101,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     ],
     adrenaline: { gain: 9 },
     cooldownSeconds: 10.2,
+    replacementGroup: "ricochet",
     source: wiki("Ricochet", "Ricochet"),
   },
   {
@@ -120,6 +121,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     ],
     adrenaline: { gain: 9 },
     cooldownSeconds: 10.2,
+    replacementGroup: "ricochet",
     source: wiki("Greater Ricochet", "Greater_Ricochet"),
   },
   {
@@ -214,6 +216,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     hits: Array.from({ length: 4 }, () => ({ band: { minPct: 105, maxPct: 125 } })),
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
+    replacementGroup: "deadshot",
     source: wiki("Deadshot", "Deadshot"),
   },
   {
@@ -225,6 +228,8 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     hits: Array.from({ length: 8 }, () => ({ band: { minPct: 55, maxPct: 75 } })),
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
+    replacementGroup: "deadshot",
+    requiredEquipmentAnyOf: ["item:igneous-kal-xil", "item:igneous-kal-zuk"],
     source: wiki("Deadshot", "Deadshot"),
   },
   {
@@ -236,6 +241,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     stateEffect: "deaths_swiftness",
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
+    replacementGroup: "deaths_swiftness",
     source: wiki("Death's Swiftness", "Death%27s_Swiftness"),
   },
   {
@@ -249,6 +255,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     stateEffect: "greater_deaths_swiftness",
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
+    replacementGroup: "deaths_swiftness",
     source: wiki("Greater Death's Swiftness", "Greater_Death%27s_Swiftness"),
   },
 ];
@@ -286,7 +293,7 @@ export const RANGED_EFFECTS = [
     id: "snipe_piercing_interaction",
     name: "Snipe cooldown reduction",
     notes:
-      "Each Piercing Shot hit reduces Snipe CD by 2.4s (3.6s with fleeting boots). Nightmare gauntlets: +25% hit chance and mobile channel; enchanted dread adds a half-damage flanking shot (150–180%).",
+      "Each Piercing Shot hit reduces Snipe CD by 2.4s (3.6s with Fleeting boots). Nightmare gauntlets: +25% hit chance and mobile channel; enchanted dread adds a half-damage flanking shot (150–180%).",
     source: wiki("Snipe", "Snipe"),
   },
   {

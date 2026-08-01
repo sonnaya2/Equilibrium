@@ -6,10 +6,7 @@ import {
   CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
   GREATER_CONC_BLAST_CRIT_PER_HIT_PCT,
   GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
-  GREATER_FLOW_REDUCTION,
   isConcentratedBlast,
-  RUNIC_FLOW_BONUS,
-  SONIC_FLOW_REDUCTION,
 } from "../../../styles/magic/effects";
 import { animaCharged, consumeAnima } from "../../../styles/magic/runicCharge";
 import { patchMagic, patchTarget } from "../../runtime/state";
@@ -30,8 +27,7 @@ function concCritPerStackPct(abilityId: string, empowered: boolean): number {
  * Runic Charge consumption by the casts that empower off it, the Concentrated
  * Blast stack ledger, Combust's burn on the target, and Flow's consumption.
  *
- * Flow is only *earned* here as a pending reduction — Sonic Wave grants the
- * window when its hit lands (see resolution/landed/magic).
+ * Flow is earned from event-carried data when Sonic Wave lands.
  */
 export function applyMagicCastEffects(fx: CastEffectContext): void {
   const { rt, ability, candidate } = fx;
@@ -54,14 +50,8 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     rt.state = patchMagic(rt.state, { instability: activateInstability(candidate) });
   }
 
-  // Sonic Wave / Greater Sonic Wave record what a landed hit should grant; a
-  // Runic-charged cast earns the empowered reduction and spends the charge now.
   if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {
     const empowered = animaCharged(rt.state.magic.runicCharge, candidate);
-    const base = ability.id === "sonic_wave" ? SONIC_FLOW_REDUCTION : GREATER_FLOW_REDUCTION;
-    rt.state = patchMagic(rt.state, {
-      pendingFlowReduction: base + (empowered ? RUNIC_FLOW_BONUS : 0),
-    });
     if (empowered) spendCharge();
   }
   // Runic-charged Dragon Breath spends the charge; its empowered band was
@@ -82,10 +72,12 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
   if (ability.id === "combust") {
     rt.state = patchTarget(rt.state, { burns: applyCombust(rt.state.target.burns, candidate) });
   }
-  // Enhanced/ultimate Magic casts consume Flow (wiki); basics never do.
+  // Flow is consumed by a listed positive-cost Magic spender even when Flow
+  // reduced the actual cost to zero. Listed zero-cost abilities do not use it.
   if (
-    (ability.category === "enhanced" || ability.category === "ultimate") &&
-    rt.state.magic.flowUntilTick > 0
+    ability.style === "magic" &&
+    (ability.adrenaline?.cost ?? 0) > 0 &&
+    candidate < rt.state.magic.flowUntilTick
   ) {
     rt.state = patchMagic(rt.state, { flowUntilTick: 0, flowReduction: 0 });
   }

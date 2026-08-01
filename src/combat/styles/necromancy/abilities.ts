@@ -400,7 +400,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     adrenaline: { cost: 0 },
     stateEffect: "conjure_vengeful_ghost",
     supportStatus: "partially-modeled",
-    supportNote: "Ghost healing and Spirit Pact duration variants not modeled.",
+    supportNote:
+      "Ghost healing, Command Vengeful Ghost / Haunted, and Spirit Pact duration variants are not modeled.",
     source: CONJURE_GHOST_WIKI,
   },
   {
@@ -411,6 +412,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_putrid_zombie",
+    cooldownSeconds: 30,
     supportStatus: "partially-modeled",
     supportNote: "Spirit Pact III duration assumed; duration-extending effects not modeled.",
     source: CONJURE_ZOMBIE_WIKI,

@@ -15,6 +15,7 @@ import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
 
@@ -240,6 +241,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         plantedFeet: stats.plantedFeet,
         conjureBasicDamageMult: stats.conjureBasicDamageMult,
         targetHpPercent: loadout.target?.hpPercent,
+        cap: stats.cap,
+        startingAdrenaline: stats.startingAdrenaline,
+        equipmentIds: stats.equipmentIds,
+        weaponConfiguration: stats.weaponConfiguration,
       }),
     );
   };
@@ -365,7 +370,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               <dd className="font-mono text-parch-50">{formatNumber(result.totalExpected)}</dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">DPS</dt>
+              <dt className="text-xs text-parch-300">Fixed-window DPS</dt>
               <dd className="font-mono text-parch-50">{formatNumber(result.dps)}</dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
@@ -382,6 +387,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               </dd>
             </div>
           </dl>
+
+          <CalculationAssumptions stats={stats} result={result} />
 
           <section className="revo-section revo-timeline">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">Timeline</h3>

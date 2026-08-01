@@ -19,6 +19,8 @@ export type CooldownState = Readonly<Record<string, number>>;
 
 /** Dynamic effects the simulation has put on the target, not on the player. */
 export interface TargetRuntimeState {
+  /** Tick of the latest damaging cast against this target; -1 before combat. */
+  lastAttackTick: number;
   /** Burn debuffs applied to the target (Combust). */
   burns: BurnState;
   /**
@@ -54,17 +56,19 @@ export interface RotationState {
   target: TargetRuntimeState;
 }
 
-export function newRotationState(opts: { lantern?: boolean } = {}): RotationState {
+export function newRotationState(
+  opts: { lantern?: boolean; adrenaline?: number } = {},
+): RotationState {
   return {
     tick: 0,
-    adrenaline: 0,
+    adrenaline: opts.adrenaline ?? 0,
     cooldowns: {},
     relentlessUntilTick: 0,
     melee: newMeleeRotationState(),
     ranged: newRangedRotationState(),
     magic: newMagicRotationState(),
     necromancy: newNecromancyRotationState({ lantern: opts.lantern }),
-    target: { burns: newBurns(), bloatedByCast: -1 },
+    target: { lastAttackTick: -1, burns: newBurns(), bloatedByCast: -1 },
   };
 }
 
@@ -77,8 +81,16 @@ export function spendAdrenaline(state: RotationState, amount: number): RotationS
 }
 
 /** GCD-free tick and any per-ability cooldown combined. */
-export function firstLegalTick(state: RotationState, abilityId: string): number {
-  return Math.max(state.tick, state.cooldowns[abilityId] ?? 0);
+export function firstLegalTick(
+  state: RotationState,
+  abilityId: string,
+  cooldownGroup?: string,
+): number {
+  return Math.max(
+    state.tick,
+    state.cooldowns[abilityId] ?? 0,
+    cooldownGroup ? (state.cooldowns[cooldownGroup] ?? 0) : 0,
+  );
 }
 
 export function startCooldown(

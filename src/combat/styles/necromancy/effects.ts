@@ -46,6 +46,9 @@ export interface NecroRotationState {
   livingDeathUntilTick: number;
   /** Soulbound lantern: residual soul cap 3 → 5. */
   lantern: boolean;
+  /** Exclusive stage windows for Spectral Scythe's second and third casts. */
+  spectralScythe2UntilTick: number;
+  spectralScythe3UntilTick: number;
 }
 
 /** Result of a necro cast's resource side-effects (merge into RotationState). */
@@ -65,6 +68,8 @@ export function newNecroRotationState(opts: { lantern?: boolean } = {}): NecroRo
     necrosisStacks: 0,
     livingDeathUntilTick: 0,
     lantern: opts.lantern ?? false,
+    spectralScythe2UntilTick: 0,
+    spectralScythe3UntilTick: 0,
   };
 }
 
@@ -159,6 +164,8 @@ export function necroCanCast(
   tick = 0,
 ): boolean {
   if (!isNecromancyAbility(ability)) return true;
+  if (ability.id === "spectral_scythe_2" && tick >= necro.spectralScythe2UntilTick) return false;
+  if (ability.id === "spectral_scythe_3" && tick >= necro.spectralScythe3UntilTick) return false;
   if (ability.id === "volley_of_souls") {
     if (necro.residualSouls < VOLLEY_MIN_SOULS) return false;
   } else {
@@ -225,6 +232,23 @@ export function applyNecroOnCast(
   if (ability.stateEffect === "living_death") {
     necro = activateLivingDeath(necro, castTick);
     clearCooldownIds = ["touch_of_death", "death_skulls"];
+  }
+
+  const scytheWindow = 25;
+  if (ability.id === "spectral_scythe") {
+    necro = {
+      ...necro,
+      spectralScythe2UntilTick: castTick + scytheWindow,
+      spectralScythe3UntilTick: 0,
+    };
+  } else if (ability.id === "spectral_scythe_2") {
+    necro = {
+      ...necro,
+      spectralScythe2UntilTick: 0,
+      spectralScythe3UntilTick: castTick + scytheWindow,
+    };
+  } else if (ability.id === "spectral_scythe_3") {
+    necro = { ...necro, spectralScythe2UntilTick: 0, spectralScythe3UntilTick: 0 };
   }
 
   if (conjures !== undefined) {

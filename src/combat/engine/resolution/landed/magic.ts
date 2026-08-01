@@ -24,8 +24,7 @@ export function onMagicHitLanded(
   if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {
     rt.state = patchMagic(rt.state, {
       flowUntilTick: event.tick + FLOW_DURATION_TICKS,
-      flowReduction: rt.state.magic.pendingFlowReduction,
-      pendingFlowReduction: 0,
+      flowReduction: event.flowReduction ?? 0,
     });
   }
 }

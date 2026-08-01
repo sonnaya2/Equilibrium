@@ -222,6 +222,58 @@ describe("patch validation", () => {
     ).toMatchObject({ region: "global", relation: "global" });
   });
 
+  // Requirements, effects and tags are the operations that let one record's
+  // facts move onto another before the first is retired.
+  it("shapes a requirement and bounds its level", () => {
+    expect(
+      validate({ op: "add-requirement", entity: "item:x", description: "92 Attack to wield" }),
+    ).toMatchObject({ description: "92 Attack to wield", kind: "text", skill: null, level: null });
+    expect(
+      validate({
+        op: "add-requirement",
+        entity: "item:x",
+        description: "92 Attack",
+        skill: "Attack",
+        level: 92,
+      }),
+    ).toMatchObject({ skill: "Attack", level: 92 });
+    for (const level of [-1, 201, 1.5, "92"]) {
+      expect(
+        () => validate({ op: "add-requirement", entity: "item:x", description: "d", level }),
+        String(level),
+      ).toThrow(/level must be an integer between 0 and 200/);
+    }
+  });
+
+  it("defaults an effect key and slugifies a tag", () => {
+    expect(validate({ op: "add-effect", entity: "item:x", description: "Bleeds" })).toMatchObject({
+      key: "effect",
+      value: "",
+    });
+    expect(validate({ op: "add-tag", entity: "item:x", tag: "Ability Upgrade" })).toMatchObject({
+      tag: "ability-upgrade",
+      label: "ability-upgrade",
+    });
+    expect(
+      validate({
+        op: "add-tag",
+        entity: "item:x",
+        tag: "ability-upgrade",
+        label: "ability upgrade",
+      }),
+    ).toMatchObject({ tag: "ability-upgrade", label: "ability upgrade" });
+  });
+
+  it("requires a description on a requirement and an effect", () => {
+    expect(() => validate({ op: "add-requirement", entity: "item:x" })).toThrow(
+      /add-requirement requires description/,
+    );
+    expect(() => validate({ op: "add-effect", entity: "item:x" })).toThrow(
+      /add-effect requires description/,
+    );
+    expect(() => validate({ op: "add-tag", entity: "item:x" })).toThrow(/add-tag requires tag/);
+  });
+
   it("requires a source URL to be HTTP or HTTPS", () => {
     expect(
       validate({

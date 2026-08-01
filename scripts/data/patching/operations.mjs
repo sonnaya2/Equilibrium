@@ -152,6 +152,77 @@ function removeEntity(db, operation, source) {
   return [entity];
 }
 
+// Ordinals are the database's business, not the patch author's: a requirement or
+// effect appends at the end of what the entity already has. That keeps a patch
+// line about the fact it carries, and keeps the (entity, key, ordinal) unique
+// constraint satisfiable without the author tracking it.
+const nextOrdinal = (db, sql, ...params) => Number(db.prepare(sql).get(...params).next ?? 0);
+
+function requirement(db, operation) {
+  const { op, entity, description, kind, skill, level, target } = operation;
+  requireEntity(db, entity);
+  if (op === "remove-requirement") {
+    db.prepare("DELETE FROM requirements WHERE entity_id = ? AND kind = ? AND description = ?").run(
+      entity,
+      kind,
+      description,
+    );
+    return [entity];
+  }
+  if (target) requireEntity(db, target);
+  const ordinal = nextOrdinal(
+    db,
+    "SELECT coalesce(max(ordinal) + 1, 0) AS next FROM requirements WHERE entity_id = ?",
+    entity,
+  );
+  db.prepare(
+    `INSERT INTO requirements(entity_id, kind, skill, level, target_entity_id, description, ordinal)
+     VALUES (?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(entity_id, kind, description) DO UPDATE SET
+       skill = excluded.skill, level = excluded.level, target_entity_id = excluded.target_entity_id`,
+  ).run(entity, kind, skill, level, target, description, ordinal);
+  return [entity];
+}
+
+function effect(db, operation) {
+  const { op, entity, description, key, value } = operation;
+  requireEntity(db, entity);
+  if (op === "remove-effect") {
+    db.prepare("DELETE FROM effects WHERE entity_id = ? AND effect_key = ? AND description = ?").run(
+      entity,
+      key,
+      description,
+    );
+    return [entity];
+  }
+  if (db.prepare("SELECT 1 FROM effects WHERE entity_id = ? AND effect_key = ? AND description = ?").get(entity, key, description)) {
+    return [entity];
+  }
+  const ordinal = nextOrdinal(
+    db,
+    "SELECT coalesce(max(ordinal) + 1, 0) AS next FROM effects WHERE entity_id = ? AND effect_key = ?",
+    entity,
+    key,
+  );
+  db.prepare(
+    "INSERT INTO effects(entity_id, effect_key, description, value_text, ordinal) VALUES (?, ?, ?, ?, ?)",
+  ).run(entity, key, description, value, ordinal);
+  return [entity];
+}
+
+function tag(db, operation) {
+  const { op, entity, tag: tagId, label } = operation;
+  requireEntity(db, entity);
+  if (op === "remove-tag") {
+    db.prepare("DELETE FROM entity_tags WHERE entity_id = ? AND tag_id = ?").run(entity, tagId);
+    return [entity];
+  }
+  // tags.name is UNIQUE COLLATE NOCASE, so an existing tag keeps the name it has.
+  db.prepare("INSERT OR IGNORE INTO tags(id, name) VALUES (?, ?)").run(tagId, label);
+  db.prepare("INSERT OR IGNORE INTO entity_tags(entity_id, tag_id) VALUES (?, ?)").run(entity, tagId);
+  return [entity];
+}
+
 export const HANDLERS = new Map([
   ["upsert", upsertEntity],
   ["upsert-source", upsertSource],
@@ -162,4 +233,10 @@ export const HANDLERS = new Map([
   ["relate", relationship],
   ["unrelate", relationship],
   ["remove", removeEntity],
+  ["add-requirement", requirement],
+  ["remove-requirement", requirement],
+  ["add-effect", effect],
+  ["remove-effect", effect],
+  ["add-tag", tag],
+  ["remove-tag", tag],
 ]);

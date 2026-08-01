@@ -132,7 +132,11 @@ rebuilt from the database alone.
   Assignment keys are copied out of a fixed allowlist of column names, which is why the handlers can
   interpolate them into `SET`.
 - **operations** is one handler per operation. Each writes canonical database columns and returns the
-  entity IDs it changed. Handlers own no transaction and no ledger.
+  entity IDs it changed. Handlers own no transaction and no ledger. The set is `upsert`,
+  `upsert-source`, `link`/`unlink-region`, `link`/`unlink-source`, `relate`/`unrelate`, `remove`, and
+  `add`/`remove-requirement`, `add`/`remove-effect`, `add`/`remove-tag`. Ordinals are the handler's
+  job, not the author's: a requirement or effect appends after what the entity already has, and
+  re-adding one it already carries is a no-op rather than a duplicate row.
 - **apply** owns identity, one transaction per file, dispatch, the changed-entity set, the
   `patch_changes` rows and the `patch_ledger` entry.
 
@@ -221,9 +225,17 @@ summary — rank 2 beating rank 3 is wrong when rank 3 is verified and more prec
 decides which *value* wins, never which source a surviving value is attributed to: the winning
 record keeps its own `SourceReference`.
 
+Within a rank, the document that owns the domain wins — `combat/equipment.json` for equipment,
+`combat/abilities.json` for abilities — and a verified dated snapshot beats a general overlay.
+
 Where the order does not settle it, leave the conflict. A record that needs a human to choose stays
 unresolved rather than being quietly picked; the sixty entries in `quarantine.jsonl` are exactly
 that, kept so the collision stays auditable instead of disappearing into a merge.
+
+Retiring the losing record is only half of it. Everything it holds that the survivor lacks —
+requirements, effects, region links, sources, tags — moves across first, each carrying the ID of the
+record it came from in its patch `reason`. That is what the requirement, effect and tag operations
+exist for, and `npm run audit:data` fails if two documents ever claim one domain again.
 
 ## Frontend consumption
 

@@ -1,6 +1,8 @@
 {"description":"Butterfly net / magic butterfly net / Tellervo's net (or 85 Hunter + 80 Agility for barehand)","entityId":"activity:content:spirit-moths-highweald-charm-supply","level":85,"ordinal":1}
 {"description":"Highweald Forest access east of Wendlewick","entityId":"activity:content:spirit-moths-highweald-charm-supply","ordinal":0}
 {"description":"Hunter 18 gold / 32 green / 49 crimson / 64 blue spirit moth tiers","entityId":"activity:content:spirit-moths-highweald-charm-supply","level":18,"ordinal":2}
+{"description":"69 Magic","entityId":"activity:content:vampyrism-aspect","level":69,"ordinal":0}
+{"description":"Ancient Magicks spellbook (Desert Treasure path)","entityId":"activity:content:vampyrism-aspect","ordinal":1}
 {"description":"Access to the Zamorakian Undercity (Elder God Wars / Senntisten path)","entityId":"activity:misthalin:zamorak-lord-of-chaos","ordinal":0}
 {"description":"Elite Dungeon group or story mode as applicable","entityId":"activity:misthalin:zamorak-lord-of-chaos","ordinal":1}
 {"description":"30 Agility","entityId":"agility:dive","level":30,"ordinal":0}
@@ -299,6 +301,10 @@
 {"description":"40 Dungeoneering through the upgraded gem bag","entityId":"crafting:artificers-measure","level":40,"ordinal":2}
 {"description":"99 Crafting","entityId":"crafting:artificers-measure","level":99,"ordinal":0}
 {"description":"99 Smithing for self-sufficient glorious-bar production","entityId":"crafting:artificers-measure","level":99,"ordinal":3}
+{"description":"Chain link mould from the Legacy of Seergaze route","entityId":"crafting:artificers-measure","ordinal":6}
+{"description":"Crystal-flecked sandstone or an alternate player-owned ports source","entityId":"crafting:artificers-measure","ordinal":7}
+{"description":"Orthen artefact components","entityId":"crafting:artificers-measure","ordinal":5}
+{"description":"Upgraded gem bag","entityId":"crafting:artificers-measure","ordinal":4}
 {"description":"112 Archaeology + 111 Invention; restored prototype godsword + 500 historic + 500 base + 10 timeworn + 10 vintage components","entityId":"cross-region:abyssal-link-relic","level":112,"ordinal":2}
 {"description":"5,000 chronotes and 250 monolith energy to harness","entityId":"cross-region:abyssal-link-relic","level":5,"ordinal":4}
 {"description":"Howl's Floating Workshop theoretical blueprints (Stormguard) + Back to the Drawing Board research","entityId":"cross-region:abyssal-link-relic","ordinal":0}
@@ -1315,7 +1321,11 @@
 {"description":"Materials include refined + historic + classic components + clear parts (wiki craft table)","entityId":"invention:xp-capacitor-5000","ordinal":2}
 {"description":"League self-supply: karamja","entityId":"item:abomination-cape","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:abyssal-orb","ordinal":0}
+{"description":"115 Slayer to harm abyssal lords","entityId":"item:abyssal-scourge","level":115,"ordinal":2}
+{"description":"92 Attack to wield","entityId":"item:abyssal-scourge","level":92,"ordinal":1}
+{"description":"Abyssal lords in Senntisten Asylum (working Misthalin / Senntisten taxonomy)","entityId":"item:abyssal-scourge","ordinal":3}
 {"description":"League self-supply: misthalin + forinthry","entityId":"item:abyssal-scourge","ordinal":0}
+{"description":"Wiki drop also badges Wilderness — Forinthry is support pressure, not a second hard gate for Asylum farm","entityId":"item:abyssal-scourge","ordinal":4}
 {"description":"League self-supply: morytania + karamja","entityId":"item:abyssal-vine-whip","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:abyssal-wand","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:abyssal-whip","ordinal":0}
@@ -1376,6 +1386,10 @@
 {"description":"Ascendri bolts (e) (ascension residual)","entityId":"item:ascendri-bolts-e","ordinal":0}
 {"description":"Ascension crossbows","entityId":"item:ascension-crossbow","ordinal":0}
 {"description":"Ascension crossbows","entityId":"item:ascension-grips","ordinal":0}
+{"description":"Complete Broken Home once","entityId":"item:asylum-surgeons-ring","ordinal":1}
+{"description":"Complete a replay in under 37 minutes","entityId":"item:asylum-surgeons-ring","level":37,"ordinal":3}
+{"description":"Complete the designated post-quest challenges","entityId":"item:asylum-surgeons-ring","ordinal":2}
+{"description":"Complete the post-quest challenges","entityId":"item:asylum-surgeons-ring","ordinal":4}
 {"description":"League self-supply: misthalin","entityId":"item:asylum-surgeons-ring","ordinal":0}
 {"description":"Attuned crystal weapon family","entityId":"item:attuned-crystal-bow","ordinal":0}
 {"description":"Attuned crystal weapons","entityId":"item:attuned-crystal-chakram","ordinal":0}
@@ -1407,7 +1421,10 @@
 {"description":"League self-supply: asgarnia","entityId":"item:boots-of-subjugation","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:bow-of-the-last-guardian","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:brawlers-knockout-necklace","ordinal":0}
+{"description":"85 Magic to wield","entityId":"item:camel-staff","level":85,"ordinal":1}
+{"description":"Camel Warriors (Desert island / Raptor's Challenge)","entityId":"item:camel-staff","ordinal":2}
 {"description":"Camel staff","entityId":"item:camel-staff","ordinal":0}
+{"description":"On-task drop rate strongly preferred","entityId":"item:camel-staff","ordinal":3}
 {"description":"League self-supply: morytania","entityId":"item:celestial-handwraps","ordinal":0}
 {"description":"League self-supply: anachronia + fremennik","entityId":"item:champions-ring","ordinal":0}
 {"description":"League self-supply: anachronia + fremennik","entityId":"item:channelers-ring","ordinal":0}
@@ -1418,8 +1435,13 @@
 {"description":"Chaotic equipment","entityId":"item:chaotic-maul","ordinal":0}
 {"description":"Chaotic equipment","entityId":"item:chaotic-rapier","ordinal":0}
 {"description":"Chaotic equipment","entityId":"item:chaotic-spear","ordinal":0}
+{"description":"80 Magic and 80 Dungeoneering to claim","entityId":"item:chaotic-staff","level":80,"ordinal":1}
 {"description":"Chaotic staff","entityId":"item:chaotic-staff","ordinal":0}
+{"description":"Daemonheim Rewards trader token purchase (Forinthry Daemonheim taxonomy)","entityId":"item:chaotic-staff","ordinal":2}
+{"description":"Token cost self-source inside Daemonheim","entityId":"item:chaotic-staff","ordinal":3}
+{"description":"85 Defence to wear","entityId":"item:cinderbane-gloves","level":85,"ordinal":1}
 {"description":"Cinderbane gloves","entityId":"item:cinderbane-gloves","ordinal":0}
+{"description":"Lost Grove creature or Solak drop (wiki League region badge Tirannwn on Solak)","entityId":"item:cinderbane-gloves","ordinal":2}
 {"description":"League self-supply: morytania","entityId":"item:corrupted-defender","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:cryptbloom-body","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:cryptbloom-boots","ordinal":0}
@@ -1471,8 +1493,17 @@
 {"description":"League self-supply: misthalin","entityId":"item:deathwarden-robe-bottom-t90","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:deathwarden-robe-top-t90","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:decimation","ordinal":0}
+{"description":"35,000 Dungeoneering tokens","entityId":"item:demon-horn-necklace","level":35,"ordinal":3}
+{"description":"35,000 Dungeoneering tokens from Marmaros (Daemonheim Rewards)","entityId":"item:demon-horn-necklace","level":35,"ordinal":5}
+{"description":"75 Dungeoneering","entityId":"item:demon-horn-necklace","level":75,"ordinal":1}
+{"description":"90 Prayer","entityId":"item:demon-horn-necklace","level":90,"ordinal":2}
+{"description":"90 Prayer and 75 Dungeoneering (post-11-May-2026 remaster: DG gate reduced from 90 to 75)","entityId":"item:demon-horn-necklace","level":90,"ordinal":4}
 {"description":"League self-supply: forinthry","entityId":"item:demon-horn-necklace","ordinal":0}
+{"description":"95 Necromancy to wield","entityId":"item:devourers-guard","level":95,"ordinal":1}
+{"description":"Amascut, the Devourer (Menaphos / Desert; Eclipse of the Heart quest gate in normal game)","entityId":"item:devourers-guard","ordinal":2}
 {"description":"Amascut, the Devourer progression","entityId":"item:devourers-guard","ordinal":0}
+{"description":"No matching off-hand — pair with soulbound lantern (Rasial / Misthalin) for dual-wield conduit","entityId":"item:devourers-guard","ordinal":3}
+{"description":"Optional Shard of Genesis Essence → innate mastery T100 (needs second shard on the OH lantern for full T100 pair)","entityId":"item:devourers-guard","ordinal":4}
 {"description":"League self-supply: morytania","entityId":"item:dharoks-greataxe","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:divine-spirit-shield","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:dracolich-body","ordinal":0}
@@ -1483,7 +1514,9 @@
 {"description":"League self-supply: misthalin","entityId":"item:dragon-claws","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:dragon-defender","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:dragon-rider-amulet","ordinal":0}
+{"description":"85 Attack to wield (tier-85* accuracy polearm)","entityId":"item:dragon-rider-lance","level":85,"ordinal":1}
 {"description":"GWD2 anima core and mid-tier melee/ranged weapons","entityId":"item:dragon-rider-lance","ordinal":0}
+{"description":"Vindicta / Gorvek in Heart of Gielinor (GWD2)","entityId":"item:dragon-rider-lance","ordinal":2}
 {"description":"League self-supply: asgarnia","entityId":"item:dragonfire-deflector","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:dragonfire-shield","ordinal":0}
 {"description":"Drygore weapon set","entityId":"item:drygore-longsword","ordinal":0}
@@ -1491,7 +1524,10 @@
 {"description":"Drygore weapons","entityId":"item:drygore-rapier","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:eagle-eye-kiteshield","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:ek-zekkil","ordinal":0}
+{"description":"92 Ranged to wield","entityId":"item:eldritch-crossbow","level":92,"ordinal":2}
+{"description":"Eldritch crossbow components assembly","entityId":"item:eldritch-crossbow","ordinal":3}
 {"description":"League self-supply: forinthry","entityId":"item:eldritch-crossbow","ordinal":0}
+{"description":"The Shadow Reef (Elite Dungeon 3) — Daemonheim / Forinthry","entityId":"item:eldritch-crossbow","level":3,"ordinal":1}
 {"description":"League self-supply: asgarnia","entityId":"item:elite-death-lotus-chaps","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:elite-death-lotus-chestplate","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:elite-death-lotus-dart","ordinal":0}
@@ -1547,6 +1583,9 @@
 {"description":"League self-supply: misthalin","entityId":"item:first-necromancer-legs","ordinal":0}
 {"description":"T90 glacor-upgraded boots","entityId":"item:flarefrost-boots","ordinal":0}
 {"description":"Laceration / fleeting boots + shadow spike T90","entityId":"item:fleeting-boots","ordinal":0}
+{"description":"95 Crafting to assemble (irreversible)","entityId":"item:fractured-staff-of-armadyl","level":95,"ordinal":2}
+{"description":"95 Magic","entityId":"item:fractured-staff-of-armadyl","level":95,"ordinal":1}
+{"description":"Kerapac, the bound hard mode for the three fractured pieces","entityId":"item:fractured-staff-of-armadyl","ordinal":3}
 {"description":"League self-supply: misthalin","entityId":"item:fractured-staff-of-armadyl","ordinal":0}
 {"description":"Elder God Wars arrows / deathspore","entityId":"item:ful-arrows","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:ganodermic-leggings","ordinal":0}
@@ -1571,8 +1610,13 @@
 {"description":"T90 glacor-upgraded boots","entityId":"item:hailfire-boots","ordinal":0}
 {"description":"League self-supply: fremennik","entityId":"item:hand-cannon","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:hellfire-bow","ordinal":0}
+{"description":"80 Ranged to wield; 99 Slayer for soulgazers","entityId":"item:hexhunter-bow","level":80,"ordinal":1}
 {"description":"League self-supply: forinthry","entityId":"item:hexhunter-bow","ordinal":0}
+{"description":"Soulgazers / elite soulgazers in the stalker dungeon (Zamorak's hideout / Daemonheim — Forinthry Daemonheim taxonomy)","entityId":"item:hexhunter-bow","ordinal":2}
+{"description":"Veil-ripper Ozharakha (stalker dungeon) is the practical unique hexhunter source; rare surface Wilderness soulgazer drops exist but are not a second elective","entityId":"item:hexhunter-bow","ordinal":3}
 {"description":"League self-supply: morytania","entityId":"item:holy-wrench","ordinal":0}
+{"description":"Reclaim free from Davey on Braindeath Island or May's Quest Caravan Hub Track (150 QP invested)","entityId":"item:holy-wrench","level":150,"ordinal":2}
+{"description":"Rum Deal quest completed (Port Phasmatys start → Braindeath Island)","entityId":"item:holy-wrench","ordinal":1}
 {"description":"League self-supply: asgarnia","entityId":"item:hood-of-subjugation","ordinal":0}
 {"description":"Bakriminel bolts (Wilderness bloodwood tree, Forinthry)","entityId":"item:hydra-bakriminel-bolts-e","ordinal":0}
 {"description":"League self-supply: karamja + misthalin","entityId":"item:igneous-kal-ket","ordinal":0}
@@ -1586,7 +1630,11 @@
 {"description":"League self-supply: desert","entityId":"item:illuminated-book-of-war","ordinal":0}
 {"description":"League self-supply: desert","entityId":"item:illuminated-book-of-wisdom","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:imperium-core","ordinal":0}
+{"description":"114 Archaeology (boostable) for the praetorian staff component path","entityId":"item:inquisitor-staff","level":114,"ordinal":3}
+{"description":"80 Magic to wield","entityId":"item:inquisitor-staff","level":80,"ordinal":1}
+{"description":"93 Runecrafting (boostable) to assemble","entityId":"item:inquisitor-staff","level":93,"ordinal":2}
 {"description":"Inquisitor staff","entityId":"item:inquisitor-staff","ordinal":0}
+{"description":"Kharid-et Dig Site inquisitor staff pieces and praetorian staff materials","entityId":"item:inquisitor-staff","ordinal":4}
 {"description":"Elder God Wars arrows / deathspore","entityId":"item:jas-dragonbane-arrows","ordinal":0}
 {"description":"League self-supply: misthalin + forinthry","entityId":"item:jaws-of-the-abyss","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:jessikas-sword","ordinal":0}
@@ -1602,7 +1650,9 @@
 {"description":"Khopesh of Tumeken / Elidinis (Magister DW melee)","entityId":"item:khopesh-of-tumeken","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:korasis-sword","ordinal":0}
 {"description":"Laceration / fleeting boots + shadow spike T90","entityId":"item:laceration-boots","ordinal":0}
+{"description":"Anachronia / Laniakea slayer infrastructure","entityId":"item:laniakeas-spear","ordinal":1}
 {"description":"Laniakea's spear","entityId":"item:laniakeas-spear","ordinal":0}
+{"description":"Spear obtained via Laniakea / Anachronia slayer progression (not a GWD drop)","entityId":"item:laniakeas-spear","ordinal":2}
 {"description":"League self-supply: morytania + forinthry","entityId":"item:lava-whip","ordinal":0}
 {"description":"League self-supply: desert","entityId":"item:legatuss-emberstaff","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:leviathan-ring","ordinal":0}
@@ -1612,9 +1662,19 @@
 {"description":"League self-supply: morytania","entityId":"item:malevolent-helm","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:malevolent-kiteshield","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:malevolent-legs","ordinal":0}
+{"description":"99 Attack to wield; 110 Smithing + It Still Should Have Been Called Aetherium","entityId":"item:masterwork-2h-sword","level":99,"ordinal":1}
+{"description":"Asgarnia: Artisans' Workshop / smithing hub pressure for glorious/primal chain and dragon-forge essence break-downs","entityId":"item:masterwork-2h-sword","ordinal":4}
+{"description":"Desert: 2 drygore weapons → kalphite essence; 2 Twin Furies blades (Nymora/Avaryss) → demonic essence","entityId":"item:masterwork-2h-sword","level":2,"ordinal":3}
+{"description":"Forinthry: 2 chaotic melee weapons → chaotic essence (Daemonheim tokens)","entityId":"item:masterwork-2h-sword","level":2,"ordinal":2}
 {"description":"League self-supply: desert + forinthry","entityId":"item:masterwork-2h-sword","ordinal":0}
+{"description":"Primed glorious bars, primal bars, moonstone chaos-infuse, undead dragon leather grip","entityId":"item:masterwork-2h-sword","ordinal":5}
 {"description":"League self-supply: asgarnia","entityId":"item:masterwork-boots","ordinal":0}
+{"description":"99 Ranged to wield; 110 Fletching + Woodcutting + Fletch Quest achievement","entityId":"item:masterwork-bow","level":99,"ordinal":1}
+{"description":"Asgarnia support: glorious bar smithing pressure (not hard if bars GE-traded)","entityId":"item:masterwork-bow","ordinal":4}
+{"description":"Kandarin: 1 fully repaired ascension crossbow → ascended essence","entityId":"item:masterwork-bow","level":1,"ordinal":3}
 {"description":"League self-supply: kandarin + morytania","entityId":"item:masterwork-bow","ordinal":0}
+{"description":"Morytania: 1 fully repaired noxious weapon → noxious essence (sapphire path)","entityId":"item:masterwork-bow","level":1,"ordinal":2}
+{"description":"Perfect eternal magic branches / eternal magic sap (tree geography varies — soft pressure)","entityId":"item:masterwork-bow","ordinal":5}
 {"description":"League self-supply: asgarnia","entityId":"item:masterwork-gloves","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:masterwork-helm","ordinal":0}
 {"description":"League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin","entityId":"item:masterwork-magic-boots","ordinal":0}
@@ -1630,8 +1690,17 @@
 {"description":"League self-supply: Asgarnia + Tirannwn + Anachronia + Wilderness*","entityId":"item:masterwork-ranged-cowl","ordinal":0}
 {"description":"League self-supply: Asgarnia + Tirannwn + Anachronia + Wilderness*","entityId":"item:masterwork-ranged-vambraces","ordinal":0}
 {"description":"League self-supply: kandarin + forinthry + morytania + asgarnia","entityId":"item:masterwork-spear-of-annihilation","ordinal":0}
+{"description":"99 Magic to wield; 110 Runecrafting + Crafting to Your Own Rune","entityId":"item:masterwork-staff","level":99,"ordinal":1}
+{"description":"Abyssal runic synapse untradeable from Abyss runecrafting (Forinthry-adjacent support)","entityId":"item:masterwork-staff","ordinal":5}
+{"description":"Altar access: death/blood/soul/time for volatile bricks (quest gates — soft multi-region RC pressure)","entityId":"item:masterwork-staff","ordinal":6}
+{"description":"Asgarnia: 2 seismic weapons → binding essence (Vorago)","entityId":"item:masterwork-staff","level":2,"ordinal":2}
+{"description":"Desert: 2 Cywir wand/orb → melodic essence (GWD2 Helwyr)","entityId":"item:masterwork-staff","level":2,"ordinal":3}
 {"description":"League self-supply: asgarnia + desert + tirannwn + forinthry + kandarin","entityId":"item:masterwork-staff","ordinal":0}
+{"description":"Tirannwn: 2 attuned crystal magic weapons → crystalline essence (Prif seed + harmonic dust)","entityId":"item:masterwork-staff","level":2,"ordinal":4}
+{"description":"82 Attack to wield","entityId":"item:masutas-warspear","level":82,"ordinal":1}
 {"description":"League self-supply: asgarnia","entityId":"item:masutas-warspear","ordinal":0}
+{"description":"Masuta the Ascended in Temple of Aminishi (Elite Dungeon 1)","entityId":"item:masutas-warspear","level":1,"ordinal":2}
+{"description":"Wiki League badge currently lists Asgarnia on the drop table — treat ED1 self-supply under that badge until Equilibrium reassigns Arc/ED hubs","entityId":"item:masutas-warspear","ordinal":3}
 {"description":"League self-supply: misthalin","entityId":"item:max-cape","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:mercenarys-gloves","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:merciless-kiteshield","ordinal":0}
@@ -1642,6 +1711,8 @@
 {"description":"Nightmare gauntlets (ranged residual)","entityId":"item:nightmare-gauntlets","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:noxious-longbow","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:noxious-scythe","ordinal":0}
+{"description":"90 Magic to wield; 90 Crafting to assemble spider leg + Araxxi's eye","entityId":"item:noxious-staff","level":90,"ordinal":1}
+{"description":"Araxxor / Araxxi (Morytania Araxyte Hive) for spider leg path + noxious eye/component","entityId":"item:noxious-staff","ordinal":2}
 {"description":"League self-supply: morytania","entityId":"item:noxious-staff","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:obliteration","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:obsidian-boots","ordinal":0}
@@ -1653,6 +1724,7 @@
 {"description":"League self-supply: karamja","entityId":"item:obsidian-ranger-helm","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:obsidian-warrior-helm","ordinal":0}
 {"description":"League self-supply: anachronia","entityId":"item:occultists-ring","ordinal":0}
+{"description":"Osseous (Rex Matriarchs family) kills for the Occultist's ring drop","entityId":"item:occultists-ring","ordinal":1}
 {"description":"League self-supply: misthalin","entityId":"item:ode-to-deceit","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:off-hand-armadyl-crossbow","ordinal":0}
 {"description":"Ascension crossbows","entityId":"item:off-hand-ascension-crossbow","ordinal":0}
@@ -1695,7 +1767,11 @@
 {"description":"Steadfast / Ragefire / Glaiven boots (glacor T85 tank)","entityId":"item:ragefire-boots","ordinal":0}
 {"description":"League self-supply: desert","entityId":"item:razorback-gauntlets","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:reaper-necklace","ordinal":0}
+{"description":"70 Crafting to combine heart + rings","entityId":"item:reavers-ring","level":70,"ordinal":4}
+{"description":"Anachronia: Heart of the Berserker from any Rex Matriarch (wiki League region badge: Anachronia)","entityId":"item:reavers-ring","ordinal":2}
+{"description":"Fremennik: 10× berserker rings from Dagannoth Rex (Waterbirth)","entityId":"item:reavers-ring","level":10,"ordinal":3}
 {"description":"League self-supply: anachronia + fremennik","entityId":"item:reavers-ring","ordinal":0}
+{"description":"Rex Matriarchs (Heart of the Berserker path) for the Reaver's ring","entityId":"item:reavers-ring","ordinal":1}
 {"description":"League self-supply: asgarnia","entityId":"item:reefwalkers-cape","ordinal":0}
 {"description":"God Wars Dungeon 2 weapon and anima-core progression","entityId":"item:refined-anima-core-body-of-seren","level":2,"ordinal":0}
 {"description":"God Wars Dungeon 2 weapon and anima-core progression","entityId":"item:refined-anima-core-body-of-sliske","level":2,"ordinal":0}
@@ -1713,14 +1789,22 @@
 {"description":"League self-supply: forinthry","entityId":"item:ring-of-vigour","ordinal":0}
 {"description":"League self-supply: desert + forinthry","entityId":"item:ripper-claw","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:roar-of-awakening","ordinal":0}
+{"description":"70 Smithing / 60 Summoning base-game craft gates","entityId":"item:royal-crossbow","level":70,"ordinal":3}
+{"description":"Brandish unfinished crossbow in extreme dragonfire","entityId":"item:royal-crossbow","ordinal":4}
 {"description":"League self-supply: asgarnia","entityId":"item:royal-crossbow","ordinal":0}
+{"description":"Queen Black Dragon for royal crossbow components","entityId":"item:royal-crossbow","ordinal":1}
+{"description":"Song from the Depths (quest overlay)","entityId":"item:royal-crossbow","ordinal":2}
 {"description":"Ruinous weapons (Wilderness / Dominion Tower path)","entityId":"item:ruinous-crossbow","ordinal":0}
 {"description":"Ruinous weapons (Wilderness / Dominion Tower path)","entityId":"item:ruinous-guard","ordinal":0}
 {"description":"Ruinous weapons (Wilderness / Dominion Tower path)","entityId":"item:ruinous-lantern","ordinal":0}
 {"description":"Ruinous weapons (Wilderness / Dominion Tower path)","entityId":"item:ruinous-maul","ordinal":0}
 {"description":"Ruinous weapons (Wilderness / Dominion Tower path)","entityId":"item:ruinous-rapier","ordinal":0}
 {"description":"Ruinous weapons (Wilderness / Dominion Tower path)","entityId":"item:ruinous-staff","ordinal":0}
+{"description":"Base salve amulet crafted (morytania:salve-amulet)","entityId":"item:salve-amulet-e","ordinal":1}
+{"description":"Lair of Tarn Razorlor miniquest completed","entityId":"item:salve-amulet-e","ordinal":2}
 {"description":"League self-supply: morytania","entityId":"item:salve-amulet-e","ordinal":0}
+{"description":"Multiple amulets can be enchanted if multiple bases are inventoried","entityId":"item:salve-amulet-e","ordinal":4}
+{"description":"Use Tarn's diary on salve amulet (diary also appears in POH bookcase after miniquest)","entityId":"item:salve-amulet-e","ordinal":3}
 {"description":"League self-supply: asgarnia","entityId":"item:saradomin-godsword","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:saradomin-sword","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:saradomins-hiss","ordinal":0}
@@ -1730,7 +1814,11 @@
 {"description":"Player-owned ports / Arc craft (Asgarnia mapping)","entityId":"item:scrimshaw-of-the-elements","ordinal":0}
 {"description":"Player-owned ports / Arc craft (Asgarnia mapping)","entityId":"item:scrimshaw-of-vampyrism","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:scripture-of-amascut","ordinal":0}
+{"description":"Croesus Front / Elder God Wars access (historical Senntisten working taxonomy under Misthalin)","entityId":"item:scripture-of-bik","ordinal":1}
+{"description":"Croesus unique drop","entityId":"item:scripture-of-bik","ordinal":2}
 {"description":"League self-supply: misthalin","entityId":"item:scripture-of-bik","ordinal":0}
+{"description":"Manuscripts of Bik to recharge (45 minutes per manuscript; max 24 hours / 32 manuscripts)","entityId":"item:scripture-of-bik","level":45,"ordinal":4}
+{"description":"Scripture of Bik drop from Croesus (tradeable until unlocked; unlocks untradeable with 3 hours charge)","entityId":"item:scripture-of-bik","level":3,"ordinal":3}
 {"description":"League self-supply: misthalin","entityId":"item:scripture-of-elidinis","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:scripture-of-ful","ordinal":0}
 {"description":"League self-supply: misthalin","entityId":"item:scripture-of-jas","ordinal":0}
@@ -1743,7 +1831,10 @@
 {"description":"League self-supply: fremennik","entityId":"item:seers-ring","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:seismic-singularity","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:seismic-wand","ordinal":0}
+{"description":"92 Ranged to wield","entityId":"item:seren-godbow","level":92,"ordinal":2}
+{"description":"No ammunition required","entityId":"item:seren-godbow","ordinal":3}
 {"description":"Seren godbow","entityId":"item:seren-godbow","ordinal":0}
+{"description":"Telos, the Warden","entityId":"item:seren-godbow","ordinal":1}
 {"description":"Shadow glaives","entityId":"item:shadow-glaive","ordinal":0}
 {"description":"Sirenic armour craft (Algarium thread: Forinthry or Kandarin; multi-source scales)","entityId":"item:sirenic-chaps","ordinal":0}
 {"description":"Sirenic armour craft (Algarium thread: Forinthry or Kandarin; multi-source scales)","entityId":"item:sirenic-hauberk","ordinal":0}
@@ -1756,17 +1847,29 @@
 {"description":"League self-supply: desert","entityId":"item:spellcaster-gloves","ordinal":0}
 {"description":"League self-supply: desert","entityId":"item:spellcaster-gloves-black","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:spirit-cape","ordinal":0}
+{"description":"15,500 Dungeoneering tokens","entityId":"item:split-dragontooth-necklace","level":15,"ordinal":3}
+{"description":"15,500 Dungeoneering tokens from Marmaros (Daemonheim Rewards)","entityId":"item:split-dragontooth-necklace","level":15,"ordinal":5}
+{"description":"41 Dungeoneering","entityId":"item:split-dragontooth-necklace","level":41,"ordinal":1}
+{"description":"60 Prayer","entityId":"item:split-dragontooth-necklace","level":60,"ordinal":2}
+{"description":"60 Prayer and 41 Dungeoneering (post-11-May-2026 remaster purchase gates)","entityId":"item:split-dragontooth-necklace","level":60,"ordinal":4}
 {"description":"League self-supply: forinthry","entityId":"item:split-dragontooth-necklace","ordinal":0}
 {"description":"League self-supply: fremennik + forinthry","entityId":"item:staff-of-darkness","ordinal":0}
 {"description":"League self-supply: fremennik","entityId":"item:staff-of-light","ordinal":0}
+{"description":"92 Magic","entityId":"item:staff-of-sliske","level":92,"ordinal":1}
 {"description":"Staff of Sliske","entityId":"item:staff-of-sliske","ordinal":0}
+{"description":"Telos, the Warden for dormant staff of Sliske and the three anima orbs","entityId":"item:staff-of-sliske","ordinal":2}
 {"description":"League self-supply: forinthry","entityId":"item:stalker-arrows","ordinal":0}
+{"description":"Anachronia: Heart of the Archer from Rex Matriarchs","entityId":"item:stalkers-ring","ordinal":1}
+{"description":"Crafting combine","entityId":"item:stalkers-ring","ordinal":3}
+{"description":"Fremennik: 10× archers' rings from Dagannoth Supreme","entityId":"item:stalkers-ring","level":10,"ordinal":2}
 {"description":"League self-supply: anachronia + fremennik","entityId":"item:stalkers-ring","ordinal":0}
 {"description":"League self-supply: desert","entityId":"item:static-gloves","ordinal":0}
 {"description":"Ancient warrior weapons (Wilderness residual)","entityId":"item:statiuss-warhammer","ordinal":0}
 {"description":"Steadfast / Ragefire / Glaiven boots (glacor T85 tank)","entityId":"item:steadfast-boots","ordinal":0}
 {"description":"League self-supply: forinthry + tirannwn","entityId":"item:strykebow","ordinal":0}
+{"description":"75 Attack for melee Sunspear","entityId":"item:sunspear","level":75,"ordinal":2}
 {"description":"League self-supply: morytania","entityId":"item:sunspear","ordinal":0}
+{"description":"The Lord of Vampyrium (base); River of Blood for reforged style-switch variants","entityId":"item:sunspear","ordinal":1}
 {"description":"League self-supply: morytania","entityId":"item:sunspear-magic","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:sunspear-melee","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:sunspear-ranged","ordinal":0}
@@ -1803,6 +1906,10 @@
 {"description":"Liberation of Mazcab armour (Teralith / Tempest / Primeval / Achto)","entityId":"item:teralith-gauntlets","ordinal":0}
 {"description":"Liberation of Mazcab armour (Teralith / Tempest / Primeval / Achto)","entityId":"item:teralith-helmet","ordinal":0}
 {"description":"Liberation of Mazcab armour (Teralith / Tempest / Primeval / Achto)","entityId":"item:teralith-leggings","ordinal":0}
+{"description":"80 Strength to wield; 93 Crafting + 93 Smithing to assemble (assistable)","entityId":"item:terrasaur-maul","level":80,"ordinal":1}
+{"description":"Big Game Hunter tier-3 dinosaurs on Anachronia: tribal fin (Oculi apoterrasaur), superior long bone (Pavosaurus rex), volcanic fragments (Malletops)","entityId":"item:terrasaur-maul","level":3,"ordinal":2}
+{"description":"Minimum ~96 Hunter / 76+ Slayer path for the tier-3 BGH chain","entityId":"item:terrasaur-maul","level":96,"ordinal":3}
+{"description":"Optional Enchantment of savagery permanent +5% damage passive upgrade","entityId":"item:terrasaur-maul","level":5,"ordinal":4}
 {"description":"Terrasaur maul","entityId":"item:terrasaur-maul","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:tetsu-body","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:tetsu-helm","ordinal":0}
@@ -1813,7 +1920,12 @@
 {"description":"League self-supply: karamja","entityId":"item:tokhaar-kal-mej","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:tokhaar-kal-mor","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:tokhaar-kal-xil","ordinal":0}
+{"description":"Fight Cauldron teleport unlocks after The Brink of Extinction","entityId":"item:tokkul-zo","ordinal":5}
 {"description":"League self-supply: karamja","entityId":"item:tokkul-zo","ordinal":0}
+{"description":"Recharge: 50,000 Tokkul full (4,000 combat charges) or 12.5 Tokkul per missing charge","entityId":"item:tokkul-zo","level":50,"ordinal":4}
+{"description":"Reclaim uncharged from TzHaar-Mej-Jeh or TzHaar-Mej-Ak at TzHaar City Plaza if lost","entityId":"item:tokkul-zo","ordinal":3}
+{"description":"The Elder Kiln completed (quest reward ring)","entityId":"item:tokkul-zo","ordinal":2}
+{"description":"The Elder Kiln in the normal game","entityId":"item:tokkul-zo","ordinal":1}
 {"description":"League self-supply: karamja","entityId":"item:toktz-mej-tal","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:toktz-xil-ak","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:toktz-xil-ul","ordinal":0}
@@ -1829,7 +1941,10 @@
 {"description":"League self-supply: asgarnia + morytania","entityId":"item:trimmed-masterwork-helm","ordinal":0}
 {"description":"League self-supply: asgarnia + morytania","entityId":"item:trimmed-masterwork-platebody","ordinal":0}
 {"description":"League self-supply: asgarnia + morytania","entityId":"item:trimmed-masterwork-platelegs","ordinal":0}
+{"description":"95 Attack to wield","entityId":"item:tumekens-light","level":95,"ordinal":2}
 {"description":"Amascut, the Devourer progression","entityId":"item:tumekens-light","ordinal":0}
+{"description":"Amascut, the Devourer progression (Menaphos / desert; Eclipse of the Heart quest gate in normal game)","entityId":"item:tumekens-light","ordinal":1}
+{"description":"Optional T100: Shard of Genesis Essence","entityId":"item:tumekens-light","ordinal":3}
 {"description":"Amascut, the Devourer progression","entityId":"item:tumekens-resplendence-body","ordinal":0}
 {"description":"Amascut, the Devourer progression","entityId":"item:tumekens-resplendence-boots","ordinal":0}
 {"description":"Amascut, the Devourer progression","entityId":"item:tumekens-resplendence-gloves","ordinal":0}
@@ -1863,11 +1978,19 @@
 {"description":"League self-supply: fremennik","entityId":"item:warrior-ring","ordinal":0}
 {"description":"Elder God Wars arrows / deathspore","entityId":"item:wen-arrows","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:winds-of-waiko","ordinal":0}
+{"description":"85 Ranged to wield","entityId":"item:wyvern-crossbow","level":85,"ordinal":1}
 {"description":"League self-supply: asgarnia + forinthry","entityId":"item:wyvern-crossbow","ordinal":0}
+{"description":"On-task drop rate strongly preferred","entityId":"item:wyvern-crossbow","ordinal":3}
+{"description":"Wyverns in Asgarnian Ice Dungeon (Raptor's Challenge)","entityId":"item:wyvern-crossbow","ordinal":2}
 {"description":"League self-supply: asgarnia","entityId":"item:zamorak-godsword","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:zamorakian-spear","ordinal":0}
+{"description":"92 Attack to wield","entityId":"item:zaros-godsword","level":92,"ordinal":2}
+{"description":"Telos, the Warden (Heart of Gielinor / GWD2 desert geography)","entityId":"item:zaros-godsword","ordinal":1}
 {"description":"Zaros godsword","entityId":"item:zaros-godsword","ordinal":0}
+{"description":"80 Ranged to wield","entityId":"item:zaryte-bow","level":80,"ordinal":1}
 {"description":"League self-supply: asgarnia","entityId":"item:zaryte-bow","ordinal":0}
+{"description":"Nex (Ancient Prison / GWD1 Asgarnia) primary drop","entityId":"item:zaryte-bow","ordinal":2}
+{"description":"Nihil in The Pit are near-zero-rate alternate — do not treat as a second hard region","entityId":"item:zaryte-bow","ordinal":3}
 {"description":"Ancient warrior weapons (Wilderness residual)","entityId":"item:zuriels-staff","ordinal":0}
 {"description":"85 Agility to train the advanced course efficiently (boostable; 80 with summer pie)","entityId":"kandarin:agile-legs","level":85,"ordinal":1}
 {"description":"Claim from a gnome trainer after the chatbox perfect-lap milestone","entityId":"kandarin:agile-legs","ordinal":2}

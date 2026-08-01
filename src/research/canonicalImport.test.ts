@@ -350,6 +350,111 @@ describe("patch identity and change tracking", () => {
     }
   });
 
+  // Adjudicating an overlap means moving one record's facts onto another and
+  // then retiring it. That is only expressible because requirements, effects and
+  // tags have operations of their own; without them the facts would be lost.
+  it("carries facts onto the survivor before retiring the duplicate", () => {
+    const db = patched();
+    try {
+      const path = join(scratch, "2026-01-07-adjudicate.jsonl");
+      writeFileSync(
+        path,
+        [
+          '{"op":"add-requirement","entity":"task:alpha","description":"92 Attack to wield","skill":"Attack","level":92}',
+          '{"op":"add-requirement","entity":"task:alpha","description":"Ancient Magicks spellbook"}',
+          '{"op":"add-effect","entity":"task:alpha","description":"Bleed synergy with the spear DoT"}',
+          '{"op":"add-tag","entity":"task:alpha","tag":"Ability Upgrade","label":"ability upgrade"}',
+          '{"op":"remove","entity":"training-method:mining","reason":"Superseded by task:alpha."}',
+        ].join("\n"),
+      );
+      expect([...patches.applyPatch(db, path, false)].sort()).toEqual([
+        "task:alpha",
+        "training-method:mining",
+      ]);
+      expect(
+        db
+          .prepare(
+            "SELECT description, skill, level, ordinal FROM requirements WHERE entity_id = 'task:alpha' ORDER BY ordinal",
+          )
+          .all(),
+      ).toEqual([
+        { description: "92 Attack to wield", skill: "Attack", level: 92, ordinal: 0 },
+        { description: "Ancient Magicks spellbook", skill: null, level: null, ordinal: 1 },
+      ]);
+      expect(
+        db
+          .prepare(
+            "SELECT effect_key, description, ordinal FROM effects WHERE entity_id = 'task:alpha'",
+          )
+          .get(),
+      ).toEqual({
+        effect_key: "effect",
+        description: "Bleed synergy with the spear DoT",
+        ordinal: 0,
+      });
+      expect(
+        db
+          .prepare("SELECT tag_id FROM entity_tags WHERE entity_id = 'task:alpha' ORDER BY tag_id")
+          .all(),
+      ).toEqual([{ tag_id: "ability-upgrade" }, { tag_id: "combat" }]);
+      expect(
+        db.prepare("SELECT status FROM entities WHERE id = 'training-method:mining'").get(),
+      ).toEqual({
+        status: "removed",
+      });
+    } finally {
+      db.close();
+    }
+  });
+
+  // Replaying an adjudication must not stack duplicate rows, so the ordinal the
+  // handler picks has to be idempotent against what is already there.
+  it("does not duplicate a requirement, effect or tag it already carried", () => {
+    const db = patched();
+    try {
+      const body = [
+        '{"op":"add-requirement","entity":"task:alpha","description":"92 Attack to wield"}',
+        '{"op":"add-effect","entity":"task:alpha","description":"Bleeds"}',
+        '{"op":"add-tag","entity":"task:alpha","tag":"ability-upgrade"}',
+      ].join("\n");
+      for (const name of ["2026-01-08-first.jsonl", "2026-01-09-again.jsonl"]) {
+        const path = join(scratch, name);
+        writeFileSync(path, `${body}\n`);
+        patches.applyPatch(db, path, false);
+      }
+      const count = (sql: string) => (db.prepare(sql).get() as { c: number }).c;
+      expect(count("SELECT count(*) c FROM requirements WHERE entity_id = 'task:alpha'")).toBe(1);
+      expect(count("SELECT count(*) c FROM effects WHERE entity_id = 'task:alpha'")).toBe(1);
+      expect(count("SELECT count(*) c FROM entity_tags WHERE entity_id = 'task:alpha'")).toBe(2);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("removes a requirement, effect and tag it was told to", () => {
+    const db = patched();
+    try {
+      const path = join(scratch, "2026-01-10-strip.jsonl");
+      writeFileSync(
+        path,
+        [
+          '{"op":"add-requirement","entity":"task:alpha","description":"Wrong"}',
+          '{"op":"remove-requirement","entity":"task:alpha","description":"Wrong"}',
+          '{"op":"remove-tag","entity":"task:alpha","tag":"combat"}',
+        ].join("\n"),
+      );
+      patches.applyPatch(db, path, false);
+      expect(
+        db.prepare("SELECT count(*) AS c FROM requirements WHERE entity_id = 'task:alpha'").get(),
+      ).toEqual({ c: 0 });
+      expect(
+        db.prepare("SELECT count(*) AS c FROM entity_tags WHERE entity_id = 'task:alpha'").get(),
+      ).toEqual({ c: 0 });
+    } finally {
+      db.close();
+    }
+  });
+
   it("refuses an invalid operation before it reaches the database", () => {
     const db = patched();
     try {

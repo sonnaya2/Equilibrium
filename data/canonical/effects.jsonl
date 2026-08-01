@@ -191,6 +191,11 @@
 {"description":"On death: revive at full health with Ring of Death bleed DoT until safe area or death (sign of life / Immortality take priority)","entityId":"combat:ring-of-death","key":"effect-2","ordinal":1}
 {"description":"All-style damage ring; reaver's ring notes tie hybrid strength with ring of death (i)","entityId":"combat:ring-of-death","key":"effect-3","ordinal":2}
 {"description":"Degrades 100,000 hits (500,000 when overcharged); onyx recharge","entityId":"combat:ring-of-death","key":"effect-4","ordinal":3}
+{"description":"Stores gems like the upgraded gem bag","entityId":"crafting:artificers-measure","key":"effect","ordinal":0}
+{"description":"Always applies the Ithell Voice of Seren harp benefit while playing harps","entityId":"crafting:artificers-measure","key":"effect","ordinal":1}
+{"description":"5% chance to duplicate glassblown items and urns, including potion and crystal flasks","entityId":"crafting:artificers-measure","key":"effect","ordinal":2}
+{"description":"Scroll of proficiency chance multiplied by 1.25","entityId":"crafting:artificers-measure","key":"effect","ordinal":3}
+{"description":"Crafting/Construction buff can stack to 5% after proficiency procs","entityId":"crafting:artificers-measure","key":"effect","ordinal":4}
 {"description":"Tier 90 tank sets per style (Primeval magic, Tempest ranged, Teralith melee)","entityId":"cross-region:achto-mazcab-residual","key":"effect-1","ordinal":0}
 {"description":"Achto set: off-hand shield damage contribution scaling with pieces; chance to reset defensive ability cooldowns when damaged at 3+ pieces","entityId":"cross-region:achto-mazcab-residual","key":"effect-2","ordinal":1}
 {"description":"Does not degrade inside Raids; degrades outside and repairs for coins / POH armour stand","entityId":"cross-region:achto-mazcab-residual","key":"effect-3","ordinal":2}
@@ -498,6 +503,7 @@
 {"description":"Competes with noxious scythe for multi-target","entityId":"desert:tumekens-light","key":"effect-2","ordinal":1}
 {"description":"Blackhole is a core melee DPS special for many rotations and EoF stores","entityId":"desert:zaros-godsword","key":"effect-1","ordinal":0}
 {"description":"Still relevant after T95 weapons because of the special rather than raw tier","entityId":"desert:zaros-godsword","key":"effect-2","ordinal":1}
+{"description":"Converts seed drops to Farming XP when on toolbelt","entityId":"drop-cleaner:seedicide","key":"effect","ordinal":0}
 {"description":"Automatically converts configured bone drops into normal burying Prayer XP","entityId":"dungeoneering:bonecrusher-current","key":"effect-1","ordinal":0}
 {"description":"Combines with Dungeoneering prayer necklaces for Prayer sustain","entityId":"dungeoneering:bonecrusher-current","key":"effect-2","ordinal":1}
 {"description":"Automatically collects charms and spirit gems; selected charm types can instead be converted into Summoning XP","entityId":"dungeoneering:charming-imp-current","key":"effect-1","ordinal":0}
@@ -653,6 +659,101 @@
 {"description":"Auto-process monster drops (not implings/thieving/chests/PvP/LootShare): Research (bonus XP), Dismantle (bank materials), High Alch salvage (2000+), Disassembly salvage (3000+, free springs)","entityId":"invention:spring-cleaner","key":"effect-1","ordinal":0}
 {"description":"Pocket slot usable from spring cleaner 2000; 9001 allows noted items","entityId":"invention:spring-cleaner","key":"effect-2","ordinal":1}
 {"description":"Sibling cleaner family with bonecrusher / herbicide / seedicide / charming imp / gold accumulator — spring cleaner was the missing Invention permanent","entityId":"invention:spring-cleaner","key":"effect-3","ordinal":2}
+{"description":"Strong T92 MH option when Leng / khopesh / drygore paths are region-locked","entityId":"item:abyssal-scourge","key":"effect","ordinal":0}
+{"description":"Bleed synergy with jaws of the Abyss helm and MW spear DoT extensions","entityId":"item:abyssal-scourge","key":"effect","ordinal":1}
+{"description":"Degrades; repair economy matters for long ironman use","entityId":"item:abyssal-scourge","key":"effect","ordinal":2}
+{"description":"Highest-tier staff that supplies infinite fire runes","entityId":"item:camel-staff","key":"effect","ordinal":0}
+{"description":"Niche Ancient Magicks blood-spell rune saver and mid-high Magic 2h","entityId":"item:camel-staff","key":"effect","ordinal":1}
+{"description":"Strong early-league / early-region T80 Magic 2h when boss uniques are unavailable","entityId":"item:chaotic-staff","key":"effect","ordinal":0}
+{"description":"Completes the chaotic weapon ladder — forinthry:chaotic-melee-ranged intentionally omitted Magic staff","entityId":"item:chaotic-staff","key":"effect","ordinal":1}
+{"description":"12.5% (1/8) chance per hit to apply tier-2 weapon poison (or +1 poison tier when another poison source is active)","entityId":"item:cinderbane-gloves","key":"effect","ordinal":0}
+{"description":"Reapplying poison while already poisoned can deal an extra poison hit and refresh duration (can chain)","entityId":"item:cinderbane-gloves","key":"effect","ordinal":1}
+{"description":"Does not apply to poison-immune targets","entityId":"item:cinderbane-gloves","key":"effect","ordinal":2}
+{"description":"Degrades over 60,000 charges; base full repair 300,000 coins","entityId":"item:cinderbane-gloves","key":"effect","ordinal":3}
+{"description":"Restores 50 to 150 Prayer points when qualifying bones are buried or supported ashes/ghost remains are processed with the attuned ectoplasmator","entityId":"item:demon-horn-necklace","key":"effect","ordinal":0}
+{"description":"Restores 50 / 100 / 150 prayer points by bone tier when burying or when bonecrusher auto-buries","entityId":"item:demon-horn-necklace","key":"effect","ordinal":1}
+{"description":"With attuned ectoplasmator: 50 / 100 / 150 pp on ash and ghost absorption bands (including infernal/tortured/searing ashes and high-tier undead)","entityId":"item:demon-horn-necklace","key":"effect","ordinal":2}
+{"description":"Prayer bonus 5; holy wrench (post-Pieces of Hate) adds +10% to necklace restore while worn or inventoried","entityId":"item:demon-horn-necklace","key":"effect","ordinal":3}
+{"description":"Tied with omni guard for strongest MH Necromancy weapon","entityId":"item:devourers-guard","key":"effect","ordinal":0}
+{"description":"Does not degrade in unaugmented state","entityId":"item:devourers-guard","key":"effect","ordinal":1}
+{"description":"Desert Amascut path alternative to Misthalin Rasial omni guard package","entityId":"item:devourers-guard","key":"effect","ordinal":2}
+{"description":"Halberd-range T85* melee with strong mobility special still used in many rotations","entityId":"item:dragon-rider-lance","key":"effect","ordinal":0}
+{"description":"Midgame 2h ladder piece before scythe / Ek-ZekKil / Tumeken's Light","entityId":"item:dragon-rider-lance","key":"effect","ordinal":1}
+{"description":"Split Soul is a defining ranged DPS special for curse users","entityId":"item:eldritch-crossbow","key":"effect","ordinal":0}
+{"description":"Common EoF store; competes with SGB Crystal Rain situationally","entityId":"item:eldritch-crossbow","key":"effect","ordinal":1}
+{"description":"Tier 95 two-handed Magic staff; common Magic BiS staff before Masterwork / Shard of Genesis Essence upgrades","entityId":"item:fractured-staff-of-armadyl","key":"effect","ordinal":0}
+{"description":"Instability special costs 50% adrenaline with a 60s cooldown and grants 30s of Lightning Surge on Magic critical hits","entityId":"item:fractured-staff-of-armadyl","key":"effect","ordinal":1}
+{"description":"Soul Gaze: +12.5% damage and +10% hit chance vs magic-classed enemies (effective ~T94–97 at many magic bosses)","entityId":"item:hexhunter-bow","key":"effect","ordinal":0}
+{"description":"Ranged equivalent of terrasaur maul / inquisitor staff niche triangle","entityId":"item:hexhunter-bow","key":"effect","ordinal":1}
+{"description":"Increases Prayer restored by supported prayer-restoring potions while carried or worn.","entityId":"item:holy-wrench","key":"effect","ordinal":0}
+{"description":"After Pieces of Hate, increases Prayer restored by Dungeoneering prayer necklaces by 10%.","entityId":"item:holy-wrench","key":"effect","ordinal":1}
+{"description":"Pocket or inventory: extra prayer points from prayer / super restore / prayer renewal / extreme prayer style potions (level-scaled)","entityId":"item:holy-wrench","key":"effect","ordinal":2}
+{"description":"After Pieces of Hate: +10% prayer restore from twisted bird skull / split dragontooth / demon horn necklaces while wrench is worn or inventoried","entityId":"item:holy-wrench","key":"effect","ordinal":3}
+{"description":"No effect on ancient elven ritual shard over-time restore","entityId":"item:holy-wrench","key":"effect","ordinal":4}
+{"description":"+12.5% damage and +10% hit chance against melee-classed enemies (up to +17.5% damage with enchantment)","entityId":"item:inquisitor-staff","key":"effect","ordinal":0}
+{"description":"+5 affinity when using the correct elemental spell weakness","entityId":"item:inquisitor-staff","key":"effect","ordinal":1}
+{"description":"Effective damage tiers in the mid-90s to ~105 against melee bosses despite t80 base","entityId":"item:inquisitor-staff","key":"effect","ordinal":2}
+{"description":"Anachronia-native spear option for ironmen who unlock the island early","entityId":"item:laniakeas-spear","key":"effect","ordinal":0}
+{"description":"Not competitive with endgame 2h once DRL / MW spear / EZK exist","entityId":"item:laniakeas-spear","key":"effect","ordinal":1}
+{"description":"Cheaper T100-stat 2h melee path vs EZK / Tumeken's Light when boss drops are region-locked","entityId":"item:masterwork-2h-sword","key":"effect","ordinal":0}
+{"description":"No DPS special — competes on stats + sustain passive","entityId":"item:masterwork-2h-sword","key":"effect","ordinal":1}
+{"description":"Shares essence-break economy with other masterwork style weapons","entityId":"item:masterwork-2h-sword","key":"effect","ordinal":2}
+{"description":"Smithable-adjacent T100-stat bow alternative when Bolg / SGB / Eldritch are locked","entityId":"item:masterwork-bow","key":"effect","ordinal":0}
+{"description":"Heavy fletching/woodcutting time sink — ironman region pressure is essence sources more than logs","entityId":"item:masterwork-bow","key":"effect","ordinal":1}
+{"description":"T100 craft staff path when FSoA / praesul / seismic worn sets are unavailable","entityId":"item:masterwork-staff","key":"effect","ordinal":0}
+{"description":"Shares Masterworked Mending with MW 2h / MW bow","entityId":"item:masterwork-staff","key":"effect","ordinal":1}
+{"description":"Halberd-range T82 spear; Corp spear classification retained","entityId":"item:masutas-warspear","key":"effect","ordinal":0}
+{"description":"Midgame AoE/halberd bridge before DRL / MW spear / Tumeken's Light","entityId":"item:masutas-warspear","key":"effect","ordinal":1}
+{"description":"T90 Magic 2h bridge before FSoA / Roar+Ode dual-wield endgame","entityId":"item:noxious-staff","key":"effect","ordinal":0}
+{"description":"Same boss family as noxious scythe/longbow — magic style was out of melee-ranged pack scope","entityId":"item:noxious-staff","key":"effect","ordinal":1}
+{"description":"Strongest Necromancy ring (tied with Zorgoth's soul ring)","entityId":"item:occultists-ring","key":"effect","ordinal":0}
+{"description":"Infliction passive: 10% chance for Necromancy attacks to generate 2 Necrosis stacks","entityId":"item:occultists-ring","key":"effect","ordinal":1}
+{"description":"Critical-strike focused ring used in Magic when accuracy is not the bottleneck and non-channelled abilities dominate","entityId":"item:reavers-ring","key":"effect","ordinal":0}
+{"description":"Also relevant residual for hybrid crit setups","entityId":"item:reavers-ring","key":"effect","ordinal":1}
+{"description":"+5% critical strike chance","entityId":"item:reavers-ring","key":"effect","ordinal":2}
+{"description":"−5% hit chance (Reckless Assault) — only wear when accuracy budget allows ≥~97% hit chance","entityId":"item:reavers-ring","key":"effect","ordinal":3}
+{"description":"All-style damage bonus; tied for top hybrid strength with ring of death (i)","entityId":"item:reavers-ring","key":"effect","ordinal":4}
+{"description":"Strong early-mid ranged 2h when higher unique regions are locked","entityId":"item:royal-crossbow","key":"effect","ordinal":0}
+{"description":"+20% damage and +20% hit chance vs undead while worn (all styles; on-hit only)","entityId":"item:salve-amulet-e","key":"effect","ordinal":0}
+{"description":"Prayer bonus 3; small style damage bonuses on the enchanted form","entityId":"item:salve-amulet-e","key":"effect","ordinal":1}
+{"description":"Stacks with full slayer helmet, Void, Undead Slayer perk/ability","entityId":"item:salve-amulet-e","key":"effect","ordinal":2}
+{"description":"Works at Barrows and Rise of the Six (2023 restriction removal); also applies to Osseous (2025)","entityId":"item:salve-amulet-e","key":"effect","ordinal":3}
+{"description":"+20% damage against undead enemies","entityId":"item:salve-amulet-e","key":"effect","ordinal":4}
+{"description":"+20% hit chance against undead enemies","entityId":"item:salve-amulet-e","key":"effect","ordinal":5}
+{"description":"Stacks with the full Slayer helmet, Void Knight equipment, the Undead Slayer perk, and the Undead Slayer ability","entityId":"item:salve-amulet-e","key":"effect","ordinal":6}
+{"description":"The bonus is on-hit and does not increase damage-over-time abilities or conjures","entityId":"item:salve-amulet-e","key":"effect","ordinal":7}
+{"description":"Crystal Rain remains one of the highest-value ranged specials even after Bolg","entityId":"item:seren-godbow","key":"effect","ordinal":0}
+{"description":"Often sacrificed into Essence of Finality while a higher bow is wielded","entityId":"item:seren-godbow","key":"effect","ordinal":1}
+{"description":"Restores Prayer from qualifying buried bones and works with Bonecrusher-processed bones","entityId":"item:split-dragontooth-necklace","key":"effect","ordinal":0}
+{"description":"Restores 50 pp (normal/bat/burnt bones) or 100 pp (big/baby dragon/jogre/wyvern and higher bone tiers on this necklace)","entityId":"item:split-dragontooth-necklace","key":"effect","ordinal":1}
+{"description":"With attuned ectoplasmator: 50/100 pp ash and ghost bands (high-tier ashes/ghosts cap at 100, not 150)","entityId":"item:split-dragontooth-necklace","key":"effect","ordinal":2}
+{"description":"Prayer bonus 4; mid-ladder AFK restore before demon horn","entityId":"item:split-dragontooth-necklace","key":"effect","ordinal":3}
+{"description":"Tier 92 two-handed Magic staff with a 100% hit-chance shadow clone special","entityId":"item:staff-of-sliske","key":"effect","ordinal":0}
+{"description":"Residual Magic staff option and Masterwork staff essence pressure","entityId":"item:staff-of-sliske","key":"effect","ordinal":1}
+{"description":"Upgraded archers' ring path for ranged accuracy/damage setups","entityId":"item:stalkers-ring","key":"effect","ordinal":0}
+{"description":"Competes with reaver's ring depending on hit-chance budget and style","entityId":"item:stalkers-ring","key":"effect","ordinal":1}
+{"description":"Damages vyres with blisterwood-class effectiveness (+75% hit chance vs vyres; chance of up to double damage)","entityId":"item:sunspear","key":"effect","ordinal":0}
+{"description":"Auto-cremates vyre corpses for Prayer and Firemaking XP","entityId":"item:sunspear","key":"effect","ordinal":1}
+{"description":"Shares columbarium cremation damage ladder with blisterwood weapons","entityId":"item:sunspear","key":"effect","ordinal":2}
+{"description":"Prayer point restore on vyre kill scales with manual cremation count (+1% per 50 up to +5% at 250, post-13-April-2026)","entityId":"item:sunspear","key":"effect","ordinal":3}
+{"description":"Primal Savagery: +12.5% ability damage and +10% hit chance vs ranged-classed enemies (effective T90–100 at many ranged bosses)","entityId":"item:terrasaur-maul","key":"effect","ordinal":0}
+{"description":"Melee equivalent of hexhunter bow / inquisitor staff niche triangle","entityId":"item:terrasaur-maul","key":"effect","ordinal":1}
+{"description":"10% increased damage against TzHaar, TokHaar, TzekHaar and Igneous TzekHaar","entityId":"item:tokkul-zo","key":"effect","ordinal":0}
+{"description":"The damage effect works on TzekHaar waves but not TzKal-Zuk himself","entityId":"item:tokkul-zo","key":"effect","ordinal":1}
+{"description":"Teleports around TzHaar City including Fight Cave, Fight Kiln and Fight Cauldron","entityId":"item:tokkul-zo","key":"effect","ordinal":2}
+{"description":"Teleports (need ≥1 charge; teleports do not spend charges): Main Plaza, Fight Pit, Fight Cave, Fight Kiln, Fight Cauldron","entityId":"item:tokkul-zo","key":"effect","ordinal":3}
+{"description":"Primary ironman Karamja banking + fairy ring BLP on-ramp (Fight Cave tele just south of BLP)","entityId":"item:tokkul-zo","key":"effect","ordinal":4}
+{"description":"Hardwood Grove / TzHaar furnace / gemstone cavern loops without lodestone spam","entityId":"item:tokkul-zo","key":"effect","ordinal":5}
+{"description":"Combat side: +10% damage vs TzHaar/TokHaar/TzekHaar/Igneous TzekHaar while charged (charges drain on hits) — skilling value is the tele network","entityId":"item:tokkul-zo","key":"effect","ordinal":6}
+{"description":"AoE/halberd-oriented endgame melee alternative to Ek-ZekKil ST path","entityId":"item:tumekens-light","key":"effect","ordinal":0}
+{"description":"Competes with noxious scythe for multi-target","entityId":"item:tumekens-light","key":"effect","ordinal":1}
+{"description":"Mid-high ranged 2h with unique stacking poison DoT (not standard weapon poison)","entityId":"item:wyvern-crossbow","key":"effect","ordinal":0}
+{"description":"Bridge / niche before noxious longbow / Bolg when Asgarnia is open early","entityId":"item:wyvern-crossbow","key":"effect","ordinal":1}
+{"description":"Blackhole is a core melee DPS special for many rotations and EoF stores","entityId":"item:zaros-godsword","key":"effect","ordinal":0}
+{"description":"Still relevant after T95 weapons because of the special rather than raw tier","entityId":"item:zaros-godsword","key":"effect","ordinal":1}
+{"description":"Classic T80 bridge chargebow before royal / ascension / sirenic era endgame","entityId":"item:zaryte-bow","key":"effect","ordinal":0}
+{"description":"Zaros item: full GWD faction peace outside boss rooms","entityId":"item:zaryte-bow","key":"effect","ordinal":1}
+{"description":"Still relevant as cheap ammo-free midgame ironman bow","entityId":"item:zaryte-bow","key":"effect","ordinal":2}
 {"description":"−10 kg weight when worn","entityId":"kandarin:agile-legs","key":"effect-1","ordinal":0}
 {"description":"Hybrid legs armour (tier 36) — primarily a weight/Agility QoL piece, not a combat BiS","entityId":"kandarin:agile-legs","key":"effect-2","ordinal":1}
 {"description":"Free reclaim from gnome trainers if lost (no re-grind)","entityId":"kandarin:agile-legs","key":"effect-3","ordinal":2}

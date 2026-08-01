@@ -382,33 +382,17 @@ if (missingScriptFiles.length) {
 
 // Two source documents claiming one domain: the same entity type and name
 // produced by more than one document, as separate entities. 253 across 18 pairs
-// were found; 225 have been resolved by patch, leaving 41 across the 7 pairs
-// below - all blocked on the same thing, a superseded record holding
-// requirements or effects the survivor lacks, which a patch can neither move nor
-// merge without guessing. The gate is a ratchet: a *new* pair, or an existing
-// pair growing, fails. Lower an entry as its pair is adjudicated, delete it at
-// zero, and delete this map when it empties.
-const OVERLAP_BASELINE = new Map([
-  ["data/combat/equipment.json + data/reference/progression-unlocks.json", 33],
-  ["data/combat/abilities.json + data/reference/progression-unlocks.json", 3],
-  ["data/combat/equipment.json + data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", 1],
-  ["data/combat/equipment.json + data/research/regional-combat-unlocks.json", 1],
-  ["data/reference/progression-container-bags-2026-07-25.json + data/reference/progression-unlocks.json", 1],
-  ["data/reference/progression-support-items-2026-07-25.json + data/reference/progression-unlocks.json", 1],
-  ["data/research/catalog.json + data/research/regional-skilling-unlocks.json", 1],
-]);
+// were found and all 253 have been adjudicated - the record from the document
+// that owns the domain survives, carrying every fact the retired one held. The
+// count is zero, so the gate is no longer a ratchet with a backlog: any overlap
+// at all is a regression.
 if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
   const { openDatabase } = await import("./database.mjs");
   const { entityOverlaps } = await import("./queries.mjs");
   const db = openDatabase();
   try {
     for (const { files, records } of entityOverlaps(db).filePairs) {
-      const baseline = OVERLAP_BASELINE.get(files);
-      if (baseline === undefined) {
-        architectureFailures.push(`new file pair claims one domain: ${files} (${records} records)`);
-      } else if (records > baseline) {
-        architectureFailures.push(`overlap grew for ${files}: ${baseline} -> ${records} records`);
-      }
+      architectureFailures.push(`two documents claim one domain: ${files} (${records} records)`);
     }
   } finally {
     db.close();

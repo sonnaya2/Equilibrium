@@ -5,7 +5,7 @@
 // operations.mjs read only that copy. Anything the database has to answer —
 // whether an entity exists, whether a source is already cited — belongs to the
 // handler, not here.
-import { normalizeRegion, scalar } from "../utilities.mjs";
+import { normalizeRegion, scalar, slugify } from "../utilities.mjs";
 
 // Canonical column names. A patch writes the database directly, so these are
 // the database's own field names rather than any historical record spelling.
@@ -43,6 +43,15 @@ const SCHEMA = new Map([
   ["relate", { keys: ["entity", "target", "relation", "order"], required: ["entity", "target", "relation"] }],
   ["unrelate", { keys: ["entity", "target", "relation"], required: ["entity", "target", "relation"] }],
   ["remove", { keys: ["entity", "reason"], required: ["entity", "reason"] }],
+  [
+    "add-requirement",
+    { keys: ["entity", "description", "kind", "skill", "level", "target"], required: ["entity", "description"] },
+  ],
+  ["remove-requirement", { keys: ["entity", "description", "kind"], required: ["entity", "description"] }],
+  ["add-effect", { keys: ["entity", "description", "key", "value"], required: ["entity", "description"] }],
+  ["remove-effect", { keys: ["entity", "description", "key"], required: ["entity", "description"] }],
+  ["add-tag", { keys: ["entity", "tag", "label"], required: ["entity", "tag"] }],
+  ["remove-tag", { keys: ["entity", "tag"], required: ["entity", "tag"] }],
 ]);
 
 const fail = (context, message) => {
@@ -132,6 +141,32 @@ const SHAPE = {
     entity: identifier(operation, "entity", context),
     reason: identifier(operation, "reason", context),
   }),
+  // A requirement is keyed by (entity, kind, description), so those three are
+  // the whole identity — the ordinal is the database's, and the handler picks it.
+  requirement: (operation, context) => {
+    const level = operation.level ?? null;
+    if (level !== null && (!Number.isInteger(level) || level < 0 || level > 200)) {
+      fail(context, "level must be an integer between 0 and 200");
+    }
+    return {
+      entity: identifier(operation, "entity", context),
+      description: identifier(operation, "description", context),
+      kind: scalar(operation.kind, "text"),
+      skill: operation.skill == null ? null : scalar(operation.skill),
+      level,
+      target: operation.target == null ? null : identifier(operation, "target", context),
+    };
+  },
+  effect: (operation, context) => ({
+    entity: identifier(operation, "entity", context),
+    description: identifier(operation, "description", context),
+    key: scalar(operation.key, "effect"),
+    value: scalar(operation.value),
+  }),
+  tag: (operation, context) => {
+    const tag = slugify(identifier(operation, "tag", context));
+    return { entity: identifier(operation, "entity", context), tag, label: scalar(operation.label, tag) };
+  },
 };
 
 const SHAPE_OF = new Map([
@@ -144,6 +179,12 @@ const SHAPE_OF = new Map([
   ["relate", SHAPE.relate],
   ["unrelate", SHAPE.relate],
   ["remove", SHAPE.remove],
+  ["add-requirement", SHAPE.requirement],
+  ["remove-requirement", SHAPE.requirement],
+  ["add-effect", SHAPE.effect],
+  ["remove-effect", SHAPE.effect],
+  ["add-tag", SHAPE.tag],
+  ["remove-tag", SHAPE.tag],
 ]);
 
 export function validateOperation(operation, context) {

@@ -1,3 +1,4 @@
+{"entityId":"activity:content:vampyrism-aspect","tagId":"aura-overhaul-ancient-magicks-combat-aspect"}
 {"entityId":"agility:advanced-barbarian-outpost-course","tagId":"agility"}
 {"entityId":"agility:advanced-gnome-stronghold-course","tagId":"agility"}
 {"entityId":"agility:anachronia-agility-course-advanced-section-pre-island-wide","tagId":"agility"}
@@ -247,6 +248,7 @@
 {"entityId":"cooking:yak-meat-bank-range-loop","tagId":"cooking"}
 {"entityId":"crafting:al-kharid-uncommon-gem-rocks-into-cut-gems","tagId":"crafting"}
 {"entityId":"crafting:anachronia-orthen-furnace-core-obtain-iaia-crafting-accidental-fm","tagId":"crafting"}
+{"entityId":"crafting:artificers-measure","tagId":"crafting-and-construction-skilling-off-hand-cross-region-chain"}
 {"entityId":"crafting:artificers-measure","tagId":"high-level-gem-container-and-skilling-off-hand"}
 {"entityId":"crafting:combat-flask-infrastructure","tagId":"six-dose-combat-container-access"}
 {"entityId":"crafting:crafteneering","tagId":"crafting"}
@@ -435,6 +437,7 @@
 {"entityId":"dragonkin-laboratory:greater-melee-codices","tagId":"ability-upgrades"}
 {"entityId":"dream-mentor:lunar-spells","tagId":"lunar-spell-additions"}
 {"entityId":"drop-cleaner:attuned-ectoplasmator","tagId":"upgradeable-prayer-drop-cleaner"}
+{"entityId":"drop-cleaner:seedicide","tagId":"farming-drop-cleaner"}
 {"entityId":"drop-cleaner:seedicide","tagId":"farming-experience-drop-cleaner"}
 {"entityId":"dungeoneering:advanced-gold-accumulator-current","tagId":"permanent-coin-drop-cleaner"}
 {"entityId":"dungeoneering:amulet-of-zealots-current","tagId":"post-remaster-prayer-equipment-unlock"}
@@ -860,6 +863,7 @@
 {"entityId":"item:abomination-cape","tagId":"melee"}
 {"entityId":"item:abyssal-orb","tagId":"magic"}
 {"entityId":"item:abyssal-scourge","tagId":"melee"}
+{"entityId":"item:abyssal-scourge","tagId":"tier-92-dual-wield-melee-whip-residual"}
 {"entityId":"item:abyssal-vine-whip","tagId":"melee"}
 {"entityId":"item:abyssal-wand","tagId":"magic"}
 {"entityId":"item:abyssal-whip","tagId":"melee"}
@@ -920,6 +924,8 @@
 {"entityId":"item:ascendri-bolts-e","tagId":"ranged"}
 {"entityId":"item:ascension-crossbow","tagId":"ranged"}
 {"entityId":"item:ascension-grips","tagId":"ranged"}
+{"entityId":"item:asylum-surgeons-ring","tagId":"quest-challenge-combat-equipment"}
+{"entityId":"item:asylum-surgeons-ring","tagId":"quest-challenge-equipment-unlock"}
 {"entityId":"item:attuned-crystal-bow","tagId":"ranged"}
 {"entityId":"item:attuned-crystal-chakram","tagId":"ranged"}
 {"entityId":"item:attuned-crystal-dagger","tagId":"melee"}
@@ -951,6 +957,7 @@
 {"entityId":"item:bow-of-the-last-guardian","tagId":"ranged"}
 {"entityId":"item:brawlers-knockout-necklace","tagId":"melee"}
 {"entityId":"item:camel-staff","tagId":"magic"}
+{"entityId":"item:camel-staff","tagId":"tier-85-two-handed-magic-residual"}
 {"entityId":"item:celestial-handwraps","tagId":"magic"}
 {"entityId":"item:champions-ring","tagId":"melee"}
 {"entityId":"item:channelers-ring","tagId":"magic"}
@@ -962,6 +969,8 @@
 {"entityId":"item:chaotic-rapier","tagId":"melee"}
 {"entityId":"item:chaotic-spear","tagId":"melee"}
 {"entityId":"item:chaotic-staff","tagId":"magic"}
+{"entityId":"item:chaotic-staff","tagId":"tier-80-residual-two-handed-magic-weapon"}
+{"entityId":"item:cinderbane-gloves","tagId":"best-in-slot-hybrid-poison-combat-gloves"}
 {"entityId":"item:cinderbane-gloves","tagId":"melee"}
 {"entityId":"item:corrupted-defender","tagId":"melee"}
 {"entityId":"item:cryptbloom-body","tagId":"magic"}
@@ -1014,7 +1023,10 @@
 {"entityId":"item:deathwarden-robe-bottom-t90","tagId":"necromancy"}
 {"entityId":"item:deathwarden-robe-top-t90","tagId":"necromancy"}
 {"entityId":"item:decimation","tagId":"ranged"}
+{"entityId":"item:demon-horn-necklace","tagId":"dungeoneering-prayer-restore-necklace-top"}
+{"entityId":"item:demon-horn-necklace","tagId":"post-remaster-prayer-sustain-equipment-unlock"}
 {"entityId":"item:devourers-guard","tagId":"necromancy"}
+{"entityId":"item:devourers-guard","tagId":"tier-95-necromancy-main-hand-weapon-residual"}
 {"entityId":"item:dharoks-greataxe","tagId":"melee"}
 {"entityId":"item:divine-spirit-shield","tagId":"melee"}
 {"entityId":"item:dracolich-body","tagId":"ranged"}
@@ -1025,6 +1037,7 @@
 {"entityId":"item:dragon-claws","tagId":"melee"}
 {"entityId":"item:dragon-defender","tagId":"magic"}
 {"entityId":"item:dragon-rider-amulet","tagId":"hybrid"}
+{"entityId":"item:dragon-rider-lance","tagId":"gwd2-residual-two-handed-melee-polearm"}
 {"entityId":"item:dragon-rider-lance","tagId":"melee"}
 {"entityId":"item:dragonfire-deflector","tagId":"ranged"}
 {"entityId":"item:dragonfire-shield","tagId":"hybrid"}
@@ -1034,6 +1047,7 @@
 {"entityId":"item:eagle-eye-kiteshield","tagId":"ranged"}
 {"entityId":"item:ek-zekkil","tagId":"melee"}
 {"entityId":"item:eldritch-crossbow","tagId":"ranged"}
+{"entityId":"item:eldritch-crossbow","tagId":"tier-92-two-handed-ranged-weapon"}
 {"entityId":"item:elite-death-lotus-chaps","tagId":"ranged"}
 {"entityId":"item:elite-death-lotus-chestplate","tagId":"ranged"}
 {"entityId":"item:elite-death-lotus-dart","tagId":"ranged"}
@@ -1090,6 +1104,7 @@
 {"entityId":"item:flarefrost-boots","tagId":"ranged"}
 {"entityId":"item:fleeting-boots","tagId":"ranged"}
 {"entityId":"item:fractured-staff-of-armadyl","tagId":"magic"}
+{"entityId":"item:fractured-staff-of-armadyl","tagId":"magic-best-in-slot-two-handed-staff"}
 {"entityId":"item:ful-arrows","tagId":"ranged"}
 {"entityId":"item:ganodermic-leggings","tagId":"magic"}
 {"entityId":"item:ganodermic-poncho","tagId":"magic"}
@@ -1113,7 +1128,11 @@
 {"entityId":"item:hailfire-boots","tagId":"magic"}
 {"entityId":"item:hand-cannon","tagId":"ranged"}
 {"entityId":"item:hellfire-bow","tagId":"ranged"}
+{"entityId":"item:hexhunter-bow","tagId":"niche-anti-magic-t80-ranged-weapon-residual"}
 {"entityId":"item:hexhunter-bow","tagId":"ranged"}
+{"entityId":"item:holy-wrench","tagId":"prayer-potion-and-dg-necklace-restore-amplifier"}
+{"entityId":"item:holy-wrench","tagId":"prayer-restoration-support-item"}
+{"entityId":"item:holy-wrench","tagId":"quest-prayer-restoration-support-item"}
 {"entityId":"item:hood-of-subjugation","tagId":"magic"}
 {"entityId":"item:hydra-bakriminel-bolts-e","tagId":"ranged"}
 {"entityId":"item:igneous-kal-ket","tagId":"melee"}
@@ -1128,6 +1147,7 @@
 {"entityId":"item:illuminated-book-of-wisdom","tagId":"hybrid"}
 {"entityId":"item:imperium-core","tagId":"magic"}
 {"entityId":"item:inquisitor-staff","tagId":"magic"}
+{"entityId":"item:inquisitor-staff","tagId":"magic-anti-melee-niche-bis-staff"}
 {"entityId":"item:jas-dragonbane-arrows","tagId":"ranged"}
 {"entityId":"item:jaws-of-the-abyss","tagId":"melee"}
 {"entityId":"item:jessikas-sword","tagId":"melee"}
@@ -1144,6 +1164,7 @@
 {"entityId":"item:korasis-sword","tagId":"melee"}
 {"entityId":"item:laceration-boots","tagId":"melee"}
 {"entityId":"item:laniakeas-spear","tagId":"melee"}
+{"entityId":"item:laniakeas-spear","tagId":"tier-82-anachronia-slayer-spear-residual"}
 {"entityId":"item:lava-whip","tagId":"melee"}
 {"entityId":"item:legatuss-emberstaff","tagId":"magic"}
 {"entityId":"item:leviathan-ring","tagId":"hybrid"}
@@ -1154,8 +1175,10 @@
 {"entityId":"item:malevolent-kiteshield","tagId":"melee"}
 {"entityId":"item:malevolent-legs","tagId":"melee"}
 {"entityId":"item:masterwork-2h-sword","tagId":"melee"}
+{"entityId":"item:masterwork-2h-sword","tagId":"tier-99-100-smithable-two-handed-melee-weapon"}
 {"entityId":"item:masterwork-boots","tagId":"melee"}
 {"entityId":"item:masterwork-bow","tagId":"ranged"}
+{"entityId":"item:masterwork-bow","tagId":"tier-99-100-fletchable-two-handed-ranged-weapon"}
 {"entityId":"item:masterwork-gloves","tagId":"melee"}
 {"entityId":"item:masterwork-helm","tagId":"melee"}
 {"entityId":"item:masterwork-magic-boots","tagId":"magic"}
@@ -1172,7 +1195,9 @@
 {"entityId":"item:masterwork-ranged-vambraces","tagId":"ranged"}
 {"entityId":"item:masterwork-spear-of-annihilation","tagId":"melee"}
 {"entityId":"item:masterwork-staff","tagId":"magic"}
+{"entityId":"item:masterwork-staff","tagId":"tier-100-runecrafted-two-handed-magic-weapon"}
 {"entityId":"item:masutas-warspear","tagId":"melee"}
+{"entityId":"item:masutas-warspear","tagId":"tier-82-two-handed-spear-halberd-residual"}
 {"entityId":"item:max-cape","tagId":"hybrid"}
 {"entityId":"item:mercenarys-gloves","tagId":"ranged"}
 {"entityId":"item:merciless-kiteshield","tagId":"magic"}
@@ -1184,6 +1209,7 @@
 {"entityId":"item:noxious-longbow","tagId":"ranged"}
 {"entityId":"item:noxious-scythe","tagId":"melee"}
 {"entityId":"item:noxious-staff","tagId":"magic"}
+{"entityId":"item:noxious-staff","tagId":"tier-90-residual-two-handed-magic-weapon"}
 {"entityId":"item:obliteration","tagId":"magic"}
 {"entityId":"item:obsidian-boots","tagId":"hybrid"}
 {"entityId":"item:obsidian-gloves","tagId":"hybrid"}
@@ -1194,6 +1220,7 @@
 {"entityId":"item:obsidian-ranger-helm","tagId":"ranged"}
 {"entityId":"item:obsidian-warrior-helm","tagId":"melee"}
 {"entityId":"item:occultists-ring","tagId":"necromancy"}
+{"entityId":"item:occultists-ring","tagId":"necromancy-best-in-slot-ring-residual"}
 {"entityId":"item:ode-to-deceit","tagId":"magic"}
 {"entityId":"item:off-hand-armadyl-crossbow","tagId":"ranged"}
 {"entityId":"item:off-hand-ascension-crossbow","tagId":"ranged"}
@@ -1236,7 +1263,9 @@
 {"entityId":"item:ragefire-boots","tagId":"magic"}
 {"entityId":"item:razorback-gauntlets","tagId":"melee"}
 {"entityId":"item:reaper-necklace","tagId":"hybrid"}
+{"entityId":"item:reavers-ring","tagId":"best-in-slot-hybrid-crit-ring-melee-heavy"}
 {"entityId":"item:reavers-ring","tagId":"hybrid"}
+{"entityId":"item:reavers-ring","tagId":"hybrid-critical-strike-ring-residual"}
 {"entityId":"item:reefwalkers-cape","tagId":"hybrid"}
 {"entityId":"item:refined-anima-core-body-of-seren","tagId":"magic"}
 {"entityId":"item:refined-anima-core-body-of-sliske","tagId":"hybrid"}
@@ -1255,12 +1284,15 @@
 {"entityId":"item:ripper-claw","tagId":"melee"}
 {"entityId":"item:roar-of-awakening","tagId":"magic"}
 {"entityId":"item:royal-crossbow","tagId":"ranged"}
+{"entityId":"item:royal-crossbow","tagId":"tier-80-residual-two-handed-ranged-weapon"}
 {"entityId":"item:ruinous-crossbow","tagId":"ranged"}
 {"entityId":"item:ruinous-guard","tagId":"necromancy"}
 {"entityId":"item:ruinous-lantern","tagId":"necromancy"}
 {"entityId":"item:ruinous-maul","tagId":"melee"}
 {"entityId":"item:ruinous-rapier","tagId":"melee"}
 {"entityId":"item:ruinous-staff","tagId":"magic"}
+{"entityId":"item:salve-amulet-e","tagId":"undead-combat-necklace-enchanted-permanent"}
+{"entityId":"item:salve-amulet-e","tagId":"undead-combat-support"}
 {"entityId":"item:saradomin-godsword","tagId":"melee"}
 {"entityId":"item:saradomin-sword","tagId":"melee"}
 {"entityId":"item:saradomins-hiss","tagId":"magic"}
@@ -1271,6 +1303,8 @@
 {"entityId":"item:scrimshaw-of-vampyrism","tagId":"melee"}
 {"entityId":"item:scripture-of-amascut","tagId":"magic"}
 {"entityId":"item:scripture-of-bik","tagId":"magic"}
+{"entityId":"item:scripture-of-bik","tagId":"magic-pocket-slot-residual-scripture"}
+{"entityId":"item:scripture-of-bik","tagId":"magic-skilling-pocket-scripture"}
 {"entityId":"item:scripture-of-ful","tagId":"melee"}
 {"entityId":"item:scripture-of-jas","tagId":"magic"}
 {"entityId":"item:scripture-of-wen","tagId":"melee"}
@@ -1283,6 +1317,7 @@
 {"entityId":"item:seismic-singularity","tagId":"magic"}
 {"entityId":"item:seismic-wand","tagId":"magic"}
 {"entityId":"item:seren-godbow","tagId":"ranged"}
+{"entityId":"item:seren-godbow","tagId":"tier-92-two-handed-ranged-weapon-and-eof-special"}
 {"entityId":"item:shadow-glaive","tagId":"ranged"}
 {"entityId":"item:sirenic-chaps","tagId":"ranged"}
 {"entityId":"item:sirenic-hauberk","tagId":"ranged"}
@@ -1295,16 +1330,21 @@
 {"entityId":"item:spellcaster-gloves","tagId":"magic"}
 {"entityId":"item:spellcaster-gloves-black","tagId":"magic"}
 {"entityId":"item:spirit-cape","tagId":"hybrid"}
+{"entityId":"item:split-dragontooth-necklace","tagId":"dungeoneering-prayer-restore-necklace-mid"}
+{"entityId":"item:split-dragontooth-necklace","tagId":"post-remaster-prayer-sustain-equipment-unlock"}
 {"entityId":"item:staff-of-darkness","tagId":"magic"}
 {"entityId":"item:staff-of-light","tagId":"magic"}
 {"entityId":"item:staff-of-sliske","tagId":"magic"}
+{"entityId":"item:staff-of-sliske","tagId":"magic-two-handed-residual-staff"}
 {"entityId":"item:stalker-arrows","tagId":"ranged"}
+{"entityId":"item:stalkers-ring","tagId":"best-in-slot-ranged-oriented-upgraded-fremennik-ring"}
 {"entityId":"item:stalkers-ring","tagId":"ranged"}
 {"entityId":"item:static-gloves","tagId":"magic"}
 {"entityId":"item:statiuss-warhammer","tagId":"melee"}
 {"entityId":"item:steadfast-boots","tagId":"melee"}
 {"entityId":"item:strykebow","tagId":"ranged"}
 {"entityId":"item:sunspear","tagId":"melee"}
+{"entityId":"item:sunspear","tagId":"vyre-multi-skill-weapon"}
 {"entityId":"item:sunspear-magic","tagId":"magic"}
 {"entityId":"item:sunspear-melee","tagId":"melee"}
 {"entityId":"item:sunspear-ranged","tagId":"ranged"}
@@ -1342,6 +1382,7 @@
 {"entityId":"item:teralith-helmet","tagId":"melee"}
 {"entityId":"item:teralith-leggings","tagId":"melee"}
 {"entityId":"item:terrasaur-maul","tagId":"melee"}
+{"entityId":"item:terrasaur-maul","tagId":"niche-anti-ranged-t80-melee-weapon-residual"}
 {"entityId":"item:tetsu-body","tagId":"melee"}
 {"entityId":"item:tetsu-helm","tagId":"melee"}
 {"entityId":"item:tetsu-katana","tagId":"melee"}
@@ -1351,6 +1392,8 @@
 {"entityId":"item:tokhaar-kal-mej","tagId":"magic"}
 {"entityId":"item:tokhaar-kal-mor","tagId":"necromancy"}
 {"entityId":"item:tokhaar-kal-xil","tagId":"ranged"}
+{"entityId":"item:tokkul-zo","tagId":"karamja-tzhaar-teleport-ring-and-skilling-travel-tool"}
+{"entityId":"item:tokkul-zo","tagId":"tzhaar-and-tzekhaar-combat-support-ring"}
 {"entityId":"item:toktz-mej-tal","tagId":"magic"}
 {"entityId":"item:toktz-xil-ak","tagId":"melee"}
 {"entityId":"item:toktz-xil-ul","tagId":"ranged"}
@@ -1367,6 +1410,7 @@
 {"entityId":"item:trimmed-masterwork-platebody","tagId":"melee"}
 {"entityId":"item:trimmed-masterwork-platelegs","tagId":"melee"}
 {"entityId":"item:tumekens-light","tagId":"melee"}
+{"entityId":"item:tumekens-light","tagId":"tier-95-two-handed-melee-aoe-weapon"}
 {"entityId":"item:tumekens-resplendence-body","tagId":"magic"}
 {"entityId":"item:tumekens-resplendence-boots","tagId":"magic"}
 {"entityId":"item:tumekens-resplendence-gloves","tagId":"magic"}
@@ -1401,10 +1445,13 @@
 {"entityId":"item:wen-arrows","tagId":"ranged"}
 {"entityId":"item:winds-of-waiko","tagId":"ranged"}
 {"entityId":"item:wyvern-crossbow","tagId":"ranged"}
+{"entityId":"item:wyvern-crossbow","tagId":"tier-85-two-handed-ranged-poison-residual"}
 {"entityId":"item:zamorak-godsword","tagId":"melee"}
 {"entityId":"item:zamorakian-spear","tagId":"melee"}
 {"entityId":"item:zaros-godsword","tagId":"melee"}
+{"entityId":"item:zaros-godsword","tagId":"near-bis-two-handed-melee-weapon-with-combat-special"}
 {"entityId":"item:zaryte-bow","tagId":"ranged"}
+{"entityId":"item:zaryte-bow","tagId":"tier-80-nex-chargebow-residual"}
 {"entityId":"item:zuriels-staff","tagId":"magic"}
 {"entityId":"kandarin:agile-legs","tagId":"weight-reducing-agility-reward"}
 {"entityId":"kandarin:agile-top","tagId":"agility-weight-reducing-outfit-piece"}
@@ -1530,8 +1577,10 @@
 {"entityId":"magic:dragon-breath-empowered","tagId":"magic"}
 {"entityId":"magic:greater-chain","tagId":"basic"}
 {"entityId":"magic:greater-chain","tagId":"magic"}
+{"entityId":"magic:greater-concentrated-blast","tagId":"ability-upgrade"}
 {"entityId":"magic:greater-concentrated-blast","tagId":"basic"}
 {"entityId":"magic:greater-concentrated-blast","tagId":"magic"}
+{"entityId":"magic:greater-sonic-wave","tagId":"ability-upgrade"}
 {"entityId":"magic:greater-sonic-wave","tagId":"basic"}
 {"entityId":"magic:greater-sonic-wave","tagId":"magic"}
 {"entityId":"magic:greater-sunshine","tagId":"magic"}
@@ -1543,6 +1592,7 @@
 {"entityId":"magic:instability","tagId":"magic"}
 {"entityId":"magic:magic-attack","tagId":"basic"}
 {"entityId":"magic:magic-attack","tagId":"magic"}
+{"entityId":"magic:magma-tempest","tagId":"ability-unlock"}
 {"entityId":"magic:magma-tempest","tagId":"enhanced"}
 {"entityId":"magic:magma-tempest","tagId":"magic"}
 {"entityId":"magic:omnipower","tagId":"magic"}

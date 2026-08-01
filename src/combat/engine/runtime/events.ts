@@ -94,9 +94,11 @@ export class EventQueue<RT = unknown> {
   }
 
   /**
-   * Structural signature for branch equivalence: provenance fields of every
-   * pending event in order (resolve closures excluded — equivalent branches
-   * scheduled identical events from identical casts).
+   * Structural signature for branch equivalence: EVERY branch-relevant field of
+   * every pending event, in order (resolve closures excluded — equivalent
+   * branches scheduled identical events from identical casts). `derivedFrom`
+   * belongs here: two branches whose tails derive from different source hits
+   * resolve to different damage and are not equivalent.
    */
   signature(): string {
     return JSON.stringify(
@@ -110,7 +112,8 @@ export class EventQueue<RT = unknown> {
         e.attached,
         e.procEligible,
         e.recursionAllowed,
-        e.cancelOwner ?? 0,
+        e.cancelOwner ?? -1,
+        e.derivedFrom ?? -1,
       ]),
     );
   }

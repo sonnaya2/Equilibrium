@@ -38,6 +38,7 @@ function corruptionShotHits(): AbilitySpec["hits"] {
   return bands.map((band, i) => ({
     band,
     critEligible: false,
+    dot: true,
     tickOffset: i * 2,
   }));
 }

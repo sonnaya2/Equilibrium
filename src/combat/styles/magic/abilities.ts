@@ -78,6 +78,7 @@ function corruptionBlastHits() {
   return scales.map((scale, i) => ({
     band: { minPct: 90 * scale, maxPct: 110 * scale },
     critEligible: false,
+    dot: true,
     tickOffset: (i + 1) * 2,
   }));
 }
@@ -96,7 +97,13 @@ function smokeTendrilHits() {
   return bands.map((band, i) => ({ band, tickOffset: i * 2 }));
 }
 
-/** Magma Tempest: 8 hits of 35-45% every 1.2s (2 ticks); cannot critically strike. */
+/**
+ * Magma Tempest: 8 hits of 35-45% every 1.2s (2 ticks); cannot critically
+ * strike (Mar 2024, compensated with higher damage). Wiki, verified
+ * 2026-08-01: "Damage from this ability is not considered as damage over
+ * time" — so despite landing late and never critting, its hits keep prayers
+ * and the Sunshine window.
+ */
 function magmaTempestHits() {
   return Array.from({ length: 8 }, (_, i) => ({
     band: { minPct: 35, maxPct: 45 },
@@ -115,6 +122,7 @@ function sunshineDotHits(count: number) {
   return Array.from({ length: count }, (_, i) => ({
     band: { minPct: 10, maxPct: 20 },
     critEligible: false,
+    dot: true,
     tickOffset: (i + 1) * 3,
   }));
 }
@@ -182,6 +190,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: Array.from({ length: 10 }, (_, i) => ({
       band: { minPct: 27, maxPct: 33 },
       critEligible: false,
+      dot: true,
       tickOffset: (i + 1) * 3,
     })),
     adrenaline: { gain: 9 },

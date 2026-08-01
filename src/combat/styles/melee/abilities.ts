@@ -197,6 +197,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 25, maxPct: 35 },
       critEligible: false,
+      dot: true,
       tickOffset: (i + 1) * 2,
     })),
     cooldownSeconds: 24,
@@ -211,6 +212,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: Array.from({ length: 6 }, (_, i) => ({
       band: { minPct: 80, maxPct: 100 },
       critEligible: false,
+      dot: true,
       tickOffset: (i + 1) * 3,
     })),
     adrenaline: { cost: 25 },
@@ -228,6 +230,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
       ...Array.from({ length: 6 }, (_, i) => ({
         band: { minPct: 100, maxPct: 100 },
         critEligible: false,
+        dot: true,
         tickOffset: (i + 1) * 4,
       })),
     ],

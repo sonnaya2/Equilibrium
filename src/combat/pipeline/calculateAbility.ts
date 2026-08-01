@@ -6,6 +6,16 @@ export interface AbilityHit {
   band: DamageBand;
   critEligible?: boolean;
   tickOffset?: number;
+  /**
+   * This hit is a damage-over-time tick, so it ignores damage-boosting prayers
+   * and the Berserk / Death's Swiftness / Sunshine windows (wiki Dismember /
+   * Slaughter / Massacre). Declared, never inferred: damage over time is a
+   * separate axis from crit eligibility and from landing late. Magma Tempest
+   * cannot crit and lands over 16 ticks yet is explicitly "not considered as
+   * damage over time", and Corruption Shot's first bleed tick lands on the
+   * cast tick.
+   */
+  dot?: boolean;
 }
 
 export type StateEffectId =

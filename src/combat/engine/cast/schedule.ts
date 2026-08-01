@@ -57,10 +57,10 @@ export function scheduleCastEvents(
     }
     const seq = rt.nextSeq++;
     hitSeqs.push(seq);
-    // Classified once, here. The land-time resolver reads the family it was
-    // given rather than re-deriving "is this a DoT?" from timing or crit
-    // eligibility — a delayed direct hit stays direct.
-    const isDot = hitSpec.critEligible === false && (hitSpec.tickOffset ?? 0) > 0;
+    // Classified once, here, from what the ability declares. Never inferred
+    // from timing or crit eligibility: a delayed direct hit stays direct, and a
+    // bleed tick landing on the cast tick is still a bleed tick.
+    const isDot = hitSpec.dot === true;
     rt.queue.push({
       tick: landTick,
       seq,

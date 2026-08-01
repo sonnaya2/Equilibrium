@@ -78,12 +78,16 @@ board goes unverified. `npx playwright test -c playwright.webgpu.config.ts e2e/m
 runs the same specs in a headed off-screen Edge on port 3101, where the adapter is real. Use
 Playwright for browser work here, and do not leave a dev server running in the background.
 
-**`assets/` is not web-served, and `public/game/` is not editable.** `assets/` is the only editable
-image tree; `public/game/` and `public/brand/` are regenerated from it by `scripts/publish-assets.mjs`
-on every dev/build/test run, and are untracked. Hand-editing them is how the two trees drifted apart
-the last time — a publish wipes anything unregistered. Routing lives in `scripts/assets/routes.mjs`,
-provenance in `assets/catalog/`. Run `npm run assets:check` instead of pinning a count in
-documentation. `public/map/` is different: that is `build:map` output and stays tracked.
+**There is one art tree: `public/`.** `public/game/` and `public/brand/` are the art — tracked,
+edited directly, served as-is. There is no source tree shadowing them and no publish step; a file's
+path *is* its URL. Provenance lives in `asset-catalog/` (metadata only, never images), and
+`asset-catalog/schema.json` documents the fields. Run `npm run art:check` instead of pinning a count
+in documentation.
+
+One picture may legitimately sit at two URLs when two resolvers want it in different places; the
+catalog's `alsoAt` records those, and `art:check` fails on any byte-identical pair it does not
+explain. Optimize with `npm run optimize:images` — it re-encodes in place and never renames, so no
+reference can go stale.
 
 ## Boundaries that carry weight
 

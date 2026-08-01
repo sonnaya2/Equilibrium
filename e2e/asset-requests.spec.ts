@@ -60,12 +60,3 @@ test("every region detail resolves its art", async ({ page }) => {
   );
   expect(broken, `broken asset requests:\n${JSON.stringify(broken, null, 2)}`).toEqual([]);
 });
-
-test("published index reports the tree the publisher wrote", async ({ request }) => {
-  const response = await request.get("/game/index.json");
-  expect(response.ok()).toBe(true);
-  const index = (await response.json()) as { count: number; digest: string; note: string };
-  expect(index.count).toBeGreaterThan(2000);
-  expect(index.digest).toMatch(/^[0-9a-f]{16}$/);
-  expect(index.note).toContain("publish-assets.mjs");
-});

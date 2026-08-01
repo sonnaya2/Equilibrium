@@ -1,44 +1,41 @@
 /**
- * Generates src/lib/dataIconIndex.ts from assets/ and the asset catalog.
+ * Generates src/lib/dataIconIndex.ts from public/game.
  *
- * The lookups gameArt.ts resolves against used to be derived from public/game -
- * generated web output feeding application source. This derives them from the
- * same publish plan the publisher uses, so a clean clone reproduces the file
- * without the web tree existing at all.
+ * public/game is the art tree - what is on disk is what the browser gets - so
+ * the lookups gameArt.ts resolves against are read straight off it.
  *
  *   node scripts/assets/build-icon-index.mjs [--check]
  *
  * --check regenerates in memory and exits non-zero if the committed file differs.
  */
-import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { join, relative, sep } from "node:path";
 import prettier from "prettier";
-import { planPublish } from "./plan.mjs";
 
 const ROOT = process.cwd();
 const CHECK = process.argv.includes("--check");
 const OUT = "src/lib/dataIconIndex.ts";
+const GAME = join(ROOT, "public/game");
 const EXT = /\.(png|jpg|jpeg|gif|webp)$/i;
 
-const { targets, collisions } = await planPublish(ROOT);
-if (collisions.length) {
-  console.error(`ICON INDEX: ${collisions.length} publish collision(s); fix those first`);
-  for (const c of collisions) console.error(`  ${c.target} <- ${c.sources.join(" AND ")}`);
-  process.exit(1);
+/** Sorted walk so output never depends on filesystem enumeration order. */
+function walk(dir, acc = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) =>
+    a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+  )) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) walk(full, acc);
+    else if (EXT.test(entry.name)) acc.push(full);
+  }
+  return acc;
 }
-
-/** Published paths under game/<category>/, sorted so output never depends on walk order. */
-const published = [...targets.keys()]
-  .filter((target) => EXT.test(target))
-  .sort();
 
 /** slug -> path relative to the category root, first match in sorted order. */
 function bySlug(category) {
-  const prefix = `game/${category}/`;
+  const root = join(GAME, category);
   const out = {};
-  for (const target of published) {
-    if (!target.startsWith(prefix)) continue;
-    const rel = target.slice(prefix.length);
+  for (const path of walk(root)) {
+    const rel = relative(root, path).split(sep).join("/");
     const slug = rel.slice(rel.lastIndexOf("/") + 1).replace(EXT, "");
     out[slug] ??= rel;
   }
@@ -53,8 +50,7 @@ const EXT_RANK = { webp: 4, png: 3, jpg: 2, jpeg: 2, gif: 1 };
 const extOf = (file) => file.slice(file.lastIndexOf(".") + 1).toLowerCase().replace("jpeg", "jpg");
 
 const bossBySlug = {};
-for (const rel of Object.values(bySlug("bosses"))) {
-  const file = rel.slice(rel.lastIndexOf("/") + 1);
+for (const file of readdirSync(join(GAME, "bosses")).filter((name) => EXT.test(name))) {
   const slug = file.replace(EXT, "");
   const previous = bossBySlug[slug];
   if (!previous || (EXT_RANK[extOf(file)] ?? 0) > (EXT_RANK[extOf(previous)] ?? 0)) {
@@ -69,7 +65,7 @@ for (const [slug, file] of Object.entries(bossBySlug)) {
 const bossSlugs = Object.keys(bossBySlug).sort();
 const skillSlugs = Object.keys(bySlug("skills")).sort();
 
-const body = `/** Generated from assets/ by scripts/assets/build-icon-index.mjs - do not hand-edit. */
+const body = `/** Generated from public/game by scripts/assets/build-icon-index.mjs - do not hand-edit. */
 export const UPGRADE_ICON_BY_SLUG: Record<string, string> = ${JSON.stringify(upgradeBySlug, null, 2)};
 
 export const ACTIVITY_ICON_BY_SLUG: Record<string, string> = ${JSON.stringify(activityBySlug, null, 2)};
@@ -96,7 +92,7 @@ if (CHECK) {
     console.log(`ICON INDEX OK: ${counts}`);
     process.exit(0);
   }
-  console.error(`ICON INDEX DRIFT: ${OUT} does not match assets/ - run npm run assets:index`);
+  console.error(`ICON INDEX DRIFT: ${OUT} does not match public/game - run npm run art:index`);
   process.exit(1);
 }
 

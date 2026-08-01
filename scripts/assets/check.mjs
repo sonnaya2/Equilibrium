@@ -1,5 +1,5 @@
 /**
- * The asset pipeline gate. Exits non-zero on any failure.
+ * The art gate. Exits non-zero on any failure.
  *
  * Replaces scripts/audit-public-game-provenance.mjs, which swallowed its own
  * errors and always exited 0, so it could never protect anything.
@@ -11,13 +11,13 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
-import { planPublish } from "./plan.mjs";
 import { SHARDS, loadCatalog, shardFor } from "./catalog.mjs";
 
 const ROOT = process.cwd();
 const VERBOSE = process.argv.includes("--verbose");
 const IMAGE_RE = /\.(png|jpe?g|gif|webp)$/i;
 const KNOWN_EXT = [".webp", ".png", ".jpg", ".jpeg", ".gif"];
+const TREES = ["public/game", "public/brand"];
 const fwd = (p) => p.split(sep).join("/");
 
 const failures = [];
@@ -44,12 +44,13 @@ async function walk(dir, acc = []) {
 // --- catalog ---------------------------------------------------------------
 const catalog = await loadCatalog();
 const seenIds = new Map();
+const seenPaths = new Map();
 for (const row of catalog.assets) {
   for (const field of ["id", "label", "category", "path"]) {
     if (!row[field]) fail("catalog-schema", `${row.id ?? "(no id)"} missing ${field}`);
   }
-  if (row.path && !row.path.startsWith("assets/")) {
-    fail("catalog-schema", `${row.id} path escapes assets/: ${row.path}`);
+  if (row.path && !row.path.startsWith("public/")) {
+    fail("catalog-schema", `${row.id} path is not under public/: ${row.path}`);
   }
   if (row.path && IMAGE_RE.test(row.path)) {
     fail("catalog-schema", `${row.id} path carries an extension: ${row.path}`);
@@ -60,85 +61,98 @@ for (const row of catalog.assets) {
   const prior = seenIds.get(row.id);
   if (prior) fail("catalog-duplicate-id", `${row.id} in ${prior} and ${row.shard}`);
   seenIds.set(row.id, row.shard);
+
+  const owner = seenPaths.get(row.path);
+  if (owner) fail("catalog-duplicate-path", `${row.path} claimed by ${owner} and ${row.id}`);
+  seenPaths.set(row.path, row.id);
+
+  if (row.provenance === "unverified-local" && (row.canonicalPage || row.sourcePage)) {
+    fail("catalog-provenance", `${row.id} is marked unverified but carries a source`);
+  }
 }
 
-if (existsSync(join(ROOT, "assets/source-manifest.json"))) {
-  fail("catalog-monolith", "assets/source-manifest.json still exists; the catalog is assets/catalog/");
+if (existsSync(join(ROOT, "assets"))) {
+  fail("stray-assets-tree", "assets/ is back; art lives in public/, provenance in asset-catalog/");
 }
 
-// --- catalogued files exist ------------------------------------------------
+// --- every catalogued row points at a real file ----------------------------
 for (const row of catalog.assets) {
   if (!row.path) continue;
   if (!KNOWN_EXT.some((ext) => existsSync(join(ROOT, row.path + ext)))) {
     fail("catalog-missing-file", `${row.id}: no file at ${row.path}.{${KNOWN_EXT.join(",")}}`);
   }
+  for (const also of row.alsoAt ?? []) {
+    if (!existsSync(join(ROOT, also))) {
+      fail("catalog-missing-file", `${row.id}: alsoAt points at nothing: ${also}`);
+    }
+  }
 }
 
-// --- publish plan ----------------------------------------------------------
-const { targets, collisions, sourceFiles } = await planPublish(ROOT);
-for (const c of collisions) {
-  fail(c.reason === "case collision" ? "publish-case-collision" : "publish-collision", `${c.target} <- ${c.sources.join(" AND ")}`);
+// --- the tree --------------------------------------------------------------
+const files = [];
+for (const tree of TREES) {
+  for (const abs of await walk(join(ROOT, tree))) {
+    files.push({ path: `${tree}/${fwd(relative(join(ROOT, tree), abs))}`, abs });
+  }
 }
-const publishedSources = new Set([...targets.values()].map((t) => t.sourcePath));
 
-// --- uncatalogued source art ----------------------------------------------
+const lowered = new Map();
+for (const file of files) {
+  const key = file.path.toLowerCase();
+  const prior = lowered.get(key);
+  if (prior && prior !== file.path) fail("case-collision", `${prior} vs ${file.path}`);
+  lowered.set(key, file.path);
+}
+
 const catalogued = new Set(catalog.assets.map((row) => row.path?.toLowerCase()));
-const uncatalogued = sourceFiles.filter(
-  (f) => IMAGE_RE.test(f.rel) && !catalogued.has(f.path.replace(IMAGE_RE, "").toLowerCase()),
+for (const row of catalog.assets) {
+  for (const also of row.alsoAt ?? []) catalogued.add(also.replace(IMAGE_RE, "").toLowerCase());
+}
+const uncatalogued = files.filter(
+  (f) => IMAGE_RE.test(f.path) && !catalogued.has(f.path.replace(IMAGE_RE, "").toLowerCase()),
 );
 if (uncatalogued.length) {
-  warn("catalog-coverage", `${uncatalogued.length} source images have no catalog row`);
+  warn("catalog-coverage", `${uncatalogued.length} images have no provenance row`);
   if (VERBOSE) for (const f of uncatalogued.slice(0, 40)) warn("catalog-coverage", `  ${f.path}`);
 }
 
 // --- duplicates ------------------------------------------------------------
-// Only served art must be unique. Duplication inside raw/ and variants/ is the
-// record of which version won, so it is reported but never a failure.
+// One picture can legitimately sit at two URLs when two resolvers want it in
+// different places; the catalog's `alsoAt` records those. Anything else is
+// unaccounted-for duplication.
+const declared = new Set();
+for (const row of catalog.assets) {
+  for (const also of row.alsoAt ?? []) declared.add(also.toLowerCase());
+}
+
 const byHash = new Map();
-for (const file of sourceFiles) {
-  if (!IMAGE_RE.test(file.rel)) continue;
+for (const file of files) {
+  if (!IMAGE_RE.test(file.path)) continue;
   const hash = createHash("sha256").update(readFileSync(file.abs)).digest("hex");
   if (!byHash.has(hash)) byHash.set(hash, []);
   byHash.get(hash).push(file.path);
 }
-const duplicates = [...byHash.values()].filter((group) => group.length > 1);
-const servedDuplicates = duplicates.filter(
-  (group) => group.filter((path) => publishedSources.has(path)).length > 1,
-);
-const archivalDuplicates = duplicates.length - servedDuplicates.length;
 
-if (servedDuplicates.length) {
+const undeclared = [];
+for (const group of byHash.values()) {
+  if (group.length < 2) continue;
+  const unaccounted = group.filter((p) => !declared.has(p.toLowerCase()));
+  if (unaccounted.length > 1) undeclared.push(group);
+}
+if (undeclared.length) {
   fail(
-    "duplicate-source",
-    `${servedDuplicates.length} published group(s), ${servedDuplicates.reduce((n, g) => n + g.length - 1, 0)} redundant files`,
+    "duplicate-undeclared",
+    `${undeclared.length} byte-identical group(s) with no alsoAt row explaining them`,
   );
-  for (const group of servedDuplicates.slice(0, VERBOSE ? 200 : 5)) {
-    fail("duplicate-source", `  ${group.join("  ==  ")}`);
+  for (const group of undeclared.slice(0, VERBOSE ? 200 : 5)) {
+    fail("duplicate-undeclared", `  ${group.join("  ==  ")}`);
   }
 }
-if (archivalDuplicates) {
-  warn("duplicate-archival", `${archivalDuplicates} group(s) inside unpublished/archival trees`);
-}
-
-// --- generated trees are not tracked ---------------------------------------
-try {
-  const tracked = execFileSync("git", ["ls-files", "public/game", "public/brand"], {
-    cwd: ROOT,
-    encoding: "utf8",
-  })
-    .split("\n")
-    .filter(Boolean);
-  if (tracked.length) {
-    fail("public-tracked", `${tracked.length} generated file(s) are tracked; public/ is build output`);
-  }
-} catch {
-  warn("public-tracked", "git unavailable; skipped");
-}
+if (declared.size) warn("duplicate-declared", `${declared.size} copies declared via alsoAt`);
 
 // --- delegated checks ------------------------------------------------------
 for (const [name, script] of [
   ["icon-index", "scripts/assets/build-icon-index.mjs --check"],
-  ["publish-mirror", "scripts/publish-assets.mjs --check"],
   ["aliases", "scripts/assets/check-aliases.mjs"],
 ]) {
   try {
@@ -150,10 +164,9 @@ for (const [name, script] of [
 }
 
 // --- report ----------------------------------------------------------------
-console.log("ASSET CHECK");
+console.log("ART CHECK");
 console.log(
-  `  catalog ${catalog.assets.length} rows across ${SHARDS.length} shard prefixes, ` +
-    `${sourceFiles.length} source files, ${targets.size} published paths`,
+  `  ${catalog.assets.length} provenance rows across ${SHARDS.length} shard prefixes, ${files.length} files in public/`,
 );
 for (const { check, detail } of warnings) console.log(`  WARN  ${check}: ${detail}`);
 for (const { check, detail } of failures) console.log(`  FAIL  ${check}: ${detail}`);

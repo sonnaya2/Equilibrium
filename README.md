@@ -68,8 +68,8 @@ npm run data:rebuild     # recreate SQLite and every generated frontend artifact
 npm run data:find -- --query "Seismic wand"
 npm run data:context -- --id item:seismic-wand --format markdown
 npm run audit:data       # rebuild plus architecture/provenance gates
-npm run assets:check     # asset pipeline gate (routing, index drift, aliases, duplicates)
-npm run assets:publish   # regenerate public/game and public/brand from assets/
+npm run art:check        # art gate (provenance, index drift, aliases, duplicates)
+npm run art:index        # regenerate src/lib/dataIconIndex.ts from public/game
 ```
 
 Tracked data is one compressed seed, SQL migrations, and small JSONL patches. Everything else — the
@@ -89,7 +89,7 @@ src/components/      shared UI
 src/lib/             browser persistence
 
 data/                compressed seed, migrations, and content patches
-assets/              sourced game media and provenance manifest
+asset-catalog/       art provenance (metadata only; the art is in public/)
 scripts/data/        SQLite pipeline, bounded query CLI, and architecture audit
 ```
 

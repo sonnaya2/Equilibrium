@@ -1,7 +1,7 @@
 /**
  * Downloads catalogued art from the RuneScape Wiki into a local cache.
  *
- * Nothing here writes assets/. The old sync script downloaded straight over the
+ * Nothing here writes public/. The old sync script downloaded straight over the
  * canonical tree, so one run could replace optimized art with a raw upstream
  * copy; fetching and importing are now separate decisions.
  *
@@ -255,5 +255,5 @@ await writeFile(
 );
 
 console.log(`\nASSET FETCH: ${fetched.length} cached, ${unresolved.length} unresolved`);
-console.log("Promote with: npm run assets:import -- <asset-id>...");
+console.log("Promote with: npm run art:import -- <asset-id>...");
 if (unresolved.length) process.exitCode = 2;

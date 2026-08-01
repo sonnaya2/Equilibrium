@@ -1,15 +1,16 @@
 /**
- * Reads the sharded asset provenance catalog under assets/catalog/.
+ * Reads the sharded art provenance catalog under asset-catalog/.
  *
- * One 1.1 MB file made every asset change an unreviewable diff. The catalog is
- * split by domain instead; this is the only place that knows the layout, so
- * readers do not care how many files it is spread across.
+ * One 1.1 MB file made every change an unreviewable diff. The catalog is split
+ * by domain instead; this is the only place that knows the layout, so readers
+ * do not care how many files it is spread across. The art itself lives in
+ * public/ - this is metadata about it, not a second copy of it.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 
 const ROOT = process.cwd();
-const CATALOG_DIR = join(ROOT, "assets/catalog");
+const CATALOG_DIR = join(ROOT, "asset-catalog");
 
 /** category prefix -> shard file. Longest matching prefix wins. */
 export const SHARDS = [

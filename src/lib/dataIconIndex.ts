@@ -1,4 +1,4 @@
-/** Generated from assets/ by scripts/assets/build-icon-index.mjs - do not hand-edit. */
+/** Generated from public/game by scripts/assets/build-icon-index.mjs - do not hand-edit. */
 export const UPGRADE_ICON_BY_SLUG: Record<string, string> = {
   "chaos-roar": "ability-codices/chaos-roar.webp",
   "codex-ultimatus": "ability-codices/codex-ultimatus.webp",

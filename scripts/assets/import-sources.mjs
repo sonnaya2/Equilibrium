@@ -1,5 +1,5 @@
 /**
- * Promotes cached downloads into assets/, optimizing on the way in.
+ * Promotes cached downloads into public/game, optimizing on the way in.
  *
  * Requires explicit asset ids. Re-importing the whole catalog is what used to
  * silently overwrite optimized art with raw upstream copies, so there is no
@@ -28,7 +28,7 @@ if (!ids.length) {
   process.exit(1);
 }
 if (!existsSync(MANIFEST)) {
-  console.error("No .asset-cache/fetched.json - run npm run assets:fetch first.");
+  console.error("No .asset-cache/fetched.json - run npm run art:fetch first.");
   process.exit(1);
 }
 
@@ -88,7 +88,7 @@ for (const raw of ids) {
   imported++;
 }
 
-console.log(`ASSET IMPORT: ${imported}/${ids.length} into assets/`);
-console.log("Next: npm run assets:index && npm run assets:publish && npm run assets:check");
+console.log(`ART IMPORT: ${imported}/${ids.length} into public/`);
+console.log("Next: npm run art:index && npm run art:check");
 if (imported !== ids.length) process.exitCode = 1;
 await writeFile(join(ROOT, ".asset-cache/last-import.json"), `${JSON.stringify({ ids, imported }, null, 2)}\n`);

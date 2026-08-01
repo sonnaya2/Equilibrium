@@ -1,0 +1,441 @@
+[
+  {
+    "id": "catalyst-item-abyssal-conduit",
+    "label": "Abyssal conduit",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/abyssal-conduit",
+    "search": "Abyssal conduit Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Abyssal_conduit"
+  },
+  {
+    "id": "catalyst-item-bankers-note",
+    "label": "Bankers Note",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/bankers-note",
+    "search": "Bankers Note Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Bankers_Note"
+  },
+  {
+    "id": "catalyst-item-brooch-elder-gods",
+    "label": "Brooch of the Elder Gods",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/brooch-of-the-elder-gods",
+    "fileTitle": "Brooch of the Gods.png",
+    "search": "Brooch of the Elder Gods inventory",
+    "canonicalPage": "https://runescape.wiki/w/Brooch_of_the_Gods"
+  },
+  {
+    "id": "catalyst-item-clue-gear-crate",
+    "label": "Crate of clue gear",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/crate-of-clue-gear",
+    "search": "Crate of clue gear Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Crate_of_clue_gear"
+  },
+  {
+    "id": "catalyst-item-elder-eof",
+    "label": "Elder Essence of Finality amulet",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/elder-essence-of-finality",
+    "search": "Elder Essence of Finality amulet Catalyst inventory",
+    "canonicalPage": "https://runescape.wiki/w/Elder_Essence_of_Finality_amulet"
+  },
+  {
+    "id": "catalyst-item-elder-god-book",
+    "label": "Elder God Book",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/elder-god-book",
+    "search": "Elder God Book Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Elder_God_Book"
+  },
+  {
+    "id": "catalyst-item-fairy-mushroom",
+    "label": "Fairy mushroom",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/fairy-mushroom",
+    "search": "Fairy mushroom Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Fairy_mushroom"
+  },
+  {
+    "id": "catalyst-item-goldenhawk-boots",
+    "label": "Goldenhawk boots",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/goldenhawk-boots",
+    "search": "Goldenhawk boots Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Goldenhawk_boots"
+  },
+  {
+    "id": "catalyst-item-hatchet-divinity",
+    "label": "Hatchet of Divinity",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/hatchet-of-divinity",
+    "search": "Hatchet of Divinity inventory",
+    "canonicalPage": "https://runescape.wiki/w/Hatchet_of_Divinity"
+  },
+  {
+    "id": "catalyst-item-pickaxe-ages",
+    "label": "Pickaxe of the Ages",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/pickaxe-of-the-ages",
+    "search": "Pickaxe of the Ages inventory",
+    "canonicalPage": "https://runescape.wiki/w/Pickaxe_of_the_Ages"
+  },
+  {
+    "id": "catalyst-item-skull-slaying",
+    "label": "Skull of Slaying",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/skull-of-slaying",
+    "search": "Skull of Slaying inventory",
+    "canonicalPage": "https://runescape.wiki/w/Skull_of_Slaying"
+  },
+  {
+    "id": "catalyst-item-trappers-harpoon",
+    "label": "Trapper's harpoon",
+    "category": "leagues/catalyst/items",
+    "path": "public/game/leagues/catalyst/items/trappers-harpoon",
+    "search": "Trapper's harpoon Catalyst League inventory",
+    "canonicalPage": "https://runescape.wiki/w/Trapper%27s_harpoon"
+  },
+  {
+    "id": "catalyst-official-page-art",
+    "label": "Catalyst official page art",
+    "category": "leagues/catalyst/official",
+    "path": "public/game/leagues/catalyst/official/hero",
+    "type": "page-og",
+    "canonicalPage": "https://rs.runescape.com/leagues",
+    "pageUrl": "https://rs.runescape.com/leagues",
+    "attribution": "Jagex / RuneScape"
+  },
+  {
+    "id": "catalyst-relic-animal-wrangler",
+    "label": "Animal Wrangler",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t1-animal-wrangler",
+    "search": "Catalyst League Animal Wrangler relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Animal_Wrangler"
+  },
+  {
+    "id": "catalyst-relic-ascension",
+    "label": "Ascension",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t7-ascension",
+    "search": "Catalyst League Ascension relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Ascension"
+  },
+  {
+    "id": "catalyst-relic-assassins-insight",
+    "label": "Assassin's Insight",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t3-assassins-insight",
+    "search": "Catalyst League Assassin's Insight relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Assassin%27s_Insight"
+  },
+  {
+    "id": "catalyst-relic-bankers-note",
+    "label": "Banker's Note",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t6-bankers-note",
+    "search": "Catalyst League Banker's Note relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Banker%27s_Note"
+  },
+  {
+    "id": "catalyst-relic-barbarism",
+    "label": "Barbarism",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t5-barbarism",
+    "search": "Catalyst League Barbarism relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Barbarism"
+  },
+  {
+    "id": "catalyst-relic-bombardment",
+    "label": "Bombardment",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t5-bombardment",
+    "search": "Catalyst League Bombardment relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Bombardment"
+  },
+  {
+    "id": "catalyst-relic-clue-connoisseur",
+    "label": "Clue Connoisseur",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t4-clue-connoisseur",
+    "search": "Catalyst League Clue Connoisseur relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Clue_Connoisseur"
+  },
+  {
+    "id": "catalyst-relic-crit-happens",
+    "label": "Crit Happens",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t5-crit-happens",
+    "search": "Catalyst League Crit Happens relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Crit_Happens"
+  },
+  {
+    "id": "catalyst-relic-divine-woodcutter",
+    "label": "Divine Woodcutter",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t1-divine-woodcutter",
+    "search": "Catalyst League Divine Woodcutter relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Divine_Woodcutter"
+  },
+  {
+    "id": "catalyst-relic-everlasting-faith",
+    "label": "Everlasting Faith",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t7-everlasting-faith",
+    "search": "Catalyst League Everlasting Faith relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Everlasting_Faith"
+  },
+  {
+    "id": "catalyst-relic-excavator",
+    "label": "Excavator",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t1-excavator",
+    "search": "Catalyst League Excavator relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Excavator"
+  },
+  {
+    "id": "catalyst-relic-fairys-flight",
+    "label": "Fairy's Flight",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t3-fairys-flight",
+    "search": "Catalyst League Fairy's Flight relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Fairy%27s_Flight"
+  },
+  {
+    "id": "catalyst-relic-farming-frenzy",
+    "label": "Farming Frenzy",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t2-farming-frenzy",
+    "search": "Catalyst League Farming Frenzy relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Farming_Frenzy"
+  },
+  {
+    "id": "catalyst-relic-five-finger-discount",
+    "label": "Five Finger Discount",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t2-five-finger-discount",
+    "search": "Catalyst League Five Finger Discount relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Five_Finger_Discount"
+  },
+  {
+    "id": "catalyst-relic-golden-footed",
+    "label": "Golden Footed",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t2-golden-footed",
+    "search": "Catalyst League Golden Footed relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Golden_Footed"
+  },
+  {
+    "id": "catalyst-relic-perkfection",
+    "label": "Perkfection",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t6-perkfection",
+    "search": "Catalyst League Perkfection relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Perkfection"
+  },
+  {
+    "id": "catalyst-relic-production-master",
+    "label": "Production Master",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t4-production-master",
+    "search": "Catalyst League Production Master relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Production_Master"
+  },
+  {
+    "id": "catalyst-relic-rejuvenated",
+    "label": "Rejuvenated",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t4-rejuvenated",
+    "search": "Catalyst League Rejuvenated relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Rejuvenated"
+  },
+  {
+    "id": "catalyst-relic-soulbourne",
+    "label": "Soulbourne",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t5-soulbourne",
+    "search": "Catalyst League Soulbourne relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Soulbourne"
+  },
+  {
+    "id": "catalyst-relic-specialist",
+    "label": "Specialist",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t7-specialist",
+    "search": "Catalyst League Specialist relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Specialist"
+  },
+  {
+    "id": "catalyst-relic-voidwalker",
+    "label": "Voidwalker",
+    "category": "leagues/catalyst/relics",
+    "path": "public/game/leagues/catalyst/relics/t3-voidwalker",
+    "search": "Catalyst League Voidwalker relic",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Relics#Voidwalker"
+  },
+  {
+    "id": "catalyst-scroll-bloat",
+    "label": "Catalyst override scroll (shared placeholder art)",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/bloat-scroll",
+    "search": "Catalyst Bloat scroll inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_Bloat_scroll",
+    "alsoAt": [
+      "public/game/leagues/catalyst/overrides/detonate-scroll.webp",
+      "public/game/leagues/catalyst/overrides/flurry-scroll.webp",
+      "public/game/leagues/catalyst/overrides/reflect-scroll.webp",
+      "public/game/leagues/catalyst/overrides/snap-shot-scroll.webp"
+    ],
+    "aliases": [
+      "catalyst-scroll-detonate",
+      "catalyst-scroll-flurry",
+      "catalyst-scroll-reflect",
+      "catalyst-scroll-snapshot"
+    ]
+  },
+  {
+    "id": "catalyst-token-aura",
+    "label": "Catalyst Aura token",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/aura-token",
+    "search": "Catalyst aura token inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_aura_token"
+  },
+  {
+    "id": "catalyst-token-harpoon",
+    "label": "Catalyst Harpoon token",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/harpoon-token",
+    "search": "Catalyst Harpoon token inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_Harpoon_token"
+  },
+  {
+    "id": "catalyst-token-hatchet",
+    "label": "Catalyst Hatchet token",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/hatchet-token",
+    "search": "Catalyst Hatchet token inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_Hatchet_token"
+  },
+  {
+    "id": "catalyst-token-meditate-rest",
+    "label": "Catalyst meditate rest token",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/meditate-rest-token",
+    "search": "Catalyst meditate rest token inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_meditate_rest_token"
+  },
+  {
+    "id": "catalyst-token-pickaxe",
+    "label": "Catalyst Pickaxe token",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/pickaxe-token",
+    "search": "Catalyst Pickaxe token inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_Pickaxe_token"
+  },
+  {
+    "id": "catalyst-token-teleport",
+    "label": "Catalyst teleport token",
+    "category": "leagues/catalyst/overrides",
+    "path": "public/game/leagues/catalyst/overrides/teleport-token",
+    "search": "Catalyst teleport token inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_teleport_token"
+  },
+  {
+    "id": "catalyst-trophy-adamant",
+    "label": "Catalyst adamant trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/adamant",
+    "search": "Catalyst adamant trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_adamant_trophy"
+  },
+  {
+    "id": "catalyst-trophy-bronze",
+    "label": "Catalyst bronze trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/bronze",
+    "search": "Catalyst bronze trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_bronze_trophy"
+  },
+  {
+    "id": "catalyst-trophy-dragon",
+    "label": "Catalyst dragon trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/dragon",
+    "search": "Catalyst dragon trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_dragon_trophy"
+  },
+  {
+    "id": "catalyst-trophy-iron",
+    "label": "Catalyst iron trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/iron",
+    "search": "Catalyst iron trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_iron_trophy"
+  },
+  {
+    "id": "catalyst-trophy-mithril",
+    "label": "Catalyst mithril trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/mithril",
+    "search": "Catalyst mithril trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_mithril_trophy"
+  },
+  {
+    "id": "catalyst-trophy-rune",
+    "label": "Catalyst rune trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/rune",
+    "search": "Catalyst rune trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_rune_trophy"
+  },
+  {
+    "id": "catalyst-trophy-steel",
+    "label": "Catalyst steel trophy",
+    "category": "leagues/catalyst/trophies",
+    "path": "public/game/leagues/catalyst/trophies/steel",
+    "search": "Catalyst steel trophy inventory",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_steel_trophy"
+  },
+  {
+    "id": "task-tier-easy",
+    "label": "Easy task tier",
+    "category": "leagues/catalyst/tasks",
+    "path": "public/game/leagues/catalyst/tasks/easy",
+    "search": "Catalyst League Easy task icon",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Tasks"
+  },
+  {
+    "id": "task-tier-elite",
+    "label": "Elite task tier",
+    "category": "leagues/catalyst/tasks",
+    "path": "public/game/leagues/catalyst/tasks/elite",
+    "search": "Catalyst League Elite task icon",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Tasks"
+  },
+  {
+    "id": "task-tier-hard",
+    "label": "Hard task tier",
+    "category": "leagues/catalyst/tasks",
+    "path": "public/game/leagues/catalyst/tasks/hard",
+    "search": "Catalyst League Hard task icon",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Tasks"
+  },
+  {
+    "id": "task-tier-master",
+    "label": "Master task tier",
+    "category": "leagues/catalyst/tasks",
+    "path": "public/game/leagues/catalyst/tasks/master",
+    "search": "Catalyst League Master task icon",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Tasks"
+  },
+  {
+    "id": "task-tier-medium",
+    "label": "Medium task tier",
+    "category": "leagues/catalyst/tasks",
+    "path": "public/game/leagues/catalyst/tasks/medium",
+    "search": "Catalyst League Medium task icon",
+    "canonicalPage": "https://runescape.wiki/w/Catalyst_League/Tasks"
+  }
+]

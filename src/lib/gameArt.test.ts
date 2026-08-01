@@ -36,10 +36,9 @@ describe("gameArt", () => {
   it("every style icon is published to public/game", () => {
     for (const style of Object.keys(STYLE_ICON) as Array<keyof typeof STYLE_ICON>) {
       const path = styleIconPath(style);
-      expect(
-        existsSync(join(PUBLIC, path)),
-        `${path} not published — run npm run assets:publish`,
-      ).toBe(true);
+      expect(existsSync(join(PUBLIC, path)), `${path} not published — run npm run art:index`).toBe(
+        true,
+      );
     }
   });
 

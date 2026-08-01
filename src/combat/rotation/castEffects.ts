@@ -4,6 +4,7 @@ import {
   spendBloodlust,
 } from "../styles/melee/bloodlust";
 import {
+  BLEED_CHAIN_RECAST_WINDOW_TICKS,
   CHAOS_ROAR_DURATION_SECONDS,
   GREATER_FURY_CRIT_WINDOW_SECONDS,
   isMeleeAbility,
@@ -218,6 +219,18 @@ export function applyCastEffects(
 
   if (ability.style === "melee" && working.hits.length > 0) {
     rt.state = { ...rt.state, lastMeleeCastTick: candidate };
+  }
+
+  // Dismember chain: each stage unlocks the next for 40 ticks; completing
+  // Massacre resets it.
+  if (melee?.enables === "slaughter" || melee?.enables === "massacre") {
+    rt.state = {
+      ...rt.state,
+      bleedChainNext: melee.enables,
+      bleedChainUntilTick: candidate + BLEED_CHAIN_RECAST_WINDOW_TICKS,
+    };
+  } else if (melee?.recastOf) {
+    rt.state = { ...rt.state, bleedChainNext: null, bleedChainUntilTick: 0 };
   }
 
   if (ability.style === "ranged") {

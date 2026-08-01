@@ -44,6 +44,13 @@ function buffMultiplier(id: string, multiplier: number, source: SourceReference)
   };
 }
 
+/** Buff windows that never apply to damage over time (wiki DoT rules). */
+const DOT_IGNORED_MODIFIER_IDS = new Set([
+  "buff:berserk",
+  "buff:deaths_swiftness",
+  "buff:sunshine",
+]);
+
 /**
  * What a cast captured at cast time for its scheduled hits. Time-windowed
  * globals (Berserk, Swiftness, Sunshine) are NOT here — they read state at the
@@ -161,7 +168,12 @@ export function resolveCastHit(
   snap: CastSnapshot,
 ): ResolvedDamage {
   const { input, state } = rt;
-  const modifiers = [...snap.baseMods];
+  // Wiki DoT rules (Dismember/Slaughter/Massacre pages, verified 2026-07-31):
+  // damage over time ignores damage-boosting prayers and the Berserk / Death's
+  // Swiftness / Sunshine windows. Chaos Roar's bleed boost is the sourced
+  // explicit exception; Vulnerability and base-stage effects still apply.
+  const isDotTick = hitSpec.critEligible === false && (hitSpec.tickOffset ?? 0) > 0;
+  let modifiers = [...snap.baseMods];
   if (snap.chaosRoarActive && (!snap.channelled || hitIndex === 0)) {
     modifiers.push(
       buffMultiplier("buff:chaos_roar", CHAOS_ROAR_DAMAGE_MULTIPLIER, MODERNISATION_WIKI),
@@ -189,6 +201,11 @@ export function resolveCastHit(
     sunshineActive(state.sunshine, at)
   ) {
     modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
+  }
+  if (isDotTick) {
+    modifiers = modifiers.filter(
+      (m) => !m.id.startsWith("prayer:") && !DOT_IGNORED_MODIFIER_IDS.has(m.id),
+    );
   }
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
   const crit: CritLayers = {
@@ -238,6 +255,26 @@ export function resolveCastHit(
     expected += bonus.expected;
   }
   return { min, max, expected, critExpected: (hit.critMin + hit.critMax) / 2 };
+}
+
+/**
+ * Resolve a derived hit (Bloat tail, Death Skulls bounce): a fraction of the
+ * source hit's RESOLVED damage — crit boost included, never re-modified, never
+ * crit itself (wiki Bloat / Death Skulls, verified 2026-07-31). min/max span
+ * the source's non-crit min to its crit max; expected is the source's.
+ */
+export function resolveDerivedHit(
+  rt: SimulationRuntime,
+  sourceSeq: number,
+  fractionPct: number,
+): ResolvedDamage {
+  const source = rt.hitDetails.get(sourceSeq);
+  if (!source) return { min: 0, max: 0, expected: 0 };
+  return {
+    min: Math.floor((source.min * fractionPct) / 100),
+    max: Math.floor((source.critMax * fractionPct) / 100),
+    expected: (source.expected * fractionPct) / 100,
+  };
 }
 
 /**

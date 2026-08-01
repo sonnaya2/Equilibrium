@@ -68,6 +68,20 @@ export interface NecromancyAbilitySpec extends AbilitySpec {
   soulCost?: number;
   /** Chance to generate a Residual Soul per target (Spectral Scythe = 0.25). */
   soulChance?: number;
+  /**
+   * Hits derived from the resolved FIRST hit at this fraction of it (wiki:
+   * Bloat tails = 25% of the initial hit; Death Skulls bounces = 100%).
+   * They inherit the source hit's crit-boosted damage, never crit themselves,
+   * and are never re-modified.
+   */
+  derivedHits?: {
+    count: number;
+    intervalTicks: number;
+    firstOffset: number;
+    fractionPct: number;
+    /** Damage-over-time tails (Bloat) vs direct derived hits (Death Skulls). */
+    dot: boolean;
+  };
   source: SourceReference;
 }
 
@@ -180,15 +194,23 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: FINGER_OF_DEATH_WIKI,
   },
   {
-    // Single-target model: 3 hits of 225–275% (675–825% total). Bounce path and
-    // crit-linked secondary hits are target/sim territory, not cast data.
+    // Single-target: initial hit + 2 damaging bounces at 2-tick intervals
+    // (monster → player → monster → player → monster; player hops deal nothing).
+    // Each bounce deals 100% of the resolved initial hit — crit inheritance
+    // (wiki: "if the initial hit was a critical hit, the remaining hits will
+    // also be critical hits"). Igneous capes (+2 bounces) are not modeled.
     id: "death_skulls",
     name: "Death Skulls",
     style: "necromancy",
     category: "ultimate",
-    hits: Array.from({ length: DEATH_SKULLS_SINGLE_TARGET_HITS }, () => ({
-      band: { ...DEATH_SKULLS_BAND },
-    })),
+    hits: [{ band: { ...DEATH_SKULLS_BAND } }],
+    derivedHits: {
+      count: DEATH_SKULLS_SINGLE_TARGET_HITS - 1,
+      intervalTicks: 2,
+      firstOffset: 2,
+      fractionPct: 100,
+      dot: false,
+    },
     adrenaline: { cost: DEATH_SKULLS_BASE_COST_PCT },
     cooldownSeconds: DEATH_SKULLS_COOLDOWN_SECONDS,
     source: DEATH_SKULLS_WIKI,
@@ -237,23 +259,21 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
-    // Initial hit + 10 DoT hits of 25% of initial damage every 3 ticks.
-    // DoT inherits the initial hit's crit damage boost but is crit-ineligible.
+    // Initial hit + 10 DoT tails every 3 ticks, each 25% of the RESOLVED initial
+    // hit (crit boost included; the tails themselves never crit and are never
+    // re-modified — wiki Bloat, verified 2026-07-31).
     id: "bloat",
     name: "Bloat",
     style: "necromancy",
     category: "enhanced",
-    hits: [
-      { band: { ...BLOAT_INITIAL_BAND } },
-      ...Array.from({ length: BLOAT_DOT_HITS }, (_, i) => ({
-        band: {
-          minPct: BLOAT_INITIAL_BAND.minPct * BLOAT_DOT_FRACTION,
-          maxPct: BLOAT_INITIAL_BAND.maxPct * BLOAT_DOT_FRACTION,
-        },
-        critEligible: false,
-        tickOffset: (i + 1) * BLOAT_DOT_TICK_INTERVAL,
-      })),
-    ],
+    hits: [{ band: { ...BLOAT_INITIAL_BAND } }],
+    derivedHits: {
+      count: BLOAT_DOT_HITS,
+      intervalTicks: BLOAT_DOT_TICK_INTERVAL,
+      firstOffset: BLOAT_DOT_TICK_INTERVAL,
+      fractionPct: BLOAT_DOT_FRACTION * 100,
+      dot: true,
+    },
     adrenaline: { cost: 20 },
     source: BLOAT_WIKI,
   },

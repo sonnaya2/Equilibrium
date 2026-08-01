@@ -24,6 +24,11 @@ export interface MeleeAbilitySpec extends AbilitySpec {
   channelled?: boolean;
   /** Bleed-chain enabler: Dismember -> Slaughter -> Massacre. */
   enables?: string;
+  /**
+   * Bleed-chain predecessor this cast needs live (Slaughter needs Dismember,
+   * Massacre needs Slaughter, within the 40-tick recast window).
+   */
+  recastOf?: "dismember" | "slaughter";
   source: SourceReference;
 }
 
@@ -42,6 +47,8 @@ export const CHAOS_ROAR_DAMAGE_MULTIPLIER = 1.75;
 export const CHAOS_ROAR_DURATION_SECONDS = 7.2;
 export const GREATER_FURY_CRIT_WINDOW_SECONDS = 15;
 export const METEOR_STRIKE_ADREN_BUFF_SECONDS = 30;
+/** Dismember chain: a recast must land within this window of the previous cast. */
+export const BLEED_CHAIN_RECAST_WINDOW_TICKS = 40;
 
 export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {
@@ -205,6 +212,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     })),
     adrenaline: { cost: 25 },
     enables: "massacre",
+    recastOf: "dismember",
     source: wikiAbility("Slaughter", "Slaughter"),
   },
   {
@@ -221,6 +229,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
       })),
     ],
     adrenaline: { cost: 25 },
+    recastOf: "slaughter",
     source: wikiAbility("Massacre", "Massacre"),
   },
   {

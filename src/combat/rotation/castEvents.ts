@@ -5,9 +5,10 @@ import {
   COMMAND_REQUIRES_CONJURE,
   COMMAND_SKELETON_EXPIRY_TAIL_TICKS,
 } from "../styles/necromancy/conjures";
+import { isNecromancyAbility } from "../styles/necromancy/abilities";
 import type { PreparedCast } from "./castPreparation";
 import type { CastRecord } from "./contracts";
-import { resolveCastHit, resolveLightningSurge } from "./resolution";
+import { resolveCastHit, resolveDerivedHit, resolveLightningSurge } from "./resolution";
 import { scheduleEvent, type SimulationRuntime } from "./runtime";
 
 /**
@@ -74,6 +75,28 @@ export function scheduleCastEvents(
       resolve: (eventRt, at) => resolveCastHit(eventRt, at, seq, hitSpec, hitIndex, ability, snap),
     });
   });
+
+  // Derived hits (Bloat tails, Death Skulls bounces): each is a fraction of the
+  // resolved first hit, scheduled with provenance back to it.
+  const derived = isNecromancyAbility(ability) ? ability.derivedHits : undefined;
+  if (derived && hitSeqs.length > 0) {
+    const sourceSeq = hitSeqs[0]!;
+    for (let i = 0; i < derived.count; i++) {
+      scheduleEvent(rt, {
+        tick: candidate + derived.firstOffset + i * derived.intervalTicks,
+        family: derived.dot ? "dot" : "hit",
+        abilityId: ability.id,
+        sourceCast: castSeq,
+        hitIndex: i + 1,
+        attached: false,
+        procEligible: !derived.dot,
+        recursionAllowed: false,
+        cancelOwner: castSeq,
+        derivedFrom: sourceSeq,
+        resolve: (eventRt) => resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct),
+      });
+    }
+  }
 
   // Instability: Lightning Surge on Magic crits while the buff is active. The
   // granting cast's own hits predate the buff and never fire a surge (checked

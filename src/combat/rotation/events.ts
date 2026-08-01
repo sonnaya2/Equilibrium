@@ -25,6 +25,8 @@ export interface ScheduledEvent<RT = unknown> {
   procEligible: boolean; // may trigger on-hit procs / stack generation / hit counters
   recursionAllowed: boolean; // may recursively create events of the same family
   cancelOwner?: number; // cast sequence whose cancellation removes this event
+  /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
+  derivedFrom?: number;
   resolve: (rt: RT, landTick: number) => ResolvedDamage; // computes damage AT LAND TIME
 }
 

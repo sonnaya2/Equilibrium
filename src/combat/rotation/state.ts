@@ -75,6 +75,13 @@ export interface RotationState {
    * cast after >= 8 idle ticks; next channelled melee inside the window consumes it.
    */
   endlessAssaultUntilTick: number;
+  /**
+   * Dismember recast chain (wiki: "Can be recast within 24s (40 ticks) of the
+   * previous cast"): the unlocked follow-up stage and its window end.
+   * null/0 = no live chain.
+   */
+  bleedChainNext: "slaughter" | "massacre" | null;
+  bleedChainUntilTick: number;
   /** Sunshine / Greater Sunshine zone buff window (starts 1 tick after cast). */
   sunshine: SunshineState;
   /** Instability (FSOA): Lightning Surge on Magic crit while active. */
@@ -107,6 +114,8 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     meteorStrikeUntilTick: 0,
     lastMeleeCastTick: -1,
     endlessAssaultUntilTick: 0,
+    bleedChainNext: null,
+    bleedChainUntilTick: 0,
     sunshine: newSunshine(),
     instability: newInstability(),
     ranged: {

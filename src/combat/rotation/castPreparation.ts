@@ -79,6 +79,13 @@ export function prepareCast(
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necro, candidate);
   }
+  // Planted Feet: base Sunshine's duration extends (handled in castEffects) but
+  // its periodic beam damage is removed — schedule no DoT events at all (wiki:
+  // "they no longer deal periodic damage to your target"). Greater variants
+  // and Death's Swiftness (no periodic hits since 16 Mar 2026) are unaffected.
+  if (ability.appliesEffect === "sunshine" && input.plantedFeet) {
+    working = { ...working, hits: [] };
+  }
 
   const meleeIdleTicks =
     ability.style === "melee" && working.hits.length > 0 && rt.state.lastMeleeCastTick >= 0

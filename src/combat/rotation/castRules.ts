@@ -1,5 +1,6 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { isMagicAbility } from "../styles/magic/abilities";
+import { isMeleeAbility } from "../styles/melee/abilities";
 import { animaCharged } from "../styles/magic/runicCharge";
 import { necroAdrenalineCost, necroCanCast } from "../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../styles/ranged/onHit";
@@ -60,6 +61,12 @@ export function castRejection(
   }
   if (!necroCanCast(ability, state.necro, state.conjures, candidate)) {
     return `${ability.id} needs residual souls or an active conjure, ${state.necro.residualSouls} souls available at tick ${candidate}`;
+  }
+  const recastOf = isMeleeAbility(ability) ? ability.recastOf : undefined;
+  if (recastOf && (state.bleedChainNext !== ability.id || candidate >= state.bleedChainUntilTick)) {
+    return `${ability.id} needs ${recastOf} cast within the last 40 ticks (chain ${
+      state.bleedChainNext ?? "none"
+    } at tick ${candidate})`;
   }
   const cost = costOf(state, ability, candidate);
   if (cost > state.adrenaline) {

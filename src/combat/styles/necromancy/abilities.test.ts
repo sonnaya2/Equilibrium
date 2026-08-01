@@ -3,6 +3,7 @@ import { calculateAbility } from "../../pipeline/calculateAbility";
 import {
   BLOAT_DOT_FRACTION,
   BLOAT_DOT_HITS,
+  BLOAT_DOT_TICK_INTERVAL,
   BLOAT_INITIAL_BAND,
   BLOOD_SIPHON_FINAL_BAND,
   COMMAND_PHANTOM_GUARDIAN_BAND,
@@ -60,22 +61,31 @@ describe("necromancy ability data", () => {
     expect(tod.necrosisGain).toBe(4);
   });
 
-  it("Death Skulls single-target model is 3 × 225–275% at 60% adrenaline", () => {
+  it("Death Skulls single-target model is an initial hit plus 2 derived bounces", () => {
     const ds = NECROMANCY_ABILITIES.find((a) => a.id === "death_skulls")!;
-    expect(ds.hits).toHaveLength(DEATH_SKULLS_SINGLE_TARGET_HITS);
-    expect(ds.hits.every((h) => h.band.minPct === DEATH_SKULLS_BAND.minPct)).toBe(true);
+    expect(ds.hits).toHaveLength(1);
+    expect(ds.hits[0]!.band).toEqual({ ...DEATH_SKULLS_BAND });
+    expect(ds.derivedHits).toEqual({
+      count: DEATH_SKULLS_SINGLE_TARGET_HITS - 1,
+      intervalTicks: 2,
+      firstOffset: 2,
+      fractionPct: 100,
+      dot: false,
+    });
     expect(ds.adrenaline?.cost).toBe(60);
-    const result = calculateAbility(ds, input);
-    expect(result.min).toBe(3 * 2250);
-    expect(result.max).toBe(3 * 2750);
   });
 
-  it("Bloat is initial + 10 DoT hits at 25% of initial band", () => {
+  it("Bloat is an initial hit plus 10 derived DoT tails at 25% of it", () => {
     const bloat = NECROMANCY_ABILITIES.find((a) => a.id === "bloat")!;
-    expect(bloat.hits).toHaveLength(1 + BLOAT_DOT_HITS);
+    expect(bloat.hits).toHaveLength(1);
     expect(bloat.hits[0]!.band).toEqual({ ...BLOAT_INITIAL_BAND });
-    expect(bloat.hits.slice(1).every((h) => h.critEligible === false)).toBe(true);
-    expect(bloat.hits[1]!.band.minPct).toBe(BLOAT_INITIAL_BAND.minPct * BLOAT_DOT_FRACTION);
+    expect(bloat.derivedHits).toEqual({
+      count: BLOAT_DOT_HITS,
+      intervalTicks: BLOAT_DOT_TICK_INTERVAL,
+      firstOffset: BLOAT_DOT_TICK_INTERVAL,
+      fractionPct: BLOAT_DOT_FRACTION * 100,
+      dot: true,
+    });
     expect(bloat.adrenaline?.cost).toBe(20);
   });
 

@@ -55,7 +55,8 @@ export function channelledMightCritBonus(state: ChannelledMightState, tick: numb
  *
  * Planted Feet (base only): duration × PLANTED_FEET_DURATION_MULT → 63 ticks
  * (Math.round(50 × 1.25)); same [cast+1, cast+duration) shape. Greater: no change.
- * Planted Feet also removes periodic DoT hits in-game — not modelled here.
+ * Planted Feet also removes the periodic beam DoT — implemented in
+ * castPreparation (the cast schedules no DoT events at all).
  */
 export const SUNSHINE_DAMAGE_MULTIPLIER = 1.5;
 /** Base Sunshine beam duration in ticks (wiki: 30s / 50 ticks). */

@@ -32,6 +32,8 @@ export type PlannerRegion = {
 
 export type RelicChoice = {
   name: string;
+  /** 0 top, 1 middle, 2 bottom. Absent on fully revealed tiers, which fill in order. */
+  seat?: number | null;
   effects: string[];
   sourceUrl?: string;
   verified?: boolean;
@@ -375,7 +377,18 @@ export function BuildPlanner({
                   const open = tier.revealed && tier.choices.length > 0;
                   const seated = build.relics[String(tier.tier)] ?? null;
                   const choices = open ? tier.choices : [];
-                  const seats = Array.from({ length: SEATS }, (_, i) => choices[i] ?? null);
+                  // A partly revealed tier names its seats, so a known bottom
+                  // relic stays at the bottom instead of sliding up.
+                  const seats: Array<RelicChoice | null> = Array.from(
+                    { length: SEATS },
+                    () => null,
+                  );
+                  let next = 0;
+                  for (const choice of choices) {
+                    const index = choice.seat ?? next;
+                    if (index >= 0 && index < SEATS && !seats[index]) seats[index] = choice;
+                    next = Math.max(next, index) + 1;
+                  }
 
                   return (
                     <div

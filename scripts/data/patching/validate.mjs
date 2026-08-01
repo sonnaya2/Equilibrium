@@ -43,6 +43,7 @@ const SCHEMA = new Map([
   ["relate", { keys: ["entity", "target", "relation", "order"], required: ["entity", "target", "relation"] }],
   ["unrelate", { keys: ["entity", "target", "relation"], required: ["entity", "target", "relation"] }],
   ["remove", { keys: ["entity", "reason"], required: ["entity", "reason"] }],
+  ["set-record", { keys: ["file", "path", "body", "reason"], required: ["file", "path", "body"] }],
   [
     "add-requirement",
     { keys: ["entity", "description", "kind", "skill", "level", "target"], required: ["entity", "description"] },
@@ -141,6 +142,21 @@ const SHAPE = {
     entity: identifier(operation, "entity", context),
     reason: identifier(operation, "reason", context),
   }),
+  // Documents are rebuilt as skeleton + source records, so revealing something
+  // new in one - a relic tier, a task band - means writing the record itself.
+  // Every other operation edits an entity, which no document is assembled from.
+  "set-record": (operation, context) => {
+    const file = identifier(operation, "file", context);
+    if (!file.startsWith("data/") || file.includes("..")) {
+      fail(context, `record file must sit under data/: ${file}`);
+    }
+    const path = identifier(operation, "path", context);
+    if (!path.startsWith("$.")) fail(context, `record path must be a JSON path: ${path}`);
+    if (operation.body == null || typeof operation.body !== "object") {
+      fail(context, "set-record body must be an object");
+    }
+    return { file, path, body: operation.body, reason: scalar(operation.reason) };
+  },
   // A requirement is keyed by (entity, kind, description), so those three are
   // the whole identity — the ordinal is the database's, and the handler picks it.
   requirement: (operation, context) => {
@@ -179,6 +195,7 @@ const SHAPE_OF = new Map([
   ["relate", SHAPE.relate],
   ["unrelate", SHAPE.relate],
   ["remove", SHAPE.remove],
+  ["set-record", SHAPE["set-record"]],
   ["add-requirement", SHAPE.requirement],
   ["remove-requirement", SHAPE.requirement],
   ["add-effect", SHAPE.effect],

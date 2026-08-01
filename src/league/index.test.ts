@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import regionsData from "#shard/league/regions.json";
+import relicsData from "#shard/league/relics.json";
 import { BLESSING_RESET_COUNT, PATH_TIERS } from "./blessings";
 import {
   blessingResetsLeft,
@@ -130,21 +131,27 @@ describe("normalizeBuild", () => {
   });
 
   it("drops relic names outside revealed choices; keeps unrevealed-tier picks", () => {
+    // Tiers come from the data, not pinned numbers: every reveal moves one tier
+    // from the second group to the first, and a hardcoded tier turns that red.
+    const revealed = relicsData.records.find((tier) => tier.choices.length > 0);
+    const unrevealed = relicsData.records.find((tier) => tier.choices.length === 0);
+    if (!revealed || !unrevealed) throw new Error("needs one revealed and one unrevealed tier");
+    const open = String(revealed.tier);
+    const closed = String(unrevealed.tier);
+    const known = revealed.choices[0]!.name;
+
     expect(
       normalizeBuild({
         elective: [],
-        relics: {
-          "1": "Not A Real Relic",
-          "2": "Placeholder for unrevealed tier",
-        },
+        relics: { [open]: "Not A Real Relic", [closed]: "Placeholder for unrevealed tier" },
       }).relics,
-    ).toEqual({ "2": "Placeholder for unrevealed tier" });
+    ).toEqual({ [closed]: "Placeholder for unrevealed tier" });
     expect(
       normalizeBuild({
         elective: [],
-        relics: { "1": "Golden Touch", "2": "Still open" },
+        relics: { [open]: known, [closed]: "Still open" },
       }).relics,
-    ).toEqual({ "1": "Golden Touch", "2": "Still open" });
+    ).toEqual({ [open]: known, [closed]: "Still open" });
   });
 
   it("clamps resets to the data-owned count and caps picks at the path tier count", () => {

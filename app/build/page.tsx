@@ -60,6 +60,7 @@ export default function BuildPage() {
     sourceUrl: tier.source?.url,
     choices: tier.choices.map((choice) => ({
       name: choice.name,
+      seat: choice.seat,
       effects: choice.effects,
       sourceUrl: choice.source?.url,
       verified: choice.verified,

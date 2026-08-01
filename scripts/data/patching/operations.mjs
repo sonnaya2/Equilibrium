@@ -5,7 +5,7 @@
 // needs the database: whether a row exists, and what to write. Each returns the
 // entity IDs it changed.
 import { requireEntity } from "../database.mjs";
-import { scalar, slugify } from "../utilities.mjs";
+import { hash, scalar, slugify, stableJson } from "../utilities.mjs";
 
 // Safe to interpolate: validate.mjs copies assignment keys out of a fixed
 // allowlist of column names, so nothing caller-chosen reaches the SQL.
@@ -223,8 +223,33 @@ function tag(db, operation) {
   return [entity];
 }
 
+/**
+ * Writes one source record, the unit documents are rebuilt from.
+ *
+ * Every other handler edits an entity, and no document is assembled from those
+ * — export.mjs replays source records over a skeleton. So a reveal that adds a
+ * record, rather than amending one, has no other way in.
+ */
+function setRecord(db, operation) {
+  const { file, path, body } = operation;
+  const known = db.prepare("SELECT path FROM source_files WHERE path = ?").get(file);
+  if (!known) throw new Error(`unknown source file: ${file}`);
+  // canonical-validate reconstructs the hash as hash(stableJson(record)), so it
+  // has to be written the same way or every rebuild fails parity.
+  const raw = stableJson(body);
+  db.prepare(
+    `INSERT INTO source_records (source_file, record_path, record_hash, raw_json)
+     VALUES (?, ?, ?, ?)
+     ON CONFLICT (source_file, record_path)
+     DO UPDATE SET record_hash = excluded.record_hash, raw_json = excluded.raw_json`,
+  ).run(file, path, hash(raw), raw);
+  // Touches no entity, so it contributes nothing to the changed-entity set.
+  return [];
+}
+
 export const HANDLERS = new Map([
   ["upsert", upsertEntity],
+  ["set-record", setRecord],
   ["upsert-source", upsertSource],
   ["link-region", regionLink],
   ["unlink-region", regionLink],

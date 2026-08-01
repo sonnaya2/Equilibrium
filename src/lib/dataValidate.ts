@@ -142,6 +142,8 @@ export type RelicTierRow = {
   source?: SourceRefShape | null;
   choices: Array<{
     name: string;
+    /** 0 top, 1 middle, 2 bottom. Absent on fully revealed tiers, which fill in order. */
+    seat?: number | null;
     effects: string[];
     source?: SourceRefShape | null;
     verified?: boolean;
@@ -160,6 +162,9 @@ export function parseRelicTier(raw: unknown): RelicTierRow | null {
       if (!name) return null;
       return {
         name,
+        // Explicit once a tier is only partly revealed: without it a known
+        // bottom relic would slide up into the empty top slot.
+        seat: asNumber(c.seat),
         effects: asStringArray(c.effects),
         source: parseSourceRef(c.source),
         verified: asBoolean(c.verified),

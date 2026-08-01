@@ -1,6 +1,6 @@
-import { impatientProcChance, relentlessProcChance } from "../shared/perks";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { performCast, spendOf } from "./cast";
+import { commitCast, prepareSimulationCast } from "./cast";
+import { rngPointFor } from "./castRules";
 import type { CastRecord } from "./contracts";
 import type { SimulationRuntime } from "./runtime";
 
@@ -90,11 +90,11 @@ export function mergeBranches(branches: readonly Branch[]): Branch[] {
 }
 
 /**
- * Run one cast with its state-changing RNG enumerated. At most one RNG point
- * applies per cast (a basic never costs adrenaline): Impatient on basics,
- * Relentless on adrenaline spenders off lockout. Each outcome gets an
- * independent runtime snapshot; without an RNG point the branch continues
- * unchanged. Explicit outcomes only — performCast never rolls for itself.
+ * Run one cast with its state-changing RNG enumerated. The cast is prepared
+ * ONCE on the branch's own runtime (canonical advance + validation + prepared
+ * cast), the RNG point is read from that prepared cast, and each outcome
+ * commits the same prepared cast on a clone of the already-advanced, validated
+ * runtime. A rejected cast has no RNG outcomes — it produces one error branch.
  */
 export function castOutcomes(
   branch: Branch,
@@ -102,40 +102,31 @@ export function castOutcomes(
   readyTick: number,
   auto: boolean,
 ): Branch[] {
-  const rt = branch.rt;
-  const rules = rt.input.adrenaline;
-  const candidate = Math.max(readyTick, rt.state.tick);
-  const isBasic = ability.category === "basic" || !!ability.autoAttack;
-
-  let point: "impatient" | "relentless" | null = null;
-  let chance = 0;
-  if (isBasic && (rules?.impatientRank ?? 0) > 0) {
-    point = "impatient";
-    chance = impatientProcChance(rules!.impatientRank!, rules?.impatientLevel20);
-  } else if (
-    (rules?.relentlessRank ?? 0) > 0 &&
-    candidate >= rt.state.relentlessUntilTick &&
-    spendOf(rt, ability, candidate) > 0
-  ) {
-    point = "relentless";
-    chance = relentlessProcChance(rules!.relentlessRank!, rules?.relentlessLevel20);
-  }
+  const preparation = prepareSimulationCast(branch.rt, ability, readyTick);
+  if (!preparation.ok) return [{ ...branch, error: preparation.error }];
+  const { prepared } = preparation;
+  const point = rngPointFor(
+    branch.rt.state,
+    ability,
+    prepared.candidate,
+    prepared.spend,
+    branch.rt.input.adrenaline,
+  );
 
   if (!point) {
-    const attempt = performCast(rt, ability, readyTick, auto);
-    return attempt.ok ? [branch] : [{ ...branch, error: attempt.error }];
+    commitCast(branch.rt, prepared, auto);
+    return [branch];
   }
-  const rngKey = point === "impatient" ? ("impatientProc" as const) : ("relentlessProc" as const);
+  const rngKey = point.kind === "impatient" ? ("impatientProc" as const) : ("relentlessProc" as const);
   return [
-    { proc: true, outcomeWeight: chance },
-    { proc: false, outcomeWeight: 1 - chance },
+    { proc: true, outcomeWeight: point.chance },
+    { proc: false, outcomeWeight: 1 - point.chance },
   ].map(({ proc, outcomeWeight }) => {
     const next = snapshotRuntime(branch.rt);
-    const attempt = performCast(next, ability, readyTick, auto, { [rngKey]: proc });
+    commitCast(next, prepared, auto, { [rngKey]: proc });
     return {
       weight: branch.weight * outcomeWeight,
       rt: next,
-      ...(attempt.ok ? {} : { error: attempt.error }),
     };
   });
 }

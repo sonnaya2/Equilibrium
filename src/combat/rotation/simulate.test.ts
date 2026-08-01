@@ -7,7 +7,7 @@ import {
   NECROMANCY_ABILITIES,
   volleyOfSouls,
 } from "../styles/necromancy/abilities";
-import { rotationOf } from "./actions";
+import { rotationOf } from "./contracts";
 import { simulate, type CastRecord, type RotationSummary, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
 

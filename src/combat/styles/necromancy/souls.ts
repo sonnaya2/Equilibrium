@@ -1,4 +1,4 @@
-import { secondsToTicks } from "../../rotation/timeline";
+import { secondsToTicks } from "../../rotation/timing";
 import { RESIDUAL_SOUL_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 

@@ -13,7 +13,7 @@ export function createCastContext(input: CastContextInput): CastContext {
   const rt = createRuntime(input);
   return {
     getState: () => rt.state,
-    costOf: (ability) => costOf(rt, ability),
+    costOf: (ability) => costOf(rt.state, ability, rt.state.tick),
     firstLegalTick: (abilityId) => firstLegalTick(rt.state, abilityId),
     advanceTo: (targetTick) => advanceTo(rt, targetTick),
     performCast: (ability, readyTick, auto, rng) => performCast(rt, ability, readyTick, auto, rng),

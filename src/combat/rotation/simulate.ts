@@ -1,5 +1,4 @@
 import { runicChargeReady } from "../styles/magic/runicCharge";
-import { necroCanCast } from "../styles/necromancy/effects";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 
 export type {
@@ -16,7 +15,8 @@ export type {
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
 import { castOutcomes, mergeBranches, type Branch } from "./branch";
-import { costOf, performOffGcdCast } from "./cast";
+import { castRejection } from "./castRules";
+import { performOffGcdCast } from "./cast";
 import { createRuntime } from "./runtime";
 import { firstLegalTick } from "./state";
 import { combineBranchSummaries } from "./summary";
@@ -56,8 +56,7 @@ function stepManualAction(
       const basic = current.rt.basicByStyle.get(ability.style);
       const castable =
         firstLegalTick(current.rt.state, ability.id) <= current.rt.state.tick &&
-        costOf(current.rt, ability) <= current.rt.state.adrenaline &&
-        necroCanCast(ability, current.rt.state.necro, current.rt.state.conjures, current.rt.state.tick);
+        castRejection(current.rt.state, ability, current.rt.state.tick) === null;
       if (castable || !basic) {
         done.push(current);
         continue;

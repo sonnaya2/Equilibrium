@@ -2,9 +2,17 @@ import type { CritLayers } from "../core/critical";
 import type { HitCapRule } from "../core/hitCaps";
 import type { AbilityResult, AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatContext, CombatModifier } from "../types";
-import type { RotationAction } from "./actions";
 import type { ResolvedEvent } from "./events";
 import type { RotationState } from "./state";
+
+/** One queued cast; the simulator advances to its first legal tick. */
+export interface RotationAction {
+  abilityId: string;
+}
+
+export function rotationOf(...abilityIds: string[]): RotationAction[] {
+  return abilityIds.map((abilityId) => ({ abilityId }));
+}
 
 export interface AdrenalineRules {
   basicGainMultiplier?: number;

@@ -7,7 +7,7 @@ import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { RotationSummary } from "@/combat/rotation/simulate";
 import { simulateRevolution as runRevolution } from "@/combat/rotation/revolution";
-import { secondsToTicks, ticksToSeconds } from "@/combat/rotation/timeline";
+import { secondsToTicks, ticksToSeconds } from "@/combat/rotation/timing";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";

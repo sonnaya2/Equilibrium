@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
-import { rotationOf } from "@/combat/rotation/actions";
+import { rotationOf } from "@/combat/rotation/contracts";
 import { simulate, type RotationSummary } from "@/combat/rotation/simulate";
-import { TICK_SECONDS } from "@/combat/rotation/timeline";
+import { TICK_SECONDS } from "@/combat/rotation/timing";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";

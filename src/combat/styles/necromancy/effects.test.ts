@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { secondsToTicks } from "../../rotation/timeline";
+import { secondsToTicks } from "../../rotation/timing";
 import {
   DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS,
   LIVING_DEATH_DURATION_SECONDS,

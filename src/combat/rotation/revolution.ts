@@ -1,9 +1,6 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { isMagicAbility } from "../styles/magic/abilities";
-import { animaCharged } from "../styles/magic/runicCharge";
-import { necroCanCast } from "../styles/necromancy/effects";
+import { castRejection } from "./castRules";
 import { castOutcomes, mergeBranches, type Branch } from "./branch";
-import { costOf } from "./cast";
 import { createRuntime } from "./runtime";
 import { firstLegalTick } from "./state";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
@@ -51,19 +48,11 @@ export function simulateRevolution(
         continue;
       }
       const state = branch.rt.state;
-      const ready = input.bar.find((ability) => {
-        if (
-          isMagicAbility(ability) &&
-          ability.requiresAnima &&
-          !animaCharged(state.magic, state.tick)
-        )
-          return false;
-        if (!necroCanCast(ability, state.necro, state.conjures, state.tick)) return false;
-        return (
+      const ready = input.bar.find(
+        (ability) =>
           firstLegalTick(state, ability.id) <= state.tick &&
-          costOf(branch.rt, ability) <= state.adrenaline
-        );
-      });
+          castRejection(state, ability, state.tick) === null,
+      );
       // Basics fill every empty GCD when the bar has nothing ready/affordable.
       const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);
       const ability = ready ?? basic;

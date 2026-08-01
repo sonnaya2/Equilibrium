@@ -156,12 +156,17 @@ export function doctor(db) {
   return result;
 }
 
-// Two source documents claiming one domain: the same entity type and name
-// produced by more than one document, as separate entities. Grouping on type +
-// name is what makes that visible - two documents holding the same 90 prayers
-// under `prayer:protect-item` and `prayer:standard-prayers:protect-item` share
-// no ID, so nothing keyed on IDs notices them. A removed entity is no longer a
-// claim on the domain, or the audit ratchet in audit.mjs could never come down.
+// One record described twice. Grouping on entity type + name is what makes that
+// visible, because the two copies share no ID - `prayer:protect-item` and
+// `prayer:standard-prayers:protect-item` are the same prayer, and nothing keyed
+// on IDs notices.
+//
+// Two shapes count. Across documents, two sources claim one domain. Within one
+// document, two records of the same name land on the same region page, which is
+// a visible duplicate on the site even though only one document produced it -
+// `misthalin:explorers-ring` and `misthalin:area-tasks-explorers-ring` both come
+// from progression-unlocks.json. A removed entity is no longer a claim on
+// either, or the audit gate could never come down.
 export function entityOverlaps(db) {
   const groups = new Map();
   for (const row of db
@@ -174,18 +179,58 @@ export function entityOverlaps(db) {
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(row);
   }
+  const regionsOf = prepared(db, "SELECT DISTINCT region_id FROM entity_regions WHERE entity_id = ?");
+  // Same name, deliberately kept apart. One training method trains several
+  // skills and is listed once under each; one prayer name exists in two books.
+  // Those are not duplicates - merging them would empty a skill's method list or
+  // lose a whole prayer - so a group whose members are told apart by a domain
+  // scope is excluded rather than reported.
+  const skillsOf = prepared(db, "SELECT skill_entity_id FROM research_skill_methods WHERE method_entity_id = ?");
+  const bookOf = prepared(db, "SELECT book FROM prayers WHERE entity_id = ?");
+  const scopedApart = (rows) => {
+    // A League task's identity is Jagex's `wiki:N`, not its label, and two tasks
+    // can legitimately read the same - "Defeat the empowered Barrows Brothers."
+    // is wiki:740 and wiki:741. Distinct official ids are distinct tasks.
+    if (rows.every(({ entity_type, id }) => entity_type === "task" && /^wiki:\d+$/.test(id))) return true;
+    for (const scope of [
+      (id) => skillsOf.all(id).map(({ skill_entity_id }) => skill_entity_id).sort().join(","),
+      (id) => bookOf.get(id)?.book ?? "",
+    ]) {
+      const values = rows.map(({ id }) => scope(id));
+      if (values.every(Boolean) && new Set(values).size === rows.length) return true;
+    }
+    return false;
+  };
   const overlaps = [];
   const pairs = new Map();
   for (const [key, rows] of groups) {
+    if (rows.length < 2) continue;
+    if (scopedApart(rows)) continue;
     const files = [...new Set(rows.map(({ created_source }) => created_source))].sort();
-    if (files.length < 2) continue;
-    const pair = files.join(" + ");
-    pairs.set(pair, (pairs.get(pair) ?? 0) + 1);
+    // Regions holding more than one of this group: the pages a reader would see
+    // the same record on twice.
+    const byRegion = new Map();
+    for (const row of rows) {
+      for (const { region_id } of regionsOf.all(row.id)) {
+        if (!byRegion.has(region_id)) byRegion.set(region_id, []);
+        byRegion.get(region_id).push(row.id);
+      }
+    }
+    const sharedRegions = [...byRegion]
+      .filter(([, ids]) => ids.length > 1)
+      .map(([region]) => region)
+      .sort();
+    if (files.length < 2 && !sharedRegions.length) continue;
+    if (files.length > 1) {
+      const pair = files.join(" + ");
+      pairs.set(pair, (pairs.get(pair) ?? 0) + 1);
+    }
     overlaps.push({
       logicalRecord: key,
       entityType: rows[0].entity_type,
       name: rows[0].name,
       files,
+      sharedRegions,
       entityIds: rows.map(({ id }) => id).sort(),
     });
   }

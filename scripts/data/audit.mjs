@@ -380,19 +380,28 @@ if (missingScriptFiles.length) {
   );
 }
 
-// Two source documents claiming one domain: the same entity type and name
-// produced by more than one document, as separate entities. 253 across 18 pairs
-// were found and all 253 have been adjudicated - the record from the document
-// that owns the domain survives, carrying every fact the retired one held. The
-// count is zero, so the gate is no longer a ratchet with a backlog: any overlap
-// at all is a regression.
+// One record described twice, in either shape: two documents claiming one
+// domain, or two records of one name landing on the same region page. Both were
+// adjudicated to zero - the more complete record survives, carrying every fact
+// the retired one held - so neither is a ratchet with a backlog any more. Any
+// overlap at all is a regression.
 if (existsSync(join(ROOT, ".cache/equilibrium.sqlite"))) {
   const { openDatabase } = await import("./database.mjs");
   const { entityOverlaps } = await import("./queries.mjs");
   const db = openDatabase();
   try {
-    for (const { files, records } of entityOverlaps(db).filePairs) {
+    const { filePairs, overlaps } = entityOverlaps(db);
+    for (const { files, records } of filePairs) {
       architectureFailures.push(`two documents claim one domain: ${files} (${records} records)`);
+    }
+    const sameRegion = overlaps.filter(({ sharedRegions }) => sharedRegions.length);
+    for (const { entityType, name, sharedRegions, entityIds } of sameRegion.slice(0, 5)) {
+      architectureFailures.push(
+        `duplicate ${entityType} "${name}" on ${sharedRegions.join(", ")}: ${entityIds.join(" + ")}`,
+      );
+    }
+    if (sameRegion.length > 5) {
+      architectureFailures.push(`... and ${sameRegion.length - 5} more same-region duplicates`);
     }
   } finally {
     db.close();

@@ -212,6 +212,8 @@
 {"description":"Demon horn restore bands: 50 pp (normal/bat/burnt bones), 100 pp (big/baby dragon/jogre/wyvern), 150 pp (dragon/dinosaur/dagannoth/ourg/airut/frost/hardened/reinforced dragon bones)","entityId":"cross-region:bonecrusher-necklace","key":"effect-2","ordinal":1}
 {"description":"RS3 has no single fused 'bonecrusher necklace' craft (wiki Bonecrusher necklace redirects to demon horn) — the planner package is the dual-item stack ironmen equip","entityId":"cross-region:bonecrusher-necklace","key":"effect-3","ordinal":2}
 {"description":"Pairs with attuned ectoplasmator for ash/ghost restore on the same necklace bands","entityId":"cross-region:bonecrusher-necklace","key":"effect-4","ordinal":3}
+{"description":"Preferred Magic ring for channelled abilities (Concentrated Blast / Smoke Tendrils) and FSoA crit stacks","entityId":"cross-region:channellers-ring","key":"effect","ordinal":0}
+{"description":"Often preferred over Reaver's ring when channelled abilities dominate the rotation","entityId":"cross-region:channellers-ring","key":"effect","ordinal":1}
 {"description":"Upgraded seers' ring line — primarily magic channel/crit value","entityId":"cross-region:channellers-ring","key":"effect-1","ordinal":0}
 {"description":"Included because the heart/ring dual-region pattern is shared combat infrastructure and the user asked for channelers with regions","entityId":"cross-region:channellers-ring","key":"effect-2","ordinal":1}
 {"description":"After using an ultimate ability, regain 10% adrenaline","entityId":"cross-region:conservation-of-energy-relic","key":"effect-1","ordinal":0}
@@ -856,6 +858,10 @@
 {"description":"Strong T92 MH option when Leng / khopesh / drygore paths are region-locked","entityId":"misthalin:abyssal-scourge","key":"effect-1","ordinal":0}
 {"description":"Bleed synergy with jaws of the Abyss helm and MW spear DoT extensions","entityId":"misthalin:abyssal-scourge","key":"effect-2","ordinal":1}
 {"description":"Degrades; repair economy matters for long ironman use","entityId":"misthalin:abyssal-scourge","key":"effect-3","ordinal":2}
+{"description":"Cabbage-port and other operate teleports scaling by tier","entityId":"misthalin:area-tasks-explorers-ring","key":"effect","ordinal":0}
+{"description":"Run energy restore charges scaling by tier","entityId":"misthalin:area-tasks-explorers-ring","key":"effect","ordinal":1}
+{"description":"Low-tier alchemy and related diary utility on higher tiers","entityId":"misthalin:area-tasks-explorers-ring","key":"effect","ordinal":2}
+{"description":"Farming and exploration QoL associated with the Lumbridge achievement set","entityId":"misthalin:area-tasks-explorers-ring","key":"effect","ordinal":3}
 {"description":"Tier 1 operate: 1x daily restore 50% run energy","entityId":"misthalin:area-tasks-explorers-ring","key":"effect-1","ordinal":0}
 {"description":"Tier 2 worn: 10% chance extra air/earth/fire/water rune per essence at matching altar (not Ourania), with extra XP; operate: 2 run restores/day; 30 runeless Low Level Alchemy/day (Magic 21)","entityId":"misthalin:area-tasks-explorers-ring","key":"effect-2","ordinal":1}
 {"description":"Tier 3 operate: 3 run restores/day; unlimited cabbage-port to Falador farm cabbage patch","entityId":"misthalin:area-tasks-explorers-ring","key":"effect-3","ordinal":2}
@@ -868,6 +874,13 @@
 {"description":"Worn City of Um 10% chance 4-dose necromancy / super / extreme potions by tiers 1-3; elite removes City-of-Um-only potion restriction","entityId":"misthalin:area-tasks-underworld-grimoire","key":"effect-5","ordinal":4}
 {"description":"Operate: smithy teleports (10/day then unlimited); ritual site teleports (shared Um/Ungael) scaling to unlimited at tier 3; daily Lupe teleport at tier 4","entityId":"misthalin:area-tasks-underworld-grimoire","key":"effect-6","ordinal":5}
 {"description":"Always: weekly Lupe bones/ink/candles scaling by tier; Soul Supplies daily slime stock at tier 3; Um mushroom patch disease-free at tier 3; elite free daily Death reclaim and banked weekly supplies","entityId":"misthalin:area-tasks-underworld-grimoire","key":"effect-7","ordinal":6}
+{"description":"Chance to mine two ores at once on tiered ore brackets (4% / 3% / 2% / 1% by armour tier before New Varrock doubling)","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":0}
+{"description":"Chance to smelt an extra bar to metal bank on tiered brackets","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":1}
+{"description":"Chance for double Smithing progress per strike on tiered metal brackets","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":2}
+{"description":"1% bonus Mining XP while wearing (does not contribute to golden mining suit set bonus)","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":3}
+{"description":"Always: Edgeville furnace access from tier 1; expanded Naff battlestaff stock by tier","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":4}
+{"description":"Tier 3 always: Cooks' Guild entry without chef's hat/Cooking cape and bank access","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":5}
+{"description":"Tier 4 operate: unlimited Chaos Tunnels teleport; log storage boxes near beacons","entityId":"misthalin:area-tasks-varrock-armour","key":"effect","ordinal":6}
 {"description":"Tier 1 worn: 4% chance double copper/tin/iron/coal; 4% extra bronze/iron/steel bar to metal bank; 4% double Smithing progress on bronze/iron/steel; 1% bonus Mining XP (not part of golden mining suit set); increased skull sceptre part chance","entityId":"misthalin:area-tasks-varrock-armour","key":"effect-1","ordinal":0}
 {"description":"Tier 2 worn: 3% chance double mithril/adamantite/luminite; 3% extra mithril/adamant bars; 3% double progress on mithril/adamant","entityId":"misthalin:area-tasks-varrock-armour","key":"effect-2","ordinal":1}
 {"description":"Tier 3 worn: 2% chance double runite/orichalcite/drakolith/necrite/phasmatite; 2% extra rune/orikalkum/necronium bars; 2% double progress on those metals","entityId":"misthalin:area-tasks-varrock-armour","key":"effect-3","ordinal":2}
@@ -991,6 +1004,13 @@
 {"description":"+10% Mining critical strike chance","entityId":"misthalin:taggas-corehammer","key":"effect-1","ordinal":0}
 {"description":"+35% Mining critical strike damage","entityId":"misthalin:taggas-corehammer","key":"effect-2","ordinal":1}
 {"description":"Chance for deathspore arrow tips from core ores","entityId":"misthalin:taggas-corehammer","key":"effect-3","ordinal":2}
+{"description":"Worn: toggleable auto-deposit of tiered bones into focus storage (priority over bonecrusher); bank ashes when picked up from tier 1","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":0}
+{"description":"Worn impure essence extra-rune chance: 2.5% / 5% / 7.5% / 10% by tiers 1-4","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":1}
+{"description":"Worn ritual disturbance dispel XP: 3% / 6% / 9% / 12% total by tier (scaled from Um site base)","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":2}
+{"description":"Worn extra necroplasm from rituals: 5% / 10% / 15% from tiers 2-4 (additive with Multiply glyphs)","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":3}
+{"description":"Worn City of Um 10% chance 4-dose necromancy / super / extreme potions by tiers 1-3; elite removes City-of-Um-only potion restriction","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":4}
+{"description":"Operate: smithy teleports (10/day then unlimited); ritual site teleports (shared Um/Ungael) scaling to unlimited at tier 3; daily Lupe teleport at tier 4","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":5}
+{"description":"Always: weekly Lupe bones/ink/candles scaling by tier; Soul Supplies daily slime stock at tier 3; Um mushroom patch disease-free at tier 3; elite free daily Death reclaim and banked weekly supplies","entityId":"misthalin:underworld-grimoire","key":"effect","ordinal":6}
 {"description":"Toggleable auto-deposit of tiered bones into focus storage (takes priority over bonecrusher)","entityId":"misthalin:underworld-grimoire","key":"effect-1","ordinal":0}
 {"description":"Ashes banked when picked up (from tier 1)","entityId":"misthalin:underworld-grimoire","key":"effect-2","ordinal":1}
 {"description":"Extra rune chance per impure essence when runecrafting necrotic runes (2.5% / 5% / 7.5% / 10% by tier)","entityId":"misthalin:underworld-grimoire","key":"effect-3","ordinal":2}
@@ -1057,6 +1077,13 @@
 {"description":"When worn: double fungi when casting Bloom","entityId":"morytania:morytania-legs-1","key":"effect-1","ordinal":0}
 {"description":"When worn: 50% chance a ghast ignores the player rather than attacking","entityId":"morytania:morytania-legs-1","key":"effect-2","ordinal":1}
 {"description":"Always: 5% extra Temple Trekking rewards","entityId":"morytania:morytania-legs-1","key":"effect-3","ordinal":2}
+{"description":"Tier 1 worn: double fungi from Bloom; 50% ghast ignore; always +5% Temple Trekking rewards","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":0}
+{"description":"Tier 2 worn: 10% second blood rune per essence at blood altar; Port Phasmatys regular cannonballs 7 ticks to 4; operate slime-pit teleport 5/day","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":1}
+{"description":"Always tier 2: Robin 13 bones to bonemeal + 13 free slime daily (noted bones ok); Razmire weekly free planks (10 teak/20 oak/30 plank); Mort'ton pyre log chests; Canifis mushroom patch disease-free; 4-dose olive oil from Razmire","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":2}
+{"description":"Tier 3 worn: +50% Prayer XP burning shades; better shade keys; 50% blood altar teleports do not break; operate slime teleports 10/day","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":3}
+{"description":"Always tier 3: Robin 26 bones + 26 slime; ghostspeak-passive; bank Barrows loot from chest; +10% Temple Trekking; crystal outcrop shortcut; Big Book o' Piracy cap 20","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":4}
+{"description":"Tier 4 worn: +50% Firemaking and Prayer XP cremating vyre corpses (including Sunspear); +10% Slayer XP on Slayer Tower tasks; 20% chance 4-dose prayer renewal in Morytania; operate unlimited slime-pit teleports","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":5}
+{"description":"Always tier 4: Robin 39 bones + 39 slime; double mushroom yield at Canifis, Isafdar, and City of Um (XP not doubled); Big Book o' Piracy cap 60","entityId":"morytania:morytania-legs-1-4","key":"effect","ordinal":6}
 {"description":"Single planner ladder for easy→elite Morytania legs skilling utilities (Prayer, RC, Farming mushrooms, Ectofuntus logistics, Temple Trekking, Barrows bank QoL)","entityId":"morytania:morytania-legs-1-4","key":"effect-1","ordinal":0}
 {"description":"Higher tiers supersede lower operate caps (slime tele 5 → 10 → unlimited) and Robin bone/slime daily caps (13 → 26 → 39)","entityId":"morytania:morytania-legs-1-4","key":"effect-2","ordinal":1}
 {"description":"Isafdar / City of Um double mushrooms require elite ownership — not granted by medium disease-free Canifis alone","entityId":"morytania:morytania-legs-1-4","key":"effect-3","ordinal":2}

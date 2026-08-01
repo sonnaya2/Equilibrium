@@ -39,7 +39,12 @@ const validation = await load<{
 const queries = await load<{
   runReadOnlyQuery: (db: DatabaseSync, options: { sql: string; limit: number }) => unknown[];
   entityOverlaps: (db: DatabaseSync) => {
-    overlaps: Array<{ logicalRecord: string; files: string[]; entityIds: string[] }>;
+    overlaps: Array<{
+      logicalRecord: string;
+      files: string[];
+      sharedRegions: string[];
+      entityIds: string[];
+    }>;
     filePairs: Array<{ files: string; records: number }>;
   };
 }>("queries.mjs");
@@ -303,6 +308,9 @@ describe("overlapping domains", () => {
   const db = new DatabaseSync(":memory:");
   db.exec(
     `CREATE TABLE entities(id TEXT PRIMARY KEY, entity_type TEXT, name TEXT, created_source TEXT, status TEXT);
+     CREATE TABLE entity_regions(entity_id TEXT, region_id TEXT, relation TEXT);
+     CREATE TABLE research_skill_methods(skill_entity_id TEXT, method_entity_id TEXT, ordinal INTEGER);
+     CREATE TABLE prayers(entity_id TEXT, book TEXT, level INTEGER);
      INSERT INTO entities VALUES
        ('prayer:protect-item', 'prayer', 'Protect Item', 'data/combat/prayers.json', 'active'),
        ('prayer:standard-prayers:protect-item', 'prayer', 'Protect Item', 'data/reference/prayers.json', 'active'),
@@ -311,7 +319,27 @@ describe("overlapping domains", () => {
        ('equipment:bandos', 'equipment', 'Bandos', 'data/combat/equipment.json', 'active'),
        ('equipment:bandos-dup', 'equipment', 'bandos', 'data/reference/progression-unlocks.json', 'active'),
        ('spell:wind-rush', 'spell', 'Wind Rush', 'data/reference/spellbooks.json', 'active'),
-       ('spell:wind-rush-dup', 'spell', 'Wind Rush', 'data/combat/abilities.json', 'removed');`,
+       ('spell:wind-rush-dup', 'spell', 'Wind Rush', 'data/combat/abilities.json', 'removed'),
+       -- One document, one name, both landing on Misthalin: a visible duplicate.
+       ('misthalin:explorers-ring', 'equipment', 'Explorer''s ring', 'data/reference/progression-unlocks.json', 'active'),
+       ('misthalin:area-tasks-explorers-ring', 'equipment', 'Explorer''s ring', 'data/reference/progression-unlocks.json', 'active'),
+       -- Same name in two prayer books: two prayers, not a duplicate.
+       ('curse:dark-form', 'prayer', 'Dark Form', 'data/combat/prayers.json', 'active'),
+       ('seren:dark-form', 'prayer', 'Dark Form', 'data/combat/prayers.json', 'active'),
+       -- One method listed under each skill it trains: not a duplicate either.
+       ('firemaking:curly-roots', 'training-method', 'Curly roots', 'data/research/catalog.json', 'active'),
+       ('woodcutting:curly-roots', 'training-method', 'Curly roots', 'data/research/catalog.json', 'active');
+     INSERT INTO entity_regions VALUES
+       ('misthalin:explorers-ring', 'misthalin', 'hint'),
+       ('misthalin:area-tasks-explorers-ring', 'misthalin', 'hint'),
+       ('curse:dark-form', 'asgarnia', 'hint'),
+       ('seren:dark-form', 'asgarnia', 'hint'),
+       ('firemaking:curly-roots', 'karamja', 'hint'),
+       ('woodcutting:curly-roots', 'karamja', 'hint');
+     INSERT INTO prayers VALUES ('curse:dark-form', 'Ancient Curses', 95), ('seren:dark-form', 'Seren prayers', 95);
+     INSERT INTO research_skill_methods VALUES
+       ('skill:firemaking', 'firemaking:curly-roots', 0),
+       ('skill:woodcutting', 'woodcutting:curly-roots', 0);`,
   );
   afterAll(() => db.close());
 
@@ -329,6 +357,7 @@ describe("overlapping domains", () => {
     const { overlaps } = queries.entityOverlaps(db);
     expect(overlaps.map(({ logicalRecord }) => logicalRecord)).toEqual([
       "equipment|bandos",
+      "equipment|explorer's ring",
       "prayer|protect item",
     ]);
   });
@@ -339,6 +368,30 @@ describe("overlapping domains", () => {
       { files: "data/combat/equipment.json + data/reference/progression-unlocks.json", records: 1 },
       { files: "data/combat/prayers.json + data/reference/prayers.json", records: 1 },
     ]);
+  });
+
+  // One document can duplicate a record on its own. Nothing keyed on source files
+  // sees it, so the region the two land on is what makes it visible.
+  it("catches two records from one document sharing a region", () => {
+    const { overlaps } = queries.entityOverlaps(db);
+    const ring = overlaps.find(
+      ({ logicalRecord }) => logicalRecord === "equipment|explorer's ring",
+    );
+    expect(ring?.files).toEqual(["data/reference/progression-unlocks.json"]);
+    expect(ring?.sharedRegions).toEqual(["misthalin"]);
+    expect(ring?.entityIds).toEqual([
+      "misthalin:area-tasks-explorers-ring",
+      "misthalin:explorers-ring",
+    ]);
+  });
+
+  // Same name, deliberately kept apart. Merging either of these would lose data:
+  // a whole prayer, or a skill's method listing.
+  it("leaves records that a domain scope tells apart", () => {
+    const { overlaps } = queries.entityOverlaps(db);
+    const records = overlaps.map(({ logicalRecord }) => logicalRecord);
+    expect(records).not.toContain("prayer|dark form");
+    expect(records).not.toContain("training-method|curly roots");
   });
 
   // Resolving an overlap means removing the superseded side, so a removed entity

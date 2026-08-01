@@ -270,6 +270,7 @@
 {"entityId":"cross-region:balaraks-sash-brush","tagId":"archaeology-skilling-off-hand-cross-region-chain"}
 {"entityId":"cross-region:binding-contract-ancient-summoning","tagId":"permanent-ancient-summoning-slayer-bind-infrastructure"}
 {"entityId":"cross-region:bonecrusher-necklace","tagId":"cross-region-prayer-afk-restore-package"}
+{"entityId":"cross-region:channellers-ring","tagId":"magic-best-in-slot-ring-residual"}
 {"entityId":"cross-region:channellers-ring","tagId":"upgraded-fremennik-ring-channel-crit-support"}
 {"entityId":"cross-region:chronicle-fragment-utility","tagId":"divination-fragment-utility-infrastructure"}
 {"entityId":"cross-region:conservation-of-energy-relic","tagId":"combat-archaeology-and-invention-relic-cross-region-chain"}
@@ -1674,8 +1675,10 @@
 {"entityId":"misthalin:altar-of-zaros","tagId":"permanent-prayer-book-switch-and-restore-facility"}
 {"entityId":"misthalin:ancient-curses-senntisten","tagId":"permanent-prayer-book-unlock"}
 {"entityId":"misthalin:area-tasks-explorers-ring","tagId":"achievement-diary-skilling-utility-ring"}
+{"entityId":"misthalin:area-tasks-explorers-ring","tagId":"lumbridge-achievement-skilling-utility-ring"}
 {"entityId":"misthalin:area-tasks-underworld-grimoire","tagId":"achievement-diary-necromancy-rc-ritual-utility"}
 {"entityId":"misthalin:area-tasks-varrock-armour","tagId":"achievement-diary-mining-and-smithing-utility"}
+{"entityId":"misthalin:area-tasks-varrock-armour","tagId":"varrock-achievement-mining-and-smithing-utility"}
 {"entityId":"misthalin:artisans-outfit","tagId":"crafting-xp-outfit"}
 {"entityId":"misthalin:auto-screener","tagId":"archaeology-invention-device-permanent-unlock"}
 {"entityId":"misthalin:avas-device-chain","tagId":"permanent-ranged-ammo-recovery-and-cape-rack-utility-chain"}
@@ -1754,6 +1757,7 @@
 {"entityId":"misthalin:thieves-guild-master-tools","tagId":"thieving-permanent-toolbelt-tools"}
 {"entityId":"misthalin:um-mushroom-patch","tagId":"farming-patch-unlock"}
 {"entityId":"misthalin:um-selene-necromancy-prayers","tagId":"prayer-unlock-infrastructure"}
+{"entityId":"misthalin:underworld-grimoire","tagId":"achievement-diary-necromancy-rc-ritual-utility"}
 {"entityId":"misthalin:underworld-grimoire","tagId":"underworld-achievement-skilling-utility-pocket"}
 {"entityId":"misthalin:underworld-grimoire-skilling-milestones","tagId":"underworld-achievement-skilling-breakpoint-densify"}
 {"entityId":"misthalin:varrock-armour","tagId":"varrock-achievement-mining-and-smithing-utility"}
@@ -1785,6 +1789,7 @@
 {"entityId":"morytania:lumberjack-outfit","tagId":"woodcutting-xp-outfit"}
 {"entityId":"morytania:malevolent-armour","tagId":"bis-power-armour-craft-t90-melee"}
 {"entityId":"morytania:morytania-legs-1","tagId":"easy-achievement-skilling-utility"}
+{"entityId":"morytania:morytania-legs-1-4","tagId":"achievement-diary-prayer-rc-farming-utility"}
 {"entityId":"morytania:morytania-legs-1-4","tagId":"achievement-diary-prayer-rc-farming-utility-ladder"}
 {"entityId":"morytania:morytania-legs-2","tagId":"medium-achievement-skilling-utility"}
 {"entityId":"morytania:morytania-legs-3","tagId":"hard-achievement-skilling-utility"}
@@ -2432,6 +2437,7 @@
 {"entityId":"unlock:forinthry:seedicide","tagId":"farming-drop-cleaner"}
 {"entityId":"unlock:forinthry:sirenic-armour-t90-ranged-power-craft","tagId":"bis-power-armour-craft-t90-ranged"}
 {"entityId":"unlock:forinthry:sirenic-elite-sirenic-armour","tagId":"best-in-slot-ranged-power-armour-craft-chain"}
+{"entityId":"unlock:forinthry:skekas-hypnowand","tagId":"hunter-skilling-off-hand"}
 {"entityId":"unlock:forinthry:skekas-hypnowand","tagId":"hunter-skilling-off-hand-cross-region-chain"}
 {"entityId":"unlock:forinthry:smithing-autoheater","tagId":"permanent-smithing-daemonheim-reward"}
 {"entityId":"unlock:forinthry:spirit-cape-passive","tagId":"permanent-summoning-combat-support"}

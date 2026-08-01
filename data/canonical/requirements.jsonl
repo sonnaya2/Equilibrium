@@ -336,6 +336,7 @@
 {"description":"Anachronia: Heart of the Seer from Rex Matriarchs","entityId":"cross-region:channellers-ring","ordinal":0}
 {"description":"Crafting combine","entityId":"cross-region:channellers-ring","ordinal":2}
 {"description":"Fremennik: 10× seers' rings from Dagannoth Prime","entityId":"cross-region:channellers-ring","level":10,"ordinal":1}
+{"description":"Rex Matriarchs (Heart of the Seer path) for the Channeller's ring","entityId":"cross-region:channellers-ring","ordinal":3}
 {"description":"Divination training at wisps/springs to spawn chronicle fragments","entityId":"cross-region:chronicle-fragment-utility","ordinal":0}
 {"description":"Memorial to Guthix tutorial removes the 30-fragment possession cap","entityId":"cross-region:chronicle-fragment-utility","level":30,"ordinal":2}
 {"description":"Optional Chronicle Attraction (Tirannwn Seren prayer) or spirit attraction potion for auto-catch enhanced fragments","entityId":"cross-region:chronicle-fragment-utility","ordinal":1}
@@ -2343,9 +2344,11 @@
 {"description":"Read the Ancient hymnal from Azzanadra after the quest to unlock the curse book","entityId":"misthalin:ancient-curses-senntisten","ordinal":3}
 {"description":"The Temple at Senntisten completed","entityId":"misthalin:ancient-curses-senntisten","ordinal":0}
 {"description":"Beginner through hard Lumbridge achievements claimed in order","entityId":"misthalin:area-tasks-explorers-ring","ordinal":0}
+{"description":"Easy through elite Lumbridge achievements claimed in order","entityId":"misthalin:area-tasks-explorers-ring","ordinal":1}
 {"description":"Easy through elite Underworld achievements claimed in order","entityId":"misthalin:area-tasks-underworld-grimoire","ordinal":0}
 {"description":"Prior grimoire tier claimed before the next","entityId":"misthalin:area-tasks-underworld-grimoire","ordinal":1}
 {"description":"Easy through elite Varrock achievements claimed in order","entityId":"misthalin:area-tasks-varrock-armour","ordinal":0}
+{"description":"New Varrock achievement set upgrades double several chance effects and relax wear requirements","entityId":"misthalin:area-tasks-varrock-armour","ordinal":2}
 {"description":"Optional New Varrock achievements double several chance effects and relax wear requirements","entityId":"misthalin:area-tasks-varrock-armour","ordinal":1}
 {"description":"Stealing Creation reward shop: 100 points per random missing piece (500 full set)","entityId":"misthalin:artisans-outfit","level":100,"ordinal":0}
 {"description":"50,000 chronotes for Auto-screener v1.080 blueprint at Archaeology Guild Shop","entityId":"misthalin:auto-screener","level":50,"ordinal":2}

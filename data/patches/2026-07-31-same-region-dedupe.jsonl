@@ -1,0 +1,190 @@
+# Same-document duplicates: one record described twice, both landing on the
+# same region page.
+#
+# These were invisible to the cross-document overlap gate, which only compares
+# records from different source files - these come from one. The survivor is
+# the more complete record, and it inherits every requirement, effect, region
+# link, source and tag the retired copies held, so the merge loses nothing but
+# the duplication. Each carried fact names the record it came from.
+#
+# Deliberately NOT merged: prayers that share a name across two books, and
+# training methods listed once per skill they train. Those are told apart by a
+# domain scope and merging them would empty a skill list or lose a prayer.
+# Official Catalyst task records are left alone.
+
+# equipment "Channeller's ring" -> keep cross-region:channellers-ring
+{"description":"Rex Matriarchs (Heart of the Seer path) for the Channeller's ring","entity":"cross-region:channellers-ring","op":"add-requirement","reason":"From anachronia:channellers-ring."}
+{"description":"Preferred Magic ring for channelled abilities (Concentrated Blast / Smoke Tendrils) and FSoA crit stacks","entity":"cross-region:channellers-ring","op":"add-effect","reason":"From anachronia:channellers-ring."}
+{"description":"Often preferred over Reaver's ring when channelled abilities dominate the rotation","entity":"cross-region:channellers-ring","op":"add-effect","reason":"From anachronia:channellers-ring."}
+{"entity":"cross-region:channellers-ring","op":"link-source","order":3,"reason":"From anachronia:channellers-ring.","role":"verification","source":"source:runescape-wiki:88ce6e6c6a3c0faf"}
+{"entity":"cross-region:channellers-ring","op":"link-source","order":4,"reason":"From anachronia:channellers-ring.","role":"verification","source":"source:runescape-wiki:d3454aa84714a00e"}
+{"entity":"cross-region:channellers-ring","label":"Magic best-in-slot ring residual","op":"add-tag","reason":"From anachronia:channellers-ring.","tag":"magic-best-in-slot-ring-residual"}
+{"entity":"anachronia:channellers-ring","op":"remove","reason":"Duplicate of cross-region:channellers-ring, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# equipment "Explorer's ring 1-4" -> keep misthalin:area-tasks-explorers-ring
+{"description":"Easy through elite Lumbridge achievements claimed in order","entity":"misthalin:area-tasks-explorers-ring","op":"add-requirement","reason":"From misthalin:explorers-ring."}
+{"description":"Cabbage-port and other operate teleports scaling by tier","entity":"misthalin:area-tasks-explorers-ring","op":"add-effect","reason":"From misthalin:explorers-ring."}
+{"description":"Run energy restore charges scaling by tier","entity":"misthalin:area-tasks-explorers-ring","op":"add-effect","reason":"From misthalin:explorers-ring."}
+{"description":"Low-tier alchemy and related diary utility on higher tiers","entity":"misthalin:area-tasks-explorers-ring","op":"add-effect","reason":"From misthalin:explorers-ring."}
+{"description":"Farming and exploration QoL associated with the Lumbridge achievement set","entity":"misthalin:area-tasks-explorers-ring","op":"add-effect","reason":"From misthalin:explorers-ring."}
+{"entity":"misthalin:area-tasks-explorers-ring","label":"Lumbridge achievement skilling utility ring","op":"add-tag","reason":"From misthalin:explorers-ring.","tag":"lumbridge-achievement-skilling-utility-ring"}
+{"entity":"misthalin:explorers-ring","op":"remove","reason":"Duplicate of misthalin:area-tasks-explorers-ring, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# equipment "Morytania legs 1-4" -> keep morytania:morytania-legs-1-4
+{"description":"Tier 1 worn: double fungi from Bloom; 50% ghast ignore; always +5% Temple Trekking rewards","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"description":"Tier 2 worn: 10% second blood rune per essence at blood altar; Port Phasmatys regular cannonballs 7 ticks to 4; operate slime-pit teleport 5/day","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"description":"Always tier 2: Robin 13 bones to bonemeal + 13 free slime daily (noted bones ok); Razmire weekly free planks (10 teak/20 oak/30 plank); Mort'ton pyre log chests; Canifis mushroom patch disease-free; 4-dose olive oil from Razmire","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"description":"Tier 3 worn: +50% Prayer XP burning shades; better shade keys; 50% blood altar teleports do not break; operate slime teleports 10/day","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"description":"Always tier 3: Robin 26 bones + 26 slime; ghostspeak-passive; bank Barrows loot from chest; +10% Temple Trekking; crystal outcrop shortcut; Big Book o' Piracy cap 20","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"description":"Tier 4 worn: +50% Firemaking and Prayer XP cremating vyre corpses (including Sunspear); +10% Slayer XP on Slayer Tower tasks; 20% chance 4-dose prayer renewal in Morytania; operate unlimited slime-pit teleports","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"description":"Always tier 4: Robin 39 bones + 39 slime; double mushroom yield at Canifis, Isafdar, and City of Um (XP not doubled); Big Book o' Piracy cap 60","entity":"morytania:morytania-legs-1-4","op":"add-effect","reason":"From morytania:area-tasks-morytania-legs."}
+{"entity":"morytania:morytania-legs-1-4","label":"achievement diary Prayer RC Farming utility","op":"add-tag","reason":"From morytania:area-tasks-morytania-legs.","tag":"achievement-diary-prayer-rc-farming-utility"}
+{"entity":"morytania:area-tasks-morytania-legs","op":"remove","reason":"Duplicate of morytania:morytania-legs-1-4, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# equipment "Underworld Grimoire 1-4" -> keep misthalin:underworld-grimoire
+{"description":"Worn: toggleable auto-deposit of tiered bones into focus storage (priority over bonecrusher); bank ashes when picked up from tier 1","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"description":"Worn impure essence extra-rune chance: 2.5% / 5% / 7.5% / 10% by tiers 1-4","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"description":"Worn ritual disturbance dispel XP: 3% / 6% / 9% / 12% total by tier (scaled from Um site base)","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"description":"Worn extra necroplasm from rituals: 5% / 10% / 15% from tiers 2-4 (additive with Multiply glyphs)","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"description":"Worn City of Um 10% chance 4-dose necromancy / super / extreme potions by tiers 1-3; elite removes City-of-Um-only potion restriction","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"description":"Operate: smithy teleports (10/day then unlimited); ritual site teleports (shared Um/Ungael) scaling to unlimited at tier 3; daily Lupe teleport at tier 4","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"description":"Always: weekly Lupe bones/ink/candles scaling by tier; Soul Supplies daily slime stock at tier 3; Um mushroom patch disease-free at tier 3; elite free daily Death reclaim and banked weekly supplies","entity":"misthalin:underworld-grimoire","op":"add-effect","reason":"From misthalin:area-tasks-underworld-grimoire."}
+{"entity":"misthalin:underworld-grimoire","label":"achievement diary Necromancy RC ritual utility","op":"add-tag","reason":"From misthalin:area-tasks-underworld-grimoire.","tag":"achievement-diary-necromancy-rc-ritual-utility"}
+{"entity":"misthalin:area-tasks-underworld-grimoire","op":"remove","reason":"Duplicate of misthalin:underworld-grimoire, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# equipment "Varrock armour 1-4" -> keep misthalin:area-tasks-varrock-armour
+{"description":"New Varrock achievement set upgrades double several chance effects and relax wear requirements","entity":"misthalin:area-tasks-varrock-armour","op":"add-requirement","reason":"From misthalin:varrock-armour."}
+{"description":"Chance to mine two ores at once on tiered ore brackets (4% / 3% / 2% / 1% by armour tier before New Varrock doubling)","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"description":"Chance to smelt an extra bar to metal bank on tiered brackets","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"description":"Chance for double Smithing progress per strike on tiered metal brackets","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"description":"1% bonus Mining XP while wearing (does not contribute to golden mining suit set bonus)","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"description":"Always: Edgeville furnace access from tier 1; expanded Naff battlestaff stock by tier","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"description":"Tier 3 always: Cooks' Guild entry without chef's hat/Cooking cape and bank access","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"description":"Tier 4 operate: unlimited Chaos Tunnels teleport; log storage boxes near beacons","entity":"misthalin:area-tasks-varrock-armour","op":"add-effect","reason":"From misthalin:varrock-armour."}
+{"entity":"misthalin:area-tasks-varrock-armour","label":"Varrock achievement Mining and Smithing utility","op":"add-tag","reason":"From misthalin:varrock-armour.","tag":"varrock-achievement-mining-and-smithing-utility"}
+{"entity":"misthalin:varrock-armour","op":"remove","reason":"Duplicate of misthalin:area-tasks-varrock-armour, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "All Fired Up → Inferno adze reward chain" -> keep unlock:misthalin:all-fired-up-inferno-adze-reward-chain
+{"entity":"unlock:misthalin:all-fired-up-inferno-adze-reward-chain","group":"all_required","op":"link-region","reason":"From unlock:asgarnia:all-fired-up-inferno-adze-reward-chain.","region":"asgarnia","relation":"primary"}
+{"entity":"unlock:asgarnia:all-fired-up-inferno-adze-reward-chain","op":"remove","reason":"Duplicate of unlock:misthalin:all-fired-up-inferno-adze-reward-chain, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Artificer's measure" -> keep unlock:forinthry:artificers-measure
+{"entity":"unlock:forinthry:artificers-measure","group":"all_required","op":"link-region","reason":"From unlock:morytania:artificers-measure.","region":"morytania","relation":"primary"}
+{"entity":"unlock:morytania:artificers-measure","op":"remove","reason":"Duplicate of unlock:forinthry:artificers-measure, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:forinthry:artificers-measure","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:artificers-measure.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:artificers-measure","op":"remove","reason":"Duplicate of unlock:forinthry:artificers-measure, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:forinthry:artificers-measure","group":"all_required","op":"link-region","reason":"From unlock:anachronia:artificers-measure.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:artificers-measure","op":"remove","reason":"Duplicate of unlock:forinthry:artificers-measure, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Auto-burn Woodcutting paths (Superheat Form vs Always Adze vs partial outfit/adze)" -> keep unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze
+{"entity":"unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze","op":"remove","reason":"Duplicate of unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Balarak's sash brush" -> keep unlock:forinthry:balaraks-sash-brush
+{"entity":"unlock:forinthry:balaraks-sash-brush","group":"all_required","op":"link-region","reason":"From unlock:anachronia:balaraks-sash-brush.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:balaraks-sash-brush","op":"remove","reason":"Duplicate of unlock:forinthry:balaraks-sash-brush, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Bonecrusher auto-pickup upgrade (Waiko / Boni)" -> keep unlock:asgarnia:bonecrusher-auto-pickup-upgrade-waiko-boni
+{"entity":"unlock:asgarnia:bonecrusher-auto-pickup-upgrade-waiko-boni","group":"all_required","op":"link-region","reason":"From unlock:forinthry:bonecrusher-auto-pickup-upgrade-waiko-boni.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:bonecrusher-auto-pickup-upgrade-waiko-boni","op":"remove","reason":"Duplicate of unlock:asgarnia:bonecrusher-auto-pickup-upgrade-waiko-boni, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Channeller's ring" -> keep unlock:fremennik:channellers-ring
+{"entity":"unlock:fremennik:channellers-ring","group":"all_required","op":"link-region","reason":"From unlock:anachronia:channellers-ring.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:channellers-ring","op":"remove","reason":"Duplicate of unlock:fremennik:channellers-ring, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Conservation of Energy relic chain" -> keep unlock:misthalin:conservation-of-energy-relic-chain
+{"entity":"unlock:misthalin:conservation-of-energy-relic-chain","group":"all_required","op":"link-region","reason":"From unlock:asgarnia:conservation-of-energy-relic-chain.","region":"asgarnia","relation":"primary"}
+{"entity":"unlock:asgarnia:conservation-of-energy-relic-chain","op":"remove","reason":"Duplicate of unlock:misthalin:conservation-of-energy-relic-chain, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:misthalin:conservation-of-energy-relic-chain","group":"all_required","op":"link-region","reason":"From unlock:kandarin:conservation-of-energy-relic-chain.","region":"kandarin","relation":"primary"}
+{"entity":"unlock:kandarin:conservation-of-energy-relic-chain","op":"remove","reason":"Duplicate of unlock:misthalin:conservation-of-energy-relic-chain, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Curly roots Firemaking ceiling stack (Jadinko + All Fired Up gear)" -> keep unlock:karamja:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear
+{"entity":"unlock:karamja:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear","group":"all_required","op":"link-region","reason":"From unlock:asgarnia:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear.","region":"asgarnia","relation":"primary"}
+{"entity":"unlock:asgarnia:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear","op":"remove","reason":"Duplicate of unlock:karamja:curly-roots-firemaking-ceiling-stack-jadinko-all-fired-up-gear, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Dark Facet of Grace (GOTE enchantment)" -> keep unlock:forinthry:dark-facet-of-grace-gote-enchantment
+{"entity":"unlock:forinthry:dark-facet-of-grace-gote-enchantment","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:dark-facet-of-grace-gote-enchantment.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:dark-facet-of-grace-gote-enchantment","op":"remove","reason":"Duplicate of unlock:forinthry:dark-facet-of-grace-gote-enchantment, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Death Ward relic chain" -> keep unlock:asgarnia:death-ward-relic-chain
+{"entity":"unlock:asgarnia:death-ward-relic-chain","group":"all_required","op":"link-region","reason":"From unlock:kandarin:death-ward-relic-chain.","region":"kandarin","relation":"primary"}
+{"entity":"unlock:kandarin:death-ward-relic-chain","op":"remove","reason":"Duplicate of unlock:asgarnia:death-ward-relic-chain, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Elite tectonic robe armour" -> keep unlock:asgarnia:elite-tectonic-robe-armour
+{"entity":"unlock:asgarnia:elite-tectonic-robe-armour","group":"all_required","op":"link-region","reason":"From unlock:forinthry:elite-tectonic-robe-armour.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:elite-tectonic-robe-armour","op":"remove","reason":"Duplicate of unlock:asgarnia:elite-tectonic-robe-armour, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Emberkeen / Hailfire / Flarefrost boots (T90 glacor upgrades)" -> keep unlock:fremennik:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades
+{"entity":"unlock:fremennik:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades","group":"all_required","op":"link-region","reason":"From unlock:forinthry:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades","op":"remove","reason":"Duplicate of unlock:fremennik:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Expansive essence pouch (70 essence, non-degrading)" -> keep unlock:misthalin:expansive-essence-pouch-70-essence-non-degrading
+{"entity":"unlock:misthalin:expansive-essence-pouch-70-essence-non-degrading","group":"all_required","op":"link-region","reason":"From unlock:forinthry:expansive-essence-pouch-70-essence-non-degrading.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:expansive-essence-pouch-70-essence-non-degrading","op":"remove","reason":"Duplicate of unlock:misthalin:expansive-essence-pouch-70-essence-non-degrading, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Fury of the Small relic chain" -> keep unlock:misthalin:fury-of-the-small-relic-chain
+{"entity":"unlock:misthalin:fury-of-the-small-relic-chain","group":"all_required","op":"link-region","reason":"From unlock:kandarin:fury-of-the-small-relic-chain.","region":"kandarin","relation":"primary"}
+{"entity":"unlock:kandarin:fury-of-the-small-relic-chain","op":"remove","reason":"Duplicate of unlock:misthalin:fury-of-the-small-relic-chain, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "GOTE + Dark Facet of Grace + ancient elven ritual shard sustain" -> keep unlock:forinthry:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain
+{"entity":"unlock:forinthry:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain","op":"remove","reason":"Duplicate of unlock:forinthry:gote-dark-facet-of-grace-ancient-elven-ritual-shard-sustain, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Grace of the elves (GOTE)" -> keep unlock:forinthry:grace-of-the-elves-gote
+{"entity":"unlock:forinthry:grace-of-the-elves-gote","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:grace-of-the-elves-gote.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:grace-of-the-elves-gote","op":"remove","reason":"Duplicate of unlock:forinthry:grace-of-the-elves-gote, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Grasping rune pouch" -> keep unlock:forinthry:grasping-rune-pouch
+{"entity":"unlock:forinthry:grasping-rune-pouch","group":"all_required","op":"link-region","reason":"From unlock:morytania:grasping-rune-pouch.","region":"morytania","relation":"primary"}
+{"entity":"unlock:morytania:grasping-rune-pouch","op":"remove","reason":"Duplicate of unlock:forinthry:grasping-rune-pouch, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Hatchet of Bloom and Blight" -> keep unlock:misthalin:hatchet-of-bloom-and-blight
+{"entity":"unlock:misthalin:hatchet-of-bloom-and-blight","group":"all_required","op":"link-region","reason":"From unlock:fremennik:hatchet-of-bloom-and-blight.","region":"fremennik","relation":"primary"}
+{"entity":"unlock:fremennik:hatchet-of-bloom-and-blight","op":"remove","reason":"Duplicate of unlock:misthalin:hatchet-of-bloom-and-blight, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:misthalin:hatchet-of-bloom-and-blight","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:hatchet-of-bloom-and-blight.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:hatchet-of-bloom-and-blight","op":"remove","reason":"Duplicate of unlock:misthalin:hatchet-of-bloom-and-blight, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Hatchet of Ember and Glade" -> keep unlock:misthalin:hatchet-of-ember-and-glade
+{"entity":"unlock:misthalin:hatchet-of-ember-and-glade","group":"all_required","op":"link-region","reason":"From unlock:fremennik:hatchet-of-ember-and-glade.","region":"fremennik","relation":"primary"}
+{"entity":"unlock:fremennik:hatchet-of-ember-and-glade","op":"remove","reason":"Duplicate of unlock:misthalin:hatchet-of-ember-and-glade, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:misthalin:hatchet-of-ember-and-glade","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:hatchet-of-ember-and-glade.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:hatchet-of-ember-and-glade","op":"remove","reason":"Duplicate of unlock:misthalin:hatchet-of-ember-and-glade, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Igneous cape progression" -> keep unlock:misthalin:igneous-cape-progression
+{"entity":"unlock:misthalin:igneous-cape-progression","group":"all_required","op":"link-region","reason":"From unlock:karamja:igneous-cape-progression.","region":"karamja","relation":"primary"}
+{"entity":"unlock:karamja:igneous-cape-progression","op":"remove","reason":"Duplicate of unlock:misthalin:igneous-cape-progression, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Masterwork 2h sword" -> keep unlock:asgarnia:masterwork-2h-sword
+{"entity":"unlock:asgarnia:masterwork-2h-sword","group":"all_required","op":"link-region","reason":"From unlock:forinthry:masterwork-2h-sword.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:masterwork-2h-sword","op":"remove","reason":"Duplicate of unlock:asgarnia:masterwork-2h-sword, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Masterwork bow" -> keep unlock:asgarnia:masterwork-bow
+{"entity":"unlock:asgarnia:masterwork-bow","group":"all_required","op":"link-region","reason":"From unlock:kandarin:masterwork-bow.","region":"kandarin","relation":"primary"}
+{"entity":"unlock:kandarin:masterwork-bow","op":"remove","reason":"Duplicate of unlock:asgarnia:masterwork-bow, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:asgarnia:masterwork-bow","group":"all_required","op":"link-region","reason":"From unlock:morytania:masterwork-bow.","region":"morytania","relation":"primary"}
+{"entity":"unlock:morytania:masterwork-bow","op":"remove","reason":"Duplicate of unlock:asgarnia:masterwork-bow, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Masterwork ranged armour material pressure (Havenhythe/Anachronia Hunter)" -> keep unlock:havenhythe:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter
+{"entity":"unlock:havenhythe:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter","group":"all_required","op":"link-region","reason":"From unlock:anachronia:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter","op":"remove","reason":"Duplicate of unlock:havenhythe:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Masterwork Spear of Annihilation" -> keep unlock:morytania:masterwork-spear-of-annihilation
+{"entity":"unlock:morytania:masterwork-spear-of-annihilation","group":"all_required","op":"link-region","reason":"From unlock:anachronia:masterwork-spear-of-annihilation.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:masterwork-spear-of-annihilation","op":"remove","reason":"Duplicate of unlock:morytania:masterwork-spear-of-annihilation, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Masterwork staff" -> keep unlock:tirannwn:masterwork-staff
+{"entity":"unlock:tirannwn:masterwork-staff","group":"all_required","op":"link-region","reason":"From unlock:asgarnia:masterwork-staff.","region":"asgarnia","relation":"primary"}
+{"entity":"unlock:asgarnia:masterwork-staff","op":"remove","reason":"Duplicate of unlock:tirannwn:masterwork-staff, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:tirannwn:masterwork-staff","group":"all_required","op":"link-region","reason":"From unlock:forinthry:masterwork-staff.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:masterwork-staff","op":"remove","reason":"Duplicate of unlock:tirannwn:masterwork-staff, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:tirannwn:masterwork-staff","group":"all_required","op":"link-region","reason":"From unlock:desert:masterwork-staff.","region":"desert","relation":"primary"}
+{"entity":"unlock:desert:masterwork-staff","op":"remove","reason":"Duplicate of unlock:tirannwn:masterwork-staff, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Mattock of Time and Space" -> keep unlock:misthalin:mattock-of-time-and-space
+{"entity":"unlock:misthalin:mattock-of-time-and-space","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:mattock-of-time-and-space.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:mattock-of-time-and-space","op":"remove","reason":"Duplicate of unlock:misthalin:mattock-of-time-and-space, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Nature's sentinel outfit" -> keep unlock:misthalin:natures-sentinel-outfit
+{"entity":"unlock:misthalin:natures-sentinel-outfit","group":"all_required","op":"link-region","reason":"From unlock:asgarnia:natures-sentinel-outfit.","region":"asgarnia","relation":"primary"}
+{"entity":"unlock:asgarnia:natures-sentinel-outfit","op":"remove","reason":"Duplicate of unlock:misthalin:natures-sentinel-outfit, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:misthalin:natures-sentinel-outfit","group":"all_required","op":"link-region","reason":"From unlock:kandarin:natures-sentinel-outfit.","region":"kandarin","relation":"primary"}
+{"entity":"unlock:kandarin:natures-sentinel-outfit","op":"remove","reason":"Duplicate of unlock:misthalin:natures-sentinel-outfit, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Orthen furnace core + Superheat Form + smithing autoheater stack" -> keep unlock:forinthry:orthen-furnace-core-superheat-form-smithing-autoheater-stack
+{"entity":"unlock:forinthry:orthen-furnace-core-superheat-form-smithing-autoheater-stack","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:orthen-furnace-core-superheat-form-smithing-autoheater-stack.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:orthen-furnace-core-superheat-form-smithing-autoheater-stack","op":"remove","reason":"Duplicate of unlock:forinthry:orthen-furnace-core-superheat-form-smithing-autoheater-stack, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Pickaxe of Earth and Song" -> keep unlock:fremennik:pickaxe-of-earth-and-song
+{"entity":"unlock:fremennik:pickaxe-of-earth-and-song","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:pickaxe-of-earth-and-song.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:pickaxe-of-earth-and-song","op":"remove","reason":"Duplicate of unlock:fremennik:pickaxe-of-earth-and-song, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Pickaxe of Life and Death" -> keep unlock:fremennik:pickaxe-of-life-and-death
+{"entity":"unlock:fremennik:pickaxe-of-life-and-death","group":"all_required","op":"link-region","reason":"From unlock:tirannwn:pickaxe-of-life-and-death.","region":"tirannwn","relation":"primary"}
+{"entity":"unlock:tirannwn:pickaxe-of-life-and-death","op":"remove","reason":"Duplicate of unlock:fremennik:pickaxe-of-life-and-death, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Reaver's ring" -> keep unlock:fremennik:reavers-ring
+{"entity":"unlock:fremennik:reavers-ring","group":"all_required","op":"link-region","reason":"From unlock:anachronia:reavers-ring.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:reavers-ring","op":"remove","reason":"Duplicate of unlock:fremennik:reavers-ring, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Sirenic armour (T90 ranged power craft)" -> keep unlock:forinthry:sirenic-armour-t90-ranged-power-craft
+{"entity":"unlock:forinthry:sirenic-armour-t90-ranged-power-craft","group":"self_supply_pressure_with_alternates","op":"link-region","reason":"From unlock:morytania:sirenic-armour-t90-ranged-power-craft.","region":"morytania","relation":"primary"}
+{"entity":"unlock:morytania:sirenic-armour-t90-ranged-power-craft","op":"remove","reason":"Duplicate of unlock:forinthry:sirenic-armour-t90-ranged-power-craft, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Skeka's hypnowand" -> keep unlock:forinthry:skekas-hypnowand
+{"entity":"unlock:forinthry:skekas-hypnowand","group":"all_required","op":"link-region","reason":"From unlock:anachronia:skekas-hypnowand.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:forinthry:skekas-hypnowand","label":"Hunter skilling off-hand","op":"add-tag","reason":"From unlock:anachronia:skekas-hypnowand.","tag":"hunter-skilling-off-hand"}
+{"entity":"unlock:anachronia:skekas-hypnowand","op":"remove","reason":"Duplicate of unlock:forinthry:skekas-hypnowand, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Slayer Introspection (Amascut's Enchanted Gem)" -> keep unlock:misthalin:slayer-introspection-amascuts-enchanted-gem
+{"entity":"unlock:misthalin:slayer-introspection-amascuts-enchanted-gem","group":"all_required","op":"link-region","reason":"From unlock:kandarin:slayer-introspection-amascuts-enchanted-gem.","region":"kandarin","relation":"primary"}
+{"entity":"unlock:kandarin:slayer-introspection-amascuts-enchanted-gem","op":"remove","reason":"Duplicate of unlock:misthalin:slayer-introspection-amascuts-enchanted-gem, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+{"entity":"unlock:misthalin:slayer-introspection-amascuts-enchanted-gem","group":"all_required","op":"link-region","reason":"From unlock:morytania:slayer-introspection-amascuts-enchanted-gem.","region":"morytania","relation":"primary"}
+{"entity":"unlock:morytania:slayer-introspection-amascuts-enchanted-gem","op":"remove","reason":"Duplicate of unlock:misthalin:slayer-introspection-amascuts-enchanted-gem, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Stalker's ring" -> keep unlock:fremennik:stalkers-ring
+{"entity":"unlock:fremennik:stalkers-ring","group":"all_required","op":"link-region","reason":"From unlock:anachronia:stalkers-ring.","region":"anachronia","relation":"primary"}
+{"entity":"unlock:anachronia:stalkers-ring","op":"remove","reason":"Duplicate of unlock:fremennik:stalkers-ring, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}
+# unlock "Superior dragon claws (Wilderness hilt upgrade)" -> keep unlock:misthalin:superior-dragon-claws-wilderness-hilt-upgrade
+{"entity":"unlock:misthalin:superior-dragon-claws-wilderness-hilt-upgrade","group":"all_required","op":"link-region","reason":"From unlock:forinthry:superior-dragon-claws-wilderness-hilt-upgrade.","region":"forinthry","relation":"primary"}
+{"entity":"unlock:forinthry:superior-dragon-claws-wilderness-hilt-upgrade","op":"remove","reason":"Duplicate of unlock:misthalin:superior-dragon-claws-wilderness-hilt-upgrade, which renders on the same region pages; every fact it held that the survivor lacked was carried over first."}

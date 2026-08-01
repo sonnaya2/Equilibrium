@@ -2,7 +2,7 @@ import type { AbilityResult, AbilitySpec } from "../../pipeline/calculateAbility
 import { activateRunicCharge } from "../../styles/magic/runicCharge";
 import { castRejection, candidateTick } from "./rules";
 import { scheduleCastEvents } from "./schedule";
-import { applyCastEffects } from "./effects";
+import { applyCastEffects, applyCompletionEffects, castEffectContext } from "./effects";
 import { prepareCast, type PreparedCast } from "./prepare";
 import { advanceTo } from "../runtime/clock";
 import type { CastAttempt, CastRng } from "../simulation/contracts";
@@ -35,9 +35,10 @@ export function prepareSimulationCast(
 }
 
 /**
- * Commit one prepared cast on a runtime: schedule damage events, apply the
- * resource and on-cast state transitions, then complete occupancy (advancing
- * through the channel lands its due hits and passive generation).
+ * Commit one prepared cast on a runtime: schedule its damage events, apply the
+ * cast-start transitions, advance through occupancy (landing the channel's due
+ * hits and passive generation), apply the transitions that needed a completed
+ * channel, then record the cast.
  */
 export function commitCast(
   rt: SimulationRuntime,
@@ -47,8 +48,10 @@ export function commitCast(
 ): void {
   const record = scheduleCastEvents(rt, prepared, auto);
   applyCastEffects(rt, prepared, rng);
-  rt.endTick = Math.max(rt.endTick, prepared.candidate + prepared.occupancyTicks);
-  advanceTo(rt, prepared.candidate + prepared.occupancyTicks);
+  const completesAt = prepared.candidate + prepared.occupancyTicks;
+  rt.endTick = Math.max(rt.endTick, completesAt);
+  advanceTo(rt, completesAt);
+  applyCompletionEffects(castEffectContext(rt, prepared, rng));
   record.adrenalineAfter = rt.state.adrenaline;
   rt.casts.push(record);
 }

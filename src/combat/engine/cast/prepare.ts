@@ -23,9 +23,26 @@ import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
 
 /**
+ * A state change decided during preparation and applied at commit, in list
+ * order. Preparation stays read-only, so a mechanic records its transition here
+ * instead of adding another boolean to PreparedCast.
+ */
+export type PreparedTransition =
+  /** Bloodlust stacks the empowered variant consumes. */
+  | { kind: "spendBloodlust"; stacks: number }
+  /** Endless Assault window Greater Barge opens after enough idle ticks. */
+  | { kind: "grantEndlessAssault"; untilTick: number }
+  /** Endless Assault window a channelled melee cast inside one consumes. */
+  | { kind: "consumeEndlessAssault" }
+  /** Next-hit melee windows this cast consumes. */
+  | { kind: "consumeChaosRoar" }
+  | { kind: "consumeGreaterFury" }
+  | { kind: "consumeFury" };
+
+/**
  * Everything one atomic cast needs, computed once against the advanced state
  * at the candidate tick. Preparation is READ-ONLY: every state mutation the
- * cast implies is recorded here as data and applied by castEffects at commit.
+ * cast implies is recorded here as data and applied by cast/effects at commit.
  */
 export interface PreparedCast {
   /** The ability as queued. */
@@ -39,16 +56,7 @@ export interface PreparedCast {
   spend: number;
   occupancyTicks: number;
   snap: CastSnapshot;
-  /** Bloodlust stacks to consume at commit (0 = unempowered). */
-  bloodlustSpend: number;
-  /** Next-hit windows to consume at commit. */
-  chaosRoarConsume: boolean;
-  greaterFuryConsume: boolean;
-  furyConsume: boolean;
-  /** Endless Assault window to open (Greater Barge after enough idle ticks). */
-  endlessAssaultGrantUntilTick?: number;
-  /** Endless Assault window to consume (channelled melee inside one). */
-  endlessAssaultConsume: boolean;
+  transitions: readonly PreparedTransition[];
 }
 
 /**
@@ -211,6 +219,16 @@ export function prepareCast(
     searingWindsAtCast,
   };
 
+  const transitions: PreparedTransition[] = [];
+  if (bloodlustSpend > 0) transitions.push({ kind: "spendBloodlust", stacks: bloodlustSpend });
+  if (endlessAssaultGrantUntilTick !== undefined) {
+    transitions.push({ kind: "grantEndlessAssault", untilTick: endlessAssaultGrantUntilTick });
+  }
+  if (endlessAssaultConsume) transitions.push({ kind: "consumeEndlessAssault" });
+  if (chaosRoarConsume) transitions.push({ kind: "consumeChaosRoar" });
+  if (greaterFuryConsume) transitions.push({ kind: "consumeGreaterFury" });
+  if (furyConsume) transitions.push({ kind: "consumeFury" });
+
   return {
     ability,
     working,
@@ -219,11 +237,6 @@ export function prepareCast(
     spend: spendOf(rt.state, ability, candidate, input.ammo),
     occupancyTicks: ability.channelTicks ?? GLOBAL_COOLDOWN_TICKS,
     snap,
-    bloodlustSpend,
-    chaosRoarConsume,
-    greaterFuryConsume,
-    furyConsume,
-    ...(endlessAssaultGrantUntilTick !== undefined ? { endlessAssaultGrantUntilTick } : {}),
-    endlessAssaultConsume,
+    transitions,
   };
 }

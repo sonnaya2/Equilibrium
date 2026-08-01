@@ -56,9 +56,8 @@ function entityCommand(db, name) {
     return {
       entity: { id, type: context.entity.entity_type, name: context.entity.name },
       relationships: context.related,
-      regions: context.regions.map(({ region_id }) => `/data/v2/regions/${region_id}.json`),
+      regions: context.regions.map(({ region_id }) => region_id),
       domain: context.entity.entity_type,
-      frontendShard: buildOutputs(db).idMap[id] ?? null,
       sources: context.sources.map(({ id: sourceId }) => sourceId),
       responsibility: context.responsibility,
       validation: ["foreign keys", "source URLs", "region taxonomy", "search index", "research parity"],

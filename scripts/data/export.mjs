@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
 import {
   DATA_CATALOG,
@@ -9,17 +9,15 @@ import {
   DOMAIN_TABLES,
   EXPORT_ROOT,
   EXPORT_VERSION,
-  REGION_IDS,
   REPORTS,
   ROOT,
   SCHEMA_VERSION,
   SHARD_LIMIT_BYTES,
-  SHARD_TARGET_BYTES,
   TRANSFORM_BY_NAME,
 } from "./config.mjs";
 import { prepared, recordTransform } from "./database.mjs";
 import { researchExport, researchParity } from "./research.mjs";
-import { atomicWrite, hash, jsonLine, slash, slugify, stableJson, walkFiles } from "./utilities.mjs";
+import { atomicWrite, hash, slash, stableJson, walkFiles } from "./utilities.mjs";
 
 function setRecordAtPath(document, recordPath, value) {
   const tokens = [...recordPath.matchAll(/\.([^.[\]]+)|\[(\d+)\]/g)].map((match) =>
@@ -85,99 +83,6 @@ export function documentOutputs(db) {
   );
 }
 
-function rowsByEntity(rows) {
-  const grouped = new Map();
-  for (const { entity_id, ...row } of rows) {
-    const values = grouped.get(entity_id) ?? [];
-    values.push(row);
-    grouped.set(entity_id, values);
-  }
-  return grouped;
-}
-
-function entityExport(entity, regionsByEntity, sourcesByEntity) {
-  return {
-    id: entity.id,
-    type: entity.entity_type,
-    name: entity.name,
-    description: entity.short_description || entity.detailed_description,
-    verifiedAt: entity.verified_at,
-    status: entity.status,
-    regions: regionsByEntity.get(entity.id) ?? [],
-    sources: sourcesByEntity.get(entity.id) ?? [],
-  };
-}
-
-// Shards are filled to a byte target rather than a record count so a domain of
-// long records still downloads in predictable chunks.
-function chunkDomain(domain, rows) {
-  const chunks = [];
-  let current = [];
-  for (const row of rows) {
-    const candidate = [...current, row];
-    const body = jsonLine({ schemaVersion: EXPORT_VERSION, domain, records: candidate });
-    if (current.length && Buffer.byteLength(body) > SHARD_TARGET_BYTES) {
-      chunks.push(current);
-      current = [row];
-    } else current = candidate;
-  }
-  if (current.length) chunks.push(current);
-  return chunks;
-}
-
-function domainShards(outputs, manifest, entities, regionsByEntity, sourcesByEntity) {
-  const idMap = {};
-  for (const domain of [...new Set(entities.map(({ entity_type }) => entity_type))].sort()) {
-    const records = entities
-      .filter(({ entity_type }) => entity_type === domain)
-      .map((entity) => entityExport(entity, regionsByEntity, sourcesByEntity));
-    const shards = [];
-    for (const [index, chunk] of chunkDomain(domain, records).entries()) {
-      const body = jsonLine({ schemaVersion: EXPORT_VERSION, domain, records: chunk });
-      const path = `domains/${slugify(domain)}-${String(index + 1).padStart(2, "0")}.json`;
-      outputs.set(path, body);
-      const entry = { href: `/data/v2/${path}`, sha256: hash(body), bytes: Buffer.byteLength(body), records: chunk.length };
-      shards.push(entry);
-      for (const record of chunk) idMap[record.id] = entry.href;
-    }
-    manifest.domains[domain] = { records: records.length, shards };
-  }
-  return idMap;
-}
-
-// Bounded ID shards let a page resolve one stable ID without downloading a
-// whole-database index.
-function idIndexShards(outputs, manifest, idMap) {
-  let chunk = {};
-  const flush = () => {
-    const entries = Object.entries(chunk);
-    if (!entries.length) return;
-    const body = jsonLine({ schemaVersion: EXPORT_VERSION, ids: chunk });
-    const path = `indexes/entities-${String(manifest.idIndexes.length + 1).padStart(2, "0")}.json`;
-    outputs.set(path, body);
-    manifest.idIndexes.push({
-      firstId: entries[0][0],
-      lastId: entries.at(-1)[0],
-      href: `/data/v2/${path}`,
-      sha256: hash(body),
-      bytes: Buffer.byteLength(body),
-      records: entries.length,
-    });
-    chunk = {};
-  };
-  for (const [id, href] of Object.entries(idMap).sort(([a], [b]) => a.localeCompare(b))) {
-    const candidate = { ...chunk, [id]: href };
-    if (
-      Object.keys(chunk).length &&
-      Buffer.byteLength(jsonLine({ schemaVersion: EXPORT_VERSION, ids: candidate })) > SHARD_TARGET_BYTES
-    ) {
-      flush();
-    }
-    chunk[id] = href;
-  }
-  flush();
-}
-
 export function buildOutputs(db) {
   const outputs = new Map();
   const research = researchExport(db);
@@ -186,28 +91,8 @@ export function buildOutputs(db) {
   // change, so its provenance, sources and relationships stay queryable through
   // data:context while the browser stops being told about it. Without this the
   // whole point of retiring a duplicate is lost - both records keep shipping.
-  const entities = db
-    .prepare(
-      `SELECT id, entity_type, name, short_description, detailed_description, verified_at, status
-       FROM entities WHERE status <> 'removed' ORDER BY entity_type, id`,
-    )
-    .all();
-  const regionsByEntity = rowsByEntity(
-    db
-      .prepare(
-        "SELECT entity_id, region_id, relation, ordinal FROM entity_regions ORDER BY entity_id, relation, ordinal, region_id",
-      )
-      .all(),
-  );
-  const sourcesByEntity = rowsByEntity(
-    db
-      .prepare(
-        `SELECT entity_sources.entity_id, sources.id, sources.url, sources.page_title AS title,
-                sources.verified_at AS verifiedAt, entity_sources.role
-         FROM entity_sources JOIN sources ON sources.id = entity_sources.source_id
-         ORDER BY entity_sources.entity_id, entity_sources.ordinal, sources.id`,
-      )
-      .all(),
+  const recordCount = Number(
+    db.prepare("SELECT count(*) AS count FROM entities WHERE status <> 'removed'").get().count,
   );
   const documents = {};
   for (const [path, body] of documentOutputs(db)) {
@@ -218,40 +103,31 @@ export function buildOutputs(db) {
       bytes: Buffer.byteLength(body),
     };
   }
+  // Bookkeeping, not a payload: `data:doctor` and `data:diff` read it to spot a
+  // stale export. It is written under reports/ rather than shipped, because the
+  // browser never asked for it.
   const manifest = {
     schemaVersion: SCHEMA_VERSION,
     exportVersion: EXPORT_VERSION,
     databaseInputHash: db.prepare("SELECT input_hash FROM transform_runs WHERE name = 'canonical-ingest'").get()
       .input_hash,
-    recordCount: entities.length,
+    recordCount,
     documents,
-    domains: {},
     regions: Object.fromEntries(research.index.regions.map((region) => [region.id, region])),
-    idIndexes: [],
   };
-  const idMap = domainShards(outputs, manifest, entities, regionsByEntity, sourcesByEntity);
-  idIndexShards(outputs, manifest, idMap);
-  for (const region of REGION_IDS) {
-    const records = prepared(
-      db,
-      `SELECT entities.id, entities.entity_type AS type, entities.name, entity_regions.relation
-       FROM entity_regions JOIN entities ON entities.id = entity_regions.entity_id
-       WHERE entity_regions.region_id = ? AND entities.status <> 'removed'
-       ORDER BY entities.entity_type, entities.id`,
-    ).all(region);
-    const body = jsonLine({ schemaVersion: EXPORT_VERSION, region, records });
-    const path = `regions/${region}.json`;
-    outputs.set(path, body);
-    manifest.regions[region] = {
-      ...(manifest.regions[region] ?? { id: region }),
-      indexHref: `/data/v2/${path}`,
-      indexSha256: hash(body),
-      indexBytes: Buffer.byteLength(body),
-      indexedRecords: records.length,
-    };
+  return { outputs, manifest };
+}
+
+// Removing every file in a directory leaves the directory. An empty `domains/`
+// under the deploy reads as "something failed to write" rather than "nothing
+// belongs here any more".
+function pruneEmptyDirectories(root) {
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const path = join(root, entry.name);
+    pruneEmptyDirectories(path);
+    if (!readdirSync(path).length) rmSync(path, { recursive: true, force: true });
   }
-  outputs.set("manifest.json", jsonLine(manifest));
-  return { outputs, manifest, idMap };
 }
 
 export function compareOutputs(outputs) {
@@ -279,7 +155,7 @@ export function gitDataStatus() {
   }
 }
 
-function writeCatalog(db, manifest) {
+function writeCatalog(db) {
   const counts = db
     .prepare("SELECT entity_type, count(*) AS count FROM entities GROUP BY entity_type ORDER BY entity_type")
     .all();
@@ -290,11 +166,9 @@ function writeCatalog(db, manifest) {
     "",
     "## Domains",
     "",
-    "| Domain | Records | Frontend shards |",
-    "| --- | ---: | ---: |",
-    ...counts.map(
-      ({ entity_type, count }) => `| ${entity_type} | ${count} | ${manifest.domains[entity_type]?.shards.length ?? 0} |`,
-    ),
+    "| Domain | Records |",
+    "| --- | ---: |",
+    ...counts.map(({ entity_type, count }) => `| ${entity_type} | ${count} |`),
     "",
     "## Normal workflow",
     "",
@@ -393,8 +267,10 @@ export function exportData(db, checkOnly = false) {
   if (checkOnly) return { ...comparison, written: [] };
   mkdirSync(EXPORT_ROOT, { recursive: true });
   for (const path of comparison.stale) rmSync(join(EXPORT_ROOT, path), { force: true });
+  pruneEmptyDirectories(EXPORT_ROOT);
   for (const path of comparison.changed) atomicWrite(join(EXPORT_ROOT, path), outputs.get(path));
-  writeCatalog(db, manifest);
-  recordTransform(db, TRANSFORM_BY_NAME.get("frontend-shards"), hash(outputs.get("manifest.json")), manifest.recordCount);
+  writeCatalog(db);
+  atomicWrite(join(REPORTS, "data-export-manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
+  recordTransform(db, TRANSFORM_BY_NAME.get("frontend-shards"), hash(stableJson(manifest)), manifest.recordCount);
   return { ...comparison, written: comparison.changed };
 }

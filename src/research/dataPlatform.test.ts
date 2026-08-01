@@ -101,56 +101,37 @@ interface Manifest {
   exportVersion: number;
   recordCount: number;
   documents: Record<string, Artifact>;
-  domains: Record<string, { records: number; shards: Shard[] }>;
   regions: Record<string, RegionArtifacts>;
-  idIndexes: Array<Shard & { firstId: string; lastId: string }>;
 }
 
 describe("generated data platform", () => {
-  const manifest = readJson<Manifest>("public/data/v2/manifest.json");
+  // Build bookkeeping, not a payload. It lives under reports/ because nothing in
+  // the browser ever asked for it.
+  const manifest = readJson<Manifest>("reports/data-export-manifest.json");
 
-  it("keeps every frontend artifact bounded and content-addressed", () => {
+  it("keeps every fetched artifact bounded and content-addressed", () => {
     expect(manifest.schemaVersion).toBe(5);
     expect(manifest.exportVersion).toBe(2);
-    const regionArtifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
+    const artifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
       region,
-      { href: region.indexHref, sha256: region.indexSha256, bytes: region.indexBytes },
       region.panels.regional,
       ...Object.values(region.panels.unlocks),
     ]);
-    const artifacts: Artifact[] = [
-      ...Object.values(manifest.domains).flatMap((domain) => domain.shards),
-      ...manifest.idIndexes,
-      ...regionArtifacts,
-    ];
+    expect(artifacts.length).toBeGreaterThan(50);
     for (const artifact of artifacts) {
-      const path = artifact.href.replace(/^\//, "");
-      expect(existsSync(join(root, "public", path.replace(/^data\//, "data/"))), path).toBe(true);
-      const repoPath = `public/${path}`;
+      const repoPath = `public${artifact.href}`;
+      expect(existsSync(join(root, repoPath)), repoPath).toBe(true);
       expect(statSync(join(root, repoPath)).size, repoPath).toBe(artifact.bytes);
       expect(digest(repoPath), repoPath).toBe(artifact.sha256);
       expect(artifact.bytes, repoPath).toBeLessThan(500 * 1024);
     }
   });
 
-  it("indexes every exported stable ID exactly once", () => {
-    const ids = new Map<string, string>();
-    for (const shard of manifest.idIndexes) {
-      const index = readJson<{ ids: Record<string, string> }>(`public${shard.href}`);
-      for (const [id, href] of Object.entries(index.ids)) {
-        expect(ids.has(id), `duplicate exported ID ${id}`).toBe(false);
-        ids.set(id, href);
-      }
-    }
-    expect(ids.size).toBe(manifest.recordCount);
-    for (const id of [
-      "item:seismic-wand",
-      "magic:sonic-wave",
-      "prayer:clarity-of-thought",
-      "perk:biting",
-      "wiki:462",
-    ]) {
-      expect(ids.has(id), id).toBe(true);
+  // Domain shards and ID indexes used to ship 3.9 MB that no line of app code
+  // ever read. The database is the index now.
+  it("ships nothing the app does not fetch", () => {
+    for (const dead of ["domains", "indexes", "regions", "manifest.json"]) {
+      expect(existsSync(join(root, "public/data/v2", dead)), dead).toBe(false);
     }
   });
 

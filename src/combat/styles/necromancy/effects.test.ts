@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { secondsToTicks } from "../../core/ticks";
+import { rotationOf } from "../../engine/simulation/contracts";
+import { createCastContext, simulate } from "../../engine/simulation/simulate";
+import { necroInput } from "../../test/fixtures/inputs";
+import { abilityById, findCast } from "../../test/helpers/summary";
 import {
   DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS,
   LIVING_DEATH_DURATION_SECONDS,
@@ -144,5 +148,59 @@ describe("necro rotation state machine", () => {
     expect(conjureActive(z, "putrid_zombie", 0)).toBe(true);
     z = applyNecroOnCast(necro, byId("command_putrid_zombie"), 10, z).conjures!;
     expect(conjureActive(z, "putrid_zombie", 10)).toBe(false);
+  });
+});
+
+describe("living death — cooldown resets and damage buff through the simulator", () => {
+  it("Living Death resets ToD/DS CDs, buffs FoD, and shortens Death Skulls CD", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = abilityById(NECROMANCY_ABILITIES, "necromancy_basic");
+    const tod = abilityById(NECROMANCY_ABILITIES, "touch_of_death");
+    const ld = abilityById(NECROMANCY_ABILITIES, "living_death");
+    const fod = abilityById(NECROMANCY_ABILITIES, "finger_of_death");
+    const ds = abilityById(NECROMANCY_ABILITIES, "death_skulls");
+
+    for (let i = 0; i < 12; i++) ctx.performCast(basic, i * 3, false);
+    ctx.performCast(tod, 36, false);
+    expect(ctx.getState().cooldowns["touch_of_death"]).toBeGreaterThan(ctx.getState().tick);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(4);
+
+    ctx.performCast(ld, 39, false);
+    expect(ctx.getState().necromancy.resources.livingDeathUntilTick).toBeGreaterThan(39);
+    expect(ctx.getState().cooldowns["touch_of_death"]).toBeUndefined();
+    expect(ctx.getState().cooldowns["death_skulls"]).toBeUndefined();
+
+    ctx.performCast(basic, 42, false);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(6);
+
+    ctx.performCast(fod, 45, false);
+    expect(ctx.getState().necromancy.resources.necrosisStacks).toBe(0);
+
+    for (let i = 0; i < 7; i++) ctx.performCast(basic, 48 + i * 3, false);
+    const dsTick = 48 + 7 * 3;
+    ctx.performCast(ds, dsTick, false);
+    expect(ctx.getState().cooldowns["death_skulls"]).toBe(
+      dsTick + DEATH_SKULLS_LIVING_DEATH_COOLDOWN_TICKS,
+    );
+  });
+
+  it("Living Death multiplies Finger of Death damage in the full sim path", () => {
+    const s = simulate({
+      ...necroInput,
+      rotation: rotationOf(
+        ...Array(12).fill("necromancy_basic"),
+        "touch_of_death",
+        "living_death",
+        "necromancy_basic",
+        "finger_of_death",
+      ),
+    });
+    expect(s.ok).toBe(true);
+    const fodCast = findCast(
+      s,
+      (cast) => cast.abilityId === "finger_of_death",
+      "Missing Finger of Death cast",
+    );
+    expect(fodCast.result.expected).toBeCloseTo(4500);
   });
 });

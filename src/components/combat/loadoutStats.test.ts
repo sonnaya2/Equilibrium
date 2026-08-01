@@ -64,14 +64,13 @@ vi.mock("@/combat/data", async (importOriginal) => {
 const base: Loadout = { ...DEFAULT_LOADOUT };
 
 describe("loadoutStats", () => {
-  it("uses the manual base when set; no weapon equipped falls back to the tier slider", () => {
-    expect(loadoutBase(base)).toBe(1000);
-    const fallback: Loadout = { ...base, base: NaN, level: 99, weaponTier: 90, style: "melee" };
-    // Slider fallback keeps the pre-routing twohand assumption.
+  it("defaults to automatic base; no weapon equipped uses the selected configuration", () => {
+    const fallback: Loadout = { ...base, level: 99, weaponTier: 90, style: "melee" };
     expect(loadoutWeaponConfig(fallback)).toEqual({
       kind: "twohand",
       weapon: { tier: 90 },
       style: "melee",
+      styleBonus: 0,
     });
     expect(loadoutBase(fallback)).toBe(
       baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
@@ -85,7 +84,6 @@ describe("loadoutStats", () => {
       attackLevel: 80,
       strengthLevel: 110,
       level: 110,
-      base: NaN,
       weaponTier: 90,
       target: { defenceLevel: 80, affinity: "same" },
     };
@@ -112,7 +110,6 @@ describe("loadoutStats", () => {
       level: 105,
       attackLevel: 1,
       strengthLevel: 1,
-      base: NaN,
       weaponTier: 90,
       target: { defenceLevel: 80, affinity: "same" },
     };
@@ -128,13 +125,50 @@ describe("loadoutStats", () => {
   });
 
   it("passes accuracy% through as Damage Potential when no target is set", () => {
-    expect(loadoutStats({ ...base, accuracy: 70 }).dp).toBeCloseTo(0.7, 10);
+    const stats = loadoutStats({ ...base, accuracy: 70 });
+    expect(stats.dp).toBeCloseTo(0.7, 10);
+    expect(stats.damagePotentialSource).toBe("manual override");
+    expect(loadoutStats(base).damagePotentialSource).toBe("100% assumption");
   });
 
   it("derives Damage Potential from the target model when set", () => {
     const stats = loadoutStats({ ...base, target: { defenceLevel: 80, affinity: "same" } });
     const expected = hitChance(playerAccuracy(99, 90), { defenceLevel: 80, affinity: "same" });
     expect(stats.dp).toBeCloseTo(expected, 10);
+    expect(stats.damagePotentialSource).toBe("target stats");
+  });
+
+  it("surfaces manual target DP override provenance", () => {
+    const stats = loadoutStats({
+      ...base,
+      target: {
+        defenceLevel: 80,
+        affinity: "same",
+        damagePotentialOverride: 0.42,
+      },
+    });
+    expect(stats.dp).toBe(0.42);
+    expect(stats.damagePotentialSource).toBe("manual override");
+  });
+
+  it("keeps automatic base reactive while manual base is an explicit raw-AD override", () => {
+    const automatic = loadoutStats({ ...base, level: 110, strengthLevel: 110 });
+    expect(automatic.rawBase).toBe(
+      computedLoadoutBase({ ...base, level: 110, strengthLevel: 110 }),
+    );
+
+    const manual = loadoutStats({
+      ...base,
+      level: 110,
+      strengthLevel: 110,
+      baseDamage: { mode: "manual", manualValue: 2345 },
+      startingAdrenaline: 72,
+      hitCapEnabled: false,
+    });
+    expect(manual.rawBase).toBe(2345);
+    expect(manual.base).toBe(2345);
+    expect(manual.startingAdrenaline).toBe(72);
+    expect(manual.cap).toEqual({ cap: 30_000, bypass: true });
   });
 
   it("adds Energising's flat accuracy inside the target model only", () => {
@@ -260,13 +294,10 @@ describe("loadoutStats", () => {
         },
       });
       expect(stats.critChance).toBe(0);
-      const mod = stats.globalModifiers.find((m) => m.id === `perk:equilibrium:${rank}`);
-      expect(mod).toBeDefined();
       const mult = 1 + equilibriumDamageBonus(rank);
       expect(mult).toBeCloseTo(1.06 + 0.02 * rank, 10);
-      expect(runPipeline({ damage: 1000 }, [mod!], { style: "melee" }).damage).toBe(
-        Math.floor(1000 * mult),
-      );
+      expect(stats.base).toBe(Math.floor(stats.rawBase * mult));
+      expect(stats.globalModifiers.some((m) => m.id.startsWith("perk:equilibrium"))).toBe(false);
     }
   });
 
@@ -325,6 +356,7 @@ describe("loadoutStats", () => {
 
     const mainhand: Loadout = {
       ...base,
+      style: "necromancy",
       equipmentSlots: { mainhand: "item:soulbound-lantern" },
       weaponTier: 90,
     };
@@ -344,7 +376,6 @@ describe("loadoutStats", () => {
   it("routes base AD through the equipped weapon configuration", () => {
     const twohand: Loadout = {
       ...base,
-      base: NaN,
       style: "melee",
       level: 99,
       strengthLevel: 99,
@@ -354,62 +385,92 @@ describe("loadoutStats", () => {
       kind: "twohand",
       weapon: { tier: 90 },
       style: "melee",
+      styleBonus: 0,
     });
     expect(loadoutBase(twohand)).toBe(
-      baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
+      baseAbilityDamage(99, {
+        kind: "twohand",
+        weapon: { tier: 90 },
+        style: "melee",
+        styleBonus: 0,
+      }),
     );
 
     const dual: Loadout = {
       ...base,
-      base: NaN,
       style: "magic",
       level: 99,
       equipmentSlots: { mainhand: "item:seismic-wand", offhand: "item:seismic-singularity" },
     };
     expect(loadoutWeaponConfig(dual)).toEqual({
       kind: "mainhand",
+      style: "magic",
       weapon: { tier: 90 },
       offhand: { tier: 90 },
+      styleBonus: equippedBonuses(dual).damage,
+      spellTier: 90,
     });
     expect(loadoutBase(dual)).toBe(
-      baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 90 }, offhand: { tier: 90 } }),
+      baseAbilityDamage(99, {
+        kind: "mainhand",
+        style: "magic",
+        weapon: { tier: 90 },
+        offhand: { tier: 90 },
+        spellTier: 90,
+        styleBonus: equippedBonuses(dual).damage,
+      }),
     );
 
     const mainOnly: Loadout = {
       ...base,
-      base: NaN,
       style: "magic",
       level: 99,
       equipmentSlots: { mainhand: "item:seismic-wand" },
     };
-    expect(loadoutWeaponConfig(mainOnly)).toEqual({ kind: "mainhand", weapon: { tier: 90 } });
+    expect(loadoutWeaponConfig(mainOnly)).toEqual({
+      kind: "mainhand",
+      style: "magic",
+      weapon: { tier: 90 },
+      styleBonus: equippedBonuses(mainOnly).damage,
+      spellTier: 90,
+    });
     expect(loadoutBase(mainOnly)).toBe(
-      baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 90 } }),
+      baseAbilityDamage(99, {
+        kind: "mainhand",
+        style: "magic",
+        weapon: { tier: 90 },
+        spellTier: 90,
+        styleBonus: equippedBonuses(mainOnly).damage,
+      }),
     );
   });
 
-  it("necromancy mainhand + offhand conduit routes through the dual-wield formula", () => {
+  it("necromancy mainhand + conduit uses the explicit necromancy formula", () => {
     const necro: Loadout = {
       ...base,
-      base: NaN,
       style: "necromancy",
       level: 99,
       equipmentSlots: { mainhand: "item:omni-guard", offhand: "item:soulbound-lantern" },
     };
     expect(loadoutWeaponConfig(necro)).toEqual({
-      kind: "mainhand",
-      weapon: { tier: 95 },
-      offhand: { tier: 95 },
+      kind: "necromancy",
+      deathGuard: { tier: 95 },
+      conduit: { tier: 95 },
+      styleBonus: 0,
     });
     expect(loadoutBase(necro)).toBe(
-      baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 95 }, offhand: { tier: 95 } }),
+      baseAbilityDamage(99, {
+        kind: "necromancy",
+        deathGuard: { tier: 95 },
+        conduit: { tier: 95 },
+        styleBonus: 0,
+      }),
     );
   });
 
   it("overload-boosted level feeds computed base AD; prayer curse never does", () => {
     const loadout: Loadout = {
       ...base,
-      base: NaN,
       style: "melee",
       attackLevel: 99,
       strengthLevel: 99,
@@ -524,9 +585,23 @@ describe("loadoutStats", () => {
     expect(withBoth.dp).toBeCloseTo(hitChance(playerAccuracy(99, 90) + 150 + 100, target), 10);
   });
 
-  it("Eruptive adds a global base-stage damage modifier", () => {
+  it("Eruptive changes the canonical base without a second hit-stage modifier", () => {
     const stats = loadoutStats({ ...base, perks: { ...base.perks, eruptive: 4 } });
-    expect(stats.globalModifiers.some((m) => m.id === "perk:eruptive:4")).toBe(true);
+    expect(stats.base).toBe(Math.floor(stats.rawBase * 1.02));
+    expect(stats.globalModifiers.some((m) => m.id === "perk:eruptive:4")).toBe(false);
+  });
+
+  it("applies Equilibrium then Eruptive once at the shared AD-stat boundary", () => {
+    const stats = loadoutStats({
+      ...base,
+      perks: { ...base.perks, equilibrium: 4, eruptive: 4 },
+    });
+    expect(stats.base).toBe(Math.floor(Math.floor(stats.rawBase * 1.14) * 1.02));
+    expect(stats.critChance).toBe(0);
+    expect(stats.globalModifiers.some((modifier) => modifier.id.includes("equilibrium"))).toBe(
+      false,
+    );
+    expect(stats.globalModifiers.some((modifier) => modifier.id.includes("eruptive"))).toBe(false);
   });
 
   it("Invigorating and Impatient feed adrenaline rules (rank 0 = defaults)", () => {
@@ -598,8 +673,8 @@ describe("loadoutStats", () => {
       ...base,
       perks: { ...base.perks, equilibrium: 4, ultimatums: 4 },
     });
-    expect(ranked.globalModifiers).toHaveLength(1);
-    expect(ranked.castModifiersFor(ability)).toHaveLength(2);
+    expect(ranked.globalModifiers).toHaveLength(0);
+    expect(ranked.castModifiersFor(ability)).toHaveLength(1);
     const ultimate = { id: "melee:overpower", category: "ultimate" } as typeof ability;
     expect(
       ranked

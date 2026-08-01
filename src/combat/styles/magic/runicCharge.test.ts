@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { rotationOf } from "../../engine/simulation/contracts";
+import { simulate } from "../../engine/simulation/simulate";
+import { magicInput } from "../../test/fixtures/inputs";
 import {
   activateRunicCharge,
   animaCharged,
@@ -37,5 +40,36 @@ describe("runic charge", () => {
     expect(RUNIC_EMPOWERMENTS.dragon_breath.band).toEqual({ minPct: 260, maxPct: 310 });
     expect(RUNIC_EMPOWERMENTS.sonic_wave.nextAbilityCostReductionPct).toBe(35);
     expect(RUNIC_EMPOWERMENTS.concentrated_blast.critChanceGrantPct).toBe(15);
+  });
+});
+
+describe("runic charge — off-GCD casting and empowerment", () => {
+  it("runic charge casts off-GCD and empowers the next dragon breath", () => {
+    const s = simulate({
+      ...magicInput,
+      rotation: rotationOf("runic_charge", "magic_attack", "dragon_breath"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].tick).toBe(0);
+    expect(s.casts[1].tick).toBe(0);
+    expect(s.casts[2].abilityId).toBe("dragon_breath");
+    expect(s.casts[2].result.expected).toBeCloseTo(2850);
+    // Same basic: +9 adrenaline and the normal cooldown.
+    expect(s.casts[2].adrenalineAfter).toBe(9 + 9);
+  });
+
+  it("dragon breath resolves unempowered without an active charge", () => {
+    const s = simulate({ ...magicInput, rotation: rotationOf("dragon_breath") });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].result.expected).toBeCloseTo(1200);
+  });
+
+  it("runic charge cannot be recast inside its cooldown", () => {
+    const s = simulate({
+      ...magicInput,
+      rotation: rotationOf("runic_charge", "magic_attack", "runic_charge"),
+    });
+    expect(s.ok).toBe(false);
+    expect(s.error).toContain("on cooldown");
   });
 });

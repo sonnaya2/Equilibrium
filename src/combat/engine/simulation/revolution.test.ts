@@ -265,7 +265,7 @@ describe("revolution buff uptimes", () => {
       s.casts.find((cast) => cast.abilityId === "magic_attack" && cast.tick === 39),
       "Missing buffed magic attack",
     );
-    expect(buffed.result.expected).toBeCloseTo(1500);
+    expect(buffed.result.expected).toBeCloseTo(1499.7512437810944, 10);
     const expired = s.casts.filter((cast) => cast.abilityId === "magic_attack" && cast.tick >= 101);
     expect(expired.length).toBeGreaterThan(0);
     expect(expired.every((cast) => Math.abs(cast.result.expected - 1000) < 1e-9)).toBe(true);
@@ -289,7 +289,7 @@ describe("revolution buff uptimes", () => {
       s.casts.find((cast) => cast.abilityId === "ranged_attack" && cast.tick === 39),
       "Missing buffed ranged attack",
     );
-    expect(buffed.result.expected).toBeCloseTo(1500);
+    expect(buffed.result.expected).toBeCloseTo(1499.7512437810944, 10);
     const expired = s.casts.filter(
       (cast) => cast.abilityId === "ranged_attack" && cast.tick >= 102,
     );
@@ -414,13 +414,13 @@ describe("revolution — channels and horizon", () => {
       "attack@6",
       "flurry@9",
     ]);
-    // Flurry @9 hits at 9..16: 9–12 land inside; 13 (the horizon) and 14+ do not.
+    // Flurry @9 hits at 10..17: 10–12 land inside; 13 (the horizon) and later do not.
     expect(s.events.filter((e) => e.abilityId === "flurry").map((e) => e.tick)).toEqual([
-      9, 10, 11, 12,
+      10, 11, 12,
     ]);
     expect(s.events.every((e) => e.tick < 13)).toBe(true);
-    expect(s.perAbility["flurry"]).toBeCloseTo(4 * 650);
-    expect(s.totalExpected).toBeCloseTo(3 * 1200 + 4 * 650);
+    expect(s.perAbility["flurry"]).toBeCloseTo(3 * 650);
+    expect(s.totalExpected).toBeCloseTo(3 * 1200 + 3 * 650);
     expect(s.dps).toBeCloseTo(s.totalExpected / (13 * TICK_SECONDS), 5);
   });
 

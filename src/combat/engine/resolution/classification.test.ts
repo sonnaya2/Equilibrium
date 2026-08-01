@@ -65,8 +65,8 @@ describe("damage over time is declared, not inferred from timing", () => {
     const hits = s.events.filter((e) => e.abilityId === "magma_tempest");
     expect(hits).toHaveLength(8);
     expect(hits.every((e) => e.family === "hit")).toBe(true);
-    // 35-45% of 1000 → 400 expected, ×1.2 prayer.
-    expect(hits[0].damage.expected).toBeCloseTo(480);
+    // Inclusive integer rolls keep every floor before the 1.2 prayer.
+    expect(hits[0].damage.expected).toBeCloseTo(479.6039603960396, 10);
   });
 
   it("a delayed crit-eligible hit stays a direct hit", () => {

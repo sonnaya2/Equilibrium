@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
 import { rotationOf } from "../simulation/contracts";
 import { simulate, type SimulateInput } from "../simulation/simulate";
+import { baseInput } from "../../test/fixtures/inputs";
 import { EventQueue, type ScheduledEvent } from "./events";
 
 /**
@@ -113,5 +114,43 @@ describe("attached damage is not a separate hit", () => {
     expect(s.ok).toBe(true);
     const hits = s.events.filter((e) => e.procEligible && !e.attached && e.family === "hit");
     expect(hits).toHaveLength(10);
+  });
+});
+
+describe("same-tick event order is explicit and stable", () => {
+  it("is deterministic and orders same-tick events by (tick, seq) in hit-index order", () => {
+    const rotation = rotationOf("attack", "adaptive_strike_dw", "attack", "dismember");
+    const a = simulate({ ...baseInput, rotation });
+    const b = simulate({ ...baseInput, rotation });
+    expect(a.events).toEqual(b.events);
+    expect(a).toEqual(b);
+    const dw = a.events.filter((e) => e.abilityId === "adaptive_strike_dw");
+    expect(dw.map((e) => e.tick)).toEqual([3, 3]);
+    expect(dw[0].hitIndex).toBe(0);
+    expect(dw[1].hitIndex).toBe(1);
+    expect(dw[0].seq).toBeLessThan(dw[1].seq);
+  });
+});
+
+describe("attached damage rides its source event", () => {
+  it("folds Searing Winds into the source hit event — no separate event, and Galeshot never rides its own buff", () => {
+    const s = simulate({
+      ...baseInput,
+      abilities: RANGED_ABILITIES,
+      context: { style: "ranged" },
+      rotation: rotationOf("galeshot", "ranged_attack"),
+    });
+    expect(s.ok).toBe(true);
+    const galeshot = s.events.filter((e) => e.abilityId === "galeshot");
+    expect(galeshot).toHaveLength(1);
+    expect(galeshot[0].damage.expected).toBeCloseTo(1000);
+    const attack = s.events.filter((e) => e.abilityId === "ranged_attack");
+    expect(attack).toHaveLength(1);
+    expect(attack[0].family).toBe("hit");
+    expect(attack[0].attached).toBe(false);
+    expect(attack[0].damage.expected).toBeCloseTo(1200);
+    // The attached +20% is in the event damage but not in the real hit's own roll.
+    expect(s.casts[1].result.hits[0].expected).toBeCloseTo(1000);
+    expect(s.casts[1].result.expected).toBeCloseTo(1200);
   });
 });

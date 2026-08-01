@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_LOADOUT,
+  clearEquipment,
   equipInSlot,
   normalizeLoadout,
   pruneUnknownEquipment,
   unlockOnlyIds,
   withAttackLevel,
+  withCombatStyle,
   withStrengthLevel,
   withStyleLevel,
 } from "./useLoadout";
@@ -14,6 +16,28 @@ describe("normalizeLoadout", () => {
   it("returns defaults for null / non-objects", () => {
     expect(normalizeLoadout(null)).toEqual(DEFAULT_LOADOUT);
     expect(normalizeLoadout("nope")).toEqual(DEFAULT_LOADOUT);
+  });
+
+  it("defaults stored loadouts to automatic base damage and migrates the legacy base as a fallback", () => {
+    const legacy = normalizeLoadout({ base: 777, startingAdrenaline: 140 });
+    expect(legacy.baseDamage).toEqual({ mode: "automatic", manualValue: 777 });
+    expect(legacy.startingAdrenaline).toBe(100);
+    expect(legacy.hitCapEnabled).toBe(true);
+
+    const manual = normalizeLoadout({
+      baseDamage: { mode: "manual", manualValue: 1234 },
+      startingAdrenaline: -5,
+      hitCapEnabled: false,
+    });
+    expect(manual.baseDamage).toEqual({ mode: "manual", manualValue: 1234 });
+    expect(manual.startingAdrenaline).toBe(0);
+    expect(manual.hitCapEnabled).toBe(false);
+  });
+
+  it("rejects non-positive persisted manual base values", () => {
+    expect(
+      normalizeLoadout({ baseDamage: { mode: "manual", manualValue: -4 } }).baseDamage,
+    ).toEqual({ mode: "manual", manualValue: 1 });
   });
 
   it("migrates legacy { level } into attackLevel + strengthLevel", () => {
@@ -197,6 +221,16 @@ describe("equipInSlot twohand exclusivity", () => {
     loadout = equipInSlot(loadout, "ring", "item:ring");
     loadout = equipInSlot(loadout, "helmet", null);
     expect(loadout.equipmentSlots).toEqual({ ring: "item:ring" });
+  });
+
+  it("equipment, equipment clearing, and style changes return manual base mode to automatic", () => {
+    const manual = {
+      ...DEFAULT_LOADOUT,
+      baseDamage: { mode: "manual" as const, manualValue: 4321 },
+    };
+    expect(equipInSlot(manual, "helmet", "item:helm").baseDamage.mode).toBe("automatic");
+    expect(clearEquipment(manual).baseDamage.mode).toBe("automatic");
+    expect(withCombatStyle(manual, "magic").baseDamage.mode).toBe("automatic");
   });
 });
 

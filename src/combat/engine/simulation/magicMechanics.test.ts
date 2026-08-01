@@ -5,6 +5,7 @@ import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { rotationOf } from "./contracts";
 import { simulate, type CastRecord, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
+import { simulateRevolution } from "./revolution";
 
 /**
  * Stage 6 regression coverage: Wild Magic crit layers, Concentrated Blast /
@@ -45,8 +46,7 @@ describe("Wild Magic crit layers", () => {
     });
     expect(s.ok).toBe(true);
     const wm = lastCastOf(s);
-    // 1400 avg band × (1 + 0.10 × 0.70)
-    expect(wm.result.expected).toBeCloseTo(2 * 1400 * 1.07);
+    expect(wm.result.expected).toBeCloseTo(2995.9102990033225, 10);
     expect(wm.result.hits[0].critChance).toBeCloseTo(0.1);
   });
 });
@@ -65,7 +65,7 @@ describe("Concentrated Blast crit progression", () => {
     expect(cbCast.result.hits[1].critChance).toBeCloseTo(0.05);
     expect(cbCast.result.hits[2].critChance).toBeCloseTo(0.1);
     expect(s.casts[1].result.hits[0].critChance).toBeCloseTo(0.15);
-    expect(s.casts[1].result.expected).toBeCloseTo(1000 * 1.075);
+    expect(s.casts[1].result.expected).toBeCloseTo(1074.9626865671642, 10);
     // The consuming attack reset the stacks.
     expect(ctx.getState().magic.concCritStacks).toBe(0);
   });
@@ -113,7 +113,7 @@ describe("Channelled Might", () => {
     ctx.performCast(attack, ctx.getState().tick, false);
     const s = ctx.finish();
     const empowered = s.casts.at(-1)!;
-    expect(empowered.result.hits[0].expected).toBeCloseTo(1000 * 1.65);
+    expect(empowered.result.hits[0].expected).toBeCloseTo(1649.5273631840796, 10);
   });
 });
 
@@ -130,7 +130,7 @@ describe("Dragon Breath vs Combust", () => {
     });
     expect(s.ok).toBe(true);
     const breaths = s.casts.filter((c) => c.abilityId === "dragon_breath");
-    expect(breaths[0].result.expected).toBeCloseTo(1200 * 1.25);
+    expect(breaths[0].result.expected).toBeCloseTo(1499.6268656716418, 10);
     // Second cast at tick 30: the 10-tick burn (0→30) has just lapsed.
     expect(breaths[1].result.expected).toBeCloseTo(1200);
   });
@@ -185,6 +185,32 @@ describe("Sonic Wave Flow", () => {
     expect(ctx.getState().magic.runicCharge.animaUntilTick).toBe(0);
     expect(ctx.getState().magic.flowReduction).toBe(35);
     expect(ctx.costOf(wild)).toBe(0);
+    ctx.performCast(wild, ctx.getState().tick, false);
+    const record = ctx.finish().casts.at(-1)!;
+    expect(record).toMatchObject({ listedCost: 25, effectiveCost: 0, actualSpend: 0 });
+    expect(ctx.getState().magic.flowUntilTick).toBe(0);
+  });
+
+  it("keeps each pending Sonic hit's own Flow value when hits land out of cast order", () => {
+    const ctx = createCastContext(magicInput);
+    const sonic = ctx.byId.get("sonic_wave")!;
+    const greater = ctx.byId.get("greater_sonic_wave")!;
+    const slowSonic = {
+      ...sonic,
+      cooldownSeconds: 0,
+      hits: sonic.hits.map((hit) => ({ ...hit, tickOffset: 8 })),
+    };
+    const fastGreater = {
+      ...greater,
+      cooldownSeconds: 0,
+      hits: greater.hits.map((hit) => ({ ...hit, tickOffset: 1 })),
+    };
+    ctx.performCast(slowSonic, 0, false);
+    ctx.performCast(fastGreater, 3, false);
+    expect(ctx.getState().magic.flowReduction).toBe(20);
+    ctx.advanceTo(8);
+    expect(ctx.getState().magic.flowReduction).toBe(10);
+    expect(ctx.getState().magic.flowUntilTick).toBe(8 + 15);
   });
 
   it("basics do not consume Flow", () => {
@@ -230,18 +256,57 @@ describe("target HP percentage", () => {
     expect(lastCastOf(noHp).result.expected).toBeCloseTo(1200);
   });
 
-  it("Spectral Scythe cast 3 scales by (2 − hp fraction)", () => {
+  it("Spectral Scythe cast 3 scales by (2 − hp fraction) after casts 1 and 2", () => {
     const at50 = simulate({
       ...necroInput,
+      startingAdrenaline: 100,
       targetHpPercent: 50,
-      rotation: rotationOf(...Array(4).fill("necromancy_basic"), "spectral_scythe_3"),
+      rotation: rotationOf("spectral_scythe", "spectral_scythe_2", "spectral_scythe_3"),
     });
-    expect(lastCastOf(at50).result.expected).toBeCloseTo(2500 * 1.5);
+    expect(lastCastOf(at50).abilityId).toBe("spectral_scythe_3");
+    expect(lastCastOf(at50).result.expected).toBeCloseTo(3750, 10);
     const noHp = simulate({
       ...necroInput,
-      rotation: rotationOf(...Array(4).fill("necromancy_basic"), "spectral_scythe_3"),
+      startingAdrenaline: 100,
+      rotation: rotationOf("spectral_scythe", "spectral_scythe_2", "spectral_scythe_3"),
     });
-    expect(lastCastOf(noHp).result.expected).toBeCloseTo(2500);
+    expect(lastCastOf(noHp).result.expected).toBeCloseTo(2500, 10);
+  });
+
+  it("rejects out-of-sequence or expired Spectral Scythe stages without changing resources", () => {
+    const ctx = createCastContext({ ...necroInput, startingAdrenaline: 100 });
+    const stage2 = ctx.byId.get("spectral_scythe_2")!;
+    const stage3 = ctx.byId.get("spectral_scythe_3")!;
+    const before = structuredClone(ctx.getState());
+    expect(ctx.performCast(stage3, 0, false).ok).toBe(false);
+    expect(ctx.getState()).toEqual(before);
+
+    expect(ctx.performCast(ctx.byId.get("spectral_scythe")!, 0, false).ok).toBe(true);
+    ctx.advanceTo(25);
+    const expired = structuredClone(ctx.getState());
+    expect(ctx.performCast(stage2, 25, false).ok).toBe(false);
+    expect(ctx.getState()).toEqual(expired);
+  });
+
+  it("Revolution advances Spectral Scythe in order and resets the sequence after stage 3", () => {
+    const byId = new Map(NECROMANCY_ABILITIES.map((ability) => [ability.id, ability]));
+    const s = simulateRevolution({
+      ...necroInput,
+      startingAdrenaline: 100,
+      bar: [
+        byId.get("spectral_scythe_3")!,
+        byId.get("spectral_scythe_2")!,
+        byId.get("spectral_scythe")!,
+      ],
+      style: "necromancy",
+      durationTicks: 10,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.slice(0, 3).map((cast) => cast.abilityId)).toEqual([
+      "spectral_scythe",
+      "spectral_scythe_2",
+      "spectral_scythe_3",
+    ]);
   });
 
   it("rejects out-of-range HP input", () => {

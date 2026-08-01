@@ -17,60 +17,119 @@ describe("abilityDamage", () => {
   });
 });
 
-describe("baseAbilityDamage", () => {
-  const t90 = { tier: 90 };
+describe("baseAbilityDamage golden fixtures", () => {
+  const t99 = { tier: 99 };
 
-  it("main-hand = floor(DPL) + floor(9.6 × tier + bonus), keeping the two floors separate", () => {
-    const level = 99;
-    const expected = Math.floor(damagePerLevel(level)) + Math.floor(9.6 * 90);
-    expect(baseAbilityDamage(level, { kind: "mainhand", weapon: t90 })).toBe(expected);
-    expect(expected).toBeLessThanOrEqual(Math.floor(damagePerLevel(level) + 9.6 * 90));
-  });
-
-  it("adds the style bonus inside the weapon-term floor", () => {
-    const withBonus = baseAbilityDamage(90, {
-      kind: "mainhand",
-      weapon: { tier: 90, styleBonus: 12.7 },
-    });
-    const without = baseAbilityDamage(90, { kind: "mainhand", weapon: t90 });
-    expect(withBonus - without).toBe(Math.floor(9.6 * 90 + 12.7) - Math.floor(9.6 * 90));
-  });
-
-  it("dual wield totals MH + floor(OH-level formula / 2)", () => {
-    const dw = baseAbilityDamage(99, { kind: "mainhand", weapon: t90, offhand: { tier: 85 } });
-    const mh = baseAbilityDamage(99, { kind: "mainhand", weapon: t90 });
-    const ohAsMh = baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 85 } });
-    expect(dw).toBe(mh + Math.floor(ohAsMh / 2));
-  });
-
-  it("two-handed melee/ranged adds floor(4.8 × tier + 0.5 × bonus)", () => {
-    const level = 120;
-    const twoHand = baseAbilityDamage(level, { kind: "twohand", weapon: t90, style: "melee" });
-    const mh = baseAbilityDamage(level, { kind: "mainhand", weapon: t90 });
-    expect(twoHand).toBe(mh + Math.floor(4.8 * 90));
-  });
-
-  it("two-handed magic uses the 14.4 tier term with the retained 1.25 level term", () => {
-    const level = 99;
-    const expected =
-      Math.floor(damagePerLevel(level)) + Math.floor(1.25 * level) + Math.floor(14.4 * 90);
-    expect(baseAbilityDamage(level, { kind: "twohand", weapon: t90, style: "magic" })).toBe(
+  it.each([
+    ["melee", 1821],
+    ["ranged", 1821],
+    ["magic", 1821],
+  ] as const)("level 99 naked T99 2H %s = 264 + 132 + 1425", (style, expected) => {
+    const styleCap =
+      style === "ranged" ? { ammunitionTier: 99 } : style === "magic" ? { spellTier: 99 } : {};
+    expect(baseAbilityDamage(99, { kind: "twohand", style, weapon: t99, ...styleCap })).toBe(
       expected,
     );
   });
 
-  it("caps the weapon tier at the spell/ammo tier cap", () => {
-    const capped = baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 90, tierCap: 80 } });
-    const t80 = baseAbilityDamage(99, { kind: "mainhand", weapon: { tier: 80 } });
-    expect(capped).toBe(t80);
+  it("level 99 T99/T99 dual wield = 1214 + floor(1214 / 2)", () => {
+    expect(
+      baseAbilityDamage(99, {
+        kind: "mainhand",
+        style: "melee",
+        weapon: t99,
+        offhand: t99,
+      }),
+    ).toBe(1821);
   });
 
-  it("meets the pre-2026 linear total at level 145 for the level term", () => {
-    const modern = baseAbilityDamage(145, { kind: "mainhand", weapon: t90 });
-    expect(modern).toBe(362 + Math.floor(9.6 * 90));
+  it("level 99 T99 death guard plus T99 conduit uses explicit necromancy hands", () => {
+    expect(baseAbilityDamage(99, { kind: "necromancy", deathGuard: t99, conduit: t99 })).toBe(1821);
   });
 
-  it("rejects bad levels", () => {
-    expect(() => baseAbilityDamage(0, { kind: "mainhand", weapon: t90 })).toThrow(RangeError);
+  it("supports boosted levels", () => {
+    // floor(DPL(110)) + floor(DPL(110)/2) + floor(14.4*99) = 289+144+1425.
+    expect(baseAbilityDamage(110, { kind: "twohand", style: "melee", weapon: t99 })).toBe(1858);
+  });
+
+  it("supports mixed-tier dual wield", () => {
+    // T99 main = 1214; T85-as-main = 1080; off-hand contributes floor(1080/2).
+    expect(
+      baseAbilityDamage(99, {
+        kind: "mainhand",
+        style: "melee",
+        weapon: t99,
+        offhand: { tier: 85 },
+      }),
+    ).toBe(1754);
+  });
+
+  it("caps ranged and Magic weapon contributions independently", () => {
+    expect(
+      baseAbilityDamage(99, {
+        kind: "twohand",
+        style: "ranged",
+        weapon: t99,
+        ammunitionTier: 80,
+      }),
+    ).toBe(1548);
+    expect(
+      baseAbilityDamage(99, {
+        kind: "twohand",
+        style: "magic",
+        weapon: t99,
+        spellTier: 80,
+      }),
+    ).toBe(1548);
+  });
+
+  it("caps high-tier melee weapons at the effective damage level", () => {
+    // Melee's 9.6 term is level-capped; its separate 4.8 term uses raw weapon tier.
+    // floor(DPL(50)) + floor(DPL(50)/2) + floor(9.6*50) + floor(4.8*99)
+    // = 145 + 72 + 480 + 475.
+    expect(baseAbilityDamage(50, { kind: "twohand", style: "melee", weapon: t99 })).toBe(1172);
+  });
+
+  it("places equipment style damage inside the weighted weapon floor", () => {
+    // 264 + 132 + floor(14.4*99 + 1.5*12.7) = 1840.
+    expect(
+      baseAbilityDamage(99, {
+        kind: "twohand",
+        style: "melee",
+        weapon: t99,
+        styleBonus: 12.7,
+      }),
+    ).toBe(1840);
+  });
+
+  it("keeps the style-bonus floor boundary exact", () => {
+    const below = baseAbilityDamage(99, {
+      kind: "twohand",
+      style: "melee",
+      weapon: t99,
+      styleBonus: 0.59,
+    });
+    const above = baseAbilityDamage(99, {
+      kind: "twohand",
+      style: "melee",
+      weapon: t99,
+      styleBonus: 0.6,
+    });
+    expect(above - below).toBe(1);
+  });
+
+  it("keeps each documented intermediate floor separate", () => {
+    const expected =
+      Math.floor(damagePerLevel(99)) + Math.floor(damagePerLevel(99) / 2) + Math.floor(14.4 * 99);
+    expect(baseAbilityDamage(99, { kind: "twohand", style: "melee", weapon: t99 })).toBe(expected);
+  });
+
+  it("rejects invalid levels and tiers", () => {
+    expect(() => baseAbilityDamage(0, { kind: "twohand", style: "melee", weapon: t99 })).toThrow(
+      RangeError,
+    );
+    expect(() => baseAbilityDamage(99, { kind: "necromancy", deathGuard: { tier: -1 } })).toThrow(
+      RangeError,
+    );
   });
 });

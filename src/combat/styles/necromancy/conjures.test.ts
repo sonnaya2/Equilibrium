@@ -1,4 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { mulFloor } from "../../core/rounding";
+import { MODERNISATION_WIKI } from "../../data/sources";
+import { rotationOf } from "../../engine/simulation/contracts";
+import { simulate, type RotationSummary } from "../../engine/simulation/simulate";
+import { necroInput } from "../../test/fixtures/inputs";
+import type { CombatModifier } from "../../types";
 import {
   CONJURE_IDS,
   CONJURE_UNTIL_OFFSET_TICKS,
@@ -159,5 +165,71 @@ describe("conjures", () => {
     expect(conjureCanCast("conjure_undead_army", army, 0)).toBe(false);
     const partial = dismissConjure(army, "vengeful_ghost");
     expect(conjureCanCast("conjure_undead_army", partial, 0)).toBe(true);
+  });
+});
+
+describe("conjure damage potential and modifier routing", () => {
+  it("spirit autos always deal 100% of their damage potential", () => {
+    const rotation = rotationOf("conjure_skeleton_warrior", ...Array(10).fill("necromancy_basic"));
+    const full = simulate({ ...necroInput, rotation });
+    const halved = simulate({ ...necroInput, accuracy: 0.5, rotation });
+    expect(halved.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(
+      full.perAbility["spirit_skeleton_warrior"]!,
+      10,
+    );
+    // Damage Potential is floored for each integer roll rather than applied to the mean.
+    expect(halved.perAbility["necromancy_basic"]).toBeCloseTo(4997.512437810946, 10);
+  });
+
+  it("commands also use full damage potential", () => {
+    const rotation = rotationOf(
+      "conjure_skeleton_warrior",
+      "command_skeleton_warrior",
+      ...Array(6).fill("necromancy_basic"),
+    );
+    const full = simulate({ ...necroInput, rotation });
+    const halved = simulate({ ...necroInput, accuracy: 0.5, rotation });
+    expect(halved.perAbility["command_skeleton_warrior"]).toBeCloseTo(
+      full.perAbility["command_skeleton_warrior"]!,
+      10,
+    );
+  });
+
+  const globalBuff: CombatModifier = {
+    id: "test:global",
+    stage: "onCast",
+    priority: 0,
+    applies: () => true,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1.1) }),
+    source: MODERNISATION_WIKI,
+  };
+  const prayerBuff: CombatModifier = {
+    id: "prayer:test",
+    stage: "ability",
+    priority: 10,
+    applies: () => true,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1.2) }),
+    source: MODERNISATION_WIKI,
+  };
+
+  it("spirit autos take global modifiers but never the player's prayers", () => {
+    const rotation = rotationOf("conjure_skeleton_warrior", ...Array(10).fill("necromancy_basic"));
+    const plain = simulate({ ...necroInput, rotation });
+    const buffed = simulate({ ...necroInput, modifiers: [globalBuff], rotation });
+    const prayed = simulate({ ...necroInput, modifiers: [globalBuff, prayerBuff], rotation });
+    const spirit = (s: RotationSummary) => s.perAbility["spirit_skeleton_warrior"] ?? 0;
+    expect(spirit(buffed)).toBeGreaterThan(spirit(plain));
+    expect(spirit(prayed)).toBeCloseTo(spirit(buffed), 10);
+  });
+
+  it("array and function modifier forms give spirits identical damage (manual/Revolution parity)", () => {
+    const rotation = rotationOf("conjure_skeleton_warrior", ...Array(10).fill("necromancy_basic"));
+    const asArray = simulate({ ...necroInput, modifiers: [globalBuff], rotation });
+    const asFunction = simulate({ ...necroInput, modifiers: () => [globalBuff], rotation });
+    expect(asFunction.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(
+      asArray.perAbility["spirit_skeleton_warrior"]!,
+      10,
+    );
+    expect(asFunction.totalExpected).toBeCloseTo(asArray.totalExpected, 10);
   });
 });

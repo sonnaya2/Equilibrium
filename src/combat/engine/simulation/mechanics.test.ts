@@ -63,10 +63,12 @@ describe("Bloat derived tails", () => {
       rotation: rotationOf(...Array(3).fill("necromancy_basic"), "bloat"),
     });
     const initial = s.events.find((e) => e.abilityId === "bloat" && e.hitIndex === 0)!;
-    expect(initial.damage.expected).toBeCloseTo(1500 * 1.5);
+    expect(initial.damage.expected).toBeCloseTo(2249.750830564784, 10);
     const tails = s.events.filter((e) => e.abilityId === "bloat" && e.hitIndex > 0);
-    for (const tail of tails) expect(tail.damage.expected).toBeCloseTo(1500 * 1.5 * 0.25);
-    expect(s.perAbility["bloat"]).toBeCloseTo(1500 * 1.5 * (1 + 10 * 0.25));
+    for (const tail of tails) {
+      expect(tail.damage.expected).toBeCloseTo(562.437707641196, 10);
+    }
+    expect(s.perAbility["bloat"]).toBeCloseTo(7874.127906976744, 10);
   });
 
   it("tails past the revolution horizon never land", () => {
@@ -112,7 +114,9 @@ describe("Death Skulls derived bounces", () => {
       rotation: rotationOf(...Array(7).fill("necromancy_basic"), "death_skulls"),
     });
     const events = s.events.filter((e) => e.abilityId === "death_skulls");
-    expect(events.map((e) => e.damage.expected)).toEqual([3750, 3750, 3750]);
+    for (const event of events) {
+      expect(event.damage.expected).toBeCloseTo(3749.750499001996, 10);
+    }
   });
 });
 
@@ -201,12 +205,16 @@ describe("damage-over-time modifier rule", () => {
       modifiers: [vulnerabilityModifier()],
       rotation: rotationOf("dismember"),
     });
-    for (let t = 2; t <= 16; t += 2) expect(withVuln.damageByTick[t]).toBeCloseTo(330);
+    for (let t = 2; t <= 16; t += 2) {
+      expect(withVuln.damageByTick[t]).toBeCloseTo(329.55445544554453, 10);
+    }
   });
 
   it("Chaos Roar's bleed boost is the sourced exception to the DoT rule", () => {
     const s = simulate({ ...meleeInput, rotation: rotationOf("chaos_roar", "dismember") });
-    for (let t = 5; t <= 19; t += 2) expect(s.damageByTick[t]).toBeCloseTo(524.5);
+    for (let t = 5; t <= 19; t += 2) {
+      expect(s.damageByTick[t]).toBeCloseTo(524.6237623762377, 10);
+    }
   });
 });
 
@@ -293,7 +301,9 @@ describe("Bloat recast overwrite", () => {
       (e) => e.abilityId === "bloat" && e.derivedFrom === initials[1].seq,
     );
     expect(newSet).toHaveLength(10);
-    for (const tail of newSet) expect(tail.damage.expected).toBeCloseTo(1500 * 1.5 * 0.25);
+    for (const tail of newSet) {
+      expect(tail.damage.expected).toBeCloseTo(562.437707641196, 10);
+    }
   });
 
   it("unrelated DoTs survive a Bloat recast", () => {

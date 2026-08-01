@@ -24,12 +24,12 @@ describe("calculateHit", () => {
     const r = calculateHit({ ...baseInput, crit: { chance: 0, guaranteed: true } });
     expect(r.critMin).toBe(1650);
     expect(r.critMax).toBe(1950);
-    expect(r.expected).toBe(1800);
+    expect(r.expected).toBeCloseTo(1799.7512437810944, 10);
   });
 
   it("chance-weighted expectation mixes noncrit and crit", () => {
     const r = calculateHit({ ...baseInput, crit: { chance: 0.5 } });
-    expect(r.expected).toBeCloseTo(1500);
+    expect(r.expected).toBeCloseTo(1499.8756218905473, 10);
   });
 
   it("scales by Damage Potential instead of missing", () => {
@@ -42,6 +42,70 @@ describe("calculateHit", () => {
   it("applies the standard hit cap", () => {
     const r = calculateHit({ ...baseInput, base: 30_000, band: { minPct: 520, maxPct: 570 } });
     expect(r.max).toBe(30_000);
+  });
+
+  it("uses the exact clipped integer distribution for partial caps", () => {
+    const r = calculateHit({
+      ...baseInput,
+      base: 20_000,
+      band: { minPct: 100, maxPct: 200 },
+    });
+    // Uniform integers 20,000..40,000: 20,000..29,999 retain their rolls and
+    // 30,000..40,000 each contribute 30,000.
+    expect(r.nonCritExpected).toBeCloseTo(550_025_000 / 20_001, 10);
+    expect(r.min).toBe(20_000);
+    expect(r.max).toBe(30_000);
+  });
+
+  it.each([
+    [29_999, 29_999],
+    [30_000, 30_000],
+    [30_001, 30_000],
+  ])("clips a deterministic %i roll to %i", (base, expected) => {
+    const r = calculateHit({ ...baseInput, base, band: { minPct: 100, maxPct: 100 } });
+    expect(r.expected).toBe(expected);
+  });
+
+  it("supports an explicit uncapped rule for normal and critical damage", () => {
+    const r = calculateHit({
+      ...baseInput,
+      base: 35_000,
+      band: { minPct: 100, maxPct: 100 },
+      crit: { chance: 0, guaranteed: true },
+      cap: { cap: 30_000, bypass: true },
+    });
+    expect(r.min).toBe(35_000);
+    expect(r.critMin).toBeGreaterThan(35_000);
+    expect(r.expected).toBe(r.critExpected);
+  });
+
+  it("preserves floors and Damage Potential in the exact expectation", () => {
+    const half: CombatModifier = {
+      id: "half",
+      stage: "onHit",
+      priority: 0,
+      applies: () => true,
+      apply: (s) => ({ ...s, damage: mulFloor(s.damage, 0.5) }),
+      source: { source: "derived", url: "test", verifiedAt: "2026-08-01" },
+    };
+    const r = calculateHit({
+      ...baseInput,
+      base: 101,
+      band: { minPct: 100, maxPct: 102 },
+      accuracy: 0.5,
+      modifiers: [half],
+    });
+    expect(r.nonCritExpected).toBe((25 + 25 + 25) / 3);
+  });
+
+  it("rejects an impractically wide exact band", () => {
+    expect(() =>
+      calculateHit({
+        ...baseInput,
+        base: 100_001,
+        band: { minPct: 0, maxPct: 100 },
+      }),
+    ).toThrow("exact integer band has 100002 points");
   });
 
   it("runs the modifier pipeline before the crit layer", () => {

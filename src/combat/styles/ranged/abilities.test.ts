@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { calculateAbility } from "../../pipeline/calculateAbility";
+import { rotationOf } from "../../engine/simulation/contracts";
+import { simulate } from "../../engine/simulation/simulate";
+import { rangedInput } from "../../test/fixtures/inputs";
 import { RANGED_ABILITIES, RANGED_EFFECTS } from "./abilities";
 
 const byId = (id: string) => RANGED_ABILITIES.find((a) => a.id === id)!;
@@ -183,5 +186,14 @@ describe("ranged ability data", () => {
       ).toBe(false);
     }
     expect(RANGED_EFFECTS.some((e) => e.id === "csm_removals")).toBe(true);
+  });
+
+  it("shadow tendrils crits guaranteed even at 0% crit chance", () => {
+    const s = simulate({
+      ...rangedInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("shadow_tendrils"),
+    });
+    expect(s.casts[0].result.expected).toBeCloseTo(3299.7506234413963, 10);
   });
 });

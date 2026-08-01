@@ -12,6 +12,11 @@ describe("damagePotential", () => {
     expect(damagePotential(-0.5)).toBe(0);
   });
 
+  it("deals no damage below the live 1% threshold", () => {
+    expect(damagePotential(0.0099)).toBe(0);
+    expect(damagePotential(0.01)).toBe(0.01);
+  });
+
   it("rejects non-finite accuracy", () => {
     expect(() => damagePotential(NaN)).toThrow(RangeError);
   });

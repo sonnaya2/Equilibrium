@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { rotationOf } from "../../engine/simulation/contracts";
+import { simulate } from "../../engine/simulation/simulate";
+import { rangedInput } from "../../test/fixtures/inputs";
+import { findCast } from "../../test/helpers/summary";
 import {
   activateDeathsSwiftness,
   DEATHS_SWIFTNESS_MULTIPLIER,
@@ -42,5 +46,32 @@ describe("death's swiftness", () => {
 
   it("is inactive before activation", () => {
     expect(deathsSwiftnessActive(newDeathsSwiftness(), 0)).toBe(false);
+  });
+
+  it("Planted Feet extends base Death's Swiftness buff window to 63 ticks", () => {
+    const setup = [
+      ...Array(12).fill("ranged_attack"),
+      "deaths_swiftness",
+      ...Array(22).fill("ranged_attack"),
+    ];
+    const plain = simulate({ ...rangedInput, rotation: rotationOf(...setup) });
+    const pf = simulate({
+      ...rangedInput,
+      plantedFeet: true,
+      rotation: rotationOf(...setup),
+    });
+    expect(plain.ok && pf.ok).toBe(true);
+    const plainAt87 = findCast(
+      plain,
+      (cast) => cast.abilityId === "ranged_attack" && cast.tick === 87,
+      "Missing plain ranged attack at tick 87",
+    );
+    const pfAt87 = findCast(
+      pf,
+      (cast) => cast.abilityId === "ranged_attack" && cast.tick === 87,
+      "Missing Planted Feet ranged attack at tick 87",
+    );
+    expect(plainAt87.result.expected).toBeCloseTo(1000);
+    expect(pfAt87.result.expected).toBeCloseTo(1499.7512437810944, 10);
   });
 });

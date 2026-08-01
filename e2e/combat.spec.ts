@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 
 test("quick calculator runs the real pipeline", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Abilities" })).toBeVisible();
-  await expect(page.getByText("Damage Potential")).toBeVisible();
+  await expect(page.getByText("Damage Potential").first()).toBeVisible();
 
   await page.getByRole("option", { name: /Rend/ }).click();
   await expect(page.getByRole("heading", { name: "Rend" })).toBeVisible();
@@ -25,8 +25,8 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
 
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("DPS")).toBeVisible();
-  await expect(page.getByText("6 ticks · 3.6s")).toBeVisible();
+  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
   await expect(page.getByText("18%")).toBeVisible();
 
   await page.reload();
@@ -51,8 +51,8 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
 
   await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("DPS")).toBeVisible();
-  await expect(page.getByText("24 ticks · 14.4s")).toBeVisible();
+  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("24 ticks · 14.4s").first()).toBeVisible();
   await expect(page.getByText("auto").first()).toBeVisible();
 });
 
@@ -75,7 +75,9 @@ test("the main-hand picker accepts two-handed weapons and locks off-hand", async
   await weapons.getByRole("button", { name: /^Main-hand/ }).click();
   await page.getByRole("button", { name: /Masterwork 2h sword/ }).click();
 
-  await expect(weapons.getByRole("button", { name: /^Main-hand.*Masterwork 2h sword/ })).toBeVisible();
+  await expect(
+    weapons.getByRole("button", { name: /^Main-hand.*Masterwork 2h sword/ }),
+  ).toBeVisible();
   await expect(weapons.getByRole("button", { name: /^Off-hand/ })).toBeDisabled();
   await expect(weapons.getByText("Locked")).toBeVisible();
 });
@@ -105,8 +107,8 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
   await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("DPS")).toBeVisible();
-  await expect(page.getByText("6 ticks · 3.6s")).toBeVisible();
+  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
 });
 
 test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
@@ -140,7 +142,7 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
   await page.getByRole("button", { name: "Run bar" }).click();
-  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
   await expect(page.getByTestId("revo-horizon")).toHaveText(/^100$/);
   await expect(page.getByTestId("revo-casts")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Timeline" })).toBeVisible();
@@ -155,4 +157,32 @@ test("manual rotation still exposes necromancy abilities", async ({ page }) => {
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await page.getByRole("button", { name: "Necromancy", exact: true }).click();
   await expect(page.getByRole("button", { name: /Volley of Souls/ })).toBeVisible();
+});
+
+test("loadout calculation controls reset automatic base and persist into Revolution", async ({
+  page,
+}) => {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: "Stats", exact: true }).click();
+
+  const baseMode = page.getByRole("combobox", { name: "Base damage" });
+  await baseMode.selectOption("manual");
+  await page.getByRole("spinbutton", { name: "Manual base override" }).fill("9999");
+  await expect(page.getByText("Base AD · manual", { exact: true })).toBeVisible();
+
+  await page.getByRole("spinbutton", { name: "Main weapon tier" }).fill("91");
+  await expect(baseMode).toHaveValue("automatic");
+  await page.getByRole("spinbutton", { name: "Starting adrenaline" }).fill("62");
+  await page.getByRole("checkbox", { name: "30,000 hit cap" }).uncheck();
+
+  await page.reload();
+  await page.getByRole("tab", { name: "Abilities", exact: true }).click();
+  await expect(page.getByRole("checkbox", { name: "Use Loadout" })).toBeChecked();
+  await expect(page.getByRole("spinbutton", { name: "Base ability damage" })).toHaveValue("1705");
+
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Run bar" }).click();
+  const assumptions = page.getByRole("heading", { name: "Calculation assumptions" }).locator("..");
+  await expect(assumptions.getByText("62%", { exact: true })).toBeVisible();
+  await expect(assumptions.getByText("Off", { exact: true })).toBeVisible();
 });

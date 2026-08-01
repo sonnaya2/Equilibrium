@@ -53,8 +53,8 @@ describe("melee ability data", () => {
   it("channel and bleed multi-hits carry wiki tickOffsets", () => {
     expect(byId("assault").hits.map((h) => h.tickOffset)).toEqual([1, 3, 5, 7]);
 
-    expect(byId("flurry").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
-    expect(byId("greater_flurry").hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+    expect(byId("flurry").hits.map((h) => h.tickOffset)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(byId("greater_flurry").hits.map((h) => h.tickOffset)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
 
     expect(byId("dismember").hits.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
     expect(byId("slaughter").hits.map((h) => h.tickOffset)).toEqual([3, 6, 9, 12, 15, 18]);

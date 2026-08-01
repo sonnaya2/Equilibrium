@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
+import { necroInput as necroFixtureInput } from "../../test/fixtures/inputs";
+import { abilityById, lastCast } from "../../test/helpers/summary";
 import {
   findConjure,
   hasAutoTrack,
@@ -13,13 +15,12 @@ import { commitCast, prepareSimulationCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
 import { snapshotRuntime } from "../simulation/branch";
 import { rotationOf, type CastContextInput } from "../simulation/contracts";
-import { createCastContext, simulate, type SimulateInput } from "../simulation/simulate";
-
-/**
- * Conjure capability invariants: the poison aura belongs to the Putrid Zombie
- * alone, and no other spirit can acquire one by being summoned, re-summoned,
- * commanded, or cloned into a branch.
- */
+import {
+  createCastContext,
+  simulate,
+  type RotationSummary,
+  type SimulateInput,
+} from "../simulation/simulate";
 
 const necroInput: Omit<SimulateInput, "rotation"> & CastContextInput = {
   base: 1000,
@@ -146,5 +147,206 @@ describe("branch cloning preserves conjure track state", () => {
       findConjure(rt.state.necromancy.conjures, "putrid_zombie")!.poison.nextTick,
     );
     expect(clone.state.necromancy.conjures.spirits.filter((s) => "poison" in s)).toHaveLength(1);
+  });
+});
+
+describe("conjure summoning and auto contribution", () => {
+  it("conjure skeleton summons and spirit autos contribute EV (never crit)", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("conjure_skeleton_warrior", ...Array(20).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].abilityId).toBe("conjure_skeleton_warrior");
+    expect(s.casts[0].result.expected).toBe(0);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    expect(s.damageByTick[7]).toBeGreaterThan(0);
+    expect(s.totalExpected).toBeGreaterThan(s.casts.reduce((n, c) => n + c.result.expected, 0));
+  });
+
+  it("First Necromancer conjureBasicDamageMult scales spirit basic autos (not poison)", () => {
+    const rot = rotationOf("conjure_skeleton_warrior", ...Array(20).fill("necromancy_basic"));
+    const base = simulate({ ...necroFixtureInput, rotation: rot });
+    const boosted = simulate({
+      ...necroFixtureInput,
+      rotation: rot,
+      conjureBasicDamageMult: 1.35, // 5-piece First Necro
+    });
+    expect(base.ok && boosted.ok).toBe(true);
+    const baseSpirit = base.perAbility["spirit_skeleton_warrior"] ?? 0;
+    const boostSpirit = boosted.perAbility["spirit_skeleton_warrior"] ?? 0;
+    expect(baseSpirit).toBeGreaterThan(0);
+    expect(boostSpirit / baseSpirit).toBeCloseTo(1.35, 5);
+
+    const zRot = rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic"));
+    const zBase = simulate({ ...necroFixtureInput, rotation: zRot });
+    const zBoost = simulate({ ...necroFixtureInput, rotation: zRot, conjureBasicDamageMult: 1.35 });
+    const poisonBase = zBase.perAbility["spirit_putrid_zombie_poison"] ?? 0;
+    const poisonBoost = zBoost.perAbility["spirit_putrid_zombie_poison"] ?? 0;
+    expect(poisonBase).toBeGreaterThan(0);
+    expect(poisonBoost / poisonBase).toBeCloseTo(1, 5);
+    const autoBase = zBase.perAbility["spirit_putrid_zombie"] ?? 0;
+    const autoBoost = zBoost.perAbility["spirit_putrid_zombie"] ?? 0;
+    expect(autoBase).toBeGreaterThan(0);
+    expect(autoBoost / autoBase).toBeCloseTo(1.35, 5);
+  });
+
+  it("command skeleton requires an active conjure", () => {
+    const blocked = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("command_skeleton_warrior"),
+    });
+    expect(blocked.ok).toBe(false);
+
+    const ok = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("conjure_skeleton_warrior", "command_skeleton_warrior"),
+    });
+    expect(ok.ok).toBe(true);
+    expect(lastCast(ok).abilityId).toBe("command_skeleton_warrior");
+    expect(lastCast(ok).result.hits.every((h) => h.critChance === 0)).toBe(true);
+  });
+
+  it("conjure undead army summons three spirits with auto EV", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    const army = abilityById(NECROMANCY_ABILITIES, "conjure_undead_army");
+    ctx.performCast(army, 0, false);
+    const ids = ctx
+      .getState()
+      .necromancy.conjures.spirits.map((s) => s.id)
+      .sort();
+    expect(ids).toEqual(["putrid_zombie", "skeleton_warrior", "vengeful_ghost"]);
+
+    const s = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("conjure_undead_army", ...Array(15).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_vengeful_ghost"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_putrid_zombie"]).toBeGreaterThan(0);
+  });
+
+  it("keeps Putrid Zombie's 30s conjure cooldown independent of command and expiry", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    ctx.performCast(ctx.byId.get("conjure_putrid_zombie")!, 0, false);
+    expect(ctx.getState().cooldowns.conjure_putrid_zombie).toBe(50);
+    const untilTick = findConjure(ctx.getState().necromancy.conjures, "putrid_zombie")!.untilTick;
+    expect(ctx.performCast(ctx.byId.get("command_putrid_zombie")!, 3, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.conjure_putrid_zombie).toBe(50);
+
+    const expiry = createCastContext(necroFixtureInput);
+    expiry.performCast(expiry.byId.get("conjure_putrid_zombie")!, 0, false);
+    expiry.advanceTo(untilTick);
+    expect(expiry.getState().cooldowns.conjure_putrid_zombie).toBe(50);
+  });
+
+  it("starts the Zombie conjure cooldown when Undead Army supplies a missing Zombie only", () => {
+    const fresh = createCastContext(necroFixtureInput);
+    fresh.performCast(fresh.byId.get("conjure_undead_army")!, 0, false);
+    expect(fresh.getState().cooldowns.conjure_putrid_zombie).toBe(50);
+
+    const active = createCastContext(necroFixtureInput);
+    active.performCast(active.byId.get("conjure_putrid_zombie")!, 0, false);
+    active.performCast(active.byId.get("conjure_undead_army")!, 3, false);
+    expect(active.getState().cooldowns.conjure_putrid_zombie).toBe(50);
+  });
+});
+
+describe("Command Skeleton Warrior scheduling", () => {
+  function skeletonEvents(s: RotationSummary) {
+    return {
+      autos: s.events.filter((e) => e.family === "conjureAuto"),
+      commands: s.events.filter((e) => e.family === "command"),
+    };
+  }
+
+  it("the command is locked for 6 ticks after summoning (initial 3.6s cooldown)", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    expect(ctx.firstLegalTick("command_skeleton_warrior")).toBe(6);
+  });
+
+  it("wiki example: command at 6 — RAAAR auto at 7, hits 8-17, autos resume 19, 24", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    ctx.performCast(
+      ctx.byId.get("command_skeleton_warrior")!,
+      ctx.firstLegalTick("command_skeleton_warrior"),
+      false,
+    );
+    expect(ctx.getState().tick).toBe(9);
+    while (ctx.getState().tick <= 26) ctx.performCast(basic, ctx.getState().tick, false);
+    // Rage after the resumed auto at 24: 1 (auto at 7) + 10 (command) + 2 (autos).
+    expect(findConjure(ctx.getState().necromancy.conjures, "skeleton_warrior")!.rageStacks).toBe(
+      13,
+    );
+    const s = ctx.finish();
+    const { autos, commands } = skeletonEvents(s);
+    expect(autos.map((e) => e.tick).slice(0, 3)).toEqual([7, 19, 24]);
+    expect(autos.some((e) => e.tick === 12 || e.tick === 17)).toBe(false); // suppressed
+    expect(commands.map((e) => e.tick)).toEqual([8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+    expect(commands.map((e) => e.hitIndex)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    // Rage: auto at 7 deals the plain 250 band; each command hit builds a stack
+    // (damage first), so the 19-tick auto lands at 11 stacks (1.33x).
+    expect(autos[0].damage.expected).toBeCloseTo(250);
+    expect(commands[0].damage.expected).toBeCloseTo(257);
+    expect(autos[1].damage.expected).toBeCloseTo(332);
+  });
+
+  it("wiki example: command at 11 — auto on the RAAAR tick fires, mid-command autos suppressed", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    for (let i = 0; i < 2; i++) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(ctx.byId.get("command_skeleton_warrior")!, 11, false);
+    while (ctx.getState().tick <= 30) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const { autos, commands } = skeletonEvents(s);
+    // Autos at 7 and 12 (the RAAAR tick) fire; 17/22 are suppressed; resume 24.
+    expect(autos.map((e) => e.tick).slice(0, 4)).toEqual([7, 12, 24, 29]);
+    expect(commands.map((e) => e.tick)).toEqual([13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
+  });
+
+  it("a repeat command mutates the schedule again (25-tick cooldown)", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    ctx.performCast(
+      ctx.byId.get("command_skeleton_warrior")!,
+      ctx.firstLegalTick("command_skeleton_warrior"),
+      false,
+    );
+    expect(ctx.firstLegalTick("command_skeleton_warrior")).toBe(31);
+    while (ctx.getState().tick <= 28) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(
+      ctx.byId.get("command_skeleton_warrior")!,
+      ctx.firstLegalTick("command_skeleton_warrior"),
+      false,
+    );
+    // The second command cast at 31: RAAAR 32, hits 33-42 below.
+    while (ctx.getState().tick <= 46) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const { commands } = skeletonEvents(s);
+    expect(commands.map((e) => e.tick)).toEqual([
+      8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+    ]);
+  });
+
+  it("command hits land up to 2 ticks past the skeleton's expiry, never more", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    while (ctx.getState().tick < 96) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(ctx.byId.get("command_skeleton_warrior")!, 98, false);
+    while (ctx.getState().tick <= 112) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const { autos, commands } = skeletonEvents(s);
+    // Expiry is tick 105: command hits land 100..107, the 102 auto is suppressed,
+    // and nothing schedules past the +2 tail.
+    expect(commands.map((e) => e.tick)).toEqual([100, 101, 102, 103, 104, 105, 106, 107]);
+    expect(autos.every((e) => e.tick !== 102)).toBe(true);
+    expect(autos.every((e) => e.tick < 105)).toBe(true);
   });
 });

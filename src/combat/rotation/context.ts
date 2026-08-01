@@ -16,7 +16,7 @@ export function createCastContext(input: CastContextInput): CastContext {
     costOf: (ability) => costOf(rt, ability),
     firstLegalTick: (abilityId) => firstLegalTick(rt.state, abilityId),
     advanceTo: (targetTick) => advanceTo(rt, targetTick),
-    performCast: (ability, readyTick, auto) => performCast(rt, ability, readyTick, auto),
+    performCast: (ability, readyTick, auto, rng) => performCast(rt, ability, readyTick, auto, rng),
     performOffGcdCast: (ability) => performOffGcdCast(rt, ability),
     cancelCastEvents: (castSeq) => rt.queue.cancelByOwner(castSeq),
     finish: (error, horizonTicks, options) => finish(rt, error, horizonTicks, options),

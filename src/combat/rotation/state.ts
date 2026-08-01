@@ -42,13 +42,22 @@ export interface RotationState {
    * Wiki window 7.2s (12 ticks) after the roar cast.
    */
   chaosRoarUntilTick: number;
-  /** Greater Fury: next non-bleed melee hit is a guaranteed crit (consumed on use). */
-  greaterFuryCrit: boolean;
   /**
-   * Fury: next crit-eligible melee gains +25% crit chance (consumed on use).
-   * Wiki: next Melee attack; bleeds do not consume (parity with Greater Fury).
+   * Greater Fury: the next non-bleed melee attack used before this tick has its
+   * first crit-eligible hit guaranteed crit; bleeds do not consume it.
+   * Wiki window 15s (25 ticks) after the Greater Fury cast (0 = inactive).
+   */
+  greaterFuryUntilTick: number;
+  /**
+   * Fury: next crit-eligible melee hit gains +25% crit chance (consumed on use).
+   * Wiki states no window — it persists until a non-bleed melee hit consumes it.
    */
   furyCritBonus: boolean;
+  /**
+   * Relentless perk lockout: after a proc the perk cannot activate again until
+   * this tick (wiki: 30s internal cooldown; 0 = ready).
+   */
+  relentlessUntilTick: number;
   /**
    * Meteor Strike: melee basics generate 1.5x adren + 4.5% passive per tick
    * until this tick (0 = inactive). Wiki duration 30s (50 ticks).
@@ -92,8 +101,9 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     melee: newBloodlust(),
     berserkUntilTick: 0,
     chaosRoarUntilTick: 0,
-    greaterFuryCrit: false,
+    greaterFuryUntilTick: 0,
     furyCritBonus: false,
+    relentlessUntilTick: 0,
     meteorStrikeUntilTick: 0,
     lastMeleeCastTick: -1,
     endlessAssaultUntilTick: 0,

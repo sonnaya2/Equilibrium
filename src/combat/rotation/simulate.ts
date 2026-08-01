@@ -1,5 +1,6 @@
 import { runicChargeReady } from "../styles/magic/runicCharge";
 import { necroCanCast } from "../styles/necromancy/effects";
+import type { AbilitySpec } from "../pipeline/calculateAbility";
 
 export type {
   AdrenalineRules,
@@ -11,54 +12,104 @@ export type {
   CastAttempt,
   CastContext,
   CastContextInput,
+  CastRng,
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
-import { createCastContext } from "./context";
+import { castOutcomes, mergeBranches, type Branch } from "./branch";
+import { costOf, performOffGcdCast } from "./cast";
+import { createRuntime } from "./runtime";
+import { firstLegalTick } from "./state";
+import { combineBranchSummaries } from "./summary";
 
 export { createCastContext } from "./context";
 
-/** Deterministic expected-value run; unpayable casts return an error summary. */
-export function simulate(input: SimulateInput, options?: SimulateOptions): RotationSummary {
-  const ctx = createCastContext(input);
-
-  for (const action of input.rotation) {
-    const ability = ctx.byId.get(action.abilityId);
-    if (!ability) return ctx.finish(`unknown ability: ${action.abilityId}`);
-
-    if (ability.stateEffect === "runic_charge") {
-      if (!runicChargeReady(ctx.getState().magic, ctx.getState().tick)) {
-        return ctx.finish(`runic_charge is on cooldown at tick ${ctx.getState().tick}`);
-      }
-      ctx.performOffGcdCast(ability);
-      continue;
+/**
+ * One queued action (plus auto-weave) across the live branches. Weaving and
+ * the cast itself go through castOutcomes, so state-changing RNG (Impatient /
+ * Relentless) splits the branch set instead of spending impossible averages.
+ */
+function stepManualAction(
+  branch: Branch,
+  ability: AbilitySpec,
+  autoWeave: boolean | undefined,
+): Branch[] {
+  if (branch.error !== undefined) return [branch];
+  if (ability.stateEffect === "runic_charge") {
+    if (!runicChargeReady(branch.rt.state.magic, branch.rt.state.tick)) {
+      return [{ ...branch, error: `runic_charge is on cooldown at tick ${branch.rt.state.tick}` }];
     }
-
-    if (input.autoWeave) {
-      const basic = ctx.basicByStyle.get(ability.style);
-      let guard = 0;
-      while (
-        basic &&
-        (ctx.firstLegalTick(ability.id) > ctx.getState().tick ||
-          ctx.costOf(ability) > ctx.getState().adrenaline ||
-          !necroCanCast(
-            ability,
-            ctx.getState().necro,
-            ctx.getState().conjures,
-            ctx.getState().tick,
-          ))
-      ) {
-        if (++guard > 200)
-          return ctx.finish(
-            `${ability.id} is unaffordable at tick ${ctx.getState().tick}, even weaving basics`,
-          );
-        const attempt = ctx.performCast(basic, ctx.getState().tick, true);
-        if (!attempt.ok) return ctx.finish(attempt.error);
-      }
-    }
-
-    const attempt = ctx.performCast(ability, ctx.firstLegalTick(ability.id), false);
-    if (!attempt.ok) return ctx.finish(attempt.error);
+    performOffGcdCast(branch.rt, ability);
+    return [branch];
   }
 
-  return ctx.finish(undefined, undefined, options);
+  let work: Branch[] = [branch];
+  if (autoWeave) {
+    const done: Branch[] = [];
+    const pending: Branch[] = [branch];
+    let guard = 0;
+    while (pending.length > 0) {
+      const current = pending.pop()!;
+      if (current.error !== undefined) {
+        done.push(current);
+        continue;
+      }
+      const basic = current.rt.basicByStyle.get(ability.style);
+      const castable =
+        firstLegalTick(current.rt.state, ability.id) <= current.rt.state.tick &&
+        costOf(current.rt, ability) <= current.rt.state.adrenaline &&
+        necroCanCast(ability, current.rt.state.necro, current.rt.state.conjures, current.rt.state.tick);
+      if (castable || !basic) {
+        done.push(current);
+        continue;
+      }
+      if (++guard > 400) {
+        done.push({
+          ...current,
+          error: `${ability.id} is unaffordable at tick ${current.rt.state.tick}, even weaving basics`,
+        });
+        continue;
+      }
+      pending.push(...castOutcomes(current, basic, current.rt.state.tick, true));
+    }
+    work = mergeBranches(done);
+  }
+
+  const out: Branch[] = [];
+  for (const woven of work) {
+    if (woven.error !== undefined) {
+      out.push(woven);
+      continue;
+    }
+    out.push(...castOutcomes(woven, ability, firstLegalTick(woven.rt.state, ability.id), false));
+  }
+  return out;
+}
+
+/**
+ * Deterministic expected-value run with probability-weighted branching at
+ * state-changing RNG points; unpayable casts fail their branch, and the
+ * summary surfaces the failed weight instead of smoothing it away.
+ */
+export function simulate(input: SimulateInput, options?: SimulateOptions): RotationSummary {
+  let branches: Branch[] = [{ weight: 1, rt: createRuntime(input) }];
+  let sawBranching = false;
+
+  for (const action of input.rotation) {
+    const ability = branches[0]!.rt.byId.get(action.abilityId);
+    if (!ability) {
+      branches = branches.map((branch) => ({
+        ...branch,
+        error: branch.error ?? `unknown ability: ${action.abilityId}`,
+      }));
+      break;
+    }
+    const next: Branch[] = [];
+    for (const branch of branches) {
+      next.push(...stepManualAction(branch, ability, input.autoWeave));
+    }
+    sawBranching ||= next.length > 1;
+    branches = mergeBranches(next);
+  }
+
+  return combineBranchSummaries(branches, undefined, options, sawBranching);
 }

@@ -23,13 +23,13 @@ export interface SimulationRuntime {
   readonly horizon?: number;
   readonly byId: Map<string, AbilitySpec>;
   readonly basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
-  readonly queue: EventQueue;
+  readonly queue: EventQueue<SimulationRuntime>;
   state: RotationState;
   readonly casts: CastRecord[];
   readonly perAbility: Record<string, number>;
   readonly damageByTick: Record<number, number>;
   /** Every landed event in (tick, seq) order. */
-  readonly events: ResolvedEvent[];
+  readonly events: ResolvedEvent<SimulationRuntime>[];
   readonly recordBySeq: Map<number, CastRecord>;
   /** Full hit detail per landed hit event, keyed by event seq (cast records, surge EV). */
   readonly hitDetails: Map<number, HitResult>;
@@ -45,6 +45,14 @@ export interface SimulationRuntime {
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
+  if (
+    input.targetHpPercent != null &&
+    (!Number.isFinite(input.targetHpPercent) ||
+      input.targetHpPercent < 0 ||
+      input.targetHpPercent > 100)
+  ) {
+    throw new RangeError(`targetHpPercent outside 0-100: ${input.targetHpPercent}`);
+  }
   return {
     input,
     horizon: input.horizonTicks,
@@ -52,7 +60,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     basicByStyle: new Map(
       input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]),
     ),
-    queue: new EventQueue(),
+    queue: new EventQueue<SimulationRuntime>(),
     state: newRotationState(),
     casts: [],
     perAbility: {},
@@ -73,7 +81,10 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
 }
 
 /** Push an event onto the queue, assigning its monotonic per-run seq. */
-export function scheduleEvent(rt: SimulationRuntime, event: Omit<ScheduledEvent, "seq">): number {
+export function scheduleEvent(
+  rt: SimulationRuntime,
+  event: Omit<ScheduledEvent<SimulationRuntime>, "seq">,
+): number {
   const seq = rt.nextSeq++;
   rt.queue.push({ ...event, seq });
   return seq;

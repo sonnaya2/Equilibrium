@@ -5,6 +5,7 @@ import type { AbilityHit, AbilitySpec } from "../pipeline/calculateAbility";
 import { calculateHit } from "../pipeline/calculateHit";
 import { BERSERK_DAMAGE_MULTIPLIER } from "../styles/melee/bloodlust";
 import { CHAOS_ROAR_DAMAGE_MULTIPLIER } from "../styles/melee/abilities";
+import { FURY_CRIT_CHANCE_BONUS } from "../styles/melee/effects";
 import { deathsSwiftnessMultiplier } from "../styles/ranged/effects";
 import {
   LIGHTNING_SURGE_BAND,
@@ -13,10 +14,16 @@ import {
   SUNSHINE_DAMAGE_MULTIPLIER,
   SUNSHINE_SOURCE,
 } from "../styles/magic/effects";
-import { searingWindsBonusPct } from "../styles/ranged/onHit";
+import {
+  extendSearingWinds,
+  onRangedHit,
+  SEARING_WINDS_BONUS_HIT_PCT,
+  shadowImbuedAdrenalinePerHit,
+} from "../styles/ranged/onHit";
 import type { CombatModifier, SourceReference } from "../types";
 import type { ResolvedDamage, ScheduledEvent } from "./events";
 import type { SimulationRuntime } from "./runtime";
+import { gainAdrenaline, patchRanged } from "./state";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 function buffMultiplier(id: string, multiplier: number, source: SourceReference): CombatModifier {
@@ -31,12 +38,37 @@ function buffMultiplier(id: string, multiplier: number, source: SourceReference)
 }
 
 /**
+ * What a cast captured at cast time for its scheduled hits. Time-windowed
+ * globals (Berserk, Swiftness, Sunshine) are NOT here — they read state at the
+ * land tick. Next-hit buffs, empowerment, and Searing Winds eligibility are
+ * cast-scope per their sourced mechanics, so they live in the snapshot.
+ */
+export interface CastSnapshot {
+  /** Owning cast sequence — buff-granting casts exclude their own hits. */
+  castSeq: number;
+  critLayers: CritLayers;
+  baseMods: CombatModifier[];
+  /** Chaos Roar ×1.75: channels on the first hit only; non-channels on all hits. */
+  chaosRoarActive: boolean;
+  channelled: boolean;
+  /** Greater Fury: first crit-eligible non-bleed hit is a guaranteed crit. */
+  greaterFuryActive: boolean;
+  /** Fury: first crit-eligible non-bleed hit gains +25% crit chance. */
+  furyActive: boolean;
+  firstEligibleHitIndex: number;
+  /** Bloodlust missing-LP multiplier for Flurry / Greater Flurry (1 = none). */
+  empowerMult: number;
+  /** Searing Winds was active at cast — every hit carries the attached bonus. */
+  searingWindsAtCast: boolean;
+}
+
+/**
  * Record one landed event: damage ledgers, tick/ability attribution, the owning
  * cast record, and the event log (provenance kept, resolve closure dropped).
  */
 export function recordResolved(
   rt: SimulationRuntime,
-  event: ScheduledEvent,
+  event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
 ): void {
   rt.totalMin += damage.min;
@@ -63,39 +95,61 @@ export function recordResolved(
 }
 
 /**
- * Per-landed-hit consumption hook (proc-eligible hits only). Stage 3 moves
- * next-hit melee effects (Fury / Greater Fury first-hit scope) here; today
- * they resolve at cast scope inside performCast, so this is intentionally inert.
+ * Per-landed-hit state effects for real (proc-eligible, non-attached) hits.
+ * Attached damage, conjure autos, poison, and proc events never reach this —
+ * one real hit is one stack roll / one adrenaline grant / one extension.
  */
-export function consumeNextHitEffects(rt: SimulationRuntime, _event: ScheduledEvent): void {
-  void rt;
-  // Stage 3 hook — see combat-sim "Event provenance and per-hit scope".
+export function consumeNextHitEffects(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): void {
+  const ability = rt.byId.get(event.abilityId);
+  if (ability?.style !== "ranged") return;
+  // Deathspore: every landed ranged hit builds a stack (its own cooldown gate).
+  if (rt.input.ammo === "deathspore") {
+    rt.state = patchRanged(rt.state, {
+      deathspore: onRangedHit(rt.state.ranged.deathspore, event.tick),
+    });
+  }
+  const perHit = shadowImbuedAdrenalinePerHit(rt.state.ranged.shadowImbued, event.tick);
+  if (perHit > 0) rt.state = gainAdrenaline(rt.state, perHit);
+  // Rapid Fire: each landed hit extends an active Searing Winds by 1 tick (wiki).
+  if (
+    ability.id === "rapid_fire" &&
+    event.tick < rt.state.ranged.searingWinds.expiresAtTick
+  ) {
+    rt.state = patchRanged(rt.state, {
+      searingWinds: extendSearingWinds(rt.state.ranged.searingWinds, 1),
+    });
+  }
 }
 
 /**
  * Resolve one cast hit at its land tick: time-windowed globals (Berserk,
- * Death's Swiftness, Sunshine) read state at that tick; Chaos Roar and the
- * crit layers were captured cast-scope. Searing Winds is folded in as an
- * attached component of the source hit — never a separate event, so it cannot
- * inflate proc rolls, stacks, or hit counters.
+ * Death's Swiftness, Sunshine) read state at that tick; the cast snapshot
+ * carries next-hit crit layers (first eligible hit only), Chaos Roar's
+ * channel rule, empowerment, and Searing Winds' cast-time eligibility. The
+ * Searing Winds bonus is an attached component of the source hit — never a
+ * separate event, so it cannot inflate proc rolls, stacks, or hit counters.
  */
 export function resolveCastHit(
   rt: SimulationRuntime,
   at: number,
   eventSeq: number,
   hitSpec: AbilityHit,
+  hitIndex: number,
   ability: AbilitySpec,
-  castSeq: number,
-  critLayers: CritLayers,
-  baseMods: CombatModifier[],
-  chaosRoarActive: boolean,
+  snap: CastSnapshot,
 ): ResolvedDamage {
   const { input, state } = rt;
-  const modifiers = [...baseMods];
-  if (chaosRoarActive) {
+  const modifiers = [...snap.baseMods];
+  if (snap.chaosRoarActive && (!snap.channelled || hitIndex === 0)) {
     modifiers.push(
       buffMultiplier("buff:chaos_roar", CHAOS_ROAR_DAMAGE_MULTIPLIER, MODERNISATION_WIKI),
     );
+  }
+  if (snap.empowerMult !== 1) {
+    modifiers.push(buffMultiplier("buff:bloodlust_flurry", snap.empowerMult, MODERNISATION_WIKI));
   }
   if (ability.style === "melee" && at < state.berserkUntilTick) {
     modifiers.push(
@@ -109,20 +163,29 @@ export function resolveCastHit(
     }
   }
   // A buff-granting cast's own hits predate its buff (wiki: the Sunshine beam
-  // DoT is not buffed by its own window; Galeshot does not ride its own Winds).
+  // DoT is not buffed by its own window).
   if (
     ability.style === "magic" &&
-    state.sunshine.grantedByCast !== castSeq &&
+    state.sunshine.grantedByCast !== snap.castSeq &&
     sunshineActive(state.sunshine, at)
   ) {
     modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
   }
+  const firstEligible = hitIndex === snap.firstEligibleHitIndex;
+  const crit: CritLayers = {
+    ...snap.critLayers,
+    eligible: hitSpec.critEligible ?? true,
+    chance:
+      snap.critLayers.chance + (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0),
+    guaranteed:
+      snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
+  };
   const hit = calculateHit({
     base: input.base,
     band: hitSpec.band,
     level: input.level,
     accuracy: input.accuracy,
-    crit: { ...critLayers, eligible: hitSpec.critEligible ?? true },
+    crit,
     modifiers,
     context: input.context,
     cap: input.cap,
@@ -131,23 +194,20 @@ export function resolveCastHit(
   let min = hit.min;
   let max = hit.max;
   let expected = hit.expected;
-  if (ability.style === "ranged" && state.ranged.searingWinds.grantedByCast !== castSeq) {
-    const bonusPct = searingWindsBonusPct(state.ranged.searingWinds, at);
-    if (bonusPct > 0) {
-      const bonus = calculateHit({
-        base: input.base,
-        band: { minPct: bonusPct, maxPct: bonusPct },
-        level: input.level,
-        accuracy: input.accuracy,
-        crit: { chance: 0, eligible: false },
-        modifiers,
-        context: input.context,
-        cap: input.cap,
-      });
-      min += bonus.min;
-      max += bonus.max;
-      expected += bonus.expected;
-    }
+  if (snap.searingWindsAtCast) {
+    const bonus = calculateHit({
+      base: input.base,
+      band: { minPct: SEARING_WINDS_BONUS_HIT_PCT, maxPct: SEARING_WINDS_BONUS_HIT_PCT },
+      level: input.level,
+      accuracy: input.accuracy,
+      crit: { chance: 0, eligible: false },
+      modifiers,
+      context: input.context,
+      cap: input.cap,
+    });
+    min += bonus.min;
+    max += bonus.max;
+    expected += bonus.expected;
   }
   return { min, max, expected, critExpected: (hit.critMin + hit.critMax) / 2 };
 }

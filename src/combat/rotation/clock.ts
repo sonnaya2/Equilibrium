@@ -21,7 +21,7 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
       processSpiritEvent(rt, event);
       continue;
     }
-    recordResolved(rt, event, event.resolve(event.tick));
+    recordResolved(rt, event, event.resolve(rt, event.tick));
   }
 }
 

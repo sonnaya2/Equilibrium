@@ -1,4 +1,5 @@
 import { expectedAftershockDamage, expectedCracklingDamage } from "../shared/perks";
+import type { Branch } from "./branch";
 import type { RotationSummary, SimulateOptions } from "./contracts";
 import { advanceTo } from "./clock";
 import type { SimulationRuntime } from "./runtime";
@@ -62,7 +63,7 @@ export function finish(
   let totalExpectedIncludingTails: number | undefined;
   if (options?.includeTails) {
     let tails = rt.totalExpected;
-    for (const event of rt.queue.pending()) tails += event.resolve(event.tick).expected;
+    for (const event of rt.queue.pending()) tails += event.resolve(rt, event.tick).expected;
     totalExpectedIncludingTails = tails;
   }
 
@@ -82,5 +83,68 @@ export function finish(
     damageByTick: rt.damageByTick,
     events: rt.events,
     ...(totalExpectedIncludingTails !== undefined ? { totalExpectedIncludingTails } : {}),
+  };
+}
+
+/**
+ * Combine finished branches into one summary: numeric totals are
+ * branch-weighted means; `casts`/`events`/`ticks` show the modal
+ * (highest-weight) trajectory. `rng` is attached only when branching actually
+ * occurred, so deterministic runs keep their exact previous shape.
+ */
+export function combineBranchSummaries(
+  branches: readonly Branch[],
+  horizonTicks: number | undefined,
+  options: SimulateOptions | undefined,
+  sawBranching: boolean,
+): RotationSummary {
+  const parts = branches.map((branch) => ({
+    weight: branch.weight,
+    summary: finish(branch.rt, branch.error, horizonTicks, options),
+  }));
+  const totalWeight = parts.reduce((sum, part) => sum + part.weight, 0) || 1;
+  const mix = (f: (s: RotationSummary) => number) =>
+    parts.reduce((sum, part) => sum + (part.weight * f(part.summary)) / totalWeight, 0);
+  const modal = parts.reduce((a, b) => (b.weight > a.weight ? b : a)).summary;
+  const failedWeight = parts.filter((part) => !part.summary.ok).reduce((s, p) => s + p.weight, 0);
+  const error =
+    modal.error ??
+    parts.filter((part) => part.summary.error).sort((a, b) => b.weight - a.weight)[0]?.summary
+      .error;
+
+  const perAbility: Record<string, number> = {};
+  for (const key of new Set(parts.flatMap((part) => Object.keys(part.summary.perAbility)))) {
+    perAbility[key] = mix((s) => s.perAbility[key] ?? 0);
+  }
+  const damageByTick: Record<number, number> = {};
+  for (const key of new Set(parts.flatMap((part) => Object.keys(part.summary.damageByTick)))) {
+    damageByTick[Number(key)] = mix((s) => s.damageByTick[Number(key)] ?? 0);
+  }
+
+  return {
+    ok: failedWeight === 0,
+    ...(error !== undefined ? { error } : {}),
+    casts: modal.casts,
+    ticks: modal.ticks,
+    ...(modal.horizonTicks !== undefined ? { horizonTicks: modal.horizonTicks } : {}),
+    totalMin: mix((s) => s.totalMin),
+    totalMax: mix((s) => s.totalMax),
+    totalExpected: mix((s) => s.totalExpected),
+    dps: mix((s) => s.dps),
+    perAbility,
+    damageByTick,
+    events: modal.events,
+    ...(modal.totalExpectedIncludingTails !== undefined
+      ? { totalExpectedIncludingTails: mix((s) => s.totalExpectedIncludingTails ?? 0) }
+      : {}),
+    ...(sawBranching
+      ? {
+          rng: {
+            method: "probability-weighted branching" as const,
+            branches: parts.length,
+            ...(failedWeight > 0 ? { failedWeight } : {}),
+          },
+        }
+      : {}),
   };
 }

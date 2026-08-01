@@ -5,11 +5,8 @@ import {
   energisingAccuracyBonus,
   equilibriumPerkModifier,
   eruptivePerkModifier,
-  IMPATIENT_EXTRA_ADRENALINE,
-  impatientProcChance,
   invigoratingAdrenalineMultiplier,
   lungingPerkModifier,
-  relentlessProcChance,
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
 import {
@@ -291,15 +288,12 @@ export function loadoutStats(loadout: Loadout): CalcStats {
       loadout.perks.invigorating > 0
         ? invigoratingAdrenalineMultiplier(loadout.perks.invigorating)
         : 1,
-    impatientExpectedExtra:
-      loadout.perks.impatient > 0
-        ? impatientProcChance(loadout.perks.impatient, loadout.perks.impatientLevel20) *
-          IMPATIENT_EXTRA_ADRENALINE
-        : 0,
-    relentlessRefundChance:
-      loadout.perks.relentless > 0
-        ? relentlessProcChance(loadout.perks.relentless, loadout.perks.relentlessLevel20)
-        : 0,
+    // Impatient / Relentless are state-changing RNG: the rotation drivers
+    // branch on them (probability-weighted), never flat expected value.
+    impatientRank: loadout.perks.impatient > 0 ? loadout.perks.impatient : 0,
+    impatientLevel20: loadout.perks.impatientLevel20,
+    relentlessRank: loadout.perks.relentless > 0 ? loadout.perks.relentless : 0,
+    relentlessLevel20: loadout.perks.relentlessLevel20,
   };
 
   const procs: ProcRules = {

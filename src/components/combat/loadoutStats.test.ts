@@ -532,19 +532,25 @@ describe("loadoutStats", () => {
   it("Invigorating and Impatient feed adrenaline rules (rank 0 = defaults)", () => {
     const off = loadoutStats(base);
     expect(off.adrenaline?.basicGainMultiplier).toBe(1);
-    expect(off.adrenaline?.impatientExpectedExtra).toBe(0);
+    expect(off.adrenaline?.impatientRank).toBe(0);
+    expect(off.adrenaline?.relentlessRank).toBe(0);
 
     const inv4 = loadoutStats({ ...base, perks: { ...base.perks, invigorating: 4 } });
     expect(inv4.adrenaline?.basicGainMultiplier).toBeCloseTo(1.2, 10);
 
+    // Impatient / Relentless pass ranks through: the rotation drivers branch
+    // on them (probability-weighted), so no EV values live here anymore.
     const imp4 = loadoutStats({ ...base, perks: { ...base.perks, impatient: 4 } });
-    expect(imp4.adrenaline?.impatientExpectedExtra).toBeCloseTo(1.08, 10);
+    expect(imp4.adrenaline?.impatientRank).toBe(4);
 
     const imp4l20 = loadoutStats({
       ...base,
       perks: { ...base.perks, impatient: 4, impatientLevel20: true },
     });
-    expect(imp4l20.adrenaline?.impatientExpectedExtra).toBeCloseTo(1.188, 10);
+    expect(imp4l20.adrenaline?.impatientLevel20).toBe(true);
+
+    const rel5 = loadoutStats({ ...base, perks: { ...base.perks, relentless: 5 } });
+    expect(rel5.adrenaline?.relentlessRank).toBe(5);
   });
 
   it("Crackling / Aftershock ranks feed procs rules (rank 0 = off)", () => {

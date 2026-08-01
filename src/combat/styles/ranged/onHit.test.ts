@@ -4,8 +4,10 @@ import {
   activateSearingWinds,
   activateShadowImbued,
   applyPuncture,
+  DEATHSPORE_COOLDOWN_TICKS,
   DEATHSPORE_FREE_ABILITY_STACKS,
-  deathsporeReady,
+  DEATHSPORE_FREE_CAST_WINDOW_TICKS,
+  deathsporeFreeCastActive,
   extendSearingWinds,
   extendShadowImbued,
   newDeathspore,
@@ -45,24 +47,48 @@ describe("puncture", () => {
 });
 
 describe("deathspore arrows", () => {
-  it("builds per hit and caps at the free-ability threshold", () => {
+  it("builds one stack per landed hit; the 12th triggers the buff and the shared cooldown", () => {
     let state = newDeathspore();
-    for (let i = 0; i < 20; i++) state = onRangedHit(state);
-    expect(state.stacks).toBe(DEATHSPORE_FREE_ABILITY_STACKS);
-  });
-
-  it("is ready at 12 and spends only when ready", () => {
-    let state = newDeathspore();
-    expect(spendDeathspore(state)).toBe(state);
-    for (let i = 0; i < DEATHSPORE_FREE_ABILITY_STACKS; i++) state = onRangedHit(state);
-    expect(deathsporeReady(state)).toBe(true);
-    state = spendDeathspore(state);
+    for (let i = 0; i < DEATHSPORE_FREE_ABILITY_STACKS - 1; i++) state = onRangedHit(state, i);
+    expect(state.stacks).toBe(DEATHSPORE_FREE_ABILITY_STACKS - 1);
+    expect(deathsporeFreeCastActive(state, 11)).toBe(false);
+    state = onRangedHit(state, 11);
     expect(state.stacks).toBe(0);
-    expect(deathsporeReady(state)).toBe(false);
+    expect(state.freeCastUntilTick).toBe(11 + DEATHSPORE_FREE_CAST_WINDOW_TICKS);
+    expect(state.cooldownUntilTick).toBe(11 + DEATHSPORE_COOLDOWN_TICKS);
+    expect(deathsporeFreeCastActive(state, 11)).toBe(true);
   });
 
-  it("counts multi-hit abilities per hit", () => {
-    expect(onRangedHit(newDeathspore(), 4).stacks).toBe(4);
+  it("free-cast window is half-open: active at untilTick - 1, gone at untilTick", () => {
+    let state = newDeathspore();
+    for (let i = 0; i < DEATHSPORE_FREE_ABILITY_STACKS; i++) state = onRangedHit(state, 0);
+    const last = state.freeCastUntilTick - 1;
+    expect(deathsporeFreeCastActive(state, last)).toBe(true);
+    expect(deathsporeFreeCastActive(state, state.freeCastUntilTick)).toBe(false);
+    expect(deathsporeFreeCastActive(state, state.freeCastUntilTick + 5)).toBe(false);
+  });
+
+  it("rejects stack generation during the cooldown, then rebuilds after it", () => {
+    let state = newDeathspore();
+    for (let i = 0; i < DEATHSPORE_FREE_ABILITY_STACKS; i++) state = onRangedHit(state, 0);
+    const during = onRangedHit(state, 10);
+    expect(during.stacks).toBe(0);
+    expect(onRangedHit(during, state.cooldownUntilTick - 1).stacks).toBe(0);
+    expect(onRangedHit(during, state.cooldownUntilTick).stacks).toBe(1);
+  });
+
+  it("a free cast consumes the buff while the cooldown keeps running", () => {
+    let state = newDeathspore();
+    for (let i = 0; i < DEATHSPORE_FREE_ABILITY_STACKS; i++) state = onRangedHit(state, 0);
+    state = spendDeathspore(state, 3);
+    expect(deathsporeFreeCastActive(state, 3)).toBe(false);
+    expect(state.cooldownUntilTick).toBe(DEATHSPORE_COOLDOWN_TICKS);
+    expect(onRangedHit(state, 3).stacks).toBe(0);
+  });
+
+  it("spending without an active buff changes nothing", () => {
+    const state = newDeathspore();
+    expect(spendDeathspore(state, 0)).toBe(state);
   });
 });
 

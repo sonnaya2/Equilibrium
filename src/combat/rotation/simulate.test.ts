@@ -175,25 +175,48 @@ describe("simulate — Invigorating / Impatient adrenaline", () => {
     expect(s.casts[0].adrenalineAfter).toBeCloseTo(9 * 1.2);
   });
 
-  it("Impatient adds EV extra on basic gains (R4 non-l20: 0.36×3 = 1.08)", () => {
+  it("Impatient proc grants +3 on the basic; no-proc leaves the base gain", () => {
+    const procCtx = createCastContext({ ...baseInput, adrenaline: { impatientRank: 4 } });
+    const attack = procCtx.byId.get("attack")!;
+    expect(procCtx.performCast(attack, 0, false, { impatientProc: true }).ok).toBe(true);
+    expect(procCtx.getState().adrenaline).toBeCloseTo(12);
+
+    const flatCtx = createCastContext({ ...baseInput, adrenaline: { impatientRank: 4 } });
+    expect(flatCtx.performCast(attack, 0, false, { impatientProc: false }).ok).toBe(true);
+    expect(flatCtx.getState().adrenaline).toBeCloseTo(9);
+  });
+
+  it("the driver branches per basic and reports the modal trajectory (R4: 0.36/0.64)", () => {
     const s = simulate({
       ...baseInput,
-      adrenaline: { impatientExpectedExtra: 0.36 * 3 },
+      adrenaline: { impatientRank: 4 },
       rotation: rotationOf("attack"),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts[0].adrenalineAfter).toBeCloseTo(9 + 1.08);
+    expect(s.rng).toEqual({ method: "probability-weighted branching", branches: 2 });
+    expect(lastCast(s).adrenalineAfter).toBe(9); // modal branch: no proc (0.64)
   });
 
-  it("stacks Invigorating multiplier then Impatient EV on the same basic", () => {
+  it("branches whose adrenaline realigns merge back", () => {
     const s = simulate({
       ...baseInput,
-      adrenaline: { basicGainMultiplier: 1.2, impatientExpectedExtra: 1.08 },
+      adrenaline: { impatientRank: 4 },
       rotation: rotationOf("attack", "attack"),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts[0].adrenalineAfter).toBeCloseTo(11.88);
-    expect(s.casts[1].adrenalineAfter).toBeCloseTo(23.76);
+    // 24 (p²), 21 (2pq, merged), 18 (q²)
+    expect(s.rng?.branches).toBe(3);
+    expect(lastCast(s).adrenalineAfter).toBe(21); // modal branch: exactly one proc
+  });
+
+  it("Invigorating multiplier applies before the Impatient proc", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      adrenaline: { basicGainMultiplier: 1.2, impatientRank: 4 },
+    });
+    const attack = ctx.byId.get("attack")!;
+    expect(ctx.performCast(attack, 0, false, { impatientProc: true }).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBeCloseTo(9 * 1.2 + 3);
   });
 
   it("does not apply Invigorating/Impatient when there is no adrenaline gain", () => {
@@ -203,45 +226,87 @@ describe("simulate — Invigorating / Impatient adrenaline", () => {
     });
     const noGain = simulate({
       ...baseInput,
-      adrenaline: { basicGainMultiplier: 1.2, impatientExpectedExtra: 1.08 },
+      adrenaline: { basicGainMultiplier: 1.2, impatientRank: 4 },
       rotation: rotationOf("dismember"), // enhanced bleed — no adrenaline field
     });
     expect(plain.casts[0].adrenalineAfter).toBe(9);
     expect(noGain.casts[0].adrenalineAfter).toBe(0);
+    expect(noGain.rng).toBeUndefined(); // no basic cast → no RNG point → no branching
   });
 });
 
-describe("simulate — Relentless EV cost refund", () => {
-  it("refunds cost × chance after spend (R5: 25 cost → +1.25 EV)", () => {
-    const plain = simulate({
-      ...baseInput,
-      rotation: rotationOf("attack", "attack", "attack", "attack", "assault"),
-    });
-    const withR = simulate({
-      ...baseInput,
-      adrenaline: { relentlessRefundChance: 0.05 },
-      rotation: rotationOf("attack", "attack", "attack", "attack", "assault"),
-    });
-    expect(plain.ok).toBe(true);
-    expect(withR.ok).toBe(true);
-    const plainAssault = lastCast(plain);
-    const rAssault = lastCast(withR);
-    expect(plainAssault.abilityId).toBe("assault");
-    expect(plainAssault.adrenalineAfter).toBeCloseTo(36 - 25, 10);
-    expect(rAssault.adrenalineAfter).toBeCloseTo(36 - 25 + 25 * 0.05, 10);
+describe("simulate — Relentless refund branching", () => {
+  it("a proc refunds the full cost and starts the 30s lockout", () => {
+    const ctx = createCastContext({ ...baseInput, adrenaline: { relentlessRank: 5 } });
+    const attack = ctx.byId.get("attack")!;
+    const assault = ctx.byId.get("assault")!;
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.getState().adrenaline).toBe(36);
+    const attempt = ctx.performCast(assault, ctx.getState().tick, false, { relentlessProc: true });
+    expect(attempt.ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(36); // cost 25 fully refunded
+    expect(ctx.getState().relentlessUntilTick).toBe(12 + 50);
   });
 
-  it("does not refund when cost is 0 (basics / free casts)", () => {
-    const plain = simulate({
+  it("a non-proc spends the cost normally with no lockout", () => {
+    const ctx = createCastContext({ ...baseInput, adrenaline: { relentlessRank: 5 } });
+    const attack = ctx.byId.get("attack")!;
+    const assault = ctx.byId.get("assault")!;
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.performCast(assault, ctx.getState().tick, false, { relentlessProc: false }).ok).toBe(
+      true,
+    );
+    expect(ctx.getState().adrenaline).toBe(36 - 25);
+    expect(ctx.getState().relentlessUntilTick).toBe(0);
+  });
+
+  it("the lockout spends normally on a second spender inside 50 ticks, even told to proc", () => {
+    const ctx = createCastContext({ ...baseInput, adrenaline: { relentlessRank: 5 } });
+    const attack = ctx.byId.get("attack")!;
+    const assault = ctx.byId.get("assault")!;
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    ctx.performCast(assault, ctx.getState().tick, false, { relentlessProc: true });
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    // Second assault lands inside the lockout: the override cannot re-proc it.
+    const before = ctx.getState().adrenaline;
+    expect(ctx.performCast(assault, ctx.firstLegalTick("assault"), false, { relentlessProc: true }).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(before - 25);
+  });
+
+  it("driver branches on the spender and surfaces the failed branch's weight", () => {
+    const s = simulate({
       ...baseInput,
+      adrenaline: { relentlessRank: 5 },
+      rotation: rotationOf("attack", "attack", "attack", "attack", "assault", "assault"),
+    });
+    // 36 adrenaline at the first assault: a proc (w 0.05) refunds → the second
+    // assault casts; no-proc (w 0.95) leaves 11 → the second assault is unpayable.
+    // A flat EV would have reported an impossible middle state instead.
+    expect(s.ok).toBe(false);
+    expect(s.rng?.failedWeight).toBeCloseTo(0.95, 10);
+    expect(s.error).toContain("assault");
+  });
+
+  it("a rotation legal on every branch stays ok with weighted totals", () => {
+    const s = simulate({
+      ...baseInput,
+      adrenaline: { relentlessRank: 5 },
+      rotation: rotationOf("attack", "attack", "attack", "assault"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.rng?.branches).toBe(2);
+    expect(lastCast(s).adrenalineAfter).toBe(27 - 25); // modal branch: no refund
+    expect(lastCast(s).result.expected).toBeCloseTo(4 * 1400);
+  });
+
+  it("never branches on zero-cost casts", () => {
+    const s = simulate({
+      ...baseInput,
+      adrenaline: { relentlessRank: 5 },
       rotation: rotationOf("attack"),
     });
-    const withR = simulate({
-      ...baseInput,
-      adrenaline: { relentlessRefundChance: 0.05 },
-      rotation: rotationOf("attack"),
-    });
-    expect(withR.casts[0].adrenalineAfter).toBeCloseTo(plain.casts[0].adrenalineAfter, 10);
+    expect(s.rng).toBeUndefined();
+    expect(s.casts[0].adrenalineAfter).toBe(9);
   });
 });
 
@@ -1160,5 +1225,277 @@ describe("simulate — event log", () => {
     expect(ctx.getState().melee.berserk).toBe(false);
     expect(ctx.getState().melee.stacks).toBe(4);
     expect(ctx.getState().berserkUntilTick).toBe(0);
+  });
+});
+
+describe("simulate — Bloodlust spend lifecycle", () => {
+  it("an empowered Assault consumes 4 stacks atomically; the next spender rebuilds first", () => {
+    const ctx = createCastContext(baseInput);
+    const attack = ctx.byId.get("attack")!;
+    const assault = ctx.byId.get("assault")!;
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.getState().melee.stacks).toBe(4);
+    expect(ctx.performCast(assault, ctx.firstLegalTick("assault"), false).ok).toBe(true);
+    expect(ctx.getState().melee.stacks).toBe(0);
+    for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.getState().melee.stacks).toBe(3);
+    expect(ctx.performCast(assault, ctx.firstLegalTick("assault"), false).ok).toBe(true);
+    expect(ctx.getState().melee.stacks).toBe(3); // unempowered: no spend
+    const s = ctx.finish();
+    expect(s.casts[4].result.expected).toBeCloseTo(4 * 1800); // empowered 170-190
+    expect(s.casts[8].result.expected).toBeCloseTo(4 * 1400); // normal 130-150
+  });
+
+  it("an empowered Hurricane appends its sourced extra hit and spends 4 stacks", () => {
+    const ctx = createCastContext(baseInput);
+    const attack = ctx.byId.get("attack")!;
+    const hurricane = ctx.byId.get("hurricane")!;
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.performCast(hurricane, ctx.getState().tick, false).ok).toBe(true);
+    expect(ctx.getState().melee.stacks).toBe(0);
+    const s = ctx.finish();
+    const cast = lastCast(s);
+    expect(cast.result.hits).toHaveLength(3);
+    expect(cast.result.expected).toBeCloseTo(1500 + 1700 + 850);
+    const events = s.events.filter((e) => e.abilityId === "hurricane");
+    expect(events).toHaveLength(3);
+    expect(events.map((e) => e.hitIndex)).toEqual([0, 1, 2]);
+    expect(events.every((e) => e.procEligible && !e.attached)).toBe(true);
+  });
+
+  it("an unempowered Hurricane keeps its two hits and its stacks", () => {
+    const ctx = createCastContext(baseInput);
+    const attack = ctx.byId.get("attack")!;
+    const hurricane = ctx.byId.get("hurricane")!;
+    for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.performCast(hurricane, ctx.getState().tick, false).ok).toBe(true);
+    expect(ctx.getState().melee.stacks).toBe(3); // below threshold: no spend
+    const s = ctx.finish();
+    expect(lastCast(s).result.hits).toHaveLength(2);
+    expect(lastCast(s).result.expected).toBeCloseTo(1500 + 1700);
+  });
+
+  it("an empowered Flurry scales with target missing LP when HP is provided", () => {
+    const rotation = rotationOf("attack", "attack", "attack", "attack", "flurry");
+    const low = simulate({ ...baseInput, targetHpPercent: 30, rotation });
+    // 70% missing LP capped to +65%: 8 hits × 650 × 1.65.
+    expect(lastCast(low).result.expected).toBeCloseTo(8 * 650 * 1.65);
+    const full = simulate({ ...baseInput, targetHpPercent: 100, rotation });
+    expect(lastCast(full).result.expected).toBeCloseTo(8 * 650);
+  });
+
+  it("an empowered Flurry without target HP spends stacks but invents no bonus", () => {
+    const ctx = createCastContext(baseInput);
+    const attack = ctx.byId.get("attack")!;
+    const flurry = ctx.byId.get("flurry")!;
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.performCast(flurry, ctx.getState().tick, false).ok).toBe(true);
+    expect(ctx.getState().melee.stacks).toBe(0);
+    const s = ctx.finish();
+    expect(s.casts[4].result.expected).toBeCloseTo(8 * 650);
+  });
+});
+
+describe("simulate — next-hit effect scope", () => {
+  it("Greater Fury guarantees only the first hit of a channel", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("attack", "attack", "greater_fury", "assault"),
+    });
+    expect(s.ok).toBe(true);
+    const assault = lastCast(s);
+    expect(assault.result.expected).toBeCloseTo(2100 + 3 * 1400);
+    expect(assault.result.hits[0].critChance).toBe(1);
+    expect(assault.result.hits[1].critChance).toBe(0);
+  });
+
+  it("Greater Fury guarantees exactly one hit of a non-channelled multihit", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("attack", "attack", "greater_fury", "hurricane"),
+    });
+    expect(lastCast(s).result.expected).toBeCloseTo(2250 + 1700);
+  });
+
+  it("Greater Fury expires at the 15s window boundary", () => {
+    const ctx = createCastContext(baseInput);
+    const greaterFury = ctx.byId.get("greater_fury")!;
+    const attack = ctx.byId.get("attack")!;
+    ctx.performCast(greaterFury, 0, false);
+    expect(ctx.getState().greaterFuryUntilTick).toBe(25);
+    ctx.performCast(attack, 24, false); // inside the window
+    ctx.performCast(greaterFury, ctx.getState().tick, false); // recast: new window from cast tick
+    const secondWindow = ctx.getState().greaterFuryUntilTick;
+    ctx.performCast(attack, secondWindow, false); // exactly at its end: expired
+    const s = ctx.finish();
+    expect(s.casts[1].result.expected).toBeCloseTo(1800);
+    expect(s.casts[3].result.expected).toBeCloseTo(1200);
+  });
+
+  it("Fury's +25% applies to a channel's first hit only", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 0 },
+      rotation: rotationOf("attack", "attack", "fury", "assault"),
+    });
+    expect(s.ok).toBe(true);
+    const assault = lastCast(s);
+    expect(assault.result.hits[0].critChance).toBeCloseTo(0.25);
+    expect(assault.result.hits[1].critChance).toBe(0);
+    expect(assault.result.expected).toBeCloseTo(1575 + 3 * 1400);
+  });
+
+  it("Chaos Roar multiplies only the first hit of a channel", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack", "attack", "chaos_roar", "assault"),
+    });
+    expect(lastCast(s).result.expected).toBeCloseTo(1400 * 1.75 + 3 * 1400);
+  });
+
+  it("Chaos Roar multiplies every hit of a non-channelled multihit", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack", "attack", "chaos_roar", "hurricane"),
+    });
+    // floor-per-stage rounding: (2362+2887)/2 + (2712+3237)/2
+    expect(lastCast(s).result.expected).toBeCloseTo(2624.5 + 2974.5);
+  });
+
+  it("Chaos Roar also boosts bleed ticks", () => {
+    const s = simulate({ ...baseInput, rotation: rotationOf("chaos_roar", "dismember") });
+    expect(s.ok).toBe(true);
+    // floor-per-stage rounding: (498 + 551) / 2
+    for (let t = 5; t <= 19; t += 2) expect(s.damageByTick[t]).toBeCloseTo(524.5);
+  });
+
+  it("Chaos Roar expires at the 7.2s window boundary", () => {
+    const ctx = createCastContext(baseInput);
+    const chaosRoar = ctx.byId.get("chaos_roar")!;
+    const attack = ctx.byId.get("attack")!;
+    ctx.performCast(chaosRoar, 0, false);
+    expect(ctx.getState().chaosRoarUntilTick).toBe(12);
+    ctx.performCast(attack, 11, false); // inside the window
+    ctx.performCast(chaosRoar, ctx.getState().tick, false);
+    const secondWindow = ctx.getState().chaosRoarUntilTick;
+    ctx.performCast(attack, secondWindow, false); // exactly at its end: expired
+    const s = ctx.finish();
+    expect(s.casts[1].result.expected).toBeCloseTo(1200 * 1.75);
+    expect(s.casts[3].result.expected).toBeCloseTo(1200); // expired: half-open window
+  });
+});
+
+describe("simulate — Deathspore lifecycle", () => {
+  const rangedInput: Omit<SimulateInput, "rotation"> = {
+    ...baseInput,
+    abilities: RANGED_ABILITIES,
+    context: { style: "ranged" },
+  };
+
+  it("a free cast outside the 15-tick window pays full cost", () => {
+    // 12th stack lands at tick 33 → buff until 48; imbue at 54 is past it.
+    const rotation = rotationOf(...Array(18).fill("ranged_attack"), "imbue_shadows");
+    const s = simulate({ ...rangedInput, ammo: "deathspore", rotation });
+    expect(s.ok).toBe(true);
+    expect(lastCast(s).adrenalineAfter).toBe(100 - 40);
+  });
+
+  it("the free cast still needs the adrenaline on hand", () => {
+    // 6 attacks (54 adrenaline, 6 stacks) → Rapid Fire drains 25 and its hits
+    // build stacks 7-12; the buff opens at tick 23 with only 29 on hand, so
+    // the free-but-40-cost imbue at 26 is rejected (wiki: "the player still
+    // needs the necessary adrenaline in order to cast it").
+    const broke = simulate({
+      ...rangedInput,
+      ammo: "deathspore",
+      rotation: rotationOf(...Array(6).fill("ranged_attack"), "rapid_fire", "imbue_shadows"),
+    });
+    expect(broke.ok).toBe(false);
+    expect(broke.error).toContain("imbue_shadows needs 40% adrenaline");
+    // With enough adrenaline rebuilt inside the window, the same cast spends 0.
+    const funded = simulate({
+      ...rangedInput,
+      ammo: "deathspore",
+      rotation: rotationOf(
+        ...Array(6).fill("ranged_attack"),
+        "rapid_fire",
+        ...Array(3).fill("ranged_attack"),
+        "imbue_shadows",
+      ),
+    });
+    expect(funded.ok).toBe(true);
+    expect(lastCast(funded).adrenalineAfter).toBe(29 + 27); // spend 0
+  });
+
+  it("stacks cannot rebuild during the 50-tick cooldown, then build again", () => {
+    const ctx = createCastContext({ ...rangedInput, ammo: "deathspore" });
+    const attack = ctx.byId.get("ranged_attack")!;
+    for (let i = 0; i < 12; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.getState().ranged.deathspore.freeCastUntilTick).toBe(33 + 15);
+    expect(ctx.getState().ranged.deathspore.cooldownUntilTick).toBe(33 + 50);
+    for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.getState().ranged.deathspore.stacks).toBe(0); // cooldown rejects
+    ctx.advanceTo(83);
+    ctx.performCast(attack, 83, false);
+    expect(ctx.getState().ranged.deathspore.stacks).toBe(1); // building again
+  });
+
+  it("the free cast consumes the buff; the next spender pays again", () => {
+    const rotation = rotationOf(
+      ...Array(12).fill("ranged_attack"),
+      "imbue_shadows",
+      ...Array(20).fill("ranged_attack"),
+      "imbue_shadows",
+    );
+    const s = simulate({ ...rangedInput, ammo: "deathspore", rotation });
+    expect(s.ok).toBe(true);
+    const imbues = s.casts.filter((c) => c.abilityId === "imbue_shadows");
+    expect(imbues[0].adrenalineAfter).toBe(100); // free: spend 0
+    // Second imbue: 20 more attacks cannot retrigger the buff before tick 83,
+    // and 12 fresh stacks need 36 ticks of attacks after it — full price.
+    expect(imbues[1].adrenalineAfter).toBe(100 - 40);
+  });
+});
+
+describe("simulate — Searing Winds cast-time eligibility and Rapid Fire extension", () => {
+  const rangedInput: Omit<SimulateInput, "rotation"> = {
+    ...baseInput,
+    abilities: RANGED_ABILITIES,
+    context: { style: "ranged" },
+  };
+
+  it("a channel cast inside the window keeps the bonus on hits landing after expiry", () => {
+    const ctx = createCastContext(rangedInput);
+    const galeshot = ctx.byId.get("galeshot")!;
+    const attack = ctx.byId.get("ranged_attack")!;
+    const rapidFire = ctx.byId.get("rapid_fire")!;
+    ctx.performCast(galeshot, 0, false); // Searing Winds until tick 10
+    ctx.performCast(attack, 3, false);
+    ctx.performCast(attack, 6, false);
+    expect(ctx.performCast(rapidFire, 9, false).ok).toBe(true);
+    const s = ctx.finish();
+    expect(s.casts[0].result.expected).toBeCloseTo(1000); // Galeshot precludes its own buff
+    const rf = s.casts[3];
+    expect(rf.result.hits).toHaveLength(8); // attached, not phantom hits
+    expect(rf.result.expected).toBeCloseTo(8 * (800 + 200));
+  });
+
+  it("each landed Rapid Fire hit extends the buff one tick; the next ability rides the extension", () => {
+    const ctx = createCastContext(rangedInput);
+    const galeshot = ctx.byId.get("galeshot")!;
+    const attack = ctx.byId.get("ranged_attack")!;
+    const rapidFire = ctx.byId.get("rapid_fire")!;
+    ctx.performCast(galeshot, 0, false);
+    ctx.performCast(attack, 3, false);
+    ctx.performCast(attack, 6, false);
+    ctx.performCast(rapidFire, 9, false);
+    expect(ctx.getState().ranged.searingWinds.expiresAtTick).toBe(18);
+    ctx.performCast(attack, 17, false); // inside the extended window
+    ctx.performCast(attack, 20, false); // outside it
+    const s = ctx.finish();
+    expect(s.casts[4].result.expected).toBeCloseTo(1000 + 200);
+    expect(s.casts[5].result.expected).toBeCloseTo(1000);
   });
 });

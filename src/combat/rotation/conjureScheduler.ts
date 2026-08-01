@@ -25,7 +25,7 @@ import { scheduleEvent, withinHorizon, type SimulationRuntime } from "./runtime"
 
 function spiritEventLive(
   rt: SimulationRuntime,
-  event: ScheduledEvent,
+  event: ScheduledEvent<SimulationRuntime>,
 ): { spirit: ActiveConjure; kind: "auto" | "poison" } | null {
   const meta = rt.spiritEventMeta.get(event.seq);
   if (!meta) return null;
@@ -58,12 +58,12 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
     attached: false,
     procEligible: false,
     recursionAllowed: false,
-    resolve: (at) => {
+    resolve: (eventRt) => {
       // Spirit-internal mult (skeleton rage) stays on the band; the First Necro
       // set mult is post-hit damage so intermediate AD rounding does not distort
       // the exact +7%/piece ratio (wiki: conjure basics only).
       const profile = spiritAutoProfile(spirit.id);
-      const live = rt.state.conjures.spirits.find(
+      const live = eventRt.state.conjures.spirits.find(
         (s) => s.id === spirit.id && s.untilTick === spirit.untilTick,
       );
       if (!profile || !live) return { min: 0, max: 0, expected: 0 };
@@ -134,10 +134,10 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
  * instance, record its damage, advance the track, and queue the next event.
  * Events of dismissed or replaced spirits die silently.
  */
-export function processSpiritEvent(rt: SimulationRuntime, event: ScheduledEvent): void {
+export function processSpiritEvent(rt: SimulationRuntime, event: ScheduledEvent<SimulationRuntime>): void {
   const live = spiritEventLive(rt, event);
   if (!live) return;
-  recordResolved(rt, event, event.resolve(event.tick));
+  recordResolved(rt, event, event.resolve(rt, event.tick));
   const next =
     live.kind === "auto" ? spiritAutoFired(live.spirit) : spiritPoisonFired(live.spirit);
   patchSpirit(rt, live.spirit, next);

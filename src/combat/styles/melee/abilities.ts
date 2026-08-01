@@ -13,6 +13,13 @@ export interface MeleeAbilitySpec extends AbilitySpec {
   bloodlustScale?: { threshold: number; band: { minPct: number; maxPct: number } };
   /** Extra hit(s) appended when Bloodlust threshold is met (Hurricane at 4). */
   bloodlustExtraHits?: { threshold: number; hits: AbilityHit[] };
+  /**
+   * Bloodlust empowerment scaling with the target's missing life points
+   * (Flurry / Greater Flurry at 4): +1% damage per 1% missing LP, capped.
+   * Needs targetHpPercent in the simulation input; without it the stacks are
+   * still consumed but no bonus applies (partially modeled).
+   */
+  bloodlustMissingHp?: { threshold: number; capPct: number };
   /** Channelled cast: Chaos Roar empowers first hit only (wiki). */
   channelled?: boolean;
   /** Bleed-chain enabler: Dismember -> Slaughter -> Massacre. */
@@ -247,6 +254,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     })),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
+    bloodlustMissingHp: { threshold: 4, capPct: 65 },
     source: wikiAbility("Flurry", "Flurry"),
   },
   {
@@ -264,6 +272,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
     appliesEffect: "greater_flurry",
+    bloodlustMissingHp: { threshold: 4, capPct: 65 },
     source: wikiAbility("Greater Flurry", "Greater_Flurry"),
   },
   {

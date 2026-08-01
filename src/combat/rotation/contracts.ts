@@ -8,8 +8,22 @@ import type { RotationState } from "./state";
 
 export interface AdrenalineRules {
   basicGainMultiplier?: number;
-  impatientExpectedExtra?: number;
-  relentlessRefundChance?: number;
+  /** Impatient perk rank (1-4) — state-changing RNG, branched by the drivers. */
+  impatientRank?: number;
+  impatientLevel20?: boolean;
+  /** Relentless perk rank (1-5) — state-changing RNG, branched by the drivers. */
+  relentlessRank?: number;
+  relentlessLevel20?: boolean;
+}
+
+/**
+ * Explicit outcomes for a cast's state-changing RNG points. The drivers
+ * enumerate these to build probability-weighted branches; a missing flag means
+ * "does not proc" (deterministic single-branch runs never proc).
+ */
+export interface CastRng {
+  impatientProc?: boolean;
+  relentlessProc?: boolean;
 }
 
 export interface ProcRules {
@@ -43,6 +57,13 @@ export interface SimulateInput {
    * First Necromancer set: firstNecromancerConjureDamageMult(pieces). Default 1.
    */
   conjureBasicDamageMult?: number;
+  /**
+   * Target life-points percentage (0-100) for target-HP-dependent mechanics
+   * (Bloodlust-empowered Flurry, Punish, Spectral Scythe). When absent those
+   * mechanics apply no HP-scaled bonus and stay partially modeled — no default
+   * is invented.
+   */
+  targetHpPercent?: number;
 }
 
 export interface SimulateOptions {
@@ -94,6 +115,17 @@ export interface RotationSummary {
    * Never presented as fixed-window DPS.
    */
   totalExpectedIncludingTails?: number;
+  /**
+   * Present only when state-changing RNG perks (Impatient / Relentless) forced
+   * probability-weighted branching: totals are branch-weighted means, while
+   * `casts` and `events` show the modal (highest-weight) branch's trajectory.
+   */
+  rng?: {
+    method: "probability-weighted branching";
+    branches: number;
+    /** Combined weight of branches that ended in a cast error (ok is then false). */
+    failedWeight?: number;
+  };
 }
 
 export type CastAttempt = { ok: true } | { ok: false; error: string };
@@ -116,7 +148,7 @@ export interface CastContext {
    * cooldown and occupancy, schedule hit events with provenance, then apply
    * immediate on-cast grants/windows.
    */
-  performCast(ability: AbilitySpec, readyTick: number, auto: boolean): CastAttempt;
+  performCast(ability: AbilitySpec, readyTick: number, auto: boolean, rng?: CastRng): CastAttempt;
   /** Off-GCD utility casts (Runic Charge): state-machine update and a cast record
    *  without consuming or advancing the global cooldown. */
   performOffGcdCast(ability: AbilitySpec): void;

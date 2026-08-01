@@ -9,7 +9,12 @@
  */
 export type EventFamily = "hit" | "dot" | "proc" | "conjureAuto" | "command" | "poison";
 
-export interface ScheduledEvent {
+/**
+ * RT is the runtime context handed to `resolve` at land time. Events never close
+ * over a runtime directly, so a branched/cloned runtime can share pending events
+ * safely (each branch resolves them against its own state).
+ */
+export interface ScheduledEvent<RT = unknown> {
   tick: number; // land tick
   seq: number; // monotonic per simulation run — explicit same-tick tiebreak
   family: EventFamily;
@@ -20,7 +25,7 @@ export interface ScheduledEvent {
   procEligible: boolean; // may trigger on-hit procs / stack generation / hit counters
   recursionAllowed: boolean; // may recursively create events of the same family
   cancelOwner?: number; // cast sequence whose cancellation removes this event
-  resolve: (landTick: number) => ResolvedDamage; // computes damage AT LAND TIME
+  resolve: (rt: RT, landTick: number) => ResolvedDamage; // computes damage AT LAND TIME
 }
 
 export interface ResolvedDamage {
@@ -30,7 +35,7 @@ export interface ResolvedDamage {
   critExpected?: number;
 }
 
-export interface ResolvedEvent extends Omit<ScheduledEvent, "resolve"> {
+export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "resolve"> {
   damage: ResolvedDamage;
 }
 
@@ -39,10 +44,10 @@ export interface ResolvedEvent extends Omit<ScheduledEvent, "resolve"> {
  * the tail, so this is a short walk); `due` extracts in order. Cancellation is
  * removal by `cancelOwner`.
  */
-export class EventQueue {
-  private items: ScheduledEvent[] = [];
+export class EventQueue<RT = unknown> {
+  private items: ScheduledEvent<RT>[] = [];
 
-  push(event: ScheduledEvent): void {
+  push(event: ScheduledEvent<RT>): void {
     let i = this.items.length;
     while (i > 0) {
       const prev = this.items[i - 1]!;
@@ -53,12 +58,12 @@ export class EventQueue {
   }
 
   /** Next event in (tick, seq) order, without removing it. */
-  peek(): ScheduledEvent | undefined {
+  peek(): ScheduledEvent<RT> | undefined {
     return this.items[0];
   }
 
   /** Remove and return the next event in (tick, seq) order. */
-  shift(): ScheduledEvent | undefined {
+  shift(): ScheduledEvent<RT> | undefined {
     return this.items.shift();
   }
 
@@ -77,8 +82,37 @@ export class EventQueue {
   }
 
   /** Still-pending events, in order. */
-  pending(): readonly ScheduledEvent[] {
+  pending(): readonly ScheduledEvent<RT>[] {
     return this.items;
+  }
+
+  /** Shallow copy sharing the (immutable) events — used by branch snapshots. */
+  clone(): EventQueue<RT> {
+    const next = new EventQueue<RT>();
+    next.items = [...this.items];
+    return next;
+  }
+
+  /**
+   * Structural signature for branch equivalence: provenance fields of every
+   * pending event in order (resolve closures excluded — equivalent branches
+   * scheduled identical events from identical casts).
+   */
+  signature(): string {
+    return JSON.stringify(
+      this.items.map((e) => [
+        e.tick,
+        e.seq,
+        e.family,
+        e.abilityId,
+        e.sourceCast,
+        e.hitIndex,
+        e.attached,
+        e.procEligible,
+        e.recursionAllowed,
+        e.cancelOwner ?? 0,
+      ]),
+    );
   }
 
   get length(): number {

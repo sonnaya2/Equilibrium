@@ -1,9 +1,16 @@
 import { critProbability } from "../core/critical";
 import type { AbilityHit, AbilityResult, AbilitySpec } from "../pipeline/calculateAbility";
-import { activateBerserk, BERSERK_DURATION_SECONDS } from "../styles/melee/bloodlust";
-import { CHAOS_ROAR_DURATION_SECONDS, isMeleeAbility } from "../styles/melee/abilities";
 import {
-  FURY_CRIT_CHANCE_BONUS,
+  activateBerserk,
+  BERSERK_DURATION_SECONDS,
+  spendBloodlust,
+} from "../styles/melee/bloodlust";
+import {
+  CHAOS_ROAR_DURATION_SECONDS,
+  GREATER_FURY_CRIT_WINDOW_SECONDS,
+  isMeleeAbility,
+} from "../styles/melee/abilities";
+import {
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS,
@@ -21,12 +28,15 @@ import {
 import {
   activateSearingWinds,
   activateShadowImbued,
-  deathsporeReady,
+  deathsporeFreeCastActive,
   extendShadowImbued,
-  onRangedHit,
-  shadowImbuedAdrenalinePerHit,
+  searingWindsBonusPct,
   spendDeathspore,
 } from "../styles/ranged/onHit";
+import {
+  IMPATIENT_EXTRA_ADRENALINE,
+  RELENTLESS_INTERNAL_CD_SECONDS,
+} from "../shared/perks";
 import {
   activateRunicCharge,
   animaCharged,
@@ -41,10 +51,10 @@ import {
   resolveNecromancyAbility,
 } from "../styles/necromancy/effects";
 import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
-import type { CastAttempt, CastRecord } from "./contracts";
+import type { CastAttempt, CastRecord, CastRng } from "./contracts";
 import { advanceTo } from "./clock";
 import { scheduleSpiritTracks } from "./conjureScheduler";
-import { resolveCastHit, resolveLightningSurge } from "./resolution";
+import { resolveCastHit, resolveLightningSurge, type CastSnapshot } from "./resolution";
 import { scheduleEvent, type SimulationRuntime } from "./runtime";
 import {
   clearCooldowns,
@@ -58,17 +68,27 @@ import { GLOBAL_COOLDOWN_TICKS, secondsToTicks } from "./timeline";
 
 const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
 
+/**
+ * Listed adrenaline cost — the cast REQUIREMENT. A Deathspore free cast zeroes
+ * the spend, not the requirement (wiki: "the player still needs the necessary
+ * adrenaline in order to cast").
+ */
 export function costOf(rt: SimulationRuntime, ability: AbilitySpec): number {
   if (ability.style === "necromancy") {
     return necroAdrenalineCost(ability, rt.state.necro, rt.state.tick);
   }
-  const listed = ability.adrenaline?.cost ?? 0;
-  return listed > 0 &&
+  return ability.adrenaline?.cost ?? 0;
+}
+
+/** Actual adrenaline spend after a Deathspore free-cast buff. */
+export function spendOf(rt: SimulationRuntime, ability: AbilitySpec, tick = rt.state.tick): number {
+  const cost = costOf(rt, ability);
+  return cost > 0 &&
     ability.style === "ranged" &&
     rt.input.ammo === "deathspore" &&
-    deathsporeReady(rt.state.ranged.deathspore)
+    deathsporeFreeCastActive(rt.state.ranged.deathspore, tick)
     ? 0
-    : listed;
+    : cost;
 }
 
 /**
@@ -84,6 +104,7 @@ export function performCast(
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
+  rng?: CastRng,
 ): CastAttempt {
   const input = rt.input;
   const candidate = Math.max(readyTick, rt.state.tick);
@@ -116,15 +137,41 @@ export function performCast(
     };
   }
 
-  // Empowered variant resolution (and its resource reads) in this transition.
+  // Empowered variant resolution and its resource spend in the same transition:
+  // at the Bloodlust threshold the empowered form resolves and the stacks are
+  // consumed atomically — nothing stays permanently empowered.
   const melee = isMeleeAbility(ability) ? ability : null;
-  const bloodlustBand =
-    melee?.bloodlustScale && rt.state.melee.stacks >= melee.bloodlustScale.threshold
-      ? melee.bloodlustScale.band
-      : null;
-  let working: AbilitySpec = bloodlustBand
-    ? { ...ability, hits: ability.hits.map((hit) => ({ ...hit, band: bloodlustBand })) }
-    : ability;
+  let working: AbilitySpec = ability;
+  let empowerMult = 1;
+  if (melee) {
+    const stacks = rt.state.melee.stacks;
+    if (melee.bloodlustScale && stacks >= melee.bloodlustScale.threshold) {
+      working = {
+        ...ability,
+        hits: ability.hits.map((hit) => ({ ...hit, band: melee.bloodlustScale!.band })),
+      };
+      rt.state = { ...rt.state, melee: spendBloodlust(rt.state.melee, melee.bloodlustScale.threshold) };
+    } else if (melee.bloodlustExtraHits && stacks >= melee.bloodlustExtraHits.threshold) {
+      working = {
+        ...ability,
+        hits: [...ability.hits, ...melee.bloodlustExtraHits.hits.map((hit) => ({ ...hit }))],
+      };
+      rt.state = {
+        ...rt.state,
+        melee: spendBloodlust(rt.state.melee, melee.bloodlustExtraHits.threshold),
+      };
+    } else if (melee.bloodlustMissingHp && stacks >= melee.bloodlustMissingHp.threshold) {
+      // +1% per 1% of the target's missing LP, capped (wiki Bloodlust). Without
+      // target HP input the stacks are still spent but no bonus is invented.
+      const hp = input.targetHpPercent;
+      empowerMult =
+        hp != null ? 1 + Math.min(melee.bloodlustMissingHp.capPct, 100 - hp) / 100 : 1;
+      rt.state = {
+        ...rt.state,
+        melee: spendBloodlust(rt.state.melee, melee.bloodlustMissingHp.threshold),
+      };
+    }
+  }
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necro, candidate);
   }
@@ -157,31 +204,49 @@ export function performCast(
     rt.state = { ...rt.state, endlessAssaultUntilTick: 0 };
   }
 
-  // Cast-scope buffs this cast consumes (Chaos Roar empowerment, Fury crit
-  // layers) — captured for the cast's events; windows below resolve at land tick.
+  // Next-hit buffs are consumed by the next melee cast that can use them; the
+  // benefit lands on that cast's FIRST eligible hit only (wiki: "only the
+  // first hit of the channeled ability will receive the boost"). Chaos Roar is
+  // the exception among them: channels get ×1.75 on the first hit, non-channel
+  // multi-hit abilities on every hit, and bleeds benefit too.
+  const damaging = working.hits.length > 0;
+  const nonBleed = working.hits.some((h) => h.critEligible !== false);
   const chaosRoarActive =
     ability.style === "melee" &&
-    working.hits.length > 0 &&
+    damaging &&
     rt.state.chaosRoarUntilTick > 0 &&
     candidate < rt.state.chaosRoarUntilTick;
   if (chaosRoarActive) rt.state = { ...rt.state, chaosRoarUntilTick: 0 };
-  const furyCrit =
+  const greaterFuryActive =
     ability.style === "melee" &&
-    rt.state.greaterFuryCrit &&
-    working.hits.some((h) => h.critEligible !== false);
-  if (furyCrit) rt.state = { ...rt.state, greaterFuryCrit: false };
-  const furyBonus =
-    ability.style === "melee" &&
-    rt.state.furyCritBonus &&
-    working.hits.some((h) => h.critEligible !== false);
-  if (furyBonus) rt.state = { ...rt.state, furyCritBonus: false };
-  const critLayers = {
-    ...input.crit,
-    chance: input.crit.chance + (furyBonus ? FURY_CRIT_CHANCE_BONUS : 0),
-    guaranteed: furyCrit || ability.guaranteedCrit || input.crit.guaranteed,
+    nonBleed &&
+    rt.state.greaterFuryUntilTick > 0 &&
+    candidate < rt.state.greaterFuryUntilTick;
+  if (greaterFuryActive) rt.state = { ...rt.state, greaterFuryUntilTick: 0 };
+  const furyActive = ability.style === "melee" && nonBleed && rt.state.furyCritBonus;
+  if (furyActive) rt.state = { ...rt.state, furyCritBonus: false };
+  // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") —
+  // a channel cast inside the window keeps the bonus on hits landing after it.
+  const searingWindsAtCast =
+    ability.style === "ranged" && searingWindsBonusPct(rt.state.ranged.searingWinds, candidate) > 0;
+  const snap: CastSnapshot = {
+    castSeq: rt.nextCastSeq,
+    critLayers: {
+      ...input.crit,
+      guaranteed: ability.guaranteedCrit || input.crit.guaranteed,
+    },
+    baseMods:
+      typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []),
+    chaosRoarActive,
+    channelled: ability.channelTicks != null,
+    greaterFuryActive,
+    furyActive,
+    firstEligibleHitIndex: working.hits.findIndex((h) => h.critEligible !== false),
+    empowerMult,
+    searingWindsAtCast,
   };
-  const baseMods =
-    typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []);
+  const critLayers = snap.critLayers;
+  const baseMods = snap.baseMods;
 
   if (ability.cooldownSeconds) {
     const cdTicks =
@@ -227,8 +292,7 @@ export function performCast(
       procEligible: true,
       recursionAllowed: false,
       cancelOwner: castSeq,
-      resolve: (at) =>
-        resolveCastHit(rt, at, seq, hitSpec, ability, castSeq, critLayers, baseMods, chaosRoarActive),
+      resolve: (eventRt, at) => resolveCastHit(eventRt, at, seq, hitSpec, hitIndex, ability, snap),
     });
   });
 
@@ -255,7 +319,7 @@ export function performCast(
         procEligible: false,
         recursionAllowed: false,
         cancelOwner: castSeq,
-        resolve: (at) => resolveLightningSurge(rt, at, sourceSeq, castSeq, critLayers, baseMods),
+        resolve: (eventRt, at) => resolveLightningSurge(eventRt, at, sourceSeq, castSeq, critLayers, baseMods),
       });
     });
   }
@@ -273,24 +337,34 @@ export function performCast(
       : ability.adrenaline.gain;
     if (isBasic) {
       gain *= input.adrenaline?.basicGainMultiplier ?? 1;
-      gain += input.adrenaline?.impatientExpectedExtra ?? 0;
+      // Impatient: state-changing RNG — the driver branches on it; never flat EV.
+      if ((input.adrenaline?.impatientRank ?? 0) > 0 && rng?.impatientProc) {
+        gain += IMPATIENT_EXTRA_ADRENALINE;
+      }
     }
     rt.state = gainAdrenaline(rt.state, gain);
   }
-  if (cost) {
-    rt.state = spendAdrenaline(rt.state, cost);
-    const relentlessChance = input.adrenaline?.relentlessRefundChance ?? 0;
-    if (relentlessChance > 0) {
-      rt.state = gainAdrenaline(rt.state, cost * relentlessChance);
+  const spend = spendOf(rt, ability, candidate);
+  if (spend > 0) {
+    // Relentless: on a proc the cost is fully refunded and the perk locks out
+    // for 30s — state-changing RNG, branched by the driver; never flat EV.
+    if (
+      (input.adrenaline?.relentlessRank ?? 0) > 0 &&
+      candidate >= rt.state.relentlessUntilTick &&
+      rng?.relentlessProc
+    ) {
+      rt.state = {
+        ...rt.state,
+        relentlessUntilTick: candidate + secondsToTicks(RELENTLESS_INTERNAL_CD_SECONDS),
+      };
+    } else {
+      rt.state = spendAdrenaline(rt.state, spend);
     }
   }
-  if (
-    cost === 0 &&
-    (ability.adrenaline?.cost ?? 0) > 0 &&
-    ability.style === "ranged" &&
-    input.ammo === "deathspore"
-  ) {
-    rt.state = patchRanged(rt.state, { deathspore: spendDeathspore(rt.state.ranged.deathspore) });
+  if (spend === 0 && cost > 0 && ability.style === "ranged" && input.ammo === "deathspore") {
+    rt.state = patchRanged(rt.state, {
+      deathspore: spendDeathspore(rt.state.ranged.deathspore, candidate),
+    });
   }
   if (melee?.bloodlustGain) {
     rt.state = gainMeleeBloodlust(rt.state, melee.bloodlustGain);
@@ -343,7 +417,10 @@ export function performCast(
     };
   }
   if (ability.appliesEffect === "greater_fury") {
-    rt.state = { ...rt.state, greaterFuryCrit: true };
+    rt.state = {
+      ...rt.state,
+      greaterFuryUntilTick: candidate + secondsToTicks(GREATER_FURY_CRIT_WINDOW_SECONDS),
+    };
   }
   if (ability.appliesEffect === "fury") {
     rt.state = { ...rt.state, furyCritBonus: true };
@@ -369,19 +446,12 @@ export function performCast(
   }
 
   if (ability.style === "ranged") {
-    if (input.ammo === "deathspore") {
-      rt.state = patchRanged(rt.state, {
-        deathspore: onRangedHit(rt.state.ranged.deathspore, working.hits.length),
-      });
-    }
+    // Deathspore stacks, Shadow Imbued per-hit adrenaline, and Rapid Fire's
+    // Searing Winds extension are landed-hit effects — see consumeNextHitEffects.
     if (ability.id === "shadow_tendrils") {
       rt.state = patchRanged(rt.state, {
         shadowImbued: extendShadowImbued(rt.state.ranged.shadowImbued, candidate),
       });
-    }
-    const perHit = shadowImbuedAdrenalinePerHit(rt.state.ranged.shadowImbued, candidate);
-    if (perHit > 0 && working.hits.length > 0) {
-      rt.state = gainAdrenaline(rt.state, perHit * working.hits.length);
     }
   }
   if (isMagicAbility(ability) && ability.requiresAnima) {

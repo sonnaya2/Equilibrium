@@ -41,35 +41,66 @@ export function punctureBonusPct(state: PunctureState, tick: number): number {
 export const PUNCTURE_SOURCE: SourceReference = MODERNISATION_WIKI;
 
 /**
- * Deathspore arrows: stacks build per hit under the redesign (the old rule built
- * on critical strikes); at 12 they enable a free ability.
+ * Deathspore arrows (post-2 Mar 2026, wiki update history): every landed Ranged
+ * hit grants a Feasting Spores stack; at 12 the stacks are consumed for a 9s
+ * (15 tick) free-cast buff and a 30s (50 tick) cooldown that starts WITH the
+ * buff — no stacks while it runs. The free cast zeroes the adrenaline SPEND but
+ * not the requirement: the listed adrenaline must still be on hand.
+ * https://runescape.wiki/w/Deathspore_arrows (verified 2026-07-31).
  */
 export const DEATHSPORE_FREE_ABILITY_STACKS = 12;
+export const DEATHSPORE_FREE_CAST_WINDOW_TICKS = 15;
+export const DEATHSPORE_COOLDOWN_TICKS = 50;
 
 export interface DeathsporeState {
   stacks: number;
+  /** Free-cast buff expiry; active while tick < freeCastUntilTick (0 = inactive). */
+  freeCastUntilTick: number;
+  /** Stack-generation lockout; active while tick < cooldownUntilTick (0 = inactive). */
+  cooldownUntilTick: number;
 }
 
-export const newDeathspore = (): DeathsporeState => ({ stacks: 0 });
+export const newDeathspore = (): DeathsporeState => ({
+  stacks: 0,
+  freeCastUntilTick: 0,
+  cooldownUntilTick: 0,
+});
 
-export function onRangedHit(state: DeathsporeState, hits = 1): DeathsporeState {
-  return { stacks: Math.min(DEATHSPORE_FREE_ABILITY_STACKS, state.stacks + hits) };
+/**
+ * One landed ranged hit at `tick`. During the cooldown no stacks are gained;
+ * the 12th stack consumes all stacks, opens the free-cast window, and starts
+ * the shared cooldown.
+ */
+export function onRangedHit(state: DeathsporeState, tick: number): DeathsporeState {
+  if (tick < state.cooldownUntilTick) return state;
+  const stacks = state.stacks + 1;
+  if (stacks < DEATHSPORE_FREE_ABILITY_STACKS) return { ...state, stacks };
+  return {
+    stacks: 0,
+    freeCastUntilTick: tick + DEATHSPORE_FREE_CAST_WINDOW_TICKS,
+    cooldownUntilTick: tick + DEATHSPORE_COOLDOWN_TICKS,
+  };
 }
 
-export function deathsporeReady(state: DeathsporeState): boolean {
-  return state.stacks >= DEATHSPORE_FREE_ABILITY_STACKS;
+/** Free-cast buff active at `tick` (half-open window). */
+export function deathsporeFreeCastActive(state: DeathsporeState, tick: number): boolean {
+  return tick < state.freeCastUntilTick;
 }
 
-/** The free cast consumes the ready counter. */
-export function spendDeathspore(state: DeathsporeState): DeathsporeState {
-  return deathsporeReady(state) ? { stacks: 0 } : state;
+/** A free cast consumes the buff; the cooldown keeps running either way. */
+export function spendDeathspore(state: DeathsporeState, tick: number): DeathsporeState {
+  return deathsporeFreeCastActive(state, tick) ? { ...state, freeCastUntilTick: 0 } : state;
 }
 
 export const DEATHSPORE_SOURCE: SourceReference = MODERNISATION_WIKI;
 
 /**
- * Searing Winds lasts 10 ticks, adds a 20% ability-damage hit to each ranged
- * hit, and gains one tick per Rapid Fire hit.
+ * Searing Winds lasts 10 ticks (6s), adds 20% ability damage to each ranged
+ * ability hit as attached bonus damage, and gains one tick per Rapid Fire hit.
+ * Eligibility is checked AT CAST: an ability cast while the buff is open keeps
+ * the bonus on every hit even if the buff expires mid-channel (wiki:
+ * "The extra damage is calculated on cast").
+ * https://runescape.wiki/w/Searing_Winds (verified 2026-07-31).
  */
 export const SEARING_WINDS_DURATION_TICKS = 10;
 export const SEARING_WINDS_BONUS_HIT_PCT = 20;

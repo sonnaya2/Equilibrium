@@ -7,6 +7,7 @@ import {
   NECROMANCY_ABILITIES,
   volleyOfSouls,
 } from "../../styles/necromancy/abilities";
+import { findConjure } from "../../styles/necromancy/conjures";
 import { mulFloor } from "../../core/rounding";
 import { MODERNISATION_WIKI } from "../../data/sources";
 import type { CombatModifier } from "../../types";
@@ -1634,7 +1635,9 @@ describe("simulate — Command Skeleton Warrior scheduling", () => {
     expect(ctx.getState().tick).toBe(9);
     while (ctx.getState().tick <= 26) ctx.performCast(basic, ctx.getState().tick, false);
     // Rage after the resumed auto at 24: 1 (auto at 7) + 10 (command) + 2 (autos).
-    expect(ctx.getState().necromancy.conjures.spirits[0].rageStacks).toBe(13);
+    expect(findConjure(ctx.getState().necromancy.conjures, "skeleton_warrior")!.rageStacks).toBe(
+      13,
+    );
     const s = ctx.finish();
     const { autos, commands } = skeletonEvents(s);
     expect(autos.map((e) => e.tick).slice(0, 3)).toEqual([7, 19, 24]);

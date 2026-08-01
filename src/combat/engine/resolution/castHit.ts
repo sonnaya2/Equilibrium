@@ -8,6 +8,7 @@ import {
   COMMAND_REQUIRES_CONJURE,
   CONJURE_DAMAGE_POTENTIAL,
   conjureEligibleModifiers,
+  findConjure,
   skeletonRageMult,
 } from "../../styles/necromancy/conjures";
 import type { CastSnapshot } from "../cast/snapshot";
@@ -62,7 +63,7 @@ export function resolveCastHit(
   const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
   let band = hitSpec.band;
   if (ability.id === "command_skeleton_warrior") {
-    const spirit = state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+    const spirit = findConjure(state.necromancy.conjures, "skeleton_warrior");
     const mult = skeletonRageMult(spirit?.rageStacks ?? 0);
     if (mult !== 1) band = { minPct: band.minPct * mult, maxPct: band.maxPct * mult };
   }

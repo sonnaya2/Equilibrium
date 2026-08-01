@@ -1,4 +1,4 @@
-import { skeletonCommandHitLanded } from "../../../styles/necromancy/conjures";
+import { findConjure, skeletonCommandHitLanded } from "../../../styles/necromancy/conjures";
 import type { ScheduledEvent } from "../../runtime/events";
 import type { SimulationRuntime } from "../../runtime/runtime";
 import { patchConjures } from "../../runtime/state";
@@ -13,7 +13,7 @@ export function onNecromancyHitLanded(
   event: ScheduledEvent<SimulationRuntime>,
 ): void {
   if (event.family !== "command" || event.abilityId !== "command_skeleton_warrior") return;
-  const spirit = rt.state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+  const spirit = findConjure(rt.state.necromancy.conjures, "skeleton_warrior");
   if (!spirit) return;
   rt.state = patchConjures(rt.state, {
     spirits: rt.state.necromancy.conjures.spirits.map((s) =>

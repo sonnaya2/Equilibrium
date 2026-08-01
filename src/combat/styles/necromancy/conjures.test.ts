@@ -24,6 +24,8 @@ import {
   spiritPoisonPending,
   summonConjure,
   summonConjures,
+  findConjure,
+  hasAutoTrack,
   type ActiveConjure,
 } from "./conjures";
 
@@ -31,9 +33,9 @@ import {
 function collectAutos(spirit: ActiveConjure, throughTick: number) {
   const events: { tick: number; mult: number }[] = [];
   let s = spirit;
-  while (spiritAutoPending(s) && s.nextAutoTick <= throughTick) {
+  while (hasAutoTrack(s) && spiritAutoPending(s) && s.auto.nextTick <= throughTick) {
     events.push({
-      tick: s.nextAutoTick,
+      tick: s.auto.nextTick,
       mult: s.id === "skeleton_warrior" ? skeletonRageMult(s.rageStacks) : 1,
     });
     s = spiritAutoFired(s);
@@ -56,21 +58,21 @@ describe("conjures", () => {
     const ready = 0;
     let state = summonConjure(newConjures(), "skeleton_warrior", ready);
     expect(state.spirits).toHaveLength(1);
-    const skel = state.spirits[0]!;
+    const skel = findConjure(state, "skeleton_warrior")!;
     expect(skel.untilTick).toBe(ready + CONJURE_UNTIL_OFFSET_TICKS);
-    expect(skel.nextAutoTick).toBe(ready + SKELETON_FIRST_AUTO_TICKS);
+    expect(skel.auto.nextTick).toBe(ready + SKELETON_FIRST_AUTO_TICKS);
     expect(skel.rageStacks).toBe(0);
     expect(conjureActive(state, "skeleton_warrior", ready)).toBe(true);
     expect(conjureActive(state, "skeleton_warrior", skel.untilTick)).toBe(false);
 
     state = summonConjure(state, "vengeful_ghost", ready);
-    expect(state.spirits.find((s) => s.id === "vengeful_ghost")!.nextAutoTick).toBe(
+    expect(findConjure(state, "vengeful_ghost")!.auto.nextTick).toBe(
       ready + GHOST_FIRST_AUTO_TICKS,
     );
     state = summonConjure(state, "putrid_zombie", ready);
-    const z = state.spirits.find((s) => s.id === "putrid_zombie")!;
-    expect(z.nextAutoTick).toBe(ready + ZOMBIE_FIRST_AUTO_TICKS);
-    expect(z.nextPoisonTick).toBe(ready + ZOMBIE_POISON_FIRST_TICKS);
+    const z = findConjure(state, "putrid_zombie")!;
+    expect(z.auto.nextTick).toBe(ready + ZOMBIE_FIRST_AUTO_TICKS);
+    expect(z.poison.nextTick).toBe(ready + ZOMBIE_POISON_FIRST_TICKS);
   });
 
   it("refreshing a summon replaces timers; dismiss removes cleanly", () => {
@@ -90,8 +92,8 @@ describe("conjures", () => {
 
   it("phantom guardian has no auto schedule", () => {
     const state = summonConjure(newConjures(), "phantom_guardian", 0);
-    const p = state.spirits[0]!;
-    expect(p.nextAutoTick).toBe(p.untilTick);
+    const p = findConjure(state, "phantom_guardian")!;
+    expect(hasAutoTrack(p)).toBe(false);
     expect(spiritAutoPending(p)).toBe(false);
     expect(collectAutos(p, p.untilTick).events).toHaveLength(0);
   });
@@ -103,8 +105,10 @@ describe("conjures", () => {
     expect(events[0]!.mult).toBe(1);
     expect(events[1]!.mult).toBeCloseTo(skeletonRageMult(1));
     expect(events[2]!.mult).toBeCloseTo(skeletonRageMult(2));
+    expect(after.id).toBe("skeleton_warrior");
+    if (after.id !== "skeleton_warrior") return;
     expect(after.rageStacks).toBe(3);
-    expect(after.nextAutoTick).toBe(7 + 3 * SKELETON_AUTO_INTERVAL);
+    expect(after.auto.nextTick).toBe(7 + 3 * SKELETON_AUTO_INTERVAL);
   });
 
   it("lands full SP3 skeleton autos (~20 hits) with rage capped at 25", () => {
@@ -124,10 +128,10 @@ describe("conjures", () => {
       7 + ZOMBIE_AUTO_INTERVAL,
       7 + 2 * ZOMBIE_AUTO_INTERVAL,
     ]);
-    let z = state.spirits[0]!;
+    let z = findConjure(state, "putrid_zombie")!;
     const poisonTicks: number[] = [];
-    while (spiritPoisonPending(z) && z.nextPoisonTick <= 20) {
-      poisonTicks.push(z.nextPoisonTick);
+    while (spiritPoisonPending(z) && z.poison.nextTick <= 20) {
+      poisonTicks.push(z.poison.nextTick);
       z = spiritPoisonFired(z);
     }
     expect(poisonTicks[0]).toBe(ZOMBIE_POISON_FIRST_TICKS);

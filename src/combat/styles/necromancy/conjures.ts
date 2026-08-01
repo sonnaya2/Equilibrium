@@ -115,23 +115,60 @@ export const COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS = 6;
 /** Command hits keep landing up to 2 ticks past the skeleton's expiry. */
 export const COMMAND_SKELETON_EXPIRY_TAIL_TICKS = 2;
 
-export interface ActiveConjure {
-  readonly id: ConjureId;
+/**
+ * One scheduled track: the tick its next event lands on. A spirit only carries
+ * the tracks it actually has, so a phantom cannot hold an auto tick and nothing
+ * but the zombie can hold a poison tick.
+ */
+export interface SpiritTrack {
+  readonly nextTick: number;
+}
+
+interface ActiveConjureBase {
   /** Exclusive end tick (active while tick < untilTick). SP3 → ready + 105. */
   readonly untilTick: number;
-  /** Next auto-attack land tick. Phantom has no autos (nextAutoTick = untilTick). */
-  readonly nextAutoTick: number;
-  /** Skeleton rage stacks (applied after each auto; 0 on summon). */
+}
+
+export interface ActiveSkeletonWarrior extends ActiveConjureBase {
+  readonly id: "skeleton_warrior";
+  readonly auto: SpiritTrack;
+  /** Rage: +3% per landed attack, capped at 25 stacks; 0 on summon. */
   readonly rageStacks: number;
-  /** Zombie poison next land tick; 0 = no poison track. */
-  readonly nextPoisonTick: number;
   /**
-   * Set when a Skeleton command let a pending auto fire on/before its RAAAR
-   * tick: that auto's successor lands here (command end + 2) instead of on the
-   * plain cadence. Cleared when consumed.
+   * Set when a command let a pending auto fire on/before its RAAAR tick: that
+   * auto's successor lands here (command end + 2) instead of on the plain
+   * cadence. Cleared when consumed.
    */
   readonly commandResumeTick?: number;
 }
+
+export interface ActiveVengefulGhost extends ActiveConjureBase {
+  readonly id: "vengeful_ghost";
+  readonly auto: SpiritTrack;
+}
+
+export interface ActivePutridZombie extends ActiveConjureBase {
+  readonly id: "putrid_zombie";
+  readonly auto: SpiritTrack;
+  /** The poison aura. No other spirit has one. */
+  readonly poison: SpiritTrack;
+}
+
+export interface ActivePhantomGuardian extends ActiveConjureBase {
+  readonly id: "phantom_guardian";
+  // No auto and no poison: the phantom only acts when commanded, and its Valour
+  // scale is ability data rather than simulated state.
+}
+
+/**
+ * An active conjured spirit, modelled by what it can actually do. Adding a
+ * capability to one spirit cannot silently give it to the others.
+ */
+export type ActiveConjure =
+  ActiveSkeletonWarrior | ActiveVengefulGhost | ActivePutridZombie | ActivePhantomGuardian;
+
+/** Narrowed to the one variant that id names. */
+export type ConjureOf<Id extends ConjureId> = Extract<ActiveConjure, { id: Id }>;
 
 export interface ConjureState {
   readonly spirits: readonly ActiveConjure[];
@@ -143,13 +180,28 @@ export function conjureActive(state: ConjureState, id: ConjureId, tick = 0): boo
   return state.spirits.some((s) => s.id === id && tick < s.untilTick);
 }
 
+/** The active spirit with this id, narrowed to its own variant. */
+export function findConjure<Id extends ConjureId>(
+  state: ConjureState,
+  id: Id,
+): ConjureOf<Id> | undefined {
+  return state.spirits.find((s): s is ConjureOf<Id> => s.id === id);
+}
+
+/** Spirits that attack on their own. The phantom is absent by construction. */
+export type AutoAttackingConjure = ActiveSkeletonWarrior | ActiveVengefulGhost | ActivePutridZombie;
+
+export function hasAutoTrack(s: ActiveConjure): s is AutoAttackingConjure {
+  return s.id !== "phantom_guardian";
+}
+
 export interface SpiritAutoProfile {
   first: number;
   interval: number;
   band: DamageBand;
-  poison?: { first: number; interval: number };
 }
 
+/** Auto cadence and band, or null for a spirit that never attacks unprompted. */
 export function spiritAutoProfile(id: ConjureId): SpiritAutoProfile | null {
   switch (id) {
     case "skeleton_warrior":
@@ -163,7 +215,6 @@ export function spiritAutoProfile(id: ConjureId): SpiritAutoProfile | null {
         first: ZOMBIE_FIRST_AUTO_TICKS,
         interval: ZOMBIE_AUTO_INTERVAL,
         band: ZOMBIE_AUTO_BAND,
-        poison: { first: ZOMBIE_POISON_FIRST_TICKS, interval: ZOMBIE_POISON_INTERVAL },
       };
     case "vengeful_ghost":
       return {
@@ -176,20 +227,34 @@ export function spiritAutoProfile(id: ConjureId): SpiritAutoProfile | null {
   }
 }
 
-export function summonConjure(state: ConjureState, id: ConjureId, readyTick: number): ConjureState {
+/** Build the summoned spirit with exactly the tracks its kind has. */
+function newActiveConjure(id: ConjureId, readyTick: number): ActiveConjure {
   const untilTick = readyTick + CONJURE_UNTIL_OFFSET_TICKS;
-  const profile = spiritAutoProfile(id);
-  const nextAutoTick = profile ? readyTick + profile.first : untilTick;
-  const nextPoisonTick = profile?.poison ? readyTick + profile.poison.first : 0;
-  const spirit: ActiveConjure = {
-    id,
-    untilTick,
-    nextAutoTick,
-    rageStacks: 0,
-    nextPoisonTick,
-  };
+  switch (id) {
+    case "skeleton_warrior":
+      return {
+        id,
+        untilTick,
+        auto: { nextTick: readyTick + SKELETON_FIRST_AUTO_TICKS },
+        rageStacks: 0,
+      };
+    case "vengeful_ghost":
+      return { id, untilTick, auto: { nextTick: readyTick + GHOST_FIRST_AUTO_TICKS } };
+    case "putrid_zombie":
+      return {
+        id,
+        untilTick,
+        auto: { nextTick: readyTick + ZOMBIE_FIRST_AUTO_TICKS },
+        poison: { nextTick: readyTick + ZOMBIE_POISON_FIRST_TICKS },
+      };
+    case "phantom_guardian":
+      return { id, untilTick };
+  }
+}
+
+export function summonConjure(state: ConjureState, id: ConjureId, readyTick: number): ConjureState {
   const others = state.spirits.filter((s) => s.id !== id);
-  return { spirits: [...others, spirit] };
+  return { spirits: [...others, newActiveConjure(id, readyTick)] };
 }
 
 /** Summon every id not already active (army partial-cast behaviour). */
@@ -215,47 +280,50 @@ export function skeletonRageMult(stacks: number): number {
 }
 
 /**
- * Spirit scheduler state lives on ActiveConjure; the rotation event queue fires
- * one scheduled event per track and these helpers advance to the next. Autos
- * never schedule past untilTick; zombie poison lands a short sourced tail past it.
+ * Track state lives on the spirit; the rotation event queue holds one scheduled
+ * event per track and these helpers advance to the next. Autos never schedule
+ * past untilTick; zombie poison lands a short sourced tail past it.
  */
 
-/** The auto track has another attack to schedule (phantom: never). */
+/** The auto track has another attack to schedule. A phantom never does. */
 export function spiritAutoPending(s: ActiveConjure): boolean {
-  return spiritAutoProfile(s.id) !== null && s.nextAutoTick < s.untilTick;
+  return hasAutoTrack(s) && s.auto.nextTick < s.untilTick;
 }
 
 /** The zombie poison track has another hit to schedule (tail may pass untilTick). */
-export function spiritPoisonPending(s: ActiveConjure): boolean {
-  return (
-    s.id === "putrid_zombie" &&
-    s.nextPoisonTick > 0 &&
-    s.nextPoisonTick <= s.untilTick + ZOMBIE_POISON_TAIL_TICKS
-  );
+export function spiritPoisonPending(s: ActiveConjure): s is ActivePutridZombie {
+  return s.id === "putrid_zombie" && s.poison.nextTick <= s.untilTick + ZOMBIE_POISON_TAIL_TICKS;
 }
 
-/** Advance the auto track after a landed auto: next tick + skeleton rage. */
+/** Next scheduled tick of a track, for the scheduler's horizon check. */
+export function spiritAutoTick(s: AutoAttackingConjure): number {
+  return s.auto.nextTick;
+}
+
+/** Advance the auto track after a landed auto: next tick, plus skeleton rage. */
 export function spiritAutoFired(s: ActiveConjure): ActiveConjure {
-  const profile = spiritAutoProfile(s.id);
-  if (!profile) return s;
-  const { commandResumeTick, ...base } = s;
-  return {
-    ...base,
-    nextAutoTick: commandResumeTick ?? s.nextAutoTick + profile.interval,
-    rageStacks:
-      s.id === "skeleton_warrior"
-        ? Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1)
-        : s.rageStacks,
-  };
+  if (!hasAutoTrack(s)) return s;
+  const profile = spiritAutoProfile(s.id)!;
+  if (s.id === "skeleton_warrior") {
+    // A command that let a pending auto fire redirects only that auto's
+    // successor; the redirect is consumed here.
+    const { commandResumeTick, ...base } = s;
+    return {
+      ...base,
+      auto: { nextTick: commandResumeTick ?? s.auto.nextTick + profile.interval },
+      rageStacks: Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1),
+    };
+  }
+  return { ...s, auto: { nextTick: s.auto.nextTick + profile.interval } };
 }
 
-/** Advance the poison track after a landed poison hit. */
-export function spiritPoisonFired(s: ActiveConjure): ActiveConjure {
-  return { ...s, nextPoisonTick: s.nextPoisonTick + ZOMBIE_POISON_INTERVAL };
+/** Advance the poison track after a landed poison hit. Zombie only, by type. */
+export function spiritPoisonFired(s: ActivePutridZombie): ActivePutridZombie {
+  return { ...s, poison: { nextTick: s.poison.nextTick + ZOMBIE_POISON_INTERVAL } };
 }
 
 /** One landed command hit builds one rage stack (its damage resolved first). */
-export function skeletonCommandHitLanded(s: ActiveConjure): ActiveConjure {
+export function skeletonCommandHitLanded(s: ActiveSkeletonWarrior): ActiveSkeletonWarrior {
   return { ...s, rageStacks: Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1) };
 }
 

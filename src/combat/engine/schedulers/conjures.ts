@@ -15,7 +15,12 @@ import {
   spiritPoisonFired,
   spiritPoisonPending,
   ZOMBIE_POISON_BAND,
+  findConjure,
+  hasAutoTrack,
   type ActiveConjure,
+  type ActivePutridZombie,
+  type ActiveSkeletonWarrior,
+  type AutoAttackingConjure,
 } from "../../styles/necromancy/conjures";
 import type { CombatModifier } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
@@ -72,11 +77,11 @@ function patchSpirit(rt: SimulationRuntime, target: ActiveConjure, next: ActiveC
   });
 }
 
-function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void {
+function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure): void {
   const input = rt.input;
   const key = `${spirit.id}:${spirit.untilTick}:auto`;
   const seq = scheduleEvent(rt, {
-    tick: spirit.nextAutoTick,
+    tick: spirit.auto.nextTick,
     family: "conjureAuto",
     abilityId: SPIRIT_AUTO_ABILITY_ID[spirit.id],
     sourceCast: -1,
@@ -89,11 +94,9 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
       // set mult is post-hit damage so intermediate AD rounding does not distort
       // the exact +7%/piece ratio (wiki: conjure basics only).
       const profile = spiritAutoProfile(spirit.id);
-      const live = eventRt.state.necromancy.conjures.spirits.find(
-        (s) => s.id === spirit.id && s.untilTick === spirit.untilTick,
-      );
-      if (!profile || !live) return NO_DAMAGE;
-      const mult = spirit.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
+      const live = findConjure(eventRt.state.necromancy.conjures, spirit.id);
+      if (!profile || !live || live.untilTick !== spirit.untilTick) return NO_DAMAGE;
+      const mult = live.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
       const hit = calculateHit({
         base: input.base,
         band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },
@@ -114,11 +117,11 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
   rt.spiritEventMeta.set(seq, { id: spirit.id, untilTick: spirit.untilTick, kind: "auto" });
 }
 
-function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActiveConjure): void {
+function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie): void {
   const input = rt.input;
   const key = `${spirit.id}:${spirit.untilTick}:poison`;
   const seq = scheduleEvent(rt, {
-    tick: spirit.nextPoisonTick,
+    tick: spirit.poison.nextTick,
     family: "poison",
     abilityId: SPIRIT_POISON_ABILITY_ID,
     sourceCast: -1,
@@ -149,10 +152,14 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
   const key = `${spirit.id}:${spirit.untilTick}`;
   if (rt.scheduledSpiritTracks.has(key)) return;
   rt.scheduledSpiritTracks.add(key);
-  if (spiritAutoPending(spirit) && withinHorizon(rt, spirit.nextAutoTick)) {
+  if (
+    hasAutoTrack(spirit) &&
+    spiritAutoPending(spirit) &&
+    withinHorizon(rt, spirit.auto.nextTick)
+  ) {
     scheduleSpiritAuto(rt, spirit);
   }
-  if (spiritPoisonPending(spirit) && withinHorizon(rt, spirit.nextPoisonTick)) {
+  if (spiritPoisonPending(spirit) && withinHorizon(rt, spirit.poison.nextTick)) {
     scheduleSpiritPoison(rt, spirit);
   }
 }
@@ -165,7 +172,7 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
  * then every 5 ticks. Command hits themselves are cast events (see castEvents).
  */
 export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): void {
-  const spirit = rt.state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+  const spirit = findConjure(rt.state.necromancy.conjures, "skeleton_warrior");
   if (!spirit) return;
   const raaarTick = candidate + COMMAND_SKELETON_RAAAR_DELAY_TICKS;
   const resumeTick =
@@ -184,9 +191,9 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
     return;
   }
   if (pending) rt.spiritEventMeta.delete(pending.seq); // suppressed: the event dies
-  const next = { ...spirit, nextAutoTick: resumeTick };
+  const next: ActiveSkeletonWarrior = { ...spirit, auto: { nextTick: resumeTick } };
   patchSpirit(rt, spirit, next);
-  if (spiritAutoPending(next) && withinHorizon(rt, next.nextAutoTick)) {
+  if (spiritAutoPending(next) && withinHorizon(rt, next.auto.nextTick)) {
     scheduleSpiritAuto(rt, next);
   }
 }
@@ -203,16 +210,19 @@ export function processSpiritEvent(
   const live = spiritEventLive(rt, event);
   if (!live) return;
   recordResolved(rt, event, event.resolve(rt, event.tick));
-  const next = live.kind === "auto" ? spiritAutoFired(live.spirit) : spiritPoisonFired(live.spirit);
-  patchSpirit(rt, live.spirit, next);
-  if (live.kind === "auto" && spiritAutoPending(next) && withinHorizon(rt, next.nextAutoTick)) {
-    scheduleSpiritAuto(rt, next);
+  if (live.kind === "poison") {
+    // Only the zombie has a poison track, and the type says so.
+    if (live.spirit.id !== "putrid_zombie") return;
+    const next = spiritPoisonFired(live.spirit);
+    patchSpirit(rt, live.spirit, next);
+    if (spiritPoisonPending(next) && withinHorizon(rt, next.poison.nextTick)) {
+      scheduleSpiritPoison(rt, next);
+    }
+    return;
   }
-  if (
-    live.kind === "poison" &&
-    spiritPoisonPending(next) &&
-    withinHorizon(rt, next.nextPoisonTick)
-  ) {
-    scheduleSpiritPoison(rt, next);
+  const next = spiritAutoFired(live.spirit);
+  patchSpirit(rt, live.spirit, next);
+  if (hasAutoTrack(next) && spiritAutoPending(next) && withinHorizon(rt, next.auto.nextTick)) {
+    scheduleSpiritAuto(rt, next);
   }
 }

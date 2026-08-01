@@ -32,6 +32,7 @@ export * from "./styles/necromancy/abilities";
 export * from "./rotation/timeline";
 export * from "./rotation/state";
 export * from "./rotation/actions";
+export * from "./rotation/events";
 export * from "./rotation/simulate";
 export * from "./rotation/revolution";
 export * from "./league/ruleset";

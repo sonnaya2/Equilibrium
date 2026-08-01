@@ -47,6 +47,11 @@ export interface AbilitySpec {
   offGcd?: boolean;
   autoAttack?: boolean;
   guaranteedCrit?: boolean;
+  /**
+   * Channelled cast occupancy in ticks (last hit offset + 1 — the actor is free
+   * the tick after the final hit lands). Absent = one global cooldown.
+   */
+  channelTicks?: number;
 }
 
 export interface AbilityResult {

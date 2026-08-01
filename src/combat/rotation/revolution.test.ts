@@ -6,7 +6,9 @@ import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
+import { rotationOf } from "./actions";
 import { simulateRevolution } from "./revolution";
+import { simulate } from "./simulate";
 import { secondsToTicks, TICK_SECONDS } from "./timeline";
 
 function required<T>(value: T | null | undefined, label: string): T {
@@ -116,7 +118,7 @@ describe("specFromRecord", () => {
 });
 
 describe("simulateRevolution", () => {
-  it("fires the first ready bar ability per slot and weaves basics through shortfalls", () => {
+  it("fires the first ready bar ability per slot and holds channels for their full occupancy", () => {
     const modelled = revoModelled(barById("magic"));
     const s = simulateRevolution({
       ...baseInput,
@@ -128,9 +130,13 @@ describe("simulateRevolution", () => {
     expect(s.ok).toBe(true);
     expect(s.casts[0].abilityId).toBe("greater_concentrated_blast");
     expect(s.casts[0].tick).toBe(0);
-    expect(s.casts.some((cast) => cast.abilityId === "magic_attack" && cast.auto)).toBe(true);
     expect(s.casts.some((cast) => cast.abilityId === "corruption_blast")).toBe(true);
     expect(s.casts.some((cast) => cast.abilityId === "asphyxiate")).toBe(true);
+    // Asphyxiate's 7-tick channel: the next cast never starts inside it.
+    s.casts.forEach((cast, i) => {
+      if (cast.abilityId !== "asphyxiate" || i + 1 >= s.casts.length) return;
+      expect(s.casts[i + 1].tick).toBeGreaterThanOrEqual(cast.tick + 7);
+    });
   });
 
   it("skips unaffordable Berserk and spends lower-priority thresholds (no adren banking)", () => {
@@ -196,7 +202,7 @@ describe("simulateRevolution", () => {
     expect(fwdIds[0]).not.toBe(revIds[0]);
   });
 
-  it("lands Combust burn hits on their sourced ticks past the horizon", () => {
+  it("excludes burns landing at or after the horizon (half-open [0, horizonTicks))", () => {
     const combust = abilitySpec("combust");
     const s = simulateRevolution({
       ...baseInput,
@@ -206,10 +212,13 @@ describe("simulateRevolution", () => {
       durationTicks: 6,
     });
     expect(s.ok).toBe(true);
-    const burnTicks = Object.keys(s.damageByTick)
-      .map(Number)
-      .filter((tick) => tick > 0);
-    expect(Math.max(...burnTicks)).toBeGreaterThan(6);
+    // Combust @0 burns at 3,6,9,...: only the tick-3 burn lands inside; the woven
+    // basic at 3 also lands. Nothing at tick >= 6 counts.
+    expect(s.damageByTick[3]).toBeCloseTo(300 + 1000);
+    expect(Object.keys(s.damageByTick).map(Number).every((t) => t < 6)).toBe(true);
+    expect(s.events.every((e) => e.tick < 6)).toBe(true);
+    expect(s.perAbility["combust"]).toBeCloseTo(300);
+    expect(s.dps).toBeCloseTo(1300 / (6 * TICK_SECONDS), 5);
   });
 
   it("fills a full 60s horizon with GCDs, basics, and horizon DPS", () => {
@@ -224,7 +233,9 @@ describe("simulateRevolution", () => {
     });
     expect(s.ok).toBe(true);
     expect(s.horizonTicks).toBe(durationTicks);
-    expect(s.casts.length).toBeGreaterThanOrEqual(30);
+    // Channels (Assault / Greater Flurry) hold their slots for 8 ticks, so the
+    // cast count no longer tracks one cast per GCD.
+    expect(s.casts.length).toBeGreaterThanOrEqual(25);
     expect(s.casts.some((c) => c.auto && c.abilityId === "attack")).toBe(true);
     expect(s.casts[s.casts.length - 1].tick).toBeLessThan(durationTicks);
     expect(s.dps).toBeCloseTo(s.totalExpected / (durationTicks * TICK_SECONDS), 5);
@@ -288,14 +299,16 @@ describe("golden 60s revo smoke", () => {
     barId: string;
     style: "melee" | "ranged" | "magic" | "necromancy";
     basicId: string;
+    weaves: boolean;
   }> = [
-    { barId: "melee-dual-wield", style: "melee", basicId: "attack" },
-    { barId: "ranged", style: "ranged", basicId: "ranged_attack" },
-    { barId: "magic", style: "magic", basicId: "magic_attack" },
-    { barId: "necromancy", style: "necromancy", basicId: "necromancy_basic" },
+    { barId: "melee-dual-wield", style: "melee", basicId: "attack", weaves: true },
+    { barId: "ranged", style: "ranged", basicId: "ranged_attack", weaves: true },
+    // With channels holding occupancy, the magic bar fills every slot — no idle GCDs.
+    { barId: "magic", style: "magic", basicId: "magic_attack", weaves: false },
+    { barId: "necromancy", style: "necromancy", basicId: "necromancy_basic", weaves: true },
   ];
 
-  for (const { barId, style, basicId } of CASES) {
+  for (const { barId, style, basicId, weaves } of CASES) {
     it(`${barId}: 60s horizon structural smoke`, () => {
       const bar = barById(barId);
       const modelled = revoModelled(bar);
@@ -314,7 +327,153 @@ describe("golden 60s revo smoke", () => {
       expect(s.casts.length).toBeGreaterThanOrEqual(25);
       expect(s.horizonTicks).toBe(100);
       expect(s.dps).toBeCloseTo(s.totalExpected / (100 * 0.6), 5);
-      expect(s.casts.some((c) => c.auto && c.abilityId === basicId)).toBe(true);
+      expect(s.casts.some((c) => c.auto && c.abilityId === basicId)).toBe(weaves);
     });
   }
+});
+
+
+describe("revolution — channels and horizon", () => {
+  it("completes Assault's channel: next cast at castTick+8, full channel damage", () => {
+    const assault = abilitySpec("assault");
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [assault],
+      style: "melee",
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
+      "attack@0",
+      "attack@3",
+      "attack@6",
+      "assault@9",
+      "attack@17",
+    ]);
+    expect(s.perAbility["assault"]).toBeCloseTo(4 * 1400);
+  });
+
+  it("completes Rapid Fire's channel: next cast at castTick+8, full channel damage", () => {
+    const rapidFire = abilitySpec("rapid_fire");
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [rapidFire],
+      style: "ranged",
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
+      "ranged_attack@0",
+      "ranged_attack@3",
+      "ranged_attack@6",
+      "rapid_fire@9",
+      "ranged_attack@17",
+    ]);
+    expect(s.perAbility["rapid_fire"]).toBeCloseTo(8 * 800);
+  });
+
+  it("completes Asphyxiate's channel: next cast at castTick+7, full channel damage", () => {
+    const asphyxiate = abilitySpec("asphyxiate");
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [asphyxiate],
+      style: "magic",
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
+      "magic_attack@0",
+      "magic_attack@3",
+      "magic_attack@6",
+      "asphyxiate@9",
+      "magic_attack@16",
+      "magic_attack@19",
+    ]);
+    expect(s.perAbility["asphyxiate"]).toBeCloseTo(4 * 1300);
+  });
+
+  it("counts events at horizon-1 but not at horizon or horizon+1 (half-open)", () => {
+    const flurry = abilitySpec("flurry");
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [flurry],
+      style: "melee",
+      durationTicks: 13,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
+      "attack@0",
+      "attack@3",
+      "attack@6",
+      "flurry@9",
+    ]);
+    // Flurry @9 hits at 9..16: 9–12 land inside; 13 (the horizon) and 14+ do not.
+    expect(s.events.filter((e) => e.abilityId === "flurry").map((e) => e.tick)).toEqual([
+      9, 10, 11, 12,
+    ]);
+    expect(s.events.every((e) => e.tick < 13)).toBe(true);
+    expect(s.perAbility["flurry"]).toBeCloseTo(4 * 650);
+    expect(s.totalExpected).toBeCloseTo(3 * 1200 + 4 * 650);
+    expect(s.dps).toBeCloseTo(s.totalExpected / (13 * TICK_SECONDS), 5);
+  });
+
+  it("a conjure summoned mid-horizon contributes only autos landing inside", () => {
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [abilitySpec("blood_siphon"), abilitySpec("conjure_skeleton_warrior")],
+      style: "necromancy",
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].abilityId).toBe("blood_siphon");
+    expect(s.casts[1].abilityId).toBe("conjure_skeleton_warrior");
+    expect(s.casts[1].tick).toBe(3);
+    // Skeleton autos at 10, 15, 20: the auto exactly on the horizon does not count.
+    // Rage ×1.03 scales the band to 226.6–288.4 → floored 226/288 (mean 257).
+    expect(s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick)).toEqual([10, 15]);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(250 + 257, 5);
+    expect(s.damageByTick[20]).toBeUndefined();
+  });
+
+  it("matches the manual simulator's event stream for an equivalent rotation", () => {
+    const assault = abilitySpec("assault");
+    const revo = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [assault],
+      style: "melee",
+      durationTicks: 20,
+    });
+    const manual = simulate({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+      rotation: rotationOf("attack", "attack", "attack", "assault", "attack"),
+    });
+    expect(revo.ok && manual.ok).toBe(true);
+    expect(revo.events).toEqual(manual.events);
+    expect(revo.totalExpected).toBeCloseTo(manual.totalExpected, 10);
+  });
+
+  it("reports totalExpectedIncludingTails only on request and never as DPS", () => {
+    const combust = abilitySpec("combust");
+    const input = {
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [combust],
+      style: "magic" as const,
+      durationTicks: 6,
+    };
+    const plain = simulateRevolution(input);
+    expect(plain.totalExpectedIncludingTails).toBeUndefined();
+    const withTails = simulateRevolution(input, { includeTails: true });
+    // In-horizon: the tick-3 burn + woven basic. Tails: 9 unlanded burns × 300.
+    expect(withTails.totalExpected).toBeCloseTo(1300);
+    expect(withTails.totalExpectedIncludingTails).toBeCloseTo(4000);
+    expect(withTails.dps).toBeCloseTo(1300 / (6 * TICK_SECONDS), 5);
+  });
 });

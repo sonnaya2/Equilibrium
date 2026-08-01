@@ -71,7 +71,7 @@ describe("simulate", () => {
     expect(assault.adrenalineAfter).toBe(36 - 25);
   });
 
-  it("stalls a repeated cast until its individual cooldown expires", () => {
+  it("stalls a repeated cast until its individual cooldown expires (Assault's channel occupies 8 ticks)", () => {
     const s = simulate({
       ...baseInput,
       rotation: rotationOf(
@@ -86,7 +86,7 @@ describe("simulate", () => {
       ),
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 12, 15, 18, 21]);
+    expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 17, 20, 23, 26]);
   });
 
   it("fails on adrenaline starvation instead of silently skipping", () => {
@@ -305,7 +305,7 @@ describe("simulate — fury", () => {
 });
 
 describe("simulate — greater_flurry", () => {
-  it("extends an active Berserk window by 0.6s per hit (8 ticks)", () => {
+  it("extends an active Berserk window by 0.6s per hit (8 ticks) while the channel occupies 8", () => {
     const rotation = rotationOf(
       ...Array(12).fill("attack"),
       "berserk",
@@ -317,7 +317,8 @@ describe("simulate — greater_flurry", () => {
     expect(s.ok).toBe(true);
     const last = lastCast(s);
     expect(last.abilityId).toBe("attack");
-    expect(last.tick).toBe(69);
+    // Greater Flurry @48 holds the actor until 56; Berserk 36+33=69 extended +8 → 77.
+    expect(last.tick).toBe(74);
     expect(last.result.expected).toBeCloseTo(2100);
   });
 
@@ -348,7 +349,7 @@ describe("simulate — meteor_strike", () => {
     expect(follow.adrenalineAfter).toBeCloseTo(meteor.adrenalineAfter + 13.5 + 3 * 4.5);
   });
 
-  it("does not 1.5x non-basic adrenaline costs or gains", () => {
+  it("does not 1.5x non-basic adrenaline costs or gains (channel occupancy grants its 8 passive ticks)", () => {
     const s = simulate({
       ...baseInput,
       rotation: rotationOf(
@@ -361,7 +362,9 @@ describe("simulate — meteor_strike", () => {
     expect(s.ok).toBe(true);
     const assault = lastCast(s);
     const beforeAssault = s.casts[s.casts.length - 2].adrenalineAfter;
-    expect(assault.adrenalineAfter).toBeCloseTo(beforeAssault - 25 + 3 * 4.5);
+    // Assault @33: −25 cost, then 8 channel ticks × 4.5 passive = +36 (cap 100).
+    expect(assault.adrenalineAfter).toBeCloseTo(Math.min(100, beforeAssault - 25 + 8 * 4.5), 10);
+    expect(assault.adrenalineAfter).toBe(100);
   });
 });
 
@@ -418,12 +421,17 @@ describe("simulate — greater_barge idle + Endless Assault", () => {
     ctx.performCast(byId("attack"), 0, false);
     ctx.performCast(byId("greater_barge"), 8, false);
     expect(ctx.getState().endlessAssaultUntilTick).toBe(18);
-    ctx.performCast(byId("assault"), 11, false);
+    // Fund the channel: attack@11 puts adrenaline at 27 so the cast is accepted.
+    ctx.performCast(byId("attack"), 11, false);
+    const attempt = ctx.performCast(byId("assault"), 14, false);
+    expect(attempt.ok).toBe(true);
     expect(ctx.getState().endlessAssaultUntilTick).toBe(0);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
     expect(s.casts[1].result.min).toBe(1150);
     expect(s.casts[1].result.max).toBe(1510);
+    expect(s.casts[3].abilityId).toBe("assault");
+    expect(s.casts[3].tick).toBe(14);
   });
 });
 
@@ -461,7 +469,7 @@ describe("simulate — ranged", () => {
     expect(s.casts[4].result.expected).toBeCloseTo(1000);
   });
 
-  it("shadow imbued grants adrenaline per ranged hit", () => {
+  it("shadow imbued grants adrenaline per real hit — attached Searing Winds damage does not inflate the count", () => {
     const s = simulate({
       ...rangedInput,
       rotation: rotationOf(
@@ -471,8 +479,12 @@ describe("simulate — ranged", () => {
         "ranged_attack",
       ),
     });
-    expect(lastCast(s).result.hits).toHaveLength(2);
-    expect(lastCast(s).adrenalineAfter).toBe(5 + 9 + 5 + 9 + 10);
+    // The Searing Winds bonus is attached to the source hit, not a phantom second
+    // hit: 1 real hit → +5 imbued adrenaline (was +10 via the phantom).
+    expect(lastCast(s).result.hits).toHaveLength(1);
+    expect(lastCast(s).result.hits[0].expected).toBeCloseTo(1000);
+    expect(lastCast(s).result.expected).toBeCloseTo(1200);
+    expect(lastCast(s).adrenalineAfter).toBe(5 + 9 + 5 + 9 + 5);
   });
 
   it("shadow tendrils without an active imbue grants no phantom adrenaline", () => {
@@ -728,10 +740,10 @@ describe("simulate auto-weave", () => {
       "attack@3",
       "attack@6",
       "assault@9",
-      "attack@12",
-      "attack@15",
-      "attack@18",
-      "assault@21",
+      "attack@17",
+      "attack@20",
+      "attack@23",
+      "assault@26",
     ]);
     expect(s.casts[3].result.expected).toBeCloseTo(4 * 1400);
     expect(s.casts[7].result.expected).toBeCloseTo(4 * 1800);
@@ -955,5 +967,198 @@ describe("simulate — necromancy resources", () => {
     expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
     expect(s.perAbility["spirit_vengeful_ghost"]).toBeGreaterThan(0);
     expect(s.perAbility["spirit_putrid_zombie"]).toBeGreaterThan(0);
+  });
+});
+
+
+describe("simulate — channel occupancy (manual completes channels)", () => {
+  it("Assault then another ability: the follow-up starts at castTick+8, not +3, with full channel damage", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack", "attack", "attack", "assault", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 17]);
+    expect(s.perAbility["assault"]).toBeCloseTo(4 * 1400);
+    const assaultEvents = s.events.filter((e) => e.abilityId === "assault");
+    expect(assaultEvents.map((e) => e.tick)).toEqual([10, 12, 14, 16]);
+    expect(assaultEvents.every((e) => e.family === "hit" && !e.attached)).toBe(true);
+  });
+
+  it("Rapid Fire then another ability: follow-up at castTick+8 with full channel damage", () => {
+    const s = simulate({
+      ...baseInput,
+      abilities: RANGED_ABILITIES,
+      context: { style: "ranged" },
+      rotation: rotationOf("ranged_attack", "ranged_attack", "ranged_attack", "rapid_fire", "ranged_attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 17]);
+    expect(s.perAbility["rapid_fire"]).toBeCloseTo(8 * 800);
+  });
+
+  it("Asphyxiate then another ability: follow-up at castTick+7 with full channel damage", () => {
+    const s = simulate({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      context: { style: "magic" },
+      rotation: rotationOf("magic_attack", "magic_attack", "magic_attack", "asphyxiate", "magic_attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 16]);
+    expect(s.perAbility["asphyxiate"]).toBeCloseTo(4 * 1300);
+  });
+});
+
+describe("simulate — atomic cast transition", () => {
+  it("a rejected cast (insufficient adrenaline) leaves state byte-identical", () => {
+    const ctx = createCastContext(baseInput);
+    ctx.performCast(abilityById(MELEE_ABILITIES, "attack"), 0, false);
+    ctx.performCast(abilityById(MELEE_ABILITIES, "attack"), 3, false);
+    const before = JSON.stringify(ctx.getState());
+    const attempt = ctx.performCast(abilityById(MELEE_ABILITIES, "overpower"), 6, false);
+    expect(attempt.ok).toBe(false);
+    if (!attempt.ok) expect(attempt.error).toContain("adrenaline");
+    expect(JSON.stringify(ctx.getState())).toBe(before);
+    const s = ctx.finish();
+    expect(s.casts).toHaveLength(2);
+  });
+
+  it("a rejected cast (unmet residual-soul requirement) leaves state byte-identical", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      abilities: NECROMANCY_ABILITIES,
+      context: { style: "necromancy" },
+    });
+    const before = JSON.stringify(ctx.getState());
+    const attempt = ctx.performCast(abilityById(NECROMANCY_ABILITIES, "soul_strike"), 0, false);
+    expect(attempt.ok).toBe(false);
+    if (!attempt.ok) expect(attempt.error).toContain("residual souls");
+    expect(JSON.stringify(ctx.getState())).toBe(before);
+    expect(ctx.finish().casts).toHaveLength(0);
+  });
+
+  it("advance-then-check: waiting out a cooldown under Meteor Strike's passive makes the repeat cast affordable", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf(
+        ...Array(7).fill("attack"),
+        "meteor_strike",
+        "attack",
+        "attack",
+        "overpower",
+        "overpower",
+      ),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 80]);
+    const repeat = lastCast(s);
+    expect(repeat.abilityId).toBe("overpower");
+    // 24% at tick 33 → 100% after the passive-covered wait to the 50-tick cooldown.
+    expect(repeat.tick).toBe(80);
+  });
+});
+
+describe("simulate — event log", () => {
+  it("is deterministic and orders same-tick events by (tick, seq) in hit-index order", () => {
+    const rotation = rotationOf("attack", "adaptive_strike_dw", "attack", "dismember");
+    const a = simulate({ ...baseInput, rotation });
+    const b = simulate({ ...baseInput, rotation });
+    expect(a.events).toEqual(b.events);
+    expect(a).toEqual(b);
+    const dw = a.events.filter((e) => e.abilityId === "adaptive_strike_dw");
+    expect(dw.map((e) => e.tick)).toEqual([3, 3]);
+    expect(dw[0].hitIndex).toBe(0);
+    expect(dw[1].hitIndex).toBe(1);
+    expect(dw[0].seq).toBeLessThan(dw[1].seq);
+  });
+
+  it("reconciles per cast: non-attached hit/dot events sum to that cast's hit damage", () => {
+    const s = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack", "attack", "attack", "assault", "dismember"),
+    });
+    expect(s.ok).toBe(true);
+    s.casts.forEach((cast, i) => {
+      const owned = s.events.filter(
+        (e) => e.sourceCast === i && e.family !== "proc" && !e.attached,
+      );
+      const eventSum = owned.reduce((n, e) => n + e.damage.expected, 0);
+      expect(cast.result.expected).toBeCloseTo(eventSum, 10);
+      expect(cast.result.min).toBeCloseTo(owned.reduce((n, e) => n + e.damage.min, 0), 10);
+      expect(cast.result.max).toBeCloseTo(owned.reduce((n, e) => n + e.damage.max, 0), 10);
+      expect(cast.result.hits.reduce((n, h) => n + h.expected, 0)).toBeCloseTo(eventSum, 10);
+    });
+  });
+
+  it("folds Searing Winds into the source hit event — no separate event, and Galeshot never rides its own buff", () => {
+    const s = simulate({
+      ...baseInput,
+      abilities: RANGED_ABILITIES,
+      context: { style: "ranged" },
+      rotation: rotationOf("galeshot", "ranged_attack"),
+    });
+    expect(s.ok).toBe(true);
+    const galeshot = s.events.filter((e) => e.abilityId === "galeshot");
+    expect(galeshot).toHaveLength(1);
+    expect(galeshot[0].damage.expected).toBeCloseTo(1000);
+    const attack = s.events.filter((e) => e.abilityId === "ranged_attack");
+    expect(attack).toHaveLength(1);
+    expect(attack[0].family).toBe("hit");
+    expect(attack[0].attached).toBe(false);
+    expect(attack[0].damage.expected).toBeCloseTo(1200);
+    // The attached +20% is in the event damage but not in the real hit's own roll.
+    expect(s.casts[1].result.hits[0].expected).toBeCloseTo(1000);
+    expect(s.casts[1].result.expected).toBeCloseTo(1200);
+  });
+
+  it("schedules Instability's Lightning Surge as a proc event at sourceHitTick+1 (EV, non-recursive)", () => {
+    const s = simulate({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      context: { style: "magic" },
+      crit: { chance: 1 },
+      rotation: rotationOf(...Array(6).fill("magic_attack"), "instability", "magic_attack"),
+    });
+    expect(s.ok).toBe(true);
+    const instabilitySeq = s.casts.findIndex((c) => c.abilityId === "instability");
+    const followSeq = s.casts.findIndex((c, i) => i > instabilitySeq);
+    // The granting cast fires no surge: exactly one hit event, no proc.
+    expect(
+      s.events.filter((e) => e.sourceCast === instabilitySeq).map((e) => e.family),
+    ).toEqual(["hit"]);
+    const followEvents = s.events.filter((e) => e.sourceCast === followSeq);
+    expect(followEvents.map((e) => e.family)).toEqual(["hit", "proc"]);
+    const surge = followEvents[1];
+    expect(surge.tick).toBe(s.casts[followSeq].tick + 1);
+    expect(surge.procEligible).toBe(false);
+    expect(surge.recursionAllowed).toBe(false);
+    expect(surge.damage.expected).toBeCloseTo(1200);
+    expect(surge.damage.min).toBe(0);
+    expect(surge.damage.max).toBe(0);
+    // Hit events reconcile with the cast record; the surge EV lands in expected.
+    expect(s.casts[followSeq].result.expected).toBeCloseTo(2700);
+    expect(s.casts[followSeq].result.hits).toHaveLength(1);
+    expect(s.damageByTick[s.casts[followSeq].tick + 1]).toBeCloseTo(1200);
+  });
+
+  it("clips Bloodlust stacks when Berserk expires mid-wait, at the boundary tick", () => {
+    const ctx = createCastContext(baseInput);
+    const attack = abilityById(MELEE_ABILITIES, "attack");
+    for (let i = 0; i < 12; i++) ctx.performCast(attack, i * 3, false);
+    ctx.performCast(abilityById(MELEE_ABILITIES, "berserk"), 36, false);
+    expect(ctx.getState().melee.stacks).toBe(8);
+    expect(ctx.getState().berserkUntilTick).toBe(69);
+    for (let t = 39; t <= 63; t += 3) ctx.performCast(attack, t, false);
+    // Still inside the window at tick 66: no clip.
+    expect(ctx.getState().tick).toBe(66);
+    expect(ctx.getState().melee.stacks).toBe(8);
+    expect(ctx.getState().melee.berserk).toBe(true);
+    ctx.performCast(attack, 66, false);
+    // The occupancy advance crosses tick 69 (the exclusive end): stacks clip to the base cap.
+    expect(ctx.getState().tick).toBe(69);
+    expect(ctx.getState().melee.berserk).toBe(false);
+    expect(ctx.getState().melee.stacks).toBe(4);
+    expect(ctx.getState().berserkUntilTick).toBe(0);
   });
 });

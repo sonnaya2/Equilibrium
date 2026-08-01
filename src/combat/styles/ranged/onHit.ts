@@ -77,16 +77,24 @@ export const RAPID_FIRE_SEARING_WINDS_TICKS_PER_HIT = 1;
 
 export interface SearingWindsState {
   expiresAtTick: number;
+  /**
+   * Cast sequence that applied the buff (sim provenance). The granting cast's
+   * own hits predate the buff and never take its attached bonus.
+   */
+  grantedByCast?: number;
 }
 
 export const newSearingWinds = (): SearingWindsState => ({ expiresAtTick: 0 });
 
-export function activateSearingWinds(tick: number): SearingWindsState {
-  return { expiresAtTick: tick + SEARING_WINDS_DURATION_TICKS };
+export function activateSearingWinds(tick: number, grantedByCast?: number): SearingWindsState {
+  return {
+    expiresAtTick: tick + SEARING_WINDS_DURATION_TICKS,
+    ...(grantedByCast !== undefined ? { grantedByCast } : {}),
+  };
 }
 
 export function extendSearingWinds(state: SearingWindsState, hits: number): SearingWindsState {
-  return { expiresAtTick: state.expiresAtTick + hits * RAPID_FIRE_SEARING_WINDS_TICKS_PER_HIT };
+  return { ...state, expiresAtTick: state.expiresAtTick + hits * RAPID_FIRE_SEARING_WINDS_TICKS_PER_HIT };
 }
 
 /** Bonus-hit percent while the window is open; 0 outside it. */

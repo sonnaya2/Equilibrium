@@ -66,6 +66,11 @@ export const GREATER_SUNSHINE_BUFF_TICKS = 64;
 export interface SunshineState {
   startsAtTick: number;
   expiresAtTick: number;
+  /**
+   * Cast sequence that created the beam (sim provenance). The granting cast's
+   * own hits predate the buff and never take its multiplier.
+   */
+  grantedByCast?: number;
 }
 
 export const newSunshine = (): SunshineState => ({ startsAtTick: 0, expiresAtTick: 0 });
@@ -79,14 +84,23 @@ export function activateSunshine(
   tick: number,
   greater = false,
   plantedFeet = false,
+  grantedByCast?: number,
 ): SunshineState {
   if (greater) {
-    return { startsAtTick: tick + 1, expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS };
+    return {
+      startsAtTick: tick + 1,
+      expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS,
+      ...(grantedByCast !== undefined ? { grantedByCast } : {}),
+    };
   }
   const duration = plantedFeet
     ? Math.round(SUNSHINE_DURATION_TICKS * PLANTED_FEET_DURATION_MULT)
     : SUNSHINE_DURATION_TICKS;
-  return { startsAtTick: tick + 1, expiresAtTick: tick + duration };
+  return {
+    startsAtTick: tick + 1,
+    expiresAtTick: tick + duration,
+    ...(grantedByCast !== undefined ? { grantedByCast } : {}),
+  };
 }
 
 /** Greater Sunshine only — thin wrapper kept for existing call sites. */

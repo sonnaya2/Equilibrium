@@ -8,8 +8,6 @@ import {
   SKELETON_AUTO_INTERVAL,
   SKELETON_FIRST_AUTO_TICKS,
   SKELETON_RAGE_MAX_STACKS,
-  SPIRIT_AUTO_ABILITY_ID,
-  SPIRIT_POISON_ABILITY_ID,
   UNDEAD_ARMY_DEFAULT,
   ZOMBIE_AUTO_INTERVAL,
   ZOMBIE_FIRST_AUTO_TICKS,
@@ -19,11 +17,29 @@ import {
   conjureCanCast,
   dismissConjure,
   newConjures,
-  processSpiritAutos,
   skeletonRageMult,
+  spiritAutoFired,
+  spiritAutoPending,
+  spiritPoisonFired,
+  spiritPoisonPending,
   summonConjure,
   summonConjures,
+  type ActiveConjure,
 } from "./conjures";
+
+/** Walks a spirit's auto track like the event queue would: fire, advance, repeat. */
+function collectAutos(spirit: ActiveConjure, throughTick: number) {
+  const events: { tick: number; mult: number }[] = [];
+  let s = spirit;
+  while (spiritAutoPending(s) && s.nextAutoTick <= throughTick) {
+    events.push({
+      tick: s.nextAutoTick,
+      mult: s.id === "skeleton_warrior" ? skeletonRageMult(s.rageStacks) : 1,
+    });
+    s = spiritAutoFired(s);
+  }
+  return { events, state: s };
+}
 
 describe("conjures", () => {
   it("lists the four sourced spirits and the no-crit engine rule", () => {
@@ -76,26 +92,24 @@ describe("conjures", () => {
     const state = summonConjure(newConjures(), "phantom_guardian", 0);
     const p = state.spirits[0]!;
     expect(p.nextAutoTick).toBe(p.untilTick);
-    const { events } = processSpiritAutos(state, 0, p.untilTick);
-    expect(events).toHaveLength(0);
+    expect(spiritAutoPending(p)).toBe(false);
+    expect(collectAutos(p, p.untilTick).events).toHaveLength(0);
   });
 
   it("lands skeleton autos with progressive rage and never marks crit", () => {
     const state = summonConjure(newConjures(), "skeleton_warrior", 0);
-    const { events, state: after } = processSpiritAutos(state, 0, 20);
+    const { events, state: after } = collectAutos(state.spirits[0]!, 20);
     expect(events.map((e) => e.tick)).toEqual([7, 12, 17]);
-    expect(events.every((e) => e.critEligible === false)).toBe(true);
-    expect(events.every((e) => e.abilityId === SPIRIT_AUTO_ABILITY_ID.skeleton_warrior)).toBe(true);
     expect(events[0]!.mult).toBe(1);
     expect(events[1]!.mult).toBeCloseTo(skeletonRageMult(1));
     expect(events[2]!.mult).toBeCloseTo(skeletonRageMult(2));
-    expect(after.spirits[0]!.rageStacks).toBe(3);
-    expect(after.spirits[0]!.nextAutoTick).toBe(7 + 3 * SKELETON_AUTO_INTERVAL);
+    expect(after.rageStacks).toBe(3);
+    expect(after.nextAutoTick).toBe(7 + 3 * SKELETON_AUTO_INTERVAL);
   });
 
   it("lands full SP3 skeleton autos (~20 hits) with rage capped at 25", () => {
     const state = summonConjure(newConjures(), "skeleton_warrior", 0);
-    const { events } = processSpiritAutos(state, 0, CONJURE_UNTIL_OFFSET_TICKS);
+    const { events } = collectAutos(state.spirits[0]!, CONJURE_UNTIL_OFFSET_TICKS);
     expect(events).toHaveLength(20);
     expect(events.at(-1)!.tick).toBe(102);
     expect(events.at(-1)!.mult).toBeCloseTo(skeletonRageMult(19));
@@ -104,21 +118,25 @@ describe("conjures", () => {
 
   it("lands zombie autos + poison on sourced intervals", () => {
     const state = summonConjure(newConjures(), "putrid_zombie", 0);
-    const { events } = processSpiritAutos(state, 0, 20);
-    const autos = events.filter((e) => e.abilityId === SPIRIT_AUTO_ABILITY_ID.putrid_zombie);
-    const poison = events.filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID);
-    expect(autos.map((e) => e.tick)).toEqual([
+    const { events } = collectAutos(state.spirits[0]!, 20);
+    expect(events.map((e) => e.tick)).toEqual([
       7,
       7 + ZOMBIE_AUTO_INTERVAL,
       7 + 2 * ZOMBIE_AUTO_INTERVAL,
     ]);
-    expect(poison[0]!.tick).toBe(ZOMBIE_POISON_FIRST_TICKS);
-    expect(poison.every((e) => e.critEligible === false)).toBe(true);
+    let z = state.spirits[0]!;
+    const poisonTicks: number[] = [];
+    while (spiritPoisonPending(z) && z.nextPoisonTick <= 20) {
+      poisonTicks.push(z.nextPoisonTick);
+      z = spiritPoisonFired(z);
+    }
+    expect(poisonTicks[0]).toBe(ZOMBIE_POISON_FIRST_TICKS);
+    expect(poisonTicks).toEqual([9, 12, 15, 18]);
   });
 
   it("lands ghost autos every 7 ticks from first@6", () => {
     const state = summonConjure(newConjures(), "vengeful_ghost", 0);
-    const { events } = processSpiritAutos(state, 0, 30);
+    const { events } = collectAutos(state.spirits[0]!, 30);
     expect(events.map((e) => e.tick)).toEqual([6, 13, 20, 27]);
     expect(events[0]!.tick).toBe(GHOST_FIRST_AUTO_TICKS);
     expect(events[1]!.tick - events[0]!.tick).toBe(GHOST_AUTO_INTERVAL);

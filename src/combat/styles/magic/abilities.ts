@@ -41,12 +41,13 @@ export function isMagicAbility(ability: AbilitySpec): ability is MagicAbilitySpe
   return ability.style === "magic";
 }
 
-/** 3-tick channel: one hit per tick over 1.8s (wiki: "Attack 3 times over 1.8s (3 ticks)"). */
+/** 3-tick channel: one hit per tick over 1.8s (wiki: "Attack 3 times over 1.8s (3 ticks)").
+ *  Last hit lands at +2, so occupancy fits the 3-tick GCD — no channelTicks. */
 function concHits(minPct: number, maxPct: number) {
   return [0, 1, 2].map((tickOffset) => ({ band: { minPct, maxPct }, tickOffset }));
 }
 
-/** Asphyxiate: 4 hits, one every 1.2s (2 ticks) over 4.2s. */
+/** Asphyxiate: 4 hits, one every 1.2s (2 ticks) over 4.2s. Last hit at +6 → 7-tick occupancy. */
 function asphyxiateHits() {
   return [0, 2, 4, 6].map((tickOffset) => ({
     band: { minPct: 120, maxPct: 140 },
@@ -248,6 +249,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Asphyxiate",
     style: "magic",
     category: "enhanced",
+    channelTicks: 7,
     hits: asphyxiateHits(),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
@@ -258,6 +260,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Asphyxiate (Tumeken's Resplendence)",
     style: "magic",
     category: "enhanced",
+    channelTicks: 8,
     hits: asphyxiateResplendenceHits(),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,

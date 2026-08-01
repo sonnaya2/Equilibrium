@@ -223,6 +223,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "enhanced",
     channelled: true,
+    channelTicks: 8,
     hits: Array.from({ length: 4 }, (_, i) => ({
       band: { minPct: 130, maxPct: 150 },
       tickOffset: 1 + i * 2,
@@ -239,6 +240,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "enhanced",
     channelled: true,
+    channelTicks: 8,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 60, maxPct: 70 },
       tickOffset: i,
@@ -254,6 +256,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "enhanced",
     channelled: true,
+    channelTicks: 8,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 60, maxPct: 70 },
       tickOffset: i,

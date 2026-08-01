@@ -100,27 +100,20 @@ export interface ConjureState {
   readonly spirits: readonly ActiveConjure[];
 }
 
-export interface SpiritAutoEvent {
-  tick: number;
-  abilityId: string;
-  band: DamageBand;
-  /** Damage mult (skeleton rage). Applied to EV at roll time. */
-  mult: number;
-  critEligible: false;
-}
-
 export const newConjures = (): ConjureState => ({ spirits: [] });
 
 export function conjureActive(state: ConjureState, id: ConjureId, tick = 0): boolean {
   return state.spirits.some((s) => s.id === id && tick < s.untilTick);
 }
 
-function autoProfile(id: ConjureId): {
+export interface SpiritAutoProfile {
   first: number;
   interval: number;
   band: DamageBand;
   poison?: { first: number; interval: number };
-} | null {
+}
+
+export function spiritAutoProfile(id: ConjureId): SpiritAutoProfile | null {
   switch (id) {
     case "skeleton_warrior":
       return {
@@ -148,7 +141,7 @@ function autoProfile(id: ConjureId): {
 
 export function summonConjure(state: ConjureState, id: ConjureId, readyTick: number): ConjureState {
   const untilTick = readyTick + CONJURE_UNTIL_OFFSET_TICKS;
-  const profile = autoProfile(id);
+  const profile = spiritAutoProfile(id);
   const nextAutoTick = profile ? readyTick + profile.first : untilTick;
   const nextPoisonTick = profile?.poison ? readyTick + profile.poison.first : 0;
   const spirit: ActiveConjure = {
@@ -179,92 +172,48 @@ export function dismissConjure(state: ConjureState, id: ConjureId): ConjureState
   return { spirits: state.spirits.filter((s) => s.id !== id) };
 }
 
-/** True while the spirit still contributes (alive, or zombie poison tail pending). */
-export function spiritStillPresent(s: ActiveConjure, tick: number): boolean {
-  if (tick < s.untilTick) return true;
-  if (s.id === "putrid_zombie" && s.nextPoisonTick > 0) {
-    return s.nextPoisonTick <= s.untilTick + ZOMBIE_POISON_TAIL_TICKS;
-  }
-  return false;
-}
-
-/** Drop fully expired spirits (past untilTick and any poison tail). */
-export function expireConjures(state: ConjureState, tick: number): ConjureState {
-  const spirits = state.spirits.filter((s) => spiritStillPresent(s, tick));
-  return spirits.length === state.spirits.length ? state : { spirits };
-}
-
 export function skeletonRageMult(stacks: number): number {
   const s = Math.max(0, Math.min(stacks, SKELETON_RAGE_MAX_STACKS));
   return 1 + SKELETON_RAGE_PER_STACK * s;
 }
 
 /**
- * Land spirit autos with nextAutoTick / nextPoisonTick in (fromTick, toTick].
- * Gains skeleton rage after each auto. Spirits expire once past untilTick
- * (zombie poison may land a short tail past until).
+ * Spirit scheduler state lives on ActiveConjure; the rotation event queue fires
+ * one scheduled event per track and these helpers advance to the next. Autos
+ * never schedule past untilTick; zombie poison lands a short sourced tail past it.
  */
-export function processSpiritAutos(
-  stateIn: ConjureState,
-  fromTick: number,
-  toTick: number,
-): { state: ConjureState; events: SpiritAutoEvent[] } {
-  if (toTick <= fromTick) return { state: stateIn, events: [] };
 
-  const events: SpiritAutoEvent[] = [];
-  const nextSpirits: ActiveConjure[] = [];
+/** The auto track has another attack to schedule (phantom: never). */
+export function spiritAutoPending(s: ActiveConjure): boolean {
+  return spiritAutoProfile(s.id) !== null && s.nextAutoTick < s.untilTick;
+}
 
-  for (const raw of stateIn.spirits) {
-    let s = { ...raw };
-    const profile = autoProfile(s.id);
+/** The zombie poison track has another hit to schedule (tail may pass untilTick). */
+export function spiritPoisonPending(s: ActiveConjure): boolean {
+  return (
+    s.id === "putrid_zombie" &&
+    s.nextPoisonTick > 0 &&
+    s.nextPoisonTick <= s.untilTick + ZOMBIE_POISON_TAIL_TICKS
+  );
+}
 
-    if (profile) {
-      while (
-        s.nextAutoTick > fromTick &&
-        s.nextAutoTick <= toTick &&
-        s.nextAutoTick < s.untilTick
-      ) {
-        const mult = s.id === "skeleton_warrior" ? skeletonRageMult(s.rageStacks) : 1;
-        events.push({
-          tick: s.nextAutoTick,
-          abilityId: SPIRIT_AUTO_ABILITY_ID[s.id],
-          band: { minPct: profile.band.minPct, maxPct: profile.band.maxPct },
-          mult,
-          critEligible: false,
-        });
-        s = {
-          ...s,
-          nextAutoTick: s.nextAutoTick + profile.interval,
-          rageStacks:
-            s.id === "skeleton_warrior"
-              ? Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1)
-              : s.rageStacks,
-        };
-      }
-    }
+/** Advance the auto track after a landed auto: next tick + skeleton rage. */
+export function spiritAutoFired(s: ActiveConjure): ActiveConjure {
+  const profile = spiritAutoProfile(s.id);
+  if (!profile) return s;
+  return {
+    ...s,
+    nextAutoTick: s.nextAutoTick + profile.interval,
+    rageStacks:
+      s.id === "skeleton_warrior"
+        ? Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1)
+        : s.rageStacks,
+  };
+}
 
-    if (s.id === "putrid_zombie" && s.nextPoisonTick > 0) {
-      const poisonEnd = s.untilTick + ZOMBIE_POISON_TAIL_TICKS;
-      while (
-        s.nextPoisonTick > fromTick &&
-        s.nextPoisonTick <= toTick &&
-        s.nextPoisonTick <= poisonEnd
-      ) {
-        events.push({
-          tick: s.nextPoisonTick,
-          abilityId: SPIRIT_POISON_ABILITY_ID,
-          band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
-          mult: 1,
-          critEligible: false,
-        });
-        s = { ...s, nextPoisonTick: s.nextPoisonTick + ZOMBIE_POISON_INTERVAL };
-      }
-    }
-
-    if (spiritStillPresent(s, toTick)) nextSpirits.push(s);
-  }
-
-  return { state: { spirits: nextSpirits }, events };
+/** Advance the poison track after a landed poison hit. */
+export function spiritPoisonFired(s: ActiveConjure): ActiveConjure {
+  return { ...s, nextPoisonTick: s.nextPoisonTick + ZOMBIE_POISON_INTERVAL };
 }
 
 /** Summon from a conjure_* ability id; army uses UNDEAD_ARMY_DEFAULT. */

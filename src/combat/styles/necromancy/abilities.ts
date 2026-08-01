@@ -271,6 +271,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   {
     // Solo primary: finishing hit only. Channel 4×22–28% hits non-primaries only
     // (heal + 100% of heal on the finisher is multi-target sim territory).
+    // In-game this is a 5.4s channel; the finisher-only simplification also keeps
+    // GCD occupancy instead of declaring channelTicks.
     id: "blood_siphon",
     name: "Blood Siphon",
     style: "necromancy",

@@ -1,13 +1,10 @@
 import type { CritLayers } from "../core/critical";
+import { critProbability } from "../core/critical";
 import type { HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_PATCH_2, MODERNISATION_WIKI } from "../data/sources";
-import {
-  calculateAbility,
-  type AbilityResult,
-  type AbilitySpec,
-} from "../pipeline/calculateAbility";
-import { calculateHit } from "../pipeline/calculateHit";
+import type { AbilityHit, AbilityResult, AbilitySpec } from "../pipeline/calculateAbility";
+import { calculateHit, type HitResult } from "../pipeline/calculateHit";
 import {
   activateBerserk,
   BERSERK_DAMAGE_MULTIPLIER,
@@ -66,13 +63,23 @@ import {
   resolveNecromancyAbility,
 } from "../styles/necromancy/effects";
 import {
-  processSpiritAutos,
+  COMMAND_REQUIRES_CONJURE,
+  skeletonRageMult,
+  SPIRIT_AUTO_ABILITY_ID,
   SPIRIT_POISON_ABILITY_ID,
-  type SpiritAutoEvent,
+  spiritAutoFired,
+  spiritAutoPending,
+  spiritAutoProfile,
+  spiritPoisonFired,
+  spiritPoisonPending,
+  ZOMBIE_POISON_BAND,
+  type ActiveConjure,
+  type ConjureId,
 } from "../styles/necromancy/conjures";
 import { expectedAftershockDamage, expectedCracklingDamage } from "../shared/perks";
 import type { CombatContext, CombatModifier, SourceReference } from "../types";
 import type { RotationAction } from "./actions";
+import { EventQueue, type ResolvedDamage, type ResolvedEvent, type ScheduledEvent } from "./events";
 import {
   clearCooldowns,
   firstLegalTick,
@@ -125,6 +132,14 @@ export interface SimulateInput {
   conjureBasicDamageMult?: number;
 }
 
+export interface SimulateOptions {
+  /**
+   * Also compute `totalExpectedIncludingTails`: in-horizon damage plus the
+   * still-scheduled (unlanded) tails of casts begun inside the horizon.
+   */
+  includeTails?: boolean;
+}
+
 export interface CastRecord {
   tick: number;
   abilityId: string;
@@ -138,11 +153,12 @@ export interface RotationSummary {
   ok: boolean;
   error?: string;
   casts: CastRecord[];
-  /** Elapsed ticks: last cast's global cooldown, or the DoT tail if it outlasts it. */
+  /** Elapsed ticks: last cast's occupancy end, or the damage tail if it outlasts it. */
   ticks: number;
   /**
-   * Horizon the run was asked to fill (revolution duration). When set, `dps` is
-   * totalExpected / (horizonTicks * tickSeconds) so a 60s revo reports 60s DPS.
+   * Horizon the run was asked to fill (revolution duration). When set, totals
+   * count only events landing before it (half-open [0, horizonTicks)) and
+   * `dps` is totalExpected / (horizonTicks * tickSeconds).
    */
   horizonTicks?: number;
   totalMin: number;
@@ -152,7 +168,17 @@ export interface RotationSummary {
   perAbility: Record<string, number>;
   /** Expected damage landing on each tick — DoT tails land on their sourced ticks. */
   damageByTick: Record<number, number>;
+  /** Every landed event in (tick, seq) order, with provenance and land-time damage. */
+  events: ResolvedEvent[];
+  /**
+   * Opt-in second metric (SimulateOptions.includeTails): in-horizon damage plus
+   * the unlanded scheduled tails of casts begun inside the horizon.
+   * Never presented as fixed-window DPS.
+   */
+  totalExpectedIncludingTails?: number;
 }
+
+export type CastAttempt = { ok: true } | { ok: false; error: string };
 
 const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
 
@@ -172,87 +198,270 @@ export interface CastContext {
   getState(): RotationState;
   costOf(ability: AbilitySpec): number;
   firstLegalTick(abilityId: string): number;
-  performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void;
+  /**
+   * The one canonical time path: lands every queued event due by targetTick in
+   * (tick, seq) order (damage resolved against state at each land tick), applies
+   * passive generation over the crossed interval, expires crossed clocks, and
+   * stops with state representing exactly targetTick.
+   */
+  advanceTo(targetTick: number): void;
+  /**
+   * One atomic cast transition: advance to the candidate tick, re-check
+   * requirements/affordability against the advanced state (rejection leaves the
+   * state otherwise untouched), resolve the empowered variant, start the
+   * cooldown and occupancy, schedule hit events with provenance, then apply
+   * immediate on-cast grants/windows.
+   */
+  performCast(ability: AbilitySpec, readyTick: number, auto: boolean): CastAttempt;
   /** Off-GCD utility casts (Runic Charge): state-machine update and a cast record
    *  without consuming or advancing the global cooldown. */
   performOffGcdCast(ability: AbilitySpec): void;
-  finish(error?: string, horizonTicks?: number): RotationSummary;
+  /** Remove a cast's pending events (channel cancellation); returns the count. */
+  cancelCastEvents(castSeq: number): number;
+  finish(error?: string, horizonTicks?: number, options?: SimulateOptions): RotationSummary;
   byId: Map<string, AbilitySpec>;
   basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
 }
 
 export function createCastContext(
-  input: Omit<SimulateInput, "rotation" | "autoWeave">,
+  input: Omit<SimulateInput, "rotation" | "autoWeave"> & { horizonTicks?: number },
 ): CastContext {
   const byId = new Map(input.abilities.map((a) => [a.id, a]));
   const basicByStyle = new Map(
     input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]),
   );
+  /** Runs with a horizon land events only before it (half-open). */
+  const horizon = input.horizonTicks;
   const casts: CastRecord[] = [];
   const perAbility: Record<string, number> = {};
   const damageByTick: Record<number, number> = {};
+  const events: ResolvedEvent[] = [];
+  const queue = new EventQueue();
+  const recordBySeq = new Map<number, CastRecord>();
+  /** Full hit detail per landed hit event, keyed by event seq (cast records, surge EV). */
+  const hitDetails = new Map<number, HitResult>();
+  /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
+  const spiritEventMeta = new Map<number, { id: ConjureId; untilTick: number; kind: "auto" | "poison" }>();
+  const scheduledSpiritTracks = new Set<string>();
+  const spiritHitCounts = new Map<string, number>();
   let state = newRotationState();
   let endTick = 0;
-  let spiritMin = 0;
-  let spiritMax = 0;
-  let spiritExpected = 0;
-  let spiritCursor = 0;
+  let totalMin = 0;
+  let totalMax = 0;
+  let totalExpected = 0;
+  let nextSeq = 0;
+  let nextCastSeq = 0;
 
-  function landSpiritEvents(events: SpiritAutoEvent[]): void {
-    const setMult = input.conjureBasicDamageMult ?? 1;
-    for (const ev of events) {
-      // Spirit-internal mult (e.g. command windows) stays on the band.
-      // First Necro set mult is post-hit damage so intermediate AD rounding
-      // does not distort the exact +7%/piece ratio (wiki: conjure basics only).
-      const hit = calculateHit({
-        base: input.base,
-        band: {
-          minPct: ev.band.minPct * ev.mult,
-          maxPct: ev.band.maxPct * ev.mult,
-        },
-        level: input.level,
-        accuracy: input.accuracy,
-        crit: { chance: 0, eligible: false },
-        modifiers: typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
-        context: input.context,
-        cap: input.cap,
-      });
-      const scale = ev.abilityId === SPIRIT_POISON_ABILITY_ID ? 1 : setMult;
-      const min = hit.min * scale;
-      const max = hit.max * scale;
-      const expected = hit.expected * scale;
-      spiritMin += min;
-      spiritMax += max;
-      spiritExpected += expected;
-      damageByTick[ev.tick] = (damageByTick[ev.tick] ?? 0) + expected;
-      perAbility[ev.abilityId] = (perAbility[ev.abilityId] ?? 0) + expected;
-      endTick = Math.max(endTick, ev.tick + 1);
+  const withinHorizon = (tick: number): boolean => horizon == null || tick < horizon;
+
+  function schedule(event: Omit<ScheduledEvent, "seq">): number {
+    const seq = nextSeq++;
+    queue.push({ ...event, seq });
+    return seq;
+  }
+
+  function recordResolved(event: ScheduledEvent, damage: ResolvedDamage): void {
+    totalMin += damage.min;
+    totalMax += damage.max;
+    totalExpected += damage.expected;
+    damageByTick[event.tick] = (damageByTick[event.tick] ?? 0) + damage.expected;
+    perAbility[event.abilityId] = (perAbility[event.abilityId] ?? 0) + damage.expected;
+    endTick = Math.max(endTick, event.tick + 1);
+    if (event.sourceCast >= 0) {
+      const record = recordBySeq.get(event.sourceCast);
+      if (record) {
+        record.result.expected += damage.expected;
+        if (event.family !== "proc" && !event.attached) {
+          record.result.min += damage.min;
+          record.result.max += damage.max;
+          const detail = hitDetails.get(event.seq);
+          if (detail) record.result.hits.push(detail);
+        }
+      }
+    }
+    const { resolve: _resolve, ...provenance } = event;
+    events.push({ ...provenance, damage });
+    if (event.procEligible && !event.attached) consumeNextHitEffects(event);
+  }
+
+  /**
+   * Per-landed-hit consumption hook (proc-eligible hits only). Stage 3 moves
+   * next-hit melee effects (Fury / Greater Fury first-hit scope) here; today
+   * they resolve at cast scope inside performCast, so this is intentionally inert.
+   */
+  function consumeNextHitEffects(_event: ScheduledEvent): void {
+    // Stage 3 hook — see combat-sim "Event provenance and per-hit scope".
+  }
+
+  function spiritEventLive(
+    event: ScheduledEvent,
+  ): { spirit: ActiveConjure; kind: "auto" | "poison" } | null {
+    const meta = spiritEventMeta.get(event.seq);
+    if (!meta) return null;
+    const spirit = state.conjures.spirits.find(
+      (s) => s.id === meta.id && s.untilTick === meta.untilTick,
+    );
+    if (!spirit) return null; // dismissed, or replaced by a re-summon
+    if (meta.kind === "auto" && event.tick >= spirit.untilTick) return null;
+    return { spirit, kind: meta.kind };
+  }
+
+  function patchSpirit(target: ActiveConjure, next: ActiveConjure): void {
+    state = {
+      ...state,
+      conjures: {
+        spirits: state.conjures.spirits.map((s) => (s === target ? next : s)),
+      },
+    };
+  }
+
+  function scheduleSpiritAuto(spirit: ActiveConjure): void {
+    const key = `${spirit.id}:${spirit.untilTick}:auto`;
+    const seq = schedule({
+      tick: spirit.nextAutoTick,
+      family: "conjureAuto",
+      abilityId: SPIRIT_AUTO_ABILITY_ID[spirit.id],
+      sourceCast: -1,
+      hitIndex: spiritHitCounts.get(key) ?? 0,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      resolve: (at) => {
+        // Spirit-internal mult (skeleton rage) stays on the band; the First Necro
+        // set mult is post-hit damage so intermediate AD rounding does not distort
+        // the exact +7%/piece ratio (wiki: conjure basics only).
+        const profile = spiritAutoProfile(spirit.id);
+        const live = state.conjures.spirits.find(
+          (s) => s.id === spirit.id && s.untilTick === spirit.untilTick,
+        );
+        if (!profile || !live) return { min: 0, max: 0, expected: 0 };
+        const mult = spirit.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
+        const hit = calculateHit({
+          base: input.base,
+          band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },
+          level: input.level,
+          accuracy: input.accuracy,
+          crit: { chance: 0, eligible: false },
+          modifiers: typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
+          context: input.context,
+          cap: input.cap,
+        });
+        const scale = input.conjureBasicDamageMult ?? 1;
+        return { min: hit.min * scale, max: hit.max * scale, expected: hit.expected * scale };
+      },
+    });
+    spiritHitCounts.set(key, (spiritHitCounts.get(key) ?? 0) + 1);
+    spiritEventMeta.set(seq, { id: spirit.id, untilTick: spirit.untilTick, kind: "auto" });
+  }
+
+  function scheduleSpiritPoison(spirit: ActiveConjure): void {
+    const key = `${spirit.id}:${spirit.untilTick}:poison`;
+    const seq = schedule({
+      tick: spirit.nextPoisonTick,
+      family: "poison",
+      abilityId: SPIRIT_POISON_ABILITY_ID,
+      sourceCast: -1,
+      hitIndex: spiritHitCounts.get(key) ?? 0,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      resolve: () => {
+        const hit = calculateHit({
+          base: input.base,
+          band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
+          level: input.level,
+          accuracy: input.accuracy,
+          crit: { chance: 0, eligible: false },
+          modifiers: typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
+          context: input.context,
+          cap: input.cap,
+        });
+        return { min: hit.min, max: hit.max, expected: hit.expected };
+      },
+    });
+    spiritHitCounts.set(key, (spiritHitCounts.get(key) ?? 0) + 1);
+    spiritEventMeta.set(seq, { id: spirit.id, untilTick: spirit.untilTick, kind: "poison" });
+  }
+
+  /** Schedule this summon instance's pending tracks exactly once. */
+  function scheduleSpiritTracks(spirit: ActiveConjure): void {
+    const key = `${spirit.id}:${spirit.untilTick}`;
+    if (scheduledSpiritTracks.has(key)) return;
+    scheduledSpiritTracks.add(key);
+    if (spiritAutoPending(spirit) && withinHorizon(spirit.nextAutoTick)) {
+      scheduleSpiritAuto(spirit);
+    }
+    if (spiritPoisonPending(spirit) && withinHorizon(spirit.nextPoisonTick)) {
+      scheduleSpiritPoison(spirit);
     }
   }
 
-  function advanceSpirits(toTick: number): void {
-    if (toTick <= spiritCursor) return;
-    const { state: next, events } = processSpiritAutos(state.conjures, spiritCursor, toTick);
-    state = { ...state, conjures: next };
-    landSpiritEvents(events);
-    spiritCursor = toTick;
+  function processDueEvents(bound: number): void {
+    for (;;) {
+      const event = queue.peek();
+      if (!event || event.tick > bound) return;
+      queue.shift();
+      if (event.family === "conjureAuto" || event.family === "poison") {
+        const live = spiritEventLive(event);
+        if (!live) continue; // spirit dismissed or re-summoned: the event dies
+        recordResolved(event, event.resolve(event.tick));
+        const next =
+          live.kind === "auto" ? spiritAutoFired(live.spirit) : spiritPoisonFired(live.spirit);
+        patchSpirit(live.spirit, next);
+        if (live.kind === "auto" && spiritAutoPending(next) && withinHorizon(next.nextAutoTick)) {
+          scheduleSpiritAuto(next);
+        }
+        if (
+          live.kind === "poison" &&
+          spiritPoisonPending(next) &&
+          withinHorizon(next.nextPoisonTick)
+        ) {
+          scheduleSpiritPoison(next);
+        }
+        continue;
+      }
+      recordResolved(event, event.resolve(event.tick));
+    }
   }
 
-  function finish(error?: string, horizonTicks?: number): RotationSummary {
-    const spiritEnd = state.conjures.spirits.reduce(
-      (m, s) => Math.max(m, s.untilTick + 3),
-      spiritCursor,
-    );
-    if (spiritEnd > spiritCursor) advanceSpirits(spiritEnd);
+  function grantMeteorPassive(fromTick: number, toTickExclusive: number): void {
+    if (state.meteorStrikeUntilTick <= 0 || toTickExclusive <= fromTick) return;
+    let gain = 0;
+    const end = Math.min(toTickExclusive, state.meteorStrikeUntilTick);
+    for (let t = fromTick; t < end; t++) gain += METEOR_STRIKE_PASSIVE_ADREN_PER_TICK;
+    if (gain > 0) state = gainAdrenaline(state, gain);
+  }
+
+  function advanceTo(targetTick: number): void {
+    if (targetTick < state.tick) return;
+    // A horizon run never lands events at or after the horizon (half-open).
+    processDueEvents(horizon != null ? Math.min(targetTick, horizon - 1) : targetTick);
+    grantMeteorPassive(state.tick, targetTick);
+    if (state.melee.berserk && targetTick >= state.berserkUntilTick) {
+      state = { ...state, melee: endBerserk(state.melee), berserkUntilTick: 0 };
+    }
+    if (targetTick > state.tick) state = { ...state, tick: targetTick };
+  }
+
+  function finish(
+    error?: string,
+    horizonTicks?: number,
+    options?: SimulateOptions,
+  ): RotationSummary {
+    const effectiveHorizon = horizonTicks ?? horizon;
+    if (effectiveHorizon != null && effectiveHorizon > 0) {
+      advanceTo(effectiveHorizon - 1);
+      if (state.tick < effectiveHorizon) state = { ...state, tick: effectiveHorizon };
+    } else {
+      // No horizon: land every scheduled event through the natural end.
+      while (queue.length > 0) advanceTo(queue.maxTick());
+    }
 
     // Ability + spirit damage only — Aftershock thresholds on this, not on procs.
-    const abilityExpected = casts.reduce((n, c) => n + c.result.expected, 0) + spiritExpected;
-    const totalMin = casts.reduce((n, c) => n + c.result.min, 0) + spiritMin;
-    const totalMax = casts.reduce((n, c) => n + c.result.max, 0) + spiritMax;
-    const denomTicks = horizonTicks != null && horizonTicks > 0 ? horizonTicks : endTick;
+    const abilityExpected = totalExpected;
+    const denomTicks = effectiveHorizon != null && effectiveHorizon > 0 ? effectiveHorizon : endTick;
     const seconds = denomTicks * TICK_SECONDS;
 
-    let totalExpected = abilityExpected;
     // Crackling: continuous EV ≈ fraction * base * (H / 60). Mid-horizon tick for chart.
     const crackling = expectedCracklingDamage(input.procs?.cracklingRank ?? 0, input.base, seconds);
     if (crackling > 0) {
@@ -275,18 +484,29 @@ export function createCastContext(
       damageByTick[landTick] = (damageByTick[landTick] ?? 0) + aftershock;
     }
 
+    let totalExpectedIncludingTails: number | undefined;
+    if (options?.includeTails) {
+      let tails = totalExpected;
+      for (const event of queue.pending()) tails += event.resolve(event.tick).expected;
+      totalExpectedIncludingTails = tails;
+    }
+
     return {
       ok: error === undefined,
       error,
       casts,
       ticks: endTick,
-      horizonTicks,
+      ...(effectiveHorizon != null && effectiveHorizon > 0
+        ? { horizonTicks: effectiveHorizon }
+        : {}),
       totalMin,
       totalMax,
       totalExpected,
       dps: seconds > 0 ? totalExpected / seconds : 0,
       perAbility,
       damageByTick,
+      events,
+      ...(totalExpectedIncludingTails !== undefined ? { totalExpectedIncludingTails } : {}),
     };
   }
 
@@ -303,40 +523,48 @@ export function createCastContext(
       : listed;
   }
 
-  function grantMeteorPassive(fromTick: number, toTickExclusive: number): void {
-    if (state.meteorStrikeUntilTick <= 0 || toTickExclusive <= fromTick) return;
-    let gain = 0;
-    const end = Math.min(toTickExclusive, state.meteorStrikeUntilTick);
-    for (let t = fromTick; t < end; t++) gain += METEOR_STRIKE_PASSIVE_ADREN_PER_TICK;
-    if (gain > 0) state = gainAdrenaline(state, gain);
-  }
+  function performCast(ability: AbilitySpec, readyTick: number, auto: boolean): CastAttempt {
+    const candidate = Math.max(readyTick, state.tick);
+    advanceTo(candidate);
 
-  function prepareCast(ability: AbilitySpec, readyTick: number): AbilitySpec {
-    advanceSpirits(readyTick);
-    grantMeteorPassive(state.tick, readyTick);
-    state = { ...state, tick: readyTick };
-    if (state.melee.berserk && readyTick >= state.berserkUntilTick) {
-      state = { ...state, melee: endBerserk(state.melee), berserkUntilTick: 0 };
+    // Requirements and affordability against the ADVANCED state — waiting may
+    // have generated adrenaline or expired a lockout. A rejection mutates nothing
+    // beyond the canonical time advance.
+    if (isMagicAbility(ability) && ability.requiresAnima && !animaCharged(state.magic, candidate)) {
+      return {
+        ok: false,
+        error: `${ability.id} requires an active Runic Charge at tick ${candidate}`,
+      };
+    }
+    if (!necroCanCast(ability, state.necro, state.conjures, candidate)) {
+      return {
+        ok: false,
+        error: `${ability.id} needs residual souls or an active conjure, ${state.necro.residualSouls} souls available at tick ${candidate}`,
+      };
+    }
+    const cost = costOf(ability);
+    if (cost > state.adrenaline) {
+      return {
+        ok: false,
+        error: `${ability.id} needs ${cost}% adrenaline, ${state.adrenaline}% available at tick ${candidate}`,
+      };
     }
 
+    // Empowered variant resolution (and its resource reads) in this transition.
     const melee = isMeleeAbility(ability) ? ability : null;
     const bloodlustBand =
       melee?.bloodlustScale && state.melee.stacks >= melee.bloodlustScale.threshold
         ? melee.bloodlustScale.band
         : null;
     let working: AbilitySpec = bloodlustBand
-      ? {
-          ...ability,
-          hits: ability.hits.map((hit) => ({ ...hit, band: bloodlustBand })),
-        }
+      ? { ...ability, hits: ability.hits.map((hit) => ({ ...hit, band: bloodlustBand })) }
       : ability;
     if (ability.style === "necromancy") {
-      working = resolveNecromancyAbility(working, state.necro, readyTick);
+      working = resolveNecromancyAbility(working, state.necro, candidate);
     }
-
     const meleeIdleTicks =
       ability.style === "melee" && working.hits.length > 0 && state.lastMeleeCastTick >= 0
-        ? readyTick - state.lastMeleeCastTick
+        ? candidate - state.lastMeleeCastTick
         : 0;
     if (ability.id === "greater_barge" && working.hits.length > 0) {
       working = {
@@ -350,7 +578,7 @@ export function createCastContext(
         state = {
           ...state,
           endlessAssaultUntilTick:
-            readyTick + secondsToTicks(GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS),
+            candidate + secondsToTicks(GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS),
         };
       }
     }
@@ -358,144 +586,142 @@ export function createCastContext(
       melee?.channelled &&
       working.hits.length > 0 &&
       state.endlessAssaultUntilTick > 0 &&
-      readyTick < state.endlessAssaultUntilTick
+      candidate < state.endlessAssaultUntilTick
     ) {
       state = { ...state, endlessAssaultUntilTick: 0 };
     }
 
-    return working;
-  }
-
-  function calculateCastResult(
-    ability: AbilitySpec,
-    working: AbilitySpec,
-    readyTick: number,
-  ): { result: AbilityResult; working: AbilitySpec } {
-    const baseMods =
-      typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []);
-    const modifiers = [...baseMods];
+    // Cast-scope buffs this cast consumes (Chaos Roar empowerment, Fury crit
+    // layers) — captured for the cast's events; windows below resolve at land tick.
     const chaosRoarActive =
       ability.style === "melee" &&
       working.hits.length > 0 &&
       state.chaosRoarUntilTick > 0 &&
-      readyTick < state.chaosRoarUntilTick;
-    if (chaosRoarActive) {
-      modifiers.push(
-        buffMultiplier("buff:chaos_roar", CHAOS_ROAR_DAMAGE_MULTIPLIER, MODERNISATION_WIKI),
-      );
-      state = { ...state, chaosRoarUntilTick: 0 };
-    }
+      candidate < state.chaosRoarUntilTick;
+    if (chaosRoarActive) state = { ...state, chaosRoarUntilTick: 0 };
     const furyCrit =
       ability.style === "melee" &&
       state.greaterFuryCrit &&
       working.hits.some((h) => h.critEligible !== false);
-    if (furyCrit) {
-      state = { ...state, greaterFuryCrit: false };
-    }
+    if (furyCrit) state = { ...state, greaterFuryCrit: false };
     const furyBonus =
       ability.style === "melee" &&
       state.furyCritBonus &&
       working.hits.some((h) => h.critEligible !== false);
-    if (furyBonus) {
-      state = { ...state, furyCritBonus: false };
-    }
-    if (ability.style === "melee" && readyTick < state.berserkUntilTick) {
-      modifiers.push(
-        buffMultiplier("buff:berserk", BERSERK_DAMAGE_MULTIPLIER, MODERNISATION_PATCH_2),
-      );
-    }
-    if (ability.style === "ranged") {
-      const mult = deathsSwiftnessMultiplier(state.ranged.swiftness, readyTick);
-      if (mult !== 1)
-        modifiers.push(buffMultiplier("buff:deaths_swiftness", mult, MODERNISATION_WIKI));
-      const bonusPct = searingWindsBonusPct(state.ranged.searingWinds, readyTick);
-      if (bonusPct > 0 && working.hits.length > 0) {
-        working = {
-          ...working,
-          hits: working.hits.flatMap((h) => [
-            h,
-            {
-              band: { minPct: bonusPct, maxPct: bonusPct },
-              critEligible: false,
-              tickOffset: h.tickOffset,
-            },
-          ]),
-        };
-      }
-    }
-    if (ability.style === "magic" && sunshineActive(state.sunshine, readyTick)) {
-      modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
-    }
-
+    if (furyBonus) state = { ...state, furyCritBonus: false };
     const critLayers = {
       ...input.crit,
       chance: input.crit.chance + (furyBonus ? FURY_CRIT_CHANCE_BONUS : 0),
       guaranteed: furyCrit || ability.guaranteedCrit || input.crit.guaranteed,
     };
+    const baseMods =
+      typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []);
 
-    let result: AbilityResult =
-      working.hits.length === 0
-        ? EMPTY_RESULT
-        : calculateAbility(working, {
-            base: input.base,
-            level: input.level,
-            accuracy: input.accuracy,
-            crit: critLayers,
-            modifiers,
-            context: input.context,
-            cap: input.cap,
-          });
-
-    working.hits.forEach((hit, i) => {
-      const landTick = readyTick + (hit.tickOffset ?? 0);
-      damageByTick[landTick] = (damageByTick[landTick] ?? 0) + result.hits[i].expected;
-      endTick = Math.max(endTick, landTick + 1);
-    });
-
-    // Lightning Surge fires only while the Instability buff is active (wiki) — the
-    // granting cast's own hits predate the buff and never fire a surge.
-    const procInstability =
-      ability.style === "magic" &&
-      working.hits.length > 0 &&
-      instabilityActive(state.instability, readyTick);
-    if (procInstability) {
-      const surgeHit = calculateHit({
-        base: input.base,
-        band: LIGHTNING_SURGE_BAND,
-        level: input.level,
-        accuracy: input.accuracy,
-        crit: { ...critLayers, eligible: true },
-        modifiers,
-        context: input.context,
-        cap: input.cap,
-      });
-      let surgeTotal = 0;
-      working.hits.forEach((hit, i) => {
-        if (hit.critEligible === false) return;
-        const contrib = lightningSurgeExpected(result.hits[i]?.critChance ?? 0, surgeHit.expected);
-        if (contrib <= 0) return;
-        const landTick = readyTick + (hit.tickOffset ?? 0) + LIGHTNING_SURGE_TICK_DELAY;
-        damageByTick[landTick] = (damageByTick[landTick] ?? 0) + contrib;
-        endTick = Math.max(endTick, landTick + 1);
-        surgeTotal += contrib;
-      });
-      if (surgeTotal > 0) {
-        result = { ...result, expected: result.expected + surgeTotal };
-      }
+    if (ability.cooldownSeconds) {
+      const cdTicks =
+        ability.id === "death_skulls"
+          ? deathSkullsCooldownTicks(state.necro, candidate)
+          : secondsToTicks(ability.cooldownSeconds);
+      state = startCooldown(state, ability.id, cdTicks);
     }
 
-    return { result, working };
-  }
+    const castSeq = nextCastSeq++;
+    const record: CastRecord = {
+      tick: candidate,
+      abilityId: ability.id,
+      result: {
+        hits: [],
+        min: 0,
+        max: 0,
+        expected: 0,
+        adrenalineDelta: (working.adrenaline?.gain ?? 0) - (working.adrenaline?.cost ?? 0),
+      },
+      adrenalineAfter: 0,
+      ...(auto ? { auto: true as const } : {}),
+    };
+    recordBySeq.set(castSeq, record);
 
-  function applyCastState(ability: AbilitySpec, working: AbilitySpec, readyTick: number): void {
-    const cost = costOf(ability);
+    const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
+    const hitSeqs: number[] = [];
+    working.hits.forEach((hitSpec: AbilityHit, hitIndex: number) => {
+      const seq = nextSeq++;
+      hitSeqs.push(seq);
+      queue.push({
+        tick: candidate + (hitSpec.tickOffset ?? 0),
+        seq,
+        family: isCommand
+          ? "command"
+          : hitSpec.critEligible === false && (hitSpec.tickOffset ?? 0) > 0
+            ? "dot"
+            : "hit",
+        abilityId: ability.id,
+        sourceCast: castSeq,
+        hitIndex,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        cancelOwner: castSeq,
+        resolve: (at) =>
+          resolveCastHit(at, seq, hitSpec, ability, castSeq, critLayers, baseMods, chaosRoarActive),
+      });
+    });
+
+    // Instability: Lightning Surge on Magic crits while the buff is active. The
+    // granting cast's own hits predate the buff and never fire a surge (checked
+    // here at cast time, before the grant below). Surge damage resolves at its
+    // own land tick from the source hit's crit chance.
+    if (ability.style === "magic" && working.hits.length > 0 && instabilityActive(state.instability, candidate)) {
+      working.hits.forEach((hitSpec, hitIndex) => {
+        if (hitSpec.critEligible === false) return;
+        if (critProbability({ ...critLayers, eligible: true }) <= 0) return;
+        const sourceSeq = hitSeqs[hitIndex]!;
+        schedule({
+          tick: candidate + (hitSpec.tickOffset ?? 0) + LIGHTNING_SURGE_TICK_DELAY,
+          family: "proc",
+          abilityId: ability.id,
+          sourceCast: castSeq,
+          hitIndex,
+          attached: false,
+          procEligible: false,
+          recursionAllowed: false,
+          cancelOwner: castSeq,
+          resolve: (at) => {
+            const sourceCritChance = hitDetails.get(sourceSeq)?.critChance ?? 0;
+            if (sourceCritChance <= 0) return { min: 0, max: 0, expected: 0 };
+            const modifiers = [...baseMods];
+            if (state.sunshine.grantedByCast !== castSeq && sunshineActive(state.sunshine, at)) {
+              modifiers.push(
+                buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE),
+              );
+            }
+            const surgeHit = calculateHit({
+              base: input.base,
+              band: LIGHTNING_SURGE_BAND,
+              level: input.level,
+              accuracy: input.accuracy,
+              crit: { ...critLayers, eligible: true },
+              modifiers,
+              context: input.context,
+              cap: input.cap,
+            });
+            return {
+              min: 0,
+              max: 0,
+              expected: lightningSurgeExpected(sourceCritChance, surgeHit.expected),
+            };
+          },
+        });
+      });
+    }
+
+    // Immediate on-cast grants/windows in their sourced order.
     if (ability.adrenaline?.gain) {
       const isBasic = ability.category === "basic" || !!ability.autoAttack;
       const meteorBasic =
         ability.style === "melee" &&
         ability.category === "basic" &&
         state.meteorStrikeUntilTick > 0 &&
-        readyTick < state.meteorStrikeUntilTick;
+        candidate < state.meteorStrikeUntilTick;
       let gain = meteorBasic
         ? ability.adrenaline.gain * METEOR_STRIKE_BASIC_ADREN_MULTIPLIER
         : ability.adrenaline.gain;
@@ -520,19 +746,12 @@ export function createCastContext(
     ) {
       state = patchRanged(state, { deathspore: spendDeathspore(state.ranged.deathspore) });
     }
-    if (isMeleeAbility(ability) && ability.bloodlustGain) {
-      state = gainMeleeBloodlust(state, ability.bloodlustGain);
-    }
-    if (ability.cooldownSeconds) {
-      const cdTicks =
-        ability.id === "death_skulls"
-          ? deathSkullsCooldownTicks(state.necro, readyTick)
-          : secondsToTicks(ability.cooldownSeconds);
-      state = startCooldown(state, ability.id, cdTicks);
+    if (melee?.bloodlustGain) {
+      state = gainMeleeBloodlust(state, melee.bloodlustGain);
     }
 
     if (ability.style === "necromancy") {
-      const patch = applyNecroOnCast(state.necro, ability, readyTick, state.conjures);
+      const patch = applyNecroOnCast(state.necro, ability, candidate, state.conjures);
       state = {
         ...state,
         necro: patch.necro,
@@ -540,40 +759,41 @@ export function createCastContext(
       };
       if (patch.adrenalineBonus) state = gainAdrenaline(state, patch.adrenalineBonus);
       state = clearCooldowns(state, patch.clearCooldownIds);
+      for (const spirit of state.conjures.spirits) scheduleSpiritTracks(spirit);
     }
 
     if (ability.stateEffect === "berserk") {
       state = {
         ...state,
         melee: activateBerserk(state.melee),
-        berserkUntilTick: readyTick + secondsToTicks(BERSERK_DURATION_SECONDS),
+        berserkUntilTick: candidate + secondsToTicks(BERSERK_DURATION_SECONDS),
       };
     } else if (ability.stateEffect === "deaths_swiftness") {
       state = patchRanged(state, {
-        swiftness: activateDeathsSwiftness(readyTick, false, input.plantedFeet === true),
+        swiftness: activateDeathsSwiftness(candidate, false, input.plantedFeet === true),
       });
     } else if (ability.stateEffect === "greater_deaths_swiftness") {
-      state = patchRanged(state, { swiftness: activateDeathsSwiftness(readyTick, true) });
+      state = patchRanged(state, { swiftness: activateDeathsSwiftness(candidate, true) });
     } else if (ability.stateEffect === "shadow_imbued") {
-      state = patchRanged(state, { shadowImbued: activateShadowImbued(readyTick) });
+      state = patchRanged(state, { shadowImbued: activateShadowImbued(candidate) });
     }
     if (ability.appliesEffect === "searing_winds") {
-      state = patchRanged(state, { searingWinds: activateSearingWinds(readyTick) });
+      state = patchRanged(state, { searingWinds: activateSearingWinds(candidate, castSeq) });
     }
     if (ability.appliesEffect === "sunshine" || ability.appliesEffect === "greater_sunshine") {
       const greater = ability.appliesEffect === "greater_sunshine";
       state = {
         ...state,
-        sunshine: activateSunshine(readyTick, greater, !greater && input.plantedFeet === true),
+        sunshine: activateSunshine(candidate, greater, !greater && input.plantedFeet === true, castSeq),
       };
     }
     if (ability.appliesEffect === "instability") {
-      state = { ...state, instability: activateInstability(readyTick) };
+      state = { ...state, instability: activateInstability(candidate) };
     }
     if (ability.appliesEffect === "chaos_roar") {
       state = {
         ...state,
-        chaosRoarUntilTick: readyTick + secondsToTicks(CHAOS_ROAR_DURATION_SECONDS),
+        chaosRoarUntilTick: candidate + secondsToTicks(CHAOS_ROAR_DURATION_SECONDS),
       };
     }
     if (ability.appliesEffect === "greater_fury") {
@@ -585,13 +805,13 @@ export function createCastContext(
     if (ability.appliesEffect === "meteor_strike") {
       state = {
         ...state,
-        meteorStrikeUntilTick: readyTick + secondsToTicks(METEOR_STRIKE_DURATION_SECONDS),
+        meteorStrikeUntilTick: candidate + secondsToTicks(METEOR_STRIKE_DURATION_SECONDS),
       };
     }
     if (
       ability.appliesEffect === "greater_flurry" &&
       state.melee.berserk &&
-      readyTick < state.berserkUntilTick
+      candidate < state.berserkUntilTick
     ) {
       const extendTicks =
         working.hits.length * secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS);
@@ -599,7 +819,7 @@ export function createCastContext(
     }
 
     if (ability.style === "melee" && working.hits.length > 0) {
-      state = { ...state, lastMeleeCastTick: readyTick };
+      state = { ...state, lastMeleeCastTick: candidate };
     }
 
     if (ability.style === "ranged") {
@@ -610,10 +830,10 @@ export function createCastContext(
       }
       if (ability.id === "shadow_tendrils") {
         state = patchRanged(state, {
-          shadowImbued: extendShadowImbued(state.ranged.shadowImbued, readyTick),
+          shadowImbued: extendShadowImbued(state.ranged.shadowImbued, candidate),
         });
       }
-      const perHit = shadowImbuedAdrenalinePerHit(state.ranged.shadowImbued, readyTick);
+      const perHit = shadowImbuedAdrenalinePerHit(state.ranged.shadowImbued, candidate);
       if (perHit > 0 && working.hits.length > 0) {
         state = gainAdrenaline(state, perHit * working.hits.length);
       }
@@ -621,37 +841,92 @@ export function createCastContext(
     if (isMagicAbility(ability) && ability.requiresAnima) {
       state = { ...state, magic: consumeAnima(state.magic) };
     }
+
+    // Occupancy: the actor is busy through the channel (or one GCD). Advancing
+    // through it lands this cast's due hits and the interval's passive generation.
+    const occupancyTicks = ability.channelTicks ?? GLOBAL_COOLDOWN_TICKS;
+    endTick = Math.max(endTick, candidate + occupancyTicks);
+    advanceTo(candidate + occupancyTicks);
+    record.adrenalineAfter = state.adrenaline;
+    casts.push(record);
+    return { ok: true };
   }
 
-  function completeCast(
+  function resolveCastHit(
+    at: number,
+    eventSeq: number,
+    hitSpec: AbilityHit,
     ability: AbilitySpec,
-    result: AbilityResult,
-    readyTick: number,
-    auto: boolean,
-  ): void {
-    const gcdEnd = readyTick + GLOBAL_COOLDOWN_TICKS;
-    grantMeteorPassive(readyTick, gcdEnd);
-    casts.push({
-      tick: readyTick,
-      abilityId: ability.id,
-      result,
-      adrenalineAfter: state.adrenaline,
-      ...(auto ? { auto: true as const } : {}),
+    castSeq: number,
+    critLayers: CritLayers,
+    baseMods: CombatModifier[],
+    chaosRoarActive: boolean,
+  ): ResolvedDamage {
+    const modifiers = [...baseMods];
+    if (chaosRoarActive) {
+      modifiers.push(
+        buffMultiplier("buff:chaos_roar", CHAOS_ROAR_DAMAGE_MULTIPLIER, MODERNISATION_WIKI),
+      );
+    }
+    if (ability.style === "melee" && at < state.berserkUntilTick) {
+      modifiers.push(
+        buffMultiplier("buff:berserk", BERSERK_DAMAGE_MULTIPLIER, MODERNISATION_PATCH_2),
+      );
+    }
+    if (ability.style === "ranged") {
+      const mult = deathsSwiftnessMultiplier(state.ranged.swiftness, at);
+      if (mult !== 1) {
+        modifiers.push(buffMultiplier("buff:deaths_swiftness", mult, MODERNISATION_WIKI));
+      }
+    }
+    // A buff-granting cast's own hits predate its buff (wiki: the Sunshine beam
+    // DoT is not buffed by its own window; Galeshot does not ride its own Winds).
+    if (
+      ability.style === "magic" &&
+      state.sunshine.grantedByCast !== castSeq &&
+      sunshineActive(state.sunshine, at)
+    ) {
+      modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
+    }
+    const hit = calculateHit({
+      base: input.base,
+      band: hitSpec.band,
+      level: input.level,
+      accuracy: input.accuracy,
+      crit: { ...critLayers, eligible: hitSpec.critEligible ?? true },
+      modifiers,
+      context: input.context,
+      cap: input.cap,
     });
-    perAbility[ability.id] = (perAbility[ability.id] ?? 0) + result.expected;
-    state = { ...state, tick: gcdEnd };
-    advanceSpirits(gcdEnd);
-    endTick = Math.max(endTick, state.tick);
-  }
-
-  function performCast(ability: AbilitySpec, readyTick: number, auto: boolean): void {
-    const prepared = prepareCast(ability, readyTick);
-    const { result, working } = calculateCastResult(ability, prepared, readyTick);
-    applyCastState(ability, working, readyTick);
-    completeCast(ability, result, readyTick, auto);
+    hitDetails.set(eventSeq, hit);
+    let min = hit.min;
+    let max = hit.max;
+    let expected = hit.expected;
+    // Searing Winds: attached +20% component folded into this hit — never a
+    // separate event, so it cannot inflate proc rolls, stacks, or hit counters.
+    if (ability.style === "ranged" && state.ranged.searingWinds.grantedByCast !== castSeq) {
+      const bonusPct = searingWindsBonusPct(state.ranged.searingWinds, at);
+      if (bonusPct > 0) {
+        const bonus = calculateHit({
+          base: input.base,
+          band: { minPct: bonusPct, maxPct: bonusPct },
+          level: input.level,
+          accuracy: input.accuracy,
+          crit: { chance: 0, eligible: false },
+          modifiers,
+          context: input.context,
+          cap: input.cap,
+        });
+        min += bonus.min;
+        max += bonus.max;
+        expected += bonus.expected;
+      }
+    }
+    return { min, max, expected, critExpected: (hit.critMin + hit.critMax) / 2 };
   }
 
   function performOffGcdCast(ability: AbilitySpec): void {
+    nextCastSeq++;
     if (ability.stateEffect === "runic_charge") {
       state = { ...state, magic: activateRunicCharge(state.magic, state.tick) };
     }
@@ -668,8 +943,10 @@ export function createCastContext(
     getState: () => state,
     costOf,
     firstLegalTick: (abilityId) => firstLegalTick(state, abilityId),
+    advanceTo,
     performCast,
     performOffGcdCast,
+    cancelCastEvents: (castSeq) => queue.cancelByOwner(castSeq),
     finish,
     byId,
     basicByStyle,
@@ -677,7 +954,7 @@ export function createCastContext(
 }
 
 /** Deterministic expected-value run; unpayable casts return an error summary. */
-export function simulate(input: SimulateInput): RotationSummary {
+export function simulate(input: SimulateInput, options?: SimulateOptions): RotationSummary {
   const ctx = createCastContext(input);
 
   for (const action of input.rotation) {
@@ -710,34 +987,14 @@ export function simulate(input: SimulateInput): RotationSummary {
           return ctx.finish(
             `${ability.id} is unaffordable at tick ${ctx.getState().tick}, even weaving basics`,
           );
-        ctx.performCast(basic, ctx.getState().tick, true);
+        const attempt = ctx.performCast(basic, ctx.getState().tick, true);
+        if (!attempt.ok) return ctx.finish(attempt.error);
       }
     }
 
-    const readyTick = ctx.firstLegalTick(ability.id);
-    if (
-      isMagicAbility(ability) &&
-      ability.requiresAnima &&
-      !animaCharged(ctx.getState().magic, readyTick)
-    ) {
-      return ctx.finish(`${ability.id} requires an active Runic Charge at tick ${readyTick}`);
-    }
-    if (!necroCanCast(ability, ctx.getState().necro, ctx.getState().conjures, readyTick)) {
-      const souls = ctx.getState().necro.residualSouls;
-      return ctx.finish(
-        `${ability.id} needs residual souls or an active conjure, ${souls} souls available at tick ${readyTick}`,
-      );
-    }
-
-    const cost = ctx.costOf(ability);
-    if (cost > ctx.getState().adrenaline) {
-      return ctx.finish(
-        `${ability.id} needs ${cost}% adrenaline, ${ctx.getState().adrenaline}% available at tick ${readyTick}`,
-      );
-    }
-
-    ctx.performCast(ability, readyTick, false);
+    const attempt = ctx.performCast(ability, ctx.firstLegalTick(ability.id), false);
+    if (!attempt.ok) return ctx.finish(attempt.error);
   }
 
-  return ctx.finish();
+  return ctx.finish(undefined, undefined, options);
 }

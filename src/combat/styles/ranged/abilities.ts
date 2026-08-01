@@ -160,6 +160,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Rapid Fire",
     style: "ranged",
     category: "enhanced",
+    channelTicks: 8,
     hits: Array.from({ length: 8 }, (_, i) => ({
       band: { minPct: 75, maxPct: 85 },
       tickOffset: i,

@@ -1,0 +1,85 @@
+import type { AbilitySpec } from "../pipeline/calculateAbility";
+import type { HitResult } from "../pipeline/calculateHit";
+import type { ConjureId } from "../styles/necromancy/conjures";
+import type { CastContextInput, CastRecord } from "./contracts";
+import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
+import { newRotationState, type RotationState } from "./state";
+
+/** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
+export interface SpiritEventMeta {
+  id: ConjureId;
+  untilTick: number;
+  kind: "auto" | "poison";
+}
+
+/**
+ * All per-run mutable simulation state. Created once per simulation by
+ * createCastContext and threaded through every runtime function — never a
+ * module-level singleton, so concurrent simulations cannot interfere.
+ */
+export interface SimulationRuntime {
+  readonly input: CastContextInput;
+  /** Runs with a horizon land events only before it (half-open). */
+  readonly horizon?: number;
+  readonly byId: Map<string, AbilitySpec>;
+  readonly basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
+  readonly queue: EventQueue;
+  state: RotationState;
+  readonly casts: CastRecord[];
+  readonly perAbility: Record<string, number>;
+  readonly damageByTick: Record<number, number>;
+  /** Every landed event in (tick, seq) order. */
+  readonly events: ResolvedEvent[];
+  readonly recordBySeq: Map<number, CastRecord>;
+  /** Full hit detail per landed hit event, keyed by event seq (cast records, surge EV). */
+  readonly hitDetails: Map<number, HitResult>;
+  readonly spiritEventMeta: Map<number, SpiritEventMeta>;
+  readonly scheduledSpiritTracks: Set<string>;
+  readonly spiritHitCounts: Map<string, number>;
+  endTick: number;
+  totalMin: number;
+  totalMax: number;
+  totalExpected: number;
+  nextSeq: number;
+  nextCastSeq: number;
+}
+
+export function createRuntime(input: CastContextInput): SimulationRuntime {
+  return {
+    input,
+    horizon: input.horizonTicks,
+    byId: new Map(input.abilities.map((a) => [a.id, a])),
+    basicByStyle: new Map(
+      input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]),
+    ),
+    queue: new EventQueue(),
+    state: newRotationState(),
+    casts: [],
+    perAbility: {},
+    damageByTick: {},
+    events: [],
+    recordBySeq: new Map(),
+    hitDetails: new Map(),
+    spiritEventMeta: new Map(),
+    scheduledSpiritTracks: new Set(),
+    spiritHitCounts: new Map(),
+    endTick: 0,
+    totalMin: 0,
+    totalMax: 0,
+    totalExpected: 0,
+    nextSeq: 0,
+    nextCastSeq: 0,
+  };
+}
+
+/** Push an event onto the queue, assigning its monotonic per-run seq. */
+export function scheduleEvent(rt: SimulationRuntime, event: Omit<ScheduledEvent, "seq">): number {
+  const seq = rt.nextSeq++;
+  rt.queue.push({ ...event, seq });
+  return seq;
+}
+
+/** Runs with a horizon never schedule events at or after it (half-open). */
+export function withinHorizon(rt: SimulationRuntime, tick: number): boolean {
+  return rt.horizon == null || tick < rt.horizon;
+}

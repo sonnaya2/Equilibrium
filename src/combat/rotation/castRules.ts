@@ -28,7 +28,13 @@ export function costOf(state: RotationState, ability: AbilitySpec, tick: number)
   if (ability.style === "necromancy") {
     return necroAdrenalineCost(ability, state.necro, tick);
   }
-  return ability.adrenaline?.cost ?? 0;
+  const listed = ability.adrenaline?.cost ?? 0;
+  // Flow (Sonic Wave): the next Magic ability costs X% less while the window
+  // is open. Defence/Constitution/specials never benefit (none are Magic).
+  if (listed > 0 && ability.style === "magic" && tick < state.magicFx.flowUntilTick) {
+    return listed * (1 - state.magicFx.flowReductionPct / 100);
+  }
+  return listed;
 }
 
 /** Actual adrenaline spend after a Deathspore free-cast buff, evaluated at `tick`. */

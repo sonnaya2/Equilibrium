@@ -98,6 +98,7 @@ export function RotationPlanner() {
           procs: stats.procs,
           plantedFeet: stats.plantedFeet,
           conjureBasicDamageMult: stats.conjureBasicDamageMult,
+          targetHpPercent: loadout.target?.hpPercent,
           autoWeave: weave,
           ammo: ammo === "none" ? undefined : ammo,
         }),

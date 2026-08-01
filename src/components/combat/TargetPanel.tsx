@@ -60,6 +60,37 @@ export function TargetPanel({
                 <option value="weakness">Specific weakness (90)</option>
               </select>
             </label>
+            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+              <input
+                type="checkbox"
+                checked={loadout.target.hpPercent !== undefined}
+                onChange={(event) =>
+                  setLoadout({
+                    ...loadout,
+                    target: {
+                      ...loadout.target!,
+                      hpPercent: event.target.checked ? 100 : undefined,
+                    },
+                  })
+                }
+              />
+              Track target HP % (Punish, Bloodlust Flurry, Spectral Scythe)
+            </label>
+            {loadout.target.hpPercent !== undefined ? (
+              <NumberField
+                label="HP %"
+                value={loadout.target.hpPercent}
+                onChange={(value) =>
+                  setLoadout({
+                    ...loadout,
+                    target: {
+                      ...loadout.target!,
+                      hpPercent: Math.min(100, Math.max(0, value)),
+                    },
+                  })
+                }
+              />
+            ) : null}
           </>
         ) : null}
       </div>

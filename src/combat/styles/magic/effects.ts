@@ -1,6 +1,7 @@
 import { secondsToTicks } from "../../rotation/timing";
 import { BLOOMING_BURROW_WIKI_2026_03_30 } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
+import { newBurns, type BurnState } from "./burn";
 import type { SourceReference } from "../../types";
 
 /**
@@ -13,34 +14,87 @@ export const CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS = 0.15;
 export const TUMEKENS_CHANNELLED_MIGHT = { durationSeconds: 9, critDamageBonus: 0.35 } as const;
 
 export interface ChannelledMightState {
+  /** Tick the buff starts (end of the completed Asphyxiate channel). */
+  startsAtTick: number;
   /** Tick the buff expires on; 0 = inactive. */
   expiresAtTick: number;
   critDamageBonus: number;
 }
 
 export const newChannelledMight = (): ChannelledMightState => ({
+  startsAtTick: 0,
   expiresAtTick: 0,
   critDamageBonus: CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS,
 });
 
 export function grantChannelledMight(
-  tick: number,
+  startTick: number,
   tumekensFivePiece = false,
 ): ChannelledMightState {
   const duration = tumekensFivePiece
     ? TUMEKENS_CHANNELLED_MIGHT.durationSeconds
     : CHANNELLED_MIGHT_DURATION_SECONDS;
   return {
-    expiresAtTick: tick + secondsToTicks(duration),
+    startsAtTick: startTick,
+    expiresAtTick: startTick + secondsToTicks(duration),
     critDamageBonus: tumekensFivePiece
       ? TUMEKENS_CHANNELLED_MIGHT.critDamageBonus
       : CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS,
   };
 }
 
-/** Extra crit damage while active; 0 outside the window. Feeds the crit damageBonus layer. */
+/** Extra crit damage while active (half-open window); 0 outside it. Feeds the crit damageBonus layer. */
 export function channelledMightCritBonus(state: ChannelledMightState, tick: number): number {
-  return tick < state.expiresAtTick ? state.critDamageBonus : 0;
+  return tick >= state.startsAtTick && tick < state.expiresAtTick ? state.critDamageBonus : 0;
+}
+
+/**
+ * Flow (Sonic Wave, 2 Mar 2026): the next Magic ability costs 10% less
+ * adrenaline for 9s (15 ticks); Greater Sonic Wave's Greater Flow is 20%.
+ * Empowered by Runic Charge: +25% (totals 35%/45%). Enhanced/ultimate Magic
+ * casts consume it; Defence/Constitution/specials never touch it.
+ * https://runescape.wiki/w/Sonic_Wave (verified 2026-07-31).
+ */
+export const FLOW_DURATION_TICKS = 15;
+export const SONIC_FLOW_REDUCTION_PCT = 10;
+export const GREATER_FLOW_REDUCTION_PCT = 20;
+export const RUNIC_FLOW_BONUS_PCT = 25;
+
+/**
+ * Concentrated Blast crit progression (wiki Critical strike): each channelled
+ * hit grants +5% crit chance for the next Magic attack, including the
+ * channel's own later hits; Greater Concentrated Blast +7%. Runic-empowered:
+ * +15%/+17% per hit. Stacks apply at land time and the next non-CB magic
+ * attack consumes them.
+ */
+export const CONC_BLAST_CRIT_PER_HIT_PCT = 5;
+export const GREATER_CONC_BLAST_CRIT_PER_HIT_PCT = 7;
+export const CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 15;
+export const GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 17;
+
+/** Magic rotation state beyond Runic Charge. */
+export interface MagicFxState {
+  /** Flow window end (0 = inactive) and the stored reduction pct. */
+  flowUntilTick: number;
+  flowReductionPct: number;
+  /** Accumulated Concentrated Blast crit stacks and the granting cast's pct per stack. */
+  concCritStacks: number;
+  concCritPerStackPct: number;
+  channelledMight: ChannelledMightState;
+  burns: BurnState;
+}
+
+export const newMagicFx = (): MagicFxState => ({
+  flowUntilTick: 0,
+  flowReductionPct: 0,
+  concCritStacks: 0,
+  concCritPerStackPct: 0,
+  channelledMight: newChannelledMight(),
+  burns: newBurns(),
+});
+
+export function isConcentratedBlast(abilityId: string): boolean {
+  return abilityId === "concentrated_blast" || abilityId === "greater_concentrated_blast";
 }
 
 /**

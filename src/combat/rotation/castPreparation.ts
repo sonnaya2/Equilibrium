@@ -1,12 +1,20 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { isMeleeAbility } from "../styles/melee/abilities";
+import type { CritLayers } from "../core/critical";
+import {
+  isMeleeAbility,
+  PUNISH_LOW_HP_MULTIPLIER,
+  PUNISH_LOW_HP_THRESHOLD_PCT,
+} from "../styles/melee/abilities";
 import {
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
 } from "../styles/melee/effects";
 import { searingWindsBonusPct } from "../styles/ranged/onHit";
+import { isMagicAbility } from "../styles/magic/abilities";
+import { isConcentratedBlast } from "../styles/magic/effects";
 import { resolveNecromancyAbility } from "../styles/necromancy/effects";
+import { spectralScythe3 } from "../styles/necromancy/abilities";
 import { costOf, spendOf } from "./castRules";
 import type { CastSnapshot } from "./resolution";
 import type { SimulationRuntime } from "./runtime";
@@ -39,6 +47,26 @@ export interface PreparedCast {
   endlessAssaultGrantUntilTick?: number;
   /** Endless Assault window to consume (channelled melee inside one). */
   endlessAssaultConsume: boolean;
+}
+
+/**
+ * Crit layers for the cast: the input layers, any spec-level bonuses (Wild
+ * Magic), and — for non-Concentrated casts — the accumulated Concentrated
+ * Blast stacks (the "next Magic attack" consuming them). CB/GCB casts read
+ * their live accumulating stacks at land time instead (see resolveCastHit).
+ */
+function magicCritLayers(
+  crit: Omit<CritLayers, "eligible">,
+  ability: AbilitySpec,
+  concStacksChance: number,
+): Omit<CritLayers, "eligible"> {
+  const layers = { ...crit, guaranteed: ability.guaranteedCrit || crit.guaranteed };
+  if (!isMagicAbility(ability)) return layers;
+  if (ability.critChanceBonusPct) layers.chance += ability.critChanceBonusPct / 100;
+  if (ability.critDamageBonus)
+    layers.damageBonus = (layers.damageBonus ?? 0) + ability.critDamageBonus;
+  if (!isConcentratedBlast(ability.id)) layers.chance += concStacksChance;
+  return layers;
 }
 
 export function prepareCast(
@@ -85,6 +113,26 @@ export function prepareCast(
   // and Death's Swiftness (no periodic hits since 16 Mar 2026) are unaffected.
   if (ability.appliesEffect === "sunshine" && input.plantedFeet) {
     working = { ...working, hits: [] };
+  }
+
+  // Target-HP variants (sourced thresholds; absent HP → no bonus, never invented).
+  const hp = input.targetHpPercent;
+  if (hp != null) {
+    if (ability.id === "punish" && hp < PUNISH_LOW_HP_THRESHOLD_PCT) {
+      working = {
+        ...working,
+        hits: working.hits.map((h) => ({
+          ...h,
+          band: {
+            minPct: h.band.minPct * PUNISH_LOW_HP_MULTIPLIER,
+            maxPct: h.band.maxPct * PUNISH_LOW_HP_MULTIPLIER,
+          },
+        })),
+      };
+    }
+    if (ability.id === "spectral_scythe_3") {
+      working = { ...working, hits: spectralScythe3(hp / 100).hits };
+    }
   }
 
   const meleeIdleTicks =
@@ -136,10 +184,11 @@ export function prepareCast(
 
   const snap: CastSnapshot = {
     castSeq: rt.nextCastSeq,
-    critLayers: {
-      ...input.crit,
-      guaranteed: ability.guaranteedCrit || input.crit.guaranteed,
-    },
+    critLayers: magicCritLayers(
+      input.crit,
+      ability,
+      (rt.state.magicFx.concCritStacks * rt.state.magicFx.concCritPerStackPct) / 100,
+    ),
     baseMods:
       typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []),
     chaosRoarActive: chaosRoarConsume,

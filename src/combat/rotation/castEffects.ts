@@ -15,7 +15,21 @@ import {
   METEOR_STRIKE_DURATION_SECONDS,
 } from "../styles/melee/effects";
 import { activateDeathsSwiftness } from "../styles/ranged/effects";
-import { activateInstability, activateSunshine } from "../styles/magic/effects";
+import {
+  activateInstability,
+  activateSunshine,
+  CONC_BLAST_CRIT_PER_HIT_PCT,
+  CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
+  FLOW_DURATION_TICKS,
+  GREATER_CONC_BLAST_CRIT_PER_HIT_PCT,
+  GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
+  GREATER_FLOW_REDUCTION_PCT,
+  grantChannelledMight,
+  isConcentratedBlast,
+  RUNIC_FLOW_BONUS_PCT,
+  SONIC_FLOW_REDUCTION_PCT,
+} from "../styles/magic/effects";
+import { applyCombust } from "../styles/magic/burn";
 import {
   activateSearingWinds,
   activateShadowImbued,
@@ -23,7 +37,7 @@ import {
   spendDeathspore,
 } from "../styles/ranged/onHit";
 import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../shared/perks";
-import { consumeAnima } from "../styles/magic/runicCharge";
+import { animaCharged, consumeAnima } from "../styles/magic/runicCharge";
 import { isMagicAbility } from "../styles/magic/abilities";
 import { applyNecroOnCast, deathSkullsCooldownTicks } from "../styles/necromancy/effects";
 import {
@@ -242,7 +256,69 @@ export function applyCastEffects(
       });
     }
   }
-  if (isMagicAbility(ability) && ability.requiresAnima) {
-    rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
+  if (isMagicAbility(ability)) {
+    // Sonic Wave / Greater Sonic Wave apply Flow; Runic-charged casts are
+    // empowered (+25% reduction) and consume the charge.
+    if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {
+      const empowered = animaCharged(rt.state.magic, candidate);
+      const base =
+        ability.id === "sonic_wave" ? SONIC_FLOW_REDUCTION_PCT : GREATER_FLOW_REDUCTION_PCT;
+      rt.state = {
+        ...rt.state,
+        magicFx: {
+          ...rt.state.magicFx,
+          flowUntilTick: candidate + FLOW_DURATION_TICKS,
+          flowReductionPct: base + (empowered ? RUNIC_FLOW_BONUS_PCT : 0),
+        },
+      };
+      if (empowered) rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
+    }
+    if (isConcentratedBlast(ability.id)) {
+      // The granting cast sets the per-stack crit pct (Runic-empowered if charged).
+      const empowered = animaCharged(rt.state.magic, candidate);
+      const perStack =
+        ability.id === "concentrated_blast"
+          ? empowered
+            ? CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT
+            : CONC_BLAST_CRIT_PER_HIT_PCT
+          : empowered
+            ? GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT
+            : GREATER_CONC_BLAST_CRIT_PER_HIT_PCT;
+      rt.state = { ...rt.state, magicFx: { ...rt.state.magicFx, concCritPerStackPct: perStack } };
+      if (empowered) rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
+    } else if (rt.state.magicFx.concCritStacks > 0) {
+      // The next non-CB magic attack consumed the accumulated stacks.
+      rt.state = { ...rt.state, magicFx: { ...rt.state.magicFx, concCritStacks: 0 } };
+    }
+    // A completed Asphyxiate channel grants Channelled Might (+15% crit damage
+    // for 3.6s) when the channel ends. The sim always completes channels.
+    if (ability.id === "asphyxiate" && ability.channelTicks != null) {
+      rt.state = {
+        ...rt.state,
+        magicFx: {
+          ...rt.state.magicFx,
+          channelledMight: grantChannelledMight(candidate + ability.channelTicks),
+        },
+      };
+    }
+    if (ability.id === "combust") {
+      rt.state = {
+        ...rt.state,
+        magicFx: { ...rt.state.magicFx, burns: applyCombust(rt.state.magicFx.burns, candidate) },
+      };
+    }
+    // Enhanced/ultimate Magic casts consume Flow (wiki).
+    if (
+      (ability.category === "enhanced" || ability.category === "ultimate") &&
+      rt.state.magicFx.flowUntilTick > 0
+    ) {
+      rt.state = {
+        ...rt.state,
+        magicFx: { ...rt.state.magicFx, flowUntilTick: 0, flowReductionPct: 0 },
+      };
+    }
+    if (ability.requiresAnima) {
+      rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
+    }
   }
 }

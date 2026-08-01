@@ -10,10 +10,13 @@ import { deathsSwiftnessMultiplier } from "../styles/ranged/effects";
 import {
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
+  channelledMightCritBonus,
+  isConcentratedBlast,
   sunshineActive,
   SUNSHINE_DAMAGE_MULTIPLIER,
   SUNSHINE_SOURCE,
 } from "../styles/magic/effects";
+import { burnActive, DRAGON_BREATH_COMBUST_BONUS_PCT } from "../styles/magic/burn";
 import {
   extendSearingWinds,
   onRangedHit,
@@ -133,7 +136,17 @@ export function consumeNextHitEffects(
     }
     return;
   }
-  if (ability?.style !== "ranged") return;
+  if (ability?.style !== "ranged") {
+    // Concentrated Blast hits stack their crit grant at land time (wiki: each
+    // channelled hit increases crit chance for the next Magic attack).
+    if (ability?.style === "magic" && isConcentratedBlast(ability.id)) {
+      rt.state = {
+        ...rt.state,
+        magicFx: { ...rt.state.magicFx, concCritStacks: rt.state.magicFx.concCritStacks + 1 },
+      };
+    }
+    return;
+  }
   // Deathspore: every landed ranged hit builds a stack (its own cooldown gate).
   if (rt.input.ammo === "deathspore") {
     rt.state = patchRanged(rt.state, {
@@ -202,18 +215,39 @@ export function resolveCastHit(
   ) {
     modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
   }
+  // Dragon Breath deals 1.25x against targets burning from Combust (wiki).
+  if (ability.id === "dragon_breath" && burnActive(state.magicFx.burns, "combust", at)) {
+    modifiers.push(
+      buffMultiplier(
+        "buff:dragon_breath_combust",
+        1 + DRAGON_BREATH_COMBUST_BONUS_PCT / 100,
+        MODERNISATION_WIKI,
+      ),
+    );
+  }
   if (isDotTick) {
     modifiers = modifiers.filter(
       (m) => !m.id.startsWith("prayer:") && !DOT_IGNORED_MODIFIER_IDS.has(m.id),
     );
   }
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
+  // Concentrated Blast's own hits read the live accumulating stacks; every
+  // other magic cast consumed them at cast time (baked into snap.critLayers).
+  const liveConcChance =
+    ability.style === "magic" && isConcentratedBlast(ability.id)
+      ? (state.magicFx.concCritStacks * state.magicFx.concCritPerStackPct) / 100
+      : 0;
   const crit: CritLayers = {
     ...snap.critLayers,
     eligible: hitSpec.critEligible ?? true,
     chance:
-      snap.critLayers.chance + (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0),
+      snap.critLayers.chance +
+      liveConcChance +
+      (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0),
     guaranteed: snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
+    damageBonus:
+      (snap.critLayers.damageBonus ?? 0) +
+      (ability.style === "magic" ? channelledMightCritBonus(state.magicFx.channelledMight, at) : 0),
   };
   // Command abilities are part of the conjure: full Damage Potential, the
   // conjure-eligible modifier set (never prayers), and for the skeleton the

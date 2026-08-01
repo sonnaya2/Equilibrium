@@ -30,6 +30,8 @@ const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);
 export interface LoadoutTarget {
   defenceLevel: number;
   affinity: AffinityKind;
+  /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
+  hpPercent?: number;
 }
 
 export interface LoadoutPerks {

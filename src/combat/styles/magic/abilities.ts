@@ -34,6 +34,9 @@ export interface MagicAbilitySpec extends AbilitySpec {
   style: "magic";
   /** Cast only under Anima Charged (Runic Charge); the unempowered band is separate. */
   requiresAnima?: boolean;
+  /** Sourced per-ability crit layers (Wild Magic: +10% chance, +20% crit damage). */
+  critChanceBonusPct?: number;
+  critDamageBonus?: number;
   source: SourceReference;
 }
 
@@ -234,7 +237,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Greater Concentrated Blast"),
   },
   {
-    // 2 hits; wiki does not give a per-hit tick split.
+    // 2 hits; wiki does not give a per-hit tick split. +10% crit chance and
+    // +20% crit damage on both hits (wiki Critical strike, verified 2026-07-31).
     id: "wild_magic",
     name: "Wild Magic",
     style: "magic",
@@ -242,6 +246,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 125, maxPct: 155 } }, { band: { minPct: 125, maxPct: 155 } }],
     adrenaline: { cost: 25 },
     cooldownSeconds: 5.4,
+    critChanceBonusPct: 10,
+    critDamageBonus: 0.2,
     source: wikiAbility("Wild Magic"),
   },
   {
@@ -358,6 +364,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 225, maxPct: 275 } }],
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
+    supportStatus: "partially-modeled",
+    supportNote: "Crit-adrenaline window (30s, +8% per crit) not modeled.",
     source: wikiAbility("Tsunami"),
   },
   {
@@ -422,7 +430,7 @@ export const MAGIC_EFFECTS = [
     id: "wild_magic_crit",
     name: "Wild Magic crit layers",
     notes:
-      "Each hit has +10% Critical Strike Chance and +20% Critical Strike Damage (30 Mar 2026). Not yet folded into AbilitySpec crit input.",
+      "Each hit has +10% Critical Strike Chance and +20% Critical Strike Damage (30 Mar 2026). Implemented via the spec's critChanceBonusPct / critDamageBonus.",
     source: wikiAbility("Wild Magic"),
   },
   {
@@ -442,7 +450,8 @@ export const MAGIC_EFFECTS = [
   {
     id: "tsunami_crit_adrenaline",
     name: "Tsunami crit adrenaline",
-    notes: "After cast, critical strikes generate an additional 8% Adrenaline for 30s (50 ticks).",
+    notes:
+      "After cast, critical strikes generate an additional 8% Adrenaline for 30s (50 ticks). NOT modeled: per-hit crit rolls over a 50-tick window are state-changing RNG outside exact branching's reasonable cost, and a flat EV refund would be an impossible average state. Tsunami's damage is modeled; the ability is labeled partially modeled.",
     source: wikiAbility("Tsunami"),
   },
   {

@@ -239,6 +239,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         procs: stats.procs,
         plantedFeet: stats.plantedFeet,
         conjureBasicDamageMult: stats.conjureBasicDamageMult,
+        targetHpPercent: loadout.target?.hpPercent,
       }),
     );
   };

@@ -213,6 +213,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     },
     adrenaline: { cost: DEATH_SKULLS_BASE_COST_PCT },
     cooldownSeconds: DEATH_SKULLS_COOLDOWN_SECONDS,
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Single-target only (bounce path via the player); igneous capes' +2 bounces not modeled.",
     source: DEATH_SKULLS_WIKI,
   },
   {
@@ -235,6 +238,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     adrenaline: { cost: 10 },
     cooldownSeconds: 15,
     soulChance: SPECTRAL_SCYTHE_SOUL_CHANCE,
+    supportStatus: "partially-modeled",
+    supportNote: "25% soul roll excluded from the deterministic simulation.",
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
@@ -245,17 +250,22 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [{ band: { minPct: 180, maxPct: 220 } }],
     adrenaline: { cost: 20 },
     soulChance: SPECTRAL_SCYTHE_SOUL_CHANCE,
+    supportStatus: "partially-modeled",
+    supportNote: "25% soul roll excluded from the deterministic simulation.",
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
     // Base band only. Missing-HP multiplier (1% per 1% missing, up to +100%) is a
-    // target-stage modifier — apply via spectralScythe3(hpFraction) when needed.
+    // target-stage modifier — applied when targetHpPercent is provided.
     id: "spectral_scythe_3",
     name: "Spectral Scythe (cast 3)",
     style: "necromancy",
     category: "enhanced",
     hits: [{ band: { minPct: 225, maxPct: 275 } }],
     adrenaline: { cost: 30 },
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Missing-HP multiplier applies only when target HP% is set; 25% soul roll excluded.",
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
@@ -275,6 +285,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
       dot: true,
     },
     adrenaline: { cost: 20 },
+    supportStatus: "partially-modeled",
+    supportNote:
+      "On-death spread and dynamic on-npc retargeting not modeled (single static target).",
     source: BLOAT_WIKI,
   },
   {
@@ -300,6 +313,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [{ band: { ...BLOOD_SIPHON_FINAL_BAND }, tickOffset: 9 }],
     adrenaline: { cost: 0 },
     cooldownSeconds: BLOOD_SIPHON_COOLDOWN_SECONDS,
+    supportStatus: "partially-modeled",
+    supportNote: "5.4s channel simplified to the finishing hit only.",
     source: BLOOD_SIPHON_WIKI,
   },
   {
@@ -369,6 +384,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_skeleton_warrior",
+    supportStatus: "partially-modeled",
+    supportNote: "Spirit Pact III duration assumed; duration-extending effects not modeled.",
     source: CONJURE_SKELETON_WIKI,
   },
   {
@@ -379,6 +396,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_vengeful_ghost",
+    supportStatus: "partially-modeled",
+    supportNote: "Ghost healing and Spirit Pact duration variants not modeled.",
     source: CONJURE_GHOST_WIKI,
   },
   {
@@ -389,6 +408,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_putrid_zombie",
+    supportStatus: "partially-modeled",
+    supportNote: "Spirit Pact III duration assumed; duration-extending effects not modeled.",
     source: CONJURE_ZOMBIE_WIKI,
   },
   {
@@ -399,6 +420,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_phantom_guardian",
+    supportStatus: "partially-modeled",
+    supportNote: "Phantom Guardian's taunt / damage-sharing role is not modeled (damage only).",
     source: CONJURE_PHANTOM_WIKI,
   },
   {
@@ -410,6 +433,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_undead_army",
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Army conjures the default three spirits at Spirit Pact III; customisation not modeled.",
     source: CONJURE_ARMY_WIKI,
   },
 ];

@@ -49,6 +49,9 @@ export const GREATER_FURY_CRIT_WINDOW_SECONDS = 15;
 export const METEOR_STRIKE_ADREN_BUFF_SECONDS = 30;
 /** Dismember chain: a recast must land within this window of the previous cast. */
 export const BLEED_CHAIN_RECAST_WINDOW_TICKS = 40;
+/** Punish: ×2.5 when the target is below 50% life points (wiki, verified 2026-07-31). */
+export const PUNISH_LOW_HP_MULTIPLIER = 2.5;
+export const PUNISH_LOW_HP_THRESHOLD_PCT = 50;
 
 export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {

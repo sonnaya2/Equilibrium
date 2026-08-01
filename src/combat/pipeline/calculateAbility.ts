@@ -34,6 +34,8 @@ export type AppliedEffectId =
   | "searing_winds"
   | "sunshine";
 
+export type SupportStatus = "partially-modeled" | "not-modeled" | "mechanics-unverified";
+
 export interface AbilitySpec {
   id: string;
   name: string;
@@ -52,6 +54,12 @@ export interface AbilitySpec {
    * the tick after the final hit lands). Absent = one global cooldown.
    */
   channelTicks?: number;
+  /**
+   * Honest support label shown to users when anything material is missing.
+   * Absent = fully modeled within the calculator's generic-target scope.
+   */
+  supportStatus?: SupportStatus;
+  supportNote?: string;
 }
 
 export interface AbilityResult {

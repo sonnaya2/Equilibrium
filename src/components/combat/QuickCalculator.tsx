@@ -17,6 +17,7 @@ import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
+import { SupportStatusChip } from "./SupportStatusChip";
 import { NumberField } from "./NumberField";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
@@ -224,6 +225,7 @@ export function QuickCalculator() {
                 />
                 <span className="min-w-0 truncate">{ability.name}</span>
                 <AbilityCategoryChip category={ability.category} />
+                <SupportStatusChip ability={ability} />
               </h3>
               <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
                 {hitBandLabel(ability)}
@@ -305,10 +307,14 @@ export function QuickCalculator() {
                 />
                 <span>{ability.name}</span>
                 <AbilityCategoryChip category={ability.category} />
+                <SupportStatusChip ability={ability} />
               </h3>
             </div>
             <div className="panel-body">
               <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability) || "Summon"}</p>
+              {ability.supportNote ? (
+                <p className="mt-1 text-xs leading-5 text-parch-300">{ability.supportNote}</p>
+              ) : null}
               <p className="mt-2 text-sm text-parch-300">No damage hits. Summon or buff only.</p>
             </div>
           </div>

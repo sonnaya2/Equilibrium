@@ -1,8 +1,10 @@
 import { gainBloodlust, newBloodlust, type BloodlustState } from "../styles/melee/bloodlust";
 import {
   newInstability,
+  newMagicFx,
   newSunshine,
   type InstabilityState,
+  type MagicFxState,
   type SunshineState,
 } from "../styles/magic/effects";
 import {
@@ -86,6 +88,8 @@ export interface RotationState {
   sunshine: SunshineState;
   /** Instability (FSOA): Lightning Surge on Magic crit while active. */
   instability: InstabilityState;
+  /** Magic style state beyond Runic Charge: Flow, Concentrated stacks, Channelled Might, burns. */
+  magicFx: MagicFxState;
   ranged: RangedRotationState;
   magic: RunicChargeState;
   /**
@@ -118,6 +122,7 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     bleedChainUntilTick: 0,
     sunshine: newSunshine(),
     instability: newInstability(),
+    magicFx: newMagicFx(),
     ranged: {
       swiftness: newDeathsSwiftness(),
       searingWinds: newSearingWinds(),

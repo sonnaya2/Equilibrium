@@ -168,7 +168,8 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
   const spirit = rt.state.conjures.spirits.find((s) => s.id === "skeleton_warrior");
   if (!spirit) return;
   const raaarTick = candidate + COMMAND_SKELETON_RAAAR_DELAY_TICKS;
-  const resumeTick = candidate + COMMAND_SKELETON_LAST_HIT_OFFSET + COMMAND_SKELETON_RESUME_DELAY_TICKS;
+  const resumeTick =
+    candidate + COMMAND_SKELETON_LAST_HIT_OFFSET + COMMAND_SKELETON_RESUME_DELAY_TICKS;
   const pending = rt.queue
     .pending()
     .find(
@@ -195,17 +196,23 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
  * instance, record its damage, advance the track, and queue the next event.
  * Events of dismissed or replaced spirits die silently.
  */
-export function processSpiritEvent(rt: SimulationRuntime, event: ScheduledEvent<SimulationRuntime>): void {
+export function processSpiritEvent(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): void {
   const live = spiritEventLive(rt, event);
   if (!live) return;
   recordResolved(rt, event, event.resolve(rt, event.tick));
-  const next =
-    live.kind === "auto" ? spiritAutoFired(live.spirit) : spiritPoisonFired(live.spirit);
+  const next = live.kind === "auto" ? spiritAutoFired(live.spirit) : spiritPoisonFired(live.spirit);
   patchSpirit(rt, live.spirit, next);
   if (live.kind === "auto" && spiritAutoPending(next) && withinHorizon(rt, next.nextAutoTick)) {
     scheduleSpiritAuto(rt, next);
   }
-  if (live.kind === "poison" && spiritPoisonPending(next) && withinHorizon(rt, next.nextPoisonTick)) {
+  if (
+    live.kind === "poison" &&
+    spiritPoisonPending(next) &&
+    withinHorizon(rt, next.nextPoisonTick)
+  ) {
     scheduleSpiritPoison(rt, next);
   }
 }

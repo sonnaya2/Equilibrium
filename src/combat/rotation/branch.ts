@@ -65,7 +65,10 @@ function mergePair(a: Branch, b: Branch): Branch {
   for (const key of new Set([...Object.keys(a.rt.perAbility), ...Object.keys(b.rt.perAbility)])) {
     keep.rt.perAbility[key] = mix(a.rt.perAbility[key] ?? 0, b.rt.perAbility[key] ?? 0);
   }
-  for (const key of new Set([...Object.keys(a.rt.damageByTick), ...Object.keys(b.rt.damageByTick)])) {
+  for (const key of new Set([
+    ...Object.keys(a.rt.damageByTick),
+    ...Object.keys(b.rt.damageByTick),
+  ])) {
     const tick = Number(key);
     keep.rt.damageByTick[tick] = mix(a.rt.damageByTick[tick] ?? 0, b.rt.damageByTick[tick] ?? 0);
   }
@@ -117,7 +120,8 @@ export function castOutcomes(
     commitCast(branch.rt, prepared, auto);
     return [branch];
   }
-  const rngKey = point.kind === "impatient" ? ("impatientProc" as const) : ("relentlessProc" as const);
+  const rngKey =
+    point.kind === "impatient" ? ("impatientProc" as const) : ("relentlessProc" as const);
   return [
     { proc: true, outcomeWeight: point.chance },
     { proc: false, outcomeWeight: 1 - point.chance },

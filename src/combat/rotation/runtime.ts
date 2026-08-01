@@ -57,9 +57,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     input,
     horizon: input.horizonTicks,
     byId: new Map(input.abilities.map((a) => [a.id, a])),
-    basicByStyle: new Map(
-      input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a]),
-    ),
+    basicByStyle: new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a])),
     queue: new EventQueue<SimulationRuntime>(),
     state: newRotationState(),
     casts: [],

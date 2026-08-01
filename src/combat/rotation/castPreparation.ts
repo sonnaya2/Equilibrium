@@ -72,8 +72,7 @@ export function prepareCast(
       // +1% per 1% of the target's missing LP, capped (wiki Bloodlust). Without
       // target HP input the stacks are still spent but no bonus is invented.
       const hp = input.targetHpPercent;
-      empowerMult =
-        hp != null ? 1 + Math.min(melee.bloodlustMissingHp.capPct, 100 - hp) / 100 : 1;
+      empowerMult = hp != null ? 1 + Math.min(melee.bloodlustMissingHp.capPct, 100 - hp) / 100 : 1;
       bloodlustSpend = melee.bloodlustMissingHp.threshold;
     }
   }

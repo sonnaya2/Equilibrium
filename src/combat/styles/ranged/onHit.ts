@@ -125,7 +125,10 @@ export function activateSearingWinds(tick: number, grantedByCast?: number): Sear
 }
 
 export function extendSearingWinds(state: SearingWindsState, hits: number): SearingWindsState {
-  return { ...state, expiresAtTick: state.expiresAtTick + hits * RAPID_FIRE_SEARING_WINDS_TICKS_PER_HIT };
+  return {
+    ...state,
+    expiresAtTick: state.expiresAtTick + hits * RAPID_FIRE_SEARING_WINDS_TICKS_PER_HIT,
+  };
 }
 
 /** Bonus-hit percent while the window is open; 0 outside it. */

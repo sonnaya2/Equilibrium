@@ -14,9 +14,7 @@ const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adr
 export { costOf, spendOf } from "./castRules";
 export type { PreparedCast } from "./castPreparation";
 
-export type CastPreparation =
-  | { ok: true; prepared: PreparedCast }
-  | { ok: false; error: string };
+export type CastPreparation = { ok: true; prepared: PreparedCast } | { ok: false; error: string };
 
 /**
  * Advance to the candidate tick and validate + prepare the cast there. A

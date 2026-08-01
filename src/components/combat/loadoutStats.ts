@@ -175,10 +175,7 @@ export function loadoutEffectiveDamageLevel(loadout: Loadout): number {
   return clampLevel(tier ? overloadBoostedLevel(level, tier) : level);
 }
 
-function slotWeaponTier(
-  loadout: Loadout,
-  slot: "twohand" | "mainhand" | "offhand",
-): number | null {
+function slotWeaponTier(loadout: Loadout, slot: "twohand" | "mainhand" | "offhand"): number | null {
   const id = loadout.equipmentSlots?.[slot];
   if (typeof id !== "string") return null;
   const tier = equipmentById(id)?.tier;

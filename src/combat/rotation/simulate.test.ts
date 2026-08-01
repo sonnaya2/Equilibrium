@@ -272,7 +272,9 @@ describe("simulate — Relentless refund branching", () => {
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
     // Second assault lands inside the lockout: the override cannot re-proc it.
     const before = ctx.getState().adrenaline;
-    expect(ctx.performCast(assault, ctx.firstLegalTick("assault"), false, { relentlessProc: true }).ok).toBe(true);
+    expect(
+      ctx.performCast(assault, ctx.firstLegalTick("assault"), false, { relentlessProc: true }).ok,
+    ).toBe(true);
     expect(ctx.getState().adrenaline).toBe(before - 25);
   });
 
@@ -1038,7 +1040,6 @@ describe("simulate — necromancy resources", () => {
   });
 });
 
-
 describe("simulate — channel occupancy (manual completes channels)", () => {
   it("Assault then another ability: the follow-up starts at castTick+8, not +3, with full channel damage", () => {
     const s = simulate({
@@ -1058,7 +1059,13 @@ describe("simulate — channel occupancy (manual completes channels)", () => {
       ...baseInput,
       abilities: RANGED_ABILITIES,
       context: { style: "ranged" },
-      rotation: rotationOf("ranged_attack", "ranged_attack", "ranged_attack", "rapid_fire", "ranged_attack"),
+      rotation: rotationOf(
+        "ranged_attack",
+        "ranged_attack",
+        "ranged_attack",
+        "rapid_fire",
+        "ranged_attack",
+      ),
     });
     expect(s.ok).toBe(true);
     expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 17]);
@@ -1070,7 +1077,13 @@ describe("simulate — channel occupancy (manual completes channels)", () => {
       ...baseInput,
       abilities: MAGIC_ABILITIES,
       context: { style: "magic" },
-      rotation: rotationOf("magic_attack", "magic_attack", "magic_attack", "asphyxiate", "magic_attack"),
+      rotation: rotationOf(
+        "magic_attack",
+        "magic_attack",
+        "magic_attack",
+        "asphyxiate",
+        "magic_attack",
+      ),
     });
     expect(s.ok).toBe(true);
     expect(s.casts.map((c) => c.tick)).toEqual([0, 3, 6, 9, 16]);
@@ -1153,8 +1166,14 @@ describe("simulate — event log", () => {
       );
       const eventSum = owned.reduce((n, e) => n + e.damage.expected, 0);
       expect(cast.result.expected).toBeCloseTo(eventSum, 10);
-      expect(cast.result.min).toBeCloseTo(owned.reduce((n, e) => n + e.damage.min, 0), 10);
-      expect(cast.result.max).toBeCloseTo(owned.reduce((n, e) => n + e.damage.max, 0), 10);
+      expect(cast.result.min).toBeCloseTo(
+        owned.reduce((n, e) => n + e.damage.min, 0),
+        10,
+      );
+      expect(cast.result.max).toBeCloseTo(
+        owned.reduce((n, e) => n + e.damage.max, 0),
+        10,
+      );
       expect(cast.result.hits.reduce((n, h) => n + h.expected, 0)).toBeCloseTo(eventSum, 10);
     });
   });
@@ -1192,9 +1211,9 @@ describe("simulate — event log", () => {
     const instabilitySeq = s.casts.findIndex((c) => c.abilityId === "instability");
     const followSeq = s.casts.findIndex((c, i) => i > instabilitySeq);
     // The granting cast fires no surge: exactly one hit event, no proc.
-    expect(
-      s.events.filter((e) => e.sourceCast === instabilitySeq).map((e) => e.family),
-    ).toEqual(["hit"]);
+    expect(s.events.filter((e) => e.sourceCast === instabilitySeq).map((e) => e.family)).toEqual([
+      "hit",
+    ]);
     const followEvents = s.events.filter((e) => e.sourceCast === followSeq);
     expect(followEvents.map((e) => e.family)).toEqual(["hit", "proc"]);
     const surge = followEvents[1];
@@ -1654,14 +1673,14 @@ describe("simulate — Command Skeleton Warrior scheduling", () => {
     ctx.performCast(
       ctx.byId.get("command_skeleton_warrior")!,
       ctx.firstLegalTick("command_skeleton_warrior"),
-      false);
+      false,
+    );
     // The second command cast at 31: RAAAR 32, hits 33-42 below.
     while (ctx.getState().tick <= 46) ctx.performCast(basic, ctx.getState().tick, false);
     const s = ctx.finish();
     const { commands } = skeletonEvents(s);
     expect(commands.map((e) => e.tick)).toEqual([
-      8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-      33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+      8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
     ]);
   });
 

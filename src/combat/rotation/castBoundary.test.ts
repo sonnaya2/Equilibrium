@@ -35,11 +35,7 @@ describe("cast boundary — candidate-tick evaluation", () => {
     const s = simulate({
       ...rangedInput,
       ammo: "deathspore",
-      rotation: rotationOf(
-        ...Array(6).fill("ranged_attack"),
-        "rapid_fire",
-        "corruption_shot",
-      ),
+      rotation: rotationOf(...Array(6).fill("ranged_attack"), "rapid_fire", "corruption_shot"),
     });
     expect(s.ok).toBe(true);
     const corruption = s.casts.at(-1)!;
@@ -74,11 +70,7 @@ describe("cast boundary — branching commits the prepared cast", () => {
     const s = simulate({
       ...meleeInput,
       adrenaline: { relentlessRank: 5 },
-      rotation: rotationOf(
-        ...Array(6).fill("attack"),
-        "assault",
-        "assault",
-      ),
+      rotation: rotationOf(...Array(6).fill("attack"), "assault", "assault"),
     });
     expect(s.ok).toBe(true);
     // First assault at 18 splits (0.05 refund / 0.95 spend). In the refund

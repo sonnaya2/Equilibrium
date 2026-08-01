@@ -72,9 +72,7 @@ export function finish(
     error,
     casts: rt.casts,
     ticks: rt.endTick,
-    ...(effectiveHorizon != null && effectiveHorizon > 0
-      ? { horizonTicks: effectiveHorizon }
-      : {}),
+    ...(effectiveHorizon != null && effectiveHorizon > 0 ? { horizonTicks: effectiveHorizon } : {}),
     totalMin: rt.totalMin,
     totalMax: rt.totalMax,
     totalExpected: rt.totalExpected,

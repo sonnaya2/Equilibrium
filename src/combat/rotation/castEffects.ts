@@ -1,4 +1,8 @@
-import { activateBerserk, BERSERK_DURATION_SECONDS, spendBloodlust } from "../styles/melee/bloodlust";
+import {
+  activateBerserk,
+  BERSERK_DURATION_SECONDS,
+  spendBloodlust,
+} from "../styles/melee/bloodlust";
 import {
   CHAOS_ROAR_DURATION_SECONDS,
   GREATER_FURY_CRIT_WINDOW_SECONDS,
@@ -134,10 +138,7 @@ export function applyCastEffects(
     for (const spirit of rt.state.conjures.spirits) scheduleSpiritTracks(rt, spirit);
     // Wiki: conjuring a skeleton starts the command's initial 3.6s (6-tick)
     // lockout; commanding mutates the skeleton's own auto scheduler.
-    if (
-      CONJURE_ABILITY_SUMMONS[ability.id]?.includes("skeleton_warrior") &&
-      !skeletonWasActive
-    ) {
+    if (CONJURE_ABILITY_SUMMONS[ability.id]?.includes("skeleton_warrior") && !skeletonWasActive) {
       rt.state = {
         ...rt.state,
         cooldowns: {
@@ -173,7 +174,12 @@ export function applyCastEffects(
     const greater = ability.appliesEffect === "greater_sunshine";
     rt.state = {
       ...rt.state,
-      sunshine: activateSunshine(candidate, greater, !greater && input.plantedFeet === true, snap.castSeq),
+      sunshine: activateSunshine(
+        candidate,
+        greater,
+        !greater && input.plantedFeet === true,
+        snap.castSeq,
+      ),
     };
   }
   if (ability.appliesEffect === "instability") {

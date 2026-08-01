@@ -30,7 +30,9 @@ export function simulateRevolution(
   const maxCasts = Math.max(input.durationTicks * 2, 64);
 
   for (;;) {
-    const anyActive = branches.some((b) => b.error === undefined && b.rt.state.tick < input.durationTicks);
+    const anyActive = branches.some(
+      (b) => b.error === undefined && b.rt.state.tick < input.durationTicks,
+    );
     if (!anyActive) break;
     if (++guard > maxCasts) {
       branches = branches.map((b) =>

@@ -215,7 +215,11 @@ describe("simulateRevolution", () => {
     // Combust @0 burns at 3,6,9,...: only the tick-3 burn lands inside; the woven
     // basic at 3 also lands. Nothing at tick >= 6 counts.
     expect(s.damageByTick[3]).toBeCloseTo(300 + 1000);
-    expect(Object.keys(s.damageByTick).map(Number).every((t) => t < 6)).toBe(true);
+    expect(
+      Object.keys(s.damageByTick)
+        .map(Number)
+        .every((t) => t < 6),
+    ).toBe(true);
     expect(s.events.every((e) => e.tick < 6)).toBe(true);
     expect(s.perAbility["combust"]).toBeCloseTo(300);
     expect(s.dps).toBeCloseTo(1300 / (6 * TICK_SECONDS), 5);
@@ -331,7 +335,6 @@ describe("golden 60s revo smoke", () => {
     });
   }
 });
-
 
 describe("revolution — channels and horizon", () => {
   it("completes Assault's channel: next cast at castTick+8, full channel damage", () => {

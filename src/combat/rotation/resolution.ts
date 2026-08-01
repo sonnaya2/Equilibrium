@@ -136,10 +136,7 @@ export function consumeNextHitEffects(
   const perHit = shadowImbuedAdrenalinePerHit(rt.state.ranged.shadowImbued, event.tick);
   if (perHit > 0) rt.state = gainAdrenaline(rt.state, perHit);
   // Rapid Fire: each landed hit extends an active Searing Winds by 1 tick (wiki).
-  if (
-    ability.id === "rapid_fire" &&
-    event.tick < rt.state.ranged.searingWinds.expiresAtTick
-  ) {
+  if (ability.id === "rapid_fire" && event.tick < rt.state.ranged.searingWinds.expiresAtTick) {
     rt.state = patchRanged(rt.state, {
       searingWinds: extendSearingWinds(rt.state.ranged.searingWinds, 1),
     });
@@ -199,8 +196,7 @@ export function resolveCastHit(
     eligible: hitSpec.critEligible ?? true,
     chance:
       snap.critLayers.chance + (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0),
-    guaranteed:
-      snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
+    guaranteed: snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
   };
   // Command abilities are part of the conjure: full Damage Potential, the
   // conjure-eligible modifier set (never prayers), and for the skeleton the

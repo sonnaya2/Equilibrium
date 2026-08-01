@@ -26,7 +26,11 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
 }
 
 /** Meteor Strike passive adrenaline: constant per-tick rate while the window covers the tick. */
-function grantMeteorPassive(rt: SimulationRuntime, fromTick: number, toTickExclusive: number): void {
+function grantMeteorPassive(
+  rt: SimulationRuntime,
+  fromTick: number,
+  toTickExclusive: number,
+): void {
   if (rt.state.meteorStrikeUntilTick <= 0 || toTickExclusive <= fromTick) return;
   let gain = 0;
   const end = Math.min(toTickExclusive, rt.state.meteorStrikeUntilTick);

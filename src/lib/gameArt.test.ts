@@ -38,7 +38,7 @@ describe("gameArt", () => {
       const path = styleIconPath(style);
       expect(
         existsSync(join(PUBLIC, path)),
-        `${path} not published — run npm run sync:assets`,
+        `${path} not published — run npm run assets:publish`,
       ).toBe(true);
     }
   });

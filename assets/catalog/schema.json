@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RS3 Equilibrium asset provenance catalog shard",
+  "description": "Durable provenance for one domain of assets/. Rows are sorted by id. Never records resolved download URLs, hashes, or timestamps - those belong to .asset-cache/, which is not tracked.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "label", "category", "path"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "description": "Stable identifier. Unique across every shard."
+      },
+      "label": { "type": "string", "minLength": 1 },
+      "category": {
+        "type": "string",
+        "description": "Mirrors the directory under assets/, minus the filename. Decides the shard."
+      },
+      "path": {
+        "type": "string",
+        "pattern": "^assets/",
+        "description": "Local path WITHOUT an extension - the extension follows the file on disk."
+      },
+      "type": { "enum": ["wiki", "page-og"] },
+      "fileTitle": { "type": "string", "description": "Exact RuneScape Wiki File: title when known." },
+      "search": { "type": "string" },
+      "canonicalPage": { "type": "string", "format": "uri" },
+      "sourcePage": { "type": "string", "format": "uri" },
+      "pageUrl": { "type": "string", "format": "uri" },
+      "aliases": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Retired ids that resolved to this same artwork."
+      },
+      "provenanceAlternates": {
+        "type": "array",
+        "items": { "type": "object" },
+        "description": "Merged historical rows, kept so a past attribution is still traceable."
+      },
+      "provenance": {
+        "enum": ["unverified-local"],
+        "description": "Set only when no upstream source could be established. Never invent one."
+      },
+      "publish": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Extra public paths this one file serves, beyond its routed target."
+      },
+      "attribution": { "type": "string" },
+      "copyright": { "type": "string" },
+      "fallbackUrl": { "type": "string", "format": "uri" },
+      "fallbackMime": { "type": "string" },
+      "fallbackSourcePage": { "type": "string", "format": "uri" },
+      "maxBytes": { "type": "integer", "minimum": 1 }
+    }
+  }
+}

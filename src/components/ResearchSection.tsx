@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import type { ResearchRegion } from "@/research/catalog";
 import { GameIcon } from "@/components/GameIcon";
 import { dataEntityIconPath } from "@/lib/gameArt";
 import { presentInterestMeta, presentInterestName } from "@/lib/dataContentPresentation";

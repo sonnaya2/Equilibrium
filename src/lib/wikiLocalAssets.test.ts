@@ -9,7 +9,7 @@ function expectPublishedLocal(src: string | null | undefined, label: string) {
   expect(src, `${label} should resolve`).toBeTruthy();
   expect(src!.startsWith("/game/"), `${label} must be local /game/ path`).toBe(true);
   expect(src!.includes("://"), `${label} must not be remote`).toBe(false);
-  expect(existsSync(join(PUBLIC, src!)), `${src} not published — run npm run sync:assets`).toBe(
+  expect(existsSync(join(PUBLIC, src!)), `${src} not published — run npm run assets:publish`).toBe(
     true,
   );
 }

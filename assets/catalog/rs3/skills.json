@@ -1,0 +1,348 @@
+[
+  {
+    "id": "skill-agility",
+    "label": "Agility",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/agility",
+    "fileTitle": "Agility.png",
+    "search": "Agility detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Agility",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/agility.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/agility.png"
+  },
+  {
+    "id": "skill-archaeology",
+    "label": "Archaeology",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/archaeology",
+    "fileTitle": "Archaeology.png",
+    "search": "Archaeology detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Archaeology",
+    "aliases": [
+      "arch-skill-icon"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "arch-skill-icon",
+        "search": "Archaeology skill icon"
+      }
+    ],
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/archaeology.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/archaeology.png"
+  },
+  {
+    "id": "skill-attack",
+    "label": "Attack",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/attack",
+    "fileTitle": "Attack.png",
+    "search": "Attack detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Attack",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/attack.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/attack.png"
+  },
+  {
+    "id": "skill-constitution",
+    "label": "Constitution",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/constitution",
+    "fileTitle": "Constitution.png",
+    "search": "Constitution detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Constitution",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/constitution.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/constitution.png"
+  },
+  {
+    "id": "skill-construction",
+    "label": "Construction",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/construction",
+    "fileTitle": "Construction.png",
+    "search": "Construction detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Construction",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/construction.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/construction.png"
+  },
+  {
+    "id": "skill-cooking",
+    "label": "Cooking",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/cooking",
+    "fileTitle": "Cooking.png",
+    "search": "Cooking detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Cooking",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/cooking.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/cooking.png"
+  },
+  {
+    "id": "skill-crafting",
+    "label": "Crafting",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/crafting",
+    "fileTitle": "Crafting.png",
+    "search": "Crafting detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Crafting",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/crafting.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/crafting.png",
+    "publish": [
+      "game/upgrades/permanent-unlocks/crafteneering.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-crafteneering"
+    ]
+  },
+  {
+    "id": "skill-defence",
+    "label": "Defence",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/defence",
+    "fileTitle": "Defence.png",
+    "search": "Defence detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Defence",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/defence.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/defence.png"
+  },
+  {
+    "id": "skill-divination",
+    "label": "Divination",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/divination",
+    "fileTitle": "Divination.png",
+    "search": "Divination detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Divination",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/divination.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/divination.png"
+  },
+  {
+    "id": "skill-dungeoneering",
+    "label": "Dungeoneering",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/dungeoneering",
+    "fileTitle": "Dungeoneering.png",
+    "search": "Dungeoneering detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Dungeoneering",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/dungeoneering.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/dungeoneering.png"
+  },
+  {
+    "id": "skill-farming",
+    "label": "Farming",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/farming",
+    "fileTitle": "Farming.png",
+    "search": "Farming detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Farming",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/farming.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/farming.png"
+  },
+  {
+    "id": "skill-firemaking",
+    "label": "Firemaking",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/firemaking",
+    "fileTitle": "Firemaking.png",
+    "search": "Firemaking detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Firemaking",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/firemaking.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/firemaking.png"
+  },
+  {
+    "id": "skill-fishing",
+    "label": "Fishing",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/fishing",
+    "fileTitle": "Fishing.png",
+    "search": "Fishing detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Fishing",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/fishing.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/fishing.png"
+  },
+  {
+    "id": "skill-fletching",
+    "label": "Fletching",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/fletching",
+    "fileTitle": "Fletching.png",
+    "search": "Fletching detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Fletching",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/fletching.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/fletching.png"
+  },
+  {
+    "id": "skill-herblore",
+    "label": "Herblore",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/herblore",
+    "fileTitle": "Herblore.png",
+    "search": "Herblore detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Herblore",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/herblore.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/herblore.png"
+  },
+  {
+    "id": "skill-hunter",
+    "label": "Hunter",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/hunter",
+    "fileTitle": "Hunter.png",
+    "search": "Hunter detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Hunter",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/hunter.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/hunter.png",
+    "publish": [
+      "game/upgrades/permanent-unlocks/quick-traps.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-quick-traps"
+    ]
+  },
+  {
+    "id": "skill-invention",
+    "label": "Invention",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/invention",
+    "fileTitle": "Invention.png",
+    "search": "Invention detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Invention",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/invention.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/invention.png"
+  },
+  {
+    "id": "skill-magic",
+    "label": "Magic",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/magic",
+    "fileTitle": "Magic.png",
+    "search": "Magic detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Magic",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/magic.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/magic.png"
+  },
+  {
+    "id": "skill-mining",
+    "label": "Mining",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/mining",
+    "fileTitle": "Mining.png",
+    "search": "Mining detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Mining",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/mining.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/mining.png"
+  },
+  {
+    "id": "skill-necromancy",
+    "label": "Necromancy",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/necromancy",
+    "fileTitle": "Necromancy.png",
+    "search": "Necromancy detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Necromancy",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/necromancy.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/necromancy.png"
+  },
+  {
+    "id": "skill-prayer",
+    "label": "Prayer",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/prayer",
+    "fileTitle": "Prayer.png",
+    "search": "Prayer detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Prayer",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/prayer.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/prayer.png",
+    "publish": [
+      "game/upgrades/permanent-unlocks/prayer-altar.webp"
+    ],
+    "aliases": [
+      "upgrades-upgrades-permanent-unlocks-prayer-altar"
+    ]
+  },
+  {
+    "id": "skill-ranged",
+    "label": "Ranged",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/ranged",
+    "fileTitle": "Ranged.png",
+    "search": "Ranged detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Ranged",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/ranged.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/ranged.png"
+  },
+  {
+    "id": "skill-runecrafting",
+    "label": "Runecrafting",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/runecrafting",
+    "fileTitle": "Runecrafting.png",
+    "search": "Runecrafting detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Runecrafting",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/runecrafting.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/runecrafting.png"
+  },
+  {
+    "id": "skill-slayer",
+    "label": "Slayer",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/slayer",
+    "fileTitle": "Slayer.png",
+    "search": "Slayer detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Slayer",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/slayer.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/slayer.png"
+  },
+  {
+    "id": "skill-smithing",
+    "label": "Smithing",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/smithing",
+    "fileTitle": "Smithing.png",
+    "search": "Smithing detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Smithing",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/smithing.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/smithing.png"
+  },
+  {
+    "id": "skill-strength",
+    "label": "Strength",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/strength",
+    "fileTitle": "Strength.png",
+    "search": "Strength detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Strength",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/strength.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/strength.png"
+  },
+  {
+    "id": "skill-summoning",
+    "label": "Summoning",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/summoning",
+    "fileTitle": "Summoning.png",
+    "search": "Summoning detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Summoning",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/summoning.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/summoning.png"
+  },
+  {
+    "id": "skill-thieving",
+    "label": "Thieving",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/thieving",
+    "fileTitle": "Thieving.png",
+    "search": "Thieving detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Thieving",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/thieving.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/thieving.png"
+  },
+  {
+    "id": "skill-woodcutting",
+    "label": "Woodcutting",
+    "category": "rs3/skills",
+    "path": "assets/rs3/skills/woodcutting",
+    "fileTitle": "Woodcutting.png",
+    "search": "Woodcutting detailed skill icon",
+    "canonicalPage": "https://runescape.wiki/w/Woodcutting",
+    "fallbackUrl": "https://raw.githubusercontent.com/runesync/runesync/main/public/assets/skills/woodcutting.png",
+    "fallbackSourcePage": "https://github.com/runesync/runesync/blob/main/public/assets/skills/woodcutting.png"
+  }
+]

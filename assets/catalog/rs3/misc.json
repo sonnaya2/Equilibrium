@@ -1,0 +1,20 @@
+[
+  {
+    "id": "leagues-world-map-icon",
+    "label": "World Map Icon",
+    "category": "rs3/leagues",
+    "path": "assets/rs3/leagues/world-map-icon",
+    "fileTitle": "World Map Icon.png",
+    "search": "World Map Icon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/World_Map_Icon"
+  },
+  {
+    "id": "terrain--contact-sheet",
+    "label": "_contact Sheet",
+    "category": "rs3/terrain",
+    "path": "assets/rs3/terrain/_contact-sheet",
+    "fileTitle": "_contact Sheet.png",
+    "search": "_contact Sheet inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/_contact_Sheet"
+  }
+]

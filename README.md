@@ -68,7 +68,8 @@ npm run data:rebuild     # recreate SQLite and every generated frontend artifact
 npm run data:find -- --query "Seismic wand"
 npm run data:context -- --id item:seismic-wand --format markdown
 npm run audit:data       # rebuild plus architecture/provenance gates
-npm run sync:assets      # refresh sourced RS3 and League media
+npm run assets:check     # asset pipeline gate (routing, index drift, aliases, duplicates)
+npm run assets:publish   # regenerate public/game and public/brand from assets/
 ```
 
 Tracked data is one compressed seed, SQL migrations, and small JSONL patches. Everything else — the

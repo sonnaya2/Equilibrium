@@ -82,9 +82,23 @@ data/**/.cache/
 /reports/data-*.json
 /reports/data-*.md
 /reports/canonical-*.json
+/reports/assets/
 # data/canonical/ is generated but tracked on purpose - it is the reviewable
 # form of the dataset, and .gitattributes pins it to LF so parity holds.
 /docs/data-catalog.md
+
+# ---------------------------------------------------------------------------
+# Published web art. Regenerated from assets/ by scripts/publish-assets.mjs on
+# every dev/build/test run - hand-editing these is how the source tree and the
+# web tree drifted apart. public/map/ stays tracked; that is build:map output.
+# ---------------------------------------------------------------------------
+/public/game/
+/public/brand/
+/public/.game-staging/
+/public/.brand-staging/
+
+# Upstream downloads staged before import into assets/. Never a build input.
+/.asset-cache/
 
 # ---------------------------------------------------------------------------
 # Playwright / E2E artifacts (configs in repo root stay tracked)

@@ -83,20 +83,6 @@ interface Artifact {
   bytes: number;
 }
 
-interface Shard extends Artifact {
-  records: number;
-}
-
-interface RegionArtifacts extends Artifact {
-  indexHref: string;
-  indexSha256: string;
-  indexBytes: number;
-  panels: {
-    regional: Shard;
-    unlocks: Record<string, Shard>;
-  };
-}
-
 interface Manifest {
   schemaVersion: number;
   exportVersion: number;

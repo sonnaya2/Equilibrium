@@ -1,49 +1,148 @@
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
-import { basename, dirname, join } from "node:path";
-
 /**
- * Publishes extracted game art from assets/ into the web-served public/game/ tree.
- * Convention: assets/rs3/<category>/<file>.webp -> public/game/<category>/<file>.webp
- * (legacy .png still published if present). Reads the sync
- * manifest (assets/manifest.generated.json) so only real, attributed art is served,
- * and fails loudly if any manifest asset is missing from assets/.
- * Run after sync-assets: npm run sync:assets
+ * Regenerates public/game and public/brand from assets/.
+ *
+ * assets/ is the only editable image tree. This script is the only writer of the
+ * public trees, it needs no network, and it builds each tree in a staging
+ * directory that then replaces the live one - so deleting a source file deletes
+ * its published copy instead of leaving it behind forever.
+ *
+ *   node scripts/publish-assets.mjs [--check]
+ *
+ * --check compares the live trees against what assets/ says they should be and
+ * exits non-zero on any difference. Routing lives in scripts/assets/routes.mjs.
  */
+import { createHash } from "node:crypto";
+import { cp, mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { dirname, join, relative, sep } from "node:path";
+import { planPublish } from "./assets/plan.mjs";
 
 const ROOT = process.cwd();
-const manifest = JSON.parse(await readFile(join(ROOT, "assets/manifest.generated.json"), "utf8"));
+const CHECK = process.argv.includes("--check");
+const PUBLIC_ROOTS = ["game", "brand"];
 
-let published = 0;
-const missing = [];
-for (const asset of manifest.assets) {
-  if (!asset.category?.startsWith("rs3/")) continue;
-  const category = asset.category.slice(4);
-  const file = basename(asset.path);
-  const source = join(ROOT, asset.path);
-  const target = join(ROOT, "public/game", category, file);
+const fwd = (p) => p.split(sep).join("/");
+const sha = (buffer) => createHash("sha256").update(buffer).digest("hex");
+
+async function walk(dir, acc = []) {
+  let entries;
   try {
-    await mkdir(dirname(target), { recursive: true });
-    await copyFile(source, target);
-    published++;
-  } catch {
-    missing.push(`${asset.id} (${asset.path})`);
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch (err) {
+    if (err?.code === "ENOENT") return acc;
+    throw err;
   }
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) await walk(full, acc);
+    else if (entry.isFile()) acc.push(full);
+  }
+  return acc;
 }
 
-const indexPath = join(ROOT, "public/game/index.json");
+const { targets, collisions } = await planPublish(ROOT);
+
+if (collisions.length) {
+  console.error(`ASSET PUBLISH: ${collisions.length} target collision(s) - nothing written`);
+  for (const c of collisions) console.error(`  ${c.target} <- ${c.sources.join(" AND ")}`);
+  process.exit(1);
+}
+
+/** Content digest over the whole published set; stable across runs, unlike a timestamp. */
+const digestOf = (entries) =>
+  sha(
+    Buffer.from(
+      entries
+        .map(([target, hash]) => `${target}:${hash}`)
+        .sort()
+        .join("\n"),
+    ),
+  ).slice(0, 16);
+
+if (CHECK) {
+  const live = new Map();
+  for (const root of PUBLIC_ROOTS) {
+    for (const abs of await walk(join(ROOT, "public", root))) {
+      const rel = `${root}/${fwd(relative(join(ROOT, "public", root), abs))}`;
+      if (rel === "game/index.json") continue;
+      live.set(rel, sha(await readFile(abs)));
+    }
+  }
+
+  const missing = [];
+  const changed = [];
+  for (const [target, { abs }] of targets) {
+    const hash = live.get(target);
+    if (hash === undefined) missing.push(target);
+    else if (hash !== sha(await readFile(abs))) changed.push(target);
+    live.delete(target);
+  }
+  const unexpected = [...live.keys()];
+
+  const failures = missing.length + changed.length + unexpected.length;
+  console.log(
+    `ASSET PUBLISH CHECK: ${targets.size} expected, ${missing.length} missing, ` +
+      `${changed.length} changed, ${unexpected.length} unexpected`,
+  );
+  for (const p of missing.slice(0, 20)) console.log(`  MISSING:    ${p}`);
+  for (const p of changed.slice(0, 20)) console.log(`  CHANGED:    ${p}`);
+  for (const p of unexpected.slice(0, 20)) console.log(`  UNEXPECTED: ${p}`);
+  process.exit(failures ? 1 : 0);
+}
+
+// Build into staging, then swap. A half-written tree never becomes the live one.
+const staging = new Map(
+  PUBLIC_ROOTS.map((root) => [root, join(ROOT, "public", `.${root}-staging`)]),
+);
+for (const dir of staging.values()) await rm(dir, { recursive: true, force: true });
+
+const digestEntries = [];
+for (const [target, { abs, sourcePath }] of targets) {
+  const [root, ...rest] = target.split("/");
+  const dest = join(staging.get(root), ...rest);
+  let bytes;
+  try {
+    bytes = await readFile(abs);
+  } catch (err) {
+    console.error(`ASSET PUBLISH: cannot read ${sourcePath}: ${err.message}`);
+    process.exit(1);
+  }
+  await mkdir(dirname(dest), { recursive: true });
+  await writeFile(dest, bytes);
+  const hash = sha(bytes);
+  if (sha(await readFile(dest)) !== hash) {
+    console.error(`ASSET PUBLISH: verification failed for ${target}`);
+    process.exit(1);
+  }
+  digestEntries.push([target, hash]);
+}
+
+const digest = digestOf(digestEntries);
 await writeFile(
-  indexPath,
+  join(staging.get("game"), "index.json"),
   `${JSON.stringify(
     {
-      publishedAt: new Date().toISOString(),
-      count: published,
-      note: "Generated by scripts/publish-assets.mjs from assets/manifest.generated.json — real game art only, attribution in the manifest.",
+      count: digestEntries.length,
+      digest,
+      note: "Generated by scripts/publish-assets.mjs from assets/. Attribution in assets/catalog/.",
     },
     null,
     2,
   )}\n`,
 );
 
-console.log(`ASSET PUBLISH: ${published} files -> public/game/ (${missing.length} missing)`);
-for (const entry of missing) console.log(`  MISSING: ${entry}`);
-if (missing.length) process.exitCode = 1;
+for (const [root, dir] of staging) {
+  const live = join(ROOT, "public", root);
+  await rm(live, { recursive: true, force: true });
+  // rename is atomic within a volume; cp covers the cross-device case.
+  try {
+    await rename(dir, live);
+  } catch {
+    await cp(dir, live, { recursive: true });
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+const perRoot = PUBLIC_ROOTS.map(
+  (root) => `${root} ${digestEntries.filter(([t]) => t.startsWith(`${root}/`)).length}`,
+).join(", ");
+console.log(`ASSET PUBLISH: ${digestEntries.length} files (${perRoot}) digest ${digest}`);

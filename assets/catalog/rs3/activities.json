@@ -1,0 +1,4424 @@
+[
+  {
+    "id": "activities-abandoned-mine",
+    "label": "Abandoned Mine",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/abandoned-mine",
+    "fileTitle": "Abandoned Mine.png",
+    "search": "Abandoned Mine inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Abandoned_Mine"
+  },
+  {
+    "id": "activities-abyss-static",
+    "label": "Abyss Static",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/abyss-static",
+    "fileTitle": "Abyss Static.png",
+    "search": "Abyss Static inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Abyss_Static"
+  },
+  {
+    "id": "activities-abyssal-beasts",
+    "label": "Abyssal Beasts",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/abyssal-beasts",
+    "fileTitle": "Abyssal Beasts.png",
+    "search": "Abyssal Beasts inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Abyssal_Beasts"
+  },
+  {
+    "id": "activities-abyssal-lords",
+    "label": "Abyssal Lords",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/abyssal-lords",
+    "fileTitle": "Abyssal Lords.png",
+    "search": "Abyssal Lords inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Abyssal_Lords"
+  },
+  {
+    "id": "activities-acheron-mammoths",
+    "label": "Acheron Mammoths",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/acheron-mammoths",
+    "fileTitle": "Acheron Mammoths.png",
+    "search": "Acheron Mammoths inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Acheron_Mammoths"
+  },
+  {
+    "id": "activities-agility-pyramid",
+    "label": "Agility Pyramid",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/agility-pyramid",
+    "fileTitle": "Agility Pyramid.png",
+    "search": "Agility Pyramid inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Agility_Pyramid"
+  },
+  {
+    "id": "activities-al-kharid",
+    "label": "Al Kharid",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/al-kharid",
+    "fileTitle": "Al Kharid.png",
+    "search": "Al Kharid inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Al_Kharid",
+    "publish": [
+      "game/upgrades/permanent-unlocks/al-kharid.webp"
+    ]
+  },
+  {
+    "id": "activities-amlodd-clan",
+    "label": "Amlodd Clan",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/amlodd-clan",
+    "fileTitle": "Amlodd Clan.png",
+    "search": "Amlodd Clan inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Amlodd_Clan"
+  },
+  {
+    "id": "activities-astral-altar",
+    "label": "Astral Altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/astral-altar",
+    "fileTitle": "Astral Altar.png",
+    "search": "Astral Altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Astral_Altar",
+    "publish": [
+      "game/upgrades/permanent-unlocks/astral-altar.webp"
+    ]
+  },
+  {
+    "id": "activities-banshees",
+    "label": "Banshees",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/banshees",
+    "fileTitle": "Banshees.png",
+    "search": "Banshees inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Banshees",
+    "publish": [
+      "game/upgrades/permanent-unlocks/banshees.webp"
+    ]
+  },
+  {
+    "id": "activities-barbarian-outpost",
+    "label": "Barbarian Outpost",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/barbarian-outpost",
+    "fileTitle": "Barbarian Outpost.png",
+    "search": "Barbarian Outpost inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Barbarian_Outpost",
+    "publish": [
+      "game/upgrades/permanent-unlocks/barbarian-outpost-agility-course.webp",
+      "game/upgrades/permanent-unlocks/barbarian-outpost.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-barbarian-outpost-agility-course"
+    ]
+  },
+  {
+    "id": "activities-barbarian-training",
+    "label": "Barbarian Training",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/barbarian-training",
+    "fileTitle": "Barbarian Training.png",
+    "search": "Barbarian Training inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Barbarian_Training",
+    "publish": [
+      "game/upgrades/permanent-unlocks/barbarian-training.webp"
+    ]
+  },
+  {
+    "id": "activities-barrows-rise-of-the-six",
+    "label": "Barrows Rise Of The Six",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/barrows-rise-of-the-six",
+    "fileTitle": "Barrows Rise Of The Six.png",
+    "search": "Barrows Rise Of The Six inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Barrows_Rise_Of_The_Six",
+    "publish": [
+      "game/activities/rise-of-the-six.webp",
+      "game/upgrades/permanent-unlocks/barrows-rise-of-the-six.webp",
+      "game/upgrades/permanent-unlocks/rise-of-the-six-alt.webp",
+      "game/upgrades/permanent-unlocks/rise-of-the-six.webp"
+    ],
+    "aliases": [
+      "activity-rise-of-the-six",
+      "bulk42-upgrades-permanent-unlocks-barrows-rise-of-the-six",
+      "bulk42-upgrades-permanent-unlocks-rise-of-the-six",
+      "upgrades-upgrades-permanent-unlocks-rise-of-the-six-alt"
+    ]
+  },
+  {
+    "id": "activities-birdhouse-plot",
+    "label": "Birdhouse Plot",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/birdhouse-plot",
+    "fileTitle": "Birdhouse Plot.png",
+    "search": "Birdhouse Plot inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Birdhouse_Plot",
+    "publish": [
+      "game/upgrades/permanent-unlocks/birdhouse-plot.webp"
+    ]
+  },
+  {
+    "id": "activities-black-salamanders",
+    "label": "Black Salamanders",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/black-salamanders",
+    "fileTitle": "Black Salamanders.png",
+    "search": "Black Salamanders inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Black_Salamanders",
+    "publish": [
+      "game/upgrades/permanent-unlocks/black-salamanders.webp"
+    ]
+  },
+  {
+    "id": "activities-blighted-cave",
+    "label": "Blighted Cave",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/blighted-cave",
+    "fileTitle": "Blighted Cave.png",
+    "search": "Blighted Cave inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Blighted_Cave"
+  },
+  {
+    "id": "activities-brimhaven",
+    "label": "Brimhaven",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/brimhaven",
+    "fileTitle": "Brimhaven.png",
+    "search": "Brimhaven inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Brimhaven"
+  },
+  {
+    "id": "activities-brimhaven-agility-arena",
+    "label": "Brimhaven Agility Arena",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/brimhaven-agility-arena",
+    "fileTitle": "Brimhaven Agility Arena.png",
+    "search": "Brimhaven Agility Arena inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Brimhaven_Agility_Arena",
+    "publish": [
+      "game/upgrades/permanent-unlocks/brimhaven-agility-arena.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-brimhaven-agility-arena"
+    ]
+  },
+  {
+    "id": "activities-cadarn-clan",
+    "label": "Cadarn Clan",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/cadarn-clan",
+    "fileTitle": "Cadarn Clan.png",
+    "search": "Cadarn Clan inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Cadarn_Clan"
+  },
+  {
+    "id": "activities-chaos-temple-wilderness",
+    "label": "Chaos Temple Wilderness",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/chaos-temple-wilderness",
+    "fileTitle": "Chaos Temple Wilderness.png",
+    "search": "Chaos Temple Wilderness inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Chaos_Temple_Wilderness"
+  },
+  {
+    "id": "activities-charming-moths",
+    "label": "Charming Moths",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/charming-moths",
+    "fileTitle": "Charming Moths.png",
+    "search": "Charming Moths inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Charming_Moths",
+    "publish": [
+      "game/upgrades/permanent-unlocks/charming-moths.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-charming-moths"
+    ]
+  },
+  {
+    "id": "activities-citharede-abbey",
+    "label": "Citharede Abbey",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/citharede-abbey",
+    "fileTitle": "Citharede Abbey.png",
+    "search": "Citharede Abbey inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Citharede_Abbey",
+    "publish": [
+      "game/upgrades/permanent-unlocks/citharede-abbey.webp"
+    ]
+  },
+  {
+    "id": "activities-crafting-guild",
+    "label": "Crafting Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/crafting-guild",
+    "fileTitle": "Crafting Guild.png",
+    "search": "Crafting Guild inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Crafting_Guild"
+  },
+  {
+    "id": "activities-crawling-hands",
+    "label": "Crawling Hands",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/crawling-hands",
+    "fileTitle": "Crawling Hands.png",
+    "search": "Crawling Hands inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Crawling_Hands",
+    "publish": [
+      "game/upgrades/permanent-unlocks/crawling-hands.webp"
+    ]
+  },
+  {
+    "id": "activities-crwys-clan",
+    "label": "Crwys Clan",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/crwys-clan",
+    "fileTitle": "Crwys Clan.png",
+    "search": "Crwys Clan inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Crwys_Clan"
+  },
+  {
+    "id": "activities-daemonheim-dig-site",
+    "label": "Daemonheim Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/daemonheim-dig-site",
+    "fileTitle": "Daemonheim Dig Site.png",
+    "search": "Daemonheim Dig Site inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Daemonheim_Dig_Site"
+  },
+  {
+    "id": "activities-daemonheim-peninsula",
+    "label": "Daemonheim Peninsula",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/daemonheim-peninsula",
+    "fileTitle": "Daemonheim Peninsula.png",
+    "search": "Daemonheim Peninsula inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Daemonheim_Peninsula",
+    "publish": [
+      "game/upgrades/permanent-unlocks/daemonheim-peninsula.webp"
+    ]
+  },
+  {
+    "id": "activities-daemonheim-rewards",
+    "label": "Daemonheim Rewards",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/daemonheim-rewards",
+    "fileTitle": "Daemonheim Rewards.png",
+    "search": "Daemonheim Rewards inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Daemonheim_Rewards",
+    "publish": [
+      "game/upgrades/permanent-unlocks/daemonheim-rewards.webp"
+    ]
+  },
+  {
+    "id": "activities-demonic-ruins",
+    "label": "Demonic Ruins",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/demonic-ruins",
+    "fileTitle": "Demonic Ruins.png",
+    "search": "Demonic Ruins inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Demonic_Ruins"
+  },
+  {
+    "id": "activities-desert-strykewyrm",
+    "label": "Desert Strykewyrm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/desert-strykewyrm",
+    "fileTitle": "Desert Strykewyrm.png",
+    "search": "Desert Strykewyrm inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Desert_Strykewyrm",
+    "publish": [
+      "game/upgrades/permanent-unlocks/desert-strykewyrm.webp"
+    ]
+  },
+  {
+    "id": "activities-dragonkin-laboratory-wiki",
+    "label": "Dragonkin Laboratory Wiki",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/dragonkin-laboratory-wiki",
+    "fileTitle": "Dragonkin Laboratory Wiki.png",
+    "search": "Dragonkin Laboratory Wiki inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragonkin_Laboratory_Wiki"
+  },
+  {
+    "id": "activities-draynor-willow-trees",
+    "label": "Draynor Willow Trees",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/draynor-willow-trees",
+    "fileTitle": "Draynor Willow Trees.png",
+    "search": "Draynor Willow Trees inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Draynor_Willow_Trees",
+    "publish": [
+      "game/upgrades/permanent-unlocks/draynor-willow-trees.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-draynor-willow-trees"
+    ]
+  },
+  {
+    "id": "activities-edgeville-resource-dungeons",
+    "label": "Edgeville Resource Dungeons",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/edgeville-resource-dungeons",
+    "fileTitle": "Edgeville Resource Dungeons.png",
+    "search": "Edgeville Resource Dungeons inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Edgeville_Resource_Dungeons",
+    "publish": [
+      "game/upgrades/permanent-unlocks/edgeville-dungeon.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-edgeville-dungeon"
+    ]
+  },
+  {
+    "id": "activities-elemental-workshop",
+    "label": "Elemental Workshop",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/elemental-workshop",
+    "fileTitle": "Elemental Workshop.png",
+    "search": "Elemental Workshop inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Elemental_Workshop",
+    "publish": [
+      "game/upgrades/permanent-unlocks/elemental-workshop.webp"
+    ]
+  },
+  {
+    "id": "activities-fairy-ring",
+    "label": "Fairy Ring",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fairy-ring",
+    "fileTitle": "Fairy Ring.png",
+    "search": "Fairy Ring inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Fairy_Ring",
+    "publish": [
+      "game/upgrades/permanent-unlocks/fairy-ring.webp",
+      "game/upgrades/permanent-unlocks/portable-fairy-ring.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-fairy-ring",
+      "unlock-portable-fairy",
+      "upgrades-permanent-unlocks-portable-fairy-ring"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "upgrades-permanent-unlocks-portable-fairy-ring",
+        "label": "Portable Fairy Ring",
+        "search": "Portable Fairy Ring inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Portable_Fairy_Ring",
+        "fileTitle": "Portable Fairy Ring.png"
+      }
+    ]
+  },
+  {
+    "id": "activities-falador-farm",
+    "label": "Falador Farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/falador-farm",
+    "fileTitle": "Falador Farm.png",
+    "search": "Falador Farm inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Falador_Farm",
+    "publish": [
+      "game/upgrades/permanent-unlocks/falador-farm.webp"
+    ]
+  },
+  {
+    "id": "activities-fishing-guild",
+    "label": "Fishing Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fishing-guild",
+    "fileTitle": "Fishing Guild.png",
+    "search": "Fishing Guild inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Fishing_Guild",
+    "publish": [
+      "game/upgrades/permanent-unlocks/fishing-guild.webp"
+    ]
+  },
+  {
+    "id": "activities-forinthry-dungeon",
+    "label": "Forinthry Dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/forinthry-dungeon",
+    "fileTitle": "Forinthry Dungeon.png",
+    "search": "Forinthry Dungeon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Forinthry_Dungeon"
+  },
+  {
+    "id": "activities-frozen-waste-plateau",
+    "label": "Frozen Waste Plateau",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/frozen-waste-plateau",
+    "fileTitle": "Frozen Waste Plateau.png",
+    "search": "Frozen Waste Plateau inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Frozen_Waste_Plateau"
+  },
+  {
+    "id": "activities-gilded-altar",
+    "label": "Gilded Altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/gilded-altar",
+    "fileTitle": "Gilded Altar.png",
+    "search": "Gilded Altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Gilded_Altar"
+  },
+  {
+    "id": "activities-glacors",
+    "label": "Glacors",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/glacors",
+    "fileTitle": "Glacors.png",
+    "search": "Glacors inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Glacors"
+  },
+  {
+    "id": "activities-gnome-glider",
+    "label": "Gnome Glider",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/gnome-glider",
+    "fileTitle": "Gnome Glider.png",
+    "search": "Gnome Glider inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Gnome_Glider",
+    "publish": [
+      "game/upgrades/permanent-unlocks/gnome-glider.webp"
+    ]
+  },
+  {
+    "id": "activities-goebie-scavengers",
+    "label": "Goebie Scavengers",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/goebie-scavengers",
+    "fileTitle": "Goebie Scavengers.png",
+    "search": "Goebie Scavengers inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Goebie_Scavengers",
+    "publish": [
+      "game/upgrades/permanent-unlocks/goebie-scavengers.webp"
+    ]
+  },
+  {
+    "id": "activities-green-dragons",
+    "label": "Green Dragons",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/green-dragons",
+    "fileTitle": "Green Dragons.png",
+    "search": "Green Dragons inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Green_Dragons"
+  },
+  {
+    "id": "activities-grenwalls",
+    "label": "Grenwalls",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/grenwalls",
+    "fileTitle": "Grenwalls.png",
+    "search": "Grenwalls inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Grenwalls",
+    "publish": [
+      "game/upgrades/permanent-unlocks/grenwalls.webp"
+    ]
+  },
+  {
+    "id": "activities-hardwood-grove",
+    "label": "Hardwood Grove",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hardwood-grove",
+    "fileTitle": "Hardwood Grove.png",
+    "search": "Hardwood Grove inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Hardwood_Grove"
+  },
+  {
+    "id": "activities-havenhythe-big-game-hunter",
+    "label": "Havenhythe Big Game Hunter",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/havenhythe-big-game-hunter",
+    "fileTitle": "Havenhythe Big Game Hunter.png",
+    "search": "Havenhythe Big Game Hunter inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Havenhythe_Big_Game_Hunter",
+    "publish": [
+      "game/upgrades/permanent-unlocks/havenhythe-big-game-hunter.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-havenhythe-big-game-hunter"
+    ]
+  },
+  {
+    "id": "activities-hefin-agility-course",
+    "label": "Hefin Agility Course",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hefin-agility-course",
+    "fileTitle": "Hefin Agility Course.png",
+    "search": "Hefin Agility Course inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Hefin_Agility_Course",
+    "publish": [
+      "game/upgrades/permanent-unlocks/hefin-agility-course.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-hefin-agility-course"
+    ]
+  },
+  {
+    "id": "activities-hefin-clan",
+    "label": "Hefin Clan",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hefin-clan",
+    "fileTitle": "Hefin Clan.png",
+    "search": "Hefin Clan inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Hefin_Clan"
+  },
+  {
+    "id": "activities-herblore-habitat",
+    "label": "Herblore Habitat",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/herblore-habitat",
+    "fileTitle": "Herblore Habitat.png",
+    "search": "Herblore Habitat inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Herblore_Habitat",
+    "publish": [
+      "game/upgrades/permanent-unlocks/herblore-habitat.webp"
+    ]
+  },
+  {
+    "id": "activities-hollow-hill",
+    "label": "Hollow Hill",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hollow-hill",
+    "fileTitle": "Hollow Hill.png",
+    "search": "Hollow Hill inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Hollow_Hill"
+  },
+  {
+    "id": "activities-house-portal",
+    "label": "House Portal",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/house-portal",
+    "fileTitle": "House Portal.png",
+    "search": "House Portal inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/House_Portal",
+    "publish": [
+      "game/upgrades/permanent-unlocks/house-portal.webp",
+      "game/upgrades/permanent-unlocks/player-owned-house.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-player-owned-house"
+    ]
+  },
+  {
+    "id": "activities-ice-strykewyrm",
+    "label": "Ice Strykewyrm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ice-strykewyrm",
+    "fileTitle": "Ice Strykewyrm.png",
+    "search": "Ice Strykewyrm inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ice_Strykewyrm",
+    "publish": [
+      "game/bosses/ice-strykewyrm.webp"
+    ]
+  },
+  {
+    "id": "activities-infernal-source",
+    "label": "Infernal Source",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/infernal-source",
+    "fileTitle": "Infernal Source.png",
+    "search": "Infernal Source inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Infernal_Source"
+  },
+  {
+    "id": "activities-isafdar",
+    "label": "Isafdar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/isafdar",
+    "fileTitle": "Isafdar.png",
+    "search": "Isafdar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Isafdar"
+  },
+  {
+    "id": "activities-ivar-king-of-bones",
+    "label": "Ivar King Of Bones",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ivar-king-of-bones",
+    "fileTitle": "Ivar King Of Bones.png",
+    "search": "Ivar King Of Bones inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ivar_King_Of_Bones"
+  },
+  {
+    "id": "activities-jackalopes",
+    "label": "Jackalopes",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/jackalopes",
+    "fileTitle": "Jackalopes.png",
+    "search": "Jackalopes inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jackalopes",
+    "publish": [
+      "game/upgrades/permanent-unlocks/jackalope.webp",
+      "game/upgrades/skilling-production/jackalope.webp"
+    ],
+    "aliases": [
+      "u40-jackalope",
+      "upgrades-permanent-unlocks-jackalope"
+    ]
+  },
+  {
+    "id": "activities-jadinko-favour",
+    "label": "Jadinko Favour",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/jadinko-favour",
+    "fileTitle": "Jadinko Favour.png",
+    "search": "Jadinko Favour inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jadinko_Favour",
+    "publish": [
+      "game/upgrades/permanent-unlocks/jadinko-favour.webp"
+    ]
+  },
+  {
+    "id": "activities-jadinko-lair",
+    "label": "Jadinko Lair",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/jadinko-lair",
+    "fileTitle": "Jadinko Lair.png",
+    "search": "Jadinko Lair inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jadinko_Lair",
+    "publish": [
+      "game/upgrades/permanent-unlocks/jadinko-lair.webp"
+    ]
+  },
+  {
+    "id": "activities-kharid",
+    "label": "Kharid",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/kharid",
+    "fileTitle": "Kharid.png",
+    "search": "Kharid inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Kharid"
+  },
+  {
+    "id": "activities-lava-maze",
+    "label": "Lava Maze",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lava-maze",
+    "fileTitle": "Lava Maze.png",
+    "search": "Lava Maze inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Lava_Maze"
+  },
+  {
+    "id": "activities-lava-strykewyrm",
+    "label": "Lava Strykewyrm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lava-strykewyrm",
+    "fileTitle": "Lava Strykewyrm.png",
+    "search": "Lava Strykewyrm inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Lava_Strykewyrm",
+    "publish": [
+      "game/bosses/lava-strykewyrm.webp"
+    ]
+  },
+  {
+    "id": "activities-lesser-demons",
+    "label": "Lesser Demons",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lesser-demons",
+    "fileTitle": "Lesser Demons.png",
+    "search": "Lesser Demons inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Lesser_Demons",
+    "publish": [
+      "game/upgrades/permanent-unlocks/lesser-demons.webp"
+    ]
+  },
+  {
+    "id": "activities-liberation-of-mazcab",
+    "label": "Liberation Of Mazcab",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/liberation-of-mazcab",
+    "fileTitle": "Liberation Of Mazcab.png",
+    "search": "Liberation Of Mazcab inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Liberation_Of_Mazcab",
+    "publish": [
+      "game/upgrades/permanent-unlocks/mazcab.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-mazcab"
+    ]
+  },
+  {
+    "id": "activities-lletya",
+    "label": "Lletya",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lletya",
+    "fileTitle": "Lletya.png",
+    "search": "Lletya inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Lletya"
+  },
+  {
+    "id": "activities-lumbridge-hops-patch",
+    "label": "Lumbridge Hops Patch",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lumbridge-hops-patch",
+    "fileTitle": "Lumbridge Hops Patch.png",
+    "search": "Lumbridge Hops Patch inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Lumbridge_Hops_Patch",
+    "publish": [
+      "game/upgrades/permanent-unlocks/hops-patch.webp",
+      "game/upgrades/permanent-unlocks/lumbridge-hops-patch.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-lumbridge-hops-patch",
+      "upgrades-permanent-unlocks-hops-patch"
+    ]
+  },
+  {
+    "id": "activities-mage-of-zamorak",
+    "label": "Mage Of Zamorak",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mage-of-zamorak",
+    "fileTitle": "Mage Of Zamorak.png",
+    "search": "Mage Of Zamorak inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Mage_Of_Zamorak",
+    "publish": [
+      "game/upgrades/permanent-unlocks/mage-of-zamorak.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-mage-of-zamorak"
+    ]
+  },
+  {
+    "id": "activities-mage-training-arena",
+    "label": "Mage Training Arena",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mage-training-arena",
+    "fileTitle": "Mage Training Arena.png",
+    "search": "Mage Training Arena inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Mage_Training_Arena",
+    "publish": [
+      "game/upgrades/permanent-unlocks/mage-training-arena.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-mage-training-arena"
+    ]
+  },
+  {
+    "id": "activities-marigold-farm",
+    "label": "Marigold Farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/marigold-farm",
+    "fileTitle": "Marigold Farm.png",
+    "search": "Marigold Farm inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Marigold_Farm"
+  },
+  {
+    "id": "activities-mazcab-emergency-merchants",
+    "label": "Mazcab Emergency Merchants",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mazcab-emergency-merchants",
+    "fileTitle": "Mazcab Emergency Merchants.png",
+    "search": "Mazcab Emergency Merchants inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Mazcab_Emergency_Merchants",
+    "publish": [
+      "game/upgrades/permanent-unlocks/mazcab-emergency-merchants.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-mazcab-emergency-merchants"
+    ]
+  },
+  {
+    "id": "activities-meilyr-recipe-shop",
+    "label": "Meilyr Recipe Shop",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/meilyr-recipe-shop",
+    "fileTitle": "Meilyr Recipe Shop.png",
+    "search": "Meilyr Recipe Shop inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Meilyr_Recipe_Shop",
+    "publish": [
+      "game/upgrades/permanent-unlocks/meilyr-potion.webp",
+      "game/upgrades/permanent-unlocks/meilyr-recipe-shop.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-meilyr-recipe-shop",
+      "upgrades-permanent-unlocks-meilyr-potion"
+    ]
+  },
+  {
+    "id": "activities-memorial-to-guthix",
+    "label": "Memorial To Guthix",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/memorial-to-guthix",
+    "fileTitle": "Memorial To Guthix.png",
+    "search": "Memorial To Guthix inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Memorial_To_Guthix",
+    "publish": [
+      "game/upgrades/permanent-unlocks/memorial-to-guthix.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-memorial-to-guthix"
+    ]
+  },
+  {
+    "id": "activities-mining-guild",
+    "label": "Mining Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mining-guild",
+    "fileTitle": "Mining Guild.png",
+    "search": "Mining Guild inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Mining_Guild",
+    "publish": [
+      "game/upgrades/permanent-unlocks/mining-guild.webp"
+    ]
+  },
+  {
+    "id": "activities-miscellania",
+    "label": "Miscellania",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/miscellania",
+    "fileTitle": "Miscellania.png",
+    "search": "Miscellania inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Miscellania",
+    "publish": [
+      "game/upgrades/permanent-unlocks/managing-miscellania.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-managing-miscellania"
+    ]
+  },
+  {
+    "id": "activities-musa-point",
+    "label": "Musa Point",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/musa-point",
+    "fileTitle": "Musa Point.png",
+    "search": "Musa Point inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Musa_Point"
+  },
+  {
+    "id": "activities-nature-altar",
+    "label": "Nature Altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/nature-altar",
+    "fileTitle": "Nature Altar.png",
+    "search": "Nature Altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Nature_Altar"
+  },
+  {
+    "id": "activities-necromantic-rune-temple",
+    "label": "Necromantic Rune Temple",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/necromantic-rune-temple",
+    "fileTitle": "Necromantic Rune Temple.png",
+    "search": "Necromantic Rune Temple inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Necromantic_Rune_Temple",
+    "publish": [
+      "game/upgrades/permanent-unlocks/necromantic-rune-temple.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-necromantic-rune-temple"
+    ]
+  },
+  {
+    "id": "activities-nopenopenope",
+    "label": "Nopenopenope",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/nopenopenope",
+    "fileTitle": "Nopenopenope.png",
+    "search": "Nopenopenope inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Nopenopenope",
+    "publish": [
+      "game/upgrades/permanent-unlocks/nopenopenope.webp"
+    ]
+  },
+  {
+    "id": "activities-pirates-hideout",
+    "label": "Pirates Hideout",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/pirates-hideout",
+    "fileTitle": "Pirates Hideout.png",
+    "search": "Pirates Hideout inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Pirates_Hideout"
+  },
+  {
+    "id": "activities-piscatoris-fishing-colony",
+    "label": "Piscatoris Fishing Colony",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/piscatoris-fishing-colony",
+    "fileTitle": "Piscatoris Fishing Colony.png",
+    "search": "Piscatoris Fishing Colony inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Piscatoris_Fishing_Colony",
+    "publish": [
+      "game/upgrades/permanent-unlocks/piscatoris-fishing-colony.webp",
+      "game/upgrades/permanent-unlocks/piscatoris-hunter-area.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-piscatoris-fishing-colony",
+      "upgrades-permanent-unlocks-piscatoris-hunter-area"
+    ]
+  },
+  {
+    "id": "activities-player-owned-port",
+    "label": "Player Owned Port",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/player-owned-port",
+    "fileTitle": "Player Owned Port.png",
+    "search": "Player Owned Port inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Player_Owned_Port",
+    "publish": [
+      "game/upgrades/permanent-unlocks/player-owned-port.webp",
+      "game/upgrades/permanent-unlocks/player-owned-ports.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-player-owned-port",
+      "upgrades-permanent-unlocks-player-owned-ports"
+    ]
+  },
+  {
+    "id": "activities-port-phasmatys",
+    "label": "Port Phasmatys",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/port-phasmatys",
+    "fileTitle": "Port Phasmatys.png",
+    "search": "Port Phasmatys inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Port_Phasmatys",
+    "publish": [
+      "game/upgrades/permanent-unlocks/port-phasmatys.webp"
+    ]
+  },
+  {
+    "id": "activities-port-tyras",
+    "label": "Port Tyras",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/port-tyras",
+    "fileTitle": "Port Tyras.png",
+    "search": "Port Tyras inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Port_Tyras"
+  },
+  {
+    "id": "activities-prifddinas-spirit-tree",
+    "label": "Prifddinas Spirit Tree",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/prifddinas-spirit-tree",
+    "fileTitle": "Prifddinas Spirit Tree.png",
+    "search": "Prifddinas Spirit Tree inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Prifddinas_Spirit_Tree"
+  },
+  {
+    "id": "activities-ranging-guild",
+    "label": "Ranging Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ranging-guild",
+    "fileTitle": "Ranging Guild.png",
+    "search": "Ranging Guild inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ranging_Guild",
+    "publish": [
+      "game/upgrades/permanent-unlocks/ranging-guild.webp"
+    ]
+  },
+  {
+    "id": "activities-red-chinchompas",
+    "label": "Red Chinchompas",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/red-chinchompas",
+    "fileTitle": "Red Chinchompas.png",
+    "search": "Red Chinchompas inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Red_Chinchompas"
+  },
+  {
+    "id": "activities-revenants",
+    "label": "Revenants",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/revenants",
+    "fileTitle": "Revenants.png",
+    "search": "Revenants inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Revenants"
+  },
+  {
+    "id": "activities-rimmington",
+    "label": "Rimmington",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/rimmington",
+    "fileTitle": "Rimmington.png",
+    "search": "Rimmington inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Rimmington",
+    "publish": [
+      "game/upgrades/permanent-unlocks/rimmington.webp"
+    ]
+  },
+  {
+    "id": "activities-ripper-demons",
+    "label": "Ripper Demons",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ripper-demons",
+    "fileTitle": "Ripper Demons.png",
+    "search": "Ripper Demons inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ripper_Demons"
+  },
+  {
+    "id": "activities-rogues-castle",
+    "label": "Rogues Castle",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/rogues-castle",
+    "fileTitle": "Rogues Castle.png",
+    "search": "Rogues Castle inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Rogues_Castle"
+  },
+  {
+    "id": "activities-shifting-tombs",
+    "label": "Shifting Tombs",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/shifting-tombs",
+    "fileTitle": "Shifting Tombs.png",
+    "search": "Shifting Tombs inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Shifting_Tombs",
+    "publish": [
+      "game/upgrades/permanent-unlocks/shifting-tombs.webp"
+    ]
+  },
+  {
+    "id": "activities-shilo-village",
+    "label": "Shilo Village",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/shilo-village",
+    "fileTitle": "Shilo Village.png",
+    "search": "Shilo Village inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Shilo_Village"
+  },
+  {
+    "id": "activities-shrine-of-inanna",
+    "label": "Shrine Of Inanna",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/shrine-of-inanna",
+    "fileTitle": "Shrine Of Inanna.png",
+    "search": "Shrine Of Inanna inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Shrine_Of_Inanna"
+  },
+  {
+    "id": "activities-skeletons",
+    "label": "Skeletons",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/skeletons",
+    "fileTitle": "Skeletons.png",
+    "search": "Skeletons inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Skeletons",
+    "publish": [
+      "game/upgrades/permanent-unlocks/skeletons.webp"
+    ]
+  },
+  {
+    "id": "activities-soul-altar",
+    "label": "Soul Altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/soul-altar",
+    "fileTitle": "Soul Altar.png",
+    "search": "Soul Altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Soul_Altar",
+    "publish": [
+      "game/upgrades/permanent-unlocks/soul-altar.webp"
+    ]
+  },
+  {
+    "id": "activities-soulgazer",
+    "label": "Soulgazer",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/soulgazer",
+    "fileTitle": "Soulgazer.png",
+    "search": "Soulgazer inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Soulgazer",
+    "publish": [
+      "game/bosses/soulgazer.webp"
+    ]
+  },
+  {
+    "id": "activities-spirit-tree",
+    "label": "Spirit Tree",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/spirit-tree",
+    "fileTitle": "Spirit Tree.png",
+    "search": "Spirit Tree inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Spirit_Tree",
+    "publish": [
+      "game/activities/tree-gnome-stronghold.webp",
+      "game/upgrades/permanent-unlocks/spirit-tree.webp",
+      "game/upgrades/permanent-unlocks/tree-gnome-stronghold.webp"
+    ],
+    "aliases": [
+      "activities-tree-gnome-stronghold",
+      "bulk42-upgrades-permanent-unlocks-spirit-tree",
+      "bulk42-upgrades-permanent-unlocks-tree-gnome-stronghold"
+    ]
+  },
+  {
+    "id": "activities-sunken-pyramid",
+    "label": "Sunken Pyramid",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/sunken-pyramid",
+    "fileTitle": "Sunken Pyramid.png",
+    "search": "Sunken Pyramid inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Sunken_Pyramid",
+    "publish": [
+      "game/upgrades/permanent-unlocks/sunken-pyramid.webp"
+    ]
+  },
+  {
+    "id": "activities-thieves-guild",
+    "label": "Thieves Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/thieves-guild",
+    "fileTitle": "Thieves Guild.png",
+    "search": "Thieves Guild inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Thieves_Guild"
+  },
+  {
+    "id": "activities-trahaearn-clan",
+    "label": "Trahaearn Clan",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/trahaearn-clan",
+    "fileTitle": "Trahaearn Clan.png",
+    "search": "Trahaearn Clan inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Trahaearn_Clan",
+    "publish": [
+      "game/upgrades/permanent-unlocks/trahaearn-clan.webp"
+    ]
+  },
+  {
+    "id": "activities-tzhaar-area",
+    "label": "Tzhaar Area",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/tzhaar-area",
+    "fileTitle": "Tzhaar Area.png",
+    "search": "Tzhaar Area inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Tzhaar_Area",
+    "publish": [
+      "game/activities/tzhaar-city.webp",
+      "game/upgrades/permanent-unlocks/tzhaar-city.webp",
+      "game/upgrades/permanent-unlocks/tzhaar.webp"
+    ],
+    "aliases": [
+      "activities-tzhaar-city",
+      "upgrades-permanent-unlocks-tzhaar"
+    ]
+  },
+  {
+    "id": "activities-um-mushroom-patch",
+    "label": "Um Mushroom Patch",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/um-mushroom-patch",
+    "fileTitle": "Um Mushroom Patch.png",
+    "search": "Um Mushroom Patch inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Um_Mushroom_Patch",
+    "publish": [
+      "game/upgrades/permanent-unlocks/um-mushroom-patch.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-um-mushroom-patch"
+    ]
+  },
+  {
+    "id": "activities-um-soul-forge",
+    "label": "Um Soul Forge",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/um-soul-forge",
+    "fileTitle": "Um Soul Forge.png",
+    "search": "Um Soul Forge inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Um_Soul_Forge",
+    "publish": [
+      "game/upgrades/permanent-unlocks/um-soul-forge.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-um-soul-forge"
+    ]
+  },
+  {
+    "id": "activities-ungael",
+    "label": "Ungael",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ungael",
+    "fileTitle": "Ungael.png",
+    "search": "Ungael inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ungael",
+    "publish": [
+      "game/upgrades/permanent-unlocks/ungael-ritual.webp",
+      "game/upgrades/permanent-unlocks/ungael.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-ungael-ritual"
+    ]
+  },
+  {
+    "id": "activities-varrock-palace-tree-patch",
+    "label": "Varrock Palace Tree Patch",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/varrock-palace-tree-patch",
+    "fileTitle": "Varrock Palace Tree Patch.png",
+    "search": "Varrock Palace Tree Patch inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Varrock_Palace_Tree_Patch",
+    "publish": [
+      "game/upgrades/permanent-unlocks/tree-patch.webp",
+      "game/upgrades/permanent-unlocks/varrock-palace-tree-patch.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-varrock-palace-tree-patch",
+      "upgrades-permanent-unlocks-tree-patch"
+    ]
+  },
+  {
+    "id": "activities-warped-depths",
+    "label": "Warped Depths",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/warped-depths",
+    "fileTitle": "Warped Depths.png",
+    "search": "Warped Depths inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Warped_Depths",
+    "publish": [
+      "game/upgrades/permanent-unlocks/warped-depths.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-warped-depths"
+    ]
+  },
+  {
+    "id": "activities-waterfall-fishing-plate",
+    "label": "Waterfall Fishing Plate",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/waterfall-fishing-plate",
+    "fileTitle": "Waterfall Fishing Plate.png",
+    "search": "Waterfall Fishing Plate inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Waterfall_Fishing_Plate"
+  },
+  {
+    "id": "activities-wendlewick",
+    "label": "Wendlewick",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wendlewick",
+    "fileTitle": "Wendlewick.png",
+    "search": "Wendlewick inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Wendlewick"
+  },
+  {
+    "id": "activities-werewolf-agility-course",
+    "label": "Werewolf Agility Course",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/werewolf-agility-course",
+    "fileTitle": "Werewolf Agility Course.png",
+    "search": "Werewolf Agility Course inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Werewolf_Agility_Course",
+    "publish": [
+      "game/upgrades/permanent-unlocks/werewolf-agility-course.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-werewolf-agility-course"
+    ]
+  },
+  {
+    "id": "activities-wilderness-bloodwood",
+    "label": "Wilderness Bloodwood",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wilderness-bloodwood",
+    "fileTitle": "Wilderness Bloodwood.png",
+    "search": "Wilderness Bloodwood inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Wilderness_Bloodwood",
+    "publish": [
+      "game/upgrades/permanent-unlocks/wilderness-bloodwood.webp"
+    ]
+  },
+  {
+    "id": "activities-wilderness-crater",
+    "label": "Wilderness Crater",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wilderness-crater",
+    "fileTitle": "Wilderness Crater.png",
+    "search": "Wilderness Crater inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Wilderness_Crater"
+  },
+  {
+    "id": "activities-wilderness-runite",
+    "label": "Wilderness Runite",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wilderness-runite",
+    "fileTitle": "Wilderness Runite.png",
+    "search": "Wilderness Runite inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Wilderness_Runite",
+    "publish": [
+      "game/upgrades/permanent-unlocks/wilderness-runite.webp"
+    ]
+  },
+  {
+    "id": "activities-yak",
+    "label": "Yak",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/yak",
+    "fileTitle": "Yak.png",
+    "search": "Yak inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Yak",
+    "publish": [
+      "game/upgrades/permanent-unlocks/yak.webp"
+    ]
+  },
+  {
+    "id": "activity-abyss",
+    "label": "The Abyss",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/abyss",
+    "search": "Abyss Runecrafting image",
+    "canonicalPage": "https://runescape.wiki/w/Abyss"
+  },
+  {
+    "id": "activity-anachronia-agility-course",
+    "label": "Anachronia Agility Course",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/anachronia-agility-course",
+    "search": "Anachronia Agility Course image",
+    "canonicalPage": "https://runescape.wiki/w/Anachronia_Agility_Course",
+    "publish": [
+      "game/upgrades/permanent-unlocks/anachronia-agility-course.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-anachronia-agility-course"
+    ]
+  },
+  {
+    "id": "activity-artisans-workshop",
+    "label": "Artisans' Workshop",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/artisans-workshop",
+    "search": "Artisans' Workshop image",
+    "canonicalPage": "https://runescape.wiki/w/Artisans%27_Workshop",
+    "publish": [
+      "game/upgrades/permanent-unlocks/artisans-workshop.webp"
+    ]
+  },
+  {
+    "id": "activity-austins-place",
+    "label": "Austin's Place",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/austins-place",
+    "search": "Austin's Place City of Um shop image",
+    "canonicalPage": "https://runescape.wiki/w/Austin%27s_Place",
+    "publish": [
+      "game/upgrades/permanent-unlocks/austins-place.webp"
+    ]
+  },
+  {
+    "id": "activity-bandit-camp",
+    "label": "Bandit Camp",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/bandit-camp",
+    "fileTitle": "Bandit Camp.png",
+    "search": "Bandit Camp Wilderness",
+    "canonicalPage": "https://runescape.wiki/w/Bandit_Camp_(Wilderness)",
+    "aliases": [
+      "activities-bandit-camp"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-bandit-camp",
+        "search": "Bandit Camp inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Bandit_Camp"
+      }
+    ]
+  },
+  {
+    "id": "activity-barrows",
+    "label": "Barrows",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/barrows",
+    "search": "Barrows image",
+    "canonicalPage": "https://runescape.wiki/w/Barrows",
+    "publish": [
+      "game/upgrades/permanent-unlocks/barrows.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-barrows"
+    ]
+  },
+  {
+    "id": "activity-big-game-hunter",
+    "label": "Big Game Hunter",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/big-game-hunter",
+    "search": "Big Game Hunter icon image",
+    "canonicalPage": "https://runescape.wiki/w/Big_Game_Hunter",
+    "publish": [
+      "game/upgrades/permanent-unlocks/big-game-hunter.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-big-game-hunter"
+    ]
+  },
+  {
+    "id": "activity-cabbage-facepunch-bonanza",
+    "label": "Cabbage Facepunch Bonanza",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/cabbage-facepunch-bonanza",
+    "search": "Cabbage Facepunch Bonanza activity image",
+    "canonicalPage": "https://runescape.wiki/w/Cabbage_Facepunch_Bonanza"
+  },
+  {
+    "id": "activity-city-of-um",
+    "label": "City of Um",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/city-of-um",
+    "search": "City of Um image",
+    "canonicalPage": "https://runescape.wiki/w/City_of_Um"
+  },
+  {
+    "id": "activity-deep-sea-fishing",
+    "label": "Deep Sea Fishing hub",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/deep-sea-fishing",
+    "search": "Deep Sea Fishing hub image",
+    "canonicalPage": "https://runescape.wiki/w/Deep_Sea_Fishing_hub",
+    "publish": [
+      "game/upgrades/permanent-unlocks/deep-sea-fishing.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-deep-sea-fishing"
+    ]
+  },
+  {
+    "id": "activity-dominion-tower",
+    "label": "Dominion Tower",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/dominion-tower",
+    "search": "Dominion Tower location image",
+    "canonicalPage": "https://runescape.wiki/w/Dominion_Tower"
+  },
+  {
+    "id": "activity-dragonkin-laboratory",
+    "label": "Dragonkin Laboratory",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/dragonkin-laboratory",
+    "search": "Dragonkin Laboratory image",
+    "canonicalPage": "https://runescape.wiki/w/Dragonkin_Laboratory",
+    "publish": [
+      "game/upgrades/permanent-unlocks/dragonkin-laboratory.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-dragonkin-laboratory"
+    ]
+  },
+  {
+    "id": "activity-ectofuntus",
+    "label": "Ectofuntus",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/ectofuntus",
+    "search": "Ectofuntus location image",
+    "canonicalPage": "https://runescape.wiki/w/Ectofuntus",
+    "publish": [
+      "game/activities/ectofuntus.webp",
+      "game/upgrades/permanent-unlocks/ectofuntus.webp"
+    ]
+  },
+  {
+    "id": "activity-farmers-market",
+    "label": "Farmers' Market",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/farmers-market",
+    "search": "Farmers' Market Player-owned Farm shop image",
+    "canonicalPage": "https://runescape.wiki/w/Farmers%27_Market"
+  },
+  {
+    "id": "activity-flash-powder-factory",
+    "label": "Flash Powder Factory",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/flash-powder-factory",
+    "search": "Flash Powder Factory activity image",
+    "canonicalPage": "https://runescape.wiki/w/Flash_Powder_Factory"
+  },
+  {
+    "id": "activity-garden-of-kharid",
+    "label": "Garden of Kharid",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/garden-of-kharid",
+    "search": "Garden of Kharid location image",
+    "canonicalPage": "https://runescape.wiki/w/Garden_of_Kharid",
+    "publish": [
+      "game/activities/garden-of-kharid.webp",
+      "game/upgrades/permanent-unlocks/garden-of-kharid.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-garden-of-kharid"
+    ]
+  },
+  {
+    "id": "activity-gnome-restaurant",
+    "label": "Gnome Restaurant",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/gnome-restaurant",
+    "search": "Gnome Restaurant Grand Tree activity image",
+    "canonicalPage": "https://runescape.wiki/w/Gnome_Restaurant",
+    "publish": [
+      "game/activities/gnome-restaurant.webp",
+      "game/upgrades/permanent-unlocks/gnome-restaurant.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-gnome-restaurant"
+    ]
+  },
+  {
+    "id": "activity-hall-of-memories",
+    "label": "Hall of Memories",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hall-of-memories",
+    "search": "Hall of Memories image",
+    "canonicalPage": "https://runescape.wiki/w/Hall_of_Memories",
+    "publish": [
+      "game/upgrades/permanent-unlocks/hall-of-memories.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-hall-of-memories"
+    ]
+  },
+  {
+    "id": "activity-hets-oasis",
+    "label": "Het's Oasis",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hets-oasis",
+    "search": "Het's Oasis image",
+    "canonicalPage": "https://runescape.wiki/w/Het%27s_Oasis",
+    "publish": [
+      "game/upgrades/permanent-unlocks/hets-oasis.webp"
+    ]
+  },
+  {
+    "id": "activity-invention-guild",
+    "label": "Invention Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/invention-guild",
+    "search": "Invention Guild image",
+    "canonicalPage": "https://runescape.wiki/w/Invention_Guild",
+    "publish": [
+      "game/upgrades/permanent-unlocks/invention-guild.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-invention-guild"
+    ]
+  },
+  {
+    "id": "activity-lava-flow-mine",
+    "label": "Lava Flow Mine",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/lava-flow-mine",
+    "search": "Lava Flow Mine location image",
+    "canonicalPage": "https://runescape.wiki/w/Lava_Flow_Mine",
+    "publish": [
+      "game/upgrades/permanent-unlocks/lava-flow-mine.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-lava-flow-mine"
+    ]
+  },
+  {
+    "id": "activity-livid-farm",
+    "label": "Livid Farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/livid-farm",
+    "search": "Livid Farm image",
+    "canonicalPage": "https://runescape.wiki/w/Livid_Farm",
+    "publish": [
+      "game/upgrades/permanent-unlocks/livid-farm.webp"
+    ]
+  },
+  {
+    "id": "activity-lost-grove",
+    "label": "The Lost Grove",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lost-grove",
+    "search": "The Lost Grove image",
+    "canonicalPage": "https://runescape.wiki/w/The_Lost_Grove",
+    "publish": [
+      "game/upgrades/permanent-unlocks/lost-grove.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-lost-grove"
+    ]
+  },
+  {
+    "id": "activity-lunar-isle",
+    "label": "Lunar Isle",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lunar-isle",
+    "search": "Lunar Isle image",
+    "canonicalPage": "https://runescape.wiki/w/Lunar_Isle",
+    "publish": [
+      "game/upgrades/permanent-unlocks/lunar-island.webp",
+      "game/upgrades/permanent-unlocks/lunar-isle.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-lunar-island"
+    ]
+  },
+  {
+    "id": "activity-mage-arena",
+    "label": "Mage Arena",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mage-arena",
+    "search": "Mage Arena location image",
+    "canonicalPage": "https://runescape.wiki/w/Mage_Arena",
+    "publish": [
+      "game/upgrades/permanent-unlocks/mage-arena.webp"
+    ]
+  },
+  {
+    "id": "activity-max-guild",
+    "label": "Max Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/max-guild",
+    "search": "Max Guild image",
+    "canonicalPage": "https://runescape.wiki/w/Max_Guild",
+    "publish": [
+      "game/upgrades/permanent-unlocks/max-guild.webp"
+    ]
+  },
+  {
+    "id": "activity-menaphos",
+    "label": "Menaphos",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/menaphos",
+    "search": "Menaphos image",
+    "canonicalPage": "https://runescape.wiki/w/Menaphos",
+    "publish": [
+      "game/upgrades/permanent-unlocks/menaphos.webp"
+    ]
+  },
+  {
+    "id": "activity-monastery-of-ascension",
+    "label": "Monastery of Ascension",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/monastery-of-ascension",
+    "search": "Monastery of Ascension image",
+    "canonicalPage": "https://runescape.wiki/w/Monastery_of_Ascension",
+    "publish": [
+      "game/upgrades/permanent-unlocks/legiones.webp",
+      "game/upgrades/permanent-unlocks/monastery-of-ascension.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-legiones",
+      "bulk42-upgrades-permanent-unlocks-monastery-of-ascension"
+    ]
+  },
+  {
+    "id": "activity-prifddinas",
+    "label": "Prifddinas",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/prifddinas",
+    "search": "Prifddinas image",
+    "canonicalPage": "https://runescape.wiki/w/Prifddinas",
+    "publish": [
+      "game/upgrades/permanent-unlocks/prifddinas.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-prifddinas"
+    ]
+  },
+  {
+    "id": "activity-pyramid-plunder",
+    "label": "Pyramid Plunder",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/pyramid-plunder",
+    "search": "Pyramid Plunder activity image",
+    "canonicalPage": "https://runescape.wiki/w/Pyramid_Plunder",
+    "publish": [
+      "game/activities/pyramid-plunder.webp",
+      "game/upgrades/permanent-unlocks/pyramid-plunder.webp"
+    ]
+  },
+  {
+    "id": "activity-runespan",
+    "label": "Runespan",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/runespan",
+    "search": "Runespan activity image",
+    "canonicalPage": "https://runescape.wiki/w/Runespan",
+    "publish": [
+      "game/activities/runespan.webp",
+      "game/upgrades/permanent-unlocks/runespan.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-runespan"
+    ]
+  },
+  {
+    "id": "activity-sanctum-of-rebirth",
+    "label": "Sanctum of Rebirth",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/sanctum-of-rebirth",
+    "search": "Sanctum of Rebirth location image",
+    "canonicalPage": "https://runescape.wiki/w/Sanctum_of_Rebirth",
+    "publish": [
+      "game/bosses/nakatra.webp"
+    ],
+    "aliases": [
+      "boss-nakatra"
+    ]
+  },
+  {
+    "id": "activity-shadow-reef",
+    "label": "The Shadow Reef",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/shadow-reef",
+    "search": "Shadow Reef image",
+    "canonicalPage": "https://runescape.wiki/w/The_Shadow_Reef",
+    "publish": [
+      "game/activities/the-shadow-reef.webp"
+    ],
+    "aliases": [
+      "activities-the-shadow-reef"
+    ]
+  },
+  {
+    "id": "activity-shattered-worlds",
+    "label": "Shattered Worlds",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/shattered-worlds",
+    "search": "Shattered Worlds image",
+    "canonicalPage": "https://runescape.wiki/w/Shattered_Worlds",
+    "publish": [
+      "game/upgrades/permanent-unlocks/shattered-worlds.webp"
+    ]
+  },
+  {
+    "id": "activity-slayer-tower",
+    "label": "Slayer Tower",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/slayer-tower",
+    "search": "Slayer Tower image",
+    "canonicalPage": "https://runescape.wiki/w/Slayer_Tower",
+    "publish": [
+      "game/upgrades/permanent-unlocks/slayer-tower.webp"
+    ],
+    "aliases": [
+      "bulk42-upgrades-permanent-unlocks-slayer-tower"
+    ]
+  },
+  {
+    "id": "activity-sophanem-slayer-dungeon",
+    "label": "Sophanem Slayer Dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/sophanem-slayer-dungeon",
+    "search": "Sophanem Slayer Dungeon image",
+    "canonicalPage": "https://runescape.wiki/w/Sophanem_Slayer_Dungeon"
+  },
+  {
+    "id": "activity-time-altar",
+    "label": "Time altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/time-altar",
+    "search": "Time altar image",
+    "canonicalPage": "https://runescape.wiki/w/Time_altar"
+  },
+  {
+    "id": "activity-tzhaar-fight-cave",
+    "label": "TzHaar Fight Cave",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/tzhaar-fight-cave",
+    "search": "TzHaar Fight Cave image",
+    "canonicalPage": "https://runescape.wiki/w/TzHaar_Fight_Cave"
+  },
+  {
+    "id": "activity-wars-retreat",
+    "label": "War's Retreat",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wars-retreat",
+    "search": "War's Retreat image",
+    "canonicalPage": "https://runescape.wiki/w/War%27s_Retreat",
+    "publish": [
+      "game/upgrades/permanent-unlocks/wars-retreat-hub.webp"
+    ],
+    "aliases": [
+      "upgrades-permanent-unlocks-wars-retreat-hub"
+    ]
+  },
+  {
+    "id": "activity-waterbirth-island",
+    "label": "Waterbirth Island",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/waterbirth-island",
+    "search": "Waterbirth Island image",
+    "canonicalPage": "https://runescape.wiki/w/Waterbirth_Island",
+    "publish": [
+      "game/upgrades/permanent-unlocks/waterbirth-island.webp"
+    ]
+  },
+  {
+    "id": "activity-well-of-souls",
+    "label": "Well of Souls",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/well-of-souls",
+    "search": "Well of Souls Necromancy image",
+    "canonicalPage": "https://runescape.wiki/w/Well_of_Souls"
+  },
+  {
+    "id": "activity-wilderness-agility-course",
+    "label": "Wilderness Agility Course",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wilderness-agility-course",
+    "search": "Wilderness Agility Course image",
+    "canonicalPage": "https://runescape.wiki/w/Wilderness_Agility_Course"
+  },
+  {
+    "id": "activity-wilderness-slayer",
+    "label": "Wilderness Slayer",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wilderness-slayer",
+    "fileTitle": "Slayer Equipment (Wilderness).png",
+    "search": "Slayer Equipment Wilderness Mandrith",
+    "canonicalPage": "https://runescape.wiki/w/Wilderness_Slayer"
+  },
+  {
+    "id": "activity-woodcutters-grove",
+    "label": "Woodcutter's Grove",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/woodcutters-grove",
+    "fileTitle": "Woodcutters' Grove.png",
+    "search": "Woodcutters Grove Fort Forinthry built location image",
+    "canonicalPage": "https://runescape.wiki/w/Woodcutter%27s_Grove",
+    "publish": [
+      "game/upgrades/permanent-unlocks/woodcutters-grove.webp"
+    ]
+  },
+  {
+    "id": "arch-everlight",
+    "label": "Everlight Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/everlight-dig-site",
+    "fileTitle": "Archaeology - Everlight achievement icon.png",
+    "search": "Archaeology - Everlight achievement icon",
+    "canonicalPage": "https://runescape.wiki/w/Everlight_Dig_Site",
+    "aliases": [
+      "activity-everlight-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-everlight-dig-site",
+        "search": "Everlight Dig Site image"
+      }
+    ]
+  },
+  {
+    "id": "arch-guild-icon",
+    "label": "Archaeology Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/archaeology-guild",
+    "fileTitle": "Qualification icon.png",
+    "search": "Qualification icon Archaeology",
+    "canonicalPage": "https://runescape.wiki/w/Archaeology_Guild",
+    "aliases": [
+      "activity-archaeology-guild"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-archaeology-guild",
+        "search": "Archaeology Guild image"
+      }
+    ]
+  },
+  {
+    "id": "arch-infernal-source",
+    "label": "Infernal Source Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/infernal-source-dig-site",
+    "fileTitle": "Archaeology - Infernal Source achievement icon.png",
+    "search": "Archaeology - Infernal Source achievement icon",
+    "canonicalPage": "https://runescape.wiki/w/Infernal_Source_Dig_Site",
+    "aliases": [
+      "activities-infernal-source-dig-site",
+      "bulk42-upgrades-permanent-unlocks-infernal-source-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-infernal-source-dig-site",
+        "search": "Infernal Source Dig Site inventory icon",
+        "fileTitle": "Infernal Source Dig Site.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/infernal-source-dig-site.webp"
+    ]
+  },
+  {
+    "id": "arch-kharid-et",
+    "label": "Kharid-et Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/kharid-et-dig-site",
+    "fileTitle": "Kharid-et Dig Site map icon.png",
+    "search": "Kharid-et Dig Site map icon",
+    "canonicalPage": "https://runescape.wiki/w/Kharid-et_Dig_Site",
+    "aliases": [
+      "activities-kharid-et-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-kharid-et-dig-site",
+        "label": "Kharid Et Dig Site",
+        "search": "Kharid Et Dig Site inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Kharid_Et_Dig_Site",
+        "fileTitle": "Kharid Et Dig Site.png"
+      }
+    ]
+  },
+  {
+    "id": "arch-moonrise",
+    "label": "Moonrise Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/moonrise-dig-site",
+    "fileTitle": "Archaeology - Moonrise achievement icon.png",
+    "search": "Archaeology - Moonrise achievement icon",
+    "canonicalPage": "https://runescape.wiki/w/Moonrise_Dig_Site",
+    "aliases": [
+      "activity-moonrise-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-moonrise-dig-site",
+        "search": "Moonrise Dig Site image"
+      }
+    ]
+  },
+  {
+    "id": "arch-senntisten",
+    "label": "Senntisten Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/senntisten-dig-site",
+    "fileTitle": "Senntisten Dig Site camp.png",
+    "search": "Senntisten Dig Site camp location image",
+    "canonicalPage": "https://runescape.wiki/w/Senntisten_Dig_Site",
+    "aliases": [
+      "activities-senntisten-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-senntisten-dig-site",
+        "search": "Senntisten Dig Site inventory icon",
+        "fileTitle": "Senntisten Dig Site.png"
+      }
+    ]
+  },
+  {
+    "id": "arch-stormguard",
+    "label": "Stormguard Citadel Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/stormguard-citadel-dig-site",
+    "fileTitle": "Archaeology - Stormguard achievement icon.png",
+    "search": "Archaeology - Stormguard achievement icon",
+    "canonicalPage": "https://runescape.wiki/w/Stormguard_Citadel_Dig_Site",
+    "aliases": [
+      "activities-stormguard-citadel-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-stormguard-citadel-dig-site",
+        "search": "Stormguard Citadel Dig Site inventory icon",
+        "fileTitle": "Stormguard Citadel Dig Site.png"
+      }
+    ]
+  },
+  {
+    "id": "arch-warforge",
+    "label": "Warforge Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/warforge-dig-site",
+    "fileTitle": "Archaeology - Warforge achievement icon.png",
+    "search": "Archaeology - Warforge achievement icon",
+    "canonicalPage": "https://runescape.wiki/w/Warforge_Dig_Site",
+    "aliases": [
+      "activities-warforge-dig-site",
+      "bulk42-upgrades-permanent-unlocks-warforge-dig-site"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-warforge-dig-site",
+        "search": "Warforge Dig Site inventory icon",
+        "fileTitle": "Warforge Dig Site.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/warforge-dig-site.webp"
+    ]
+  },
+  {
+    "id": "bulk39-air-altar",
+    "label": "Air altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/air-altar",
+    "fileTitle": "Air Altar inside.png",
+    "search": "Air altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Air_altar",
+    "aliases": [
+      "activities-air-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-air-altar",
+        "label": "Air Altar",
+        "search": "Air Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Air_Altar",
+        "fileTitle": "Air Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-ardougne",
+    "label": "Ardougne",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ardougne",
+    "fileTitle": "East Ardougne.png",
+    "search": "Ardougne inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ardougne",
+    "aliases": [
+      "activities-ardougne"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-ardougne",
+        "fileTitle": "Ardougne.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/ardougne.webp"
+    ]
+  },
+  {
+    "id": "bulk39-big-chinchompa",
+    "label": "Big Chinchompa",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/big-chinchompa",
+    "fileTitle": "Big Chinchompa.png",
+    "search": "Big Chinchompa inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Big_Chinchompa",
+    "aliases": [
+      "activities-big-chinchompa",
+      "bulk42-upgrades-permanent-unlocks-big-chinchompa"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/big-chinchompa.webp"
+    ]
+  },
+  {
+    "id": "bulk39-blood-altar",
+    "label": "Blood altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/blood-altar",
+    "fileTitle": "Blood Altar inside.png",
+    "search": "Blood altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Blood_altar",
+    "aliases": [
+      "activities-blood-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-blood-altar",
+        "label": "Blood Altar",
+        "search": "Blood Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Blood_Altar",
+        "fileTitle": "Blood Altar.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/blood-altar.webp"
+    ]
+  },
+  {
+    "id": "bulk39-body-altar",
+    "label": "Body altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/body-altar",
+    "fileTitle": "Body Altar inside.png",
+    "search": "Body altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Body_altar",
+    "aliases": [
+      "activities-body-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-body-altar",
+        "label": "Body Altar",
+        "search": "Body Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Body_Altar",
+        "fileTitle": "Body Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-burgh-de-rott",
+    "label": "Burgh de Rott",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/burgh-de-rott",
+    "fileTitle": "Burgh de Rott.png",
+    "search": "Burgh de Rott inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Burgh_de_Rott",
+    "aliases": [
+      "activities-burgh-de-rott",
+      "bulk42-upgrades-permanent-unlocks-burgh-de-rott"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-burgh-de-rott",
+        "label": "Burgh De Rott",
+        "search": "Burgh De Rott inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Burgh_De_Rott",
+        "fileTitle": "Burgh De Rott.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/burgh-de-rott.webp"
+    ]
+  },
+  {
+    "id": "bulk39-burthorpe",
+    "label": "Burthorpe",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/burthorpe",
+    "fileTitle": "Burthorpe.png",
+    "search": "Burthorpe inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Burthorpe",
+    "aliases": [
+      "activities-burthorpe"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/burthorpe.webp"
+    ]
+  },
+  {
+    "id": "bulk39-catherby",
+    "label": "Catherby",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/catherby",
+    "fileTitle": "Catherby.png",
+    "search": "Catherby inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Catherby",
+    "aliases": [
+      "activities-catherby"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/catherby.webp"
+    ]
+  },
+  {
+    "id": "bulk39-chaos-altar",
+    "label": "Chaos altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/chaos-altar",
+    "fileTitle": "Chaos Altar inside.png",
+    "search": "Chaos altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Chaos_altar",
+    "aliases": [
+      "activities-chaos-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-chaos-altar",
+        "label": "Chaos Altar",
+        "search": "Chaos Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Chaos_Altar",
+        "fileTitle": "Chaos Altar.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/chaos-altar.webp"
+    ]
+  },
+  {
+    "id": "bulk39-chaos-tunnels",
+    "label": "Chaos Tunnels",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/chaos-tunnels",
+    "fileTitle": "Chaos Tunnels.png",
+    "search": "Chaos Tunnels inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Chaos_Tunnels",
+    "aliases": [
+      "activities-chaos-tunnels"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/chaos-tunnels.webp"
+    ]
+  },
+  {
+    "id": "bulk39-cosmic-altar",
+    "label": "Cosmic altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/cosmic-altar",
+    "fileTitle": "Cosmic Altar inside.png",
+    "search": "Cosmic altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Cosmic_altar",
+    "aliases": [
+      "activities-cosmic-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-cosmic-altar",
+        "label": "Cosmic Altar",
+        "search": "Cosmic Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Cosmic_Altar",
+        "fileTitle": "Cosmic Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-crystal-flecked-sandstone-mine",
+    "label": "Crystal-flecked sandstone mine",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/crystal-flecked-sandstone-mine",
+    "fileTitle": "Crystal-flecked sandstone.png",
+    "search": "Crystal-flecked sandstone mine inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Crystal-flecked_sandstone_mine",
+    "aliases": [
+      "activities-crystal-flecked-sandstone-mine"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-crystal-flecked-sandstone-mine",
+        "label": "Crystal Flecked Sandstone Mine",
+        "search": "Crystal Flecked Sandstone Mine inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Crystal_Flecked_Sandstone_Mine",
+        "fileTitle": "Crystal Flecked Sandstone Mine.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-darkmeyer",
+    "label": "Darkmeyer",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/darkmeyer",
+    "fileTitle": "Darkmeyer NXT.png",
+    "search": "Darkmeyer inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Darkmeyer",
+    "aliases": [
+      "activities-darkmeyer"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-darkmeyer",
+        "fileTitle": "Darkmeyer.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/darkmeyer.webp"
+    ]
+  },
+  {
+    "id": "bulk39-deaths-office",
+    "label": "Death's office",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/deaths-office",
+    "fileTitle": "Death's office interior.png",
+    "search": "Death's office inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Death's_office",
+    "aliases": [
+      "activities-deaths-office"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-deaths-office",
+        "label": "Deaths Office",
+        "search": "Deaths Office inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Deaths_Office",
+        "fileTitle": "Deaths Office.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-draynor-village",
+    "label": "Draynor Village",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/draynor-village",
+    "fileTitle": "NewDraynor.png",
+    "search": "Draynor Village inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Draynor_Village",
+    "aliases": [
+      "activities-draynor-village"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-draynor-village",
+        "fileTitle": "Draynor Village.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-earth-altar",
+    "label": "Earth altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/earth-altar",
+    "fileTitle": "Earth Altar inside.png",
+    "search": "Earth altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Earth_altar",
+    "aliases": [
+      "activities-earth-altar",
+      "u40-earth-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "u40-earth-altar",
+        "fileTitle": "Earth altar.png",
+        "search": "Earth altar"
+      },
+      {
+        "id": "activities-earth-altar",
+        "label": "Earth Altar",
+        "search": "Earth Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Earth_Altar",
+        "fileTitle": "Earth Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-edgeville",
+    "label": "Edgeville",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/edgeville",
+    "fileTitle": "Edgeville.png",
+    "search": "Edgeville inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Edgeville",
+    "aliases": [
+      "activities-edgeville"
+    ]
+  },
+  {
+    "id": "bulk39-falador",
+    "label": "Falador",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/falador",
+    "fileTitle": "Falador.png",
+    "search": "Falador inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Falador",
+    "aliases": [
+      "activities-falador"
+    ]
+  },
+  {
+    "id": "bulk39-fire-altar",
+    "label": "Fire altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fire-altar",
+    "fileTitle": "Fire altar.png",
+    "search": "Fire altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Fire_altar",
+    "aliases": [
+      "activities-fire-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fire-altar",
+        "label": "Fire Altar",
+        "search": "Fire Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fire_Altar",
+        "fileTitle": "Fire Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-grotworm-lair",
+    "label": "Grotworm Lair",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/grotworm-lair",
+    "fileTitle": "Grotworm Lair entrance.png",
+    "search": "Grotworm Lair inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Grotworm_Lair",
+    "aliases": [
+      "activities-grotworm-lair"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-grotworm-lair",
+        "fileTitle": "Grotworm Lair.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-guildmaster-tony",
+    "label": "Guildmaster Tony",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/guildmaster-tony",
+    "fileTitle": "Guildmaster Tony.png",
+    "search": "Guildmaster Tony inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Guildmaster_Tony",
+    "aliases": [
+      "activities-guildmaster-tony",
+      "arch-tony",
+      "u40-guildmaster-tony"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "u40-guildmaster-tony",
+        "fileTitle": "Guildmaster Tony chathead.png",
+        "search": "Guildmaster Tony chathead"
+      },
+      {
+        "id": "arch-tony",
+        "fileTitle": "Guildmaster Tony chathead.png",
+        "search": "Guildmaster Tony chathead"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-hefin-cathedral",
+    "label": "Hefin cathedral",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hefin-cathedral",
+    "fileTitle": "Prifddinas Hefin Cathedral.png",
+    "search": "Hefin cathedral inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Hefin_cathedral",
+    "aliases": [
+      "activities-hefin-cathedral"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-hefin-cathedral",
+        "label": "Hefin Cathedral",
+        "search": "Hefin Cathedral inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Hefin_Cathedral",
+        "fileTitle": "Hefin Cathedral.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-howls-workshop",
+    "label": "Howl's workshop",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/howls-workshop",
+    "fileTitle": "Stormguard Citadel - Howl's workshop excavation site.png",
+    "search": "Howl's workshop inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Howl's_workshop",
+    "aliases": [
+      "activities-howls-workshop"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-howls-workshop",
+        "label": "Howls Workshop",
+        "search": "Howls Workshop inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Howls_Workshop",
+        "fileTitle": "Howls Workshop.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-jatizso",
+    "label": "Jatizso",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/jatizso",
+    "fileTitle": "Jatizso town.png",
+    "search": "Jatizso inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jatizso",
+    "aliases": [
+      "activities-jatizso"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-jatizso",
+        "fileTitle": "Jatizso.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-kuradals-dungeon",
+    "label": "Kuradal's Dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/kuradals-dungeon",
+    "fileTitle": "Kuradal's dungeon.png",
+    "search": "Kuradal's Dungeon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Kuradal's_Dungeon",
+    "aliases": [
+      "activities-kuradals-dungeon"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-kuradals-dungeon",
+        "label": "Kuradals Dungeon",
+        "search": "Kuradals Dungeon inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Kuradals_Dungeon",
+        "fileTitle": "Kuradals Dungeon.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/kuradals-dungeon.webp"
+    ]
+  },
+  {
+    "id": "bulk39-law-altar",
+    "label": "Law altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/law-altar",
+    "fileTitle": "Law Altar inside.png",
+    "search": "Law altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Law_altar",
+    "aliases": [
+      "activities-law-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-law-altar",
+        "label": "Law Altar",
+        "search": "Law Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Law_Altar",
+        "fileTitle": "Law Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-lumbridge",
+    "label": "Lumbridge",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/lumbridge",
+    "fileTitle": "Lumbridge.png",
+    "search": "Lumbridge inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Lumbridge",
+    "aliases": [
+      "activities-lumbridge"
+    ]
+  },
+  {
+    "id": "bulk39-meilyr-clan-district",
+    "label": "Meilyr Clan district",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/meilyr-clan-district",
+    "fileTitle": "Prifddinas Meilyr district.png",
+    "search": "Meilyr Clan district inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Meilyr_Clan_district",
+    "aliases": [
+      "activities-meilyr-clan",
+      "activities-meilyr-clan-district",
+      "place-meilyr"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-meilyr-clan-district",
+        "label": "Meilyr Clan District",
+        "search": "Meilyr Clan District inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Meilyr_Clan_District",
+        "fileTitle": "Meilyr Clan District.png"
+      },
+      {
+        "id": "activities-meilyr-clan",
+        "label": "Meilyr Clan",
+        "search": "Meilyr Clan inventory icon",
+        "fileTitle": "Meilyr Clan.png"
+      }
+    ],
+    "publish": [
+      "game/activities/meilyr-clan.webp"
+    ]
+  },
+  {
+    "id": "bulk39-meiyerditch",
+    "label": "Meiyerditch",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/meiyerditch",
+    "fileTitle": "Meiyerditch.png",
+    "search": "Meiyerditch inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Meiyerditch",
+    "aliases": [
+      "activities-meiyerditch"
+    ]
+  },
+  {
+    "id": "bulk39-mind-altar",
+    "label": "Mind altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mind-altar",
+    "fileTitle": "Mind Altar inside.png",
+    "search": "Mind altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Mind_altar",
+    "aliases": [
+      "activities-mind-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-mind-altar",
+        "label": "Mind Altar",
+        "search": "Mind Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Mind_Altar",
+        "fileTitle": "Mind Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-neitiznot",
+    "label": "Neitiznot",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/neitiznot",
+    "fileTitle": "Neitiznot scenery.png",
+    "search": "Neitiznot inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Neitiznot",
+    "aliases": [
+      "activities-neitiznot"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-neitiznot",
+        "fileTitle": "Neitiznot.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/neitiznot.webp"
+    ]
+  },
+  {
+    "id": "bulk39-ooglog",
+    "label": "Oo'glog",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ooglog",
+    "fileTitle": "Oo'glog.png",
+    "search": "Oo'glog inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Oo'glog",
+    "aliases": [
+      "activities-ooglog"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-ooglog",
+        "label": "Ooglog",
+        "search": "Ooglog inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Ooglog",
+        "fileTitle": "Ooglog.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-ourania-altar",
+    "label": "Ourania Altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ourania-altar",
+    "fileTitle": "Ourania.png",
+    "search": "Ourania Altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ourania_Altar",
+    "aliases": [
+      "activities-ourania-altar",
+      "activities-ourania-runecrafting-altar",
+      "bulk42-upgrades-permanent-unlocks-ourania-runecrafting-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-ourania-altar",
+        "fileTitle": "Ourania Altar.png"
+      }
+    ],
+    "publish": [
+      "game/activities/ourania-runecrafting-altar.webp",
+      "game/upgrades/permanent-unlocks/ourania-altar.webp",
+      "game/upgrades/permanent-unlocks/ourania-runecrafting-altar.webp"
+    ]
+  },
+  {
+    "id": "bulk39-overgrown-idol",
+    "label": "Overgrown idol",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/overgrown-idol",
+    "fileTitle": "Overgrown idol icon.png",
+    "search": "Overgrown idol inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Overgrown_idol",
+    "aliases": [
+      "activities-overgrown-idol",
+      "u40-overgrown-idol"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "u40-overgrown-idol",
+        "fileTitle": "Overgrown idol.png",
+        "search": "Overgrown idol"
+      },
+      {
+        "id": "activities-overgrown-idol",
+        "label": "Overgrown Idol",
+        "search": "Overgrown Idol inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Overgrown_Idol",
+        "fileTitle": "Overgrown Idol.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-polypore-dungeon",
+    "label": "Polypore Dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/polypore-dungeon",
+    "fileTitle": "Polypore Dungeon.png",
+    "search": "Polypore Dungeon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Polypore_Dungeon",
+    "aliases": [
+      "activities-polypore-dungeon"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/polypore-dungeon.webp"
+    ]
+  },
+  {
+    "id": "bulk39-port-sarim",
+    "label": "Port Sarim",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/port-sarim",
+    "fileTitle": "Port Sarim.png",
+    "search": "Port Sarim inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Port_Sarim",
+    "aliases": [
+      "activities-port-sarim"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/port-sarim.webp"
+    ]
+  },
+  {
+    "id": "bulk39-research-bench",
+    "label": "Research bench",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/research-bench",
+    "fileTitle": "Research (Archaeology).png",
+    "search": "Archaeology research",
+    "canonicalPage": "https://runescape.wiki/w/Research_bench",
+    "aliases": [
+      "activities-research-bench"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-research-bench",
+        "label": "Research Bench",
+        "search": "Research Bench inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Research_Bench",
+        "fileTitle": "Research Bench.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-seers-village",
+    "label": "Seers' Village",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/seers-village",
+    "fileTitle": "Seers' Village.png",
+    "search": "Seers' Village inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Seers'_Village",
+    "aliases": [
+      "activities-seers-village"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-seers-village",
+        "label": "Seers Village",
+        "search": "Seers Village inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Seers_Village",
+        "fileTitle": "Seers Village.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/seers-village.webp"
+    ]
+  },
+  {
+    "id": "bulk39-seren-stones",
+    "label": "Seren stones",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/seren-stones",
+    "fileTitle": "Trahaearn Seren stones.png",
+    "search": "Seren stones inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Seren_stones",
+    "aliases": [
+      "activities-seren-stones"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-seren-stones",
+        "label": "Seren Stones",
+        "search": "Seren Stones inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Seren_Stones",
+        "fileTitle": "Seren Stones.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/seren-stones.webp"
+    ]
+  },
+  {
+    "id": "bulk39-sophanem",
+    "label": "Sophanem",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/sophanem",
+    "fileTitle": "Sophanem.png",
+    "search": "Sophanem inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Sophanem",
+    "aliases": [
+      "activities-sophanem"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/sophanem.webp"
+    ]
+  },
+  {
+    "id": "bulk39-taverley",
+    "label": "Taverley",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/taverley",
+    "fileTitle": "Taverley.png",
+    "search": "Taverley inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Taverley",
+    "aliases": [
+      "activities-taverley"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/taverley.webp"
+    ]
+  },
+  {
+    "id": "bulk39-trollheim",
+    "label": "Trollheim",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/trollheim",
+    "fileTitle": "Trollheim.png",
+    "search": "Trollheim inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Trollheim",
+    "aliases": [
+      "activities-trollheim"
+    ]
+  },
+  {
+    "id": "bulk39-underworld",
+    "label": "Underworld",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/underworld",
+    "fileTitle": "Grim Underworld gates.png",
+    "search": "Underworld inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Underworld",
+    "aliases": [
+      "activities-underworld"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-underworld",
+        "fileTitle": "Underworld.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-varrock",
+    "label": "Varrock",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/varrock",
+    "fileTitle": "Varrock.png",
+    "search": "Varrock inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Varrock",
+    "aliases": [
+      "activities-varrock"
+    ]
+  },
+  {
+    "id": "bulk39-velucia",
+    "label": "Velucia",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/velucia",
+    "fileTitle": "Velucia.png",
+    "search": "Velucia inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Velucia",
+    "aliases": [
+      "activities-velucia",
+      "arch-velucia",
+      "u40-velucia"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "u40-velucia",
+        "fileTitle": "Velucia chathead.png",
+        "search": "Velucia chathead"
+      },
+      {
+        "id": "arch-velucia",
+        "fileTitle": "Velucia chathead.png",
+        "search": "Velucia chathead"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-waiko",
+    "label": "Waiko",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/waiko",
+    "fileTitle": "Waiko.png",
+    "search": "Waiko inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Waiko",
+    "aliases": [
+      "activities-waiko"
+    ]
+  },
+  {
+    "id": "bulk39-water-altar",
+    "label": "Water altar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/water-altar",
+    "fileTitle": "Water Altar inside.png",
+    "search": "Water altar inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Water_altar",
+    "aliases": [
+      "activities-water-altar",
+      "u40-water-altar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "u40-water-altar",
+        "fileTitle": "Water altar.png",
+        "search": "Water altar"
+      },
+      {
+        "id": "activities-water-altar",
+        "label": "Water Altar",
+        "search": "Water Altar inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Water_Altar",
+        "fileTitle": "Water Altar.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-wizards-guild",
+    "label": "Wizards' Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wizards-guild",
+    "fileTitle": "Wizards' Guild.png",
+    "search": "Wizards' Guild inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Wizards'_Guild",
+    "aliases": [
+      "activities-wizards-guild"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-wizards-guild",
+        "label": "Wizards Guild",
+        "search": "Wizards Guild inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Wizards_Guild",
+        "fileTitle": "Wizards Guild.png"
+      }
+    ]
+  },
+  {
+    "id": "bulk39-wizards-tower",
+    "label": "Wizards' Tower",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/wizards-tower",
+    "fileTitle": "Wizards' Tower.png",
+    "search": "Wizards' Tower inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Wizards'_Tower",
+    "aliases": [
+      "activities-wizards-tower"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-wizards-tower",
+        "label": "Wizards Tower",
+        "search": "Wizards Tower inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Wizards_Tower",
+        "fileTitle": "Wizards Tower.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/wizards-tower.webp"
+    ]
+  },
+  {
+    "id": "bulk39-yanille",
+    "label": "Yanille",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/yanille",
+    "fileTitle": "Yanille.png",
+    "search": "Yanille inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Yanille",
+    "aliases": [
+      "activities-yanille"
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/yanille.webp"
+    ]
+  },
+  {
+    "id": "npc-chaeldar",
+    "label": "Chaeldar",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/chaeldar",
+    "fileTitle": "Chaeldar chathead.png",
+    "search": "Chaeldar chathead",
+    "canonicalPage": "https://runescape.wiki/w/Chaeldar",
+    "aliases": [
+      "activities-chaeldar"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-chaeldar",
+        "search": "Chaeldar inventory icon",
+        "fileTitle": "Chaeldar.png"
+      }
+    ]
+  },
+  {
+    "id": "npc-duradel",
+    "label": "Duradel",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/duradel",
+    "fileTitle": "Duradel chathead.png",
+    "search": "Duradel chathead",
+    "canonicalPage": "https://runescape.wiki/w/Duradel",
+    "aliases": [
+      "activities-duradel"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-duradel",
+        "search": "Duradel inventory icon",
+        "fileTitle": "Duradel.png"
+      }
+    ]
+  },
+  {
+    "id": "npc-laniakea",
+    "label": "Laniakea",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/laniakea",
+    "fileTitle": "Laniakea chathead.png",
+    "search": "Laniakea chathead",
+    "canonicalPage": "https://runescape.wiki/w/Laniakea",
+    "aliases": [
+      "activities-laniakea"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-laniakea",
+        "search": "Laniakea inventory icon",
+        "fileTitle": "Laniakea.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/laniakea.webp"
+    ]
+  },
+  {
+    "id": "place-advanced-gnome-stronghold",
+    "label": "Advanced Gnome Stronghold course",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/advanced-gnome-stronghold-course",
+    "fileTitle": "Advanced Gnome Stronghold Agility Course.png",
+    "search": "Advanced Gnome Stronghold Agility Course image",
+    "canonicalPage": "https://runescape.wiki/w/Advanced_Gnome_Stronghold_Agility_Course",
+    "aliases": [
+      "activities-advanced-gnome-stronghold-course"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-advanced-gnome-stronghold-course",
+        "label": "Advanced Gnome Stronghold Course",
+        "search": "Advanced Gnome Stronghold Course inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Advanced_Gnome_Stronghold_Course",
+        "fileTitle": "Advanced Gnome Stronghold Course.png"
+      }
+    ]
+  },
+  {
+    "id": "place-anachronia-base-camp",
+    "label": "Anachronia base camp",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/anachronia-base-camp",
+    "fileTitle": "Anachronia base camp.png",
+    "search": "Anachronia base camp location image",
+    "canonicalPage": "https://runescape.wiki/w/Anachronia_base_camp",
+    "aliases": [
+      "activities-anachronia-base-camp",
+      "bulk42-upgrades-permanent-unlocks-anachronia-base-camp",
+      "upgrades-permanent-unlocks-anachronia-base",
+      "upgrades-permanent-unlocks-player-lodge",
+      "upgrades-permanent-unlocks-slayer-lodge"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-anachronia-base-camp",
+        "label": "Anachronia Base Camp",
+        "search": "Anachronia Base Camp inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Anachronia_Base_Camp",
+        "fileTitle": "Anachronia Base Camp.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/anachronia-base-camp.webp",
+      "game/upgrades/permanent-unlocks/anachronia-base.webp",
+      "game/upgrades/permanent-unlocks/player-lodge.webp",
+      "game/upgrades/permanent-unlocks/slayer-lodge.webp"
+    ]
+  },
+  {
+    "id": "place-cooks-guild",
+    "label": "Cooks' Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/cooks-guild",
+    "fileTitle": "Cooking Guild.png",
+    "search": "Cooking Guild exterior location image",
+    "canonicalPage": "https://runescape.wiki/w/Cooks%27_Guild",
+    "aliases": [
+      "activities-cooks-guild"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-cooks-guild",
+        "label": "Cooks Guild",
+        "search": "Cooks Guild inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Cooks_Guild",
+        "fileTitle": "Cooks Guild.png"
+      }
+    ]
+  },
+  {
+    "id": "place-croesus-front",
+    "label": "Croesus Front",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/croesus-front",
+    "fileTitle": "Croesus Front.png",
+    "search": "Croesus Front location image",
+    "canonicalPage": "https://runescape.wiki/w/Croesus_Front",
+    "aliases": [
+      "activities-croesus-front"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-croesus-front",
+        "search": "Croesus Front inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-dinosaur-farm",
+    "label": "Anachronia Dinosaur Farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/anachronia-dinosaur-farm",
+    "fileTitle": "Anachronia Dinosaur Farm.png",
+    "search": "Anachronia Dinosaur Farm location image",
+    "canonicalPage": "https://runescape.wiki/w/Anachronia_Dinosaur_Farm",
+    "aliases": [
+      "activities-anachronia-dinosaur-farm",
+      "bulk42-upgrades-permanent-unlocks-anachronia-dinosaur-farm"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-anachronia-dinosaur-farm",
+        "search": "Anachronia Dinosaur Farm inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/anachronia-dinosaur-farm.webp"
+    ]
+  },
+  {
+    "id": "place-dream-of-iaia",
+    "label": "Dream of Iaia",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/dream-of-iaia",
+    "fileTitle": "Dream of Iaia.png",
+    "search": "Dream of Iaia location image",
+    "canonicalPage": "https://runescape.wiki/w/Dream_of_Iaia",
+    "aliases": [
+      "activities-dream-of-iaia",
+      "bulk42-upgrades-permanent-unlocks-dream-of-iaia"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-dream-of-iaia",
+        "label": "Dream Of Iaia",
+        "search": "Dream Of Iaia inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Dream_Of_Iaia",
+        "fileTitle": "Dream Of Iaia.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/dream-of-iaia.webp"
+    ]
+  },
+  {
+    "id": "place-edimmu",
+    "label": "Edimmu resource dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/edimmu-resource-dungeon",
+    "fileTitle": "Edimmu resource dungeon.png",
+    "search": "Edimmu resource dungeon image",
+    "canonicalPage": "https://runescape.wiki/w/Edimmu_resource_dungeon",
+    "aliases": [
+      "activities-edimmu-resource-dungeon"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-edimmu-resource-dungeon",
+        "label": "Edimmu Resource Dungeon",
+        "search": "Edimmu Resource Dungeon inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Edimmu_Resource_Dungeon",
+        "fileTitle": "Edimmu Resource Dungeon.png"
+      }
+    ]
+  },
+  {
+    "id": "place-empty-throne-room",
+    "label": "The Empty Throne Room",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/empty-throne-room",
+    "fileTitle": "The Empty Throne Room.png",
+    "search": "Empty Throne Room location image",
+    "canonicalPage": "https://runescape.wiki/w/The_Empty_Throne_Room",
+    "aliases": [
+      "activities-empty-throne-room"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-empty-throne-room",
+        "label": "Empty Throne Room",
+        "search": "Empty Throne Room inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Empty_Throne_Room",
+        "fileTitle": "Empty Throne Room.png"
+      }
+    ]
+  },
+  {
+    "id": "place-fight-cauldron",
+    "label": "Fight Cauldron",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fight-cauldron",
+    "fileTitle": "Fight Cauldron.png",
+    "search": "Fight Cauldron location image",
+    "canonicalPage": "https://runescape.wiki/w/Fight_Cauldron",
+    "aliases": [
+      "activities-fight-cauldron"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fight-cauldron",
+        "search": "Fight Cauldron inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-fort-chapel",
+    "label": "Chapel (Fort Forinthry)",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fort-forinthry-chapel",
+    "fileTitle": "Chapel (Fort Forinthry).png",
+    "search": "Fort Forinthry Chapel image",
+    "canonicalPage": "https://runescape.wiki/w/Chapel_(Fort_Forinthry)",
+    "aliases": [
+      "activities-fort-forinthry-chapel"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fort-forinthry-chapel",
+        "label": "Fort Forinthry Chapel",
+        "search": "Fort Forinthry Chapel inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry_Chapel",
+        "fileTitle": "Fort Forinthry Chapel.png"
+      }
+    ]
+  },
+  {
+    "id": "place-fort-command",
+    "label": "Command Centre",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fort-forinthry-command-centre",
+    "fileTitle": "Command Centre.png",
+    "search": "Fort Forinthry Command Centre image",
+    "canonicalPage": "https://runescape.wiki/w/Command_Centre",
+    "aliases": [
+      "activities-fort-forinthry-command-centre",
+      "activity-fort-forinthry"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fort-forinthry-command-centre",
+        "label": "Fort Forinthry Command Centre",
+        "search": "Fort Forinthry Command Centre inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry_Command_Centre",
+        "fileTitle": "Fort Forinthry Command Centre.png"
+      }
+    ],
+    "publish": [
+      "game/activities/fort-forinthry.webp"
+    ]
+  },
+  {
+    "id": "place-fort-guardhouse",
+    "label": "Guardhouse",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fort-forinthry-guardhouse",
+    "fileTitle": "Guardhouse (tier 3, exterior).png",
+    "search": "Fort Forinthry Guardhouse exterior image",
+    "canonicalPage": "https://runescape.wiki/w/Guardhouse",
+    "aliases": [
+      "activities-fort-forinthry-guardhouse"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fort-forinthry-guardhouse",
+        "label": "Fort Forinthry Guardhouse",
+        "search": "Fort Forinthry Guardhouse inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry_Guardhouse",
+        "fileTitle": "Fort Forinthry Guardhouse.png"
+      }
+    ]
+  },
+  {
+    "id": "place-fort-kitchen",
+    "label": "Kitchen (Fort Forinthry)",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fort-forinthry-kitchen",
+    "fileTitle": "Kitchen (Fort Forinthry, tier 3).png",
+    "search": "Fort Forinthry Kitchen interior image",
+    "canonicalPage": "https://runescape.wiki/w/Kitchen_(Fort_Forinthry)",
+    "aliases": [
+      "activities-fort-forinthry-kitchen",
+      "upgrades-permanent-unlocks-fort-kitchen"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fort-forinthry-kitchen",
+        "label": "Fort Forinthry Kitchen",
+        "search": "Fort Forinthry Kitchen inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry_Kitchen",
+        "fileTitle": "Fort Forinthry Kitchen.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/fort-kitchen.webp"
+    ]
+  },
+  {
+    "id": "place-fort-town-hall",
+    "label": "Town Hall (Fort Forinthry)",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fort-forinthry-town-hall",
+    "fileTitle": "Town Hall (Fort Forinthry, tier 3, exterior).png",
+    "search": "Fort Forinthry Town Hall exterior image",
+    "canonicalPage": "https://runescape.wiki/w/Town_Hall_(Fort_Forinthry)",
+    "aliases": [
+      "activities-fort-forinthry-town-hall"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fort-forinthry-town-hall",
+        "label": "Fort Forinthry Town Hall",
+        "search": "Fort Forinthry Town Hall inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry_Town_Hall",
+        "fileTitle": "Fort Forinthry Town Hall.png"
+      }
+    ]
+  },
+  {
+    "id": "place-fort-workshop",
+    "label": "Workshop (Fort Forinthry)",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fort-forinthry-workshop",
+    "fileTitle": "Workshop (Fort Forinthry).png",
+    "search": "Fort Forinthry Workshop image",
+    "canonicalPage": "https://runescape.wiki/w/Workshop_(Fort_Forinthry)",
+    "aliases": [
+      "activities-fort-forinthry-workshop"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fort-forinthry-workshop",
+        "label": "Fort Forinthry Workshop",
+        "search": "Fort Forinthry Workshop inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fort_Forinthry_Workshop",
+        "fileTitle": "Fort Forinthry Workshop.png"
+      }
+    ]
+  },
+  {
+    "id": "place-giant-oyster",
+    "label": "Giant Oyster",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/giant-oyster",
+    "fileTitle": "Oyster (Giant Oyster, closed).png",
+    "search": "Giant Oyster closed oyster image",
+    "canonicalPage": "https://runescape.wiki/w/Giant_Oyster",
+    "aliases": [
+      "activities-giant-oyster"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-giant-oyster",
+        "search": "Giant Oyster inventory icon",
+        "fileTitle": "Giant Oyster.png"
+      }
+    ]
+  },
+  {
+    "id": "place-gwd1",
+    "label": "God Wars Dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/god-wars-dungeon",
+    "fileTitle": "God Wars Dungeon.png",
+    "search": "God Wars Dungeon location image",
+    "canonicalPage": "https://runescape.wiki/w/God_Wars_Dungeon",
+    "aliases": [
+      "activity-god-wars-dungeon",
+      "bulk42-upgrades-permanent-unlocks-god-wars-dungeon",
+      "upgrades-permanent-unlocks-god-wars",
+      "upgrades-permanent-unlocks-god-wars-dungeon-1",
+      "upgrades-permanent-unlocks-god-wars-dungeon-1-equipment"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-god-wars-dungeon",
+        "search": "God Wars Dungeon image"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/god-wars-dungeon-1-equipment.webp",
+      "game/upgrades/permanent-unlocks/god-wars-dungeon-1.webp",
+      "game/upgrades/permanent-unlocks/god-wars-dungeon.webp",
+      "game/upgrades/permanent-unlocks/god-wars.webp"
+    ]
+  },
+  {
+    "id": "place-gwd2",
+    "label": "Heart of Gielinor",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/heart-of-gielinor",
+    "fileTitle": "Heart of Gielinor skybox.png",
+    "search": "Heart of Gielinor location image",
+    "canonicalPage": "https://runescape.wiki/w/Heart_of_Gielinor",
+    "aliases": [
+      "activity-heart-of-gielinor",
+      "bulk42-upgrades-permanent-unlocks-heart-of-gielinor",
+      "upgrades-permanent-unlocks-god-wars-dungeon-2"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-heart-of-gielinor",
+        "search": "Heart of Gielinor image"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/god-wars-dungeon-2.webp",
+      "game/upgrades/permanent-unlocks/heart-of-gielinor.webp"
+    ]
+  },
+  {
+    "id": "place-ham-hideout",
+    "label": "H.A.M. Hideout",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ham-hideout",
+    "fileTitle": "H.A.M. Hideout.png",
+    "search": "HAM Hideout location image",
+    "canonicalPage": "https://runescape.wiki/w/H.A.M._Hideout",
+    "aliases": [
+      "activities-ham-hideout",
+      "upgrades-permanent-unlocks-h-a-m-hideout"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-ham-hideout",
+        "label": "Ham Hideout",
+        "search": "Ham Hideout inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Ham_Hideout",
+        "fileTitle": "Ham Hideout.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/h-a-m-hideout.webp",
+      "game/upgrades/permanent-unlocks/ham-hideout.webp"
+    ]
+  },
+  {
+    "id": "place-herby-werby",
+    "label": "Herby Werby",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/herby-werby",
+    "fileTitle": "Herby Werby.png",
+    "search": "Herby Werby minigame image",
+    "canonicalPage": "https://runescape.wiki/w/Herby_Werby",
+    "aliases": [
+      "activities-herby-werby"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-herby-werby",
+        "search": "Herby Werby inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/herby-werby.webp"
+    ]
+  },
+  {
+    "id": "place-hunter-lodge",
+    "label": "Hunter Lodge",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/hunter-lodge",
+    "fileTitle": "Hunter Lodge.png",
+    "search": "Hunter Lodge Anachronia image",
+    "canonicalPage": "https://runescape.wiki/w/Hunter_Lodge",
+    "aliases": [
+      "activities-hunter-lodge",
+      "upgrades-upgrades-permanent-unlocks-hunter-lodge"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-hunter-lodge",
+        "search": "Hunter Lodge inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/hunter-lodge.webp"
+    ]
+  },
+  {
+    "id": "place-iod",
+    "label": "Iorwerth Clan district",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/iorwerth-clan",
+    "fileTitle": "Iorwerth Clan district.png",
+    "search": "Iorwerth Clan district image",
+    "canonicalPage": "https://runescape.wiki/w/Iorwerth_Clan",
+    "aliases": [
+      "activities-iorwerth-clan",
+      "activities-iorwerth-dungeon",
+      "bulk39-iorwerth-dungeon",
+      "u40-iorwerth"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "u40-iorwerth",
+        "search": "Iorwerth Clan district"
+      },
+      {
+        "id": "activities-iorwerth-clan",
+        "label": "Iorwerth Clan",
+        "search": "Iorwerth Clan inventory icon",
+        "fileTitle": "Iorwerth Clan.png"
+      },
+      {
+        "id": "activities-iorwerth-dungeon",
+        "fileTitle": "Iorwerth Dungeon.png"
+      }
+    ],
+    "publish": [
+      "game/activities/iorwerth-dungeon.webp"
+    ]
+  },
+  {
+    "id": "place-kiln",
+    "label": "Fight Kiln",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fight-kiln",
+    "fileTitle": "Fight Kiln.png",
+    "search": "Fight Kiln location image",
+    "canonicalPage": "https://runescape.wiki/w/Fight_Kiln",
+    "aliases": [
+      "activity-fight-kiln"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-fight-kiln",
+        "search": "Fight Kiln image"
+      }
+    ]
+  },
+  {
+    "id": "place-manor-farm",
+    "label": "Manor Farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/manor-farm",
+    "fileTitle": "Manor Farm.png",
+    "search": "Manor Farm location image",
+    "canonicalPage": "https://runescape.wiki/w/Manor_Farm",
+    "aliases": [
+      "activities-manor-farm"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-manor-farm",
+        "search": "Manor Farm inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/manor-farm.webp"
+    ]
+  },
+  {
+    "id": "place-motherlode-maw",
+    "label": "Motherlode Maw",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/motherlode-maw",
+    "fileTitle": "Motherlode Maw.png",
+    "search": "Motherlode Maw location image",
+    "canonicalPage": "https://runescape.wiki/w/Motherlode_Maw",
+    "aliases": [
+      "activity-motherlode-maw"
+    ]
+  },
+  {
+    "id": "place-orthen-dig-site",
+    "label": "Orthen Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/orthen-dig-site",
+    "fileTitle": "Orthen Dig Site.png",
+    "search": "Orthen Dig Site location image",
+    "canonicalPage": "https://runescape.wiki/w/Orthen_Dig_Site",
+    "aliases": [
+      "activities-orthen-dig-site",
+      "arch-orthen"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "arch-orthen",
+        "fileTitle": "Archaeology - Orthen achievement icon.png",
+        "search": "Archaeology - Orthen achievement icon"
+      },
+      {
+        "id": "activities-orthen-dig-site",
+        "search": "Orthen Dig Site inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-pest-control",
+    "label": "Pest Control",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/pest-control",
+    "fileTitle": "Pest Control.png",
+    "search": "Pest Control minigame location image",
+    "canonicalPage": "https://runescape.wiki/w/Pest_Control",
+    "aliases": [
+      "activities-pest-control"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-pest-control",
+        "search": "Pest Control inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-pof",
+    "label": "Player-owned farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/player-owned-farm",
+    "fileTitle": "Player-owned farm.png",
+    "search": "Player-owned farm location image",
+    "canonicalPage": "https://runescape.wiki/w/Player-owned_farm",
+    "aliases": [
+      "activity-player-owned-farm",
+      "bulk42-upgrades-permanent-unlocks-player-owned-farm"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-player-owned-farm",
+        "search": "Player-owned farm icon image"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/player-owned-farm.webp"
+    ]
+  },
+  {
+    "id": "place-poison-waste",
+    "label": "Poison Waste",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/poison-waste",
+    "fileTitle": "Poison Waste.png",
+    "search": "Poison Waste location image",
+    "canonicalPage": "https://runescape.wiki/w/Poison_Waste",
+    "aliases": [
+      "activities-poison-waste"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-poison-waste",
+        "search": "Poison Waste inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-prif-waterfall",
+    "label": "Prifddinas Waterfall Fishing",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/waterfall-fishing",
+    "fileTitle": "Prifddinas waterfall fishing.png",
+    "search": "Prifddinas Waterfall Fishing image",
+    "canonicalPage": "https://runescape.wiki/w/Prifddinas_Waterfall_Fishing",
+    "aliases": [
+      "activity-waterfall-fishing"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-waterfall-fishing",
+        "label": "Waterfall Fishing",
+        "search": "Waterfall Fishing location activity image",
+        "canonicalPage": "https://runescape.wiki/w/Waterfall_Fishing"
+      }
+    ],
+    "publish": [
+      "game/activities/waterfall-fishing.webp",
+      "game/upgrades/permanent-unlocks/waterfall-fishing.webp"
+    ]
+  },
+  {
+    "id": "place-rush-of-blood",
+    "label": "Rush of Blood",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/rush-of-blood",
+    "fileTitle": "Rush of Blood.png",
+    "search": "Rush of Blood minigame image",
+    "canonicalPage": "https://runescape.wiki/w/Rush_of_Blood",
+    "aliases": [
+      "activities-rush-of-blood"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-rush-of-blood",
+        "label": "Rush Of Blood",
+        "search": "Rush Of Blood inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Rush_Of_Blood",
+        "fileTitle": "Rush Of Blood.png"
+      }
+    ]
+  },
+  {
+    "id": "place-safecracking",
+    "label": "Safecracking",
+    "category": "rs3/activities/skilling",
+    "path": "assets/rs3/activities/skilling/safecracking",
+    "fileTitle": "Safecracking.png",
+    "search": "Safecracking thieving activity image",
+    "canonicalPage": "https://runescape.wiki/w/Safecracking",
+    "aliases": [
+      "activities-skilling-safecracking",
+      "upgrades-permanent-unlocks-safe"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-skilling-safecracking",
+        "search": "Safecracking inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/safe.webp"
+    ]
+  },
+  {
+    "id": "place-senntisten",
+    "label": "Senntisten",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/senntisten",
+    "fileTitle": "Senntisten Dig Site entrance.png",
+    "search": "Senntisten Dig Site entrance location image",
+    "canonicalPage": "https://runescape.wiki/w/Senntisten",
+    "aliases": [
+      "activities-senntisten"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-senntisten",
+        "search": "Senntisten inventory icon",
+        "fileTitle": "Senntisten.png"
+      }
+    ]
+  },
+  {
+    "id": "place-taverley-dungeon",
+    "label": "Taverley Dungeon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/taverley-dungeon",
+    "fileTitle": "Taverley Dungeon.png",
+    "search": "Taverley Dungeon location image",
+    "canonicalPage": "https://runescape.wiki/w/Taverley_Dungeon",
+    "aliases": [
+      "activities-taverley-dungeon"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-taverley-dungeon",
+        "search": "Taverley Dungeon inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-temple-of-aminishi",
+    "label": "Temple of Aminishi",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/temple-of-aminishi",
+    "fileTitle": "Temple of Aminishi.png",
+    "search": "Temple of Aminishi location image",
+    "canonicalPage": "https://runescape.wiki/w/Temple_of_Aminishi",
+    "aliases": [
+      "activities-temple-of-aminishi"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-temple-of-aminishi",
+        "label": "Temple Of Aminishi",
+        "search": "Temple Of Aminishi inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Temple_Of_Aminishi",
+        "fileTitle": "Temple Of Aminishi.png"
+      }
+    ]
+  },
+  {
+    "id": "place-troll-invasion",
+    "label": "Troll Invasion",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/troll-invasion",
+    "fileTitle": "Troll Invasion.png",
+    "search": "Troll Invasion minigame image",
+    "canonicalPage": "https://runescape.wiki/w/Troll_Invasion",
+    "aliases": [
+      "activities-troll-invasion"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-troll-invasion",
+        "search": "Troll Invasion inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-varrock-dig-site",
+    "label": "Varrock Dig Site",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/varrock-dig-site",
+    "fileTitle": "Varrock Dig Site.png",
+    "search": "Varrock Dig Site location image",
+    "canonicalPage": "https://runescape.wiki/w/Varrock_Dig_Site",
+    "aliases": [
+      "activities-varrock-dig-site",
+      "arch-varrock-dig"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "arch-varrock-dig",
+        "fileTitle": "Archaeological Dig Site map icon.png",
+        "search": "Archaeological Dig Site map icon"
+      },
+      {
+        "id": "activities-varrock-dig-site",
+        "search": "Varrock Dig Site inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "place-warriors-guild",
+    "label": "Warriors' Guild",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/warriors-guild",
+    "fileTitle": "Warriors' Guild.png",
+    "search": "Warriors' Guild location image",
+    "canonicalPage": "https://runescape.wiki/w/Warriors%27_Guild",
+    "aliases": [
+      "activities-warriors-guild"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-warriors-guild",
+        "label": "Warriors Guild",
+        "search": "Warriors Guild inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Warriors_Guild",
+        "fileTitle": "Warriors Guild.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/warriors-guild.webp"
+    ]
+  },
+  {
+    "id": "place-zanaris",
+    "label": "Zanaris",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/zanaris",
+    "fileTitle": "Zanaris.png",
+    "search": "Zanaris location image",
+    "canonicalPage": "https://runescape.wiki/w/Zanaris",
+    "aliases": [
+      "activities-zanaris"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-zanaris",
+        "search": "Zanaris inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "u40-abyssal-demon",
+    "label": "Abyssal demon",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/abyssal-demon",
+    "fileTitle": "Abyssal demon.png",
+    "search": "Abyssal demon",
+    "canonicalPage": "https://runescape.wiki/w/Abyssal_demon",
+    "aliases": [
+      "activities-abyssal-demon"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-abyssal-demon",
+        "label": "Abyssal Demon",
+        "search": "Abyssal Demon inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Abyssal_Demon",
+        "fileTitle": "Abyssal Demon.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-camdozaal",
+    "label": "Camdozaal",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/camdozaal",
+    "fileTitle": "Camdozaal.png",
+    "search": "Camdozaal location image",
+    "canonicalPage": "https://runescape.wiki/w/Camdozaal",
+    "aliases": [
+      "activities-camdozaal"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-camdozaal",
+        "search": "Camdozaal inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "u40-canifis",
+    "label": "Canifis",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/canifis",
+    "fileTitle": "Canifis.png",
+    "search": "Canifis location",
+    "canonicalPage": "https://runescape.wiki/w/Canifis",
+    "aliases": [
+      "activities-canifis"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-canifis",
+        "search": "Canifis inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/canifis.webp"
+    ]
+  },
+  {
+    "id": "u40-chaos-druid",
+    "label": "Chaos druid",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/chaos-druid",
+    "fileTitle": "Chaos druid.png",
+    "search": "Chaos druid",
+    "canonicalPage": "https://runescape.wiki/w/Chaos_druid",
+    "aliases": [
+      "activities-chaos-druid",
+      "activities-chaos-druids"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-chaos-druid",
+        "label": "Chaos Druid",
+        "search": "Chaos Druid inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Chaos_Druid",
+        "fileTitle": "Chaos Druid.png"
+      }
+    ],
+    "publish": [
+      "game/activities/chaos-druids.webp",
+      "game/upgrades/permanent-unlocks/chaos-druids.webp"
+    ]
+  },
+  {
+    "id": "u40-daemonheim",
+    "label": "Daemonheim",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/daemonheim",
+    "fileTitle": "Daemonheim.png",
+    "search": "Daemonheim location",
+    "canonicalPage": "https://runescape.wiki/w/Daemonheim",
+    "aliases": [
+      "activity-daemonheim"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activity-daemonheim",
+        "search": "Daemonheim image"
+      }
+    ]
+  },
+  {
+    "id": "u40-fish-farm",
+    "label": "Fish farm",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/fish-farm",
+    "fileTitle": "Raw giant crayfish.png",
+    "search": "Raw giant crayfish",
+    "canonicalPage": "https://runescape.wiki/w/Fish_farm",
+    "aliases": [
+      "activities-fish-farm",
+      "upgrades-permanent-unlocks-wendlewick-fish-farm"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-fish-farm",
+        "label": "Fish Farm",
+        "search": "Fish Farm inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Fish_Farm",
+        "fileTitle": "Fish Farm.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/fish-farm.webp",
+      "game/upgrades/permanent-unlocks/wendlewick-fish-farm.webp"
+    ]
+  },
+  {
+    "id": "u40-gara-dul",
+    "label": "Gara-Dul",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/gara-dul",
+    "fileTitle": "Gara-Dul.png",
+    "search": "Gara-Dul",
+    "canonicalPage": "https://runescape.wiki/w/Gara-Dul",
+    "aliases": [
+      "activities-gara-dul"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-gara-dul",
+        "label": "Gara Dul",
+        "search": "Gara Dul inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Gara_Dul",
+        "fileTitle": "Gara Dul.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-harmonium",
+    "label": "Harmonium",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/harmonium",
+    "fileTitle": "Harmonic dust.png",
+    "search": "Harmonic dust inventory",
+    "canonicalPage": "https://runescape.wiki/w/Harmonium",
+    "aliases": [
+      "activities-harmonium",
+      "activities-ithell-harps"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-harmonium",
+        "search": "Harmonium inventory icon",
+        "fileTitle": "Harmonium.png"
+      }
+    ],
+    "publish": [
+      "game/activities/ithell-harps.webp",
+      "game/upgrades/permanent-unlocks/ithell-harps.webp"
+    ]
+  },
+  {
+    "id": "u40-hefin-serenity",
+    "label": "Serenity posts",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/serenity-posts",
+    "fileTitle": "Serenity posts.png",
+    "search": "Serenity posts Hefin",
+    "canonicalPage": "https://runescape.wiki/w/Serenity_posts",
+    "aliases": [
+      "activities-serenity-posts",
+      "upgrades-upgrades-permanent-unlocks-serenity-posts"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-serenity-posts",
+        "label": "Serenity Posts",
+        "search": "Serenity Posts inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Serenity_Posts",
+        "fileTitle": "Serenity Posts.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/serenity-posts.webp"
+    ]
+  },
+  {
+    "id": "u40-ithell",
+    "label": "Ithell Clan district",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ithell-clan",
+    "fileTitle": "Ithell Clan district.png",
+    "search": "Ithell Clan district",
+    "canonicalPage": "https://runescape.wiki/w/Ithell_Clan",
+    "aliases": [
+      "activities-ithell-clan"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-ithell-clan",
+        "label": "Ithell Clan",
+        "search": "Ithell Clan inventory icon",
+        "fileTitle": "Ithell Clan.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-keldagrim",
+    "label": "Keldagrim",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/keldagrim",
+    "fileTitle": "Keldagrim.png",
+    "search": "Keldagrim location",
+    "canonicalPage": "https://runescape.wiki/w/Keldagrim",
+    "aliases": [
+      "activities-keldagrim",
+      "upgrades-permanent-unlocks-dwarven-traders"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-keldagrim",
+        "search": "Keldagrim inventory icon"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/dwarven-traders.webp",
+      "game/upgrades/permanent-unlocks/keldagrim.webp"
+    ]
+  },
+  {
+    "id": "u40-laughing-miner",
+    "label": "Laughing Miner Pub",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/laughing-miner-pub",
+    "fileTitle": "Laughing Miner Pub.png",
+    "search": "Laughing Miner Pub",
+    "canonicalPage": "https://runescape.wiki/w/Laughing_Miner_Pub",
+    "aliases": [
+      "activities-laughing-miner-pub"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-laughing-miner-pub",
+        "search": "Laughing Miner Pub inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "u40-marmaros",
+    "label": "Marmaros",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/marmaros",
+    "fileTitle": "Marmaros chathead.png",
+    "search": "Marmaros chathead",
+    "canonicalPage": "https://runescape.wiki/w/Marmaros",
+    "aliases": [
+      "activities-marmaros"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-marmaros",
+        "search": "Marmaros inventory icon",
+        "fileTitle": "Marmaros.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-mineral-deposit",
+    "label": "Mineral deposit",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mineral-deposit",
+    "fileTitle": "Mineral deposit.png",
+    "search": "Mineral deposit Menaphos",
+    "canonicalPage": "https://runescape.wiki/w/Mineral_deposit",
+    "aliases": [
+      "activities-mineral-deposit"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-mineral-deposit",
+        "label": "Mineral Deposit",
+        "search": "Mineral Deposit inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Mineral_Deposit",
+        "fileTitle": "Mineral Deposit.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-mortton",
+    "label": "Mort'ton",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/mortton",
+    "fileTitle": "Mort'ton.png",
+    "search": "Mort'ton location",
+    "canonicalPage": "https://runescape.wiki/w/Mort%27ton",
+    "aliases": [
+      "activities-mortton",
+      "upgrades-permanent-unlocks-shades-of-mortton"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-mortton",
+        "label": "Mortton",
+        "search": "Mortton inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Mortton",
+        "fileTitle": "Mortton.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/mortton.webp",
+      "game/upgrades/permanent-unlocks/shades-of-mortton.webp"
+    ]
+  },
+  {
+    "id": "u40-museum",
+    "label": "Varrock Museum",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/varrock-museum",
+    "fileTitle": "Varrock Museum.png",
+    "search": "Varrock Museum",
+    "canonicalPage": "https://runescape.wiki/w/Varrock_Museum",
+    "aliases": [
+      "activities-varrock-museum",
+      "arch-museum"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "arch-museum",
+        "fileTitle": "Curator Haig Halen chathead.png",
+        "search": "Curator Haig Halen chathead"
+      },
+      {
+        "id": "activities-varrock-museum",
+        "search": "Varrock Museum inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "u40-nechryael",
+    "label": "Nechryael",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/nechryael",
+    "fileTitle": "Nechryael.png",
+    "search": "Nechryael",
+    "canonicalPage": "https://runescape.wiki/w/Nechryael",
+    "aliases": [
+      "activities-nechryael"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-nechryael",
+        "search": "Nechryael inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "u40-ramarno",
+    "label": "Ramarno",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/ramarno",
+    "fileTitle": "Ramarno chathead.png",
+    "search": "Ramarno chathead",
+    "canonicalPage": "https://runescape.wiki/w/Ramarno",
+    "aliases": [
+      "activities-ramarno"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-ramarno",
+        "search": "Ramarno inventory icon",
+        "fileTitle": "Ramarno.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-rewards-trader",
+    "label": "Rewards trader",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/rewards-trader",
+    "fileTitle": "Rewards trader chathead.png",
+    "search": "Rewards trader chathead",
+    "canonicalPage": "https://runescape.wiki/w/Rewards_trader",
+    "aliases": [
+      "activities-rewards-trader"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-rewards-trader",
+        "label": "Rewards Trader",
+        "search": "Rewards Trader inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Rewards_Trader",
+        "fileTitle": "Rewards Trader.png"
+      }
+    ]
+  },
+  {
+    "id": "u40-summoning-obelisk",
+    "label": "Summoning obelisk",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/summoning-obelisk",
+    "fileTitle": "Summoning obelisk.png",
+    "search": "Summoning obelisk",
+    "canonicalPage": "https://runescape.wiki/w/Summoning_obelisk",
+    "aliases": [
+      "activities-summoning-obelisk"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-summoning-obelisk",
+        "label": "Summoning Obelisk",
+        "search": "Summoning Obelisk inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Summoning_Obelisk",
+        "fileTitle": "Summoning Obelisk.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/summoning-obelisk.webp"
+    ]
+  },
+  {
+    "id": "u40-tai-bwo-wannai",
+    "label": "Tai Bwo Wannai",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/tai-bwo-wannai",
+    "fileTitle": "Tai Bwo Wannai.png",
+    "search": "Tai Bwo Wannai location",
+    "canonicalPage": "https://runescape.wiki/w/Tai_Bwo_Wannai",
+    "aliases": [
+      "activities-tai-bwo-wannai"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-tai-bwo-wannai",
+        "search": "Tai Bwo Wannai inventory icon"
+      }
+    ]
+  },
+  {
+    "id": "u40-vip-area",
+    "label": "VIP skilling area",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/vip-skilling-area",
+    "fileTitle": "VIP skilling area.png",
+    "search": "VIP skilling area Menaphos",
+    "canonicalPage": "https://runescape.wiki/w/VIP_skilling_area",
+    "aliases": [
+      "activities-vip-skilling-area",
+      "bulk42-upgrades-permanent-unlocks-vip-skilling-area"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-vip-skilling-area",
+        "label": "Vip Skilling Area",
+        "search": "Vip Skilling Area inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Vip_Skilling_Area",
+        "fileTitle": "Vip Skilling Area.png"
+      }
+    ],
+    "publish": [
+      "game/upgrades/permanent-unlocks/vip-skilling-area.webp"
+    ]
+  },
+  {
+    "id": "u40-worker-district",
+    "label": "Worker district",
+    "category": "rs3/activities",
+    "path": "assets/rs3/activities/worker-district",
+    "fileTitle": "Worker district.png",
+    "search": "Worker district Menaphos",
+    "canonicalPage": "https://runescape.wiki/w/Worker_district",
+    "aliases": [
+      "activities-worker-district"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-worker-district",
+        "label": "Worker District",
+        "search": "Worker District inventory icon",
+        "canonicalPage": "https://runescape.wiki/w/Worker_District",
+        "fileTitle": "Worker District.png"
+      }
+    ]
+  }
+]

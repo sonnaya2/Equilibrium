@@ -78,9 +78,12 @@ board goes unverified. `npx playwright test -c playwright.webgpu.config.ts e2e/m
 runs the same specs in a headed off-screen Edge on port 3101, where the adapter is real. Use
 Playwright for browser work here, and do not leave a dev server running in the background.
 
-**`assets/` is not web-served.** It is the source library managed by `scripts/sync-assets.mjs`;
-generated web assets live under `public/game/`. Run `node scripts/sync-assets.mjs --check` instead of
-pinning a count in documentation.
+**`assets/` is not web-served, and `public/game/` is not editable.** `assets/` is the only editable
+image tree; `public/game/` and `public/brand/` are regenerated from it by `scripts/publish-assets.mjs`
+on every dev/build/test run, and are untracked. Hand-editing them is how the two trees drifted apart
+the last time — a publish wipes anything unregistered. Routing lives in `scripts/assets/routes.mjs`,
+provenance in `assets/catalog/`. Run `npm run assets:check` instead of pinning a count in
+documentation. `public/map/` is different: that is `build:map` output and stays tracked.
 
 ## Boundaries that carry weight
 

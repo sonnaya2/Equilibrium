@@ -1,0 +1,93 @@
+[
+  {
+    "id": "region-anachronia",
+    "label": "Anachronia",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/anachronia",
+    "search": "Anachronia lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Anachronia",
+    "publish": [
+      "game/activities/anachronia.webp"
+    ]
+  },
+  {
+    "id": "region-asgarnia",
+    "label": "Asgarnia",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/asgarnia",
+    "search": "Falador lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Asgarnia"
+  },
+  {
+    "id": "region-desert",
+    "label": "Kharidian Desert",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/desert",
+    "search": "Menaphos lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Kharidian_Desert"
+  },
+  {
+    "id": "region-forinthry",
+    "label": "Forinthry / Wilderness",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/forinthry",
+    "search": "Wilderness sword 4 icon",
+    "canonicalPage": "https://runescape.wiki/w/Wilderness"
+  },
+  {
+    "id": "region-fremennik",
+    "label": "Fremennik Province",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/fremennik",
+    "search": "Fremennik Province map icon",
+    "canonicalPage": "https://runescape.wiki/w/Fremennik_Province"
+  },
+  {
+    "id": "region-havenhythe",
+    "label": "Havenhythe",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/havenhythe",
+    "search": "Havenhythe map icon",
+    "canonicalPage": "https://runescape.wiki/w/Havenhythe"
+  },
+  {
+    "id": "region-kandarin",
+    "label": "Kandarin",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/kandarin",
+    "search": "Ardougne lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Kandarin"
+  },
+  {
+    "id": "region-karamja",
+    "label": "Karamja",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/karamja",
+    "search": "Karamja lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Karamja"
+  },
+  {
+    "id": "region-misthalin",
+    "label": "Misthalin / Lumbridge",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/misthalin",
+    "search": "Lumbridge lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Misthalin"
+  },
+  {
+    "id": "region-morytania",
+    "label": "Morytania",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/morytania",
+    "search": "Canifis lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Morytania"
+  },
+  {
+    "id": "region-tirannwn",
+    "label": "Tirannwn",
+    "category": "rs3/regions",
+    "path": "assets/rs3/regions/tirannwn",
+    "search": "Prifddinas lodestone icon",
+    "canonicalPage": "https://runescape.wiki/w/Tirannwn"
+  }
+]

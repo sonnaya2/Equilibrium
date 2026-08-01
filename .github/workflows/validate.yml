@@ -39,6 +39,10 @@ jobs:
       # migrations, and the patches. The retired seed is not an input here.
       - name: Audit data platform
         run: npm run audit:data
+      # Fails if public/ is re-tracked, the icon index drifts from assets/, a
+      # reward alias points at nothing, or two sources claim one public path.
+      - name: Audit asset pipeline
+        run: npm run assets:check
       - run: npm run typecheck
       - name: Lint
         run: npm run lint

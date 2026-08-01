@@ -26,7 +26,7 @@ Details: root **`NOTICE`** (authoritative) and **`LICENSE`** (MIT code only, wit
 - If a fact came from PvME, tag source `pvme` and re-verify on the Wiki before `verified: true`.
 - Never strip source URLs to “clean” a row.
 - Never copy PvME / RS Analysis guide prose or UI.
-- New icons: register provenance in `assets/source-manifest.json` — see `assets/README.md`.
+- New icons: register provenance in `assets/catalog/` — see `assets/README.md`.
 
 ## Data ownership
 
@@ -38,9 +38,11 @@ Only the first three rows are tracked. Everything else on this list is rebuilt b
 | `data/seed-v1.json.gz`        | Immutable baseline        | Never edit or broadly inspect it for routine data work       |
 | `data/migrations/`            | Relational schema         | Forward-only schema changes                                  |
 | `data/patches/`               | Reviewable content edits  | Use stable IDs and validated transactional operations        |
-| `assets/source-manifest.json` | Art provenance catalog    | New icons must register here, then run `npm run sync:assets` |
+| `assets/catalog/`             | Art provenance catalog    | Register new icons here, then `assets:fetch` and `assets:import` |
+| `assets/rs3/` `leagues/` `brand/` | Source art            | The only editable image trees                                |
 | `.cache/`                     | Generated SQLite and JSON | Never edit or commit                                         |
 | `public/data/v2/`             | Generated browser exports | Never edit or commit; regenerate with `data:export`          |
+| `public/game/` `public/brand/`| Generated web art         | Never edit or commit; regenerate with `assets:publish`       |
 | `reports/`                    | Generated run reports     | Never edit or commit                                         |
 
 ## Scripts

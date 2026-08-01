@@ -66,7 +66,18 @@ Author factual changes through the repository's normal JSONL patch workflow. Nev
 
 ## Implementation routing
 
-Classify each effect before writing code.
+Classify each effect before writing code, then place it at the matching engine seam. `combat-sim` describes the seams; the mapping is:
+
+| Classification              | Where it lands                                                                                   |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| derived input or override   | shared combat/loadout context feeding `leagueModifiers(loadout)` in `src/combat/league/ruleset.ts` |
+| per-hit or per-attack damage | a scheduled event with full provenance, resolved in `engine/resolution/`                          |
+| cast-start state change     | `engine/cast/effects/`, in the lifecycle stage and style module that owns it                      |
+| landed-hit state change     | `engine/resolution/landed/`, in the style that owns it                                            |
+| persistent runtime state    | the style or target bucket of `RotationState`, written through its patch helper                   |
+| autonomous actor            | `engine/schedulers/`, with its own scheduler state                                                |
+
+Nothing league-specific goes into a base formula, an unconditional engine branch, or a blessing-only field bolted onto shared state. With the ruleset omitted, base-game totals, event order, and cast sequence must be unchanged.
 
 ### Derived inputs and resolver overrides
 
@@ -381,19 +392,7 @@ Until testing proves otherwise:
 
 ## RNG policy
 
-Use deterministic expected value for damage-only randomness when it does not alter future state.
-
-Use probability-weighted state branching for randomness that changes:
-
-- adrenaline;
-- cooldowns;
-- active windows;
-- future cast legality;
-- stack state.
-
-Merge equivalent states to control growth. Seeded Monte Carlo is the fallback for state spaces that cannot be represented exactly at reasonable cost.
-
-Every result using an approximation must label the method and assumptions.
+`combat-sim` owns it. Blessing procs follow the same rule as every other state-changing roll: expected value only when the outcome cannot change future state, probability-weighted branching when it can, and a labelled method whenever an approximation is used. Avernic Rampage and Inferno of Zamorak are branching cases, not flat averages.
 
 ## Required context additions
 
@@ -418,23 +417,20 @@ For each implemented blessing, test the ruleset enabled and disabled.
 
 Base-game numerical output and cast sequence must remain identical when Equilibrium blessings are absent.
 
-Use relevant matrices, including:
+The general simulator matrix — hit counts, channels, tick boundaries, crit paths, event ordering — belongs to `combat-sim`. On top of it, blessings need:
 
+- ruleset `"base"` versus `"equilibrium"`, with base totals and cast sequence unchanged;
 - no shield, defender, and shield;
 - 1×1 and larger targets;
 - auto-attack versus Basic-category ability;
-- single-hit, multi-hit, and damage-over-time;
 - AoE versus multi-target;
 - first-hit and per-hit trigger boundaries;
 - proc cooldown boundaries;
-- tick-rounding boundaries;
-- crit and non-crit paths;
 - separate-hit and hit-cap treatment;
 - no recursive self-triggering;
 - poisonable and poison-immune targets;
-- ruleset `"base"` versus `"equilibrium"`;
 - unsupported effects displayed but excluded from totals.
 
-Test names must state any provisional assumption or expected-value smoothing.
+Test names must state any provisional assumption or expected-value smoothing. Do not move a golden total to accommodate a blessing without the source that justifies the new number.
 
-Run the repository's normal typecheck, unit tests, build, and relevant rendered verification before claiming blessing support is complete.
+Run `npm run typecheck`, `npm test`, and `npm run build`, plus `npm run test:e2e` when a support label or displayed metric changed, before claiming blessing support is complete.

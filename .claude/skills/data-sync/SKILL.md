@@ -45,4 +45,6 @@ Use the actual `SourceReference` type in `src/combat/types.ts` or `src/research/
 - PvME is discovery material until a current Wiki or Jagex source verifies mechanics affected by the 2 March 2026 combat update.
 - When sources disagree, retain the claims in quarantine or patch context and choose the app-facing value deliberately. Never blend them silently.
 
+This section governs record provenance. For combat mechanics specifically — formulas, timings, cooldowns, rounding — `combat-math` owns the ranking, and a combat record must clear it before it lands here.
+
 Write facts in this app's words. Do not copy source prose, invent a value to fill an empty record, or strip attribution.

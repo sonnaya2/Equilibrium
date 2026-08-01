@@ -60,6 +60,14 @@ Reuse `Page`, `Nav`, `GameIcon`, `RegionCrest`, `@/lib/gameArt`, canonical `data
 
 Keep `three`, `@react-three/fiber`, and `drei` inside the client-only map implementation loaded through `next/dynamic` with `ssr: false`. Shared layout and other routes must not import the Three bundle. Load `map-3d` for map work.
 
+## Combat route boundary
+
+`/combat` presents the engine; it never re-implements it. Components read results from the combat core and format them — no damage arithmetic, rounding, cap clamping, tick conversion, or rotation legality in a component or a hook.
+
+`src/combat/index.ts` is the deliberate external API and must name every module a consumer may reach for. UI may import the modules it names; `@/combat/engine/cast/*`, `@/combat/engine/resolution/*`, `@/combat/engine/runtime/*` and `@/combat/engine/schedulers/*` are engine internals and stay unimported outside `src/combat/`. The combat core has zero React dependency in both directions: nothing under `src/combat/` imports React, and nothing in the UI mutates engine state directly.
+
+Label results honestly. Show the support status a mechanic actually has (`modeled`, `partially modeled`, `not modeled`, `mechanics unverified`), name which metric a number is and over what window, and surface the `SourceReference` behind a displayed value rather than presenting a provisional interpretation as confirmed. Say "Damage Potential", never "hit chance". Load `combat-math` and `combat-sim` before changing what a combat surface claims.
+
 ## Frozen accessibility and e2e contracts
 
 Preserve unless the user explicitly changes them and tests change in the same commit:

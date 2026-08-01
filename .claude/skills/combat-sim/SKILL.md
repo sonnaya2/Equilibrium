@@ -1,15 +1,50 @@
 ---
 name: combat-sim
-description: RS3 Rotation and Revolution simulation semantics for this repo: tick advancement, cast legality, channels, event provenance, per-hit effects, resource and cooldown clocks, state-changing RNG, sequences, conjure scheduling, and horizon accounting. Use before writing, reviewing, or debugging src/combat/rotation/, style on-cast state, scheduled combat events, or any Quick, Rotation, or Revolution result whose timing or state looks wrong.
+description: RS3 Rotation and Revolution simulation semantics for this repo: the src/combat/engine/ layout, tick advancement, cast legality, channels, event provenance, per-hit effects, resource and cooldown clocks, state-changing RNG, sequences, conjure scheduling, and horizon accounting. Use before writing, reviewing, or debugging anything under src/combat/engine/, style on-cast state, scheduled combat events, or any Quick, Rotation, or Revolution result whose timing or state looks wrong.
 ---
 
 # Combat simulation semantics
 
-This skill owns **when combat events happen and what state survives between them**.
+This skill owns **when combat events happen and what state survives between them**, and the shape of `src/combat/engine/`.
 
-`combat-math` owns what a hit's damage is: Damage Potential, DPL, crit layers, hit caps, modifier ordering, and rounding. `league-blessings` owns revealed blessing facts, support status, and the routing decision for each blessing effect. Ability and equipment data own sourced mechanic values such as durations, stack thresholds, hit offsets, and cooldowns.
+`combat-math` owns what a hit's damage is: base ability damage, Damage Potential, DPL, crit layers, hit caps, modifier ordering, rounding, and the source hierarchy every combat number must clear. `league-blessings` owns revealed blessing facts, support status, and the routing decision for each blessing effect. Ability and equipment data own sourced mechanic values such as durations, stack thresholds, hit offsets, and cooldowns.
 
 This document describes the simulator's target semantics, not whichever buggy behavior happens to exist today. Fix code to match the rules; do not weaken the rules to preserve a defect.
+
+## Engine architecture
+
+The engine is split by responsibility, and each folder has exactly one:
+
+```text
+src/combat/engine/
+  cast/          the atomic cast transition
+    effects/     cast-start state changes, by lifecycle stage then style
+  runtime/       clock, per-run mutable runtime, event queue, RotationState
+  resolution/    land-time damage calculation
+    landed/      on-hit state transitions, by style
+  simulation/    drivers, branching, contracts, summaries
+  schedulers/    autonomous actors (conjures)
+```
+
+The boundaries that make it work:
+
+- **Preparation is read-only.** `cast/prepare.ts` computes everything the cast needs against the advanced state and records each implied mutation as a `PreparedTransition` variant. A new mechanic adds a variant, not another boolean on `PreparedCast`.
+- **A rejected cast mutates nothing** beyond the canonical time advance — no resources, cooldowns, scheduled events, or cast records. `prepareSimulationCast` is the single boundary where readiness and affordability are decided, shared by the manual driver, Revolution, and the branch layer.
+- **Cast effects are split by lifecycle and by style.** `cast/effects/` holds prepared transitions, cooldowns, resources, completion, and one module per style. A cast has exactly one style, so style modules never interleave; effects needing a finished channel belong in `completion.ts`, applied after advancing through occupancy.
+- **Resolution calculates; recording writes.** Resolvers return an `EventResolution` and touch no runtime ledger. `resolution/record.ts` is the only writer of totals, per-ability ledgers, hit details and the event log.
+- **`resolution/landed/` applies on-hit state**, dispatched to the style that owns it, and only for real hits — attached components, conjure autos, poison ticks and procs are excluded by the caller.
+- **Runtime state is grouped by combat style and target.** `RotationState` carries the genuinely global clocks (`tick`, `adrenaline`, `cooldowns`, `relentlessUntilTick`) plus one bucket per style and one for the target. Each style's state and its constructor live in that style's module, so the engine composes state rather than declaring it. Debuffs the simulation put on the target (burns, Bloat) live in `target`, not in player state.
+- **Every state write goes through a patch helper** (`patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget`). No nested object is mutated in place, so a branch snapshot stays isolated.
+- **Conjures use capability-specific discriminated types.** `ActiveConjure` carries exactly the tracks a spirit has — the skeleton's auto track and Rage, the zombie's auto and poison tracks, the ghost's auto, the phantom's neither. A poison track on a skeleton is a compile error, not a test someone has to remember. Never reintroduce a shared shape with sentinel values or a runtime `id ===` guard standing in for a type.
+- **Damage-over-time classification is declared, not inferred.** An `AbilityHit` carries an explicit `dot` flag and the scheduler classifies from it. Landing late and being crit-ineligible are two unrelated axes and neither implies DoT: Corruption Shot's first bleed tick lands on the cast tick and is still DoT; Magma Tempest lands over 16 ticks, cannot crit, and is still a direct hit. Classification is decided once, where the event is scheduled, and passed to the resolver.
+- **`src/combat/index.ts` is the deliberate external API.** It must name every module an outside consumer may reach for. `cast/`, `resolution/`, `runtime/` and `schedulers/` are internal; nothing outside `src/combat/` imports them.
+
+`src/combat/rotation/` no longer exists. Do not recreate it, `castEffects.ts`, the old flat `resolution.ts`, a flat eighteen-field `RotationState`, or a single conjure shape with unusable fields. If a module is growing into a dispatcher that touches every mechanic, split it along these seams instead of adding another branch to it.
+
+Two more structural rules, for the same reason:
+
+- No arbitrary callback plumbing. A mechanic declares data — a `PreparedTransition`, a scheduled event with provenance, a state field — and the canonical path acts on it. A callback whose captured state is not visible at the call site is hidden simulation state.
+- No hidden compatibility layer. When a shape changes, change the callers. Do not leave a shim that quietly accepts the old shape, and do not keep a deprecated field alive "just in case" — a stale field will get read.
 
 ## Verification and support status
 
@@ -36,6 +71,10 @@ Use the repository's established state idioms:
 - per-ability cooldown readiness lives in the cooldown state and is combined with cast availability by `firstLegalTick` or its canonical replacement;
 - expiring effects use explicit clocks such as `*UntilTick` rather than parallel booleans and ad hoc timers;
 - per-style state mutates through its existing helpers so caps, spending, and invariants stay centralized.
+
+Per-run mutable bookkeeping — the event queue, ledgers, sequence counters, the event log — lives on the `SimulationRuntime` created once per run and threaded through, never in a module-level singleton, so concurrent simulations cannot interfere.
+
+**Starting state is configurable wherever a comparison depends on it.** A run that always begins at zero adrenaline, no stacks, every cooldown ready and no active window can only answer one question. Any metric used to compare rotations, gear, or rulesets must let the caller state the opening conditions it is comparing under, and the result must report which ones it used. Defaults stay explicit and documented; never bury an assumed opening state inside a driver.
 
 Unless a sourced mechanic requires different treatment, timed windows are half-open: active from their start tick while `currentTick < untilTick`, and inactive at `untilTick`. Boundary behavior must be covered by tests.
 
@@ -131,6 +170,8 @@ Use probability-weighted state branching when randomness changes any of the foll
 
 Merge equivalent states to control growth. Use seeded Monte Carlo only when exact branching is unreasonably expensive. Any approximation must expose its method and assumptions in tests and result metadata.
 
+**Branch-relevant event provenance belongs in the equivalence signature.** Two branches are equivalent when their `RotationState`, pending-event signature, and run counters match. Every field of a pending event that can change how it resolves belongs in that signature — `derivedFrom` included, since tails deriving from different source hits resolve to different damage and are not the same branch. Adding such a field to `ScheduledEvent` means adding it to the signature in the same change; omitting it silently merges branches that were never equivalent, and the totals are then wrong in a way no damage assertion will catch. `resolve` closures stay out: equivalent branches scheduled identical events from identical casts.
+
 ## Resource clocks and lockouts
 
 A timed resource mechanic owns all state required to model its lifecycle. A typical clocked resource may need:
@@ -171,6 +212,13 @@ The canonical DPS metric is **landed damage within the horizon**:
 
 A second metric, **damage from casts begun within the horizon**, may include later tails only when explicitly requested. It must be separately named and must never be presented as fixed-window DPS.
 
+**Fixed-window and natural-completion metrics are different numbers and are named differently.** A per-minute figure can mean either:
+
+- **fixed-window DPM** — everything that lands inside a stated window, divided by that window. Unfinished tails past the edge are excluded; the window length is an input, not a consequence of the rotation.
+- **natural-completion DPM** — a rotation run to its own end, including every scheduled tail, divided by the elapsed time it actually took. The denominator is an output.
+
+They diverge whenever a rotation ends on a long DoT, a live conjure, or a channel. Never label one with the other's name, never compare a fixed-window number against a natural-completion number, and always report which one a result is along with its window or elapsed ticks. When both are shown, show the denominators too.
+
 ## League effect routing
 
 Follow `league-blessings` rather than inventing a parallel lettered routing taxonomy.
@@ -186,8 +234,8 @@ Nothing league-specific is baked into base formulas or unconditional simulator s
 
 Before changing simulation code:
 
-1. identify whether the mechanic belongs to hit math, event scheduling, persistent state, league routing, or unsupported target/incoming-combat context;
-2. verify its timings, trigger scope, and ordering rather than inferring them from tooltip prose;
+1. identify whether the mechanic belongs to hit math, event scheduling, persistent state, league routing, or unsupported target/incoming-combat context — then to which engine folder above, so it lands with the one responsibility that owns it rather than in whichever file is already open;
+2. verify its timings, trigger scope, and ordering against the `combat-math` source hierarchy rather than inferring them from tooltip prose, a comment, or an existing test's expectation;
 3. define the state fields, clocks, event provenance, and boundary behavior;
 4. write a regression test named for the intended behavior, not a bug number;
 5. implement through the canonical advancement, cast, state-helper, and event paths;
@@ -218,4 +266,6 @@ Use relevant cases including:
 
 Base-ruleset fixtures must remain identical when league modifiers are absent.
 
-Run `npm run typecheck`, `npm test`, and `npm run build` before claiming a simulator change works. Run rendered or end-to-end verification when the change affects user-visible support labels, rotation controls, or reported metrics.
+**Never update a snapshot or a golden total to make a test pass.** A moved number is a claim about the game, and it needs the same source treatment as the original: identify the mechanic that changed, verify it against the `combat-math` source hierarchy, and say in the test or the commit which source moved it. If you cannot explain the delta, the change is a regression, not a new baseline. Prefer focused state and event assertions over aggregate snapshots precisely because a snapshot fails without telling you what broke.
+
+Run `npm run typecheck`, `npm test`, and `npm run build` before claiming a simulator change works. Run `npm run test:e2e` (Playwright, port 3100, not in CI) when the change affects user-visible support labels, rotation controls, or reported metrics — see `equilibrium-ui` for the rendered-QA rules.

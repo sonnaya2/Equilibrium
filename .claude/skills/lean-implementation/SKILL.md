@@ -20,19 +20,38 @@ what is safe to simplify here and what is not.
 
 ## Preserve load-bearing complexity
 
-Read `combat-math` before touching combat mechanics. Fewer lines never justify changing:
+Read `combat-math` before touching combat mechanics, and `combat-sim` before touching
+`src/combat/engine/`. Fewer lines never justify changing:
 
 - ordered modifier stages and priority;
 - intermediate rounding order;
+- base ability damage split by weapon configuration;
 - separate crit chance, crit damage, guaranteed crits, and per-hit eligibility;
 - Damage Potential scaling;
 - per-effect hit caps;
 - the tested DPL curve;
 - per-ability adrenaline and weapon timing;
 - style-specific state machines;
+- the engine's one-responsibility folders — read-only preparation, cast effects split by lifecycle
+  and style, resolution separate from recording, runtime state grouped by style and target,
+  capability-typed conjures, declared damage-over-time;
 - the League ruleset boundary;
 - `SourceReference` provenance;
 - the combat core's zero-React boundary.
+
+Collapsing those folders back into one file per subsystem is not a simplification: each split
+removed a class of bug the merged shape allowed. `combat-sim` records which.
+
+## Structure
+
+Density is the house style, and it is not a licence for a god file. When a module has become the
+place every mechanic touches, split it along an existing responsibility seam rather than adding one
+more branch. Prefer data over indirection: a discriminated variant the canonical path handles beats
+a callback whose captured state is invisible at the call site.
+
+When a shape changes, change its callers. A compatibility shim that quietly accepts the old shape,
+or a deprecated field kept alive "just in case", is state someone will read by accident — delete it
+in the same change.
 
 Read `data-sync` before changing ingestion or generated data. Ingestion supplies candidates; verified
 mechanics and sourced records stay explicit. Never replace a sourced rule with tooltip parsing or

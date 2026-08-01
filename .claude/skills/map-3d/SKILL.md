@@ -56,7 +56,7 @@ The board's silhouette is the HD Wiki raster's own coastline. `npm run build:map
 The Wiki draws open water as **one flat colour** (`#7789A5`), which is why the
 coastline is recoverable exactly rather than approximately. Region ownership is a
 Euclidean partition seeded from the real place coordinates in `gameCoords.ts` plus the
-supplemental hints in `data/map/region-seeds.json` — **never** hand-drawn polygons in
+supplemental hints in `.generated/documents/map/region-seeds.json` — **never** hand-drawn polygons in
 uv. An earlier set of authored uv rings survived a change of base raster and silently
 landed in open ocean; that is the failure this replaced.
 

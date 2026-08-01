@@ -20,6 +20,13 @@ import {
   SEARING_WINDS_BONUS_HIT_PCT,
   shadowImbuedAdrenalinePerHit,
 } from "../styles/ranged/onHit";
+import {
+  COMMAND_REQUIRES_CONJURE,
+  CONJURE_DAMAGE_POTENTIAL,
+  conjureEligibleModifiers,
+  skeletonCommandHitLanded,
+  skeletonRageMult,
+} from "../styles/necromancy/conjures";
 import type { CombatModifier, SourceReference } from "../types";
 import type { ResolvedDamage, ScheduledEvent } from "./events";
 import type { SimulationRuntime } from "./runtime";
@@ -104,6 +111,21 @@ export function consumeNextHitEffects(
   event: ScheduledEvent<SimulationRuntime>,
 ): void {
   const ability = rt.byId.get(event.abilityId);
+  // Skeleton command hits build one rage stack each (damage resolved first).
+  if (event.family === "command" && event.abilityId === "command_skeleton_warrior") {
+    const spirit = rt.state.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+    if (spirit) {
+      rt.state = {
+        ...rt.state,
+        conjures: {
+          spirits: rt.state.conjures.spirits.map((s) =>
+            s === spirit ? skeletonCommandHitLanded(s) : s,
+          ),
+        },
+      };
+    }
+    return;
+  }
   if (ability?.style !== "ranged") return;
   // Deathspore: every landed ranged hit builds a stack (its own cooldown gate).
   if (rt.input.ammo === "deathspore") {
@@ -180,13 +202,23 @@ export function resolveCastHit(
     guaranteed:
       snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
   };
+  // Command abilities are part of the conjure: full Damage Potential, the
+  // conjure-eligible modifier set (never prayers), and for the skeleton the
+  // live rage multiplier at the land tick (wiki, verified 2026-07-31).
+  const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
+  let band = hitSpec.band;
+  if (ability.id === "command_skeleton_warrior") {
+    const spirit = state.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+    const mult = skeletonRageMult(spirit?.rageStacks ?? 0);
+    if (mult !== 1) band = { minPct: band.minPct * mult, maxPct: band.maxPct * mult };
+  }
   const hit = calculateHit({
     base: input.base,
-    band: hitSpec.band,
+    band,
     level: input.level,
-    accuracy: input.accuracy,
+    accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
     crit,
-    modifiers,
+    modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
     context: input.context,
     cap: input.cap,
   });

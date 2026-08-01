@@ -1,7 +1,10 @@
 import { critProbability } from "../core/critical";
 import type { AbilityHit } from "../pipeline/calculateAbility";
 import { instabilityActive, LIGHTNING_SURGE_TICK_DELAY } from "../styles/magic/effects";
-import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
+import {
+  COMMAND_REQUIRES_CONJURE,
+  COMMAND_SKELETON_EXPIRY_TAIL_TICKS,
+} from "../styles/necromancy/conjures";
 import type { PreparedCast } from "./castPreparation";
 import type { CastRecord } from "./contracts";
 import { resolveCastHit, resolveLightningSurge } from "./resolution";
@@ -35,12 +38,26 @@ export function scheduleCastEvents(
   rt.recordBySeq.set(castSeq, record);
 
   const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
+  // Wiki: commanded when the skeleton has less than its duration remaining, it
+  // "will deal an attack on the tick it dies, and up to 2 ticks later" — later
+  // command hits are never scheduled.
+  const skeletonUntilTick =
+    ability.id === "command_skeleton_warrior"
+      ? rt.state.conjures.spirits.find((s) => s.id === "skeleton_warrior")?.untilTick
+      : undefined;
   const hitSeqs: number[] = [];
   working.hits.forEach((hitSpec: AbilityHit, hitIndex: number) => {
+    const landTick = candidate + (hitSpec.tickOffset ?? 0);
+    if (
+      skeletonUntilTick !== undefined &&
+      landTick > skeletonUntilTick + COMMAND_SKELETON_EXPIRY_TAIL_TICKS
+    ) {
+      return;
+    }
     const seq = rt.nextSeq++;
     hitSeqs.push(seq);
     rt.queue.push({
-      tick: candidate + (hitSpec.tickOffset ?? 0),
+      tick: landTick,
       seq,
       family: isCommand
         ? "command"

@@ -21,8 +21,13 @@ import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../s
 import { consumeAnima } from "../styles/magic/runicCharge";
 import { isMagicAbility } from "../styles/magic/abilities";
 import { applyNecroOnCast, deathSkullsCooldownTicks } from "../styles/necromancy/effects";
+import {
+  COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS,
+  CONJURE_ABILITY_SUMMONS,
+  conjureActive,
+} from "../styles/necromancy/conjures";
 import type { PreparedCast } from "./castPreparation";
-import { scheduleSpiritTracks } from "./conjureScheduler";
+import { applySkeletonCommand, scheduleSpiritTracks } from "./conjureScheduler";
 import type { CastRng } from "./contracts";
 import type { SimulationRuntime } from "./runtime";
 import {
@@ -117,6 +122,7 @@ export function applyCastEffects(
   }
 
   if (ability.style === "necromancy") {
+    const skeletonWasActive = conjureActive(rt.state.conjures, "skeleton_warrior", candidate);
     const patch = applyNecroOnCast(rt.state.necro, ability, candidate, rt.state.conjures);
     rt.state = {
       ...rt.state,
@@ -126,6 +132,21 @@ export function applyCastEffects(
     if (patch.adrenalineBonus) rt.state = gainAdrenaline(rt.state, patch.adrenalineBonus);
     rt.state = clearCooldowns(rt.state, patch.clearCooldownIds);
     for (const spirit of rt.state.conjures.spirits) scheduleSpiritTracks(rt, spirit);
+    // Wiki: conjuring a skeleton starts the command's initial 3.6s (6-tick)
+    // lockout; commanding mutates the skeleton's own auto scheduler.
+    if (
+      CONJURE_ABILITY_SUMMONS[ability.id]?.includes("skeleton_warrior") &&
+      !skeletonWasActive
+    ) {
+      rt.state = {
+        ...rt.state,
+        cooldowns: {
+          ...rt.state.cooldowns,
+          command_skeleton_warrior: candidate + COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS,
+        },
+      };
+    }
+    if (ability.id === "command_skeleton_warrior") applySkeletonCommand(rt, candidate);
   }
 
   if (ability.stateEffect === "berserk") {

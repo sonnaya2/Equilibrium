@@ -7,6 +7,9 @@ import {
   NECROMANCY_ABILITIES,
   volleyOfSouls,
 } from "../styles/necromancy/abilities";
+import { mulFloor } from "../core/rounding";
+import { MODERNISATION_WIKI } from "../data/sources";
+import type { CombatModifier } from "../types";
 import { rotationOf } from "./contracts";
 import { simulate, type CastRecord, type RotationSummary, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
@@ -1497,5 +1500,184 @@ describe("simulate — Searing Winds cast-time eligibility and Rapid Fire extens
     const s = ctx.finish();
     expect(s.casts[4].result.expected).toBeCloseTo(1000 + 200);
     expect(s.casts[5].result.expected).toBeCloseTo(1000);
+  });
+});
+
+describe("simulate — conjure Damage Potential and modifier routing", () => {
+  const necroAbilities = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
+  const necroInput: Omit<SimulateInput, "rotation"> = {
+    ...baseInput,
+    abilities: necroAbilities,
+    context: { style: "necromancy" },
+  };
+
+  it("spirit autos always deal 100% of their damage potential", () => {
+    const rotation = rotationOf("conjure_skeleton_warrior", ...Array(10).fill("necromancy_basic"));
+    const full = simulate({ ...necroInput, rotation });
+    const halved = simulate({ ...necroInput, accuracy: 0.5, rotation });
+    expect(halved.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(
+      full.perAbility["spirit_skeleton_warrior"]!,
+      10,
+    );
+    // The player's own hits still scale with their Damage Potential.
+    expect(halved.perAbility["necromancy_basic"]).toBeCloseTo(
+      full.perAbility["necromancy_basic"]! / 2,
+      10,
+    );
+  });
+
+  it("commands also use full damage potential", () => {
+    const rotation = rotationOf(
+      "conjure_skeleton_warrior",
+      "command_skeleton_warrior",
+      ...Array(6).fill("necromancy_basic"),
+    );
+    const full = simulate({ ...necroInput, rotation });
+    const halved = simulate({ ...necroInput, accuracy: 0.5, rotation });
+    expect(halved.perAbility["command_skeleton_warrior"]).toBeCloseTo(
+      full.perAbility["command_skeleton_warrior"]!,
+      10,
+    );
+  });
+
+  const globalBuff: CombatModifier = {
+    id: "test:global",
+    stage: "onCast",
+    priority: 0,
+    applies: () => true,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1.1) }),
+    source: MODERNISATION_WIKI,
+  };
+  const prayerBuff: CombatModifier = {
+    id: "prayer:test",
+    stage: "ability",
+    priority: 10,
+    applies: () => true,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1.2) }),
+    source: MODERNISATION_WIKI,
+  };
+
+  it("spirit autos take global modifiers but never the player's prayers", () => {
+    const rotation = rotationOf("conjure_skeleton_warrior", ...Array(10).fill("necromancy_basic"));
+    const plain = simulate({ ...necroInput, rotation });
+    const buffed = simulate({ ...necroInput, modifiers: [globalBuff], rotation });
+    const prayed = simulate({ ...necroInput, modifiers: [globalBuff, prayerBuff], rotation });
+    const spirit = (s: RotationSummary) => s.perAbility["spirit_skeleton_warrior"] ?? 0;
+    expect(spirit(buffed)).toBeGreaterThan(spirit(plain));
+    expect(spirit(prayed)).toBeCloseTo(spirit(buffed), 10);
+  });
+
+  it("array and function modifier forms give spirits identical damage (manual/Revolution parity)", () => {
+    const rotation = rotationOf("conjure_skeleton_warrior", ...Array(10).fill("necromancy_basic"));
+    const asArray = simulate({ ...necroInput, modifiers: [globalBuff], rotation });
+    const asFunction = simulate({ ...necroInput, modifiers: () => [globalBuff], rotation });
+    expect(asFunction.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(
+      asArray.perAbility["spirit_skeleton_warrior"]!,
+      10,
+    );
+    expect(asFunction.totalExpected).toBeCloseTo(asArray.totalExpected, 10);
+  });
+});
+
+describe("simulate — Command Skeleton Warrior scheduling", () => {
+  const necroAbilities = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
+  const necroInput: Omit<SimulateInput, "rotation"> = {
+    ...baseInput,
+    abilities: necroAbilities,
+    context: { style: "necromancy" },
+  };
+
+  function skeletonEvents(s: RotationSummary) {
+    return {
+      autos: s.events.filter((e) => e.family === "conjureAuto"),
+      commands: s.events.filter((e) => e.family === "command"),
+    };
+  }
+
+  it("the command is locked for 6 ticks after summoning (initial 3.6s cooldown)", () => {
+    const ctx = createCastContext(necroInput);
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    expect(ctx.firstLegalTick("command_skeleton_warrior")).toBe(6);
+  });
+
+  it("wiki example: command at 6 — RAAAR auto at 7, hits 8-17, autos resume 19, 24", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    ctx.performCast(
+      ctx.byId.get("command_skeleton_warrior")!,
+      ctx.firstLegalTick("command_skeleton_warrior"),
+      false,
+    );
+    expect(ctx.getState().tick).toBe(9);
+    while (ctx.getState().tick <= 26) ctx.performCast(basic, ctx.getState().tick, false);
+    // Rage after the resumed auto at 24: 1 (auto at 7) + 10 (command) + 2 (autos).
+    expect(ctx.getState().conjures.spirits[0].rageStacks).toBe(13);
+    const s = ctx.finish();
+    const { autos, commands } = skeletonEvents(s);
+    expect(autos.map((e) => e.tick).slice(0, 3)).toEqual([7, 19, 24]);
+    expect(autos.some((e) => e.tick === 12 || e.tick === 17)).toBe(false); // suppressed
+    expect(commands.map((e) => e.tick)).toEqual([8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+    expect(commands.map((e) => e.hitIndex)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    // Rage: auto at 7 deals the plain 250 band; each command hit builds a stack
+    // (damage first), so the 19-tick auto lands at 11 stacks (1.33x).
+    expect(autos[0].damage.expected).toBeCloseTo(250);
+    expect(commands[0].damage.expected).toBeCloseTo(257);
+    expect(autos[1].damage.expected).toBeCloseTo(332);
+  });
+
+  it("wiki example: command at 11 — auto on the RAAAR tick fires, mid-command autos suppressed", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    for (let i = 0; i < 2; i++) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(ctx.byId.get("command_skeleton_warrior")!, 11, false);
+    while (ctx.getState().tick <= 30) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const { autos, commands } = skeletonEvents(s);
+    // Autos at 7 and 12 (the RAAAR tick) fire; 17/22 are suppressed; resume 24.
+    expect(autos.map((e) => e.tick).slice(0, 4)).toEqual([7, 12, 24, 29]);
+    expect(commands.map((e) => e.tick)).toEqual([13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
+  });
+
+  it("a repeat command mutates the schedule again (25-tick cooldown)", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    ctx.performCast(
+      ctx.byId.get("command_skeleton_warrior")!,
+      ctx.firstLegalTick("command_skeleton_warrior"),
+      false,
+    );
+    expect(ctx.firstLegalTick("command_skeleton_warrior")).toBe(31);
+    while (ctx.getState().tick <= 28) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(
+      ctx.byId.get("command_skeleton_warrior")!,
+      ctx.firstLegalTick("command_skeleton_warrior"),
+      false);
+    // The second command cast at 31: RAAAR 32, hits 33-42 below.
+    while (ctx.getState().tick <= 46) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const { commands } = skeletonEvents(s);
+    expect(commands.map((e) => e.tick)).toEqual([
+      8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+      33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+    ]);
+  });
+
+  it("command hits land up to 2 ticks past the skeleton's expiry, never more", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_skeleton_warrior")!, 0, false);
+    while (ctx.getState().tick < 96) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(ctx.byId.get("command_skeleton_warrior")!, 98, false);
+    while (ctx.getState().tick <= 112) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const { autos, commands } = skeletonEvents(s);
+    // Expiry is tick 105: command hits land 100..107, the 102 auto is suppressed,
+    // and nothing schedules past the +2 tail.
+    expect(commands.map((e) => e.tick)).toEqual([100, 101, 102, 103, 104, 105, 106, 107]);
+    expect(autos.every((e) => e.tick !== 102)).toBe(true);
+    expect(autos.every((e) => e.tick < 105)).toBe(true);
   });
 });

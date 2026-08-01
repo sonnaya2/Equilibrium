@@ -1,5 +1,11 @@
+import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { calculateHit } from "../pipeline/calculateHit";
 import {
+  COMMAND_SKELETON_LAST_HIT_OFFSET,
+  COMMAND_SKELETON_RAAAR_DELAY_TICKS,
+  COMMAND_SKELETON_RESUME_DELAY_TICKS,
+  CONJURE_DAMAGE_POTENTIAL,
+  conjureEligibleModifiers,
   skeletonRageMult,
   SPIRIT_AUTO_ABILITY_ID,
   SPIRIT_POISON_ABILITY_ID,
@@ -11,6 +17,7 @@ import {
   ZOMBIE_POISON_BAND,
   type ActiveConjure,
 } from "../styles/necromancy/conjures";
+import type { CombatModifier } from "../types";
 import type { ScheduledEvent } from "./events";
 import { recordResolved } from "./resolution";
 import { scheduleEvent, withinHorizon, type SimulationRuntime } from "./runtime";
@@ -22,6 +29,27 @@ import { scheduleEvent, withinHorizon, type SimulationRuntime } from "./runtime"
  * tail) and never past the run's horizon. Events of a dismissed or re-summoned
  * spirit are identified by (id, untilTick) and die silently.
  */
+
+/**
+ * Spirit autos have no ability-specific perks (Ultimatums/Lunging never match
+ * this probe), so probing the modifier function with it yields exactly the
+ * global set — which the prayer filter then reduces to the conjure-eligible
+ * globals (wiki: conjures take Eruptive/Equilibrium/Vulnerability/set effects,
+ * never the player's prayers).
+ */
+const SPIRIT_PROBE: AbilitySpec = {
+  id: "spirit_auto",
+  name: "Spirit auto",
+  style: "necromancy",
+  category: "basic",
+  hits: [],
+};
+
+function conjureModifiers(rt: SimulationRuntime): CombatModifier[] {
+  const modifiers = rt.input.modifiers;
+  const resolved = typeof modifiers === "function" ? modifiers(SPIRIT_PROBE) : (modifiers ?? []);
+  return conjureEligibleModifiers(resolved);
+}
 
 function spiritEventLive(
   rt: SimulationRuntime,
@@ -72,9 +100,9 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
         base: input.base,
         band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },
         level: input.level,
-        accuracy: input.accuracy,
+        accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
-        modifiers: typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
+        modifiers: conjureModifiers(eventRt),
         context: input.context,
         cap: input.cap,
       });
@@ -98,14 +126,14 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActiveConjure): voi
     attached: false,
     procEligible: false,
     recursionAllowed: false,
-    resolve: () => {
+    resolve: (eventRt) => {
       const hit = calculateHit({
         base: input.base,
         band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
         level: input.level,
-        accuracy: input.accuracy,
+        accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
-        modifiers: typeof input.modifiers === "function" ? [] : (input.modifiers ?? []),
+        modifiers: conjureModifiers(eventRt),
         context: input.context,
         cap: input.cap,
       });
@@ -126,6 +154,39 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
   }
   if (spiritPoisonPending(spirit) && withinHorizon(rt, spirit.nextPoisonTick)) {
     scheduleSpiritPoison(rt, spirit);
+  }
+}
+
+/**
+ * Command Skeleton Warrior mutates the skeleton's own scheduler (wiki tick
+ * table, verified 2026-07-31): RAAAR lands at activation+1 — a normal auto due
+ * on/before that tick still fires; later autos are suppressed through the
+ * command, and the track resumes at last-command-hit + 2 (activation+13),
+ * then every 5 ticks. Command hits themselves are cast events (see castEvents).
+ */
+export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): void {
+  const spirit = rt.state.conjures.spirits.find((s) => s.id === "skeleton_warrior");
+  if (!spirit) return;
+  const raaarTick = candidate + COMMAND_SKELETON_RAAAR_DELAY_TICKS;
+  const resumeTick = candidate + COMMAND_SKELETON_LAST_HIT_OFFSET + COMMAND_SKELETON_RESUME_DELAY_TICKS;
+  const pending = rt.queue
+    .pending()
+    .find(
+      (e) =>
+        e.family === "conjureAuto" &&
+        e.abilityId === SPIRIT_AUTO_ABILITY_ID.skeleton_warrior &&
+        rt.spiritEventMeta.get(e.seq)?.untilTick === spirit.untilTick,
+    );
+  if (pending && pending.tick <= raaarTick) {
+    // The pending auto still fires; its successor resumes after the command.
+    patchSpirit(rt, spirit, { ...spirit, commandResumeTick: resumeTick });
+    return;
+  }
+  if (pending) rt.spiritEventMeta.delete(pending.seq); // suppressed: the event dies
+  const next = { ...spirit, nextAutoTick: resumeTick };
+  patchSpirit(rt, spirit, next);
+  if (spiritAutoPending(next) && withinHorizon(rt, next.nextAutoTick)) {
+    scheduleSpiritAuto(rt, next);
   }
 }
 

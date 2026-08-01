@@ -8,7 +8,7 @@ import {
   NECROSIS_CAP,
   TOUCH_OF_DEATH_NECROSIS,
 } from "./necrosis";
-import { CONJURES_CANNOT_CRIT } from "./conjures";
+import { COMMAND_SKELETON_FIRST_HIT_OFFSET, CONJURES_CANNOT_CRIT } from "./conjures";
 import { SPECTRAL_SCYTHE_SOUL_CHANCE, VOLLEY_OF_SOULS_BAND } from "./souls";
 
 export {
@@ -283,7 +283,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: BLOOD_SIPHON_WIKI,
   },
   {
-    // Spirit damage — conjures cannot crit. Rage scale left as effect note.
+    // Spirit damage — conjures cannot crit. Rage scales each hit at land time.
+    // Wiki tick table: RAAAR at +1, the 10 hits land at +2..+11.
     id: "command_skeleton_warrior",
     name: "Command Skeleton Warrior",
     style: "necromancy",
@@ -291,7 +292,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: Array.from({ length: COMMAND_SKELETON_HITS }, (_, i) => ({
       band: { ...COMMAND_SKELETON_BAND },
       critEligible: spiritCrit(),
-      tickOffset: i,
+      tickOffset: i + COMMAND_SKELETON_FIRST_HIT_OFFSET,
     })),
     adrenaline: { cost: 0 },
     cooldownSeconds: COMMAND_SKELETON_COOLDOWN_SECONDS,

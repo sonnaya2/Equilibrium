@@ -84,6 +84,37 @@ export const SPIRIT_AUTO_ABILITY_ID: Readonly<Record<ConjureId, string>> = {
 
 export const SPIRIT_POISON_ABILITY_ID = "spirit_putrid_zombie_poison";
 
+/**
+ * Wiki (verified 2026-07-31): "Conjured spirits and their command abilities
+ * always deal 100% of their damage potential, even when the player does not
+ * have 100% hit chance against the target." Conjure damage therefore never
+ * uses the player's Damage Potential fraction.
+ */
+export const CONJURE_DAMAGE_POTENTIAL = 1;
+
+/**
+ * Conjure-eligible global modifiers. Wiki (verified 2026-07-31): conjure damage
+ * is increased by Eruptive and Equilibrium (via base ability damage),
+ * Vulnerability, and set effects, but is NOT boosted by the player's prayers.
+ * Command abilities and Putrid poison follow the same rule (poison also takes
+ * Vulnerability).
+ */
+export function conjureEligibleModifiers<T extends { id: string }>(mods: readonly T[]): T[] {
+  return mods.filter((m) => !m.id.startsWith("prayer:"));
+}
+
+/** Command Skeleton Warrior scheduling (wiki tick table, verified 2026-07-31). */
+/** RAAAR lands 1 tick after activation; a normal auto due on that tick still fires. */
+export const COMMAND_SKELETON_RAAAR_DELAY_TICKS = 1;
+/** Command hits land at activation+2 .. activation+11; normal autos resume 2 ticks later. */
+export const COMMAND_SKELETON_FIRST_HIT_OFFSET = 2;
+export const COMMAND_SKELETON_LAST_HIT_OFFSET = 11;
+export const COMMAND_SKELETON_RESUME_DELAY_TICKS = 2;
+/** Initial lockout after conjuring (wiki: "initial 3.6 second cooldown"). */
+export const COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS = 6;
+/** Command hits keep landing up to 2 ticks past the skeleton's expiry. */
+export const COMMAND_SKELETON_EXPIRY_TAIL_TICKS = 2;
+
 export interface ActiveConjure {
   readonly id: ConjureId;
   /** Exclusive end tick (active while tick < untilTick). SP3 → ready + 105. */
@@ -94,6 +125,12 @@ export interface ActiveConjure {
   readonly rageStacks: number;
   /** Zombie poison next land tick; 0 = no poison track. */
   readonly nextPoisonTick: number;
+  /**
+   * Set when a Skeleton command let a pending auto fire on/before its RAAAR
+   * tick: that auto's successor lands here (command end + 2) instead of on the
+   * plain cadence. Cleared when consumed.
+   */
+  readonly commandResumeTick?: number;
 }
 
 export interface ConjureState {
@@ -201,9 +238,10 @@ export function spiritPoisonPending(s: ActiveConjure): boolean {
 export function spiritAutoFired(s: ActiveConjure): ActiveConjure {
   const profile = spiritAutoProfile(s.id);
   if (!profile) return s;
+  const { commandResumeTick, ...base } = s;
   return {
-    ...s,
-    nextAutoTick: s.nextAutoTick + profile.interval,
+    ...base,
+    nextAutoTick: commandResumeTick ?? s.nextAutoTick + profile.interval,
     rageStacks:
       s.id === "skeleton_warrior"
         ? Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1)
@@ -214,6 +252,11 @@ export function spiritAutoFired(s: ActiveConjure): ActiveConjure {
 /** Advance the poison track after a landed poison hit. */
 export function spiritPoisonFired(s: ActiveConjure): ActiveConjure {
   return { ...s, nextPoisonTick: s.nextPoisonTick + ZOMBIE_POISON_INTERVAL };
+}
+
+/** One landed command hit builds one rage stack (its damage resolved first). */
+export function skeletonCommandHitLanded(s: ActiveConjure): ActiveConjure {
+  return { ...s, rageStacks: Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1) };
 }
 
 /** Summon from a conjure_* ability id; army uses UNDEAD_ARMY_DEFAULT. */

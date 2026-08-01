@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     alias: {
-      "#shard": fileURLToPath(new URL("./public/data/v2/documents", import.meta.url)),
+      "#shard": fileURLToPath(new URL("./.generated/documents", import.meta.url)),
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },

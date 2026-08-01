@@ -600,7 +600,7 @@ export const COLLECTIONS = [
   },
   {
     // The shape each document keeps once its records are lifted out. Export
-    // replays source-records over this to rebuild public/data/v2/documents/**,
+    // replays source-records over this to rebuild .generated/documents/**,
     // which is what lets the frontend documents be rebuilt from the database alone.
     name: "source-documents",
     file: "provenance/source-documents.jsonl",

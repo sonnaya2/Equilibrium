@@ -522,7 +522,7 @@ describe("clean-checkout rebuild from canonical files only", () => {
     );
     const produced = walk(rebuilt).map((path) => relative(rebuilt, path).replaceAll("\\", "/"));
     expect(produced.sort()).toEqual(shipped.sort());
-    expect(produced.length).toBeGreaterThan(100);
+    expect(produced.length).toBeGreaterThan(50);
     for (const path of produced) {
       expect(statSync(join(rebuilt, path)).size, path).toBe(
         statSync(join(root, "public/data/v2", path)).size,

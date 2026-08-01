@@ -7,6 +7,7 @@ import {
   DOCUMENT_EXTRA_CONSUMERS,
   DOCUMENT_SKIP,
   DOMAIN_TABLES,
+  DOCUMENTS_ROOT,
   EXPORT_ROOT,
   EXPORT_VERSION,
   REPORTS,
@@ -94,14 +95,14 @@ export function buildOutputs(db) {
   const recordCount = Number(
     db.prepare("SELECT count(*) AS count FROM entities WHERE status <> 'removed'").get().count,
   );
+  // Build inputs, generated outside the web root: the `#shard/*` alias resolves
+  // into .generated/documents, and no request ever asks for one.
+  const documentOutputMap = new Map();
   const documents = {};
   for (const [path, body] of documentOutputs(db)) {
-    outputs.set(path, body);
-    documents[`data/${path.slice(DOCUMENTS_PREFIX.length + 1)}`] = {
-      href: `/data/v2/${path}`,
-      sha256: hash(body),
-      bytes: Buffer.byteLength(body),
-    };
+    const file = path.slice(DOCUMENTS_PREFIX.length + 1);
+    documentOutputMap.set(file, body);
+    documents[`data/${file}`] = { sha256: hash(body), bytes: Buffer.byteLength(body) };
   }
   // Bookkeeping, not a payload: `data:doctor` and `data:diff` read it to spot a
   // stale export. It is written under reports/ rather than shipped, because the
@@ -115,7 +116,26 @@ export function buildOutputs(db) {
     documents,
     regions: Object.fromEntries(research.index.regions.map((region) => [region.id, region])),
   };
-  return { outputs, manifest };
+  return { outputs, documentOutputs: documentOutputMap, manifest };
+}
+
+// Both generated trees get the same treatment: write what changed, delete what
+// no longer belongs, and leave no empty directory behind.
+function syncTree(root, outputs) {
+  const stale = walkFiles(root, () => true)
+    .map((path) => slash(relative(root, path)))
+    .filter((path) => !outputs.has(path));
+  mkdirSync(root, { recursive: true });
+  for (const path of stale) rmSync(join(root, path), { force: true });
+  let written = 0;
+  for (const [path, body] of outputs) {
+    const destination = join(root, path);
+    if (existsSync(destination) && readFileSync(destination, "utf8") === body) continue;
+    atomicWrite(destination, body);
+    written += 1;
+  }
+  pruneEmptyDirectories(root);
+  return written;
 }
 
 // Removing every file in a directory leaves the directory. An empty `domains/`
@@ -246,16 +266,13 @@ function parityReport(db, parity) {
 }
 
 export function exportData(db, checkOnly = false) {
-  const { outputs, manifest } = buildOutputs(db);
+  const { outputs, documentOutputs: documents, manifest } = buildOutputs(db);
   const parity = researchParity(db, outputs);
   const mismatch = parity.filter(({ equal }) => !equal);
   const comparison = compareOutputs(outputs);
-  // Documents are build inputs, not browser payloads; data:audit is what fails
-  // if one becomes reachable from a client component.
-  const oversized = [...outputs].filter(
-    ([path, body]) =>
-      !path.startsWith(`${DOCUMENTS_PREFIX}/`) && Buffer.byteLength(body) > SHARD_LIMIT_BYTES,
-  );
+  // Everything under EXPORT_ROOT is fetched by a browser, so all of it is
+  // budgeted. Documents are not shipped and have no such limit.
+  const oversized = [...outputs].filter(([, body]) => Buffer.byteLength(body) > SHARD_LIMIT_BYTES);
   if (oversized.length) {
     throw new Error(`Frontend shards exceed 500 KiB: ${oversized.map(([path]) => path).join(", ")}`);
   }
@@ -265,10 +282,8 @@ export function exportData(db, checkOnly = false) {
     throw new Error(`Research compatibility parity failed: ${mismatch.map(({ region }) => region).join(", ")}`);
   }
   if (checkOnly) return { ...comparison, written: [] };
-  mkdirSync(EXPORT_ROOT, { recursive: true });
-  for (const path of comparison.stale) rmSync(join(EXPORT_ROOT, path), { force: true });
-  pruneEmptyDirectories(EXPORT_ROOT);
-  for (const path of comparison.changed) atomicWrite(join(EXPORT_ROOT, path), outputs.get(path));
+  syncTree(EXPORT_ROOT, outputs);
+  syncTree(DOCUMENTS_ROOT, documents);
   writeCatalog(db);
   atomicWrite(join(REPORTS, "data-export-manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
   recordTransform(db, TRANSFORM_BY_NAME.get("frontend-shards"), hash(stableJson(manifest)), manifest.recordCount);

@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = path.join(ROOT, "public/map/world-surface-wiki.webp");
-const SEEDS_JSON = path.join(ROOT, "public/data/v2/documents/map/region-seeds.json");
+const SEEDS_JSON = path.join(ROOT, ".generated/documents/map/region-seeds.json");
 const ANCHORS_TS = path.join(ROOT, "src/map/data/placeAnchors.ts");
 const OUT_FIELD = path.join(ROOT, "public/map/terrain-field.webp");
 const OUT_PLATES = path.join(ROOT, "public/map/region-plates.json");

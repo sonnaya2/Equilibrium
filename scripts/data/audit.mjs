@@ -162,7 +162,7 @@ function inspectValues(value, file, path, collections) {
 }
 
 function referencedPath(sourceFile, literal) {
-  if (literal.startsWith("#shard/")) return `public/data/v2/documents/${literal.slice(7)}`;
+  if (literal.startsWith("#shard/")) return `.generated/documents/${literal.slice(7)}`;
   if (/^(data|public|assets|reports|scraped-data)\//.test(literal)) return slash(literal);
   if (!literal.startsWith(".")) return null;
   const absolute = resolve(ROOT, dirname(sourceFile), literal);
@@ -312,7 +312,7 @@ const veryLargeFiles = inventory.filter((entry) => entry.bytes > 1024 * 1024);
 const multipleWriters = inventory.filter((entry) => entry.writers.length > 1);
 const clientDataImports = inventory.filter((entry) => entry.clientImports.length > 0);
 const oversizedClientShards = clientDataImports.filter(
-  (entry) => entry.file.startsWith("public/data/v2/documents/") && entry.bytes > 250 * 1024,
+  (entry) => entry.file.startsWith(".generated/documents/") && entry.bytes > 250 * 1024,
 );
 const hardcodedCollections = sources
   .map(({ file, text }) => ({

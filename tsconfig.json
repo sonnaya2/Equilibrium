@@ -28,7 +28,7 @@
         "./src/*"
       ],
       "#shard/*": [
-        "./public/data/v2/documents/*"
+        "./.generated/documents/*"
       ]
     }
   },

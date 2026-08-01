@@ -175,3 +175,6 @@ scripts/_*.py
 # ---------------------------------------------------------------------------
 scraped-data/
 assets/manifest.generated.json
+
+# Generated build inputs for the #shard alias. Never served, never committed.
+/.generated/

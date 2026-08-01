@@ -105,7 +105,7 @@ describe("region membership against the wiki", () => {
 
   const sourced = JSON.parse(
     fs.readFileSync(
-      path.join(process.cwd(), "public/data/v2/documents/map/wiki-league-regions.json"),
+      path.join(process.cwd(), ".generated/documents/map/wiki-league-regions.json"),
       "utf8",
     ),
   ) as { places: Record<string, string> };

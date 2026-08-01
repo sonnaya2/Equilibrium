@@ -15,6 +15,11 @@ export const CHANGED = join(CACHE, "data-changed.json");
 export const MIGRATIONS = join(ROOT, "data/migrations");
 export const PATCHES = join(ROOT, "data/patches");
 export const EXPORT_ROOT = BUILD_ROOT ? join(BUILD_ROOT, "data/v2") : join(ROOT, "public/data/v2");
+// Whole documents are build inputs for the `#shard/*` alias, not browser
+// payloads - nothing ever fetches one. Keeping them under public/ published 1.5
+// MB to the web root that no request ever asked for, so they are generated
+// outside it.
+export const DOCUMENTS_ROOT = BUILD_ROOT ? join(BUILD_ROOT, "documents") : join(ROOT, ".generated/documents");
 export const REPORTS = BUILD_ROOT ? join(BUILD_ROOT, "reports") : join(ROOT, "reports");
 export const DATA_CATALOG = BUILD_ROOT ? join(BUILD_ROOT, "data-catalog.md") : join(ROOT, "docs/data-catalog.md");
 

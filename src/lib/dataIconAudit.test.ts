@@ -115,7 +115,7 @@ describe("data icon audit", () => {
   it("writes blank/garbage report for /data entities", () => {
     const catalog = getResearchCatalog();
     const combat = JSON.parse(
-      readFileSync("public/data/v2/documents/research/regional-combat-unlocks.json", "utf8"),
+      readFileSync(".generated/documents/research/regional-combat-unlocks.json", "utf8"),
     );
     const skilling = sourceArrays("data/research/regional-skilling-unlocks.json");
     const unlocks = sourceArrays("data/reference/progression-unlocks.json");

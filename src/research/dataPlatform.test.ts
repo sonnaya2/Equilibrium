@@ -137,24 +137,27 @@ describe("generated data platform", () => {
 
   // Documents are build inputs for `#shard/*`, not browser payloads, so they
   // are content-addressed but exempt from the shard size budget.
-  it("content-addresses every exported source document", () => {
+  // Documents are build inputs for the `#shard/*` alias, so they are generated
+  // outside the web root. Nothing fetches one, and none is served.
+  it("content-addresses every source document, outside public/", () => {
     const entries = Object.entries(manifest.documents);
     // Exactly the documents something still imports - not a magic floor, which
     // would turn every retired document into a red suite.
     expect(new Set(entries.map(([source]) => source))).toEqual(new Set(shardImportedDocuments()));
     for (const [source, artifact] of entries) {
       expect(source.startsWith("data/"), source).toBe(true);
-      const repoPath = `public${artifact.href}`;
+      const repoPath = `.generated/documents/${source.slice("data/".length)}`;
       expect(existsSync(join(root, repoPath)), repoPath).toBe(true);
       expect(statSync(join(root, repoPath)).size, repoPath).toBe(artifact.bytes);
       expect(digest(repoPath), repoPath).toBe(artifact.sha256);
     }
+    expect(existsSync(join(root, "public/data/v2/documents"))).toBe(false);
   });
 
   it("exports source documents without a materialized compatibility tree", () => {
     expect(existsSync(join(root, ".cache/data"))).toBe(false);
     expect(manifest.documents["data/research/catalog.json"]).toBeUndefined();
-    expect(existsSync(join(root, "public/data/v2/documents/research/catalog.json"))).toBe(false);
+    expect(existsSync(join(root, ".generated/documents/research/catalog.json"))).toBe(false);
     const database = new DatabaseSync(join(root, ".cache/equilibrium.sqlite"), { readOnly: true });
     try {
       const stored = database
@@ -163,7 +166,7 @@ describe("generated data platform", () => {
         )
         .get() as { raw_json: string };
       const cache = readJson<{ records: Array<{ id: string }> }>(
-        "public/data/v2/documents/combat/equipment.json",
+        ".generated/documents/combat/equipment.json",
       );
       expect(cache.records.find(({ id }) => id === "item:seismic-wand")).toEqual(
         JSON.parse(stored.raw_json),
@@ -179,7 +182,7 @@ describe("generated data platform", () => {
       sourceArrays<Row>("data/research/regional-skilling-unlocks.json").records,
     );
     const combat = live(
-      readJson<{ records: Row[] }>("public/data/v2/documents/research/regional-combat-unlocks.json")
+      readJson<{ records: Row[] }>(".generated/documents/research/regional-combat-unlocks.json")
         .records,
     );
     const sections = (file: string) =>

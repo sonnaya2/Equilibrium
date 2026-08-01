@@ -182,9 +182,14 @@ export function buildOutputs(db) {
   const outputs = new Map();
   const research = researchExport(db);
   for (const [path, body] of research.outputs) outputs.set(path, body);
+  // A retired record leaves the site but not the database: `remove` is a status
+  // change, so its provenance, sources and relationships stay queryable through
+  // data:context while the browser stops being told about it. Without this the
+  // whole point of retiring a duplicate is lost - both records keep shipping.
   const entities = db
     .prepare(
-      "SELECT id, entity_type, name, short_description, detailed_description, verified_at, status FROM entities ORDER BY entity_type, id",
+      `SELECT id, entity_type, name, short_description, detailed_description, verified_at, status
+       FROM entities WHERE status <> 'removed' ORDER BY entity_type, id`,
     )
     .all();
   const regionsByEntity = rowsByEntity(
@@ -231,7 +236,8 @@ export function buildOutputs(db) {
       db,
       `SELECT entities.id, entities.entity_type AS type, entities.name, entity_regions.relation
        FROM entity_regions JOIN entities ON entities.id = entity_regions.entity_id
-       WHERE entity_regions.region_id = ? ORDER BY entities.entity_type, entities.id`,
+       WHERE entity_regions.region_id = ? AND entities.status <> 'removed'
+       ORDER BY entities.entity_type, entities.id`,
     ).all(region);
     const body = jsonLine({ schemaVersion: EXPORT_VERSION, region, records });
     const path = `regions/${region}.json`;

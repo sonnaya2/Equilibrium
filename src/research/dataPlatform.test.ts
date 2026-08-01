@@ -55,6 +55,27 @@ function sourceArrays<T>(file: string): Record<string, T[]> {
   }
 }
 
+// A source row whose entity was retired as a duplicate is the record the
+// survivor already shows, so the panels drop it. The expectation has to drop it
+// too, or this test would be asserting the duplicate back into the export.
+function retiredEntityIds(): Set<string> {
+  const database = new DatabaseSync(join(root, ".cache/equilibrium.sqlite"), { readOnly: true });
+  try {
+    return new Set(
+      (
+        database
+          .prepare("SELECT id FROM entities WHERE status = 'removed'")
+          .all() as unknown as Array<{ id: string }>
+      ).map(({ id }) => id),
+    );
+  } finally {
+    database.close();
+  }
+}
+const RETIRED = retiredEntityIds();
+const live = <T extends Record<string, unknown>>(rows: T[]): T[] =>
+  rows.filter((row) => !(typeof row.id === "string" && RETIRED.has(row.id)));
+
 interface Artifact {
   href: string;
   sha256: string;
@@ -173,14 +194,21 @@ describe("generated data platform", () => {
 
   it("keeps regional and unlock panel exports equal to their normalized records", () => {
     type Row = Record<string, unknown>;
-    const skilling = sourceArrays<Row>("data/research/regional-skilling-unlocks.json").records;
-    const combat = readJson<{ records: Row[] }>(
-      "public/data/v2/documents/research/regional-combat-unlocks.json",
-    ).records;
-    const progression = sourceArrays<Row>("data/reference/progression-unlocks.json");
+    const skilling = live(
+      sourceArrays<Row>("data/research/regional-skilling-unlocks.json").records,
+    );
+    const combat = live(
+      readJson<{ records: Row[] }>("public/data/v2/documents/research/regional-combat-unlocks.json")
+        .records,
+    );
+    const sections = (file: string) =>
+      Object.fromEntries(
+        Object.entries(sourceArrays<Row>(file)).map(([section, rows]) => [section, live(rows)]),
+      );
+    const progression = sections("data/reference/progression-unlocks.json");
     const supplements = [
-      sourceArrays<Row>("data/reference/progression-support-items-2026-07-25.json"),
-      sourceArrays<Row>("data/reference/progression-container-bags-2026-07-25.json"),
+      sections("data/reference/progression-support-items-2026-07-25.json"),
+      sections("data/reference/progression-container-bags-2026-07-25.json"),
     ];
     const key = (row: Row, index: number, prefix: string) =>
       row.id != null && row.id !== ""

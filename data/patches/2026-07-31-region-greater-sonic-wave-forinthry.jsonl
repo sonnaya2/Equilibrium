@@ -1,0 +1,18 @@
+# Greater Sonic Wave is a Forinthry (Wilderness) unlock, not Misthalin.
+#
+# Its codex drops from the risen ghosts and armoured phantoms in the crypt
+# beneath Fort Forinthry, which sits on the south-eastern Wilderness edge. The
+# Misthalin links came from the superseded fort-forinthry: record, whose own
+# note called that filing provisional - "the crypt is north of the Fort in
+# Wilderness geography" - and they were carried onto the survivor by the overlap
+# adjudication before anyone ruled on them. This is the ruling.
+#
+# The rule this follows: Fort Forinthry itself stays Misthalin, and the ~37 other
+# records filed under that working taxonomy are right as they are. What moves is
+# content physically in the Wilderness - the crypt monsters are north of the Fort
+# - because Wilderness content requires the Wilderness region. Being reachable
+# through a Misthalin building does not make the drop Misthalin.
+{"entity":"magic:greater-sonic-wave","op":"unlink-region","reason":"Fort Forinthry crypt is Wilderness geography, not Misthalin.","region":"misthalin","relation":"hint"}
+{"entity":"magic:greater-sonic-wave","op":"unlink-region","reason":"Fort Forinthry crypt is Wilderness geography, not Misthalin.","region":"misthalin","relation":"required"}
+{"entity":"magic:greater-sonic-wave","op":"link-region","reason":"Codex drops from risen ghosts and armoured phantoms in the Fort Forinthry crypt.","region":"forinthry","relation":"required"}
+{"entity":"magic:greater-sonic-wave","op":"link-region","reason":"Codex drops from risen ghosts and armoured phantoms in the Fort Forinthry crypt.","region":"forinthry","relation":"hint"}

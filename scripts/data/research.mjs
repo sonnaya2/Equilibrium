@@ -86,9 +86,21 @@ export function rowMatchesRegion(row, region) {
   return matches(host);
 }
 
+// Panels render source rows, but a row whose entity was retired as a duplicate
+// is the same record the survivor already shows. Joining through
+// source_records.entity_id is what lets an adjudication reach these panels; a
+// row that never became an entity has no survivor to defer to and stays.
 function sourceSection(db, file, section) {
   const pattern = new RegExp(`^\\$\\.${section}\\[\\d+\\]$`);
-  return prepared(db, "SELECT record_path, raw_json FROM source_records WHERE source_file = ? ORDER BY record_path")
+  return prepared(
+    db,
+    `SELECT source_records.record_path, source_records.raw_json
+     FROM source_records
+     LEFT JOIN entities ON entities.id = source_records.entity_id
+     WHERE source_records.source_file = ?
+       AND (source_records.entity_id IS NULL OR entities.status <> 'removed')
+     ORDER BY source_records.record_path`,
+  )
     .all(file)
     .filter(({ record_path }) => pattern.test(record_path))
     .sort(

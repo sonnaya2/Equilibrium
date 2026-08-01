@@ -2525,8 +2525,8 @@
 {"entityId":"magic:abyss-afk-magic-air-surge-blood-barrage","regionId":"forinthry","relation":"hint"}
 {"entityId":"magic:greater-concentrated-blast","regionId":"misthalin","relation":"hint"}
 {"entityId":"magic:greater-concentrated-blast","regionId":"misthalin","relation":"required"}
-{"entityId":"magic:greater-sonic-wave","regionId":"misthalin","relation":"hint"}
-{"entityId":"magic:greater-sonic-wave","regionId":"misthalin","relation":"required"}
+{"entityId":"magic:greater-sonic-wave","regionId":"forinthry","relation":"hint"}
+{"entityId":"magic:greater-sonic-wave","regionId":"forinthry","relation":"required"}
 {"entityId":"magic:magma-tempest","regionId":"misthalin","relation":"hint"}
 {"entityId":"magic:plank-make-lunar","regionId":"fremennik","relation":"hint"}
 {"entityId":"melee:greater-fury","regionId":"forinthry","relation":"required"}

@@ -1,3 +1,7 @@
+import type { EventResolution, ResolvedDamage } from "../resolution/types";
+
+export type { EventResolution, ResolvedDamage } from "../resolution/types";
+
 /**
  * Scheduled combat events: every damaging or state-changing thing the simulator
  * has promised for a future tick. Damage resolves AT LAND TIME against the state
@@ -27,14 +31,8 @@ export interface ScheduledEvent<RT = unknown> {
   cancelOwner?: number; // cast sequence whose cancellation removes this event
   /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
   derivedFrom?: number;
-  resolve: (rt: RT, landTick: number) => ResolvedDamage; // computes damage AT LAND TIME
-}
-
-export interface ResolvedDamage {
-  min: number;
-  max: number;
-  expected: number;
-  critExpected?: number;
+  /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
+  resolve: (rt: RT, landTick: number) => EventResolution;
 }
 
 export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "resolve"> {

@@ -57,14 +57,14 @@ export function scheduleCastEvents(
     }
     const seq = rt.nextSeq++;
     hitSeqs.push(seq);
+    // Classified once, here. The land-time resolver reads the family it was
+    // given rather than re-deriving "is this a DoT?" from timing or crit
+    // eligibility — a delayed direct hit stays direct.
+    const isDot = hitSpec.critEligible === false && (hitSpec.tickOffset ?? 0) > 0;
     rt.queue.push({
       tick: landTick,
       seq,
-      family: isCommand
-        ? "command"
-        : hitSpec.critEligible === false && (hitSpec.tickOffset ?? 0) > 0
-          ? "dot"
-          : "hit",
+      family: isCommand ? "command" : isDot ? "dot" : "hit",
       abilityId: ability.id,
       sourceCast: castSeq,
       hitIndex,
@@ -72,7 +72,8 @@ export function scheduleCastEvents(
       procEligible: true,
       recursionAllowed: false,
       cancelOwner: castSeq,
-      resolve: (eventRt, at) => resolveCastHit(eventRt, at, seq, hitSpec, hitIndex, ability, snap),
+      resolve: (eventRt, at) =>
+        resolveCastHit(eventRt, at, hitSpec, hitIndex, ability, snap, isDot),
     });
   });
 

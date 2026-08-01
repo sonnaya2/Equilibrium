@@ -63,7 +63,7 @@ export function finish(
   let totalExpectedIncludingTails: number | undefined;
   if (options?.includeTails) {
     let tails = rt.totalExpected;
-    for (const event of rt.queue.pending()) tails += event.resolve(rt, event.tick).expected;
+    for (const event of rt.queue.pending()) tails += event.resolve(rt, event.tick).damage.expected;
     totalExpectedIncludingTails = tails;
   }
 

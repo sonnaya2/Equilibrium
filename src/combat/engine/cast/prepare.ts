@@ -17,7 +17,7 @@ import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge
 import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { costOf, spendOf } from "./rules";
-import type { CastSnapshot } from "../resolution";
+import type { CastSnapshot } from "./snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";

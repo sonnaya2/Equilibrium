@@ -23,7 +23,11 @@ const magicInput: CastContextInput = {
   context: { style: "magic" },
 };
 
-const meleeInput: CastContextInput = { ...magicInput, abilities: MELEE_ABILITIES, context: {} };
+const meleeInput: CastContextInput = {
+  ...magicInput,
+  abilities: MELEE_ABILITIES,
+  context: { style: "melee" },
+};
 
 describe("preparation purity", () => {
   it("preparing a cast changes nothing beyond the canonical advance", () => {

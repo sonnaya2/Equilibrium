@@ -19,7 +19,7 @@ import {
 } from "../../styles/necromancy/conjures";
 import type { CombatModifier } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
-import { recordResolved } from "../resolution";
+import { NO_DAMAGE, recordResolved } from "../resolution";
 import { scheduleEvent, withinHorizon, type SimulationRuntime } from "../runtime/runtime";
 
 /**
@@ -94,7 +94,7 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
       const live = eventRt.state.conjures.spirits.find(
         (s) => s.id === spirit.id && s.untilTick === spirit.untilTick,
       );
-      if (!profile || !live) return { min: 0, max: 0, expected: 0 };
+      if (!profile || !live) return NO_DAMAGE;
       const mult = spirit.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
       const hit = calculateHit({
         base: input.base,
@@ -107,7 +107,9 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: ActiveConjure): void 
         cap: input.cap,
       });
       const scale = input.conjureBasicDamageMult ?? 1;
-      return { min: hit.min * scale, max: hit.max * scale, expected: hit.expected * scale };
+      return {
+        damage: { min: hit.min * scale, max: hit.max * scale, expected: hit.expected * scale },
+      };
     },
   });
   rt.spiritHitCounts.set(key, (rt.spiritHitCounts.get(key) ?? 0) + 1);
@@ -137,7 +139,7 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActiveConjure): voi
         context: input.context,
         cap: input.cap,
       });
-      return { min: hit.min, max: hit.max, expected: hit.expected };
+      return { damage: { min: hit.min, max: hit.max, expected: hit.expected } };
     },
   });
   rt.spiritHitCounts.set(key, (rt.spiritHitCounts.get(key) ?? 0) + 1);

@@ -1,0 +1,35 @@
+# Wilderness content requires the Wilderness.
+#
+# These activities had no region link at all, so they appeared on no region page.
+# Each line follows the record's own text: "Deep Wilderness Mage Arena",
+# "Forinthry Dungeon revenants", "Cavern entrance is Wilderness (Forinthry)".
+# Fort Forinthry stays Misthalin - what is filed here is content physically in
+# the Wilderness.
+#
+# Not included: activity:content:infernal-puzzle-box, whose text names Wilderness
+# effects rather than a Wilderness location. It is an item unlock, and where it
+# belongs is a separate ruling.
+{"entity":"activity:content:acheron-mammoths","op":"link-region","reason":"Frozen Waste Plateau is Wilderness.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:bandit-camp-shops","op":"link-region","reason":"Skulled-only Wilderness camp.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:black-salamanders","op":"link-region","reason":"Boneyard net traps are in the Wilderness.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:brawling-gloves","op":"link-region","reason":"Wilderness shared loot table.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:chaos-elemental","op":"link-region","reason":"Wilderness boss.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:chaos-tunnels","op":"link-region","reason":"Low Wilderness dungeon network north of Edgeville.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:corporeal-beast","op":"link-region","reason":"Cavern entrance is Wilderness (Forinthry).","region":"forinthry","relation":"required"}
+{"entity":"activity:content:daemonheim-dig-site","op":"link-region","reason":"Dungeoneering/Daemonheim requires the Forinthry pick.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:dragonkin-laboratory-ed2","op":"link-region","reason":"Located in the Deep Wilderness Castle Ruins.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:glacors","op":"link-region","reason":"Frozen Waste Plateau glacors and the Glacor Cave.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:lava-strykewyrms","op":"link-region","reason":"Wilderness lava mounds south of the Lava Maze.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:mage-arena","op":"link-region","reason":"Deep Wilderness Mage Arena.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:magic-axe-hut-chest","op":"link-region","reason":"Deep Wilderness chest.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:revenants","op":"link-region","reason":"Forinthry Dungeon revenants.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:rogues-castle-safes","op":"link-region","reason":"Deep Wilderness Rogues' Castle, on the Forinthry thieving route.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:soulgazers","op":"link-region","reason":"Wilderness and Daemonheim routes, both Forinthry.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:wilderness-herb-patch","op":"link-region","reason":"The Wilderness herb patch is the only bloodweed patch.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:wilderness-slayer","op":"link-region","reason":"Assignments only count in the Wilderness.","region":"forinthry","relation":"required"}
+# Ripper demons are Wilderness first, with a desert cave as the alternate route.
+{"entity":"activity:content:ripper-demons","op":"link-region","reason":"Wilderness Ripper Demons.","region":"forinthry","relation":"required"}
+{"entity":"activity:content:ripper-demons","op":"link-region","reason":"Also in the desert Ripper cave.","region":"desert","relation":"hint"}
+# Abyssal beasts sit in the Senntisten Asylum; the Wilderness is an access route.
+{"entity":"activity:content:abyssal-beasts","op":"link-region","reason":"Senntisten Asylum is Misthalin under the working taxonomy.","region":"misthalin","relation":"required"}
+{"entity":"activity:content:abyssal-beasts","op":"link-region","reason":"Wilderness access route.","region":"forinthry","relation":"hint"}

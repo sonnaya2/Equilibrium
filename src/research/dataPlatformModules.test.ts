@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { afterAll, describe, expect, it } from "vitest";
+import { researchRowMatchesRegion } from "@/research/regionMatch";
 
 // The data platform is plain ESM under scripts/ and has no type declarations,
 // so it is loaded through a computed URL rather than a checked import.
@@ -18,12 +19,9 @@ const utilities = await load<{
   normalizeRegion: (value: unknown) => string | null;
 }>("utilities.mjs");
 
-const research = await load<{
-  rowMatchesRegion: (
-    row: Record<string, unknown>,
-    region: { id: string; name: string; aliases?: string[] },
-  ) => boolean;
-}>("research.mjs");
+// The matcher is TypeScript now: the server builds the panels with it, so it is
+// imported directly rather than through the scripts/ loader.
+const research = { rowMatchesRegion: researchRowMatchesRegion };
 
 const parse = await load<{
   parsePatch: (path: string) => {

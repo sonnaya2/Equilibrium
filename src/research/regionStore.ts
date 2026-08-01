@@ -15,7 +15,7 @@ function loadResearchRegion(id: string): Promise<ResearchRegion> {
 
   if (!/^[a-z0-9-]+$/.test(id)) return Promise.reject(new Error(`Invalid region id: ${id}`));
 
-  const request = fetch(`/data/v2/research/regions/${id}.json`, { cache: "force-cache" })
+  const request = fetch(`/data/regions/${id}`, { cache: "force-cache" })
     .then((response) => {
       if (!response.ok) throw new Error(`Region data returned ${response.status}`);
       return response.json() as Promise<ResearchRegion>;

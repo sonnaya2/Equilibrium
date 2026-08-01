@@ -18,18 +18,22 @@ Three things are tracked. Everything downstream of them is generated and ignored
 | `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
 | `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
 | `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
-| `public/data/v2/`             | no      | Every generated artifact, with size and SHA-256 metadata in the manifest    |
+| `.generated/documents/`       | no      | Source documents for the `#shard/*` alias; build inputs, never served       |
 | `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |
 
 There is no hosted database, API or CMS. The site is static; user progress lives in `localStorage`.
 
-`public/data/v2/` holds two kinds of artifact. **Shards** (`domains/`, `indexes/`, `regions/`,
-`research/`) are fetched by the browser and are capped at 500 KiB each. **Documents**
-(`documents/…`, addressed as `#shard/…`) are seed-shaped JSON that a module imports whole at build
-time; Next inlines them into the server bundle, so they are build inputs rather than payloads and the
-shard cap does not apply. Two of them are around 1 MiB. What keeps that honest is `npm run
-audit:data`, which walks imports transitively from every `"use client"` file and fails if a document
-over 250 KiB is reachable from the client.
+**Nothing generated is published.** `public/data/` does not exist. The site reads the database
+directly: server components call `research/catalog.ts`, and the `/data` region browser lazy-loads a
+region at a time from the route handlers under `app/data/regions/`, which are `force-static` with
+`generateStaticParams` — Next renders all 99 of them from SQLite at build time and serves them like
+files.
+
+`.generated/documents/` is the one generated tree left. Those are source-shaped JSON that a module
+imports whole through the `#shard/*` alias, so they are build inputs rather than payloads; Next
+inlines them into the bundle. They live outside `public/` because no request ever asks for one. What
+keeps that honest is `npm run audit:data`, which walks imports transitively from every `"use client"`
+file and fails if a document over 250 KiB is reachable from the client.
 
 ## Why `node:sqlite`
 
@@ -78,7 +82,7 @@ and rewrites only the artifacts whose bytes changed.
 | `patching/apply.mjs`       | Patch identity, transaction, dispatch, ledger, changed entities  |
 | `validate.mjs`             | Invariant checks and the validation/quarantine reports           |
 | `research.mjs`             | Research catalog reconstruction, region panels, export parity    |
-| `export.mjs`               | Domain shards, whole documents, ID indexes, manifest             |
+| `export.mjs`               | Source documents, the build manifest, byte-diffed writes         |
 | `queries.mjs`              | Bounded read commands: find, context, query, doctor, stats       |
 | `pipeline.mjs`             | `rebuild` and single-patch `apply` sequencing                    |
 | `benchmark.mjs`            | Scoped patch and rebuild measurements                            |
@@ -117,7 +121,7 @@ it needs is a declared field.
 
 Three columns are recomputed rather than stored twice: `entities.slug` and `regions.entity_id` from
 the ID, and `entities.extra_json` from the entity's provenance record. `source_documents` holds each
-source document's shape with its records removed, which is what lets `public/data/v2/documents/**` be
+source document's shape with its records removed, which is what lets `.generated/documents/**` be
 rebuilt from the database alone.
 
 ### Applying a patch

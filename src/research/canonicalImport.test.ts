@@ -1,4 +1,5 @@
 import {
+  existsSync,
   cpSync,
   mkdirSync,
   mkdtempSync,
@@ -502,13 +503,16 @@ describe("clean-checkout rebuild from canonical files only", () => {
   });
 
   // A whole rebuild, so it gets a real timeout rather than the 5s default.
-  it("rebuilds the database and every frontend artifact", { timeout: 120_000 }, () => {
+  // The generated tree is .generated/documents now: public/ gets nothing, and
+  // the /data payloads are rendered from the database by route handlers.
+  it("rebuilds the database and every generated document", { timeout: 120_000 }, () => {
     execFileSync(process.execPath, [join(root, "scripts/data/platform.mjs"), "rebuild"], {
       cwd: checkout,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
-    const rebuilt = join(checkout, "public/data/v2");
+    expect(existsSync(join(checkout, "public/data"))).toBe(false);
+    const rebuilt = join(checkout, ".generated/documents");
     const walk = (directory: string, out: string[] = []): string[] => {
       for (const entry of readdirSync(directory, { withFileTypes: true })) {
         const path = join(directory, entry.name);
@@ -517,18 +521,14 @@ describe("clean-checkout rebuild from canonical files only", () => {
       }
       return out;
     };
-    const shipped = walk(join(root, "public/data/v2")).map((path) =>
-      relative(join(root, "public/data/v2"), path).replaceAll("\\", "/"),
-    );
+    const here = join(root, ".generated/documents");
+    const shipped = walk(here).map((path) => relative(here, path).replaceAll("\\", "/"));
     const produced = walk(rebuilt).map((path) => relative(rebuilt, path).replaceAll("\\", "/"));
     expect(produced.sort()).toEqual(shipped.sort());
-    expect(produced.length).toBeGreaterThan(50);
+    expect(produced.length).toBeGreaterThan(40);
     for (const path of produced) {
-      expect(statSync(join(rebuilt, path)).size, path).toBe(
-        statSync(join(root, "public/data/v2", path)).size,
-      );
       expect(readFileSync(join(rebuilt, path), "utf8"), path).toBe(
-        readFileSync(join(root, "public/data/v2", path), "utf8"),
+        readFileSync(join(here, path), "utf8"),
       );
     }
   });

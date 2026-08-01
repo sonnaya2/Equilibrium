@@ -17,7 +17,7 @@ import {
   TRANSFORM_BY_NAME,
 } from "./config.mjs";
 import { prepared, recordTransform } from "./database.mjs";
-import { researchExport, researchParity } from "./research.mjs";
+import { researchRegionIndex } from "./research.mjs";
 import { atomicWrite, hash, slash, stableJson, walkFiles } from "./utilities.mjs";
 
 function setRecordAtPath(document, recordPath, value) {
@@ -86,8 +86,6 @@ export function documentOutputs(db) {
 
 export function buildOutputs(db) {
   const outputs = new Map();
-  const research = researchExport(db);
-  for (const [path, body] of research.outputs) outputs.set(path, body);
   // A retired record leaves the site but not the database: `remove` is a status
   // change, so its provenance, sources and relationships stay queryable through
   // data:context while the browser stops being told about it. Without this the
@@ -114,7 +112,7 @@ export function buildOutputs(db) {
       .input_hash,
     recordCount,
     documents,
-    regions: Object.fromEntries(research.index.regions.map((region) => [region.id, region])),
+    regions: Object.fromEntries(researchRegionIndex(db).map((region) => [region.id, region])),
   };
   return { outputs, documentOutputs: documentOutputMap, manifest };
 }
@@ -122,6 +120,13 @@ export function buildOutputs(db) {
 // Both generated trees get the same treatment: write what changed, delete what
 // no longer belongs, and leave no empty directory behind.
 function syncTree(root, outputs) {
+  // Nothing to write means the tree should not exist. Creating it first and
+  // deleting it after would leave the empty parent behind, which is how
+  // public/data survived having nothing in it.
+  if (!outputs.size) {
+    rmSync(root, { recursive: true, force: true });
+    return 0;
+  }
   const stale = walkFiles(root, () => true)
     .map((path) => slash(relative(root, path)))
     .filter((path) => !outputs.has(path));
@@ -135,6 +140,10 @@ function syncTree(root, outputs) {
     written += 1;
   }
   pruneEmptyDirectories(root);
+  // Nothing belongs here any more, so the tree itself goes. public/data/v2 is
+  // empty now that the panels render from SQLite, and an empty directory in the
+  // deploy is just a question someone has to answer later.
+  if (!readdirSync(root).length) rmSync(root, { recursive: true, force: true });
   return written;
 }
 
@@ -207,11 +216,9 @@ function writeCatalog(db) {
 
 const countOf = (db, sql, ...params) => Number(prepared(db, sql).get(...params).count);
 
-function parityReport(db, parity) {
+function parityReport(db) {
   return {
     schemaVersion: SCHEMA_VERSION,
-    researchRegions: parity,
-    exactRegionParity: parity.every(({ equal }) => equal),
     entityCounts: Object.fromEntries(
       db
         .prepare("SELECT entity_type, count(*) AS count FROM entities GROUP BY entity_type ORDER BY entity_type")
@@ -267,8 +274,6 @@ function parityReport(db, parity) {
 
 export function exportData(db, checkOnly = false) {
   const { outputs, documentOutputs: documents, manifest } = buildOutputs(db);
-  const parity = researchParity(db, outputs);
-  const mismatch = parity.filter(({ equal }) => !equal);
   const comparison = compareOutputs(outputs);
   // Everything under EXPORT_ROOT is fetched by a browser, so all of it is
   // budgeted. Documents are not shipped and have no such limit.
@@ -277,10 +282,7 @@ export function exportData(db, checkOnly = false) {
     throw new Error(`Frontend shards exceed 500 KiB: ${oversized.map(([path]) => path).join(", ")}`);
   }
   mkdirSync(REPORTS, { recursive: true });
-  atomicWrite(join(REPORTS, "data-migration-parity.json"), `${JSON.stringify(parityReport(db, parity), null, 2)}\n`);
-  if (mismatch.length) {
-    throw new Error(`Research compatibility parity failed: ${mismatch.map(({ region }) => region).join(", ")}`);
-  }
+  atomicWrite(join(REPORTS, "data-migration-parity.json"), `${JSON.stringify(parityReport(db), null, 2)}\n`);
   if (checkOnly) return { ...comparison, written: [] };
   syncTree(EXPORT_ROOT, outputs);
   syncTree(DOCUMENTS_ROOT, documents);

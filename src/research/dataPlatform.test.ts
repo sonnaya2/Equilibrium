@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { REGION_IDS } from "@/league";
 import { researchRowMatchesRegion } from "@/components/ResearchSection";
 import { getResearchCatalog } from "./catalog";
+import { UNLOCK_SECTIONS, getRegionalPanel, getUnlockPanel } from "./panels";
 
 const root = process.cwd();
 const readJson = <T>(path: string): T => JSON.parse(readFileSync(join(root, path), "utf8")) as T;
@@ -101,7 +102,7 @@ interface Manifest {
   exportVersion: number;
   recordCount: number;
   documents: Record<string, Artifact>;
-  regions: Record<string, RegionArtifacts>;
+  regions: Array<{ id: string; name: string; availability: string; training: number }>;
 }
 
 describe("generated data platform", () => {
@@ -109,30 +110,17 @@ describe("generated data platform", () => {
   // the browser ever asked for it.
   const manifest = readJson<Manifest>("reports/data-export-manifest.json");
 
-  it("keeps every fetched artifact bounded and content-addressed", () => {
+  it("summarises every region without addressing a file", () => {
     expect(manifest.schemaVersion).toBe(5);
     expect(manifest.exportVersion).toBe(2);
-    const artifacts: Artifact[] = Object.values(manifest.regions).flatMap((region) => [
-      region,
-      region.panels.regional,
-      ...Object.values(region.panels.unlocks),
-    ]);
-    expect(artifacts.length).toBeGreaterThan(50);
-    for (const artifact of artifacts) {
-      const repoPath = `public${artifact.href}`;
-      expect(existsSync(join(root, repoPath)), repoPath).toBe(true);
-      expect(statSync(join(root, repoPath)).size, repoPath).toBe(artifact.bytes);
-      expect(digest(repoPath), repoPath).toBe(artifact.sha256);
-      expect(artifact.bytes, repoPath).toBeLessThan(500 * 1024);
-    }
+    expect(Object.keys(manifest.regions)).toHaveLength(REGION_IDS.length);
   });
 
-  // Domain shards and ID indexes used to ship 3.9 MB that no line of app code
-  // ever read. The database is the index now.
-  it("ships nothing the app does not fetch", () => {
-    for (const dead of ["domains", "indexes", "regions", "manifest.json"]) {
-      expect(existsSync(join(root, "public/data/v2", dead)), dead).toBe(false);
-    }
+  // The whole tree is gone: domain shards and ID indexes nothing read, then the
+  // documents that were build inputs, then the research payloads, which the
+  // route handlers under app/data/regions render straight out of SQLite.
+  it("publishes no generated data at all", () => {
+    expect(existsSync(join(root, "public/data"))).toBe(false);
   });
 
   // Documents are build inputs for `#shard/*`, not browser payloads, so they
@@ -176,7 +164,7 @@ describe("generated data platform", () => {
     }
   });
 
-  it("keeps regional and unlock panel exports equal to their normalized records", () => {
+  it("builds every panel from SQLite, matching the normalized records", () => {
     type Row = Record<string, unknown>;
     const skilling = live(
       sourceArrays<Row>("data/research/regional-skilling-unlocks.json").records,
@@ -204,10 +192,7 @@ describe("generated data platform", () => {
             : `${prefix}:${index}`;
 
     for (const region of getResearchCatalog().regions) {
-      const exported = readJson<{
-        panelHrefs: { regional: string; unlocks: Record<string, string> };
-      }>(`public/data/v2/research/regions/${region.id}.json`);
-      const regional = readJson<Record<string, unknown>>(`public${exported.panelHrefs.regional}`);
+      const regional = getRegionalPanel(region) as unknown as Record<string, unknown>;
       expect(regional.skillingActivities).toEqual(
         skilling.filter(
           (row) => row.recordType === "activity" && researchRowMatchesRegion(row, region),
@@ -234,7 +219,7 @@ describe("generated data platform", () => {
         ),
       );
 
-      for (const [section, href] of Object.entries(exported.panelHrefs.unlocks)) {
+      for (const section of UNLOCK_SECTIONS) {
         const rows = new Map<string, Row>();
         (progression[section] ?? []).forEach((row, index) =>
           rows.set(key(row, index, "base"), row),
@@ -246,29 +231,24 @@ describe("generated data platform", () => {
             ),
           );
         }
-        expect(readJson<{ records: Row[] }>(`public${href}`).records).toEqual(
+        expect(getUnlockPanel(region, section), section).toEqual(
           [...rows.values()].filter((row) => researchRowMatchesRegion(row, region)),
         );
       }
     }
   });
 
-  it("preserves every seeded research region exactly", () => {
-    const parity = readJson<{
-      exactRegionParity: boolean;
-      researchRegions: Array<{ region: string; equal: boolean }>;
-      quarantinedRecords: number;
-    }>("reports/data-migration-parity.json");
-    expect(parity.exactRegionParity).toBe(true);
-    expect(parity.researchRegions).toHaveLength(REGION_IDS.length);
-    expect(parity.researchRegions.every((region) => region.equal)).toBe(true);
-    expect(new Set(parity.researchRegions.map((region) => region.region))).toEqual(
-      new Set(REGION_IDS),
-    );
-    const index = readJson<{ regions: Array<{ id: string }> }>(
-      "public/data/v2/research/index.json",
-    );
-    expect(index.regions.map(({ id }) => id)).toEqual(REGION_IDS);
+  // The catalog reconstruction is gated by data:canonical:validate, which
+  // digests readResearchCatalog against the canonical files. What is left to
+  // check here is that every region survives into what the site serves.
+  it("serves every research region", () => {
+    const parity = readJson<{ quarantinedRecords: number }>("reports/data-migration-parity.json");
+    const regions = getResearchCatalog().regions;
+    expect(regions.map(({ id }) => id)).toEqual(REGION_IDS);
+    for (const region of regions) {
+      expect(region.name, region.id).toBeTruthy();
+      expect(Array.isArray(region.training), region.id).toBe(true);
+    }
     const quarantine = readJson<unknown[]>("reports/data-quarantine.json");
     expect(quarantine).toHaveLength(parity.quarantinedRecords);
   });

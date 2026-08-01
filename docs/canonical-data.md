@@ -184,7 +184,7 @@ stored.
 
 `source-documents.jsonl` holds each document's `skeleton`: its shape with every top-level array
 record replaced by `null`. Export writes each source record back over its own `recordPath` to rebuild
-`public/data/v2/documents/**`, and record paths sort parent-before-child, so a nested record lands
+`.generated/documents/**`, and record paths sort parent-before-child, so a nested record lands
 inside the parent body that was just restored. Ninety-four KB of scaffolding stands in for 1.5 MB of
 documents, and it is the last thing the frontend artifacts needed the seed for.
 

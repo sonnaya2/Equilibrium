@@ -8,7 +8,7 @@ Three things live here, and nothing else on the data path is tracked:
 
 The compressed seed these were derived from is retired and no longer in the tree. Its 56 source documents survive in `canonical/provenance/`, which records each one's path, classification, content hash, byte count and shape, plus the verbatim body of every record it held — including the 2,382 that never became entities. The seed file itself remains in Git history at commit `43c23873`.
 
-`npm run data:rebuild` creates `.cache/equilibrium.sqlite` from scratch out of `canonical/`, applies every patch, validates it, and exports every generated artifact under `public/data/v2/`. All of those outputs are ignored by Git. The research catalog is normalized into relational tables and is never written back out as a JSON file.
+`npm run data:rebuild` creates `.cache/equilibrium.sqlite` from scratch out of `canonical/`, applies every patch, validates it, and writes the `#shard/*` build inputs into `.generated/documents/`. All of those outputs are ignored by Git, and nothing generated is published under `public/`. The research catalog is normalized into relational tables and is never written back out as a JSON file.
 
 Correct a record with a patch rather than rewriting a dataset — [`docs/data-platform.md`](../docs/data-platform.md) has the commands and says when a change needs a patch, a migration, or a baseline re-export. Do not restore the retired per-domain JSON files or mutation scripts. Unknown and unrevealed League values remain empty until sourced.
 
@@ -18,5 +18,5 @@ Correct a record with a patch rather than rewriting a dataset — [`docs/data-pl
 - Put a factual change in one small JSONL file under `patches/`, with stable IDs and source links attached. Patches are immutable once applied: a later correction is a new patch.
 - Re-export `canonical/` and commit it alongside the patch that changed it; `npm run data:canonical:validate` fails while the two disagree.
 - Use a SQL migration for schema changes only, never one per content correction.
-- Do not commit `.cache/`, generated reports, or `public/data/v2/`.
+- Do not commit `.cache/`, `.generated/`, or generated reports, and do not reintroduce `public/data/`.
 - `Troll Country` is not a region under this taxonomy — those records belong to Asgarnia, and validation fails if one slips back in.

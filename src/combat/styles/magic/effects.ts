@@ -49,16 +49,18 @@ export function channelledMightCritBonus(state: ChannelledMightState, tick: numb
 }
 
 /**
- * Flow (Sonic Wave, 2 Mar 2026): the next Magic ability costs 10% less
- * adrenaline for 9s (15 ticks); Greater Sonic Wave's Greater Flow is 20%.
- * Empowered by Runic Charge: +25% (totals 35%/45%). Enhanced/ultimate Magic
- * casts consume it; Defence/Constitution/specials never touch it.
+ * Flow (Sonic Wave, 2 Mar 2026): granted when Sonic Wave's hit LANDS (wiki:
+ * "If the ability successfully damages your opponent, Flow is gained") — a
+ * cancelled or non-landed cast grants nothing. For 9s (15 ticks) from the
+ * land tick, the next eligible Magic ability costs 10 fewer adrenaline points
+ * (Greater Flow: 20; Runic-charged: 35/45). Enhanced/ultimate Magic casts
+ * consume it; basics never do. Cost floors at 0.
  * https://runescape.wiki/w/Sonic_Wave (verified 2026-07-31).
  */
 export const FLOW_DURATION_TICKS = 15;
-export const SONIC_FLOW_REDUCTION_PCT = 10;
-export const GREATER_FLOW_REDUCTION_PCT = 20;
-export const RUNIC_FLOW_BONUS_PCT = 25;
+export const SONIC_FLOW_REDUCTION = 10;
+export const GREATER_FLOW_REDUCTION = 20;
+export const RUNIC_FLOW_BONUS = 25;
 
 /**
  * Concentrated Blast crit progression (wiki Critical strike): each channelled
@@ -74,9 +76,14 @@ export const GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 17;
 
 /** Magic rotation state beyond Runic Charge. */
 export interface MagicFxState {
-  /** Flow window end (0 = inactive) and the stored reduction pct. */
+  /** Flow window end (0 = inactive) and the stored reduction in adrenaline points. */
   flowUntilTick: number;
-  flowReductionPct: number;
+  flowReduction: number;
+  /**
+   * Flow reduction earned by a Sonic Wave cast, pending its hit landing.
+   * Applied (with the window starting at the land tick) only on a landed hit.
+   */
+  pendingFlowReduction: number;
   /** Accumulated Concentrated Blast crit stacks and the granting cast's pct per stack. */
   concCritStacks: number;
   concCritPerStackPct: number;
@@ -86,7 +93,8 @@ export interface MagicFxState {
 
 export const newMagicFx = (): MagicFxState => ({
   flowUntilTick: 0,
-  flowReductionPct: 0,
+  flowReduction: 0,
+  pendingFlowReduction: 0,
   concCritStacks: 0,
   concCritPerStackPct: 0,
   channelledMight: newChannelledMight(),

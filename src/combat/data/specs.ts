@@ -71,7 +71,7 @@ const ENGINE_ID_BY_RECORD_ID: Record<string, string> = {
   "magic:asphyxiate": "asphyxiate",
   "magic:asphyxiate-resplendence": "asphyxiate_resplendence",
   "magic:omnipower-igneous": "omnipower_igneous",
-  "magic:dragon-breath-empowered": "dragon_breath_empowered",
+  "magic:dragon-breath-empowered": "dragon_breath",
   "magic:corruption-blast": "corruption_blast",
   "magic:smoke-tendrils": "smoke_tendrils",
   "magic:magma-tempest": "magma_tempest",

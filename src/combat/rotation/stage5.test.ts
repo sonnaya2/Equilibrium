@@ -252,3 +252,87 @@ describe("Planted Feet", () => {
     expect(s.events.filter((e) => e.abilityId === "greater_sunshine")).toHaveLength(21);
   });
 });
+
+describe("Bloat recast overwrite", () => {
+  it("a recast cancels the previous tails; damage after it comes only from the new Bloat", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    const bloat = ctx.byId.get("bloat")!;
+    for (let i = 0; i < 3; i++) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(bloat, ctx.getState().tick, false); // Bloat at 9, tails 12..39
+    for (let i = 0; i < 3; i++) ctx.performCast(basic, ctx.getState().tick, false);
+    ctx.performCast(bloat, ctx.getState().tick, false); // recast at 21, tails 24..51
+    const s = ctx.finish();
+    const initials = s.events.filter((e) => e.abilityId === "bloat" && e.hitIndex === 0);
+    const tails = s.events.filter((e) => e.abilityId === "bloat" && e.hitIndex > 0);
+    expect(initials).toHaveLength(2);
+    const oldSet = tails.filter((e) => e.derivedFrom === initials[0].seq);
+    const newSet = tails.filter((e) => e.derivedFrom === initials[1].seq);
+    // Old set: only the four tails that landed before/at the recast tick
+    // (the +21 tail lands during the advance, before the cancellation).
+    expect(oldSet.map((e) => e.tick)).toEqual([12, 15, 18, 21]);
+    // New set: a full fresh ten, all derived from the new initial hit.
+    expect(newSet.map((e) => e.tick)).toEqual([24, 27, 30, 33, 36, 39, 42, 45, 48, 51]);
+    expect(s.damageByTick[21]).toBeCloseTo(1500 + 375); // new initial + last old tail
+    expect(s.damageByTick[39]).toBeCloseTo(375); // new set only — old +39 tail is gone
+  });
+
+  it("a critical recast makes the fresh set inherit the new initial's crit", () => {
+    const s = simulate({
+      ...necroInput,
+      crit: { chance: 0, guaranteed: true },
+      rotation: rotationOf(
+        ...Array(3).fill("necromancy_basic"),
+        "bloat",
+        ...Array(3).fill("necromancy_basic"),
+        "bloat",
+      ),
+    });
+    const initials = s.events.filter((e) => e.abilityId === "bloat" && e.hitIndex === 0);
+    const newSet = s.events.filter(
+      (e) => e.abilityId === "bloat" && e.derivedFrom === initials[1].seq,
+    );
+    expect(newSet).toHaveLength(10);
+    for (const tail of newSet) expect(tail.damage.expected).toBeCloseTo(1500 * 1.5 * 0.25);
+  });
+
+  it("unrelated DoTs survive a Bloat recast", () => {
+    const mixed: Omit<SimulateInput, "rotation"> = {
+      ...necroInput,
+      abilities: [...NECROMANCY_ABILITIES, ...MAGIC_ABILITIES],
+    };
+    const s = simulate({
+      ...mixed,
+      rotation: rotationOf(
+        "combust",
+        ...Array(3).fill("necromancy_basic"),
+        "bloat",
+        ...Array(3).fill("necromancy_basic"),
+        "bloat",
+      ),
+    });
+    expect(s.ok).toBe(true);
+    const burns = s.events.filter((e) => e.abilityId === "combust");
+    expect(burns).toHaveLength(10); // the whole Combust burn ran, untouched
+  });
+});
+
+describe("Blood Siphon occupancy", () => {
+  it("occupies the actor for the full 9-tick channel; the finisher lands on release", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    const siphon = ctx.byId.get("blood_siphon")!;
+    ctx.performCast(siphon, 0, false);
+    expect(ctx.getState().tick).toBe(9); // not the 3-tick GCD
+    ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const finisher = s.events.find((e) => e.abilityId === "blood_siphon")!;
+    expect(finisher.tick).toBe(9);
+    expect(s.casts[1].tick).toBe(9); // next cast begins only after the channel
+    // The canonical clock lands the finisher before the next cast on that tick.
+    expect(s.events.filter((e) => e.tick === 9).map((e) => e.abilityId)).toEqual([
+      "blood_siphon",
+      "necromancy_basic",
+    ]);
+  });
+});

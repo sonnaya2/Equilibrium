@@ -11,6 +11,7 @@ import {
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
   channelledMightCritBonus,
+  FLOW_DURATION_TICKS,
   isConcentratedBlast,
   sunshineActive,
   SUNSHINE_DAMAGE_MULTIPLIER,
@@ -143,6 +144,20 @@ export function consumeNextHitEffects(
       rt.state = {
         ...rt.state,
         magicFx: { ...rt.state.magicFx, concCritStacks: rt.state.magicFx.concCritStacks + 1 },
+      };
+    }
+    // Sonic Wave / Greater Sonic Wave grant Flow when their hit lands (wiki:
+    // "If the ability successfully damages your opponent, Flow is gained") —
+    // the 9s window starts at the land tick; a non-landed cast grants nothing.
+    if (ability?.id === "sonic_wave" || ability?.id === "greater_sonic_wave") {
+      rt.state = {
+        ...rt.state,
+        magicFx: {
+          ...rt.state.magicFx,
+          flowUntilTick: event.tick + FLOW_DURATION_TICKS,
+          flowReduction: rt.state.magicFx.pendingFlowReduction,
+          pendingFlowReduction: 0,
+        },
       };
     }
     return;

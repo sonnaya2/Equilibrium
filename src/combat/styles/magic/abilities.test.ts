@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { calculateAbility } from "../../pipeline/calculateAbility";
+import { RUNIC_EMPOWERMENTS } from "./runicCharge";
 import { MAGIC_ABILITIES, MAGIC_EFFECTS } from "./abilities";
 
 const byId = (id: string) => {
@@ -113,11 +114,13 @@ describe("magic ability data", () => {
     expect(sun.hits[15].tickOffset).toBe(48);
   });
 
-  it("keeps Runic-Charged Dragon Breath as a separate anima-gated band", () => {
-    const empowered = byId("dragon_breath_empowered");
-    expect(empowered.requiresAnima).toBe(true);
-    expect(empowered.hits[0].band).toEqual({ minPct: 260, maxPct: 310 });
-    expect(byId("dragon_breath").requiresAnima).toBeFalsy();
+  it("no longer exposes Runic-Charged Dragon Breath as a separate ability", () => {
+    expect(MAGIC_ABILITIES.some((a) => a.id === "dragon_breath_empowered")).toBe(false);
+    const base = byId("dragon_breath");
+    expect(base.category).toBe("basic");
+    expect(base.adrenaline?.gain).toBe(9);
+    expect(base.cooldownSeconds).toBe(7.2);
+    expect(RUNIC_EMPOWERMENTS.dragon_breath.band).toEqual({ minPct: 260, maxPct: 310 });
   });
 
   it("models wiki-verified weapon special cast bands", () => {

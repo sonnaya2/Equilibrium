@@ -20,14 +20,13 @@ import {
   activateSunshine,
   CONC_BLAST_CRIT_PER_HIT_PCT,
   CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
-  FLOW_DURATION_TICKS,
   GREATER_CONC_BLAST_CRIT_PER_HIT_PCT,
   GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
-  GREATER_FLOW_REDUCTION_PCT,
+  GREATER_FLOW_REDUCTION,
   grantChannelledMight,
   isConcentratedBlast,
-  RUNIC_FLOW_BONUS_PCT,
-  SONIC_FLOW_REDUCTION_PCT,
+  RUNIC_FLOW_BONUS,
+  SONIC_FLOW_REDUCTION,
 } from "../styles/magic/effects";
 import { applyCombust } from "../styles/magic/burn";
 import {
@@ -163,6 +162,15 @@ export function applyCastEffects(
       };
     }
     if (ability.id === "command_skeleton_warrior") applySkeletonCommand(rt, candidate);
+    // Bloated does not stack on the single static target: a recast cancels the
+    // previous cast's pending tails and starts a fresh derived set (wiki:
+    // "its 19.8-second duration will be reset").
+    if (ability.id === "bloat") {
+      if (rt.state.activeBloatCastSeq >= 0) {
+        rt.queue.cancelByOwner(rt.state.activeBloatCastSeq);
+      }
+      rt.state = { ...rt.state, activeBloatCastSeq: snap.castSeq };
+    }
   }
 
   if (ability.stateEffect === "berserk") {
@@ -257,21 +265,25 @@ export function applyCastEffects(
     }
   }
   if (isMagicAbility(ability)) {
-    // Sonic Wave / Greater Sonic Wave apply Flow; Runic-charged casts are
-    // empowered (+25% reduction) and consume the charge.
+    // Sonic Wave / Greater Sonic Wave earn Flow when their hit LANDS — the
+    // cast only records what a landed hit should grant (Runic-charged casts
+    // earn the empowered reduction and consume the charge now).
     if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {
       const empowered = animaCharged(rt.state.magic, candidate);
-      const base =
-        ability.id === "sonic_wave" ? SONIC_FLOW_REDUCTION_PCT : GREATER_FLOW_REDUCTION_PCT;
+      const base = ability.id === "sonic_wave" ? SONIC_FLOW_REDUCTION : GREATER_FLOW_REDUCTION;
       rt.state = {
         ...rt.state,
         magicFx: {
           ...rt.state.magicFx,
-          flowUntilTick: candidate + FLOW_DURATION_TICKS,
-          flowReductionPct: base + (empowered ? RUNIC_FLOW_BONUS_PCT : 0),
+          pendingFlowReduction: base + (empowered ? RUNIC_FLOW_BONUS : 0),
         },
       };
       if (empowered) rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
+    }
+    // Runic-charged Dragon Breath consumes the charge; the empowered band was
+    // resolved in castPreparation.
+    if (ability.id === "dragon_breath" && animaCharged(rt.state.magic, candidate)) {
+      rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
     }
     if (isConcentratedBlast(ability.id)) {
       // The granting cast sets the per-stack crit pct (Runic-empowered if charged).
@@ -314,11 +326,8 @@ export function applyCastEffects(
     ) {
       rt.state = {
         ...rt.state,
-        magicFx: { ...rt.state.magicFx, flowUntilTick: 0, flowReductionPct: 0 },
+        magicFx: { ...rt.state.magicFx, flowUntilTick: 0, flowReduction: 0 },
       };
-    }
-    if (ability.requiresAnima) {
-      rt.state = { ...rt.state, magic: consumeAnima(rt.state.magic) };
     }
   }
 }

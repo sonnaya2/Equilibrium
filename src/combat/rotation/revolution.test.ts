@@ -435,11 +435,11 @@ describe("revolution — channels and horizon", () => {
     expect(s.ok).toBe(true);
     expect(s.casts[0].abilityId).toBe("blood_siphon");
     expect(s.casts[1].abilityId).toBe("conjure_skeleton_warrior");
-    expect(s.casts[1].tick).toBe(3);
-    // Skeleton autos at 10, 15, 20: the auto exactly on the horizon does not count.
-    // Rage ×1.03 scales the band to 226.6–288.4 → floored 226/288 (mean 257).
-    expect(s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick)).toEqual([10, 15]);
-    expect(s.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(250 + 257, 5);
+    // Blood Siphon occupies its full 9-tick channel before the conjure cast.
+    expect(s.casts[1].tick).toBe(9);
+    // Skeleton autos at 16, 21: only the first lands inside the horizon.
+    expect(s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick)).toEqual([16]);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeCloseTo(250, 5);
     expect(s.damageByTick[20]).toBeUndefined();
   });
 

@@ -32,8 +32,6 @@ function wikiAbility(title: string, path?: string): SourceReference {
 
 export interface MagicAbilitySpec extends AbilitySpec {
   style: "magic";
-  /** Cast only under Anima Charged (Runic Charge); the unempowered band is separate. */
-  requiresAnima?: boolean;
   /** Sourced per-ability crit layers (Wild Magic: +10% chance, +20% crit damage). */
   critChanceBonusPct?: number;
   critDamageBonus?: number;
@@ -133,21 +131,24 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: MODERNISATION_WIKI,
   },
   {
+    // Wiki: "Sonic Wave strikes the target 2 ticks after being cast"; Flow is
+    // gained on a successful hit, so the 9s window runs from that land tick.
     id: "sonic_wave",
     name: "Sonic Wave",
     style: "magic",
     category: "basic",
-    hits: [{ band: { minPct: 90, maxPct: 110 } }],
+    hits: [{ band: { minPct: 90, maxPct: 110 }, tickOffset: 2 }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
     source: wikiAbility("Sonic Wave"),
   },
   {
+    // Greater Sonic Wave: same strike timing as Sonic Wave (hits land at +2).
     id: "greater_sonic_wave",
     name: "Greater Sonic Wave",
     style: "magic",
     category: "basic",
-    hits: [{ band: { minPct: 115, maxPct: 135 } }],
+    hits: [{ band: { minPct: 115, maxPct: 135 }, tickOffset: 2 }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
     source: wikiAbility("Greater Sonic Wave"),
@@ -161,15 +162,6 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 7.2,
     source: wikiAbility("Dragon Breath"),
-  },
-  {
-    id: "dragon_breath_empowered",
-    name: "Dragon Breath (Runic-Charged)",
-    style: "magic",
-    category: "enhanced",
-    hits: [{ band: { minPct: 260, maxPct: 310 } }],
-    requiresAnima: true,
-    source: RUNIC_CHARGE_WIKI,
   },
   {
     id: "impact",

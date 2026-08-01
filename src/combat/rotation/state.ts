@@ -98,6 +98,12 @@ export interface RotationState {
    */
   necro: NecroRotationState;
   /**
+   * Cast sequence of the active Bloat effect (-1 = none). Recasting Bloat
+   * overwrites the previous Bloated debuff: its pending tails are cancelled
+   * by owner (wiki: the duration resets on recast).
+   */
+  activeBloatCastSeq: number;
+  /**
    * Active conjured spirits (timers + skeleton rage). Mutate via conjures.ts
    * helpers and applyNecroOnCast summon hooks.
    */
@@ -131,6 +137,7 @@ export function newRotationState(opts: { lantern?: boolean } = {}): RotationStat
     },
     magic: newRunicCharge(),
     necro: newNecroRotationState({ lantern: opts.lantern }),
+    activeBloatCastSeq: -1,
     conjures: newConjures(),
   };
 }

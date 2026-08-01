@@ -612,18 +612,21 @@ describe("simulate — magic", () => {
   it("runic charge casts off-GCD and empowers the next dragon breath", () => {
     const s = simulate({
       ...magicInput,
-      rotation: rotationOf("runic_charge", "magic_attack", "dragon_breath_empowered"),
+      rotation: rotationOf("runic_charge", "magic_attack", "dragon_breath"),
     });
     expect(s.ok).toBe(true);
     expect(s.casts[0].tick).toBe(0);
     expect(s.casts[1].tick).toBe(0);
+    expect(s.casts[2].abilityId).toBe("dragon_breath");
     expect(s.casts[2].result.expected).toBeCloseTo(2850);
+    // Same basic: +9 adrenaline and the normal cooldown.
+    expect(s.casts[2].adrenalineAfter).toBe(9 + 9);
   });
 
-  it("empowered casts fail without an active charge", () => {
-    const s = simulate({ ...magicInput, rotation: rotationOf("dragon_breath_empowered") });
-    expect(s.ok).toBe(false);
-    expect(s.error).toContain("requires an active Runic Charge");
+  it("dragon breath resolves unempowered without an active charge", () => {
+    const s = simulate({ ...magicInput, rotation: rotationOf("dragon_breath") });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0].result.expected).toBeCloseTo(1200);
   });
 
   it("runic charge cannot be recast inside its cooldown", () => {

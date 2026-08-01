@@ -13,6 +13,7 @@ import {
 import { searingWindsBonusPct } from "../styles/ranged/onHit";
 import { isMagicAbility } from "../styles/magic/abilities";
 import { isConcentratedBlast } from "../styles/magic/effects";
+import { animaCharged, RUNIC_EMPOWERMENTS } from "../styles/magic/runicCharge";
 import { resolveNecromancyAbility } from "../styles/necromancy/effects";
 import { spectralScythe3 } from "../styles/necromancy/abilities";
 import { costOf, spendOf } from "./castRules";
@@ -106,6 +107,15 @@ export function prepareCast(
   }
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necro, candidate);
+  }
+  // Runic-charged Dragon Breath: same ability (basic, +9 adrenaline, same
+  // cooldown), empowered band while Anima Charged — the charge is consumed at
+  // commit (castEffects). Not a separate ability.
+  if (ability.id === "dragon_breath" && animaCharged(rt.state.magic, candidate)) {
+    working = {
+      ...working,
+      hits: working.hits.map((h) => ({ ...h, band: { ...RUNIC_EMPOWERMENTS.dragon_breath.band } })),
+    };
   }
   // Planted Feet: base Sunshine's duration extends (handled in castEffects) but
   // its periodic beam damage is removed — schedule no DoT events at all (wiki:

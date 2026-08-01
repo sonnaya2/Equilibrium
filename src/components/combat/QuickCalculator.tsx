@@ -6,7 +6,7 @@ import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES, type MeleeAbilitySpec } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
-import { MAGIC_ABILITIES, type MagicAbilitySpec } from "@/combat/styles/magic/abilities";
+import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import {
   MAX_SOULS,
   NECROMANCY_ABILITIES,
@@ -74,7 +74,7 @@ function abilityMeta(ability: AbilitySpec): string {
     ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
     ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
     (ability as RangedAbilitySpec).guaranteedCrit ? "guaranteed crit" : null,
-    (ability as MagicAbilitySpec).requiresAnima ? "needs an active Runic Charge" : null,
+    ability.id === "dragon_breath" ? "empowered while Runic Charge is active" : null,
   ]
     .filter(Boolean)
     .join(" · ");

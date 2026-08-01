@@ -137,7 +137,57 @@ describe("Dragon Breath vs Combust", () => {
 });
 
 describe("Sonic Wave Flow", () => {
-  it("reduces the next Magic ability's cost by 10% and is consumed", () => {
+  it("grants Flow only when the hit lands, subtracting 10 adrenaline from the next cost", () => {
+    const ctx = createCastContext(magicInput);
+    const attack = ctx.byId.get("magic_attack")!;
+    const sonic = ctx.byId.get("sonic_wave")!;
+    const wild = ctx.byId.get("wild_magic")!;
+    ctx.performCast(attack, 0, false);
+    ctx.performCast(attack, 3, false);
+    // Sonic Wave's hit lands 2 ticks after the cast; Flow runs 15 ticks from there.
+    ctx.performCast(sonic, 6, false);
+    expect(ctx.getState().magicFx.flowReduction).toBe(10);
+    expect(ctx.getState().magicFx.flowUntilTick).toBe(8 + 15);
+    expect(ctx.costOf(wild)).toBe(25 - 10);
+    ctx.performCast(wild, ctx.getState().tick, false);
+    expect(ctx.getState().magicFx.flowUntilTick).toBe(0); // consumed
+  });
+
+  it("a Sonic Wave whose hit never lands grants no Flow (horizon truncation)", () => {
+    // Cast at tick 0 with horizon 1: the +2 strike lands past the horizon and
+    // is never processed, so no window opens.
+    const ctx = createCastContext({ ...magicInput, horizonTicks: 1 });
+    const sonic = ctx.byId.get("sonic_wave")!;
+    ctx.performCast(sonic, 0, false);
+    expect(ctx.getState().magicFx.flowUntilTick).toBe(0);
+    expect(ctx.getState().magicFx.flowReduction).toBe(0);
+  });
+
+  it("flat reductions: 60-cost under Flow costs 50, 25-cost under Greater Flow costs 5", () => {
+    const ctx = createCastContext(magicInput);
+    const attack = ctx.byId.get("magic_attack")!;
+    const gsw = ctx.byId.get("greater_sonic_wave")!;
+    const wild = ctx.byId.get("wild_magic")!;
+    const overpower = ctx.byId.get("omnipower")!;
+    ctx.performCast(attack, 0, false);
+    ctx.performCast(attack, 3, false);
+    ctx.performCast(gsw, 6, false);
+    expect(ctx.costOf(wild)).toBe(5);
+    expect(ctx.costOf(overpower)).toBe(60 - 20);
+  });
+
+  it("a Runic-charged Sonic Wave floors the cost at zero and consumes the charge", () => {
+    const ctx = createCastContext(magicInput);
+    const sonic = ctx.byId.get("sonic_wave")!;
+    const wild = ctx.byId.get("wild_magic")!;
+    ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
+    ctx.performCast(sonic, ctx.getState().tick, false);
+    expect(ctx.getState().magic.animaUntilTick).toBe(0);
+    expect(ctx.getState().magicFx.flowReduction).toBe(35);
+    expect(ctx.costOf(wild)).toBe(0);
+  });
+
+  it("basics do not consume Flow", () => {
     const ctx = createCastContext(magicInput);
     const attack = ctx.byId.get("magic_attack")!;
     const sonic = ctx.byId.get("sonic_wave")!;
@@ -145,34 +195,12 @@ describe("Sonic Wave Flow", () => {
     ctx.performCast(attack, 0, false);
     ctx.performCast(attack, 3, false);
     ctx.performCast(sonic, 6, false);
-    expect(ctx.getState().magicFx.flowReductionPct).toBe(10);
-    expect(ctx.costOf(wild)).toBeCloseTo(25 * 0.9);
-    ctx.performCast(wild, ctx.getState().tick, false);
-    expect(ctx.getState().magicFx.flowUntilTick).toBe(0); // consumed
-  });
-
-  it("basics do not consume Flow; Greater Sonic Wave reduces by 20%", () => {
-    const ctx = createCastContext(magicInput);
-    const attack = ctx.byId.get("magic_attack")!;
-    const gsw = ctx.byId.get("greater_sonic_wave")!;
-    const wild = ctx.byId.get("wild_magic")!;
-    ctx.performCast(attack, 0, false);
-    ctx.performCast(attack, 3, false);
-    ctx.performCast(gsw, 6, false);
     ctx.performCast(attack, 9, false);
-    expect(ctx.getState().magicFx.flowReductionPct).toBe(20);
-    expect(ctx.costOf(wild)).toBeCloseTo(25 * 0.8);
+    expect(ctx.getState().magicFx.flowReduction).toBe(10);
+    expect(ctx.costOf(wild)).toBe(15);
   });
 
-  it("a Runic-charged Sonic Wave reduces by 35% and consumes the charge", () => {
-    const ctx = createCastContext(magicInput);
-    ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
-    ctx.performCast(ctx.byId.get("sonic_wave")!, ctx.getState().tick, false);
-    expect(ctx.getState().magicFx.flowReductionPct).toBe(35);
-    expect(ctx.getState().magic.animaUntilTick).toBe(0);
-  });
-
-  it("Flow expires at the 9s boundary", () => {
+  it("Flow expires at the 9s boundary and stops affecting cost", () => {
     const ctx = createCastContext(magicInput);
     const attack = ctx.byId.get("magic_attack")!;
     const sonic = ctx.byId.get("sonic_wave")!;
@@ -220,5 +248,54 @@ describe("target HP percentage", () => {
     expect(() =>
       simulate({ ...meleeInput, targetHpPercent: 140, rotation: rotationOf("punish") }),
     ).toThrow(RangeError);
+  });
+});
+
+describe("Runic-charged Dragon Breath", () => {
+  it("resolves the empowered band only while the charge is active", () => {
+    const ctx = createCastContext(magicInput);
+    const db = ctx.byId.get("dragon_breath")!;
+    ctx.performCast(db, 0, false);
+    ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
+    ctx.performCast(db, ctx.firstLegalTick("dragon_breath"), false);
+    const s = ctx.finish();
+    expect(s.casts[0].result.expected).toBeCloseTo(1200); // normal 110-130
+    expect(s.casts[1].abilityId).toBe("runic_charge"); // off-GCD record
+    expect(s.casts[2].abilityId).toBe("dragon_breath");
+    expect(s.casts[2].result.expected).toBeCloseTo(2850); // empowered 260-310
+  });
+
+  it("consumes the charge exactly once and grants the normal +9 adrenaline", () => {
+    const ctx = createCastContext(magicInput);
+    const db = ctx.byId.get("dragon_breath")!;
+    ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
+    ctx.performCast(db, 0, false);
+    expect(ctx.getState().magic.animaUntilTick).toBe(0);
+    expect(ctx.getState().adrenaline).toBe(9);
+    ctx.performCast(db, ctx.firstLegalTick("dragon_breath"), false);
+    const s = ctx.finish();
+    expect(s.casts[2].result.expected).toBeCloseTo(1200); // unempowered
+  });
+
+  it("shares one cooldown family — no alternating-ID bypass", () => {
+    const s = simulate({
+      ...magicInput,
+      rotation: rotationOf("runic_charge", "dragon_breath", "dragon_breath"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[1].result.expected).toBeCloseTo(2850); // empowered first cast
+    expect(s.casts[2].tick).toBe(12); // normal 7.2s cooldown, not an alias reset
+    expect(s.casts[2].result.expected).toBeCloseTo(1200);
+  });
+
+  it("empowered Dragon Breath stays a basic and never consumes Flow", () => {
+    const ctx = createCastContext(magicInput);
+    const sonic = ctx.byId.get("sonic_wave")!;
+    const db = ctx.byId.get("dragon_breath")!;
+    ctx.performCast(sonic, 0, false); // Flow active from tick 2 (10 points)
+    ctx.performOffGcdCast(ctx.byId.get("runic_charge")!);
+    ctx.performCast(db, 3, false);
+    expect(ctx.getState().magicFx.flowReduction).toBe(10);
+    expect(ctx.getState().magicFx.flowUntilTick).toBeGreaterThan(0);
   });
 });

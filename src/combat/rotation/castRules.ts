@@ -1,7 +1,5 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { isMagicAbility } from "../styles/magic/abilities";
 import { isMeleeAbility } from "../styles/melee/abilities";
-import { animaCharged } from "../styles/magic/runicCharge";
 import { necroAdrenalineCost, necroCanCast } from "../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../styles/ranged/onHit";
 import { impatientProcChance, relentlessProcChance } from "../shared/perks";
@@ -29,10 +27,10 @@ export function costOf(state: RotationState, ability: AbilitySpec, tick: number)
     return necroAdrenalineCost(ability, state.necro, tick);
   }
   const listed = ability.adrenaline?.cost ?? 0;
-  // Flow (Sonic Wave): the next Magic ability costs X% less while the window
-  // is open. Defence/Constitution/specials never benefit (none are Magic).
+  // Flow (Sonic Wave): a flat adrenaline-point reduction while the window is
+  // open, never below zero. Defence/Constitution/specials never benefit.
   if (listed > 0 && ability.style === "magic" && tick < state.magicFx.flowUntilTick) {
-    return listed * (1 - state.magicFx.flowReductionPct / 100);
+    return Math.max(0, listed - state.magicFx.flowReduction);
   }
   return listed;
 }
@@ -62,9 +60,6 @@ export function castRejection(
   ability: AbilitySpec,
   candidate: number,
 ): string | null {
-  if (isMagicAbility(ability) && ability.requiresAnima && !animaCharged(state.magic, candidate)) {
-    return `${ability.id} requires an active Runic Charge at tick ${candidate}`;
-  }
   if (!necroCanCast(ability, state.necro, state.conjures, candidate)) {
     return `${ability.id} needs residual souls or an active conjure, ${state.necro.residualSouls} souls available at tick ${candidate}`;
   }

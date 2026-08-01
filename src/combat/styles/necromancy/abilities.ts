@@ -304,12 +304,15 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   {
     // Solo primary: finishing hit only. Channel 4×22–28% hits non-primaries only
     // (heal + 100% of heal on the finisher is multi-target sim territory).
-    // In-game this is a 5.4s channel; the finisher-only simplification also keeps
-    // GCD occupancy instead of declaring channelTicks.
+    // Wiki Blood Siphon: "Attack 5 times over 5.4s (9 ticks). Channelled." The
+    // single-target model keeps the 117–143% finisher only (at +9, the release
+    // tick, where the canonical clock lands it before the next cast); the 9-tick
+    // channel occupies the actor for its full duration either way.
     id: "blood_siphon",
     name: "Blood Siphon",
     style: "necromancy",
     category: "enhanced",
+    channelTicks: 9,
     hits: [{ band: { ...BLOOD_SIPHON_FINAL_BAND }, tickOffset: 9 }],
     adrenaline: { cost: 0 },
     cooldownSeconds: BLOOD_SIPHON_COOLDOWN_SECONDS,

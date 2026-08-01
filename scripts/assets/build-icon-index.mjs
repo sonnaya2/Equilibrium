@@ -64,6 +64,10 @@ for (const [slug, file] of Object.entries(bossBySlug)) {
 
 const bossSlugs = Object.keys(bossBySlug).sort();
 const skillSlugs = Object.keys(bySlug("skills")).sort();
+// League art often lands before the record describing it does, so these are
+// membership sets: art resolves by name as soon as a record names it.
+const relicSlugs = Object.keys(bySlug("relics")).sort();
+const blessingSlugs = Object.keys(bySlug("blessings")).sort();
 
 const body = `/** Generated from public/game by scripts/assets/build-icon-index.mjs - do not hand-edit. */
 export const UPGRADE_ICON_BY_SLUG: Record<string, string> = ${JSON.stringify(upgradeBySlug, null, 2)};
@@ -76,6 +80,10 @@ export const BOSS_ICON_SLUGS = new Set(${JSON.stringify(bossSlugs)});
 export const BOSS_ICON_EXT: Record<string, string> = ${JSON.stringify(bossExt, null, 2)};
 
 export const SKILL_ICON_SLUGS = new Set(${JSON.stringify(skillSlugs)});
+
+export const RELIC_ICON_SLUGS = new Set(${JSON.stringify(relicSlugs)});
+
+export const BLESSING_ICON_SLUGS = new Set(${JSON.stringify(blessingSlugs)});
 `;
 
 const formatted = await prettier.format(body, {
@@ -85,7 +93,8 @@ const formatted = await prettier.format(body, {
 
 const counts =
   `upgrades ${Object.keys(upgradeBySlug).length}, activities ${Object.keys(activityBySlug).length}, ` +
-  `bosses ${bossSlugs.length}, skills ${skillSlugs.length}`;
+  `bosses ${bossSlugs.length}, skills ${skillSlugs.length}, relics ${relicSlugs.length}, ` +
+  `blessings ${blessingSlugs.length}`;
 
 if (CHECK) {
   if (readFileSync(join(ROOT, OUT), "utf8") === formatted) {

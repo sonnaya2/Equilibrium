@@ -4,8 +4,10 @@
  */
 import {
   ACTIVITY_ICON_BY_SLUG,
+  BLESSING_ICON_SLUGS,
   BOSS_ICON_EXT,
   BOSS_ICON_SLUGS,
+  RELIC_ICON_SLUGS,
   SKILL_ICON_SLUGS,
   UPGRADE_ICON_BY_SLUG,
 } from "./dataIconIndex";
@@ -1663,6 +1665,23 @@ export function skillIconPath(skillIdOrName: string): string | null {
   const slug = slugifyIconLabel(raw);
   if (SKILL_ICON_SLUGS.has(slug)) return `/game/skills/${slug}.webp`;
   return null;
+}
+
+/**
+ * League Relic and Blessing plates, resolved by name.
+ *
+ * Most of this art landed before the record naming it did, so these are exact
+ * lookups against what is actually in public/game: art attaches the moment a
+ * record names it, and returns null until then rather than guessing a match.
+ */
+export function relicIconPath(name: string): string | null {
+  const slug = slugifyIconLabel(name.trim());
+  return slug && RELIC_ICON_SLUGS.has(slug) ? `/game/relics/${slug}.webp` : null;
+}
+
+export function blessingIconPath(name: string): string | null {
+  const slug = slugifyIconLabel(name.trim());
+  return slug && BLESSING_ICON_SLUGS.has(slug) ? `/game/blessings/${slug}.webp` : null;
 }
 
 /** Exact / alias / epithet boss plate only — no long-string containment. */

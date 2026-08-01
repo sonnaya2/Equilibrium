@@ -3,7 +3,7 @@
     "id": "equilibrium-blessing-abyssal-cinders",
     "label": "Abyssal Cinders",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Abyssal_Cinders",
+    "path": "public/game/blessings/abyssal-cinders",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -11,7 +11,7 @@
     "id": "equilibrium-blessing-adrenaline-junkie",
     "label": "Adrenaline Junkie",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Adrenaline_Junkie",
+    "path": "public/game/blessings/adrenaline-junkie",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -19,7 +19,7 @@
     "id": "equilibrium-blessing-avernic-rampage",
     "label": "Avernic Rampage",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Avernic_Rampage",
+    "path": "public/game/blessings/avernic-rampage",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -27,7 +27,7 @@
     "id": "equilibrium-blessing-barkscales",
     "label": "Barkscales",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Barkscales",
+    "path": "public/game/blessings/barkscales",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -35,23 +35,26 @@
     "id": "equilibrium-blessing-big-boned",
     "label": "Big Boned",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Big_Boned",
+    "path": "public/game/blessings/big-boned",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
   {
-    "id": "equilibrium-blessing-demon-s-mark",
+    "id": "equilibrium-blessing-demons-mark",
     "label": "Demon's Mark",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Demon's_Mark",
+    "path": "public/game/blessings/demons-mark",
     "provenance": "unverified-local",
-    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
+    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)",
+    "aliases": [
+      "equilibrium-blessing-demon-s-mark"
+    ]
   },
   {
     "id": "equilibrium-blessing-eternal-sustenance",
     "label": "Eternal Sustenance",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Eternal_Sustenance",
+    "path": "public/game/blessings/eternal-sustenance",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -59,7 +62,7 @@
     "id": "equilibrium-blessing-sacred-fervor",
     "label": "Sacred Fervor",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Sacred_Fervor",
+    "path": "public/game/blessings/sacred-fervor",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -67,7 +70,7 @@
     "id": "equilibrium-blessing-splash-zone",
     "label": "Splash Zone",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Splash_Zone",
+    "path": "public/game/blessings/splash-zone",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -75,7 +78,7 @@
     "id": "equilibrium-blessing-steadfast-will",
     "label": "Steadfast Will",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Steadfast_Will",
+    "path": "public/game/blessings/steadfast-will",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -83,17 +86,20 @@
     "id": "equilibrium-blessing-striking-light",
     "label": "Striking Light",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Striking_Light",
+    "path": "public/game/blessings/striking-light",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
   {
-    "id": "equilibrium-blessing-teragard-s-aegis",
+    "id": "equilibrium-blessing-teragards-aegis",
     "label": "Teragard's Aegis",
     "category": "leagues/equilibrium/blessings",
-    "path": "public/game/blessings/Teragard's_Aegis",
+    "path": "public/game/blessings/teragards-aegis",
     "provenance": "unverified-local",
-    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
+    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)",
+    "aliases": [
+      "equilibrium-blessing-teragard-s-aegis"
+    ]
   },
   {
     "id": "equilibrium-promo-1",
@@ -112,10 +118,18 @@
     "attribution": "Jagex Ltd."
   },
   {
+    "id": "equilibrium-relic-assassins-insight",
+    "label": "Assassin's Insight",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/assassins-insight",
+    "provenance": "unverified-local",
+    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
+  },
+  {
     "id": "equilibrium-relic-crystal-grace",
     "label": "Crystal Grace",
     "category": "leagues/equilibrium/relics/site",
-    "path": "public/game/relics/Crystal_Grace",
+    "path": "public/game/relics/crystal-grace",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -123,7 +137,23 @@
     "id": "equilibrium-relic-divine-druid",
     "label": "Divine Druid",
     "category": "leagues/equilibrium/relics/site",
-    "path": "public/game/relics/Divine_Druid",
+    "path": "public/game/relics/divine-druid",
+    "provenance": "unverified-local",
+    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
+  },
+  {
+    "id": "equilibrium-relic-golden-touch",
+    "label": "Golden Touch",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/golden-touch",
+    "provenance": "unverified-local",
+    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
+  },
+  {
+    "id": "equilibrium-relic-natures-network",
+    "label": "Nature's Network",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/natures-network",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -131,7 +161,7 @@
     "id": "equilibrium-relic-superheated",
     "label": "Superheated",
     "category": "leagues/equilibrium/relics/site",
-    "path": "public/game/relics/Superheated",
+    "path": "public/game/relics/superheated",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },
@@ -139,7 +169,15 @@
     "id": "equilibrium-relic-transmutation",
     "label": "Transmutation",
     "category": "leagues/equilibrium/relics/site",
-    "path": "public/game/relics/Transmutation",
+    "path": "public/game/relics/transmutation",
+    "provenance": "unverified-local",
+    "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
+  },
+  {
+    "id": "equilibrium-relic-voidwalker",
+    "label": "Voidwalker",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/voidwalker",
     "provenance": "unverified-local",
     "attribution": "Jagex Ltd. (Leagues II: Equilibrium reveal media)"
   },

@@ -13,7 +13,7 @@ import { canSelectElective, ELECTIVE_CAP, type BuildState, type RegionId } from 
 import { godTierAlignments, PATH_TIERS, type BlessingPath } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
 import { useBuild } from "@/league/useBuild";
-import { equipmentIconPath, regionCrestPath, styleIconPath } from "@/lib/gameArt";
+import { equipmentIconPath, regionCrestPath, relicIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "@/components/GameIcon";
 import { useLoadout } from "@/components/combat/useLoadout";
 import "./build-board.css";
@@ -98,17 +98,15 @@ const LOADOUT_DOLL: Array<EquipmentSlot | "style" | null> = [
   null,
 ];
 
-const RELIC_ICON: Record<string, string> = {
-  Survivalist: "/game/relics/survivalist.webp",
-  "Endless Harvest": "/game/relics/endless-harvest.webp",
-  "Golden Touch": "/game/relics/golden-touch.webp",
-};
-
-const RELIC_MONO: Record<string, string> = {
-  Survivalist: "SV",
-  "Endless Harvest": "EH",
-  "Golden Touch": "GT",
-};
+/** Initials for a relic with no plate yet, so an unrevealed tier still reads. */
+function relicMonogram(name: string): string {
+  const initials = name
+    .split(/\s+/)
+    .filter((word) => /^[A-Za-z]/.test(word))
+    .map((word) => word[0]!.toUpperCase())
+    .join("");
+  return initials.slice(0, 2) || "·";
+}
 
 function availLabel(value: string): string {
   if (value === "automatic_early") return "early";
@@ -124,11 +122,11 @@ function shortName(name: string): string {
 }
 
 function relicIcon(name: string): string | undefined {
-  return RELIC_ICON[name];
+  return relicIconPath(name) ?? undefined;
 }
 
 function relicMono(name: string): string {
-  return RELIC_MONO[name] ?? "·";
+  return relicMonogram(name);
 }
 
 function CharacterLoadout({

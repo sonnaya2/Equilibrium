@@ -1705,3 +1705,31 @@ export const SKILL_ICON_SLUGS = new Set([
   "thieving",
   "woodcutting",
 ]);
+
+export const RELIC_ICON_SLUGS = new Set([
+  "assassins-insight",
+  "crystal-grace",
+  "divine-druid",
+  "endless-harvest",
+  "golden-touch",
+  "natures-network",
+  "superheated",
+  "survivalist",
+  "transmutation",
+  "voidwalker",
+]);
+
+export const BLESSING_ICON_SLUGS = new Set([
+  "abyssal-cinders",
+  "adrenaline-junkie",
+  "avernic-rampage",
+  "barkscales",
+  "big-boned",
+  "demons-mark",
+  "eternal-sustenance",
+  "sacred-fervor",
+  "splash-zone",
+  "steadfast-will",
+  "striking-light",
+  "teragards-aegis",
+]);

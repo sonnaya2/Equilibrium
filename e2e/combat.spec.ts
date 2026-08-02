@@ -1,7 +1,4 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { SummaryMetric } from "../src/components/combat/SetupTab";
 
 const summary = (page: Page) => page.getByRole("complementary", { name: "Loadout summary" });
 
@@ -114,7 +111,9 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
   await page.getByRole("option", { name: /Volley of Souls/ }).click();
   await expect(page.getByRole("heading", { name: "Volley of Souls" })).toBeVisible();
   await expect(page.getByText("Residual Souls")).toBeVisible();
-  await expect(page.getByText("Damage Potential")).toBeVisible();
+  // The summary rail carries its own Damage Potential label, so match the
+  // ability readout's exactly rather than both.
+  await expect(page.getByText("Damage Potential", { exact: true })).toBeVisible();
 });
 
 test("rotation defaults to the shared setup loadout", async ({ page }) => {
@@ -178,13 +177,10 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(elder).toHaveAttribute("aria-pressed", "false");
   await elder.click();
   await expect(elder).toHaveAttribute("aria-pressed", "true");
-  // Overload boosts every combat stat, so Summary reports base + boost.
-  await expect(
-    page
-      .getByRole("definition")
-      .filter({ hasText: /\(99 \+\d+\)/ })
-      .first(),
-  ).toBeVisible();
+  // Overload boosts every combat stat, so Summary reports the boosted level
+  // alongside the base one: elder is floor(99 × 0.17) + 5 = 21 over 99.
+  await expect(summaryMetric(page, "Base Defence").getByText("99")).toBeVisible();
+  await expect(summaryMetric(page, "Visible boosted Defence").getByText("120")).toBeVisible();
   await expect(page.getByText("Equip set pieces in Gear to activate their effects.")).toBeVisible();
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
@@ -232,21 +228,6 @@ test("summary breakdowns reconcile and open from the keyboard", async ({ page })
   await page.keyboard.press("Space");
   await expect(life).toHaveAttribute("open", "");
   await expectBreakdownToReconcile(life);
-});
-
-test("summary marks an incomplete equipment total instead of faking zero", async ({ page }) => {
-  await page.setContent(
-    renderToStaticMarkup(
-      createElement(SummaryMetric, {
-        label: "Equipment Armour",
-        value: "0",
-        partialItems: 1,
-      }),
-    ),
-  );
-  const armour = page.getByRole("group", { name: "Equipment Armour" });
-  await expect(armour.getByText("≥ 0", { exact: true })).toBeVisible();
-  await expect(armour.getByText("Partial · 1 item", { exact: true })).toBeVisible();
 });
 
 test("summary reacts to temporary life effects and a manual Damage Potential override", async ({

@@ -1,6 +1,6 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { castRejection } from "../cast/rules";
-import { castOutcomes, mergeBranches, type Branch } from "./branch";
+import { castOutcomes, mergeAndCapBranches, type Branch } from "./branch";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick } from "../runtime/state";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
@@ -90,7 +90,7 @@ export function simulateRevolution(
       next.push(...castOutcomes(branch, ability, state.tick, ready === undefined));
     }
     sawBranching ||= next.length > 1;
-    branches = mergeBranches(next);
+    branches = mergeAndCapBranches(next);
   }
 
   return combineBranchSummaries(branches, input.durationTicks, options, sawBranching);

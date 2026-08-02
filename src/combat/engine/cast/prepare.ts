@@ -21,6 +21,7 @@ import {
 import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge";
 import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
+import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
 import { costOf, spendOf } from "./rules";
 import type { CastSnapshot } from "./snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -94,24 +95,28 @@ export function prepareCast(
 ): PreparedCast {
   const input = rt.input;
 
+  // Equipment-adjusted hit list (e.g. Masterwork spear bleed duration) before
+  // Bloodlust / other variants so extra hits keep the same bands and cadence.
+  // Shared with Quick via resolveAbilityWithEquipment — never mutates catalogues.
+  let working: AbilitySpec = resolveAbilityWithEquipment(ability, input.equipmentEffects);
+
   // Empowered variant resolution: the spend itself is recorded, not applied —
   // it lands atomically with the rest of the commit.
   const melee = isMeleeAbility(ability) ? ability : null;
-  let working: AbilitySpec = ability;
   let empowerMult = 1;
   let bloodlustSpend = 0;
   if (melee) {
     const stacks = rt.state.melee.bloodlust.stacks;
     if (melee.bloodlustScale && stacks >= melee.bloodlustScale.threshold) {
       working = {
-        ...ability,
-        hits: ability.hits.map((hit) => ({ ...hit, band: melee.bloodlustScale!.band })),
+        ...working,
+        hits: working.hits.map((hit) => ({ ...hit, band: melee.bloodlustScale!.band })),
       };
       bloodlustSpend = melee.bloodlustScale.threshold;
     } else if (melee.bloodlustExtraHits && stacks >= melee.bloodlustExtraHits.threshold) {
       working = {
-        ...ability,
-        hits: [...ability.hits, ...melee.bloodlustExtraHits.hits.map((hit) => ({ ...hit }))],
+        ...working,
+        hits: [...working.hits, ...melee.bloodlustExtraHits.hits.map((hit) => ({ ...hit }))],
       };
       bloodlustSpend = melee.bloodlustExtraHits.threshold;
     } else if (melee.bloodlustMissingHp && stacks >= melee.bloodlustMissingHp.threshold) {

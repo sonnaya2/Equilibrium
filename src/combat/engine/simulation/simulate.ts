@@ -14,7 +14,7 @@ export type {
   CastRng,
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
-import { castOutcomes, mergeBranches, type Branch } from "./branch";
+import { castOutcomes, mergeAndCapBranches, type Branch } from "./branch";
 import { castRejection } from "../cast/rules";
 import { performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
@@ -95,9 +95,9 @@ function stepManualAction(
         branched ||= outcomes.length > 1;
         next.push(...outcomes);
       }
-      pending = mergeBranches(next);
+      pending = mergeAndCapBranches(next);
     }
-    work = mergeBranches(done);
+    work = mergeAndCapBranches(done);
   }
 
   const out: Branch[] = [];
@@ -115,7 +115,7 @@ function stepManualAction(
     branched ||= outcomes.length > 1;
     out.push(...outcomes);
   }
-  return { branches: out, branched };
+  return { branches: mergeAndCapBranches(out), branched };
 }
 
 /**
@@ -153,7 +153,7 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
       next.push(...step.branches);
       sawBranching ||= step.branched;
     }
-    branches = mergeBranches(next);
+    branches = mergeAndCapBranches(next);
   }
 
   return combineBranchSummaries(branches, undefined, options, sawBranching);

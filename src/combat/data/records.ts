@@ -94,6 +94,8 @@ export type ItemPassiveId =
   | "stalker-ring"
   | "channeller-ring"
   | "defender-accuracy"
+  /** Masterwork Spear of Annihilation: +50% eligible melee bleed duration (floor). */
+  | "masterwork-spear-bleed-extension"
   // Recorded but not modelled: both are stochastic with their own internal
   // cooldown, and neither has a settled place in the modifier pipeline.
   | "asylum-surgeon"

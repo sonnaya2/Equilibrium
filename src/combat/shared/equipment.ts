@@ -455,6 +455,14 @@ function passivePresentation(
         effects: ["Defenders, reprisers, and rebounders have +3% accuracy."],
         support: "modeled",
       };
+    case "masterwork-spear-bleed-extension":
+      return {
+        label: "Masterwork Spear of Annihilation",
+        effects: [
+          "Extends eligible melee bleed abilities by 50%, rounded down to whole additional hits.",
+        ],
+        support: "modeled",
+      };
     case "asylum-surgeon":
       return {
         label: "Asylum surgeon's ring",

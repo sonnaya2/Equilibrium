@@ -3,7 +3,7 @@ import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { commitCast, prepareSimulationCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
-import { mergeBranches, snapshotRuntime } from "./branch";
+import { capBranches, mergeAndCapBranches, mergeBranches, snapshotRuntime } from "./branch";
 import type { CastContextInput } from "./contracts";
 import { rotationOf } from "./contracts";
 import { createCastContext, simulate, type SimulateInput } from "./simulate";
@@ -273,6 +273,40 @@ describe("snapshotRuntime shares no mutable collection", () => {
         { weight: 0.5, rt: b },
       ]),
     ).toHaveLength(2);
+  });
+});
+
+describe("capBranches", () => {
+  it("keeps the heaviest branches and folds discarded weight into the top", () => {
+    const base = createRuntime(meleeInput);
+    const mk = (weight: number): { weight: number; rt: ReturnType<typeof createRuntime> } => ({
+      weight,
+      rt: snapshotRuntime(base),
+    });
+    // Distinct endTick so merge does not collapse them first.
+    const branches = [0.4, 0.3, 0.15, 0.1, 0.05].map((w, i) => {
+      const b = mk(w);
+      b.rt.endTick = i;
+      return b;
+    });
+    const capped = capBranches(branches, 2);
+    expect(capped).toHaveLength(2);
+    expect(capped[0]!.weight).toBeCloseTo(0.4 + 0.15 + 0.1 + 0.05);
+    expect(capped[1]!.weight).toBeCloseTo(0.3);
+    const mass = capped.reduce((s, b) => s + b.weight, 0);
+    expect(mass).toBeCloseTo(1);
+  });
+
+  it("mergeAndCapBranches stays within MAX_LIVE_BRANCHES", () => {
+    const base = createRuntime(meleeInput);
+    const many = Array.from({ length: 100 }, (_, i) => {
+      const rt = snapshotRuntime(base);
+      rt.endTick = i;
+      return { weight: 1 / 100, rt };
+    });
+    const out = mergeAndCapBranches(many, 16);
+    expect(out.length).toBeLessThanOrEqual(16);
+    expect(out.reduce((s, b) => s + b.weight, 0)).toBeCloseTo(1);
   });
 });
 

@@ -92,6 +92,14 @@ export interface AbilitySpec {
    */
   supportStatus?: SupportStatus;
   supportNote?: string;
+  /**
+   * Bleed-tail duration extension from a named equipment passive (e.g. Masterwork
+   * Spear of Annihilation). Declared on the ability; scheduling code reads this
+   * metadata and never hardcodes ability ids for eligibility.
+   */
+  bleedDurationExtension?: {
+    equipmentPassive: "masterwork-spear-bleed-extension";
+  };
 }
 
 export interface AbilityResult {

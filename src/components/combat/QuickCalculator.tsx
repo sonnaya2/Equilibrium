@@ -14,6 +14,7 @@ import {
   VOLLEY_MIN_SOULS,
   volleyOfSouls,
 } from "@/combat/styles/necromancy/abilities";
+import { resolveAbilityWithEquipment } from "@/combat/shared/bleedDurationExtension";
 import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
@@ -119,10 +120,15 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
       : STYLE_ABILITIES[activeStyle].filter((a) => a.hits.length > 0);
   const ability = palette.find((a) => a.id === abilityId) ?? palette[0];
   const selectedId = ability?.id;
-  const calculatedAbility =
-    useBuild && ability?.id === "asphyxiate" && (setup.tumekensPieces ?? 0) >= 4
-      ? resplendentAsphyxiate(ability)
+  // Same equipment hit resolution as prepareCast / rotation (MW spear bleeds, etc.).
+  const equippedAbility =
+    useBuild && ability
+      ? resolveAbilityWithEquipment(ability, setup.equipmentEffects)
       : ability;
+  const calculatedAbility =
+    useBuild && equippedAbility?.id === "asphyxiate" && (setup.tumekensPieces ?? 0) >= 4
+      ? resplendentAsphyxiate(equippedAbility)
+      : equippedAbility;
   const crit = {
     chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
     guaranteed: (calculatedAbility as RangedAbilitySpec | undefined)?.guaranteedCrit,

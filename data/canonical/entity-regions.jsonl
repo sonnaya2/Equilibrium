@@ -2211,10 +2211,10 @@
 {"entityId":"item:masterwork-ranged-vambraces","ordinal":2,"regionId":"anachronia","relation":"required"}
 {"entityId":"item:masterwork-ranged-vambraces","regionId":"asgarnia","relation":"required"}
 {"entityId":"item:masterwork-ranged-vambraces","ordinal":1,"regionId":"tirannwn","relation":"required"}
-{"entityId":"item:masterwork-spear-of-annihilation","ordinal":3,"regionId":"asgarnia","relation":"required"}
+{"entityId":"item:masterwork-spear-of-annihilation","ordinal":2,"regionId":"asgarnia","relation":"required"}
 {"entityId":"item:masterwork-spear-of-annihilation","ordinal":1,"regionId":"forinthry","relation":"required"}
 {"entityId":"item:masterwork-spear-of-annihilation","regionId":"kandarin","relation":"required"}
-{"entityId":"item:masterwork-spear-of-annihilation","ordinal":2,"regionId":"morytania","relation":"required"}
+{"entityId":"item:masterwork-spear-of-annihilation","ordinal":3,"regionId":"morytania","relation":"required"}
 {"entityId":"item:masterwork-staff","regionId":"asgarnia","relation":"hint","requirementGroup":"all_required"}
 {"entityId":"item:masterwork-staff","regionId":"asgarnia","relation":"required"}
 {"entityId":"item:masterwork-staff","regionId":"desert","relation":"hint","requirementGroup":"all_required"}

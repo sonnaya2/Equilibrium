@@ -120,6 +120,40 @@ export function mergeBranches(branches: readonly Branch[]): Branch[] {
 }
 
 /**
+ * Hard cap on live probability branches after merge. Impatient + Relentless +
+ * Avernic (and similar) can otherwise explode over a long Revolution horizon
+ * even when equivalent branches merge. Keep the heaviest survivors and fold
+ * discarded weight into the top branch so total probability mass is preserved.
+ */
+export const MAX_LIVE_BRANCHES = 64;
+
+export function capBranches(
+  branches: readonly Branch[],
+  max: number = MAX_LIVE_BRANCHES,
+): Branch[] {
+  if (!Number.isInteger(max) || max < 1) {
+    throw new RangeError(`capBranches: max must be a positive integer, got ${max}`);
+  }
+  if (branches.length <= max) return [...branches];
+  const sorted = [...branches].sort((a, b) => b.weight - a.weight);
+  const keep = sorted.slice(0, max).map((b) => ({ ...b }));
+  let discardedWeight = 0;
+  for (let i = max; i < sorted.length; i++) discardedWeight += sorted[i]!.weight;
+  if (discardedWeight > 0) {
+    keep[0] = { ...keep[0]!, weight: keep[0]!.weight + discardedWeight };
+  }
+  return keep;
+}
+
+/** Merge equivalents, then cap live branch count. */
+export function mergeAndCapBranches(
+  branches: readonly Branch[],
+  max: number = MAX_LIVE_BRANCHES,
+): Branch[] {
+  return capBranches(mergeBranches(branches), max);
+}
+
+/**
  * Run one cast with its state-changing RNG enumerated. The cast is prepared
  * ONCE on the branch's own runtime (canonical advance + validation + prepared
  * cast), the RNG point is read from that prepared cast, and each outcome

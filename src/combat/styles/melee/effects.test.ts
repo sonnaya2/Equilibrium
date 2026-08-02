@@ -127,6 +127,16 @@ describe("Greater Fury and Chaos Roar", () => {
     expect(s.ok).toBe(true);
     expect(s.casts[1].result.expected).toBeCloseTo(1799.7512437810944, 10);
   });
+
+  it("Equilibrium suppresses Greater Fury's guaranteed crit", () => {
+    const s = simulate({
+      ...baseInput,
+      crit: { chance: 1, disabled: true },
+      rotation: rotationOf("greater_fury", "attack"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[1].result.hits[0].critChance).toBe(0);
+  });
 });
 
 describe("greater_barge idle + Endless Assault", () => {

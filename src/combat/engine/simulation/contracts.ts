@@ -4,6 +4,7 @@ import type { AbilityResult, AbilitySpec } from "../../pipeline/calculateAbility
 import type { CombatContext, CombatModifier } from "../../types";
 import type { ResolvedEvent } from "../runtime/events";
 import type { RotationState } from "../runtime/state";
+import type { ActiveEquipmentEffects } from "../../shared/equipment";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {
@@ -64,12 +65,12 @@ export interface SimulateInput {
    * Does not apply to greater variants.
    */
   plantedFeet?: boolean;
-  /** Effective Tumeken's resplendence piece count (0-5). */
+  /** Effective Tumeken count (0-5); its 5.4s activation is assumed complete before tick 0. */
   tumekensPieces?: number;
   /** False when another mechanic (Equilibrium) disables all set crit chance. */
   tumekensCritEnabled?: boolean;
-  /** Effective Vestments of havoc piece count (0-4). */
-  vestmentsPieces?: number;
+  /** Set bonuses already active before tick 0 for this fixed loadout. */
+  equipmentEffects?: ActiveEquipmentEffects;
   procs?: ProcRules;
   /**
    * Mult on conjure spirit *basic autos* only (not putrid poison, not commands).

@@ -128,6 +128,20 @@ describe("RNG branches merge to the weighted mean", () => {
     const s = simulate({ ...meleeInput, rotation: rotationOf("attack", "attack") });
     expect(s.rng).toBeUndefined();
   });
+
+  it("keeps a long Impatient and Relentless rotation bounded", () => {
+    const cycle = ["attack", "attack", "attack", "attack", "assault"];
+    const rotation = rotationOf(...Array.from({ length: 10 }, () => cycle).flat());
+    const stochastic = simulate({
+      ...meleeInput,
+      adrenaline: { impatientRank: 4, relentlessRank: 5 },
+      rotation,
+    });
+    const plain = simulate({ ...meleeInput, rotation });
+    expect(stochastic.ok).toBe(true);
+    expect(stochastic.totalExpected).toBeCloseTo(plain.totalExpected, 8);
+    expect(stochastic.rng!.terminalClasses).toBeLessThan(64);
+  });
 });
 
 describe("Invigorating / Impatient adrenaline", () => {

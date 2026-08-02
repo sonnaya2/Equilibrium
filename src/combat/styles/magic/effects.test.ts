@@ -87,7 +87,7 @@ describe("sunshine damage buff", () => {
 
 describe("instability lightning surge", () => {
   it("buff lasts 50 ticks from cast", () => {
-    const state = activateInstability(10);
+    const state = activateInstability(10, 3);
     expect(state.expiresAtTick).toBe(10 + INSTABILITY_DURATION_TICKS);
     expect(instabilityActive(state, 10)).toBe(true);
     expect(instabilityActive(state, 59)).toBe(true);

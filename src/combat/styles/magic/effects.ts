@@ -226,12 +226,14 @@ export const LIGHTNING_SURGE_TICK_DELAY = 1;
 export interface InstabilityState {
   /** Tick the buff expires on; 0 = inactive. Active while tick < expiresAtTick. */
   expiresAtTick: number;
+  /** The granting cast cannot trigger its own Lightning Surge. */
+  grantedByCast: number;
 }
 
-export const newInstability = (): InstabilityState => ({ expiresAtTick: 0 });
+export const newInstability = (): InstabilityState => ({ expiresAtTick: 0, grantedByCast: -1 });
 
-export function activateInstability(tick: number): InstabilityState {
-  return { expiresAtTick: tick + INSTABILITY_DURATION_TICKS };
+export function activateInstability(tick: number, castSeq: number): InstabilityState {
+  return { expiresAtTick: tick + INSTABILITY_DURATION_TICKS, grantedByCast: castSeq };
 }
 
 export function instabilityActive(state: InstabilityState, tick: number): boolean {

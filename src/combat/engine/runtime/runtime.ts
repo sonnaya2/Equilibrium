@@ -46,7 +46,9 @@ export interface SimulationRuntime {
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
-  const adrenalineCap = (input.vestmentsPieces ?? 0) >= 4 ? 120 : ADRENALINE_CAP;
+  const adrenalineCap = input.equipmentEffects?.vestments.increasedAdrenalineCap
+    ? 120
+    : ADRENALINE_CAP;
   if (
     input.startingAdrenaline != null &&
     (!Number.isFinite(input.startingAdrenaline) ||

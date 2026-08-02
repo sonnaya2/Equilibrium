@@ -53,6 +53,29 @@ describe("normalizeLoadout", () => {
     expect(next.startingAdrenaline).toBe(120);
   });
 
+  it("clamps saved adrenaline when Vestments loses a piece or the loadout switches weapon style", () => {
+    const pieces = {
+      helmet: "item:vestments-of-havoc-hood",
+      body: "item:vestments-of-havoc-robe-top",
+      legs: "item:vestments-of-havoc-robe-bottom",
+      boots: "item:vestments-of-havoc-boots",
+    } as const;
+    expect(
+      normalizeLoadout({
+        style: "melee",
+        startingAdrenaline: 120,
+        equipmentSlots: { ...pieces, boots: undefined },
+      }).startingAdrenaline,
+    ).toBe(100);
+    expect(
+      normalizeLoadout({
+        style: "melee",
+        startingAdrenaline: 120,
+        equipmentSlots: { ...pieces, mainhand: "item:seismic-wand" },
+      }).startingAdrenaline,
+    ).toBe(100);
+  });
+
   it("clamps manual Tectonic pieces to the three-piece set", () => {
     expect(normalizeLoadout({ perks: { tectonicPieces: 5 } }).perks.tectonicPieces).toBe(3);
   });

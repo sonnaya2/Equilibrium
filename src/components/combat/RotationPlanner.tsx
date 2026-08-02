@@ -96,7 +96,7 @@ export function RotationPlanner() {
           base: setup.base,
           level: setup.level,
           accuracy: setup.dp,
-          crit: { chance: setup.simulationCritChance },
+          crit: { chance: setup.simulationCritChance, disabled: setup.critsDisabled },
           abilities: ALL_ABILITIES,
           rotation: rotationOf(...queue),
           modifiers: setup.globalModifiers,
@@ -107,7 +107,7 @@ export function RotationPlanner() {
           conjureDurationMult: setup.conjureDurationMult,
           tumekensPieces: setup.tumekensPieces,
           tumekensCritEnabled: setup.tumekensCritEnabled,
-          vestmentsPieces: setup.vestmentsPieces,
+          equipmentEffects: setup.equipmentEffects,
           targetHpPercent: loadout.target?.hpPercent,
           cap: setup.cap,
           startingAdrenaline: setup.startingAdrenaline,
@@ -154,6 +154,7 @@ export function RotationPlanner() {
     attackLevel: Math.min(Math.max(1, level), 145),
     dp: Math.min(Math.max(0, accuracy), 100) / 100,
     critChance: Math.min(Math.max(0, critChance), 100) / 100,
+    critsDisabled: false,
     simulationCritChance: Math.min(Math.max(0, critChance), 100) / 100,
     critDamageBonus: 0,
     cap: buildStats.cap,
@@ -171,6 +172,7 @@ export function RotationPlanner() {
     weaponConfiguration: manualCombatStyle === "necromancy" ? "necromancy" : "twohand",
     globalModifiers: [],
     castModifiersFor: () => [],
+    equipmentEffects: buildStats.equipmentEffects,
   };
   const activeStats = useBuild ? buildStats : manualStats;
 

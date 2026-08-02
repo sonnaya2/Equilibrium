@@ -29,6 +29,8 @@ export interface CritLayers {
   damageBonus?: number;
   /** Skips the chance roll. */
   guaranteed?: boolean;
+  /** Prevents all critical strikes, including guarantees and chance bonuses. */
+  disabled?: boolean;
   /** False = this hit cannot crit at all (default for bleed tails). */
   eligible?: boolean;
 }
@@ -45,6 +47,7 @@ export function baseCritDamageMultiplier(level: number, damageBonus = 0): number
 
 export function rollsCrit(layers: CritLayers, roll: number): boolean {
   if (layers.eligible === false) return false;
+  if (layers.disabled) return false;
   if (layers.guaranteed) return true;
   return roll < layers.chance;
 }
@@ -52,6 +55,7 @@ export function rollsCrit(layers: CritLayers, roll: number): boolean {
 /** Chance-weighted crit probability for expectation math. */
 export function critProbability(layers: CritLayers): number {
   if (layers.eligible === false) return 0;
+  if (layers.disabled) return 0;
   if (layers.guaranteed) return 1;
   return Math.min(1, Math.max(0, layers.chance));
 }

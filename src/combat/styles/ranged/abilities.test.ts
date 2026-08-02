@@ -196,4 +196,13 @@ describe("ranged ability data", () => {
     });
     expect(s.casts[0].result.expected).toBeCloseTo(3299.7506234413963, 10);
   });
+
+  it("Equilibrium suppresses Shadow Tendrils' guaranteed crit", () => {
+    const s = simulate({
+      ...rangedInput,
+      crit: { chance: 1, disabled: true },
+      rotation: rotationOf("shadow_tendrils"),
+    });
+    expect(s.casts[0].result.hits[0].critChance).toBe(0);
+  });
 });

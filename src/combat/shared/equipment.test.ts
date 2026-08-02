@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  activeEquipmentEffects,
   deathdealer90SetFacts,
   equipmentSetById,
   equippedSetCounts,
@@ -16,6 +17,25 @@ import {
 } from "./equipment";
 
 describe("shared/equipment set effects", () => {
+  it("makes the pre-activated static-loadout model explicit", () => {
+    const effects = activeEquipmentEffects({
+      style: "melee",
+      equipmentIds: [
+        "item:vestments-of-havoc-hood",
+        "item:vestments-of-havoc-robe-top",
+        "item:vestments-of-havoc-robe-bottom",
+        "item:vestments-of-havoc-boots",
+      ],
+    });
+    expect(effects.activation).toBe("pre-activated-static-loadout");
+    expect(effects.vestments).toMatchObject({
+      pieces: 4,
+      heraldOfChaos: true,
+      berserkExtension: true,
+      increasedAdrenalineCap: true,
+    });
+  });
+
   it("tectonic grants +1% crit chance per piece, elite +2%", () => {
     expect(tectonicSet(3).critChanceBonus).toBeCloseTo(0.03, 10);
     expect(tectonicSet(3, true).critChanceBonus).toBeCloseTo(0.06, 10);

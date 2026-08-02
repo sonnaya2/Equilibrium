@@ -4,6 +4,7 @@ import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effe
 import { spendDeathspore } from "../../../styles/ranged/onHit";
 import { gainAdrenaline, patchRanged, spendAdrenaline } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
+import { vestmentsUltimateEligible } from "../../../shared/equipment";
 
 /**
  * Adrenaline and free-cast resources for one cast, in sourced order: gain
@@ -63,7 +64,7 @@ export function applyCastResources(fx: CastEffectContext): void {
     });
   }
 
-  if ((input.vestmentsPieces ?? 0) >= 2 && ability.category === "ultimate") {
+  if (vestmentsUltimateEligible(input.equipmentEffects, ability)) {
     if (candidate < rt.state.vestmentsAdrenalineUntilTick) {
       rt.state = gainAdrenaline({ ...rt.state, vestmentsAdrenalineUntilTick: 0 }, 20);
     } else {

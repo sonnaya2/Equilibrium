@@ -10,6 +10,7 @@ import {
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
 import {
+  activeEquipmentEffects,
   equippedSetCounts,
   effectiveTumekenPieces,
   isWeaponAccuracySlot,
@@ -20,6 +21,7 @@ import {
   setEffectsSummary,
   sumEquipmentBonuses,
   sumNonWeaponAccuracy,
+  type ActiveEquipmentEffects,
 } from "@/combat/shared/equipment";
 import {
   prayerBoostedStyleLevel,
@@ -55,6 +57,7 @@ export interface CalcStats {
   attackLevel: number;
   dp: number;
   critChance: number;
+  critsDisabled: boolean;
   /** Crit chance for the simulator before land-time Tumeken Sunshine bonus. */
   simulationCritChance: number;
   critDamageBonus: number;
@@ -87,7 +90,7 @@ export interface CalcStats {
   conjureDurationMult?: number;
   tumekensPieces?: number;
   tumekensCritEnabled?: boolean;
-  vestmentsPieces?: number;
+  equipmentEffects: ActiveEquipmentEffects;
 }
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -348,7 +351,10 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   const tumekensPieces = effectiveTumekenPieces(setCounts, {
     tumekensPieces: loadout.perks.tumekensPieces,
   });
-  const vestmentsPieces = Math.min(4, setCounts.get("vestments-of-havoc") ?? 0);
+  const equipmentEffects = activeEquipmentEffects({
+    style: loadout.style,
+    equipmentSlots: loadout.equipmentSlots,
+  });
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
@@ -377,7 +383,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     loadout.perks.equilibrium > 0
       ? 0
       : clamp01(loadout.critChance / 100 + biting + simulationSetCrit);
-  const maxAdrenaline = vestmentsPieces >= 4 ? 120 : 100;
+  const maxAdrenaline = equipmentEffects.vestments.increasedAdrenalineCap ? 120 : 100;
 
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet — structure ready).
@@ -429,6 +435,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     attackLevel,
     dp,
     critChance,
+    critsDisabled: loadout.perks.equilibrium > 0,
     simulationCritChance,
     critDamageBonus: 0,
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
@@ -484,6 +491,6 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     }),
     tumekensPieces,
     tumekensCritEnabled: loadout.perks.equilibrium === 0,
-    vestmentsPieces,
+    equipmentEffects,
   };
 }

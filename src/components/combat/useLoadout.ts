@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
-import { equippedSetCounts } from "@/combat/shared/equipment";
+import { activeEquipmentEffects } from "@/combat/shared/equipment";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
@@ -381,8 +381,10 @@ export function normalizeLoadout(value: unknown): Loadout {
     : [];
   const slotted = new Set(equipmentIdList(equipmentSlots));
   const unlocks = legacyIds.filter((id) => !slotted.has(id));
-  const startingAdrenalineCap =
-    (equippedSetCounts({ equipmentSlots }).get("vestments-of-havoc") ?? 0) >= 4 ? 120 : 100;
+  const startingAdrenalineCap = activeEquipmentEffects({ style, equipmentSlots }).vestments
+    .increasedAdrenalineCap
+    ? 120
+    : 100;
 
   return {
     style,

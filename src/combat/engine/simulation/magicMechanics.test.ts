@@ -122,11 +122,15 @@ describe("Channelled Might", () => {
     for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
     const castTick = ctx.getState().tick;
     ctx.performCast(ctx.byId.get("asphyxiate")!, castTick, false);
-    const cast = ctx.finish().casts.at(-1)!;
+    expect(ctx.getState().tick).toBe(castTick + 8);
+    ctx.performCast(attack, ctx.getState().tick, false);
+    const summary = ctx.finish();
+    const cast = summary.casts.at(-2)!;
     expect(cast.abilityId).toBe("asphyxiate");
     expect(cast.result.hits).toHaveLength(8);
     expect(cast.result.hits.every((hit) => hit.expected === 780)).toBe(true);
     expect(ctx.getState().magic.channelledMight.startsAtTick).toBe(castTick + 8);
+    expect(summary.casts.at(-1)!.tick).toBe(castTick + 8);
   });
 
   it("Tumeken set(5) grants +35% Channelled Might for 9 seconds", () => {
@@ -141,6 +145,19 @@ describe("Channelled Might", () => {
       expiresAtTick: castTick + 23,
       critDamageBonus: 0.35,
     });
+  });
+
+  it("applies Channelled Might to the first hit after transformed Asphyxiate", () => {
+    const ctx = createCastContext({
+      ...magicInput,
+      crit: { chance: 0, guaranteed: true },
+      tumekensPieces: 4,
+    });
+    const attack = ctx.byId.get("magic_attack")!;
+    for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    ctx.performCast(ctx.byId.get("asphyxiate")!, ctx.getState().tick, false);
+    ctx.performCast(attack, ctx.getState().tick, false);
+    expect(ctx.finish().casts.at(-1)!.result.hits[0].expected).toBeCloseTo(1649.5273631840796, 10);
   });
 
   it("Tumeken set(3) adds crit only while another cast's Sunshine is active", () => {

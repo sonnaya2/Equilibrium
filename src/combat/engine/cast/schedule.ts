@@ -1,6 +1,4 @@
-import { critProbability } from "../../core/critical";
 import type { AbilityHit } from "../../pipeline/calculateAbility";
-import { instabilityActive, LIGHTNING_SURGE_TICK_DELAY } from "../../styles/magic/effects";
 import {
   COMMAND_REQUIRES_CONJURE,
   COMMAND_SKELETON_EXPIRY_TAIL_TICKS,
@@ -8,7 +6,7 @@ import {
 import { isNecromancyAbility } from "../../styles/necromancy/abilities";
 import type { PreparedCast } from "./prepare";
 import type { CastRecord } from "../simulation/contracts";
-import { resolveCastHit, resolveDerivedHit, resolveLightningSurge } from "../resolution";
+import { resolveCastHit, resolveDerivedHit } from "../resolution";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 
 /**
@@ -80,6 +78,9 @@ export function scheduleCastEvents(
       cancelOwner: castSeq,
       ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
       ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
+      ...(ability.style === "magic" && !isDot && hitSpec.critEligible !== false
+        ? { lightningSurge: { critLayers: snap.critLayers, baseMods: snap.baseMods } }
+        : {}),
       resolve: (eventRt, at) =>
         resolveCastHit(eventRt, at, hitSpec, hitIndex, ability, snap, isDot, prepared.channelAsDot),
     });
@@ -105,40 +106,6 @@ export function scheduleCastEvents(
         resolve: (eventRt) => resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct),
       });
     }
-  }
-
-  // Instability: Lightning Surge on Magic crits while the buff is active. The
-  // granting cast's own hits predate the buff and never fire a surge (checked
-  // here at cast time, before the grant in castEffects). Surge damage resolves
-  // at its own land tick from the source hit's crit chance.
-  if (
-    ability.style === "magic" &&
-    working.hits.length > 0 &&
-    instabilityActive(rt.state.magic.instability, candidate)
-  ) {
-    working.hits.forEach((hitSpec, hitIndex) => {
-      if (hitSpec.critEligible === false) return;
-      if (
-        critProbability({ ...snap.critLayers, eligible: true }) <= 0 &&
-        ((rt.input.tumekensPieces ?? 0) < 3 || rt.input.tumekensCritEnabled === false)
-      ) {
-        return;
-      }
-      const sourceSeq = hitSeqs[hitIndex]!;
-      scheduleEvent(rt, {
-        tick: candidate + (hitSpec.tickOffset ?? 0) + LIGHTNING_SURGE_TICK_DELAY,
-        family: "proc",
-        abilityId: ability.id,
-        sourceCast: castSeq,
-        hitIndex,
-        attached: false,
-        procEligible: false,
-        recursionAllowed: false,
-        cancelOwner: castSeq,
-        resolve: (eventRt, at) =>
-          resolveLightningSurge(eventRt, at, sourceSeq, castSeq, snap.critLayers, snap.baseMods),
-      });
-    });
   }
 
   return record;

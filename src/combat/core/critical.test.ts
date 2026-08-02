@@ -35,6 +35,7 @@ describe("critical", () => {
 
   it("keeps guaranteed, eligibility and chance as separate layers", () => {
     expect(rollsCrit({ chance: 0, guaranteed: true }, 0.999)).toBe(true);
+    expect(rollsCrit({ chance: 1, guaranteed: true, disabled: true }, 0)).toBe(false);
     expect(rollsCrit({ chance: 1, eligible: false }, 0)).toBe(false);
     expect(rollsCrit({ chance: 0.25 }, 0.2)).toBe(true);
     expect(rollsCrit({ chance: 0.25 }, 0.3)).toBe(false);
@@ -42,6 +43,7 @@ describe("critical", () => {
 
   it("reports expectation probability", () => {
     expect(critProbability({ chance: 0.1, guaranteed: true })).toBe(1);
+    expect(critProbability({ chance: 1, guaranteed: true, disabled: true })).toBe(0);
     expect(critProbability({ chance: 1, eligible: false })).toBe(0);
     expect(critProbability({ chance: 0.1 })).toBeCloseTo(0.1);
   });

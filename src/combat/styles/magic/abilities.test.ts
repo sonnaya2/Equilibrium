@@ -149,6 +149,17 @@ describe("magic ability data", () => {
     expect(r.adrenalineDelta).toBe(-25);
   });
 
+  it("Equilibrium suppresses Smoke Tendrils' guaranteed crits", () => {
+    const smoke = byId("smoke_tendrils");
+    const r = calculateAbility(smoke, {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 1, guaranteed: smoke.guaranteedCrit, disabled: true },
+    });
+    expect(r.hits.every((hit) => hit.critChance === 0)).toBe(true);
+  });
+
   it("effect notes remain sourced; no orphan average-only stubs for promoted ids", () => {
     for (const e of MAGIC_EFFECTS) {
       expect(e.source.verifiedAt, e.id).toBeTruthy();

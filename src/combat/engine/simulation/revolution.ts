@@ -26,6 +26,11 @@ export function simulateRevolution(
     { weight: 1, rt: createRuntime({ ...input, horizonTicks: input.durationTicks }) },
   ];
   let sawBranching = false;
+  const offGcd = input.bar.find((ability) => ability.offGcd);
+  if (offGcd) {
+    branches[0]!.error = `${offGcd.name} is off-GCD and cannot be placed on a Revolution bar; trigger it manually`;
+    return combineBranchSummaries(branches, input.durationTicks, options, false);
+  }
   const selectedGroups = new Map<string, string>();
   for (const ability of input.bar) {
     if (!ability.replacementGroup) continue;

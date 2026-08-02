@@ -5,7 +5,7 @@ import {
   MASTERWORK_WEAPONS_WIKI_2025_05_27,
 } from "../data/sources";
 import type { EquipmentBonuses, EquipmentSlot } from "../data/records";
-import type { CombatModifier, SourceReference } from "../types";
+import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
 
 /**
@@ -108,6 +108,49 @@ export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, nu
   for (const id of Object.values(loadout.equipmentSlots ?? {})) add(id);
   for (const id of loadout.equipmentIds ?? []) add(id);
   return counts;
+}
+
+export const EQUIPMENT_SET_ACTIVATION = "pre-activated-static-loadout" as const;
+
+export interface ActiveEquipmentEffects {
+  activation: typeof EQUIPMENT_SET_ACTIVATION;
+  vestments: {
+    pieces: number;
+    heraldOfChaos: boolean;
+    berserkExtension: boolean;
+    increasedAdrenalineCap: boolean;
+  };
+}
+
+/** Active set effects for the fixed loadout the simulator starts with at tick 0. */
+export function activeEquipmentEffects(
+  loadout: LoadoutEquipmentView & { style?: CombatStyle },
+): ActiveEquipmentEffects {
+  const pieces = Math.min(4, equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0);
+  const weaponId = loadout.equipmentSlots?.twohand ?? loadout.equipmentSlots?.mainhand;
+  const meleeWeapon = weaponId
+    ? equipmentById(weaponId)?.style === "melee"
+    : loadout.style === "melee";
+  return {
+    activation: EQUIPMENT_SET_ACTIVATION,
+    vestments: {
+      pieces,
+      heraldOfChaos: meleeWeapon && pieces >= 2,
+      berserkExtension: meleeWeapon && pieces >= 3,
+      increasedAdrenalineCap: meleeWeapon && pieces >= 4,
+    },
+  };
+}
+
+export function vestmentsUltimateEligible(
+  effects: ActiveEquipmentEffects | undefined,
+  ability: { style: CombatStyle; category: string },
+): boolean {
+  return (
+    effects?.vestments.heraldOfChaos === true &&
+    ability.style === "melee" &&
+    ability.category === "ultimate"
+  );
 }
 
 export type SetEffectSupport = "modeled" | "not-modeled" | "outgoing-only" | "none";

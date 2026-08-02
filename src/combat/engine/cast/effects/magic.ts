@@ -47,7 +47,9 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     });
   }
   if (ability.appliesEffect === "instability") {
-    rt.state = patchMagic(rt.state, { instability: activateInstability(candidate) });
+    rt.state = patchMagic(rt.state, {
+      instability: activateInstability(candidate, fx.prepared.snap.castSeq),
+    });
   }
 
   if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {

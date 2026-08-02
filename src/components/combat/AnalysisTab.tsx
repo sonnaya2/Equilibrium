@@ -54,6 +54,7 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
     crit: {
       chance: stats.critChance,
       guaranteed: (working as RangedAbilitySpec).guaranteedCrit,
+      disabled: stats.critsDisabled,
     },
     modifiers: stats.castModifiersFor(working),
     context: { style },

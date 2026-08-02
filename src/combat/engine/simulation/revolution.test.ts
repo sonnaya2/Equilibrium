@@ -118,6 +118,20 @@ describe("specFromRecord", () => {
 });
 
 describe("simulateRevolution", () => {
+  it("rejects off-GCD utility abilities with a useful error", () => {
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      bar: [abilitySpec("runic_charge")],
+      style: "magic",
+      durationTicks: 30,
+    });
+    expect(s.ok).toBe(false);
+    expect(s.error).toContain("Runic Charge is off-GCD");
+    expect(s.error).toContain("trigger it manually");
+    expect(s.casts).toHaveLength(0);
+  });
+
   it("fires the first ready bar ability per slot and holds channels for their full occupancy", () => {
     const modelled = revoModelled(barById("magic"));
     const s = simulateRevolution({
@@ -396,6 +410,26 @@ describe("revolution — channels and horizon", () => {
       "magic_attack@19",
     ]);
     expect(s.perAbility["asphyxiate"]).toBeCloseTo(4 * 1300);
+  });
+
+  it("uses transformed Asphyxiate's eight-tick occupancy in Revolution", () => {
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [abilitySpec("asphyxiate")],
+      style: "magic",
+      durationTicks: 20,
+      tumekensPieces: 4,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((cast) => `${cast.abilityId}@${cast.tick}`)).toEqual([
+      "magic_attack@0",
+      "magic_attack@3",
+      "magic_attack@6",
+      "asphyxiate@9",
+      "magic_attack@17",
+    ]);
+    expect(s.perAbility.asphyxiate).toBeCloseTo(8 * 780);
   });
 
   it("counts events at horizon-1 but not at horizon or horizon+1 (half-open)", () => {

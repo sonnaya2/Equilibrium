@@ -131,6 +131,7 @@ export function QuickCalculator() {
           crit: {
             chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
             guaranteed: (calculatedAbility as RangedAbilitySpec).guaranteedCrit,
+            disabled: useBuild && setup.critsDisabled,
           },
           modifiers: useBuild ? setup.castModifiersFor(calculatedAbility) : undefined,
           context: { style: activeStyle },

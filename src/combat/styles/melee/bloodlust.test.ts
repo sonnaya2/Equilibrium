@@ -4,6 +4,10 @@ import { createCastContext, simulate } from "../../engine/simulation/simulate";
 import { baseInput } from "../../test/fixtures/inputs";
 import { abilityById, lastCast } from "../../test/helpers/summary";
 import { MELEE_ABILITIES } from "./abilities";
+import { MAGIC_ABILITIES } from "../magic/abilities";
+import { RANGED_ABILITIES } from "../ranged/abilities";
+import { NECROMANCY_ABILITIES } from "../necromancy/abilities";
+import { activeEquipmentEffects } from "../../shared/equipment";
 import {
   activateBerserk,
   bloodlustCap,
@@ -11,6 +15,15 @@ import {
   newBloodlust,
   spendBloodlust,
 } from "./bloodlust";
+
+const VESTMENTS = [
+  "item:vestments-of-havoc-hood",
+  "item:vestments-of-havoc-robe-top",
+  "item:vestments-of-havoc-robe-bottom",
+  "item:vestments-of-havoc-boots",
+];
+const vestments = (pieces: number, style: "melee" | "magic" = "melee") =>
+  activeEquipmentEffects({ style, equipmentIds: VESTMENTS.slice(0, pieces) });
 
 describe("bloodlust", () => {
   it("builds to a cap of 4", () => {
@@ -38,7 +51,11 @@ describe("bloodlust", () => {
 
 describe("bloodlust — spend lifecycle through the simulator", () => {
   it("Vestments set(2) regenerates 15 adrenaline over 18 seconds", () => {
-    const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100, vestmentsPieces: 2 });
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      equipmentEffects: vestments(2),
+    });
     ctx.performCast(ctx.byId.get("berserk")!, 0, false);
     expect(ctx.getState().vestmentsAdrenalineUntilTick).toBe(30);
     expect(ctx.getState().adrenaline).toBeCloseTo(1.5, 10);
@@ -50,7 +67,7 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 120,
-      vestmentsPieces: 4,
+      equipmentEffects: vestments(4),
       adrenaline: { relentlessRank: 1 },
     });
     ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentlessProc: true });
@@ -62,13 +79,67 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
   });
 
   it("Vestments set(3) extends Berserk by 6 seconds and set(4) raises the cap to 120", () => {
-    const ctx = createCastContext({ ...baseInput, startingAdrenaline: 120, vestmentsPieces: 4 });
+    const three = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      equipmentEffects: vestments(3),
+    });
+    three.performCast(three.byId.get("berserk")!, 0, false);
+    expect(three.getState().melee.berserkUntilTick).toBe(43);
+    expect(three.getState().adrenalineCap).toBe(100);
+
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 120,
+      equipmentEffects: vestments(4),
+    });
     expect(ctx.getState().adrenalineCap).toBe(120);
     ctx.performCast(ctx.byId.get("berserk")!, 0, false);
     expect(ctx.getState().melee.berserkUntilTick).toBe(43);
     expect(() => createCastContext({ ...baseInput, startingAdrenaline: 120 })).toThrow(
       "outside 0-100",
     );
+    expect(() =>
+      createCastContext({
+        ...baseInput,
+        startingAdrenaline: 120,
+        equipmentEffects: vestments(4, "magic"),
+      }),
+    ).toThrow("outside 0-100");
+  });
+
+  it("starts Herald of Chaos from either eligible melee ultimate", () => {
+    for (const abilityId of ["berserk", "meteor_strike"]) {
+      const ctx = createCastContext({
+        ...baseInput,
+        startingAdrenaline: 100,
+        equipmentEffects: vestments(2),
+      });
+      expect(ctx.performCast(ctx.byId.get(abilityId)!, 0, false).ok).toBe(true);
+      expect(ctx.getState().vestmentsAdrenalineUntilTick, abilityId).toBe(30);
+    }
+  });
+
+  it("does not consume Herald of Chaos on Magic, Ranged, or Necromancy ultimates", () => {
+    const abilities = [
+      ...MELEE_ABILITIES,
+      ...MAGIC_ABILITIES,
+      ...RANGED_ABILITIES,
+      ...NECROMANCY_ABILITIES,
+    ];
+    for (const abilityId of ["sunshine", "deaths_swiftness", "living_death"]) {
+      const ctx = createCastContext({
+        ...baseInput,
+        abilities,
+        startingAdrenaline: 120,
+        equipmentEffects: vestments(4),
+        adrenaline: { relentlessRank: 1 },
+      });
+      ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentlessProc: true });
+      const before = ctx.getState().vestmentsAdrenalineUntilTick;
+      expect(ctx.performCast(ctx.byId.get(abilityId)!, ctx.getState().tick, false).ok).toBe(true);
+      expect(ctx.getState().vestmentsAdrenalineUntilTick, abilityId).toBe(before);
+    }
   });
 
   it("swaps Assault to its 4-Bloodlust band only once the threshold is met", () => {

@@ -223,7 +223,7 @@ export function prepareCast(
     baseMods:
       typeof input.modifiers === "function" ? input.modifiers(ability) : (input.modifiers ?? []),
     chaosRoarActive: chaosRoarConsume,
-    channelled: ability.channelTicks != null,
+    channelled: working.channelTicks != null,
     greaterFuryActive: greaterFuryConsume,
     furyActive: furyConsume,
     firstEligibleHitIndex: working.hits.findIndex((h) => h.critEligible !== false),
@@ -255,7 +255,7 @@ export function prepareCast(
     spend: spendOf(rt.state, ability, candidate, input.ammo),
     occupancyTicks: endlessAssaultConsume
       ? GLOBAL_COOLDOWN_TICKS
-      : (ability.channelTicks ?? GLOBAL_COOLDOWN_TICKS),
+      : (working.channelTicks ?? GLOBAL_COOLDOWN_TICKS),
     ...(flowReduction !== undefined ? { flowReduction } : {}),
     channelAsDot: endlessAssaultConsume,
     snap,

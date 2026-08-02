@@ -303,11 +303,14 @@ describe("loadoutStats", () => {
         },
       });
       expect(stats.critChance).toBe(0);
+      expect(stats.simulationCritChance).toBe(0);
+      expect(stats.critsDisabled).toBe(true);
       const mult = 1 + equilibriumDamageBonus(rank);
       expect(mult).toBeCloseTo(1.06 + 0.02 * rank, 10);
       expect(stats.base).toBe(Math.floor(stats.rawBase * mult));
       expect(stats.globalModifiers.some((m) => m.id.startsWith("perk:equilibrium"))).toBe(false);
     }
+    expect(loadoutStats(base).critsDisabled).toBe(false);
   });
 
   it("Vulnerability + style curse damage + overload accuracy boost apply when buffs present", () => {
@@ -686,9 +689,35 @@ describe("loadoutStats", () => {
         boots: "item:vestments-of-havoc-boots",
       },
     });
-    expect(stats.vestmentsPieces).toBe(4);
+    expect(stats.equipmentEffects.vestments.pieces).toBe(4);
+    expect(stats.equipmentEffects.vestments.heraldOfChaos).toBe(true);
     expect(stats.maxAdrenaline).toBe(120);
     expect(stats.startingAdrenaline).toBe(120);
+  });
+
+  it("does not activate Vestments with an explicitly non-melee weapon", () => {
+    for (const [style, slot, weapon] of [
+      ["magic", "mainhand", "item:seismic-wand"],
+      ["ranged", "twohand", "item:bow-of-the-last-guardian"],
+      ["necromancy", "mainhand", "item:omni-guard"],
+    ] as const) {
+      const stats = loadoutStats({
+        ...base,
+        style,
+        startingAdrenaline: 120,
+        equipmentSlots: {
+          [slot]: weapon,
+          helmet: "item:vestments-of-havoc-hood",
+          body: "item:vestments-of-havoc-robe-top",
+          legs: "item:vestments-of-havoc-robe-bottom",
+          boots: "item:vestments-of-havoc-boots",
+        },
+      });
+      expect(stats.equipmentEffects.vestments.pieces, style).toBe(4);
+      expect(stats.equipmentEffects.vestments.heraldOfChaos, style).toBe(false);
+      expect(stats.maxAdrenaline, style).toBe(100);
+      expect(stats.startingAdrenaline, style).toBe(100);
+    }
   });
 
   it("rank-0 perks produce no modifiers; ranked perks produce gated ones", () => {

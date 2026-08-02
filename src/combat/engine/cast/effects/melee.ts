@@ -24,7 +24,7 @@ export function applyMeleeCastEffects(fx: CastEffectContext): void {
     rt.state = gainMeleeBloodlust(rt.state, melee.bloodlustGain);
   }
   if (ability.stateEffect === "berserk") {
-    const vestmentsExtension = (rt.input.vestmentsPieces ?? 0) >= 3 ? 6 : 0;
+    const vestmentsExtension = rt.input.equipmentEffects?.vestments.berserkExtension ? 6 : 0;
     rt.state = patchMelee(rt.state, {
       bloodlust: activateBerserk(rt.state.melee.bloodlust),
       berserkUntilTick: candidate + secondsToTicks(BERSERK_DURATION_SECONDS + vestmentsExtension),

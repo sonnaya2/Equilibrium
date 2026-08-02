@@ -422,6 +422,10 @@ export function GearPanel({
                   </li>
                 ))}
               </ul>
+              <p className="mt-1 text-parch-300">
+                Set effects, including Tumeken&apos;s 5.4s activation, are assumed active before
+                tick 0. Gear swaps are not simulated.
+              </p>
             </div>
           );
         })()}

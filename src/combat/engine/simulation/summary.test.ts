@@ -6,6 +6,7 @@ import { snapshotRuntime } from "./branch";
 import { rotationOf } from "./contracts";
 import { createCastContext, simulate } from "./simulate";
 import { combineBranchSummaries } from "./summary";
+import { MODERNISATION_WIKI } from "../../data/sources";
 
 describe("summary — Crackling / Aftershock expected-value procs", () => {
   it("Crackling rank 4, base 1000, 60s horizon → ~2000 EV", () => {
@@ -18,6 +19,26 @@ describe("summary — Crackling / Aftershock expected-value procs", () => {
     expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
     expect(s.totalExpected).toBeCloseTo(2000, 5);
     expect(s.damageByTick[50]).toBeCloseTo(2000, 5);
+  });
+
+  it("uses the effective ability-damage input for procs without cast modifiers", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      base: 1140,
+      procs: { cracklingRank: 4 },
+      modifiers: [
+        {
+          id: "test:cast-only",
+          stage: "onCast",
+          priority: 0,
+          applies: () => true,
+          apply: (state) => ({ ...state, damage: state.damage * 10 }),
+          source: MODERNISATION_WIKI,
+        },
+      ],
+    });
+    const s = ctx.finish(undefined, 100);
+    expect(s.perAbility.crackling).toBeCloseTo(2280, 5);
   });
 
   it("Aftershock: 100k ability damage, rank 1, base 1000 → 2 procs × 318 = 636 when H allows", () => {

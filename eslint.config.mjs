@@ -67,6 +67,96 @@ const config = [
       "@next/next/no-img-element": "off",
     },
   },
+  // Combat layer boundaries (mirrors scripts/architecture/check.mjs).
+  // packRequest.ts is known legacy debt (UI loadout types); shared→engine is
+  // enforced by the architecture script only (helpers still live in engine).
+  {
+    files: ["src/combat/**/*.{ts,tsx}"],
+    ignores: [
+      "src/combat/**/*.test.ts",
+      "src/combat/**/*.test.tsx",
+      "src/combat/solver/packRequest.ts",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/components",
+              message: "src/combat must not import UI components (architecture boundary).",
+            },
+          ],
+          patterns: [
+            {
+              group: ["@/components/*", "src/components", "src/components/*"],
+              message: "src/combat must not import UI components (architecture boundary).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/combat/solver/**/*.{ts,tsx}"],
+    ignores: ["src/combat/solver/**/*.test.ts", "src/combat/solver/packRequest.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "react",
+              message: "src/combat/solver must stay free of react (architecture boundary).",
+            },
+            {
+              name: "react-dom",
+              message: "src/combat/solver must stay free of react-dom (architecture boundary).",
+            },
+            {
+              name: "@/components",
+              message: "src/combat/solver must not import UI components (architecture boundary).",
+            },
+          ],
+          patterns: [
+            {
+              group: [
+                "react/*",
+                "react-dom/*",
+                "@/components/*",
+                "src/components",
+                "src/components/*",
+              ],
+              message: "src/combat/solver must not import react or UI components.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/combat/engine/**/*.{ts,tsx}"],
+    ignores: ["src/combat/engine/**/*.test.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/components",
+              message: "src/combat/engine must not import UI components (architecture boundary).",
+            },
+          ],
+          patterns: [
+            {
+              group: ["@/components/*", "src/components", "src/components/*"],
+              message: "src/combat/engine must not import UI components (architecture boundary).",
+            },
+          ],
+        },
+      ],
+    },
+  },
   {
     // Node .mjs data platform — catch unused vars / undefined globals without
     // forcing a TypeScript migration of the whole pipeline.

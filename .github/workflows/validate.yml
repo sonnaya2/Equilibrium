@@ -1,7 +1,14 @@
-# App validate: install, data/art audit, typecheck, lint, format, unit tests, build.
-# Full Playwright (incl. map/WebGPU) stays local (npm run test:e2e). Combat-only
-# E2E may run via workflow_dispatch enable_combat_e2e — default off. Never enable
+# App validate: install, data/art/architecture audit, typecheck, lint, format,
+# unit tests, build.
+#
+# Full Playwright (incl. map/WebGPU) stays local (npm run test:e2e).
+# Combat-only E2E is NOT on every push — use workflow combat-e2e.yml (dispatch)
+# or this workflow's workflow_dispatch input enable_combat_e2e. Never enable
 # map/WebGPU in this workflow.
+#
+# Smoke vs full combat:
+#   e2e/smoke.spec.ts  — route/nav smoke (default Playwright suite / local)
+#   e2e/combat.spec.ts — full combat UI E2E; dispatch-only under CI
 name: Validate app
 
 on:
@@ -31,7 +38,7 @@ on:
   workflow_dispatch:
     inputs:
       enable_combat_e2e:
-        description: "Run combat-only Playwright after validate (no map/WebGPU)"
+        description: "Run combat-only Playwright after validate (no map/WebGPU). Prefer combat-e2e.yml for combat-only runs."
         type: boolean
         default: false
 
@@ -59,6 +66,9 @@ jobs:
       # Icon index, reward aliases, path uniqueness, alsoAt duplicates.
       - name: Audit art
         run: npm run art:check
+      # Combat layer boundaries (scripts/architecture/check.mjs).
+      - name: Audit architecture
+        run: npm run audit:architecture
       - name: Typecheck
         run: npm run typecheck
       - name: Lint
@@ -89,7 +99,9 @@ jobs:
         run: npm run build
 
   # Combat-only Playwright: no map/WebGPU. Off unless workflow_dispatch sets
-  # enable_combat_e2e=true after measured local stability under CI=1.
+  # enable_combat_e2e=true. Prefer dedicated combat-e2e.yml for combat-only runs.
+  # e2e/smoke.spec.ts is route smoke (default suite); e2e/combat.spec.ts is
+  # full combat UI and is dispatch-only under CI.
   combat-e2e:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_combat_e2e == true }}
     runs-on: ubuntu-latest

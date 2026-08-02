@@ -19,21 +19,33 @@ src/combat/engine/
 
 ### Boundaries
 
-| Rule | Detail |
-| ---- | ------ |
-| Preparation is read-only | `cast/prepare.ts` computes against advanced state and records mutations as `PreparedTransition` variants. New mechanics add variants, not booleans on `PreparedCast`. |
-| Rejected cast is inert | No resources, cooldowns, scheduled events, or cast records beyond the time advance used to re-check readiness. |
-| Single readiness boundary | `prepareSimulationCast` decides readiness/affordability for manual, Revolution, and branch drivers. |
-| Effects split by lifecycle and style | `cast/effects/`: prepared transitions, cooldowns, resources, completion, plus one module per style. Channel completion effects run after occupancy advance (`completion.ts`). |
+| Rule                                    | Detail                                                                                                                                                                                                                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preparation is read-only                | `cast/prepare.ts` computes against advanced state and records mutations as `PreparedTransition` variants. New mechanics add variants, not booleans on `PreparedCast`.                                                                 |
+| Rejected cast is inert                  | No resources, cooldowns, scheduled events, or cast records beyond the time advance used to re-check readiness.                                                                                                                        |
+| Single readiness boundary               | `prepareSimulationCast` decides readiness/affordability for manual, Revolution, and branch drivers.                                                                                                                                   |
+| Effects split by lifecycle and style    | `cast/effects/`: prepared transitions, cooldowns, resources, completion, plus one module per style. Channel completion effects run after occupancy advance (`completion.ts`).                                                         |
 | Resolution calculates; recording writes | Resolvers return `EventResolution` and do not touch ledgers. `resolution/record.ts` writes totals, per-ability ledgers, hit details, event log, then dispatches `accounting`, league blessing damage, invention procs, and `landed/`. |
-| Landed handlers for real hits only | Attached components, conjure autos, poison ticks, and procs are excluded by the caller. |
-| State grouped by style and target | Global clocks on `RotationState`; style buckets and `target` for debuffs the sim applied. |
-| Immutable patches only | `patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget` — no in-place nested mutation (branch isolation). |
-| Conjures are capability-typed | `ActiveConjure` carries only the tracks that spirit has. Sentinel shared shapes are forbidden. |
-| DoT classification is declared | `AbilityHit.dot` + scheduler; not inferred from land tick or crit eligibility. |
-| External API is the barrel | `src/combat/index.ts`. `cast/`, `resolution/`, `runtime/`, `schedulers/` stay internal. |
+| Landed handlers for real hits only      | Attached components, conjure autos, poison ticks, and procs are excluded by the caller.                                                                                                                                               |
+| State grouped by style and target       | Global clocks on `RotationState`; style buckets and `target` for debuffs the sim applied.                                                                                                                                             |
+| Immutable patches only                  | `patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget` — no in-place nested mutation (branch isolation).                                                                                             |
+| Conjures are capability-typed           | `ActiveConjure` carries only the tracks that spirit has. Sentinel shared shapes are forbidden.                                                                                                                                        |
+| DoT classification is declared          | `AbilityHit.dot` + scheduler; not inferred from land tick or crit eligibility.                                                                                                                                                        |
+| External API is the barrel              | `src/combat/index.ts`. `cast/`, `resolution/`, `runtime/`, `schedulers/` stay internal.                                                                                                                                               |
 
 No arbitrary callback plumbing for hidden state. No compatibility shims that accept retired shapes.
+
+### Solver orchestration (`src/combat/solver/`)
+
+| Module                 | Ownership                                        |
+| ---------------------- | ------------------------------------------------ |
+| `solveFromRequest.ts`  | Public entry: wire request → search → DTO        |
+| `requestContext.ts`    | Deny lists, pools, seeds, horizons, budgets      |
+| `evaluationSession.ts` | Memoized bar evaluation and session counters     |
+| `progressReporter.ts`  | Phase mapping and progress emission              |
+| `resultBuilder.ts`     | Winner validation and `SolverResultDTO` assembly |
+
+Deterministic benches: `npm run benchmark:solver:quick` (see [`solver-benchmarks.md`](./solver-benchmarks.md)). Combat-domain → UI imports are gated by `npm run audit:architecture`.
 
 ## Runtime and state ownership
 
@@ -132,9 +144,9 @@ Consumed by the first eligible **landed** hit, not applied to the whole ability 
 
 Do not flatten all randomness into expected damage.
 
-| Kind | Treatment |
-| ---- | --------- |
-| Damage-only randomness (does not change future state, topology, or cast legality) | Deterministic expected value |
+| Kind                                                                                                         | Treatment                      |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------ |
+| Damage-only randomness (does not change future state, topology, or cast legality)                            | Deterministic expected value   |
 | State-changing RNG (adrenaline, cooldowns, windows, stacks, scheduled events, target state, future legality) | Probability-weighted branching |
 
 Current cast RNG points include `impatient`, `relentless`, `avernic-rampage` (`CastRng` in `simulation/contracts.ts`). Missing flag = no proc (deterministic single-branch runs never proc).
@@ -174,10 +186,10 @@ Global combat modifiers stay separate from cast-specific modifiers; event proven
 
 Optional second metric: **damage from casts begun within the horizon** including later tails — only when explicitly requested (`includeTails` / `totalExpectedIncludingTails`), separately named, never presented as fixed-window DPS.
 
-| Metric | Definition |
-| ------ | ---------- |
-| Fixed-window DPM | Everything that lands inside a stated window ÷ window. Unfinished tails past the edge excluded. Denominator is an input. |
-| Natural-completion DPM | Rotation run to its own end including every scheduled tail ÷ actual elapsed. Denominator is an output. |
+| Metric                 | Definition                                                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Fixed-window DPM       | Everything that lands inside a stated window ÷ window. Unfinished tails past the edge excluded. Denominator is an input. |
+| Natural-completion DPM | Rotation run to its own end including every scheduled tail ÷ actual elapsed. Denominator is an output.                   |
 
 Never compare one against the other unlabeled. Report which metric and its window or elapsed ticks.
 
@@ -185,12 +197,12 @@ Never compare one against the other unlabeled. Report which metric and its windo
 
 Nothing league-specific is baked into base formulas or unconditional simulator state. With ruleset `"base"` and no league loadout, base-game output, event order, and cast sequence are unchanged.
 
-| Effect shape | Entry point |
-| ------------ | ----------- |
-| Derived inputs / resolver overrides | Shared combat or loadout context via `resolveLeagueRules` |
-| Per-hit / per-attack blessing damage | Event + provenance (`resolution/league/`, `family: "blessing"`) |
-| Adrenaline, cooldowns, windows, stacks, future legality | Simulation state (`RotationState.league`, etc.) |
-| Outside outgoing-damage sim | Displayed, excluded from totals |
+| Effect shape                                            | Entry point                                                     |
+| ------------------------------------------------------- | --------------------------------------------------------------- |
+| Derived inputs / resolver overrides                     | Shared combat or loadout context via `resolveLeagueRules`       |
+| Per-hit / per-attack blessing damage                    | Event + provenance (`resolution/league/`, `family: "blessing"`) |
+| Adrenaline, cooldowns, windows, stacks, future legality | Simulation state (`RotationState.league`, etc.)                 |
+| Outside outgoing-damage sim                             | Displayed, excluded from totals                                 |
 
 Support labels match the honesty model in [`combat-model.md`](./combat-model.md) (`modeled` / `partially modeled` / `not modeled` / `mechanics unverified` as exposed to users).
 
@@ -231,4 +243,4 @@ Never retarget a snapshot or golden total without a source for the mechanic that
 
 - [`combat-model.md`](./combat-model.md) — formulas, pipeline, caps, sources
 - [`equipment-effects.md`](./equipment-effects.md) — passives, sets, procs routing
-)
+  )

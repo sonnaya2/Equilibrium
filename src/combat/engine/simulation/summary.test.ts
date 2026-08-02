@@ -115,8 +115,8 @@ describe("summary finalization", () => {
     expect(s.dps).toBe(75);
     expect(s.rng).toMatchObject({
       terminalClasses: 2,
-      representativeWeight: 0.5,
-      representativeTicks: 10,
+      representativeClassWeight: 0.5,
+      representativeClassTicks: 10,
     });
   });
 });

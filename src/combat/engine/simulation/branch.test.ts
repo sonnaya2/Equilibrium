@@ -162,8 +162,8 @@ describe("Invigorating / Impatient adrenaline", () => {
     expect(s.rng).toMatchObject({
       method: "probability-weighted branching",
       terminalClasses: 2,
-      representativeWeight: 0.64,
-      representativeTicks: 3,
+      representativeClassWeight: 0.64,
+      representativeClassTicks: 3,
     });
     expect(lastCast(s).adrenalineAfter).toBe(9);
   });
@@ -177,7 +177,7 @@ describe("Invigorating / Impatient adrenaline", () => {
     expect(s.ok).toBe(true);
     // 24 (p²), 21 (2pq, merged), 18 (q²)
     expect(s.rng?.terminalClasses).toBe(3);
-    expect(s.rng?.representativeWeight).toBeCloseTo(0.4608, 10);
+    expect(s.rng?.representativeClassWeight).toBeCloseTo(0.4608, 10);
     expect(lastCast(s).adrenalineAfter).toBe(21);
   });
 

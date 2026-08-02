@@ -175,8 +175,8 @@ export function combineBranchSummaries(
           rng: {
             method: "probability-weighted branching" as const,
             terminalClasses: parts.length,
-            representativeWeight: representative.weight / totalWeight,
-            representativeTicks: modal.ticks,
+            representativeClassWeight: representative.weight / totalWeight,
+            representativeClassTicks: modal.ticks,
             ...(failedWeight > 0 ? { failedWeight } : {}),
           },
         }

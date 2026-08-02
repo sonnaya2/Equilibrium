@@ -56,7 +56,7 @@ export function CalculationAssumptions({
     if (result.rng) {
       rows.push([
         "Timeline path",
-        `${result.rng.representativeTicks} ticks · ${(result.rng.representativeWeight * 100).toFixed(1)}% terminal class`,
+        `${result.rng.representativeClassTicks} ticks · ${(result.rng.representativeClassWeight * 100).toFixed(1)}% terminal class`,
       ]);
     }
   }

@@ -149,8 +149,8 @@ export interface RotationSummary {
   rng?: {
     method: "probability-weighted branching";
     terminalClasses: number;
-    representativeWeight: number;
-    representativeTicks: number;
+    representativeClassWeight: number;
+    representativeClassTicks: number;
     /** Combined weight of branches that ended in a cast error (ok is then false). */
     failedWeight?: number;
   };

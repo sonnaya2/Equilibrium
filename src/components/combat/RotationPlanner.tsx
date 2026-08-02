@@ -67,7 +67,7 @@ function castCritLabel(result: RotationSummary["casts"][number]["result"]): stri
 }
 
 export function RotationPlanner() {
-  const [loadout] = useLoadout();
+  const [loadout, setLoadout] = useLoadout();
   const { build } = useLeagueBuild();
   const [mode, setMode] = useState<"revolution" | "manual">("revolution");
   const [useBuild, setUseBuild] = useState(true);
@@ -232,6 +232,15 @@ export function RotationPlanner() {
               Auto-weave basics
             </label>
           ) : null}
+          <label className="flex items-center gap-2 text-xs text-parch-300">
+            <input
+              type="checkbox"
+              checked={loadout.hitCapEnabled}
+              aria-label="30,000 hit cap"
+              onChange={(e) => setLoadout({ ...loadout, hitCapEnabled: e.target.checked })}
+            />
+            30,000 hit cap
+          </label>
         </div>
         {useBuild ? (
           <dl className="rotation-facts mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
@@ -351,10 +360,14 @@ export function RotationPlanner() {
                     ? `Replaced by ${abilityName(selectedVariant)}`
                     : useBuild && !meetsWeaponRequirement(a, buildStats.weaponConfiguration)
                       ? `Requires ${
-                          a.weaponRequirement ??
-                          (a.style === "necromancy"
-                            ? "death guard and conduit"
-                            : `${a.style} weapon`)
+                          a.weaponRequirement === "conduit"
+                            ? "a conduit"
+                            : a.weaponRequirement === "death-guard-and-conduit"
+                              ? "death guard and conduit"
+                              : (a.weaponRequirement ??
+                                (a.style === "necromancy"
+                                  ? "a necromancy weapon"
+                                  : `${a.style} weapon`))
                         }`
                       : useBuild && !meetsEquipmentRequirement(a, buildStats.equipmentIds)
                         ? "Requires an Igneous cape"

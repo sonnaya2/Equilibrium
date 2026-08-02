@@ -112,6 +112,13 @@ export interface CalcStats {
    * flat accuracy. The same value feeds the target-model Damage Potential.
    */
   accuracyRating: number;
+  /** Named sources for the setup summary dropdowns — zero rows are filtered in the UI. */
+  baseAbilityDamageBreakdown: readonly { label: string; value: number }[];
+  equipmentDamageBreakdown: readonly { label: string; value: number }[];
+  accuracyBreakdown: readonly { label: string; value: number }[];
+  armourBreakdown: readonly { label: string; value: number }[];
+  armourRatingBreakdown: readonly { label: string; value: number }[];
+  defenceBreakdown: readonly { label: string; value: number }[];
   critChance: number;
   critChanceBreakdown: {
     configured: number;
@@ -339,7 +346,48 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   const wieldedOffhand = wieldedOffhandKind(loadout);
   const aegis = aegisArmourBonus(aegisRule, defence, wieldedOffhand);
   const leagueBaseAbilityDamageBonus = aegis.baseAbilityDamageBonus;
-  const resolvedBase = loadoutBase(loadout) + leagueBaseAbilityDamageBonus;
+  const formulaBase = computedLoadoutBase(loadout);
+  const enteredBase =
+    loadout.baseDamage.mode === "manual" && loadout.baseDamage.manualValue > 0
+      ? loadout.baseDamage.manualValue
+      : formulaBase;
+  const afterPerksBase = loadoutBase(loadout);
+  const resolvedBase = afterPerksBase + leagueBaseAbilityDamageBonus;
+  const weaponAccuracy = playerAccuracy(attackLevel, weaponTier);
+  const baseAbilityDamageBreakdown = [
+    {
+      label: loadout.baseDamage.mode === "manual" ? "Manual" : "Weapon",
+      value: enteredBase,
+    },
+    { label: "Invention perks", value: afterPerksBase - enteredBase },
+    { label: "Teragard's Aegis", value: leagueBaseAbilityDamageBonus },
+  ];
+  const equipmentDamageBreakdown = [{ label: "Equipped gear", value: equipmentStats.damage }];
+  const accuracyBeforeEffects = weaponAccuracy + energising + accessoryAccuracy;
+  const accuracyBreakdown = [
+    { label: "Weapon", value: weaponAccuracy },
+    { label: "Energising", value: energising },
+    { label: "Accessories", value: accessoryAccuracy },
+    { label: "Equipment effects", value: accuracyRating - accuracyBeforeEffects },
+  ];
+  const armourBreakdown = [{ label: "Equipped gear", value: defence.totalArmour }];
+  const defenceBreakdown = [
+    { label: "Base", value: loadout.defenceLevel },
+    { label: "Overload", value: defence.visibleLevel - loadout.defenceLevel },
+  ];
+  // Armour rating floors the sum; pin the residual on the Defence share so the
+  // dropdown still reconciles to the displayed total.
+  const armourRatingBreakdown = [
+    { label: "Armour", value: defence.totalArmour },
+    {
+      label: loadout.buffs.fortitude
+        ? "From Defence (Fortitude)"
+        : loadout.buffs.styleCurse !== "none"
+          ? "From Defence (style curse)"
+          : "From Defence",
+      value: defence.blockArmourRating - defence.totalArmour,
+    },
+  ];
   // Barkscales needs an incoming attack cadence the outgoing rotation cannot
   // supply; the scenario is stated on the target or the result stays unavailable.
   const barkscales = barkscalesOutcome(
@@ -399,15 +447,18 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   return {
     combatStyle: loadout.style,
     baseDamageMode: loadout.baseDamage.mode,
-    rawBase:
-      loadout.baseDamage.mode === "manual"
-        ? loadout.baseDamage.manualValue
-        : computedLoadoutBase(loadout),
+    rawBase: enteredBase,
     base: resolvedBase,
     level,
     attackLevel,
     dp,
     accuracyRating,
+    baseAbilityDamageBreakdown,
+    equipmentDamageBreakdown,
+    accuracyBreakdown,
+    armourBreakdown,
+    armourRatingBreakdown,
+    defenceBreakdown,
     critChance,
     critChanceBreakdown: {
       configured: configuredCrit,
@@ -451,9 +502,17 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
         ? "100% assumption"
         : "manual override",
     equipmentIds: equippedRecordIds(loadout),
+    // Necromancy: `"necromancy"` only when a conduit is available (equipped
+    // conduit, or empty off-hand with dual-hand tier sliders). A shield /
+    // defender in the off-hand reports that shape so conjures gate correctly
+    // while necrotic abilities still cast (wiki: conduit required to conjure).
     weaponConfiguration:
       weaponConfig.kind === "necromancy"
-        ? "necromancy"
+        ? offhandType
+          ? offhandType
+          : weaponConfig.conduit != null
+            ? "necromancy"
+            : "mainhand"
         : weaponConfig.kind === "twohand"
           ? "twohand"
           : offhandType

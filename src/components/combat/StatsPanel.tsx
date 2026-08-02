@@ -247,34 +247,36 @@ export function StatsPanel({
             onChange={(constitutionLevel) => setLoadout({ ...loadout, constitutionLevel })}
           />
           <DerivedRow
-            label="Visible Defence"
+            label="Defence"
             value={format(stats.defence.visibleLevel)}
             note={boostNote(loadout.defenceLevel)}
           />
-          <DerivedRow
-            label="Defence in block calculation"
-            value={format(stats.defence.blockLevel, 2)}
-            note={
-              loadout.buffs.fortitude
-                ? "Fortitude"
-                : loadout.buffs.styleCurse !== "none"
-                  ? loadout.buffs.styleCurse
-                  : undefined
-            }
-          />
+          {stats.defence.blockLevel !== stats.defence.visibleLevel ? (
+            <DerivedRow
+              label="Block level"
+              value={format(stats.defence.blockLevel, 2)}
+              note={
+                loadout.buffs.fortitude
+                  ? "Fortitude"
+                  : loadout.buffs.styleCurse !== "none"
+                    ? loadout.buffs.styleCurse
+                    : undefined
+              }
+            />
+          ) : null}
           {/* Two different numbers: the Loadout screen's Armour stat, which every
               "% of your armour value" effect reads, and the hit-chance rating
               that Defence level, curses and Fortitude also feed. */}
-          <DerivedRow label="Total armour" value={format(stats.defence.totalArmour)} />
+          <DerivedRow label="Armour" value={format(stats.defence.totalArmour)} />
           <DerivedRow
-            label="Block armour rating"
+            label="Armour rating"
             value={format(stats.defence.blockArmourRating)}
             note="hit chance only"
           />
           {/* null current life means "follow the maximum", so it never goes stale
               when a buff moves the maximum underneath it. */}
           <AutoNumberField
-            label="Current life points"
+            label="Current HP"
             value={stats.life.currentLife}
             min={0}
             max={stats.life.overhealCeiling}
@@ -285,12 +287,18 @@ export function StatsPanel({
             onChange={(currentLife) => setLoadout({ ...loadout, currentLife })}
           />
           <DerivedRow
-            label="Maximum life points"
+            label="Maximum HP"
             value={format(stats.life.temporaryMaxLife)}
-            note={stats.life.powerburstActive ? "Powerburst active" : undefined}
+            note={
+              stats.life.powerburstActive
+                ? "Powerburst active"
+                : stats.life.temporaryMaxLife !== stats.life.normalMaxLife
+                  ? "Includes temporary effects"
+                  : undefined
+            }
           />
           {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
-            <DerivedRow label="Overheal ceiling" value={format(stats.life.overhealCeiling)} />
+            <DerivedRow label="Overheal cap" value={format(stats.life.overhealCeiling)} />
           ) : null}
         </StatsGroup>
 
@@ -318,14 +326,6 @@ export function StatsPanel({
             onChange={(critChance) => setLoadout({ ...loadout, critChance })}
             suffix="%"
           />
-          <label className="loadout-toggle">
-            <span>30,000 hit cap</span>
-            <input
-              type="checkbox"
-              checked={loadout.hitCapEnabled}
-              onChange={(event) => setLoadout({ ...loadout, hitCapEnabled: event.target.checked })}
-            />
-          </label>
           <DerivedRow
             label="Damage Potential in play"
             value={`${Math.round(stats.dp * 1000) / 10}%`}

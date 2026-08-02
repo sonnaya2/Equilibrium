@@ -1,14 +1,7 @@
 "use client";
 
 import { MAX_FIREMAKING_LEVEL } from "@/combat";
-import {
-  EQUIPMENT_ENCHANTMENTS,
-  equipmentSetById,
-  setEffectsSummary,
-  type EquipmentSetEffectDef,
-  type EquipmentEnchantmentId,
-  type SetEffectSupport,
-} from "@/combat/shared/equipment";
+import { EQUIPMENT_ENCHANTMENTS, type EquipmentEnchantmentId } from "@/combat/shared/equipment";
 import type { CombatStyle } from "@/combat/types";
 import {
   BLESSING_PATHS,
@@ -98,33 +91,12 @@ const OVERLOAD_OPTIONS: Array<{
   { value: "elder", label: "Elder overload", effect: "+17% of level +5 to every combat stat" },
 ];
 
-const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
-  modeled: "Active",
-  "not-modeled": "Not modeled",
-  "outgoing-only": "Partial",
-  none: "Recorded",
-};
 const BLESSING_SUPPORT_LABEL: Record<BlessingSupportStatus, string> = {
   modeled: "Modeled",
   "partially-modeled": "Partial",
   "not-modeled": "Not modeled",
   "scenario-dependent": "Situational",
 };
-
-function setFactThreshold(fact: string): number | null {
-  const match = /^Set\((\d+)\):/i.exec(fact);
-  return match ? Number(match[1]) : null;
-}
-
-function setEffectText(effect: EquipmentSetEffectDef): string {
-  const percent = `${Math.round(effect.value * 1000) / 10}%`;
-  const context = effect.requires === "sunshine" ? " while inside Sunshine" : "";
-  if (effect.kind === "critChancePerPiece") {
-    return `${percent} critical strike chance per piece${context}`;
-  }
-  if (effect.kind === "damageMultPerPiece") return `${percent} damage per piece${context}`;
-  return `${percent} damage${context}`;
-}
 
 /** Icon toggle. Name and effect live in the tooltip; sr-only text carries the a11y name. */
 function BuffTile({
@@ -191,7 +163,6 @@ export function BuffsPanel({
   const godBlessing = godAlignment ? blessingChoice(4, godAlignment) : undefined;
   const selectedBlessings = activeBlessings(build.blessingPicks);
 
-  const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
   return (
     <div className="loadout-panel loadout-panel-wide buffs-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
@@ -455,97 +426,6 @@ export function BuffsPanel({
             </select>
           </label>
         </div>
-      </div>
-
-      <div className="buff-group buff-sets mt-3">
-        <h3 className="buff-group__title">Set effects</h3>
-        {sets.length === 0 ? (
-          <p className="mt-1 text-xs text-parch-300">
-            Equip set pieces in Gear to activate their effects.
-          </p>
-        ) : (
-          <ul className="set-effect-list mt-1">
-            {sets.map((s) => {
-              const def = equipmentSetById(s.setId);
-              const thresholds = [
-                ...(def?.effects.map((effect) => effect.minPieces) ?? []),
-                ...(def?.facts
-                  ?.map(setFactThreshold)
-                  .filter((value): value is number => value != null) ?? []),
-              ];
-              const activeThresholds = thresholds.filter((value) => value <= s.pieces).length;
-              const state =
-                s.support === "not-modeled"
-                  ? "Not modeled"
-                  : activeThresholds > 0 && activeThresholds < thresholds.length
-                    ? "Partial"
-                    : activeThresholds > 0
-                      ? "Active"
-                      : thresholds.length > 0
-                        ? "Partial"
-                        : "Equipped";
-              return (
-                <li key={s.setId} className="set-effect-card">
-                  <div className="set-effect-card__head">
-                    <span className="text-parch-50">{s.label}</span>
-                    <span className="set-effect-state">{state}</span>
-                    <span className="ml-auto font-mono text-parch-300">
-                      {s.pieces}/{def?.maxPieces ?? s.pieces}
-                    </span>
-                  </div>
-                  <ul className="set-threshold-list">
-                    {def?.effects.map((effect) => {
-                      const met = s.pieces >= effect.minPieces;
-                      return (
-                        <li
-                          key={`${effect.kind}-${effect.minPieces}`}
-                          className={met ? "is-met" : ""}
-                        >
-                          <span className="set-threshold-badge">
-                            {met
-                              ? effect.requires
-                                ? "Context"
-                                : "Active"
-                              : `Set ${effect.minPieces}`}
-                          </span>
-                          <span>{setEffectText(effect)}</span>
-                        </li>
-                      );
-                    })}
-                    {def?.facts?.map((fact) => {
-                      const required = setFactThreshold(fact);
-                      const met = required == null || s.pieces >= required;
-                      return (
-                        <li key={fact} className={met ? "is-met" : ""}>
-                          <span className="set-threshold-badge">
-                            {required == null ? "Note" : met ? "Active" : `Set ${required}`}
-                          </span>
-                          <span>{fact.replace(/^Set\(\d+\):\s*/i, "")}</span>
-                        </li>
-                      );
-                    })}
-                    {!def?.effects.length && !def?.facts?.length ? (
-                      <li>
-                        <span className="set-threshold-badge">Note</span>
-                        <span>This set has no combat bonus yet.</span>
-                      </li>
-                    ) : null}
-                  </ul>
-                  <div className="set-effect-card__foot">
-                    {/* The head badge already reports an active set; only the
-                        weaker support states are worth repeating here. */}
-                    {s.support !== "modeled" ? <span>{SET_SUPPORT_LABEL[s.support]}</span> : null}
-                    {def?.source ? (
-                      <a href={def.source.url} target="_blank" rel="noreferrer">
-                        Source
-                      </a>
-                    ) : null}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
       </div>
     </div>
   );

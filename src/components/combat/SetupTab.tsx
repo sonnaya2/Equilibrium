@@ -150,10 +150,32 @@ export function SetupTab({
   const missingItems = new Set(stats.equipment.incomplete.map((item) => item.id)).size;
   const partialTotals = [
     missingDamage ? "Equipment damage" : null,
-    missingArmour ? "Equipment armour and Armour rating" : null,
-    missingLife ? "Equipment life and life-point totals" : null,
+    missingArmour ? "Armour and armour rating" : null,
+    missingLife ? "Maximum HP" : null,
   ].filter((label): label is string => label != null);
   const life = stats.life.breakdown;
+  const maximumHp = stats.life.temporaryMaxLife;
+  const maximumHpNote = stats.life.powerburstActive
+    ? "Powerburst active"
+    : stats.life.temporaryMaxLife !== stats.life.normalMaxLife
+      ? "Includes temporary effects"
+      : undefined;
+  // Every named life source, including temporary ones. Zero rows hide in Breakdown.
+  // The pieces always sum to the live maximum (temporaryMaxLife after Powerburst).
+  const maximumHpBreakdown = [
+    { label: "Constitution", value: life.constitution },
+    { label: "Equipment", value: life.equipment },
+    { label: "Reaper Crew", value: life.reaperCrew },
+    { label: "Boon of Het", value: life.boonOfHet },
+    { label: "Font of Life", value: life.fontOfLife },
+    { label: "Fortitude", value: life.fortitude },
+    { label: "Thermal bath", value: life.thermalBath },
+    { label: "Elidinis Statuette", value: life.elidinisStatuette },
+    { label: "Bonfire", value: life.bonfire },
+    { label: "Totem of Vitality", value: life.totemOfVitality },
+    { label: "Big Boned", value: life.leagueMaximumNormal + life.leagueMaximumTemporary },
+    { label: "Powerburst of vitality", value: life.powerburst },
+  ];
 
   return (
     <div className="combat-setup py-3">
@@ -214,13 +236,19 @@ export function SetupTab({
 
           <div className="setup-summary__sections">
             <SummarySection title="Offence">
-              <SummaryMetric label="Base ability damage" value={formatNum(stats.base)} />
+              <SummaryMetric label="Base ability damage" value={formatNum(stats.base)}>
+                <Breakdown total={stats.base} items={stats.baseAbilityDamageBreakdown} />
+              </SummaryMetric>
               <SummaryMetric
                 label="Equipment damage"
                 value={formatNum(stats.equipment.damage)}
                 partialItems={missingDamage}
-              />
-              <SummaryMetric label="Accuracy" value={formatNum(stats.accuracyRating)} />
+              >
+                <Breakdown total={stats.equipment.damage} items={stats.equipmentDamageBreakdown} />
+              </SummaryMetric>
+              <SummaryMetric label="Accuracy" value={formatNum(stats.accuracyRating)}>
+                <Breakdown total={stats.accuracyRating} items={stats.accuracyBreakdown} />
+              </SummaryMetric>
               <SummaryMetric
                 label="Damage Potential"
                 value={PERCENT_FORMAT.format(stats.dp)}
@@ -258,97 +286,53 @@ export function SetupTab({
             </SummarySection>
 
             <SummarySection title="Defence">
-              <SummaryMetric label="Base Defence" value={formatNum(loadout.defenceLevel)} />
               <SummaryMetric
-                label="Visible boosted Defence"
+                label="Defence"
                 value={LEVEL_FORMAT.format(stats.defence.visibleLevel)}
-              />
-              {stats.defence.blockLevel !== stats.defence.visibleLevel ? (
-                <SummaryMetric
-                  label="Block-calculation Defence"
-                  value={LEVEL_FORMAT.format(stats.defence.blockLevel)}
-                />
-              ) : null}
+                note={
+                  stats.defence.blockLevel !== stats.defence.visibleLevel
+                    ? `Block level ${LEVEL_FORMAT.format(stats.defence.blockLevel)}`
+                    : undefined
+                }
+              >
+                <Breakdown total={stats.defence.visibleLevel} items={stats.defenceBreakdown} />
+              </SummaryMetric>
               <SummaryMetric
-                label="Total armour"
+                label="Armour"
                 value={formatNum(stats.defence.totalArmour)}
                 partialItems={missingArmour}
-              />
+              >
+                <Breakdown total={stats.defence.totalArmour} items={stats.armourBreakdown} />
+              </SummaryMetric>
               <SummaryMetric
-                label="Block armour rating"
+                label="Armour rating"
                 value={formatNum(stats.defence.blockArmourRating)}
+                note="Hit chance only"
                 partialItems={missingArmour}
-              />
+              >
+                <Breakdown
+                  total={stats.defence.blockArmourRating}
+                  items={stats.armourRatingBreakdown}
+                />
+              </SummaryMetric>
             </SummarySection>
 
             <SummarySection title="Life & resources">
-              <SummaryMetric label="Constitution" value={formatNum(loadout.constitutionLevel)} />
               <SummaryMetric
-                label="Constitution life"
-                value={formatNum(stats.life.constitutionLife)}
-              />
-              <SummaryMetric
-                label="Equipment life"
-                value={formatNum(stats.life.equipmentLife)}
-                partialItems={missingLife}
-              />
-              <SummaryMetric
-                label="Maximum life points"
-                value={formatNum(stats.life.normalMaxLife)}
-                note="Normal maximum"
+                label="Maximum HP"
+                value={formatNum(maximumHp)}
+                note={maximumHpNote}
                 partialItems={missingLife}
               >
-                <Breakdown
-                  total={stats.life.normalMaxLife}
-                  items={[
-                    { label: "Constitution", value: life.constitution },
-                    { label: "Equipment", value: life.equipment },
-                    { label: "Reaper Crew", value: life.reaperCrew },
-                    { label: "Boon of Het", value: life.boonOfHet },
-                    { label: "Font of Life", value: life.fontOfLife },
-                    { label: "Totem of Vitality", value: life.totemOfVitality },
-                    { label: "Big Boned", value: life.leagueMaximumNormal },
-                  ]}
-                />
+                <Breakdown total={maximumHp} items={maximumHpBreakdown} />
               </SummaryMetric>
-              {stats.life.temporaryMaxLife !== stats.life.normalMaxLife ? (
-                <SummaryMetric
-                  label="Temporary maximum life"
-                  value={formatNum(stats.life.temporaryMaxLife)}
-                  note={stats.life.powerburstActive ? "Powerburst active" : undefined}
-                  partialItems={missingLife}
-                >
-                  <Breakdown
-                    total={stats.life.temporaryMaxLife}
-                    items={[
-                      { label: "Constitution", value: life.constitution },
-                      { label: "Equipment", value: life.equipment },
-                      { label: "Reaper Crew", value: life.reaperCrew },
-                      { label: "Boon of Het", value: life.boonOfHet },
-                      { label: "Font of Life", value: life.fontOfLife },
-                      { label: "Fortitude", value: life.fortitude },
-                      { label: "Thermal bath", value: life.thermalBath },
-                      { label: "Elidinis Statuette", value: life.elidinisStatuette },
-                      { label: "Bonfire", value: life.bonfire },
-                      { label: "Totem of Vitality", value: life.totemOfVitality },
-                      { label: "Big Boned", value: life.leagueMaximumTemporary },
-                      { label: "Powerburst of vitality", value: life.powerburst },
-                    ]}
-                  />
-                </SummaryMetric>
-              ) : null}
-              <SummaryMetric label="Current life" value={formatNum(stats.life.currentLife)} />
+              <SummaryMetric label="Current HP" value={formatNum(stats.life.currentLife)} />
               {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
                 <SummaryMetric label="Overheal cap" value={formatNum(stats.life.overhealCeiling)} />
               ) : null}
               <SummaryMetric label="Prayer bonus" value={formatNum(stats.equipment.prayer)} />
               <SummaryMetric label="Starting adrenaline" value={`${stats.startingAdrenaline}%`} />
               <SummaryMetric label="Maximum adrenaline" value={`${stats.maxAdrenaline}%`} />
-              <SummaryMetric
-                label="Hit cap"
-                value={stats.cap.bypass ? "Disabled" : formatNum(stats.cap.cap)}
-                note={stats.cap.bypass ? undefined : "Per hit"}
-              />
             </SummarySection>
           </div>
 

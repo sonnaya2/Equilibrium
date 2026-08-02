@@ -11,6 +11,7 @@ import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
 import { CombatFrameCorners } from "./CombatFrameCorners";
+import { SetEffectsList } from "./SetEffectsList";
 import { clearEquipment, equipInSlot, type Loadout } from "./useLoadout";
 
 const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
@@ -461,6 +462,14 @@ export function GearPanel({
           ) : (
             <p className="mt-1.5 text-xs text-parch-300">No equipped item grants a passive.</p>
           )}
+
+          <h4
+            id="gear-set-effects-title"
+            className="combat-section-title mt-3 text-xs font-medium uppercase tracking-wide text-parch-300"
+          >
+            Set effects
+          </h4>
+          <SetEffectsList loadout={loadout} />
         </section>
       </div>
 

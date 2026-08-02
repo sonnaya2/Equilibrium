@@ -650,7 +650,7 @@ body:has(.combat-screen) {
     "target enchantments"
     "style blessings"
     "overload blessings"
-    "life sets";
+    "life life";
   grid-template-columns: minmax(22rem, 0.88fr) minmax(28rem, 1.12fr);
   gap: 0.55rem 0.85rem;
 }
@@ -693,10 +693,6 @@ body:has(.combat-screen) {
 
 .buff-life {
   grid-area: life;
-}
-
-.buff-sets {
-  grid-area: sets;
 }
 
 .icon-tile-grid {
@@ -2451,8 +2447,7 @@ body:has(.combat-screen) {
       "overload"
       "life"
       "enchantments"
-      "blessings"
-      "sets";
+      "blessings";
     grid-template-columns: minmax(0, 1fr);
   }
 

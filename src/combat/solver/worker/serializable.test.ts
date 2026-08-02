@@ -117,10 +117,19 @@ describe("solver worker serializable boundary", () => {
     expect(revived.blessingIds.has("striking-light")).toBe(true);
     expect(revived.blessingIds.has("splash-zone")).toBe(true);
     expect(revived.blessingIds.size).toBe(2);
+    expect(revived.includeBigBonedOutgoingDamage).toBe(false);
+    expect(revived.powerburstUntilTick).toBe(0);
 
     const again = serializeLeague(revived);
     expect(again.blessingIds).toEqual(["striking-light", "splash-zone"]);
     expect(Array.isArray(again.blessingIds)).toBe(true);
+    expect(again.includeBigBonedOutgoingDamage).toBe(false);
+  });
+
+  it("defaults omitted includeBigBonedOutgoingDamage to false on revive", () => {
+    const league = { ...sampleSimBase().league };
+    delete league.includeBigBonedOutgoingDamage;
+    expect(reviveLeague(league).includeBigBonedOutgoingDamage).toBe(false);
   });
 
   it("revives modifiers as a function without shipping closures across clone", () => {

@@ -13,11 +13,12 @@ import {
   effectiveTargetAffinity,
   leagueModifiers,
   resolveLeagueRules,
+  type ResolveLeagueRulesDerived,
 } from "./ruleset";
 
 const rules = (
   picks: readonly ("Order" | "Balance" | "Chaos")[],
-  derived: { totalArmour?: number; maximumLife?: number; targetTiles?: number } = {},
+  derived: ResolveLeagueRulesDerived = {},
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: picks }, derived);
 
 describe("Teragard's Aegis and basic attacks", () => {
@@ -187,11 +188,25 @@ describe("Big Boned maximum-life basis", () => {
     const summary = (maximumLife: number) =>
       simulate({
         ...baseInput,
-        league: rules(["Balance"], { maximumLife }),
+        league: rules(["Balance"], {
+          maximumLife,
+          includeBigBonedOutgoingDamage: true,
+        }),
         context: { style: "melee", ruleset: "equilibrium" },
         rotation: rotationOf("attack"),
       }).events.find((event) => event.abilityId === "big-boned")!.damage.expected;
     expect(summary(15_000)).toBe(750);
     expect(summary(20_000)).toBe(1_000);
+  });
+
+  it("default rules emit no Big Boned damage events", () => {
+    const summary = simulate({
+      ...baseInput,
+      league: rules(["Balance"], { maximumLife: 15_000 }),
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(0);
+    expect(summary.totalExpected).toBe(1_200);
   });
 });

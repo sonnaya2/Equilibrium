@@ -76,6 +76,26 @@ describe("solutionStore", () => {
     expect(fingerprintSolveContext(c)).not.toBe(fingerprintSolveContext(a));
   });
 
+  it("fingerprints includeBigBonedOutgoingDamage so experimental scoring cannot share cache", () => {
+    const safe = sampleRequest();
+    const experimental = structuredClone(safe);
+    if (!("league" in experimental.loadout)) throw new Error("expected sim base");
+    experimental.loadout.league = {
+      ...experimental.loadout.league,
+      blessingIds: ["big-boned"],
+      includeBigBonedOutgoingDamage: true,
+    };
+    expect(fingerprintSolveContext(experimental)).not.toBe(fingerprintSolveContext(safe));
+    const experimentalOff = structuredClone(experimental);
+    experimentalOff.loadout.league = {
+      ...experimentalOff.loadout.league,
+      includeBigBonedOutgoingDamage: false,
+    };
+    expect(fingerprintSolveContext(experimentalOff)).not.toBe(
+      fingerprintSolveContext(experimental),
+    );
+  });
+
   it("normalizes corrupt cache payloads", () => {
     expect(normalizeSolveCache(null).entries).toEqual([]);
     expect(normalizeSolveCache({ version: 1, entries: [{ key: "x" }] }).entries).toEqual([]);

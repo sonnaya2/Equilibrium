@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { CombatModifier } from "../types";
 import { mulFloor } from "../core/rounding";
-import { calculateHit, type HitInput } from "./calculateHit";
+import { calculateHit, calculateRawHitBand, type HitInput } from "./calculateHit";
 
 const baseInput: HitInput = {
   base: 1000,
@@ -116,6 +116,20 @@ describe("calculateHit", () => {
         band: { minPct: 0, maxPct: 100 },
       }),
     ).toThrow("exact integer band has 100002 points");
+  });
+
+  it("rejects fractional raw-band bounds", () => {
+    expect(() => calculateRawHitBand({ ...baseInput, min: 10.5, max: 20 })).toThrow(/non-integer/);
+  });
+  it("rejects NaN and infinite raw-band bounds", () => {
+    expect(() => calculateRawHitBand({ ...baseInput, min: Number.NaN, max: 20 })).toThrow(/non-finite/);
+    expect(() =>
+      calculateRawHitBand({ ...baseInput, min: 0, max: Number.POSITIVE_INFINITY }),
+    ).toThrow(/non-finite/);
+  });
+  it("rejects inverted and negative-min raw bands", () => {
+    expect(() => calculateRawHitBand({ ...baseInput, min: 50, max: 10 })).toThrow(/inverted/);
+    expect(() => calculateRawHitBand({ ...baseInput, min: -1, max: 10 })).toThrow(/negative/);
   });
 
   it("runs the modifier pipeline before the crit layer", () => {

@@ -169,40 +169,39 @@ Still unverified:
 
 ### Big Boned
 
-Status: `partially modeled`, `mechanics unverified`
+Status: `modeled`, `mechanics unverified` (edge cases)
 
 The wiki card reads "**all damage you deal** gains 5% of your maximum life points as bonus damage",
 which is wider than the Cinders wording and is not once per cast. It rides every qualifying damage
 instance, through the shared eligibility policy below.
 
-**Safe default / experimental opt-in:**
+**Confirmed (Jagex Mod Sponge on Discord):** per hit, and works with other blessings.
 
-- `ResolvedLeagueRules.includeBigBonedOutgoingDamage` defaults to **false**.
-- Default calculator totals and solver rankings **exclude** the 5% max-life outgoing rider so an
-  unverified per-hit model cannot dominate rankings.
-- The +50% maximum-life multiplier (`blessingLifeMultiplier` / `maximumLifeMultiplier`) stays
-  active regardless of the flag.
-- Characterization tests and any future experimental UI pass
-  `includeBigBonedOutgoingDamage: true`. Do not silently change the provisional per-hit
-  interpretation when that flag is on.
-- Assumptions strings: default shows “Outgoing Big Boned damage excluded pending live
-  verification”; experimental lists per-hit, attached, 5% of max life including BB’s own boost,
-  rides DoT, no recursion (`BIG_BONED_OUTGOING_*` in `src/combat/league/ruleset.ts`).
+**Product default (include outgoing damage):**
 
-Implementation (when experimental flag is true):
+- `ResolvedLeagueRules.includeBigBonedOutgoingDamage` defaults to **true**.
+- Default calculator totals and solver rankings **include** the 5% max-life outgoing rider on every
+  unique rider-eligible hit (direct multi-hit components, DoT ticks, command hits).
+- The +50% maximum-life multiplier (`blessingLifeMultiplier` / `maximumLifeMultiplier`) always
+  applies when the blessing is picked.
+- Set `includeBigBonedOutgoingDamage: false` only as an advanced override (no experimental UI).
+- Assumptions strings live in `BIG_BONED_OUTGOING_*` in `src/combat/league/ruleset.ts`.
 
-- its own +50% maximum-life-points increase contributes to the 5% damage amount;
-- the basis is the resolved maximum after temporary boosts, so Fortitude, bonfires, thermal baths
-  and a Powerburst of vitality all raise it;
-- the survival benefit is displayed but not converted into damage value.
+Implementation:
+
+- per unique hit: attached flat bonus = 5% of `resolveMaximumLife` at land tick;
+- additive non-crit band, `attached: true`, `expectedSeparateHits: 0`;
+- its own +50% maximum-life increase contributes to the 5% amount;
+- temporary max-life (Fortitude, bonfires, thermal baths, Powerburst) raises the bonus while active;
+- BB rides the same parent hits as Cinders riders; both may attach to one parent hit;
+- does not recurse onto blessing-generated damage (no BB-on-BB, no BB-on-Inferno);
+- the survival benefit is displayed but not converted into extra damage beyond the rider.
 
 Still unverified:
 
-- whether temporary maximum-life boosts really count toward the bonus;
-- whether it is a separate hit;
-- crit eligibility;
-- hit-cap treatment;
-- whether autonomous conjure damage counts as "damage you deal".
+- exact formula stage and hit-cap treatment details;
+- DoT / conjure / poison / reflected-damage edge cases if any differ from the shared rider policy;
+- live magnitude confirmation beyond the card + Sponge ruling.
 
 Do not silently treat it as a generic final `damage × 1.05` modifier.
 

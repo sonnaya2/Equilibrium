@@ -2,8 +2,8 @@ import { ticksToSeconds } from "@/combat/core/ticks";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
 import {
+  BIG_BONED_OUTGOING_ASSUMPTIONS,
   BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
-  BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
 } from "@/combat/league/ruleset";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
@@ -98,7 +98,7 @@ export function CalculationAssumptions({
           [
             "Big Boned outgoing",
             stats.league.includeBigBonedOutgoingDamage
-              ? BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS.join("; ")
+              ? BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")
               : BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
           ],
         ] as Array<[string, string | number]>)

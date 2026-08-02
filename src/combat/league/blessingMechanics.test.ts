@@ -188,10 +188,7 @@ describe("Big Boned maximum-life basis", () => {
     const summary = (maximumLife: number) =>
       simulate({
         ...baseInput,
-        league: rules(["Balance"], {
-          maximumLife,
-          includeBigBonedOutgoingDamage: true,
-        }),
+        league: rules(["Balance"], { maximumLife }),
         context: { style: "melee", ruleset: "equilibrium" },
         rotation: rotationOf("attack"),
       }).events.find((event) => event.abilityId === "big-boned")!.damage.expected;
@@ -199,14 +196,15 @@ describe("Big Boned maximum-life basis", () => {
     expect(summary(20_000)).toBe(1_000);
   });
 
-  it("default rules emit no Big Boned damage events", () => {
+  it("default rules emit Big Boned damage events when the blessing is active", () => {
     const summary = simulate({
       ...baseInput,
       league: rules(["Balance"], { maximumLife: 15_000 }),
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(0);
-    expect(summary.totalExpected).toBe(1_200);
+    expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(1);
+    // Base 1200 + BB 750.
+    expect(summary.totalExpected).toBe(1_950);
   });
 });

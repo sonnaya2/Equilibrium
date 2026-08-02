@@ -34,8 +34,8 @@ export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRul
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
     targetTiles: league.targetTiles,
-    // Omitted / legacy payloads stay on the safe default (no outgoing rider).
-    includeBigBonedOutgoingDamage: league.includeBigBonedOutgoingDamage === true,
+    // Omitted / legacy payloads default to product policy (include outgoing rider).
+    includeBigBonedOutgoingDamage: league.includeBigBonedOutgoingDamage !== false,
   };
 }
 
@@ -49,7 +49,7 @@ export function serializeLeague(league: ResolvedLeagueRules): SerializableLeague
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
     targetTiles: league.targetTiles,
-    includeBigBonedOutgoingDamage: league.includeBigBonedOutgoingDamage === true,
+    includeBigBonedOutgoingDamage: league.includeBigBonedOutgoingDamage !== false,
   };
 }
 

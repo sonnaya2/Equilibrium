@@ -243,8 +243,8 @@ export interface LoadoutStatsOptions {
   blessingPicks?: readonly BlessingPath[];
   ruleset?: "base" | "equilibrium";
   /**
-   * Experimental: include Big Boned's 5% max-life outgoing damage rider.
-   * Default false — safe totals / solver scoring exclude it.
+   * Include Big Boned's 5% max-life outgoing damage rider.
+   * Default true — product totals / solver scoring include it when BB is active.
    */
   includeBigBonedOutgoingDamage?: boolean;
   /** Window the incoming-combat scenario is measured over; one minute by default. */
@@ -329,9 +329,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     maximumLife: maximumLifeForLeague,
     powerburstUntilTick,
     targetTiles: loadout.target?.occupiedTiles,
-    includeBigBonedOutgoingDamage:
-      options.includeBigBonedOutgoingDamage === true ||
-      loadout.buffs.experimentalBigBonedDamage === true,
+    includeBigBonedOutgoingDamage: options.includeBigBonedOutgoingDamage !== false,
   });
 
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.

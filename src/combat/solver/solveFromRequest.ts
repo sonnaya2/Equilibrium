@@ -13,8 +13,8 @@ import { requireSimBase } from "./worker/revive";
 import type { SolveFn, SolveRuntimeOptions } from "./worker/solveTypes";
 import type { SolverPhase, SolverProgress } from "./worker/protocol";
 import {
+  BIG_BONED_OUTGOING_ASSUMPTIONS,
   BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
-  BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
 } from "../league/ruleset";
 
 function resolveSpecs(ids: readonly string[]): AbilitySpec[] {
@@ -371,17 +371,14 @@ export const solveFromRequest: SolveFn = async (
   const winnerBar = result.best.bar;
   const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
   const hasBigBoned = simBase.league.blessingIds.includes("big-boned");
-  const experimentalBigBoned = simBase.league.includeBigBonedOutgoingDamage === true && hasBigBoned;
-  const bigBonedAssumptions = experimentalBigBoned
-    ? [...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS]
+  const includeBigBoned = hasBigBoned && simBase.league.includeBigBonedOutgoingDamage !== false;
+  const bigBonedAssumptions = includeBigBoned
+    ? [...BIG_BONED_OUTGOING_ASSUMPTIONS]
     : hasBigBoned
       ? [BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION]
       : undefined;
-  const experimentalNotes = experimentalBigBoned
-    ? ([
-        "best-found under experimental assumptions",
-        ...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
-      ] as const)
+  const bigBonedNotes = includeBigBoned
+    ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const)
     : hasBigBoned
       ? ([BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION] as const)
       : [];
@@ -408,7 +405,7 @@ export const solveFromRequest: SolveFn = async (
         result.exhaustiveCompleted ? "exhaustive completed" : "heuristic search",
         `pool size ${pool.ids.length}`,
         `seed best ${result.seedBestScore}`,
-        ...experimentalNotes,
+        ...bigBonedNotes,
       ],
     },
     top: result.top.map((t) => ({

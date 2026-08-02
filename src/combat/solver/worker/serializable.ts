@@ -56,8 +56,8 @@ export interface SerializableLeagueRules {
   powerburstUntilTick: number;
   targetTiles: number;
   /**
-   * Experimental opt-in for Big Boned's 5% max-life outgoing rider.
-   * Default / omitted = false (safe solver scoring).
+   * Include Big Boned's 5% max-life outgoing rider in scoring.
+   * Default / omitted = true (product scoring). Set false to exclude.
    */
   includeBigBonedOutgoingDamage?: boolean;
 }
@@ -217,8 +217,8 @@ export interface SolverResultDTO {
   developedDpm?: number;
   steadyDpm?: number;
   /**
-   * When experimental league mechanics (e.g. Big Boned outgoing damage) were
-   * included in scoring, human-readable provisional assumptions.
+   * Human-readable league assumptions for the scored loadout (e.g. Big Boned
+   * per-hit outgoing damage model).
    */
   assumptions?: readonly string[];
   /** Optional compact summary numbers for the winning bar. */

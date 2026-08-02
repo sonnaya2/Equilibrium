@@ -24,11 +24,8 @@ const rules = (
 
 describe("Equilibrium blessing combat rules", () => {
   it("adds Big Boned and Cinders as explicit non-recursive damage events", () => {
-    // Experimental path: provisional BB rider characterization (not default scoring).
-    const league = rules(["Balance", "Chaos", "Chaos"], {
-      maximumLife: 15_000,
-      includeBigBonedOutgoingDamage: true,
-    });
+    // Default product path: BB per-hit rider + Cinders on the same parent hits.
+    const league = rules(["Balance", "Chaos", "Chaos"], { maximumLife: 15_000 });
     const result = simulate({
       ...baseInput,
       league,
@@ -53,9 +50,9 @@ describe("Equilibrium blessing combat rules", () => {
     expect(simulate({ ...baseInput, rotation: rotationOf("attack") }).totalExpected).toBe(1_200);
   });
 
-  it("excludes Big Boned outgoing damage by default while keeping max-life multiplier", () => {
+  it("includes Big Boned outgoing damage by default while keeping max-life multiplier", () => {
     const league = rules(["Balance", "Chaos", "Chaos"], { maximumLife: 15_000 });
-    expect(league.includeBigBonedOutgoingDamage).toBe(false);
+    expect(league.includeBigBonedOutgoingDamage).toBe(true);
     expect(blessingLifeMultiplier({ ruleset: "equilibrium", blessingPicks: ["Balance"] })).toBe(
       1.5,
     );
@@ -65,12 +62,29 @@ describe("Equilibrium blessing combat rules", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
+    // Base 1200 + BB 750 + cinders 150 + inferno EV 75.
+    expect(result.totalExpected).toBe(2_175);
+    expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(1);
+    expect(
+      result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
+    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak"]);
+  });
+
+  it("can exclude Big Boned outgoing damage via advanced override", () => {
+    const league = rules(["Balance", "Chaos", "Chaos"], {
+      maximumLife: 15_000,
+      includeBigBonedOutgoingDamage: false,
+    });
+    expect(league.includeBigBonedOutgoingDamage).toBe(false);
+    const result = simulate({
+      ...baseInput,
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
     // Base 1200 + cinders 150 + inferno EV 75 — no BB 750 rider.
     expect(result.totalExpected).toBe(1_425);
     expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(0);
-    expect(
-      result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["abyssal-cinders", "inferno-of-zamorak"]);
   });
 
   it("enforces Striking Light's 15-tick cooldown and Sacred Fervor's cooldown clock", () => {

@@ -16,19 +16,20 @@ export interface LeagueLoadout {
 }
 
 /**
- * Default calculator / solver policy: Big Boned's +50% maximum life always
- * applies, but the 5% max-life outgoing rider is excluded until live mechanics
- * are verified. Opt in via `includeBigBonedOutgoingDamage` for characterization.
+ * Default calculator / solver policy (Mod Sponge Discord): Big Boned is per
+ * unique hit and stacks with other blessings. Outgoing 5% max-life flat damage
+ * is included whenever the blessing is active; +50% maximum life always applies.
+ * Set `includeBigBonedOutgoingDamage: false` only as an advanced override.
  */
 export const BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION =
-  "Outgoing Big Boned damage excluded pending live verification";
+  "Outgoing Big Boned damage excluded (advanced override)";
 
-/** Provisional model used only when `includeBigBonedOutgoingDamage` is true. */
-export const BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS = [
-  "Experimental Big Boned outgoing damage enabled (not default scoring)",
-  "Per-hit rider (not once per cast); attached to the parent hit, not a separate hit",
-  "5% of maximum life including Big Boned's own +50% max-life boost",
-  "Rides DoT ticks; does not recurse into blessing-generated damage",
+/** Product model for Big Boned's 5% max-life outgoing rider (default scoring). */
+export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
+  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as additive non-crit attached damage",
+  "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
+  "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
+  "Still unverified: DoT/conjure edge cases if any; exact formula stage details",
 ] as const;
 
 export interface ResolvedLeagueRules {
@@ -48,9 +49,9 @@ export interface ResolvedLeagueRules {
   powerburstUntilTick: number;
   targetTiles: number;
   /**
-   * When false (default), Big Boned still multiplies maximum life but does not
-   * emit the 5% max-life bonus damage rider. Solver rankings and default
-   * totals must stay on this path until live verification.
+   * When true (default), Big Boned emits the 5% max-life bonus damage rider on
+   * each qualifying hit. Set false only to exclude that damage from totals.
+   * Maximum-life +50% always applies when the blessing is picked.
    */
   includeBigBonedOutgoingDamage: boolean;
 }
@@ -60,7 +61,7 @@ export interface ResolveLeagueRulesDerived {
   maximumLife?: number;
   powerburstUntilTick?: number;
   targetTiles?: number;
-  /** Default false — experimental opt-in only. */
+  /** Default true — product scoring includes Big Boned outgoing damage. */
   includeBigBonedOutgoingDamage?: boolean;
 }
 
@@ -78,7 +79,7 @@ export function resolveLeagueRules(
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
     targetTiles: Math.max(1, Math.floor(derived.targetTiles ?? 1)),
-    includeBigBonedOutgoingDamage: derived.includeBigBonedOutgoingDamage === true,
+    includeBigBonedOutgoingDamage: derived.includeBigBonedOutgoingDamage !== false,
   };
 }
 

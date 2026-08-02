@@ -272,23 +272,6 @@ export function RotationEventPreview({
   );
 }
 
-/** Big Boned outgoing is opt-in; surface safe-default vs experimental scoring. */
-function ExperimentalMechanicsBanner({ stats }: { stats: CalcStats }) {
-  const hasPick = stats.league.blessings.some((choice) => choice.id === "big-boned");
-  if (!hasPick) return null;
-  const warning = stats.league.includeBigBonedOutgoingDamage
-    ? "Experimental: Big Boned outgoing damage is included in this total and may change."
-    : "Outgoing Big Boned damage excluded pending live verification.";
-  return (
-    <div
-      role="status"
-      className="border border-chaos-300/40 bg-stone-900/80 px-3 py-2 text-xs text-chaos-300"
-    >
-      <p>{warning}</p>
-    </div>
-  );
-}
-
 export function RotationAnalysisModal({
   open,
   result,
@@ -343,8 +326,6 @@ export function RotationAnalysisModal({
             Close
           </button>
         </header>
-
-        <ExperimentalMechanicsBanner stats={stats} />
 
         <dl className="grid grid-cols-2 border-b border-stone-750 text-sm md:grid-cols-4">
           {[

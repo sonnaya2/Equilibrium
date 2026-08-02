@@ -170,8 +170,8 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
-  // Default path excludes the outgoing rider (unverified magnitude/trigger).
-  // Maximum-life multiplier stays active via blessingLifeMultiplier regardless.
+  // Default path includes the outgoing rider (per-hit, Mod Sponge). Max-life
+  // multiplier stays active via blessingLifeMultiplier regardless of the flag.
   const bigBoned = blessingRule(input.rules, "big-boned");
   if (
     input.rules.includeBigBonedOutgoingDamage &&

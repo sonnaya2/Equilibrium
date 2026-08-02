@@ -202,11 +202,6 @@ export interface LoadoutBuffs {
   powerburstOfVitalityUntil: number | null;
   /** Epoch expiry for the sourced two-minute global powerburst cooldown. */
   powerburstOfVitalityCooldownUntil: number | null;
-  /**
-   * Experimental: include Big Boned's 5% max-life outgoing damage rider in
-   * totals and solver scores. Default false — max-life +50% still applies.
-   */
-  experimentalBigBonedDamage: boolean;
 }
 
 export interface Loadout {
@@ -305,7 +300,6 @@ export const DEFAULT_LOADOUT: Loadout = {
     overheal: "none",
     powerburstOfVitalityUntil: null,
     powerburstOfVitalityCooldownUntil: null,
-    experimentalBigBonedDamage: false,
   },
   equipmentSlots: {},
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
@@ -869,7 +863,6 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
         : "none",
       powerburstOfVitalityUntil,
       powerburstOfVitalityCooldownUntil,
-      experimentalBigBonedDamage: rawBuffs.experimentalBigBonedDamage === true,
     },
     equipmentSlots,
     enchantments,

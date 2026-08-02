@@ -56,7 +56,7 @@ function sampleSimBase(): SerializableRevolutionSimBase {
       maximumLife: 10000,
       powerburstUntilTick: 0,
       targetTiles: 1,
-      includeBigBonedOutgoingDamage: false,
+      includeBigBonedOutgoingDamage: true,
     },
     context: { style: "melee", ruleset: "equilibrium", targetTiles: 1 },
     cap: { cap: 30000, bypass: false },
@@ -118,18 +118,26 @@ describe("solver worker serializable boundary", () => {
     expect(revived.blessingIds.has("striking-light")).toBe(true);
     expect(revived.blessingIds.has("splash-zone")).toBe(true);
     expect(revived.blessingIds.size).toBe(2);
-    expect(revived.includeBigBonedOutgoingDamage).toBe(false);
+    expect(revived.includeBigBonedOutgoingDamage).toBe(true);
     expect(revived.powerburstUntilTick).toBe(0);
 
     const again = serializeLeague(revived);
     expect(again.blessingIds).toEqual(["striking-light", "splash-zone"]);
     expect(Array.isArray(again.blessingIds)).toBe(true);
-    expect(again.includeBigBonedOutgoingDamage).toBe(false);
+    expect(again.includeBigBonedOutgoingDamage).toBe(true);
   });
 
-  it("defaults omitted includeBigBonedOutgoingDamage to false on revive", () => {
+  it("defaults omitted includeBigBonedOutgoingDamage to true on revive", () => {
     const league = { ...sampleSimBase().league };
     delete league.includeBigBonedOutgoingDamage;
+    expect(reviveLeague(league).includeBigBonedOutgoingDamage).toBe(true);
+  });
+
+  it("honors explicit false includeBigBonedOutgoingDamage on revive", () => {
+    const league = {
+      ...sampleSimBase().league,
+      includeBigBonedOutgoingDamage: false,
+    };
     expect(reviveLeague(league).includeBigBonedOutgoingDamage).toBe(false);
   });
 

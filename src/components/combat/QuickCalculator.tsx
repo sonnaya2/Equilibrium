@@ -121,6 +121,12 @@ export function QuickCalculator() {
     useBuild && ability?.id === "asphyxiate" && (setup.tumekensPieces ?? 0) >= 4
       ? resplendentAsphyxiate(ability)
       : ability;
+  const crit = {
+    chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
+    guaranteed: (calculatedAbility as RangedAbilitySpec | undefined)?.guaranteedCrit,
+    disabled: useBuild && setup.critsDisabled,
+    damageBonus: useBuild ? setup.critDamageBonus : 0,
+  };
 
   const result =
     calculatedAbility && calculatedAbility.hits.length > 0
@@ -128,11 +134,8 @@ export function QuickCalculator() {
           base: Math.max(0, finite(effectiveBase, 0)),
           level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
           accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
-          crit: {
-            chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
-            guaranteed: (calculatedAbility as RangedAbilitySpec).guaranteedCrit,
-            disabled: useBuild && setup.critsDisabled,
-          },
+          crit,
+          critByHit: useBuild ? setup.critByHitFor(calculatedAbility, crit) : undefined,
           modifiers: useBuild ? setup.castModifiersFor(calculatedAbility) : undefined,
           context: { style: activeStyle },
           cap: setup.cap,

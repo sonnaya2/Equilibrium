@@ -37,6 +37,11 @@ export function CalculationAssumptions({
       `+${Math.round((baseCritDamageMultiplier(stats.level, stats.critDamageBonus) - 1) * 100)}%`,
     ],
     ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions preserved"],
+    ...(stats.activePassives.length > 0
+      ? ([["Equipment passives", stats.activePassives.join(", ")]] as Array<
+          [string, string | number]
+        >)
+      : []),
   ];
   if (!manualInputsOnly && stats.combatStyle === "magic")
     rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "—"]);

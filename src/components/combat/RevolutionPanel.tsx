@@ -229,7 +229,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         base: stats.base,
         level: stats.level,
         accuracy: stats.dp,
-        crit: { chance: stats.simulationCritChance, disabled: stats.critsDisabled },
+        crit: {
+          chance: stats.simulationCritChance,
+          disabled: stats.critsDisabled,
+          damageBonus: stats.critDamageBonus,
+        },
         abilities: [...ENGINE_SPECS.values(), ...modelled],
         bar: modelled,
         style: bar.style,

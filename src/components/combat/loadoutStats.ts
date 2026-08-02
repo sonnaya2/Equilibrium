@@ -11,6 +11,11 @@ import {
 } from "@/combat/shared/perks";
 import {
   activeEquipmentEffects,
+  activePassiveLabels,
+  additiveMeleeDamageModifier,
+  amZiModifier,
+  applyEquipmentDamagePotential,
+  equipmentCritByHit,
   equippedSetCounts,
   effectiveTumekenPieces,
   isWeaponAccuracySlot,
@@ -19,6 +24,7 @@ import {
   loadoutSetCritChance,
   setDamageModifiers,
   setEffectsSummary,
+  staticEquipmentCritBonus,
   sumEquipmentBonuses,
   sumNonWeaponAccuracy,
   type ActiveEquipmentEffects,
@@ -35,6 +41,7 @@ import { equipmentById } from "@/combat/data";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
+import type { CritLayers } from "@/combat/core/critical";
 import type { Loadout } from "./useLoadout";
 
 /** Re-export for GearPanel / setup consumers. */
@@ -61,6 +68,11 @@ export interface CalcStats {
   /** Crit chance for the simulator before land-time Tumeken Sunshine bonus. */
   simulationCritChance: number;
   critDamageBonus: number;
+  activePassives: readonly string[];
+  critByHitFor: (
+    ability: AbilitySpec,
+    crit: Omit<CritLayers, "eligible">,
+  ) => Omit<CritLayers, "eligible">[];
   cap: HitCapRule;
   startingAdrenaline: number;
   maxAdrenaline: number;
@@ -322,9 +334,11 @@ export function loadoutStats(loadout: Loadout): CalcStats {
 
   let attackLevel = loadoutAttackLevel(loadout);
   if (overloadTier) attackLevel = overloadBoostedLevel(attackLevel, overloadTier);
+  const visibleAttackLevel = attackLevel;
   if (curse) attackLevel = prayerBoostedStyleLevel(attackLevel, curse);
 
   const level = loadoutDamageLevel(loadout);
+  const effectiveStrengthLevel = loadoutEffectiveDamageLevel(loadout);
   const energising =
     loadout.perks.energising > 0 ? energisingAccuracyBonus(loadout.perks.energising) : 0;
   const accessoryAccuracy = nonWeaponAccuracyBonus(loadout);
@@ -332,18 +346,28 @@ export function loadoutStats(loadout: Loadout): CalcStats {
 
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
   // Without a target, the manual accuracy% slider remains authoritative.
-  const dp = loadout.target
-    ? targetDamagePotential(
-        playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
-        {
-          defenceLevel: loadout.target.defenceLevel,
-          armour: loadout.target.armour,
-          affinity: loadout.target.affinity,
-          additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
-          damagePotentialOverride: loadout.target.damagePotentialOverride,
-        },
-      )
-    : clamp01(loadout.accuracy / 100);
+  const equipmentEffects = activeEquipmentEffects({
+    style: loadout.style,
+    equipmentSlots: loadout.equipmentSlots,
+    enchantments: loadout.enchantments,
+    effectiveAttackLevel: visibleAttackLevel,
+    effectiveStrengthLevel,
+  });
+  const dp = applyEquipmentDamagePotential(
+    loadout.target
+      ? targetDamagePotential(
+          playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
+          {
+            defenceLevel: loadout.target.defenceLevel,
+            armour: loadout.target.armour,
+            affinity: loadout.target.affinity,
+            additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
+            damagePotentialOverride: loadout.target.damagePotentialOverride,
+          },
+        )
+      : clamp01(loadout.accuracy / 100),
+    equipmentEffects,
+  );
 
   // Equilibrium perk prevents critical strikes (wiki). Biting/set bonuses ignored while active.
   // Set crit: actual gear counts (Math.max with manual perk piece sliders — no double-count).
@@ -351,10 +375,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   const tumekensPieces = effectiveTumekenPieces(setCounts, {
     tumekensPieces: loadout.perks.tumekensPieces,
   });
-  const equipmentEffects = activeEquipmentEffects({
-    style: loadout.style,
-    equipmentSlots: loadout.equipmentSlots,
-  });
+  const equipmentCrit = staticEquipmentCritBonus(equipmentEffects);
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
@@ -378,11 +399,13 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     },
   });
   const critChance =
-    loadout.perks.equilibrium > 0 ? 0 : clamp01(loadout.critChance / 100 + biting + setCrit);
+    loadout.perks.equilibrium > 0
+      ? 0
+      : clamp01(loadout.critChance / 100 + biting + setCrit + equipmentCrit.chance);
   const simulationCritChance =
     loadout.perks.equilibrium > 0
       ? 0
-      : clamp01(loadout.critChance / 100 + biting + simulationSetCrit);
+      : clamp01(loadout.critChance / 100 + biting + simulationSetCrit + equipmentCrit.chance);
   const maxAdrenaline = equipmentEffects.vestments.increasedAdrenalineCap ? 120 : 100;
 
   const globalModifiers: CombatModifier[] = [];
@@ -394,6 +417,12 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   );
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (curse) globalModifiers.push(prayerDamageModifier(curse));
+  if (equipmentEffects.amZiFlatDamage > 0) {
+    globalModifiers.push(amZiModifier(equipmentEffects.amZiFlatDamage));
+  }
+  if (equipmentEffects.amHejDamageBonus > 0) {
+    globalModifiers.push(additiveMeleeDamageModifier(equipmentEffects.amHejDamageBonus));
+  }
 
   const adrenaline: AdrenalineRules = {
     basicGainMultiplier:
@@ -437,7 +466,9 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     critChance,
     critsDisabled: loadout.perks.equilibrium > 0,
     simulationCritChance,
-    critDamageBonus: 0,
+    critDamageBonus: equipmentCrit.damageBonus,
+    activePassives: activePassiveLabels(equipmentEffects),
+    critByHitFor: (ability, crit) => equipmentCritByHit(equipmentEffects, ability, crit),
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
     maxAdrenaline,

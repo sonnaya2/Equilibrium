@@ -186,6 +186,12 @@ describe("normalizeLoadout", () => {
     expect(next.equipmentIds).toEqual(["item:a", "item:b", "item:unlock-only"]);
     expect(unlockOnlyIds(next)).toEqual(["item:unlock-only"]);
   });
+
+  it("keeps only unique known equipment enchantments", () => {
+    expect(
+      normalizeLoadout({ enchantments: ["agony", "agony", "unknown", 1] }).enchantments,
+    ).toEqual(["agony"]);
+  });
 });
 
 describe("pruneUnknownEquipment", () => {

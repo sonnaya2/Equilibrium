@@ -76,6 +76,14 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
     }
   });
 
+  it("ships passive metadata and keeps crossbows out of the bow class", () => {
+    expect(equipmentById("item:am-zi")?.passiveId).toBe("am-zi");
+    expect(equipmentById("item:am-hej")?.passiveId).toBe("am-hej");
+    expect(equipmentById("cross-region:channellers-ring")?.passiveId).toBe("channeller-ring");
+    expect(equipmentById("item:bow-of-the-last-guardian")?.weaponClass).toBe("bow");
+    expect(equipmentById("item:eldritch-crossbow")?.weaponClass).not.toBe("bow");
+  });
+
   it("equippedBonuses still works for omni + lantern", () => {
     const omni = equipmentById("item:omni-guard");
     const lantern = equipmentById("item:soulbound-lantern");

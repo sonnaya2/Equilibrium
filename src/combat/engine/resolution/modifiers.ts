@@ -10,9 +10,14 @@ import {
   SUNSHINE_SOURCE,
 } from "../../styles/magic/effects";
 import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
-import type { CombatModifier, SourceReference } from "../../types";
+import type { CombatModifier, DamageOverTimeKind, SourceReference } from "../../types";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
+import {
+  additiveMeleeDamageModifier,
+  amZiModifier,
+  ENDURING_RUIN_SOURCE,
+} from "../../shared/equipment";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -57,9 +62,47 @@ export function landTimeModifiers(
   hitIndex: number,
   isDot: boolean,
   convertedChannel = false,
+  dotKind?: DamageOverTimeKind,
 ): CombatModifier[] {
   const { state } = rt;
   const modifiers = [...snap.baseMods];
+  const equipment = rt.input.equipmentEffects;
+  if (equipment?.amZiFlatDamage && !modifiers.some((modifier) => modifier.id === "item:am-zi")) {
+    modifiers.push(amZiModifier(equipment.amZiFlatDamage));
+  }
+  if (
+    equipment?.amHejDamageBonus &&
+    !modifiers.some((modifier) => modifier.id === "item:additive-melee")
+  ) {
+    modifiers.push(additiveMeleeDamageModifier(equipment.amHejDamageBonus));
+  }
+  if (snap.enduringRuinBonus > 0) {
+    const additiveIndex = modifiers.findIndex((modifier) => modifier.id === "item:additive-melee");
+    if (additiveIndex >= 0) modifiers.splice(additiveIndex, 1);
+    modifiers.push(
+      additiveMeleeDamageModifier(
+        (rt.input.equipmentEffects?.amHejDamageBonus ?? 0) + snap.enduringRuinBonus,
+        ENDURING_RUIN_SOURCE,
+      ),
+    );
+  }
+  if (
+    dotKind === "bleed" &&
+    state.target.melee.enduringRuin.bleedVulnerability > 0 &&
+    at < state.target.melee.enduringRuin.untilTick
+  ) {
+    modifiers.push({
+      id: "item:enduring-ruin-bleed",
+      stage: "target",
+      priority: 50,
+      applies: () => true,
+      apply: (damage) => ({
+        ...damage,
+        damage: mulFloor(damage.damage, 1 + state.target.melee.enduringRuin.bleedVulnerability),
+      }),
+      source: ENDURING_RUIN_SOURCE,
+    });
+  }
   if (snap.chaosRoarActive && (!snap.channelled || hitIndex === 0)) {
     modifiers.push(
       buffMultiplier("buff:chaos_roar", CHAOS_ROAR_DAMAGE_MULTIPLIER, MODERNISATION_WIKI),

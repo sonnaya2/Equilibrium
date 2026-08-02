@@ -47,15 +47,18 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
     ability.id === "asphyxiate" && (stats.tumekensPieces ?? 0) >= 4
       ? resplendentAsphyxiate(ability)
       : ability;
+  const crit = {
+    chance: stats.critChance,
+    guaranteed: (working as RangedAbilitySpec).guaranteedCrit,
+    disabled: stats.critsDisabled,
+    damageBonus: stats.critDamageBonus,
+  };
   return calculateAbility(working, {
     base: Math.max(0, finite(stats.base, 0)),
     level: stats.level,
     accuracy: stats.dp,
-    crit: {
-      chance: stats.critChance,
-      guaranteed: (working as RangedAbilitySpec).guaranteedCrit,
-      disabled: stats.critsDisabled,
-    },
+    crit,
+    critByHit: stats.critByHitFor(working, crit),
     modifiers: stats.castModifiersFor(working),
     context: { style },
     cap: stats.cap,

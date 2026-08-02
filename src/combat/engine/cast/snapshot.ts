@@ -24,4 +24,6 @@ export interface CastSnapshot {
   empowerMult: number;
   /** Searing Winds was active at cast — every hit carries the attached bonus. */
   searingWindsAtCast: boolean;
+  /** Enduring Ruin's next-attack additive bonus captured for every hit in this cast. */
+  enduringRuinBonus: number;
 }

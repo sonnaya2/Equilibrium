@@ -19,6 +19,8 @@ import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
 import type { EventResolution } from "./types";
+import { dynamicEquipmentCritBonus } from "../../shared/equipment";
+import { activeBleedCount } from "../../styles/melee/effects";
 
 /**
  * Resolve one ordinary cast hit at its land tick. Time-windowed globals read
@@ -40,9 +42,24 @@ export function resolveCastHit(
   convertedChannel = false,
 ): EventResolution {
   const { input, state } = rt;
-  const modifiers = landTimeModifiers(rt, at, ability, snap, hitIndex, isDot, convertedChannel);
+  const modifiers = landTimeModifiers(
+    rt,
+    at,
+    ability,
+    snap,
+    hitIndex,
+    isDot,
+    convertedChannel,
+    hitSpec.dotKind,
+  );
 
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
+  const equipmentCrit = dynamicEquipmentCritBonus(
+    input.equipmentEffects,
+    ability,
+    hitIndex,
+    activeBleedCount(state.target.melee, at),
+  );
   // Concentrated Blast's own hits read the live accumulating stacks; every
   // other magic cast consumed them at cast time (baked into snap.critLayers).
   const liveConcChance =
@@ -63,11 +80,13 @@ export function resolveCastHit(
             snap.castSeq,
           )
         : 0) +
-      (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0),
+      (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0) +
+      equipmentCrit.chance,
     guaranteed: snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
     damageBonus:
       (snap.critLayers.damageBonus ?? 0) +
-      (ability.style === "magic" ? channelledMightCritBonus(state.magic.channelledMight, at) : 0),
+      (ability.style === "magic" ? channelledMightCritBonus(state.magic.channelledMight, at) : 0) +
+      equipmentCrit.damageBonus,
   };
 
   // Command abilities are part of the conjure: full Damage Potential, the
@@ -87,7 +106,7 @@ export function resolveCastHit(
     accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
     crit,
     modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
-    context: input.context,
+    context: { ...input.context, style: ability.style, dotKind: hitSpec.dotKind },
     cap: input.cap,
   });
 
@@ -102,7 +121,7 @@ export function resolveCastHit(
       accuracy: input.accuracy,
       crit: { chance: 0, eligible: false },
       modifiers,
-      context: input.context,
+      context: { ...input.context, style: ability.style, dotKind: hitSpec.dotKind },
       cap: input.cap,
     });
     min += bonus.min;

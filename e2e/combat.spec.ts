@@ -117,6 +117,9 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
   const doll = page.getByRole("group", { name: "Equipment slots" });
   await expect(doll.getByText("Main-hand")).toBeVisible();
   await expect(doll.getByText("Empty").first()).toBeVisible();
+  const agony = page.getByRole("checkbox", { name: /Agony/ });
+  await agony.check();
+  await expect(agony).toBeChecked();
 
   await page.getByRole("button", { name: "Perks", exact: true }).click();
   await expect(page.getByText("Perks & sets")).toBeVisible();

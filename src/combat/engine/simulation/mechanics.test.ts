@@ -7,6 +7,17 @@ import { rotationOf } from "./contracts";
 import { simulate, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
 import { simulateRevolution } from "./revolution";
+import {
+  activeEquipmentEffects,
+  amHejDamageBonus,
+  applyEquipmentDamagePotential,
+  dynamicEquipmentCritBonus,
+  staticEquipmentCritBonus,
+  type ActiveEquipmentEffects,
+  type EquipmentEnchantmentId,
+} from "../../shared/equipment";
+import { activeBleedCount } from "../../styles/melee/effects";
+import type { ItemPassiveId, WeaponClass } from "../../data/records";
 
 /**
  * Stage 5 regression coverage: Bloat's derived tails, Death Skulls' derived
@@ -33,6 +44,25 @@ const magicInput: Omit<SimulateInput, "rotation"> = {
   abilities: MAGIC_ABILITIES,
   context: { style: "magic" },
 };
+
+function itemEffects(
+  passiveIds: ItemPassiveId[],
+  enchantments: EquipmentEnchantmentId[] = [],
+  weaponClass: WeaponClass | null = null,
+  resolved: Partial<Pick<ActiveEquipmentEffects, "amZiFlatDamage" | "amHejDamageBonus">> = {},
+): ActiveEquipmentEffects {
+  return {
+    ...activeEquipmentEffects({ style: "melee" }),
+    passiveIds,
+    enchantments,
+    weaponClass,
+    passage: {
+      active: passiveIds.includes("enduring-ruin"),
+      agonyActive: passiveIds.includes("enduring-ruin") && enchantments.includes("agony"),
+    },
+    ...resolved,
+  };
+}
 
 describe("Bloat derived tails", () => {
   it("tails are 25% of the resolved initial hit with provenance", () => {
@@ -187,6 +217,118 @@ describe("Dismember recast chain", () => {
     expect(ids).toContain("dismember");
     expect(ids).toContain("slaughter");
     expect(ids.indexOf("dismember")).toBeLessThan(ids.indexOf("slaughter"));
+  });
+});
+
+describe("item passive timelines", () => {
+  it("counts unique bleeds for Jaws and doubles only that gain under Natural Instinct", () => {
+    const equipmentEffects = itemEffects(["jaws-of-the-abyss", "abyssal-parasite"]);
+    const run = (naturalInstinctUntilTick = 0) => {
+      const ctx = createCastContext({
+        ...meleeInput,
+        equipmentEffects,
+        naturalInstinctUntilTick,
+      });
+      ctx.performCast(ctx.byId.get("dismember")!, 0, false);
+      expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(2);
+      ctx.performCast(ctx.byId.get("fury")!, 3, false);
+      return ctx.getState().adrenaline;
+    };
+    expect(run()).toBe(13);
+    expect(run(100)).toBe(17);
+  });
+
+  it("keeps Parasite cadence and resolves a same-tick refresh with the old stacks", () => {
+    const result = simulate({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["abyssal-parasite"]),
+      rotation: rotationOf("rend", "fury"),
+    });
+    const parasite = result.events.filter((event) => event.abilityId === "abyssal_parasite");
+    expect(parasite.map((event) => event.tick)).toEqual([3, 6, 9, 12, 15, 18]);
+    expect(parasite[0]!.damage).toMatchObject({ min: 18, max: 31, expected: 24.5 });
+    expect(parasite[1]!.damage).toMatchObject({ min: 37, max: 62, expected: 49.5 });
+  });
+
+  it("grants Passage on Rend landing and combines its next attack additively with Am-hej", () => {
+    const equipmentEffects = itemEffects(
+      ["enduring-ruin", "am-hej", "abyssal-parasite"],
+      ["agony"],
+      null,
+      { amHejDamageBonus: 0.06 },
+    );
+    const result = simulate({
+      ...meleeInput,
+      equipmentEffects,
+      rotation: rotationOf("rend", "fury"),
+    });
+    const fury = result.casts.find((cast) => cast.abilityId === "fury")!;
+    expect(fury.result.expected).toBeCloseTo(1463.5124378109454, 10);
+
+    const bleeds = simulate({
+      ...meleeInput,
+      equipmentEffects,
+      rotation: rotationOf("rend", "dismember"),
+    });
+    expect(
+      bleeds.events.find((event) => event.abilityId === "abyssal_parasite")?.damage,
+    ).toMatchObject({ min: 22, max: 38, expected: 30 });
+    expect(bleeds.events.find((event) => event.abilityId === "dismember")?.damage).toMatchObject({
+      min: 312,
+      max: 437,
+    });
+  });
+
+  it("adds Am-zi after the roll on direct hits and excludes bleeds", () => {
+    const direct = simulate({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["am-zi"], [], null, { amZiFlatDamage: 162 }),
+      rotation: rotationOf("fury"),
+    });
+    const bleed = simulate({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["am-zi"], [], null, { amZiFlatDamage: 162 }),
+      rotation: rotationOf("dismember"),
+    });
+    expect(direct.casts[0]!.result.expected).toBe(1362);
+    expect(bleed.casts[0]!.result.expected).toBe(8 * 300);
+    expect(amHejDamageBonus(120)).toBe(0.06);
+    expect(amHejDamageBonus(139)).toBe(0.06);
+    expect(amHejDamageBonus(140)).toBe(0.07);
+  });
+
+  it("applies Heroism and Metaphysics from live bleed and channel-hit state", () => {
+    const champion = dynamicEquipmentCritBonus(
+      itemEffects(["champion-ring"], ["heroism"]),
+      { style: "melee" },
+      0,
+      3,
+    );
+    expect(champion).toEqual({ chance: 0.04, damageBonus: 0.045 });
+
+    const channeller = dynamicEquipmentCritBonus(
+      itemEffects(["channeller-ring"], ["metaphysics"]),
+      { style: "magic", channelTicks: 8 },
+      4,
+      0,
+    );
+    expect(channeller).toEqual({ chance: 0.2, damageBonus: 0.125 });
+  });
+
+  it("gates Stalker by bow class and leaves Reaver unenchanted", () => {
+    expect(staticEquipmentCritBonus(itemEffects(["stalker-ring"], ["shadows"], "bow"))).toEqual({
+      chance: 0.04,
+      damageBonus: 0.03,
+    });
+    expect(
+      staticEquipmentCritBonus(itemEffects(["stalker-ring"], ["shadows"], "crossbow")),
+    ).toEqual({ chance: 0, damageBonus: 0 });
+    expect(staticEquipmentCritBonus(itemEffects(["reaver-ring"]))).toEqual({
+      chance: 0.05,
+      damageBonus: 0,
+    });
+    expect(applyEquipmentDamagePotential(1, itemEffects(["reaver-ring"]))).toBe(0.95);
+    expect(applyEquipmentDamagePotential(0.8, itemEffects(["reaver-ring"]))).toBe(0.75);
   });
 });
 

@@ -88,7 +88,7 @@
 {"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"cross-region:artificers-measure"}
 {"category":"Archaeology skilling off-hand cross-region chain","entityId":"cross-region:balaraks-sash-brush"}
 {"category":"cross-region Prayer AFK restore package","entityId":"cross-region:bonecrusher-necklace"}
-{"category":"upgraded Fremennik ring (channel/crit support)","entityId":"cross-region:channellers-ring"}
+{"entityId":"cross-region:channellers-ring","slot":"ring","style":"magic","tier":85}
 {"category":"cross-region crystal tool progression family","entityId":"cross-region:crystal-tools-dragon-base"}
 {"category":"Grace of the Elves permanent upgrade","entityId":"cross-region:dark-facet-of-grace"}
 {"category":"permanent luck enhancer enchantment","entityId":"cross-region:dark-facet-of-luck"}
@@ -262,6 +262,8 @@
 {"entityId":"item:ahrims-staff","slot":"twohand","style":"magic","tier":70}
 {"entityId":"item:ahrims-wand","slot":"mainhand","style":"magic","tier":70}
 {"entityId":"item:akrisaes-war-mace","slot":"mainhand","style":"melee","tier":70}
+{"entityId":"item:am-hej","slot":"amulet","style":"melee","tier":90}
+{"entityId":"item:am-zi","slot":"amulet","style":"melee","tier":90}
 {"entityId":"item:amulet-of-souls","slot":"amulet","style":"hybrid","tier":90}
 {"entityId":"item:amulet-of-the-forsaken","slot":"amulet","style":"hybrid","tier":70}
 {"entityId":"item:ancient-defender","slot":"offhand","style":"melee","tier":80}

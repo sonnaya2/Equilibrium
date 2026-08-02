@@ -76,6 +76,19 @@ export type EquipmentSlot =
   | "pocket"
   | "ammo";
 
+export type ItemPassiveId =
+  | "jaws-of-the-abyss"
+  | "abyssal-parasite"
+  | "am-zi"
+  | "am-hej"
+  | "enduring-ruin"
+  | "reaver-ring"
+  | "champion-ring"
+  | "stalker-ring"
+  | "channeller-ring";
+
+export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
+
 export interface EquipmentBonuses {
   damage?: number;
   accuracy?: number;
@@ -93,7 +106,8 @@ export interface EquipmentRecord extends CombatRecordBase {
   bonuses: EquipmentBonuses;
   /** Set membership, passive and special attack reference EffectRecord ids. */
   setId?: string;
-  passiveId?: string;
+  passiveId?: ItemPassiveId;
+  weaponClass?: WeaponClass;
   specialAttackId?: string;
 }
 

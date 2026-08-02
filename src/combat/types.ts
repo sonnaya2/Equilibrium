@@ -12,12 +12,17 @@ export interface SourceReference {
 
 export type CombatStyle = "melee" | "ranged" | "magic" | "necromancy";
 
+export type DamageOverTimeKind = "bleed" | "burn" | "other";
+
+export type BleedId = "dismember" | "slaughter" | "massacre" | "abyssal-parasite";
+
 export type ModifierStage =
   "base" | "ability" | "onCast" | "roll" | "critical" | "onHit" | "target" | "postHit";
 
 export interface CombatContext {
   style: CombatStyle;
   ruleset?: "base" | "equilibrium";
+  dotKind?: DamageOverTimeKind;
 }
 
 export interface DamageState {

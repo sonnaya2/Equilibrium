@@ -1,6 +1,6 @@
 import type { EventResolution, ResolvedDamage } from "../resolution/types";
 import type { CritLayers } from "../../core/critical";
-import type { CombatModifier } from "../../types";
+import type { BleedId, CombatModifier, DamageOverTimeKind } from "../../types";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
@@ -37,6 +37,10 @@ export interface ScheduledEvent<RT = unknown> {
   flowReduction?: number;
   /** Greater Barge converted a channel hit into Endless Assault damage over time. */
   convertedChannel?: boolean;
+  dotKind?: DamageOverTimeKind;
+  bleedId?: BleedId;
+  bleedExpiresAtTick?: number;
+  abyssalParasiteEligible?: boolean;
   /** Cast snapshot needed if this Magic hit lands during Instability. */
   lightningSurge?: { critLayers: CritLayers; baseMods: CombatModifier[] };
   /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
@@ -124,6 +128,10 @@ export class EventQueue<RT = unknown> {
         e.derivedFrom ?? -1,
         e.flowReduction ?? 0,
         e.convertedChannel ?? false,
+        e.dotKind ?? null,
+        e.bleedId ?? null,
+        e.bleedExpiresAtTick ?? -1,
+        e.abyssalParasiteEligible ?? false,
         e.lightningSurge
           ? [
               e.lightningSurge.critLayers.chance,

@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
-import { activeEquipmentEffects } from "@/combat/shared/equipment";
+import {
+  activeEquipmentEffects,
+  EQUIPMENT_ENCHANTMENTS,
+  type EquipmentEnchantmentId,
+} from "@/combat/shared/equipment";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
@@ -119,6 +123,7 @@ export interface Loadout {
   perks: LoadoutPerks;
   buffs: LoadoutBuffs;
   equipmentSlots: Partial<Record<EquipmentSlot, string | null>>;
+  enchantments: EquipmentEnchantmentId[];
   /** Derived: slotted ids + unlock pins. */
   equipmentIds: string[];
 }
@@ -167,6 +172,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     overload: "none",
   },
   equipmentSlots: {},
+  enchantments: [],
   equipmentIds: [],
 };
 
@@ -259,6 +265,16 @@ export function toggleUnlockPin(loadout: Loadout, itemId: string): Loadout {
     equipmentSlots: loadout.equipmentSlots ?? {},
     equipmentIds: mergeEquipmentIds(loadout.equipmentSlots ?? {}, [...unlocks]),
   };
+}
+
+export function toggleEquipmentEnchantment(
+  loadout: Loadout,
+  enchantment: EquipmentEnchantmentId,
+): Loadout {
+  const enchantments = new Set(loadout.enchantments);
+  if (enchantments.has(enchantment)) enchantments.delete(enchantment);
+  else enchantments.add(enchantment);
+  return { ...loadout, enchantments: [...enchantments] };
 }
 
 export function clearEquipment(loadout: Loadout): Loadout {
@@ -376,13 +392,24 @@ export function normalizeLoadout(value: unknown): Loadout {
   }
 
   const equipmentSlots = normalizeEquipmentSlots(raw.equipmentSlots);
+  const enchantments = Array.isArray(raw.enchantments)
+    ? [
+        ...new Set(
+          raw.enchantments.filter(
+            (id): id is EquipmentEnchantmentId =>
+              typeof id === "string" &&
+              EQUIPMENT_ENCHANTMENTS.includes(id as EquipmentEnchantmentId),
+          ),
+        ),
+      ]
+    : [];
   const legacyIds = Array.isArray(raw.equipmentIds)
     ? raw.equipmentIds.filter((id): id is string => typeof id === "string")
     : [];
   const slotted = new Set(equipmentIdList(equipmentSlots));
   const unlocks = legacyIds.filter((id) => !slotted.has(id));
-  const startingAdrenalineCap = activeEquipmentEffects({ style, equipmentSlots }).vestments
-    .increasedAdrenalineCap
+  const startingAdrenalineCap = activeEquipmentEffects({ style, equipmentSlots, enchantments })
+    .vestments.increasedAdrenalineCap
     ? 120
     : 100;
 
@@ -470,6 +497,7 @@ export function normalizeLoadout(value: unknown): Loadout {
         : "none",
     },
     equipmentSlots,
+    enchantments,
     equipmentIds: mergeEquipmentIds(equipmentSlots, unlocks),
   };
 }

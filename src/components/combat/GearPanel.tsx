@@ -10,11 +10,16 @@ import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
 import { CombatFrameCorners } from "./CombatFrameCorners";
-import { setEffectsSummary } from "@/combat/shared/equipment";
+import {
+  EQUIPMENT_ENCHANTMENTS,
+  setEffectsSummary,
+  type EquipmentEnchantmentId,
+} from "@/combat/shared/equipment";
 import {
   clearEquipment,
   equipInSlot,
   equipmentIdList,
+  toggleEquipmentEnchantment,
   toggleUnlockPin,
   unlockOnlyIds,
   type Loadout,
@@ -37,6 +42,13 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
   ranged: "Ranged",
   magic: "Magic",
   necromancy: "Necromancy",
+};
+
+const ENCHANTMENT_LABELS: Record<EquipmentEnchantmentId, string> = {
+  agony: "Agony · Passage gloves",
+  heroism: "Heroism · Champion's ring",
+  shadows: "Shadows · Stalker's ring",
+  metaphysics: "Metaphysics · Channeller's ring",
 };
 
 const SLOT_LABELS: Record<EquipmentSlot, string> = {
@@ -429,6 +441,28 @@ export function GearPanel({
             </div>
           );
         })()}
+
+        <fieldset className="combat-subpanel mt-3 px-2 py-1.5 text-xs">
+          <legend className="px-1 text-[11px] uppercase tracking-wide text-parch-300">
+            Account enchantments
+          </legend>
+          <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-1">
+            {EQUIPMENT_ENCHANTMENTS.map((id) => (
+              <label key={id} className="inline-flex items-center gap-2 text-parch-100">
+                <input
+                  type="checkbox"
+                  checked={loadout.enchantments.includes(id)}
+                  onChange={() => setLoadout(toggleEquipmentEnchantment(loadout, id))}
+                />
+                {ENCHANTMENT_LABELS[id]}
+              </label>
+            ))}
+          </div>
+          <p className="mt-1 text-parch-300">
+            Enchantments apply only while their matching item is equipped. Agony assumes the
+            enhanced gloves were equipped at least 9 seconds before tick 0.
+          </p>
+        </fieldset>
 
         {activeItem ? (
           <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">

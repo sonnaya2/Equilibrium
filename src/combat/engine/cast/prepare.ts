@@ -42,7 +42,8 @@ export type PreparedTransition =
   /** Next-hit melee windows this cast consumes. */
   | { kind: "consumeChaosRoar" }
   | { kind: "consumeGreaterFury" }
-  | { kind: "consumeFury" };
+  | { kind: "consumeFury" }
+  | { kind: "consumeEnduringRuin" };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -208,6 +209,11 @@ export function prepareCast(
     rt.state.melee.greaterFuryUntilTick > 0 &&
     candidate < rt.state.melee.greaterFuryUntilTick;
   const furyConsume = ability.style === "melee" && nonBleed && rt.state.melee.furyCritBonus;
+  const enduringRuinConsume =
+    ability.style === "melee" &&
+    damaging &&
+    rt.state.melee.enduringRuin.nextAttackBonus > 0 &&
+    candidate < rt.state.melee.enduringRuin.untilTick;
   // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") —
   // a channel cast inside the window keeps the bonus on hits landing after it.
   const searingWindsAtCast =
@@ -229,6 +235,7 @@ export function prepareCast(
     firstEligibleHitIndex: working.hits.findIndex((h) => h.critEligible !== false),
     empowerMult,
     searingWindsAtCast,
+    enduringRuinBonus: enduringRuinConsume ? rt.state.melee.enduringRuin.nextAttackBonus : 0,
   };
 
   const transitions: PreparedTransition[] = [];
@@ -240,6 +247,7 @@ export function prepareCast(
   if (chaosRoarConsume) transitions.push({ kind: "consumeChaosRoar" });
   if (greaterFuryConsume) transitions.push({ kind: "consumeGreaterFury" });
   if (furyConsume) transitions.push({ kind: "consumeFury" });
+  if (enduringRuinConsume) transitions.push({ kind: "consumeEnduringRuin" });
 
   const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
   const flowReduction = sonic

@@ -5,6 +5,8 @@ import { spendDeathspore } from "../../../styles/ranged/onHit";
 import { gainAdrenaline, patchRanged, spendAdrenaline } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 import { vestmentsUltimateEligible } from "../../../shared/equipment";
+import { hasPassive } from "../../../shared/equipment";
+import { activeBleedCount } from "../../../styles/melee/effects";
 
 /**
  * Adrenaline and free-cast resources for one cast, in sourced order: gain
@@ -38,6 +40,20 @@ export function applyCastResources(fx: CastEffectContext): void {
       }
     }
     rt.state = gainAdrenaline(rt.state, gain);
+  }
+
+  if (
+    hasPassive(input.equipmentEffects, "jaws-of-the-abyss") &&
+    ability.style === "melee" &&
+    ability.category === "basic" &&
+    !ability.autoAttack &&
+    fx.prepared.working.hits.length > 0
+  ) {
+    const jaws = 2 * activeBleedCount(rt.state.target.melee, candidate);
+    rt.state = gainAdrenaline(
+      rt.state,
+      candidate < rt.state.naturalInstinctUntilTick ? jaws * 2 : jaws,
+    );
   }
 
   if (spend > 0) {

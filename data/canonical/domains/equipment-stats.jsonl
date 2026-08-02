@@ -1,3 +1,5 @@
+{"entityId":"cross-region:channellers-ring","stat":"damage","value":34.5}
+{"entityId":"cross-region:channellers-ring","stat":"prayer","value":5}
 {"entityId":"item:abomination-cape","stat":"armour","value":50.8}
 {"entityId":"item:abomination-cape","stat":"damage","value":28.1}
 {"entityId":"item:abyssal-orb","stat":"accuracy","value":1694}
@@ -29,6 +31,8 @@
 {"entityId":"item:akrisaes-war-mace","stat":"accuracy","value":1486}
 {"entityId":"item:akrisaes-war-mace","stat":"damage","value":1564.5}
 {"entityId":"item:akrisaes-war-mace","stat":"prayer","value":2}
+{"entityId":"item:am-hej","stat":"damage","value":51.7}
+{"entityId":"item:am-zi","stat":"damage","value":51.7}
 {"entityId":"item:amulet-of-souls","stat":"damage","value":48.3}
 {"entityId":"item:amulet-of-souls","stat":"prayer","value":5}
 {"entityId":"item:amulet-of-the-forsaken","stat":"damage","value":40.2}

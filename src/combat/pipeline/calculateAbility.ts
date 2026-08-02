@@ -1,5 +1,6 @@
 import type { DamageBand } from "../core/abilityDamage";
 import type { CritLayers } from "../core/critical";
+import type { BleedId, DamageOverTimeKind } from "../types";
 import { calculateHit, type HitInput, type HitResult } from "./calculateHit";
 
 export interface AbilityHit {
@@ -16,6 +17,8 @@ export interface AbilityHit {
    * cast tick.
    */
   dot?: boolean;
+  dotKind?: DamageOverTimeKind;
+  bleedId?: BleedId;
 }
 
 export type StateEffectId =
@@ -89,13 +92,17 @@ export interface AbilityResult {
 
 export function calculateAbility(
   ability: AbilitySpec,
-  input: Omit<HitInput, "band" | "crit"> & { crit: Omit<CritLayers, "eligible"> },
+  input: Omit<HitInput, "band" | "crit"> & {
+    crit: Omit<CritLayers, "eligible">;
+    critByHit?: readonly Omit<CritLayers, "eligible">[];
+  },
 ): AbilityResult {
-  const hits = ability.hits.map((hit) =>
+  const hits = ability.hits.map((hit, index) =>
     calculateHit({
       ...input,
       band: hit.band,
-      crit: { ...input.crit, eligible: hit.critEligible ?? true },
+      crit: { ...(input.critByHit?.[index] ?? input.crit), eligible: hit.critEligible ?? true },
+      context: { ...input.context, style: ability.style, dotKind: hit.dotKind },
     }),
   );
   return {

@@ -1,4 +1,4 @@
-import type { SourceReference } from "../../types";
+import type { BleedId, SourceReference } from "../../types";
 import { newBloodlust, type BloodlustState } from "./bloodlust";
 
 const wiki = (title: string, path: string, verifiedAt = "2026-07-26"): SourceReference => ({
@@ -45,6 +45,40 @@ export const PULVERISE_DEBUFF_DURATION_SECONDS = 30;
 export const PULVERISE_KILL_ADRENALINE = 50;
 export const PULVERISE_SOURCE = wiki("Pulverise", "Pulverise");
 
+export const ABYSSAL_PARASITE_MAX_STACKS = 50;
+export const ABYSSAL_PARASITE_DURATION_TICKS = 15;
+export const ABYSSAL_PARASITE_INTERVAL_TICKS = 3;
+
+export interface AbyssalParasiteState {
+  stacks: number;
+  expiresAtTick: number;
+  nextDamageTick: number;
+  scheduledThroughTick: number;
+}
+
+export interface MeleeTargetEffects {
+  bleeds: Partial<Record<BleedId, number>>;
+  abyssalParasite: AbyssalParasiteState;
+  enduringRuin: { bleedVulnerability: number; untilTick: number };
+}
+
+export const newMeleeTargetEffects = (): MeleeTargetEffects => ({
+  bleeds: {},
+  abyssalParasite: { stacks: 0, expiresAtTick: 0, nextDamageTick: 0, scheduledThroughTick: 0 },
+  enduringRuin: { bleedVulnerability: 0, untilTick: 0 },
+});
+
+export function activeBleedCount(target: MeleeTargetEffects, at: number): number {
+  let count = Object.values(target.bleeds).filter((until) => until != null && at < until).length;
+  if (target.abyssalParasite.stacks > 0 && at < target.abyssalParasite.expiresAtTick) count++;
+  return count;
+}
+
+export function abyssalParasiteDamage(stacks: number): { min: number; max: number } {
+  const n = Math.max(0, Math.min(ABYSSAL_PARASITE_MAX_STACKS, Math.floor(stacks)));
+  return { min: Math.floor(18.74 * n), max: Math.floor(31.24 * n) };
+}
+
 /** Every mutable melee state the simulation carries between casts. */
 export interface MeleeRotationState {
   bloodlust: BloodlustState;
@@ -83,6 +117,7 @@ export interface MeleeRotationState {
    */
   bleedChainNext: "slaughter" | "massacre" | null;
   bleedChainUntilTick: number;
+  enduringRuin: { nextAttackBonus: number; untilTick: number; grantedByCast: number };
 }
 
 export const newMeleeRotationState = (): MeleeRotationState => ({
@@ -95,6 +130,7 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   endlessAssaultUntilTick: 0,
   bleedChainNext: null,
   bleedChainUntilTick: 0,
+  enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
 });
 
 export function greaterBargeIdleBand(

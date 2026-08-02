@@ -1814,6 +1814,8 @@
 {"entityId":"item:ahrims-staff","regionId":"morytania","relation":"required"}
 {"entityId":"item:ahrims-wand","regionId":"morytania","relation":"required"}
 {"entityId":"item:akrisaes-war-mace","regionId":"morytania","relation":"required"}
+{"entityId":"item:am-hej","regionId":"desert","relation":"required"}
+{"entityId":"item:am-zi","regionId":"desert","relation":"required"}
 {"entityId":"item:amulet-of-souls","regionId":"misthalin","relation":"required"}
 {"entityId":"item:amulet-of-the-forsaken","regionId":"morytania","relation":"required"}
 {"entityId":"item:ancient-defender","regionId":"morytania","relation":"required"}

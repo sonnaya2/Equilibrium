@@ -1,5 +1,10 @@
 import { gainBloodlust } from "../../styles/melee/bloodlust";
-import { newMeleeRotationState, type MeleeRotationState } from "../../styles/melee/effects";
+import {
+  newMeleeRotationState,
+  newMeleeTargetEffects,
+  type MeleeRotationState,
+  type MeleeTargetEffects,
+} from "../../styles/melee/effects";
 import { newMagicRotationState, type MagicRotationState } from "../../styles/magic/effects";
 import { newBurns, type BurnState } from "../../styles/magic/burn";
 import { newRangedRotationState, type RangedRotationState } from "../../styles/ranged/effects";
@@ -29,6 +34,7 @@ export interface TargetRuntimeState {
    * (wiki: the duration resets on recast).
    */
   bloatedByCast: number;
+  melee: MeleeTargetEffects;
 }
 
 /**
@@ -52,6 +58,7 @@ export interface RotationState {
    * this tick (wiki: 30s internal cooldown; 0 = ready). Style-agnostic.
    */
   relentlessUntilTick: number;
+  naturalInstinctUntilTick: number;
   melee: MeleeRotationState;
   ranged: RangedRotationState;
   magic: MagicRotationState;
@@ -60,7 +67,12 @@ export interface RotationState {
 }
 
 export function newRotationState(
-  opts: { lantern?: boolean; adrenaline?: number; adrenalineCap?: number } = {},
+  opts: {
+    lantern?: boolean;
+    adrenaline?: number;
+    adrenalineCap?: number;
+    naturalInstinctUntilTick?: number;
+  } = {},
 ): RotationState {
   const adrenalineCap = opts.adrenalineCap ?? ADRENALINE_CAP;
   return {
@@ -70,11 +82,17 @@ export function newRotationState(
     vestmentsAdrenalineUntilTick: 0,
     cooldowns: {},
     relentlessUntilTick: 0,
+    naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
     melee: newMeleeRotationState(),
     ranged: newRangedRotationState(),
     magic: newMagicRotationState(),
     necromancy: newNecromancyRotationState({ lantern: opts.lantern }),
-    target: { lastAttackTick: -1, burns: newBurns(), bloatedByCast: -1 },
+    target: {
+      lastAttackTick: -1,
+      burns: newBurns(),
+      bloatedByCast: -1,
+      melee: newMeleeTargetEffects(),
+    },
   };
 }
 

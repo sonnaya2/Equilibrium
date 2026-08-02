@@ -60,6 +60,12 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     );
   }
   if (
+    input.naturalInstinctUntilTick != null &&
+    (!Number.isFinite(input.naturalInstinctUntilTick) || input.naturalInstinctUntilTick < 0)
+  ) {
+    throw new RangeError(`bad naturalInstinctUntilTick: ${input.naturalInstinctUntilTick}`);
+  }
+  if (
     input.targetHpPercent != null &&
     (!Number.isFinite(input.targetHpPercent) ||
       input.targetHpPercent < 0 ||
@@ -73,7 +79,11 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     byId: new Map(input.abilities.map((a) => [a.id, a])),
     basicByStyle: new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a])),
     queue: new EventQueue<SimulationRuntime>(),
-    state: newRotationState({ adrenaline: input.startingAdrenaline, adrenalineCap }),
+    state: newRotationState({
+      adrenaline: input.startingAdrenaline,
+      adrenalineCap,
+      naturalInstinctUntilTick: input.naturalInstinctUntilTick,
+    }),
     casts: [],
     perAbility: {},
     damageByTick: {},

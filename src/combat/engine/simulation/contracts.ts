@@ -86,6 +86,8 @@ export interface SimulateInput {
    * is invented.
    */
   targetHpPercent?: number;
+  /** Optional pre-active Natural Instinct window for Jaws adrenaline. */
+  naturalInstinctUntilTick?: number;
 }
 
 export interface SimulateOptions {

@@ -8,6 +8,8 @@ import type { PreparedCast } from "./prepare";
 import type { CastRecord } from "../simulation/contracts";
 import { resolveCastHit, resolveDerivedHit } from "../resolution";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
+import { hasPassive } from "../../shared/equipment";
+import type { BleedId } from "../../types";
 
 /**
  * Damage-event construction for one prepared cast: sequence allocation, the
@@ -51,6 +53,14 @@ export function scheduleCastEvents(
       ? rt.state.necromancy.conjures.spirits.find((s) => s.id === "skeleton_warrior")?.untilTick
       : undefined;
   const hitSeqs: number[] = [];
+  const bleedExpires = new Map<BleedId, number>();
+  for (const hit of working.hits) {
+    if (!hit.bleedId) continue;
+    bleedExpires.set(
+      hit.bleedId,
+      Math.max(bleedExpires.get(hit.bleedId) ?? 0, candidate + (hit.tickOffset ?? 0) + 1),
+    );
+  }
   working.hits.forEach((hitSpec: AbilityHit, hitIndex: number) => {
     const landTick = candidate + (hitSpec.tickOffset ?? 0);
     if (
@@ -78,6 +88,16 @@ export function scheduleCastEvents(
       cancelOwner: castSeq,
       ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
       ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
+      ...(hitSpec.dotKind ? { dotKind: hitSpec.dotKind } : {}),
+      ...(hitSpec.bleedId
+        ? {
+            bleedId: hitSpec.bleedId,
+            bleedExpiresAtTick: bleedExpires.get(hitSpec.bleedId),
+          }
+        : {}),
+      ...(ability.style === "melee" && hasPassive(rt.input.equipmentEffects, "abyssal-parasite")
+        ? { abyssalParasiteEligible: true }
+        : {}),
       ...(ability.style === "magic" && !isDot && hitSpec.critEligible !== false
         ? { lightningSurge: { critLayers: snap.critLayers, baseMods: snap.baseMods } }
         : {}),

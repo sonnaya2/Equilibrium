@@ -230,21 +230,63 @@ function tag(db, operation) {
  * — export.mjs replays source records over a skeleton. So a reveal that adds a
  * record, rather than amending one, has no other way in.
  */
-function setRecord(db, operation) {
+function setRecord(db, operation, source) {
   const { file, path, body } = operation;
   const known = db.prepare("SELECT path FROM source_files WHERE path = ?").get(file);
   if (!known) throw new Error(`unknown source file: ${file}`);
+  const previous = db
+    .prepare("SELECT stable_id, entity_id FROM source_records WHERE source_file = ? AND record_path = ?")
+    .get(file, path);
+  const bodyId = typeof body.id === "string" ? body.id : null;
+  const matchedEntity = bodyId
+    ? db.prepare("SELECT id FROM entities WHERE id = ?").get(bodyId)?.id
+    : null;
+  const stableId = matchedEntity ? bodyId : previous?.stable_id ?? null;
+  const entityId = matchedEntity ?? previous?.entity_id ?? null;
   // canonical-validate reconstructs the hash as hash(stableJson(record)), so it
   // has to be written the same way or every rebuild fails parity.
   const raw = stableJson(body);
   db.prepare(
-    `INSERT INTO source_records (source_file, record_path, record_hash, raw_json)
-     VALUES (?, ?, ?, ?)
+    `INSERT INTO source_records (source_file, record_path, stable_id, entity_id, record_hash, raw_json)
+     VALUES (?, ?, ?, ?, ?, ?)
      ON CONFLICT (source_file, record_path)
-     DO UPDATE SET record_hash = excluded.record_hash, raw_json = excluded.raw_json`,
-  ).run(file, path, hash(raw), raw);
-  // Touches no entity, so it contributes nothing to the changed-entity set.
-  return [];
+     DO UPDATE SET stable_id = excluded.stable_id, entity_id = excluded.entity_id,
+                   record_hash = excluded.record_hash, raw_json = excluded.raw_json`,
+  ).run(file, path, stableId, entityId, hash(raw), raw);
+  if (!entityId) return [];
+  const name = typeof body.name === "string" ? body.name : null;
+  if (name) {
+    db.prepare(
+      "UPDATE entities SET name = ?, sort_key = ?, extra_json = ?, updated_source = ? WHERE id = ?",
+    ).run(name, name.toLocaleLowerCase("en"), raw, source, entityId);
+  } else {
+    db.prepare("UPDATE entities SET extra_json = ?, updated_source = ? WHERE id = ?").run(
+      raw,
+      source,
+      entityId,
+    );
+  }
+  if (file === "data/combat/equipment.json") {
+    db.prepare(
+      `INSERT INTO equipment(entity_id, style, slot, tier, category) VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(entity_id) DO UPDATE SET style = excluded.style, slot = excluded.slot,
+         tier = excluded.tier, category = excluded.category`,
+    ).run(
+      entityId,
+      scalar(body.style),
+      scalar(body.slot),
+      Number.isFinite(body.tier) ? body.tier : null,
+      scalar(body.category),
+    );
+    db.prepare("DELETE FROM equipment_stats WHERE entity_id = ?").run(entityId);
+    const insertStat = db.prepare(
+      "INSERT INTO equipment_stats(entity_id, stat, value, unit) VALUES (?, ?, ?, '')",
+    );
+    for (const [stat, value] of Object.entries(body.bonuses ?? {})) {
+      if (Number.isFinite(value)) insertStat.run(entityId, stat, value);
+    }
+  }
+  return [entityId];
 }
 
 export const HANDLERS = new Map([

@@ -31,6 +31,11 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
       case "consumeFury":
         rt.state = patchMelee(rt.state, { furyCritBonus: false });
         break;
+      case "consumeEnduringRuin":
+        rt.state = patchMelee(rt.state, {
+          enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
+        });
+        break;
     }
   }
 }

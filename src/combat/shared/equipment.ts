@@ -4,7 +4,9 @@ import {
   AMASCUT_MASTERIES_WIKI_2025_09_29,
   MASTERWORK_WEAPONS_WIKI_2025_05_27,
 } from "../data/sources";
-import type { EquipmentBonuses, EquipmentSlot } from "../data/records";
+import type { EquipmentBonuses, EquipmentSlot, ItemPassiveId, WeaponClass } from "../data/records";
+import type { CritLayers } from "../core/critical";
+import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
 
@@ -112,8 +114,20 @@ export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, nu
 
 export const EQUIPMENT_SET_ACTIVATION = "pre-activated-static-loadout" as const;
 
+export const EQUIPMENT_ENCHANTMENTS = ["agony", "heroism", "shadows", "metaphysics"] as const;
+export type EquipmentEnchantmentId = (typeof EQUIPMENT_ENCHANTMENTS)[number];
+
 export interface ActiveEquipmentEffects {
   activation: typeof EQUIPMENT_SET_ACTIVATION;
+  passiveIds: readonly ItemPassiveId[];
+  enchantments: readonly EquipmentEnchantmentId[];
+  weaponClass: WeaponClass | null;
+  passage: {
+    active: boolean;
+    agonyActive: boolean;
+  };
+  amZiFlatDamage: number;
+  amHejDamageBonus: number;
   vestments: {
     pieces: number;
     heraldOfChaos: boolean;
@@ -124,15 +138,54 @@ export interface ActiveEquipmentEffects {
 
 /** Active set effects for the fixed loadout the simulator starts with at tick 0. */
 export function activeEquipmentEffects(
-  loadout: LoadoutEquipmentView & { style?: CombatStyle },
+  loadout: LoadoutEquipmentView & {
+    style?: CombatStyle;
+    enchantments?: readonly EquipmentEnchantmentId[];
+    effectiveAttackLevel?: number;
+    effectiveStrengthLevel?: number;
+  },
 ): ActiveEquipmentEffects {
   const pieces = Math.min(4, equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0);
   const weaponId = loadout.equipmentSlots?.twohand ?? loadout.equipmentSlots?.mainhand;
-  const meleeWeapon = weaponId
-    ? equipmentById(weaponId)?.style === "melee"
-    : loadout.style === "melee";
+  const weapon = weaponId ? equipmentById(weaponId) : undefined;
+  const meleeWeapon = weaponId ? weapon?.style === "melee" : loadout.style === "melee";
+  const passiveIds = [
+    ...new Set(
+      Object.values(loadout.equipmentSlots ?? {}).flatMap((id) => {
+        const passiveId = typeof id === "string" ? equipmentById(id)?.passiveId : undefined;
+        return passiveId ? [passiveId] : [];
+      }),
+    ),
+  ];
+  const enchantments = [
+    ...new Set(
+      (loadout.enchantments ?? []).filter((id): id is EquipmentEnchantmentId =>
+        EQUIPMENT_ENCHANTMENTS.includes(id),
+      ),
+    ),
+  ];
+  const passageActive = passiveIds.includes("enduring-ruin");
   return {
     activation: EQUIPMENT_SET_ACTIVATION,
+    passiveIds,
+    enchantments,
+    weaponClass:
+      loadout.style === "ranged" && weapon?.style === "ranged"
+        ? (weapon.weaponClass ?? null)
+        : null,
+    passage: {
+      active: passageActive,
+      agonyActive:
+        passageActive &&
+        loadout.equipmentSlots?.gloves === "item:enhanced-gloves-of-passage" &&
+        enchantments.includes("agony"),
+    },
+    amZiFlatDamage: passiveIds.includes("am-zi")
+      ? Math.floor((loadout.effectiveAttackLevel ?? 0) * 1.35)
+      : 0,
+    amHejDamageBonus: passiveIds.includes("am-hej")
+      ? Math.floor((loadout.effectiveStrengthLevel ?? 0) * 0.05) / 100
+      : 0,
     vestments: {
       pieces,
       heraldOfChaos: meleeWeapon && pieces >= 2,
@@ -140,6 +193,141 @@ export function activeEquipmentEffects(
       increasedAdrenalineCap: meleeWeapon && pieces >= 4,
     },
   };
+}
+
+export function hasPassive(
+  effects: ActiveEquipmentEffects | undefined,
+  id: ItemPassiveId,
+): boolean {
+  return effects?.passiveIds.includes(id) === true;
+}
+
+export function hasEnchantment(
+  effects: ActiveEquipmentEffects | undefined,
+  id: EquipmentEnchantmentId,
+): boolean {
+  return effects?.enchantments.includes(id) === true;
+}
+
+const itemSource = (title: string, path: string): SourceReference => ({
+  source: "runescape-wiki",
+  url: `https://runescape.wiki/w/${path}`,
+  title,
+  verifiedAt: "2026-08-01",
+});
+
+export const AM_ZI_SOURCE = itemSource("Am-zi", "Am-zi");
+export const AM_HEJ_SOURCE = itemSource("Am-hej", "Am-hej");
+export const ENDURING_RUIN_SOURCE = itemSource("Gloves of passage", "Gloves_of_passage");
+export const REX_RING_SOURCE = itemSource("Critical strike", "Critical_strike");
+
+export function amZiModifier(flatDamage: number): CombatModifier {
+  return {
+    id: "item:am-zi",
+    stage: "roll",
+    priority: 100,
+    applies: (context) => context.style === "melee" && context.dotKind !== "bleed",
+    apply: (state) => ({ ...state, damage: state.damage + flatDamage }),
+    source: AM_ZI_SOURCE,
+  };
+}
+
+export function amHejDamageBonus(effectiveStrengthLevel: number): number {
+  return Math.floor(effectiveStrengthLevel * 0.05) / 100;
+}
+
+export function additiveMeleeDamageModifier(
+  bonus: number,
+  source: SourceReference = AM_HEJ_SOURCE,
+): CombatModifier {
+  return {
+    id: "item:additive-melee",
+    stage: "onCast",
+    priority: 90,
+    applies: (context) => context.style === "melee" && context.dotKind !== "bleed",
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, 1 + bonus) }),
+    source,
+  };
+}
+
+export function staticEquipmentCritBonus(effects: ActiveEquipmentEffects): {
+  chance: number;
+  damageBonus: number;
+} {
+  if (hasPassive(effects, "reaver-ring")) return { chance: 0.05, damageBonus: 0 };
+  if (hasPassive(effects, "stalker-ring") && effects.weaponClass === "bow") {
+    return hasEnchantment(effects, "shadows")
+      ? { chance: 0.04, damageBonus: 0.03 }
+      : { chance: 0.03, damageBonus: 0 };
+  }
+  return { chance: 0, damageBonus: 0 };
+}
+
+export function dynamicEquipmentCritBonus(
+  effects: ActiveEquipmentEffects | undefined,
+  ability: Pick<AbilitySpec, "style" | "channelTicks">,
+  hitIndex: number,
+  activeBleeds: number,
+): { chance: number; damageBonus: number } {
+  let chance = 0;
+  let damageBonus = 0;
+  if (activeBleeds > 0 && hasPassive(effects, "champion-ring")) {
+    chance += hasEnchantment(effects, "heroism") ? 0.04 : 0.03;
+    if (hasEnchantment(effects, "heroism")) damageBonus += activeBleeds * 0.015;
+  }
+  if (
+    ability.style === "magic" &&
+    ability.channelTicks != null &&
+    hasPassive(effects, "channeller-ring")
+  ) {
+    const step = hitIndex + 1;
+    chance += step * 0.04;
+    if (hasEnchantment(effects, "metaphysics")) damageBonus += step * 0.025;
+  }
+  return { chance, damageBonus };
+}
+
+export function equipmentCritByHit(
+  effects: ActiveEquipmentEffects,
+  ability: AbilitySpec,
+  crit: Omit<CritLayers, "eligible">,
+): Omit<CritLayers, "eligible">[] {
+  return ability.hits.map((_, hitIndex) => {
+    const bonus = dynamicEquipmentCritBonus(effects, ability, hitIndex, 0);
+    return {
+      ...crit,
+      chance: crit.chance + bonus.chance,
+      damageBonus: (crit.damageBonus ?? 0) + bonus.damageBonus,
+    };
+  });
+}
+
+export function applyEquipmentDamagePotential(
+  damagePotential: number,
+  effects: ActiveEquipmentEffects,
+): number {
+  return Math.max(0, damagePotential - (hasPassive(effects, "reaver-ring") ? 0.05 : 0));
+}
+
+export function activePassiveLabels(effects: ActiveEquipmentEffects): string[] {
+  const labels: Partial<Record<ItemPassiveId, string>> = {
+    "jaws-of-the-abyss": "Jaws of the Abyss",
+    "abyssal-parasite": "Abyssal Parasite · death spread not modeled",
+    "am-zi": "Am-zi",
+    "am-hej": "Am-hej",
+    "enduring-ruin": effects.passage.agonyActive ? "Enduring Ruin + Agony" : "Enduring Ruin",
+    "reaver-ring": "Reaver's ring",
+    "champion-ring": hasEnchantment(effects, "heroism")
+      ? "Champion's ring + Heroism"
+      : "Champion's ring",
+    "stalker-ring": hasEnchantment(effects, "shadows")
+      ? "Stalker's ring + Shadows"
+      : "Stalker's ring",
+    "channeller-ring": hasEnchantment(effects, "metaphysics")
+      ? "Channeller's ring + Metaphysics"
+      : "Channeller's ring",
+  };
+  return effects.passiveIds.flatMap((id) => (labels[id] ? [labels[id]!] : []));
 }
 
 export function vestmentsUltimateEligible(

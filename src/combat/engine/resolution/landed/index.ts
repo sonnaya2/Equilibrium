@@ -3,9 +3,8 @@ import type { SimulationRuntime } from "../../runtime/runtime";
 import { onMagicHitLanded } from "./magic";
 import { onNecromancyHitLanded } from "./necromancy";
 import { onRangedHitLanded } from "./ranged";
-import { secondsToTicks } from "../../../core/ticks";
-import { GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS } from "../../../styles/melee/effects";
-import { patchMelee } from "../../runtime/state";
+import { onMeleeHitLanded } from "./melee";
+import type { ResolvedDamage } from "../types";
 
 /**
  * Per-landed-hit state effects, dispatched to the style that owns them. Only
@@ -16,8 +15,13 @@ import { patchMelee } from "../../runtime/state";
 export function applyLandedHitEffects(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
 ): void {
   const ability = rt.byId.get(event.abilityId);
+  if (event.abilityId === "abyssal_parasite") {
+    onMeleeHitLanded(rt, event, undefined, damage);
+    return;
+  }
   if (!ability) return;
   switch (ability.style) {
     case "necromancy":
@@ -30,17 +34,7 @@ export function applyLandedHitEffects(
       onRangedHitLanded(rt, event, ability);
       break;
     case "melee":
-      if (
-        ability.id === "greater_flurry" &&
-        rt.state.melee.bloodlust.berserk &&
-        event.tick < rt.state.melee.berserkUntilTick
-      ) {
-        rt.state = patchMelee(rt.state, {
-          berserkUntilTick:
-            rt.state.melee.berserkUntilTick +
-            secondsToTicks(GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS),
-        });
-      }
+      onMeleeHitLanded(rt, event, ability, damage);
       break;
   }
 }

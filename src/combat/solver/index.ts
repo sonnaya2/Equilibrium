@@ -86,10 +86,12 @@ export {
   configForTier,
   TIER_BUDGETS,
   TIER_HORIZON_SECONDS,
+  preferredAgentCount,
   type SolveInput,
   type SolveAsyncHooks,
   type SolvePhaseName,
 } from "./solve";
+export { clearEvalMemo, evalMemoStats } from "./evalMemo";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export { packSolverRequest, packSimBase } from "./packRequest";
 export {

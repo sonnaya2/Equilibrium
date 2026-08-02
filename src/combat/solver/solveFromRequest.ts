@@ -9,6 +9,9 @@ import { evaluateRevolutionBar } from "./evaluate";
 import { secondsToTicks } from "../core/ticks";
 import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
 import { TIER_HORIZON_SECONDS } from "./solve";
+import { readEvalMemo, writeEvalMemo } from "./evalMemo";
+import { fingerprintEvaluationKey, stableStringify } from "./fingerprint";
+import { OBJECTIVE_VERSION } from "./contracts";
 import { solveAsync, TIER_BUDGETS, type SolvePhaseName } from "./solve";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import { requireSimBase } from "./worker/revive";
@@ -284,12 +287,75 @@ export const solveFromRequest: SolveFn = async (
     options.onProgress(progress);
   };
 
+  // Loadout/context slice for process-local eval memo (re-Optimize warms).
+  const memoContext = stableStringify({
+    style: request.style,
+    profileId: request.profileId,
+    customWeights: request.customWeights ?? null,
+    includePartial: request.includePartial === true,
+    base: simBase.base,
+    level: simBase.level,
+    accuracy: simBase.accuracy,
+    crit: simBase.crit,
+    weaponConfiguration: simBase.weaponConfiguration,
+    equipmentIds: simBase.equipmentIds,
+    startingAdrenaline: simBase.startingAdrenaline,
+    plantedFeet: simBase.plantedFeet === true,
+    strengthCape99: simBase.strengthCape99 === true,
+    preciseRank: simBase.preciseRank ?? 0,
+    leagueIds: simBase.league.blessingIds,
+    ruleset: simBase.league.ruleset,
+    targetHp: simBase.targetHpPercent ?? null,
+  });
+
   const evaluate: EvaluateFn = ({ bar, mode }: { bar: readonly string[]; mode?: EvalMode }) => {
     if (options?.isCancelled?.() || options?.signal?.aborted) {
       return { score: Number.NEGATIVE_INFINITY, finite: false };
     }
     const useFull = mode === "full" || mode === "finalize";
     const durationTicks = useFull ? fullTicks : exploreTicks;
+    const scoreMode = useFull ? "full" : "search";
+    const memoKey = fingerprintEvaluationKey({
+      bar,
+      mode: scoreMode,
+      horizonTicks: durationTicks,
+      profileId: request.profileId,
+      customWeights: request.customWeights,
+      context: memoContext,
+      objectiveVersion: OBJECTIVE_VERSION,
+    });
+    const memoHit = readEvalMemo(memoKey);
+    if (memoHit) {
+      // Count as evaluation for progress honesty but skip the heavy sim.
+      evaluations += 1;
+      if (useFull) fullEvaluations += 1;
+      else searchEvaluations += 1;
+      const key = bar.join("\0");
+      if (!seenBars.has(key)) {
+        seenBars.add(key);
+        uniqueBars += 1;
+      }
+      if (memoHit.finite && memoHit.score > bestExploratoryScore && scoreMode === "search") {
+        bestExploratoryScore = memoHit.score;
+        if (!finalizeActive) topPreview = [...bar];
+      }
+      if (
+        memoHit.finite &&
+        memoHit.validForFinalRanking &&
+        scoreMode === "full" &&
+        memoHit.score > bestFullScore
+      ) {
+        bestFullScore = memoHit.score;
+        topPreview = [...bar];
+      }
+      if (useFull) {
+        currentPhase = "finalize";
+        finalizeActive = true;
+      }
+      emitProgress();
+      return memoHit;
+    }
+
     evaluations += 1;
     if (useFull) fullEvaluations += 1;
     else searchEvaluations += 1;
@@ -357,26 +423,30 @@ export const solveFromRequest: SolveFn = async (
 
     // Exploratory successes carry no synthetic robust objective windows.
     if (evaluation.exploratory || !evaluation.objective?.ok) {
-      return {
+      const out = {
         score: evaluation.score,
-        finite: true,
+        finite: true as const,
         mode: evaluation.mode,
-        exploratory: true,
-        validForFinalRanking: false,
+        exploratory: true as const,
+        validForFinalRanking: false as const,
         horizonTicks: evaluation.horizonTicks,
         // objective omitted on purpose — scalar exploratory DPM only
       };
+      writeEvalMemo(memoKey, out);
+      return out;
     }
 
-    return {
+    const out = {
       score: evaluation.score,
-      finite: true,
-      mode: "full",
-      exploratory: false,
-      validForFinalRanking: true,
+      finite: true as const,
+      mode: "full" as const,
+      exploratory: false as const,
+      validForFinalRanking: true as const,
       horizonTicks: evaluation.horizonTicks,
       objective: evaluation.objective,
     };
+    writeEvalMemo(memoKey, out);
+    return out;
   };
 
   // Seeds / user bars may list weapon-illegal ids (e.g. Hurricane on dual-wield).

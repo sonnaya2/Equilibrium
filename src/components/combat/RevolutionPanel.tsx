@@ -24,6 +24,7 @@ import {
   solverPoolSize,
   TIER_BUDGETS,
   TIER_HORIZON_SECONDS,
+  preferredAgentCount,
   type ObjectiveProfileId,
   type SolverProgress,
   type SolverResultDTO,
@@ -589,12 +590,13 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           })),
         ],
       };
-      // Parallel Web Worker agents (different seeds); sticky main-thread fallback.
-      // Each agent runs a full search+finalize; final scoring is still one bar at a time per agent.
-      const agents = solverPoolSize();
+      // Thorough: one agent (cache-friendly, no N× finalize). Extreme+: multi-seed pool.
+      const agents = preferredAgentCount(solverTier, solverPoolSize());
       setSolverAgents(agents);
       if (agents > 1) {
         setCacheNote((prev) => prev ?? `${agents} parallel search agents…`);
+      } else {
+        setCacheNote((prev) => prev ?? "Single agent · session eval cache warm…");
       }
       const dto = await runOptimize(
         request,

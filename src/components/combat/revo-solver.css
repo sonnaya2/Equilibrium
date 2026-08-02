@@ -33,6 +33,11 @@
   color: var(--combat-text);
 }
 
+.revo-solver-status__timer {
+  color: var(--combat-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 .revo-solver-status__best.is-pulse {
   color: var(--combat-gem-bright);
   animation: revo-best-pulse 420ms ease-out 1;

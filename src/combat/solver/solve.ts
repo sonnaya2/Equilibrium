@@ -30,10 +30,17 @@ export const TIER_HORIZON_SECONDS: Record<
   SolveTier,
   { exploreSeconds: number; fullSeconds: number }
 > = {
-  thorough: { exploreSeconds: 12, fullSeconds: 30 },
-  extreme: { exploreSeconds: 20, fullSeconds: 90 },
+  // Explore closer to full so ranking tracks real DPM; full short enough to feel snappy.
+  thorough: { exploreSeconds: 20, fullSeconds: 60 },
+  extreme: { exploreSeconds: 30, fullSeconds: 120 },
   unhinged: { exploreSeconds: 30, fullSeconds: 300 },
 };
+
+/** Thorough keeps one agent so finalize shortlist is not re-scored N times in parallel. */
+export function preferredAgentCount(tier: SolveTier, hardwareAgents: number): number {
+  if (tier === "thorough") return 1;
+  return Math.max(1, hardwareAgents);
+}
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
   const evaluationBudget = TIER_BUDGETS[tier];

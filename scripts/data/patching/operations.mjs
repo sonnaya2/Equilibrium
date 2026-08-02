@@ -231,9 +231,12 @@ function tag(db, operation) {
  * record, rather than amending one, has no other way in.
  */
 function setRecord(db, operation, source) {
-  const { file, path, body } = operation;
+  const { file, path, body, entity: entityOverride } = operation;
   const known = db.prepare("SELECT path FROM source_files WHERE path = ?").get(file);
   if (!known) throw new Error(`unknown source file: ${file}`);
+  if (entityOverride && !db.prepare("SELECT id FROM entities WHERE id = ?").get(entityOverride)) {
+    throw new Error(`set-record entity not found: ${entityOverride}`);
+  }
   const previous = db
     .prepare("SELECT stable_id, entity_id FROM source_records WHERE source_file = ? AND record_path = ?")
     .get(file, path);
@@ -241,8 +244,8 @@ function setRecord(db, operation, source) {
   const matchedEntity = bodyId
     ? db.prepare("SELECT id FROM entities WHERE id = ?").get(bodyId)?.id
     : null;
-  const stableId = matchedEntity ? bodyId : previous?.stable_id ?? null;
-  const entityId = matchedEntity ?? previous?.entity_id ?? null;
+  const entityId = entityOverride ?? matchedEntity ?? previous?.entity_id ?? null;
+  const stableId = entityId ?? previous?.stable_id ?? null;
   // canonical-validate reconstructs the hash as hash(stableJson(record)), so it
   // has to be written the same way or every rebuild fails parity.
   const raw = stableJson(body);
@@ -254,6 +257,8 @@ function setRecord(db, operation, source) {
                    record_hash = excluded.record_hash, raw_json = excluded.raw_json`,
   ).run(file, path, stableId, entityId, hash(raw), raw);
   if (!entityId) return [];
+  // When re-pointing a thin catalogue row onto an entity, still update extra_json
+  // so recordRef matching (raw_json = extra_json) works for that entity.
   const name = typeof body.name === "string" ? body.name : null;
   if (name) {
     db.prepare(

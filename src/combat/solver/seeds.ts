@@ -21,7 +21,7 @@ export function buildSeeds(opts: SeedOptions): string[][] {
   const seen = new Set<string>();
 
   const push = (bar: string[], opts?: { padToMin?: boolean }) => {
-    let built: string[] = [];
+    const built: string[] = [];
     for (const id of bar) {
       if (built.length >= sizeBounds.max) break;
       const a = byId.get(id);

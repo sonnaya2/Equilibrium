@@ -488,7 +488,7 @@ export const solveFromRequest: SolveFn = async (
   const fitSeed = (ids: readonly string[]): string[] | null => {
     const cleaned = ids.filter(legalId);
     if (cleaned.length < 2) return null;
-    let built =
+    const built =
       cleaned.length > request.maxBarSize ? cleaned.slice(0, request.maxBarSize) : [...cleaned];
     if (built.length < request.minBarSize) {
       const remain = remainingCandidates(built, searchPool, pool.byId);

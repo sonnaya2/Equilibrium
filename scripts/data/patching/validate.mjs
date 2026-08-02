@@ -43,7 +43,7 @@ const SCHEMA = new Map([
   ["relate", { keys: ["entity", "target", "relation", "order"], required: ["entity", "target", "relation"] }],
   ["unrelate", { keys: ["entity", "target", "relation"], required: ["entity", "target", "relation"] }],
   ["remove", { keys: ["entity", "reason"], required: ["entity", "reason"] }],
-  ["set-record", { keys: ["file", "path", "body", "reason"], required: ["file", "path", "body"] }],
+  ["set-record", { keys: ["file", "path", "body", "entity", "reason"], required: ["file", "path", "body"] }],
   [
     "add-requirement",
     { keys: ["entity", "description", "kind", "skill", "level", "target"], required: ["entity", "description"] },
@@ -155,7 +155,11 @@ const SHAPE = {
     if (operation.body == null || typeof operation.body !== "object") {
       fail(context, "set-record body must be an object");
     }
-    return { file, path, body: operation.body, reason: scalar(operation.reason) };
+    // Optional entity re-point: catalogue rows keep short body.id ("biting") while
+    // provenance attaches to a full stable id (invention-perk:biting / perk:biting).
+    const entity =
+      operation.entity == null ? null : identifier(operation, "entity", context);
+    return { file, path, body: operation.body, entity, reason: scalar(operation.reason) };
   },
   // A requirement is keyed by (entity, kind, description), so those three are
   // the whole identity — the ordinal is the database's, and the handler picks it.

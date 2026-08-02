@@ -70,11 +70,28 @@ export function documentOutputs(db) {
   );
   // Removal is a status change: keep provenance in SQLite, drop the body from
   // every #shard document so the app stops listing retired equipment / abilities.
+  // Narrow exception: the invention active-perks catalogue is a membership list.
+  // When overlap authority retires invention-perk:* in favor of combat perk:*,
+  // keep the catalogue row if a live same type+name survivor exists — do not
+  // resurrect other dual-claim domain records (equipment twins, etc.).
   const removed = new Set(
     prepared(db, "SELECT id FROM entities WHERE status = 'removed'")
       .all()
       .map((row) => row.id),
   );
+  const entityMeta = new Map(
+    prepared(db, "SELECT id, entity_type, name, status FROM entities")
+      .all()
+      .map((row) => [row.id, row]),
+  );
+  const liveTypeName = new Set(
+    [...entityMeta.values()]
+      .filter((row) => row.status !== "removed" && row.name)
+      .map((row) => `${row.entity_type}|${row.name.trim().toLocaleLowerCase("en")}`),
+  );
+  const isActivePerkMembership = (row) =>
+    row.source_file === "data/research/planner-expansions-invention-active-perks.json" &&
+    row.record_path.startsWith("$.active_perks[");
   // Nested source rows (e.g. $.records[12].sources[0]) have no entity_id; skip
   // any path that sits under a top-level record whose entity is removed.
   const skippedPrefixes = new Set();
@@ -86,9 +103,16 @@ export function documentOutputs(db) {
     if (!document) continue;
     if ([...skippedPrefixes].some((prefix) => row.record_path.startsWith(prefix))) continue;
     if (row.entity_id && removed.has(row.entity_id)) {
-      skippedPrefixes.add(`${row.record_path}.`);
-      skippedPrefixes.add(`${row.record_path}[`);
-      continue;
+      const meta = entityMeta.get(row.entity_id);
+      const key =
+        meta?.name &&
+        `${meta.entity_type}|${meta.name.trim().toLocaleLowerCase("en")}`;
+      const keepCatalogue = isActivePerkMembership(row) && key && liveTypeName.has(key);
+      if (!keepCatalogue) {
+        skippedPrefixes.add(`${row.record_path}.`);
+        skippedPrefixes.add(`${row.record_path}[`);
+        continue;
+      }
     }
     setRecordAtPath(document, row.record_path, JSON.parse(row.raw_json));
   }

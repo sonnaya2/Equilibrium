@@ -1877,6 +1877,14 @@
 {"entityId":"necromancy:well-of-souls-talents","tagId":"necromancy-combat-progression-tree"}
 {"entityId":"nex-aod:praesul-curses","tagId":"prayer-unlocks"}
 {"entityId":"one-piercing-note:gwd1-abilities","tagId":"combat-abilities"}
+{"entityId":"perk:biting","tagId":"damage-and-accuracy"}
+{"entityId":"perk:crackling","tagId":"damage-and-accuracy"}
+{"entityId":"perk:enhanced-devoted","tagId":"damage-reduction"}
+{"entityId":"perk:impatient","tagId":"adrenaline"}
+{"entityId":"perk:invigorating","tagId":"adrenaline"}
+{"entityId":"perk:lucky","tagId":"damage-reduction"}
+{"entityId":"perk:turtling","tagId":"ability-and-cooldown"}
+{"entityId":"perk:ultimatums","tagId":"ability-and-cooldown"}
 {"entityId":"ports:seasinger-residual-note","tagId":"residual-high-level-magic-leaning-ports-armour-note-for-combat-planners"}
 {"entityId":"potion:adrenaline-renewal","tagId":"combat-adrenaline-consumable"}
 {"entityId":"potion:charming","tagId":"temporary-charm-drop-modifier"}

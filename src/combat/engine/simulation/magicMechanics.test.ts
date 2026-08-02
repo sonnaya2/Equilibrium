@@ -8,10 +8,9 @@ import { createCastContext } from "./simulate";
 import { simulateRevolution } from "./revolution";
 
 /**
- * Stage 6 regression coverage: Wild Magic crit layers, Concentrated Blast /
- * Greater Concentrated Blast crit progression, Channelled Might after a
- * completed Asphyxiate, Dragon Breath vs Combust, Sonic Wave / Greater Sonic
- * Wave Flow, and target-HP-dependent bands (Punish, Spectral Scythe 3).
+ * Wild Magic crit layers, Concentrated Blast / Greater Concentrated Blast crit
+ * progression, Channelled Might after Asphyxiate, Dragon Breath vs Combust,
+ * Sonic Wave / Greater Sonic Wave Flow, HP-dependent bands (Punish, Scythe 3).
  */
 
 const meleeInput: Omit<SimulateInput, "rotation"> = {

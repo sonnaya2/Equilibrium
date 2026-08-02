@@ -94,11 +94,11 @@ export function CalculationAssumptions({
             "Barkscales",
             stats.barkscales.support === "scenario-dependent"
               ? `No outgoing damage calculated — needs ${stats.barkscales.missingInputs.join(", ").toLowerCase()}`
-              : `${stats.barkscales.triggers} Grasp triggers · one per ${stats.barkscales.secondsPerTrigger}s`,
+              : `${stats.barkscales.triggers} Grasp triggers · one per ${stats.barkscales.secondsPerTrigger}s (scenario only — not in rotation damage)`,
           ],
           [
             "Barkscales mitigation",
-            `−${formatNumber(stats.barkscales.perHit)} per incoming hit · ${stats.barkscales.hitsPerTrigger} to trigger`,
+            `−${formatNumber(stats.barkscales.perHit)} per incoming hit · ${stats.barkscales.hitsPerTrigger} to trigger (incoming damage only)`,
           ],
         ] as Array<[string, string | number]>)
       : []),

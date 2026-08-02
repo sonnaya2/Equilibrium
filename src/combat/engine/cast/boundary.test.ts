@@ -284,9 +284,43 @@ describe("cast legality at the candidate tick", () => {
 
   it("lets defenders satisfy dual-wield requirements without treating shields as weapons", () => {
     const dualWield = MELEE_ABILITIES.find((ability) => ability.weaponRequirement === "dualwield")!;
+    const twoHand = MELEE_ABILITIES.find((ability) => ability.weaponRequirement === "twohand")!;
     const unrestricted = MELEE_ABILITIES.find((ability) => ability.weaponRequirement == null)!;
+    // Dual-wield melee: offensive OH or defender only.
     expect(meetsWeaponRequirement(dualWield, "defender")).toBe(true);
+    expect(meetsWeaponRequirement(dualWield, "dualwield")).toBe(true);
     expect(meetsWeaponRequirement(dualWield, "shield")).toBe(false);
+    expect(meetsWeaponRequirement(dualWield, "mainhand")).toBe(false);
+    expect(meetsWeaponRequirement(dualWield, "twohand")).toBe(false);
+    // Two-hand melee: twohand only.
+    expect(meetsWeaponRequirement(twoHand, "twohand")).toBe(true);
+    expect(meetsWeaponRequirement(twoHand, "dualwield")).toBe(false);
+    expect(meetsWeaponRequirement(twoHand, "defender")).toBe(false);
+    expect(meetsWeaponRequirement(twoHand, "shield")).toBe(false);
+    expect(meetsWeaponRequirement(twoHand, "mainhand")).toBe(false);
+    // Unrestricted: any non-necro shape including shield.
     expect(meetsWeaponRequirement(unrestricted, "shield")).toBe(true);
+    expect(meetsWeaponRequirement(unrestricted, "defender")).toBe(true);
+    expect(meetsWeaponRequirement(unrestricted, "mainhand")).toBe(true);
+    expect(meetsWeaponRequirement(unrestricted, "dualwield")).toBe(true);
+    expect(meetsWeaponRequirement(unrestricted, "twohand")).toBe(true);
+  });
+
+  it("ignores dual/twohand tags on magic and ranged (wiki: no weapon-type cast gates)", () => {
+    // Stale dualwield tags on magic (if present) must not block; ranged never gates.
+    const magicTagged = {
+      ...MELEE_ABILITIES.find((a) => a.weaponRequirement === "dualwield")!,
+      id: "test_magic_dual",
+      style: "magic" as const,
+    };
+    const rangedTagged = {
+      ...MELEE_ABILITIES.find((a) => a.weaponRequirement === "twohand")!,
+      id: "test_ranged_2h",
+      style: "ranged" as const,
+    };
+    for (const shape of ["mainhand", "shield", "defender", "dualwield", "twohand"] as const) {
+      expect(meetsWeaponRequirement(magicTagged, shape)).toBe(true);
+      expect(meetsWeaponRequirement(rangedTagged, shape)).toBe(true);
+    }
   });
 });

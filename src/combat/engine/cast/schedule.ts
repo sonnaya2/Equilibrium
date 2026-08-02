@@ -99,7 +99,7 @@ export function scheduleCastEvents(
         ? { abyssalParasiteEligible: true }
         : {}),
       ...(ability.style === "magic" && !isDot && hitSpec.critEligible !== false
-        ? { lightningSurge: { critLayers: snap.critLayers, baseMods: snap.baseMods } }
+        ? { lightningSurge: { snap } }
         : {}),
       resolve: (eventRt, at) =>
         resolveCastHit(eventRt, at, hitSpec, hitIndex, ability, snap, isDot, prepared.channelAsDot),

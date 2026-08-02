@@ -9,6 +9,22 @@ export interface CriticalResolution {
   inherited?: boolean;
 }
 
+/** Package a hit's crit chance and EV split into the shared CriticalResolution shape. */
+export function packageCritical(
+  chance: number,
+  critExpected: number,
+  nonCritExpected: number,
+  opts?: { inherited?: boolean; scale?: number },
+): CriticalResolution {
+  const scale = opts?.scale ?? 1;
+  return {
+    mode: chance >= 1 ? "guaranteed" : chance > 0 ? "expected" : "none",
+    chance,
+    contribution: Math.max(0, chance * (critExpected - nonCritExpected)) * scale,
+    ...(opts?.inherited ? { inherited: true } : {}),
+  };
+}
+
 /** Damage one scheduled event contributed. `critExpected` is diagnostic only. */
 export interface ResolvedDamage {
   min: number;

@@ -117,6 +117,15 @@ export function castRejection(
  * - conjures need a conduit (off-hand); shield/defender dual is not enough
  * - loadout reports `"necromancy"` only when a conduit is available (equipped
  *   conduit, or empty off-hand with the dual-hand tier sliders)
+ *
+ * Melee only has 1H / dual / 2H gates among non-necro styles:
+ * - dualwield req: offensive OH or defender (not shield, empty OH, or 2H alone)
+ * - twohand req: two-handed only
+ * - defender counts as dual-wield OH; pure shield does not
+ *
+ * Ranged and Magic: no dual/2H cast gates (wiki 22 Jul 2024 Magic weapon-type
+ * requirements removed; ranged never had them). Stale dualwield/twohand tags on
+ * those styles are ignored.
  */
 export function meetsWeaponRequirement(
   ability: AbilitySpec,
@@ -124,6 +133,7 @@ export function meetsWeaponRequirement(
 ): boolean {
   if (weaponConfiguration === undefined) return true;
 
+  // --- Necromancy: conduit / siphon rules (unchanged) ---
   if (ability.style === "necromancy") {
     const req = ability.weaponRequirement;
     // Conjures (and any explicit dual-necro gate) need siphon + conduit.
@@ -140,16 +150,29 @@ export function meetsWeaponRequirement(
   }
 
   if (weaponConfiguration === "necromancy") return false;
-  if (ability.weaponRequirement === undefined) return true;
-  if (
-    ability.weaponRequirement === "conduit" ||
-    ability.weaponRequirement === "death-guard-and-conduit"
-  ) {
-    return false;
+
+  const req = ability.weaponRequirement;
+  // Necro-only requirement tags never apply to other styles.
+  if (req === "conduit" || req === "death-guard-and-conduit") return false;
+  if (req === undefined) return true;
+
+  // Ranged + Magic: wiki — no weapon-type cast gates for dual / 2H.
+  if (ability.style === "ranged" || ability.style === "magic") return true;
+
+  // Melee only:
+  if (req === "dualwield") {
+    // Offensive OH or defender (not shield, not empty, not 2H alone).
+    return weaponConfiguration === "dualwield" || weaponConfiguration === "defender";
   }
-  if (weaponConfiguration === "defender") return ability.weaponRequirement === "dualwield";
-  if (weaponConfiguration === "shield") return false;
-  return weaponConfiguration === ability.weaponRequirement;
+  if (req === "twohand") {
+    return weaponConfiguration === "twohand";
+  }
+  if (req === "mainhand") {
+    // 1H shape: mainhand, dual, defender, or shield (all have a main hand).
+    // Necromancy already rejected above.
+    return weaponConfiguration !== "twohand";
+  }
+  return weaponConfiguration === req;
 }
 
 export function meetsEquipmentRequirement(

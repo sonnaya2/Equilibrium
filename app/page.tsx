@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import tasksData from "#shard/league/tasks.json";
 import { Page } from "@/components/Page";
 import { OverviewPlan } from "@/components/OverviewPlan";
-import { getResearchCatalogIndex } from "@/research/catalog";
 
 export const metadata: Metadata = {
   title: { absolute: "RS3 Equilibrium" },
@@ -22,14 +21,10 @@ function taskListTotal(): number {
   return 0;
 }
 
-function catalogRegionCount(): number {
-  return getResearchCatalogIndex().regions.length;
-}
-
 export default function OverviewPage() {
   return (
     <Page className="!max-w-none !px-0 !py-0">
-      <OverviewPlan taskTotal={taskListTotal()} catalogCount={catalogRegionCount()} />
+      <OverviewPlan taskTotal={taskListTotal()} />
     </Page>
   );
 }

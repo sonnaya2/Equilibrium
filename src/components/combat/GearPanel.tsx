@@ -34,7 +34,7 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
 };
 
 const PASSIVE_STATUS: Record<PassiveSupport, string> = {
-  modeled: "Active",
+  modeled: "Modeled",
   "partially-modeled": "Partial",
   "not-modeled": "Not modeled",
 };

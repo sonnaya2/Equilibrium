@@ -79,7 +79,7 @@ function abilityMeta(ability: AbilitySpec): string {
     ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
     ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
     (ability as RangedAbilitySpec).guaranteedCrit ? "guaranteed crit" : null,
-    ability.id === "dragon_breath" ? "empowered while Runic Charge is active" : null,
+    ability.id === "dragon_breath" ? "260–310% while Runic Charge is active" : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -210,7 +210,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
               }}
             />
             <NumberField
-              label="Accuracy"
+              label="Damage Potential"
               value={effectiveAccuracy}
               onChange={(value) => {
                 if (useBuild) setManual();

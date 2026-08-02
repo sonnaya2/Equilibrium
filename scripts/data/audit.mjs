@@ -507,7 +507,7 @@ const architecture = [
   "",
   "## Migration boundary",
   "",
-  "The canonical JSONL dataset, migrations, and JSONL patches rebuild an ignored SQLite database. Client consumers use bounded, hashed documents under `public/data/v2/`; larger data is server-only. No compatibility tree is materialized.",
+  "The canonical JSONL dataset, migrations, and JSONL patches rebuild an ignored SQLite database. Client consumers use SQLite and `#shard/*` from `.generated/documents/`; nothing is published under `public/data/`. No compatibility tree is materialized.",
   "",
   "## Reports",
   "",

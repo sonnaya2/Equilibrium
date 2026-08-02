@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { calculateLeagueAbility } from "@/combat/league/damage";
 import type { CombatStyle } from "@/combat/types";
@@ -68,6 +68,32 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
   });
 }
 
+/** Line B overlays A; keeps equipment crit above the configured loadout crit. */
+function withAnalysisCompareLine(
+  statsA: CalcStats,
+  lineB: {
+    base: number;
+    level: number;
+    accuracy: number;
+    critChance: number;
+  },
+  loadoutCritChancePct: number,
+): CalcStats {
+  // equipment/set/biting crit sits above the slider as (statsA - configured loadout)
+  const critChance = Math.min(
+    1,
+    Math.max(0, finite(lineB.critChance, 10)) / 100 +
+      (statsA.critChance - loadoutCritChancePct / 100),
+  );
+  return {
+    ...statsA,
+    base: lineB.base,
+    level: Math.min(Math.max(1, finite(lineB.level, 99)), 145),
+    dp: Math.min(Math.max(0, finite(lineB.accuracy, 100)), 100) / 100,
+    critChance,
+  };
+}
+
 /** Analysis: one cast through two stat lines — the shared loadout (A, perks and
  *  target model included) against an editable comparison line (B). */
 export function AnalysisTab() {
@@ -86,18 +112,11 @@ export function AnalysisTab() {
     ALL_ENTRIES.find((candidate) => candidate.ability.id === abilityId) ?? ALL_ENTRIES[0];
   const ability = entry.ability.id === "volley_of_souls" ? volleyOfSouls(souls) : entry.ability;
 
-  const statsA = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
-  const statsB: CalcStats = {
-    ...statsA,
-    base: lineB.base,
-    level: Math.min(Math.max(1, finite(lineB.level, 99)), 145),
-    dp: Math.min(Math.max(0, finite(lineB.accuracy, 100)), 100) / 100,
-    critChance: Math.min(
-      1,
-      Math.max(0, finite(lineB.critChance, 10)) / 100 +
-        (statsA.critChance - loadout.critChance / 100),
-    ),
-  };
+  const statsA = useMemo(
+    () => loadoutStats(loadout, { blessingPicks: build.blessingPicks }),
+    [loadout, build.blessingPicks],
+  );
+  const statsB = withAnalysisCompareLine(statsA, lineB, loadout.critChance);
 
   const resultA = runCast(ability, entry.style, statsA);
   const resultB = runCast(ability, entry.style, statsB);
@@ -200,7 +219,7 @@ export function AnalysisTab() {
                 onChange={(base) => setLineB({ ...lineB, base })}
               />
               <NumberField
-                label="Accuracy"
+                label="Damage Potential"
                 value={lineB.accuracy}
                 onChange={(accuracy) => setLineB({ ...lineB, accuracy })}
                 suffix="%"

@@ -1,9 +1,5 @@
 import equipmentSetsData from "#shard/combat/equipment-sets.json";
 import { equipmentById } from "../data";
-import {
-  AMASCUT_MASTERIES_WIKI_2025_09_29,
-  MASTERWORK_WEAPONS_WIKI_2025_05_27,
-} from "../data/sources";
 import type { EquipmentBonuses, EquipmentSlot, ItemPassiveId, WeaponClass } from "../data/records";
 import type { CritLayers } from "../core/critical";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
@@ -31,13 +27,6 @@ export const WEAPON_ACCURACY_SLOTS: ReadonlySet<EquipmentSlot> = new Set([
 
 export function isWeaponAccuracySlot(slot: string | null | undefined): boolean {
   return slot != null && WEAPON_ACCURACY_SLOTS.has(slot as EquipmentSlot);
-}
-
-export interface SetEffect {
-  id: string;
-  pieces: number;
-  critChanceBonus: number;
-  source: SourceReference;
 }
 
 /** Effect kinds that feed crit chance or damage modifiers. */
@@ -702,91 +691,6 @@ export function loadoutFirstNecromancerConjureDurationMult(loadout: LoadoutEquip
     equippedSetCounts(loadout).get("first-necromancer") ?? 0,
   );
 }
-
-function setCritChance(
-  id: string,
-  pieces: number,
-  perPiece: number,
-  source: SourceReference,
-  maxPieces: number,
-): SetEffect {
-  if (!Number.isInteger(pieces) || pieces < 0 || pieces > maxPieces) {
-    throw new RangeError(`${id}: bad piece count ${pieces}`);
-  }
-  return { id, pieces, critChanceBonus: pieces * perPiece, source };
-}
-
-/** Tectonic armour: +1% crit chance per piece; elite tectonic +2% per piece (27 May 2025). */
-export const tectonicSet = (pieces: number, elite = false) =>
-  setCritChance(
-    elite ? "elite_tectonic" : "tectonic",
-    pieces,
-    elite ? 0.02 : 0.01,
-    MASTERWORK_WEAPONS_WIKI_2025_05_27,
-    3,
-  );
-
-/**
- * Tumeken's resplendence set(3): +1.5% crit chance per piece while inside Sunshine
- * (29 Sep 2025 rebalance). Wiki requires ≥3 pieces for the crit effect.
- */
-export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): SetEffect {
-  const effect = setCritChance(
-    "tumekens_resplendence",
-    pieces,
-    0.015,
-    AMASCUT_MASTERIES_WIKI_2025_09_29,
-    5,
-  );
-  if (!insideSunshine || pieces < 3) return { ...effect, critChanceBonus: 0 };
-  return effect;
-}
-
-export interface SetFactsResult {
-  setId: string;
-  pieces: number;
-  facts: string[];
-  modifiers: CombatModifier[];
-  source: SourceReference;
-}
-
-function factsFor(setId: string, pieces: number): SetFactsResult {
-  const def = equipmentSetById(setId);
-  const n = Math.max(0, Math.floor(pieces));
-  return {
-    setId,
-    pieces: n,
-    facts: def?.facts ?? [],
-    modifiers: [],
-    source: def?.source ?? {
-      source: "runescape-wiki",
-      url: "https://runescape.wiki/w/Set_bonus",
-      title: setId,
-      verifiedAt: "2026-07-26",
-    },
-  };
-}
-
-/**
- * Conjure damage/duration only — 0 player ability modifiers.
- * Use firstNecromancerConjureDamageMult for the spirit basic mult.
- */
-export const firstNecromancerSetFacts = (pieces: number) => factsFor("first-necromancer", pieces);
-
-/** Herald of Chaos adren/Berserk duration — 0 damage modifiers. */
-export const vestmentsOfHavocSetFacts = (pieces: number) => factsFor("vestments-of-havoc", pieces);
-
-/** Death Mark proc chance only — 0 crit/damage modifiers. */
-export const deathdealer90SetFacts = (pieces: number) => factsFor("deathdealer-90", pieces);
-
-/** No combat set bonus. */
-export const malevolentSetFacts = (pieces: number) => factsFor("malevolent", pieces);
-
-/** Chromatic Choir bolt procs — not crit. */
-export const sirenicSetFacts = (pieces: number) => factsFor("sirenic", pieces);
-
-/** Defensive delayed damage — not outgoing AD. */
-export const trimmedMasterworkSetFacts = (pieces: number) => factsFor("trimmed-masterwork", pieces);
 
 /** Sum numeric damage/accuracy from equipped piece bonus bags (display totals). */
 export function sumEquipmentBonuses(pieces: Iterable<EquipmentBonuses | undefined>): {

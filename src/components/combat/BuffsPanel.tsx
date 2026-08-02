@@ -95,7 +95,7 @@ const BLESSING_SUPPORT_LABEL: Record<BlessingSupportStatus, string> = {
   modeled: "Modeled",
   "partially-modeled": "Partial",
   "not-modeled": "Not modeled",
-  "scenario-dependent": "Situational",
+  "scenario-dependent": "Scenario-dependent",
 };
 
 /** Icon toggle. Name and effect live in the tooltip; sr-only text carries the a11y name. */
@@ -337,7 +337,7 @@ export function BuffsPanel({
           <BuffTile
             icon={LIFE_ICON.fontOfLife}
             label="Font of Life"
-            effect="Persistent +500 maximum life points while the relic power is harnessed"
+            effect="Persistent +500 maximum life points while Font of Life is active"
             pressed={loadout.buffs.fontOfLife}
             onClick={() => setBuffs({ fontOfLife: !loadout.buffs.fontOfLife })}
           />

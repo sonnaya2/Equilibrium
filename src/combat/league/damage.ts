@@ -9,7 +9,7 @@ import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/c
 import type { CombatContext, CombatModifier } from "../types";
 import { blessingRule, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
-import type { ResolvedDamage } from "../engine/resolution/types";
+import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
 
 export interface LeagueDamageComponent {
   effectId: string;
@@ -122,11 +122,7 @@ function damageOf(hit: HitResult): ResolvedDamage {
     expected: hit.expected,
     critExpected: hit.critExpected,
     capLoss: hit.capLoss,
-    critical: {
-      mode: hit.critChance >= 1 ? "guaranteed" : hit.critChance > 0 ? "expected" : "none",
-      chance: hit.critChance,
-      contribution: Math.max(0, hit.critChance * (hit.critExpected - hit.nonCritExpected)),
-    },
+    critical: packageCritical(hit.critChance, hit.critExpected, hit.nonCritExpected),
   };
 }
 

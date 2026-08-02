@@ -1,5 +1,5 @@
 import type { SimulationRuntime } from "../runtime/runtime";
-import { NO_DAMAGE, type EventResolution } from "./types";
+import { NO_DAMAGE, packageCritical, type EventResolution } from "./types";
 
 /**
  * Resolve a derived hit (Bloat tail, Death Skulls bounce): a fraction of the
@@ -23,15 +23,10 @@ export function resolveDerivedHit(
       max: Math.floor((source.critMax * fractionPct) / 100),
       expected: (source.expected * fractionPct) / 100,
       capLoss: (source.capLoss * fractionPct) / 100,
-      critical: {
-        mode: source.critChance >= 1 ? "guaranteed" : source.critChance > 0 ? "expected" : "none",
-        chance: source.critChance,
-        contribution:
-          (Math.max(0, source.critChance * (source.critExpected - source.nonCritExpected)) *
-            fractionPct) /
-          100,
+      critical: packageCritical(source.critChance, source.critExpected, source.nonCritExpected, {
+        scale: fractionPct / 100,
         inherited: true,
-      },
+      }),
     },
   };
 }

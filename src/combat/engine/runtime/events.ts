@@ -1,9 +1,29 @@
 import type { EventResolution, ResolvedDamage } from "../resolution/types";
-import type { CritLayers } from "../../core/critical";
-import type { BleedId, CombatModifier, DamageOverTimeKind } from "../../types";
+import type { BleedId, DamageOverTimeKind } from "../../types";
 import type { BlessingId } from "../../../league/blessings";
+import type { CastSnapshot } from "../cast/snapshot";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
+
+/** Branch-equivalence fingerprint of a cast snapshot carried on Lightning Surge. */
+function snapSig(s: CastSnapshot) {
+  return [
+    s.castSeq,
+    s.critLayers.chance,
+    s.critLayers.damageBonus ?? 0,
+    s.critLayers.guaranteed ?? false,
+    s.critLayers.disabled ?? false,
+    s.baseMods.map((m) => m.id),
+    s.empowerMult,
+    s.enduringRuinBonus,
+    s.chaosRoarActive,
+    s.channelled,
+    s.greaterFuryActive,
+    s.furyActive,
+    s.firstEligibleHitIndex,
+    s.searingWindsAtCast,
+  ];
+}
 
 /**
  * Scheduled combat events: every damaging or state-changing thing the simulator
@@ -46,8 +66,8 @@ export interface ScheduledEvent<RT = unknown> {
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;
   abyssalParasiteEligible?: boolean;
-  /** Cast snapshot needed if this Magic hit lands during Instability. */
-  lightningSurge?: { critLayers: CritLayers; baseMods: CombatModifier[] };
+  /** Full cast snapshot so Lightning Surge can share landTimeModifiers with parent hits. */
+  lightningSurge?: { snap: CastSnapshot };
   /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
   resolve: (rt: RT, landTick: number) => EventResolution;
 }
@@ -141,15 +161,7 @@ export class EventQueue<RT = unknown> {
         e.bleedId ?? null,
         e.bleedExpiresAtTick ?? -1,
         e.abyssalParasiteEligible ?? false,
-        e.lightningSurge
-          ? [
-              e.lightningSurge.critLayers.chance,
-              e.lightningSurge.critLayers.damageBonus ?? 0,
-              e.lightningSurge.critLayers.guaranteed ?? false,
-              e.lightningSurge.critLayers.disabled ?? false,
-              e.lightningSurge.baseMods.map((modifier) => modifier.id),
-            ]
-          : null,
+        e.lightningSurge ? snapSig(e.lightningSurge.snap) : null,
       ]),
     );
   }

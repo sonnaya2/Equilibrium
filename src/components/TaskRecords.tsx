@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GameIcon } from "@/components/GameIcon";
 import { RegionCrestPreload } from "@/components/RegionCrest";
 import { gameIconPath } from "@/lib/gameArt";
@@ -457,31 +457,16 @@ export function TaskRecords({
 function TaskStatsStrip({ stats }: { stats: TaskPageStats }) {
   const cells = [
     {
-      kind: "tasks",
       label: "Tasks completed",
       value: `${stats.completedTasks.toLocaleString()} / ${stats.totalTasks.toLocaleString()}`,
       hint: formatPercent(stats.completionRate),
     },
     {
-      kind: "points",
       label: "Total points",
       value: `${stats.completedPoints.toLocaleString()} / ${stats.totalPoints.toLocaleString()}`,
       hint: formatPercent(stats.pointCompletionRate),
     },
     {
-      kind: "completion",
-      label: "Completion",
-      value: formatPercent(stats.completionRate),
-      hint: "All tasks",
-    },
-    {
-      kind: "filters",
-      label: "Active filters",
-      value: stats.activeFilterCount.toLocaleString(),
-      hint: "Current view",
-    },
-    {
-      kind: "build",
       label: "In my build",
       value: `${stats.completedBuildTaskCount.toLocaleString()} / ${stats.buildTaskCount.toLocaleString()}`,
       hint: "Completed / available",
@@ -491,34 +476,13 @@ function TaskStatsStrip({ stats }: { stats: TaskPageStats }) {
   return (
     <dl className="tasks-stats">
       {cells.map((cell) => (
-        <div key={cell.label} className={`tasks-stat tasks-stat--${cell.kind}`}>
-          <TaskStatGlyph kind={cell.kind} progress={stats.completionRate} />
-          <div>
-            <dt>{cell.label}</dt>
-            <dd>{cell.value}</dd>
-            <dd>{cell.hint}</dd>
-          </div>
+        <div key={cell.label} className="tasks-stat">
+          <dt>{cell.label}</dt>
+          <dd>{cell.value}</dd>
+          <dd>{cell.hint}</dd>
         </div>
       ))}
     </dl>
-  );
-}
-
-function TaskStatGlyph({ kind, progress }: { kind: string; progress: number }) {
-  const mark = { tasks: "✓", points: "◆", filters: "⌁", build: "⬡" }[kind];
-  if (kind === "completion") {
-    return (
-      <span
-        className="tasks-stat__ring"
-        style={{ "--task-progress": `${Math.min(100, progress) * 3.6}deg` } as CSSProperties}
-        aria-hidden
-      />
-    );
-  }
-  return (
-    <span className="tasks-stat__glyph" aria-hidden>
-      {mark}
-    </span>
   );
 }
 

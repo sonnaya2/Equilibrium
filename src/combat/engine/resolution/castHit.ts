@@ -18,7 +18,7 @@ import {
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
-import type { EventResolution } from "./types";
+import { packageCritical, type EventResolution } from "./types";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
 
@@ -115,6 +115,7 @@ export function resolveCastHit(
       area: ability.area,
     },
     cap: input.cap,
+    preciseRank: input.preciseRank,
   });
 
   let min = hit.min;
@@ -151,11 +152,7 @@ export function resolveCastHit(
       expected,
       critExpected: hit.critExpected,
       capLoss,
-      critical: {
-        mode: hit.critChance >= 1 ? "guaranteed" : hit.critChance > 0 ? "expected" : "none",
-        chance: hit.critChance,
-        contribution: Math.max(0, hit.critChance * (hit.critExpected - hit.nonCritExpected)),
-      },
+      critical: packageCritical(hit.critChance, hit.critExpected, hit.nonCritExpected),
     },
     hitDetail: hit,
   };

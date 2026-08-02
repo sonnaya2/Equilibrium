@@ -6,6 +6,7 @@ import {
   energisingAccuracyBonus,
   invigoratingAdrenalineMultiplier,
   lungingPerkModifier,
+  raceSlayerPerkModifier,
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
 import {
@@ -128,8 +129,6 @@ export interface CalcStats {
     adjustment: number;
   };
   critsDisabled: boolean;
-  /** Crit chance for the simulator before land-time Tumeken Sunshine bonus. */
-  simulationCritChance: number;
   /** Persistent equipment crit-damage bonus (conditional ability/runtime bonuses excluded). */
   critDamageBonus: number;
   /** Level-derived base crit damage multiplier (+50% at level 90). */
@@ -165,6 +164,8 @@ export interface CalcStats {
   procs?: ProcRules;
   /** Planted Feet: base Sunshine / Death's Swiftness duration ×1.25. */
   plantedFeet?: boolean;
+  /** Precise perk rank 1–6 for sim hit bands. */
+  preciseRank?: number;
   /**
    * First Necromancer set mult on conjure spirit basic autos (1 if set inactive).
    * Pass to SimulateInput.conjureBasicDamageMult.
@@ -335,10 +336,6 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   const configuredCrit = loadout.critChance / 100;
   const critSubtotal = configuredCrit + biting + setCrit + equipmentCrit.chance;
   const critChance = loadout.perks.equilibrium > 0 ? 0 : clamp01(critSubtotal);
-  const simulationCritChance =
-    loadout.perks.equilibrium > 0
-      ? 0
-      : clamp01(loadout.critChance / 100 + biting + setCrit + equipmentCrit.chance);
   const equipmentAdrenalineCap = equipmentEffects.vestments.increasedAdrenalineCap ? 120 : 100;
   const maxAdrenaline = resolveMaximumAdrenaline(equipmentAdrenalineCap, league);
 
@@ -412,6 +409,15 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   if (equipmentEffects.amHejDamageBonus > 0) {
     globalModifiers.push(additiveMeleeDamageModifier(equipmentEffects.amHejDamageBonus));
   }
+  if (loadout.perks.demonSlayer > 0) {
+    globalModifiers.push(raceSlayerPerkModifier("demon", loadout.target?.demon === true));
+  }
+  if (loadout.perks.dragonSlayer > 0) {
+    globalModifiers.push(raceSlayerPerkModifier("dragon", loadout.target?.dragon === true));
+  }
+  if (loadout.perks.undeadSlayer > 0) {
+    globalModifiers.push(raceSlayerPerkModifier("undead", loadout.target?.undead === true));
+  }
   globalModifiers.push(...leagueModifiers(league));
 
   const adrenaline: AdrenalineRules = {
@@ -468,7 +474,6 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
       adjustment: critChance - critSubtotal,
     },
     critsDisabled: loadout.perks.equilibrium > 0,
-    simulationCritChance,
     critDamageBonus: equipmentCrit.damageBonus,
     baseCritDamage: critDamage.baseMultiplier,
     totalCritDamage: critDamage.totalMultiplier,
@@ -532,7 +537,8 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     ],
     adrenaline,
     procs,
-    plantedFeet: loadout.perks.plantedFeet === true,
+    plantedFeet: loadout.perks.plantedFeet > 0,
+    preciseRank: loadout.perks.precise > 0 ? loadout.perks.precise : 0,
     conjureBasicDamageMult: loadoutFirstNecromancerConjureDamageMult({
       equipmentSlots: loadout.equipmentSlots,
     }),

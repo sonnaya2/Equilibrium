@@ -41,7 +41,7 @@ Only the first three rows are tracked. Everything else on this list is rebuilt b
 | `asset-catalog/`              | Art provenance (metadata) | Register new icons here, then `art:fetch` and `art:import`   |
 | `public/game/` `public/brand/`| The art itself            | One tree, edited directly; a file's path is its URL          |
 | `.cache/`                     | Generated SQLite and JSON | Never edit or commit                                         |
-| `public/data/v2/`             | Generated browser exports | Never edit or commit; regenerate with `data:export`          |
+| `.generated/`                 | Build shards (`#shard/*`) | Never edit or commit; regenerate with `data:rebuild`         |
 | `reports/`                    | Generated run reports     | Never edit or commit                                         |
 
 ## Scripts

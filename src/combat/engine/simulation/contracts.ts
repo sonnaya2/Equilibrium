@@ -70,6 +70,8 @@ export interface SimulateInput {
    * Does not apply to greater variants.
    */
   plantedFeet?: boolean;
+  /** Precise perk rank 1–6; raises minimum ability damage before the hit pipeline. */
+  preciseRank?: number;
   /** Effective Tumeken count (0-5); its 5.4s activation is assumed complete before tick 0. */
   tumekensPieces?: number;
   /** False when another mechanic (Equilibrium) disables all set crit chance. */

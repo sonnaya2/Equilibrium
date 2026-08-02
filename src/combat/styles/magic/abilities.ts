@@ -146,6 +146,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
   {
     // Wiki: "Sonic Wave strikes the target 2 ticks after being cast"; Flow is
     // gained on a successful hit, so the 9s window runs from that land tick.
+    // Wiki Jul 2024 — no longer weapon-type gated.
     id: "sonic_wave",
     name: "Sonic Wave",
     style: "magic",
@@ -154,7 +155,6 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
     replacementGroup: "sonic_wave",
-    weaponRequirement: "twohand",
     source: wikiAbility("Sonic Wave"),
   },
   {
@@ -167,7 +167,6 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
     replacementGroup: "sonic_wave",
-    weaponRequirement: "twohand",
     source: wikiAbility("Greater Sonic Wave"),
   },
   {
@@ -238,7 +237,6 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 5.4,
     replacementGroup: "concentrated_blast",
-    weaponRequirement: "dualwield",
     source: wikiAbility("Concentrated Blast"),
   },
   {
@@ -250,7 +248,6 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { gain: 9 },
     cooldownSeconds: 5.4,
     replacementGroup: "concentrated_blast",
-    weaponRequirement: "dualwield",
     source: wikiAbility("Greater Concentrated Blast"),
   },
   {

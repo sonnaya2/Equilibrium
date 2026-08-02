@@ -152,7 +152,15 @@ export function StatsPanel({
               <span>Weapon setup</span>
               <select
                 aria-label="Weapon setup"
-                value={loadout.weaponConfiguration}
+                value={
+                  // Shield / defender come only from equipped gear; map to the
+                  // nearest manual option so the disabled control stays valid.
+                  loadout.weaponConfiguration === "shield"
+                    ? "mainhand"
+                    : loadout.weaponConfiguration === "defender"
+                      ? "dualwield"
+                      : loadout.weaponConfiguration
+                }
                 disabled={weaponConfigurationFor(loadout) != null}
                 title={
                   weaponConfigurationFor(loadout) != null
@@ -176,7 +184,9 @@ export function StatsPanel({
             value={loadout.weaponTier}
             onChange={(weaponTier) => automatic({ weaponTier })}
           />
-          {loadout.style === "necromancy" || loadout.weaponConfiguration === "dualwield" ? (
+          {loadout.style === "necromancy" ||
+          loadout.weaponConfiguration === "dualwield" ||
+          loadout.weaponConfiguration === "defender" ? (
             <NumberField
               label={loadout.style === "necromancy" ? "Conduit tier" : "Off-hand tier"}
               value={loadout.offhandTier}
@@ -205,7 +215,9 @@ export function StatsPanel({
           <AutoNumberField
             label="Base ability damage"
             value={
-              loadout.baseDamage.mode === "manual" ? loadout.baseDamage.manualValue : stats.base
+              loadout.baseDamage.mode === "manual"
+                ? loadout.baseDamage.manualValue
+                : stats.rawBase
             }
             auto={loadout.baseDamage.mode === "automatic"}
             onAutoChange={(auto) =>
@@ -213,7 +225,8 @@ export function StatsPanel({
                 ...loadout,
                 baseDamage: {
                   mode: auto ? "automatic" : "manual",
-                  manualValue: auto ? loadout.baseDamage.manualValue : stats.base,
+                  // Freeze pre-perk / pre-Aegis entered base; loadoutBase + Aegis re-apply once.
+                  manualValue: auto ? loadout.baseDamage.manualValue : stats.rawBase,
                 },
               })
             }
@@ -224,10 +237,12 @@ export function StatsPanel({
               })
             }
           />
-          {/* Perks move the number the engine actually uses away from the entered one. */}
+          {/* Engine total after Invention perks and Teragard's Aegis when it differs from the field. */}
           {stats.base !==
-          (loadout.baseDamage.mode === "manual" ? loadout.baseDamage.manualValue : stats.base) ? (
-            <DerivedRow label="After perks" value={format(stats.base)} />
+          (loadout.baseDamage.mode === "manual"
+            ? loadout.baseDamage.manualValue
+            : stats.rawBase) ? (
+            <DerivedRow label="After modifiers" value={format(stats.base)} />
           ) : null}
         </StatsGroup>
 

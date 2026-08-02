@@ -9,10 +9,10 @@ import {
 import type { Loadout } from "./useLoadout";
 
 const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
-  modeled: "Active",
+  modeled: "Modeled",
   "not-modeled": "Not modeled",
   "outgoing-only": "Partial",
-  none: "Recorded",
+  none: "No combat effect",
 };
 
 function setFactThreshold(fact: string): number | null {

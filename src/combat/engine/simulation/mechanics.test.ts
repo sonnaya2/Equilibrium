@@ -20,9 +20,8 @@ import { activeBleedCount } from "../../styles/melee/effects";
 import type { ItemPassiveId, WeaponClass } from "../../data/records";
 
 /**
- * Stage 5 regression coverage: Bloat's derived tails, Death Skulls' derived
- * bounces, the Dismember -> Slaughter -> Massacre chain, Planted Feet's
- * removed periodic damage, and the wiki DoT modifier rule.
+ * Bloat derived tails, Death Skulls bounces, Dismember → Slaughter → Massacre,
+ * Planted Feet removing periodic damage, wiki DoT modifier rule.
  */
 
 const meleeInput: Omit<SimulateInput, "rotation"> = {

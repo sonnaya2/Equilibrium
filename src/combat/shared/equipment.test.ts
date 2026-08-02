@@ -3,20 +3,16 @@ import {
   activeEquipmentEffects,
   applyEquipmentAccuracy,
   applyEquipmentDamagePotential,
-  deathdealer90SetFacts,
   equipmentSetById,
   equippedPassiveSummaries,
   equippedSetCounts,
   firstNecromancerConjureDamageMult,
   firstNecromancerConjureDurationMult,
-  firstNecromancerSetFacts,
   loadoutFirstNecromancerConjureDamageMult,
   loadoutSetCritChance,
+  setCritChanceFromDef,
   setDamageModifiers,
   setEffectsSummary,
-  tectonicSet,
-  tumekensSunshineSet,
-  vestmentsOfHavocSetFacts,
 } from "./equipment";
 
 describe("shared/equipment set effects", () => {
@@ -39,30 +35,26 @@ describe("shared/equipment set effects", () => {
     });
   });
 
-  it("tectonic grants +1% crit chance per piece, elite +2%", () => {
-    expect(tectonicSet(3).critChanceBonus).toBeCloseTo(0.03, 10);
-    expect(tectonicSet(3, true).critChanceBonus).toBeCloseTo(0.06, 10);
-    expect(tectonicSet(0).critChanceBonus).toBe(0);
+  it("tectonic via setCritChanceFromDef + equipmentSetById", () => {
+    const tec = equipmentSetById("tectonic")!;
+    expect(setCritChanceFromDef(tec, 3)).toBeCloseTo(0.03, 10);
+    const elite = equipmentSetById("elite-tectonic")!;
+    expect(setCritChanceFromDef(elite, 3)).toBeCloseTo(0.06, 10);
+    expect(setCritChanceFromDef(tec, 0)).toBe(0);
   });
 
-  it("Tumeken's set(3) applies only inside Sunshine", () => {
-    expect(tumekensSunshineSet(3, true).critChanceBonus).toBeCloseTo(0.045, 10);
-    expect(tumekensSunshineSet(3, false).critChanceBonus).toBe(0);
+  it("tumeken sunshine gate via catalogue", () => {
+    const tum = equipmentSetById("tumekens-resplendence")!;
+    expect(setCritChanceFromDef(tum, 3, { insideSunshine: true })).toBeCloseTo(0.045, 10);
+    expect(setCritChanceFromDef(tum, 3, { insideSunshine: false })).toBe(0);
+    expect(setCritChanceFromDef(tum, 2, { insideSunshine: true })).toBe(0);
   });
 
-  it("Tumeken's crit requires at least 3 pieces", () => {
-    expect(tumekensSunshineSet(2, true).critChanceBonus).toBe(0);
-    expect(tumekensSunshineSet(1, true).critChanceBonus).toBe(0);
-  });
-
-  it("rejects impossible piece counts", () => {
-    expect(() => tectonicSet(4)).toThrow(RangeError);
-    expect(() => tumekensSunshineSet(-1, true)).toThrow(RangeError);
-  });
-
-  it("every set effect carries provenance", () => {
-    expect(tectonicSet(3).source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(tumekensSunshineSet(3, true).source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  it("catalogue set defs carry provenance", () => {
+    const tec = equipmentSetById("tectonic")!;
+    const tum = equipmentSetById("tumekens-resplendence")!;
+    expect(tec.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(tum.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   it("3 tectonic pieces from mock equipment → +3% crit", () => {
@@ -184,19 +176,17 @@ describe("shared/equipment set effects", () => {
     });
   });
 
-  it("facts-only helpers return 0 modifiers with wiki facts", () => {
-    const fn = firstNecromancerSetFacts(5);
-    expect(fn.modifiers).toEqual([]);
-    expect(fn.facts.length).toBeGreaterThan(0);
+  it("facts-only catalogue sets expose wiki facts", () => {
+    const fn = equipmentSetById("first-necromancer")!;
+    expect(fn.facts?.length).toBeGreaterThan(0);
+    expect(fn.effects).toEqual([]);
     expect(fn.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 
-    const vest = vestmentsOfHavocSetFacts(4);
-    expect(vest.modifiers).toEqual([]);
-    expect(vest.facts.some((f) => /adrenaline/i.test(f))).toBe(true);
+    const vest = equipmentSetById("vestments-of-havoc")!;
+    expect(vest.facts?.some((f) => /adrenaline/i.test(f))).toBe(true);
 
-    const dd = deathdealer90SetFacts(5);
-    expect(dd.modifiers).toEqual([]);
-    expect(dd.facts.some((f) => /Death Mark/i.test(f))).toBe(true);
+    const dd = equipmentSetById("deathdealer-90")!;
+    expect(dd.facts?.some((f) => /Death Mark/i.test(f))).toBe(true);
   });
 
   it("firstNecromancerConjureDamageMult is +7%/piece from set(2), cap 5", () => {

@@ -51,6 +51,10 @@ export interface LoadoutTarget {
   hpPercent?: number;
   hasApplicableWeakness?: boolean;
   occupiedTiles?: number;
+  /** Race flags for Undead / Demon / Dragon Slayer invention perks. */
+  undead?: boolean;
+  demon?: boolean;
+  dragon?: boolean;
   /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */
   poisonImmune?: boolean;
   /**
@@ -66,7 +70,13 @@ export interface BaseDamageSettings {
   manualValue: number;
 }
 
-export type LoadoutWeaponConfiguration = "twohand" | "dualwield" | "mainhand";
+/** Stored weapon shape. Shield / defender are set from equipped gear (not the manual select). */
+export type LoadoutWeaponConfiguration =
+  | "twohand"
+  | "dualwield"
+  | "mainhand"
+  | "shield"
+  | "defender";
 
 export interface LoadoutPerks {
   equilibrium: number;
@@ -90,8 +100,14 @@ export interface LoadoutPerks {
   /** Relentless: branched cost refund with its 30s lockout. Rank 0 = off, max 5. */
   relentless: number;
   relentlessLevel20: boolean;
-  /** Planted Feet: base Sunshine / Death's Swiftness ×1.25 duration (→ 63 ticks). */
-  plantedFeet: boolean;
+  /** Precise: raises min hit by 1.5% of max per rank. Rank 0 = off, max 6. */
+  precise: number;
+  /** Planted Feet: base Sunshine / Death's Swiftness ×1.25 duration. Rank 0/1. */
+  plantedFeet: number;
+  /** Race slayer perks: +7% damage when the target matches. Rank 0/1. */
+  demonSlayer: number;
+  dragonSlayer: number;
+  undeadSlayer: number;
 }
 
 /**
@@ -116,6 +132,11 @@ export const PERK_GIZMO_KIND: Record<PerkRankKey, "weapon" | "armour" | "both"> 
   crackling: "both",
   aftershock: "weapon",
   relentless: "both",
+  precise: "weapon",
+  plantedFeet: "weapon",
+  demonSlayer: "both",
+  dragonSlayer: "both",
+  undeadSlayer: "both",
 };
 
 export const GIZMO_SLOTS = ["weapon1", "weapon2", "armour1", "armour2"] as const;
@@ -261,7 +282,11 @@ export const DEFAULT_LOADOUT: Loadout = {
     aftershock: 0,
     relentless: 0,
     relentlessLevel20: false,
-    plantedFeet: false,
+    precise: 0,
+    plantedFeet: 0,
+    demonSlayer: 0,
+    dragonSlayer: 0,
+    undeadSlayer: 0,
   },
   gizmos: {},
   buffs: {
@@ -370,6 +395,9 @@ function normalizeGizmos(raw: unknown): GizmoLayout {
 
 const clampRank = (value: unknown, max: number) =>
   Number.isFinite(value) ? Math.min(Math.max(0, Math.floor(Number(value))), max) : 0;
+/** Rank-1 toggles; accept old boolean saves. */
+const legacyToggleRank = (value: unknown) =>
+  value === true ? 1 : value === false || value == null ? 0 : clampRank(value, 1);
 const num = (value: unknown, fallback: number) =>
   Number.isFinite(value) ? Number(value) : fallback;
 const clamp = (value: unknown, min: number, max: number, fallback: number) =>
@@ -532,9 +560,12 @@ function curseForStyle(current: StyleCurseChoice, style: CombatStyle): StyleCurs
 }
 
 /**
- * Weapon shape implied by the equipped gear. A wielded shield or defender is not
- * a second weapon, so it reads as main-hand and dual-wield abilities stay
- * uncastable. Null while no weapon is equipped, leaving the stored choice.
+ * Weapon shape implied by the equipped gear.
+ * - Offensive off-hand → dualwield (dual-wield abilities cast).
+ * - Defender → defender (hybrid OH: dual-wield abilities cast; not a pure shield).
+ * - Shield → shield (no dual-wield; unrestricted still cast).
+ * - Empty off-hand → mainhand (1H only).
+ * Null while no weapon is equipped, leaving the stored choice.
  */
 export function weaponConfigurationFor(
   loadout: LoadoutEquipmentView,
@@ -542,8 +573,11 @@ export function weaponConfigurationFor(
   const slots = resolvedEquipmentSlots(loadout);
   if (slots.twohand) return "twohand";
   if (!slots.mainhand) return null;
-  if (!slots.offhand || wieldedOffhandKind(loadout) !== null) return "mainhand";
-  return "dualwield";
+  const oh = wieldedOffhandKind(loadout);
+  if (oh === "shield") return "shield";
+  if (oh === "defender") return "defender";
+  if (slots.offhand) return "dualwield";
+  return "mainhand";
 }
 
 export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
@@ -737,7 +771,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     // the stored style.
     weaponConfiguration:
       weaponConfigurationFor({ equipmentSlots }) ??
-      (raw.weaponConfiguration === "dualwield" || raw.weaponConfiguration === "mainhand"
+      (raw.weaponConfiguration === "dualwield" ||
+      raw.weaponConfiguration === "mainhand" ||
+      raw.weaponConfiguration === "shield" ||
+      raw.weaponConfiguration === "defender"
         ? raw.weaponConfiguration
         : "twohand"),
     baseDamage: {
@@ -776,6 +813,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
             ...(Number.isFinite(rawTarget.occupiedTiles)
               ? { occupiedTiles: Math.max(1, Math.floor(Number(rawTarget.occupiedTiles))) }
               : {}),
+            ...(rawTarget.undead === true ? { undead: true } : {}),
+            ...(rawTarget.demon === true ? { demon: true } : {}),
+            ...(rawTarget.dragon === true ? { dragon: true } : {}),
             ...(rawTarget.poisonImmune === true ? { poisonImmune: true } : {}),
             ...(Number.isFinite(rawTarget.incomingHitIntervalSeconds) &&
             Number(rawTarget.incomingHitIntervalSeconds) > 0
@@ -800,7 +840,12 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       aftershock: clampRank(rawPerks.aftershock, 4),
       relentless: clampRank(rawPerks.relentless, 5),
       relentlessLevel20: rawPerks.relentlessLevel20 === true,
-      plantedFeet: rawPerks.plantedFeet === true,
+      precise: clampRank(rawPerks.precise, 6),
+      // Legacy boolean saves (pre-gizmo placement) migrate to rank 1.
+      plantedFeet: legacyToggleRank(rawPerks.plantedFeet),
+      demonSlayer: legacyToggleRank(rawPerks.demonSlayer),
+      dragonSlayer: legacyToggleRank(rawPerks.dragonSlayer),
+      undeadSlayer: legacyToggleRank(rawPerks.undeadSlayer),
     },
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
     buffs: {

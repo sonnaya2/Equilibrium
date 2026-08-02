@@ -1,16 +1,13 @@
-import type { CritLayers } from "../../core/critical";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { calculateHit } from "../../pipeline/calculateHit";
 import {
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
-  sunshineActive,
-  SUNSHINE_DAMAGE_MULTIPLIER,
-  SUNSHINE_SOURCE,
   tumekensSunshineCritChance,
 } from "../../styles/magic/effects";
-import type { CombatModifier } from "../../types";
+import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
-import { buffMultiplier } from "./modifiers";
+import { landTimeModifiers } from "./modifiers";
 import { NO_DAMAGE, type EventResolution } from "./types";
 
 /**
@@ -18,22 +15,23 @@ import { NO_DAMAGE, type EventResolution } from "./types";
  * source hit's crit chance (from its landed detail) × the surge hit's expected,
  * recomputed against land-time state. min/max stay 0 — the surge is EV-only,
  * and it is never itself proc-eligible, so it cannot chain another surge.
+ *
+ * Modifiers match parent hits via landTimeModifiers (Am-Zi, Am-Hej, Sunshine
+ * self-exclusion, Chaos Roar, etc.) — never a hand-copied subset.
  */
 export function resolveLightningSurge(
   rt: SimulationRuntime,
   at: number,
   sourceSeq: number,
-  castSeq: number,
-  critLayers: CritLayers,
-  baseMods: CombatModifier[],
+  ability: AbilitySpec,
+  snap: CastSnapshot,
+  hitIndex = 0,
 ): EventResolution {
   const { input, state } = rt;
   const sourceCritChance = rt.hitDetails.get(sourceSeq)?.critChance ?? 0;
   if (sourceCritChance <= 0) return NO_DAMAGE;
-  const modifiers = [...baseMods];
-  if (state.magic.sunshine.grantedByCast !== castSeq && sunshineActive(state.magic.sunshine, at)) {
-    modifiers.push(buffMultiplier("buff:sunshine", SUNSHINE_DAMAGE_MULTIPLIER, SUNSHINE_SOURCE));
-  }
+  const modifiers = landTimeModifiers(rt, at, ability, snap, hitIndex, false);
+  const { critLayers } = snap;
   const surgeHit = calculateHit({
     base: input.base,
     band: LIGHTNING_SURGE_BAND,
@@ -49,7 +47,7 @@ export function resolveLightningSurge(
               input.tumekensPieces ?? 0,
               state.magic.sunshine,
               at,
-              castSeq,
+              snap.castSeq,
             )),
       eligible: true,
     },

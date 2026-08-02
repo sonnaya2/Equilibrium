@@ -214,6 +214,30 @@ describe("loadoutStats", () => {
     expect(manual.cap).toEqual({ cap: 30_000, bypass: true });
   });
 
+  it("freezing automatic base into manual stores rawBase so perks/Aegis apply once", () => {
+    const autoLoadout: Loadout = {
+      ...base,
+      perks: { ...base.perks, equilibrium: 4, eruptive: 4 },
+    };
+    const auto = loadoutStats(autoLoadout);
+    expect(auto.rawBase).toBeLessThan(auto.base);
+
+    // Correct freeze path (StatsPanel auto→manual): store pre-perk rawBase.
+    const frozen = loadoutStats({
+      ...autoLoadout,
+      baseDamage: { mode: "manual", manualValue: auto.rawBase },
+    });
+    expect(frozen.rawBase).toBe(auto.rawBase);
+    expect(frozen.base).toBe(auto.base);
+
+    // Buggy freeze path stored stats.base and double-applied perks.
+    const doubleCounted = loadoutStats({
+      ...autoLoadout,
+      baseDamage: { mode: "manual", manualValue: auto.base },
+    });
+    expect(doubleCounted.base).toBeGreaterThan(auto.base);
+  });
+
   it("adds Energising's flat accuracy inside the target model only", () => {
     const withPerk = loadoutStats({
       ...base,
@@ -279,7 +303,6 @@ describe("loadoutStats", () => {
       },
     });
     expect(stats.critChance).toBeCloseTo(0.1, 10);
-    expect(stats.simulationCritChance).toBeCloseTo(0.1, 10);
     expect(stats.tumekensPieces).toBe(3);
   });
 
@@ -335,7 +358,6 @@ describe("loadoutStats", () => {
         },
       });
       expect(stats.critChance).toBe(0);
-      expect(stats.simulationCritChance).toBe(0);
       expect(stats.critsDisabled).toBe(true);
       expect(
         Object.values(stats.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
@@ -774,9 +796,34 @@ describe("loadoutStats", () => {
     expect(ranked.procs?.aftershockRank).toBe(2);
   });
 
+  it("race Slayer perks add base modifiers only when the target matches", () => {
+    const withDemon = {
+      ...base,
+      perks: { ...base.perks, demonSlayer: 1 },
+      target: {
+        defenceLevel: 80,
+        armour: 0,
+        affinity: "same" as const,
+        demon: true,
+      },
+    };
+    expect(
+      loadoutStats(withDemon).globalModifiers.some((m) => m.id === "perk:demon-slayer"),
+    ).toBe(true);
+    const offTarget = {
+      ...base,
+      perks: { ...base.perks, demonSlayer: 1 },
+      target: { defenceLevel: 80, armour: 0, affinity: "same" as const },
+    };
+    const mod = loadoutStats(offTarget).globalModifiers.find((m) => m.id === "perk:demon-slayer");
+    expect(mod).toBeDefined();
+    // closed over targetMatches=false — no damage when the target is not a demon
+    expect(mod!.applies({ style: "melee" })).toBe(false);
+  });
+
   it("Planted Feet surfaces on CalcStats for simulate", () => {
     expect(loadoutStats(base).plantedFeet).toBe(false);
-    expect(loadoutStats({ ...base, perks: { ...base.perks, plantedFeet: true } }).plantedFeet).toBe(
+    expect(loadoutStats({ ...base, perks: { ...base.perks, plantedFeet: 1 } }).plantedFeet).toBe(
       true,
     );
   });

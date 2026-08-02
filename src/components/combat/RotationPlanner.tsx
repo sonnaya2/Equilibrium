@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { rotationOf } from "@/combat/engine/simulation/contracts";
 import { simulate, type RotationSummary } from "@/combat/engine/simulation/simulate";
@@ -66,6 +66,57 @@ function castCritLabel(result: RotationSummary["casts"][number]["result"]): stri
   return chance > 0 ? `${Math.round(chance * 1000) / 10}% crit EV` : null;
 }
 
+/** Assumptions scaffold only — sim path builds SimulateInput directly. */
+function withManualRotationLine(
+  scaffold: CalcStats,
+  line: {
+    combatStyle: string;
+    base: number;
+    level: number;
+    damagePotentialPct: number;
+    critPct: number;
+  },
+): CalcStats {
+  const level = Math.min(Math.max(1, line.level), 145);
+  const base = Math.max(0, line.base);
+  const critChance = Math.min(Math.max(0, line.critPct), 100) / 100;
+  const dp = Math.min(Math.max(0, line.damagePotentialPct), 100) / 100;
+  const manualCritDamage = critDamageStats(level);
+  return {
+    ...scaffold,
+    combatStyle: line.combatStyle,
+    baseDamageMode: "manual",
+    rawBase: base,
+    base,
+    level,
+    attackLevel: level,
+    dp,
+    accuracyRating: 0,
+    critChance,
+    critsDisabled: false,
+    critDamageBonus: 0,
+    baseCritDamage: manualCritDamage.baseMultiplier,
+    totalCritDamage: manualCritDamage.totalMultiplier,
+    baseCritDamageBonus: manualCritDamage.baseBonus,
+    totalCritDamageBonus: manualCritDamage.totalBonus,
+    activePassives: [],
+    critByHitFor: (ability, crit) => ability.hits.map(() => crit),
+    effectiveDamageLevel: level,
+    mainhandTier: 0,
+    offhandTier: null,
+    spellTier: null,
+    ammunitionTier: null,
+    equipmentStyleDamageBonus: 0,
+    styleDamageBonus: 0,
+    damagePotentialSource:
+      line.damagePotentialPct === 100 ? "100% assumption" : "manual override",
+    equipmentIds: [],
+    weaponConfiguration: line.combatStyle === "necromancy" ? "necromancy" : "twohand",
+    globalModifiers: [],
+    castModifiersFor: () => [],
+  };
+}
+
 export function RotationPlanner() {
   const [loadout, setLoadout] = useLoadout();
   const { build } = useLeagueBuild();
@@ -92,6 +143,15 @@ export function RotationPlanner() {
     );
   }, []);
 
+  const setupStats = useMemo(
+    () =>
+      loadoutStats(
+        loadout,
+        useBuild ? { blessingPicks: build.blessingPicks } : { ruleset: "base" },
+      ),
+    [loadout, useBuild, build.blessingPicks],
+  );
+
   const updateQueue = (next: string[]) => {
     setQueue(next);
     saveState(STORAGE_KEY, next);
@@ -100,38 +160,36 @@ export function RotationPlanner() {
   const run = () => {
     setAnalysisOpen(false);
     const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
-    const setup = loadoutStats(loadout, {
-      ...(useBuild ? { blessingPicks: build.blessingPicks } : { ruleset: "base" as const }),
-    });
     if (useBuild) {
       setResult(
         simulate({
-          base: setup.base,
-          level: setup.level,
-          accuracy: setup.dp,
+          base: setupStats.base,
+          level: setupStats.level,
+          accuracy: setupStats.dp,
           crit: {
-            chance: setup.simulationCritChance,
-            disabled: setup.critsDisabled,
-            damageBonus: setup.critDamageBonus,
+            chance: setupStats.critChance,
+            disabled: setupStats.critsDisabled,
+            damageBonus: setupStats.critDamageBonus,
           },
           abilities: ALL_ABILITIES,
           rotation: rotationOf(...queue),
-          modifiers: setup.globalModifiers,
-          adrenaline: setup.adrenaline,
-          procs: setup.procs,
-          plantedFeet: setup.plantedFeet,
-          conjureBasicDamageMult: setup.conjureBasicDamageMult,
-          conjureDurationMult: setup.conjureDurationMult,
-          tumekensPieces: setup.tumekensPieces,
-          tumekensCritEnabled: setup.tumekensCritEnabled,
-          equipmentEffects: setup.equipmentEffects,
-          league: setup.league,
-          context: setup.combatContext,
+          modifiers: setupStats.globalModifiers,
+          adrenaline: setupStats.adrenaline,
+          procs: setupStats.procs,
+          plantedFeet: setupStats.plantedFeet,
+          preciseRank: setupStats.preciseRank,
+          conjureBasicDamageMult: setupStats.conjureBasicDamageMult,
+          conjureDurationMult: setupStats.conjureDurationMult,
+          tumekensPieces: setupStats.tumekensPieces,
+          tumekensCritEnabled: setupStats.tumekensCritEnabled,
+          equipmentEffects: setupStats.equipmentEffects,
+          league: setupStats.league,
+          context: setupStats.combatContext,
           targetHpPercent: loadout.target?.hpPercent,
-          cap: setup.cap,
-          startingAdrenaline: setup.startingAdrenaline,
-          equipmentIds: setup.equipmentIds,
-          weaponConfiguration: setup.weaponConfiguration,
+          cap: setupStats.cap,
+          startingAdrenaline: setupStats.startingAdrenaline,
+          equipmentIds: setupStats.equipmentIds,
+          weaponConfiguration: setupStats.weaponConfiguration,
           autoWeave: weave,
           ammo: ammo === "none" ? undefined : ammo,
         }),
@@ -146,8 +204,8 @@ export function RotationPlanner() {
         crit: { chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100 },
         abilities: ALL_ABILITIES,
         rotation: rotationOf(...queue),
-        cap: setup.cap,
-        startingAdrenaline: setup.startingAdrenaline,
+        cap: setupStats.cap,
+        startingAdrenaline: setupStats.startingAdrenaline,
         autoWeave: weave,
         ammo: ammo === "none" ? undefined : ammo,
       }),
@@ -155,8 +213,6 @@ export function RotationPlanner() {
   };
 
   const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
-  const buildStats = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
-  const baseStats = loadoutStats(loadout, { ruleset: "base" });
   const selectedVariants = new Map<string, string>();
   for (const id of queue) {
     const ability = abilityById(id);
@@ -165,47 +221,15 @@ export function RotationPlanner() {
   const manualStyles = [...new Set(queue.map((id) => abilityById(id)?.style).filter(Boolean))];
   const manualCombatStyle =
     mode === "revolution" ? loadout.style : manualStyles.join(" + ") || paletteStyle;
-  const manualCritDamage = critDamageStats(level);
-  const manualStats: CalcStats = {
-    ...baseStats,
-    combatStyle: manualCombatStyle,
-    baseDamageMode: "manual",
-    rawBase: Math.max(0, base),
-    base: Math.max(0, base),
-    level: Math.min(Math.max(1, level), 145),
-    attackLevel: Math.min(Math.max(1, level), 145),
-    dp: Math.min(Math.max(0, accuracy), 100) / 100,
-    accuracyRating: 0, // manual mode prices accuracy as a raw %, not a rating
-    critChance: Math.min(Math.max(0, critChance), 100) / 100,
-    critsDisabled: false,
-    simulationCritChance: Math.min(Math.max(0, critChance), 100) / 100,
-    critDamageBonus: 0,
-    baseCritDamage: manualCritDamage.baseMultiplier,
-    totalCritDamage: manualCritDamage.totalMultiplier,
-    baseCritDamageBonus: manualCritDamage.baseBonus,
-    totalCritDamageBonus: manualCritDamage.totalBonus,
-    activePassives: [],
-    critByHitFor: (ability, crit) => ability.hits.map(() => crit),
-    cap: baseStats.cap,
-    startingAdrenaline: baseStats.startingAdrenaline,
-    maxAdrenaline: baseStats.maxAdrenaline,
-    effectiveDamageLevel: Math.min(Math.max(1, level), 145),
-    mainhandTier: 0,
-    offhandTier: null,
-    spellTier: null,
-    ammunitionTier: null,
-    equipmentStyleDamageBonus: 0,
-    styleDamageBonus: 0,
-    damagePotentialSource: accuracy === 100 ? "100% assumption" : "manual override",
-    equipmentIds: [],
-    weaponConfiguration: manualCombatStyle === "necromancy" ? "necromancy" : "twohand",
-    globalModifiers: [],
-    castModifiersFor: () => [],
-    equipmentEffects: baseStats.equipmentEffects,
-    defence: baseStats.defence,
-    life: baseStats.life,
-  };
-  const activeStats = useBuild ? buildStats : manualStats;
+  const activeStats = useBuild
+    ? setupStats
+    : withManualRotationLine(setupStats, {
+        combatStyle: manualCombatStyle,
+        base,
+        level,
+        damagePotentialPct: accuracy,
+        critPct: critChance,
+      });
 
   const contributions = result?.analysis.byEffect ?? [];
 
@@ -246,10 +270,10 @@ export function RotationPlanner() {
           <dl className="rotation-facts mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
             {(
               [
-                ["Level", buildStats.level],
-                ["Base", buildStats.base],
-                ["DP", `${Math.round(buildStats.dp * 1000) / 10}%`],
-                ["Crit", `${Math.round(buildStats.critChance * 1000) / 10}%`],
+                ["Level", setupStats.level],
+                ["Base", setupStats.base],
+                ["DP", `${Math.round(setupStats.dp * 1000) / 10}%`],
+                ["Crit", `${Math.round(setupStats.critChance * 1000) / 10}%`],
               ] as const
             ).map(([label, value]) => (
               <div key={label} className="border-b border-stone-750/70 py-1.5">
@@ -279,7 +303,7 @@ export function RotationPlanner() {
               />
             </label>
             <label className="grid gap-1">
-              <span>Accuracy %</span>
+              <span>Damage Potential %</span>
               <input
                 type="number"
                 value={accuracy}
@@ -358,7 +382,7 @@ export function RotationPlanner() {
                 const reason =
                   selectedVariant && selectedVariant !== a.id
                     ? `Replaced by ${abilityName(selectedVariant)}`
-                    : useBuild && !meetsWeaponRequirement(a, buildStats.weaponConfiguration)
+                    : useBuild && !meetsWeaponRequirement(a, setupStats.weaponConfiguration)
                       ? `Requires ${
                           a.weaponRequirement === "conduit"
                             ? "a conduit"
@@ -369,7 +393,7 @@ export function RotationPlanner() {
                                   ? "a necromancy weapon"
                                   : `${a.style} weapon`))
                         }`
-                      : useBuild && !meetsEquipmentRequirement(a, buildStats.equipmentIds)
+                      : useBuild && !meetsEquipmentRequirement(a, setupStats.equipmentIds)
                         ? "Requires an Igneous cape"
                         : undefined;
                 return (

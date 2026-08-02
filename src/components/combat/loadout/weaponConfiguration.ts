@@ -161,7 +161,13 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
           ...caps,
         };
   }
-  if (loadout.weaponConfiguration === "mainhand") {
+  // Slider fallback when no tiered weapon is equipped. Shield = main-hand only;
+  // defender is dual-capable for AD (half-tier OH when an item is present; full
+  // offhandTier slider when the shape is stored without gear).
+  if (
+    loadout.weaponConfiguration === "mainhand" ||
+    loadout.weaponConfiguration === "shield"
+  ) {
     return {
       kind: "mainhand",
       style: loadout.style,
@@ -170,7 +176,10 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
       ...caps,
     };
   }
-  if (loadout.weaponConfiguration === "dualwield") {
+  if (
+    loadout.weaponConfiguration === "dualwield" ||
+    loadout.weaponConfiguration === "defender"
+  ) {
     return {
       kind: "mainhand",
       style: loadout.style,

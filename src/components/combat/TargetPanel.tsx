@@ -115,6 +115,36 @@ export function TargetPanel({
               />
               Has an applicable weakness
             </label>
+            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+              <input
+                type="checkbox"
+                checked={target.demon === true}
+                onChange={(event) =>
+                  updateTarget({ demon: event.target.checked || undefined })
+                }
+              />
+              Demon (Demon Slayer perk)
+            </label>
+            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+              <input
+                type="checkbox"
+                checked={target.dragon === true}
+                onChange={(event) =>
+                  updateTarget({ dragon: event.target.checked || undefined })
+                }
+              />
+              Dragon (Dragon Slayer perk)
+            </label>
+            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+              <input
+                type="checkbox"
+                checked={target.undead === true}
+                onChange={(event) =>
+                  updateTarget({ undead: event.target.checked || undefined })
+                }
+              />
+              Undead (Undead Slayer perk)
+            </label>
             <NumberField
               label="Occupied tiles"
               value={target.occupiedTiles ?? 1}

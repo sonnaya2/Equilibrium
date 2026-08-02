@@ -36,14 +36,7 @@ export function onMagicHitLanded(
       procEligible: false,
       recursionAllowed: false,
       resolve: (eventRt, at) =>
-        resolveLightningSurge(
-          eventRt,
-          at,
-          event.seq,
-          event.sourceCast,
-          surge.critLayers,
-          surge.baseMods,
-        ),
+        resolveLightningSurge(eventRt, at, event.seq, ability, surge.snap, event.hitIndex),
     });
   }
   // Concentrated Blast hits stack their crit grant at land time (wiki: each

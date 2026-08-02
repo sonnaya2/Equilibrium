@@ -6457,6 +6457,24 @@
     "canonicalPage": "https://runescape.wiki/w/Dragon_Slayer_(perk)"
   },
   {
+    "id": "inv-eruptive-perk",
+    "label": "Eruptive",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/eruptive",
+    "fileTitle": "Eruptive.png",
+    "search": "Eruptive invention perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Eruptive"
+  },
+  {
+    "id": "inv-planted-feet-perk",
+    "label": "Planted Feet",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/planted-feet",
+    "fileTitle": "Planted Feet.png",
+    "search": "Planted Feet invention perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Planted_Feet"
+  },
+  {
     "id": "inv-precise",
     "label": "Precise",
     "category": "rs3/combat/perks",

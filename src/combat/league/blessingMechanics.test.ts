@@ -6,7 +6,9 @@ import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { baseInput, magicInput } from "../test/fixtures/inputs";
 import { secondsToTicks } from "../core/ticks";
 import { AFFINITY } from "../target/genericTarget";
+import { blessingChoice } from "../../league/blessings";
 import {
+  aegisArmourBonus,
   effectiveCooldownTicks,
   effectiveTargetAffinity,
   leagueModifiers,
@@ -34,14 +36,20 @@ describe("Teragard's Aegis and basic attacks", () => {
     const plain = simulate({ ...baseInput, rotation: rotationOf("attack") });
     expect(plain.totalExpected).toBe(1_200);
 
-    // 1,000 base + 250 Aegis = 1,250, read by the same 110-130% band.
+    // Aegis is applied at loadout resolve (aegisArmourBonus → base), not inside simulate.
+    const aegisBonus = aegisArmourBonus(
+      blessingChoice(1, "Order")!.combat,
+      { totalArmour: 1_000, blockArmourRating: 1_000 },
+      null,
+    ).baseAbilityDamageBonus;
+    expect(aegisBonus).toBe(250);
+
     const aegis = simulate({
       ...baseInput,
-      base: 1_250,
-      league: rules(["Order"], { totalArmour: 1_000 }),
-      context: { style: "melee", ruleset: "equilibrium" },
+      base: baseInput.base + aegisBonus,
       rotation: rotationOf("attack"),
     });
+    // Mid of 110–130% on 1,250 ability damage.
     expect(aegis.totalExpected).toBe(1_500);
   });
 });

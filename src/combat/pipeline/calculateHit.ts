@@ -4,6 +4,7 @@ import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_WIKI } from "../data/sources";
+import { preciseMinHitAddition } from "../shared/perks";
 import { runPipeline } from "./modifierPipeline";
 import type { CombatContext, CombatModifier } from "../types";
 
@@ -19,6 +20,8 @@ export interface HitInput {
   context?: CombatContext;
   modifiers?: CombatModifier[];
   cap?: HitCapRule;
+  /** Precise perk rank 1–6; raises min hit by 1.5% of max per rank. */
+  preciseRank?: number;
 }
 
 export interface HitResult {
@@ -99,7 +102,13 @@ function exactMean(
  */
 export function calculateHit(input: HitInput): HitResult {
   const band = bandOf(input.base, input.band);
-  return calculateRawHitBand({ ...input, min: band.min, max: band.max });
+  let min = band.min;
+  const max = band.max;
+  const precise = input.preciseRank ?? 0;
+  if (precise > 0) {
+    min = Math.min(max, Math.floor(min + preciseMinHitAddition(max, precise)));
+  }
+  return calculateRawHitBand({ ...input, min, max });
 }
 
 /** Resolve an already-composed inclusive integer band through the normal hit pipeline. */

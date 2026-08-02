@@ -20,13 +20,7 @@ function regionLabel(id: string): string {
   return REGION_ANCHOR_BY_ID.get(id as RegionId)?.name ?? id;
 }
 
-export function OverviewPlan({
-  taskTotal,
-  catalogCount,
-}: {
-  taskTotal: number;
-  catalogCount: number;
-}) {
+export function OverviewPlan({ taskTotal }: { taskTotal: number }) {
   const { build, loaded } = useBuild();
   const [progress, setProgress] = useState<TaskProgress>(EMPTY_PROGRESS);
 
@@ -94,10 +88,6 @@ export function OverviewPlan({
             </p>
           </div>
           <div className="overview-stat">
-            <p className="overview-stat__label">Catalog</p>
-            <p className="overview-stat__value">{catalogCount > 0 ? catalogCount : "—"}</p>
-          </div>
-          <div className="overview-stat">
             <p className="overview-stat__label">T1</p>
             <p className={`overview-stat__value${relicMono ? "" : " is-quiet"}`}>{t1Fig}</p>
           </div>
@@ -109,89 +99,56 @@ export function OverviewPlan({
       </div>
 
       <div className="overview-details">
-        <div className="overview-details__grid">
-          <div className="surface-panel surface-panel--muted">
-            <div className="surface-panel__header">Ledger</div>
-            <div className="surface-panel__body">
-              <dl className="overview-facts">
-                <dt>Regions</dt>
-                <dd>
-                  {pickNames.length > 0 ? (
-                    <span style={{ color: "var(--color-parch-100)" }}>{pickNames.join(" · ")}</span>
-                  ) : (
-                    <span style={{ color: "var(--color-parch-300)" }}>—</span>
-                  )}
-                </dd>
-                <dt>Tasks</dt>
-                <dd>
-                  <span className="mono">
-                    {taskDone}
-                    {taskTotal > 0 ? `/${taskTotal}` : ""}
+        <div className="overview-details__desk">
+          <dl className="overview-facts">
+            <dt>Regions</dt>
+            <dd>
+              {pickNames.length > 0 ? pickNames.join(" · ") : "—"}
+              <span className="overview-facts__note">2 start + Karamja + 3 electives</span>
+            </dd>
+            <dt>Tasks</dt>
+            <dd className="mono">
+              {taskDone}
+              {taskTotal > 0 ? `/${taskTotal}` : ""}
+            </dd>
+            <dt>Relic T1</dt>
+            <dd>{t1Relic ?? "—"}</dd>
+            <dt>Launch</dt>
+            <dd>10 Aug 2026</dd>
+            <dt>Relics</dt>
+            <dd>7 tiers</dd>
+            <dt>Blessings</dt>
+            <dd>8 tiers · Order / Chaos / Balance</dd>
+          </dl>
+
+          <div className="overview-details__next">
+            <ul className="overview-details__checks">
+              {(
+                [
+                  [regionsFull, `Regions ${loaded ? picks.length : "…"}/${ELECTIVE_CAP}`],
+                  [Boolean(t1Relic), t1Relic ? `T1 ${t1Relic}` : "T1"],
+                ] as const
+              ).map(([ok, label]) => (
+                <li key={label} className="overview-details__check">
+                  <span
+                    className="overview-details__mark"
+                    data-ok={ok ? "true" : undefined}
+                  >
+                    {ok ? "ok" : "··"}
                   </span>
-                </dd>
-                <dt>Relic T1</dt>
-                <dd>{t1Relic ?? "—"}</dd>
-                <dt>Launch</dt>
-                <dd>10 Aug 2026</dd>
-              </dl>
-            </div>
-          </div>
-
-          <div className="surface-panel surface-panel--emphasized">
-            <div className="surface-panel__header">Next</div>
-            <div className="surface-panel__body text-[13px]">
-              <ul className="overview-details__checks m-0 list-none p-0">
-                {(
-                  [
-                    [regionsFull, `Regions ${loaded ? picks.length : "…"}/${ELECTIVE_CAP}`],
-                    [Boolean(t1Relic), t1Relic ? `T1 ${t1Relic}` : "T1"],
-                  ] as const
-                ).map(([ok, label]) => (
-                  <li key={label} className="overview-details__check">
-                    <span
-                      className="font-mono text-[11px]"
-                      style={{
-                        color: ok ? "var(--color-gem-400)" : "var(--color-parch-400)",
-                      }}
-                    >
-                      {ok ? "ok" : "··"}
-                    </span>
-                    {label}
-                  </li>
-                ))}
-              </ul>
-              <p className="overview-links">
-                <Link href="/map" className="text-gem-300 hover:underline">
-                  Map
-                </Link>
-                {" · "}
-                <Link href="/build" className="text-gem-300 hover:underline">
-                  Build
-                </Link>
-                {" · "}
-                <Link href="/tasks" className="text-gem-300 hover:underline">
-                  Tasks
-                </Link>
-                {" · "}
-                <Link href="/combat" className="text-gem-300 hover:underline">
-                  Combat
-                </Link>
-              </p>
-            </div>
-          </div>
-
-          <div className="surface-panel">
-            <div className="surface-panel__header">Structure</div>
-            <div className="surface-panel__body">
-              <dl className="overview-facts">
-                <dt>Regions</dt>
-                <dd>2 start + Karamja + 3 electives</dd>
-                <dt>Relics</dt>
-                <dd>7 tiers</dd>
-                <dt>Blessings</dt>
-                <dd>8 tiers · Order / Chaos / Balance</dd>
-              </dl>
-            </div>
+                  {label}
+                </li>
+              ))}
+            </ul>
+            <p className="overview-links">
+              <Link href="/map">Map</Link>
+              {" · "}
+              <Link href="/build">Build</Link>
+              {" · "}
+              <Link href="/tasks">Tasks</Link>
+              {" · "}
+              <Link href="/combat">Combat</Link>
+            </p>
           </div>
         </div>
       </div>

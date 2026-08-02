@@ -20,6 +20,13 @@ describe("calculateHit", () => {
     expect(r.critChance).toBe(0);
   });
 
+  it("Precise raises the min hit by 1.5% of max per rank", () => {
+    // band max 1300; Precise 6 → +1.5%×6×1300 = 117 → min 1100+117 = 1217
+    const r = calculateHit({ ...baseInput, preciseRank: 6 });
+    expect(r.max).toBe(1300);
+    expect(r.min).toBe(1217);
+  });
+
   it("guaranteed crits use the level-90 multiplier", () => {
     const r = calculateHit({ ...baseInput, crit: { chance: 0, guaranteed: true } });
     expect(r.critMin).toBe(1650);

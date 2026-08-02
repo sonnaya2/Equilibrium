@@ -203,13 +203,14 @@ describe("normalizeLoadout", () => {
     expect(next.perks.invigorating).toBe(0);
     expect(next.perks.impatient).toBe(0);
     expect(next.perks.impatientLevel20).toBe(false);
-    expect(next.perks.plantedFeet).toBe(false);
+    expect(next.perks.plantedFeet).toBe(0);
   });
 
-  it("preserves plantedFeet when true; defaults false", () => {
-    expect(normalizeLoadout({ perks: { plantedFeet: true } }).perks.plantedFeet).toBe(true);
-    expect(normalizeLoadout({ perks: { plantedFeet: false } }).perks.plantedFeet).toBe(false);
-    expect(normalizeLoadout({ perks: {} }).perks.plantedFeet).toBe(false);
+  it("preserves plantedFeet rank; migrates legacy boolean true to 1", () => {
+    expect(normalizeLoadout({ perks: { plantedFeet: true } }).perks.plantedFeet).toBe(1);
+    expect(normalizeLoadout({ perks: { plantedFeet: 1 } }).perks.plantedFeet).toBe(1);
+    expect(normalizeLoadout({ perks: { plantedFeet: false } }).perks.plantedFeet).toBe(0);
+    expect(normalizeLoadout({ perks: {} }).perks.plantedFeet).toBe(0);
   });
 
   it("clamps Invigorating / Impatient ranks and preserves impatientLevel20", () => {

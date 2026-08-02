@@ -174,6 +174,10 @@ describe("summary finalization", () => {
       damageCounted: s.totalExpected,
       tails: "included-in-natural-completion",
     });
+    expect(s.history.kind).toBe("complete");
+    expect(s.duration.kind).toBe("deterministic");
+    expect(s.duration.expectedTicks).toBe(s.duration.representativeTicks);
+    expect(s.rng).toBeUndefined();
   });
 
   it("keeps stochastic natural DPM consistent with its expected duration", () => {
@@ -194,9 +198,20 @@ describe("summary finalization", () => {
       true,
     );
     expect(s.totalExpected).toBe(900);
+    expect(s.damage.expectedDamage).toBe(900);
     expect(s.ticks).toBe(20);
+    expect(s.duration.expectedTicks).toBe(20);
+    expect(s.duration.minimumTicks).toBe(10);
+    expect(s.duration.maximumTicks).toBe(30);
+    expect(s.duration.representativeTicks).toBe(10);
     expect(s.metric.denominatorTicks).toBe(20);
+    // Primary natural DPS is ratio of expectations: 900 / (20 * 0.6) = 75.
     expect(s.dps).toBe(75);
+    expect(s.dpsDetail.ratioOfExpectations).toBe(75);
+    // E[D_i/T_i] = 0.5*(600/6) + 0.5*(1200/18) = 50 + 33.333... = 83.333...
+    expect(s.dpsDetail.expectedBranchDps).toBeCloseTo(0.5 * 100 + 0.5 * (1200 / 18), 10);
+    expect(s.dpsDetail.representativeDps).toBe(100);
+    expect(s.history.kind).toBe("representative-terminal-class");
     expect(s.rng).toMatchObject({
       terminalClasses: 2,
       representativeClassWeight: 0.5,

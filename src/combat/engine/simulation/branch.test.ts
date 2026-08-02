@@ -114,7 +114,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     ).toHaveLength(1);
   });
 
-  it("merges future-equivalent branches and weight-averages historical ledgers", () => {
+  it("merges future-equivalent branches: expected ledgers mean, support uses min/max", () => {
     const low = createRuntime(meleeInput);
     low.totalExpected = 100;
     low.totalMin = 80;
@@ -138,10 +138,39 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(merged[0]!.weight).toBe(1);
     // 0.25*100 + 0.75*300 = 250
     expect(rt.totalExpected).toBe(250);
+    // Path conditionals are weight-averaged (expected conditional extrema).
     expect(rt.totalMin).toBe(200);
     expect(rt.totalMax).toBe(300);
+    // True support extrema use min/max via offsets.
+    expect(rt.totalMin + rt.analysis.supportMinOffset).toBe(80);
+    expect(rt.totalMax + rt.analysis.supportMaxOffset).toBe(360);
     expect(rt.perAbility.attack).toBe(250);
     expect(rt.damageByTick[0]).toBe(250);
+  });
+
+  it("support bounds survive post-merge damage landings", () => {
+    const low = createRuntime(meleeInput);
+    low.totalMin = 80;
+    low.totalMax = 120;
+    low.totalExpected = 100;
+    const high = snapshotRuntime(low);
+    high.totalMin = 240;
+    high.totalMax = 360;
+    high.totalExpected = 300;
+
+    const merged = mergeBranches([
+      { weight: 0.25, rt: low },
+      { weight: 0.75, rt: high },
+    ])[0]!;
+    // Identical future hit lands after merge.
+    merged.rt.totalMin += 50;
+    merged.rt.totalMax += 70;
+    merged.rt.totalExpected += 60;
+    expect(merged.rt.totalMin + merged.rt.analysis.supportMinOffset).toBe(130);
+    expect(merged.rt.totalMax + merged.rt.analysis.supportMaxOffset).toBe(430);
+    // Conditional means also advanced by the same landing.
+    expect(merged.rt.totalMin).toBe(250);
+    expect(merged.rt.totalMax).toBe(370);
   });
 
   it("weight-averages analysis ledgers; representative events do not drive aggregates", () => {
@@ -373,11 +402,18 @@ describe("Invigorating / Impatient adrenaline", () => {
       rotation: rotationOf("attack"),
     });
     expect(s.ok).toBe(true);
+    expect(s.history.kind).toBe("representative-terminal-class");
     expect(s.rng).toMatchObject({
       method: "probability-weighted branching",
       terminalClasses: 2,
       representativeClassWeight: 0.64,
       representativeClassTicks: 3,
+    });
+    expect(s.rng!.representative).toMatchObject({
+      classWeight: 0.64,
+      ticks: 3,
+      historyKind: "representative-terminal-class",
+      selectionReason: "highest-probability-mass",
     });
     expect(lastCast(s).adrenalineAfter).toBe(9);
   });
@@ -497,6 +533,9 @@ describe("Relentless refund branching", () => {
     // A flat EV would have reported an impossible middle state instead.
     expect(s.ok).toBe(false);
     expect(s.rng?.failedWeight).toBeCloseTo(0.95, 10);
+    expect(s.failure?.failedWeight).toBeCloseTo(0.95, 10);
+    expect(s.failure?.successfulWeight).toBeCloseTo(0.05, 10);
+    expect(s.failure?.totalsScope).toBe("successful-branches-renormalized");
     expect(s.error).toContain("assault");
   });
 

@@ -37,6 +37,14 @@ export interface RuntimeAnalysisState {
    * numeric `casts` field is weight-averaged after merge.
    */
   castKeys: Set<string>;
+  /**
+   * Offsets so support extrema survive weight-averaging of path conditionals.
+   * `supportMin = totalMin + supportMinOffset` (offset ≤ 0 after any merge).
+   * Future landings that bump `totalMin` keep support correct without replaying
+   * the event log.
+   */
+  supportMinOffset: number;
+  supportMaxOffset: number;
 }
 
 export function emptyAnalysisState(): RuntimeAnalysisState {
@@ -48,6 +56,8 @@ export function emptyAnalysisState(): RuntimeAnalysisState {
     criticalContribution: 0,
     capLoss: 0,
     castKeys: new Set(),
+    supportMinOffset: 0,
+    supportMaxOffset: 0,
   };
 }
 
@@ -60,6 +70,8 @@ export function cloneAnalysisState(state: RuntimeAnalysisState): RuntimeAnalysis
     criticalContribution: state.criticalContribution,
     capLoss: state.capLoss,
     castKeys: new Set(state.castKeys),
+    supportMinOffset: state.supportMinOffset,
+    supportMaxOffset: state.supportMaxOffset,
   };
 }
 
@@ -107,5 +119,8 @@ export function mixAnalysisStates(
     capLoss: mix(a.capLoss, b.capLoss),
     // Post-merge castKeys are unused; numeric casts already mixed.
     castKeys: new Set(),
+    // Offsets are set by branch mergePair from path totals after this mix.
+    supportMinOffset: a.supportMinOffset,
+    supportMaxOffset: a.supportMaxOffset,
   };
 }

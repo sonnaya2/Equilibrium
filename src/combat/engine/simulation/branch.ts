@@ -4,6 +4,7 @@ import { commitCast, prepareSimulationCast } from "../cast";
 import { rngPointsFor } from "../cast/rules";
 import type { CastRecord, CastRng } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
+import { mergeSupportOffsets } from "./stats";
 
 /**
  * Probability-weighted branching for state-changing RNG (Impatient, Relentless,
@@ -13,10 +14,10 @@ import type { SimulationRuntime } from "../runtime/runtime";
  *
  * A branch owns an independent runtime produced by snapshotRuntime. Branches
  * whose future evolution is identical (same RotationState, same pending-event
- * structure, same counters) are merged: weights sum and ledgers become the
- * weight-weighted mean, so merged totals equal the mean of the merged
- * trajectories. Cast and event logs retain one representative from the
- * highest-weight terminal equivalence class.
+ * structure, same counters) are merged: weights sum, expected ledgers become
+ * the weight-weighted mean, and support damage bounds take min/max of each
+ * branch's support (not a weighted mean of path extrema). Cast and event logs
+ * retain one representative from the highest-weight terminal equivalence class.
  */
 export interface Branch {
   weight: number;
@@ -56,10 +57,11 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
 
 /**
  * Future evolution signature. Historical damage ledgers (`totalExpected`,
- * `totalMin`/`totalMax`, `perAbility`, `damageByTick`, event/cast logs) are
- * intentionally omitted: `mergePair` combines them as a weight-weighted mean,
- * so two branches that only differ in past damage may merge when their
- * remaining state, queue, and counters match.
+ * path conditionals / support offsets, `perAbility`, `damageByTick`, event/cast
+ * logs) are intentionally omitted: `mergePair` combines expected ledgers as a
+ * weight-weighted mean and support extrema via min/max, so two branches that
+ * only differ in past damage may merge when their remaining state, queue, and
+ * counters match.
  *
  * Keep `endTick` — it feeds metric denominators and is not re-derived solely
  * from future events once a branch is terminal. Keep hitDetails / spirit meta
@@ -79,12 +81,29 @@ function branchKey(rt: SimulationRuntime): string {
   ]);
 }
 
+/**
+ * Path conditionals (`totalMin`/`totalMax`) are weight-averaged.
+ * Support extrema use min/max via offsets so later landings that bump the
+ * conditionals keep true support bounds without replaying history.
+ */
 function mergePair(a: Branch, b: Branch): Branch {
   const weight = a.weight + b.weight;
   const keep = a.weight >= b.weight ? a : b;
   const mix = (x: number, y: number) => (a.weight * x + b.weight * y) / weight;
-  keep.rt.totalMin = mix(a.rt.totalMin, b.rt.totalMin);
-  keep.rt.totalMax = mix(a.rt.totalMax, b.rt.totalMax);
+  const bounds = mergeSupportOffsets(
+    a.rt.totalMin,
+    a.rt.totalMax,
+    a.rt.analysis.supportMinOffset,
+    a.rt.analysis.supportMaxOffset,
+    b.rt.totalMin,
+    b.rt.totalMax,
+    b.rt.analysis.supportMinOffset,
+    b.rt.analysis.supportMaxOffset,
+    a.weight,
+    b.weight,
+  );
+  keep.rt.totalMin = bounds.totalMin;
+  keep.rt.totalMax = bounds.totalMax;
   keep.rt.totalExpected = mix(a.rt.totalExpected, b.rt.totalExpected);
   keep.rt.endTick = Math.max(a.rt.endTick, b.rt.endTick);
   for (const key of new Set([...Object.keys(a.rt.perAbility), ...Object.keys(b.rt.perAbility)])) {
@@ -99,6 +118,8 @@ function mergePair(a: Branch, b: Branch): Branch {
   }
   // Quantitative analysis is ledger-owned: weight-mix, never rebuild from keep.events.
   keep.rt.analysis = mixAnalysisStates(a.rt.analysis, b.rt.analysis, a.weight, b.weight);
+  keep.rt.analysis.supportMinOffset = bounds.supportMinOffset;
+  keep.rt.analysis.supportMaxOffset = bounds.supportMaxOffset;
   keep.weight = weight;
   return keep;
 }

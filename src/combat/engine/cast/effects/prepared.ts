@@ -36,6 +36,9 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
           enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
         });
         break;
+      case "consumePrimordialIce":
+        rt.state = patchMelee(rt.state, { primordialIceStacks: 0 });
+        break;
     }
   }
 }

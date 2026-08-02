@@ -1,6 +1,6 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
-import { commitCast, prepareSimulationCast } from "../cast";
+import { commitCast, prepareSimulationCast, type PreparedCast } from "../cast";
 import { rngPointsFor } from "../cast/rules";
 import type { CastRecord, CastRng } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -174,21 +174,43 @@ export function mergeAndCapBranches(
   return capBranches(mergeBranches(branches), max);
 }
 
+/** Weight plan for one RNG outcome before snapshot+commit. */
+export interface CastOutcomePlan {
+  weight: number;
+  parent: Branch;
+  prepared: PreparedCast;
+  auto: boolean;
+  rng?: CastRng;
+  /** Single non-RNG path: commit on parent without cloning. */
+  inPlace: boolean;
+}
+
+function rngWeightProduct(
+  points: ReturnType<typeof rngPointsFor>,
+): Array<{ rng: CastRng; weight: number }> {
+  return points.reduce<Array<{ rng: CastRng; weight: number }>>(
+    (current, point) =>
+      current.flatMap(({ rng, weight }) => [
+        { rng: { ...rng, [point.id]: true }, weight: weight * point.chance },
+        { rng: { ...rng, [point.id]: false }, weight: weight * (1 - point.chance) },
+      ]),
+    [{ rng: {}, weight: 1 }],
+  );
+}
+
 /**
- * Run one cast with its state-changing RNG enumerated. The cast is prepared
- * ONCE on the branch's own runtime (canonical advance + validation + prepared
- * cast), the RNG point is read from that prepared cast, and each outcome
- * commits the same prepared cast on a clone of the already-advanced, validated
- * runtime. A rejected cast has no RNG outcomes — it produces one error branch.
+ * Prepare one cast and enumerate state-changing RNG outcomes as weight plans.
+ * Does not snapshot or commit — callers batch plans across live branches and
+ * materialize only the heaviest survivors (see materializeCastPlans).
  */
-export function castOutcomes(
+export function planCastOutcomes(
   branch: Branch,
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
-): Branch[] {
+): { error: Branch } | { plans: CastOutcomePlan[] } {
   const preparation = prepareSimulationCast(branch.rt, ability, readyTick);
-  if (!preparation.ok) return [{ ...branch, error: preparation.error }];
+  if (!preparation.ok) return { error: { ...branch, error: preparation.error } };
   const { prepared } = preparation;
   const points = rngPointsFor(
     branch.rt.state,
@@ -200,23 +222,92 @@ export function castOutcomes(
   );
 
   if (points.length === 0) {
-    commitCast(branch.rt, prepared, auto);
-    return [branch];
-  }
-  const outcomes = points.reduce<Array<{ rng: CastRng; weight: number }>>(
-    (current, point) =>
-      current.flatMap(({ rng, weight }) => [
-        { rng: { ...rng, [point.id]: true }, weight: weight * point.chance },
-        { rng: { ...rng, [point.id]: false }, weight: weight * (1 - point.chance) },
-      ]),
-    [{ rng: {}, weight: 1 }],
-  );
-  return outcomes.map(({ rng, weight }) => {
-    const next = snapshotRuntime(branch.rt);
-    commitCast(next, prepared, auto, rng);
     return {
-      weight: branch.weight * weight,
-      rt: next,
+      plans: [{ weight: branch.weight, parent: branch, prepared, auto, inPlace: true }],
     };
-  });
+  }
+  const plans: CastOutcomePlan[] = [];
+  for (const { rng, weight } of rngWeightProduct(points)) {
+    if (weight <= 0) continue;
+    plans.push({
+      weight: branch.weight * weight,
+      parent: branch,
+      prepared,
+      auto,
+      rng,
+      inPlace: false,
+    });
+  }
+  if (plans.length === 0) {
+    return {
+      plans: [{ weight: branch.weight, parent: branch, prepared, auto, inPlace: true }],
+    };
+  }
+  return { plans };
+}
+
+/**
+ * Snapshot+commit planned outcomes, keeping at most `max` forked paths by weight
+ * (same policy as capBranches). In-place plans always commit; discarded fork mass
+ * folds into the heaviest kept plan so total probability is preserved without
+ * paying commit cost for paths that merge/cap would drop immediately after.
+ */
+export function materializeCastPlans(
+  plans: readonly CastOutcomePlan[],
+  max: number = MAX_LIVE_BRANCHES,
+): Branch[] {
+  if (!Number.isInteger(max) || max < 1) {
+    throw new RangeError(`materializeCastPlans: max must be a positive integer, got ${max}`);
+  }
+  const inPlace: CastOutcomePlan[] = [];
+  const forked: CastOutcomePlan[] = [];
+  for (const plan of plans) {
+    if (plan.inPlace) inPlace.push(plan);
+    else forked.push(plan);
+  }
+
+  const out: Branch[] = [];
+  for (const plan of inPlace) {
+    commitCast(plan.parent.rt, plan.prepared, plan.auto, plan.rng);
+    out.push({ weight: plan.weight, rt: plan.parent.rt, error: plan.parent.error });
+  }
+
+  let keep = forked;
+  if (forked.length > max) {
+    const sorted = [...forked].sort((a, b) => b.weight - a.weight);
+    keep = sorted.slice(0, max).map((p) => ({ ...p }));
+    let discardedWeight = 0;
+    for (let i = max; i < sorted.length; i++) discardedWeight += sorted[i]!.weight;
+    if (discardedWeight > 0) {
+      keep[0] = { ...keep[0]!, weight: keep[0]!.weight + discardedWeight };
+    }
+  }
+
+  for (const plan of keep) {
+    const next = snapshotRuntime(plan.parent.rt);
+    commitCast(next, plan.prepared, plan.auto, plan.rng);
+    out.push({ weight: plan.weight, rt: next });
+  }
+  return out;
+}
+
+/**
+ * Run one cast with its state-changing RNG enumerated. The cast is prepared
+ * ONCE on the branch's own runtime (canonical advance + validation + prepared
+ * cast), the RNG point is read from that prepared cast, and each outcome
+ * commits the same prepared cast on a clone of the already-advanced, validated
+ * runtime. A rejected cast has no RNG outcomes — it produces one error branch.
+ *
+ * Multi-branch drivers should plan across the live set and call
+ * materializeCastPlans once so the branch cap avoids wasted commits.
+ */
+export function castOutcomes(
+  branch: Branch,
+  ability: AbilitySpec,
+  readyTick: number,
+  auto: boolean,
+): Branch[] {
+  const planned = planCastOutcomes(branch, ability, readyTick, auto);
+  if ("error" in planned) return [planned.error];
+  return materializeCastPlans(planned.plans, Number.MAX_SAFE_INTEGER);
 }

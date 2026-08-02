@@ -1,6 +1,11 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { meetsEquipmentRequirement, meetsWeaponRequirement } from "../engine/cast/rules";
+import { resolveAbilityCastAvailability } from "../engine/cast/requirements";
+import type { ItemPassiveId } from "../data/records";
 import type { CandidatePool, CandidatePoolOptions, PoolAbility } from "./contracts";
+
+function asPassiveIds(ids: readonly string[] | undefined): readonly ItemPassiveId[] | undefined {
+  return ids as readonly ItemPassiveId[] | undefined;
+}
 
 function isFullyModeled(ability: PoolAbility): boolean {
   return ability.supportStatus === undefined;
@@ -48,6 +53,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
     supportStatus: spec.supportStatus,
     weaponRequirement: spec.weaponRequirement,
     requiredEquipmentAnyOf: spec.requiredEquipmentAnyOf,
+    requiredPassiveAnyOf: spec.requiredPassiveAnyOf,
   };
 }
 
@@ -74,6 +80,14 @@ export function buildCandidatePool(
   const includeOffGcd = options.includeOffGcd === true;
   const includePartial = options.includePartial === true;
 
+  const peersByGroup = new Map<string, AbilitySpec[]>();
+  for (const ability of catalogue) {
+    if (!ability.replacementGroup) continue;
+    const list = peersByGroup.get(ability.replacementGroup) ?? [];
+    list.push(ability);
+    peersByGroup.set(ability.replacementGroup, list);
+  }
+
   const selected: AbilitySpec[] = [];
   const seenIds = new Set<string>();
   for (const ability of catalogue) {
@@ -83,9 +97,17 @@ export function buildCandidatePool(
     if (!includeAutos && ability.autoAttack) continue;
     if (!includeOffGcd && ability.offGcd) continue;
     if (!includePartial && !isFullyModeled(ability)) continue;
-    // Illegal under the equipped weapon shape — never enter search or final scoring.
-    if (!meetsWeaponRequirement(ability, options.weaponConfiguration)) continue;
-    if (!meetsEquipmentRequirement(ability, options.equipmentIds)) continue;
+    // Illegal under weapon / equipment / passive / supersede rules.
+    const peers = ability.replacementGroup
+      ? (peersByGroup.get(ability.replacementGroup) ?? [])
+      : [];
+    const availability = resolveAbilityCastAvailability(ability, {
+      weaponConfiguration: options.weaponConfiguration,
+      equipmentIds: options.equipmentIds,
+      passiveIds: asPassiveIds(options.passiveIds),
+      groupPeers: peers,
+    });
+    if (!availability.available) continue;
     if (seenIds.has(ability.id)) {
       throw new Error(`candidate pool: duplicate ability id "${ability.id}"`);
     }

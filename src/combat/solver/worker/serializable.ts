@@ -196,6 +196,11 @@ export interface SerializableSolverRequest {
   now: number;
   authoredSeedBars: readonly AuthoredSeedBar[];
   userBar?: readonly string[];
+  /**
+   * Parallel-agent search recipe (set by the pool).
+   * default | evolutionary (agent 1) | anneal_local (agent 2, unhinged).
+   */
+  agentRecipe?: "default" | "evolutionary" | "anneal_local";
 }
 
 /** Cloneable solver result (no Maps/Sets/functions). */
@@ -271,7 +276,7 @@ export function defaultSerializableRequest(
     tier: "thorough",
     profileId: "balanced",
     maxBarSize: 10,
-    minBarSize: 4,
+    minBarSize: 5,
     permittedCategories: ["basic", "enhanced", "ultimate"],
     unlockedRegions: [],
     blessingPicks: [],

@@ -49,6 +49,24 @@ export const ABYSSAL_PARASITE_MAX_STACKS = 50;
 export const ABYSSAL_PARASITE_DURATION_TICKS = 15;
 export const ABYSSAL_PARASITE_INTERVAL_TICKS = 3;
 
+/** Dark Shard of Leng — Endless Frost (wiki, post 4 Mar 2024). */
+export const LENG_ENDLESS_FROST_CHANCE = 0.1;
+/** Dark Sliver of Leng — Boundless Chill. */
+export const LENG_BOUNDLESS_CHILL_CHANCE = 0.02;
+export const PRIMORDIAL_ICE_CAP = 10;
+/** Frostblades from Boundless Chill stack generation. */
+export const FROSTBLADES_DURATION_SECONDS = 9;
+/** Flat damage = 24% of player ability damage (AD). */
+export const FROSTBLADES_AD_FRACTION = 0.24;
+export const ICY_TEMPEST_COST_PCT = 30;
+export const ICY_TEMPEST_COST_REDUCTION_PER_STACK = 12;
+export const ICY_TEMPEST_COOLDOWN_SECONDS = 15;
+export const ICY_TEMPEST_PRIMARY_BAND = { minPct: 115, maxPct: 135 } as const;
+export const ICY_TEMPEST_SECONDARY_BAND = { minPct: 175, maxPct: 205 } as const;
+/** Per stack: +18–22% ability damage on each Icy Tempest hit. */
+export const ICY_TEMPEST_STACK_BAND = { minPct: 18, maxPct: 22 } as const;
+export const LENG_SOURCE = wiki("Dark Shard of Leng", "Dark_Shard_of_Leng", "2026-08-02");
+
 export interface AbyssalParasiteState {
   stacks: number;
   expiresAtTick: number;
@@ -118,6 +136,10 @@ export interface MeleeRotationState {
   bleedChainNext: "slaughter" | "massacre" | null;
   bleedChainUntilTick: number;
   enduringRuin: { nextAttackBonus: number; untilTick: number; grantedByCast: number };
+  /** Primordial Ice stacks from Leng weapons (cap 10). */
+  primordialIceStacks: number;
+  /** Frostblades window end (0 = inactive). Active while tick < until. */
+  frostbladesUntilTick: number;
 }
 
 export const newMeleeRotationState = (): MeleeRotationState => ({
@@ -131,7 +153,42 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   bleedChainNext: null,
   bleedChainUntilTick: 0,
   enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
+  primordialIceStacks: 0,
+  frostbladesUntilTick: 0,
 });
+
+/** Deterministic per-event unit roll in [0, 1) — same seq always yields the same outcome. */
+export function lengHitRoll(eventSeq: number, salt: number): number {
+  let t = (eventSeq + Math.imul(salt, 0x9e3779b9)) >>> 0;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+export function icyTempestSpend(stacks: number): number {
+  const n = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
+  return Math.max(0, ICY_TEMPEST_COST_PCT - ICY_TEMPEST_COST_REDUCTION_PER_STACK * n);
+}
+
+export function icyTempestHits(stacks: number): { band: { minPct: number; maxPct: number } }[] {
+  const n = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
+  const addMin = ICY_TEMPEST_STACK_BAND.minPct * n;
+  const addMax = ICY_TEMPEST_STACK_BAND.maxPct * n;
+  return [
+    {
+      band: {
+        minPct: ICY_TEMPEST_PRIMARY_BAND.minPct + addMin,
+        maxPct: ICY_TEMPEST_PRIMARY_BAND.maxPct + addMax,
+      },
+    },
+    {
+      band: {
+        minPct: ICY_TEMPEST_SECONDARY_BAND.minPct + addMin,
+        maxPct: ICY_TEMPEST_SECONDARY_BAND.maxPct + addMax,
+      },
+    },
+  ];
+}
 
 export function greaterBargeIdleBand(
   baseMinPct: number,

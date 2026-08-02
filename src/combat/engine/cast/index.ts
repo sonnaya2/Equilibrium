@@ -43,6 +43,7 @@ export function prepareSimulationCast(
     candidate,
     rt.input.weaponConfiguration,
     rt.input.equipmentIds,
+    rt.input.equipmentEffects?.passiveIds,
   );
   if (rejection) return { ok: false, error: rejection };
   return { ok: true, prepared: prepareCast(rt, ability, candidate) };

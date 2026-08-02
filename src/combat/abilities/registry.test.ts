@@ -82,6 +82,13 @@ describe("ABILITY_REGISTRY", () => {
     expect(entryByEngineId("adaptive_strike_2h")?.linkKind).toBe("setup-variant");
     expect(entryByEngineId("adaptive_strike_dw")?.parentRecordId).toBe("melee:adaptive-strike");
     expect(entryByEngineId("overpower_igneous")?.linkKind).toBe("equipment-variant");
+    expect(entryByEngineId("overpower_igneous")?.parentRecordId).toBe("melee:overpower");
+    expect(entryByEngineId("deadshot_igneous")?.linkKind).toBe("equipment-variant");
+    expect(entryByEngineId("deadshot_igneous")?.parentRecordId).toBe("ranged:deadshot");
+    expect(entryByEngineId("omnipower_igneous")?.linkKind).toBe("equipment-variant");
+    expect(entryByEngineId("omnipower_igneous")?.parentRecordId).toBe("magic:omnipower");
+    expect(entryByEngineId("death_skulls_igneous")?.linkKind).toBe("equipment-variant");
+    expect(entryByEngineId("death_skulls_igneous")?.parentRecordId).toBe("necromancy:death-skulls");
     expect(entryByEngineId("spectral_scythe_2")?.linkKind).toBe("cast-stage");
     expect(entryByEngineId("spectral_scythe_3")?.solverEligibleDefault).toBe(false);
     expect(entryByEngineId("volley_of_souls")?.linkKind).toBe("factory");

@@ -62,7 +62,7 @@ function isExpectedProcEvent(event: ResolvedEvent): boolean {
 }
 
 function eventType(event: ResolvedEvent): string {
-  if (event.damageTag === "bonus-damage") return "Bonus damage";
+  if (event.damageTag === "bonus-damage") return "Bonus";
   if (event.attached) return "Attached bonus";
   if (isExpectedProcEvent(event)) return "Expected proc";
   if (event.abilityId === "aftershock" || event.abilityId === "crackling") return "Perk proc";
@@ -117,12 +117,14 @@ const EFFECT_COLUMNS: readonly {
 }[] = [
   {
     id: "bonusDamage",
-    label: "Bonus damage",
-    title: "Damage tagged as bonus damage (e.g. Big Boned)",
+    label: "Bonus",
+    title:
+      "Bonus damage riders added on this skill's hits (e.g. Big Boned). The rider row itself is 0 — its Total is the bonus.",
     align: "right",
     afterTotal: true,
+    // Column visible when any parent skill received riders; rider rows show –.
     showIf: (row) => row.bonusDamage !== 0,
-    format: (row) => (row.bonusDamage !== 0 ? formatNumber(row.bonusDamage) : "—"),
+    format: (row) => (row.bonusDamage !== 0 ? formatNumber(row.bonusDamage) : "–"),
   },
   {
     id: "casts",
@@ -222,11 +224,11 @@ function EventTable({
                   {effectName(event.abilityId, nameForId)}
                   {parent ? <span className="ml-1.5 text-parch-300">on {parent}</span> : null}
                 </td>
-                <td className="py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
-                <td className="py-1.5 pr-3 font-mono text-parch-300">
-                  {event.attached ? "—" : event.hitIndex + 1}
+                <td className="whitespace-nowrap py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
+                <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-300">
+                  {event.attached ? "–" : event.hitIndex + 1}
                 </td>
-                <td className="py-1.5 pr-3 text-right font-mono text-parch-50">
+                <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-50">
                   {formatNumber(event.damage.expected)}
                   {event.damage.capLoss ? (
                     <span className="ml-1 text-chaos-300">
@@ -389,25 +391,33 @@ export function RotationAnalysisModal({
           <section>
             <h3 className="combat-section-title text-xs font-medium text-parch-50">By effect</h3>
             <div className="mt-2 overflow-auto border-t border-stone-750">
-              <table className="w-full min-w-[680px] border-collapse text-left text-xs">
+              <table
+                className={`w-full border-collapse text-left text-xs ${
+                  afterTotalColumns.length > 0 ? "min-w-[820px]" : "min-w-[680px]"
+                }`}
+              >
                 <thead className="text-parch-300">
                   <tr className="border-b border-stone-750">
-                    <th className="py-1.5 pr-3 font-medium">Effect</th>
-                    <th className="py-1.5 pr-3 text-right font-medium">Total</th>
+                    <th className="py-1.5 pr-3 text-left font-medium">Effect</th>
+                    <th className="w-[1%] whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-medium">
+                      Total
+                    </th>
                     {afterTotalColumns.map((column) => (
                       <th
                         key={column.id}
-                        className="py-1.5 pr-3 text-right font-medium"
+                        className="w-[1%] whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-medium"
                         title={column.title}
                       >
                         {column.label}
                       </th>
                     ))}
-                    <th className="py-1.5 pr-3 text-right font-medium">Share</th>
+                    <th className="w-[1%] whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-medium">
+                      Share
+                    </th>
                     {trailingColumns.map((column) => (
                       <th
                         key={column.id}
-                        className="py-1.5 pr-3 text-right font-medium last:pr-0"
+                        className="w-[1%] whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-medium last:pr-0"
                         title={column.title}
                       >
                         {column.label}
@@ -419,30 +429,34 @@ export function RotationAnalysisModal({
                   {result.analysis.byEffect.map((effect) => (
                     <tr key={effect.id} className="border-b border-stone-750/70">
                       <td className="py-1.5 pr-3 text-parch-50">
-                        {effectName(effect.id, nameForId)}
-                        {effect.dotDamage > 0 ? (
-                          <span className="ml-1.5 text-parch-300">DoT</span>
-                        ) : null}
+                        <span className="inline-flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                          <span>{effectName(effect.id, nameForId)}</span>
+                          {/* DoT badge only for real DoT effects — not for skills that merely
+                              received bonus-damage riders (those use the Bonus column). */}
+                          {effect.dotDamage > 0 ? (
+                            <span className="whitespace-nowrap text-parch-300">DoT</span>
+                          ) : null}
+                        </span>
                       </td>
-                      <td className="py-1.5 pr-3 text-right font-mono text-parch-50">
+                      <td className="whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-mono tabular-nums text-parch-50">
                         {formatNumber(effect.totalDamage)}
                       </td>
                       {afterTotalColumns.map((column) => (
                         <td
                           key={column.id}
-                          className="py-1.5 pr-3 text-right font-mono text-parch-300"
+                          className="whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-mono tabular-nums text-parch-300"
                           title={column.title}
                         >
                           {column.format(effect)}
                         </td>
                       ))}
-                      <td className="py-1.5 pr-3 text-right font-mono text-parch-300">
+                      <td className="whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-mono tabular-nums text-parch-300">
                         {formatPercent(effect.share)}
                       </td>
                       {trailingColumns.map((column) => (
                         <td
                           key={column.id}
-                          className="py-1.5 pr-3 text-right font-mono text-parch-300 last:pr-0"
+                          className="whitespace-nowrap py-1.5 pl-3 pr-3 text-right font-mono tabular-nums text-parch-300 last:pr-0"
                           title={column.title}
                         >
                           {column.format(effect)}

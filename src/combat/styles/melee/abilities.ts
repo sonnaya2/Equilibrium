@@ -351,8 +351,28 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
     replacementGroup: "overpower",
-    requiredEquipmentAnyOf: ["item:igneous-kal-ket", "item:igneous-kal-zuk"],
+    requiredPassiveAnyOf: ["igneous-overpower"],
     source: wikiAbility("Overpower", "Overpower"),
+  },
+  {
+    // Dark Shard of Leng special (wiki 4 Mar 2024). ST model: primary + secondary
+    // that also hits the primary. Stacks scale bands and reduce spend at cast time.
+    id: "icy_tempest",
+    name: "Icy Tempest",
+    style: "melee",
+    category: "utility",
+    area: "aoe",
+    hits: [
+      { band: { minPct: 115, maxPct: 135 } },
+      { band: { minPct: 175, maxPct: 205 } },
+    ],
+    adrenaline: { cost: 30 },
+    cooldownSeconds: 15,
+    weaponRequirement: "mainhand",
+    requiredPassiveAnyOf: ["leng-endless-frost"],
+    supportStatus: "partially-modeled",
+    supportNote: "Single-target model (primary + splash-on-primary). Multi-target splash unmodeled.",
+    source: wikiAbility("Icy Tempest", "Icy_Tempest", "2026-08-02"),
   },
   {
     // Wiki Pulverise: two-handed ultimate, 300-340, 60% cost, 60s CD; Pulverised 30s; on-kill +50% adren.

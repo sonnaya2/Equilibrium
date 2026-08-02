@@ -20,7 +20,12 @@ import type { CombatStyle } from "../types";
 import { combatRevolutionBars } from "../data";
 import { revoManagedSlots } from "../data/specs";
 import { engineSpecs } from "../abilities/registry";
-import { clampSolverBarSizes, DEFAULT_MAX_BAR_SIZE, MIN_SOLVER_BAR_SIZE } from "./solutionStore";
+import {
+  ABSOLUTE_MAX_BAR_SIZE,
+  clampSolverBarSizes,
+  MIN_SOLVER_BAR_SIZE,
+  TIER_BAR_SIZE_BOUNDS,
+} from "./solutionStore";
 import { TIER_HORIZON_SECONDS } from "./solve";
 
 export interface PackSolverRequestInput {
@@ -137,9 +142,14 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
   const includeUnknownAvailability =
     input.includeUnknownAvailability ?? (unrestricted ? true : undefined);
 
+  // Product window is always 5–12. Never honor a collapsed maxBarSize=6.
+  const tierSizes = TIER_BAR_SIZE_BOUNDS[tier] ?? TIER_BAR_SIZE_BOUNDS.thorough;
   const sizes = clampSolverBarSizes(
-    input.minBarSize ?? MIN_SOLVER_BAR_SIZE,
-    input.maxBarSize ?? DEFAULT_MAX_BAR_SIZE,
+    MIN_SOLVER_BAR_SIZE,
+    Math.min(
+      ABSOLUTE_MAX_BAR_SIZE,
+      Math.max(tierSizes.max, input.maxBarSize ?? ABSOLUTE_MAX_BAR_SIZE, ABSOLUTE_MAX_BAR_SIZE),
+    ),
   );
 
   return defaultSerializableRequest({

@@ -86,6 +86,9 @@ describe("melee ability data", () => {
     expect(byId("rend").hits[0].band).toEqual({ minPct: 135, maxPct: 165 });
     expect(byId("overpower").hits[0].band).toEqual({ minPct: 520, maxPct: 570 });
     expect(byId("overpower_igneous").hits).toHaveLength(2);
+    expect(byId("overpower_igneous").hits[0].band).toEqual({ minPct: 280, maxPct: 340 });
+    expect(byId("overpower_igneous").adrenaline).toEqual({ cost: 60 });
+    expect(byId("overpower_igneous").requiredPassiveAnyOf).toEqual(["igneous-overpower"]);
   });
 
   it("Revo-bar and RSA damage kit carry sourced bands", () => {

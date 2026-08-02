@@ -46,6 +46,15 @@ function emptyLedger(id: string, kind: DamageSourceKind): EffectAnalysisLedger {
   };
 }
 
+/** Parent ability that a bonus-damage rider attached to (already in the event log). */
+function parentAbilityId(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): string | undefined {
+  if (event.derivedFrom == null) return undefined;
+  return rt.events.find((e) => e.seq === event.derivedFrom)?.abilityId;
+}
+
 /**
  * Update weighted analysis ledgers for one landed event. Call from record
  * accounting — never from summary finalization over the event log.
@@ -62,27 +71,42 @@ export function accountAnalysisEvent(
   const expected = damage.expected;
   const crit = damage.critical?.contribution ?? 0;
   const cap = damage.capLoss ?? 0;
-  const asDot = isDotOrigin(event);
+  // Global direct/DoT split follows parent provenance (BB on a bleed still lands
+  // in the DoT total). The rider's own effect row never stamps as DoT — that is
+  // bonus damage, shown in the Bonus column instead.
+  const originIsDot = isDotOrigin(event);
+  const riderIsBonus = event.damageTag === "bonus-damage";
+  const asDotGlobal = originIsDot;
+  const asDotLedger = riderIsBonus ? false : originIsDot;
 
   analysis.sources.set(kind, (analysis.sources.get(kind) ?? 0) + expected);
-  analysis.directDamage += asDot ? 0 : expected;
-  analysis.dotDamage += asDot ? expected : 0;
+  analysis.directDamage += asDotGlobal ? 0 : expected;
+  analysis.dotDamage += asDotGlobal ? expected : 0;
   analysis.criticalContribution += crit;
   analysis.capLoss += cap;
 
   const ledger = analysis.effects.get(event.abilityId) ?? emptyLedger(event.abilityId, kind);
   ledger.kind = kind;
   ledger.totalDamage += expected;
-  ledger.directDamage += asDot ? 0 : expected;
-  ledger.dotDamage += asDot ? expected : 0;
+  ledger.directDamage += asDotLedger ? 0 : expected;
+  ledger.dotDamage += asDotLedger ? expected : 0;
   ledger.criticalContribution += crit;
   ledger.capLoss += cap;
   ledger.triggerRolls += mult.triggerRolls;
   ledger.expectedActivations += mult.expectedActivations;
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
   ledger.attachedComponents += mult.attachedComponents;
+  // Attribute bonus-damage riders ONLY onto the parent skill (how much Big Boned
+  // added on that ability's hits). Never onto the rider row itself — that would
+  // double-count if Bonus were summed, and mark Big Boned as "receiving" bonus.
   if (event.damageTag === "bonus-damage") {
-    ledger.bonusDamage += expected;
+    const parentId = parentAbilityId(rt, event);
+    if (parentId && parentId !== event.abilityId) {
+      const parent =
+        analysis.effects.get(parentId) ?? emptyLedger(parentId, "ability-direct");
+      parent.bonusDamage += expected;
+      analysis.effects.set(parentId, parent);
+    }
   }
 
   // Cast identity is committed once per ability/sourceCast for player-owned

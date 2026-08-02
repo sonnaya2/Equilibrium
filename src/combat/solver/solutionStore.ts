@@ -18,13 +18,47 @@ export const REVO_SOLVE_CACHE_KEY = "eq:revo-solve:v2";
 /** @deprecated read-only migration from pre-hash storage */
 const REVO_SOLVE_CACHE_KEY_V1 = "eq:revo-solve:v1";
 
-/** Short bars never compete on real revo bars — search floor for the product path. */
-/** Floor for optimizer bars — short "degen" bars are legal (was 6). */
-export const MIN_SOLVER_BAR_SIZE = 4;
+/** Floor / ceiling for product bars (six lengths: 5–10). */
+export const MIN_SOLVER_BAR_SIZE = 5;
 export const DEFAULT_MAX_BAR_SIZE = 10;
+export const ABSOLUTE_MAX_BAR_SIZE = 10;
+export const BAR_LENGTH_COUNT = ABSOLUTE_MAX_BAR_SIZE - MIN_SOLVER_BAR_SIZE + 1; // 6
 const MAX_CACHE_ENTRIES = 48;
 const MAX_TOP_PER_ENTRY = 5;
 const MAX_SEED_BARS = 16;
+
+export const TIER_BAR_SIZE_BOUNDS: Record<
+  "thorough" | "extreme" | "unhinged",
+  { min: number; max: number }
+> = {
+  thorough: { min: MIN_SOLVER_BAR_SIZE, max: ABSOLUTE_MAX_BAR_SIZE },
+  extreme: { min: MIN_SOLVER_BAR_SIZE, max: ABSOLUTE_MAX_BAR_SIZE },
+  unhinged: { min: MIN_SOLVER_BAR_SIZE, max: ABSOLUTE_MAX_BAR_SIZE },
+};
+
+/** Ceiling length for agent i in a 6-slot block: 0→5 … 5→10, then repeats. */
+export function agentBarLength(agentIndex: number): number {
+  const i = Math.max(0, Math.floor(Number(agentIndex)) || 0);
+  return MIN_SOLVER_BAR_SIZE + (i % BAR_LENGTH_COUNT);
+}
+
+/** Distinct bar lengths in a size window (max − min + 1). */
+export function barLengthSpan(minBarSize: number, maxBarSize: number): number {
+  const { minBarSize: lo, maxBarSize: hi } = clampSolverBarSizes(minBarSize, maxBarSize);
+  return hi - lo + 1;
+}
+
+/** @deprecated use barLengthSpan — kept for older imports */
+export function agentCountForBarSizes(minBarSize: number, maxBarSize: number): number {
+  return barLengthSpan(minBarSize, maxBarSize);
+}
+
+/** Tier agent target — Thorough 6 · Extreme 12 · Unhinged 18. */
+export function tierAgentCount(tier: "thorough" | "extreme" | "unhinged"): number {
+  if (tier === "extreme") return 12;
+  if (tier === "unhinged") return 18;
+  return 6;
+}
 
 export interface CachedSolveBar {
   bar: readonly string[];
@@ -362,18 +396,33 @@ export function seedBarsFromSolveCache(
   return out.slice(0, MAX_SEED_BARS);
 }
 
+function clampBarSize(raw: number | undefined, fallback: number): number {
+  const n = Math.floor(raw ?? fallback) || fallback;
+  return Math.max(MIN_SOLVER_BAR_SIZE, Math.min(ABSOLUTE_MAX_BAR_SIZE, n));
+}
+
 /** Clamp product path size bounds — never search sub-floor bars. */
 export function clampSolverBarSizes(
   minBarSize?: number,
   maxBarSize?: number,
 ): { minBarSize: number; maxBarSize: number } {
-  const min = Math.max(
-    MIN_SOLVER_BAR_SIZE,
-    Math.min(14, Math.floor(minBarSize ?? MIN_SOLVER_BAR_SIZE) || MIN_SOLVER_BAR_SIZE),
-  );
-  const max = Math.max(
-    min,
-    Math.min(14, Math.floor(maxBarSize ?? DEFAULT_MAX_BAR_SIZE) || DEFAULT_MAX_BAR_SIZE),
-  );
+  const min = clampBarSize(minBarSize, MIN_SOLVER_BAR_SIZE);
+  const max = Math.max(min, clampBarSize(maxBarSize, DEFAULT_MAX_BAR_SIZE));
   return { minBarSize: min, maxBarSize: max };
+}
+
+/**
+ * Ladder band for agent i: floor always 5, ceiling = agentBarLength(i).
+ * agent 0 → 5–5 … agent 5 → 5–10; next recipe block wraps. Request min/max ignored.
+ */
+export function agentBarSizeBounds(
+  _minBarSize: number,
+  _maxBarSize: number,
+  agentIndex: number,
+  _agentCount: number,
+): { minBarSize: number; maxBarSize: number } {
+  return {
+    minBarSize: MIN_SOLVER_BAR_SIZE,
+    maxBarSize: agentBarLength(agentIndex),
+  };
 }

@@ -14,7 +14,13 @@ export type {
   CastRng,
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
-import { castOutcomes, mergeAndCapBranches, type Branch } from "./branch";
+import {
+  materializeCastPlans,
+  mergeAndCapBranches,
+  planCastOutcomes,
+  type Branch,
+  type CastOutcomePlan,
+} from "./branch";
 import { castRejection, permanentCastBlock } from "../cast/rules";
 import { performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
@@ -32,8 +38,9 @@ interface ManualStep {
 
 /**
  * One queued action (plus auto-weave) across the live branches. Weaving and
- * the cast itself go through castOutcomes, so state-changing RNG (Impatient /
- * Relentless) splits the branch set instead of spending impossible averages.
+ * the cast itself plan state-changing RNG first, then materialize only the
+ * heaviest survivors so Impatient/Relentless/Avernic do not pay full commits
+ * for paths the live-branch cap would discard immediately.
  */
 function stepManualAction(
   branch: Branch,
@@ -63,6 +70,7 @@ function stepManualAction(
       ability,
       branch.rt.input.weaponConfiguration,
       branch.rt.input.equipmentIds,
+      branch.rt.input.equipmentEffects?.passiveIds,
     );
     if (permanent !== null) {
       return {
@@ -74,7 +82,7 @@ function stepManualAction(
     const done: Branch[] = [];
     let pending: Branch[] = [branch];
     for (let weaveDepth = 0; pending.length > 0; weaveDepth++) {
-      const next: Branch[] = [];
+      const plans: CastOutcomePlan[] = [];
       for (const current of pending) {
         if (current.error !== undefined) {
           done.push(current);
@@ -93,6 +101,7 @@ function stepManualAction(
             current.rt.state.tick,
             current.rt.input.weaponConfiguration,
             current.rt.input.equipmentIds,
+            current.rt.input.equipmentEffects?.passiveIds,
           ) === null;
         if (castable || !basic) {
           done.push(current);
@@ -105,31 +114,44 @@ function stepManualAction(
           });
           continue;
         }
-        const outcomes = castOutcomes(current, basic, current.rt.state.tick, true);
-        branched ||= outcomes.length > 1;
-        next.push(...outcomes);
+        const planned = planCastOutcomes(current, basic, current.rt.state.tick, true);
+        if ("error" in planned) {
+          done.push(planned.error);
+          continue;
+        }
+        if (planned.plans.length > 1) branched = true;
+        plans.push(...planned.plans);
       }
-      pending = mergeAndCapBranches(next);
+      const advanced = materializeCastPlans(plans);
+      branched ||= advanced.length > 1;
+      pending = mergeAndCapBranches(advanced);
     }
     work = mergeAndCapBranches(done);
   }
 
-  const out: Branch[] = [];
+  const carried: Branch[] = [];
+  const plans: CastOutcomePlan[] = [];
   for (const woven of work) {
     if (woven.error !== undefined) {
-      out.push(woven);
+      carried.push(woven);
       continue;
     }
-    const outcomes = castOutcomes(
+    const planned = planCastOutcomes(
       woven,
       ability,
       firstLegalTick(woven.rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
       false,
     );
-    branched ||= outcomes.length > 1;
-    out.push(...outcomes);
+    if ("error" in planned) {
+      carried.push(planned.error);
+      continue;
+    }
+    if (planned.plans.length > 1) branched = true;
+    plans.push(...planned.plans);
   }
-  return { branches: mergeAndCapBranches(out), branched };
+  const advanced = materializeCastPlans(plans);
+  branched ||= advanced.length > 1;
+  return { branches: mergeAndCapBranches([...carried, ...advanced]), branched };
 }
 
 /**
@@ -160,6 +182,39 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
         error: branch.error ?? `unknown ability: ${action.abilityId}`,
       }));
       break;
+    }
+    // Plan every live branch's cast, then materialize under the live-branch cap
+    // once — not once per parent (which would expand 64×8 commits before cap).
+    if (!input.autoWeave && ability.stateEffect !== "runic_charge") {
+      const carried: Branch[] = [];
+      const plans: CastOutcomePlan[] = [];
+      let branched = false;
+      for (const branch of branches) {
+        if (branch.error !== undefined) {
+          carried.push(branch);
+          continue;
+        }
+        const planned = planCastOutcomes(
+          branch,
+          ability,
+          firstLegalTick(
+            branch.rt.state,
+            ability.id,
+            ability.cooldownGroup ?? ability.replacementGroup,
+          ),
+          false,
+        );
+        if ("error" in planned) {
+          carried.push(planned.error);
+          continue;
+        }
+        if (planned.plans.length > 1) branched = true;
+        plans.push(...planned.plans);
+      }
+      const advanced = materializeCastPlans(plans);
+      sawBranching ||= branched || advanced.length > 1;
+      branches = mergeAndCapBranches([...carried, ...advanced]);
+      continue;
     }
     const next: Branch[] = [];
     for (const branch of branches) {

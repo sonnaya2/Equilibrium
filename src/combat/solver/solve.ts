@@ -10,68 +10,131 @@ import { runAnnealing, runAnnealingAsync } from "./search/annealing";
 import { runLocalSearch, runLocalSearchAsync } from "./search/localSearch";
 import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
 import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
-
-/**
- * Evaluation budgets. Thorough is tuned for interactive UI (~few seconds of
- * explore sims), not overnight research. Extreme/Unhinged scale up.
- */
+/** Evaluation budgets per agent (scaled up so longer ladder bands stay competitive). */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
-  // Thorough ~ half of Extreme search budget; still the interactive default.
-  thorough: 900,
-  extreme: 1_800,
-  unhinged: 8_000,
+  thorough: 2_400,
+  extreme: 4_000,
+  unhinged: 10_000,
 };
 
-/**
- * Per-tier sim horizons (game-time seconds, not wall clock).
- */
+/** Per-tier sim horizons (game-time seconds, not wall clock). */
 export const TIER_HORIZON_SECONDS: Record<
   SolveTier,
   { exploreSeconds: number; fullSeconds: number }
 > = {
-  thorough: { exploreSeconds: 15, fullSeconds: 60 },
-  extreme: { exploreSeconds: 30, fullSeconds: 120 },
-  unhinged: { exploreSeconds: 30, fullSeconds: 300 },
+  thorough: { exploreSeconds: 24, fullSeconds: 90 },
+  extreme: { exploreSeconds: 36, fullSeconds: 150 },
+  unhinged: { exploreSeconds: 36, fullSeconds: 300 },
 };
 
-/** Parallel agents by depth — host merges best score / bars across workers. */
+/** Thorough 6 · Extreme 12 · Unhinged 18 (recipe blocks of 6 × lengths 5–10). */
 export const TIER_AGENT_COUNT: Record<SolveTier, number> = {
-  thorough: 4,
-  extreme: 6,
-  unhinged: 8,
+  thorough: 6,
+  extreme: 12,
+  unhinged: 18,
 };
 
-/**
- * How many parallel agents to launch for a tier.
- * `hardwareAgents` is usually solverPoolSize() (cores−1, capped at pool max).
- */
-export function preferredAgentCount(tier: SolveTier, hardwareAgents: number): number {
-  const want = TIER_AGENT_COUNT[tier] ?? TIER_AGENT_COUNT.thorough;
-  return Math.max(1, Math.min(want, Math.max(1, hardwareAgents)));
+/** How many agents to launch for a tier (6 / 12 / 18). */
+export function preferredAgentCount(tier: SolveTier, _hardwareAgents?: number): number {
+  return TIER_AGENT_COUNT[tier] ?? TIER_AGENT_COUNT.thorough;
 }
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
   const evaluationBudget = TIER_BUDGETS[tier];
   const scale = evaluationBudget / TIER_BUDGETS.thorough;
+  const capped = Math.min(scale, 4);
+  const isThorough = tier === "thorough";
+  const isExtreme = tier === "extreme";
+
+  let beamWidth = 32;
+  let topK = 10;
+  let exhaustiveMax = 80_000;
+  if (isThorough) {
+    beamWidth = 18;
+    topK = 6;
+    exhaustiveMax = 8_000;
+  } else if (isExtreme) {
+    beamWidth = 22;
+    topK = 8;
+    exhaustiveMax = 16_000;
+  }
+
   return {
     tier,
     evaluationBudget,
     seed,
-    beamWidth: tier === "thorough" ? 10 : tier === "extreme" ? 18 : 28,
-    beamInsertAllPositions: tier !== "thorough",
+    // Wider beam + insert-all so longer constructive bands are not a single prefix.
+    beamWidth,
+    beamInsertAllPositions: true,
     // Thorough: beam + local only. Extreme+: full ensemble.
-    evoPopulation: tier === "thorough" ? 0 : Math.round(16 * Math.min(scale, 4)),
-    evoGenerations: tier === "thorough" ? 0 : Math.round(8 * Math.min(scale, 4)),
+    evoPopulation: isThorough ? 0 : Math.round(16 * capped),
+    evoGenerations: isThorough ? 0 : Math.round(8 * capped),
     evoElite: 2,
-    lnsRounds: tier === "thorough" ? 0 : Math.round(14 * Math.min(scale, 4)),
+    lnsRounds: isThorough ? 0 : Math.round(14 * capped),
     lnsDestroyK: 2,
-    annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
-    localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
-    topK: tier === "thorough" ? 5 : tier === "extreme" ? 6 : 8,
-    // Finalize shortlist: Thorough 4 · Extreme 6 · Unhinged 8
-    fullShortlistSize: tier === "thorough" ? 4 : tier === "extreme" ? 6 : 8,
-    exhaustiveMax: tier === "thorough" ? 6_000 : tier === "extreme" ? 12_000 : 80_000,
+    annealSteps: isThorough ? 0 : Math.round(50 * capped),
+    localIterations: isThorough ? 40 : Math.round(56 * capped),
+    topK,
+    fullShortlistSize: topK,
+    exhaustiveMax,
     profileId: "balanced",
+  };
+}
+
+/**
+ * Parallel-agent search recipe — blocks of {@link AGENTS_PER_RECIPE} (6):
+ *   indices 0–5   → ensemble (default)
+ *   indices 6–11  → evolutionary
+ *   indices 12–17 → anneal+local
+ * Tier caps total agents (6 / 12 / 18), so Extreme never reaches anneal,
+ * Thorough never leaves ensemble. Overflow rolls into the next block.
+ */
+export type SolverAgentRecipe = "default" | "evolutionary" | "anneal_local";
+
+/** Hard cap per algorithm block before rolling into the next recipe. */
+export const AGENTS_PER_RECIPE = 6;
+
+export function agentSearchRecipe(
+  agentIndex: number,
+  _tier?: SolveTier,
+): SolverAgentRecipe {
+  const i = Math.max(0, Math.floor(Number(agentIndex)) || 0);
+  const block = Math.floor(i / AGENTS_PER_RECIPE);
+  if (block <= 0) return "default";
+  if (block === 1) return "evolutionary";
+  return "anneal_local";
+}
+
+/** Config overrides applied on top of {@link configForTier} for a specialized agent. */
+export function configPatchForRecipe(
+  tier: SolveTier,
+  recipe: SolverAgentRecipe,
+): Partial<SearchConfig> {
+  if (recipe === "default") return {};
+
+  const base = configForTier(tier, 1);
+  if (recipe === "evolutionary") {
+    // Evo path even on Thorough (tier default zeros evo). Cut LNS/anneal.
+    return {
+      evoPopulation: Math.max(12, base.evoPopulation || 12),
+      evoGenerations: Math.max(6, base.evoGenerations || 6),
+      evoElite: 2,
+      lnsRounds: 0,
+      annealSteps: 0,
+      beamWidth: Math.max(6, Math.floor(base.beamWidth * 0.65)),
+      localIterations: Math.max(4, Math.floor(base.localIterations * 0.5)),
+      exhaustiveMax: Math.max(200, Math.floor(base.exhaustiveMax * 0.25)),
+    };
+  }
+
+  // anneal_local — Unhinged third recipe block (indices 12–17)
+  return {
+    evoPopulation: 0,
+    lnsRounds: 0,
+    annealSteps: Math.max(80, Math.round(base.annealSteps * 2) || 80),
+    localIterations: Math.max(60, Math.round(base.localIterations * 2) || 60),
+    beamWidth: Math.max(4, Math.floor(base.beamWidth * 0.4)),
+    exhaustiveMax: Math.max(100, Math.floor(base.exhaustiveMax * 0.15)),
   };
 }
 

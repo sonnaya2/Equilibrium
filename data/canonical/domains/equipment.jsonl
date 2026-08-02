@@ -377,8 +377,8 @@
 {"entityId":"item:dark-bow","slot":"twohand","style":"ranged","tier":70}
 {"entityId":"item:dark-ice-shard","slot":"offhand","style":"melee","tier":90}
 {"entityId":"item:dark-ice-sliver","slot":"mainhand","style":"melee","tier":90}
-{"entityId":"item:dark-shard-of-leng","slot":"offhand","style":"melee","tier":95}
-{"entityId":"item:dark-sliver-of-leng","slot":"mainhand","style":"melee","tier":95}
+{"entityId":"item:dark-shard-of-leng","slot":"mainhand","style":"melee","tier":95}
+{"entityId":"item:dark-sliver-of-leng","slot":"offhand","style":"melee","tier":95}
 {"entityId":"item:death-lotus-chaps","slot":"legs","style":"ranged","tier":85}
 {"entityId":"item:death-lotus-chestplate","slot":"body","style":"ranged","tier":85}
 {"entityId":"item:death-lotus-dart","slot":"mainhand","style":"ranged","tier":85}

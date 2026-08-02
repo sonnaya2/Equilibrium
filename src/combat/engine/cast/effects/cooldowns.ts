@@ -12,8 +12,9 @@ import { effectiveCooldownTicks } from "../../../league/ruleset";
 export function applyCastCooldown(fx: CastEffectContext): void {
   const { rt, ability, candidate } = fx;
   if (!ability.cooldownSeconds) return;
+  const deathSkullsKey = ability.replacementGroup ?? ability.id;
   const baseTicks =
-    ability.id === "death_skulls"
+    deathSkullsKey === "death_skulls"
       ? deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate)
       : secondsToTicks(ability.cooldownSeconds);
   rt.state = startCooldown(

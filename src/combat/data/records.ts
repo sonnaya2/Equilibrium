@@ -96,6 +96,18 @@ export type ItemPassiveId =
   | "defender-accuracy"
   /** Masterwork Spear of Annihilation: +50% eligible melee bleed duration (floor). */
   | "masterwork-spear-bleed-extension"
+  /** Igneous Kal-Ket / Kal-Zuk: upgraded Overpower. */
+  | "igneous-overpower"
+  /** Igneous Kal-Xil / Kal-Zuk: upgraded Deadshot. */
+  | "igneous-deadshot"
+  /** Igneous Kal-Mej / Kal-Zuk: upgraded Omnipower. */
+  | "igneous-omnipower"
+  /** Igneous Kal-Mor / Kal-Zuk: upgraded Death Skulls. */
+  | "igneous-death-skulls"
+  /** Dark Shard of Leng: Endless Frost (Primordial Ice stacks). */
+  | "leng-endless-frost"
+  /** Dark Sliver of Leng: Boundless Chill + Frostblades. */
+  | "leng-boundless-chill"
   // Recorded but not modelled: both are stochastic with their own internal
   // cooldown, and neither has a settled place in the modifier pipeline.
   | "asylum-surgeon"
@@ -123,7 +135,13 @@ export interface EquipmentRecord extends CombatRecordBase {
   bonuses: EquipmentBonuses;
   /** Set membership, passive and special attack reference EffectRecord ids. */
   setId?: string;
+  /**
+   * Single equipment passive (legacy single-passive items). Prefer `passiveIds`
+   * when an item grants more than one independent capability (e.g. Kal-Zuk).
+   */
   passiveId?: ItemPassiveId;
+  /** Independent passive capabilities granted while this item is equipped. */
+  passiveIds?: readonly ItemPassiveId[];
   weaponClass?: WeaponClass;
   /** Wear/wield requirement when it diverges from the stat tier (Vestments: 95). */
   requirementTier?: number;

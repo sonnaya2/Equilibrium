@@ -228,8 +228,14 @@ describe("Big Boned rides every qualifying damage instance", () => {
       expect(rider.damage.expected).toBeGreaterThan(750);
     }
     const bb = withCrit.analysis.byEffect.find((row) => row.id === "big-boned");
-    expect(bb?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
-    expect(bb?.bonusDamage).toBeGreaterThan(7 * 750);
+    expect(bb?.totalDamage).toBeGreaterThan(7 * 750);
+    // Rider is not self-attributed in Bonus (would double-count vs parents).
+    expect(bb?.bonusDamage).toBe(0);
+    // Never classify as DoT — even when some parents are bleeds elsewhere.
+    expect(bb?.dotDamage).toBe(0);
+    // Parent skill shows how much Big Boned added on its hits.
+    const gr = withCrit.analysis.byEffect.find((row) => row.id === "greater_ricochet");
+    expect(gr?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
   });
 
   it("rides damage-over-time ticks too", () => {

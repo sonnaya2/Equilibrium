@@ -24,7 +24,13 @@ export interface SolverProgress {
   windowDpms: number;
   phase: SolverPhase;
   noImprovementCount: number;
+  /** Best exploratory bar so far (stable until beaten). */
   topBarPreview: readonly string[];
+  /**
+   * Bar currently under evaluation. Changes every try so the UI can cycle
+   * candidates; distinct from topBarPreview (best-so-far).
+   */
+  activeBarPreview?: readonly string[];
   evaluationBudget?: number;
   progressRatio?: number;
   finalizeStep?: number;
@@ -38,7 +44,29 @@ export interface SolverProgress {
   scoringBarPreview?: readonly string[];
   /** Parallel agent count when the pool is running (search phase). */
   agentCount?: number;
+  /** Per-agent snapshot for UI worker glyphs (pool merge). */
+  agents?: readonly SolverAgentSnapshot[];
+  /**
+   * Full-horizon evals served from the process-local eval memo (skip sim).
+   * High during re-Optimize on the same loadout — scoring looks instant.
+   */
+  fullMemoHits?: number;
   proof?: SolverProofDTO;
+}
+
+/** One parallel agent’s live status (cloneable). */
+export interface SolverAgentSnapshot {
+  index: number;
+  phase: SolverPhase;
+  evaluations: number;
+  bestScore: number;
+  progressRatio?: number;
+  /** True after that agent posted a final result. */
+  finished?: boolean;
+  /** Search recipe this worker runs (for UI grouping / hover). */
+  recipe?: "default" | "evolutionary" | "anneal_local";
+  /** Fixed bar length this worker searches. */
+  barLength?: number;
 }
 
 export interface StartSolverMessage {

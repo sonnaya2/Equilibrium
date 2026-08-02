@@ -136,3 +136,33 @@ describe("exclusiveKey / canAdd", () => {
     expect(canAdd(["fury"], "missing", pool.byId)).toBe(false);
   });
 });
+
+describe("igneous passive pool filtering", () => {
+  it("excludes locked upgrades and supersedes the base when the passive is active", async () => {
+    const { allEngineSpecs } = await import("../abilities/registry");
+    const specs = allEngineSpecs();
+    const without = buildCandidatePool(specs, "melee");
+    expect(without.ids).toContain("overpower");
+    expect(without.ids).not.toContain("overpower_igneous");
+
+    const withCape = buildCandidatePool(specs, "melee", {
+      equipmentIds: ["item:igneous-kal-ket"],
+      passiveIds: ["igneous-overpower"],
+    });
+    expect(withCape.ids).toContain("overpower_igneous");
+    expect(withCape.ids).not.toContain("overpower");
+
+    const withZuk = buildCandidatePool(specs, "necromancy", {
+      equipmentIds: ["item:igneous-kal-zuk"],
+      passiveIds: [
+        "igneous-overpower",
+        "igneous-deadshot",
+        "igneous-omnipower",
+        "igneous-death-skulls",
+      ],
+      includePartial: true,
+    });
+    expect(withZuk.ids).toContain("death_skulls_igneous");
+    expect(withZuk.ids).not.toContain("death_skulls");
+  });
+});

@@ -101,6 +101,21 @@ const LINK_OVERRIDES: Readonly<Record<string, LinkOverride>> = {
     recordId: "melee:overpower",
     parentRecordId: "melee:overpower",
   },
+  deadshot_igneous: {
+    linkKind: "equipment-variant",
+    recordId: "ranged:deadshot",
+    parentRecordId: "ranged:deadshot",
+  },
+  omnipower_igneous: {
+    linkKind: "equipment-variant",
+    recordId: "magic:omnipower",
+    parentRecordId: "magic:omnipower",
+  },
+  death_skulls_igneous: {
+    linkKind: "equipment-variant",
+    recordId: "necromancy:death-skulls",
+    parentRecordId: "necromancy:death-skulls",
+  },
   spectral_scythe_2: {
     linkKind: "cast-stage",
     recordId: "necromancy:spectral-scythe",

@@ -161,7 +161,10 @@ export interface DamageEffectBreakdown {
   expectedSeparateHits: number;
   /** Attached bonus components riding another hit. */
   attachedComponents: number;
-  /** Damage tagged as bonus-damage (e.g. Big Boned); 0 when none. */
+  /**
+   * Bonus-damage riders on this parent skill. 0 on the rider row itself (use
+   * Total there). Do not sum with effect Total across rows.
+   */
   bonusDamage: number;
   /** totalDamage / expectedActivations when activations > 0. */
   averagePerActivation: number;

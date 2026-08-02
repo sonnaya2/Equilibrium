@@ -151,6 +151,7 @@ describe("ranged ability data", () => {
     expect(byId("deadshot").adrenaline).toEqual({ cost: 60 });
     expect(byId("deadshot").cooldownSeconds).toBe(30);
     expect(byId("deadshot_igneous").adrenaline).toEqual({ cost: 60 });
+    expect(byId("deadshot_igneous").requiredPassiveAnyOf).toEqual(["igneous-deadshot"]);
 
     expect(byId("deaths_swiftness").adrenaline).toEqual({ cost: 100 });
     expect(byId("deaths_swiftness").cooldownSeconds).toBe(60);

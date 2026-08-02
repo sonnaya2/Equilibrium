@@ -334,7 +334,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
     replacementGroup: "omnipower",
-    requiredEquipmentAnyOf: ["item:igneous-kal-mej", "item:igneous-kal-zuk"],
+    requiredPassiveAnyOf: ["igneous-omnipower"],
     source: wikiAbility("Omnipower"),
   },
   {

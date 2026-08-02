@@ -15,6 +15,16 @@ export * from "./target/genericTarget";
 export * from "./shared/perks";
 export * from "./shared/equipment";
 export * from "./shared/equipmentStats";
+export {
+  equipmentRecordPassiveIds,
+  meetsPassiveRequirement,
+  missingPassiveMessage,
+  passiveIdsFromEquipmentIds,
+  permanentAvailabilityBlock,
+  resolveAbilityCastAvailability,
+  type AbilityAvailabilityOptions,
+  type AbilityCastAvailability,
+} from "./shared/abilityAvailability";
 export * from "./shared/prayers";
 export * from "./shared/vulnerability";
 export * from "./shared/potions";

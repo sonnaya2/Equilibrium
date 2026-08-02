@@ -220,7 +220,7 @@ describe("cast legality at the candidate tick", () => {
     const before = structuredClone(withoutCape.getState());
     expect(withoutCape.performCast(igneous, 0, false)).toMatchObject({
       ok: false,
-      error: "overpower_igneous requires an equipped Igneous cape",
+      error: "Requires Igneous Kal-Ket or Igneous Kal-Zuk",
     });
     expect(withoutCape.getState()).toEqual(before);
 

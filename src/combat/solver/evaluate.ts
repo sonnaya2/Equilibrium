@@ -72,6 +72,9 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
     | CandidatePoolOptions["weaponConfiguration"]
     | undefined;
   const equipmentIds = simFields.equipmentIds;
+  const passiveIds = (
+    simFields as { equipmentEffects?: { passiveIds?: readonly string[] } }
+  ).equipmentEffects?.passiveIds;
 
   if (pool.style !== style) {
     reasons.push({
@@ -86,6 +89,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
       size,
       weaponConfiguration,
       equipmentIds,
+      passiveIds,
     }),
   );
 

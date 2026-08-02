@@ -436,7 +436,7 @@ export function GearPanel({
           {passives.length ? (
             <ul className="gear-passive-list mt-1.5">
               {passives.map((passive) => (
-                <li key={passive.itemId} className="gear-passive-row">
+                <li key={`${passive.itemId}:${passive.passiveId}`} className="gear-passive-row">
                   <GameIcon
                     src={equipmentIconPath(passive.itemId)}
                     size={28}

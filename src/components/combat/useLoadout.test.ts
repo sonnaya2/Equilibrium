@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import { POWERBURST_COOLDOWN_MS, POWERBURST_DURATION_MS } from "@/combat";
 import {
   DEFAULT_LOADOUT,
+  ARMOUR_GIZMO_CAPACITY,
   GIZMO_CAPACITY,
+  gizmoCapacity,
   GIZMO_SLOTS,
   activatePowerburstOfVitality,
   clearEquipment,
@@ -537,12 +539,31 @@ describe("gizmo layout", () => {
     expect(placed).toBe(DEFAULT_LOADOUT);
   });
 
-  it("rejects a third perk on a full gizmo", () => {
+  it("rejects a third perk on a full weapon gizmo", () => {
     let loadout = placePerkOnGizmo(DEFAULT_LOADOUT, "weapon1", "aftershock");
     loadout = placePerkOnGizmo(loadout, "weapon1", "equilibrium");
     const full = placePerkOnGizmo(loadout, "weapon1", "biting");
     expect(full.gizmos.weapon1).toEqual(["aftershock", "equilibrium"]);
     expect(gizmoSlotOf(full.gizmos, "biting")).toBeNull();
+  });
+
+  it("allows four perks on armour shells and rejects a fifth", () => {
+    expect(gizmoCapacity("armour1")).toBe(ARMOUR_GIZMO_CAPACITY);
+    expect(gizmoCapacity("armour2")).toBe(ARMOUR_GIZMO_CAPACITY);
+    expect(gizmoCapacity("weapon1")).toBe(GIZMO_CAPACITY);
+    let loadout = placePerkOnGizmo(DEFAULT_LOADOUT, "armour1", "biting");
+    loadout = placePerkOnGizmo(loadout, "armour1", "impatient");
+    loadout = placePerkOnGizmo(loadout, "armour1", "invigorating");
+    loadout = placePerkOnGizmo(loadout, "armour1", "energising");
+    expect(loadout.gizmos.armour1).toEqual([
+      "biting",
+      "impatient",
+      "invigorating",
+      "energising",
+    ]);
+    const full = placePerkOnGizmo(loadout, "armour1", "ultimatums");
+    expect(full.gizmos.armour1).toEqual(loadout.gizmos.armour1);
+    expect(gizmoSlotOf(full.gizmos, "ultimatums")).toBeNull();
   });
 
   it("removePerkFromGizmos clears the perk but keeps its rank", () => {
@@ -573,6 +594,7 @@ describe("gizmo layout", () => {
   it("exposes two weapon shells and two armour shells (body + legs)", () => {
     expect(GIZMO_SLOTS).toEqual(["weapon1", "weapon2", "armour1", "armour2"]);
     expect(GIZMO_CAPACITY).toBe(2);
+    expect(ARMOUR_GIZMO_CAPACITY).toBe(4);
     let loadout = placePerkOnGizmo(DEFAULT_LOADOUT, "armour1", "biting");
     loadout = placePerkOnGizmo(loadout, "armour2", "impatient");
     expect(loadout.gizmos.armour1).toEqual(["biting"]);

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  agentBarLength,
+  agentBarSizeBounds,
   clampSolverBarSizes,
   fingerprintSolveContext,
   MIN_SOLVER_BAR_SIZE,
@@ -67,10 +69,26 @@ function sampleRequest(overrides: { equipmentIds?: string[]; style?: "melee" | "
 }
 
 describe("solutionStore", () => {
-  it("clamps bar sizes to the product floor", () => {
-    expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 4, maxBarSize: 10 });
+  it("clamps bar sizes to the product floor and 10-slot hard cap", () => {
+    expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 5, maxBarSize: 10 });
     expect(clampSolverBarSizes(8, 7)).toEqual({ minBarSize: 8, maxBarSize: 8 });
     expect(clampSolverBarSizes(undefined, undefined).minBarSize).toBe(MIN_SOLVER_BAR_SIZE);
+    expect(clampSolverBarSizes(5, 99)).toEqual({ minBarSize: 5, maxBarSize: 10 });
+  });
+
+  it("agent i → ladder band 5..5+(i%6); ceiling per slot, floor always MIN", () => {
+    expect(agentBarLength(0)).toBe(5);
+    expect(agentBarLength(1)).toBe(6);
+    expect(agentBarLength(5)).toBe(10);
+    expect(agentBarLength(6)).toBe(5); // next algorithm block
+    expect(agentBarLength(11)).toBe(10);
+    expect(agentBarLength(12)).toBe(5);
+    // agent 0: 5–5, agent 1: 5–6, … agent 5: 5–10
+    expect(agentBarSizeBounds(0, 0, 0, 6)).toEqual({ minBarSize: 5, maxBarSize: 5 });
+    expect(agentBarSizeBounds(0, 0, 1, 6)).toEqual({ minBarSize: 5, maxBarSize: 6 });
+    expect(agentBarSizeBounds(0, 0, 4, 6)).toEqual({ minBarSize: 5, maxBarSize: 9 });
+    expect(agentBarSizeBounds(0, 0, 5, 6)).toEqual({ minBarSize: 5, maxBarSize: 10 });
+    expect(agentBarSizeBounds(0, 0, 7, 12)).toEqual({ minBarSize: 5, maxBarSize: 6 });
   });
 
   it("fingerprints loadout changes and is stable for the same request", async () => {

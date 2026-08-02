@@ -1,5 +1,6 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { meetsEquipmentRequirement, meetsWeaponRequirement } from "../engine/cast/rules";
+import type { ItemPassiveId } from "../data/records";
+import { resolveAbilityCastAvailability } from "../engine/cast/requirements";
 import type {
   BarSizeBounds,
   CandidatePool,
@@ -15,9 +16,10 @@ export interface EligibilityOptions {
   size?: BarSizeBounds;
   weaponConfiguration?: CandidatePool["options"]["weaponConfiguration"];
   equipmentIds?: readonly string[];
+  passiveIds?: readonly string[];
 }
 
-const DEFAULT_SIZE: SizeBounds = { min: 1, max: 14 };
+const DEFAULT_SIZE: SizeBounds = { min: 1, max: 10 };
 
 export function normalizeSizeBounds(size?: BarSizeBounds): SizeBounds {
   if (!size) return DEFAULT_SIZE;
@@ -105,6 +107,7 @@ export function validateBarEligibility(
   const includePartial = options.includePartial ?? pool.options.includePartial ?? false;
   const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
+  const passiveIds = options.passiveIds ?? pool.options.passiveIds;
 
   if (bar.length < size.min) {
     issues.push({
@@ -180,18 +183,36 @@ export function validateBarEligibility(
         groups.set(group, id);
       }
     }
-    if (!meetsWeaponRequirement(asSpec, weaponConfiguration)) {
+    const peers =
+      ability.replacementGroup === undefined
+        ? []
+        : [...pool.byId.values()].filter(
+            (peer) => peer.replacementGroup === ability.replacementGroup,
+          );
+    const availability = resolveAbilityCastAvailability(asSpec, {
+      weaponConfiguration,
+      equipmentIds,
+      passiveIds: passiveIds as readonly ItemPassiveId[] | undefined,
+      groupPeers: peers.map((peer) => ({
+        id: peer.id,
+        name: peer.name ?? peer.id,
+        replacementGroup: peer.replacementGroup,
+        requiredPassiveAnyOf: peer.requiredPassiveAnyOf as readonly ItemPassiveId[] | undefined,
+      })),
+    });
+    if (!availability.available) {
+      const code =
+        availability.reason === "weapon-requirement"
+          ? "weapon-requirement"
+          : availability.reason === "missing-equipment" ||
+              availability.reason === "missing-passive" ||
+              availability.reason === "superseded"
+            ? "equipment-requirement"
+            : "equipment-requirement";
       issues.push({
-        code: "weapon-requirement",
+        code,
         abilityId: id,
-        message: `${id} does not meet weapon requirement under ${weaponConfiguration ?? "any"}`,
-      });
-    }
-    if (!meetsEquipmentRequirement(asSpec, equipmentIds)) {
-      issues.push({
-        code: "equipment-requirement",
-        abilityId: id,
-        message: `${id} requires equipment not present in the loadout`,
+        message: availability.message,
       });
     }
     if (!includePartial) {

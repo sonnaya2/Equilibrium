@@ -84,13 +84,17 @@ export {
   solve,
   solveAsync,
   configForTier,
+  agentSearchRecipe,
+  configPatchForRecipe,
   TIER_BUDGETS,
   TIER_HORIZON_SECONDS,
   preferredAgentCount,
   TIER_AGENT_COUNT,
+  AGENTS_PER_RECIPE,
   type SolveInput,
   type SolveAsyncHooks,
   type SolvePhaseName,
+  type SolverAgentRecipe,
 } from "./solve";
 export { clearEvalMemo, evalMemoStats } from "./evalMemo";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
@@ -99,12 +103,18 @@ export {
   REVO_SOLVE_CACHE_KEY,
   MIN_SOLVER_BAR_SIZE,
   DEFAULT_MAX_BAR_SIZE,
+  ABSOLUTE_MAX_BAR_SIZE,
+  TIER_BAR_SIZE_BOUNDS,
   fingerprintSolveContext,
   loadSolveCache,
   rememberSolvedBar,
   lookupSolvedBar,
   seedBarsFromSolveCache,
   clampSolverBarSizes,
+  agentBarLength,
+  agentBarSizeBounds,
+  agentCountForBarSizes,
+  tierAgentCount,
   type CachedSolveEntry,
   type SolveCacheStore,
 } from "./solutionStore";
@@ -114,7 +124,7 @@ export type {
   SerializableRevolutionSimBase,
   SolverSearchTier,
 } from "./worker/serializable";
-export type { SolverProgress } from "./worker/protocol";
+export type { SolverProgress, SolverAgentSnapshot } from "./worker/protocol";
 export {
   runOptimize,
   cancelOptimize,

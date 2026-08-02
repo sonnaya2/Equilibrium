@@ -5,6 +5,7 @@ import type { CritLayers } from "../core/critical";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
+import { equipmentRecordPassiveIds } from "../engine/cast/requirements";
 
 /**
  * Equipment set effects with sourced current numbers. Per-item combat stats live on
@@ -182,9 +183,10 @@ export function activeEquipmentEffects(
     ...new Set(
       Object.values(slots).flatMap((id) => {
         const item = equipmentById(id);
+        if (!item) return [] as ItemPassiveId[];
         return [
-          ...(item?.passiveId ? [item.passiveId] : []),
-          ...(item?.defender ? (["defender-accuracy"] as const) : []),
+          ...equipmentRecordPassiveIds(item),
+          ...(item.defender ? (["defender-accuracy"] as const) : []),
         ];
       }),
     ),
@@ -262,6 +264,24 @@ export function amZiModifier(flatDamage: number): CombatModifier {
     applies: (context) => context.style === "melee" && context.dotKind !== "bleed",
     apply: (state) => ({ ...state, damage: state.damage + flatDamage }),
     source: AM_ZI_SOURCE,
+  };
+}
+
+/** Frostblades: flat damage equal to 24% of ability damage on melee ability hits. */
+export function frostbladesModifier(flatDamage: number): CombatModifier {
+  return {
+    id: "item:frostblades",
+    stage: "roll",
+    priority: 101,
+    applies: (context) =>
+      context.style === "melee" && context.dotKind !== "bleed" && !context.autoAttack,
+    apply: (state) => ({ ...state, damage: state.damage + flatDamage }),
+    source: {
+      source: "runescape-wiki",
+      url: "https://runescape.wiki/w/Dark_Sliver_of_Leng",
+      title: "Dark Sliver of Leng",
+      verifiedAt: "2026-08-02",
+    },
   };
 }
 
@@ -463,6 +483,48 @@ function passivePresentation(
         ],
         support: "modeled",
       };
+    case "igneous-overpower":
+      return {
+        label: "Igneous Overpower",
+        effects: ["Unlocks upgraded Overpower."],
+        support: "modeled",
+      };
+    case "igneous-deadshot":
+      return {
+        label: "Igneous Deadshot",
+        effects: ["Unlocks upgraded Deadshot."],
+        support: "modeled",
+      };
+    case "igneous-omnipower":
+      return {
+        label: "Igneous Omnipower",
+        effects: ["Unlocks upgraded Omnipower."],
+        support: "modeled",
+      };
+    case "igneous-death-skulls":
+      return {
+        label: "Igneous Death Skulls",
+        effects: ["Unlocks upgraded Death Skulls."],
+        support: "modeled",
+      };
+    case "leng-endless-frost":
+      return {
+        label: "Endless Frost",
+        effects: [
+          "Melee hits have a 10% chance to gain a Primordial Ice stack (cap 10).",
+          "Icy Tempest spends stacks for free-cast cost reduction and bonus damage.",
+        ],
+        support: "modeled",
+      };
+    case "leng-boundless-chill":
+      return {
+        label: "Boundless Chill",
+        effects: [
+          "Melee hits have a 2% chance to gain Primordial Ice and grant Frostblades for 9s.",
+          "Frostblades: +24% ability damage as flat damage on melee ability hits.",
+        ],
+        support: "modeled",
+      };
     case "asylum-surgeon":
       return {
         label: "Asylum surgeon's ring",
@@ -478,6 +540,45 @@ function passivePresentation(
   }
 }
 
+/** Igneous ultimate-upgrade capabilities — collapsed to one Gear row when multi-granted. */
+const IGNEOUS_ULTIMATE_PASSIVES: readonly ItemPassiveId[] = [
+  "igneous-overpower",
+  "igneous-deadshot",
+  "igneous-omnipower",
+  "igneous-death-skulls",
+];
+
+const IGNEOUS_ULTIMATE_PASSIVE_SET = new Set<ItemPassiveId>(IGNEOUS_ULTIMATE_PASSIVES);
+
+const LENG_PASSIVES: readonly ItemPassiveId[] = ["leng-endless-frost", "leng-boundless-chill"];
+const LENG_PASSIVE_SET = new Set<ItemPassiveId>(LENG_PASSIVES);
+
+/** Combined Kal-Zuk (or any multi-igneous) presentation for Gear. */
+function igneousCombinedPresentation(): Pick<
+  EquippedPassiveSummary,
+  "label" | "effects" | "support"
+> {
+  return {
+    label: "Igneous ultimate upgrades",
+    effects: [
+      "Unlocks upgraded Overpower, Deadshot, Omnipower, and Death Skulls.",
+    ],
+    support: "modeled",
+  };
+}
+
+function lengCombinedPresentation(): Pick<EquippedPassiveSummary, "label" | "effects" | "support"> {
+  return {
+    label: "Leng weapons",
+    effects: [
+      "Endless Frost / Boundless Chill: Primordial Ice stacks on hit (cap 10).",
+      "Frostblades: +24% ability damage flat on melee ability hits for 9s after Chill procs.",
+      "Icy Tempest spends stacks for reduced adrenaline cost and bonus damage.",
+    ],
+    support: "modeled",
+  };
+}
+
 /** Equipped passive rows for Gear. Item identity and source stay catalogue-driven. */
 export function equippedPassiveSummaries(
   loadout: LoadoutEquipmentView & {
@@ -486,21 +587,89 @@ export function equippedPassiveSummaries(
   },
 ): EquippedPassiveSummary[] {
   const effects = activeEquipmentEffects(loadout);
-  const seen = new Set<string>();
+  const seenItems = new Set<string>();
+  const seenPassives = new Set<ItemPassiveId>();
   const rows: EquippedPassiveSummary[] = [];
   for (const id of Object.values(resolvedEquipmentSlots(loadout))) {
-    if (seen.has(id)) continue;
-    seen.add(id);
+    if (seenItems.has(id)) continue;
+    seenItems.add(id);
     const item = equipmentById(id);
-    const passiveId = item?.passiveId ?? (item?.defender ? "defender-accuracy" : undefined);
-    if (!item || !passiveId || !item.sources[0]) continue;
-    rows.push({
-      passiveId,
-      itemId: item.id,
-      itemName: item.name,
-      source: item.sources[0],
-      ...passivePresentation(passiveId, effects),
-    });
+    if (!item || !item.sources[0]) continue;
+    const passiveList: ItemPassiveId[] = [
+      ...equipmentRecordPassiveIds(item),
+      ...(item.defender ? (["defender-accuracy"] as const) : []),
+    ];
+    const igneousOnItem = passiveList.filter((p) => IGNEOUS_ULTIMATE_PASSIVE_SET.has(p));
+    const lengOnItem = passiveList.filter((p) => LENG_PASSIVE_SET.has(p));
+    const otherOnItem = passiveList.filter(
+      (p) => !IGNEOUS_ULTIMATE_PASSIVE_SET.has(p) && !LENG_PASSIVE_SET.has(p),
+    );
+
+    // Kal-Zuk (and any multi-igneous grant): one Gear row, not four.
+    if (igneousOnItem.length > 1) {
+      const fresh = igneousOnItem.filter((p) => !seenPassives.has(p));
+      for (const p of fresh) seenPassives.add(p);
+      if (fresh.length > 0) {
+        rows.push({
+          passiveId: fresh[0]!,
+          itemId: item.id,
+          itemName: item.name,
+          source: item.sources[0],
+          ...igneousCombinedPresentation(),
+        });
+      }
+    } else if (igneousOnItem.length === 1) {
+      const passiveId = igneousOnItem[0]!;
+      if (!seenPassives.has(passiveId)) {
+        seenPassives.add(passiveId);
+        rows.push({
+          passiveId,
+          itemId: item.id,
+          itemName: item.name,
+          source: item.sources[0],
+          ...passivePresentation(passiveId, effects),
+        });
+      }
+    }
+
+    // Dual-wield Leng: collapse to one pair row when both passives are equipped.
+    for (const passiveId of lengOnItem) {
+      if (seenPassives.has(passiveId)) continue;
+      const bothActive =
+        effects.passiveIds.includes("leng-endless-frost") &&
+        effects.passiveIds.includes("leng-boundless-chill");
+      if (bothActive) {
+        for (const p of LENG_PASSIVES) seenPassives.add(p);
+        rows.push({
+          passiveId: "leng-endless-frost",
+          itemId: item.id,
+          itemName: "Dark Shard & Sliver of Leng",
+          source: item.sources[0],
+          ...lengCombinedPresentation(),
+        });
+        break;
+      }
+      seenPassives.add(passiveId);
+      rows.push({
+        passiveId,
+        itemId: item.id,
+        itemName: item.name,
+        source: item.sources[0],
+        ...passivePresentation(passiveId, effects),
+      });
+    }
+
+    for (const passiveId of otherOnItem) {
+      if (seenPassives.has(passiveId)) continue;
+      seenPassives.add(passiveId);
+      rows.push({
+        passiveId,
+        itemId: item.id,
+        itemName: item.name,
+        source: item.sources[0],
+        ...passivePresentation(passiveId, effects),
+      });
+    }
   }
   return rows;
 }
@@ -548,8 +717,9 @@ export function setEffectSupport(def: EquipmentSetDef | undefined): SetEffectSup
 }
 
 /**
- * Equipped sets with piece counts for GearPanel. Prefers catalogue labels;
- * unknown setIds still surface with raw id as label.
+ * Equipped sets with piece counts for GearPanel.
+ * Only catalogue set definitions surface here — raw grouping tags on items
+ * (e.g. setId "igneous" / "leng") are not combat sets and must not paint empty cards.
  */
 export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSummary[] {
   const counts = equippedSetCounts(loadout);
@@ -557,10 +727,11 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
   for (const [setId, pieces] of counts) {
     if (pieces <= 0) continue;
     const def = equipmentSetById(setId);
+    if (!def) continue;
     out.push({
       setId,
-      pieces: Math.min(def?.maxPieces ?? pieces, pieces),
-      label: def?.label ?? setId,
+      pieces: Math.min(def.maxPieces, pieces),
+      label: def.label,
       support: setEffectSupport(def),
     });
   }

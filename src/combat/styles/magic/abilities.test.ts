@@ -62,6 +62,11 @@ describe("magic ability data", () => {
     expect(byId("tsunami").adrenaline?.cost).toBe(100);
     expect(byId("omnipower").hits[0].band).toEqual({ minPct: 420, maxPct: 500 });
     expect(byId("omnipower_igneous").hits.map((h) => h.tickOffset)).toEqual([0, 1, 1, 1]);
+    expect(byId("omnipower_igneous").hits.every((h) => h.band.minPct === 120 && h.band.maxPct === 150)).toBe(
+      true,
+    );
+    expect(byId("omnipower_igneous").adrenaline).toEqual({ cost: 60 });
+    expect(byId("omnipower_igneous").requiredPassiveAnyOf).toEqual(["igneous-omnipower"]);
   });
 
   it("models multi-hit DoTs with wiki decay / escalation, not average-only stubs", () => {

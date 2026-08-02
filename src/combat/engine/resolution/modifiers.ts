@@ -17,7 +17,9 @@ import {
   additiveMeleeDamageModifier,
   amZiModifier,
   ENDURING_RUIN_SOURCE,
+  frostbladesModifier,
 } from "../../shared/equipment";
+import { FROSTBLADES_AD_FRACTION } from "../../styles/melee/effects";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -69,6 +71,15 @@ export function landTimeModifiers(
   const equipment = rt.input.equipmentEffects;
   if (equipment?.amZiFlatDamage && !modifiers.some((modifier) => modifier.id === "item:am-zi")) {
     modifiers.push(amZiModifier(equipment.amZiFlatDamage));
+  }
+  if (
+    ability.style === "melee" &&
+    !ability.autoAttack &&
+    !isDot &&
+    at < state.melee.frostbladesUntilTick &&
+    !modifiers.some((modifier) => modifier.id === "item:frostblades")
+  ) {
+    modifiers.push(frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)));
   }
   if (
     equipment?.amHejDamageBonus &&

@@ -1,6 +1,6 @@
 import type { ScoredBar } from "../contracts";
 import { remainingCandidates } from "../eligibility";
-import { diverseSelect } from "../diversity";
+import { barDistance, diverseSelect } from "../diversity";
 import { compareScored, insertAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
@@ -111,14 +111,14 @@ function range(lo: number, hi: number): number[] {
 function keepBeam(items: ScoredBar[], width: number): ScoredBar[] {
   const finite = items.filter((s) => Number.isFinite(s.robustScore));
   const partials = items.filter((s) => !Number.isFinite(s.robustScore));
+  // Scored finite first: compareScored + diverseSelect — never reorder that tier.
   finite.sort(compareScored);
   const diverse = diverseSelect(finite, width);
   const seen = new Set(diverse.map((d) => d.fingerprint));
-  for (const p of partials) {
-    if (diverse.length >= width) break;
-    if (seen.has(p.fingerprint)) continue;
-    seen.add(p.fingerprint);
+  // Unscored partials: longer depth + barDistance so high ladder ceilings stay diverse.
+  for (const p of pickDiversePartials(partials, width - diverse.length, seen)) {
     diverse.push(p);
+    seen.add(p.fingerprint);
   }
   for (const f of finite) {
     if (diverse.length >= width) break;
@@ -129,15 +129,61 @@ function keepBeam(items: ScoredBar[], width: number): ScoredBar[] {
   return diverse.slice(0, width);
 }
 
+/** Greedy partial beam: max length, then max min barDistance to selected. */
+function pickDiversePartials(
+  partials: readonly ScoredBar[],
+  k: number,
+  seen: ReadonlySet<string>,
+): ScoredBar[] {
+  if (k <= 0 || partials.length === 0) return [];
+  const unique: ScoredBar[] = [];
+  const fps = new Set<string>();
+  for (const p of partials) {
+    if (seen.has(p.fingerprint) || fps.has(p.fingerprint)) continue;
+    fps.add(p.fingerprint);
+    unique.push(p);
+  }
+  if (unique.length === 0) return [];
+  unique.sort((a, b) => {
+    if (b.bar.length !== a.bar.length) return b.bar.length - a.bar.length;
+    return a.fingerprint < b.fingerprint ? -1 : a.fingerprint > b.fingerprint ? 1 : 0;
+  });
+  if (unique.length <= k) return unique;
+
+  const selected: ScoredBar[] = [unique[0]!];
+  const remaining = unique.slice(1);
+  while (selected.length < k && remaining.length > 0) {
+    let bestIdx = 0;
+    let bestMetric = Number.NEGATIVE_INFINITY;
+    for (let i = 0; i < remaining.length; i++) {
+      const c = remaining[i]!;
+      let minDist = Infinity;
+      for (const s of selected) {
+        minDist = Math.min(minDist, barDistance(c.bar, s.bar));
+      }
+      // Length dominates (~[0,1] distance); stable fingerprint tie-break.
+      const metric = c.bar.length * 2 + minDist;
+      if (metric > bestMetric) {
+        bestMetric = metric;
+        bestIdx = i;
+      } else if (metric === bestMetric) {
+        const best = remaining[bestIdx]!;
+        if (c.fingerprint < best.fingerprint) bestIdx = i;
+      }
+    }
+    const [pick] = remaining.splice(bestIdx, 1);
+    selected.push(pick!);
+  }
+  return selected;
+}
+
+function fingerprintSetKey(bars: readonly ScoredBar[]): string {
+  return bars
+    .map((x) => x.fingerprint)
+    .sort()
+    .join("|");
+}
+
 function sameFingerprints(a: ScoredBar[], b: ScoredBar[]): boolean {
-  if (a.length !== b.length) return false;
-  const sa = a
-    .map((x) => x.fingerprint)
-    .sort()
-    .join("|");
-  const sb = b
-    .map((x) => x.fingerprint)
-    .sort()
-    .join("|");
-  return sa === sb;
+  return a.length === b.length && fingerprintSetKey(a) === fingerprintSetKey(b);
 }

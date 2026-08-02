@@ -111,6 +111,46 @@ describe("shared/equipment set effects", () => {
     expect(equippedPassiveSummaries({ equipmentSlots: {} })).toEqual([]);
   });
 
+  it("collapses Kal-Zuk multi-igneous passives into one Gear row", () => {
+    const rows = equippedPassiveSummaries({
+      equipmentSlots: { cape: "item:igneous-kal-zuk" },
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      itemId: "item:igneous-kal-zuk",
+      label: "Igneous ultimate upgrades",
+      support: "modeled",
+    });
+    expect(rows[0]!.effects).toEqual([
+      "Unlocks upgraded Overpower, Deadshot, Omnipower, and Death Skulls.",
+    ]);
+  });
+
+  it("does not paint empty Set effects cards for grouping tags like igneous or leng", () => {
+    expect(
+      setEffectsSummary({ equipmentSlots: { cape: "item:igneous-kal-zuk" } }),
+    ).toEqual([]);
+    expect(
+      setEffectsSummary({
+        equipmentSlots: {
+          mainhand: "item:dark-shard-of-leng",
+          offhand: "item:dark-sliver-of-leng",
+        },
+      }),
+    ).toEqual([]);
+  });
+
+  it("style Igneous capes still show a single style-specific passive row", () => {
+    const rows = equippedPassiveSummaries({
+      equipmentSlots: { cape: "item:igneous-kal-ket" },
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      passiveId: "igneous-overpower",
+      label: "Igneous Overpower",
+    });
+  });
+
   it("applies defender-class +3% to accuracy, not final Damage Potential", () => {
     const defender = activeEquipmentEffects({
       style: "melee",

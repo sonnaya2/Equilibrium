@@ -1,6 +1,12 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { castRejection } from "../cast/rules";
-import { castOutcomes, mergeAndCapBranches, type Branch } from "./branch";
+import {
+  materializeCastPlans,
+  mergeAndCapBranches,
+  planCastOutcomes,
+  type Branch,
+  type CastOutcomePlan,
+} from "./branch";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick } from "../runtime/state";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
@@ -17,6 +23,11 @@ export interface RevolutionInput extends Omit<SimulateInput, "rotation" | "autoW
  * branches diverge at state-changing RNG points and merge when their futures
  * realign. Revolution completes channels — occupancy advances past the full
  * channel before the next scan.
+ *
+ * Casts are planned across the whole live set first, then only the heaviest
+ * RNG outcomes are materialized (snapshot+commit). That applies the live-branch
+ * cap before the expensive work, which matters when Impatient/Relentless/Avernic
+ * would otherwise expand 64 parents into hundreds of full commits per GCD.
  */
 export function simulateRevolution(
   input: RevolutionInput,
@@ -58,10 +69,11 @@ export function simulateRevolution(
       break;
     }
 
-    const next: Branch[] = [];
+    const carried: Branch[] = [];
+    const plans: CastOutcomePlan[] = [];
     for (const branch of branches) {
       if (branch.error !== undefined || branch.rt.state.tick >= input.durationTicks) {
-        next.push(branch);
+        carried.push(branch);
         continue;
       }
       const state = branch.rt.state;
@@ -75,22 +87,31 @@ export function simulateRevolution(
             state.tick,
             input.weaponConfiguration,
             input.equipmentIds,
+            input.equipmentEffects?.passiveIds,
           ) === null,
       );
       // Basics fill every empty GCD when the bar has nothing ready/affordable.
       const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);
       const ability = ready ?? basic;
       if (!ability) {
-        next.push({
+        carried.push({
           ...branch,
           error: `revolution stalled at tick ${state.tick}: no bar ability ready and no basic for ${input.style}`,
         });
         continue;
       }
-      next.push(...castOutcomes(branch, ability, state.tick, ready === undefined));
+      const planned = planCastOutcomes(branch, ability, state.tick, ready === undefined);
+      if ("error" in planned) {
+        carried.push(planned.error);
+        continue;
+      }
+      if (planned.plans.length > 1) sawBranching = true;
+      plans.push(...planned.plans);
     }
-    sawBranching ||= next.length > 1;
-    branches = mergeAndCapBranches(next);
+
+    const advanced = materializeCastPlans(plans);
+    sawBranching ||= advanced.length > 1;
+    branches = mergeAndCapBranches([...carried, ...advanced]);
   }
 
   return combineBranchSummaries(branches, input.durationTicks, options, sawBranching);

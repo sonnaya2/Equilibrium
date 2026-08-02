@@ -8,11 +8,19 @@ import type { EvaluateFn, EvalMode, PoolAbility, SolveResult } from "./contracts
 import { evaluateRevolutionBar } from "./evaluate";
 import { secondsToTicks } from "../core/ticks";
 import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
-import { TIER_HORIZON_SECONDS } from "./solve";
+import {
+  configPatchForRecipe,
+  solveAsync,
+  TIER_BUDGETS,
+  TIER_HORIZON_SECONDS,
+  type SolvePhaseName,
+  type SolverAgentRecipe,
+} from "./solve";
+import { MIN_SOLVER_BAR_SIZE } from "./solutionStore";
+import { remainingCandidates } from "./eligibility";
 import { readEvalMemo, writeEvalMemo } from "./evalMemo";
 import { fingerprintEvaluationKey, stableStringify } from "./fingerprint";
 import { OBJECTIVE_VERSION } from "./contracts";
-import { solveAsync, TIER_BUDGETS, type SolvePhaseName } from "./solve";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import { requireSimBase } from "./worker/revive";
 import type { SolveFn, SolveRuntimeOptions } from "./worker/solveTypes";
@@ -120,11 +128,13 @@ export const solveFromRequest: SolveFn = async (
   const denySet = new Set(deny);
 
   const catalogue = allEngineSpecs();
+  const passiveIds = simBase.equipmentEffects?.passiveIds;
   let pool = buildCandidatePool(catalogue, request.style, {
     includePartial: request.includePartial === true,
     deny: [...denySet],
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
+    passiveIds,
   });
 
   // Category filter (optional) — rebuild pool rather than mutate.
@@ -139,6 +149,7 @@ export const solveFromRequest: SolveFn = async (
       deny: [...denySet, ...catDeny],
       weaponConfiguration: simBase.weaponConfiguration,
       equipmentIds: simBase.equipmentIds,
+      passiveIds,
     });
   }
 
@@ -160,7 +171,10 @@ export const solveFromRequest: SolveFn = async (
       ? request.durationTicks
       : secondsToTicks(tierHorizons.fullSeconds),
   );
-  const evaluationBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
+  const baseBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
+  // lenScale = (maxBarSize / MIN_SOLVER_BAR_SIZE) ** 1.2; floor 1.0 so length-5 keeps base budget.
+  const lenScale = Math.max(1, (request.maxBarSize / MIN_SOLVER_BAR_SIZE) ** 1.2);
+  const evaluationBudget = Math.round(baseBudget * lenScale);
 
   const { reviveModifiers, reviveLeague } = await import("./worker/revive");
   const league = reviveLeague(simBase.league);
@@ -201,6 +215,8 @@ export const solveFromRequest: SolveFn = async (
   let bestExploratoryScore = Number.NEGATIVE_INFINITY;
   let bestFullScore = Number.NEGATIVE_INFINITY;
   let topPreview: string[] = [];
+  /** Candidate currently in evaluate() — drives the cycling strip, not best-so-far. */
+  let activePreview: string[] = [];
   let currentPhase: SolverPhase = "seed";
   let noImprovement = 0;
   // Search fill stops short of full so "Final scoring" still has track room.
@@ -211,6 +227,8 @@ export const solveFromRequest: SolveFn = async (
   let finalizeActive = false;
   let scoringLabel: string | undefined;
   let scoringBarPreview: readonly string[] | undefined;
+  /** Full-horizon scores reused from the worker/main eval memo (no new sim). */
+  let fullMemoHits = 0;
 
   const throwCancelled = (): never => {
     const err = new Error("solver cancelled");
@@ -219,12 +237,19 @@ export const solveFromRequest: SolveFn = async (
   };
 
   const mapPhase = (name: SolvePhaseName): SolverPhase => {
-    if (name === "seed") return "seed";
-    if (name === "finalize") return "finalize";
-    if (name === "local" || name === "anneal" || name === "lns" || name === "evolutionary") {
-      return "exploit";
+    switch (name) {
+      case "seed":
+        return "seed";
+      case "finalize":
+        return "finalize";
+      case "local":
+      case "anneal":
+      case "lns":
+      case "evolutionary":
+        return "exploit";
+      default:
+        return "explore";
     }
-    return "explore";
   };
 
   const progressRatioNow = (): number => {
@@ -263,6 +288,7 @@ export const solveFromRequest: SolveFn = async (
       // Never stuff robust score into windowDpms — real windows live on the result DTO.
       windowDpms: 0,
       topBarPreview: topPreview,
+      ...(activePreview.length ? { activeBarPreview: activePreview } : {}),
       noImprovementCount: noImprovement,
       evaluationBudget,
       progressRatio: progressRatioNow(),
@@ -275,6 +301,7 @@ export const solveFromRequest: SolveFn = async (
           `fullEvaluations=${fullEvaluations}`,
         ],
       },
+      ...(fullMemoHits > 0 ? { fullMemoHits } : {}),
       ...(finalizeActive && finalizeTotal > 0
         ? {
             finalizeStep: finalizeDone,
@@ -312,6 +339,13 @@ export const solveFromRequest: SolveFn = async (
     if (options?.isCancelled?.() || options?.signal?.aborted) {
       return { score: Number.NEGATIVE_INFINITY, finite: false };
     }
+    // Track the bar under test so the UI strip can cycle. Best-so-far
+    // (topPreview) only moves when a candidate beats the incumbent.
+    const nextActive = [...bar];
+    const activeChanged =
+      nextActive.length !== activePreview.length ||
+      nextActive.some((id, i) => id !== activePreview[i]);
+    activePreview = nextActive;
     const useFull = mode === "full" || mode === "finalize";
     const durationTicks = useFull ? fullTicks : exploreTicks;
     const scoreMode = useFull ? "full" : "search";
@@ -328,8 +362,12 @@ export const solveFromRequest: SolveFn = async (
     if (memoHit) {
       // Count as evaluation for progress honesty but skip the heavy sim.
       evaluations += 1;
-      if (useFull) fullEvaluations += 1;
-      else searchEvaluations += 1;
+      if (useFull) {
+        fullEvaluations += 1;
+        fullMemoHits += 1;
+      } else {
+        searchEvaluations += 1;
+      }
       const key = bar.join("\0");
       if (!seenBars.has(key)) {
         seenBars.add(key);
@@ -348,11 +386,10 @@ export const solveFromRequest: SolveFn = async (
         bestFullScore = memoHit.score;
         topPreview = [...bar];
       }
-      if (useFull) {
-        currentPhase = "finalize";
-        finalizeActive = true;
-      }
-      emitProgress();
+      // Do not flip phase to finalize on a memo hit alone — only the finalize
+      // hook owns that (avoids a one-frame "scoring" flash on warm re-runs).
+      // Force emit when the strip candidate changes so the UI keeps cycling.
+      emitProgress(activeChanged);
       return memoHit;
     }
 
@@ -401,11 +438,8 @@ export const solveFromRequest: SolveFn = async (
       noImprovement += 1;
     }
 
-    if (useFull) {
-      currentPhase = "finalize";
-      finalizeActive = true;
-    }
-    emitProgress();
+    // Force paint when the under-test bar changes; else keep every-2 throttle.
+    emitProgress(activeChanged);
 
     if (!evaluation.ok) {
       return {
@@ -449,20 +483,39 @@ export const solveFromRequest: SolveFn = async (
     return out;
   };
 
-  // Seeds / user bars may list weapon-illegal ids (e.g. Hurricane on dual-wield).
-  // Pool already dropped those — filter seeds to legal ids only so search never
-  // evaluates a shape-mismatched ability even via authored bars.
+  // Pool-legal only (weapon/region denylist already applied to the pool).
   const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
+  const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
+  // Fit wiki/user seeds into the agent ladder band: truncate > max; pad < min.
+  const fitSeed = (ids: readonly string[]): string[] | null => {
+    const cleaned = ids.filter(legalId);
+    if (cleaned.length < 2) return null;
+    let built =
+      cleaned.length > request.maxBarSize
+        ? cleaned.slice(0, request.maxBarSize)
+        : [...cleaned];
+    if (built.length < request.minBarSize) {
+      const remain = remainingCandidates(built, searchPool, pool.byId);
+      for (const a of remain) {
+        if (built.length >= request.minBarSize) break;
+        if (remainingCandidates(built, [a], pool.byId).length) built.push(a.id);
+      }
+    }
+    return built.length >= 2 ? built : null;
+  };
   const authored = [
     ...authoredSeedsFromCatalogue(request.style, denySet),
-    ...request.authoredSeedBars.map((s) => s.abilityIds.filter(legalId)),
-    ...(request.userBar ? [request.userBar.filter(legalId)] : []),
-  ].filter((s) => s.length >= request.minBarSize);
-
-  const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
+    ...request.authoredSeedBars.map((s) => s.abilityIds),
+    ...(request.userBar ? [request.userBar] : []),
+  ]
+    .map(fitSeed)
+    .filter((s): s is string[] => s != null && s.length >= 2);
 
   emitProgress(true);
   if (options?.yieldSlice) await options.yieldSlice();
+
+  const recipe: SolverAgentRecipe = request.agentRecipe ?? "default";
+  const recipePatch = configPatchForRecipe(request.tier, recipe);
 
   const result: SolveResult = await solveAsync(
     {
@@ -474,6 +527,8 @@ export const solveFromRequest: SolveFn = async (
       authoredSeeds: authored,
       config: {
         profileId: request.profileId,
+        ...recipePatch,
+        evaluationBudget,
       },
     },
     {
@@ -489,6 +544,7 @@ export const solveFromRequest: SolveFn = async (
         finalizeTotal = Math.max(1, info.total);
         scoringLabel = info.label;
         scoringBarPreview = info.bar;
+        if (info.bar?.length) activePreview = [...info.bar];
         emitProgress(true);
       },
       isCancelled: () => options?.isCancelled?.() === true || options?.signal?.aborted === true,

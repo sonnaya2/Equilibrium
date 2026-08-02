@@ -241,6 +241,7 @@ export interface PoolAbility {
   supportStatus?: "partially-modeled" | "not-modeled" | "mechanics-unverified";
   weaponRequirement?: "twohand" | "dualwield" | "mainhand" | "conduit" | "death-guard-and-conduit";
   requiredEquipmentAnyOf?: readonly string[];
+  requiredPassiveAnyOf?: readonly string[];
 }
 
 export type EvaluateFn = (input: { bar: readonly string[]; mode?: EvalMode }) => EvalResult;
@@ -309,6 +310,8 @@ export interface CandidatePoolOptions {
   deny?: readonly string[];
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   equipmentIds?: readonly string[];
+  /** Active equipment passives (capability gates for Igneous upgrades, etc.). */
+  passiveIds?: readonly string[];
 }
 
 export interface CandidatePool {

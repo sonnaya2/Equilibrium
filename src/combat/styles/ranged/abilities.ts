@@ -232,7 +232,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
     replacementGroup: "deadshot",
-    requiredEquipmentAnyOf: ["item:igneous-kal-xil", "item:igneous-kal-zuk"],
+    requiredPassiveAnyOf: ["igneous-deadshot"],
     source: wiki("Deadshot", "Deadshot"),
   },
   {

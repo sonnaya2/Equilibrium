@@ -152,8 +152,13 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       });
     }
     const bb = summary.analysis.byEffect.find((row) => row.id === "big-boned");
-    expect(bb?.bonusDamage).toBeGreaterThan(0);
-    expect(bb?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
+    // Rider row: Total is the bonus; Bonus column stays 0 (not self-attributed).
+    expect(bb?.totalDamage).toBeGreaterThan(0);
+    expect(bb?.bonusDamage).toBe(0);
+    // Parent skill shows rider total in its Bonus column only.
+    const gr = summary.analysis.byEffect.find((row) => row.id === "greater_ricochet");
+    expect(gr?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
+    expect(gr?.bonusDamage).toBeGreaterThan(0);
   });
 
   it("Cinders on GR: 7 riders, 7 Inferno trigger rolls, 0.35 expected activations", () => {
@@ -219,8 +224,19 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(ridersOnDots.length).toBe(dotTicks);
     for (const rider of ridersOnDots) {
       expect(rider.originKind).toBe("dot");
+      expect(rider.damageTag).toBe("bonus-damage");
       expect(rider.attached).toBe(true);
       expect(resolveEventMultiplicity(rider).expectedSeparateHits).toBe(0);
     }
+    // BB row: Total holds the damage; Bonus column is 0 (not self-tagged).
+    // Global DoT total still includes riders on bleed ticks.
+    const bb = summary.analysis.byEffect.find((row) => row.id === "big-boned");
+    expect(bb?.totalDamage).toBeGreaterThan(0);
+    expect(bb?.bonusDamage).toBe(0);
+    expect(bb?.dotDamage).toBe(0);
+    expect(summary.analysis.dotDamage).toBeGreaterThanOrEqual(bb?.totalDamage ?? 0);
+    // Dismember shows bonus attributed onto the bleed skill only.
+    const dis = summary.analysis.byEffect.find((row) => row.id === "dismember");
+    expect(dis?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
   });
 });

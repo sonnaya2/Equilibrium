@@ -12,10 +12,7 @@ export interface SeedOptions {
   count?: number;
 }
 
-/**
- * Heuristic seeds: authored bars, category-balanced, damage-per-occupancy,
- * cooldown spread, random legal subsets.
- */
+/** Authored + heuristic seeds within sizeBounds. */
 export function buildSeeds(opts: SeedOptions): string[][] {
   const { pool, sizeBounds, rng } = opts;
   const byId = new Map(pool.map((a) => [a.id, a] as const));
@@ -23,21 +20,29 @@ export function buildSeeds(opts: SeedOptions): string[][] {
   const out: string[][] = [];
   const seen = new Set<string>();
 
-  const push = (bar: string[]) => {
-    if (bar.length < sizeBounds.min || bar.length > sizeBounds.max) return;
-    const built: string[] = [];
+  const push = (bar: string[], opts?: { padToMin?: boolean }) => {
+    let built: string[] = [];
     for (const id of bar) {
+      if (built.length >= sizeBounds.max) break;
       const a = byId.get(id);
       if (a && remainingCandidates(built, [a], byId).length) built.push(id);
     }
-    if (built.length < sizeBounds.min) return;
+    // Pad short authored seeds to band min (pinned length agents).
+    if (opts?.padToMin && built.length > 0 && built.length < sizeBounds.min) {
+      const remain = remainingCandidates(built, pool, byId);
+      for (const a of remain) {
+        if (built.length >= sizeBounds.min) break;
+        if (remainingCandidates(built, [a], byId).length) built.push(a.id);
+      }
+    }
+    if (built.length < sizeBounds.min || built.length > sizeBounds.max) return;
     const key = built.join("\0");
     if (seen.has(key)) return;
     seen.add(key);
     out.push(built);
   };
 
-  for (const a of opts.authored ?? []) push([...a]);
+  for (const a of opts.authored ?? []) push([...a], { padToMin: true });
 
   push(categoryBalanced(pool, sizeBounds, byId));
   push(damagePerOccupancy(pool, sizeBounds, byId));

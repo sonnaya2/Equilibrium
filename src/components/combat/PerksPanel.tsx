@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { GameIcon } from "../GameIcon";
 import {
+  ARMOUR_GIZMO_CAPACITY,
   GIZMO_CAPACITY,
   GIZMO_SLOTS,
   PERK_GIZMO_KIND,
   gizmoAccepts,
+  gizmoCapacity,
   gizmoSlotOf,
   placePerkOnGizmo,
   removePerkFromGizmos,
@@ -267,7 +269,8 @@ function GizmoCard({
   onActivate: () => void;
 }) {
   const held = loadout.gizmos[slot] ?? [];
-  const free = Math.max(0, GIZMO_CAPACITY - held.length);
+  const capacity = gizmoCapacity(slot);
+  const free = Math.max(0, capacity - held.length);
   const hint = GIZMO_HINTS[slot];
   return (
     <section
@@ -286,7 +289,7 @@ function GizmoCard({
             {hint ? <span className="gizmo-card__hint">{hint}</span> : null}
           </span>
           <span className="font-mono">
-            {held.length}/{GIZMO_CAPACITY}
+            {held.length}/{capacity}
           </span>
         </button>
         {held.length ? (
@@ -369,7 +372,7 @@ function GizmoCard({
             key={`empty-${index}`}
             type="button"
             className={`gizmo-slot-empty${active ? " is-active" : ""}`}
-            aria-label={`Empty perk slot ${held.length + index + 1} of ${GIZMO_CAPACITY} on ${GIZMO_LABELS[slot]}`}
+            aria-label={`Empty perk slot ${held.length + index + 1} of ${capacity} on ${GIZMO_LABELS[slot]}`}
             onClick={onActivate}
           >
             Empty
@@ -389,7 +392,8 @@ export function PerksPanel({
 }) {
   const [activeSlot, setActiveSlot] = useState<GizmoSlotId>("weapon1");
   const activeHeld = loadout.gizmos[activeSlot] ?? [];
-  const activeFull = activeHeld.length >= GIZMO_CAPACITY;
+  const activeCapacity = gizmoCapacity(activeSlot);
+  const activeFull = activeHeld.length >= activeCapacity;
   const hasGizmoPerks = PERKS.some((perk) => loadout.perks[perk.key] > 0);
 
   return (
@@ -413,7 +417,7 @@ export function PerksPanel({
               Perks
             </h3>
             <span className="text-xs text-gem-300">
-              {GIZMO_LABELS[activeSlot]} · {activeHeld.length}/{GIZMO_CAPACITY}
+              {GIZMO_LABELS[activeSlot]} · {activeHeld.length}/{activeCapacity}
             </span>
           </div>
           <div className="perk-library mt-1.5" role="group" aria-label="Perks">
@@ -470,8 +474,8 @@ export function PerksPanel({
             Gizmos
           </h3>
           <p className="gizmo-list__note mt-1">
-            Two weapon shells and two armour shells (body + legs). Each shell holds up to{" "}
-            {GIZMO_CAPACITY} perks.
+            Two weapon shells and two armour shells (body + legs). Weapon shells hold{" "}
+            {GIZMO_CAPACITY} perks; armour shells hold {ARMOUR_GIZMO_CAPACITY}.
           </p>
           <div className="gizmo-list mt-1.5" role="group" aria-label="Gizmos">
             {GIZMO_SLOTS.map((slot) => (

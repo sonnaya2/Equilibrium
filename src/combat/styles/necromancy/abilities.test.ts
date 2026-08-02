@@ -64,6 +64,23 @@ describe("necromancy ability data", () => {
       dot: false,
     });
     expect(ds.adrenaline?.cost).toBe(60);
+    expect(ds.replacementGroup).toBe("death_skulls");
+  });
+
+  it("Death Skulls Igneous is initial plus 3 derived target hits gated by the cape passive", () => {
+    const ds = NECROMANCY_ABILITIES.find((a) => a.id === "death_skulls_igneous")!;
+    expect(ds.hits).toHaveLength(1);
+    expect(ds.hits[0]!.band).toEqual({ ...DEATH_SKULLS_BAND });
+    expect(ds.derivedHits).toEqual({
+      count: 3,
+      intervalTicks: 2,
+      firstOffset: 2,
+      fractionPct: 100,
+      dot: false,
+    });
+    expect(ds.adrenaline?.cost).toBe(60);
+    expect(ds.replacementGroup).toBe("death_skulls");
+    expect(ds.requiredPassiveAnyOf).toEqual(["igneous-death-skulls"]);
   });
 
   it("Bloat is an initial hit plus 10 derived DoT tails at 25% of it", () => {

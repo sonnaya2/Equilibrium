@@ -5,7 +5,12 @@ import {
   ABYSSAL_PARASITE_INTERVAL_TICKS,
   ABYSSAL_PARASITE_MAX_STACKS,
   abyssalParasiteDamage,
+  FROSTBLADES_DURATION_SECONDS,
   GREATER_FLURRY_BERSERK_EXTEND_PER_HIT_SECONDS,
+  LENG_BOUNDLESS_CHILL_CHANCE,
+  LENG_ENDLESS_FROST_CHANCE,
+  lengHitRoll,
+  PRIMORDIAL_ICE_CAP,
 } from "../../../styles/melee/effects";
 import { hasPassive } from "../../../shared/equipment";
 import type { ResolvedDamage } from "../types";
@@ -141,4 +146,40 @@ export function onMeleeHitLanded(
   }
 
   if (event.abyssalParasiteEligible) addParasiteStack(rt, event);
+
+  // Leng: Endless Frost (10%) / Boundless Chill (2%) on real melee hits.
+  // Chill stack generation also opens Frostblades for 9s.
+  if (
+    event.procEligible &&
+    !event.attached &&
+    ability.style === "melee" &&
+    event.family !== "dot" &&
+    !event.dotKind
+  ) {
+    const equipment = rt.input.equipmentEffects;
+    let stacks = rt.state.melee.primordialIceStacks;
+    let frostUntil = rt.state.melee.frostbladesUntilTick;
+    let changed = false;
+    if (
+      hasPassive(equipment, "leng-endless-frost") &&
+      lengHitRoll(event.seq, 1) < LENG_ENDLESS_FROST_CHANCE
+    ) {
+      stacks = Math.min(PRIMORDIAL_ICE_CAP, stacks + 1);
+      changed = true;
+    }
+    if (
+      hasPassive(equipment, "leng-boundless-chill") &&
+      lengHitRoll(event.seq, 2) < LENG_BOUNDLESS_CHILL_CHANCE
+    ) {
+      stacks = Math.min(PRIMORDIAL_ICE_CAP, stacks + 1);
+      frostUntil = event.tick + secondsToTicks(FROSTBLADES_DURATION_SECONDS);
+      changed = true;
+    }
+    if (changed) {
+      rt.state = patchMelee(rt.state, {
+        primordialIceStacks: stacks,
+        frostbladesUntilTick: frostUntil,
+      });
+    }
+  }
 }

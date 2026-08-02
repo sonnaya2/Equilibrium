@@ -321,7 +321,7 @@ export async function finalizeSearchAsync(
     opts.onStep?.({
       done: i,
       total: Math.max(1, totalSteps),
-      label: `Full-horizon score ${i + 1}/${Math.max(1, totalSteps)}`,
+      label: `${i + 1}/${Math.max(1, totalSteps)}`,
       bar: s.bar,
     });
     // Yield *before* the heavy sim so a pending cancel is observed without
@@ -333,7 +333,7 @@ export async function finalizeSearchAsync(
     opts.onStep?.({
       done: i + 1,
       total: Math.max(1, totalSteps),
-      label: `Full-horizon score ${i + 1}/${Math.max(1, totalSteps)} done`,
+      label: `${i + 1}/${Math.max(1, totalSteps)}`,
       bar: s.bar,
     });
     await yieldSlice();
@@ -343,7 +343,7 @@ export async function finalizeSearchAsync(
   opts.onStep?.({
     done: totalSteps,
     total: Math.max(1, totalSteps),
-    label: "Full-horizon scoring done",
+    label: "Done",
   });
 
   return assembleResult(state, opts, seedBestScore, seedBestBar, explorePool, fullOnly);

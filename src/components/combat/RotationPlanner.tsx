@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { rotationOf } from "@/combat/engine/simulation/contracts";
 import { simulate, type RotationSummary } from "@/combat/engine/simulation/simulate";
-import { meetsEquipmentRequirement, meetsWeaponRequirement } from "@/combat/engine/cast/rules";
+import { resolveAbilityCastAvailability } from "@/combat/engine/cast/requirements";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import type { CombatStyle } from "@/combat/types";
 import {
@@ -392,29 +392,30 @@ export function RotationPlanner() {
                 const selectedVariant = a.replacementGroup
                   ? selectedVariants.get(a.replacementGroup)
                   : undefined;
+                const loadoutGate = useBuild
+                  ? resolveAbilityCastAvailability(a, {
+                      weaponConfiguration: setupStats.weaponConfiguration,
+                      equipmentIds: setupStats.equipmentIds,
+                      passiveIds: setupStats.equipmentEffects.passiveIds,
+                      groupPeers: palette,
+                    })
+                  : ({ available: true } as const);
                 const reason =
                   selectedVariant && selectedVariant !== a.id
                     ? `Replaced by ${abilityName(selectedVariant)}`
-                    : useBuild && !meetsWeaponRequirement(a, setupStats.weaponConfiguration)
-                      ? `Requires ${
-                          a.weaponRequirement === "conduit"
-                            ? "a conduit"
-                            : a.weaponRequirement === "death-guard-and-conduit"
-                              ? "death guard and conduit"
-                              : (a.weaponRequirement ??
-                                (a.style === "necromancy"
-                                  ? "a necromancy weapon"
-                                  : `${a.style} weapon`))
-                        }`
-                      : useBuild && !meetsEquipmentRequirement(a, setupStats.equipmentIds)
-                        ? "Requires an Igneous cape"
-                        : undefined;
+                    : !loadoutGate.available
+                      ? loadoutGate.message
+                      : undefined;
                 return (
                   <button
                     key={a.id}
                     type="button"
-                    onClick={() => updateQueue([...queue, a.id])}
+                    onClick={() => {
+                      if (reason !== undefined) return;
+                      updateQueue([...queue, a.id]);
+                    }}
                     disabled={reason !== undefined}
+                    aria-disabled={reason !== undefined}
                     title={reason}
                     className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 enabled:hover:bg-white/[0.02] enabled:hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-45"
                   >
@@ -477,19 +478,33 @@ export function RotationPlanner() {
             <p className="mt-3 text-xs text-parch-300">Add abilities to the queue</p>
           ) : (
             <div className="mt-3 border-t border-stone-750">
-              {queue.map((id, index) => (
-                <button
-                  key={`${id}-${index}`}
-                  type="button"
-                  title="Remove cast"
-                  onClick={() => updateQueue(queue.filter((_, i) => i !== index))}
-                  className="grid w-full grid-cols-[2rem_1fr] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-                >
-                  <span className="font-mono text-parch-300">{index + 1}</span>
-                  <span className="inline-flex min-w-0 items-center gap-1.5">
-                    {(() => {
-                      const a = abilityById(id);
-                      return a ? (
+              {queue.map((id, index) => {
+                const a = abilityById(id);
+                const slotGate =
+                  useBuild && a
+                    ? resolveAbilityCastAvailability(a, {
+                        weaponConfiguration: setupStats.weaponConfiguration,
+                        equipmentIds: setupStats.equipmentIds,
+                        passiveIds: setupStats.equipmentEffects.passiveIds,
+                        groupPeers: ALL_ABILITIES,
+                      })
+                    : ({ available: true } as const);
+                const lockReason = !slotGate.available ? slotGate.message : undefined;
+                return (
+                  <button
+                    key={`${id}-${index}`}
+                    type="button"
+                    title={lockReason ? `${lockReason} · click to remove` : "Remove cast"}
+                    onClick={() => updateQueue(queue.filter((_, i) => i !== index))}
+                    className={`grid w-full grid-cols-[2rem_1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs hover:bg-white/[0.02] ${
+                      lockReason
+                        ? "text-parch-300/70 opacity-70"
+                        : "text-parch-300 hover:text-parch-50"
+                    }`}
+                  >
+                    <span className="font-mono text-parch-300">{index + 1}</span>
+                    <span className="inline-flex min-w-0 items-center gap-1.5">
+                      {a ? (
                         <>
                           <GameIcon
                             src={abilityIconPath(a.id, a.style)}
@@ -501,11 +516,16 @@ export function RotationPlanner() {
                         </>
                       ) : (
                         <span>{abilityName(id)}</span>
-                      );
-                    })()}
-                  </span>
-                </button>
-              ))}
+                      )}
+                    </span>
+                    {lockReason ? (
+                      <span className="max-w-[12rem] truncate font-mono text-[10px] text-parch-300">
+                        {lockReason}
+                      </span>
+                    ) : null}
+                  </button>
+                );
+              })}
             </div>
           )}
 

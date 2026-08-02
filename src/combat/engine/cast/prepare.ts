@@ -9,6 +9,8 @@ import {
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
+  icyTempestHits,
+  icyTempestSpend,
 } from "../../styles/melee/effects";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
 import { isMagicAbility, resplendentAsphyxiate } from "../../styles/magic/abilities";
@@ -76,7 +78,9 @@ export type PreparedTransition =
   | { kind: "consumeChaosRoar" }
   | { kind: "consumeGreaterFury" }
   | { kind: "consumeFury" }
-  | { kind: "consumeEnduringRuin" };
+  | { kind: "consumeEnduringRuin" }
+  /** Icy Tempest spends all Primordial Ice stacks on cast. */
+  | { kind: "consumePrimordialIce" };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -162,6 +166,13 @@ export function prepareCast(
   }
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
+  }
+  // Icy Tempest: stack-scaled bands; spend drops with stacks (requirement stays 30%).
+  if (ability.id === "icy_tempest") {
+    working = {
+      ...working,
+      hits: icyTempestHits(rt.state.melee.primordialIceStacks),
+    };
   }
   if (ability.id === "asphyxiate" && (input.tumekensPieces ?? 0) >= 4) {
     working = resplendentAsphyxiate(working);
@@ -281,6 +292,7 @@ export function prepareCast(
   if (greaterFuryConsume) transitions.push({ kind: "consumeGreaterFury" });
   if (furyConsume) transitions.push({ kind: "consumeFury" });
   if (enduringRuinConsume) transitions.push({ kind: "consumeEnduringRuin" });
+  if (ability.id === "icy_tempest") transitions.push({ kind: "consumePrimordialIce" });
 
   const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
   const flowReduction = sonic
@@ -288,12 +300,18 @@ export function prepareCast(
       (animaCharged(rt.state.magic.runicCharge, candidate) ? RUNIC_FLOW_BONUS : 0)
     : undefined;
 
+  const cost = costOf(rt.state, ability, candidate);
+  let spend = spendOf(rt.state, ability, candidate, input.ammo);
+  if (ability.id === "icy_tempest") {
+    spend = icyTempestSpend(rt.state.melee.primordialIceStacks);
+  }
+
   return {
     ability,
     working,
     candidate,
-    cost: costOf(rt.state, ability, candidate),
-    spend: spendOf(rt.state, ability, candidate, input.ammo),
+    cost,
+    spend,
     occupancyTicks: endlessAssaultConsume
       ? GLOBAL_COOLDOWN_TICKS
       : (working.channelTicks ?? GLOBAL_COOLDOWN_TICKS),

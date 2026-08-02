@@ -7,20 +7,19 @@ import type { SerializableSolverRequest, SolverResultDTO } from "./serializable"
 import {
   isWorkerToHostMessage,
   type HostToWorkerMessage,
+  type SolverAgentSnapshot,
   type SolverProgress,
   type WorkerToHostMessage,
 } from "./protocol";
 import type { SolveProgressHandler } from "./solveTypes";
 import { createSolverWorker, getFirstAckMs } from "./workerCreate";
+import { agentBarSizeBounds } from "../solutionStore";
+import { agentSearchRecipe, TIER_BUDGETS } from "../solve";
 
-/** Unhinged asks for 8 agents; leave room for UI/compositor via hc−1. */
-const MAX_POOL = 8;
+const MAX_POOL = 18;
 
 export function solverPoolSize(): number {
-  if (typeof navigator === "undefined") return 1;
-  const hc = navigator.hardwareConcurrency ?? 2;
-  // Leave a core for UI; at least 1, at most MAX_POOL (unhinged uses 8).
-  return Math.max(1, Math.min(MAX_POOL, Math.max(1, hc - 1)));
+  return MAX_POOL;
 }
 
 /** Match host.ts worker construction (and test factory). */
@@ -55,12 +54,59 @@ function phaseRank(phase: SolverProgress["phase"] | undefined): number {
   }
 }
 
+function withAgentMeta(
+  base: SolverAgentSnapshot,
+  meta?: { recipe?: SolverAgentSnapshot["recipe"]; barLength?: number },
+): SolverAgentSnapshot {
+  if (meta?.recipe) base.recipe = meta.recipe;
+  if (meta?.barLength != null) base.barLength = meta.barLength;
+  return base;
+}
+
+function agentSnapshot(
+  index: number,
+  part: SolverProgress | undefined,
+  meta?: { recipe?: SolverAgentSnapshot["recipe"]; barLength?: number },
+): SolverAgentSnapshot {
+  if (!part) {
+    return withAgentMeta(
+      {
+        index,
+        phase: "seed",
+        evaluations: 0,
+        bestScore: 0,
+        progressRatio: 0,
+        finished: false,
+      },
+      meta,
+    );
+  }
+  const ratio = part.progressRatio ?? 0;
+  // Result path sets progressRatio: 1. Also treat idle as done.
+  const finished = ratio >= 1 || part.phase === "idle";
+  return withAgentMeta(
+    {
+      index,
+      phase: finished ? "idle" : part.phase,
+      evaluations: part.evaluations,
+      bestScore: part.bestExploratoryScore ?? part.bestScore,
+      progressRatio: ratio,
+      finished,
+    },
+    meta,
+  );
+}
+
 /** Exported for unit tests — host progress merge across parallel agents. */
 export function mergeProgress(
   parts: readonly (SolverProgress | undefined)[],
   agentCount: number,
   baseBudget: number,
+  agentMeta?: readonly { recipe?: SolverAgentSnapshot["recipe"]; barLength?: number }[],
 ): SolverProgress {
+  const agents = Array.from({ length: agentCount }, (_, i) =>
+    agentSnapshot(i, parts[i], agentMeta?.[i]),
+  );
   const live = parts.filter((p): p is SolverProgress => p != null);
   if (live.length === 0) {
     return {
@@ -74,6 +120,7 @@ export function mergeProgress(
       evaluationBudget: baseBudget * agentCount,
       progressRatio: 0.02,
       agentCount,
+      agents,
     };
   }
 
@@ -81,7 +128,12 @@ export function mergeProgress(
   let evaluations = 0;
   let unique = 0;
   let ratioSum = 0;
-  let phase = best.phase;
+  let searchPhase: SolverProgress["phase"] = "seed";
+  let anyStillSearching = false;
+  let anyFinalize = false;
+  let allDone = live.length > 0;
+  /** Furthest shortlist score — not the exploratory-score leader. */
+  let finalizeLead: SolverProgress | undefined;
   let bestExploratory = Number.NEGATIVE_INFINITY;
   let bestFull = Number.NEGATIVE_INFINITY;
   let hasExploratory = false;
@@ -90,12 +142,37 @@ export function mergeProgress(
   let fullEvals = 0;
   let hasSearchEvals = false;
   let hasFullEvals = false;
+  let fullMemoHits = 0;
+  let hasFullMemo = false;
+  /** Busiest unfinished agent’s active bar — keeps the strip cycling under merge. */
+  let activeLead: SolverProgress | undefined;
+
   for (const p of live) {
     evaluations += p.evaluations;
     unique += p.uniqueCandidates;
     ratioSum += p.progressRatio ?? 0;
     if (p.bestScore > best.bestScore) best = p;
-    if (phaseRank(p.phase) > phaseRank(phase)) phase = p.phase;
+
+    const finished = (p.progressRatio ?? 0) >= 1;
+    if (!finished) allDone = false;
+    const inFinalize = p.phase === "finalize" || finished;
+    if (inFinalize) anyFinalize = true;
+    // Still exploring/exploiting — do not promote the merged phase to finalize yet.
+    if (!finished && p.phase !== "finalize") {
+      anyStillSearching = true;
+      if (phaseRank(p.phase) > phaseRank(searchPhase)) searchPhase = p.phase;
+    }
+    if (p.finalizeTotal != null && p.finalizeTotal > 0) {
+      const step = p.finalizeStep ?? 0;
+      const leadStep = finalizeLead?.finalizeStep ?? -1;
+      if (!finalizeLead || step > leadStep) finalizeLead = p;
+    }
+    if (!finished && p.activeBarPreview?.length) {
+      if (!activeLead || p.evaluations >= (activeLead.evaluations ?? 0)) {
+        activeLead = p;
+      }
+    }
+
     const exp = p.bestExploratoryScore ?? p.bestScore;
     if (Number.isFinite(exp) && exp > bestExploratory) {
       bestExploratory = exp;
@@ -113,9 +190,37 @@ export function mergeProgress(
       hasFullEvals = true;
       fullEvals += p.fullEvaluations;
     }
+    if (p.fullMemoHits != null) {
+      hasFullMemo = true;
+      fullMemoHits += p.fullMemoHits;
+    }
   }
 
-  // Missing agents count as 0 so the bar does not jump to ~done on first report.
+  // Finalize only when no live agent is still searching.
+  let phase: SolverProgress["phase"] = searchPhase;
+  if (!anyStillSearching && (anyFinalize || allDone)) phase = "finalize";
+
+  // Missing agents count as 0; cap below finalize band while anyone still searches.
+  const rawRatio = ratioSum / Math.max(1, agentCount);
+  const progressRatio = anyStillSearching
+    ? Math.min(0.82, rawRatio)
+    : Math.min(0.995, rawRatio);
+
+  const fin = !anyStillSearching ? finalizeLead : undefined;
+
+  let evaluationMode = best.evaluationMode ?? "search";
+  if (fin?.evaluationMode) evaluationMode = fin.evaluationMode;
+  else if (phase === "finalize") evaluationMode = "finalize";
+
+  let topBarPreview = best.topBarPreview;
+  if (fin?.scoringBarPreview?.length) topBarPreview = fin.scoringBarPreview;
+  else if (fin?.topBarPreview?.length) topBarPreview = fin.topBarPreview;
+
+  let activeBarPreview: readonly string[] | undefined;
+  if (activeLead?.activeBarPreview?.length) activeBarPreview = activeLead.activeBarPreview;
+  else if (fin?.activeBarPreview?.length) activeBarPreview = fin.activeBarPreview;
+  else if (best.activeBarPreview?.length) activeBarPreview = best.activeBarPreview;
+
   return {
     phase,
     evaluations,
@@ -126,19 +231,34 @@ export function mergeProgress(
     ...(hasFull ? { bestFullScore: bestFull } : {}),
     ...(hasSearchEvals ? { searchEvaluations: searchEvals } : {}),
     ...(hasFullEvals ? { fullEvaluations: fullEvals } : {}),
-    evaluationMode: best.evaluationMode ?? (phase === "finalize" ? "finalize" : "search"),
+    ...(hasFullMemo && fullMemoHits > 0 ? { fullMemoHits } : {}),
+    evaluationMode,
     windowDpms: best.windowDpms,
-    topBarPreview: best.topBarPreview,
+    topBarPreview,
+    ...(activeBarPreview ? { activeBarPreview } : {}),
     noImprovementCount: best.noImprovementCount,
     evaluationBudget: baseBudget * agentCount,
-    progressRatio: Math.min(0.995, ratioSum / Math.max(1, agentCount)),
-    finalizeStep: best.finalizeStep,
-    finalizeTotal: best.finalizeTotal,
+    progressRatio,
     agentCount,
-    ...(best.scoringLabel ? { scoringLabel: best.scoringLabel } : {}),
-    ...(best.scoringBarPreview?.length ? { scoringBarPreview: best.scoringBarPreview } : {}),
-    proof: best.proof,
+    agents,
+    ...(fin && fin.finalizeTotal != null && fin.finalizeTotal > 0
+      ? {
+          finalizeStep: fin.finalizeStep,
+          finalizeTotal: fin.finalizeTotal,
+          ...(fin.scoringLabel ? { scoringLabel: fin.scoringLabel } : {}),
+          ...(fin.scoringBarPreview?.length ? { scoringBarPreview: fin.scoringBarPreview } : {}),
+        }
+      : {}),
+    proof: fin?.proof ?? best.proof,
   };
+}
+
+function isNearScoreTie(a: number, b: number): boolean {
+  return (
+    Number.isFinite(a) &&
+    Number.isFinite(b) &&
+    Math.abs(a - b) <= Math.max(1, Math.abs(b) * 0.02)
+  );
 }
 
 function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
@@ -147,7 +267,11 @@ function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
   }
   let best = results[0]!;
   for (const r of results) {
-    if (r.score > best.score) best = r;
+    if (r.score > best.score) {
+      best = r;
+    } else if (isNearScoreTie(r.score, best.score) && r.bar.length > best.bar.length) {
+      best = r;
+    }
   }
   const seen = new Set<string>();
   const top: { bar: readonly string[]; score: number; fingerprint?: string }[] = [];
@@ -163,16 +287,21 @@ function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
     push(r.bar, r.score, r.bar.join("\0"));
     for (const t of r.top ?? []) push(t.bar, t.score, t.fingerprint);
   }
-  top.sort((a, b) => b.score - a.score);
-  const evaluations = results.reduce((s, r) => s + r.evaluations, 0);
-  const unique = results.reduce((s, r) => s + r.uniqueCandidates, 0);
+  // Score desc, then bar length desc.
+  top.sort((a, b) => b.score - a.score || b.bar.length - a.bar.length);
+
+  let evaluations = 0;
+  let unique = 0;
+  for (const r of results) {
+    evaluations += r.evaluations;
+    unique += r.uniqueCandidates;
+  }
 
   const priorNotes = (best.proof?.notes ?? []).filter((n) => !n.startsWith("parallel agents "));
-  const parallelNote =
+  const notes =
     results.length > 1
-      ? `parallel agents ${results.length}; winner seed ${best.seed}`
-      : undefined;
-  const notes = parallelNote ? [...priorNotes, parallelNote] : priorNotes;
+      ? [...priorNotes, `parallel agents ${results.length}; winner seed ${best.seed}`]
+      : priorNotes;
 
   return {
     ...best,
@@ -203,12 +332,22 @@ export class SolverAgentPool {
     return this.slots.length;
   }
 
+  /** Grow or shrink the pool to exactly n workers (capped at MAX_POOL). */
   ensure(n: number): number {
-    const want = Math.max(1, Math.min(MAX_POOL, n));
+    const want = Math.max(1, Math.min(MAX_POOL, Math.floor(n) || 1));
     while (this.slots.length < want) {
       const worker = createWorker();
       if (!worker) break;
       this.slots.push({ worker, requestId: 0 });
+    }
+    while (this.slots.length > want) {
+      const slot = this.slots.pop();
+      if (!slot) break;
+      try {
+        slot.worker.terminate();
+      } catch {
+        // ignore
+      }
     }
     return this.slots.length;
   }
@@ -268,14 +407,18 @@ export class SolverAgentPool {
     onProgress?: SolveProgressHandler,
     options?: { isCancelled?: () => boolean; signal?: AbortSignal; agents?: number },
   ): Promise<SolverResultDTO> {
-    // Supersede any previous pool run before starting another.
     this.cancel();
 
-    const want = options?.agents ?? solverPoolSize();
+    // Requested agents (6 / 12 / 18), not residual slots.length.
+    const want = Math.max(
+      1,
+      Math.min(MAX_POOL, Math.floor(options?.agents ?? solverPoolSize()) || 1),
+    );
     const n = this.ensure(want);
     if (n === 0) {
       throw new Error("revolution solver pool: no workers available");
     }
+    const agentCount = Math.min(want, n);
 
     const cancelled = () =>
       options?.isCancelled?.() === true || options?.signal?.aborted === true;
@@ -283,12 +426,20 @@ export class SolverAgentPool {
       throw new DOMException("revolution solver cancelled", "AbortError");
     }
 
-    const baseBudget =
-      request.tier === "unhinged" ? 8_000 : request.tier === "extreme" ? 1_800 : 220;
-    const progressParts: (SolverProgress | undefined)[] = Array.from({ length: n });
+    const baseBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
+    const progressParts: (SolverProgress | undefined)[] = Array.from({
+      length: agentCount,
+    });
+    const agentMeta = Array.from({ length: agentCount }, (_, index) => {
+      const band = agentBarSizeBounds(0, 0, index, agentCount);
+      return {
+        recipe: agentSearchRecipe(index, request.tier),
+        barLength: band.maxBarSize,
+      };
+    });
     const emit = () => {
       if (cancelled()) return;
-      onProgress?.(mergeProgress(progressParts, n, baseBudget));
+      onProgress?.(mergeProgress(progressParts, agentCount, baseBudget, agentMeta));
     };
 
     const runCancels: Array<() => void> = [];
@@ -310,17 +461,19 @@ export class SolverAgentPool {
       const requestId = ++this.seq;
       slot.requestId = requestId;
 
+      const band = agentBarSizeBounds(0, 0, index, agentCount);
+      const recipe = agentSearchRecipe(index, request.tier);
+      const patch = {
+        seed: (request.seed ?? 1) + index * 9973,
+        minBarSize: band.minBarSize,
+        maxBarSize: band.maxBarSize,
+        agentRecipe: recipe,
+      } as const;
       let payload: SerializableSolverRequest;
       try {
-        payload = structuredClone({
-          ...request,
-          seed: (request.seed ?? 1) + index * 9973,
-        });
+        payload = structuredClone({ ...request, ...patch });
       } catch {
-        payload = {
-          ...request,
-          seed: (request.seed ?? 1) + index * 9973,
-        };
+        payload = { ...request, ...patch };
       }
 
       return new Promise<SolverResultDTO>((resolve, reject) => {
@@ -393,10 +546,11 @@ export class SolverAgentPool {
                 0;
               const full = msg.result.bestFullScore ?? msg.result.score;
               progressParts[index] = {
-                phase: "finalize",
+                // idle + ratio 1 marks agent done.
+                phase: "idle",
                 evaluations: msg.result.evaluations,
                 uniqueCandidates: msg.result.uniqueCandidates,
-                // Never put full robust into bestScore.
+                // bestScore stays exploratory, not full robust.
                 bestScore: Number.isFinite(exp) ? exp : 0,
                 ...(Number.isFinite(exp) ? { bestExploratoryScore: exp } : {}),
                 ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
@@ -461,7 +615,7 @@ export class SolverAgentPool {
 
     try {
       const settled = await Promise.allSettled(
-        Array.from({ length: n }, (_, i) => runOne(i)),
+        Array.from({ length: agentCount }, (_, i) => runOne(i)),
       );
       if (cancelled()) {
         throw new DOMException("revolution solver cancelled", "AbortError");
@@ -476,13 +630,14 @@ export class SolverAgentPool {
           continue;
         }
         const reason = s.reason;
+        const message = reason instanceof Error ? reason.message : String(reason);
         if (isAbortError(reason)) {
           sawAbort = true;
           if (cancelled()) throw reason;
-          errors.push(reason instanceof Error ? reason.message : String(reason));
+          errors.push(message);
           continue;
         }
-        errors.push(reason instanceof Error ? reason.message : String(reason));
+        errors.push(message);
       }
 
       if (ok.length === 0) {

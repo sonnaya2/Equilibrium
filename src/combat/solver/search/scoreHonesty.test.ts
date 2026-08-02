@@ -480,8 +480,8 @@ describe("score honesty", () => {
         yieldSlice: async () => undefined,
         isCancelled: () => cancelled,
         onStep: (info) => {
-          // After the first full score completes, cancel before the next starts.
-          if (info.done >= 1 && info.label.includes("done")) cancelled = true;
+          // Cancel after first bar fully scored (between candidates).
+          if (info.done >= 1) cancelled = true;
         },
       }),
     ).rejects.toMatchObject({ name: "AbortError" });

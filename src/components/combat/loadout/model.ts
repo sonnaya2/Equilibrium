@@ -138,8 +138,15 @@ export const PERK_GIZMO_KIND: Record<PerkRankKey, "weapon" | "armour" | "both"> 
 export const GIZMO_SLOTS = ["weapon1", "weapon2", "armour1", "armour2"] as const;
 export type GizmoSlotId = (typeof GIZMO_SLOTS)[number];
 
-/** Up to two perks per gizmo, as in game. */
+/** Default / weapon shell capacity (two perks). Prefer `gizmoCapacity(slot)`. */
 export const GIZMO_CAPACITY = 2;
+/** Armour shells (body + legs) show four perk rows each. */
+export const ARMOUR_GIZMO_CAPACITY = 4;
+
+/** Perk slots on a gizmo shell: weapons 2, armour 4. */
+export function gizmoCapacity(slot: GizmoSlotId): number {
+  return slot.startsWith("armour") ? ARMOUR_GIZMO_CAPACITY : GIZMO_CAPACITY;
+}
 
 export type GizmoLayout = Partial<Record<GizmoSlotId, PerkRankKey[]>>;
 
@@ -365,7 +372,7 @@ export function placePerkOnGizmo(loadout: Loadout, slot: GizmoSlotId, perk: Perk
     if (held.length) gizmos[id] = held;
   }
   const target = gizmos[slot] ?? [];
-  if (target.length >= GIZMO_CAPACITY) return loadout;
+  if (target.length >= gizmoCapacity(slot)) return loadout;
   gizmos[slot] = [...target, perk];
   return { ...loadout, gizmos };
 }
@@ -394,7 +401,7 @@ function normalizeGizmos(raw: unknown): GizmoLayout {
       if (!gizmoAccepts(slot, entry as PerkRankKey)) continue;
       claimed.add(entry);
       held.push(entry as PerkRankKey);
-      if (held.length >= GIZMO_CAPACITY) break;
+      if (held.length >= gizmoCapacity(slot)) break;
     }
     if (held.length) out[slot] = held;
   }

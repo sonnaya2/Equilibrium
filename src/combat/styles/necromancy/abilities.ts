@@ -101,6 +101,8 @@ export const FINGER_OF_DEATH_LIVING_DEATH_MULT = 1.5;
 export const DEATH_SKULLS_BAND = { minPct: 225, maxPct: 275 } as const;
 /** Single-target bounce path: 3 hits on the primary target (wiki Damage section). */
 export const DEATH_SKULLS_SINGLE_TARGET_HITS = 3;
+/** Igneous single-target: initial hit + 3 derived target hits. */
+export const DEATH_SKULLS_IGNEOUS_SINGLE_TARGET_HITS = 4;
 export const DEATH_SKULLS_BASE_COST_PCT = 60;
 export const DEATH_SKULLS_COOLDOWN_SECONDS = 60;
 /** Living Death reduces Death Skulls' cooldown to 17 ticks / 10.2s (2 Mar 2026). */
@@ -198,7 +200,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     // (monster → player → monster → player → monster; player hops deal nothing).
     // Each bounce deals 100% of the resolved initial hit — crit inheritance
     // (wiki: "if the initial hit was a critical hit, the remaining hits will
-    // also be critical hits"). Igneous capes (+2 bounces) are not modeled.
+    // also be critical hits"). Igneous variant is death_skulls_igneous.
     id: "death_skulls",
     name: "Death Skulls",
     style: "necromancy",
@@ -214,9 +216,31 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     },
     adrenaline: { cost: DEATH_SKULLS_BASE_COST_PCT },
     cooldownSeconds: DEATH_SKULLS_COOLDOWN_SECONDS,
+    replacementGroup: "death_skulls",
     supportStatus: "partially-modeled",
-    supportNote:
-      "Single-target only (bounce path via the player); igneous capes' +2 bounces not modeled.",
+    supportNote: "Single-target only (bounce path via the player).",
+    source: DEATH_SKULLS_WIKI,
+  },
+  {
+    // Igneous Kal-Mor / Kal-Zuk: one extra primary-target bounce in the ST model
+    // (initial + 3 derived = 4 damaging hits). Same bands, intervals, crit inheritance.
+    id: "death_skulls_igneous",
+    name: "Death Skulls (Igneous)",
+    style: "necromancy",
+    category: "ultimate",
+    area: "multi-target",
+    hits: [{ band: { ...DEATH_SKULLS_BAND } }],
+    derivedHits: {
+      count: DEATH_SKULLS_IGNEOUS_SINGLE_TARGET_HITS - 1,
+      intervalTicks: 2,
+      firstOffset: 2,
+      fractionPct: 100,
+      dot: false,
+    },
+    adrenaline: { cost: DEATH_SKULLS_BASE_COST_PCT },
+    cooldownSeconds: DEATH_SKULLS_COOLDOWN_SECONDS,
+    replacementGroup: "death_skulls",
+    requiredPassiveAnyOf: ["igneous-death-skulls"],
     source: DEATH_SKULLS_WIKI,
   },
   {
@@ -609,10 +633,10 @@ export const NECROMANCY_EFFECTS = [
     source: DEATH_SKULLS_WIKI,
   },
   {
-    id: "death_skulls_igneous",
-    name: "Death Skulls (Igneous cape)",
+    id: "death_skulls_igneous_multi",
+    name: "Death Skulls multi-target with Igneous cape",
     notes:
-      "Igneous Kal-Mor / Kal-Zuk: +2 bounces (6 instead of 4). Single-target model stays 3 primary hits; igneous changes multi-target bounce count only.",
+      "Multi-target bounce count rises with the cape (wiki). The engine models the single-target path via death_skulls / death_skulls_igneous.",
     source: DEATH_SKULLS_WIKI,
   },
   {

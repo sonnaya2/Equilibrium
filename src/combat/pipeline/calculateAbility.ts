@@ -1,5 +1,6 @@
 import type { DamageBand } from "../core/abilityDamage";
 import type { CritLayers } from "../core/critical";
+import type { ItemPassiveId } from "../data/records";
 import type { BleedId, DamageOverTimeKind } from "../types";
 import { calculateHit, type HitInput, type HitResult } from "./calculateHit";
 
@@ -81,6 +82,11 @@ export interface AbilitySpec {
     | "death-guard-and-conduit";
   /** At least one of these catalogue items must be equipped. */
   requiredEquipmentAnyOf?: readonly string[];
+  /**
+   * At least one of these equipment passives must be active (capability gate).
+   * Prefer this over item-id lists when multiple items grant the same unlock.
+   */
+  requiredPassiveAnyOf?: readonly ItemPassiveId[];
   /**
    * Channelled cast occupancy in ticks (last hit offset + 1 — the actor is free
    * the tick after the final hit lands). Absent = one global cooldown.

@@ -1,3 +1,4 @@
+import type { ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { isMeleeAbility } from "../../styles/melee/abilities";
 import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effects";
@@ -7,6 +8,24 @@ import type { AdrenalineRules } from "../simulation/contracts";
 import type { CastRngPointId } from "../simulation/contracts";
 import type { RotationState } from "../runtime/state";
 import { blessingRule, hasBlessing, type ResolvedLeagueRules } from "../../league/ruleset";
+import {
+  permanentAvailabilityBlock,
+  type WeaponConfiguration,
+} from "./requirements";
+
+export {
+  equipmentRecordPassiveIds,
+  meetsEquipmentRequirement,
+  meetsPassiveRequirement,
+  meetsWeaponRequirement,
+  missingPassiveMessage,
+  passiveIdsFromEquipmentIds,
+  permanentAvailabilityBlock,
+  resolveAbilityCastAvailability,
+  type AbilityAvailabilityOptions,
+  type AbilityCastAvailability,
+  type WeaponConfiguration,
+} from "./requirements";
 
 /**
  * Cast legality rules. Every function takes the explicit state and candidate
@@ -53,42 +72,24 @@ export function spendOf(
     : cost;
 }
 
-type WeaponConfiguration =
-  | "twohand"
-  | "dualwield"
-  | "mainhand"
-  | "shield"
-  | "defender"
-  | "necromancy";
-
-function weaponRequirementMessage(ability: AbilitySpec): string {
-  const requirement =
-    ability.weaponRequirement === "conduit"
-      ? "a conduit"
-      : ability.weaponRequirement === "death-guard-and-conduit"
-        ? "death guard and conduit"
-        : (ability.weaponRequirement ??
-          (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
-  return `${ability.id} requires ${requirement}`;
-}
-
 /**
- * Blocks that weaving basics can never clear (wrong weapon/equipment, or cost
- * above the adrenaline cap). Temporary shortfalls (current adren, cooldowns,
- * sequence windows) are not reported here.
+ * Blocks that weaving basics can never clear (wrong weapon/equipment/passive,
+ * or cost above the adrenaline cap). Temporary shortfalls (current adren,
+ * cooldowns, sequence windows) are not reported here.
  */
 export function permanentCastBlock(
   state: RotationState,
   ability: AbilitySpec,
   weaponConfiguration?: WeaponConfiguration,
   equipmentIds?: readonly string[],
+  passiveIds?: readonly ItemPassiveId[],
 ): string | null {
-  if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
-    return weaponRequirementMessage(ability);
-  }
-  if (!meetsEquipmentRequirement(ability, equipmentIds)) {
-    return `${ability.id} requires an equipped Igneous cape`;
-  }
+  const loadoutBlock = permanentAvailabilityBlock(ability, {
+    weaponConfiguration,
+    equipmentIds,
+    passiveIds,
+  });
+  if (loadoutBlock !== null) return loadoutBlock;
   const cost = costOf(state, ability, state.tick);
   if (cost > state.adrenalineCap) {
     return `${ability.id} is unaffordable at tick ${state.tick}, even weaving basics`;
@@ -106,13 +107,14 @@ export function castRejection(
   candidate: number,
   weaponConfiguration?: WeaponConfiguration,
   equipmentIds?: readonly string[],
+  passiveIds?: readonly ItemPassiveId[],
 ): string | null {
-  if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
-    return weaponRequirementMessage(ability);
-  }
-  if (!meetsEquipmentRequirement(ability, equipmentIds)) {
-    return `${ability.id} requires an equipped Igneous cape`;
-  }
+  const loadoutBlock = permanentAvailabilityBlock(ability, {
+    weaponConfiguration,
+    equipmentIds,
+    passiveIds,
+  });
+  if (loadoutBlock !== null) return loadoutBlock;
   if (
     ability.id === "spectral_scythe_2" &&
     candidate >= state.necromancy.resources.spectralScythe2UntilTick
@@ -142,83 +144,6 @@ export function castRejection(
     return `${ability.id} needs ${cost}% adrenaline, ${state.adrenaline}% available at tick ${candidate}`;
   }
   return null;
-}
-
-/**
- * Pure equipment-shape check shared by engine validation and ability pickers.
- *
- * Necromancy (wiki — Conjuration / Necromancy abilities):
- * - necrotic basics/enhanced/ultimates need a siphon (main hand); they still
- *   cast with a shield or defender in the off-hand
- * - conjures need a conduit (off-hand); shield/defender dual is not enough
- * - loadout reports `"necromancy"` only when a conduit is available (equipped
- *   conduit, or empty off-hand with the dual-hand tier sliders)
- *
- * Melee only has 1H / dual / 2H gates among non-necro styles:
- * - dualwield req: offensive OH or defender (not shield, empty OH, or 2H alone)
- * - twohand req: two-handed only
- * - defender counts as dual-wield OH; pure shield does not
- *
- * Ranged and Magic: no dual/2H cast gates (wiki 22 Jul 2024 Magic weapon-type
- * requirements removed; ranged never had them). Stale dualwield/twohand tags on
- * those styles are ignored.
- */
-export function meetsWeaponRequirement(
-  ability: AbilitySpec,
-  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy",
-): boolean {
-  if (weaponConfiguration === undefined) return true;
-
-  // --- Necromancy: conduit / siphon rules (unchanged) ---
-  if (ability.style === "necromancy") {
-    const req = ability.weaponRequirement;
-    // Conjures (and any explicit dual-necro gate) need siphon + conduit.
-    if (req === "conduit" || req === "death-guard-and-conduit") {
-      return weaponConfiguration === "necromancy";
-    }
-    // Other necro abilities: any necro main-hand shape, including shield tanking.
-    return (
-      weaponConfiguration === "necromancy" ||
-      weaponConfiguration === "mainhand" ||
-      weaponConfiguration === "shield" ||
-      weaponConfiguration === "defender"
-    );
-  }
-
-  if (weaponConfiguration === "necromancy") return false;
-
-  const req = ability.weaponRequirement;
-  // Necro-only requirement tags never apply to other styles.
-  if (req === "conduit" || req === "death-guard-and-conduit") return false;
-  if (req === undefined) return true;
-
-  // Ranged + Magic: wiki — no weapon-type cast gates for dual / 2H.
-  if (ability.style === "ranged" || ability.style === "magic") return true;
-
-  // Melee only:
-  if (req === "dualwield") {
-    // Offensive OH or defender (not shield, not empty, not 2H alone).
-    return weaponConfiguration === "dualwield" || weaponConfiguration === "defender";
-  }
-  if (req === "twohand") {
-    return weaponConfiguration === "twohand";
-  }
-  if (req === "mainhand") {
-    // 1H shape: mainhand, dual, defender, or shield (all have a main hand).
-    // Necromancy already rejected above.
-    return weaponConfiguration !== "twohand";
-  }
-  return weaponConfiguration === req;
-}
-
-export function meetsEquipmentRequirement(
-  ability: AbilitySpec,
-  equipmentIds?: readonly string[],
-): boolean {
-  return (
-    ability.requiredEquipmentAnyOf === undefined ||
-    ability.requiredEquipmentAnyOf.some((id) => equipmentIds?.includes(id))
-  );
 }
 
 /** One state-changing RNG point a cast may have, with its sourced chance. */

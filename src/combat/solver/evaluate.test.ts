@@ -85,9 +85,10 @@ describe("evaluateRevolutionBar", () => {
     expect(fromTicks).toBeCloseTo(direct.totalExpected, 8);
   });
 
-  it("uses objective.scoreSummary multi-window scoring at the full horizon", () => {
+  it("uses objective.scoreSummary multi-window scoring at a rankable short horizon (30s)", () => {
     const pool = buildCandidatePool(catalogue, "melee");
-    const durationTicks = OBJECTIVE_HORIZON_TICKS;
+    // Thorough full score is 50 ticks — not the 500-tick research horizon.
+    const durationTicks = 50;
     const evaluation = evaluateRevolutionBar({
       bar: ["alpha", "beta"],
       style: "melee",
@@ -116,8 +117,8 @@ describe("evaluateRevolutionBar", () => {
     expect(evaluation.score).toBeCloseTo(scored.robustScore, 8);
     expect(evaluation.metrics?.openingDpm).toBeCloseTo(scored.openingDpm, 8);
 
-    // Window DPM matches damageByTick sum logic.
-    const opening = windowDpmFromDamageByTick(summary.damageByTick ?? {}, 0, 100);
+    // Window DPM matches scaled open window [0, 10) on a 50-tick horizon.
+    const opening = windowDpmFromDamageByTick(summary.damageByTick ?? {}, 0, 10);
     expect(evaluation.metrics!.openingDpm).toBeCloseTo(opening, 8);
   });
 

@@ -23,6 +23,7 @@ import {
   seedBarsFromSolveCache,
   solverPoolSize,
   TIER_BUDGETS,
+  TIER_HORIZON_SECONDS,
   type ObjectiveProfileId,
   type SolverProgress,
   type SolverResultDTO,
@@ -63,7 +64,20 @@ function solverPhaseLabel(
   }
 }
 
-function scoringHint(progress: SolverProgress | null, agentCount: number, stopping: boolean): string {
+function formatElapsed(ms: number): string {
+  const totalSec = Math.max(0, Math.floor(ms / 1000));
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return m > 0 ? `${m}:${String(s).padStart(2, "0")}` : `${s}s`;
+}
+
+function scoringHint(
+  progress: SolverProgress | null,
+  agentCount: number,
+  stopping: boolean,
+  tier: SolverSearchTier,
+): string {
+  const horizons = TIER_HORIZON_SECONDS[tier] ?? TIER_HORIZON_SECONDS.thorough;
   if (stopping) {
     return "Cancel received — killing workers after the current score if one is mid-flight.";
   }
@@ -73,13 +87,13 @@ function scoringHint(progress: SolverProgress | null, agentCount: number, stoppi
     const total = progress.finalizeTotal ?? 0;
     const label =
       progress.scoringLabel ??
-      (total > 0 ? `Full-horizon score ${step}/${total}` : "Full-horizon scoring");
-    return `${label}. Each shortlist bar runs a full 5‑minute sim — this is single-threaded per agent and intentionally slow. Search used parallel workers; final ranking re-scores the shortlist one bar at a time.`;
+      (total > 0 ? `Full score ${step}/${total}` : "Full scoring");
+    return `${label}. Each shortlist bar is a ${horizons.fullSeconds}s game-time sim (not wall clock). Search was short (~${horizons.exploreSeconds}s); final ranking re-scores ${total || "a few"} bars one at a time.`;
   }
   if (agentCount > 1) {
-    return `${agentCount} parallel agents searching with different seeds (short explore window). Best bars advance to full-horizon scoring.`;
+    return `${agentCount} parallel agents searching (~${horizons.exploreSeconds}s game-time each eval). Best bars then get a ${horizons.fullSeconds}s full score.`;
   }
-  return "Searching legal bars, then full-horizon re-score of the shortlist.";
+  return `Searching (~${horizons.exploreSeconds}s evals), then full-score shortlist (~${horizons.fullSeconds}s each).`;
 }
 
 function previewCategory(
@@ -294,6 +308,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
   const [bestPulse, setBestPulse] = useState(false);
   const [solverAgents, setSolverAgents] = useState(1);
+  /** Wall-clock ms when the current Optimize started (for elapsed timer). */
+  const [solveStartedAt, setSolveStartedAt] = useState<number | null>(null);
+  const [elapsedMs, setElapsedMs] = useState(0);
   const cancelRef = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   const lastBestRef = useRef(0);
@@ -379,6 +396,16 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       cancelOptimize();
     };
   }, []);
+
+  // Elapsed wall-clock while optimizing (1s tick).
+  useEffect(() => {
+    if (!solving || solveStartedAt == null) return;
+    setElapsedMs(Date.now() - solveStartedAt);
+    const id = window.setInterval(() => {
+      setElapsedMs(Date.now() - solveStartedAt);
+    }, 250);
+    return () => window.clearInterval(id);
+  }, [solving, solveStartedAt]);
 
   const simStyle = loadout.style;
 
@@ -483,6 +510,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     latestProgressRef.current = null;
     setSolving(true);
     setStopping(false);
+    setSolveStartedAt(Date.now());
+    setElapsedMs(0);
     setSolverError(null);
     setSolverResult(null);
     setBestPulse(false);
@@ -511,8 +540,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         profileId: solverProfile,
         maxBarSize: sizes.maxBarSize,
         minBarSize: sizes.minBarSize,
-        exploreSeconds: 30,
-        durationSeconds: 300,
+        // Horizons come from TIER_HORIZON_SECONDS (thorough: ~12s explore / 30s full).
         userBar: modelled.map((m) => m.id),
         seed: 1,
         // On: Build picks only. Off: every region + unknown unlocks (full ability pool).
@@ -671,6 +699,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       if (gen === solveGenRef.current) {
         setSolving(false);
         setStopping(false);
+        setSolveStartedAt(null);
         abortRef.current = null;
       }
     }
@@ -770,9 +799,15 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               className="border border-stone-750 bg-transparent px-2 py-1 text-parch-50"
               disabled={solving}
             >
-              <option value="thorough">Thorough</option>
-              <option value="extreme">Extreme</option>
-              <option value="unhinged">Unhinged</option>
+              <option value="thorough">
+                Thorough (~{TIER_HORIZON_SECONDS.thorough.fullSeconds}s full)
+              </option>
+              <option value="extreme">
+                Extreme (~{TIER_HORIZON_SECONDS.extreme.fullSeconds}s full)
+              </option>
+              <option value="unhinged">
+                Unhinged (~{TIER_HORIZON_SECONDS.unhinged.fullSeconds}s full)
+              </option>
             </select>
           </label>
           <label className="flex items-center gap-1 text-parch-300">
@@ -859,6 +894,16 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                       : cacheNote?.startsWith("Stopped") || cacheNote?.startsWith("Stopping")
                         ? "Stopped"
                         : "Done"}
+                {solving || stopping ? (
+                  <>
+                    <span className="revo-solver-status__dot" aria-hidden>
+                      ·
+                    </span>
+                    <span className="revo-solver-status__timer font-mono" data-testid="revo-solver-elapsed">
+                      {formatElapsed(elapsedMs)}
+                    </span>
+                  </>
+                ) : null}
               </span>
               <span className="revo-solver-status__meta font-mono">
                 {solverProgress ? (
@@ -1045,7 +1090,12 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               </div>
             ) : null}
             <p className="revo-solver-status__hint">
-              {scoringHint(solverProgress, solverProgress?.agentCount ?? solverAgents, stopping)}
+              {scoringHint(
+                solverProgress,
+                solverProgress?.agentCount ?? solverAgents,
+                stopping,
+                solverTier,
+              )}
             </p>
             {cacheNote ? <p className="revo-solver-status__hint">{cacheNote}</p> : null}
           </div>

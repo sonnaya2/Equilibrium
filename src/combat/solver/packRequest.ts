@@ -5,7 +5,6 @@ import { REGION_IDS, unlockedRegions } from "@/league";
 import type { BlessingPath } from "@/league/blessings";
 import { secondsToTicks } from "../core/ticks";
 import { equippedSetCounts } from "../shared/equipment";
-import { OBJECTIVE_HORIZON_TICKS } from "./objective";
 import {
   defaultSerializableRequest,
   emptyModifierSources,
@@ -22,6 +21,7 @@ import { combatRevolutionBars } from "../data";
 import { revoManagedSlots } from "../data/specs";
 import { engineSpecs } from "../abilities/registry";
 import { clampSolverBarSizes, DEFAULT_MAX_BAR_SIZE, MIN_SOLVER_BAR_SIZE } from "./solutionStore";
+import { TIER_HORIZON_SECONDS } from "./solve";
 
 export interface PackSolverRequestInput {
   stats: CalcStats;
@@ -37,9 +37,9 @@ export interface PackSolverRequestInput {
   includePartial?: boolean;
   includeUnknownAvailability?: boolean;
   disabledAbilityIds?: readonly string[];
-  /** Final exact horizon seconds (default 300). */
+  /** Final exact horizon seconds (default: tier fullSeconds, thorough = 30). */
   durationSeconds?: number;
-  /** Explore horizon seconds (default 60). */
+  /** Explore horizon seconds (default: tier exploreSeconds). */
   exploreSeconds?: number;
   userBar?: readonly string[];
   now?: number;
@@ -126,9 +126,10 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
   // Freeze once per request — never re-sample Date.now() per evaluation.
   const now = input.now ?? Date.now();
   const style = input.style ?? input.loadout.style;
-  const durationSeconds = input.durationSeconds ?? 300;
-  /** Short explore horizon for ranking; full 300s only on finalists. */
-  const exploreSeconds = input.exploreSeconds ?? 30;
+  const tier = input.tier ?? "thorough";
+  const horizons = TIER_HORIZON_SECONDS[tier] ?? TIER_HORIZON_SECONDS.thorough;
+  const durationSeconds = input.durationSeconds ?? horizons.fullSeconds;
+  const exploreSeconds = input.exploreSeconds ?? horizons.exploreSeconds;
   const unrestricted = input.useBuildRegions === false;
   const regions = unrestricted
     ? (input.unlockedRegions ?? [...REGION_IDS])
@@ -144,10 +145,11 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
   return defaultSerializableRequest({
     loadout: packSimBase(input.stats, input.loadout),
     style,
-    durationTicks: Math.max(secondsToTicks(durationSeconds), OBJECTIVE_HORIZON_TICKS),
-    exploreDurationTicks: secondsToTicks(exploreSeconds),
+    // Do not force 300s — thorough finalists score at ~30s game-time.
+    durationTicks: Math.max(1, secondsToTicks(durationSeconds)),
+    exploreDurationTicks: Math.max(1, secondsToTicks(exploreSeconds)),
     seed: input.seed ?? 1,
-    tier: input.tier ?? "thorough",
+    tier,
     profileId: input.profileId ?? "balanced",
     customWeights: input.customWeights,
     minBarSize: sizes.minBarSize,

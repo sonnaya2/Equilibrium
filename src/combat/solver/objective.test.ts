@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  MIN_RANKABLE_HORIZON_TICKS,
   OBJECTIVE_HORIZON_TICKS,
   OBJECTIVE_WINDOWS,
+  objectiveWindowsForHorizon,
   scoreFromDamageByTick,
   scoreSummary,
   sumDamageInTickRange,
@@ -24,6 +26,18 @@ describe("objective windows", () => {
     expect(sumDamageInTickRange(ledger, 300, 500)).toBe(40 + 50);
     // tick 500 is outside the horizon half-open end
     expect(sumDamageInTickRange(ledger, 0, 500)).toBe(10 + 20 + 30 + 40 + 50);
+  });
+
+  it("scales open/mid/steady proportionally for a 30s (50-tick) horizon", () => {
+    const w = objectiveWindowsForHorizon(MIN_RANKABLE_HORIZON_TICKS);
+    expect(w.map((x) => [x.id, x.startTick, x.endTick])).toEqual([
+      ["opening", 0, 10],
+      ["developed", 10, 30],
+      ["steady", 30, 50],
+    ]);
+    // Rankable short horizon scores (not hard-failed as insufficient).
+    const s = scoreFromDamageByTick({ 5: 1000 }, "balanced", undefined, 50);
+    expect(s.ok).toBe(true);
   });
 });
 
@@ -72,11 +86,11 @@ describe("scoreFromDamageByTick", () => {
     expect(s.robustScore).toBeCloseTo(1800);
   });
 
-  it("rejects insufficient horizon", () => {
-    const s = scoreFromDamageByTick({ 0: 1 }, "balanced", undefined, 400);
+  it("rejects insufficient horizon below min rankable", () => {
+    const s = scoreFromDamageByTick({ 0: 1 }, "balanced", undefined, 40);
     expect(s).toEqual({
       ok: false,
-      reason: "insufficient horizon: need 500 ticks, got 400",
+      reason: `insufficient horizon: need ${MIN_RANKABLE_HORIZON_TICKS} ticks, got 40`,
       robustScore: 0,
       profileId: "balanced",
     });

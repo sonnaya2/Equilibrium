@@ -6,7 +6,9 @@ import { revoManagedSlots } from "../data/specs";
 import { buildCandidatePool } from "./candidatePool";
 import type { EvaluateFn, EvalMode, PoolAbility, SolveResult } from "./contracts";
 import { evaluateRevolutionBar } from "./evaluate";
-import { OBJECTIVE_HORIZON_TICKS } from "./objective";
+import { secondsToTicks } from "../core/ticks";
+import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
+import { TIER_HORIZON_SECONDS } from "./solve";
 import { solveAsync, TIER_BUDGETS, type SolvePhaseName } from "./solve";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import { requireSimBase } from "./worker/revive";
@@ -142,12 +144,19 @@ export const solveFromRequest: SolveFn = async (
   for (const a of poolSpecs) abilityMap.set(a.id, a);
   const abilities = [...abilityMap.values()];
 
-  // Explore short (default 50 ticks ≈ 30s). Full robust score only at finalize.
+  // Explore short; finalize uses tier full horizon (thorough ≈ 30s, not 300s).
+  const tierHorizons = TIER_HORIZON_SECONDS[request.tier] ?? TIER_HORIZON_SECONDS.thorough;
   const exploreTicks = Math.max(
     10,
-    request.exploreDurationTicks ?? Math.min(request.durationTicks, 50),
+    request.exploreDurationTicks ??
+      Math.min(request.durationTicks, secondsToTicks(tierHorizons.exploreSeconds)),
   );
-  const fullTicks = Math.max(request.durationTicks, OBJECTIVE_HORIZON_TICKS);
+  const fullTicks = Math.max(
+    MIN_RANKABLE_HORIZON_TICKS,
+    request.durationTicks > 0
+      ? request.durationTicks
+      : secondsToTicks(tierHorizons.fullSeconds),
+  );
   const evaluationBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
 
   const { reviveModifiers, reviveLeague } = await import("./worker/revive");

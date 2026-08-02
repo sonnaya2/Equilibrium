@@ -52,7 +52,9 @@ export { EvalCache, createEvalCache } from "./cache";
 export {
   OBJECTIVE_HORIZON_SECONDS,
   OBJECTIVE_HORIZON_TICKS,
+  MIN_RANKABLE_HORIZON_TICKS,
   OBJECTIVE_WINDOWS,
+  objectiveWindowsForHorizon,
   OBJECTIVE_PRESETS,
   resolveObjectiveWeights,
   validateObjectiveWeights,
@@ -83,6 +85,7 @@ export {
   solveAsync,
   configForTier,
   TIER_BUDGETS,
+  TIER_HORIZON_SECONDS,
   type SolveInput,
   type SolveAsyncHooks,
   type SolvePhaseName,

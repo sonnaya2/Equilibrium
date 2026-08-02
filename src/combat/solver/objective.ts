@@ -10,13 +10,20 @@ import type {
   ScoreableSummary,
 } from "./contracts";
 
-/** Fixed-window robust objective over a 300s / 500-tick horizon. */
+/** Canonical full research horizon (unhinged). Thorough uses a shorter tier horizon. */
 
 export const OBJECTIVE_HORIZON_SECONDS = 300;
 export const OBJECTIVE_HORIZON_TICKS = 500;
 
 /**
- * Half-open tick windows covering [0, 500):
+ * Shortest horizon that still gets three proportional open/mid/steady windows
+ * and may rank for final (validForFinalRanking). Below this → exploratory DPM only.
+ * 50 ticks = 30s wall-clock sim time.
+ */
+export const MIN_RANKABLE_HORIZON_TICKS = 50;
+
+/**
+ * Half-open tick windows for the canonical 500-tick / 300s horizon:
  * opening 0–60s, developed 60–180s, steady 180–300s.
  */
 export const OBJECTIVE_WINDOWS: readonly ObjectiveWindowSpec[] = [
@@ -24,6 +31,36 @@ export const OBJECTIVE_WINDOWS: readonly ObjectiveWindowSpec[] = [
   { id: "developed", startTick: 100, endTick: 300, seconds: 120 },
   { id: "steady", startTick: 300, endTick: 500, seconds: 120 },
 ] as const;
+
+/**
+ * Scale open / mid / steady to any rankable horizon (20% / 40% / 40% of ticks),
+ * matching the classic 60 / 120 / 120 second split on a 300s run.
+ */
+export function objectiveWindowsForHorizon(horizonTicks: number): readonly ObjectiveWindowSpec[] {
+  const h = Math.max(MIN_RANKABLE_HORIZON_TICKS, Math.floor(horizonTicks));
+  if (h === OBJECTIVE_HORIZON_TICKS) return OBJECTIVE_WINDOWS;
+
+  let oEnd = Math.max(1, Math.round(h * 0.2));
+  let dEnd = Math.max(oEnd + 1, Math.round(h * 0.6));
+  if (dEnd >= h) dEnd = h - 1;
+  if (oEnd >= dEnd) oEnd = Math.max(1, dEnd - 1);
+
+  return [
+    { id: "opening", startTick: 0, endTick: oEnd, seconds: oEnd * TICK_SECONDS },
+    {
+      id: "developed",
+      startTick: oEnd,
+      endTick: dEnd,
+      seconds: (dEnd - oEnd) * TICK_SECONDS,
+    },
+    {
+      id: "steady",
+      startTick: dEnd,
+      endTick: h,
+      seconds: (h - dEnd) * TICK_SECONDS,
+    },
+  ] as const;
+}
 
 export const OBJECTIVE_PRESETS: Readonly<
   Record<Exclude<ObjectiveProfileId, "custom">, ObjectiveWeights>
@@ -114,9 +151,12 @@ function fail(profileId: ObjectiveProfileId, reason: string): ObjectiveScoreFail
   return { ok: false, reason, robustScore: 0, profileId };
 }
 
-function windowDpms(damageByTick: Record<number, number>): Record<ObjectiveWindowId, number> {
+function windowDpms(
+  damageByTick: Record<number, number>,
+  windows: readonly ObjectiveWindowSpec[] = OBJECTIVE_WINDOWS,
+): Record<ObjectiveWindowId, number> {
   const out = { opening: 0, developed: 0, steady: 0 };
-  for (const w of OBJECTIVE_WINDOWS) {
+  for (const w of windows) {
     out[w.id] = windowDpmFromDamageByTick(damageByTick, w.startTick, w.endTick);
   }
   return out;
@@ -125,6 +165,7 @@ function windowDpms(damageByTick: Record<number, number>): Record<ObjectiveWindo
 /**
  * Score a damage ledger under a profile.
  * Hard-fails on invalid weights or insufficient horizon when horizonTicks is set.
+ * Horizons below the canonical 500 ticks use proportional open/mid/steady windows.
  */
 export function scoreFromDamageByTick(
   damageByTick: Record<number, number>,
@@ -138,14 +179,18 @@ export function scoreFromDamageByTick(
   const weightError = validateObjectiveWeights(resolved);
   if (weightError) return fail(profileId, weightError);
 
-  if (horizonTicks !== undefined && horizonTicks < OBJECTIVE_HORIZON_TICKS) {
+  if (horizonTicks !== undefined && horizonTicks < MIN_RANKABLE_HORIZON_TICKS) {
     return fail(
       profileId,
-      `insufficient horizon: need ${OBJECTIVE_HORIZON_TICKS} ticks, got ${horizonTicks}`,
+      `insufficient horizon: need ${MIN_RANKABLE_HORIZON_TICKS} ticks, got ${horizonTicks}`,
     );
   }
 
-  const dpm = windowDpms(damageByTick);
+  const windows =
+    horizonTicks === undefined
+      ? OBJECTIVE_WINDOWS
+      : objectiveWindowsForHorizon(horizonTicks);
+  const dpm = windowDpms(damageByTick, windows);
   const windowSum = resolved.opening + resolved.developed + resolved.steady;
   const weightedMean =
     (dpm.opening * resolved.opening +

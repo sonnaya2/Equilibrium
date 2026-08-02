@@ -21,6 +21,20 @@ export const TIER_BUDGETS: Record<SolveTier, number> = {
   unhinged: 8_000,
 };
 
+/**
+ * Per-tier sim horizons (game-time seconds, not wall clock).
+ * Search uses the short explore window; finalize re-scores with fullSeconds.
+ * Thorough keeps full scoring at 30s so ranking is fast and not a 5‑min hang.
+ */
+export const TIER_HORIZON_SECONDS: Record<
+  SolveTier,
+  { exploreSeconds: number; fullSeconds: number }
+> = {
+  thorough: { exploreSeconds: 12, fullSeconds: 30 },
+  extreme: { exploreSeconds: 20, fullSeconds: 90 },
+  unhinged: { exploreSeconds: 30, fullSeconds: 300 },
+};
+
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
   const evaluationBudget = TIER_BUDGETS[tier];
   const scale = evaluationBudget / TIER_BUDGETS.thorough;

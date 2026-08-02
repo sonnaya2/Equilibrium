@@ -11,7 +11,7 @@ import type {
   ScoreEvalMode,
 } from "./contracts";
 import { validateBarEligibility } from "./eligibility";
-import { OBJECTIVE_HORIZON_TICKS, scoreSummary } from "./objective";
+import { MIN_RANKABLE_HORIZON_TICKS, scoreSummary } from "./objective";
 
 export type {
   ObjectiveProfileId,
@@ -26,7 +26,7 @@ function exploratoryDpm(totalExpected: number, durationTicks: number): number {
 }
 
 function modeForHorizon(durationTicks: number): ScoreEvalMode {
-  return durationTicks >= OBJECTIVE_HORIZON_TICKS ? "full" : "search";
+  return durationTicks >= MIN_RANKABLE_HORIZON_TICKS ? "full" : "search";
 }
 
 function failEval(
@@ -56,9 +56,9 @@ function failEval(
  * Exact Revolution evaluation: eligibility → resolve → simulateRevolution → score.
  * Does not search; scores one bar against the real driver.
  *
- * When durationTicks >= OBJECTIVE_HORIZON_TICKS, scores via objective.scoreSummary
- * (opening/developed/steady damageByTick windows). Shorter runs use a single
- * totalExpected DPM fallback marked exploratory:true and validForFinalRanking:false.
+ * When durationTicks >= MIN_RANKABLE_HORIZON_TICKS, scores via objective.scoreSummary
+ * (proportional open/mid/steady windows). Shorter runs use a single totalExpected
+ * DPM fallback marked exploratory:true and validForFinalRanking:false.
  *
  * Robust objective failure is never laundered into a successful robust score.
  */
@@ -139,7 +139,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   }
 
   // Short horizon: exploratory single-window totalExpected DPM (no robust windows).
-  if (durationTicks < OBJECTIVE_HORIZON_TICKS) {
+  if (durationTicks < MIN_RANKABLE_HORIZON_TICKS) {
     const dpm = exploratoryDpm(summary.totalExpected, durationTicks);
     return {
       ok: true,

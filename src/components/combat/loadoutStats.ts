@@ -19,6 +19,8 @@ import {
   equippedPassiveSummaries,
   equippedSetCounts,
   effectiveTumekenPieces,
+  hasEnchantment,
+  hasPassive,
   loadoutFirstNecromancerConjureDamageMult,
   loadoutFirstNecromancerConjureDurationMult,
   loadoutSetCritChance,
@@ -29,6 +31,7 @@ import {
   wieldedOffhandKind,
   type ActiveEquipmentEffects,
 } from "@/combat/shared/equipment";
+import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import {
   prayerBoostedStyleLevel,
   prayerDamageModifier,
@@ -51,6 +54,7 @@ import { isPowerburstOfVitalityActive, type Loadout } from "./useLoadout";
 import {
   equippedRecordIds,
   equipmentStyleDamageBonus,
+  equipmentStyleDamageContributions,
   equippedWeaponTier,
   loadoutWeaponTier,
   loadoutAttackLevel,
@@ -81,6 +85,7 @@ export { equippedSetCounts, setEffectsSummary };
 /** Weapon/offence derivation lives in loadout/weaponConfiguration. */
 export {
   equipmentStyleDamageBonus,
+  equipmentStyleDamageContributions,
   equippedWeaponTier,
   loadoutWeaponTier,
   loadoutAttackLevel,
@@ -128,6 +133,15 @@ export interface CalcStats {
     equipment: number;
     adjustment: number;
   };
+  /** Named static crit sources (rings/sets) for the Setup breakdown. */
+  critChanceSources: readonly { label: string; value: number }[];
+  /**
+   * Situational crit that is modelled at land/cast time but not in the static
+   * total — Channeller's channel stacking, Champion's bleed window, etc.
+   */
+  critConditionalNotes: readonly string[];
+  /** Style-mismatched style-gear (e.g. Channeller's on a melee loadout). */
+  styleMismatchNotes: readonly string[];
   critsDisabled: boolean;
   /** Persistent equipment crit-damage bonus (conditional ability/runtime bonuses excluded). */
   critDamageBonus: number;
@@ -327,6 +341,39 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
   const tumekensPieces = effectiveTumekenPieces(setCounts);
   const equipmentCrit = staticEquipmentCritBonus(equipmentEffects);
+  const critChanceSources: { label: string; value: number }[] = [];
+  if (hasPassive(equipmentEffects, "reaver-ring")) {
+    critChanceSources.push({ label: "Reaver's ring", value: 0.05 });
+  }
+  if (hasPassive(equipmentEffects, "stalker-ring") && equipmentEffects.weaponClass === "bow") {
+    critChanceSources.push({
+      label: hasEnchantment(equipmentEffects, "shadows")
+        ? "Stalker's ring + Shadows"
+        : "Stalker's ring",
+      value: hasEnchantment(equipmentEffects, "shadows") ? 0.04 : 0.03,
+    });
+  }
+  const critConditionalNotes: string[] = [];
+  if (hasPassive(equipmentEffects, "channeller-ring")) {
+    critConditionalNotes.push(
+      hasEnchantment(equipmentEffects, "metaphysics")
+        ? "Channeller's ring: +4% crit chance and +2.5% crit damage per successive channel hit"
+        : "Channeller's ring: +4% crit chance per successive channel hit",
+    );
+  }
+  if (hasPassive(equipmentEffects, "champion-ring")) {
+    critConditionalNotes.push(
+      hasEnchantment(equipmentEffects, "heroism")
+        ? "Champion's ring: +4% crit while a bleed is active; +1.5% crit damage per bleed"
+        : "Champion's ring: +3% crit while a bleed is active",
+    );
+  }
+  if (
+    hasPassive(equipmentEffects, "stalker-ring") &&
+    equipmentEffects.weaponClass !== "bow"
+  ) {
+    critConditionalNotes.push("Stalker's ring: equip a bow for its static crit chance");
+  }
   const critDamage = critDamageStats(level, equipmentCrit.damageBonus);
   const biting =
     loadout.perks.biting > 0
@@ -351,15 +398,47 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   const afterPerksBase = loadoutBase(loadout);
   const resolvedBase = afterPerksBase + leagueBaseAbilityDamageBonus;
   const weaponAccuracy = playerAccuracy(attackLevel, weaponTier);
+  const styleContributions = equipmentStyleDamageContributions(loadout);
+  const styleMismatchNotes = styleContributions
+    .filter((row) => row.blockedByStyle)
+    .map(
+      (row) =>
+        `${row.label}: ${row.blockedByStyle} style damage not applied (loadout is ${loadout.style})`,
+    );
+  const styleGearDamage = equipmentStyleDamageBonus(loadout);
+  // Split weapon tier AD from style Damage (rings/armour) so Channeller's etc. show.
+  const weaponConfigForBase = loadoutWeaponConfig(loadout);
+  const bareWeaponBase =
+    loadout.baseDamage.mode === "manual"
+      ? enteredBase
+      : baseAbilityDamage(loadoutEffectiveDamageLevel(loadout), {
+          ...weaponConfigForBase,
+          styleBonus: 0,
+        });
+  const styleInBase =
+    loadout.baseDamage.mode === "manual" ? 0 : Math.max(0, formulaBase - bareWeaponBase);
   const baseAbilityDamageBreakdown = [
     {
       label: loadout.baseDamage.mode === "manual" ? "Manual" : "Weapon",
-      value: enteredBase,
+      value: loadout.baseDamage.mode === "manual" ? enteredBase : bareWeaponBase,
     },
+    { label: "Style damage", value: styleInBase },
     { label: "Invention perks", value: afterPerksBase - enteredBase },
     { label: "Teragard's Aegis", value: leagueBaseAbilityDamageBonus },
   ];
-  const equipmentDamageBreakdown = [{ label: "Equipped gear", value: equipmentStats.damage }];
+  // Defenders contribute equipment Damage but are weapon-slot (not style b).
+  const defenderEquipmentDamage = Math.max(0, equipmentStats.damage - styleGearDamage);
+  const equipmentDamageBreakdown: { label: string; value: number }[] = [
+    ...styleContributions
+      .filter((row) => row.value !== 0)
+      .map((row) => ({ label: row.label, value: row.value })),
+    ...(defenderEquipmentDamage > 0
+      ? [{ label: "Defender", value: defenderEquipmentDamage }]
+      : []),
+  ];
+  // Style-mismatched style-gear: show held damage with a switch-style cue (value
+  // stays 0 so it does not inflate the total; Breakdown zero-hide would drop
+  // them, so they are listed under a separate summary note instead).
   const accuracyBeforeEffects = weaponAccuracy + energising + accessoryAccuracy;
   const accuracyBreakdown = [
     { label: "Weapon", value: weaponAccuracy },
@@ -473,6 +552,9 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
       equipment: equipmentCrit.chance,
       adjustment: critChance - critSubtotal,
     },
+    critChanceSources,
+    critConditionalNotes,
+    styleMismatchNotes,
     critsDisabled: loadout.perks.equilibrium > 0,
     critDamageBonus: equipmentCrit.damageBonus,
     baseCritDamage: critDamage.baseMultiplier,

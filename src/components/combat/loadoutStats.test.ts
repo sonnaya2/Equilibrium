@@ -685,6 +685,55 @@ describe("loadoutStats", () => {
     expect(styleB).toBe(loadoutWeaponConfig(loadout).styleBonus);
   });
 
+  it("names Channeller's ring in equipment damage and raises magic Base AD", () => {
+    const bare: Loadout = {
+      ...base,
+      style: "magic",
+      equipmentSlots: {},
+      baseDamage: { mode: "automatic", manualValue: 0 },
+    };
+    const ring: Loadout = {
+      ...bare,
+      equipmentSlots: { ring: "item:channelers-ring" },
+    };
+    const bareS = loadoutStats(bare);
+    const ringS = loadoutStats(ring);
+    expect(ringS.equipment.damage).toBe(34.5);
+    expect(ringS.equipmentDamageBreakdown).toEqual(
+      expect.arrayContaining([{ label: "Channeller's ring", value: 34.5 }]),
+    );
+    expect(ringS.base).toBeGreaterThan(bareS.base);
+    expect(ringS.baseAbilityDamageBreakdown.some((row) => row.label === "Style damage")).toBe(
+      true,
+    );
+    expect(ringS.critConditionalNotes.some((n) => /Channeller/i.test(n))).toBe(true);
+  });
+
+  it("flags Channeller's ring when loadout style blocks its damage", () => {
+    const ring: Loadout = {
+      ...base,
+      style: "melee",
+      equipmentSlots: { ring: "item:channelers-ring" },
+    };
+    const stats = loadoutStats(ring);
+    expect(stats.equipment.damage).toBe(0);
+    expect(stats.styleMismatchNotes.some((n) => /Channeller/i.test(n))).toBe(true);
+  });
+
+  it("lists Reaver's ring on crit sources and equipment damage", () => {
+    const ring: Loadout = {
+      ...base,
+      style: "melee",
+      equipmentSlots: { ring: "item:reavers-ring" },
+    };
+    const stats = loadoutStats(ring);
+    expect(stats.equipment.damage).toBe(33);
+    expect(stats.critChanceSources).toEqual(
+      expect.arrayContaining([{ label: "Reaver's ring", value: 0.05 }]),
+    );
+    expect(stats.critChanceBreakdown.equipment).toBeCloseTo(0.05);
+  });
+
   it("sumNonWeaponAccuracy keeps only accessory/armour accuracy (not weapons)", () => {
     expect(
       sumNonWeaponAccuracy([

@@ -245,6 +245,13 @@ export function SetupTab({
                 partialItems={missingDamage}
               >
                 <Breakdown total={stats.equipment.damage} items={stats.equipmentDamageBreakdown} />
+                {stats.styleMismatchNotes.length > 0 ? (
+                  <ul className="summary-notes">
+                    {stats.styleMismatchNotes.map((note) => (
+                      <li key={note}>{note}</li>
+                    ))}
+                  </ul>
+                ) : null}
               </SummaryMetric>
               <SummaryMetric label="Accuracy" value={formatNum(stats.accuracyRating)}>
                 <Breakdown total={stats.accuracyRating} items={stats.accuracyBreakdown} />
@@ -262,13 +269,28 @@ export function SetupTab({
                     { label: "Configured", value: stats.critChanceBreakdown.configured },
                     { label: "Biting", value: stats.critChanceBreakdown.biting },
                     { label: "Set effects", value: stats.critChanceBreakdown.sets },
-                    { label: "Equipment", value: stats.critChanceBreakdown.equipment },
+                    ...stats.critChanceSources,
+                    ...(stats.critChanceSources.length === 0
+                      ? [
+                          {
+                            label: "Equipment",
+                            value: stats.critChanceBreakdown.equipment,
+                          },
+                        ]
+                      : []),
                     {
                       label: stats.critsDisabled ? "Equilibrium" : "Cap adjustment",
                       value: stats.critChanceBreakdown.adjustment,
                     },
                   ]}
                 />
+                {stats.critConditionalNotes.length > 0 ? (
+                  <ul className="summary-notes">
+                    {stats.critConditionalNotes.map((note) => (
+                      <li key={note}>{note}</li>
+                    ))}
+                  </ul>
+                ) : null}
               </SummaryMetric>
               <SummaryMetric
                 label="Crit damage"

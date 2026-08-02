@@ -1559,6 +1559,18 @@ body:has(.combat-screen) {
   line-height: 1.35;
 }
 
+.summary-notes {
+  margin: 0.35rem 0 0;
+  padding: 0 0 0 0.85rem;
+  color: var(--color-parch-300);
+  font-size: 0.62rem;
+  line-height: 1.35;
+}
+
+.summary-notes li {
+  margin: 0.15rem 0;
+}
+
 .gear-layout {
   grid-template-columns: minmax(22rem, 25rem) minmax(31rem, 1fr);
   gap: 0.7rem;

@@ -26,20 +26,46 @@ export function equippedRecordIds(loadout: Loadout): string[] {
   return out;
 }
 
+export interface StyleDamageContribution {
+  id: string;
+  label: string;
+  /** Damage applied for the current loadout style (0 when style-mismatched). */
+  value: number;
+  /** Record's combat style when it blocked the contribution. */
+  blockedByStyle?: string;
+}
+
+/**
+ * Per-piece style Damage for Setup breakdowns. Non-weapon only. Style-mismatched
+ * pieces keep their resolved value on `blockedByStyle` so rings like Channeller's
+ * are visible when the loadout style does not match.
+ */
+export function equipmentStyleDamageContributions(loadout: Loadout): StyleDamageContribution[] {
+  const rows: StyleDamageContribution[] = [];
+  for (const id of equippedRecordIds(loadout)) {
+    const record = equipmentById(id);
+    if (!record?.slot || WEAPON_SLOTS.has(record.slot)) continue;
+    const damage = equipmentRecordDamage(record);
+    if (damage === 0) continue;
+    const styleOk =
+      !record.style || record.style === "hybrid" || record.style === loadout.style;
+    rows.push({
+      id,
+      label: record.name,
+      value: styleOk ? damage : 0,
+      ...(styleOk ? {} : { blockedByStyle: record.style }),
+    });
+  }
+  return rows;
+}
+
 /**
  * Style bonus `b` for ability damage: non-weapon pieces only, same resolve as
  * Setup "Equipment damage" (exact `bonuses.damage` or formula). Weapons never
  * enter here — tier handles them; defenders use half-tier OH, not style b.
  */
 export function equipmentStyleDamageBonus(loadout: Loadout): number {
-  let bonus = 0;
-  for (const id of equippedRecordIds(loadout)) {
-    const record = equipmentById(id);
-    if (!record?.slot || WEAPON_SLOTS.has(record.slot)) continue;
-    if (record.style && record.style !== "hybrid" && record.style !== loadout.style) continue;
-    bonus += equipmentRecordDamage(record);
-  }
-  return bonus;
+  return equipmentStyleDamageContributions(loadout).reduce((sum, row) => sum + row.value, 0);
 }
 
 /** Equipped twohand or mainhand tier when tagged on the record. */

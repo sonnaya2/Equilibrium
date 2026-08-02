@@ -1,23 +1,82 @@
 "use client";
 
+import {
+  equipmentSetById,
+  setCritChanceFromDef,
+  setEffectsSummary,
+} from "@/combat/shared/equipment";
 import type { CombatStyle } from "@/combat/types";
-import type { Loadout, StyleCurseChoice } from "./useLoadout";
+import { GameIcon } from "../GameIcon";
+import type { Loadout, OverloadChoice, StyleCurseChoice } from "./useLoadout";
+
+/** Wiki art already published under public/game — one consumer, so no gameArt.ts entry. */
+const CURSE_ICON = (id: Exclude<StyleCurseChoice, "none">) =>
+  `/game/combat/prayers/ancient-curses/${id}.webp`;
+const VULNERABILITY_ICON = "/game/upgrades/combat-utility/vulnerability-bomb.webp";
+const OVERLOAD_ICON: Record<Exclude<OverloadChoice, "none">, string> = {
+  overload: "/game/upgrades/skilling-production/overload.webp",
+  supreme: "/game/upgrades/skilling-production/supreme-overload-potion.webp",
+  elder: "/game/upgrades/skilling-production/elder-overload-potion.webp",
+};
 
 const CURSE_OPTIONS: Array<{
-  value: StyleCurseChoice;
+  value: Exclude<StyleCurseChoice, "none">;
   label: string;
-  style?: CombatStyle;
+  effect: string;
+  style: CombatStyle;
 }> = [
-  { value: "none", label: "None" },
-  { value: "turmoil", label: "Turmoil (melee +10%)", style: "melee" },
-  { value: "anguish", label: "Anguish (ranged +10%)", style: "ranged" },
-  { value: "torment", label: "Torment (magic +10%)", style: "magic" },
-  { value: "sorrow", label: "Sorrow (necro +10%)", style: "necromancy" },
-  { value: "malevolence", label: "Malevolence (melee +12%)", style: "melee" },
-  { value: "desolation", label: "Desolation (ranged +12%)", style: "ranged" },
-  { value: "affliction", label: "Affliction (magic +12%)", style: "magic" },
-  { value: "ruination", label: "Ruination (necro +12%)", style: "necromancy" },
+  { value: "turmoil", label: "Turmoil", effect: "+10% melee damage", style: "melee" },
+  { value: "anguish", label: "Anguish", effect: "+10% ranged damage", style: "ranged" },
+  { value: "torment", label: "Torment", effect: "+10% magic damage", style: "magic" },
+  { value: "sorrow", label: "Sorrow", effect: "+10% necromancy damage", style: "necromancy" },
+  { value: "malevolence", label: "Malevolence", effect: "+12% melee damage", style: "melee" },
+  { value: "desolation", label: "Desolation", effect: "+12% ranged damage", style: "ranged" },
+  { value: "affliction", label: "Affliction", effect: "+12% magic damage", style: "magic" },
+  { value: "ruination", label: "Ruination", effect: "+12% necromancy damage", style: "necromancy" },
 ];
+
+const OVERLOAD_OPTIONS: Array<{
+  value: Exclude<OverloadChoice, "none">;
+  label: string;
+  effect: string;
+}> = [
+  { value: "overload", label: "Overload", effect: "+15% of level +3 to every combat stat" },
+  { value: "supreme", label: "Supreme overload", effect: "+16% of level +4 to every combat stat" },
+  { value: "elder", label: "Elder overload", effect: "+17% of level +5 to every combat stat" },
+];
+
+/** Icon toggle. Name and effect live in the tooltip; sr-only text carries the a11y name. */
+function BuffTile({
+  icon,
+  label,
+  effect,
+  pressed,
+  onClick,
+}: {
+  icon: string | null;
+  label: string;
+  effect: string;
+  pressed: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={pressed}
+      className={`icon-tile${icon ? "" : " icon-tile--text"}`}
+    >
+      {icon ? <GameIcon src={icon} size={34} className="icon-tile__icon" /> : <span>None</span>}
+      <span className="sr-only">
+        {label} — {effect}
+      </span>
+      <span className="icon-tip" role="tooltip">
+        <strong>{label}</strong>
+        {effect}
+      </span>
+    </button>
+  );
+}
 
 /** Player-toggled buffs — wiki numbers only. */
 export function BuffsPanel({
@@ -29,71 +88,129 @@ export function BuffsPanel({
 }) {
   // Prefer same-style curses, but keep the active pick visible even if style mismatched.
   const curseOptions = CURSE_OPTIONS.filter(
-    (opt) =>
-      opt.value === "none" || opt.style === loadout.style || opt.value === loadout.buffs.styleCurse,
+    (opt) => opt.style === loadout.style || opt.value === loadout.buffs.styleCurse,
   );
+
+  const setBuffs = (patch: Partial<Loadout["buffs"]>) =>
+    setLoadout({ ...loadout, buffs: { ...loadout.buffs, ...patch } });
+
+  const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
 
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
-      <p className="mt-1 text-xs text-parch-300">Overloads affect accuracy only.</p>
-      <div className="loadout-fields mt-3">
-        <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
-          <input
-            type="checkbox"
-            checked={loadout.buffs.vulnerability}
-            onChange={(event) =>
-              setLoadout({
-                ...loadout,
-                buffs: { ...loadout.buffs, vulnerability: event.target.checked },
-              })
-            }
+      <p className="mt-1 text-xs text-parch-300">
+        Hover an icon for its effect. Overloads boost every combat stat; curses are damage only.
+      </p>
+
+      <div className="buff-group mt-3" role="group" aria-label="Target debuff">
+        <h3 className="buff-group__title">Debuff</h3>
+        <div className="icon-tile-grid">
+          <label className={`icon-tile${loadout.buffs.vulnerability ? " is-on" : ""}`}>
+            {/* Real checkbox, transparent over the whole tile: keeps the a11y name e2e
+                pins while staying a full-size click target. */}
+            <input
+              type="checkbox"
+              className="icon-tile__input"
+              checked={loadout.buffs.vulnerability}
+              onChange={(event) => setBuffs({ vulnerability: event.target.checked })}
+            />
+            <GameIcon src={VULNERABILITY_ICON} size={34} className="icon-tile__icon" />
+            <span className="sr-only">Vulnerability — +10% damage taken</span>
+            <span className="icon-tip" role="tooltip">
+              <strong>Vulnerability</strong>+10% damage taken by the target
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div className="buff-group mt-3" role="group" aria-label="Style curse">
+        <h3 className="buff-group__title">Style curse</h3>
+        <div className="icon-tile-grid">
+          <BuffTile
+            icon={null}
+            label="No curse"
+            effect="No prayer damage bonus"
+            pressed={loadout.buffs.styleCurse === "none"}
+            onClick={() => setBuffs({ styleCurse: "none" })}
           />
-          Vulnerability (+10% damage taken)
-        </label>
-        <label className="grid grid-cols-[1fr_140px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-100">
-          <span>Style curse</span>
-          <select
-            value={loadout.buffs.styleCurse}
-            onChange={(event) =>
-              setLoadout({
-                ...loadout,
-                buffs: {
-                  ...loadout.buffs,
-                  styleCurse: event.target.value as StyleCurseChoice,
-                },
-              })
-            }
-            className="w-full border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
-          >
-            {curseOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="grid grid-cols-[1fr_140px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-100">
-          <span>Overload</span>
-          <select
-            value={loadout.buffs.overload}
-            onChange={(event) =>
-              setLoadout({
-                ...loadout,
-                buffs: {
-                  ...loadout.buffs,
-                  overload: event.target.value as typeof loadout.buffs.overload,
-                },
-              })
-            }
-            className="w-full border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
-          >
-            <option value="none">None</option>
-            <option value="overload">Overload</option>
-            <option value="supreme">Supreme overload</option>
-            <option value="elder">Elder overload</option>
-          </select>
-        </label>
+          {curseOptions.map((opt) => (
+            <BuffTile
+              key={opt.value}
+              icon={CURSE_ICON(opt.value)}
+              label={opt.label}
+              effect={opt.effect}
+              pressed={loadout.buffs.styleCurse === opt.value}
+              onClick={() =>
+                setBuffs({
+                  styleCurse: loadout.buffs.styleCurse === opt.value ? "none" : opt.value,
+                })
+              }
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="buff-group mt-3" role="group" aria-label="Overload">
+        <h3 className="buff-group__title">Overload</h3>
+        <div className="icon-tile-grid">
+          <BuffTile
+            icon={null}
+            label="No overload"
+            effect="Unboosted combat stats"
+            pressed={loadout.buffs.overload === "none"}
+            onClick={() => setBuffs({ overload: "none" })}
+          />
+          {OVERLOAD_OPTIONS.map((opt) => (
+            <BuffTile
+              key={opt.value}
+              icon={OVERLOAD_ICON[opt.value]}
+              label={opt.label}
+              effect={opt.effect}
+              pressed={loadout.buffs.overload === opt.value}
+              onClick={() =>
+                setBuffs({ overload: loadout.buffs.overload === opt.value ? "none" : opt.value })
+              }
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="buff-group mt-3">
+        <h3 className="buff-group__title">Set effects</h3>
+        {sets.length === 0 ? (
+          <p className="mt-1 text-xs text-parch-300">
+            No armour set pieces equipped — pick gear on the Gear tab.
+          </p>
+        ) : (
+          <ul className="set-effect-list mt-1">
+            {sets.map((s) => {
+              const def = equipmentSetById(s.setId);
+              const crit = def ? setCritChanceFromDef(def, s.pieces) : 0;
+              return (
+                <li key={s.setId} className="set-effect-row" tabIndex={0}>
+                  <span className="text-parch-50">{s.label}</span>
+                  <span className="font-mono text-parch-300">
+                    {s.pieces}/{def?.maxPieces ?? s.pieces} pieces
+                  </span>
+                  <span className="icon-tip" role="tooltip">
+                    <strong>{s.label}</strong>
+                    <ul>
+                      {crit > 0 ? (
+                        <li>Active: +{Math.round(crit * 1000) / 10}% critical strike chance</li>
+                      ) : null}
+                      {def?.facts?.length ? (
+                        def.facts.map((fact) => <li key={fact}>{fact}</li>)
+                      ) : crit > 0 ? null : (
+                        <li>No combat set bonus sourced.</li>
+                      )}
+                    </ul>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </div>
   );

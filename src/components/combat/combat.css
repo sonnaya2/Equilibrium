@@ -606,6 +606,382 @@ body:has(.combat-screen) {
   border-right: 1px solid rgb(133 98 58 / 35%);
 }
 
+.buff-group__title {
+  color: var(--combat-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.icon-tile-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+
+/* Same tile vocabulary as .ability-bar-slot, sized for a bare icon. */
+.icon-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  padding: 0.3rem;
+  border: 1px solid var(--combat-gold-mid);
+  border-radius: 1px;
+  background: linear-gradient(145deg, rgb(255 245 211 / 4%), transparent 50%), var(--combat-panel);
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 62%),
+    inset 0 1px 0 rgb(201 154 89 / 10%);
+  cursor: pointer;
+}
+
+.icon-tile__input {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.icon-tile__icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Muted, not hidden — the icon is the only label, so it stays identifiable when off. */
+  filter: grayscale(50%);
+  opacity: 0.72;
+}
+
+/* Fallback for entries with no synced wiki icon — the name is the tile. */
+.icon-tile--text {
+  padding: 0.2rem;
+  color: var(--combat-muted);
+  font-size: 0.58rem;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.icon-tile--text.is-on,
+.icon-tile--text[aria-pressed="true"] {
+  color: var(--combat-gold-bright);
+}
+
+.icon-tile:hover {
+  border-color: var(--combat-gold-bright);
+}
+
+.icon-tile:hover .icon-tile__icon {
+  filter: none;
+  opacity: 1;
+}
+
+.icon-tile[aria-pressed="true"],
+.icon-tile.is-on,
+.icon-tile:has(input:checked) {
+  border-color: var(--combat-gold-bright);
+  background: var(--combat-inset);
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 62%),
+    0 0 0 1px color-mix(in srgb, var(--combat-gold-bright) 45%, transparent);
+}
+
+.icon-tile[aria-pressed="true"] .icon-tile__icon,
+.icon-tile.is-on .icon-tile__icon,
+.icon-tile:has(input:checked) .icon-tile__icon {
+  filter: none;
+  opacity: 1;
+}
+
+/* Rank badge on stepper tiles. Muted at 0 so "off" reads at a glance. */
+.icon-tile__rank {
+  position: absolute;
+  right: 1px;
+  bottom: 0;
+  padding: 0 0.15rem;
+  background: color-mix(in srgb, var(--combat-void) 82%, transparent);
+  color: var(--combat-muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.55rem;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.icon-tile.is-on .icon-tile__rank {
+  color: var(--combat-gold-bright);
+}
+
+.stats-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 0.9rem 1.1rem;
+  align-items: start;
+}
+
+.loadout-select,
+.loadout-toggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.62rem 0.75rem;
+  border-bottom: 1px solid rgb(133 98 58 / 35%);
+  color: var(--combat-muted);
+  font-size: 0.75rem;
+}
+
+.combat-screen .loadout-select select {
+  width: 100%;
+  padding-inline: 0.4rem;
+  font-size: 0.78rem;
+}
+
+.loadout-toggle input {
+  justify-self: start;
+}
+
+/* Result rows read as output: gold value, no input chrome. */
+.stats-derived {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.62rem 0.75rem;
+  background: color-mix(in srgb, var(--combat-gold-dim) 16%, transparent);
+}
+
+.stats-derived__label {
+  display: flex;
+  flex-direction: column;
+  color: var(--combat-muted);
+  font-size: 0.75rem;
+}
+
+.stats-derived__note {
+  color: var(--combat-gold);
+  font-size: 0.66rem;
+  font-style: normal;
+}
+
+.stats-derived__value {
+  color: var(--combat-gold-bright);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Perks left, gizmo ledger right, one gold rule between — same frame. */
+.perks-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
+  gap: 1.1rem;
+}
+
+.perks-gizmos {
+  padding-left: 1.1rem;
+  border-left: 1px solid var(--combat-gold-dim);
+}
+
+@media (width < 60rem) {
+  .perks-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .perks-gizmos {
+    padding-top: 0.9rem;
+    padding-left: 0;
+    border-top: 1px solid var(--combat-gold-dim);
+    border-left: 0;
+  }
+}
+
+.gizmo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.gizmo-card {
+  padding: 0.4rem 0.5rem 0.45rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-inset) 86%, transparent);
+}
+
+.gizmo-card__title {
+  color: var(--combat-muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.gizmo-perk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.1rem 1.1rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+
+.gizmo-perk__name {
+  overflow: hidden;
+  color: var(--combat-text);
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combat-screen .gizmo-perk__rank {
+  min-height: 1.5rem;
+  padding: 0 0.25rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  text-align: right;
+}
+
+.gizmo-perk__remove {
+  color: var(--combat-muted);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.gizmo-perk__remove:hover {
+  color: var(--combat-gold-bright);
+}
+
+.combat-screen .gizmo-card__add {
+  width: 100%;
+  min-height: 1.6rem;
+  margin-top: 0.35rem;
+  padding: 0 0.3rem;
+  font-size: 0.68rem;
+}
+
+/* Still counted by the engine, just not relevant to the picked style. */
+.icon-tile.is-off-style {
+  border-style: dashed;
+  border-color: var(--combat-ultimate-dim);
+}
+
+.icon-tip__warn {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--combat-ultimate);
+  font-size: 0.66rem;
+  font-style: normal;
+}
+
+.perk-flag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+}
+
+.perk-flag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--combat-text);
+  font-size: 0.72rem;
+}
+
+.icon-tip__hint {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--combat-muted);
+  font-size: 0.66rem;
+  font-style: normal;
+}
+
+/* :has(input:focus-visible), not :focus-within — the latter also matches the
+   focus a mouse click leaves behind, pinning tooltips open after every pick. */
+.icon-tile:has(input:focus-visible),
+.icon-tile:focus-visible {
+  outline: 1px solid var(--combat-gold-bright);
+  outline-offset: 1px;
+}
+
+.set-effect-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-inset) 86%, transparent);
+}
+
+.set-effect-row {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.75rem;
+}
+
+.set-effect-row + .set-effect-row {
+  border-top: 1px solid rgb(133 98 58 / 35%);
+}
+
+.set-effect-row:hover,
+.set-effect-row:focus-visible {
+  outline: none;
+  background: rgb(255 255 255 / 2%);
+}
+
+/* Mechanics mirror .build-board__tip — hover/focus reveal, never hit-testable. */
+.icon-tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: 40;
+  display: none;
+  width: max-content;
+  max-width: 22rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-panel);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 65%);
+  color: var(--combat-text);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.icon-tip strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--combat-gold-bright);
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+}
+
+.icon-tip ul {
+  margin: 0;
+  padding-left: 0.95rem;
+  list-style: disc;
+}
+
+.icon-tip li + li {
+  margin-top: 0.15rem;
+}
+
+.icon-tile:hover .icon-tip,
+.icon-tile:has(input:focus-visible) .icon-tip,
+.icon-tile:focus-visible .icon-tip,
+.set-effect-row:hover .icon-tip,
+.set-effect-row:focus-visible .icon-tip {
+  display: block;
+}
+
 .setup-style-button {
   justify-content: center;
   min-width: 7rem;

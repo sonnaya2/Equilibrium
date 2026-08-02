@@ -174,7 +174,7 @@ export function loadoutDamageLevel(loadout: Loadout): number {
   return clampLevel(loadout.style === "melee" ? loadout.strengthLevel : loadout.level);
 }
 
-function loadoutOverloadTier(loadout: Loadout): OverloadTier | null {
+export function loadoutOverloadTier(loadout: Loadout): OverloadTier | null {
   return loadout.buffs?.overload && loadout.buffs.overload !== "none"
     ? (loadout.buffs.overload as OverloadTier)
     : null;

@@ -74,6 +74,23 @@ export interface LoadoutPerks {
   plantedFeet: boolean;
 }
 
+/**
+ * Perk ranks that can be placed on a gizmo. Placement is organisational only —
+ * the engine reads `perks`, never `gizmos`. The wiki perk/gizmo compatibility
+ * table is not in this repo, so slots accept whatever the player says they own.
+ */
+export type PerkRankKey = {
+  [K in keyof LoadoutPerks]: LoadoutPerks[K] extends number ? K : never;
+}[keyof LoadoutPerks];
+
+export const GIZMO_SLOTS = ["weapon1", "weapon2", "armour1", "armour2"] as const;
+export type GizmoSlotId = (typeof GIZMO_SLOTS)[number];
+
+/** Up to two perks per gizmo, as in game. */
+export const GIZMO_CAPACITY = 2;
+
+export type GizmoLayout = Partial<Record<GizmoSlotId, PerkRankKey[]>>;
+
 export type OverloadChoice = "none" | "overload" | "supreme" | "elder";
 export type StyleCurseChoice =
   | "none"
@@ -116,6 +133,8 @@ export interface Loadout {
   critChance: number;
   target: LoadoutTarget | null;
   perks: LoadoutPerks;
+  /** Which perks the player keeps on which gizmo. Display grouping, not engine input. */
+  gizmos: GizmoLayout;
   buffs: LoadoutBuffs;
   equipmentSlots: Partial<Record<EquipmentSlot, string | null>>;
   /** Derived: slotted ids + unlock pins. */
@@ -160,6 +179,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     insideSunshine: false,
     plantedFeet: false,
   },
+  gizmos: {},
   buffs: {
     vulnerability: false,
     styleCurse: "none",
@@ -184,6 +204,63 @@ const STYLE_CURSES: StyleCurseChoice[] = [
   "ruination",
 ];
 const OVERLOADS: OverloadChoice[] = ["none", "overload", "supreme", "elder"];
+const GIZMO_SLOT_SET = new Set<string>(GIZMO_SLOTS);
+/** Rank-valued perk keys, from the default loadout so the two never drift. */
+export const PERK_RANK_KEYS = Object.entries(DEFAULT_LOADOUT.perks)
+  .filter(([, value]) => typeof value === "number")
+  .map(([key]) => key as PerkRankKey);
+const PERK_RANK_KEY_SET = new Set<string>(PERK_RANK_KEYS);
+
+/** Slot holding a perk, or null. A perk lives on at most one gizmo. */
+export function gizmoSlotOf(gizmos: GizmoLayout, perk: PerkRankKey): GizmoSlotId | null {
+  for (const slot of GIZMO_SLOTS) {
+    if (gizmos[slot]?.includes(perk)) return slot;
+  }
+  return null;
+}
+
+/** Place a perk on a gizmo, removing it from any other slot. Full slots reject. */
+export function placePerkOnGizmo(loadout: Loadout, slot: GizmoSlotId, perk: PerkRankKey): Loadout {
+  const gizmos: GizmoLayout = {};
+  for (const id of GIZMO_SLOTS) {
+    const held = (loadout.gizmos?.[id] ?? []).filter((p) => p !== perk);
+    if (held.length) gizmos[id] = held;
+  }
+  const target = gizmos[slot] ?? [];
+  if (target.length >= GIZMO_CAPACITY) return loadout;
+  gizmos[slot] = [...target, perk];
+  return { ...loadout, gizmos };
+}
+
+export function removePerkFromGizmos(loadout: Loadout, perk: PerkRankKey): Loadout {
+  const gizmos: GizmoLayout = {};
+  for (const id of GIZMO_SLOTS) {
+    const held = (loadout.gizmos?.[id] ?? []).filter((p) => p !== perk);
+    if (held.length) gizmos[id] = held;
+  }
+  return { ...loadout, gizmos };
+}
+
+function normalizeGizmos(raw: unknown): GizmoLayout {
+  if (typeof raw !== "object" || raw === null) return {};
+  const out: GizmoLayout = {};
+  // A perk on two gizmos would double its rank in the readout — first slot wins.
+  const claimed = new Set<string>();
+  for (const slot of GIZMO_SLOTS) {
+    const value = (raw as Record<string, unknown>)[slot];
+    if (!GIZMO_SLOT_SET.has(slot) || !Array.isArray(value)) continue;
+    const held: PerkRankKey[] = [];
+    for (const entry of value) {
+      if (typeof entry !== "string") continue;
+      if (!PERK_RANK_KEY_SET.has(entry) || claimed.has(entry)) continue;
+      claimed.add(entry);
+      held.push(entry as PerkRankKey);
+      if (held.length >= GIZMO_CAPACITY) break;
+    }
+    if (held.length) out[slot] = held;
+  }
+  return out;
+}
 
 const clampRank = (value: unknown, max: number) =>
   Number.isFinite(value) ? Math.min(Math.max(0, Math.floor(Number(value))), max) : 0;
@@ -455,6 +532,7 @@ export function normalizeLoadout(value: unknown): Loadout {
       insideSunshine: rawPerks.insideSunshine === true,
       plantedFeet: rawPerks.plantedFeet === true,
     },
+    gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
     buffs: {
       vulnerability: rawBuffs.vulnerability === true,
       styleCurse: STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)

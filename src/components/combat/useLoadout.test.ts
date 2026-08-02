@@ -3,8 +3,11 @@ import {
   DEFAULT_LOADOUT,
   clearEquipment,
   equipInSlot,
+  gizmoSlotOf,
   normalizeLoadout,
+  placePerkOnGizmo,
   pruneUnknownEquipment,
+  removePerkFromGizmos,
   unlockOnlyIds,
   withAttackLevel,
   withCombatStyle,
@@ -249,5 +252,50 @@ describe("level helpers", () => {
     expect(str.strengthLevel).toBe(115);
     expect(str.level).toBe(115);
     expect(str.attackLevel).toBe(99);
+  });
+});
+
+describe("gizmo layout", () => {
+  it("places a perk and moves it between gizmos rather than duplicating", () => {
+    const placed = placePerkOnGizmo(DEFAULT_LOADOUT, "weapon1", "aftershock");
+    expect(placed.gizmos.weapon1).toEqual(["aftershock"]);
+    expect(gizmoSlotOf(placed.gizmos, "aftershock")).toBe("weapon1");
+
+    const moved = placePerkOnGizmo(placed, "armour1", "aftershock");
+    expect(moved.gizmos.weapon1).toBeUndefined();
+    expect(moved.gizmos.armour1).toEqual(["aftershock"]);
+  });
+
+  it("rejects a third perk on a full gizmo", () => {
+    let loadout = placePerkOnGizmo(DEFAULT_LOADOUT, "weapon1", "aftershock");
+    loadout = placePerkOnGizmo(loadout, "weapon1", "equilibrium");
+    const full = placePerkOnGizmo(loadout, "weapon1", "biting");
+    expect(full.gizmos.weapon1).toEqual(["aftershock", "equilibrium"]);
+    expect(gizmoSlotOf(full.gizmos, "biting")).toBeNull();
+  });
+
+  it("removePerkFromGizmos clears the perk but keeps its rank", () => {
+    const placed = placePerkOnGizmo({ ...DEFAULT_LOADOUT }, "armour2", "biting");
+    const cleared = removePerkFromGizmos(placed, "biting");
+    expect(cleared.gizmos.armour2).toBeUndefined();
+    expect(cleared.perks.biting).toBe(DEFAULT_LOADOUT.perks.biting);
+  });
+
+  it("normalizes stored gizmos: unknown keys, flags, overflow and duplicates drop", () => {
+    const { gizmos } = normalizeLoadout({
+      gizmos: {
+        weapon1: ["aftershock", "not-a-perk", "eliteTectonic", "biting", "equilibrium"],
+        // Duplicate of a perk already claimed by weapon1 — first slot wins.
+        armour1: ["aftershock", "lunging"],
+        madeUpSlot: ["biting"],
+      },
+    });
+    expect(gizmos.weapon1).toEqual(["aftershock", "biting"]);
+    expect(gizmos.armour1).toEqual(["lunging"]);
+    expect(Object.keys(gizmos)).toEqual(["weapon1", "armour1"]);
+  });
+
+  it("a loadout stored before gizmos existed normalizes to an empty layout", () => {
+    expect(normalizeLoadout({ style: "magic" }).gizmos).toEqual({});
   });
 });

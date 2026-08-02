@@ -38,6 +38,7 @@ describe("encodeBuild / decodeBuild", () => {
       elective: ["desert"],
       relics: {},
       blessingPicks: ["Order"],
+      blessingSelections: [{ tier: 1, blessingId: "teragards-aegis" }],
       blessingResetsUsed: 3,
     });
   });

@@ -2,6 +2,7 @@ import { ticksToSeconds } from "@/combat/core/ticks";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "@/combat/league/ruleset";
+import { barkscalesGraspNote } from "@/combat/league/barkscales";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -97,12 +98,7 @@ export function CalculationAssumptions({
       : []),
     ...(barkscalesPicked
       ? ([
-          [
-            "Barkscales",
-            stats.barkscales.support === "scenario-dependent"
-              ? `No outgoing damage calculated — needs ${stats.barkscales.missingInputs.join(", ").toLowerCase()}`
-              : `${stats.barkscales.triggers} Grasp triggers · one per ${stats.barkscales.secondsPerTrigger}s (scenario only — not in rotation damage)`,
-          ],
+          ["Barkscales", barkscalesGraspNote(stats.barkscales)],
           [
             "Barkscales mitigation",
             `−${formatNumber(stats.barkscales.perHit)} per incoming hit · ${stats.barkscales.hitsPerTrigger} to trigger (incoming damage only)`,

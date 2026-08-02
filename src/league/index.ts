@@ -8,7 +8,16 @@
 
 import regionsData from "#shard/league/regions.json";
 import relicsData from "#shard/league/relics.json";
-import { BLESSING_PATHS, BLESSING_RESET_COUNT, PATH_TIERS, type BlessingPath } from "./blessings";
+import { normalizeBlessingSelections } from "./blessingSchema";
+import {
+  BLESSING_PATHS,
+  BLESSING_RESET_COUNT,
+  PATH_TIERS,
+  blessingById,
+  blessingChoice,
+  type BlessingPath,
+  type StableBlessingSelection,
+} from "./blessings";
 
 /** Revealed tiers with published choices only — unrevealed empty tiers stay open. */
 const REVEALED_RELIC_NAMES_BY_TIER: ReadonlyMap<string, ReadonlySet<string>> = (() => {
@@ -62,8 +71,16 @@ export interface BuildState {
   elective: RegionId[];
   /** Relic tier (as string key) -> chosen relic name. Only revealed tiers have choices. */
   relics: Record<string, string>;
-  /** Path picks in tier order, contiguous — god tiers grant, they are never picked. */
+  /**
+   * Path picks in PATH_TIERS order, contiguous — god tiers grant, they are never picked.
+   * Derived from `blessingSelections` so combat and god derivation stay path-based.
+   */
   blessingPicks: BlessingPath[];
+  /**
+   * Stable persistence form: tier + blessing id. Survives record reorder; invalid /
+   * duplicate / tier-mismatched ids are pruned on normalize.
+   */
+  blessingSelections: StableBlessingSelection[];
   blessingResetsUsed: number;
 }
 
@@ -74,7 +91,65 @@ export const MAX_RELIC_KEYS = 16;
 export const MAX_RELIC_NAME_LEN = 64;
 
 export function emptyBuild(): BuildState {
-  return { elective: [], relics: {}, blessingPicks: [], blessingResetsUsed: 0 };
+  return {
+    elective: [],
+    relics: {},
+    blessingPicks: [],
+    blessingSelections: [],
+    blessingResetsUsed: 0,
+  };
+}
+
+function isBlessingPath(value: unknown): value is BlessingPath {
+  return typeof value === "string" && (BLESSING_PATHS as readonly string[]).includes(value);
+}
+
+/** Resolve blessing picks from stable selections and/or legacy path arrays. */
+export function resolveBlessingPersistence(raw: {
+  blessingPicks?: unknown;
+  blessingSelections?: unknown;
+}): { blessingPicks: BlessingPath[]; blessingSelections: StableBlessingSelection[] } {
+  const resolve = {
+    pathTiers: PATH_TIERS,
+    choiceAt: (tier: number, path: string) => {
+      if (!isBlessingPath(path)) return undefined;
+      const choice = blessingChoice(tier, path);
+      return choice ? { id: choice.id as string, path: choice.path as string } : undefined;
+    },
+    choiceById: (id: string) => {
+      const choice = blessingById(id);
+      return choice
+        ? { id: choice.id as string, path: choice.path as string, tier: choice.tier }
+        : undefined;
+    },
+    isPath: (value: unknown): value is string => isBlessingPath(value),
+  };
+  // Prefer stable selections when present; fall back to legacy path arrays.
+  const primary =
+    Array.isArray(raw.blessingSelections) && raw.blessingSelections.length > 0
+      ? raw.blessingSelections
+      : raw.blessingPicks;
+  const { selections, paths } = normalizeBlessingSelections(primary, resolve);
+  const legacyPathPicks = Array.isArray(raw.blessingPicks)
+    ? (raw.blessingPicks as unknown[]).filter(isBlessingPath).slice(0, PATH_TIERS.length)
+    : null;
+  // Prefer the longer legacy path prefix (unrevealed tiers), then re-materialize
+  // selections from that list so the two fields never diverge.
+  const blessingPicks = (
+    legacyPathPicks && legacyPathPicks.length > paths.length ? legacyPathPicks : paths
+  ) as BlessingPath[];
+  const blessingSelections: StableBlessingSelection[] = [];
+  blessingPicks.forEach((path, index) => {
+    const tier = PATH_TIERS[index];
+    if (tier === undefined) return;
+    const choice = blessingChoice(tier, path);
+    if (choice) blessingSelections.push({ tier, blessingId: choice.id });
+  });
+  return { blessingPicks, blessingSelections };
+}
+
+function selectionsFromPaths(paths: readonly BlessingPath[]): StableBlessingSelection[] {
+  return resolveBlessingPersistence({ blessingPicks: paths }).blessingSelections;
 }
 
 /** Tolerates corrupt or stale persisted shapes — anything unrecognised drops out. */
@@ -110,12 +185,10 @@ export function normalizeBuild(value: unknown): BuildState {
     }
   }
 
-  const picks = (value as { blessingPicks?: unknown }).blessingPicks;
-  if (Array.isArray(picks)) {
-    base.blessingPicks = picks
-      .filter((p): p is BlessingPath => (BLESSING_PATHS as readonly string[]).includes(p))
-      .slice(0, PATH_TIERS.length);
-  }
+  const raw = value as { blessingPicks?: unknown; blessingSelections?: unknown };
+  const resolved = resolveBlessingPersistence(raw);
+  base.blessingPicks = resolved.blessingPicks;
+  base.blessingSelections = resolved.blessingSelections;
 
   const resets = (value as { blessingResetsUsed?: unknown }).blessingResetsUsed;
   if (typeof resets === "number" && Number.isFinite(resets)) {
@@ -165,7 +238,11 @@ export function pickBlessing(state: BuildState, pathTier: number, path: Blessing
   const picks = state.blessingPicks.slice();
   if (picks[idx] === path) picks.length = idx;
   else picks[idx] = path;
-  return { ...state, blessingPicks: picks };
+  return {
+    ...state,
+    blessingPicks: picks,
+    blessingSelections: selectionsFromPaths(picks),
+  };
 }
 
 /** Wipes blessing picks and spends one reset — no-op when none left or nothing to reset. */
@@ -173,7 +250,12 @@ export function resetBlessings(state: BuildState): BuildState {
   if (state.blessingResetsUsed >= BLESSING_RESET_COUNT || state.blessingPicks.length === 0) {
     return state;
   }
-  return { ...state, blessingPicks: [], blessingResetsUsed: state.blessingResetsUsed + 1 };
+  return {
+    ...state,
+    blessingPicks: [],
+    blessingSelections: [],
+    blessingResetsUsed: state.blessingResetsUsed + 1,
+  };
 }
 
 export function blessingResetsLeft(state: BuildState): number {

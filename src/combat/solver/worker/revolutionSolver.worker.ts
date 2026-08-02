@@ -49,37 +49,55 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
       return;
     }
 
+    const isDead = () => cancelled.has(requestId) || runningId !== requestId;
+
     const options: SolveRuntimeOptions = {
       onProgress: (progress: SolverProgress) => {
-        if (cancelled.has(requestId) || runningId !== requestId) return;
-        post({ type: "progress", requestId, progress });
+        if (isDead()) return;
+        try {
+          post({ type: "progress", requestId, progress });
+        } catch {
+          // Ignore progress clone failures; keep solving.
+        }
       },
-      isCancelled: () => cancelled.has(requestId) || runningId !== requestId,
+      isCancelled: isDead,
       isPaused: () => paused.has(requestId),
       yieldSlice: async () => {
         await waitWhilePaused(requestId);
-        if (cancelled.has(requestId)) return;
+        if (isDead()) throw new Error("solver cancelled");
         await new Promise((resolve) => setTimeout(resolve, 0));
       },
     };
 
     const result: SolverResultDTO = await solve(payload, options);
 
-    if (cancelled.has(requestId) || runningId !== requestId) {
+    if (isDead()) {
       post({ type: "cancelled", requestId });
       return;
     }
-    post({ type: "result", requestId, result });
+    try {
+      post({ type: "result", requestId, result });
+    } catch (cloneErr) {
+      post({
+        type: "error",
+        requestId,
+        error:
+          cloneErr instanceof Error
+            ? `result post failed: ${cloneErr.message}`
+            : "result post failed",
+      });
+    }
   } catch (err) {
     if (cancelled.has(requestId) || runningId !== requestId) {
       post({ type: "cancelled", requestId });
       return;
     }
-    post({
-      type: "error",
-      requestId,
-      error: err instanceof Error ? err.message : String(err),
-    });
+    const message = err instanceof Error ? err.message : String(err);
+    if (message === "solver cancelled") {
+      post({ type: "cancelled", requestId });
+      return;
+    }
+    post({ type: "error", requestId, error: message });
   } finally {
     if (runningId === requestId) runningId = null;
   }

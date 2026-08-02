@@ -229,6 +229,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const cancelRef = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   const lastBestRef = useRef(0);
+  /** Bumps on each Optimize / Cancel so stale promises cannot clear a newer run. */
+  const solveGenRef = useRef(0);
+  const latestProgressRef = useRef<SolverProgress | null>(null);
 
   const bar: RevoBarView | undefined =
     SUPPORTED_BARS.find((candidate) => candidate.id === barId) ??
@@ -295,10 +298,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to Setup style
   }, [loadout.style]);
 
-  // Cancel in-flight worker solve if the panel unmounts mid-run.
+  // Tear down in-flight solve on unmount only (do not poison cancelRef for remounts).
   useEffect(() => {
     return () => {
-      cancelRef.current = true;
+      solveGenRef.current += 1;
       abortRef.current?.abort();
       cancelOptimize();
     };
@@ -356,20 +359,52 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     );
   };
 
+  const applyDto = useCallback(
+    (dto: SolverResultDTO, request: Parameters<typeof rememberSolvedBar>[0], sizes: { minBarSize: number; maxBarSize: number }) => {
+      const bar = dto.bar?.length ? [...dto.bar] : [];
+      if (bar.length === 0) {
+        setSolverError(
+          `Search finished without a legal bar (${sizes.minBarSize}–${sizes.maxBarSize} slots). Try more max slots or a different style.`,
+        );
+        setSolverResult(dto);
+      } else {
+        setSolverError(null);
+        setSolverResult(dto);
+        setActiveBarIds(bar);
+        setResult(null);
+        rememberSolvedBar(request, dto);
+        setCacheNote("Saved to this browser");
+      }
+      setSolverProgress({
+        phase: "finalize",
+        evaluations: dto.evaluations,
+        uniqueCandidates: dto.uniqueCandidates,
+        bestScore: Number.isFinite(dto.score) ? dto.score : 0,
+        windowDpms: Number.isFinite(dto.score) ? dto.score : 0,
+        topBarPreview: bar,
+        noImprovementCount: 0,
+        evaluationBudget: TIER_BUDGETS[solverTier],
+        progressRatio: 1,
+      });
+    },
+    [solverTier],
+  );
+
   const optimize = useCallback(async () => {
     cancelRef.current = false;
     abortRef.current?.abort();
     const abort = new AbortController();
     abortRef.current = abort;
+    const gen = ++solveGenRef.current;
     lastBestRef.current = 0;
+    latestProgressRef.current = null;
     setSolving(true);
     setSolverError(null);
     setSolverResult(null);
     setBestPulse(false);
     setCacheNote(null);
     const sizes = clampSolverBarSizes(MIN_SOLVER_BAR_SIZE, maxBarSize);
-    // Immediate progress plate so the UI never looks dead while the first eval runs.
-    setSolverProgress({
+    const seedProgress: SolverProgress = {
       phase: "seed",
       evaluations: 0,
       uniqueCandidates: 0,
@@ -379,7 +414,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       noImprovementCount: 0,
       evaluationBudget: TIER_BUDGETS[solverTier],
       progressRatio: 0.02,
-    });
+    };
+    latestProgressRef.current = seedProgress;
+    setSolverProgress(seedProgress);
     try {
       const baseRequest = packSolverRequest({
         stats,
@@ -400,7 +437,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       const cachedSeeds = seedBarsFromSolveCache(loadout.style, contextKey, sizes.minBarSize);
       if (cached?.bar?.length) {
         lastBestRef.current = cached.score;
-        setSolverProgress({
+        const warm: SolverProgress = {
           phase: "seed",
           evaluations: 0,
           uniqueCandidates: cached.top?.length ?? 1,
@@ -410,7 +447,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           noImprovementCount: 0,
           evaluationBudget: TIER_BUDGETS[solverTier],
           progressRatio: 0.08,
-        });
+        };
+        latestProgressRef.current = warm;
+        setSolverProgress(warm);
         setCacheNote(
           cachedSeeds.length > 1
             ? `Resuming from ${cachedSeeds.length} saved bars`
@@ -432,12 +471,13 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           })),
         ],
       };
-      // Worker-first: sims run off the UI thread. Main-thread fallback only if
-      // Worker construct/load fails (sticky for the tab session).
+      // Worker-first with sticky main-thread fallback (see runOptimize).
       const dto = await runOptimize(
         request,
         (progress) => {
+          if (gen !== solveGenRef.current) return;
           if (cancelRef.current || abort.signal.aborted) return;
+          latestProgressRef.current = progress;
           if (progress.bestScore > lastBestRef.current + 1e-6) {
             lastBestRef.current = progress.bestScore;
             setBestPulse(true);
@@ -446,52 +486,99 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           setSolverProgress({ ...progress });
         },
         {
-          isCancelled: () => cancelRef.current || abort.signal.aborted,
+          isCancelled: () =>
+            gen !== solveGenRef.current || cancelRef.current || abort.signal.aborted,
           signal: abort.signal,
         },
       );
-      if (cancelRef.current || abort.signal.aborted) return;
-
-      const bar = dto.bar?.length ? [...dto.bar] : [];
-      if (bar.length === 0) {
-        setSolverError(
-          `Search finished without a legal bar (${sizes.minBarSize}–${sizes.maxBarSize} slots). Try more max slots or a different style.`,
-        );
-        setSolverResult(dto);
-      } else {
-        setSolverResult(dto);
-        setActiveBarIds(bar);
-        setResult(null);
-        rememberSolvedBar(request, dto);
-        setCacheNote("Saved to this browser");
+      if (gen !== solveGenRef.current) return;
+      if (cancelRef.current || abort.signal.aborted) {
+        // User cancel: keep best-so-far if we have a bar.
+        const partial = latestProgressRef.current;
+        if (partial?.topBarPreview?.length) {
+          setActiveBarIds([...partial.topBarPreview]);
+          setCacheNote("Stopped — kept best bar so far");
+        } else {
+          setCacheNote("Stopped");
+        }
+        return;
       }
-      setSolverProgress({
-        phase: "finalize",
-        evaluations: dto.evaluations,
-        uniqueCandidates: dto.uniqueCandidates,
-        bestScore: Number.isFinite(dto.score) ? dto.score : 0,
-        windowDpms: Number.isFinite(dto.score) ? dto.score : 0,
-        topBarPreview: bar,
-        noImprovementCount: 0,
-        evaluationBudget: TIER_BUDGETS[solverTier],
-        progressRatio: 1,
-      });
+
+      applyDto(dto, request, sizes);
     } catch (err) {
-      if (cancelRef.current || abort.signal.aborted) return;
-      if (err instanceof DOMException && err.name === "AbortError") return;
+      if (gen !== solveGenRef.current) return;
+      const aborted =
+        cancelRef.current ||
+        abort.signal.aborted ||
+        (err instanceof DOMException && err.name === "AbortError") ||
+        (err instanceof Error &&
+          (err.message === "solver cancelled" || err.message === "revolution solver cancelled"));
+
+      const partial = latestProgressRef.current;
+      if (aborted) {
+        if (partial?.topBarPreview?.length) {
+          setActiveBarIds([...partial.topBarPreview]);
+          setCacheNote("Stopped — kept best bar so far");
+          // Surface as a minimal result so the UI is not "Done + nothing".
+          setSolverResult({
+            bar: [...partial.topBarPreview],
+            score: partial.bestScore,
+            windowDpms: partial.bestScore,
+            evaluations: partial.evaluations,
+            uniqueCandidates: partial.uniqueCandidates,
+            seed: 1,
+            profileId: solverProfile,
+            tier: solverTier,
+            durationTicks: 500,
+            proofLabel: "best-found",
+          });
+        } else {
+          setSolverError("Search stopped before a bar was found.");
+        }
+        return;
+      }
+
       const message = err instanceof Error ? err.message : String(err);
-      setSolverError(message === "solver cancelled" ? null : message);
+      // Last-ditch: if search had a best preview, keep it usable.
+      if (partial?.topBarPreview?.length) {
+        setActiveBarIds([...partial.topBarPreview]);
+        setSolverResult({
+          bar: [...partial.topBarPreview],
+          score: partial.bestScore,
+          windowDpms: partial.bestScore,
+          evaluations: partial.evaluations,
+          uniqueCandidates: partial.uniqueCandidates,
+          seed: 1,
+          profileId: solverProfile,
+          tier: solverTier,
+          durationTicks: 500,
+          proofLabel: "best-found",
+        });
+        setSolverError(`${message} — showing best bar found before the error.`);
+      } else {
+        setSolverError(message || "Optimize failed.");
+      }
     } finally {
-      setSolving(false);
-      abortRef.current = null;
+      if (gen === solveGenRef.current) {
+        setSolving(false);
+        abortRef.current = null;
+      }
     }
-  }, [stats, loadout, build, solverTier, solverProfile, maxBarSize, modelled]);
+  }, [stats, loadout, build, solverTier, solverProfile, maxBarSize, modelled, applyDto]);
 
   const cancelSolve = () => {
     cancelRef.current = true;
+    solveGenRef.current += 1;
     abortRef.current?.abort();
     cancelOptimize();
     setSolving(false);
+    const partial = latestProgressRef.current;
+    if (partial?.topBarPreview?.length) {
+      setActiveBarIds([...partial.topBarPreview]);
+      setCacheNote("Stopped — kept best bar so far");
+    } else {
+      setCacheNote("Stopped");
+    }
   };
 
   const progressFill = solving
@@ -615,7 +702,15 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           >
             <div className="revo-solver-status__head">
               <span className="revo-solver-status__phase">
-                {solving ? solverPhaseLabel(solverProgress?.phase) : "Done"}
+                {solving
+                  ? solverPhaseLabel(solverProgress?.phase)
+                  : solverResult
+                    ? "Done"
+                    : solverError
+                      ? "Failed"
+                      : cacheNote?.startsWith("Stopped")
+                        ? "Stopped"
+                        : "Done"}
               </span>
               <span className="revo-solver-status__meta font-mono">
                 {solverProgress ? (

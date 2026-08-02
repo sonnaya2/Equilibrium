@@ -12,12 +12,10 @@ export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solve
 let stickyMainThread = false;
 let sharedClient: RevolutionSolverClient | null = null;
 
-/**
- * Load the worker-facing entry. Pure search `solve(SolveInput)` is not the wire
- * API — look for `solveFromRequest` (or a same-shaped default) only.
- */
 async function loadSolve(): Promise<SolveFn> {
-  const mod = (await import(/* webpackMode: "lazy" */ "../solveFromRequest")) as {
+  const mod = (await import(
+    /* webpackMode: "lazy" */ "../solveFromRequest"
+  )) as {
     solveFromRequest?: SolveFn;
     default?: SolveFn;
   };
@@ -44,7 +42,10 @@ function post(worker: Worker, message: HostToWorkerMessage): void {
 function isAbortError(err: unknown): boolean {
   return (
     (err instanceof DOMException && err.name === "AbortError") ||
-    (err instanceof Error && (err.name === "AbortError" || err.message === "solver cancelled"))
+    (err instanceof Error &&
+      (err.name === "AbortError" ||
+        err.message === "solver cancelled" ||
+        err.message === "revolution solver cancelled"))
   );
 }
 
@@ -60,8 +61,7 @@ export function resetSolverHostForTests(): void {
 }
 
 /**
- * Main-thread fallback: run solve with cooperative yields so the UI can paint.
- * Used when Worker construction fails (SSR, test env, bundler quirks).
+ * Main-thread solve with cooperative yields so the UI can paint.
  */
 export async function runSolverOnMainThread(
   request: SerializableSolverRequest,
@@ -72,74 +72,91 @@ export async function runSolverOnMainThread(
   let cancelled = false;
   const isCancelled = () => cancelled || options?.isCancelled?.() === true;
 
-  return solve(request, {
-    onProgress,
-    isCancelled,
-    // rAF + macrotask: let React commit and the browser paint between yields.
-    yieldSlice: () =>
-      new Promise((resolve) => {
-        const done = () => setTimeout(resolve, 0);
-        if (typeof requestAnimationFrame === "function") {
-          requestAnimationFrame(done);
-        } else {
-          done();
-        }
-      }),
-  }).finally(() => {
+  try {
+    return await solve(request, {
+      onProgress,
+      isCancelled,
+      yieldSlice: () =>
+        new Promise((resolve) => {
+          const done = () => setTimeout(resolve, 0);
+          if (typeof requestAnimationFrame === "function") {
+            requestAnimationFrame(done);
+          } else {
+            done();
+          }
+        }),
+    });
+  } finally {
     cancelled = true;
-  });
+  }
 }
 
 export type RunOptimizeOptions = {
   isCancelled?: () => boolean;
   signal?: AbortSignal;
-  /** Force main-thread (tests / sticky recovery). */
   forceMainThread?: boolean;
 };
 
 /**
- * Product entry: dedicated Web Worker when available, cooperative main-thread
- * fallback otherwise. Sticky-falls-back for the tab after a hard worker death.
+ * Product entry: try a dedicated Web Worker; on any hard failure fall back to
+ * main-thread cooperative solve (sticky for the tab).
  */
 export async function runOptimize(
   request: SerializableSolverRequest,
   onProgress?: SolveProgressHandler,
   options?: RunOptimizeOptions,
 ): Promise<SolverResultDTO> {
-  const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
+  const cancelled = () =>
+    options?.isCancelled?.() === true || options?.signal?.aborted === true;
 
   if (cancelled()) {
     throw new DOMException("revolution solver cancelled", "AbortError");
+  }
+
+  // Clone once so postMessage cannot fail on host-side mutation / non-cloneables.
+  let payload: SerializableSolverRequest;
+  try {
+    payload = structuredClone(request);
+  } catch (err) {
+    stickyMainThread = true;
+    if (typeof console !== "undefined") {
+      console.warn("[revo-solver] request not cloneable, main-thread only", err);
+    }
+    return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
   }
 
   const forceMain =
     options?.forceMainThread === true || stickyMainThread || typeof Worker === "undefined";
 
   if (forceMain) {
-    return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
+    return runSolverOnMainThread(payload, onProgress, { isCancelled: cancelled });
   }
 
   const client = getRevolutionSolverClient();
   try {
-    return await client.start(request, onProgress, {
+    const result = await client.start(payload, onProgress, {
       isCancelled: cancelled,
       signal: options?.signal,
     });
+    return result;
   } catch (err) {
     if (isAbortError(err) || cancelled()) throw err;
-    // Construct or runtime failure — leave the UI path alive on main thread.
     stickyMainThread = true;
     if (typeof console !== "undefined") {
       console.warn("[revo-solver] worker unavailable, main-thread fallback", err);
     }
-    client.dispose();
+    // Drop broken worker without rejecting a fresh run.
+    try {
+      client.disposeQuiet();
+    } catch {
+      // ignore
+    }
     if (sharedClient === client) sharedClient = null;
     if (cancelled()) throw err;
-    return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
+    return runSolverOnMainThread(payload, onProgress, { isCancelled: cancelled });
   }
 }
 
-/** Cancel the in-flight optimize (worker or main-thread shared client). */
 export function cancelOptimize(): void {
   sharedClient?.cancel();
 }
@@ -150,122 +167,33 @@ export function getRevolutionSolverClient(): RevolutionSolverClient {
 }
 
 /**
- * Prefer a dedicated Worker; fall back to async chunked main-thread solve when
- * Workers are unavailable. Terminates the worker after each run (cold start).
- * Prefer {@link runOptimize} / {@link RevolutionSolverClient} for UI.
+ * One-shot worker (terminates after run). Prefer {@link runOptimize}.
  */
 export async function runSolverInWorker(
   request: SerializableSolverRequest,
   onProgress?: SolveProgressHandler,
   options?: { signal?: AbortSignal; isCancelled?: () => boolean },
 ): Promise<SolverResultDTO> {
-  const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
-
-  if (stickyMainThread || typeof Worker === "undefined") {
-    return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
-  }
-
-  const worker = createWorker();
-  if (!worker) {
-    stickyMainThread = true;
-    return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
-  }
-
-  const requestId = 1;
-  return new Promise<SolverResultDTO>((resolve, reject) => {
-    let settled = false;
-    const settle = (fn: () => void) => {
-      if (settled) return;
-      settled = true;
-      fn();
-    };
-
-    const onAbort = () => {
-      post(worker, { type: "cancel", requestId });
-    };
-    options?.signal?.addEventListener("abort", onAbort, { once: true });
-
-    const cleanup = () => {
-      options?.signal?.removeEventListener("abort", onAbort);
-      worker.removeEventListener("message", onMessage);
-      worker.removeEventListener("error", onError);
-      worker.terminate();
-    };
-
-    const fallbackMain = () => {
-      cleanup();
-      stickyMainThread = true;
-      if (typeof console !== "undefined") {
-        console.warn("[revo-solver] one-shot worker failed, main-thread fallback");
-      }
-      if (cancelled()) {
-        settle(() => reject(new DOMException("revolution solver cancelled", "AbortError")));
-        return;
-      }
-      void runSolverOnMainThread(request, onProgress, { isCancelled: cancelled }).then(
-        (result) => settle(() => resolve(result)),
-        (err: unknown) => settle(() => reject(err instanceof Error ? err : new Error(String(err)))),
-      );
-    };
-
-    const onError = () => {
-      fallbackMain();
-    };
-
-    const onMessage = (event: MessageEvent<unknown>) => {
-      if (!isWorkerToHostMessage(event.data)) return;
-      const msg = event.data as WorkerToHostMessage;
-      if (msg.requestId !== requestId) return;
-      switch (msg.type) {
-        case "progress":
-          onProgress?.(msg.progress);
-          break;
-        case "result":
-          settle(() => {
-            cleanup();
-            resolve(msg.result);
-          });
-          break;
-        case "error":
-          // Load/runtime failure → main-thread retry once.
-          fallbackMain();
-          break;
-        case "cancelled":
-          settle(() => {
-            cleanup();
-            reject(new DOMException("revolution solver cancelled", "AbortError"));
-          });
-          break;
-      }
-    };
-
-    worker.addEventListener("message", onMessage);
-    worker.addEventListener("error", onError);
-    try {
-      post(worker, { type: "start", requestId, payload: request });
-    } catch {
-      fallbackMain();
-      return;
-    }
-
-    if (options?.signal?.aborted || cancelled()) onAbort();
-  });
+  return runOptimize(request, onProgress, options);
 }
 
+type ActiveRun = {
+  requestId: number;
+  resolve: (result: SolverResultDTO) => void;
+  reject: (error: Error) => void;
+  onProgress?: SolveProgressHandler;
+  /** Explicit abort — never infer cancel from active===null. */
+  aborted: boolean;
+  settled: boolean;
+};
+
 /**
- * Long-lived host helper: one Worker, cancel/pause/resume, Promise API.
- * Keeps the combat bundle warm across Optimize clicks.
+ * Long-lived host: one Worker, cancel/pause/resume.
  */
 export class RevolutionSolverClient {
   private worker: Worker | null = null;
   private seq = 0;
-  private active: {
-    requestId: number;
-    resolve: (result: SolverResultDTO) => void;
-    reject: (error: Error) => void;
-    onProgress?: SolveProgressHandler;
-    isCancelled?: () => boolean;
-  } | null = null;
+  private active: ActiveRun | null = null;
 
   private ensureWorker(): Worker | null {
     if (this.worker) return this.worker;
@@ -275,16 +203,32 @@ export class RevolutionSolverClient {
       this.onWorkerMessage(event.data);
     });
     this.worker.addEventListener("error", (event: ErrorEvent) => {
-      this.onWorkerFailed(event.message || "revolution solver worker failed");
+      this.failActive(new Error(event.message || "revolution solver worker failed"));
+      this.dropWorker();
+    });
+    this.worker.addEventListener("messageerror", () => {
+      this.failActive(new Error("revolution solver worker messageerror (clone failed)"));
+      this.dropWorker();
     });
     return this.worker;
   }
 
-  private onWorkerFailed(message: string): void {
-    const active = this.active;
-    this.dropWorker();
-    this.active = null;
-    active?.reject(new Error(message));
+  private settleActive(
+    run: ActiveRun,
+    kind: "resolve" | "reject",
+    value: SolverResultDTO | Error,
+  ): void {
+    if (run.settled) return;
+    run.settled = true;
+    if (this.active === run) this.active = null;
+    if (kind === "resolve") run.resolve(value as SolverResultDTO);
+    else run.reject(value as Error);
+  }
+
+  private failActive(error: Error): void {
+    const run = this.active;
+    if (!run) return;
+    this.settleActive(run, "reject", error);
   }
 
   private dropWorker(): void {
@@ -299,26 +243,30 @@ export class RevolutionSolverClient {
   private onWorkerMessage(data: unknown): void {
     if (!isWorkerToHostMessage(data)) return;
     const msg = data;
-    const active = this.active;
-    if (!active || msg.requestId !== active.requestId) return;
+    const run = this.active;
+    if (!run || msg.requestId !== run.requestId) return;
     switch (msg.type) {
       case "progress":
-        if (active.isCancelled?.()) return;
-        active.onProgress?.(msg.progress);
+        if (run.aborted) return;
+        try {
+          run.onProgress?.(msg.progress);
+        } catch {
+          // UI progress must never kill the solve.
+        }
         break;
       case "result":
-        this.active = null;
-        active.resolve(msg.result);
+        this.settleActive(run, "resolve", msg.result);
         break;
       case "error":
-        this.active = null;
-        // Kill the worker so the next start reconstructs cleanly.
         this.dropWorker();
-        active.reject(new Error(msg.error));
+        this.settleActive(run, "reject", new Error(msg.error));
         break;
       case "cancelled":
-        this.active = null;
-        active.reject(new DOMException("revolution solver cancelled", "AbortError"));
+        this.settleActive(
+          run,
+          "reject",
+          new DOMException("revolution solver cancelled", "AbortError"),
+        );
         break;
     }
   }
@@ -328,96 +276,192 @@ export class RevolutionSolverClient {
     onProgress?: SolveProgressHandler,
     options?: { isCancelled?: () => boolean; signal?: AbortSignal },
   ): Promise<SolverResultDTO> {
-    this.cancel();
-    const requestId = ++this.seq;
-    const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
+    // Soft-cancel previous run (do not throw into the new caller's stack).
+    this.cancelQuiet();
 
-    if (cancelled()) {
+    const requestId = ++this.seq;
+    const externalCancelled = () =>
+      options?.isCancelled?.() === true || options?.signal?.aborted === true;
+
+    if (externalCancelled()) {
       return Promise.reject(new DOMException("revolution solver cancelled", "AbortError"));
     }
 
     const worker = stickyMainThread ? null : this.ensureWorker();
 
+    // ── Main-thread path ──────────────────────────────────────────────────
     if (!worker) {
       return new Promise<SolverResultDTO>((resolve, reject) => {
-        this.active = { requestId, resolve, reject, onProgress, isCancelled: cancelled };
+        const run: ActiveRun = {
+          requestId,
+          resolve,
+          reject,
+          onProgress,
+          aborted: false,
+          settled: false,
+        };
+        this.active = run;
+
         const onAbort = () => {
-          if (this.active?.requestId !== requestId) return;
-          this.active = null;
-          reject(new DOMException("revolution solver cancelled", "AbortError"));
+          run.aborted = true;
+          this.settleActive(
+            run,
+            "reject",
+            new DOMException("revolution solver cancelled", "AbortError"),
+          );
         };
         options?.signal?.addEventListener("abort", onAbort, { once: true });
+
         void runSolverOnMainThread(request, onProgress, {
-          isCancelled: () => cancelled() || this.active?.requestId !== requestId,
+          isCancelled: () => run.aborted || externalCancelled(),
         })
           .then((result) => {
             options?.signal?.removeEventListener("abort", onAbort);
-            if (this.active?.requestId !== requestId) return;
-            this.active = null;
-            resolve(result);
+            if (run.aborted || externalCancelled()) {
+              this.settleActive(
+                run,
+                "reject",
+                new DOMException("revolution solver cancelled", "AbortError"),
+              );
+              return;
+            }
+            this.settleActive(run, "resolve", result);
           })
           .catch((err: unknown) => {
             options?.signal?.removeEventListener("abort", onAbort);
-            if (this.active?.requestId !== requestId) return;
-            this.active = null;
-            reject(err instanceof Error ? err : new Error(String(err)));
+            if (run.settled) return;
+            this.settleActive(
+              run,
+              "reject",
+              err instanceof Error ? err : new Error(String(err)),
+            );
           });
       });
     }
 
+    // ── Worker path ───────────────────────────────────────────────────────
     return new Promise<SolverResultDTO>((resolve, reject) => {
-      this.active = { requestId, resolve, reject, onProgress, isCancelled: cancelled };
+      const run: ActiveRun = {
+        requestId,
+        resolve,
+        reject,
+        onProgress,
+        aborted: false,
+        settled: false,
+      };
+      this.active = run;
+
       const onAbort = () => {
-        if (this.active?.requestId !== requestId) return;
-        post(worker, { type: "cancel", requestId });
+        run.aborted = true;
+        try {
+          post(worker, { type: "cancel", requestId });
+        } catch {
+          // ignore
+        }
+        this.settleActive(
+          run,
+          "reject",
+          new DOMException("revolution solver cancelled", "AbortError"),
+        );
       };
       options?.signal?.addEventListener("abort", onAbort, { once: true });
 
-      // Wrap settle so abort listener is cleared.
-      const prevResolve = resolve;
-      const prevReject = reject;
-      this.active.resolve = (result) => {
+      // Wrap settle to drop abort listener.
+      const rawResolve = run.resolve;
+      const rawReject = run.reject;
+      run.resolve = (result) => {
         options?.signal?.removeEventListener("abort", onAbort);
-        prevResolve(result);
+        rawResolve(result);
       };
-      this.active.reject = (error) => {
+      run.reject = (error) => {
         options?.signal?.removeEventListener("abort", onAbort);
-        prevReject(error);
+        rawReject(error);
       };
 
       try {
         post(worker, { type: "start", requestId, payload: request });
       } catch (err) {
-        this.active = null;
         options?.signal?.removeEventListener("abort", onAbort);
         this.dropWorker();
-        reject(err instanceof Error ? err : new Error(String(err)));
+        this.settleActive(
+          run,
+          "reject",
+          err instanceof Error ? err : new Error(String(err)),
+        );
+        return;
       }
 
-      if (cancelled()) onAbort();
+      if (externalCancelled()) onAbort();
     });
   }
 
+  /** Reject active run as cancelled (user Cancel / new start). */
   cancel(): void {
-    const active = this.active;
-    if (!active) return;
+    const run = this.active;
+    if (!run || run.settled) return;
+    run.aborted = true;
     if (this.worker) {
-      post(this.worker, { type: "cancel", requestId: active.requestId });
+      try {
+        post(this.worker, { type: "cancel", requestId: run.requestId });
+      } catch {
+        // ignore
+      }
+    }
+    this.settleActive(
+      run,
+      "reject",
+      new DOMException("revolution solver cancelled", "AbortError"),
+    );
+  }
+
+  /** Cancel without rejecting if already settled; used when replacing a run. */
+  cancelQuiet(): void {
+    const run = this.active;
+    if (!run || run.settled) {
+      this.active = null;
+      return;
+    }
+    run.aborted = true;
+    if (this.worker) {
+      try {
+        post(this.worker, { type: "cancel", requestId: run.requestId });
+      } catch {
+        // ignore
+      }
+    }
+    // Still reject so the previous awaiter unblocks — but only once.
+    this.settleActive(
+      run,
+      "reject",
+      new DOMException("revolution solver cancelled", "AbortError"),
+    );
+  }
+
+  /** Dispose worker without a loud cancel if idle. */
+  disposeQuiet(): void {
+    const run = this.active;
+    if (run && !run.settled) {
+      run.aborted = true;
+      this.settleActive(
+        run,
+        "reject",
+        new DOMException("revolution solver cancelled", "AbortError"),
+      );
     }
     this.active = null;
-    active.reject(new DOMException("revolution solver cancelled", "AbortError"));
+    this.dropWorker();
   }
 
   pause(): void {
-    const active = this.active;
-    if (!active || !this.worker) return;
-    post(this.worker, { type: "pause", requestId: active.requestId });
+    const run = this.active;
+    if (!run || !this.worker) return;
+    post(this.worker, { type: "pause", requestId: run.requestId });
   }
 
   resume(): void {
-    const active = this.active;
-    if (!active || !this.worker) return;
-    post(this.worker, { type: "resume", requestId: active.requestId });
+    const run = this.active;
+    if (!run || !this.worker) return;
+    post(this.worker, { type: "resume", requestId: run.requestId });
   }
 
   dispose(): void {

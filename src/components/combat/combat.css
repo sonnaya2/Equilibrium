@@ -1495,7 +1495,6 @@ body:has(.combat-screen) {
 .summary-breakdown {
   margin: 0 0.18rem 0.45rem 0.8rem;
   padding: 0.28rem 0.4rem 0.35rem;
-  border-left: 1px solid color-mix(in srgb, var(--combat-gem) 50%, var(--combat-gold-dim));
   background: color-mix(in srgb, var(--combat-inset) 88%, transparent);
 }
 
@@ -1564,7 +1563,8 @@ body:has(.combat-screen) {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  padding: 0.3rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
   border: 1px solid var(--combat-gold-mid);
   background: color-mix(in srgb, var(--combat-inset) 88%, transparent);
   box-shadow:
@@ -1574,10 +1574,6 @@ body:has(.combat-screen) {
 
 .weapon-slot-block .equipment-slot {
   min-height: 4.7rem;
-}
-
-.weapon-slot-block .equipment-slot + .equipment-slot {
-  margin-left: -1px;
 }
 
 .equipment-slot:disabled {
@@ -1708,6 +1704,12 @@ body:has(.combat-screen) {
 
 .gear-passive-row__icon {
   margin-top: 0.1rem;
+}
+
+/* GameIcon renders nothing when art is missing, which would otherwise drop the
+   text into the narrow icon column and wrap it one word per line. */
+.gear-passive-row > :last-child {
+  grid-column: 2;
 }
 
 .blessing-settings {

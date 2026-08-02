@@ -13,6 +13,7 @@ import {
   removePerkFromGizmos,
   toggleEquipmentEnchantment,
   unlockOnlyIds,
+  weaponStyle,
   withLoadoutBuffs,
   withAttackLevel,
   withCombatStyle,
@@ -116,7 +117,8 @@ describe("normalizeLoadout", () => {
     });
 
     expect(next).toMatchObject({
-      style: "ranged",
+      // Stored "ranged" loses to the equipped seismic wand, which is magic.
+      style: "magic",
       level: 108,
       attackLevel: 82,
       strengthLevel: 91,
@@ -127,7 +129,8 @@ describe("normalizeLoadout", () => {
       equipmentIds: ["item:seismic-wand", "item:unlock-pin"],
       enchantments: ["agony"],
       perks: { biting: 4, impatient: 3 },
-      buffs: { vulnerability: true, styleCurse: "anguish", overload: "elder" },
+      // Anguish is the ranged curse, so following the wand moves it to Torment.
+      buffs: { vulnerability: true, styleCurse: "torment", overload: "elder" },
       target: { defenceLevel: 88, armour: 420, affinity: "strong" },
       baseDamage: { mode: "manual", manualValue: 4321 },
       startingAdrenaline: 72,
@@ -445,6 +448,53 @@ describe("equipInSlot twohand exclusivity", () => {
     expect(equipInSlot(manual, "helmet", "item:helm").baseDamage.mode).toBe("automatic");
     expect(clearEquipment(manual).baseDamage.mode).toBe("automatic");
     expect(withCombatStyle(manual, "magic").baseDamage.mode).toBe("automatic");
+  });
+});
+
+describe("weapon-driven combat style", () => {
+  it("takes the style from the equipped weapon rather than the stored one", () => {
+    expect(
+      normalizeLoadout({ style: "melee", equipmentSlots: { mainhand: "item:seismic-wand" } }),
+    ).toMatchObject({ style: "magic" });
+    expect(
+      normalizeLoadout({ style: "magic", equipmentSlots: { twohand: "item:ek-zekkil" } }),
+    ).toMatchObject({ style: "melee" });
+  });
+
+  it("lets a two-hand weapon outrank a stale main-hand entry", () => {
+    expect(weaponStyle({ twohand: "item:ek-zekkil", mainhand: "item:seismic-wand" })).toBe("melee");
+  });
+
+  it("keeps the stored style while no weapon is equipped", () => {
+    expect(weaponStyle({ helmet: "item:primal-full-helm-plus-5" })).toBeNull();
+    expect(weaponStyle(undefined)).toBeNull();
+    expect(normalizeLoadout({ style: "ranged" })).toMatchObject({ style: "ranged" });
+  });
+
+  it("switches style as the weapon is equipped and keeps it when unequipped", () => {
+    const magic = equipInSlot(DEFAULT_LOADOUT, "mainhand", "item:seismic-wand");
+    expect(magic.style).toBe("magic");
+    const ranged = equipInSlot(magic, "mainhand", "item:ascension-crossbow");
+    expect(ranged.style).toBe("ranged");
+    // Removing the weapon leaves the last style in place instead of snapping back.
+    expect(equipInSlot(ranged, "mainhand", null).style).toBe("ranged");
+  });
+
+  it("carries an active style curse to the matching tier in the new style", () => {
+    const melee = { ...DEFAULT_LOADOUT, style: "melee" as const };
+    const cursed = withLoadoutBuffs(melee, { styleCurse: "turmoil" });
+    expect(withCombatStyle(cursed, "magic").buffs.styleCurse).toBe("torment");
+    // The 99 tier maps to its own counterparts, not down to the 95 tier.
+    const upgraded = withLoadoutBuffs(melee, { styleCurse: "malevolence" });
+    expect(withCombatStyle(upgraded, "necromancy").buffs.styleCurse).toBe("ruination");
+    // No curse stays no curse.
+    expect(withCombatStyle(melee, "ranged").buffs.styleCurse).toBe("none");
+  });
+
+  it("carries the melee damage level across a style switch", () => {
+    const melee = { ...DEFAULT_LOADOUT, style: "melee" as const, strengthLevel: 91, level: 91 };
+    expect(withCombatStyle(melee, "magic").level).toBe(91);
+    expect(withCombatStyle(melee, "melee")).toBe(melee);
   });
 });
 

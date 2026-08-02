@@ -11,14 +11,7 @@ import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
 import { CombatFrameCorners } from "./CombatFrameCorners";
-import {
-  clearEquipment,
-  equipInSlot,
-  equipmentIdList,
-  toggleUnlockPin,
-  unlockOnlyIds,
-  type Loadout,
-} from "./useLoadout";
+import { clearEquipment, equipInSlot, type Loadout } from "./useLoadout";
 
 const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 
@@ -40,7 +33,7 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
 };
 
 const PASSIVE_STATUS: Record<PassiveSupport, string> = {
-  modeled: "Modeled",
+  modeled: "Active",
   "partially-modeled": "Partial",
   "not-modeled": "Not modeled",
 };
@@ -235,12 +228,8 @@ export function GearPanel({
   const [styleBrowse, setStyleBrowse] = useState<StyleBrowse>("setup");
   /** Cap long catalogues; toggle expands past the first 80. */
   const [showAllWearables, setShowAllWearables] = useState(false);
-  /** Unlocks are secondary — collapsed so the wearable list owns the column. */
-  const [unlocksOpen, setUnlocksOpen] = useState(false);
 
   const slots = loadout.equipmentSlots ?? {};
-  const unlockPins = new Set(unlockOnlyIds(loadout));
-  const slottedCount = equipmentIdList(slots).length;
   const passives = equippedPassiveSummaries({
     style: loadout.style,
     equipmentSlots: slots,
@@ -260,10 +249,6 @@ export function GearPanel({
   /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
     () => combatEquipment.records.filter((r) => r.slot != null && r.unlock?.type !== "removed"),
-    [],
-  );
-  const unlocks = useMemo(
-    () => combatEquipment.records.filter((r) => r.slot == null && r.unlock?.type !== "removed"),
     [],
   );
 
@@ -302,24 +287,6 @@ export function GearPanel({
   const pickerFiltered = regionFilter !== "all" || search.trim().length > 0 || activeSlot != null;
   const wearablesCapped = !pickerFiltered && pickerRows.length > WEARABLE_CAP && !showAllWearables;
   const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
-
-  const unlockRows = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    // No-slot only: materials, codices, set aggregates — never equip onto the doll.
-    const filtered = unlocks.filter((record) => {
-      if (record.slot != null) return false;
-      if (regionFilter === "base") {
-        if (recordRegions(record).length > 0) return false;
-      } else if (regionFilter !== "all") {
-        if (!recordRegions(record).includes(regionFilter)) return false;
-      }
-      if (q && !record.name.toLowerCase().includes(q) && !record.id.toLowerCase().includes(q)) {
-        return false;
-      }
-      return true;
-    });
-    return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
-  }, [unlocks, regionFilter, search]);
 
   const setStyleBrowseAndReset = (next: StyleBrowse) => {
     setStyleBrowse(next);
@@ -456,10 +423,6 @@ export function GearPanel({
           >
             Clear all gear
           </button>
-          <span className="self-center text-parch-300">
-            {slottedCount} slot{slottedCount === 1 ? "" : "s"} · {unlockPins.size} unlock pin
-            {unlockPins.size === 1 ? "" : "s"}
-          </span>
         </div>
 
         <section className="gear-passives mt-4" aria-labelledby="gear-passives-title">
@@ -467,7 +430,7 @@ export function GearPanel({
             id="gear-passives-title"
             className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300"
           >
-            Passives from equipped gear
+            Passives
           </h3>
           {passives.length ? (
             <ul className="gear-passive-list mt-1.5">
@@ -490,17 +453,7 @@ export function GearPanel({
                         <li key={effect}>{effect}</li>
                       ))}
                     </ul>
-                    <p className="mt-1 text-[11px] text-parch-300">
-                      From {passive.itemName} ·{" "}
-                      <a
-                        href={passive.source.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-gem-400 underline underline-offset-2 hover:text-gem-300"
-                      >
-                        source
-                      </a>
-                    </p>
+                    <p className="mt-1 text-[11px] text-parch-300">From {passive.itemName}</p>
                   </div>
                 </li>
               ))}
@@ -692,54 +645,6 @@ export function GearPanel({
               ) : null}
             </>
           )}
-        </div>
-
-        <div className="unlocks-panel mt-4 border-t border-stone-750 pt-2">
-          <button
-            type="button"
-            aria-expanded={unlocksOpen}
-            onClick={() => setUnlocksOpen((v) => !v)}
-            className="flex w-full flex-wrap items-baseline justify-between gap-2 text-left"
-          >
-            <h3 className="text-xs font-medium uppercase tracking-wide text-parch-300">
-              Unlocks &amp; materials · {unlockRows.length}
-            </h3>
-            <span className="text-xs text-gem-400">{unlocksOpen ? "Hide pins" : "Show pins"}</span>
-          </button>
-          <p className="mt-1 text-xs text-parch-300">
-            Materials and codices can be pinned, not equipped.
-          </p>
-          {unlocksOpen ? (
-            <div className="mt-1 max-h-48 overflow-y-auto border-t border-stone-750">
-              {unlockRows.length === 0 ? (
-                <p className="px-2 py-2 text-xs text-parch-300">No unlocks match region/search</p>
-              ) : (
-                unlockRows.map((record) => {
-                  const pinned = unlockPins.has(record.id);
-                  return (
-                    <button
-                      key={record.id}
-                      type="button"
-                      onClick={() => setLoadout(toggleUnlockPin(loadout, record.id))}
-                      className={`grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
-                        pinned
-                          ? "bg-stone-850 text-parch-50"
-                          : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span>{record.name}</span>
-                        {record.tier != null ? (
-                          <span className="font-mono text-parch-100">T{record.tier}</span>
-                        ) : null}
-                      </span>
-                      <RegionMarks record={record} />
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          ) : null}
         </div>
       </div>
     </div>

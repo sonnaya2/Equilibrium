@@ -149,9 +149,9 @@ export function SetupTab({
   const missingDamage = incompleteCount("damage");
   const missingItems = new Set(stats.equipment.incomplete.map((item) => item.id)).size;
   const partialTotals = [
-    missingDamage ? "Equipment Damage" : null,
-    missingArmour ? "Equipment Armour and Armour rating" : null,
-    missingLife ? "Equipment Life and life-point totals" : null,
+    missingDamage ? "Equipment damage" : null,
+    missingArmour ? "Equipment armour and Armour rating" : null,
+    missingLife ? "Equipment life and life-point totals" : null,
   ].filter((label): label is string => label != null);
   const life = stats.life.breakdown;
 
@@ -210,14 +210,13 @@ export function SetupTab({
               <p>{loadout.style} loadout</p>
               <h3 className="combat-section-title">Setup summary</h3>
             </div>
-            <span>{stats.baseDamageMode === "automatic" ? "Core derived" : "Manual base"}</span>
           </header>
 
           <div className="setup-summary__sections">
             <SummarySection title="Offence">
               <SummaryMetric label="Base ability damage" value={formatNum(stats.base)} />
               <SummaryMetric
-                label="Equipment Damage"
+                label="Equipment damage"
                 value={formatNum(stats.equipment.damage)}
                 partialItems={missingDamage}
               />
@@ -271,7 +270,7 @@ export function SetupTab({
                 />
               ) : null}
               <SummaryMetric
-                label="Equipment Armour"
+                label="Equipment armour"
                 value={formatNum(stats.defence.equipmentArmour)}
                 partialItems={missingArmour}
               />
@@ -289,7 +288,7 @@ export function SetupTab({
                 value={formatNum(stats.life.constitutionLife)}
               />
               <SummaryMetric
-                label="Equipment Life"
+                label="Equipment life"
                 value={formatNum(stats.life.equipmentLife)}
                 partialItems={missingLife}
               />

@@ -191,18 +191,18 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
 test("setup summary exposes the complete core-derived stat line", async ({ page }) => {
   for (const label of [
     "Base ability damage",
-    "Equipment Damage",
+    "Equipment damage",
     "Accuracy",
     "Damage Potential",
     "Crit chance",
     "Crit damage",
     "Base Defence",
     "Visible boosted Defence",
-    "Equipment Armour",
+    "Equipment armour",
     "Armour rating",
     "Constitution",
     "Constitution life",
-    "Equipment Life",
+    "Equipment life",
     "Maximum life points",
     "Current life",
     "Prayer bonus",
@@ -306,14 +306,13 @@ test("loadout calculation controls reset automatic base and persist into Revolut
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Stats", exact: true }).click();
 
-  const baseMode = page.getByRole("combobox", { name: "Base damage" });
-  await baseMode.selectOption("manual");
-  await page.getByRole("spinbutton", { name: "Manual base override" }).fill("9999");
-  await expect(page.getByText("Manual base", { exact: true })).toBeVisible();
+  const baseAuto = page.getByRole("checkbox", { name: "Base ability damage automatic" });
+  await baseAuto.uncheck();
+  await page.getByRole("spinbutton", { name: "Base ability damage" }).fill("9999");
   await expect(summaryMetric(page, "Base ability damage").getByText("9,999")).toBeVisible();
 
   await page.getByRole("spinbutton", { name: "Main weapon tier" }).fill("91");
-  await expect(baseMode).toHaveValue("automatic");
+  await expect(baseAuto).toBeChecked();
   await page.getByRole("spinbutton", { name: "Starting adrenaline" }).fill("62");
   await page.getByRole("checkbox", { name: "30,000 hit cap" }).uncheck();
 
@@ -339,8 +338,8 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
         level: 91,
         attackLevel: 82,
         strengthLevel: 91,
-        equipmentSlots: { mainhand: "item:roar-of-awakening" },
-        equipmentIds: ["item:roar-of-awakening"],
+        equipmentSlots: { mainhand: "item:drygore-mace" },
+        equipmentIds: ["item:drygore-mace"],
         enchantments: ["agony"],
         perks: { biting: 4 },
         buffs: { vulnerability: true, styleCurse: "turmoil", overload: "elder" },
@@ -359,12 +358,16 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
   await expect(page.getByRole("spinbutton", { name: "Strength level" })).toHaveValue("91");
   await expect(page.getByRole("spinbutton", { name: "Defence level" })).toHaveValue("99");
   await expect(page.getByRole("spinbutton", { name: "Constitution level" })).toHaveValue("99");
-  await expect(page.getByRole("combobox", { name: "Base damage" })).toHaveValue("manual");
+  await expect(
+    page.getByRole("checkbox", { name: "Base ability damage automatic" }),
+  ).not.toBeChecked();
   await expect(page.getByRole("spinbutton", { name: "Starting adrenaline" })).toHaveValue("72");
   await expect(page.getByRole("checkbox", { name: "30,000 hit cap" })).not.toBeChecked();
 
   await page.getByRole("spinbutton", { name: "Defence level" }).fill("73");
   await page.getByRole("spinbutton", { name: "Constitution level" }).fill("88");
+  // Current life follows the maximum until that is turned off.
+  await page.getByRole("checkbox", { name: "Current life points automatic" }).uncheck();
   await page.getByRole("spinbutton", { name: "Current life points" }).fill("6000");
   await page.getByRole("button", { name: "Buffs", exact: true }).click();
 
@@ -432,6 +435,7 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
 test("Powerburst doubles life for six seconds and persists its cooldown", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Stats", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Current life points automatic" }).uncheck();
   await page.getByRole("spinbutton", { name: "Current life points" }).fill("4000");
   await page.getByRole("button", { name: "Buffs", exact: true }).click();
   await page.getByRole("button", { name: /Powerburst of vitality/ }).click();
@@ -476,7 +480,7 @@ test("rotation analysis opens the engine-owned event breakdown", async ({ page }
 test("equipped passives appear under Gear and disappear when the item is removed", async ({
   page,
 }) => {
-  const passives = page.getByRole("heading", { name: "Passives from equipped gear" }).locator("..");
+  const passives = page.getByRole("heading", { name: "Passives" }).locator("..");
   await expect(passives.getByText("No equipped item grants a passive.")).toBeVisible();
 
   await page.getByRole("button", { name: /^Helmet/ }).click();
@@ -484,11 +488,7 @@ test("equipped passives appear under Gear and disappear when the item is removed
   await page.getByRole("button", { name: /Jaws of the Abyss/ }).click();
 
   await expect(passives.getByText("Natural Instinct doubles this bonus gain.")).toBeVisible();
-  await expect(passives.getByText("Modeled", { exact: true })).toBeVisible();
-  await expect(passives.getByRole("link", { name: "source" })).toHaveAttribute(
-    "href",
-    /runescape\.wiki\/w\/Jaws_of_the_Abyss/,
-  );
+  await expect(passives.getByText("Active", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Clear Helmet" }).click();
   await expect(passives.getByText("No equipped item grants a passive.")).toBeVisible();
@@ -499,7 +499,7 @@ test("equipped passives appear under Gear and disappear when the item is removed
   await expect(
     passives.getByText("Defenders, reprisers, and rebounders have +3% accuracy."),
   ).toBeVisible();
-  await expect(passives.getByText("Modeled", { exact: true })).toBeVisible();
+  await expect(passives.getByText("Active", { exact: true })).toBeVisible();
 });
 
 test("set thresholds downgrade and disappear with equipped pieces", async ({ page }) => {

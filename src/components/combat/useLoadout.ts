@@ -14,8 +14,12 @@ import type { EquipmentSlot } from "@/combat/data/records";
 import {
   activeEquipmentEffects,
   EQUIPMENT_ENCHANTMENTS,
+  resolvedEquipmentSlots,
+  wieldedOffhandKind,
   type EquipmentEnchantmentId,
+  type LoadoutEquipmentView,
 } from "@/combat/shared/equipment";
+import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
@@ -50,6 +54,14 @@ export interface LoadoutTarget {
   hpPercent?: number;
   hasApplicableWeakness?: boolean;
   occupiedTiles?: number;
+  /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */
+  poisonImmune?: boolean;
+  /**
+   * Seconds between incoming hits large enough for Barkscales to reduce. Absent
+   * means no incoming-combat scenario has been stated, which is the only honest
+   * default for an outgoing rotation.
+   */
+  incomingHitIntervalSeconds?: number;
 }
 
 export interface BaseDamageSettings {
@@ -415,12 +427,17 @@ export function equipInSlot(loadout: Loadout, slot: EquipmentSlot, itemId: strin
     }
   }
   const unlocks = unlockOnlyIds(loadout);
-  return {
+  const next: Loadout = {
     ...loadout,
     baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     equipmentSlots: slots,
     equipmentIds: mergeEquipmentIds(slots, unlocks),
   };
+  // Equipping a weapon sets both the style and the weapon shape, so neither can
+  // disagree with what is actually in hand.
+  next.weaponConfiguration = weaponConfigurationFor(next) ?? next.weaponConfiguration;
+  const style = weaponStyle(slots);
+  return style != null ? withCombatStyle(next, style) : next;
 }
 
 export function toggleUnlockPin(loadout: Loadout, itemId: string): Loadout {
@@ -490,11 +507,58 @@ export function withStyleLevel(loadout: Loadout, level: number): Loadout {
   return { ...loadout, level };
 }
 
+/**
+ * Style of the equipped two-hand or main-hand weapon, which owns the loadout
+ * style whenever one is equipped. Hybrid weapons and an empty weapon slot
+ * return null, leaving the stored style in charge.
+ */
+export function weaponStyle(
+  equipmentSlots: Partial<Record<EquipmentSlot, string | null>> | undefined,
+): CombatStyle | null {
+  const id = equipmentSlots?.twohand ?? equipmentSlots?.mainhand;
+  if (typeof id !== "string" || id.length === 0) return null;
+  const style = equipmentById(id)?.style;
+  return style != null && style !== "hybrid" ? style : null;
+}
+
+/**
+ * The same curse tier in another style — Turmoil to Anguish, Malevolence to
+ * Desolation. An inactive curse stays inactive.
+ */
+function curseForStyle(current: StyleCurseChoice, style: CombatStyle): StyleCurseChoice {
+  const active = current === "none" ? undefined : styleCurseById(current);
+  if (!active) return current;
+  const match = STYLE_CURSE_BOOSTS.find(
+    (curse) => curse.style === style && curse.prayerLevel === active.prayerLevel,
+  );
+  return (match?.id as StyleCurseChoice | undefined) ?? current;
+}
+
+/**
+ * Weapon shape implied by the equipped gear. A wielded shield or defender is not
+ * a second weapon, so it reads as main-hand and dual-wield abilities stay
+ * uncastable. Null while no weapon is equipped, leaving the stored choice.
+ */
+export function weaponConfigurationFor(
+  loadout: LoadoutEquipmentView,
+): LoadoutWeaponConfiguration | null {
+  const slots = resolvedEquipmentSlots(loadout);
+  if (slots.twohand) return "twohand";
+  if (!slots.mainhand) return null;
+  if (!slots.offhand || wieldedOffhandKind(loadout) !== null) return "mainhand";
+  return "dualwield";
+}
+
 export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
+  if (style === loadout.style) return loadout;
   return {
     ...loadout,
     style,
     baseDamage: { ...loadout.baseDamage, mode: "automatic" },
+    // Melee reads its damage level from Strength; leaving melee carries that
+    // level across as the starting point for the new style.
+    level: style === "melee" || loadout.style === "melee" ? loadout.strengthLevel : loadout.level,
+    buffs: { ...loadout.buffs, styleCurse: curseForStyle(loadout.buffs.styleCurse, style) },
   };
 }
 
@@ -569,9 +633,12 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     typeof raw.baseDamage === "object" && raw.baseDamage !== null
       ? (raw.baseDamage as Partial<BaseDamageSettings>)
       : undefined;
-  const style = STYLES.includes(raw.style as string)
+  const equipmentSlots = normalizeEquipmentSlots(raw.equipmentSlots);
+  const storedStyle = STYLES.includes(raw.style as string)
     ? (raw.style as CombatStyle)
     : DEFAULT_LOADOUT.style;
+  // An equipped weapon wins, so a stored style can never contradict the gear.
+  const style = weaponStyle(equipmentSlots) ?? storedStyle;
 
   const hasAttack = Number.isFinite(raw.attackLevel);
   const hasStrength = Number.isFinite(raw.strengthLevel);
@@ -587,7 +654,6 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     level = hasStrength ? strengthLevel : attackLevel;
   }
 
-  const equipmentSlots = normalizeEquipmentSlots(raw.equipmentSlots);
   const enchantments = Array.isArray(raw.enchantments)
     ? [
         ...new Set(
@@ -608,9 +674,14 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     .vestments.increasedAdrenalineCap
     ? 120
     : 100;
-  const styleCurse = STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
-    ? (rawBuffs.styleCurse as StyleCurseChoice)
-    : "none";
+  // Follow the resolved style, so a weapon swap cannot leave a melee curse on a
+  // magic loadout.
+  const styleCurse = curseForStyle(
+    STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
+      ? (rawBuffs.styleCurse as StyleCurseChoice)
+      : "none",
+    style,
+  );
   const fortitude = rawBuffs.fortitude === true && styleCurse === "none";
   const totemOfVitality = rawBuffs.totemOfVitality === true;
   const bonfireLogType =
@@ -665,10 +736,13 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       num(raw.weaponTier, DEFAULT_LOADOUT.ammunitionTier),
     ),
     styleDamageBonus: Math.max(0, num(raw.styleDamageBonus, DEFAULT_LOADOUT.styleDamageBonus)),
+    // Equipped gear outranks the stored shape for the same reason it outranks
+    // the stored style.
     weaponConfiguration:
-      raw.weaponConfiguration === "dualwield" || raw.weaponConfiguration === "mainhand"
+      weaponConfigurationFor({ equipmentSlots }) ??
+      (raw.weaponConfiguration === "dualwield" || raw.weaponConfiguration === "mainhand"
         ? raw.weaponConfiguration
-        : "twohand",
+        : "twohand"),
     baseDamage: {
       mode: rawBaseDamage?.mode === "manual" ? "manual" : "automatic",
       manualValue: Math.max(

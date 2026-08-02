@@ -99,15 +99,16 @@ const OVERLOAD_OPTIONS: Array<{
 ];
 
 const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
-  modeled: "Modeled",
+  modeled: "Active",
   "not-modeled": "Not modeled",
   "outgoing-only": "Partial",
   none: "Recorded",
 };
 const BLESSING_SUPPORT_LABEL: Record<BlessingSupportStatus, string> = {
-  modeled: "Modeled",
+  modeled: "Active",
   "partially-modeled": "Partial",
   "not-modeled": "Not modeled",
+  "scenario-dependent": "Situational",
 };
 
 function setFactThreshold(fact: string): number | null {
@@ -194,10 +195,6 @@ export function BuffsPanel({
   return (
     <div className="loadout-panel loadout-panel-wide buffs-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
-      <p className="mt-1 text-xs text-parch-300">
-        Hover an icon for its effect. Fortitude replaces a style curse; overloads still boost every
-        combat stat.
-      </p>
 
       <div className="buff-group buff-target mt-3" role="group" aria-label="Target debuff">
         <h3 className="buff-group__title">Debuff</h3>
@@ -239,8 +236,8 @@ export function BuffsPanel({
           ))}
         </div>
         <p className="mt-1.5 text-[11px] text-parch-300">
-          Account unlocks default on and activate only with their matching item. Agony assumes the
-          enhanced gloves were equipped at least 9 seconds before tick 0.
+          Each enchantment only counts while its item is equipped. Agony assumes the enhanced gloves
+          went on at least 9 seconds before the fight.
         </p>
       </div>
 
@@ -287,13 +284,13 @@ export function BuffsPanel({
               <li key={choice.id}>
                 <span className="text-parch-100">{choice.name}</span> ·{" "}
                 {BLESSING_SUPPORT_LABEL[choice.support.status]}
-                {choice.support.mechanicsUnverified ? " · mechanics unverified" : ""}
+                {choice.support.mechanicsUnverified ? " · awaiting Jagex detail" : ""}
               </li>
             ))}
           </ul>
         ) : null}
         <p className="mt-1.5 text-[11px] text-parch-300">
-          Shared with Build. Unsupported effects remain excluded from combat totals.
+          These are the picks from Build. Anything not yet modelled stays out of the totals.
         </p>
       </div>
 
@@ -530,12 +527,14 @@ export function BuffsPanel({
                     {!def?.effects.length && !def?.facts?.length ? (
                       <li>
                         <span className="set-threshold-badge">Note</span>
-                        <span>No combat set bonus sourced.</span>
+                        <span>This set has no combat bonus yet.</span>
                       </li>
                     ) : null}
                   </ul>
                   <div className="set-effect-card__foot">
-                    <span>{SET_SUPPORT_LABEL[s.support]}</span>
+                    {/* The head badge already reports an active set; only the
+                        weaker support states are worth repeating here. */}
+                    {s.support !== "modeled" ? <span>{SET_SUPPORT_LABEL[s.support]}</span> : null}
                     {def?.source ? (
                       <a href={def.source.url} target="_blank" rel="noreferrer">
                         Source

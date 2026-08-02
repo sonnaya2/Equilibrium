@@ -4,8 +4,23 @@ import { NumberField } from "./NumberField";
 import { loadoutOverloadTier, loadoutStats } from "./loadoutStats";
 import { MAX_CONSTITUTION_LEVEL, MAX_DEFENCE_LEVEL } from "@/combat";
 import { overloadBoostedLevel } from "@/combat/shared/potions";
-import { withAttackLevel, withStrengthLevel, withStyleLevel, type Loadout } from "./useLoadout";
+import {
+  weaponConfigurationFor,
+  withAttackLevel,
+  withStrengthLevel,
+  withStyleLevel,
+  type Loadout,
+} from "./useLoadout";
+import type { CombatStyle } from "@/combat/types";
 import { useBuild } from "@/league/useBuild";
+
+/** Skill each style draws its damage level from. */
+const DAMAGE_SKILL: Record<CombatStyle, string> = {
+  melee: "Strength",
+  ranged: "Ranged",
+  magic: "Magic",
+  necromancy: "Necromancy",
+};
 
 function StatsGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -13,6 +28,53 @@ function StatsGroup({ title, children }: { title: string; children: React.ReactN
       <h3 className="buff-group__title">{title}</h3>
       <div className="loadout-fields mt-1.5">{children}</div>
     </section>
+  );
+}
+
+/**
+ * Numeric row whose value is engine-derived until the user takes it over. The
+ * checkbox sits beside the number so the two read as one control.
+ */
+function AutoNumberField({
+  label,
+  value,
+  auto,
+  onAutoChange,
+  onChange,
+  min,
+  max,
+}: {
+  label: string;
+  value: number;
+  auto: boolean;
+  onAutoChange: (auto: boolean) => void;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+}) {
+  return (
+    <div className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+      <span>{label}</span>
+      <span className="flex items-center gap-1.5">
+        <input
+          type="checkbox"
+          checked={auto}
+          aria-label={`${label} automatic`}
+          title="Follow the calculated value"
+          onChange={(event) => onAutoChange(event.target.checked)}
+        />
+        <input
+          type="number"
+          aria-label={label}
+          value={value}
+          min={min}
+          max={max}
+          disabled={auto}
+          onChange={(event) => onChange(Number(event.target.value))}
+          className="w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50 disabled:cursor-not-allowed disabled:text-parch-300"
+        />
+      </span>
+    </div>
   );
 }
 
@@ -54,10 +116,6 @@ export function StatsPanel({
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Stats</h2>
-      <p className="mt-1 text-xs text-parch-300">
-        Offensive levels and weapon tiers feed base ability damage. Defence and life remain separate
-        resolved stats.
-      </p>
 
       <div className="stats-layout mt-3">
         <StatsGroup title="Levels">
@@ -76,13 +134,13 @@ export function StatsPanel({
             </>
           ) : (
             <NumberField
-              label="Style level"
+              label={`${DAMAGE_SKILL[loadout.style]} level`}
               value={loadout.level}
               onChange={(level) => setLoadout(withStyleLevel(loadout, level))}
             />
           )}
           <DerivedRow
-            label="Damage level in play"
+            label={`Boosted ${DAMAGE_SKILL[loadout.style]} level`}
             value={String(stats.effectiveDamageLevel)}
             note={boostNote(loadout.style === "melee" ? loadout.strengthLevel : loadout.level)}
           />
@@ -95,6 +153,12 @@ export function StatsPanel({
               <select
                 aria-label="Weapon setup"
                 value={loadout.weaponConfiguration}
+                disabled={weaponConfigurationFor(loadout) != null}
+                title={
+                  weaponConfigurationFor(loadout) != null
+                    ? "Set by the weapon you have equipped"
+                    : undefined
+                }
                 onChange={(event) =>
                   automatic({
                     weaponConfiguration: event.target.value as Loadout["weaponConfiguration"],
@@ -103,7 +167,7 @@ export function StatsPanel({
               >
                 <option value="twohand">Two-handed</option>
                 <option value="dualwield">Dual wield</option>
-                <option value="mainhand">Main-hand only</option>
+                <option value="mainhand">Main-hand</option>
               </select>
             </label>
           ) : null}
@@ -138,6 +202,33 @@ export function StatsPanel({
             value={loadout.styleDamageBonus}
             onChange={(styleDamageBonus) => automatic({ styleDamageBonus })}
           />
+          <AutoNumberField
+            label="Base ability damage"
+            value={
+              loadout.baseDamage.mode === "manual" ? loadout.baseDamage.manualValue : stats.base
+            }
+            auto={loadout.baseDamage.mode === "automatic"}
+            onAutoChange={(auto) =>
+              setLoadout({
+                ...loadout,
+                baseDamage: {
+                  mode: auto ? "automatic" : "manual",
+                  manualValue: auto ? loadout.baseDamage.manualValue : stats.base,
+                },
+              })
+            }
+            onChange={(manualValue) =>
+              setLoadout({
+                ...loadout,
+                baseDamage: { mode: "manual", manualValue: Math.max(1, manualValue) },
+              })
+            }
+          />
+          {/* Perks move the number the engine actually uses away from the entered one. */}
+          {stats.base !==
+          (loadout.baseDamage.mode === "manual" ? loadout.baseDamage.manualValue : stats.base) ? (
+            <DerivedRow label="After perks" value={format(stats.base)} />
+          ) : null}
         </StatsGroup>
 
         <StatsGroup title="Defence & life">
@@ -172,11 +263,17 @@ export function StatsPanel({
             }
           />
           <DerivedRow label="Armour rating" value={format(stats.defence.totalArmour)} />
-          <NumberField
+          {/* null current life means "follow the maximum", so it never goes stale
+              when a buff moves the maximum underneath it. */}
+          <AutoNumberField
             label="Current life points"
             value={stats.life.currentLife}
             min={0}
             max={stats.life.overhealCeiling}
+            auto={loadout.currentLife == null}
+            onAutoChange={(auto) =>
+              setLoadout({ ...loadout, currentLife: auto ? null : stats.life.currentLife })
+            }
             onChange={(currentLife) => setLoadout({ ...loadout, currentLife })}
           />
           <DerivedRow
@@ -187,51 +284,6 @@ export function StatsPanel({
           {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
             <DerivedRow label="Overheal ceiling" value={format(stats.life.overhealCeiling)} />
           ) : null}
-        </StatsGroup>
-
-        <StatsGroup title="Base damage">
-          <label className="loadout-select">
-            <span>Source</span>
-            {/* Group heading carries "Base damage" visually; the control keeps it
-                as its accessible name so it still stands alone. */}
-            <select
-              aria-label="Base damage"
-              value={loadout.baseDamage.mode}
-              onChange={(event) =>
-                setLoadout({
-                  ...loadout,
-                  baseDamage: {
-                    ...loadout.baseDamage,
-                    mode: event.target.value === "manual" ? "manual" : "automatic",
-                  },
-                })
-              }
-            >
-              <option value="automatic">Automatic</option>
-              <option value="manual">Manual override</option>
-            </select>
-          </label>
-          {loadout.baseDamage.mode === "manual" ? (
-            <NumberField
-              label="Manual base override"
-              value={loadout.baseDamage.manualValue}
-              onChange={(manualValue) =>
-                setLoadout({
-                  ...loadout,
-                  baseDamage: { mode: "manual", manualValue: Math.max(1, manualValue) },
-                })
-              }
-            />
-          ) : null}
-          <DerivedRow
-            label="Effective base ability damage"
-            value={format(stats.base)}
-            note={
-              loadout.perks.equilibrium > 0 || loadout.perks.eruptive > 0
-                ? "perks applied"
-                : undefined
-            }
-          />
         </StatsGroup>
 
         <StatsGroup title="Combat assumptions">

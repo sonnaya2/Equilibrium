@@ -315,16 +315,12 @@ export function GearPanel({
       : `Showing ${visiblePickerRows.length} of ${pickerRows.length} · ${browseStyle ? STYLE_LABELS[browseStyle] : "all styles"}`;
 
   return (
-    <div className="gear-layout grid gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)]">
+    <div className="gear-layout">
       <div className="combat-frame paper-doll">
         <CombatFrameCorners />
         <h2 className="combat-section-title text-sm font-medium text-parch-50">Loadout</h2>
 
-        <div
-          className="paper-doll-grid mt-3 grid grid-cols-3 gap-1.5"
-          role="group"
-          aria-label="Equipment slots"
-        >
+        <div className="paper-doll-grid" role="group" aria-label="Equipment slots">
           {DOLL_LAYOUT.flatMap((row, rowIdx) =>
             row.map((slot, colIdx) => {
               if (!slot) {
@@ -475,8 +471,8 @@ export function GearPanel({
 
       <div className="combat-frame wearables-browser">
         <CombatFrameCorners />
-        <div className="gear-filterbar flex flex-wrap items-center gap-2 text-xs">
-          <label className="flex items-center gap-1 text-parch-100">
+        <div className="gear-filterbar text-xs">
+          <label>
             Region
             <select
               value={regionFilter}
@@ -490,7 +486,6 @@ export function GearPanel({
                   setStyleBrowse("all");
                 }
               }}
-              className="border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
             >
               <option value="all">All regions</option>
               <option value="base">Unverified</option>
@@ -501,7 +496,7 @@ export function GearPanel({
               ))}
             </select>
           </label>
-          <label className="flex items-center gap-1 text-parch-100">
+          <label>
             Search
             <input
               type="search"
@@ -511,11 +506,10 @@ export function GearPanel({
                 setShowAllWearables(false);
               }}
               placeholder="Name…"
-              className="w-36 border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
             />
           </label>
           {/* Kept for e2e + keyboard: checked = follow setup style. */}
-          <label className="flex items-center gap-1.5 text-parch-100">
+          <label className="gear-filterbar__check">
             <input
               type="checkbox"
               checked={matchStyle}
@@ -533,11 +527,7 @@ export function GearPanel({
                   setShowAllWearables(false);
                 }}
                 aria-pressed={sortKey === key}
-                className={`combat-button border px-2 py-1 capitalize ${
-                  sortKey === key
-                    ? "border-stone-750 bg-stone-850 text-parch-50"
-                    : "border-stone-750 text-parch-100 hover:text-parch-50"
-                }`}
+                className="combat-button px-2 py-1 capitalize"
               >
                 {key}
               </button>
@@ -615,7 +605,7 @@ export function GearPanel({
                     key={record.id}
                     type="button"
                     onClick={() => equip(record)}
-                    className={`wearable-row grid w-full grid-cols-[1fr_auto] items-center gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-sm ${
+                    className={`wearable-row w-full border-b text-left text-sm ${
                       equipped
                         ? "bg-stone-850 text-parch-50"
                         : "text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"

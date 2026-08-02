@@ -22,7 +22,7 @@ export function TargetPanel({
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Target</h2>
       <p className="mt-1 text-xs text-parch-300">Calculates Damage Potential from target stats.</p>
       <div className="loadout-fields mt-3">
-        <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+        <label className="loadout-check">
           <input
             type="checkbox"
             checked={target !== null}
@@ -55,12 +55,11 @@ export function TargetPanel({
               onChange={(additiveHitChance) => updateTarget({ additiveHitChance })}
               suffix="%"
             />
-            <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-select loadout-select--wide">
               <span>Affinity</span>
               <select
                 value={target.affinity}
                 onChange={(event) => updateTarget({ affinity: event.target.value as AffinityKind })}
-                className="w-full border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
               >
                 <option value="weak">Weak (70)</option>
                 <option value="same">Same (60)</option>
@@ -68,7 +67,7 @@ export function TargetPanel({
                 <option value="weakness">Specific weakness (90)</option>
               </select>
             </label>
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.damagePotentialOverride !== undefined}
@@ -88,7 +87,7 @@ export function TargetPanel({
                 suffix="%"
               />
             ) : null}
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.hpPercent !== undefined}
@@ -105,7 +104,7 @@ export function TargetPanel({
                 onChange={(value) => updateTarget({ hpPercent: Math.min(100, Math.max(0, value)) })}
               />
             ) : null}
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.hasApplicableWeakness === true}
@@ -115,7 +114,7 @@ export function TargetPanel({
               />
               Has an applicable weakness
             </label>
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.demon === true}
@@ -125,7 +124,7 @@ export function TargetPanel({
               />
               Demon (Demon Slayer perk)
             </label>
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.dragon === true}
@@ -135,7 +134,7 @@ export function TargetPanel({
               />
               Dragon (Dragon Slayer perk)
             </label>
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.undead === true}
@@ -150,7 +149,7 @@ export function TargetPanel({
               value={target.occupiedTiles ?? 1}
               onChange={(value) => updateTarget({ occupiedTiles: Math.max(1, Math.floor(value)) })}
             />
-            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+            <label className="loadout-check">
               <input
                 type="checkbox"
                 checked={target.poisonImmune === true}

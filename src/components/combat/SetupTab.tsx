@@ -178,12 +178,9 @@ export function SetupTab({
   ];
 
   return (
-    <div className="combat-setup py-3">
-      <div className="setup-layout grid">
-        <nav
-          className="combat-frame setup-nav flex flex-row flex-wrap gap-1 lg:flex-col"
-          aria-label="Loadout sections"
-        >
+    <div className="combat-setup">
+      <div className="setup-layout">
+        <nav className="combat-frame setup-nav" aria-label="Loadout sections">
           <CombatFrameCorners />
           {SUB_TABS.map((tab) => (
             <button
@@ -191,11 +188,7 @@ export function SetupTab({
               type="button"
               onClick={() => setSubTab(tab)}
               aria-pressed={subTab === tab}
-              className={`combat-button setup-nav-button border px-2.5 py-1.5 text-left text-xs ${
-                subTab === tab
-                  ? "border-gem-400 bg-stone-850 font-medium text-gem-300"
-                  : "border-stone-750 text-parch-100 hover:text-parch-50"
-              }`}
+              className="combat-button setup-nav-button"
             >
               <GameIcon
                 src={

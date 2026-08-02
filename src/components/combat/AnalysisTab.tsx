@@ -125,7 +125,7 @@ export function AnalysisTab() {
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;
 
   return (
-    <div className="analysis-layout py-3">
+    <div className="analysis-layout">
       <aside className="combat-frame analysis-library">
         <CombatFrameCorners />
         <h2 className="combat-page-title text-sm font-medium text-parch-50">Analysis</h2>
@@ -171,7 +171,7 @@ export function AnalysisTab() {
         <div className="analysis-lines">
           <div className="analysis-line">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">A · Loadout</h3>
-            <dl className="mt-2 text-xs">
+            <dl className="analysis-stat-rows mt-2">
               {(
                 [
                   ["Level", statsA.level],
@@ -180,9 +180,9 @@ export function AnalysisTab() {
                   ["Crit", `${Math.round(statsA.critChance * 1000) / 10}%`],
                 ] as const
               ).map(([label, value]) => (
-                <div key={label} className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
-                  <dt className="text-parch-300">{label}</dt>
-                  <dd className="text-right font-mono text-parch-50">{value}</dd>
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
                 </div>
               ))}
             </dl>
@@ -202,12 +202,12 @@ export function AnalysisTab() {
                     critChance: statsA.critChance * 100,
                   })
                 }
-                className="combat-button border border-stone-750 px-2 py-0.5 text-xs text-parch-300"
+                className="combat-button px-2 py-0.5 text-xs text-parch-300"
               >
                 Reset to A
               </button>
             </div>
-            <div className="mt-2">
+            <div className="loadout-fields mt-2">
               <NumberField
                 label="Level"
                 value={lineB.level}

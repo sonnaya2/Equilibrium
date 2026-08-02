@@ -53,9 +53,9 @@ function AutoNumberField({
   max?: number;
 }) {
   return (
-    <div className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+    <div className="loadout-number">
       <span>{label}</span>
-      <span className="flex items-center gap-1.5">
+      <span className="loadout-control">
         <input
           type="checkbox"
           checked={auto}
@@ -71,7 +71,6 @@ function AutoNumberField({
           max={max}
           disabled={auto}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50 disabled:cursor-not-allowed disabled:text-parch-300"
         />
       </span>
     </div>

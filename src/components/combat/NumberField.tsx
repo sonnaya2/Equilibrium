@@ -20,9 +20,9 @@ export function NumberField({
   disabled?: boolean;
 }) {
   return (
-    <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-300">
+    <label className="loadout-number">
       <span>{label}</span>
-      <span className="flex items-center gap-1">
+      <span className="loadout-control">
         <input
           type="number"
           value={value}
@@ -30,7 +30,6 @@ export function NumberField({
           max={max}
           disabled={disabled}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50 disabled:cursor-not-allowed disabled:text-parch-300"
         />
         {suffix ? <span className="text-parch-300">{suffix}</span> : null}
       </span>

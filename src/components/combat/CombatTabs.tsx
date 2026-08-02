@@ -23,7 +23,7 @@ export function CombatTabs() {
   const [loadout, setLoadout] = useLoadout();
 
   return (
-    <div className="combat-screen flex min-h-0 flex-1 flex-col">
+    <div className="combat-screen">
       <header className="combat-toolbar">
         {/* The equipped weapon sets the style, so this icon is the only readout. */}
         <div className="combat-toolbar__title">
@@ -38,21 +38,15 @@ export function CombatTabs() {
         />
       </header>
 
-      <div className="combat-tab-stage min-h-0 flex-1 overflow-hidden">
+      <div className="combat-tab-stage">
         <WorkbenchPanel id="Setup" active={tab}>
-          <div className="h-full min-h-0 overflow-auto">
-            <SetupTab loadout={loadout} setLoadout={setLoadout} />
-          </div>
+          <SetupTab loadout={loadout} setLoadout={setLoadout} />
         </WorkbenchPanel>
-        <WorkbenchPanel id="Rotation" active={tab}>
-          <div className="h-full min-h-0 overflow-hidden">
-            <RotationPlanner />
-          </div>
+        <WorkbenchPanel id="Rotation" active={tab} clip>
+          <RotationPlanner />
         </WorkbenchPanel>
-        <WorkbenchPanel id="Analysis" active={tab}>
-          <div className="h-full min-h-0 overflow-hidden">
-            <AnalysisTab />
-          </div>
+        <WorkbenchPanel id="Analysis" active={tab} clip>
+          <AnalysisTab />
         </WorkbenchPanel>
       </div>
     </div>

@@ -335,7 +335,7 @@ export function RotationPlanner() {
             </label>
           </div>
         )}
-        <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-parch-300">
+        <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-parch-300">
           <label className="grid gap-1">
             <span>Ammo</span>
             <select

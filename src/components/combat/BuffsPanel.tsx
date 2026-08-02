@@ -171,7 +171,7 @@ export function BuffsPanel({
     <div className="loadout-panel loadout-panel-wide buffs-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
 
-      <div className="buff-group buff-target mt-3" role="group" aria-label="Target debuff">
+      <div className="buff-group buff-target" role="group" aria-label="Target debuff">
         <h3 className="buff-group__title">Debuff</h3>
         <div className="icon-tile-grid">
           <label className={`icon-tile${loadout.buffs.vulnerability ? " is-on" : ""}`}>
@@ -193,7 +193,7 @@ export function BuffsPanel({
       </div>
 
       <div
-        className="buff-group buff-enchantments mt-3"
+        className="buff-group buff-enchantments"
         role="group"
         aria-label="Account enchantments"
       >
@@ -217,7 +217,7 @@ export function BuffsPanel({
       </div>
 
       <div
-        className="buff-group buff-blessings mt-3"
+        className="buff-group buff-blessings"
         role="group"
         aria-label="Equilibrium blessings"
       >
@@ -269,7 +269,7 @@ export function BuffsPanel({
         </p>
       </div>
 
-      <div className="buff-group buff-style mt-3" role="group" aria-label="Style curse">
+      <div className="buff-group buff-style" role="group" aria-label="Style curse">
         <h3 className="buff-group__title">Style curse</h3>
         <div className="icon-tile-grid">
           <BuffTile
@@ -296,7 +296,7 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div className="buff-group buff-overload mt-3" role="group" aria-label="Overload">
+      <div className="buff-group buff-overload" role="group" aria-label="Overload">
         <h3 className="buff-group__title">Overload</h3>
         <div className="icon-tile-grid">
           <BuffTile
@@ -321,7 +321,7 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div className="buff-group buff-skillcapes mt-3" role="group" aria-label="Skillcape perks">
+      <div className="buff-group buff-skillcapes" role="group" aria-label="Skillcape perks">
         <h3 className="buff-group__title">Skillcape perks</h3>
         <div className="icon-tile-grid">
           <BuffTile
@@ -341,7 +341,7 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div className="buff-group buff-life mt-3" role="group" aria-label="Defence and life">
+      <div className="buff-group buff-life" role="group" aria-label="Defence and life">
         <h3 className="buff-group__title">Defence & life</h3>
         <div className="icon-tile-grid">
           <BuffTile

@@ -362,16 +362,14 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "utility",
     area: "aoe",
-    hits: [
-      { band: { minPct: 115, maxPct: 135 } },
-      { band: { minPct: 175, maxPct: 205 } },
-    ],
+    hits: [{ band: { minPct: 115, maxPct: 135 } }, { band: { minPct: 175, maxPct: 205 } }],
     adrenaline: { cost: 30 },
     cooldownSeconds: 15,
     weaponRequirement: "mainhand",
     requiredPassiveAnyOf: ["leng-endless-frost"],
     supportStatus: "partially-modeled",
-    supportNote: "Single-target model (primary + splash-on-primary). Multi-target splash unmodeled.",
+    supportNote:
+      "Single-target model (primary + splash-on-primary). Multi-target splash unmodeled.",
     source: wikiAbility("Icy Tempest", "Icy_Tempest", "2026-08-02"),
   },
   {

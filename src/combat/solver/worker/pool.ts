@@ -202,9 +202,7 @@ export function mergeProgress(
 
   // Missing agents count as 0; cap below finalize band while anyone still searches.
   const rawRatio = ratioSum / Math.max(1, agentCount);
-  const progressRatio = anyStillSearching
-    ? Math.min(0.82, rawRatio)
-    : Math.min(0.995, rawRatio);
+  const progressRatio = anyStillSearching ? Math.min(0.82, rawRatio) : Math.min(0.995, rawRatio);
 
   const fin = !anyStillSearching ? finalizeLead : undefined;
 
@@ -255,9 +253,7 @@ export function mergeProgress(
 
 function isNearScoreTie(a: number, b: number): boolean {
   return (
-    Number.isFinite(a) &&
-    Number.isFinite(b) &&
-    Math.abs(a - b) <= Math.max(1, Math.abs(b) * 0.02)
+    Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= Math.max(1, Math.abs(b) * 0.02)
   );
 }
 
@@ -420,8 +416,7 @@ export class SolverAgentPool {
     }
     const agentCount = Math.min(want, n);
 
-    const cancelled = () =>
-      options?.isCancelled?.() === true || options?.signal?.aborted === true;
+    const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
     if (cancelled()) {
       throw new DOMException("revolution solver cancelled", "AbortError");
     }
@@ -499,16 +494,12 @@ export class SolverAgentPool {
           } catch {
             // ignore
           }
-          settle(() =>
-            reject(new DOMException("revolution solver cancelled", "AbortError")),
-          );
+          settle(() => reject(new DOMException("revolution solver cancelled", "AbortError")));
         };
 
         const onError = (event: ErrorEvent) => {
           this.replaceDeadWorker(slot, requestId);
-          settle(() =>
-            reject(new Error(event.message || `solver agent ${index} failed`)),
-          );
+          settle(() => reject(new Error(event.message || `solver agent ${index} failed`)));
         };
 
         const onMessageError = () => {
@@ -573,9 +564,7 @@ export class SolverAgentPool {
               settle(() => reject(new Error(msg.error)));
               break;
             case "cancelled":
-              settle(() =>
-                reject(new DOMException("revolution solver cancelled", "AbortError")),
-              );
+              settle(() => reject(new DOMException("revolution solver cancelled", "AbortError")));
               break;
           }
         };
@@ -586,11 +575,7 @@ export class SolverAgentPool {
           if (settled || acknowledged) return;
           this.replaceDeadWorker(slot, requestId);
           settle(() =>
-            reject(
-              new Error(
-                `solver agent ${index} did not acknowledge start within ${ackMs}ms`,
-              ),
-            ),
+            reject(new Error(`solver agent ${index} did not acknowledge start within ${ackMs}ms`)),
           );
         }, ackMs);
 
@@ -604,9 +589,7 @@ export class SolverAgentPool {
           post(slot.worker, { type: "start", requestId, payload });
         } catch (err) {
           this.replaceDeadWorker(slot, requestId);
-          settle(() =>
-            reject(err instanceof Error ? err : new Error(String(err))),
-          );
+          settle(() => reject(err instanceof Error ? err : new Error(String(err))));
         }
 
         if (cancelled()) onAbort();

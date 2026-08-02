@@ -3,12 +3,7 @@ import type { EquipmentRecord, ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 
 export type WeaponConfiguration =
-  | "twohand"
-  | "dualwield"
-  | "mainhand"
-  | "shield"
-  | "defender"
-  | "necromancy";
+  "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
 
 /**
  * Structured cast/palette availability for one ability under a loadout.
@@ -19,11 +14,7 @@ export type AbilityCastAvailability =
   | {
       available: false;
       reason:
-        | "missing-passive"
-        | "superseded"
-        | "weapon-requirement"
-        | "missing-equipment"
-        | "other";
+        "missing-passive" | "superseded" | "weapon-requirement" | "missing-equipment" | "other";
       message: string;
     };
 

@@ -126,8 +126,7 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
       const mult = live.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
       const scale = input.conjureBasicDamageMult ?? 1;
       const modifiers = conjureModifiers(eventRt);
-      const hitMods =
-        scale === 1 ? modifiers : [...modifiers, conjureBasicDamageModifier(scale)];
+      const hitMods = scale === 1 ? modifiers : [...modifiers, conjureBasicDamageModifier(scale)];
       const hit = calculateHit({
         base: input.base,
         band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },

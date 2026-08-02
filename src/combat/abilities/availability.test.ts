@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  isObtainableInRegions,
-  resolveAvailability,
-  resolveRegionMode,
-} from "./availability";
+import { isObtainableInRegions, resolveAvailability, resolveRegionMode } from "./availability";
 
 describe("resolveAvailability", () => {
   it("missing unlock → unknown", () => {
@@ -16,9 +12,9 @@ describe("resolveAvailability", () => {
   });
 
   it("type codex with empty regions → unknown", () => {
-    expect(
-      resolveAvailability({ type: "codex", regions: [], requirement: "Some codex" }),
-    ).toBe("unknown");
+    expect(resolveAvailability({ type: "codex", regions: [], requirement: "Some codex" })).toBe(
+      "unknown",
+    );
   });
 
   it("regions with forinthry → regional", () => {

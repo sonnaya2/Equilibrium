@@ -47,8 +47,7 @@ export function equipmentStyleDamageContributions(loadout: Loadout): StyleDamage
     if (!record?.slot || WEAPON_SLOTS.has(record.slot)) continue;
     const damage = equipmentRecordDamage(record);
     if (damage === 0) continue;
-    const styleOk =
-      !record.style || record.style === "hybrid" || record.style === loadout.style;
+    const styleOk = !record.style || record.style === "hybrid" || record.style === loadout.style;
     rows.push({
       id,
       label: record.name,
@@ -192,10 +191,7 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
   }
   // Slider fallback when no tiered weapon is equipped. Shield = main-hand only;
   // defender is dual-capable for AD at half-tier OH; dualwield uses full offhandTier.
-  if (
-    loadout.weaponConfiguration === "mainhand" ||
-    loadout.weaponConfiguration === "shield"
-  ) {
+  if (loadout.weaponConfiguration === "mainhand" || loadout.weaponConfiguration === "shield") {
     return {
       kind: "mainhand",
       style: loadout.style,

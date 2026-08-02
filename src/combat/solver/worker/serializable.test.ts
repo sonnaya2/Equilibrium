@@ -124,8 +124,6 @@ describe("solver worker serializable boundary", () => {
     expect(Array.isArray(again.blessingIds)).toBe(true);
   });
 
-
-
   it("revives modifiers as a function without shipping closures across clone", () => {
     const sim = structuredClone(sampleSimBase());
     const base = reviveRevolutionBase(sim);

@@ -3,10 +3,7 @@ import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import type { AbilityHit, AbilitySpec } from "../pipeline/calculateAbility";
-import {
-  activeEquipmentEffects,
-  type ActiveEquipmentEffects,
-} from "./equipment";
+import { activeEquipmentEffects, type ActiveEquipmentEffects } from "./equipment";
 import type { ItemPassiveId } from "../data/records";
 import {
   additionalBleedHitsFromExtension,
@@ -66,9 +63,7 @@ describe("extendBleedHitList", () => {
     expect(base.hits).toHaveLength(8);
     expect(base.hits.map((h) => h.tickOffset)).toEqual(before);
     expect(extended).toHaveLength(12);
-    expect(extended.map((h) => h.tickOffset)).toEqual([
-      2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,
-    ]);
+    expect(extended.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]);
     for (const hit of extended) {
       expect(hit.dot).toBe(true);
       expect(hit.dotKind).toBe("bleed");

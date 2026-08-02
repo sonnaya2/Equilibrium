@@ -555,12 +555,7 @@ describe("gizmo layout", () => {
     loadout = placePerkOnGizmo(loadout, "armour1", "impatient");
     loadout = placePerkOnGizmo(loadout, "armour1", "invigorating");
     loadout = placePerkOnGizmo(loadout, "armour1", "energising");
-    expect(loadout.gizmos.armour1).toEqual([
-      "biting",
-      "impatient",
-      "invigorating",
-      "energising",
-    ]);
+    expect(loadout.gizmos.armour1).toEqual(["biting", "impatient", "invigorating", "energising"]);
     const full = placePerkOnGizmo(loadout, "armour1", "ultimatums");
     expect(full.gizmos.armour1).toEqual(loadout.gizmos.armour1);
     expect(gizmoSlotOf(full.gizmos, "ultimatums")).toBeNull();

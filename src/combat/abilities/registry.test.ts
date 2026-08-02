@@ -3,12 +3,7 @@ import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
-import {
-  ABILITY_REGISTRY,
-  entryByEngineId,
-  entryByRecordId,
-  engineSpecs,
-} from "./registry";
+import { ABILITY_REGISTRY, entryByEngineId, entryByRecordId, engineSpecs } from "./registry";
 
 const ALL_STYLE_SPECS = [
   ...MELEE_ABILITIES,

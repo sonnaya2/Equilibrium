@@ -118,9 +118,7 @@ export function TargetPanel({
               <input
                 type="checkbox"
                 checked={target.demon === true}
-                onChange={(event) =>
-                  updateTarget({ demon: event.target.checked || undefined })
-                }
+                onChange={(event) => updateTarget({ demon: event.target.checked || undefined })}
               />
               Demon (Demon Slayer perk)
             </label>
@@ -128,9 +126,7 @@ export function TargetPanel({
               <input
                 type="checkbox"
                 checked={target.dragon === true}
-                onChange={(event) =>
-                  updateTarget({ dragon: event.target.checked || undefined })
-                }
+                onChange={(event) => updateTarget({ dragon: event.target.checked || undefined })}
               />
               Dragon (Dragon Slayer perk)
             </label>
@@ -138,9 +134,7 @@ export function TargetPanel({
               <input
                 type="checkbox"
                 checked={target.undead === true}
-                onChange={(event) =>
-                  updateTarget({ undead: event.target.checked || undefined })
-                }
+                onChange={(event) => updateTarget({ undead: event.target.checked || undefined })}
               />
               Undead (Undead Slayer perk)
             </label>

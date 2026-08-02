@@ -220,9 +220,7 @@ export function toScoredBar(
   const profileId = config.profileId ?? "balanced";
   const horizonTicks =
     result.horizonTicks ??
-    (mode === "full"
-      ? (config.fullHorizonTicks ?? 500)
-      : (config.searchHorizonTicks ?? 50));
+    (mode === "full" ? (config.fullHorizonTicks ?? 500) : (config.searchHorizonTicks ?? 50));
   const obj = result.objective;
 
   if (obj && "ok" in obj && obj.ok === false) {
@@ -275,8 +273,7 @@ export function toScoredBar(
   // return `{ score }` on full mode are treated as rankable full scores so unit
   // tests can exercise finalize; production evaluate always sets flags.
   const score = result.score;
-  const exploratory =
-    result.exploratory !== undefined ? result.exploratory : mode === "search";
+  const exploratory = result.exploratory !== undefined ? result.exploratory : mode === "search";
   const validForFinalRanking =
     result.validForFinalRanking !== undefined
       ? result.validForFinalRanking

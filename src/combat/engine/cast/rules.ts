@@ -8,10 +8,7 @@ import type { AdrenalineRules } from "../simulation/contracts";
 import type { CastRngPointId } from "../simulation/contracts";
 import type { RotationState } from "../runtime/state";
 import { blessingRule, hasBlessing, type ResolvedLeagueRules } from "../../league/ruleset";
-import {
-  permanentAvailabilityBlock,
-  type WeaponConfiguration,
-} from "./requirements";
+import { permanentAvailabilityBlock, type WeaponConfiguration } from "./requirements";
 
 export {
   equipmentRecordPassiveIds,

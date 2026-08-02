@@ -560,9 +560,7 @@ function igneousCombinedPresentation(): Pick<
 > {
   return {
     label: "Igneous ultimate upgrades",
-    effects: [
-      "Unlocks upgraded Overpower, Deadshot, Omnipower, and Death Skulls.",
-    ],
+    effects: ["Unlocks upgraded Overpower, Deadshot, Omnipower, and Death Skulls."],
     support: "modeled",
   };
 }

@@ -20,9 +20,7 @@ const t99 = { tier: 99 };
 describe("combat goldens (independently derived)", () => {
   it("DPL intermediate floors rebuild the T99 2H golden without calling baseAbilityDamage", () => {
     const rebuilt =
-      Math.floor(damagePerLevel(99)) +
-      Math.floor(damagePerLevel(99) / 2) +
-      Math.floor(14.4 * 99);
+      Math.floor(damagePerLevel(99)) + Math.floor(damagePerLevel(99) / 2) + Math.floor(14.4 * 99);
     expect(rebuilt).toBe(GOLDEN_L99_T99_TWO_HAND);
   });
 

@@ -94,10 +94,7 @@ export type SolverAgentRecipe = "default" | "evolutionary" | "anneal_local";
 /** Hard cap per algorithm block before rolling into the next recipe. */
 export const AGENTS_PER_RECIPE = 6;
 
-export function agentSearchRecipe(
-  agentIndex: number,
-  _tier?: SolveTier,
-): SolverAgentRecipe {
+export function agentSearchRecipe(agentIndex: number, _tier?: SolveTier): SolverAgentRecipe {
   const i = Math.max(0, Math.floor(Number(agentIndex)) || 0);
   const block = Math.floor(i / AGENTS_PER_RECIPE);
   if (block <= 0) return "default";

@@ -6,7 +6,9 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function progress(partial: Partial<SolverProgress> & Pick<SolverProgress, "bestScore">): SolverProgress {
+function progress(
+  partial: Partial<SolverProgress> & Pick<SolverProgress, "bestScore">,
+): SolverProgress {
   return {
     evaluations: 10,
     uniqueCandidates: 5,
@@ -140,11 +142,7 @@ describe("mergeProgress dual scores", () => {
   });
 
   it("keeps bestScore exploratory when only bestScore is present", () => {
-    const merged = mergeProgress(
-      [progress({ bestScore: 12 }), progress({ bestScore: 9 })],
-      2,
-      50,
-    );
+    const merged = mergeProgress([progress({ bestScore: 12 }), progress({ bestScore: 9 })], 2, 50);
     expect(merged.bestScore).toBe(12);
     expect(merged.bestExploratoryScore).toBe(12);
     expect(merged.bestFullScore).toBeUndefined();

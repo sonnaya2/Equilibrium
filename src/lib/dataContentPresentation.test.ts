@@ -364,9 +364,18 @@ describe("presentContentRewards — major boss uniques", () => {
       const presented = presentContentRewards(sample.full);
       const all = contentRewardIcons(presented.tokens, 99);
       expect(all.length, `${sample.name} resolved`).toBeGreaterThanOrEqual(sample.minResolved);
-      expect(all.every((i) => publicOk(i.src)), sample.name).toBe(true);
-      expect(all.some((i) => sample.srcRe.test(i.src)), sample.name).toBe(true);
-      expect(all.every((i) => !i.src.includes("/game/bosses/")), sample.name).toBe(true);
+      expect(
+        all.every((i) => publicOk(i.src)),
+        sample.name,
+      ).toBe(true);
+      expect(
+        all.some((i) => sample.srcRe.test(i.src)),
+        sample.name,
+      ).toBe(true);
+      expect(
+        all.every((i) => !i.src.includes("/game/bosses/")),
+        sample.name,
+      ).toBe(true);
       expect(presented.icons.length, sample.name).toBeLessThanOrEqual(REWARD_ICON_CAP);
       expect(presented.overflowResolved, sample.name).toBe(
         Math.max(0, all.length - presented.icons.length),

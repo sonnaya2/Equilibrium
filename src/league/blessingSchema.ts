@@ -230,8 +230,6 @@ export function normalizeBlessingSelections(
   return { selections: ordered, paths };
 }
 
-
-
 /** Non-throwing validation for tests and tooling. Empty array = valid. */
 export function validateBlessingsDocument(doc: unknown): { path: string; message: string }[] {
   const issues: { path: string; message: string }[] = [];
@@ -243,10 +241,13 @@ export function validateBlessingsDocument(doc: unknown): { path: string; message
   }
   if (doc && typeof doc === "object" && Array.isArray((doc as { records?: unknown }).records)) {
     const seen = new Set<string>();
-    for (const record of (doc as { records: { choices?: { id?: string; combat?: Record<string, unknown> }[] }[] }).records) {
+    for (const record of (
+      doc as { records: { choices?: { id?: string; combat?: Record<string, unknown> }[] }[] }
+    ).records) {
       for (const choice of record.choices ?? []) {
         if (choice.id) {
-          if (seen.has(choice.id)) issues.push({ path: choice.id, message: `duplicate id ${choice.id}` });
+          if (seen.has(choice.id))
+            issues.push({ path: choice.id, message: `duplicate id ${choice.id}` });
           seen.add(choice.id);
         }
         const combat = choice.combat ?? {};

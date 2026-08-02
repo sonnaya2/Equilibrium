@@ -92,9 +92,9 @@ export function CalculationAssumptions({
         ] as Array<[string, string | number]>)
       : []),
     ...(bigBonedPicked
-      ? ([
-          ["Big Boned outgoing", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")],
-        ] as Array<[string, string | number]>)
+      ? ([["Big Boned outgoing", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")]] as Array<
+          [string, string | number]
+        >)
       : []),
     ...(barkscalesPicked
       ? ([

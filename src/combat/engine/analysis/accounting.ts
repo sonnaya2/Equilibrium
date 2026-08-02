@@ -102,8 +102,7 @@ export function accountAnalysisEvent(
   if (event.damageTag === "bonus-damage") {
     const parentId = parentAbilityId(rt, event);
     if (parentId && parentId !== event.abilityId) {
-      const parent =
-        analysis.effects.get(parentId) ?? emptyLedger(parentId, "ability-direct");
+      const parent = analysis.effects.get(parentId) ?? emptyLedger(parentId, "ability-direct");
       parent.bonusDamage += expected;
       analysis.effects.set(parentId, parent);
     }

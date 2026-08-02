@@ -149,13 +149,12 @@ const PERKS: readonly PerkDef[] = [
 const PERK_BY_KEY = new Map(PERKS.map((perk) => [perk.key, perk]));
 
 /** Wiki: Equipment level → Perk benefits (×1.1 chance). Modeled: Biting, Impatient, Relentless. */
-const LEVEL_20_BY_PERK: Partial<
-  Record<PerkRankKey, { key: keyof LoadoutPerks; detail: string }>
-> = {
-  biting: { key: "bitingLevel20", detail: "L20 ×1.1 → +2.2% crit per rank" },
-  impatient: { key: "impatientLevel20", detail: "L20 ×1.1 → 9.9% proc per rank" },
-  relentless: { key: "relentlessLevel20", detail: "L20 ×1.1 → 1.1% refund per rank" },
-};
+const LEVEL_20_BY_PERK: Partial<Record<PerkRankKey, { key: keyof LoadoutPerks; detail: string }>> =
+  {
+    biting: { key: "bitingLevel20", detail: "L20 ×1.1 → +2.2% crit per rank" },
+    impatient: { key: "impatientLevel20", detail: "L20 ×1.1 → 9.9% proc per rank" },
+    relentless: { key: "relentlessLevel20", detail: "L20 ×1.1 → 1.1% refund per rank" },
+  };
 
 function level20Meta(perk: PerkRankKey) {
   return LEVEL_20_BY_PERK[perk] ?? null;
@@ -323,10 +322,7 @@ function GizmoCard({
                 <span className="gizmo-perk__identity">
                   <span className="gizmo-perk__name">{perk.label}</span>
                   {l20 ? (
-                    <label
-                      className={`gizmo-perk__l20${l20On ? " is-on" : ""}`}
-                      title={l20.detail}
-                    >
+                    <label className={`gizmo-perk__l20${l20On ? " is-on" : ""}`} title={l20.detail}>
                       <input
                         type="checkbox"
                         checked={l20On}

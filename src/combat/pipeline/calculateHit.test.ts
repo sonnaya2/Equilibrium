@@ -122,7 +122,9 @@ describe("calculateHit", () => {
     expect(() => calculateRawHitBand({ ...baseInput, min: 10.5, max: 20 })).toThrow(/non-integer/);
   });
   it("rejects NaN and infinite raw-band bounds", () => {
-    expect(() => calculateRawHitBand({ ...baseInput, min: Number.NaN, max: 20 })).toThrow(/non-finite/);
+    expect(() => calculateRawHitBand({ ...baseInput, min: Number.NaN, max: 20 })).toThrow(
+      /non-finite/,
+    );
     expect(() =>
       calculateRawHitBand({ ...baseInput, min: 0, max: Number.POSITIVE_INFINITY }),
     ).toThrow(/non-finite/);

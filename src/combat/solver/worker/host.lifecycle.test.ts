@@ -583,11 +583,10 @@ describe("solver host lifecycle", () => {
   it("Worker constructor failure rejects preferWorker path", async () => {
     FakeWorker.failConstruct = true;
     const client = getRevolutionSolverClient();
-    await expect(
-      client.start(sampleRequest(), undefined, { preferWorker: true }),
-    ).rejects.toThrow(/worker unavailable/);
+    await expect(client.start(sampleRequest(), undefined, { preferWorker: true })).rejects.toThrow(
+      /worker unavailable/,
+    );
   });
-
 
   it("plain loadout does not sticky-prefer main for later sim-base runs", async () => {
     const plain = defaultSerializableRequest({

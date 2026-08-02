@@ -63,14 +63,8 @@ describe("solver pool weapon-shape gates (melee catalogue)", () => {
     expect(isBarEligible(["assault", "flurry"], dualPool)).toBe(true);
 
     const loose = buildCandidatePool(MELEE_ABILITIES, "melee", {});
-    expect(
-      isBarEligible(["hurricane"], loose, { weaponConfiguration: "dualwield" }),
-    ).toBe(false);
-    expect(
-      isBarEligible(["flurry"], loose, { weaponConfiguration: "twohand" }),
-    ).toBe(false);
-    expect(
-      isBarEligible(["hurricane"], loose, { weaponConfiguration: "twohand" }),
-    ).toBe(true);
+    expect(isBarEligible(["hurricane"], loose, { weaponConfiguration: "dualwield" })).toBe(false);
+    expect(isBarEligible(["flurry"], loose, { weaponConfiguration: "twohand" })).toBe(false);
+    expect(isBarEligible(["hurricane"], loose, { weaponConfiguration: "twohand" })).toBe(true);
   });
 });

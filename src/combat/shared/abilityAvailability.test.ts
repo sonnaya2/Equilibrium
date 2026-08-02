@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { activeEquipmentEffects } from "./equipment";
-import {
-  equipmentRecordPassiveIds,
-  resolveAbilityCastAvailability,
-} from "./abilityAvailability";
+import { equipmentRecordPassiveIds, resolveAbilityCastAvailability } from "./abilityAvailability";
 import { equipmentById } from "../data";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
@@ -64,12 +61,7 @@ describe("igneous cape equipment passives", () => {
       equipmentSlots: { cape: "item:igneous-kal-zuk" },
     });
     expect([...effects.passiveIds].sort()).toEqual(
-      [
-        "igneous-deadshot",
-        "igneous-death-skulls",
-        "igneous-omnipower",
-        "igneous-overpower",
-      ].sort(),
+      ["igneous-deadshot", "igneous-death-skulls", "igneous-omnipower", "igneous-overpower"].sort(),
     );
     expect(new Set(effects.passiveIds).size).toBe(4);
   });
@@ -83,12 +75,7 @@ describe("igneous cape equipment passives", () => {
     const zuk = equipmentById("item:igneous-kal-zuk");
     expect(zuk).toBeDefined();
     expect(equipmentRecordPassiveIds(zuk!).sort()).toEqual(
-      [
-        "igneous-deadshot",
-        "igneous-death-skulls",
-        "igneous-omnipower",
-        "igneous-overpower",
-      ].sort(),
+      ["igneous-deadshot", "igneous-death-skulls", "igneous-omnipower", "igneous-overpower"].sort(),
     );
   });
 });
@@ -140,9 +127,9 @@ describe("resolveAbilityCastAvailability — igneous pairs", () => {
   for (const c of cases) {
     describe(c.style, () => {
       it("without passive: base available, upgrade missing-passive", () => {
-        expect(
-          resolveAbilityCastAvailability(c.base, { groupPeers: c.peers }),
-        ).toEqual({ available: true });
+        expect(resolveAbilityCastAvailability(c.base, { groupPeers: c.peers })).toEqual({
+          available: true,
+        });
         const upgrade = resolveAbilityCastAvailability(c.upgrade, { groupPeers: c.peers });
         expect(upgrade).toMatchObject({
           available: false,

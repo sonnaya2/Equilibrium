@@ -7,10 +7,7 @@ import { simulate, type RotationSummary } from "@/combat/engine/simulation/simul
 import { resolveAbilityCastAvailability } from "@/combat/engine/cast/requirements";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import type { CombatStyle } from "@/combat/types";
-import {
-  MELEE_ABILITIES,
-  withStrengthCape99Dismember,
-} from "@/combat/styles/melee/abilities";
+import { MELEE_ABILITIES, withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
@@ -121,8 +118,7 @@ function withManualRotationLine(
     ammunitionTier: null,
     equipmentStyleDamageBonus: 0,
     styleDamageBonus: 0,
-    damagePotentialSource:
-      line.damagePotentialPct === 100 ? "100% assumption" : "manual override",
+    damagePotentialSource: line.damagePotentialPct === 100 ? "100% assumption" : "manual override",
     equipmentIds: [],
     weaponConfiguration: line.combatStyle === "necromancy" ? "necromancy" : "twohand",
     globalModifiers: [],

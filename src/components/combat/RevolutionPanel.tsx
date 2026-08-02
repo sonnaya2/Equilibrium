@@ -224,19 +224,14 @@ function pickBarForLoadout(
       weaponConfiguration === "shield" ||
       weaponConfiguration === undefined
         ? pool.find(
-            (b) =>
-              /dual/i.test(b.setup) || /dual/i.test(b.id) || /dual/i.test(b.name ?? ""),
+            (b) => /dual/i.test(b.setup) || /dual/i.test(b.id) || /dual/i.test(b.name ?? ""),
           )
         : undefined;
     // Main-hand / shield prefer dual-shaped reference (closest 1H kit); fall through if missing.
     if (dual && weaponConfiguration !== "twohand") return dual;
   }
 
-  return (
-    pool.find((b) => b.setup === "Any") ??
-    pool.find((b) => b.mode === "revo++") ??
-    pool[0]
-  );
+  return pool.find((b) => b.setup === "Any") ?? pool.find((b) => b.mode === "revo++") ?? pool[0];
 }
 
 /**
@@ -596,11 +591,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       });
       const contextKey = await fingerprintSolveContext(baseRequest);
       const cached = lookupSolvedBar(contextKey);
-      const cachedSeeds = seedBarsFromSolveCache(
-        loadout.style,
-        contextKey,
-        MIN_SOLVER_BAR_SIZE,
-      );
+      const cachedSeeds = seedBarsFromSolveCache(loadout.style, contextKey, MIN_SOLVER_BAR_SIZE);
       if (cached?.bar?.length) {
         // Cache stores full winner score only — do not treat it as exploratory bestScore.
         lastBestRef.current = 0;
@@ -699,16 +690,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         abortRef.current = null;
       }
     }
-  }, [
-    stats,
-    loadout,
-    build,
-    solverTier,
-    solverProfile,
-    modelled,
-    applyDto,
-    limitToRegions,
-  ]);
+  }, [stats, loadout, build, solverTier, solverProfile, modelled, applyDto, limitToRegions]);
 
   const cancelSolve = () => {
     // Do not bump solveGenRef here — the in-flight promise must still hit finally
@@ -767,8 +749,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       ? solverResult.score
       : null;
   const alreadySaved =
-    currentSaveBar != null &&
-    isBarAlreadySaved(barLibrary, loadout.style, currentSaveBar);
+    currentSaveBar != null && isBarAlreadySaved(barLibrary, loadout.style, currentSaveBar);
   const styleLibrary = libraryForStyle(barLibrary, loadout.style);
 
   const saveCurrentBar = () => {
@@ -1135,10 +1116,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             {(() => {
               const snaps = solverProgress?.agents;
               const planned =
-                TIER_AGENT_COUNT[solverTier] ??
-                solverAgents ??
-                solverProgress?.agentCount ??
-                1;
+                TIER_AGENT_COUNT[solverTier] ?? solverAgents ?? solverProgress?.agentCount ?? 1;
               // Always show the full planned pack (6/12/18) while solving.
               let count = 0;
               if (solving) {
@@ -1156,8 +1134,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
               const recipeOf = (i: number): SolverAgentRecipe =>
                 snaps?.[i]?.recipe ?? agentSearchRecipe(i, solverTier);
-              const lengthOf = (i: number): number =>
-                snaps?.[i]?.barLength ?? agentBarLength(i);
+              const lengthOf = (i: number): number => snaps?.[i]?.barLength ?? agentBarLength(i);
 
               const showLegend = solverTier === "extreme" || solverTier === "unhinged";
               const legendRecipes: SolverAgentRecipe[] =
@@ -1258,14 +1235,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             {solverProgress?.phase === "finalize" &&
             solverProgress.finalizeTotal != null &&
             solverProgress.finalizeTotal > 0 ? (
-              <div
-                className="revo-solver-score-steps"
-                role="list"
-                aria-label="Scoring"
-              >
+              <div className="revo-solver-score-steps" role="list" aria-label="Scoring">
                 {Array.from({ length: solverProgress.finalizeTotal }, (_, i) => {
                   const done = solverProgress.finalizeStep ?? 0;
-                  const active = solving && !stopping && i === done && done < solverProgress.finalizeTotal!;
+                  const active =
+                    solving && !stopping && i === done && done < solverProgress.finalizeTotal!;
                   const complete = i < done;
                   return (
                     <span
@@ -1342,7 +1316,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                 </div>
               );
             })()}
-
           </div>
         )}
         {solverError ? <p className="mt-2 text-xs text-chaos-300">{solverError}</p> : null}
@@ -1399,9 +1372,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               </span>
               {modelled.length} of {managedSlots.length} modelled
               {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
-              {keybindCount > 0
-                ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
-                : ""}
+              {keybindCount > 0 ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}` : ""}
             </>
           ) : (
             "No reference bar for this loadout"

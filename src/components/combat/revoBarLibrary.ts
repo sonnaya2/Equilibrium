@@ -68,8 +68,7 @@ function normalizeEntry(raw: unknown, kind: RevoBarEntryKind): RevoBarEntry | nu
   if (typeof e.id !== "string" || !e.id) return null;
   if (typeof e.style !== "string" || !e.style) return null;
   if (!isStringArray(e.bar) || e.bar.length === 0) return null;
-  const score =
-    typeof e.score === "number" && Number.isFinite(e.score) ? e.score : null;
+  const score = typeof e.score === "number" && Number.isFinite(e.score) ? e.score : null;
   return {
     id: e.id,
     bar: [...e.bar],
@@ -170,9 +169,7 @@ export function withPermanentBar(store: RevoBarLibrary, input: RememberBarInput)
 
   const now = input.now ?? Date.now();
   const fp = barFingerprint(bar);
-  const existing = store.saved.find(
-    (e) => e.style === input.style && barFingerprint(e.bar) === fp,
-  );
+  const existing = store.saved.find((e) => e.style === input.style && barFingerprint(e.bar) === fp);
   const rest = store.saved.filter((e) => e.id !== existing?.id);
   const entry: RevoBarEntry = {
     id: existing?.id ?? newId("s", now),

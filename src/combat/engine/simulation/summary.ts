@@ -76,9 +76,7 @@ function buildDuration(args: {
     minimumTicks: args.minimumTicks,
     maximumTicks: args.maximumTicks,
     representativeTicks: args.representativeTicks,
-    ...(args.fixedHorizonTicks !== undefined
-      ? { fixedHorizonTicks: args.fixedHorizonTicks }
-      : {}),
+    ...(args.fixedHorizonTicks !== undefined ? { fixedHorizonTicks: args.fixedHorizonTicks } : {}),
   };
 }
 
@@ -92,9 +90,7 @@ function buildDpsDetail(args: {
     primary: args.primary,
     ratioOfExpectations: args.ratioOfExpectations,
     representativeDps: args.representativeDps,
-    ...(args.expectedBranchDps !== undefined
-      ? { expectedBranchDps: args.expectedBranchDps }
-      : {}),
+    ...(args.expectedBranchDps !== undefined ? { expectedBranchDps: args.expectedBranchDps } : {}),
   };
 }
 
@@ -341,7 +337,9 @@ export function combineBranchSummaries(
       : undefined;
 
   const mix = (f: (s: RotationSummary) => number) =>
-    mixWeight > 0 ? weightedMean(mixPool.map((p) => ({ weight: p.weight, value: f(p.summary) }))) : 0;
+    mixWeight > 0
+      ? weightedMean(mixPool.map((p) => ({ weight: p.weight, value: f(p.summary) })))
+      : 0;
 
   const perAbility: Record<string, number> = {};
   for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.perAbility)))) {
@@ -356,13 +354,9 @@ export function combineBranchSummaries(
   const expectedConditionalMin = mix((s) => s.damage.expectedConditionalMin);
   const expectedConditionalMax = mix((s) => s.damage.expectedConditionalMax);
   const supportMinDamage =
-    mixPool.length > 0
-      ? Math.min(...mixPool.map((p) => p.summary.damage.supportMinDamage))
-      : 0;
+    mixPool.length > 0 ? Math.min(...mixPool.map((p) => p.summary.damage.supportMinDamage)) : 0;
   const supportMaxDamage =
-    mixPool.length > 0
-      ? Math.max(...mixPool.map((p) => p.summary.damage.supportMaxDamage))
-      : 0;
+    mixPool.length > 0 ? Math.max(...mixPool.map((p) => p.summary.damage.supportMaxDamage)) : 0;
 
   // Expected duration is over the totals mix (successful only). Support min/max
   // and representative ticks share the history pool so rep ∈ [min, max] always —
@@ -386,7 +380,10 @@ export function combineBranchSummaries(
     !fixedWindow && mixPool.length > 1
       ? mix((s) => dpsFrom(s.damage.expectedDamage, s.duration.expectedTicks))
       : undefined;
-  const representativeDps = dpsFrom(modal.damage.expectedDamage, modal.duration.representativeTicks);
+  const representativeDps = dpsFrom(
+    modal.damage.expectedDamage,
+    modal.duration.representativeTicks,
+  );
 
   const bySource = SOURCE_KINDS.flatMap((kind) => {
     const damage = mix(
@@ -461,11 +458,7 @@ export function combineBranchSummaries(
       };
 
   const duration = buildDuration({
-    kind: fixedWindow
-      ? "fixed-window"
-      : useRepresentativeHistory
-        ? "stochastic"
-        : "deterministic",
+    kind: fixedWindow ? "fixed-window" : useRepresentativeHistory ? "stochastic" : "deterministic",
     expectedTicks,
     minimumTicks,
     maximumTicks,
@@ -476,7 +469,9 @@ export function combineBranchSummaries(
   let tails: TailMetrics | undefined;
   if (modal.tails !== undefined && mixWeight > 0) {
     tails = {
-      inWindowExpectedDamage: mix((s) => s.tails?.inWindowExpectedDamage ?? s.damage.expectedDamage),
+      inWindowExpectedDamage: mix(
+        (s) => s.tails?.inWindowExpectedDamage ?? s.damage.expectedDamage,
+      ),
       postWindowTailDamage: mix((s) => s.tails?.postWindowTailDamage ?? 0),
       totalIncludingTails: mix((s) => s.tails?.totalIncludingTails ?? s.damage.expectedDamage),
     };

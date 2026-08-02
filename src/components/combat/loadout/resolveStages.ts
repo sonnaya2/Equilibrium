@@ -63,10 +63,7 @@ import {
 } from "@/combat/league/ruleset";
 import { barkscalesOutcome, type BarkscalesOutcome } from "@/combat/league/barkscales";
 import type { BlessingPath } from "@/league/blessings";
-import {
-  isPowerburstOfVitalityActive,
-  type Loadout,
-} from "./model";
+import { isPowerburstOfVitalityActive, type Loadout } from "./model";
 import {
   equippedRecordIds,
   equipmentStyleDamageBonus,
@@ -96,10 +93,7 @@ export interface LoadoutStatsOptions {
 }
 
 export type DamagePotentialSource =
-  | "target stats"
-  | "target weakness"
-  | "manual override"
-  | "100% assumption";
+  "target stats" | "target weakness" | "manual override" | "100% assumption";
 
 export type BreakdownRow = { label: string; value: number };
 
@@ -395,12 +389,8 @@ export function resolveAccuracyDp(
   // Without a target, the manual accuracy% slider is the FINAL override — no
   // equipment accuracy/DP passives on that path.
   const weaponAccuracy = playerAccuracy(levels.attackLevel, equipment.weaponTier);
-  const accuracyBeforeEffects =
-    weaponAccuracy + levels.energising + equipment.accessoryAccuracy;
-  const accuracyRating = applyEquipmentAccuracy(
-    accuracyBeforeEffects,
-    equipment.equipmentEffects,
-  );
+  const accuracyBeforeEffects = weaponAccuracy + levels.energising + equipment.accessoryAccuracy;
+  const accuracyRating = applyEquipmentAccuracy(accuracyBeforeEffects, equipment.equipmentEffects);
   // Attack master cape (120): +2% melee hit chance (buff, not equipment accuracy).
   const attackCapeHit =
     loadout.buffs.attackCape120 && loadout.style === "melee" ? ATTACK_CAPE_MELEE_HIT_CHANCE : 0;
@@ -508,9 +498,7 @@ export function resolveBaseDamage(
     ...equipment.styleContributions
       .filter((row) => row.value !== 0)
       .map((row) => ({ label: row.label, value: row.value })),
-    ...(defenderEquipmentDamage > 0
-      ? [{ label: "Defender", value: defenderEquipmentDamage }]
-      : []),
+    ...(defenderEquipmentDamage > 0 ? [{ label: "Defender", value: defenderEquipmentDamage }] : []),
   ];
   const armourBreakdown: BreakdownRow[] = [
     { label: "Equipped gear", value: defenceLife.defence.totalArmour },
@@ -644,8 +632,7 @@ export function resolveCrit(
     baseCritDamageBonus: critDamage.baseBonus,
     totalCritDamageBonus: critDamage.totalBonus,
     tumekensCritEnabled: !critsDisabled,
-    critByHitFor: (ability, crit) =>
-      equipmentCritByHit(equipment.equipmentEffects, ability, crit),
+    critByHitFor: (ability, crit) => equipmentCritByHit(equipment.equipmentEffects, ability, crit),
   };
 }
 
@@ -680,9 +667,7 @@ export function resolveCombatRules(
     globalModifiers.push(amZiModifier(equipment.equipmentEffects.amZiFlatDamage));
   }
   if (equipment.equipmentEffects.amHejDamageBonus > 0) {
-    globalModifiers.push(
-      additiveMeleeDamageModifier(equipment.equipmentEffects.amHejDamageBonus),
-    );
+    globalModifiers.push(additiveMeleeDamageModifier(equipment.equipmentEffects.amHejDamageBonus));
   }
   if (loadout.perks.demonSlayer > 0) {
     globalModifiers.push(raceSlayerPerkModifier("demon", loadout.target?.demon === true));

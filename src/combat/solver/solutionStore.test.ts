@@ -124,7 +124,6 @@ describe("solutionStore", () => {
     expect(await fingerprintSolveContext(off)).not.toBe(await fingerprintSolveContext(a));
   });
 
-
   it("sha256Hex is deterministic and compact", async () => {
     const h = await sha256Hex("equilibrium");
     expect(h).toMatch(/^[0-9a-f]{64}$/);

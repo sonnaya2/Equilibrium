@@ -13,7 +13,8 @@ export interface AbilityRegistryEntry {
   recordId: string | null;
   parentRecordId?: string;
   recordAliases?: readonly string[];
-  linkKind: "canonical" | "record-alias" | "setup-variant" | "equipment-variant" | "cast-stage" | "factory";
+  linkKind:
+    "canonical" | "record-alias" | "setup-variant" | "equipment-variant" | "cast-stage" | "factory";
   spec: AbilitySpec;
   style: CombatStyle;
   category: AbilityCategory;

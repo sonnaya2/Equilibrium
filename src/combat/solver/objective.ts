@@ -187,9 +187,7 @@ export function scoreFromDamageByTick(
   }
 
   const windows =
-    horizonTicks === undefined
-      ? OBJECTIVE_WINDOWS
-      : objectiveWindowsForHorizon(horizonTicks);
+    horizonTicks === undefined ? OBJECTIVE_WINDOWS : objectiveWindowsForHorizon(horizonTicks);
   const dpm = windowDpms(damageByTick, windows);
   const windowSum = resolved.opening + resolved.developed + resolved.steady;
   const weightedMean =

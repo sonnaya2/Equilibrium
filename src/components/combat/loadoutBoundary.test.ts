@@ -1,11 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { loadoutStats, sumBreakdown } from "./loadoutStats";
-import {
-  DEFAULT_LOADOUT,
-  type Loadout,
-  normalizeLoadout,
-} from "./loadout/model";
+import { DEFAULT_LOADOUT, type Loadout, normalizeLoadout } from "./loadout/model";
 import {
   equippedWeaponTier,
   loadoutWeaponConfig,
@@ -101,7 +97,10 @@ describe("presentation reconciles with engine inputs", () => {
       { blessingPicks: ["Order", "Order", "Order"] },
     );
     expect(sumBreakdown(stats.baseAbilityDamageBreakdown)).toBe(stats.base);
-    expect(stats.base).toBe(loadoutBase({ ...base, equipmentSlots: { body: "item:torva-platebody" } }) + stats.leagueBaseAbilityDamageBonus);
+    expect(stats.base).toBe(
+      loadoutBase({ ...base, equipmentSlots: { body: "item:torva-platebody" } }) +
+        stats.leagueBaseAbilityDamageBonus,
+    );
   });
 
   it("armour breakdown equals totalArmour and Aegis qualifying armour", () => {

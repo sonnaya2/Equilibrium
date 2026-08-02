@@ -9,8 +9,7 @@ import { hasPassive } from "./equipment";
  *
  * Source: https://runescape.wiki/w/Masterwork_Spear_of_Annihilation (verified 2026-08-02).
  */
-export const MASTERWORK_SPEAR_BLEED_EXTENSION_PASSIVE =
-  "masterwork-spear-bleed-extension" as const;
+export const MASTERWORK_SPEAR_BLEED_EXTENSION_PASSIVE = "masterwork-spear-bleed-extension" as const;
 
 export const BLEED_DURATION_EXTENSION_FACTOR = 0.5;
 

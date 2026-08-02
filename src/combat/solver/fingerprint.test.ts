@@ -50,9 +50,9 @@ describe("fingerprintEvaluationKey", () => {
     expect(fingerprintEvaluationKey({ bar: ["a", "b"], profileId: "balanced" })).not.toBe(
       fingerprintEvaluationKey({ bar: ["b", "a"], profileId: "balanced" }),
     );
-    expect(
-      fingerprintEvaluationKey({ bar: ["a"], mode: "search" }),
-    ).not.toBe(fingerprintEvaluationKey({ bar: ["a"], mode: "full" }));
+    expect(fingerprintEvaluationKey({ bar: ["a"], mode: "search" })).not.toBe(
+      fingerprintEvaluationKey({ bar: ["a"], mode: "full" }),
+    );
   });
 
   it("changes when context changes", () => {

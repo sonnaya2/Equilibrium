@@ -1,9 +1,6 @@
 import type { SourceReference } from "../types";
 import type { BlessingChoice } from "../../league/blessings";
-import {
-  isNonNegativeFinite,
-  isPositiveFinite,
-} from "../shared/domainValidators";
+import { isNonNegativeFinite, isPositiveFinite } from "../shared/domainValidators";
 
 /**
  * Barkscales is the one revealed blessing whose damage is driven by incoming
@@ -49,11 +46,7 @@ export type BarkscalesSupport = "scenario-dependent" | "modeled";
 
 /** Why trigger/damage figures are withheld — never encode that as a calculated 0. */
 export type BarkscalesUnavailability =
-  | "no-scenario"
-  | "invalid-interval"
-  | "invalid-duration"
-  | "poison-immune"
-  | "zero-targets";
+  "no-scenario" | "invalid-interval" | "invalid-duration" | "poison-immune" | "zero-targets";
 
 export interface BarkscalesReduction {
   /** Damage removed from each qualifying incoming hit: 10% of the armour value. */

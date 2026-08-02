@@ -35,7 +35,8 @@ function finite(value: unknown, label: string): ValidationResult<number> {
 export function validateArmour(value: unknown): ValidationResult<number> {
   const n = finite(value, "armour");
   if (!n.ok) return n;
-  if (n.value < 0 || n.value > 1_000_000) return { ok: false, reason: "armour must be in [0, 1000000]" };
+  if (n.value < 0 || n.value > 1_000_000)
+    return { ok: false, reason: "armour must be in [0, 1000000]" };
   return n;
 }
 
@@ -43,14 +44,16 @@ export function validateIncomingHitInterval(value: unknown): ValidationResult<nu
   if (value === undefined || value === null) return { ok: true, value: undefined };
   const n = finite(value, "incoming hit interval");
   if (!n.ok) return n;
-  if (n.value <= 0 || n.value > 3600) return { ok: false, reason: "incoming hit interval must be in (0, 3600] seconds" };
+  if (n.value <= 0 || n.value > 3600)
+    return { ok: false, reason: "incoming hit interval must be in (0, 3600] seconds" };
   return n;
 }
 
 export function validateScenarioDuration(value: unknown): ValidationResult<number> {
   const n = finite(value, "scenario duration");
   if (!n.ok) return n;
-  if (n.value <= 0 || n.value > 3600) return { ok: false, reason: "scenario duration must be in (0, 3600] seconds" };
+  if (n.value <= 0 || n.value > 3600)
+    return { ok: false, reason: "scenario duration must be in (0, 3600] seconds" };
   return n;
 }
 

@@ -20,21 +20,16 @@ export interface FinalizeOptions {
 }
 
 function isSearchRankable(s: ScoredBar | null | undefined): s is ScoredBar {
-  return Boolean(
-    s &&
-      s.mode === "search" &&
-      Number.isFinite(s.robustScore) &&
-      s.bar.length > 0,
-  );
+  return Boolean(s && s.mode === "search" && Number.isFinite(s.robustScore) && s.bar.length > 0);
 }
 
 function isFullRankable(s: ScoredBar | null | undefined): s is ScoredBar {
   return Boolean(
     s &&
-      s.mode === "full" &&
-      s.validForFinalRanking &&
-      Number.isFinite(s.robustScore) &&
-      s.bar.length > 0,
+    s.mode === "full" &&
+    s.validForFinalRanking &&
+    Number.isFinite(s.robustScore) &&
+    s.bar.length > 0,
   );
 }
 
@@ -234,7 +229,8 @@ function assembleResult(
   const proof = chooseProof(state, status, rankedFull, feasibleCount);
 
   const bestExploratoryScore = state.bestExploratory?.robustScore ?? seedBestScore;
-  const bestFullScore = state.bestFull?.robustScore ?? rankedFull[0]?.robustScore ?? Number.NEGATIVE_INFINITY;
+  const bestFullScore =
+    state.bestFull?.robustScore ?? rankedFull[0]?.robustScore ?? Number.NEGATIVE_INFINITY;
 
   const searchEvaluations = state.searchEvaluations;
   const fullEvaluations = state.fullEvaluations;
@@ -269,7 +265,9 @@ function assembleResult(
       fullCacheHits: state.fullCacheHits,
       uniqueBars: new Set(state.archive.map((a) => a.fingerprint)).size,
       elapsedMs: Date.now() - state.startedAt,
-      bestExploratoryScore: Number.isFinite(bestExploratoryScore) ? bestExploratoryScore : undefined,
+      bestExploratoryScore: Number.isFinite(bestExploratoryScore)
+        ? bestExploratoryScore
+        : undefined,
       bestFullScore: Number.isFinite(bestFullScore) ? bestFullScore : undefined,
       // Never mix scales into a single bestScore — leave unset when both exist.
       bestScore: undefined,

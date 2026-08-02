@@ -192,11 +192,7 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div
-        className="buff-group buff-enchantments"
-        role="group"
-        aria-label="Account enchantments"
-      >
+      <div className="buff-group buff-enchantments" role="group" aria-label="Account enchantments">
         <h3 className="buff-group__title">Account enchantments</h3>
         <div className="icon-tile-grid">
           {EQUIPMENT_ENCHANTMENTS.map((id) => (
@@ -216,11 +212,7 @@ export function BuffsPanel({
         </p>
       </div>
 
-      <div
-        className="buff-group buff-blessings"
-        role="group"
-        aria-label="Equilibrium blessings"
-      >
+      <div className="buff-group buff-blessings" role="group" aria-label="Equilibrium blessings">
         <h3 className="buff-group__title">Equilibrium blessings</h3>
         <div className="blessing-settings mt-1.5">
           {revealedBlessingTiers.map((tier) => {

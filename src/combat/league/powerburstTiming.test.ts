@@ -13,10 +13,7 @@ import { powerburstRemainingTicks } from "@/components/combat/loadoutStats";
 const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
 
 const bigBoned = (derived: { maximumLife?: number; powerburstUntilTick?: number }) =>
-  resolveLeagueRules(
-    { ruleset: "equilibrium", blessingPicks: ["Balance"] },
-    { ...derived },
-  );
+  resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: ["Balance"] }, { ...derived });
 
 function bigBonedExpected(rules: ReturnType<typeof resolveLeagueRules>, landTick: number): number {
   const components = leagueDamageComponents({

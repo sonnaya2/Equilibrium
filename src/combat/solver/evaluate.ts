@@ -69,12 +69,10 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   const reasons: ExclusionReason[] = [];
   const simFields = sim as Omit<RevolutionInput, "bar" | "style" | "durationTicks">;
   const weaponConfiguration = simFields.weaponConfiguration as
-    | CandidatePoolOptions["weaponConfiguration"]
-    | undefined;
+    CandidatePoolOptions["weaponConfiguration"] | undefined;
   const equipmentIds = simFields.equipmentIds;
-  const passiveIds = (
-    simFields as { equipmentEffects?: { passiveIds?: readonly string[] } }
-  ).equipmentEffects?.passiveIds;
+  const passiveIds = (simFields as { equipmentEffects?: { passiveIds?: readonly string[] } })
+    .equipmentEffects?.passiveIds;
 
   if (pool.style !== style) {
     reasons.push({

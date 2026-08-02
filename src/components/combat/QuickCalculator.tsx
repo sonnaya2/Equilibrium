@@ -122,9 +122,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
   const selectedId = ability?.id;
   // Same equipment hit resolution as prepareCast / rotation (MW spear bleeds, etc.).
   const equippedAbility =
-    useBuild && ability
-      ? resolveAbilityWithEquipment(ability, setup.equipmentEffects)
-      : ability;
+    useBuild && ability ? resolveAbilityWithEquipment(ability, setup.equipmentEffects) : ability;
   const calculatedAbility =
     useBuild && equippedAbility?.id === "asphyxiate" && (setup.tumekensPieces ?? 0) >= 4
       ? resplendentAsphyxiate(equippedAbility)

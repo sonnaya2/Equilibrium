@@ -25,10 +25,7 @@ import {
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 export { solverPoolSize } from "./pool";
-export {
-  setWorkerFactoryForTests,
-  setWorkerHostTimeoutsForTests,
-} from "./workerCreate";
+export { setWorkerFactoryForTests, setWorkerHostTimeoutsForTests } from "./workerCreate";
 
 /** After a hard worker failure, prefer main-thread for the rest of the tab session. */
 let stickyMainThread = false;
@@ -43,9 +40,7 @@ let productRun: ProductRunToken | null = null;
 type ProductRunToken = { cancelled: boolean };
 
 async function loadSolve(): Promise<SolveFn> {
-  const mod = (await import(
-    /* webpackMode: "lazy" */ "../solveFromRequest"
-  )) as {
+  const mod = (await import(/* webpackMode: "lazy" */ "../solveFromRequest")) as {
     solveFromRequest?: SolveFn;
     default?: SolveFn;
   };
@@ -145,8 +140,7 @@ export type RunOptimizeOptions = {
 };
 
 export type PauseResumeResult =
-  | { ok: true }
-  | { ok: false; reason: "no-active-run" | "main-thread" | "worker-unavailable" };
+  { ok: true } | { ok: false; reason: "no-active-run" | "main-thread" | "worker-unavailable" };
 
 /**
  * Product entry: parallel worker agents when possible; sticky main fallback after
@@ -165,9 +159,7 @@ export async function runOptimize(
   productRun = token;
 
   const cancelled = () =>
-    token.cancelled ||
-    options?.isCancelled?.() === true ||
-    options?.signal?.aborted === true;
+    token.cancelled || options?.isCancelled?.() === true || options?.signal?.aborted === true;
 
   const onAbort = () => {
     token.cancelled = true;
@@ -196,9 +188,7 @@ export async function runOptimize(
     }
 
     const forceMain =
-      options?.forceMainThread === true ||
-      stickyMainThread ||
-      !canCreateSolverWorker();
+      options?.forceMainThread === true || stickyMainThread || !canCreateSolverWorker();
 
     if (forceMain) {
       return await runTrackedMain(payload, onProgress, cancelled);
@@ -456,7 +446,14 @@ export class RevolutionSolverClient {
     if (!useMain) {
       const worker = this.ensureWorker();
       if (worker) {
-        return this.startOnWorker(worker, requestId, request, onProgress, options, externalCancelled);
+        return this.startOnWorker(
+          worker,
+          requestId,
+          request,
+          onProgress,
+          options,
+          externalCancelled,
+        );
       }
       if (options?.preferWorker) {
         return Promise.reject(new Error("revolution solver worker unavailable"));
@@ -520,11 +517,7 @@ export class RevolutionSolverClient {
             this.settleActive(run, "reject", abortError());
             return;
           }
-          this.settleActive(
-            run,
-            "reject",
-            err instanceof Error ? err : new Error(String(err)),
-          );
+          this.settleActive(run, "reject", err instanceof Error ? err : new Error(String(err)));
         });
     });
   }
@@ -580,9 +573,7 @@ export class RevolutionSolverClient {
         this.settleActive(
           run,
           "reject",
-          new Error(
-            `revolution solver worker did not acknowledge start within ${ackMs}ms`,
-          ),
+          new Error(`revolution solver worker did not acknowledge start within ${ackMs}ms`),
         );
       }, ackMs);
 
@@ -590,11 +581,7 @@ export class RevolutionSolverClient {
         post(worker, { type: "start", requestId, payload: request });
       } catch (err) {
         this.dropWorker();
-        this.settleActive(
-          run,
-          "reject",
-          err instanceof Error ? err : new Error(String(err)),
-        );
+        this.settleActive(run, "reject", err instanceof Error ? err : new Error(String(err)));
         return;
       }
 

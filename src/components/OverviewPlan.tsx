@@ -130,10 +130,7 @@ export function OverviewPlan({ taskTotal }: { taskTotal: number }) {
                 ] as const
               ).map(([ok, label]) => (
                 <li key={label} className="overview-details__check">
-                  <span
-                    className="overview-details__mark"
-                    data-ok={ok ? "true" : undefined}
-                  >
+                  <span className="overview-details__mark" data-ok={ok ? "true" : undefined}>
                     {ok ? "ok" : "··"}
                   </span>
                   {label}

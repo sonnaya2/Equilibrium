@@ -91,10 +91,7 @@ export interface ResumeSolverMessage {
 }
 
 export type HostToWorkerMessage =
-  | StartSolverMessage
-  | CancelSolverMessage
-  | PauseSolverMessage
-  | ResumeSolverMessage;
+  StartSolverMessage | CancelSolverMessage | PauseSolverMessage | ResumeSolverMessage;
 
 /** Immediate ACK before expensive imports/solve — clears host cold-start watchdog. */
 export interface StartedSolverMessage {

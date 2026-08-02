@@ -127,9 +127,7 @@ describe("shared/equipment set effects", () => {
   });
 
   it("does not paint empty Set effects cards for grouping tags like igneous or leng", () => {
-    expect(
-      setEffectsSummary({ equipmentSlots: { cape: "item:igneous-kal-zuk" } }),
-    ).toEqual([]);
+    expect(setEffectsSummary({ equipmentSlots: { cape: "item:igneous-kal-zuk" } })).toEqual([]);
     expect(
       setEffectsSummary({
         equipmentSlots: {

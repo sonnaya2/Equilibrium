@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { calculateAbility } from "../../pipeline/calculateAbility";
 import { activeBleedCount } from "../../styles/melee/effects";
-import {
-  activeEquipmentEffects,
-  type ActiveEquipmentEffects,
-} from "../../shared/equipment";
+import { activeEquipmentEffects, type ActiveEquipmentEffects } from "../../shared/equipment";
 import type { ItemPassiveId } from "../../data/records";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
 import { rotationOf } from "./contracts";
@@ -48,9 +45,7 @@ describe("Masterwork spear bleed extension in simulation and Quick parity", () =
     const baseHits = without.events.filter((e) => e.abilityId === "dismember");
     expect(spearHits).toHaveLength(12);
     expect(baseHits).toHaveLength(8);
-    expect(spearHits.map((e) => e.tick)).toEqual([
-      2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,
-    ]);
+    expect(spearHits.map((e) => e.tick)).toEqual([2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]);
   });
 
   it("Quick/calculateAbility matches rotation hit count and totals for Dismember", () => {

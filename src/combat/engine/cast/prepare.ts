@@ -25,11 +25,7 @@ import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
 import { costOf, spendOf } from "./rules";
-import {
-  firstEligibleDirectHitIndex,
-  hasDamagingHits,
-  hasFuryConsumingHit,
-} from "./hitKind";
+import { firstEligibleDirectHitIndex, hasDamagingHits, hasFuryConsumingHit } from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";

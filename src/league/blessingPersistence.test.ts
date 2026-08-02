@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { activeBlessings, BLESSING_IDS } from "./blessings";
-import {
-  emptyBuild,
-  normalizeBuild,
-  pickBlessing,
-  resolveBlessingPersistence,
-} from "./index";
+import { emptyBuild, normalizeBuild, pickBlessing, resolveBlessingPersistence } from "./index";
 import { validateBlessingsDocument } from "./blessingSchema";
 import blessingsData from "#shard/league/blessings.json";
 

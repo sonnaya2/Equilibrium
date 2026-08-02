@@ -18,11 +18,7 @@ import {
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
-import {
-  packageCritical,
-  type AttachedDamageComponent,
-  type EventResolution,
-} from "./types";
+import { packageCritical, type AttachedDamageComponent, type EventResolution } from "./types";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
 

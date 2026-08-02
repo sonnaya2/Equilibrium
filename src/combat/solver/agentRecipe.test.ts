@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  agentSearchRecipe,
-  configForTier,
-  configPatchForRecipe,
-} from "./solve";
+import { agentSearchRecipe, configForTier, configPatchForRecipe } from "./solve";
 
 describe("agentSearchRecipe", () => {
   it("blocks of 6: ensemble then evo then anneal", () => {

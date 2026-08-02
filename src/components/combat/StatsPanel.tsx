@@ -214,9 +214,7 @@ export function StatsPanel({
           <AutoNumberField
             label="Base ability damage"
             value={
-              loadout.baseDamage.mode === "manual"
-                ? loadout.baseDamage.manualValue
-                : stats.rawBase
+              loadout.baseDamage.mode === "manual" ? loadout.baseDamage.manualValue : stats.rawBase
             }
             auto={loadout.baseDamage.mode === "automatic"}
             onAutoChange={(auto) =>

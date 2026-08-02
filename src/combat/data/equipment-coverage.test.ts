@@ -84,13 +84,13 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
     expect(equipmentById("item:eldritch-crossbow")?.weaponClass).not.toBe("bow");
   });
 
-  // Known gap: `remove` retires the entity but a document is rebuilt from source
-  // records, so the retired twin still reaches this shard. The survivor is the
-  // one carrying the passive, which is what the calculator reads.
+  // Retired cross-region twin is status=removed and no longer exported into the
+  // equipment shard; the Anachronia survivor keeps the passive.
   it("keeps the passive on the surviving Channeller's ring", () => {
-    expect(equipmentById("cross-region:channellers-ring")?.passiveId).toBe("channeller-ring");
+    expect(equipmentById("cross-region:channellers-ring")).toBeUndefined();
     expect(equipmentById("item:channelers-ring")?.name).toBe("Channeller's ring");
-    expect(combatEquipment.records.filter((record) => record.name === "Channeller's ring")).toHaveLength(2);
+    expect(equipmentById("item:channelers-ring")?.passiveId).toBe("channeller-ring");
+    expect(combatEquipment.records.filter((record) => record.name === "Channeller's ring")).toHaveLength(1);
   });
 
   it("sources the upgraded Fremennik rings from Anachronia alone", () => {

@@ -68,13 +68,33 @@ export function documentOutputs(db) {
       .sort()
       .map((file) => [file, JSON.parse(skeletons.get(file))]),
   );
+  // Removal is a status change: keep provenance in SQLite, drop the body from
+  // every #shard document so the app stops listing retired equipment / abilities.
+  const removed = new Set(
+    prepared(db, "SELECT id FROM entities WHERE status = 'removed'")
+      .all()
+      .map((row) => row.id),
+  );
+  // Nested source rows (e.g. $.records[12].sources[0]) have no entity_id; skip
+  // any path that sits under a top-level record whose entity is removed.
+  const skippedPrefixes = new Set();
   for (const row of prepared(
     db,
-    "SELECT source_file, record_path, raw_json FROM source_records ORDER BY source_file, record_path",
+    "SELECT source_file, record_path, entity_id, raw_json FROM source_records ORDER BY source_file, record_path",
   ).all()) {
     const document = documents.get(row.source_file);
     if (!document) continue;
+    if ([...skippedPrefixes].some((prefix) => row.record_path.startsWith(prefix))) continue;
+    if (row.entity_id && removed.has(row.entity_id)) {
+      skippedPrefixes.add(`${row.record_path}.`);
+      skippedPrefixes.add(`${row.record_path}[`);
+      continue;
+    }
     setRecordAtPath(document, row.record_path, JSON.parse(row.raw_json));
+  }
+  // Indexed writes leave holes when middle records are skipped; compact them.
+  for (const data of documents.values()) {
+    if (Array.isArray(data.records)) data.records = data.records.filter(Boolean);
   }
   return new Map(
     [...documents].map(([file, data]) => [

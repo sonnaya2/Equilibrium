@@ -1,0 +1,17 @@
+# Drop custom-fit masterwork armour from the combat picker for all three styles.
+# Base masterwork / trimmed masterwork stay; custom-fit is a near-duplicate upgrade chain that only bloats the loadout list.
+{"op":"remove","entity":"item:custom-fit-trimmed-masterwork-melee-helm","reason":"Custom-fit masterwork is combat-picker bloat; players can use trimmed masterwork without a separate CFMW piece list."}
+{"op":"remove","entity":"item:custom-fit-trimmed-masterwork-melee-platebody","reason":"Custom-fit masterwork is combat-picker bloat; players can use trimmed masterwork without a separate CFMW piece list."}
+{"op":"remove","entity":"item:custom-fit-trimmed-masterwork-melee-platelegs","reason":"Custom-fit masterwork is combat-picker bloat; players can use trimmed masterwork without a separate CFMW piece list."}
+{"op":"remove","entity":"item:custom-fit-trimmed-masterwork-melee-gloves","reason":"Custom-fit masterwork is combat-picker bloat; players can use trimmed masterwork without a separate CFMW piece list."}
+{"op":"remove","entity":"item:custom-fit-trimmed-masterwork-melee-boots","reason":"Custom-fit masterwork is combat-picker bloat; players can use trimmed masterwork without a separate CFMW piece list."}
+{"op":"remove","entity":"item:custom-fit-masterwork-magic-hat","reason":"Custom-fit masterwork is combat-picker bloat across styles; magic CFMW pieces removed with melee and ranged."}
+{"op":"remove","entity":"item:custom-fit-masterwork-magic-robe-top","reason":"Custom-fit masterwork is combat-picker bloat across styles; magic CFMW pieces removed with melee and ranged."}
+{"op":"remove","entity":"item:custom-fit-masterwork-magic-robe-bottom","reason":"Custom-fit masterwork is combat-picker bloat across styles; magic CFMW pieces removed with melee and ranged."}
+{"op":"remove","entity":"item:custom-fit-masterwork-magic-gloves","reason":"Custom-fit masterwork is combat-picker bloat across styles; magic CFMW pieces removed with melee and ranged."}
+{"op":"remove","entity":"item:custom-fit-masterwork-magic-boots","reason":"Custom-fit masterwork is combat-picker bloat across styles; magic CFMW pieces removed with melee and ranged."}
+{"op":"remove","entity":"item:custom-fit-masterwork-ranged-cowl","reason":"Custom-fit masterwork is combat-picker bloat across styles; ranged CFMW pieces removed with melee and magic."}
+{"op":"remove","entity":"item:custom-fit-masterwork-ranged-body","reason":"Custom-fit masterwork is combat-picker bloat across styles; ranged CFMW pieces removed with melee and magic."}
+{"op":"remove","entity":"item:custom-fit-masterwork-ranged-chaps","reason":"Custom-fit masterwork is combat-picker bloat across styles; ranged CFMW pieces removed with melee and magic."}
+{"op":"remove","entity":"item:custom-fit-masterwork-ranged-vambraces","reason":"Custom-fit masterwork is combat-picker bloat across styles; ranged CFMW pieces removed with melee and magic."}
+{"op":"remove","entity":"item:custom-fit-masterwork-ranged-boots","reason":"Custom-fit masterwork is combat-picker bloat across styles; ranged CFMW pieces removed with melee and magic."}

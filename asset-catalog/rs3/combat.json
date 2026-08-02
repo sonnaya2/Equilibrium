@@ -4212,10 +4212,7 @@
     "path": "public/game/combat/equipment/masterwork-ranged-body",
     "fileTitle": "Masterwork ranged body.png",
     "search": "Masterwork ranged body inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_body",
-    "alsoAt": [
-      "public/game/combat/equipment/custom-fit-masterwork-ranged-body.webp"
-    ]
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_body"
   },
   {
     "id": "combat-equipment-masterwork-ranged-boots",
@@ -4224,10 +4221,7 @@
     "path": "public/game/combat/equipment/masterwork-ranged-boots",
     "fileTitle": "Masterwork ranged boots.png",
     "search": "Masterwork ranged boots inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_boots",
-    "alsoAt": [
-      "public/game/combat/equipment/custom-fit-masterwork-ranged-boots.webp"
-    ]
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_boots"
   },
   {
     "id": "combat-equipment-masterwork-ranged-chaps",
@@ -4236,10 +4230,7 @@
     "path": "public/game/combat/equipment/masterwork-ranged-chaps",
     "fileTitle": "Masterwork ranged chaps.png",
     "search": "Masterwork ranged chaps inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_chaps",
-    "alsoAt": [
-      "public/game/combat/equipment/custom-fit-masterwork-ranged-chaps.webp"
-    ]
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_chaps"
   },
   {
     "id": "combat-equipment-masterwork-ranged-cowl",
@@ -4248,10 +4239,7 @@
     "path": "public/game/combat/equipment/masterwork-ranged-cowl",
     "fileTitle": "Masterwork ranged cowl.png",
     "search": "Masterwork ranged cowl inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_cowl",
-    "alsoAt": [
-      "public/game/combat/equipment/custom-fit-masterwork-ranged-cowl.webp"
-    ]
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_cowl"
   },
   {
     "id": "combat-equipment-masterwork-ranged-vambraces",
@@ -4260,10 +4248,7 @@
     "path": "public/game/combat/equipment/masterwork-ranged-vambraces",
     "fileTitle": "Masterwork ranged vambraces.png",
     "search": "Masterwork ranged vambraces inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_vambraces",
-    "alsoAt": [
-      "public/game/combat/equipment/custom-fit-masterwork-ranged-vambraces.webp"
-    ]
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_vambraces"
   },
   {
     "id": "combat-equipment-masterwork-spear-of-annihilation",

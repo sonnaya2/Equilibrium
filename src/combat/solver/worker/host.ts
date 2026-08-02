@@ -9,8 +9,15 @@ import {
   type WorkerToHostMessage,
 } from "./protocol";
 import type { SolveFn, SolveProgressHandler } from "./solveTypes";
+import {
+  cancelSolverAgentPool,
+  getSolverAgentPool,
+  resetSolverAgentPoolForTests,
+  solverPoolSize,
+} from "./pool";
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
+export { solverPoolSize } from "./pool";
 
 /** After a hard worker failure, prefer main-thread for the rest of the tab session. */
 let stickyMainThread = false;
@@ -63,6 +70,7 @@ export function resetSolverHostForTests(): void {
   stickyMainThread = false;
   sharedClient?.dispose();
   sharedClient = null;
+  resetSolverAgentPoolForTests();
 }
 
 /**
@@ -100,11 +108,13 @@ export type RunOptimizeOptions = {
   isCancelled?: () => boolean;
   signal?: AbortSignal;
   forceMainThread?: boolean;
+  /** Override parallel agent count (default: hardware-derived, max 4). */
+  agents?: number;
 };
 
 /**
- * Product entry: try a dedicated Web Worker; on any hard failure fall back to
- * main-thread cooperative solve (sticky for the tab).
+ * Product entry: parallel Web Worker agents (different seeds) when possible;
+ * sticky main-thread cooperative solve if workers cannot run.
  */
 export async function runOptimize(
   request: SerializableSolverRequest,
@@ -119,12 +129,10 @@ export async function runOptimize(
   }
 
   if (!isSerializableSimBase(request.loadout)) {
-    // Plain loadout is not a worker wire shape — main path can still pack via revive.
     stickyMainThread = true;
     return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
   }
 
-  // Clone once so postMessage cannot fail on host-side mutation / non-cloneables.
   let payload: SerializableSolverRequest;
   try {
     payload = structuredClone(request);
@@ -143,39 +151,59 @@ export async function runOptimize(
     return runSolverOnMainThread(payload, onProgress, { isCancelled: cancelled });
   }
 
-  const client = getRevolutionSolverClient();
   try {
-    const result = await client.start(payload, onProgress, {
+    const pool = getSolverAgentPool();
+    const agents = options?.agents ?? solverPoolSize();
+    if (typeof console !== "undefined" && agents > 1) {
+      console.info(`[revo-solver] launching ${agents} parallel agents`);
+    }
+    return await pool.run(payload, onProgress, {
       isCancelled: cancelled,
       signal: options?.signal,
+      agents,
     });
-    return result;
   } catch (err) {
-    // AbortError = intentional cancel / supersede — never start a second solve.
-    // Bare Error("solver cancelled") is NOT AbortError → sticky main fallback.
     if (cancelled() || isAbortError(err)) {
       throw isAbortError(err)
         ? err
         : new DOMException("revolution solver cancelled", "AbortError");
     }
-    stickyMainThread = true;
     if (typeof console !== "undefined") {
-      console.warn("[revo-solver] worker unavailable, main-thread fallback", err);
+      console.warn("[revo-solver] agent pool failed, trying single worker", err);
     }
     try {
-      client.disposeQuiet();
-    } catch {
-      // ignore
+      cancelSolverAgentPool();
+      const client = getRevolutionSolverClient();
+      return await client.start(payload, onProgress, {
+        isCancelled: cancelled,
+        signal: options?.signal,
+      });
+    } catch (err2) {
+      if (cancelled() || isAbortError(err2)) {
+        throw isAbortError(err2)
+          ? err2
+          : new DOMException("revolution solver cancelled", "AbortError");
+      }
+      stickyMainThread = true;
+      if (typeof console !== "undefined") {
+        console.warn("[revo-solver] worker unavailable, main-thread fallback", err2);
+      }
+      try {
+        getRevolutionSolverClient().disposeQuiet();
+      } catch {
+        // ignore
+      }
+      sharedClient = null;
+      if (cancelled()) {
+        throw new DOMException("revolution solver cancelled", "AbortError");
+      }
+      return runSolverOnMainThread(payload, onProgress, { isCancelled: cancelled });
     }
-    if (sharedClient === client) sharedClient = null;
-    if (cancelled()) {
-      throw new DOMException("revolution solver cancelled", "AbortError");
-    }
-    return runSolverOnMainThread(payload, onProgress, { isCancelled: cancelled });
   }
 }
 
 export function cancelOptimize(): void {
+  cancelSolverAgentPool();
   sharedClient?.cancel();
 }
 

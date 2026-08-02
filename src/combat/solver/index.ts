@@ -118,6 +118,7 @@ export {
   RevolutionSolverClient,
   isSolverPreferringMainThread,
   resetSolverHostForTests,
+  solverPoolSize,
 } from "./worker/host";
 
 export {

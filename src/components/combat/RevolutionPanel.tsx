@@ -19,6 +19,7 @@ import {
   rememberSolvedBar,
   runOptimize,
   seedBarsFromSolveCache,
+  solverPoolSize,
   TIER_BUDGETS,
   type ObjectiveProfileId,
   type SolverProgress,
@@ -33,7 +34,7 @@ import type { CalcStats } from "./loadoutStats";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
 import { useBuild } from "@/league/useBuild";
-import { unlockedRegions } from "@/league";
+import { REGION_IDS, unlockedRegions } from "@/league";
 import "./revo-solver.css";
 
 function solverPhaseLabel(phase: SolverProgress["phase"] | undefined): string {
@@ -219,6 +220,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
   const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
   const [maxBarSize, setMaxBarSize] = useState(10);
+  /** When true, solver ability pool respects Build region picks. Off = all regions. */
+  const [limitToRegions, setLimitToRegions] = useState(false);
   const [cacheNote, setCacheNote] = useState<string | null>(null);
   const [solving, setSolving] = useState(false);
   const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
@@ -431,8 +434,12 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         durationSeconds: 300,
         userBar: modelled.map((m) => m.id),
         seed: 1,
+        // On: Build picks only. Off: every region + unknown unlocks (full ability pool).
+        useBuildRegions: limitToRegions,
+        unlockedRegions: limitToRegions ? undefined : [...REGION_IDS],
+        includeUnknownAvailability: !limitToRegions,
       });
-      const contextKey = fingerprintSolveContext(baseRequest);
+      const contextKey = await fingerprintSolveContext(baseRequest);
       const cached = lookupSolvedBar(contextKey);
       const cachedSeeds = seedBarsFromSolveCache(loadout.style, contextKey, sizes.minBarSize);
       if (cached?.bar?.length) {
@@ -471,7 +478,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           })),
         ],
       };
-      // Worker-first with sticky main-thread fallback (see runOptimize).
+      // Parallel Web Worker agents (different seeds); sticky main-thread fallback.
+      const agents = solverPoolSize();
+      if (agents > 1) {
+        setCacheNote((prev) => prev ?? `Running ${agents} parallel agents…`);
+      }
       const dto = await runOptimize(
         request,
         (progress) => {
@@ -489,6 +500,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           isCancelled: () =>
             gen !== solveGenRef.current || cancelRef.current || abort.signal.aborted,
           signal: abort.signal,
+          agents,
         },
       );
       if (gen !== solveGenRef.current) return;
@@ -564,7 +576,17 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         abortRef.current = null;
       }
     }
-  }, [stats, loadout, build, solverTier, solverProfile, maxBarSize, modelled, applyDto]);
+  }, [
+    stats,
+    loadout,
+    build,
+    solverTier,
+    solverProfile,
+    maxBarSize,
+    modelled,
+    applyDto,
+    limitToRegions,
+  ]);
 
   const cancelSolve = () => {
     cancelRef.current = true;
@@ -686,9 +708,27 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               disabled={solving}
             />
           </label>
-          <span className="text-parch-300" title={regions.join(", ")}>
+          <span className="text-parch-300" title={regions.join(", ") || "No picks"}>
             Regions · {regions.length}
           </span>
+          <label
+            className="flex items-center gap-1.5 text-parch-300"
+            title={
+              limitToRegions
+                ? "Only abilities obtainable with your Build region picks"
+                : "Use abilities from every region (ignores Build picks for the pool)"
+            }
+          >
+            <input
+              type="checkbox"
+              checked={limitToRegions}
+              onChange={(e) => setLimitToRegions(e.target.checked)}
+              disabled={solving}
+              className="accent-[var(--combat-gem)]"
+              data-testid="revo-limit-regions"
+            />
+            Limit to picks
+          </label>
         </div>
         {(solving || solverProgress) && (
           <div

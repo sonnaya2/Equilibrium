@@ -1,7 +1,7 @@
 import type { CalcStats } from "@/components/combat/loadoutStats";
 import type { Loadout } from "@/components/combat/loadout/model";
 import type { BuildState, RegionId } from "@/league";
-import { unlockedRegions } from "@/league";
+import { REGION_IDS, unlockedRegions } from "@/league";
 import type { BlessingPath } from "@/league/blessings";
 import { secondsToTicks } from "../core/ticks";
 import { equippedSetCounts } from "../shared/equipment";
@@ -128,8 +128,12 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
   const durationSeconds = input.durationSeconds ?? 300;
   /** Short explore horizon for ranking; full 300s only on finalists. */
   const exploreSeconds = input.exploreSeconds ?? 30;
-  const regions =
-    input.useBuildRegions === false ? (input.unlockedRegions ?? []) : unlockedRegions(input.build);
+  const unrestricted = input.useBuildRegions === false;
+  const regions = unrestricted
+    ? (input.unlockedRegions ?? [...REGION_IDS])
+    : unlockedRegions(input.build);
+  const includeUnknownAvailability =
+    input.includeUnknownAvailability ?? (unrestricted ? true : undefined);
 
   const sizes = clampSolverBarSizes(
     input.minBarSize ?? MIN_SOLVER_BAR_SIZE,
@@ -148,7 +152,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     minBarSize: sizes.minBarSize,
     maxBarSize: sizes.maxBarSize,
     includePartial: input.includePartial,
-    includeUnknownAvailability: input.includeUnknownAvailability,
+    includeUnknownAvailability,
     disabledAbilityIds: input.disabledAbilityIds,
     unlockedRegions: regions as RegionId[],
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],

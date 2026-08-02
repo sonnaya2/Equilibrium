@@ -52,7 +52,9 @@ export {
   runSolverOnMainThread,
   isSolverPreferringMainThread,
   resetSolverHostForTests,
+  solverPoolSize,
 } from "./host";
+export { SolverAgentPool, getSolverAgentPool } from "./pool";
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 

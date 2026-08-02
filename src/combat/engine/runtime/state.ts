@@ -43,6 +43,9 @@ export interface RotationState {
   /** Next tick free for a cast — the global cooldown is encoded here. */
   tick: number;
   adrenaline: number;
+  adrenalineCap: number;
+  /** Vestments set(2): exclusive end of the 15%-over-18s regeneration. */
+  vestmentsAdrenalineUntilTick: number;
   cooldowns: CooldownState;
   /**
    * Relentless perk lockout: after a proc the perk cannot activate again until
@@ -57,11 +60,14 @@ export interface RotationState {
 }
 
 export function newRotationState(
-  opts: { lantern?: boolean; adrenaline?: number } = {},
+  opts: { lantern?: boolean; adrenaline?: number; adrenalineCap?: number } = {},
 ): RotationState {
+  const adrenalineCap = opts.adrenalineCap ?? ADRENALINE_CAP;
   return {
     tick: 0,
-    adrenaline: opts.adrenaline ?? 0,
+    adrenaline: Math.min(adrenalineCap, opts.adrenaline ?? 0),
+    adrenalineCap,
+    vestmentsAdrenalineUntilTick: 0,
     cooldowns: {},
     relentlessUntilTick: 0,
     melee: newMeleeRotationState(),
@@ -73,7 +79,7 @@ export function newRotationState(
 }
 
 export function gainAdrenaline(state: RotationState, amount: number): RotationState {
-  return { ...state, adrenaline: Math.min(ADRENALINE_CAP, state.adrenaline + amount) };
+  return { ...state, adrenaline: Math.min(state.adrenalineCap, state.adrenaline + amount) };
 }
 
 export function spendAdrenaline(state: RotationState, amount: number): RotationState {

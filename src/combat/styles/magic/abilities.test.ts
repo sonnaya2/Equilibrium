@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateAbility } from "../../pipeline/calculateAbility";
 import { RUNIC_EMPOWERMENTS } from "./runicCharge";
-import { MAGIC_ABILITIES, MAGIC_EFFECTS } from "./abilities";
+import { MAGIC_ABILITIES, MAGIC_EFFECTS, resplendentAsphyxiate } from "./abilities";
 
 const byId = (id: string) => {
   const a = MAGIC_ABILITIES.find((x) => x.id === id);
@@ -59,10 +59,11 @@ describe("magic ability data", () => {
     expect(asph.hits.map((h) => h.tickOffset)).toEqual([0, 2, 4, 6]);
     expect(asph.adrenaline?.cost).toBe(25);
 
-    const respl = byId("asphyxiate_resplendence");
+    const respl = resplendentAsphyxiate(asph);
     expect(respl.hits).toHaveLength(8);
     expect(respl.hits.every((h) => h.band.minPct === 72 && h.band.maxPct === 84)).toBe(true);
     expect(respl.hits.map((h) => h.tickOffset)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+    expect(MAGIC_ABILITIES.some((a) => a.id === "asphyxiate_resplendence")).toBe(false);
 
     expect(byId("tsunami").hits[0].band).toEqual({ minPct: 225, maxPct: 275 });
     expect(byId("tsunami").adrenaline?.cost).toBe(100);

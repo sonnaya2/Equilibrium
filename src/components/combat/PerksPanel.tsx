@@ -15,7 +15,7 @@ const PERK_FIELDS = [
   ["crackling", "Crackling rank (PvM zap 50% AD × rank, 60s CD)", 4],
   ["aftershock", "Aftershock rank (AoE after 50k dmg, 40% AD × rank, 6s min)", 4],
   ["relentless", "Relentless rank (R1 1% EV adren refund on costs; 1.1% if lvl20)", 5],
-  ["tectonicPieces", "Tectonic pieces (+1%/piece crit)", 5],
+  ["tectonicPieces", "Tectonic pieces (+1%/piece crit)", 3],
   ["tumekensPieces", "Tumeken's pieces (+1.5%/piece crit)", 5],
 ] as const;
 

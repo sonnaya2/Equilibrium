@@ -3,7 +3,7 @@ import type { HitResult } from "../../pipeline/calculateHit";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord } from "../simulation/contracts";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
-import { newRotationState, type RotationState } from "./state";
+import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -46,13 +46,16 @@ export interface SimulationRuntime {
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
+  const adrenalineCap = (input.vestmentsPieces ?? 0) >= 4 ? 120 : ADRENALINE_CAP;
   if (
     input.startingAdrenaline != null &&
     (!Number.isFinite(input.startingAdrenaline) ||
       input.startingAdrenaline < 0 ||
-      input.startingAdrenaline > 100)
+      input.startingAdrenaline > adrenalineCap)
   ) {
-    throw new RangeError(`startingAdrenaline outside 0-100: ${input.startingAdrenaline}`);
+    throw new RangeError(
+      `startingAdrenaline outside 0-${adrenalineCap}: ${input.startingAdrenaline}`,
+    );
   }
   if (
     input.targetHpPercent != null &&
@@ -68,7 +71,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     byId: new Map(input.abilities.map((a) => [a.id, a])),
     basicByStyle: new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a])),
     queue: new EventQueue<SimulationRuntime>(),
-    state: newRotationState({ adrenaline: input.startingAdrenaline }),
+    state: newRotationState({ adrenaline: input.startingAdrenaline, adrenalineCap }),
     casts: [],
     perAbility: {},
     damageByTick: {},

@@ -22,7 +22,13 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
 
   const skeletonWasActive = conjureActive(necromancy.conjures, "skeleton_warrior", candidate);
   const zombieWasActive = conjureActive(necromancy.conjures, "putrid_zombie", candidate);
-  const patch = applyNecroOnCast(necromancy.resources, ability, candidate, necromancy.conjures);
+  const patch = applyNecroOnCast(
+    necromancy.resources,
+    ability,
+    candidate,
+    necromancy.conjures,
+    rt.input.conjureDurationMult,
+  );
   rt.state = patchNecro(rt.state, patch.necro);
   if (patch.conjures) rt.state = patchConjures(rt.state, patch.conjures);
   grantBonusAdrenaline(fx, patch.adrenalineBonus);

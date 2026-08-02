@@ -13,10 +13,13 @@ import type { CastEffectContext } from "./context";
  * here.
  */
 export function applyCompletionEffects(fx: CastEffectContext): void {
-  const { rt, ability, candidate } = fx;
-  if (ability.id === "asphyxiate" && ability.channelTicks != null) {
+  const { rt, ability, working, candidate } = fx;
+  if (ability.id === "asphyxiate" && working.channelTicks != null) {
     rt.state = patchMagic(rt.state, {
-      channelledMight: grantChannelledMight(candidate + ability.channelTicks),
+      channelledMight: grantChannelledMight(
+        candidate + working.channelTicks,
+        (rt.input.tumekensPieces ?? 0) >= 5,
+      ),
     });
   }
 }

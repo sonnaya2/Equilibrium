@@ -228,8 +228,9 @@ export function spiritAutoProfile(id: ConjureId): SpiritAutoProfile | null {
 }
 
 /** Build the summoned spirit with exactly the tracks its kind has. */
-function newActiveConjure(id: ConjureId, readyTick: number): ActiveConjure {
-  const untilTick = readyTick + CONJURE_UNTIL_OFFSET_TICKS;
+function newActiveConjure(id: ConjureId, readyTick: number, durationMult = 1): ActiveConjure {
+  const untilTick =
+    readyTick + CONJURE_ANIM_TICKS + Math.floor(SPIRIT_PACT_III_DURATION_TICKS * durationMult);
   switch (id) {
     case "skeleton_warrior":
       return {
@@ -252,9 +253,14 @@ function newActiveConjure(id: ConjureId, readyTick: number): ActiveConjure {
   }
 }
 
-export function summonConjure(state: ConjureState, id: ConjureId, readyTick: number): ConjureState {
+export function summonConjure(
+  state: ConjureState,
+  id: ConjureId,
+  readyTick: number,
+  durationMult = 1,
+): ConjureState {
   const others = state.spirits.filter((s) => s.id !== id);
-  return { spirits: [...others, newActiveConjure(id, readyTick)] };
+  return { spirits: [...others, newActiveConjure(id, readyTick, durationMult)] };
 }
 
 /** Summon every id not already active (army partial-cast behaviour). */
@@ -262,10 +268,13 @@ export function summonConjures(
   state: ConjureState,
   ids: readonly ConjureId[],
   readyTick: number,
+  durationMult = 1,
 ): ConjureState {
   let next = state;
   for (const id of ids) {
-    if (!conjureActive(next, id, readyTick)) next = summonConjure(next, id, readyTick);
+    if (!conjureActive(next, id, readyTick)) {
+      next = summonConjure(next, id, readyTick, durationMult);
+    }
   }
   return next;
 }
@@ -332,10 +341,11 @@ export function applyConjureCast(
   state: ConjureState,
   abilityId: string,
   readyTick: number,
+  durationMult = 1,
 ): ConjureState {
   const ids = CONJURE_ABILITY_SUMMONS[abilityId];
   if (!ids) return state;
-  return summonConjures(state, ids, readyTick);
+  return summonConjures(state, ids, readyTick, durationMult);
 }
 
 /**

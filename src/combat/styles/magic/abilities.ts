@@ -68,6 +68,11 @@ function asphyxiateResplendenceHits() {
   }));
 }
 
+/** Resolve the ordinary Asphyxiate spec through Tumeken's four-piece bonus. */
+export function resplendentAsphyxiate(ability: AbilitySpec): AbilitySpec {
+  return { ...ability, channelTicks: 8, hits: asphyxiateResplendenceHits() };
+}
+
 /**
  * Corruption Blast: first hit 90-110%; each subsequent hit loses 20% of the
  * *initial* hit (wiki example: 1080 -> 864 -> 648 -> 432 -> 216). Modelled as
@@ -266,17 +271,6 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     category: "enhanced",
     channelTicks: 7,
     hits: asphyxiateHits(),
-    adrenaline: { cost: 25 },
-    cooldownSeconds: 20.4,
-    source: wikiAbility("Asphyxiate"),
-  },
-  {
-    id: "asphyxiate_resplendence",
-    name: "Asphyxiate (Tumeken's Resplendence)",
-    style: "magic",
-    category: "enhanced",
-    channelTicks: 8,
-    hits: asphyxiateResplendenceHits(),
     adrenaline: { cost: 25 },
     cooldownSeconds: 20.4,
     source: wikiAbility("Asphyxiate"),

@@ -6,7 +6,7 @@ import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES, type MeleeAbilitySpec } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
-import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
+import { MAGIC_ABILITIES, resplendentAsphyxiate } from "@/combat/styles/magic/abilities";
 import {
   MAX_SOULS,
   NECROMANCY_ABILITIES,
@@ -117,18 +117,22 @@ export function QuickCalculator() {
       : STYLE_ABILITIES[activeStyle].filter((a) => a.hits.length > 0);
   const ability = palette.find((a) => a.id === abilityId) ?? palette[0];
   const selectedId = ability?.id;
+  const calculatedAbility =
+    useBuild && ability?.id === "asphyxiate" && (setup.tumekensPieces ?? 0) >= 4
+      ? resplendentAsphyxiate(ability)
+      : ability;
 
   const result =
-    ability && ability.hits.length > 0
-      ? calculateAbility(ability, {
+    calculatedAbility && calculatedAbility.hits.length > 0
+      ? calculateAbility(calculatedAbility, {
           base: Math.max(0, finite(effectiveBase, 0)),
           level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
           accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
           crit: {
             chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
-            guaranteed: (ability as RangedAbilitySpec).guaranteedCrit,
+            guaranteed: (calculatedAbility as RangedAbilitySpec).guaranteedCrit,
           },
-          modifiers: useBuild ? setup.castModifiersFor(ability) : undefined,
+          modifiers: useBuild ? setup.castModifiersFor(calculatedAbility) : undefined,
           context: { style: activeStyle },
           cap: setup.cap,
         })

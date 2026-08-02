@@ -115,6 +115,48 @@ describe("Channelled Might", () => {
     const empowered = s.casts.at(-1)!;
     expect(empowered.result.hits[0].expected).toBeCloseTo(1649.5273631840796, 10);
   });
+
+  it("Tumeken set(4) turns the ordinary Asphyxiate into eight 0.6s hits", () => {
+    const ctx = createCastContext({ ...magicInput, tumekensPieces: 4 });
+    const attack = ctx.byId.get("magic_attack")!;
+    for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    const castTick = ctx.getState().tick;
+    ctx.performCast(ctx.byId.get("asphyxiate")!, castTick, false);
+    const cast = ctx.finish().casts.at(-1)!;
+    expect(cast.abilityId).toBe("asphyxiate");
+    expect(cast.result.hits).toHaveLength(8);
+    expect(cast.result.hits.every((hit) => hit.expected === 780)).toBe(true);
+    expect(ctx.getState().magic.channelledMight.startsAtTick).toBe(castTick + 8);
+  });
+
+  it("Tumeken set(5) grants +35% Channelled Might for 9 seconds", () => {
+    const ctx = createCastContext({ ...magicInput, tumekensPieces: 5 });
+    const attack = ctx.byId.get("magic_attack")!;
+    for (let i = 0; i < 3; i++) ctx.performCast(attack, ctx.getState().tick, false);
+    const castTick = ctx.getState().tick;
+    ctx.performCast(ctx.byId.get("asphyxiate")!, castTick, false);
+    const might = ctx.getState().magic.channelledMight;
+    expect(might).toMatchObject({
+      startsAtTick: castTick + 8,
+      expiresAtTick: castTick + 23,
+      critDamageBonus: 0.35,
+    });
+  });
+
+  it("Tumeken set(3) adds crit only while another cast's Sunshine is active", () => {
+    const ctx = createCastContext({
+      ...magicInput,
+      startingAdrenaline: 100,
+      tumekensPieces: 3,
+    });
+    ctx.performCast(ctx.byId.get("sunshine")!, 0, false);
+    ctx.performCast(ctx.byId.get("magic_attack")!, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const sunshine = s.casts[0]!;
+    const attack = s.casts[1]!;
+    expect(sunshine.result.hits.every((hit) => hit.critChance === 0)).toBe(true);
+    expect(attack.result.hits[0].critChance).toBeCloseTo(0.045, 10);
+  });
 });
 
 describe("Dragon Breath vs Combust", () => {

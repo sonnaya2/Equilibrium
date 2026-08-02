@@ -85,6 +85,11 @@ export type LoadoutEquipmentView = {
   equipmentIds?: readonly string[] | null;
 };
 
+const SET_PIECE_WEIGHTS: Readonly<Record<string, number>> = {
+  // The combined crown + death mask occupies one slot but counts twice.
+  "item:visage-of-the-first-necromancer": 2,
+};
+
 /**
  * Count equipped set pieces from slotted gear (and legacy flat equipmentIds).
  * Uses equipmentById → record.setId. Duplicate item ids count once.
@@ -97,14 +102,44 @@ export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, nu
     seen.add(id);
     const setId = equipmentById(id)?.setId;
     if (!setId) return;
-    counts.set(setId, (counts.get(setId) ?? 0) + 1);
+    const max = equipmentSetById(setId)?.maxPieces ?? Number.POSITIVE_INFINITY;
+    counts.set(setId, Math.min(max, (counts.get(setId) ?? 0) + (SET_PIECE_WEIGHTS[id] ?? 1)));
   };
   for (const id of Object.values(loadout.equipmentSlots ?? {})) add(id);
   for (const id of loadout.equipmentIds ?? []) add(id);
   return counts;
 }
 
-export type SetEffectSummary = { setId: string; pieces: number; label: string };
+export type SetEffectSupport = "modeled" | "not-modeled" | "outgoing-only" | "none";
+export type SetEffectSummary = {
+  setId: string;
+  pieces: number;
+  label: string;
+  support: SetEffectSupport;
+};
+
+const MODELED_SET_IDS = new Set([
+  "tectonic",
+  "elite-tectonic",
+  "tumekens-resplendence",
+  "first-necromancer",
+  "vestments-of-havoc",
+]);
+const UNSUPPORTED_SET_IDS = new Set([
+  "sirenic",
+  "elite-sirenic",
+  "deathdealer-90",
+  "anima-core-sliske",
+  "refined-anima-core-sliske",
+]);
+
+export function setEffectSupport(def: EquipmentSetDef | undefined): SetEffectSupport {
+  if (!def) return "not-modeled";
+  if (MODELED_SET_IDS.has(def.id)) return "modeled";
+  if (UNSUPPORTED_SET_IDS.has(def.id)) return "not-modeled";
+  if (def.id === "trimmed-masterwork") return "outgoing-only";
+  return "none";
+}
 
 /**
  * Equipped sets with piece counts for GearPanel. Prefers catalogue labels;
@@ -116,7 +151,12 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
   for (const [setId, pieces] of counts) {
     if (pieces <= 0) continue;
     const def = equipmentSetById(setId);
-    out.push({ setId, pieces, label: def?.label ?? setId });
+    out.push({
+      setId,
+      pieces: Math.min(def?.maxPieces ?? pieces, pieces),
+      label: def?.label ?? setId,
+      support: setEffectSupport(def),
+    });
   }
   out.sort((a, b) => a.setId.localeCompare(b.setId));
   return out;
@@ -254,9 +294,21 @@ export function firstNecromancerConjureDamageMult(pieces: number): number {
   return 1 + 0.07 * n;
 }
 
+/** First Necromancer set(4+): +5% conjure lifetime per effective piece. */
+export function firstNecromancerConjureDurationMult(pieces: number): number {
+  const n = Math.max(0, Math.min(5, Math.floor(pieces)));
+  return n < 4 ? 1 : 1 + 0.05 * n;
+}
+
 /** Equipped first-necromancer piece count → conjure basic mult (1 if none / <2). */
 export function loadoutFirstNecromancerConjureDamageMult(loadout: LoadoutEquipmentView): number {
   return firstNecromancerConjureDamageMult(
+    equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+  );
+}
+
+export function loadoutFirstNecromancerConjureDurationMult(loadout: LoadoutEquipmentView): number {
+  return firstNecromancerConjureDurationMult(
     equippedSetCounts(loadout).get("first-necromancer") ?? 0,
   );
 }
@@ -266,8 +318,9 @@ function setCritChance(
   pieces: number,
   perPiece: number,
   source: SourceReference,
+  maxPieces: number,
 ): SetEffect {
-  if (!Number.isInteger(pieces) || pieces < 0 || pieces > 5) {
+  if (!Number.isInteger(pieces) || pieces < 0 || pieces > maxPieces) {
     throw new RangeError(`${id}: bad piece count ${pieces}`);
   }
   return { id, pieces, critChanceBonus: pieces * perPiece, source };
@@ -280,6 +333,7 @@ export const tectonicSet = (pieces: number, elite = false) =>
     pieces,
     elite ? 0.02 : 0.01,
     MASTERWORK_WEAPONS_WIKI_2025_05_27,
+    3,
   );
 
 /**
@@ -292,6 +346,7 @@ export function tumekensSunshineSet(pieces: number, insideSunshine: boolean): Se
     pieces,
     0.015,
     AMASCUT_MASTERIES_WIKI_2025_09_29,
+    5,
   );
   if (!insideSunshine || pieces < 3) return { ...effect, critChanceBonus: 0 };
   return effect;

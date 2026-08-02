@@ -118,7 +118,12 @@ export function scheduleCastEvents(
   ) {
     working.hits.forEach((hitSpec, hitIndex) => {
       if (hitSpec.critEligible === false) return;
-      if (critProbability({ ...snap.critLayers, eligible: true }) <= 0) return;
+      if (
+        critProbability({ ...snap.critLayers, eligible: true }) <= 0 &&
+        ((rt.input.tumekensPieces ?? 0) < 3 || rt.input.tumekensCritEnabled === false)
+      ) {
+        return;
+      }
       const sourceSeq = hitSeqs[hitIndex]!;
       scheduleEvent(rt, {
         tick: candidate + (hitSpec.tickOffset ?? 0) + LIGHTNING_SURGE_TICK_DELAY,

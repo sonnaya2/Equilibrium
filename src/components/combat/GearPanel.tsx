@@ -410,10 +410,18 @@ export function GearPanel({
                   <li key={s.setId}>
                     <span className="text-parch-50">{s.label}</span>
                     <span className="ml-1.5 font-mono text-parch-300">×{s.pieces}</span>
+                    <span className="ml-1.5 text-parch-300">
+                      {s.support === "modeled"
+                        ? "modeled"
+                        : s.support === "outgoing-only"
+                          ? "defensive effect not modeled"
+                          : s.support === "not-modeled"
+                            ? "set effect not modeled"
+                            : "no outgoing set bonus"}
+                    </span>
                   </li>
                 ))}
               </ul>
-              <p className="mt-1 text-[11px] text-parch-300">Set crit is included.</p>
             </div>
           );
         })()}

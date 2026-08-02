@@ -11,7 +11,7 @@ import {
   greaterBargeIdleBand,
 } from "../../styles/melee/effects";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
-import { isMagicAbility } from "../../styles/magic/abilities";
+import { isMagicAbility, resplendentAsphyxiate } from "../../styles/magic/abilities";
 import {
   GREATER_FLOW_REDUCTION,
   isConcentratedBlast,
@@ -123,6 +123,9 @@ export function prepareCast(
   }
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
+  }
+  if (ability.id === "asphyxiate" && (input.tumekensPieces ?? 0) >= 4) {
+    working = resplendentAsphyxiate(working);
   }
   // Runic-charged Dragon Breath: same ability (basic, +9 adrenaline, same
   // cooldown), empowered band while Anima Charged — the charge is consumed at

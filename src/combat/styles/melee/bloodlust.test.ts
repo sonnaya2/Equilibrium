@@ -37,6 +37,40 @@ describe("bloodlust", () => {
 });
 
 describe("bloodlust — spend lifecycle through the simulator", () => {
+  it("Vestments set(2) regenerates 15 adrenaline over 18 seconds", () => {
+    const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100, vestmentsPieces: 2 });
+    ctx.performCast(ctx.byId.get("berserk")!, 0, false);
+    expect(ctx.getState().vestmentsAdrenalineUntilTick).toBe(30);
+    expect(ctx.getState().adrenaline).toBeCloseTo(1.5, 10);
+    ctx.advanceTo(30);
+    expect(ctx.getState().adrenaline).toBeCloseTo(15, 10);
+  });
+
+  it("a second ultimate during Vestments regeneration gains 20 instantly and ends it", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 120,
+      vestmentsPieces: 4,
+      adrenaline: { relentlessRank: 1 },
+    });
+    ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentlessProc: true });
+    ctx.performCast(ctx.byId.get("overpower")!, ctx.getState().tick, false, {
+      relentlessProc: false,
+    });
+    expect(ctx.getState().vestmentsAdrenalineUntilTick).toBe(0);
+    expect(ctx.getState().adrenaline).toBeCloseTo(80, 10);
+  });
+
+  it("Vestments set(3) extends Berserk by 6 seconds and set(4) raises the cap to 120", () => {
+    const ctx = createCastContext({ ...baseInput, startingAdrenaline: 120, vestmentsPieces: 4 });
+    expect(ctx.getState().adrenalineCap).toBe(120);
+    ctx.performCast(ctx.byId.get("berserk")!, 0, false);
+    expect(ctx.getState().melee.berserkUntilTick).toBe(43);
+    expect(() => createCastContext({ ...baseInput, startingAdrenaline: 120 })).toThrow(
+      "outside 0-100",
+    );
+  });
+
   it("swaps Assault to its 4-Bloodlust band only once the threshold is met", () => {
     const low = simulate({
       ...baseInput,

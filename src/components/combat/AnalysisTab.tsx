@@ -5,7 +5,7 @@ import { calculateAbility, type AbilitySpec } from "@/combat/pipeline/calculateA
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
-import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
+import { MAGIC_ABILITIES, resplendentAsphyxiate } from "@/combat/styles/magic/abilities";
 import { MAX_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
@@ -43,15 +43,19 @@ function finite(value: number, fallback: number): number {
 }
 
 function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
-  return calculateAbility(ability, {
+  const working =
+    ability.id === "asphyxiate" && (stats.tumekensPieces ?? 0) >= 4
+      ? resplendentAsphyxiate(ability)
+      : ability;
+  return calculateAbility(working, {
     base: Math.max(0, finite(stats.base, 0)),
     level: stats.level,
     accuracy: stats.dp,
     crit: {
       chance: stats.critChance,
-      guaranteed: (ability as RangedAbilitySpec).guaranteedCrit,
+      guaranteed: (working as RangedAbilitySpec).guaranteedCrit,
     },
-    modifiers: stats.castModifiersFor(ability),
+    modifiers: stats.castModifiersFor(working),
     context: { style },
     cap: stats.cap,
   });

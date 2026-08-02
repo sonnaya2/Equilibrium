@@ -38,11 +38,22 @@ function grantMeteorPassive(
   if (gain > 0) rt.state = gainAdrenaline(rt.state, gain);
 }
 
+/** Vestments set(2): 15 adrenaline over 30 ticks, cancelled by its instant repeat. */
+function grantVestmentsPassive(
+  rt: SimulationRuntime,
+  fromTick: number,
+  toTickExclusive: number,
+): void {
+  const end = Math.min(toTickExclusive, rt.state.vestmentsAdrenalineUntilTick);
+  if (end > fromTick) rt.state = gainAdrenaline(rt.state, (end - fromTick) * 0.5);
+}
+
 export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   if (targetTick < rt.state.tick) return;
   // A horizon run never lands events at or after the horizon (half-open).
   processDueEvents(rt, rt.horizon != null ? Math.min(targetTick, rt.horizon - 1) : targetTick);
   grantMeteorPassive(rt, rt.state.tick, targetTick);
+  grantVestmentsPassive(rt, rt.state.tick, targetTick);
   if (rt.state.melee.bloodlust.berserk && targetTick >= rt.state.melee.berserkUntilTick) {
     rt.state = patchMelee(rt.state, {
       bloodlust: endBerserk(rt.state.melee.bloodlust),

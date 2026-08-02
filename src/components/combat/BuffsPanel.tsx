@@ -36,7 +36,9 @@ export function BuffsPanel({
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
-      <p className="mt-1 text-xs text-parch-300">Overloads affect accuracy only.</p>
+      <p className="mt-1 text-xs text-parch-300">
+        Overloads boost accuracy and base ability damage. Curses add accuracy levels and damage.
+      </p>
       <div className="loadout-fields mt-3">
         <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
           <input

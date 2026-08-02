@@ -69,7 +69,7 @@ const ENGINE_ID_BY_RECORD_ID: Record<string, string> = {
   "magic:greater-concentrated-blast": "greater_concentrated_blast",
   "magic:wild-magic": "wild_magic",
   "magic:asphyxiate": "asphyxiate",
-  "magic:asphyxiate-resplendence": "asphyxiate_resplendence",
+  "magic:asphyxiate-resplendence": "asphyxiate",
   "magic:omnipower-igneous": "omnipower_igneous",
   "magic:dragon-breath-empowered": "dragon_breath",
   "magic:corruption-blast": "corruption_blast",

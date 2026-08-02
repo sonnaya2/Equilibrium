@@ -185,6 +185,7 @@ export function applyNecroOnCast(
   ability: AbilitySpec,
   castTick: number,
   conjuresIn?: ConjureState,
+  conjureDurationMult = 1,
 ): NecroOnCastPatch {
   if (!isNecromancyAbility(ability)) {
     return { necro: necroIn, adrenalineBonus: 0, clearCooldownIds: [] };
@@ -252,7 +253,7 @@ export function applyNecroOnCast(
   }
 
   if (conjures !== undefined) {
-    const afterSummon = applyConjureCast(conjures, ability.id, castTick);
+    const afterSummon = applyConjureCast(conjures, ability.id, castTick, conjureDurationMult);
     if (afterSummon !== conjures) conjures = afterSummon;
     if (ability.id === "command_putrid_zombie") {
       conjures = dismissConjure(conjures, "putrid_zombie");

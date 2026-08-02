@@ -62,6 +62,17 @@ export function applyCastResources(fx: CastEffectContext): void {
       deathspore: spendDeathspore(rt.state.ranged.deathspore, candidate),
     });
   }
+
+  if ((input.vestmentsPieces ?? 0) >= 2 && ability.category === "ultimate") {
+    if (candidate < rt.state.vestmentsAdrenalineUntilTick) {
+      rt.state = gainAdrenaline({ ...rt.state, vestmentsAdrenalineUntilTick: 0 }, 20);
+    } else {
+      rt.state = {
+        ...rt.state,
+        vestmentsAdrenalineUntilTick: candidate + secondsToTicks(18),
+      };
+    }
+  }
 }
 
 /** Extra adrenaline a style rule grants beyond the ability's listed gain. */

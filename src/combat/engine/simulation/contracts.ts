@@ -64,12 +64,20 @@ export interface SimulateInput {
    * Does not apply to greater variants.
    */
   plantedFeet?: boolean;
+  /** Effective Tumeken's resplendence piece count (0-5). */
+  tumekensPieces?: number;
+  /** False when another mechanic (Equilibrium) disables all set crit chance. */
+  tumekensCritEnabled?: boolean;
+  /** Effective Vestments of havoc piece count (0-4). */
+  vestmentsPieces?: number;
   procs?: ProcRules;
   /**
    * Mult on conjure spirit *basic autos* only (not putrid poison, not commands).
    * First Necromancer set: firstNecromancerConjureDamageMult(pieces). Default 1.
    */
   conjureBasicDamageMult?: number;
+  /** Multiplier on the Spirit Pact lifetime, after the 5-tick summon animation. */
+  conjureDurationMult?: number;
   /**
    * Target life-points percentage (0-100) for target-HP-dependent mechanics
    * (Bloodlust-empowered Flurry, Punish, Spectral Scythe). When absent those

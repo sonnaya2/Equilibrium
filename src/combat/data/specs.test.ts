@@ -135,7 +135,7 @@ describe("ENGINE_ID_BY_RECORD_ID magic", () => {
     ["magic:greater-concentrated-blast", "greater_concentrated_blast"],
     ["magic:wild-magic", "wild_magic"],
     ["magic:asphyxiate", "asphyxiate"],
-    ["magic:asphyxiate-resplendence", "asphyxiate_resplendence"],
+    ["magic:asphyxiate-resplendence", "asphyxiate"],
     ["magic:corruption-blast", "corruption_blast"],
     ["magic:smoke-tendrils", "smoke_tendrils"],
     ["magic:magma-tempest", "magma_tempest"],

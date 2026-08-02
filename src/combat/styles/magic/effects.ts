@@ -7,7 +7,7 @@ import type { SourceReference } from "../../types";
 /**
  * Channelled Might (30 Mar 2026): completing a full Asphyxiate channel grants
  * +15% magic critical strike damage for 3.6s. With 5 pieces of Tumeken's
- * resplendence it lasts 9s at +35% — the set bonus is data, not modelled state.
+ * resplendence it lasts 9s at +35%.
  */
 export const CHANNELLED_MIGHT_DURATION_SECONDS = 3.6;
 export const CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS = 0.15;
@@ -178,6 +178,19 @@ export function activateGreaterSunshine(tick: number): SunshineState {
 
 export function sunshineActive(state: SunshineState, tick: number): boolean {
   return tick >= state.startsAtTick && tick < state.expiresAtTick;
+}
+
+/** Tumeken set(3): +1.5% Magic crit chance per piece inside another cast's Sunshine. */
+export function tumekensSunshineCritChance(
+  pieces: number,
+  state: SunshineState,
+  tick: number,
+  sourceCast: number,
+): number {
+  const n = Math.max(0, Math.min(5, Math.floor(pieces)));
+  return n >= 3 && state.grantedByCast !== sourceCast && sunshineActive(state, tick)
+    ? n * 0.015
+    : 0;
 }
 
 export const SUNSHINE_SOURCE: SourceReference = {

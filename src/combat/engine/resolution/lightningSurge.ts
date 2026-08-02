@@ -6,6 +6,7 @@ import {
   sunshineActive,
   SUNSHINE_DAMAGE_MULTIPLIER,
   SUNSHINE_SOURCE,
+  tumekensSunshineCritChance,
 } from "../../styles/magic/effects";
 import type { CombatModifier } from "../../types";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -38,7 +39,20 @@ export function resolveLightningSurge(
     band: LIGHTNING_SURGE_BAND,
     level: input.level,
     accuracy: input.accuracy,
-    crit: { ...critLayers, eligible: true },
+    crit: {
+      ...critLayers,
+      chance:
+        critLayers.chance +
+        (input.tumekensCritEnabled === false
+          ? 0
+          : tumekensSunshineCritChance(
+              input.tumekensPieces ?? 0,
+              state.magic.sunshine,
+              at,
+              castSeq,
+            )),
+      eligible: true,
+    },
     modifiers,
     context: input.context,
     cap: input.cap,

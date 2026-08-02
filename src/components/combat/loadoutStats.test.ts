@@ -189,7 +189,7 @@ describe("loadoutStats", () => {
     const stats = loadoutStats({
       ...base,
       critChance: 97,
-      perks: { ...base.perks, tectonicPieces: 5, tumekensPieces: 3, insideSunshine: true },
+      perks: { ...base.perks, tectonicPieces: 3, tumekensPieces: 3, insideSunshine: true },
     });
     expect(stats.critChance).toBe(1);
     const plain = loadoutStats(base);
@@ -230,6 +230,8 @@ describe("loadoutStats", () => {
       perks: { ...base.perks, insideSunshine: true },
     });
     expect(stats.critChance).toBeCloseTo(0.145, 10);
+    expect(stats.simulationCritChance).toBeCloseTo(0.1, 10);
+    expect(stats.tumekensPieces).toBe(3);
   });
 
   it("empty gear + zero perk set pieces → no set crit", () => {
@@ -252,7 +254,14 @@ describe("loadoutStats", () => {
           legs: "item:tectonic-legs",
         },
       }),
-    ).toEqual([{ setId: "tectonic", pieces: 3, label: "Tectonic (Fracture Point)" }]);
+    ).toEqual([
+      {
+        setId: "tectonic",
+        pieces: 3,
+        label: "Tectonic (Fracture Point)",
+        support: "modeled",
+      },
+    ]);
   });
 
   it("Math.max(gear, perk) does not double-count tectonic", () => {
@@ -289,7 +298,7 @@ describe("loadoutStats", () => {
           ...base.perks,
           equilibrium: rank,
           biting: 4,
-          tectonicPieces: 5,
+          tectonicPieces: 3,
           eliteTectonic: true,
         },
       });
@@ -650,6 +659,7 @@ describe("loadoutStats", () => {
 
   it("First Necromancer gear surfaces conjureBasicDamageMult for spirit autos", () => {
     expect(loadoutStats(base).conjureBasicDamageMult).toBe(1);
+    expect(loadoutStats(base).conjureDurationMult).toBe(1);
     const full = loadoutStats({
       ...base,
       equipmentSlots: {
@@ -662,6 +672,23 @@ describe("loadoutStats", () => {
       },
     });
     expect(full.conjureBasicDamageMult).toBeCloseTo(1.35, 10);
+    expect(full.conjureDurationMult).toBeCloseTo(1.25, 10);
+  });
+
+  it("Vestments gear surfaces its piece count and 120 adrenaline cap", () => {
+    const stats = loadoutStats({
+      ...base,
+      startingAdrenaline: 120,
+      equipmentSlots: {
+        helmet: "item:vestments-of-havoc-hood",
+        body: "item:vestments-of-havoc-robe-top",
+        legs: "item:vestments-of-havoc-robe-bottom",
+        boots: "item:vestments-of-havoc-boots",
+      },
+    });
+    expect(stats.vestmentsPieces).toBe(4);
+    expect(stats.maxAdrenaline).toBe(120);
+    expect(stats.startingAdrenaline).toBe(120);
   });
 
   it("rank-0 perks produce no modifiers; ranked perks produce gated ones", () => {

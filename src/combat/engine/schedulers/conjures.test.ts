@@ -191,6 +191,20 @@ describe("conjure summoning and auto contribution", () => {
     expect(autoBoost / autoBase).toBeCloseTo(1.35, 5);
   });
 
+  it("First Necromancer set(5) extends the Spirit Pact lifetime by 25%", () => {
+    const plain = createCastContext(necroFixtureInput);
+    plain.performCast(plain.byId.get("conjure_skeleton_warrior")!, 0, false);
+    expect(findConjure(plain.getState().necromancy.conjures, "skeleton_warrior")!.untilTick).toBe(
+      105,
+    );
+
+    const boosted = createCastContext({ ...necroFixtureInput, conjureDurationMult: 1.25 });
+    boosted.performCast(boosted.byId.get("conjure_skeleton_warrior")!, 0, false);
+    expect(findConjure(boosted.getState().necromancy.conjures, "skeleton_warrior")!.untilTick).toBe(
+      130,
+    );
+  });
+
   it("command skeleton requires an active conjure", () => {
     const blocked = simulate({
       ...necroFixtureInput,

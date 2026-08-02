@@ -4,6 +4,7 @@ import {
   equipmentSetById,
   equippedSetCounts,
   firstNecromancerConjureDamageMult,
+  firstNecromancerConjureDurationMult,
   firstNecromancerSetFacts,
   loadoutFirstNecromancerConjureDamageMult,
   loadoutSetCritChance,
@@ -16,8 +17,8 @@ import {
 
 describe("shared/equipment set effects", () => {
   it("tectonic grants +1% crit chance per piece, elite +2%", () => {
-    expect(tectonicSet(5).critChanceBonus).toBeCloseTo(0.05, 10);
-    expect(tectonicSet(5, true).critChanceBonus).toBeCloseTo(0.1, 10);
+    expect(tectonicSet(3).critChanceBonus).toBeCloseTo(0.03, 10);
+    expect(tectonicSet(3, true).critChanceBonus).toBeCloseTo(0.06, 10);
     expect(tectonicSet(0).critChanceBonus).toBe(0);
   });
 
@@ -32,7 +33,7 @@ describe("shared/equipment set effects", () => {
   });
 
   it("rejects impossible piece counts", () => {
-    expect(() => tectonicSet(6)).toThrow(RangeError);
+    expect(() => tectonicSet(4)).toThrow(RangeError);
     expect(() => tumekensSunshineSet(-1, true)).toThrow(RangeError);
   });
 
@@ -80,9 +81,9 @@ describe("shared/equipment set effects", () => {
         body: "item:tectonic-body",
         legs: "item:tectonic-legs",
       },
-      perks: { tectonicPieces: 5 },
+      perks: { tectonicPieces: 3 },
     };
-    expect(loadoutSetCritChance(gear3)).toBeCloseTo(0.05, 10);
+    expect(loadoutSetCritChance(gear3)).toBeCloseTo(0.03, 10);
 
     const perkOnly = { equipmentSlots: {}, perks: { tectonicPieces: 3, eliteTectonic: true } };
     expect(loadoutSetCritChance(perkOnly)).toBeCloseTo(0.06, 10);
@@ -108,7 +109,14 @@ describe("shared/equipment set effects", () => {
         legs: "item:tectonic-legs",
       },
     });
-    expect(summary).toEqual([{ setId: "tectonic", pieces: 3, label: "Tectonic (Fracture Point)" }]);
+    expect(summary).toEqual([
+      {
+        setId: "tectonic",
+        pieces: 3,
+        label: "Tectonic (Fracture Point)",
+        support: "modeled",
+      },
+    ]);
     expect(setEffectsSummary({ equipmentSlots: {} })).toEqual([]);
   });
 
@@ -134,6 +142,27 @@ describe("shared/equipment set effects", () => {
     expect(firstNecromancerConjureDamageMult(3)).toBeCloseTo(1.21, 10);
     expect(firstNecromancerConjureDamageMult(5)).toBeCloseTo(1.35, 10);
     expect(firstNecromancerConjureDamageMult(9)).toBeCloseTo(1.35, 10);
+  });
+
+  it("First Necromancer set(4+) extends conjure lifetime by 5% per piece", () => {
+    expect(firstNecromancerConjureDurationMult(3)).toBe(1);
+    expect(firstNecromancerConjureDurationMult(4)).toBeCloseTo(1.2, 10);
+    expect(firstNecromancerConjureDurationMult(5)).toBeCloseTo(1.25, 10);
+  });
+
+  it("the First Necromancer visage counts as two pieces and the set caps at five", () => {
+    const loadout = {
+      equipmentSlots: {
+        helmet: "item:visage-of-the-first-necromancer",
+        body: "item:first-necromancer-body",
+        legs: "item:first-necromancer-legs",
+        gloves: "item:first-necromancer-gloves",
+        boots: "item:first-necromancer-boots",
+      },
+    };
+    expect(equippedSetCounts(loadout).get("first-necromancer")).toBe(5);
+    expect(setEffectsSummary(loadout)[0]?.pieces).toBe(5);
+    expect(loadoutFirstNecromancerConjureDamageMult(loadout)).toBeCloseTo(1.35, 10);
   });
 
   it("loadout First Necro gear drives conjure mult; not player setDamageModifiers", () => {

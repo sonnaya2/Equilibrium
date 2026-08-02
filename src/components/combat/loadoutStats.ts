@@ -11,8 +11,10 @@ import {
 } from "@/combat/shared/perks";
 import {
   equippedSetCounts,
+  effectiveTumekenPieces,
   isWeaponAccuracySlot,
   loadoutFirstNecromancerConjureDamageMult,
+  loadoutFirstNecromancerConjureDurationMult,
   loadoutSetCritChance,
   setDamageModifiers,
   setEffectsSummary,
@@ -53,9 +55,12 @@ export interface CalcStats {
   attackLevel: number;
   dp: number;
   critChance: number;
+  /** Crit chance for the simulator before land-time Tumeken Sunshine bonus. */
+  simulationCritChance: number;
   critDamageBonus: number;
   cap: HitCapRule;
   startingAdrenaline: number;
+  maxAdrenaline: number;
   effectiveDamageLevel: number;
   mainhandTier: number;
   offhandTier: number | null;
@@ -79,6 +84,10 @@ export interface CalcStats {
    * Pass to SimulateInput.conjureBasicDamageMult.
    */
   conjureBasicDamageMult?: number;
+  conjureDurationMult?: number;
+  tumekensPieces?: number;
+  tumekensCritEnabled?: boolean;
+  vestmentsPieces?: number;
 }
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -336,6 +345,10 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   // Equilibrium perk prevents critical strikes (wiki). Biting/set bonuses ignored while active.
   // Set crit: actual gear counts (Math.max with manual perk piece sliders — no double-count).
   const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
+  const tumekensPieces = effectiveTumekenPieces(setCounts, {
+    tumekensPieces: loadout.perks.tumekensPieces,
+  });
+  const vestmentsPieces = Math.min(4, setCounts.get("vestments-of-havoc") ?? 0);
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
@@ -349,8 +362,22 @@ export function loadoutStats(loadout: Loadout): CalcStats {
       insideSunshine: loadout.perks.insideSunshine,
     },
   });
+  const simulationSetCrit = loadoutSetCritChance({
+    equipmentSlots: loadout.equipmentSlots,
+    perks: {
+      tectonicPieces: loadout.perks.tectonicPieces,
+      eliteTectonic: loadout.perks.eliteTectonic,
+      tumekensPieces: loadout.perks.tumekensPieces,
+      insideSunshine: false,
+    },
+  });
   const critChance =
     loadout.perks.equilibrium > 0 ? 0 : clamp01(loadout.critChance / 100 + biting + setCrit);
+  const simulationCritChance =
+    loadout.perks.equilibrium > 0
+      ? 0
+      : clamp01(loadout.critChance / 100 + biting + simulationSetCrit);
+  const maxAdrenaline = vestmentsPieces >= 4 ? 120 : 100;
 
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet — structure ready).
@@ -402,9 +429,11 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     attackLevel,
     dp,
     critChance,
+    simulationCritChance,
     critDamageBonus: 0,
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
-    startingAdrenaline: loadout.startingAdrenaline,
+    startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
+    maxAdrenaline,
     effectiveDamageLevel: loadoutEffectiveDamageLevel(loadout),
     mainhandTier,
     offhandTier,
@@ -450,5 +479,11 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     conjureBasicDamageMult: loadoutFirstNecromancerConjureDamageMult({
       equipmentSlots: loadout.equipmentSlots,
     }),
+    conjureDurationMult: loadoutFirstNecromancerConjureDurationMult({
+      equipmentSlots: loadout.equipmentSlots,
+    }),
+    tumekensPieces,
+    tumekensCritEnabled: loadout.perks.equilibrium === 0,
+    vestmentsPieces,
   };
 }

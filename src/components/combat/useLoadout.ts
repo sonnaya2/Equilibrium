@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
+import { equippedSetCounts } from "@/combat/shared/equipment";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
@@ -380,6 +381,8 @@ export function normalizeLoadout(value: unknown): Loadout {
     : [];
   const slotted = new Set(equipmentIdList(equipmentSlots));
   const unlocks = legacyIds.filter((id) => !slotted.has(id));
+  const startingAdrenalineCap =
+    (equippedSetCounts({ equipmentSlots }).get("vestments-of-havoc") ?? 0) >= 4 ? 120 : 100;
 
   return {
     style,
@@ -408,7 +411,7 @@ export function normalizeLoadout(value: unknown): Loadout {
       ),
     },
     startingAdrenaline: Math.min(
-      100,
+      startingAdrenalineCap,
       Math.max(0, num(raw.startingAdrenaline, DEFAULT_LOADOUT.startingAdrenaline)),
     ),
     hitCapEnabled: raw.hitCapEnabled !== false,
@@ -449,7 +452,7 @@ export function normalizeLoadout(value: unknown): Loadout {
       aftershock: clampRank(rawPerks.aftershock, 4),
       relentless: clampRank(rawPerks.relentless, 5),
       relentlessLevel20: rawPerks.relentlessLevel20 === true,
-      tectonicPieces: clampRank(rawPerks.tectonicPieces, 5),
+      tectonicPieces: clampRank(rawPerks.tectonicPieces, 3),
       eliteTectonic: rawPerks.eliteTectonic === true,
       tumekensPieces: clampRank(rawPerks.tumekensPieces, 5),
       insideSunshine: rawPerks.insideSunshine === true,

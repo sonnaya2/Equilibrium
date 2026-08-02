@@ -2,7 +2,11 @@ import type { CritLayers } from "../../core/critical";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
 import { calculateHit } from "../../pipeline/calculateHit";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
-import { channelledMightCritBonus, isConcentratedBlast } from "../../styles/magic/effects";
+import {
+  channelledMightCritBonus,
+  isConcentratedBlast,
+  tumekensSunshineCritChance,
+} from "../../styles/magic/effects";
 import { SEARING_WINDS_BONUS_HIT_PCT } from "../../styles/ranged/onHit";
 import {
   COMMAND_REQUIRES_CONJURE,
@@ -51,6 +55,14 @@ export function resolveCastHit(
     chance:
       snap.critLayers.chance +
       liveConcChance +
+      (ability.style === "magic" && input.tumekensCritEnabled !== false
+        ? tumekensSunshineCritChance(
+            input.tumekensPieces ?? 0,
+            state.magic.sunshine,
+            at,
+            snap.castSeq,
+          )
+        : 0) +
       (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0),
     guaranteed: snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
     damageBonus:

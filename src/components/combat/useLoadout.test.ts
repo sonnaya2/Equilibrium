@@ -40,6 +40,23 @@ describe("normalizeLoadout", () => {
     ).toEqual({ mode: "manual", manualValue: 1 });
   });
 
+  it("keeps up to 120 starting adrenaline with four Vestments pieces", () => {
+    const next = normalizeLoadout({
+      startingAdrenaline: 140,
+      equipmentSlots: {
+        helmet: "item:vestments-of-havoc-hood",
+        body: "item:vestments-of-havoc-robe-top",
+        legs: "item:vestments-of-havoc-robe-bottom",
+        boots: "item:vestments-of-havoc-boots",
+      },
+    });
+    expect(next.startingAdrenaline).toBe(120);
+  });
+
+  it("clamps manual Tectonic pieces to the three-piece set", () => {
+    expect(normalizeLoadout({ perks: { tectonicPieces: 5 } }).perks.tectonicPieces).toBe(3);
+  });
+
   it("migrates legacy { level } into attackLevel + strengthLevel", () => {
     const next = normalizeLoadout({ style: "melee", level: 112, weaponTier: 92 });
     expect(next.level).toBe(112);

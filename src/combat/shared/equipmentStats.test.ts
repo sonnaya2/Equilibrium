@@ -258,6 +258,44 @@ describe("aggregateEquipmentStats", () => {
     expect(defender.appliedAccuracy).toBe(0); // weapon-slot accuracy is tier-encoded
   });
 
+  it("ignores weapon face Damage so equipment damage is style bonuses only", () => {
+    add({
+      ...base,
+      id: "item:mh",
+      slot: "mainhand",
+      tier: 90,
+      style: "necromancy",
+      bonuses: { damage: 1415.5, accuracy: 2765 },
+    });
+    add({
+      ...base,
+      id: "item:oh",
+      slot: "offhand",
+      tier: 90,
+      style: "necromancy",
+      bonuses: { damage: 707.7, accuracy: 2765 },
+    });
+    add({
+      ...base,
+      id: "item:body",
+      slot: "body",
+      tier: 90,
+      style: "necromancy",
+      armourClass: "power",
+      bonuses: { damage: 33.8 },
+    });
+    const totals = aggregateEquipmentStats(
+      {
+        style: "necromancy",
+        equipmentSlots: { mainhand: "item:mh", offhand: "item:oh", body: "item:body" },
+      },
+      resolve,
+    );
+    expect(totals.damage).toBeCloseTo(33.8, 5);
+    expect(totals.displayedAccuracy).toBe(2765 + 2765);
+    expect(totals.appliedAccuracy).toBe(0);
+  });
+
   it("flags missing metadata instead of inventing values", () => {
     add({ ...base, id: "item:b", slot: "body", tier: 80 });
     add({ ...base, id: "item:r", slot: "ring", tier: 88, bonuses: {} });

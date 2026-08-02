@@ -1,6 +1,7 @@
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { equilibriumDamageBonus, eruptiveDamageBonus } from "@/combat/shared/perks";
 import { resolvedEquipmentSlots } from "@/combat/shared/equipment";
+import { equipmentRecordDamage } from "@/combat/shared/equipmentStats";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import { equipmentById } from "@/combat/data";
 import type { Loadout } from "./model";
@@ -25,16 +26,18 @@ export function equippedRecordIds(loadout: Loadout): string[] {
   return out;
 }
 
-/** Style bonus `b`: matching armour/jewellery bonuses, never weapon damage. */
+/**
+ * Style bonus `b` for ability damage: non-weapon pieces only, same resolve as
+ * Setup "Equipment damage" (exact `bonuses.damage` or formula). Weapons never
+ * enter here — tier handles them; defenders use half-tier OH, not style b.
+ */
 export function equipmentStyleDamageBonus(loadout: Loadout): number {
   let bonus = 0;
   for (const id of equippedRecordIds(loadout)) {
     const record = equipmentById(id);
     if (!record?.slot || WEAPON_SLOTS.has(record.slot)) continue;
     if (record.style && record.style !== "hybrid" && record.style !== loadout.style) continue;
-    if (record.bonuses.damage != null && Number.isFinite(record.bonuses.damage)) {
-      bonus += record.bonuses.damage;
-    }
+    bonus += equipmentRecordDamage(record);
   }
   return bonus;
 }

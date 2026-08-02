@@ -9,6 +9,7 @@ import { hitChance, playerAccuracy, targetDamagePotential } from "@/combat/targe
 import {
   computedLoadoutBase,
   equippedBonuses,
+  equipmentStyleDamageBonus,
   equippedSetCounts,
   equippedWeaponTier,
   loadoutAttackLevel,
@@ -645,12 +646,17 @@ describe("loadoutStats", () => {
     expect(stats.level).toBe(99);
   });
 
-  it("equippedBonuses sums wiki damage/accuracy from slotted pieces", () => {
+  it("equippedBonuses sums wiki face values; Setup equipment.damage ignores weapon Damage", () => {
     const dual: Loadout = {
       ...base,
+      style: "necromancy",
       equipmentSlots: { mainhand: "item:omni-guard", offhand: "item:soulbound-lantern" },
     };
+    // Wiki face totals still available for display/debug.
     expect(equippedBonuses(dual)).toEqual({ damage: 1415.5 + 707.7, accuracy: 2765 + 2765 });
+    // Setup "Equipment damage" is style bonuses only — weapons are tier-encoded.
+    expect(loadoutStats(dual).equipment.damage).toBe(0);
+    expect(equipmentStyleDamageBonus(dual)).toBe(0);
 
     const seismic: Loadout = {
       ...base,
@@ -659,6 +665,24 @@ describe("loadoutStats", () => {
     expect(equippedBonuses(seismic)).toEqual({ damage: 0, accuracy: 2458 });
 
     expect(equippedBonuses({ ...base, equipmentSlots: {} })).toEqual({ damage: 0, accuracy: 0 });
+  });
+
+  it("formula power armour writes style damage into Base AD and Setup equipment.damage", () => {
+    // Masterwork ranged is power armour without always-sourced bonuses.damage on every piece.
+    const loadout: Loadout = {
+      ...base,
+      style: "ranged",
+      equipmentSlots: {
+        helmet: "item:masterwork-ranged-cowl",
+        body: "item:masterwork-ranged-body",
+        legs: "item:masterwork-ranged-chaps",
+      },
+    };
+    const stats = loadoutStats(loadout);
+    const styleB = equipmentStyleDamageBonus(loadout);
+    expect(stats.equipment.damage).toBeGreaterThan(0);
+    expect(styleB).toBe(stats.equipment.damage);
+    expect(styleB).toBe(loadoutWeaponConfig(loadout).styleBonus);
   });
 
   it("sumNonWeaponAccuracy keeps only accessory/armour accuracy (not weapons)", () => {

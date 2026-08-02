@@ -310,17 +310,24 @@ function resolveLife(record: EquipmentRecord): ResolvedStat {
 }
 
 function resolveDamage(record: EquipmentRecord): ResolvedStat {
-  if (record.bonuses.damage != null) return { value: record.bonuses.damage };
-  if (record.slot == null) return { value: 0, unknown: "missing-slot" };
-  if (isWeaponAccuracySlot(record.slot)) {
-    // Defenders are off-hand weapons with a real damage bonus.
+  // Weapon slots first: tier encodes ability damage. Wiki weapon Damage face
+  // values must never enter the equipment-damage total (only style bonuses do).
+  // Defenders are the exception — they carry a real off-hand style Damage bonus.
+  if (record.slot != null && isWeaponAccuracySlot(record.slot)) {
     if (record.defender) {
+      if (record.bonuses.damage != null && Number.isFinite(record.bonuses.damage)) {
+        return { value: record.bonuses.damage };
+      }
       return record.tier == null
         ? { value: 0, unknown: "missing-tier" }
         : { value: defenderDamageValue(record.tier) };
     }
     return { value: 0 };
   }
+  if (record.bonuses.damage != null && Number.isFinite(record.bonuses.damage)) {
+    return { value: record.bonuses.damage };
+  }
+  if (record.slot == null) return { value: 0, unknown: "missing-slot" };
   if (record.damageTier != null) {
     const derived = equipmentDamageValue(record.slot, record.damageTier, record);
     return derived == null ? { value: 0 } : { value: derived };
@@ -336,6 +343,14 @@ function resolveDamage(record: EquipmentRecord): ResolvedStat {
   if (damageTier == null) return { value: 0 };
   const derived = equipmentDamageValue(record.slot, damageTier, record);
   return derived == null ? { value: 0 } : { value: derived };
+}
+
+/**
+ * Style Damage for one catalogue record (exact bonus or formula). Weapons that
+ * are not defenders always resolve to 0 — their contribution is weapon tier.
+ */
+export function equipmentRecordDamage(record: EquipmentRecord): number {
+  return resolveDamage(record).value;
 }
 
 /**

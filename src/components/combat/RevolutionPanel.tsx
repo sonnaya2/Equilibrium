@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { combatRevolutionBars, type RevolutionBarRecord } from "@/combat/data";
 import * as combatSpecs from "@/combat/data/specs";
 import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
@@ -8,10 +8,15 @@ import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { simulateRevolution as runRevolution } from "@/combat/engine/simulation/revolution";
 import { secondsToTicks, ticksToSeconds } from "@/combat/core/ticks";
-import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
-import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
-import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
-import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
+import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
+import {
+  packSolverRequest,
+  runSolverOnMainThread,
+  type ObjectiveProfileId,
+  type SolverProgress,
+  type SolverResultDTO,
+  type SolverSearchTier,
+} from "@/combat/solver";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
@@ -19,16 +24,8 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
-
-const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
-  [
-    ...MELEE_ABILITIES,
-    ...RANGED_ABILITIES,
-    ...MAGIC_ABILITIES,
-    ...NECROMANCY_ABILITIES,
-    volleyOfSouls(3),
-  ].map((spec) => [spec.id, spec]),
-);
+import { useBuild } from "@/league/useBuild";
+import { unlockedRegions } from "@/league";
 
 type RevoBarView = RevolutionBarRecord;
 
@@ -173,10 +170,10 @@ function BarGraphic({ slots, revoSize }: { slots: ResolvedSlot[]; revoSize: numb
   );
 }
 
-/** Revolution mode: wiki bars over a continuous horizon (default 60s), GCD basics when
- *  nothing on the bar is ready/affordable. */
+/** Revolution mode: solver-first bar search with wiki bars as seeds / references. */
 export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [loadout] = useLoadout();
+  const { build } = useBuild();
   const [barId, setBarId] = useState(
     () => pickBarForStyle(DEFAULT_LOADOUT.style)?.id ?? SUPPORTED_BARS[0]?.id ?? "",
   );
@@ -185,17 +182,53 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [showAllCasts, setShowAllCasts] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
 
+  const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
+  const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
+  const [maxBarSize, setMaxBarSize] = useState(10);
+  const [solving, setSolving] = useState(false);
+  const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
+  const [solverResult, setSolverResult] = useState<SolverResultDTO | null>(null);
+  const [solverError, setSolverError] = useState<string | null>(null);
+  const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
+  const cancelRef = useRef(false);
+
   const bar: RevoBarView | undefined =
     SUPPORTED_BARS.find((candidate) => candidate.id === barId) ??
     pickBarForStyle(loadout.style) ??
     SUPPORTED_BARS[0];
   const styleMismatch = Boolean(bar && bar.style !== loadout.style);
-  const slots = useMemo(() => (bar ? resolveBar(bar, ENGINE_SPECS) : []), [bar]);
-  const revoSize = bar?.revolutionSize ?? slots.length;
-  const managedSlots = useMemo(() => (bar ? slots.slice(0, bar.revolutionSize) : []), [bar, slots]);
-  const modelled = useMemo(() => (bar ? revoManagedModelled(bar) : []), [bar]);
+
+  const solvedSlots: ResolvedSlot[] | null = useMemo(() => {
+    if (!activeBarIds?.length) return null;
+    return activeBarIds.map((id) => {
+      const spec = ENGINE_SPECS.get(id) ?? null;
+      const entry = entryByEngineId(id);
+      return {
+        name: spec?.name ?? entry?.spec.name ?? id,
+        modelledBy: spec ? ("engine" as const) : ("unmodelled" as const),
+        spec,
+      };
+    });
+  }, [activeBarIds]);
+
+  const slots = useMemo(
+    () => solvedSlots ?? (bar ? resolveBar(bar, ENGINE_SPECS) : []),
+    [solvedSlots, bar],
+  );
+  const revoSize = solvedSlots ? solvedSlots.length : (bar?.revolutionSize ?? slots.length);
+  const managedSlots = useMemo(
+    () => (solvedSlots ? solvedSlots : bar ? slots.slice(0, bar.revolutionSize) : []),
+    [solvedSlots, bar, slots],
+  );
+  const modelled = useMemo(() => {
+    if (solvedSlots) {
+      return solvedSlots.filter((s) => s.spec).map((s) => s.spec!);
+    }
+    return bar ? revoManagedModelled(bar) : [];
+  }, [solvedSlots, bar]);
   const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
   const keybindCount = Math.max(0, slots.length - revoSize);
+  const regions = useMemo(() => unlockedRegions(build), [build]);
 
   const nameById = useMemo(() => {
     const map = new Map(
@@ -221,18 +254,21 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     setResult(null);
     setShowAllCasts(false);
     // barId intentionally omitted: only react to Setup style changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Wave F1 style auto-switch
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to Setup style
   }, [loadout.style]);
 
   const selectBar = (id: string) => {
     setBarId(id);
+    setActiveBarIds(null);
     setResult(null);
     setShowAllCasts(false);
     setAnalysisOpen(false);
   };
 
+  const simStyle = (solvedSlots ? loadout.style : bar?.style) ?? loadout.style;
+
   const run = () => {
-    if (!bar) return;
+    if (modelled.length === 0) return;
     const durationTicks = secondsToTicks(
       Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
     );
@@ -244,19 +280,19 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         level: stats.level,
         accuracy: stats.dp,
         crit: {
-          chance: stats.simulationCritChance,
+          chance: stats.critChance,
           disabled: stats.critsDisabled,
           damageBonus: stats.critDamageBonus,
         },
         abilities: [...ENGINE_SPECS.values(), ...modelled],
         bar: modelled,
-        style: bar.style,
+        style: simStyle,
         durationTicks,
-        // Global loadout mods + per-cast perk scopes (Ultimatums, Lunging).
         modifiers: (ability) => stats.castModifiersFor(ability),
         adrenaline: stats.adrenaline,
         procs: stats.procs,
         plantedFeet: stats.plantedFeet,
+        preciseRank: stats.preciseRank,
         conjureBasicDamageMult: stats.conjureBasicDamageMult,
         conjureDurationMult: stats.conjureDurationMult,
         tumekensPieces: stats.tumekensPieces,
@@ -273,6 +309,55 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     );
   };
 
+  const optimize = useCallback(async () => {
+    cancelRef.current = false;
+    setSolving(true);
+    setSolverError(null);
+    setSolverProgress(null);
+    setSolverResult(null);
+    try {
+      const request = packSolverRequest({
+        stats,
+        loadout,
+        build,
+        style: loadout.style,
+        tier: solverTier,
+        profileId: solverProfile,
+        maxBarSize,
+        minBarSize: 4,
+        exploreSeconds: 60,
+        durationSeconds: 300,
+        userBar: modelled.map((m) => m.id),
+        seed: 1,
+      });
+      const dto = await runSolverOnMainThread(request, (progress) => {
+        if (!cancelRef.current) setSolverProgress(progress);
+      }, {
+        isCancelled: () => cancelRef.current,
+      });
+      if (cancelRef.current) return;
+      setSolverResult(dto);
+      setActiveBarIds([...dto.bar]);
+      setResult(null);
+    } catch (err) {
+      if (!cancelRef.current) {
+        setSolverError(err instanceof Error ? err.message : String(err));
+      }
+    } finally {
+      setSolving(false);
+    }
+  }, [stats, loadout, build, solverTier, solverProfile, maxBarSize, modelled]);
+
+  const cancelSolve = () => {
+    cancelRef.current = true;
+    setSolving(false);
+  };
+
+  const applySolverBar = (ids: readonly string[]) => {
+    setActiveBarIds([...ids]);
+    setResult(null);
+  };
+
   const contributions = result?.analysis.byEffect ?? [];
 
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
@@ -281,9 +366,120 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   return (
     <div className="revolution-panel">
+      <section className="revo-solver-controls mb-3 border border-stone-750 bg-stone-850/40 p-3">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <button
+            type="button"
+            onClick={() => void optimize()}
+            disabled={solving}
+            className="combat-button revo-run-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800 disabled:opacity-50"
+            data-testid="revo-optimize"
+          >
+            {solving ? "Optimizing…" : "Optimize bar"}
+          </button>
+          {solving ? (
+            <button
+              type="button"
+              onClick={cancelSolve}
+              className="combat-button border border-stone-750 bg-transparent px-3 py-1.5 text-xs text-parch-300"
+            >
+              Cancel
+            </button>
+          ) : null}
+          <label className="flex items-center gap-1 text-parch-300">
+            Depth
+            <select
+              value={solverTier}
+              onChange={(e) => setSolverTier(e.target.value as SolverSearchTier)}
+              className="border border-stone-750 bg-transparent px-2 py-1 text-parch-50"
+              disabled={solving}
+            >
+              <option value="thorough">Thorough</option>
+              <option value="extreme">Extreme</option>
+              <option value="unhinged">Unhinged</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1 text-parch-300">
+            Objective
+            <select
+              value={solverProfile}
+              onChange={(e) => setSolverProfile(e.target.value as ObjectiveProfileId)}
+              className="border border-stone-750 bg-transparent px-2 py-1 text-parch-50"
+              disabled={solving}
+            >
+              <option value="balanced">Balanced</option>
+              <option value="burst">Burst</option>
+              <option value="sustained">Sustained</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1 text-parch-300">
+            Max slots
+            <input
+              type="number"
+              min={4}
+              max={14}
+              value={maxBarSize}
+              onChange={(e) => setMaxBarSize(Math.max(4, Math.min(14, Number(e.target.value) || 10)))}
+              className="w-14 border border-stone-750 bg-transparent px-2 py-1 font-mono text-parch-50"
+              disabled={solving}
+            />
+          </label>
+          <span className="text-parch-300" title={regions.join(", ")}>
+            Regions · {regions.length}
+          </span>
+        </div>
+        {solverProgress ? (
+          <p className="mt-2 font-mono text-xs text-parch-300" data-testid="revo-solver-progress">
+            {solverProgress.phase} · {solverProgress.evaluations} evals · best{" "}
+            {formatNumber(solverProgress.bestScore)}
+            {solverProgress.topBarPreview.length
+              ? ` · ${solverProgress.topBarPreview.length} abilities`
+              : ""}
+          </p>
+        ) : null}
+        {solverError ? <p className="mt-2 text-xs text-chaos-300">{solverError}</p> : null}
+        {solverResult ? (
+          <div className="mt-3 border-t border-stone-750 pt-2" data-testid="revo-solver-results">
+            <p className="text-xs text-parch-300">
+              Score {formatNumber(solverResult.score)} · {solverResult.proofLabel ?? "best-found"} ·{" "}
+              {solverResult.evaluations} evals
+              {solverResult.openingDpm != null
+                ? ` · open ${formatNumber(solverResult.openingDpm)} / mid ${formatNumber(solverResult.developedDpm ?? 0)} / steady ${formatNumber(solverResult.steadyDpm ?? 0)}`
+                : ""}
+            </p>
+            <ul className="mt-2 space-y-1">
+              {(solverResult.top ?? [{ bar: solverResult.bar, score: solverResult.score }]).map(
+                (row, i) => (
+                  <li
+                    key={`${row.fingerprint ?? i}-${row.score}`}
+                    className="flex flex-wrap items-center gap-2 text-xs"
+                  >
+                    <span className="font-mono text-parch-50">
+                      #{i + 1} {formatNumber(row.score)}
+                    </span>
+                    <span className="truncate text-parch-300">
+                      {row.bar
+                        .map((id) => ENGINE_SPECS.get(id)?.name ?? id)
+                        .join(" → ")}
+                    </span>
+                    <button
+                      type="button"
+                      className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800"
+                      onClick={() => applySolverBar(row.bar)}
+                    >
+                      Apply
+                    </button>
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
+        ) : null}
+      </section>
+
       <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
         <label className="flex items-center gap-1 text-parch-300">
-          Bar
+          Reference bar
           <select
             value={bar?.id ?? ""}
             onChange={(event) => selectBar(event.target.value)}
@@ -311,15 +507,17 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           </select>
         </label>
         <span className="text-parch-300">
-          {modelled.length === managedSlots.length && managedSlots.length > 0
-            ? `All ${managedSlots.length} revo slots ready`
-            : `${modelled.length} of ${managedSlots.length} revo slots ready`}
-          {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
-          {keybindCount > 0 ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}` : ""}
+          {activeBarIds
+            ? `Solved bar · ${modelled.length} abilities`
+            : `${modelled.length} of ${managedSlots.length} slots modelled`}
+          {!activeBarIds && unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
+          {!activeBarIds && keybindCount > 0
+            ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
+            : ""}
         </span>
       </div>
 
-      {styleMismatch && bar ? (
+      {styleMismatch && bar && !activeBarIds ? (
         <p className="mt-2 text-xs text-chaos-300">
           Loadout is {loadout.style}; this bar is {bar.style}. Accuracy and crit may be off.
         </p>
@@ -359,7 +557,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           className="mt-4 border-t border-stone-750 pt-3 text-xs text-parch-300"
           data-testid="revo-empty"
         >
-          Hit Run to see how the bar plays out.
+          Run the bar to score expected damage over the duration.
         </p>
       ) : null}
 

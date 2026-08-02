@@ -111,9 +111,8 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
   await page.getByRole("option", { name: /Volley of Souls/ }).click();
   await expect(page.getByRole("heading", { name: "Volley of Souls" })).toBeVisible();
   await expect(page.getByText("Residual Souls")).toBeVisible();
-  // The summary rail carries its own Damage Potential label, so match the
-  // ability readout's exactly rather than both.
-  await expect(page.getByText("Damage Potential", { exact: true })).toBeVisible();
+  // Summary rail and ability readout both say Damage Potential — pin the first.
+  await expect(page.getByText("Damage Potential", { exact: true }).first()).toBeVisible();
 });
 
 test("rotation defaults to the shared setup loadout", async ({ page }) => {
@@ -156,10 +155,10 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
 
   await page.getByRole("button", { name: "Invention", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
-  const aftershock = page.getByRole("button", { name: /Aftershock.*Weapon only/ });
-  await page.getByRole("button", { name: /Armour gizmo 1/ }).click();
+  const aftershock = page.getByRole("button", { name: /Aftershock.*Weapon/ });
+  await page.getByRole("button", { name: /Armour 1/ }).click();
   await expect(aftershock).toHaveAttribute("aria-disabled", "true");
-  await page.getByRole("button", { name: /Weapon gizmo 1/ }).click();
+  await page.getByRole("button", { name: /Weapon 1/ }).click();
   await aftershock.click();
   await expect(page.getByRole("status", { name: "Aftershock rank" })).toHaveText("R1");
   await page.getByRole("button", { name: "Increase Aftershock rank" }).click();
@@ -279,11 +278,12 @@ test("setup summary and every editor subtab stay within a phone viewport", async
 test("revolution is the default mode with the wiki bar graphic", async ({ page }) => {
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
 
+  await expect(page.getByRole("button", { name: "Optimize bar" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Run bar" })).toBeVisible();
-  await expect(page.getByText("Hit Run to see how the bar plays out.")).toBeVisible();
+  await expect(page.getByTestId("revo-empty")).toBeVisible();
   await expect(page.getByTestId("revo-horizon-plan")).toHaveText(/100 ticks/);
 
-  await expect(page.getByText(/All \d+ revo slots ready/)).toBeVisible();
+  await expect(page.getByText(/\d+ of \d+ slots modelled/)).toBeVisible();
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
@@ -296,6 +296,23 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   const timeline = page.getByTestId("revo-cast-timeline");
   await expect(timeline).toBeVisible();
   await expect(basics.or(timeline.locator("tbody tr")).first()).toBeVisible();
+});
+
+test("revolution solver optimizes and apply keeps a runnable bar", async ({ page }) => {
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Optimize bar" })).toBeVisible();
+
+  // Thorough depth is the default; cap slots for a faster browser pass.
+  await page.getByLabel("Max slots").fill("6");
+  await page.getByRole("button", { name: "Optimize bar" }).click();
+  await expect(page.getByTestId("revo-solver-results")).toBeVisible({ timeout: 120_000 });
+  await expect(page.getByTestId("revo-solver-results")).toContainText(/Score/);
+
+  await page.getByRole("button", { name: "Apply" }).first().click();
+  await expect(page.getByText(/Solved bar/)).toBeVisible();
+  await page.getByRole("button", { name: "Run bar" }).click();
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("revo-casts")).toBeVisible();
 });
 
 test("manual rotation still exposes necromancy abilities", async ({ page }) => {
@@ -505,7 +522,7 @@ test("equipped passives appear under Gear and disappear when the item is removed
   await page.getByRole("button", { name: /Jaws of the Abyss/ }).click();
 
   await expect(passives.getByText("Natural Instinct doubles this bonus gain.")).toBeVisible();
-  await expect(passives.getByText("Active", { exact: true })).toBeVisible();
+  await expect(passives.getByText("Modeled", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Clear Helmet" }).click();
   await expect(passives.getByText("No equipped item grants a passive.")).toBeVisible();
@@ -516,7 +533,7 @@ test("equipped passives appear under Gear and disappear when the item is removed
   await expect(
     passives.getByText("Defenders, reprisers, and rebounders have +3% accuracy."),
   ).toBeVisible();
-  await expect(passives.getByText("Active", { exact: true })).toBeVisible();
+  await expect(passives.getByText("Modeled", { exact: true })).toBeVisible();
 });
 
 test("set thresholds downgrade and disappear with equipped pieces", async ({ page }) => {

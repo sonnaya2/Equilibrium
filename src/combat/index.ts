@@ -42,3 +42,17 @@ export * from "./engine/simulation/revolution";
 export * from "./league/ruleset";
 export * from "./league/damage";
 export * from "./data/sources";
+export * from "./data/availability";
+export * from "./abilities/registry";
+export {
+  solve,
+  solveFromRequest,
+  packSolverRequest,
+  evaluateRevolutionBar,
+  buildCandidatePool,
+  OBJECTIVE_HORIZON_TICKS,
+  OBJECTIVE_PRESETS,
+  TIER_BUDGETS,
+  runSolverInWorker,
+  runSolverOnMainThread,
+} from "./solver";

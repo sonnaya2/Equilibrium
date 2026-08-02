@@ -1,0 +1,145 @@
+import { describe, expect, it } from "vitest";
+import { TICK_SECONDS } from "../core/ticks";
+import type { AbilitySpec } from "../pipeline/calculateAbility";
+import { simulateRevolution } from "../engine/simulation/revolution";
+import { buildCandidatePool } from "./candidatePool";
+import { evaluateRevolutionBar } from "./evaluate";
+import {
+  OBJECTIVE_HORIZON_TICKS,
+  scoreSummary,
+  sumDamageInTickRange,
+  windowDpmFromDamageByTick,
+} from "./objective";
+
+function basic(id: string, name: string, minPct: number, maxPct: number): AbilitySpec {
+  return {
+    id,
+    name,
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { minPct, maxPct } }],
+    adrenaline: { gain: 9 },
+    cooldownSeconds: 5.4,
+  };
+}
+
+/** Neutral fixture matching revolution tests: base 1000, level 99, full accuracy, no crit. */
+const auto: AbilitySpec = {
+  id: "attack",
+  name: "Attack",
+  style: "melee",
+  category: "basic",
+  autoAttack: true,
+  hits: [{ band: { minPct: 110, maxPct: 130 } }],
+  adrenaline: { gain: 9 },
+};
+
+const alpha = basic("alpha", "Alpha", 100, 100);
+const beta = basic("beta", "Beta", 150, 150);
+const catalogue = [auto, alpha, beta];
+
+const baseSim = {
+  base: 1000,
+  level: 99,
+  accuracy: 1,
+  crit: { chance: 0 },
+  abilities: catalogue,
+};
+
+describe("evaluateRevolutionBar", () => {
+  it("scores a short-horizon bar from totalExpected DPM (exploratory)", () => {
+    const pool = buildCandidatePool(catalogue, "melee");
+    const durationTicks = 30;
+    const evaluation = evaluateRevolutionBar({
+      bar: ["alpha", "beta"],
+      style: "melee",
+      durationTicks,
+      pool,
+      sim: baseSim,
+      profileId: "balanced",
+    });
+
+    expect(evaluation.ok).toBe(true);
+    expect(evaluation.exploratory).toBe(true);
+    expect(evaluation.summary?.ok).toBe(true);
+    expect(evaluation.resolved?.map((spec) => spec.id)).toEqual(["alpha", "beta"]);
+
+    const direct = simulateRevolution({
+      ...baseSim,
+      bar: [alpha, beta],
+      style: "melee",
+      durationTicks,
+    });
+    expect(direct.ok).toBe(true);
+    expect(evaluation.summary!.totalExpected).toBeCloseTo(direct.totalExpected, 10);
+
+    const minutes = (durationTicks * TICK_SECONDS) / 60;
+    const expectedDpm = direct.totalExpected / minutes;
+    expect(evaluation.score).toBeCloseTo(expectedDpm, 10);
+    expect(evaluation.metrics?.dpm).toBeCloseTo(expectedDpm, 10);
+
+    // damageByTick sum over the horizon matches totalExpected.
+    const fromTicks = sumDamageInTickRange(direct.damageByTick, 0, durationTicks);
+    expect(fromTicks).toBeCloseTo(direct.totalExpected, 8);
+  });
+
+  it("uses objective.scoreSummary multi-window scoring at the full horizon", () => {
+    const pool = buildCandidatePool(catalogue, "melee");
+    const durationTicks = OBJECTIVE_HORIZON_TICKS;
+    const evaluation = evaluateRevolutionBar({
+      bar: ["alpha", "beta"],
+      style: "melee",
+      durationTicks,
+      pool,
+      sim: baseSim,
+      profileId: "balanced",
+    });
+    expect(evaluation.ok).toBe(true);
+    expect(evaluation.exploratory).toBe(false);
+    expect(evaluation.objective?.ok).toBe(true);
+
+    const summary = evaluation.summary!;
+    const scored = scoreSummary(
+      {
+        ok: true,
+        horizonTicks: durationTicks,
+        damageByTick: summary.damageByTick ?? {},
+      },
+      "balanced",
+    );
+    expect(scored.ok).toBe(true);
+    if (!scored.ok || !evaluation.objective?.ok) return;
+    expect(evaluation.score).toBeCloseTo(scored.robustScore, 8);
+    expect(evaluation.metrics?.openingDpm).toBeCloseTo(scored.openingDpm, 8);
+
+    // Window DPM matches damageByTick sum logic.
+    const opening = windowDpmFromDamageByTick(summary.damageByTick ?? {}, 0, 100);
+    expect(evaluation.metrics!.openingDpm).toBeCloseTo(opening, 8);
+  });
+
+  it("returns invalid reasons without simulating when the bar fails eligibility", () => {
+    const offGcd: AbilitySpec = {
+      id: "utility",
+      name: "Utility",
+      style: "melee",
+      category: "utility",
+      hits: [],
+      offGcd: true,
+    };
+    const withUtility = buildCandidatePool([...catalogue, offGcd], "melee", {
+      includeOffGcd: true,
+    });
+    const evaluation = evaluateRevolutionBar({
+      bar: ["utility"],
+      style: "melee",
+      durationTicks: 30,
+      pool: withUtility,
+      sim: { ...baseSim, abilities: [...catalogue, offGcd] },
+      profileId: "balanced",
+    });
+    expect(evaluation.ok).toBe(false);
+    expect(evaluation.summary).toBeUndefined();
+    expect(evaluation.score).toBe(Number.NEGATIVE_INFINITY);
+    expect(evaluation.reasons.some((reason) => reason.code === "off-gcd")).toBe(true);
+  });
+});

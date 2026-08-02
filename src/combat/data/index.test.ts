@@ -90,12 +90,13 @@ describe("combat data accessors", () => {
     expect(ranged.every((record) => record.style === "ranged")).toBe(true);
   });
 
-  it("filters by region: region-locked records plus base game by default", () => {
+  it("filters by region: only records tagged with that region (empty ≠ global)", () => {
     const misthalin = abilitiesByRegion("misthalin");
     const locked = abilitiesByRegion("misthalin", { regionLockedOnly: true });
     expect(locked.some((record) => record.id === "magic:greater-sonic-wave")).toBe(true);
     expect(locked.every((record) => record.unlock?.regions.includes("misthalin"))).toBe(true);
-    expect(misthalin.length).toBeGreaterThan(locked.length);
+    // regionLockedOnly is retained for API compat but empty regions are never implied global.
+    expect(misthalin.map((r) => r.id).sort()).toEqual(locked.map((r) => r.id).sort());
     expect(
       recordsByRegion(combatAbilities.records, "kandarin", { regionLockedOnly: true }).map((r) => r.id),
     ).toContain("ranged:deaths-swiftness");

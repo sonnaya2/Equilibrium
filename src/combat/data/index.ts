@@ -6,6 +6,7 @@ import prayersData from "#shard/combat/prayers.json";
 import revolutionBarsData from "#shard/combat/revolution-bars.json";
 import type { RegionId } from "../../league";
 import type { CombatStyle } from "../types";
+import { isObtainableInRegions } from "./availability";
 import type {
   AbilityRecord,
   CombatDataset,
@@ -36,18 +37,25 @@ export function recordById<T extends AnyRecord>(dataset: CombatDataset<T>, id: s
   return dataset.records.find((record) => record.id === id);
 }
 
-/** Records available in a League region: region-locked records tagged with it, plus
- *  base-game records (no region list) unless `regionLockedOnly` is set. */
+/** Records tagged with `region`. Empty regions is NOT global — use
+ *  `recordsAvailableInRegion` / `resolveAvailability` for obtainability. */
 export function recordsByRegion<T extends AnyRecord>(
   records: T[],
   region: RegionId,
-  { regionLockedOnly = false }: { regionLockedOnly?: boolean } = {},
+  _opts?: { regionLockedOnly?: boolean },
 ): T[] {
-  return records.filter((record) => {
-    const regions = record.unlock?.regions ?? [];
-    if (regions.includes(region)) return true;
-    return !regionLockedOnly && regions.length === 0;
-  });
+  return records.filter((record) => (record.unlock?.regions ?? []).includes(region));
+}
+
+/** Records obtainable when only `region` is unlocked (globals + regionals for it). */
+export function recordsAvailableInRegion<T extends AnyRecord>(
+  records: T[],
+  region: RegionId,
+  options?: { includeUnknown?: boolean },
+): T[] {
+  return records.filter(
+    (record) => isObtainableInRegions(record.unlock, [region], options).obtainable,
+  );
 }
 
 export const abilityById = (id: string) => recordById(combatAbilities, id);

@@ -19,13 +19,20 @@ export type UnlockType =
   /** Retired from live game (e.g. 2026 Aura Overhaul combat auras). */
   | "removed";
 
+export type AbilityAvailabilityKind = "global" | "regional" | "unknown" | "removed";
+export type RegionRequirementMode = "any" | "all";
+
 /** Where and how a record is obtained. `regions` names the League regions whose
- *  unlock makes it available. Empty `regions` means unverified/unknown availability
- *  for equipment loadout display until stamped — not affirmed base-game. */
+ *  unlock makes it available. Empty `regions` means unknown unless `type` is
+ *  `"level"` (base skill unlocks are global) — see `resolveAvailability`. */
 export interface UnlockInfo {
   type: UnlockType;
   requirement?: string;
   regions: RegionId[];
+  /** Explicit stamp; when set, overrides region/type inference. */
+  availability?: AbilityAvailabilityKind;
+  /** Multi-region requirement: any (default) or all listed regions. */
+  regionMode?: RegionRequirementMode;
 }
 
 interface CombatRecordBase {

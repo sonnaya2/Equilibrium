@@ -840,6 +840,8 @@
 {"entityId":"item:slayer-helmet-i","stat":"armour","value":40.4}
 {"entityId":"item:soulbound-lantern","stat":"accuracy","value":2765}
 {"entityId":"item:soulbound-lantern","stat":"damage","value":707.7}
+{"entityId":"item:spear-of-annihilation","stat":"accuracy","value":2458}
+{"entityId":"item:spear-of-annihilation","stat":"damage","value":2011.5}
 {"entityId":"item:spectral-spirit-shield","stat":"armour","value":338.8}
 {"entityId":"item:spectral-spirit-shield","stat":"prayer","value":3}
 {"entityId":"item:spellcaster-gloves","stat":"armour","value":96.2}

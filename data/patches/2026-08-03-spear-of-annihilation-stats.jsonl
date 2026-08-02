@@ -1,0 +1,6 @@
+# Spear of Annihilation combat stats from the wiki infobox.
+# https://runescape.wiki/w/Spear_of_Annihilation
+# Tooltip damage 2011.5, accuracy 2458, tier 90 spear, two-handed melee.
+# Ability damage (1296) is tier-derived and is not stored on weapon records.
+# Armour / LP / prayer face zeros are omitted (same pattern as other T90 2H weapons).
+{"op":"set-record","file":"data/combat/equipment.json","path":"$.records[65]","body":{"id":"item:spear-of-annihilation","name":"Spear of Annihilation","slot":"twohand","style":"melee","tier":90,"bonuses":{"accuracy":2458,"damage":2011.5},"sources":[{"source":"runescape-wiki","url":"https://runescape.wiki/w/Spear_of_Annihilation","title":"Spear of Annihilation","verifiedAt":"2026-08-03"}],"unlock":{"regions":["kandarin","forinthry"],"requirement":"League self-supply: kandarin + forinthry","type":"drop"},"displayDescription":"Tier-90 two-handed melee spear. No combat passive.","mechanicalImplementation":"Ordinary T90 2H melee weapon. Does not grant Masterwork bleed-duration extension."},"reason":"Store wiki combat face values (tooltip damage 2011.5, accuracy 2458) on Spear of Annihilation; matches other T90 2H weapons such as Noxious scythe."}

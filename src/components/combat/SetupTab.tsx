@@ -1,128 +1,158 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { CombatStyle } from "@/combat/types";
-import { styleIconPath } from "@/lib/gameArt";
+import { useMemo, useState, type ReactNode } from "react";
 import { GameIcon } from "../GameIcon";
 import { BuffsPanel } from "./BuffsPanel";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { GearPanel } from "./GearPanel";
-import { loadoutOverloadTier, loadoutStats, loadoutWeaponTier } from "./loadoutStats";
-import { overloadBoostedLevel } from "@/combat/shared/potions";
+import { loadoutStats } from "./loadoutStats";
 import { PerksPanel } from "./PerksPanel";
+import { QuickCalculator } from "./QuickCalculator";
 import { StatsPanel } from "./StatsPanel";
 import { TargetPanel } from "./TargetPanel";
-import { equipmentIdList, useLoadout } from "./useLoadout";
+import type { Loadout } from "./useLoadout";
 
-const STYLE_LABELS: Record<CombatStyle, string> = {
-  melee: "Melee",
-  ranged: "Ranged",
-  magic: "Magic",
-  necromancy: "Necromancy",
-};
-
-const STYLES: CombatStyle[] = ["melee", "ranged", "magic", "necromancy"];
-
-const SUB_TABS = ["Gear", "Archaeology", "Invention", "Stats", "Buffs", "Target"] as const;
+const SUB_TABS = [
+  "Gear",
+  "Stats",
+  "Buffs",
+  "Archaeology",
+  "Invention",
+  "Abilities",
+  "Target",
+] as const;
 type SubTab = (typeof SUB_TABS)[number];
+
+const SUB_TAB_ICONS: Record<SubTab, string> = {
+  Gear: "/game/skills/defence.webp",
+  Stats: "/game/skills/constitution.webp",
+  Buffs: "/game/skills/prayer.webp",
+  Archaeology: "/game/skills/archaeology.webp",
+  Invention: "/game/skills/invention.webp",
+  Abilities: "/game/combat/melee-abilities.webp",
+  Target: "/game/combat/critical-strike.webp",
+};
 
 function ArchaeologyPanel() {
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Archaeology</h2>
-      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-parch-300">
-        No sourced Archaeology relic is included in combat calculations yet.
-      </p>
+      <p className="mt-2 text-sm text-parch-300">No Archaeology combat buffs are modeled yet.</p>
     </div>
   );
 }
 
-function formatPct(fraction: number): string {
-  return `${Math.round(fraction * 1000) / 10}%`;
-}
+const NUMBER_FORMAT = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+const LEVEL_FORMAT = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
+const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
 
 function formatNum(value: number): string {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
+  return NUMBER_FORMAT.format(value);
 }
 
-/** Stat level with the overload boost folded in — the number the engine actually uses. */
-function BoostedLevel({ base, boosted }: { base: number; boosted: number }) {
-  if (boosted === base) return <dd className="font-mono text-parch-50">{base}</dd>;
+function Breakdown({
+  items,
+  total,
+  percent = false,
+}: {
+  items: readonly { label: string; value: number }[];
+  total: number;
+  percent?: boolean;
+}) {
   return (
-    <dd className="font-mono text-parch-50">
-      {boosted}
-      <span className="ml-1 text-parch-300">
-        ({base} +{boosted - base})
-      </span>
-    </dd>
+    <dl className="summary-breakdown" data-breakdown-total={total}>
+      {items.map((item) =>
+        item.value !== 0 ? (
+          <div key={item.label} data-breakdown-value={item.value}>
+            <dt>{item.label}</dt>
+            <dd>{percent ? PERCENT_FORMAT.format(item.value) : formatNum(item.value)}</dd>
+          </div>
+        ) : null,
+      )}
+    </dl>
   );
 }
 
-export function SetupTab() {
-  const [loadout, setLoadout] = useLoadout();
+export function SummaryMetric({
+  label,
+  value,
+  note,
+  partialItems = 0,
+  children,
+}: {
+  label: string;
+  value: string;
+  note?: string;
+  partialItems?: number;
+  children?: ReactNode;
+}) {
+  const row = (
+    <>
+      <span className="summary-metric__label">
+        {label}
+        {note ? <small>{note}</small> : null}
+      </span>
+      <span className="summary-metric__result">
+        <strong>{partialItems ? `≥ ${value}` : value}</strong>
+        {partialItems ? (
+          <small>
+            Partial · {partialItems} item{partialItems === 1 ? "" : "s"}
+          </small>
+        ) : null}
+      </span>
+    </>
+  );
+
+  return children ? (
+    <details className="summary-metric summary-metric--expandable" role="group" aria-label={label}>
+      <summary>{row}</summary>
+      {children}
+    </details>
+  ) : (
+    <div className="summary-metric" role="group" aria-label={label}>
+      {row}
+    </div>
+  );
+}
+
+function SummarySection({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="summary-section" aria-label={title}>
+      <h4>{title}</h4>
+      <div>{children}</div>
+    </section>
+  );
+}
+
+export function SetupTab({
+  loadout,
+  setLoadout,
+}: {
+  loadout: Loadout;
+  setLoadout: (next: Loadout) => void;
+}) {
   const [subTab, setSubTab] = useState<SubTab>("Gear");
   const stats = useMemo(() => loadoutStats(loadout), [loadout]);
-
-  const slotted = equipmentIdList(loadout.equipmentSlots);
-  // Mirrors loadoutStats' accuracy path: overload only, curse is a prayer boost.
-  const overloadTier = loadoutOverloadTier(loadout);
-  const boostedAttackLevel = overloadTier
-    ? overloadBoostedLevel(loadout.attackLevel, overloadTier)
-    : loadout.attackLevel;
-  const activeBuffs = [
-    loadout.buffs.vulnerability ? "Vuln" : null,
-    loadout.buffs.styleCurse !== "none" ? loadout.buffs.styleCurse : null,
-    loadout.buffs.overload !== "none" ? loadout.buffs.overload : null,
-  ].filter(Boolean) as string[];
-
-  const setStyle = (style: CombatStyle) => {
-    if (style === loadout.style) return;
-    if (style === "melee") {
-      setLoadout({
-        ...loadout,
-        style,
-        baseDamage: { ...loadout.baseDamage, mode: "automatic" },
-        // Keep current strength/attack; level alias tracks strength.
-        level: loadout.strengthLevel,
-      });
-    } else {
-      // Non-melee: single style level from prior damage level.
-      const level = loadout.style === "melee" ? loadout.strengthLevel : loadout.level;
-      setLoadout({
-        ...loadout,
-        style,
-        baseDamage: { ...loadout.baseDamage, mode: "automatic" },
-        level,
-        attackLevel: level,
-        strengthLevel: level,
-      });
-    }
-  };
+  const incompleteCount = (stat: "armour" | "life" | "damage") =>
+    new Set(stats.equipment.incomplete.filter((item) => item.stat === stat).map((item) => item.id))
+      .size;
+  const missingArmour = incompleteCount("armour");
+  const missingLife = incompleteCount("life");
+  const missingDamage = incompleteCount("damage");
+  const missingItems = new Set(stats.equipment.incomplete.map((item) => item.id)).size;
+  const partialTotals = [
+    missingDamage ? "Equipment Damage" : null,
+    missingArmour ? "Equipment Armour and Armour rating" : null,
+    missingLife ? "Equipment Life and life-point totals" : null,
+  ].filter((label): label is string => label != null);
+  const life = stats.life.breakdown;
 
   return (
     <div className="combat-setup py-3">
-      <div className="combat-page-header flex flex-wrap items-start justify-end gap-3">
-        <div className="flex flex-wrap gap-1" role="group" aria-label="Combat style">
-          {STYLES.map((s) => (
-            <button
-              key={s}
-              type="button"
-              onClick={() => setStyle(s)}
-              aria-pressed={loadout.style === s}
-              className={`combat-button setup-style-button flex items-center gap-1.5 border px-3 py-1.5 text-xs ${
-                loadout.style === s
-                  ? "border-gem-400 bg-stone-850 text-parch-50"
-                  : "border-stone-750 text-parch-100 hover:bg-white/[0.02] hover:text-parch-50"
-              }`}
-            >
-              <GameIcon src={styleIconPath(s)} size={16} />
-              {STYLE_LABELS[s]}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="setup-layout mt-3 grid gap-4 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem]">
+      <div className="setup-layout grid">
         <nav
           className="combat-frame setup-nav flex flex-row flex-wrap gap-1 lg:flex-col"
           aria-label="Loadout sections"
@@ -140,93 +170,184 @@ export function SetupTab() {
                   : "border-stone-750 text-parch-100 hover:text-parch-50"
               }`}
             >
+              <GameIcon
+                src={
+                  tab === "Abilities"
+                    ? `/game/combat/${loadout.style}-abilities.webp`
+                    : SUB_TAB_ICONS[tab]
+                }
+                size={20}
+              />
               {tab}
             </button>
           ))}
         </nav>
 
         <div
-          className={`setup-stage min-w-0${subTab === "Gear" ? "" : " combat-frame loadout-editor"}`}
+          className={`setup-stage min-w-0${
+            subTab === "Gear" || subTab === "Abilities" ? "" : " combat-frame loadout-editor"
+          }`}
         >
-          {subTab === "Gear" ? null : <CombatFrameCorners />}
+          {subTab === "Gear" || subTab === "Abilities" ? null : <CombatFrameCorners />}
           {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Archaeology" ? <ArchaeologyPanel /> : null}
-          {subTab === "Invention" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Buffs" ? <BuffsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
+          {subTab === "Archaeology" ? <ArchaeologyPanel /> : null}
+          {subTab === "Invention" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
+          {subTab === "Abilities" ? <QuickCalculator loadout={loadout} /> : null}
           {subTab === "Target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}
         </div>
 
-        <aside className="combat-frame setup-summary p-3">
+        <aside className="combat-frame setup-summary" aria-label="Loadout summary">
           <CombatFrameCorners />
-          <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">
-            Summary
-          </h3>
-          <dl className="mt-2 space-y-2 text-xs">
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">Style</dt>
-              <dd className="font-medium text-parch-50">{STYLE_LABELS[loadout.style]}</dd>
+          <header className="setup-summary__header">
+            <div>
+              <p>{loadout.style} loadout</p>
+              <h3 className="combat-section-title">Setup summary</h3>
             </div>
-            {loadout.style === "melee" ? (
-              <>
-                <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-                  <dt className="text-parch-300">Attack</dt>
-                  <BoostedLevel base={loadout.attackLevel} boosted={boostedAttackLevel} />
-                </div>
-                <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-                  <dt className="text-parch-300">Strength</dt>
-                  <BoostedLevel base={loadout.strengthLevel} boosted={stats.effectiveDamageLevel} />
-                </div>
-              </>
-            ) : (
-              <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-                <dt className="text-parch-300">Level</dt>
-                <BoostedLevel base={loadout.level} boosted={stats.effectiveDamageLevel} />
-              </div>
-            )}
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">Weapon tier</dt>
-              <dd className="font-mono text-parch-50">{loadoutWeaponTier(loadout)}</dd>
-            </div>
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">
-                Base AD · {loadout.baseDamage.mode === "automatic" ? "auto" : "manual"}
-              </dt>
-              <dd className="font-mono text-parch-50">{formatNum(stats.base)}</dd>
-            </div>
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">DP · {stats.damagePotentialSource}</dt>
-              <dd className="font-mono text-parch-50">{formatPct(stats.dp)}</dd>
-            </div>
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">Crit</dt>
-              <dd className="font-mono text-parch-50">{formatPct(stats.critChance)}</dd>
-            </div>
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">Starting adrenaline</dt>
-              <dd className="font-mono text-parch-50">{loadout.startingAdrenaline}%</dd>
-            </div>
-            <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">30,000 cap</dt>
-              <dd className="font-mono text-parch-50">{loadout.hitCapEnabled ? "On" : "Off"}</dd>
-            </div>
-            <div className="border-b border-stone-750/70 pb-1.5">
-              <dt className="text-parch-300">Buffs</dt>
-              <dd className="mt-0.5 text-parch-50">
-                {activeBuffs.length ? activeBuffs.join(" · ") : "None"}
-              </dd>
-            </div>
-            <div className="flex justify-between gap-2">
-              <dt className="text-parch-300">Equipped</dt>
-              <dd className="font-mono text-parch-50">
-                {slotted.length}/{14}
-              </dd>
-            </div>
-          </dl>
-          {loadout.equipmentIds.length > slotted.length ? (
-            <p className="mt-2 text-[11px] text-parch-300">
-              +{loadout.equipmentIds.length - slotted.length} unlock pin
-              {loadout.equipmentIds.length - slotted.length === 1 ? "" : "s"}
+            <span>{stats.baseDamageMode === "automatic" ? "Core derived" : "Manual base"}</span>
+          </header>
+
+          <div className="setup-summary__sections">
+            <SummarySection title="Offence">
+              <SummaryMetric label="Base ability damage" value={formatNum(stats.base)} />
+              <SummaryMetric
+                label="Equipment Damage"
+                value={formatNum(stats.equipment.damage)}
+                partialItems={missingDamage}
+              />
+              <SummaryMetric label="Accuracy" value={formatNum(stats.accuracyRating)} />
+              <SummaryMetric
+                label="Damage Potential"
+                value={PERCENT_FORMAT.format(stats.dp)}
+                note={stats.damagePotentialSource}
+              />
+              <SummaryMetric label="Crit chance" value={PERCENT_FORMAT.format(stats.critChance)}>
+                <Breakdown
+                  percent
+                  total={stats.critChance}
+                  items={[
+                    { label: "Configured", value: stats.critChanceBreakdown.configured },
+                    { label: "Biting", value: stats.critChanceBreakdown.biting },
+                    { label: "Set effects", value: stats.critChanceBreakdown.sets },
+                    { label: "Equipment", value: stats.critChanceBreakdown.equipment },
+                    {
+                      label: stats.critsDisabled ? "Equilibrium" : "Cap adjustment",
+                      value: stats.critChanceBreakdown.adjustment,
+                    },
+                  ]}
+                />
+              </SummaryMetric>
+              <SummaryMetric
+                label="Crit damage"
+                value={`+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`}
+              >
+                <Breakdown
+                  percent
+                  total={stats.totalCritDamageBonus}
+                  items={[
+                    { label: "Level", value: stats.baseCritDamageBonus },
+                    { label: "Equipment", value: stats.critDamageBonus },
+                  ]}
+                />
+              </SummaryMetric>
+            </SummarySection>
+
+            <SummarySection title="Defence">
+              <SummaryMetric label="Base Defence" value={formatNum(loadout.defenceLevel)} />
+              <SummaryMetric
+                label="Visible boosted Defence"
+                value={LEVEL_FORMAT.format(stats.defence.visibleLevel)}
+              />
+              {stats.defence.blockLevel !== stats.defence.visibleLevel ? (
+                <SummaryMetric
+                  label="Block-calculation Defence"
+                  value={LEVEL_FORMAT.format(stats.defence.blockLevel)}
+                />
+              ) : null}
+              <SummaryMetric
+                label="Equipment Armour"
+                value={formatNum(stats.defence.equipmentArmour)}
+                partialItems={missingArmour}
+              />
+              <SummaryMetric
+                label="Armour rating"
+                value={formatNum(stats.defence.totalArmour)}
+                partialItems={missingArmour}
+              />
+            </SummarySection>
+
+            <SummarySection title="Life & resources">
+              <SummaryMetric label="Constitution" value={formatNum(loadout.constitutionLevel)} />
+              <SummaryMetric
+                label="Constitution life"
+                value={formatNum(stats.life.constitutionLife)}
+              />
+              <SummaryMetric
+                label="Equipment Life"
+                value={formatNum(stats.life.equipmentLife)}
+                partialItems={missingLife}
+              />
+              <SummaryMetric
+                label="Maximum life points"
+                value={formatNum(stats.life.normalMaxLife)}
+                note="Normal maximum"
+                partialItems={missingLife}
+              >
+                <Breakdown
+                  total={stats.life.normalMaxLife}
+                  items={[
+                    { label: "Constitution", value: life.constitution },
+                    { label: "Equipment", value: life.equipment },
+                    { label: "Reaper Crew", value: life.reaperCrew },
+                    { label: "Boon of Het", value: life.boonOfHet },
+                  ]}
+                />
+              </SummaryMetric>
+              {stats.life.temporaryMaxLife !== stats.life.normalMaxLife ? (
+                <SummaryMetric
+                  label="Temporary maximum life"
+                  value={formatNum(stats.life.temporaryMaxLife)}
+                  note={stats.life.powerburstActive ? "Powerburst active" : undefined}
+                  partialItems={missingLife}
+                >
+                  <Breakdown
+                    total={stats.life.temporaryMaxLife}
+                    items={[
+                      { label: "Constitution", value: life.constitution },
+                      { label: "Equipment", value: life.equipment },
+                      { label: "Reaper Crew", value: life.reaperCrew },
+                      { label: "Boon of Het", value: life.boonOfHet },
+                      { label: "Font of Life", value: life.fontOfLife },
+                      { label: "Fortitude", value: life.fortitude },
+                      { label: "Thermal bath", value: life.thermalBath },
+                      { label: "Elidinis Statuette", value: life.elidinisStatuette },
+                      { label: "Bonfire", value: life.bonfire },
+                      { label: "Totem of Vitality", value: life.totemOfVitality },
+                      { label: "Powerburst of vitality", value: life.powerburst },
+                    ]}
+                  />
+                </SummaryMetric>
+              ) : null}
+              <SummaryMetric label="Current life" value={formatNum(stats.life.currentLife)} />
+              {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
+                <SummaryMetric label="Overheal cap" value={formatNum(stats.life.overhealCeiling)} />
+              ) : null}
+              <SummaryMetric label="Prayer bonus" value={formatNum(stats.equipment.prayer)} />
+              <SummaryMetric label="Starting adrenaline" value={`${stats.startingAdrenaline}%`} />
+              <SummaryMetric label="Maximum adrenaline" value={`${stats.maxAdrenaline}%`} />
+              <SummaryMetric
+                label="Hit cap"
+                value={stats.cap.bypass ? "Disabled" : formatNum(stats.cap.cap)}
+                note={stats.cap.bypass ? undefined : "Per hit"}
+              />
+            </SummarySection>
+          </div>
+
+          {missingItems ? (
+            <p className="summary-incomplete" role="status">
+              {missingItems} equipped item{missingItems === 1 ? " is" : "s are"} missing relevant
+              stats. Partial totals: {partialTotals.join(", ")}.
             </p>
           ) : null}
         </aside>

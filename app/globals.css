@@ -589,6 +589,12 @@ textarea {
     max-height: none;
     overflow: visible;
   }
+
+  .route-fill:has(> .combat-screen) > .combat-screen {
+    flex: none;
+    height: auto;
+    overflow: visible;
+  }
 }
 
 @media (max-width: 720px) {

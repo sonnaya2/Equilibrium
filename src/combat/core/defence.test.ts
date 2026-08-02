@@ -49,9 +49,18 @@ describe("defenceStats", () => {
     expect(stats.totalArmour).toBe(1902);
   });
 
-  it("matches the documented level-1 and level-120 reference values", () => {
+  it("applies Fortitude's 15% boost only in the block calculation", () => {
+    const stats = defenceStats({ baseLevel: 99, fortitude: true });
+    expect(stats.visibleLevel).toBe(99);
+    expect(stats.blockLevel).toBeCloseTo(113.85);
+    expect(stats.totalArmour).toBe(
+      Math.floor(stats.blockLevel ** 3 / 1250 + 4 * stats.blockLevel + 40),
+    );
+  });
+
+  it("matches the documented level-1 reference and keeps base Defence capped at 99", () => {
     expect(defenceStats({ baseLevel: 1 }).totalArmour).toBe(44);
-    expect(defenceStats({ baseLevel: 120 }).totalArmour).toBe(1902);
+    expect(() => defenceStats({ baseLevel: 100 })).toThrow(RangeError);
   });
 
   it("has no Prayer-bonus input: only block levels and equipment Armour feed the rating", () => {
@@ -88,5 +97,8 @@ describe("defenceStats", () => {
     expect(() => defenceStats({ baseLevel: Number.NaN })).toThrow(RangeError);
     expect(() => defenceStats({ baseLevel: 99, prayerBlockLevels: -1 })).toThrow(RangeError);
     expect(() => defenceStats({ baseLevel: 99, equipmentArmour: -0.1 })).toThrow(RangeError);
+    expect(() => defenceStats({ baseLevel: 99, prayerBlockLevels: 10, fortitude: true })).toThrow(
+      RangeError,
+    );
   });
 });

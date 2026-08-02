@@ -6,7 +6,6 @@ import { rotationOf } from "@/combat/engine/simulation/contracts";
 import { simulate, type RotationSummary } from "@/combat/engine/simulation/simulate";
 import { meetsEquipmentRequirement, meetsWeaponRequirement } from "@/combat/engine/cast/rules";
 import { TICK_SECONDS } from "@/combat/core/ticks";
-import { baseCritDamageMultiplier } from "@/combat/core/critical";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
@@ -18,7 +17,7 @@ import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { CalculationAssumptions } from "./CalculationAssumptions";
-import { loadoutStats, type CalcStats } from "./loadoutStats";
+import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { useLoadout } from "./useLoadout";
@@ -159,7 +158,9 @@ export function RotationPlanner() {
   const manualStyles = [...new Set(queue.map((id) => abilityById(id)?.style).filter(Boolean))];
   const manualCombatStyle =
     mode === "revolution" ? loadout.style : manualStyles.join(" + ") || paletteStyle;
+  const manualCritDamage = critDamageStats(level);
   const manualStats: CalcStats = {
+    ...buildStats,
     combatStyle: manualCombatStyle,
     baseDamageMode: "manual",
     rawBase: Math.max(0, base),
@@ -172,8 +173,10 @@ export function RotationPlanner() {
     critsDisabled: false,
     simulationCritChance: Math.min(Math.max(0, critChance), 100) / 100,
     critDamageBonus: 0,
-    baseCritDamage: baseCritDamageMultiplier(Math.min(Math.max(1, level), 145)),
-    totalCritDamage: baseCritDamageMultiplier(Math.min(Math.max(1, level), 145)),
+    baseCritDamage: manualCritDamage.baseMultiplier,
+    totalCritDamage: manualCritDamage.totalMultiplier,
+    baseCritDamageBonus: manualCritDamage.baseBonus,
+    totalCritDamageBonus: manualCritDamage.totalBonus,
     activePassives: [],
     critByHitFor: (ability, crit) => ability.hits.map(() => crit),
     cap: buildStats.cap,
@@ -192,6 +195,8 @@ export function RotationPlanner() {
     globalModifiers: [],
     castModifiersFor: () => [],
     equipmentEffects: buildStats.equipmentEffects,
+    defence: buildStats.defence,
+    life: buildStats.life,
   };
   const activeStats = useBuild ? buildStats : manualStats;
 

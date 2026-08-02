@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
     [int]$Port = 0,
+    [ValidateRange(1, 64)]
+    [int]$Workers = 1,
     [string[]]$Test = @()
 )
 
@@ -39,6 +41,7 @@ $server = $null
 $stdout = $null
 $stderr = $null
 $previousPort = $env:PLAYWRIGHT_PORT
+$previousWorkers = $env:PLAYWRIGHT_WORKERS
 $exitCode = 1
 
 foreach ($candidate in $candidates) {
@@ -89,6 +92,7 @@ try {
     $ownership = if ($server) { "started" } else { "reused" }
     Write-Host "Playwright server: http://127.0.0.1:$selectedPort ($ownership)"
     $env:PLAYWRIGHT_PORT = [string]$selectedPort
+    $env:PLAYWRIGHT_WORKERS = [string]$Workers
     & $playwright test @Test
     $exitCode = $LASTEXITCODE
 }
@@ -100,6 +104,12 @@ finally {
     }
     else {
         $env:PLAYWRIGHT_PORT = $previousPort
+    }
+    if ($null -eq $previousWorkers) {
+        Remove-Item Env:PLAYWRIGHT_WORKERS -ErrorAction SilentlyContinue
+    }
+    else {
+        $env:PLAYWRIGHT_WORKERS = $previousWorkers
     }
 
     if ($server) {

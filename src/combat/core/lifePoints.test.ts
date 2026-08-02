@@ -46,17 +46,20 @@ describe("lifePointStats", () => {
     expect(stats.overhealCeiling).toBe(22628);
   });
 
-  it("computes the bonfire window as ⌈(fm+1)/2⌉ × 0.1% of Constitution + equipment, capped at 750", () => {
-    const at99 = lifePointStats({ constitutionLevel: 99, bonfireFiremakingLevel: 99 });
-    expect(at99.bonfireLife).toBe(Math.floor(0.05 * 9900));
+  it("computes the bonfire window through current level 110, capped at 750", () => {
+    const at110 = lifePointStats({ constitutionLevel: 99, bonfireFiremakingLevel: 110 });
+    expect(at110.bonfireLife).toBe(Math.floor(0.056 * 9900));
     const at1 = lifePointStats({ constitutionLevel: 99, bonfireFiremakingLevel: 1 });
     expect(at1.bonfireLife).toBe(Math.floor(0.001 * 9900));
     const capped = lifePointStats({
       constitutionLevel: 99,
       equipmentLife: 5785,
-      bonfireFiremakingLevel: 99,
+      bonfireFiremakingLevel: 110,
     });
     expect(capped.bonfireLife).toBe(750);
+    expect(() => lifePointStats({ constitutionLevel: 99, bonfireFiremakingLevel: 111 })).toThrow(
+      RangeError,
+    );
   });
 
   it("rejects bonfire + Totem of Vitality together — they do not stack", () => {
@@ -84,10 +87,8 @@ describe("lifePointStats", () => {
     );
   });
 
-  it("doubles the maximum under Powerburst of vitality, capped at 32,000", () => {
-    const uncapped = lifePointStats({ constitutionLevel: 99, powerburstOfVitality: true });
-    expect(uncapped.temporaryMaxLife).toBe(19800);
-    const capped = lifePointStats({
+  it("doubles current, maximum, and overheal without an extra calculator cap", () => {
+    const base = lifePointStats({
       constitutionLevel: 99,
       equipmentLife: 5785,
       reaperCrew: true,
@@ -98,8 +99,18 @@ describe("lifePointStats", () => {
       totemOfVitality: true,
       powerburstOfVitality: true,
     });
-    expect(capped.temporaryMaxLife).toBe(32000);
-    expect(capped.overhealCeiling).toBe(32000);
+    expect(base.temporaryMaxLife).toBe(39_354);
+    expect(base.overhealCeiling).toBe(39_354);
+    expect(Object.values(base.breakdown).reduce((sum, value) => sum + value, 0)).toBe(
+      base.temporaryMaxLife,
+    );
+
+    const wounded = lifePointStats({
+      constitutionLevel: 99,
+      currentLife: 4000,
+      powerburstOfVitality: true,
+    });
+    expect(wounded.currentLife).toBe(8000);
   });
 
   it("clamps current life to the overheal ceiling and defaults to the maximum", () => {

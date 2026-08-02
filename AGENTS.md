@@ -55,6 +55,8 @@ would publish the private one.
 
 **Playwright defaults to port 3100**, not 3000 — another app on this machine holds 3000. E2E is _not_
 in CI (`.github/workflows/validate.yml` stops at `build` — no Playwright job, optional or otherwise).
+Before every Playwright command, read and follow the canonical `playwright-e2e` skill, including for
+focused retries and runs that reuse an existing server. Never run Playwright from memory alone.
 Use the `playwright-e2e` skill's managed runner before pushing; it reuses a verified Equilibrium
 server or selects 3100, then 3102 through 3110, and stops only the server it starts. `PLAYWRIGHT_PORT`
 sets the config explicitly. WebGPU / 3D map paths are easy to flake in headless CI, so keep e2e local.

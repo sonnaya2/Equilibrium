@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   activeEquipmentEffects,
+  applyEquipmentAccuracy,
+  applyEquipmentDamagePotential,
   deathdealer90SetFacts,
   equipmentSetById,
+  equippedPassiveSummaries,
   equippedSetCounts,
   firstNecromancerConjureDamageMult,
   firstNecromancerConjureDurationMult,
@@ -127,6 +130,58 @@ describe("shared/equipment set effects", () => {
       },
     ]);
     expect(setEffectsSummary({ equipmentSlots: {} })).toEqual([]);
+  });
+
+  it("derives sourced passive rows from equipped items and account enchantments", () => {
+    const rows = equippedPassiveSummaries({
+      style: "melee",
+      equipmentSlots: {
+        helmet: "item:jaws-of-the-abyss",
+        gloves: "item:enhanced-gloves-of-passage",
+      },
+      enchantments: ["agony"],
+    });
+    expect(rows.map((row) => row.itemName)).toEqual([
+      "Jaws of the Abyss",
+      "Enhanced gloves of passage",
+    ]);
+    expect(rows[0]).toMatchObject({ support: "modeled", passiveId: "jaws-of-the-abyss" });
+    expect(rows[0]!.effects).toHaveLength(2);
+    expect(rows[0]!.source.url).toMatch(/^https:\/\/runescape\.wiki\//);
+    expect(rows[1]).toMatchObject({ label: "Enduring Ruin + Agony", support: "modeled" });
+    expect(equippedPassiveSummaries({ equipmentSlots: {} })).toEqual([]);
+  });
+
+  it("applies defender-class +3% to accuracy, not final Damage Potential", () => {
+    const defender = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: { offhand: "item:kalphite-defender" },
+    });
+    const shield = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: { offhand: "item:malevolent-kiteshield" },
+    });
+    expect(defender.defenderEquipped).toBe(true);
+    expect(shield.defenderEquipped).toBe(false);
+    expect(applyEquipmentAccuracy(1000, defender)).toBe(1030);
+    expect(applyEquipmentAccuracy(1000, shield)).toBe(1000);
+    expect(applyEquipmentDamagePotential(0.5, defender)).toBe(0.5);
+    expect(applyEquipmentDamagePotential(0.5, shield)).toBe(0.5);
+  });
+
+  it.each([
+    ["item:kalphite-defender", "melee"],
+    ["item:kalphite-repriser", "ranged"],
+    ["item:kalphite-rebounder", "magic"],
+  ] as const)("shows the defender accuracy passive for %s", (itemId, style) => {
+    expect(
+      equippedPassiveSummaries({ style, equipmentSlots: { offhand: itemId } })[0],
+    ).toMatchObject({
+      passiveId: "defender-accuracy",
+      label: "Defender accuracy",
+      effects: ["Defenders, reprisers, and rebounders have +3% accuracy."],
+      support: "modeled",
+    });
   });
 
   it("facts-only helpers return 0 modifiers with wiki facts", () => {

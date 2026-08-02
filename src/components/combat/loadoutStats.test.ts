@@ -56,6 +56,18 @@ vi.mock("@/combat/data", async (importOriginal) => {
           sources: [],
         };
       }
+      if (id === "mock:defence-body") {
+        return {
+          id,
+          name: "Mock defensive body",
+          slot: "body" as const,
+          tier: 80,
+          style: "melee" as const,
+          armourClass: "tank" as const,
+          bonuses: { armour: 500, life: 1000, prayer: 42 },
+          sources: [],
+        };
+      }
       return actual.equipmentById(id);
     },
   };
@@ -160,6 +172,8 @@ describe("loadoutStats", () => {
     expect(at90.baseCritDamage).toBeCloseTo(1.5, 10);
     expect(at90.critDamageBonus).toBe(0);
     expect(at90.totalCritDamage).toBeCloseTo(1.5, 10);
+    expect(at90.baseCritDamageBonus).toBeCloseTo(0.5, 10);
+    expect(at90.totalCritDamageBonus).toBeCloseTo(0.5, 10);
     const at80 = loadoutStats({ ...base, style: "magic", level: 80 });
     expect(at80.baseCritDamage).toBeCloseTo(1.45, 10);
     const melee = loadoutStats({ ...base, style: "melee", attackLevel: 1, strengthLevel: 90 });
@@ -225,6 +239,9 @@ describe("loadoutStats", () => {
       },
     });
     expect(stats.critChance).toBe(1);
+    expect(
+      Object.values(stats.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
+    ).toBeCloseTo(stats.critChance, 10);
     const plain = loadoutStats(base);
     expect(plain.critChance).toBeCloseTo(0.1, 10);
   });
@@ -320,6 +337,9 @@ describe("loadoutStats", () => {
       expect(stats.critChance).toBe(0);
       expect(stats.simulationCritChance).toBe(0);
       expect(stats.critsDisabled).toBe(true);
+      expect(
+        Object.values(stats.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
+      ).toBeCloseTo(0, 10);
       const mult = 1 + equilibriumDamageBonus(rank);
       expect(mult).toBeCloseTo(1.06 + 0.02 * rank, 10);
       expect(stats.base).toBe(Math.floor(stats.rawBase * mult));
@@ -338,6 +358,7 @@ describe("loadoutStats", () => {
       weaponTier: 90,
       target: { defenceLevel: 80, affinity: "same" },
       buffs: {
+        ...base.buffs,
         vulnerability: true,
         styleCurse: "turmoil",
         overload: "elder",
@@ -365,7 +386,7 @@ describe("loadoutStats", () => {
     const stats = loadoutStats({
       ...base,
       target: { defenceLevel: 80, affinity: "same" },
-      buffs: { vulnerability: false, styleCurse: "none", overload: "none" },
+      buffs: { ...base.buffs, vulnerability: false, styleCurse: "none", overload: "none" },
     });
     expect(stats.attackLevel).toBe(99);
     expect(stats.globalModifiers.some((m) => m.id === "vulnerability")).toBe(false);
@@ -472,6 +493,69 @@ describe("loadoutStats", () => {
     );
   });
 
+  it("classifies shields and defenders without granting full off-hand weapon damage", () => {
+    const common: Loadout = {
+      ...base,
+      style: "melee",
+      level: 99,
+      attackLevel: 99,
+      strengthLevel: 99,
+      accuracy: 50,
+    };
+    const shield: Loadout = {
+      ...common,
+      equipmentSlots: {
+        mainhand: "item:drygore-longsword",
+        offhand: "item:malevolent-kiteshield",
+      },
+    };
+    const defender: Loadout = {
+      ...common,
+      equipmentSlots: {
+        mainhand: "item:drygore-longsword",
+        offhand: "item:kalphite-defender",
+      },
+    };
+    const dual: Loadout = {
+      ...common,
+      equipmentSlots: {
+        mainhand: "item:drygore-longsword",
+        offhand: "item:off-hand-drygore-longsword",
+      },
+    };
+
+    expect(loadoutWeaponConfig(shield)).toMatchObject({ kind: "mainhand" });
+    expect(loadoutWeaponConfig(shield)).not.toHaveProperty("offhand");
+    expect(loadoutWeaponConfig(defender)).toMatchObject({
+      kind: "mainhand",
+      offhand: { tier: 45 },
+    });
+    expect(loadoutStats(shield).weaponConfiguration).toBe("shield");
+    expect(loadoutStats(defender).weaponConfiguration).toBe("defender");
+    expect(loadoutBase(shield)).toBeLessThan(loadoutBase(defender));
+    expect(loadoutBase(defender)).toBeLessThan(loadoutBase(dual));
+
+    // Ability accuracy comes from the main hand only; the defender's sourced
+    // passive multiplies that rating instead of adding its displayed off-hand stat.
+    expect(loadoutStats(shield).accuracyRating).toBe(loadoutStats(dual).accuracyRating);
+    expect(loadoutStats(defender).accuracyRating).toBeCloseTo(
+      loadoutStats(dual).accuracyRating * 1.03,
+    );
+    expect(loadoutStats(shield).dp).toBe(0.5);
+    expect(loadoutStats(defender).dp).toBeCloseTo(0.515);
+    expect(loadoutStats(defender).activePassives).toContain("Defender accuracy");
+
+    const target = {
+      defenceLevel: 99,
+      armour: 1000,
+      affinity: "strong" as const,
+      additiveHitChance: 10,
+    };
+    const shieldDp = loadoutStats({ ...shield, target }).dp;
+    const defenderDp = loadoutStats({ ...defender, target }).dp;
+    expect(defenderDp).toBeCloseTo((shieldDp - 0.1) * 1.03 + 0.1);
+  });
+
   it("necromancy mainhand + conduit uses the explicit necromancy formula", () => {
     const necro: Loadout = {
       ...base,
@@ -503,7 +587,7 @@ describe("loadoutStats", () => {
       strengthLevel: 99,
       level: 99,
       weaponTier: 90,
-      buffs: { vulnerability: false, styleCurse: "turmoil", overload: "elder" },
+      buffs: { ...base.buffs, vulnerability: false, styleCurse: "turmoil", overload: "elder" },
     };
     const boosted = overloadBoostedLevel(99, "elder");
     expect(loadoutEffectiveDamageLevel(loadout)).toBe(boosted);
@@ -759,5 +843,84 @@ describe("loadoutStats", () => {
         .find((m) => m.id.startsWith("perk:ultimatums"))
         ?.applies({ style: "melee" }),
     ).toBe(false);
+  });
+
+  describe("Defence and life resolution", () => {
+    it("routes equipment Armour/Life into their stats while Prayer remains separate", () => {
+      const stats = loadoutStats({
+        ...base,
+        equipmentSlots: { body: "mock:defence-body" },
+      });
+      expect(stats.defence.equipmentArmour).toBe(500);
+      expect(stats.equipment.armour).toBe(500);
+      expect(stats.life.equipmentLife).toBe(1000);
+      expect(stats.defence.totalArmour).toBe(Math.floor(500 + stats.defence.levelArmour));
+    });
+
+    it("boosts Defence through the overload formula", () => {
+      const stats = loadoutStats({
+        ...base,
+        defenceLevel: 99,
+        buffs: { ...base.buffs, overload: "elder" },
+      });
+      expect(stats.defence.potionBoost).toBe(21);
+      expect(stats.defence.visibleLevel).toBe(120);
+    });
+
+    it("applies both verified Fortitude effects", () => {
+      const stats = loadoutStats({
+        ...base,
+        buffs: { ...base.buffs, fortitude: true },
+      });
+      expect(stats.defence.blockLevel).toBeCloseTo(113.85);
+      expect(stats.life.temporaryFlatLife).toBe(1000);
+      expect(stats.life.temporaryMaxLife).toBe(10_900);
+    });
+
+    it.each([
+      ["Reaper Crew", { reaperCrew: true }, "normalMaxLife", 10_100],
+      ["Font of Life", { fontOfLife: true }, "temporaryMaxLife", 10_400],
+      ["Boon of Het", { boonOfHet: true }, "normalMaxLife", 10_395],
+      ["thermal bath", { thermalBath: true }, "temporaryMaxLife", 10_197],
+      ["Totem of Vitality", { totemOfVitality: true }, "temporaryMaxLife", 11_400],
+    ] as const)("applies %s", (_name, patch, field, expected) => {
+      const stats = loadoutStats({ ...base, buffs: { ...base.buffs, ...patch } });
+      expect(stats.life[field]).toBe(expected);
+    });
+
+    it("resolves bonfire level, food overheal, and current life separately", () => {
+      const stats = loadoutStats({
+        ...base,
+        currentLife: 10_200,
+        buffs: {
+          ...base.buffs,
+          bonfireFiremakingLevel: 110,
+          overheal: "soup-line",
+        },
+      });
+      expect(stats.life.bonfireLife).toBe(554);
+      expect(stats.life.temporaryMaxLife).toBe(10_454);
+      expect(stats.life.overhealCeiling).toBe(12_022);
+      expect(stats.life.currentLife).toBe(10_200);
+    });
+
+    it("applies Powerburst only inside its six-second active window", () => {
+      const now = 20_000;
+      const loadout: Loadout = {
+        ...base,
+        currentLife: 4000,
+        buffs: { ...base.buffs, powerburstOfVitalityUntil: now + 6000 },
+      };
+      expect(loadoutStats(loadout, now).life).toMatchObject({
+        currentLife: 8000,
+        temporaryMaxLife: 19_800,
+        powerburstActive: true,
+      });
+      expect(loadoutStats(loadout, now + 6000).life).toMatchObject({
+        currentLife: 4000,
+        temporaryMaxLife: 9900,
+        powerburstActive: false,
+      });
+    });
   });
 });

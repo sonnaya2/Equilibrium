@@ -19,7 +19,7 @@ import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { SupportStatusChip } from "./SupportStatusChip";
 import { NumberField } from "./NumberField";
-import { useLoadout } from "./useLoadout";
+import type { Loadout } from "./useLoadout";
 import { loadoutStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 
@@ -83,8 +83,7 @@ function abilityMeta(ability: AbilitySpec): string {
     .join(" · ");
 }
 
-export function QuickCalculator() {
-  const [loadout] = useLoadout();
+export function QuickCalculator({ loadout }: { loadout: Loadout }) {
   const setup = loadoutStats(loadout);
   const [useBuild, setUseBuild] = useState(true);
   const [style, setStyle] = useState<CombatStyle>("melee");

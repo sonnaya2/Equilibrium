@@ -86,6 +86,7 @@ export type ItemPassiveId =
   | "champion-ring"
   | "stalker-ring"
   | "channeller-ring"
+  | "defender-accuracy"
   // Recorded but not modelled: both are stochastic with their own internal
   // cooldown, and neither has a settled place in the modifier pipeline.
   | "asylum-surgeon"
@@ -126,7 +127,7 @@ export interface EquipmentRecord extends CombatRecordBase {
   armourClass?: ArmourClass;
   /** Shields are stored in the offhand slot; this marks them. */
   shield?: boolean;
-  /** Defenders: half shield-multiplier armour, half-tier off-hand damage, full-tier accuracy. */
+  /** Defender/repriser/rebounder: defensive hybrid, half-tier off-hand damage, full-tier accuracy. */
   defender?: boolean;
   /** Melee ammo-harness items carry the 0.26875 damage multiplier. */
   meleeAmmoHarness?: boolean;

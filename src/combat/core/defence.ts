@@ -14,8 +14,8 @@ import { accuracyCurve } from "../target/genericTarget";
  *
  * Equipment Armour and total Armour rating stay separate fields; equipment Prayer
  * bonus is never an input here — it does not affect Armour (wiki Armour /
- * Combat Stats). Fortitude's +15% Defence is deliberately unimplemented: no
- * current source documents its rounding or boost-order, so it would be invented.
+ * Combat Stats). Fortitude multiplies the post-potion Defence level by 1.15 only
+ * inside the block calculation and is incompatible with other stat-boosting curses.
  */
 export const DEFENCE_LEVEL_ARMOUR_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -31,8 +31,18 @@ export const TOTAL_ARMOUR_RATING_SOURCE: SourceReference = {
   verifiedAt: "2026-08-02",
 };
 
+export const FORTITUDE_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Fortitude_(status)",
+  title: "Fortitude (status)",
+  verifiedAt: "2026-08-02",
+};
+
+export const MAX_DEFENCE_LEVEL = 99;
+export const FORTITUDE_BLOCK_MULTIPLIER = 1.15;
+
 export interface DefenceInput {
-  /** Untrimmed Defence level (1–120). */
+  /** Untrimmed Defence level (1–99). */
   baseLevel: number;
   /** Active overload-family tier; overloads boost Defence like every combat stat. */
   overloadTier?: OverloadTier | null;
@@ -41,6 +51,8 @@ export interface DefenceInput {
    * (e.g. StyleCurseBoost.defenceLevels: +10 Turmoil line, +12 Praesul).
    */
   prayerBlockLevels?: number;
+  /** Fortitude's 15% block-calculation Defence boost. */
+  fortitude?: boolean;
   /** Summed equipment Armour from the canonical equipment aggregation. */
   equipmentArmour?: number;
 }
@@ -52,6 +64,7 @@ export interface DefenceStats {
   /** Base level plus potion boost — what the stats tab shows. */
   visibleLevel: number;
   prayerBlockLevels: number;
+  fortitude: boolean;
   /** Visible level plus prayer block levels — feeds f(x). */
   blockLevel: number;
   equipmentArmour: number;
@@ -62,8 +75,14 @@ export interface DefenceStats {
 }
 
 export function defenceStats(input: DefenceInput): DefenceStats {
-  const { baseLevel, overloadTier = null, prayerBlockLevels = 0, equipmentArmour = 0 } = input;
-  if (!Number.isFinite(baseLevel) || baseLevel < 1) {
+  const {
+    baseLevel,
+    overloadTier = null,
+    prayerBlockLevels = 0,
+    fortitude = false,
+    equipmentArmour = 0,
+  } = input;
+  if (!Number.isFinite(baseLevel) || baseLevel < 1 || baseLevel > MAX_DEFENCE_LEVEL) {
     throw new RangeError(`defenceStats: bad base level ${baseLevel}`);
   }
   if (!Number.isFinite(prayerBlockLevels) || prayerBlockLevels < 0) {
@@ -72,15 +91,21 @@ export function defenceStats(input: DefenceInput): DefenceStats {
   if (!Number.isFinite(equipmentArmour) || equipmentArmour < 0) {
     throw new RangeError(`defenceStats: bad equipment armour ${equipmentArmour}`);
   }
+  if (fortitude && prayerBlockLevels > 0) {
+    throw new RangeError("defenceStats: Fortitude and stat-boosting curses are incompatible");
+  }
   const potionBoost = overloadTier ? overloadLevelBoost(baseLevel, overloadTier) : 0;
   const visibleLevel = overloadTier ? overloadBoostedLevel(baseLevel, overloadTier) : baseLevel;
-  const blockLevel = visibleLevel + prayerBlockLevels;
+  const blockLevel = fortitude
+    ? visibleLevel * FORTITUDE_BLOCK_MULTIPLIER
+    : visibleLevel + prayerBlockLevels;
   const levelArmour = accuracyCurve(blockLevel);
   return {
     baseLevel,
     potionBoost,
     visibleLevel,
     prayerBlockLevels,
+    fortitude,
     blockLevel,
     equipmentArmour,
     levelArmour,

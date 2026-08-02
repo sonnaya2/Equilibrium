@@ -1,18 +1,32 @@
 "use client";
 
+import { MAX_FIREMAKING_LEVEL } from "@/combat";
 import {
-  activeEquipmentEffects,
-  activePassiveLabels,
   EQUIPMENT_ENCHANTMENTS,
   equipmentSetById,
-  setCritChanceFromDef,
   setEffectsSummary,
+  type EquipmentSetEffectDef,
   type EquipmentEnchantmentId,
+  type SetEffectSupport,
 } from "@/combat/shared/equipment";
 import type { CombatStyle } from "@/combat/types";
-import { GameIcon } from "../GameIcon";
 import {
+  BLESSING_PATHS,
+  PATH_TIERS,
+  blessingChoice,
+  blessingTierRevealed,
+  deriveGodTier,
+  type BlessingPath,
+} from "@/league/blessings";
+import { useBuild } from "@/league/useBuild";
+import { GameIcon } from "../GameIcon";
+import { NumberField } from "./NumberField";
+import {
+  activatePowerburstOfVitality,
+  isPowerburstOfVitalityActive,
+  isPowerburstOfVitalityReady,
   toggleEquipmentEnchantment,
+  withLoadoutBuffs,
   type Loadout,
   type OverloadChoice,
   type StyleCurseChoice,
@@ -28,6 +42,14 @@ const OVERLOAD_ICON: Record<Exclude<OverloadChoice, "none">, string> = {
   elder: "/game/upgrades/skilling-production/elder-overload-potion.webp",
 };
 const ENCHANTMENT_ICON = (id: EquipmentEnchantmentId) => `/game/upgrades/enchantments/${id}.webp`;
+const LIFE_ICON = {
+  fortitude: "/game/combat/prayers/ancient-curses/fortitude.webp",
+  reaperCrew: "/game/upgrades/permanent-unlocks/reaper-crew.webp",
+  fontOfLife: "/game/upgrades/permanent-unlocks/font-of-life.webp",
+  boonOfHet: "/game/upgrades/permanent-unlocks/blessing-of-het.webp",
+  totemOfVitality: "/game/upgrades/permanent-unlocks/totem-of-vitality.webp",
+  powerburstOfVitality: "/game/upgrades/skilling-production/powerburst-of-vitality.webp",
+} as const;
 const ENCHANTMENTS: Record<EquipmentEnchantmentId, { label: string; effect: string }> = {
   agony: {
     label: "Agony",
@@ -73,6 +95,28 @@ const OVERLOAD_OPTIONS: Array<{
   { value: "elder", label: "Elder overload", effect: "+17% of level +5 to every combat stat" },
 ];
 
+const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
+  modeled: "Modeled",
+  "not-modeled": "Not modeled",
+  "outgoing-only": "Partial",
+  none: "Recorded",
+};
+
+function setFactThreshold(fact: string): number | null {
+  const match = /^Set\((\d+)\):/i.exec(fact);
+  return match ? Number(match[1]) : null;
+}
+
+function setEffectText(effect: EquipmentSetEffectDef): string {
+  const percent = `${Math.round(effect.value * 1000) / 10}%`;
+  const context = effect.requires === "sunshine" ? " while inside Sunshine" : "";
+  if (effect.kind === "critChancePerPiece") {
+    return `${percent} critical strike chance per piece${context}`;
+  }
+  if (effect.kind === "damageMultPerPiece") return `${percent} damage per piece${context}`;
+  return `${percent} damage${context}`;
+}
+
 /** Icon toggle. Name and effect live in the tooltip; sr-only text carries the a11y name. */
 function BuffTile({
   icon,
@@ -80,21 +124,30 @@ function BuffTile({
   effect,
   pressed,
   onClick,
+  fallback = "None",
+  disabled = false,
 }: {
   icon: string | null;
   label: string;
   effect: string;
   pressed: boolean;
   onClick: () => void;
+  fallback?: string;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       aria-pressed={pressed}
-      className={`icon-tile${icon ? "" : " icon-tile--text"}`}
+      aria-disabled={disabled}
+      className={`icon-tile${icon ? "" : " icon-tile--text"}${disabled ? " is-disabled" : ""}`}
     >
-      {icon ? <GameIcon src={icon} size={34} className="icon-tile__icon" /> : <span>None</span>}
+      {icon ? (
+        <GameIcon src={icon} size={34} className="icon-tile__icon" />
+      ) : (
+        <span>{fallback}</span>
+      )}
       <span className="sr-only">
         {label}: {effect}
       </span>
@@ -120,25 +173,24 @@ export function BuffsPanel({
   );
 
   const setBuffs = (patch: Partial<Loadout["buffs"]>) =>
-    setLoadout({ ...loadout, buffs: { ...loadout.buffs, ...patch } });
+    setLoadout(withLoadoutBuffs(loadout, patch));
+  const powerburstActive = isPowerburstOfVitalityActive(loadout);
+  const powerburstReady = isPowerburstOfVitalityReady(loadout);
+  const { build, loaded: buildLoaded, pickBlessing } = useBuild();
+  const revealedBlessingTiers = PATH_TIERS.filter(blessingTierRevealed);
+  const godAlignment = deriveGodTier(build.blessingPicks.slice(0, 3));
+  const godBlessing = godAlignment ? blessingChoice(4, godAlignment) : undefined;
 
   const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
-  const passives = activePassiveLabels(
-    activeEquipmentEffects({
-      style: loadout.style,
-      equipmentSlots: loadout.equipmentSlots,
-      enchantments: loadout.enchantments,
-    }),
-  );
-
   return (
-    <div className="loadout-panel">
+    <div className="loadout-panel loadout-panel-wide buffs-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
       <p className="mt-1 text-xs text-parch-300">
-        Hover an icon for its effect. Overloads boost every combat stat; curses are damage only.
+        Hover an icon for its effect. Fortitude replaces a style curse; overloads still boost every
+        combat stat.
       </p>
 
-      <div className="buff-group mt-3" role="group" aria-label="Target debuff">
+      <div className="buff-group buff-target mt-3" role="group" aria-label="Target debuff">
         <h3 className="buff-group__title">Debuff</h3>
         <div className="icon-tile-grid">
           <label className={`icon-tile${loadout.buffs.vulnerability ? " is-on" : ""}`}>
@@ -159,7 +211,11 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div className="buff-group mt-3" role="group" aria-label="Account enchantments">
+      <div
+        className="buff-group buff-enchantments mt-3"
+        role="group"
+        aria-label="Account enchantments"
+      >
         <h3 className="buff-group__title">Account enchantments</h3>
         <div className="icon-tile-grid">
           {EQUIPMENT_ENCHANTMENTS.map((id) => (
@@ -179,7 +235,50 @@ export function BuffsPanel({
         </p>
       </div>
 
-      <div className="buff-group mt-3" role="group" aria-label="Style curse">
+      <div
+        className="buff-group buff-blessings mt-3"
+        role="group"
+        aria-label="Equilibrium blessings"
+      >
+        <h3 className="buff-group__title">Equilibrium blessings</h3>
+        <div className="blessing-settings mt-1.5">
+          {revealedBlessingTiers.map((tier) => {
+            const pickIndex = PATH_TIERS.indexOf(tier);
+            return (
+              <label key={tier} className="loadout-select">
+                <span>Tier {tier}</span>
+                <select
+                  aria-label={`Blessing tier ${tier}`}
+                  value={build.blessingPicks[pickIndex] ?? ""}
+                  disabled={!buildLoaded || pickIndex > build.blessingPicks.length}
+                  onChange={(event) => pickBlessing(tier, event.target.value as BlessingPath)}
+                >
+                  <option value="">Not selected</option>
+                  {BLESSING_PATHS.map((path) => {
+                    const choice = blessingChoice(tier, path);
+                    return (
+                      <option key={path} value={path}>
+                        {path} · {choice?.name ?? "Unrevealed"}
+                      </option>
+                    );
+                  })}
+                </select>
+              </label>
+            );
+          })}
+        </div>
+        {godBlessing ? (
+          <p className="mt-1.5 text-xs text-gem-300">
+            God Tier One · {godBlessing.name} ({godAlignment})
+          </p>
+        ) : null}
+        <p className="mt-1.5 text-[11px] text-parch-300">
+          Shared with Build. Revealed choices are saved here; blessing mechanics are not included in
+          combat totals yet.
+        </p>
+      </div>
+
+      <div className="buff-group buff-style mt-3" role="group" aria-label="Style curse">
         <h3 className="buff-group__title">Style curse</h3>
         <div className="icon-tile-grid">
           <BuffTile
@@ -206,7 +305,7 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div className="buff-group mt-3" role="group" aria-label="Overload">
+      <div className="buff-group buff-overload mt-3" role="group" aria-label="Overload">
         <h3 className="buff-group__title">Overload</h3>
         <div className="icon-tile-grid">
           <BuffTile
@@ -231,7 +330,107 @@ export function BuffsPanel({
         </div>
       </div>
 
-      <div className="buff-group mt-3">
+      <div className="buff-group buff-life mt-3" role="group" aria-label="Defence and life">
+        <h3 className="buff-group__title">Defence & life</h3>
+        <div className="icon-tile-grid">
+          <BuffTile
+            icon={LIFE_ICON.fortitude}
+            label="Fortitude"
+            effect="+15% Defence in the block calculation; +10 life points per Constitution level, plus 10"
+            pressed={loadout.buffs.fortitude}
+            onClick={() => setBuffs({ fortitude: !loadout.buffs.fortitude })}
+          />
+          <BuffTile
+            icon={LIFE_ICON.reaperCrew}
+            label="Reaper Crew"
+            effect="+200 maximum life points"
+            pressed={loadout.buffs.reaperCrew}
+            onClick={() => setBuffs({ reaperCrew: !loadout.buffs.reaperCrew })}
+          />
+          <BuffTile
+            icon={LIFE_ICON.fontOfLife}
+            label="Font of Life"
+            effect="+500 maximum life points"
+            pressed={loadout.buffs.fontOfLife}
+            onClick={() => setBuffs({ fontOfLife: !loadout.buffs.fontOfLife })}
+          />
+          <BuffTile
+            icon={LIFE_ICON.boonOfHet}
+            label="Boon of Het"
+            effect="+5% of Constitution life to maximum life points"
+            pressed={loadout.buffs.boonOfHet}
+            onClick={() => setBuffs({ boonOfHet: !loadout.buffs.boonOfHet })}
+          />
+          <BuffTile
+            icon={null}
+            fallback="Bath"
+            label="Thermal bath"
+            effect="+3 maximum life points per Constitution level for its active window"
+            pressed={loadout.buffs.thermalBath}
+            onClick={() => setBuffs({ thermalBath: !loadout.buffs.thermalBath })}
+          />
+          <BuffTile
+            icon={LIFE_ICON.totemOfVitality}
+            label="Totem of Vitality"
+            effect="Up to +1,500 maximum life points; replaces a bonfire boost"
+            pressed={loadout.buffs.totemOfVitality}
+            onClick={() => setBuffs({ totemOfVitality: !loadout.buffs.totemOfVitality })}
+          />
+          <BuffTile
+            icon={LIFE_ICON.powerburstOfVitality}
+            label="Powerburst of vitality"
+            effect="Doubles current and maximum life points for 6 seconds; 2-minute powerburst cooldown"
+            pressed={powerburstActive}
+            disabled={!powerburstReady}
+            onClick={() => setLoadout(activatePowerburstOfVitality(loadout))}
+          />
+        </div>
+        <div className="loadout-fields mt-2">
+          <label className="loadout-select">
+            <span>Bonfire boost</span>
+            <select
+              aria-label="Bonfire boost"
+              value={loadout.buffs.bonfireFiremakingLevel == null ? "none" : "active"}
+              onChange={(event) =>
+                setBuffs({
+                  bonfireFiremakingLevel:
+                    event.target.value === "active" ? MAX_FIREMAKING_LEVEL : null,
+                })
+              }
+            >
+              <option value="none">None</option>
+              <option value="active">Active</option>
+            </select>
+          </label>
+          {loadout.buffs.bonfireFiremakingLevel != null ? (
+            <NumberField
+              label="Bonfire Firemaking level"
+              value={loadout.buffs.bonfireFiremakingLevel}
+              min={1}
+              max={MAX_FIREMAKING_LEVEL}
+              onChange={(bonfireFiremakingLevel) => setBuffs({ bonfireFiremakingLevel })}
+            />
+          ) : null}
+          <label className="loadout-select">
+            <span>Overheal source</span>
+            <select
+              aria-label="Overheal source"
+              value={loadout.buffs.overheal}
+              onChange={(event) =>
+                setBuffs({ overheal: event.target.value as Loadout["buffs"]["overheal"] })
+              }
+            >
+              <option value="none">None</option>
+              <option value="rocktail-line">Rocktail, tiger shark or sailfish · 110%</option>
+              <option value="soup-line">Rocktail or sailfish soup · 115%</option>
+              <option value="saradomin-brew">Saradomin brew · +1,000</option>
+              <option value="super-saradomin-brew">Super Saradomin brew · +1,300</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div className="buff-group buff-sets mt-3">
         <h3 className="buff-group__title">Set effects</h3>
         {sets.length === 0 ? (
           <p className="mt-1 text-xs text-parch-300">
@@ -241,43 +440,82 @@ export function BuffsPanel({
           <ul className="set-effect-list mt-1">
             {sets.map((s) => {
               const def = equipmentSetById(s.setId);
-              const crit = def ? setCritChanceFromDef(def, s.pieces) : 0;
+              const thresholds = [
+                ...(def?.effects.map((effect) => effect.minPieces) ?? []),
+                ...(def?.facts
+                  ?.map(setFactThreshold)
+                  .filter((value): value is number => value != null) ?? []),
+              ];
+              const activeThresholds = thresholds.filter((value) => value <= s.pieces).length;
+              const state =
+                s.support === "not-modeled"
+                  ? "Not modeled"
+                  : activeThresholds > 0 && activeThresholds < thresholds.length
+                    ? "Partial"
+                    : activeThresholds > 0
+                      ? "Active"
+                      : thresholds.length > 0
+                        ? "Partial"
+                        : "Equipped";
               return (
-                <li key={s.setId} className="set-effect-row" tabIndex={0}>
-                  <span className="text-parch-50">{s.label}</span>
-                  <span className="font-mono text-parch-300">
-                    {s.pieces}/{def?.maxPieces ?? s.pieces} pieces
-                  </span>
-                  <span className="icon-tip" role="tooltip">
-                    <strong>{s.label}</strong>
-                    <ul>
-                      {crit > 0 ? (
-                        <li>Active: +{Math.round(crit * 1000) / 10}% critical strike chance</li>
-                      ) : null}
-                      {def?.facts?.length ? (
-                        def.facts.map((fact) => <li key={fact}>{fact}</li>)
-                      ) : crit > 0 ? null : (
-                        <li>No combat set bonus sourced.</li>
-                      )}
-                    </ul>
-                  </span>
+                <li key={s.setId} className="set-effect-card">
+                  <div className="set-effect-card__head">
+                    <span className="text-parch-50">{s.label}</span>
+                    <span className="set-effect-state">{state}</span>
+                    <span className="ml-auto font-mono text-parch-300">
+                      {s.pieces}/{def?.maxPieces ?? s.pieces}
+                    </span>
+                  </div>
+                  <ul className="set-threshold-list">
+                    {def?.effects.map((effect) => {
+                      const met = s.pieces >= effect.minPieces;
+                      return (
+                        <li
+                          key={`${effect.kind}-${effect.minPieces}`}
+                          className={met ? "is-met" : ""}
+                        >
+                          <span className="set-threshold-badge">
+                            {met
+                              ? effect.requires
+                                ? "Context"
+                                : "Active"
+                              : `Set ${effect.minPieces}`}
+                          </span>
+                          <span>{setEffectText(effect)}</span>
+                        </li>
+                      );
+                    })}
+                    {def?.facts?.map((fact) => {
+                      const required = setFactThreshold(fact);
+                      const met = required == null || s.pieces >= required;
+                      return (
+                        <li key={fact} className={met ? "is-met" : ""}>
+                          <span className="set-threshold-badge">
+                            {required == null ? "Note" : met ? "Active" : `Set ${required}`}
+                          </span>
+                          <span>{fact.replace(/^Set\(\d+\):\s*/i, "")}</span>
+                        </li>
+                      );
+                    })}
+                    {!def?.effects.length && !def?.facts?.length ? (
+                      <li>
+                        <span className="set-threshold-badge">Note</span>
+                        <span>No combat set bonus sourced.</span>
+                      </li>
+                    ) : null}
+                  </ul>
+                  <div className="set-effect-card__foot">
+                    <span>{SET_SUPPORT_LABEL[s.support]}</span>
+                    {def?.source ? (
+                      <a href={def.source.url} target="_blank" rel="noreferrer">
+                        Source
+                      </a>
+                    ) : null}
+                  </div>
                 </li>
               );
             })}
           </ul>
-        )}
-      </div>
-
-      <div className="buff-group mt-3">
-        <h3 className="buff-group__title">Persistent passive effects</h3>
-        {passives.length > 0 ? (
-          <ul className="mt-1 space-y-1 text-xs text-parch-100">
-            {passives.map((passive) => (
-              <li key={passive}>{passive}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-1 text-xs text-parch-300">No modeled item passives are active.</p>
         )}
       </div>
     </div>

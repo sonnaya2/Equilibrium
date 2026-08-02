@@ -1,15 +1,19 @@
 import { describe, expect, it } from "vitest";
+import { POWERBURST_COOLDOWN_MS, POWERBURST_DURATION_MS } from "@/combat";
 import {
   DEFAULT_LOADOUT,
+  activatePowerburstOfVitality,
   clearEquipment,
   equipInSlot,
   gizmoSlotOf,
   normalizeLoadout,
+  isPowerburstOfVitalityReady,
   placePerkOnGizmo,
   pruneUnknownEquipment,
   removePerkFromGizmos,
   toggleEquipmentEnchantment,
   unlockOnlyIds,
+  withLoadoutBuffs,
   withAttackLevel,
   withCombatStyle,
   withStrengthLevel,
@@ -94,6 +98,43 @@ describe("normalizeLoadout", () => {
     expect(next.weaponTier).toBe(92);
   });
 
+  it("forward-migrates a complete v1 loadout without losing existing state", () => {
+    const next = normalizeLoadout({
+      style: "ranged",
+      level: 108,
+      attackLevel: 82,
+      strengthLevel: 91,
+      equipmentSlots: { mainhand: "item:seismic-wand" },
+      equipmentIds: ["item:seismic-wand", "item:unlock-pin"],
+      enchantments: ["agony"],
+      perks: { biting: 4, impatient: 3 },
+      buffs: { vulnerability: true, styleCurse: "anguish", overload: "elder" },
+      target: { defenceLevel: 88, armour: 420, affinity: "strong" },
+      baseDamage: { mode: "manual", manualValue: 4321 },
+      startingAdrenaline: 72,
+      hitCapEnabled: false,
+    });
+
+    expect(next).toMatchObject({
+      style: "ranged",
+      level: 108,
+      attackLevel: 82,
+      strengthLevel: 91,
+      defenceLevel: 99,
+      constitutionLevel: 99,
+      currentLife: null,
+      equipmentSlots: { mainhand: "item:seismic-wand" },
+      equipmentIds: ["item:seismic-wand", "item:unlock-pin"],
+      enchantments: ["agony"],
+      perks: { biting: 4, impatient: 3 },
+      buffs: { vulnerability: true, styleCurse: "anguish", overload: "elder" },
+      target: { defenceLevel: 88, armour: 420, affinity: "strong" },
+      baseDamage: { mode: "manual", manualValue: 4321 },
+      startingAdrenaline: 72,
+      hitCapEnabled: false,
+    });
+  });
+
   it("melee keeps split Attack/Strength; level aliases strength", () => {
     const next = normalizeLoadout({
       style: "melee",
@@ -106,7 +147,7 @@ describe("normalizeLoadout", () => {
     expect(next.level).toBe(110);
   });
 
-  it("non-melee collapses attack/strength onto style level", () => {
+  it("non-melee keeps stored Attack and Strength while using its own style level", () => {
     const next = normalizeLoadout({
       style: "ranged",
       level: 105,
@@ -114,8 +155,25 @@ describe("normalizeLoadout", () => {
       strengthLevel: 2,
     });
     expect(next.level).toBe(105);
-    expect(next.attackLevel).toBe(105);
-    expect(next.strengthLevel).toBe(105);
+    expect(next.attackLevel).toBe(1);
+    expect(next.strengthLevel).toBe(2);
+  });
+
+  it("normalizes Defence, Constitution, and current life to their canonical ranges", () => {
+    expect(
+      normalizeLoadout({ defenceLevel: 100, constitutionLevel: 1, currentLife: 99_000 }),
+    ).toMatchObject({
+      defenceLevel: 99,
+      constitutionLevel: 10,
+      currentLife: 99_000,
+    });
+    expect(
+      normalizeLoadout({ defenceLevel: -1, constitutionLevel: 120, currentLife: -4 }),
+    ).toMatchObject({
+      defenceLevel: 1,
+      constitutionLevel: 99,
+      currentLife: 0,
+    });
   });
 
   it("fills missing buffs and equipmentSlots", () => {
@@ -124,6 +182,16 @@ describe("normalizeLoadout", () => {
       vulnerability: false,
       styleCurse: "none",
       overload: "none",
+      fortitude: false,
+      reaperCrew: false,
+      fontOfLife: false,
+      boonOfHet: false,
+      bonfireFiremakingLevel: null,
+      totemOfVitality: false,
+      thermalBath: false,
+      overheal: "none",
+      powerburstOfVitalityUntil: null,
+      powerburstOfVitalityCooldownUntil: null,
     });
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);
@@ -169,7 +237,7 @@ describe("normalizeLoadout", () => {
         overload: "supreme",
       },
     });
-    expect(next.buffs).toEqual({
+    expect(next.buffs).toMatchObject({
       vulnerability: true,
       styleCurse: "malevolence",
       overload: "supreme",
@@ -177,11 +245,80 @@ describe("normalizeLoadout", () => {
     const bad = normalizeLoadout({
       buffs: { vulnerability: "yes", styleCurse: "not-a-curse", overload: "extreme" },
     });
-    expect(bad.buffs).toEqual({
+    expect(bad.buffs).toMatchObject({
       vulnerability: false,
       styleCurse: "none",
       overload: "none",
     });
+  });
+
+  it("normalizes supported life effects and rejects incompatible stored combinations", () => {
+    const now = 10_000;
+    const next = normalizeLoadout(
+      {
+        buffs: {
+          fortitude: true,
+          styleCurse: "turmoil",
+          reaperCrew: true,
+          fontOfLife: true,
+          boonOfHet: true,
+          bonfireFiremakingLevel: 999,
+          totemOfVitality: true,
+          thermalBath: true,
+          overheal: "soup-line",
+          powerburstOfVitalityUntil: now + 99_000,
+        },
+      },
+      now,
+    );
+    expect(next.buffs).toMatchObject({
+      styleCurse: "turmoil",
+      fortitude: false,
+      reaperCrew: true,
+      fontOfLife: true,
+      boonOfHet: true,
+      bonfireFiremakingLevel: null,
+      totemOfVitality: true,
+      thermalBath: true,
+      overheal: "soup-line",
+      powerburstOfVitalityUntil: now + POWERBURST_DURATION_MS,
+      powerburstOfVitalityCooldownUntil: now + POWERBURST_COOLDOWN_MS,
+    });
+    expect(
+      normalizeLoadout({ buffs: { powerburstOfVitalityUntil: now } }, now).buffs
+        .powerburstOfVitalityUntil,
+    ).toBeNull();
+  });
+
+  it("enforces prayer and maximum-life incompatibilities when controls change", () => {
+    const fortified = withLoadoutBuffs(
+      { ...DEFAULT_LOADOUT, buffs: { ...DEFAULT_LOADOUT.buffs, styleCurse: "turmoil" } },
+      { fortitude: true },
+    );
+    expect(fortified.buffs).toMatchObject({ fortitude: true, styleCurse: "none" });
+    const cursed = withLoadoutBuffs(fortified, { styleCurse: "turmoil" });
+    expect(cursed.buffs).toMatchObject({ fortitude: false, styleCurse: "turmoil" });
+
+    const bonfire = withLoadoutBuffs(DEFAULT_LOADOUT, { bonfireFiremakingLevel: 110 });
+    expect(bonfire.buffs.totemOfVitality).toBe(false);
+    const totem = withLoadoutBuffs(bonfire, { totemOfVitality: true });
+    expect(totem.buffs).toMatchObject({ bonfireFiremakingLevel: null, totemOfVitality: true });
+  });
+
+  it("enforces Powerburst's six-second window and two-minute cooldown", () => {
+    const now = 40_000;
+    const next = activatePowerburstOfVitality(DEFAULT_LOADOUT, now);
+    expect(next.buffs.powerburstOfVitalityUntil).toBe(now + POWERBURST_DURATION_MS);
+    expect(next.buffs.powerburstOfVitalityCooldownUntil).toBe(now + POWERBURST_COOLDOWN_MS);
+    expect(isPowerburstOfVitalityReady(next, now + POWERBURST_DURATION_MS)).toBe(false);
+
+    const afterWindow = normalizeLoadout(next, now + POWERBURST_DURATION_MS);
+    expect(afterWindow.buffs.powerburstOfVitalityUntil).toBeNull();
+    expect(afterWindow.buffs.powerburstOfVitalityCooldownUntil).toBe(now + POWERBURST_COOLDOWN_MS);
+    expect(activatePowerburstOfVitality(afterWindow, now + POWERBURST_DURATION_MS)).toBe(
+      afterWindow,
+    );
+    expect(isPowerburstOfVitalityReady(afterWindow, now + POWERBURST_COOLDOWN_MS)).toBe(true);
   });
 
   it("merges slotted ids with unlock-only pins from legacy equipmentIds", () => {
@@ -299,9 +436,9 @@ describe("equipInSlot twohand exclusivity", () => {
 });
 
 describe("level helpers", () => {
-  it("withStyleLevel mirrors attack and strength", () => {
+  it("withStyleLevel leaves saved melee levels intact", () => {
     const next = withStyleLevel(DEFAULT_LOADOUT, 120);
-    expect(next).toMatchObject({ level: 120, attackLevel: 120, strengthLevel: 120 });
+    expect(next).toMatchObject({ level: 120, attackLevel: 99, strengthLevel: 99 });
   });
 
   it("withAttackLevel only changes attack; withStrengthLevel also updates level alias", () => {

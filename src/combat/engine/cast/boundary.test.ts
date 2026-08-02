@@ -8,6 +8,7 @@ import { createCastContext } from "../simulation/simulate";
 import { simulateRevolution } from "../simulation/revolution";
 import { baseInput } from "../../test/fixtures/inputs";
 import { lastCast } from "../../test/helpers/summary";
+import { meetsWeaponRequirement } from "./rules";
 
 /**
  * Regression coverage for the cast-branch preparation boundary: future-tick
@@ -255,5 +256,13 @@ describe("cast legality at the candidate tick", () => {
       error: "necromancy_basic requires death guard and conduit",
     });
     expect(ctx.getState()).toEqual(before);
+  });
+
+  it("lets defenders satisfy dual-wield requirements without treating shields as weapons", () => {
+    const dualWield = MELEE_ABILITIES.find((ability) => ability.weaponRequirement === "dualwield")!;
+    const unrestricted = MELEE_ABILITIES.find((ability) => ability.weaponRequirement == null)!;
+    expect(meetsWeaponRequirement(dualWield, "defender")).toBe(true);
+    expect(meetsWeaponRequirement(dualWield, "shield")).toBe(false);
+    expect(meetsWeaponRequirement(unrestricted, "shield")).toBe(true);
   });
 });

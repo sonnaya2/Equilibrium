@@ -122,6 +122,7 @@ export interface ActiveEquipmentEffects {
   passiveIds: readonly ItemPassiveId[];
   enchantments: readonly EquipmentEnchantmentId[];
   weaponClass: WeaponClass | null;
+  defenderEquipped: boolean;
   passage: {
     active: boolean;
     agonyActive: boolean;
@@ -148,12 +149,17 @@ export function activeEquipmentEffects(
   const pieces = Math.min(4, equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0);
   const weaponId = loadout.equipmentSlots?.twohand ?? loadout.equipmentSlots?.mainhand;
   const weapon = weaponId ? equipmentById(weaponId) : undefined;
+  const offhandId = loadout.equipmentSlots?.offhand;
+  const offhand = offhandId ? equipmentById(offhandId) : undefined;
   const meleeWeapon = weaponId ? weapon?.style === "melee" : loadout.style === "melee";
   const passiveIds = [
     ...new Set(
       Object.values(loadout.equipmentSlots ?? {}).flatMap((id) => {
-        const passiveId = typeof id === "string" ? equipmentById(id)?.passiveId : undefined;
-        return passiveId ? [passiveId] : [];
+        const item = typeof id === "string" ? equipmentById(id) : undefined;
+        return [
+          ...(item?.passiveId ? [item.passiveId] : []),
+          ...(item?.defender ? (["defender-accuracy"] as const) : []),
+        ];
       }),
     ),
   ];
@@ -173,6 +179,7 @@ export function activeEquipmentEffects(
       loadout.style === "ranged" && weapon?.style === "ranged"
         ? (weapon.weaponClass ?? null)
         : null,
+    defenderEquipped: offhand?.defender === true,
     passage: {
       active: passageActive,
       agonyActive:
@@ -306,28 +313,162 @@ export function applyEquipmentDamagePotential(
   damagePotential: number,
   effects: ActiveEquipmentEffects,
 ): number {
-  return Math.max(0, damagePotential - (hasPassive(effects, "reaver-ring") ? 0.05 : 0));
+  return Math.min(
+    1,
+    Math.max(0, damagePotential - (hasPassive(effects, "reaver-ring") ? 0.05 : 0)),
+  );
 }
 
-export function activePassiveLabels(effects: ActiveEquipmentEffects): string[] {
-  const labels: Partial<Record<ItemPassiveId, string>> = {
-    "jaws-of-the-abyss": "Jaws of the Abyss",
-    "abyssal-parasite": "Abyssal Parasite · death spread not modeled",
-    "am-zi": "Am-zi",
-    "am-hej": "Am-hej",
-    "enduring-ruin": effects.passage.agonyActive ? "Enduring Ruin + Agony" : "Enduring Ruin",
-    "reaver-ring": "Reaver's ring",
-    "champion-ring": hasEnchantment(effects, "heroism")
-      ? "Champion's ring + Heroism"
-      : "Champion's ring",
-    "stalker-ring": hasEnchantment(effects, "shadows")
-      ? "Stalker's ring + Shadows"
-      : "Stalker's ring",
-    "channeller-ring": hasEnchantment(effects, "metaphysics")
-      ? "Channeller's ring + Metaphysics"
-      : "Channeller's ring",
-  };
-  return effects.passiveIds.flatMap((id) => (labels[id] ? [labels[id]!] : []));
+/** Defender-class gear multiplies accuracy before the hit-chance formula. */
+export function applyEquipmentAccuracy(accuracy: number, effects: ActiveEquipmentEffects): number {
+  return effects.defenderEquipped ? accuracy * 1.03 : accuracy;
+}
+
+export type PassiveSupport = "modeled" | "partially-modeled" | "not-modeled";
+
+export interface EquippedPassiveSummary {
+  passiveId: ItemPassiveId;
+  itemId: string;
+  itemName: string;
+  label: string;
+  effects: readonly string[];
+  support: PassiveSupport;
+  source: SourceReference;
+}
+
+function passivePresentation(
+  id: ItemPassiveId,
+  effects: ActiveEquipmentEffects,
+): Pick<EquippedPassiveSummary, "label" | "effects" | "support"> {
+  switch (id) {
+    case "jaws-of-the-abyss":
+      return {
+        label: "Jaws of the Abyss",
+        effects: [
+          "Basic abilities grant 2% adrenaline per active bleed.",
+          "Natural Instinct doubles this bonus gain.",
+        ],
+        support: "modeled",
+      };
+    case "abyssal-parasite":
+      return {
+        label: "Abyssal Parasite",
+        effects: [
+          "Melee hits apply and refresh the stacking parasite bleed.",
+          "Damage cadence and stack refresh are modeled; death spread is not.",
+        ],
+        support: "partially-modeled",
+      };
+    case "am-zi":
+      return {
+        label: "Am-zi",
+        effects: ["Direct melee hits gain flat damage equal to 135% of effective Attack."],
+        support: "modeled",
+      };
+    case "am-hej":
+      return {
+        label: "Am-hej",
+        effects: ["Direct melee damage gains 0.05% per effective Strength level."],
+        support: "modeled",
+      };
+    case "enduring-ruin":
+      return {
+        label: effects.passage.agonyActive ? "Enduring Ruin + Agony" : "Enduring Ruin",
+        effects: effects.passage.agonyActive
+          ? [
+              "Rend grants +16% damage to the next attack for 6 seconds.",
+              "Bleeds take +25% damage for 10 seconds.",
+            ]
+          : [
+              "Rend grants +10% damage to the next attack for 6 seconds.",
+              "Bleeds take +20% damage for 10 seconds.",
+            ],
+        support: "modeled",
+      };
+    case "reaver-ring":
+      return {
+        label: "Reaver's ring",
+        effects: ["+5% critical strike chance.", "−5 percentage points Damage Potential."],
+        support: "modeled",
+      };
+    case "champion-ring":
+      return {
+        label: hasEnchantment(effects, "heroism") ? "Champion's ring + Heroism" : "Champion's ring",
+        effects: hasEnchantment(effects, "heroism")
+          ? [
+              "+4% critical strike chance while a bleed is active.",
+              "+1.5% critical strike damage per active bleed.",
+            ]
+          : ["+3% critical strike chance while a bleed is active."],
+        support: "modeled",
+      };
+    case "stalker-ring":
+      return {
+        label: hasEnchantment(effects, "shadows") ? "Stalker's ring + Shadows" : "Stalker's ring",
+        effects: hasEnchantment(effects, "shadows")
+          ? ["With a bow: +4% critical strike chance.", "+3% critical strike damage."]
+          : ["With a bow: +3% critical strike chance."],
+        support: "modeled",
+      };
+    case "channeller-ring":
+      return {
+        label: hasEnchantment(effects, "metaphysics")
+          ? "Channeller's ring + Metaphysics"
+          : "Channeller's ring",
+        effects: hasEnchantment(effects, "metaphysics")
+          ? [
+              "+4% critical strike chance per successive channel hit.",
+              "+2.5% critical strike damage per successive channel hit.",
+            ]
+          : ["+4% critical strike chance per successive channel hit."],
+        support: "modeled",
+      };
+    case "defender-accuracy":
+      return {
+        label: "Defender accuracy",
+        effects: ["Defenders, reprisers, and rebounders have +3% accuracy."],
+        support: "modeled",
+      };
+    case "asylum-surgeon":
+      return {
+        label: "Asylum surgeon's ring",
+        effects: ["10% chance to reduce an ability's adrenaline cost by 15%; 30-second cooldown."],
+        support: "not-modeled",
+      };
+    case "deathtouch-reflect":
+      return {
+        label: "Deathtouch reflect",
+        effects: ["20% chance to reflect 25–50% of damage taken, capped at 5,000."],
+        support: "not-modeled",
+      };
+  }
+}
+
+/** Equipped passive rows for Gear. Item identity and source stay catalogue-driven. */
+export function equippedPassiveSummaries(
+  loadout: LoadoutEquipmentView & {
+    style?: CombatStyle;
+    enchantments?: readonly EquipmentEnchantmentId[];
+  },
+): EquippedPassiveSummary[] {
+  const effects = activeEquipmentEffects(loadout);
+  const seen = new Set<string>();
+  const rows: EquippedPassiveSummary[] = [];
+  for (const id of Object.values(loadout.equipmentSlots ?? {})) {
+    if (typeof id !== "string" || seen.has(id)) continue;
+    seen.add(id);
+    const item = equipmentById(id);
+    const passiveId = item?.passiveId ?? (item?.defender ? "defender-accuracy" : undefined);
+    if (!item || !passiveId || !item.sources[0]) continue;
+    rows.push({
+      passiveId,
+      itemId: item.id,
+      itemName: item.name,
+      source: item.sources[0],
+      ...passivePresentation(passiveId, effects),
+    });
+  }
+  return rows;
 }
 
 export function vestmentsUltimateEligible(

@@ -1,6 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  MAX_CONSTITUTION_LEVEL,
+  MAX_DEFENCE_LEVEL,
+  MAX_FIREMAKING_LEVEL,
+  POWERBURST_COOLDOWN_MS,
+  POWERBURST_DURATION_MS,
+  type OverhealKind,
+} from "@/combat";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import {
@@ -77,8 +85,8 @@ export interface LoadoutPerks {
 
 /**
  * Perk ranks that can be placed on a gizmo. Placement is organisational only —
- * the engine reads `perks`, never `gizmos`. The wiki perk/gizmo compatibility
- * table is not in this repo, so slots accept whatever the player says they own.
+ * the engine reads `perks`, never `gizmos`. Compatibility is enforced by the
+ * modeled perk kind below.
  */
 export type PerkRankKey = {
   [K in keyof LoadoutPerks]: LoadoutPerks[K] extends number ? K : never;
@@ -113,6 +121,7 @@ export function gizmoAccepts(slot: GizmoSlotId, perk: PerkRankKey): boolean {
 }
 
 export type OverloadChoice = "none" | "overload" | "supreme" | "elder";
+export type OverhealChoice = "none" | OverhealKind;
 export type StyleCurseChoice =
   | "none"
   | "turmoil"
@@ -128,6 +137,19 @@ export interface LoadoutBuffs {
   vulnerability: boolean;
   styleCurse: StyleCurseChoice;
   overload: OverloadChoice;
+  fortitude: boolean;
+  reaperCrew: boolean;
+  fontOfLife: boolean;
+  boonOfHet: boolean;
+  /** Active bonfire amount source; null means no bonfire boost. */
+  bonfireFiremakingLevel: number | null;
+  totemOfVitality: boolean;
+  thermalBath: boolean;
+  overheal: OverhealChoice;
+  /** Epoch expiry keeps the six-second Powerburst window temporary across reloads. */
+  powerburstOfVitalityUntil: number | null;
+  /** Epoch expiry for the sourced two-minute global powerburst cooldown. */
+  powerburstOfVitalityCooldownUntil: number | null;
 }
 
 export interface Loadout {
@@ -137,10 +159,16 @@ export interface Loadout {
    * Prefer attackLevel / strengthLevel for melee.
    */
   level: number;
-  /** Melee Attack — accuracy only. Mirrors level when not melee. */
+  /** Melee Attack — accuracy only, retained while another style is selected. */
   attackLevel: number;
   /** Melee Strength — ability damage + crit damage-from-level. */
   strengthLevel: number;
+  /** Unboosted player Defence; potion/prayer boosts resolve separately. */
+  defenceLevel: number;
+  /** Unboosted Constitution; current normal range is 10–99. */
+  constitutionLevel: number;
+  /** Life points before Powerburst doubling; null means start fully healed. */
+  currentLife: number | null;
   weaponTier: number;
   offhandTier: number;
   spellTier: number;
@@ -168,6 +196,9 @@ export const DEFAULT_LOADOUT: Loadout = {
   level: 99,
   attackLevel: 99,
   strengthLevel: 99,
+  defenceLevel: 99,
+  constitutionLevel: 99,
+  currentLife: null,
   weaponTier: 90,
   offhandTier: 90,
   spellTier: 90,
@@ -202,6 +233,16 @@ export const DEFAULT_LOADOUT: Loadout = {
     vulnerability: false,
     styleCurse: "none",
     overload: "none",
+    fortitude: false,
+    reaperCrew: false,
+    fontOfLife: false,
+    boonOfHet: false,
+    bonfireFiremakingLevel: null,
+    totemOfVitality: false,
+    thermalBath: false,
+    overheal: "none",
+    powerburstOfVitalityUntil: null,
+    powerburstOfVitalityCooldownUntil: null,
   },
   equipmentSlots: {},
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
@@ -223,6 +264,13 @@ const STYLE_CURSES: StyleCurseChoice[] = [
   "ruination",
 ];
 const OVERLOADS: OverloadChoice[] = ["none", "overload", "supreme", "elder"];
+const OVERHEALS: OverhealChoice[] = [
+  "none",
+  "rocktail-line",
+  "soup-line",
+  "saradomin-brew",
+  "super-saradomin-brew",
+];
 const GIZMO_SLOT_SET = new Set<string>(GIZMO_SLOTS);
 /** Rank-valued perk keys, from the default loadout so the two never drift. */
 export const PERK_RANK_KEYS = Object.entries(DEFAULT_LOADOUT.perks)
@@ -411,7 +459,7 @@ export function pruneUnknownEquipment(
 }
 
 export function withStyleLevel(loadout: Loadout, level: number): Loadout {
-  return { ...loadout, level, attackLevel: level, strengthLevel: level };
+  return { ...loadout, level };
 }
 
 export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
@@ -430,6 +478,31 @@ export function withStrengthLevel(loadout: Loadout, strengthLevel: number): Load
   return { ...loadout, strengthLevel, level: strengthLevel };
 }
 
+export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>): Loadout {
+  const buffs = { ...loadout.buffs, ...patch };
+  if (patch.fortitude === true) buffs.styleCurse = "none";
+  else if (patch.styleCurse != null && patch.styleCurse !== "none") buffs.fortitude = false;
+  if (patch.totemOfVitality === true) buffs.bonfireFiremakingLevel = null;
+  else if (patch.bonfireFiremakingLevel != null) buffs.totemOfVitality = false;
+  return { ...loadout, buffs };
+}
+
+export function activatePowerburstOfVitality(loadout: Loadout, now = Date.now()): Loadout {
+  if (!isPowerburstOfVitalityReady(loadout, now)) return loadout;
+  return withLoadoutBuffs(loadout, {
+    powerburstOfVitalityUntil: now + POWERBURST_DURATION_MS,
+    powerburstOfVitalityCooldownUntil: now + POWERBURST_COOLDOWN_MS,
+  });
+}
+
+export function isPowerburstOfVitalityActive(loadout: Loadout, now = Date.now()): boolean {
+  return (loadout.buffs.powerburstOfVitalityUntil ?? 0) > now;
+}
+
+export function isPowerburstOfVitalityReady(loadout: Loadout, now = Date.now()): boolean {
+  return (loadout.buffs.powerburstOfVitalityCooldownUntil ?? 0) <= now;
+}
+
 function normalizeEquipmentSlots(raw: unknown): Partial<Record<EquipmentSlot, string | null>> {
   if (typeof raw !== "object" || raw === null) return {};
   const out: Partial<Record<EquipmentSlot, string | null>> = {};
@@ -442,7 +515,7 @@ function normalizeEquipmentSlots(raw: unknown): Partial<Record<EquipmentSlot, st
 }
 
 /** Forward-migrate stored loadouts. Exported for tests. */
-export function normalizeLoadout(value: unknown): Loadout {
+export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
   if (typeof value !== "object" || value === null) return DEFAULT_LOADOUT;
   const raw = value as Partial<Loadout> & {
     base?: unknown;
@@ -468,18 +541,14 @@ export function normalizeLoadout(value: unknown): Loadout {
   const hasStrength = Number.isFinite(raw.strengthLevel);
   const hasLevel = Number.isFinite(raw.level);
   const legacyLevel = clamp(raw.level, 1, 145, DEFAULT_LOADOUT.level);
-  let attackLevel = hasAttack ? clamp(raw.attackLevel, 1, 145, legacyLevel) : legacyLevel;
-  let strengthLevel = hasStrength ? clamp(raw.strengthLevel, 1, 145, legacyLevel) : legacyLevel;
+  const attackLevel = hasAttack ? clamp(raw.attackLevel, 1, 145, legacyLevel) : legacyLevel;
+  const strengthLevel = hasStrength ? clamp(raw.strengthLevel, 1, 145, legacyLevel) : legacyLevel;
   let level = hasLevel ? legacyLevel : strengthLevel;
 
   if (style === "melee") {
     level = strengthLevel;
-  } else {
-    if (!hasLevel && (hasAttack || hasStrength)) {
-      level = hasStrength ? strengthLevel : attackLevel;
-    }
-    attackLevel = level;
-    strengthLevel = level;
+  } else if (!hasLevel && (hasAttack || hasStrength)) {
+    level = hasStrength ? strengthLevel : attackLevel;
   }
 
   const equipmentSlots = normalizeEquipmentSlots(raw.equipmentSlots);
@@ -503,12 +572,45 @@ export function normalizeLoadout(value: unknown): Loadout {
     .vestments.increasedAdrenalineCap
     ? 120
     : 100;
+  const styleCurse = STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
+    ? (rawBuffs.styleCurse as StyleCurseChoice)
+    : "none";
+  const fortitude = rawBuffs.fortitude === true && styleCurse === "none";
+  const totemOfVitality = rawBuffs.totemOfVitality === true;
+  const bonfireFiremakingLevel =
+    !totemOfVitality && Number.isFinite(rawBuffs.bonfireFiremakingLevel)
+      ? clamp(rawBuffs.bonfireFiremakingLevel, 1, MAX_FIREMAKING_LEVEL, MAX_FIREMAKING_LEVEL)
+      : null;
+  const powerburstOfVitalityUntil =
+    Number.isFinite(rawBuffs.powerburstOfVitalityUntil) &&
+    Number(rawBuffs.powerburstOfVitalityUntil) > now
+      ? Math.min(Number(rawBuffs.powerburstOfVitalityUntil), now + POWERBURST_DURATION_MS)
+      : null;
+  const storedPowerburstCooldown =
+    Number.isFinite(rawBuffs.powerburstOfVitalityCooldownUntil) &&
+    Number(rawBuffs.powerburstOfVitalityCooldownUntil) > now
+      ? Math.min(Number(rawBuffs.powerburstOfVitalityCooldownUntil), now + POWERBURST_COOLDOWN_MS)
+      : null;
+  const inferredPowerburstCooldown =
+    powerburstOfVitalityUntil == null
+      ? null
+      : powerburstOfVitalityUntil + POWERBURST_COOLDOWN_MS - POWERBURST_DURATION_MS;
+  const powerburstOfVitalityCooldownUntil =
+    Math.max(storedPowerburstCooldown ?? 0, inferredPowerburstCooldown ?? 0) || null;
 
   return {
     style,
     level,
     attackLevel,
     strengthLevel,
+    defenceLevel: clamp(raw.defenceLevel, 1, MAX_DEFENCE_LEVEL, DEFAULT_LOADOUT.defenceLevel),
+    constitutionLevel: clamp(
+      raw.constitutionLevel,
+      10,
+      MAX_CONSTITUTION_LEVEL,
+      DEFAULT_LOADOUT.constitutionLevel,
+    ),
+    currentLife: Number.isFinite(raw.currentLife) ? Math.max(0, Number(raw.currentLife)) : null,
     weaponTier: clamp(raw.weaponTier, 0, 145, DEFAULT_LOADOUT.weaponTier),
     offhandTier: clamp(raw.offhandTier, 0, 145, num(raw.weaponTier, DEFAULT_LOADOUT.offhandTier)),
     spellTier: clamp(raw.spellTier, 0, 145, num(raw.weaponTier, DEFAULT_LOADOUT.spellTier)),
@@ -577,12 +679,22 @@ export function normalizeLoadout(value: unknown): Loadout {
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
     buffs: {
       vulnerability: rawBuffs.vulnerability === true,
-      styleCurse: STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
-        ? (rawBuffs.styleCurse as StyleCurseChoice)
-        : "none",
+      styleCurse,
       overload: OVERLOADS.includes(rawBuffs.overload as OverloadChoice)
         ? (rawBuffs.overload as OverloadChoice)
         : "none",
+      fortitude,
+      reaperCrew: rawBuffs.reaperCrew === true,
+      fontOfLife: rawBuffs.fontOfLife === true,
+      boonOfHet: rawBuffs.boonOfHet === true,
+      bonfireFiremakingLevel,
+      totemOfVitality,
+      thermalBath: rawBuffs.thermalBath === true,
+      overheal: OVERHEALS.includes(rawBuffs.overheal as OverhealChoice)
+        ? (rawBuffs.overheal as OverhealChoice)
+        : "none",
+      powerburstOfVitalityUntil,
+      powerburstOfVitalityCooldownUntil,
     },
     equipmentSlots,
     enchantments,
@@ -610,11 +722,33 @@ export function useLoadout() {
     }
   }, []);
 
+  useEffect(() => {
+    const now = Date.now();
+    const deadlines = [
+      loadout.buffs.powerburstOfVitalityUntil,
+      loadout.buffs.powerburstOfVitalityCooldownUntil,
+    ].filter((deadline): deadline is number => deadline != null && deadline > now);
+    if (deadlines.length === 0) return;
+    const until = Math.min(...deadlines);
+    const timeout = window.setTimeout(
+      () => {
+        setLoadout((current) => {
+          const normalized = pruneUnknownEquipment(normalizeLoadout(current));
+          try {
+            window.localStorage.setItem(KEY, JSON.stringify(normalized));
+          } catch {
+            // Storage full/blocked — expiry still applies in memory.
+          }
+          return normalized;
+        });
+      },
+      Math.max(0, until - now) + 20,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [loadout.buffs.powerburstOfVitalityUntil, loadout.buffs.powerburstOfVitalityCooldownUntil]);
+
   const update = (next: Loadout) => {
-    const withLevels =
-      next.style === "melee"
-        ? { ...next, level: next.strengthLevel }
-        : { ...next, attackLevel: next.level, strengthLevel: next.level };
+    const withLevels = next.style === "melee" ? { ...next, level: next.strengthLevel } : next;
     const normalized = pruneUnknownEquipment(normalizeLoadout(withLevels));
     setLoadout(normalized);
     try {

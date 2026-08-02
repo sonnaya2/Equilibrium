@@ -14,9 +14,9 @@ import type { SourceReference } from "../types";
  *                              basis is Constitution + equipment only
  *   6. food overheal last      +10% / +15% of the buffed max, or flat brew caps
  *
- * Absolute cap 32,000, reachable only transiently via Powerburst of vitality
- * (doubles max and current). Abidor Crank and boosted-Constitution max-LP
- * effects are unverified and deliberately not modelled.
+ * Powerburst of vitality doubles max and current after those layers. Abidor
+ * Crank and boosted-Constitution max-LP effects are unverified and deliberately
+ * not modelled.
  */
 export const LIFE_POINTS_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -39,8 +39,17 @@ export const OVERHEAL_SOURCE: SourceReference = {
   verifiedAt: "2026-08-02",
 };
 
+export const POWERBURST_OF_VITALITY_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Powerburst_of_vitality",
+  title: "Powerburst of vitality",
+  verifiedAt: "2026-08-02",
+};
+
 export const MAX_CONSTITUTION_LEVEL = 99;
-export const ABSOLUTE_LIFE_CAP = 32_000;
+export const MAX_FIREMAKING_LEVEL = 110;
+export const POWERBURST_DURATION_MS = 6_000;
+export const POWERBURST_COOLDOWN_MS = 120_000;
 
 /** Documented overheal classes: +10% foods (rocktail line), +15% foods
  *  (soups / giant meats), and the flat brew ceilings. One cap, largest applies. */
@@ -83,6 +92,20 @@ export interface LifePointStats {
   overhealCeiling: number;
   currentLife: number;
   powerburstActive: boolean;
+  /** Named contributions for presentation; sums exactly to the resolved maxima. */
+  breakdown: {
+    constitution: number;
+    equipment: number;
+    reaperCrew: number;
+    boonOfHet: number;
+    fontOfLife: number;
+    fortitude: number;
+    thermalBath: number;
+    elidinisStatuette: number;
+    bonfire: number;
+    totemOfVitality: number;
+    powerburst: number;
+  };
 }
 
 export function lifePointStats(input: LifePointInput): LifePointStats {
@@ -110,19 +133,20 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     bonfireFiremakingLevel != null &&
     (!Number.isFinite(bonfireFiremakingLevel) ||
       bonfireFiremakingLevel < 1 ||
-      bonfireFiremakingLevel > 99)
+      bonfireFiremakingLevel > MAX_FIREMAKING_LEVEL)
   ) {
     throw new RangeError(`lifePointStats: bad Firemaking level ${bonfireFiremakingLevel}`);
   }
 
   const constitutionLife = 100 * constitutionLevel;
-  const permanentLife =
-    (input.reaperCrew ? 200 : 0) + (input.boonOfHet ? Math.floor(0.05 * constitutionLife) : 0);
-  const temporaryFlatLife =
-    (input.fontOfLife ? 500 : 0) +
-    (input.fortitude ? 10 + 10 * constitutionLevel : 0) +
-    (input.thermalBath ? 3 * constitutionLevel : 0) +
-    (input.elidinisStatuette ? 500 : 0);
+  const reaperCrewLife = input.reaperCrew ? 200 : 0;
+  const boonOfHetLife = input.boonOfHet ? Math.floor(0.05 * constitutionLife) : 0;
+  const fontOfLife = input.fontOfLife ? 500 : 0;
+  const fortitudeLife = input.fortitude ? 10 + 10 * constitutionLevel : 0;
+  const thermalBathLife = input.thermalBath ? 3 * constitutionLevel : 0;
+  const elidinisStatuetteLife = input.elidinisStatuette ? 500 : 0;
+  const permanentLife = reaperCrewLife + boonOfHetLife;
+  const temporaryFlatLife = fontOfLife + fortitudeLife + thermalBathLife + elidinisStatuetteLife;
 
   // Percent windows share the documented basis: Constitution + equipment only.
   const percentBasis = constitutionLife + equipmentLife;
@@ -152,15 +176,17 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
             ? temporaryMaxLife + 1300
             : temporaryMaxLife;
 
-  const powerburstActive = input.powerburstOfVitality === true;
-  if (powerburstActive) {
-    temporaryMaxLife = Math.min(ABSOLUTE_LIFE_CAP, 2 * temporaryMaxLife);
-    overhealCeiling = Math.min(ABSOLUTE_LIFE_CAP, 2 * overhealCeiling);
-  }
-
-  const resolvedCurrent = currentLife ?? temporaryMaxLife;
+  let resolvedCurrent = currentLife ?? temporaryMaxLife;
   if (!Number.isFinite(resolvedCurrent) || resolvedCurrent < 0) {
     throw new RangeError(`lifePointStats: bad current life ${currentLife}`);
+  }
+
+  const powerburstActive = input.powerburstOfVitality === true;
+  const powerburstLife = powerburstActive ? temporaryMaxLife : 0;
+  if (powerburstActive) {
+    temporaryMaxLife *= 2;
+    overhealCeiling *= 2;
+    resolvedCurrent *= 2;
   }
 
   return {
@@ -175,5 +201,18 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     overhealCeiling,
     currentLife: Math.min(resolvedCurrent, overhealCeiling),
     powerburstActive,
+    breakdown: {
+      constitution: constitutionLife,
+      equipment: equipmentLife,
+      reaperCrew: reaperCrewLife,
+      boonOfHet: boonOfHetLife,
+      fontOfLife,
+      fortitude: fortitudeLife,
+      thermalBath: thermalBathLife,
+      elidinisStatuette: elidinisStatuetteLife,
+      bonfire: bonfireLife,
+      totemOfVitality: totemOfVitalityLife,
+      powerburst: powerburstLife,
+    },
   };
 }

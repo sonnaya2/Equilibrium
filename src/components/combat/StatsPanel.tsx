@@ -2,6 +2,7 @@
 
 import { NumberField } from "./NumberField";
 import { loadoutOverloadTier, loadoutStats } from "./loadoutStats";
+import { MAX_CONSTITUTION_LEVEL, MAX_DEFENCE_LEVEL } from "@/combat";
 import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { withAttackLevel, withStrengthLevel, withStyleLevel, type Loadout } from "./useLoadout";
 
@@ -45,13 +46,15 @@ export function StatsPanel({
 
   const boostNote = (base: number) =>
     overloadTier ? `+${overloadBoostedLevel(base, overloadTier) - base} from overload` : undefined;
+  const format = (value: number, maximumFractionDigits = 0) =>
+    new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value);
 
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Stats</h2>
       <p className="mt-1 text-xs text-parch-300">
-        Levels and weapon tiers feed base ability damage. Editing any of them switches base damage
-        back to automatic.
+        Offensive levels and weapon tiers feed base ability damage. Defence and life remain separate
+        resolved stats.
       </p>
 
       <div className="stats-layout mt-3">
@@ -135,6 +138,55 @@ export function StatsPanel({
           />
         </StatsGroup>
 
+        <StatsGroup title="Defence & life">
+          <NumberField
+            label="Defence level"
+            value={loadout.defenceLevel}
+            min={1}
+            max={MAX_DEFENCE_LEVEL}
+            onChange={(defenceLevel) => setLoadout({ ...loadout, defenceLevel })}
+          />
+          <NumberField
+            label="Constitution level"
+            value={loadout.constitutionLevel}
+            min={10}
+            max={MAX_CONSTITUTION_LEVEL}
+            onChange={(constitutionLevel) => setLoadout({ ...loadout, constitutionLevel })}
+          />
+          <DerivedRow
+            label="Visible Defence"
+            value={format(stats.defence.visibleLevel)}
+            note={boostNote(loadout.defenceLevel)}
+          />
+          <DerivedRow
+            label="Defence in block calculation"
+            value={format(stats.defence.blockLevel, 2)}
+            note={
+              loadout.buffs.fortitude
+                ? "Fortitude"
+                : loadout.buffs.styleCurse !== "none"
+                  ? loadout.buffs.styleCurse
+                  : undefined
+            }
+          />
+          <DerivedRow label="Armour rating" value={format(stats.defence.totalArmour)} />
+          <NumberField
+            label="Current life points"
+            value={stats.life.currentLife}
+            min={0}
+            max={stats.life.overhealCeiling}
+            onChange={(currentLife) => setLoadout({ ...loadout, currentLife })}
+          />
+          <DerivedRow
+            label="Maximum life points"
+            value={format(stats.life.temporaryMaxLife)}
+            note={stats.life.powerburstActive ? "Powerburst active" : undefined}
+          />
+          {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
+            <DerivedRow label="Overheal ceiling" value={format(stats.life.overhealCeiling)} />
+          ) : null}
+        </StatsGroup>
+
         <StatsGroup title="Base damage">
           <label className="loadout-select">
             <span>Source</span>
@@ -171,7 +223,7 @@ export function StatsPanel({
           ) : null}
           <DerivedRow
             label="Effective base ability damage"
-            value={new Intl.NumberFormat("en-US").format(stats.base)}
+            value={format(stats.base)}
             note={
               loadout.perks.equilibrium > 0 || loadout.perks.eruptive > 0
                 ? "perks applied"

@@ -7,11 +7,15 @@ export function NumberField({
   value,
   onChange,
   suffix,
+  min,
+  max,
 }: {
   label: string;
   value: number;
   onChange: (value: number) => void;
   suffix?: string;
+  min?: number;
+  max?: number;
 }) {
   return (
     <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-300">
@@ -20,6 +24,8 @@ export function NumberField({
         <input
           type="number"
           value={value}
+          min={min}
+          max={max}
           onChange={(event) => onChange(Number(event.target.value))}
           className="w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50"
         />

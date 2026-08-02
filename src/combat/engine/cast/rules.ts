@@ -59,7 +59,7 @@ export function castRejection(
   state: RotationState,
   ability: AbilitySpec,
   candidate: number,
-  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "necromancy",
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy",
   equipmentIds?: readonly string[],
 ): string | null {
   if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
@@ -105,13 +105,15 @@ export function castRejection(
 /** Pure equipment-shape check shared by engine validation and ability pickers. */
 export function meetsWeaponRequirement(
   ability: AbilitySpec,
-  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "necromancy",
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy",
 ): boolean {
   if (weaponConfiguration === undefined) return true;
   if (ability.style === "necromancy") return weaponConfiguration === "necromancy";
   if (weaponConfiguration === "necromancy") return false;
   if (ability.weaponRequirement === undefined) return true;
   if (ability.weaponRequirement === "death-guard-and-conduit") return false;
+  if (weaponConfiguration === "defender") return ability.weaponRequirement === "dualwield";
+  if (weaponConfiguration === "shield") return false;
   return weaponConfiguration === ability.weaponRequirement;
 }
 

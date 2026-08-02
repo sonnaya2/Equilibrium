@@ -1,4 +1,6 @@
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
+import { defenceStats, type DefenceStats } from "@/combat/core/defence";
+import { lifePointStats, type LifePointStats } from "@/combat/core/lifePoints";
 import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTarget";
 import {
   bitingCritChanceBonus,
@@ -11,11 +13,12 @@ import {
 } from "@/combat/shared/perks";
 import {
   activeEquipmentEffects,
-  activePassiveLabels,
   additiveMeleeDamageModifier,
   amZiModifier,
+  applyEquipmentAccuracy,
   applyEquipmentDamagePotential,
   equipmentCritByHit,
+  equippedPassiveSummaries,
   equippedSetCounts,
   effectiveTumekenPieces,
   loadoutFirstNecromancerConjureDamageMult,
@@ -40,8 +43,11 @@ import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simu
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critical";
-import { aggregateLoadoutEquipment } from "@/combat/shared/equipmentStats";
-import type { Loadout } from "./useLoadout";
+import {
+  aggregateLoadoutEquipment,
+  type EquipmentStatTotals,
+} from "@/combat/shared/equipmentStats";
+import { isPowerburstOfVitalityActive, type Loadout } from "./useLoadout";
 
 /** Re-export for GearPanel / setup consumers. */
 export { equippedSetCounts, setEffectsSummary };
@@ -68,6 +74,13 @@ export interface CalcStats {
    */
   accuracyRating: number;
   critChance: number;
+  critChanceBreakdown: {
+    configured: number;
+    biting: number;
+    sets: number;
+    equipment: number;
+    adjustment: number;
+  };
   critsDisabled: boolean;
   /** Crit chance for the simulator before land-time Tumeken Sunshine bonus. */
   simulationCritChance: number;
@@ -77,6 +90,9 @@ export interface CalcStats {
   baseCritDamage: number;
   /** baseCritDamage plus the persistent equipment bonus — the static loadout total. */
   totalCritDamage: number;
+  /** Display-ready bonuses above a normal hit (0.5 means +50%). */
+  baseCritDamageBonus: number;
+  totalCritDamageBonus: number;
   activePassives: readonly string[];
   critByHitFor: (
     ability: AbilitySpec,
@@ -94,7 +110,7 @@ export interface CalcStats {
   styleDamageBonus: number;
   damagePotentialSource: "target stats" | "manual override" | "100% assumption";
   equipmentIds: readonly string[];
-  weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "necromancy";
+  weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   globalModifiers: CombatModifier[];
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
   /** Invigorating / Impatient rules for rotation + revolution sim. */
@@ -112,6 +128,9 @@ export interface CalcStats {
   tumekensPieces?: number;
   tumekensCritEnabled?: boolean;
   equipmentEffects: ActiveEquipmentEffects;
+  equipment: EquipmentStatTotals;
+  defence: DefenceStats;
+  life: LifePointStats;
 }
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -221,9 +240,18 @@ function slotWeaponTier(
   const id = loadout.equipmentSlots?.[slot];
   if (typeof id !== "string") return null;
   const record = equipmentById(id);
+  if (!record) return null;
   if (record?.style && record.style !== "hybrid" && record.style !== loadout.style) return null;
-  const tier = record?.tier;
-  return tier != null && Number.isFinite(tier) ? tier : null;
+  const tier = record.tier;
+  if (tier == null || !Number.isFinite(tier)) return null;
+  if (slot === "offhand" && record.shield && !record.defender) return null;
+  return slot === "offhand" && record.defender ? tier / 2 : tier;
+}
+
+function equippedOffhandType(loadout: Loadout): "shield" | "defender" | null {
+  const id = loadout.equipmentSlots?.offhand;
+  const record = typeof id === "string" ? equipmentById(id) : undefined;
+  return record?.defender ? "defender" : record?.shield ? "shield" : null;
 }
 
 type WeaponHand = Parameters<typeof baseAbilityDamage>[1];
@@ -239,11 +267,17 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
   const twohandTier = slotWeaponTier(loadout, "twohand");
   const mainhandTier = slotWeaponTier(loadout, "mainhand");
   const offhandTier = slotWeaponTier(loadout, "offhand");
+  const offhandOccupied = typeof loadout.equipmentSlots?.offhand === "string";
   if (loadout.style === "necromancy") {
     return {
       kind: "necromancy",
       deathGuard: { tier: mainhandTier ?? loadout.weaponTier },
-      conduit: { tier: offhandTier ?? loadout.offhandTier },
+      conduit:
+        offhandTier != null
+          ? { tier: offhandTier }
+          : offhandOccupied
+            ? undefined
+            : { tier: loadout.offhandTier },
       styleBonus,
     };
   }
@@ -324,7 +358,18 @@ export function loadoutBase(loadout: Loadout): number {
   return Math.floor(Math.floor(raw * equilibrium) * eruptive);
 }
 
-export function loadoutStats(loadout: Loadout): CalcStats {
+export function critDamageStats(level: number, equipmentBonus = 0) {
+  const baseMultiplier = baseCritDamageMultiplier(clampLevel(level));
+  const totalMultiplier = baseCritDamageMultiplier(clampLevel(level), equipmentBonus);
+  return {
+    baseMultiplier,
+    totalMultiplier,
+    baseBonus: baseMultiplier - 1,
+    totalBonus: totalMultiplier - 1,
+  };
+}
+
+export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
   const curse =
     loadout.buffs?.styleCurse && loadout.buffs.styleCurse !== "none"
       ? styleCurseById(loadout.buffs.styleCurse)
@@ -340,8 +385,33 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   const effectiveStrengthLevel = loadoutEffectiveDamageLevel(loadout);
   const energising =
     loadout.perks.energising > 0 ? energisingAccuracyBonus(loadout.perks.energising) : 0;
-  const accessoryAccuracy = nonWeaponAccuracyBonus(loadout);
+  const equipmentStats = aggregateLoadoutEquipment({
+    equipmentSlots: loadout.equipmentSlots,
+    style: loadout.style,
+  });
+  const accessoryAccuracy = equipmentStats.appliedAccuracy;
   const weaponTier = loadoutWeaponTier(loadout);
+  const defence = defenceStats({
+    baseLevel: loadout.defenceLevel,
+    overloadTier,
+    prayerBlockLevels: curse?.defenceLevels ?? 0,
+    fortitude: loadout.buffs.fortitude,
+    equipmentArmour: equipmentStats.armour,
+  });
+  const life = lifePointStats({
+    constitutionLevel: loadout.constitutionLevel,
+    equipmentLife: equipmentStats.life,
+    reaperCrew: loadout.buffs.reaperCrew,
+    boonOfHet: loadout.buffs.boonOfHet,
+    fontOfLife: loadout.buffs.fontOfLife,
+    fortitude: loadout.buffs.fortitude,
+    thermalBath: loadout.buffs.thermalBath,
+    bonfireFiremakingLevel: loadout.buffs.bonfireFiremakingLevel,
+    totemOfVitality: loadout.buffs.totemOfVitality,
+    overheal: loadout.buffs.overheal === "none" ? null : loadout.buffs.overheal,
+    powerburstOfVitality: isPowerburstOfVitalityActive(loadout, now),
+    currentLife: loadout.currentLife ?? undefined,
+  });
 
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
   // Without a target, the manual accuracy% slider remains authoritative.
@@ -352,33 +422,39 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     effectiveAttackLevel: visibleAttackLevel,
     effectiveStrengthLevel,
   });
-  const accuracyRating = playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy;
-  const dp = applyEquipmentDamagePotential(
-    loadout.target
-      ? targetDamagePotential(accuracyRating, {
+  const accuracyRating = applyEquipmentAccuracy(
+    playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
+    equipmentEffects,
+  );
+  const dp = loadout.target
+    ? applyEquipmentDamagePotential(
+        targetDamagePotential(accuracyRating, {
           defenceLevel: loadout.target.defenceLevel,
           armour: loadout.target.armour,
           affinity: loadout.target.affinity,
           additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
           damagePotentialOverride: loadout.target.damagePotentialOverride,
-        })
-      : clamp01(loadout.accuracy / 100),
-    equipmentEffects,
-  );
+        }),
+        equipmentEffects,
+      )
+    : applyEquipmentDamagePotential(
+        clamp01(applyEquipmentAccuracy(loadout.accuracy / 100, equipmentEffects)),
+        equipmentEffects,
+      );
 
   // Equilibrium prevents critical strikes. Set bonuses come only from equipped records.
   const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
   const tumekensPieces = effectiveTumekenPieces(setCounts);
   const equipmentCrit = staticEquipmentCritBonus(equipmentEffects);
+  const critDamage = critDamageStats(level, equipmentCrit.damageBonus);
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
   const setCrit = loadoutSetCritChance({ equipmentSlots: loadout.equipmentSlots });
-  const critChance =
-    loadout.perks.equilibrium > 0
-      ? 0
-      : clamp01(loadout.critChance / 100 + biting + setCrit + equipmentCrit.chance);
+  const configuredCrit = loadout.critChance / 100;
+  const critSubtotal = configuredCrit + biting + setCrit + equipmentCrit.chance;
+  const critChance = loadout.perks.equilibrium > 0 ? 0 : clamp01(critSubtotal);
   const simulationCritChance =
     loadout.perks.equilibrium > 0
       ? 0
@@ -415,6 +491,7 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     aftershockRank: loadout.perks.aftershock > 0 ? loadout.perks.aftershock : 0,
   };
   const weaponConfig = loadoutWeaponConfig(loadout);
+  const offhandType = equippedOffhandType(loadout);
   const equipmentDamage = equipmentStyleDamageBonus(loadout);
   const mainhandTier =
     weaponConfig.kind === "necromancy" ? weaponConfig.deathGuard.tier : weaponConfig.weapon.tier;
@@ -438,12 +515,21 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     dp,
     accuracyRating,
     critChance,
+    critChanceBreakdown: {
+      configured: configuredCrit,
+      biting,
+      sets: setCrit,
+      equipment: equipmentCrit.chance,
+      adjustment: critChance - critSubtotal,
+    },
     critsDisabled: loadout.perks.equilibrium > 0,
     simulationCritChance,
     critDamageBonus: equipmentCrit.damageBonus,
-    baseCritDamage: baseCritDamageMultiplier(level),
-    totalCritDamage: baseCritDamageMultiplier(level, equipmentCrit.damageBonus),
-    activePassives: activePassiveLabels(equipmentEffects),
+    baseCritDamage: critDamage.baseMultiplier,
+    totalCritDamage: critDamage.totalMultiplier,
+    baseCritDamageBonus: critDamage.baseBonus,
+    totalCritDamageBonus: critDamage.totalBonus,
+    activePassives: equippedPassiveSummaries(loadout).map(({ label }) => label),
     critByHitFor: (ability, crit) => equipmentCritByHit(equipmentEffects, ability, crit),
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
@@ -474,9 +560,11 @@ export function loadoutStats(loadout: Loadout): CalcStats {
         ? "necromancy"
         : weaponConfig.kind === "twohand"
           ? "twohand"
-          : weaponConfig.offhand
-            ? "dualwield"
-            : "mainhand",
+          : offhandType
+            ? offhandType
+            : weaponConfig.offhand
+              ? "dualwield"
+              : "mainhand",
     globalModifiers,
     castModifiersFor: (ability) => [
       ...globalModifiers,
@@ -499,5 +587,8 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     tumekensPieces,
     tumekensCritEnabled: loadout.perks.equilibrium === 0,
     equipmentEffects,
+    equipment: equipmentStats,
+    defence,
+    life,
   };
 }

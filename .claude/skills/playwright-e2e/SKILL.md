@@ -11,10 +11,15 @@ Use the managed runner for ordinary headless E2E work:
 pwsh -NoProfile -File .claude/skills/playwright-e2e/scripts/run-e2e.ps1
 ```
 
-Pass a specific port or one or more test files when needed:
+The runner and `playwright.config.ts` default to one worker. The map suite is GPU- and
+compile-heavy; serial execution avoids starving or crashing a reused Next dev server. Allow at
+least ten minutes for a whole-suite run.
+
+Pass a specific port, worker count, or one or more test files when needed:
 
 ```powershell
 pwsh -NoProfile -File .claude/skills/playwright-e2e/scripts/run-e2e.ps1 -Port 3104 -Test e2e/combat.spec.ts
+pwsh -NoProfile -File .claude/skills/playwright-e2e/scripts/run-e2e.ps1 -Workers 4
 ```
 
 The runner reuses a responding Equilibrium server or starts one on 3100, then 3102 through 3110. It sets `PLAYWRIGHT_PORT`, waits for `/combat`, runs the local Playwright binary, and force-stops only the server process tree it started. It leaves reused servers alone.

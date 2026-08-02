@@ -1,7 +1,11 @@
-import { baseCritDamageMultiplier } from "@/combat/core/critical";
 import { ticksToSeconds } from "@/combat/core/ticks";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
+
+const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
 
 export function CalculationAssumptions({
   stats,
@@ -30,12 +34,9 @@ export function CalculationAssumptions({
     ["Base-damage mode", stats.baseDamageMode],
     ["Effective base damage", stats.base],
     ["Starting adrenaline", `${stats.startingAdrenaline}%`],
-    ["Damage Potential", `${Math.round(stats.dp * 1000) / 10}% · ${stats.damagePotentialSource}`],
-    ["Critical chance", `${Math.round(stats.critChance * 1000) / 10}%`],
-    [
-      "Critical damage",
-      `+${Math.round((baseCritDamageMultiplier(stats.level, stats.critDamageBonus) - 1) * 100)}%`,
-    ],
+    ["Damage Potential", `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`],
+    ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
+    ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
     ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions preserved"],
     ...(stats.activePassives.length > 0
       ? ([["Equipment passives", stats.activePassives.join(", ")]] as Array<

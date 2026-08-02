@@ -22,6 +22,22 @@ export const BLESSING_TIERS: readonly number[] = blessingsData.records.map((r) =
 /** Tiers where a path is picked — god tiers grant, they are not picked. */
 export const PATH_TIERS: readonly number[] = BLESSING_TIERS.filter((t) => !GOD_TIERS.includes(t));
 
+export interface BlessingChoice {
+  name: string;
+  path: BlessingPath;
+  effects: readonly string[];
+  verified: boolean;
+}
+
+export function blessingChoice(tier: number, path: BlessingPath): BlessingChoice | undefined {
+  const record = blessingsData.records.find((entry) => entry.tier === tier);
+  return record?.choices.find((choice) => choice.path === path) as BlessingChoice | undefined;
+}
+
+export function blessingTierRevealed(tier: number): boolean {
+  return blessingsData.records.find((entry) => entry.tier === tier)?.revealed === true;
+}
+
 /** God for one segment of picks. Null while the picks made so far leave it undecided. */
 export function deriveGodTier(picks: readonly BlessingPath[]): GodTierAlignment | null {
   const counts: Record<BlessingPath, number> = { Order: 0, Balance: 0, Chaos: 0 };

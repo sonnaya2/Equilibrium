@@ -54,7 +54,7 @@ export interface SimulateInput {
   startingAdrenaline?: number;
   /** Equipped catalogue ids used by mechanics with verified item requirements. */
   equipmentIds?: readonly string[];
-  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "necromancy";
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   /** Puncture damage is outside the current model. */
   ammo?: "deathspore" | "splintering";
   /** Weave the style auto-attack through idle GCDs and adrenaline shortfalls. */

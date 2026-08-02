@@ -5,6 +5,7 @@ import regionsData from "#shard/league/regions.json";
 import { combatEquipment, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
+import { equippedPassiveSummaries, type PassiveSupport } from "@/combat/shared/equipment";
 import type { RegionId } from "@/league";
 import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
@@ -36,6 +37,12 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
   ranged: "Ranged",
   magic: "Magic",
   necromancy: "Necromancy",
+};
+
+const PASSIVE_STATUS: Record<PassiveSupport, string> = {
+  modeled: "Modeled",
+  "partially-modeled": "Partial",
+  "not-modeled": "Not modeled",
 };
 
 const SLOT_LABELS: Record<EquipmentSlot, string> = {
@@ -234,6 +241,11 @@ export function GearPanel({
   const slots = loadout.equipmentSlots ?? {};
   const unlockPins = new Set(unlockOnlyIds(loadout));
   const slottedCount = equipmentIdList(slots).length;
+  const passives = equippedPassiveSummaries({
+    style: loadout.style,
+    equipmentSlots: slots,
+    enchantments: loadout.enchantments,
+  });
   const primaryWeapon = byId(slots.twohand ?? slots.mainhand);
   const activeItem =
     activeSlot === "weapon" ? primaryWeapon : activeSlot ? byId(slots[activeSlot]) : undefined;
@@ -448,6 +460,54 @@ export function GearPanel({
             {unlockPins.size === 1 ? "" : "s"}
           </span>
         </div>
+
+        <section className="gear-passives mt-4" aria-labelledby="gear-passives-title">
+          <h3
+            id="gear-passives-title"
+            className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300"
+          >
+            Passives from equipped gear
+          </h3>
+          {passives.length ? (
+            <ul className="gear-passive-list mt-1.5">
+              {passives.map((passive) => (
+                <li key={passive.itemId} className="gear-passive-row">
+                  <GameIcon
+                    src={equipmentIconPath(passive.itemId)}
+                    size={28}
+                    className="gear-passive-row__icon"
+                  />
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <span className="text-sm text-parch-50">{passive.label}</span>
+                      <span className={`passive-status is-${passive.support}`}>
+                        {PASSIVE_STATUS[passive.support]}
+                      </span>
+                    </div>
+                    <ul className="mt-0.5 space-y-0.5 text-[11px] leading-snug text-parch-300">
+                      {passive.effects.map((effect) => (
+                        <li key={effect}>{effect}</li>
+                      ))}
+                    </ul>
+                    <p className="mt-1 text-[11px] text-parch-300">
+                      From {passive.itemName} ·{" "}
+                      <a
+                        href={passive.source.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-gem-400 underline underline-offset-2 hover:text-gem-300"
+                      >
+                        source
+                      </a>
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-1.5 text-xs text-parch-300">No equipped item grants a passive.</p>
+          )}
+        </section>
       </div>
 
       <div className="combat-frame wearables-browser">

@@ -87,6 +87,7 @@ export {
   TIER_BUDGETS,
   TIER_HORIZON_SECONDS,
   preferredAgentCount,
+  TIER_AGENT_COUNT,
   type SolveInput,
   type SolveAsyncHooks,
   type SolvePhaseName,

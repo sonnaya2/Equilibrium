@@ -13,12 +13,13 @@ import {
 import type { SolveProgressHandler } from "./solveTypes";
 import { createSolverWorker, getFirstAckMs } from "./workerCreate";
 
-const MAX_POOL = 4;
+/** Unhinged asks for 8 agents; leave room for UI/compositor via hc−1. */
+const MAX_POOL = 8;
 
 export function solverPoolSize(): number {
   if (typeof navigator === "undefined") return 1;
   const hc = navigator.hardwareConcurrency ?? 2;
-  // Leave a couple of cores for UI / compositor; at least 1, at most 4.
+  // Leave a core for UI; at least 1, at most MAX_POOL (unhinged uses 8).
   return Math.max(1, Math.min(MAX_POOL, Math.max(1, hc - 1)));
 }
 

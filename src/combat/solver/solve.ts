@@ -34,9 +34,20 @@ export const TIER_HORIZON_SECONDS: Record<
   unhinged: { exploreSeconds: 30, fullSeconds: 300 },
 };
 
-/** Cap parallel agents at 4 for every tier (hardwareConcurrency may be lower). */
-export function preferredAgentCount(_tier: SolveTier, hardwareAgents: number): number {
-  return Math.max(1, Math.min(4, hardwareAgents));
+/** Parallel agents by depth — host merges best score / bars across workers. */
+export const TIER_AGENT_COUNT: Record<SolveTier, number> = {
+  thorough: 4,
+  extreme: 6,
+  unhinged: 8,
+};
+
+/**
+ * How many parallel agents to launch for a tier.
+ * `hardwareAgents` is usually solverPoolSize() (cores−1, capped at pool max).
+ */
+export function preferredAgentCount(tier: SolveTier, hardwareAgents: number): number {
+  const want = TIER_AGENT_COUNT[tier] ?? TIER_AGENT_COUNT.thorough;
+  return Math.max(1, Math.min(want, Math.max(1, hardwareAgents)));
 }
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
@@ -56,8 +67,9 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     lnsDestroyK: 2,
     annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
     localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
-    topK: 5,
-    fullShortlistSize: tier === "thorough" ? 4 : tier === "extreme" ? 6 : 10,
+    topK: tier === "thorough" ? 5 : tier === "extreme" ? 6 : 8,
+    // Finalize shortlist: Thorough 4 · Extreme 6 · Unhinged 8
+    fullShortlistSize: tier === "thorough" ? 4 : tier === "extreme" ? 6 : 8,
     exhaustiveMax: tier === "thorough" ? 6_000 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
   };

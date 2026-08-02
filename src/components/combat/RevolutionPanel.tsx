@@ -568,11 +568,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           })),
         ],
       };
-      // Up to 4 parallel agents (different seeds); sticky main-thread fallback.
+      // Parallel agents by tier (4 / 6 / 8), capped by hardware; host merges bests.
       const agents = preferredAgentCount(solverTier, solverPoolSize());
       setSolverAgents(agents);
       if (agents > 1) {
-        setCacheNote((prev) => prev ?? `${agents} parallel search agents…`);
+        setCacheNote((prev) => prev ?? `${agents} parallel agents · merging best scores…`);
       }
       const dto = await runOptimize(
         request,

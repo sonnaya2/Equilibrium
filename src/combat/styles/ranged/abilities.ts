@@ -94,6 +94,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Ricochet",
     style: "ranged",
     category: "basic",
+    area: "multi-target",
     hits: [
       { band: { minPct: 75, maxPct: 85 } },
       { band: { minPct: 15, maxPct: 20 }, tickOffset: 1 },
@@ -110,6 +111,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Greater Ricochet",
     style: "ranged",
     category: "basic",
+    area: "multi-target",
     hits: [
       { band: { minPct: 75, maxPct: 85 } },
       { band: { minPct: 15, maxPct: 20 }, tickOffset: 1 },
@@ -152,6 +154,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     name: "Bombardment",
     style: "ranged",
     category: "enhanced",
+    area: "aoe",
     hits: [{ band: { minPct: 220, maxPct: 260 } }],
     adrenaline: { cost: 25 },
     cooldownSeconds: 1.8,

@@ -1,6 +1,7 @@
 import type { EventResolution, ResolvedDamage } from "../resolution/types";
 import type { CritLayers } from "../../core/critical";
 import type { BleedId, CombatModifier, DamageOverTimeKind } from "../../types";
+import type { BlessingId } from "../../../league/blessings";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
@@ -13,7 +14,8 @@ export type { EventResolution, ResolvedDamage } from "../resolution/types";
  * (a cast's hits in hit-index order, then its on-cast effects), so the log is
  * deterministic for a given input.
  */
-export type EventFamily = "hit" | "dot" | "proc" | "conjureAuto" | "command" | "poison";
+export type EventFamily =
+  "hit" | "dot" | "proc" | "blessing" | "conjureAuto" | "command" | "poison";
 
 /**
  * RT is the runtime context handed to `resolve` at land time. Events never close
@@ -30,6 +32,9 @@ export interface ScheduledEvent<RT = unknown> {
   attached: boolean; // true = attached damage component, NOT a separate proc-eligible hit
   procEligible: boolean; // may trigger on-hit procs / stack generation / hit counters
   recursionAllowed: boolean; // may recursively create events of the same family
+  blessingId?: BlessingId;
+  /** Expected applications represented by a deterministic expected-value event. */
+  expectedOccurrences?: number;
   cancelOwner?: number; // cast sequence whose cancellation removes this event
   /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
   derivedFrom?: number;
@@ -126,6 +131,8 @@ export class EventQueue<RT = unknown> {
         e.attached,
         e.procEligible,
         e.recursionAllowed,
+        e.blessingId ?? null,
+        e.expectedOccurrences ?? 1,
         e.cancelOwner ?? -1,
         e.derivedFrom ?? -1,
         e.flowReduction ?? 0,

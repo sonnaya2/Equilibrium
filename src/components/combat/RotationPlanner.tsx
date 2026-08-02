@@ -21,6 +21,7 @@ import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { useLoadout } from "./useLoadout";
+import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STORAGE_KEY = "eq:rotation:v1";
 
@@ -67,6 +68,7 @@ function castCritLabel(result: RotationSummary["casts"][number]["result"]): stri
 
 export function RotationPlanner() {
   const [loadout] = useLoadout();
+  const { build } = useLeagueBuild();
   const [mode, setMode] = useState<"revolution" | "manual">("revolution");
   const [useBuild, setUseBuild] = useState(true);
   const [weave, setWeave] = useState(true);
@@ -98,7 +100,9 @@ export function RotationPlanner() {
   const run = () => {
     setAnalysisOpen(false);
     const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
-    const setup = loadoutStats(loadout);
+    const setup = loadoutStats(loadout, {
+      ...(useBuild ? { blessingPicks: build.blessingPicks } : { ruleset: "base" as const }),
+    });
     if (useBuild) {
       setResult(
         simulate({
@@ -121,6 +125,8 @@ export function RotationPlanner() {
           tumekensPieces: setup.tumekensPieces,
           tumekensCritEnabled: setup.tumekensCritEnabled,
           equipmentEffects: setup.equipmentEffects,
+          league: setup.league,
+          context: setup.combatContext,
           targetHpPercent: loadout.target?.hpPercent,
           cap: setup.cap,
           startingAdrenaline: setup.startingAdrenaline,
@@ -149,7 +155,8 @@ export function RotationPlanner() {
   };
 
   const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
-  const buildStats = loadoutStats(loadout);
+  const buildStats = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
+  const baseStats = loadoutStats(loadout, { ruleset: "base" });
   const selectedVariants = new Map<string, string>();
   for (const id of queue) {
     const ability = abilityById(id);
@@ -160,7 +167,7 @@ export function RotationPlanner() {
     mode === "revolution" ? loadout.style : manualStyles.join(" + ") || paletteStyle;
   const manualCritDamage = critDamageStats(level);
   const manualStats: CalcStats = {
-    ...buildStats,
+    ...baseStats,
     combatStyle: manualCombatStyle,
     baseDamageMode: "manual",
     rawBase: Math.max(0, base),
@@ -179,9 +186,9 @@ export function RotationPlanner() {
     totalCritDamageBonus: manualCritDamage.totalBonus,
     activePassives: [],
     critByHitFor: (ability, crit) => ability.hits.map(() => crit),
-    cap: buildStats.cap,
-    startingAdrenaline: buildStats.startingAdrenaline,
-    maxAdrenaline: buildStats.maxAdrenaline,
+    cap: baseStats.cap,
+    startingAdrenaline: baseStats.startingAdrenaline,
+    maxAdrenaline: baseStats.maxAdrenaline,
     effectiveDamageLevel: Math.min(Math.max(1, level), 145),
     mainhandTier: 0,
     offhandTier: null,
@@ -194,9 +201,9 @@ export function RotationPlanner() {
     weaponConfiguration: manualCombatStyle === "necromancy" ? "necromancy" : "twohand",
     globalModifiers: [],
     castModifiersFor: () => [],
-    equipmentEffects: buildStats.equipmentEffects,
-    defence: buildStats.defence,
-    life: buildStats.life,
+    equipmentEffects: baseStats.equipmentEffects,
+    defence: baseStats.defence,
+    life: baseStats.life,
   };
   const activeStats = useBuild ? buildStats : manualStats;
 

@@ -12,7 +12,8 @@ import type { SourceReference } from "../types";
  *   5. + temporary percent     bonfire ⌈(fm+1)/2⌉×0.1% (cap 750) OR Totem of
  *                              Vitality 25% (cap 1,500) — mutually exclusive,
  *                              basis is Constitution + equipment only
- *   6. food overheal last      +10% / +15% of the buffed max, or flat brew caps
+ *   6. League maximum          Big Boned multiplier on the composed maximum
+ *   7. food overheal last      +10% / +15% of the buffed max, or flat brew caps
  *
  * Powerburst of vitality doubles max and current after those layers. Abidor
  * Crank and boosted-Constitution max-LP effects are unverified and deliberately
@@ -71,6 +72,8 @@ export interface LifePointInput {
   totemOfVitality?: boolean;
   overheal?: OverhealKind | null;
   powerburstOfVitality?: boolean;
+  /** Equilibrium maximum-life stage (1 when no blessing is active). */
+  maximumLifeMultiplier?: number;
   /** Defaults to the (temporary) maximum — a fully healed loadout. */
   currentLife?: number;
 }
@@ -105,6 +108,8 @@ export interface LifePointStats {
     bonfire: number;
     totemOfVitality: number;
     powerburst: number;
+    leagueMaximumNormal: number;
+    leagueMaximumTemporary: number;
   };
 }
 
@@ -115,6 +120,7 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     bonfireFiremakingLevel = null,
     overheal = null,
     currentLife,
+    maximumLifeMultiplier = 1,
   } = input;
   if (
     !Number.isFinite(constitutionLevel) ||
@@ -125,6 +131,9 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
   }
   if (!Number.isFinite(equipmentLife) || equipmentLife < 0) {
     throw new RangeError(`lifePointStats: bad equipment life ${equipmentLife}`);
+  }
+  if (!Number.isFinite(maximumLifeMultiplier) || maximumLifeMultiplier < 1) {
+    throw new RangeError(`lifePointStats: bad maximum-life multiplier ${maximumLifeMultiplier}`);
   }
   if (bonfireFiremakingLevel != null && input.totemOfVitality) {
     throw new RangeError("lifePointStats: bonfire and Totem of Vitality do not stack");
@@ -163,8 +172,14 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     ? Math.min(1500, Math.floor(0.25 * percentBasis))
     : 0;
 
-  const normalMaxLife = constitutionLife + equipmentLife + permanentLife;
-  let temporaryMaxLife = normalMaxLife + temporaryFlatLife + bonfireLife + totemOfVitalityLife;
+  const baseNormalMaxLife = constitutionLife + equipmentLife + permanentLife;
+  const leagueMaximumNormal = Math.floor(baseNormalMaxLife * (maximumLifeMultiplier - 1));
+  const normalMaxLife = baseNormalMaxLife + leagueMaximumNormal;
+  const baseTemporaryMaxLife =
+    baseNormalMaxLife + temporaryFlatLife + bonfireLife + totemOfVitalityLife;
+  const leagueMaximumTotal = Math.floor(baseTemporaryMaxLife * (maximumLifeMultiplier - 1));
+  const leagueMaximumTemporary = leagueMaximumTotal - leagueMaximumNormal;
+  let temporaryMaxLife = baseTemporaryMaxLife + leagueMaximumTotal;
   let overhealCeiling =
     overheal === "rocktail-line"
       ? temporaryMaxLife + Math.floor(0.1 * temporaryMaxLife)
@@ -213,6 +228,8 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
       bonfire: bonfireLife,
       totemOfVitality: totemOfVitalityLife,
       powerburst: powerburstLife,
+      leagueMaximumNormal,
+      leagueMaximumTemporary,
     },
   };
 }

@@ -26,5 +26,5 @@ export function runPipeline(
 ): DamageState {
   return orderModifiers(modifiers)
     .filter((m) => m.applies(context))
-    .reduce((state, m) => m.apply(state), initial);
+    .reduce((state, m) => m.apply(state, context), initial);
 }

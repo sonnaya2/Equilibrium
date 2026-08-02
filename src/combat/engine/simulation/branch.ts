@@ -1,12 +1,12 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { commitCast, prepareSimulationCast } from "../cast";
-import { rngPointFor } from "../cast/rules";
-import type { CastRecord } from "./contracts";
+import { rngPointsFor } from "../cast/rules";
+import type { CastRecord, CastRng } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 
 /**
- * Probability-weighted branching for state-changing RNG (Impatient / Relentless
- * procs change adrenaline and lockout state, so a flat expected value would
+ * Probability-weighted branching for state-changing RNG (Impatient, Relentless,
+ * and Avernic Rampage procs change resources and windows, so a flat expected value would
  * spend resources no real branch could have). Damage-only randomness stays
  * expected-value by design.
  *
@@ -122,28 +122,32 @@ export function castOutcomes(
   const preparation = prepareSimulationCast(branch.rt, ability, readyTick);
   if (!preparation.ok) return [{ ...branch, error: preparation.error }];
   const { prepared } = preparation;
-  const point = rngPointFor(
+  const points = rngPointsFor(
     branch.rt.state,
     ability,
     prepared.candidate,
     prepared.spend,
     branch.rt.input.adrenaline,
+    branch.rt.input.league,
   );
 
-  if (!point) {
+  if (points.length === 0) {
     commitCast(branch.rt, prepared, auto);
     return [branch];
   }
-  const rngKey =
-    point.kind === "impatient" ? ("impatientProc" as const) : ("relentlessProc" as const);
-  return [
-    { proc: true, outcomeWeight: point.chance },
-    { proc: false, outcomeWeight: 1 - point.chance },
-  ].map(({ proc, outcomeWeight }) => {
+  const outcomes = points.reduce<Array<{ rng: CastRng; weight: number }>>(
+    (current, point) =>
+      current.flatMap(({ rng, weight }) => [
+        { rng: { ...rng, [point.id]: true }, weight: weight * point.chance },
+        { rng: { ...rng, [point.id]: false }, weight: weight * (1 - point.chance) },
+      ]),
+    [{ rng: {}, weight: 1 }],
+  );
+  return outcomes.map(({ rng, weight }) => {
     const next = snapshotRuntime(branch.rt);
-    commitCast(next, prepared, auto, { [rngKey]: proc });
+    commitCast(next, prepared, auto, rng);
     return {
-      weight: branch.weight * outcomeWeight,
+      weight: branch.weight * weight,
       rt: next,
     };
   });

@@ -37,6 +37,13 @@ export interface HitResult {
   capLoss: number;
 }
 
+export interface RawHitBandInput extends Omit<HitInput, "base" | "band"> {
+  min: number;
+  max: number;
+}
+
+type SharedHitInput = Omit<HitInput, "base" | "band">;
+
 function critModifier(multiplier: number): CombatModifier {
   return {
     id: "core:critical-damage",
@@ -48,7 +55,12 @@ function critModifier(multiplier: number): CombatModifier {
   };
 }
 
-function runPass(damage: number, critMult: number | null, input: HitInput, cap = true): number {
+function runPass(
+  damage: number,
+  critMult: number | null,
+  input: SharedHitInput,
+  cap = true,
+): number {
   const modifiers =
     critMult === null
       ? (input.modifiers ?? [])
@@ -65,7 +77,7 @@ function exactMean(
   min: number,
   max: number,
   critMult: number | null,
-  input: HitInput,
+  input: SharedHitInput,
   cap = true,
 ): number {
   const count = max - min + 1;
@@ -87,26 +99,37 @@ function exactMean(
  */
 export function calculateHit(input: HitInput): HitResult {
   const band = bandOf(input.base, input.band);
+  return calculateRawHitBand({ ...input, min: band.min, max: band.max });
+}
+
+/** Resolve an already-composed inclusive integer band through the normal hit pipeline. */
+export function calculateRawHitBand(input: RawHitBandInput): HitResult {
+  if (!Number.isFinite(input.min) || !Number.isFinite(input.max) || input.min < 0) {
+    throw new RangeError(`calculateRawHitBand: bad band ${input.min}-${input.max}`);
+  }
+  if (input.min > input.max) {
+    throw new RangeError(`calculateRawHitBand: inverted band ${input.min}-${input.max}`);
+  }
   const p = critProbability(input.crit);
   const critMult =
     p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
 
-  const min = runPass(band.min, null, input);
-  const max = runPass(band.max, null, input);
-  const critMin = critMult === null ? min : runPass(band.min, critMult, input);
-  const critMax = critMult === null ? max : runPass(band.max, critMult, input);
-  const nonCritExpected = exactMean(band.min, band.max, null, input);
+  const min = runPass(input.min, null, input);
+  const max = runPass(input.max, null, input);
+  const critMin = critMult === null ? min : runPass(input.min, critMult, input);
+  const critMax = critMult === null ? max : runPass(input.max, critMult, input);
+  const nonCritExpected = exactMean(input.min, input.max, null, input);
   const critExpected =
-    critMult === null ? nonCritExpected : exactMean(band.min, band.max, critMult, input);
+    critMult === null ? nonCritExpected : exactMean(input.min, input.max, critMult, input);
   const expected = (1 - p) * nonCritExpected + p * critExpected;
   const capRule = input.cap ?? standardHitCap;
   const canClip =
     !capRule.bypass &&
-    Math.max(runPass(band.max, null, input, false), runPass(band.max, critMult, input, false)) >
+    Math.max(runPass(input.max, null, input, false), runPass(input.max, critMult, input, false)) >
       capRule.cap;
   const uncappedExpected = canClip
-    ? (1 - p) * exactMean(band.min, band.max, null, input, false) +
-      p * exactMean(band.min, band.max, critMult, input, false)
+    ? (1 - p) * exactMean(input.min, input.max, null, input, false) +
+      p * exactMean(input.min, input.max, critMult, input, false)
     : expected;
 
   return {

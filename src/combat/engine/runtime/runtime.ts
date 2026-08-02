@@ -4,6 +4,8 @@ import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord } from "../simulation/contracts";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
+import { resolveMaximumAdrenaline } from "../../league/ruleset";
+import { hasBlessing } from "../../league/ruleset";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -46,9 +48,10 @@ export interface SimulationRuntime {
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
-  const adrenalineCap = input.equipmentEffects?.vestments.increasedAdrenalineCap
-    ? 120
-    : ADRENALINE_CAP;
+  const adrenalineCap = resolveMaximumAdrenaline(
+    input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
+    input.league,
+  );
   if (
     input.startingAdrenaline != null &&
     (!Number.isFinite(input.startingAdrenaline) ||
@@ -83,6 +86,8 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
       adrenaline: input.startingAdrenaline,
       adrenalineCap,
       naturalInstinctUntilTick: input.naturalInstinctUntilTick,
+      league:
+        hasBlessing(input.league, "avernic-rampage") || hasBlessing(input.league, "striking-light"),
     }),
     casts: [],
     perAbility: {},

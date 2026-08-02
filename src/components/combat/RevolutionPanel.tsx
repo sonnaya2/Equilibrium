@@ -262,6 +262,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         tumekensPieces: stats.tumekensPieces,
         tumekensCritEnabled: stats.tumekensCritEnabled,
         equipmentEffects: stats.equipmentEffects,
+        league: stats.league,
+        context: stats.combatContext,
         targetHpPercent: loadout.target?.hpPercent,
         cap: stats.cap,
         startingAdrenaline: stats.startingAdrenaline,

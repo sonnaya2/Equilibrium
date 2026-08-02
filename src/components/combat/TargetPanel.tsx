@@ -105,6 +105,21 @@ export function TargetPanel({
                 onChange={(value) => updateTarget({ hpPercent: Math.min(100, Math.max(0, value)) })}
               />
             ) : null}
+            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+              <input
+                type="checkbox"
+                checked={target.hasApplicableWeakness === true}
+                onChange={(event) =>
+                  updateTarget({ hasApplicableWeakness: event.target.checked || undefined })
+                }
+              />
+              Has an applicable weakness
+            </label>
+            <NumberField
+              label="Occupied tiles"
+              value={target.occupiedTiles ?? 1}
+              onChange={(value) => updateTarget({ occupiedTiles: Math.max(1, Math.floor(value)) })}
+            />
           </>
         ) : null}
       </div>

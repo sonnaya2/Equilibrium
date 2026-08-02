@@ -13,6 +13,9 @@ import {
 } from "../../shared/perks";
 import { applyLandedHitEffects } from "./landed";
 import type { EventResolution, ResolvedDamage } from "./types";
+import { leagueDamageComponents } from "../../league/damage";
+import { blessingRule } from "../../league/ruleset";
+import { patchLeague } from "../runtime/state";
 
 function procRank(value: number | undefined, max: number): number {
   return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= max
@@ -155,6 +158,70 @@ function applyInventionProcs(
   });
 }
 
+function scheduleBlessingDamage(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+): void {
+  if (
+    !rt.input.league ||
+    event.blessingId ||
+    event.sourceCast < 0 ||
+    damage.max <= 0 ||
+    (event.family !== "hit" && event.family !== "dot" && event.family !== "command")
+  ) {
+    return;
+  }
+  const ability = rt.byId.get(event.abilityId);
+  if (!ability) return;
+  const modifiers =
+    typeof rt.input.modifiers === "function"
+      ? rt.input.modifiers(ability)
+      : (rt.input.modifiers ?? []);
+  const lightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
+  const components = leagueDamageComponents({
+    rules: rt.input.league,
+    ability,
+    hitIndex: event.hitIndex,
+    base: rt.input.base,
+    level: rt.input.level,
+    accuracy: rt.input.accuracy,
+    crit: rt.input.crit,
+    modifiers,
+    context: {
+      ...rt.input.context,
+      style: ability.style,
+      abilityCategory: ability.category,
+      autoAttack: ability.autoAttack,
+      area: ability.area,
+    },
+    cap: rt.input.cap,
+    strikingLightReady: lightReady,
+  });
+  if (components.some((component) => component.effectId === "light-of-saradomin")) {
+    const cooldown = blessingRule(rt.input.league, "striking-light")?.light?.cooldownTicks;
+    if (cooldown !== undefined) {
+      rt.state = patchLeague(rt.state, { strikingLightReadyTick: event.tick + cooldown });
+    }
+  }
+  for (const component of components) {
+    scheduleEvent(rt, {
+      tick: event.tick,
+      family: "blessing",
+      abilityId: component.effectId,
+      sourceCast: event.sourceCast,
+      hitIndex: event.hitIndex,
+      attached: component.attached,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: event.seq,
+      blessingId: component.blessingId,
+      expectedOccurrences: component.expectedOccurrences,
+      resolve: () => ({ damage: component.damage, hitDetail: component.hitDetail }),
+    });
+  }
+}
+
 /**
  * Record one landed event: damage ledgers, tick/ability attribution, the owning
  * cast record, the hit detail later derived hits read, and the event log
@@ -183,10 +250,10 @@ export function recordResolved(
     const record = rt.recordBySeq.get(event.sourceCast);
     if (record) {
       record.result.expected += damage.expected;
-      // Attached components and procs fold into the cast's expected total only:
-      // they are not separate hits, so they never extend the min/max span or the
-      // per-hit breakdown.
-      if (event.family !== "proc" && !event.attached) {
+      if (event.attached && event.blessingId) {
+        record.result.min += damage.min;
+        record.result.max += damage.max;
+      } else if (event.family !== "proc") {
         record.result.min += damage.min;
         record.result.max += damage.max;
         if (hitDetail) record.result.hits.push(hitDetail);
@@ -212,7 +279,8 @@ export function recordResolved(
     ...(remainingTicks !== undefined ? { remainingTicks } : {}),
   });
 
-  applyInventionProcs(rt, event, damage);
+  scheduleBlessingDamage(rt, event, damage);
+  if (!event.blessingId) applyInventionProcs(rt, event, damage);
 
   // Endless Assault damage is not proc-eligible, but it is still the original
   // channel hit for ability-owned landed effects such as Greater Flurry's

@@ -61,6 +61,8 @@ export interface AbilitySpec {
   appliesEffect?: AppliedEffectId;
   offGcd?: boolean;
   autoAttack?: boolean;
+  /** Declared targeting shape used by mechanics such as Splash Zone. */
+  area?: "aoe" | "multi-target";
   guaranteedCrit?: boolean;
   /** Equivalent variants share one cooldown and cannot coexist in one action list. */
   replacementGroup?: string;
@@ -102,7 +104,14 @@ export function calculateAbility(
       ...input,
       band: hit.band,
       crit: { ...(input.critByHit?.[index] ?? input.crit), eligible: hit.critEligible ?? true },
-      context: { ...input.context, style: ability.style, dotKind: hit.dotKind },
+      context: {
+        ...input.context,
+        style: ability.style,
+        dotKind: hit.dotKind,
+        abilityCategory: ability.category,
+        autoAttack: ability.autoAttack,
+        area: ability.area,
+      },
     }),
   );
   return {

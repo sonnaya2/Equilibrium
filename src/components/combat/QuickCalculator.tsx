@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { calculateAbility } from "@/combat/pipeline/calculateAbility";
+import { calculateLeagueAbility } from "@/combat/league/damage";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES, type MeleeAbilitySpec } from "@/combat/styles/melee/abilities";
@@ -22,6 +23,7 @@ import { NumberField } from "./NumberField";
 import type { Loadout } from "./useLoadout";
 import { loadoutStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
+import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
   melee: MELEE_ABILITIES,
@@ -84,7 +86,8 @@ function abilityMeta(ability: AbilitySpec): string {
 }
 
 export function QuickCalculator({ loadout }: { loadout: Loadout }) {
-  const setup = loadoutStats(loadout);
+  const { build } = useLeagueBuild();
+  const setup = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
   const [useBuild, setUseBuild] = useState(true);
   const [style, setStyle] = useState<CombatStyle>("melee");
   const [level, setLevel] = useState(99);
@@ -129,16 +132,26 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
 
   const result =
     calculatedAbility && calculatedAbility.hits.length > 0
-      ? calculateAbility(calculatedAbility, {
-          base: Math.max(0, finite(effectiveBase, 0)),
-          level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
-          accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
-          crit,
-          critByHit: useBuild ? setup.critByHitFor(calculatedAbility, crit) : undefined,
-          modifiers: useBuild ? setup.castModifiersFor(calculatedAbility) : undefined,
-          context: { style: activeStyle },
-          cap: setup.cap,
-        })
+      ? useBuild
+        ? calculateLeagueAbility(calculatedAbility, {
+            base: Math.max(0, finite(effectiveBase, 0)),
+            level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
+            accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
+            crit,
+            critByHit: useBuild ? setup.critByHitFor(calculatedAbility, crit) : undefined,
+            modifiers: useBuild ? setup.castModifiersFor(calculatedAbility) : undefined,
+            context: setup.combatContext,
+            cap: setup.cap,
+            rules: setup.league,
+          })
+        : calculateAbility(calculatedAbility, {
+            base: Math.max(0, finite(effectiveBase, 0)),
+            level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
+            accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
+            crit,
+            context: { style: activeStyle },
+            cap: setup.cap,
+          })
       : null;
 
   return (

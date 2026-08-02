@@ -11,6 +11,7 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
   "ability-dot": "Damage over time",
   "equipment-passive": "Equipment passives",
+  "league-blessing": "Equilibrium blessings",
   perk: "Invention perks",
   "conjure-or-familiar": "Conjures and familiars",
   "auto-attack": "Auto-attacks",
@@ -19,6 +20,10 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
 const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   aftershock: "Aftershock",
   crackling: "Crackling",
+  "big-boned": "Big Boned",
+  "abyssal-cinders": "Cinders",
+  "inferno-of-zamorak": "Inferno",
+  "light-of-saradomin": "Striking Light",
 };
 
 const formatNumber = (value: number) =>
@@ -34,6 +39,7 @@ function eventType(event: ResolvedEvent): string {
   if (event.family === "command") return "Conjure command";
   if (event.family === "poison") return "Poison";
   if (event.family === "proc") return "Proc";
+  if (event.family === "blessing") return "Blessing";
   return "Hit";
 }
 

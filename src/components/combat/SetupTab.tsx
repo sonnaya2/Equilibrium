@@ -11,6 +11,7 @@ import { QuickCalculator } from "./QuickCalculator";
 import { StatsPanel } from "./StatsPanel";
 import { TargetPanel } from "./TargetPanel";
 import type { Loadout } from "./useLoadout";
+import { useBuild } from "@/league/useBuild";
 
 const SUB_TABS = [
   "Gear",
@@ -135,7 +136,11 @@ export function SetupTab({
   setLoadout: (next: Loadout) => void;
 }) {
   const [subTab, setSubTab] = useState<SubTab>("Gear");
-  const stats = useMemo(() => loadoutStats(loadout), [loadout]);
+  const { build } = useBuild();
+  const stats = useMemo(
+    () => loadoutStats(loadout, { blessingPicks: build.blessingPicks }),
+    [loadout, build.blessingPicks],
+  );
   const incompleteCount = (stat: "armour" | "life" | "damage") =>
     new Set(stats.equipment.incomplete.filter((item) => item.stat === stat).map((item) => item.id))
       .size;
@@ -301,6 +306,7 @@ export function SetupTab({
                     { label: "Equipment", value: life.equipment },
                     { label: "Reaper Crew", value: life.reaperCrew },
                     { label: "Boon of Het", value: life.boonOfHet },
+                    { label: "Big Boned", value: life.leagueMaximumNormal },
                   ]}
                 />
               </SummaryMetric>
@@ -324,6 +330,7 @@ export function SetupTab({
                       { label: "Elidinis Statuette", value: life.elidinisStatuette },
                       { label: "Bonfire", value: life.bonfire },
                       { label: "Totem of Vitality", value: life.totemOfVitality },
+                      { label: "Big Boned", value: life.leagueMaximumTemporary },
                       { label: "Powerburst of vitality", value: life.powerburst },
                     ]}
                   />

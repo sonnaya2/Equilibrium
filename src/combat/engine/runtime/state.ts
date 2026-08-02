@@ -22,6 +22,11 @@ export const ADRENALINE_CAP = 100;
 /** Ability id -> first tick it can be cast again. Absent = no individual cooldown. */
 export type CooldownState = Readonly<Record<string, number>>;
 
+export interface LeagueRotationState {
+  avernicRampageUntilTick: number;
+  strikingLightReadyTick: number;
+}
+
 /** Dynamic effects the simulation has put on the target, not on the player. */
 export interface TargetRuntimeState {
   /** Tick of the latest damaging cast against this target; -1 before combat. */
@@ -69,6 +74,7 @@ export interface RotationState {
     aftershockPending: boolean;
   };
   naturalInstinctUntilTick: number;
+  league?: LeagueRotationState;
   melee: MeleeRotationState;
   ranged: RangedRotationState;
   magic: MagicRotationState;
@@ -82,6 +88,7 @@ export function newRotationState(
     adrenaline?: number;
     adrenalineCap?: number;
     naturalInstinctUntilTick?: number;
+    league?: boolean;
   } = {},
 ): RotationState {
   const adrenalineCap = opts.adrenalineCap ?? ADRENALINE_CAP;
@@ -99,6 +106,7 @@ export function newRotationState(
       aftershockPending: false,
     },
     naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
+    ...(opts.league ? { league: { avernicRampageUntilTick: 0, strikingLightReadyTick: 0 } } : {}),
     melee: newMeleeRotationState(),
     ranged: newRangedRotationState(),
     magic: newMagicRotationState(),
@@ -189,6 +197,14 @@ export function patchTarget(
   patch: Partial<TargetRuntimeState>,
 ): RotationState {
   return { ...state, target: { ...state.target, ...patch } };
+}
+
+export function patchLeague(
+  state: RotationState,
+  patch: Partial<LeagueRotationState>,
+): RotationState {
+  if (!state.league) return state;
+  return { ...state, league: { ...state.league, ...patch } };
 }
 
 export function gainMeleeBloodlust(state: RotationState, base: number): RotationState {

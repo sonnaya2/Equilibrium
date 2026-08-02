@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import blessingsData from "#shard/league/blessings.json";
 import {
   BLESSING_PATHS,
+  BLESSING_IDS,
   BLESSING_RESET_COUNT,
+  activeBlessings,
   deriveGodTier,
   GOD_TIERS,
   godTierAlignments,
@@ -41,6 +43,24 @@ describe("canonical blessings data contract", () => {
 
   it("marks exactly tiers 4 and 8 as god tiers in the records", () => {
     expect(blessingsData.records.filter((r) => r.godTier).map((r) => r.tier)).toEqual([4, 8]);
+  });
+
+  it("emits stable ids, support status, and the granted God Tier from Build picks", () => {
+    expect(BLESSING_IDS).toEqual(
+      blessingsData.records.flatMap((record) => record.choices.map((choice) => choice.id)),
+    );
+    expect(activeBlessings([B, C, C]).map((choice) => choice.id)).toEqual([
+      "big-boned",
+      "abyssal-cinders",
+      "avernic-rampage",
+      "demons-mark",
+    ]);
+    expect(
+      activeBlessings([O, O, O]).find((choice) => choice.id === "steadfast-will")?.support,
+    ).toMatchObject({
+      status: "not-modeled",
+      excluded: ["Bash", "Preparation cooldown reduction", "Reflect", "Revenge"],
+    });
   });
 });
 

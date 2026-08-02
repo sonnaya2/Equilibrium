@@ -70,9 +70,9 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
       equipmentEffects: vestments(4),
       adrenaline: { relentlessRank: 1 },
     });
-    ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentlessProc: true });
+    ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentless: true });
     ctx.performCast(ctx.byId.get("overpower")!, ctx.getState().tick, false, {
-      relentlessProc: false,
+      relentless: false,
     });
     expect(ctx.getState().vestmentsAdrenalineUntilTick).toBe(0);
     expect(ctx.getState().adrenaline).toBeCloseTo(80, 10);
@@ -135,7 +135,7 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
         equipmentEffects: vestments(4),
         adrenaline: { relentlessRank: 1 },
       });
-      ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentlessProc: true });
+      ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentless: true });
       const before = ctx.getState().vestmentsAdrenalineUntilTick;
       expect(ctx.performCast(ctx.byId.get(abilityId)!, ctx.getState().tick, false).ok).toBe(true);
       expect(ctx.getState().vestmentsAdrenalineUntilTick, abilityId).toBe(before);

@@ -38,6 +38,17 @@ export function CalculationAssumptions({
     ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
     ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
     ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions preserved"],
+    ...(stats.league.blessings.length > 0
+      ? ([
+          ["Equilibrium blessings", stats.league.blessings.map((choice) => choice.name).join(", ")],
+          [
+            "Blessing support",
+            stats.league.blessings
+              .map((choice) => `${choice.name}: ${choice.support.status}`)
+              .join("; "),
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
     ...(stats.activePassives.length > 0
       ? ([["Equipment passives", stats.activePassives.join(", ")]] as Array<
           [string, string | number]

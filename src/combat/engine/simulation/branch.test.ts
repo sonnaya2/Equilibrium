@@ -158,11 +158,11 @@ describe("Invigorating / Impatient adrenaline", () => {
   it("Impatient proc grants +3 on the basic; no-proc leaves the base gain", () => {
     const procCtx = createCastContext({ ...baseInput, adrenaline: { impatientRank: 4 } });
     const attack = procCtx.byId.get("attack")!;
-    expect(procCtx.performCast(attack, 0, false, { impatientProc: true }).ok).toBe(true);
+    expect(procCtx.performCast(attack, 0, false, { impatient: true }).ok).toBe(true);
     expect(procCtx.getState().adrenaline).toBeCloseTo(12);
 
     const flatCtx = createCastContext({ ...baseInput, adrenaline: { impatientRank: 4 } });
-    expect(flatCtx.performCast(attack, 0, false, { impatientProc: false }).ok).toBe(true);
+    expect(flatCtx.performCast(attack, 0, false, { impatient: false }).ok).toBe(true);
     expect(flatCtx.getState().adrenaline).toBeCloseTo(9);
   });
 
@@ -201,7 +201,7 @@ describe("Invigorating / Impatient adrenaline", () => {
       adrenaline: { basicGainMultiplier: 1.2, impatientRank: 4 },
     });
     const attack = ctx.byId.get("attack")!;
-    expect(ctx.performCast(attack, 0, false, { impatientProc: true }).ok).toBe(true);
+    expect(ctx.performCast(attack, 0, false, { impatient: true }).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBeCloseTo(9 * 1.2 + 3);
   });
 
@@ -246,7 +246,7 @@ describe("Relentless refund branching", () => {
     const assault = ctx.byId.get("assault")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.getState().adrenaline).toBe(36);
-    const attempt = ctx.performCast(assault, ctx.getState().tick, false, { relentlessProc: true });
+    const attempt = ctx.performCast(assault, ctx.getState().tick, false, { relentless: true });
     expect(attempt.ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(36); // cost 25 fully refunded
     expect(ctx.getState().relentlessUntilTick).toBe(12 + 50);
@@ -264,7 +264,7 @@ describe("Relentless refund branching", () => {
     const attack = ctx.byId.get("attack")!;
     const assault = ctx.byId.get("assault")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
-    expect(ctx.performCast(assault, ctx.getState().tick, false, { relentlessProc: false }).ok).toBe(
+    expect(ctx.performCast(assault, ctx.getState().tick, false, { relentless: false }).ok).toBe(
       true,
     );
     expect(ctx.getState().adrenaline).toBe(36 - 25);
@@ -276,12 +276,12 @@ describe("Relentless refund branching", () => {
     const attack = ctx.byId.get("attack")!;
     const assault = ctx.byId.get("assault")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
-    ctx.performCast(assault, ctx.getState().tick, false, { relentlessProc: true });
+    ctx.performCast(assault, ctx.getState().tick, false, { relentless: true });
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
     // Second assault lands inside the lockout: the override cannot re-proc it.
     const before = ctx.getState().adrenaline;
     expect(
-      ctx.performCast(assault, ctx.firstLegalTick("assault"), false, { relentlessProc: true }).ok,
+      ctx.performCast(assault, ctx.firstLegalTick("assault"), false, { relentless: true }).ok,
     ).toBe(true);
     expect(ctx.getState().adrenaline).toBe(before - 25);
   });

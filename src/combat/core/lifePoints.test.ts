@@ -122,4 +122,19 @@ describe("lifePointStats", () => {
     expect(stats.currentLife).toBe(10900);
     expect(lifePointStats({ constitutionLevel: 99 }).currentLife).toBe(9900);
   });
+
+  it("applies the league maximum-life multiplier before overheal and Powerburst", () => {
+    const stats = lifePointStats({
+      constitutionLevel: 99,
+      fontOfLife: true,
+      maximumLifeMultiplier: 1.5,
+      overheal: "soup-line",
+    });
+    expect(stats.normalMaxLife).toBe(14_850);
+    expect(stats.temporaryMaxLife).toBe(15_600);
+    expect(stats.overhealCeiling).toBe(17_940);
+    expect(Object.values(stats.breakdown).reduce((sum, value) => sum + value, 0)).toBe(
+      stats.temporaryMaxLife,
+    );
+  });
 });

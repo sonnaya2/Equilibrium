@@ -7,6 +7,7 @@ import type { CastEffectContext } from "./context";
 import { vestmentsUltimateEligible } from "../../../shared/equipment";
 import { hasPassive } from "../../../shared/equipment";
 import { activeBleedCount } from "../../../styles/melee/effects";
+import { rngProc } from "../../simulation/contracts";
 
 /**
  * Adrenaline and free-cast resources for one cast, in sourced order: gain
@@ -35,10 +36,11 @@ export function applyCastResources(fx: CastEffectContext): void {
       : ability.adrenaline.gain;
     if (isBasic) {
       gain *= input.adrenaline?.basicGainMultiplier ?? 1;
-      if ((input.adrenaline?.impatientRank ?? 0) > 0 && rng?.impatientProc) {
+      if ((input.adrenaline?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient")) {
         gain += IMPATIENT_EXTRA_ADRENALINE;
       }
     }
+    gain *= input.adrenaline?.abilityGainMultiplier ?? 1;
     rt.state = gainAdrenaline(rt.state, gain);
   }
 
@@ -62,7 +64,7 @@ export function applyCastResources(fx: CastEffectContext): void {
     if (
       (input.adrenaline?.relentlessRank ?? 0) > 0 &&
       candidate >= rt.state.relentlessUntilTick &&
-      rng?.relentlessProc
+      rngProc(rng, "relentless")
     ) {
       rt.state = {
         ...rt.state,

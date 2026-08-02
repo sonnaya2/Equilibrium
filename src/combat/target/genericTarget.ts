@@ -30,6 +30,10 @@ export interface GenericTarget {
   damagePotentialOverride?: number;
   /** Current HP fraction 0–100; drives below-threshold effects (Punish). */
   hpPercent?: number;
+  /** Explicitly declared applicable weakness; never inferred from the target name. */
+  hasApplicableWeakness?: boolean;
+  /** Full target footprint used by area mechanics. */
+  occupiedTiles?: number;
   vulnerability?: boolean;
   poisonable?: boolean;
   slayerCategory?: string;

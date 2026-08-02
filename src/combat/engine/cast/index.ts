@@ -10,6 +10,7 @@ import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
+import { rngProc } from "../simulation/contracts";
 
 const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
 
@@ -64,7 +65,7 @@ export function commitCast(
   advanceTo(rt, completesAt);
   applyCompletionEffects(castEffectContext(rt, prepared, rng));
   record.adrenalineAfter = rt.state.adrenaline;
-  record.refund = rng?.relentlessProc ? prepared.spend : 0;
+  record.refund = rngProc(rng, "relentless") ? prepared.spend : 0;
   record.adrenalineGained =
     record.adrenalineAfter - record.adrenalineBefore + record.actualSpend - record.refund;
   rt.casts.push(record);

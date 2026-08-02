@@ -41,6 +41,7 @@ import { STANDARD_HIT_CAP, type HitCapRule } from "@/combat/core/hitCaps";
 import { equipmentById } from "@/combat/data";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier } from "@/combat/types";
+import type { CombatContext } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critical";
 import {
@@ -48,6 +49,17 @@ import {
   type EquipmentStatTotals,
 } from "@/combat/shared/equipmentStats";
 import { isPowerburstOfVitalityActive, type Loadout } from "./useLoadout";
+import {
+  blessingAdrenalineGenerationMultiplier,
+  blessingLifeMultiplier,
+  blessingRule,
+  effectiveTargetAffinity,
+  leagueModifiers,
+  resolveLeagueRules,
+  resolveMaximumAdrenaline,
+  type ResolvedLeagueRules,
+} from "@/combat/league/ruleset";
+import type { BlessingPath } from "@/league/blessings";
 
 /** Re-export for GearPanel / setup consumers. */
 export { equippedSetCounts, setEffectsSummary };
@@ -108,7 +120,7 @@ export interface CalcStats {
   ammunitionTier: number | null;
   equipmentStyleDamageBonus: number;
   styleDamageBonus: number;
-  damagePotentialSource: "target stats" | "manual override" | "100% assumption";
+  damagePotentialSource: "target stats" | "target weakness" | "manual override" | "100% assumption";
   equipmentIds: readonly string[];
   weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   globalModifiers: CombatModifier[];
@@ -131,6 +143,9 @@ export interface CalcStats {
   equipment: EquipmentStatTotals;
   defence: DefenceStats;
   life: LifePointStats;
+  league: ResolvedLeagueRules;
+  combatContext: CombatContext;
+  leagueBaseAbilityDamageBonus: number;
 }
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -369,7 +384,18 @@ export function critDamageStats(level: number, equipmentBonus = 0) {
   };
 }
 
-export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
+export interface LoadoutStatsOptions {
+  now?: number;
+  blessingPicks?: readonly BlessingPath[];
+  ruleset?: "base" | "equilibrium";
+}
+
+export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}): CalcStats {
+  const now = options.now ?? Date.now();
+  const leagueLoadout = {
+    ruleset: options.ruleset ?? (options.blessingPicks === undefined ? "base" : "equilibrium"),
+    blessingPicks: options.blessingPicks,
+  } as const;
   const curse =
     loadout.buffs?.styleCurse && loadout.buffs.styleCurse !== "none"
       ? styleCurseById(loadout.buffs.styleCurse)
@@ -411,6 +437,13 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
     overheal: loadout.buffs.overheal === "none" ? null : loadout.buffs.overheal,
     powerburstOfVitality: isPowerburstOfVitalityActive(loadout, now),
     currentLife: loadout.currentLife ?? undefined,
+    maximumLifeMultiplier: blessingLifeMultiplier(leagueLoadout),
+  });
+
+  const league = resolveLeagueRules(leagueLoadout, {
+    totalArmour: defence.totalArmour,
+    maximumLife: life.temporaryMaxLife,
+    targetTiles: loadout.target?.occupiedTiles,
   });
 
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
@@ -426,12 +459,19 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
     playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
     equipmentEffects,
   );
+  const targetAffinity = loadout.target
+    ? effectiveTargetAffinity(
+        loadout.target.affinity,
+        loadout.target.hasApplicableWeakness === true,
+        league,
+      )
+    : undefined;
   const dp = loadout.target
     ? applyEquipmentDamagePotential(
         targetDamagePotential(accuracyRating, {
           defenceLevel: loadout.target.defenceLevel,
           armour: loadout.target.armour,
-          affinity: loadout.target.affinity,
+          affinity: targetAffinity,
           additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
           damagePotentialOverride: loadout.target.damagePotentialOverride,
         }),
@@ -459,7 +499,20 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
     loadout.perks.equilibrium > 0
       ? 0
       : clamp01(loadout.critChance / 100 + biting + setCrit + equipmentCrit.chance);
-  const maxAdrenaline = equipmentEffects.vestments.increasedAdrenalineCap ? 120 : 100;
+  const equipmentAdrenalineCap = equipmentEffects.vestments.increasedAdrenalineCap ? 120 : 100;
+  const maxAdrenaline = resolveMaximumAdrenaline(equipmentAdrenalineCap, league);
+
+  const aegis = blessingRule(league, "teragards-aegis");
+  const armourMultiplier =
+    equippedOffhandType(loadout) === "shield"
+      ? (aegis?.shieldArmourMultiplier ?? 1)
+      : equippedOffhandType(loadout) === "defender"
+        ? (aegis?.defenderArmourMultiplier ?? 1)
+        : 1;
+  const leagueBaseAbilityDamageBonus = Math.floor(
+    defence.totalArmour * (aegis?.baseAbilityDamageArmourPercent ?? 0) * armourMultiplier,
+  );
+  const resolvedBase = loadoutBase(loadout) + leagueBaseAbilityDamageBonus;
 
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet — structure ready).
@@ -472,8 +525,10 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
   if (equipmentEffects.amHejDamageBonus > 0) {
     globalModifiers.push(additiveMeleeDamageModifier(equipmentEffects.amHejDamageBonus));
   }
+  globalModifiers.push(...leagueModifiers(league));
 
   const adrenaline: AdrenalineRules = {
+    abilityGainMultiplier: blessingAdrenalineGenerationMultiplier(league),
     basicGainMultiplier:
       loadout.perks.invigorating > 0
         ? invigoratingAdrenalineMultiplier(loadout.perks.invigorating)
@@ -509,7 +564,7 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
       loadout.baseDamage.mode === "manual"
         ? loadout.baseDamage.manualValue
         : computedLoadoutBase(loadout),
-    base: loadoutBase(loadout),
+    base: resolvedBase,
     level,
     attackLevel,
     dp,
@@ -550,7 +605,9 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
     damagePotentialSource: loadout.target
       ? loadout.target.damagePotentialOverride != null
         ? "manual override"
-        : "target stats"
+        : targetAffinity !== loadout.target.affinity
+          ? "target weakness"
+          : "target stats"
       : loadout.accuracy === 100
         ? "100% assumption"
         : "manual override",
@@ -590,5 +647,12 @@ export function loadoutStats(loadout: Loadout, now = Date.now()): CalcStats {
     equipment: equipmentStats,
     defence,
     life,
+    league,
+    combatContext: {
+      style: loadout.style,
+      ruleset: league.ruleset,
+      targetTiles: league.targetTiles,
+    },
+    leagueBaseAbilityDamageBonus,
   };
 }

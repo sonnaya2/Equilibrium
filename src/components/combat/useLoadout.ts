@@ -48,6 +48,8 @@ export interface LoadoutTarget {
   damagePotentialOverride?: number;
   /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
   hpPercent?: number;
+  hasApplicableWeakness?: boolean;
+  occupiedTiles?: number;
 }
 
 export interface BaseDamageSettings {
@@ -656,6 +658,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
               : {}),
             ...(Number.isFinite(rawTarget.hpPercent)
               ? { hpPercent: Math.min(100, Math.max(0, Number(rawTarget.hpPercent))) }
+              : {}),
+            ...(rawTarget.hasApplicableWeakness === true ? { hasApplicableWeakness: true } : {}),
+            ...(Number.isFinite(rawTarget.occupiedTiles)
+              ? { occupiedTiles: Math.max(1, Math.floor(Number(rawTarget.occupiedTiles))) }
               : {}),
           }
         : null,

@@ -5,6 +5,7 @@ import type { CombatContext, CombatModifier } from "../../types";
 import type { ResolvedEvent } from "../runtime/events";
 import type { RotationState } from "../runtime/state";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
+import type { ResolvedLeagueRules } from "../../league/ruleset";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {
@@ -16,6 +17,8 @@ export function rotationOf(...abilityIds: string[]): RotationAction[] {
 }
 
 export interface AdrenalineRules {
+  /** Multiplier on listed ability gains; does not affect refunds or unrelated grants. */
+  abilityGainMultiplier?: number;
   basicGainMultiplier?: number;
   /** Impatient perk rank (1-4) — state-changing RNG, branched by the drivers. */
   impatientRank?: number;
@@ -30,9 +33,11 @@ export interface AdrenalineRules {
  * enumerate these to build probability-weighted branches; a missing flag means
  * "does not proc" (deterministic single-branch runs never proc).
  */
-export interface CastRng {
-  impatientProc?: boolean;
-  relentlessProc?: boolean;
+export type CastRngPointId = "impatient" | "relentless" | "avernic-rampage";
+export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
+
+export function rngProc(rng: CastRng | undefined, id: CastRngPointId): boolean {
+  return rng?.[id] === true;
 }
 
 export interface ProcRules {
@@ -71,6 +76,7 @@ export interface SimulateInput {
   tumekensCritEnabled?: boolean;
   /** Set bonuses already active before tick 0 for this fixed loadout. */
   equipmentEffects?: ActiveEquipmentEffects;
+  league?: ResolvedLeagueRules;
   procs?: ProcRules;
   /**
    * Mult on conjure spirit *basic autos* only (not putrid poison, not commands).
@@ -122,6 +128,7 @@ export type DamageSourceKind =
   | "ability-direct"
   | "ability-dot"
   | "equipment-passive"
+  | "league-blessing"
   | "perk"
   | "conjure-or-familiar"
   | "auto-attack"

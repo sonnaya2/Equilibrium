@@ -110,7 +110,7 @@ describe("Lightning Surge proc event", () => {
       tumekensPieces: 3,
       adrenaline: { relentlessRank: 1 },
     });
-    tumeken.performCast(tumeken.byId.get("instability")!, 0, false, { relentlessProc: true });
+    tumeken.performCast(tumeken.byId.get("instability")!, 0, false, { relentless: true });
     tumeken.performCast(tumeken.byId.get("sunshine")!, tumeken.getState().tick, false);
     tumeken.performCast(tumeken.byId.get("magic_attack")!, tumeken.getState().tick, false);
     const active = tumeken.finish();

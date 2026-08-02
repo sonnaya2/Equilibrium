@@ -2,6 +2,7 @@ import { secondsToTicks } from "../../../core/ticks";
 import { deathSkullsCooldownTicks } from "../../../styles/necromancy/effects";
 import { clearCooldowns, startCooldown } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
+import { effectiveCooldownTicks } from "../../../league/ruleset";
 
 /**
  * Cooldown clocks for one cast. Every ability keeps its own clock keyed by id;
@@ -11,14 +12,14 @@ import type { CastEffectContext } from "./context";
 export function applyCastCooldown(fx: CastEffectContext): void {
   const { rt, ability, candidate } = fx;
   if (!ability.cooldownSeconds) return;
-  const ticks =
+  const baseTicks =
     ability.id === "death_skulls"
       ? deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate)
       : secondsToTicks(ability.cooldownSeconds);
   rt.state = startCooldown(
     rt.state,
     ability.cooldownGroup ?? ability.replacementGroup ?? ability.id,
-    ticks,
+    effectiveCooldownTicks(baseTicks, rt.input.league),
   );
 }
 

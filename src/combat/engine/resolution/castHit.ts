@@ -106,7 +106,14 @@ export function resolveCastHit(
     accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
     crit,
     modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
-    context: { ...input.context, style: ability.style, dotKind: hitSpec.dotKind },
+    context: {
+      ...input.context,
+      style: ability.style,
+      dotKind: hitSpec.dotKind,
+      abilityCategory: ability.category,
+      autoAttack: ability.autoAttack,
+      area: ability.area,
+    },
     cap: input.cap,
   });
 
@@ -122,7 +129,14 @@ export function resolveCastHit(
       accuracy: input.accuracy,
       crit: { chance: 0, eligible: false },
       modifiers,
-      context: { ...input.context, style: ability.style, dotKind: hitSpec.dotKind },
+      context: {
+        ...input.context,
+        style: ability.style,
+        dotKind: hitSpec.dotKind,
+        abilityCategory: ability.category,
+        autoAttack: ability.autoAttack,
+        area: ability.area,
+      },
       cap: input.cap,
     });
     min += bonus.min;

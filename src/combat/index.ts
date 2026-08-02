@@ -40,4 +40,5 @@ export * from "./engine/simulation/contracts";
 export * from "./engine/simulation/simulate";
 export * from "./engine/simulation/revolution";
 export * from "./league/ruleset";
+export * from "./league/damage";
 export * from "./data/sources";

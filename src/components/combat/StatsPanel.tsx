@@ -5,6 +5,7 @@ import { loadoutOverloadTier, loadoutStats } from "./loadoutStats";
 import { MAX_CONSTITUTION_LEVEL, MAX_DEFENCE_LEVEL } from "@/combat";
 import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { withAttackLevel, withStrengthLevel, withStyleLevel, type Loadout } from "./useLoadout";
+import { useBuild } from "@/league/useBuild";
 
 function StatsGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -35,7 +36,8 @@ export function StatsPanel({
   loadout: Loadout;
   setLoadout: (next: Loadout) => void;
 }) {
-  const stats = loadoutStats(loadout);
+  const { build } = useBuild();
+  const stats = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
   const overloadTier = loadoutOverloadTier(loadout);
   const automatic = (patch: Partial<Loadout>) =>
     setLoadout({

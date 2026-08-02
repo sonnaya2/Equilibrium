@@ -15,6 +15,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "ability-direct",
   "ability-dot",
   "equipment-passive",
+  "league-blessing",
   "perk",
   "conjure-or-familiar",
   "auto-attack",
@@ -22,6 +23,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
 ];
 
 function sourceKind(rt: SimulationRuntime, event: ResolvedEvent): DamageSourceKind {
+  if (event.blessingId) return "league-blessing";
   if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
   if (event.abilityId === "abyssal_parasite") return "equipment-passive";
   if (event.family === "conjureAuto" || event.family === "command" || event.family === "poison") {
@@ -38,7 +40,7 @@ function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
   const effects = new Map<
     string,
     Omit<DamageEffectBreakdown, "share" | "applications" | "averagePerApplication"> & {
-      applicationKeys: Set<string>;
+      applicationWeights: Map<string, number>;
     }
   >();
 
@@ -54,7 +56,7 @@ function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
       dotDamage: 0,
       criticalContribution: 0,
       capLoss: 0,
-      applicationKeys: new Set<string>(),
+      applicationWeights: new Map<string, number>(),
     };
     current.totalDamage += event.damage.expected;
     current.damagingEvents += 1;
@@ -62,8 +64,11 @@ function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
     current.dotDamage += event.family === "dot" ? event.damage.expected : 0;
     current.criticalContribution += event.damage.critical?.contribution ?? 0;
     current.capLoss += event.damage.capLoss ?? 0;
-    current.applicationKeys.add(
-      event.sourceCast >= 0 ? `cast:${event.sourceCast}` : `event:${event.seq}`,
+    const applicationKey =
+      event.sourceCast >= 0 ? `cast:${event.sourceCast}` : `event:${event.seq}`;
+    current.applicationWeights.set(
+      applicationKey,
+      Math.max(current.applicationWeights.get(applicationKey) ?? 0, event.expectedOccurrences ?? 1),
     );
     effects.set(event.abilityId, current);
   }
@@ -74,8 +79,11 @@ function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
       return damage > 0 ? [{ kind, damage }] : [];
     }).sort((a, b) => b.damage - a.damage),
     byEffect: [...effects.values()]
-      .map(({ applicationKeys, ...effect }) => {
-        const applications = applicationKeys.size;
+      .map(({ applicationWeights, ...effect }) => {
+        const applications = [...applicationWeights.values()].reduce(
+          (sum, value) => sum + value,
+          0,
+        );
         return {
           ...effect,
           share: rt.totalExpected > 0 ? effect.totalDamage / rt.totalExpected : 0,

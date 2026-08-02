@@ -13,10 +13,12 @@ import type { CombatStyle } from "@/combat/types";
 import {
   BLESSING_PATHS,
   PATH_TIERS,
+  activeBlessings,
   blessingChoice,
   blessingTierRevealed,
   deriveGodTier,
   type BlessingPath,
+  type BlessingSupportStatus,
 } from "@/league/blessings";
 import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
@@ -101,6 +103,11 @@ const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
   "outgoing-only": "Partial",
   none: "Recorded",
 };
+const BLESSING_SUPPORT_LABEL: Record<BlessingSupportStatus, string> = {
+  modeled: "Modeled",
+  "partially-modeled": "Partial",
+  "not-modeled": "Not modeled",
+};
 
 function setFactThreshold(fact: string): number | null {
   const match = /^Set\((\d+)\):/i.exec(fact);
@@ -180,6 +187,7 @@ export function BuffsPanel({
   const revealedBlessingTiers = PATH_TIERS.filter(blessingTierRevealed);
   const godAlignment = deriveGodTier(build.blessingPicks.slice(0, 3));
   const godBlessing = godAlignment ? blessingChoice(4, godAlignment) : undefined;
+  const selectedBlessings = activeBlessings(build.blessingPicks);
 
   const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
   return (
@@ -272,9 +280,19 @@ export function BuffsPanel({
             God Tier One · {godBlessing.name} ({godAlignment})
           </p>
         ) : null}
+        {selectedBlessings.length > 0 ? (
+          <ul className="mt-1.5 space-y-0.5 text-[11px] text-parch-300">
+            {selectedBlessings.map((choice) => (
+              <li key={choice.id}>
+                <span className="text-parch-100">{choice.name}</span> ·{" "}
+                {BLESSING_SUPPORT_LABEL[choice.support.status]}
+                {choice.support.mechanicsUnverified ? " · mechanics unverified" : ""}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <p className="mt-1.5 text-[11px] text-parch-300">
-          Shared with Build. Revealed choices are saved here; blessing mechanics are not included in
-          combat totals yet.
+          Shared with Build. Unsupported effects remain excluded from combat totals.
         </p>
       </div>
 

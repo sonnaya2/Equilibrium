@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { calculateAbility, type AbilitySpec } from "@/combat/pipeline/calculateAbility";
+import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
+import { calculateLeagueAbility } from "@/combat/league/damage";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
@@ -15,6 +16,7 @@ import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { useLoadout } from "./useLoadout";
+import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
   melee: MELEE_ABILITIES,
@@ -53,15 +55,16 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
     disabled: stats.critsDisabled,
     damageBonus: stats.critDamageBonus,
   };
-  return calculateAbility(working, {
+  return calculateLeagueAbility(working, {
     base: Math.max(0, finite(stats.base, 0)),
     level: stats.level,
     accuracy: stats.dp,
     crit,
     critByHit: stats.critByHitFor(working, crit),
     modifiers: stats.castModifiersFor(working),
-    context: { style },
+    context: { ...stats.combatContext, style },
     cap: stats.cap,
+    rules: stats.league,
   });
 }
 
@@ -69,10 +72,11 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
  *  target model included) against an editable comparison line (B). */
 export function AnalysisTab() {
   const [loadout] = useLoadout();
+  const { build } = useLeagueBuild();
   const [abilityId, setAbilityId] = useState(ALL_ENTRIES[0].ability.id);
   const [souls, setSouls] = useState(3);
   const [lineB, setLineB] = useState(() => ({
-    base: loadoutStats(loadout).base,
+    base: loadoutStats(loadout, { blessingPicks: build.blessingPicks }).base,
     level: loadout.level,
     accuracy: loadout.accuracy,
     critChance: loadout.critChance,
@@ -82,7 +86,7 @@ export function AnalysisTab() {
     ALL_ENTRIES.find((candidate) => candidate.ability.id === abilityId) ?? ALL_ENTRIES[0];
   const ability = entry.ability.id === "volley_of_souls" ? volleyOfSouls(souls) : entry.ability;
 
-  const statsA = loadoutStats(loadout);
+  const statsA = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
   const statsB: CalcStats = {
     ...statsA,
     base: lineB.base,

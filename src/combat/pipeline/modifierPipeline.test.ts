@@ -16,9 +16,9 @@ describe("modifierPipeline", () => {
     const log: string[] = [];
     const spy = (m: CombatModifier): CombatModifier => ({
       ...m,
-      apply: (s) => {
+      apply: (s, context) => {
         log.push(m.id);
-        return m.apply(s);
+        return m.apply(s, context);
       },
     });
     runPipeline(

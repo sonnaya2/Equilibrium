@@ -857,6 +857,43 @@ describe("loadoutStats", () => {
       expect(stats.defence.totalArmour).toBe(Math.floor(500 + stats.defence.levelArmour));
     });
 
+    it("derives blessing inputs from Build picks without replacing the existing stats model", () => {
+      const aegisLoadout: Loadout = {
+        ...base,
+        equipmentSlots: { body: "mock:defence-body" },
+      };
+      const aegis = loadoutStats(aegisLoadout, {
+        blessingPicks: ["Order", "Order", "Order"],
+      });
+      expect(aegis.leagueBaseAbilityDamageBonus).toBe(Math.floor(aegis.defence.totalArmour * 0.25));
+      expect(aegis.base).toBe(loadoutBase(aegisLoadout) + aegis.leagueBaseAbilityDamageBonus);
+
+      const bigBoned = loadoutStats(base, {
+        blessingPicks: ["Balance", "Chaos", "Chaos"],
+      });
+      expect(bigBoned.life.normalMaxLife).toBe(14_850);
+      expect(bigBoned.life.temporaryMaxLife).toBe(14_850);
+
+      const demonsMark = loadoutStats(
+        {
+          ...base,
+          target: { defenceLevel: 80, affinity: "same", hasApplicableWeakness: true },
+        },
+        { blessingPicks: ["Balance", "Chaos", "Chaos"] },
+      );
+      expect(demonsMark.damagePotentialSource).toBe("target weakness");
+      expect(demonsMark.dp).toBeCloseTo(
+        targetDamagePotential(demonsMark.accuracyRating, {
+          defenceLevel: 80,
+          affinity: "weakness",
+        }),
+      );
+
+      expect(
+        loadoutStats(base, { blessingPicks: ["Chaos", "Balance", "Balance"] }).maxAdrenaline,
+      ).toBe(150);
+    });
+
     it("boosts Defence through the overload formula", () => {
       const stats = loadoutStats({
         ...base,
@@ -911,12 +948,12 @@ describe("loadoutStats", () => {
         currentLife: 4000,
         buffs: { ...base.buffs, powerburstOfVitalityUntil: now + 6000 },
       };
-      expect(loadoutStats(loadout, now).life).toMatchObject({
+      expect(loadoutStats(loadout, { now }).life).toMatchObject({
         currentLife: 8000,
         temporaryMaxLife: 19_800,
         powerburstActive: true,
       });
-      expect(loadoutStats(loadout, now + 6000).life).toMatchObject({
+      expect(loadoutStats(loadout, { now: now + 6000 }).life).toMatchObject({
         currentLife: 4000,
         temporaryMaxLife: 9900,
         powerburstActive: false,

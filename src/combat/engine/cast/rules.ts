@@ -4,7 +4,9 @@ import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effec
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
 import type { AdrenalineRules } from "../simulation/contracts";
+import type { CastRngPointId } from "../simulation/contracts";
 import type { RotationState } from "../runtime/state";
+import { blessingRule, hasBlessing, type ResolvedLeagueRules } from "../../league/ruleset";
 
 /**
  * Cast legality rules. Every function takes the explicit state and candidate
@@ -23,16 +25,16 @@ export function candidateTick(state: RotationState, readyTick: number): number {
  * adrenaline in order to cast").
  */
 export function costOf(state: RotationState, ability: AbilitySpec, tick: number): number {
-  if (ability.style === "necromancy") {
-    return necroAdrenalineCost(ability, state.necromancy.resources, tick);
-  }
-  const listed = ability.adrenaline?.cost ?? 0;
+  let listed =
+    ability.style === "necromancy"
+      ? necroAdrenalineCost(ability, state.necromancy.resources, tick)
+      : (ability.adrenaline?.cost ?? 0);
   // Flow (Sonic Wave): a flat adrenaline-point reduction while the window is
   // open, never below zero. Defence/Constitution/specials never benefit.
   if (listed > 0 && ability.style === "magic" && tick < state.magic.flowUntilTick) {
-    return Math.max(0, listed - state.magic.flowReduction);
+    listed = Math.max(0, listed - state.magic.flowReduction);
   }
-  return listed;
+  return listed > 0 && tick < (state.league?.avernicRampageUntilTick ?? 0) ? 0 : listed;
 }
 
 /** Actual adrenaline spend after a Deathspore free-cast buff, evaluated at `tick`. */
@@ -127,36 +129,46 @@ export function meetsEquipmentRequirement(
   );
 }
 
-/** The one state-changing RNG point a cast may have, with its sourced chance. */
+/** One state-changing RNG point a cast may have, with its sourced chance. */
 export interface RngPoint {
-  kind: "impatient" | "relentless";
+  id: CastRngPointId;
   chance: number;
 }
 
 /**
  * A basic with Impatient rolls for +3 adrenaline; a spender with Relentless
- * (off lockout, actually spending) rolls for a full refund. A basic never costs
- * adrenaline, so at most one point exists per cast.
+ * (off lockout, actually spending) rolls for a full refund. Avernic Rampage
+ * adds its own independent on-attack roll.
  */
-export function rngPointFor(
+export function rngPointsFor(
   state: RotationState,
   ability: AbilitySpec,
   candidate: number,
   spend: number,
   rules?: AdrenalineRules,
-): RngPoint | null {
+  league?: ResolvedLeagueRules,
+): RngPoint[] {
+  const points: RngPoint[] = [];
   const isBasic = ability.category === "basic" || !!ability.autoAttack;
   if (isBasic && (ability.adrenaline?.gain ?? 0) > 0 && (rules?.impatientRank ?? 0) > 0) {
-    return {
-      kind: "impatient",
+    points.push({
+      id: "impatient",
       chance: impatientProcChance(rules!.impatientRank!, rules?.impatientLevel20),
-    };
+    });
   }
   if ((rules?.relentlessRank ?? 0) > 0 && candidate >= state.relentlessUntilTick && spend > 0) {
-    return {
-      kind: "relentless",
+    points.push({
+      id: "relentless",
       chance: relentlessProcChance(rules!.relentlessRank!, rules?.relentlessLevel20),
-    };
+    });
   }
-  return null;
+  const avernic = blessingRule(league, "avernic-rampage");
+  if (
+    hasBlessing(league, "avernic-rampage") &&
+    ability.hits.length > 0 &&
+    avernic?.procChance !== undefined
+  ) {
+    points.push({ id: "avernic-rampage", chance: avernic.procChance });
+  }
+  return points;
 }

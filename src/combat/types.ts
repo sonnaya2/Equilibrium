@@ -23,6 +23,11 @@ export interface CombatContext {
   style: CombatStyle;
   ruleset?: "base" | "equilibrium";
   dotKind?: DamageOverTimeKind;
+  abilityCategory?: "basic" | "enhanced" | "ultimate" | "utility";
+  autoAttack?: boolean;
+  area?: "aoe" | "multi-target";
+  targetTiles?: number;
+  blessingGenerated?: boolean;
 }
 
 export interface DamageState {
@@ -34,6 +39,6 @@ export interface CombatModifier {
   stage: ModifierStage;
   priority: number;
   applies(context: CombatContext): boolean;
-  apply(state: DamageState): DamageState;
+  apply(state: DamageState, context: CombatContext): DamageState;
   source: SourceReference;
 }

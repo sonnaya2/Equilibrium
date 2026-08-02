@@ -173,23 +173,183 @@ export interface RotationDamageAnalysis {
   capLoss: number;
 }
 
+/**
+ * Duration fields are always explicit. Never treat a bare tick count as both
+ * "exact path length" and "E[ticks]" without reading `kind` / `rng`.
+ */
+export interface DurationSummary {
+  /**
+   * - deterministic: single path; all tick fields equal the exact length.
+   * - stochastic: probability-weighted branches; fields may differ.
+   * - fixed-window: horizon is the DPS denominator; path ticks still reported.
+   */
+  kind: "deterministic" | "stochastic" | "fixed-window";
+  /** Probability-weighted mean terminal duration (exact when deterministic). */
+  expectedTicks: number;
+  /** Minimum terminal-branch duration in the support. */
+  minimumTicks: number;
+  /** Maximum terminal-branch duration in the support. */
+  maximumTicks: number;
+  /** Duration of the representative history (exact path when deterministic). */
+  representativeTicks: number;
+  /** Present when the run used a fixed horizon (Revolution duration). */
+  fixedHorizonTicks?: number;
+}
+
+/**
+ * Damage bounds. `expectedConditional*` are weighted means of per-branch path
+ * extrema — useful diagnostics, never global support bounds.
+ */
+export interface DamageBoundsSummary {
+  expectedDamage: number;
+  /** Minimum achievable terminal-branch path-minimum (true support lower bound). */
+  supportMinDamage: number;
+  /** Maximum achievable terminal-branch path-maximum (true support upper bound). */
+  supportMaxDamage: number;
+  /** Weighted average of branch conditional minima (not a support bound). */
+  expectedConditionalMin: number;
+  /** Weighted average of branch conditional maxima (not a support bound). */
+  expectedConditionalMax: number;
+}
+
+/**
+ * DPS quantities. `primary` is always the headline metric for the run type:
+ * fixed-window → E[D] / (horizon × tickSeconds);
+ * natural-completion → E[D] / (E[T] × tickSeconds) (ratio of expectations).
+ */
+export interface DpsSummary {
+  primary: number;
+  /** E[D] / (E[T] × tickSeconds). Equals primary for natural-completion. */
+  ratioOfExpectations: number;
+  /**
+   * E[D_i / T_i] across terminal classes. Only set for stochastic natural
+   * completion (undefined for fixed-window and deterministic single-path).
+   */
+  expectedBranchDps?: number;
+  /** DPS of the representative terminal class (or the sole deterministic path). */
+  representativeDps: number;
+}
+
+export type HistoryKind = "complete" | "representative-terminal-class";
+
+/**
+ * Provenance of `casts` / `events`. When kind is representative-terminal-class,
+ * those arrays are NOT the weighted event ledger and must not rebuild analysis.
+ */
+/**
+ * Why this history class was chosen.
+ * - sole-terminal: single complete path.
+ * - highest-probability-mass: max weight among all terminals (all ok, or all failed).
+ * - highest-successful-mass: max weight among successful only (partial failure;
+ *   totals are success-conditional, so history matches that scope).
+ */
+export type HistorySelectionReason =
+  | "sole-terminal"
+  | "highest-probability-mass"
+  | "highest-successful-mass";
+
+export interface HistoryProvenance {
+  kind: HistoryKind;
+  /** Probability mass of the class that supplied casts/events (absolute, not renormalized). */
+  classWeight: number;
+  ticks: number;
+  selectionReason: HistorySelectionReason;
+  /**
+   * True only for a single non-branching successful path. False after any
+   * state-changing branching (including intermediate merges that later collapse
+   * to one terminal class), and when any branch failed — events never rebuild
+   * weighted ledgers in those cases.
+   */
+  eventsReconcileWithWeightedTotals: boolean;
+}
+
+/**
+ * Partial branch failure. Weighted damage totals use successful branches only
+ * (renormalized) when successfulWeight > 0; all-failed runs expose zeros and
+ * totalsScope "none".
+ */
+export interface BranchFailureSummary {
+  failedWeight: number;
+  successfulWeight: number;
+  totalsScope: "successful-branches-renormalized" | "none";
+  primaryReason: string;
+  reasons: ReadonlyArray<{ reason: string; weight: number }>;
+}
+
+export interface StochasticRngSummary {
+  method: "probability-weighted branching";
+  terminalClasses: number;
+  successfulClasses: number;
+  failedClasses: number;
+  /** Raw weight sum before any renormalization (should be ~1). */
+  probabilityMass: number;
+  representative: {
+    classWeight: number;
+    ticks: number;
+    selectionReason: Exclude<HistorySelectionReason, "sole-terminal">;
+    historyKind: "representative-terminal-class";
+    eventsReconcileWithWeightedTotals: boolean;
+  };
+  failure?: BranchFailureSummary;
+  /**
+   * @deprecated Use `failure.failedWeight`. Kept for solver/UI during migration.
+   */
+  failedWeight?: number;
+  /**
+   * @deprecated Use `representative.classWeight`.
+   */
+  representativeClassWeight: number;
+  /**
+   * @deprecated Use `representative.ticks`.
+   */
+  representativeClassTicks: number;
+}
+
+export interface TailMetrics {
+  /** In-window expected damage (same as totalExpected for fixed-window). */
+  inWindowExpectedDamage: number;
+  /** Expected damage from tails landing at or after the horizon. */
+  postWindowTailDamage: number;
+  /** inWindow + postWindow. Never use this as fixed-window DPS numerator. */
+  totalIncludingTails: number;
+}
+
 export interface RotationSummary {
   ok: boolean;
   error?: string;
-  /** Exact for deterministic runs; representative terminal class when `rng` is present. */
+  /** Exact for complete history; representative terminal class when history.kind says so. */
   casts: CastRecord[];
-  /** Elapsed ticks, probability-weighted when state-changing RNG changes duration. */
+  duration: DurationSummary;
+  /**
+   * Convenience: duration.expectedTicks.
+   * Deterministic runs: exact path length.
+   * Stochastic runs: E[ticks] — inspect duration / rng for support and representative.
+   */
   ticks: number;
   /**
    * Horizon the run was asked to fill (revolution duration). When set, totals
    * count only events landing before it (half-open [0, horizonTicks)) and
-   * `dps` is totalExpected / (horizonTicks * tickSeconds).
+   * primary DPS divides by the horizon.
    */
   horizonTicks?: number;
-  totalMin: number;
-  totalMax: number;
+  damage: DamageBoundsSummary;
+  /**
+   * Expected damage (E[D] over the probability mass used for totals).
+   * Same as damage.expectedDamage.
+   */
   totalExpected: number;
+  /**
+   * @deprecated Prefer damage.supportMinDamage. Equals the true support lower
+   * bound (not a weighted mean of path minima).
+   */
+  totalMin: number;
+  /**
+   * @deprecated Prefer damage.supportMaxDamage. Equals the true support upper
+   * bound (not a weighted mean of path maxima).
+   */
+  totalMax: number;
   dps: number;
+  dpsDetail: DpsSummary;
   metric: {
     type: "fixed-window" | "natural-completion";
     denominatorTicks: number;
@@ -199,29 +359,26 @@ export interface RotationSummary {
   perAbility: Record<string, number>;
   /** Expected damage landing on each tick — DoT tails land on their sourced ticks. */
   damageByTick: Record<number, number>;
-  /** Landed events for the deterministic run or representative terminal class. */
+  /** Landed events for complete history or the representative terminal class. */
   events: ResolvedEvent[];
-  /** Reconciled engine-owned aggregations; components only format these values. */
+  history: HistoryProvenance;
+  /** Reconciled engine-owned aggregations; never rebuilt from representative events. */
   analysis: RotationDamageAnalysis;
   /**
-   * Opt-in second metric (SimulateOptions.includeTails): in-horizon damage plus
-   * the unlanded scheduled tails of casts begun inside the horizon.
-   * Never presented as fixed-window DPS.
+   * Opt-in second metric (SimulateOptions.includeTails). Never presented as
+   * fixed-window DPS.
    */
+  tails?: TailMetrics;
+  /** @deprecated Use tails.totalIncludingTails. */
   totalExpectedIncludingTails?: number;
+  /** @deprecated Use tails.postWindowTailDamage. */
   postWindowTailDamage?: number;
   /**
    * Present only when state-changing RNG forced probability-weighted branching.
-   * Casts and events show one representative of the highest-weight terminal class.
    */
-  rng?: {
-    method: "probability-weighted branching";
-    terminalClasses: number;
-    representativeClassWeight: number;
-    representativeClassTicks: number;
-    /** Combined weight of branches that ended in a cast error (ok is then false). */
-    failedWeight?: number;
-  };
+  rng?: StochasticRngSummary;
+  /** Present when any terminal class failed (also nested under rng when branching). */
+  failure?: BranchFailureSummary;
 }
 
 export type CastAttempt = { ok: true } | { ok: false; error: string };

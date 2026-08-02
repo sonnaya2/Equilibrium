@@ -76,6 +76,8 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { gain: 12 },
     cooldownSeconds: 5.4,
     bloodlustGain: 1,
+    weaponRequirement: "twohand",
+    replacementGroup: "adaptive_strike",
     source: wikiAbility("Adaptive Strike", "Adaptive_Strike"),
   },
   {
@@ -87,6 +89,8 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { gain: 12 },
     cooldownSeconds: 5.4,
     bloodlustGain: 1,
+    weaponRequirement: "dualwield",
+    replacementGroup: "adaptive_strike",
     source: wikiAbility("Adaptive Strike", "Adaptive_Strike"),
   },
   {
@@ -351,7 +355,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     source: wikiAbility("Overpower", "Overpower"),
   },
   {
-    // Wiki Pulverise: 2h ultimate, 300-340, 60% cost, 60s CD; Pulverised 30s; on-kill +50% adren.
+    // Wiki Pulverise: two-handed ultimate, 300-340, 60% cost, 60s CD; Pulverised 30s; on-kill +50% adren.
     id: "pulverise",
     name: "Pulverise",
     style: "melee",
@@ -359,6 +363,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 300, maxPct: 340 } }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 60,
+    weaponRequirement: "twohand",
     appliesEffect: "pulverise",
     source: wikiAbility("Pulverise", "Pulverise"),
   },

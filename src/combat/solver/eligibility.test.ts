@@ -69,6 +69,24 @@ describe("validateBarEligibility", () => {
     ).toBe(true);
   });
 
+  it("drops two-hand-only abilities from dual-wield and main-hand pools", () => {
+    const dual = buildCandidatePool(catalogue, "melee", {
+      includePartial: true,
+      weaponConfiguration: "dualwield",
+    });
+    const main = buildCandidatePool(catalogue, "melee", {
+      includePartial: true,
+      weaponConfiguration: "mainhand",
+    });
+    const twohand = buildCandidatePool(catalogue, "melee", {
+      includePartial: true,
+      weaponConfiguration: "twohand",
+    });
+    expect(dual.byId.has("cleave")).toBe(false);
+    expect(main.byId.has("cleave")).toBe(false);
+    expect(twohand.byId.has("cleave")).toBe(true);
+  });
+
   it("rejects unknown ids and duplicates", () => {
     const pool = buildCandidatePool(catalogue, "melee", { includePartial: true });
     const issues = validateBarEligibility(["a", "a", "missing"], pool);

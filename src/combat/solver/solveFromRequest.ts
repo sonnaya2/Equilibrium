@@ -370,14 +370,14 @@ export const solveFromRequest: SolveFn = async (
     };
   };
 
+  // Seeds / user bars may list weapon-illegal ids (e.g. Hurricane on dual-wield).
+  // Pool already dropped those — filter seeds to legal ids only so search never
+  // evaluates a shape-mismatched ability even via authored bars.
+  const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
   const authored = [
     ...authoredSeedsFromCatalogue(request.style, denySet),
-    ...request.authoredSeedBars.map((s) =>
-      s.abilityIds.filter((id) => pool.byId.has(id) && !denySet.has(id)),
-    ),
-    ...(request.userBar
-      ? [request.userBar.filter((id) => pool.byId.has(id) && !denySet.has(id))]
-      : []),
+    ...request.authoredSeedBars.map((s) => s.abilityIds.filter(legalId)),
+    ...(request.userBar ? [request.userBar.filter(legalId)] : []),
   ].filter((s) => s.length >= request.minBarSize);
 
   const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);

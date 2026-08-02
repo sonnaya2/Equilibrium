@@ -56,6 +56,10 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
  * Defaults: no autos, no off-GCD, no partial/not-modeled/unverified specs.
  * Ids are sorted stably for deterministic search.
  *
+ * Weapon-shaped abilities (twohand / dualwield / mainhand / conduit) are dropped
+ * when they are illegal under `options.weaponConfiguration` — e.g. Hurricane on
+ * dual-wield, Flurry on a two-hander. Callers should always pass the loadout shape.
+ *
  * Accepts an AbilitySpec catalogue only — there is no abilities/registry yet.
  * Duplicate catalogue ids for the same style throw.
  */
@@ -79,6 +83,7 @@ export function buildCandidatePool(
     if (!includeAutos && ability.autoAttack) continue;
     if (!includeOffGcd && ability.offGcd) continue;
     if (!includePartial && !isFullyModeled(ability)) continue;
+    // Illegal under the equipped weapon shape — never enter search or final scoring.
     if (!meetsWeaponRequirement(ability, options.weaponConfiguration)) continue;
     if (!meetsEquipmentRequirement(ability, options.equipmentIds)) continue;
     if (seenIds.has(ability.id)) {

@@ -34,7 +34,7 @@ import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
-import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
+import { useLoadout, type Loadout } from "./useLoadout";
 import { useBuild } from "@/league/useBuild";
 import { REGION_IDS, unlockedRegions } from "@/league";
 import "./revo-solver.css";
@@ -92,8 +92,7 @@ function previewCategory(
 
 type RevoBarView = RevolutionBarRecord;
 
-const STYLE_ORDER = ["melee", "ranged", "magic", "necromancy"] as const;
-const STYLE_LABEL: Record<(typeof STYLE_ORDER)[number], string> = {
+const STYLE_LABEL: Record<string, string> = {
   melee: "Melee",
   ranged: "Ranged",
   magic: "Magic",
@@ -103,9 +102,6 @@ const STYLE_LABEL: Record<(typeof STYLE_ORDER)[number], string> = {
 /** Single-target only — multi-target bars are not shipped in the app. */
 const SUPPORTED_BARS = combatRevolutionBars.records.filter(
   (bar) => bar.supported && (bar.target == null || bar.target === "single"),
-) as RevoBarView[];
-const UNSUPPORTED_BARS = combatRevolutionBars.records.filter(
-  (bar) => !bar.supported && (bar.target == null || bar.target === "single"),
 ) as RevoBarView[];
 
 const DEFAULT_DURATION_SECONDS = 60;
@@ -125,8 +121,7 @@ function formatTime(ticks: number): string {
 }
 
 function styleLabel(style: string): string {
-  if (style in STYLE_LABEL) return STYLE_LABEL[style as keyof typeof STYLE_LABEL];
-  return style.charAt(0).toUpperCase() + style.slice(1);
+  return STYLE_LABEL[style] ?? style.charAt(0).toUpperCase() + style.slice(1);
 }
 
 function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {
@@ -147,10 +142,52 @@ function barOptionLabel(bar: RevoBarView): string {
   return style;
 }
 
-/** First supported ST bar for a combat style — prefer revo++ over basics. */
-function pickBarForStyle(style: string): RevoBarView | undefined {
+/**
+ * Reference bar from Setup style + weapon shape (no manual picker).
+ * Melee: twohand → 2h ST bar; dual-wield / defender → dual ST bar.
+ * Other styles: revo++ "Any" when present.
+ */
+function pickBarForLoadout(
+  style: string,
+  weaponConfiguration?: CalcStats["weaponConfiguration"] | Loadout["weaponConfiguration"],
+): RevoBarView | undefined {
   const forStyle = SUPPORTED_BARS.filter((b) => b.style === style);
-  return forStyle.find((b) => b.mode === "revo++") ?? forStyle[0];
+  if (forStyle.length === 0) return undefined;
+  const revoPlus = forStyle.filter((b) => b.mode === "revo++");
+  const pool = revoPlus.length > 0 ? revoPlus : forStyle;
+
+  if (style === "melee") {
+    const twoHand =
+      weaponConfiguration === "twohand"
+        ? pool.find(
+            (b) =>
+              /two.?hand/i.test(b.setup) ||
+              /two.?hand|2h/i.test(b.id) ||
+              /2h|two.?hand/i.test(b.name ?? ""),
+          )
+        : undefined;
+    if (twoHand) return twoHand;
+
+    const dual =
+      weaponConfiguration === "dualwield" ||
+      weaponConfiguration === "defender" ||
+      weaponConfiguration === "mainhand" ||
+      weaponConfiguration === "shield" ||
+      weaponConfiguration === undefined
+        ? pool.find(
+            (b) =>
+              /dual/i.test(b.setup) || /dual/i.test(b.id) || /dual/i.test(b.name ?? ""),
+          )
+        : undefined;
+    // Main-hand / shield prefer dual-shaped reference (closest 1H kit); fall through if missing.
+    if (dual && weaponConfiguration !== "twohand") return dual;
+  }
+
+  return (
+    pool.find((b) => b.setup === "Any") ??
+    pool.find((b) => b.mode === "revo++") ??
+    pool[0]
+  );
 }
 
 /**
@@ -237,9 +274,6 @@ function BarGraphic({ slots, revoSize }: { slots: ResolvedSlot[]; revoSize: numb
 export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [loadout] = useLoadout();
   const { build } = useBuild();
-  const [barId, setBarId] = useState(
-    () => pickBarForStyle(DEFAULT_LOADOUT.style)?.id ?? SUPPORTED_BARS[0]?.id ?? "",
-  );
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
@@ -267,11 +301,14 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const solveGenRef = useRef(0);
   const latestProgressRef = useRef<SolverProgress | null>(null);
 
-  const bar: RevoBarView | undefined =
-    SUPPORTED_BARS.find((candidate) => candidate.id === barId) ??
-    pickBarForStyle(loadout.style) ??
-    SUPPORTED_BARS[0];
-  const styleMismatch = Boolean(bar && bar.style !== loadout.style);
+  /** Wiki reference bar — always follows Setup style + weapon shape (no manual picker). */
+  const bar: RevoBarView | undefined = useMemo(
+    () =>
+      pickBarForLoadout(loadout.style, stats.weaponConfiguration) ??
+      pickBarForLoadout(loadout.style) ??
+      SUPPORTED_BARS[0],
+    [loadout.style, stats.weaponConfiguration],
+  );
 
   const solvedSlots: ResolvedSlot[] | null = useMemo(() => {
     if (!activeBarIds?.length) return null;
@@ -319,18 +356,20 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
   );
 
-  // Setup style owns the default bar; manual cross-style picks stay until Setup changes.
+  // When Setup style or weapon shape changes, drop a solved/applied bar so the
+  // graphic tracks the auto reference for the new loadout.
+  const equipKey = `${loadout.style}|${stats.weaponConfiguration}`;
+  const prevEquipKey = useRef(equipKey);
   useEffect(() => {
-    const current = SUPPORTED_BARS.find((candidate) => candidate.id === barId);
-    if (current?.style === loadout.style) return;
-    const next = pickBarForStyle(loadout.style);
-    if (!next || next.id === barId) return;
-    setBarId(next.id);
+    if (prevEquipKey.current === equipKey) return;
+    prevEquipKey.current = equipKey;
+    setActiveBarIds(null);
     setResult(null);
     setShowAllCasts(false);
-    // barId intentionally omitted: only react to Setup style changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to Setup style
-  }, [loadout.style]);
+    setAnalysisOpen(false);
+    setSolverResult(null);
+    setSolverError(null);
+  }, [equipKey]);
 
   // Tear down in-flight solve on unmount only (do not poison cancelRef for remounts).
   useEffect(() => {
@@ -341,15 +380,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     };
   }, []);
 
-  const selectBar = (id: string) => {
-    setBarId(id);
-    setActiveBarIds(null);
-    setResult(null);
-    setShowAllCasts(false);
-    setAnalysisOpen(false);
-  };
-
-  const simStyle = (solvedSlots ? loadout.style : bar?.style) ?? loadout.style;
+  const simStyle = loadout.style;
 
   const run = () => {
     if (modelled.length === 0) return;
@@ -1058,50 +1089,30 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       </section>
 
       <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
-        <label className="flex items-center gap-1 text-parch-300">
-          Reference bar
-          <select
-            value={bar?.id ?? ""}
-            onChange={(event) => selectBar(event.target.value)}
-            className="border border-stone-750 bg-transparent px-2 py-1 text-parch-50"
-          >
-            {STYLE_ORDER.map((style) => {
-              const supported = SUPPORTED_BARS.filter((b) => b.style === style);
-              const unsupported = UNSUPPORTED_BARS.filter((b) => b.style === style);
-              if (supported.length === 0 && unsupported.length === 0) return null;
-              return (
-                <optgroup key={style} label={STYLE_LABEL[style]}>
-                  {supported.map((candidate) => (
-                    <option key={candidate.id} value={candidate.id}>
-                      {barOptionLabel(candidate)}
-                    </option>
-                  ))}
-                  {unsupported.map((candidate) => (
-                    <option key={candidate.id} value={candidate.id} disabled>
-                      {barOptionLabel(candidate)} — not in sim
-                    </option>
-                  ))}
-                </optgroup>
-              );
-            })}
-          </select>
-        </label>
-        <span className="text-parch-300">
-          {activeBarIds
-            ? `Solved bar · ${modelled.length} abilities`
-            : `${modelled.length} of ${managedSlots.length} slots modelled`}
-          {!activeBarIds && unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
-          {!activeBarIds && keybindCount > 0
-            ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
-            : ""}
+        <span className="text-parch-300" data-testid="revo-reference-bar">
+          {activeBarIds ? (
+            <>Solved bar · {modelled.length} abilities</>
+          ) : bar ? (
+            <>
+              <span className="text-parch-50">{barOptionLabel(bar)}</span>
+              <span className="revo-solver-status__dot" aria-hidden>
+                ·
+              </span>
+              from Setup
+              <span className="revo-solver-status__dot" aria-hidden>
+                ·
+              </span>
+              {modelled.length} of {managedSlots.length} modelled
+              {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
+              {keybindCount > 0
+                ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
+                : ""}
+            </>
+          ) : (
+            "No reference bar for this loadout"
+          )}
         </span>
       </div>
-
-      {styleMismatch && bar && !activeBarIds ? (
-        <p className="mt-2 text-xs text-chaos-300">
-          Loadout is {loadout.style}; this bar is {bar.style}. Accuracy and crit may be off.
-        </p>
-      ) : null}
 
       <BarGraphic slots={slots} revoSize={revoSize} />
 

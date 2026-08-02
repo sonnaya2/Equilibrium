@@ -138,6 +138,35 @@ describe("loadoutStats", () => {
     expect(stats.damagePotentialSource).toBe("target stats");
   });
 
+  it("exposes the same accuracy rating it feeds into the target-model Damage Potential", () => {
+    const loadout: Loadout = {
+      ...base,
+      style: "magic",
+      level: 105,
+      weaponTier: 90,
+      target: { defenceLevel: 80, affinity: "same" },
+      equipmentSlots: { ring: "mock:acc-ring", amulet: "mock:acc-amulet" },
+    };
+    const stats = loadoutStats(loadout);
+    expect(stats.accuracyRating).toBe(playerAccuracy(105, 90) + 150);
+    expect(stats.dp).toBeCloseTo(
+      targetDamagePotential(stats.accuracyRating, { defenceLevel: 80, affinity: "same" }),
+      10,
+    );
+  });
+
+  it("exposes base crit damage, the persistent bonus, and the total static crit damage", () => {
+    const at90 = loadoutStats({ ...base, style: "magic", level: 90 });
+    expect(at90.baseCritDamage).toBeCloseTo(1.5, 10);
+    expect(at90.critDamageBonus).toBe(0);
+    expect(at90.totalCritDamage).toBeCloseTo(1.5, 10);
+    const at80 = loadoutStats({ ...base, style: "magic", level: 80 });
+    expect(at80.baseCritDamage).toBeCloseTo(1.45, 10);
+    const melee = loadoutStats({ ...base, style: "melee", attackLevel: 1, strengthLevel: 90 });
+    expect(melee.baseCritDamage).toBeCloseTo(1.5, 10);
+    expect(melee.totalCritDamage).toBeCloseTo(melee.baseCritDamage + melee.critDamageBonus, 10);
+  });
+
   it("surfaces manual target DP override provenance", () => {
     const stats = loadoutStats({
       ...base,

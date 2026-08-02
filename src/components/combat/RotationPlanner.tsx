@@ -6,6 +6,7 @@ import { rotationOf } from "@/combat/engine/simulation/contracts";
 import { simulate, type RotationSummary } from "@/combat/engine/simulation/simulate";
 import { meetsEquipmentRequirement, meetsWeaponRequirement } from "@/combat/engine/cast/rules";
 import { TICK_SECONDS } from "@/combat/core/ticks";
+import { baseCritDamageMultiplier } from "@/combat/core/critical";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
@@ -157,10 +158,13 @@ export function RotationPlanner() {
     level: Math.min(Math.max(1, level), 145),
     attackLevel: Math.min(Math.max(1, level), 145),
     dp: Math.min(Math.max(0, accuracy), 100) / 100,
+    accuracyRating: 0, // manual mode prices accuracy as a raw %, not a rating
     critChance: Math.min(Math.max(0, critChance), 100) / 100,
     critsDisabled: false,
     simulationCritChance: Math.min(Math.max(0, critChance), 100) / 100,
     critDamageBonus: 0,
+    baseCritDamage: baseCritDamageMultiplier(Math.min(Math.max(1, level), 145)),
+    totalCritDamage: baseCritDamageMultiplier(Math.min(Math.max(1, level), 145)),
     activePassives: [],
     critByHitFor: (ability, crit) => ability.hits.map(() => crit),
     cap: buildStats.cap,

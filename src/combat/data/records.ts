@@ -89,6 +89,9 @@ export type ItemPassiveId =
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 
+/** Armour classification driving the stat-tier offsets (tank t, power t−5, hybrid t−15, PvP t). */
+export type ArmourClass = "tank" | "power" | "hybrid" | "pvp";
+
 export interface EquipmentBonuses {
   damage?: number;
   accuracy?: number;
@@ -108,6 +111,21 @@ export interface EquipmentRecord extends CombatRecordBase {
   setId?: string;
   passiveId?: ItemPassiveId;
   weaponClass?: WeaponClass;
+  /** Wear/wield requirement when it diverges from the stat tier (Vestments: 95). */
+  requirementTier?: number;
+  /** Armour stat tier when it diverges (chainbodies/med helms/sq shields at −2, Vestments 70). */
+  armourTier?: number;
+  /** Damage stat tier when it diverges (Vestments 110; jewellery tiers). */
+  damageTier?: number;
+  /** Life stat tier for exceptional power armour (Nex 75, masterwork magic/ranged 95). */
+  lifeTier?: number;
+  armourClass?: ArmourClass;
+  /** Shields are stored in the offhand slot; this marks them. */
+  shield?: boolean;
+  /** Defenders: half shield-multiplier armour, half-tier off-hand damage, full-tier accuracy. */
+  defender?: boolean;
+  /** Melee ammo-harness items carry the 0.26875 damage multiplier. */
+  meleeAmmoHarness?: boolean;
   specialAttackId?: string;
 }
 

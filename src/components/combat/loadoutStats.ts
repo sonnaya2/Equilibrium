@@ -18,7 +18,6 @@ import {
   equipmentCritByHit,
   equippedSetCounts,
   effectiveTumekenPieces,
-  isWeaponAccuracySlot,
   loadoutFirstNecromancerConjureDamageMult,
   loadoutFirstNecromancerConjureDurationMult,
   loadoutSetCritChance,
@@ -26,7 +25,6 @@ import {
   setEffectsSummary,
   staticEquipmentCritBonus,
   sumEquipmentBonuses,
-  sumNonWeaponAccuracy,
   type ActiveEquipmentEffects,
 } from "@/combat/shared/equipment";
 import {
@@ -41,7 +39,8 @@ import { equipmentById } from "@/combat/data";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier } from "@/combat/types";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
-import type { CritLayers } from "@/combat/core/critical";
+import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critical";
+import { aggregateLoadoutEquipment } from "@/combat/shared/equipmentStats";
 import type { Loadout } from "./useLoadout";
 
 /** Re-export for GearPanel / setup consumers. */
@@ -63,11 +62,21 @@ export interface CalcStats {
   /** Level feeding playerAccuracy when the target model is active. */
   attackLevel: number;
   dp: number;
+  /**
+   * Total player Accuracy rating: level+tier curve plus Energising and non-weapon
+   * flat accuracy. The same value feeds the target-model Damage Potential.
+   */
+  accuracyRating: number;
   critChance: number;
   critsDisabled: boolean;
   /** Crit chance for the simulator before land-time Tumeken Sunshine bonus. */
   simulationCritChance: number;
+  /** Persistent equipment crit-damage bonus (conditional ability/runtime bonuses excluded). */
   critDamageBonus: number;
+  /** Level-derived base crit damage multiplier (+50% at level 90). */
+  baseCritDamage: number;
+  /** baseCritDamage plus the persistent equipment bonus — the static loadout total. */
+  totalCritDamage: number;
   activePassives: readonly string[];
   critByHitFor: (
     ability: AbilitySpec,
@@ -149,23 +158,13 @@ export function equipmentStyleDamageBonus(loadout: Loadout): number {
 /**
  * Flat accuracy from non-weapon slots only (gloves, rings, amulets, cape, armour, …).
  * Mainhand / offhand / twohand Accuracy is excluded — encoded by weapon tier.
+ * Resolved through the canonical equipment aggregation.
  */
 export function nonWeaponAccuracyBonus(loadout: Loadout): number {
-  const pieces: { slot?: string | null; bonuses?: { accuracy?: number } | null }[] = [];
-  const seen = new Set<string>();
-  for (const [slot, id] of Object.entries(loadout.equipmentSlots ?? {})) {
-    if (typeof id !== "string") continue;
-    if (isWeaponAccuracySlot(slot)) {
-      seen.add(id);
-      continue;
-    }
-    if (seen.has(id)) continue;
-    seen.add(id);
-    const record = equipmentById(id);
-    if (record?.style && record.style !== "hybrid" && record.style !== loadout.style) continue;
-    pieces.push({ slot, bonuses: record?.bonuses });
-  }
-  return sumNonWeaponAccuracy(pieces);
+  return aggregateLoadoutEquipment({
+    equipmentSlots: loadout.equipmentSlots,
+    style: loadout.style,
+  }).appliedAccuracy;
 }
 
 /** Equipped twohand or mainhand tier when tagged on the record. */
@@ -353,18 +352,16 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     effectiveAttackLevel: visibleAttackLevel,
     effectiveStrengthLevel,
   });
+  const accuracyRating = playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy;
   const dp = applyEquipmentDamagePotential(
     loadout.target
-      ? targetDamagePotential(
-          playerAccuracy(attackLevel, weaponTier) + energising + accessoryAccuracy,
-          {
-            defenceLevel: loadout.target.defenceLevel,
-            armour: loadout.target.armour,
-            affinity: loadout.target.affinity,
-            additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
-            damagePotentialOverride: loadout.target.damagePotentialOverride,
-          },
-        )
+      ? targetDamagePotential(accuracyRating, {
+          defenceLevel: loadout.target.defenceLevel,
+          armour: loadout.target.armour,
+          affinity: loadout.target.affinity,
+          additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
+          damagePotentialOverride: loadout.target.damagePotentialOverride,
+        })
       : clamp01(loadout.accuracy / 100),
     equipmentEffects,
   );
@@ -463,10 +460,13 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     level,
     attackLevel,
     dp,
+    accuracyRating,
     critChance,
     critsDisabled: loadout.perks.equilibrium > 0,
     simulationCritChance,
     critDamageBonus: equipmentCrit.damageBonus,
+    baseCritDamage: baseCritDamageMultiplier(level),
+    totalCritDamage: baseCritDamageMultiplier(level, equipmentCrit.damageBonus),
     activePassives: activePassiveLabels(equipmentEffects),
     critByHitFor: (ability, crit) => equipmentCritByHit(equipmentEffects, ability, crit),
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },

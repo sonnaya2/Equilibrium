@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { blessingChoice } from "../../league/blessings";
-import { barkscalesOutcome } from "./barkscales";
+import { barkscalesGraspNote, barkscalesOutcome } from "./barkscales";
 import { graspOfGuthixComponent } from "./damage";
 import { resolveLeagueRules } from "./ruleset";
 
@@ -23,6 +23,7 @@ describe("Barkscales without an incoming scenario", () => {
 
   it("is scenario-dependent, never a calculated zero", () => {
     expect(outcome.support).toBe("scenario-dependent");
+    expect(outcome.unavailability).toBe("no-scenario");
     expect(outcome.triggers).toBeNull();
     expect(outcome.qualifyingHits).toBeNull();
     expect(outcome.mitigatedDamage).toBeNull();
@@ -30,6 +31,21 @@ describe("Barkscales without an incoming scenario", () => {
 
   it("names the input the outgoing rotation cannot supply", () => {
     expect(outcome.missingInputs).toEqual(["Incoming qualifying-hit interval"]);
+  });
+
+  it("rejects invalid interval and duration without reporting zero damage", () => {
+    const badInterval = barkscalesOutcome(BARKSCALES, 1_000, 60, {
+      incomingHitIntervalSeconds: Number.NaN,
+    });
+    expect(badInterval.support).toBe("scenario-dependent");
+    expect(badInterval.unavailability).toBe("invalid-interval");
+    expect(badInterval.triggers).toBeNull();
+
+    const badDuration = barkscalesOutcome(BARKSCALES, 1_000, -10, {
+      incomingHitIntervalSeconds: 6,
+    });
+    expect(badDuration.unavailability).toBe("invalid-duration");
+    expect(badDuration.mitigatedDamage).toBeNull();
   });
 
   it("still reports the mitigation the blessing provides per hit", () => {
@@ -105,6 +121,9 @@ describe("Barkscales with a bounded incoming scenario", () => {
     });
     expect(immune.triggers).toBe(2);
     expect(immune.targetsStruck).toBe(0);
+    expect(immune.unavailability).toBe("poison-immune");
+    expect(barkscalesGraspNote(immune)).toMatch(/poison-immune/i);
+    expect(barkscalesGraspNote(immune)).not.toMatch(/^0 /);
     expect(
       graspOfGuthixComponent({
         rules: league,

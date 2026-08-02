@@ -1,5 +1,6 @@
 import {
   activeBlessings,
+  indexActiveBlessings,
   type BlessingChoice,
   type BlessingId,
   type BlessingPath,
@@ -15,7 +16,10 @@ export interface LeagueLoadout {
   regions?: readonly string[];
 }
 
-/** Product model for Big Boned's 5% max-life outgoing rider. */
+/**
+ * Product model: when Big Boned is picked, the 5% max-life outgoing rider is
+ * always included (no opt-out gate). Assumptions stay visible for unverified edges.
+ */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
   "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as additive non-crit attached damage",
   "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
@@ -25,7 +29,13 @@ export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
 
 export interface ResolvedLeagueRules {
   ruleset: "base" | "equilibrium";
+  /** Ordered active cards for presentation / serialization. */
   blessings: readonly BlessingChoice[];
+  /**
+   * Runtime lookup keyed by blessing id. Optional for worker-revived payloads
+   * that only ship the array; use `blessingsIndex` rather than reading directly.
+   */
+  blessingsById?: ReadonlyMap<BlessingId, BlessingChoice>;
   blessingIds: ReadonlySet<BlessingId>;
   totalArmour: number;
   /**
@@ -54,10 +64,12 @@ export function resolveLeagueRules(
 ): ResolvedLeagueRules {
   const ruleset = loadout.ruleset === "equilibrium" ? "equilibrium" : "base";
   const blessings = ruleset === "equilibrium" ? activeBlessings(loadout.blessingPicks ?? []) : [];
+  const blessingsById = indexActiveBlessings(blessings);
   return {
     ruleset,
     blessings,
-    blessingIds: new Set(blessings.map((choice) => choice.id)),
+    blessingsById,
+    blessingIds: new Set(blessingsById.keys()),
     totalArmour: Math.max(0, derived.totalArmour ?? 0),
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
@@ -77,11 +89,19 @@ export function hasBlessing(rules: ResolvedLeagueRules | undefined, id: Blessing
   return rules?.ruleset === "equilibrium" && rules.blessingIds.has(id);
 }
 
+/** Stable index for mechanic lookup; rebuilds from the array when the Map is absent. */
+export function blessingsIndex(
+  rules: ResolvedLeagueRules | undefined,
+): ReadonlyMap<BlessingId, BlessingChoice> {
+  if (!rules) return new Map();
+  return rules.blessingsById ?? indexActiveBlessings(rules.blessings);
+}
+
 export function blessingRule(
   rules: ResolvedLeagueRules | undefined,
   id: BlessingId,
 ): BlessingChoice["combat"] | undefined {
-  return rules?.blessings.find((choice) => choice.id === id)?.combat;
+  return blessingsIndex(rules).get(id)?.combat;
 }
 
 export interface AegisArmourBonus {
@@ -156,12 +176,20 @@ export function blessingAdrenalineGenerationMultiplier(
   return blessingRule(rules, "adrenaline-junkie")?.adrenalineGenerationMultiplier ?? 1;
 }
 
+/**
+ * Sacred Fervor: floor(defaultCooldown × multiplier). A positive base cooldown
+ * cannot become zero after reduction — minimum remaining is 1 tick unless the
+ * base was already 0 (or non-positive / non-finite, which clamp to 0).
+ */
 export function effectiveCooldownTicks(
   ticks: number,
   rules: ResolvedLeagueRules | undefined,
 ): number {
+  if (!Number.isFinite(ticks) || ticks <= 0) return 0;
+  const base = Math.floor(ticks);
   const multiplier = blessingRule(rules, "sacred-fervor")?.cooldownMultiplier;
-  return multiplier === undefined ? ticks : Math.floor(ticks * multiplier);
+  if (multiplier === undefined) return base;
+  return Math.max(1, Math.floor(base * multiplier));
 }
 
 export function effectiveTargetAffinity(
@@ -182,7 +210,8 @@ export function effectiveTargetAffinity(
 export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatModifier[] {
   if (rules?.ruleset !== "equilibrium") return [];
   const modifiers: CombatModifier[] = [];
-  const striking = rules.blessings.find((choice) => choice.id === "striking-light");
+  const byId = blessingsIndex(rules);
+  const striking = byId.get("striking-light");
   if (striking?.combat.basicDamageMultiplier !== undefined) {
     modifiers.push({
       id: "blessing:striking-light",
@@ -199,7 +228,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       source: striking.source,
     });
   }
-  const splash = rules.blessings.find((choice) => choice.id === "splash-zone");
+  const splash = byId.get("splash-zone");
   if (splash?.combat.areaDamageBonus !== undefined) {
     modifiers.push({
       id: "blessing:splash-zone",

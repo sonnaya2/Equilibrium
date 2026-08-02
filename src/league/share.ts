@@ -27,7 +27,13 @@ export function decodeBuild(value: string): BuildState | null {
       new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))),
     );
     if (typeof parsed !== "object" || parsed === null) return null;
-    const keys = ["elective", "relics", "blessingPicks", "blessingResetsUsed"];
+    const keys = [
+      "elective",
+      "relics",
+      "blessingPicks",
+      "blessingSelections",
+      "blessingResetsUsed",
+    ];
     if (!keys.some((k) => k in parsed)) return null;
     return normalizeBuild(parsed);
   } catch {

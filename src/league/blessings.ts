@@ -1,5 +1,6 @@
 import blessingsData from "#shard/league/blessings.json";
 import type { SourceReference } from "@/combat/types";
+import { assertBlessingsDocument, collectBlessingIds } from "./blessingSchema";
 
 /**
  * Blessing domain. Canonical structure (paths, god tiers, reset count) lives in
@@ -11,12 +12,15 @@ import type { SourceReference } from "@/combat/types";
  * Tier cards are resolved from the same database-generated record as path picks.
  */
 
+assertBlessingsDocument(blessingsData);
+
 export const BLESSING_PATHS = ["Order", "Balance", "Chaos"] as const;
 export type BlessingPath = (typeof BLESSING_PATHS)[number];
 
 export type GodTierAlignment = BlessingPath;
 
-export const BLESSING_IDS = [
+/** Compile-time closed set — runtime catalogue is asserted against the shard. */
+export const KNOWN_BLESSING_IDS = [
   "teragards-aegis",
   "big-boned",
   "adrenaline-junkie",
@@ -30,7 +34,10 @@ export const BLESSING_IDS = [
   "splash-zone",
   "demons-mark",
 ] as const;
-export type BlessingId = (typeof BLESSING_IDS)[number];
+export type BlessingId = (typeof KNOWN_BLESSING_IDS)[number];
+
+export const BLESSING_IDS = collectBlessingIds(blessingsData) as readonly BlessingId[];
+
 /**
  * `scenario-dependent` is distinct from `not-modeled`: the mechanic is
  * implemented, but it needs an input the outgoing rotation cannot supply, so it
@@ -90,6 +97,7 @@ export interface BlessingChoice {
   id: BlessingId;
   name: string;
   path: BlessingPath;
+  tier: number;
   effects: readonly string[];
   verified: boolean;
   support: BlessingSupport;
@@ -97,10 +105,65 @@ export interface BlessingChoice {
   source: SourceReference;
 }
 
+/** Stable pick row for persistence / share links (path history + resolved id). */
+export interface StableBlessingSelection {
+  tier: number;
+  blessingId: BlessingId;
+  path?: BlessingPath;
+}
+
+function isBlessingId(value: string): value is BlessingId {
+  return (KNOWN_BLESSING_IDS as readonly string[]).includes(value);
+}
+
+function isBlessingPath(value: string): value is BlessingPath {
+  return (BLESSING_PATHS as readonly string[]).includes(value);
+}
+
+function toChoice(
+  tier: number,
+  choice: (typeof blessingsData.records)[number]["choices"][number],
+  source: SourceReference,
+): BlessingChoice | undefined {
+  if (!isBlessingId(choice.id) || !isBlessingPath(choice.path)) return undefined;
+  return {
+    ...(choice as Omit<BlessingChoice, "tier" | "source">),
+    id: choice.id,
+    path: choice.path,
+    tier,
+    source,
+  };
+}
+
+/** All revealed/unrevealed choices keyed by stable id (last write wins on collision). */
+export const CHOICES_BY_ID: ReadonlyMap<BlessingId, BlessingChoice> = (() => {
+  const map = new Map<BlessingId, BlessingChoice>();
+  for (const record of blessingsData.records) {
+    const source = record.source as SourceReference;
+    for (const choice of record.choices) {
+      const resolved = toChoice(record.tier, choice, source);
+      if (resolved) map.set(resolved.id, resolved);
+    }
+  }
+  return map;
+})();
+
+export function blessingById(id: string): BlessingChoice | undefined {
+  return CHOICES_BY_ID.get(id as BlessingId);
+}
+
 export function blessingChoice(tier: number, path: BlessingPath): BlessingChoice | undefined {
   const record = blessingsData.records.find((entry) => entry.tier === tier);
-  const choice = record?.choices.find((entry) => entry.path === path);
-  return choice ? ({ ...choice, source: record!.source } as BlessingChoice) : undefined;
+  if (!record) return undefined;
+  const choice = record.choices.find((entry) => entry.path === path);
+  if (!choice) return undefined;
+  return toChoice(tier, choice, record.source as SourceReference);
+}
+
+export function indexActiveBlessings(
+  blessings: readonly BlessingChoice[],
+): ReadonlyMap<BlessingId, BlessingChoice> {
+  return new Map(blessings.map((choice) => [choice.id, choice]));
 }
 
 export function blessingTierRevealed(tier: number): boolean {

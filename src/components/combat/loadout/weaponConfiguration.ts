@@ -70,7 +70,7 @@ export function equipmentStyleDamageBonus(loadout: Loadout): number {
 
 /** Equipped twohand or mainhand tier when tagged on the record. */
 export function equippedWeaponTier(loadout: Loadout): number | null {
-  const slots = loadout.equipmentSlots ?? {};
+  const slots = resolvedEquipmentSlots(loadout);
   for (const slot of ["twohand", "mainhand"] as const) {
     const id = slots[slot];
     if (typeof id !== "string") continue;
@@ -191,8 +191,7 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
         };
   }
   // Slider fallback when no tiered weapon is equipped. Shield = main-hand only;
-  // defender is dual-capable for AD (half-tier OH when an item is present; full
-  // offhandTier slider when the shape is stored without gear).
+  // defender is dual-capable for AD at half-tier OH; dualwield uses full offhandTier.
   if (
     loadout.weaponConfiguration === "mainhand" ||
     loadout.weaponConfiguration === "shield"
@@ -205,10 +204,17 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
       ...caps,
     };
   }
-  if (
-    loadout.weaponConfiguration === "dualwield" ||
-    loadout.weaponConfiguration === "defender"
-  ) {
+  if (loadout.weaponConfiguration === "defender") {
+    return {
+      kind: "mainhand",
+      style: loadout.style,
+      weapon: { tier: loadout.weaponTier },
+      offhand: { tier: loadout.offhandTier / 2 },
+      styleBonus,
+      ...caps,
+    };
+  }
+  if (loadout.weaponConfiguration === "dualwield") {
     return {
       kind: "mainhand",
       style: loadout.style,

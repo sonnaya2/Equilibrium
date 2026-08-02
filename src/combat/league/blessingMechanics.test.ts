@@ -93,11 +93,13 @@ describe("Avernic Rampage window boundary", () => {
 describe("Sacred Fervor cooldown reduction", () => {
   const fervor = rules(["Order", "Order", "Order"]);
 
-  it("floors the reduced cooldown in ticks", () => {
+  it("floors the reduced cooldown in ticks and keeps positive CDs at least 1", () => {
     expect(effectiveCooldownTicks(10, fervor)).toBe(7);
     // 17 x 0.7 = 11.9 -> 11, not 12: the rounding is a floor, in ticks.
     expect(effectiveCooldownTicks(17, fervor)).toBe(11);
-    expect(effectiveCooldownTicks(1, fervor)).toBe(0);
+    // Positive base cooldowns cannot become zero after Sacred Fervor.
+    expect(effectiveCooldownTicks(1, fervor)).toBe(1);
+    expect(effectiveCooldownTicks(0, fervor)).toBe(0);
   });
 
   it("leaves cooldowns untouched without the blessing", () => {

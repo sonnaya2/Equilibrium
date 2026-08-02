@@ -521,8 +521,10 @@ describe("loadoutStats", () => {
     expect(loadoutStats(defender).accuracyRating).toBeCloseTo(
       loadoutStats(dual).accuracyRating * 1.03,
     );
+    // Manual accuracy is a final Damage Potential override when no target is set —
+    // defender ×1.03 does not re-scale the slider (it still multiplies accuracyRating).
     expect(loadoutStats(shield).dp).toBe(0.5);
-    expect(loadoutStats(defender).dp).toBeCloseTo(0.515);
+    expect(loadoutStats(defender).dp).toBe(0.5);
     expect(loadoutStats(defender).activePassives).toContain("Defender accuracy");
 
     const target = {

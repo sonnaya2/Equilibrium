@@ -93,6 +93,7 @@ describe("normalizeBuild", () => {
       elective: ["desert", "tirannwn"],
       relics: {},
       blessingPicks: [],
+      blessingSelections: [],
       blessingResetsUsed: 0,
     });
   });
@@ -102,7 +103,13 @@ describe("normalizeBuild", () => {
     expect(normalizeBuild("junk")).toEqual(emptyBuild());
     expect(normalizeBuild({ elective: "desert" })).toEqual(emptyBuild());
     expect(normalizeBuild({ elective: ["desert", "not-a-region", "misthalin", "desert"] })).toEqual(
-      { elective: ["desert"], relics: {}, blessingPicks: [], blessingResetsUsed: 0 },
+      {
+        elective: ["desert"],
+        relics: {},
+        blessingPicks: [],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      },
     );
     expect(
       normalizeBuild({ elective: ["asgarnia", "kandarin", "desert", "tirannwn", "fremennik"] }),
@@ -110,6 +117,7 @@ describe("normalizeBuild", () => {
       elective: ["asgarnia", "kandarin", "desert"],
       relics: {},
       blessingPicks: [],
+      blessingSelections: [],
       blessingResetsUsed: 0,
     });
   });
@@ -126,6 +134,10 @@ describe("normalizeBuild", () => {
       elective: [],
       relics: { "1": "Survivalist" },
       blessingPicks: ["Order", "Chaos"],
+      blessingSelections: [
+        { tier: 1, blessingId: "teragards-aegis" },
+        { tier: 2, blessingId: "abyssal-cinders" },
+      ],
       blessingResetsUsed: 2,
     });
   });

@@ -247,6 +247,9 @@ Keep bug inventories and temporary backlogs outside this skill. They change; the
 
 ## Test requirements
 
+Read and follow `test-maintainer` before writing, editing, or triaging any test. That skill is
+mandatory for suite work; this section only names which simulator contracts to pin.
+
 Every simulator change needs focused state and event assertions, not only an aggregate DPS snapshot.
 
 Use relevant cases including:

@@ -1,0 +1,8 @@
+{"op":"upsert","entity":"invention-perk:turtling","set":{"status":"active"},"reason":"Overlap-authority retired this as a duplicate of perk:turtling, but the research active-perk catalogue still needs the row. Export drops removed entity bodies and only compacts $.records, so active_perks[10] became a null hole and the Invention planner lost Turtling."}
+{"op":"upsert","entity":"invention-perk:ultimatums","set":{"status":"active"},"reason":"Same catalogue hole as turtling: restore so planner-expansions-invention-active-perks keeps Ultimatums after the July 2026 active-perk snapshot."}
+{"op":"upsert","entity":"invention-perk:biting","set":{"status":"active"},"reason":"Same catalogue hole: Biting remains an active game perk and must stay in the research active-perk list even though combat/perks.json holds the richer PvM recipe under perk:biting."}
+{"op":"upsert","entity":"invention-perk:crackling","set":{"status":"active"},"reason":"Same catalogue hole: restore Crackling to the research active-perk list."}
+{"op":"upsert","entity":"invention-perk:enhanced-devoted","set":{"status":"active"},"reason":"Same catalogue hole: restore Enhanced Devoted to the research active-perk list."}
+{"op":"upsert","entity":"invention-perk:lucky","set":{"status":"active"},"reason":"Same catalogue hole: restore Lucky to the research active-perk list."}
+{"op":"upsert","entity":"invention-perk:invigorating","set":{"status":"active"},"reason":"Same catalogue hole: restore Invigorating to the research active-perk list."}
+{"op":"upsert","entity":"invention-perk:impatient","set":{"status":"active"},"reason":"Same catalogue hole: restore Impatient to the research active-perk list."}

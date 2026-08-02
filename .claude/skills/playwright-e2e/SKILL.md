@@ -5,6 +5,9 @@ description: Run and diagnose this repository's local Playwright browser tests w
 
 # Playwright E2E
 
+This skill owns **how to run** local Playwright. For writing, editing, deleting, or triaging E2E
+cases, also read and follow `test-maintainer` first — mandatory for all suite work.
+
 Use the managed runner for ordinary headless E2E work:
 
 ```powershell

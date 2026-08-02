@@ -165,6 +165,9 @@ the derivation in the test rather than guessing.
 
 ## Validation fixtures
 
+Read and follow `test-maintainer` before writing, editing, or triaging any combat test. That skill is
+mandatory for suite work; this section only names how goldens must be derived.
+
 Golden fixtures are **derived independently** — from the sourced formula, worked out in the test
 itself — and never pasted from another calculator's output. A fixture that only records what RS
 Analysis or RS-Rot printed proves agreement with that tool, not with the game, and will happily pin

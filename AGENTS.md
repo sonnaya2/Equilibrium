@@ -25,6 +25,7 @@ not repeat.
 | `equilibrium-ui`      | UI rules: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA    |
 | `map-3d`              | Generated map data, WebGPU fence, controls, fallback, and rendered verification                          |
 | `playwright-e2e`      | Local E2E server ownership, port selection, startup checks, and teardown                                 |
+| `test-maintainer`     | **Mandatory** for any Vitest/Playwright write, edit, delete, or failure triage                            |
 | `lean-implementation` | How much implementation a change deserves, and which complexity is load-bearing                          |
 
 The full text lives in `.claude/skills/`; the tracked `skills/` files are one-line pointers to it.
@@ -53,6 +54,13 @@ and reconcile `origin/main`, validate, commit on `main`, then push `main` direct
 (`299354192+sonnaya2@users.noreply.github.com`), set repo-locally because GitHub blocks pushes that
 would publish the private one.
 
+**`test-maintainer` is mandatory for all test work.** Before writing, editing, deleting, relocating,
+or triaging any Vitest or Playwright test — and before changing an expectation to make a suite green
+— read and follow the canonical `test-maintainer` skill. Domain skills (`combat-math`, `combat-sim`,
+etc.) still own mechanic truth; `test-maintainer` owns how tests may be changed. Never weaken a valid
+test to pass incorrect production behavior. Never run or invent test commands from memory alone when
+the work is about the suite itself.
+
 **Playwright defaults to port 3100**, not 3000 — another app on this machine holds 3000. E2E is _not_
 in CI (`.github/workflows/validate.yml` stops at `build` — no Playwright job, optional or otherwise).
 Before every Playwright command, read and follow the canonical `playwright-e2e` skill, including for
@@ -60,6 +68,8 @@ focused retries and runs that reuse an existing server. Never run Playwright fro
 Use the `playwright-e2e` skill's managed runner before pushing; it reuses a verified Equilibrium
 server or selects 3100, then 3102 through 3110, and stops only the server it starts. `PLAYWRIGHT_PORT`
 sets the config explicitly. WebGPU / 3D map paths are easy to flake in headless CI, so keep e2e local.
+When the task is writing or fixing Playwright cases (not only running them), also follow
+`test-maintainer`.
 
 **Do not pin sourced values in e2e.** `verifiedAt` dates and rule wording move with content patches,
 and a hardcoded date turns every data refresh into a red suite. Match a pattern.

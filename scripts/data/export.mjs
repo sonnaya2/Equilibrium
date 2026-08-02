@@ -92,9 +92,21 @@ export function documentOutputs(db) {
     }
     setRecordAtPath(document, row.record_path, JSON.parse(row.raw_json));
   }
-  // Indexed writes leave holes when middle records are skipped; compact them.
+  // Indexed writes leave holes when middle records are skipped; compact every
+  // top-level record list (not only `records` — e.g. active_perks).
   for (const data of documents.values()) {
-    if (Array.isArray(data.records)) data.records = data.records.filter(Boolean);
+    for (const [key, value] of Object.entries(data)) {
+      if (
+        Array.isArray(value) &&
+        value.some((entry) => entry == null) &&
+        value.every((entry) => entry == null || (typeof entry === "object" && !Array.isArray(entry)))
+      ) {
+        data[key] = value.filter(Boolean);
+      }
+    }
+    if (typeof data.active_perk_count === "number" && Array.isArray(data.active_perks)) {
+      data.active_perk_count = data.active_perks.length;
+    }
   }
   return new Map(
     [...documents].map(([file, data]) => [

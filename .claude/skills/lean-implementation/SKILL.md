@@ -13,7 +13,7 @@ what is safe to simplify here and what is not.
 - Extend existing files and helpers before adding files, libraries, stores, workflows, or abstractions.
 - The generated SQLite database is the runtime data store; tracked authoring stays limited to one compressed seed, migrations, and small patches. Do not add an API, CMS, committed database, or duplicate authoring tree.
 - Publish from the primary `main` checkout. Do not create branches, worktrees, or pull requests unless asked.
-- Reuse the current test framework and scripts. Non-trivial behavior gets the smallest focused regression check that proves it.
+- Reuse the current test framework and scripts. Non-trivial behavior gets the smallest focused regression check that proves it. Any test write, edit, delete, or failure triage must follow `test-maintainer` first.
 - Delete stale automation and duplicated guidance instead of building synchronization machinery around it.
 - Keep UI code lean without flattening visual hierarchy, accessibility, real art, or rendered QA.
 - Keep Three.js fenced to Map; never make other routes pay for it.

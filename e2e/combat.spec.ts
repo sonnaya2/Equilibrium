@@ -123,10 +123,37 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
 
   await page.getByRole("button", { name: "Perks", exact: true }).click();
   await expect(page.getByText("Perks & sets")).toBeVisible();
-  await expect(page.getByText(/Equilibrium rank \(R1 \+8% AD/)).toBeVisible();
+  // Perks are icon steppers: the effect text survives in the accessible name.
+  const equilibrium = page.getByRole("spinbutton", { name: /Equilibrium — R1 \+8% AD/ });
+  await expect(equilibrium).toHaveAttribute("aria-valuenow", "0");
+  await equilibrium.click();
+  await expect(equilibrium).toHaveAttribute("aria-valuenow", "1");
+  await equilibrium.press("ArrowDown");
+  await expect(equilibrium).toHaveAttribute("aria-valuenow", "0");
+
+  // Gizmo placement is organisational: the rank input drives the same perk value.
+  await page
+    .getByRole("combobox", { name: /Add a perk to Weapon gizmo 1/ })
+    .selectOption("equilibrium");
+  await page.getByRole("spinbutton", { name: "Equilibrium rank" }).fill("3");
+  await expect(equilibrium).toHaveAttribute("aria-valuenow", "3");
 
   await page.getByRole("button", { name: "Buffs", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: /Vulnerability/ })).toBeVisible();
+
+  // Buffs are icon tiles: the name and effect survive only in the accessible name.
+  const elder = page.getByRole("button", { name: /Elder overload/ });
+  await expect(elder).toHaveAttribute("aria-pressed", "false");
+  await elder.click();
+  await expect(elder).toHaveAttribute("aria-pressed", "true");
+  // Overload boosts every combat stat, so Summary reports base + boost.
+  await expect(
+    page
+      .getByRole("definition")
+      .filter({ hasText: /\(99 \+\d+\)/ })
+      .first(),
+  ).toBeVisible();
+  await expect(page.getByText("No armour set pieces equipped", { exact: false })).toBeVisible();
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
   await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
@@ -188,4 +215,25 @@ test("loadout calculation controls reset automatic base and persist into Revolut
   const assumptions = page.getByRole("heading", { name: "Calculation assumptions" }).locator("..");
   await expect(assumptions.getByText("62%", { exact: true })).toBeVisible();
   await expect(assumptions.getByText("Off", { exact: true })).toBeVisible();
+});
+
+test("perks follow the combat style, but a set left ranked stays reachable", async ({ page }) => {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  const style = (name: string) => page.locator(".setup-style-button", { hasText: name });
+
+  await style("Magic").click();
+  await page.getByRole("button", { name: "Perks", exact: true }).click();
+  const tectonic = page.getByRole("spinbutton", { name: /^Tectonic/ });
+  await expect(tectonic).toBeVisible();
+
+  // Magic-only entries drop off melee...
+  await style("Melee").click();
+  await expect(page.getByRole("button", { name: /Inside Sunshine/ })).toBeHidden();
+
+  // ...but one still carrying pieces must not vanish, because the engine keeps counting it.
+  await style("Magic").click();
+  await tectonic.click();
+  await expect(tectonic).toHaveAttribute("aria-valuenow", "1");
+  await style("Melee").click();
+  await expect(page.getByRole("spinbutton", { name: /^Tectonic/ })).toBeVisible();
 });

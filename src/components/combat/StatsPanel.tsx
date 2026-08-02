@@ -1,8 +1,31 @@
 "use client";
 
 import { NumberField } from "./NumberField";
-import { loadoutStats } from "./loadoutStats";
+import { loadoutOverloadTier, loadoutStats } from "./loadoutStats";
+import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { withAttackLevel, withStrengthLevel, withStyleLevel, type Loadout } from "./useLoadout";
+
+function StatsGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="stats-group">
+      <h3 className="buff-group__title">{title}</h3>
+      <div className="loadout-fields mt-1.5">{children}</div>
+    </section>
+  );
+}
+
+/** Engine output, not an input — reads as a result, never as an empty field. */
+function DerivedRow({ label, value, note }: { label: string; value: string; note?: string }) {
+  return (
+    <div className="stats-derived">
+      <span className="stats-derived__label">
+        {label}
+        {note ? <em className="stats-derived__note">{note}</em> : null}
+      </span>
+      <strong className="stats-derived__value">{value}</strong>
+    </div>
+  );
+}
 
 export function StatsPanel({
   loadout,
@@ -12,6 +35,7 @@ export function StatsPanel({
   setLoadout: (next: Loadout) => void;
 }) {
   const stats = loadoutStats(loadout);
+  const overloadTier = loadoutOverloadTier(loadout);
   const automatic = (patch: Partial<Loadout>) =>
     setLoadout({
       ...loadout,
@@ -19,145 +43,184 @@ export function StatsPanel({
       baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     });
 
+  const boostNote = (base: number) =>
+    overloadTier ? `+${overloadBoostedLevel(base, overloadTier) - base} from overload` : undefined;
+
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Stats</h2>
-      <div className="loadout-fields mt-3">
-        {loadout.style === "melee" ? (
-          <>
+      <p className="mt-1 text-xs text-parch-300">
+        Levels and weapon tiers feed base ability damage. Editing any of them switches base damage
+        back to automatic.
+      </p>
+
+      <div className="stats-layout mt-3">
+        <StatsGroup title="Levels">
+          {loadout.style === "melee" ? (
+            <>
+              <NumberField
+                label="Attack level"
+                value={loadout.attackLevel}
+                onChange={(attackLevel) => setLoadout(withAttackLevel(loadout, attackLevel))}
+              />
+              <NumberField
+                label="Strength level"
+                value={loadout.strengthLevel}
+                onChange={(strengthLevel) => setLoadout(withStrengthLevel(loadout, strengthLevel))}
+              />
+            </>
+          ) : (
             <NumberField
-              label="Attack level"
-              value={loadout.attackLevel}
-              onChange={(attackLevel) => setLoadout(withAttackLevel(loadout, attackLevel))}
+              label="Style level"
+              value={loadout.level}
+              onChange={(level) => setLoadout(withStyleLevel(loadout, level))}
             />
-            <NumberField
-              label="Strength level"
-              value={loadout.strengthLevel}
-              onChange={(strengthLevel) => setLoadout(withStrengthLevel(loadout, strengthLevel))}
-            />
-          </>
-        ) : (
-          <NumberField
-            label="Style level"
-            value={loadout.level}
-            onChange={(level) => setLoadout(withStyleLevel(loadout, level))}
+          )}
+          <DerivedRow
+            label="Damage level in play"
+            value={String(stats.effectiveDamageLevel)}
+            note={boostNote(loadout.style === "melee" ? loadout.strengthLevel : loadout.level)}
           />
-        )}
-        {loadout.style !== "necromancy" ? (
-          <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-100">
-            <span>Weapon setup</span>
+        </StatsGroup>
+
+        <StatsGroup title="Weapon">
+          {loadout.style !== "necromancy" ? (
+            <label className="loadout-select">
+              <span>Weapon setup</span>
+              <select
+                aria-label="Weapon setup"
+                value={loadout.weaponConfiguration}
+                onChange={(event) =>
+                  automatic({
+                    weaponConfiguration: event.target.value as Loadout["weaponConfiguration"],
+                  })
+                }
+              >
+                <option value="twohand">Two-handed</option>
+                <option value="dualwield">Dual wield</option>
+                <option value="mainhand">Main-hand only</option>
+              </select>
+            </label>
+          ) : null}
+          <NumberField
+            label={loadout.style === "necromancy" ? "Death guard tier" : "Main weapon tier"}
+            value={loadout.weaponTier}
+            onChange={(weaponTier) => automatic({ weaponTier })}
+          />
+          {loadout.style === "necromancy" || loadout.weaponConfiguration === "dualwield" ? (
+            <NumberField
+              label={loadout.style === "necromancy" ? "Conduit tier" : "Off-hand tier"}
+              value={loadout.offhandTier}
+              onChange={(offhandTier) => automatic({ offhandTier })}
+            />
+          ) : null}
+          {loadout.style === "magic" ? (
+            <NumberField
+              label="Spell tier"
+              value={loadout.spellTier}
+              onChange={(spellTier) => automatic({ spellTier })}
+            />
+          ) : null}
+          {loadout.style === "ranged" ? (
+            <NumberField
+              label="Ammunition tier"
+              value={loadout.ammunitionTier}
+              onChange={(ammunitionTier) => automatic({ ammunitionTier })}
+            />
+          ) : null}
+          <NumberField
+            label="Other style damage bonus"
+            value={loadout.styleDamageBonus}
+            onChange={(styleDamageBonus) => automatic({ styleDamageBonus })}
+          />
+        </StatsGroup>
+
+        <StatsGroup title="Base damage">
+          <label className="loadout-select">
+            <span>Source</span>
+            {/* Group heading carries "Base damage" visually; the control keeps it
+                as its accessible name so it still stands alone. */}
             <select
-              value={loadout.weaponConfiguration}
+              aria-label="Base damage"
+              value={loadout.baseDamage.mode}
               onChange={(event) =>
-                automatic({
-                  weaponConfiguration: event.target.value as Loadout["weaponConfiguration"],
+                setLoadout({
+                  ...loadout,
+                  baseDamage: {
+                    ...loadout.baseDamage,
+                    mode: event.target.value === "manual" ? "manual" : "automatic",
+                  },
                 })
               }
-              className="w-full border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
             >
-              <option value="twohand">Two-handed</option>
-              <option value="dualwield">Dual wield</option>
-              <option value="mainhand">Main-hand only</option>
+              <option value="automatic">Automatic</option>
+              <option value="manual">Manual override</option>
             </select>
           </label>
-        ) : null}
-        <NumberField
-          label={loadout.style === "necromancy" ? "Death guard tier" : "Main weapon tier"}
-          value={loadout.weaponTier}
-          onChange={(weaponTier) => automatic({ weaponTier })}
-        />
-        {loadout.style === "necromancy" || loadout.weaponConfiguration === "dualwield" ? (
-          <NumberField
-            label={loadout.style === "necromancy" ? "Conduit tier" : "Off-hand tier"}
-            value={loadout.offhandTier}
-            onChange={(offhandTier) => automatic({ offhandTier })}
-          />
-        ) : null}
-        {loadout.style === "magic" ? (
-          <NumberField
-            label="Spell tier"
-            value={loadout.spellTier}
-            onChange={(spellTier) => automatic({ spellTier })}
-          />
-        ) : null}
-        {loadout.style === "ranged" ? (
-          <NumberField
-            label="Ammunition tier"
-            value={loadout.ammunitionTier}
-            onChange={(ammunitionTier) => automatic({ ammunitionTier })}
-          />
-        ) : null}
-        <NumberField
-          label="Other style damage bonus"
-          value={loadout.styleDamageBonus}
-          onChange={(styleDamageBonus) => automatic({ styleDamageBonus })}
-        />
-        <label className="grid grid-cols-[1fr_110px] items-center gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-100">
-          <span>Base damage</span>
-          <select
-            value={loadout.baseDamage.mode}
-            onChange={(event) =>
-              setLoadout({
-                ...loadout,
-                baseDamage: {
-                  ...loadout.baseDamage,
-                  mode: event.target.value === "manual" ? "manual" : "automatic",
-                },
-              })
-            }
-            className="w-full border border-stone-750 bg-transparent px-2 py-1 text-sm text-parch-50"
-          >
-            <option value="automatic">Automatic</option>
-            <option value="manual">Manual override</option>
-          </select>
-        </label>
-        {loadout.baseDamage.mode === "manual" ? (
-          <NumberField
-            label="Manual base override"
-            value={loadout.baseDamage.manualValue}
-            onChange={(manualValue) =>
-              setLoadout({
-                ...loadout,
-                baseDamage: { mode: "manual", manualValue: Math.max(1, manualValue) },
-              })
+          {loadout.baseDamage.mode === "manual" ? (
+            <NumberField
+              label="Manual base override"
+              value={loadout.baseDamage.manualValue}
+              onChange={(manualValue) =>
+                setLoadout({
+                  ...loadout,
+                  baseDamage: { mode: "manual", manualValue: Math.max(1, manualValue) },
+                })
+              }
+            />
+          ) : null}
+          <DerivedRow
+            label="Effective base ability damage"
+            value={new Intl.NumberFormat("en-US").format(stats.base)}
+            note={
+              loadout.perks.equilibrium > 0 || loadout.perks.eruptive > 0
+                ? "perks applied"
+                : undefined
             }
           />
-        ) : null}
-        <div className="flex justify-between gap-3 border-b border-stone-750/70 py-2 text-xs">
-          <span className="text-parch-300">Effective base ability damage</span>
-          <strong className="font-mono font-medium text-parch-50">{stats.base}</strong>
-        </div>
-        <NumberField
-          label="Starting adrenaline"
-          value={loadout.startingAdrenaline}
-          onChange={(startingAdrenaline) =>
-            setLoadout({
-              ...loadout,
-              startingAdrenaline: Math.min(stats.maxAdrenaline, Math.max(0, startingAdrenaline)),
-            })
-          }
-          suffix="%"
-        />
-        <label className="flex items-center justify-between gap-3 border-b border-stone-750/70 py-2 text-xs text-parch-100">
-          <span>30,000 hit cap</span>
-          <input
-            type="checkbox"
-            checked={loadout.hitCapEnabled}
-            onChange={(event) => setLoadout({ ...loadout, hitCapEnabled: event.target.checked })}
+        </StatsGroup>
+
+        <StatsGroup title="Combat assumptions">
+          <NumberField
+            label="Starting adrenaline"
+            value={loadout.startingAdrenaline}
+            onChange={(startingAdrenaline) =>
+              setLoadout({
+                ...loadout,
+                startingAdrenaline: Math.min(
+                  stats.maxAdrenaline,
+                  Math.max(0, startingAdrenaline),
+                ),
+              })
+            }
+            suffix="%"
           />
-        </label>
-        <NumberField
-          label="Damage Potential assumption"
-          value={loadout.accuracy}
-          onChange={(accuracy) => setLoadout({ ...loadout, accuracy })}
-          suffix="%"
-        />
-        <NumberField
-          label="Crit chance"
-          value={loadout.critChance}
-          onChange={(critChance) => setLoadout({ ...loadout, critChance })}
-          suffix="%"
-        />
+          <NumberField
+            label="Damage Potential assumption"
+            value={loadout.accuracy}
+            onChange={(accuracy) => setLoadout({ ...loadout, accuracy })}
+            suffix="%"
+          />
+          <NumberField
+            label="Crit chance"
+            value={loadout.critChance}
+            onChange={(critChance) => setLoadout({ ...loadout, critChance })}
+            suffix="%"
+          />
+          <label className="loadout-toggle">
+            <span>30,000 hit cap</span>
+            <input
+              type="checkbox"
+              checked={loadout.hitCapEnabled}
+              onChange={(event) => setLoadout({ ...loadout, hitCapEnabled: event.target.checked })}
+            />
+          </label>
+          <DerivedRow
+            label="Damage Potential in play"
+            value={`${Math.round(stats.dp * 1000) / 10}%`}
+            note={stats.damagePotentialSource}
+          />
+        </StatsGroup>
       </div>
     </div>
   );

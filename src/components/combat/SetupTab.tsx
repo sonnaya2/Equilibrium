@@ -7,7 +7,8 @@ import { GameIcon } from "../GameIcon";
 import { BuffsPanel } from "./BuffsPanel";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { GearPanel } from "./GearPanel";
-import { loadoutStats, loadoutWeaponTier } from "./loadoutStats";
+import { loadoutOverloadTier, loadoutStats, loadoutWeaponTier } from "./loadoutStats";
+import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { PerksPanel } from "./PerksPanel";
 import { StatsPanel } from "./StatsPanel";
 import { TargetPanel } from "./TargetPanel";
@@ -33,12 +34,30 @@ function formatNum(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
+/** Stat level with the overload boost folded in — the number the engine actually uses. */
+function BoostedLevel({ base, boosted }: { base: number; boosted: number }) {
+  if (boosted === base) return <dd className="font-mono text-parch-50">{base}</dd>;
+  return (
+    <dd className="font-mono text-parch-50">
+      {boosted}
+      <span className="ml-1 text-parch-300">
+        ({base} +{boosted - base})
+      </span>
+    </dd>
+  );
+}
+
 export function SetupTab() {
   const [loadout, setLoadout] = useLoadout();
   const [subTab, setSubTab] = useState<SubTab>("Gear");
   const stats = useMemo(() => loadoutStats(loadout), [loadout]);
 
   const slotted = equipmentIdList(loadout.equipmentSlots);
+  // Mirrors loadoutStats' accuracy path: overload only, curse is a prayer boost.
+  const overloadTier = loadoutOverloadTier(loadout);
+  const boostedAttackLevel = overloadTier
+    ? overloadBoostedLevel(loadout.attackLevel, overloadTier)
+    : loadout.attackLevel;
   const activeBuffs = [
     loadout.buffs.vulnerability ? "Vuln" : null,
     loadout.buffs.styleCurse !== "none" ? loadout.buffs.styleCurse : null,
@@ -140,17 +159,17 @@ export function SetupTab() {
               <>
                 <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
                   <dt className="text-parch-300">Attack</dt>
-                  <dd className="font-mono text-parch-50">{loadout.attackLevel}</dd>
+                  <BoostedLevel base={loadout.attackLevel} boosted={boostedAttackLevel} />
                 </div>
                 <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
                   <dt className="text-parch-300">Strength</dt>
-                  <dd className="font-mono text-parch-50">{loadout.strengthLevel}</dd>
+                  <BoostedLevel base={loadout.strengthLevel} boosted={stats.effectiveDamageLevel} />
                 </div>
               </>
             ) : (
               <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">
                 <dt className="text-parch-300">Level</dt>
-                <dd className="font-mono text-parch-50">{loadout.level}</dd>
+                <BoostedLevel base={loadout.level} boosted={stats.effectiveDamageLevel} />
               </div>
             )}
             <div className="flex justify-between gap-2 border-b border-stone-750/70 pb-1.5">

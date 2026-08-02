@@ -945,17 +945,27 @@ body:has(.combat-screen) {
 }
 
 .invention-gizmos {
+  min-width: 0;
   padding-left: 0.75rem;
   border-left: 1px solid var(--combat-gold-dim);
 }
 
+.gizmo-list__note {
+  color: var(--combat-muted);
+  font-size: 0.7rem;
+  line-height: 1.3;
+}
+
 .gizmo-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.45rem;
 }
 
 .gizmo-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
   border: 1px solid var(--combat-gold-dim);
   background: var(--combat-inset);
 }
@@ -986,8 +996,29 @@ body:has(.combat-screen) {
   text-transform: uppercase;
 }
 
+.gizmo-card__title-block {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+}
+
+.gizmo-card__hint {
+  color: var(--combat-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
 .gizmo-card__activate[aria-pressed="true"] {
   color: var(--combat-gem-bright);
+}
+
+.gizmo-card__activate[aria-pressed="true"] .gizmo-card__hint {
+  color: color-mix(in srgb, var(--combat-gem-bright) 70%, var(--combat-muted));
 }
 
 .gizmo-card__clear {
@@ -1003,13 +1034,31 @@ body:has(.combat-screen) {
 }
 
 .gizmo-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.35rem;
   padding: 0.45rem 0.55rem 0.55rem;
 }
 
-.gizmo-card__empty {
-  padding: 0.35rem 0;
+.gizmo-card__empty,
+.gizmo-slot-empty {
+  padding: 0.4rem 0.45rem;
+  border: 1px dashed color-mix(in srgb, var(--combat-gold-dim) 80%, transparent);
+  background: color-mix(in srgb, var(--combat-panel) 55%, transparent);
   color: var(--combat-muted);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  text-align: left;
+}
+
+.gizmo-slot-empty:hover,
+.gizmo-slot-empty.is-active {
+  border-color: var(--combat-gem);
+  color: var(--combat-gem-bright);
+}
+
+.gizmo-slot-empty.is-active {
+  background: color-mix(in srgb, var(--combat-gem-dark) 18%, var(--combat-inset));
 }
 
 .gizmo-perk {
@@ -1084,8 +1133,7 @@ body:has(.combat-screen) {
 }
 
 .gizmo-perk-block + .gizmo-perk-block {
-  margin-top: 0.45rem;
-  padding-top: 0.45rem;
+  padding-top: 0.35rem;
   border-top: 1px solid var(--combat-gold-dim);
 }
 
@@ -1140,6 +1188,12 @@ body:has(.combat-screen) {
     padding-left: 0;
     border-top: 1px solid var(--combat-gold-dim);
     border-left: 0;
+  }
+}
+
+@media (width < 28rem) {
+  .gizmo-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

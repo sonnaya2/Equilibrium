@@ -155,6 +155,14 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
 
   await page.getByRole("button", { name: "Invention", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
+  // Two weapon shells + two armour shells (body + legs); each shell is 2 perk slots.
+  const gizmos = page.getByRole("group", { name: "Gizmos" });
+  await expect(gizmos.getByRole("button", { name: /Weapon 1/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /Weapon 2/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /Armour 1/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /Armour 2/ })).toBeVisible();
+  await expect(gizmos.getByText("Body", { exact: true })).toBeVisible();
+  await expect(gizmos.getByText("Legs", { exact: true })).toBeVisible();
   const aftershock = page.getByRole("button", { name: /Aftershock.*Weapon/ });
   await page.getByRole("button", { name: /Armour 1/ }).click();
   await expect(aftershock).toHaveAttribute("aria-disabled", "true");

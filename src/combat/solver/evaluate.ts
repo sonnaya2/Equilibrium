@@ -1,6 +1,8 @@
 import { TICK_SECONDS } from "../core/ticks";
 import { simulateRevolution, type RevolutionInput } from "../engine/simulation/revolution";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
+import { withStrengthCape99Dismember } from "../styles/melee/abilities";
+import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
 import type {
   CandidatePoolOptions,
   ExclusionReason,
@@ -112,10 +114,18 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   }
   for (const ability of resolved) abilityMap.set(ability.id, ability);
 
+  const strengthCape99 = (sim as { strengthCape99?: boolean }).strengthCape99 === true;
+  const catalogue = strengthCape99
+    ? withStrengthCape99Dismember([...abilityMap.values()], STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
+    : [...abilityMap.values()];
+  const resolvedBar = strengthCape99
+    ? withStrengthCape99Dismember(resolved, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
+    : resolved;
+
   const summary = simulateRevolution({
     ...simFields,
-    abilities: [...abilityMap.values()],
-    bar: resolved,
+    abilities: catalogue,
+    bar: resolvedBar,
     style,
     durationTicks,
   });

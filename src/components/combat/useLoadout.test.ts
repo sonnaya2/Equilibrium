@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { POWERBURST_COOLDOWN_MS, POWERBURST_DURATION_MS } from "@/combat";
 import {
   DEFAULT_LOADOUT,
+  GIZMO_CAPACITY,
+  GIZMO_SLOTS,
   activatePowerburstOfVitality,
   clearEquipment,
   equipInSlot,
@@ -196,6 +198,8 @@ describe("normalizeLoadout", () => {
       overheal: "none",
       powerburstOfVitalityUntil: null,
       powerburstOfVitalityCooldownUntil: null,
+      strengthCape99: false,
+      attackCape120: false,
     });
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);
@@ -564,5 +568,26 @@ describe("gizmo layout", () => {
 
   it("a loadout stored before gizmos existed normalizes to an empty layout", () => {
     expect(normalizeLoadout({ style: "magic" }).gizmos).toEqual({});
+  });
+
+  it("exposes two weapon shells and two armour shells (body + legs)", () => {
+    expect(GIZMO_SLOTS).toEqual(["weapon1", "weapon2", "armour1", "armour2"]);
+    expect(GIZMO_CAPACITY).toBe(2);
+    let loadout = placePerkOnGizmo(DEFAULT_LOADOUT, "armour1", "biting");
+    loadout = placePerkOnGizmo(loadout, "armour2", "impatient");
+    expect(loadout.gizmos.armour1).toEqual(["biting"]);
+    expect(loadout.gizmos.armour2).toEqual(["impatient"]);
+    expect(gizmoSlotOf(loadout.gizmos, "biting")).toBe("armour1");
+    expect(gizmoSlotOf(loadout.gizmos, "impatient")).toBe("armour2");
+  });
+});
+
+describe("skillcape buffs", () => {
+  it("defaults skillcape perks off and normalizes truthy flags", () => {
+    expect(DEFAULT_LOADOUT.buffs.strengthCape99).toBe(false);
+    expect(DEFAULT_LOADOUT.buffs.attackCape120).toBe(false);
+    expect(normalizeLoadout({ buffs: { strengthCape99: true } }).buffs.strengthCape99).toBe(true);
+    expect(normalizeLoadout({ buffs: { attackCape120: 1 } }).buffs.attackCape120).toBe(false);
+    expect(normalizeLoadout({ buffs: { attackCape120: true } }).buffs.attackCape120).toBe(true);
   });
 });

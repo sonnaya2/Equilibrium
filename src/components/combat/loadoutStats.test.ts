@@ -114,6 +114,42 @@ describe("loadoutStats", () => {
     );
   });
 
+  it("Attack cape (120) adds 2% melee hit chance to Damage Potential", () => {
+    // Strong target so hit chance is below the 100% cap and the cape is visible.
+    const target = { defenceLevel: 120, affinity: "strong" as const };
+    const plain = loadoutStats({
+      ...base,
+      style: "melee",
+      attackLevel: 99,
+      strengthLevel: 99,
+      weaponTier: 90,
+      target,
+    });
+    const withCape = loadoutStats({
+      ...base,
+      style: "melee",
+      attackLevel: 99,
+      strengthLevel: 99,
+      weaponTier: 90,
+      target,
+      buffs: { ...base.buffs, attackCape120: true },
+    });
+    expect(withCape.attackCape120).toBe(true);
+    expect(plain.dp).toBeLessThan(1);
+    expect(withCape.dp).toBeGreaterThan(plain.dp);
+    expect(withCape.dp - plain.dp).toBeCloseTo(0.02, 5);
+    // Non-melee styles ignore the cape for hit chance.
+    const ranged = loadoutStats({
+      ...base,
+      style: "ranged",
+      level: 99,
+      weaponTier: 90,
+      target,
+      buffs: { ...base.buffs, attackCape120: true },
+    });
+    expect(ranged.attackCape120).toBe(false);
+  });
+
   it("non-melee styles use a single style level for both accuracy and damage", () => {
     const magic: Loadout = {
       ...base,

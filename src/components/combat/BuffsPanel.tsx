@@ -46,6 +46,10 @@ const LIFE_ICON = {
   totemOfVitality: "/game/upgrades/permanent-unlocks/totem-of-vitality.webp",
   powerburstOfVitality: "/game/upgrades/skilling-production/powerburst-of-vitality.webp",
 } as const;
+const SKILLCAPE_ICON = {
+  strength: "/game/skills/strength.webp",
+  attack: "/game/skills/attack.webp",
+} as const;
 const ENCHANTMENTS: Record<EquipmentEnchantmentId, { label: string; effect: string }> = {
   agony: {
     label: "Agony",
@@ -314,6 +318,26 @@ export function BuffsPanel({
               }
             />
           ))}
+        </div>
+      </div>
+
+      <div className="buff-group buff-skillcapes mt-3" role="group" aria-label="Skillcape perks">
+        <h3 className="buff-group__title">Skillcape perks</h3>
+        <div className="icon-tile-grid">
+          <BuffTile
+            icon={SKILLCAPE_ICON.strength}
+            label="Strength cape (99)"
+            effect="Dismember deals three extra bleed hits (wiki Strength cape perk)"
+            pressed={loadout.buffs.strengthCape99}
+            onClick={() => setBuffs({ strengthCape99: !loadout.buffs.strengthCape99 })}
+          />
+          <BuffTile
+            icon={SKILLCAPE_ICON.attack}
+            label="Attack cape (120)"
+            effect="+2% melee hit chance (wiki Attack master cape perk)"
+            pressed={loadout.buffs.attackCape120}
+            onClick={() => setBuffs({ attackCape120: !loadout.buffs.attackCape120 })}
+          />
         </div>
       </div>
 

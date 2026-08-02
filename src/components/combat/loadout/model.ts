@@ -202,6 +202,16 @@ export interface LoadoutBuffs {
   powerburstOfVitalityUntil: number | null;
   /** Epoch expiry for the sourced two-minute global powerburst cooldown. */
   powerburstOfVitalityCooldownUntil: number | null;
+  /**
+   * Strength cape (99) perk: Dismember deals three extra bleed hits.
+   * (Independent of wearing the cape piece — player-toggled like other buffs.)
+   */
+  strengthCape99: boolean;
+  /**
+   * Attack master cape (120) perk: +2% melee hit chance.
+   * Only applied while the loadout style is melee.
+   */
+  attackCape120: boolean;
 }
 
 export interface Loadout {
@@ -300,6 +310,8 @@ export const DEFAULT_LOADOUT: Loadout = {
     overheal: "none",
     powerburstOfVitalityUntil: null,
     powerburstOfVitalityCooldownUntil: null,
+    strengthCape99: false,
+    attackCape120: false,
   },
   equipmentSlots: {},
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
@@ -863,6 +875,8 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
         : "none",
       powerburstOfVitalityUntil,
       powerburstOfVitalityCooldownUntil,
+      strengthCape99: rawBuffs.strengthCape99 === true,
+      attackCape120: rawBuffs.attackCape120 === true,
     },
     equipmentSlots,
     enchantments,

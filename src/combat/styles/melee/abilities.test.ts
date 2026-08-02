@@ -6,7 +6,9 @@ import {
   MELEE_EFFECTS,
   PUNISH_HP_THRESHOLD,
   PUNISH_TARGET_MULTIPLIER,
+  withStrengthCape99Dismember,
 } from "./abilities";
+import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../../shared/perks";
 
 const byId = (id: string) => {
   const a = MELEE_ABILITIES.find((x) => x.id === id);
@@ -32,6 +34,19 @@ describe("melee ability data", () => {
     expect(dismember.category).toBe("enhanced");
     expect(dismember.enables).toBe("slaughter");
     expect(byId("slaughter").enables).toBe("massacre");
+  });
+
+  it("Strength cape (99) adds three extra Dismember hits of the same band", () => {
+    const base = byId("dismember");
+    expect(base.hits).toHaveLength(8);
+    const patched = withStrengthCape99Dismember(MELEE_ABILITIES, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS);
+    const dismember = patched.find((a) => a.id === "dismember")!;
+    expect(dismember.hits).toHaveLength(11);
+    expect(dismember.hits.slice(8).map((h) => h.tickOffset)).toEqual([18, 20, 22]);
+    expect(dismember.hits[10]?.band).toEqual(base.hits[0]!.band);
+    // Idempotent.
+    const twice = withStrengthCape99Dismember(patched, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS);
+    expect(twice.find((a) => a.id === "dismember")!.hits).toHaveLength(11);
   });
 
   it("Assault carries its 4-Bloodlust band as data", () => {

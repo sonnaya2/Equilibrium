@@ -17,6 +17,8 @@ import {
   relentlessProcChance,
   ruthlessDamageBonus,
   SLAYER_PERK_DAMAGE_BONUS,
+  STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
+  STRENGTH_CAPE_DISMEMBER_HEAL_BONUS,
   ultimatumsPerkModifier,
 } from "./perks";
 
@@ -82,8 +84,10 @@ describe("shared/perks", () => {
     expect(genocidalDamageBonus(1, 100)).toBeCloseTo(0.049, 10);
   });
 
-  it("skillcape constants match Beta Update 4", () => {
+  it("skillcape constants match wiki combat modernisation values", () => {
     expect(ATTACK_CAPE_MELEE_HIT_CHANCE).toBe(0.02);
+    expect(STRENGTH_CAPE_DISMEMBER_EXTRA_HITS).toBe(3);
+    expect(STRENGTH_CAPE_DISMEMBER_HEAL_BONUS).toBeCloseTo(0.03, 10);
   });
 
   it("Relentless is 1%/rank (1.1% lvl20) and EV refund is cost × chance", () => {

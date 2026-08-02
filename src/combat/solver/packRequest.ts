@@ -91,6 +91,7 @@ export function packSimBase(stats: CalcStats, loadout: Loadout): SerializableRev
     adrenaline: stats.adrenaline,
     procs: stats.procs,
     plantedFeet: stats.plantedFeet,
+    strengthCape99: stats.strengthCape99,
     preciseRank: stats.preciseRank,
     conjureBasicDamageMult: stats.conjureBasicDamageMult,
     conjureDurationMult: stats.conjureDurationMult,

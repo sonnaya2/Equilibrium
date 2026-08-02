@@ -7,7 +7,11 @@ import { simulate, type RotationSummary } from "@/combat/engine/simulation/simul
 import { meetsEquipmentRequirement, meetsWeaponRequirement } from "@/combat/engine/cast/rules";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import type { CombatStyle } from "@/combat/types";
-import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
+import {
+  MELEE_ABILITIES,
+  withStrengthCape99Dismember,
+} from "@/combat/styles/melee/abilities";
+import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
 import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
@@ -27,6 +31,15 @@ const STORAGE_KEY = "eq:rotation:v1";
 
 // Volley is factory-built (soul count); 3 = base Residual Soul cap.
 const NECRO_PALETTE: AbilitySpec[] = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
+
+function abilitiesForLoadout(
+  base: readonly AbilitySpec[],
+  strengthCape99: boolean | undefined,
+): AbilitySpec[] {
+  return strengthCape99
+    ? withStrengthCape99Dismember(base, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
+    : [...base];
+}
 
 // One combined registry: swapping styles mid-rotation is legal in-game, and the
 // sim handles style resources per cast.
@@ -171,7 +184,7 @@ export function RotationPlanner() {
             disabled: setupStats.critsDisabled,
             damageBonus: setupStats.critDamageBonus,
           },
-          abilities: ALL_ABILITIES,
+          abilities: abilitiesForLoadout(ALL_ABILITIES, setupStats.strengthCape99),
           rotation: rotationOf(...queue),
           modifiers: setupStats.globalModifiers,
           adrenaline: setupStats.adrenaline,

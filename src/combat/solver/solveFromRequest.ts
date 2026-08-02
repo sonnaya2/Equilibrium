@@ -164,6 +164,7 @@ export const solveFromRequest: SolveFn = async (
     adrenaline: simBase.adrenaline,
     procs: simBase.procs,
     plantedFeet: simBase.plantedFeet,
+    strengthCape99: simBase.strengthCape99,
     preciseRank: simBase.preciseRank,
     conjureBasicDamageMult: simBase.conjureBasicDamageMult,
     conjureDurationMult: simBase.conjureDurationMult,

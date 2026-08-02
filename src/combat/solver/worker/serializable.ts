@@ -74,6 +74,8 @@ export interface SerializableRevolutionSimBase {
   adrenaline?: AdrenalineRules;
   procs?: ProcRules;
   plantedFeet?: boolean;
+  /** Strength cape (99): extend Dismember by three bleed hits in the worker catalogue. */
+  strengthCape99?: boolean;
   preciseRank?: number;
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;

@@ -6,6 +6,7 @@ import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critica
 import { STANDARD_HIT_CAP, type HitCapRule } from "@/combat/core/hitCaps";
 import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTarget";
 import {
+  ATTACK_CAPE_MELEE_HIT_CHANCE,
   bitingCritChanceBonus,
   energisingAccuracyBonus,
   invigoratingAdrenalineMultiplier,
@@ -400,6 +401,9 @@ export function resolveAccuracyDp(
     accuracyBeforeEffects,
     equipment.equipmentEffects,
   );
+  // Attack master cape (120): +2% melee hit chance (buff, not equipment accuracy).
+  const attackCapeHit =
+    loadout.buffs.attackCape120 && loadout.style === "melee" ? ATTACK_CAPE_MELEE_HIT_CHANCE : 0;
   const targetAffinity = loadout.target
     ? effectiveTargetAffinity(
         loadout.target.affinity,
@@ -413,12 +417,13 @@ export function resolveAccuracyDp(
           defenceLevel: loadout.target.defenceLevel,
           armour: loadout.target.armour,
           affinity: targetAffinity,
-          additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100,
+          additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100 + attackCapeHit,
           damagePotentialOverride: loadout.target.damagePotentialOverride,
         }),
         equipment.equipmentEffects,
       )
-    : clamp01(loadout.accuracy / 100);
+    : // Manual slider is final DP; skillcape hit chance still stacks on top.
+      clamp01(loadout.accuracy / 100 + attackCapeHit);
   const damagePotentialSource: DamagePotentialSource = loadout.target
     ? loadout.target.damagePotentialOverride != null
       ? "manual override"

@@ -160,6 +160,10 @@ export interface CalcStats {
   procs?: ProcRules;
   /** Planted Feet: base Sunshine / Death's Swiftness duration ×1.25. */
   plantedFeet?: boolean;
+  /** Strength cape (99): Dismember +3 bleed hits. */
+  strengthCape99?: boolean;
+  /** Attack master cape (120): +2% melee hit chance (active for melee loadouts only). */
+  attackCape120?: boolean;
   /** Precise perk rank 1–6 for sim hit bands. */
   preciseRank?: number;
   /**
@@ -266,6 +270,8 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     adrenaline: combat.adrenaline,
     procs: combat.procs,
     plantedFeet: combat.plantedFeet,
+    strengthCape99: loadout.buffs.strengthCape99 === true,
+    attackCape120: loadout.buffs.attackCape120 === true && loadout.style === "melee",
     preciseRank: combat.preciseRank,
     conjureBasicDamageMult: combat.conjureBasicDamageMult,
     conjureDurationMult: combat.conjureDurationMult,

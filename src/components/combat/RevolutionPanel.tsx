@@ -9,6 +9,8 @@ import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { simulateRevolution as runRevolution } from "@/combat/engine/simulation/revolution";
 import { secondsToTicks, ticksToSeconds } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
+import { withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
+import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
 import {
   cancelOptimize,
   clampSolverBarSizes,
@@ -337,8 +339,15 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           disabled: stats.critsDisabled,
           damageBonus: stats.critDamageBonus,
         },
-        abilities: [...ENGINE_SPECS.values(), ...modelled],
-        bar: modelled,
+        abilities: stats.strengthCape99
+          ? withStrengthCape99Dismember(
+              [...ENGINE_SPECS.values(), ...modelled],
+              STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
+            )
+          : [...ENGINE_SPECS.values(), ...modelled],
+        bar: stats.strengthCape99
+          ? withStrengthCape99Dismember(modelled, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
+          : modelled,
         style: simStyle,
         durationTicks,
         modifiers: (ability) => stats.castModifiersFor(ability),

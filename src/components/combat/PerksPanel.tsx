@@ -166,6 +166,14 @@ const GIZMO_LABELS: Record<GizmoSlotId, string> = {
   armour2: "Armour 2",
 };
 
+/** Short sublabels so the two armour shells (body / legs) read as a pair. */
+const GIZMO_HINTS: Partial<Record<GizmoSlotId, string>> = {
+  armour1: "Body",
+  armour2: "Legs",
+  weapon1: "Main",
+  weapon2: "Off / 2nd",
+};
+
 function kindLabel(kind: GizmoKind): string {
   if (kind === "weapon") return "Weapon";
   if (kind === "armour") return "Armour";
@@ -259,6 +267,8 @@ function GizmoCard({
   onActivate: () => void;
 }) {
   const held = loadout.gizmos[slot] ?? [];
+  const free = Math.max(0, GIZMO_CAPACITY - held.length);
+  const hint = GIZMO_HINTS[slot];
   return (
     <section
       className={`gizmo-card${active ? " is-active" : ""}`}
@@ -271,7 +281,10 @@ function GizmoCard({
           className="gizmo-card__activate"
           onClick={onActivate}
         >
-          <span id={`gizmo-${slot}`}>{GIZMO_LABELS[slot]}</span>
+          <span className="gizmo-card__title-block">
+            <span id={`gizmo-${slot}`}>{GIZMO_LABELS[slot]}</span>
+            {hint ? <span className="gizmo-card__hint">{hint}</span> : null}
+          </span>
           <span className="font-mono">
             {held.length}/{GIZMO_CAPACITY}
           </span>
@@ -288,73 +301,80 @@ function GizmoCard({
         ) : null}
       </div>
 
-      <div className="gizmo-card__body">
-        {held.length ? (
-          held.map((key) => {
-            const perk = PERK_BY_KEY.get(key);
-            if (!perk) return null;
-            const l20 = level20Meta(key);
-            const l20On = l20 ? loadout.perks[l20.key] === true : false;
-            return (
-              <div key={key} className="gizmo-perk-block">
-                <div className="gizmo-perk">
-                  {perk.icon ? (
-                    <GameIcon src={perk.icon} size={26} className="shrink-0" />
-                  ) : (
-                    <span className="gizmo-perk__fallback" aria-hidden>
-                      E
-                    </span>
-                  )}
-                  <span className="gizmo-perk__identity">
-                    <span className="gizmo-perk__name">{perk.label}</span>
-                    {l20 ? (
-                      <label
-                        className={`gizmo-perk__l20${l20On ? " is-on" : ""}`}
-                        title={l20.detail}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={l20On}
-                          onChange={(event) =>
-                            setLoadout({
-                              ...loadout,
-                              perks: {
-                                ...loadout.perks,
-                                [l20.key]: event.target.checked,
-                              },
-                            })
-                          }
-                        />
-                        <span className="gizmo-perk__l20-mark">20</span>
-                      </label>
-                    ) : null}
+      <div className="gizmo-card__body" aria-label={`${GIZMO_LABELS[slot]} perk slots`}>
+        {held.map((key) => {
+          const perk = PERK_BY_KEY.get(key);
+          if (!perk) return null;
+          const l20 = level20Meta(key);
+          const l20On = l20 ? loadout.perks[l20.key] === true : false;
+          return (
+            <div key={key} className="gizmo-perk-block">
+              <div className="gizmo-perk">
+                {perk.icon ? (
+                  <GameIcon src={perk.icon} size={26} className="shrink-0" />
+                ) : (
+                  <span className="gizmo-perk__fallback" aria-hidden>
+                    E
                   </span>
-                  {perk.max > 1 ? (
-                    <RankStepper
-                      perk={perk}
-                      rank={loadout.perks[key]}
-                      onChange={(rank) => setLoadout(withPerkRank(loadout, key, rank))}
-                    />
-                  ) : (
-                    <span className="gizmo-perk__on" aria-label={`${perk.label} on`}>
-                      On
-                    </span>
-                  )}
-                  <button
-                    type="button"
-                    aria-label={`Remove ${perk.label} from ${GIZMO_LABELS[slot]}`}
-                    onClick={() => setLoadout(removePerk(loadout, key))}
-                    className="gizmo-perk__remove"
-                  >
-                    ×
-                  </button>
-                </div>
+                )}
+                <span className="gizmo-perk__identity">
+                  <span className="gizmo-perk__name">{perk.label}</span>
+                  {l20 ? (
+                    <label
+                      className={`gizmo-perk__l20${l20On ? " is-on" : ""}`}
+                      title={l20.detail}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={l20On}
+                        onChange={(event) =>
+                          setLoadout({
+                            ...loadout,
+                            perks: {
+                              ...loadout.perks,
+                              [l20.key]: event.target.checked,
+                            },
+                          })
+                        }
+                      />
+                      <span className="gizmo-perk__l20-mark">20</span>
+                    </label>
+                  ) : null}
+                </span>
+                {perk.max > 1 ? (
+                  <RankStepper
+                    perk={perk}
+                    rank={loadout.perks[key]}
+                    onChange={(rank) => setLoadout(withPerkRank(loadout, key, rank))}
+                  />
+                ) : (
+                  <span className="gizmo-perk__on" aria-label={`${perk.label} on`}>
+                    On
+                  </span>
+                )}
+                <button
+                  type="button"
+                  aria-label={`Remove ${perk.label} from ${GIZMO_LABELS[slot]}`}
+                  onClick={() => setLoadout(removePerk(loadout, key))}
+                  className="gizmo-perk__remove"
+                >
+                  ×
+                </button>
               </div>
-            );
-          })
-        ) : (
-          <p className="gizmo-card__empty">Empty</p>
-        )}
+            </div>
+          );
+        })}
+        {Array.from({ length: free }, (_, index) => (
+          <button
+            key={`empty-${index}`}
+            type="button"
+            className={`gizmo-slot-empty${active ? " is-active" : ""}`}
+            aria-label={`Empty perk slot ${held.length + index + 1} of ${GIZMO_CAPACITY} on ${GIZMO_LABELS[slot]}`}
+            onClick={onActivate}
+          >
+            Empty
+          </button>
+        ))}
       </div>
     </section>
   );
@@ -449,6 +469,10 @@ export function PerksPanel({
           <h3 id="gizmos-title" className="buff-group__title">
             Gizmos
           </h3>
+          <p className="gizmo-list__note mt-1">
+            Two weapon shells and two armour shells (body + legs). Each shell holds up to{" "}
+            {GIZMO_CAPACITY} perks.
+          </p>
           <div className="gizmo-list mt-1.5" role="group" aria-label="Gizmos">
             {GIZMO_SLOTS.map((slot) => (
               <GizmoCard

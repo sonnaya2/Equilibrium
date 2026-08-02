@@ -319,6 +319,14 @@ export function flankingDamageBonus(rank: number): number {
   return 0.4 * rank;
 }
 
-/** 120 skillcape perks. Only damage-relevant constants; Magic/Ranged feed style systems. */
+/**
+ * Skillcape combat perks (wiki, combat modernisation 2026).
+ * - Attack master cape (120): +2% melee hit chance.
+ * - Strength cape (99): Dismember deals 3 extra hits.
+ * - Strength master cape (120): also +3% heal from Dismember / Slaughter / Massacre
+ *   (heal not yet routed into the simulator).
+ */
 export const ATTACK_CAPE_MELEE_HIT_CHANCE = 0.02;
-export const STRENGTH_CAPE_DISMEMBER_HEAL_BONUS = 0.02;
+export const STRENGTH_CAPE_DISMEMBER_EXTRA_HITS = 3;
+/** Strength master cape (120) bleed heal bonus. */
+export const STRENGTH_CAPE_DISMEMBER_HEAL_BONUS = 0.03;

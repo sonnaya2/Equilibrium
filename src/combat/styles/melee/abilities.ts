@@ -194,6 +194,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   },
   {
     // Wiki Dismember: enhanced bleed book, 0% adren, 8x 25-35 every 1.2s, 24s CD.
+    // Strength cape (99) adds three extra hits of the same band (see withStrengthCape99).
     id: "dismember",
     name: "Dismember",
     style: "melee",
@@ -483,3 +484,31 @@ export const MELEE_EFFECTS = [
 /** Punish: 2.5x against targets below 50% life points — a target-stage modifier. */
 export const PUNISH_TARGET_MULTIPLIER = 2.5;
 export const PUNISH_HP_THRESHOLD = 0.5;
+
+/**
+ * Strength cape (99) / master cape: Dismember deals three additional hits of
+ * the same bleed band (wiki). Idempotent if already extended.
+ */
+export function withStrengthCape99Dismember<T extends AbilitySpec>(
+  abilities: readonly T[],
+  extraHits = 3,
+): T[] {
+  if (!Number.isInteger(extraHits) || extraHits <= 0) return [...abilities];
+  return abilities.map((ability) => {
+    if (ability.id !== "dismember") return ability;
+    const baseHits = ability.hits;
+    if (baseHits.length === 0) return ability;
+    // Base kit is 8 ticks; skip if already patched.
+    if (baseHits.length >= 8 + extraHits) return ability;
+    const sample = baseHits[baseHits.length - 1]!;
+    const step =
+      baseHits.length >= 2
+        ? Math.max(1, (sample.tickOffset ?? 0) - (baseHits[baseHits.length - 2]!.tickOffset ?? 0))
+        : 2;
+    const extra: AbilityHit[] = Array.from({ length: extraHits }, (_, i) => ({
+      ...sample,
+      tickOffset: (sample.tickOffset ?? 0) + step * (i + 1),
+    }));
+    return { ...ability, hits: [...baseHits, ...extra] };
+  });
+}

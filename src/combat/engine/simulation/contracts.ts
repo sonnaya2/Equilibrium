@@ -70,6 +70,11 @@ export interface SimulateInput {
    * Does not apply to greater variants.
    */
   plantedFeet?: boolean;
+  /**
+   * Strength cape (99): Dismember +3 bleed hits. Applied by evaluate/UI catalogue
+   * patching; the engine may also receive the flag for workers.
+   */
+  strengthCape99?: boolean;
   /** Precise perk rank 1–6; raises minimum ability damage before the hit pipeline. */
   preciseRank?: number;
   /** Effective Tumeken count (0-5); its 5.4s activation is assumed complete before tick 0. */

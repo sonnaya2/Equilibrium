@@ -55,6 +55,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:combat": "playwright test -c playwright.combat.config.ts",
     "art:fetch": "node scripts/assets/fetch-sources.mjs",
     "art:import": "node scripts/assets/import-sources.mjs",
     "build:map": "npm run data:rebuild && node --max-old-space-size=6144 scripts/build-map-terrain.mjs && node scripts/build-poi-atlas.mjs",

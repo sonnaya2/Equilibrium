@@ -22,12 +22,17 @@ const config = [
       "public/**",
       "assets/**",
       "data/**",
+      // Asset/map tooling stays ignored; critical data platform scripts are
+      // re-included below for unused-vars and no-undef checks.
       "scripts/**",
+      "!scripts/data/**",
       "coverage/**",
       "test-results/**",
       "playwright-report/**",
       "tools/_refactor_*.mjs",
       "tools/_TaskRecords.orig.tsx",
+      // Local scratch / generated icon helpers (not product).
+      ".asset-cache/**",
     ],
   },
   ...nextVitals,
@@ -61,6 +66,51 @@ const config = [
       "react-hooks/incompatible-library": "off",
       "react/no-unescaped-entities": "off",
       "@next/next/no-img-element": "off",
+    },
+  },
+  {
+    // Node .mjs data platform — catch unused vars / undefined globals without
+    // forcing a TypeScript migration of the whole pipeline.
+    files: ["scripts/data/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        Buffer: "readonly",
+        URL: "readonly",
+        URLSearchParams: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        structuredClone: "readonly",
+        performance: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        module: "readonly",
+        require: "readonly",
+        exports: "writable",
+      },
+      sourceType: "module",
+      ecmaVersion: 2024,
+    },
+    rules: {
+      // CLI entrypoints log status intentionally.
+      "no-console": "off",
+      "no-undef": "error",
+      "no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      // Next/TS rules are irrelevant for Node scripts.
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-hooks/rules-of-hooks": "off",
+      "@next/next/no-html-link-for-pages": "off",
     },
   },
 ];

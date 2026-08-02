@@ -7,6 +7,21 @@ const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 1,
 });
 
+const formatNumber = (value: number) =>
+  new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
+
+/**
+ * `scenario-dependent` is deliberately distinct from `not modelled`: the
+ * mechanic is implemented and waiting on an input, so its absence from the
+ * totals is not a claim that it deals no damage.
+ */
+const SUPPORT_LABEL: Record<string, string> = {
+  modeled: "modelled",
+  "partially-modeled": "partially modelled",
+  "scenario-dependent": "scenario-dependent",
+  "not-modeled": "not modelled",
+};
+
 export function CalculationAssumptions({
   stats,
   result,
@@ -15,6 +30,7 @@ export function CalculationAssumptions({
   result?: RotationSummary | null;
 }) {
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
+  const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
   const rows: Array<[string, string | number]> = [
     ["Style / effective level", `${stats.combatStyle} · ${stats.effectiveDamageLevel}`],
     ["Weapon", manualInputsOnly ? "Not applied" : stats.weaponConfiguration],
@@ -44,8 +60,45 @@ export function CalculationAssumptions({
           [
             "Blessing support",
             stats.league.blessings
-              .map((choice) => `${choice.name}: ${choice.support.status}`)
+              .map(
+                (choice) =>
+                  `${choice.name}: ${SUPPORT_LABEL[choice.support.status]}${
+                    choice.support.mechanicsUnverified ? " (mechanics unverified)" : ""
+                  }`,
+              )
               .join("; "),
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    // Aegis converts armour into flat base damage, so a wrong armour basis or a
+    // stale off-hand is invisible in the total. Show the whole conversion.
+    ...(stats.aegis.armourPercent > 0
+      ? ([
+          [
+            "Aegis qualifying armour",
+            `${formatNumber(stats.aegis.qualifyingArmour)} · ${PERCENT_FORMAT.format(
+              stats.aegis.armourPercent,
+            )} · off-hand ${stats.aegis.offhand}`,
+          ],
+          [
+            "Aegis base-damage bonus",
+            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (${formatNumber(
+              stats.aegis.excludedBlockArmour,
+            )} block-only armour excluded)`,
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    ...(barkscalesPicked
+      ? ([
+          [
+            "Barkscales",
+            stats.barkscales.support === "scenario-dependent"
+              ? `No outgoing damage calculated — needs ${stats.barkscales.missingInputs.join(", ").toLowerCase()}`
+              : `${stats.barkscales.triggers} Grasp triggers · one per ${stats.barkscales.secondsPerTrigger}s`,
+          ],
+          [
+            "Barkscales mitigation",
+            `−${formatNumber(stats.barkscales.perHit)} per incoming hit · ${stats.barkscales.hitsPerTrigger} to trigger`,
           ],
         ] as Array<[string, string | number]>)
       : []),

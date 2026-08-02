@@ -1,0 +1,189 @@
+import { describe, expect, it } from "vitest";
+import { createCastContext, simulate } from "../engine/simulation/simulate";
+import { rotationOf } from "../engine/simulation/contracts";
+import { MAGIC_ABILITIES } from "../styles/magic/abilities";
+import { MELEE_ABILITIES } from "../styles/melee/abilities";
+import { baseInput, magicInput } from "../test/fixtures/inputs";
+import { secondsToTicks } from "../core/ticks";
+import { AFFINITY } from "../target/genericTarget";
+import {
+  effectiveCooldownTicks,
+  effectiveTargetAffinity,
+  leagueModifiers,
+  resolveLeagueRules,
+} from "./ruleset";
+
+const rules = (
+  picks: readonly ("Order" | "Balance" | "Chaos")[],
+  derived: { totalArmour?: number; maximumLife?: number; targetTiles?: number } = {},
+) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: picks }, derived);
+
+describe("Teragard's Aegis and basic attacks", () => {
+  /**
+   * The March 2026 Combat Style Modernisation removed auto-attacks and replaced
+   * them with basic attacks, which are ordinary Basic-category abilities dealing
+   * a percentage of ability damage (melee Attack 110-130%). So an Aegis bonus to
+   * base ability damage reaching the basic attack is the mechanic working, not
+   * a leak into a separate auto-attack damage system — there is no longer one.
+   */
+  it("scales the melee basic attack, which reads ability damage like any ability", () => {
+    const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
+    expect(attack.category).toBe("basic");
+    expect(attack.hits[0]!.band).toEqual({ minPct: 110, maxPct: 130 });
+
+    const plain = simulate({ ...baseInput, rotation: rotationOf("attack") });
+    expect(plain.totalExpected).toBe(1_200);
+
+    // 1,000 base + 250 Aegis = 1,250, read by the same 110-130% band.
+    const aegis = simulate({
+      ...baseInput,
+      base: 1_250,
+      league: rules(["Order"], { totalArmour: 1_000 }),
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    expect(aegis.totalExpected).toBe(1_500);
+  });
+});
+
+describe("Avernic Rampage window boundary", () => {
+  const avernic = rules(["Chaos", "Chaos", "Chaos"]);
+  const assault = MELEE_ABILITIES.find((ability) => ability.id === "assault")!;
+
+  it("opens a 12-tick half-open window that the triggering cast does not benefit from", () => {
+    const context = createCastContext({
+      ...baseInput,
+      league: avernic,
+      startingAdrenaline: 100,
+      context: { style: "melee", ruleset: "equilibrium" },
+    });
+    expect(context.performCast(assault, 0, false, { "avernic-rampage": true }).ok).toBe(true);
+    // The proccing cast paid in full.
+    expect(context.getState().adrenaline).toBe(100 - (assault.adrenaline?.cost ?? 0));
+    expect(context.getState().league?.avernicRampageUntilTick).toBe(12);
+  });
+
+  it("is free at tick 11 and charges again at tick 12", () => {
+    const at = (tick: number) => {
+      const context = createCastContext({
+        ...baseInput,
+        league: avernic,
+        startingAdrenaline: 100,
+        context: { style: "melee", ruleset: "equilibrium" },
+      });
+      context.performCast(assault, 0, false, { "avernic-rampage": true });
+      const before = context.getState().adrenaline;
+      context.performCast(assault, tick, false, { "avernic-rampage": false });
+      return before - context.getState().adrenaline;
+    };
+    expect(at(11)).toBe(0);
+    expect(at(12)).toBe(assault.adrenaline?.cost ?? 0);
+  });
+});
+
+describe("Sacred Fervor cooldown reduction", () => {
+  const fervor = rules(["Order", "Order", "Order"]);
+
+  it("floors the reduced cooldown in ticks", () => {
+    expect(effectiveCooldownTicks(10, fervor)).toBe(7);
+    // 17 x 0.7 = 11.9 -> 11, not 12: the rounding is a floor, in ticks.
+    expect(effectiveCooldownTicks(17, fervor)).toBe(11);
+    expect(effectiveCooldownTicks(1, fervor)).toBe(0);
+  });
+
+  it("leaves cooldowns untouched without the blessing", () => {
+    expect(effectiveCooldownTicks(17, rules(["Chaos"]))).toBe(17);
+    expect(effectiveCooldownTicks(17, undefined)).toBe(17);
+  });
+
+  it("applies to the clock a shared or replacement group starts", () => {
+    const dragonBreath = MAGIC_ABILITIES.find((ability) => ability.id === "dragon_breath")!;
+    const full = secondsToTicks(dragonBreath.cooldownSeconds!);
+    const context = createCastContext({
+      ...magicInput,
+      league: fervor,
+      context: { style: "magic", ruleset: "equilibrium" },
+    });
+    expect(context.performCast(dragonBreath, 0, false).ok).toBe(true);
+    expect(context.firstLegalTick(dragonBreath.id)).toBe(Math.floor(full * 0.7));
+  });
+});
+
+describe("Splash Zone", () => {
+  const splashModifier = (targetTiles: number) =>
+    leagueModifiers(rules(["Chaos", "Balance", "Balance"], { targetTiles })).find(
+      (modifier) => modifier.id === "blessing:splash-zone",
+    )!;
+
+  it("adds 30% to multi-target attacks with no per-tile term", () => {
+    const modifier = splashModifier(5);
+    const context = { style: "ranged", ruleset: "equilibrium", area: "multi-target" } as const;
+    expect(modifier.applies(context)).toBe(true);
+    expect(modifier.apply({ damage: 1_000 }, context).damage).toBe(1_300);
+  });
+
+  it("adds 30% plus 5% per occupied tile to AoE, additively", () => {
+    const context = { style: "magic", ruleset: "equilibrium", area: "aoe" } as const;
+    // 1 + 0.30 + 5 x 0.05 = 1.55
+    expect(splashModifier(5).apply({ damage: 1_000 }, context).damage).toBe(1_550);
+    // A single-tile target still occupies one tile: 1 + 0.30 + 0.05 = 1.35
+    expect(splashModifier(1).apply({ damage: 1_000 }, context).damage).toBe(1_350);
+  });
+
+  it("ignores untagged attacks and blessing-generated damage", () => {
+    const modifier = splashModifier(5);
+    expect(modifier.applies({ style: "magic", ruleset: "equilibrium" })).toBe(false);
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        area: "aoe",
+        blessingGenerated: true,
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("Demon's Mark affinity resolution", () => {
+  // Two Chaos picks in the segment grant the Chaos god tier.
+  const mark = rules(["Chaos", "Chaos", "Balance"]);
+
+  it("uses the target's weakness when one is declared", () => {
+    expect(effectiveTargetAffinity("same", true, mark)).toBe("weakness");
+  });
+
+  it("leaves a target with no declared weakness alone", () => {
+    expect(effectiveTargetAffinity("same", false, mark)).toBe("same");
+  });
+
+  it("never makes the affinity worse, and higher is more favourable here", () => {
+    // AFFINITY: strong 50 < same 60 < weak 70 < weakness 90. The blessing only
+    // ever raises the value, so no target picks up a worse affinity from it, and
+    // a target already at the weakness affinity is left exactly as it was.
+    for (const affinity of ["strong", "same", "weak"] as const) {
+      expect(AFFINITY[effectiveTargetAffinity(affinity, true, mark)]).toBeGreaterThanOrEqual(
+        AFFINITY[affinity],
+      );
+    }
+    expect(effectiveTargetAffinity("weakness", true, mark)).toBe("weakness");
+  });
+
+  it("does nothing without the blessing", () => {
+    expect(effectiveTargetAffinity("same", true, rules(["Order"]))).toBe("same");
+    expect(effectiveTargetAffinity("same", true, undefined)).toBe("same");
+  });
+});
+
+describe("Big Boned maximum-life basis", () => {
+  it("takes 5% of the maximum life the loadout resolves, not a fixed figure", () => {
+    const summary = (maximumLife: number) =>
+      simulate({
+        ...baseInput,
+        league: rules(["Balance"], { maximumLife }),
+        context: { style: "melee", ruleset: "equilibrium" },
+        rotation: rotationOf("attack"),
+      }).events.find((event) => event.abilityId === "big-boned")!.damage.expected;
+    expect(summary(15_000)).toBe(750);
+    expect(summary(20_000)).toBe(1_000);
+  });
+});

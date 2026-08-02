@@ -51,6 +51,54 @@ export function blessingRule(
   return rules?.blessings.find((choice) => choice.id === id)?.combat;
 }
 
+export interface AegisArmourBonus {
+  /** The total Armour stat the blessing reads — equipment Armour, never the block rating. */
+  qualifyingArmour: number;
+  /** Level-derived Armour that exists only inside the block calculation, excluded here. */
+  excludedBlockArmour: number;
+  offhand: "shield" | "defender" | "none";
+  /** The resolved share of armour: 25%, 50% wielding a defender, 75% wielding a shield. */
+  armourPercent: number;
+  /** Flat addition to base ability damage, before the ability's own damage band. */
+  baseAbilityDamageBonus: number;
+}
+
+/**
+ * Teragard's Aegis: "Your base ability damage is increased by 25% of your total
+ * armour value. If you are wielding a defender, it is increased by 50%. If you
+ * are wielding a shield, it is increased by 75%."
+ *
+ * The card states three flat shares rather than a 25% term that is later
+ * multiplied, so the percentage resolves first and the result rounds once —
+ * floor(armour × 0.75), not floor(armour × 0.25) × 3. The two agree on every
+ * multiple of four and differ by at most two damage elsewhere; the reading is
+ * provisional until the live values can be read off a character.
+ *
+ * `armour` must supply the player's total Armour stat separately from the block
+ * armour rating: Fortitude, prayer/curse Defence levels and the Defence level
+ * itself raise the rating without granting any real armour to convert.
+ */
+export function aegisArmourBonus(
+  rule: BlessingChoice["combat"] | undefined,
+  armour: { totalArmour: number; blockArmourRating: number },
+  offhand: "shield" | "defender" | null,
+): AegisArmourBonus {
+  const multiplier =
+    offhand === "shield"
+      ? (rule?.shieldArmourMultiplier ?? 1)
+      : offhand === "defender"
+        ? (rule?.defenderArmourMultiplier ?? 1)
+        : 1;
+  const armourPercent = (rule?.baseAbilityDamageArmourPercent ?? 0) * multiplier;
+  return {
+    qualifyingArmour: armour.totalArmour,
+    excludedBlockArmour: armour.blockArmourRating - armour.totalArmour,
+    offhand: offhand ?? "none",
+    armourPercent,
+    baseAbilityDamageBonus: Math.floor(armour.totalArmour * armourPercent),
+  };
+}
+
 export function blessingLifeMultiplier(loadout: LeagueLoadout): number {
   return (
     activeBlessings(loadout.ruleset === "equilibrium" ? (loadout.blessingPicks ?? []) : []).find(

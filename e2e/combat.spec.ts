@@ -198,8 +198,10 @@ test("setup summary exposes the complete core-derived stat line", async ({ page 
     "Crit damage",
     "Base Defence",
     "Visible boosted Defence",
-    "Equipment armour",
-    "Armour rating",
+    // Two distinct armour numbers: the Loadout-screen stat that "% of your
+    // armour value" effects read, and the hit-chance rating.
+    "Total armour",
+    "Block armour rating",
     "Constitution",
     "Constitution life",
     "Equipment life",

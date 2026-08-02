@@ -120,6 +120,28 @@ export function TargetPanel({
               value={target.occupiedTiles ?? 1}
               onChange={(value) => updateTarget({ occupiedTiles: Math.max(1, Math.floor(value)) })}
             />
+            <label className="flex items-center gap-2 border-b border-stone-750/70 py-2 text-xs text-parch-100">
+              <input
+                type="checkbox"
+                checked={target.poisonImmune === true}
+                onChange={(event) =>
+                  updateTarget({ poisonImmune: event.target.checked || undefined })
+                }
+              />
+              Poison immune
+            </label>
+            {/* Barkscales counts incoming hits, which an outgoing rotation never
+                sees. Zero means no scenario stated, not a zero-damage result. */}
+            <NumberField
+              label="Incoming hit interval (s)"
+              value={target.incomingHitIntervalSeconds ?? 0}
+              min={0}
+              onChange={(value) =>
+                updateTarget({
+                  incomingHitIntervalSeconds: value > 0 ? Math.min(600, value) : undefined,
+                })
+              }
+            />
           </>
         ) : null}
       </div>

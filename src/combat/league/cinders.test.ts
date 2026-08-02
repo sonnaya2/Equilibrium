@@ -1,0 +1,245 @@
+import { describe, expect, it } from "vitest";
+import { simulate } from "../engine/simulation/simulate";
+import { rotationOf } from "../engine/simulation/contracts";
+import { MELEE_ABILITIES } from "../styles/melee/abilities";
+import { RANGED_ABILITIES } from "../styles/ranged/abilities";
+import { baseInput, rangedInput } from "../test/fixtures/inputs";
+import { blessingHitEligibility, calculateLeagueAbility } from "./damage";
+import { resolveLeagueRules } from "./ruleset";
+
+/**
+ * Abyssal Cinders: "On hit: Your attacks deal 15% of ability damage as bonus
+ * damage. On hit: Your attacks have a 5% chance to trigger an Inferno of
+ * Zamorak, which deals 100-200% ability damage to a single target."
+ * (RuneScape Wiki, Equilibrium League/Blessings, verified 2026-08-02.)
+ *
+ * The "On hit" prefix is what makes the roll per landed hit rather than per
+ * cast; every expected-application count below follows from that reading alone.
+ */
+const cinders = (derived: { maximumLife?: number } = {}) =>
+  resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: ["Chaos", "Chaos"] }, derived);
+
+const infernoApplications = (summary: ReturnType<typeof simulate>) =>
+  summary.events
+    .filter((event) => event.abilityId === "inferno-of-zamorak")
+    .reduce((sum, event) => sum + (event.expectedOccurrences ?? 1), 0);
+
+const cindersRiders = (summary: ReturnType<typeof simulate>) =>
+  summary.events.filter((event) => event.abilityId === "abyssal-cinders").length;
+
+const ranged = (id: string) => RANGED_ABILITIES.find((ability) => ability.id === id)!;
+
+describe("Abyssal Cinders eligibility policy", () => {
+  it("gives direct hits both the rider and the on-hit roll", () => {
+    expect(blessingHitEligibility("direct", false)).toEqual({ rider: true, onHit: true });
+  });
+
+  it("gives a damage-over-time tick the rider but no on-hit roll", () => {
+    expect(blessingHitEligibility("dot", false)).toEqual({ rider: true, onHit: false });
+  });
+
+  it("gives a conjure command the rider but no on-hit roll", () => {
+    expect(blessingHitEligibility("command", false)).toEqual({ rider: true, onHit: false });
+  });
+
+  it.each(["conjure", "proc", "blessing"] as const)("excludes %s damage entirely", (source) => {
+    expect(blessingHitEligibility(source, false)).toEqual({ rider: false, onHit: false });
+  });
+
+  it("excludes attached components whatever their source, so hit counts stay honest", () => {
+    for (const source of ["direct", "dot", "command"] as const) {
+      expect(blessingHitEligibility(source, true)).toEqual({ rider: false, onHit: false });
+    }
+  });
+
+  it("cannot recurse: blessing damage never generates more blessing damage", () => {
+    expect(blessingHitEligibility("blessing", false)).toEqual({ rider: false, onHit: false });
+    expect(blessingHitEligibility("blessing", true)).toEqual({ rider: false, onHit: false });
+  });
+});
+
+describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
+  it("expects 0.05 applications from a one-hit attack", () => {
+    const summary = simulate({
+      ...baseInput,
+      league: cinders(),
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    expect(infernoApplications(summary)).toBeCloseTo(0.05, 10);
+    expect(cindersRiders(summary)).toBe(1);
+  });
+
+  it("expects 0.10 applications from a two-hit ability", () => {
+    const twoHit = MELEE_ABILITIES.find((ability) => ability.hits.length === 2)!;
+    const summary = simulate({
+      ...baseInput,
+      league: cinders(),
+      startingAdrenaline: 100,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf(twoHit.id),
+    });
+    expect(infernoApplications(summary)).toBeCloseTo(0.1, 10);
+    expect(cindersRiders(summary)).toBe(2);
+  });
+
+  it("expects 0.35 applications from Greater Ricochet's seven hits", () => {
+    expect(ranged("greater_ricochet").hits).toHaveLength(7);
+    const summary = simulate({
+      ...rangedInput,
+      league: cinders(),
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
+    });
+    expect(infernoApplications(summary)).toBeCloseTo(0.35, 10);
+    expect(cindersRiders(summary)).toBe(7);
+  });
+
+  it("expects 0.40 applications from Rapid Fire's eight channel hits", () => {
+    expect(ranged("rapid_fire").hits).toHaveLength(8);
+    const summary = simulate({
+      ...rangedInput,
+      league: cinders(),
+      startingAdrenaline: 100,
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("rapid_fire"),
+    });
+    expect(infernoApplications(summary)).toBeCloseTo(0.4, 10);
+    expect(cindersRiders(summary)).toBe(8);
+  });
+
+  it("does not roll on a bleed's damage-over-time ticks, but still rides them", () => {
+    const dismember = MELEE_ABILITIES.find((ability) => ability.id === "dismember")!;
+    const dotTicks = dismember.hits.filter((hit) => hit.dot).length;
+    expect(dotTicks).toBeGreaterThan(0);
+    const summary = simulate({
+      ...baseInput,
+      league: cinders(),
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("dismember"),
+    });
+    const directHits = dismember.hits.length - dotTicks;
+    expect(infernoApplications(summary)).toBeCloseTo(0.05 * directHits, 10);
+    expect(cindersRiders(summary)).toBe(dismember.hits.length);
+  });
+
+  it("never lets Inferno or the rider generate further blessing damage", () => {
+    const summary = simulate({
+      ...rangedInput,
+      league: cinders(),
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
+    });
+    const generated = summary.events.filter((event) => event.blessingId);
+    expect(generated.length).toBeGreaterThan(0);
+    for (const event of generated) {
+      expect(event.recursionAllowed).toBe(false);
+      expect(event.procEligible).toBe(false);
+    }
+    // Every blessing event derives from a non-blessing hit.
+    const blessingSeqs = new Set(generated.map((event) => event.seq));
+    for (const event of generated) {
+      expect(blessingSeqs.has(event.derivedFrom ?? -1)).toBe(false);
+    }
+  });
+
+  it("agrees between the Quick calculator and the simulator on application counts", () => {
+    const league = cinders();
+    const quick = calculateLeagueAbility(ranged("greater_ricochet"), {
+      base: 1_000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rules: league,
+    });
+    const quickInferno = quick.leagueContributions
+      .filter((component) => component.effectId === "inferno-of-zamorak")
+      .reduce((sum, component) => sum + component.expectedOccurrences, 0);
+    expect(quickInferno).toBeCloseTo(0.35, 10);
+
+    const summary = simulate({
+      ...rangedInput,
+      league,
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
+    });
+    expect(quickInferno).toBeCloseTo(infernoApplications(summary), 10);
+    expect(quick.leagueContributions.filter((c) => c.effectId === "abyssal-cinders")).toHaveLength(
+      cindersRiders(summary),
+    );
+  });
+
+  it("reports expected applications and average damage per application in the analysis", () => {
+    const summary = simulate({
+      ...rangedInput,
+      league: cinders(),
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
+    });
+    const inferno = summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")!;
+    // 100-200% of 1,000 base averages 1,500 per application.
+    expect(inferno.averagePerApplication).toBeCloseTo(1_500, 0);
+    expect(inferno.totalDamage).toBeCloseTo(0.35 * 1_500, 0);
+  });
+});
+
+describe("Big Boned rides every qualifying damage instance", () => {
+  // "All damage you deal gains 5% of your maximum life points as bonus damage."
+  const bigBoned = resolveLeagueRules(
+    { ruleset: "equilibrium", blessingPicks: ["Balance"] },
+    { maximumLife: 15_000 },
+  );
+
+  it("adds one component per hit of a multi-hit ability, not one per cast", () => {
+    const summary = simulate({
+      ...rangedInput,
+      league: bigBoned,
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
+    });
+    const components = summary.events.filter((event) => event.abilityId === "big-boned");
+    expect(components).toHaveLength(7);
+    // 5% of 15,000 = 750 per hit, attached and non-critical.
+    for (const component of components) {
+      expect(component.damage.expected).toBe(750);
+      expect(component.attached).toBe(true);
+    }
+  });
+
+  it("rides damage-over-time ticks too", () => {
+    const dismember = MELEE_ABILITIES.find((ability) => ability.id === "dismember")!;
+    const summary = simulate({
+      ...baseInput,
+      league: bigBoned,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("dismember"),
+    });
+    expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(
+      dismember.hits.length,
+    );
+  });
+});
+
+describe("base ruleset stays untouched", () => {
+  it.each([
+    ["melee attack", baseInput, "attack"],
+    ["Greater Ricochet", rangedInput, "greater_ricochet"],
+  ] as const)("produces no blessing events for %s", (_name, input, ability) => {
+    const summary = simulate({ ...input, rotation: rotationOf(ability) });
+    expect(summary.events.filter((event) => event.blessingId)).toHaveLength(0);
+  });
+
+  it("keeps totals identical with and without an inert ruleset object", () => {
+    const withoutLeague = simulate({ ...rangedInput, rotation: rotationOf("greater_ricochet") });
+    const withBaseRules = simulate({
+      ...rangedInput,
+      league: resolveLeagueRules({ ruleset: "base" }),
+      rotation: rotationOf("greater_ricochet"),
+    });
+    expect(withBaseRules.totalExpected).toBe(withoutLeague.totalExpected);
+    expect(withBaseRules.events.map((event) => event.abilityId)).toEqual(
+      withoutLeague.events.map((event) => event.abilityId),
+    );
+  });
+});

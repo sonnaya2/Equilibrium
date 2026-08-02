@@ -1,7 +1,11 @@
 import type { ArmourClass, EquipmentRecord, EquipmentSlot } from "../data/records";
 import type { CombatStyle, SourceReference } from "../types";
 import { accuracyCurve } from "../target/genericTarget";
-import { isWeaponAccuracySlot, type LoadoutEquipmentView } from "./equipment";
+import {
+  isWeaponAccuracySlot,
+  resolvedEquipmentSlots,
+  type LoadoutEquipmentView,
+} from "./equipment";
 import { equipmentById } from "../data";
 
 export type { ArmourClass } from "../data/records";
@@ -334,9 +338,6 @@ function resolveDamage(record: EquipmentRecord): ResolvedStat {
   return derived == null ? { value: 0 } : { value: derived };
 }
 
-/** Slots a two-handed weapon overrides: when twohand is occupied, hands are locked. */
-const TWOHAND_LOCKED_SLOTS: readonly string[] = ["mainhand", "offhand"];
-
 /**
  * The canonical equipment aggregation. Equipped slots only — unlock pins are
  * never equipped; duplicate item ids count once; an occupied twohand slot
@@ -360,12 +361,9 @@ export function aggregateEquipmentStats(
     critChance: 0,
     incomplete: [],
   };
-  const slots = loadout.equipmentSlots ?? {};
-  const twohandEquipped = typeof slots.twohand === "string";
   const seen = new Set<string>();
-  for (const [slot, id] of Object.entries(slots)) {
-    if (typeof id !== "string" || seen.has(id)) continue;
-    if (twohandEquipped && TWOHAND_LOCKED_SLOTS.includes(slot)) continue;
+  for (const id of Object.values(resolvedEquipmentSlots(loadout))) {
+    if (seen.has(id)) continue;
     seen.add(id);
     const record = resolve(id);
     if (!record) {

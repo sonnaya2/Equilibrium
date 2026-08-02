@@ -7,18 +7,22 @@ import { defenceStats } from "./defence";
 // f(99) = 1212.2392, f(120) = 1902.4, f(126) = 2144.3008.
 
 describe("defenceStats", () => {
-  it("keeps equipment Armour and total Armour rating separate", () => {
+  it("separates the total Armour stat from the block armour rating", () => {
+    // wiki Armour: the Loadout screen's total Armour stat comes from equipment
+    // tiers and slots alone. wiki Hit chance: the rating d additionally carries
+    // f(Defence level). They are two different numbers and must stay two fields.
     const stats = defenceStats({ baseLevel: 99, equipmentArmour: 1217.5 });
     expect(stats.equipmentArmour).toBe(1217.5);
-    expect(stats.levelArmour).toBeCloseTo(1212.2392);
-    expect(stats.totalArmour).toBe(Math.floor(1217.5 + 1212.2392));
-    expect(stats.totalArmour).toBe(2429);
+    expect(stats.totalArmour).toBe(1217.5);
+    expect(stats.blockLevelArmour).toBeCloseTo(1212.2392);
+    expect(stats.blockArmourRating).toBe(Math.floor(1217.5 + 1212.2392));
+    expect(stats.blockArmourRating).toBe(2429);
   });
 
-  it("floors the total, not the level-derived term", () => {
+  it("floors the block rating, not the level-derived term", () => {
     // f(99) = 1212.2392: flooring the term first would give 1212 + 0.8 = 1212.8 → 1212,
     // the sourced chain floors the sum: floor(0.8 + 1212.2392) = 1213.
-    expect(defenceStats({ baseLevel: 99, equipmentArmour: 0.8 }).totalArmour).toBe(1213);
+    expect(defenceStats({ baseLevel: 99, equipmentArmour: 0.8 }).blockArmourRating).toBe(1213);
   });
 
   it("stacks boost layers in order: base → potion → prayer block levels", () => {
@@ -38,28 +42,62 @@ describe("defenceStats", () => {
     });
     expect(prayed.visibleLevel).toBe(116);
     expect(prayed.blockLevel).toBe(126);
-    expect(prayed.levelArmour).toBeCloseTo(2144.3008);
-    expect(prayed.totalArmour).toBe(2144);
+    expect(prayed.blockLevelArmour).toBeCloseTo(2144.3008);
+    expect(prayed.blockArmourRating).toBe(2144);
   });
 
   it("boosts Defence with elder overloads (17% + 5)", () => {
     const stats = defenceStats({ baseLevel: 99, overloadTier: "elder" });
     expect(stats.potionBoost).toBe(21);
     expect(stats.visibleLevel).toBe(120);
-    expect(stats.totalArmour).toBe(1902);
+    expect(stats.blockArmourRating).toBe(1902);
   });
 
   it("applies Fortitude's 15% boost only in the block calculation", () => {
-    const stats = defenceStats({ baseLevel: 99, fortitude: true });
-    expect(stats.visibleLevel).toBe(99);
-    expect(stats.blockLevel).toBeCloseTo(113.85);
-    expect(stats.totalArmour).toBe(
-      Math.floor(stats.blockLevel ** 3 / 1250 + 4 * stats.blockLevel + 40),
+    const plain = defenceStats({ baseLevel: 99, equipmentArmour: 1_000 });
+    const fortified = defenceStats({ baseLevel: 99, equipmentArmour: 1_000, fortitude: true });
+    expect(fortified.visibleLevel).toBe(99);
+    expect(fortified.blockLevel).toBeCloseTo(113.85);
+    expect(fortified.blockArmourRating).toBeGreaterThan(plain.blockArmourRating);
+    // The armour value every "% of your armour" effect reads is untouched.
+    expect(fortified.totalArmour).toBe(plain.totalArmour);
+    expect(fortified.totalArmour).toBe(1_000);
+  });
+
+  it("keeps prayer and curse block levels out of the total Armour stat", () => {
+    const plain = defenceStats({ baseLevel: 99, equipmentArmour: 1_000 });
+    const cursed = defenceStats({
+      baseLevel: 99,
+      equipmentArmour: 1_000,
+      prayerBlockLevels: 12,
+    });
+    expect(cursed.blockArmourRating).toBeGreaterThan(plain.blockArmourRating);
+    expect(cursed.totalArmour).toBe(plain.totalArmour);
+  });
+
+  it("keeps the Defence level itself out of the total Armour stat", () => {
+    const low = defenceStats({ baseLevel: 1, equipmentArmour: 1_000 });
+    const high = defenceStats({ baseLevel: 99, equipmentArmour: 1_000 });
+    expect(low.totalArmour).toBe(high.totalArmour);
+    expect(high.blockArmourRating - low.blockArmourRating).toBe(
+      Math.floor(1_000 + high.blockLevelArmour) - Math.floor(1_000 + low.blockLevelArmour),
     );
   });
 
+  it("lets a visible overload boost move the rating while equipment sets the stat", () => {
+    const plain = defenceStats({ baseLevel: 99, equipmentArmour: 1_000 });
+    const overloaded = defenceStats({
+      baseLevel: 99,
+      equipmentArmour: 1_000,
+      overloadTier: "elder",
+    });
+    expect(overloaded.visibleLevel).toBe(120);
+    expect(overloaded.blockArmourRating).toBeGreaterThan(plain.blockArmourRating);
+    expect(overloaded.totalArmour).toBe(1_000);
+  });
+
   it("matches the documented level-1 reference and keeps base Defence capped at 99", () => {
-    expect(defenceStats({ baseLevel: 1 }).totalArmour).toBe(44);
+    expect(defenceStats({ baseLevel: 1 }).blockArmourRating).toBe(44);
     expect(() => defenceStats({ baseLevel: 100 })).toThrow(RangeError);
   });
 
@@ -67,7 +105,7 @@ describe("defenceStats", () => {
     // Equipment Prayer bonus lowers prayer drain only; the model's armour inputs
     // are exactly equipmentArmour and the block-calculation level.
     const stats = defenceStats({ baseLevel: 90, prayerBlockLevels: 8, equipmentArmour: 500 });
-    expect(stats.totalArmour).toBe(
+    expect(stats.blockArmourRating).toBe(
       Math.floor(500 + stats.blockLevel ** 3 / 1250 + 4 * stats.blockLevel + 40),
     );
   });
@@ -89,7 +127,8 @@ describe("defenceStats", () => {
     );
     expect(totals.prayer).toBe(42);
     const stats = defenceStats({ baseLevel: 99, equipmentArmour: totals.armour });
-    expect(stats.totalArmour).toBe(Math.floor(totals.armour + stats.levelArmour));
+    expect(stats.blockArmourRating).toBe(Math.floor(totals.armour + stats.blockLevelArmour));
+    expect(stats.totalArmour).toBe(totals.armour);
   });
 
   it("rejects invalid inputs", () => {

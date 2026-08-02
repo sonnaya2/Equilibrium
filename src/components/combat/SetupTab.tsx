@@ -270,13 +270,13 @@ export function SetupTab({
                 />
               ) : null}
               <SummaryMetric
-                label="Equipment armour"
-                value={formatNum(stats.defence.equipmentArmour)}
+                label="Total armour"
+                value={formatNum(stats.defence.totalArmour)}
                 partialItems={missingArmour}
               />
               <SummaryMetric
-                label="Armour rating"
-                value={formatNum(stats.defence.totalArmour)}
+                label="Block armour rating"
+                value={formatNum(stats.defence.blockArmourRating)}
                 partialItems={missingArmour}
               />
             </SummarySection>

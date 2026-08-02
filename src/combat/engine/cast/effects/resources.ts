@@ -10,10 +10,16 @@ import { activeBleedCount } from "../../../styles/melee/effects";
 import { rngProc } from "../../simulation/contracts";
 
 /**
- * Adrenaline and free-cast resources for one cast, in sourced order: gain
- * first (Meteor Strike's basic multiplier, the loadout multiplier, then an
- * Impatient proc), then the spend (refunded outright by a Relentless proc), then
- * the Deathspore charge a free cast consumed.
+ * Adrenaline and free-cast resources for one cast, in sourced order: the
+ * ability's listed gain and every multiplier on it (Meteor Strike's basic
+ * multiplier, Invigorating, Adrenaline Junkie) resolve first, then flat grants
+ * that are not that listed generation are added on top — Impatient's +3 and the
+ * Jaws of the Abyss bleed grant. Then the spend (refunded outright by a
+ * Relentless proc), then the Deathspore charge a free cast consumed.
+ *
+ * Keeping the flat grants outside the multipliers is what stops Adrenaline
+ * Junkie turning Impatient's sourced +3 into +4.5: the blessing raises
+ * adrenaline generation, not unrelated grants or refunds.
  *
  * Impatient and Relentless are state-changing RNG: the driver enumerates the
  * outcome and passes it in, so a flat expected value never spends what no real
@@ -34,13 +40,11 @@ export function applyCastResources(fx: CastEffectContext): void {
     let gain = meteorBasic
       ? ability.adrenaline.gain * METEOR_STRIKE_BASIC_ADREN_MULTIPLIER
       : ability.adrenaline.gain;
-    if (isBasic) {
-      gain *= input.adrenaline?.basicGainMultiplier ?? 1;
-      if ((input.adrenaline?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient")) {
-        gain += IMPATIENT_EXTRA_ADRENALINE;
-      }
-    }
+    if (isBasic) gain *= input.adrenaline?.basicGainMultiplier ?? 1;
     gain *= input.adrenaline?.abilityGainMultiplier ?? 1;
+    if (isBasic && (input.adrenaline?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient")) {
+      gain += IMPATIENT_EXTRA_ADRENALINE;
+    }
     rt.state = gainAdrenaline(rt.state, gain);
   }
 

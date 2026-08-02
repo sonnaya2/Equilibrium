@@ -12,7 +12,7 @@ export interface SourceReference {
 
 export type CombatStyle = "melee" | "ranged" | "magic" | "necromancy";
 
-export type DamageOverTimeKind = "bleed" | "burn" | "other";
+export type DamageOverTimeKind = "bleed" | "burn" | "poison" | "other";
 
 export type BleedId = "dismember" | "slaughter" | "massacre" | "abyssal-parasite";
 

@@ -262,7 +262,15 @@ export function StatsPanel({
                   : undefined
             }
           />
-          <DerivedRow label="Armour rating" value={format(stats.defence.totalArmour)} />
+          {/* Two different numbers: the Loadout screen's Armour stat, which every
+              "% of your armour value" effect reads, and the hit-chance rating
+              that Defence level, curses and Fortitude also feed. */}
+          <DerivedRow label="Total armour" value={format(stats.defence.totalArmour)} />
+          <DerivedRow
+            label="Block armour rating"
+            value={format(stats.defence.blockArmourRating)}
+            note="hit chance only"
+          />
           {/* null current life means "follow the maximum", so it never goes stale
               when a buff moves the maximum underneath it. */}
           <AutoNumberField

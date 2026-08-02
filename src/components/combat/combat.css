@@ -1637,19 +1637,38 @@ body:has(.combat-screen) {
 }
 
 .equipment-slot__well {
+  position: relative;
   display: grid;
   grid-row: 2 / 4;
+  box-sizing: border-box;
   place-items: center;
   width: 2.25rem;
   height: 2.25rem;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
   border: 1px solid var(--combat-gold-dim);
   background: rgb(0 0 0 / 24%);
   box-shadow: inset 0 0 8px rgb(0 0 0 / 65%);
 }
 
+/* Hard box: icon may never paint outside the well, even for tall inventory art. */
+.equipment-slot__well .game-icon {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0.12rem;
+  object-fit: contain;
+  object-position: center;
+}
+
 .equipment-slot-mark {
   width: 1.7rem;
   height: 1.7rem;
+  max-width: 100%;
+  max-height: 100%;
   fill: none;
   stroke: rgb(201 154 89 / 20%);
   stroke-width: 1;
@@ -1703,7 +1722,14 @@ body:has(.combat-screen) {
 }
 
 .gear-passive-row__icon {
+  display: block;
+  box-sizing: border-box;
+  width: 1.8rem;
+  height: 1.8rem;
   margin-top: 0.1rem;
+  overflow: hidden;
+  object-fit: contain;
+  object-position: center;
 }
 
 /* GameIcon renders nothing when art is missing, which would otherwise drop the

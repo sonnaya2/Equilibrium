@@ -87,6 +87,42 @@ export type LoadoutEquipmentView = {
   equipmentIds?: readonly string[] | null;
 };
 
+/** Slots a two-handed weapon overrides: when twohand is occupied, both hands are locked. */
+export const TWOHAND_LOCKED_SLOTS: readonly string[] = ["mainhand", "offhand"];
+
+/**
+ * The canonical equipped state, and the only correct answer to "what is the
+ * player actually wearing". A stored main-hand or off-hand survives a switch to
+ * a two-handed weapon in persisted loadouts, imports and hand-built fixtures, so
+ * reading `equipmentSlots` directly sees gear the game would have unequipped.
+ * Every consumer — stat aggregation, weapon configuration, passives, sets, and
+ * the League blessings that ask what is being wielded — resolves through here.
+ */
+export function resolvedEquipmentSlots(loadout: LoadoutEquipmentView): Record<string, string> {
+  const slots = loadout.equipmentSlots ?? {};
+  const twohandEquipped = typeof slots.twohand === "string";
+  const resolved: Record<string, string> = {};
+  for (const [slot, id] of Object.entries(slots)) {
+    if (typeof id !== "string") continue;
+    if (twohandEquipped && TWOHAND_LOCKED_SLOTS.includes(slot)) continue;
+    resolved[slot] = id;
+  }
+  return resolved;
+}
+
+/**
+ * The off-hand item genuinely being wielded, in the two categories Teragard's
+ * Aegis distinguishes. Driven purely by the equipped record's own `shield` /
+ * `defender` classification, so an ability that grants a shield effect without
+ * one in hand — Necromancy's Bone Shield — never reads as a wielded shield, and
+ * a Necromancy conduit reads as neither.
+ */
+export function wieldedOffhandKind(loadout: LoadoutEquipmentView): "shield" | "defender" | null {
+  const id = resolvedEquipmentSlots(loadout).offhand;
+  const record = id === undefined ? undefined : equipmentById(id);
+  return record?.defender ? "defender" : record?.shield ? "shield" : null;
+}
+
 const SET_PIECE_WEIGHTS: Readonly<Record<string, number>> = {
   // The combined crown + death mask occupies one slot but counts twice.
   "item:visage-of-the-first-necromancer": 2,
@@ -107,7 +143,7 @@ export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, nu
     const max = equipmentSetById(setId)?.maxPieces ?? Number.POSITIVE_INFINITY;
     counts.set(setId, Math.min(max, (counts.get(setId) ?? 0) + (SET_PIECE_WEIGHTS[id] ?? 1)));
   };
-  for (const id of Object.values(loadout.equipmentSlots ?? {})) add(id);
+  for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
   for (const id of loadout.equipmentIds ?? []) add(id);
   return counts;
 }
@@ -147,15 +183,16 @@ export function activeEquipmentEffects(
   },
 ): ActiveEquipmentEffects {
   const pieces = Math.min(4, equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0);
-  const weaponId = loadout.equipmentSlots?.twohand ?? loadout.equipmentSlots?.mainhand;
+  const slots = resolvedEquipmentSlots(loadout);
+  const weaponId = slots.twohand ?? slots.mainhand;
   const weapon = weaponId ? equipmentById(weaponId) : undefined;
-  const offhandId = loadout.equipmentSlots?.offhand;
+  const offhandId = slots.offhand;
   const offhand = offhandId ? equipmentById(offhandId) : undefined;
   const meleeWeapon = weaponId ? weapon?.style === "melee" : loadout.style === "melee";
   const passiveIds = [
     ...new Set(
-      Object.values(loadout.equipmentSlots ?? {}).flatMap((id) => {
-        const item = typeof id === "string" ? equipmentById(id) : undefined;
+      Object.values(slots).flatMap((id) => {
+        const item = equipmentById(id);
         return [
           ...(item?.passiveId ? [item.passiveId] : []),
           ...(item?.defender ? (["defender-accuracy"] as const) : []),
@@ -454,8 +491,8 @@ export function equippedPassiveSummaries(
   const effects = activeEquipmentEffects(loadout);
   const seen = new Set<string>();
   const rows: EquippedPassiveSummary[] = [];
-  for (const id of Object.values(loadout.equipmentSlots ?? {})) {
-    if (typeof id !== "string" || seen.has(id)) continue;
+  for (const id of Object.values(resolvedEquipmentSlots(loadout))) {
+    if (seen.has(id)) continue;
     seen.add(id);
     const item = equipmentById(id);
     const passiveId = item?.passiveId ?? (item?.defender ? "defender-accuracy" : undefined);

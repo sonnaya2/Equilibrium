@@ -64,12 +64,20 @@ function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
     current.dotDamage += event.family === "dot" ? event.damage.expected : 0;
     current.criticalContribution += event.damage.critical?.contribution ?? 0;
     current.capLoss += event.damage.capLoss ?? 0;
-    const applicationKey =
-      event.sourceCast >= 0 ? `cast:${event.sourceCast}` : `event:${event.seq}`;
-    current.applicationWeights.set(
-      applicationKey,
-      Math.max(current.applicationWeights.get(applicationKey) ?? 0, event.expectedOccurrences ?? 1),
-    );
+    // An event that declares expectedOccurrences carries its own application
+    // count and is summed: one cast of a seven-hit ability rolls Inferno of
+    // Zamorak seven times, and collapsing those to the cast would divide the
+    // effect's damage by a single roll's chance. Everything else is deduplicated
+    // per cast, so an ordinary ability still reads one application per cast.
+    if (event.expectedOccurrences !== undefined) {
+      current.applicationWeights.set(
+        `event:${event.seq}`,
+        current.applicationWeights.get(`event:${event.seq}`) ?? event.expectedOccurrences,
+      );
+    } else {
+      const key = event.sourceCast >= 0 ? `cast:${event.sourceCast}` : `event:${event.seq}`;
+      current.applicationWeights.set(key, Math.max(current.applicationWeights.get(key) ?? 0, 1));
+    }
     effects.set(event.abilityId, current);
   }
 

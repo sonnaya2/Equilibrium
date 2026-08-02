@@ -25,10 +25,14 @@ Use these support labels:
 
 - `modeled` — implemented with no known missing component relevant to the calculator.
 - `partially modeled` — the outgoing-damage or rotation component is implemented, but another part is outside calculator scope or still unsupported.
+- `scenario-dependent` — implemented, but it needs an input the outgoing rotation cannot supply, so
+  it has no calculated damage until the user states that scenario.
 - `not modeled` — shown to the user but excluded from calculated totals.
 - `mechanics unverified` — the card is revealed, but one or more implementation details remain provisional.
 
-Never present a provisional interpretation as confirmed game behaviour.
+Never present a provisional interpretation as confirmed game behaviour, and never let an unsupported
+or scenario-dependent blessing read as an ordinary `0 DPM`: a zero must mean the calculator modelled
+the mechanic and got zero.
 
 ## Domain ownership
 
@@ -154,28 +158,37 @@ Provisional implementation:
 - adrenaline generation is multiplied by 1.5;
 - no other known maximum-adrenaline increase currently needs stacking rules.
 
+The multiplier applies to the ability's **listed** generation only. Flat grants and refunds are added
+after it, so Impatient's sourced +3 stays +3 rather than becoming +4.5, and Jaws of the Abyss, the
+Vestments ultimate refund and a Relentless refund are likewise untouched.
+
 Still unverified:
 
-- whether refunds, item effects, or every non-standard adrenaline source receive the generation multiplier;
+- whether any non-standard adrenaline source does receive the generation multiplier in game;
 - exact rounding for fractional adrenaline.
 
 ### Big Boned
 
 Status: `partially modeled`, `mechanics unverified`
 
-Provisional implementation:
+The wiki card reads "**all damage you deal** gains 5% of your maximum life points as bonus damage",
+which is wider than the Cinders wording and is not once per cast. It rides every qualifying damage
+instance, through the shared eligibility policy below.
+
+Implementation:
 
 - its own +50% maximum-life-points increase contributes to the 5% damage amount;
-- armour-derived life-point bonuses also contribute;
+- the basis is the resolved maximum after temporary boosts, so Fortitude, bonfires, thermal baths
+  and a Powerburst of vitality all raise it;
 - the survival benefit is displayed but not converted into damage value.
 
 Still unverified:
 
-- whether bonus damage is once per attack or once per damaging hit;
+- whether temporary maximum-life boosts really count toward the bonus;
 - whether it is a separate hit;
 - crit eligibility;
 - hit-cap treatment;
-- whether damage-over-time, proc damage, conjures, poison, or reflected damage trigger it.
+- whether autonomous conjure damage counts as "damage you deal".
 
 Do not silently treat it as a generic final `damage × 1.05` modifier.
 
@@ -183,74 +196,122 @@ Do not silently treat it as a generic final `damage × 1.05` modifier.
 
 Status: `partially modeled`, `mechanics unverified`
 
-Provisional implementation:
+**Two different numbers are called armour, and they must never share a field.**
+`src/combat/core/defence.ts` keeps them apart:
 
-- total armour includes equipment and temporary armour increases, including potions, overload effects, Excalibur, and other armour boosts;
-- add 25% of total armour value to base ability damage;
-- multiply that armour contribution by 2 with a defender or 3 with a shield;
-- shield and defender states are mutually exclusive;
+- `totalArmour` — the player's total Armour stat, shown on the Loadout screen's Hero tab. Wiki
+  `Armour` derives it from each item's own tier and slot, so the player's Defence level is not in it.
+- `blockArmourRating` — `floor(equipment Armour + f(block level))`, the hit-chance denominator `d`
+  from wiki `Hit chance`. Fortitude's ×1.15, prayer and curse block levels, and the Defence level
+  itself live here and nowhere else.
+
+Every "% of your armour value" effect — Aegis, Striking Light, Barkscales, Steadfast Will's Bash —
+reads `totalArmour`. A boost that only moves the block calculation must never reach them.
+
+Implementation:
+
+- add 25% of the total Armour stat to base ability damage, 50% wielding a defender, 75% wielding a
+  shield — the card's three flat shares, so the percentage resolves before a single rounding:
+  `floor(armour × 0.75)`, not `floor(armour × 0.25) × 3`;
+- it is additive base ability damage, never a final-damage multiplier. At 1,000 qualifying armour a
+  later 150% band reads 1,875 / 2,250 / 2,625 raw, not 1.25×/1.5×/1.75× of final damage;
+- the wielded off-hand comes from `wieldedOffhandKind`, over the canonical resolved equipped state,
+  so a stored shield or defender under a two-handed weapon cannot multiply it, a Necromancy conduit
+  reads as neither, and an ability-granted shield effect such as Bone Shield is not a wielded shield;
 - health regeneration is not modeled.
 
 Still unverified:
 
-- exact calculation and rounding stage;
-- whether every temporary armour source is included exactly as displayed;
+- whether "total armour value" is confirmed in game to be the Loadout-screen stat rather than the
+  internal armour rating — the single assumption the whole magnitude rests on;
+- whether the Loadout screen's combat-triangle style bonus adjusts the qualifying value;
+- the rounding stage against live values;
 - regeneration tick timing.
 
 ### Abyssal Cinders
 
 Status: `mechanics unverified`
 
-Provisional implementation:
+The wiki card prefixes **both** clauses with "On hit", so both are per landed hit. Inferno rolls once
+per qualifying hit, not once per cast: seven-hit Greater Ricochet expects 0.35 applications and
+eight-hit Rapid Fire 0.40. Do not reintroduce a `hitIndex === 0` gate on either clause.
 
-- the guaranteed 15% bonus applies to every qualifying damaging hit, including multi-hit and damage-over-time hits;
-- Inferno of Zamorak rolls once per attack or ability use, not once per individual hit;
-- Inferno behaves like a randomly triggered 100-200% ability-damage attack;
-- Inferno may crit;
-- blessing-generated damage cannot recursively trigger Abyssal Cinders itself.
+Eligibility for every blessing rider and on-hit roll is one policy — `blessingHitEligibility` in
+`src/combat/league/damage.ts` — shared by the Quick calculator and the simulator so the two cannot
+drift apart:
 
-The general first-hit trigger rule does not apply to the guaranteed 15% portion.
+| Damage source                         | 15% and Big Boned riders | On-hit roll (Inferno, Light) |
+| ------------------------------------- | ------------------------ | ---------------------------- |
+| direct hit (incl. channel, multi-hit) | yes                      | yes                          |
+| damage-over-time tick                 | yes                      | no                           |
+| conjure command                       | yes                      | no                           |
+| autonomous conjure auto or poison     | no                       | no                           |
+| equipment or perk proc                | no                       | no                           |
+| attached component                    | no                       | no                           |
+| blessing-generated                    | no                       | no                           |
+
+Attached components are excluded by the hit-count integrity rule; blessing damage is excluded so
+nothing recurses. Damage Potential replaces hit/miss rolls against NPCs, so there is no missed-hit
+case, and a zero-damage event is excluded by the caller.
+
+Inferno is a non-recursive, critical-eligible expected-value event. Its `max` represents every roll
+landing, so read it together with `expectedOccurrences` and never as a guaranteed hit.
 
 Still unverified:
 
 - whether the guaranteed bonus is a separate hit;
+- whether a damage-over-time tick really rolls nothing;
 - exact crit and hit-cap behaviour;
-- whether proc damage can trigger unrelated on-hit effects;
 - exact random-band distribution and rounding.
 
 ### Barkscales
 
-Status: `not modeled`, `mechanics unverified`
+Status: `scenario-dependent`, `mechanics unverified`
 
-Provisional interpretation:
+`scenario-dependent` is its own support status and is **not** `not modeled`: the mechanic is
+implemented and waiting on an input, so it must never be presented as a calculated `0 DPM`.
 
-- reduce incoming damage after ordinary mitigation;
-- never reduce a hit below zero;
-- each qualifying enemy hit advances the five-hit counter;
-- after the fifth reduction, Grasp of Guthix is placed at the selected target's location;
-- poison-immune targets take no poison damage;
-- normal poison modifiers such as weapon poison and Cinderbane-style effects are expected to affect Grasp.
+`src/combat/league/barkscales.ts` takes one bounded incoming scenario — the interval between
+qualifying incoming hits, the occupied tiles, and poison immunity — and reports the counter
+arithmetic that follows. With no interval stated it returns `support: "scenario-dependent"` and names
+the missing input rather than a number. Do not turn this into a boss simulator.
 
-The outgoing calculator cannot trigger Barkscales automatically because it has no enemy attack timeline.
+Interpretation:
 
-A future manual “Grasp active” calculation may model the proc damage separately, but that is not full Barkscales support.
+- the reduction takes 10% of the total Armour stat, after ordinary mitigation, never below zero;
+- each qualifying enemy hit advances the five-hit counter, which resets to zero on trigger;
+- Grasp of Guthix lands at the attacker's location and resolves through the shared hit pipeline as
+  non-critical poison, so it deals nothing to a poison-immune target and cannot generate further
+  blessing damage;
+- each occupied tile of the 3×3 counts as one application, kept separate from single-target damage.
+
+Still unverified: whether a hit fully absorbed by the reduction, a blocked hit, or several hits on
+one tick each advance the counter; whether the counter carries overflow; whether every tile takes its
+own hit; whether weapon poison and Cinderbane-style modifiers affect Grasp.
 
 ### Striking Light
 
 Status: `mechanics unverified`
 
+The March 2026 Combat Style Modernisation **removed auto-attacks** and replaced them with basic
+attacks, which are ordinary Basic-category abilities reading ability damage (melee Attack 110-130%,
+Ranged and Magic 90-110%). "Basic attack" is now a precise game term for those four abilities, so the
+card's wording has two readings and the broader one is implemented.
+
 Provisional implementation:
 
-- “basic attack” includes auto-attacks and abilities categorized as Basic;
-- the +40% increase applies after the ordinary basic attack or Basic ability damage is established;
-- Light of Saradomin activates from the first qualifying hit while off cooldown;
+- “basic attack” is read as the whole Basic category, including the four basic attacks;
+- the +40% increase applies after the ordinary Basic ability damage is established;
+- Light of Saradomin activates from the first landed direct hit while off cooldown, once per cast —
+  its 9-second cooldown outlives any single cast;
 - Light is a separate hit and may crit;
-- Light damage is the 40-60% ability-damage band plus a flat 250% of armour value;
+- Light damage is the 40-60% ability-damage band plus a flat 250% of the **total Armour stat**, the
+  same value Teragard's Aegis reads;
 - the cooldown is 9 seconds.
 
 Still unverified:
 
-- whether the reveal's “basic attack” wording truly includes Basic-category abilities;
+- whether “basic attack” means the whole Basic category or only the four basic attacks;
 - cooldown start timing;
 - hit-cap and recursion behaviour;
 - exact ordering between the ability-damage and armour components.

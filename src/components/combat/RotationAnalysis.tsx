@@ -24,6 +24,7 @@ const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   "abyssal-cinders": "Cinders",
   "inferno-of-zamorak": "Inferno",
   "light-of-saradomin": "Striking Light",
+  "grasp-of-guthix": "Grasp of Guthix",
 };
 
 const formatNumber = (value: number) =>

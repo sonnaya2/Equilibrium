@@ -31,7 +31,14 @@ export const BLESSING_IDS = [
   "demons-mark",
 ] as const;
 export type BlessingId = (typeof BLESSING_IDS)[number];
-export type BlessingSupportStatus = "modeled" | "partially-modeled" | "not-modeled";
+/**
+ * `scenario-dependent` is distinct from `not-modeled`: the mechanic is
+ * implemented, but it needs an input the outgoing rotation cannot supply, so it
+ * has no calculated damage until the user states that scenario. It must never
+ * be presented as a calculated zero.
+ */
+export type BlessingSupportStatus =
+  "modeled" | "partially-modeled" | "scenario-dependent" | "not-modeled";
 
 export interface BlessingSupport {
   status: BlessingSupportStatus;
@@ -57,6 +64,12 @@ export interface BlessingCombatRules {
   };
   perHitAbilityDamagePercent?: number;
   inferno?: { chance: number; abilityDamageBand: readonly [number, number] };
+  barkscales?: {
+    armourReductionPercent: number;
+    reductionsPerTrigger: number;
+    graspAbilityDamageBand: readonly [number, number];
+    graspAreaTiles: number;
+  };
   procChance?: number;
   freeCastDurationTicks?: number;
   refresh?: "refresh";

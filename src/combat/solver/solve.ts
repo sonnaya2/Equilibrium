@@ -39,6 +39,8 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
     localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
     topK: 5,
+    // Diverse full shortlist — never a hardcoded top-two of near-identical bars.
+    fullShortlistSize: tier === "thorough" ? 6 : tier === "extreme" ? 10 : 16,
     exhaustiveMax: tier === "thorough" ? 800 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
   };

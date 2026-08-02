@@ -165,11 +165,20 @@ function assertLegalResult(
   expect(new Set(result.bar).size).toBe(result.bar.length);
   expect(Number.isFinite(result.score)).toBe(true);
   expect(result.evaluations).toBeGreaterThan(0);
-  expect(
-    result.proofLabel === "globally-optimal" ||
-      result.proofLabel === "best-found" ||
-      result.proofLabel === "converged",
-  ).toBe(true);
+  const honestProofs = new Set([
+    "full-objective-global-optimum",
+    "search-objective-exhaustive",
+    "full-shortlist-best",
+    "heuristic-best-found",
+    "degraded-exploratory-fallback",
+    "failed",
+    "budget-not-exhausted",
+    "stopped-early",
+    "heuristic-complete",
+  ]);
+  expect(result.proofLabel && honestProofs.has(result.proofLabel)).toBe(true);
+  expect(result.proofLabel).not.toBe("globally-optimal" as never);
+  expect(result.proofLabel).not.toBe("converged" as never);
   expect(result.bar).not.toContain("attack");
   expect(result.bar).not.toContain("runic_charge");
   // Every slot must be a real engine ability id (no blanks).

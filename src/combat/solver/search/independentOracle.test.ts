@@ -43,9 +43,11 @@ describe("independent solver oracle", () => {
       tier: "thorough",
       seed: 7,
     });
-    expect([...result.best.bar]).toEqual(oracle.bar);
-    expect(result.best.robustScore).toBe(oracle.score);
-    expect(result.proof).toBe("globally-optimal");
+    expect(result.best).not.toBeNull();
+    expect([...result.best!.bar]).toEqual(oracle.bar);
+    expect(result.best!.robustScore).toBe(oracle.score);
+    // Exhaustive search-objective does not imply full-objective global optimum.
+    expect(result.proof).not.toBe("full-objective-global-optimum");
     expect(configForTier("thorough", 1).evaluationBudget).toBeGreaterThan(0);
   });
 

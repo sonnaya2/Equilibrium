@@ -144,7 +144,7 @@ export function rngPointFor(
   rules?: AdrenalineRules,
 ): RngPoint | null {
   const isBasic = ability.category === "basic" || !!ability.autoAttack;
-  if (isBasic && (rules?.impatientRank ?? 0) > 0) {
+  if (isBasic && (ability.adrenaline?.gain ?? 0) > 0 && (rules?.impatientRank ?? 0) > 0) {
     return {
       kind: "impatient",
       chance: impatientProcChance(rules!.impatientRank!, rules?.impatientLevel20),

@@ -110,8 +110,9 @@ export interface CastRecord {
 export interface RotationSummary {
   ok: boolean;
   error?: string;
+  /** Exact for deterministic runs; representative terminal class when `rng` is present. */
   casts: CastRecord[];
-  /** Elapsed ticks: last cast's occupancy end, or the damage tail if it outlasts it. */
+  /** Elapsed ticks, probability-weighted when state-changing RNG changes duration. */
   ticks: number;
   /**
    * Horizon the run was asked to fill (revolution duration). When set, totals
@@ -132,7 +133,7 @@ export interface RotationSummary {
   perAbility: Record<string, number>;
   /** Expected damage landing on each tick — DoT tails land on their sourced ticks. */
   damageByTick: Record<number, number>;
-  /** Every landed event in (tick, seq) order, with provenance and land-time damage. */
+  /** Landed events for the deterministic run or representative terminal class. */
   events: ResolvedEvent[];
   /**
    * Opt-in second metric (SimulateOptions.includeTails): in-horizon damage plus
@@ -142,13 +143,14 @@ export interface RotationSummary {
   totalExpectedIncludingTails?: number;
   postWindowTailDamage?: number;
   /**
-   * Present only when state-changing RNG perks (Impatient / Relentless) forced
-   * probability-weighted branching: totals are branch-weighted means, while
-   * `casts` and `events` show the modal (highest-weight) branch's trajectory.
+   * Present only when state-changing RNG forced probability-weighted branching.
+   * Casts and events show one representative of the highest-weight terminal class.
    */
   rng?: {
     method: "probability-weighted branching";
-    branches: number;
+    terminalClasses: number;
+    representativeWeight: number;
+    representativeTicks: number;
     /** Combined weight of branches that ended in a cast error (ok is then false). */
     failedWeight?: number;
   };

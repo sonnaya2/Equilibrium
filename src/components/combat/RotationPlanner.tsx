@@ -46,6 +46,10 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
+function formatTicks(value: number): string {
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
+}
+
 function abilityById(id: string): AbilitySpec | undefined {
   return ALL_ABILITIES.find((a) => a.id === id);
 }
@@ -437,7 +441,11 @@ export function RotationPlanner() {
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
                       <dt className="text-xs text-parch-300">
-                        {result.metric.type === "fixed-window" ? "Fixed-window DPS" : "Natural DPS"}
+                        {result.metric.type === "fixed-window"
+                          ? "Fixed-window DPS"
+                          : result.rng
+                            ? "Expected natural DPS"
+                            : "Natural DPS"}
                       </dt>
                       <dd className="font-mono text-parch-50">{formatNumber(result.dps)}</dd>
                     </div>
@@ -448,9 +456,12 @@ export function RotationPlanner() {
                       </dd>
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
-                      <dt className="text-xs text-parch-300">Length</dt>
+                      <dt className="text-xs text-parch-300">
+                        {result.rng ? "Expected length" : "Length"}
+                      </dt>
                       <dd className="font-mono text-parch-50">
-                        {result.ticks} ticks · {(result.ticks * TICK_SECONDS).toFixed(1)}s
+                        {formatTicks(result.ticks)} ticks ·{" "}
+                        {(result.ticks * TICK_SECONDS).toFixed(1)}s
                       </dd>
                     </div>
                   </dl>

@@ -43,15 +43,22 @@ export function CalculationAssumptions({
   if (!manualInputsOnly && stats.combatStyle === "ranged")
     rows.splice(4, 0, ["Ammunition tier", stats.ammunitionTier ?? "—"]);
   if (result) {
+    const denominator = Math.round(result.metric.denominatorTicks * 100) / 100;
     rows.push(
       ["DPM metric", result.metric.type],
       ["Damage counted", Math.round(result.metric.damageCounted)],
       [
         "Denominator",
-        `${result.metric.denominatorTicks} ticks · ${ticksToSeconds(result.metric.denominatorTicks).toFixed(1)}s`,
+        `${denominator} ticks · ${ticksToSeconds(result.metric.denominatorTicks).toFixed(1)}s`,
       ],
       ["Post-window tails", result.metric.tails],
     );
+    if (result.rng) {
+      rows.push([
+        "Timeline path",
+        `${result.rng.representativeTicks} ticks · ${(result.rng.representativeWeight * 100).toFixed(1)}% terminal class`,
+      ]);
+    }
   }
 
   return (

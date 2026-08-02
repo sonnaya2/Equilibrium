@@ -107,10 +107,9 @@ export function finish(
 }
 
 /**
- * Combine finished branches into one summary: numeric totals are
- * branch-weighted means; `casts`/`events`/`ticks` show the modal
- * (highest-weight) trajectory. `rng` is attached only when branching actually
- * occurred, so deterministic runs keep their exact previous shape.
+ * Combine terminal equivalence classes into one summary. Casts and events use
+ * one representative of the highest-weight class; numeric totals and duration
+ * remain probability-weighted.
  */
 export function combineBranchSummaries(
   branches: readonly Branch[],
@@ -125,7 +124,8 @@ export function combineBranchSummaries(
   const totalWeight = parts.reduce((sum, part) => sum + part.weight, 0) || 1;
   const mix = (f: (s: RotationSummary) => number) =>
     parts.reduce((sum, part) => sum + (part.weight * f(part.summary)) / totalWeight, 0);
-  const modal = parts.reduce((a, b) => (b.weight > a.weight ? b : a)).summary;
+  const representative = parts.reduce((a, b) => (b.weight > a.weight ? b : a));
+  const modal = representative.summary;
   const failedWeight = parts.filter((part) => !part.summary.ok).reduce((s, p) => s + p.weight, 0);
   const error =
     modal.error ??
@@ -141,19 +141,25 @@ export function combineBranchSummaries(
     damageByTick[Number(key)] = mix((s) => s.damageByTick[Number(key)] ?? 0);
   }
 
+  const totalExpected = mix((s) => s.totalExpected);
+  const ticks = mix((s) => s.ticks);
+  const denominatorTicks =
+    modal.metric.type === "fixed-window" ? modal.metric.denominatorTicks : ticks;
+
   return {
     ok: failedWeight === 0,
     ...(error !== undefined ? { error } : {}),
     casts: modal.casts,
-    ticks: modal.ticks,
+    ticks,
     ...(modal.horizonTicks !== undefined ? { horizonTicks: modal.horizonTicks } : {}),
     totalMin: mix((s) => s.totalMin),
     totalMax: mix((s) => s.totalMax),
-    totalExpected: mix((s) => s.totalExpected),
-    dps: mix((s) => s.dps),
+    totalExpected,
+    dps: denominatorTicks > 0 ? totalExpected / (denominatorTicks * TICK_SECONDS) : 0,
     metric: {
       ...modal.metric,
-      damageCounted: mix((s) => s.metric.damageCounted),
+      denominatorTicks,
+      damageCounted: totalExpected,
     },
     perAbility,
     damageByTick,
@@ -168,7 +174,9 @@ export function combineBranchSummaries(
       ? {
           rng: {
             method: "probability-weighted branching" as const,
-            branches: parts.length,
+            terminalClasses: parts.length,
+            representativeWeight: representative.weight / totalWeight,
+            representativeTicks: modal.ticks,
             ...(failedWeight > 0 ? { failedWeight } : {}),
           },
         }

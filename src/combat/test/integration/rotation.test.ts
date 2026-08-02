@@ -165,6 +165,27 @@ describe("auto-weave", () => {
     expect(lastCast(s).adrenalineAfter).toBe(45 - 40);
   });
 
+  it("merges Impatient outcomes between woven basics", () => {
+    const expensive = {
+      id: "expensive_ultimate",
+      name: "Expensive ultimate",
+      style: "melee" as const,
+      category: "ultimate" as const,
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+      adrenaline: { cost: 90 },
+    };
+    const s = simulate({
+      ...baseInput,
+      abilities: [...MELEE_ABILITIES, expensive],
+      autoWeave: true,
+      adrenaline: { impatientRank: 4 },
+      rotation: rotationOf(expensive.id),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.rng?.failedWeight).toBeUndefined();
+    expect(lastCast(s).abilityId).toBe(expensive.id);
+  });
+
   it("stops with an honest error when no weave can ever afford the cast", () => {
     const impossible = {
       id: "impossible_ult",

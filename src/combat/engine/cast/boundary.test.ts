@@ -80,8 +80,8 @@ describe("cast boundary — branching commits the prepared cast", () => {
     // First assault at 18 splits (0.05 refund / 0.95 spend). In the refund
     // branch the lockout blocks a second point; in the spend branch the second
     // assault (candidate 28, after its 10-tick cooldown) splits again.
-    expect(s.rng?.branches).toBe(3);
-    // Modal branch (0.95², no refunds): 54 − 25 − 25 adrenaline.
+    expect(s.rng?.terminalClasses).toBe(3);
+    // Highest-weight terminal class (0.95², no refunds): 54 − 25 − 25 adrenaline.
     expect(s.casts.at(-1)!.adrenalineAfter).toBe(4);
   });
 });

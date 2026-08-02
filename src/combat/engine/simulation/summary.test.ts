@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { baseInput } from "../../test/fixtures/inputs";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
+import { createRuntime } from "../runtime/runtime";
+import { snapshotRuntime } from "./branch";
 import { rotationOf } from "./contracts";
 import { createCastContext, simulate } from "./simulate";
+import { combineBranchSummaries } from "./summary";
 
 describe("summary — Crackling / Aftershock expected-value procs", () => {
   it("Crackling rank 4, base 1000, 60s horizon → ~2000 EV", () => {
@@ -86,6 +89,34 @@ describe("summary finalization", () => {
       denominatorTicks: s.ticks,
       damageCounted: s.totalExpected,
       tails: "included-in-natural-completion",
+    });
+  });
+
+  it("keeps stochastic natural DPM consistent with its expected duration", () => {
+    const short = createRuntime(baseInput);
+    short.totalExpected = 600;
+    short.endTick = 10;
+    const long = snapshotRuntime(short);
+    long.totalExpected = 1200;
+    long.endTick = 30;
+
+    const s = combineBranchSummaries(
+      [
+        { weight: 0.5, rt: short },
+        { weight: 0.5, rt: long },
+      ],
+      undefined,
+      undefined,
+      true,
+    );
+    expect(s.totalExpected).toBe(900);
+    expect(s.ticks).toBe(20);
+    expect(s.metric.denominatorTicks).toBe(20);
+    expect(s.dps).toBe(75);
+    expect(s.rng).toMatchObject({
+      terminalClasses: 2,
+      representativeWeight: 0.5,
+      representativeTicks: 10,
     });
   });
 });

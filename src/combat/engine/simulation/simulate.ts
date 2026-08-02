@@ -23,6 +23,13 @@ import { combineBranchSummaries } from "./summary";
 
 export { createCastContext } from "./context";
 
+const MAX_AUTO_WEAVE_CASTS = 400;
+
+interface ManualStep {
+  branches: Branch[];
+  branched: boolean;
+}
+
 /**
  * One queued action (plus auto-weave) across the live branches. Weaving and
  * the cast itself go through castOutcomes, so state-changing RNG (Impatient /
@@ -32,53 +39,63 @@ function stepManualAction(
   branch: Branch,
   ability: AbilitySpec,
   autoWeave: boolean | undefined,
-): Branch[] {
-  if (branch.error !== undefined) return [branch];
+): ManualStep {
+  if (branch.error !== undefined) return { branches: [branch], branched: false };
   if (ability.stateEffect === "runic_charge") {
     if (!runicChargeReady(branch.rt.state.magic.runicCharge, branch.rt.state.tick)) {
-      return [{ ...branch, error: `runic_charge is on cooldown at tick ${branch.rt.state.tick}` }];
+      return {
+        branches: [
+          { ...branch, error: `runic_charge is on cooldown at tick ${branch.rt.state.tick}` },
+        ],
+        branched: false,
+      };
     }
     performOffGcdCast(branch.rt, ability);
-    return [branch];
+    return { branches: [branch], branched: false };
   }
 
   let work: Branch[] = [branch];
+  let branched = false;
   if (autoWeave) {
     const done: Branch[] = [];
-    const pending: Branch[] = [branch];
-    let guard = 0;
-    while (pending.length > 0) {
-      const current = pending.pop()!;
-      if (current.error !== undefined) {
-        done.push(current);
-        continue;
+    let pending: Branch[] = [branch];
+    for (let weaveDepth = 0; pending.length > 0; weaveDepth++) {
+      const next: Branch[] = [];
+      for (const current of pending) {
+        if (current.error !== undefined) {
+          done.push(current);
+          continue;
+        }
+        const basic = current.rt.basicByStyle.get(ability.style);
+        const castable =
+          firstLegalTick(
+            current.rt.state,
+            ability.id,
+            ability.cooldownGroup ?? ability.replacementGroup,
+          ) <= current.rt.state.tick &&
+          castRejection(
+            current.rt.state,
+            ability,
+            current.rt.state.tick,
+            current.rt.input.weaponConfiguration,
+            current.rt.input.equipmentIds,
+          ) === null;
+        if (castable || !basic) {
+          done.push(current);
+          continue;
+        }
+        if (weaveDepth >= MAX_AUTO_WEAVE_CASTS) {
+          done.push({
+            ...current,
+            error: `${ability.id} is unaffordable at tick ${current.rt.state.tick}, even weaving basics`,
+          });
+          continue;
+        }
+        const outcomes = castOutcomes(current, basic, current.rt.state.tick, true);
+        branched ||= outcomes.length > 1;
+        next.push(...outcomes);
       }
-      const basic = current.rt.basicByStyle.get(ability.style);
-      const castable =
-        firstLegalTick(
-          current.rt.state,
-          ability.id,
-          ability.cooldownGroup ?? ability.replacementGroup,
-        ) <= current.rt.state.tick &&
-        castRejection(
-          current.rt.state,
-          ability,
-          current.rt.state.tick,
-          current.rt.input.weaponConfiguration,
-          current.rt.input.equipmentIds,
-        ) === null;
-      if (castable || !basic) {
-        done.push(current);
-        continue;
-      }
-      if (++guard > 400) {
-        done.push({
-          ...current,
-          error: `${ability.id} is unaffordable at tick ${current.rt.state.tick}, even weaving basics`,
-        });
-        continue;
-      }
-      pending.push(...castOutcomes(current, basic, current.rt.state.tick, true));
+      pending = mergeBranches(next);
     }
     work = mergeBranches(done);
   }
@@ -89,20 +106,16 @@ function stepManualAction(
       out.push(woven);
       continue;
     }
-    out.push(
-      ...castOutcomes(
-        woven,
-        ability,
-        firstLegalTick(
-          woven.rt.state,
-          ability.id,
-          ability.cooldownGroup ?? ability.replacementGroup,
-        ),
-        false,
-      ),
+    const outcomes = castOutcomes(
+      woven,
+      ability,
+      firstLegalTick(woven.rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
+      false,
     );
+    branched ||= outcomes.length > 1;
+    out.push(...outcomes);
   }
-  return out;
+  return { branches: out, branched };
 }
 
 /**
@@ -136,9 +149,10 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
     }
     const next: Branch[] = [];
     for (const branch of branches) {
-      next.push(...stepManualAction(branch, ability, input.autoWeave));
+      const step = stepManualAction(branch, ability, input.autoWeave);
+      next.push(...step.branches);
+      sawBranching ||= step.branched;
     }
-    sawBranching ||= next.length > 1;
     branches = mergeBranches(next);
   }
 

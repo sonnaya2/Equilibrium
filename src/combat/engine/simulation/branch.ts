@@ -14,7 +14,8 @@ import type { SimulationRuntime } from "../runtime/runtime";
  * whose future evolution is identical (same RotationState, same pending-event
  * structure, same counters) are merged: weights sum and ledgers become the
  * weight-weighted mean, so merged totals equal the mean of the merged
- * trajectories. The kept branch's casts/events log is the modal trajectory.
+ * trajectories. Cast and event logs retain one representative from the
+ * highest-weight terminal equivalence class.
  */
 export interface Branch {
   weight: number;
@@ -51,15 +52,17 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   };
 }
 
-/** Future evolution is fully determined by state + pending events + counters. */
+/** Future evolution and finalization are fully determined by this signature. */
 function branchKey(rt: SimulationRuntime): string {
   return JSON.stringify([
     rt.state,
     rt.queue.signature(),
-    [...rt.hitDetails],
-    [...rt.spiritEventMeta],
+    [...rt.hitDetails].sort(([a], [b]) => a - b),
+    [...rt.spiritEventMeta].sort(([a], [b]) => a - b),
     [...rt.scheduledSpiritTracks].sort(),
-    [...rt.spiritHitCounts],
+    [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
+    rt.endTick,
+    rt.totalExpected,
     rt.nextSeq,
     rt.nextCastSeq,
   ]);

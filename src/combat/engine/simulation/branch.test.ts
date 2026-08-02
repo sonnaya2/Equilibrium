@@ -72,7 +72,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(rt.queue.length).toBe(0);
   });
 
-  it("does not merge branches whose future scheduler state differs", () => {
+  it("does not merge branches whose future or finalization state differs", () => {
     const rt = createRuntime(meleeInput);
     expect(
       mergeBranches([
@@ -87,6 +87,24 @@ describe("snapshotRuntime shares no mutable collection", () => {
       mergeBranches([
         { weight: 0.4, rt },
         { weight: 0.6, rt: different },
+      ]),
+    ).toHaveLength(2);
+
+    const differentEnd = snapshotRuntime(rt);
+    differentEnd.endTick = 1;
+    expect(
+      mergeBranches([
+        { weight: 0.4, rt },
+        { weight: 0.6, rt: differentEnd },
+      ]),
+    ).toHaveLength(2);
+
+    const differentDamage = snapshotRuntime(rt);
+    differentDamage.totalExpected = 50_000;
+    expect(
+      mergeBranches([
+        { weight: 0.4, rt },
+        { weight: 0.6, rt: differentDamage },
       ]),
     ).toHaveLength(2);
   });
@@ -134,15 +152,20 @@ describe("Invigorating / Impatient adrenaline", () => {
     expect(flatCtx.getState().adrenaline).toBeCloseTo(9);
   });
 
-  it("the driver branches per basic and reports the modal trajectory (R4: 0.36/0.64)", () => {
+  it("reports a representative from the highest-weight terminal class", () => {
     const s = simulate({
       ...baseInput,
       adrenaline: { impatientRank: 4 },
       rotation: rotationOf("attack"),
     });
     expect(s.ok).toBe(true);
-    expect(s.rng).toEqual({ method: "probability-weighted branching", branches: 2 });
-    expect(lastCast(s).adrenalineAfter).toBe(9); // modal branch: no proc (0.64)
+    expect(s.rng).toMatchObject({
+      method: "probability-weighted branching",
+      terminalClasses: 2,
+      representativeWeight: 0.64,
+      representativeTicks: 3,
+    });
+    expect(lastCast(s).adrenalineAfter).toBe(9);
   });
 
   it("branches whose adrenaline realigns merge back", () => {
@@ -153,8 +176,9 @@ describe("Invigorating / Impatient adrenaline", () => {
     });
     expect(s.ok).toBe(true);
     // 24 (p²), 21 (2pq, merged), 18 (q²)
-    expect(s.rng?.branches).toBe(3);
-    expect(lastCast(s).adrenalineAfter).toBe(21); // modal branch: exactly one proc
+    expect(s.rng?.terminalClasses).toBe(3);
+    expect(s.rng?.representativeWeight).toBeCloseTo(0.4608, 10);
+    expect(lastCast(s).adrenalineAfter).toBe(21);
   });
 
   it("Invigorating multiplier applies before the Impatient proc", () => {
@@ -180,6 +204,24 @@ describe("Invigorating / Impatient adrenaline", () => {
     expect(plain.casts[0].adrenalineAfter).toBe(9);
     expect(noGain.casts[0].adrenalineAfter).toBe(0);
     expect(noGain.rng).toBeUndefined(); // no basic cast → no RNG point → no branching
+  });
+
+  it("does not branch a basic with no adrenaline gain", () => {
+    const noGainBasic = {
+      id: "no_gain_basic",
+      name: "No-gain basic",
+      style: "melee" as const,
+      category: "basic" as const,
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+    };
+    const s = simulate({
+      ...baseInput,
+      abilities: [...MELEE_ABILITIES, noGainBasic],
+      adrenaline: { impatientRank: 4 },
+      rotation: rotationOf(noGainBasic.id),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.rng).toBeUndefined();
   });
 });
 
@@ -251,8 +293,8 @@ describe("Relentless refund branching", () => {
       rotation: rotationOf("attack", "attack", "attack", "assault"),
     });
     expect(s.ok).toBe(true);
-    expect(s.rng?.branches).toBe(2);
-    expect(lastCast(s).adrenalineAfter).toBe(27 - 25); // modal branch: no refund
+    expect(s.rng?.terminalClasses).toBe(2);
+    expect(lastCast(s).adrenalineAfter).toBe(27 - 25);
     expect(lastCast(s).result.expected).toBeCloseTo(4 * 1400);
   });
 

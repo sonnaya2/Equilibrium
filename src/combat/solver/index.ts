@@ -112,13 +112,9 @@ export type { SolverProgress } from "./worker/protocol";
 export {
   runOptimize,
   cancelOptimize,
-  getRevolutionSolverClient,
-  runSolverInWorker,
   runSolverOnMainThread,
-  RevolutionSolverClient,
-  isSolverPreferringMainThread,
-  resetSolverHostForTests,
   solverPoolSize,
+  type RunOptimizeOptions,
 } from "./worker/host";
 
 export {

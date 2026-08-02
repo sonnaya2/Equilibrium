@@ -17,17 +17,12 @@ export interface SolverProgress {
   phase: SolverPhase;
   noImprovementCount: number;
   topBarPreview: readonly string[];
-  /** Soft budget for UI fill (not a hard promise). */
   evaluationBudget?: number;
-  /** 0–1 estimated progress for the track fill. */
   progressRatio?: number;
-  /** Finalize shortlist re-score step (UI only — search budget is separate). */
   finalizeStep?: number;
   finalizeTotal?: number;
   proof?: SolverProofDTO;
 }
-
-// ── Main → Worker ──────────────────────────────────────────────────────────
 
 export interface StartSolverMessage {
   type: "start";
@@ -51,9 +46,16 @@ export interface ResumeSolverMessage {
 }
 
 export type HostToWorkerMessage =
-  StartSolverMessage | CancelSolverMessage | PauseSolverMessage | ResumeSolverMessage;
+  | StartSolverMessage
+  | CancelSolverMessage
+  | PauseSolverMessage
+  | ResumeSolverMessage;
 
-// ── Worker → Main ──────────────────────────────────────────────────────────
+/** Immediate ACK before expensive imports/solve — clears host cold-start watchdog. */
+export interface StartedSolverMessage {
+  type: "started";
+  requestId: number;
+}
 
 export interface ProgressSolverMessage {
   type: "progress";
@@ -79,16 +81,42 @@ export interface CancelledSolverMessage {
 }
 
 export type WorkerToHostMessage =
-  ProgressSolverMessage | ResultSolverMessage | ErrorSolverMessage | CancelledSolverMessage;
+  | StartedSolverMessage
+  | ProgressSolverMessage
+  | ResultSolverMessage
+  | ErrorSolverMessage
+  | CancelledSolverMessage;
+
+function isFiniteRequestId(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
 
 export function isHostToWorkerMessage(value: unknown): value is HostToWorkerMessage {
   if (value === null || typeof value !== "object") return false;
-  const t = (value as { type?: unknown }).type;
-  return t === "start" || t === "cancel" || t === "pause" || t === "resume";
+  const msg = value as { type?: unknown; requestId?: unknown };
+  if (!isFiniteRequestId(msg.requestId)) return false;
+  const t = msg.type;
+  if (t === "start") {
+    return (value as { payload?: unknown }).payload !== undefined;
+  }
+  return t === "cancel" || t === "pause" || t === "resume";
 }
 
 export function isWorkerToHostMessage(value: unknown): value is WorkerToHostMessage {
   if (value === null || typeof value !== "object") return false;
-  const t = (value as { type?: unknown }).type;
-  return t === "progress" || t === "result" || t === "error" || t === "cancelled";
+  const msg = value as { type?: unknown; requestId?: unknown };
+  if (!isFiniteRequestId(msg.requestId)) return false;
+  switch (msg.type) {
+    case "started":
+    case "cancelled":
+      return true;
+    case "progress":
+      return (value as { progress?: unknown }).progress !== undefined;
+    case "result":
+      return (value as { result?: unknown }).result !== undefined;
+    case "error":
+      return typeof (value as { error?: unknown }).error === "string";
+    default:
+      return false;
+  }
 }

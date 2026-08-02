@@ -21,10 +21,10 @@ export interface LeagueLoadout {
  * always included (no opt-out gate). Assumptions stay visible for unverified edges.
  */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
-  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as additive non-crit attached damage",
+  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as crit-eligible bonus damage attached to the parent hit",
   "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
   "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
-  "Still unverified: DoT/conjure edge cases if any; exact formula stage details",
+  "Still unverified: live crit eligibility, DoT/conjure edge cases if any; exact formula stage details",
 ] as const;
 
 export interface ResolvedLeagueRules {

@@ -92,6 +92,7 @@ export function scheduleBlessingDamage(
       recursionAllowed: false,
       derivedFrom: event.seq,
       blessingId: component.blessingId,
+      ...(component.damageTag ? { damageTag: component.damageTag } : {}),
       originKind,
       expectedOccurrences: component.expectedOccurrences,
       triggerRolls: component.triggerRolls,

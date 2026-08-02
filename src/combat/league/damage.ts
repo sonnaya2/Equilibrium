@@ -11,10 +11,15 @@ import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ru
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
 
+/** Tag for blessing-generated damage instances shown in analysis. */
+export type BlessingDamageTag = "bonus-damage";
+
 export interface LeagueDamageComponent {
   effectId: string;
   blessingId: BlessingId;
   attached: boolean;
+  /** Analysis tag (e.g. bonus-damage riders shown in the Bonus damage column). */
+  damageTag?: BlessingDamageTag;
   /** Legacy application weight; kept for older consumers and EV packing. */
   expectedOccurrences: number;
   /** Probability rolls this component represents (Inferno 5% = 1). */
@@ -170,7 +175,8 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
-  // Per unique hit (Mod Sponge): flat 5% of land-time max life, attached.
+  // Per unique hit (Mod Sponge): flat 5% of land-time max life, attached,
+  // crit-eligible bonus damage (product model — live crit eligibility unverified).
   const bigBoned = blessingRule(input.rules, "big-boned");
   if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
     const hit = calculateHit({
@@ -180,12 +186,13 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
         minPct: bigBoned.maxLifeDamagePercent * 100,
         maxPct: bigBoned.maxLifeDamagePercent * 100,
       },
-      crit: noCrit,
+      crit: { ...input.crit, eligible: true },
     });
     components.push({
       effectId: "big-boned",
       blessingId: "big-boned",
       attached: true,
+      damageTag: "bonus-damage",
       expectedOccurrences: 1,
       triggerRolls: 0,
       expectedActivations: 1,

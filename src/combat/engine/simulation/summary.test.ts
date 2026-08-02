@@ -240,6 +240,7 @@ describe("summary finalization", () => {
       expectedActivations: 2,
       expectedSeparateHits: 2,
       attachedComponents: 0,
+      bonusDamage: 0,
     });
     // Event log deliberately disagrees with the ledger.
     rt.events.push({

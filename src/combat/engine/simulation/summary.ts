@@ -403,6 +403,7 @@ export function combineBranchSummaries(
     | "expectedActivations"
     | "expectedSeparateHits"
     | "attachedComponents"
+    | "bonusDamage"
     | "directDamage"
     | "dotDamage"
     | "criticalContribution"
@@ -426,6 +427,7 @@ export function combineBranchSummaries(
         expectedActivations,
         expectedSeparateHits: value("expectedSeparateHits"),
         attachedComponents: value("attachedComponents"),
+        bonusDamage: value("bonusDamage"),
         averagePerActivation: expectedActivations > 0 ? totalDamage / expectedActivations : 0,
         directDamage: value("directDamage"),
         dotDamage: value("dotDamage"),

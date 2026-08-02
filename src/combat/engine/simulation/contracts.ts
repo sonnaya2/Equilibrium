@@ -156,6 +156,8 @@ export interface DamageEffectBreakdown {
   expectedSeparateHits: number;
   /** Attached bonus components riding another hit. */
   attachedComponents: number;
+  /** Damage tagged as bonus-damage (e.g. Big Boned); 0 when none. */
+  bonusDamage: number;
   /** totalDamage / expectedActivations when activations > 0. */
   averagePerActivation: number;
   directDamage: number;

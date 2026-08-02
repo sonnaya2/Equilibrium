@@ -62,6 +62,7 @@ function isExpectedProcEvent(event: ResolvedEvent): boolean {
 }
 
 function eventType(event: ResolvedEvent): string {
+  if (event.damageTag === "bonus-damage") return "Bonus damage";
   if (event.attached) return "Attached bonus";
   if (isExpectedProcEvent(event)) return "Expected proc";
   if (event.abilityId === "aftershock" || event.abilityId === "crackling") return "Perk proc";
@@ -95,6 +96,7 @@ function parentEffectLabel(
 }
 
 type EffectColumnId =
+  | "bonusDamage"
   | "casts"
   | "triggerRolls"
   | "expectedActivations"
@@ -108,9 +110,20 @@ const EFFECT_COLUMNS: readonly {
   label: string;
   title?: string;
   align: "right";
+  /** When true, column is rendered immediately after Total (not with the trailing set). */
+  afterTotal?: boolean;
   showIf: (row: DamageEffectBreakdown) => boolean;
   format: (row: DamageEffectBreakdown) => string;
 }[] = [
+  {
+    id: "bonusDamage",
+    label: "Bonus damage",
+    title: "Damage tagged as bonus damage (e.g. Big Boned)",
+    align: "right",
+    afterTotal: true,
+    showIf: (row) => row.bonusDamage !== 0,
+    format: (row) => (row.bonusDamage !== 0 ? formatNumber(row.bonusDamage) : "—"),
+  },
   {
     id: "casts",
     label: "Casts",
@@ -297,6 +310,8 @@ export function RotationAnalysisModal({
   const visibleColumns = EFFECT_COLUMNS.filter((column) =>
     result.analysis.byEffect.some((row) => column.showIf(row)),
   );
+  const afterTotalColumns = visibleColumns.filter((column) => column.afterTotal);
+  const trailingColumns = visibleColumns.filter((column) => !column.afterTotal);
 
   return (
     <dialog
@@ -379,8 +394,17 @@ export function RotationAnalysisModal({
                   <tr className="border-b border-stone-750">
                     <th className="py-1.5 pr-3 font-medium">Effect</th>
                     <th className="py-1.5 pr-3 text-right font-medium">Total</th>
+                    {afterTotalColumns.map((column) => (
+                      <th
+                        key={column.id}
+                        className="py-1.5 pr-3 text-right font-medium"
+                        title={column.title}
+                      >
+                        {column.label}
+                      </th>
+                    ))}
                     <th className="py-1.5 pr-3 text-right font-medium">Share</th>
-                    {visibleColumns.map((column) => (
+                    {trailingColumns.map((column) => (
                       <th
                         key={column.id}
                         className="py-1.5 pr-3 text-right font-medium last:pr-0"
@@ -403,10 +427,19 @@ export function RotationAnalysisModal({
                       <td className="py-1.5 pr-3 text-right font-mono text-parch-50">
                         {formatNumber(effect.totalDamage)}
                       </td>
+                      {afterTotalColumns.map((column) => (
+                        <td
+                          key={column.id}
+                          className="py-1.5 pr-3 text-right font-mono text-parch-300"
+                          title={column.title}
+                        >
+                          {column.format(effect)}
+                        </td>
+                      ))}
                       <td className="py-1.5 pr-3 text-right font-mono text-parch-300">
                         {formatPercent(effect.share)}
                       </td>
-                      {visibleColumns.map((column) => (
+                      {trailingColumns.map((column) => (
                         <td
                           key={column.id}
                           className="py-1.5 pr-3 text-right font-mono text-parch-300 last:pr-0"

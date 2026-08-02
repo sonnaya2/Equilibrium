@@ -42,6 +42,7 @@ function emptyLedger(id: string, kind: DamageSourceKind): EffectAnalysisLedger {
     expectedActivations: 0,
     expectedSeparateHits: 0,
     attachedComponents: 0,
+    bonusDamage: 0,
   };
 }
 
@@ -80,6 +81,9 @@ export function accountAnalysisEvent(
   ledger.expectedActivations += mult.expectedActivations;
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
   ledger.attachedComponents += mult.attachedComponents;
+  if (event.damageTag === "bonus-damage") {
+    ledger.bonusDamage += expected;
+  }
 
   // Cast identity is committed once per ability/sourceCast for player-owned
   // hit/dot/command events. Blessings and procs use activations, not casts.

@@ -39,6 +39,7 @@ export function finalizeAnalysis(
           expectedActivations: activations,
           expectedSeparateHits: ledger.expectedSeparateHits,
           attachedComponents: ledger.attachedComponents,
+          bonusDamage: ledger.bonusDamage,
           averagePerActivation: activations > 0 ? ledger.totalDamage / activations : 0,
           directDamage: ledger.directDamage,
           dotDamage: ledger.dotDamage,

@@ -195,6 +195,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
       expectedActivations: 1,
       expectedSeparateHits: 1,
       attachedComponents: 0,
+      bonusDamage: 0,
     });
     // Representative provenance log only reflects this branch's past.
     low.events.push({
@@ -231,6 +232,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
       expectedActivations: 3,
       expectedSeparateHits: 3,
       attachedComponents: 0,
+      bonusDamage: 0,
     });
     high.events[0] = {
       ...high.events[0]!,

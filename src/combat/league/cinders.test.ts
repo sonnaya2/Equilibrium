@@ -197,16 +197,39 @@ describe("Big Boned rides every qualifying damage instance", () => {
     const summary = simulate({
       ...rangedInput,
       league: bigBoned,
+      // Zero crit so the flat 5% of max life is exact.
+      crit: { chance: 0 },
       context: { style: "ranged", ruleset: "equilibrium" },
       rotation: rotationOf("greater_ricochet"),
     });
     const components = summary.events.filter((event) => event.abilityId === "big-boned");
     expect(components).toHaveLength(7);
-    // 5% of 15,000 = 750 per hit, attached and non-critical.
+    // 5% of 15,000 = 750 per hit, attached, tagged bonus-damage.
     for (const component of components) {
-      expect(component.damage.expected).toBe(750);
       expect(component.attached).toBe(true);
+      expect(component.damageTag).toBe("bonus-damage");
+      expect(component.damage.expected).toBe(750);
     }
+  });
+
+  it("is crit-eligible bonus damage: non-zero crit chance raises expected above the flat 5%", () => {
+    const withCrit = simulate({
+      ...rangedInput,
+      league: bigBoned,
+      crit: { chance: 0.2, damageBonus: 0 },
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
+    });
+    const riders = withCrit.events.filter((event) => event.abilityId === "big-boned");
+    expect(riders).toHaveLength(7);
+    for (const rider of riders) {
+      expect(rider.damageTag).toBe("bonus-damage");
+      // Flat 5% of 15k is 750; crit-eligible EV must exceed that.
+      expect(rider.damage.expected).toBeGreaterThan(750);
+    }
+    const bb = withCrit.analysis.byEffect.find((row) => row.id === "big-boned");
+    expect(bb?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
+    expect(bb?.bonusDamage).toBeGreaterThan(7 * 750);
   });
 
   it("rides damage-over-time ticks too", () => {

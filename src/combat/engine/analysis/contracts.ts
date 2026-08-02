@@ -22,6 +22,8 @@ export interface EffectAnalysisLedger {
   expectedSeparateHits: number;
   /** Attached bonus components (Big Boned, Cinders rider, …). */
   attachedComponents: number;
+  /** Damage tagged as bonus-damage (e.g. Big Boned); subset of totalDamage. */
+  bonusDamage: number;
 }
 
 export interface RuntimeAnalysisState {
@@ -103,6 +105,7 @@ export function mixAnalysisStates(
       expectedActivations: mix(left?.expectedActivations ?? 0, right?.expectedActivations ?? 0),
       expectedSeparateHits: mix(left?.expectedSeparateHits ?? 0, right?.expectedSeparateHits ?? 0),
       attachedComponents: mix(left?.attachedComponents ?? 0, right?.attachedComponents ?? 0),
+      bonusDamage: mix(left?.bonusDamage ?? 0, right?.bonusDamage ?? 0),
     });
   }
   const sourceKinds = new Set([...a.sources.keys(), ...b.sources.keys()]);

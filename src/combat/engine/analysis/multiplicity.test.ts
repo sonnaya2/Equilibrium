@@ -139,6 +139,7 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(riders).toHaveLength(7);
     for (const rider of riders) {
       expect(rider.attached).toBe(true);
+      expect(rider.damageTag).toBe("bonus-damage");
       expect(rider.originKind).toBe("direct");
       expect(rider.expectedSeparateHits).toBe(0);
       expect(rider.triggerRolls).toBe(0);
@@ -150,6 +151,9 @@ describe("scheduled hit multiplicity and origin provenance", () => {
         attachedComponents: 1,
       });
     }
+    const bb = summary.analysis.byEffect.find((row) => row.id === "big-boned");
+    expect(bb?.bonusDamage).toBeGreaterThan(0);
+    expect(bb?.bonusDamage).toBeCloseTo(bb?.totalDamage ?? 0, 6);
   });
 
   it("Cinders on GR: 7 riders, 7 Inferno trigger rolls, 0.35 expected activations", () => {

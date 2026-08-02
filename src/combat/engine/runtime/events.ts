@@ -1,6 +1,7 @@
 import type { EventResolution, ResolvedDamage } from "../resolution/types";
 import type { BleedId, DamageOverTimeKind } from "../../types";
 import type { BlessingId } from "../../../league/blessings";
+import type { BlessingDamageTag } from "../../league/damage";
 import type { CastSnapshot } from "../cast/snapshot";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
@@ -60,6 +61,8 @@ export interface ScheduledEvent<RT = unknown> {
   procEligible: boolean; // may trigger on-hit procs / stack generation / hit counters
   recursionAllowed: boolean; // may recursively create events of the same family
   blessingId?: BlessingId;
+  /** Analysis tag for bonus-damage riders (e.g. Big Boned). */
+  damageTag?: BlessingDamageTag;
   /**
    * Legacy application weight for expected-value events. Prefer the explicit
    * multiplicity fields below; kept so older schedulers and tests still work.

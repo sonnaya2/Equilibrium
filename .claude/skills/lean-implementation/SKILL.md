@@ -20,7 +20,8 @@ what is safe to simplify here and what is not.
 
 ## Preserve load-bearing complexity
 
-Read `combat-math` before touching combat mechanics, and `combat-sim` before touching
+Read `combat-math` before touching combat mechanics, `equipment-effects` before touching item stats,
+passives, enchantments, or set effects, and `combat-sim` before touching
 `src/combat/engine/`. Fewer lines never justify changing:
 
 - ordered modifier stages and priority;

@@ -1,13 +1,13 @@
 ---
 name: combat-sim
-description: RS3 Rotation and Revolution simulation semantics for this repo: the src/combat/engine/ layout, tick advancement, cast legality, channels, event provenance, per-hit effects, resource and cooldown clocks, state-changing RNG, sequences, conjure scheduling, and horizon accounting. Use before writing, reviewing, or debugging anything under src/combat/engine/, style on-cast state, scheduled combat events, or any Quick, Rotation, or Revolution result whose timing or state looks wrong.
+description: "RS3 Rotation and Revolution simulation semantics for this repo: the src/combat/engine/ layout, tick advancement, cast legality, channels, event provenance, per-hit effects, resource and cooldown clocks, state-changing RNG, sequences, conjure scheduling, and horizon accounting. Use before writing, reviewing, or debugging anything under src/combat/engine/, style on-cast state, scheduled combat events, or any Quick, Rotation, or Revolution result whose timing or state looks wrong."
 ---
 
 # Combat simulation semantics
 
 This skill owns **when combat events happen and what state survives between them**, and the shape of `src/combat/engine/`.
 
-`combat-math` owns what a hit's damage is: base ability damage, Damage Potential, DPL, crit layers, hit caps, modifier ordering, rounding, and the source hierarchy every combat number must clear. `league-blessings` owns revealed blessing facts, support status, and the routing decision for each blessing effect. Ability and equipment data own sourced mechanic values such as durations, stack thresholds, hit offsets, and cooldowns.
+`combat-math` owns what a hit's damage is: base ability damage, Damage Potential, DPL, crit layers, hit caps, modifier ordering, rounding, and the source hierarchy every combat number must clear. `equipment-effects` owns item records, static activation, passive/set/enchantment routing, and equipment support status. `league-blessings` owns revealed blessing facts, support status, and the routing decision for each blessing effect. Ability and equipment data own sourced mechanic values such as durations, stack thresholds, hit offsets, and cooldowns.
 
 This document describes the simulator's target semantics, not whichever buggy behavior happens to exist today. Fix code to match the rules; do not weaken the rules to preserve a defect.
 

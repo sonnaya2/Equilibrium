@@ -10,20 +10,22 @@ description: RS3 combat engine math for this repo - base ability damage by weapo
 This skill owns **what a hit is worth** and **how a combat number is verified**. `combat-sim` owns
 the engine under `src/combat/engine/`: when events happen and what state survives between them.
 `league-blessings` owns revealed blessing facts, support labels, and blessing routing.
+`equipment-effects` owns item records, passive/set activation, enchantments, and their routing into
+these math layers.
 
 ## Where the code lives
 
-| Path                                            | Owns                                                                              |
-| ----------------------------------------------- | --------------------------------------------------------------------------------- |
-| `src/combat/core/`                              | DPL, bands and base ability damage, crit layers, hit caps, Damage Potential, rounding, ticks |
-| `src/combat/pipeline/`                          | the ordered modifier pipeline, `calculateHit`, `calculateAbility`                 |
-| `src/combat/shared/`                            | equipment, prayers, potions, perks, vulnerability                                 |
-| `src/combat/styles/{melee,ranged,magic,necromancy}/` | ability tables and the state machines that are genuinely that style's        |
-| `src/combat/target/`                            | the generic target                                                                |
-| `src/combat/data/`                              | sourced records, ability specs, `SourceReference` constants                       |
-| `src/combat/league/ruleset.ts`                  | the one League boundary                                                           |
-| `src/combat/engine/`                            | simulation — read `combat-sim` before touching it                                 |
-| `src/combat/index.ts`                           | the deliberate external API                                                       |
+| Path                                                 | Owns                                                                                         |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `src/combat/core/`                                   | DPL, bands and base ability damage, crit layers, hit caps, Damage Potential, rounding, ticks |
+| `src/combat/pipeline/`                               | the ordered modifier pipeline, `calculateHit`, `calculateAbility`                            |
+| `src/combat/shared/`                                 | equipment, prayers, potions, perks, vulnerability                                            |
+| `src/combat/styles/{melee,ranged,magic,necromancy}/` | ability tables and the state machines that are genuinely that style's                        |
+| `src/combat/target/`                                 | the generic target                                                                           |
+| `src/combat/data/`                                   | sourced records, ability specs, `SourceReference` constants                                  |
+| `src/combat/league/ruleset.ts`                       | the one League boundary                                                                      |
+| `src/combat/engine/`                                 | simulation — read `combat-sim` before touching it                                            |
+| `src/combat/index.ts`                                | the deliberate external API                                                                  |
 
 `src/combat/index.ts` must name every module an outside consumer may reach for, so adding a module
 that UI or tooling will import means adding it to the barrel. `engine/cast/`, `engine/resolution/`,
@@ -80,8 +82,8 @@ two-handed melee, two-handed ranged, two-handed magic, and Necromancy — not on
   wielder-level cap stays out until its start date is sourced.
 - **Necromancy is not a two-handed melee weapon.** Its main-hand weapon and its conduit are their
   own configuration and need an explicit branch; do not let Necromancy fall through the
-  melee/ranged two-handed term. Source the conduit's contribution before implementing it. The
-  current code has no Necromancy branch — that is a known gap, not a ruling.
+  melee/ranged two-handed term. The current explicit branch gives the conduit half of its
+  tier-derived main-hand term.
 
 **Hit caps are per-effect metadata.** `standardHitCap` (30,000) is enabled by default and every hit
 passes through `applyHitCap` unless an effect's own sourced rule raises, splits or bypasses it.
@@ -125,7 +127,8 @@ global constant.
 **Weapon speed.** Modernisation standardised fundamental attack timing to ~3 ticks across styles.
 Attack-speed metadata may exist for historical/debug purposes only - it does not drive modern math.
 
-**Equipment.** The 9 Mar 2026 rebalance realigned bonuses to tier across armour, rings, amulets,
+**Equipment.** Read `equipment-effects` before changing item stats, passives, enchantments, set
+thresholds, or special-attack routing. The 9 Mar 2026 rebalance realigned bonuses to tier across armour, rings, amulets,
 pocket items, Necromancy and hybrid gear. Never use a 2024/2025 gear spreadsheet. Every item value
 carries its own source and verification date.
 

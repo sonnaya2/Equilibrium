@@ -68,6 +68,8 @@ const skillSlugs = Object.keys(bySlug("skills")).sort();
 // membership sets: art resolves by name as soon as a record names it.
 const relicSlugs = Object.keys(bySlug("relics")).sort();
 const blessingSlugs = Object.keys(bySlug("blessings")).sort();
+// Combat equipment inventory icons live flat under combat/equipment/.
+const equipmentSlugs = Object.keys(bySlug(join("combat", "equipment"))).sort();
 
 const body = `/** Generated from public/game by scripts/assets/build-icon-index.mjs - do not hand-edit. */
 export const UPGRADE_ICON_BY_SLUG: Record<string, string> = ${JSON.stringify(upgradeBySlug, null, 2)};
@@ -84,6 +86,9 @@ export const SKILL_ICON_SLUGS = new Set(${JSON.stringify(skillSlugs)});
 export const RELIC_ICON_SLUGS = new Set(${JSON.stringify(relicSlugs)});
 
 export const BLESSING_ICON_SLUGS = new Set(${JSON.stringify(blessingSlugs)});
+
+/** Verified local combat equipment inventory icons under public/game/combat/equipment/. */
+export const EQUIPMENT_ICON_SLUGS = new Set(${JSON.stringify(equipmentSlugs)});
 `;
 
 const formatted = await prettier.format(body, {
@@ -94,7 +99,7 @@ const formatted = await prettier.format(body, {
 const counts =
   `upgrades ${Object.keys(upgradeBySlug).length}, activities ${Object.keys(activityBySlug).length}, ` +
   `bosses ${bossSlugs.length}, skills ${skillSlugs.length}, relics ${relicSlugs.length}, ` +
-  `blessings ${blessingSlugs.length}`;
+  `blessings ${blessingSlugs.length}, equipment ${equipmentSlugs.length}`;
 
 if (CHECK) {
   if (readFileSync(join(ROOT, OUT), "utf8") === formatted) {

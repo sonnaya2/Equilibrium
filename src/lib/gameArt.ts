@@ -7,15 +7,15 @@ import {
   BLESSING_ICON_SLUGS,
   BOSS_ICON_EXT,
   BOSS_ICON_SLUGS,
+  EQUIPMENT_ICON_SLUGS,
   RELIC_ICON_SLUGS,
   SKILL_ICON_SLUGS,
   UPGRADE_ICON_BY_SLUG,
 } from "./dataIconIndex";
 import { decodeHtmlEntities } from "./htmlEntities";
-import equipmentIconSlugs from "#shard/combat/equipment-icon-slugs.json";
 
 /** Slugs with a verified local equipment inventory icon (no 404 wells). */
-const EQUIPMENT_OK = new Set(equipmentIconSlugs as string[]);
+const EQUIPMENT_OK = EQUIPMENT_ICON_SLUGS;
 
 export function gameIconPath(category: string, name: string): string {
   return `/game/${category}/${name}.webp`;
@@ -39,12 +39,10 @@ export const worldMapIconPath = () => "/game/leagues/world-map-icon.webp";
 /**
  * Local equipment inventory icons (synced from the wiki, never hotlinked).
  * Path: public/game/combat/equipment/<id-without-item-prefix>.webp
- * Only returns a path when the slug is in equipment-icon-slugs.json (ok:true).
- * The sync script that built it is gone; the slug list is now seed data, and
- * the companion equipment-icons.json it also wrote is read by nothing.
+ * Only returns a path when the slug is on disk (EQUIPMENT_ICON_SLUGS from art:index).
  */
 export function equipmentIconPath(equipmentId: string): string | null {
-  const slug = equipmentId.replace(/^(?:item|equipment):/, "");
+  const slug = equipmentId.replace(/^(?:item|equipment|cross-region):/, "");
   if (!EQUIPMENT_OK.has(slug)) return null;
   return `/game/combat/equipment/${slug}.webp`;
 }

@@ -1048,7 +1048,10 @@
     "fileTitle": "Scripture of Amascut.png",
     "search": "Scripture of Amascut inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Scripture_of_Amascut",
-    "sourcePage": "https://runescape.wiki/w/File:Scripture_of_Amascut.png"
+    "sourcePage": "https://runescape.wiki/w/File:Scripture_of_Amascut.png",
+    "alsoAt": [
+      "public/game/upgrades/progression/scripture-of-amascut.webp"
+    ]
   },
   {
     "id": "bulk42-combat-equipment-scripture-of-bik",
@@ -1144,7 +1147,10 @@
     "fileTitle": "Soulbound Lantern.png",
     "search": "Soulbound Lantern inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Soulbound_Lantern",
-    "sourcePage": "https://runescape.wiki/w/File:Soulbound_Lantern.png"
+    "sourcePage": "https://runescape.wiki/w/File:Soulbound_Lantern.png",
+    "alsoAt": [
+      "public/game/upgrades/progression/soulbound-lantern.webp"
+    ]
   },
   {
     "id": "bulk42-combat-equipment-staff-of-sliske",
@@ -4200,6 +4206,66 @@
     "canonicalPage": "https://runescape.wiki/w/Masterwork_Platelegs"
   },
   {
+    "id": "combat-equipment-masterwork-ranged-body",
+    "label": "Masterwork ranged body",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/masterwork-ranged-body",
+    "fileTitle": "Masterwork ranged body.png",
+    "search": "Masterwork ranged body inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_body",
+    "alsoAt": [
+      "public/game/combat/equipment/custom-fit-masterwork-ranged-body.webp"
+    ]
+  },
+  {
+    "id": "combat-equipment-masterwork-ranged-boots",
+    "label": "Masterwork ranged boots",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/masterwork-ranged-boots",
+    "fileTitle": "Masterwork ranged boots.png",
+    "search": "Masterwork ranged boots inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_boots",
+    "alsoAt": [
+      "public/game/combat/equipment/custom-fit-masterwork-ranged-boots.webp"
+    ]
+  },
+  {
+    "id": "combat-equipment-masterwork-ranged-chaps",
+    "label": "Masterwork ranged chaps",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/masterwork-ranged-chaps",
+    "fileTitle": "Masterwork ranged chaps.png",
+    "search": "Masterwork ranged chaps inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_chaps",
+    "alsoAt": [
+      "public/game/combat/equipment/custom-fit-masterwork-ranged-chaps.webp"
+    ]
+  },
+  {
+    "id": "combat-equipment-masterwork-ranged-cowl",
+    "label": "Masterwork ranged cowl",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/masterwork-ranged-cowl",
+    "fileTitle": "Masterwork ranged cowl.png",
+    "search": "Masterwork ranged cowl inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_cowl",
+    "alsoAt": [
+      "public/game/combat/equipment/custom-fit-masterwork-ranged-cowl.webp"
+    ]
+  },
+  {
+    "id": "combat-equipment-masterwork-ranged-vambraces",
+    "label": "Masterwork ranged vambraces",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/masterwork-ranged-vambraces",
+    "fileTitle": "Masterwork ranged vambraces.png",
+    "search": "Masterwork ranged vambraces inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_vambraces",
+    "alsoAt": [
+      "public/game/combat/equipment/custom-fit-masterwork-ranged-vambraces.webp"
+    ]
+  },
+  {
     "id": "combat-equipment-masterwork-spear-of-annihilation",
     "label": "Masterwork Spear Of Annihilation",
     "category": "rs3/combat/equipment",
@@ -4713,6 +4779,18 @@
     "canonicalPage": "https://runescape.wiki/w/Reckless_Aura"
   },
   {
+    "id": "combat-equipment-reefwalkers-cape",
+    "label": "Reefwalker's cape",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/reefwalkers-cape",
+    "fileTitle": "Reefwalker's cape.png",
+    "search": "Reefwalker's cape inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Reefwalker%27s_cape",
+    "alsoAt": [
+      "public/game/combat/equipment/superior-reefwalkers-cape.webp"
+    ]
+  },
+  {
     "id": "combat-equipment-refined-anima-core-body-of-seren",
     "label": "Refined Anima Core Body Of Seren",
     "category": "rs3/combat/equipment",
@@ -5056,9 +5134,12 @@
     "label": "Skull Lantern",
     "category": "rs3/combat/equipment",
     "path": "public/game/combat/equipment/skull-lantern",
-    "fileTitle": "Skull Lantern.png",
+    "fileTitle": "Skull lantern (tier 70).png",
     "search": "Skull Lantern inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Skull_Lantern"
+    "canonicalPage": "https://runescape.wiki/w/Skull_lantern",
+    "alsoAt": [
+      "public/game/upgrades/progression/skull-lantern.webp"
+    ]
   },
   {
     "id": "combat-equipment-skull-lantern-t80",

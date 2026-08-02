@@ -21,7 +21,19 @@ export default defineConfig({
   testIgnore: ["**/map*.spec.ts", "**/map-board*.spec.ts"],
   timeout: 30_000,
   workers: WORKERS,
-  use: { baseURL: URL },
+  fullyParallel: false,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  reporter: process.env.CI
+    ? [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]]
+    : "list",
+  outputDir: "test-results",
+  use: {
+    baseURL: URL,
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
+    video: "off",
+  },
   webServer: {
     command: `npm run dev -- --port ${PORT}`,
     url: URL,
@@ -29,5 +41,4 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [{ name: "chromium", use: { browserName: "chromium" } }],
-  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
 });

@@ -382,12 +382,23 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         phase: "finalize",
         evaluations: dto.evaluations,
         uniqueCandidates: dto.uniqueCandidates,
-        bestScore: Number.isFinite(dto.score) ? dto.score : 0,
-        windowDpms: Number.isFinite(dto.score) ? dto.score : 0,
+        // Exploratory scale only — never put full robust into bestScore.
+        bestScore: Number.isFinite(dto.bestExploratoryScore) ? dto.bestExploratoryScore! : 0,
+        ...(Number.isFinite(dto.bestExploratoryScore)
+          ? { bestExploratoryScore: dto.bestExploratoryScore }
+          : {}),
+        ...(Number.isFinite(dto.bestFullScore)
+          ? { bestFullScore: dto.bestFullScore }
+          : Number.isFinite(dto.score)
+            ? { bestFullScore: dto.score }
+            : {}),
+        // Real windows only — never stuff score into windowDpms.
+        windowDpms: 0,
         topBarPreview: bar,
         noImprovementCount: 0,
         evaluationBudget: TIER_BUDGETS[solverTier],
         progressRatio: 1,
+        evaluationMode: "finalize",
       });
     },
     [solverTier],
@@ -443,13 +454,15 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       const cached = lookupSolvedBar(contextKey);
       const cachedSeeds = seedBarsFromSolveCache(loadout.style, contextKey, sizes.minBarSize);
       if (cached?.bar?.length) {
-        lastBestRef.current = cached.score;
+        // Cache stores full winner score only — do not treat it as exploratory bestScore.
+        lastBestRef.current = 0;
         const warm: SolverProgress = {
           phase: "seed",
           evaluations: 0,
           uniqueCandidates: cached.top?.length ?? 1,
-          bestScore: Number.isFinite(cached.score) ? cached.score : 0,
-          windowDpms: Number.isFinite(cached.score) ? cached.score : 0,
+          bestScore: 0,
+          ...(Number.isFinite(cached.score) ? { bestFullScore: cached.score } : {}),
+          windowDpms: 0,
           topBarPreview: [...cached.bar],
           noImprovementCount: 0,
           evaluationBudget: TIER_BUDGETS[solverTier],
@@ -532,17 +545,22 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           setActiveBarIds([...partial.topBarPreview]);
           setCacheNote("Stopped — kept best bar so far");
           // Surface as a minimal result so the UI is not "Done + nothing".
+          const exp = partial.bestExploratoryScore ?? partial.bestScore;
+          const full = partial.bestFullScore;
           setSolverResult({
             bar: [...partial.topBarPreview],
-            score: partial.bestScore,
-            windowDpms: partial.bestScore,
+            // Prefer full when finalize scored; else exploratory preview.
+            score: Number.isFinite(full) ? full! : exp,
+            windowDpms: 0,
             evaluations: partial.evaluations,
             uniqueCandidates: partial.uniqueCandidates,
             seed: 1,
             profileId: solverProfile,
             tier: solverTier,
             durationTicks: 500,
-            proofLabel: "best-found",
+            proofLabel: "stopped-early",
+            ...(Number.isFinite(exp) ? { bestExploratoryScore: exp } : {}),
+            ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
           });
         } else {
           setSolverError("Search stopped before a bar was found.");
@@ -554,17 +572,21 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       // Last-ditch: if search had a best preview, keep it usable.
       if (partial?.topBarPreview?.length) {
         setActiveBarIds([...partial.topBarPreview]);
+        const exp = partial.bestExploratoryScore ?? partial.bestScore;
+        const full = partial.bestFullScore;
         setSolverResult({
           bar: [...partial.topBarPreview],
-          score: partial.bestScore,
-          windowDpms: partial.bestScore,
+          score: Number.isFinite(full) ? full! : exp,
+          windowDpms: 0,
           evaluations: partial.evaluations,
           uniqueCandidates: partial.uniqueCandidates,
           seed: 1,
           profileId: solverProfile,
           tier: solverTier,
           durationTicks: 500,
-          proofLabel: "best-found",
+          proofLabel: "heuristic-best-found",
+          ...(Number.isFinite(exp) ? { bestExploratoryScore: exp } : {}),
+          ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
         });
         setSolverError(`${message} — showing best bar found before the error.`);
       } else {
@@ -786,7 +808,22 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                         bestPulse ? "revo-solver-status__best is-pulse" : "revo-solver-status__best"
                       }
                     >
-                      best {formatNumber(solverProgress.bestScore)}
+                      {Number.isFinite(solverProgress.bestFullScore) ? (
+                        <>
+                          search{" "}
+                          {formatNumber(
+                            solverProgress.bestExploratoryScore ?? solverProgress.bestScore,
+                          )}{" "}
+                          · full {formatNumber(solverProgress.bestFullScore!)}
+                        </>
+                      ) : (
+                        <>
+                          best{" "}
+                          {formatNumber(
+                            solverProgress.bestExploratoryScore ?? solverProgress.bestScore,
+                          )}
+                        </>
+                      )}
                     </span>
                     {solverProgress.uniqueCandidates > 0 ? (
                       <>
@@ -853,8 +890,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         {solverResult ? (
           <div className="mt-3 border-t border-stone-750 pt-2" data-testid="revo-solver-results">
             <p className="text-xs text-parch-300">
-              Score {formatNumber(solverResult.score)} · {solverResult.proofLabel ?? "best-found"} ·{" "}
-              {solverResult.evaluations} evals
+              Score {formatNumber(solverResult.score)} ·{" "}
+              {solverResult.proofLabel ?? "heuristic-best-found"} · {solverResult.evaluations} evals
               {solverResult.openingDpm != null
                 ? ` · open ${formatNumber(solverResult.openingDpm)} / mid ${formatNumber(solverResult.developedDpm ?? 0)} / steady ${formatNumber(solverResult.steadyDpm ?? 0)}`
                 : ""}

@@ -12,7 +12,15 @@ export type SolverPhase = "seed" | "explore" | "exploit" | "finalize" | "paused"
 export interface SolverProgress {
   evaluations: number;
   uniqueCandidates: number;
+  /** Exploratory (search) best DPM — same units for the whole run. */
   bestScore: number;
+  /** Explicit dual fields (honest). Prefer these over parsing proof.notes. */
+  bestExploratoryScore?: number;
+  bestFullScore?: number;
+  searchEvaluations?: number;
+  fullEvaluations?: number;
+  /** Current evaluation scale for the latest step if useful. */
+  evaluationMode?: "search" | "full" | "finalize";
   windowDpms: number;
   phase: SolverPhase;
   noImprovementCount: number;

@@ -223,7 +223,6 @@ export const solveFromRequest: SolveFn = async (
     if (!options?.onProgress) return;
     if (!force && evaluations % 2 !== 0) return;
     // bestScore is ALWAYS exploratory DPM — never unit-switch to full robust mid-run.
-    // Separate full best is carried in proof.notes (protocol has no dual-score fields).
     const exploratory =
       Number.isFinite(bestExploratoryScore) ? bestExploratoryScore : Number.NEGATIVE_INFINITY;
     const full =
@@ -233,6 +232,11 @@ export const solveFromRequest: SolveFn = async (
       evaluations,
       uniqueCandidates: uniqueBars,
       bestScore: Number.isFinite(exploratory) ? exploratory : 0,
+      ...(Number.isFinite(exploratory) ? { bestExploratoryScore: exploratory } : {}),
+      ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
+      searchEvaluations,
+      fullEvaluations,
+      evaluationMode: currentPhase === "finalize" ? "finalize" : "search",
       // Never stuff robust score into windowDpms — real windows live on the result DTO.
       windowDpms: 0,
       topBarPreview: topPreview,
@@ -464,6 +468,11 @@ export const solveFromRequest: SolveFn = async (
     Number.isFinite(winner.developedDpm) &&
     Number.isFinite(winner.steadyDpm);
 
+  const exploratoryOut = Number.isFinite(result.bestExploratoryScore)
+    ? result.bestExploratoryScore
+    : undefined;
+  const fullOut = Number.isFinite(result.bestFullScore) ? result.bestFullScore : undefined;
+
   const dto: SolverResultDTO = {
     bar: winnerBar,
     score,
@@ -476,6 +485,8 @@ export const solveFromRequest: SolveFn = async (
     tier: request.tier,
     durationTicks: fullTicks,
     proofLabel: result.proof,
+    ...(exploratoryOut != null ? { bestExploratoryScore: exploratoryOut } : {}),
+    ...(fullOut != null ? { bestFullScore: fullOut } : {}),
     openingDpm: hasRealWindows ? winner.openingDpm : undefined,
     developedDpm: hasRealWindows ? winner.developedDpm : undefined,
     steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
@@ -498,7 +509,12 @@ export const solveFromRequest: SolveFn = async (
     evaluations: result.totalEvaluations,
     uniqueCandidates: dto.uniqueCandidates,
     // Keep bestScore on exploratory scale for the whole run (req 10).
-    bestScore: Number.isFinite(result.bestExploratoryScore) ? result.bestExploratoryScore : 0,
+    bestScore: exploratoryOut ?? 0,
+    ...(exploratoryOut != null ? { bestExploratoryScore: exploratoryOut } : {}),
+    ...(fullOut != null ? { bestFullScore: fullOut } : {}),
+    searchEvaluations: result.searchEvaluations,
+    fullEvaluations: result.fullEvaluations,
+    evaluationMode: "finalize",
     windowDpms: 0,
     topBarPreview: winnerBar,
     noImprovementCount: 0,

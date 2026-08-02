@@ -54,7 +54,8 @@ function phaseRank(phase: SolverProgress["phase"] | undefined): number {
   }
 }
 
-function mergeProgress(
+/** Exported for unit tests — host progress merge across parallel agents. */
+export function mergeProgress(
   parts: readonly (SolverProgress | undefined)[],
   agentCount: number,
   baseBudget: number,
@@ -79,12 +80,37 @@ function mergeProgress(
   let unique = 0;
   let ratioSum = 0;
   let phase = best.phase;
+  let bestExploratory = Number.NEGATIVE_INFINITY;
+  let bestFull = Number.NEGATIVE_INFINITY;
+  let hasExploratory = false;
+  let hasFull = false;
+  let searchEvals = 0;
+  let fullEvals = 0;
+  let hasSearchEvals = false;
+  let hasFullEvals = false;
   for (const p of live) {
     evaluations += p.evaluations;
     unique += p.uniqueCandidates;
     ratioSum += p.progressRatio ?? 0;
     if (p.bestScore > best.bestScore) best = p;
     if (phaseRank(p.phase) > phaseRank(phase)) phase = p.phase;
+    const exp = p.bestExploratoryScore ?? p.bestScore;
+    if (Number.isFinite(exp) && exp > bestExploratory) {
+      bestExploratory = exp;
+      hasExploratory = true;
+    }
+    if (p.bestFullScore != null && Number.isFinite(p.bestFullScore)) {
+      hasFull = true;
+      if (p.bestFullScore > bestFull) bestFull = p.bestFullScore;
+    }
+    if (p.searchEvaluations != null) {
+      hasSearchEvals = true;
+      searchEvals += p.searchEvaluations;
+    }
+    if (p.fullEvaluations != null) {
+      hasFullEvals = true;
+      fullEvals += p.fullEvaluations;
+    }
   }
 
   // Missing agents count as 0 so the bar does not jump to ~done on first report.
@@ -92,7 +118,13 @@ function mergeProgress(
     phase,
     evaluations,
     uniqueCandidates: unique,
-    bestScore: best.bestScore,
+    // bestScore stays exploratory-only across agents.
+    bestScore: hasExploratory ? bestExploratory : best.bestScore,
+    ...(hasExploratory ? { bestExploratoryScore: bestExploratory } : {}),
+    ...(hasFull ? { bestFullScore: bestFull } : {}),
+    ...(hasSearchEvals ? { searchEvaluations: searchEvals } : {}),
+    ...(hasFullEvals ? { fullEvaluations: fullEvals } : {}),
+    evaluationMode: best.evaluationMode ?? (phase === "finalize" ? "finalize" : "search"),
     windowDpms: best.windowDpms,
     topBarPreview: best.topBarPreview,
     noImprovementCount: best.noImprovementCount,
@@ -347,17 +379,28 @@ export class SolverAgentPool {
                 // Progress callback exceptions must not kill the agent.
               }
               break;
-            case "result":
+            case "result": {
+              const prev = progressParts[index];
+              const exp =
+                msg.result.bestExploratoryScore ??
+                prev?.bestExploratoryScore ??
+                prev?.bestScore ??
+                0;
+              const full = msg.result.bestFullScore ?? msg.result.score;
               progressParts[index] = {
                 phase: "finalize",
                 evaluations: msg.result.evaluations,
                 uniqueCandidates: msg.result.uniqueCandidates,
-                bestScore: msg.result.score,
-                windowDpms: msg.result.score,
+                // Never put full robust into bestScore.
+                bestScore: Number.isFinite(exp) ? exp : 0,
+                ...(Number.isFinite(exp) ? { bestExploratoryScore: exp } : {}),
+                ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
+                windowDpms: 0,
                 topBarPreview: [...msg.result.bar],
                 noImprovementCount: 0,
                 evaluationBudget: baseBudget,
                 progressRatio: 1,
+                evaluationMode: "finalize",
               };
               try {
                 emit();
@@ -366,6 +409,7 @@ export class SolverAgentPool {
               }
               settle(() => resolve(msg.result));
               break;
+            }
             case "error":
               settle(() => reject(new Error(msg.error)));
               break;

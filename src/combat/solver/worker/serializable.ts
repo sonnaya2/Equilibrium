@@ -208,6 +208,10 @@ export interface SolverResultDTO {
   tier: SolverSearchTier;
   durationTicks: number;
   proofLabel?: ProofLabel;
+  /** Best exploratory (search-horizon) score seen — not mixed with full robust. */
+  bestExploratoryScore?: number;
+  /** Best full-horizon robust score seen (winner scale when finalize ran). */
+  bestFullScore?: number;
   openingDpm?: number;
   developedDpm?: number;
   steadyDpm?: number;

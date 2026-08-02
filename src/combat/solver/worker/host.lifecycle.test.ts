@@ -91,10 +91,13 @@ function sampleProgress(overrides?: Partial<SolverProgress>): SolverProgress {
     evaluations: 1,
     uniqueCandidates: 1,
     bestScore: 10,
+    // Optional dual fields — callers may override; defaults keep exploratory scale only.
+    bestExploratoryScore: 10,
     windowDpms: 10,
     phase: "explore",
     noImprovementCount: 0,
     topBarPreview: ["melee:slice"],
+    evaluationMode: "search",
     ...overrides,
   };
 }

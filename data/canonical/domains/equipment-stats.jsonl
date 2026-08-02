@@ -624,6 +624,8 @@
 {"entityId":"item:masterwork-ranged-vambraces","stat":"armour","value":138.2}
 {"entityId":"item:masterwork-ranged-vambraces","stat":"life","value":475}
 {"entityId":"item:masterwork-ranged-vambraces","stat":"prayer","value":2}
+{"entityId":"item:masterwork-spear-of-annihilation","stat":"accuracy","value":2577}
+{"entityId":"item:masterwork-spear-of-annihilation","stat":"damage","value":2056.2}
 {"entityId":"item:masterwork-staff","stat":"accuracy","value":3100}
 {"entityId":"item:masutas-warspear","stat":"accuracy","value":2023}
 {"entityId":"item:masutas-warspear","stat":"damage","value":1832.7}

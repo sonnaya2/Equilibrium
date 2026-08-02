@@ -15,7 +15,6 @@ export * from "./target/genericTarget";
 export * from "./shared/perks";
 export * from "./shared/equipment";
 export * from "./shared/equipmentStats";
-export * from "./shared/bleedDurationExtension";
 export * from "./shared/prayers";
 export * from "./shared/vulnerability";
 export * from "./shared/potions";
@@ -56,6 +55,4 @@ export {
   TIER_BUDGETS,
   runOptimize,
   cancelOptimize,
-  runSolverInWorker,
-  runSolverOnMainThread,
 } from "./solver";

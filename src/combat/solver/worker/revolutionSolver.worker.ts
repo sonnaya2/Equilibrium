@@ -14,11 +14,11 @@ function post(message: WorkerToHostMessage): void {
   self.postMessage(message);
 }
 
-/**
- * Wire API is `solveFromRequest(SerializableSolverRequest, options)`. The pure
- * search orchestrator `solve(SolveInput)` needs an EvaluateFn and is not called
- * from this boundary.
- */
+function clearRequestState(requestId: number): void {
+  cancelled.delete(requestId);
+  paused.delete(requestId);
+}
+
 async function loadSolve(): Promise<SolveFn> {
   const mod = (await import(/* webpackMode: "lazy" */ "../solveFromRequest")) as {
     solveFromRequest?: SolveFn;
@@ -39,12 +39,17 @@ async function waitWhilePaused(requestId: number): Promise<void> {
 
 async function runStart(requestId: number, payload: SerializableSolverRequest): Promise<void> {
   runningId = requestId;
-  cancelled.delete(requestId);
-  paused.delete(requestId);
+  clearRequestState(requestId);
+  post({ type: "started", requestId });
 
   try {
-    const solve = await loadSolve();
     if (cancelled.has(requestId)) {
+      post({ type: "cancelled", requestId });
+      return;
+    }
+
+    const solve = await loadSolve();
+    if (cancelled.has(requestId) || runningId !== requestId) {
       post({ type: "cancelled", requestId });
       return;
     }
@@ -57,7 +62,7 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
         try {
           post({ type: "progress", requestId, progress });
         } catch {
-          // Ignore progress clone failures; keep solving.
+          // Progress clone failure must not abort the solve.
         }
       },
       isCancelled: isDead,
@@ -99,33 +104,38 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
     }
     post({ type: "error", requestId, error: message });
   } finally {
+    clearRequestState(requestId);
     if (runningId === requestId) runningId = null;
   }
 }
 
-self.onmessage = (event: MessageEvent<HostToWorkerMessage>) => {
+self.onmessage = (event: MessageEvent<unknown>) => {
   const msg = event.data;
   if (!msg || typeof msg !== "object") return;
+  const typed = msg as HostToWorkerMessage;
+  if (typeof (typed as { requestId?: unknown }).requestId !== "number") return;
 
-  switch (msg.type) {
+  switch (typed.type) {
     case "start":
-      if (runningId !== null && runningId !== msg.requestId) {
+      if (runningId !== null && runningId !== typed.requestId) {
         cancelled.add(runningId);
       }
-      void runStart(msg.requestId, msg.payload);
+      void runStart(typed.requestId, typed.payload);
       break;
     case "cancel":
-      cancelled.add(msg.requestId);
-      paused.delete(msg.requestId);
-      if (runningId === msg.requestId) {
-        // Cooperative cancel: solve checks isCancelled; also post if idle.
+      cancelled.add(typed.requestId);
+      paused.delete(typed.requestId);
+      if (runningId !== typed.requestId) {
+        clearRequestState(typed.requestId);
       }
       break;
     case "pause":
-      paused.add(msg.requestId);
+      if (runningId === typed.requestId) {
+        paused.add(typed.requestId);
+      }
       break;
     case "resume":
-      paused.delete(msg.requestId);
+      paused.delete(typed.requestId);
       break;
   }
 };

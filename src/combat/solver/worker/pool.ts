@@ -11,8 +11,8 @@ import {
   type WorkerToHostMessage,
 } from "./protocol";
 import type { SolveProgressHandler } from "./solveTypes";
+import { createSolverWorker, getFirstAckMs } from "./workerCreate";
 
-const WORKER_FIRST_MESSAGE_MS = 12_000;
 const MAX_POOL = 4;
 
 export function solverPoolSize(): number {
@@ -22,17 +22,9 @@ export function solverPoolSize(): number {
   return Math.max(1, Math.min(MAX_POOL, Math.max(1, hc - 1)));
 }
 
-/**
- * Match host.ts worker construction. Next/webpack expects the classic bundled
- * worker URL — `type: "module"` breaks that pipeline.
- */
+/** Match host.ts worker construction (and test factory). */
 function createWorker(): Worker | null {
-  if (typeof Worker === "undefined") return null;
-  try {
-    return new Worker(new URL("./revolutionSolver.worker.ts", import.meta.url));
-  } catch {
-    return null;
-  }
+  return createSolverWorker();
 }
 
 function post(worker: Worker, message: HostToWorkerMessage): void {
@@ -296,6 +288,7 @@ export class SolverAgentPool {
 
       return new Promise<SolverResultDTO>((resolve, reject) => {
         let settled = false;
+        let acknowledged = false;
         let bootTimer: ReturnType<typeof setTimeout> | undefined;
 
         const settle = (fn: () => void) => {
@@ -334,6 +327,7 @@ export class SolverAgentPool {
         };
 
         const onMessage = (event: MessageEvent<unknown>) => {
+          // Malformed protocol must not kill a healthy agent.
           if (!isWorkerToHostMessage(event.data)) return;
           const msg = event.data as WorkerToHostMessage;
           if (msg.requestId !== requestId) return;
@@ -342,9 +336,16 @@ export class SolverAgentPool {
             bootTimer = undefined;
           }
           switch (msg.type) {
+            case "started":
+              acknowledged = true;
+              break;
             case "progress":
-              progressParts[index] = msg.progress;
-              emit();
+              try {
+                progressParts[index] = msg.progress;
+                emit();
+              } catch {
+                // Progress callback exceptions must not kill the agent.
+              }
               break;
             case "result":
               progressParts[index] = {
@@ -358,7 +359,11 @@ export class SolverAgentPool {
                 evaluationBudget: baseBudget,
                 progressRatio: 1,
               };
-              emit();
+              try {
+                emit();
+              } catch {
+                // ignore
+              }
               settle(() => resolve(msg.result));
               break;
             case "error":
@@ -372,16 +377,19 @@ export class SolverAgentPool {
           }
         };
 
+        // ACK watchdog only — slow import after started is not a pool failure.
+        const ackMs = getFirstAckMs();
         bootTimer = setTimeout(() => {
+          if (settled || acknowledged) return;
           this.replaceDeadWorker(slot, requestId);
           settle(() =>
             reject(
               new Error(
-                `solver agent ${index} watchdog: no message after ${WORKER_FIRST_MESSAGE_MS}ms`,
+                `solver agent ${index} did not acknowledge start within ${ackMs}ms`,
               ),
             ),
           );
-        }, WORKER_FIRST_MESSAGE_MS);
+        }, ackMs);
 
         slot.worker.addEventListener("message", onMessage);
         slot.worker.addEventListener("error", onError);
@@ -452,7 +460,12 @@ export function cancelSolverAgentPool(): void {
   sharedPool?.cancel();
 }
 
-export function resetSolverAgentPoolForTests(): void {
+/** Terminate all agent workers and drop the shared pool (hard failure / fallback). */
+export function disposeSolverAgentPool(): void {
   sharedPool?.dispose();
   sharedPool = null;
+}
+
+export function resetSolverAgentPoolForTests(): void {
+  disposeSolverAgentPool();
 }

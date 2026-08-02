@@ -27,6 +27,7 @@ export {
   type ProgressSolverMessage,
   type ResultSolverMessage,
   type ResumeSolverMessage,
+  type StartedSolverMessage,
   type SolverPhase,
   type SolverProgress,
   type StartSolverMessage,
@@ -43,18 +44,17 @@ export {
   type RevivedRevolutionBase,
 } from "./revive";
 
+/** Product + low-level host. Client/test hooks: deep-import ./host. */
 export {
-  RevolutionSolverClient,
   runOptimize,
   cancelOptimize,
-  getRevolutionSolverClient,
-  runSolverInWorker,
   runSolverOnMainThread,
-  isSolverPreferringMainThread,
-  resetSolverHostForTests,
   solverPoolSize,
+  type RunOptimizeOptions,
+  type PauseResumeResult,
 } from "./host";
-export { SolverAgentPool, getSolverAgentPool } from "./pool";
+
+export { SolverAgentPool, getSolverAgentPool, solverPoolSize as poolSize } from "./pool";
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 

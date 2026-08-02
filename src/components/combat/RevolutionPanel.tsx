@@ -568,13 +568,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           })),
         ],
       };
-      // Thorough: one agent (cache-friendly, no N× finalize). Extreme+: multi-seed pool.
+      // Up to 4 parallel agents (different seeds); sticky main-thread fallback.
       const agents = preferredAgentCount(solverTier, solverPoolSize());
       setSolverAgents(agents);
       if (agents > 1) {
         setCacheNote((prev) => prev ?? `${agents} parallel search agents…`);
-      } else {
-        setCacheNote((prev) => prev ?? "Single agent · session eval cache warm…");
       }
       const dto = await runOptimize(
         request,

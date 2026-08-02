@@ -16,29 +16,27 @@ import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
  * explore sims), not overnight research. Extreme/Unhinged scale up.
  */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
-  // Thorough ≈ 1/4 of Extreme search budget (hardware-snappy default).
-  thorough: 450,
+  // Thorough ~ half of Extreme search budget; still the interactive default.
+  thorough: 900,
   extreme: 1_800,
   unhinged: 8_000,
 };
 
 /**
  * Per-tier sim horizons (game-time seconds, not wall clock).
- * Thorough ≈ 1/4 Extreme full score; Extreme mid; Unhinged full research.
  */
 export const TIER_HORIZON_SECONDS: Record<
   SolveTier,
   { exploreSeconds: number; fullSeconds: number }
 > = {
-  thorough: { exploreSeconds: 8, fullSeconds: 30 },
+  thorough: { exploreSeconds: 15, fullSeconds: 60 },
   extreme: { exploreSeconds: 30, fullSeconds: 120 },
   unhinged: { exploreSeconds: 30, fullSeconds: 300 },
 };
 
-/** Thorough keeps one agent so finalize shortlist is not re-scored N times in parallel. */
-export function preferredAgentCount(tier: SolveTier, hardwareAgents: number): number {
-  if (tier === "thorough") return 1;
-  return Math.max(1, hardwareAgents);
+/** Cap parallel agents at 4 for every tier (hardwareConcurrency may be lower). */
+export function preferredAgentCount(_tier: SolveTier, hardwareAgents: number): number {
+  return Math.max(1, Math.min(4, hardwareAgents));
 }
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
@@ -59,9 +57,8 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
     localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
     topK: 5,
-    // Thorough shortlist ≈ 1/4 Extreme (2 vs 6); unhinged wider.
-    fullShortlistSize: tier === "thorough" ? 2 : tier === "extreme" ? 6 : 10,
-    exhaustiveMax: tier === "thorough" ? 3_000 : tier === "extreme" ? 12_000 : 80_000,
+    fullShortlistSize: tier === "thorough" ? 4 : tier === "extreme" ? 6 : 10,
+    exhaustiveMax: tier === "thorough" ? 6_000 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
   };
 }

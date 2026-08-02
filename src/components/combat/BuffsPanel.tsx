@@ -105,7 +105,7 @@ const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
   none: "Recorded",
 };
 const BLESSING_SUPPORT_LABEL: Record<BlessingSupportStatus, string> = {
-  modeled: "Active",
+  modeled: "Modeled",
   "partially-modeled": "Partial",
   "not-modeled": "Not modeled",
   "scenario-dependent": "Situational",
@@ -284,7 +284,7 @@ export function BuffsPanel({
               <li key={choice.id}>
                 <span className="text-parch-100">{choice.name}</span> ·{" "}
                 {BLESSING_SUPPORT_LABEL[choice.support.status]}
-                {choice.support.mechanicsUnverified ? " · awaiting Jagex detail" : ""}
+                {choice.support.mechanicsUnverified ? " · mechanics unverified" : ""}
               </li>
             ))}
           </ul>

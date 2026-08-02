@@ -16,22 +16,21 @@ import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
  * explore sims), not overnight research. Extreme/Unhinged scale up.
  */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
-  thorough: 220,
+  // Thorough ≈ 1/4 of Extreme search budget (hardware-snappy default).
+  thorough: 450,
   extreme: 1_800,
   unhinged: 8_000,
 };
 
 /**
  * Per-tier sim horizons (game-time seconds, not wall clock).
- * Search uses the short explore window; finalize re-scores with fullSeconds.
- * Thorough keeps full scoring at 30s so ranking is fast and not a 5‑min hang.
+ * Thorough ≈ 1/4 Extreme full score; Extreme mid; Unhinged full research.
  */
 export const TIER_HORIZON_SECONDS: Record<
   SolveTier,
   { exploreSeconds: number; fullSeconds: number }
 > = {
-  // Explore closer to full so ranking tracks real DPM; full short enough to feel snappy.
-  thorough: { exploreSeconds: 20, fullSeconds: 60 },
+  thorough: { exploreSeconds: 8, fullSeconds: 30 },
   extreme: { exploreSeconds: 30, fullSeconds: 120 },
   unhinged: { exploreSeconds: 30, fullSeconds: 300 },
 };
@@ -60,10 +59,9 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
     localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
     topK: 5,
-    // Diverse full shortlist — full-horizon re-scores are expensive (~seconds each).
-    // Keep thorough snappy; extreme/unhinged pay for a wider shortlist.
-    fullShortlistSize: tier === "thorough" ? 3 : tier === "extreme" ? 6 : 10,
-    exhaustiveMax: tier === "thorough" ? 800 : tier === "extreme" ? 12_000 : 80_000,
+    // Thorough shortlist ≈ 1/4 Extreme (2 vs 6); unhinged wider.
+    fullShortlistSize: tier === "thorough" ? 2 : tier === "extreme" ? 6 : 10,
+    exhaustiveMax: tier === "thorough" ? 3_000 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
   };
 }

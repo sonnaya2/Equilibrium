@@ -65,13 +65,6 @@ function solverPhaseLabel(
   }
 }
 
-function formatElapsed(ms: number): string {
-  const totalSec = Math.max(0, Math.floor(ms / 1000));
-  const m = Math.floor(totalSec / 60);
-  const s = totalSec % 60;
-  return m > 0 ? `${m}:${String(s).padStart(2, "0")}` : `${s}s`;
-}
-
 function scoringHint(
   progress: SolverProgress | null,
   agentCount: number,
@@ -309,9 +302,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
   const [bestPulse, setBestPulse] = useState(false);
   const [solverAgents, setSolverAgents] = useState(1);
-  /** Wall-clock ms when the current Optimize started (for elapsed timer). */
-  const [solveStartedAt, setSolveStartedAt] = useState<number | null>(null);
-  const [elapsedMs, setElapsedMs] = useState(0);
   const cancelRef = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   const lastBestRef = useRef(0);
@@ -397,16 +387,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       cancelOptimize();
     };
   }, []);
-
-  // Elapsed wall-clock while optimizing (1s tick).
-  useEffect(() => {
-    if (!solving || solveStartedAt == null) return;
-    setElapsedMs(Date.now() - solveStartedAt);
-    const id = window.setInterval(() => {
-      setElapsedMs(Date.now() - solveStartedAt);
-    }, 250);
-    return () => window.clearInterval(id);
-  }, [solving, solveStartedAt]);
 
   const simStyle = loadout.style;
 
@@ -511,8 +491,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     latestProgressRef.current = null;
     setSolving(true);
     setStopping(false);
-    setSolveStartedAt(Date.now());
-    setElapsedMs(0);
     setSolverError(null);
     setSolverResult(null);
     setBestPulse(false);
@@ -701,7 +679,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       if (gen === solveGenRef.current) {
         setSolving(false);
         setStopping(false);
-        setSolveStartedAt(null);
         abortRef.current = null;
       }
     }
@@ -896,16 +873,6 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                       : cacheNote?.startsWith("Stopped") || cacheNote?.startsWith("Stopping")
                         ? "Stopped"
                         : "Done"}
-                {solving || stopping ? (
-                  <>
-                    <span className="revo-solver-status__dot" aria-hidden>
-                      ·
-                    </span>
-                    <span className="revo-solver-status__timer font-mono" data-testid="revo-solver-elapsed">
-                      {formatElapsed(elapsedMs)}
-                    </span>
-                  </>
-                ) : null}
               </span>
               <span className="revo-solver-status__meta font-mono">
                 {solverProgress ? (

@@ -262,11 +262,25 @@ export async function runOptimize(
 /**
  * Cancel every execution mode: agent pool, single worker, direct/sticky/forced
  * main, fallback, and any superseded previous run.
+ *
+ * Soft cancel messages alone cannot interrupt a sync full-horizon simulation on
+ * a worker — so product cancel also **terminates** pool/single workers. The next
+ * optimize recreates them. Main-thread runs still rely on cooperative isCancelled
+ * between candidates (and after the current sim finishes).
  */
 export function cancelOptimize(): void {
   if (productRun) productRun.cancelled = true;
+  // Soft cancel first so awaiters settle as AbortError, then hard-kill workers
+  // so a long finalize sim cannot keep burning CPU after the user hit Cancel.
   cancelSolverAgentPool();
   sharedClient?.cancel();
+  disposeSolverAgentPool();
+  try {
+    sharedClient?.disposeQuiet();
+  } catch {
+    // ignore
+  }
+  sharedClient = null;
 }
 
 export function getRevolutionSolverClient(): RevolutionSolverClient {

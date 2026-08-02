@@ -39,8 +39,9 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
     localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
     topK: 5,
-    // Diverse full shortlist — never a hardcoded top-two of near-identical bars.
-    fullShortlistSize: tier === "thorough" ? 6 : tier === "extreme" ? 10 : 16,
+    // Diverse full shortlist — full-horizon re-scores are expensive (~seconds each).
+    // Keep thorough snappy; extreme/unhinged pay for a wider shortlist.
+    fullShortlistSize: tier === "thorough" ? 3 : tier === "extreme" ? 6 : 10,
     exhaustiveMax: tier === "thorough" ? 800 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
   };
@@ -65,7 +66,14 @@ export interface SolveAsyncHooks {
   /** Cooperative yield so the UI can paint / cancel. */
   yieldSlice?: () => Promise<void>;
   /** Full-horizon finalize step progress (N of M). */
-  onFinalizeStep?: (info: { done: number; total: number; label: string }) => void;
+  onFinalizeStep?: (info: {
+    done: number;
+    total: number;
+    label: string;
+    bar?: readonly string[];
+  }) => void;
+  /** Cooperative cancel for finalize shortlist loop. */
+  isCancelled?: () => boolean;
 }
 
 /**
@@ -184,6 +192,7 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
     tier,
     topK: config.topK,
     yieldSlice,
+    isCancelled: hooks?.isCancelled,
     onStep: (info) => {
       onPhase?.("finalize");
       hooks?.onFinalizeStep?.(info);

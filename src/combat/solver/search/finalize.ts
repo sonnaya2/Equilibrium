@@ -8,7 +8,15 @@ export interface FinalizeOptions {
   topK?: number;
   /** Yield between expensive full-horizon re-scores so the UI can paint. */
   yieldSlice?: () => Promise<void>;
-  onStep?: (info: { done: number; total: number; label: string }) => void;
+  /** Cooperative cancel — checked before each full re-score (not mid-sim). */
+  isCancelled?: () => boolean;
+  onStep?: (info: {
+    done: number;
+    total: number;
+    label: string;
+    /** Bar about to be / just scored under full horizon. */
+    bar?: readonly string[];
+  }) => void;
 }
 
 function isSearchRankable(s: ScoredBar | null | undefined): s is ScoredBar {
@@ -279,16 +287,28 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
 }
 
 /**
- * Async finalize: yields between each full-horizon re-score so main-thread UI
- * stays responsive and progress can update.
+ * Async finalize: yields before/after each full-horizon re-score so cancel and
+ * UI paint can run. One full-horizon sim is still synchronous (cannot mid-kill
+ * without terminating the worker); cancel is observed between candidates.
  */
 export async function finalizeSearchAsync(
   state: SearchState,
   opts: FinalizeOptions,
 ): Promise<SolveResult> {
   const yieldSlice = opts.yieldSlice ?? (async () => undefined);
+  const throwIfCancelled = () => {
+    if (opts.isCancelled?.()) {
+      const err = new Error("solver cancelled");
+      err.name = "AbortError";
+      throw err;
+    }
+  };
+
+  throwIfCancelled();
   const { seedBestScore, seedBestBar } = await pickSeedBestAsync(state, yieldSlice);
+  throwIfCancelled();
   await yieldSlice();
+  throwIfCancelled();
 
   const explorePool = buildExplorePool(state, seedBestBar);
   const fullCandidates = fullCandidateList(explorePool, state, seedBestBar);
@@ -296,21 +316,34 @@ export async function finalizeSearchAsync(
   const fullOnly: ScoredBar[] = [];
 
   for (let i = 0; i < fullCandidates.length; i++) {
+    throwIfCancelled();
     const s = fullCandidates[i]!;
     opts.onStep?.({
       done: i,
       total: Math.max(1, totalSteps),
-      label: `Final scoring ${i + 1}/${Math.max(1, totalSteps)}`,
+      label: `Full-horizon score ${i + 1}/${Math.max(1, totalSteps)}`,
+      bar: s.bar,
     });
+    // Yield *before* the heavy sim so a pending cancel is observed without
+    // starting another 300s-window evaluation.
+    await yieldSlice();
+    throwIfCancelled();
     const full = state.forceEval(s.bar, "full", "finalize");
     if (isFullRankable(full)) fullOnly.push(full);
+    opts.onStep?.({
+      done: i + 1,
+      total: Math.max(1, totalSteps),
+      label: `Full-horizon score ${i + 1}/${Math.max(1, totalSteps)} done`,
+      bar: s.bar,
+    });
     await yieldSlice();
   }
 
+  throwIfCancelled();
   opts.onStep?.({
     done: totalSteps,
     total: Math.max(1, totalSteps),
-    label: "Final scoring done",
+    label: "Full-horizon scoring done",
   });
 
   return assembleResult(state, opts, seedBestScore, seedBestBar, explorePool, fullOnly);

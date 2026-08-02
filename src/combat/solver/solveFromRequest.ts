@@ -99,7 +99,9 @@ export const solveFromRequest: SolveFn = async (
   options?: SolveRuntimeOptions,
 ): Promise<SolverResultDTO> => {
   if (options?.isCancelled?.() || options?.signal?.aborted) {
-    throw new Error("solver cancelled");
+    const err = new Error("solver cancelled");
+    err.name = "AbortError";
+    throw err;
   }
 
   const simBase = requireSimBase(request.loadout);
@@ -195,6 +197,14 @@ export const solveFromRequest: SolveFn = async (
   let finalizeDone = 0;
   let finalizeTotal = 0;
   let finalizeActive = false;
+  let scoringLabel: string | undefined;
+  let scoringBarPreview: readonly string[] | undefined;
+
+  const throwCancelled = (): never => {
+    const err = new Error("solver cancelled");
+    err.name = "AbortError";
+    throw err;
+  };
 
   const mapPhase = (name: SolvePhaseName): SolverPhase => {
     if (name === "seed") return "seed";
@@ -253,7 +263,14 @@ export const solveFromRequest: SolveFn = async (
           `fullEvaluations=${fullEvaluations}`,
         ],
       },
-      ...(finalizeActive && finalizeTotal > 0 ? { finalizeStep: finalizeDone, finalizeTotal } : {}),
+      ...(finalizeActive && finalizeTotal > 0
+        ? {
+            finalizeStep: finalizeDone,
+            finalizeTotal,
+            ...(scoringLabel ? { scoringLabel } : {}),
+            ...(scoringBarPreview?.length ? { scoringBarPreview } : {}),
+          }
+        : {}),
     };
     options.onProgress(progress);
   };
@@ -391,12 +408,15 @@ export const solveFromRequest: SolveFn = async (
         finalizeActive = true;
         finalizeDone = info.done;
         finalizeTotal = Math.max(1, info.total);
+        scoringLabel = info.label;
+        scoringBarPreview = info.bar;
         emitProgress(true);
       },
+      isCancelled: () => options?.isCancelled?.() === true || options?.signal?.aborted === true,
       yieldSlice: async () => {
         emitProgress(true);
         if (options?.isCancelled?.() || options?.signal?.aborted) {
-          throw new Error("solver cancelled");
+          throwCancelled();
         }
         if (options?.isPaused?.()) {
           while (options.isPaused?.() && !options?.isCancelled?.()) {
@@ -411,7 +431,7 @@ export const solveFromRequest: SolveFn = async (
   );
 
   if (options?.isCancelled?.() || options?.signal?.aborted) {
-    throw new Error("solver cancelled");
+    throwCancelled();
   }
 
   // Finalize already full-rescored the shortlist — no second 300s winner sim.

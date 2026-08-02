@@ -69,7 +69,11 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
       isPaused: () => paused.has(requestId),
       yieldSlice: async () => {
         await waitWhilePaused(requestId);
-        if (isDead()) throw new Error("solver cancelled");
+        if (isDead()) {
+          const err = new Error("solver cancelled");
+          err.name = "AbortError";
+          throw err;
+        }
         await new Promise((resolve) => setTimeout(resolve, 0));
       },
     };
@@ -98,7 +102,9 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
       return;
     }
     const message = err instanceof Error ? err.message : String(err);
-    if (message === "solver cancelled") {
+    const aborted =
+      (err instanceof Error && err.name === "AbortError") || message === "solver cancelled";
+    if (aborted) {
       post({ type: "cancelled", requestId });
       return;
     }

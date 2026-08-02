@@ -72,6 +72,7 @@ export function mergeProgress(
       noImprovementCount: 0,
       evaluationBudget: baseBudget * agentCount,
       progressRatio: 0.02,
+      agentCount,
     };
   }
 
@@ -132,6 +133,9 @@ export function mergeProgress(
     progressRatio: Math.min(0.995, ratioSum / Math.max(1, agentCount)),
     finalizeStep: best.finalizeStep,
     finalizeTotal: best.finalizeTotal,
+    agentCount,
+    ...(best.scoringLabel ? { scoringLabel: best.scoringLabel } : {}),
+    ...(best.scoringBarPreview?.length ? { scoringBarPreview: best.scoringBarPreview } : {}),
     proof: best.proof,
   };
 }

@@ -9,7 +9,7 @@ import { fingerprintEvaluationKey } from "../fingerprint";
 import { OBJECTIVE_HORIZON_TICKS } from "../objective";
 import { configForTier, solve } from "../solve";
 import { createSearchState, cacheKeyFor } from "./types";
-import { finalizeSearch, fullCandidateList } from "./finalize";
+import { finalizeSearch, finalizeSearchAsync, fullCandidateList } from "./finalize";
 
 const tinyPool: PoolAbility[] = [
   { id: "a", category: "basic", averageDamage: 10, occupancyTicks: 3 },
@@ -439,6 +439,55 @@ describe("score honesty", () => {
     expect(result.best).not.toBeNull();
     expect([...result.best!.bar]).toEqual(["c", "b", "a"]);
     expect(result.best!.robustScore).toBe(420);
+  });
+
+  it("finalize stops between full re-scores when cancelled", async () => {
+    let fullCalls = 0;
+    const evaluate: EvaluateFn = ({ bar, mode }) => {
+      if (mode === "full" || mode === "finalize") {
+        fullCalls += 1;
+        return {
+          score: fullScore(bar),
+          finite: true,
+          mode: "full",
+          validForFinalRanking: true,
+        };
+      }
+      return {
+        score: searchScore(bar),
+        finite: true,
+        mode: "search",
+        exploratory: true,
+        validForFinalRanking: false,
+      };
+    };
+    const state = createSearchState({
+      pool: tinyPool,
+      sizeBounds: { min: 1, max: 3 },
+      evaluate,
+      config: {
+        ...configForTier("thorough", 1),
+        evaluationBudget: 200,
+        fullShortlistSize: 4,
+      },
+      seeds: [["a"], ["b"], ["c"], ["c", "b", "a"]],
+    });
+    for (const seed of state.seeds) state.tryEval(seed, "search");
+    let cancelled = false;
+    await expect(
+      finalizeSearchAsync(state, {
+        tier: "thorough",
+        yieldSlice: async () => undefined,
+        isCancelled: () => cancelled,
+        onStep: (info) => {
+          // After the first full score completes, cancel before the next starts.
+          if (info.done >= 1 && info.label.includes("done")) cancelled = true;
+        },
+      }),
+    ).rejects.toMatchObject({ name: "AbortError" });
+    // At most one full re-score should have run before cancel between bars.
+    expect(fullCalls).toBeLessThanOrEqual(2);
+    expect(fullCalls).toBeGreaterThanOrEqual(1);
   });
 
   it("full shortlist expands beyond two near-identical candidates", () => {

@@ -29,6 +29,15 @@ export interface SolverProgress {
   progressRatio?: number;
   finalizeStep?: number;
   finalizeTotal?: number;
+  /**
+   * Human-readable finalize status, e.g. "Full-horizon score 2/4".
+   * UI should prefer this over inventing copy from phase alone.
+   */
+  scoringLabel?: string;
+  /** Ability ids of the bar currently being full-scored (finalize only). */
+  scoringBarPreview?: readonly string[];
+  /** Parallel agent count when the pool is running (search phase). */
+  agentCount?: number;
   proof?: SolverProofDTO;
 }
 

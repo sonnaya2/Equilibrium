@@ -47,6 +47,74 @@
   margin: 0.4rem 0 0;
   color: var(--combat-muted);
   font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.revo-solver-status.is-scoring {
+  border-color: color-mix(in srgb, var(--combat-gem) 40%, var(--combat-gold-dim));
+}
+
+.revo-solver-status.is-stopping {
+  border-color: color-mix(in srgb, var(--combat-chaos, #c45) 45%, var(--combat-gold-dim));
+}
+
+.revo-solver-status.is-stopping .revo-solver-status__phase {
+  color: color-mix(in srgb, var(--combat-chaos, #e88) 70%, var(--combat-gem-bright));
+}
+
+/* Shortlist scoring steps — one chip per full-horizon re-score */
+.revo-solver-score-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+}
+
+.revo-solver-score-step {
+  display: inline-flex;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-inset) 80%, black);
+  color: var(--combat-muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.65rem;
+}
+
+.revo-solver-score-step.is-done {
+  border-color: color-mix(in srgb, var(--combat-gem) 45%, var(--combat-gold-dim));
+  color: var(--combat-gem-bright);
+  background: color-mix(in srgb, var(--combat-gem-dark) 22%, var(--combat-inset));
+}
+
+.revo-solver-score-step.is-active {
+  border-color: var(--combat-gem);
+  color: var(--combat-gem-bright);
+  box-shadow: 0 0 8px rgb(46 203 143 / 28%);
+  animation: revo-score-step-pulse 1.1s ease-in-out infinite;
+}
+
+.revo-solver-preview--scoring {
+  margin-top: 0.4rem;
+  outline: 1px solid color-mix(in srgb, var(--combat-gem) 35%, transparent);
+  outline-offset: 2px;
+}
+
+@keyframes revo-score-step-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgb(46 203 143 / 18%);
+  }
+  50% {
+    box-shadow: 0 0 12px rgb(46 203 143 / 40%);
+  }
+}
+
+.revo-solver-track--stopping {
+  border-color: color-mix(in srgb, #c45 40%, var(--combat-gold-dim));
+  animation: revo-track-breathe 1.2s ease-in-out infinite;
 }
 
 /* ── Progress track ───────────────────────────────────────────────────────

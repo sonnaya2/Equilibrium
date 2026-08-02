@@ -12,42 +12,42 @@ const CREDITS = [
     url: "https://runescape.wiki",
     license: "CC BY-NC-SA 3.0",
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/3.0/",
-    note: "Primary game-data source. Wiki text and authored data are adapted under Creative Commons Attribution-NonCommercial-ShareAlike 3.0. Per Weird Gloop policy we credit the Wiki, link cited pages via SourceReference fields, and mark that wording/structure are adapted for this tool. Host policy: meta.weirdgloop.org/w/Licensing. Non-text media keep separate file-page terms.",
+    note: "Main game-data source. Text is adapted (wording and structure change; values keep their cited pages). Images follow each file’s own terms. Host notes: meta.weirdgloop.org/w/Licensing.",
   },
   {
     name: "PvM Encyclopedia (PvME)",
     url: "https://pvme.io",
     license: "CC BY-NC-SA 4.0",
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-    note: "Guides and research notes (github.com/pvme/pvme-guides) are CC BY-NC-SA 4.0. This project uses PvME for mechanics discovery and limited research citations — not a mirror of their guides, Discord, or UI. Adapted PvME material stays under CC BY-NC-SA 4.0. PvME-only figures are not marked verified until re-checked on the Wiki or against Jagex.",
+    note: "Used for mechanics discovery and a few citations (pvme-guides). Not a mirror of their guides or UI. PvME-only numbers are not marked verified until re-checked on the Wiki or Jagex.",
   },
   {
     name: "RS Analysis",
     url: "https://rs-analysis.xyz",
     license: "Site terms",
     licenseUrl: "https://rs-analysis.xyz",
-    note: "Combat math and model cross-check only. No bulk copy of their UI, code, or guide layout. Rows tagged rs-analysis keep that citation.",
+    note: "Combat math cross-check only. Their site layout and code are not copied. Rows tagged rs-analysis keep that citation.",
   },
   {
     name: "Jagex Ltd.",
     url: "https://legal.jagex.com/docs/policies/fan-content-policy",
     license: "Fan Content Policy",
     licenseUrl: "https://legal.jagex.com/docs/policies/fan-content-policy",
-    note: "RuneScape assets, names, and other game IP remain Jagex property. Used non-commercially under the Fan Content Policy. Not endorsed by or affiliated with Jagex. Icons and art under assets/ and public/game/ are not MIT-licensed.",
+    note: "Game art, names, and marks stay Jagex property. Used non-commercially under the Fan Content Policy. Not endorsed by Jagex. Files under public/game/ are not MIT.",
   },
   {
     name: "Equilibrium source code",
-    url: "/sources#licenses",
+    url: "https://github.com/sonnaya2/Equilibrium",
     license: "MIT",
-    licenseUrl: "/sources#licenses",
-    note: "Original application code only (repository LICENSE). Wiki- and PvME-derived data and Jagex media keep the terms above — see repository NOTICE.",
+    licenseUrl: "https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE",
+    note: "Original app code only. Wiki/PvME data and Jagex media keep the terms above. See repository NOTICE.",
   },
 ];
 
 export default function SourcesPage() {
   return (
     <Page>
-      <PageHeading title="Sources" note="Where the data comes from and the terms that cover it." />
+      <PageHeading title="Sources" note="Where numbers and art come from." />
 
       <section
         id="licenses"
@@ -58,9 +58,8 @@ export default function SourcesPage() {
           Licence split
         </h2>
         <p className="mt-1 max-w-prose text-sm leading-5 text-parch-300">
-          Free fan tool. Original code is MIT. Jagex game art is not for sale and is not covered by
-          that licence. Wiki and PvME adapted data stay under their Creative Commons terms, not MIT.
-          Adapted RuneScape Wiki material is{" "}
+          Free fan tool. App code is MIT. Game art is Jagex&apos;s and not for sale. Wiki text we
+          adapted is{" "}
           <a
             href="https://creativecommons.org/licenses/by-nc-sa/3.0/"
             className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
@@ -69,7 +68,7 @@ export default function SourcesPage() {
           >
             CC BY-NC-SA 3.0
           </a>
-          . Adapted PvME material is{" "}
+          . PvME notes stay{" "}
           <a
             href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
             className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
@@ -78,48 +77,7 @@ export default function SourcesPage() {
           >
             CC BY-NC-SA 4.0
           </a>
-          . Jagex art and marks stay under Jagex&apos;s{" "}
-          <a
-            href="https://legal.jagex.com/docs/policies/fan-content-policy"
-            className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Fan Content Policy
-          </a>
-          . Full repository text: root <code>NOTICE</code>.
-        </p>
-        <p className="mt-2 max-w-prose text-sm leading-5 text-parch-300">
-          This tool uses material from the{" "}
-          <a
-            href="https://runescape.wiki/"
-            className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            RuneScape Wiki
-          </a>{" "}
-          and is licensed under the{" "}
-          <a
-            href="https://creativecommons.org/licenses/by-nc-sa/3.0/"
-            className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Creative Commons BY-NC-SA 3.0
-          </a>{" "}
-          licence for that material. Content is adapted for planner use (structure and wording
-          modified; values retained from cited pages). PvME discovery notes, where present, remain
-          under{" "}
-          <a
-            href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-            className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            CC BY-NC-SA 4.0
-          </a>
-          .
+          . Full wording lives in the repo <code>NOTICE</code>.
         </p>
       </section>
 

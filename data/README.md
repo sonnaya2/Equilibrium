@@ -19,4 +19,4 @@ Correct a record with a patch rather than rewriting a dataset — [`docs/data-pl
 - Re-export `canonical/` and commit it alongside the patch that changed it; `npm run data:canonical:validate` fails while the two disagree.
 - Use a SQL migration for schema changes only, never one per content correction.
 - Do not commit `.cache/`, `.generated/`, or generated reports, and do not reintroduce `public/data/`.
-- `Troll Country` is not a region under this taxonomy — those records belong to Asgarnia, and validation fails if one slips back in.
+- Do not add a separate “Troll Country” region. That area folds into Asgarnia; validation rejects the old name if it reappears.

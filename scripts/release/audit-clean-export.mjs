@@ -49,9 +49,9 @@ const FORBIDDEN_TRACKED_PREFIXES = [
 /** Stale public identifiers that should be rewritten before export. */
 const STALE_IDENTIFIERS = [
   {
-    id: "stale-repo-url",
-    label: "stale repository URL",
-    pattern: /github\.com\/sonnaya2\/Equilibrium/gi,
+    id: "stale-legacy-repo-url",
+    label: "legacy private repository URL",
+    pattern: /github\.com\/sonnaya2\/Equilibrium-legacy/gi,
   },
   {
     id: "stale-deploy-host",
@@ -62,6 +62,11 @@ const STALE_IDENTIFIERS = [
     id: "stale-vercel-project",
     label: "stale Vercel project id",
     pattern: /ever-sense\/equilibrium/gi,
+  },
+  {
+    id: "stale-placeholder-url",
+    label: "unfilled NEW_* placeholder",
+    pattern: /<NEW_(?:REPOSITORY|HOMEPAGE|ISSUES)_URL>/g,
   },
 ];
 
@@ -554,7 +559,7 @@ Checks:
   - prompt/handoff files
   - obvious unredacted credential patterns
 
-  Placeholders such as <NEW_REPOSITORY_URL> are allowed until the target repo is named.
+  Public repo is github.com/sonnaya2/Equilibrium. Unfilled <NEW_*_URL> placeholders fail.
 
 Does not delete or modify any files.`);
 }

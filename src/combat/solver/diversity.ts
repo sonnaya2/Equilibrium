@@ -40,6 +40,7 @@ export function barDistance(a: readonly string[], b: readonly string[]): number 
  */
 export function diverseSelect(candidates: readonly ScoredBar[], k: number): ScoredBar[] {
   if (k <= 0 || candidates.length === 0) return [];
+  // Only rank within a homogeneous mode set; callers must not mix search/full.
   const sorted = [...candidates]
     .filter((c) => Number.isFinite(c.robustScore))
     .sort((a, b) => b.robustScore - a.robustScore);

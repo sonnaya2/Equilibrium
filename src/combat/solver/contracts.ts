@@ -3,11 +3,40 @@
 /** Bumped when evaluation inputs change shape (e.g. Big Boned always-on). */
 export const SOLVER_SCHEMA_VERSION = 4 as const;
 
+/**
+ * Bumped when objective math or score tagging semantics change.
+ * Included in eval cache keys so search/full archives never mix scales.
+ */
+export const OBJECTIVE_VERSION = 2 as const;
+
 export type Bar = readonly string[];
 
 export type SearchTier = "thorough" | "extreme" | "unhinged";
 
-export type ProofLabel = "globally-optimal" | "best-found" | "converged";
+/**
+ * Honest proof labels — only claim what was actually proven.
+ * full-objective-global-optimum requires every feasible bar under the final
+ * objective+horizon; exhaustive short-horizon search alone never qualifies.
+ *
+ * Legacy labels remain in the union for UI/DTO type compatibility but the
+ * solver never emits them (see finalize chooseProof).
+ */
+export type ProofLabel =
+  | "full-objective-global-optimum"
+  | "search-objective-exhaustive"
+  | "full-shortlist-best"
+  | "heuristic-best-found"
+  | "degraded-exploratory-fallback"
+  | "failed"
+  | "budget-not-exhausted"
+  | "stopped-early"
+  | "heuristic-complete"
+  /** @deprecated never emitted — use heuristic-best-found */
+  | "best-found"
+  /** @deprecated never emitted — use full-objective-global-optimum only when proven */
+  | "globally-optimal"
+  /** @deprecated never emitted — use budget-not-exhausted / stopped-early */
+  | "converged";
 
 export type ObjectiveProfileId = "balanced" | "burst" | "sustained" | "custom";
 
@@ -85,26 +114,54 @@ export interface ObjectiveScoreFail {
 
 export type ObjectiveScore = ObjectiveScoreOk | ObjectiveScoreFail;
 
-export interface ScoredBar extends ObjectiveWindowDpms {
+/** Evaluation mode: short exploratory search vs full-horizon robust scoring. */
+export type ScoreEvalMode = "search" | "full";
+
+/**
+ * Tagged scored bar — search and full scores are never interchangeable units.
+ * exploratory scores must not rank against robust scores.
+ */
+export interface ScoredBar {
   bar: Bar;
   fingerprint: string;
+  /** Scalar used for ranking within the same mode only. */
+  robustScore: number;
+  /** Alias of robustScore for search layers that read `.score`. */
+  score?: number;
+  profileId: ObjectiveProfileId;
+  /** search = exploratory short-horizon; full = robust objective horizon. */
+  mode: ScoreEvalMode;
+  objectiveType: ObjectiveProfileId;
+  horizonTicks: number;
+  exploratory: boolean;
+  /** True only for finite full-horizon robust scores. */
+  validForFinalRanking: boolean;
+  failureReason?: string;
   minDpm: number;
   weightedMean: number;
-  robustScore: number;
-  profileId: ObjectiveProfileId;
-  /** Optional ranking alias (search may mirror robustScore here). */
-  score?: number;
+  openingDpm: number;
+  developedDpm: number;
+  steadyDpm: number;
   source?: string;
 }
 
 export interface SearchStats {
   evaluations: number;
+  searchEvaluations: number;
+  fullEvaluations: number;
   cacheHits: number;
   cacheMisses: number;
+  searchCacheHits: number;
+  fullCacheHits: number;
   uniqueBars: number;
   elapsedMs: number;
   generations?: number;
   restarts?: number;
+  /** Best exploratory score observed (search mode). */
+  bestExploratoryScore?: number;
+  /** Best full robust score observed. */
+  bestFullScore?: number;
+  /** @deprecated Prefer bestFullScore / bestExploratoryScore — mixed scale. */
   bestScore?: number;
 }
 
@@ -146,9 +203,15 @@ export interface EvalResult {
   objective?: ObjectiveScore;
   /** Optional flag some mocks set; prefer isFiniteEval(score). */
   finite?: boolean;
+  /** Mode the evaluator intended; defaults from request path. */
+  mode?: ScoreEvalMode;
+  exploratory?: boolean;
+  validForFinalRanking?: boolean;
+  horizonTicks?: number;
+  failureReason?: string;
 }
 
-/** Search-time evaluation modes. */
+/** Search-time evaluation modes (finalize is an alias of full). */
 export type EvalMode = "search" | "full" | "finalize";
 
 /** Alias used by search tiers (same set as SearchTier). */
@@ -182,16 +245,31 @@ export interface PoolAbility {
 
 export type EvaluateFn = (input: { bar: readonly string[]; mode?: EvalMode }) => EvalResult;
 
+/** Solve outcome status — success never pretends after total failure. */
+export type SolveStatus = "ok" | "degraded" | "failed";
+
 /** Solve orchestrator output (search layer). */
 export interface SolveResult {
-  best: ScoredBar;
+  status: SolveStatus;
+  /** Winner when status is ok or degraded; null when failed. */
+  best: ScoredBar | null;
   top: ScoredBar[];
   proof: ProofLabel;
+  /** Search-budget evaluations only (excludes forced finalize). */
+  searchEvaluations: number;
+  /** Full-horizon rescoring evaluations (including forced). */
+  fullEvaluations: number;
+  totalEvaluations: number;
+  searchBudget: number;
+  /** @deprecated Use totalEvaluations — includes forced full rescores. */
   evaluationsUsed: number;
   evaluationBudget: number;
   exhaustiveCompleted: boolean;
   tier: SearchTier;
   seedBestScore: number;
+  bestExploratoryScore: number;
+  bestFullScore: number;
+  validFullCandidateCount: number;
   stats: SearchStats;
 }
 
@@ -278,11 +356,22 @@ export interface RevolutionEvalRequest {
   size?: BarSizeBounds;
 }
 
+/**
+ * Exact bar evaluation with explicit mode tagging.
+ * Search exploratory DPM and full robust scores never share a rank scale.
+ */
 export interface RevolutionBarEvaluation {
   ok: boolean;
+  /** search when horizon < robust windows; full at objective horizon. */
+  mode: ScoreEvalMode;
   exploratory: boolean;
+  /** Only true for successful full robust objective scores. */
+  validForFinalRanking: boolean;
+  horizonTicks: number;
+  objectiveType: ObjectiveProfileId;
   score: number;
   reasons: ExclusionReason[];
+  failureReason?: string;
   bar: Bar;
   resolved?: readonly PoolAbility[];
   /** Present when simulateRevolution ran. */

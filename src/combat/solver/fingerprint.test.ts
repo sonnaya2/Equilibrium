@@ -36,18 +36,23 @@ describe("stableStringify", () => {
 });
 
 describe("fingerprintEvaluationKey", () => {
-  it("includes schema version and bar order", () => {
+  it("includes schema version, objective version, mode, and bar order", () => {
     const key = fingerprintEvaluationKey({
       bar: ["a", "b"],
       profileId: "balanced",
       horizonTicks: 500,
+      mode: "full",
       context: { level: 120 },
     });
     expect(key.startsWith(`v${SOLVER_SCHEMA_VERSION}\0`)).toBe(true);
+    expect(key).toContain("mode=full");
     expect(key).toContain("a\0b");
     expect(fingerprintEvaluationKey({ bar: ["a", "b"], profileId: "balanced" })).not.toBe(
       fingerprintEvaluationKey({ bar: ["b", "a"], profileId: "balanced" }),
     );
+    expect(
+      fingerprintEvaluationKey({ bar: ["a"], mode: "search" }),
+    ).not.toBe(fingerprintEvaluationKey({ bar: ["a"], mode: "full" }));
   });
 
   it("changes when context changes", () => {

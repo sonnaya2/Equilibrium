@@ -1,4 +1,9 @@
-import { SOLVER_SCHEMA_VERSION, type Bar } from "./contracts";
+import {
+  OBJECTIVE_VERSION,
+  SOLVER_SCHEMA_VERSION,
+  type Bar,
+  type ScoreEvalMode,
+} from "./contracts";
 
 /** Ordered bar identity — slot order matters. */
 export function fingerprintBar(bar: Bar): string {
@@ -40,12 +45,17 @@ export interface EvaluationKeyParts {
   profileId?: string;
   customWeights?: unknown;
   horizonTicks?: number;
+  /** search vs full — required for mode-separated caches. */
+  mode?: ScoreEvalMode;
+  objectiveVersion?: number;
 }
 
-/** Cache key for a bar evaluation — includes schema version so bumps invalidate. */
+/** Cache key for a bar evaluation — includes schema, objective version, and mode. */
 export function fingerprintEvaluationKey(parts: EvaluationKeyParts): string {
   return [
     `v${SOLVER_SCHEMA_VERSION}`,
+    `ov${parts.objectiveVersion ?? OBJECTIVE_VERSION}`,
+    `mode=${parts.mode ?? "search"}`,
     fingerprintBar(parts.bar),
     parts.profileId ?? "",
     parts.horizonTicks === undefined ? "" : String(parts.horizonTicks),

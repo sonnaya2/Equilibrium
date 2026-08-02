@@ -6,10 +6,18 @@ function isFullyModeled(ability: PoolAbility): boolean {
   return ability.supportStatus === undefined;
 }
 
-/** Index a pool by id (last write wins on duplicates). */
+/**
+ * Index a pool by id. Duplicate ids fail loudly — silent Map last-write-wins
+ * previously dropped alternate definitions without notice.
+ */
 export function indexPool<T extends PoolAbility>(pool: readonly T[]): Map<string, T> {
   const map = new Map<string, T>();
-  for (const ability of pool) map.set(ability.id, ability);
+  for (const ability of pool) {
+    if (map.has(ability.id)) {
+      throw new Error(`candidate pool: duplicate ability id "${ability.id}"`);
+    }
+    map.set(ability.id, ability);
+  }
   return map;
 }
 
@@ -49,6 +57,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
  * Ids are sorted stably for deterministic search.
  *
  * Accepts an AbilitySpec catalogue only — there is no abilities/registry yet.
+ * Duplicate catalogue ids for the same style throw.
  */
 export function buildCandidatePool(
   catalogue: readonly AbilitySpec[],
@@ -62,6 +71,7 @@ export function buildCandidatePool(
   const includePartial = options.includePartial === true;
 
   const selected: AbilitySpec[] = [];
+  const seenIds = new Set<string>();
   for (const ability of catalogue) {
     if (ability.style !== style) continue;
     if (deny?.has(ability.id)) continue;
@@ -71,6 +81,10 @@ export function buildCandidatePool(
     if (!includePartial && !isFullyModeled(ability)) continue;
     if (!meetsWeaponRequirement(ability, options.weaponConfiguration)) continue;
     if (!meetsEquipmentRequirement(ability, options.equipmentIds)) continue;
+    if (seenIds.has(ability.id)) {
+      throw new Error(`candidate pool: duplicate ability id "${ability.id}"`);
+    }
+    seenIds.add(ability.id);
     selected.push(ability);
   }
 

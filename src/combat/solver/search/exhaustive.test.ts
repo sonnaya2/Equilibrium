@@ -83,7 +83,7 @@ describe("runExhaustive", () => {
 });
 
 describe("solve orchestrator (tiny pool)", () => {
-  it("returns globally-optimal proof when exhaustive fits", () => {
+  it("finds best bar; exhaustive short-horizon never claims full-objective global optimum", () => {
     const result = solve({
       pool,
       sizeBounds: { min: 1, max: 3 },
@@ -91,10 +91,17 @@ describe("solve orchestrator (tiny pool)", () => {
       tier: "thorough",
       seed: 7,
     });
-    expect([...result.best.bar]).toEqual(["c", "b", "a"]);
-    expect(result.proof).toBe("globally-optimal");
+    expect(result.best).not.toBeNull();
+    expect([...result.best!.bar]).toEqual(["c", "b", "a"]);
+    // Full shortlist rescoring ranks the winner; exhaustive search alone is not full-global.
+    expect(result.proof).not.toBe("full-objective-global-optimum");
+    expect(["full-shortlist-best", "heuristic-best-found", "search-objective-exhaustive"]).toContain(
+      result.proof,
+    );
     expect(result.exhaustiveCompleted).toBe(true);
-    expect(result.evaluationsUsed).toBeGreaterThan(0);
-    expect(result.best.robustScore).toBeGreaterThanOrEqual(result.seedBestScore);
+    expect(result.totalEvaluations).toBeGreaterThan(0);
+    expect(result.fullEvaluations).toBeGreaterThan(0);
+    expect(result.searchEvaluations).toBeGreaterThan(0);
+    expect(result.best!.robustScore).toBeGreaterThanOrEqual(result.seedBestScore);
   });
 });

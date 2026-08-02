@@ -61,6 +61,8 @@ describe("evaluateRevolutionBar", () => {
 
     expect(evaluation.ok).toBe(true);
     expect(evaluation.exploratory).toBe(true);
+    expect(evaluation.mode).toBe("search");
+    expect(evaluation.validForFinalRanking).toBe(false);
     expect(evaluation.summary?.ok).toBe(true);
     expect(evaluation.resolved?.map((spec) => spec.id)).toEqual(["alpha", "beta"]);
 
@@ -96,6 +98,8 @@ describe("evaluateRevolutionBar", () => {
     });
     expect(evaluation.ok).toBe(true);
     expect(evaluation.exploratory).toBe(false);
+    expect(evaluation.mode).toBe("full");
+    expect(evaluation.validForFinalRanking).toBe(true);
     expect(evaluation.objective?.ok).toBe(true);
 
     const summary = evaluation.summary!;
@@ -141,5 +145,32 @@ describe("evaluateRevolutionBar", () => {
     expect(evaluation.summary).toBeUndefined();
     expect(evaluation.score).toBe(Number.NEGATIVE_INFINITY);
     expect(evaluation.reasons.some((reason) => reason.code === "off-gcd")).toBe(true);
+  });
+
+  it("keeps robust score-failed visible after a successful simulation (no synthetic windows)", () => {
+    const pool = buildCandidatePool(catalogue, "melee");
+    // Sim runs at full horizon; custom profile without weights fails scoreSummary.
+    const evaluation = evaluateRevolutionBar({
+      bar: ["alpha", "beta"],
+      style: "melee",
+      durationTicks: OBJECTIVE_HORIZON_TICKS,
+      pool,
+      sim: baseSim,
+      profileId: "custom",
+      // customWeights intentionally omitted → scoreSummary fails
+    });
+
+    expect(evaluation.ok).toBe(false);
+    expect(evaluation.mode).toBe("full");
+    expect(evaluation.exploratory).toBe(false);
+    expect(evaluation.validForFinalRanking).toBe(false);
+    expect(evaluation.score).toBe(Number.NEGATIVE_INFINITY);
+    expect(evaluation.reasons.some((r) => r.code === "score-failed")).toBe(true);
+    // Simulation succeeded — summary present — but robust scoring failed.
+    expect(evaluation.summary?.ok).toBe(true);
+    expect(evaluation.objective?.ok).toBe(false);
+    // No laundered synthetic opening/developed/steady metrics.
+    expect(evaluation.metrics).toBeUndefined();
+    expect(evaluation.failureReason).toMatch(/custom/i);
   });
 });

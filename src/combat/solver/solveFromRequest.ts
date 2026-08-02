@@ -178,9 +178,13 @@ export const solveFromRequest: SolveFn = async (
   };
 
   let evaluations = 0;
+  let searchEvaluations = 0;
+  let fullEvaluations = 0;
   let uniqueBars = 0;
   const seenBars = new Set<string>();
-  let bestScore = Number.NEGATIVE_INFINITY;
+  /** Separate scales — never one "best score" that changes units mid-run. */
+  let bestExploratoryScore = Number.NEGATIVE_INFINITY;
+  let bestFullScore = Number.NEGATIVE_INFINITY;
   let topPreview: string[] = [];
   let currentPhase: SolverPhase = "seed";
   let noImprovement = 0;
@@ -218,16 +222,32 @@ export const solveFromRequest: SolveFn = async (
   const emitProgress = (force = false) => {
     if (!options?.onProgress) return;
     if (!force && evaluations % 2 !== 0) return;
+    // bestScore is ALWAYS exploratory DPM — never unit-switch to full robust mid-run.
+    // Separate full best is carried in proof.notes (protocol has no dual-score fields).
+    const exploratory =
+      Number.isFinite(bestExploratoryScore) ? bestExploratoryScore : Number.NEGATIVE_INFINITY;
+    const full =
+      Number.isFinite(bestFullScore) ? bestFullScore : Number.NEGATIVE_INFINITY;
     const progress: SolverProgress = {
       phase: currentPhase,
       evaluations,
       uniqueCandidates: uniqueBars,
-      bestScore: Number.isFinite(bestScore) ? bestScore : 0,
-      windowDpms: Number.isFinite(bestScore) ? bestScore : 0,
+      bestScore: Number.isFinite(exploratory) ? exploratory : 0,
+      // Never stuff robust score into windowDpms — real windows live on the result DTO.
+      windowDpms: 0,
       topBarPreview: topPreview,
       noImprovementCount: noImprovement,
       evaluationBudget,
       progressRatio: progressRatioNow(),
+      proof: {
+        notes: [
+          `bestExploratory=${Number.isFinite(exploratory) ? exploratory : "none"}`,
+          `bestFull=${Number.isFinite(full) ? full : "none"}`,
+          `phase=${currentPhase}`,
+          `searchEvaluations=${searchEvaluations}`,
+          `fullEvaluations=${fullEvaluations}`,
+        ],
+      },
       ...(finalizeActive && finalizeTotal > 0 ? { finalizeStep: finalizeDone, finalizeTotal } : {}),
     };
     options.onProgress(progress);
@@ -240,6 +260,8 @@ export const solveFromRequest: SolveFn = async (
     const useFull = mode === "full" || mode === "finalize";
     const durationTicks = useFull ? fullTicks : exploreTicks;
     evaluations += 1;
+    if (useFull) fullEvaluations += 1;
+    else searchEvaluations += 1;
     const key = bar.join("\0");
     if (!seenBars.has(key)) {
       seenBars.add(key);
@@ -258,10 +280,26 @@ export const solveFromRequest: SolveFn = async (
       size: { min: request.minBarSize, max: request.maxBarSize },
     });
 
-    if (evaluation.ok && evaluation.score > bestScore) {
-      bestScore = evaluation.score;
-      topPreview = [...bar];
-      noImprovement = 0;
+    if (evaluation.ok) {
+      if (evaluation.mode === "full" && evaluation.validForFinalRanking) {
+        if (evaluation.score > bestFullScore) {
+          bestFullScore = evaluation.score;
+          topPreview = [...bar];
+          noImprovement = 0;
+        } else {
+          noImprovement += 1;
+        }
+      } else if (evaluation.exploratory) {
+        if (evaluation.score > bestExploratoryScore) {
+          bestExploratoryScore = evaluation.score;
+          if (!finalizeActive) topPreview = [...bar];
+          noImprovement = 0;
+        } else {
+          noImprovement += 1;
+        }
+      } else {
+        noImprovement += 1;
+      }
     } else {
       noImprovement += 1;
     }
@@ -273,31 +311,40 @@ export const solveFromRequest: SolveFn = async (
     emitProgress();
 
     if (!evaluation.ok) {
-      return { score: Number.NEGATIVE_INFINITY, finite: false };
+      return {
+        score: Number.NEGATIVE_INFINITY,
+        finite: false,
+        mode: evaluation.mode,
+        exploratory: evaluation.exploratory,
+        validForFinalRanking: false,
+        horizonTicks: evaluation.horizonTicks,
+        failureReason: evaluation.failureReason ?? evaluation.reasons[0]?.message,
+        // Preserve failed robust objective when present (never synthesize success).
+        objective: evaluation.objective,
+      };
+    }
+
+    // Exploratory successes carry no synthetic robust objective windows.
+    if (evaluation.exploratory || !evaluation.objective?.ok) {
+      return {
+        score: evaluation.score,
+        finite: true,
+        mode: evaluation.mode,
+        exploratory: true,
+        validForFinalRanking: false,
+        horizonTicks: evaluation.horizonTicks,
+        // objective omitted on purpose — scalar exploratory DPM only
+      };
     }
 
     return {
       score: evaluation.score,
       finite: true,
-      objective: evaluation.objective?.ok
-        ? evaluation.objective
-        : {
-            ok: true as const,
-            robustScore: evaluation.score,
-            minDpm: evaluation.score,
-            weightedMean: evaluation.score,
-            profileId: request.profileId,
-            openingDpm: evaluation.metrics?.openingDpm ?? evaluation.score,
-            developedDpm: evaluation.metrics?.developedDpm ?? evaluation.score,
-            steadyDpm: evaluation.metrics?.steadyDpm ?? evaluation.score,
-            weights: request.customWeights ?? {
-              opening: 1,
-              developed: 1,
-              steady: 1,
-              robustMean: 0.8,
-              robustMin: 0.2,
-            },
-          },
+      mode: "full",
+      exploratory: false,
+      validForFinalRanking: true,
+      horizonTicks: evaluation.horizonTicks,
+      objective: evaluation.objective,
     };
   };
 
@@ -365,36 +412,79 @@ export const solveFromRequest: SolveFn = async (
   // Finalize already full-rescored the shortlist — no second 300s winner sim.
   currentPhase = "finalize";
   emitProgress(true);
-  const winnerBar = result.best.bar;
-  const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
   const hasBigBoned = simBase.league.blessingIds.includes("big-boned");
   const bigBonedAssumptions = hasBigBoned ? [...BIG_BONED_OUTGOING_ASSUMPTIONS] : undefined;
   const bigBonedNotes = hasBigBoned ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const) : [];
+
+  // No fabricated empty-bar / zero-score "success" DTO (req 6).
+  if (result.status === "failed" || result.best == null) {
+    throw new Error(
+      [
+        "solver failed: no valid candidate",
+        `proof=${result.proof}`,
+        `searchEvaluations=${result.searchEvaluations}`,
+        `fullEvaluations=${result.fullEvaluations}`,
+        `bestExploratory=${result.bestExploratoryScore}`,
+        `bestFull=${result.bestFullScore}`,
+      ].join("; "),
+    );
+  }
+
+  const winner = result.best;
+  const winnerBar = [...winner.bar];
+  const fullWinner = winner.validForFinalRanking === true && winner.mode === "full";
+  const score = Number.isFinite(winner.robustScore) ? winner.robustScore : Number.NEGATIVE_INFINITY;
+  if (!Number.isFinite(score)) {
+    throw new Error(`solver failed: non-finite winner score (proof=${result.proof})`);
+  }
+
+  const proofNotes = [
+    `status=${result.status}`,
+    `proof=${result.proof}`,
+    result.exhaustiveCompleted
+      ? "search-objective exhaustive completed (does not prove full-objective global optimum alone)"
+      : "heuristic search",
+    `pool size ${pool.ids.length}`,
+    `searchEvaluations ${result.searchEvaluations}/${result.searchBudget}`,
+    `fullEvaluations ${result.fullEvaluations}`,
+    `totalEvaluations ${result.totalEvaluations}`,
+    `bestExploratory ${result.bestExploratoryScore}`,
+    `bestFull ${result.bestFullScore}`,
+    `validFullCandidates ${result.validFullCandidateCount}`,
+    `seed best exploratory ${result.seedBestScore}`,
+    ...bigBonedNotes,
+  ];
+
+  // Honest windows only — never copy robust score into windowDpms.
+  // Full winners from production evaluate carry measured window DPMs (may be 0).
+  const hasRealWindows =
+    fullWinner &&
+    !winner.exploratory &&
+    Number.isFinite(winner.openingDpm) &&
+    Number.isFinite(winner.developedDpm) &&
+    Number.isFinite(winner.steadyDpm);
+
   const dto: SolverResultDTO = {
-    bar: [...winnerBar],
+    bar: winnerBar,
     score,
-    windowDpms: score,
-    evaluations: result.evaluationsUsed,
-    uniqueCandidates: uniqueBars || result.stats.uniqueBars || result.evaluationsUsed,
+    // Required DTO field: 0 when no honest window aggregate (do not stuff score).
+    windowDpms: 0,
+    evaluations: result.totalEvaluations,
+    uniqueCandidates: uniqueBars || result.stats.uniqueBars || result.totalEvaluations,
     seed: request.seed,
     profileId: request.profileId,
     tier: request.tier,
     durationTicks: fullTicks,
     proofLabel: result.proof,
-    openingDpm: result.best.openingDpm,
-    developedDpm: result.best.developedDpm,
-    steadyDpm: result.best.steadyDpm,
+    openingDpm: hasRealWindows ? winner.openingDpm : undefined,
+    developedDpm: hasRealWindows ? winner.developedDpm : undefined,
+    steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
     assumptions: bigBonedAssumptions,
-    summary: undefined,
+    // summary left unset unless an independent sim is run — never fabricate.
     proof: {
       label: result.proof,
-      recheckScore: score,
-      notes: [
-        result.exhaustiveCompleted ? "exhaustive completed" : "heuristic search",
-        `pool size ${pool.ids.length}`,
-        `seed best ${result.seedBestScore}`,
-        ...bigBonedNotes,
-      ],
+      // recheckScore omitted — a copy of the chosen score is not a recheck.
+      notes: proofNotes,
     },
     top: result.top.map((t) => ({
       bar: [...t.bar],
@@ -405,15 +495,23 @@ export const solveFromRequest: SolveFn = async (
 
   options?.onProgress?.({
     phase: "finalize",
-    evaluations: result.evaluationsUsed,
+    evaluations: result.totalEvaluations,
     uniqueCandidates: dto.uniqueCandidates,
-    bestScore: Number.isFinite(score) ? score : 0,
-    windowDpms: Number.isFinite(score) ? score : 0,
-    topBarPreview: [...winnerBar],
+    // Keep bestScore on exploratory scale for the whole run (req 10).
+    bestScore: Number.isFinite(result.bestExploratoryScore) ? result.bestExploratoryScore : 0,
+    windowDpms: 0,
+    topBarPreview: winnerBar,
     noImprovementCount: 0,
     evaluationBudget,
     progressRatio: 1,
-    proof: dto.proof,
+    proof: {
+      ...dto.proof,
+      notes: [
+        ...(dto.proof?.notes ?? []),
+        `bestExploratory=${result.bestExploratoryScore}`,
+        `bestFull=${result.bestFullScore}`,
+      ],
+    },
   });
 
   return dto;

@@ -10,13 +10,19 @@ import { maybeYield, type YieldCtx } from "./yield";
  * Wider: also try insert at every position when config.beamInsertAllPositions.
  */
 function partialBar(state: SearchState, bar: readonly string[]): ScoredBar {
+  const profileId = state.config.profileId ?? "balanced";
   return {
     bar: [...bar],
     fingerprint: bar.join("\0"),
     robustScore: Number.NEGATIVE_INFINITY,
     minDpm: 0,
     weightedMean: 0,
-    profileId: state.config.profileId ?? "balanced",
+    profileId,
+    mode: "search",
+    objectiveType: profileId,
+    horizonTicks: state.config.searchHorizonTicks ?? 50,
+    exploratory: true,
+    validForFinalRanking: false,
     openingDpm: 0,
     developedDpm: 0,
     steadyDpm: 0,
@@ -73,17 +79,7 @@ async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promi
           if (!state.canEval()) break;
           const next = insertAt(parent.bar, pos, a.id);
           if (next.length < state.sizeBounds.min) {
-            children.push({
-              bar: next,
-              fingerprint: next.join("\0"),
-              robustScore: Number.NEGATIVE_INFINITY,
-              minDpm: 0,
-              weightedMean: 0,
-              profileId: state.config.profileId ?? "balanced",
-              openingDpm: 0,
-              developedDpm: 0,
-              steadyDpm: 0,
-            });
+            children.push(partialBar(state, next));
             grew = true;
             continue;
           }

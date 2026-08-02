@@ -63,7 +63,8 @@ export function shouldRunExhaustive(
 
 /**
  * Backtracking ordered subsets with exclusivity; evaluates each legal bar.
- * Returns true when the full tree fit in budget (globally-optimal claim ok).
+ * Returns true when the full tree fit in budget (search-objective exhaustive only;
+ * does not prove full-horizon global optimum).
  */
 export function runExhaustive(state: SearchState): boolean {
   return runExhaustiveSync(state);

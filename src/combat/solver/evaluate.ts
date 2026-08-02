@@ -6,6 +6,7 @@ import type {
   ExclusionReason,
   RevolutionBarEvaluation,
   RevolutionEvalRequest,
+  ScoreEvalMode,
 } from "./contracts";
 import { validateBarEligibility } from "./eligibility";
 import { OBJECTIVE_HORIZON_TICKS, scoreSummary } from "./objective";
@@ -22,13 +23,42 @@ function exploratoryDpm(totalExpected: number, durationTicks: number): number {
   return minutes > 0 ? totalExpected / minutes : 0;
 }
 
+function modeForHorizon(durationTicks: number): ScoreEvalMode {
+  return durationTicks >= OBJECTIVE_HORIZON_TICKS ? "full" : "search";
+}
+
+function failEval(
+  request: RevolutionEvalRequest,
+  reasons: ExclusionReason[],
+  extra: Partial<RevolutionBarEvaluation> = {},
+): RevolutionBarEvaluation {
+  const horizonTicks = request.durationTicks;
+  const mode = modeForHorizon(horizonTicks);
+  return {
+    ok: false,
+    mode,
+    exploratory: mode === "search",
+    validForFinalRanking: false,
+    horizonTicks,
+    objectiveType: request.profileId,
+    score: Number.NEGATIVE_INFINITY,
+    reasons,
+    failureReason: reasons[0]?.message,
+    bar: request.bar,
+    profileId: request.profileId,
+    ...extra,
+  };
+}
+
 /**
  * Exact Revolution evaluation: eligibility → resolve → simulateRevolution → score.
  * Does not search; scores one bar against the real driver.
  *
  * When durationTicks >= OBJECTIVE_HORIZON_TICKS, scores via objective.scoreSummary
  * (opening/developed/steady damageByTick windows). Shorter runs use a single
- * totalExpected DPM fallback marked exploratory:true.
+ * totalExpected DPM fallback marked exploratory:true and validForFinalRanking:false.
+ *
+ * Robust objective failure is never laundered into a successful robust score.
  */
 export function evaluateRevolutionBar(request: RevolutionEvalRequest): RevolutionBarEvaluation {
   const { bar, style, durationTicks, pool, sim, profileId, customWeights, includePartial, size } =
@@ -37,7 +67,8 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   const reasons: ExclusionReason[] = [];
   const simFields = sim as Omit<RevolutionInput, "bar" | "style" | "durationTicks">;
   const weaponConfiguration = simFields.weaponConfiguration as
-    CandidatePoolOptions["weaponConfiguration"] | undefined;
+    | CandidatePoolOptions["weaponConfiguration"]
+    | undefined;
   const equipmentIds = simFields.equipmentIds;
 
   if (pool.style !== style) {
@@ -57,14 +88,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   );
 
   if (reasons.length > 0) {
-    return {
-      ok: false,
-      exploratory: false,
-      score: Number.NEGATIVE_INFINITY,
-      reasons,
-      bar,
-      profileId,
-    };
+    return failEval(request, reasons);
   }
 
   const resolved: AbilitySpec[] = [];
@@ -76,14 +100,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
         abilityId: id,
         message: `ability ${id} is not in the candidate pool`,
       });
-      return {
-        ok: false,
-        exploratory: false,
-        score: Number.NEGATIVE_INFINITY,
-        reasons,
-        bar,
-        profileId,
-      };
+      return failEval(request, reasons);
     }
     resolved.push(ability);
   }
@@ -108,16 +125,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
       code: "sim-failed",
       message: summary.error ?? "revolution simulation failed",
     });
-    return {
-      ok: false,
-      exploratory: false,
-      score: Number.NEGATIVE_INFINITY,
-      reasons,
-      bar,
-      resolved,
-      summary,
-      profileId,
-    };
+    return failEval(request, reasons, { resolved, summary });
   }
 
   // Short horizon: exploratory single-window totalExpected DPM (no robust windows).
@@ -125,7 +133,11 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
     const dpm = exploratoryDpm(summary.totalExpected, durationTicks);
     return {
       ok: true,
+      mode: "search",
       exploratory: true,
+      validForFinalRanking: false,
+      horizonTicks: durationTicks,
+      objectiveType: profileId,
       score: dpm,
       reasons: [],
       bar,
@@ -141,51 +153,30 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
 
   const scored = scoreSummary(summary, profileId, customWeights);
   if (!scored.ok) {
-    // failedWeight / branch failures are common with Impatient/Relentless.
-    // Do not hard-kill ranking: fall back to fixed-window DPM from the ledger
-    // so finalize always returns a usable bar.
-    const soft = exploratoryDpm(summary.totalExpected, durationTicks);
-    if (Number.isFinite(soft) && summary.totalExpected > 0) {
-      return {
-        ok: true,
-        exploratory: true,
-        score: soft,
-        reasons: [
-          {
-            code: "score-failed",
-            message: scored.reason,
-          },
-        ],
-        bar,
-        resolved,
-        summary,
-        metrics: {
-          dpm: soft,
-          totalExpected: summary.totalExpected,
-        },
-        profileId,
-      };
-    }
+    // Sim succeeded but robust scoring failed — keep failure visible.
+    // Do not copy scalar DPM into synthetic opening/developed/steady windows.
     reasons.push({
       code: "score-failed",
       message: scored.reason,
     });
-    return {
-      ok: false,
+    return failEval(request, reasons, {
+      mode: "full",
       exploratory: false,
-      score: Number.NEGATIVE_INFINITY,
-      reasons,
-      bar,
+      validForFinalRanking: false,
       resolved,
       summary,
       objective: scored,
-      profileId,
-    };
+      failureReason: scored.reason,
+    });
   }
 
   return {
     ok: true,
+    mode: "full",
     exploratory: false,
+    validForFinalRanking: true,
+    horizonTicks: durationTicks,
+    objectiveType: profileId,
     score: scored.robustScore,
     reasons: [],
     bar,

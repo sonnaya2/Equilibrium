@@ -8,12 +8,20 @@ import {
   swapAt,
   type SearchState,
 } from "./types";
+import { maybeYield, type YieldCtx } from "./yield";
 
 /**
  * Generational EA: order crossover, swap/insert/remove/replace/reverse mutations,
  * elitism. Seeded rng only.
  */
 export function runEvolutionary(state: SearchState): void {
+  void runEvolutionaryAsync(state, undefined);
+}
+
+export async function runEvolutionaryAsync(
+  state: SearchState,
+  yieldCtx?: YieldCtx,
+): Promise<void> {
   const { evoPopulation, evoGenerations, evoElite } = state.config;
   let pop = seedPopulation(state, evoPopulation);
   if (pop.length === 0) return;
@@ -32,6 +40,7 @@ export function runEvolutionary(state: SearchState): void {
       child = mutate(state, child);
       if (child.length < state.sizeBounds.min || child.length > state.sizeBounds.max) continue;
       const scored = state.tryEval(child, "search", "evo");
+      if (yieldCtx) await maybeYield(state, yieldCtx);
       if (scored && Number.isFinite(scored.robustScore)) next.push(scored);
     }
 

@@ -1,8 +1,16 @@
 import { remainingCandidates } from "../eligibility";
 import { insertAt, type SearchState } from "./types";
+import { maybeYield, type YieldCtx } from "./yield";
 
 /** LNS: destroy k random slots, repair greedily or randomly. */
 export function runLargeNeighborhood(state: SearchState): void {
+  void runLargeNeighborhoodAsync(state, undefined);
+}
+
+export async function runLargeNeighborhoodAsync(
+  state: SearchState,
+  yieldCtx?: YieldCtx,
+): Promise<void> {
   if (!state.best) return;
   let current = [...state.best.bar];
   const rounds = state.config.lnsRounds;
@@ -18,6 +26,7 @@ export function runLargeNeighborhood(state: SearchState): void {
     if (repaired.length > state.sizeBounds.max) continue;
 
     const scored = state.tryEval(repaired, "search", "lns");
+    if (yieldCtx) await maybeYield(state, yieldCtx);
     if (scored && scored.robustScore > (state.best?.robustScore ?? Number.NEGATIVE_INFINITY)) {
       current = [...scored.bar];
     } else if (scored && state.rng.next() < 0.15) {

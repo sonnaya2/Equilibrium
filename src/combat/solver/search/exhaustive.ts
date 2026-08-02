@@ -1,6 +1,7 @@
 import type { PoolAbility, SizeBounds } from "../contracts";
 import { exclusiveKey } from "../eligibility";
 import type { SearchState } from "./types";
+import { maybeYield, type YieldCtx } from "./yield";
 
 /**
  * Upper-bound count of ordered bars respecting size bounds + exclusivity groups.
@@ -65,6 +66,10 @@ export function shouldRunExhaustive(
  * Returns true when the full tree fit in budget (globally-optimal claim ok).
  */
 export function runExhaustive(state: SearchState): boolean {
+  return runExhaustiveSync(state);
+}
+
+function runExhaustiveSync(state: SearchState): boolean {
   const estimate = estimateFeasibleCount(state.pool, state.sizeBounds);
   if (
     !shouldRunExhaustive(estimate, state.budget.remaining, state.config.exhaustiveMax)
@@ -104,12 +109,62 @@ export function runExhaustive(state: SearchState): boolean {
   };
 
   rec();
+  finishExhaustive(state, before, estimate);
+  return state.exhaustiveCompleted;
+}
 
+export async function runExhaustiveAsync(
+  state: SearchState,
+  yieldCtx?: YieldCtx,
+): Promise<boolean> {
+  const estimate = estimateFeasibleCount(state.pool, state.sizeBounds);
+  if (
+    !shouldRunExhaustive(estimate, state.budget.remaining, state.config.exhaustiveMax)
+  ) {
+    return false;
+  }
+
+  const before = state.budget.used;
+  const pool = state.pool;
+  const { min, max } = state.sizeBounds;
+  const used = new Set<string>();
+  const usedGroups = new Set<string>();
+  const bar: string[] = [];
+
+  const rec = async (): Promise<void> => {
+    if (bar.length >= min && bar.length <= max) {
+      if (!state.canEval()) return;
+      state.tryEval(bar, "search", "exhaustive");
+      if (yieldCtx) await maybeYield(state, yieldCtx);
+    }
+    if (bar.length >= max || !state.canEval()) return;
+
+    for (let i = 0; i < pool.length; i++) {
+      if (!state.canEval()) return;
+      const a = pool[i]!;
+      if (used.has(a.id)) continue;
+      const g = exclusiveKey(a);
+      if (g && usedGroups.has(g)) continue;
+
+      used.add(a.id);
+      if (g) usedGroups.add(g);
+      bar.push(a.id);
+      await rec();
+      bar.pop();
+      used.delete(a.id);
+      if (g) usedGroups.delete(g);
+    }
+  };
+
+  await rec();
+  finishExhaustive(state, before, estimate);
+  return state.exhaustiveCompleted;
+}
+
+function finishExhaustive(state: SearchState, before: number, estimate: number): void {
   const usedEvals = state.budget.used - before;
-  state.exhaustiveCompleted =
-    state.budget.remaining > 0 || usedEvals >= estimate;
+  state.exhaustiveCompleted = state.budget.remaining > 0 || usedEvals >= estimate;
   if (state.budget.remaining === 0 && usedEvals < estimate) {
     state.exhaustiveCompleted = usedEvals >= estimate;
   }
-  return state.exhaustiveCompleted;
 }

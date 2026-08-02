@@ -299,20 +299,62 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
 });
 
 test("revolution solver optimizes and apply keeps a runnable bar", async ({ page }) => {
+  test.setTimeout(180_000);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.getByRole("button", { name: "Optimize bar" })).toBeVisible();
 
   // Thorough depth is the default; cap slots for a faster browser pass.
   await page.getByLabel("Max slots").fill("6");
   await page.getByRole("button", { name: "Optimize bar" }).click();
+
+  const progress = page.getByTestId("revo-solver-progress");
+  await expect(progress).toBeVisible();
+  await expect(progress).toHaveAttribute("aria-busy", "true");
+
   await expect(page.getByTestId("revo-solver-results")).toBeVisible({ timeout: 120_000 });
   await expect(page.getByTestId("revo-solver-results")).toContainText(/Score/);
+  await expect(progress).toHaveAttribute("aria-busy", "false");
+  await expect(page.getByTestId("revo-optimize")).toHaveText("Optimize bar");
 
   await page.getByRole("button", { name: "Apply" }).first().click();
   await expect(page.getByText(/Solved bar/)).toBeVisible();
   await page.getByRole("button", { name: "Run bar" }).click();
   await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
   await expect(page.getByTestId("revo-casts")).toBeVisible();
+});
+
+test("solver progress advances at least twice before results", async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByLabel("Max slots").fill("6");
+
+  const optimize = page.getByTestId("revo-optimize");
+  await optimize.click();
+
+  const progress = page.getByTestId("revo-solver-progress");
+  await expect(progress).toBeVisible();
+  await expect(progress).toHaveAttribute("aria-busy", "true");
+  await expect(optimize).toHaveText("Optimizing…");
+
+  const seen: number[] = [];
+  await expect
+    .poll(
+      async () => {
+        const raw = await progress.getAttribute("data-evals");
+        const n = raw != null ? Number(raw) : NaN;
+        if (Number.isFinite(n) && (seen.length === 0 || n > seen[seen.length - 1]!)) {
+          seen.push(n);
+        }
+        return seen.length;
+      },
+      { timeout: 120_000, intervals: [50, 100, 200, 400] },
+    )
+    .toBeGreaterThanOrEqual(3);
+
+  await expect(page.getByTestId("revo-solver-results")).toBeVisible({ timeout: 120_000 });
+  await expect(page.getByTestId("revo-solver-results")).toContainText(/Score/);
+  await expect(progress).toHaveAttribute("aria-busy", "false");
+  await expect(optimize).toHaveText("Optimize bar");
 });
 
 test("manual rotation still exposes necromancy abilities", async ({ page }) => {

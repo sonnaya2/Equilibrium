@@ -56,10 +56,15 @@ export async function runSolverOnMainThread(
   return solve(request, {
     onProgress,
     isCancelled,
-    // Two macrotasks: give React a chance to commit paint between phases/evals.
+    // rAF + macrotask: let React commit and the browser paint between yields.
     yieldSlice: () =>
       new Promise((resolve) => {
-        setTimeout(() => setTimeout(resolve, 0), 0);
+        const done = () => setTimeout(resolve, 0);
+        if (typeof requestAnimationFrame === "function") {
+          requestAnimationFrame(done);
+        } else {
+          done();
+        }
       }),
   }).finally(() => {
     cancelled = true;

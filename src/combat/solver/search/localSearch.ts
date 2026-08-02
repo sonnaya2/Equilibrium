@@ -7,11 +7,20 @@ import {
   swapAt,
   type SearchState,
 } from "./types";
+import { maybeYield, type YieldCtx } from "./yield";
 
 /**
  * Hill-climb for N iterations: swap, adjacent swap, replace, insert, remove, move.
  */
 export function runLocalSearch(state: SearchState): void {
+  // No yieldCtx → no await inside async body → runs fully sync.
+  void runLocalSearchAsync(state, undefined);
+}
+
+export async function runLocalSearchAsync(
+  state: SearchState,
+  yieldCtx?: YieldCtx,
+): Promise<void> {
   if (!state.best) return;
   let current = [...state.best.bar];
   let currentScore = state.best.robustScore;
@@ -28,6 +37,7 @@ export function runLocalSearch(state: SearchState): void {
     for (const nb of order) {
       if (!state.canEval()) break;
       const scored = state.tryEval(nb, "search", "local");
+      if (yieldCtx) await maybeYield(state, yieldCtx);
       if (!scored || !Number.isFinite(scored.robustScore)) continue;
       if (scored.robustScore > improvedScore) {
         improved = [...scored.bar];
@@ -40,6 +50,7 @@ export function runLocalSearch(state: SearchState): void {
       for (const nb of order) {
         if (!state.canEval()) break;
         const scored = state.tryEval(nb, "search", "local");
+        if (yieldCtx) await maybeYield(state, yieldCtx);
         if (!scored || !Number.isFinite(scored.robustScore)) continue;
         if (scored.robustScore > improvedScore) {
           improved = [...scored.bar];

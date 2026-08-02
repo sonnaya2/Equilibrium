@@ -8,13 +8,14 @@ import type {
 import { createRng } from "./rng";
 import { buildSeeds } from "./seeds";
 import { createSearchState, type SearchConfig } from "./search/types";
-import { runExhaustive } from "./search/exhaustive";
-import { runConstructiveBeam } from "./search/constructiveBeam";
-import { runEvolutionary } from "./search/evolutionary";
-import { runLargeNeighborhood } from "./search/largeNeighborhood";
-import { runAnnealing } from "./search/annealing";
-import { runLocalSearch } from "./search/localSearch";
+import { runExhaustive, runExhaustiveAsync } from "./search/exhaustive";
+import { runConstructiveBeam, runConstructiveBeamAsync } from "./search/constructiveBeam";
+import { runEvolutionary, runEvolutionaryAsync } from "./search/evolutionary";
+import { runLargeNeighborhood, runLargeNeighborhoodAsync } from "./search/largeNeighborhood";
+import { runAnnealing, runAnnealingAsync } from "./search/annealing";
+import { runLocalSearch, runLocalSearchAsync } from "./search/localSearch";
 import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
+import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
 
 /**
  * Evaluation budgets. Thorough is tuned for interactive UI (~few seconds of
@@ -151,42 +152,44 @@ export async function solveAsync(
     seeds,
   });
 
+  const yieldCtx = createYieldCtx(hooks?.yieldSlice, yieldEveryForTier(tier));
+
   onPhase?.("seed");
   for (let i = 0; i < seeds.length; i++) {
     if (!state.canEval()) break;
     state.tryEval(seeds[i]!, "search", "seed");
-    if (i % 2 === 1) await yieldSlice();
+    await maybeYield(state, yieldCtx);
   }
   await yieldSlice();
 
   if (state.canEval()) {
     onPhase?.("exhaustive");
-    runExhaustive(state);
+    await runExhaustiveAsync(state, yieldCtx);
     await yieldSlice();
   }
   if (state.canEval()) {
     onPhase?.("beam");
-    runConstructiveBeam(state);
+    await runConstructiveBeamAsync(state, yieldCtx);
     await yieldSlice();
   }
   if (state.canEval() && config.evoPopulation > 0) {
     onPhase?.("evolutionary");
-    runEvolutionary(state);
+    await runEvolutionaryAsync(state, yieldCtx);
     await yieldSlice();
   }
   if (state.canEval() && config.lnsRounds > 0) {
     onPhase?.("lns");
-    runLargeNeighborhood(state);
+    await runLargeNeighborhoodAsync(state, yieldCtx);
     await yieldSlice();
   }
   if (state.canEval() && config.annealSteps > 0) {
     onPhase?.("anneal");
-    runAnnealing(state);
+    await runAnnealingAsync(state, yieldCtx);
     await yieldSlice();
   }
   if (state.canEval()) {
     onPhase?.("local");
-    runLocalSearch(state);
+    await runLocalSearchAsync(state, yieldCtx);
     await yieldSlice();
   }
 

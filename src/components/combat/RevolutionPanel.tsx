@@ -522,6 +522,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           <div
             className="revo-solver-status"
             data-testid="revo-solver-progress"
+            data-evals={solverProgress?.evaluations ?? 0}
+            data-phase={solverProgress?.phase ?? (solving ? "seed" : "idle")}
             role="status"
             aria-live="polite"
             aria-busy={solving}

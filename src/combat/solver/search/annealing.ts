@@ -1,5 +1,6 @@
 import { generateNeighbors } from "./localSearch";
 import type { SearchState } from "./types";
+import { maybeYield, type YieldCtx } from "./yield";
 
 /**
  * Threshold acceptance / SA hybrid for escaping local optima.
@@ -7,6 +8,13 @@ import type { SearchState } from "./types";
  * or via Metropolis at temperature.
  */
 export function runAnnealing(state: SearchState): void {
+  void runAnnealingAsync(state, undefined);
+}
+
+export async function runAnnealingAsync(
+  state: SearchState,
+  yieldCtx?: YieldCtx,
+): Promise<void> {
   if (!state.best) return;
   let current = [...state.best.bar];
   let currentScore = state.best.robustScore;
@@ -28,6 +36,7 @@ export function runAnnealing(state: SearchState): void {
     for (const nb of sample) {
       if (!state.canEval()) break;
       const scored = state.tryEval(nb, "search", "anneal");
+      if (yieldCtx) await maybeYield(state, yieldCtx);
       if (!scored || !Number.isFinite(scored.robustScore)) continue;
       const delta = scored.robustScore - currentScore;
       if (delta >= 0) {

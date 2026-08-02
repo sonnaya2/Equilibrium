@@ -2,6 +2,7 @@ import type { ScoredBar } from "../contracts";
 import { remainingCandidates } from "../eligibility";
 import { diverseSelect } from "../diversity";
 import { compareScored, insertAt, type SearchState } from "./types";
+import { maybeYield, type YieldCtx } from "./yield";
 
 /**
  * Constructive beam: grow bars left-to-right.
@@ -23,16 +24,28 @@ function partialBar(state: SearchState, bar: readonly string[]): ScoredBar {
 }
 
 export function runConstructiveBeam(state: SearchState): void {
+  // Sync path: no yieldCtx → no await → body completes before returning.
+  void runBeamBody(state, null);
+}
+
+export async function runConstructiveBeamAsync(
+  state: SearchState,
+  yieldCtx?: YieldCtx,
+): Promise<void> {
+  await runBeamBody(state, yieldCtx ?? null);
+}
+
+async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promise<void> {
   const { beamWidth, beamInsertAllPositions } = state.config;
   let beam: ScoredBar[] = [];
 
-  // Bootstrap: length-1 partials when minSlots > 1 (tryEval rejects undersized bars).
   for (const a of state.pool) {
     if (!state.canEval() && state.sizeBounds.min > 1) break;
     if (state.sizeBounds.min <= 1) {
       if (!state.canEval()) break;
       const scored = state.tryEval([a.id], "search", "beam");
       if (scored && Number.isFinite(scored.robustScore)) beam.push(scored);
+      if (yieldCtx) await maybeYield(state, yieldCtx);
     } else {
       beam.push(partialBar(state, [a.id]));
     }
@@ -79,6 +92,7 @@ export function runConstructiveBeam(state: SearchState): void {
             children.push(scored);
             grew = true;
           }
+          if (yieldCtx) await maybeYield(state, yieldCtx);
         }
       }
       if (parent.bar.length >= state.sizeBounds.min) children.push(parent);

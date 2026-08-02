@@ -854,7 +854,10 @@ describe("loadoutStats", () => {
       expect(stats.defence.equipmentArmour).toBe(500);
       expect(stats.equipment.armour).toBe(500);
       expect(stats.life.equipmentLife).toBe(1000);
-      expect(stats.defence.totalArmour).toBe(Math.floor(500 + stats.defence.levelArmour));
+      expect(stats.defence.totalArmour).toBe(500);
+      expect(stats.defence.blockArmourRating).toBe(
+        Math.floor(500 + stats.defence.blockLevelArmour),
+      );
     });
 
     it("derives blessing inputs from Build picks without replacing the existing stats model", () => {
@@ -865,7 +868,12 @@ describe("loadoutStats", () => {
       const aegis = loadoutStats(aegisLoadout, {
         blessingPicks: ["Order", "Order", "Order"],
       });
-      expect(aegis.leagueBaseAbilityDamageBonus).toBe(Math.floor(aegis.defence.totalArmour * 0.25));
+      expect(aegis.leagueBaseAbilityDamageBonus).toBe(125);
+      expect(aegis.aegis).toMatchObject({
+        qualifyingArmour: 500,
+        offhand: "none",
+        armourPercent: 0.25,
+      });
       expect(aegis.base).toBe(loadoutBase(aegisLoadout) + aegis.leagueBaseAbilityDamageBonus);
 
       const bigBoned = loadoutStats(base, {

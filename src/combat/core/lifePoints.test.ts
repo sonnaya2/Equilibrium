@@ -28,7 +28,7 @@ describe("lifePointStats", () => {
     expect(stats.currentLife).toBe(stats.temporaryMaxLife);
   });
 
-  it("reproduces the wiki worked maximum: 19,677 buffed, 22,628 with 15% overheal", () => {
+  it("keeps persistent life in the normal maximum and food overheal based on that maximum", () => {
     const stats = lifePointStats({
       constitutionLevel: 99,
       equipmentLife: 5785,
@@ -40,10 +40,22 @@ describe("lifePointStats", () => {
       totemOfVitality: true,
       overheal: "soup-line",
     });
-    expect(stats.temporaryFlatLife).toBe(500 + 1000 + 297);
+    expect(stats.permanentLife).toBe(200 + 495 + 500 + 1500);
+    expect(stats.temporaryFlatLife).toBe(1000 + 297);
     expect(stats.totemOfVitalityLife).toBe(1500);
+    expect(stats.normalMaxLife).toBe(18_380);
     expect(stats.temporaryMaxLife).toBe(19677);
-    expect(stats.overhealCeiling).toBe(22628);
+    expect(stats.overhealCeiling).toBe(22_434);
+  });
+
+  it("scales Boon of Het with maximum life and caps it at 495", () => {
+    // 5% of 5,000 + 1,000 is below the cap, so the percentage binds.
+    const low = lifePointStats({ constitutionLevel: 50, equipmentLife: 1000, boonOfHet: true });
+    expect(low.permanentLife).toBe(300);
+    // Equipment life counts toward the basis, so the cap binds well before 99.
+    const capped = lifePointStats({ constitutionLevel: 50, equipmentLife: 5785, boonOfHet: true });
+    expect(capped.permanentLife).toBe(495);
+    expect(lifePointStats({ constitutionLevel: 99, boonOfHet: true }).permanentLife).toBe(495);
   });
 
   it("computes the bonfire window through current level 110, capped at 750", () => {
@@ -71,6 +83,17 @@ describe("lifePointStats", () => {
   it("applies Fortitude as 10 + 10 × Constitution level", () => {
     const stats = lifePointStats({ constitutionLevel: 99, fortitude: true });
     expect(stats.temporaryFlatLife).toBe(1000);
+  });
+
+  it("does not let Fortitude increase a percentage food overheal", () => {
+    const stats = lifePointStats({
+      constitutionLevel: 99,
+      fortitude: true,
+      overheal: "soup-line",
+    });
+    expect(stats.normalMaxLife).toBe(9900);
+    expect(stats.temporaryMaxLife).toBe(10_900);
+    expect(stats.overhealCeiling).toBe(10_900 + Math.floor(0.15 * 9900));
   });
 
   it("caps overheal by class: +10%, +15%, or the flat brew ceilings", () => {
@@ -130,7 +153,7 @@ describe("lifePointStats", () => {
       maximumLifeMultiplier: 1.5,
       overheal: "soup-line",
     });
-    expect(stats.normalMaxLife).toBe(14_850);
+    expect(stats.normalMaxLife).toBe(15_600);
     expect(stats.temporaryMaxLife).toBe(15_600);
     expect(stats.overhealCeiling).toBe(17_940);
     expect(Object.values(stats.breakdown).reduce((sum, value) => sum + value, 0)).toBe(

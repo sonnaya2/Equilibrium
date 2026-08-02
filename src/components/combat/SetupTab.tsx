@@ -306,6 +306,8 @@ export function SetupTab({
                     { label: "Equipment", value: life.equipment },
                     { label: "Reaper Crew", value: life.reaperCrew },
                     { label: "Boon of Het", value: life.boonOfHet },
+                    { label: "Font of Life", value: life.fontOfLife },
+                    { label: "Totem of Vitality", value: life.totemOfVitality },
                     { label: "Big Boned", value: life.leagueMaximumNormal },
                   ]}
                 />

@@ -2283,7 +2283,16 @@
 {"entityId":"item:pernix-gloves","regionId":"asgarnia","relation":"required"}
 {"entityId":"item:pneumatic-gloves","regionId":"desert","relation":"required"}
 {"entityId":"item:polypore-staff","regionId":"morytania","relation":"required"}
+{"entityId":"item:primal-2h-sword-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-armoured-boots-plus-5","regionId":"forinthry","relation":"required"}
 {"entityId":"item:primal-crossbow-mk-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-full-helm-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-gauntlets-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-kiteshield-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-off-hand-warhammer-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-platebody-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-platelegs-plus-5","regionId":"forinthry","relation":"required"}
+{"entityId":"item:primal-warhammer-plus-5","regionId":"forinthry","relation":"required"}
 {"entityId":"item:primeval-boots","regionId":"desert","relation":"required"}
 {"entityId":"item:primeval-gloves","regionId":"desert","relation":"required"}
 {"entityId":"item:primeval-mask","regionId":"desert","relation":"required"}

@@ -186,6 +186,7 @@ describe("normalizeLoadout", () => {
       reaperCrew: false,
       fontOfLife: false,
       boonOfHet: false,
+      bonfireLogType: null,
       bonfireFiremakingLevel: null,
       totemOfVitality: false,
       thermalBath: false,
@@ -262,6 +263,7 @@ describe("normalizeLoadout", () => {
           reaperCrew: true,
           fontOfLife: true,
           boonOfHet: true,
+          bonfireLogType: "elder",
           bonfireFiremakingLevel: 999,
           totemOfVitality: true,
           thermalBath: true,
@@ -277,6 +279,7 @@ describe("normalizeLoadout", () => {
       reaperCrew: true,
       fontOfLife: true,
       boonOfHet: true,
+      bonfireLogType: null,
       bonfireFiremakingLevel: null,
       totemOfVitality: true,
       thermalBath: true,
@@ -300,9 +303,19 @@ describe("normalizeLoadout", () => {
     expect(cursed.buffs).toMatchObject({ fortitude: false, styleCurse: "turmoil" });
 
     const bonfire = withLoadoutBuffs(DEFAULT_LOADOUT, { bonfireFiremakingLevel: 110 });
-    expect(bonfire.buffs.totemOfVitality).toBe(false);
+    expect(bonfire.buffs).toMatchObject({ bonfireLogType: "normal", totemOfVitality: false });
     const totem = withLoadoutBuffs(bonfire, { totemOfVitality: true });
-    expect(totem.buffs).toMatchObject({ bonfireFiremakingLevel: null, totemOfVitality: true });
+    expect(totem.buffs).toMatchObject({
+      bonfireLogType: null,
+      bonfireFiremakingLevel: null,
+      totemOfVitality: true,
+    });
+    const elder = withLoadoutBuffs(totem, { bonfireLogType: "elder" });
+    expect(elder.buffs).toMatchObject({
+      bonfireLogType: "elder",
+      bonfireFiremakingLevel: 110,
+      totemOfVitality: false,
+    });
   });
 
   it("enforces Powerburst's six-second window and two-minute cooldown", () => {

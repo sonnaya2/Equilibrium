@@ -124,6 +124,28 @@ export function gizmoAccepts(slot: GizmoSlotId, perk: PerkRankKey): boolean {
 
 export type OverloadChoice = "none" | "overload" | "supreme" | "elder";
 export type OverhealChoice = "none" | OverhealKind;
+export const BONFIRE_LOGS = [
+  { value: "normal", label: "Normal logs", minutes: 6 },
+  { value: "achey", label: "Achey tree logs", minutes: 6 },
+  { value: "oak", label: "Oak logs", minutes: 12 },
+  { value: "willow", label: "Willow logs", minutes: 18 },
+  { value: "teak", label: "Teak logs", minutes: 24 },
+  { value: "arctic-pine", label: "Arctic pine logs", minutes: 30 },
+  { value: "corrupted-magic", label: "Corrupted magic logs", minutes: 30 },
+  { value: "maple", label: "Maple logs", minutes: 36 },
+  { value: "acadia", label: "Acadia logs", minutes: 38 },
+  { value: "mahogany", label: "Mahogany logs", minutes: 42 },
+  { value: "eucalyptus", label: "Eucalyptus logs", minutes: 48 },
+  { value: "yew", label: "Yew logs", minutes: 54 },
+  { value: "magic", label: "Magic logs", minutes: 60 },
+  { value: "blisterwood", label: "Blisterwood logs", minutes: 60 },
+  { value: "cursed-magic", label: "Cursed magic logs", minutes: 60 },
+  { value: "elder", label: "Elder logs", minutes: 66 },
+  { value: "protean", label: "Protean logs", minutes: 66 },
+  { value: "driftwood", label: "Driftwood", minutes: 66 },
+  { value: "eternal-magic", label: "Eternal magic logs", minutes: 72 },
+] as const;
+export type BonfireLogType = (typeof BONFIRE_LOGS)[number]["value"];
 export type StyleCurseChoice =
   | "none"
   | "turmoil"
@@ -143,6 +165,8 @@ export interface LoadoutBuffs {
   reaperCrew: boolean;
   fontOfLife: boolean;
   boonOfHet: boolean;
+  /** Log type determines the bonfire boost duration; null means no bonfire. */
+  bonfireLogType: BonfireLogType | null;
   /** Active bonfire amount source; null means no bonfire boost. */
   bonfireFiremakingLevel: number | null;
   totemOfVitality: boolean;
@@ -239,6 +263,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     reaperCrew: false,
     fontOfLife: false,
     boonOfHet: false,
+    bonfireLogType: null,
     bonfireFiremakingLevel: null,
     totemOfVitality: false,
     thermalBath: false,
@@ -273,6 +298,7 @@ const OVERHEALS: OverhealChoice[] = [
   "saradomin-brew",
   "super-saradomin-brew",
 ];
+const BONFIRE_LOG_TYPE_SET = new Set<string>(BONFIRE_LOGS.map(({ value }) => value));
 const GIZMO_SLOT_SET = new Set<string>(GIZMO_SLOTS);
 /** Rank-valued perk keys, from the default loadout so the two never drift. */
 export const PERK_RANK_KEYS = Object.entries(DEFAULT_LOADOUT.perks)
@@ -484,8 +510,16 @@ export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>)
   const buffs = { ...loadout.buffs, ...patch };
   if (patch.fortitude === true) buffs.styleCurse = "none";
   else if (patch.styleCurse != null && patch.styleCurse !== "none") buffs.fortitude = false;
-  if (patch.totemOfVitality === true) buffs.bonfireFiremakingLevel = null;
-  else if (patch.bonfireFiremakingLevel != null) buffs.totemOfVitality = false;
+  if (patch.totemOfVitality === true) {
+    buffs.bonfireLogType = null;
+    buffs.bonfireFiremakingLevel = null;
+  } else if (patch.bonfireLogType === null) {
+    buffs.bonfireFiremakingLevel = null;
+  } else if (patch.bonfireLogType != null || patch.bonfireFiremakingLevel != null) {
+    buffs.bonfireLogType ??= "normal";
+    buffs.bonfireFiremakingLevel ??= MAX_FIREMAKING_LEVEL;
+    buffs.totemOfVitality = false;
+  }
   return { ...loadout, buffs };
 }
 
@@ -579,10 +613,18 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     : "none";
   const fortitude = rawBuffs.fortitude === true && styleCurse === "none";
   const totemOfVitality = rawBuffs.totemOfVitality === true;
+  const bonfireLogType =
+    !totemOfVitality && BONFIRE_LOG_TYPE_SET.has(rawBuffs.bonfireLogType as string)
+      ? (rawBuffs.bonfireLogType as BonfireLogType)
+      : !totemOfVitality && Number.isFinite(rawBuffs.bonfireFiremakingLevel)
+        ? "normal"
+        : null;
   const bonfireFiremakingLevel =
-    !totemOfVitality && Number.isFinite(rawBuffs.bonfireFiremakingLevel)
+    bonfireLogType != null && Number.isFinite(rawBuffs.bonfireFiremakingLevel)
       ? clamp(rawBuffs.bonfireFiremakingLevel, 1, MAX_FIREMAKING_LEVEL, MAX_FIREMAKING_LEVEL)
-      : null;
+      : bonfireLogType != null
+        ? MAX_FIREMAKING_LEVEL
+        : null;
   const powerburstOfVitalityUntil =
     Number.isFinite(rawBuffs.powerburstOfVitalityUntil) &&
     Number(rawBuffs.powerburstOfVitalityUntil) > now
@@ -693,6 +735,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       reaperCrew: rawBuffs.reaperCrew === true,
       fontOfLife: rawBuffs.fontOfLife === true,
       boonOfHet: rawBuffs.boonOfHet === true,
+      bonfireLogType,
       bonfireFiremakingLevel,
       totemOfVitality,
       thermalBath: rawBuffs.thermalBath === true,

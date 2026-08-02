@@ -257,9 +257,12 @@ test("summary reacts to temporary life effects and a manual Damage Potential ove
   await page.getByRole("button", { name: /Font of Life/ }).click();
   await page.getByRole("button", { name: /Boon of Het/ }).click();
 
-  await expect(summaryMetric(page, "Maximum life points").getByText("10,595")).toBeVisible();
+  // Reaper Crew, Font of Life and Boon of Het are persistent, so they land in the
+  // normal maximum; only the thermal bath opens a temporary window above it.
+  await expect(summaryMetric(page, "Maximum life points").getByText("11,095")).toBeVisible();
+  await page.getByRole("button", { name: /Thermal bath/ }).click();
   const temporary = summaryMetric(page, "Temporary maximum life");
-  await expect(temporary.getByText("11,095")).toBeVisible();
+  await expect(temporary.getByText("11,392")).toBeVisible();
   await temporary.locator("summary").click();
   await expectBreakdownToReconcile(temporary);
 
@@ -396,13 +399,13 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
   for (const name of ["Reaper Crew", "Font of Life", "Boon of Het", "Thermal bath"]) {
     await page.getByRole("button", { name: new RegExp(name) }).click();
   }
-  await page.getByRole("combobox", { name: "Bonfire boost" }).selectOption("active");
+  await page.getByRole("combobox", { name: "Bonfire log type" }).selectOption("elder");
   await page.getByRole("spinbutton", { name: "Bonfire Firemaking level" }).fill("110");
   const totem = page.getByRole("button", { name: /Totem of Vitality/ });
   await totem.click();
-  await expect(page.getByRole("combobox", { name: "Bonfire boost" })).toHaveValue("none");
+  await expect(page.getByRole("combobox", { name: "Bonfire log type" })).toHaveValue("none");
   await totem.click();
-  await page.getByRole("combobox", { name: "Bonfire boost" }).selectOption("active");
+  await page.getByRole("combobox", { name: "Bonfire log type" }).selectOption("elder");
   await page.getByRole("combobox", { name: "Overheal source" }).selectOption("soup-line");
 
   await page.reload();
@@ -416,7 +419,7 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
     "aria-pressed",
     "true",
   );
-  await expect(page.getByRole("combobox", { name: "Bonfire boost" })).toHaveValue("active");
+  await expect(page.getByRole("combobox", { name: "Bonfire log type" })).toHaveValue("elder");
   await expect(page.getByRole("spinbutton", { name: "Bonfire Firemaking level" })).toHaveValue(
     "110",
   );
@@ -435,7 +438,12 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
     baseDamage: { mode: "manual", manualValue: 4321 },
     startingAdrenaline: 72,
     hitCapEnabled: false,
-    buffs: { fortitude: true, styleCurse: "none", bonfireFiremakingLevel: 110 },
+    buffs: {
+      fortitude: true,
+      styleCurse: "none",
+      bonfireLogType: "elder",
+      bonfireFiremakingLevel: 110,
+    },
   });
   expect(stored.base).toBeUndefined();
 });

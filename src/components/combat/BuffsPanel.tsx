@@ -24,6 +24,7 @@ import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
 import { NumberField } from "./NumberField";
 import {
+  BONFIRE_LOGS,
   activatePowerburstOfVitality,
   isPowerburstOfVitalityActive,
   isPowerburstOfVitalityReady,
@@ -368,7 +369,7 @@ export function BuffsPanel({
           <BuffTile
             icon={LIFE_ICON.fontOfLife}
             label="Font of Life"
-            effect="+500 maximum life points"
+            effect="Persistent +500 maximum life points while the relic power is harnessed"
             pressed={loadout.buffs.fontOfLife}
             onClick={() => setBuffs({ fontOfLife: !loadout.buffs.fontOfLife })}
           />
@@ -390,7 +391,7 @@ export function BuffsPanel({
           <BuffTile
             icon={LIFE_ICON.totemOfVitality}
             label="Totem of Vitality"
-            effect="Up to +1,500 maximum life points; replaces a bonfire boost"
+            effect="Persistent up to +1,500 maximum life points while active; replaces a bonfire boost"
             pressed={loadout.buffs.totemOfVitality}
             onClick={() => setBuffs({ totemOfVitality: !loadout.buffs.totemOfVitality })}
           />
@@ -405,19 +406,30 @@ export function BuffsPanel({
         </div>
         <div className="loadout-fields mt-2">
           <label className="loadout-select">
-            <span>Bonfire boost</span>
+            <span>Bonfire log type</span>
             <select
-              aria-label="Bonfire boost"
-              value={loadout.buffs.bonfireFiremakingLevel == null ? "none" : "active"}
-              onChange={(event) =>
+              aria-label="Bonfire log type"
+              value={loadout.buffs.bonfireLogType ?? "none"}
+              onChange={(event) => {
+                const bonfireLogType =
+                  event.target.value === "none"
+                    ? null
+                    : (event.target.value as Loadout["buffs"]["bonfireLogType"]);
                 setBuffs({
+                  bonfireLogType,
                   bonfireFiremakingLevel:
-                    event.target.value === "active" ? MAX_FIREMAKING_LEVEL : null,
-                })
-              }
+                    bonfireLogType == null
+                      ? null
+                      : (loadout.buffs.bonfireFiremakingLevel ?? MAX_FIREMAKING_LEVEL),
+                });
+              }}
             >
               <option value="none">None</option>
-              <option value="active">Active</option>
+              {BONFIRE_LOGS.map((log) => (
+                <option key={log.value} value={log.value}>
+                  {log.label} · {log.minutes} min
+                </option>
+              ))}
             </select>
           </label>
           {loadout.buffs.bonfireFiremakingLevel != null ? (

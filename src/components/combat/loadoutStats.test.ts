@@ -916,10 +916,10 @@ describe("loadoutStats", () => {
 
     it.each([
       ["Reaper Crew", { reaperCrew: true }, "normalMaxLife", 10_100],
-      ["Font of Life", { fontOfLife: true }, "temporaryMaxLife", 10_400],
+      ["Font of Life", { fontOfLife: true }, "normalMaxLife", 10_400],
       ["Boon of Het", { boonOfHet: true }, "normalMaxLife", 10_395],
       ["thermal bath", { thermalBath: true }, "temporaryMaxLife", 10_197],
-      ["Totem of Vitality", { totemOfVitality: true }, "temporaryMaxLife", 11_400],
+      ["Totem of Vitality", { totemOfVitality: true }, "normalMaxLife", 11_400],
     ] as const)("applies %s", (_name, patch, field, expected) => {
       const stats = loadoutStats({ ...base, buffs: { ...base.buffs, ...patch } });
       expect(stats.life[field]).toBe(expected);
@@ -937,7 +937,7 @@ describe("loadoutStats", () => {
       });
       expect(stats.life.bonfireLife).toBe(554);
       expect(stats.life.temporaryMaxLife).toBe(10_454);
-      expect(stats.life.overhealCeiling).toBe(12_022);
+      expect(stats.life.overhealCeiling).toBe(11_939);
       expect(stats.life.currentLife).toBe(10_200);
     });
 

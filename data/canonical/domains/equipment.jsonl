@@ -612,7 +612,16 @@
 {"entityId":"item:pernix-gloves","slot":"gloves","style":"ranged","tier":80}
 {"entityId":"item:pneumatic-gloves","slot":"gloves","style":"melee","tier":85}
 {"entityId":"item:polypore-staff","slot":"twohand","style":"magic","tier":75}
+{"entityId":"item:primal-2h-sword-plus-5","slot":"twohand","style":"melee","tier":90}
+{"entityId":"item:primal-armoured-boots-plus-5","slot":"boots","style":"melee","tier":90}
 {"entityId":"item:primal-crossbow-mk-5","slot":"mainhand","style":"ranged","tier":99}
+{"entityId":"item:primal-full-helm-plus-5","slot":"helmet","style":"melee","tier":90}
+{"entityId":"item:primal-gauntlets-plus-5","slot":"gloves","style":"melee","tier":90}
+{"entityId":"item:primal-kiteshield-plus-5","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:primal-off-hand-warhammer-plus-5","slot":"offhand","style":"melee","tier":90}
+{"entityId":"item:primal-platebody-plus-5","slot":"body","style":"melee","tier":90}
+{"entityId":"item:primal-platelegs-plus-5","slot":"legs","style":"melee","tier":90}
+{"entityId":"item:primal-warhammer-plus-5","slot":"mainhand","style":"melee","tier":90}
 {"entityId":"item:primeval-boots","slot":"boots","style":"magic","tier":90}
 {"entityId":"item:primeval-gloves","slot":"gloves","style":"magic","tier":90}
 {"entityId":"item:primeval-mask","slot":"helmet","style":"magic","tier":90}

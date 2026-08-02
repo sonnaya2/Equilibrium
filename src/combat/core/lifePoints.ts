@@ -6,14 +6,14 @@ import type { SourceReference } from "../types";
  *   1. Constitution life      100 × level (max level 99 → 9,900; Constitution
  *                             was not raised to 120 in the 2026 modernisation)
  *   2. + equipment Life        flat per-item bonuses
- *   3. + permanent unlocks     Reaper Crew +200; Boon of Het +5% of Constitution life
- *   4. + temporary flat        Font of Life +500, Fortitude 10+10×level,
- *                              thermal bath 3×level, Elidinis Statuette +500
- *   5. + temporary percent     bonfire ⌈(fm+1)/2⌉×0.1% (cap 750) OR Totem of
- *                              Vitality 25% (cap 1,500) — mutually exclusive,
- *                              basis is Constitution + equipment only
+ *   3. + persistent effects    Reaper Crew +200; Boon of Het 5% (cap 495);
+ *                              Font of Life +500; Totem of Vitality 25% (cap 1,500)
+ *   4. + temporary flat        Fortitude 10+10×level, thermal bath 3×level,
+ *                              Elidinis Statuette +500
+ *   5. + temporary percent     bonfire ⌈(fm+1)/2⌉×0.1% (cap 750), mutually
+ *                              exclusive with Totem; both use Constitution + equipment
  *   6. League maximum          Big Boned multiplier on the composed maximum
- *   7. food overheal last      +10% / +15% of the buffed max, or flat brew caps
+ *   7. food overheal last      +10% / +15% of normal max, or flat brew allowances
  *
  * Powerburst of vitality doubles max and current after those layers. Abidor
  * Crank and boosted-Constitution max-LP effects are unverified and deliberately
@@ -81,15 +81,15 @@ export interface LifePointInput {
 export interface LifePointStats {
   constitutionLife: number;
   equipmentLife: number;
-  /** Reaper Crew and Boon of Het — permanent account unlocks. */
+  /** Reaper Crew, Boon of Het, Font of Life, and Totem of Vitality. */
   permanentLife: number;
-  /** Font of Life, Fortitude, thermal bath, Elidinis Statuette. */
+  /** Fortitude, thermal bath, and Elidinis Statuette. */
   temporaryFlatLife: number;
   bonfireLife: number;
   totemOfVitalityLife: number;
-  /** Constitution + equipment + permanent — the maximum without temporary buffs. */
+  /** Constitution + equipment + persistent effects — the maximum without temporary buffs. */
   normalMaxLife: number;
-  /** normalMaxLife plus temporary flat and the bonfire/totem window. */
+  /** normalMaxLife plus temporary flat and the bonfire window. */
   temporaryMaxLife: number;
   /** temporaryMaxLife plus the overheal allowance — the ceiling current life may reach. */
   overhealCeiling: number;
@@ -149,16 +149,17 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
 
   const constitutionLife = 100 * constitutionLevel;
   const reaperCrewLife = input.reaperCrew ? 200 : 0;
-  const boonOfHetLife = input.boonOfHet ? Math.floor(0.05 * constitutionLife) : 0;
   const fontOfLife = input.fontOfLife ? 500 : 0;
   const fortitudeLife = input.fortitude ? 10 + 10 * constitutionLevel : 0;
   const thermalBathLife = input.thermalBath ? 3 * constitutionLevel : 0;
   const elidinisStatuetteLife = input.elidinisStatuette ? 500 : 0;
-  const permanentLife = reaperCrewLife + boonOfHetLife;
-  const temporaryFlatLife = fontOfLife + fortitudeLife + thermalBathLife + elidinisStatuetteLife;
+  const temporaryFlatLife = fortitudeLife + thermalBathLife + elidinisStatuetteLife;
 
   // Percent windows share the documented basis: Constitution + equipment only.
   const percentBasis = constitutionLife + equipmentLife;
+  // Boon of Het scales with maximum life; 495 is the cap, which 99 Constitution
+  // already reaches on its own, so the percentage only binds below that.
+  const boonOfHetLife = input.boonOfHet ? Math.min(495, Math.floor(0.05 * percentBasis)) : 0;
   const bonfireLife =
     bonfireFiremakingLevel != null
       ? Math.min(
@@ -172,19 +173,19 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     ? Math.min(1500, Math.floor(0.25 * percentBasis))
     : 0;
 
+  const permanentLife = reaperCrewLife + boonOfHetLife + fontOfLife + totemOfVitalityLife;
   const baseNormalMaxLife = constitutionLife + equipmentLife + permanentLife;
   const leagueMaximumNormal = Math.floor(baseNormalMaxLife * (maximumLifeMultiplier - 1));
   const normalMaxLife = baseNormalMaxLife + leagueMaximumNormal;
-  const baseTemporaryMaxLife =
-    baseNormalMaxLife + temporaryFlatLife + bonfireLife + totemOfVitalityLife;
+  const baseTemporaryMaxLife = baseNormalMaxLife + temporaryFlatLife + bonfireLife;
   const leagueMaximumTotal = Math.floor(baseTemporaryMaxLife * (maximumLifeMultiplier - 1));
   const leagueMaximumTemporary = leagueMaximumTotal - leagueMaximumNormal;
   let temporaryMaxLife = baseTemporaryMaxLife + leagueMaximumTotal;
   let overhealCeiling =
     overheal === "rocktail-line"
-      ? temporaryMaxLife + Math.floor(0.1 * temporaryMaxLife)
+      ? temporaryMaxLife + Math.floor(0.1 * normalMaxLife)
       : overheal === "soup-line"
-        ? temporaryMaxLife + Math.floor(0.15 * temporaryMaxLife)
+        ? temporaryMaxLife + Math.floor(0.15 * normalMaxLife)
         : overheal === "saradomin-brew"
           ? temporaryMaxLife + 1000
           : overheal === "super-saradomin-brew"

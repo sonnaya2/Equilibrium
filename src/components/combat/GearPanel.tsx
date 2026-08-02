@@ -424,6 +424,7 @@ export function GearPanel({
                   activeItem.bonuses.damage != null ? `dmg ${activeItem.bonuses.damage}` : null,
                   activeItem.bonuses.accuracy != null ? `acc ${activeItem.bonuses.accuracy}` : null,
                   activeItem.bonuses.armour != null ? `arm ${activeItem.bonuses.armour}` : null,
+                  activeItem.bonuses.life != null ? `life ${activeItem.bonuses.life}` : null,
                   activeItem.bonuses.prayer != null ? `pray ${activeItem.bonuses.prayer}` : null,
                   activeItem.bonuses.critChance != null
                     ? `crit ${activeItem.bonuses.critChance}`

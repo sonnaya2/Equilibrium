@@ -126,15 +126,20 @@ function evalBar(
 
   const result = state.evaluate({ bar, mode });
   if (result.finite === false) {
-    const bad = emptyScored(bar, state.config.profileId ?? "balanced", Number.NEGATIVE_INFINITY);
-    state.cache.set(cacheKey, { score: bad.robustScore, scored: bad });
-    return bad;
+    // Do not cache failures as rankable bars (would pollute beam/local).
+    return null;
   }
   const scored = toScoredBar(bar, result, state.config.profileId ?? "balanced");
   state.cache.set(cacheKey, { score: scored.robustScore, scored });
   if (isFiniteEval({ score: scored.robustScore })) {
-    touchBest(state, scored);
-    pushArchive(state, scored);
+    // Only explore scores drive search best; full re-scores never demote via scale mismatch.
+    if (mode === "search") {
+      touchBest(state, scored);
+      pushArchive(state, scored);
+    } else if (mode === "full") {
+      // Still archive full results for finalize diversity, but do not replace explore best by score alone.
+      pushArchive(state, scored);
+    }
   }
   return scored;
 }

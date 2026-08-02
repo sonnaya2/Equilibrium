@@ -69,20 +69,16 @@ function assembleResult(
   rescoredFull: ScoredBar[],
 ): SolveResult {
   const topK = opts.topK ?? state.config.topK;
-  const rescored: ScoredBar[] = [...rescoredFull];
-  for (const s of pool) {
-    if (!rescored.some((r) => r.fingerprint === s.fingerprint)) rescored.push(s);
-  }
-  rescored.sort((a, b) => b.robustScore - a.robustScore);
+  // Rank ONLY full-horizon re-scores. Explore DPM is a different unit and must
+  // not beat a true robust score in the final leaderboard.
+  const fullOnly = rescoredFull.filter(isRankable).sort((a, b) => b.robustScore - a.robustScore);
 
-  let best = rescored.find(isRankable) ?? null;
+  let best = fullOnly[0] ?? null;
 
-  if (seedBestBar && isRankable(best)) {
-    const seedFull = rescored.find((r) => r.bar.join("\0") === seedBestBar.join("\0"));
-    const seedScore = seedFull?.robustScore ?? seedBestScore;
-    if (Number.isFinite(seedScore) && best.robustScore + 1e-9 < seedScore && seedFull) {
-      best = seedFull;
-    }
+  // If no full re-score was finite, fall back to best explore candidate (labeled via score).
+  if (!best) {
+    const exploreBest = pool.find(isRankable) ?? null;
+    if (exploreBest) best = exploreBest;
   }
 
   if (!best) {
@@ -100,14 +96,8 @@ function assembleResult(
     };
   }
 
-  if (!rescored.some((r) => r.fingerprint === best!.fingerprint)) {
-    rescored.unshift(best);
-  }
-
-  const top = diverseSelect(
-    rescored.filter(isRankable),
-    topK,
-  );
+  const diversifyPool = fullOnly.length > 0 ? fullOnly : pool.filter(isRankable);
+  const top = diverseSelect(diversifyPool, topK);
   if (top.length === 0) top.push(best);
   top.sort((a, b) => b.robustScore - a.robustScore);
   if (top[0]!.robustScore < best.robustScore) top[0] = best;

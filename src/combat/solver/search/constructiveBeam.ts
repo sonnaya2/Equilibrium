@@ -8,14 +8,34 @@ import { compareScored, insertAt, type SearchState } from "./types";
  * Default: append each remaining ability (priority order).
  * Wider: also try insert at every position when config.beamInsertAllPositions.
  */
+function partialBar(state: SearchState, bar: readonly string[]): ScoredBar {
+  return {
+    bar: [...bar],
+    fingerprint: bar.join("\0"),
+    robustScore: Number.NEGATIVE_INFINITY,
+    minDpm: 0,
+    weightedMean: 0,
+    profileId: state.config.profileId ?? "balanced",
+    openingDpm: 0,
+    developedDpm: 0,
+    steadyDpm: 0,
+  };
+}
+
 export function runConstructiveBeam(state: SearchState): void {
   const { beamWidth, beamInsertAllPositions } = state.config;
   let beam: ScoredBar[] = [];
 
+  // Bootstrap: length-1 partials when minSlots > 1 (tryEval rejects undersized bars).
   for (const a of state.pool) {
-    if (!state.canEval()) break;
-    const scored = state.tryEval([a.id], "search", "beam");
-    if (scored && Number.isFinite(scored.robustScore)) beam.push(scored);
+    if (!state.canEval() && state.sizeBounds.min > 1) break;
+    if (state.sizeBounds.min <= 1) {
+      if (!state.canEval()) break;
+      const scored = state.tryEval([a.id], "search", "beam");
+      if (scored && Number.isFinite(scored.robustScore)) beam.push(scored);
+    } else {
+      beam.push(partialBar(state, [a.id]));
+    }
   }
 
   beam = keepBeam(beam, beamWidth);
@@ -55,7 +75,7 @@ export function runConstructiveBeam(state: SearchState): void {
             continue;
           }
           const scored = state.tryEval(next, "search", "beam");
-          if (scored) {
+          if (scored && Number.isFinite(scored.robustScore)) {
             children.push(scored);
             grew = true;
           }

@@ -110,6 +110,7 @@
 {"entityId":"item:ascension-grips","stat":"armour","value":108.9}
 {"entityId":"item:ascension-grips","stat":"damage","value":14}
 {"entityId":"item:ascension-grips","stat":"prayer","value":2}
+{"entityId":"item:asylum-surgeons-ring","stat":"armour","value":0}
 {"entityId":"item:asylum-surgeons-ring","stat":"damage","value":26.2}
 {"entityId":"item:attuned-crystal-bow","stat":"accuracy","value":1924}
 {"entityId":"item:attuned-crystal-bow","stat":"damage","value":1470}
@@ -287,7 +288,9 @@
 {"entityId":"item:deathguard-t90","stat":"accuracy","value":2458}
 {"entityId":"item:deathguard-t90","stat":"damage","value":1341}
 {"entityId":"item:deathspore-arrows","stat":"damage","value":912}
+{"entityId":"item:deathtouch-bracelet","stat":"armour","value":0}
 {"entityId":"item:deathtouch-bracelet","stat":"damage","value":14}
+{"entityId":"item:deathtouch-bracelet","stat":"life","value":0}
 {"entityId":"item:deathtouch-bracelet","stat":"prayer","value":3}
 {"entityId":"item:deathwarden-boots-t90","stat":"armour","value":122.9}
 {"entityId":"item:deathwarden-gloves-t90","stat":"armour","value":122.9}

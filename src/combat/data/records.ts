@@ -85,7 +85,11 @@ export type ItemPassiveId =
   | "reaver-ring"
   | "champion-ring"
   | "stalker-ring"
-  | "channeller-ring";
+  | "channeller-ring"
+  // Recorded but not modelled: both are stochastic with their own internal
+  // cooldown, and neither has a settled place in the modifier pipeline.
+  | "asylum-surgeon"
+  | "deathtouch-reflect";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 

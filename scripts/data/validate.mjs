@@ -31,6 +31,58 @@ const UNMAPPED_STABLE_RECORDS = `SELECT source_records.source_file, source_recor
      )
    ORDER BY source_records.source_file, source_records.record_path`;
 
+// Equipment stat metadata is only half-declared: an exact bonus in the record
+// wins, and anything absent is derived from tier, slot and armour class. These
+// checks cover the gap between the two, where a record looks complete but the
+// stat core can only answer "unknown".
+const EQUIPMENT_RECORDS = `FROM source_records
+   WHERE source_file = 'data/combat/equipment.json' AND record_path NOT LIKE '%].%'`;
+const CLASS_GATED = "('helmet','body','legs','gloves','boots')";
+
+const DERIVED_WITHOUT_CLASS = `SELECT stable_id, record_path ${EQUIPMENT_RECORDS}
+     AND json_extract(raw_json, '$.slot') IN ${CLASS_GATED}
+     AND json_extract(raw_json, '$.armourClass') IS NULL
+     AND (json_extract(raw_json, '$.bonuses.armour') IS NULL
+       OR json_extract(raw_json, '$.bonuses.life') IS NULL
+       OR json_extract(raw_json, '$.bonuses.damage') IS NULL)
+   ORDER BY stable_id`;
+
+const DERIVED_WITHOUT_TIER = `SELECT stable_id, record_path ${EQUIPMENT_RECORDS}
+     AND json_extract(raw_json, '$.tier') IS NULL
+     AND (json_extract(raw_json, '$.armourClass') IS NOT NULL
+       OR json_extract(raw_json, '$.shield') IS NOT NULL
+       OR json_extract(raw_json, '$.defender') IS NOT NULL)
+   ORDER BY stable_id`;
+
+const INVALID_CLASS_COMBINATION = `SELECT stable_id, record_path ${EQUIPMENT_RECORDS}
+     AND (
+       (json_extract(raw_json, '$.armourClass') IS NOT NULL
+         AND json_extract(raw_json, '$.armourClass') NOT IN ('tank','power','hybrid','pvp'))
+       OR (json_extract(raw_json, '$.armourClass') IS NOT NULL
+         AND json_extract(raw_json, '$.slot') NOT IN ${CLASS_GATED})
+       OR (json_extract(raw_json, '$.shield') IS NOT NULL AND json_extract(raw_json, '$.defender') IS NOT NULL)
+       OR ((json_extract(raw_json, '$.shield') IS NOT NULL OR json_extract(raw_json, '$.defender') IS NOT NULL)
+         AND json_extract(raw_json, '$.slot') <> 'offhand')
+     )
+   ORDER BY stable_id`;
+
+// Every stat the formulas read has to be a usable positive number; a negative or
+// non-numeric tier silently produces a nonsense bonus rather than an error.
+const UNUSABLE_STAT_VALUES = `SELECT stable_id, record_path ${EQUIPMENT_RECORDS}
+     AND EXISTS (
+       SELECT 1 FROM json_each(raw_json, '$.bonuses')
+       WHERE json_each.type NOT IN ('integer','real') OR json_each.value < 0
+     )
+   ORDER BY stable_id`;
+
+const UNUSABLE_TIER_OVERRIDES = `SELECT stable_id, record_path ${EQUIPMENT_RECORDS}
+     AND EXISTS (
+       SELECT 1 FROM json_each(raw_json)
+       WHERE json_each.key IN ('tier','armourTier','damageTier','lifeTier','requirementTier')
+         AND (json_each.type NOT IN ('integer','real') OR json_each.value < 1)
+     )
+   ORDER BY stable_id`;
+
 export function validate(db, changedOnly = false) {
   const changed = changedOnly && existsSync(CHANGED) ? JSON.parse(readFileSync(CHANGED, "utf8")).entities : [];
   const changedIds = new Set(changed.map(({ id }) => id));
@@ -59,6 +111,11 @@ export function validate(db, changedOnly = false) {
     rows(`SELECT max(version) AS version FROM schema_migrations HAVING version != ${SCHEMA_VERSION}`),
   );
   addFailure("unmapped stable source records without quarantine", rows(UNMAPPED_STABLE_RECORDS));
+  addFailure("equipment deriving stats without an armour class", rows(DERIVED_WITHOUT_CLASS));
+  addFailure("equipment carrying stat metadata without a tier", rows(DERIVED_WITHOUT_TIER));
+  addFailure("equipment with an impossible slot and class combination", rows(INVALID_CLASS_COMBINATION));
+  addFailure("equipment bonuses that are not usable numbers", rows(UNUSABLE_STAT_VALUES));
+  addFailure("equipment stat tiers that are not usable numbers", rows(UNUSABLE_TIER_OVERRIDES));
 
   const missingSources = rows(
     `SELECT id, entity_type FROM entities

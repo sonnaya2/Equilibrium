@@ -53,6 +53,41 @@ export interface SimulationRuntime {
   finalized: boolean;
 }
 
+export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string, AbilitySpec> {
+  const byId = new Map<string, AbilitySpec>();
+  for (const ability of abilities) {
+    const prev = byId.get(ability.id);
+    if (prev) {
+      // Catalogue/bar merges may list the same id twice. Silent overwrite is
+      // banned: keep the first registration, throw when a later entry conflicts.
+      if (
+        prev.name !== ability.name ||
+        prev.style !== ability.style ||
+        prev.hits.length !== ability.hits.length ||
+        (prev.category ?? "") !== (ability.category ?? "")
+      ) {
+        throw new Error(`Duplicate ability id in runtime registry: ${ability.id}`);
+      }
+      continue;
+    }
+    byId.set(ability.id, ability);
+  }
+  return byId;
+}
+
+function mapBasicsByStyle(
+  abilities: readonly AbilitySpec[],
+): Map<AbilitySpec["style"], AbilitySpec> {
+  // First auto-attack wins. Tests inject temporary autoAttack flags on synthetic
+  // abilities; that is not a duplicate ability-id data bug.
+  const basicByStyle = new Map<AbilitySpec["style"], AbilitySpec>();
+  for (const ability of abilities) {
+    if (!ability.autoAttack || basicByStyle.has(ability.style)) continue;
+    basicByStyle.set(ability.style, ability);
+  }
+  return basicByStyle;
+}
+
 export function createRuntime(input: CastContextInput): SimulationRuntime {
   const adrenalineCap = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
@@ -85,8 +120,8 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   return {
     input,
     horizon: input.horizonTicks,
-    byId: new Map(input.abilities.map((a) => [a.id, a])),
-    basicByStyle: new Map(input.abilities.filter((a) => a.autoAttack).map((a) => [a.style, a])),
+    byId: mapAbilitiesById(input.abilities),
+    basicByStyle: mapBasicsByStyle(input.abilities),
     queue: new EventQueue<SimulationRuntime>(),
     state: newRotationState({
       adrenaline: input.startingAdrenaline,

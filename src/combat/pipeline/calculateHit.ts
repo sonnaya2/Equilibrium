@@ -1,7 +1,7 @@
 import { bandOf, type DamageBand } from "../core/abilityDamage";
 import { baseCritDamageMultiplier, critProbability, type CritLayers } from "../core/critical";
 import { applyDamagePotential, damagePotential } from "../core/damagePotential";
-import { applyHitCap, standardHitCap, type HitCapRule } from "../core/hitCaps";
+import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_WIKI } from "../data/sources";
 import { preciseMinHitAddition } from "../shared/perks";
@@ -111,14 +111,25 @@ export function calculateHit(input: HitInput): HitResult {
   return calculateRawHitBand({ ...input, min, max });
 }
 
+function assertIntegerBandBounds(min: number, max: number): void {
+  if (!Number.isFinite(min) || !Number.isFinite(max)) {
+    throw new RangeError(`calculateRawHitBand: non-finite band ${min}-${max}`);
+  }
+  if (!Number.isInteger(min) || !Number.isInteger(max)) {
+    throw new RangeError(`calculateRawHitBand: non-integer band ${min}-${max}`);
+  }
+  if (min < 0) {
+    throw new RangeError(`calculateRawHitBand: negative minimum ${min}`);
+  }
+  if (min > max) {
+    throw new RangeError(`calculateRawHitBand: inverted band ${min}-${max}`);
+  }
+}
+
 /** Resolve an already-composed inclusive integer band through the normal hit pipeline. */
 export function calculateRawHitBand(input: RawHitBandInput): HitResult {
-  if (!Number.isFinite(input.min) || !Number.isFinite(input.max) || input.min < 0) {
-    throw new RangeError(`calculateRawHitBand: bad band ${input.min}-${input.max}`);
-  }
-  if (input.min > input.max) {
-    throw new RangeError(`calculateRawHitBand: inverted band ${input.min}-${input.max}`);
-  }
+  assertIntegerBandBounds(input.min, input.max);
+  if (input.cap) normalizeHitCapRule(input.cap);
   const p = critProbability(input.crit);
   const critMult =
     p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
@@ -131,7 +142,7 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
   const critExpected =
     critMult === null ? nonCritExpected : exactMean(input.min, input.max, critMult, input);
   const expected = (1 - p) * nonCritExpected + p * critExpected;
-  const capRule = input.cap ?? standardHitCap;
+  const capRule = normalizeHitCapRule(input.cap ?? standardHitCap);
   const canClip =
     !capRule.bypass &&
     Math.max(runPass(input.max, null, input, false), runPass(input.max, critMult, input, false)) >

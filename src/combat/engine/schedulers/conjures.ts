@@ -1,5 +1,6 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { calculateHit } from "../../pipeline/calculateHit";
+import { mulFloor } from "../../core/rounding";
 import {
   COMMAND_SKELETON_LAST_HIT_OFFSET,
   COMMAND_SKELETON_RAAAR_DELAY_TICKS,
@@ -22,7 +23,7 @@ import {
   type ActiveSkeletonWarrior,
   type AutoAttackingConjure,
 } from "../../styles/necromancy/conjures";
-import type { CombatModifier } from "../../types";
+import type { CombatModifier, SourceReference } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
@@ -45,18 +46,42 @@ import { patchConjures } from "../runtime/state";
  * globals (wiki: conjures take Eruptive/Equilibrium/Vulnerability/set effects,
  * never the player's prayers).
  */
-const SPIRIT_PROBE: AbilitySpec = {
+const FIRST_NECROMANCER_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/First_Necromancer%27s_equipment",
+  title: "First Necromancer's equipment",
+  verifiedAt: "2026-07-31",
+};
+
+export const SPIRIT_MODIFIER_SCOPE = {
   id: "spirit_auto",
   name: "Spirit auto",
   style: "necromancy",
   category: "basic",
   hits: [],
-};
+} as const satisfies AbilitySpec;
+
+export function conjureBasicDamageModifier(mult: number): CombatModifier {
+  return {
+    id: "equipment:first-necromancer-conjure-basic",
+    stage: "postHit",
+    priority: 0,
+    applies: () => true,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+    source: FIRST_NECROMANCER_SOURCE,
+  };
+}
+
+export function resolveConjureModifiers(
+  modifiers: CombatModifier[] | ((ability: AbilitySpec) => CombatModifier[]) | undefined,
+): CombatModifier[] {
+  const resolved =
+    typeof modifiers === "function" ? modifiers(SPIRIT_MODIFIER_SCOPE) : (modifiers ?? []);
+  return conjureEligibleModifiers(resolved);
+}
 
 function conjureModifiers(rt: SimulationRuntime): CombatModifier[] {
-  const modifiers = rt.input.modifiers;
-  const resolved = typeof modifiers === "function" ? modifiers(SPIRIT_PROBE) : (modifiers ?? []);
-  return conjureEligibleModifiers(resolved);
+  return resolveConjureModifiers(rt.input.modifiers);
 }
 
 function spiritEventLive(
@@ -99,24 +124,28 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
       const live = findConjure(eventRt.state.necromancy.conjures, spirit.id);
       if (!profile || !live || live.untilTick !== spirit.untilTick) return NO_DAMAGE;
       const mult = live.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
+      const scale = input.conjureBasicDamageMult ?? 1;
+      const modifiers = conjureModifiers(eventRt);
+      const hitMods =
+        scale === 1 ? modifiers : [...modifiers, conjureBasicDamageModifier(scale)];
       const hit = calculateHit({
         base: input.base,
         band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },
         level: input.level,
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
-        modifiers: conjureModifiers(eventRt),
+        modifiers: hitMods,
         context: input.context,
         cap: input.cap,
       });
-      const scale = input.conjureBasicDamageMult ?? 1;
       return {
         damage: {
-          min: hit.min * scale,
-          max: hit.max * scale,
-          expected: hit.expected * scale,
-          capLoss: hit.capLoss * scale,
+          min: hit.min,
+          max: hit.max,
+          expected: hit.expected,
+          capLoss: hit.capLoss,
         },
+        hitDetail: hit,
       };
     },
   });
@@ -195,7 +224,11 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
     patchSpirit(rt, spirit, { ...spirit, commandResumeTick: resumeTick });
     return;
   }
-  if (pending) rt.spiritEventMeta.delete(pending.seq); // suppressed: the event dies
+  if (pending) {
+    rt.queue.cancelBySeq(pending.seq);
+    rt.spiritEventMeta.delete(pending.seq);
+    rt.spiritHitCounts.delete(`${spirit.id}:${spirit.untilTick}:auto`);
+  }
   const next: ActiveSkeletonWarrior = { ...spirit, auto: { nextTick: resumeTick } };
   patchSpirit(rt, spirit, next);
   if (spiritAutoPending(next)) {
@@ -215,6 +248,7 @@ export function processSpiritEvent(
   const live = spiritEventLive(rt, event);
   if (!live) return;
   recordResolved(rt, event, event.resolve(rt, event.tick));
+  rt.spiritEventMeta.delete(event.seq);
   if (live.kind === "poison") {
     // Only the zombie has a poison track, and the type says so.
     if (live.spirit.id !== "putrid_zombie") return;

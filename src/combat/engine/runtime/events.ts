@@ -138,6 +138,13 @@ export class EventQueue<RT = unknown> {
     return before - this.items.length;
   }
 
+  /** Remove one pending event by seq; returns true when it was present. */
+  cancelBySeq(seq: number): boolean {
+    const before = this.items.length;
+    this.items = this.items.filter((e) => e.seq !== seq);
+    return this.items.length < before;
+  }
+
   /** Still-pending events, in order. */
   pending(): readonly ScheduledEvent<RT>[] {
     return this.items;

@@ -23,10 +23,42 @@ import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
 import { costOf, spendOf } from "./rules";
+import {
+  firstEligibleDirectHitIndex,
+  hasDamagingHits,
+  hasFuryConsumingHit,
+} from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
+
+/** Explicit Greater Barge opener idle policy when lastAttackTick is unset (default 0). */
+export const GREATER_BARGE_OPENER_IDLE_TICKS = 0;
+
+type PrecombatIdleInput = { precombatIdleTicks?: number };
+
+function resolveOpenerIdleTicks(input: PrecombatIdleInput): number {
+  const raw = input.precombatIdleTicks;
+  if (raw === undefined) return GREATER_BARGE_OPENER_IDLE_TICKS;
+  if (!Number.isInteger(raw) || raw < 0) {
+    throw new RangeError(`precombatIdleTicks must be a non-negative integer, got ${raw}`);
+  }
+  return raw;
+}
+
+function meleeIdleTicksAt(
+  rt: SimulationRuntime,
+  candidate: number,
+  abilityStyle: AbilitySpec["style"],
+  hitCount: number,
+): number {
+  if (abilityStyle !== "melee" || hitCount === 0) return 0;
+  if (rt.state.target.lastAttackTick < 0) {
+    return resolveOpenerIdleTicks(rt.input as PrecombatIdleInput);
+  }
+  return candidate - rt.state.target.lastAttackTick;
+}
 
 /**
  * A state change decided during preparation and applied at commit, in list
@@ -120,11 +152,12 @@ export function prepareCast(
       };
       bloodlustSpend = melee.bloodlustExtraHits.threshold;
     } else if (melee.bloodlustMissingHp && stacks >= melee.bloodlustMissingHp.threshold) {
-      // +1% per 1% of the target's missing LP, capped (wiki Bloodlust). Without
-      // target HP input the stacks are still spent but no bonus is invented.
+      // When target HP is unavailable, do not invent HP and do not spend stacks.
       const hp = input.targetHpPercent;
-      empowerMult = hp != null ? 1 + Math.min(melee.bloodlustMissingHp.capPct, 100 - hp) / 100 : 1;
-      bloodlustSpend = melee.bloodlustMissingHp.threshold;
+      if (hp != null) {
+        empowerMult = 1 + Math.min(melee.bloodlustMissingHp.capPct, 100 - hp) / 100;
+        bloodlustSpend = melee.bloodlustMissingHp.threshold;
+      }
     }
   }
   if (ability.style === "necromancy") {
@@ -170,12 +203,7 @@ export function prepareCast(
     }
   }
 
-  const meleeIdleTicks =
-    ability.style !== "melee" || working.hits.length === 0
-      ? 0
-      : rt.state.target.lastAttackTick < 0
-        ? 0
-        : candidate - rt.state.target.lastAttackTick;
+  const meleeIdleTicks = meleeIdleTicksAt(rt, candidate, ability.style, working.hits.length);
   let endlessAssaultGrantUntilTick: number | undefined;
   if (ability.id === "greater_barge" && working.hits.length > 0) {
     working = {
@@ -201,8 +229,8 @@ export function prepareCast(
   // first hit of the channeled ability will receive the boost"). Chaos Roar is
   // the exception among them: channels get ×1.75 on the first hit, non-channel
   // multi-hit abilities on every hit, and bleeds benefit too.
-  const damaging = working.hits.length > 0;
-  const nonBleed = working.hits.some((h) => h.critEligible !== false);
+  const damaging = hasDamagingHits(working.hits);
+  const furyEligible = hasFuryConsumingHit(working.hits);
   const chaosRoarConsume =
     ability.style === "melee" &&
     damaging &&
@@ -210,10 +238,10 @@ export function prepareCast(
     candidate < rt.state.melee.chaosRoarUntilTick;
   const greaterFuryConsume =
     ability.style === "melee" &&
-    nonBleed &&
+    furyEligible &&
     rt.state.melee.greaterFuryUntilTick > 0 &&
     candidate < rt.state.melee.greaterFuryUntilTick;
-  const furyConsume = ability.style === "melee" && nonBleed && rt.state.melee.furyCritBonus;
+  const furyConsume = ability.style === "melee" && furyEligible && rt.state.melee.furyCritBonus;
   const enduringRuinConsume =
     ability.style === "melee" &&
     damaging &&
@@ -237,7 +265,7 @@ export function prepareCast(
     channelled: working.channelTicks != null,
     greaterFuryActive: greaterFuryConsume,
     furyActive: furyConsume,
-    firstEligibleHitIndex: working.hits.findIndex((h) => h.critEligible !== false),
+    firstEligibleHitIndex: firstEligibleDirectHitIndex(working.hits),
     empowerMult,
     searingWindsAtCast,
     enduringRuinBonus: enduringRuinConsume ? rt.state.melee.enduringRuin.nextAttackBonus : 0,

@@ -18,7 +18,11 @@ import {
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
-import { packageCritical, type EventResolution } from "./types";
+import {
+  packageCritical,
+  type AttachedDamageComponent,
+  type EventResolution,
+} from "./types";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
 
@@ -118,10 +122,7 @@ export function resolveCastHit(
     preciseRank: input.preciseRank,
   });
 
-  let min = hit.min;
-  let max = hit.max;
-  let expected = hit.expected;
-  let capLoss = hit.capLoss;
+  const components: AttachedDamageComponent[] = [];
   if (snap.searingWindsAtCast) {
     const bonus = calculateHit({
       base: input.base,
@@ -140,20 +141,45 @@ export function resolveCastHit(
       },
       cap: input.cap,
     });
-    min += bonus.min;
-    max += bonus.max;
-    expected += bonus.expected;
-    capLoss += bonus.capLoss;
+    components.push({
+      id: "searing_winds",
+      damage: {
+        min: bonus.min,
+        max: bonus.max,
+        expected: bonus.expected,
+        critExpected: bonus.critExpected,
+        capLoss: bonus.capLoss,
+        critical: packageCritical(bonus.critChance, bonus.critExpected, bonus.nonCritExpected),
+      },
+      hitDetail: bonus,
+      attached: true,
+      hitCapPolicy: "separate",
+    });
   }
+
+  let min = hit.min;
+  let max = hit.max;
+  let expected = hit.expected;
+  let capLoss = hit.capLoss;
+  let critExpected = hit.critExpected;
+  for (const c of components) {
+    min += c.damage.min;
+    max += c.damage.max;
+    expected += c.damage.expected;
+    capLoss += c.damage.capLoss ?? 0;
+    critExpected += c.damage.expected;
+  }
+
   return {
     damage: {
       min,
       max,
       expected,
-      critExpected: hit.critExpected,
+      critExpected,
       capLoss,
       critical: packageCritical(hit.critChance, hit.critExpected, hit.nonCritExpected),
     },
     hitDetail: hit,
+    ...(components.length > 0 ? { components } : {}),
   };
 }

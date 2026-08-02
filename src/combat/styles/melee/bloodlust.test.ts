@@ -214,13 +214,13 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
     expect(lastCast(full).result.expected).toBeCloseTo(8 * 650);
   });
 
-  it("an empowered Flurry without target HP spends stacks but invents no bonus", () => {
+  it("an empowered Flurry without target HP preserves stacks and invents no bonus", () => {
     const ctx = createCastContext(baseInput);
     const attack = ctx.byId.get("attack")!;
     const flurry = ctx.byId.get("flurry")!;
     for (let i = 0; i < 4; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.performCast(flurry, ctx.getState().tick, false).ok).toBe(true);
-    expect(ctx.getState().melee.bloodlust.stacks).toBe(0);
+    expect(ctx.getState().melee.bloodlust.stacks).toBe(4);
     const s = ctx.finish();
     expect(s.casts[4].result.expected).toBeCloseTo(8 * 650);
   });

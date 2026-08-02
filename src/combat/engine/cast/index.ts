@@ -12,7 +12,9 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 import { rngProc } from "../simulation/contracts";
 
-const EMPTY_RESULT: AbilityResult = { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
+function emptyAbilityResult(): AbilityResult {
+  return { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
+}
 
 export { costOf, spendOf } from "./rules";
 export type { PreparedCast } from "./prepare";
@@ -97,7 +99,7 @@ export function performOffGcdCast(rt: SimulationRuntime, ability: AbilitySpec): 
   const record: CastRecord = {
     tick: rt.state.tick,
     abilityId: ability.id,
-    result: EMPTY_RESULT,
+    result: emptyAbilityResult(),
     adrenalineAfter: rt.state.adrenaline,
     adrenalineBefore: rt.state.adrenaline,
     listedCost: ability.adrenaline?.cost ?? 0,

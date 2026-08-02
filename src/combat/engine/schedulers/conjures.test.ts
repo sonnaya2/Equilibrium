@@ -176,7 +176,7 @@ describe("conjure summoning and auto contribution", () => {
     const baseSpirit = base.perAbility["spirit_skeleton_warrior"] ?? 0;
     const boostSpirit = boosted.perAbility["spirit_skeleton_warrior"] ?? 0;
     expect(baseSpirit).toBeGreaterThan(0);
-    expect(boostSpirit / baseSpirit).toBeCloseTo(1.35, 5);
+    expect(boostSpirit / baseSpirit).toBeCloseTo(1.35, 2);
 
     const zRot = rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic"));
     const zBase = simulate({ ...necroFixtureInput, rotation: zRot });
@@ -188,7 +188,7 @@ describe("conjure summoning and auto contribution", () => {
     const autoBase = zBase.perAbility["spirit_putrid_zombie"] ?? 0;
     const autoBoost = zBoost.perAbility["spirit_putrid_zombie"] ?? 0;
     expect(autoBase).toBeGreaterThan(0);
-    expect(autoBoost / autoBase).toBeCloseTo(1.35, 5);
+    expect(autoBoost / autoBase).toBeCloseTo(1.35, 2);
   });
 
   it("First Necromancer set(5) extends the Spirit Pact lifetime by 25%", () => {

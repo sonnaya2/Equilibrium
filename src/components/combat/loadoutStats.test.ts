@@ -556,6 +556,28 @@ describe("loadoutStats", () => {
     expect(defenderDp).toBeCloseTo((shieldDp - 0.1) * 1.03 + 0.1);
   });
 
+  it("reports necromancy dual only with a conduit; shield OH is not a conjure shape", () => {
+    // Wiki Conjuration: equipment Conduit. Siphon + shield is necrotic-capable, not dual.
+    const dual: Loadout = {
+      ...DEFAULT_LOADOUT,
+      style: "necromancy",
+      equipmentSlots: {
+        mainhand: "item:omni-guard",
+        offhand: "item:soulbound-lantern",
+      },
+    };
+    const tank: Loadout = {
+      ...DEFAULT_LOADOUT,
+      style: "necromancy",
+      equipmentSlots: {
+        mainhand: "item:omni-guard",
+        offhand: "item:malevolent-kiteshield",
+      },
+    };
+    expect(loadoutStats(dual).weaponConfiguration).toBe("necromancy");
+    expect(loadoutStats(tank).weaponConfiguration).toBe("shield");
+  });
+
   it("necromancy mainhand + conduit uses the explicit necromancy formula", () => {
     const necro: Loadout = {
       ...base,

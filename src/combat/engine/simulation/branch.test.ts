@@ -99,12 +99,83 @@ describe("snapshotRuntime shares no mutable collection", () => {
       ]),
     ).toHaveLength(2);
 
+    // Historical damage alone must not block a merge when future state matches.
     const differentDamage = snapshotRuntime(rt);
     differentDamage.totalExpected = 50_000;
     expect(
       mergeBranches([
         { weight: 0.4, rt },
         { weight: 0.6, rt: differentDamage },
+      ]),
+    ).toHaveLength(1);
+  });
+
+  it("merges future-equivalent branches and weight-averages historical ledgers", () => {
+    const low = createRuntime(meleeInput);
+    low.totalExpected = 100;
+    low.totalMin = 80;
+    low.totalMax = 120;
+    low.perAbility.attack = 100;
+    low.damageByTick[0] = 100;
+
+    const high = snapshotRuntime(low);
+    high.totalExpected = 300;
+    high.totalMin = 240;
+    high.totalMax = 360;
+    high.perAbility.attack = 300;
+    high.damageByTick[0] = 300;
+
+    const merged = mergeBranches([
+      { weight: 0.25, rt: low },
+      { weight: 0.75, rt: high },
+    ]);
+    expect(merged).toHaveLength(1);
+    const rt = merged[0]!.rt;
+    expect(merged[0]!.weight).toBe(1);
+    // 0.25*100 + 0.75*300 = 250
+    expect(rt.totalExpected).toBe(250);
+    expect(rt.totalMin).toBe(200);
+    expect(rt.totalMax).toBe(300);
+    expect(rt.perAbility.attack).toBe(250);
+    expect(rt.damageByTick[0]).toBe(250);
+  });
+
+  it("does not merge when pending queue signatures differ", () => {
+    const a = createRuntime(meleeInput);
+    const noop = () => ({ damage: { min: 0, max: 0, expected: 0 } });
+    a.queue.push({
+      tick: 5,
+      seq: 1,
+      family: "hit",
+      abilityId: "future-a",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      resolve: noop,
+    });
+    a.nextSeq = 2;
+
+    const b = snapshotRuntime(a);
+    b.queue.shift();
+    b.queue.push({
+      tick: 5,
+      seq: 1,
+      family: "hit",
+      abilityId: "future-b",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      resolve: noop,
+    });
+
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
       ]),
     ).toHaveLength(2);
   });

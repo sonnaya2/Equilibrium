@@ -52,7 +52,17 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   };
 }
 
-/** Future evolution and finalization are fully determined by this signature. */
+/**
+ * Future evolution signature. Historical damage ledgers (`totalExpected`,
+ * `totalMin`/`totalMax`, `perAbility`, `damageByTick`, event/cast logs) are
+ * intentionally omitted: `mergePair` combines them as a weight-weighted mean,
+ * so two branches that only differ in past damage may merge when their
+ * remaining state, queue, and counters match.
+ *
+ * Keep `endTick` — it feeds metric denominators and is not re-derived solely
+ * from future events once a branch is terminal. Keep hitDetails / spirit meta
+ * because pending derived events read them at land time.
+ */
 function branchKey(rt: SimulationRuntime): string {
   return JSON.stringify([
     rt.state,
@@ -62,7 +72,6 @@ function branchKey(rt: SimulationRuntime): string {
     [...rt.scheduledSpiritTracks].sort(),
     [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
     rt.endTick,
-    rt.totalExpected,
     rt.nextSeq,
     rt.nextCastSeq,
   ]);

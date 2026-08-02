@@ -75,6 +75,7 @@ export function scheduleCastEvents(
     // from timing or crit eligibility: a delayed direct hit stays direct, and a
     // bleed tick landing on the cast tick is still a bleed tick.
     const isDot = hitSpec.dot === true || prepared.channelAsDot;
+    const originKind = isCommand ? "command" : isDot ? "dot" : "direct";
     rt.queue.push({
       tick: landTick,
       seq,
@@ -85,6 +86,7 @@ export function scheduleCastEvents(
       attached: false,
       procEligible: !isDot,
       recursionAllowed: false,
+      originKind,
       cancelOwner: castSeq,
       ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
       ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
@@ -121,6 +123,7 @@ export function scheduleCastEvents(
         attached: false,
         procEligible: !derived.dot,
         recursionAllowed: false,
+        originKind: derived.dot ? "dot" : "direct",
         cancelOwner: castSeq,
         derivedFrom: sourceSeq,
         resolve: (eventRt) => resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct),

@@ -7,7 +7,7 @@ import {
 } from "../pipeline/calculateAbility";
 import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/calculateHit";
 import type { CombatContext, CombatModifier } from "../types";
-import { blessingRule, type ResolvedLeagueRules } from "./ruleset";
+import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
 
@@ -15,7 +15,14 @@ export interface LeagueDamageComponent {
   effectId: string;
   blessingId: BlessingId;
   attached: boolean;
+  /** Legacy application weight; kept for older consumers and EV packing. */
   expectedOccurrences: number;
+  /** Probability rolls this component represents (Inferno 5% = 1). */
+  triggerRolls: number;
+  /** Expected activations (0.05 for one 5% roll; 1 for a deterministic rider). */
+  expectedActivations: number;
+  /** Expected separate hits; 0 when attached. */
+  expectedSeparateHits: number;
   damage: ResolvedDamage;
   hitDetail?: HitResult;
 }
@@ -95,6 +102,11 @@ export interface LeagueDamageInput {
   source: BlessingDamageSource;
   /** True when the instance is an attached component rather than its own hit. */
   attached?: boolean;
+  /**
+   * Sim land tick for timed max-life effects (Powerburst). Defaults to 0 so
+   * single-cast views use the freeze-at-request window.
+   */
+  landTick?: number;
   base: number;
   level: number;
   accuracy: number;
@@ -158,11 +170,17 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
+  // Default path excludes the outgoing rider (unverified magnitude/trigger).
+  // Maximum-life multiplier stays active via blessingLifeMultiplier regardless.
   const bigBoned = blessingRule(input.rules, "big-boned");
-  if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
+  if (
+    input.rules.includeBigBonedOutgoingDamage &&
+    eligible.rider &&
+    bigBoned?.maxLifeDamagePercent !== undefined
+  ) {
     const hit = calculateHit({
       ...shared,
-      base: input.rules.maximumLife,
+      base: resolveMaximumLife(input.rules, input.landTick ?? 0),
       band: {
         minPct: bigBoned.maxLifeDamagePercent * 100,
         maxPct: bigBoned.maxLifeDamagePercent * 100,
@@ -174,6 +192,9 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "big-boned",
       attached: true,
       expectedOccurrences: 1,
+      triggerRolls: 0,
+      expectedActivations: 1,
+      expectedSeparateHits: 0,
       damage: damageOf(hit),
       hitDetail: hit,
     });
@@ -195,11 +216,15 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "abyssal-cinders",
       attached: true,
       expectedOccurrences: 1,
+      triggerRolls: 0,
+      expectedActivations: 1,
+      expectedSeparateHits: 0,
       damage: damageOf(hit),
       hitDetail: hit,
     });
   }
   if (eligible.onHit && cinders?.inferno) {
+    const chance = cinders.inferno.chance;
     const hit = calculateHit({
       ...shared,
       base: input.base,
@@ -213,8 +238,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       effectId: "inferno-of-zamorak",
       blessingId: "abyssal-cinders",
       attached: false,
-      expectedOccurrences: cinders.inferno.chance,
-      damage: expectedProc(hit, cinders.inferno.chance),
+      expectedOccurrences: chance,
+      triggerRolls: 1,
+      expectedActivations: chance,
+      expectedSeparateHits: chance,
+      damage: expectedProc(hit, chance),
     });
   }
 
@@ -237,6 +265,9 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "striking-light",
       attached: false,
       expectedOccurrences: 1,
+      triggerRolls: 0,
+      expectedActivations: 1,
+      expectedSeparateHits: 1,
       damage: damageOf(hit),
       hitDetail: hit,
     });
@@ -293,6 +324,9 @@ export function graspOfGuthixComponent(
     blessingId: "barkscales",
     attached: false,
     expectedOccurrences: applications,
+    triggerRolls: 0,
+    expectedActivations: applications,
+    expectedSeparateHits: applications,
     damage: {
       ...damage,
       min: damage.min * applications,

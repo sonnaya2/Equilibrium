@@ -38,6 +38,19 @@ export type EventFamily =
   "hit" | "dot" | "proc" | "blessing" | "conjureAuto" | "command" | "poison";
 
 /**
+ * Origin of the damage instance for analysis classification. Derived / attached
+ * components preserve the parent's origin (e.g. Big Boned on a bleed stays "dot")
+ * rather than inheriting only `family: "blessing"`.
+ */
+export type DamageOriginKind =
+  | "direct"
+  | "dot"
+  | "command"
+  | "conjure"
+  | "proc"
+  | "blessing";
+
+/**
  * RT is the runtime context handed to `resolve` at land time. Events never close
  * over a runtime directly, so a branched/cloned runtime can share pending events
  * safely (each branch resolves them against its own state).
@@ -53,8 +66,19 @@ export interface ScheduledEvent<RT = unknown> {
   procEligible: boolean; // may trigger on-hit procs / stack generation / hit counters
   recursionAllowed: boolean; // may recursively create events of the same family
   blessingId?: BlessingId;
-  /** Expected applications represented by a deterministic expected-value event. */
+  /**
+   * Legacy application weight for expected-value events. Prefer the explicit
+   * multiplicity fields below; kept so older schedulers and tests still work.
+   */
   expectedOccurrences?: number;
+  /** Probability rolls represented by this event (e.g. one Inferno 5% roll). */
+  triggerRolls?: number;
+  /** Expected activations represented (0.05 for one 5% roll). */
+  expectedActivations?: number;
+  /** Expected separate hits represented; 0 when attached. */
+  expectedSeparateHits?: number;
+  /** Damage-origin provenance for analysis (direct vs DoT vs proc…). */
+  originKind?: DamageOriginKind;
   cancelOwner?: number; // cast sequence whose cancellation removes this event
   /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
   derivedFrom?: number;

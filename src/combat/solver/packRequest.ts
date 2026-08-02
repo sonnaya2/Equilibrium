@@ -21,6 +21,7 @@ import type { CombatStyle } from "../types";
 import { combatRevolutionBars } from "../data";
 import { revoManagedSlots } from "../data/specs";
 import { engineSpecs } from "../abilities/registry";
+import { clampSolverBarSizes, DEFAULT_MAX_BAR_SIZE, MIN_SOLVER_BAR_SIZE } from "./solutionStore";
 
 export interface PackSolverRequestInput {
   stats: CalcStats;
@@ -126,6 +127,8 @@ function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
 
 /** Pack a structured-clone-safe solver request from live combat UI state. */
 export function packSolverRequest(input: PackSolverRequestInput): SerializableSolverRequest {
+  // Freeze once per request — never re-sample Date.now() per evaluation.
+  const now = input.now ?? Date.now();
   const style = input.style ?? input.loadout.style;
   const durationSeconds = input.durationSeconds ?? 300;
   /** Short explore horizon for ranking; full 300s only on finalists. */
@@ -134,6 +137,11 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     input.useBuildRegions === false
       ? (input.unlockedRegions ?? [])
       : unlockedRegions(input.build);
+
+  const sizes = clampSolverBarSizes(
+    input.minBarSize ?? MIN_SOLVER_BAR_SIZE,
+    input.maxBarSize ?? DEFAULT_MAX_BAR_SIZE,
+  );
 
   return defaultSerializableRequest({
     loadout: packSimBase(input.stats, input.loadout),
@@ -144,15 +152,15 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     tier: input.tier ?? "thorough",
     profileId: input.profileId ?? "balanced",
     customWeights: input.customWeights,
-    maxBarSize: input.maxBarSize ?? 10,
-    minBarSize: input.minBarSize ?? 4,
+    minBarSize: sizes.minBarSize,
+    maxBarSize: sizes.maxBarSize,
     includePartial: input.includePartial,
     includeUnknownAvailability: input.includeUnknownAvailability,
     disabledAbilityIds: input.disabledAbilityIds,
     unlockedRegions: regions as RegionId[],
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],
     ruleset: input.stats.league.ruleset,
-    now: input.now ?? 0,
+    now,
     authoredSeedBars: staticSeedBars(style),
     userBar: input.userBar,
   });

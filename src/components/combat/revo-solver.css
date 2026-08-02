@@ -1,10 +1,10 @@
 /* Solver live status — stone plate, gem progression track, mini best-bar strip */
 .revo-solver-status {
   margin-top: 0.55rem;
-  padding: 0.55rem 0.65rem 0.5rem;
+  padding: 0.55rem 0.65rem 0.55rem;
   border: 1px solid var(--combat-gold-dim);
   background:
-    linear-gradient(180deg, rgb(46 203 143 / 5%), transparent 2.2rem),
+    linear-gradient(180deg, rgb(46 203 143 / 5.5%), transparent 2.4rem),
     color-mix(in srgb, var(--combat-inset) 92%, black);
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 45%);
 }
@@ -15,7 +15,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 0.35rem 0.75rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
 }
 
 .revo-solver-status__phase {
@@ -49,41 +49,140 @@
   font-size: 0.68rem;
 }
 
+/* ── Progress track ───────────────────────────────────────────────────────
+   Channel + fill + tip. Fill width from --fill (0–1). Live sheen runs inside
+   the fill only so the empty rail stays still stone. Finalize gets a slower
+   breathe so "search budget spent" never reads as frozen-complete. */
+
 .revo-solver-track {
+  --fill: 0;
   position: relative;
-  height: 0.3rem;
+  height: 0.48rem;
   overflow: hidden;
   border: 1px solid var(--combat-gold-dim);
-  background: rgb(0 0 0 / 45%);
   border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 55%), rgb(0 0 0 / 28%)),
+    color-mix(in srgb, var(--combat-inset) 88%, black);
+  box-shadow:
+    inset 0 1px 2px rgb(0 0 0 / 55%),
+    inset 0 0 0 1px rgb(0 0 0 / 25%);
+}
+
+.revo-solver-track__rail {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 7px,
+    rgb(133 98 58 / 7%) 7px,
+    rgb(133 98 58 / 7%) 8px
+  );
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 .revo-solver-track__fill {
+  position: relative;
+  z-index: 1;
   width: calc(var(--fill, 0) * 100%);
   max-width: 100%;
   height: 100%;
+  overflow: hidden;
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--combat-gem-dark) 70%, black),
-    var(--combat-gem)
+    color-mix(in srgb, var(--combat-gem-dark) 78%, black) 0%,
+    color-mix(in srgb, var(--combat-gem) 88%, var(--combat-gem-dark)) 42%,
+    var(--combat-gem) 72%,
+    color-mix(in srgb, var(--combat-gem-bright) 55%, var(--combat-gem)) 100%
   );
-  box-shadow: 0 0 8px rgb(46 203 143 / 18%);
-  transition: width 160ms ease-out;
+  box-shadow:
+    0 0 10px rgb(46 203 143 / 16%),
+    inset 0 1px 0 rgb(255 255 255 / 12%);
+  transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.revo-solver-track--live::after {
-  content: "";
+/* Internal sheen — clipped to fill so empty rail stays quiet */
+.revo-solver-track__sheen {
   position: absolute;
   inset: 0;
-  width: 38%;
+  width: 42%;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in srgb, var(--combat-gem-bright) 55%, transparent) 45%,
-    transparent 90%
+    color-mix(in srgb, var(--combat-gem-bright) 38%, transparent) 48%,
+    transparent 100%
   );
-  animation: revo-track-sweep 1.15s ease-in-out infinite;
+  opacity: 0;
   pointer-events: none;
+}
+
+.revo-solver-track--live .revo-solver-track__sheen {
+  opacity: 1;
+  animation: revo-fill-sheen 1.35s ease-in-out infinite;
+}
+
+/* Leading tip — sharp gem edge that reads as "still working" */
+.revo-solver-track__tip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--combat-gem-bright) 70%, white),
+    var(--combat-gem-bright)
+  );
+  box-shadow: 0 0 6px rgb(46 203 143 / 45%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.revo-solver-track--live .revo-solver-track__tip {
+  opacity: 0.9;
+  animation: revo-tip-breathe 1.1s ease-in-out infinite;
+}
+
+/* Finalize: slower, denser — search budget is done, scoring is not */
+.revo-solver-track--finalize {
+  border-color: color-mix(in srgb, var(--combat-gem) 35%, var(--combat-gold-dim));
+  animation: revo-track-breathe 1.8s ease-in-out infinite;
+}
+
+.revo-solver-track--finalize .revo-solver-track__fill {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--combat-gem-dark) 70%, black) 0%,
+    var(--combat-gem) 55%,
+    color-mix(in srgb, var(--combat-gem-bright) 50%, var(--combat-gold-bright)) 100%
+  );
+  box-shadow:
+    0 0 12px rgb(46 203 143 / 22%),
+    inset 0 1px 0 rgb(255 255 255 / 14%);
+}
+
+.revo-solver-track--finalize .revo-solver-track__sheen {
+  animation-duration: 1.85s;
+  width: 48%;
+}
+
+.revo-solver-track--done .revo-solver-track__fill {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--combat-gem-dark) 65%, black),
+    var(--combat-gem),
+    color-mix(in srgb, var(--combat-gem-bright) 40%, var(--combat-gem))
+  );
+  box-shadow: 0 0 8px rgb(46 203 143 / 14%);
+  transition: none;
+}
+
+.revo-solver-track--done .revo-solver-track__tip {
+  opacity: 0.55;
+  animation: none;
+  box-shadow: none;
 }
 
 .revo-solver-preview {
@@ -132,12 +231,38 @@
   border: 1px solid rgb(133 98 58 / 28%);
 }
 
-@keyframes revo-track-sweep {
+@keyframes revo-fill-sheen {
   0% {
     transform: translateX(-120%);
   }
   100% {
-    transform: translateX(320%);
+    transform: translateX(280%);
+  }
+}
+
+@keyframes revo-tip-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    box-shadow: 0 0 4px rgb(46 203 143 / 25%);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 9px rgb(46 203 143 / 55%);
+  }
+}
+
+@keyframes revo-track-breathe {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 2px rgb(0 0 0 / 55%),
+      0 0 0 0 rgb(46 203 143 / 0%);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 2px rgb(0 0 0 / 55%),
+      0 0 10px 0 rgb(46 203 143 / 12%);
   }
 }
 
@@ -154,8 +279,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .revo-solver-track--live::after,
+  .revo-solver-track__sheen,
+  .revo-solver-track__tip,
+  .revo-solver-track--finalize,
   .revo-solver-status__best.is-pulse {
     animation: none;
+  }
+
+  .revo-solver-track--live .revo-solver-track__tip {
+    opacity: 0.75;
+  }
+
+  .revo-solver-track__fill {
+    transition: none;
   }
 }

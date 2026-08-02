@@ -44,9 +44,13 @@ describe("snapshotRuntime shares no mutable collection", () => {
       "spiritEventMeta",
       "scheduledSpiritTracks",
       "spiritHitCounts",
+      "analysis",
     ] as const) {
       expect(clone[key], key).not.toBe(rt[key]);
     }
+    expect(clone.analysis.effects).not.toBe(rt.analysis.effects);
+    expect(clone.analysis.sources).not.toBe(rt.analysis.sources);
+    expect(clone.analysis.castKeys).not.toBe(rt.analysis.castKeys);
     // Cast records are cloned, not aliased — a branch's totals must not leak.
     expect(clone.casts[0]).not.toBe(rt.casts[0]);
     expect(clone.casts[0]!.result.hits).not.toBe(rt.casts[0]!.result.hits);
@@ -138,6 +142,97 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(rt.totalMax).toBe(300);
     expect(rt.perAbility.attack).toBe(250);
     expect(rt.damageByTick[0]).toBe(250);
+  });
+
+  it("weight-averages analysis ledgers; representative events do not drive aggregates", () => {
+    const low = createRuntime(meleeInput);
+    low.totalExpected = 100;
+    low.totalMin = 80;
+    low.totalMax = 120;
+    low.analysis.directDamage = 100;
+    low.analysis.criticalContribution = 10;
+    low.analysis.capLoss = 4;
+    low.analysis.sources.set("ability-direct", 100);
+    low.analysis.effects.set("attack", {
+      id: "attack",
+      kind: "ability-direct",
+      totalDamage: 100,
+      directDamage: 100,
+      dotDamage: 0,
+      criticalContribution: 10,
+      capLoss: 4,
+      casts: 1,
+      triggerRolls: 0,
+      expectedActivations: 1,
+      expectedSeparateHits: 1,
+      attachedComponents: 0,
+    });
+    // Representative provenance log only reflects this branch's past.
+    low.events.push({
+      tick: 0,
+      seq: 0,
+      family: "hit",
+      abilityId: "attack",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      damage: { min: 80, max: 120, expected: 100 },
+    });
+
+    const high = snapshotRuntime(low);
+    high.totalExpected = 300;
+    high.totalMin = 240;
+    high.totalMax = 360;
+    high.analysis.directDamage = 300;
+    high.analysis.criticalContribution = 30;
+    high.analysis.capLoss = 12;
+    high.analysis.sources.set("ability-direct", 300);
+    high.analysis.effects.set("attack", {
+      id: "attack",
+      kind: "ability-direct",
+      totalDamage: 300,
+      directDamage: 300,
+      dotDamage: 0,
+      criticalContribution: 30,
+      capLoss: 12,
+      casts: 1,
+      triggerRolls: 0,
+      expectedActivations: 3,
+      expectedSeparateHits: 3,
+      attachedComponents: 0,
+    });
+    high.events[0] = {
+      ...high.events[0]!,
+      damage: { min: 240, max: 360, expected: 300 },
+    };
+
+    const merged = mergeBranches([
+      { weight: 0.25, rt: low },
+      { weight: 0.75, rt: high },
+    ]);
+    expect(merged).toHaveLength(1);
+    const { rt, weight } = merged[0]!;
+    expect(weight).toBe(1);
+    expect(rt.totalExpected).toBe(250);
+    // Analysis is weight-mixed: 0.25*low + 0.75*high
+    expect(rt.analysis.directDamage).toBe(250);
+    expect(rt.analysis.criticalContribution).toBe(25);
+    expect(rt.analysis.capLoss).toBe(10);
+    expect(rt.analysis.sources.get("ability-direct")).toBe(250);
+    const attack = rt.analysis.effects.get("attack")!;
+    expect(attack.totalDamage).toBe(250);
+    expect(attack.expectedActivations).toBe(2.5);
+    expect(attack.expectedSeparateHits).toBe(2.5);
+    expect(attack.casts).toBe(1);
+    expect(attack.criticalContribution).toBe(25);
+    expect(attack.capLoss).toBe(10);
+    // keep = high (weight 0.75); events are representative, not the weighted mean.
+    expect(rt.events).toHaveLength(1);
+    expect(rt.events[0]!.damage.expected).toBe(300);
+    // Aggregates stay mixed even though the representative event is from high alone.
+    expect(rt.totalExpected).not.toBe(rt.events[0]!.damage.expected);
   });
 
   it("does not merge when pending queue signatures differ", () => {

@@ -1,4 +1,5 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
 import { commitCast, prepareSimulationCast } from "../cast";
 import { rngPointsFor } from "../cast/rules";
 import type { CastRecord, CastRng } from "./contracts";
@@ -49,6 +50,7 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     ),
     scheduledSpiritTracks: new Set(rt.scheduledSpiritTracks),
     spiritHitCounts: new Map(rt.spiritHitCounts),
+    analysis: cloneAnalysisState(rt.analysis),
   };
 }
 
@@ -95,6 +97,8 @@ function mergePair(a: Branch, b: Branch): Branch {
     const tick = Number(key);
     keep.rt.damageByTick[tick] = mix(a.rt.damageByTick[tick] ?? 0, b.rt.damageByTick[tick] ?? 0);
   }
+  // Quantitative analysis is ledger-owned: weight-mix, never rebuild from keep.events.
+  keep.rt.analysis = mixAnalysisStates(a.rt.analysis, b.rt.analysis, a.weight, b.weight);
   keep.weight = weight;
   return keep;
 }

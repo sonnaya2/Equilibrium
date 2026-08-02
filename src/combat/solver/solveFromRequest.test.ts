@@ -44,6 +44,7 @@ describe("solveFromRequest", () => {
           blessingIds: [],
           totalArmour: 0,
           maximumLife: 10_000,
+          powerburstUntilTick: 0,
           targetTiles: 1,
         },
         equipmentIds: [],

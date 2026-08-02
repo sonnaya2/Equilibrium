@@ -1,11 +1,12 @@
+import { accountAnalysisEvent } from "../analysis";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { EventResolution } from "./types";
 
 /**
  * Write generic ledgers for one landed event: totals, per-tick / per-ability
- * attribution, cast-record updates, and the provenance event log. Does not
- * schedule dependent events or apply style landed-hit transitions.
+ * attribution, cast-record updates, weighted analysis, and the provenance event
+ * log. Does not schedule dependent events or apply style landed-hit transitions.
  */
 export function recordEventAccounting(
   rt: SimulationRuntime,
@@ -21,6 +22,7 @@ export function recordEventAccounting(
   rt.damageByTick[event.tick] = (rt.damageByTick[event.tick] ?? 0) + damage.expected;
   rt.perAbility[event.abilityId] = (rt.perAbility[event.abilityId] ?? 0) + damage.expected;
   rt.endTick = Math.max(rt.endTick, event.tick + 1);
+  accountAnalysisEvent(rt.analysis, rt, event, resolution);
 
   if (event.sourceCast >= 0) {
     const record = rt.recordBySeq.get(event.sourceCast);

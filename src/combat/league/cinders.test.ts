@@ -170,7 +170,7 @@ describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
     );
   });
 
-  it("reports expected applications and average damage per application in the analysis", () => {
+  it("reports expected activations and average damage per activation in the analysis", () => {
     const summary = simulate({
       ...rangedInput,
       league: cinders(),
@@ -178,8 +178,10 @@ describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
       rotation: rotationOf("greater_ricochet"),
     });
     const inferno = summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")!;
-    // 100-200% of 1,000 base averages 1,500 per application.
-    expect(inferno.averagePerApplication).toBeCloseTo(1_500, 0);
+    // 100-200% of 1,000 base averages 1,500 per activation.
+    expect(inferno.expectedActivations).toBeCloseTo(0.35, 10);
+    expect(inferno.triggerRolls).toBeCloseTo(7, 10);
+    expect(inferno.averagePerActivation).toBeCloseTo(1_500, 0);
     expect(inferno.totalDamage).toBeCloseTo(0.35 * 1_500, 0);
   });
 });
@@ -188,7 +190,7 @@ describe("Big Boned rides every qualifying damage instance", () => {
   // "All damage you deal gains 5% of your maximum life points as bonus damage."
   const bigBoned = resolveLeagueRules(
     { ruleset: "equilibrium", blessingPicks: ["Balance"] },
-    { maximumLife: 15_000 },
+    { maximumLife: 15_000, includeBigBonedOutgoingDamage: true },
   );
 
   it("adds one component per hit of a multi-hit ability, not one per cast", () => {

@@ -32,7 +32,10 @@ export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRul
     blessingIds: new Set<BlessingId>(league.blessingIds),
     totalArmour: league.totalArmour,
     maximumLife: league.maximumLife,
+    powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
     targetTiles: league.targetTiles,
+    // Omitted / legacy payloads stay on the safe default (no outgoing rider).
+    includeBigBonedOutgoingDamage: league.includeBigBonedOutgoingDamage === true,
   };
 }
 
@@ -44,7 +47,9 @@ export function serializeLeague(league: ResolvedLeagueRules): SerializableLeague
     blessingIds: [...league.blessingIds],
     totalArmour: league.totalArmour,
     maximumLife: league.maximumLife,
+    powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
     targetTiles: league.targetTiles,
+    includeBigBonedOutgoingDamage: league.includeBigBonedOutgoingDamage === true,
   };
 }
 

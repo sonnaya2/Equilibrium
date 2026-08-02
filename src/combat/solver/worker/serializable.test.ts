@@ -54,6 +54,7 @@ function sampleSimBase(): SerializableRevolutionSimBase {
       blessingIds: ["striking-light", "splash-zone"],
       totalArmour: 1000,
       maximumLife: 10000,
+      powerburstUntilTick: 0,
       targetTiles: 1,
     },
     context: { style: "melee", ruleset: "equilibrium", targetTiles: 1 },

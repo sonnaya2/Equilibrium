@@ -1098,16 +1098,24 @@ describe("loadoutStats", () => {
         currentLife: 4000,
         buffs: { ...base.buffs, powerburstOfVitalityUntil: now + 6000 },
       };
-      expect(loadoutStats(loadout, { now }).life).toMatchObject({
+      const active = loadoutStats(loadout, { now });
+      expect(active.life).toMatchObject({
         currentLife: 8000,
         temporaryMaxLife: 19_800,
         powerburstActive: true,
       });
-      expect(loadoutStats(loadout, { now: now + 6000 }).life).toMatchObject({
+      // League rules keep undoubled max life + remaining until-tick for land-time resolve.
+      expect(active.league.maximumLife).toBe(9_900);
+      expect(active.league.powerburstUntilTick).toBe(10);
+
+      const expired = loadoutStats(loadout, { now: now + 6000 });
+      expect(expired.life).toMatchObject({
         currentLife: 4000,
         temporaryMaxLife: 9900,
         powerburstActive: false,
       });
+      expect(expired.league.maximumLife).toBe(9_900);
+      expect(expired.league.powerburstUntilTick).toBe(0);
     });
   });
 });

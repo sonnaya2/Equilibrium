@@ -203,4 +203,58 @@ describe("summary finalization", () => {
       representativeClassTicks: 10,
     });
   });
+
+  it("finalizes analysis from runtime ledgers, not the representative event log", () => {
+    const rt = createRuntime(baseInput);
+    rt.totalExpected = 500;
+    rt.endTick = 3;
+    rt.analysis.directDamage = 500;
+    rt.analysis.criticalContribution = 40;
+    rt.analysis.capLoss = 8;
+    rt.analysis.sources.set("ability-direct", 500);
+    rt.analysis.effects.set("attack", {
+      id: "attack",
+      kind: "ability-direct",
+      totalDamage: 500,
+      directDamage: 500,
+      dotDamage: 0,
+      criticalContribution: 40,
+      capLoss: 8,
+      casts: 1,
+      triggerRolls: 0,
+      expectedActivations: 2,
+      expectedSeparateHits: 2,
+      attachedComponents: 0,
+    });
+    // Event log deliberately disagrees with the ledger.
+    rt.events.push({
+      tick: 0,
+      seq: 0,
+      family: "hit",
+      abilityId: "attack",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      damage: { min: 0, max: 0, expected: 1 },
+    });
+
+    const summary = combineBranchSummaries([{ weight: 1, rt }], undefined, undefined, false);
+    expect(summary.totalExpected).toBe(500);
+    expect(summary.analysis.directDamage).toBe(500);
+    expect(summary.analysis.criticalContribution).toBe(40);
+    expect(summary.analysis.capLoss).toBe(8);
+    expect(summary.analysis.byEffect[0]).toMatchObject({
+      id: "attack",
+      totalDamage: 500,
+      expectedActivations: 2,
+      expectedSeparateHits: 2,
+      averagePerActivation: 250,
+      criticalContribution: 40,
+      capLoss: 8,
+    });
+    // Events remain representative provenance only.
+    expect(summary.events[0]?.damage.expected).toBe(1);
+  });
 });

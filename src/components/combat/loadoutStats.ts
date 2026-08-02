@@ -1,5 +1,6 @@
 import { defenceStats, type DefenceStats } from "@/combat/core/defence";
 import { lifePointStats, type LifePointStats } from "@/combat/core/lifePoints";
+import { TICK_SECONDS } from "@/combat/core/ticks";
 import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTarget";
 import {
   bitingCritChanceBonus,
@@ -241,8 +242,26 @@ export interface LoadoutStatsOptions {
   now?: number;
   blessingPicks?: readonly BlessingPath[];
   ruleset?: "base" | "equilibrium";
+  /**
+   * Experimental: include Big Boned's 5% max-life outgoing damage rider.
+   * Default false — safe totals / solver scoring exclude it.
+   */
+  includeBigBonedOutgoingDamage?: boolean;
   /** Window the incoming-combat scenario is measured over; one minute by default. */
   scenarioSeconds?: number;
+}
+
+const TICK_MS = TICK_SECONDS * 1000;
+
+/** Remaining Powerburst ticks from frozen now (half-open until-tick basis). */
+export function powerburstRemainingTicks(
+  untilMs: number | null | undefined,
+  now: number,
+): number {
+  if (untilMs == null || !Number.isFinite(untilMs)) return 0;
+  const remainingMs = untilMs - now;
+  if (!(remainingMs > 0)) return 0;
+  return Math.ceil(remainingMs / TICK_MS);
 }
 
 export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}): CalcStats {
@@ -279,7 +298,8 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     fortitude: loadout.buffs.fortitude,
     equipmentArmour: equipmentStats.armour,
   });
-  const life = lifePointStats({
+  const powerburstActive = isPowerburstOfVitalityActive(loadout, now);
+  const lifeInput = {
     constitutionLevel: loadout.constitutionLevel,
     equipmentLife: equipmentStats.life,
     reaperCrew: loadout.buffs.reaperCrew,
@@ -290,15 +310,29 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     bonfireFiremakingLevel: loadout.buffs.bonfireFiremakingLevel,
     totemOfVitality: loadout.buffs.totemOfVitality,
     overheal: loadout.buffs.overheal === "none" ? null : loadout.buffs.overheal,
-    powerburstOfVitality: isPowerburstOfVitalityActive(loadout, now),
     currentLife: loadout.currentLife ?? undefined,
     maximumLifeMultiplier: blessingLifeMultiplier(leagueLoadout),
+  } as const;
+  // UI life includes Powerburst doubling; league rules store the undoubled max
+  // and a remaining until-tick so Big Boned resolves at each land tick.
+  const life = lifePointStats({
+    ...lifeInput,
+    powerburstOfVitality: powerburstActive,
   });
+  const maximumLifeForLeague = powerburstActive
+    ? lifePointStats({ ...lifeInput, powerburstOfVitality: false }).temporaryMaxLife
+    : life.temporaryMaxLife;
+  const powerburstUntilTick = powerburstRemainingTicks(
+    loadout.buffs.powerburstOfVitalityUntil,
+    now,
+  );
 
   const league = resolveLeagueRules(leagueLoadout, {
     totalArmour: defence.totalArmour,
-    maximumLife: life.temporaryMaxLife,
+    maximumLife: maximumLifeForLeague,
+    powerburstUntilTick,
     targetTiles: loadout.target?.occupiedTiles,
+    includeBigBonedOutgoingDamage: options.includeBigBonedOutgoingDamage === true,
   });
 
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.

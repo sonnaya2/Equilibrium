@@ -2,6 +2,10 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord } from "../simulation/contracts";
+import {
+  emptyAnalysisState,
+  type RuntimeAnalysisState,
+} from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
 import { resolveMaximumAdrenaline } from "../../league/ruleset";
@@ -42,6 +46,11 @@ export interface SimulationRuntime {
   totalMin: number;
   totalMax: number;
   totalExpected: number;
+  /**
+   * Weighted analysis ledgers — quantitative breakdown lives here, not in the
+   * representative event log. Branch merge weight-averages this state.
+   */
+  analysis: RuntimeAnalysisState;
   nextSeq: number;
   nextCastSeq: number;
   finalized: boolean;
@@ -102,6 +111,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     totalMin: 0,
     totalMax: 0,
     totalExpected: 0,
+    analysis: emptyAnalysisState(),
     nextSeq: 0,
     nextCastSeq: 0,
     finalized: false,

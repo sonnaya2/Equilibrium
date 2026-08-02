@@ -146,9 +146,18 @@ export interface DamageEffectBreakdown {
   kind: DamageSourceKind;
   totalDamage: number;
   share: number;
-  applications: number;
-  damagingEvents: number;
-  averagePerApplication: number;
+  /** Distinct owning casts (abilities); 0 for pure procs / blessing riders. */
+  casts: number;
+  /** Probability rolls that produced expected activations (e.g. seven Inferno 5% rolls). */
+  triggerRolls: number;
+  /** Probability-weighted times the effect occurs. */
+  expectedActivations: number;
+  /** Probability-weighted separate hits; attached riders contribute 0. */
+  expectedSeparateHits: number;
+  /** Attached bonus components riding another hit. */
+  attachedComponents: number;
+  /** totalDamage / expectedActivations when activations > 0. */
+  averagePerActivation: number;
   directDamage: number;
   dotDamage: number;
   criticalContribution: number;

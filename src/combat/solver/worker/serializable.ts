@@ -52,7 +52,14 @@ export interface SerializableLeagueRules {
   blessingIds: readonly BlessingId[];
   totalArmour: number;
   maximumLife: number;
+  /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */
+  powerburstUntilTick: number;
   targetTiles: number;
+  /**
+   * Experimental opt-in for Big Boned's 5% max-life outgoing rider.
+   * Default / omitted = false (safe solver scoring).
+   */
+  includeBigBonedOutgoingDamage?: boolean;
 }
 
 /**
@@ -209,6 +216,11 @@ export interface SolverResultDTO {
   openingDpm?: number;
   developedDpm?: number;
   steadyDpm?: number;
+  /**
+   * When experimental league mechanics (e.g. Big Boned outgoing damage) were
+   * included in scoring, human-readable provisional assumptions.
+   */
+  assumptions?: readonly string[];
   /** Optional compact summary numbers for the winning bar. */
   summary?: {
     totalExpected: number;
@@ -257,8 +269,8 @@ export function defaultSerializableRequest(
     seed: 1,
     tier: "thorough",
     profileId: "balanced",
-    maxBarSize: 9,
-    minBarSize: 4,
+    maxBarSize: 10,
+    minBarSize: 6,
     permittedCategories: ["basic", "enhanced", "ultimate"],
     unlockedRegions: [],
     blessingPicks: [],

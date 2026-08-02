@@ -1,6 +1,10 @@
 import { ticksToSeconds } from "@/combat/core/ticks";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
+import {
+  BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
+  BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
+} from "@/combat/league/ruleset";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -31,6 +35,7 @@ export function CalculationAssumptions({
 }) {
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
+  const bigBonedPicked = stats.league.blessings.some((choice) => choice.id === "big-boned");
   const rows: Array<[string, string | number]> = [
     ["Style / effective level", `${stats.combatStyle} · ${stats.effectiveDamageLevel}`],
     ["Weapon", manualInputsOnly ? "Not applied" : stats.weaponConfiguration],
@@ -85,6 +90,16 @@ export function CalculationAssumptions({
             `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (${formatNumber(
               stats.aegis.excludedBlockArmour,
             )} block-only armour excluded)`,
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    ...(bigBonedPicked
+      ? ([
+          [
+            "Big Boned outgoing",
+            stats.league.includeBigBonedOutgoingDamage
+              ? BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS.join("; ")
+              : BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
           ],
         ] as Array<[string, string | number]>)
       : []),

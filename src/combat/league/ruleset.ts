@@ -15,18 +15,58 @@ export interface LeagueLoadout {
   regions?: readonly string[];
 }
 
+/**
+ * Default calculator / solver policy: Big Boned's +50% maximum life always
+ * applies, but the 5% max-life outgoing rider is excluded until live mechanics
+ * are verified. Opt in via `includeBigBonedOutgoingDamage` for characterization.
+ */
+export const BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION =
+  "Outgoing Big Boned damage excluded pending live verification";
+
+/** Provisional model used only when `includeBigBonedOutgoingDamage` is true. */
+export const BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS = [
+  "Experimental Big Boned outgoing damage enabled (not default scoring)",
+  "Per-hit rider (not once per cast); attached to the parent hit, not a separate hit",
+  "5% of maximum life including Big Boned's own +50% max-life boost",
+  "Rides DoT ticks; does not recurse into blessing-generated damage",
+] as const;
+
 export interface ResolvedLeagueRules {
   ruleset: "base" | "equilibrium";
   blessings: readonly BlessingChoice[];
   blessingIds: ReadonlySet<BlessingId>;
   totalArmour: number;
+  /**
+   * Maximum life without Powerburst of Vitality doubling. Call
+   * `resolveMaximumLife` at a land tick for the timed double.
+   */
   maximumLife: number;
+  /**
+   * Half-open exclusive end tick for Powerburst max-life doubling from sim
+   * start (`landTick < powerburstUntilTick`). 0 = inactive for the whole run.
+   */
+  powerburstUntilTick: number;
   targetTiles: number;
+  /**
+   * When false (default), Big Boned still multiplies maximum life but does not
+   * emit the 5% max-life bonus damage rider. Solver rankings and default
+   * totals must stay on this path until live verification.
+   */
+  includeBigBonedOutgoingDamage: boolean;
+}
+
+export interface ResolveLeagueRulesDerived {
+  totalArmour?: number;
+  maximumLife?: number;
+  powerburstUntilTick?: number;
+  targetTiles?: number;
+  /** Default false — experimental opt-in only. */
+  includeBigBonedOutgoingDamage?: boolean;
 }
 
 export function resolveLeagueRules(
   loadout: LeagueLoadout,
-  derived: { totalArmour?: number; maximumLife?: number; targetTiles?: number } = {},
+  derived: ResolveLeagueRulesDerived = {},
 ): ResolvedLeagueRules {
   const ruleset = loadout.ruleset === "equilibrium" ? "equilibrium" : "base";
   const blessings = ruleset === "equilibrium" ? activeBlessings(loadout.blessingPicks ?? []) : [];
@@ -36,8 +76,18 @@ export function resolveLeagueRules(
     blessingIds: new Set(blessings.map((choice) => choice.id)),
     totalArmour: Math.max(0, derived.totalArmour ?? 0),
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
+    powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
     targetTiles: Math.max(1, Math.floor(derived.targetTiles ?? 1)),
+    includeBigBonedOutgoingDamage: derived.includeBigBonedOutgoingDamage === true,
   };
+}
+
+/** Powerburst doubles maximum life after all other layers, only while active. */
+export function resolveMaximumLife(rules: ResolvedLeagueRules, landTick: number): number {
+  if (rules.powerburstUntilTick > 0 && landTick < rules.powerburstUntilTick) {
+    return rules.maximumLife * 2;
+  }
+  return rules.maximumLife;
 }
 
 export function hasBlessing(rules: ResolvedLeagueRules | undefined, id: BlessingId): boolean {

@@ -13,12 +13,20 @@ import {
 
 const rules = (
   blessingPicks: readonly BlessingPath[],
-  derived: { totalArmour?: number; maximumLife?: number; targetTiles?: number } = {},
+  derived: {
+    totalArmour?: number;
+    maximumLife?: number;
+    targetTiles?: number;
+    includeBigBonedOutgoingDamage?: boolean;
+  } = {},
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks }, derived);
 
 describe("Equilibrium blessing combat rules", () => {
   it("adds Big Boned and Cinders as explicit non-recursive damage events", () => {
-    const league = rules(["Balance", "Chaos", "Chaos"], { maximumLife: 15_000 });
+    const league = rules(["Balance", "Chaos", "Chaos"], {
+      maximumLife: 15_000,
+      includeBigBonedOutgoingDamage: true,
+    });
     const result = simulate({
       ...baseInput,
       league,
@@ -32,11 +40,14 @@ describe("Equilibrium blessing combat rules", () => {
     expect(result.events.find((event) => event.abilityId === "inferno-of-zamorak")).toMatchObject({
       family: "blessing",
       expectedOccurrences: 0.05,
+      triggerRolls: 1,
+      expectedActivations: 0.05,
+      expectedSeparateHits: 0.05,
       damage: { min: 0, max: 2_000, expected: 75 },
     });
     expect(
       result.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak"),
-    ).toMatchObject({ applications: 0.05, averagePerApplication: 1_500 });
+    ).toMatchObject({ expectedActivations: 0.05, averagePerActivation: 1_500 });
     expect(simulate({ ...baseInput, rotation: rotationOf("attack") }).totalExpected).toBe(1_200);
   });
 

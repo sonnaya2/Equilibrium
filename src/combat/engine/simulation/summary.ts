@@ -1,13 +1,12 @@
+import { finalizeAnalysis } from "../analysis";
 import { snapshotRuntime, type Branch } from "./branch";
 import type {
   DamageEffectBreakdown,
   DamageSourceKind,
-  RotationDamageAnalysis,
   RotationSummary,
   SimulateOptions,
 } from "./contracts";
 import { advanceTo } from "../runtime/clock";
-import type { ResolvedEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { TICK_SECONDS } from "../../core/ticks";
 
@@ -22,98 +21,9 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "other-modeled",
 ];
 
-function sourceKind(rt: SimulationRuntime, event: ResolvedEvent): DamageSourceKind {
-  if (event.blessingId) return "league-blessing";
-  if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
-  if (event.abilityId === "abyssal_parasite") return "equipment-passive";
-  if (event.family === "conjureAuto" || event.family === "command" || event.family === "poison") {
-    return "conjure-or-familiar";
-  }
-  if (event.sourceCast >= 0 && rt.recordBySeq.get(event.sourceCast)?.auto) return "auto-attack";
-  if (event.family === "dot") return "ability-dot";
-  if (event.family === "hit") return "ability-direct";
-  return "other-modeled";
-}
-
-function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
-  const sourceTotals = new Map<DamageSourceKind, number>();
-  const effects = new Map<
-    string,
-    Omit<DamageEffectBreakdown, "share" | "applications" | "averagePerApplication"> & {
-      applicationWeights: Map<string, number>;
-    }
-  >();
-
-  for (const event of rt.events) {
-    const kind = sourceKind(rt, event);
-    sourceTotals.set(kind, (sourceTotals.get(kind) ?? 0) + event.damage.expected);
-    const current = effects.get(event.abilityId) ?? {
-      id: event.abilityId,
-      kind,
-      totalDamage: 0,
-      damagingEvents: 0,
-      directDamage: 0,
-      dotDamage: 0,
-      criticalContribution: 0,
-      capLoss: 0,
-      applicationWeights: new Map<string, number>(),
-    };
-    current.totalDamage += event.damage.expected;
-    current.damagingEvents += 1;
-    current.directDamage += event.family === "dot" ? 0 : event.damage.expected;
-    current.dotDamage += event.family === "dot" ? event.damage.expected : 0;
-    current.criticalContribution += event.damage.critical?.contribution ?? 0;
-    current.capLoss += event.damage.capLoss ?? 0;
-    // An event that declares expectedOccurrences carries its own application
-    // count and is summed: one cast of a seven-hit ability rolls Inferno of
-    // Zamorak seven times, and collapsing those to the cast would divide the
-    // effect's damage by a single roll's chance. Everything else is deduplicated
-    // per cast, so an ordinary ability still reads one application per cast.
-    if (event.expectedOccurrences !== undefined) {
-      current.applicationWeights.set(
-        `event:${event.seq}`,
-        current.applicationWeights.get(`event:${event.seq}`) ?? event.expectedOccurrences,
-      );
-    } else {
-      const key = event.sourceCast >= 0 ? `cast:${event.sourceCast}` : `event:${event.seq}`;
-      current.applicationWeights.set(key, Math.max(current.applicationWeights.get(key) ?? 0, 1));
-    }
-    effects.set(event.abilityId, current);
-  }
-
-  return {
-    bySource: SOURCE_KINDS.flatMap((kind) => {
-      const damage = sourceTotals.get(kind) ?? 0;
-      return damage > 0 ? [{ kind, damage }] : [];
-    }).sort((a, b) => b.damage - a.damage),
-    byEffect: [...effects.values()]
-      .map(({ applicationWeights, ...effect }) => {
-        const applications = [...applicationWeights.values()].reduce(
-          (sum, value) => sum + value,
-          0,
-        );
-        return {
-          ...effect,
-          share: rt.totalExpected > 0 ? effect.totalDamage / rt.totalExpected : 0,
-          applications,
-          averagePerApplication: applications > 0 ? effect.totalDamage / applications : 0,
-        };
-      })
-      .sort((a, b) => b.totalDamage - a.totalDamage),
-    directDamage: rt.events.reduce(
-      (total, event) => total + (event.family === "dot" ? 0 : event.damage.expected),
-      0,
-    ),
-    dotDamage: rt.events.reduce(
-      (total, event) => total + (event.family === "dot" ? event.damage.expected : 0),
-      0,
-    ),
-    criticalContribution: rt.events.reduce(
-      (total, event) => total + (event.damage.critical?.contribution ?? 0),
-      0,
-    ),
-    capLoss: rt.events.reduce((total, event) => total + (event.damage.capLoss ?? 0), 0),
-  };
+/** Public analysis from engine-owned ledgers — never rescanned from events. */
+function buildAnalysis(rt: SimulationRuntime) {
+  return finalizeAnalysis(rt.analysis, rt.totalExpected);
 }
 
 /**
@@ -190,8 +100,8 @@ export function finish(
 
 /**
  * Combine terminal equivalence classes into one summary. Casts and events use
- * one representative of the highest-weight class; numeric totals and duration
- * remain probability-weighted.
+ * one representative of the highest-weight class; numeric totals, duration, and
+ * finalized analysis rows remain probability-weighted.
  */
 export function combineBranchSummaries(
   branches: readonly Branch[],
@@ -236,36 +146,41 @@ export function combineBranchSummaries(
   const effectIds = new Set(
     parts.flatMap((part) => part.summary.analysis.byEffect.map((row) => row.id)),
   );
+  const effectNumeric = [
+    "totalDamage",
+    "casts",
+    "triggerRolls",
+    "expectedActivations",
+    "expectedSeparateHits",
+    "attachedComponents",
+    "directDamage",
+    "dotDamage",
+    "criticalContribution",
+    "capLoss",
+  ] as const;
   const byEffect: DamageEffectBreakdown[] = [...effectIds]
     .map((id) => {
       const sample = parts
         .flatMap((part) => part.summary.analysis.byEffect)
         .find((effect) => effect.id === id)!;
-      const value = (
-        field: keyof Pick<
-          DamageEffectBreakdown,
-          | "totalDamage"
-          | "applications"
-          | "damagingEvents"
-          | "directDamage"
-          | "dotDamage"
-          | "criticalContribution"
-          | "capLoss"
-        >,
-      ) =>
+      const value = (field: (typeof effectNumeric)[number]) =>
         mix(
           (summary) => summary.analysis.byEffect.find((effect) => effect.id === id)?.[field] ?? 0,
         );
       const totalDamage = value("totalDamage");
-      const applications = value("applications");
+      const expectedActivations = value("expectedActivations");
       return {
         id,
         kind: sample.kind,
         totalDamage,
         share: totalExpected > 0 ? totalDamage / totalExpected : 0,
-        applications,
-        damagingEvents: value("damagingEvents"),
-        averagePerApplication: applications > 0 ? totalDamage / applications : 0,
+        casts: value("casts"),
+        triggerRolls: value("triggerRolls"),
+        expectedActivations,
+        expectedSeparateHits: value("expectedSeparateHits"),
+        attachedComponents: value("attachedComponents"),
+        averagePerActivation:
+          expectedActivations > 0 ? totalDamage / expectedActivations : 0,
         directDamage: value("directDamage"),
         dotDamage: value("dotDamage"),
         criticalContribution: value("criticalContribution"),

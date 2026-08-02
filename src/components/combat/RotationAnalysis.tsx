@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ticksToSeconds } from "@/combat/core/ticks";
 import type { ResolvedEvent } from "@/combat/engine/runtime/events";
-import type { DamageSourceKind, RotationSummary } from "@/combat/engine/simulation/contracts";
+import type {
+  DamageEffectBreakdown,
+  DamageSourceKind,
+  RotationSummary,
+} from "@/combat/engine/simulation/contracts";
 import type { CalcStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 
@@ -27,13 +31,39 @@ const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   "grasp-of-guthix": "Grasp of Guthix",
 };
 
+/** Damage totals — whole numbers. */
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
-const formatCount = (value: number) =>
+/** Expected activations/hits — keep fractional weight (never round 0.35 → 0). */
+const formatExpected = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
+/** Casts / trigger rolls / attached component counts — integers when whole. */
+const formatLiteral = (value: number) =>
+  new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: Number.isInteger(value) ? 0 : 2,
+  }).format(value);
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
+function effectName(id: string, nameForId: (id: string) => string): string {
+  return PROCEDURAL_EFFECT_LABEL[id] ?? nameForId(id);
+}
+
+/** Probability weight carried by an EV-scheduled event, when present. */
+function eventExpectedWeight(event: ResolvedEvent): number | undefined {
+  if (event.expectedActivations !== undefined) return event.expectedActivations;
+  if (event.expectedOccurrences !== undefined) return event.expectedOccurrences;
+  return undefined;
+}
+
+function isExpectedProcEvent(event: ResolvedEvent): boolean {
+  if (event.attached) return false;
+  const weight = eventExpectedWeight(event);
+  return weight !== undefined && weight < 1;
+}
+
 function eventType(event: ResolvedEvent): string {
+  if (event.attached) return "Attached bonus";
+  if (isExpectedProcEvent(event)) return "Expected proc";
   if (event.abilityId === "aftershock" || event.abilityId === "crackling") return "Perk proc";
   if (event.family === "dot") return event.dotKind ? `${event.dotKind} DoT` : "DoT";
   if (event.family === "conjureAuto") return "Conjure auto";
@@ -51,6 +81,93 @@ function critLabel(event: ResolvedEvent): string | null {
   return `${formatPercent(critical.chance)} crit EV`;
 }
 
+function parentEffectLabel(
+  event: ResolvedEvent,
+  bySeq: Map<number, ResolvedEvent>,
+  nameForId: (id: string) => string,
+): string | null {
+  if (!event.attached) return null;
+  if (event.derivedFrom != null) {
+    const parent = bySeq.get(event.derivedFrom);
+    if (parent) return effectName(parent.abilityId, nameForId);
+  }
+  return null;
+}
+
+type EffectColumnId =
+  | "casts"
+  | "triggerRolls"
+  | "expectedActivations"
+  | "expectedSeparateHits"
+  | "attachedComponents"
+  | "averagePerActivation"
+  | "capLoss";
+
+const EFFECT_COLUMNS: readonly {
+  id: EffectColumnId;
+  label: string;
+  title?: string;
+  align: "right";
+  showIf: (row: DamageEffectBreakdown) => boolean;
+  format: (row: DamageEffectBreakdown) => string;
+}[] = [
+  {
+    id: "casts",
+    label: "Casts",
+    title: "Distinct owning casts for this effect",
+    align: "right",
+    showIf: (row) => row.casts !== 0,
+    format: (row) => formatLiteral(row.casts),
+  },
+  {
+    id: "triggerRolls",
+    label: "Trigger rolls",
+    title: "Probability rolls that produced expected activations",
+    align: "right",
+    showIf: (row) => row.triggerRolls !== 0,
+    format: (row) => formatLiteral(row.triggerRolls),
+  },
+  {
+    id: "expectedActivations",
+    label: "Expected activations",
+    title: "Probability-weighted number of times the effect occurs",
+    align: "right",
+    showIf: (row) => row.expectedActivations !== 0,
+    format: (row) => formatExpected(row.expectedActivations),
+  },
+  {
+    id: "expectedSeparateHits",
+    label: "Expected hits",
+    title: "Probability-weighted separate hits; attached riders do not count",
+    align: "right",
+    showIf: (row) => row.expectedSeparateHits !== 0,
+    format: (row) => formatExpected(row.expectedSeparateHits),
+  },
+  {
+    id: "attachedComponents",
+    label: "Attached",
+    title: "Bonus damage components added to another hit",
+    align: "right",
+    showIf: (row) => row.attachedComponents !== 0,
+    format: (row) => formatLiteral(row.attachedComponents),
+  },
+  {
+    id: "averagePerActivation",
+    label: "Average per activation",
+    title: "Total damage divided by expected activations",
+    align: "right",
+    showIf: (row) => row.averagePerActivation !== 0,
+    format: (row) => formatNumber(row.averagePerActivation),
+  },
+  {
+    id: "capLoss",
+    label: "Cap loss",
+    align: "right",
+    showIf: (row) => row.capLoss !== 0,
+    format: (row) => formatNumber(row.capLoss),
+  },
+];
+
 function EventTable({
   events,
   nameForId,
@@ -60,6 +177,8 @@ function EventTable({
   nameForId: (id: string) => string;
   compact?: boolean;
 }) {
+  const bySeq = useMemo(() => new Map(events.map((event) => [event.seq, event])), [events]);
+
   return (
     <div className={compact ? "max-h-72 overflow-auto" : "max-h-[30rem] overflow-auto"}>
       <table className="w-full min-w-[760px] border-collapse text-left text-xs">
@@ -76,6 +195,8 @@ function EventTable({
         <tbody>
           {events.map((event) => {
             const critical = critLabel(event);
+            const weight = eventExpectedWeight(event);
+            const parent = parentEffectLabel(event, bySeq, nameForId);
             return (
               <tr key={event.seq} className="border-b border-stone-750/70">
                 <td className="py-1.5 pr-3 font-mono text-parch-300">
@@ -85,10 +206,15 @@ function EventTable({
                   </span>
                 </td>
                 <td className="py-1.5 pr-3 text-parch-50">
-                  {PROCEDURAL_EFFECT_LABEL[event.abilityId] ?? nameForId(event.abilityId)}
+                  {effectName(event.abilityId, nameForId)}
+                  {parent ? (
+                    <span className="ml-1.5 text-parch-300">on {parent}</span>
+                  ) : null}
                 </td>
                 <td className="py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
-                <td className="py-1.5 pr-3 font-mono text-parch-300">{event.hitIndex + 1}</td>
+                <td className="py-1.5 pr-3 font-mono text-parch-300">
+                  {event.attached ? "—" : event.hitIndex + 1}
+                </td>
                 <td className="py-1.5 pr-3 text-right font-mono text-parch-50">
                   {formatNumber(event.damage.expected)}
                   {event.damage.capLoss ? (
@@ -98,6 +224,12 @@ function EventTable({
                   ) : null}
                 </td>
                 <td className="py-1.5 text-parch-300">
+                  {isExpectedProcEvent(event) && weight !== undefined ? (
+                    <span className="mr-2">
+                      {formatExpected(weight)} expected occurrence
+                      {weight === 1 ? "" : "s"}
+                    </span>
+                  ) : null}
                   {critical ? (
                     <span className={critical === "Crit" ? "rotation-crit" : undefined}>
                       {critical}
@@ -142,6 +274,49 @@ export function RotationEventPreview({
   );
 }
 
+/** Optional experimental / exclusion notes once the engine exposes them. */
+function ExperimentalMechanicsBanner({
+  result,
+  stats,
+}: {
+  result: RotationSummary;
+  stats: CalcStats;
+}) {
+  const summary = result as RotationSummary & {
+    includeBigBonedOutgoingDamage?: boolean;
+    supportWarnings?: readonly string[];
+  };
+  const warnings: string[] = [];
+  if (Array.isArray(summary.supportWarnings)) {
+    for (const warning of summary.supportWarnings) {
+      if (typeof warning === "string" && warning.trim()) warnings.push(warning.trim());
+    }
+  }
+  if (summary.includeBigBonedOutgoingDamage === true) {
+    warnings.push(
+      "Experimental: Big Boned outgoing damage is included in this total and may change.",
+    );
+  } else if (summary.includeBigBonedOutgoingDamage === false) {
+    const hasPick = stats.league.blessings.some((choice) => choice.id === "big-boned");
+    if (hasPick) {
+      warnings.push("Big Boned is picked, but its outgoing damage is excluded from this total.");
+    }
+  }
+  if (warnings.length === 0) return null;
+  return (
+    <div
+      role="status"
+      className="border border-chaos-300/40 bg-stone-900/80 px-3 py-2 text-xs text-chaos-300"
+    >
+      {warnings.map((warning, index) => (
+        <p key={warning} className={index > 0 ? "mt-1" : undefined}>
+          {warning}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 export function RotationAnalysisModal({
   open,
   result,
@@ -163,6 +338,10 @@ export function RotationAnalysisModal({
     if (open && !dialog.open) dialog.showModal();
     if (!open && dialog.open) dialog.close();
   }, [open]);
+
+  const visibleColumns = EFFECT_COLUMNS.filter((column) =>
+    result.analysis.byEffect.some((row) => column.showIf(row)),
+  );
 
   return (
     <dialog
@@ -192,6 +371,8 @@ export function RotationAnalysisModal({
             Close
           </button>
         </header>
+
+        <ExperimentalMechanicsBanner result={result} stats={stats} />
 
         <dl className="grid grid-cols-2 border-b border-stone-750 text-sm md:grid-cols-4">
           {[
@@ -246,17 +427,22 @@ export function RotationAnalysisModal({
                     <th className="py-1.5 pr-3 font-medium">Effect</th>
                     <th className="py-1.5 pr-3 text-right font-medium">Total</th>
                     <th className="py-1.5 pr-3 text-right font-medium">Share</th>
-                    <th className="py-1.5 pr-3 text-right font-medium">Uses</th>
-                    <th className="py-1.5 pr-3 text-right font-medium">Hits</th>
-                    <th className="py-1.5 pr-3 text-right font-medium">Average</th>
-                    <th className="py-1.5 text-right font-medium">Cap loss</th>
+                    {visibleColumns.map((column) => (
+                      <th
+                        key={column.id}
+                        className="py-1.5 pr-3 text-right font-medium last:pr-0"
+                        title={column.title}
+                      >
+                        {column.label}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
                   {result.analysis.byEffect.map((effect) => (
                     <tr key={effect.id} className="border-b border-stone-750/70">
                       <td className="py-1.5 pr-3 text-parch-50">
-                        {PROCEDURAL_EFFECT_LABEL[effect.id] ?? nameForId(effect.id)}
+                        {effectName(effect.id, nameForId)}
                         {effect.dotDamage > 0 ? (
                           <span className="ml-1.5 text-parch-300">DoT</span>
                         ) : null}
@@ -267,18 +453,15 @@ export function RotationAnalysisModal({
                       <td className="py-1.5 pr-3 text-right font-mono text-parch-300">
                         {formatPercent(effect.share)}
                       </td>
-                      <td className="py-1.5 pr-3 text-right font-mono text-parch-300">
-                        {formatCount(effect.applications)}
-                      </td>
-                      <td className="py-1.5 pr-3 text-right font-mono text-parch-300">
-                        {formatCount(effect.damagingEvents)}
-                      </td>
-                      <td className="py-1.5 pr-3 text-right font-mono text-parch-300">
-                        {formatNumber(effect.averagePerApplication)}
-                      </td>
-                      <td className="py-1.5 text-right font-mono text-parch-300">
-                        {formatNumber(effect.capLoss)}
-                      </td>
+                      {visibleColumns.map((column) => (
+                        <td
+                          key={column.id}
+                          className="py-1.5 pr-3 text-right font-mono text-parch-300 last:pr-0"
+                          title={column.title}
+                        >
+                          {column.format(effect)}
+                        </td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>

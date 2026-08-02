@@ -12,6 +12,9 @@ import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serial
 import { requireSimBase } from "./worker/revive";
 import type { SolveFn, SolveRuntimeOptions } from "./worker/solveTypes";
 import type { SolverPhase, SolverProgress } from "./worker/protocol";
+import {
+  BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
+} from "../league/ruleset";
 
 function resolveSpecs(ids: readonly string[]): AbilitySpec[] {
   const out: AbilitySpec[] = [];
@@ -180,6 +183,12 @@ export const solveFromRequest: SolveFn = async (
   let topPreview: string[] = [];
   let currentPhase: SolverPhase = "seed";
   let noImprovement = 0;
+  // Search fill stops short of full so "Final scoring" still has track room.
+  // Finalize maps the remaining share — never clobber with evals/budget alone.
+  const SEARCH_SHARE = 0.82;
+  let finalizeDone = 0;
+  let finalizeTotal = 0;
+  let finalizeActive = false;
 
   const mapPhase = (name: SolvePhaseName): SolverPhase => {
     if (name === "seed") return "seed";
@@ -190,10 +199,24 @@ export const solveFromRequest: SolveFn = async (
     return "explore";
   };
 
+  const progressRatioNow = (): number => {
+    if (finalizeActive) {
+      // Hold at search ceiling until the first finalize step reports a real total.
+      if (finalizeTotal <= 0) return SEARCH_SHARE;
+      // 0.82 → 0.995 across finalize steps; 1.0 only when the run completes.
+      return Math.min(
+        0.995,
+        SEARCH_SHARE + (0.995 - SEARCH_SHARE) * (finalizeDone / finalizeTotal),
+      );
+    }
+    // Leave a visible tail even when the search budget is spent.
+    const searchT = Math.min(1, evaluations / Math.max(1, evaluationBudget));
+    return Math.min(SEARCH_SHARE * 0.98, SEARCH_SHARE * searchT);
+  };
+
   const emitProgress = (force = false) => {
     if (!options?.onProgress) return;
     if (!force && evaluations % 2 !== 0) return;
-    const ratio = Math.min(0.97, evaluations / Math.max(1, evaluationBudget + 8));
     const progress: SolverProgress = {
       phase: currentPhase,
       evaluations,
@@ -203,7 +226,10 @@ export const solveFromRequest: SolveFn = async (
       topBarPreview: topPreview,
       noImprovementCount: noImprovement,
       evaluationBudget,
-      progressRatio: ratio,
+      progressRatio: progressRatioNow(),
+      ...(finalizeActive && finalizeTotal > 0
+        ? { finalizeStep: finalizeDone, finalizeTotal }
+        : {}),
     };
     options.onProgress(progress);
   };
@@ -241,7 +267,10 @@ export const solveFromRequest: SolveFn = async (
       noImprovement += 1;
     }
 
-    if (useFull) currentPhase = "finalize";
+    if (useFull) {
+      currentPhase = "finalize";
+      finalizeActive = true;
+    }
     emitProgress();
 
     if (!evaluation.ok) {
@@ -303,23 +332,15 @@ export const solveFromRequest: SolveFn = async (
     {
       onPhase: (phase) => {
         currentPhase = mapPhase(phase);
+        if (phase === "finalize") finalizeActive = true;
         emitProgress(true);
       },
       onFinalizeStep: (info) => {
         currentPhase = "finalize";
-        // Keep ratio under 1 until truly done so the track still animates.
-        const ratio = 0.85 + 0.14 * (info.done / Math.max(1, info.total));
-        options?.onProgress?.({
-          phase: "finalize",
-          evaluations,
-          uniqueCandidates: uniqueBars,
-          bestScore: Number.isFinite(bestScore) ? bestScore : 0,
-          windowDpms: Number.isFinite(bestScore) ? bestScore : 0,
-          topBarPreview: topPreview,
-          noImprovementCount: noImprovement,
-          evaluationBudget,
-          progressRatio: Math.min(0.99, ratio),
-        });
+        finalizeActive = true;
+        finalizeDone = info.done;
+        finalizeTotal = Math.max(1, info.total);
+        emitProgress(true);
       },
       yieldSlice: async () => {
         emitProgress(true);
@@ -347,6 +368,12 @@ export const solveFromRequest: SolveFn = async (
   emitProgress(true);
   const winnerBar = result.best.bar;
   const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
+  const experimentalBigBoned =
+    simBase.league.includeBigBonedOutgoingDamage === true &&
+    simBase.league.blessingIds.includes("big-boned");
+  const experimentalNotes = experimentalBigBoned
+    ? (["best-found under experimental assumptions", ...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS] as const)
+    : [];
   const dto: SolverResultDTO = {
     bar: [...winnerBar],
     score,
@@ -361,6 +388,9 @@ export const solveFromRequest: SolveFn = async (
     openingDpm: result.best.openingDpm,
     developedDpm: result.best.developedDpm,
     steadyDpm: result.best.steadyDpm,
+    assumptions: experimentalBigBoned
+      ? [...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS]
+      : undefined,
     summary: undefined,
     proof: {
       label: result.proof,
@@ -369,6 +399,7 @@ export const solveFromRequest: SolveFn = async (
         result.exhaustiveCompleted ? "exhaustive completed" : "heuristic search",
         `pool size ${pool.ids.length}`,
         `seed best ${result.seedBestScore}`,
+        ...experimentalNotes,
       ],
     },
     top: result.top.map((t) => ({

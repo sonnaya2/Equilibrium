@@ -10,8 +10,14 @@ import { simulateRevolution as runRevolution } from "@/combat/engine/simulation/
 import { secondsToTicks, ticksToSeconds } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
 import {
+  clampSolverBarSizes,
+  fingerprintSolveContext,
+  lookupSolvedBar,
+  MIN_SOLVER_BAR_SIZE,
   packSolverRequest,
+  rememberSolvedBar,
   runSolverOnMainThread,
+  seedBarsFromSolveCache,
   TIER_BUDGETS,
   type ObjectiveProfileId,
   type SolverProgress,
@@ -212,6 +218,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
   const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
   const [maxBarSize, setMaxBarSize] = useState(10);
+  const [cacheNote, setCacheNote] = useState<string | null>(null);
   const [solving, setSolving] = useState(false);
   const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
   const [solverResult, setSolverResult] = useState<SolverResultDTO | null>(null);
@@ -349,6 +356,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     setSolverError(null);
     setSolverResult(null);
     setBestPulse(false);
+    setCacheNote(null);
+    const sizes = clampSolverBarSizes(MIN_SOLVER_BAR_SIZE, maxBarSize);
     // Immediate progress plate so the UI never looks dead while the first eval runs.
     setSolverProgress({
       phase: "seed",
@@ -362,20 +371,59 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       progressRatio: 0.02,
     });
     try {
-      const request = packSolverRequest({
+      const baseRequest = packSolverRequest({
         stats,
         loadout,
         build,
         style: loadout.style,
         tier: solverTier,
         profileId: solverProfile,
-        maxBarSize,
-        minBarSize: 4,
+        maxBarSize: sizes.maxBarSize,
+        minBarSize: sizes.minBarSize,
         exploreSeconds: 30,
         durationSeconds: 300,
         userBar: modelled.map((m) => m.id),
         seed: 1,
       });
+      const contextKey = fingerprintSolveContext(baseRequest);
+      const cached = lookupSolvedBar(contextKey);
+      const cachedSeeds = seedBarsFromSolveCache(
+        loadout.style,
+        contextKey,
+        sizes.minBarSize,
+      );
+      if (cached?.bar?.length) {
+        lastBestRef.current = cached.score;
+        setSolverProgress({
+          phase: "seed",
+          evaluations: 0,
+          uniqueCandidates: cached.top?.length ?? 1,
+          bestScore: Number.isFinite(cached.score) ? cached.score : 0,
+          windowDpms: Number.isFinite(cached.score) ? cached.score : 0,
+          topBarPreview: [...cached.bar],
+          noImprovementCount: 0,
+          evaluationBudget: TIER_BUDGETS[solverTier],
+          progressRatio: 0.08,
+        });
+        setCacheNote(
+          cachedSeeds.length > 1
+            ? `Resuming from ${cachedSeeds.length} saved bars`
+            : "Resuming from saved bar",
+        );
+      } else if (cachedSeeds.length > 0) {
+        setCacheNote(`Seeding ${cachedSeeds.length} saved bar${cachedSeeds.length === 1 ? "" : "s"}`);
+      }
+      const request = {
+        ...baseRequest,
+        authoredSeedBars: [
+          ...baseRequest.authoredSeedBars,
+          ...cachedSeeds.map((abilityIds, i) => ({
+            id: `cached-${i}`,
+            abilityIds,
+            baseline: false as const,
+          })),
+        ],
+      };
       // Main-thread with cooperative yields: Next workers often fail to load the
       // combat bundle, and finalize used to hard-block without yields.
       const dto = await runSolverOnMainThread(
@@ -395,12 +443,16 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
       const bar = dto.bar?.length ? [...dto.bar] : [];
       if (bar.length === 0) {
-        setSolverError("Search finished without a legal bar. Try a larger max slots or different style.");
+        setSolverError(
+          `Search finished without a legal bar (${sizes.minBarSize}–${sizes.maxBarSize} slots). Try more max slots or a different style.`,
+        );
         setSolverResult(dto);
       } else {
         setSolverResult(dto);
         setActiveBarIds(bar);
         setResult(null);
+        rememberSolvedBar(request, dto);
+        setCacheNote("Saved to this browser");
       }
       setSolverProgress({
         phase: "finalize",
@@ -432,16 +484,30 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   const progressFill = solving
     ? Math.min(
-        0.97,
+        0.995,
         solverProgress?.progressRatio ??
           (solverProgress
-            ? solverProgress.evaluations /
-              Math.max(1, solverProgress.evaluationBudget ?? TIER_BUDGETS[solverTier])
+            ? // Fallback if a progress event omitted ratio: search share only.
+              0.82 *
+              Math.min(
+                0.98,
+                solverProgress.evaluations /
+                  Math.max(1, solverProgress.evaluationBudget ?? TIER_BUDGETS[solverTier]),
+              )
             : 0.04),
       )
     : solverProgress
       ? 1
       : 0;
+
+  const trackLiveClass =
+    solving && solverProgress?.phase === "finalize"
+      ? "revo-solver-track revo-solver-track--live revo-solver-track--finalize"
+      : solving
+        ? "revo-solver-track revo-solver-track--live"
+        : solverProgress
+          ? "revo-solver-track revo-solver-track--done"
+          : "revo-solver-track";
 
   const applySolverBar = (ids: readonly string[]) => {
     setActiveBarIds([...ids]);
@@ -502,14 +568,18 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               <option value="sustained">Sustained</option>
             </select>
           </label>
-          <label className="flex items-center gap-1 text-parch-300">
+          <label className="flex items-center gap-1 text-parch-300" title={`Search floor ${MIN_SOLVER_BAR_SIZE} slots — shorter bars are skipped`}>
             Max slots
             <input
               type="number"
-              min={4}
+              min={MIN_SOLVER_BAR_SIZE}
               max={14}
               value={maxBarSize}
-              onChange={(e) => setMaxBarSize(Math.max(4, Math.min(14, Number(e.target.value) || 10)))}
+              onChange={(e) =>
+                setMaxBarSize(
+                  clampSolverBarSizes(MIN_SOLVER_BAR_SIZE, Number(e.target.value) || 10).maxBarSize,
+                )
+              }
               className="w-14 border border-stone-750 bg-transparent px-2 py-1 font-mono text-parch-50"
               disabled={solving}
             />
@@ -535,11 +605,26 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               <span className="revo-solver-status__meta font-mono">
                 {solverProgress ? (
                   <>
-                    {formatNumber(solverProgress.evaluations)}
-                    {solverProgress.evaluationBudget
-                      ? ` / ${formatNumber(solverProgress.evaluationBudget)}`
-                      : ""}{" "}
-                    evals
+                    {solverProgress.phase === "finalize" &&
+                    solverProgress.finalizeTotal != null &&
+                    solverProgress.finalizeTotal > 0 ? (
+                      <>
+                        scoring {formatNumber(Math.min(solverProgress.finalizeStep ?? 0, solverProgress.finalizeTotal))}
+                        /{formatNumber(solverProgress.finalizeTotal)}
+                        <span className="revo-solver-status__dot" aria-hidden>
+                          ·
+                        </span>
+                        {formatNumber(solverProgress.evaluations)} evals
+                      </>
+                    ) : (
+                      <>
+                        {formatNumber(solverProgress.evaluations)}
+                        {solverProgress.evaluationBudget
+                          ? ` / ${formatNumber(solverProgress.evaluationBudget)}`
+                          : ""}{" "}
+                        evals
+                      </>
+                    )}
                     <span className="revo-solver-status__dot" aria-hidden>
                       ·
                     </span>
@@ -567,14 +652,17 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               </span>
             </div>
             <div
-              className={
-                solving ? "revo-solver-track revo-solver-track--live" : "revo-solver-track"
-              }
+              className={trackLiveClass}
+              style={{ ["--fill" as string]: String(progressFill) }}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progressFill * 100)}
             >
-              <div
-                className="revo-solver-track__fill"
-                style={{ ["--fill" as string]: String(progressFill) }}
-              />
+              <div className="revo-solver-track__rail" aria-hidden />
+              <div className="revo-solver-track__fill">
+                <span className="revo-solver-track__sheen" aria-hidden />
+                <span className="revo-solver-track__tip" aria-hidden />
+              </div>
             </div>
             {solverProgress?.topBarPreview?.length ? (
               <div className="revo-solver-preview" role="list" aria-label="Best bar so far">
@@ -603,9 +691,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               </div>
             ) : solving ? (
               <p className="revo-solver-status__hint">
-                Searching legal bars for this loadout and region pick…
+                Searching legal bars ({MIN_SOLVER_BAR_SIZE}+ slots) for this loadout and region pick…
               </p>
             ) : null}
+            {cacheNote ? <p className="revo-solver-status__hint">{cacheNote}</p> : null}
           </div>
         )}
         {solverError ? <p className="mt-2 text-xs text-chaos-300">{solverError}</p> : null}
@@ -896,8 +985,11 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                     })()}
                     <span className="truncate">
                       {nameById.get(row.id) ?? row.id}
-                      <span className="ml-1.5 font-mono text-parch-300">
-                        ×{formatCount(row.applications)}
+                      <span
+                        className="ml-1.5 font-mono text-parch-300"
+                        title="Probability-weighted number of times the effect occurs"
+                      >
+                        ×{formatCount(row.expectedActivations)}
                       </span>
                     </span>
                   </span>

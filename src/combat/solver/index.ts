@@ -89,6 +89,19 @@ export {
 } from "./solve";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export { packSolverRequest, packSimBase } from "./packRequest";
+export {
+  REVO_SOLVE_CACHE_KEY,
+  MIN_SOLVER_BAR_SIZE,
+  DEFAULT_MAX_BAR_SIZE,
+  fingerprintSolveContext,
+  loadSolveCache,
+  rememberSolvedBar,
+  lookupSolvedBar,
+  seedBarsFromSolveCache,
+  clampSolverBarSizes,
+  type CachedSolveEntry,
+  type SolveCacheStore,
+} from "./solutionStore";
 export type {
   SerializableSolverRequest,
   SolverResultDTO,

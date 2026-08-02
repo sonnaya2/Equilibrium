@@ -1,4 +1,4 @@
-import type { ScheduledEvent } from "../../runtime/events";
+import type { DamageOriginKind, ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import {
   blessingHitEligibility,
@@ -12,10 +12,23 @@ import type { ResolvedDamage } from "../types";
 /** Event provenance in the vocabulary the blessing eligibility policy speaks. */
 function blessingSourceOf(event: ScheduledEvent<SimulationRuntime>): BlessingDamageSource {
   if (event.blessingId) return "blessing";
+  // Equipment/perk and autonomous ticks are identified by family / ownership —
+  // not originKind — so a parasite DoT (sourceCast < 0) stays ineligible.
   if (event.family === "proc" || event.sourceCast < 0) return "proc";
   if (event.family === "conjureAuto" || event.family === "poison") return "conjure";
   if (event.family === "command") return "command";
   return event.family === "dot" ? "dot" : "direct";
+}
+
+/**
+ * Parent origin for derived blessing riders. Big Boned on a bleed stays "dot"
+ * so analysis attributes the rider with the bleed, not as a free-standing hit.
+ */
+function parentOriginKind(
+  event: ScheduledEvent<SimulationRuntime>,
+  source: BlessingDamageSource,
+): DamageOriginKind {
+  return event.originKind ?? source;
 }
 
 /**
@@ -44,6 +57,7 @@ export function scheduleBlessingDamage(
     hitIndex: event.hitIndex,
     source,
     attached: event.attached,
+    landTick: event.tick,
     base: rt.input.base,
     level: rt.input.level,
     accuracy: rt.input.accuracy,
@@ -65,6 +79,7 @@ export function scheduleBlessingDamage(
       rt.state = patchLeague(rt.state, { strikingLightReadyTick: event.tick + cooldown });
     }
   }
+  const originKind = parentOriginKind(event, source);
   for (const component of components) {
     scheduleEvent(rt, {
       tick: event.tick,
@@ -77,7 +92,11 @@ export function scheduleBlessingDamage(
       recursionAllowed: false,
       derivedFrom: event.seq,
       blessingId: component.blessingId,
+      originKind,
       expectedOccurrences: component.expectedOccurrences,
+      triggerRolls: component.triggerRolls,
+      expectedActivations: component.expectedActivations,
+      expectedSeparateHits: component.expectedSeparateHits,
       resolve: () => ({ damage: component.damage, hitDetail: component.hitDetail }),
     });
   }

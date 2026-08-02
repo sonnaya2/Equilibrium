@@ -31,6 +31,9 @@ export interface SolverProgress {
   evaluationBudget?: number;
   /** 0–1 estimated progress for the track fill. */
   progressRatio?: number;
+  /** Finalize shortlist re-score step (UI only — search budget is separate). */
+  finalizeStep?: number;
+  finalizeTotal?: number;
   proof?: SolverProofDTO;
 }
 

@@ -1,6 +1,7 @@
 /** Revolution-bar solver contracts. Pure types for evaluate/search layers. */
 
-export const SOLVER_SCHEMA_VERSION = 1 as const;
+/** Bumped when evaluation inputs change shape (e.g. Big Boned outgoing opt-in). */
+export const SOLVER_SCHEMA_VERSION = 2 as const;
 
 export type Bar = readonly string[];
 

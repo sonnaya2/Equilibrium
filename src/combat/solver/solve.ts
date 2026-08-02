@@ -1,10 +1,4 @@
-import type {
-  EvaluateFn,
-  PoolAbility,
-  SizeBounds,
-  SolveResult,
-  SolveTier,
-} from "./contracts";
+import type { EvaluateFn, PoolAbility, SizeBounds, SolveResult, SolveTier } from "./contracts";
 import { createRng } from "./rng";
 import { buildSeeds } from "./seeds";
 import { createSearchState, type SearchConfig } from "./search/types";
@@ -61,14 +55,7 @@ export interface SolveInput {
 }
 
 export type SolvePhaseName =
-  | "seed"
-  | "exhaustive"
-  | "beam"
-  | "evolutionary"
-  | "lns"
-  | "anneal"
-  | "local"
-  | "finalize";
+  "seed" | "exhaustive" | "beam" | "evolutionary" | "lns" | "anneal" | "local" | "finalize";
 
 export interface SolveAsyncHooks {
   /** Called before each search phase (for progress labels). */
@@ -125,10 +112,7 @@ export function solve(input: SolveInput): SolveResult {
  * Strategy bodies are still synchronous, but shorter thorough budgets keep
  * each phase snappy; yield between them restores interactivity.
  */
-export async function solveAsync(
-  input: SolveInput,
-  hooks?: SolveAsyncHooks,
-): Promise<SolveResult> {
+export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Promise<SolveResult> {
   const tier = input.tier ?? "thorough";
   const base = configForTier(tier, input.seed ?? 1);
   const config: SearchConfig = { ...base, ...input.config, tier };

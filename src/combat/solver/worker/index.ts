@@ -54,11 +54,7 @@ export {
   resetSolverHostForTests,
 } from "./host";
 
-export type {
-  SolveFn,
-  SolveProgressHandler,
-  SolveRuntimeOptions,
-} from "./solveTypes";
+export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 
 export {
   deleteCheckpoint,

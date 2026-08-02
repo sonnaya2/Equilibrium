@@ -6,28 +6,19 @@ import { TICK_SECONDS } from "../core/ticks";
 import { baseInput } from "../test/fixtures/inputs";
 import { leagueDamageComponents } from "./damage";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import {
-  resolveLeagueRules,
-  resolveMaximumLife,
-} from "./ruleset";
+import { resolveLeagueRules, resolveMaximumLife } from "./ruleset";
 import { serializeLeague, reviveLeague } from "../solver/worker/revive";
 import { powerburstRemainingTicks } from "@/components/combat/loadoutStats";
 
 const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
 
-const bigBoned = (derived: {
-  maximumLife?: number;
-  powerburstUntilTick?: number;
-}) =>
+const bigBoned = (derived: { maximumLife?: number; powerburstUntilTick?: number }) =>
   resolveLeagueRules(
     { ruleset: "equilibrium", blessingPicks: ["Balance"] },
     { includeBigBonedOutgoingDamage: true, ...derived },
   );
 
-function bigBonedExpected(
-  rules: ReturnType<typeof resolveLeagueRules>,
-  landTick: number,
-): number {
+function bigBonedExpected(rules: ReturnType<typeof resolveLeagueRules>, landTick: number): number {
   const components = leagueDamageComponents({
     rules,
     ability: attack,
@@ -64,27 +55,26 @@ describe("Powerburst max-life window for Big Boned", () => {
 
   it("does not preserve Powerburst for a 60s revo / 300s horizon", () => {
     // Full duration freeze at request: 6s = 10 ticks remaining.
-    const until = powerburstRemainingTicks(
-      Date.now() + POWERBURST_DURATION_MS,
-      Date.now(),
-    );
+    const until = powerburstRemainingTicks(Date.now() + POWERBURST_DURATION_MS, Date.now());
     expect(until).toBe(Math.ceil(POWERBURST_DURATION_MS / (TICK_SECONDS * 1000)));
     expect(until).toBe(10);
 
     const rules = bigBoned({ maximumLife: 10_000, powerburstUntilTick: until });
-    // A long revolution schedule: early hit boosted, late hit not.
+    // Early land tick (within 6s / 10-tick window) is doubled; a 60s or 300s
+    // revolution horizon must not keep that boost for late hits.
     const early = simulate({
       ...baseInput,
       league: rules,
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
-      durationTicks: secondsToTicksSafe(60),
     });
     const earlyBb = early.events.find((e) => e.abilityId === "big-boned");
     expect(earlyBb?.damage.expected).toBe(1_000);
+    expect(earlyBb?.tick).toBeLessThan(until);
 
-    // Hit scheduled well past the 10-tick window (e.g. late in a long revo).
+    // Hits scheduled well past the 10-tick window (late revo / 300s solver).
     expect(resolveMaximumLife(rules, 100)).toBe(10_000);
+    expect(resolveMaximumLife(rules, secondsToTicksSafe(60))).toBe(10_000);
     expect(resolveMaximumLife(rules, 500)).toBe(10_000); // ~300s
     expect(bigBonedExpected(rules, 100)).toBe(500);
     expect(bigBonedExpected(rules, 500)).toBe(500);

@@ -1,12 +1,5 @@
 import { exclusiveKey, remainingCandidates } from "../eligibility";
-import {
-  insertAt,
-  moveAt,
-  removeAt,
-  replaceAt,
-  swapAt,
-  type SearchState,
-} from "./types";
+import { insertAt, moveAt, removeAt, replaceAt, swapAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
 /**
@@ -17,10 +10,7 @@ export function runLocalSearch(state: SearchState): void {
   void runLocalSearchAsync(state, undefined);
 }
 
-export async function runLocalSearchAsync(
-  state: SearchState,
-  yieldCtx?: YieldCtx,
-): Promise<void> {
+export async function runLocalSearchAsync(state: SearchState, yieldCtx?: YieldCtx): Promise<void> {
   if (!state.best) return;
   let current = [...state.best.bar];
   let currentScore = state.best.robustScore;

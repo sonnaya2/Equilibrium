@@ -53,9 +53,7 @@ export function emptyAnalysisState(): RuntimeAnalysisState {
 
 export function cloneAnalysisState(state: RuntimeAnalysisState): RuntimeAnalysisState {
   return {
-    effects: new Map(
-      [...state.effects].map(([id, ledger]) => [id, { ...ledger }]),
-    ),
+    effects: new Map([...state.effects].map(([id, ledger]) => [id, { ...ledger }])),
     sources: new Map(state.sources),
     directDamage: state.directDamage,
     dotDamage: state.dotDamage,
@@ -86,25 +84,13 @@ export function mixAnalysisStates(
       totalDamage: mix(left?.totalDamage ?? 0, right?.totalDamage ?? 0),
       directDamage: mix(left?.directDamage ?? 0, right?.directDamage ?? 0),
       dotDamage: mix(left?.dotDamage ?? 0, right?.dotDamage ?? 0),
-      criticalContribution: mix(
-        left?.criticalContribution ?? 0,
-        right?.criticalContribution ?? 0,
-      ),
+      criticalContribution: mix(left?.criticalContribution ?? 0, right?.criticalContribution ?? 0),
       capLoss: mix(left?.capLoss ?? 0, right?.capLoss ?? 0),
       casts: mix(left?.casts ?? 0, right?.casts ?? 0),
       triggerRolls: mix(left?.triggerRolls ?? 0, right?.triggerRolls ?? 0),
-      expectedActivations: mix(
-        left?.expectedActivations ?? 0,
-        right?.expectedActivations ?? 0,
-      ),
-      expectedSeparateHits: mix(
-        left?.expectedSeparateHits ?? 0,
-        right?.expectedSeparateHits ?? 0,
-      ),
-      attachedComponents: mix(
-        left?.attachedComponents ?? 0,
-        right?.attachedComponents ?? 0,
-      ),
+      expectedActivations: mix(left?.expectedActivations ?? 0, right?.expectedActivations ?? 0),
+      expectedSeparateHits: mix(left?.expectedSeparateHits ?? 0, right?.expectedSeparateHits ?? 0),
+      attachedComponents: mix(left?.attachedComponents ?? 0, right?.attachedComponents ?? 0),
     });
   }
   const sourceKinds = new Set([...a.sources.keys(), ...b.sources.keys()]);

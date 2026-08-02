@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { simulate } from "../simulation/simulate";
 import { rotationOf } from "../simulation/contracts";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
-import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
 import { baseInput, rangedInput } from "../../test/fixtures/inputs";
 import { resolveLeagueRules } from "../../league/ruleset";
 import { resolveEventMultiplicity } from "./multiplicity";
@@ -86,9 +85,7 @@ describe("resolveEventMultiplicity defaults", () => {
   });
 
   it("legacy chance-weighted EV still implies one trigger roll", () => {
-    expect(
-      resolveEventMultiplicity(event({ expectedOccurrences: 0.05 })),
-    ).toEqual({
+    expect(resolveEventMultiplicity(event({ expectedOccurrences: 0.05 }))).toEqual({
       triggerRolls: 1,
       expectedActivations: 0.05,
       expectedSeparateHits: 0.05,
@@ -203,9 +200,7 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       rotation: rotationOf("dismember"),
     });
 
-    const dots = summary.events.filter(
-      (e) => e.abilityId === "dismember" && e.family === "dot",
-    );
+    const dots = summary.events.filter((e) => e.abilityId === "dismember" && e.family === "dot");
     expect(dots.length).toBe(dotTicks);
     for (const tick of dots) {
       expect(tick.originKind).toBe("dot");

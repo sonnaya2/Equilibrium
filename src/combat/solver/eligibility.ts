@@ -1,8 +1,5 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import {
-  meetsEquipmentRequirement,
-  meetsWeaponRequirement,
-} from "../engine/cast/rules";
+import { meetsEquipmentRequirement, meetsWeaponRequirement } from "../engine/cast/rules";
 import type {
   BarSizeBounds,
   CandidatePool,
@@ -106,8 +103,7 @@ export function validateBarEligibility(
   const issues: ExclusionReason[] = [];
   const size = normalizeSizeBounds(options.size);
   const includePartial = options.includePartial ?? pool.options.includePartial ?? false;
-  const weaponConfiguration =
-    options.weaponConfiguration ?? pool.options.weaponConfiguration;
+  const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
 
   if (bar.length < size.min) {

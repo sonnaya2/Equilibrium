@@ -110,12 +110,7 @@ export function packSimBase(stats: CalcStats, loadout: Loadout): SerializableRev
 
 function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
   return combatRevolutionBars.records
-    .filter(
-      (b) =>
-        b.style === style &&
-        b.supported &&
-        (b.target == null || b.target === "single"),
-    )
+    .filter((b) => b.style === style && b.supported && (b.target == null || b.target === "single"))
     .map((b) => {
       const ids = revoManagedSlots(b, engineSpecs)
         .filter((s) => s.modelledBy === "engine" && s.spec)
@@ -134,9 +129,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
   /** Short explore horizon for ranking; full 300s only on finalists. */
   const exploreSeconds = input.exploreSeconds ?? 30;
   const regions =
-    input.useBuildRegions === false
-      ? (input.unlockedRegions ?? [])
-      : unlockedRegions(input.build);
+    input.useBuildRegions === false ? (input.unlockedRegions ?? []) : unlockedRegions(input.build);
 
   const sizes = clampSolverBarSizes(
     input.minBarSize ?? MIN_SOLVER_BAR_SIZE,

@@ -146,24 +146,23 @@ export function combineBranchSummaries(
   const effectIds = new Set(
     parts.flatMap((part) => part.summary.analysis.byEffect.map((row) => row.id)),
   );
-  const effectNumeric = [
-    "totalDamage",
-    "casts",
-    "triggerRolls",
-    "expectedActivations",
-    "expectedSeparateHits",
-    "attachedComponents",
-    "directDamage",
-    "dotDamage",
-    "criticalContribution",
-    "capLoss",
-  ] as const;
+  type EffectNumericField =
+    | "totalDamage"
+    | "casts"
+    | "triggerRolls"
+    | "expectedActivations"
+    | "expectedSeparateHits"
+    | "attachedComponents"
+    | "directDamage"
+    | "dotDamage"
+    | "criticalContribution"
+    | "capLoss";
   const byEffect: DamageEffectBreakdown[] = [...effectIds]
     .map((id) => {
       const sample = parts
         .flatMap((part) => part.summary.analysis.byEffect)
         .find((effect) => effect.id === id)!;
-      const value = (field: (typeof effectNumeric)[number]) =>
+      const value = (field: EffectNumericField) =>
         mix(
           (summary) => summary.analysis.byEffect.find((effect) => effect.id === id)?.[field] ?? 0,
         );
@@ -179,8 +178,7 @@ export function combineBranchSummaries(
         expectedActivations,
         expectedSeparateHits: value("expectedSeparateHits"),
         attachedComponents: value("attachedComponents"),
-        averagePerActivation:
-          expectedActivations > 0 ? totalDamage / expectedActivations : 0,
+        averagePerActivation: expectedActivations > 0 ? totalDamage / expectedActivations : 0,
         directDamage: value("directDamage"),
         dotDamage: value("dotDamage"),
         criticalContribution: value("criticalContribution"),

@@ -60,9 +60,11 @@ describe("solveFromRequest", () => {
     expect(new Set(result.bar).size).toBe(result.bar.length);
     expect(Number.isFinite(result.score)).toBe(true);
     expect(result.evaluations).toBeGreaterThan(0);
-    expect(result.proofLabel === "globally-optimal" || result.proofLabel === "best-found" || result.proofLabel === "converged").toBe(
-      true,
-    );
+    expect(
+      result.proofLabel === "globally-optimal" ||
+        result.proofLabel === "best-found" ||
+        result.proofLabel === "converged",
+    ).toBe(true);
     // No autos or off-GCD on the bar.
     expect(result.bar).not.toContain("attack");
     expect(result.bar).not.toContain("runic_charge");

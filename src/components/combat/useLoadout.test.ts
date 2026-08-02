@@ -196,6 +196,7 @@ describe("normalizeLoadout", () => {
       overheal: "none",
       powerburstOfVitalityUntil: null,
       powerburstOfVitalityCooldownUntil: null,
+      experimentalBigBonedDamage: false,
     });
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);

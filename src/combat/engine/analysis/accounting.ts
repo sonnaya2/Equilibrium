@@ -7,7 +7,7 @@ import { resolveEventMultiplicity } from "./multiplicity";
 
 export function sourceKindOf(
   rt: SimulationRuntime,
-  event: ScheduledEvent,
+  event: ScheduledEvent<SimulationRuntime>,
 ): DamageSourceKind {
   if (event.blessingId) return "league-blessing";
   if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
@@ -22,7 +22,7 @@ export function sourceKindOf(
   return "other-modeled";
 }
 
-function isDotOrigin(event: ScheduledEvent): boolean {
+function isDotOrigin(event: ScheduledEvent<SimulationRuntime>): boolean {
   if (event.originKind === "dot") return true;
   if (event.originKind !== undefined) return false;
   return event.family === "dot";
@@ -52,7 +52,7 @@ function emptyLedger(id: string, kind: DamageSourceKind): EffectAnalysisLedger {
 export function accountAnalysisEvent(
   analysis: RuntimeAnalysisState,
   rt: SimulationRuntime,
-  event: ScheduledEvent,
+  event: ScheduledEvent<SimulationRuntime>,
   resolution: EventResolution,
 ): void {
   const { damage } = resolution;

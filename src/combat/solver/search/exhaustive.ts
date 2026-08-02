@@ -71,9 +71,7 @@ export function runExhaustive(state: SearchState): boolean {
 
 function runExhaustiveSync(state: SearchState): boolean {
   const estimate = estimateFeasibleCount(state.pool, state.sizeBounds);
-  if (
-    !shouldRunExhaustive(estimate, state.budget.remaining, state.config.exhaustiveMax)
-  ) {
+  if (!shouldRunExhaustive(estimate, state.budget.remaining, state.config.exhaustiveMax)) {
     return false;
   }
 
@@ -118,9 +116,7 @@ export async function runExhaustiveAsync(
   yieldCtx?: YieldCtx,
 ): Promise<boolean> {
   const estimate = estimateFeasibleCount(state.pool, state.sizeBounds);
-  if (
-    !shouldRunExhaustive(estimate, state.budget.remaining, state.config.exhaustiveMax)
-  ) {
+  if (!shouldRunExhaustive(estimate, state.budget.remaining, state.config.exhaustiveMax)) {
     return false;
   }
 

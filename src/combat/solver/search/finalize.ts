@@ -69,10 +69,7 @@ function fullCandidateList(pool: ScoredBar[], seedBestBar: readonly string[] | n
   const fullCandidates: ScoredBar[] = [];
   const take = Math.min(pool.length, 2);
   for (let i = 0; i < take; i++) fullCandidates.push(pool[i]!);
-  if (
-    seedBestBar &&
-    !fullCandidates.some((c) => c.bar.join("\0") === seedBestBar.join("\0"))
-  ) {
+  if (seedBestBar && !fullCandidates.some((c) => c.bar.join("\0") === seedBestBar.join("\0"))) {
     const seedEntry = pool.find((p) => p.bar.join("\0") === seedBestBar.join("\0"));
     if (seedEntry) fullCandidates.push(seedEntry);
   }
@@ -147,10 +144,7 @@ function assembleResult(
   };
 }
 
-function rescoreFull(
-  state: SearchState,
-  fullCandidates: ScoredBar[],
-): ScoredBar[] {
+function rescoreFull(state: SearchState, fullCandidates: ScoredBar[]): ScoredBar[] {
   const rescored: ScoredBar[] = [];
   for (const s of fullCandidates) {
     const full = state.forceEval(s.bar, "full", "finalize");
@@ -161,10 +155,7 @@ function rescoreFull(
 }
 
 /** Sync finalize for unit tests / pure solve(). */
-export function finalizeSearch(
-  state: SearchState,
-  opts: FinalizeOptions,
-): SolveResult {
+export function finalizeSearch(state: SearchState, opts: FinalizeOptions): SolveResult {
   const { seedBestScore, seedBestBar } = pickSeedBest(state);
   const pool = buildPool(state, seedBestBar);
   const fullCandidates = fullCandidateList(pool, seedBestBar);

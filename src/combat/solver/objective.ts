@@ -191,7 +191,9 @@ export function scoreSummary(
 }
 
 /** True when an eval result carries a finite numeric score usable for ranking. */
-export function isFiniteEval(result: { score: number } | ObjectiveScore | null | undefined): boolean {
+export function isFiniteEval(
+  result: { score: number } | ObjectiveScore | null | undefined,
+): boolean {
   if (result == null) return false;
   if ("ok" in result) {
     return result.ok === true && Number.isFinite(result.robustScore);

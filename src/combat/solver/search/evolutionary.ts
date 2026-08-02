@@ -1,13 +1,6 @@
 import type { ScoredBar } from "../contracts";
 import { exclusiveKey, remainingCandidates } from "../eligibility";
-import {
-  compareScored,
-  insertAt,
-  removeAt,
-  replaceAt,
-  swapAt,
-  type SearchState,
-} from "./types";
+import { compareScored, insertAt, removeAt, replaceAt, swapAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
 /**
@@ -18,10 +11,7 @@ export function runEvolutionary(state: SearchState): void {
   void runEvolutionaryAsync(state, undefined);
 }
 
-export async function runEvolutionaryAsync(
-  state: SearchState,
-  yieldCtx?: YieldCtx,
-): Promise<void> {
+export async function runEvolutionaryAsync(state: SearchState, yieldCtx?: YieldCtx): Promise<void> {
   const { evoPopulation, evoGenerations, evoElite } = state.config;
   let pop = seedPopulation(state, evoPopulation);
   if (pop.length === 0) return;

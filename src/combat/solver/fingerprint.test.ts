@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SOLVER_SCHEMA_VERSION } from "./contracts";
-import {
-  fingerprintBar,
-  fingerprintEvaluationKey,
-  stableStringify,
-} from "./fingerprint";
+import { fingerprintBar, fingerprintEvaluationKey, stableStringify } from "./fingerprint";
 import { EvalCache } from "./cache";
 
 describe("fingerprintBar", () => {
@@ -49,9 +45,9 @@ describe("fingerprintEvaluationKey", () => {
     });
     expect(key.startsWith(`v${SOLVER_SCHEMA_VERSION}\0`)).toBe(true);
     expect(key).toContain("a\0b");
-    expect(
-      fingerprintEvaluationKey({ bar: ["a", "b"], profileId: "balanced" }),
-    ).not.toBe(fingerprintEvaluationKey({ bar: ["b", "a"], profileId: "balanced" }));
+    expect(fingerprintEvaluationKey({ bar: ["a", "b"], profileId: "balanced" })).not.toBe(
+      fingerprintEvaluationKey({ bar: ["b", "a"], profileId: "balanced" }),
+    );
   });
 
   it("changes when context changes", () => {

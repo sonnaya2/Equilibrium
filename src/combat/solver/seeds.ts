@@ -126,9 +126,7 @@ function cooldownSpread(
   bounds: SizeBounds,
   byId: Map<string, PoolAbility>,
 ): string[] {
-  const ranked = [...pool].sort(
-    (a, b) => (b.cooldownTicks ?? 0) - (a.cooldownTicks ?? 0),
-  );
+  const ranked = [...pool].sort((a, b) => (b.cooldownTicks ?? 0) - (a.cooldownTicks ?? 0));
   const bar: string[] = [];
   const len = targetLen(bounds);
   let lo = 0;

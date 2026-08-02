@@ -42,13 +42,7 @@ export type EventFamily =
  * components preserve the parent's origin (e.g. Big Boned on a bleed stays "dot")
  * rather than inheriting only `family: "blessing"`.
  */
-export type DamageOriginKind =
-  | "direct"
-  | "dot"
-  | "command"
-  | "conjure"
-  | "proc"
-  | "blessing";
+export type DamageOriginKind = "direct" | "dot" | "command" | "conjure" | "proc" | "blessing";
 
 /**
  * RT is the runtime context handed to `resolve` at land time. Events never close

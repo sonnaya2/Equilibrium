@@ -1,11 +1,7 @@
 /// <reference lib="webworker" />
 
 import type { SerializableSolverRequest, SolverResultDTO } from "./serializable";
-import type {
-  HostToWorkerMessage,
-  SolverProgress,
-  WorkerToHostMessage,
-} from "./protocol";
+import type { HostToWorkerMessage, SolverProgress, WorkerToHostMessage } from "./protocol";
 import type { SolveFn, SolveRuntimeOptions } from "./solveTypes";
 
 declare const self: DedicatedWorkerGlobalScope;
@@ -24,9 +20,7 @@ function post(message: WorkerToHostMessage): void {
  * from this boundary.
  */
 async function loadSolve(): Promise<SolveFn> {
-  const mod = (await import(
-    /* webpackMode: "lazy" */ "../solveFromRequest"
-  )) as {
+  const mod = (await import(/* webpackMode: "lazy" */ "../solveFromRequest")) as {
     solveFromRequest?: SolveFn;
     default?: SolveFn;
   };

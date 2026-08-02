@@ -17,9 +17,7 @@ let sharedClient: RevolutionSolverClient | null = null;
  * API — look for `solveFromRequest` (or a same-shaped default) only.
  */
 async function loadSolve(): Promise<SolveFn> {
-  const mod = (await import(
-    /* webpackMode: "lazy" */ "../solveFromRequest"
-  )) as {
+  const mod = (await import(/* webpackMode: "lazy" */ "../solveFromRequest")) as {
     solveFromRequest?: SolveFn;
     default?: SolveFn;
   };
@@ -108,8 +106,7 @@ export async function runOptimize(
   onProgress?: SolveProgressHandler,
   options?: RunOptimizeOptions,
 ): Promise<SolverResultDTO> {
-  const cancelled = () =>
-    options?.isCancelled?.() === true || options?.signal?.aborted === true;
+  const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
 
   if (cancelled()) {
     throw new DOMException("revolution solver cancelled", "AbortError");
@@ -162,8 +159,7 @@ export async function runSolverInWorker(
   onProgress?: SolveProgressHandler,
   options?: { signal?: AbortSignal; isCancelled?: () => boolean },
 ): Promise<SolverResultDTO> {
-  const cancelled = () =>
-    options?.isCancelled?.() === true || options?.signal?.aborted === true;
+  const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
 
   if (stickyMainThread || typeof Worker === "undefined") {
     return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
@@ -208,8 +204,7 @@ export async function runSolverInWorker(
       }
       void runSolverOnMainThread(request, onProgress, { isCancelled: cancelled }).then(
         (result) => settle(() => resolve(result)),
-        (err: unknown) =>
-          settle(() => reject(err instanceof Error ? err : new Error(String(err)))),
+        (err: unknown) => settle(() => reject(err instanceof Error ? err : new Error(String(err)))),
       );
     };
 
@@ -264,15 +259,13 @@ export async function runSolverInWorker(
 export class RevolutionSolverClient {
   private worker: Worker | null = null;
   private seq = 0;
-  private active:
-    | {
-        requestId: number;
-        resolve: (result: SolverResultDTO) => void;
-        reject: (error: Error) => void;
-        onProgress?: SolveProgressHandler;
-        isCancelled?: () => boolean;
-      }
-    | null = null;
+  private active: {
+    requestId: number;
+    resolve: (result: SolverResultDTO) => void;
+    reject: (error: Error) => void;
+    onProgress?: SolveProgressHandler;
+    isCancelled?: () => boolean;
+  } | null = null;
 
   private ensureWorker(): Worker | null {
     if (this.worker) return this.worker;
@@ -337,8 +330,7 @@ export class RevolutionSolverClient {
   ): Promise<SolverResultDTO> {
     this.cancel();
     const requestId = ++this.seq;
-    const cancelled = () =>
-      options?.isCancelled?.() === true || options?.signal?.aborted === true;
+    const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
 
     if (cancelled()) {
       return Promise.reject(new DOMException("revolution solver cancelled", "AbortError"));

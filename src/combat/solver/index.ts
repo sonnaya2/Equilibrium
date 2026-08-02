@@ -126,11 +126,7 @@ export {
   type SearchState,
   type SearchConfig,
 } from "./search/types";
-export {
-  estimateFeasibleCount,
-  shouldRunExhaustive,
-  runExhaustive,
-} from "./search/exhaustive";
+export { estimateFeasibleCount, shouldRunExhaustive, runExhaustive } from "./search/exhaustive";
 export { runConstructiveBeam } from "./search/constructiveBeam";
 export { runLocalSearch, generateNeighbors } from "./search/localSearch";
 export { runLargeNeighborhood } from "./search/largeNeighborhood";

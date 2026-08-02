@@ -11,10 +11,7 @@ export function runAnnealing(state: SearchState): void {
   void runAnnealingAsync(state, undefined);
 }
 
-export async function runAnnealingAsync(
-  state: SearchState,
-  yieldCtx?: YieldCtx,
-): Promise<void> {
+export async function runAnnealingAsync(state: SearchState, yieldCtx?: YieldCtx): Promise<void> {
   if (!state.best) return;
   let current = [...state.best.bar];
   let currentScore = state.best.robustScore;

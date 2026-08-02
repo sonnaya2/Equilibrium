@@ -61,25 +61,25 @@ Author factual changes through the repository's normal JSONL patch workflow. Nev
 
 ## Revealed cards
 
-| Tier | Chaos | Balance | Order |
-| --- | --- | --- | --- |
-| 1 | **Adrenaline Junkie** — maximum adrenaline +50%; adrenaline generation +50% | **Big Boned** — maximum life points +50%; damage dealt gains bonus damage equal to 5% of maximum life points | **Teragard's Aegis** — base ability damage gains 25% of total armour value, doubled with a defender and tripled with a shield; base health regeneration gains 2.5% of maximum life points with the same multipliers |
-| 2 | **Abyssal Cinders** — attacks deal 15% of ability damage as bonus damage; 5% on-hit chance to trigger Inferno of Zamorak for 100-200% ability damage to one target | **Barkscales** — incoming damage is reduced by 10% of armour value; after five reductions, trigger Grasp of Guthix for 80-120% ability damage as poison in a 3×3 area | **Striking Light** — basic attack damage +40%; basic attacks trigger Light of Saradomin on a 9-second cooldown for 40-60% ability damage plus 250% of armour value |
-| 3 | **Avernic Rampage** — 5% on-attack chance to activate a 7.2-second window where abilities and special attacks cost 0% adrenaline | **Eternal Sustenance** — food is not consumed when eaten; eating no longer drains adrenaline | **Steadfast Will** — empowers Bash, Preparation, Reflect, and Revenge |
-| God 1 | **Demon's Mark** — accuracy is always calculated using the target's weakness | **Splash Zone** — AoE and multi-target attacks deal 30% more damage; AoE abilities deal 5% more damage per tile occupied by the target | **Sacred Fervor** — ability and special-attack cooldowns are reduced by 30% for all four combat styles |
+| Tier  | Chaos                                                                                                                                                              | Balance                                                                                                                                                               | Order                                                                                                                                                                                                               |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | **Adrenaline Junkie** — maximum adrenaline +50%; adrenaline generation +50%                                                                                        | **Big Boned** — maximum life points +50%; damage dealt gains bonus damage equal to 5% of maximum life points                                                          | **Teragard's Aegis** — base ability damage gains 25% of total armour value, doubled with a defender and tripled with a shield; base health regeneration gains 2.5% of maximum life points with the same multipliers |
+| 2     | **Abyssal Cinders** — attacks deal 15% of ability damage as bonus damage; 5% on-hit chance to trigger Inferno of Zamorak for 100-200% ability damage to one target | **Barkscales** — incoming damage is reduced by 10% of armour value; after five reductions, trigger Grasp of Guthix for 80-120% ability damage as poison in a 3×3 area | **Striking Light** — basic attack damage +40%; basic attacks trigger Light of Saradomin on a 9-second cooldown for 40-60% ability damage plus 250% of armour value                                                  |
+| 3     | **Avernic Rampage** — 5% on-attack chance to activate a 7.2-second window where abilities and special attacks cost 0% adrenaline                                   | **Eternal Sustenance** — food is not consumed when eaten; eating no longer drains adrenaline                                                                          | **Steadfast Will** — empowers Bash, Preparation, Reflect, and Revenge                                                                                                                                               |
+| God 1 | **Demon's Mark** — accuracy is always calculated using the target's weakness                                                                                       | **Splash Zone** — AoE and multi-target attacks deal 30% more damage; AoE abilities deal 5% more damage per tile occupied by the target                                | **Sacred Fervor** — ability and special-attack cooldowns are reduced by 30% for all four combat styles                                                                                                              |
 
 ## Implementation routing
 
 Classify each effect before writing code, then place it at the matching engine seam. `combat-sim` describes the seams; the mapping is:
 
-| Classification              | Where it lands                                                                                   |
-| --------------------------- | ------------------------------------------------------------------------------------------------ |
-| derived input or override   | shared combat/loadout context feeding `leagueModifiers(loadout)` in `src/combat/league/ruleset.ts` |
-| per-hit or per-attack damage | a scheduled event with full provenance, resolved in `engine/resolution/`                          |
-| cast-start state change     | `engine/cast/effects/`, in the lifecycle stage and style module that owns it                      |
-| landed-hit state change     | `engine/resolution/landed/`, in the style that owns it                                            |
-| persistent runtime state    | the style or target bucket of `RotationState`, written through its patch helper                   |
-| autonomous actor            | `engine/schedulers/`, with its own scheduler state                                                |
+| Classification               | Where it lands                                                                                     |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- |
+| derived input or override    | shared combat/loadout context feeding `leagueModifiers(loadout)` in `src/combat/league/ruleset.ts` |
+| per-hit or per-attack damage | a scheduled event with full provenance, resolved in `engine/resolution/`                           |
+| cast-start state change      | `engine/cast/effects/`, in the lifecycle stage and style module that owns it                       |
+| landed-hit state change      | `engine/resolution/landed/`, in the style that owns it                                             |
+| persistent runtime state     | the style or target bucket of `RotationState`, written through its patch helper                    |
+| autonomous actor             | `engine/schedulers/`, with its own scheduler state                                                 |
 
 Nothing league-specific goes into a base formula, an unconditional engine branch, or a blessing-only field bolted onto shared state. With the ruleset omitted, base-game totals, event order, and cast sequence must be unchanged.
 
@@ -175,7 +175,21 @@ The wiki card reads "**all damage you deal** gains 5% of your maximum life point
 which is wider than the Cinders wording and is not once per cast. It rides every qualifying damage
 instance, through the shared eligibility policy below.
 
-Implementation:
+**Safe default / experimental opt-in:**
+
+- `ResolvedLeagueRules.includeBigBonedOutgoingDamage` defaults to **false**.
+- Default calculator totals and solver rankings **exclude** the 5% max-life outgoing rider so an
+  unverified per-hit model cannot dominate rankings.
+- The +50% maximum-life multiplier (`blessingLifeMultiplier` / `maximumLifeMultiplier`) stays
+  active regardless of the flag.
+- Characterization tests and any future experimental UI pass
+  `includeBigBonedOutgoingDamage: true`. Do not silently change the provisional per-hit
+  interpretation when that flag is on.
+- Assumptions strings: default shows “Outgoing Big Boned damage excluded pending live
+  verification”; experimental lists per-hit, attached, 5% of max life including BB’s own boost,
+  rides DoT, no recursion (`BIG_BONED_OUTGOING_*` in `src/combat/league/ruleset.ts`).
+
+Implementation (when experimental flag is true):
 
 - its own +50% maximum-life-points increase contributes to the 5% damage amount;
 - the basis is the resolved maximum after temporary boosts, so Fortitude, bonfires, thermal baths

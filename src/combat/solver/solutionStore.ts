@@ -120,8 +120,7 @@ export function fingerprintSolveContext(request: SerializableSolverRequest): str
           maximumLife: loadout.league.maximumLife,
           powerburstUntilTick: loadout.league.powerburstUntilTick ?? 0,
           targetTiles: loadout.league.targetTiles,
-          includeBigBonedOutgoingDamage:
-            loadout.league.includeBigBonedOutgoingDamage === true,
+          includeBigBonedOutgoingDamage: loadout.league.includeBigBonedOutgoingDamage === true,
         },
         modifierSources: loadout.modifierSources,
         passiveIds: [...(loadout.equipmentEffects.passiveIds ?? [])].sort(),
@@ -155,10 +154,7 @@ export function saveSolveCache(store: SolveCacheStore): void {
 }
 
 /** Insert or refresh an entry (most-recent first LRU). */
-export function upsertSolveEntry(
-  store: SolveCacheStore,
-  entry: CachedSolveEntry,
-): SolveCacheStore {
+export function upsertSolveEntry(store: SolveCacheStore, entry: CachedSolveEntry): SolveCacheStore {
   const rest = store.entries.filter((e) => e.key !== entry.key);
   return {
     version: 1,

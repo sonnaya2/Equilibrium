@@ -244,6 +244,21 @@ export function BuffsPanel({
             );
           })}
         </div>
+        {selectedBlessings.some((b) => b.id === "big-boned") ? (
+          <label className="mt-2 flex items-start gap-2 text-xs text-parch-100">
+            <input
+              type="checkbox"
+              className="mt-0.5"
+              checked={loadout.buffs.experimentalBigBonedDamage}
+              onChange={(event) => setBuffs({ experimentalBigBonedDamage: event.target.checked })}
+            />
+            <span>
+              <strong className="text-chaos-300">Experimental:</strong> include Big Boned outgoing
+              damage (5% max life per hit). Off by default — mechanics unverified. Max-life +50%
+              always applies.
+            </span>
+          </label>
+        ) : null}
         {godBlessing ? (
           <p className="mt-1.5 text-xs text-gem-300">
             God Tier One · {godBlessing.name} ({godAlignment})

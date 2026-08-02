@@ -1,22 +1,13 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import {
-  meetsEquipmentRequirement,
-  meetsWeaponRequirement,
-} from "../engine/cast/rules";
-import type {
-  CandidatePool,
-  CandidatePoolOptions,
-  PoolAbility,
-} from "./contracts";
+import { meetsEquipmentRequirement, meetsWeaponRequirement } from "../engine/cast/rules";
+import type { CandidatePool, CandidatePoolOptions, PoolAbility } from "./contracts";
 
 function isFullyModeled(ability: PoolAbility): boolean {
   return ability.supportStatus === undefined;
 }
 
 /** Index a pool by id (last write wins on duplicates). */
-export function indexPool<T extends PoolAbility>(
-  pool: readonly T[],
-): Map<string, T> {
+export function indexPool<T extends PoolAbility>(pool: readonly T[]): Map<string, T> {
   const map = new Map<string, T>();
   for (const ability of pool) map.set(ability.id, ability);
   return map;

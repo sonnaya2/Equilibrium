@@ -1,4 +1,14 @@
-import type { ScheduledEvent } from "../runtime/events";
+/**
+ * Multiplicity fields shared by scheduled and resolved events (no `resolve`
+ * closure required — works on the event log).
+ */
+export interface MultiplicityFields {
+  attached: boolean;
+  expectedOccurrences?: number;
+  triggerRolls?: number;
+  expectedActivations?: number;
+  expectedSeparateHits?: number;
+}
 
 /**
  * Resolved multiplicity for one landed event. Prefer explicit fields; fall back
@@ -11,10 +21,9 @@ export interface ResolvedMultiplicity {
   attachedComponents: number;
 }
 
-export function resolveEventMultiplicity(event: ScheduledEvent): ResolvedMultiplicity {
+export function resolveEventMultiplicity(event: MultiplicityFields): ResolvedMultiplicity {
   if (event.attached) {
-    const activations =
-      event.expectedActivations ?? event.expectedOccurrences ?? 1;
+    const activations = event.expectedActivations ?? event.expectedOccurrences ?? 1;
     return {
       triggerRolls: event.triggerRolls ?? 0,
       expectedActivations: activations,

@@ -254,10 +254,7 @@ export interface LoadoutStatsOptions {
 const TICK_MS = TICK_SECONDS * 1000;
 
 /** Remaining Powerburst ticks from frozen now (half-open until-tick basis). */
-export function powerburstRemainingTicks(
-  untilMs: number | null | undefined,
-  now: number,
-): number {
+export function powerburstRemainingTicks(untilMs: number | null | undefined, now: number): number {
   if (untilMs == null || !Number.isFinite(untilMs)) return 0;
   const remainingMs = untilMs - now;
   if (!(remainingMs > 0)) return 0;
@@ -332,7 +329,9 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     maximumLife: maximumLifeForLeague,
     powerburstUntilTick,
     targetTiles: loadout.target?.occupiedTiles,
-    includeBigBonedOutgoingDamage: options.includeBigBonedOutgoingDamage === true,
+    includeBigBonedOutgoingDamage:
+      options.includeBigBonedOutgoingDamage === true ||
+      loadout.buffs.experimentalBigBonedDamage === true,
   });
 
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
@@ -402,10 +401,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
         : "Champion's ring: +3% crit while a bleed is active",
     );
   }
-  if (
-    hasPassive(equipmentEffects, "stalker-ring") &&
-    equipmentEffects.weaponClass !== "bow"
-  ) {
+  if (hasPassive(equipmentEffects, "stalker-ring") && equipmentEffects.weaponClass !== "bow") {
     critConditionalNotes.push("Stalker's ring: equip a bow for its static crit chance");
   }
   const critDamage = critDamageStats(level, equipmentCrit.damageBonus);
@@ -466,9 +462,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     ...styleContributions
       .filter((row) => row.value !== 0)
       .map((row) => ({ label: row.label, value: row.value })),
-    ...(defenderEquipmentDamage > 0
-      ? [{ label: "Defender", value: defenderEquipmentDamage }]
-      : []),
+    ...(defenderEquipmentDamage > 0 ? [{ label: "Defender", value: defenderEquipmentDamage }] : []),
   ];
   // Style-mismatched style-gear: show held damage with a switch-style cue (value
   // stays 0 so it does not inflate the total; Breakdown zero-hide would drop

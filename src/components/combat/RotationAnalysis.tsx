@@ -207,9 +207,7 @@ function EventTable({
                 </td>
                 <td className="py-1.5 pr-3 text-parch-50">
                   {effectName(event.abilityId, nameForId)}
-                  {parent ? (
-                    <span className="ml-1.5 text-parch-300">on {parent}</span>
-                  ) : null}
+                  {parent ? <span className="ml-1.5 text-parch-300">on {parent}</span> : null}
                 </td>
                 <td className="py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
                 <td className="py-1.5 pr-3 font-mono text-parch-300">
@@ -274,45 +272,19 @@ export function RotationEventPreview({
   );
 }
 
-/** Optional experimental / exclusion notes once the engine exposes them. */
-function ExperimentalMechanicsBanner({
-  result,
-  stats,
-}: {
-  result: RotationSummary;
-  stats: CalcStats;
-}) {
-  const summary = result as RotationSummary & {
-    includeBigBonedOutgoingDamage?: boolean;
-    supportWarnings?: readonly string[];
-  };
-  const warnings: string[] = [];
-  if (Array.isArray(summary.supportWarnings)) {
-    for (const warning of summary.supportWarnings) {
-      if (typeof warning === "string" && warning.trim()) warnings.push(warning.trim());
-    }
-  }
-  if (summary.includeBigBonedOutgoingDamage === true) {
-    warnings.push(
-      "Experimental: Big Boned outgoing damage is included in this total and may change.",
-    );
-  } else if (summary.includeBigBonedOutgoingDamage === false) {
-    const hasPick = stats.league.blessings.some((choice) => choice.id === "big-boned");
-    if (hasPick) {
-      warnings.push("Big Boned is picked, but its outgoing damage is excluded from this total.");
-    }
-  }
-  if (warnings.length === 0) return null;
+/** Big Boned outgoing is opt-in; surface safe-default vs experimental scoring. */
+function ExperimentalMechanicsBanner({ stats }: { stats: CalcStats }) {
+  const hasPick = stats.league.blessings.some((choice) => choice.id === "big-boned");
+  if (!hasPick) return null;
+  const warning = stats.league.includeBigBonedOutgoingDamage
+    ? "Experimental: Big Boned outgoing damage is included in this total and may change."
+    : "Outgoing Big Boned damage excluded pending live verification.";
   return (
     <div
       role="status"
       className="border border-chaos-300/40 bg-stone-900/80 px-3 py-2 text-xs text-chaos-300"
     >
-      {warnings.map((warning, index) => (
-        <p key={warning} className={index > 0 ? "mt-1" : undefined}>
-          {warning}
-        </p>
-      ))}
+      <p>{warning}</p>
     </div>
   );
 }
@@ -372,7 +344,7 @@ export function RotationAnalysisModal({
           </button>
         </header>
 
-        <ExperimentalMechanicsBanner result={result} stats={stats} />
+        <ExperimentalMechanicsBanner stats={stats} />
 
         <dl className="grid grid-cols-2 border-b border-stone-750 text-sm md:grid-cols-4">
           {[

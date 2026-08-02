@@ -31,23 +31,13 @@ function exploratoryDpm(totalExpected: number, durationTicks: number): number {
  * totalExpected DPM fallback marked exploratory:true.
  */
 export function evaluateRevolutionBar(request: RevolutionEvalRequest): RevolutionBarEvaluation {
-  const {
-    bar,
-    style,
-    durationTicks,
-    pool,
-    sim,
-    profileId,
-    customWeights,
-    includePartial,
-    size,
-  } = request;
+  const { bar, style, durationTicks, pool, sim, profileId, customWeights, includePartial, size } =
+    request;
 
   const reasons: ExclusionReason[] = [];
   const simFields = sim as Omit<RevolutionInput, "bar" | "style" | "durationTicks">;
   const weaponConfiguration = simFields.weaponConfiguration as
-    | CandidatePoolOptions["weaponConfiguration"]
-    | undefined;
+    CandidatePoolOptions["weaponConfiguration"] | undefined;
   const equipmentIds = simFields.equipmentIds;
 
   if (pool.style !== style) {

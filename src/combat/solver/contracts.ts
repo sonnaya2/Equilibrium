@@ -176,19 +176,11 @@ export interface PoolAbility {
   occupancyTicks?: number;
   cooldownTicks?: number;
   supportStatus?: "partially-modeled" | "not-modeled" | "mechanics-unverified";
-  weaponRequirement?:
-    | "twohand"
-    | "dualwield"
-    | "mainhand"
-    | "conduit"
-    | "death-guard-and-conduit";
+  weaponRequirement?: "twohand" | "dualwield" | "mainhand" | "conduit" | "death-guard-and-conduit";
   requiredEquipmentAnyOf?: readonly string[];
 }
 
-export type EvaluateFn = (input: {
-  bar: readonly string[];
-  mode?: EvalMode;
-}) => EvalResult;
+export type EvaluateFn = (input: { bar: readonly string[]; mode?: EvalMode }) => EvalResult;
 
 /** Solve orchestrator output (search layer). */
 export interface SolveResult {
@@ -237,13 +229,7 @@ export interface CandidatePoolOptions {
   includePartial?: boolean;
   allow?: readonly string[];
   deny?: readonly string[];
-  weaponConfiguration?:
-    | "twohand"
-    | "dualwield"
-    | "mainhand"
-    | "shield"
-    | "defender"
-    | "necromancy";
+  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   equipmentIds?: readonly string[];
 }
 

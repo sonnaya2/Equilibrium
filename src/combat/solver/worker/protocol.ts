@@ -1,19 +1,9 @@
-import type {
-  SerializableSolverRequest,
-  SolverProofDTO,
-  SolverResultDTO,
-} from "./serializable";
+import type { SerializableSolverRequest, SolverProofDTO, SolverResultDTO } from "./serializable";
 
 export type { SolverResultDTO, SolverProofDTO };
 
 /** Search phase labels posted with progress (opaque to the host UI). */
-export type SolverPhase =
-  | "seed"
-  | "explore"
-  | "exploit"
-  | "finalize"
-  | "paused"
-  | "idle";
+export type SolverPhase = "seed" | "explore" | "exploit" | "finalize" | "paused" | "idle";
 
 /**
  * Incremental search status. Keep fields cloneable — no Maps/Sets/functions.
@@ -61,10 +51,7 @@ export interface ResumeSolverMessage {
 }
 
 export type HostToWorkerMessage =
-  | StartSolverMessage
-  | CancelSolverMessage
-  | PauseSolverMessage
-  | ResumeSolverMessage;
+  StartSolverMessage | CancelSolverMessage | PauseSolverMessage | ResumeSolverMessage;
 
 // ── Worker → Main ──────────────────────────────────────────────────────────
 
@@ -92,10 +79,7 @@ export interface CancelledSolverMessage {
 }
 
 export type WorkerToHostMessage =
-  | ProgressSolverMessage
-  | ResultSolverMessage
-  | ErrorSolverMessage
-  | CancelledSolverMessage;
+  ProgressSolverMessage | ResultSolverMessage | ErrorSolverMessage | CancelledSolverMessage;
 
 export function isHostToWorkerMessage(value: unknown): value is HostToWorkerMessage {
   if (value === null || typeof value !== "object") return false;

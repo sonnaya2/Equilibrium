@@ -146,7 +146,21 @@ function evalBar(
 
 export function toScoredBar(
   bar: readonly string[],
-  result: { score: number; objective?: ScoredBar | { ok?: boolean; robustScore?: number; minDpm?: number; weightedMean?: number; profileId?: ScoredBar["profileId"]; openingDpm?: number; developedDpm?: number; steadyDpm?: number } },
+  result: {
+    score: number;
+    objective?:
+      | ScoredBar
+      | {
+          ok?: boolean;
+          robustScore?: number;
+          minDpm?: number;
+          weightedMean?: number;
+          profileId?: ScoredBar["profileId"];
+          openingDpm?: number;
+          developedDpm?: number;
+          steadyDpm?: number;
+        };
+  },
   profileId: ScoredBar["profileId"],
 ): ScoredBar {
   const obj = result.objective;
@@ -182,7 +196,11 @@ export function toScoredBar(
   };
 }
 
-function emptyScored(bar: readonly string[], profileId: ScoredBar["profileId"], score: number): ScoredBar {
+function emptyScored(
+  bar: readonly string[],
+  profileId: ScoredBar["profileId"],
+  score: number,
+): ScoredBar {
   return {
     bar: [...bar],
     fingerprint: fingerprintBar(bar),

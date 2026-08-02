@@ -76,7 +76,10 @@ function authoredSeedsFromCatalogue(
   return seeds;
 }
 
-function poolAsSpecs(poolIds: readonly string[], byId: ReadonlyMap<string, PoolAbility>): AbilitySpec[] {
+function poolAsSpecs(
+  poolIds: readonly string[],
+  byId: ReadonlyMap<string, PoolAbility>,
+): AbilitySpec[] {
   const out: AbilitySpec[] = [];
   for (const id of poolIds) {
     const entry = byId.get(id);
@@ -228,9 +231,7 @@ export const solveFromRequest: SolveFn = async (
       noImprovementCount: noImprovement,
       evaluationBudget,
       progressRatio: progressRatioNow(),
-      ...(finalizeActive && finalizeTotal > 0
-        ? { finalizeStep: finalizeDone, finalizeTotal }
-        : {}),
+      ...(finalizeActive && finalizeTotal > 0 ? { finalizeStep: finalizeDone, finalizeTotal } : {}),
     };
     options.onProgress(progress);
   };
@@ -370,15 +371,17 @@ export const solveFromRequest: SolveFn = async (
   const winnerBar = result.best.bar;
   const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
   const hasBigBoned = simBase.league.blessingIds.includes("big-boned");
-  const experimentalBigBoned =
-    simBase.league.includeBigBonedOutgoingDamage === true && hasBigBoned;
+  const experimentalBigBoned = simBase.league.includeBigBonedOutgoingDamage === true && hasBigBoned;
   const bigBonedAssumptions = experimentalBigBoned
     ? [...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS]
     : hasBigBoned
       ? [BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION]
       : undefined;
   const experimentalNotes = experimentalBigBoned
-    ? (["best-found under experimental assumptions", ...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS] as const)
+    ? ([
+        "best-found under experimental assumptions",
+        ...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
+      ] as const)
     : hasBigBoned
       ? ([BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION] as const)
       : [];

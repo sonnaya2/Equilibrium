@@ -2,10 +2,7 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord } from "../simulation/contracts";
-import {
-  emptyAnalysisState,
-  type RuntimeAnalysisState,
-} from "../analysis";
+import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
 import { resolveMaximumAdrenaline } from "../../league/ruleset";

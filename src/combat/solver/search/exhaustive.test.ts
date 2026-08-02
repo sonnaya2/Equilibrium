@@ -2,11 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { EvaluateFn, PoolAbility } from "../contracts";
 import { createSearchState } from "./types";
 import { configForTier, solve } from "../solve";
-import {
-  estimateFeasibleCount,
-  runExhaustive,
-  shouldRunExhaustive,
-} from "./exhaustive";
+import { estimateFeasibleCount, runExhaustive, shouldRunExhaustive } from "./exhaustive";
 
 const pool: PoolAbility[] = [
   { id: "a", category: "basic", averageDamage: 10, occupancyTicks: 3 },

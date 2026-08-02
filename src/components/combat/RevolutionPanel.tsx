@@ -397,11 +397,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       });
       const contextKey = fingerprintSolveContext(baseRequest);
       const cached = lookupSolvedBar(contextKey);
-      const cachedSeeds = seedBarsFromSolveCache(
-        loadout.style,
-        contextKey,
-        sizes.minBarSize,
-      );
+      const cachedSeeds = seedBarsFromSolveCache(loadout.style, contextKey, sizes.minBarSize);
       if (cached?.bar?.length) {
         lastBestRef.current = cached.score;
         setSolverProgress({
@@ -421,7 +417,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             : "Resuming from saved bar",
         );
       } else if (cachedSeeds.length > 0) {
-        setCacheNote(`Seeding ${cachedSeeds.length} saved bar${cachedSeeds.length === 1 ? "" : "s"}`);
+        setCacheNote(
+          `Seeding ${cachedSeeds.length} saved bar${cachedSeeds.length === 1 ? "" : "s"}`,
+        );
       }
       const request = {
         ...baseRequest,
@@ -582,7 +580,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               <option value="sustained">Sustained</option>
             </select>
           </label>
-          <label className="flex items-center gap-1 text-parch-300" title={`Search floor ${MIN_SOLVER_BAR_SIZE} slots — shorter bars are skipped`}>
+          <label
+            className="flex items-center gap-1 text-parch-300"
+            title={`Search floor ${MIN_SOLVER_BAR_SIZE} slots — shorter bars are skipped`}
+          >
             Max slots
             <input
               type="number"
@@ -623,7 +624,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                     solverProgress.finalizeTotal != null &&
                     solverProgress.finalizeTotal > 0 ? (
                       <>
-                        scoring {formatNumber(Math.min(solverProgress.finalizeStep ?? 0, solverProgress.finalizeTotal))}
+                        scoring{" "}
+                        {formatNumber(
+                          Math.min(solverProgress.finalizeStep ?? 0, solverProgress.finalizeTotal),
+                        )}
                         /{formatNumber(solverProgress.finalizeTotal)}
                         <span className="revo-solver-status__dot" aria-hidden>
                           ·
@@ -644,9 +648,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                     </span>
                     <span
                       className={
-                        bestPulse
-                          ? "revo-solver-status__best is-pulse"
-                          : "revo-solver-status__best"
+                        bestPulse ? "revo-solver-status__best is-pulse" : "revo-solver-status__best"
                       }
                     >
                       best {formatNumber(solverProgress.bestScore)}
@@ -705,7 +707,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               </div>
             ) : solving ? (
               <p className="revo-solver-status__hint">
-                Searching legal bars ({MIN_SOLVER_BAR_SIZE}+ slots) for this loadout and region pick…
+                Searching legal bars ({MIN_SOLVER_BAR_SIZE}+ slots) for this loadout and region
+                pick…
               </p>
             ) : null}
             {cacheNote ? <p className="revo-solver-status__hint">{cacheNote}</p> : null}
@@ -732,9 +735,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                       #{i + 1} {formatNumber(row.score)}
                     </span>
                     <span className="truncate text-parch-300">
-                      {row.bar
-                        .map((id) => ENGINE_SPECS.get(id)?.name ?? id)
-                        .join(" → ")}
+                      {row.bar.map((id) => ENGINE_SPECS.get(id)?.name ?? id).join(" → ")}
                     </span>
                     <button
                       type="button"

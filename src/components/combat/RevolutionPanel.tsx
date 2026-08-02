@@ -11,7 +11,7 @@ import { secondsToTicks, ticksToSeconds } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
 import {
   packSolverRequest,
-  runSolverInWorker,
+  runSolverOnMainThread,
   TIER_BUDGETS,
   type ObjectiveProfileId,
   type SolverProgress,
@@ -376,39 +376,48 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         userBar: modelled.map((m) => m.id),
         seed: 1,
       });
-      const dto = await runSolverInWorker(
+      // Main-thread with cooperative yields: Next workers often fail to load the
+      // combat bundle, and finalize used to hard-block without yields.
+      const dto = await runSolverOnMainThread(
         request,
         (progress) => {
-          if (cancelRef.current) return;
+          if (cancelRef.current || abort.signal.aborted) return;
           if (progress.bestScore > lastBestRef.current + 1e-6) {
             lastBestRef.current = progress.bestScore;
             setBestPulse(true);
             window.setTimeout(() => setBestPulse(false), 450);
           }
-          setSolverProgress(progress);
+          setSolverProgress({ ...progress });
         },
-        { signal: abort.signal },
+        { isCancelled: () => cancelRef.current || abort.signal.aborted },
       );
-      if (cancelRef.current) return;
-      setSolverResult(dto);
-      setActiveBarIds([...dto.bar]);
-      setResult(null);
+      if (cancelRef.current || abort.signal.aborted) return;
+
+      const bar = dto.bar?.length ? [...dto.bar] : [];
+      if (bar.length === 0) {
+        setSolverError("Search finished without a legal bar. Try a larger max slots or different style.");
+        setSolverResult(dto);
+      } else {
+        setSolverResult(dto);
+        setActiveBarIds(bar);
+        setResult(null);
+      }
       setSolverProgress({
         phase: "finalize",
         evaluations: dto.evaluations,
         uniqueCandidates: dto.uniqueCandidates,
-        bestScore: dto.score,
-        windowDpms: dto.score,
-        topBarPreview: dto.bar,
+        bestScore: Number.isFinite(dto.score) ? dto.score : 0,
+        windowDpms: Number.isFinite(dto.score) ? dto.score : 0,
+        topBarPreview: bar,
         noImprovementCount: 0,
         evaluationBudget: TIER_BUDGETS[solverTier],
         progressRatio: 1,
       });
     } catch (err) {
-      if (cancelRef.current || (err instanceof DOMException && err.name === "AbortError")) {
-        return;
-      }
-      setSolverError(err instanceof Error ? err.message : String(err));
+      if (cancelRef.current || abort.signal.aborted) return;
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      const message = err instanceof Error ? err.message : String(err);
+      setSolverError(message === "solver cancelled" ? null : message);
     } finally {
       setSolving(false);
       abortRef.current = null;

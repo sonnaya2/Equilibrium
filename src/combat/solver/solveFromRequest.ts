@@ -305,6 +305,22 @@ export const solveFromRequest: SolveFn = async (
         currentPhase = mapPhase(phase);
         emitProgress(true);
       },
+      onFinalizeStep: (info) => {
+        currentPhase = "finalize";
+        // Keep ratio under 1 until truly done so the track still animates.
+        const ratio = 0.85 + 0.14 * (info.done / Math.max(1, info.total));
+        options?.onProgress?.({
+          phase: "finalize",
+          evaluations,
+          uniqueCandidates: uniqueBars,
+          bestScore: Number.isFinite(bestScore) ? bestScore : 0,
+          windowDpms: Number.isFinite(bestScore) ? bestScore : 0,
+          topBarPreview: topPreview,
+          noImprovementCount: noImprovement,
+          evaluationBudget,
+          progressRatio: Math.min(0.99, ratio),
+        });
+      },
       yieldSlice: async () => {
         emitProgress(true);
         if (options?.isCancelled?.() || options?.signal?.aborted) {
@@ -315,7 +331,9 @@ export const solveFromRequest: SolveFn = async (
             await new Promise((r) => setTimeout(r, 16));
           }
         }
+        // Double rAF-style yield: setTimeout(0) alone can still starve paint.
         await options?.yieldSlice?.();
+        await new Promise((r) => setTimeout(r, 0));
       },
     },
   );

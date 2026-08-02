@@ -5,75 +5,92 @@ import type { SearchState } from "./types";
 export interface FinalizeOptions {
   tier: SolveTier;
   topK?: number;
+  /** Yield between expensive full-horizon re-scores so the UI can paint. */
+  yieldSlice?: () => Promise<void>;
+  onStep?: (info: { done: number; total: number; label: string }) => void;
 }
 
-/**
- * Re-evaluate a short finalist list at full horizon. Seed baseline uses the
- * best explore-scored seed only (not every seed) so finalize stays cheap.
- */
-export function finalizeSearch(state: SearchState, opts: FinalizeOptions): SolveResult {
-  const topK = opts.topK ?? state.config.topK;
+function isRankable(s: ScoredBar | null | undefined): s is ScoredBar {
+  return Boolean(s && Number.isFinite(s.robustScore) && s.bar.length > 0);
+}
 
-  // Best seed under explore scores already on archive/seeds — pick explore best seed.
+function pickSeedBest(state: SearchState): {
+  seedBestScore: number;
+  seedBestBar: readonly string[] | null;
+} {
   let seedBestScore = Number.NEGATIVE_INFINITY;
   let seedBestBar: readonly string[] | null = null;
   for (const seed of state.seeds) {
     const explore = state.forceEval(seed, "search", "seed-baseline-explore");
-    if (explore && Number.isFinite(explore.robustScore) && explore.robustScore > seedBestScore) {
+    if (isRankable(explore) && explore.robustScore > seedBestScore) {
       seedBestScore = explore.robustScore;
       seedBestBar = explore.bar;
     }
   }
-  // One full-horizon seed baseline for the guarantee.
-  if (seedBestBar) {
-    const fullSeed = state.forceEval(seedBestBar, "full", "seed-final");
-    if (fullSeed && Number.isFinite(fullSeed.robustScore)) {
-      seedBestScore = fullSeed.robustScore;
-    }
-  }
+  return { seedBestScore, seedBestBar };
+}
 
+function buildPool(state: SearchState, seedBestBar: readonly string[] | null): ScoredBar[] {
   const pool: ScoredBar[] = [];
   const seen = new Set<string>();
   const add = (s: ScoredBar | null | undefined) => {
-    if (!s || !Number.isFinite(s.robustScore)) return;
+    if (!isRankable(s)) return;
     if (seen.has(s.fingerprint)) return;
     seen.add(s.fingerprint);
     pool.push(s);
   };
   add(state.best);
   for (const a of state.archive) add(a);
-
+  if (seedBestBar) add(state.forceEval(seedBestBar, "search", "seed-in-pool"));
   pool.sort((a, b) => b.robustScore - a.robustScore);
-  // Interactive: full-rescore topK only (plus a couple of alternates), not 12+.
-  const reevalLimit = Math.min(pool.length, Math.max(topK + 1, 5));
-  const rescored: ScoredBar[] = [];
-  for (let i = 0; i < reevalLimit; i++) {
-    const s = pool[i]!;
-    const full = state.forceEval(s.bar, "full", "finalize");
-    if (full && Number.isFinite(full.robustScore)) rescored.push(full);
-    else rescored.push(s);
+  return pool;
+}
+
+function fullCandidateList(pool: ScoredBar[], seedBestBar: readonly string[] | null): ScoredBar[] {
+  const fullCandidates: ScoredBar[] = [];
+  const take = Math.min(pool.length, 2);
+  for (let i = 0; i < take; i++) fullCandidates.push(pool[i]!);
+  if (
+    seedBestBar &&
+    !fullCandidates.some((c) => c.bar.join("\0") === seedBestBar.join("\0"))
+  ) {
+    const seedEntry = pool.find((p) => p.bar.join("\0") === seedBestBar.join("\0"));
+    if (seedEntry) fullCandidates.push(seedEntry);
   }
-  for (let i = reevalLimit; i < pool.length; i++) rescored.push(pool[i]!);
+  return fullCandidates;
+}
+
+function assembleResult(
+  state: SearchState,
+  opts: FinalizeOptions,
+  seedBestScore: number,
+  seedBestBar: readonly string[] | null,
+  pool: ScoredBar[],
+  rescoredFull: ScoredBar[],
+): SolveResult {
+  const topK = opts.topK ?? state.config.topK;
+  const rescored: ScoredBar[] = [...rescoredFull];
+  for (const s of pool) {
+    if (!rescored.some((r) => r.fingerprint === s.fingerprint)) rescored.push(s);
+  }
   rescored.sort((a, b) => b.robustScore - a.robustScore);
 
-  let best = rescored[0] ?? state.best;
-  if (
-    !best ||
-    (Number.isFinite(seedBestScore) &&
-      seedBestScore > Number.NEGATIVE_INFINITY &&
-      best.robustScore < seedBestScore - 1e-9)
-  ) {
-    if (seedBestBar) {
-      const s = state.forceEval(seedBestBar, "full", "seed-baseline");
-      if (s && s.robustScore >= seedBestScore - 1e-9) best = s;
+  let best = rescored.find(isRankable) ?? null;
+
+  if (seedBestBar && isRankable(best)) {
+    const seedFull = rescored.find((r) => r.bar.join("\0") === seedBestBar.join("\0"));
+    const seedScore = seedFull?.robustScore ?? seedBestScore;
+    if (Number.isFinite(seedScore) && best.robustScore + 1e-9 < seedScore && seedFull) {
+      best = seedFull;
     }
   }
 
   if (!best) {
+    const fallbackBar = seedBestBar ?? state.seeds[0] ?? [];
     best = {
-      bar: [],
-      fingerprint: "",
-      robustScore: Number.NEGATIVE_INFINITY,
+      bar: [...fallbackBar],
+      fingerprint: fallbackBar.join("\0"),
+      robustScore: Number.isFinite(seedBestScore) ? seedBestScore : 0,
       minDpm: 0,
       weightedMean: 0,
       profileId: state.config.profileId ?? "balanced",
@@ -87,12 +104,14 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
     rescored.unshift(best);
   }
 
-  const top = diverseSelect(rescored, topK);
+  const top = diverseSelect(
+    rescored.filter(isRankable),
+    topK,
+  );
   if (top.length === 0) top.push(best);
   top.sort((a, b) => b.robustScore - a.robustScore);
   if (top[0]!.robustScore < best.robustScore) top[0] = best;
 
-  // globally-optimal only if exhaustive completed the full tree.
   const proof: ProofLabel = state.exhaustiveCompleted
     ? "globally-optimal"
     : state.budget.remaining > 0 && state.budget.used > 0
@@ -117,4 +136,68 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
       bestScore: best.robustScore,
     },
   };
+}
+
+function rescoreFull(
+  state: SearchState,
+  fullCandidates: ScoredBar[],
+): ScoredBar[] {
+  const rescored: ScoredBar[] = [];
+  for (const s of fullCandidates) {
+    const full = state.forceEval(s.bar, "full", "finalize");
+    if (isRankable(full)) rescored.push(full);
+    else rescored.push(s);
+  }
+  return rescored;
+}
+
+/** Sync finalize for unit tests / pure solve(). */
+export function finalizeSearch(
+  state: SearchState,
+  opts: FinalizeOptions,
+): SolveResult {
+  const { seedBestScore, seedBestBar } = pickSeedBest(state);
+  const pool = buildPool(state, seedBestBar);
+  const fullCandidates = fullCandidateList(pool, seedBestBar);
+  const rescoredFull = rescoreFull(state, fullCandidates);
+  return assembleResult(state, opts, seedBestScore, seedBestBar, pool, rescoredFull);
+}
+
+/**
+ * Async finalize: yields between each full-horizon re-score so main-thread UI
+ * stays responsive and progress can update.
+ */
+export async function finalizeSearchAsync(
+  state: SearchState,
+  opts: FinalizeOptions,
+): Promise<SolveResult> {
+  const yieldSlice = opts.yieldSlice ?? (async () => undefined);
+  const { seedBestScore, seedBestBar } = pickSeedBest(state);
+  await yieldSlice();
+
+  const pool = buildPool(state, seedBestBar);
+  const fullCandidates = fullCandidateList(pool, seedBestBar);
+  const totalSteps = fullCandidates.length;
+  const rescoredFull: ScoredBar[] = [];
+
+  for (let i = 0; i < fullCandidates.length; i++) {
+    const s = fullCandidates[i]!;
+    opts.onStep?.({
+      done: i,
+      total: Math.max(1, totalSteps),
+      label: `Final scoring ${i + 1}/${Math.max(1, totalSteps)}`,
+    });
+    const full = state.forceEval(s.bar, "full", "finalize");
+    if (isRankable(full)) rescoredFull.push(full);
+    else rescoredFull.push(s);
+    await yieldSlice();
+  }
+
+  opts.onStep?.({
+    done: totalSteps,
+    total: Math.max(1, totalSteps),
+    label: "Final scoring done",
+  });
+
+  return assembleResult(state, opts, seedBestScore, seedBestBar, pool, rescoredFull);
 }

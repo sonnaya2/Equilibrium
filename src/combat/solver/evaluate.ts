@@ -151,6 +151,31 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
 
   const scored = scoreSummary(summary, profileId, customWeights);
   if (!scored.ok) {
+    // failedWeight / branch failures are common with Impatient/Relentless.
+    // Do not hard-kill ranking: fall back to fixed-window DPM from the ledger
+    // so finalize always returns a usable bar.
+    const soft = exploratoryDpm(summary.totalExpected, durationTicks);
+    if (Number.isFinite(soft) && summary.totalExpected > 0) {
+      return {
+        ok: true,
+        exploratory: true,
+        score: soft,
+        reasons: [
+          {
+            code: "score-failed",
+            message: scored.reason,
+          },
+        ],
+        bar,
+        resolved,
+        summary,
+        metrics: {
+          dpm: soft,
+          totalExpected: summary.totalExpected,
+        },
+        profileId,
+      };
+    }
     reasons.push({
       code: "score-failed",
       message: scored.reason,

@@ -114,4 +114,4 @@ export { runLocalSearch, generateNeighbors } from "./search/localSearch";
 export { runLargeNeighborhood } from "./search/largeNeighborhood";
 export { runEvolutionary, orderCrossover } from "./search/evolutionary";
 export { runAnnealing } from "./search/annealing";
-export { finalizeSearch } from "./search/finalize";
+export { finalizeSearch, finalizeSearchAsync } from "./search/finalize";

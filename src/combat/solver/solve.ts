@@ -14,7 +14,7 @@ import { runEvolutionary } from "./search/evolutionary";
 import { runLargeNeighborhood } from "./search/largeNeighborhood";
 import { runAnnealing } from "./search/annealing";
 import { runLocalSearch } from "./search/localSearch";
-import { finalizeSearch } from "./search/finalize";
+import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
 
 /**
  * Evaluation budgets. Thorough is tuned for interactive UI (~few seconds of
@@ -42,7 +42,7 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     lnsRounds: tier === "thorough" ? 0 : Math.round(14 * Math.min(scale, 4)),
     lnsDestroyK: 2,
     annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
-    localIterations: tier === "thorough" ? 40 : Math.round(60 * Math.min(scale, 4)),
+    localIterations: tier === "thorough" ? 12 : Math.round(40 * Math.min(scale, 4)),
     topK: 5,
     exhaustiveMax: tier === "thorough" ? 800 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
@@ -74,6 +74,8 @@ export interface SolveAsyncHooks {
   onPhase?: (phase: SolvePhaseName) => void;
   /** Cooperative yield so the UI can paint / cancel. */
   yieldSlice?: () => Promise<void>;
+  /** Full-horizon finalize step progress (N of M). */
+  onFinalizeStep?: (info: { done: number; total: number; label: string }) => void;
 }
 
 /**
@@ -189,7 +191,15 @@ export async function solveAsync(
   }
 
   onPhase?.("finalize");
-  const result = finalizeSearch(state, { tier, topK: config.topK });
+  const result = await finalizeSearchAsync(state, {
+    tier,
+    topK: config.topK,
+    yieldSlice,
+    onStep: (info) => {
+      onPhase?.("finalize");
+      hooks?.onFinalizeStep?.(info);
+    },
+  });
   await yieldSlice();
   return result;
 }

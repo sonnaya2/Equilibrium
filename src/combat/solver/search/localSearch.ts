@@ -77,14 +77,18 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
 
   if (n < max) {
     const remain = remainingCandidates(bar, state.pool, state.byId);
-    for (const a of remain) {
+    // Cap inserts — full remain×positions explodes and freezes the UI.
+    const insertPool = remain.slice(0, 8);
+    for (const a of insertPool) {
       for (let i = 0; i <= n; i++) out.push(insertAt(bar, i, a.id));
     }
   }
 
   for (let i = 0; i < n; i++) {
     const without = removeAt(bar, i);
+    let replaced = 0;
     for (const a of state.pool) {
+      if (replaced >= 8) break;
       if (a.id === bar[i]) continue;
       if (without.includes(a.id)) continue;
       const g = exclusiveKey(a);
@@ -100,8 +104,13 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
         if (clash) continue;
       }
       out.push(replaceAt(bar, i, a.id));
+      replaced += 1;
     }
   }
 
+  // Hard cap neighbor set so local search cannot stall the page.
+  if (out.length > 48) {
+    return state.rng.shuffle(out).slice(0, 48);
+  }
   return out;
 }

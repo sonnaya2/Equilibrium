@@ -68,7 +68,7 @@ function sampleRequest(overrides: { equipmentIds?: string[]; style?: "melee" | "
 
 describe("solutionStore", () => {
   it("clamps bar sizes to the product floor", () => {
-    expect(clampSolverBarSizes(4, 10)).toEqual({ minBarSize: 6, maxBarSize: 10 });
+    expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 4, maxBarSize: 10 });
     expect(clampSolverBarSizes(8, 7)).toEqual({ minBarSize: 8, maxBarSize: 8 });
     expect(clampSolverBarSizes(undefined, undefined).minBarSize).toBe(MIN_SOLVER_BAR_SIZE);
   });

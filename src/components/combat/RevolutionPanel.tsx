@@ -825,7 +825,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           </label>
           <label
             className="flex items-center gap-1 text-parch-300"
-            title={`Search floor ${MIN_SOLVER_BAR_SIZE} slots — shorter bars are skipped`}
+            title={`Search floor ${MIN_SOLVER_BAR_SIZE} slots — shorter bars are skipped (degen 4–5 ok)`}
           >
             Max slots
             <input

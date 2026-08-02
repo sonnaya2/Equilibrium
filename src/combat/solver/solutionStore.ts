@@ -19,7 +19,8 @@ export const REVO_SOLVE_CACHE_KEY = "eq:revo-solve:v2";
 const REVO_SOLVE_CACHE_KEY_V1 = "eq:revo-solve:v1";
 
 /** Short bars never compete on real revo bars — search floor for the product path. */
-export const MIN_SOLVER_BAR_SIZE = 6;
+/** Floor for optimizer bars — short "degen" bars are legal (was 6). */
+export const MIN_SOLVER_BAR_SIZE = 4;
 export const DEFAULT_MAX_BAR_SIZE = 10;
 const MAX_CACHE_ENTRIES = 48;
 const MAX_TOP_PER_ENTRY = 5;

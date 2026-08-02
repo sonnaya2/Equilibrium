@@ -1,46 +1,70 @@
 # Equilibrium data platform
 
-Game data is built into a queryable database rather than maintained as large JSON files:
+Game data is built into a queryable local SQLite database rather than maintained as large hand-edited JSON:
 
 ```text
-data/canonical/*.jsonl
-  -> schema migrations
-  -> validated direct import into SQLite + transactional content patches
-  -> validation and bounded query CLI
-  -> versioned manifest, bounded indexes, and page-sized frontend shards
+data/canonical/*.jsonl          # tracked build input (reviewable mirror)
+data/migrations/*.sql           # tracked schema
+data/patches/*.jsonl            # tracked content ops
+  -> scripts/data rebuild
+  -> .cache/equilibrium.sqlite  # local only, never committed
+  -> .generated/documents/      # #shard/* build inputs, never committed
+  -> reports/data-*.json        # validation / inventory / parity, never committed
+  -> docs/data-catalog.md       # generated catalog summary, never committed
 ```
 
-Three things are tracked. Everything downstream of them is generated and ignored by Git.
+There is no hosted database, API, or CMS. The site is static; user progress lives in `localStorage`.
+The build reads `.cache/equilibrium.sqlite` (and a few whole documents via the `#shard/*` alias).
+Nothing under `public/data/` is shipped — that tree is removed on export when empty.
 
-| Path                          | Tracked | Role                                                                        |
-| ----------------------------- | ------- | --------------------------------------------------------------------------- |
-| `data/canonical/`             | yes     | The build input: explicit JSONL, one record per line; see `canonical-data.md` |
-| `data/migrations/`            | yes     | Forward-only SQLite schema changes                                          |
-| `data/patches/`               | yes     | Small immutable JSONL content operations against stable IDs                 |
-| `.cache/equilibrium.sqlite`   | no      | The built database; regenerate, never edit or commit                        |
-| `.generated/documents/`       | no      | Source documents for the `#shard/*` alias; build inputs, never served       |
-| `reports/data-*.json`         | no      | Validation, quarantine and parity reports                                   |
+## Source vs generated
 
-There is no hosted database, API or CMS. The site is static; user progress lives in `localStorage`.
+### Tracked source (authoring surface)
 
-**Nothing generated is published.** `public/data/` does not exist. The site reads the database
-directly: server components call `research/catalog.ts`, and the `/data` region browser lazy-loads a
-region at a time from the route handlers under `app/data/regions/`, which are `force-static` with
-`generateStaticParams` — Next renders all 99 of them from SQLite at build time and serves them like
-files.
+Exactly three roots under `data/`. `scripts/data/audit.mjs` fails if anything else appears there.
 
-`.generated/documents/` is the one generated tree left. Those are source-shaped JSON that a module
-imports whole through the `#shard/*` alias, so they are build inputs rather than payloads; Next
-inlines them into the bundle. They live outside `public/` because no request ever asks for one. What
-keeps that honest is `npm run audit:data`, which walks imports transitively from every `"use client"`
-file and fails if a document over 250 KiB is reachable from the client.
+| Path               | Role                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| `data/canonical/`  | Deterministic JSONL mirror of the validated database after patches — the only build **input** |
+| `data/migrations/` | Forward-only SQLite schema (numbered `00N-*.sql`)                                            |
+| `data/patches/`    | Immutable JSONL content operations against stable IDs                                        |
+| `data/README.md`   | House rules for this tree                                                                    |
 
-## Why `node:sqlite`
+`scripts/data/` implements the pipeline; it is code, not game data. Do not add a second authoring
+tree, hosted DB, CMS, or restored per-domain seed JSON.
 
-The implementation uses Node's built-in `node:sqlite` `DatabaseSync`. The build targets Node 22 or
-newer, where `node:sqlite` is available without an experimental flag and ships with foreign keys and
-FTS5 enabled. That avoids a native addon install during Windows development and Vercel builds. See
-the [Node SQLite API](https://nodejs.org/download/release/latest-v22.x/docs/api/sqlite.html).
+### Generated (local only — never commit)
+
+| Path / pattern                      | Role                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------- |
+| `.cache/equilibrium.sqlite`         | Built database; regenerate with `npm run data:rebuild`               |
+| `.cache/data-changed.json`          | Last changed-entity set from apply/rebuild                           |
+| `.generated/documents/**`           | Source-shaped JSON for `#shard/*` imports (build inputs, not payloads) |
+| `reports/data-*.json`, `reports/data-*.md` | Validation, quarantine, inventory, export manifest, audit     |
+| `reports/canonical-*.json`          | Canonical structural + parity report                                 |
+| `docs/data-catalog.md`              | Domain count summary rewritten by export                             |
+| `public/data/v*`                    | Retired frontend shard tree — gitignored; export deletes if empty    |
+
+`.gitignore` covers these. `npm run audit:data` / `data:audit` fails if generated reports, cache, or
+`public/data/v*` become tracked.
+
+### Why `data/canonical/` is tracked even though it is generated
+
+Canonical is **generated by export**, but it is also the **only dataset the rebuild ingests**. It is
+committed so that:
+
+1. **Reviewability** — a factual change appears as a readable JSONL diff next to its patch file.
+2. **Reproducible builds** — CI and every clone rebuild the same SQLite without replaying a lost
+   private seed. The compressed seed is retired (Git history only, commit `43c23873`); provenance of
+   its 56 documents lives under `canonical/provenance/`.
+3. **Staleness detection** — `data:canonical:validate` byte-compares the tracked mirror to a fresh
+   export from the database and fails while they disagree.
+
+Hand-editing `data/canonical/` is forbidden: the next export overwrites it, and the patch ledger no
+longer explains who changed what. Always patch → apply/rebuild → re-export → validate → commit
+patch + canonical together.
+
+`.gitattributes` forces `data/canonical/**` to LF so Windows checkouts do not break parity.
 
 ## Schema
 
@@ -52,17 +76,30 @@ source-specific fields stay in validated JSON columns; regions, sources, require
 relationships are also materialized relationally.
 
 The research catalog is normalized into those tables and is never written back out as a
-`catalog.json`.
+`catalog.json` under `public/`.
+
+## Why `node:sqlite`
+
+The implementation uses Node's built-in `node:sqlite` `DatabaseSync`. The build targets Node 22 or
+newer, where `node:sqlite` is available without an experimental flag and ships with foreign keys and
+FTS5 enabled. That avoids a native addon install during Windows development and Vercel builds. See
+the [Node SQLite API](https://nodejs.org/download/release/latest-v22.x/docs/api/sqlite.html).
 
 ## Pipeline
 
-`scripts/data/` declares five transforms — ingest, relational core, enrich, validate, export. Each
-records its version, dependencies, input hash, output count and validation contract in
-`transform_runs`.
+`scripts/data/` declares transforms — ingest, relational core, search, validate, export. Each records
+its version, dependencies, input hash, output count and validation contract in `transform_runs`.
 
-A clean `npm run data:rebuild` deletes only the ignored cache database, applies migrations, imports
-`data/canonical/`, applies patches transactionally, rebuilds search, validates exact research parity,
-and rewrites only the artifacts whose bytes changed.
+A clean `npm run data:rebuild`:
+
+1. Deletes only the ignored cache database.
+2. Applies `data/migrations/`.
+3. Imports `data/canonical/` in one transaction.
+4. Applies every `data/patches/*.jsonl` transactionally (content-hash identity; mutating an applied
+   file is an error).
+5. Rebuilds FTS search.
+6. Validates invariants and writes reports.
+7. Rebuilds `.generated/documents/` and clears empty `public/data/`.
 
 | Module                     | Responsibility                                                   |
 | -------------------------- | ---------------------------------------------------------------- |
@@ -82,7 +119,7 @@ and rewrites only the artifacts whose bytes changed.
 | `patching/apply.mjs`       | Patch identity, transaction, dispatch, ledger, changed entities  |
 | `validate.mjs`             | Invariant checks and the validation/quarantine reports           |
 | `research.mjs`             | Research catalog reconstruction, region panels, export parity    |
-| `export.mjs`               | Source documents, the build manifest, byte-diffed writes         |
+| `export.mjs`               | `#shard` documents, catalog, reports, empty `public/data` prune  |
 | `queries.mjs`              | Bounded read commands: find, context, query, doctor, stats       |
 | `pipeline.mjs`             | `rebuild` and single-patch `apply` sequencing                    |
 | `benchmark.mjs`            | Scoped patch and rebuild measurements                            |
@@ -137,17 +174,19 @@ rebuilt from the database alone.
   interpolate them into `SET`.
 - **operations** is one handler per operation. Each writes canonical database columns and returns the
   entity IDs it changed. Handlers own no transaction and no ledger. The set is `upsert`,
-  `upsert-source`, `link`/`unlink-region`, `link`/`unlink-source`, `relate`/`unrelate`, `remove`, and
-  `add`/`remove-requirement`, `add`/`remove-effect`, `add`/`remove-tag`. Ordinals are the handler's
-  job, not the author's: a requirement or effect appends after what the entity already has, and
-  re-adding one it already carries is a no-op rather than a duplicate row.
+  `set-record`, `upsert-source`, `link`/`unlink-region`, `link`/`unlink-source`, `relate`/`unrelate`,
+  `remove`, and `add`/`remove-requirement`, `add`/`remove-effect`, `add`/`remove-tag`. Ordinals are
+  the handler's job, not the author's: a requirement or effect appends after what the entity already
+  has, and re-adding one it already carries is a no-op rather than a duplicate row.
 - **apply** owns identity, one transaction per file, dispatch, the changed-entity set, the
   `patch_changes` rows and the `patch_ledger` entry.
 
-A patch writes the database. It does not write back into the provenance record the entity came from:
-`source_records.raw_json` is what the source document said, and stays that way.
+Most patches write database columns only. They do **not** rewrite `source_records.raw_json` by
+default: that column is what the source document said. The exception is `set-record`, which updates a
+provenance body (and optionally linked entity fields) when a reveal must change the source-shaped
+record itself — still as a ledgered patch, never a hand edit of `data/canonical/`.
 
-## Editing a record
+## Patch / migration / baseline workflow
 
 ```text
 npm run data:find -- --query "Seismic wand" --limit 20
@@ -170,13 +209,13 @@ new patch is not lost — but the tracked mirror is stale until it is re-exporte
 npm run data:canonical:export && npm run data:canonical:validate
 ```
 
-Guard rails worth knowing about: a patch file is capped at 1 MiB and 1,000 operations and applies in
-a single transaction, so a rejected operation leaves nothing behind. An applied migration or patch
-whose content later changes is an error rather than a silent re-run. `data:query` accepts one bounded
-read-only `SELECT` or `WITH` and rejects writes, PRAGMA, attachment, DDL and multiple statements.
-`data:context` defaults to a 16 KB output ceiling and reports truncation.
+Guard rails: a patch file is capped at 1 MiB and 1,000 operations and applies in a single transaction,
+so a rejected operation leaves nothing behind. An applied migration or patch whose content later
+changes is an error rather than a silent re-run. `data:query` accepts one bounded read-only `SELECT`
+or `WITH` and rejects writes, PRAGMA, attachment, DDL and multiple statements. `data:context`
+defaults to a 16 KB output ceiling and reports truncation.
 
-## How canonical data changes
+### How canonical data changes
 
 The model is an immutable baseline plus ordered immutable patches:
 
@@ -190,8 +229,8 @@ needs is not a judgement call.
 
 **Add a patch** for any factual change to a record that already exists, or for a record that should:
 a corrected value, a new source, a region link, a duplicate to retire. This is the normal case and it
-is the only one that needs no rebuild. A patch is immutable once applied — a later correction is a
-new patch, never an edit to an old one.
+is the only one that needs no full rebuild if the DB already exists. A patch is immutable once
+applied — a later correction is a new patch, never an edit to an old one.
 
 **Write a migration** when the shape changes rather than the content: a new column, table, index or
 constraint. Migrations are forward-only and numbered, and an applied one whose bytes later change is
@@ -213,6 +252,39 @@ started from. Until then, keep them.
 The one thing not to do is rewrite the baseline to express an edit. Hand-editing `data/canonical/`
 loses the record of who changed what and why, and the export would overwrite it on the next rebuild
 anyway.
+
+### Required validation commands
+
+| When                                              | Commands                                                                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------ |
+| After a record patch                              | `data:apply` → `data:validate:changed` → `data:export:changed` → `data:canonical:export` → `data:canonical:validate` |
+| Schema / pipeline / taxonomy change               | `npm run data:rebuild` then `data:canonical:export` + `data:canonical:validate` |
+| Before claiming data is shippable / on main push prep | `npm run audit:data` (`data:rebuild` + `data:audit` + `data:doctor`) and full app `npm run build` / `npm test` as appropriate |
+| Spot-check structure only                         | `npm run data:canonical:validate` (needs a current local DB)             |
+| Bounded investigation                             | `data:find`, `data:context`, `data:impact`, `data:query`, `data:doctor`  |
+
+`npm run audit:data` is the shipped-data gate: rebuild, architecture inventory (no tracked generated
+trees, no client path into huge documents, complete canonical set, no undocumented `data/` roots,
+duplicate adjudication), then doctor.
+
+## Provenance guarantees
+
+1. **Every combat / league / research number carries source identity.** Entities keep
+   `createdSource` / `updatedSource` (seed path or `patch:<file>`). Citation rows live in
+   `sources` + `entity_sources` (`sources.jsonl`, `entity-sources.jsonl`). App types such as
+   `SourceReference` (`src/combat/types.ts`) are the TypeScript face of the same rule: never strip
+   URL / family / `verifiedAt` when surfacing a value.
+2. **Source-shaped bodies are retained verbatim** in `provenance/source-records.jsonl`, including
+   records that never became entities. Entity columns reference them via `recordRef`
+   (`sourceFile#recordPath`) instead of duplicating the body.
+3. **Patches do not silently rewrite provenance.** Column patches leave `source_records.raw_json`
+   alone. Only `set-record` changes a provenance body, and it still goes through the patch ledger.
+4. **Authority order** (highest first) when sources disagree — see below. Authority picks the
+   *value*; the winning record keeps its own source attribution.
+5. **Unresolved collisions stay in `quarantine.jsonl`**, not merged away. The sixty stable-ID
+   collisions are kept so the conflict remains auditable.
+6. **Never invent numbers** to fill unrevealed League stubs. Empty `records: []` is correct until a
+   source exists. Never present a stale value as current.
 
 ### Source authority
 
@@ -261,10 +333,18 @@ exist for, and `npm run audit:data` fails if two documents ever claim one domain
 
 ## Frontend consumption
 
-Server-rendered catalog summaries query the normalized tables directly. `/data` loads the small v2
-research index and one region shard at a time, then fetches only the active region/tab payload.
-Domain artifacts are chunked near 220 KiB, hashed in the manifest, and resolved through bounded ID
-index shards; the manifest regression test rejects any browser-fetched shard at or above 500 KiB.
+Server components and route handlers open `.cache/equilibrium.sqlite` read-only (for example
+`src/research/catalog.ts` and `app/data/regions/`). `/data` region routes are `force-static` with
+`generateStaticParams` — Next renders them from SQLite at build time and serves them like files.
+No browser fetch goes to `public/data/`.
 
-Every rebuild independently reconstructs the 11 research payloads from the normalized tables and
-requires exact parity with the shipped shards before export succeeds.
+A small set of whole source documents is still needed as module imports. Export rebuilds only the
+documents something imports through `#shard/*` (plus a few path-loaded map seeds) into
+`.generated/documents/`. Those are build inputs, inlined by the bundler; they live outside `public/`
+because no request ever asks for one. `npm run audit:data` walks imports transitively from every
+`"use client"` file and fails if a document over 250 KiB is reachable from the client.
+
+`data:export` still writes a bookkeeping manifest under `reports/` (record counts, document hashes,
+region index). Domain browser payloads are not chunked into public shards anymore; research region
+reconstruction still has to match between database and canonical files under
+`data:canonical:validate`.

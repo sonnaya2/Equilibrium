@@ -21,7 +21,7 @@ const ROOT = process.cwd();
 const CACHE = join(ROOT, ".asset-cache/raw");
 const MANIFEST = join(ROOT, ".asset-cache/fetched.json");
 const WIKI_API = "https://runescape.wiki/api.php";
-const USER_AGENT = "EquilibriumAssetSync/2.0 (https://github.com/sonnaya2/Equilibrium)";
+const USER_AGENT = "EquilibriumAssetSync/2.0 (+https://runescape.wiki; fan tool asset sync)";
 const MAX_BYTES = 8 * 1024 * 1024;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

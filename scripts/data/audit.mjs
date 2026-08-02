@@ -30,8 +30,8 @@ const EXTENSIONS = new Set([
 ]);
 const EXCLUDED = new Set([
   ".git",
-  // Sibling git worktrees are separate checkouts, not part of this inventory.
-  ".claude",
+  // Sibling checkouts / local worktrees are not part of this inventory.
+  "worktrees",
   ".next",
   "node_modules",
   "build",

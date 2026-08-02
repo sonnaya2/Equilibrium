@@ -508,7 +508,7 @@ function SkillDetail({
   );
 }
 
-/** Search haystack only — no audit essays (note/warning/detail). */
+/** Search haystack only — excludes note, warning, and detail fields. */
 function methodSearchText(method: ResearchTrainingMethod): string {
   return [
     method.method,

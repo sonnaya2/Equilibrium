@@ -66,7 +66,6 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
  * when they are illegal under `options.weaponConfiguration` — e.g. Hurricane on
  * dual-wield, Flurry on a two-hander. Callers should always pass the loadout shape.
  *
- * Accepts an AbilitySpec catalogue only — there is no abilities/registry yet.
  * Duplicate catalogue ids for the same style throw.
  */
 export function buildCandidatePool(

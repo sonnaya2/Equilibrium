@@ -225,7 +225,7 @@ export async function fetchCatalystCompletionRates(): Promise<{
     // Bound stalled Wiki requests independently of Next's revalidation cache.
     const response = await fetch(CATALYST_COMPLETION_URL, {
       headers: {
-        "User-Agent": "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)",
+        "User-Agent": "Equilibrium/0.1 RuneScape fan tool (+https://runescape.wiki)",
       },
       next: { revalidate: 3600 },
       signal: AbortSignal.timeout(8_000),
@@ -257,7 +257,7 @@ export async function fetchCatalystTasksLive(
   try {
     const response = await fetch(CATALYST_TASKS_API, {
       headers: {
-        "User-Agent": "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)",
+        "User-Agent": "Equilibrium/0.1 RuneScape fan tool (+https://runescape.wiki)",
       },
       signal: AbortSignal.timeout(120_000),
     });

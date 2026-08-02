@@ -37,8 +37,8 @@ export interface MapFocus {
 /** Zoom in raises this; zoom out lowers it. */
 export const ZOOM_MIN = -2;
 /**
- * Closer end of the designed zoom ladder. Was 4 (~2.2× radius); 10 reaches
- * ~7× base so pins and coasts can be inspected without fighting the clamp.
+ * Closer end of the designed zoom ladder (~7× base radius) so pins and coasts
+ * can be inspected without fighting the clamp.
  */
 export const ZOOM_MAX = 10;
 /** Radius scale per zoom step — <1 means zoom-in shortens the shot. */
@@ -113,8 +113,8 @@ let hoverQueued: string | null | undefined;
 
 /**
  * Coalesce hover emits to one per animation frame.
- * Unthrottled pointerenter/leave across many pins was a Cascading Update storm
- * through every useMapFocus subscriber (ledger, inspector, canvas).
+ * Unthrottled pointerenter/leave across many pins floods every useMapFocus
+ * subscriber (ledger, inspector, canvas).
  */
 export function hoverPlace(hover: string | null) {
   // Clear immediately so pointer-out never leaves a sticky hover highlight.

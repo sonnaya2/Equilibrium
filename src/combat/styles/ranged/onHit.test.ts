@@ -265,7 +265,7 @@ describe("shadow imbued — adrenaline is per real hit", () => {
       ),
     });
     // The Searing Winds bonus is attached to the source hit, not a phantom second
-    // hit: 1 real hit → +5 imbued adrenaline (was +10 via the phantom).
+    // hit: 1 real hit → +5 imbued adrenaline.
     expect(lastCast(s).result.hits).toHaveLength(1);
     expect(lastCast(s).result.hits[0].expected).toBeCloseTo(1000);
     expect(lastCast(s).result.expected).toBeCloseTo(1200);

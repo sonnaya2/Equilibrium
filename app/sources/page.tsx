@@ -37,10 +37,10 @@ const CREDITS = [
   },
   {
     name: "Equilibrium source code",
-    url: "https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE",
+    url: "/sources#licenses",
     license: "MIT",
-    licenseUrl: "https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE",
-    note: "Original application code only. Wiki- and PvME-derived data and Jagex media keep the terms above — see repository NOTICE.",
+    licenseUrl: "/sources#licenses",
+    note: "Original application code only (repository LICENSE). Wiki- and PvME-derived data and Jagex media keep the terms above — see repository NOTICE.",
   },
 ];
 
@@ -87,16 +87,7 @@ export default function SourcesPage() {
           >
             Fan Content Policy
           </a>
-          . Full repository text:{" "}
-          <a
-            href="https://github.com/sonnaya2/Equilibrium/blob/main/NOTICE"
-            className="text-parch-50 underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            NOTICE
-          </a>
-          .
+          . Full repository text: root <code>NOTICE</code>.
         </p>
         <p className="mt-2 max-w-prose text-sm leading-5 text-parch-300">
           This tool uses material from the{" "}
@@ -162,17 +153,9 @@ export default function SourcesPage() {
       </dl>
 
       <p className="mt-4 max-w-prose text-xs leading-5 text-parch-300">
-        Downstream forks: keep footer credits, this page, per-row sources, and the repository{" "}
-        <a
-          href="https://github.com/sonnaya2/Equilibrium/blob/main/NOTICE"
-          className="underline decoration-stone-750 underline-offset-2 hover:decoration-parch-300"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          NOTICE
-        </a>
-        . Do not re-license wiki or PvME adapted data as MIT-only. Not affiliated with Jagex, Weird
-        Gloop, PvME, or RS Analysis.
+        Downstream forks: keep footer credits, this page, per-row sources, and the repository
+        NOTICE. Do not re-license wiki or PvME adapted data as MIT-only. Not affiliated with Jagex,
+        Weird Gloop, PvME, or RS Analysis.
       </p>
     </Page>
   );

@@ -1,19 +1,34 @@
-# Dependencies / build
+# Dependencies
 node_modules/
-.next/
-/out/
-/dist/
-/build/
-*.tsbuildinfo
-next-env.d.ts
-coverage/
-.turbo/
-.cache/
-.eslintcache
 
+# ---------------------------------------------------------------------------
+# Build, test, cache, and audit output
+# ---------------------------------------------------------------------------
 # NOTE: build/ out/ and data/ are anchored with a leading slash on purpose.
 # app/build/ and app/data/ are App Router routes - an unanchored pattern
 # would silently untrack them.
+/.next/
+/out/
+/dist/
+/build/
+/coverage/
+/reports/
+/playwright-report/
+/test-results/
+/blob-report/
+/.shots/
+/design-previews/
+/exports/
+/logs/
+/scratch/
+/.wiki-cache/
+/.asset-cache/
+/.generated/
+/.cache/
+*.tsbuildinfo
+next-env.d.ts
+.turbo/
+.eslintcache
 
 # ---------------------------------------------------------------------------
 # Secrets / env - never commit real credentials
@@ -36,33 +51,57 @@ id_ed25519.pub
 .netrc
 certificates/
 
-# IDE / personal agent state
-.vscode/
-.idea/
-.cursor/
+# ---------------------------------------------------------------------------
+# AI assistants and local agent tooling
+# ---------------------------------------------------------------------------
+/.claude/
+/skills/
+/AGENTS.md
+/CLAUDE.md
+/.mcp.json
+/.agents/
+/.grok/
+/.kimi-code/
+/.codex/
+/.cursor/
 .cursor
-.agents/
-.grok/
-.kimi-code/
-.codex/
-*.kate-swp
-.mcp.json
-
-# Claude project configuration is tracked.
-# Only machine-specific state and mutable local work stay untracked.
 CLAUDE.local.md
 TASKS.local.md
-.claude/settings.local.json
-.claude/memory/
-.claude/transcripts/
-.claude/sessions/
-.claude/worktrees/
-
-# Agent install scaffolding - not project documentation
 README-FIRST.md
 CHANGES.md
 
+# ---------------------------------------------------------------------------
+# Local handoffs and prompt material
+# ---------------------------------------------------------------------------
+/prompts/
+/agent-notes/
+/transcripts/
+/sessions/
+/worktrees/
+/ai-notes/
+KIMI-START.md
+AI-HANDOFF*.md
+AGENT-HANDOFF*.md
+
+# ---------------------------------------------------------------------------
+# IDE / editor state (non-agent)
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.kate-swp
+
+# ---------------------------------------------------------------------------
+# Local databases
+# ---------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+
+# ---------------------------------------------------------------------------
 # Logs
+# ---------------------------------------------------------------------------
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -71,35 +110,25 @@ pnpm-debug.log*
 .dev-*.log
 .codex-*.log
 
-# Local scratch and generated data.
-/scratch/
-/exports/
-/logs/
-.wiki-cache/
+# ---------------------------------------------------------------------------
+# Local / generated data specifics
+# ---------------------------------------------------------------------------
+# data/canonical/ is generated but tracked on purpose - it is the reviewable
+# form of the dataset, and .gitattributes pins it to LF so parity holds.
 data/**/*.raw.json
 data/**/.cache/
 /public/data/v*/
-/reports/data-*.json
-/reports/data-*.md
-/reports/canonical-*.json
-/reports/assets/
-# data/canonical/ is generated but tracked on purpose - it is the reviewable
-# form of the dataset, and .gitattributes pins it to LF so parity holds.
 /docs/data-catalog.md
 
 # Upstream downloads staged before import into public/game/. Never a build input.
-/.asset-cache/
+# (also covered by /.asset-cache/ above)
 
 # ---------------------------------------------------------------------------
 # Playwright / E2E artifacts (configs in repo root stay tracked)
 # ---------------------------------------------------------------------------
-/playwright-report/
-/test-results/
 /css-visual/baseline/
-/blob-report/
 /playwright/.cache/
 .playwright-mcp/
-.shots/
 playwright/.auth/
 **/trace.zip
 
@@ -111,9 +140,6 @@ desktop.ini
 # Vercel CLI (deploy metadata / project link)
 .vercel
 
-# Local design mockups
-design-previews/
-
 # Yarn PnP (defensive; this repo uses npm)
 .pnp.*
 .yarn/*
@@ -121,7 +147,6 @@ design-previews/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-dev-server.log
 
 # Scratch output of the dev-only region authoring scripts
 scripts/.region-draft.json
@@ -133,24 +158,15 @@ scripts/.*.jpg
 scripts/.*.webp
 
 # ---------------------------------------------------------------------------
-# Local agent / one-shot scratch (never ship)
+# Temporary files
 # ---------------------------------------------------------------------------
-tmp-*/
-/tmp-*.*
-tmp-*.mjs
-tmp-*.mts
-tmp-*.js
-tmp-*.ts
-tmp-*.ps1
-tmp-*.cmd
-tmp-*.png
-tmp-*.jpg
-tmp-*.webp
-tmp-*.json
-tmp-*.txt
-tmp-*.md
-tmp_*/
-/tmp_*.*
+/tmp-*/
+/tmp_*/
+tmp-*
+tmp_*
+*.new
+*.bak
+*.orig
 .tools-scratch/
 
 # Root QA screenshots (not product art)
@@ -161,9 +177,6 @@ tmp_*/
 /map-fix-*.png
 /map-overview-*.png
 /clipboard-*.png
-/*.png.new
-/**/*.png.new
-/**/*.jpg.new
 
 # One-shot tools (product scripts live under scripts/ without leading _)
 tools/_*
@@ -179,6 +192,3 @@ scripts/_*.py
 # ---------------------------------------------------------------------------
 scraped-data/
 assets/manifest.generated.json
-
-# Generated build inputs for the #shard alias. Never served, never committed.
-/.generated/

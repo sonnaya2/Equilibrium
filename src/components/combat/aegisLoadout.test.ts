@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { EquipmentRecord } from "@/combat/data/records";
 
 /**
- * Teragard's Aegis resolved through a real Setup loadout, which is where the
- * stale-off-hand and Fortitude defects lived. Armour values are chosen so the
- * qualifying total is exactly 1,000 without a shield.
+ * Teragard's Aegis resolved through a real Setup loadout (stale off-hand and
+ * Fortitude interactions). Armour values are chosen so the qualifying total is
+ * exactly 1,000 without a shield.
  */
 const RECORDS: Record<string, EquipmentRecord> = {
   "mock:2h": {

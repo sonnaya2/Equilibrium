@@ -9,8 +9,7 @@ import { sanitizeWikiHtml } from "./sanitizeWikiHtml";
 
 export const WIKI_HOST = "runescape.wiki";
 export const WIKI_ORIGIN = `https://${WIKI_HOST}`;
-export const WIKI_USER_AGENT =
-  "Equilibrium/0.1 RuneScape fan tool (github.com/sonnaya2/Equilibrium)";
+export const WIKI_USER_AGENT = "Equilibrium/0.1 RuneScape fan tool (+https://runescape.wiki)";
 
 /** Keep a fuller wiki intro — fills the hero summary and reduces empty plate. */
 const LEAD_MAX = 1600;
@@ -172,8 +171,8 @@ function clampHtml(html: string, max: number): string {
 
 /**
  * Keep wiki drop icons for harvest; still kill script/iframe/etc.
- * Closers must match openers — a bare `<button>` without `</button>` in the
- * closer set used to swallow entire articles (infobox mode toggles on Zuk/etc.).
+ * Closers must match openers — a bare `<button>` without matching `</button>` in
+ * the closer set would swallow entire articles (infobox mode toggles on Zuk/etc.).
  */
 const DANGEROUS_OPEN =
   "script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|video|audio";
@@ -289,7 +288,7 @@ export function stripWikiChrome(html: string): string {
   // Comments
   out = out.replace(/<!--[\s\S]*?-->/g, "");
   // Paired elements (open + matching close). Keep closer list aligned with openers —
-  // a mismatched pair (e.g. button → form) used to delete half the article.
+  // a mismatched pair (e.g. button → form) deletes half the article.
   out = out.replace(new RegExp(`<(${STRIP_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"), "");
   // Unclosed openers (truncated parse chunks, missing closers).
   out = out.replace(new RegExp(`<(?:${STRIP_OPEN})\\b[^>]*>`, "gi"), "");

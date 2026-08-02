@@ -9,7 +9,7 @@ import { defineConfig } from "@playwright/test";
  *
  *   npx playwright test -c playwright.webgpu.config.ts e2e/map-board.spec.ts
  *
- * Local only, like the rest of e2e (see AGENTS.md) — CI has no GPU either.
+ * Local only, like the rest of e2e (see docs/map-rendering.md) — CI has no GPU either.
  */
 const PORT = 3101;
 const URL = `http://localhost:${PORT}`;

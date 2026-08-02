@@ -611,8 +611,7 @@ function region(row: ResearchRow): string {
   return regionName(direct);
 }
 
-// The rule lives in @/research/regionMatch so the server can build the panels
-// with it. Re-exported here because this is where callers have always found it.
+// Shared match rule (also used server-side when building panels).
 import { researchRowMatchesRegion } from "@/research/regionMatch";
 
 export { researchRowMatchesRegion };

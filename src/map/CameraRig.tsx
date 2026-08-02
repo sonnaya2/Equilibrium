@@ -150,7 +150,7 @@ export function CameraRig({
         ? PLACE_ELEVATION
         : FOCUS_ELEVATION;
     const azimuth = flags.topDown ? 0 : clamp((rawX / MAP_WORLD.width) * 0.9, -0.42, 0.42);
-    // Slightly wider than before so a framed desert still shows neighbouring coast.
+    // Wide enough that a framed desert still shows neighbouring coast.
     const span = place ? 0.34 : 0.72 + region.size * 0.16;
     const radius = fitRadius(span, span * 0.78, elevation, aspect, FOV) * zMul;
 
@@ -216,8 +216,8 @@ export function CameraRig({
 
   // Hover parallax (not while dragging).
   // Write pointer only — do NOT invalidate here. MotionDriver already ticks the
-  // demand loop at idle Hz; per-move invalidate + getBoundingClientRect was the
-  // "Coalesced input move flusher / Cascading Update" main-thread pin.
+  // demand loop at idle Hz; per-move invalidate + getBoundingClientRect pins
+  // the main thread under pointer traffic.
   useEffect(() => {
     if (reducedMotion || flags.topDown) return;
     const canvas = gl.domElement;

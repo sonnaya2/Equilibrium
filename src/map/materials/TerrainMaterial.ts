@@ -147,8 +147,8 @@ export function createTerrainMaterials(
   // deadAmt: 1 = full grey.
   //   locked  → grey always
   //   unlocking → grey outside the expanding disc (radialDead * sweep)
-  //   open at rest (sweep=0) → 0 — full colour (old path left edges grey
-  //     forever because front maxed at ~0.48 and never covered big plates)
+  //   open at rest (sweep=0) → 0 — full colour (front alone maxes ~0.48 and
+  //     never covers large plates; deadAmt must clear when sweep ends)
   const radialDead = float(1).sub(restored);
   const deadAmt = mix(radialDead.mul(sweep), float(1), lock)
     .mul(float(0.9))

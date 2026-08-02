@@ -69,7 +69,7 @@ export function RegionPlate({
   const { build } = useBuild();
   const { focus, focusRegion } = useMapFocus();
   const invalidate = useThree((s) => s.invalidate);
-  // Ref, not useState — hover must not re-render the plate tree (Cascading Update).
+  // Ref, not useState — hover must not re-render the plate tree.
   const hovered = useRef(false);
 
   const depth = PLATE_DEPTH[id];

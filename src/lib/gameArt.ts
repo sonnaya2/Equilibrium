@@ -1667,10 +1667,8 @@ export function skillIconPath(skillIdOrName: string): string | null {
 
 /**
  * League Relic and Blessing plates, resolved by name.
- *
- * Most of this art landed before the record naming it did, so these are exact
- * lookups against what is actually in public/game: art attaches the moment a
- * record names it, and returns null until then rather than guessing a match.
+ * Exact lookups against published public/game art — null until a record names
+ * a published slug; never guess a match.
  */
 export function relicIconPath(name: string): string | null {
   const slug = slugifyIconLabel(name.trim());

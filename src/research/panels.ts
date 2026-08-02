@@ -5,10 +5,7 @@ import { researchRowMatchesRegion, type ResearchRow } from "./regionMatch";
 
 /**
  * The /data region panels, built from SQLite rather than shipped as JSON.
- *
- * These used to be 100 files under public/data/v2/research. They are the same
- * rows, filtered the same way; the difference is that the database is the only
- * copy and the route handlers below render from it at build time.
+ * Database is the only copy; route handlers render from it at build time.
  */
 
 export const UNLOCK_SECTIONS = [
@@ -22,7 +19,7 @@ export const UNLOCK_SECTIONS = [
 ] as const;
 export type UnlockSection = (typeof UNLOCK_SECTIONS)[number];
 
-// Later passes added these without merging them back into the base document.
+// Extra equipment-model sources not merged into the base progression document.
 const EQUIPMENT_MODEL_SUPPLEMENTS = [
   "data/reference/progression-support-items-2026-07-25.json",
   "data/reference/progression-container-bags-2026-07-25.json",

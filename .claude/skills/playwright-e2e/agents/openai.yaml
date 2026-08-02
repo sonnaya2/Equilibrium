@@ -1,4 +1,0 @@
-interface:
-  display_name: "Playwright E2E"
-  short_description: "Run local Playwright tests without port leaks"
-  default_prompt: "Use $playwright-e2e to run this repo's browser tests with a clean local server."

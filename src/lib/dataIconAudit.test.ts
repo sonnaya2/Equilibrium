@@ -199,8 +199,7 @@ describe("data icon audit", () => {
       garbage: dedupe(garbage),
       missingFile: dedupe(missingFile),
     };
-    // reports/ is the ignored home for generated output; writing to the repo
-    // root left tmp-data-icon-audit.json lying around after every run.
+    // reports/ is the ignored home for generated audit output.
     mkdirSync("reports", { recursive: true });
     writeFileSync(join("reports", "data-icon-audit.json"), `${JSON.stringify(report, null, 2)}\n`);
     expect(bossIconPath("Kerapac")).toBeTruthy();

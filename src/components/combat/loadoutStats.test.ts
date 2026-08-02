@@ -265,7 +265,7 @@ describe("loadoutStats", () => {
     expect(frozen.rawBase).toBe(auto.rawBase);
     expect(frozen.base).toBe(auto.base);
 
-    // Buggy freeze path stored stats.base and double-applied perks.
+    // Freezing stats.base re-applies perks and double-counts.
     const doubleCounted = loadoutStats({
       ...autoLoadout,
       baseDamage: { mode: "manual", manualValue: auto.base },
@@ -698,9 +698,7 @@ describe("loadoutStats", () => {
       expect.arrayContaining([{ label: "Channeller's ring", value: 34.5 }]),
     );
     expect(ringS.base).toBeGreaterThan(bareS.base);
-    expect(ringS.baseAbilityDamageBreakdown.some((row) => row.label === "Style damage")).toBe(
-      true,
-    );
+    expect(ringS.baseAbilityDamageBreakdown.some((row) => row.label === "Style damage")).toBe(true);
     expect(ringS.critConditionalNotes.some((n) => /Channeller/i.test(n))).toBe(true);
   });
 
@@ -836,8 +834,8 @@ describe("loadoutStats", () => {
     const inv4 = loadoutStats({ ...base, perks: { ...base.perks, invigorating: 4 } });
     expect(inv4.adrenaline?.basicGainMultiplier).toBeCloseTo(1.2, 10);
 
-    // Impatient / Relentless pass ranks through: the rotation drivers branch
-    // on them (probability-weighted), so no EV values live here anymore.
+    // Impatient / Relentless pass ranks through; rotation drivers branch on
+    // them (probability-weighted). EV is not computed at this boundary.
     const imp4 = loadoutStats({ ...base, perks: { ...base.perks, impatient: 4 } });
     expect(imp4.adrenaline?.impatientRank).toBe(4);
 
@@ -875,9 +873,9 @@ describe("loadoutStats", () => {
         demon: true,
       },
     };
-    expect(
-      loadoutStats(withDemon).globalModifiers.some((m) => m.id === "perk:demon-slayer"),
-    ).toBe(true);
+    expect(loadoutStats(withDemon).globalModifiers.some((m) => m.id === "perk:demon-slayer")).toBe(
+      true,
+    );
     const offTarget = {
       ...base,
       perks: { ...base.perks, demonSlayer: 1 },

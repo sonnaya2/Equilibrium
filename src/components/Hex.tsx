@@ -20,7 +20,7 @@ export type HexState = keyof typeof STATES;
  * Lattice cell classes. The hexagon is the layout grid here, not a logo — region
  * crests, relic tiers and the blessing lattice are the same shape at three
  * densities. Applied directly to a button when the cell is interactive, so the
- * cell keeps its own focus ring. Visual rules live in the equilibrium-ui skill.
+ * cell keeps its own focus ring.
  */
 export function hexClass(size: HexSize = "md", state: HexState = "open", extra = ""): string {
   return `cell ${SIZES[size]} ${STATES[state]} ${extra}`;

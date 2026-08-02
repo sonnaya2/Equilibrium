@@ -274,8 +274,6 @@ export interface SolveResult {
   stats: SearchStats;
 }
 
-// ── Eligibility / candidate pool / exact evaluate ─────────────────────────
-
 export type ExclusionCode =
   | "duplicate-id"
   | "unknown-id"

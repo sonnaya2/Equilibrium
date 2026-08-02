@@ -254,9 +254,7 @@ export type HistoryKind = "complete" | "representative-terminal-class";
  *   totals are success-conditional, so history matches that scope).
  */
 export type HistorySelectionReason =
-  | "sole-terminal"
-  | "highest-probability-mass"
-  | "highest-successful-mass";
+  "sole-terminal" | "highest-probability-mass" | "highest-successful-mass";
 
 export interface HistoryProvenance {
   kind: HistoryKind;
@@ -302,7 +300,7 @@ export interface StochasticRngSummary {
   };
   failure?: BranchFailureSummary;
   /**
-   * @deprecated Use `failure.failedWeight`. Kept for solver/UI during migration.
+   * @deprecated Use `failure.failedWeight`.
    */
   failedWeight?: number;
   /**

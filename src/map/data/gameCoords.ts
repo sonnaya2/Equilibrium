@@ -3,7 +3,7 @@ import type { MapXY } from "./regionAnchors";
 
 /**
  * Named surface locations in the Wiki/Kartographer game-coordinate system.
- * The source raster and these overlays now share coordinates directly.
+ * Source raster and overlays share coordinates directly.
  */
 const SURFACE_COORDS = new Map<string, MapXY>([
   ["Varrock", [3212, 3424]],
@@ -66,8 +66,8 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Player-Owned Farm", [2645, 3361]],
   ["Manor Farm", [2645, 3361]],
   ["Warforge Dig Site", [2410, 2838]],
-  // Platform off the Fishing Guild coast (wiki: N of East Ardougne). Not the
-  // old [2520,3050] far-south pin — put it in the water north of the guild.
+  // Platform off the Fishing Guild coast (wiki: N of East Ardougne) — pin in
+  // the water north of the guild, not on land.
   ["Deep Sea Fishing Hub", [2595, 3468]],
   ["Stormguard Citadel Dig Site", [2678, 3400]],
   ["Temple of Ikov", [2576, 3320]],
@@ -75,7 +75,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Underground Pass", [2575, 3297]],
   ["Legiones", [2500, 2887]],
   ["Elemental Workshop", [2710, 3497]],
-  // Was 2675,3160 — two tiles offshore, so the pin floated in open sea.
+  // Dock / pier — keep the pin on the structure, not open sea.
   ["Fishing Trawler", [2676, 3162]],
   ["Gnome Restaurant", [2466, 3497]],
   ["Musa Point", [2950, 3145]],
@@ -103,7 +103,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Miscellania", [2530, 3860]],
   ["Keldagrim", [2850, 3580]],
   // Underground fre content under the massif; surface pin sits on the fre
-  // Keldagrim pocket (not Ice Mountain asgarnia land at the old 2930,3520).
+  // Keldagrim pocket, not Ice Mountain / Asgarnia land.
   ["Lava Flow Mine", [2860, 3575]],
   ["Dagannoth Kings", [2522, 3740]],
   ["Wilderness Agility Course", [2998, 3931]],
@@ -140,7 +140,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Soul altar", [3175, 2750]],
   ["Slayer Tower", [3420, 3535]],
   ["Canifis", [3494, 3489]],
-  // Everlight dig camp (wiki Infobox map 3760,3220) — not the old 3700,3400 mid-swamp pin.
+  // Everlight dig camp (wiki Infobox map 3760,3220).
   ["Everlight Dig Site", [3760, 3220]],
   ["Port Phasmatys", [3680, 3485]],
   // Surface cave entrance into the hive (wiki Object map Cave 91557).
@@ -154,7 +154,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Blood altar", [3600, 3300]],
   ["Shades of Mort'ton", [3491, 3287]],
   ["Abandoned Mine", [3441, 3233]],
-  // Burgh de Rott start (Hiylik Myna) — not the old mid-Mort Myre guess.
+  // Burgh de Rott start (Hiylik Myna).
   ["Temple Trekking", [3479, 3238]],
   ["Prifddinas", [2235, 3340]],
   // Lost Grove island (wiki Map 1952,3168). Pin sits NE of Solak so both read.
@@ -167,8 +167,6 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Solak", [1952, 3151]],
   ["Max Guild", [2276, 3319]],
   ["Hefin Agility Course", [2181, 3423]],
-  // Dropped by accident in a06568f while the anchor row stayed in
-  // placeAnchors.ts, which took `npm test` red. Restored from 97f6f69.
   ["Motherlode Maw", [2205, 3310]],
 
   ["Anachronia base camp", [3908, 4270]],

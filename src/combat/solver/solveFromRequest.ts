@@ -167,9 +167,7 @@ export const solveFromRequest: SolveFn = async (
   );
   const fullTicks = Math.max(
     MIN_RANKABLE_HORIZON_TICKS,
-    request.durationTicks > 0
-      ? request.durationTicks
-      : secondsToTicks(tierHorizons.fullSeconds),
+    request.durationTicks > 0 ? request.durationTicks : secondsToTicks(tierHorizons.fullSeconds),
   );
   const baseBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
   // lenScale = (maxBarSize / MIN_SOLVER_BAR_SIZE) ** 1.2; floor 1.0 so length-5 keeps base budget.
@@ -271,10 +269,10 @@ export const solveFromRequest: SolveFn = async (
     if (!options?.onProgress) return;
     if (!force && evaluations % 2 !== 0) return;
     // bestScore is ALWAYS exploratory DPM — never unit-switch to full robust mid-run.
-    const exploratory =
-      Number.isFinite(bestExploratoryScore) ? bestExploratoryScore : Number.NEGATIVE_INFINITY;
-    const full =
-      Number.isFinite(bestFullScore) ? bestFullScore : Number.NEGATIVE_INFINITY;
+    const exploratory = Number.isFinite(bestExploratoryScore)
+      ? bestExploratoryScore
+      : Number.NEGATIVE_INFINITY;
+    const full = Number.isFinite(bestFullScore) ? bestFullScore : Number.NEGATIVE_INFINITY;
     const progress: SolverProgress = {
       phase: currentPhase,
       evaluations,
@@ -491,9 +489,7 @@ export const solveFromRequest: SolveFn = async (
     const cleaned = ids.filter(legalId);
     if (cleaned.length < 2) return null;
     let built =
-      cleaned.length > request.maxBarSize
-        ? cleaned.slice(0, request.maxBarSize)
-        : [...cleaned];
+      cleaned.length > request.maxBarSize ? cleaned.slice(0, request.maxBarSize) : [...cleaned];
     if (built.length < request.minBarSize) {
       const remain = remainingCandidates(built, searchPool, pool.byId);
       for (const a of remain) {
@@ -576,7 +572,7 @@ export const solveFromRequest: SolveFn = async (
   const bigBonedAssumptions = hasBigBoned ? [...BIG_BONED_OUTGOING_ASSUMPTIONS] : undefined;
   const bigBonedNotes = hasBigBoned ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const) : [];
 
-  // No fabricated empty-bar / zero-score "success" DTO (req 6).
+  // No fabricated empty-bar / zero-score "success" DTO.
   if (result.status === "failed" || result.best == null) {
     throw new Error(
       [
@@ -664,7 +660,7 @@ export const solveFromRequest: SolveFn = async (
     phase: "finalize",
     evaluations: result.totalEvaluations,
     uniqueCandidates: dto.uniqueCandidates,
-    // Keep bestScore on exploratory scale for the whole run (req 10).
+    // Keep bestScore on exploratory scale for the whole run.
     bestScore: exploratoryOut ?? 0,
     ...(exploratoryOut != null ? { bestExploratoryScore: exploratoryOut } : {}),
     ...(fullOut != null ? { bestFullScore: fullOut } : {}),

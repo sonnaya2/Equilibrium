@@ -102,17 +102,13 @@ describe("generated data platform", () => {
     expect(Object.keys(manifest.regions)).toHaveLength(REGION_IDS.length);
   });
 
-  // The whole tree is gone: domain shards and ID indexes nothing read, then the
-  // documents that were build inputs, then the research payloads, which the
-  // route handlers under app/data/regions render straight out of SQLite.
+  // Research payloads are not under public/data — route handlers read SQLite.
   it("publishes no generated data at all", () => {
     expect(existsSync(join(root, "public/data"))).toBe(false);
   });
 
-  // Documents are build inputs for `#shard/*`, not browser payloads, so they
-  // are content-addressed but exempt from the shard size budget.
-  // Documents are build inputs for the `#shard/*` alias, so they are generated
-  // outside the web root. Nothing fetches one, and none is served.
+  // Documents are build inputs for `#shard/*`, not browser payloads: content-
+  // addressed under .generated/, never served from public/.
   it("content-addresses every source document, outside public/", () => {
     const entries = Object.entries(manifest.documents);
     // Exactly the documents something still imports - not a magic floor, which

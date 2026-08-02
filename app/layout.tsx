@@ -13,7 +13,7 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://equilibrium-ruddy.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
     default: "RS3 Equilibrium",
     template: "%s · Equilibrium",
@@ -122,24 +122,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   . Game art here is not for sale. Individual Wiki files may carry separate terms.
                 </p>
                 <p>
-                  <strong>Site code:</strong>{" "}
-                  <a
-                    href="https://github.com/sonnaya2/Equilibrium/blob/main/LICENSE"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    MIT License
-                  </a>{" "}
-                  (original code only). Wiki data, PvME notes, and Jagex assets are outside that
-                  grant — see{" "}
-                  <a
-                    href="https://github.com/sonnaya2/Equilibrium/blob/main/NOTICE"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    NOTICE
-                  </a>
-                  . <Link href="/sources#licenses">Full attribution</Link>.
+                  <strong>Site code:</strong> MIT License (original code only; see repository{" "}
+                  <code>LICENSE</code>). Wiki data, PvME notes, and Jagex assets are outside that
+                  grant — see repository <code>NOTICE</code>.{" "}
+                  <Link href="/sources#licenses">Full attribution</Link>.
                 </p>
               </div>
             </details>

@@ -1891,9 +1891,7 @@
 {"entityId":"item:camel-staff","regionId":"desert","relation":"required"}
 {"entityId":"item:celestial-handwraps","regionId":"morytania","relation":"required"}
 {"entityId":"item:champions-ring","regionId":"anachronia","relation":"required"}
-{"entityId":"item:champions-ring","ordinal":1,"regionId":"fremennik","relation":"required"}
 {"entityId":"item:channelers-ring","regionId":"anachronia","relation":"required"}
-{"entityId":"item:channelers-ring","ordinal":1,"regionId":"fremennik","relation":"required"}
 {"entityId":"item:chaotic-claw","regionId":"forinthry","relation":"required"}
 {"entityId":"item:chaotic-crossbow","regionId":"forinthry","relation":"required"}
 {"entityId":"item:chaotic-kiteshield","regionId":"forinthry","relation":"required"}
@@ -2297,7 +2295,6 @@
 {"entityId":"item:reavers-ring","regionId":"anachronia","relation":"hint","requirementGroup":"all_required"}
 {"entityId":"item:reavers-ring","regionId":"anachronia","relation":"required"}
 {"entityId":"item:reavers-ring","regionId":"fremennik","relation":"hint","requirementGroup":"all_required"}
-{"entityId":"item:reavers-ring","ordinal":1,"regionId":"fremennik","relation":"required"}
 {"entityId":"item:reefwalkers-cape","regionId":"asgarnia","relation":"required"}
 {"entityId":"item:refined-anima-core-body-of-seren","regionId":"desert","relation":"required"}
 {"entityId":"item:refined-anima-core-body-of-sliske","regionId":"desert","relation":"required"}
@@ -2379,7 +2376,6 @@
 {"entityId":"item:stalkers-ring","regionId":"anachronia","relation":"hint","requirementGroup":"all_required"}
 {"entityId":"item:stalkers-ring","regionId":"anachronia","relation":"required"}
 {"entityId":"item:stalkers-ring","regionId":"fremennik","relation":"hint","requirementGroup":"all_required"}
-{"entityId":"item:stalkers-ring","ordinal":1,"regionId":"fremennik","relation":"required"}
 {"entityId":"item:static-gloves","regionId":"desert","relation":"required"}
 {"entityId":"item:statiuss-warhammer","regionId":"forinthry","relation":"required"}
 {"entityId":"item:steadfast-boots","regionId":"fremennik","relation":"required"}

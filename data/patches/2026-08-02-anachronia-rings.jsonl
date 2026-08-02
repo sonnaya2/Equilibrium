@@ -1,0 +1,36 @@
+# The upgraded Fremennik rings are Anachronia-only in Equilibrium.
+#
+# Base game, these are a two-region craft: a heart from the Rex Matriarchs on
+# Anachronia combined with ten of the matching Fremennik ring from the Dagannoth
+# Kings. The League changes the drop - "Rex Matriarchs - Will drop full
+# Fremennik rings instead of the hearts" - so a self-supplying player needs
+# Anachronia and nothing else. The Fremennik requirement, the combine step and
+# the heart come off all four rings.
+#
+# Occultist's ring already sat on anachronia alone and is left as it is.
+#
+# The Channeller's ring was also held twice. The 2026-07-31 same-region dedupe
+# merged anachronia:channellers-ring into cross-region:channellers-ring, but
+# that id names a cross-region requirement that no longer exists. The item:
+# record survives instead and takes the passive, the wiki's two-l spelling and
+# the two effect notes worth keeping; the id-shaped commentary is dropped.
+{"op":"set-record","file":"data/combat/equipment.json","path":"$.records[312]","body":{"bonuses":{"damage":34.5,"prayer":5},"id":"item:channelers-ring","name":"Channeller's ring","passiveId":"channeller-ring","slot":"ring","sources":[{"source":"runescape-wiki","title":"Channeller's ring","url":"https://runescape.wiki/w/Channeller%27s_ring","verifiedAt":"2026-08-02"},{"source":"runescape-wiki","title":"Equilibrium League","url":"https://runescape.wiki/w/Equilibrium_League","verifiedAt":"2026-08-02"}],"style":"magic","tier":85,"unlock":{"regions":["anachronia"],"requirement":"League self-supply: anachronia","type":"drop"}},"reason":"Survivor of the Channeller's ring duplication, on anachronia alone now the League drops the ring complete."}
+{"op":"unlink-region","entity":"item:channelers-ring","region":"fremennik","reason":"The ring drops complete from the Rex Matriarchs; no Fremennik base ring is needed."}
+{"op":"remove-requirement","entity":"item:channelers-ring","description":"League self-supply: anachronia + fremennik","reason":"Superseded by the single-region requirement."}
+{"op":"add-requirement","entity":"item:channelers-ring","description":"League self-supply: anachronia","reason":"Rex Matriarchs drop the full ring in Equilibrium."}
+{"op":"add-effect","entity":"item:channelers-ring","description":"Preferred Magic ring for channelled abilities (Concentrated Blast / Smoke Tendrils) and FSoA crit stacks","reason":"Carried from cross-region:channellers-ring."}
+{"op":"add-effect","entity":"item:channelers-ring","description":"Upgraded seers' ring line - primarily magic channel/crit value","reason":"Carried from cross-region:channellers-ring."}
+{"op":"add-tag","entity":"item:channelers-ring","tag":"upgraded-fremennik-ring-channel-crit-support","label":"Upgraded Fremennik ring channel crit support","reason":"Carried from cross-region:channellers-ring."}
+{"op":"remove","entity":"cross-region:channellers-ring","reason":"Duplicate of item:channelers-ring under an id naming a cross-region requirement the League removes."}
+{"op":"set-record","file":"data/combat/equipment.json","path":"$.records[311]","body":{"bonuses":{"armour":17,"damage":33,"prayer":5},"id":"item:reavers-ring","name":"Reaver's ring","passiveId":"reaver-ring","slot":"ring","sources":[{"source":"runescape-wiki","url":"https://runescape.wiki/w/Reaver%27s_ring","verifiedAt":"2026-08-02"},{"source":"runescape-wiki","title":"Equilibrium League","url":"https://runescape.wiki/w/Equilibrium_League","verifiedAt":"2026-08-02"}],"style":"hybrid","tier":85,"unlock":{"regions":["anachronia"],"requirement":"League self-supply: anachronia","type":"drop"}},"reason":"Drops complete from the Rex Matriarchs in Equilibrium."}
+{"op":"unlink-region","entity":"item:reavers-ring","region":"fremennik","reason":"The ring drops complete from the Rex Matriarchs; no Fremennik base ring is needed."}
+{"op":"remove-requirement","entity":"item:reavers-ring","description":"League self-supply: anachronia + fremennik","reason":"Superseded by the single-region requirement."}
+{"op":"add-requirement","entity":"item:reavers-ring","description":"League self-supply: anachronia","reason":"Rex Matriarchs drop the full ring in Equilibrium."}
+{"op":"set-record","file":"data/combat/equipment.json","path":"$.records[313]","body":{"bonuses":{"damage":34.5,"prayer":5},"id":"item:stalkers-ring","name":"Stalker's ring","passiveId":"stalker-ring","slot":"ring","sources":[{"source":"runescape-wiki","url":"https://runescape.wiki/w/Stalker%27s_ring","verifiedAt":"2026-08-02"},{"source":"runescape-wiki","title":"Equilibrium League","url":"https://runescape.wiki/w/Equilibrium_League","verifiedAt":"2026-08-02"}],"style":"ranged","tier":85,"unlock":{"regions":["anachronia"],"requirement":"League self-supply: anachronia","type":"drop"}},"reason":"Drops complete from the Rex Matriarchs in Equilibrium."}
+{"op":"unlink-region","entity":"item:stalkers-ring","region":"fremennik","reason":"The ring drops complete from the Rex Matriarchs; no Fremennik base ring is needed."}
+{"op":"remove-requirement","entity":"item:stalkers-ring","description":"League self-supply: anachronia + fremennik","reason":"Superseded by the single-region requirement."}
+{"op":"add-requirement","entity":"item:stalkers-ring","description":"League self-supply: anachronia","reason":"Rex Matriarchs drop the full ring in Equilibrium."}
+{"op":"set-record","file":"data/combat/equipment.json","path":"$.records[314]","body":{"bonuses":{"damage":34.5,"prayer":5},"id":"item:champions-ring","name":"Champion's ring","passiveId":"champion-ring","slot":"ring","sources":[{"source":"runescape-wiki","url":"https://runescape.wiki/w/Champion%27s_ring","verifiedAt":"2026-08-02"},{"source":"runescape-wiki","title":"Equilibrium League","url":"https://runescape.wiki/w/Equilibrium_League","verifiedAt":"2026-08-02"}],"style":"melee","tier":85,"unlock":{"regions":["anachronia"],"requirement":"League self-supply: anachronia","type":"drop"}},"reason":"Drops complete from the Rex Matriarchs in Equilibrium."}
+{"op":"unlink-region","entity":"item:champions-ring","region":"fremennik","reason":"The ring drops complete from the Rex Matriarchs; no Fremennik base ring is needed."}
+{"op":"remove-requirement","entity":"item:champions-ring","description":"League self-supply: anachronia + fremennik","reason":"Superseded by the single-region requirement."}
+{"op":"add-requirement","entity":"item:champions-ring","description":"League self-supply: anachronia","reason":"Rex Matriarchs drop the full ring in Equilibrium."}

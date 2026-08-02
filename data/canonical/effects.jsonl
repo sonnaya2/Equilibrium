@@ -666,6 +666,8 @@
 {"description":"Degrades; repair economy matters for long ironman use","entityId":"item:abyssal-scourge","key":"effect","ordinal":2}
 {"description":"Highest-tier staff that supplies infinite fire runes","entityId":"item:camel-staff","key":"effect","ordinal":0}
 {"description":"Niche Ancient Magicks blood-spell rune saver and mid-high Magic 2h","entityId":"item:camel-staff","key":"effect","ordinal":1}
+{"description":"Preferred Magic ring for channelled abilities (Concentrated Blast / Smoke Tendrils) and FSoA crit stacks","entityId":"item:channelers-ring","key":"effect","ordinal":0}
+{"description":"Upgraded seers' ring line - primarily magic channel/crit value","entityId":"item:channelers-ring","key":"effect","ordinal":1}
 {"description":"Strong early-league / early-region T80 Magic 2h when boss uniques are unavailable","entityId":"item:chaotic-staff","key":"effect","ordinal":0}
 {"description":"Completes the chaotic weapon ladder — forinthry:chaotic-melee-ranged intentionally omitted Magic staff","entityId":"item:chaotic-staff","key":"effect","ordinal":1}
 {"description":"12.5% (1/8) chance per hit to apply tier-2 weapon poison (or +1 poison tier when another poison source is active)","entityId":"item:cinderbane-gloves","key":"effect","ordinal":0}

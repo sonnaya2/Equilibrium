@@ -962,6 +962,7 @@
 {"entityId":"item:celestial-handwraps","tagId":"magic"}
 {"entityId":"item:champions-ring","tagId":"melee"}
 {"entityId":"item:channelers-ring","tagId":"magic"}
+{"entityId":"item:channelers-ring","tagId":"upgraded-fremennik-ring-channel-crit-support"}
 {"entityId":"item:chaotic-claw","tagId":"melee"}
 {"entityId":"item:chaotic-crossbow","tagId":"ranged"}
 {"entityId":"item:chaotic-kiteshield","tagId":"melee"}

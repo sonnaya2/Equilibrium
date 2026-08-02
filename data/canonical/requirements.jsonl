@@ -1427,8 +1427,8 @@
 {"description":"Camel staff","entityId":"item:camel-staff","ordinal":0}
 {"description":"On-task drop rate strongly preferred","entityId":"item:camel-staff","ordinal":3}
 {"description":"League self-supply: morytania","entityId":"item:celestial-handwraps","ordinal":0}
-{"description":"League self-supply: anachronia + fremennik","entityId":"item:champions-ring","ordinal":0}
-{"description":"League self-supply: anachronia + fremennik","entityId":"item:channelers-ring","ordinal":0}
+{"description":"League self-supply: anachronia","entityId":"item:champions-ring","ordinal":0}
+{"description":"League self-supply: anachronia","entityId":"item:channelers-ring","ordinal":0}
 {"description":"Chaotic equipment","entityId":"item:chaotic-claw","ordinal":0}
 {"description":"Chaotic melee and ranged weapons","entityId":"item:chaotic-crossbow","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:chaotic-kiteshield","ordinal":0}
@@ -1771,7 +1771,7 @@
 {"description":"70 Crafting to combine heart + rings","entityId":"item:reavers-ring","level":70,"ordinal":4}
 {"description":"Anachronia: Heart of the Berserker from any Rex Matriarch (wiki League region badge: Anachronia)","entityId":"item:reavers-ring","ordinal":2}
 {"description":"Fremennik: 10× berserker rings from Dagannoth Rex (Waterbirth)","entityId":"item:reavers-ring","level":10,"ordinal":3}
-{"description":"League self-supply: anachronia + fremennik","entityId":"item:reavers-ring","ordinal":0}
+{"description":"League self-supply: anachronia","entityId":"item:reavers-ring","ordinal":5}
 {"description":"Rex Matriarchs (Heart of the Berserker path) for the Reaver's ring","entityId":"item:reavers-ring","ordinal":1}
 {"description":"League self-supply: asgarnia","entityId":"item:reefwalkers-cape","ordinal":0}
 {"description":"God Wars Dungeon 2 weapon and anima-core progression","entityId":"item:refined-anima-core-body-of-seren","level":2,"ordinal":0}
@@ -1863,7 +1863,7 @@
 {"description":"Anachronia: Heart of the Archer from Rex Matriarchs","entityId":"item:stalkers-ring","ordinal":1}
 {"description":"Crafting combine","entityId":"item:stalkers-ring","ordinal":3}
 {"description":"Fremennik: 10× archers' rings from Dagannoth Supreme","entityId":"item:stalkers-ring","level":10,"ordinal":2}
-{"description":"League self-supply: anachronia + fremennik","entityId":"item:stalkers-ring","ordinal":0}
+{"description":"League self-supply: anachronia","entityId":"item:stalkers-ring","ordinal":4}
 {"description":"League self-supply: desert","entityId":"item:static-gloves","ordinal":0}
 {"description":"Ancient warrior weapons (Wilderness residual)","entityId":"item:statiuss-warhammer","ordinal":0}
 {"description":"Steadfast / Ragefire / Glaiven boots (glacor T85 tank)","entityId":"item:steadfast-boots","ordinal":0}

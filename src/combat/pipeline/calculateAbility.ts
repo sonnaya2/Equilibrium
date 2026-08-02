@@ -68,7 +68,17 @@ export interface AbilitySpec {
   replacementGroup?: string;
   /** Shared logical cooldown when distinct ids represent one live timer. */
   cooldownGroup?: string;
-  weaponRequirement?: "twohand" | "dualwield" | "mainhand" | "death-guard-and-conduit";
+  /**
+   * Weapon shape gate. Necromancy conjures use `"conduit"` (wiki: Conjuration
+   * requires an off-hand conduit). `"death-guard-and-conduit"` is full dual
+   * necro shape. Other styles use twohand / dualwield / mainhand.
+   */
+  weaponRequirement?:
+    | "twohand"
+    | "dualwield"
+    | "mainhand"
+    | "conduit"
+    | "death-guard-and-conduit";
   /** At least one of these catalogue items must be equipped. */
   requiredEquipmentAnyOf?: readonly string[];
   /**

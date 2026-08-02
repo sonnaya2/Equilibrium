@@ -253,9 +253,33 @@ describe("cast legality at the candidate tick", () => {
     const before = structuredClone(ctx.getState());
     expect(ctx.performCast(necro, 0, false)).toMatchObject({
       ok: false,
-      error: "necromancy_basic requires death guard and conduit",
+      error: "necromancy_basic requires a necromancy weapon",
     });
     expect(ctx.getState()).toEqual(before);
+  });
+
+  it("blocks conjures without a conduit while necrotic abilities still cast with a shield", () => {
+    const conjure = NECROMANCY_ABILITIES.find((a) => a.id === "conjure_skeleton_warrior")!;
+    const basic = NECROMANCY_ABILITIES.find((a) => a.id === "necromancy_basic")!;
+    // Wiki Conjuration: equipment Conduit. Shield keeps necrotic casting (siphon).
+    expect(meetsWeaponRequirement(conjure, "necromancy")).toBe(true);
+    expect(meetsWeaponRequirement(conjure, "shield")).toBe(false);
+    expect(meetsWeaponRequirement(conjure, "mainhand")).toBe(false);
+    expect(meetsWeaponRequirement(basic, "shield")).toBe(true);
+    expect(meetsWeaponRequirement(basic, "mainhand")).toBe(true);
+    expect(meetsWeaponRequirement(basic, "necromancy")).toBe(true);
+
+    const noConduit = createCastContext({
+      ...baseInput,
+      abilities: NECROMANCY_ABILITIES,
+      context: { style: "necromancy" },
+      weaponConfiguration: "shield",
+    });
+    expect(noConduit.performCast(conjure, 0, false)).toMatchObject({
+      ok: false,
+      error: "conjure_skeleton_warrior requires a conduit",
+    });
+    expect(noConduit.performCast(basic, 0, false).ok).toBe(true);
   });
 
   it("lets defenders satisfy dual-wield requirements without treating shields as weapons", () => {

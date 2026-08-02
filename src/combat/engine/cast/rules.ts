@@ -66,8 +66,12 @@ export function castRejection(
 ): string | null {
   if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
     const requirement =
-      ability.weaponRequirement ??
-      (ability.style === "necromancy" ? "death guard and conduit" : `${ability.style} weapon`);
+      ability.weaponRequirement === "conduit"
+        ? "a conduit"
+        : ability.weaponRequirement === "death-guard-and-conduit"
+          ? "death guard and conduit"
+          : (ability.weaponRequirement ??
+            (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
     return `${ability.id} requires ${requirement}`;
   }
   if (!meetsEquipmentRequirement(ability, equipmentIds)) {
@@ -104,16 +108,45 @@ export function castRejection(
   return null;
 }
 
-/** Pure equipment-shape check shared by engine validation and ability pickers. */
+/**
+ * Pure equipment-shape check shared by engine validation and ability pickers.
+ *
+ * Necromancy (wiki — Conjuration / Necromancy abilities):
+ * - necrotic basics/enhanced/ultimates need a siphon (main hand); they still
+ *   cast with a shield or defender in the off-hand
+ * - conjures need a conduit (off-hand); shield/defender dual is not enough
+ * - loadout reports `"necromancy"` only when a conduit is available (equipped
+ *   conduit, or empty off-hand with the dual-hand tier sliders)
+ */
 export function meetsWeaponRequirement(
   ability: AbilitySpec,
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy",
 ): boolean {
   if (weaponConfiguration === undefined) return true;
-  if (ability.style === "necromancy") return weaponConfiguration === "necromancy";
+
+  if (ability.style === "necromancy") {
+    const req = ability.weaponRequirement;
+    // Conjures (and any explicit dual-necro gate) need siphon + conduit.
+    if (req === "conduit" || req === "death-guard-and-conduit") {
+      return weaponConfiguration === "necromancy";
+    }
+    // Other necro abilities: any necro main-hand shape, including shield tanking.
+    return (
+      weaponConfiguration === "necromancy" ||
+      weaponConfiguration === "mainhand" ||
+      weaponConfiguration === "shield" ||
+      weaponConfiguration === "defender"
+    );
+  }
+
   if (weaponConfiguration === "necromancy") return false;
   if (ability.weaponRequirement === undefined) return true;
-  if (ability.weaponRequirement === "death-guard-and-conduit") return false;
+  if (
+    ability.weaponRequirement === "conduit" ||
+    ability.weaponRequirement === "death-guard-and-conduit"
+  ) {
+    return false;
+  }
   if (weaponConfiguration === "defender") return ability.weaponRequirement === "dualwield";
   if (weaponConfiguration === "shield") return false;
   return weaponConfiguration === ability.weaponRequirement;

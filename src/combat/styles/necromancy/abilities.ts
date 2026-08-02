@@ -392,6 +392,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_skeleton_warrior",
+    // Wiki Conjuration: equipment Conduit (off-hand). Siphon alone is not enough.
+    weaponRequirement: "conduit",
     supportStatus: "partially-modeled",
     supportNote: "Spirit Pact III duration assumed; duration-extending effects not modeled.",
     source: CONJURE_SKELETON_WIKI,
@@ -404,6 +406,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_vengeful_ghost",
+    weaponRequirement: "conduit",
     supportStatus: "partially-modeled",
     supportNote:
       "Ghost healing, Command Vengeful Ghost / Haunted, and Spirit Pact duration variants are not modeled.",
@@ -418,6 +421,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     adrenaline: { cost: 0 },
     stateEffect: "conjure_putrid_zombie",
     cooldownSeconds: 30,
+    weaponRequirement: "conduit",
     supportStatus: "partially-modeled",
     supportNote: "Spirit Pact III duration assumed; duration-extending effects not modeled.",
     source: CONJURE_ZOMBIE_WIKI,
@@ -430,6 +434,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_phantom_guardian",
+    weaponRequirement: "conduit",
     supportStatus: "partially-modeled",
     supportNote: "Phantom Guardian's taunt / damage-sharing role is not modeled (damage only).",
     source: CONJURE_PHANTOM_WIKI,
@@ -443,6 +448,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [],
     adrenaline: { cost: 0 },
     stateEffect: "conjure_undead_army",
+    weaponRequirement: "conduit",
     supportStatus: "partially-modeled",
     supportNote:
       "Army conjures the default three spirits at Spirit Pact III; customisation not modeled.",

@@ -12,10 +12,7 @@ import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serial
 import { requireSimBase } from "./worker/revive";
 import type { SolveFn, SolveRuntimeOptions } from "./worker/solveTypes";
 import type { SolverPhase, SolverProgress } from "./worker/protocol";
-import {
-  BIG_BONED_OUTGOING_ASSUMPTIONS,
-  BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
-} from "../league/ruleset";
+import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "../league/ruleset";
 
 function resolveSpecs(ids: readonly string[]): AbilitySpec[] {
   const out: AbilitySpec[] = [];
@@ -371,17 +368,8 @@ export const solveFromRequest: SolveFn = async (
   const winnerBar = result.best.bar;
   const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
   const hasBigBoned = simBase.league.blessingIds.includes("big-boned");
-  const includeBigBoned = hasBigBoned && simBase.league.includeBigBonedOutgoingDamage !== false;
-  const bigBonedAssumptions = includeBigBoned
-    ? [...BIG_BONED_OUTGOING_ASSUMPTIONS]
-    : hasBigBoned
-      ? [BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION]
-      : undefined;
-  const bigBonedNotes = includeBigBoned
-    ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const)
-    : hasBigBoned
-      ? ([BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION] as const)
-      : [];
+  const bigBonedAssumptions = hasBigBoned ? [...BIG_BONED_OUTGOING_ASSUMPTIONS] : undefined;
+  const bigBonedNotes = hasBigBoned ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const) : [];
   const dto: SolverResultDTO = {
     bar: [...winnerBar],
     score,

@@ -1,10 +1,7 @@
 import { ticksToSeconds } from "@/combat/core/ticks";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
-import {
-  BIG_BONED_OUTGOING_ASSUMPTIONS,
-  BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
-} from "@/combat/league/ruleset";
+import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "@/combat/league/ruleset";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -95,12 +92,7 @@ export function CalculationAssumptions({
       : []),
     ...(bigBonedPicked
       ? ([
-          [
-            "Big Boned outgoing",
-            stats.league.includeBigBonedOutgoingDamage
-              ? BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")
-              : BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
-          ],
+          ["Big Boned outgoing", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")],
         ] as Array<[string, string | number]>)
       : []),
     ...(barkscalesPicked

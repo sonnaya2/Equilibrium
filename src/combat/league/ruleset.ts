@@ -15,16 +15,7 @@ export interface LeagueLoadout {
   regions?: readonly string[];
 }
 
-/**
- * Default calculator / solver policy (Mod Sponge Discord): Big Boned is per
- * unique hit and stacks with other blessings. Outgoing 5% max-life flat damage
- * is included whenever the blessing is active; +50% maximum life always applies.
- * Set `includeBigBonedOutgoingDamage: false` only as an advanced override.
- */
-export const BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION =
-  "Outgoing Big Boned damage excluded (advanced override)";
-
-/** Product model for Big Boned's 5% max-life outgoing rider (default scoring). */
+/** Product model for Big Boned's 5% max-life outgoing rider. */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
   "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as additive non-crit attached damage",
   "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
@@ -48,12 +39,6 @@ export interface ResolvedLeagueRules {
    */
   powerburstUntilTick: number;
   targetTiles: number;
-  /**
-   * When true (default), Big Boned emits the 5% max-life bonus damage rider on
-   * each qualifying hit. Set false only to exclude that damage from totals.
-   * Maximum-life +50% always applies when the blessing is picked.
-   */
-  includeBigBonedOutgoingDamage: boolean;
 }
 
 export interface ResolveLeagueRulesDerived {
@@ -61,8 +46,6 @@ export interface ResolveLeagueRulesDerived {
   maximumLife?: number;
   powerburstUntilTick?: number;
   targetTiles?: number;
-  /** Default true — product scoring includes Big Boned outgoing damage. */
-  includeBigBonedOutgoingDamage?: boolean;
 }
 
 export function resolveLeagueRules(
@@ -79,7 +62,6 @@ export function resolveLeagueRules(
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
     targetTiles: Math.max(1, Math.floor(derived.targetTiles ?? 1)),
-    includeBigBonedOutgoingDamage: derived.includeBigBonedOutgoingDamage !== false,
   };
 }
 

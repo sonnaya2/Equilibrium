@@ -15,7 +15,7 @@ const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
 const bigBoned = (derived: { maximumLife?: number; powerburstUntilTick?: number }) =>
   resolveLeagueRules(
     { ruleset: "equilibrium", blessingPicks: ["Balance"] },
-    { includeBigBonedOutgoingDamage: true, ...derived },
+    { ...derived },
   );
 
 function bigBonedExpected(rules: ReturnType<typeof resolveLeagueRules>, landTick: number): number {

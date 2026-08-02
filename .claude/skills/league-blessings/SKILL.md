@@ -177,15 +177,13 @@ instance, through the shared eligibility policy below.
 
 **Confirmed (Jagex Mod Sponge on Discord):** per hit, and works with other blessings.
 
-**Product default (include outgoing damage):**
+**Product model:**
 
-- `ResolvedLeagueRules.includeBigBonedOutgoingDamage` defaults to **true**.
-- Default calculator totals and solver rankings **include** the 5% max-life outgoing rider on every
+- Calculator totals and solver rankings **always include** the 5% max-life outgoing rider on every
   unique rider-eligible hit (direct multi-hit components, DoT ticks, command hits).
 - The +50% maximum-life multiplier (`blessingLifeMultiplier` / `maximumLifeMultiplier`) always
   applies when the blessing is picked.
-- Set `includeBigBonedOutgoingDamage: false` only as an advanced override (no experimental UI).
-- Assumptions strings live in `BIG_BONED_OUTGOING_*` in `src/combat/league/ruleset.ts`.
+- Assumption strings live in `BIG_BONED_OUTGOING_ASSUMPTIONS` in `src/combat/league/ruleset.ts`.
 
 Implementation:
 

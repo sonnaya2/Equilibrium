@@ -178,7 +178,6 @@ export function canonicalSolveContext(request: SerializableSolverRequest): unkno
           // Boolean only — remaining ticks tick down and would thrash the key.
           powerburstActive: (loadout.league.powerburstUntilTick ?? 0) > 0,
           targetTiles: loadout.league.targetTiles,
-          includeBigBonedOutgoingDamage: loadout.league.includeBigBonedOutgoingDamage !== false,
         },
         modifierSources: normalizeModifierSources(loadout.modifierSources),
         passiveIds: [...(loadout.equipmentEffects.passiveIds ?? [])].map(String).sort(),

@@ -70,7 +70,7 @@ function nakedRequest() {
  * UI-shaped equilibrium loadout: blessings, vulnerability, curse, perks, multi-region
  * pool, product min bar size. This is the path that freezes/fails when naked still works.
  */
-function complicatedRequest(opts?: { includeBigBonedOutgoing?: boolean }) {
+function complicatedRequest() {
   // Balance→Chaos→Chaos grants big-boned, abyssal-cinders, avernic-rampage (state-branching).
   const blessingPicks = [
     "Balance",
@@ -93,8 +93,6 @@ function complicatedRequest(opts?: { includeBigBonedOutgoing?: boolean }) {
       maximumLife: 15_000,
       powerburstUntilTick: 50,
       targetTiles: 3,
-      // Default product policy includes BB outgoing; explicit false is the override.
-      includeBigBonedOutgoingDamage: opts?.includeBigBonedOutgoing !== false,
     },
   );
 

@@ -190,7 +190,7 @@ describe("Big Boned rides every qualifying damage instance", () => {
   // "All damage you deal gains 5% of your maximum life points as bonus damage."
   const bigBoned = resolveLeagueRules(
     { ruleset: "equilibrium", blessingPicks: ["Balance"] },
-    { maximumLife: 15_000, includeBigBonedOutgoingDamage: true },
+    { maximumLife: 15_000 },
   );
 
   it("adds one component per hit of a multi-hit ability, not one per cast", () => {

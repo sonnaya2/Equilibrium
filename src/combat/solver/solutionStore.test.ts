@@ -106,23 +106,6 @@ describe("solutionStore", () => {
     expect(await fingerprintSolveContext(off)).not.toBe(await fingerprintSolveContext(a));
   });
 
-  it("fingerprints includeBigBonedOutgoingDamage so experimental scoring cannot share cache", async () => {
-    const safe = sampleRequest();
-    if (!isSerializableSimBase(safe.loadout)) throw new Error("expected sim base");
-    const experimental = structuredClone(safe);
-    if (!isSerializableSimBase(experimental.loadout)) throw new Error("expected sim base");
-    experimental.loadout = {
-      ...experimental.loadout,
-      league: {
-        ...experimental.loadout.league,
-        blessingIds: ["big-boned"],
-        includeBigBonedOutgoingDamage: true,
-      },
-    };
-    expect(await fingerprintSolveContext(experimental)).not.toBe(
-      await fingerprintSolveContext(safe),
-    );
-  });
 
   it("sha256Hex is deterministic and compact", async () => {
     const h = await sha256Hex("equilibrium");

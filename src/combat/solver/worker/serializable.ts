@@ -55,11 +55,6 @@ export interface SerializableLeagueRules {
   /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */
   powerburstUntilTick: number;
   targetTiles: number;
-  /**
-   * Include Big Boned's 5% max-life outgoing rider in scoring.
-   * Default / omitted = true (product scoring). Set false to exclude.
-   */
-  includeBigBonedOutgoingDamage?: boolean;
 }
 
 /**

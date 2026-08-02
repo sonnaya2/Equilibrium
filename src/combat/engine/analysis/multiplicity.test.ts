@@ -30,7 +30,7 @@ const cinders = () =>
 const bigBoned = () =>
   resolveLeagueRules(
     { ruleset: "equilibrium", blessingPicks: ["Balance"] },
-    { maximumLife: 15_000, includeBigBonedOutgoingDamage: true },
+    { maximumLife: 15_000 },
   );
 
 describe("resolveEventMultiplicity defaults", () => {

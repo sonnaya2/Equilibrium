@@ -170,14 +170,9 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
-  // Default path includes the outgoing rider (per-hit, Mod Sponge). Max-life
-  // multiplier stays active via blessingLifeMultiplier regardless of the flag.
+  // Per unique hit (Mod Sponge): flat 5% of land-time max life, attached.
   const bigBoned = blessingRule(input.rules, "big-boned");
-  if (
-    input.rules.includeBigBonedOutgoingDamage &&
-    eligible.rider &&
-    bigBoned?.maxLifeDamagePercent !== undefined
-  ) {
+  if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
     const hit = calculateHit({
       ...shared,
       base: resolveMaximumLife(input.rules, input.landTick ?? 0),

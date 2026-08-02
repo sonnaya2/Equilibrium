@@ -1,0 +1,161 @@
+/* Solver live status — stone plate, gem progression track, mini best-bar strip */
+.revo-solver-status {
+  margin-top: 0.55rem;
+  padding: 0.55rem 0.65rem 0.5rem;
+  border: 1px solid var(--combat-gold-dim);
+  background:
+    linear-gradient(180deg, rgb(46 203 143 / 5%), transparent 2.2rem),
+    color-mix(in srgb, var(--combat-inset) 92%, black);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 45%);
+}
+
+.revo-solver-status__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.revo-solver-status__phase {
+  color: var(--combat-gem-bright);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.revo-solver-status__meta {
+  color: var(--combat-muted);
+  font-size: 0.68rem;
+}
+
+.revo-solver-status__best {
+  color: var(--combat-text);
+}
+
+.revo-solver-status__best.is-pulse {
+  color: var(--combat-gem-bright);
+  animation: revo-best-pulse 420ms ease-out 1;
+}
+
+.revo-solver-status__dot {
+  margin-inline: 0.35rem;
+  opacity: 0.55;
+}
+
+.revo-solver-status__hint {
+  margin: 0.4rem 0 0;
+  color: var(--combat-muted);
+  font-size: 0.68rem;
+}
+
+.revo-solver-track {
+  position: relative;
+  height: 0.3rem;
+  overflow: hidden;
+  border: 1px solid var(--combat-gold-dim);
+  background: rgb(0 0 0 / 45%);
+  border-radius: 1px;
+}
+
+.revo-solver-track__fill {
+  width: calc(var(--fill, 0) * 100%);
+  max-width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--combat-gem-dark) 70%, black),
+    var(--combat-gem)
+  );
+  box-shadow: 0 0 8px rgb(46 203 143 / 18%);
+  transition: width 160ms ease-out;
+}
+
+.revo-solver-track--live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 38%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--combat-gem-bright) 55%, transparent) 45%,
+    transparent 90%
+  );
+  animation: revo-track-sweep 1.15s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.revo-solver-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+  margin-top: 0.45rem;
+  padding: 0.28rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-inset) 90%, black);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 55%);
+}
+
+.revo-solver-preview__slot {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1px solid var(--combat-gold-mid);
+  border-radius: 1px;
+  background: var(--combat-panel);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 55%);
+}
+
+.revo-solver-preview__slot[data-category="basic"] {
+  border-color: color-mix(in srgb, var(--combat-basic) 70%, var(--combat-gold-mid));
+}
+.revo-solver-preview__slot[data-category="threshold"] {
+  border-color: color-mix(in srgb, var(--combat-threshold) 70%, var(--combat-gold-mid));
+}
+.revo-solver-preview__slot[data-category="ultimate"] {
+  border-color: color-mix(in srgb, var(--combat-ultimate) 70%, var(--combat-gold-mid));
+}
+.revo-solver-preview__slot[data-category="utility"] {
+  border-color: color-mix(in srgb, var(--combat-utility) 55%, var(--combat-gold-mid));
+}
+
+.revo-solver-preview__icon {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
+.revo-solver-preview__empty {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1px solid rgb(133 98 58 / 28%);
+}
+
+@keyframes revo-track-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+@keyframes revo-best-pulse {
+  0% {
+    text-shadow: 0 0 0 transparent;
+  }
+  40% {
+    text-shadow: 0 0 10px rgb(46 203 143 / 35%);
+  }
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revo-solver-track--live::after,
+  .revo-solver-status__best.is-pulse {
+    animation: none;
+  }
+}

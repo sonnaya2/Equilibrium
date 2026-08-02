@@ -7,11 +7,11 @@ import { buildCandidatePool } from "./candidatePool";
 import type { EvaluateFn, EvalMode, PoolAbility, SolveResult } from "./contracts";
 import { evaluateRevolutionBar } from "./evaluate";
 import { OBJECTIVE_HORIZON_TICKS } from "./objective";
-import { solve } from "./solve";
+import { solveAsync, TIER_BUDGETS, type SolvePhaseName } from "./solve";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import { requireSimBase } from "./worker/revive";
 import type { SolveFn, SolveRuntimeOptions } from "./worker/solveTypes";
-import type { SolverProgress } from "./worker/protocol";
+import type { SolverPhase, SolverProgress } from "./worker/protocol";
 
 function resolveSpecs(ids: readonly string[]): AbilitySpec[] {
   const out: AbilitySpec[] = [];
@@ -136,11 +136,13 @@ export const solveFromRequest: SolveFn = async (
   for (const a of poolSpecs) abilityMap.set(a.id, a);
   const abilities = [...abilityMap.values()];
 
+  // Explore short (default 50 ticks ≈ 30s). Full robust score only at finalize.
   const exploreTicks = Math.max(
     10,
-    request.exploreDurationTicks ?? Math.min(request.durationTicks, 100),
+    request.exploreDurationTicks ?? Math.min(request.durationTicks, 50),
   );
   const fullTicks = Math.max(request.durationTicks, OBJECTIVE_HORIZON_TICKS);
+  const evaluationBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
 
   const { reviveModifiers, reviveLeague } = await import("./worker/revive");
   const league = reviveLeague(simBase.league);
@@ -172,8 +174,39 @@ export const solveFromRequest: SolveFn = async (
   };
 
   let evaluations = 0;
+  let uniqueBars = 0;
+  const seenBars = new Set<string>();
   let bestScore = Number.NEGATIVE_INFINITY;
   let topPreview: string[] = [];
+  let currentPhase: SolverPhase = "seed";
+  let noImprovement = 0;
+
+  const mapPhase = (name: SolvePhaseName): SolverPhase => {
+    if (name === "seed") return "seed";
+    if (name === "finalize") return "finalize";
+    if (name === "local" || name === "anneal" || name === "lns" || name === "evolutionary") {
+      return "exploit";
+    }
+    return "explore";
+  };
+
+  const emitProgress = (force = false) => {
+    if (!options?.onProgress) return;
+    if (!force && evaluations % 2 !== 0) return;
+    const ratio = Math.min(0.97, evaluations / Math.max(1, evaluationBudget + 8));
+    const progress: SolverProgress = {
+      phase: currentPhase,
+      evaluations,
+      uniqueCandidates: uniqueBars,
+      bestScore: Number.isFinite(bestScore) ? bestScore : 0,
+      windowDpms: Number.isFinite(bestScore) ? bestScore : 0,
+      topBarPreview: topPreview,
+      noImprovementCount: noImprovement,
+      evaluationBudget,
+      progressRatio: ratio,
+    };
+    options.onProgress(progress);
+  };
 
   const evaluate: EvaluateFn = ({ bar, mode }: { bar: readonly string[]; mode?: EvalMode }) => {
     if (options?.isCancelled?.() || options?.signal?.aborted) {
@@ -182,6 +215,11 @@ export const solveFromRequest: SolveFn = async (
     const useFull = mode === "full" || mode === "finalize";
     const durationTicks = useFull ? fullTicks : exploreTicks;
     evaluations += 1;
+    const key = bar.join("\0");
+    if (!seenBars.has(key)) {
+      seenBars.add(key);
+      uniqueBars += 1;
+    }
 
     const evaluation = evaluateRevolutionBar({
       bar,
@@ -198,20 +236,13 @@ export const solveFromRequest: SolveFn = async (
     if (evaluation.ok && evaluation.score > bestScore) {
       bestScore = evaluation.score;
       topPreview = [...bar];
+      noImprovement = 0;
+    } else {
+      noImprovement += 1;
     }
 
-    if (evaluations % 8 === 0 && options?.onProgress) {
-      const progress: SolverProgress = {
-        phase: useFull ? "finalize" : "explore",
-        evaluations,
-        uniqueCandidates: evaluations,
-        bestScore: Number.isFinite(bestScore) ? bestScore : 0,
-        windowDpms: Number.isFinite(bestScore) ? bestScore : 0,
-        topBarPreview: topPreview,
-        noImprovementCount: 0,
-      };
-      options.onProgress(progress);
-    }
+    if (useFull) currentPhase = "finalize";
+    emitProgress();
 
     if (!evaluation.ok) {
       return { score: Number.NEGATIVE_INFINITY, finite: false };
@@ -252,68 +283,67 @@ export const solveFromRequest: SolveFn = async (
       : []),
   ].filter((s) => s.length >= request.minBarSize);
 
-  // Pool for search uses PoolAbility surface (AbilitySpecs already work).
-  const searchPool: PoolAbility[] = pool.ids.map((id) => {
-    const a = pool.byId.get(id)!;
-    return a;
-  });
+  const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
 
+  emitProgress(true);
   if (options?.yieldSlice) await options.yieldSlice();
 
-  const result: SolveResult = solve({
-    pool: searchPool,
-    sizeBounds: { min: request.minBarSize, max: request.maxBarSize },
-    evaluate,
-    tier: request.tier,
-    seed: request.seed,
-    authoredSeeds: authored,
-    config: {
-      profileId: request.profileId,
+  const result: SolveResult = await solveAsync(
+    {
+      pool: searchPool,
+      sizeBounds: { min: request.minBarSize, max: request.maxBarSize },
+      evaluate,
+      tier: request.tier,
+      seed: request.seed,
+      authoredSeeds: authored,
+      config: {
+        profileId: request.profileId,
+      },
     },
-  });
+    {
+      onPhase: (phase) => {
+        currentPhase = mapPhase(phase);
+        emitProgress(true);
+      },
+      yieldSlice: async () => {
+        emitProgress(true);
+        if (options?.isCancelled?.() || options?.signal?.aborted) {
+          throw new Error("solver cancelled");
+        }
+        if (options?.isPaused?.()) {
+          while (options.isPaused?.() && !options?.isCancelled?.()) {
+            await new Promise((r) => setTimeout(r, 16));
+          }
+        }
+        await options?.yieldSlice?.();
+      },
+    },
+  );
 
   if (options?.isCancelled?.() || options?.signal?.aborted) {
     throw new Error("solver cancelled");
   }
 
-  // Exact final re-score of winner at full horizon (authoritative).
+  // Finalize already full-rescored the shortlist — no second 300s winner sim.
+  currentPhase = "finalize";
+  emitProgress(true);
   const winnerBar = result.best.bar;
-  const finalEval = evaluateRevolutionBar({
-    bar: winnerBar,
-    style: request.style,
-    durationTicks: fullTicks,
-    pool,
-    sim: simCommon,
-    profileId: request.profileId,
-    customWeights: request.customWeights,
-    includePartial: request.includePartial,
-    size: { min: request.minBarSize, max: request.maxBarSize },
-  });
-
-  const score = finalEval.ok ? finalEval.score : result.best.robustScore;
+  const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
   const dto: SolverResultDTO = {
     bar: [...winnerBar],
     score,
     windowDpms: score,
     evaluations: result.evaluationsUsed,
-    uniqueCandidates: result.stats.uniqueBars ?? result.evaluationsUsed,
+    uniqueCandidates: uniqueBars || result.stats.uniqueBars || result.evaluationsUsed,
     seed: request.seed,
     profileId: request.profileId,
     tier: request.tier,
     durationTicks: fullTicks,
     proofLabel: result.proof,
-    openingDpm: finalEval.metrics?.openingDpm ?? result.best.openingDpm,
-    developedDpm: finalEval.metrics?.developedDpm ?? result.best.developedDpm,
-    steadyDpm: finalEval.metrics?.steadyDpm ?? result.best.steadyDpm,
-    summary: finalEval.summary
-      ? {
-          totalExpected: finalEval.summary.totalExpected ?? 0,
-          dps: finalEval.summary.dps ?? 0,
-          ticks: finalEval.summary.ticks ?? 0,
-          ok: finalEval.summary.ok,
-          error: finalEval.summary.error,
-        }
-      : undefined,
+    openingDpm: result.best.openingDpm,
+    developedDpm: result.best.developedDpm,
+    steadyDpm: result.best.steadyDpm,
+    summary: undefined,
     proof: {
       label: result.proof,
       recheckScore: score,
@@ -338,6 +368,8 @@ export const solveFromRequest: SolveFn = async (
     windowDpms: Number.isFinite(score) ? score : 0,
     topBarPreview: [...winnerBar],
     noImprovementCount: 0,
+    evaluationBudget,
+    progressRatio: 1,
     proof: dto.proof,
   });
 

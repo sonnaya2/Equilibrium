@@ -78,7 +78,15 @@ export { evaluateRevolutionBar } from "./evaluate";
 
 export { barDistance, diverseSelect } from "./diversity";
 export { buildSeeds, type SeedOptions } from "./seeds";
-export { solve, configForTier, TIER_BUDGETS, type SolveInput } from "./solve";
+export {
+  solve,
+  solveAsync,
+  configForTier,
+  TIER_BUDGETS,
+  type SolveInput,
+  type SolveAsyncHooks,
+  type SolvePhaseName,
+} from "./solve";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export { packSolverRequest, packSimBase } from "./packRequest";
 export type {

@@ -11,7 +11,8 @@ import { secondsToTicks, ticksToSeconds } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
 import {
   packSolverRequest,
-  runSolverOnMainThread,
+  runSolverInWorker,
+  TIER_BUDGETS,
   type ObjectiveProfileId,
   type SolverProgress,
   type SolverResultDTO,
@@ -26,6 +27,32 @@ import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis"
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
 import { useBuild } from "@/league/useBuild";
 import { unlockedRegions } from "@/league";
+import "./revo-solver.css";
+
+function solverPhaseLabel(phase: SolverProgress["phase"] | undefined): string {
+  switch (phase) {
+    case "seed":
+      return "Seeding bars";
+    case "explore":
+      return "Exploring bars";
+    case "exploit":
+      return "Refining best";
+    case "finalize":
+      return "Final scoring";
+    case "paused":
+      return "Paused";
+    default:
+      return "Searching";
+  }
+}
+
+function previewCategory(
+  category: AbilitySpec["category"] | undefined,
+): "basic" | "threshold" | "ultimate" | "utility" | undefined {
+  if (category === "enhanced") return "threshold";
+  if (category === "basic" || category === "ultimate" || category === "utility") return category;
+  return undefined;
+}
 
 type RevoBarView = RevolutionBarRecord;
 
@@ -190,7 +217,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [solverResult, setSolverResult] = useState<SolverResultDTO | null>(null);
   const [solverError, setSolverError] = useState<string | null>(null);
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
+  const [bestPulse, setBestPulse] = useState(false);
   const cancelRef = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
+  const lastBestRef = useRef(0);
 
   const bar: RevoBarView | undefined =
     SUPPORTED_BARS.find((candidate) => candidate.id === barId) ??
@@ -311,10 +341,26 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   const optimize = useCallback(async () => {
     cancelRef.current = false;
+    abortRef.current?.abort();
+    const abort = new AbortController();
+    abortRef.current = abort;
+    lastBestRef.current = 0;
     setSolving(true);
     setSolverError(null);
-    setSolverProgress(null);
     setSolverResult(null);
+    setBestPulse(false);
+    // Immediate progress plate so the UI never looks dead while the first eval runs.
+    setSolverProgress({
+      phase: "seed",
+      evaluations: 0,
+      uniqueCandidates: 0,
+      bestScore: 0,
+      windowDpms: 0,
+      topBarPreview: [],
+      noImprovementCount: 0,
+      evaluationBudget: TIER_BUDGETS[solverTier],
+      progressRatio: 0.02,
+    });
     try {
       const request = packSolverRequest({
         stats,
@@ -325,33 +371,68 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         profileId: solverProfile,
         maxBarSize,
         minBarSize: 4,
-        exploreSeconds: 60,
+        exploreSeconds: 30,
         durationSeconds: 300,
         userBar: modelled.map((m) => m.id),
         seed: 1,
       });
-      const dto = await runSolverOnMainThread(request, (progress) => {
-        if (!cancelRef.current) setSolverProgress(progress);
-      }, {
-        isCancelled: () => cancelRef.current,
-      });
+      const dto = await runSolverInWorker(
+        request,
+        (progress) => {
+          if (cancelRef.current) return;
+          if (progress.bestScore > lastBestRef.current + 1e-6) {
+            lastBestRef.current = progress.bestScore;
+            setBestPulse(true);
+            window.setTimeout(() => setBestPulse(false), 450);
+          }
+          setSolverProgress(progress);
+        },
+        { signal: abort.signal },
+      );
       if (cancelRef.current) return;
       setSolverResult(dto);
       setActiveBarIds([...dto.bar]);
       setResult(null);
+      setSolverProgress({
+        phase: "finalize",
+        evaluations: dto.evaluations,
+        uniqueCandidates: dto.uniqueCandidates,
+        bestScore: dto.score,
+        windowDpms: dto.score,
+        topBarPreview: dto.bar,
+        noImprovementCount: 0,
+        evaluationBudget: TIER_BUDGETS[solverTier],
+        progressRatio: 1,
+      });
     } catch (err) {
-      if (!cancelRef.current) {
-        setSolverError(err instanceof Error ? err.message : String(err));
+      if (cancelRef.current || (err instanceof DOMException && err.name === "AbortError")) {
+        return;
       }
+      setSolverError(err instanceof Error ? err.message : String(err));
     } finally {
       setSolving(false);
+      abortRef.current = null;
     }
   }, [stats, loadout, build, solverTier, solverProfile, maxBarSize, modelled]);
 
   const cancelSolve = () => {
     cancelRef.current = true;
+    abortRef.current?.abort();
     setSolving(false);
   };
+
+  const progressFill = solving
+    ? Math.min(
+        0.97,
+        solverProgress?.progressRatio ??
+          (solverProgress
+            ? solverProgress.evaluations /
+              Math.max(1, solverProgress.evaluationBudget ?? TIER_BUDGETS[solverTier])
+            : 0.04),
+      )
+    : solverProgress
+      ? 1
+      : 0;
 
   const applySolverBar = (ids: readonly string[]) => {
     setActiveBarIds([...ids]);
@@ -428,15 +509,94 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             Regions · {regions.length}
           </span>
         </div>
-        {solverProgress ? (
-          <p className="mt-2 font-mono text-xs text-parch-300" data-testid="revo-solver-progress">
-            {solverProgress.phase} · {solverProgress.evaluations} evals · best{" "}
-            {formatNumber(solverProgress.bestScore)}
-            {solverProgress.topBarPreview.length
-              ? ` · ${solverProgress.topBarPreview.length} abilities`
-              : ""}
-          </p>
-        ) : null}
+        {(solving || solverProgress) && (
+          <div
+            className="revo-solver-status"
+            data-testid="revo-solver-progress"
+            role="status"
+            aria-live="polite"
+            aria-busy={solving}
+          >
+            <div className="revo-solver-status__head">
+              <span className="revo-solver-status__phase">
+                {solving ? solverPhaseLabel(solverProgress?.phase) : "Done"}
+              </span>
+              <span className="revo-solver-status__meta font-mono">
+                {solverProgress ? (
+                  <>
+                    {formatNumber(solverProgress.evaluations)}
+                    {solverProgress.evaluationBudget
+                      ? ` / ${formatNumber(solverProgress.evaluationBudget)}`
+                      : ""}{" "}
+                    evals
+                    <span className="revo-solver-status__dot" aria-hidden>
+                      ·
+                    </span>
+                    <span
+                      className={
+                        bestPulse
+                          ? "revo-solver-status__best is-pulse"
+                          : "revo-solver-status__best"
+                      }
+                    >
+                      best {formatNumber(solverProgress.bestScore)}
+                    </span>
+                    {solverProgress.uniqueCandidates > 0 ? (
+                      <>
+                        <span className="revo-solver-status__dot" aria-hidden>
+                          ·
+                        </span>
+                        {formatNumber(solverProgress.uniqueCandidates)} unique
+                      </>
+                    ) : null}
+                  </>
+                ) : (
+                  <span>warming search…</span>
+                )}
+              </span>
+            </div>
+            <div
+              className={
+                solving ? "revo-solver-track revo-solver-track--live" : "revo-solver-track"
+              }
+            >
+              <div
+                className="revo-solver-track__fill"
+                style={{ ["--fill" as string]: String(progressFill) }}
+              />
+            </div>
+            {solverProgress?.topBarPreview?.length ? (
+              <div className="revo-solver-preview" role="list" aria-label="Best bar so far">
+                {solverProgress.topBarPreview.map((id, index) => {
+                  const spec = ENGINE_SPECS.get(id);
+                  return (
+                    <div
+                      key={`${id}-${index}`}
+                      role="listitem"
+                      title={spec?.name ?? id}
+                      data-category={previewCategory(spec?.category)}
+                      className="revo-solver-preview__slot"
+                    >
+                      {spec ? (
+                        <GameIcon
+                          src={abilityIconPath(spec.id, spec.style)}
+                          size={22}
+                          className="revo-solver-preview__icon"
+                        />
+                      ) : (
+                        <span className="revo-solver-preview__empty" aria-hidden />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : solving ? (
+              <p className="revo-solver-status__hint">
+                Searching legal bars for this loadout and region pick…
+              </p>
+            ) : null}
+          </div>
+        )}
         {solverError ? <p className="mt-2 text-xs text-chaos-300">{solverError}</p> : null}
         {solverResult ? (
           <div className="mt-3 border-t border-stone-750 pt-2" data-testid="revo-solver-results">

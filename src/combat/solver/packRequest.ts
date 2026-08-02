@@ -128,7 +128,8 @@ function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
 export function packSolverRequest(input: PackSolverRequestInput): SerializableSolverRequest {
   const style = input.style ?? input.loadout.style;
   const durationSeconds = input.durationSeconds ?? 300;
-  const exploreSeconds = input.exploreSeconds ?? 60;
+  /** Short explore horizon for ranking; full 300s only on finalists. */
+  const exploreSeconds = input.exploreSeconds ?? 30;
   const regions =
     input.useBuildRegions === false
       ? (input.unlockedRegions ?? [])

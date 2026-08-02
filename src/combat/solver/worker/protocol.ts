@@ -27,6 +27,10 @@ export interface SolverProgress {
   phase: SolverPhase;
   noImprovementCount: number;
   topBarPreview: readonly string[];
+  /** Soft budget for UI fill (not a hard promise). */
+  evaluationBudget?: number;
+  /** 0–1 estimated progress for the track fill. */
+  progressRatio?: number;
   proof?: SolverProofDTO;
 }
 

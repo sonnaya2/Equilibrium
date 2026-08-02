@@ -24,8 +24,9 @@ function post(message: WorkerToHostMessage): void {
  * from this boundary.
  */
 async function loadSolve(): Promise<SolveFn> {
-  const specifier = "../solve";
-  const mod = (await import(/* webpackMode: "lazy" */ specifier)) as {
+  const mod = (await import(
+    /* webpackMode: "lazy" */ "../solveFromRequest"
+  )) as {
     solveFromRequest?: SolveFn;
     default?: SolveFn;
   };

@@ -16,11 +16,14 @@ import { runAnnealing } from "./search/annealing";
 import { runLocalSearch } from "./search/localSearch";
 import { finalizeSearch } from "./search/finalize";
 
-/** A16-scaled budgets (thorough reduced for CI). */
+/**
+ * Evaluation budgets. Thorough is tuned for interactive UI (~few seconds of
+ * explore sims), not overnight research. Extreme/Unhinged scale up.
+ */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
-  thorough: 500,
-  extreme: 5_000,
-  unhinged: 25_000,
+  thorough: 220,
+  extreme: 1_800,
+  unhinged: 8_000,
 };
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
@@ -30,17 +33,18 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
     tier,
     evaluationBudget,
     seed,
-    beamWidth: tier === "thorough" ? 8 : tier === "extreme" ? 16 : 24,
+    beamWidth: tier === "thorough" ? 10 : tier === "extreme" ? 18 : 28,
     beamInsertAllPositions: tier !== "thorough",
-    evoPopulation: Math.round(12 * Math.min(scale, 4)),
-    evoGenerations: Math.round(6 * Math.min(scale, 4)),
+    // Thorough: beam + local only. Extreme+: full ensemble.
+    evoPopulation: tier === "thorough" ? 0 : Math.round(16 * Math.min(scale, 4)),
+    evoGenerations: tier === "thorough" ? 0 : Math.round(8 * Math.min(scale, 4)),
     evoElite: 2,
-    lnsRounds: Math.round(10 * Math.min(scale, 4)),
+    lnsRounds: tier === "thorough" ? 0 : Math.round(14 * Math.min(scale, 4)),
     lnsDestroyK: 2,
-    annealSteps: Math.round(40 * Math.min(scale, 4)),
-    localIterations: Math.round(30 * Math.min(scale, 4)),
+    annealSteps: tier === "thorough" ? 0 : Math.round(50 * Math.min(scale, 4)),
+    localIterations: tier === "thorough" ? 40 : Math.round(60 * Math.min(scale, 4)),
     topK: 5,
-    exhaustiveMax: tier === "thorough" ? 2_000 : tier === "extreme" ? 20_000 : 100_000,
+    exhaustiveMax: tier === "thorough" ? 800 : tier === "extreme" ? 12_000 : 80_000,
     profileId: "balanced",
   };
 }
@@ -55,10 +59,26 @@ export interface SolveInput {
   config?: Partial<SearchConfig>;
 }
 
+export type SolvePhaseName =
+  | "seed"
+  | "exhaustive"
+  | "beam"
+  | "evolutionary"
+  | "lns"
+  | "anneal"
+  | "local"
+  | "finalize";
+
+export interface SolveAsyncHooks {
+  /** Called before each search phase (for progress labels). */
+  onPhase?: (phase: SolvePhaseName) => void;
+  /** Cooperative yield so the UI can paint / cancel. */
+  yieldSlice?: () => Promise<void>;
+}
+
 /**
- * Orchestrator:
- * 1 seeds → 2 exhaustive (if small) → 3 beam → 4 evolutionary →
- * 5 LNS → 6 annealing → 7 local → 8 finalize
+ * Synchronous orchestrator (tests / workers that own the thread).
+ * 1 seeds → 2 exhaustive? → 3 beam → 4 evo → 5 LNS → 6 anneal → 7 local → 8 finalize
  */
 export function solve(input: SolveInput): SolveResult {
   const tier = input.tier ?? "thorough";
@@ -89,10 +109,87 @@ export function solve(input: SolveInput): SolveResult {
 
   if (state.canEval()) runExhaustive(state);
   if (state.canEval()) runConstructiveBeam(state);
-  if (state.canEval()) runEvolutionary(state);
-  if (state.canEval()) runLargeNeighborhood(state);
-  if (state.canEval()) runAnnealing(state);
+  if (state.canEval() && config.evoPopulation > 0) runEvolutionary(state);
+  if (state.canEval() && config.lnsRounds > 0) runLargeNeighborhood(state);
+  if (state.canEval() && config.annealSteps > 0) runAnnealing(state);
   if (state.canEval()) runLocalSearch(state);
 
   return finalizeSearch(state, { tier, topK: config.topK });
+}
+
+/**
+ * Async orchestrator: yields between phases so main-thread UI can paint.
+ * Strategy bodies are still synchronous, but shorter thorough budgets keep
+ * each phase snappy; yield between them restores interactivity.
+ */
+export async function solveAsync(
+  input: SolveInput,
+  hooks?: SolveAsyncHooks,
+): Promise<SolveResult> {
+  const tier = input.tier ?? "thorough";
+  const base = configForTier(tier, input.seed ?? 1);
+  const config: SearchConfig = { ...base, ...input.config, tier };
+  const yieldSlice = hooks?.yieldSlice ?? (async () => undefined);
+  const onPhase = hooks?.onPhase;
+
+  const rng = createRng(config.seed);
+  const seeds = buildSeeds({
+    pool: input.pool,
+    sizeBounds: input.sizeBounds,
+    rng,
+    authored: input.authoredSeeds,
+    count: tier === "thorough" ? 8 : 16,
+  });
+
+  const state = createSearchState({
+    pool: input.pool,
+    sizeBounds: input.sizeBounds,
+    evaluate: input.evaluate,
+    config,
+    seeds,
+  });
+
+  onPhase?.("seed");
+  for (let i = 0; i < seeds.length; i++) {
+    if (!state.canEval()) break;
+    state.tryEval(seeds[i]!, "search", "seed");
+    if (i % 2 === 1) await yieldSlice();
+  }
+  await yieldSlice();
+
+  if (state.canEval()) {
+    onPhase?.("exhaustive");
+    runExhaustive(state);
+    await yieldSlice();
+  }
+  if (state.canEval()) {
+    onPhase?.("beam");
+    runConstructiveBeam(state);
+    await yieldSlice();
+  }
+  if (state.canEval() && config.evoPopulation > 0) {
+    onPhase?.("evolutionary");
+    runEvolutionary(state);
+    await yieldSlice();
+  }
+  if (state.canEval() && config.lnsRounds > 0) {
+    onPhase?.("lns");
+    runLargeNeighborhood(state);
+    await yieldSlice();
+  }
+  if (state.canEval() && config.annealSteps > 0) {
+    onPhase?.("anneal");
+    runAnnealing(state);
+    await yieldSlice();
+  }
+  if (state.canEval()) {
+    onPhase?.("local");
+    runLocalSearch(state);
+    await yieldSlice();
+  }
+
+  onPhase?.("finalize");
+  const result = finalizeSearch(state, { tier, topK: config.topK });
+  await yieldSlice();
+  return result;
 }

@@ -8,17 +8,27 @@ export interface FinalizeOptions {
 }
 
 /**
- * Re-evaluate finalists at full horizon, force seed evaluation, enforce
- * baseline guarantee (best >= best seed), diverse top-k, proof label.
+ * Re-evaluate a short finalist list at full horizon. Seed baseline uses the
+ * best explore-scored seed only (not every seed) so finalize stays cheap.
  */
 export function finalizeSearch(state: SearchState, opts: FinalizeOptions): SolveResult {
   const topK = opts.topK ?? state.config.topK;
 
+  // Best seed under explore scores already on archive/seeds — pick explore best seed.
   let seedBestScore = Number.NEGATIVE_INFINITY;
+  let seedBestBar: readonly string[] | null = null;
   for (const seed of state.seeds) {
-    const scored = state.forceEval(seed, "full", "seed-final");
-    if (scored && Number.isFinite(scored.robustScore)) {
-      seedBestScore = Math.max(seedBestScore, scored.robustScore);
+    const explore = state.forceEval(seed, "search", "seed-baseline-explore");
+    if (explore && Number.isFinite(explore.robustScore) && explore.robustScore > seedBestScore) {
+      seedBestScore = explore.robustScore;
+      seedBestBar = explore.bar;
+    }
+  }
+  // One full-horizon seed baseline for the guarantee.
+  if (seedBestBar) {
+    const fullSeed = state.forceEval(seedBestBar, "full", "seed-final");
+    if (fullSeed && Number.isFinite(fullSeed.robustScore)) {
+      seedBestScore = fullSeed.robustScore;
     }
   }
 
@@ -34,7 +44,8 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
   for (const a of state.archive) add(a);
 
   pool.sort((a, b) => b.robustScore - a.robustScore);
-  const reevalLimit = Math.min(pool.length, Math.max(topK * 3, 12));
+  // Interactive: full-rescore topK only (plus a couple of alternates), not 12+.
+  const reevalLimit = Math.min(pool.length, Math.max(topK + 1, 5));
   const rescored: ScoredBar[] = [];
   for (let i = 0; i < reevalLimit; i++) {
     const s = pool[i]!;
@@ -50,14 +61,11 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
     !best ||
     (Number.isFinite(seedBestScore) &&
       seedBestScore > Number.NEGATIVE_INFINITY &&
-      best.robustScore < seedBestScore)
+      best.robustScore < seedBestScore - 1e-9)
   ) {
-    for (const seed of state.seeds) {
-      const s = state.forceEval(seed, "full", "seed-baseline");
-      if (s && s.robustScore >= seedBestScore) {
-        best = s;
-        break;
-      }
+    if (seedBestBar) {
+      const s = state.forceEval(seedBestBar, "full", "seed-baseline");
+      if (s && s.robustScore >= seedBestScore - 1e-9) best = s;
     }
   }
 

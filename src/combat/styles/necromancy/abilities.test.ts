@@ -33,15 +33,6 @@ const input = {
 };
 
 describe("necromancy ability data", () => {
-  it("every calculable record carries a source and sane bands", () => {
-    for (const a of NECROMANCY_ABILITIES) {
-      expect(a.source.verifiedAt, a.id).toBeTruthy();
-      expect(a.style).toBe("necromancy");
-      for (const h of a.hits) expect(h.band.minPct, a.id).toBeLessThanOrEqual(h.band.maxPct);
-    }
-    expect(new Set(NECROMANCY_ABILITIES.map((a) => a.id)).size).toBe(NECROMANCY_ABILITIES.length);
-  });
-
   it("exactly one auto-attack basic", () => {
     const autos = NECROMANCY_ABILITIES.filter((a) => a.autoAttack);
     expect(autos).toHaveLength(1);
@@ -132,7 +123,6 @@ describe("necromancy ability data", () => {
       expect(a.hits, id).toEqual([]);
       expect(a.adrenaline?.cost, id).toBe(0);
       expect(a.stateEffect, id).toBe(id);
-      expect(a.source.verifiedAt, id).toBeTruthy();
     }
   });
 

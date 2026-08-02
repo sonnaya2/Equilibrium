@@ -10,7 +10,6 @@ import {
   computedLoadoutBase,
   equippedBonuses,
   equipmentStyleDamageBonus,
-  equippedSetCounts,
   equippedWeaponTier,
   loadoutAttackLevel,
   loadoutBase,
@@ -20,7 +19,6 @@ import {
   loadoutWeaponConfig,
   loadoutWeaponTier,
   nonWeaponAccuracyBonus,
-  setEffectsSummary,
 } from "./loadoutStats";
 import { DEFAULT_LOADOUT, type Loadout } from "./useLoadout";
 
@@ -253,26 +251,11 @@ describe("loadoutStats", () => {
     expect(loadoutStats({ ...base, perks: { ...base.perks, energising: 4 } }).dp).toBe(1);
   });
 
-  it("stacks set crit-chance bonuses onto the crit layer and clamps at 100%", () => {
-    const stats = loadoutStats({
-      ...base,
-      critChance: 97,
-      equipmentSlots: {
-        helmet: "item:elite-tectonic-mask",
-        body: "item:elite-tectonic-robe-top",
-        legs: "item:elite-tectonic-robe-bottom",
-      },
-    });
-    expect(stats.critChance).toBe(1);
-    expect(
-      Object.values(stats.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
-    ).toBeCloseTo(stats.critChance, 10);
+  it("set crit wiring: tectonic +3%, elite clamps at 100%, Tumeken is dynamic-only", () => {
     const plain = loadoutStats(base);
     expect(plain.critChance).toBeCloseTo(0.1, 10);
-  });
 
-  it("3 tectonic pieces from equipped gear → +3% crit (perk 0)", () => {
-    const stats = loadoutStats({
+    const tectonic = loadoutStats({
       ...base,
       critChance: 10,
       equipmentSlots: {
@@ -281,20 +264,23 @@ describe("loadoutStats", () => {
         legs: "item:tectonic-legs",
       },
     });
-    expect(
-      equippedSetCounts({
-        equipmentSlots: {
-          helmet: "item:tectonic-helm",
-          body: "item:tectonic-body",
-          legs: "item:tectonic-legs",
-        },
-      }).get("tectonic"),
-    ).toBe(3);
-    expect(stats.critChance).toBeCloseTo(0.13, 10);
-  });
+    expect(tectonic.critChance).toBeCloseTo(0.13, 10);
 
-  it("passes equipped Tumeken pieces to the simulator without a static crit bonus", () => {
-    const stats = loadoutStats({
+    const eliteClamp = loadoutStats({
+      ...base,
+      critChance: 97,
+      equipmentSlots: {
+        helmet: "item:elite-tectonic-mask",
+        body: "item:elite-tectonic-robe-top",
+        legs: "item:elite-tectonic-robe-bottom",
+      },
+    });
+    expect(eliteClamp.critChance).toBe(1);
+    expect(
+      Object.values(eliteClamp.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
+    ).toBeCloseTo(eliteClamp.critChance, 10);
+
+    const tumeken = loadoutStats({
       ...base,
       critChance: 10,
       equipmentSlots: {
@@ -303,37 +289,8 @@ describe("loadoutStats", () => {
         legs: "item:tumekens-resplendence-legs",
       },
     });
-    expect(stats.critChance).toBeCloseTo(0.1, 10);
-    expect(stats.tumekensPieces).toBe(3);
-  });
-
-  it("empty gear has no set crit", () => {
-    expect(
-      loadoutStats({
-        ...base,
-        critChance: 10,
-        equipmentSlots: {},
-      }).critChance,
-    ).toBeCloseTo(0.1, 10);
-  });
-
-  it("setEffectsSummary exposes equipped sets for GearPanel", () => {
-    expect(
-      setEffectsSummary({
-        equipmentSlots: {
-          helmet: "item:tectonic-helm",
-          body: "item:tectonic-body",
-          legs: "item:tectonic-legs",
-        },
-      }),
-    ).toEqual([
-      {
-        setId: "tectonic",
-        pieces: 3,
-        label: "Tectonic (Fracture Point)",
-        support: "modeled",
-      },
-    ]);
+    expect(tumeken.critChance).toBeCloseTo(0.1, 10);
+    expect(tumeken.tumekensPieces).toBe(3);
   });
 
   it("Biting adds +2%/rank crit (+2.2% with level-20 flag)", () => {

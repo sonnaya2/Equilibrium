@@ -358,25 +358,24 @@ describe("presentContentRewards — major boss uniques", () => {
     },
   ];
 
-  it("covers at least 15 high-profile boss unique packs", () => {
+  it("resolves high-profile boss unique packs (rate, files, overflow)", () => {
     expect(samples.length).toBeGreaterThanOrEqual(15);
-  });
-
-  for (const sample of samples) {
-    it(`${sample.name}: high resolve rate, files exist, +N only for overflow`, () => {
+    for (const sample of samples) {
       const presented = presentContentRewards(sample.full);
       const all = contentRewardIcons(presented.tokens, 99);
       expect(all.length, `${sample.name} resolved`).toBeGreaterThanOrEqual(sample.minResolved);
-      expect(all.every((i) => publicOk(i.src))).toBe(true);
-      expect(all.some((i) => sample.srcRe.test(i.src))).toBe(true);
-      expect(all.every((i) => !i.src.includes("/game/bosses/"))).toBe(true);
-      expect(presented.icons.length).toBeLessThanOrEqual(REWARD_ICON_CAP);
-      expect(presented.overflowResolved).toBe(Math.max(0, all.length - presented.icons.length));
+      expect(all.every((i) => publicOk(i.src)), sample.name).toBe(true);
+      expect(all.some((i) => sample.srcRe.test(i.src)), sample.name).toBe(true);
+      expect(all.every((i) => !i.src.includes("/game/bosses/")), sample.name).toBe(true);
+      expect(presented.icons.length, sample.name).toBeLessThanOrEqual(REWARD_ICON_CAP);
+      expect(presented.overflowResolved, sample.name).toBe(
+        Math.max(0, all.length - presented.icons.length),
+      );
       if (all.length <= REWARD_ICON_CAP) {
-        expect(presented.overflowResolved).toBe(0);
+        expect(presented.overflowResolved, sample.name).toBe(0);
       }
-    });
-  }
+    }
+  });
 
   it("does not show +N when tokens fail to resolve (user complaint)", () => {
     const presented = presentContentRewards(

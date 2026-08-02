@@ -15,14 +15,6 @@ const byId = (id: string) => {
 };
 
 describe("melee ability data", () => {
-  it("every record carries a source and sane bands", () => {
-    for (const a of MELEE_ABILITIES) {
-      expect(a.source.verifiedAt, a.id).toBeTruthy();
-      for (const h of a.hits) expect(h.band.minPct, a.id).toBeLessThanOrEqual(h.band.maxPct);
-    }
-    expect(new Set(MELEE_ABILITIES.map((a) => a.id)).size).toBe(MELEE_ABILITIES.length);
-  });
-
   it("Bloodlust builders declare generation per record", () => {
     expect(byId("attack").bloodlustGain).toBe(1);
     expect(byId("attack").adrenaline?.gain).toBe(9);

@@ -31,6 +31,25 @@ describe("ABILITY_REGISTRY", () => {
     }
   });
 
+  it("every registered style ability is sourced with sane hit bands", () => {
+    const byStyle = [
+      ["melee", MELEE_ABILITIES],
+      ["ranged", RANGED_ABILITIES],
+      ["magic", MAGIC_ABILITIES],
+      ["necromancy", NECROMANCY_ABILITIES],
+    ] as const;
+    for (const [style, list] of byStyle) {
+      expect(new Set(list.map((a) => a.id)).size).toBe(list.length);
+      for (const a of list) expect(a.style, a.id).toBe(style);
+    }
+    for (const spec of ALL_STYLE_SPECS) {
+      expect(spec.source.verifiedAt, spec.id).toBeTruthy();
+      for (const hit of spec.hits) {
+        expect(hit.band.minPct, spec.id).toBeLessThanOrEqual(hit.band.maxPct);
+      }
+    }
+  });
+
   it("marks autos not solver eligible by default", () => {
     for (const id of ["attack", "ranged_attack", "magic_attack", "necromancy_basic"]) {
       expect(entryByEngineId(id)?.solverEligibleDefault, id).toBe(false);

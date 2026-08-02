@@ -8,14 +8,6 @@ import { RANGED_ABILITIES, RANGED_EFFECTS } from "./abilities";
 const byId = (id: string) => RANGED_ABILITIES.find((a) => a.id === id)!;
 
 describe("ranged ability data", () => {
-  it("every record carries a source and sane bands", () => {
-    for (const a of RANGED_ABILITIES) {
-      expect(a.source.verifiedAt, a.id).toBeTruthy();
-      for (const h of a.hits) expect(h.band.minPct, a.id).toBeLessThanOrEqual(h.band.maxPct);
-    }
-    expect(new Set(RANGED_ABILITIES.map((a) => a.id)).size).toBe(RANGED_ABILITIES.length);
-  });
-
   it("shadow tendrils is a guaranteed crit with the modernised band", () => {
     const tendrils = byId("shadow_tendrils");
     expect(tendrils.guaranteedCrit).toBe(true);

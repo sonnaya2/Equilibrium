@@ -75,12 +75,9 @@ describe("equipmentArmourValue", () => {
 });
 
 describe("shield armour", () => {
-  it("uses the head multiplier via the shield flag (t90 kiteshield 491.6)", () => {
+  it("uses the head multiplier via the shield flag; non-shield off-hands have no Armour", () => {
     expect(equipmentArmourValue("offhand", 90, "tank", { shield: true })).toBe(491.6);
     expect(equipmentArmourValue("offhand", 50, "tank", { shield: true })).toBe(170);
-  });
-
-  it("keeps non-shield off-hands at no Armour stat", () => {
     expect(equipmentArmourValue("offhand", 90, "tank")).toBeNull();
   });
 });
@@ -121,14 +118,11 @@ describe("equipmentLifeValue", () => {
 });
 
 describe("shieldLifeValue", () => {
-  it("is zero below tier 70 and 35 × (t−69) at tier 70+", () => {
+  it("is zero below tier 70, 35 × (t−69) at 70+, and routes through equipmentLifeValue", () => {
     expect(shieldLifeValue(69)).toBe(0);
     expect(shieldLifeValue(70)).toBe(35);
     expect(shieldLifeValue(90)).toBe(735);
     expect(shieldLifeValue(99)).toBe(1050);
-  });
-
-  it("applies through equipmentLifeValue via the shield flag", () => {
     expect(equipmentLifeValue("offhand", 69, "tank", { shield: true })).toBe(0);
     expect(equipmentLifeValue("offhand", 90, "tank", { shield: true })).toBe(735);
   });

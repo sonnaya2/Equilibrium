@@ -35,85 +35,27 @@ describe("shared/equipment set effects", () => {
     });
   });
 
-  it("tectonic via setCritChanceFromDef + equipmentSetById", () => {
+  it("set crit: catalogue defs, loadout wiring, sunshine gate, empty gear", () => {
     const tec = equipmentSetById("tectonic")!;
-    expect(setCritChanceFromDef(tec, 3)).toBeCloseTo(0.03, 10);
     const elite = equipmentSetById("elite-tectonic")!;
+    const tum = equipmentSetById("tumekens-resplendence")!;
+    expect(setCritChanceFromDef(tec, 3)).toBeCloseTo(0.03, 10);
     expect(setCritChanceFromDef(elite, 3)).toBeCloseTo(0.06, 10);
     expect(setCritChanceFromDef(tec, 0)).toBe(0);
-  });
-
-  it("tumeken sunshine gate via catalogue", () => {
-    const tum = equipmentSetById("tumekens-resplendence")!;
     expect(setCritChanceFromDef(tum, 3, { insideSunshine: true })).toBeCloseTo(0.045, 10);
     expect(setCritChanceFromDef(tum, 3, { insideSunshine: false })).toBe(0);
     expect(setCritChanceFromDef(tum, 2, { insideSunshine: true })).toBe(0);
-  });
 
-  it("catalogue set defs carry provenance", () => {
-    const tec = equipmentSetById("tectonic")!;
-    const tum = equipmentSetById("tumekens-resplendence")!;
-    expect(tec.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(tum.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-  });
-
-  it("3 tectonic pieces from mock equipment → +3% crit", () => {
-    const loadout = {
+    const tectonic = {
       equipmentSlots: {
         helmet: "item:tectonic-helm",
         body: "item:tectonic-body",
         legs: "item:tectonic-legs",
       },
     };
-    const counts = equippedSetCounts(loadout);
-    expect(counts.get("tectonic")).toBe(3);
-    expect(loadoutSetCritChance(loadout)).toBeCloseTo(0.03, 10);
-  });
-
-  it("tumeken 3 in sunshine → +4.5%", () => {
-    const loadout = {
-      equipmentSlots: {
-        helmet: "item:tumekens-resplendence-helm",
-        body: "item:tumekens-resplendence-body",
-        legs: "item:tumekens-resplendence-legs",
-      },
-      insideSunshine: true,
-    };
-    expect(equippedSetCounts(loadout).get("tumekens-resplendence")).toBe(3);
-    expect(loadoutSetCritChance(loadout)).toBeCloseTo(0.045, 10);
-    expect(loadoutSetCritChance({ ...loadout, insideSunshine: false })).toBe(0);
-  });
-
-  it("empty gear → 0 set crit", () => {
-    expect(loadoutSetCritChance({ equipmentSlots: {} })).toBe(0);
-    expect(loadoutSetCritChance({})).toBe(0);
-  });
-
-  it("does not activate set bonuses without equipped pieces", () => {
-    expect(loadoutSetCritChance({ equipmentSlots: {} })).toBe(0);
-  });
-
-  it("elite tectonic gear uses +2%/piece", () => {
-    const loadout = {
-      equipmentSlots: {
-        helmet: "item:elite-tectonic-mask",
-        body: "item:elite-tectonic-robe-top",
-        legs: "item:elite-tectonic-robe-bottom",
-      },
-    };
-    expect(equippedSetCounts(loadout).get("elite-tectonic")).toBe(3);
-    expect(loadoutSetCritChance(loadout)).toBeCloseTo(0.06, 10);
-  });
-
-  it("setEffectsSummary lists equipped catalogue sets", () => {
-    const summary = setEffectsSummary({
-      equipmentSlots: {
-        helmet: "item:tectonic-helm",
-        body: "item:tectonic-body",
-        legs: "item:tectonic-legs",
-      },
-    });
-    expect(summary).toEqual([
+    expect(equippedSetCounts(tectonic).get("tectonic")).toBe(3);
+    expect(loadoutSetCritChance(tectonic)).toBeCloseTo(0.03, 10);
+    expect(setEffectsSummary(tectonic)).toEqual([
       {
         setId: "tectonic",
         pieces: 3,
@@ -121,6 +63,31 @@ describe("shared/equipment set effects", () => {
         support: "modeled",
       },
     ]);
+
+    const eliteLoadout = {
+      equipmentSlots: {
+        helmet: "item:elite-tectonic-mask",
+        body: "item:elite-tectonic-robe-top",
+        legs: "item:elite-tectonic-robe-bottom",
+      },
+    };
+    expect(equippedSetCounts(eliteLoadout).get("elite-tectonic")).toBe(3);
+    expect(loadoutSetCritChance(eliteLoadout)).toBeCloseTo(0.06, 10);
+
+    const tumLoadout = {
+      equipmentSlots: {
+        helmet: "item:tumekens-resplendence-helm",
+        body: "item:tumekens-resplendence-body",
+        legs: "item:tumekens-resplendence-legs",
+      },
+      insideSunshine: true,
+    };
+    expect(equippedSetCounts(tumLoadout).get("tumekens-resplendence")).toBe(3);
+    expect(loadoutSetCritChance(tumLoadout)).toBeCloseTo(0.045, 10);
+    expect(loadoutSetCritChance({ ...tumLoadout, insideSunshine: false })).toBe(0);
+
+    expect(loadoutSetCritChance({ equipmentSlots: {} })).toBe(0);
+    expect(loadoutSetCritChance({})).toBe(0);
     expect(setEffectsSummary({ equipmentSlots: {} })).toEqual([]);
   });
 
@@ -176,36 +143,18 @@ describe("shared/equipment set effects", () => {
     });
   });
 
-  it("facts-only catalogue sets expose wiki facts", () => {
-    const fn = equipmentSetById("first-necromancer")!;
-    expect(fn.facts?.length).toBeGreaterThan(0);
-    expect(fn.effects).toEqual([]);
-    expect(fn.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-
-    const vest = equipmentSetById("vestments-of-havoc")!;
-    expect(vest.facts?.some((f) => /adrenaline/i.test(f))).toBe(true);
-
-    const dd = equipmentSetById("deathdealer-90")!;
-    expect(dd.facts?.some((f) => /Death Mark/i.test(f))).toBe(true);
-  });
-
-  it("firstNecromancerConjureDamageMult is +7%/piece from set(2), cap 5", () => {
+  it("First Necromancer: conjure mults, visage double-count, no player AD set effects", () => {
     expect(firstNecromancerConjureDamageMult(0)).toBe(1);
     expect(firstNecromancerConjureDamageMult(1)).toBe(1);
     expect(firstNecromancerConjureDamageMult(2)).toBeCloseTo(1.14, 10);
     expect(firstNecromancerConjureDamageMult(3)).toBeCloseTo(1.21, 10);
     expect(firstNecromancerConjureDamageMult(5)).toBeCloseTo(1.35, 10);
     expect(firstNecromancerConjureDamageMult(9)).toBeCloseTo(1.35, 10);
-  });
-
-  it("First Necromancer set(4+) extends conjure lifetime by 5% per piece", () => {
     expect(firstNecromancerConjureDurationMult(3)).toBe(1);
     expect(firstNecromancerConjureDurationMult(4)).toBeCloseTo(1.2, 10);
     expect(firstNecromancerConjureDurationMult(5)).toBeCloseTo(1.25, 10);
-  });
 
-  it("the First Necromancer visage counts as two pieces and the set caps at five", () => {
-    const loadout = {
+    const visageLoadout = {
       equipmentSlots: {
         helmet: "item:visage-of-the-first-necromancer",
         body: "item:first-necromancer-body",
@@ -214,13 +163,11 @@ describe("shared/equipment set effects", () => {
         boots: "item:first-necromancer-boots",
       },
     };
-    expect(equippedSetCounts(loadout).get("first-necromancer")).toBe(5);
-    expect(setEffectsSummary(loadout)[0]?.pieces).toBe(5);
-    expect(loadoutFirstNecromancerConjureDamageMult(loadout)).toBeCloseTo(1.35, 10);
-  });
+    expect(equippedSetCounts(visageLoadout).get("first-necromancer")).toBe(5);
+    expect(setEffectsSummary(visageLoadout)[0]?.pieces).toBe(5);
+    expect(loadoutFirstNecromancerConjureDamageMult(visageLoadout)).toBeCloseTo(1.35, 10);
 
-  it("loadout First Necro gear drives conjure mult; not player setDamageModifiers", () => {
-    const loadout = {
+    const helmLoadout = {
       equipmentSlots: {
         helmet: "item:first-necromancer-helm",
         body: "item:first-necromancer-body",
@@ -229,15 +176,19 @@ describe("shared/equipment set effects", () => {
         boots: "item:first-necromancer-boots",
       },
     };
-    expect(equippedSetCounts(loadout).get("first-necromancer")).toBe(5);
-    expect(loadoutFirstNecromancerConjureDamageMult(loadout)).toBeCloseTo(1.35, 10);
-    expect(setDamageModifiers(equippedSetCounts(loadout))).toEqual([]);
+    expect(equippedSetCounts(helmLoadout).get("first-necromancer")).toBe(5);
+    expect(loadoutFirstNecromancerConjureDamageMult(helmLoadout)).toBeCloseTo(1.35, 10);
+    expect(setDamageModifiers(equippedSetCounts(helmLoadout))).toEqual([]);
     expect(equipmentSetById("first-necromancer")?.effects).toEqual([]);
   });
 
-  it("catalogue documents anima core / vestments / trimmed as non-player-AD", () => {
+  it("catalogue sets carry provenance; facts-only / non-player-AD sets stay empty effects", () => {
     for (const id of [
+      "tectonic",
+      "tumekens-resplendence",
+      "first-necromancer",
       "vestments-of-havoc",
+      "deathdealer-90",
       "trimmed-masterwork",
       "virtus",
       "anima-core-zaros",
@@ -247,8 +198,29 @@ describe("shared/equipment set effects", () => {
     ]) {
       const def = equipmentSetById(id);
       expect(def, id).toBeDefined();
-      expect(def!.effects, id).toEqual([]);
-      expect(def!.source.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(def!.source.verifiedAt, id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+
+    const fn = equipmentSetById("first-necromancer")!;
+    expect(fn.facts?.length).toBeGreaterThan(0);
+    expect(fn.effects).toEqual([]);
+
+    const vest = equipmentSetById("vestments-of-havoc")!;
+    expect(vest.facts?.some((f) => /adrenaline/i.test(f))).toBe(true);
+    expect(vest.effects).toEqual([]);
+
+    const dd = equipmentSetById("deathdealer-90")!;
+    expect(dd.facts?.some((f) => /Death Mark/i.test(f))).toBe(true);
+
+    for (const id of [
+      "trimmed-masterwork",
+      "virtus",
+      "anima-core-zaros",
+      "anima-core-seren",
+      "anima-core-zamorak",
+      "anima-core-sliske",
+    ]) {
+      expect(equipmentSetById(id)!.effects, id).toEqual([]);
     }
   });
 });

@@ -10,19 +10,12 @@ const byId = (id: string) => {
 };
 
 describe("magic ability data", () => {
-  it("calculable records stay sourced and unique", () => {
-    for (const a of MAGIC_ABILITIES) {
-      expect(a.source.verifiedAt, a.id).toBeTruthy();
-      expect(a.style).toBe("magic");
-    }
-    expect(new Set(MAGIC_ABILITIES.map((a) => a.id)).size).toBe(MAGIC_ABILITIES.length);
+  it("promotes Revo-priority bands from verified wiki ranges", () => {
     const basic = byId("magic_attack");
     expect(basic.hits[0].band).toEqual({ minPct: 90, maxPct: 110 });
     expect(basic.adrenaline?.gain).toBe(9);
     expect(basic.autoAttack).toBe(true);
-  });
 
-  it("promotes Revo-priority bands from verified wiki ranges", () => {
     expect(byId("sonic_wave").hits[0].band).toEqual({ minPct: 90, maxPct: 110 });
     expect(byId("greater_sonic_wave").hits[0].band).toEqual({ minPct: 115, maxPct: 135 });
     expect(byId("dragon_breath").hits[0].band).toEqual({ minPct: 110, maxPct: 130 });
@@ -160,7 +153,7 @@ describe("magic ability data", () => {
     expect(r.hits.every((hit) => hit.critChance === 0)).toBe(true);
   });
 
-  it("effect notes remain sourced; no orphan average-only stubs for promoted ids", () => {
+  it("no orphan average-only stubs for promoted ids; effect notes stay sourced", () => {
     for (const e of MAGIC_EFFECTS) {
       expect(e.source.verifiedAt, e.id).toBeTruthy();
       expect(e.notes.length, e.id).toBeGreaterThan(0);

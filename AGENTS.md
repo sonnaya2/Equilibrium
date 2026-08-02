@@ -16,17 +16,18 @@ in `localStorage`.
 Read the guide for the area you are touching. They hold the working model this file deliberately does
 not repeat.
 
-| Guide                 | Covers                                                                                                   |
-| --------------------- | -------------------------------------------------------------------------------------------------------- |
-| `combat-math`         | Damage Potential, the 2026 DPL curve, crit layers, hit caps, style state, modifier order, rounding       |
-| `equipment-effects`   | Item stats, passives, enchantments, set thresholds, procs, and combat-engine routing                     |
-| `league-data`         | Regions, relics, blessings, task presentation and data boundaries, Catalyst test data, provisional rules |
-| `data-sync`           | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format                 |
-| `equilibrium-ui`      | UI rules: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA    |
-| `map-3d`              | Generated map data, WebGPU fence, controls, fallback, and rendered verification                          |
-| `playwright-e2e`      | Local E2E server ownership, port selection, startup checks, and teardown                                 |
-| `test-maintainer`     | **Mandatory** for any Vitest/Playwright write, edit, delete, or failure triage                            |
-| `lean-implementation` | How much implementation a change deserves, and which complexity is load-bearing                          |
+| Guide                     | Covers                                                                                                   |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `combat-math`             | Damage Potential, the 2026 DPL curve, crit layers, hit caps, style state, modifier order, rounding       |
+| `equipment-effects`       | Item stats, passives, enchantments, set thresholds, procs, and combat-engine routing                     |
+| `league-data`             | Regions, relics, blessings, task presentation and data boundaries, Catalyst test data, provisional rules |
+| `data-sync`               | `SourceReference` provenance, tracked-entity scanning, staleness, the sync report format                 |
+| `equilibrium-ui`          | UI rules: reference precedence, Tasks browser contract, routes, map fence, e2e contracts, rendered QA    |
+| `map-3d`                  | Generated map data, WebGPU fence, controls, fallback, and rendered verification                          |
+| `playwright-e2e`          | Local E2E server ownership, port selection, startup checks, and teardown                                 |
+| `test-maintainer`         | **Mandatory** for any Vitest/Playwright write, edit, delete, or failure triage                            |
+| `simple-commit-messages`  | **Mandatory** before creating, amending, squashing, rebasing, or suggesting any commit                   |
+| `lean-implementation`     | How much implementation a change deserves, and which complexity is load-bearing                          |
 
 The full text lives in `.claude/skills/`; the tracked `skills/` files are one-line pointers to it.
 A supplied reference and an explicit requirement both outrank anything written here — remove an
@@ -60,6 +61,12 @@ or triaging any Vitest or Playwright test — and before changing an expectation
 etc.) still own mechanic truth; `test-maintainer` owns how tests may be changed. Never weaken a valid
 test to pass incorrect production behavior. Never run or invent test commands from memory alone when
 the work is about the suite itself.
+
+**`simple-commit-messages` is mandatory for all commits.** Before creating, amending, squashing,
+rebasing, or suggesting any commit, read and follow the canonical `simple-commit-messages` skill.
+Subjects are normally 3–8 words, one line, plain English, and name only the primary completed change.
+Default to no body. No essays, test-count summaries, agent/model names, prompt numbers, emoji, or AI
+attribution trailers. Do not rewrite published history only to shorten messages.
 
 **Playwright defaults to port 3100**, not 3000 — another app on this machine holds 3000. E2E is _not_
 in CI (`.github/workflows/validate.yml` stops at `build` — no Playwright job, optional or otherwise).

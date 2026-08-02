@@ -53,6 +53,8 @@ export {
   OBJECTIVE_HORIZON_TICKS,
   OBJECTIVE_PRESETS,
   TIER_BUDGETS,
+  runOptimize,
+  cancelOptimize,
   runSolverInWorker,
   runSolverOnMainThread,
 } from "./solver";

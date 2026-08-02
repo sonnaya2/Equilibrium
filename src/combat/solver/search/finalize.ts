@@ -30,6 +30,25 @@ function pickSeedBest(state: SearchState): {
   return { seedBestScore, seedBestBar };
 }
 
+async function pickSeedBestAsync(
+  state: SearchState,
+  yieldSlice: () => Promise<void>,
+): Promise<{ seedBestScore: number; seedBestBar: readonly string[] | null }> {
+  let seedBestScore = Number.NEGATIVE_INFINITY;
+  let seedBestBar: readonly string[] | null = null;
+  for (let i = 0; i < state.seeds.length; i++) {
+    const seed = state.seeds[i]!;
+    const explore = state.forceEval(seed, "search", "seed-baseline-explore");
+    if (isRankable(explore) && explore.robustScore > seedBestScore) {
+      seedBestScore = explore.robustScore;
+      seedBestBar = explore.bar;
+    }
+    // Yield between seed re-scores so main-thread fallback can paint / cancel.
+    if (i + 1 < state.seeds.length) await yieldSlice();
+  }
+  return { seedBestScore, seedBestBar };
+}
+
 function buildPool(state: SearchState, seedBestBar: readonly string[] | null): ScoredBar[] {
   const pool: ScoredBar[] = [];
   const seen = new Set<string>();
@@ -162,7 +181,7 @@ export async function finalizeSearchAsync(
   opts: FinalizeOptions,
 ): Promise<SolveResult> {
   const yieldSlice = opts.yieldSlice ?? (async () => undefined);
-  const { seedBestScore, seedBestBar } = pickSeedBest(state);
+  const { seedBestScore, seedBestBar } = await pickSeedBestAsync(state, yieldSlice);
   await yieldSlice();
 
   const pool = buildPool(state, seedBestBar);

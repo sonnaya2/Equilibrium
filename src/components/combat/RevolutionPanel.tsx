@@ -10,13 +10,14 @@ import { simulateRevolution as runRevolution } from "@/combat/engine/simulation/
 import { secondsToTicks, ticksToSeconds } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
 import {
+  cancelOptimize,
   clampSolverBarSizes,
   fingerprintSolveContext,
   lookupSolvedBar,
   MIN_SOLVER_BAR_SIZE,
   packSolverRequest,
   rememberSolvedBar,
-  runSolverOnMainThread,
+  runOptimize,
   seedBarsFromSolveCache,
   TIER_BUDGETS,
   type ObjectiveProfileId,
@@ -294,6 +295,15 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to Setup style
   }, [loadout.style]);
 
+  // Cancel in-flight worker solve if the panel unmounts mid-run.
+  useEffect(() => {
+    return () => {
+      cancelRef.current = true;
+      abortRef.current?.abort();
+      cancelOptimize();
+    };
+  }, []);
+
   const selectBar = (id: string) => {
     setBarId(id);
     setActiveBarIds(null);
@@ -424,9 +434,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           })),
         ],
       };
-      // Main-thread with cooperative yields: Next workers often fail to load the
-      // combat bundle, and finalize used to hard-block without yields.
-      const dto = await runSolverOnMainThread(
+      // Worker-first: sims run off the UI thread. Main-thread fallback only if
+      // Worker construct/load fails (sticky for the tab session).
+      const dto = await runOptimize(
         request,
         (progress) => {
           if (cancelRef.current || abort.signal.aborted) return;
@@ -437,7 +447,10 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
           }
           setSolverProgress({ ...progress });
         },
-        { isCancelled: () => cancelRef.current || abort.signal.aborted },
+        {
+          isCancelled: () => cancelRef.current || abort.signal.aborted,
+          signal: abort.signal,
+        },
       );
       if (cancelRef.current || abort.signal.aborted) return;
 
@@ -479,6 +492,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const cancelSolve = () => {
     cancelRef.current = true;
     abortRef.current?.abort();
+    cancelOptimize();
     setSolving(false);
   };
 

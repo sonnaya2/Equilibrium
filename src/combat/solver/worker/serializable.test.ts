@@ -56,6 +56,7 @@ function sampleSimBase(): SerializableRevolutionSimBase {
       maximumLife: 10000,
       powerburstUntilTick: 0,
       targetTiles: 1,
+      includeBigBonedOutgoingDamage: false,
     },
     context: { style: "melee", ruleset: "equilibrium", targetTiles: 1 },
     cap: { cap: 30000, bypass: false },

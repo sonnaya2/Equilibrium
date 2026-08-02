@@ -45,8 +45,13 @@ export {
 
 export {
   RevolutionSolverClient,
+  runOptimize,
+  cancelOptimize,
+  getRevolutionSolverClient,
   runSolverInWorker,
   runSolverOnMainThread,
+  isSolverPreferringMainThread,
+  resetSolverHostForTests,
 } from "./host";
 
 export type {

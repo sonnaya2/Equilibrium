@@ -109,7 +109,16 @@ export type {
   SolverSearchTier,
 } from "./worker/serializable";
 export type { SolverProgress } from "./worker/protocol";
-export { runSolverInWorker, runSolverOnMainThread } from "./worker/host";
+export {
+  runOptimize,
+  cancelOptimize,
+  getRevolutionSolverClient,
+  runSolverInWorker,
+  runSolverOnMainThread,
+  RevolutionSolverClient,
+  isSolverPreferringMainThread,
+  resetSolverHostForTests,
+} from "./worker/host";
 
 export {
   createSearchState,

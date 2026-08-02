@@ -13,6 +13,7 @@ import { requireSimBase } from "./worker/revive";
 import type { SolveFn, SolveRuntimeOptions } from "./worker/solveTypes";
 import type { SolverPhase, SolverProgress } from "./worker/protocol";
 import {
+  BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION,
   BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS,
 } from "../league/ruleset";
 
@@ -368,12 +369,19 @@ export const solveFromRequest: SolveFn = async (
   emitProgress(true);
   const winnerBar = result.best.bar;
   const score = Number.isFinite(result.best.robustScore) ? result.best.robustScore : 0;
+  const hasBigBoned = simBase.league.blessingIds.includes("big-boned");
   const experimentalBigBoned =
-    simBase.league.includeBigBonedOutgoingDamage === true &&
-    simBase.league.blessingIds.includes("big-boned");
+    simBase.league.includeBigBonedOutgoingDamage === true && hasBigBoned;
+  const bigBonedAssumptions = experimentalBigBoned
+    ? [...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS]
+    : hasBigBoned
+      ? [BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION]
+      : undefined;
   const experimentalNotes = experimentalBigBoned
     ? (["best-found under experimental assumptions", ...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS] as const)
-    : [];
+    : hasBigBoned
+      ? ([BIG_BONED_OUTGOING_EXCLUDED_ASSUMPTION] as const)
+      : [];
   const dto: SolverResultDTO = {
     bar: [...winnerBar],
     score,
@@ -388,9 +396,7 @@ export const solveFromRequest: SolveFn = async (
     openingDpm: result.best.openingDpm,
     developedDpm: result.best.developedDpm,
     steadyDpm: result.best.steadyDpm,
-    assumptions: experimentalBigBoned
-      ? [...BIG_BONED_OUTGOING_EXPERIMENTAL_ASSUMPTIONS]
-      : undefined,
+    assumptions: bigBonedAssumptions,
     summary: undefined,
     proof: {
       label: result.proof,

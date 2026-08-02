@@ -9,7 +9,11 @@ import {
   type CachedSolveEntry,
   type SolveCacheStore,
 } from "./solutionStore";
-import { defaultSerializableRequest, emptyModifierSources } from "./worker/serializable";
+import {
+  defaultSerializableRequest,
+  emptyModifierSources,
+  isSerializableSimBase,
+} from "./worker/serializable";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
 
 const emptyEffects: ActiveEquipmentEffects = {
@@ -78,18 +82,26 @@ describe("solutionStore", () => {
 
   it("fingerprints includeBigBonedOutgoingDamage so experimental scoring cannot share cache", () => {
     const safe = sampleRequest();
+    if (!isSerializableSimBase(safe.loadout)) throw new Error("expected sim base");
     const experimental = structuredClone(safe);
-    if (!("league" in experimental.loadout)) throw new Error("expected sim base");
-    experimental.loadout.league = {
-      ...experimental.loadout.league,
-      blessingIds: ["big-boned"],
-      includeBigBonedOutgoingDamage: true,
+    if (!isSerializableSimBase(experimental.loadout)) throw new Error("expected sim base");
+    experimental.loadout = {
+      ...experimental.loadout,
+      league: {
+        ...experimental.loadout.league,
+        blessingIds: ["big-boned"],
+        includeBigBonedOutgoingDamage: true,
+      },
     };
     expect(fingerprintSolveContext(experimental)).not.toBe(fingerprintSolveContext(safe));
     const experimentalOff = structuredClone(experimental);
-    experimentalOff.loadout.league = {
-      ...experimentalOff.loadout.league,
-      includeBigBonedOutgoingDamage: false,
+    if (!isSerializableSimBase(experimentalOff.loadout)) throw new Error("expected sim base");
+    experimentalOff.loadout = {
+      ...experimentalOff.loadout,
+      league: {
+        ...experimentalOff.loadout.league,
+        includeBigBonedOutgoingDamage: false,
+      },
     };
     expect(fingerprintSolveContext(experimentalOff)).not.toBe(
       fingerprintSolveContext(experimental),

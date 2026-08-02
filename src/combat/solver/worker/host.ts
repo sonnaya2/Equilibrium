@@ -1,4 +1,8 @@
-import type { SerializableSolverRequest, SolverResultDTO } from "./serializable";
+import {
+  isSerializableSimBase,
+  type SerializableSolverRequest,
+  type SolverResultDTO,
+} from "./serializable";
 import {
   isWorkerToHostMessage,
   type HostToWorkerMessage,
@@ -11,6 +15,9 @@ export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solve
 /** After a hard worker failure, prefer main-thread for the rest of the tab session. */
 let stickyMainThread = false;
 let sharedClient: RevolutionSolverClient | null = null;
+
+/** No progress/result/error within this window → treat worker as dead. */
+const WORKER_FIRST_MESSAGE_MS = 12_000;
 
 async function loadSolve(): Promise<SolveFn> {
   const mod = (await import(
@@ -39,13 +46,11 @@ function post(worker: Worker, message: HostToWorkerMessage): void {
   worker.postMessage(message);
 }
 
+/** True AbortError only — do NOT match bare Error("solver cancelled") or we skip main fallback. */
 function isAbortError(err: unknown): boolean {
   return (
     (err instanceof DOMException && err.name === "AbortError") ||
-    (err instanceof Error &&
-      (err.name === "AbortError" ||
-        err.message === "solver cancelled" ||
-        err.message === "revolution solver cancelled"))
+    (err instanceof Error && err.name === "AbortError")
   );
 }
 
@@ -113,6 +118,12 @@ export async function runOptimize(
     throw new DOMException("revolution solver cancelled", "AbortError");
   }
 
+  if (!isSerializableSimBase(request.loadout)) {
+    // Plain loadout is not a worker wire shape — main path can still pack via revive.
+    stickyMainThread = true;
+    return runSolverOnMainThread(request, onProgress, { isCancelled: cancelled });
+  }
+
   // Clone once so postMessage cannot fail on host-side mutation / non-cloneables.
   let payload: SerializableSolverRequest;
   try {
@@ -140,19 +151,26 @@ export async function runOptimize(
     });
     return result;
   } catch (err) {
-    if (isAbortError(err) || cancelled()) throw err;
+    // AbortError = intentional cancel / supersede — never start a second solve.
+    // Bare Error("solver cancelled") is NOT AbortError → sticky main fallback.
+    if (cancelled() || isAbortError(err)) {
+      throw isAbortError(err)
+        ? err
+        : new DOMException("revolution solver cancelled", "AbortError");
+    }
     stickyMainThread = true;
     if (typeof console !== "undefined") {
       console.warn("[revo-solver] worker unavailable, main-thread fallback", err);
     }
-    // Drop broken worker without rejecting a fresh run.
     try {
       client.disposeQuiet();
     } catch {
       // ignore
     }
     if (sharedClient === client) sharedClient = null;
-    if (cancelled()) throw err;
+    if (cancelled()) {
+      throw new DOMException("revolution solver cancelled", "AbortError");
+    }
     return runSolverOnMainThread(payload, onProgress, { isCancelled: cancelled });
   }
 }
@@ -185,6 +203,7 @@ type ActiveRun = {
   /** Explicit abort — never infer cancel from active===null. */
   aborted: boolean;
   settled: boolean;
+  bootTimer?: ReturnType<typeof setTimeout>;
 };
 
 /**
@@ -220,6 +239,10 @@ export class RevolutionSolverClient {
   ): void {
     if (run.settled) return;
     run.settled = true;
+    if (run.bootTimer != null) {
+      clearTimeout(run.bootTimer);
+      run.bootTimer = undefined;
+    }
     if (this.active === run) this.active = null;
     if (kind === "resolve") run.resolve(value as SolverResultDTO);
     else run.reject(value as Error);
@@ -241,10 +264,32 @@ export class RevolutionSolverClient {
   }
 
   private onWorkerMessage(data: unknown): void {
-    if (!isWorkerToHostMessage(data)) return;
+    if (!isWorkerToHostMessage(data)) {
+      if (typeof console !== "undefined" && this.active) {
+        console.warn("[revo-solver] ignored non-protocol worker message", data);
+      }
+      return;
+    }
     const msg = data;
     const run = this.active;
-    if (!run || msg.requestId !== run.requestId) return;
+    if (!run) return;
+    if (msg.requestId !== run.requestId) {
+      if (typeof console !== "undefined") {
+        console.warn(
+          "[revo-solver] worker message requestId mismatch",
+          msg.requestId,
+          "expected",
+          run.requestId,
+          msg.type,
+        );
+      }
+      return;
+    }
+    // Any protocol message clears the boot watchdog.
+    if (run.bootTimer != null) {
+      clearTimeout(run.bootTimer);
+      run.bootTimer = undefined;
+    }
     switch (msg.type) {
       case "progress":
         if (run.aborted) return;
@@ -377,6 +422,18 @@ export class RevolutionSolverClient {
         options?.signal?.removeEventListener("abort", onAbort);
         rawReject(error);
       };
+
+      run.bootTimer = setTimeout(() => {
+        if (run.settled) return;
+        this.dropWorker();
+        this.settleActive(
+          run,
+          "reject",
+          new Error(
+            `revolution solver worker watchdog: no message after ${WORKER_FIRST_MESSAGE_MS}ms`,
+          ),
+        );
+      }, WORKER_FIRST_MESSAGE_MS);
 
       try {
         post(worker, { type: "start", requestId, payload: request });

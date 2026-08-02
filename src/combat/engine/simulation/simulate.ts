@@ -15,7 +15,7 @@ export type {
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
 import { castOutcomes, mergeAndCapBranches, type Branch } from "./branch";
-import { castRejection } from "../cast/rules";
+import { castRejection, permanentCastBlock } from "../cast/rules";
 import { performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick } from "../runtime/state";
@@ -57,6 +57,20 @@ function stepManualAction(
   let work: Branch[] = [branch];
   let branched = false;
   if (autoWeave) {
+    // Weapon/equipment mismatch and cost > adren cap cannot be fixed by weaving.
+    const permanent = permanentCastBlock(
+      branch.rt.state,
+      ability,
+      branch.rt.input.weaponConfiguration,
+      branch.rt.input.equipmentIds,
+    );
+    if (permanent !== null) {
+      return {
+        branches: [{ ...branch, error: permanent }],
+        branched: false,
+      };
+    }
+
     const done: Branch[] = [];
     let pending: Branch[] = [branch];
     for (let weaveDepth = 0; pending.length > 0; weaveDepth++) {

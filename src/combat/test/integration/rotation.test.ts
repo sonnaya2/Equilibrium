@@ -203,5 +203,25 @@ describe("auto-weave", () => {
     });
     expect(s.ok).toBe(false);
     expect(s.error).toContain("unaffordable");
+    // Permanent cost>cap: fail before weaving (not after MAX_AUTO_WEAVE_CASTS basics).
+    expect(s.casts.every((c) => !c.auto)).toBe(true);
+    expect(s.casts).toHaveLength(0);
+    expect(s.totalExpected).toBe(0);
+    expect(s.ticks).toBeLessThan(10);
+  });
+
+  it("fails immediately on a permanent weapon mismatch without weaving basics", () => {
+    // Flurry is dualwield-only; twohand config can never satisfy it.
+    const s = simulate({
+      ...baseInput,
+      weaponConfiguration: "twohand",
+      autoWeave: true,
+      rotation: rotationOf("flurry"),
+    });
+    expect(s.ok).toBe(false);
+    expect(s.error).toMatch(/flurry requires dualwield/i);
+    expect(s.casts).toHaveLength(0);
+    expect(s.totalExpected).toBe(0);
+    expect(s.ticks).toBeLessThan(10);
   });
 });

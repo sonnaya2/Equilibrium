@@ -53,6 +53,49 @@ export function spendOf(
     : cost;
 }
 
+type WeaponConfiguration =
+  | "twohand"
+  | "dualwield"
+  | "mainhand"
+  | "shield"
+  | "defender"
+  | "necromancy";
+
+function weaponRequirementMessage(ability: AbilitySpec): string {
+  const requirement =
+    ability.weaponRequirement === "conduit"
+      ? "a conduit"
+      : ability.weaponRequirement === "death-guard-and-conduit"
+        ? "death guard and conduit"
+        : (ability.weaponRequirement ??
+          (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
+  return `${ability.id} requires ${requirement}`;
+}
+
+/**
+ * Blocks that weaving basics can never clear (wrong weapon/equipment, or cost
+ * above the adrenaline cap). Temporary shortfalls (current adren, cooldowns,
+ * sequence windows) are not reported here.
+ */
+export function permanentCastBlock(
+  state: RotationState,
+  ability: AbilitySpec,
+  weaponConfiguration?: WeaponConfiguration,
+  equipmentIds?: readonly string[],
+): string | null {
+  if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
+    return weaponRequirementMessage(ability);
+  }
+  if (!meetsEquipmentRequirement(ability, equipmentIds)) {
+    return `${ability.id} requires an equipped Igneous cape`;
+  }
+  const cost = costOf(state, ability, state.tick);
+  if (cost > state.adrenalineCap) {
+    return `${ability.id} is unaffordable at tick ${state.tick}, even weaving basics`;
+  }
+  return null;
+}
+
 /**
  * Requirement/affordability check against the state at the candidate tick.
  * Returns the rejection text, or null when the cast is legal.
@@ -61,18 +104,11 @@ export function castRejection(
   state: RotationState,
   ability: AbilitySpec,
   candidate: number,
-  weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy",
+  weaponConfiguration?: WeaponConfiguration,
   equipmentIds?: readonly string[],
 ): string | null {
   if (!meetsWeaponRequirement(ability, weaponConfiguration)) {
-    const requirement =
-      ability.weaponRequirement === "conduit"
-        ? "a conduit"
-        : ability.weaponRequirement === "death-guard-and-conduit"
-          ? "death guard and conduit"
-          : (ability.weaponRequirement ??
-            (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
-    return `${ability.id} requires ${requirement}`;
+    return weaponRequirementMessage(ability);
   }
   if (!meetsEquipmentRequirement(ability, equipmentIds)) {
     return `${ability.id} requires an equipped Igneous cape`;

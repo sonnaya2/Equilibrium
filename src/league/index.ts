@@ -129,7 +129,7 @@ export function resolveBlessingPersistence(raw: {
     Array.isArray(raw.blessingSelections) && raw.blessingSelections.length > 0
       ? raw.blessingSelections
       : raw.blessingPicks;
-  const { selections, paths } = normalizeBlessingSelections(primary, resolve);
+  const { paths } = normalizeBlessingSelections(primary, resolve);
   const legacyPathPicks = Array.isArray(raw.blessingPicks)
     ? (raw.blessingPicks as unknown[]).filter(isBlessingPath).slice(0, PATH_TIERS.length)
     : null;

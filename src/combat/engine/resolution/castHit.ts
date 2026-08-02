@@ -113,6 +113,7 @@ export function resolveCastHit(
   let min = hit.min;
   let max = hit.max;
   let expected = hit.expected;
+  let capLoss = hit.capLoss;
   if (snap.searingWindsAtCast) {
     const bonus = calculateHit({
       base: input.base,
@@ -127,9 +128,21 @@ export function resolveCastHit(
     min += bonus.min;
     max += bonus.max;
     expected += bonus.expected;
+    capLoss += bonus.capLoss;
   }
   return {
-    damage: { min, max, expected, critExpected: hit.critExpected },
+    damage: {
+      min,
+      max,
+      expected,
+      critExpected: hit.critExpected,
+      capLoss,
+      critical: {
+        mode: hit.critChance >= 1 ? "guaranteed" : hit.critChance > 0 ? "expected" : "none",
+        chance: hit.critChance,
+        contribution: Math.max(0, hit.critChance * (hit.critExpected - hit.nonCritExpected)),
+      },
+    },
     hitDetail: hit,
   };
 }

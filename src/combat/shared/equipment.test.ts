@@ -82,11 +82,11 @@ describe("shared/equipment set effects", () => {
         body: "item:tumekens-resplendence-body",
         legs: "item:tumekens-resplendence-legs",
       },
-      perks: { insideSunshine: true },
+      insideSunshine: true,
     };
     expect(equippedSetCounts(loadout).get("tumekens-resplendence")).toBe(3);
     expect(loadoutSetCritChance(loadout)).toBeCloseTo(0.045, 10);
-    expect(loadoutSetCritChance({ ...loadout, perks: { insideSunshine: false } })).toBe(0);
+    expect(loadoutSetCritChance({ ...loadout, insideSunshine: false })).toBe(0);
   });
 
   it("empty gear → 0 set crit", () => {
@@ -94,19 +94,8 @@ describe("shared/equipment set effects", () => {
     expect(loadoutSetCritChance({})).toBe(0);
   });
 
-  it("Math.max(gear, perk) avoids double-count for tectonic", () => {
-    const gear3 = {
-      equipmentSlots: {
-        helmet: "item:tectonic-helm",
-        body: "item:tectonic-body",
-        legs: "item:tectonic-legs",
-      },
-      perks: { tectonicPieces: 3 },
-    };
-    expect(loadoutSetCritChance(gear3)).toBeCloseTo(0.03, 10);
-
-    const perkOnly = { equipmentSlots: {}, perks: { tectonicPieces: 3, eliteTectonic: true } };
-    expect(loadoutSetCritChance(perkOnly)).toBeCloseTo(0.06, 10);
+  it("does not activate set bonuses without equipped pieces", () => {
+    expect(loadoutSetCritChance({ equipmentSlots: {} })).toBe(0);
   });
 
   it("elite tectonic gear uses +2%/piece", () => {

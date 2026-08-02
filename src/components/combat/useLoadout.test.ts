@@ -8,6 +8,7 @@ import {
   placePerkOnGizmo,
   pruneUnknownEquipment,
   removePerkFromGizmos,
+  toggleEquipmentEnchantment,
   unlockOnlyIds,
   withAttackLevel,
   withCombatStyle,
@@ -79,8 +80,10 @@ describe("normalizeLoadout", () => {
     ).toBe(100);
   });
 
-  it("clamps manual Tectonic pieces to the three-piece set", () => {
-    expect(normalizeLoadout({ perks: { tectonicPieces: 5 } }).perks.tectonicPieces).toBe(3);
+  it("drops legacy manual set overrides", () => {
+    const perks = normalizeLoadout({ perks: { tectonicPieces: 3, insideSunshine: true } }).perks;
+    expect("tectonicPieces" in perks).toBe(false);
+    expect("insideSunshine" in perks).toBe(false);
   });
 
   it("migrates legacy { level } into attackLevel + strengthLevel", () => {
@@ -195,6 +198,18 @@ describe("normalizeLoadout", () => {
       normalizeLoadout({ enchantments: ["agony", "agony", "unknown", 1] }).enchantments,
     ).toEqual(["agony"]);
   });
+
+  it("defaults missing account enchantments on and preserves an explicit choice", () => {
+    expect(normalizeLoadout({}).enchantments).toEqual([
+      "agony",
+      "heroism",
+      "shadows",
+      "metaphysics",
+    ]);
+    expect(toggleEquipmentEnchantment(DEFAULT_LOADOUT, "agony").enchantments).not.toContain(
+      "agony",
+    );
+  });
 });
 
 describe("pruneUnknownEquipment", () => {
@@ -307,9 +322,14 @@ describe("gizmo layout", () => {
     expect(placed.gizmos.weapon1).toEqual(["aftershock"]);
     expect(gizmoSlotOf(placed.gizmos, "aftershock")).toBe("weapon1");
 
-    const moved = placePerkOnGizmo(placed, "armour1", "aftershock");
+    const moved = placePerkOnGizmo(placed, "weapon2", "aftershock");
     expect(moved.gizmos.weapon1).toBeUndefined();
-    expect(moved.gizmos.armour1).toEqual(["aftershock"]);
+    expect(moved.gizmos.weapon2).toEqual(["aftershock"]);
+  });
+
+  it("rejects weapon-only perks on armour gizmos", () => {
+    const placed = placePerkOnGizmo(DEFAULT_LOADOUT, "armour1", "aftershock");
+    expect(placed).toBe(DEFAULT_LOADOUT);
   });
 
   it("rejects a third perk on a full gizmo", () => {
@@ -332,12 +352,12 @@ describe("gizmo layout", () => {
       gizmos: {
         weapon1: ["aftershock", "not-a-perk", "eliteTectonic", "biting", "equilibrium"],
         // Duplicate of a perk already claimed by weapon1 — first slot wins.
-        armour1: ["aftershock", "lunging"],
+        armour1: ["aftershock", "lunging", "impatient"],
         madeUpSlot: ["biting"],
       },
     });
     expect(gizmos.weapon1).toEqual(["aftershock", "biting"]);
-    expect(gizmos.armour1).toEqual(["lunging"]);
+    expect(gizmos.armour1).toEqual(["impatient"]);
     expect(Object.keys(gizmos)).toEqual(["weapon1", "armour1"]);
   });
 

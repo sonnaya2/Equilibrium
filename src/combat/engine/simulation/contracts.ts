@@ -118,6 +118,43 @@ export interface CastRecord {
   auto?: boolean;
 }
 
+export type DamageSourceKind =
+  | "ability-direct"
+  | "ability-dot"
+  | "equipment-passive"
+  | "perk"
+  | "conjure-or-familiar"
+  | "auto-attack"
+  | "other-modeled";
+
+export interface DamageSourceBreakdown {
+  kind: DamageSourceKind;
+  damage: number;
+}
+
+export interface DamageEffectBreakdown {
+  id: string;
+  kind: DamageSourceKind;
+  totalDamage: number;
+  share: number;
+  applications: number;
+  damagingEvents: number;
+  averagePerApplication: number;
+  directDamage: number;
+  dotDamage: number;
+  criticalContribution: number;
+  capLoss: number;
+}
+
+export interface RotationDamageAnalysis {
+  bySource: DamageSourceBreakdown[];
+  byEffect: DamageEffectBreakdown[];
+  directDamage: number;
+  dotDamage: number;
+  criticalContribution: number;
+  capLoss: number;
+}
+
 export interface RotationSummary {
   ok: boolean;
   error?: string;
@@ -146,6 +183,8 @@ export interface RotationSummary {
   damageByTick: Record<number, number>;
   /** Landed events for the deterministic run or representative terminal class. */
   events: ResolvedEvent[];
+  /** Reconciled engine-owned aggregations; components only format these values. */
+  analysis: RotationDamageAnalysis;
   /**
    * Opt-in second metric (SimulateOptions.includeTails): in-horizon damage plus
    * the unlanded scheduled tails of casts begun inside the horizon.

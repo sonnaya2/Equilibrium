@@ -23,8 +23,19 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
 
 const STYLES: CombatStyle[] = ["melee", "ranged", "magic", "necromancy"];
 
-const SUB_TABS = ["Gear", "Stats", "Buffs", "Perks", "Target"] as const;
+const SUB_TABS = ["Gear", "Archaeology", "Invention", "Stats", "Buffs", "Target"] as const;
 type SubTab = (typeof SUB_TABS)[number];
+
+function ArchaeologyPanel() {
+  return (
+    <div className="loadout-panel">
+      <h2 className="combat-section-title text-sm font-medium text-parch-50">Archaeology</h2>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-parch-300">
+        No sourced Archaeology relic is included in combat calculations yet.
+      </p>
+    </div>
+  );
+}
 
 function formatPct(fraction: number): string {
   return `${Math.round(fraction * 1000) / 10}%`;
@@ -139,9 +150,10 @@ export function SetupTab() {
         >
           {subTab === "Gear" ? null : <CombatFrameCorners />}
           {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
+          {subTab === "Archaeology" ? <ArchaeologyPanel /> : null}
+          {subTab === "Invention" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Buffs" ? <BuffsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Perks" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}
         </div>
 

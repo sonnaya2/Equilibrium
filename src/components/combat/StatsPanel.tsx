@@ -187,10 +187,7 @@ export function StatsPanel({
             onChange={(startingAdrenaline) =>
               setLoadout({
                 ...loadout,
-                startingAdrenaline: Math.min(
-                  stats.maxAdrenaline,
-                  Math.max(0, startingAdrenaline),
-                ),
+                startingAdrenaline: Math.min(stats.maxAdrenaline, Math.max(0, startingAdrenaline)),
               })
             }
             suffix="%"

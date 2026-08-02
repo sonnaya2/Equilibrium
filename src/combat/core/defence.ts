@@ -73,9 +73,7 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     throw new RangeError(`defenceStats: bad equipment armour ${equipmentArmour}`);
   }
   const potionBoost = overloadTier ? overloadLevelBoost(baseLevel, overloadTier) : 0;
-  const visibleLevel = overloadTier
-    ? overloadBoostedLevel(baseLevel, overloadTier)
-    : baseLevel;
+  const visibleLevel = overloadTier ? overloadBoostedLevel(baseLevel, overloadTier) : baseLevel;
   const blockLevel = visibleLevel + prayerBlockLevels;
   const levelArmour = accuracyCurve(blockLevel);
   return {

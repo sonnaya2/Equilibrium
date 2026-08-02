@@ -59,7 +59,7 @@ describe("defenceStats", () => {
     // are exactly equipmentArmour and the block-calculation level.
     const stats = defenceStats({ baseLevel: 90, prayerBlockLevels: 8, equipmentArmour: 500 });
     expect(stats.totalArmour).toBe(
-      Math.floor(500 + (stats.blockLevel ** 3) / 1250 + 4 * stats.blockLevel + 40),
+      Math.floor(500 + stats.blockLevel ** 3 / 1250 + 4 * stats.blockLevel + 40),
     );
   });
 

@@ -229,7 +229,6 @@ export function equipmentLifeValue(
   return 0;
 }
 
-
 /** Weapon tier is the record's headline `tier`; no separate field is needed. */
 export type EquipmentStatName = "armour" | "life" | "damage";
 
@@ -255,7 +254,8 @@ export interface EquipmentStatTotals {
   incomplete: IncompleteEquipmentStat[];
 }
 
-type ResolvedStat = { value: number; unknown?: never } | { value: 0; unknown: IncompleteEquipmentStat["reason"] };
+type ResolvedStat =
+  { value: number; unknown?: never } | { value: 0; unknown: IncompleteEquipmentStat["reason"] };
 
 /**
  * Slots whose stat derivation is class-gated (armour pieces: tank t, power t−5,
@@ -373,7 +373,10 @@ export function aggregateEquipmentStats(
       continue;
     }
     const styleMatches =
-      !record.style || record.style === "hybrid" || loadout.style == null || record.style === loadout.style;
+      !record.style ||
+      record.style === "hybrid" ||
+      loadout.style == null ||
+      record.style === loadout.style;
 
     const armour = resolveArmour(record);
     if (armour.unknown) totals.incomplete.push({ id, stat: "armour", reason: armour.unknown });

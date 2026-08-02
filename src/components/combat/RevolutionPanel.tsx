@@ -17,6 +17,7 @@ import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
+import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { DEFAULT_LOADOUT, useLoadout } from "./useLoadout";
 
 const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
@@ -53,6 +54,10 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
+function formatCount(value: number): string {
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
+}
+
 /** Compact wall-clock for cast rows (e.g. 3.6s). */
 function formatTime(ticks: number): string {
   const seconds = ticksToSeconds(ticks);
@@ -62,6 +67,12 @@ function formatTime(ticks: number): string {
 function styleLabel(style: string): string {
   if (style in STYLE_LABEL) return STYLE_LABEL[style as keyof typeof STYLE_LABEL];
   return style.charAt(0).toUpperCase() + style.slice(1);
+}
+
+function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {
+  const chance = Math.max(0, ...result.hits.map((hit) => hit.critChance));
+  if (chance >= 1) return "Crit";
+  return chance > 0 ? `${Math.round(chance * 1000) / 10}% crit EV` : null;
 }
 
 /** Human-readable select option — not bare "melee" / "ranged". */
@@ -172,6 +183,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
+  const [analysisOpen, setAnalysisOpen] = useState(false);
 
   const bar: RevoBarView | undefined =
     SUPPORTED_BARS.find((candidate) => candidate.id === barId) ??
@@ -216,6 +228,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     setBarId(id);
     setResult(null);
     setShowAllCasts(false);
+    setAnalysisOpen(false);
   };
 
   const run = () => {
@@ -224,6 +237,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
     );
     setShowAllCasts(false);
+    setAnalysisOpen(false);
     setResult(
       runRevolution({
         base: stats.base,
@@ -257,17 +271,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     );
   };
 
-  const contributions = result
-    ? Object.entries(result.perAbility)
-        .map(([id, expected]) => ({
-          id,
-          name: nameById.get(id) ?? id,
-          expected,
-          share: result.totalExpected > 0 ? expected / result.totalExpected : 0,
-          count: result.casts.filter((c) => c.abilityId === id).length,
-        }))
-        .sort((a, b) => b.expected - a.expected)
-    : [];
+  const contributions = result?.analysis.byEffect ?? [];
 
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
@@ -396,6 +400,16 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
             </div>
           </dl>
 
+          <div className="mt-3 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setAnalysisOpen(true)}
+              className="combat-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800"
+            >
+              Analyze damage
+            </button>
+          </div>
+
           <CalculationAssumptions stats={stats} result={result} />
 
           <section className="revo-section revo-timeline">
@@ -447,6 +461,17 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                                 <span className="min-w-0 truncate">
                                   {nameById.get(cast.abilityId) ?? cast.abilityId}
                                 </span>
+                                {castCritLabel(cast.result) ? (
+                                  <span
+                                    className={
+                                      castCritLabel(cast.result) === "Crit"
+                                        ? "rotation-crit"
+                                        : "text-parch-300"
+                                    }
+                                  >
+                                    {castCritLabel(cast.result)}
+                                  </span>
+                                ) : null}
                                 {spec ? (
                                   <AbilityCategoryChip category={spec.category} />
                                 ) : cast.auto ? (
@@ -499,11 +524,13 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
                       ) : null;
                     })()}
                     <span className="truncate">
-                      {row.name}
-                      <span className="ml-1.5 font-mono text-parch-300">×{row.count}</span>
+                      {nameById.get(row.id) ?? row.id}
+                      <span className="ml-1.5 font-mono text-parch-300">
+                        ×{formatCount(row.applications)}
+                      </span>
                     </span>
                   </span>
-                  <span className="font-mono text-parch-300">{formatNumber(row.expected)}</span>
+                  <span className="font-mono text-parch-300">{formatNumber(row.totalDamage)}</span>
                   <span className="font-mono text-parch-50">
                     {Math.round(row.share * 1000) / 10}%
                   </span>
@@ -511,7 +538,17 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
               ))}
             </div>
           </section>
+          <RotationEventPreview result={result} nameForId={(id) => nameById.get(id) ?? id} />
         </div>
+      ) : null}
+      {result?.ok ? (
+        <RotationAnalysisModal
+          open={analysisOpen}
+          result={result}
+          stats={stats}
+          nameForId={(id) => nameById.get(id) ?? id}
+          onClose={() => setAnalysisOpen(false)}
+        />
       ) : null}
     </div>
   );

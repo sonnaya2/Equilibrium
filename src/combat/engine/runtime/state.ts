@@ -58,6 +58,16 @@ export interface RotationState {
    * this tick (wiki: 30s internal cooldown; 0 = ready). Style-agnostic.
    */
   relentlessUntilTick: number;
+  invention: {
+    /** Crackling starts ready and triggers on the next eligible attack. */
+    cracklingReadyTick: number;
+    /** Expected damage accumulated toward the 50,000 Aftershock threshold. */
+    aftershockCharge: number;
+    /** Earliest tick another Aftershock blast may land. */
+    aftershockReadyTick: number;
+    /** A threshold-crossing blast is already queued, possibly behind its cooldown. */
+    aftershockPending: boolean;
+  };
   naturalInstinctUntilTick: number;
   melee: MeleeRotationState;
   ranged: RangedRotationState;
@@ -82,6 +92,12 @@ export function newRotationState(
     vestmentsAdrenalineUntilTick: 0,
     cooldowns: {},
     relentlessUntilTick: 0,
+    invention: {
+      cracklingReadyTick: 0,
+      aftershockCharge: 0,
+      aftershockReadyTick: 0,
+      aftershockPending: false,
+    },
     naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
     melee: newMeleeRotationState(),
     ranged: newRangedRotationState(),

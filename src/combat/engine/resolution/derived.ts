@@ -22,6 +22,16 @@ export function resolveDerivedHit(
       min: Math.floor((source.min * fractionPct) / 100),
       max: Math.floor((source.critMax * fractionPct) / 100),
       expected: (source.expected * fractionPct) / 100,
+      capLoss: (source.capLoss * fractionPct) / 100,
+      critical: {
+        mode: source.critChance >= 1 ? "guaranteed" : source.critChance > 0 ? "expected" : "none",
+        chance: source.critChance,
+        contribution:
+          (Math.max(0, source.critChance * (source.critExpected - source.nonCritExpected)) *
+            fractionPct) /
+          100,
+        inherited: true,
+      },
     },
   };
 }

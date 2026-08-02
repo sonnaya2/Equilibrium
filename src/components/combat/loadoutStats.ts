@@ -99,7 +99,7 @@ export interface CalcStats {
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
   /** Invigorating / Impatient rules for rotation + revolution sim. */
   adrenaline?: AdrenalineRules;
-  /** Crackling / Aftershock EV ranks for rotation + revolution sim. */
+  /** Stateful Crackling / Aftershock rules for rotation + revolution simulation. */
   procs?: ProcRules;
   /** Planted Feet: base Sunshine / Death's Swiftness duration ×1.25. */
   plantedFeet?: boolean;
@@ -366,35 +366,15 @@ export function loadoutStats(loadout: Loadout): CalcStats {
     equipmentEffects,
   );
 
-  // Equilibrium perk prevents critical strikes (wiki). Biting/set bonuses ignored while active.
-  // Set crit: actual gear counts (Math.max with manual perk piece sliders — no double-count).
+  // Equilibrium prevents critical strikes. Set bonuses come only from equipped records.
   const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
-  const tumekensPieces = effectiveTumekenPieces(setCounts, {
-    tumekensPieces: loadout.perks.tumekensPieces,
-  });
+  const tumekensPieces = effectiveTumekenPieces(setCounts);
   const equipmentCrit = staticEquipmentCritBonus(equipmentEffects);
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
-  const setCrit = loadoutSetCritChance({
-    equipmentSlots: loadout.equipmentSlots,
-    perks: {
-      tectonicPieces: loadout.perks.tectonicPieces,
-      eliteTectonic: loadout.perks.eliteTectonic,
-      tumekensPieces: loadout.perks.tumekensPieces,
-      insideSunshine: loadout.perks.insideSunshine,
-    },
-  });
-  const simulationSetCrit = loadoutSetCritChance({
-    equipmentSlots: loadout.equipmentSlots,
-    perks: {
-      tectonicPieces: loadout.perks.tectonicPieces,
-      eliteTectonic: loadout.perks.eliteTectonic,
-      tumekensPieces: loadout.perks.tumekensPieces,
-      insideSunshine: false,
-    },
-  });
+  const setCrit = loadoutSetCritChance({ equipmentSlots: loadout.equipmentSlots });
   const critChance =
     loadout.perks.equilibrium > 0
       ? 0
@@ -402,16 +382,12 @@ export function loadoutStats(loadout: Loadout): CalcStats {
   const simulationCritChance =
     loadout.perks.equilibrium > 0
       ? 0
-      : clamp01(loadout.critChance / 100 + biting + simulationSetCrit + equipmentCrit.chance);
+      : clamp01(loadout.critChance / 100 + biting + setCrit + equipmentCrit.chance);
   const maxAdrenaline = equipmentEffects.vestments.increasedAdrenalineCap ? 120 : 100;
 
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet — structure ready).
-  globalModifiers.push(
-    ...setDamageModifiers(setCounts, {
-      insideSunshine: loadout.perks.insideSunshine,
-    }),
-  );
+  globalModifiers.push(...setDamageModifiers(setCounts));
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (curse) globalModifiers.push(prayerDamageModifier(curse));
   if (equipmentEffects.amZiFlatDamage > 0) {

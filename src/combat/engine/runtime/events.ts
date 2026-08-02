@@ -49,6 +49,8 @@ export interface ScheduledEvent<RT = unknown> {
 
 export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "resolve"> {
   damage: ResolvedDamage;
+  stackCount?: number;
+  remainingTicks?: number;
 }
 
 /**

@@ -111,35 +111,34 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
   await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
 });
 
-test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
+test("setup exposes gear, archaeology, invention, buffs, and target", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
   const doll = page.getByRole("group", { name: "Equipment slots" });
   await expect(doll.getByText("Main-hand")).toBeVisible();
   await expect(doll.getByText("Empty").first()).toBeVisible();
-  const agony = page.getByRole("checkbox", { name: /Agony/ });
-  await agony.check();
-  await expect(agony).toBeChecked();
 
-  await page.getByRole("button", { name: "Perks", exact: true }).click();
-  await expect(page.getByText("Perks & sets")).toBeVisible();
-  // Perks are icon steppers: the effect text survives in the accessible name.
-  const equilibrium = page.getByRole("spinbutton", { name: /Equilibrium — R1 \+8% AD/ });
-  await expect(equilibrium).toHaveAttribute("aria-valuenow", "0");
-  await equilibrium.click();
-  await expect(equilibrium).toHaveAttribute("aria-valuenow", "1");
-  await equilibrium.press("ArrowDown");
-  await expect(equilibrium).toHaveAttribute("aria-valuenow", "0");
+  await page.getByRole("button", { name: "Archaeology", exact: true }).click();
+  await expect(page.getByText(/No sourced Archaeology relic/)).toBeVisible();
 
-  // Gizmo placement is organisational: the rank input drives the same perk value.
+  await page.getByRole("button", { name: "Invention", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
   await page
     .getByRole("combobox", { name: /Add a perk to Weapon gizmo 1/ })
-    .selectOption("equilibrium");
-  await page.getByRole("spinbutton", { name: "Equilibrium rank" }).fill("3");
-  await expect(equilibrium).toHaveAttribute("aria-valuenow", "3");
+    .selectOption("aftershock");
+  await expect(page.getByRole("combobox", { name: "Aftershock rank" })).toHaveValue("1");
+  await expect(
+    page
+      .getByRole("combobox", { name: /Add a perk to Armour gizmo 1/ })
+      .locator("option[value=aftershock]"),
+  ).toHaveCount(0);
 
   await page.getByRole("button", { name: "Buffs", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: /Vulnerability/ })).toBeVisible();
+  const agony = page.getByRole("button", { name: /Agony/ });
+  await expect(agony).toHaveAttribute("aria-pressed", "true");
+  await agony.click();
+  await expect(agony).toHaveAttribute("aria-pressed", "false");
 
   // Buffs are icon tiles: the name and effect survive only in the accessible name.
   const elder = page.getByRole("button", { name: /Elder overload/ });
@@ -153,7 +152,7 @@ test("setup exposes gear doll, perks, buffs, and target", async ({ page }) => {
       .filter({ hasText: /\(99 \+\d+\)/ })
       .first(),
   ).toBeVisible();
-  await expect(page.getByText("No armour set pieces equipped", { exact: false })).toBeVisible();
+  await expect(page.getByText("Equip set pieces in Gear to activate their effects.")).toBeVisible();
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
   await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
@@ -212,28 +211,31 @@ test("loadout calculation controls reset automatic base and persist into Revolut
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "Run bar" }).click();
-  const assumptions = page.getByRole("heading", { name: "Calculation assumptions" }).locator("..");
+  const assumptions = page.locator("details").filter({ hasText: "Assumptions" }).first();
+  await assumptions.getByText("Assumptions", { exact: true }).click();
   await expect(assumptions.getByText("62%", { exact: true })).toBeVisible();
   await expect(assumptions.getByText("Off", { exact: true })).toBeVisible();
 });
 
-test("perks follow the combat style, but a set left ranked stays reachable", async ({ page }) => {
+test("rotation analysis opens the engine-owned event breakdown", async ({ page }) => {
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Run bar" }).click();
+  await expect(page.getByRole("heading", { name: "Resolved events" })).toBeVisible();
+  await expect(page.getByText("Assumptions", { exact: true }).first()).toBeVisible();
+
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  const dialog = page.getByRole("dialog", { name: "Damage analysis" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: "By source" })).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: "By effect" })).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: "Resolved timeline" })).toBeVisible();
+  await dialog.getByRole("button", { name: "Close" }).click();
+  await expect(dialog).toBeHidden();
+});
+
+test("set effects come only from equipped gear", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  const style = (name: string) => page.locator(".setup-style-button", { hasText: name });
-
-  await style("Magic").click();
-  await page.getByRole("button", { name: "Perks", exact: true }).click();
-  const tectonic = page.getByRole("spinbutton", { name: /^Tectonic/ });
-  await expect(tectonic).toBeVisible();
-
-  // Magic-only entries drop off melee...
-  await style("Melee").click();
-  await expect(page.getByRole("button", { name: /Inside Sunshine/ })).toBeHidden();
-
-  // ...but one still carrying pieces must not vanish, because the engine keeps counting it.
-  await style("Magic").click();
-  await tectonic.click();
-  await expect(tectonic).toHaveAttribute("aria-valuenow", "1");
-  await style("Melee").click();
-  await expect(page.getByRole("spinbutton", { name: /^Tectonic/ })).toBeVisible();
+  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  await expect(page.getByText("Equip set pieces in Gear to activate their effects.")).toBeVisible();
+  await expect(page.getByRole("spinbutton", { name: /^Tectonic/ })).toHaveCount(0);
 });

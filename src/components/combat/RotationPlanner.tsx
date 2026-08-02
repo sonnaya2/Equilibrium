@@ -20,6 +20,7 @@ import { CombatFrameCorners } from "./CombatFrameCorners";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
+import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { useLoadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
@@ -59,6 +60,12 @@ function abilityName(id: string): string {
   return abilityById(id)?.name ?? id;
 }
 
+function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {
+  const chance = Math.max(0, ...result.hits.map((hit) => hit.critChance));
+  if (chance >= 1) return "Crit";
+  return chance > 0 ? `${Math.round(chance * 1000) / 10}% crit EV` : null;
+}
+
 export function RotationPlanner() {
   const [loadout] = useLoadout();
   const [mode, setMode] = useState<"revolution" | "manual">("revolution");
@@ -72,6 +79,7 @@ export function RotationPlanner() {
   const [ammo, setAmmo] = useState<"none" | "deathspore">("none");
   const [queue, setQueue] = useState<string[]>([]);
   const [result, setResult] = useState<RotationSummary | null>(null);
+  const [analysisOpen, setAnalysisOpen] = useState(false);
 
   useEffect(() => {
     const stored = loadState<unknown>(STORAGE_KEY, []);
@@ -89,6 +97,7 @@ export function RotationPlanner() {
   };
 
   const run = () => {
+    setAnalysisOpen(false);
     const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
     const setup = loadoutStats(loadout);
     if (useBuild) {
@@ -186,15 +195,7 @@ export function RotationPlanner() {
   };
   const activeStats = useBuild ? buildStats : manualStats;
 
-  const contributions = result
-    ? Object.entries(result.perAbility)
-        .map(([id, expected]) => ({
-          id,
-          expected,
-          share: result.totalExpected > 0 ? expected / result.totalExpected : 0,
-        }))
-        .sort((a, b) => b.expected - a.expected)
-    : [];
+  const contributions = result?.analysis.byEffect ?? [];
 
   const inputCls =
     "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
@@ -484,6 +485,16 @@ export function RotationPlanner() {
                     </div>
                   </dl>
 
+                  <div className="mt-3 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setAnalysisOpen(true)}
+                      className="combat-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800"
+                    >
+                      Analyze damage
+                    </button>
+                  </div>
+
                   <CalculationAssumptions stats={activeStats} result={result} />
 
                   <div className="mt-4 overflow-x-auto border-t border-stone-750">
@@ -510,6 +521,17 @@ export function RotationPlanner() {
                               {cast.auto ? (
                                 <span className="ml-1.5 text-xs text-parch-300">auto</span>
                               ) : null}
+                              {castCritLabel(cast.result) ? (
+                                <span
+                                  className={`ml-1.5 text-xs ${
+                                    castCritLabel(cast.result) === "Crit"
+                                      ? "rotation-crit"
+                                      : "text-parch-300"
+                                  }`}
+                                >
+                                  {castCritLabel(cast.result)}
+                                </span>
+                              ) : null}
                             </td>
                             <td className="py-2 pr-4 font-mono text-xs text-parch-50">
                               {formatNumber(cast.result.expected)}
@@ -531,7 +553,7 @@ export function RotationPlanner() {
                       >
                         <span className="text-parch-50">{abilityName(row.id)}</span>
                         <span className="font-mono text-parch-300">
-                          {formatNumber(row.expected)}
+                          {formatNumber(row.totalDamage)}
                         </span>
                         <span className="font-mono text-parch-50">
                           {Math.round(row.share * 1000) / 10}%
@@ -539,6 +561,7 @@ export function RotationPlanner() {
                       </div>
                     ))}
                   </div>
+                  <RotationEventPreview result={result} nameForId={abilityName} />
                 </>
               ) : (
                 <p className="mt-3 border border-stone-750 px-3 py-2 text-xs text-parch-300">
@@ -549,6 +572,15 @@ export function RotationPlanner() {
           ) : null}
         </div>
       )}
+      {result?.ok ? (
+        <RotationAnalysisModal
+          open={analysisOpen}
+          result={result}
+          stats={activeStats}
+          nameForId={abilityName}
+          onClose={() => setAnalysisOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

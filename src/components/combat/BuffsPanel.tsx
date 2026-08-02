@@ -1,13 +1,22 @@
 "use client";
 
 import {
+  activeEquipmentEffects,
+  activePassiveLabels,
+  EQUIPMENT_ENCHANTMENTS,
   equipmentSetById,
   setCritChanceFromDef,
   setEffectsSummary,
+  type EquipmentEnchantmentId,
 } from "@/combat/shared/equipment";
 import type { CombatStyle } from "@/combat/types";
 import { GameIcon } from "../GameIcon";
-import type { Loadout, OverloadChoice, StyleCurseChoice } from "./useLoadout";
+import {
+  toggleEquipmentEnchantment,
+  type Loadout,
+  type OverloadChoice,
+  type StyleCurseChoice,
+} from "./useLoadout";
 
 /** Wiki art already published under public/game — one consumer, so no gameArt.ts entry. */
 const CURSE_ICON = (id: Exclude<StyleCurseChoice, "none">) =>
@@ -17,6 +26,25 @@ const OVERLOAD_ICON: Record<Exclude<OverloadChoice, "none">, string> = {
   overload: "/game/upgrades/skilling-production/overload.webp",
   supreme: "/game/upgrades/skilling-production/supreme-overload-potion.webp",
   elder: "/game/upgrades/skilling-production/elder-overload-potion.webp",
+};
+const ENCHANTMENT_ICON = (id: EquipmentEnchantmentId) => `/game/upgrades/enchantments/${id}.webp`;
+const ENCHANTMENTS: Record<EquipmentEnchantmentId, { label: string; effect: string }> = {
+  agony: {
+    label: "Agony",
+    effect: "Enhances Enduring Ruin while enhanced Gloves of Passage are equipped",
+  },
+  heroism: {
+    label: "Heroism",
+    effect: "Champion's ring: 4% crit chance and +1.5% crit damage per active bleed",
+  },
+  shadows: {
+    label: "Shadows",
+    effect: "Stalker's ring with a bow: 4% crit chance and +3% crit damage",
+  },
+  metaphysics: {
+    label: "Metaphysics",
+    effect: "Channeller's ring: +2.5% crit damage for each successive channel hit",
+  },
 };
 
 const CURSE_OPTIONS: Array<{
@@ -68,7 +96,7 @@ function BuffTile({
     >
       {icon ? <GameIcon src={icon} size={34} className="icon-tile__icon" /> : <span>None</span>}
       <span className="sr-only">
-        {label} — {effect}
+        {label}: {effect}
       </span>
       <span className="icon-tip" role="tooltip">
         <strong>{label}</strong>
@@ -95,6 +123,13 @@ export function BuffsPanel({
     setLoadout({ ...loadout, buffs: { ...loadout.buffs, ...patch } });
 
   const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
+  const passives = activePassiveLabels(
+    activeEquipmentEffects({
+      style: loadout.style,
+      equipmentSlots: loadout.equipmentSlots,
+      enchantments: loadout.enchantments,
+    }),
+  );
 
   return (
     <div className="loadout-panel">
@@ -116,12 +151,32 @@ export function BuffsPanel({
               onChange={(event) => setBuffs({ vulnerability: event.target.checked })}
             />
             <GameIcon src={VULNERABILITY_ICON} size={34} className="icon-tile__icon" />
-            <span className="sr-only">Vulnerability — +10% damage taken</span>
+            <span className="sr-only">Vulnerability: +10% damage taken</span>
             <span className="icon-tip" role="tooltip">
               <strong>Vulnerability</strong>+10% damage taken by the target
             </span>
           </label>
         </div>
+      </div>
+
+      <div className="buff-group mt-3" role="group" aria-label="Account enchantments">
+        <h3 className="buff-group__title">Account enchantments</h3>
+        <div className="icon-tile-grid">
+          {EQUIPMENT_ENCHANTMENTS.map((id) => (
+            <BuffTile
+              key={id}
+              icon={ENCHANTMENT_ICON(id)}
+              label={ENCHANTMENTS[id].label}
+              effect={ENCHANTMENTS[id].effect}
+              pressed={loadout.enchantments.includes(id)}
+              onClick={() => setLoadout(toggleEquipmentEnchantment(loadout, id))}
+            />
+          ))}
+        </div>
+        <p className="mt-1.5 text-[11px] text-parch-300">
+          Account unlocks default on and activate only with their matching item. Agony assumes the
+          enhanced gloves were equipped at least 9 seconds before tick 0.
+        </p>
       </div>
 
       <div className="buff-group mt-3" role="group" aria-label="Style curse">
@@ -180,7 +235,7 @@ export function BuffsPanel({
         <h3 className="buff-group__title">Set effects</h3>
         {sets.length === 0 ? (
           <p className="mt-1 text-xs text-parch-300">
-            No armour set pieces equipped — pick gear on the Gear tab.
+            Equip set pieces in Gear to activate their effects.
           </p>
         ) : (
           <ul className="set-effect-list mt-1">
@@ -210,6 +265,19 @@ export function BuffsPanel({
               );
             })}
           </ul>
+        )}
+      </div>
+
+      <div className="buff-group mt-3">
+        <h3 className="buff-group__title">Persistent passive effects</h3>
+        {passives.length > 0 ? (
+          <ul className="mt-1 space-y-1 text-xs text-parch-100">
+            {passives.map((passive) => (
+              <li key={passive}>{passive}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-1 text-xs text-parch-300">No modeled item passives are active.</p>
         )}
       </div>
     </div>

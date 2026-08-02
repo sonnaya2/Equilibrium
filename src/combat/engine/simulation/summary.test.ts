@@ -8,24 +8,26 @@ import { createCastContext, simulate } from "./simulate";
 import { combineBranchSummaries } from "./summary";
 import { MODERNISATION_WIKI } from "../../data/sources";
 
-describe("summary — Crackling / Aftershock expected-value procs", () => {
-  it("Crackling rank 4, base 1000, 60s horizon → ~2000 EV", () => {
-    const ctx = createCastContext({
+describe("summary — Crackling / Aftershock proc state", () => {
+  it("Crackling starts ready and waits 60 seconds before another attack can trigger it", () => {
+    const s = simulate({
       ...baseInput,
       procs: { cracklingRank: 4 },
+      rotation: rotationOf(...Array(35).fill("attack")),
     });
-    const s = ctx.finish(undefined, 100);
     expect(s.ok).toBe(true);
-    expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
-    expect(s.totalExpected).toBeCloseTo(2000, 5);
-    expect(s.damageByTick[50]).toBeCloseTo(2000, 5);
+    const procs = s.events.filter((event) => event.abilityId === "crackling");
+    expect(procs.map((event) => event.tick)).toEqual([0, 102]);
+    expect(procs.every((event) => event.damage.expected === 2000)).toBe(true);
+    expect(s.perAbility.crackling).toBe(4000);
   });
 
-  it("uses the effective ability-damage input for procs without cast modifiers", () => {
-    const ctx = createCastContext({
+  it("uses base ability damage and Vulnerability, but not cast-only modifiers", () => {
+    const s = simulate({
       ...baseInput,
       base: 1140,
       procs: { cracklingRank: 4 },
+      rotation: rotationOf("attack"),
       modifiers: [
         {
           id: "test:cast-only",
@@ -35,13 +37,20 @@ describe("summary — Crackling / Aftershock expected-value procs", () => {
           apply: (state) => ({ ...state, damage: state.damage * 10 }),
           source: MODERNISATION_WIKI,
         },
+        {
+          id: "vulnerability",
+          stage: "target",
+          priority: 0,
+          applies: () => true,
+          apply: (state) => ({ ...state, damage: Math.floor(state.damage * 1.1) }),
+          source: MODERNISATION_WIKI,
+        },
       ],
     });
-    const s = ctx.finish(undefined, 100);
-    expect(s.perAbility.crackling).toBeCloseTo(2280, 5);
+    expect(s.perAbility.crackling).toBe(2508);
   });
 
-  it("Aftershock: 100k ability damage, rank 1, base 1000 → 2 procs × 318 = 636 when H allows", () => {
+  it("Aftershock: 100k ability damage, rank 1, base 1000 produces two 31.8% average blasts", () => {
     const n = 84;
     const s = simulate({
       ...baseInput,
@@ -53,17 +62,32 @@ describe("summary — Crackling / Aftershock expected-value procs", () => {
     expect(abilityExpected).toBeGreaterThanOrEqual(100_000);
     expect(s.perAbility.aftershock).toBeCloseTo(636, 5);
     expect(s.totalExpected).toBeCloseTo(abilityExpected + 636, 5);
+    expect(s.events.filter((event) => event.abilityId === "aftershock")).toHaveLength(2);
   });
 
-  it("Aftershock does not recurse on Crackling damage", () => {
-    const ctx = createCastContext({
+  it("Crackling damage contributes to Aftershock without creating a free proc", () => {
+    const s = simulate({
       ...baseInput,
       procs: { cracklingRank: 4, aftershockRank: 4 },
+      rotation: rotationOf("attack"),
     });
-    const s = ctx.finish(undefined, 100);
     expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
     expect(s.perAbility.aftershock).toBeUndefined();
-    expect(s.totalExpected).toBeCloseTo(2000, 5);
+    expect(s.totalExpected).toBeCloseTo(3200, 5);
+  });
+
+  it("delays a charged Aftershock until its 6-second interval is ready", () => {
+    const s = simulate({
+      ...baseInput,
+      base: 50_000,
+      cap: { cap: 30_000, bypass: true },
+      procs: { aftershockRank: 1 },
+      rotation: rotationOf(...Array(8).fill("attack")),
+    });
+    const procs = s.events.filter((event) => event.abilityId === "aftershock");
+    expect(procs.slice(0, 3).map((event) => event.tick)).toEqual([0, 10, 20]);
+    expect(procs.every((event) => event.damage.min === 12_000)).toBe(true);
+    expect(procs.every((event) => event.damage.max === 19_800)).toBe(true);
   });
 
   it("rank 0 procs add nothing", () => {
@@ -76,6 +100,42 @@ describe("summary — Crackling / Aftershock expected-value procs", () => {
     expect(zero.totalExpected).toBeCloseTo(plain.totalExpected, 10);
     expect(zero.perAbility.crackling).toBeUndefined();
     expect(zero.perAbility.aftershock).toBeUndefined();
+  });
+
+  it("reconciles source/effect totals and labels expected crits without faking a proc", () => {
+    const expected = simulate({
+      ...baseInput,
+      crit: { chance: 0.25 },
+      procs: { cracklingRank: 1 },
+      rotation: rotationOf("attack"),
+    });
+    expect(expected.analysis.bySource.reduce((total, row) => total + row.damage, 0)).toBeCloseTo(
+      expected.totalExpected,
+      10,
+    );
+    expect(
+      expected.analysis.byEffect.reduce((total, row) => total + row.totalDamage, 0),
+    ).toBeCloseTo(expected.totalExpected, 10);
+    const hit = expected.events.find((event) => event.abilityId === "attack")!;
+    expect(hit.damage.critical).toMatchObject({ mode: "expected", chance: 0.25 });
+    expect(hit.damage.critical!.contribution).toBeGreaterThan(0);
+
+    const guaranteed = simulate({
+      ...baseInput,
+      crit: { chance: 0, guaranteed: true },
+      rotation: rotationOf("attack"),
+    });
+    expect(guaranteed.events[0]?.damage.critical?.mode).toBe("guaranteed");
+  });
+
+  it("reports expected damage lost to the hit cap", () => {
+    const s = simulate({
+      ...baseInput,
+      base: 50_000,
+      rotation: rotationOf("attack"),
+    });
+    expect(s.analysis.capLoss).toBeGreaterThan(0);
+    expect(s.analysis.byEffect[0]?.capLoss).toBeCloseTo(s.analysis.capLoss, 10);
   });
 });
 
@@ -95,6 +155,9 @@ describe("summary finalization", () => {
       tails: "included-separately",
     });
     expect(summary.events.every((event) => event.tick < 6)).toBe(true);
+    expect(
+      summary.analysis.byEffect.find((effect) => effect.id === "bloat")?.dotDamage,
+    ).toBeGreaterThan(0);
     expect(summary.totalExpectedIncludingTails).toBeGreaterThan(summary.totalExpected);
     expect(summary.postWindowTailDamage).toBeCloseTo(
       summary.totalExpectedIncludingTails! - summary.totalExpected,

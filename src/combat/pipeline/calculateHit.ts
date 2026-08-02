@@ -32,6 +32,9 @@ export interface HitResult {
   critExpected: number;
   /** Chance-weighted mean across crit and non-crit, Damage-Potential-scaled and capped. */
   expected: number;
+  /** Same expectation before the hit cap, for analysis attribution. */
+  uncappedExpected: number;
+  capLoss: number;
 }
 
 function critModifier(multiplier: number): CombatModifier {
@@ -45,19 +48,26 @@ function critModifier(multiplier: number): CombatModifier {
   };
 }
 
-function runPass(damage: number, critMult: number | null, input: HitInput): number {
+function runPass(damage: number, critMult: number | null, input: HitInput, cap = true): number {
   const modifiers =
     critMult === null
       ? (input.modifiers ?? [])
       : [...(input.modifiers ?? []), critModifier(critMult)];
   const state = runPipeline({ damage }, modifiers, input.context ?? { style: "melee" });
   const scaled = applyDamagePotential(state.damage, input.accuracy);
-  return applyHitCap(Math.floor(scaled), input.cap ?? standardHitCap);
+  const resolved = Math.floor(scaled);
+  return cap ? applyHitCap(resolved, input.cap ?? standardHitCap) : resolved;
 }
 
 const MAX_EXACT_BAND_POINTS = 100_001;
 
-function exactMean(min: number, max: number, critMult: number | null, input: HitInput): number {
+function exactMean(
+  min: number,
+  max: number,
+  critMult: number | null,
+  input: HitInput,
+  cap = true,
+): number {
   const count = max - min + 1;
   if (count > MAX_EXACT_BAND_POINTS) {
     throw new RangeError(
@@ -65,7 +75,7 @@ function exactMean(min: number, max: number, critMult: number | null, input: Hit
     );
   }
   let total = 0;
-  for (let roll = min; roll <= max; roll++) total += runPass(roll, critMult, input);
+  for (let roll = min; roll <= max; roll++) total += runPass(roll, critMult, input, cap);
   return total / count;
 }
 
@@ -88,6 +98,16 @@ export function calculateHit(input: HitInput): HitResult {
   const nonCritExpected = exactMean(band.min, band.max, null, input);
   const critExpected =
     critMult === null ? nonCritExpected : exactMean(band.min, band.max, critMult, input);
+  const expected = (1 - p) * nonCritExpected + p * critExpected;
+  const capRule = input.cap ?? standardHitCap;
+  const canClip =
+    !capRule.bypass &&
+    Math.max(runPass(band.max, null, input, false), runPass(band.max, critMult, input, false)) >
+      capRule.cap;
+  const uncappedExpected = canClip
+    ? (1 - p) * exactMean(band.min, band.max, null, input, false) +
+      p * exactMean(band.min, band.max, critMult, input, false)
+    : expected;
 
   return {
     potential: damagePotential(input.accuracy),
@@ -98,6 +118,8 @@ export function calculateHit(input: HitInput): HitResult {
     critChance: p,
     nonCritExpected,
     critExpected,
-    expected: (1 - p) * nonCritExpected + p * critExpected,
+    expected,
+    uncappedExpected,
+    capLoss: Math.max(0, uncappedExpected - expected),
   };
 }

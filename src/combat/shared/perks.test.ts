@@ -10,8 +10,6 @@ import {
   equilibriumPerkModifier,
   eruptiveDamageBonus,
   eruptivePerkModifier,
-  expectedAftershockDamage,
-  expectedCracklingDamage,
   expectedRelentlessRefund,
   genocidalDamageBonus,
   lungingPerkModifier,
@@ -82,20 +80,6 @@ describe("shared/perks", () => {
     expect(cracklingDamageFraction(4)).toBeCloseTo(2.0, 10);
     expect(genocidalDamageBonus(100, 100)).toBe(0);
     expect(genocidalDamageBonus(1, 100)).toBeCloseTo(0.049, 10);
-  });
-
-  it("Crackling EV is fraction × base × (H / 60)", () => {
-    expect(expectedCracklingDamage(4, 1000, 60)).toBeCloseTo(2000, 10);
-    expect(expectedCracklingDamage(4, 1000, 30)).toBeCloseTo(1000, 10);
-    expect(expectedCracklingDamage(0, 1000, 60)).toBe(0);
-    expect(expectedCracklingDamage(4, 1000, 0)).toBe(0);
-  });
-
-  it("Aftershock EV is min(floor(dmg/50k), floor(H/6)) × 0.318 × rank × base (PvM avg)", () => {
-    expect(expectedAftershockDamage(1, 1000, 100_000, 12)).toBeCloseTo(636, 10);
-    expect(expectedAftershockDamage(1, 1000, 100_000, 5)).toBe(0);
-    expect(expectedAftershockDamage(1, 1000, 49_999, 60)).toBe(0);
-    expect(expectedAftershockDamage(0, 1000, 100_000, 12)).toBe(0);
   });
 
   it("skillcape constants match Beta Update 4", () => {

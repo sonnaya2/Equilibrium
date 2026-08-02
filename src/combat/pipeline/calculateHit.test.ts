@@ -42,6 +42,8 @@ describe("calculateHit", () => {
   it("applies the standard hit cap", () => {
     const r = calculateHit({ ...baseInput, base: 30_000, band: { minPct: 520, maxPct: 570 } });
     expect(r.max).toBe(30_000);
+    expect(r.uncappedExpected).toBeGreaterThan(r.expected);
+    expect(r.capLoss).toBeCloseTo(r.uncappedExpected - r.expected, 10);
   });
 
   it("uses the exact clipped integer distribution for partial caps", () => {
@@ -77,6 +79,7 @@ describe("calculateHit", () => {
     expect(r.min).toBe(35_000);
     expect(r.critMin).toBeGreaterThan(35_000);
     expect(r.expected).toBe(r.critExpected);
+    expect(r.capLoss).toBe(0);
   });
 
   it("preserves floors and Damage Potential in the exact expectation", () => {

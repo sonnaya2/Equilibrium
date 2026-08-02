@@ -71,10 +71,6 @@ export interface LoadoutPerks {
   /** Relentless: branched cost refund with its 30s lockout. Rank 0 = off, max 5. */
   relentless: number;
   relentlessLevel20: boolean;
-  tectonicPieces: number;
-  eliteTectonic: boolean;
-  tumekensPieces: number;
-  insideSunshine: boolean;
   /** Planted Feet: base Sunshine / Death's Swiftness ×1.25 duration (→ 63 ticks). */
   plantedFeet: boolean;
 }
@@ -88,6 +84,21 @@ export type PerkRankKey = {
   [K in keyof LoadoutPerks]: LoadoutPerks[K] extends number ? K : never;
 }[keyof LoadoutPerks];
 
+/** Wiki gizmo compatibility for the modeled perks. Ancient variants share their base kind. */
+export const PERK_GIZMO_KIND: Record<PerkRankKey, "weapon" | "armour" | "both"> = {
+  equilibrium: "both",
+  eruptive: "weapon",
+  biting: "both",
+  invigorating: "both",
+  impatient: "both",
+  ultimatums: "both",
+  lunging: "weapon",
+  energising: "both",
+  crackling: "both",
+  aftershock: "weapon",
+  relentless: "both",
+};
+
 export const GIZMO_SLOTS = ["weapon1", "weapon2", "armour1", "armour2"] as const;
 export type GizmoSlotId = (typeof GIZMO_SLOTS)[number];
 
@@ -95,6 +106,11 @@ export type GizmoSlotId = (typeof GIZMO_SLOTS)[number];
 export const GIZMO_CAPACITY = 2;
 
 export type GizmoLayout = Partial<Record<GizmoSlotId, PerkRankKey[]>>;
+
+export function gizmoAccepts(slot: GizmoSlotId, perk: PerkRankKey): boolean {
+  const kind = PERK_GIZMO_KIND[perk];
+  return kind === "both" || slot.startsWith(kind);
+}
 
 export type OverloadChoice = "none" | "overload" | "supreme" | "elder";
 export type StyleCurseChoice =
@@ -179,10 +195,6 @@ export const DEFAULT_LOADOUT: Loadout = {
     aftershock: 0,
     relentless: 0,
     relentlessLevel20: false,
-    tectonicPieces: 0,
-    eliteTectonic: false,
-    tumekensPieces: 0,
-    insideSunshine: false,
     plantedFeet: false,
   },
   gizmos: {},
@@ -192,7 +204,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     overload: "none",
   },
   equipmentSlots: {},
-  enchantments: [],
+  enchantments: [...EQUIPMENT_ENCHANTMENTS],
   equipmentIds: [],
 };
 
@@ -228,6 +240,7 @@ export function gizmoSlotOf(gizmos: GizmoLayout, perk: PerkRankKey): GizmoSlotId
 
 /** Place a perk on a gizmo, removing it from any other slot. Full slots reject. */
 export function placePerkOnGizmo(loadout: Loadout, slot: GizmoSlotId, perk: PerkRankKey): Loadout {
+  if (!gizmoAccepts(slot, perk)) return loadout;
   const gizmos: GizmoLayout = {};
   for (const id of GIZMO_SLOTS) {
     const held = (loadout.gizmos?.[id] ?? []).filter((p) => p !== perk);
@@ -260,6 +273,7 @@ function normalizeGizmos(raw: unknown): GizmoLayout {
     for (const entry of value) {
       if (typeof entry !== "string") continue;
       if (!PERK_RANK_KEY_SET.has(entry) || claimed.has(entry)) continue;
+      if (!gizmoAccepts(slot, entry as PerkRankKey)) continue;
       claimed.add(entry);
       held.push(entry as PerkRankKey);
       if (held.length >= GIZMO_CAPACITY) break;
@@ -479,7 +493,7 @@ export function normalizeLoadout(value: unknown): Loadout {
           ),
         ),
       ]
-    : [];
+    : [...EQUIPMENT_ENCHANTMENTS];
   const legacyIds = Array.isArray(raw.equipmentIds)
     ? raw.equipmentIds.filter((id): id is string => typeof id === "string")
     : [];
@@ -558,10 +572,6 @@ export function normalizeLoadout(value: unknown): Loadout {
       aftershock: clampRank(rawPerks.aftershock, 4),
       relentless: clampRank(rawPerks.relentless, 5),
       relentlessLevel20: rawPerks.relentlessLevel20 === true,
-      tectonicPieces: clampRank(rawPerks.tectonicPieces, 3),
-      eliteTectonic: rawPerks.eliteTectonic === true,
-      tumekensPieces: clampRank(rawPerks.tumekensPieces, 5),
-      insideSunshine: rawPerks.insideSunshine === true,
       plantedFeet: rawPerks.plantedFeet === true,
     },
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),

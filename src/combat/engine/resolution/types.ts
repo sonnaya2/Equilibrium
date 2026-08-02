@@ -1,11 +1,23 @@
 import type { HitResult } from "../../pipeline/calculateHit";
 
+export interface CriticalResolution {
+  mode: "none" | "expected" | "guaranteed";
+  chance: number;
+  /** Chance-weighted damage above the same roll's non-critical result. */
+  contribution: number;
+  /** True when a tail inherits its source hit's critical result instead of rolling again. */
+  inherited?: boolean;
+}
+
 /** Damage one scheduled event contributed. `critExpected` is diagnostic only. */
 export interface ResolvedDamage {
   min: number;
   max: number;
   expected: number;
   critExpected?: number;
+  /** Expected damage removed by the active hit cap. */
+  capLoss?: number;
+  critical?: CriticalResolution;
 }
 
 /**

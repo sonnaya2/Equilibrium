@@ -23,7 +23,7 @@ export function CalculationAssumptions({
           ],
           [
             stats.combatStyle === "necromancy" ? "Conduit tier" : "Off-hand tier",
-            stats.offhandTier ?? "—",
+            stats.offhandTier ?? "Not set",
           ],
         ] as Array<[string, string | number]>)),
     ["Equipment style damage", stats.equipmentStyleDamageBonus],
@@ -42,11 +42,19 @@ export function CalculationAssumptions({
           [string, string | number]
         >)
       : []),
+    ...(stats.procs?.cracklingRank || stats.procs?.aftershockRank
+      ? ([
+          [
+            "Invention proc timing",
+            "Crackling ready at tick 0; Aftershock starts at 0/50,000 and charges from expected landed damage",
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
   ];
   if (!manualInputsOnly && stats.combatStyle === "magic")
-    rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "—"]);
+    rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "Not set"]);
   if (!manualInputsOnly && stats.combatStyle === "ranged")
-    rows.splice(4, 0, ["Ammunition tier", stats.ammunitionTier ?? "—"]);
+    rows.splice(4, 0, ["Ammunition tier", stats.ammunitionTier ?? "Not set"]);
   if (result) {
     const denominator = Math.round(result.metric.denominatorTicks * 100) / 100;
     rows.push(
@@ -67,24 +75,29 @@ export function CalculationAssumptions({
   }
 
   return (
-    <div className="border-t border-stone-750 pt-2">
-      <h4 className="text-[11px] uppercase tracking-[0.1em] text-parch-300">
-        Calculation assumptions
-      </h4>
-      <dl className="mt-1 grid gap-x-4 text-xs sm:grid-cols-2">
-        {rows.map(([label, value]) => (
-          <div key={label} className="flex justify-between gap-2 border-b border-stone-750/60 py-1">
-            <dt className="text-parch-300">{label}</dt>
-            <dd className="text-right font-mono text-parch-50">{value}</dd>
-          </div>
-        ))}
-      </dl>
-      {stats.combatStyle.includes("necromancy") ? (
-        <p className="mt-2 text-xs text-chaos-300">
-          Partial: Haunted and Ghost healing are not included; Spectral Scythe soul rolls remain
-          deterministic-only.
-        </p>
-      ) : null}
-    </div>
+    <details className="border-t border-stone-750 pt-2">
+      <summary className="cursor-pointer text-[11px] uppercase tracking-[0.1em] text-parch-300 hover:text-parch-50">
+        Assumptions
+      </summary>
+      <div className="pt-1">
+        <dl className="grid gap-x-4 text-xs sm:grid-cols-2">
+          {rows.map(([label, value]) => (
+            <div
+              key={label}
+              className="flex justify-between gap-2 border-b border-stone-750/60 py-1"
+            >
+              <dt className="text-parch-300">{label}</dt>
+              <dd className="text-right font-mono text-parch-50">{value}</dd>
+            </div>
+          ))}
+        </dl>
+        {stats.combatStyle.includes("necromancy") ? (
+          <p className="mt-2 text-xs text-chaos-300">
+            Partial: Haunted and Ghost healing are not included; Spectral Scythe soul rolls remain
+            deterministic-only.
+          </p>
+        ) : null}
+      </div>
+    </details>
   );
 }

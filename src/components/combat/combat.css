@@ -816,6 +816,9 @@ body:has(.combat-screen) {
 }
 
 .gizmo-card__title {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
   color: var(--combat-muted);
   font-size: 0.62rem;
   letter-spacing: 0.05em;
@@ -824,18 +827,27 @@ body:has(.combat-screen) {
 
 .gizmo-perk {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 3.1rem 1.1rem;
+  grid-template-columns: 1.4rem minmax(0, 1fr) 3.1rem 1.1rem;
   align-items: center;
   gap: 0.35rem;
   margin-top: 0.3rem;
 }
 
 .gizmo-perk__name {
+  width: 100%;
+  min-height: 1.5rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-inset);
   overflow: hidden;
   color: var(--combat-text);
   font-size: 0.72rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.gizmo-perk-block + .gizmo-perk-block {
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--combat-gold-dim) 70%, transparent);
 }
 
 .combat-screen .gizmo-perk__rank {
@@ -882,6 +894,37 @@ body:has(.combat-screen) {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 1.1rem;
+}
+
+.rotation-analysis-dialog {
+  width: min(94vw, 76rem);
+  max-width: none;
+  max-height: 92vh;
+  padding: 0;
+  border: 1px solid var(--combat-gold);
+  background: var(--combat-panel);
+  color: var(--combat-text);
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 65%);
+}
+
+.rotation-analysis-dialog::backdrop {
+  background: rgb(8 7 6 / 78%);
+  backdrop-filter: blur(3px);
+}
+
+.rotation-analysis-shell {
+  display: grid;
+  gap: 1.2rem;
+  max-height: 92vh;
+  padding: 1.2rem;
+  overflow: auto;
+}
+
+.rotation-crit {
+  color: var(--color-gold-400);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .perk-flag {

@@ -111,7 +111,12 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
       });
       const scale = input.conjureBasicDamageMult ?? 1;
       return {
-        damage: { min: hit.min * scale, max: hit.max * scale, expected: hit.expected * scale },
+        damage: {
+          min: hit.min * scale,
+          max: hit.max * scale,
+          expected: hit.expected * scale,
+          capLoss: hit.capLoss * scale,
+        },
       };
     },
   });
@@ -142,7 +147,9 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
         context: input.context,
         cap: input.cap,
       });
-      return { damage: { min: hit.min, max: hit.max, expected: hit.expected } };
+      return {
+        damage: { min: hit.min, max: hit.max, expected: hit.expected, capLoss: hit.capLoss },
+      };
     },
   });
   rt.spiritHitCounts.set(key, (rt.spiritHitCounts.get(key) ?? 0) + 1);

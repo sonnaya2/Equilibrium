@@ -1,17 +1,110 @@
-import { expectedAftershockDamage, expectedCracklingDamage } from "../../shared/perks";
 import { snapshotRuntime, type Branch } from "./branch";
-import type { RotationSummary, SimulateOptions } from "./contracts";
+import type {
+  DamageEffectBreakdown,
+  DamageSourceKind,
+  RotationDamageAnalysis,
+  RotationSummary,
+  SimulateOptions,
+} from "./contracts";
 import { advanceTo } from "../runtime/clock";
+import type { ResolvedEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { TICK_SECONDS } from "../../core/ticks";
+
+const SOURCE_KINDS: readonly DamageSourceKind[] = [
+  "ability-direct",
+  "ability-dot",
+  "equipment-passive",
+  "perk",
+  "conjure-or-familiar",
+  "auto-attack",
+  "other-modeled",
+];
+
+function sourceKind(rt: SimulationRuntime, event: ResolvedEvent): DamageSourceKind {
+  if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
+  if (event.abilityId === "abyssal_parasite") return "equipment-passive";
+  if (event.family === "conjureAuto" || event.family === "command" || event.family === "poison") {
+    return "conjure-or-familiar";
+  }
+  if (event.sourceCast >= 0 && rt.recordBySeq.get(event.sourceCast)?.auto) return "auto-attack";
+  if (event.family === "dot") return "ability-dot";
+  if (event.family === "hit") return "ability-direct";
+  return "other-modeled";
+}
+
+function buildAnalysis(rt: SimulationRuntime): RotationDamageAnalysis {
+  const sourceTotals = new Map<DamageSourceKind, number>();
+  const effects = new Map<
+    string,
+    Omit<DamageEffectBreakdown, "share" | "applications" | "averagePerApplication"> & {
+      applicationKeys: Set<string>;
+    }
+  >();
+
+  for (const event of rt.events) {
+    const kind = sourceKind(rt, event);
+    sourceTotals.set(kind, (sourceTotals.get(kind) ?? 0) + event.damage.expected);
+    const current = effects.get(event.abilityId) ?? {
+      id: event.abilityId,
+      kind,
+      totalDamage: 0,
+      damagingEvents: 0,
+      directDamage: 0,
+      dotDamage: 0,
+      criticalContribution: 0,
+      capLoss: 0,
+      applicationKeys: new Set<string>(),
+    };
+    current.totalDamage += event.damage.expected;
+    current.damagingEvents += 1;
+    current.directDamage += event.family === "dot" ? 0 : event.damage.expected;
+    current.dotDamage += event.family === "dot" ? event.damage.expected : 0;
+    current.criticalContribution += event.damage.critical?.contribution ?? 0;
+    current.capLoss += event.damage.capLoss ?? 0;
+    current.applicationKeys.add(
+      event.sourceCast >= 0 ? `cast:${event.sourceCast}` : `event:${event.seq}`,
+    );
+    effects.set(event.abilityId, current);
+  }
+
+  return {
+    bySource: SOURCE_KINDS.flatMap((kind) => {
+      const damage = sourceTotals.get(kind) ?? 0;
+      return damage > 0 ? [{ kind, damage }] : [];
+    }).sort((a, b) => b.damage - a.damage),
+    byEffect: [...effects.values()]
+      .map(({ applicationKeys, ...effect }) => {
+        const applications = applicationKeys.size;
+        return {
+          ...effect,
+          share: rt.totalExpected > 0 ? effect.totalDamage / rt.totalExpected : 0,
+          applications,
+          averagePerApplication: applications > 0 ? effect.totalDamage / applications : 0,
+        };
+      })
+      .sort((a, b) => b.totalDamage - a.totalDamage),
+    directDamage: rt.events.reduce(
+      (total, event) => total + (event.family === "dot" ? 0 : event.damage.expected),
+      0,
+    ),
+    dotDamage: rt.events.reduce(
+      (total, event) => total + (event.family === "dot" ? event.damage.expected : 0),
+      0,
+    ),
+    criticalContribution: rt.events.reduce(
+      (total, event) => total + (event.damage.critical?.contribution ?? 0),
+      0,
+    ),
+    capLoss: rt.events.reduce((total, event) => total + (event.damage.capLoss ?? 0), 0),
+  };
+}
 
 /**
  * Horizon completion and result assembly. With a horizon, only events landing
  * before it count (half-open [0, horizonTicks)) and DPS divides by the horizon;
  * without one, every scheduled event lands through the natural end and DPS
- * divides by the elapsed ticks. Crackling/Aftershock stay smoothed EV added at
- * completion — their proc counting uses landed-in-horizon ability damage and
- * their lumped land tick falls inside the window.
+ * divides by the elapsed ticks.
  */
 export function finish(
   rt: SimulationRuntime,
@@ -30,37 +123,9 @@ export function finish(
     while (rt.queue.length > 0) advanceTo(rt, rt.queue.maxTick());
   }
 
-  // Ability + spirit damage only — Aftershock thresholds on this, not on procs.
-  const abilityExpected = rt.totalExpected;
   const denomTicks =
     effectiveHorizon != null && effectiveHorizon > 0 ? effectiveHorizon : rt.endTick;
   const seconds = denomTicks * TICK_SECONDS;
-
-  // Crackling: continuous EV ≈ fraction * base * (H / 60). Mid-horizon tick for chart.
-  const crackling = expectedCracklingDamage(
-    rt.input.procs?.cracklingRank ?? 0,
-    rt.input.base,
-    seconds,
-  );
-  if (crackling > 0) {
-    rt.totalExpected += crackling;
-    rt.perAbility.crackling = (rt.perAbility.crackling ?? 0) + crackling;
-    const landTick = Math.max(0, Math.floor(denomTicks / 2));
-    rt.damageByTick[landTick] = (rt.damageByTick[landTick] ?? 0) + crackling;
-  }
-  // Aftershock: floor(abilityDmg/50k) capped by H/6s; hit = 0.318 * rank * base (PvM avg).
-  const aftershock = expectedAftershockDamage(
-    rt.input.procs?.aftershockRank ?? 0,
-    rt.input.base,
-    abilityExpected,
-    seconds,
-  );
-  if (aftershock > 0) {
-    rt.totalExpected += aftershock;
-    rt.perAbility.aftershock = (rt.perAbility.aftershock ?? 0) + aftershock;
-    const landTick = Math.max(0, Math.floor(denomTicks / 2));
-    rt.damageByTick[landTick] = (rt.damageByTick[landTick] ?? 0) + aftershock;
-  }
 
   let totalExpectedIncludingTails: number | undefined;
   let postWindowTailDamage: number | undefined;
@@ -101,6 +166,7 @@ export function finish(
     perAbility: rt.perAbility,
     damageByTick: rt.damageByTick,
     events: rt.events,
+    analysis: buildAnalysis(rt),
     ...(totalExpectedIncludingTails !== undefined ? { totalExpectedIncludingTails } : {}),
     ...(postWindowTailDamage !== undefined ? { postWindowTailDamage } : {}),
   };
@@ -145,6 +211,52 @@ export function combineBranchSummaries(
   const ticks = mix((s) => s.ticks);
   const denominatorTicks =
     modal.metric.type === "fixed-window" ? modal.metric.denominatorTicks : ticks;
+  const bySource = SOURCE_KINDS.flatMap((kind) => {
+    const damage = mix(
+      (summary) => summary.analysis.bySource.find((row) => row.kind === kind)?.damage ?? 0,
+    );
+    return damage > 0 ? [{ kind, damage }] : [];
+  }).sort((a, b) => b.damage - a.damage);
+  const effectIds = new Set(
+    parts.flatMap((part) => part.summary.analysis.byEffect.map((row) => row.id)),
+  );
+  const byEffect: DamageEffectBreakdown[] = [...effectIds]
+    .map((id) => {
+      const sample = parts
+        .flatMap((part) => part.summary.analysis.byEffect)
+        .find((effect) => effect.id === id)!;
+      const value = (
+        field: keyof Pick<
+          DamageEffectBreakdown,
+          | "totalDamage"
+          | "applications"
+          | "damagingEvents"
+          | "directDamage"
+          | "dotDamage"
+          | "criticalContribution"
+          | "capLoss"
+        >,
+      ) =>
+        mix(
+          (summary) => summary.analysis.byEffect.find((effect) => effect.id === id)?.[field] ?? 0,
+        );
+      const totalDamage = value("totalDamage");
+      const applications = value("applications");
+      return {
+        id,
+        kind: sample.kind,
+        totalDamage,
+        share: totalExpected > 0 ? totalDamage / totalExpected : 0,
+        applications,
+        damagingEvents: value("damagingEvents"),
+        averagePerApplication: applications > 0 ? totalDamage / applications : 0,
+        directDamage: value("directDamage"),
+        dotDamage: value("dotDamage"),
+        criticalContribution: value("criticalContribution"),
+        capLoss: value("capLoss"),
+      };
+    })
+    .sort((a, b) => b.totalDamage - a.totalDamage);
 
   return {
     ok: failedWeight === 0,
@@ -164,6 +276,14 @@ export function combineBranchSummaries(
     perAbility,
     damageByTick,
     events: modal.events,
+    analysis: {
+      bySource,
+      byEffect,
+      directDamage: mix((summary) => summary.analysis.directDamage),
+      dotDamage: mix((summary) => summary.analysis.dotDamage),
+      criticalContribution: mix((summary) => summary.analysis.criticalContribution),
+      capLoss: mix((summary) => summary.analysis.capLoss),
+    },
     ...(modal.totalExpectedIncludingTails !== undefined
       ? { totalExpectedIncludingTails: mix((s) => s.totalExpectedIncludingTails ?? 0) }
       : {}),

@@ -11,15 +11,9 @@ import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import {
-  EQUIPMENT_ENCHANTMENTS,
-  setEffectsSummary,
-  type EquipmentEnchantmentId,
-} from "@/combat/shared/equipment";
-import {
   clearEquipment,
   equipInSlot,
   equipmentIdList,
-  toggleEquipmentEnchantment,
   toggleUnlockPin,
   unlockOnlyIds,
   type Loadout,
@@ -42,13 +36,6 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
   ranged: "Ranged",
   magic: "Magic",
   necromancy: "Necromancy",
-};
-
-const ENCHANTMENT_LABELS: Record<EquipmentEnchantmentId, string> = {
-  agony: "Agony · Passage gloves",
-  heroism: "Heroism · Champion's ring",
-  shadows: "Shadows · Stalker's ring",
-  metaphysics: "Metaphysics · Channeller's ring",
 };
 
 const SLOT_LABELS: Record<EquipmentSlot, string> = {
@@ -408,61 +395,6 @@ export function GearPanel({
             }),
           )}
         </div>
-
-        {(() => {
-          const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
-          if (sets.length === 0) return null;
-          return (
-            <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">
-              <div className="text-[11px] uppercase tracking-wide text-parch-300">
-                Set pieces equipped
-              </div>
-              <ul className="mt-1 space-y-0.5 text-parch-100">
-                {sets.map((s) => (
-                  <li key={s.setId}>
-                    <span className="text-parch-50">{s.label}</span>
-                    <span className="ml-1.5 font-mono text-parch-300">×{s.pieces}</span>
-                    <span className="ml-1.5 text-parch-300">
-                      {s.support === "modeled"
-                        ? "modeled"
-                        : s.support === "outgoing-only"
-                          ? "defensive effect not modeled"
-                          : s.support === "not-modeled"
-                            ? "set effect not modeled"
-                            : "no outgoing set bonus"}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-1 text-parch-300">
-                Set effects, including Tumeken&apos;s 5.4s activation, are assumed active before
-                tick 0. Gear swaps are not simulated.
-              </p>
-            </div>
-          );
-        })()}
-
-        <fieldset className="combat-subpanel mt-3 px-2 py-1.5 text-xs">
-          <legend className="px-1 text-[11px] uppercase tracking-wide text-parch-300">
-            Account enchantments
-          </legend>
-          <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-1">
-            {EQUIPMENT_ENCHANTMENTS.map((id) => (
-              <label key={id} className="inline-flex items-center gap-2 text-parch-100">
-                <input
-                  type="checkbox"
-                  checked={loadout.enchantments.includes(id)}
-                  onChange={() => setLoadout(toggleEquipmentEnchantment(loadout, id))}
-                />
-                {ENCHANTMENT_LABELS[id]}
-              </label>
-            ))}
-          </div>
-          <p className="mt-1 text-parch-300">
-            Enchantments apply only while their matching item is equipped. Agony assumes the
-            enhanced gloves were equipped at least 9 seconds before tick 0.
-          </p>
-        </fieldset>
 
         {activeItem ? (
           <div className="combat-subpanel mt-3 px-2 py-1.5 text-xs">

@@ -218,7 +218,11 @@ describe("loadoutStats", () => {
     const stats = loadoutStats({
       ...base,
       critChance: 97,
-      perks: { ...base.perks, tectonicPieces: 3, tumekensPieces: 3, insideSunshine: true },
+      equipmentSlots: {
+        helmet: "item:elite-tectonic-mask",
+        body: "item:elite-tectonic-robe-top",
+        legs: "item:elite-tectonic-robe-bottom",
+      },
     });
     expect(stats.critChance).toBe(1);
     const plain = loadoutStats(base);
@@ -247,7 +251,7 @@ describe("loadoutStats", () => {
     expect(stats.critChance).toBeCloseTo(0.13, 10);
   });
 
-  it("tumeken 3 gear in sunshine → +4.5% crit", () => {
+  it("passes equipped Tumeken pieces to the simulator without a static crit bonus", () => {
     const stats = loadoutStats({
       ...base,
       critChance: 10,
@@ -256,20 +260,18 @@ describe("loadoutStats", () => {
         body: "item:tumekens-resplendence-body",
         legs: "item:tumekens-resplendence-legs",
       },
-      perks: { ...base.perks, insideSunshine: true },
     });
-    expect(stats.critChance).toBeCloseTo(0.145, 10);
+    expect(stats.critChance).toBeCloseTo(0.1, 10);
     expect(stats.simulationCritChance).toBeCloseTo(0.1, 10);
     expect(stats.tumekensPieces).toBe(3);
   });
 
-  it("empty gear + zero perk set pieces → no set crit", () => {
+  it("empty gear has no set crit", () => {
     expect(
       loadoutStats({
         ...base,
         critChance: 10,
         equipmentSlots: {},
-        perks: { ...base.perks, tectonicPieces: 0, tumekensPieces: 0 },
       }).critChance,
     ).toBeCloseTo(0.1, 10);
   });
@@ -293,20 +295,6 @@ describe("loadoutStats", () => {
     ]);
   });
 
-  it("Math.max(gear, perk) does not double-count tectonic", () => {
-    const stats = loadoutStats({
-      ...base,
-      critChance: 10,
-      equipmentSlots: {
-        helmet: "item:tectonic-helm",
-        body: "item:tectonic-body",
-        legs: "item:tectonic-legs",
-      },
-      perks: { ...base.perks, tectonicPieces: 3 },
-    });
-    expect(stats.critChance).toBeCloseTo(0.13, 10);
-  });
-
   it("Biting adds +2%/rank crit (+2.2% with level-20 flag)", () => {
     const r4 = loadoutStats({ ...base, critChance: 10, perks: { ...base.perks, biting: 4 } });
     expect(r4.critChance).toBeCloseTo(0.18, 10);
@@ -327,8 +315,6 @@ describe("loadoutStats", () => {
           ...base.perks,
           equilibrium: rank,
           biting: 4,
-          tectonicPieces: 3,
-          eliteTectonic: true,
         },
       });
       expect(stats.critChance).toBe(0);

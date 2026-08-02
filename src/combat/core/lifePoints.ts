@@ -45,10 +45,7 @@ export const ABSOLUTE_LIFE_CAP = 32_000;
 /** Documented overheal classes: +10% foods (rocktail line), +15% foods
  *  (soups / giant meats), and the flat brew ceilings. One cap, largest applies. */
 export type OverhealKind =
-  | "rocktail-line"
-  | "soup-line"
-  | "saradomin-brew"
-  | "super-saradomin-brew";
+  "rocktail-line" | "soup-line" | "saradomin-brew" | "super-saradomin-brew";
 
 export interface LifePointInput {
   constitutionLevel: number;
@@ -161,8 +158,7 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     overhealCeiling = Math.min(ABSOLUTE_LIFE_CAP, 2 * overhealCeiling);
   }
 
-  const resolvedCurrent =
-    currentLife ?? temporaryMaxLife;
+  const resolvedCurrent = currentLife ?? temporaryMaxLife;
   if (!Number.isFinite(resolvedCurrent) || resolvedCurrent < 0) {
     throw new RangeError(`lifePointStats: bad current life ${currentLife}`);
   }

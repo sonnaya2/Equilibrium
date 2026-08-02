@@ -394,37 +394,22 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
 }
 
 export type SetCritContext = {
-  /** Manual UI perk piece count for tectonic / elite tectonic. */
-  tectonicPieces?: number;
-  eliteTectonic?: boolean;
-  tumekensPieces?: number;
   insideSunshine?: boolean;
 };
 
-/**
- * Effective tectonic piece count: max(gear tectonic | elite-tectonic, perk).
- * Elite rate when elite gear is worn OR perk eliteTectonic is set.
- */
-export function effectiveTectonicPieces(
-  counts: Map<string, number>,
-  ctx: SetCritContext = {},
-): { pieces: number; elite: boolean } {
+/** Effective tectonic piece count comes only from equipped catalogue records. */
+export function effectiveTectonicPieces(counts: Map<string, number>): {
+  pieces: number;
+  elite: boolean;
+} {
   const gearElite = counts.get("elite-tectonic") ?? 0;
   const gearBase = counts.get("tectonic") ?? 0;
-  const elite = gearElite > 0 || ctx.eliteTectonic === true;
-  const gear = Math.max(gearElite, gearBase);
-  const perk = Math.max(0, Math.floor(ctx.tectonicPieces ?? 0));
-  return { pieces: Math.max(gear, perk), elite };
+  return { pieces: Math.max(gearElite, gearBase), elite: gearElite > 0 };
 }
 
-/** Effective Tumeken piece count: max(gear, perk). */
-export function effectiveTumekenPieces(
-  counts: Map<string, number>,
-  ctx: SetCritContext = {},
-): number {
-  const gear = counts.get("tumekens-resplendence") ?? 0;
-  const perk = Math.max(0, Math.floor(ctx.tumekensPieces ?? 0));
-  return Math.max(gear, perk);
+/** Effective Tumeken piece count comes only from equipped catalogue records. */
+export function effectiveTumekenPieces(counts: Map<string, number>): number {
+  return counts.get("tumekens-resplendence") ?? 0;
 }
 
 function effectActive(effect: EquipmentSetEffectDef, pieces: number, ctx: SetCritContext): boolean {
@@ -453,26 +438,22 @@ export function setCritChanceFromDef(
 }
 
 /**
- * Total set crit chance for a loadout: tectonic/elite + tumeken (Sunshine),
- * using Math.max(gear, perk) so manual UI never double-counts.
+ * Total set crit chance from equipped gear. Tumeken's bonus requires a live
+ * Sunshine context; the rotation engine supplies that at hit land time.
  */
-export function loadoutSetCritChance(
-  loadout: LoadoutEquipmentView & { perks?: SetCritContext | null },
-): number {
+export function loadoutSetCritChance(loadout: LoadoutEquipmentView & SetCritContext): number {
   const counts = equippedSetCounts(loadout);
-  const ctx: SetCritContext = loadout.perks ?? {};
-  const { pieces: tecPieces, elite } = effectiveTectonicPieces(counts, ctx);
-  const tumPieces = effectiveTumekenPieces(counts, ctx);
+  const { pieces: tecPieces, elite } = effectiveTectonicPieces(counts);
+  const tumPieces = effectiveTumekenPieces(counts);
 
   let bonus = 0;
   const tecDef = equipmentSetById(elite ? "elite-tectonic" : "tectonic");
-  if (tecDef) bonus += setCritChanceFromDef(tecDef, tecPieces, ctx);
+  if (tecDef) bonus += setCritChanceFromDef(tecDef, tecPieces, loadout);
 
   const tumDef = equipmentSetById("tumekens-resplendence");
   if (tumDef) {
     bonus += setCritChanceFromDef(tumDef, tumPieces, {
-      ...ctx,
-      insideSunshine: ctx.insideSunshine === true,
+      insideSunshine: loadout.insideSunshine === true,
     });
   }
   return bonus;

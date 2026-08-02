@@ -183,7 +183,6 @@ describe("defenderDamageValue", () => {
   });
 });
 
-
 describe("aggregateEquipmentStats", () => {
   const records = new Map<string, EquipmentRecord>();
   const add = (record: EquipmentRecord) => records.set(record.id, record);
@@ -224,8 +223,24 @@ describe("aggregateEquipmentStats", () => {
   });
 
   it("resolves shields and defenders through their own rules", () => {
-    add({ ...base, id: "item:s", slot: "offhand", tier: 90, style: "melee", armourClass: "tank", shield: true });
-    add({ ...base, id: "item:d", slot: "offhand", tier: 90, style: "melee", defender: true, bonuses: { accuracy: 2458 } });
+    add({
+      ...base,
+      id: "item:s",
+      slot: "offhand",
+      tier: 90,
+      style: "melee",
+      armourClass: "tank",
+      shield: true,
+    });
+    add({
+      ...base,
+      id: "item:d",
+      slot: "offhand",
+      tier: 90,
+      style: "melee",
+      defender: true,
+      bonuses: { accuracy: 2458 },
+    });
     const shield = aggregateEquipmentStats(
       { style: "melee", equipmentSlots: { offhand: "item:s" } },
       resolve,
@@ -270,11 +285,20 @@ describe("aggregateEquipmentStats", () => {
       { style: "melee", equipmentSlots: { helmet: "item:gone" } },
       resolve,
     );
-    expect(totals.incomplete).toEqual([{ id: "item:gone", stat: "armour", reason: "missing-record" }]);
+    expect(totals.incomplete).toEqual([
+      { id: "item:gone", stat: "armour", reason: "missing-record" },
+    ]);
   });
 
   it("counts duplicate item ids once and ignores unlock pins", () => {
-    add({ ...base, id: "item:a", slot: "amulet", tier: 90, style: "hybrid", bonuses: { prayer: 5 } });
+    add({
+      ...base,
+      id: "item:a",
+      slot: "amulet",
+      tier: 90,
+      style: "hybrid",
+      bonuses: { prayer: 5 },
+    });
     const totals = aggregateEquipmentStats(
       {
         style: "melee",
@@ -288,7 +312,14 @@ describe("aggregateEquipmentStats", () => {
   });
 
   it("locks mainhand/offhand out when a two-handed weapon is equipped", () => {
-    add({ ...base, id: "item:2h", slot: "twohand", tier: 90, style: "melee", bonuses: { accuracy: 2458 } });
+    add({
+      ...base,
+      id: "item:2h",
+      slot: "twohand",
+      tier: 90,
+      style: "melee",
+      bonuses: { accuracy: 2458 },
+    });
     add({ ...base, id: "item:oh", slot: "offhand", tier: 90, style: "melee", defender: true });
     const totals = aggregateEquipmentStats(
       { style: "melee", equipmentSlots: { twohand: "item:2h", offhand: "item:oh" } },
@@ -299,8 +330,22 @@ describe("aggregateEquipmentStats", () => {
   });
 
   it("keeps weapon accuracy out of the applied term but in the displayed total", () => {
-    add({ ...base, id: "item:mh", slot: "mainhand", tier: 90, style: "melee", bonuses: { accuracy: 2458 } });
-    add({ ...base, id: "item:ring", slot: "ring", tier: 88, style: "melee", bonuses: { accuracy: 300 } });
+    add({
+      ...base,
+      id: "item:mh",
+      slot: "mainhand",
+      tier: 90,
+      style: "melee",
+      bonuses: { accuracy: 2458 },
+    });
+    add({
+      ...base,
+      id: "item:ring",
+      slot: "ring",
+      tier: 88,
+      style: "melee",
+      bonuses: { accuracy: 300 },
+    });
     const totals = aggregateEquipmentStats(
       { style: "melee", equipmentSlots: { mainhand: "item:mh", ring: "item:ring" } },
       resolve,
@@ -310,8 +355,23 @@ describe("aggregateEquipmentStats", () => {
   });
 
   it("aggregates prayer and direct crit chance regardless of style matching", () => {
-    add({ ...base, id: "item:p1", slot: "body", tier: 80, style: "ranged", armourClass: "power", bonuses: { prayer: 3 } });
-    add({ ...base, id: "item:p2", slot: "amulet", tier: 90, style: "hybrid", bonuses: { prayer: 4, critChance: 0.02 } });
+    add({
+      ...base,
+      id: "item:p1",
+      slot: "body",
+      tier: 80,
+      style: "ranged",
+      armourClass: "power",
+      bonuses: { prayer: 3 },
+    });
+    add({
+      ...base,
+      id: "item:p2",
+      slot: "amulet",
+      tier: 90,
+      style: "hybrid",
+      bonuses: { prayer: 4, critChance: 0.02 },
+    });
     const totals = aggregateEquipmentStats(
       { style: "melee", equipmentSlots: { body: "item:p1", amulet: "item:p2" } },
       resolve,

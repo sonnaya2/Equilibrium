@@ -62,6 +62,7 @@ export function resolveLightningSurge(
       min: 0,
       max: 0,
       expected: lightningSurgeExpected(sourceCritChance, surgeHit.expected),
+      capLoss: lightningSurgeExpected(sourceCritChance, surgeHit.capLoss),
     },
   };
 }

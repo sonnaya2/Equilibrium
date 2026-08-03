@@ -7,6 +7,7 @@ import { NumberField } from "./NumberField";
 import {
   canSelectRelic,
   isRelicActive,
+  MONOLITH_ACTIVE_LIMIT,
   relicsGroupedByCategory,
   resolveMonolithEnergyCap,
   sanitizeArchaeologyState,
@@ -202,6 +203,10 @@ export function ArchPanel({
           <strong className="arch-energy__values">
             {used} / {energyCap}
             <span className="arch-energy__remain"> · {remaining} free</span>
+            <span className="arch-energy__active">
+              {" "}
+              · {selectedIds.length} / {MONOLITH_ACTIVE_LIMIT} active
+            </span>
           </strong>
         </div>
         <div

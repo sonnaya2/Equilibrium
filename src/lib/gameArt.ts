@@ -510,7 +510,6 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "decorated and exquisite urn craft (morytania)": "decorated-fishing-urn",
   "decorated and exquisite urn craft infrastructure": "exquisite-fishing-urn",
   "deep sea fishing": "deep-sea-fishing",
-  "deep sea fishing hub": "deep-sea-fishing",
   "deep sea fishing hub methods": "deep-sea-fishing",
   "deep sea fishing hub methods and boosts": "deep-sea-fishing",
   "demon, dragon and undead slayer ability codices": "demon-slayer",

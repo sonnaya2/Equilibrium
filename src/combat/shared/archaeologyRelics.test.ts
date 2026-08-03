@@ -4,6 +4,7 @@ import {
   canSelectRelic,
   hasAnachronia,
   isRelicActive,
+  MONOLITH_ACTIVE_LIMIT,
   MONOLITH_ENERGY_DEFAULT,
   MONOLITH_ENERGY_EXTENDED,
   MONOLITH_EXTENDED_REGION,
@@ -20,6 +21,7 @@ import {
   withArchaeologySelection,
   withLoadoutBuffs,
 } from "@/components/combat/loadout/model";
+import { loadoutStats } from "@/components/combat/loadoutStats";
 
 describe("ARCHAEOLOGY_RELICS registry", () => {
   it("lists every expected relic with energyCost and requiredRegions", () => {
@@ -164,6 +166,119 @@ describe("energy selection helpers", () => {
   });
 });
 
+
+describe("monolith active slot limit", () => {
+  it("exports MONOLITH_ACTIVE_LIMIT of 3", () => {
+    expect(MONOLITH_ACTIVE_LIMIT).toBe(3);
+  });
+
+  it("cannot select a 4th relic under energy budget", () => {
+    // three 50-cost relics = 150 <= 500
+    const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
+    expect(totalEnergyUsed(three)).toBe(150);
+    expect(
+      canSelectRelic({ relicId: "ring_of_luck", selectedIds: three, energyCap: 500 }),
+    ).toBe(false);
+    expect(
+      toggleArchaeologyRelic({
+        relicId: "ring_of_luck",
+        selectedIds: three,
+        energyCap: 500,
+      }),
+    ).toEqual(three);
+  });
+
+  it("sanitize trims to 3 from the end", () => {
+    const four = [
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+      "ring_of_luck",
+    ];
+    expect(
+      sanitizeSelectedRelics({
+        selectedIds: four,
+        energyCap: 500,
+        unlockedRegions: [],
+      }),
+    ).toEqual(["font_of_life", "shadows_grace", "unexpected_diplomacy"]);
+  });
+
+  it("deselect still works when at 3", () => {
+    const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
+    expect(
+      canSelectRelic({ relicId: "font_of_life", selectedIds: three, energyCap: 500 }),
+    ).toBe(true);
+    expect(
+      toggleArchaeologyRelic({
+        relicId: "font_of_life",
+        selectedIds: three,
+        energyCap: 500,
+      }),
+    ).toEqual(["shadows_grace", "unexpected_diplomacy"]);
+  });
+
+  it("ignores unknown ids when counting active slots", () => {
+    // raw length is 3 but only 2 known; room for one more
+    const withJunk = ["font_of_life", "ghost", "not_a_relic"];
+    expect(
+      canSelectRelic({ relicId: "shadows_grace", selectedIds: withJunk, energyCap: 500 }),
+    ).toBe(true);
+    const threeKnownPlusJunk = [
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+      "ghost",
+    ];
+    expect(
+      canSelectRelic({
+        relicId: "ring_of_luck",
+        selectedIds: threeKnownPlusJunk,
+        energyCap: 500,
+      }),
+    ).toBe(false);
+  });
+
+  it("energy and slot limits both apply", () => {
+    // 3 small under energy still capped at 3
+    const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
+    expect(totalEnergyUsed(three) + 50).toBeLessThanOrEqual(500);
+    expect(
+      canSelectRelic({ relicId: "ring_of_luck", selectedIds: three, energyCap: 500 }),
+    ).toBe(false);
+
+    // 2 large fill energy before slots: heightened 350 + conservation 350 fails energy first
+    const twoHeavy = ["heightened_senses"];
+    expect(
+      canSelectRelic({
+        relicId: "conservation_of_energy",
+        selectedIds: twoHeavy,
+        energyCap: 500,
+      }),
+    ).toBe(false);
+
+    // sanitizeArchaeologyState also applies slot trim via sanitizeSelectedRelics
+    const state = sanitizeArchaeologyState(
+      {
+        selectedIds: [
+          "font_of_life",
+          "shadows_grace",
+          "unexpected_diplomacy",
+          "ring_of_luck",
+        ],
+        energyCap: 500,
+      },
+      ["misthalin"],
+    );
+    expect(state.selectedIds).toHaveLength(3);
+    expect(state.selectedIds).toEqual([
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+    ]);
+  });
+});
+
 describe("loadout archaeology persistence", () => {
   it("defaults empty archaeology at 500 energy", () => {
     expect(DEFAULT_LOADOUT.archaeology).toEqual({ selectedIds: [], energyCap: 500 });
@@ -208,5 +323,64 @@ describe("loadout archaeology persistence", () => {
     });
     expect(next.archaeology.energyCap).toBe(500);
     expect(totalEnergyUsed(next.archaeology.selectedIds)).toBeLessThanOrEqual(500);
+  });
+
+  it("trims 4 selectedIds to MONOLITH_ACTIVE_LIMIT on normalizeLoadout", () => {
+    const four = [
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+      "ring_of_luck",
+    ];
+    expect(totalEnergyUsed(four)).toBeLessThanOrEqual(500);
+    const next = normalizeLoadout({
+      archaeology: { energyCap: 500, selectedIds: four },
+    });
+    expect(next.archaeology.selectedIds).toHaveLength(MONOLITH_ACTIVE_LIMIT);
+    expect(next.archaeology.selectedIds).toEqual([
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+    ]);
+  });
+});
+
+describe("loadoutStats archaeology active limit", () => {
+  it("with unlockedRegions trims 4 relics before applying full combat relics", () => {
+    // 3 cheap + berserkers_fury last; sanitize pops fury so fury is inactive.
+    const four = [
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+      "berserkers_fury",
+    ];
+    const loadout = normalizeLoadout({
+      archaeology: { energyCap: 500, selectedIds: four },
+      // force buff flag as if legacy/stale storage claimed fury on
+      buffs: { berserkersFury: true },
+    });
+    // normalize already trims selection; re-inflate raw selection via direct object
+    const rawFour = {
+      ...loadout,
+      archaeology: { energyCap: 500 as const, selectedIds: four },
+      buffs: { ...loadout.buffs, berserkersFury: true },
+    };
+    const stats = loadoutStats(rawFour, {
+      unlockedRegions: ["misthalin", "morytania", "desert"],
+    });
+    expect(stats.berserkersFury.active).toBe(false);
+
+    const keepFury = {
+      ...loadout,
+      archaeology: {
+        energyCap: 500 as const,
+        selectedIds: ["font_of_life", "shadows_grace", "berserkers_fury"],
+      },
+      buffs: { ...loadout.buffs, berserkersFury: true },
+    };
+    const withFury = loadoutStats(keepFury, {
+      unlockedRegions: ["misthalin", "morytania", "desert"],
+    });
+    expect(withFury.berserkersFury.active).toBe(true);
   });
 });

@@ -4,7 +4,6 @@ import type { SourceReference } from "../types";
  * Conservation of Energy (Archaeology monolith relic).
  * https://runescape.wiki/w/Conservation_of_Energy
  * After using an ultimate, refund 10 adrenaline once per cast.
- * Stacks additively with Ring of Vigour (RoV not modeled here).
  * Onslaught is excluded when present in the catalogue.
  */
 

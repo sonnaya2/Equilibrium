@@ -141,7 +141,7 @@ export function CalculationAssumptions({
             "Berserker's Fury",
             `+${PERCENT_FORMAT.format(stats.berserkersFury.bonus)} · ${formatNumber(
               stats.berserkersFury.currentLifePoints,
-            )}/${formatNumber(stats.berserkersFury.maximumLifePoints)} LP (${stats.berserkersFury.currentHealthPercent.toFixed(0)}%) · after roll, before crit · not bleeds · Dharok set not modeled (would take priority)`,
+            )}/${formatNumber(stats.berserkersFury.maximumLifePoints)} LP (${stats.berserkersFury.currentHealthPercent.toFixed(0)}%) · after roll, before crit · not bleeds`,
           ],
         ] as Array<[string, string | number]>)
       : []),

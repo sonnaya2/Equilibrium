@@ -6,11 +6,14 @@ import type { RegionId } from "@/league";
  * Energy: tutorial/research ladder to 500; Mysterious City +150 -> 650.
  * Equilibrium product: 650 when Anachronia is unlocked (Orthen / City path).
  * Active energy budget is simultaneous (not permanently spent).
+ * Max 3 active powers at once (MONOLITH_ACTIVE_LIMIT).
  */
 
 export const MONOLITH_ENERGY_DEFAULT = 500 as const;
 export const MONOLITH_ENERGY_EXTENDED = 650 as const;
 export type MonolithEnergyCap = typeof MONOLITH_ENERGY_DEFAULT | typeof MONOLITH_ENERGY_EXTENDED;
+/** In-game max simultaneous active relic powers (plus energy budget). */
+export const MONOLITH_ACTIVE_LIMIT = 3 as const;
 
 /** League region that unlocks the 650 energy cap. */
 export const MONOLITH_EXTENDED_REGION: RegionId = "anachronia";
@@ -91,6 +94,7 @@ export const ARCHAEOLOGY_RELICS: readonly ArchaeologyRelicDefinition[] = [
     energyCost: 100,
     category: "combat",
     requiredRegions: ["havenhythe"],
+    icon: PERM("hungry-like-the-wolf"),
     effect: "Food heals +100 LP and no longer costs adrenaline.",
     implementation: "energy-only",
   },
@@ -100,6 +104,7 @@ export const ARCHAEOLOGY_RELICS: readonly ArchaeologyRelicDefinition[] = [
     energyCost: 50,
     category: "combat",
     requiredRegions: ["misthalin"],
+    icon: PERM("shadows-grace"),
     effect:
       "Surge, Escape, Bladed Dive, Dive, and Barge cooldowns -50%. Does not stack with Mobile.",
     implementation: "energy-only",
@@ -140,6 +145,7 @@ export const ARCHAEOLOGY_RELICS: readonly ArchaeologyRelicDefinition[] = [
     energyCost: 150,
     category: "combat",
     requiredRegions: ["misthalin"],
+    icon: PERM("persistent-rage"),
     effect: "Adrenaline generates out of combat instead of draining.",
     implementation: "energy-only",
   },
@@ -311,6 +317,7 @@ export const ARCHAEOLOGY_RELICS: readonly ArchaeologyRelicDefinition[] = [
     energyCost: 50,
     category: "luck",
     requiredRegions: ["morytania"],
+    icon: PERM("ring-of-luck"),
     effect: "Always gain tier 1 luck.",
     implementation: "energy-only",
   },
@@ -437,7 +444,7 @@ export function isRelicActive(selectedIds: readonly string[], relicId: string): 
   return selectedIds.includes(relicId);
 }
 
-/** Drop unknown ids; trim from the end while over energyCap. */
+/** Drop unknown ids; trim from the end while over energyCap or over active limit. */
 export function sanitizeSelectedRelics(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
@@ -453,6 +460,9 @@ export function sanitizeSelectedRelics(input: {
   }
   const cap = input.energyCap;
   while (kept.length > 0 && totalEnergyUsed(kept) > cap) {
+    kept.pop();
+  }
+  while (kept.length > MONOLITH_ACTIVE_LIMIT) {
     kept.pop();
   }
   return kept;
@@ -487,10 +497,14 @@ export function canSelectRelic(input: {
   if (input.selectedIds.includes(input.relicId)) return true;
   const relic = BY_ID.get(input.relicId);
   if (!relic) return false;
+  const active = new Set(
+    input.selectedIds.filter((id) => typeof id === "string" && BY_ID.has(id)),
+  );
+  if (active.size >= MONOLITH_ACTIVE_LIMIT) return false;
   return totalEnergyUsed(input.selectedIds) + relic.energyCost <= input.energyCap;
 }
 
-/** Toggle id; select is a no-op when over energy. */
+/** Toggle id; select is a no-op when over energy or at active limit. */
 export function toggleArchaeologyRelic(input: {
   relicId: string;
   selectedIds: readonly string[];

@@ -139,7 +139,7 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
     "Gear",
     "Stats",
     "Buffs",
-    "Archaeology",
+    "Arch",
     "Invention",
     "Abilities",
     "Target",
@@ -150,8 +150,8 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(doll.getByText("Main-hand")).toBeVisible();
   await expect(doll.getByText("Empty").first()).toBeVisible();
 
-  await page.getByRole("button", { name: "Archaeology", exact: true }).click();
-  await expect(page.getByText("No Archaeology combat buffs are modeled yet.")).toBeVisible();
+  await page.getByRole("button", { name: "Arch", exact: true }).click();
+  await expect(page.getByText("No Arch combat buffs are modeled yet.")).toBeVisible();
 
   await page.getByRole("button", { name: "Invention", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
@@ -271,7 +271,7 @@ test("summary reacts to temporary life effects and a manual Damage Potential ove
 
 test("setup summary and every editor subtab stay within a phone viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const tab of ["Gear", "Stats", "Buffs", "Archaeology", "Invention", "Abilities", "Target"]) {
+  for (const tab of ["Gear", "Stats", "Buffs", "Arch", "Invention", "Abilities", "Target"]) {
     await page.getByRole("button", { name: tab, exact: true }).click();
     await expect(summary(page)).toBeVisible();
     expect(

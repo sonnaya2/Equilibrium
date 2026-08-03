@@ -17,7 +17,7 @@ const SUB_TABS = [
   "Gear",
   "Stats",
   "Buffs",
-  "Archaeology",
+  "Arch",
   "Invention",
   "Abilities",
   "Target",
@@ -28,17 +28,17 @@ const SUB_TAB_ICONS: Record<SubTab, string> = {
   Gear: "/game/skills/defence.webp",
   Stats: "/game/skills/constitution.webp",
   Buffs: "/game/skills/prayer.webp",
-  Archaeology: "/game/skills/archaeology.webp",
+  Arch: "/game/skills/archaeology.webp",
   Invention: "/game/skills/invention.webp",
   Abilities: "/game/combat/melee-abilities.webp",
   Target: "/game/combat/critical-strike.webp",
 };
 
-function ArchaeologyPanel() {
+function ArchPanel() {
   return (
     <div className="loadout-panel">
-      <h2 className="combat-section-title text-sm font-medium text-parch-50">Archaeology</h2>
-      <p className="mt-2 text-sm text-parch-300">No Archaeology combat buffs are modeled yet.</p>
+      <h2 className="combat-section-title text-sm font-medium text-parch-50">Arch</h2>
+      <p className="mt-2 text-sm text-parch-300">No Arch combat buffs are modeled yet.</p>
     </div>
   );
 }
@@ -212,7 +212,7 @@ export function SetupTab({
           {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Buffs" ? <BuffsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Archaeology" ? <ArchaeologyPanel /> : null}
+          {subTab === "Arch" ? <ArchPanel /> : null}
           {subTab === "Invention" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Abilities" ? <QuickCalculator loadout={loadout} /> : null}
           {subTab === "Target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}

@@ -131,6 +131,10 @@ export function normalizeCombatContext(ctx: CombatContext | undefined): unknown 
     area: ctx.area ?? null,
     targetTiles: ctx.targetTiles ?? null,
     blessingGenerated: ctx.blessingGenerated === true,
+    damageSource: ctx.damageSource ?? null,
+    provenance: ctx.provenance
+      ? { kind: ctx.provenance.kind, detail: ctx.provenance.detail ?? null }
+      : null,
   };
 }
 

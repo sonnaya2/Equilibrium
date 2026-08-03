@@ -4,6 +4,10 @@ import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_WIKI } from "../data/sources";
+import {
+  contextWithProvenance,
+  type DamageProvenance,
+} from "../shared/damageProvenance";
 import { preciseMinHitAddition } from "../shared/perks";
 import { runPipeline } from "./modifierPipeline";
 import type { CombatContext, CombatModifier } from "../types";
@@ -18,6 +22,8 @@ export interface HitInput {
   accuracy: number;
   crit: CritLayers;
   context?: CombatContext;
+  /** Explicit provenance; merged into context when set (preferred over legacy flags alone). */
+  provenance?: DamageProvenance;
   modifiers?: CombatModifier[];
   cap?: HitCapRule;
   /** Precise perk rank 1-6; raises min hit by 1.5% of max per rank. */
@@ -58,6 +64,10 @@ function critModifier(multiplier: number): CombatModifier {
   };
 }
 
+function resolvedHitContext(input: SharedHitInput): CombatContext {
+  return contextWithProvenance(input.context, input.provenance);
+}
+
 function runPass(
   damage: number,
   critMult: number | null,
@@ -68,7 +78,7 @@ function runPass(
     critMult === null
       ? (input.modifiers ?? [])
       : [...(input.modifiers ?? []), critModifier(critMult)];
-  const state = runPipeline({ damage }, modifiers, input.context ?? { style: "melee" });
+  const state = runPipeline({ damage }, modifiers, resolvedHitContext(input));
   const scaled = applyDamagePotential(state.damage, input.accuracy);
   const resolved = Math.floor(scaled);
   return cap ? applyHitCap(resolved, input.cap ?? standardHitCap) : resolved;

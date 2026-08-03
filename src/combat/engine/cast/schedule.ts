@@ -77,6 +77,13 @@ export function scheduleCastEvents(
     // bleed tick landing on the cast tick is still a bleed tick.
     const isDot = hitSpec.dot === true || prepared.channelAsDot;
     const originKind = isCommand ? "command" : isDot ? "dot" : "direct";
+    const provenance = isCommand
+      ? { kind: "conjure_command" as const }
+      : isDot
+        ? { kind: "player_dot" as const, detail: hitSpec.dotKind ?? hitSpec.bleedId }
+        : ability.autoAttack
+          ? { kind: "player_auto" as const }
+          : { kind: "player_direct" as const };
     rt.queue.push({
       tick: landTick,
       seq,
@@ -88,6 +95,7 @@ export function scheduleCastEvents(
       procEligible: !isDot,
       recursionAllowed: false,
       originKind,
+      provenance,
       cancelOwner: castSeq,
       ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
       ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
@@ -125,6 +133,9 @@ export function scheduleCastEvents(
         procEligible: !derived.dot,
         recursionAllowed: false,
         originKind: derived.dot ? "dot" : "direct",
+        provenance: derived.dot
+          ? { kind: "derived_tail" as const, detail: ability.id }
+          : { kind: "derived_bounce" as const, detail: ability.id },
         cancelOwner: castSeq,
         derivedFrom: sourceSeq,
         resolve: (eventRt) => resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct),

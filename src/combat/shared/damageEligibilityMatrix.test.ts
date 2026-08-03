@@ -1,0 +1,361 @@
+import { describe, expect, it } from "vitest";
+import { blessingHitEligibility } from "../league/damage";
+import { runPipeline } from "../pipeline/modifierPipeline";
+import { mulFloor } from "../core/rounding";
+import {
+  capabilitiesOf,
+  type DamageCapabilities,
+  type DamageProvenance,
+  type DamageProvenanceKind,
+} from "./damageProvenance";
+import { isOnHitPlayerDamage } from "./onHitEligibility";
+import { FULL_SLAYER_HELMET_ITEM_ID, resolveSlayerHelmet, slayerHelmetDamageModifier } from "./slayerHelmet";
+
+/**
+ * Event-family capability matrix. Columns are product gates; rows are provenance kinds.
+ * Values are asserted cell-by-cell so a kind cannot silently inherit player_direct.
+ */
+
+type CapKey = keyof DamageCapabilities;
+
+const CAP_KEYS: CapKey[] = [
+  "playerAttack",
+  "directHit",
+  "onHitGear",
+  "blessingRider",
+  "blessingOnHit",
+  "canCrit",
+  "canGenerateResources",
+  "canTriggerProcs",
+  "recursiveDamage",
+  "prayerMods",
+];
+
+/** Expected capability rows (product law). */
+const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
+  player_direct: {
+    playerAttack: true,
+    directHit: true,
+    onHitGear: true,
+    blessingRider: true,
+    blessingOnHit: true,
+    canCrit: true,
+    canGenerateResources: true,
+    canTriggerProcs: true,
+    recursiveDamage: true,
+    prayerMods: true,
+  },
+  player_auto: {
+    playerAttack: true,
+    directHit: true,
+    onHitGear: true,
+    blessingRider: true,
+    blessingOnHit: true,
+    canCrit: true,
+    canGenerateResources: true,
+    canTriggerProcs: true,
+    recursiveDamage: true,
+    prayerMods: true,
+  },
+  player_dot: {
+    playerAttack: true,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: true,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: true,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  conjure_auto: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  conjure_poison: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  conjure_command: {
+    playerAttack: true,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: true,
+    blessingOnHit: false,
+    canCrit: true,
+    canGenerateResources: true,
+    canTriggerProcs: true,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  equipment_proc: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: true,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: true,
+  },
+  invention_proc: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  attached: {
+    playerAttack: true,
+    directHit: false,
+    onHitGear: true,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: true,
+  },
+  blessing: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: true,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  derived_bounce: {
+    playerAttack: true,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: true,
+    blessingOnHit: true,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: true,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  derived_tail: {
+    playerAttack: true,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: true,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+  reflected: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+  },
+};
+
+describe("damage eligibility matrix (capabilitiesOf)", () => {
+  for (const kind of Object.keys(MATRIX) as DamageProvenanceKind[]) {
+    it(`kind ${kind}: every capability cell matches the matrix`, () => {
+      const expected = MATRIX[kind];
+      const actual = capabilitiesOf({ kind });
+      for (const key of CAP_KEYS) {
+        expect(actual[key], `${kind}.${key}`).toBe(expected[key]);
+      }
+    });
+  }
+
+  it("DoTs never onHitGear", () => {
+    expect(capabilitiesOf({ kind: "player_dot" }).onHitGear).toBe(false);
+    expect(capabilitiesOf({ kind: "conjure_poison" }).onHitGear).toBe(false);
+    expect(capabilitiesOf({ kind: "derived_tail" }).onHitGear).toBe(false);
+  });
+
+  it("commands: no onHitGear, riders yes", () => {
+    const c = capabilitiesOf({ kind: "conjure_command" });
+    expect(c.onHitGear).toBe(false);
+    expect(c.blessingRider).toBe(true);
+    expect(c.blessingOnHit).toBe(false);
+  });
+
+  it("conjure auto is not player direct", () => {
+    const c = capabilitiesOf({ kind: "conjure_auto" });
+    expect(c.playerAttack).toBe(false);
+    expect(c.directHit).toBe(false);
+    expect(c.onHitGear).toBe(false);
+  });
+
+  it("blessing cannot recurse (recursiveDamage false, riders false on blessing kind)", () => {
+    const c = capabilitiesOf({ kind: "blessing" });
+    expect(c.recursiveDamage).toBe(false);
+    expect(c.blessingRider).toBe(false);
+    expect(c.blessingOnHit).toBe(false);
+  });
+
+  it("attached: canTriggerProcs false", () => {
+    expect(capabilitiesOf({ kind: "attached", detail: "searing_winds" }).canTriggerProcs).toBe(
+      false,
+    );
+  });
+});
+
+describe("blessingHitEligibility from capabilities", () => {
+  it("mirrors capability columns for legacy sources", () => {
+    expect(blessingHitEligibility("direct", false)).toEqual({ rider: true, onHit: true });
+    expect(blessingHitEligibility("dot", false)).toEqual({ rider: true, onHit: false });
+    expect(blessingHitEligibility("command", false)).toEqual({ rider: true, onHit: false });
+    expect(blessingHitEligibility("conjure", false)).toEqual({ rider: false, onHit: false });
+    expect(blessingHitEligibility("proc", false)).toEqual({ rider: false, onHit: false });
+    expect(blessingHitEligibility("blessing", false)).toEqual({ rider: false, onHit: false });
+  });
+
+  it("attached excludes all sources", () => {
+    for (const source of ["direct", "dot", "command"] as const) {
+      expect(blessingHitEligibility(source, true)).toEqual({ rider: false, onHit: false });
+    }
+  });
+
+  it("accepts DamageProvenance objects", () => {
+    expect(blessingHitEligibility({ kind: "player_auto" }, false)).toEqual({
+      rider: true,
+      onHit: true,
+    });
+    expect(blessingHitEligibility({ kind: "equipment_proc" }, false)).toEqual({
+      rider: false,
+      onHit: false,
+    });
+  });
+});
+
+describe("Lightning Surge + Slayer Helmet (bug fix)", () => {
+  it("equipment_proc provenance does not apply helm mult", () => {
+    const r = resolveSlayerHelmet({
+      equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
+      onSlayerTask: true,
+      style: "magic",
+    });
+    const mod = slayerHelmetDamageModifier(r)!;
+    expect(mod).toBeTruthy();
+    const direct = runPipeline(
+      { damage: 1000 },
+      [mod],
+      { style: "magic", damageSource: "direct", provenance: { kind: "player_direct" } },
+    ).damage;
+    expect(direct).toBe(mulFloor(1000, 1.075));
+
+    const surge = runPipeline(
+      { damage: 1000 },
+      [mod],
+      {
+        style: "magic",
+        damageSource: "proc",
+        provenance: { kind: "equipment_proc", detail: "lightning_surge" },
+      },
+    ).damage;
+    expect(surge).toBe(1000);
+    expect(
+      isOnHitPlayerDamage({
+        style: "magic",
+        provenance: { kind: "equipment_proc", detail: "lightning_surge" },
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("attached on-hit gear follows parent", () => {
+  it("attached kind has onHitGear true (direct-parent path)", () => {
+    expect(capabilitiesOf({ kind: "attached", detail: "searing_winds" }).onHitGear).toBe(true);
+  });
+
+  it("DoT parent provenance still blocks helm (SW under Corruption Shot)", () => {
+    const r = resolveSlayerHelmet({
+      equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
+      onSlayerTask: true,
+      style: "ranged",
+    });
+    const mod = slayerHelmetDamageModifier(r)!;
+    // Live castHit uses parent provenance when parent.onHitGear is false.
+    const underDot = runPipeline(
+      { damage: 1000 },
+      [mod],
+      {
+        style: "ranged",
+        damageSource: "dot",
+        provenance: { kind: "player_dot", detail: "corruption_shot" },
+      },
+    ).damage;
+    expect(underDot).toBe(1000);
+
+    const underDirect = runPipeline(
+      { damage: 1000 },
+      [mod],
+      {
+        style: "ranged",
+        damageSource: "direct",
+        provenance: { kind: "attached", detail: "searing_winds" },
+      },
+    ).damage;
+    expect(underDirect).toBe(mulFloor(1000, 1.075));
+  });
+});
+
+describe("command analysis parity", () => {
+  it("conjure_command is not onHitGear and not blessing onHit", () => {
+    const c = capabilitiesOf({ kind: "conjure_command" });
+    expect(c.onHitGear).toBe(false);
+    expect(c.blessingRider).toBe(true);
+    expect(c.blessingOnHit).toBe(false);
+    expect(blessingHitEligibility({ kind: "conjure_command" }, false)).toEqual({
+      rider: true,
+      onHit: false,
+    });
+  });
+});
+
+describe("matrix column labels (documentation)", () => {
+  it("exposes the product gate columns used by analysis", () => {
+    // Hit counters ~ canTriggerProcs; Vulnerability is target-stage (not gated here);
+    // Prayer/window ~ prayerMods; Crit ~ canCrit; Invention proc gen ~ canTriggerProcs;
+    // Resource gen ~ canGenerateResources; Blessing riders/on-hit ~ blessingRider/OnHit.
+    const sample: DamageProvenance = { kind: "player_direct" };
+    const caps = capabilitiesOf(sample);
+    expect(Object.keys(caps).sort()).toEqual([...CAP_KEYS].sort());
+  });
+});

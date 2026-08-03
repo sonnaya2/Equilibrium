@@ -109,6 +109,8 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
     attached: false,
     procEligible: false,
     recursionAllowed: false,
+    originKind: "conjure",
+    provenance: { kind: "conjure_auto", detail: spirit.id },
     resolve: (eventRt) => {
       // Spirit-internal mult (skeleton rage) stays on the band; the First Necro
       // set mult is post-hit damage so intermediate AD rounding does not distort
@@ -120,6 +122,10 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
       const scale = input.conjureBasicDamageMult ?? 1;
       const modifiers = conjureModifiers(eventRt);
       const hitMods = scale === 1 ? modifiers : [...modifiers, conjureBasicDamageModifier(scale)];
+      const provenance = {
+        kind: "conjure_auto" as const,
+        detail: spirit.id,
+      };
       const hit = calculateHit({
         base: input.base,
         band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },
@@ -127,10 +133,12 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
         modifiers: hitMods,
+        provenance,
         context: {
           style: input.context?.style ?? "necromancy",
           ...input.context,
           damageSource: "conjure",
+          provenance,
         },
         cap: input.cap,
       });
@@ -161,7 +169,10 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
     attached: false,
     procEligible: false,
     recursionAllowed: false,
+    originKind: "conjure",
+    provenance: { kind: "conjure_poison", detail: "putrid_zombie" },
     resolve: (eventRt) => {
+      const provenance = { kind: "conjure_poison" as const, detail: "putrid_zombie" };
       const hit = calculateHit({
         base: input.base,
         band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
@@ -169,11 +180,13 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
         modifiers: conjureModifiers(eventRt),
+        provenance,
         context: {
           style: input.context?.style ?? "necromancy",
           ...input.context,
           damageSource: "conjure",
           dotKind: "poison",
+          provenance,
         },
         cap: input.cap,
       });

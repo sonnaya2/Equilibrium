@@ -1,3 +1,5 @@
+import type { DamageProvenance } from "./shared/damageProvenance";
+
 export type SourceKind = "runescape-wiki" | "jagex" | "rs-analysis" | "pvme" | "derived";
 
 export interface SourceReference {
@@ -19,7 +21,7 @@ export type BleedId = "dismember" | "slaughter" | "massacre" | "abyssal-parasite
 export type ModifierStage =
   "base" | "ability" | "onCast" | "roll" | "critical" | "onHit" | "target" | "postHit";
 
-/** Outgoing provenance for on-hit gear gates (slayer helm, salve). */
+/** Outgoing provenance for on-hit gear gates (slayer helm, salve). Projection of DamageProvenance. */
 export type OutgoingDamageSource = "direct" | "dot" | "conjure" | "command" | "proc" | "blessing";
 
 export interface CombatContext {
@@ -31,8 +33,10 @@ export interface CombatContext {
   area?: "aoe" | "multi-target";
   targetTiles?: number;
   blessingGenerated?: boolean;
-  /** Omit or "direct" for player on-hit gear; set for DoT/conjure/command paths. */
+  /** Legacy projection; prefer provenance. Omit or "direct" for player on-hit gear. */
   damageSource?: OutgoingDamageSource;
+  /** Capability-derived provenance; required on scheduled/resolved hit paths. */
+  provenance?: DamageProvenance;
 }
 
 export interface DamageState {

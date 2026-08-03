@@ -35,6 +35,8 @@ export function onMagicHitLanded(
       attached: false,
       procEligible: false,
       recursionAllowed: false,
+      originKind: "proc",
+      provenance: { kind: "equipment_proc", detail: "lightning_surge" },
       resolve: (eventRt, at) =>
         resolveLightningSurge(eventRt, at, event.seq, ability, surge.snap, event.hitIndex),
     });

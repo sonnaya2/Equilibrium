@@ -34,10 +34,18 @@ function applyProcModifiers(
       : (rt.input.modifiers ?? []);
   const modifiers = configured.filter((modifier) => modifier.id === "vulnerability");
   if (modifiers.length === 0) return damage;
+  const provenance = {
+    kind: "invention_proc" as const,
+    detail: event.abilityId,
+  };
   return runPipeline(
     { damage },
     modifiers,
-    rt.input.context ?? { style: ability?.style ?? "melee" },
+    {
+      ...(rt.input.context ?? { style: ability?.style ?? "melee" }),
+      damageSource: "proc",
+      provenance,
+    },
   ).damage;
 }
 
@@ -120,6 +128,8 @@ export function applyInventionProcs(
       attached: false,
       procEligible: false,
       recursionAllowed: false,
+      originKind: "proc",
+      provenance: { kind: "invention_proc", detail: "crackling" },
       resolve: () => ({ damage: procDamage }),
     });
   }
@@ -171,6 +181,8 @@ export function applyInventionProcs(
     attached: false,
     procEligible: false,
     recursionAllowed: false,
+    originKind: "proc",
+    provenance: { kind: "invention_proc", detail: "aftershock" },
     resolve: () => ({ damage: procDamage }),
   });
 }

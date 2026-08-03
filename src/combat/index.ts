@@ -37,6 +37,7 @@ export * from "./shared/ringOfVigour";
 export * from "./shared/slayerHelmet";
 export * from "./shared/salveAmulet";
 export * from "./shared/onHitEligibility";
+export * from "./shared/damageProvenance";
 export * from "./shared/archaeologyRelics";
 export * from "./shared/potions";
 export * from "./styles/melee/bloodlust";

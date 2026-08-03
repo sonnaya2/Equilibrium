@@ -15,6 +15,7 @@ import {
   findConjure,
   skeletonRageMult,
 } from "../../styles/necromancy/conjures";
+import { capabilitiesOf } from "../../shared/damageProvenance";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
@@ -99,6 +100,28 @@ export function resolveCastHit(
     const mult = skeletonRageMult(spirit?.rageStacks ?? 0);
     if (mult !== 1) band = { minPct: band.minPct * mult, maxPct: band.maxPct * mult };
   }
+  const damageSource: "command" | "dot" | "direct" = isCommand
+    ? "command"
+    : isDot
+      ? "dot"
+      : "direct";
+  const provenance = isCommand
+    ? { kind: "conjure_command" as const }
+    : isDot
+      ? { kind: "player_dot" as const, detail: hitSpec.dotKind ?? hitSpec.bleedId }
+      : ability.autoAttack
+        ? { kind: "player_auto" as const }
+        : { kind: "player_direct" as const };
+  const hitContext: import("../../types").CombatContext = {
+    ...input.context,
+    style: ability.style,
+    dotKind: hitSpec.dotKind,
+    abilityCategory: ability.category,
+    autoAttack: ability.autoAttack,
+    area: ability.area,
+    damageSource,
+    provenance,
+  };
   const hit = calculateHit({
     base: input.base,
     band,
@@ -106,21 +129,18 @@ export function resolveCastHit(
     accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
     crit,
     modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
-    context: {
-      ...input.context,
-      style: ability.style,
-      dotKind: hitSpec.dotKind,
-      abilityCategory: ability.category,
-      autoAttack: ability.autoAttack,
-      area: ability.area,
-      damageSource: isCommand ? "command" : isDot ? "dot" : "direct",
-    },
+    provenance,
+    context: hitContext,
     cap: input.cap,
     preciseRank: input.preciseRank,
   });
 
   const components: AttachedDamageComponent[] = [];
   if (snap.searingWindsAtCast) {
+    // Attached kind: canTriggerProcs false. On-hit gear only when parent is direct-hit
+    // family (Corruption Shot DoT ticks must not gain Slayer/Salve via SW).
+    const attachedProv = { kind: "attached" as const, detail: "searing_winds" };
+    const bonusProv = capabilitiesOf(provenance).onHitGear ? attachedProv : provenance;
     const bonus = calculateHit({
       base: input.base,
       band: { minPct: SEARING_WINDS_BONUS_HIT_PCT, maxPct: SEARING_WINDS_BONUS_HIT_PCT },
@@ -128,14 +148,11 @@ export function resolveCastHit(
       accuracy: input.accuracy,
       crit: { chance: 0, eligible: false },
       modifiers,
+      provenance: bonusProv,
       context: {
-        ...input.context,
-        style: ability.style,
-        dotKind: hitSpec.dotKind,
-        abilityCategory: ability.category,
-        autoAttack: ability.autoAttack,
-        area: ability.area,
-        damageSource: isCommand ? "command" : isDot ? "dot" : "direct",
+        ...hitContext,
+        damageSource,
+        provenance: bonusProv,
       },
       cap: input.cap,
     });

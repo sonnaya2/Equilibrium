@@ -32,6 +32,8 @@ export function resolveLightningSurge(
   if (sourceCritChance <= 0) return NO_DAMAGE;
   const modifiers = landTimeModifiers(rt, at, ability, snap, hitIndex, false);
   const { critLayers } = snap;
+  // Equipment proc: never onHitGear (Slayer/Salve). Not recursive proc-eligible.
+  const provenance = { kind: "equipment_proc" as const, detail: "lightning_surge" };
   const surgeHit = calculateHit({
     base: input.base,
     band: LIGHTNING_SURGE_BAND,
@@ -52,7 +54,13 @@ export function resolveLightningSurge(
       eligible: true,
     },
     modifiers,
-    context: input.context,
+    provenance,
+    context: {
+      ...input.context,
+      style: input.context?.style ?? ability.style,
+      damageSource: "proc",
+      provenance,
+    },
     cap: input.cap,
   });
   return {

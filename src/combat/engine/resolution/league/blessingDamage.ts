@@ -5,15 +5,23 @@ import {
   leagueDamageComponents,
   type BlessingDamageSource,
 } from "../../../league/damage";
+import {
+  outgoingSourceOf,
+  type DamageProvenance,
+} from "../../../shared/damageProvenance";
 import { blessingRule } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
 
-/** Event provenance in the vocabulary the blessing eligibility policy speaks. */
-function blessingSourceOf(event: ScheduledEvent<SimulationRuntime>): BlessingDamageSource {
+/**
+ * Prefer scheduled DamageProvenance; fall back to family/ownership for older events.
+ * Parasite (sourceCast < 0) stays ineligible even if family is "dot".
+ */
+function blessingSourceOf(
+  event: ScheduledEvent<SimulationRuntime>,
+): BlessingDamageSource | DamageProvenance {
   if (event.blessingId) return "blessing";
-  // Equipment/perk and autonomous ticks are identified by family / ownership - 
-  // not originKind - so a parasite DoT (sourceCast < 0) stays ineligible.
+  if (event.provenance != null) return event.provenance;
   if (event.family === "proc" || event.sourceCast < 0) return "proc";
   if (event.family === "conjureAuto" || event.family === "poison") return "conjure";
   if (event.family === "command") return "command";
@@ -26,9 +34,11 @@ function blessingSourceOf(event: ScheduledEvent<SimulationRuntime>): BlessingDam
  */
 function parentOriginKind(
   event: ScheduledEvent<SimulationRuntime>,
-  source: BlessingDamageSource,
+  source: BlessingDamageSource | DamageProvenance,
 ): DamageOriginKind {
-  return event.originKind ?? source;
+  if (event.originKind) return event.originKind;
+  if (typeof source === "string") return source;
+  return outgoingSourceOf(source);
 }
 
 /**
@@ -94,6 +104,7 @@ export function scheduleBlessingDamage(
       blessingId: component.blessingId,
       ...(component.damageTag ? { damageTag: component.damageTag } : {}),
       originKind,
+      provenance: { kind: "blessing", detail: component.effectId },
       expectedOccurrences: component.expectedOccurrences,
       triggerRolls: component.triggerRolls,
       expectedActivations: component.expectedActivations,

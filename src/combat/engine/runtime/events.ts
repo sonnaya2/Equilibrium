@@ -2,6 +2,7 @@ import type { EventResolution, ResolvedDamage } from "../resolution/types";
 import type { BleedId, DamageOverTimeKind } from "../../types";
 import type { BlessingId } from "../../../league/blessings";
 import type { BlessingDamageTag } from "../../league/damage";
+import type { DamageProvenance } from "../../shared/damageProvenance";
 import type { CastSnapshot } from "../cast/snapshot";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
@@ -67,6 +68,8 @@ export interface ScheduledEvent<RT = unknown> {
   expectedSeparateHits?: number;
   /** Damage-origin provenance for analysis (direct vs DoT vs proc…). */
   originKind?: DamageOriginKind;
+  /** Capability-derived provenance for gear/blessing gates (serializable). */
+  provenance?: DamageProvenance;
   cancelOwner?: number; // cast sequence whose cancellation removes this event
   /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
   derivedFrom?: number;
@@ -173,6 +176,8 @@ export class EventQueue<RT = unknown> {
         e.bleedId ?? null,
         e.bleedExpiresAtTick ?? -1,
         e.abyssalParasiteEligible ?? false,
+        e.provenance?.kind ?? null,
+        e.provenance?.detail ?? null,
         e.lightningSurge ? snapSig(e.lightningSurge.snap) : null,
       ]),
     );

@@ -11,6 +11,12 @@ import {
   netAdrenalineDeltaFromTransaction,
   previewAdrenalineTransaction,
 } from "../shared/adrenalineTransaction";
+import {
+  capabilitiesOf,
+  provenanceFromLegacy,
+  type DamageProvenance,
+} from "../shared/damageProvenance";
+import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
@@ -63,18 +69,21 @@ export interface BlessingHitEligibility {
 const NO_BLESSING_DAMAGE: BlessingHitEligibility = { rider: false, onHit: false };
 
 /**
- * Blessing eligibility. Rider (Cinders/Big Boned) on direct+DoT+command; onHit on direct only.
- * GRico 7 hits = 7 Inferno rolls. Excluded: attached, blessing, proc, autonomous conjure.
- * No recursion on blessing damage. DoT carries riders but not on-hit (landing already rolled).
+ * Blessing eligibility from DamageCapabilities.
+ * Rider (Cinders/Big Boned) on direct+DoT+command; onHit on direct only.
+ * Attached always ineligible. No recursion on blessing damage.
  */
 export function blessingHitEligibility(
-  source: BlessingDamageSource,
+  source: BlessingDamageSource | DamageProvenance,
   attached: boolean,
 ): BlessingHitEligibility {
-  if (attached || source === "blessing" || source === "proc" || source === "conjure") {
-    return NO_BLESSING_DAMAGE;
-  }
-  return { rider: true, onHit: source === "direct" };
+  if (attached) return NO_BLESSING_DAMAGE;
+  const p: DamageProvenance =
+    typeof source === "string"
+      ? provenanceFromLegacy({ damageSource: source })
+      : source;
+  const caps = capabilitiesOf(p);
+  return { rider: caps.blessingRider, onHit: caps.blessingOnHit };
 }
 
 export interface LeagueDamageInput {
@@ -82,7 +91,7 @@ export interface LeagueDamageInput {
   ability: AbilitySpec;
   hitIndex: number;
   /** Provenance of the damage instance these components hang off. */
-  source: BlessingDamageSource;
+  source: BlessingDamageSource | DamageProvenance;
   /** True when the instance is an attached component rather than its own hit. */
   attached?: boolean;
   /** Land tick for timed max-life (Powerburst); default 0 = freeze-at-request for single-cast. */
@@ -160,11 +169,20 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const targetModifiers = input.modifiers.filter(
     (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
   );
+  const blessingProv = (detail: string): DamageProvenance => ({
+    kind: "blessing",
+    detail,
+  });
   const shared = {
     level: input.level,
     accuracy: input.accuracy,
     modifiers: targetModifiers,
-    context: { ...input.context, blessingGenerated: true },
+    context: {
+      ...input.context,
+      blessingGenerated: true,
+      damageSource: "blessing" as const,
+      provenance: blessingProv("pending"),
+    },
     cap: input.cap,
   };
   const noCrit: CritLayers = { chance: 0, eligible: false };
@@ -173,8 +191,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   // Big Boned: flat 5% land-time max life, attached, crit-eligible (live crit unconfirmed).
   const bigBoned = blessingRule(input.rules, "big-boned");
   if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
+    const prov = blessingProv("big-boned");
     const hit = calculateHit({
       ...shared,
+      provenance: prov,
+      context: { ...shared.context, provenance: prov },
       base: resolveMaximumLife(input.rules, input.landTick ?? 0),
       band: {
         minPct: bigBoned.maxLifeDamagePercent * 100,
@@ -198,8 +219,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
 
   const cinders = blessingRule(input.rules, "abyssal-cinders");
   if (eligible.rider && cinders?.perHitAbilityDamagePercent !== undefined) {
+    const prov = blessingProv("abyssal-cinders");
     const hit = calculateHit({
       ...shared,
+      provenance: prov,
+      context: { ...shared.context, provenance: prov },
       base: input.base,
       band: {
         minPct: cinders.perHitAbilityDamagePercent * 100,
@@ -221,8 +245,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   }
   if (eligible.onHit && cinders?.inferno) {
     const chance = cinders.inferno.chance;
+    const prov = blessingProv("inferno-of-zamorak");
     const hit = calculateHit({
       ...shared,
+      provenance: prov,
+      context: { ...shared.context, provenance: prov },
       base: input.base,
       band: {
         minPct: cinders.inferno.abilityDamageBand[0],
@@ -250,8 +277,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     (input.ability.category === "basic" || input.ability.autoAttack)
   ) {
     const armour = Math.floor(input.rules.totalArmour * light.armourPercent);
+    const prov = blessingProv("light-of-saradomin");
     const hit = calculateRawHitBand({
       ...shared,
+      provenance: prov,
+      context: { ...shared.context, provenance: prov },
       min: Math.floor(input.base * (light.abilityDamageBand[0] / 100)) + armour,
       max: Math.floor(input.base * (light.abilityDamageBand[1] / 100)) + armour,
       crit: { ...input.crit, eligible: true },
@@ -295,6 +325,7 @@ export function graspOfGuthixComponent(
   const barkscales = blessingRule(input.rules, "barkscales")?.barkscales;
   if (!barkscales || input.triggers <= 0 || input.targetsStruck <= 0) return undefined;
   const applications = input.triggers * input.targetsStruck;
+  const provenance: DamageProvenance = { kind: "blessing", detail: "grasp-of-guthix" };
   const hit = calculateHit({
     base: input.base,
     band: {
@@ -307,7 +338,14 @@ export function graspOfGuthixComponent(
     modifiers: input.modifiers.filter(
       (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
     ),
-    context: { ...input.context, blessingGenerated: true, dotKind: "poison" },
+    provenance,
+    context: {
+      ...input.context,
+      blessingGenerated: true,
+      damageSource: "blessing",
+      dotKind: "poison",
+      provenance,
+    },
     cap: input.cap,
   });
   const damage = damageOf(hit);
@@ -340,7 +378,19 @@ export function calculateLeagueAbility(
   // Light of Saradomin 9s CD: at most first direct hit of this cast can trigger.
   let lightAvailable = strikingLightReady ?? true;
   const contributions = ability.hits.flatMap((hit, hitIndex) => {
-    const source: BlessingDamageSource = hit.dot ? "dot" : "direct";
+    const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
+    const source: BlessingDamageSource = hit.dot
+      ? "dot"
+      : isCommand
+        ? "command"
+        : "direct";
+    const provenance: DamageProvenance = hit.dot
+      ? { kind: "player_dot", detail: hit.dotKind }
+      : isCommand
+        ? { kind: "conjure_command" }
+        : ability.autoAttack
+          ? { kind: "player_auto" }
+          : { kind: "player_direct" };
     const components = leagueDamageComponents({
       rules,
       ability,
@@ -357,6 +407,8 @@ export function calculateLeagueAbility(
         abilityCategory: ability.category,
         autoAttack: ability.autoAttack,
         area: ability.area,
+        damageSource: source,
+        provenance,
       },
       cap: input.cap,
       strikingLightReady: lightAvailable,

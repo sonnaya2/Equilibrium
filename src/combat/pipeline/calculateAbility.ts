@@ -1,7 +1,9 @@
 import type { DamageBand } from "../core/abilityDamage";
 import type { CritLayers } from "../core/critical";
 import type { ItemPassiveId } from "../data/records";
-import type { BleedId, DamageOverTimeKind } from "../types";
+import type { DamageProvenance } from "../shared/damageProvenance";
+import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
+import type { BleedId, DamageOverTimeKind, OutgoingDamageSource } from "../types";
 import { calculateHit, type HitInput, type HitResult } from "./calculateHit";
 
 export interface AbilityHit {
@@ -126,6 +128,26 @@ export interface AbilityResult {
   adrenalineDelta?: number;
 }
 
+function hitProvenance(
+  ability: AbilitySpec,
+  hit: AbilityHit,
+): { damageSource: OutgoingDamageSource; provenance: DamageProvenance } {
+  if (hit.dot || hit.dotKind != null) {
+    return {
+      damageSource: "dot",
+      provenance: { kind: "player_dot", detail: hit.dotKind ?? hit.bleedId },
+    };
+  }
+  // Match live schedule/castHit: command abilities are not player direct hits.
+  if (COMMAND_REQUIRES_CONJURE[ability.id] !== undefined) {
+    return { damageSource: "command", provenance: { kind: "conjure_command" } };
+  }
+  if (ability.autoAttack) {
+    return { damageSource: "direct", provenance: { kind: "player_auto" } };
+  }
+  return { damageSource: "direct", provenance: { kind: "player_direct" } };
+}
+
 export function calculateAbility(
   ability: AbilitySpec,
   input: Omit<HitInput, "band" | "crit"> & {
@@ -133,11 +155,13 @@ export function calculateAbility(
     critByHit?: readonly Omit<CritLayers, "eligible">[];
   },
 ): AbilityResult {
-  const hits = ability.hits.map((hit, index) =>
-    calculateHit({
+  const hits = ability.hits.map((hit, index) => {
+    const { damageSource, provenance } = hitProvenance(ability, hit);
+    return calculateHit({
       ...input,
       band: hit.band,
       crit: { ...(input.critByHit?.[index] ?? input.crit), eligible: hit.critEligible ?? true },
+      provenance,
       context: {
         ...input.context,
         style: ability.style,
@@ -145,9 +169,11 @@ export function calculateAbility(
         abilityCategory: ability.category,
         autoAttack: ability.autoAttack,
         area: ability.area,
+        damageSource,
+        provenance,
       },
-    }),
-  );
+    });
+  });
   return {
     hits,
     min: hits.reduce((n, h) => n + h.min, 0),

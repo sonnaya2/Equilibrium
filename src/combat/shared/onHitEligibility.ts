@@ -1,25 +1,13 @@
-import type { CombatContext, OutgoingDamageSource } from "../types";
+import type { CombatContext } from "../types";
+import { capabilitiesOf, resolveCombatProvenance } from "./damageProvenance";
 
 /**
  * Direct-hit eligibility for on-hit gear (Full Slayer Helmet, Salve).
- * Prefer damageSource / dotKind over ability-id lists.
+ * Capability-derived from DamageProvenance (not ability-id lists).
  *
- * Eligible: player direct hits (damageSource omit or "direct").
- * Ineligible: DoT ticks, conjure autos, commands, procs, blessing-generated.
+ * Eligible: player_direct / player_auto / attached (only when parent is direct-hit family).
+ * Ineligible: DoT, conjure auto/poison/command, procs, blessing-generated.
  */
-
-const NON_DIRECT: ReadonlySet<OutgoingDamageSource> = new Set([
-  "dot",
-  "conjure",
-  "command",
-  "proc",
-  "blessing",
-]);
-
 export function isOnHitPlayerDamage(context: CombatContext): boolean {
-  if (context.dotKind != null) return false;
-  if (context.blessingGenerated === true) return false;
-  const source = context.damageSource;
-  if (source != null && NON_DIRECT.has(source)) return false;
-  return true;
+  return capabilitiesOf(resolveCombatProvenance(context)).onHitGear;
 }

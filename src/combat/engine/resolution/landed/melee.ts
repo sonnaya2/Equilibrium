@@ -61,6 +61,8 @@ function addParasiteStack(rt: SimulationRuntime, event: ScheduledEvent<Simulatio
       attached: false,
       procEligible: false,
       recursionAllowed: false,
+      originKind: "proc",
+      provenance: { kind: "equipment_proc", detail: "abyssal_parasite" },
       dotKind: "bleed",
       bleedId: "abyssal-parasite",
       resolve: resolveParasiteDamage,

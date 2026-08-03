@@ -44,14 +44,15 @@ describe("channelled might", () => {
 });
 
 describe("sunshine damage buff", () => {
-  it("base sunshine: +50% for ticks [cast+1, cast+50)", () => {
+  it("base sunshine: +50% for 50 active ticks [cast+1, cast+51)", () => {
     const state = activateSunshine(10);
     expect(state.startsAtTick).toBe(11);
-    expect(state.expiresAtTick).toBe(10 + SUNSHINE_DURATION_TICKS);
+    expect(state.expiresAtTick).toBe(10 + 1 + SUNSHINE_DURATION_TICKS);
     expect(sunshineActive(state, 10)).toBe(false);
     expect(sunshineActive(state, 11)).toBe(true);
-    expect(sunshineActive(state, 59)).toBe(true);
-    expect(sunshineActive(state, 60)).toBe(false);
+    expect(sunshineActive(state, 60)).toBe(true);
+    expect(sunshineActive(state, 61)).toBe(false);
+    expect(state.expiresAtTick - state.startsAtTick).toBe(50);
     expect(SUNSHINE_DAMAGE_MULTIPLIER).toBe(1.5);
   });
 
@@ -63,20 +64,22 @@ describe("sunshine damage buff", () => {
     expect(sunshineActive(state, 11)).toBe(true);
     expect(sunshineActive(state, 74)).toBe(true);
     expect(sunshineActive(state, 75)).toBe(false);
+    expect(state.expiresAtTick - state.startsAtTick).toBe(64);
   });
 
   it("activateSunshine(greater) matches activateGreaterSunshine", () => {
     expect(activateSunshine(20, true)).toEqual(activateGreaterSunshine(20));
   });
 
-  it("Planted Feet extends base Sunshine to 63 ticks (wiki)", () => {
+  it("Planted Feet extends base Sunshine to 63 active ticks (wiki)", () => {
     const state = activateSunshine(0, false, true);
     expect(state.startsAtTick).toBe(1);
-    expect(state.expiresAtTick).toBe(63);
+    expect(state.expiresAtTick).toBe(64);
     expect(sunshineActive(state, 0)).toBe(false);
     expect(sunshineActive(state, 1)).toBe(true);
-    expect(sunshineActive(state, 62)).toBe(true);
-    expect(sunshineActive(state, 63)).toBe(false);
+    expect(sunshineActive(state, 63)).toBe(true);
+    expect(sunshineActive(state, 64)).toBe(false);
+    expect(state.expiresAtTick - state.startsAtTick).toBe(63);
   });
 
   it("Planted Feet does not change Greater Sunshine", () => {
@@ -169,12 +172,19 @@ describe("sunshine — buff window through the simulator", () => {
     );
     expect(plainAt87.result.expected).toBeCloseTo(1000);
     expect(pfAt87.result.expected).toBeCloseTo(1499.7512437810944, 10);
+    // PF: cast@36 → active [37, 100). Tick 99 still buffed; first unbuffed GCD is 102.
     const pfAt99 = findCast(
       pf,
       (cast) => cast.abilityId === "magic_attack" && cast.tick === 99,
       "Missing Planted Feet magic attack at tick 99",
     );
-    expect(pfAt99.result.expected).toBeCloseTo(1000);
+    expect(pfAt99.result.expected).toBeCloseTo(1499.7512437810944, 10);
+    const pfExpired = findCast(
+      pf,
+      (cast) => cast.abilityId === "magic_attack" && cast.tick === 102,
+      "Missing Planted Feet magic attack at tick 102",
+    );
+    expect(pfExpired.result.expected).toBeCloseTo(1000);
   });
 
   it("Planted Feet does not extend Greater Sunshine", () => {

@@ -21,11 +21,7 @@ import {
   type SolverSearchTier,
 } from "./worker/serializable";
 import type { ObjectiveProfileId, ObjectiveWeights } from "./contracts";
-import {
-  ABSOLUTE_MAX_BAR_SIZE,
-  clampSolverBarSizes,
-  MIN_SOLVER_BAR_SIZE,
-} from "./barPolicy";
+import { ABSOLUTE_MAX_BAR_SIZE, clampSolverBarSizes, MIN_SOLVER_BAR_SIZE } from "./barPolicy";
 import { TIER_HORIZON_SECONDS } from "./solve";
 
 /**
@@ -66,6 +62,8 @@ export interface SolverPackSnapshot {
   amHejDamageBonus?: number;
   slayer?: { demon: number; dragon: number; undead: number };
   target?: { demon?: boolean; dragon?: boolean; undead?: boolean };
+  slayerHelmet?: SerializableModifierSources["slayerHelmet"];
+  salve?: SerializableModifierSources["salve"];
   ultimatums?: number;
   lunging?: number;
   /** Precomputed Berserker's Fury damage bonus fraction; 0 / omit = off. */
@@ -126,6 +124,8 @@ function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifier
       dragon: snapshot.target?.dragon,
       undead: snapshot.target?.undead,
     },
+    slayerHelmet: snapshot.slayerHelmet ?? null,
+    salve: snapshot.salve ?? null,
     ultimatums: snapshot.ultimatums ?? 0,
     lunging: snapshot.lunging ?? 0,
     berserkersFuryBonus:

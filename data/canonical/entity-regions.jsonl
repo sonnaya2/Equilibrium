@@ -1979,6 +1979,8 @@
 {"entityId":"item:cinderbane-gloves","regionId":"tirannwn","relation":"hint","requirementGroup":"all_required"}
 {"entityId":"item:cinderbane-gloves","regionId":"tirannwn","relation":"required"}
 {"entityId":"item:corrupted-defender","regionId":"morytania","relation":"required"}
+{"entityId":"item:corrupted-slayer-helmet","ordinal":1,"regionId":"desert","relation":"required"}
+{"entityId":"item:corrupted-slayer-helmet","regionId":"morytania","relation":"required"}
 {"entityId":"item:cryptbloom-body","regionId":"misthalin","relation":"required"}
 {"entityId":"item:cryptbloom-boots","regionId":"misthalin","relation":"required"}
 {"entityId":"item:cryptbloom-gloves","regionId":"misthalin","relation":"required"}
@@ -2308,6 +2310,7 @@
 {"entityId":"item:max-cape","regionId":"misthalin","relation":"required"}
 {"entityId":"item:mercenarys-gloves","regionId":"forinthry","relation":"required"}
 {"entityId":"item:merciless-kiteshield","regionId":"morytania","relation":"required"}
+{"entityId":"item:mighty-slayer-helmet","regionId":"morytania","relation":"required"}
 {"entityId":"item:misalionars-death-mask","regionId":"desert","relation":"required"}
 {"entityId":"item:mizuyari","regionId":"asgarnia","relation":"required"}
 {"entityId":"item:morrigans-javelin","regionId":"forinthry","relation":"required"}
@@ -2396,6 +2399,7 @@
 {"entityId":"item:refined-anima-core-legs-of-sliske","regionId":"desert","relation":"required"}
 {"entityId":"item:refined-anima-core-legs-of-zamorak","regionId":"desert","relation":"required"}
 {"entityId":"item:refined-anima-core-legs-of-zaros","regionId":"desert","relation":"required"}
+{"entityId":"item:reinforced-slayer-helmet","regionId":"morytania","relation":"required"}
 {"entityId":"item:ring-of-death","regionId":"misthalin","relation":"required"}
 {"entityId":"item:ring-of-vigour","regionId":"forinthry","relation":"required"}
 {"entityId":"item:ripper-claw","regionId":"desert","relation":"required"}
@@ -2409,6 +2413,7 @@
 {"entityId":"item:ruinous-maul","regionId":"forinthry","relation":"required"}
 {"entityId":"item:ruinous-rapier","regionId":"forinthry","relation":"required"}
 {"entityId":"item:ruinous-staff","regionId":"forinthry","relation":"required"}
+{"entityId":"item:salve-amulet","regionId":"morytania","relation":"required"}
 {"entityId":"item:salve-amulet-e","regionId":"morytania","relation":"hint","requirementGroup":"acquisition_region"}
 {"entityId":"item:salve-amulet-e","regionId":"morytania","relation":"required"}
 {"entityId":"item:saradomin-godsword","regionId":"asgarnia","relation":"required"}
@@ -2467,6 +2472,7 @@
 {"entityId":"item:static-gloves","regionId":"desert","relation":"required"}
 {"entityId":"item:statiuss-warhammer","regionId":"forinthry","relation":"required"}
 {"entityId":"item:steadfast-boots","regionId":"fremennik","relation":"required"}
+{"entityId":"item:strong-slayer-helmet","regionId":"morytania","relation":"required"}
 {"entityId":"item:strykebow","regionId":"forinthry","relation":"required"}
 {"entityId":"item:strykebow","ordinal":1,"regionId":"tirannwn","relation":"required"}
 {"entityId":"item:sunspear","regionId":"morytania","relation":"hint"}

@@ -783,7 +783,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "raw yak meat": perm("yak"),
   // No blast-fusion-hammer inventory art in repo; pickaxe-side icon for Earth and Song chain.
   "blast fusion hammer": "/game/upgrades/skilling-tools/imcando-pickaxe.webp",
-  "yak hide": skProd("yak-hide"),
 
   "off-hand drygore mace": equip("off-hand-drygore-mace"),
   "offhand drygore mace": equip("off-hand-drygore-mace"),
@@ -891,7 +890,6 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "ancient statuette": perm("ancient-statuette"),
   "limpwurt roots": skProd("limpwurt-root"),
   "limpwurt root": skProd("limpwurt-root"),
-  "grimy ranarr": skProd("grimy-ranarr"),
   "herb spawns": skProd("grimy-ranarr"),
   "green dragonhide": skProd("green-dragonhide"),
   "dragon bones": skProd("dragon-bones"),

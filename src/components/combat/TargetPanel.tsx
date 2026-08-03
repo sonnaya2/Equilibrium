@@ -136,7 +136,17 @@ export function TargetPanel({
                 checked={target.undead === true}
                 onChange={(event) => updateTarget({ undead: event.target.checked || undefined })}
               />
-              Undead (Undead Slayer perk)
+              Undead (Undead Slayer perk / Salve)
+            </label>
+            <label className="loadout-check">
+              <input
+                type="checkbox"
+                checked={target.onSlayerTask === true}
+                onChange={(event) =>
+                  updateTarget({ onSlayerTask: event.target.checked || undefined })
+                }
+              />
+              On Slayer task (helmet)
             </label>
             <NumberField
               label="Occupied tiles"

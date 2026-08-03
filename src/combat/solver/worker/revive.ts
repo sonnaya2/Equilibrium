@@ -16,6 +16,13 @@ import {
 import { prayerDamageModifier, styleCurseById } from "../../shared/prayers";
 import { vulnerabilityModifier } from "../../shared/vulnerability";
 import { berserkersFuryModifier } from "../../shared/berserkersFury";
+import { salveDamageModifier, type ResolvedSalve, SALVE_VARIANTS } from "../../shared/salveAmulet";
+import {
+  slayerHelmetDamageModifier,
+  type ResolvedSlayerHelmet,
+  type SlayerHelmetActivationSource,
+  SLAYER_HELMET_TIERS,
+} from "../../shared/slayerHelmet";
 import type { BlessingId } from "@/league/blessings";
 import {
   isSerializableSimBase,
@@ -86,6 +93,40 @@ export function reviveModifiers(
   }
   if (sources.slayer.undead > 0) {
     global.push(raceSlayerPerkModifier("undead", sources.target.undead === true));
+  }
+  if (sources.slayerHelmet && sources.slayerHelmet.damageMult > 1) {
+    const tier = SLAYER_HELMET_TIERS.find((t) => t.id === sources.slayerHelmet!.tierId);
+    if (tier) {
+      const resolved: ResolvedSlayerHelmet = {
+        active: true,
+        source: sources.slayerHelmet.source as SlayerHelmetActivationSource,
+        tier,
+        damageMult: sources.slayerHelmet.damageMult,
+        hitChanceMult: tier.hitChanceMult,
+        styleEligible: true,
+        onSlayerTask: true,
+        status: "active",
+        analysisLabel: tier.label,
+      };
+      const mod = slayerHelmetDamageModifier(resolved);
+      if (mod) global.push(mod);
+    }
+  }
+  if (sources.salve && sources.salve.damageMult > 1) {
+    const variant = SALVE_VARIANTS.find((v) => v.id === sources.salve!.variantId);
+    if (variant) {
+      const resolved: ResolvedSalve = {
+        active: true,
+        variant,
+        damageMult: sources.salve.damageMult,
+        hitChanceMult: variant.hitChanceMult,
+        targetUndead: true,
+        status: "active",
+        analysisLabel: variant.label,
+      };
+      const mod = salveDamageModifier(resolved);
+      if (mod) global.push(mod);
+    }
   }
   global.push(...leagueModifiers(league));
   const furyBonus = sources.berserkersFuryBonus ?? 0;

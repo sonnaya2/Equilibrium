@@ -23,6 +23,17 @@ export type SolverSearchTier = SearchTier;
  * the worker boundary. Mirrors the non-function parts of loadoutStats' modifier
  * assembly (vulnerability, curses, equipment flats, sets, slayers, per-cast perks).
  */
+export interface SerializableSlayerHelmetSource {
+  tierId: "full" | "reinforced" | "strong" | "mighty" | "corrupted";
+  source: "equipped" | "stand";
+  damageMult: number;
+}
+
+export interface SerializableSalveSource {
+  variantId: "salve" | "salve-e";
+  damageMult: number;
+}
+
 export interface SerializableModifierSources {
   vulnerability: boolean;
   /** Style curse id, or omit / "none" when inactive. */
@@ -41,6 +52,10 @@ export interface SerializableModifierSources {
     dragon?: boolean;
     undead?: boolean;
   };
+  /** Pre-resolved Full Slayer Helmet on-hit damage (host resolve; never re-equip). */
+  slayerHelmet?: SerializableSlayerHelmetSource | null;
+  /** Pre-resolved Salve on-hit damage (host resolve from amulet slot). */
+  salve?: SerializableSalveSource | null;
   ultimatums: number;
   lunging: number;
   /**
@@ -268,6 +283,8 @@ export function emptyModifierSources(): SerializableModifierSources {
     setCounts: [],
     slayer: { demon: 0, dragon: 0, undead: 0 },
     target: {},
+    slayerHelmet: null,
+    salve: null,
     ultimatums: 0,
     lunging: 0,
     berserkersFuryBonus: 0,

@@ -1505,7 +1505,6 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "unexpected diplomacy": "unexpected-diplomacy",
   "unexpected diplomacy (seal of the praefectus praetorio)": "unexpected-diplomacy",
   ungael: "ungael",
-  "ungael ritual site": "ungael-ritual",
   "ungael ritual site pressure": "ungael-ritual",
   "ungeal ritual site": "ungael-ritual",
   "urn enhancer (permanent invention device)": "urn-enhancer",
@@ -1600,7 +1599,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "wilderness sword 1-4": "wilderness-sword-4",
   "witchdoctor camo outfit": "witchdoctor-camo",
   "witchdoctor mask (habitat teleport)": "witchdoctor-mask",
-  // permanent-unlocks/wizards-guild is a tiny landscape still flagged "guild" scenery - 
+  // permanent-unlocks/wizards-guild is a tiny landscape still flagged "guild" scenery -
   // Magic cape is the honest inventory mark for this major.
   "wizards' guild": "magic-cape",
   "wizards' guild (magic guild, yanille)": "magic-cape",
@@ -1888,7 +1887,7 @@ const SCENERY_PERMANENT_UNLOCK_SLUGS = new Set([
   "vip-skilling-area",
   "voice-of-seren",
   "wendlewick-deserted-mine",
-  "wendlewick-fish-farm",
+  // wendlewick-fish-farm is a major unlock plate (reward chips) - not scenery dump.
   "werewolf-agility-course",
   "yanille",
   "catherby",
@@ -1959,8 +1958,8 @@ export function isSceneryPermanentUnlock(path: string): boolean {
   const slug = permanentUnlockSlug(path);
   if (!slug) return false;
   if (SCENERY_PERMANENT_UNLOCK_SLUGS.has(slug)) return true;
-  // Manor Farm / PoF major plates allowed in name wells.
-  if (/^(?:manor-farm|player-owned-farm)$/i.test(slug)) return false;
+  // Manor Farm / PoF / Wendlewick fish farm major plates allowed in name wells.
+  if (/^(?:manor-farm|player-owned-farm|wendlewick-fish-farm)$/i.test(slug)) return false;
   // Heuristic: bare place photos (course/area/farm/patch…) without inventory tokens.
   // Do NOT blanket-ban "altar" - astral-altar inventory art is fine; Ourania is listed above.
   // "archaeology-guild-shop" / "ferocious-ring" must stay - not scenery.

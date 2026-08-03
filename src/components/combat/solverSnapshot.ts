@@ -5,8 +5,21 @@
 import type { CalcStats } from "./loadoutStats";
 import type { Loadout } from "./loadout/model";
 import { serializeLeague, type SolverPackSnapshot } from "@/combat/solver";
+import { resolveSalve } from "@/combat/shared/salveAmulet";
+import { resolveSlayerHelmet } from "@/combat/shared/slayerHelmet";
 
 export function solverSnapshotFromUi(stats: CalcStats, loadout: Loadout): SolverPackSnapshot {
+  const slayerHelmet = resolveSlayerHelmet({
+    equipmentSlots: loadout.equipmentSlots,
+    standTier: loadout.buffs.slayerHelmetStand,
+    onSlayerTask: loadout.target?.onSlayerTask === true,
+    style: loadout.style,
+    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
+  });
+  const salve = resolveSalve({
+    equipmentSlots: loadout.equipmentSlots,
+    targetUndead: loadout.target?.undead === true,
+  });
   return {
     base: stats.base,
     level: stats.level,
@@ -48,6 +61,21 @@ export function solverSnapshotFromUi(stats: CalcStats, loadout: Loadout): Solver
       dragon: loadout.target?.dragon,
       undead: loadout.target?.undead,
     },
+    slayerHelmet:
+      slayerHelmet.active && slayerHelmet.tier && slayerHelmet.source
+        ? {
+            tierId: slayerHelmet.tier.id,
+            source: slayerHelmet.source,
+            damageMult: slayerHelmet.damageMult,
+          }
+        : null,
+    salve:
+      salve.active && salve.variant
+        ? {
+            variantId: salve.variant.id,
+            damageMult: salve.damageMult,
+          }
+        : null,
     ultimatums: loadout.perks.ultimatums ?? 0,
     lunging: loadout.perks.lunging ?? 0,
     berserkersFuryBonus: stats.berserkersFury.active ? stats.berserkersFury.bonus : 0,

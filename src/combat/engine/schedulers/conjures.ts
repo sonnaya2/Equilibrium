@@ -127,7 +127,11 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
         modifiers: hitMods,
-        context: input.context,
+        context: {
+          style: input.context?.style ?? "necromancy",
+          ...input.context,
+          damageSource: "conjure",
+        },
         cap: input.cap,
       });
       return {
@@ -165,7 +169,12 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
         modifiers: conjureModifiers(eventRt),
-        context: input.context,
+        context: {
+          style: input.context?.style ?? "necromancy",
+          ...input.context,
+          damageSource: "conjure",
+          dotKind: "poison",
+        },
         cap: input.cap,
       });
       return {

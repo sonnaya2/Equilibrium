@@ -19,6 +19,9 @@ export type BleedId = "dismember" | "slaughter" | "massacre" | "abyssal-parasite
 export type ModifierStage =
   "base" | "ability" | "onCast" | "roll" | "critical" | "onHit" | "target" | "postHit";
 
+/** Outgoing provenance for on-hit gear gates (slayer helm, salve). */
+export type OutgoingDamageSource = "direct" | "dot" | "conjure" | "command" | "proc" | "blessing";
+
 export interface CombatContext {
   style: CombatStyle;
   ruleset?: "base" | "equilibrium";
@@ -28,6 +31,8 @@ export interface CombatContext {
   area?: "aoe" | "multi-target";
   targetTiles?: number;
   blessingGenerated?: boolean;
+  /** Omit or "direct" for player on-hit gear; set for DoT/conjure/command paths. */
+  damageSource?: OutgoingDamageSource;
 }
 
 export interface DamageState {

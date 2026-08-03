@@ -9,11 +9,7 @@
 import type { HitCapRule } from "../core/hitCaps";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
 import type { CombatContext } from "../types";
-import {
-  OBJECTIVE_VERSION,
-  SOLVER_SCHEMA_VERSION,
-  type ProofLabel,
-} from "./contracts";
+import { OBJECTIVE_VERSION, SOLVER_SCHEMA_VERSION, type ProofLabel } from "./contracts";
 import {
   isSerializableSimBase,
   type SerializableModifierSources,
@@ -75,6 +71,19 @@ export function normalizeModifierSources(sources: SerializableModifierSources): 
       dragon: sources.target?.dragon === true,
       undead: sources.target?.undead === true,
     },
+    slayerHelmet: sources.slayerHelmet
+      ? {
+          tierId: sources.slayerHelmet.tierId,
+          source: sources.slayerHelmet.source,
+          damageMult: roundN(sources.slayerHelmet.damageMult, 6),
+        }
+      : null,
+    salve: sources.salve
+      ? {
+          variantId: sources.salve.variantId,
+          damageMult: roundN(sources.salve.damageMult, 6),
+        }
+      : null,
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
     berserkersFuryBonus: roundN(sources.berserkersFuryBonus ?? 0, 6),

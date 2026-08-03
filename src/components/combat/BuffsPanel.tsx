@@ -3,6 +3,12 @@
 import { useEffect } from "react";
 import { MAX_FIREMAKING_LEVEL, RING_OF_VIGOUR_ITEM_ID } from "@/combat";
 import { EQUIPMENT_ENCHANTMENTS, type EquipmentEnchantmentId } from "@/combat/shared/equipment";
+import {
+  SLAYER_HELMET_TIERS,
+  resolveSlayerHelmet,
+  type SlayerHelmetTierId,
+} from "@/combat/shared/slayerHelmet";
+import { resolveSalve } from "@/combat/shared/salveAmulet";
 import type { CombatStyle } from "@/combat/types";
 import {
   BLESSING_PATHS,
@@ -58,6 +64,7 @@ const LIFE_ICON = {
   powerburstOfVitality: "/game/upgrades/skilling-production/powerburst-of-vitality.webp",
 } as const;
 const RING_OF_VIGOUR_PASSIVE_ICON = "/game/upgrades/permanent-unlocks/ring-of-vigour.webp";
+const SPECTRAL_LENS_ICON = "/game/upgrades/permanent-unlocks/slayer-helmet.webp";
 
 const T7_RELIC_TIER = 7;
 type Tier7RelicChoice = { name: string; effects: readonly string[]; seat: number | null };
@@ -68,8 +75,11 @@ const T7_RELIC_CHOICES: readonly Tier7RelicChoice[] = (() => {
     .filter((c) => typeof c?.name === "string" && c.name.length > 0)
     .map((c) => ({
       name: c.name,
-      effects: Array.isArray(c.effects) ? c.effects.filter((e): e is string => typeof e === "string") : [],
-      seat: typeof (c as { seat?: unknown }).seat === "number" ? (c as { seat: number }).seat : null,
+      effects: Array.isArray(c.effects)
+        ? c.effects.filter((e): e is string => typeof e === "string")
+        : [],
+      seat:
+        typeof (c as { seat?: unknown }).seat === "number" ? (c as { seat: number }).seat : null,
     }))
     .sort((a, b) => (a.seat ?? 99) - (b.seat ?? 99));
 })();
@@ -103,9 +113,27 @@ const PRAYER_OPTIONS: Array<{
   style: CombatStyle;
   book: "standard" | "ancient";
 }> = [
-  { value: "piety", label: "Piety", effect: "+8% melee damage · +8 Attack/Defence levels", style: "melee", book: "standard" },
-  { value: "rigour", label: "Rigour", effect: "+8% ranged damage · +8 Ranged/Defence levels", style: "ranged", book: "standard" },
-  { value: "augury", label: "Augury", effect: "+8% magic damage · +8 Magic/Defence levels", style: "magic", book: "standard" },
+  {
+    value: "piety",
+    label: "Piety",
+    effect: "+8% melee damage · +8 Attack/Defence levels",
+    style: "melee",
+    book: "standard",
+  },
+  {
+    value: "rigour",
+    label: "Rigour",
+    effect: "+8% ranged damage · +8 Ranged/Defence levels",
+    style: "ranged",
+    book: "standard",
+  },
+  {
+    value: "augury",
+    label: "Augury",
+    effect: "+8% magic damage · +8 Magic/Defence levels",
+    style: "magic",
+    book: "standard",
+  },
   {
     value: "sanctity",
     label: "Sanctity",
@@ -113,13 +141,55 @@ const PRAYER_OPTIONS: Array<{
     style: "necromancy",
     book: "standard",
   },
-  { value: "turmoil", label: "Turmoil", effect: "+10% melee damage · +10 levels", style: "melee", book: "ancient" },
-  { value: "anguish", label: "Anguish", effect: "+10% ranged damage · +10 levels", style: "ranged", book: "ancient" },
-  { value: "torment", label: "Torment", effect: "+10% magic damage · +10 levels", style: "magic", book: "ancient" },
-  { value: "sorrow", label: "Sorrow", effect: "+10% necromancy damage · +10 levels", style: "necromancy", book: "ancient" },
-  { value: "malevolence", label: "Malevolence", effect: "+12% melee damage · +12 levels", style: "melee", book: "ancient" },
-  { value: "desolation", label: "Desolation", effect: "+12% ranged damage · +12 levels", style: "ranged", book: "ancient" },
-  { value: "affliction", label: "Affliction", effect: "+12% magic damage · +12 levels", style: "magic", book: "ancient" },
+  {
+    value: "turmoil",
+    label: "Turmoil",
+    effect: "+10% melee damage · +10 levels",
+    style: "melee",
+    book: "ancient",
+  },
+  {
+    value: "anguish",
+    label: "Anguish",
+    effect: "+10% ranged damage · +10 levels",
+    style: "ranged",
+    book: "ancient",
+  },
+  {
+    value: "torment",
+    label: "Torment",
+    effect: "+10% magic damage · +10 levels",
+    style: "magic",
+    book: "ancient",
+  },
+  {
+    value: "sorrow",
+    label: "Sorrow",
+    effect: "+10% necromancy damage · +10 levels",
+    style: "necromancy",
+    book: "ancient",
+  },
+  {
+    value: "malevolence",
+    label: "Malevolence",
+    effect: "+12% melee damage · +12 levels",
+    style: "melee",
+    book: "ancient",
+  },
+  {
+    value: "desolation",
+    label: "Desolation",
+    effect: "+12% ranged damage · +12 levels",
+    style: "ranged",
+    book: "ancient",
+  },
+  {
+    value: "affliction",
+    label: "Affliction",
+    effect: "+12% magic damage · +12 levels",
+    style: "magic",
+    book: "ancient",
+  },
   {
     value: "ruination",
     label: "Ruination",
@@ -189,13 +259,7 @@ function BuffTile({
 }
 
 /** Player-toggled buffs - wiki numbers only. */
-export function BuffsPanel({
-  loadout,
-  setLoadout,
-}: {
-  loadout: Loadout;
-  setLoadout: SetLoadout;
-}) {
+export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadout: SetLoadout }) {
   // Same-style damage prayers; keep an off-style pick visible so it can be cleared.
   const prayerOptions = PRAYER_OPTIONS.filter(
     (opt) => opt.style === loadout.style || opt.value === loadout.buffs.styleCurse,
@@ -228,6 +292,30 @@ export function BuffsPanel({
     // Narrow deps: only region unlock + passive flag, not every loadout field.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [anachroniaUnlocked, loadout.buffs.ringOfVigourPassive]);
+
+  // Helmet stand needs Anachronia (tier-3 Lodge). Equipped helmet is unaffected.
+  useEffect(() => {
+    if (!anachroniaUnlocked && loadout.buffs.slayerHelmetStand != null) {
+      setLoadout((prev) => withLoadoutBuffs(prev, { slayerHelmetStand: null }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anachroniaUnlocked, loadout.buffs.slayerHelmetStand]);
+
+  const helmEquipped =
+    typeof loadout.equipmentSlots.helmet === "string" &&
+    SLAYER_HELMET_TIERS.some((t) => t.itemId === loadout.equipmentSlots.helmet);
+  const slayerResolved = resolveSlayerHelmet({
+    equipmentSlots: loadout.equipmentSlots,
+    standTier: loadout.buffs.slayerHelmetStand,
+    unlockedRegions: anachroniaUnlocked ? ["anachronia"] : [],
+    onSlayerTask: loadout.target?.onSlayerTask === true,
+    style: loadout.style,
+    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
+  });
+  const salveResolved = resolveSalve({
+    equipmentSlots: loadout.equipmentSlots,
+    targetUndead: loadout.target?.undead === true,
+  });
 
   /** One pick per tier: sets name (replacing any other T7). Icyenic also pockets the Tome. */
   const toggleTier7Relic = (name: string) => {
@@ -372,7 +460,9 @@ export function BuffsPanel({
                   effect={opt.effect}
                   pressed={loadout.buffs.overload === opt.value}
                   onClick={() =>
-                    setBuffs({ overload: loadout.buffs.overload === opt.value ? "none" : opt.value })
+                    setBuffs({
+                      overload: loadout.buffs.overload === opt.value ? "none" : opt.value,
+                    })
                   }
                 />
               ))}
@@ -423,6 +513,15 @@ export function BuffsPanel({
                   setBuffs({ ringOfVigourPassive: !loadout.buffs.ringOfVigourPassive })
                 }
               />
+              <BuffTile
+                icon={SPECTRAL_LENS_ICON}
+                label="Ensouled spectral lens"
+                effect="Permanent Full Slayer Helmet upgrade. Enables Necromancy Slayer Spirit on task."
+                pressed={loadout.buffs.ensouledSpectralLens}
+                onClick={() =>
+                  setBuffs({ ensouledSpectralLens: !loadout.buffs.ensouledSpectralLens })
+                }
+              />
             </div>
             {anachroniaUnlocked && ringEquipped ? (
               <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-no-stack">
@@ -431,11 +530,67 @@ export function BuffsPanel({
                   : "Ring is equipped; this is optional for when you unequip it."}
               </p>
             ) : null}
+
+            <h3 className="buff-group__title mt-3">Slayer helmet stand</h3>
+            <p className="mb-1.5 text-[11px] text-parch-300">
+              Tier-3 Anachronia Slayer Lodge. Same on-task combat passive as wearing the helmet;
+              does not stack with an equipped Full Slayer Helmet.
+            </p>
+            <div className="icon-tile-grid" data-testid="slayer-helmet-stand">
+              <BuffTile
+                icon={null}
+                label="None"
+                effect={
+                  !anachroniaUnlocked ? "Needs Anachronia unlocked" : "No helmet on the stand"
+                }
+                pressed={loadout.buffs.slayerHelmetStand == null}
+                disabled={!anachroniaUnlocked}
+                onClick={() => anachroniaUnlocked && setBuffs({ slayerHelmetStand: null })}
+              />
+              {SLAYER_HELMET_TIERS.map((tier) => (
+                <BuffTile
+                  key={tier.id}
+                  icon={tier.iconPath}
+                  label={tier.label}
+                  effect={
+                    !anachroniaUnlocked
+                      ? "Needs Anachronia unlocked (tier-3 Slayer Lodge)"
+                      : `On-task: +${((tier.damageMult - 1) * 100).toFixed(1).replace(/\.0$/, "")}% damage · +${((tier.hitChanceMult - 1) * 100).toFixed(1).replace(/\.0$/, "")}% hit chance (direct hits). Stand only.`
+                  }
+                  pressed={loadout.buffs.slayerHelmetStand === tier.id}
+                  disabled={!anachroniaUnlocked}
+                  onClick={() =>
+                    anachroniaUnlocked &&
+                    setBuffs({
+                      slayerHelmetStand:
+                        loadout.buffs.slayerHelmetStand === tier.id
+                          ? null
+                          : (tier.id as Exclude<SlayerHelmetTierId, never>),
+                    })
+                  }
+                />
+              ))}
+            </div>
+            <p className="mt-1.5 text-[11px] text-parch-300" data-testid="slayer-helmet-status">
+              {slayerResolved.status}
+              {helmEquipped && loadout.buffs.slayerHelmetStand != null
+                ? " · Equipped helm and stand share one effect (stronger tier wins)."
+                : ""}
+            </p>
+            {salveResolved.variant ? (
+              <p className="mt-1 text-[11px] text-parch-300" data-testid="salve-status">
+                {salveResolved.variant.label}: {salveResolved.status}
+              </p>
+            ) : null}
           </div>
         </div>
 
         <div className="buffs-panel__col">
-          <div className="buff-group buff-enchantments" role="group" aria-label="Account enchantments">
+          <div
+            className="buff-group buff-enchantments"
+            role="group"
+            aria-label="Account enchantments"
+          >
             <h3 className="buff-group__title">Account enchantments</h3>
             <div className="icon-tile-grid">
               {EQUIPMENT_ENCHANTMENTS.map((id) => (
@@ -451,7 +606,11 @@ export function BuffsPanel({
             </div>
           </div>
 
-          <div className="buff-group buff-blessings" role="group" aria-label="Equilibrium blessings">
+          <div
+            className="buff-group buff-blessings"
+            role="group"
+            aria-label="Equilibrium blessings"
+          >
             <h3 className="buff-group__title">Equilibrium blessings</h3>
             <div className="blessing-settings mt-1.5">
               {revealedBlessingTiers.map((tier) => {
@@ -495,7 +654,9 @@ export function BuffsPanel({
                 ))}
               </ul>
             ) : null}
-            <p className="mt-1.5 text-[11px] text-parch-300">From Build. Unmodeled stays out of totals.</p>
+            <p className="mt-1.5 text-[11px] text-parch-300">
+              From Build. Unmodeled stays out of totals.
+            </p>
           </div>
 
           <div className="buff-group buff-life" role="group" aria-label="Defence and life">

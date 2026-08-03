@@ -347,6 +347,7 @@
 {"entityId":"item:chaotic-staff","slot":"twohand","style":"magic","tier":80}
 {"entityId":"item:cinderbane-gloves","slot":"gloves","style":"melee","tier":85}
 {"entityId":"item:corrupted-defender","slot":"offhand","style":"melee","tier":70}
+{"entityId":"item:corrupted-slayer-helmet","slot":"helmet","style":"hybrid","tier":70}
 {"entityId":"item:cryptbloom-body","slot":"body","style":"magic","tier":90}
 {"entityId":"item:cryptbloom-boots","slot":"boots","style":"magic","tier":90}
 {"entityId":"item:cryptbloom-gloves","slot":"gloves","style":"magic","tier":90}
@@ -561,6 +562,7 @@
 {"entityId":"item:max-cape","slot":"cape","style":"hybrid","tier":99}
 {"entityId":"item:mercenarys-gloves","slot":"gloves","style":"ranged","tier":73}
 {"entityId":"item:merciless-kiteshield","slot":"offhand","style":"magic","tier":90}
+{"entityId":"item:mighty-slayer-helmet","slot":"helmet","style":"hybrid","tier":70}
 {"entityId":"item:misalionars-death-mask","slot":"helmet","style":"necromancy","tier":95}
 {"entityId":"item:mizuyari","slot":"twohand","style":"melee","tier":85}
 {"entityId":"item:morrigans-javelin","slot":"mainhand","style":"ranged","tier":78}
@@ -644,6 +646,7 @@
 {"entityId":"item:refined-anima-core-legs-of-sliske","slot":"legs","style":"hybrid","tier":85}
 {"entityId":"item:refined-anima-core-legs-of-zamorak","slot":"legs","style":"ranged","tier":85}
 {"entityId":"item:refined-anima-core-legs-of-zaros","slot":"legs","style":"melee","tier":85}
+{"entityId":"item:reinforced-slayer-helmet","slot":"helmet","style":"hybrid","tier":30}
 {"entityId":"item:ring-of-death","slot":"ring","style":"hybrid","tier":85}
 {"entityId":"item:ring-of-vigour","slot":"ring","style":"hybrid","tier":62}
 {"entityId":"item:ripper-claw","slot":"mainhand","style":"melee","tier":85}
@@ -655,6 +658,7 @@
 {"entityId":"item:ruinous-maul","slot":"twohand","style":"melee","tier":90}
 {"entityId":"item:ruinous-rapier","slot":"mainhand","style":"melee","tier":90}
 {"entityId":"item:ruinous-staff","slot":"twohand","style":"magic","tier":90}
+{"entityId":"item:salve-amulet","slot":"amulet"}
 {"entityId":"item:salve-amulet-e","slot":"amulet"}
 {"entityId":"item:saradomin-godsword","slot":"twohand","style":"melee","tier":75}
 {"entityId":"item:saradomin-sword","slot":"mainhand","style":"melee","tier":75}
@@ -700,6 +704,7 @@
 {"entityId":"item:static-gloves","slot":"gloves","style":"magic","tier":85}
 {"entityId":"item:statiuss-warhammer","slot":"mainhand","style":"melee","tier":78}
 {"entityId":"item:steadfast-boots","slot":"boots","style":"melee","tier":85}
+{"entityId":"item:strong-slayer-helmet","slot":"helmet","style":"hybrid","tier":50}
 {"entityId":"item:strykebow","slot":"twohand","style":"ranged","tier":85}
 {"entityId":"item:sunspear","slot":"twohand","style":"melee","tier":75}
 {"entityId":"item:sunspear-magic","slot":"twohand","style":"magic","tier":78}

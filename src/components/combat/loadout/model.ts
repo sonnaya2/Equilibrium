@@ -25,6 +25,7 @@ import {
   type EquipmentEnchantmentId,
   type LoadoutEquipmentView,
 } from "@/combat/shared/equipment";
+import { normalizeSlayerHelmetStand, type SlayerHelmetTierId } from "@/combat/shared/slayerHelmet";
 import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
@@ -63,6 +64,11 @@ export interface LoadoutTarget {
   undead?: boolean;
   demon?: boolean;
   dragon?: boolean;
+  /**
+   * Current Slayer assignment (scenario). Independent of undead race.
+   * Gates Full Slayer Helmet damage/accuracy.
+   */
+  onSlayerTask?: boolean;
   /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */
   poisonImmune?: boolean;
   /** Seconds between hits large enough for Barkscales; omit when no incoming scenario. */
@@ -238,6 +244,16 @@ export interface LoadoutBuffs {
   conservationOfEnergy: boolean;
   /** Permanent RoV unlock (Anachronia). OR with equipped ring; does not stack. */
   ringOfVigourPassive: boolean;
+  /**
+   * Anachronia Slayer Lodge tier-3 helmet stand selection.
+   * null = none. Same Slayer Spirit channel as a worn Full+ helm (never stacks).
+   */
+  slayerHelmetStand: SlayerHelmetTierId | null;
+  /**
+   * Permanent ensouled spectral lens upgrade on the Full Slayer Helmet line.
+   * Required for Necromancy Slayer Spirit.
+   */
+  ensouledSpectralLens: boolean;
 }
 
 /**
@@ -259,10 +275,9 @@ const FULL_ARCH_BUFF_TO_RELIC = {
 
 type FullArchBuffKey = keyof typeof FULL_ARCH_BUFF_TO_RELIC;
 
-function buffsFromArchSelected(selectedIds: readonly string[]): Pick<
-  LoadoutBuffs,
-  FullArchBuffKey
-> {
+function buffsFromArchSelected(
+  selectedIds: readonly string[],
+): Pick<LoadoutBuffs, FullArchBuffKey> {
   return {
     berserkersFury: isRelicActive(selectedIds, "berserkers_fury"),
     furyOfTheSmall: isRelicActive(selectedIds, "fury_of_the_small"),
@@ -293,9 +308,7 @@ export function normalizeArchaeology(
   rawBuffs: Partial<LoadoutBuffs>,
 ): LoadoutArchaeology {
   const raw =
-    typeof rawArch === "object" && rawArch !== null
-      ? (rawArch as Partial<LoadoutArchaeology>)
-      : {};
+    typeof rawArch === "object" && rawArch !== null ? (rawArch as Partial<LoadoutArchaeology>) : {};
   const energyCap = normalizeArchaeologyEnergyCap(raw.energyCap);
   let selectedIds = normalizeArchaeologySelectedIds(raw.selectedIds);
   for (const [buffKey, relicId] of Object.entries(FULL_ARCH_BUFF_TO_RELIC) as [
@@ -428,6 +441,8 @@ export const DEFAULT_LOADOUT: Loadout = {
     heightenedSenses: false,
     conservationOfEnergy: false,
     ringOfVigourPassive: false,
+    slayerHelmetStand: null,
+    ensouledSpectralLens: false,
   },
   archaeology: {
     selectedIds: [],
@@ -913,8 +928,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     (activeEquipmentEffects({ style, equipmentSlots, enchantments }).vestments
       .increasedAdrenalineCap
       ? 120
-      : 100) +
-    (archBuffs.heightenedSenses ? HEIGHTENED_SENSES_ADRENALINE_BONUS : 0);
+      : 100) + (archBuffs.heightenedSenses ? HEIGHTENED_SENSES_ADRENALINE_BONUS : 0);
 
   return {
     style,
@@ -993,6 +1007,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
             ...(rawTarget.undead === true ? { undead: true } : {}),
             ...(rawTarget.demon === true ? { demon: true } : {}),
             ...(rawTarget.dragon === true ? { dragon: true } : {}),
+            ...(rawTarget.onSlayerTask === true ? { onSlayerTask: true } : {}),
             ...(rawTarget.poisonImmune === true ? { poisonImmune: true } : {}),
             ...(Number.isFinite(rawTarget.incomingHitIntervalSeconds) &&
             Number(rawTarget.incomingHitIntervalSeconds) > 0
@@ -1052,6 +1067,8 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       attackCape120: rawBuffs.attackCape120 === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
+      slayerHelmetStand: normalizeSlayerHelmetStand(rawBuffs.slayerHelmetStand),
+      ensouledSpectralLens: rawBuffs.ensouledSpectralLens === true,
       ...archBuffs,
     },
     archaeology,

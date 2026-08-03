@@ -18,10 +18,7 @@ import {
 import type { ActiveEquipmentEffects } from "@/combat/shared/equipment";
 import type { AegisArmourBonus, ResolvedLeagueRules } from "@/combat/league/ruleset";
 import type { BarkscalesOutcome } from "@/combat/league/barkscales";
-import type {
-  IcyenicFaithBonuses,
-  IcyenicProtectionOutcome,
-} from "@/combat/league/icyenicFaith";
+import type { IcyenicFaithBonuses, IcyenicProtectionOutcome } from "@/combat/league/icyenicFaith";
 import { type Loadout } from "./useLoadout";
 import {
   equippedRecordIds,
@@ -231,7 +228,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     ruleset: options.ruleset,
   });
   const leagueBundle = resolveLeagueBundle(loadout, defenceLife, { ...options, now }, equipment);
-  const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle);
+  const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle, options);
   const baseDamage = resolveBaseDamage(loadout, levels, equipment, defenceLife, leagueBundle);
   const crit = resolveCrit(loadout, levels, equipment, leagueBundle);
   const combat = resolveCombatRules(loadout, levels, equipment, leagueBundle, defenceLife, options);

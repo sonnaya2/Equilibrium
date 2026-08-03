@@ -209,6 +209,8 @@ describe("normalizeLoadout", () => {
       heightenedSenses: false,
       conservationOfEnergy: false,
       ringOfVigourPassive: false,
+      slayerHelmetStand: null,
+      ensouledSpectralLens: false,
     });
     expect(next.currentHealthPercent).toBe(50);
     expect(next.equipmentSlots).toEqual({});
@@ -220,14 +222,13 @@ describe("normalizeLoadout", () => {
     expect(next.perks.plantedFeet).toBe(0);
   });
 
-
   it("migrates legacy berserkersFury buff into archaeology.selectedIds", () => {
     const next = normalizeLoadout({ buffs: { berserkersFury: true } });
     expect(next.archaeology.selectedIds).toContain("berserkers_fury");
     expect(next.buffs.berserkersFury).toBe(true);
   });
 
-    it("syncs full archaeology buff flags from selectedIds", () => {
+  it("syncs full archaeology buff flags from selectedIds", () => {
     // 350+150=500 under default 500; conservation (350) needs room of its own.
     const withHsFotS = normalizeLoadout({
       archaeology: {
@@ -239,10 +240,7 @@ describe("normalizeLoadout", () => {
     expect(withHsFotS.buffs.furyOfTheSmall).toBe(true);
     expect(withHsFotS.buffs.conservationOfEnergy).toBe(false);
     expect(withHsFotS.buffs.berserkersFury).toBe(false);
-    expect(withHsFotS.archaeology.selectedIds).toEqual([
-      "heightened_senses",
-      "fury_of_the_small",
-    ]);
+    expect(withHsFotS.archaeology.selectedIds).toEqual(["heightened_senses", "fury_of_the_small"]);
 
     // 350+150=500 under 650; HS+CoE is 700 so still illegal at extended cap.
     const withCoE = normalizeLoadout({
@@ -256,7 +254,6 @@ describe("normalizeLoadout", () => {
     expect(withCoE.buffs.heightenedSenses).toBe(false);
     expect(withCoE.archaeology.energyCap).toBe(650);
   });
-
 
   it("defaults archaeology to empty selection at 500 energy", () => {
     expect(DEFAULT_LOADOUT.archaeology).toEqual({ selectedIds: [], energyCap: 500 });

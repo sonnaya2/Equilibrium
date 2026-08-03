@@ -43,6 +43,18 @@ import {
 } from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
 import {
+  formatSalveDamageLine,
+  formatSalveHitChanceLine,
+  resolveSalve,
+  salveDamageModifier,
+} from "@/combat/shared/salveAmulet";
+import {
+  formatSlayerHelmetDamageLine,
+  formatSlayerHelmetHitChanceLine,
+  resolveSlayerHelmet,
+  slayerHelmetDamageModifier,
+} from "@/combat/shared/slayerHelmet";
+import {
   berserkersFuryModifier,
   getBerserkersFuryBonus,
   lifePointsFromHealthPercent,
@@ -473,6 +485,7 @@ export function resolveAccuracyDp(
   levels: ResolvedLevels,
   equipment: ResolvedEquipment,
   leagueBundle: ResolvedLeagueBundle,
+  options: LoadoutStatsOptions = {},
 ): ResolvedAccuracyDp {
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
   // Without a target, the manual accuracy% slider is the FINAL override - no
@@ -483,6 +496,22 @@ export function resolveAccuracyDp(
   // Attack master cape (120): +2% melee hit chance (buff, not equipment accuracy).
   const attackCapeHit =
     loadout.buffs.attackCape120 && loadout.style === "melee" ? ATTACK_CAPE_MELEE_HIT_CHANCE : 0;
+  // Slayer Spirit + Salve: multiplicative accuracy rating (wiki Hit chance page).
+  const slayerHelm = resolveSlayerHelmet({
+    equipmentSlots: loadout.equipmentSlots,
+    standTier: loadout.buffs.slayerHelmetStand,
+    unlockedRegions: options.unlockedRegions,
+    onSlayerTask: loadout.target?.onSlayerTask === true,
+    style: loadout.style,
+    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
+  });
+  const salve = resolveSalve({
+    equipmentSlots: loadout.equipmentSlots,
+    targetUndead: loadout.target?.undead === true,
+  });
+  const accuracyMult =
+    (slayerHelm.active ? slayerHelm.hitChanceMult : 1) * (salve.active ? salve.hitChanceMult : 1);
+  const accuracyAfterTargetPassives = accuracyRating * accuracyMult;
   const targetAffinity = loadout.target
     ? effectiveTargetAffinity(
         loadout.target.affinity,
@@ -492,7 +521,7 @@ export function resolveAccuracyDp(
     : undefined;
   const dp = loadout.target
     ? applyEquipmentDamagePotential(
-        targetDamagePotential(accuracyRating, {
+        targetDamagePotential(accuracyAfterTargetPassives, {
           defenceLevel: loadout.target.defenceLevel,
           armour: loadout.target.armour,
           affinity: targetAffinity,
@@ -502,6 +531,7 @@ export function resolveAccuracyDp(
         equipment.equipmentEffects,
       )
     : // Manual slider is final DP; skillcape hit chance still stacks on top.
+      // Target-specific accuracy mults (slayer/salve) need a target model.
       clamp01(loadout.accuracy / 100 + attackCapeHit);
   const damagePotentialSource: DamagePotentialSource = loadout.target
     ? loadout.target.damagePotentialOverride != null
@@ -517,9 +547,12 @@ export function resolveAccuracyDp(
     { label: "Energising", value: levels.energising },
     { label: "Accessories", value: equipment.accessoryAccuracy },
     { label: "Equipment effects", value: accuracyRating - accuracyBeforeEffects },
+    ...(accuracyMult !== 1
+      ? [{ label: "Slayer / Salve accuracy", value: accuracyAfterTargetPassives - accuracyRating }]
+      : []),
   ];
   return {
-    accuracyRating,
+    accuracyRating: accuracyAfterTargetPassives,
     dp,
     damagePotentialSource,
     accuracyBreakdown,
@@ -789,6 +822,22 @@ export function resolveCombatRules(
   if (loadout.perks.undeadSlayer > 0) {
     globalModifiers.push(raceSlayerPerkModifier("undead", loadout.target?.undead === true));
   }
+  const slayerHelmet = resolveSlayerHelmet({
+    equipmentSlots: loadout.equipmentSlots,
+    standTier: loadout.buffs.slayerHelmetStand,
+    unlockedRegions: options.unlockedRegions,
+    onSlayerTask: loadout.target?.onSlayerTask === true,
+    style: loadout.style,
+    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
+  });
+  const salveResolved = resolveSalve({
+    equipmentSlots: loadout.equipmentSlots,
+    targetUndead: loadout.target?.undead === true,
+  });
+  const helmDmg = slayerHelmetDamageModifier(slayerHelmet);
+  if (helmDmg) globalModifiers.push(helmDmg);
+  const salveDmg = salveDamageModifier(salveResolved);
+  if (salveDmg) globalModifiers.push(salveDmg);
   globalModifiers.push(...leagueModifiers(leagueBundle.league));
 
   // Arch selection: selectedIds is source of truth (buff flags stay locked via withArchaeologySelection).
@@ -865,12 +914,8 @@ export function resolveCombatRules(
       loadout.perks.invigorating > 0
         ? invigoratingAdrenalineMultiplier(loadout.perks.invigorating)
         : 1,
-    ...(furyOfTheSmall
-      ? { basicAdrenalineFlatBonus: FURY_OF_THE_SMALL_EXTRA_ADRENALINE }
-      : {}),
-    ...(heightenedSenses
-      ? { maxAdrenalineBonus: HEIGHTENED_SENSES_ADRENALINE_BONUS }
-      : {}),
+    ...(furyOfTheSmall ? { basicAdrenalineFlatBonus: FURY_OF_THE_SMALL_EXTRA_ADRENALINE } : {}),
+    ...(heightenedSenses ? { maxAdrenalineBonus: HEIGHTENED_SENSES_ADRENALINE_BONUS } : {}),
     ...(ultimateAdrenalineRefund > 0 ? { ultimateAdrenalineRefund } : {}),
     ...(ringOfVigour ? { ringOfVigour: true } : {}),
     // Impatient / Relentless are state-changing RNG: the rotation drivers
@@ -927,6 +972,14 @@ export function resolveCombatRules(
         unlockedRegions: options.unlockedRegions,
       });
       if (vigourSources.length > 0) rows.push(formatRingOfVigourSources(vigourSources));
+      const helmDmgLine = formatSlayerHelmetDamageLine(slayerHelmet);
+      const helmHitLine = formatSlayerHelmetHitChanceLine(slayerHelmet);
+      const salveDmgLine = formatSalveDamageLine(salveResolved);
+      const salveHitLine = formatSalveHitChanceLine(salveResolved);
+      if (helmDmgLine) rows.push(helmDmgLine);
+      if (helmHitLine) rows.push(helmHitLine);
+      if (salveDmgLine) rows.push(salveDmgLine);
+      if (salveHitLine) rows.push(salveHitLine);
       return rows;
     })(),
     combatContext: {

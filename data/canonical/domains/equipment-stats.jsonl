@@ -792,6 +792,7 @@
 {"entityId":"item:ruinous-rapier","stat":"accuracy","value":3100}
 {"entityId":"item:ruinous-rapier","stat":"damage","value":1102.5}
 {"entityId":"item:ruinous-staff","stat":"accuracy","value":3100}
+{"entityId":"item:salve-amulet","stat":"prayer","value":3}
 {"entityId":"item:salve-amulet-e","stat":"damage","value":5.7}
 {"entityId":"item:salve-amulet-e","stat":"prayer","value":3}
 {"entityId":"item:saradomin-godsword","stat":"accuracy","value":1694}

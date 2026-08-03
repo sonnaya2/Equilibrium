@@ -113,6 +113,7 @@ export function resolveCastHit(
       abilityCategory: ability.category,
       autoAttack: ability.autoAttack,
       area: ability.area,
+      damageSource: isCommand ? "command" : isDot ? "dot" : "direct",
     },
     cap: input.cap,
     preciseRank: input.preciseRank,
@@ -134,6 +135,7 @@ export function resolveCastHit(
         abilityCategory: ability.category,
         autoAttack: ability.autoAttack,
         area: ability.area,
+        damageSource: isCommand ? "command" : isDot ? "dot" : "direct",
       },
       cap: input.cap,
     });

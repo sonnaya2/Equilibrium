@@ -66,6 +66,7 @@ function runCast(ability: AbilitySpec, style: CombatStyle, stats: CalcStats) {
     context: { ...stats.combatContext, style },
     cap: stats.cap,
     rules: stats.league,
+    adrenaline: stats.adrenaline,
   });
 }
 

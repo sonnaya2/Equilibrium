@@ -1,4 +1,5 @@
 import { secondsToTicks } from "../../../core/ticks";
+import { resolveAbilityAdrenalineGain } from "../../../shared/adrenalineGain";
 import { ultimateAdrenalineRefundQualifies } from "../../../shared/conservationOfEnergy";
 import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
@@ -29,12 +30,10 @@ export function applyCastResources(fx: CastEffectContext): void {
       ability.category === "basic" &&
       rt.state.melee.meteorStrikeUntilTick > 0 &&
       candidate < rt.state.melee.meteorStrikeUntilTick;
-    // FotS +1 before Invigorating / AJ mults (wiki: Invigorating multiplies the relic gain).
-    let gain = ability.adrenaline.gain;
-    if (isBasic) gain += input.adrenaline?.basicAdrenalineFlatBonus ?? 0;
-    if (meteorBasic) gain *= METEOR_STRIKE_BASIC_ADREN_MULTIPLIER;
-    if (isBasic) gain *= input.adrenaline?.basicGainMultiplier ?? 1;
-    gain *= input.adrenaline?.abilityGainMultiplier ?? 1;
+    // FotS + Invigorating + AJ via shared helper; Impatient flat stays outside mults.
+    let gain = resolveAbilityAdrenalineGain(ability, input.adrenaline, {
+      meteorBasicMultiplier: meteorBasic ? METEOR_STRIKE_BASIC_ADREN_MULTIPLIER : 1,
+    });
     if (isBasic && (input.adrenaline?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient")) {
       gain += IMPATIENT_EXTRA_ADRENALINE;
     }

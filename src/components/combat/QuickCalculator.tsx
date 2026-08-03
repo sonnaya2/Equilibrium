@@ -152,6 +152,8 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
             context: setup.combatContext,
             cap: setup.cap,
             rules: setup.league,
+            // FotS / Invigorating / AJ from the same resolve path as rotations.
+            adrenaline: setup.adrenaline,
           })
         : calculateAbility(calculatedAbility, {
             base: Math.max(0, finite(effectiveBase, 0)),

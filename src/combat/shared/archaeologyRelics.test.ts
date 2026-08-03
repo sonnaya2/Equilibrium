@@ -346,8 +346,8 @@ describe("loadout archaeology persistence", () => {
 });
 
 describe("loadoutStats archaeology active limit", () => {
-  it("with unlockedRegions trims 4 relics before applying full combat relics", () => {
-    // 3 cheap + berserkers_fury last; sanitize pops fury so fury is inactive.
+  it("prefers full combat relics over energy-only when over the 3-slot limit", () => {
+    // 3 cheap fillers + berserkers_fury last; drop energy-only so BF stays active.
     const four = [
       "font_of_life",
       "shadows_grace",
@@ -356,10 +356,8 @@ describe("loadoutStats archaeology active limit", () => {
     ];
     const loadout = normalizeLoadout({
       archaeology: { energyCap: 500, selectedIds: four },
-      // force buff flag as if legacy/stale storage claimed fury on
       buffs: { berserkersFury: true },
     });
-    // normalize already trims selection; re-inflate raw selection via direct object
     const rawFour = {
       ...loadout,
       archaeology: { energyCap: 500 as const, selectedIds: four },
@@ -368,19 +366,25 @@ describe("loadoutStats archaeology active limit", () => {
     const stats = loadoutStats(rawFour, {
       unlockedRegions: ["misthalin", "morytania", "desert"],
     });
-    expect(stats.berserkersFury.active).toBe(false);
+    expect(stats.berserkersFury.active).toBe(true);
 
-    const keepFury = {
-      ...loadout,
-      archaeology: {
-        energyCap: 500 as const,
-        selectedIds: ["font_of_life", "shadows_grace", "berserkers_fury"],
+    // Fury of the Small also survives when mixed with three energy-only fillers.
+    const withFotS = loadoutStats(
+      {
+        ...loadout,
+        archaeology: {
+          energyCap: 500 as const,
+          selectedIds: [
+            "font_of_life",
+            "shadows_grace",
+            "unexpected_diplomacy",
+            "fury_of_the_small",
+          ],
+        },
+        buffs: { ...loadout.buffs, furyOfTheSmall: true, berserkersFury: false },
       },
-      buffs: { ...loadout.buffs, berserkersFury: true },
-    };
-    const withFury = loadoutStats(keepFury, {
-      unlockedRegions: ["misthalin", "morytania", "desert"],
-    });
-    expect(withFury.berserkersFury.active).toBe(true);
+      { unlockedRegions: ["misthalin", "kandarin", "desert"] },
+    );
+    expect(withFotS.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
   });
 });

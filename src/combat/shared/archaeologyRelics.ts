@@ -85,7 +85,7 @@ export const ARCHAEOLOGY_RELICS: readonly ArchaeologyRelicDefinition[] = [
     requiredRegions: ["morytania"],
     icon: PERM("berserkers-fury"),
     effect:
-      "Up to +5.5% damage as current LP falls below max. Does not stack with Dharok set. Not bleeds.",
+      "Up to +5.5% damage as current LP falls below max. Not bleeds.",
     implementation: "full",
   },
   {
@@ -444,7 +444,21 @@ export function isRelicActive(selectedIds: readonly string[], relicId: string): 
   return selectedIds.includes(relicId);
 }
 
-/** Drop unknown ids; trim from the end while over energyCap or over active limit. */
+/** Drop the last energy-only relic when possible so full combat relics stay active. */
+function dropLowestPriority(kept: string[]): boolean {
+  if (kept.length === 0) return false;
+  for (let i = kept.length - 1; i >= 0; i--) {
+    const relic = BY_ID.get(kept[i]!);
+    if (relic?.implementation === "energy-only") {
+      kept.splice(i, 1);
+      return true;
+    }
+  }
+  kept.pop();
+  return true;
+}
+
+/** Drop unknown ids; trim while over energyCap or active limit (prefer keeping full-modeled). */
 export function sanitizeSelectedRelics(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
@@ -460,10 +474,10 @@ export function sanitizeSelectedRelics(input: {
   }
   const cap = input.energyCap;
   while (kept.length > 0 && totalEnergyUsed(kept) > cap) {
-    kept.pop();
+    dropLowestPriority(kept);
   }
   while (kept.length > MONOLITH_ACTIVE_LIMIT) {
-    kept.pop();
+    dropLowestPriority(kept);
   }
   return kept;
 }

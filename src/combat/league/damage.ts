@@ -7,6 +7,7 @@ import {
 } from "../pipeline/calculateAbility";
 import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/calculateHit";
 import type { CombatContext, CombatModifier } from "../types";
+import { resolveAbilityAdrenalineGain } from "../shared/adrenalineGain";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
@@ -97,6 +98,15 @@ export type LeagueAbilityInput = Parameters<typeof calculateAbility>[1] & {
   rules: ResolvedLeagueRules;
   /** Light of Saradomin's cooldown state entering the cast; ready by default. */
   strikingLightReady?: boolean;
+  /**
+   * Loadout adren rules (FotS, Invigorating, AJ mult). When omitted, AJ blessing
+   * alone multiplies listed generation (legacy single-cast callers).
+   */
+  adrenaline?: {
+    basicAdrenalineFlatBonus?: number;
+    basicGainMultiplier?: number;
+    abilityGainMultiplier?: number;
+  };
 };
 
 export interface LeagueAbilityResult extends AbilityResult {
@@ -357,10 +367,17 @@ export function calculateLeagueAbility(
     expected:
       ordinary.expected +
       contributions.reduce((sum, component) => sum + component.damage.expected, 0),
-    adrenalineDelta:
-      (ability.adrenaline?.gain ?? 0) *
-        (blessingRule(rules, "adrenaline-junkie")?.adrenalineGenerationMultiplier ?? 1) -
-      (ability.adrenaline?.cost ?? 0),
+    adrenalineDelta: (() => {
+      const cost = ability.adrenaline?.cost ?? 0;
+      // Prefer loadout adren rules (FotS + Invigorating + AJ mult from resolve).
+      if (input.adrenaline) {
+        return resolveAbilityAdrenalineGain(ability, input.adrenaline) - cost;
+      }
+      // Legacy: AJ blessing mult on listed generation only.
+      const listed = ability.adrenaline?.gain ?? 0;
+      const aj = blessingRule(rules, "adrenaline-junkie")?.adrenalineGenerationMultiplier ?? 1;
+      return listed * aj - cost;
+    })(),
     leagueContributions: contributions,
   };
 }

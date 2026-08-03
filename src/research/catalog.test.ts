@@ -26,12 +26,23 @@ type SeedCatalog = Omit<ResearchCatalog, "regions"> & {
 // a prefix of its children's, so a nested record lands inside the parent body
 // that was just restored. Reading the JSONL directly is what keeps this an
 // independent check on the normalized tables.
+//
+// Content/upgrades membership follows research/region-entries.jsonl (same as
+// getResearchCatalog). Provenance source_records for unlinked faces stay for
+// audit after unlink-research-entry + remove.
 const CATALOG_FILE = "data/research/catalog.json";
 const canonical = (name: string): Array<Record<string, unknown>> =>
   readFileSync(join(process.cwd(), "data/canonical/provenance", name), "utf8")
     .split("\n")
     .filter(Boolean)
     .map((line) => JSON.parse(line) as Record<string, unknown>);
+
+type RegionEntry = {
+  entityId: string;
+  regionId: string;
+  section: string;
+  ordinal: number;
+};
 
 function reconstructCatalog(): SeedCatalog {
   const document = canonical("source-documents.jsonl").find(({ path }) => path === CATALOG_FILE);
@@ -41,7 +52,11 @@ function reconstructCatalog(): SeedCatalog {
     .filter(({ sourceFile }) => sourceFile === CATALOG_FILE)
     .sort((a, b) => String(a.recordPath).localeCompare(String(b.recordPath), "en"));
   if (!records.length) throw new Error(`Canonical provenance holds no ${CATALOG_FILE} records`);
-  for (const { recordPath, record } of records) {
+  // entityId → preferred body. When set-record re-homes a face, stale paths for the
+  // same entity may still exist in provenance for audit; path-sort last-write would
+  // re-apply the pre-rehome body. Prefer the path that matches live region-entries.
+  const bodiesByEntity = new Map<string, Array<{ path: string; record: unknown }>>();
+  for (const { recordPath, record, entityId } of records) {
     const tokens = [...String(recordPath).matchAll(/\.([^.[\]]+)|\[(\d+)\]/g)].map((match) =>
       match[1] === undefined ? Number(match[2]) : match[1],
     );
@@ -49,7 +64,66 @@ function reconstructCatalog(): SeedCatalog {
     for (const token of tokens.slice(0, -1))
       target = target[token] as Record<string | number, unknown>;
     target[tokens.at(-1)!] = record;
+    if (
+      typeof entityId === "string" &&
+      entityId &&
+      /\.(content|upgrades)\[\d+\]$/.test(String(recordPath))
+    ) {
+      const list = bodiesByEntity.get(entityId) ?? [];
+      list.push({ path: String(recordPath), record });
+      bodiesByEntity.set(entityId, list);
+    }
   }
+
+  const regionEntries = readFileSync(
+    join(process.cwd(), "data/canonical/research/region-entries.jsonl"),
+    "utf8",
+  )
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => JSON.parse(line) as RegionEntry);
+
+  const regionOrdinalById = new Map(
+    ((catalog as unknown as SeedCatalog).regions ?? []).map((region, index) => [region.id, index]),
+  );
+
+  const byRegionSection = new Map<string, RegionEntry[]>();
+  for (const entry of regionEntries) {
+    if (entry.section !== "content" && entry.section !== "upgrades") continue;
+    const key = `${entry.regionId}|${entry.section}`;
+    const list = byRegionSection.get(key) ?? [];
+    list.push(entry);
+    byRegionSection.set(key, list);
+  }
+
+  const pickBody = (entry: RegionEntry): unknown => {
+    const candidates = bodiesByEntity.get(entry.entityId) ?? [];
+    if (!candidates.length) return undefined;
+    const regionOrdinal = regionOrdinalById.get(entry.regionId);
+    if (regionOrdinal !== undefined) {
+      const expected = `$.regions[${regionOrdinal}].${entry.section}[${entry.ordinal}]`;
+      const exact = candidates.find((c) => c.path === expected);
+      if (exact) return exact.record;
+      // Same region+section, any ordinal (re-index) beats a foreign-region stale path.
+      const sameHome = candidates.find((c) =>
+        c.path.startsWith(`$.regions[${regionOrdinal}].${entry.section}[`),
+      );
+      if (sameHome) return sameHome.record;
+    }
+    // Last resort: last path-sorted candidate (stable with prior behaviour).
+    return [...candidates].sort((a, b) => a.path.localeCompare(b.path, "en")).at(-1)?.record;
+  };
+
+  for (const region of (catalog as unknown as SeedCatalog).regions) {
+    for (const section of ["content", "upgrades"] as const) {
+      const faces = (byRegionSection.get(`${region.id}|${section}`) ?? [])
+        .sort((a, b) => a.ordinal - b.ordinal)
+        .map((entry) => pickBody(entry))
+        .filter((row): row is NonNullable<typeof row> => row != null);
+      (region as Record<string, unknown>)[section] = faces;
+    }
+  }
+
   return catalog as unknown as SeedCatalog;
 }
 
@@ -146,6 +220,7 @@ describe("research catalog", () => {
       "Scrimshaws",
       "Ports armour",
       "Nex",
+      "Nex: Angel of Death",
       "Falador farm allotment / flower / herb patches",
     ]) {
       expect(asgNames.has(name), `asgarnia missing ${name}`).toBe(true);
@@ -326,12 +401,35 @@ describe("research catalog", () => {
     const queenBlackDragon = asg?.content.find((row) => row.name === "Queen Black Dragon");
     expect(queenBlackDragon).toMatchObject({
       kind: "Boss",
-      detail: "Drops the Dragon kiteshield.",
     });
     expect(asg?.upgrades.some((row) => row.name === "Queen Black Dragon")).toBe(false);
-    expect(contentRewardsFull(queenBlackDragon!, asg!.upgrades)).toBe("Dragon kiteshield");
+    // Row well is the boss plate; dragon kiteshield stays a reward chip only.
     expect(dataEntityIconPath({ name: queenBlackDragon?.name, kind: queenBlackDragon?.kind })).toBe(
-      "/game/upgrades/skilling-production/dragon-kiteshield.webp",
+      "/game/bosses/queen-black-dragon.webp",
+    );
+    expect(contentRewardsFull(queenBlackDragon!, asg!.upgrades)).toMatch(/Dragon kiteshield|Royal/i);
+
+    const dwarfMulticannon = asg?.content.find((row) => row.name === "Dwarf multicannon");
+    expect(dwarfMulticannon).toBeTruthy();
+    expect(contentRewardsFull(dwarfMulticannon!, asg!.upgrades)).toMatch(
+      /Dwarf multicannon.*Golden Cannon.*Royale Cannon.*Restocking Cannon.*Kinetic cyclone.*Oldak coil.*Dwarven siege engine/i,
+    );
+    expect(
+      presentContentRewards(contentRewardsFull(dwarfMulticannon!, asg!.upgrades), 8).icons.map(
+        (icon) => icon.label,
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        "Dwarf multicannon",
+        "Golden Cannon",
+        "Royale Cannon",
+        "Kinetic cyclone",
+        "Oldak coil",
+        "Dwarven siege engine",
+      ]),
+    );
+    expect(asg?.upgrades.find((row) => row.name === "Dwarf multicannon")?.detail).toMatch(
+      /Unlocks:.*Golden Cannon.*Kinetic cyclone.*Oldak coil/i,
     );
 
     const karNames = new Set((kar?.content ?? []).map((c) => c.name));
@@ -390,12 +488,24 @@ describe("research catalog", () => {
     const asgarnia = catalog.find((region) => region.id === "asgarnia");
     expect(kandarin && asgarnia).toBeTruthy();
 
-    for (const name of ["Kuradal", "Manor Farm", "Seers' Village"]) {
+    for (const name of [
+      "Kuradal",
+      "Manor Farm",
+      "Seer's headband",
+      "Enhanced Excalibur",
+      "Eternal magic trees",
+      "Enhanced nightmare gauntlets",
+      "Nihils",
+    ]) {
       expect(
         kandarin?.content.filter((row) => row.name === name),
         `kandarin missing or duplicated ${name}`,
       ).toHaveLength(1);
     }
+    expect(
+      kandarin?.content.some((row) => row.name === "Seers' Village"),
+      "kandarin still lists Seers' Village content hub",
+    ).toBe(false);
 
     for (const name of [
       "Ardougne farming patches and Manor Farm access geography",
@@ -451,14 +561,79 @@ describe("research catalog", () => {
       presentContentRewards(contentRewardsFull(manorFarm!, kandarin!.upgrades), 8).icons.map(
         (icon) => icon.label,
       ),
-    ).toEqual(["Master farmer outfit", "Beans", "Skillchompas", "NopeNopeNope"]);
+    ).toEqual(["Master farmer outfit", "Beans", "Skillchompas", "NopeNopeNope", "Advance Time"]);
 
-    const seersVillage = kandarin?.content.find((row) => row.name === "Seers' Village");
+    const seersHeadband = kandarin?.content.find((row) => row.name === "Seer's headband");
     expect(
-      presentContentRewards(contentRewardsFull(seersVillage!, kandarin!.upgrades), 8).icons.map(
+      presentContentRewards(contentRewardsFull(seersHeadband!, kandarin!.upgrades), 8).icons.map(
         (icon) => icon.label,
       ),
-    ).toEqual(["Seer's headband 4", "Enhanced Excalibur"]);
+    ).toEqual(["Seer's headband 4"]);
+    expect(dataEntityIconPath({ name: seersHeadband?.name, kind: seersHeadband?.kind })).toBe(
+      "/game/upgrades/permanent-unlocks/seers-headband-4.webp",
+    );
+
+    const enhancedExcalibur = kandarin?.content.find((row) => row.name === "Enhanced Excalibur");
+    expect(
+      presentContentRewards(contentRewardsFull(enhancedExcalibur!, kandarin!.upgrades), 8).icons.map(
+        (icon) => icon.label,
+      ),
+    ).toEqual(["Enhanced Excalibur"]);
+    expect(
+      dataEntityIconPath({ name: enhancedExcalibur?.name, kind: enhancedExcalibur?.kind }),
+    ).toMatch(/\/enhanced-excalibur\.webp$/);
+
+    const enhancedNightmare = kandarin?.content.find(
+      (row) => row.name === "Enhanced nightmare gauntlets",
+    );
+    expect(enhancedNightmare, "kandarin major: Enhanced nightmare gauntlets").toBeTruthy();
+    expect(contentRewardsFull(enhancedNightmare!, kandarin!.upgrades)).toMatch(
+      /Enhanced nightmare gauntlets/i,
+    );
+    expect(
+      presentContentRewards(contentRewardsFull(enhancedNightmare!, kandarin!.upgrades), 8).icons.map(
+        (icon) => icon.label,
+      ),
+    ).toEqual(["Enhanced nightmare gauntlets"]);
+    expect(
+      dataEntityIconPath({ name: enhancedNightmare?.name, kind: enhancedNightmare?.kind }),
+    ).toBe("/game/combat/equipment/enhanced-nightmare-gauntlets.webp");
+    expect(
+      kandarin?.upgrades.some((row) => row.name === "Enhanced nightmare gauntlets"),
+    ).toBe(true);
+
+    const eternalMagic = kandarin?.content.find((row) => row.name === "Eternal magic trees");
+    expect(contentRewardsFull(eternalMagic!, kandarin!.upgrades)).toMatch(
+      /Eternal magic logs.*Eternal magic planks.*3x faster XP\/h than mahogany/i,
+    );
+    expect(
+      presentContentRewards(contentRewardsFull(eternalMagic!, kandarin!.upgrades), 8).icons.map(
+        (icon) => icon.label,
+      ),
+    ).toEqual(["Eternal magic logs", "Eternal magic planks"]);
+    expect(dataEntityIconPath({ name: eternalMagic?.name, kind: eternalMagic?.kind })).toMatch(
+      /eternal-magic-wood-box\.(webp|png)$/,
+    );
+
+    const nihils = kandarin?.content.find((row) => row.name === "Nihils");
+    expect(contentRewardsFull(nihils!, kandarin!.upgrades)).toBe(
+      "Blood nihil, Ice nihil, Shadow nihil, Smoke nihil",
+    );
+    const nihilRewards = presentContentRewards(
+      contentRewardsFull(nihils!, kandarin!.upgrades),
+      8,
+    );
+    expect(nihilRewards.tokens).toEqual([
+      "Blood nihil",
+      "Ice nihil",
+      "Shadow nihil",
+      "Smoke nihil",
+    ]);
+    // Only blood-nihil.webp is catalogued; other styles share the major face icon.
+    expect(nihilRewards.icons.map((icon) => icon.label)).toEqual(["Blood nihil"]);
+    expect(dataEntityIconPath({ name: nihils?.name, kind: nihils?.kind })).toMatch(
+      /blood-nihil\.(webp|png)$/,
+    );
 
     expect(kandarin?.upgrades.find((row) => row.name === "Diviner's outfit")?.detail).toContain(
       "modified headwear",
@@ -492,12 +667,21 @@ describe("research catalog", () => {
       "Keldagrim",
       "Lava Flow Mine",
       "Neitiznot yaks",
+      "Ungael",
     ]) {
       expect(
         fremennik?.content.filter((row) => row.name === name),
         `fremennik missing or duplicated ${name}`,
       ).toHaveLength(1);
     }
+
+    const ungael = fremennik?.content.find((row) => row.name === "Ungael");
+    expect(ungael).toMatchObject({
+      kind: "Necromancy / combat island",
+    });
+    expect(dataEntityIconPath({ name: ungael?.name, kind: ungael?.kind })).toMatch(
+      /\/(activities\/ungael|upgrades\/permanent-unlocks\/ungael)\.(webp|png)$/,
+    );
 
     for (const name of [
       "Blast Furnace (Keldagrim)",
@@ -566,12 +750,36 @@ describe("research catalog", () => {
       "The five-piece outfit grants 6% Mining XP and is awarded by the Liquid Gold Nymph",
     );
 
-    const lavaFlowMine = fremennik?.content.find((row) => row.name === "Lava Flow Mine");
+    const blastFurnace = fremennik?.content.find((row) => row.name === "Blast Furnace");
+    expect(contentRewardsFull(blastFurnace!, fremennik!.upgrades)).toBe(
+      "Blast fusion hammer, Coal-free bars, bank chest",
+    );
     expect(
-      presentContentRewards(contentRewardsFull(lavaFlowMine!, fremennik!.upgrades), 4).icons.map(
+      presentContentRewards(contentRewardsFull(blastFurnace!, fremennik!.upgrades), 4).icons.map(
         (icon) => icon.label,
       ),
-    ).toEqual(["Golden mining suit", "Imcando pickaxe"]);
+    ).toContain("Blast fusion hammer");
+    expect(
+      presentContentRewards(contentRewardsFull(blastFurnace!, fremennik!.upgrades), 4).icons.find(
+        (icon) => icon.label === "Blast fusion hammer",
+      )?.src,
+    ).toMatch(/imcando-pickaxe\.(webp|png)$/);
+
+    const lavaFlowMine = fremennik?.content.find((row) => row.name === "Lava Flow Mine");
+    const lavaRewards = presentContentRewards(
+      contentRewardsFull(lavaFlowMine!, fremennik!.upgrades),
+      4,
+    );
+    expect(lavaRewards.icons.map((icon) => icon.label)).toEqual([
+      "Golden mining suit",
+      "Imcando pickaxe",
+    ]);
+    expect(lavaRewards.icons.find((icon) => icon.label === "Golden mining suit")?.src).toBe(
+      "/game/upgrades/skilling-outfits/golden-mining-suit.webp",
+    );
+    expect(dataEntityIconPath({ name: "Golden mining suit" })).toBe(
+      "/game/upgrades/skilling-outfits/golden-mining-suit.webp",
+    );
 
     const sparkling = fremennik?.content.find((row) => row.name === "Sparkling wisp colony");
     expect(dataEntityIconPath({ name: sparkling?.name, kind: sparkling?.kind })).toBe(
@@ -590,6 +798,19 @@ describe("research catalog", () => {
     expect(whirligigs).toHaveLength(1);
     expect(contentRewardsFull(whirligigs![0]!, desert!.upgrades)).toBe(
       "Dundee's Crocodile Upgrades",
+    );
+
+    const citharede = desert?.content.find((row) => row.name === "Citharede Abbey");
+    expect(citharede).toMatchObject({ kind: "Quest / combat abilities" });
+    expect(contentRewardsFull(citharede!, desert!.upgrades)).toMatch(
+      /Sacrifice|Devotion|Transfigure|Illuminated god books/i,
+    );
+    expect(
+      presentContentRewards(contentRewardsFull(citharede!, desert!.upgrades), 8).icons.map(
+        (icon) => icon.label,
+      ),
+    ).toEqual(
+      expect.arrayContaining(["Sacrifice", "Devotion", "Transfigure", "Illuminated god books"]),
     );
 
     const sophanemDungeon = desert?.content.find(
@@ -644,6 +865,25 @@ describe("research catalog", () => {
           "Sell raised frogs, salamanders, jadinkos and dinosaurs for beans. Choose one small, medium and large buyer from the advertisement board",
       }),
     );
+    const advanceTime = anachronia?.upgrades.find((row) => row.name === "Advance Time");
+    expect(advanceTime).toMatchObject({
+      category: "Dream of Iaia station restock spell",
+      requiredRegions: ["anachronia"],
+    });
+    expect(advanceTime?.detail).toMatch(
+      /Construction.*Crafting.*Fishing.*Fletching.*Herblore.*Hunter/i,
+    );
+    expect(contentRewardsFull(advanceTime!, anachronia!.upgrades)).toBe(
+      "Construction, Crafting, Fishing, Fletching, Herblore, Hunter",
+    );
+    expect(dataEntityIconPath({ name: advanceTime?.name, kind: advanceTime?.category })).toMatch(
+      /dream-of-iaia\.(webp|png)$/,
+    );
+    const dreamOfIaia = anachronia?.content.find((row) => row.name === "Dream of Iaia");
+    expect(dreamOfIaia?.detail).toMatch(/Advance Time/i);
+    expect(dreamOfIaia?.detail).toMatch(
+      /Construction.*Crafting.*Fishing.*Fletching.*Herblore.*Hunter/i,
+    );
     expect(
       anachronia?.upgrades.some((row) => row.name === "Artificer's measure component region map"),
     ).toBe(false);
@@ -669,12 +909,7 @@ describe("research catalog", () => {
         category: "Tier 80 two-handed melee weapon",
       }),
     ]);
-    expect(anachronia?.upgrades.filter((row) => row.name.startsWith("Gemstone armour"))).toEqual([
-      expect.objectContaining({
-        name: "Gemstone armour",
-        category: "Tier 80 hybrid armour",
-      }),
-    ]);
+    expect(anachronia?.upgrades.some((row) => row.name.startsWith("Gemstone armour"))).toBe(false);
     expect(
       [...(anachronia?.content ?? []), ...(anachronia?.upgrades ?? [])].filter((row) =>
         row.name.startsWith("Orthen Dig Site"),
@@ -741,15 +976,21 @@ describe("research catalog", () => {
       "Mort Myre fungi Bloom harvest",
       "Nature Grotto altar of nature",
       "Port Phasmatys",
+      "Slayer Tower early floors",
     ]) {
       expect(morytania?.content.some((row) => row.name === name)).toBe(false);
     }
+    expect(morytania?.content.filter((row) => row.name === "Slayer Tower")).toHaveLength(1);
     expect(morytania?.content.filter((row) => row.name === "Canifis mushroom patch")).toHaveLength(
       1,
     );
     expect(
       morytania?.content.filter((row) => row.name === "Port Phasmatys farming patches"),
     ).toHaveLength(1);
+    expect(morytania?.content.filter((row) => row.name === "Shade keys")).toHaveLength(1);
+    expect(morytania?.content.filter((row) => row.name === "Shiny columbarium key")).toHaveLength(
+      1,
+    );
     expect(
       catalogSource.regions
         .find((region) => region.id === "misthalin")
@@ -787,6 +1028,7 @@ describe("research catalog", () => {
       "Summoning potion",
       "Super Zamorak brew",
       "Weapon poison+++",
+      "Potion flask",
     ]);
   });
 

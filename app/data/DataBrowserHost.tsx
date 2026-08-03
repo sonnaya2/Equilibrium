@@ -1,9 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DataBrowser } from "@/components/DataBrowser";
 import { DataRegionRail, ResearchBrowser } from "@/components/ResearchBrowser";
+import { REGION_IDS } from "@/league";
+import { sortByRegionOrder } from "@/lib/regionOrder";
 import type { ResearchCatalogIndex } from "@/research/catalog";
 import { useResearchRegion } from "@/research/regionStore";
 
@@ -103,14 +105,18 @@ export function DataBrowserHost({
 }: {
   catalog: ResearchCatalogIndex;
 }) {
-  const [regionId, setRegionId] = useState(catalog.regions[0]?.id ?? "");
+  const railRegions = useMemo(
+    () => sortByRegionOrder(catalog.regions, REGION_IDS),
+    [catalog.regions],
+  );
+  const [regionId, setRegionId] = useState(railRegions[0]?.id ?? "");
   const { region, error } = useResearchRegion(regionId);
 
   return (
     <DataBrowser
       region={region}
       regionRail={
-        <DataRegionRail regions={catalog.regions} regionId={regionId} onChange={setRegionId} />
+        <DataRegionRail regions={railRegions} regionId={regionId} onChange={setRegionId} />
       }
       browse={
         error ? (

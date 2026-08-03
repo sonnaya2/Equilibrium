@@ -31,14 +31,14 @@ const SUB_TAB_ICONS: Record<SubTab, string> = {
   Arch: "/game/skills/archaeology.webp",
   Invention: "/game/skills/invention.webp",
   Abilities: "/game/combat/melee-abilities.webp",
-  Target: "/game/combat/critical-strike.webp",
+  Target: "/game/bosses/nex.webp",
 };
 
 function ArchPanel() {
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Arch</h2>
-      <p className="mt-2 text-sm text-parch-300">No Arch combat buffs are modeled yet.</p>
+      <p className="mt-2 text-sm text-parch-300">No Arch combat buffs yet.</p>
     </div>
   );
 }
@@ -138,8 +138,12 @@ export function SetupTab({
   const [subTab, setSubTab] = useState<SubTab>("Gear");
   const { build } = useBuild();
   const stats = useMemo(
-    () => loadoutStats(loadout, { blessingPicks: build.blessingPicks }),
-    [loadout, build.blessingPicks],
+    () =>
+      loadoutStats(loadout, {
+        blessingPicks: build.blessingPicks,
+        relics: Object.values(build.relics).filter(Boolean),
+      }),
+    [loadout, build.blessingPicks, build.relics],
   );
   const incompleteCount = (stat: "armour" | "life" | "damage") =>
     new Set(stats.equipment.incomplete.filter((item) => item.stat === stat).map((item) => item.id))
@@ -353,8 +357,8 @@ export function SetupTab({
 
           {missingItems ? (
             <p className="summary-incomplete" role="status">
-              {missingItems} equipped item{missingItems === 1 ? " is" : "s are"} missing relevant
-              stats. Partial totals: {partialTotals.join(", ")}.
+              {missingItems} equipped item{missingItems === 1 ? " lacks" : "s lack"} stats. Partial:{" "}
+              {partialTotals.join(", ")}.
             </p>
           ) : null}
         </aside>

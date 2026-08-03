@@ -128,6 +128,16 @@
     "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
   },
   {
+    "id": "equilibrium-relic-icyenic-faith",
+    "label": "Icyenic Faith",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/icyenic-faith",
+    "fileTitle": "Icyenic_Faith.png",
+    "canonicalPage": "https://runescape.wiki/w/Icyenic_Faith",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
     "id": "equilibrium-relic-assassins-insight",
     "label": "Assassin's Insight",
     "category": "leagues/equilibrium/relics/site",

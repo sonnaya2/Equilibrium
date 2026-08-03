@@ -1,3 +1,67 @@
+{"description":"Fighter torso (Penance torso; honour points + Penance Queen kill)","entityId":"activity:content:barbarian-assault","key":"effect-1","ordinal":0}
+{"description":"Penance hats (fighter / ranger / runner / healer)","entityId":"activity:content:barbarian-assault","key":"effect-2","ordinal":0}
+{"description":"Penance skirt, Runner boots, Penance gloves","entityId":"activity:content:barbarian-assault","key":"effect-3","ordinal":0}
+{"description":"Penance trident (and master upgrade)","entityId":"activity:content:barbarian-assault","key":"effect-4","ordinal":0}
+{"description":"Role insignias (attacker / defender / collector / healer) after Penance King","entityId":"activity:content:barbarian-assault","key":"effect-5","ordinal":0}
+{"description":"Sacrifice ability (Constitution basic; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-1","ordinal":0}
+{"description":"Devotion ability (Defence threshold; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-2","ordinal":0}
+{"description":"Transfigure ability (Constitution ultimate; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-3","ordinal":0}
+{"description":"Illuminated god books (book-making table; 60 Crafting + 60 Prayer)","entityId":"activity:content:citharede-abbey","key":"effect-4","ordinal":0}
+{"description":"Fishing Frenzy: 2nd fastest Fishing XP (behind Advance Time / Dream of Iaia on Anachronia); ~285k XP/h at 99","entityId":"activity:content:deep-sea-fishing-hub","key":"effect-1","ordinal":0}
+{"description":"Sailfish (97+), swarm fishing, hub boosts, rare Tavia's fishing rod path","entityId":"activity:content:deep-sea-fishing-hub","key":"effect-2","ordinal":0}
+{"description":"Greater Fury ability codex","entityId":"activity:content:dragonkin-laboratory-ed2","key":"effect-1","ordinal":0}
+{"description":"Greater Flurry ability codex","entityId":"activity:content:dragonkin-laboratory-ed2","key":"effect-2","ordinal":0}
+{"description":"Greater Barge ability codex","entityId":"activity:content:dragonkin-laboratory-ed2","key":"effect-3","ordinal":0}
+{"description":"Draconic energy","entityId":"activity:content:dragonkin-laboratory-ed2","key":"effect-4","ordinal":0}
+{"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"activity:content:dragonkin-laboratory-ed2","key":"effect-5","ordinal":0}
+{"description":"Dwarf multicannon (Ranged deployable; Nulodion sell/replace)","entityId":"activity:content:dwarf-multicannon","key":"effect-1","ordinal":0}
+{"description":"Golden Cannon (Artisans' Workshop; 60 cannonball capacity)","entityId":"activity:content:dwarf-multicannon","key":"effect-2","ordinal":0}
+{"description":"Royale Cannon (Artisans' Workshop; 90 cannonball capacity)","entityId":"activity:content:dwarf-multicannon","key":"effect-3","ordinal":0}
+{"description":"Restocking Cannon (Artisans' Workshop; auto-reload while in sight with balls in inventory)","entityId":"activity:content:dwarf-multicannon","key":"effect-4","ordinal":0}
+{"description":"Kinetic cyclone (melee Invention variant; EGW upgrade kit +50% damage)","entityId":"activity:content:dwarf-multicannon","key":"effect-5","ordinal":0}
+{"description":"Oldak coil (magic Invention variant; EGW upgrade kit +50% damage)","entityId":"activity:content:dwarf-multicannon","key":"effect-6","ordinal":0}
+{"description":"Dwarven siege engine (EGW dwarf multicannon upgrade kit; +100% damage look)","entityId":"activity:content:dwarf-multicannon","key":"effect-7","ordinal":0}
+{"description":"Ancient scales","entityId":"activity:content:elite-dungeon-1","key":"effect-1","ordinal":0}
+{"description":"Sirenic scales (Equilibrium side drop with Ancient scales)","entityId":"activity:content:elite-dungeon-1","key":"effect-2","ordinal":0}
+{"description":"Masuta's warspear","entityId":"activity:content:elite-dungeon-1","key":"effect-3","ordinal":0}
+{"description":"Tetsu / Seasinger / Death Lotus upgrade kits","entityId":"activity:content:elite-dungeon-1","key":"effect-4","ordinal":0}
+{"description":"Enhanced Excalibur (Lady of the Lake upgrade from hard Seers diary)","entityId":"activity:content:enhanced-excalibur","key":"effect-1","ordinal":0}
+{"description":"Elite Seer's headband doubles Enhanced Excalibur heal duration","entityId":"activity:content:enhanced-excalibur","key":"effect-2","ordinal":0}
+{"description":"Enhanced nightmare gauntlets (T90 ranged power)","entityId":"activity:content:enhanced-nightmare-gauntlets","key":"effect-1","ordinal":0}
+{"description":"Steady Hands: +25% hit chance and free movement while using Snipe","entityId":"activity:content:enhanced-nightmare-gauntlets","key":"effect-2","ordinal":0}
+{"description":"Optional Enchantment of dread (extra Snipe shot vs targets not facing you)","entityId":"activity:content:enhanced-nightmare-gauntlets","key":"effect-3","ordinal":0}
+{"description":"Eternal magic logs (Piscatoris grove supply)","entityId":"activity:content:eternal-magic-trees","key":"effect-1","ordinal":0}
+{"description":"Eternal magic planks (~3x faster Construction XP/h than mahogany)","entityId":"activity:content:eternal-magic-trees","key":"effect-2","ordinal":0}
+{"description":"Perfect eternal magic branch chance at 110 Woodcutting","entityId":"activity:content:eternal-magic-trees","key":"effect-3","ordinal":0}
+{"description":"The Raptor (high-level Slayer master; Fort Guardhouse)","entityId":"activity:content:fort-forinthry","key":"effect-1","ordinal":0}
+{"description":"Construction training (fort buildings and reinforcement)","entityId":"activity:content:fort-forinthry","key":"effect-2","ordinal":0}
+{"description":"Linza's helm","entityId":"activity:content:linza-the-disgraced","key":"effect-1","ordinal":0}
+{"description":"Linza's cuirass","entityId":"activity:content:linza-the-disgraced","key":"effect-2","ordinal":0}
+{"description":"Linza's greaves","entityId":"activity:content:linza-the-disgraced","key":"effect-3","ordinal":0}
+{"description":"Linza's hammer","entityId":"activity:content:linza-the-disgraced","key":"effect-4","ordinal":0}
+{"description":"Linza's shield","entityId":"activity:content:linza-the-disgraced","key":"effect-5","ordinal":0}
+{"description":"Advance Time: +1 day animal growth and breeding on Manor Farm and Ranch Out of Time together (3 casts/week; no food, disease, or stat change)","entityId":"activity:content:manor-farm","key":"effect-advance-time","ordinal":0}
+{"description":"Wand of the praesul (t92 magic main-hand)","entityId":"activity:content:nex-angel-of-death","key":"effect-1","ordinal":0}
+{"description":"Imperium core (t92 magic off-hand)","entityId":"activity:content:nex-angel-of-death","key":"effect-2","ordinal":0}
+{"description":"Praesul codex (Malevolence / Desolation / Affliction / Ruination)","entityId":"activity:content:nex-angel-of-death","key":"effect-3","ordinal":0}
+{"description":"Blood nihil (+5% melee accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-1","ordinal":0}
+{"description":"Ice nihil (+5% necromancy accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-2","ordinal":0}
+{"description":"Shadow nihil (+5% ranged accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-3","ordinal":0}
+{"description":"Smoke nihil (+5% magic accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-4","ordinal":0}
+{"description":"Champion's ring (full drop; no heart + Warrior rings combine)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-champion","ordinal":0}
+{"description":"Channeller's ring (full drop; no heart + Seers' rings combine)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-channeller","ordinal":0}
+{"description":"Occultist's ring (Osseous)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-occultist","ordinal":0}
+{"description":"Reaver's ring (full drop; no heart + Berserker rings combine)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-reaver","ordinal":0}
+{"description":"Stalker's ring (full drop; no heart + Archers' rings combine)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-stalker","ordinal":0}
+{"description":"Skeka's hypnowand components","entityId":"activity:content:rex-matriarchs","key":"effect-skeka","ordinal":0}
+{"description":"Bronze key (Loar/Phrin remains; opens bronze doors and chests)","entityId":"activity:content:shade-keys","key":"effect-1","ordinal":0}
+{"description":"Steel key (Phrin/Riyl remains; opens steel doors and chests)","entityId":"activity:content:shade-keys","key":"effect-2","ordinal":0}
+{"description":"Black key (Riyl/Asyn remains; opens black doors and chests)","entityId":"activity:content:shade-keys","key":"effect-3","ordinal":0}
+{"description":"Silver key (Asyn/Fiyr/Edimmu remains; opens silver doors and chests)","entityId":"activity:content:shade-keys","key":"effect-4","ordinal":0}
+{"description":"Gold key (Fiyr/Edimmu remains; opens gold doors and the gold chest)","entityId":"activity:content:shade-keys","key":"effect-5","ordinal":0}
+{"description":"Shiny columbarium key (opens Columbarium wooden recesses; stronger table than columbarium key)","entityId":"activity:content:shiny-columbarium-key","key":"effect-1","ordinal":0}
+{"description":"Ungael combat activity (standard/hard 12-wave mode; cosmetic and title rewards per wiki)","entityId":"activity:content:ungael","key":"effect-1","ordinal":0}
+{"description":"Ungael ritual site (lower Necromancy XP than Um; higher component durability; Zorgoth's ring upgrade path)","entityId":"activity:content:ungael","key":"effect-2","ordinal":0}
 {"description":"Inner Wrath: Wild Magic applies Blast Infused for 10 ticks (6s)","entityId":"anachronia:blast-diffusion-boots","key":"effect-1","ordinal":0}
 {"description":"Blast Infused: Magic basic abilities (including basic attack and Combust) gain +8% base damage","entityId":"anachronia:blast-diffusion-boots","key":"effect-2","ordinal":1}
 {"description":"Same Anachronia + Raksha geography as laceration/fleeting; this row first-classes the Magic sibling the melee/ranged hub only named","entityId":"anachronia:blast-diffusion-boots","key":"effect-3","ordinal":2}
@@ -15,6 +79,8 @@
 {"description":"Damage and rare-drop boost against dinosaur combat monsters","entityId":"anachronia:necklace-of-salamancy","key":"effect-1","ordinal":0}
 {"description":"Strongest Necromancy ring (tied with Zorgoth's soul ring)","entityId":"anachronia:occultists-ring","key":"effect-1","ordinal":0}
 {"description":"Infliction passive: 10% chance for Necromancy attacks to generate 2 Necrosis stacks","entityId":"anachronia:occultists-ring","key":"effect-2","ordinal":1}
+{"description":"Mysterious City mystery: +150 monolith energy (final step to 650 energy cap)","entityId":"anachronia:orthen-dig-site","key":"effect-orthen-650","ordinal":0}
+{"description":"Advance Time: +1 day animal growth and breeding on Manor Farm and Ranch Out of Time together (3 casts/week; no food, disease, or stat change)","entityId":"anachronia:ranch-out-of-time","key":"effect-advance-time","ordinal":0}
 {"description":"Critical-strike focused ring used in Magic when accuracy is not the bottleneck and non-channelled abilities dominate","entityId":"anachronia:reavers-ring","key":"effect-1","ordinal":0}
 {"description":"Also relevant residual for hybrid crit setups","entityId":"anachronia:reavers-ring","key":"effect-2","ordinal":1}
 {"description":"Base-camp spa pools mirror Oo'glog bath family for on-island re-up","entityId":"anachronia:spa-pools","key":"effect-1","ordinal":0}
@@ -104,8 +170,10 @@
 {"description":"Linza the Disgraced set residual (smithing-themed combat set)","entityId":"boss:barrows","key":"effect-3","ordinal":2}
 {"description":"Amulet of the forsaken residual (Archaeology combat relic input)","entityId":"boss:barrows","key":"effect-4","ordinal":3}
 {"description":"Barrows defender piece residual feeding morytania:barrows-defenders","entityId":"boss:barrows","key":"effect-5","ordinal":4}
+{"description":"Linza's helm, Linza's cuirass, Linza's greaves, Linza's hammer, Linza's shield","entityId":"boss:barrows","key":"effect-linza-set","ordinal":0}
 {"description":"ED2 final-boss residual for Greater Fury / Flurry / Barge ability codex table","entityId":"boss:black-stone-dragon","key":"effect-1","ordinal":0}
 {"description":"Draconic energy residual feeding elite tectonic / elite sirenic craft chains","entityId":"boss:black-stone-dragon","key":"effect-2","ordinal":1}
+{"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"boss:black-stone-dragon","key":"effect-3","ordinal":0}
 {"description":"Dragon 2h sword residual midgame","entityId":"boss:chaos-elemental","key":"effect-1","ordinal":0}
 {"description":"Wilderness rare table residual (not headline endgame BiS)","entityId":"boss:chaos-elemental","key":"effect-2","ordinal":1}
 {"description":"Divine / Elysian / Spectral / Arcane sigil → spirit shield upgrades (tank/utility BiS residual)","entityId":"boss:corporeal-beast","key":"effect-1","ordinal":0}
@@ -115,6 +183,7 @@
 {"description":"Greater Flurry ability codex","entityId":"boss:ed2-dragonkin-laboratory","key":"effect-2","ordinal":1}
 {"description":"Greater Barge ability codex","entityId":"boss:ed2-dragonkin-laboratory","key":"effect-3","ordinal":2}
 {"description":"Draconic energy (elite tectonic / elite sirenic residual materials)","entityId":"boss:ed2-dragonkin-laboratory","key":"effect-4","ordinal":3}
+{"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"boss:ed2-dragonkin-laboratory","key":"effect-5","ordinal":0}
 {"description":"Eldritch crossbow components (t90+ ranged special weapon)","entityId":"boss:ed3-shadow-reef","key":"effect-1","ordinal":0}
 {"description":"Ambassador residual unique table (dungeon final boss)","entityId":"boss:ed3-shadow-reef","key":"effect-2","ordinal":1}
 {"description":"Dragon Rider lance (t85+ melee polearm still used for mobility specials)","entityId":"boss:gwd2","key":"effect-1","ordinal":0}
@@ -148,11 +217,12 @@
 {"description":"Key to the Crossing residual (instance re-entry economy)","entityId":"boss:magister","key":"effect-3","ordinal":2}
 {"description":"Wand of the praesul (t92 magic main-hand)","entityId":"boss:nex-angel-of-death","key":"effect-1","ordinal":0}
 {"description":"Imperium core (t92 magic off-hand)","entityId":"boss:nex-angel-of-death","key":"effect-2","ordinal":1}
-{"description":"Praesul codex (prayer unlock residual)","entityId":"boss:nex-angel-of-death","key":"effect-3","ordinal":2}
+{"description":"Praesul codex (one of Malevolence / Desolation / Affliction / Ruination)","entityId":"boss:nex-angel-of-death","key":"effect-3","ordinal":0}
 {"description":"Royal torsion spring / royal sight / royal frame / royal bolt stabiliser → Royal crossbow (t80 untradeable 2h ranged)","entityId":"boss:queen-black-dragon","key":"effect-1","ordinal":0}
 {"description":"Draconic visage residual","entityId":"boss:queen-black-dragon","key":"effect-2","ordinal":1}
 {"description":"Royal dragonhide / royal bolts residual ammo economy","entityId":"boss:queen-black-dragon","key":"effect-3","ordinal":2}
 {"description":"Heart of the Warrior / Berserker / Archer / Seer → upgraded combat rings from DK bases","entityId":"boss:rex-matriarchs","key":"effect-1","ordinal":0}
+{"description":"Champion's ring, Reaver's ring, Stalker's ring, Channeller's ring (full drops; no hearts)","entityId":"boss:rex-matriarchs","key":"effect-1","ordinal":1}
 {"description":"Skeka's hypnowand components (magic residual 2h)","entityId":"boss:rex-matriarchs","key":"effect-2","ordinal":1}
 {"description":"Savage spear components residual","entityId":"boss:rex-matriarchs","key":"effect-3","ordinal":2}
 {"description":"Occultist's ring (Osseous residual)","entityId":"boss:rex-matriarchs","key":"effect-4","ordinal":3}
@@ -163,6 +233,7 @@
 {"description":"Vengeful kiteshield (ranged)","entityId":"boss:rise-of-the-six","key":"effect-4","ordinal":3}
 {"description":"Ancient scales (elite sirenic upgrade residual — primary Arc path)","entityId":"boss:seiryu","key":"effect-1","ordinal":0}
 {"description":"ED1 final-boss residual under Temple of Aminishi family","entityId":"boss:seiryu","key":"effect-2","ordinal":1}
+{"description":"Sirenic scales (Equilibrium side drop with Ancient scales)","entityId":"boss:seiryu","key":"effect-3","ordinal":0}
 {"description":"Blightbound crossbow (t92 ranged main-hand)","entityId":"boss:solak","key":"effect-1","ordinal":0}
 {"description":"Off-hand Blightbound crossbow","entityId":"boss:solak","key":"effect-2","ordinal":1}
 {"description":"Erethdor's grimoire (pocket book)","entityId":"boss:solak","key":"effect-3","ordinal":2}
@@ -191,6 +262,7 @@
 {"description":"On death: revive at full health with Ring of Death bleed DoT until safe area or death (sign of life / Immortality take priority)","entityId":"combat:ring-of-death","key":"effect-2","ordinal":1}
 {"description":"All-style damage ring; reaver's ring notes tie hybrid strength with ring of death (i)","entityId":"combat:ring-of-death","key":"effect-3","ordinal":2}
 {"description":"Degrades 100,000 hits (500,000 when overcharged); onyx recharge","entityId":"combat:ring-of-death","key":"effect-4","ordinal":3}
+{"description":"Construction XP from fort building reinforcement (Eternal Magic Frames path)","entityId":"construction:fort-forinthry-reinforcement","key":"effect-1","ordinal":0}
 {"description":"Stores gems like the upgraded gem bag","entityId":"crafting:artificers-measure","key":"effect","ordinal":0}
 {"description":"Always applies the Ithell Voice of Seren harp benefit while playing harps","entityId":"crafting:artificers-measure","key":"effect","ordinal":1}
 {"description":"5% chance to duplicate glassblown items and urns, including potion and crystal flasks","entityId":"crafting:artificers-measure","key":"effect","ordinal":2}
@@ -517,6 +589,13 @@
 {"description":"Restores Prayer from qualifying buried bones and works with Bonecrusher-processed bones","entityId":"dungeoneering:split-dragontooth-necklace-current","key":"effect-1","ordinal":0}
 {"description":"Destroys selected seed drops for double plant XP when Farming level is high enough to plant them","entityId":"equipment:seedicide-not-daemonheim","key":"effect-1","ordinal":0}
 {"description":"Optional collector upgrade (25,000 beans) and tool-belt unlock (500 Slayer points)","entityId":"equipment:seedicide-not-daemonheim","key":"effect-2","ordinal":1}
+{"description":"Advance Time: +1 day animal growth and breeding on Manor Farm and Ranch Out of Time together (3 casts/week; no food, disease, or stat change)","entityId":"farming:player-owned-farm-manor-farm","key":"effect-advance-time","ordinal":0}
+{"description":"Advance Time: +1 day animal growth and breeding on Manor Farm and Ranch Out of Time together (3 casts/week; no food, disease, or stat change)","entityId":"farming:ranch-out-of-time","key":"effect-advance-time","ordinal":0}
+{"description":"Blood nihil (+5% melee accuracy)","entityId":"fate-of-the-gods:nihil-familiars","key":"effect-1","ordinal":0}
+{"description":"Ice nihil (+5% necromancy accuracy)","entityId":"fate-of-the-gods:nihil-familiars","key":"effect-2","ordinal":0}
+{"description":"Shadow nihil (+5% ranged accuracy)","entityId":"fate-of-the-gods:nihil-familiars","key":"effect-3","ordinal":0}
+{"description":"Smoke nihil (+5% magic accuracy)","entityId":"fate-of-the-gods:nihil-familiars","key":"effect-4","ordinal":0}
+{"description":"2nd fastest Fishing XP in the game (behind Advance Time at Anachronia / Dream of Iaia); about 285k base XP/h at 99","entityId":"fishing:fishing-frenzy","key":"effect-1","ordinal":0}
 {"description":"Classic T75 Magic DW before seismic / praesul / FSoA","entityId":"forinthry:abyssal-wand-orb","key":"effect-1","ordinal":0}
 {"description":"Token sink sibling to chaotic staff (already first-class)","entityId":"forinthry:abyssal-wand-orb","key":"effect-2","ordinal":1}
 {"description":"Permanent coin auto-collect to money pouch","entityId":"forinthry:advanced-gold-accumulator","key":"effect-1","ordinal":0}
@@ -541,6 +620,7 @@
 {"description":"Prayer bonus 5; holy wrench (post-Pieces of Hate) adds +10% to necklace restore while worn or inventoried","entityId":"forinthry:demon-horn-necklace","key":"effect-3","ordinal":2}
 {"description":"Mandatory material for elite tectonic armour and repair patches","entityId":"forinthry:draconic-energy-magic","key":"effect-1","ordinal":0}
 {"description":"Also used with tectonic energy + summerdown wool + black stone hearts for repair-patch crafts","entityId":"forinthry:draconic-energy-magic","key":"effect-2","ordinal":1}
+{"description":"Equilibrium: Tectonic energy side drop with Draconic energy from ED2","entityId":"forinthry:draconic-energy-magic","key":"effect-league-tectonic","ordinal":0}
 {"description":"Split Soul is a defining ranged DPS special for curse users","entityId":"forinthry:eldritch-crossbow","key":"effect-1","ordinal":0}
 {"description":"Common EoF store; competes with SGB Crystal Rain situationally","entityId":"forinthry:eldritch-crossbow","key":"effect-2","ordinal":1}
 {"description":"Holds up to 100 uncut sapphire/emerald/ruby/diamond total (not 100 each)","entityId":"forinthry:gem-bag","key":"effect-1","ordinal":0}
@@ -643,6 +723,12 @@
 {"description":"After full suit, Liquid Gold Nymph can gild basic bronze-through-dragon pickaxes or grant 2,500 Mining XP instead","entityId":"fremennik:golden-mining-suit","key":"effect-3","ordinal":2}
 {"description":"Craftable yak-hide body and legs from cured hides","entityId":"fremennik:yak-hide-armour","key":"effect-1","ordinal":0}
 {"description":"Quest-facing mid armour and Crafting XP product from the Neitiznot loop","entityId":"fremennik:yak-hide-armour","key":"effect-2","ordinal":1}
+{"description":"Apex hide cowl","entityId":"havenhythe:big-game-hunter","key":"effect-1","ordinal":0}
+{"description":"Apex hide body","entityId":"havenhythe:big-game-hunter","key":"effect-2","ordinal":0}
+{"description":"Apex hide chaps","entityId":"havenhythe:big-game-hunter","key":"effect-3","ordinal":0}
+{"description":"Apex hide vambraces","entityId":"havenhythe:big-game-hunter","key":"effect-4","ordinal":0}
+{"description":"Apex hide boots","entityId":"havenhythe:big-game-hunter","key":"effect-5","ordinal":0}
+{"description":"Best Hunter XP route (Havenhythe native BGH encounters)","entityId":"havenhythe:big-game-hunter","key":"effect-6","ordinal":0}
 {"description":"Additive +80% soul attraction during rituals when worn","entityId":"havenhythe:ring-of-kayazu","key":"effect-1","ordinal":0}
 {"description":"20% chance to double item rewards from ritual disturbances","entityId":"havenhythe:ring-of-kayazu","key":"effect-2","ordinal":1}
 {"description":"+1% Summoning XP per worn piece","entityId":"havenhythe:shaman-outfit","key":"effect-1","ordinal":0}
@@ -770,13 +856,17 @@
 {"description":"Always tier 4: unlimited Manor Farm teleport; daily full Summoning restore (globe); Bert 420 buckets of sand/week; 100% extra chompy; Fishing Trawler junk replaced with useful items","entityId":"kandarin:area-tasks-ardougne-cloak","key":"effect-4","ordinal":3}
 {"description":"Tier 4 worn note: 5% chance double rune crossbow limbs smithing in Yanille (wiki flags currently bugged)","entityId":"kandarin:area-tasks-ardougne-cloak","key":"effect-5","ordinal":4}
 {"description":"Operate: unlimited monastery teleport (1+); Manor Farm daily then unlimited (2/4); daily Summoning restore (4)","entityId":"kandarin:area-tasks-ardougne-cloak","key":"effect-6","ordinal":5}
+{"description":"Increased chance of +2% that the special effects of enchanted bolts activate","entityId":"kandarin:area-tasks-seers-headband","key":"effect","ordinal":0}
 {"description":"Carried light source dim/medium/bright by tiers 1-3","entityId":"kandarin:area-tasks-seers-headband","key":"effect-1","ordinal":0}
 {"description":"Tier 1 worn: 2 normal logs per normal tree (no extra XP); always +28 coal truck capacity (252); weekly 210 noted flax from Geoffrey","entityId":"kandarin:area-tasks-seers-headband","key":"effect-2","ordinal":1}
 {"description":"Tier 2 worn: +10 maple WC XP per maple log; double normal logs with XP for both; 33% faster Seers spinning wheel; coal trucks 280; weekly flax 420","entityId":"kandarin:area-tasks-seers-headband","key":"effect-3","ordinal":2}
 {"description":"Always tier 3: Enhanced Excalibur path from Lady of the Lake; Thormac mystic staff enchant 27k; Seers altar +20 prayer; coal trucks 308; weekly flax 840; Camelot teleport toggle to Seers centre","entityId":"kandarin:area-tasks-seers-headband","key":"effect-4","ordinal":3}
-{"description":"Always tier 4: Enhanced Excalibur heal duration doubled; +2% enchanted bolt special chance; weekly flax 1400; first 200 coal on trucks each day auto-bank","entityId":"kandarin:area-tasks-seers-headband","key":"effect-5","ordinal":4}
+{"description":"Always tier 4: Enhanced Excalibur heal duration doubled; weekly flax 1400; first 200 coal on trucks each day auto-bank","entityId":"kandarin:area-tasks-seers-headband","key":"effect-5","ordinal":0}
 {"description":"Reliable T90 DW ranged before Blightbound","entityId":"kandarin:ascension-crossbows","key":"effect-1","ordinal":0}
 {"description":"Also feeds Invention sirenic/ascension component family","entityId":"kandarin:ascension-crossbows","key":"effect-2","ordinal":1}
+{"description":"Fighter torso (Penance torso; honour points + Penance Queen kill)","entityId":"kandarin:barbarian-assault","key":"effect-1","ordinal":0}
+{"description":"Penance armour hats, skirt, boots, gloves","entityId":"kandarin:barbarian-assault","key":"effect-2","ordinal":0}
+{"description":"Penance trident and role insignias (Penance King path)","entityId":"kandarin:barbarian-assault","key":"effect-3","ordinal":0}
 {"description":"Highest tackle box tier: stores fishing tools, 2 glove pairs, 3 bait stacks up to 1,000 each, fishing outfit set, and raw fish stack","entityId":"kandarin:champions-tackle-box","key":"effect-1","ordinal":0}
 {"description":"Holds up to 30 of one type of raw fish in the fish slot (tier capacity; bank empty or telebank to extract)","entityId":"kandarin:champions-tackle-box","key":"effect-2","ordinal":1}
 {"description":"Daily remote telebank of up to 500 raw fish; 100-token reset to refresh telebank limit","entityId":"kandarin:champions-tackle-box","key":"effect-3","ordinal":2}
@@ -798,6 +888,8 @@
 {"description":"T90 damage/armour vs base T85","entityId":"kandarin:enhanced-nightmare-gauntlets","key":"effect-2","ordinal":1}
 {"description":"Enchantment of dread: after 9s worn, Snipe fires an additional 50%-damage shot against targets not facing you (Flanking rules)","entityId":"kandarin:enhanced-nightmare-gauntlets","key":"effect-3","ordinal":2}
 {"description":"Degrades over 60,000 charges; armour-stand repair","entityId":"kandarin:enhanced-nightmare-gauntlets","key":"effect-4","ordinal":3}
+{"description":"Eternal magic logs (Piscatoris grove supply)","entityId":"kandarin:eternal-magic-trees","key":"effect-1","ordinal":0}
+{"description":"Eternal magic planks (~3x faster Construction XP/h than mahogany)","entityId":"kandarin:eternal-magic-trees","key":"effect-2","ordinal":0}
 {"description":"1% Fishing XP per worn piece (4% for four pieces)","entityId":"kandarin:fishing-outfit","key":"effect-1","ordinal":0}
 {"description":"+1% set bonus when full set worn (5% total)","entityId":"kandarin:fishing-outfit","key":"effect-2","ordinal":1}
 {"description":"Does not boost Fish Flingers itself","entityId":"kandarin:fishing-outfit","key":"effect-3","ordinal":2}
@@ -823,6 +915,7 @@
 {"description":"10% increased fishing success rate when compatible","entityId":"kandarin:tavias-fishing-rod","key":"effect-1","ordinal":0}
 {"description":"Can trigger all three Deep Sea Fishing boosts","entityId":"kandarin:tavias-fishing-rod","key":"effect-2","ordinal":1}
 {"description":"Can be augmented","entityId":"kandarin:tavias-fishing-rod","key":"effect-3","ordinal":2}
+{"description":"Thalmund's Forge burial anvils and burial forges: burial armour / burial equipment Smithing XP after Into the Forge (Kandarin; not Artisans' Respect shop)","entityId":"kandarin:warforge-dig-site","key":"effect","ordinal":0}
 {"description":"Always tier 1: boat fares Port Sarim-Musa and Ardougne-Brimhaven reduced to 15 coins; weekly 140 pineapples from Dell Monti","entityId":"karamja:area-tasks-karamja-gloves","key":"effect-1","ordinal":0}
 {"description":"Tier 2 worn and always: +10% Agility XP from Brimhaven Agility Arena obstacles and ticket lamp trades","entityId":"karamja:area-tasks-karamja-gloves","key":"effect-2","ordinal":1}
 {"description":"Tier 3 worn: ladder access to Shilo underground mine and gemstone cavern; operate teleport to Shilo underground mine; always free Brimhaven Dungeon entry; gemstone dragons as Slayer assignment option","entityId":"karamja:area-tasks-karamja-gloves","key":"effect-3","ordinal":2}
@@ -942,6 +1035,10 @@
 {"description":"Farming and exploration QoL associated with the Lumbridge achievement set","entityId":"misthalin:explorers-ring","key":"effect-4","ordinal":3}
 {"description":"+500 maximum life points while harnessed","entityId":"misthalin:font-of-life-relic","key":"effect-1","ordinal":0}
 {"description":"Stacks additively with bonfire boosts","entityId":"misthalin:font-of-life-relic","key":"effect-2","ordinal":1}
+{"description":"The Raptor (high-level Slayer master; Fort Guardhouse)","entityId":"misthalin:fort-forinthry","key":"effect-1","ordinal":0}
+{"description":"Construction training (fort buildings and reinforcement)","entityId":"misthalin:fort-forinthry","key":"effect-2","ordinal":0}
+{"description":"Fort buildings, Chapel, Slayer hub","entityId":"misthalin:fort-forinthry","key":"effect-3","ordinal":0}
+{"description":"Fort buildings · chapel · Slayer hub","entityId":"misthalin:fort-forinthry","key":"effect-3","ordinal":1}
 {"description":"Tier 95 two-handed Magic staff; common Magic BiS staff before Masterwork / Shard of Genesis Essence upgrades","entityId":"misthalin:fractured-staff-of-armadyl","key":"effect-1","ordinal":0}
 {"description":"Instability special costs 50% adrenaline with a 60s cooldown and grants 30s of Lightning Surge on Magic critical hits","entityId":"misthalin:fractured-staff-of-armadyl","key":"effect-2","ordinal":1}
 {"description":"Shared Leng artefact is the hard Arch-Glacor bottleneck across all three style glove upgrades","entityId":"misthalin:leng-artefact-t90-glove-ladder","key":"effect-1","ordinal":0}
@@ -1109,6 +1206,8 @@
 {"description":"Longbow: Mirrorback special (reflect/defensive utility, 100% adren)","entityId":"morytania:noxious-scythe-longbow","key":"effect-2","ordinal":1}
 {"description":"T90 Magic 2h bridge before FSoA / Roar+Ode dual-wield endgame","entityId":"morytania:noxious-staff","key":"effect-1","ordinal":0}
 {"description":"Same boss family as noxious scythe/longbow — magic style was out of melee-ranged pack scope","entityId":"morytania:noxious-staff","key":"effect-2","ordinal":1}
+{"description":"Polypore staff","entityId":"morytania:polypore-dungeon","key":"effect","ordinal":0}
+{"description":"Ganodermic armour (visor, poncho, leggings)","entityId":"morytania:polypore-dungeon","key":"effect","ordinal":1}
 {"description":"+15% damage and +15% hit chance vs undead while worn (all styles; on-hit only — no DoT/conjure buff)","entityId":"morytania:salve-amulet","key":"effect-1","ordinal":0}
 {"description":"Prayer bonus 3","entityId":"morytania:salve-amulet","key":"effect-2","ordinal":1}
 {"description":"Multiple amulets craftable from multiple shards (post-2021 unlimited shard collect)","entityId":"morytania:salve-amulet","key":"effect-3","ordinal":2}
@@ -1117,6 +1216,8 @@
 {"description":"Prayer bonus 3; small style damage bonuses on the enchanted form","entityId":"morytania:salve-amulet-enchanted","key":"effect-2","ordinal":1}
 {"description":"Stacks with full slayer helmet, Void, Undead Slayer perk/ability","entityId":"morytania:salve-amulet-enchanted","key":"effect-3","ordinal":2}
 {"description":"Works at Barrows and Rise of the Six (2023 restriction removal); also applies to Osseous (2025)","entityId":"morytania:salve-amulet-enchanted","key":"effect-4","ordinal":3}
+{"description":"Shade keys (bronze, steel, black, silver, gold) for Shade Catacombs doors and chests","entityId":"morytania:shades-of-mortton-cremation","key":"effect","ordinal":0}
+{"description":"Shiny columbarium key path via magic/elder pyre vyre cremation (Columbarium recesses)","entityId":"morytania:shades-of-mortton-cremation","key":"effect","ordinal":1}
 {"description":"Damages vyres with blisterwood-class effectiveness (+75% hit chance vs vyres; chance of up to double damage)","entityId":"morytania:sunspear","key":"effect-1","ordinal":0}
 {"description":"Auto-cremates vyre corpses for Prayer and Firemaking XP","entityId":"morytania:sunspear","key":"effect-2","ordinal":1}
 {"description":"Shares columbarium cremation damage ladder with blisterwood weapons","entityId":"morytania:sunspear","key":"effect-3","ordinal":2}
@@ -1384,6 +1485,7 @@
 {"description":"Automatically burns logs while Woodcutting, speeds smelting by 0.6 seconds, and treats low and medium smithing heat as the next higher heat band.","entityId":"seren:superheat-form","key":"effect-2","ordinal":1}
 {"description":"Protection","entityId":"seren:teamwork-protection","key":"effect-1","ordinal":0}
 {"description":"For each nearby player also using Teamwork Protection, grants 5% damage reduction and 1% damage reflection, up to five contributors for 25% reduction and 5% reflection.","entityId":"seren:teamwork-protection","key":"effect-2","ordinal":1}
+{"description":"High-level Slayer master assignments from Fort Forinthry Guardhouse","entityId":"slayer:the-raptor","key":"effect-1","ordinal":0}
 {"description":"Activate: restore 37.5% of total Prayer points over 30 seconds","entityId":"tirannwn:ancient-elven-ritual-shard","key":"effect-1","ordinal":0}
 {"description":"5-minute cooldown; unlimited activations","entityId":"tirannwn:ancient-elven-ritual-shard","key":"effect-2","ordinal":1}
 {"description":"Primary Superheat Form / Light Form / Chronicle Attraction sustain with GOTE","entityId":"tirannwn:ancient-elven-ritual-shard","key":"effect-3","ordinal":2}
@@ -1439,3 +1541,56 @@
 {"description":"25% chance to avoid being stunned and damaged while pickpocketing","entityId":"tirannwn:trahaearn-exoskeleton","key":"effect-1","ordinal":0}
 {"description":"25% chance to avoid snake bites in Pyramid Plunder","entityId":"tirannwn:trahaearn-exoskeleton","key":"effect-2","ordinal":1}
 {"description":"Can inherit black ibis experience benefits once those are owned","entityId":"tirannwn:trahaearn-exoskeleton","key":"effect-3","ordinal":2}
+{"description":"Construction (Dream of Iaia stonemason; base-camp stone)","entityId":"unlock:anachronia:advance-time","key":"effect-1","ordinal":0}
+{"description":"Crafting (Dream of Iaia tannery; base-camp hides)","entityId":"unlock:anachronia:advance-time","key":"effect-2","ordinal":0}
+{"description":"Fishing (Dream of Iaia fishery; base-camp clay)","entityId":"unlock:anachronia:advance-time","key":"effect-3","ordinal":0}
+{"description":"Fletching (Dream of Iaia fletcher hut; base-camp wood)","entityId":"unlock:anachronia:advance-time","key":"effect-4","ordinal":0}
+{"description":"Herblore (Dream of Iaia apothecary; base-camp leaves)","entityId":"unlock:anachronia:advance-time","key":"effect-5","ordinal":0}
+{"description":"Hunter (Dream of Iaia hunting lodge; base-camp vines)","entityId":"unlock:anachronia:advance-time","key":"effect-6","ordinal":0}
+{"description":"+150 mysterious monolith energy","entityId":"unlock:anachronia:mysterious-city","key":"effect-1","ordinal":0}
+{"description":"Enables 650 monolith energy cap (with prior research upgrades to 500)","entityId":"unlock:anachronia:mysterious-city","key":"effect-2","ordinal":0}
+{"description":"80,000 Archaeology XP","entityId":"unlock:anachronia:mysterious-city","key":"effect-3","ordinal":0}
+{"description":"Occultist's ring (Osseous)","entityId":"unlock:anachronia:rex-matriarchs-osseous","key":"effect-occultist","ordinal":0}
+{"description":"Champion's ring, Reaver's ring, Stalker's ring, Channeller's ring (full drops)","entityId":"unlock:anachronia:rex-matriarchs-osseous","key":"effect-rings","ordinal":0}
+{"description":"Golden Cannon / Royale Cannon / Restocking Cannon (Artisans' Workshop Reward Shop; capacity then auto-reload)","entityId":"unlock:asgarnia:artisans-workshop-burial-equipment-hub","key":"effect-cannon-shop","ordinal":0}
+{"description":"Dwarf multicannon (Ranged deployable; Nulodion sell/replace)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-1","ordinal":0}
+{"description":"Golden Cannon (Artisans' Workshop; 60 cannonball capacity)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-2","ordinal":0}
+{"description":"Royale Cannon (Artisans' Workshop; 90 cannonball capacity)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-3","ordinal":0}
+{"description":"Restocking Cannon (Artisans' Workshop; auto-reload while in sight with balls in inventory)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-4","ordinal":0}
+{"description":"Kinetic cyclone (melee Invention variant; EGW upgrade kit +50% damage)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-5","ordinal":0}
+{"description":"Oldak coil (magic Invention variant; EGW upgrade kit +50% damage)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-6","ordinal":0}
+{"description":"Dwarven siege engine (EGW dwarf multicannon upgrade kit; +100% damage look)","entityId":"unlock:asgarnia:dwarf-multicannon","key":"effect-7","ordinal":0}
+{"description":"Wand of the praesul (t92 magic main-hand)","entityId":"unlock:asgarnia:nex-angel-of-death","key":"effect-1","ordinal":0}
+{"description":"Imperium core (t92 magic off-hand)","entityId":"unlock:asgarnia:nex-angel-of-death","key":"effect-2","ordinal":0}
+{"description":"Praesul codex (one of Malevolence / Desolation / Affliction / Ruination)","entityId":"unlock:asgarnia:nex-angel-of-death","key":"effect-3","ordinal":0}
+{"description":"Sirenic scales (Equilibrium side drop with Ancient scales)","entityId":"unlock:asgarnia:seiryu-the-azure-serpent-ed1-final","key":"effect-sirenic","ordinal":0}
+{"description":"Equilibrium: Tectonic energy side drop with Draconic energy from ED2","entityId":"unlock:forinthry:draconic-energy-magic","key":"effect-league-tectonic","ordinal":0}
+{"description":"Draconic energy","entityId":"unlock:forinthry:dragonkin-laboratory-ed2","key":"effect-draconic","ordinal":0}
+{"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"unlock:forinthry:dragonkin-laboratory-ed2","key":"effect-tectonic","ordinal":0}
+{"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"unlock:forinthry:dragonkin-laboratory-upgrades","key":"effect-tectonic","ordinal":0}
+{"description":"Ungael combat activity access","entityId":"unlock:fremennik:ungael","key":"effect-1","ordinal":0}
+{"description":"Ungael ritual site access (Necromancy training alternative to Um)","entityId":"unlock:fremennik:ungael","key":"effect-2","ordinal":0}
+{"description":"Apex hide cowl","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-1","ordinal":0}
+{"description":"Apex hide body","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-2","ordinal":0}
+{"description":"Apex hide chaps","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-3","ordinal":0}
+{"description":"Apex hide vambraces","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-4","ordinal":0}
+{"description":"Apex hide boots","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-5","ordinal":0}
+{"description":"Fighter torso (Penance torso; honour points + Penance Queen kill)","entityId":"unlock:kandarin:barbarian-assault","key":"effect-1","ordinal":0}
+{"description":"Penance hats (fighter / ranger / runner / healer)","entityId":"unlock:kandarin:barbarian-assault","key":"effect-2","ordinal":0}
+{"description":"Penance skirt, Runner boots, Penance gloves","entityId":"unlock:kandarin:barbarian-assault","key":"effect-3","ordinal":0}
+{"description":"Penance trident (and master upgrade)","entityId":"unlock:kandarin:barbarian-assault","key":"effect-4","ordinal":0}
+{"description":"Role insignias (attacker / defender / collector / healer) after Penance King","entityId":"unlock:kandarin:barbarian-assault","key":"effect-5","ordinal":0}
+{"description":"Fishing Frenzy at 94+: 2nd fastest Fishing XP (behind Advance Time / Dream of Iaia)","entityId":"unlock:kandarin:deep-sea-fishing-hub","key":"effect-1","ordinal":0}
+{"description":"Enhanced nightmare gauntlets (T90 ranged power)","entityId":"unlock:kandarin:enhanced-nightmare-gauntlets","key":"effect-1","ordinal":0}
+{"description":"Steady Hands: +25% hit chance and free movement while using Snipe","entityId":"unlock:kandarin:enhanced-nightmare-gauntlets","key":"effect-2","ordinal":0}
+{"description":"Eternal magic logs (Piscatoris grove supply)","entityId":"unlock:kandarin:eternal-magic-trees","key":"effect-1","ordinal":0}
+{"description":"Eternal magic planks (~3x faster Construction XP/h than mahogany)","entityId":"unlock:kandarin:eternal-magic-trees","key":"effect-2","ordinal":0}
+{"description":"Perfect eternal magic branch chance at 110 Woodcutting","entityId":"unlock:kandarin:eternal-magic-trees","key":"effect-3","ordinal":0}
+{"description":"Thalmund's Forge burial anvils and burial forges: burial armour / burial equipment Smithing XP after Into the Forge (Kandarin; not Artisans' Respect shop)","entityId":"unlock:kandarin:warforge-dig-site-feldip-hills-archaeology","key":"effect","ordinal":0}
+{"description":"Polypore staff","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","key":"effect","ordinal":0}
+{"description":"Ganodermic armour (visor, poncho, leggings)","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","key":"effect","ordinal":1}
+{"description":"Shade keys (bronze, steel, black, silver, gold) for Shade Catacombs doors and chests","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-keys","ordinal":0}
+{"description":"Shiny columbarium key path via magic/elder pyre vyre cremation (Columbarium recesses)","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-shiny-key","ordinal":0}
+{"description":"Defence threshold: protection / deflection to 100% (75% PvP) for 9.6s; +4.8s per kill up to 19.2s","entityId":"unlock:unlocks:devotion","key":"effect-1","ordinal":0}
+{"description":"Constitution basic: damage target and heal for a share of damage dealt","entityId":"unlock:unlocks:sacrifice","key":"effect-1","ordinal":0}
+{"description":"Constitution ultimate: 6s self-stun then heal 250% damage taken (75% max LP cap); stun/bind immunity 15s","entityId":"unlock:unlocks:transfigure","key":"effect-1","ordinal":0}

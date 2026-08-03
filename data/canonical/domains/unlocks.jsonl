@@ -21,6 +21,7 @@
 {"category":"high-level untradeable prayer consumable","entityId":"potion:extreme-prayer"}
 {"category":"permanent Meilyr combination-potion recipe","entityId":"potion:holy-overload"}
 {"category":"permanent Meilyr combination-potion recipe","entityId":"potion:spiritual-prayer"}
+{"category":"Dream of Iaia station restock spell","entityId":"unlock:anachronia:advance-time"}
 {"category":"permanent Anachronia spa duration infrastructure","entityId":"unlock:anachronia:anachronia-base-camp-spa-pools"}
 {"category":"Woodcutting activity and temporary boost source","entityId":"unlock:anachronia:anachronia-overgrown-idols-woodcutting"}
 {"category":"island permanent passive buff system","entityId":"unlock:anachronia:anachronia-totems-permanent-multi-skill-buffs"}
@@ -42,6 +43,7 @@
 {"category":"tier-82 Anachronia slayer spear","entityId":"unlock:anachronia:laniakeas-spear"}
 {"category":"tier-100 ranged armour region pressure","entityId":"unlock:anachronia:masterwork-ranged-armour-material-pressure-havenhythe-anachronia-hunter"}
 {"category":"tier-92 melee DoT spear","entityId":"unlock:anachronia:masterwork-spear-of-annihilation"}
+{"category":"Archaeology monolith energy","entityId":"unlock:anachronia:mysterious-city"}
 {"category":"dinosaur combat and drop support necklace","entityId":"unlock:anachronia:necklace-of-salamancy"}
 {"category":"Ranch Out of Time combat passive","entityId":"unlock:anachronia:no-fear-meteor-strike-perk"}
 {"category":"Necromancy best-in-slot ring","entityId":"unlock:anachronia:occultists-ring"}
@@ -73,6 +75,7 @@
 {"category":"Tier 92 melee armour upgrade","entityId":"unlock:asgarnia:custom-fit-trimmed-masterwork"}
 {"category":"combat Archaeology relic cross-region chain","entityId":"unlock:asgarnia:death-ward-relic-chain"}
 {"category":"Archaeology monolith relic power","entityId":"unlock:asgarnia:divine-conversion-cres-framework"}
+{"category":"Combat utility / deployable","entityId":"unlock:asgarnia:dwarf-multicannon"}
 {"category":"permanent early multi-tool and flat XP tool","entityId":"unlock:asgarnia:dwarven-army-axe"}
 {"category":"BiS power armour craft / T92 ranged","entityId":"unlock:asgarnia:elite-sirenic-armour-t92-ranged-power"}
 {"category":"Magic best-in-slot power armour cross-region chain","entityId":"unlock:asgarnia:elite-tectonic-robe-armour"}
@@ -257,6 +260,7 @@
 {"category":"Crafting and Fletching processing spell","entityId":"unlock:fremennik:spin-flax-lunar"}
 {"category":"best-in-slot ranged-oriented upgraded Fremennik ring","entityId":"unlock:fremennik:stalkers-ring"}
 {"category":"mid-high style tank boots","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank"}
+{"entityId":"unlock:fremennik:ungael"}
 {"category":"Slayer combat and charm supply hub","entityId":"unlock:fremennik:waterbirth-island-access"}
 {"category":"early Crafting product","entityId":"unlock:fremennik:yak-hide-armour"}
 {"category":"Woodcutting vine training","entityId":"unlock:havenhythe:creeping-ivy"}
@@ -292,6 +296,7 @@
 {"category":"achievement diary Thieving RC Farming utility","entityId":"unlock:kandarin:ardougne-cloak-1-4"}
 {"category":"tier-90 Ranged weapons","entityId":"unlock:kandarin:ascension-crossbows"}
 {"category":"cross-region Woodcutting and Firemaking auto-burn path package","entityId":"unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze"}
+{"category":"Combat minigame / honour shop","entityId":"unlock:kandarin:barbarian-assault"}
 {"category":"Agility course and outfit progression","entityId":"unlock:kandarin:barbarian-outpost-agility-course"}
 {"category":"permanent multi-skill unlock package","entityId":"unlock:kandarin:barbarian-training-otto-multi-skill-package"}
 {"category":"Hunter D&D permanent access package","entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds"}
@@ -306,6 +311,7 @@
 {"category":"Divination XP outfit","entityId":"unlock:kandarin:diviners-outfit"}
 {"category":"Smithing and Crafting quest-chain infrastructure","entityId":"unlock:kandarin:elemental-workshop"}
 {"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:endurance-ooglog-wellspring"}
+{"category":"best-in-slot ranged power gloves","entityId":"unlock:kandarin:enhanced-nightmare-gauntlets"}
 {"category":"Hunter permanent XP and charm-sprite tool","entityId":"unlock:kandarin:enhanced-yaktwee-stick"}
 {"category":"Woodcutting resource supply","entityId":"unlock:kandarin:eternal-magic-trees"}
 {"category":"Invention Herblore boost infrastructure","entityId":"unlock:kandarin:extreme-invention-potion-boost-path"}

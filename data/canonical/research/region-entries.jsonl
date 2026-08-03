@@ -4,7 +4,7 @@
 {"entityId":"activity:content:rex-matriarchs","ordinal":3,"regionId":"anachronia","section":"content"}
 {"entityId":"activity:content:time-altar","ordinal":4,"regionId":"anachronia","section":"content"}
 {"entityId":"activity:content:orthen-dig-site","ordinal":5,"regionId":"anachronia","section":"content"}
-{"entityId":"activity:content:ranch-out-of-time-anachronia-dinosaur-farm","ordinal":6,"regionId":"anachronia","section":"content"}
+{"entityId":"anachronia:ranch-out-of-time","ordinal":6,"regionId":"anachronia","section":"content"}
 {"entityId":"activity:content:laniakea-anachronia-highest-standard-slayer-master","ordinal":7,"regionId":"anachronia","section":"content"}
 {"entityId":"activity:content:anachronia-base-camp","ordinal":8,"regionId":"anachronia","section":"content"}
 {"entityId":"activity:content:hunter-mark-shop-irwinsson","ordinal":9,"regionId":"anachronia","section":"content"}
@@ -49,7 +49,8 @@
 {"entityId":"unlock:anachronia:king-of-beasts-bomb-conservation-perk","ordinal":29,"regionId":"anachronia","section":"upgrades"}
 {"entityId":"unlock:anachronia:no-fear-meteor-strike-perk","ordinal":30,"regionId":"anachronia","section":"upgrades"}
 {"entityId":"unlock:anachronia:armoured-hide-barricade-perk","ordinal":31,"regionId":"anachronia","section":"upgrades"}
-{"entityId":"unlock:anachronia:gemstone-armour","ordinal":32,"regionId":"anachronia","section":"upgrades"}
+{"entityId":"unlock:anachronia:mysterious-city","ordinal":32,"regionId":"anachronia","section":"upgrades"}
+{"entityId":"unlock:anachronia:advance-time","ordinal":33,"regionId":"anachronia","section":"upgrades"}
 {"entityId":"activity:content:general-graardor","ordinal":0,"regionId":"asgarnia","section":"content"}
 {"entityId":"activity:content:kreearra","ordinal":1,"regionId":"asgarnia","section":"content"}
 {"entityId":"activity:content:commander-zilyana","ordinal":2,"regionId":"asgarnia","section":"content"}
@@ -75,6 +76,8 @@
 {"entityId":"activity:content:praesul-codex","ordinal":22,"regionId":"asgarnia","section":"content"}
 {"entityId":"activity:content:scrimshaws","ordinal":23,"regionId":"asgarnia","section":"content"}
 {"entityId":"activity:content:ports-armour","ordinal":24,"regionId":"asgarnia","section":"content"}
+{"entityId":"activity:content:dwarf-multicannon","ordinal":25,"regionId":"asgarnia","section":"content"}
+{"entityId":"activity:content:nex-angel-of-death","ordinal":26,"regionId":"asgarnia","section":"content"}
 {"entityId":"unlock:asgarnia:royal-crossbow","ordinal":0,"regionId":"asgarnia","section":"upgrades"}
 {"entityId":"unlock:asgarnia:all-fired-up-beacons-ring-of-fire-flame-gloves","ordinal":1,"regionId":"asgarnia","section":"upgrades"}
 {"entityId":"unlock:asgarnia:falador-shield-1-4","ordinal":2,"regionId":"asgarnia","section":"upgrades"}
@@ -128,6 +131,7 @@
 {"entityId":"unlock:asgarnia:armadyl-battlestaff-storms-end-special","ordinal":50,"regionId":"asgarnia","section":"upgrades"}
 {"entityId":"unlock:asgarnia:armadyl-equipment-gwd1-ranged-power-ladder","ordinal":51,"regionId":"asgarnia","section":"upgrades"}
 {"entityId":"unlock:asgarnia:robes-of-subjugation-gwd1-magic-power-ladder","ordinal":52,"regionId":"asgarnia","section":"upgrades"}
+{"entityId":"unlock:asgarnia:dwarf-multicannon","ordinal":53,"regionId":"asgarnia","section":"upgrades"}
 {"entityId":"activity:content:menaphos","ordinal":0,"regionId":"desert","section":"content"}
 {"entityId":"activity:content:hets-oasis","ordinal":1,"regionId":"desert","section":"content"}
 {"entityId":"activity:content:kalphite-queen","ordinal":2,"regionId":"desert","section":"content"}
@@ -343,6 +347,7 @@
 {"entityId":"activity:content:keldagrim","ordinal":9,"regionId":"fremennik","section":"content"}
 {"entityId":"activity:content:lava-flow-mine","ordinal":10,"regionId":"fremennik","section":"content"}
 {"entityId":"activity:content:neitiznot-yaks","ordinal":11,"regionId":"fremennik","section":"content"}
+{"entityId":"activity:content:ungael","ordinal":12,"regionId":"fremennik","section":"content"}
 {"entityId":"unlock:fremennik:deathless-koscheis-death-egg","ordinal":0,"regionId":"fremennik","section":"upgrades"}
 {"entityId":"unlock:fremennik:hatchet-of-bloom-and-blight","ordinal":1,"regionId":"fremennik","section":"upgrades"}
 {"entityId":"unlock:fremennik:hatchet-of-ember-and-glade","ordinal":2,"regionId":"fremennik","section":"upgrades"}
@@ -431,6 +436,11 @@
 {"entityId":"activity:content:muspah","ordinal":18,"regionId":"kandarin","section":"content"}
 {"entityId":"activity:content:rune-dragons","ordinal":19,"regionId":"kandarin","section":"content"}
 {"entityId":"activity:content:manor-farm","ordinal":20,"regionId":"kandarin","section":"content"}
+{"entityId":"activity:content:enhanced-excalibur","ordinal":21,"regionId":"kandarin","section":"content"}
+{"entityId":"activity:content:eternal-magic-trees","ordinal":22,"regionId":"kandarin","section":"content"}
+{"entityId":"activity:content:nihil-familiars","ordinal":23,"regionId":"kandarin","section":"content"}
+{"entityId":"activity:content:enhanced-nightmare-gauntlets","ordinal":24,"regionId":"kandarin","section":"content"}
+{"entityId":"activity:content:barbarian-assault","ordinal":25,"regionId":"kandarin","section":"content"}
 {"entityId":"unlock:kandarin:ancient-invention","ordinal":0,"regionId":"kandarin","section":"upgrades"}
 {"entityId":"unlock:kandarin:ascension-crossbows","ordinal":1,"regionId":"kandarin","section":"upgrades"}
 {"entityId":"unlock:kandarin:abyssal-link-the-subtle-blade","ordinal":2,"regionId":"kandarin","section":"upgrades"}
@@ -491,6 +501,8 @@
 {"entityId":"unlock:kandarin:hexcrest","ordinal":57,"regionId":"kandarin","section":"upgrades"}
 {"entityId":"unlock:kandarin:diviners-outfit","ordinal":58,"regionId":"kandarin","section":"upgrades"}
 {"entityId":"unlock:kandarin:gnome-restaurant-and-sous-chefs-outfit","ordinal":59,"regionId":"kandarin","section":"upgrades"}
+{"entityId":"unlock:kandarin:enhanced-nightmare-gauntlets","ordinal":60,"regionId":"kandarin","section":"upgrades"}
+{"entityId":"unlock:kandarin:barbarian-assault","ordinal":61,"regionId":"kandarin","section":"upgrades"}
 {"entityId":"activity:content:duradel","ordinal":0,"regionId":"karamja","section":"content"}
 {"entityId":"activity:content:tzhaar-fight-cave","ordinal":1,"regionId":"karamja","section":"content"}
 {"entityId":"activity:content:fight-kiln","ordinal":2,"regionId":"karamja","section":"content"}
@@ -549,6 +561,7 @@
 {"entityId":"activity:content:h-a-m-hideout-pickpocketing-and-store-rooms","ordinal":22,"regionId":"misthalin","section":"content"}
 {"entityId":"activity:content:dragon-mattock","ordinal":23,"regionId":"misthalin","section":"content"}
 {"entityId":"activity:content:pure-essence-chest","ordinal":24,"regionId":"misthalin","section":"content"}
+{"entityId":"activity:content:polypore-dungeon-spore-and-stick-resources","ordinal":25,"regionId":"misthalin","section":"content"}
 {"entityId":"unlock:misthalin:expansive-essence-pouch-70-essence-non-degrading","ordinal":0,"regionId":"misthalin","section":"upgrades"}
 {"entityId":"unlock:misthalin:gate-of-elidinis-uniques","ordinal":1,"regionId":"misthalin","section":"upgrades"}
 {"entityId":"unlock:misthalin:zemouregal-vorkath-progression","ordinal":2,"regionId":"misthalin","section":"upgrades"}
@@ -641,6 +654,7 @@
 {"entityId":"unlock:misthalin:ring-of-death","ordinal":89,"regionId":"misthalin","section":"upgrades"}
 {"entityId":"unlock:misthalin:enhanced-nightmare-gauntlets-t90-ranged","ordinal":90,"regionId":"misthalin","section":"upgrades"}
 {"entityId":"unlock:misthalin:spear-of-annihilation-base-archaeology-spear","ordinal":91,"regionId":"misthalin","section":"upgrades"}
+{"entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","ordinal":92,"regionId":"misthalin","section":"upgrades"}
 {"entityId":"activity:content:araxxor-araxxi","ordinal":0,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:everlight-dig-site","ordinal":1,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:slayer-tower","ordinal":2,"regionId":"morytania","section":"content"}
@@ -650,12 +664,13 @@
 {"entityId":"activity:content:abandoned-mine-salve-shard-mining","ordinal":6,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:werewolf-agility-course","ordinal":7,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:vyre-combat-and-sunspear-progression","ordinal":8,"regionId":"morytania","section":"content"}
-{"entityId":"activity:content:polypore-dungeon-spore-and-stick-resources","ordinal":9,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:ectofuntus","ordinal":10,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:darkmeyer-thieving","ordinal":11,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:canifis-mushroom-patch","ordinal":12,"regionId":"morytania","section":"content"}
-{"entityId":"activity:content:slayer-tower-early-floors","ordinal":13,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:port-phasmatys-farming-patches","ordinal":14,"regionId":"morytania","section":"content"}
+{"entityId":"activity:content:shade-keys","ordinal":15,"regionId":"morytania","section":"content"}
+{"entityId":"activity:content:shiny-columbarium-key","ordinal":16,"regionId":"morytania","section":"content"}
+{"entityId":"activity:content:linza-the-disgraced","ordinal":17,"regionId":"morytania","section":"content"}
 {"entityId":"unlock:morytania:noxious-weapons","ordinal":0,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:vyres-sunspear-multi-skill-training","ordinal":1,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:rise-of-the-six-progression","ordinal":2,"regionId":"morytania","section":"upgrades"}
@@ -677,7 +692,6 @@
 {"entityId":"unlock:morytania:inspire-effort-petasos","ordinal":18,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:lumberjack-outfit","ordinal":19,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:ouroboros-pouch","ordinal":20,"regionId":"morytania","section":"upgrades"}
-{"entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","ordinal":21,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:salve-amulet-base","ordinal":22,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:salve-amulet-e","ordinal":23,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:shades-of-mortton-cremation","ordinal":24,"regionId":"morytania","section":"upgrades"}
@@ -723,7 +737,6 @@
 {"entityId":"activity:content:max-guild","ordinal":18,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:skillcape-shop","ordinal":19,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:ancient-elven-ritual-shard","ordinal":20,"regionId":"tirannwn","section":"content"}
-{"entityId":"activity:content:seren-spells-and-prayers","ordinal":21,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:crystal-tools","ordinal":22,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:crystal-skillchompas","ordinal":23,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:perfect-juju-potions","ordinal":24,"regionId":"tirannwn","section":"content"}

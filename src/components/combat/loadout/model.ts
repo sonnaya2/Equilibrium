@@ -58,6 +58,8 @@ export interface LoadoutTarget {
   poisonImmune?: boolean;
   /** Seconds between hits large enough for Barkscales; omit when no incoming scenario. */
   incomingHitIntervalSeconds?: number;
+  /** Optional assumed hit size for Icyenic 100% protect mitigation totals. */
+  incomingHitDamage?: number;
 }
 
 export interface BaseDamageSettings {
@@ -173,8 +175,13 @@ export const BONFIRE_LOGS = [
   { value: "eternal-magic", label: "Eternal magic logs", minutes: 72 },
 ] as const;
 export type BonfireLogType = (typeof BONFIRE_LOGS)[number]["value"];
+/** Damage prayer id (standard book + Ancient Curses). Storage key remains styleCurse. */
 export type StyleCurseChoice =
   | "none"
+  | "piety"
+  | "rigour"
+  | "augury"
+  | "sanctity"
   | "turmoil"
   | "anguish"
   | "torment"
@@ -207,6 +214,11 @@ export interface LoadoutBuffs {
   strengthCape99: boolean;
   /** Attack master cape (120): +2% melee hit chance while style is melee. */
   attackCape120: boolean;
+  /**
+   * Protection prayer or deflection curse active (scenario for Icyenic Faith
+   * 100% block + Soul Split-on-protect).
+   */
+  protectionPrayer: boolean;
 }
 
 export interface Loadout {
@@ -307,6 +319,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     powerburstOfVitalityCooldownUntil: null,
     strengthCape99: false,
     attackCape120: false,
+    protectionPrayer: false,
   },
   equipmentSlots: {},
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
@@ -318,6 +331,10 @@ const STYLES = ["melee", "ranged", "magic", "necromancy"];
 const AFFINITIES = ["weak", "same", "strong", "weakness"];
 const STYLE_CURSES: StyleCurseChoice[] = [
   "none",
+  "piety",
+  "rigour",
+  "augury",
+  "sanctity",
   "turmoil",
   "anguish",
   "torment",
@@ -809,6 +826,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
                   incomingHitIntervalSeconds: Number(rawTarget.incomingHitIntervalSeconds),
                 }
               : {}),
+            ...(Number.isFinite(rawTarget.incomingHitDamage) &&
+            Number(rawTarget.incomingHitDamage) >= 0
+              ? { incomingHitDamage: Number(rawTarget.incomingHitDamage) }
+              : {}),
           }
         : null,
     perks: {
@@ -855,6 +876,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       powerburstOfVitalityCooldownUntil,
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
+      protectionPrayer: rawBuffs.protectionPrayer === true,
     },
     equipmentSlots,
     enchantments,

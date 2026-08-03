@@ -16,6 +16,7 @@ import { RegionCrest } from "../RegionCrest";
 import {
   BAR_SIZE_PRESETS,
   formatNumber,
+  formatProofLabel,
   previewCategory,
   progressFillFromState,
   solverPhaseLabel,
@@ -503,7 +504,7 @@ export function RevoSolverSection({
         <div className="mt-3 border-t border-stone-750 pt-2" data-testid="revo-solver-results">
           <p className="text-xs text-parch-300">
             Score {formatNumber(solverResult.score)} ·{" "}
-            {solverResult.proofLabel ?? "heuristic-best-found"} · {solverResult.evaluations} evals
+            {formatProofLabel(solverResult.proofLabel)} · {solverResult.evaluations} evals
             {solverResult.openingDpm != null
               ? ` · open ${formatNumber(solverResult.openingDpm)} / mid ${formatNumber(solverResult.developedDpm ?? 0)} / steady ${formatNumber(solverResult.steadyDpm ?? 0)}`
               : ""}
@@ -540,14 +541,14 @@ export function RevoSolverSection({
           data-testid="revo-solver-stopped-preview"
         >
           <p className="text-xs text-parch-300">
-            Stopped · exploratory
+            Stopped · estimate
             {Number.isFinite(stoppedPreview.bestFullScore)
               ? ` full ~${formatNumber(stoppedPreview.bestFullScore!)}`
               : Number.isFinite(stoppedPreview.bestExploratoryScore)
                 ? ` search ~${formatNumber(stoppedPreview.bestExploratoryScore!)}`
                 : ""}
             {" · "}
-            {stoppedPreview.evaluations} evals · not a verified final
+            {stoppedPreview.evaluations} evals · unverified
           </p>
           <ul className="mt-2 space-y-1">
             <li className="flex flex-wrap items-center gap-2 text-xs">

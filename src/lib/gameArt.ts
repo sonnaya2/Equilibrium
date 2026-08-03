@@ -79,6 +79,8 @@ export function abilityCategoryLabel(
 const DATA_ICON_ALIASES: Record<string, string> = {
   "abandoned mine salve shard mining": "salve-amulet-e",
   "salve amulet (e)": "salve-amulet-e",
+  "salve amulet e": "salve-amulet-e",
+  "salve amulet": "salve-amulet-e",
   abyss: "abyss",
   "abyss access": "abyss",
   "abyss entrance": "abyss",
@@ -102,7 +104,6 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "acheron mammoths": "acheron-mammoths",
   "ice strykewyrms": "ice-strykewyrm",
   "lava strykewyrms": "lava-strykewyrm",
-  "slayer tower early floors": "crawling-hands",
   "green dragons": "green-dragons",
   "chaos tunnels": "chaos-tunnels",
   "lesser demons": "lesser-demons",
@@ -175,6 +176,15 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "antipoison totem": "antipoison-totem",
   "apex hide → masterwork ranged craft path": "apex-hide-body",
   "apex hide armour": "apex-hide-body",
+  "apex hide armor": "apex-hide-body",
+  "apex hide set": "apex-hide-body",
+  "apex hide cowl": "apex-hide-cowl",
+  "apex hide body": "apex-hide-body",
+  "apex hide chaps": "apex-hide-chaps",
+  "apex hide vambraces": "apex-hide-vambraces",
+  "apex hide boots": "apex-hide-boots",
+  "apex hide": "apex-hide-body",
+  "apex hides": "apex-hide-body",
   araxxi: "araxxi",
   araxxor: "araxxor",
   "arch glacor": "arch-glacor",
@@ -234,9 +244,19 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "bandit camp shops": "bloodweed-seed",
   "barbarian outpost": "barbarian-outpost",
   "barbarian outpost agility course": "barbarian-outpost-agility-course",
+  // BA major plate: minigame art if present, else Outpost activity plate (not agility course).
+  "barbarian assault": "barbarian-assault",
   "barbarian training (otto multi-skill package)": "barbarian-training",
   barrows: "barrows",
   "barrows: rise of the six": "barrows-rise-of-the-six",
+  // Linza the Disgraced set (Barrows) — body piece for row icon.
+  "linza the disgraced": "linzas-cuirass",
+  "linza's equipment": "linzas-cuirass",
+  "linza's helm": "linzas-helm",
+  "linza's cuirass": "linzas-cuirass",
+  "linza's greaves": "linzas-greaves",
+  "linza's hammer": "linzas-hammer",
+  "linza's shield": "linzas-shield",
   "base juju potion family (herblore habitat)": "juju-farming",
   "berserker's fury relic chain": "berserkers-fury",
   "big chinchompa private hunting grounds": "big-chinchompa",
@@ -256,9 +276,13 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "black stone dragon": "black-stone-dragon",
   "blacksmith's outfit": "blacksmiths-outfit",
   "blade of leng": "blade-of-leng",
+  // Anachronia magic boots inventory (not blast-fusion-hammer / imcando stand-in).
   "blast diffusion / enhanced blast diffusion boots": "blast-diffusion-boots",
   "blast diffusion boots": "blast-diffusion-boots",
+  "blast diffusion": "blast-diffusion-boots",
+  "blast furnace": "blast-furnace",
   "blast furnace (keldagrim)": "blast-furnace",
+  "blast fusion hammer": "imcando-pickaxe",
   "blessing of het relic (eye of het ii)": "eye-of-het",
   "blightbound crossbows": "blightbound-crossbow",
   "blood altar": "blood-altar",
@@ -266,7 +290,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   bonecrusher: "bonecrusher",
   "bonecrusher + demon horn necklace prayer stack": "bonecrusher",
   "bonecrusher auto-pickup upgrade (waiko / boni)": "bonecrusher",
+  // Permanent-unlocks slug serves the inventory mask (not a full-body plate).
   "botanist's outfit": "botanists-outfit",
+  "botanists outfit": "botanists-outfit",
   "botanist's workbench": "botanists-workbench",
   "bow of the last guardian": "bow-of-the-last-guardian",
   "bow of the last guardian (bolg)": "bow-of-the-last-guardian",
@@ -419,6 +445,10 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "daemonheim skilling reward infrastructure": "daemonheim-rewards",
   "dagannoth kings": "dagannoth-kings",
   "dalia's tree nursery eternal magic plots": "dalias-tree-nursery",
+  "eternal magic trees": "eternal-magic-wood-box",
+  "eternal magic logs": "eternal-magic-wood-box",
+  "eternal magic planks": "plank",
+  "eternal planks": "plank",
   "dark facet of grace": "dark-facet-of-grace",
   "dark facet of luck": "dark-facet-of-luck",
   "dark facet of passage": "dark-facet-of-passage",
@@ -500,6 +530,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   dreadnips: "dreadnip",
   "dream mentor": "dream-mentor",
   "dream of iaia": "dream-of-iaia",
+  "advance time": "dream-of-iaia",
   "drygore weapon set": "drygore-mace",
   "drygore weaponry": "drygore-weapons",
   "drygore weapons": "drygore-weapons",
@@ -511,6 +542,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   ectofuntus: "ectofuntus",
   "ectofuntus and first age prayer outfit": "ectofuntus",
   "ectoplasmator (base)": "ectoplasmator",
+  "effigy incubator": "effigy-incubator",
   "edgeville dungeon resource dungeons": "edgeville-dungeon",
   "edgeville resource dungeons": "edgeville-dungeon",
   "edgeville skilling and wilderness on-ramp hub": "edgeville",
@@ -529,7 +561,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "elite tectonic robe armour (t92 magic power)": "elite-tectonic-robe-top",
   "elven clan worker pickpocketing": "elven-clan",
   "emberkeen / hailfire / flarefrost boots (t90 glacor upgrades)": "emberkeen-boots",
-  "enhanced blast diffusion boots": "blast-diffusion-boots",
+  "enhanced blast diffusion boots": "enhanced-blast-diffusion-boots",
   "empowered summoning obelisks": "summoning-obelisk",
   "empty divine charge + divine-o-matic manufacture": "empty-divine-charge",
   "enchanted lyre": "enchanted-lyre",
@@ -564,6 +596,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "extreme invention potion boost path": "extreme-invention-potion",
   "extreme invention supply combo (guild + webbing + herblore)": "extreme-invention",
   "extreme prayer potion": "extreme-prayer-potion",
+  // Permanent-unlocks slug serves the inventory mask (not a full-body plate).
   "factory outfit": "factory-outfit",
   "factory outfit (flash powder factory)": "factory-outfit",
   "falador farm": "falador-farm",
@@ -607,7 +640,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "flame gloves": "flame-gloves",
   "flash powder factory": "flash-powder-factory",
   "flash powder factory herblore outfits": "factory-outfit",
-  "flash powder factory minigame and reward shop": "flash-powder",
+  "flash powder factory minigame and reward shop": "flash-powder-factory",
   "fletcher's outfit": "portable-fletcher",
   "flow state (soma)": "flow-state",
   "focus storage": "focus-storage",
@@ -618,7 +651,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "edimmu resource dungeon": "edimmu-resource-dungeon",
   "fort command centre global operations tier ladder densify": "fort-forinthry-command-centre",
   "fort forinthry": "fort-forinthry",
-  "ham hideout pickpocketing and store rooms": "clue-scroll-easy",
+  "ham hideout pickpocketing and store rooms": "ham-hideout",
   "expansive essence pouch (70 essence, non-degrading)": "expansive-essence-pouch",
   "expansive essence pouch": "expansive-essence-pouch",
   "fort forinthry botanist's workbench": "botanists-workbench",
@@ -713,7 +746,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "hatchet of ember and glade": "hatchet-of-ember-and-glade",
   "hatchet progression checklist (dragon → imcando → crystal → ember and glade → bloom and blight)":
     "hatchet-of-ember-and-glade",
-  "havenhythe big game hunter": "havenhythe-big-game-hunter",
+  // Prefer apex hide body inventory over activity plate for the major face.
+  "havenhythe big game hunter": "apex-hide-body",
   "havenhythe birdhouses": "bird-house",
   "havenhythe canoe network": "canoe-station-havenhythe",
   "havenhythe empowered summoning obelisks (spirit plane connection)": "summoning-obelisk",
@@ -729,8 +763,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   grenwalls: "grenwalls",
   grenwall: "grenwalls",
   "ancient elven ritual shard": "ancient-elven-ritual-shard",
-  "seren spells and prayers": "crystallise",
-  "seren spells & prayers": "crystallise",
+
   "crystal tools": "crystal-pickaxe",
   "crystal skillchompas": "crystal-skillchompas",
   "perfect juju potions": "perfect-juju",
@@ -840,12 +873,16 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "kree'arra": "kreearra",
   kreearra: "kreearra",
   "kril tsutsaroth": "kril-tsutsaroth",
+  // Kandarin Slayer master - NPC plate (activities/kuradal), not dungeon map / ring.
   "kuradal (ancient cavern slayer master)": "kuradal",
-  "kuradal's dungeon and ferocious ring hub": "ferocious-ring",
   kuradal: "kuradal",
+  // Legacy hub label: reward-column ring only (row is now "Kuradal").
+  "kuradal's dungeon and ferocious ring hub": "ferocious-ring",
   "ferocious ring": "ferocious-ring",
   "manor farm animal perks": "nopenopenope",
-  "freneskae via world gate": "nightmare",
+  // Kandarin packaging for Freneskae access - World Gate scenery, not Nightmare boss plate.
+  "freneskae via world gate": "world-gate",
+  "world gate": "world-gate",
   "nightmare creatures": "nightmare",
   muspah: "muspah",
   "rune dragons": "rune-dragon",
@@ -862,9 +899,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "learn quicker killing blows (400 slayer points)": "full-slayer-helmet",
   "learn to move souls in personal slayer dungeon (1,000 slayer points)": "slayer-codex",
   "legends' guild totem jewellery recharge": "legends-guild",
-  // Inventory crossbow - boss plate + multi-MB monastery dump crop poorly in name wells.
-  legiones: "ascension-crossbow",
-  "legiones (monastery of ascension)": "ascension-crossbow",
+  // Boss plate - permanent-unlocks/legiones is monastery exterior dump.
+  legiones: "legiones",
+  "legiones (monastery of ascension)": "legiones",
   "leng artefact": "leng-artefact",
   "liberation of mazcab (beastmaster durzag / yakamaru)": "liberation-of-mazcab",
   "liberation of mazcab": "liberation-of-mazcab",
@@ -873,7 +910,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "goebie scavengers": "goebie-scavengers",
   "sunken pyramid / player-owned slayer dungeon": "sunken-pyramid",
   "sunken pyramid": "sunken-pyramid",
-  "liquid gold nymph golden mining suit path": "liquid-gold-nymph",
+  // Suit inventory (skilling-outfits), not the Liquid Gold Nymph NPC plate.
+  "golden mining suit": "golden-mining-suit",
+  "liquid gold nymph golden mining suit path": "golden-mining-suit",
   "livid farm": "livid-farm",
   "livid farm lunar spell unlocks": "livid-farm",
   "living rock caverns": "living-rock-caverns",
@@ -991,6 +1030,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "mysterious monolith": "mysterious-monolith",
   "mysterious monolith energy + relic loadout ladder": "mysterious-monolith",
   "mysterious monolith relic power hub": "mysterious-monolith",
+  "mysterious city": "mysterious-monolith",
   "nakatra, devourer eternal": "nakatra",
   "nardah elidinis statuette": "desert-amulet-4",
   "nature altar": "nature-altar",
@@ -1016,6 +1056,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "nightmare gauntlets": "nightmare-gauntlets",
   "nightmare gauntlets (ranged)": "nightmare-gauntlets",
   "nihil familiar progression": "blood-nihil",
+  "nihil familiars": "blood-nihil",
+  nihils: "blood-nihil",
   "nimble outfit (the pit agility xp set)": "nimble-outfit",
   "no fear meteor strike perk": "no-fear",
   "nopenopenope spider combat perk": "nopenopenope",
@@ -1027,7 +1069,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "old meats (hollow hill meat shop)": "raw-giant-crayfish",
   "old meats": "raw-giant-crayfish",
   "fern's finds": "meilyr-recipe-shop",
-  "heather's crafting supplies": "gem-bag",
+  "heather's crafting supplies": "ruby",
   "omni guard": "omni-guard",
   "one piercing note": "one-piercing-note",
   "oo'glog spa pools (as a first resort)": "ooglog-spa",
@@ -1161,7 +1203,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "ritualist's outfit": "ritualists",
   "roar of awakening and ode to deceit": "roar-of-awakening",
   "roar of osseous (rex skeleton island buff)": "roar-of-osseous",
-  "robes of subjugation (gwd1 magic power ladder)": "subjugation-robe-top",
+  "robes of subjugation (gwd1 magic power ladder)": "garb-of-subjugation",
   "robes of the first necromancer": "first-necromancer-body",
   "rod-o-matic": "fishing-rod-o-matic",
   "rogue equipment (flash powder factory rubble)": "rogue-equipment",
@@ -1230,6 +1272,15 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "seren stones": "seren-stones",
   "shades of mort'ton cremation": "mortton",
   "shades of mort'ton": "mortton",
+  "shade keys": "gold-key",
+  "shade key": "gold-key",
+  "bronze key": "bronze-key",
+  "steel key": "steel-key",
+  "black key": "black-key",
+  "silver key": "silver-key",
+  "gold key": "gold-key",
+  "shiny columbarium key": "shiny-columbarium-key",
+  "shiny columbarium keys": "shiny-columbarium-key",
   "shadow glaives": "shadow-glaives",
   // ED3 Major unlocks Name well: Ambassador plate (not reef scenery).
   "shadow reef": "ambassador",
@@ -1311,7 +1362,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "stormguard citadel dig site": "stormguard-citadel-dig-site",
   "stormguard citadel dig site (armadylean)": "stormguard-citadel-dig-site",
   "string jewellery (lunar)": "string-jewellery",
-  "subjugation equipment": "subjugation-robe-top",
+  "subjugation equipment": "garb-of-subjugation",
   "summoning charm-conservation tools": "summoning-charm",
   "sumona (pollnivneach slayer master)": "sumona",
   "sunken pyramid fourth room (3,000 slayer points)": "sunken-pyramid",
@@ -1350,6 +1401,8 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "the abyss": "abyss",
   "the ambassador": "ambassador",
 
+  // the-arc.webp is Archaeology skill art (wrong wiki hit); Waiko is the Arc hub plate.
+  "the arc": "waiko",
   "the arc waiko reward shop (chime economy)": "chimes",
   "the barrows brothers": "barrows",
   "the dig site": "the-dig-site",
@@ -1407,6 +1460,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "underworld grimoire skilling milestone ladder (ug1–4 densify)": "underworld-grimoire-1",
   "unexpected diplomacy": "unexpected-diplomacy",
   "unexpected diplomacy (seal of the praefectus praetorio)": "unexpected-diplomacy",
+  ungael: "ungael",
   "ungael ritual site": "ungael-ritual",
   "ungael ritual site pressure": "ungael-ritual",
   "ungeal ritual site": "ungael-ritual",
@@ -1463,6 +1517,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "warriors' guild": "dragon-defender",
   safecracking: "safe",
   "safecracking route": "safe",
+  safes: "safe",
   "asgarnia safecracking circuit": "safe",
   "wars retreat": "wars-retreat-hub",
   "wars retreat combat hub": "wars-retreat-hub",
@@ -1715,6 +1770,11 @@ export function activityIconPath(name: string): string | null {
 export function upgradeIconPath(name: string): string | null {
   // Exact/alias only - containment lets short stubs (anachronia-base) steal longer hubs.
   return firstHit(exactSlugCandidates(name), (slug) => {
+    // Monastery exterior dump; ResearchBrowser prefers upgradeIconPath before entity.
+    if (slug === "legiones") return null;
+    // the-arc.webp is Archaeology skill art (wrong wiki hit); Arc majors use Waiko /
+    // uncharted-island-map via DATA_ICON_ALIASES + dataEntityIconPath.
+    if (slug === "the-arc") return null;
     const rel = UPGRADE_ICON_BY_SLUG[slug];
     return rel ? `/game/upgrades/${rel}` : null;
   });
@@ -1749,6 +1809,10 @@ const SCENERY_PERMANENT_UNLOCK_SLUGS = new Set([
   "hunter-mark-shop",
   "jatizso-dungeon-mine",
   "karamja-volcano-resource-dungeon",
+  // Floor-plan map crop - never name-well or reward chip for Kuradal row.
+  "kuradals-dungeon",
+  // Monastery exterior under permanent-unlocks - boss plate is the creature art.
+  "legiones",
   "liberation-of-mazcab",
   "manor-farm",
   "marigold-farm",
@@ -1804,6 +1868,8 @@ const SCENERY_ACTIVITY_SLUGS = new Set([
   "catherby",
   "deep-sea-fishing",
   "fishing-guild",
+  // Kuradal's Dungeon map plate - not NPC art (use activities/kuradal for the master).
+  "kuradals-dungeon",
   "manor-farm",
   "ourania-altar",
   "ourania-runecrafting-altar",
@@ -1930,7 +1996,8 @@ function skillHubIconFromBag(bag: string): string | null {
   if (/\blunar (?:isle|island|spell)\b|\blivid farm\b/i.test(bag)) {
     return hit("magic");
   }
-  if (/\bblast furnace\b|\bsmithing\b.*\bfurnace\b/i.test(bag)) {
+  // Named Blast Furnace keeps permanent-unlock inventory art; bare smithing furnaces use the skill glyph.
+  if (/\bsmithing\b.*\bfurnace\b/i.test(bag) && !/\bblast furnace\b/i.test(bag)) {
     return hit("smithing");
   }
   if (
@@ -1950,7 +2017,11 @@ function skillHubIconFromBag(bag: string): string | null {
   ) {
     return hit("runecrafting");
   }
-  if (/\bherblore\b|\bmeilyr recipe\b|\bfungi bloom\b|\bcombination potions?\b/i.test(bag)) {
+  // Meilyr Recipe Shop place plate / permanent-unlock art - not the herblore skill glyph.
+  if (
+    /\bherblore\b|\bfungi bloom\b|\bcombination potions?\b/i.test(bag) &&
+    !/\bmeilyr recipe shop\b/i.test(bag)
+  ) {
     return hit("herblore");
   }
   if (/\baccidental fletching\b|\bfletching and firemaking\b/i.test(bag)) {
@@ -1979,7 +2050,10 @@ const ENTITY_ICON_OVERRIDES: Record<string, string> = {
   "liberation of mazcab": "/game/combat/equipment/achto-teralith-cuirass.webp",
   "mage training arena": "/game/upgrades/skilling-production/bones-to-peaches.webp",
   "mazcab emergency merchants": "/game/upgrades/permanent-unlocks/super-restore.webp",
-  "queen black dragon": "/game/upgrades/skilling-production/dragon-kiteshield.webp",
+  "meilyr recipe shop": "/game/activities/meilyr-recipe-shop.webp",
+  "meilyr recipe shop and combination potions": "/game/activities/meilyr-recipe-shop.webp",
+  // QBD uses /game/bosses/queen-black-dragon.webp via primaryBossIconPath — do not
+  // override the row with dragon kiteshield (that stays a reward chip only).
   "ports armour": "/game/upgrades/progression/tetsu-body.webp",
   scrimshaws: "/game/combat/equipment/scrimshaw-of-cruelty.webp",
   "shilo village gem mine and gemstone cavern":
@@ -1988,6 +2062,11 @@ const ENTITY_ICON_OVERRIDES: Record<string, string> = {
   "uncommon gem rocks": "/game/upgrades/permanent-unlocks/wendlewick-deserted-mine.webp",
   whirligigs: "/game/upgrades/permanent-unlocks/crocodile-tears.webp",
 };
+
+const MEILYR_RECIPE_SHOP_ENTITY_IDS = new Set([
+  "activity:content:meilyr-recipe-shop",
+  "prifddinas:meilyr-recipe-shop",
+]);
 
 /**
  * Resolve a Data-route entity to a local icon path, or null.
@@ -2002,6 +2081,9 @@ export function dataEntityIconPath(input: {
   const id = input.id?.trim() ?? "";
   if (id.startsWith("item:") || id.startsWith("equipment:")) {
     return equipmentIconPath(id);
+  }
+  if (MEILYR_RECIPE_SHOP_ENTITY_IDS.has(id)) {
+    return "/game/activities/meilyr-recipe-shop.webp";
   }
 
   const name = decodeHtmlEntities(input.name ?? "").trim();
@@ -2052,18 +2134,19 @@ export function dataEntityIconPath(input: {
     /\bgate of\b/.test(kind) ||
     /\bgod wars\b/.test(kind) ||
     /\belite dungeon\b/.test(kind);
-  // Full alias to inventory (Legiones → ascension-crossbow) beats bossish kind routing.
+  // Full alias to inventory (not a boss slug) beats bossish kind routing.
   // Prefer activity plate for place majors (Empty Throne / Rune Temple) over permanent
   // unlock screenshots. Multi-MB scenery activity (fish-farm, *course) stays fenced so
   // skillHub can pick a skill glyph later.
   if (fullAlias && !BOSS_ICON_SLUGS.has(fullAlias)) {
+    // Prefer /combat/equipment inventory over /upgrades plates.
+    const aliasEq = equipmentIconPath(fullAlias);
+    if (aliasEq) return aliasEq;
     const aliasAct = activityIconPath(name);
     const aliasUp = upgradeIconPath(name);
     if (aliasUp && !aliasUp.includes("/permanent-unlocks/")) return aliasUp;
     if (aliasAct && !isSceneryActivityPath(aliasAct)) return aliasAct;
     if (aliasUp && !isSceneryPermanentUnlock(aliasUp)) return aliasUp;
-    const aliasEq = equipmentIconPath(fullAlias);
-    if (aliasEq) return aliasEq;
   }
 
   // Bossish kinds: try full containment boss before scenery (Major unlocks Name column).

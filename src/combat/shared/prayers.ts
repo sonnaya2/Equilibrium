@@ -2,11 +2,12 @@ import type { CombatContext, CombatModifier, CombatStyle, SourceReference } from
 import { mulFloor } from "../core/rounding";
 
 /**
- * Damage-relevant prayer / Ancient Curse lines. Numbers from current wiki pages
- * (Turmoil family + Praesul upgrades), verified 2026-07-26.
+ * Damage-relevant prayers: standard book (Piety line) + Ancient Curses
+ * (Turmoil family + Praesul). Numbers from prayer catalogue / wiki.
  */
 
 const VERIFIED = "2026-07-26";
+const VERIFIED_STANDARD = "2026-07-25";
 
 export interface StyleCurseBoost {
   id: string;
@@ -16,17 +17,68 @@ export interface StyleCurseBoost {
   accuracyLevels: number;
   damageBonus: number;
   defenceLevels: number;
+  /** standard = main prayer book; ancient = Ancient Curses (incl. Seren/Praesul line). */
+  book: "standard" | "ancient";
   source: SourceReference;
 }
 
-function wiki(page: string, title: string): SourceReference {
+function wiki(page: string, title: string, verifiedAt = VERIFIED): SourceReference {
   return {
     source: "runescape-wiki",
     url: `https://runescape.wiki/w/${page}`,
     title,
-    verifiedAt: VERIFIED,
+    verifiedAt,
   };
 }
+
+/** Standard book Knight Waves line: +8 accuracy / +8% damage / +8 defence. */
+export const PIETY: StyleCurseBoost = {
+  id: "piety",
+  name: "Piety",
+  style: "melee",
+  prayerLevel: 70,
+  accuracyLevels: 8,
+  damageBonus: 0.08,
+  defenceLevels: 8,
+  book: "standard",
+  source: wiki("Piety", "Piety", VERIFIED_STANDARD),
+};
+
+export const RIGOUR: StyleCurseBoost = {
+  id: "rigour",
+  name: "Rigour",
+  style: "ranged",
+  prayerLevel: 70,
+  accuracyLevels: 8,
+  damageBonus: 0.08,
+  defenceLevels: 8,
+  book: "standard",
+  source: wiki("Rigour", "Rigour", VERIFIED_STANDARD),
+};
+
+export const AUGURY: StyleCurseBoost = {
+  id: "augury",
+  name: "Augury",
+  style: "magic",
+  prayerLevel: 70,
+  accuracyLevels: 8,
+  damageBonus: 0.08,
+  defenceLevels: 8,
+  book: "standard",
+  source: wiki("Augury", "Augury", VERIFIED_STANDARD),
+};
+
+export const SANCTITY: StyleCurseBoost = {
+  id: "sanctity",
+  name: "Sanctity",
+  style: "necromancy",
+  prayerLevel: 70,
+  accuracyLevels: 8,
+  damageBonus: 0.08,
+  defenceLevels: 8,
+  book: "standard",
+  source: wiki("Sanctity", "Sanctity", VERIFIED_STANDARD),
+};
 
 /** Turmoil line (95 Prayer): +10 levels accuracy/defence, +10% style damage. */
 export const TURMOIL: StyleCurseBoost = {
@@ -37,6 +89,7 @@ export const TURMOIL: StyleCurseBoost = {
   accuracyLevels: 10,
   damageBonus: 0.1,
   defenceLevels: 10,
+  book: "ancient",
   source: wiki("Turmoil", "Turmoil"),
 };
 
@@ -48,6 +101,7 @@ export const ANGUISH: StyleCurseBoost = {
   accuracyLevels: 10,
   damageBonus: 0.1,
   defenceLevels: 10,
+  book: "ancient",
   source: wiki("Anguish", "Anguish"),
 };
 
@@ -59,6 +113,7 @@ export const TORMENT: StyleCurseBoost = {
   accuracyLevels: 10,
   damageBonus: 0.1,
   defenceLevels: 10,
+  book: "ancient",
   source: wiki("Torment", "Torment"),
 };
 
@@ -70,6 +125,7 @@ export const SORROW: StyleCurseBoost = {
   accuracyLevels: 10,
   damageBonus: 0.1,
   defenceLevels: 10,
+  book: "ancient",
   source: wiki("Sorrow", "Sorrow"),
 };
 
@@ -82,6 +138,7 @@ export const MALEVOLENCE: StyleCurseBoost = {
   accuracyLevels: 12,
   damageBonus: 0.12,
   defenceLevels: 12,
+  book: "ancient",
   source: wiki("Malevolence", "Malevolence"),
 };
 
@@ -93,6 +150,7 @@ export const DESOLATION: StyleCurseBoost = {
   accuracyLevels: 12,
   damageBonus: 0.12,
   defenceLevels: 12,
+  book: "ancient",
   source: wiki("Desolation", "Desolation"),
 };
 
@@ -104,6 +162,7 @@ export const AFFLICTION: StyleCurseBoost = {
   accuracyLevels: 12,
   damageBonus: 0.12,
   defenceLevels: 12,
+  book: "ancient",
   source: wiki("Affliction", "Affliction"),
 };
 
@@ -115,10 +174,16 @@ export const RUINATION: StyleCurseBoost = {
   accuracyLevels: 12,
   damageBonus: 0.12,
   defenceLevels: 12,
+  book: "ancient",
   source: wiki("Ruination", "Ruination"),
 };
 
+/** All damage prayers the loadout can pick (standard + ancient). */
 export const STYLE_CURSES: readonly StyleCurseBoost[] = [
+  PIETY,
+  RIGOUR,
+  AUGURY,
+  SANCTITY,
   TURMOIL,
   ANGUISH,
   TORMENT,
@@ -129,9 +194,19 @@ export const STYLE_CURSES: readonly StyleCurseBoost[] = [
   RUINATION,
 ];
 
+export const STANDARD_DAMAGE_PRAYERS: readonly StyleCurseBoost[] = [
+  PIETY,
+  RIGOUR,
+  AUGURY,
+  SANCTITY,
+];
+
 export function styleCurseById(id: string): StyleCurseBoost | undefined {
   return STYLE_CURSES.find((c) => c.id === id);
 }
+
+/** Alias: loadout field is still styleCurse; UI labels these as prayers. */
+export const damagePrayerById = styleCurseById;
 
 export function bestStyleCurse(style: CombatStyle): StyleCurseBoost {
   const matches = STYLE_CURSES.filter((c) => c.style === style);

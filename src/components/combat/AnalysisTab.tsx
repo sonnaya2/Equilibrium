@@ -102,7 +102,10 @@ export function AnalysisTab() {
   const [abilityId, setAbilityId] = useState(ALL_ENTRIES[0].ability.id);
   const [souls, setSouls] = useState(3);
   const [lineB, setLineB] = useState(() => ({
-    base: loadoutStats(loadout, { blessingPicks: build.blessingPicks }).base,
+    base: loadoutStats(loadout, {
+      blessingPicks: build.blessingPicks,
+      relics: Object.values(build.relics).filter(Boolean),
+    }).base,
     level: loadout.level,
     accuracy: loadout.accuracy,
     critChance: loadout.critChance,
@@ -113,8 +116,12 @@ export function AnalysisTab() {
   const ability = entry.ability.id === "volley_of_souls" ? volleyOfSouls(souls) : entry.ability;
 
   const statsA = useMemo(
-    () => loadoutStats(loadout, { blessingPicks: build.blessingPicks }),
-    [loadout, build.blessingPicks],
+    () =>
+      loadoutStats(loadout, {
+        blessingPicks: build.blessingPicks,
+        relics: Object.values(build.relics).filter(Boolean),
+      }),
+    [loadout, build.blessingPicks, build.relics],
   );
   const statsB = withAnalysisCompareLine(statsA, lineB, loadout.critChance);
 
@@ -276,7 +283,7 @@ export function AnalysisTab() {
                   {Math.round(delta * 10) / 10}%
                 </td>
                 <td colSpan={3} className="text-right font-sans text-xs text-parch-300">
-                  expected-value change
+                  Expected change
                 </td>
               </tr>
             </tbody>

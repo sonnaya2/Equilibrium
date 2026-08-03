@@ -18,6 +18,10 @@ import {
 import type { ActiveEquipmentEffects } from "@/combat/shared/equipment";
 import type { AegisArmourBonus, ResolvedLeagueRules } from "@/combat/league/ruleset";
 import type { BarkscalesOutcome } from "@/combat/league/barkscales";
+import type {
+  IcyenicFaithBonuses,
+  IcyenicProtectionOutcome,
+} from "@/combat/league/icyenicFaith";
 import { type Loadout } from "./useLoadout";
 import {
   equippedRecordIds,
@@ -113,6 +117,7 @@ export interface CalcStats {
     biting: number;
     sets: number;
     equipment: number;
+    icyenic?: number;
     adjustment: number;
   };
   /** Named static crit sources (rings/sets) for the Setup breakdown. */
@@ -185,6 +190,10 @@ export interface CalcStats {
   aegis: AegisArmourBonus;
   /** Barkscales resolved against the stated incoming scenario, or marked unavailable. */
   barkscales: BarkscalesOutcome;
+  /** Icyenic Faith prayer scaling (zero mult when relic off or Tome unworn). */
+  icyenic: IcyenicFaithBonuses;
+  icyenicProtection: IcyenicProtectionOutcome;
+  tomeOfTheIcyeneWorn: boolean;
 }
 
 /**
@@ -216,12 +225,13 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   const defenceLife = resolveDefenceLife(loadout, levels, equipment, {
     now,
     blessingPicks: options.blessingPicks,
+    relics: options.relics,
     ruleset: options.ruleset,
   });
-  const leagueBundle = resolveLeagueBundle(loadout, defenceLife, { ...options, now });
+  const leagueBundle = resolveLeagueBundle(loadout, defenceLife, { ...options, now }, equipment);
   const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle);
   const baseDamage = resolveBaseDamage(loadout, levels, equipment, defenceLife, leagueBundle);
-  const crit = resolveCrit(loadout, levels, equipment);
+  const crit = resolveCrit(loadout, levels, equipment, leagueBundle);
   const combat = resolveCombatRules(loadout, levels, equipment, leagueBundle);
 
   return {
@@ -286,5 +296,8 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     leagueBaseAbilityDamageBonus: leagueBundle.leagueBaseAbilityDamageBonus,
     aegis: leagueBundle.aegis,
     barkscales: leagueBundle.barkscales,
+    icyenic: leagueBundle.icyenic,
+    icyenicProtection: leagueBundle.icyenicProtection,
+    tomeOfTheIcyeneWorn: leagueBundle.tomeOfTheIcyeneWorn,
   };
 }

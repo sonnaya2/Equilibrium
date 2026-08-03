@@ -159,9 +159,14 @@ export function RotationPlanner() {
     () =>
       loadoutStats(
         loadout,
-        useBuild ? { blessingPicks: build.blessingPicks } : { ruleset: "base" },
+        useBuild
+          ? {
+              blessingPicks: build.blessingPicks,
+              relics: Object.values(build.relics).filter(Boolean),
+            }
+          : { ruleset: "base" },
       ),
-    [loadout, useBuild, build.blessingPicks],
+    [loadout, useBuild, build.blessingPicks, build.relics],
   );
 
   const updateQueue = (next: string[]) => {

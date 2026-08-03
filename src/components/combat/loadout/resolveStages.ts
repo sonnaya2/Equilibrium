@@ -4,6 +4,7 @@ import { TICK_SECONDS } from "@/combat/core/ticks";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critical";
 import { STANDARD_HIT_CAP, type HitCapRule } from "@/combat/core/hitCaps";
+import { mulFloor } from "@/combat/core/rounding";
 import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTarget";
 import {
   ATTACK_CAPE_MELEE_HIT_CHANCE,
@@ -55,6 +56,8 @@ import {
   blessingLifeMultiplier,
   blessingRule,
   effectiveTargetAffinity,
+  hasIcyenicFaith,
+  icyenicFromLoadout,
   leagueModifiers,
   resolveLeagueRules,
   resolveMaximumAdrenaline,
@@ -62,6 +65,12 @@ import {
   type ResolvedLeagueRules,
 } from "@/combat/league/ruleset";
 import { barkscalesOutcome, type BarkscalesOutcome } from "@/combat/league/barkscales";
+import {
+  icyenicProtectionOutcome,
+  isTomeOfTheIcyeneWorn,
+  type IcyenicFaithBonuses,
+  type IcyenicProtectionOutcome,
+} from "@/combat/league/icyenicFaith";
 import type { BlessingPath } from "@/league/blessings";
 import { isPowerburstOfVitalityActive, type Loadout } from "./model";
 import {
@@ -87,9 +96,17 @@ const TICK_MS = TICK_SECONDS * 1000;
 export interface LoadoutStatsOptions {
   now?: number;
   blessingPicks?: readonly BlessingPath[];
+  /** Chosen relic display names from the Build planner. */
+  relics?: readonly string[];
   ruleset?: "base" | "equilibrium";
   /** Window the incoming-combat scenario is measured over; one minute by default. */
   scenarioSeconds?: number;
+}
+
+function leagueRulesetFromOptions(options: LoadoutStatsOptions): "base" | "equilibrium" {
+  if (options.ruleset) return options.ruleset;
+  if (options.blessingPicks !== undefined || options.relics !== undefined) return "equilibrium";
+  return "base";
 }
 
 export type DamagePotentialSource =
@@ -277,8 +294,9 @@ export function resolveDefenceLife(
 ): ResolvedDefenceLife {
   const now = options.now ?? Date.now();
   const leagueLoadout = {
-    ruleset: options.ruleset ?? (options.blessingPicks === undefined ? "base" : "equilibrium"),
+    ruleset: leagueRulesetFromOptions(options),
     blessingPicks: options.blessingPicks,
+    relics: options.relics,
   } as const;
   const defence = defenceStats({
     baseLevel: loadout.defenceLevel,
@@ -329,16 +347,21 @@ export interface ResolvedLeagueBundle {
   aegis: AegisArmourBonus;
   barkscales: BarkscalesOutcome;
   leagueBaseAbilityDamageBonus: number;
+  icyenic: IcyenicFaithBonuses;
+  icyenicProtection: IcyenicProtectionOutcome;
+  tomeOfTheIcyeneWorn: boolean;
 }
 
 export function resolveLeagueBundle(
   loadout: Loadout,
   defenceLife: ResolvedDefenceLife,
   options: LoadoutStatsOptions = {},
+  equipment?: ResolvedEquipment,
 ): ResolvedLeagueBundle {
   const leagueLoadout = {
-    ruleset: options.ruleset ?? (options.blessingPicks === undefined ? "base" : "equilibrium"),
+    ruleset: leagueRulesetFromOptions(options),
     blessingPicks: options.blessingPicks,
+    relics: options.relics,
   } as const;
   const league = resolveLeagueRules(leagueLoadout, {
     totalArmour: defenceLife.defence.totalArmour,
@@ -363,11 +386,32 @@ export function resolveLeagueBundle(
       poisonImmune: loadout.target?.poisonImmune,
     },
   );
+  const equipmentIds = equipment?.equipmentIds ?? equippedRecordIds(loadout);
+  const equipmentPrayer =
+    equipment?.equipmentStats.prayer ??
+    aggregateLoadoutEquipment({
+      equipmentSlots: loadout.equipmentSlots,
+      style: loadout.style,
+    }).prayer;
+  const tomeOfTheIcyeneWorn = isTomeOfTheIcyeneWorn(equipmentIds);
+  const icyenic = icyenicFromLoadout(league, equipmentPrayer, tomeOfTheIcyeneWorn);
+  const icyenicProtection = icyenicProtectionOutcome({
+    relicActive: hasIcyenicFaith(league),
+    windowSeconds: options.scenarioSeconds ?? 60,
+    scenario: {
+      protectionActive: loadout.buffs.protectionPrayer === true,
+      incomingHitIntervalSeconds: loadout.target?.incomingHitIntervalSeconds,
+      incomingHitDamage: loadout.target?.incomingHitDamage,
+    },
+  });
   return {
     league,
     aegis,
     barkscales,
     leagueBaseAbilityDamageBonus: aegis.baseAbilityDamageBonus,
+    icyenic,
+    icyenicProtection,
+    tomeOfTheIcyeneWorn,
   };
 }
 
@@ -463,7 +507,9 @@ export function resolveBaseDamage(
       ? loadout.baseDamage.manualValue
       : formulaBase;
   const afterPerksBase = loadoutBase(loadout);
-  const resolvedBase = afterPerksBase + leagueBundle.leagueBaseAbilityDamageBonus;
+  const withAegis = afterPerksBase + leagueBundle.leagueBaseAbilityDamageBonus;
+  const icyenicMult = leagueBundle.icyenic.baseAbilityDamageMultiplier;
+  const resolvedBase = icyenicMult === 1 ? withAegis : mulFloor(withAegis, icyenicMult);
   const styleMismatchNotes = equipment.styleContributions
     .filter((row) => row.blockedByStyle)
     .map(
@@ -488,6 +534,7 @@ export function resolveBaseDamage(
     { label: "Style damage", value: styleInBase },
     { label: "Invention perks", value: afterPerksBase - enteredBase },
     { label: "Teragard's Aegis", value: leagueBundle.leagueBaseAbilityDamageBonus },
+    { label: "Icyenic Faith", value: resolvedBase - withAegis },
   ];
   // Defenders contribute equipment Damage but are weapon-slot (not style b).
   const defenderEquipmentDamage = Math.max(
@@ -543,6 +590,7 @@ export interface ResolvedCrit {
     biting: number;
     sets: number;
     equipment: number;
+    icyenic: number;
     adjustment: number;
   };
   critChanceSources: readonly BreakdownRow[];
@@ -565,6 +613,7 @@ export function resolveCrit(
   loadout: Loadout,
   levels: ResolvedLevels,
   equipment: ResolvedEquipment,
+  leagueBundle?: ResolvedLeagueBundle,
 ): ResolvedCrit {
   const equipmentCrit = staticEquipmentCritBonus(equipment.equipmentEffects);
   const critChanceSources: BreakdownRow[] = [];
@@ -581,6 +630,10 @@ export function resolveCrit(
         : "Stalker's ring",
       value: hasEnchantment(equipment.equipmentEffects, "shadows") ? 0.04 : 0.03,
     });
+  }
+  const icyenicCrit = leagueBundle?.icyenic.critChanceBonus ?? 0;
+  if (icyenicCrit > 0) {
+    critChanceSources.push({ label: "Icyenic Faith", value: icyenicCrit });
   }
   const critConditionalNotes: string[] = [];
   if (hasPassive(equipment.equipmentEffects, "channeller-ring")) {
@@ -610,7 +663,7 @@ export function resolveCrit(
       : 0;
   const setCrit = loadoutSetCritChance({ equipmentSlots: loadout.equipmentSlots });
   const configuredCrit = loadout.critChance / 100;
-  const critSubtotal = configuredCrit + biting + setCrit + equipmentCrit.chance;
+  const critSubtotal = configuredCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit;
   // Invention perk Equilibrium zeros crit - not the League.
   const critsDisabled = loadout.perks.equilibrium > 0;
   const critChance = critsDisabled ? 0 : clamp01(critSubtotal);
@@ -621,6 +674,7 @@ export function resolveCrit(
       biting,
       sets: setCrit,
       equipment: equipmentCrit.chance,
+      icyenic: icyenicCrit,
       adjustment: critChance - critSubtotal,
     },
     critChanceSources,

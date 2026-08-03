@@ -3,8 +3,13 @@ import { runPipeline } from "../pipeline/modifierPipeline";
 import {
   AFFLICTION,
   ANGUISH,
+  AUGURY,
   MALEVOLENCE,
+  PIETY,
+  RIGOUR,
+  SANCTITY,
   SORROW,
+  STANDARD_DAMAGE_PRAYERS,
   STYLE_CURSES,
   TORMENT,
   TURMOIL,
@@ -14,9 +19,27 @@ import {
   styleCurseById,
 } from "./prayers";
 
-describe("style curses", () => {
+describe("damage prayers", () => {
+  it("covers standard book Piety line at +8% damage", () => {
+    expect(PIETY).toMatchObject({
+      style: "melee",
+      damageBonus: 0.08,
+      accuracyLevels: 8,
+      book: "standard",
+    });
+    expect(RIGOUR).toMatchObject({ style: "ranged", damageBonus: 0.08, book: "standard" });
+    expect(AUGURY).toMatchObject({ style: "magic", damageBonus: 0.08, book: "standard" });
+    expect(SANCTITY).toMatchObject({ style: "necromancy", damageBonus: 0.08, book: "standard" });
+    expect(STANDARD_DAMAGE_PRAYERS.map((p) => p.id)).toEqual([
+      "piety",
+      "rigour",
+      "augury",
+      "sanctity",
+    ]);
+  });
+
   it("covers one Turmoil-line curse per style at +10% damage", () => {
-    expect(TURMOIL).toMatchObject({ style: "melee", damageBonus: 0.1, accuracyLevels: 10 });
+    expect(TURMOIL).toMatchObject({ style: "melee", damageBonus: 0.1, accuracyLevels: 10, book: "ancient" });
     expect(ANGUISH).toMatchObject({ style: "ranged", damageBonus: 0.1, accuracyLevels: 10 });
     expect(TORMENT).toMatchObject({ style: "magic", damageBonus: 0.1, accuracyLevels: 10 });
     expect(SORROW).toMatchObject({ style: "necromancy", damageBonus: 0.1, accuracyLevels: 10 });
@@ -29,10 +52,11 @@ describe("style curses", () => {
     expect(bestStyleCurse("necromancy").id).toBe("ruination");
   });
 
-  it("every curse carries a wiki SourceReference", () => {
+  it("every prayer carries a wiki SourceReference and book tag", () => {
     for (const c of STYLE_CURSES) {
       expect(c.source.verifiedAt, c.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(c.source.url, c.id).toContain("runescape.wiki");
+      expect(c.book === "standard" || c.book === "ancient", c.id).toBe(true);
     }
   });
 
@@ -42,14 +66,20 @@ describe("style curses", () => {
     expect(runPipeline({ damage: 1000 }, [mod], { style: "melee" }).damage).toBe(1000);
   });
 
-  it("Malevolence floors 12% of 1000 → 1120", () => {
-    const mod = prayerDamageModifier(MALEVOLENCE);
-    expect(runPipeline({ damage: 1000 }, [mod], { style: "melee" }).damage).toBe(1120);
+  it("Piety floors 8% of 1000 -> 1080; Malevolence 12% -> 1120", () => {
+    expect(runPipeline({ damage: 1000 }, [prayerDamageModifier(PIETY)], { style: "melee" }).damage).toBe(
+      1080,
+    );
+    expect(
+      runPipeline({ damage: 1000 }, [prayerDamageModifier(MALEVOLENCE)], { style: "melee" }).damage,
+    ).toBe(1120);
   });
 
-  it("accuracy level helper adds the curse bonus", () => {
+  it("accuracy level helper adds the prayer bonus", () => {
+    expect(prayerBoostedStyleLevel(99, PIETY)).toBe(107);
     expect(prayerBoostedStyleLevel(99, TURMOIL)).toBe(109);
     expect(prayerBoostedStyleLevel(99, null)).toBe(99);
     expect(styleCurseById("torment")?.name).toBe("Torment");
+    expect(styleCurseById("piety")?.name).toBe("Piety");
   });
 });

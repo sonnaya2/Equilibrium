@@ -26,17 +26,15 @@ const RECORDS = asTaskRecords([
 ]);
 
 describe("regionsInTaskData", () => {
-  it("returns every region present, global first then league order", () => {
-    const rail = regionsInTaskData(RECORDS);
-    expect(rail[0]).toBe("global");
-    expect(rail).toContain("misthalin");
-    expect(rail).toContain("karamja");
-    expect(rail).toContain("anachronia");
-    expect(rail).toContain("tirannwn");
-    expect(rail).toEqual(
-      expect.arrayContaining(["global", "misthalin", "karamja", "anachronia", "tirannwn"]),
-    );
-    expect(rail).toHaveLength(5);
+  it("returns every region present, global first then league display order", () => {
+    // Present league ids ordered by TASK_LEAGUE_REGION_IDS (first-3 A-Z, electives A-Z).
+    expect(regionsInTaskData(RECORDS)).toEqual([
+      "global",
+      "karamja",
+      "misthalin",
+      "anachronia",
+      "tirannwn",
+    ]);
   });
 
   it("omits regions with no tasks", () => {

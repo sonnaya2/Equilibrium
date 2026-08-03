@@ -99,6 +99,15 @@
     ]
   },
   {
+    "id": "activities-barbarian-assault",
+    "label": "Barbarian Assault",
+    "category": "rs3/activities",
+    "path": "public/game/activities/barbarian-assault",
+    "fileTitle": "Barbarian Assault.png",
+    "search": "Barbarian Assault inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Barbarian_Assault"
+  },
+  {
     "id": "activities-barbarian-outpost",
     "label": "Barbarian Outpost",
     "category": "rs3/activities",
@@ -1334,6 +1343,15 @@
     "alsoAt": [
       "public/game/upgrades/permanent-unlocks/wilderness-runite.webp"
     ]
+  },
+  {
+    "id": "activities-world-gate",
+    "label": "World Gate",
+    "category": "rs3/activities",
+    "path": "public/game/activities/world-gate",
+    "fileTitle": "World Gate.png",
+    "search": "World Gate scenery",
+    "canonicalPage": "https://runescape.wiki/w/World_Gate"
   },
   {
     "id": "activities-yak",
@@ -3233,6 +3251,30 @@
         "canonicalPage": "https://runescape.wiki/w/Edimmu_Resource_Dungeon",
         "fileTitle": "Edimmu Resource Dungeon.png"
       }
+    ]
+  },
+  {
+    "id": "place-effigy-incubator",
+    "label": "Effigy Incubator",
+    "category": "rs3/activities",
+    "path": "public/game/activities/effigy-incubator",
+    "fileTitle": "Volatile effigy.png",
+    "search": "Volatile effigy inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Effigy_Incubator",
+    "aliases": [
+      "activities-effigy-incubator"
+    ],
+    "provenanceAlternates": [
+      {
+        "id": "activities-effigy-incubator",
+        "label": "Effigy Incubator",
+        "search": "Effigy Incubator image",
+        "canonicalPage": "https://runescape.wiki/w/Effigy_Incubator",
+        "fileTitle": "Effigy Incubator.png"
+      }
+    ],
+    "alsoAt": [
+      "public/game/upgrades/permanent-unlocks/effigy-incubator.webp"
     ]
   },
   {

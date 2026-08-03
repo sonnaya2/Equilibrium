@@ -944,6 +944,7 @@
 {"entityId":"item:toktz-xil-ak","stat":"damage","value":735}
 {"entityId":"item:toktz-xil-ul","stat":"accuracy","value":1132}
 {"entityId":"item:toktz-xil-ul","stat":"damage","value":894}
+{"entityId":"item:tome-of-the-icyene","stat":"prayer","value":50}
 {"entityId":"item:torags-hammer","stat":"accuracy","value":1486}
 {"entityId":"item:torags-hammer","stat":"damage","value":1564.5}
 {"entityId":"item:torva-boots","stat":"armour","value":84.7}

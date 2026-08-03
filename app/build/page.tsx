@@ -10,19 +10,19 @@ import { sortByRegionOrder } from "@/lib/regionOrder";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { getResearchCatalog } from "@/research/catalog";
 
-/** Display order on Build - known ids only; unknowns trail via sortByRegionOrder. */
+/** Display order on Build - first-3 A-Z, then electives A-Z; unknowns trail via sortByRegionOrder. */
 export const BUILD_REGION_ORDER = [
-  "misthalin",
-  "karamja",
-  "kandarin",
-  "forinthry",
-  "desert",
   "havenhythe",
+  "karamja",
+  "misthalin",
+  "anachronia",
   "asgarnia",
+  "desert",
+  "forinthry",
   "fremennik",
+  "kandarin",
   "morytania",
   "tirannwn",
-  "anachronia",
 ] as const;
 
 export const metadata: Metadata = {

@@ -9,6 +9,7 @@ import {
   dataEntityIconPath,
   equipmentIconPath,
   gameIconPath,
+  isSceneryActivityPath,
   isSceneryPermanentUnlock,
   regionCrestPath,
   skillIconPath,
@@ -72,6 +73,67 @@ describe("gameArt", () => {
     expect(existsSync(join(PUBLIC, skillIconPath("Archaeology")!))).toBe(true);
     expect(existsSync(join(PUBLIC, bossIconPath("Kree'arra")!))).toBe(true);
     expect(existsSync(join(PUBLIC, upgradeIconPath("Bonecrusher")!))).toBe(true);
+  });
+
+  it("Freneskae via World Gate uses World Gate art, not Nightmare or Gate of Elidinis", () => {
+    const path = dataEntityIconPath({ name: "Freneskae via World Gate", kind: "content" });
+    expect(path).toBe("/game/activities/world-gate.webp");
+    expect(existsSync(join(PUBLIC, "game/activities/world-gate.webp"))).toBe(true);
+    expect(path).not.toMatch(/nightmare|gate-of-elidinis/);
+    expect(activityIconPath("World Gate")).toBe("/game/activities/world-gate.webp");
+  });
+
+  it("Meilyr Recipe Shop uses meilyr-recipe-shop art, not herblore skill or meilyr-clan", () => {
+    const expected = "/game/activities/meilyr-recipe-shop.webp";
+    expect(
+      dataEntityIconPath({
+        name: "Meilyr Recipe Shop",
+        kind: "Herblore",
+        id: "activity:content:meilyr-recipe-shop",
+      }),
+    ).toBe(expected);
+    expect(
+      dataEntityIconPath({
+        name: "Meilyr Recipe Shop and combination potions",
+        kind: "Herblore recipe and shop infrastructure",
+        id: "prifddinas:meilyr-recipe-shop",
+      }),
+    ).toBe(expected);
+    expect(dataEntityIconPath({ id: "activity:content:meilyr-recipe-shop" })).toBe(expected);
+    expect(dataEntityIconPath({ id: "prifddinas:meilyr-recipe-shop" })).toBe(expected);
+    expect(dataEntityIconPath({ name: "Meilyr Recipe Shop", kind: "Herblore" })).not.toMatch(
+      /\/skills\/herblore|meilyr-clan|meilyr-potion/,
+    );
+    expect(activityIconPath("Meilyr Recipe Shop")).toBe(expected);
+    expect(upgradeIconPath("Meilyr Recipe Shop")).toBe(
+      "/game/upgrades/permanent-unlocks/meilyr-recipe-shop.webp",
+    );
+    expect(existsSync(join(PUBLIC, "game/activities/meilyr-recipe-shop.webp"))).toBe(true);
+  });
+
+  it("H.A.M. Hideout major uses hideout art, not clue scroll", () => {
+    const name = "H.A.M. Hideout pickpocketing and store rooms";
+    const path = dataEntityIconPath({ name, kind: "activity" });
+    expect(path).toBe("/game/activities/ham-hideout.webp");
+    expect(existsSync(join(PUBLIC, "game/activities/ham-hideout.webp"))).toBe(true);
+    expect(path).not.toMatch(/clue-scroll/);
+    expect(
+      dataEntityIconPath({ name: "ham hideout pickpocketing and store rooms", kind: "activity" }),
+    ).toBe("/game/activities/ham-hideout.webp");
+  });
+
+  it("Kuradal name well uses NPC plate, not dungeon map or ferocious ring", () => {
+    const path = dataEntityIconPath({ name: "Kuradal", kind: "Slayer master" });
+    expect(path).toBe("/game/activities/kuradal.webp");
+    expect(existsSync(join(PUBLIC, "game/activities/kuradal.webp"))).toBe(true);
+    expect(path).not.toMatch(/kuradals-dungeon|ferocious-ring/);
+    expect(activityIconPath("Kuradal")).toBe("/game/activities/kuradal.webp");
+    expect(upgradeIconPath("Kuradal")).toMatch(/permanent-unlocks\/kuradal\.(webp|png)$/);
+    expect(isSceneryPermanentUnlock("/game/upgrades/permanent-unlocks/kuradals-dungeon.webp")).toBe(
+      true,
+    );
+    expect(isSceneryActivityPath("/game/activities/kuradals-dungeon.webp")).toBe(true);
+    expect(dataEntityIconPath({ name: "Kuradal's Dungeon", kind: "content" })).toBeNull();
   });
 
   it("returns null for abstract package labels without a safe alias", () => {
@@ -206,7 +268,7 @@ describe("gameArt", () => {
       /armadyl-chestplate\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Robes of subjugation (GWD1 magic power ladder)" })).toMatch(
-      /subjugation-robe-top\.(webp|png)$/,
+      /garb-of-subjugation\.(webp|png)$/,
     );
     expect(
       dataEntityIconPath({ name: "Staff of limitless family (elemental impetus craft)" }),
@@ -321,14 +383,15 @@ describe("gameArt", () => {
   });
 
   it("resolves Havenhythe majors with distinct BGH and fish-farm art", () => {
+    // Havenhythe BGH major face = apex hide body (set reward), not Anachronia BGH plate.
     expect(dataEntityIconPath({ name: "Havenhythe Big Game Hunter" })).toMatch(
-      /havenhythe-big-game-hunter\.(webp|png)$/,
+      /apex-hide-body\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Anachronia Big Game Hunter" })).toMatch(
       /big-game-hunter\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Havenhythe Big Game Hunter" })).not.toMatch(
-      /^\/game\/activities\/big-game-hunter\.(webp|png)$/,
+      /(?:^|\/)big-game-hunter\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Clockwork box traps" })).toMatch(
       /clockwork-box-trap\.(webp|png)$/,
@@ -391,6 +454,8 @@ describe("gameArt", () => {
       ["Warriors' Guild", /dragon-defender\.(webp|png)$/],
       ["Artisans' Workshop", /artisans-workshop\.(webp|png)$/],
       ["Port Sarim docks and skilling hub", /port-sarim\.(webp|png)$/],
+      // the-arc.webp is Archaeology skill art; bare Arc major uses Waiko hub plate.
+      ["The Arc", /waiko\.(webp|png)$/],
       ["Rimmington Construction supply loop", /rimmington\.(webp|png)$/],
       ["Falador farm allotment / flower / herb patches", /falador-farm\.(webp|png)$/],
       ["God Wars Dungeon 1 equipment", /god-wars-dungeon-1/],
@@ -424,6 +489,9 @@ describe("gameArt", () => {
         "GWD2 anima core and mid-tier melee/ranged weapons",
         /anima-core-body-of-zaros\.(webp|png)$/,
       ],
+      // Content row: factory plate, not flash-powder inventory / agility glyph.
+      ["Flash Powder Factory minigame and reward shop", /skilling\/flash-powder-factory\.webp$/],
+      ["Flash Powder Factory", /skilling\/flash-powder-factory\.webp$/],
     ];
     for (const [label, re] of must) {
       const path = upgradeIconPath(label) ?? dataEntityIconPath({ name: label });
@@ -432,6 +500,17 @@ describe("gameArt", () => {
         true,
       );
     }
+    expect(
+      dataEntityIconPath({
+        name: "Flash Powder Factory minigame and reward shop",
+        kind: "activity",
+      }),
+    ).not.toMatch(/permanent-unlocks\/flash-powder|skills\/agility/);
+    // Data major name well: Waiko hub plate, not the Archaeology-misnamed the-arc.webp.
+    expect(dataEntityIconPath({ name: "The Arc", kind: "Eastern Lands" })).toMatch(
+      /\/activities\/waiko\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "The Arc" })).not.toMatch(/the-arc\.webp$/);
   });
 
   it("resolves Fremennik major unlocks to published art", () => {
@@ -441,6 +520,16 @@ describe("gameArt", () => {
     expect(
       dataEntityIconPath({ name: "Imcando pickaxe (Lava Flow Mine / Birthright path)" }),
     ).toMatch(/imcando-pickaxe\.(webp|png)$/);
+    // Suit outfit art - not permanent-unlocks/liquid-gold-nymph (NPC giver plate).
+    expect(dataEntityIconPath({ name: "Golden mining suit" })).toBe(
+      "/game/upgrades/skilling-outfits/golden-mining-suit.webp",
+    );
+    expect(
+      dataEntityIconPath({ name: "Liquid Gold Nymph golden mining suit path" }),
+    ).toBe("/game/upgrades/skilling-outfits/golden-mining-suit.webp");
+    expect(dataEntityIconPath({ name: "Liquid Gold Nymph" })).toMatch(
+      /liquid-gold-nymph\.(webp|png)$/,
+    );
     expect(dataEntityIconPath({ name: "Astral altar (Lunar Isle)" })).toMatch(
       /astral-altar\.(webp|png)$/,
     );
@@ -454,6 +543,7 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Keldagrim dwarven traders and multi-step chests" })).toMatch(
       /keldagrim\.(webp|png)$/,
     );
+    expect(dataEntityIconPath({ name: "Ungael" })).toMatch(/ungael\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Ungael ritual site pressure" })).toMatch(
       /ungael-ritual\.(webp|png)$/,
     );
@@ -469,6 +559,9 @@ describe("gameArt", () => {
     );
     expect(dataEntityIconPath({ name: "Rasial, the First Necromancer", kind: "boss" })).toBe(
       "/game/bosses/rasial.webp",
+    );
+    expect(dataEntityIconPath({ name: "Muspah", kind: "Freneskae combat" })).toBe(
+      "/game/bosses/muspah.webp",
     );
     expect(
       dataEntityIconPath({ name: "Kerapac, the bound", kind: "Elder God Wars Dungeon" }),
@@ -597,9 +690,14 @@ describe("gameArt", () => {
   });
 
   it("honors curated major-unlock icons before generic boss plates", () => {
-    expect(dataEntityIconPath({ name: "Legiones", kind: "Bosses" })).toMatch(
-      /ascension-crossbow\.(webp|png)$/,
+    expect(dataEntityIconPath({ name: "Legiones", kind: "Bosses" })).toBe(
+      "/game/bosses/legiones.webp",
     );
+    expect(dataEntityIconPath({ name: "Legiones (Monastery of Ascension)" })).toBe(
+      "/game/bosses/legiones.webp",
+    );
+    expect(upgradeIconPath("Legiones")).toBeNull();
+    expect(upgradeIconPath("Legiones (Monastery of Ascension)")).toBeNull();
     expect(dataEntityIconPath({ name: "Fight Kiln", kind: "Combat" })).toMatch(
       /tokhaar-kal-ket\.(webp|png)$/,
     );

@@ -50,6 +50,8 @@ export interface SerializableLeagueRules {
   ruleset: "base" | "equilibrium";
   blessings: readonly BlessingChoice[];
   blessingIds: readonly BlessingId[];
+  /** Active relic display names. */
+  relics?: readonly string[];
   totalArmour: number;
   maximumLife: number;
   /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */

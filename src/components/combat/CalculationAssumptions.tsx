@@ -3,6 +3,11 @@ import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "@/combat/league/ruleset";
 import { barkscalesGraspNote } from "@/combat/league/barkscales";
+import {
+  icyenicProtectionNote,
+  icyenicSoulSplitHeal,
+  icyenicSoulSplitNote,
+} from "@/combat/league/icyenicFaith";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -12,16 +17,12 @@ const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 
-/**
- * `scenario-dependent` is deliberately distinct from `not modelled`: the
- * mechanic is implemented and waiting on an input, so its absence from the
- * totals is not a claim that it deals no damage.
- */
+/** scenario-dependent: implemented but waiting on an input; not a zero-damage claim. */
 const SUPPORT_LABEL: Record<string, string> = {
-  modeled: "modelled",
-  "partially-modeled": "partially modelled",
-  "scenario-dependent": "scenario-dependent",
-  "not-modeled": "not modelled",
+  modeled: "active",
+  "partially-modeled": "partial",
+  "scenario-dependent": "scenario",
+  "not-modeled": "unmodeled",
 };
 
 export function CalculationAssumptions({
@@ -34,6 +35,15 @@ export function CalculationAssumptions({
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
   const bigBonedPicked = stats.league.blessings.some((choice) => choice.id === "big-boned");
+  const icyenicActive = stats.league.relicNames?.has("Icyenic Faith") === true;
+  const protectOn =
+    icyenicActive &&
+    stats.icyenicProtection.unavailability !== "protection-off" &&
+    stats.icyenicProtection.unavailability !== "relic-inactive";
+  const icyenicSoulSplit = icyenicSoulSplitHeal(result?.totalExpected ?? 0, {
+    relicActive: icyenicActive,
+    protectionActive: protectOn,
+  });
   const rows: Array<[string, string | number]> = [
     ["Style / effective level", `${stats.combatStyle} · ${stats.effectiveDamageLevel}`],
     ["Weapon", manualInputsOnly ? "Not applied" : stats.weaponConfiguration],
@@ -56,7 +66,7 @@ export function CalculationAssumptions({
     ["Damage Potential", `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`],
     ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
     ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
-    ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions preserved"],
+    ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions"],
     ...(stats.league.blessings.length > 0
       ? ([
           ["Equilibrium blessings", stats.league.blessings.map((choice) => choice.name).join(", ")],
@@ -66,7 +76,7 @@ export function CalculationAssumptions({
               .map(
                 (choice) =>
                   `${choice.name}: ${SUPPORT_LABEL[choice.support.status]}${
-                    choice.support.mechanicsUnverified ? " (mechanics unverified)" : ""
+                    choice.support.mechanicsUnverified ? " (unverified)" : ""
                   }`,
               )
               .join("; "),
@@ -104,6 +114,31 @@ export function CalculationAssumptions({
             `−${formatNumber(stats.barkscales.perHit)} per incoming hit · ${stats.barkscales.hitsPerTrigger} to trigger (incoming damage only)`,
           ],
         ] as Array<[string, string | number]>)
+      : []),
+    ...(icyenicActive
+      ? ([
+          [
+            "Icyenic Faith",
+            stats.tomeOfTheIcyeneWorn
+              ? `Tome worn · Prayer ${formatNumber(stats.icyenic.totalPrayerBonus)} · +${PERCENT_FORMAT.format(
+                  stats.icyenic.critChanceBonus,
+                )} crit · ×${stats.icyenic.baseAbilityDamageMultiplier.toFixed(3)} base AD`
+              : "Tome of the Icyene not equipped (pocket) - no prayer scaling",
+          ],
+          ["Icyenic protection", icyenicProtectionNote(stats.icyenicProtection)],
+          [
+            "Icyenic Soul Split",
+            icyenicSoulSplitNote(icyenicSoulSplit, {
+              relicActive: icyenicActive,
+              protectionActive: protectOn,
+            }),
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    ...(stats.league.relics?.length
+      ? ([["Equilibrium relics", stats.league.relics.join(", ")]] as Array<
+          [string, string | number]
+        >)
       : []),
     ...(stats.activePassives.length > 0
       ? ([["Equipment passives", stats.activePassives.join(", ")]] as Array<
@@ -161,8 +196,7 @@ export function CalculationAssumptions({
         </dl>
         {stats.combatStyle.includes("necromancy") ? (
           <p className="mt-2 text-xs text-chaos-300">
-            Partial: Haunted and Ghost healing are not included; Spectral Scythe soul rolls remain
-            deterministic-only.
+            Partial: no Haunted or Ghost healing; Spectral Scythe soul rolls are fixed.
           </p>
         ) : null}
       </div>

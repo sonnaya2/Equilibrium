@@ -3032,6 +3032,24 @@
     "canonicalPage": "https://runescape.wiki/w/Dragon_Defender"
   },
   {
+    "id": "combat-equipment-dragon-knife",
+    "label": "Dragon Knife",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragon-knife",
+    "fileTitle": "Dragon knife.png",
+    "search": "Dragon knife inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragon_knife"
+  },
+  {
+    "id": "combat-equipment-dragon-ward",
+    "label": "Dragon Ward",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragon-ward",
+    "fileTitle": "Dragon ward.png",
+    "search": "Dragon ward inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragon_ward"
+  },
+  {
     "id": "combat-equipment-dragon-rider-amulet",
     "label": "Dragon Rider Amulet",
     "category": "rs3/combat/equipment",

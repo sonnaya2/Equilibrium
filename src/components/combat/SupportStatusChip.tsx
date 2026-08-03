@@ -1,12 +1,12 @@
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 
 const LABELS: Record<string, string> = {
-  "partially-modeled": "partially modeled",
-  "not-modeled": "not modeled",
-  "mechanics-unverified": "mechanics unverified",
+  "partially-modeled": "partial",
+  "not-modeled": "unmodeled",
+  "mechanics-unverified": "unverified",
 };
 
-/** Honest support label for abilities with known gaps; absent for fully modeled. */
+/** Status chip for abilities with known gaps; absent when fully covered. */
 export function SupportStatusChip({ ability }: { ability: AbilitySpec }) {
   if (!ability.supportStatus) return null;
   return (

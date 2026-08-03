@@ -19,7 +19,7 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   perk: "Invention perks",
   "conjure-or-familiar": "Conjures and familiars",
   "auto-attack": "Auto-attacks",
-  "other-modeled": "Other modeled effects",
+  "other-modeled": "Other effects",
 };
 const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   aftershock: "Aftershock",

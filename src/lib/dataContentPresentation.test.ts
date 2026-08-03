@@ -17,6 +17,7 @@ import {
   splitContentKind,
   REWARD_ICON_CAP,
 } from "./dataContentPresentation";
+import { dataEntityIconPath } from "./gameArt";
 import { REWARD_ICON_BY_LABEL, resolveRewardIconLabel } from "./rewardIconAliases";
 import { contentDetailOrRewards, contentRewardsFull, majorContentRows } from "./researchRewards";
 import { getResearchCatalog } from "@/research/catalog";
@@ -316,9 +317,9 @@ describe("presentContentRewards — major boss uniques", () => {
     },
     {
       name: "Anachronia uniques",
-      full: "Dragon mattock, Gemstone armour, Terrasaur maul, Double Surge, Double Escape, Anachronia totems",
+      full: "Dragon mattock, Terrasaur maul, Double Surge, Double Escape, Anachronia totems",
       minResolved: 5,
-      srcRe: /dragon-mattock|gemstone|terrasaur|surge|escape|anachronia-totem/,
+      srcRe: /dragon-mattock|terrasaur|surge|escape|anachronia-totem/,
     },
     {
       name: "Hermod / necro power",
@@ -415,7 +416,13 @@ describe("REWARD_ICON_BY_LABEL", () => {
       expect(key).toBe(key.trim().toLowerCase());
       expect(src.startsWith("/game/")).toBe(true);
       expect(publicOk(src), `missing file ${key} → ${src}`).toBe(true);
-      expect(src.includes("/game/bosses/")).toBe(false);
+      // Inventory preferred; boss plates allowed for creature tokens (e.g. Muspah).
+      expect(
+        src.startsWith("/game/upgrades/") ||
+          src.startsWith("/game/combat/") ||
+          src.startsWith("/game/bosses/"),
+        `unexpected root ${key} → ${src}`,
+      ).toBe(true);
       const resolved = resolveRewardIcon(key);
       expect(resolved, `resolveRewardIcon failed for alias "${key}"`).toBe(src);
     }
@@ -690,6 +697,29 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presentInterestName(row.name)).toBe("Bloodweed / aggression pots");
   });
 
+  it("Darkmeyer Thieving (Morytania potion stall) potion chips all publicOk", () => {
+    const { row, upgrades } = contentRow("morytania", "Darkmeyer Thieving");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Extreme attack/i);
+    expect(full).toMatch(/Spirit attraction potion/i);
+    expect(full).toMatch(/Weapon poison\+\+\+/i);
+    expect(full).toMatch(/Potion flask/i);
+    const presented = presentContentRewards(full, 14);
+    expect(presented.icons.length).toBe(14);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    // Stall loot inventory art lives under skilling-production (not scenery stalls plate).
+    expect(
+      presented.icons.filter((i) => i.label !== "Ring of Vitur").every((i) =>
+        /\/skilling-production\//.test(i.src),
+      ),
+    ).toBe(true);
+    expect(resolveRewardIcon("Extreme attack (1)")).toMatch(/extreme-attack\.(webp|png)$/);
+    expect(resolveRewardIcon("Weapon poison+++ (1)")).toMatch(
+      /weapon-poison-plus-plus-plus\.(webp|png)$/,
+    );
+    expect(publicOk(resolveRewardIcon("Potion flask"))).toBe(true);
+  });
+
   it("Desert majors: Shifting Tombs, Magister split, KQ/KK rewards", () => {
     const cases: Array<{ name: string; must: RegExp[]; minIcons?: number }> = [
       {
@@ -865,6 +895,30 @@ describe("contentRewardsFull — catalog boss packages", () => {
     }
   });
 
+  it("Havenhythe Big Game Hunter lists apex hide set with inventory icons", () => {
+    const full = contentRewardsFull({ name: "Havenhythe Big Game Hunter" }, []);
+    expect(full).toMatch(/Apex hide cowl/i);
+    expect(full).toMatch(/Apex hide body/i);
+    expect(full).toMatch(/Apex hide chaps/i);
+    expect(full).toMatch(/Apex hide vambraces/i);
+    expect(full).toMatch(/Apex hide boots/i);
+    expect(full).not.toMatch(/Best Hunter XP route, new BGH/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBe(5);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.every((i) => /apex-hide-/i.test(i.src))).toBe(true);
+    expect(presented.icons.map((i) => i.src)).toEqual([
+      "/game/combat/equipment/apex-hide-cowl.webp",
+      "/game/combat/equipment/apex-hide-body.webp",
+      "/game/combat/equipment/apex-hide-chaps.webp",
+      "/game/combat/equipment/apex-hide-vambraces.webp",
+      "/game/combat/equipment/apex-hide-boots.webp",
+    ]);
+    expect(dataEntityIconPath({ name: "Havenhythe Big Game Hunter" })).toMatch(
+      /apex-hide-body\.(webp|png)$/,
+    );
+  });
+
   it("Kerapac full text contains Fractured Staff of Armadyl", () => {
     const { row, upgrades } = contentRow("misthalin", "Kerapac, the bound");
     const full = contentRewardsFull(row, upgrades);
@@ -1030,15 +1084,19 @@ describe("contentRewardsFull — catalog boss packages", () => {
       },
       {
         name: "Orthen Dig Site",
-        min: 3,
-        re: /Orthen furnace core|Flow State|Death Note/i,
+        min: 4,
+        re: /Orthen furnace core|Flow State|Death Note|Mysterious City/i,
       },
       {
         name: /Ranch Out of Time/,
         min: 3,
         re: /King of Beasts|No Fear|Armoured Hide/i,
       },
-      { name: /Rex Matriarchs/, min: 2, re: /Occultist|Reaver|Skeka/i },
+      {
+        name: /Rex Matriarchs/,
+        min: 4,
+        re: /Champion|Reaver|Stalker|Channeller|Occultist|Skeka/i,
+      },
       { name: "Raksha", min: 7, re: /Blast diffusion|Laceration|Fleeting/i },
       { name: /Laniakea \(Anachronia/, min: 1, re: /Laniakea's spear/i },
       { name: "Volcanic trapper outfit", min: 1, re: /Volcanic trapper/i },
@@ -1088,10 +1146,58 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const frenP = presentContentRewards(contentRewardsFull(fren.row, fren.upgrades));
     expect(frenP.icons.length).toBeGreaterThanOrEqual(3);
     expect(frenP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(frenP.icons.some((i) => /\/bosses\/muspah\.(webp|png)$/i.test(i.src))).toBe(true);
+    expect(frenP.icons.some((i) => /nightmare-gauntlets/i.test(i.src))).toBe(true);
+    expect(frenP.icons.some((i) => /rune-dragon/i.test(i.src))).toBe(true);
+
+    const muspahRow = contentRow("kandarin", /^Muspah$/);
+    expect(
+      dataEntityIconPath({ name: muspahRow.row.name, kind: muspahRow.row.kind }),
+    ).toBe("/game/bosses/muspah.webp");
+    const muspahFull = contentRewardsFull(muspahRow.row, muspahRow.upgrades);
+    expect(muspahFull).toMatch(/Muspah spine/i);
+    expect(muspahFull).toMatch(/Dragon ward/i);
+    expect(muspahFull).toMatch(/Dragon knives/i);
+    const muspahP = presentContentRewards(muspahFull);
+    expect(muspahP.icons.length).toBeGreaterThanOrEqual(3);
+    expect(muspahP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(muspahP.icons.some((i) => i.label === "Muspah spine" && /muspah-spine/i.test(i.src))).toBe(
+      true,
+    );
+    expect(muspahP.icons.some((i) => i.label === "Dragon ward" && /dragon-ward/i.test(i.src))).toBe(
+      true,
+    );
+    expect(muspahP.icons.some((i) => i.label === "Dragon knives" && /dragon-knife/i.test(i.src))).toBe(
+      true,
+    );
 
     const kd = contentRow("kandarin", "Kuradal");
     const kdP = presentContentRewards(contentRewardsFull(kd.row, kd.upgrades));
     expect(kdP.icons.some((i) => /ferocious-ring/i.test(i.src))).toBe(true);
+
+    const em = contentRow("kandarin", "Eternal magic trees");
+    const emFull = contentRewardsFull(em.row, em.upgrades);
+    expect(emFull).toMatch(/Eternal magic logs/i);
+    expect(emFull).toMatch(/Eternal magic planks/i);
+    expect(emFull).toMatch(/3x faster XP\/h than mahogany/i);
+    const emP = presentContentRewards(emFull);
+    expect(emP.icons.some((i) => /eternal-magic-wood-box/i.test(i.src))).toBe(true);
+    expect(emP.icons.some((i) => /plank\.(webp|png)$/i.test(i.src))).toBe(true);
+    expect(emP.icons.every((i) => publicOk(i.src))).toBe(true);
+
+    const ba = contentRow("kandarin", "Barbarian Assault");
+    const baFull = contentRewardsFull(ba.row, ba.upgrades);
+    expect(baFull).toMatch(/Fighter torso/i);
+    expect(baFull).toMatch(/Penance trident/i);
+    expect(baFull).toMatch(/Attacker's insignia/i);
+    expect(baFull).not.toMatch(/agile top/i);
+    const baP = presentContentRewards(baFull);
+    expect(baP.icons.some((i) => /fighter-torso/i.test(i.src))).toBe(true);
+    expect(baP.icons.some((i) => /penance-trident/i.test(i.src))).toBe(true);
+    expect(baP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(dataEntityIconPath({ name: ba.row.name, kind: ba.row.kind })).toMatch(
+      /barbarian-assault\.(webp|png)$/,
+    );
   });
 
   it("Asgarnia hubs: Port Sarim Arc, Warriors defender, safecracking", () => {
@@ -1102,6 +1208,34 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const portP = presentContentRewards(portFull);
     expect(portP.icons.length).toBeGreaterThanOrEqual(1);
     expect(portP.icons.every((i) => publicOk(i.src))).toBe(true);
+    // the-arc.webp is Archaeology skill art; reward chip uses Arc map inventory.
+    expect(portP.icons.some((i) => i.label === "The Arc" && /uncharted-island-map/i.test(i.src))).toBe(
+      true,
+    );
+    expect(portP.icons.every((i) => !/the-arc\.webp$/i.test(i.src))).toBe(true);
+
+    const arc = contentRow("asgarnia", "The Arc");
+    const arcFull = contentRewardsFull(arc.row, arc.upgrades);
+    expect(arcFull).toMatch(/Waiko contracts/i);
+    expect(arcFull).toMatch(/chimes|chime shop/i);
+    expect(arcFull).toMatch(/uncharted isles/i);
+    const arcP = presentContentRewards(arcFull);
+    expect(arcP.icons.length).toBeGreaterThanOrEqual(3);
+    expect(arcP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(arcP.icons.some((i) => /waiko-contracts/i.test(i.src))).toBe(true);
+    expect(arcP.icons.some((i) => /chimes/i.test(i.src))).toBe(true);
+    expect(arcP.icons.some((i) => /uncharted-island-map/i.test(i.src))).toBe(true);
+
+    const aod = contentRow("asgarnia", "Nex: Angel of Death");
+    const aodFull = contentRewardsFull(aod.row, aod.upgrades);
+    expect(aodFull).toMatch(/Wand of the praesul/i);
+    expect(aodFull).toMatch(/Imperium core/i);
+    expect(aodFull).toMatch(/Praesul codex/i);
+    const aodP = presentContentRewards(aodFull);
+    expect(aodP.icons.length).toBeGreaterThanOrEqual(3);
+    expect(aodP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(aodP.icons.some((i) => /praesul|wand/i.test(i.src))).toBe(true);
+    expect(aodP.icons.some((i) => /imperium/i.test(i.src))).toBe(true);
 
     const wg = contentRow("asgarnia", "Warriors' Guild");
     const wgFull = contentRewardsFull(wg.row, wg.upgrades);
@@ -1109,8 +1243,13 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const wgP = presentContentRewards(wgFull);
     expect(wgP.icons.some((i) => /dragon-defender/i.test(i.src))).toBe(true);
 
-    const safe = contentRow("asgarnia", "Safecracking route");
-    const safeP = presentContentRewards(contentRewardsFull(safe.row, safe.upgrades));
+    const safe = contentRow("asgarnia", /^Safes$|Safecracking route/);
+    expect(presentInterestName(safe.row.name)).toBe("Safes");
+    const safeFull = contentRewardsFull(safe.row, safe.upgrades);
+    expect(safeFull).toMatch(/Falador/i);
+    expect(safeFull).toMatch(/Port Sarim/i);
+    expect(safeFull).toMatch(/Burthorpe/i);
+    const safeP = presentContentRewards(safeFull);
     expect(safeP.icons.some((i) => /safe\.(webp|png)$/i.test(i.src))).toBe(true);
   });
 
@@ -1131,18 +1270,58 @@ describe("contentRewardsFull — catalog boss packages", () => {
     }
   });
 
-  it("expands low-icon majors: Mole, QBD, Legiones, ED3, Achto, Barrows", () => {
+  it("Meilyr Recipe Shop lists named combination potions with distinct icons", () => {
+    const { row, upgrades } = contentRow("tirannwn", "Meilyr Recipe Shop");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Supreme overload/i);
+    expect(full).toMatch(/Elder overload/i);
+    expect(full).toMatch(/Elder overload salve/i);
+    expect(full).toMatch(/Holy overload/i);
+    expect(full).toMatch(/Spiritual prayer/i);
+    expect(full).toMatch(/Combination potions/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(5);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    const srcs = presented.icons.map((i) => i.src);
+    expect(srcs.some((s) => /supreme-overload/i.test(s))).toBe(true);
+    expect(srcs.some((s) => /elder-overload(?!-salve)/i.test(s) || /\/elder-overload\.webp$/i.test(s))).toBe(
+      true,
+    );
+    expect(srcs.some((s) => /elder-overload-salve/i.test(s))).toBe(true);
+    expect(srcs.some((s) => /holy-overload/i.test(s))).toBe(true);
+    expect(srcs.some((s) => /spiritual-prayer/i.test(s))).toBe(true);
+    expect(srcs.some((s) => /combination-potions/i.test(s))).toBe(true);
+  });
+
+  it("expands low-icon majors: Mole, QBD, Legiones, ED2, ED3, Achto, Barrows", () => {
     const cases: Array<{ region: string; name: string | RegExp; min: number; re: RegExp }> = [
       { region: "asgarnia", name: "Giant Mole", min: 1, re: /Dragon 2h/i },
       { region: "asgarnia", name: "Queen Black Dragon", min: 1, re: /Dragon kiteshield/i },
       { region: "kandarin", name: "Legiones", min: 3, re: /Ascension/i },
+      {
+        region: "forinthry",
+        name: /Dragonkin Laboratory/,
+        min: 4,
+        re: /Greater Fury|Greater Flurry|Greater Barge|Draconic energy|Tectonic energy/i,
+      },
       { region: "forinthry", name: /Shadow Reef/, min: 2, re: /Eldritch|Black stone/i },
       { region: "desert", name: "Beastmaster Durzag", min: 3, re: /Achto/i },
       { region: "desert", name: "Yakamaru", min: 3, re: /Achto/i },
-      { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil/i },
+      { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil|Linza/i },
       { region: "kandarin", name: "Kuradal", min: 1, re: /Ferocious ring/i },
-      { region: "morytania", name: /Polypore Dungeon/, min: 1, re: /Polypore staff/i },
-      { region: "anachronia", name: "Rex Matriarchs", min: 1, re: /Skeka/i },
+      { region: "misthalin", name: /Polypore Dungeon/, min: 2, re: /Polypore staff|Ganodermic/i },
+      {
+        region: "anachronia",
+        name: "Rex Matriarchs",
+        min: 4,
+        re: /Champion|Reaver|Stalker|Channeller|Occultist|Skeka/i,
+      },
+      {
+        region: "asgarnia",
+        name: "Elite Dungeon 1",
+        min: 2,
+        re: /Ancient scales|Sirenic scales/i,
+      },
     ];
     for (const c of cases) {
       const { row, upgrades } = contentRow(c.region, c.name);
@@ -1155,6 +1334,26 @@ describe("contentRewardsFull — catalog boss packages", () => {
         row.name,
       ).toBe(true);
     }
+  });
+
+  it("ED2 ability codex labels resolve to published inventory art", () => {
+    const labels = [
+      "Greater Fury",
+      "Greater Fury ability codex",
+      "Greater Flurry",
+      "Greater Flurry ability codex",
+      "Greater Barge",
+      "Greater Barge ability codex",
+      "Draconic energy",
+    ];
+    for (const label of labels) {
+      const src = resolveRewardIcon(label);
+      expect(src, label).toBeTruthy();
+      expect(publicOk(src), `${label} → ${src}`).toBe(true);
+      expect(src, label).not.toMatch(/\/game\/bosses\//);
+    }
+    expect(resolveRewardIcon("Greater Fury")).toMatch(/greater-fury\.(webp|png)$/);
+    expect(resolveRewardIcon("Draconic energy")).toMatch(/draconic-energy\.(webp|png)$/);
   });
 
   it("Amascut's Enchanted Gem resolves to gem inventory art not boss plate", () => {
@@ -1241,7 +1440,11 @@ describe("contentRewardsFull — catalog boss packages", () => {
       },
       { region: "kandarin", name: "Legiones", re: /Ascension/i },
       { region: "tirannwn", name: "Solak", re: /Blightbound|Erethdor/i },
-      { region: "forinthry", name: /Dragonkin Laboratory/, re: /Greater Fury|Draconic energy/i },
+      {
+        region: "forinthry",
+        name: /Dragonkin Laboratory/,
+        re: /Greater Fury|Draconic energy|Tectonic energy/i,
+      },
       { region: "forinthry", name: /Shadow Reef/, re: /Eldritch/i },
       { region: "forinthry", name: "Corporeal Beast", re: /spirit shield/i },
       { region: "misthalin", name: "Arch-Glacor", re: /Frozen core of Leng|Scripture of Wen/i },
@@ -1256,9 +1459,18 @@ describe("contentRewardsFull — catalog boss packages", () => {
     }
   });
 
-  it("Fort Forinthry stays text-only access (no wrong package)", () => {
+  it("Fort Forinthry surfaces The Raptor + Construction training icons", () => {
     const { row, upgrades } = contentRow("misthalin", "Fort Forinthry");
-    expect(contentRewardsFull(row, upgrades)).toMatch(/Fort buildings/i);
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/The Raptor/i);
+    expect(full).toMatch(/Construction training/i);
+    expect(full).toMatch(/Fort buildings/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.some((i) => /raptor/i.test(i.label))).toBe(true);
+    expect(presented.icons.some((i) => /construction training/i.test(i.label))).toBe(true);
+    expect(presented.icons.some((i) => /slayer-helmet/i.test(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /constructors-outfit/i.test(i.src))).toBe(true);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
   });
 
   it("parent Sanctum and child bosses share the same unique list for filter", () => {
@@ -1267,6 +1479,43 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const child = region.content.find((c) => c.name === "Vermyx, Brood Mother")!;
     expect(contentRewardsFull(parent, region.upgrades)).toBe(
       contentRewardsFull(child, region.upgrades),
+    );
+  });
+
+  it("Morytania shade cremation keys are majors with inventory icons", () => {
+    const mory = regionById("morytania");
+    expect(mory.content.some((c) => c.name === "Shade keys")).toBe(true);
+    expect(mory.content.some((c) => c.name === "Shiny columbarium key")).toBe(true);
+
+    const cremation = contentRow("morytania", "Shades of Mort'ton cremation");
+    const cremationFull = contentRewardsFull(cremation.row, cremation.upgrades);
+    expect(cremationFull).toMatch(/Bronze key/i);
+    expect(cremationFull).toMatch(/Gold key/i);
+    expect(cremationFull).toMatch(/Shiny columbarium key/i);
+    const cremationP = presentContentRewards(cremationFull);
+    expect(cremationP.icons.length).toBeGreaterThanOrEqual(6);
+    expect(cremationP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(cremationP.icons.some((i) => /gold-key/i.test(i.src))).toBe(true);
+    expect(cremationP.icons.some((i) => /shiny-columbarium-key/i.test(i.src))).toBe(true);
+
+    const shadeKeys = contentRow("morytania", "Shade keys");
+    const shadeFull = contentRewardsFull(shadeKeys.row, shadeKeys.upgrades);
+    expect(shadeFull).toMatch(/Bronze key.*Steel key.*Black key.*Silver key.*Gold key/i);
+    const shadeP = presentContentRewards(shadeFull);
+    expect(shadeP.icons.length).toBe(5);
+    expect(shadeP.icons.every((i) => publicOk(i.src))).toBe(true);
+
+    const shiny = contentRow("morytania", "Shiny columbarium key");
+    const shinyFull = contentRewardsFull(shiny.row, shiny.upgrades);
+    expect(shinyFull).toMatch(/Shiny columbarium key/i);
+    const shinyP = presentContentRewards(shinyFull);
+    expect(shinyP.icons.length).toBeGreaterThanOrEqual(1);
+    expect(shinyP.icons[0]!.src).toMatch(/shiny-columbarium-key/i);
+    expect(publicOk(shinyP.icons[0]!.src)).toBe(true);
+
+    expect(dataEntityIconPath({ name: "Shade keys" })).toMatch(/gold-key\.(webp|png)$/);
+    expect(dataEntityIconPath({ name: "Shiny columbarium key" })).toMatch(
+      /shiny-columbarium-key\.(webp|png)$/,
     );
   });
 
@@ -1305,6 +1554,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(names).toContain("Crystal skillchompas");
     expect(names).toContain("Perfect juju potions");
     expect(names).toContain("Max Guild");
+    // Package retired: individual Crystallise / Light Form / etc. stay as upgrades.
+    expect(names).not.toContain("Seren spells and prayers");
+    expect(names).not.toContain("Seren spells & prayers");
     expect(names).not.toContain("Crystal equipment and Prifddinas skilling content");
     expect(names).not.toContain("Trahaearn Mining and Smithing hub");
     expect(names).not.toContain("Voice of Seren district rotations");
@@ -1313,6 +1565,14 @@ describe("contentRewardsFull — catalog boss packages", () => {
 
     const { row: hefin, upgrades } = contentRow("tirannwn", "Hefin Agility Course");
     expect(contentRewardsFull(hefin, upgrades)).toMatch(/Prifddinian worker/i);
+  });
+
+  it("Tirannwn keeps Crystallise as an upgrade, not the Seren package content major", () => {
+    const region = regionById("tirannwn");
+    expect(region.content.some((c) => /Seren spells/i.test(c.name))).toBe(false);
+    expect(
+      region.upgrades.some((u) => /Crystallise/i.test(u.name)),
+    ).toBe(true);
   });
 });
 

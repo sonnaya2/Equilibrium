@@ -5,17 +5,15 @@ import { RegionCrest, RegionCrestPreload } from "@/components/RegionCrest";
 import {
   canSelectElective,
   ELECTIVE_CAP,
-  ELECTIVE_REGIONS,
   isRegionUnlocked,
-  MILESTONE_REGION,
-  STARTING_REGIONS,
+  REGION_IDS,
   type RegionId,
 } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import type { PlannerRegion } from "./RegionPlanner";
 import { useMapFocus } from "./useMapFocus";
 
-const ORDER: RegionId[] = [...STARTING_REGIONS, MILESTONE_REGION, ...ELECTIVE_REGIONS];
+const ORDER: RegionId[] = [...REGION_IDS];
 
 export function RegionPicker({ regions }: { regions: PlannerRegion[] }) {
   const { build, loaded, toggleRegion, clearElectives } = useBuild();

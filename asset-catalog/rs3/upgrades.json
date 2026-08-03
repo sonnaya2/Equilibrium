@@ -6219,6 +6219,24 @@
     ]
   },
   {
+    "id": "unlock-dwarf-multicannon",
+    "label": "Dwarf multicannon",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/dwarf-multicannon",
+    "fileTitle": "Dwarf multicannon.png",
+    "search": "Dwarf multicannon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dwarf_multicannon"
+  },
+  {
+    "id": "unlock-dwarven-siege-engine",
+    "label": "Dwarven siege engine",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/dwarven-siege-engine",
+    "fileTitle": "Dwarven siege engine.png",
+    "search": "Dwarven siege engine inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dwarven_siege_engine"
+  },
+  {
     "id": "unlock-ectophial",
     "label": "Ectophial",
     "category": "rs3/upgrades/permanent-unlocks",
@@ -6399,6 +6417,15 @@
     ]
   },
   {
+    "id": "unlock-gold-dwarf-multicannon",
+    "label": "Gold dwarf multicannon",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/gold-dwarf-multicannon",
+    "fileTitle": "Gold dwarf multicannon.png",
+    "search": "Gold dwarf multicannon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Gold_dwarf_multicannon"
+  },
+  {
     "id": "unlock-goldsmith-gauntlets",
     "label": "Goldsmith gauntlets",
     "category": "rs3/upgrades/permanent-unlocks",
@@ -6571,6 +6598,15 @@
     ]
   },
   {
+    "id": "unlock-kinetic-cyclone",
+    "label": "Kinetic cyclone",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/kinetic-cyclone",
+    "fileTitle": "Kinetic cyclone.png",
+    "search": "Kinetic cyclone inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Kinetic_cyclone"
+  },
+  {
     "id": "unlock-max-cape",
     "label": "Max cape",
     "category": "rs3/upgrades/permanent-unlocks",
@@ -6704,6 +6740,15 @@
         "fileTitle": "Ring Of Fortune.png"
       }
     ]
+  },
+  {
+    "id": "unlock-royale-dwarf-multicannon",
+    "label": "Royale dwarf multicannon",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/royale-dwarf-multicannon",
+    "fileTitle": "Royale dwarf multicannon.png",
+    "search": "Royale dwarf multicannon inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Royale_dwarf_multicannon"
   },
   {
     "id": "unlock-seed-bag",
@@ -8178,6 +8223,15 @@
     ]
   },
   {
+    "id": "upgrades-permanent-unlocks-black-key",
+    "label": "Black key",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/black-key",
+    "fileTitle": "Black key red.png",
+    "search": "Black key red inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Black_key_red"
+  },
+  {
     "id": "upgrades-permanent-unlocks-black-mask",
     "label": "Black Mask",
     "category": "rs3/upgrades/permanent-unlocks",
@@ -8284,9 +8338,9 @@
     "label": "Botanists Outfit",
     "category": "rs3/upgrades/permanent-unlocks",
     "path": "public/game/upgrades/permanent-unlocks/botanists-outfit",
-    "fileTitle": "Botanists Outfit.png",
-    "search": "Botanists Outfit inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Botanists_Outfit",
+    "fileTitle": "Botanist's mask.png",
+    "search": "Botanist's mask inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Botanist's_mask",
     "aliases": [
       "outfit-botanists",
       "skilling-botanists-outfit"
@@ -8294,7 +8348,7 @@
     "provenanceAlternates": [
       {
         "id": "skilling-botanists-outfit",
-        "search": "Botanist's outfit image"
+        "search": "Botanist's mask inventory icon"
       }
     ],
     "alsoAt": [
@@ -8441,6 +8495,15 @@
     "fileTitle": "Brawling Gloves Woodcutting.png",
     "search": "Brawling Gloves Woodcutting inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Brawling_Gloves_Woodcutting"
+  },
+  {
+    "id": "upgrades-permanent-unlocks-bronze-key",
+    "label": "Bronze key",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/bronze-key",
+    "fileTitle": "Bronze key red.png",
+    "search": "Bronze key red inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Bronze_key_red"
   },
   {
     "id": "upgrades-permanent-unlocks-bush-patch",
@@ -9266,9 +9329,9 @@
     "label": "Factory Outfit",
     "category": "rs3/upgrades/permanent-unlocks",
     "path": "public/game/upgrades/permanent-unlocks/factory-outfit",
-    "fileTitle": "Factory Outfit.png",
-    "search": "Factory Outfit inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Factory_Outfit",
+    "fileTitle": "Factory mask.png",
+    "search": "Factory mask inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Factory_mask",
     "aliases": [
       "outfit-factory",
       "skilling-factory-outfit"
@@ -9276,7 +9339,7 @@
     "provenanceAlternates": [
       {
         "id": "skilling-factory-outfit",
-        "search": "Factory outfit image Flash Powder Factory"
+        "search": "Factory mask inventory icon"
       }
     ],
     "alsoAt": [
@@ -9647,6 +9710,15 @@
     "fileTitle": "Gold Accumulator.png",
     "search": "Gold Accumulator inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Gold_Accumulator"
+  },
+  {
+    "id": "upgrades-permanent-unlocks-gold-key",
+    "label": "Gold key",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/gold-key",
+    "fileTitle": "Gold key.png",
+    "search": "Gold key inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Gold_key"
   },
   {
     "id": "upgrades-permanent-unlocks-grasping-rune-pouch",
@@ -10079,10 +10151,10 @@
     "label": "Kuradal",
     "category": "rs3/upgrades/permanent-unlocks",
     "path": "public/game/upgrades/permanent-unlocks/kuradal",
-    "fileTitle": "Kuradal chathead.png",
-    "search": "Kuradal chathead",
+    "fileTitle": "Kuradal.png",
+    "search": "Kuradal",
     "canonicalPage": "https://runescape.wiki/w/Kuradal",
-    "sourcePage": "https://runescape.wiki/w/File:Kuradal_chathead.png"
+    "sourcePage": "https://runescape.wiki/w/File:Kuradal.png"
   },
   {
     "id": "upgrades-permanent-unlocks-kwuarm-incense-sticks",
@@ -10460,6 +10532,15 @@
     "fileTitle": "Musa Point Banana Plantation.png",
     "search": "Musa Point Banana Plantation inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Musa_Point_Banana_Plantation"
+  },
+  {
+    "id": "upgrades-permanent-unlocks-muspah-spine",
+    "label": "Muspah Spine",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/muspah-spine",
+    "fileTitle": "Muspah spine.png",
+    "search": "Muspah spine inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Muspah_spine"
   },
   {
     "id": "upgrades-permanent-unlocks-nature-grotto",
@@ -11292,6 +11373,15 @@
     "sourcePage": "https://runescape.wiki/w/File:Shilo_Village_mine.png"
   },
   {
+    "id": "upgrades-permanent-unlocks-shiny-columbarium-key",
+    "label": "Shiny columbarium key",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/shiny-columbarium-key",
+    "fileTitle": "Shiny columbarium key.png",
+    "search": "Shiny columbarium key inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Shiny_columbarium_key"
+  },
+  {
     "id": "upgrades-permanent-unlocks-sign-of-the-porter",
     "label": "Sign Of The Porter",
     "category": "rs3/upgrades/permanent-unlocks",
@@ -11315,6 +11405,15 @@
     "alsoAt": [
       "public/game/upgrades/skilling-utility/sign-of-the-porter-vii.webp"
     ]
+  },
+  {
+    "id": "upgrades-permanent-unlocks-silver-key",
+    "label": "Silver key",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/silver-key",
+    "fileTitle": "Silver key red.png",
+    "search": "Silver key red inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Silver_key_red"
   },
   {
     "id": "upgrades-permanent-unlocks-silver-spines",
@@ -11567,6 +11666,15 @@
     "fileTitle": "Steadfast.png",
     "search": "Steadfast inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Steadfast"
+  },
+  {
+    "id": "upgrades-permanent-unlocks-steel-key",
+    "label": "Steel key",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/steel-key",
+    "fileTitle": "Steel key red.png",
+    "search": "Steel key red inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Steel_key_red"
   },
   {
     "id": "upgrades-permanent-unlocks-sticky-fingers",
@@ -12024,12 +12132,12 @@
   },
   {
     "id": "upgrades-permanent-unlocks-vault-of-hereditas",
-    "label": "Vault Of Hereditas",
+    "label": "Vault of Hereditas",
     "category": "rs3/upgrades/permanent-unlocks",
     "path": "public/game/upgrades/permanent-unlocks/vault-of-hereditas",
-    "fileTitle": "Vault Of Hereditas.png",
-    "search": "Vault Of Hereditas inventory icon",
-    "canonicalPage": "https://runescape.wiki/w/Vault_Of_Hereditas"
+    "fileTitle": "Vault of Hereditas.png",
+    "search": "Vault of Hereditas",
+    "canonicalPage": "https://runescape.wiki/w/Vault_of_Hereditas"
   },
   {
     "id": "upgrades-permanent-unlocks-velucia-museum",
@@ -12321,6 +12429,51 @@
     "canonicalPage": "https://runescape.wiki/w/Acht_Primeval_Robe_Top"
   },
   {
+    "id": "upgrades-progression-attackers-insignia",
+    "label": "Attacker's insignia",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/attackers-insignia",
+    "fileTitle": "Attacker's insignia.png",
+    "search": "Attacker's insignia inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Attacker's_insignia"
+  },
+  {
+    "id": "upgrades-progression-collectors-insignia",
+    "label": "Collector's insignia",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/collectors-insignia",
+    "fileTitle": "Collector's insignia.png",
+    "search": "Collector's insignia inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Collector's_insignia"
+  },
+  {
+    "id": "upgrades-progression-defenders-insignia",
+    "label": "Defender's insignia",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/defenders-insignia",
+    "fileTitle": "Defender's insignia.png",
+    "search": "Defender's insignia inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Defender's_insignia"
+  },
+  {
+    "id": "upgrades-progression-fighter-hat",
+    "label": "Fighter hat",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/fighter-hat",
+    "fileTitle": "Fighter hat.png",
+    "search": "Fighter hat inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Fighter_hat"
+  },
+  {
+    "id": "upgrades-progression-fighter-torso",
+    "label": "Fighter torso",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/fighter-torso",
+    "fileTitle": "Fighter torso.png",
+    "search": "Fighter torso inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Fighter_torso"
+  },
+  {
     "id": "upgrades-progression-fletchers-outfit",
     "label": "Fletchers Outfit",
     "category": "rs3/upgrades/progression",
@@ -12337,6 +12490,24 @@
     "fileTitle": "Gemstone Golem Outfit.png",
     "search": "Gemstone Golem Outfit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Gemstone_Golem_Outfit"
+  },
+  {
+    "id": "upgrades-progression-healer-hat",
+    "label": "Healer hat",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/healer-hat",
+    "fileTitle": "Healer hat.png",
+    "search": "Healer hat inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Healer_hat"
+  },
+  {
+    "id": "upgrades-progression-healers-insignia",
+    "label": "Healer's insignia",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/healers-insignia",
+    "fileTitle": "Healer's insignia.png",
+    "search": "Healer's insignia inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Healer's_insignia"
   },
   {
     "id": "upgrades-progression-hoardstalker-ring",
@@ -12391,6 +12562,60 @@
     "fileTitle": "Obsidian Platebody.png",
     "search": "Obsidian Platebody inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Obsidian_Platebody"
+  },
+  {
+    "id": "upgrades-progression-penance-gloves",
+    "label": "Penance gloves",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/penance-gloves",
+    "fileTitle": "Penance gloves.png",
+    "search": "Penance gloves inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Penance_gloves"
+  },
+  {
+    "id": "upgrades-progression-penance-skirt",
+    "label": "Penance skirt",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/penance-skirt",
+    "fileTitle": "Penance skirt.png",
+    "search": "Penance skirt inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Penance_skirt"
+  },
+  {
+    "id": "upgrades-progression-penance-trident",
+    "label": "Penance trident",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/penance-trident",
+    "fileTitle": "Penance trident.png",
+    "search": "Penance trident inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Penance_trident"
+  },
+  {
+    "id": "upgrades-progression-ranger-hat",
+    "label": "Ranger hat",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/ranger-hat",
+    "fileTitle": "Ranger hat.png",
+    "search": "Ranger hat inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ranger_hat"
+  },
+  {
+    "id": "upgrades-progression-runner-boots",
+    "label": "Runner boots",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/runner-boots",
+    "fileTitle": "Runner boots.png",
+    "search": "Runner boots inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Runner_boots"
+  },
+  {
+    "id": "upgrades-progression-runner-hat",
+    "label": "Runner hat",
+    "category": "rs3/upgrades/progression",
+    "path": "public/game/upgrades/progression/runner-hat",
+    "fileTitle": "Runner hat.png",
+    "search": "Runner hat inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Runner_hat"
   },
   {
     "id": "upgrades-progression-silverhawk-boots",
@@ -12670,6 +12895,15 @@
     "fileTitle": "Raw Monkfish.png",
     "search": "Raw Monkfish inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Raw_Monkfish"
+  },
+  {
+    "id": "upgrades-skilling-production-ruby",
+    "label": "Ruby",
+    "category": "rs3/upgrades/skilling-production",
+    "path": "public/game/upgrades/skilling-production/ruby",
+    "fileTitle": "Ruby.png",
+    "search": "Ruby inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ruby"
   },
   {
     "id": "upgrades-skilling-production-searing-ashes",

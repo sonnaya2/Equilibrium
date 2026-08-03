@@ -202,6 +202,7 @@ describe("normalizeLoadout", () => {
       powerburstOfVitalityCooldownUntil: null,
       strengthCape99: false,
       attackCape120: false,
+      protectionPrayer: false,
     });
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);
@@ -487,14 +488,19 @@ describe("weapon-driven combat style", () => {
     expect(equipInSlot(ranged, "mainhand", null).style).toBe("ranged");
   });
 
-  it("carries an active style curse to the matching tier in the new style", () => {
+  it("carries an active damage prayer to the matching tier in the new style", () => {
     const melee = { ...DEFAULT_LOADOUT, style: "melee" as const };
     const cursed = withLoadoutBuffs(melee, { styleCurse: "turmoil" });
     expect(withCombatStyle(cursed, "magic").buffs.styleCurse).toBe("torment");
     // The 99 tier maps to its own counterparts, not down to the 95 tier.
     const upgraded = withLoadoutBuffs(melee, { styleCurse: "malevolence" });
     expect(withCombatStyle(upgraded, "necromancy").buffs.styleCurse).toBe("ruination");
-    // No curse stays no curse.
+    // Standard book Piety line remaps across styles.
+    const piety = withLoadoutBuffs(melee, { styleCurse: "piety" });
+    expect(withCombatStyle(piety, "ranged").buffs.styleCurse).toBe("rigour");
+    expect(withCombatStyle(piety, "magic").buffs.styleCurse).toBe("augury");
+    expect(withCombatStyle(piety, "necromancy").buffs.styleCurse).toBe("sanctity");
+    // No prayer stays none.
     expect(withCombatStyle(melee, "ranged").buffs.styleCurse).toBe("none");
   });
 

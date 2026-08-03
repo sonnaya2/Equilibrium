@@ -1,3 +1,8 @@
+{"objectId":"unlock:anachronia:advance-time","predicate":"supported-by","subjectId":"activity:content:manor-farm"}
+{"objectId":"unlock:anachronia:advance-time","predicate":"supported-by","subjectId":"anachronia:dream-of-iaia"}
+{"objectId":"unlock:anachronia:advance-time","predicate":"supported-by","subjectId":"anachronia:ranch-out-of-time"}
+{"objectId":"unlock:anachronia:advance-time","predicate":"supported-by","subjectId":"farming:player-owned-farm-manor-farm"}
+{"objectId":"unlock:anachronia:advance-time","predicate":"supported-by","subjectId":"farming:ranch-out-of-time"}
 {"objectId":"quest:asgarnia:desperate-measures","predicate":"requires","subjectId":"quest:anachronia:sins-of-the-father"}
 {"objectId":"quest:desert:icthlarins-little-helper","predicate":"requires","subjectId":"quest:asgarnia:a-tail-of-two-cats"}
 {"objectId":"quest:asgarnia:quiet-before-the-swarm","predicate":"requires","subjectId":"quest:asgarnia:a-void-dance"}
@@ -267,3 +272,6 @@
 {"objectId":"quest:kandarin:meeting-history","predicate":"requires","subjectId":"quest:tirannwn:the-light-within"}
 {"objectId":"quest:tirannwn:plagues-end","ordinal":2,"predicate":"requires","subjectId":"quest:tirannwn:the-light-within"}
 {"objectId":"quest:kandarin:mournings-end-part-ii","predicate":"requires","subjectId":"quest:tirannwn:within-the-light"}
+{"objectId":"activity:content:manor-farm","ordinal":1,"predicate":"supports","subjectId":"unlock:anachronia:advance-time"}
+{"objectId":"anachronia:dream-of-iaia","predicate":"supports","subjectId":"unlock:anachronia:advance-time"}
+{"objectId":"anachronia:ranch-out-of-time","ordinal":2,"predicate":"supports","subjectId":"unlock:anachronia:advance-time"}

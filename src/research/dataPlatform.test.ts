@@ -223,10 +223,11 @@ describe("generated data platform", () => {
   // The catalog reconstruction is gated by data:canonical:validate, which
   // digests readResearchCatalog against the canonical files. What is left to
   // check here is that every region survives into what the site serves.
+  // Catalog row order is taxonomy ordinal; REGION_IDS is UI display order.
   it("serves every research region", () => {
     const parity = readJson<{ quarantinedRecords: number }>("reports/data-migration-parity.json");
     const regions = getResearchCatalog().regions;
-    expect(regions.map(({ id }) => id)).toEqual(REGION_IDS);
+    expect(regions.map(({ id }) => id).sort()).toEqual([...REGION_IDS].sort());
     for (const region of regions) {
       expect(region.name, region.id).toBeTruthy();
       expect(Array.isArray(region.training), region.id).toBe(true);

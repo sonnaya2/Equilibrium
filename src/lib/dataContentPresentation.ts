@@ -16,7 +16,7 @@ export const REWARD_ICON_CAP = 14;
 export const REWARD_DISPLAY_MAX = 240;
 
 const TRAILING_NOISE =
-  /\s+(?:components?|equipment|upgrades?|armour sets?|armor sets?|armours?|armors?|weapons?|sets?|materials?|path|ladder|residual)$/i;
+  /\s+(?:ability codices?|prayer codices?|components?|equipment|upgrades?|armour sets?|armor sets?|armours?|armors?|weapons?|sets?|materials?|path|ladder|residual|drops?|table|uniques?)$/i;
 
 const TOKEN_NOISE =
   /^(?:including|plus|source|see|also|etc|unlocks|effects|level|t\d+|divination\s+\d|enhanced glove(?:s)?|glove path|materials?|components?|equipment|upgrades?|uniques?|progression|access|and more)$/i;
@@ -233,19 +233,32 @@ export function resolveRewardIcon(label: string): string | null {
   const raw = label.replace(/\s+/g, " ").trim();
   if (!raw) return null;
 
-  const attempts = [raw];
+  const attempts: string[] = [raw];
+  const push = (s: string) => {
+    const t = s.replace(/\s+/g, " ").trim();
+    if (!t) return;
+    if (attempts.some((a) => a.toLowerCase() === t.toLowerCase())) return;
+    attempts.push(t);
+  };
+  // Wiki drop tables use "Extreme attack (1)" / "Weapon poison+++ (1)".
+  push(raw.replace(/\s*\(\d+\)\s*$/g, ""));
   const stripped = raw.replace(TRAILING_NOISE, "").trim();
-  if (stripped && stripped.toLowerCase() !== raw.toLowerCase()) attempts.push(stripped);
+  push(stripped);
+  push(stripped.replace(/\s*\(\d+\)\s*$/g, ""));
 
+  // Aliases before slug fallbacks so "Weapon poison+++ (1)" hits +++ art, not weapon-poison.
   for (const attempt of attempts) {
     const aliased = acceptRewardPath(resolveRewardIconLabel(attempt));
     if (aliased) return aliased;
+  }
+
+  for (const attempt of attempts) {
+    // Prefer /combat/equipment inventory over /upgrades plates.
+    const equip = equipmentIconPath(slugifyIconLabel(attempt));
+    if (equip) return equip;
 
     const up = upgradeIconPath(attempt);
     if (up && isStrictRewardPath(up)) return up;
-
-    const equip = equipmentIconPath(slugifyIconLabel(attempt));
-    if (equip) return equip;
 
     const entity = dataEntityIconPath({ name: attempt });
     if (entity && isStrictRewardPath(entity)) return entity;
@@ -254,7 +267,11 @@ export function resolveRewardIcon(label: string): string | null {
 }
 
 function acceptRewardPath(src: string | null): string | null {
-  if (!src || !isStrictRewardPath(src)) return null;
+  if (!src) return null;
+  // Explicit REWARD_ICON_BY_LABEL may point at boss plates (Muspah creature).
+  // Do not open /game/bosses/ for entity fallback - that turns "Hermodic plates" into Hermod.
+  if (src.startsWith("/game/bosses/")) return src;
+  if (!isStrictRewardPath(src)) return null;
   const equipMatch = src.match(/^\/game\/combat\/equipment\/([^/]+)\.png$/i);
   if (equipMatch) {
     return equipmentIconPath(equipMatch[1]!) ? src : null;
@@ -503,6 +520,8 @@ export function presentInterestName(value: string): string {
   if (/^Ardougne farming patches\b/i.test(raw)) return "Ardougne farm patches";
   if (/^Highweald\s*\/\s*Deserted Mine mining access$/i.test(raw)) return "Highweald mines";
   if (/^The Arc skilling destinations\b/i.test(raw)) return "The Arc islands";
+  if (/^Safecracking route$/i.test(raw)) return "Safes";
+  if (/^Asgarnia safecracking circuit$/i.test(raw)) return "Safes";
   if (/^Player-owned ports skilling rewards\b/i.test(raw)) {
     return "Ports skilling rewards";
   }
@@ -516,7 +535,6 @@ export function presentInterestName(value: string): string {
   if (/^Games necklace teleport package$/i.test(raw)) return "Games necklace";
   if (/^Plague's End Prifddinas unlock package$/i.test(raw)) return "Plague's End";
   if (/^Seren skilling prayers package\b/i.test(raw)) return "Seren prayers";
-  if (/^Seren spells and prayers$/i.test(raw)) return "Seren spells & prayers";
   if (/^Allotment patch hub package$/i.test(raw)) return "Allotment patches";
   if (/^Harmony pillars\b/i.test(raw)) return "Harmony moss";
   if (/^Seren stones and corrupted ore$/i.test(raw)) return "Seren stones";

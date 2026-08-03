@@ -88,7 +88,10 @@ function abilityMeta(ability: AbilitySpec): string {
 
 export function QuickCalculator({ loadout }: { loadout: Loadout }) {
   const { build } = useLeagueBuild();
-  const setup = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
+  const setup = loadoutStats(loadout, {
+    blessingPicks: build.blessingPicks,
+    relics: Object.values(build.relics).filter(Boolean),
+  });
   const [useBuild, setUseBuild] = useState(true);
   const [style, setStyle] = useState<CombatStyle>("melee");
   const [level, setLevel] = useState(99);

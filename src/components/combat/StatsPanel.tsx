@@ -98,7 +98,10 @@ export function StatsPanel({
   setLoadout: (next: Loadout) => void;
 }) {
   const { build } = useBuild();
-  const stats = loadoutStats(loadout, { blessingPicks: build.blessingPicks });
+  const stats = loadoutStats(loadout, {
+    blessingPicks: build.blessingPicks,
+    relics: Object.values(build.relics).filter(Boolean),
+  });
   const overloadTier = loadoutOverloadTier(loadout);
   const automatic = (patch: Partial<Loadout>) =>
     setLoadout({
@@ -327,7 +330,7 @@ export function StatsPanel({
             suffix="%"
           />
           <NumberField
-            label="Damage Potential assumption"
+            label="Assumed Damage Potential"
             value={loadout.accuracy}
             onChange={(accuracy) => setLoadout({ ...loadout, accuracy })}
             suffix="%"
@@ -339,7 +342,7 @@ export function StatsPanel({
             suffix="%"
           />
           <DerivedRow
-            label="Damage Potential in play"
+            label="Damage Potential"
             value={`${Math.round(stats.dp * 1000) / 10}%`}
             note={stats.damagePotentialSource}
           />

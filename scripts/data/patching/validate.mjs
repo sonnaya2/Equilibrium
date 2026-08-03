@@ -43,6 +43,10 @@ const SCHEMA = new Map([
   ["relate", { keys: ["entity", "target", "relation", "order"], required: ["entity", "target", "relation"] }],
   ["unrelate", { keys: ["entity", "target", "relation"], required: ["entity", "target", "relation"] }],
   ["remove", { keys: ["entity", "reason"], required: ["entity", "reason"] }],
+  [
+    "unlink-research-entry",
+    { keys: ["entity", "region", "section", "reason"], required: ["entity", "region", "section", "reason"] },
+  ],
   ["set-record", { keys: ["file", "path", "body", "entity", "reason"], required: ["file", "path", "body"] }],
   [
     "add-requirement",
@@ -142,6 +146,20 @@ const SHAPE = {
     entity: identifier(operation, "entity", context),
     reason: identifier(operation, "reason", context),
   }),
+  "unlink-research-entry": (operation, context) => {
+    const region = normalizeRegion(operation.region);
+    if (!region) fail(context, `unknown region: ${scalar(operation.region) || "(empty)"}`);
+    const section = scalar(operation.section);
+    if (section !== "content" && section !== "upgrades") {
+      fail(context, `section must be content or upgrades: ${section || "(empty)"}`);
+    }
+    return {
+      entity: identifier(operation, "entity", context),
+      region,
+      section,
+      reason: identifier(operation, "reason", context),
+    };
+  },
   // Documents are rebuilt as skeleton + source records, so revealing something
   // new in one - a relic tier, a task band - means writing the record itself.
   // Every other operation edits an entity, which no document is assembled from.
@@ -199,6 +217,7 @@ const SHAPE_OF = new Map([
   ["relate", SHAPE.relate],
   ["unrelate", SHAPE.relate],
   ["remove", SHAPE.remove],
+  ["unlink-research-entry", SHAPE["unlink-research-entry"]],
   ["set-record", SHAPE["set-record"]],
   ["add-requirement", SHAPE.requirement],
   ["remove-requirement", SHAPE.requirement],

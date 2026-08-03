@@ -26,10 +26,13 @@ import {
 
 /** Rebuild ResolvedLeagueRules (blessingIds as Set) from a cloneable payload. */
 export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRules {
+  const relics = [...(league.relics ?? [])];
   return {
     ruleset: league.ruleset,
     blessings: league.blessings,
     blessingIds: new Set<BlessingId>(league.blessingIds),
+    relics,
+    relicNames: new Set(relics),
     totalArmour: league.totalArmour,
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
@@ -43,6 +46,7 @@ export function serializeLeague(league: ResolvedLeagueRules): SerializableLeague
     ruleset: league.ruleset,
     blessings: league.blessings,
     blessingIds: [...league.blessingIds],
+    relics: [...league.relics],
     totalArmour: league.totalArmour,
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),

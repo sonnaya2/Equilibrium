@@ -25,7 +25,7 @@ const DEFAULT_CAP = 24;
 
 /** Trailing list noise stripped before resolve (display label stays original). */
 const TRAILING_NOISE =
-  /\s+(?:components?|equipment|upgrades?|armour sets?|armor sets?|armours?|armors?|weapons?|sets?|materials?|path|ladder|residual|drops?|table|uniques?)$/i;
+  /\s+(?:ability codices?|prayer codices?|components?|equipment|upgrades?|armour sets?|armor sets?|armours?|armors?|weapons?|sets?|materials?|path|ladder|residual|drops?|table|uniques?)$/i;
 
 /** Labels that must never become icons. */
 const LABEL_NOISE =

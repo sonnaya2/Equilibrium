@@ -20,7 +20,7 @@ export function TargetPanel({
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Target</h2>
-      <p className="mt-1 text-xs text-parch-300">Calculates Damage Potential from target stats.</p>
+      <p className="mt-1 text-xs text-parch-300">Damage Potential from NPC stats.</p>
       <div className="loadout-fields mt-3">
         <label className="loadout-check">
           <input
@@ -35,7 +35,7 @@ export function TargetPanel({
               })
             }
           />
-          Use NPC target model
+          Use NPC target
         </label>
         {target ? (
           <>
@@ -75,11 +75,11 @@ export function TargetPanel({
                   updateTarget({ damagePotentialOverride: event.target.checked ? 1 : undefined })
                 }
               />
-              Manual Damage Potential override
+              Manual Damage Potential
             </label>
             {target.damagePotentialOverride !== undefined ? (
               <NumberField
-                label="Damage Potential override"
+                label="Damage Potential"
                 value={target.damagePotentialOverride * 100}
                 onChange={(value) =>
                   updateTarget({ damagePotentialOverride: Math.min(1, Math.max(0, value / 100)) })
@@ -162,6 +162,16 @@ export function TargetPanel({
               onChange={(value) =>
                 updateTarget({
                   incomingHitIntervalSeconds: value > 0 ? Math.min(600, value) : undefined,
+                })
+              }
+            />
+            <NumberField
+              label="Incoming hit damage"
+              value={target.incomingHitDamage ?? 0}
+              min={0}
+              onChange={(value) =>
+                updateTarget({
+                  incomingHitDamage: value > 0 ? Math.min(1_000_000, value) : undefined,
                 })
               }
             />

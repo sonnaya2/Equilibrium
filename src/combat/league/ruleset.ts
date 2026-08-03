@@ -8,10 +8,17 @@ import {
 import { mulFloor } from "../core/rounding";
 import { AFFINITY, type AffinityKind } from "../target/genericTarget";
 import type { CombatModifier } from "../types";
+import {
+  ICYENIC_FAITH_RELIC,
+  icyenicFaithActive,
+  resolveIcyenicFaithBonuses,
+  type IcyenicFaithBonuses,
+} from "./icyenicFaith";
 
 export interface LeagueLoadout {
   ruleset?: "base" | "equilibrium";
   blessingPicks?: readonly BlessingPath[];
+  /** Chosen relic display names (not tier keys). */
   relics?: readonly string[];
   regions?: readonly string[];
 }
@@ -34,6 +41,9 @@ export interface ResolvedLeagueRules {
    */
   blessingsById?: ReadonlyMap<BlessingId, BlessingChoice>;
   blessingIds: ReadonlySet<BlessingId>;
+  /** Active relic display names when ruleset is equilibrium. */
+  relics: readonly string[];
+  relicNames: ReadonlySet<string>;
   totalArmour: number;
   /**
    * Maximum life without Powerburst of Vitality doubling. Call
@@ -62,11 +72,17 @@ export function resolveLeagueRules(
   const ruleset = loadout.ruleset === "equilibrium" ? "equilibrium" : "base";
   const blessings = ruleset === "equilibrium" ? activeBlessings(loadout.blessingPicks ?? []) : [];
   const blessingsById = indexActiveBlessings(blessings);
+  const relics =
+    ruleset === "equilibrium"
+      ? [...new Set((loadout.relics ?? []).filter((name) => typeof name === "string" && name.length > 0))]
+      : [];
   return {
     ruleset,
     blessings,
     blessingsById,
     blessingIds: new Set(blessingsById.keys()),
+    relics,
+    relicNames: new Set(relics),
     totalArmour: Math.max(0, derived.totalArmour ?? 0),
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
@@ -84,6 +100,29 @@ export function resolveMaximumLife(rules: ResolvedLeagueRules, landTick: number)
 
 export function hasBlessing(rules: ResolvedLeagueRules | undefined, id: BlessingId): boolean {
   return rules?.ruleset === "equilibrium" && rules.blessingIds.has(id);
+}
+
+export function hasRelic(rules: ResolvedLeagueRules | undefined, name: string): boolean {
+  return rules?.ruleset === "equilibrium" && rules.relicNames.has(name);
+}
+
+export function hasIcyenicFaith(rules: ResolvedLeagueRules | undefined): boolean {
+  return hasRelic(rules, ICYENIC_FAITH_RELIC) || icyenicFaithActive(rules?.relics);
+}
+
+/**
+ * Icyenic Faith damage layers from equipment Prayer + Tome worn.
+ * Crit chance and base AD % only apply when relic is active and the Tome is worn.
+ */
+export function icyenicFromLoadout(
+  rules: ResolvedLeagueRules | undefined,
+  equipmentPrayer: number,
+  tomeWorn: boolean,
+): IcyenicFaithBonuses {
+  return resolveIcyenicFaithBonuses(equipmentPrayer, {
+    relicActive: hasIcyenicFaith(rules),
+    tomeWorn,
+  });
 }
 
 /** Stable index for mechanic lookup; rebuilds from the array when the Map is absent. */

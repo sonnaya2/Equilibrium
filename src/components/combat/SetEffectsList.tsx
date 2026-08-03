@@ -1,16 +1,21 @@
 "use client";
 
+import { equipmentById } from "@/combat/data";
 import {
   equipmentSetById,
+  resolvedEquipmentSlots,
   setEffectsSummary,
   type EquipmentSetEffectDef,
+  type LoadoutEquipmentView,
   type SetEffectSupport,
 } from "@/combat/shared/equipment";
+import { equipmentIconPath } from "@/lib/gameArt";
+import { GameIcon } from "@/components/GameIcon";
 import type { Loadout } from "./useLoadout";
 
 const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
-  modeled: "Modeled",
-  "not-modeled": "Not modeled",
+  modeled: "Active",
+  "not-modeled": "Unmodeled",
   "outgoing-only": "Partial",
   none: "No combat effect",
 };
@@ -30,9 +35,32 @@ function setEffectText(effect: EquipmentSetEffectDef): string {
   return `${percent} damage${context}`;
 }
 
+/** Equipped item ids per setId (deduped). Visage still one icon while counting 2 pieces. */
+function equippedSetPieceIds(loadout: LoadoutEquipmentView): Map<string, string[]> {
+  const bySet = new Map<string, string[]>();
+  const seen = new Set<string>();
+  const add = (id: string | null | undefined) => {
+    if (typeof id !== "string" || seen.has(id)) return;
+    seen.add(id);
+    const setId = equipmentById(id)?.setId;
+    if (!setId) return;
+    const list = bySet.get(setId);
+    if (list) list.push(id);
+    else bySet.set(setId, [id]);
+  };
+  for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
+  for (const id of loadout.equipmentIds ?? []) add(id);
+  return bySet;
+}
+
 /** Equipped set progress and thresholds - Gear owns this; it is not a buff toggle. */
 export function SetEffectsList({ loadout }: { loadout: Loadout }) {
-  const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
+  const view: LoadoutEquipmentView = {
+    equipmentSlots: loadout.equipmentSlots,
+    equipmentIds: loadout.equipmentIds,
+  };
+  const sets = setEffectsSummary(view);
+  const piecesBySet = equippedSetPieceIds(view);
 
   if (sets.length === 0) {
     return (
@@ -52,7 +80,7 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
         const activeThresholds = thresholds.filter((value) => value <= s.pieces).length;
         const state =
           s.support === "not-modeled"
-            ? "Not modeled"
+            ? "Unmodeled"
             : activeThresholds > 0 && activeThresholds < thresholds.length
               ? "Partial"
               : activeThresholds > 0
@@ -60,6 +88,7 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
                 : thresholds.length > 0
                   ? "Partial"
                   : "Equipped";
+        const pieceIds = piecesBySet.get(s.setId) ?? [];
         return (
           <li key={s.setId} className="set-effect-card">
             <div className="set-effect-card__head">
@@ -69,6 +98,18 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
                 {s.pieces}/{def?.maxPieces ?? s.pieces}
               </span>
             </div>
+            {pieceIds.length > 0 ? (
+              <div className="set-effect-pieces" aria-label="Equipped set pieces">
+                {pieceIds.map((itemId) => {
+                  const name = equipmentById(itemId)?.name;
+                  return (
+                    <span key={itemId} className="set-effect-pieces__icon" title={name ?? itemId}>
+                      <GameIcon src={equipmentIconPath(itemId)} alt={name ?? ""} size={18} />
+                    </span>
+                  );
+                })}
+              </div>
+            ) : null}
             <ul className="set-threshold-list">
               {def?.effects.map((effect) => {
                 const met = s.pieces >= effect.minPieces;

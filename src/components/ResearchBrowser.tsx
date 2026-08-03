@@ -387,9 +387,16 @@ function RegionDetail({ region }: { region: ResearchRegion }) {
           <div className="data-upgrades-list">
             {region.upgrades.length ? (
               region.upgrades.map((upgrade, index) => {
+                const entitySrc = dataEntityIconPath({
+                  name: upgrade.name,
+                  kind: upgrade.category,
+                });
+                const upgradeSrc = upgradeIconPath(upgrade.name);
+                // Prefer /combat/equipment inventory when entity resolved there.
                 const iconSrc =
-                  upgradeIconPath(upgrade.name) ??
-                  dataEntityIconPath({ name: upgrade.name, kind: upgrade.category });
+                  (entitySrc?.startsWith("/game/combat/equipment/") ? entitySrc : null) ??
+                  upgradeSrc ??
+                  entitySrc;
                 const requiredRegions = [...new Set(upgrade.requiredRegions ?? [])];
                 const displayUpgradeName = interestName(upgrade.name);
                 // Category + name tokens already in memory for extra local art resolve.

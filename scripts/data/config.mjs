@@ -50,17 +50,17 @@ export const DEFAULT_LIMIT = 20;
 export const FIXED_TIME = "1970-01-01T00:00:00.000Z";
 
 export const REGION_IDS = [
-  "misthalin",
   "havenhythe",
   "karamja",
+  "misthalin",
+  "anachronia",
   "asgarnia",
-  "kandarin",
-  "fremennik",
-  "forinthry",
   "desert",
+  "forinthry",
+  "fremennik",
+  "kandarin",
   "morytania",
   "tirannwn",
-  "anachronia",
 ];
 export const REGION_SET = new Set([...REGION_IDS, "global"]);
 

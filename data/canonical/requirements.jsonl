@@ -1,6 +1,28 @@
+{"description":"Barbarian Outpost access (Kandarin; games necklace / Bar Crawl yard)","entityId":"activity:content:barbarian-assault","ordinal":0}
+{"description":"Captain Cain tutorial before first wave","entityId":"activity:content:barbarian-assault","ordinal":1}
+{"description":"One Piercing Note","entityId":"activity:content:citharede-abbey","ordinal":0}
+{"description":"68 Fishing for hub access","entityId":"activity:content:deep-sea-fishing-hub","kind":"skill","level":68,"ordinal":0,"skill":"Fishing"}
+{"description":"94 Fishing for Fishing Frenzy","entityId":"activity:content:deep-sea-fishing-hub","kind":"skill","level":94,"ordinal":1,"skill":"Fishing"}
+{"description":"70 Invention and Dwarven technology tree for Kinetic cyclone","entityId":"activity:content:dwarf-multicannon","kind":"skill","level":70,"ordinal":2,"skill":"Invention"}
+{"description":"Artisans' Workshop Respect for Golden / Royale / Restocking Cannon (in order)","entityId":"activity:content:dwarf-multicannon","ordinal":1}
+{"description":"Dwarf Cannon quest for base multicannon access","entityId":"activity:content:dwarf-multicannon","ordinal":0}
+{"description":"Hard Seers' Village achievements (Lady of the Lake Excalibur upgrade)","entityId":"activity:content:enhanced-excalibur","ordinal":0}
+{"description":"90 Defence to wear; 90 Crafting to create","entityId":"activity:content:enhanced-nightmare-gauntlets","kind":"skill","level":90,"ordinal":2,"skill":"Defence"}
+{"description":"Leng artefact + 1,000 glacor remnants (Arch-Glacor; Misthalin)","entityId":"activity:content:enhanced-nightmare-gauntlets","ordinal":1}
+{"description":"Nightmare gauntlets (base; Freneskae Nightmares / Kandarin)","entityId":"activity:content:enhanced-nightmare-gauntlets","ordinal":0}
+{"description":"100 Woodcutting for eternal magic trees","entityId":"activity:content:eternal-magic-trees","kind":"skill","level":100,"ordinal":1,"skill":"Woodcutting"}
+{"description":"Piscatoris Hunter area access in Kandarin","entityId":"activity:content:eternal-magic-trees","ordinal":0}
+{"description":"87 Summoning","entityId":"activity:content:nihil-familiars","kind":"skill","level":87,"ordinal":1,"skill":"Summoning"}
+{"description":"Fate of the Gods","entityId":"activity:content:nihil-familiars","ordinal":0}
+{"description":"Pyre logs and shade remains for cremation","entityId":"activity:content:shade-keys","ordinal":1}
+{"description":"Shades of Mort'ton quest for full minigame loop","entityId":"activity:content:shade-keys","ordinal":0}
+{"description":"Legacy of Seergaze for Columbarium access","entityId":"activity:content:shiny-columbarium-key","ordinal":0}
+{"description":"Magic or elder pyre logs for guaranteed shiny key on vyre cremation","entityId":"activity:content:shiny-columbarium-key","ordinal":1}
 {"description":"Butterfly net / magic butterfly net / Tellervo's net (or 85 Hunter + 80 Agility for barehand)","entityId":"activity:content:spirit-moths-highweald-charm-supply","level":85,"ordinal":1}
 {"description":"Highweald Forest access east of Wendlewick","entityId":"activity:content:spirit-moths-highweald-charm-supply","ordinal":0}
 {"description":"Hunter 18 gold / 32 green / 49 crimson / 64 blue spirit moth tiers","entityId":"activity:content:spirit-moths-highweald-charm-supply","level":18,"ordinal":2}
+{"description":"Ancient Awakening (Ungael combat activity)","entityId":"activity:content:ungael","ordinal":0}
+{"description":"Requiem for a Dragon (Ungael ritual site; Archivist + Zorgoth's ring to use site)","entityId":"activity:content:ungael","ordinal":1}
 {"description":"69 Magic","entityId":"activity:content:vampyrism-aspect","level":69,"ordinal":0}
 {"description":"Ancient Magicks spellbook (Desert Treasure path)","entityId":"activity:content:vampyrism-aspect","ordinal":1}
 {"description":"Access to the Zamorakian Undercity (Elder God Wars / Senntisten path)","entityId":"activity:misthalin:zamorak-lord-of-chaos","ordinal":0}
@@ -272,6 +294,11 @@
 {"description":"80 Ranged to wield","entityId":"asgarnia:zaryte-bow","level":80,"ordinal":0}
 {"description":"Nex (Ancient Prison / GWD1 Asgarnia) primary drop","entityId":"asgarnia:zaryte-bow","ordinal":1}
 {"description":"Nihil in The Pit are near-zero-rate alternate — do not treat as a second hard region","entityId":"asgarnia:zaryte-bow","ordinal":2}
+{"description":"70 Agility","entityId":"boss:nex-angel-of-death","kind":"skill","level":70,"ordinal":1,"skill":"Agility"}
+{"description":"70 Constitution","entityId":"boss:nex-angel-of-death","kind":"skill","level":70,"ordinal":2,"skill":"Constitution"}
+{"description":"70 Ranged","entityId":"boss:nex-angel-of-death","kind":"skill","level":70,"ordinal":3,"skill":"Ranged"}
+{"description":"70 Strength","entityId":"boss:nex-angel-of-death","kind":"skill","level":70,"ordinal":4,"skill":"Strength"}
+{"description":"Ancient Prison (GWD1 Zaros wing): Frozen key + 40 Zarosian KC or ancient ceremonial robes (or Gielinor's Most Expensive Doorstop)","entityId":"boss:nex-angel-of-death","ordinal":0}
 {"description":"Complete Broken Home once","entityId":"broken-home:asylum-surgeons-ring","ordinal":0}
 {"description":"Complete a replay in under 37 minutes","entityId":"broken-home:asylum-surgeons-ring","level":37,"ordinal":2}
 {"description":"Complete the designated post-quest challenges","entityId":"broken-home:asylum-surgeons-ring","ordinal":1}
@@ -869,6 +896,8 @@
 {"description":"88 Invention","entityId":"elite-dungeons:slayer-ability-codices","level":88,"ordinal":0}
 {"description":"Relevant codex blueprints from the Elite Dungeon Reward Shop","entityId":"elite-dungeons:slayer-ability-codices","ordinal":2}
 {"description":"One of: 2,200 Cabbage Facepunch renown (Asgarnia), 10,000 Farmers' Market beans (Kandarin or Anachronia farm market), or 360 Thaler","entityId":"equipment:seedicide-not-daemonheim","level":2,"ordinal":0}
+{"description":"87 Summoning","entityId":"fate-of-the-gods:nihil-familiars","kind":"skill","level":87,"ordinal":1,"skill":"Summoning"}
+{"description":"Fate of the Gods","entityId":"fate-of-the-gods:nihil-familiars","ordinal":0}
 {"description":"83 Firemaking","entityId":"firemaking:curly-roots-in-the-jadinko-lair","level":83,"ordinal":0}
 {"description":"83 Woodcutting","entityId":"firemaking:curly-roots-in-the-jadinko-lair","level":83,"ordinal":1}
 {"description":"3000 crystal urchin points at Prifddinas Waterfall Fishing Shop","entityId":"fishing:crystal-fishing-rod-unlock-and-craft-prifddinas-tirannwn","ordinal":1}
@@ -876,6 +905,7 @@
 {"description":"Indirect combat/agility gates for waterfall fishing: 90 Strength, 90 Ranged, 90 Agility, 93 Fishing (all boostable)","entityId":"fishing:crystal-fishing-rod-unlock-and-craft-prifddinas-tirannwn","level":90,"ordinal":2}
 {"description":"Plague's End for Prifddinas access","entityId":"fishing:crystal-fishing-rod-unlock-and-craft-prifddinas-tirannwn","ordinal":0}
 {"description":"The Eyes of Glouphrie + Plague's End for singing-bowl craft path","entityId":"fishing:crystal-fishing-rod-unlock-and-craft-prifddinas-tirannwn","ordinal":4}
+{"description":"94 Fishing","entityId":"fishing:fishing-frenzy","kind":"skill","level":94,"ordinal":0,"skill":"Fishing"}
 {"description":"52 Fishing for desert sole","entityId":"fishing:menafish","level":52,"ordinal":0}
 {"description":"60 Fishing for catfish","entityId":"fishing:menafish","level":60,"ordinal":1}
 {"description":"72 Fishing for beltfish","entityId":"fishing:menafish","level":72,"ordinal":2}
@@ -1589,9 +1619,9 @@
 {"description":"Kerapac, the bound hard mode for the three fractured pieces","entityId":"item:fractured-staff-of-armadyl","ordinal":3}
 {"description":"League self-supply: misthalin","entityId":"item:fractured-staff-of-armadyl","ordinal":0}
 {"description":"Elder God Wars arrows / deathspore","entityId":"item:ful-arrows","ordinal":0}
-{"description":"League self-supply: morytania","entityId":"item:ganodermic-leggings","ordinal":0}
-{"description":"League self-supply: morytania","entityId":"item:ganodermic-poncho","ordinal":0}
-{"description":"League self-supply: morytania","entityId":"item:ganodermic-visor","ordinal":0}
+{"description":"League self-supply: misthalin","entityId":"item:ganodermic-leggings","ordinal":0}
+{"description":"League self-supply: misthalin","entityId":"item:ganodermic-poncho","ordinal":0}
+{"description":"League self-supply: misthalin","entityId":"item:ganodermic-visor","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:garb-of-subjugation","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:gemstone-boots","ordinal":0}
 {"description":"League self-supply: karamja","entityId":"item:gemstone-gauntlets","ordinal":0}
@@ -1758,7 +1788,7 @@
 {"description":"League self-supply: asgarnia","entityId":"item:pernix-cowl","ordinal":0}
 {"description":"League self-supply: asgarnia","entityId":"item:pernix-gloves","ordinal":0}
 {"description":"League self-supply: desert","entityId":"item:pneumatic-gloves","ordinal":0}
-{"description":"League self-supply: morytania","entityId":"item:polypore-staff","ordinal":0}
+{"description":"League self-supply: misthalin","entityId":"item:polypore-staff","ordinal":0}
 {"description":"League self-supply: forinthry","entityId":"item:primal-crossbow-mk-5","ordinal":0}
 {"description":"Liberation of Mazcab armour (Teralith / Tempest / Primeval / Achto)","entityId":"item:primeval-boots","ordinal":0}
 {"description":"Liberation of Mazcab armour (Teralith / Tempest / Primeval / Achto)","entityId":"item:primeval-gloves","ordinal":0}
@@ -3086,6 +3116,9 @@
 {"description":"Ancient Curses book unlocked","entityId":"tirannwn:superheat-form","ordinal":2}
 {"description":"The Light Within completed in the normal game","entityId":"tirannwn:superheat-form","ordinal":0}
 {"description":"Plague's End reward in the normal game","entityId":"tirannwn:trahaearn-exoskeleton","ordinal":0}
+{"description":"93 Magic","entityId":"unlock:anachronia:advance-time","kind":"skill","level":93,"ordinal":0,"skill":"Magic"}
+{"description":"Anachronia base camp workers allocated to station resources","entityId":"unlock:anachronia:advance-time","ordinal":2}
+{"description":"Extinction completed (Dream of Iaia access)","entityId":"unlock:anachronia:advance-time","ordinal":1}
 {"description":"Anachronia base camp built to unlock spa construction tiers","entityId":"unlock:anachronia:anachronia-base-camp-spa-pools","ordinal":0}
 {"description":"As a First Resort still required for the original Oo'glog pool unlocks that the multiplier extends","entityId":"unlock:anachronia:anachronia-base-camp-spa-pools","ordinal":2}
 {"description":"Tier-3 spa for the 1.5× salt-water spring duration multiplier (and matching Anachronia pool durations)","entityId":"unlock:anachronia:anachronia-base-camp-spa-pools","level":3,"ordinal":1}
@@ -3144,6 +3177,9 @@
 {"description":"Glorious bar + masterwork rivets + Imcando anvil smithing (Artisans' Workshop Asgarnia)","entityId":"unlock:anachronia:masterwork-spear-of-annihilation","ordinal":2}
 {"description":"Masterwork melee armour trim (malevolent essence Morytania + praesulic essence Asgarnia)","entityId":"unlock:anachronia:masterwork-spear-of-annihilation","ordinal":1}
 {"description":"Spear of Annihilation base (Archaeology / dig-site material path — region pressure varies)","entityId":"unlock:anachronia:masterwork-spear-of-annihilation","ordinal":0}
+{"description":"120 Archaeology (boostable)","entityId":"unlock:anachronia:mysterious-city","kind":"skill","level":120,"ordinal":0,"skill":"Archaeology"}
+{"description":"Fragmented Memories (Orthen mystery)","entityId":"unlock:anachronia:mysterious-city","ordinal":1}
+{"description":"Orthen Dig Site access (Anachronia)","entityId":"unlock:anachronia:mysterious-city","ordinal":2}
 {"description":"Dream of Iaia access (Extinction + station training)","entityId":"unlock:anachronia:necklace-of-salamancy","ordinal":0}
 {"description":"Very rare roll while training Dream of Iaia stations","entityId":"unlock:anachronia:necklace-of-salamancy","ordinal":1}
 {"description":"112 Farming","entityId":"unlock:anachronia:no-fear-meteor-strike-perk","level":112,"ordinal":0}
@@ -3227,6 +3263,9 @@
 {"description":"86 Invention (boostable) to manufacture golem framework","entityId":"unlock:asgarnia:divine-conversion-cres-framework","level":86,"ordinal":1}
 {"description":"98 Archaeology (boostable) for golem heart/instruction artefacts at Stormguard","entityId":"unlock:asgarnia:divine-conversion-cres-framework","level":98,"ordinal":0}
 {"description":"Howl's Floating Workshop mystery; Back to the Drawing Board research; The World Wakes","entityId":"unlock:asgarnia:divine-conversion-cres-framework","ordinal":3}
+{"description":"70 Invention and Dwarven technology tree for Kinetic cyclone","entityId":"unlock:asgarnia:dwarf-multicannon","kind":"skill","level":70,"ordinal":2,"skill":"Invention"}
+{"description":"Artisans' Workshop Respect for Golden / Royale / Restocking Cannon (in order)","entityId":"unlock:asgarnia:dwarf-multicannon","ordinal":1}
+{"description":"Dwarf Cannon quest for base multicannon access","entityId":"unlock:asgarnia:dwarf-multicannon","ordinal":0}
 {"description":"Alternate historical path: To Lumbridge achievement path reward","entityId":"unlock:asgarnia:dwarven-army-axe","ordinal":1}
 {"description":"Cannot be added to the tool belt — must be carried or equipped to apply bonuses","entityId":"unlock:asgarnia:dwarven-army-axe","ordinal":2}
 {"description":"Claim from Major Mary Rancour at Burthorpe training camp (free; no tutorial path required post-10-July-2023)","entityId":"unlock:asgarnia:dwarven-army-axe","level":10,"ordinal":0}
@@ -3295,6 +3334,11 @@
 {"description":"60 Mining to enter (boostable; e.g. dwarven stout from 59)","entityId":"unlock:asgarnia:mining-guild","level":60,"ordinal":0}
 {"description":"54,000 sentinel fragments total for the three base outfits then combine into Nature's sentinel","entityId":"unlock:asgarnia:natures-sentinel-outfit","level":54,"ordinal":1}
 {"description":"70 Woodcutting to collect sentinel fragments; 80 Woodcutting and 20 Invention to craft oaken/willow/maple pieces","entityId":"unlock:asgarnia:natures-sentinel-outfit","level":70,"ordinal":0}
+{"description":"70 Agility","entityId":"unlock:asgarnia:nex-angel-of-death","kind":"skill","level":70,"ordinal":1,"skill":"Agility"}
+{"description":"70 Constitution","entityId":"unlock:asgarnia:nex-angel-of-death","kind":"skill","level":70,"ordinal":2,"skill":"Constitution"}
+{"description":"70 Ranged","entityId":"unlock:asgarnia:nex-angel-of-death","kind":"skill","level":70,"ordinal":3,"skill":"Ranged"}
+{"description":"70 Strength","entityId":"unlock:asgarnia:nex-angel-of-death","kind":"skill","level":70,"ordinal":4,"skill":"Strength"}
+{"description":"Ancient Prison (GWD1 Zaros wing): Frozen key + 40 Zarosian KC or ancient ceremonial robes (or Gielinor's Most Expensive Doorstop)","entityId":"unlock:asgarnia:nex-angel-of-death","ordinal":0}
 {"description":"No skill gate for town access","entityId":"unlock:asgarnia:port-sarim-docks-and-skilling-hub","ordinal":0}
 {"description":"No weapons/armour for Entrana boat from the docks (law altar surface route)","entityId":"unlock:asgarnia:port-sarim-docks-and-skilling-hub","ordinal":2}
 {"description":"Player-owned port voyage progression for in-port bank chest (Workshop upgrade path)","entityId":"unlock:asgarnia:port-sarim-docks-and-skilling-hub","ordinal":1}
@@ -3741,6 +3785,8 @@
 {"description":"85 Defence to wear","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank","level":85,"ordinal":0}
 {"description":"Glacors (classic glacor cave / Ritual of the Mahjarrat glacor access — Fremennik geography for surface glacor farm)","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank","ordinal":1}
 {"description":"Style split: Steadfast (melee tank), Ragefire (magic tank), Glaiven (ranged tank)","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank","ordinal":2}
+{"description":"Ancient Awakening (Ungael combat activity)","entityId":"unlock:fremennik:ungael","ordinal":0}
+{"description":"Requiem for a Dragon (Ungael ritual site)","entityId":"unlock:fremennik:ungael","ordinal":1}
 {"description":"Combat readiness for dagannoth dungeon layers; pet rock or partner for two-person doors deeper in","entityId":"unlock:fremennik:waterbirth-island-access","ordinal":1}
 {"description":"Jarvald boat from Rellekka (or Lunar Waterbirth teleport / diary / tablet alternatives)","entityId":"unlock:fremennik:waterbirth-island-access","ordinal":0}
 {"description":"Cured yak-hides from Thakkrad Sigmundson","entityId":"unlock:fremennik:yak-hide-armour","ordinal":1}
@@ -3810,6 +3856,7 @@
 {"description":"Path A — Superheat Form: The Light Within, 91 Prayer, Ancient Curses; drains 100 prayer/min base (50 with GOTE; 0 with Dark Facet GOTE); Orthen furnace core can zero drain for smithing-side use","entityId":"unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze","level":91,"ordinal":0}
 {"description":"Path B — Always Adze: Seed of the Charyou Tree harnessed (83 Archaeology path); 100% auto-burn while WC with no prayer drain","entityId":"unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze","level":83,"ordinal":1}
 {"description":"Path C — partial: Inferno adze ~1/3 incinerate (All Fired Up, 92 Firemaking wield) or Nature's sentinel 25% auto-burn/auto-fletch toggle (additive with Inferno adze)","entityId":"unlock:kandarin:auto-burn-woodcutting-paths-superheat-form-vs-always-adze-vs-partial-outfit-adze","level":1,"ordinal":2}
+{"description":"Barbarian Outpost access (Kandarin; games necklace / Bar Crawl yard)","entityId":"unlock:kandarin:barbarian-assault","ordinal":0}
 {"description":"35 Agility for basic course (boostable)","entityId":"unlock:kandarin:barbarian-outpost-agility-course","level":35,"ordinal":1}
 {"description":"90 Agility for advanced course","entityId":"unlock:kandarin:barbarian-outpost-agility-course","level":90,"ordinal":2}
 {"description":"Bar Crawl (miniquest) for outer yard access","entityId":"unlock:kandarin:barbarian-outpost-agility-course","ordinal":0}
@@ -3854,6 +3901,9 @@
 {"description":"Elemental Workshop I–IV progression for full workshop systems","entityId":"unlock:kandarin:elemental-workshop","ordinal":0}
 {"description":"81 Archaeology (boostable); 2,000 chronotes and 100 monolith energy to harness","entityId":"unlock:kandarin:endurance-ooglog-wellspring","level":81,"ordinal":1}
 {"description":"Smoky Fings collection for Chief Tess → Oo'glog Wellspring (Warforge artefact set)","entityId":"unlock:kandarin:endurance-ooglog-wellspring","ordinal":0}
+{"description":"90 Defence to wear; 90 Crafting to create","entityId":"unlock:kandarin:enhanced-nightmare-gauntlets","kind":"skill","level":90,"ordinal":2,"skill":"Defence"}
+{"description":"Leng artefact + 1,000 glacor remnants (Arch-Glacor; Misthalin)","entityId":"unlock:kandarin:enhanced-nightmare-gauntlets","ordinal":1}
+{"description":"Nightmare gauntlets (base; Freneskae Nightmares / Kandarin)","entityId":"unlock:kandarin:enhanced-nightmare-gauntlets","ordinal":0}
 {"description":"Catch 1,000 charm sprites with the yaktwee stick equipped","entityId":"unlock:kandarin:enhanced-yaktwee-stick","level":1,"ordinal":1}
 {"description":"Practical Hunter ~73+ after the 1,000-catch grind from the 72 entry band","entityId":"unlock:kandarin:enhanced-yaktwee-stick","level":73,"ordinal":3}
 {"description":"Talk to Yaktwee to upgrade (Yaktwee's a Charm achievement; completionist cape requirement)","entityId":"unlock:kandarin:enhanced-yaktwee-stick","ordinal":2}
@@ -4553,8 +4603,11 @@
 {"description":"Plague's End / Prifddinas Meilyr Recipe Shop access","entityId":"unlock:tirannwn:supreme-overload-potion-recipe-meilyr","ordinal":0}
 {"description":"Easy through elite Tirannwn achievements claimed in order","entityId":"unlock:tirannwn:tirannwn-quiver-1-4","ordinal":0}
 {"description":"Plague's End reward in the normal game","entityId":"unlock:tirannwn:trahaearn-exoskeleton","ordinal":0}
+{"description":"One Piercing Note","entityId":"unlock:unlocks:devotion","ordinal":0}
+{"description":"One Piercing Note","entityId":"unlock:unlocks:sacrifice","ordinal":0}
 {"description":"100 Runecrafting (unboostable)","entityId":"unlock:unlocks:time-rune-time-altar","level":100,"ordinal":0}
 {"description":"Enchanted key","entityId":"unlock:unlocks:time-rune-time-altar","ordinal":1}
+{"description":"One Piercing Note","entityId":"unlock:unlocks:transfigure","ordinal":0}
 {"description":"Cannot be attacked with short-range melee","entityId":"wiki:1","ordinal":0}
 {"description":"66 Runecrafting","entityId":"wiki:10","level":66,"ordinal":0}
 {"description":"1 Archaeology","entityId":"wiki:100","level":1,"ordinal":0}

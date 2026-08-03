@@ -146,9 +146,25 @@ function blessingFor(tier: BlessingTier, path: string): BlessingChoice | undefin
   return tier.choices.find((choice) => choice.path === path);
 }
 
-function blessingTitle(card: BlessingChoice | undefined, fallback: string): string {
-  if (!card) return fallback;
-  return card.effects.length ? `${card.name} — ${card.effects.join(" ")}` : card.name;
+function BlessingTip({ card }: { card: BlessingChoice }) {
+  return (
+    <span className="build-board__tip" role="tooltip">
+      <strong>{card.name}</strong>
+      {card.effects.length > 0 ? (
+        <ul>
+          {card.effects.map((fx) => (
+            <li key={fx}>{fx}</li>
+          ))}
+        </ul>
+      ) : null}
+    </span>
+  );
+}
+
+function blessingAria(card: BlessingChoice | undefined, detail: string): string {
+  if (!card) return detail;
+  const fx = card.effects.length ? `. ${card.effects.join(". ")}` : "";
+  return `${card.name}${fx}. ${detail}`;
 }
 
 function relicMono(name: string): string {
@@ -395,7 +411,7 @@ export function BuildPlanner({
         <div className="build-board__court">
           <div className="build-board__court-main">
             <section className="build-board__zone" aria-label="Relics">
-              <h2 className="build-board__zone-title">Relics · hover for effects</h2>
+              <h2 className="build-board__zone-title">Relics</h2>
               <div className="build-board__relics">
                 {relicTiers.map((tier) => {
                   const open = tier.revealed && tier.choices.length > 0;
@@ -544,6 +560,7 @@ export function BuildPlanner({
                           <span className="build-board__lat-path-name">{path}</span>
                         </div>
                         {blessingTiers.map((tier) => {
+                          const tipBelow = path === "Order";
                           if (tier.godTier) {
                             const god = alignments[tier.tier];
                             const lit = god === path;
@@ -551,21 +568,19 @@ export function BuildPlanner({
                             return (
                               <div
                                 key={`${path}-${tier.tier}`}
-                                className={`build-board__lat-cell is-god${lit ? " is-on" : ""}`}
+                                className={`build-board__lat-cell is-god${lit ? " is-on" : ""}${tipBelow ? " is-tip-below" : ""}`}
                                 role="img"
-                                title={blessingTitle(
+                                aria-label={blessingAria(
                                   card,
-                                  lit
-                                    ? `God T${tier.tier}: ${path}`
-                                    : `God T${tier.tier} undecided`,
+                                  `${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`,
                                 )}
-                                aria-label={`${card ? `${card.name}, ` : ""}${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`}
                               >
                                 {card ? (
                                   <GameIcon src={blessingIconPath(card.name)} size={26} />
                                 ) : (
                                   <span className="build-board__lat-fill" aria-hidden />
                                 )}
+                                {card ? <BlessingTip card={card} /> : null}
                               </div>
                             );
                           }
@@ -588,9 +603,11 @@ export function BuildPlanner({
                               type="button"
                               disabled={locked}
                               aria-pressed={selected}
-                              title={blessingTitle(card, `${path}, tier ${tier.tier}`)}
-                              aria-label={`${card ? `${card.name}, ` : ""}${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`}
-                              className={`build-board__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}`}
+                              aria-label={blessingAria(
+                                card,
+                                `${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`,
+                              )}
+                              className={`build-board__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}${tipBelow ? " is-tip-below" : ""}`}
                               onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
                             >
                               {card ? (
@@ -598,6 +615,7 @@ export function BuildPlanner({
                               ) : (
                                 <span className="build-board__lat-fill" aria-hidden />
                               )}
+                              {card ? <BlessingTip card={card} /> : null}
                             </button>
                           );
                         })}

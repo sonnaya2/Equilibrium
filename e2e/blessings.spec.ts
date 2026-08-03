@@ -11,10 +11,10 @@ test("Build blessing picks feed the combat workspace", async ({ page }) => {
   await page.getByRole("combobox", { name: "Blessing tier 3" }).selectOption("Chaos");
 
   await expect(page.getByText("God Tier One · Demon's Mark (Chaos)")).toBeVisible();
-  await expect(page.getByText("Big Boned · Modeled · mechanics unverified")).toBeVisible();
-  await expect(page.getByText("Abyssal Cinders · Modeled · mechanics unverified")).toBeVisible();
-  await expect(page.getByText("Avernic Rampage · Modeled · mechanics unverified")).toBeVisible();
-  await expect(page.getByText("Demon's Mark · Partial · mechanics unverified")).toBeVisible();
+  await expect(page.getByText("Big Boned · Active · unverified")).toBeVisible();
+  await expect(page.getByText("Abyssal Cinders · Active · unverified")).toBeVisible();
+  await expect(page.getByText("Avernic Rampage · Active · unverified")).toBeVisible();
+  await expect(page.getByText("Demon's Mark · Partial · unverified")).toBeVisible();
 
   await page.getByRole("button", { name: "Abilities", exact: true }).click();
   await page.getByText("Assumptions", { exact: true }).click();

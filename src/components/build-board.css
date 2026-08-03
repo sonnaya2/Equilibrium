@@ -235,6 +235,11 @@
   padding-top: 1.5rem;
 }
 
+.build-board__zone[aria-label="Relics"]:has(.build-board__seat:hover),
+.build-board__zone[aria-label="Relics"]:has(.build-board__seat:focus-visible) {
+  z-index: 8;
+}
+
 .build-board__court {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(19rem, 21rem);
@@ -244,10 +249,16 @@
 }
 
 .build-board__court-main {
+  position: relative;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: var(--build-gap);
   min-width: 0;
+}
+
+.build-board__court-main:has(.build-board__seat:hover),
+.build-board__court-main:has(.build-board__seat:focus-visible) {
+  z-index: 4;
 }
 
 .build-board__zone-title {
@@ -406,6 +417,7 @@
 
 .build-board__tier {
   position: relative;
+  z-index: 0;
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr) 1.25rem;
   gap: 0.5rem;
@@ -424,6 +436,11 @@
     inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 20%, transparent);
 }
 
+.build-board__tier:has(.build-board__seat:hover),
+.build-board__tier:has(.build-board__seat:focus-visible) {
+  z-index: 6;
+}
+
 .build-board__tier-id {
   font-family: var(--font-display), serif;
   font-size: 0.95rem;
@@ -432,6 +449,7 @@
   color: var(--build-gold);
 }
 
+/* overflow-x:auto forces overflow-y non-visible and clips absolute tips; board scrolls instead. */
 .build-board__seats {
   display: flex;
   flex-wrap: nowrap;
@@ -439,12 +457,12 @@
   align-items: stretch;
   min-width: 0;
   margin-left: 0.5rem;
-  overflow-x: auto;
-  scrollbar-width: thin;
+  overflow: visible;
 }
 
 .build-board__seat {
   position: relative;
+  z-index: 0;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -470,7 +488,9 @@
   cursor: pointer;
 }
 
-.build-board__seat:hover:not(.is-empty) {
+.build-board__seat:hover:not(.is-empty),
+.build-board__seat:focus-visible {
+  z-index: 50;
   border-color: color-mix(in srgb, var(--build-gem) 50%, var(--build-line));
 }
 
@@ -599,28 +619,70 @@
 .build-board__tip {
   position: absolute;
   z-index: 40;
-  left: 0;
-  bottom: calc(100% + 6px);
+  left: 50%;
+  bottom: calc(100% + 8px);
   display: none;
-  width: min(19rem, 72vw);
-  padding: 0.5rem 0.6rem;
-  border: 1px solid var(--build-line);
+  width: max-content;
+  max-width: min(22rem, 78vw);
+  min-width: 11.5rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--build-gold) 48%, var(--build-line));
   border-radius: 2px;
-  background: var(--color-stone-950);
-  box-shadow: 3px 5px 0 color-mix(in srgb, var(--color-stone-950) 80%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-stone-raised) 22%, var(--color-stone-950)) 0%,
+      var(--color-stone-950) 42%
+    ),
+    var(--color-stone-950);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--build-gold) 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-stone-950) 88%, transparent),
+    3px 5px 0 color-mix(in srgb, var(--color-stone-950) 82%, transparent);
   color: var(--color-parch-100);
   font-size: 0.875rem;
-  line-height: 1.35;
+  line-height: 1.4;
   text-align: left;
   white-space: normal;
+  transform: translateX(-50%);
   pointer-events: none;
+}
+
+.build-board__tip::before,
+.build-board__tip::after {
+  content: "";
+  position: absolute;
+  width: 0.55rem;
+  height: 0.55rem;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.build-board__tip::before {
+  top: -1px;
+  left: -1px;
+  background:
+    linear-gradient(var(--build-gold-dim), var(--build-gold-dim)) 0 0 / 0.55rem 1px no-repeat,
+    linear-gradient(var(--build-gold-dim), var(--build-gold-dim)) 0 0 / 1px 0.55rem no-repeat;
+}
+
+.build-board__tip::after {
+  right: -1px;
+  bottom: -1px;
+  background:
+    linear-gradient(var(--build-gold-dim), var(--build-gold-dim)) 100% 100% / 0.55rem 1px no-repeat,
+    linear-gradient(var(--build-gold-dim), var(--build-gold-dim)) 100% 100% / 1px 0.55rem no-repeat;
 }
 
 .build-board__tip strong {
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.28rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--build-gold) 28%, var(--build-line));
   font-family: var(--font-display), serif;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   color: var(--build-gold);
 }
 
@@ -628,10 +690,11 @@
   margin: 0;
   padding-left: 0.95rem;
   font-size: 0.8125rem;
+  color: var(--color-parch-100);
 }
 
 .build-board__tip li + li {
-  margin-top: 0.12rem;
+  margin-top: 0.2rem;
 }
 
 .build-board__seat:hover .build-board__tip,
@@ -639,9 +702,10 @@
   display: block;
 }
 
+/* T1-T2 open downward (top of board). */
 .build-board__tier:nth-child(-n + 2) .build-board__tip {
   bottom: auto;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
 }
 
 .build-board__loadout {
@@ -825,8 +889,7 @@
   border: 1px solid color-mix(in srgb, var(--build-line) 70%, var(--color-stone-950));
   background: var(--color-stone-950);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 14%, transparent);
-  overflow: hidden;
-  isolation: isolate;
+  overflow: visible;
 }
 
 .build-board__bless-scroll {
@@ -836,6 +899,7 @@
   min-width: 0;
   padding: 0.55rem 0.65rem 0.65rem;
   overflow-x: auto;
+  overflow-y: visible;
   scrollbar-width: thin;
 }
 
@@ -921,6 +985,26 @@
   background: var(--color-stone-inset);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 14%, transparent);
   cursor: pointer;
+}
+
+.build-board__lat-cell:is(:hover, :focus-visible) {
+  z-index: 30;
+}
+
+.build-board__lat-cell:is(:hover, :focus-visible) .build-board__tip {
+  display: block;
+}
+
+.build-board__lat-cell .build-board__tip {
+  left: 50%;
+  right: auto;
+  width: min(16rem, 70vw);
+  transform: translateX(-50%);
+}
+
+.build-board__lat-cell.is-tip-below .build-board__tip {
+  bottom: auto;
+  top: calc(100% + 6px);
 }
 
 .build-board__lat-fill {

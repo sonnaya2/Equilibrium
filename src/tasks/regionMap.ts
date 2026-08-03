@@ -8,17 +8,17 @@ import type { TaskRegionId } from "./index";
 
 /** Same order as src/league REGION_IDS - duplicated so client UI skips the league barrel. */
 export const TASK_LEAGUE_REGION_IDS = [
-  "misthalin",
   "havenhythe",
   "karamja",
+  "misthalin",
+  "anachronia",
   "asgarnia",
-  "kandarin",
-  "fremennik",
-  "forinthry",
   "desert",
+  "forinthry",
+  "fremennik",
+  "kandarin",
   "morytania",
   "tirannwn",
-  "anachronia",
 ] as const;
 
 export type TaskLeagueRegionId = (typeof TASK_LEAGUE_REGION_IDS)[number];

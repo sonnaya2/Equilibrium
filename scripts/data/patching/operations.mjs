@@ -11,6 +11,18 @@ import { hash, scalar, slugify, stableJson } from "../utilities.mjs";
 // allowlist of column names, so nothing caller-chosen reaches the SQL.
 const assign = (keys) => keys.map((key) => `${key} = ?`).join(", ");
 
+function ensureDomainRow(db, entityId, entityType) {
+  if (entityType === "activity") {
+    db.prepare(
+      "INSERT INTO activities(entity_id, category, location) VALUES (?, '', '') ON CONFLICT(entity_id) DO NOTHING",
+    ).run(entityId);
+  } else if (entityType === "unlock") {
+    db.prepare(
+      "INSERT INTO unlocks(entity_id, category, unlock_type) VALUES (?, '', '') ON CONFLICT(entity_id) DO NOTHING",
+    ).run(entityId);
+  }
+}
+
 function upsertEntity(db, operation, source) {
   const { entity: id, set } = operation;
   const existing = db.prepare("SELECT entity_type FROM entities WHERE id = ?").get(id);
@@ -35,6 +47,7 @@ function upsertEntity(db, operation, source) {
       source,
       source,
     );
+    ensureDomainRow(db, id, set.entity_type);
     return [id];
   }
   // A different type means a different record; reusing the ID would silently
@@ -48,6 +61,7 @@ function upsertEntity(db, operation, source) {
     source,
     id,
   );
+  ensureDomainRow(db, id, existing.entity_type);
   return [id];
 }
 
@@ -149,6 +163,20 @@ function removeEntity(db, operation, source) {
   const { entity } = operation;
   requireEntity(db, entity);
   db.prepare("UPDATE entities SET status = 'removed', updated_source = ? WHERE id = ?").run(source, entity);
+  return [entity];
+}
+
+// Drop a catalog content/upgrades membership without retiring the entity.
+// remove alone leaves research_region_entries so dual-claim survivors still list.
+function researchEntry(db, operation) {
+  const { entity, region, section } = operation;
+  requireEntity(db, entity);
+  if (!db.prepare("SELECT 1 FROM research_regions WHERE region_id = ?").get(region)) {
+    throw new Error(`research region not found: ${region}`);
+  }
+  db.prepare(
+    "DELETE FROM research_region_entries WHERE entity_id = ? AND region_id = ? AND section = ?",
+  ).run(entity, region, section);
   return [entity];
 }
 
@@ -257,19 +285,40 @@ function setRecord(db, operation, source) {
                    record_hash = excluded.record_hash, raw_json = excluded.raw_json`,
   ).run(file, path, stableId, entityId, hash(raw), raw);
   if (!entityId) return [];
-  // When re-pointing a thin catalogue row onto an entity, still update extra_json
-  // so recordRef matching (raw_json = extra_json) works for that entity.
+  // Catalog content/upgrades faces own entities.extra_json (getResearchCatalog reads it).
+  // A later set-record on progression-unlocks / regional-skilling / etc. must not stomp
+  // that face body after re-home, or reconstruct-vs-live equality breaks.
+  const isCatalogFace =
+    file === "data/research/catalog.json" && /\.(content|upgrades)\[\d+\]$/.test(path);
+  const hasCatalogHome = db
+    .prepare(
+      `SELECT 1 AS ok FROM research_region_entries
+       WHERE entity_id = ? AND section IN ('content', 'upgrades') LIMIT 1`,
+    )
+    .get(entityId);
+  const writeExtra = isCatalogFace || !hasCatalogHome;
   const name = typeof body.name === "string" ? body.name : null;
-  if (name) {
-    db.prepare(
-      "UPDATE entities SET name = ?, sort_key = ?, extra_json = ?, updated_source = ? WHERE id = ?",
-    ).run(name, name.toLocaleLowerCase("en"), raw, source, entityId);
-  } else {
-    db.prepare("UPDATE entities SET extra_json = ?, updated_source = ? WHERE id = ?").run(
-      raw,
+  if (writeExtra) {
+    if (name) {
+      db.prepare(
+        "UPDATE entities SET name = ?, sort_key = ?, extra_json = ?, updated_source = ? WHERE id = ?",
+      ).run(name, name.toLocaleLowerCase("en"), raw, source, entityId);
+    } else {
+      db.prepare("UPDATE entities SET extra_json = ?, updated_source = ? WHERE id = ?").run(
+        raw,
+        source,
+        entityId,
+      );
+    }
+  } else if (name) {
+    db.prepare("UPDATE entities SET name = ?, sort_key = ?, updated_source = ? WHERE id = ?").run(
+      name,
+      name.toLocaleLowerCase("en"),
       source,
       entityId,
     );
+  } else {
+    db.prepare("UPDATE entities SET updated_source = ? WHERE id = ?").run(source, entityId);
   }
   if (file === "data/combat/equipment.json") {
     db.prepare(
@@ -291,6 +340,55 @@ function setRecord(db, operation, source) {
       if (Number.isFinite(value)) insertStat.run(entityId, stat, value);
     }
   }
+  // Catalog content/upgrades paths own research_region_entries (ordinal = array index).
+  if (file === "data/research/catalog.json") {
+    const match = path.match(/^\$\.regions\[(\d+)\]\.(content|upgrades)\[(\d+)\]$/);
+    if (match) {
+      const regionOrdinal = Number(match[1]);
+      const section = match[2];
+      const entryOrdinal = Number(match[3]);
+      const region = db
+        .prepare("SELECT region_id FROM research_regions WHERE ordinal = ?")
+        .get(regionOrdinal);
+      if (!region) throw new Error(`set-record catalog path regions[${regionOrdinal}] has no research_regions row`);
+      const category = typeof body.category === "string" ? body.category : typeof body.kind === "string" ? body.kind : "";
+      const entityType = db.prepare("SELECT entity_type FROM entities WHERE id = ?").get(entityId)?.entity_type;
+      if (entityType === "activity") {
+        db.prepare(
+          `INSERT INTO activities(entity_id, category, location) VALUES (?, ?, '')
+           ON CONFLICT(entity_id) DO UPDATE SET category = CASE
+             WHEN excluded.category = '' THEN activities.category ELSE excluded.category END`,
+        ).run(entityId, category);
+      } else if (entityType === "unlock") {
+        db.prepare(
+          `INSERT INTO unlocks(entity_id, category, unlock_type) VALUES (?, ?, '')
+           ON CONFLICT(entity_id) DO UPDATE SET category = CASE
+             WHEN excluded.category = '' THEN unlocks.category ELSE excluded.category END`,
+        ).run(entityId, category);
+      }
+      // Catalog entries are single-home per section. Drop prior region rows for this
+      // entity and clear the target ordinal so set-record can re-home across regions.
+      db.prepare(
+        "DELETE FROM research_region_entries WHERE section = ? AND entity_id = ?",
+      ).run(section, entityId);
+      db.prepare(
+        "DELETE FROM research_region_entries WHERE region_id = ? AND section = ? AND ordinal = ?",
+      ).run(region.region_id, section, entryOrdinal);
+      db.prepare(
+        "INSERT INTO research_region_entries(region_id, entity_id, section, ordinal) VALUES (?, ?, ?, ?)",
+      ).run(region.region_id, entityId, section, entryOrdinal);
+      // Drop stale content/upgrades provenance paths for this entity. Re-homes leave
+      // the old $.regions[N].(content|upgrades)[i] row behind; path-sorted reconstruct
+      // would then re-apply the pre-rehome body over the live face.
+      db.prepare(
+        `DELETE FROM source_records
+         WHERE source_file = ?
+           AND entity_id = ?
+           AND record_path != ?
+           AND (record_path LIKE '$.regions[%].content[%' OR record_path LIKE '$.regions[%].upgrades[%')`,
+      ).run(file, entityId, path);
+    }
+  }
   return [entityId];
 }
 
@@ -305,6 +403,7 @@ export const HANDLERS = new Map([
   ["relate", relationship],
   ["unrelate", relationship],
   ["remove", removeEntity],
+  ["unlink-research-entry", researchEntry],
   ["add-requirement", requirement],
   ["remove-requirement", requirement],
   ["add-effect", effect],

@@ -32,18 +32,19 @@ const REVEALED_RELIC_NAMES_BY_TIER: ReadonlyMap<string, ReadonlySet<string>> = (
   return map;
 })();
 
+/** Display order: first-3 unlock path A-Z, then electives A-Z. Availability still from regions.json. */
 export const REGION_IDS = [
-  "misthalin",
   "havenhythe",
   "karamja",
+  "misthalin",
+  "anachronia",
   "asgarnia",
-  "kandarin",
-  "fremennik",
-  "forinthry",
   "desert",
+  "forinthry",
+  "fremennik",
+  "kandarin",
   "morytania",
   "tirannwn",
-  "anachronia",
 ] as const;
 
 export type RegionId = (typeof REGION_IDS)[number];

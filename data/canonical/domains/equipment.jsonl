@@ -752,6 +752,7 @@
 {"entityId":"item:toktz-mej-tal","slot":"twohand","style":"magic","tier":60}
 {"entityId":"item:toktz-xil-ak","slot":"mainhand","style":"melee","tier":60}
 {"entityId":"item:toktz-xil-ul","slot":"mainhand","style":"ranged","tier":60}
+{"entityId":"item:tome-of-the-icyene","slot":"pocket","style":"hybrid"}
 {"entityId":"item:torags-hammer","slot":"twohand","style":"melee","tier":70}
 {"entityId":"item:torva-boots","slot":"boots","style":"melee","tier":80}
 {"entityId":"item:torva-full-helm","slot":"helmet","style":"melee","tier":80}

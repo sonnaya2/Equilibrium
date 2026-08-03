@@ -151,7 +151,7 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(doll.getByText("Empty").first()).toBeVisible();
 
   await page.getByRole("button", { name: "Arch", exact: true }).click();
-  await expect(page.getByText("No Arch combat buffs are modeled yet.")).toBeVisible();
+  await expect(page.getByText("No Arch combat buffs yet.")).toBeVisible();
 
   await page.getByRole("button", { name: "Invention", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
@@ -195,7 +195,7 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(page.getByText("Equip set pieces to activate their effects.")).toBeVisible();
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
-  await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
+  await page.getByRole("checkbox", { name: "Use NPC target" }).check();
   await expect(page.getByRole("combobox", { name: "Affinity" })).toBeVisible();
 });
 
@@ -260,7 +260,7 @@ test("summary reacts to temporary life effects and a manual Damage Potential ove
   await expectBreakdownToReconcile(maximumHp);
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
-  await page.getByRole("checkbox", { name: "Use NPC target model" }).check();
+  await page.getByRole("checkbox", { name: "Use NPC target" }).check();
   await page.getByRole("checkbox", { name: "Manual Damage Potential override" }).check();
   await page.getByRole("spinbutton", { name: "Damage Potential override" }).fill("73");
   await expect(
@@ -569,7 +569,7 @@ test("equipped passives appear under Gear and disappear when the item is removed
   await page.getByRole("button", { name: /Jaws of the Abyss/ }).click();
 
   await expect(passives.getByText("Natural Instinct doubles this bonus gain.")).toBeVisible();
-  await expect(passives.getByText("Modeled", { exact: true })).toBeVisible();
+  await expect(passives.getByText("Active", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Clear Helmet" }).click();
   await expect(passives.getByText("No equipped item grants a passive.")).toBeVisible();
@@ -580,7 +580,7 @@ test("equipped passives appear under Gear and disappear when the item is removed
   await expect(
     passives.getByText("Defenders, reprisers, and rebounders have +3% accuracy."),
   ).toBeVisible();
-  await expect(passives.getByText("Modeled", { exact: true })).toBeVisible();
+  await expect(passives.getByText("Active", { exact: true })).toBeVisible();
 });
 
 test("set thresholds downgrade and disappear with equipped pieces", async ({ page }) => {

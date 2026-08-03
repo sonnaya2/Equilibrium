@@ -175,7 +175,8 @@ rebuilt from the database alone.
 - **operations** is one handler per operation. Each writes canonical database columns and returns the
   entity IDs it changed. Handlers own no transaction and no ledger. The set is `upsert`,
   `set-record`, `upsert-source`, `link`/`unlink-region`, `link`/`unlink-source`, `relate`/`unrelate`,
-  `remove`, and `add`/`remove-requirement`, `add`/`remove-effect`, `add`/`remove-tag`. Ordinals are
+  `remove`, `unlink-research-entry`, and `add`/`remove-requirement`, `add`/`remove-effect`,
+  `add`/`remove-tag`. Ordinals are
   the handler's job, not the author's: a requirement or effect appends after what the entity already
   has, and re-adding one it already carries is a no-op rather than a duplicate row.
 - **apply** owns identity, one transaction per file, dispatch, the changed-entity set, the

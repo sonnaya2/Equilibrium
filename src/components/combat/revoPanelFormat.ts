@@ -190,6 +190,40 @@ export function solverPhaseLabel(
   }
 }
 
+export function formatProofLabel(label: string | null | undefined): string {
+  if (label == null || label === "") return "Best found";
+  switch (label) {
+    case "heuristic-best-found":
+    case "best-found":
+      return "Best found";
+    case "full-objective-global-optimum":
+    case "globally-optimal":
+      return "Global optimum";
+    case "search-objective-exhaustive":
+      return "Exhaustive";
+    case "full-shortlist-best":
+      return "Shortlist best";
+    case "degraded-exploratory-fallback":
+      return "Exploratory";
+    case "failed":
+      return "Failed";
+    case "stopped-early":
+      return "Stopped early";
+    case "heuristic-complete":
+      return "Heuristic complete";
+    case "budget-not-exhausted":
+      return "Budget not exhausted";
+    case "converged":
+      return "Converged";
+    default:
+      return label
+        .split(/[-_\s]+/)
+        .filter(Boolean)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ");
+  }
+}
+
 export function previewCategory(
   category: AbilitySpec["category"] | undefined,
 ): "basic" | "threshold" | "ultimate" | "utility" | undefined {

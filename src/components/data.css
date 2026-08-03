@@ -323,7 +323,7 @@ body:has(.data-screen) {
 .data-browser__stage {
   flex: 1 1 0;
   min-height: 0;
-  padding: 0.55rem 0.55rem 0;
+  padding: 0.55rem;
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--color-stone-950);
@@ -434,6 +434,7 @@ body:has(.data-screen) {
 .data-region-panel--content > .overflow-x-auto {
   flex: 1;
   min-height: 0;
+  padding-bottom: 0.55rem;
   overflow: auto;
 }
 
@@ -474,14 +475,17 @@ body:has(.data-screen) {
   vertical-align: middle;
 }
 
+/* max 100% + min 0: tall inventory sprites must shrink; overflow:hidden crops otherwise. */
 .data-icon-well > img,
 .data-icon-well img {
   display: block;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  max-width: none;
-  max-height: none;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
   padding: 0.1rem;
   object-fit: contain;
   object-position: center;
@@ -494,6 +498,14 @@ body:has(.data-screen) {
   padding: 0;
   object-fit: cover;
   object-position: center center;
+}
+
+/* Equipment / progression inventory: always contain (override plate cover). */
+.data-icon-well img[src*="/combat/equipment/"],
+.data-icon-well img[src*="/upgrades/progression/"] {
+  padding: 0.1rem;
+  object-fit: contain;
+  object-position: center;
 }
 
 .data-icon-well img[src*="/bosses/hermod"] {
@@ -663,8 +675,10 @@ body:has(.data-screen) {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  max-width: none;
-  max-height: none;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
   margin: 0;
   padding: 0.1rem;
   object-fit: contain;
@@ -680,6 +694,15 @@ body:has(.data-screen) {
 .data-reward-icons__well img[src*="/regions/"] {
   padding: 0;
   object-fit: cover;
+}
+
+.data-icon-well.data-reward-icons__well img[src*="/combat/equipment/"],
+.data-icon-well.data-reward-icons__well img[src*="/upgrades/progression/"],
+.data-reward-icons__well img[src*="/combat/equipment/"],
+.data-reward-icons__well img[src*="/upgrades/progression/"] {
+  padding: 0.1rem;
+  object-fit: contain;
+  object-position: center;
 }
 
 .data-reward-icons__more {
@@ -734,6 +757,7 @@ body:has(.data-screen) {
   flex: 1;
   max-height: none;
   min-height: 0;
+  padding-bottom: 0.55rem;
   overflow-y: auto;
   scrollbar-width: thin;
 }

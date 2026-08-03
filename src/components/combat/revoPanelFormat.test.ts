@@ -7,6 +7,7 @@ import {
   barBoundsFromPreset,
   clampedBarBoundsFromPreset,
   formatNumber,
+  formatProofLabel,
   formatTime,
   isLiveSolverSession,
   mayPublishStoppedPreview,
@@ -30,6 +31,21 @@ describe("revoPanelFormat", () => {
     expect(solverPhaseLabel("seed")).toBe("Seeding");
     expect(solverPhaseLabel("finalize")).toBe("Scoring");
     expect(solverPhaseLabel("explore", { stopping: true })).toBe("Stopping");
+  });
+
+  it("maps proof labels to short human text", () => {
+    expect(formatProofLabel("heuristic-best-found")).toBe("Best found");
+    expect(formatProofLabel("full-objective-global-optimum")).toBe("Global optimum");
+    expect(formatProofLabel("search-objective-exhaustive")).toBe("Exhaustive");
+    expect(formatProofLabel("full-shortlist-best")).toBe("Shortlist best");
+    expect(formatProofLabel("degraded-exploratory-fallback")).toBe("Exploratory");
+    expect(formatProofLabel("failed")).toBe("Failed");
+    expect(formatProofLabel("stopped-early")).toBe("Stopped early");
+    expect(formatProofLabel("heuristic-complete")).toBe("Heuristic complete");
+    expect(formatProofLabel("budget-not-exhausted")).toBe("Budget not exhausted");
+    expect(formatProofLabel(undefined)).toBe("Best found");
+    expect(formatProofLabel(null)).toBe("Best found");
+    expect(formatProofLabel("some-future-proof")).toBe("Some Future Proof");
   });
 
   it("maps ability categories for preview slots", () => {

@@ -250,7 +250,7 @@ export function RevoRunResults({
                       {nameById.get(row.id) ?? row.id}
                       <span
                         className="ml-1.5 font-mono text-parch-300"
-                        title="Probability-weighted number of times the effect occurs"
+                        title="Expected activations"
                       >
                         ×{formatCount(row.expectedActivations)}
                       </span>

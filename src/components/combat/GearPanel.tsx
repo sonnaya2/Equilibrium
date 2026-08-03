@@ -7,6 +7,8 @@ import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
 import { equippedPassiveSummaries, type PassiveSupport } from "@/combat/shared/equipment";
 import type { RegionId } from "@/league";
+import { unlockedRegions } from "@/league";
+import { useBuild } from "@/league/useBuild";
 import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
@@ -18,13 +20,8 @@ const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 
 type SortKey = "region" | "tier" | "name";
 type RegionFilter = RegionId | "base" | "all";
-/**
- * `setup` (default) = loadout.style + hybrid/unstyled only - other combat styles are hidden.
- * Use `all` or a style chip to browse the rest of the catalogue.
- */
-type StyleBrowse = "setup" | "all" | CombatStyle;
-
-const COMBAT_STYLES: CombatStyle[] = ["melee", "ranged", "magic", "necromancy"];
+/** `setup` = loadout.style + hybrid/unstyled; `all` = full catalogue. */
+type StyleBrowse = "setup" | "all";
 
 const STYLE_LABELS: Record<CombatStyle, string> = {
   melee: "Melee",
@@ -34,9 +31,9 @@ const STYLE_LABELS: Record<CombatStyle, string> = {
 };
 
 const PASSIVE_STATUS: Record<PassiveSupport, string> = {
-  modeled: "Modeled",
+  modeled: "Active",
   "partially-modeled": "Partial",
-  "not-modeled": "Not modeled",
+  "not-modeled": "Unmodeled",
 };
 
 const SLOT_LABELS: Record<EquipmentSlot, string> = {
@@ -133,8 +130,7 @@ function effectiveBrowseStyle(
   loadoutStyle: CombatStyle,
 ): CombatStyle | null {
   if (styleBrowse === "all") return null;
-  if (styleBrowse === "setup") return loadoutStyle;
-  return styleBrowse;
+  return loadoutStyle;
 }
 
 /** Show style tag when item is hybrid, mismatched, or browsing all styles. */
@@ -158,9 +154,9 @@ function hasSourcedBonuses(record: EquipmentRecord): boolean {
 
 function emptyPickerCopy(activeSlotLabel: string | null): string {
   if (activeSlotLabel) {
-    return `No wearables for ${activeSlotLabel} with this filter.`;
+    return `No equipment for ${activeSlotLabel} with this filter.`;
   }
-  return "No wearables for this slot/filter.";
+  return "No equipment for this slot/filter.";
 }
 
 function EmptySlotMark() {
@@ -208,7 +204,7 @@ function EquipmentSlotButton({
           {item.slot === "twohand" ? " · 2H" : ""}
         </span>
       ) : null}
-      {noBonuses ? <span className="equipment-slot__note">stats not sourced</span> : null}
+      {noBonuses ? <span className="equipment-slot__note">No stats</span> : null}
     </button>
   );
 }
@@ -225,10 +221,15 @@ export function GearPanel({
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("tier");
   const [regionFilter, setRegionFilter] = useState<RegionFilter>("all");
-  /** Default setup: loadout.style + hybrid/unstyled only (other styles hidden until All styles). */
+  /** When on, picker only shows items with no region tags or any unlocked region. */
+  const [myRegionsOnly, setMyRegionsOnly] = useState(false);
   const [styleBrowse, setStyleBrowse] = useState<StyleBrowse>("setup");
   /** Cap long catalogues; toggle expands past the first 80. */
   const [showAllWearables, setShowAllWearables] = useState(false);
+
+  const { build } = useBuild();
+  const unlocked = useMemo(() => unlockedRegions(build), [build]);
+  const unlockedSet = useMemo(() => new Set<RegionId>(unlocked), [unlocked]);
 
   const slots = loadout.equipmentSlots ?? {};
   const passives = equippedPassiveSummaries({
@@ -263,10 +264,15 @@ export function GearPanel({
         return false;
       }
       if (browseStyle != null && !styleMatches(record, browseStyle)) return false;
+      const regions = recordRegions(record);
       if (regionFilter === "base") {
-        if (recordRegions(record).length > 0) return false;
+        if (regions.length > 0) return false;
       } else if (regionFilter !== "all") {
-        if (!recordRegions(record).includes(regionFilter)) return false;
+        if (!regions.includes(regionFilter)) return false;
+      }
+      // No region tags = base/Unverified (always allowed). Else need any unlocked region.
+      if (myRegionsOnly && regions.length > 0 && !regions.some((id) => unlockedSet.has(id))) {
+        return false;
       }
       if (q && !record.name.toLowerCase().includes(q) && !record.id.toLowerCase().includes(q)) {
         return false;
@@ -281,11 +287,15 @@ export function GearPanel({
       if (sortKey === "name") return byName(a, b);
       return byRegion(a, b) || (b.tier ?? 0) - (a.tier ?? 0) || byName(a, b);
     });
-  }, [wearables, activeSlot, browseStyle, regionFilter, search, sortKey]);
+  }, [wearables, activeSlot, browseStyle, regionFilter, myRegionsOnly, unlockedSet, search, sortKey]);
 
   // Cap only on full unfiltered catalogue. Region / search / active slot filters
   // must not hide lower-tier matches under tier sort (All styles + weapon = 160+).
-  const pickerFiltered = regionFilter !== "all" || search.trim().length > 0 || activeSlot != null;
+  const pickerFiltered =
+    regionFilter !== "all" ||
+    myRegionsOnly ||
+    search.trim().length > 0 ||
+    activeSlot != null;
   const wearablesCapped = !pickerFiltered && pickerRows.length > WEARABLE_CAP && !showAllWearables;
   const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
 
@@ -312,7 +322,7 @@ export function GearPanel({
   const countLine =
     styleBrowse === "setup"
       ? `Showing ${visiblePickerRows.length} of ${pickerRows.length} · ${STYLE_LABELS[loadout.style]} + hybrid`
-      : `Showing ${visiblePickerRows.length} of ${pickerRows.length} · ${browseStyle ? STYLE_LABELS[browseStyle] : "all styles"}`;
+      : `Showing ${visiblePickerRows.length} of ${pickerRows.length} · all styles`;
 
   return (
     <div className="gear-layout">
@@ -398,7 +408,7 @@ export function GearPanel({
                   .join(" · ")}
               </p>
             ) : (
-              <p className="mt-0.5 text-parch-300">stats not sourced</p>
+              <p className="mt-0.5 text-parch-300">No stats</p>
             )}
           </div>
         ) : null}
@@ -450,7 +460,6 @@ export function GearPanel({
                         <li key={effect}>{effect}</li>
                       ))}
                     </ul>
-                    <p className="mt-1 text-[11px] text-parch-300">From {passive.itemName}</p>
                   </div>
                 </li>
               ))}
@@ -496,6 +505,18 @@ export function GearPanel({
               ))}
             </select>
           </label>
+          <label className="gear-filterbar__check">
+            <input
+              type="checkbox"
+              checked={myRegionsOnly}
+              onChange={(event) => {
+                setMyRegionsOnly(event.target.checked);
+                setShowAllWearables(false);
+              }}
+              title="Only wearables with no region tags or any of your unlocked regions"
+            />
+            My regions
+          </label>
           <label>
             Search
             <input
@@ -540,7 +561,6 @@ export function GearPanel({
           )}
         </div>
 
-        {/* Browse-style chips — independent of loadout; Setup chip follows loadout.style. */}
         <div
           className="mt-2 flex flex-wrap items-center gap-1"
           role="group"
@@ -550,48 +570,28 @@ export function GearPanel({
             type="button"
             aria-pressed={styleBrowse === "setup"}
             onClick={() => setStyleBrowseAndReset("setup")}
-            className="facet-chip"
-            title={`Follow loadout style (${STYLE_LABELS[loadout.style]}) + hybrid only — other styles stay hidden`}
+            className="facet-chip flex items-center gap-1"
           >
-            Loadout
+            <GameIcon src={styleIconPath(loadout.style)} size={12} />
+            {STYLE_LABELS[loadout.style]}
           </button>
           <button
             type="button"
             aria-pressed={styleBrowse === "all"}
             onClick={() => setStyleBrowseAndReset("all")}
             className="facet-chip"
-            title="Browse every combat style (not limited to loadout)"
           >
             All styles
           </button>
-          {COMBAT_STYLES.map((s) => (
-            <button
-              key={s}
-              type="button"
-              aria-pressed={styleBrowse === s}
-              onClick={() => setStyleBrowseAndReset(s)}
-              className="facet-chip flex items-center gap-1"
-              title={`Show ${STYLE_LABELS[s]} + hybrid only`}
-            >
-              <GameIcon src={styleIconPath(s)} size={12} />
-              {STYLE_LABELS[s]}
-            </button>
-          ))}
         </div>
-        {styleBrowse === "setup" ? (
-          <p className="mt-1 text-[11px] text-parch-300">
-            Loadout filter shows {STYLE_LABELS[loadout.style]} and hybrid gear only — pick All
-            styles if an expected item is missing.
-          </p>
-        ) : null}
 
         <div className="wearables-heading mt-3 flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="combat-section-title text-xs font-medium uppercase tracking-wide text-parch-300">
-            Wearables
+            Equipment
           </h3>
           <span className="text-xs text-parch-300">{countLine}</span>
         </div>
-        <div className="wearables-list mt-1 max-h-[28rem] overflow-y-auto border-t border-stone-750">
+        <div className="wearables-list mt-1 overflow-y-auto border-t border-stone-750">
           {pickerRows.length === 0 ? (
             <p className="px-2 py-2 text-xs text-parch-300">{emptyPickerCopy(activeSlotLabel)}</p>
           ) : (
@@ -622,7 +622,7 @@ export function GearPanel({
                         <span className="text-[11px] capitalize text-parch-300">{styleTag}</span>
                       ) : null}
                       {noBonuses ? (
-                        <span className="text-[11px] text-parch-300">stats not sourced</span>
+                        <span className="text-[11px] text-parch-300">No stats</span>
                       ) : null}
                     </span>
                     <RegionMarks record={record} />

@@ -113,6 +113,23 @@ export function RevolutionPanel({
 
   const equipKey = `${loadout.style}|${stats.weaponConfiguration}`;
   const prevEquipKey = useRef(equipKey);
+  const adrenEconomyKey = useMemo(() => {
+    const a = stats.adrenaline;
+    return [
+      stats.startingAdrenaline,
+      stats.maxAdrenaline,
+      a?.basicAdrenalineFlatBonus ?? 0,
+      a?.basicGainMultiplier ?? 1,
+      a?.abilityGainMultiplier ?? 1,
+      a?.ultimateAdrenalineRefund ?? 0,
+      a?.maxAdrenalineBonus ?? 0,
+      a?.impatientRank ?? 0,
+      a?.impatientLevel20 ? 1 : 0,
+      a?.relentlessRank ?? 0,
+      a?.relentlessLevel20 ? 1 : 0,
+      a?.ringOfVigour ? 1 : 0,
+    ].join("|");
+  }, [stats.adrenaline, stats.startingAdrenaline, stats.maxAdrenaline]);
 
   const solver = useRevolutionSolver({
     stats,
@@ -133,6 +150,13 @@ export function RevolutionPanel({
     solver.clearSolverUi();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only equip shape; clearSolverUi is stable
   }, [equipKey]);
+
+  // Arch / perks change adren economy without changing equip shape — clear stale DPS.
+  useEffect(() => {
+    setResult(null);
+    setShowAllCasts(false);
+    setAnalysisOpen(false);
+  }, [adrenEconomyKey]);
 
   const simStyle = loadout.style;
 

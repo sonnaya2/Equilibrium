@@ -58,15 +58,34 @@ export function commitCast(
   rng?: CastRng,
 ): void {
   const record = scheduleCastEvents(rt, prepared, auto);
+  const adrenBefore = rt.state.adrenaline;
   applyCastEffects(rt, prepared, rng);
+  // Ability-economy snapshot after resources (FotS / spend / CoE / RoV / Relentless).
+  const adrenAfterResources = rt.state.adrenaline;
   const completesAt = prepared.candidate + prepared.occupancyTicks;
   rt.endTick = Math.max(rt.endTick, completesAt);
   advanceTo(rt, completesAt);
   applyCompletionEffects(castEffectContext(rt, prepared, rng));
   record.adrenalineAfter = rt.state.adrenaline;
-  record.refund = rngProc(rng, "relentless") ? prepared.spend : 0;
+  // Relentless: spend skipped when proc + rank + off lockout (resources already applied).
+  const relentlessRefund =
+    rngProc(rng, "relentless") &&
+    prepared.spend > 0 &&
+    (rt.input.adrenaline?.relentlessRank ?? 0) > 0
+      ? prepared.spend
+      : 0;
+  // Ultimate retain (CoE + RoV) is a post-spend grant, not Relentless.
+  const ultimateRefund = Math.max(0, adrenAfterResources - (adrenBefore - prepared.spend + (relentlessRefund > 0 ? prepared.spend : 0)));
+  // Prefer explicit fields when Relentless fired (spend not taken).
+  record.refund = relentlessRefund;
   record.adrenalineGained =
     record.adrenalineAfter - record.adrenalineBefore + record.actualSpend - record.refund;
+  // Listed delta ignored economy; overwrite with measured ability-phase change.
+  record.result = {
+    ...record.result,
+    adrenalineDelta: adrenAfterResources - adrenBefore,
+  };
+  void ultimateRefund; // measured via adrenalineDelta / after state
   rt.casts.push(record);
 }
 

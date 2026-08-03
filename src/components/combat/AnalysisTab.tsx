@@ -245,6 +245,11 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
         </div>
 
         <div className="analysis-results overflow-x-auto">
+          <p className="mb-2 text-[11px] leading-4 text-parch-300">
+            Single-cast damage EV. FotS / CoE / Invigorating change{" "}
+            <strong className="font-medium text-parch-100">Adren Δ</strong> here; multi-cast
+            economy (second ultimates, starvation) is on Rotation / Revolution after Run.
+          </p>
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-parch-300">
@@ -253,6 +258,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
                 <th className="text-right">Min – max</th>
                 <th className="text-right">Crit min – max</th>
                 <th className="text-right">Damage Potential</th>
+                <th className="text-right">Adren Δ</th>
               </tr>
             </thead>
             <tbody className="font-mono">
@@ -277,6 +283,10 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
                   <td className="text-right text-parch-50">
                     {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
                   </td>
+                  <td className="text-right text-parch-50">
+                    {result.adrenalineDelta >= 0 ? "+" : ""}
+                    {Math.round(result.adrenalineDelta * 10) / 10}%
+                  </td>
                 </tr>
               ))}
               <tr className="analysis-delta">
@@ -285,8 +295,8 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
                   {delta >= 0 ? "+" : ""}
                   {Math.round(delta * 10) / 10}%
                 </td>
-                <td colSpan={3} className="text-right font-sans text-xs text-parch-300">
-                  Expected change
+                <td colSpan={4} className="text-right font-sans text-xs text-parch-300">
+                  Expected damage change (adren economy is not damage EV)
                 </td>
               </tr>
             </tbody>

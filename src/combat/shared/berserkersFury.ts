@@ -12,8 +12,8 @@ import { mulFloor } from "../core/rounding";
  *   [91%, 100%) -> 0.5% ... [1%, 11%) -> 5.0%
  *   (0%, 1%) -> 5.5% (LP 1 .. floor(0.01*max)-1)
  * Not linear in missing health. Display steps of 0.5% up to 5.5%.
- * Dharok set effect takes priority (no stack). Affects autos/abilities/channels;
- * not bleeds (wiki). Core stage after roll, before crit -> pipeline stage "roll".
+ * Affects autos/abilities/channels; not bleeds (wiki).
+ * Core stage after roll, before crit -> pipeline stage "roll".
  */
 
 export const BERSERKERS_FURY_ID = "berserkers_fury";
@@ -48,16 +48,11 @@ export function lifePointsFromHealthPercent(
   return Math.floor((maximumLifePoints * pct) / 100);
 }
 
-/**
- * Damage bonus fraction (0.03 = +3%). Pure; no React / DOM.
- * When dharoksSetActive, returns 0 (equipment set takes priority).
- */
+/** Damage bonus fraction (0.03 = +3%). Pure; no React / DOM. */
 export function getBerserkersFuryBonus(input: {
   currentLifePoints: number;
   maximumLifePoints: number;
-  dharoksSetActive?: boolean;
 }): number {
-  if (input.dharoksSetActive) return 0;
   const max = input.maximumLifePoints;
   const current = input.currentLifePoints;
   if (!(max > 0) || !Number.isFinite(max) || !Number.isFinite(current)) return 0;
@@ -85,7 +80,6 @@ export function getBerserkersFuryBonus(input: {
 export function getBerserkersFuryBonusFromPercent(input: {
   currentHealthPercent: number;
   maximumLifePoints: number;
-  dharoksSetActive?: boolean;
 }): number {
   const current = lifePointsFromHealthPercent(
     input.maximumLifePoints,
@@ -94,7 +88,6 @@ export function getBerserkersFuryBonusFromPercent(input: {
   return getBerserkersFuryBonus({
     currentLifePoints: current,
     maximumLifePoints: input.maximumLifePoints,
-    dharoksSetActive: input.dharoksSetActive,
   });
 }
 

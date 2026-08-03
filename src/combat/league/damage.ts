@@ -8,6 +8,7 @@ import {
 import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/calculateHit";
 import type { CombatContext, CombatModifier } from "../types";
 import { resolveAbilityAdrenalineGain } from "../shared/adrenalineGain";
+import { ultimateAdrenalineRefundQualifies } from "../shared/conservationOfEnergy";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
@@ -99,13 +100,15 @@ export type LeagueAbilityInput = Parameters<typeof calculateAbility>[1] & {
   /** Light of Saradomin's cooldown state entering the cast; ready by default. */
   strikingLightReady?: boolean;
   /**
-   * Loadout adren rules (FotS, Invigorating, AJ mult). When omitted, AJ blessing
-   * alone multiplies listed generation (legacy single-cast callers).
+   * Loadout adren rules (FotS, Invigorating, AJ mult, CoE/RoV ultimate refund).
+   * When omitted, AJ blessing alone multiplies listed generation (legacy callers).
    */
   adrenaline?: {
     basicAdrenalineFlatBonus?: number;
     basicGainMultiplier?: number;
     abilityGainMultiplier?: number;
+    /** CoE + Ring of Vigour sum; applied once on qualifying ultimates. */
+    ultimateAdrenalineRefund?: number;
   };
 };
 
@@ -369,9 +372,14 @@ export function calculateLeagueAbility(
       contributions.reduce((sum, component) => sum + component.damage.expected, 0),
     adrenalineDelta: (() => {
       const cost = ability.adrenaline?.cost ?? 0;
-      // Prefer loadout adren rules (FotS + Invigorating + AJ mult from resolve).
+      // Prefer loadout adren rules (FotS + Invigorating + AJ mult + CoE/RoV refund).
       if (input.adrenaline) {
-        return resolveAbilityAdrenalineGain(ability, input.adrenaline) - cost;
+        const gain = resolveAbilityAdrenalineGain(ability, input.adrenaline);
+        const refund =
+          ultimateAdrenalineRefundQualifies(ability)
+            ? (input.adrenaline.ultimateAdrenalineRefund ?? 0)
+            : 0;
+        return gain - cost + refund;
       }
       // Legacy: AJ blessing mult on listed generation only.
       const listed = ability.adrenaline?.gain ?? 0;

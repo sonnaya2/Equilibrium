@@ -91,16 +91,6 @@ describe("getBerserkersFuryBonus", () => {
     expect(linearWrong).not.toBe(0.025);
   });
 
-  it("yields 0 when Dharok set effect is active (priority, no stack)", () => {
-    expect(
-      getBerserkersFuryBonus({
-        currentLifePoints: 1,
-        maximumLifePoints: max,
-        dharoksSetActive: true,
-      }),
-    ).toBe(0);
-  });
-
   it("covers all eleven display steps on a round max", () => {
     const round = 10_000;
     const samples: Array<[number, number]> = [

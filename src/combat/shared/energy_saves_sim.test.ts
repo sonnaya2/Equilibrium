@@ -102,19 +102,33 @@ describe("damage sim energy saves (adren economy)", () => {
     expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(CONSERVATION_OF_ENERGY_REFUND);
   });
 
-  it("CoE lets a second ultimate land in a short rotation (damage sim)", () => {
-    // Two 50-cost ultimates: without CoE, 100 adren only funds one 50 + leave 50...
-    // Use 100-cost berserk then need rebuild; simpler: 50-cost ults if present.
-    const overpower = MELEE_ABILITIES.find((a) => a.id === "overpower")!;
-    expect(overpower.adrenaline?.cost).toBe(60);
-
+  it("CoE leaves 10 after berserk and enables second 100-cost ult sooner", () => {
+    // Berserk costs 100: without CoE leave 0; with CoE leave 10.
+    // Queue: berserk, then enough attacks to fund a second berserk.
+    // CoE needs 90 more from basics (10×9=90) vs 100 more without (12 attacks min if only +9).
     const withCoE = normalizeLoadout(
       withArchaeologySelection(DEFAULT_LOADOUT, ["conservation_of_energy"], 500),
     );
     const statsOn = statsFor(withCoE);
     const statsOff = statsFor(DEFAULT_LOADOUT);
 
-    const rot = rotationOf("overpower", "attack", "attack", "attack", "attack", "attack", "overpower");
+    // 11 attacks after first berserk: with CoE 10+99=109 (cap) can cast second berserk;
+    // without CoE 0+99=99 cannot.
+    const rot = rotationOf(
+      "berserk",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "attack",
+      "berserk",
+    );
     const on = simulate({
       ...baseInput,
       abilities: MELEE_ABILITIES,
@@ -131,12 +145,14 @@ describe("damage sim energy saves (adren economy)", () => {
       adrenaline: statsOff.adrenaline,
       autoWeave: false,
     });
-    const onOps = on.casts.filter((c) => c.abilityId === "overpower").length;
-    const offOps = off.casts.filter((c) => c.abilityId === "overpower").length;
-    // CoE + FotS-less path: after first OP (60), leave 40; CoE +10 => 50; attacks rebuild.
-    // Without CoE fewer/later second ults — at least CoE should not reduce damage.
     expect(on.error ?? null).toBeNull();
-    expect(on.totalExpected).toBeGreaterThanOrEqual(off.totalExpected * 0.99);
-    expect(onOps).toBeGreaterThanOrEqual(offOps);
+    const firstOn = on.casts.find((c) => c.abilityId === "berserk")!;
+    expect(firstOn.adrenalineAfter).toBe(10);
+    const onBerserks = on.casts.filter((c) => c.abilityId === "berserk").length;
+    const offBerserks = off.casts.filter((c) => c.abilityId === "berserk").length;
+    // CoE must enable the second ultimate; without CoE the rotation starves.
+    expect(onBerserks).toBe(2);
+    expect(offBerserks).toBe(1);
+    expect(off.error).toMatch(/adrenaline/i);
   });
 });

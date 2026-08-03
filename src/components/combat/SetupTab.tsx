@@ -11,7 +11,7 @@ import { PerksPanel } from "./PerksPanel";
 import { QuickCalculator } from "./QuickCalculator";
 import { StatsPanel } from "./StatsPanel";
 import { TargetPanel } from "./TargetPanel";
-import type { Loadout } from "./useLoadout";
+import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
 
@@ -126,7 +126,7 @@ export function SetupTab({
   setLoadout,
 }: {
   loadout: Loadout;
-  setLoadout: (next: Loadout) => void;
+  setLoadout: SetLoadout;
 }) {
   const [subTab, setSubTab] = useState<SubTab>("Gear");
   const { build } = useBuild();

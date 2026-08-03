@@ -91,6 +91,29 @@ describe("FotS + Invigorating in UI calc path", () => {
     });
     expect(league.adrenalineDelta).toBe(10);
   });
+
+  it("calculateLeagueAbility includes CoE ultimate refund in adrenalineDelta", () => {
+    const loadout = normalizeLoadout(
+      withArchaeologySelection(DEFAULT_LOADOUT, ["conservation_of_energy"], 500),
+    );
+    const stats = loadoutStats(loadout, {
+      unlockedRegions: ["misthalin", "kandarin", "morytania", "forinthry"] as any,
+    });
+    expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+    const berserk = baseInput.abilities.find((a) => a.id === "berserk")!;
+    expect(berserk.category).toBe("ultimate");
+    const result = calculateLeagueAbility(berserk, {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      rules: resolveLeagueRules({ ruleset: "base" }),
+      adrenaline: stats.adrenaline,
+    });
+    // Full dump 100 → leave 0 + CoE 10 => delta -90 (if cost 100)
+    const cost = berserk.adrenaline?.cost ?? 100;
+    expect(result.adrenalineDelta).toBe(-cost + 10);
+  });
 });
 
 describe("sanitize trims from the end (selection order)", () => {

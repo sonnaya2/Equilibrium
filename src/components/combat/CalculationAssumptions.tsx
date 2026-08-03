@@ -17,6 +17,47 @@ const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 
+/** FotS / Invig / CoE / RoV / Impatient / Relentless — what single-cast Expected omits. */
+function adrenEconomyAssumptionRows(stats: CalcStats): Array<[string, string | number]> {
+  const a = stats.adrenaline;
+  if (!a) return [];
+  const rows: Array<[string, string | number]> = [];
+  if ((a.basicAdrenalineFlatBonus ?? 0) > 0) {
+    rows.push(["Fury of the Small", `+${a.basicAdrenalineFlatBonus}% on generating basics`]);
+  }
+  if ((a.basicGainMultiplier ?? 1) !== 1) {
+    rows.push(["Invigorating", `×${(a.basicGainMultiplier ?? 1).toFixed(2)} basic adren gain`]);
+  }
+  if ((a.ultimateAdrenalineRefund ?? 0) > 0) {
+    const parts: string[] = [];
+    const refund = a.ultimateAdrenalineRefund ?? 0;
+    if (a.ringOfVigour) {
+      const coe = Math.max(0, refund - 10);
+      if (coe > 0) parts.push(`CoE +${coe}%`);
+      parts.push("Ring of Vigour +10%");
+    } else {
+      parts.push(`+${refund}% after ultimate`);
+    }
+    rows.push(["Ultimate adren retain", parts.join(" · ")]);
+  }
+  if (a.ringOfVigour) {
+    rows.push(["Ring of Vigour specials", "90% of listed special cost"]);
+  }
+  if ((a.impatientRank ?? 0) > 0) {
+    rows.push([
+      "Impatient",
+      `rank ${a.impatientRank}${a.impatientLevel20 ? " · L20" : ""} (rotation RNG)`,
+    ]);
+  }
+  if ((a.relentlessRank ?? 0) > 0) {
+    rows.push([
+      "Relentless",
+      `rank ${a.relentlessRank}${a.relentlessLevel20 ? " · L20" : ""} (rotation RNG)`,
+    ]);
+  }
+  return rows;
+}
+
 /** scenario-dependent: implemented but waiting on an input; not a zero-damage claim. */
 const SUPPORT_LABEL: Record<string, string> = {
   modeled: "active",
@@ -63,6 +104,8 @@ export function CalculationAssumptions({
     ["Base-damage mode", stats.baseDamageMode],
     ["Effective base damage", stats.base],
     ["Starting adrenaline", `${stats.startingAdrenaline}%`],
+    ["Max adrenaline", `${stats.maxAdrenaline}%`],
+    ...adrenEconomyAssumptionRows(stats),
     ["Damage Potential", `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`],
     ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
     ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],

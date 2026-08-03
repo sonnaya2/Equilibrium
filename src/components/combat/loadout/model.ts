@@ -236,10 +236,7 @@ export interface LoadoutBuffs {
   heightenedSenses: boolean;
   /** Archaeology: Conservation of Energy (+10 adren after ultimate). */
   conservationOfEnergy: boolean;
-  /**
-   * Permanent Ring of Vigour unlock (Anachronia Extinction / Warped Gem).
-   * Effective only when Anachronia is unlocked; OR-resolves with equipped ring (no stack).
-   */
+  /** Permanent RoV unlock (Anachronia). OR with equipped ring; does not stack. */
   ringOfVigourPassive: boolean;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   DEFAULT_LOADOUT,
   LOADOUT_STORAGE_KEY,
@@ -9,17 +9,30 @@ import {
   type Loadout,
 } from "./model";
 
+export type SetLoadout = (next: Loadout | ((prev: Loadout) => Loadout)) => void;
+
+function persist(loadout: Loadout): Loadout {
+  const withLevels =
+    loadout.style === "melee" ? { ...loadout, level: loadout.strengthLevel } : loadout;
+  const normalized = pruneUnknownEquipment(normalizeLoadout(withLevels));
+  try {
+    window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(normalized));
+  } catch {
+    // Storage full/blocked - session state still works.
+  }
+  return normalized;
+}
+
 /** React + localStorage integration over pure loadout model functions. */
-export function useLoadout() {
-  const [loadout, setLoadout] = useState<Loadout>(DEFAULT_LOADOUT);
+export function useLoadout(): readonly [Loadout, SetLoadout] {
+  const [loadout, setLoadoutState] = useState<Loadout>(DEFAULT_LOADOUT);
 
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(LOADOUT_STORAGE_KEY);
       if (!stored) return;
       const cleaned = pruneUnknownEquipment(normalizeLoadout(JSON.parse(stored)));
-      setLoadout(cleaned);
-      // Persist prune so retired/orphan ids do not reappear every boot.
+      setLoadoutState(cleaned);
       try {
         window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(cleaned));
       } catch {
@@ -40,31 +53,19 @@ export function useLoadout() {
     const until = Math.min(...deadlines);
     const timeout = window.setTimeout(
       () => {
-        setLoadout((current) => {
-          const normalized = pruneUnknownEquipment(normalizeLoadout(current));
-          try {
-            window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(normalized));
-          } catch {
-            // Storage full/blocked - expiry still applies in memory.
-          }
-          return normalized;
-        });
+        setLoadoutState((current) => persist(current));
       },
       Math.max(0, until - now) + 20,
     );
     return () => window.clearTimeout(timeout);
   }, [loadout.buffs.powerburstOfVitalityUntil, loadout.buffs.powerburstOfVitalityCooldownUntil]);
 
-  const update = (next: Loadout) => {
-    const withLevels = next.style === "melee" ? { ...next, level: next.strengthLevel } : next;
-    const normalized = pruneUnknownEquipment(normalizeLoadout(withLevels));
-    setLoadout(normalized);
-    try {
-      window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(normalized));
-    } catch {
-      // Storage full/blocked - session state still works.
-    }
-  };
+  const update = useCallback<SetLoadout>((next) => {
+    setLoadoutState((prev) => {
+      const resolved = typeof next === "function" ? next(prev) : next;
+      return persist(resolved);
+    });
+  }, []);
 
   return [loadout, update] as const;
 }

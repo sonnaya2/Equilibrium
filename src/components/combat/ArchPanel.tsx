@@ -20,7 +20,7 @@ import {
   sanitizeHealthPercent,
 } from "@/combat/shared/berserkersFury";
 import { loadoutStats } from "./loadoutStats";
-import { withArchaeologySelection, type Loadout } from "./useLoadout";
+import { withArchaeologySelection, type Loadout, type SetLoadout } from "./useLoadout";
 import { isRegionUnlocked, REGION_IDS, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { regionDisplayName } from "@/tasks/regionMap";
@@ -115,7 +115,7 @@ export function ArchPanel({
   setLoadout,
 }: {
   loadout: Loadout;
-  setLoadout: (next: Loadout) => void;
+  setLoadout: SetLoadout;
 }) {
   const { build } = useBuild();
   const unlockedRegions = useMemo(
@@ -124,29 +124,36 @@ export function ArchPanel({
   );
   const unlockedKey = unlockedRegions.join("|");
 
-  const energyCap = resolveMonolithEnergyCap({
-    unlockedRegions,
-    requestedCap: loadout.archaeology?.energyCap ?? null,
-  });
-
-  const selectedIds = loadout.archaeology?.selectedIds ?? [];
-  const selectedKey = selectedIds.join("|");
+  // Same clamp combat/stats use — tiles and bars never show illegal "selected but dead" relics.
+  const effectiveArch = useMemo(
+    () =>
+      sanitizeArchaeologyState(
+        loadout.archaeology ?? { selectedIds: [], energyCap: 500 },
+        unlockedRegions,
+      ),
+    [loadout.archaeology, unlockedKey],
+  );
+  const energyCap = effectiveArch.energyCap;
+  const selectedIds = effectiveArch.selectedIds;
   const used = totalEnergyUsed(selectedIds);
   const remaining = energyCap - used;
   const furySelected = isRelicActive(selectedIds, "berserkers_fury");
 
-  // Drop over-budget picks when Anachronia (650 cap) is removed.
+  // Only re-clamp when league regions change (Anachronia 500↔650). Functional update
+  // so a pending relic toggle is not wiped by a stale loadout snapshot.
   useEffect(() => {
-    const stored = loadout.archaeology ?? { selectedIds: [], energyCap: 500 as const };
-    const next = sanitizeArchaeologyState(stored, unlockedRegions);
-    const sameCap = stored.energyCap === next.energyCap;
-    const sameIds =
-      next.selectedIds.length === stored.selectedIds.length &&
-      next.selectedIds.every((id, i) => id === stored.selectedIds[i]);
-    if (sameCap && sameIds) return;
-    setLoadout(withArchaeologySelection(loadout, next.selectedIds, next.energyCap));
-    // Cap follows build regions; re-run when unlocks or selection keys change.
-  }, [unlockedKey, energyCap, selectedKey, loadout, setLoadout, unlockedRegions]);
+    setLoadout((prev) => {
+      const stored = prev.archaeology ?? { selectedIds: [], energyCap: 500 as const };
+      const next = sanitizeArchaeologyState(stored, unlockedRegions);
+      const sameCap = stored.energyCap === next.energyCap;
+      const sameIds =
+        next.selectedIds.length === stored.selectedIds.length &&
+        next.selectedIds.every((id, i) => id === stored.selectedIds[i]);
+      if (sameCap && sameIds) return prev;
+      return withArchaeologySelection(prev, next.selectedIds, next.energyCap);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- region key only
+  }, [unlockedKey, setLoadout]);
 
   const stats = useMemo(
     () =>
@@ -166,16 +173,16 @@ export function ArchPanel({
         maximumLifePoints: maximumLife,
       })
     : 0;
-  const engineBonus = furySelected ? stats.berserkersFury.bonus : 0;
+  const engineBonus = stats.berserkersFury.active ? stats.berserkersFury.bonus : 0;
 
   const regionUnlocked = (id: string) => isRegionUnlocked(build, id as RegionId);
 
   const setHealthPercent = (raw: number) => {
-    setLoadout({
-      ...loadout,
+    setLoadout((prev) => ({
+      ...prev,
       currentHealthPercent: sanitizeHealthPercent(raw),
       currentLife: null,
-    });
+    }));
   };
 
   // Live from resolved combat stats (same numbers the damage sim uses).
@@ -192,12 +199,19 @@ export function ArchPanel({
   ].filter((line): line is string => line != null);
 
   const toggleRelic = (relicId: string) => {
-    const nextIds = toggleArchaeologyRelic({
-      relicId,
-      selectedIds,
-      energyCap,
+    setLoadout((prev) => {
+      const cap = resolveMonolithEnergyCap({
+        unlockedRegions,
+        requestedCap: prev.archaeology?.energyCap ?? null,
+      });
+      const ids = prev.archaeology?.selectedIds ?? [];
+      const nextIds = toggleArchaeologyRelic({
+        relicId,
+        selectedIds: ids,
+        energyCap: cap,
+      });
+      return withArchaeologySelection(prev, nextIds, cap);
     });
-    setLoadout(withArchaeologySelection(loadout, nextIds, energyCap));
   };
 
   const energyPct = energyCap > 0 ? Math.min(100, (used / energyCap) * 100) : 0;

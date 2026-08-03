@@ -24,11 +24,30 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
-import type { Loadout } from "./useLoadout";
+import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STORAGE_KEY = "eq:rotation:v1";
+
+/** Fingerprint of loadout adren rules that change multi-cast timelines. */
+function adrenEconomyFingerprint(stats: CalcStats): string {
+  const a = stats.adrenaline;
+  return [
+    stats.startingAdrenaline,
+    stats.maxAdrenaline,
+    a?.basicAdrenalineFlatBonus ?? 0,
+    a?.basicGainMultiplier ?? 1,
+    a?.abilityGainMultiplier ?? 1,
+    a?.ultimateAdrenalineRefund ?? 0,
+    a?.maxAdrenalineBonus ?? 0,
+    a?.impatientRank ?? 0,
+    a?.impatientLevel20 ? 1 : 0,
+    a?.relentlessRank ?? 0,
+    a?.relentlessLevel20 ? 1 : 0,
+    a?.ringOfVigour ? 1 : 0,
+  ].join("|");
+}
 
 // Volley is factory-built (soul count); 3 = base Residual Soul cap.
 const NECRO_PALETTE: AbilitySpec[] = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
@@ -135,7 +154,7 @@ export function RotationPlanner({
   setLoadout,
 }: {
   loadout: Loadout;
-  setLoadout: (next: Loadout) => void;
+  setLoadout: SetLoadout;
 }) {
   const { build } = useLeagueBuild();
   const [mode, setMode] = useState<"revolution" | "manual">("revolution");
@@ -175,6 +194,16 @@ export function RotationPlanner({
       ),
     [loadout, useBuild, build],
   );
+
+  // Stale results after Arch/perk toggles look like "energy saves do nothing".
+  const adrenEconomyKey = useMemo(
+    () => adrenEconomyFingerprint(setupStats),
+    [setupStats],
+  );
+  useEffect(() => {
+    setResult(null);
+    setAnalysisOpen(false);
+  }, [adrenEconomyKey]);
 
   const updateQueue = (next: string[]) => {
     setQueue(next);

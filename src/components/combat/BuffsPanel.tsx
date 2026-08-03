@@ -31,6 +31,7 @@ import {
   withLoadoutBuffs,
   type Loadout,
   type OverloadChoice,
+  type SetLoadout,
   type StyleCurseChoice,
 } from "./useLoadout";
 
@@ -193,7 +194,7 @@ export function BuffsPanel({
   setLoadout,
 }: {
   loadout: Loadout;
-  setLoadout: (next: Loadout) => void;
+  setLoadout: SetLoadout;
 }) {
   // Same-style damage prayers; keep an off-style pick visible so it can be cleared.
   const prayerOptions = PRAYER_OPTIONS.filter(
@@ -203,7 +204,7 @@ export function BuffsPanel({
   const ancientPrayers = prayerOptions.filter((opt) => opt.book === "ancient");
 
   const setBuffs = (patch: Partial<Loadout["buffs"]>) =>
-    setLoadout(withLoadoutBuffs(loadout, patch));
+    setLoadout((prev) => withLoadoutBuffs(prev, patch));
   const powerburstActive = isPowerburstOfVitalityActive(loadout);
   const powerburstReady = isPowerburstOfVitalityReady(loadout);
   const { build, loaded: buildLoaded, pickBlessing, toggleRelic } = useBuild();
@@ -222,7 +223,7 @@ export function BuffsPanel({
   // Region removed: clear persisted passive so it cannot re-activate without Anachronia.
   useEffect(() => {
     if (!anachroniaUnlocked && loadout.buffs.ringOfVigourPassive) {
-      setLoadout(withLoadoutBuffs(loadout, { ringOfVigourPassive: false }));
+      setLoadout((prev) => withLoadoutBuffs(prev, { ringOfVigourPassive: false }));
     }
     // Narrow deps: only region unlock + passive flag, not every loadout field.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -234,7 +235,7 @@ export function BuffsPanel({
     const wasActive = t7Picked === name;
     toggleRelic(T7_RELIC_TIER, name);
     if (!wasActive && name === ICYENIC_FAITH_RELIC) {
-      setLoadout(equipInSlot(loadout, "pocket", TOME_OF_THE_ICYENE_ID));
+      setLoadout((prev) => equipInSlot(prev, "pocket", TOME_OF_THE_ICYENE_ID));
     }
   };
 
@@ -410,10 +411,10 @@ export function BuffsPanel({
                 label="Ring of Vigour Passive"
                 effect={
                   !anachroniaUnlocked
-                    ? "Requires Anachronia — Extinction / Warped Gem"
+                    ? "Needs Anachronia unlocked"
                     : ringEquipped
-                      ? "Permanent unlock (works without wearing the ring). Equipped ring already grants the same effect — they do not stack."
-                      : "Permanent unlock: same effect as wearing Ring of Vigour, without equipping it. +10 adren after ultimates; weapon specials cost 90%."
+                      ? "Same effect as the equipped ring, without wearing it. Does not stack."
+                      : "Same effect as wearing Ring of Vigour. +10 adren after ultimates; weapon specials cost 90%."
                 }
                 pressed={loadout.buffs.ringOfVigourPassive}
                 disabled={!anachroniaUnlocked}
@@ -423,15 +424,13 @@ export function BuffsPanel({
                 }
               />
             </div>
-            <p className="mt-1.5 text-[11px] text-parch-300">
-              {anachroniaUnlocked
-                ? ringEquipped
-                  ? loadout.buffs.ringOfVigourPassive
-                    ? "Equipped ring is enough. Permanent unlock stays on for when you swap rings — effects do not stack."
-                    : "Equipped ring is enough. Optional permanent unlock keeps the effect when you unequip it."
-                  : "Works without the ring equipped. Equip the ring instead if you have not unlocked the permanent passive."
-                : "Anachronia — Extinction / Warped Gem"}
-            </p>
+            {anachroniaUnlocked && ringEquipped ? (
+              <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-no-stack">
+                {loadout.buffs.ringOfVigourPassive
+                  ? "Ring is equipped — keep this on if you swap rings. Effects do not stack."
+                  : "Ring is equipped; this is optional for when you unequip it."}
+              </p>
+            ) : null}
           </div>
         </div>
 
@@ -446,7 +445,7 @@ export function BuffsPanel({
                   label={ENCHANTMENTS[id].label}
                   effect={ENCHANTMENTS[id].effect}
                   pressed={loadout.enchantments.includes(id)}
-                  onClick={() => setLoadout(toggleEquipmentEnchantment(loadout, id))}
+                  onClick={() => setLoadout((prev) => toggleEquipmentEnchantment(prev, id))}
                 />
               ))}
             </div>
@@ -551,7 +550,7 @@ export function BuffsPanel({
                 effect="Doubles current and maximum life points for 6 seconds; 2-minute powerburst cooldown"
                 pressed={powerburstActive}
                 disabled={!powerburstReady}
-                onClick={() => setLoadout(activatePowerburstOfVitality(loadout))}
+                onClick={() => setLoadout((prev) => activatePowerburstOfVitality(prev))}
               />
             </div>
             <div className="loadout-fields mt-2">

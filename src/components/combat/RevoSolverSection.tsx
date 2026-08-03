@@ -17,14 +17,18 @@ import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
 import {
+  BAR_SIZE_PRESETS,
   formatNumber,
   previewCategory,
+  productBarSizeFloor,
   progressFillFromState,
   solverPhaseLabel,
   trackLiveClassName,
   workerPhaseLabel,
   workerRecipeGroupLabel,
   workerRecipeLabel,
+  type BarSizePresetId,
+  type SolverStoppedPreview,
 } from "./revoPanelFormat";
 import "./revo-solver.css";
 
@@ -34,6 +38,7 @@ export type RevoSolverSectionProps = {
   stopping: boolean;
   solverProgress: SolverProgress | null;
   solverResult: SolverResultDTO | null;
+  stoppedPreview: SolverStoppedPreview | null;
   solverError: string | null;
   bestPulse: boolean;
   solverAgents: number;
@@ -42,6 +47,8 @@ export type RevoSolverSectionProps = {
   setSolverAgents: (n: number) => void;
   solverProfile: ObjectiveProfileId;
   setSolverProfile: (p: ObjectiveProfileId) => void;
+  barSizePreset: BarSizePresetId;
+  setBarSizePreset: (p: BarSizePresetId) => void;
   limitToRegions: boolean;
   setLimitToRegions: (v: boolean) => void;
   onOptimize: () => void;
@@ -55,6 +62,7 @@ export function RevoSolverSection({
   stopping,
   solverProgress,
   solverResult,
+  stoppedPreview,
   solverError,
   bestPulse,
   solverAgents,
@@ -63,6 +71,8 @@ export function RevoSolverSection({
   setSolverAgents,
   solverProfile,
   setSolverProfile,
+  barSizePreset,
+  setBarSizePreset,
   limitToRegions,
   setLimitToRegions,
   onOptimize,
@@ -74,6 +84,7 @@ export function RevoSolverSection({
   const optimize = () => onOptimize();
   const cancelSolve = () => onCancel();
   const applySolverBar = (ids: readonly string[]) => onApplyBar(ids);
+  const floor = productBarSizeFloor();
 
   return (
     <section className="revo-solver-controls">
@@ -92,6 +103,7 @@ export function RevoSolverSection({
             type="button"
             onClick={cancelSolve}
             className="combat-button revo-solver-controls__cancel"
+            data-testid="revo-solver-cancel"
           >
             Cancel
           </button>
@@ -123,6 +135,25 @@ export function RevoSolverSection({
           <option value="balanced">Balanced</option>
           <option value="burst">Burst</option>
           <option value="sustained">Sustained</option>
+        </select>
+        <select
+          value={barSizePreset}
+          onChange={(e) => setBarSizePreset(e.target.value as BarSizePresetId)}
+          className="revo-solver-select"
+          disabled={solving}
+          aria-label="Bar size"
+          data-testid="revo-bar-size"
+          title={
+            floor > 4
+              ? `Bar length window (product floor ${floor}; UI may request 4)`
+              : "Bar length window"
+          }
+        >
+          {(Object.keys(BAR_SIZE_PRESETS) as BarSizePresetId[]).map((id) => (
+            <option key={id} value={id}>
+              {BAR_SIZE_PRESETS[id].label}
+            </option>
+          ))}
         </select>
         <label
           className={`revo-solver-controls__regions${limitToRegions ? " is-on" : ""}`}
@@ -492,6 +523,37 @@ export function RevoSolverSection({
                 </li>
               ),
             )}
+          </ul>
+        </div>
+      ) : null}
+      {!solverResult && stoppedPreview ? (
+        <div
+          className="mt-3 border-t border-stone-750 pt-2"
+          data-testid="revo-solver-stopped-preview"
+        >
+          <p className="text-xs text-parch-300">
+            Stopped · exploratory
+            {Number.isFinite(stoppedPreview.bestFullScore)
+              ? ` full ~${formatNumber(stoppedPreview.bestFullScore!)}`
+              : Number.isFinite(stoppedPreview.bestExploratoryScore)
+                ? ` search ~${formatNumber(stoppedPreview.bestExploratoryScore!)}`
+                : ""}
+            {" · "}
+            {stoppedPreview.evaluations} evals · not a verified final
+          </p>
+          <ul className="mt-2 space-y-1">
+            <li className="flex flex-wrap items-center gap-2 text-xs">
+              <span className="truncate text-parch-300">
+                {stoppedPreview.bar.map((id) => ENGINE_SPECS.get(id)?.name ?? id).join(" → ")}
+              </span>
+              <button
+                type="button"
+                className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800"
+                onClick={() => applySolverBar(stoppedPreview.bar)}
+              >
+                Apply
+              </button>
+            </li>
           </ul>
         </div>
       ) : null}

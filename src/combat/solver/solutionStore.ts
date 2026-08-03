@@ -2,63 +2,81 @@
  * Browser cache of solved Revolution bars (localStorage).
  * Keys are SHA-256 of a stable loadout/objective payload so entries stay short
  * and do not blow the quota (full JSON keys silently failed to save).
+ *
+ * Identity: see identity.ts (canonicalSolveContext). Only verified rankable
+ * finals enter the cache via rememberSolvedBar.
  */
 
 import { loadState, saveState } from "@/lib/storage";
-import { SOLVER_SCHEMA_VERSION } from "./contracts";
 import { stableStringify } from "./fingerprint";
+import { canonicalSolveContext, isVerifiedCacheableResult } from "./identity";
+import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import {
-  isSerializableSimBase,
-  type SerializableModifierSources,
-  type SerializableSolverRequest,
-  type SolverResultDTO,
-} from "./worker/serializable";
+  ABSOLUTE_MAX_BAR_SIZE,
+  BAR_LENGTH_COUNT,
+  DEFAULT_MAX_BAR_SIZE,
+  MIN_SOLVER_BAR_SIZE,
+  TIER_BAR_SIZE_BOUNDS as TIER_BAR_SIZE_BOUNDS_POLICY,
+  agentBarLength,
+  agentBarSizeBounds,
+  agentCountForBarSizes,
+  barLengthSpan,
+  clampSolverBarSizes,
+} from "./barPolicy";
+import { tierAgentCount } from "./workerPlan";
 
 export const REVO_SOLVE_CACHE_KEY = "eq:revo-solve:v2";
 /** @deprecated read-only migration from pre-hash storage */
 const REVO_SOLVE_CACHE_KEY_V1 = "eq:revo-solve:v1";
 
-/** Floor / ceiling for product bars (six lengths: 5–10). */
-export const MIN_SOLVER_BAR_SIZE = 5;
-export const DEFAULT_MAX_BAR_SIZE = 10;
-export const ABSOLUTE_MAX_BAR_SIZE = 10;
-export const BAR_LENGTH_COUNT = ABSOLUTE_MAX_BAR_SIZE - MIN_SOLVER_BAR_SIZE + 1; // 6
-const MAX_CACHE_ENTRIES = 48;
-const MAX_TOP_PER_ENTRY = 5;
-const MAX_SEED_BARS = 16;
+/** Re-export product bar policy (sole authority: barPolicy.ts). */
+export {
+  ABSOLUTE_MAX_BAR_SIZE,
+  BAR_LENGTH_COUNT,
+  DEFAULT_MAX_BAR_SIZE,
+  MIN_SOLVER_BAR_SIZE,
+  agentBarLength,
+  agentBarSizeBounds,
+  agentCountForBarSizes,
+  barLengthSpan,
+  clampSolverBarSizes,
+};
+export { tierAgentCount };
 
+// Re-export identity helpers so existing imports from solutionStore keep working.
+export {
+  SEARCH_POLICY_VERSION,
+  canonicalNormalizedIdentity,
+  canonicalSolveContext,
+  canonicalEvaluationContext,
+  canonicalSimulationIdentity,
+  isVerifiedCacheableResult,
+  VERIFIED_CACHEABLE_PROOFS,
+  NON_CACHEABLE_PROOFS,
+} from "./identity";
+
+/** Back-compat shape: { min, max } (policy uses minBarSize/maxBarSize). */
 export const TIER_BAR_SIZE_BOUNDS: Record<
   "thorough" | "extreme" | "unhinged",
   { min: number; max: number }
 > = {
-  thorough: { min: MIN_SOLVER_BAR_SIZE, max: ABSOLUTE_MAX_BAR_SIZE },
-  extreme: { min: MIN_SOLVER_BAR_SIZE, max: ABSOLUTE_MAX_BAR_SIZE },
-  unhinged: { min: MIN_SOLVER_BAR_SIZE, max: ABSOLUTE_MAX_BAR_SIZE },
+  thorough: {
+    min: TIER_BAR_SIZE_BOUNDS_POLICY.thorough.minBarSize,
+    max: TIER_BAR_SIZE_BOUNDS_POLICY.thorough.maxBarSize,
+  },
+  extreme: {
+    min: TIER_BAR_SIZE_BOUNDS_POLICY.extreme.minBarSize,
+    max: TIER_BAR_SIZE_BOUNDS_POLICY.extreme.maxBarSize,
+  },
+  unhinged: {
+    min: TIER_BAR_SIZE_BOUNDS_POLICY.unhinged.minBarSize,
+    max: TIER_BAR_SIZE_BOUNDS_POLICY.unhinged.maxBarSize,
+  },
 };
 
-/** Ceiling length for agent i in a 6-slot block: 0→5 … 5→10, then repeats. */
-export function agentBarLength(agentIndex: number): number {
-  const i = Math.max(0, Math.floor(Number(agentIndex)) || 0);
-  return MIN_SOLVER_BAR_SIZE + (i % BAR_LENGTH_COUNT);
-}
-
-/** Distinct bar lengths in a size window (max − min + 1). */
-export function barLengthSpan(minBarSize: number, maxBarSize: number): number {
-  const { minBarSize: lo, maxBarSize: hi } = clampSolverBarSizes(minBarSize, maxBarSize);
-  return hi - lo + 1;
-}
-
-/** @deprecated use barLengthSpan — kept for older imports */
-export function agentCountForBarSizes(minBarSize: number, maxBarSize: number): number {
-  return barLengthSpan(minBarSize, maxBarSize);
-}
-
-/** Tier agent target — Thorough 6 · Extreme 12 · Unhinged 18. */
-export function tierAgentCount(tier: "thorough" | "extreme" | "unhinged"): number {
-  if (tier === "extreme") return 12;
-  if (tier === "unhinged") return 18;
-  return 6;
-}
+const MAX_CACHE_ENTRIES = 48;
+const MAX_TOP_PER_ENTRY = 5;
+const MAX_SEED_BARS = 16;
 
 export interface CachedSolveBar {
   bar: readonly string[];
@@ -133,111 +151,6 @@ export function normalizeSolveCache(raw: unknown): SolveCacheStore {
   return { version: 2, entries };
 }
 
-function roundN(n: number, places: number): number {
-  const p = 10 ** places;
-  return Math.round(n * p) / p;
-}
-
-function normalizeModifierSources(sources: SerializableModifierSources): unknown {
-  const setCounts = [...sources.setCounts]
-    .map(([id, n]) => [id, n] as const)
-    .sort((a, b) => a[0].localeCompare(b[0]));
-  return {
-    vulnerability: sources.vulnerability === true,
-    styleCurseId: sources.styleCurseId ?? "none",
-    amZiFlatDamage: roundN(sources.amZiFlatDamage ?? 0, 4),
-    amHejDamageBonus: roundN(sources.amHejDamageBonus ?? 0, 6),
-    setCounts,
-    slayer: {
-      demon: sources.slayer?.demon ?? 0,
-      dragon: sources.slayer?.dragon ?? 0,
-      undead: sources.slayer?.undead ?? 0,
-    },
-    target: {
-      demon: sources.target?.demon === true,
-      dragon: sources.target?.dragon === true,
-      undead: sources.target?.undead === true,
-    },
-    ultimatums: sources.ultimatums ?? 0,
-    lunging: sources.lunging ?? 0,
-  };
-}
-
-/**
- * Stable, JSON-safe solve identity. Omits wall-clock / remaining-tick fields that
- * would invalidate the cache every second (e.g. powerburstUntilTick countdown).
- */
-export function canonicalSolveContext(request: SerializableSolverRequest): unknown {
-  const loadout = request.loadout;
-  const loadoutKey = isSerializableSimBase(loadout)
-    ? {
-        base: roundN(loadout.base, 3),
-        level: loadout.level,
-        accuracy: roundN(loadout.accuracy, 6),
-        crit: {
-          chance: roundN(loadout.crit?.chance ?? 0, 6),
-          disabled: loadout.crit?.disabled === true,
-          damageBonus: roundN(loadout.crit?.damageBonus ?? 0, 6),
-          guaranteed: loadout.crit?.guaranteed === true,
-        },
-        equipmentIds: [...loadout.equipmentIds].sort(),
-        weaponConfiguration: loadout.weaponConfiguration,
-        startingAdrenaline: loadout.startingAdrenaline ?? 0,
-        plantedFeet: loadout.plantedFeet === true,
-        preciseRank: loadout.preciseRank ?? 0,
-        tumekensPieces: loadout.tumekensPieces ?? 0,
-        tumekensCritEnabled: loadout.tumekensCritEnabled === true,
-        targetHpPercent: loadout.targetHpPercent ?? 100,
-        cap: loadout.cap ?? null,
-        adrenaline: loadout.adrenaline
-          ? {
-              abilityGainMultiplier: roundN(loadout.adrenaline.abilityGainMultiplier ?? 1, 6),
-              basicGainMultiplier: roundN(loadout.adrenaline.basicGainMultiplier ?? 1, 6),
-              impatientRank: loadout.adrenaline.impatientRank ?? 0,
-              impatientLevel20: loadout.adrenaline.impatientLevel20 === true,
-              relentlessRank: loadout.adrenaline.relentlessRank ?? 0,
-              relentlessLevel20: loadout.adrenaline.relentlessLevel20 === true,
-            }
-          : null,
-        procs: loadout.procs
-          ? {
-              cracklingRank: loadout.procs.cracklingRank ?? 0,
-              aftershockRank: loadout.procs.aftershockRank ?? 0,
-            }
-          : null,
-        league: {
-          ruleset: loadout.league.ruleset,
-          blessingIds: [...loadout.league.blessingIds].sort(),
-          totalArmour: loadout.league.totalArmour,
-          maximumLife: loadout.league.maximumLife,
-          // Boolean only — remaining ticks tick down and would thrash the key.
-          powerburstActive: (loadout.league.powerburstUntilTick ?? 0) > 0,
-          targetTiles: loadout.league.targetTiles,
-        },
-        modifierSources: normalizeModifierSources(loadout.modifierSources),
-        passiveIds: [...(loadout.equipmentEffects.passiveIds ?? [])].map(String).sort(),
-        vestmentsPieces: loadout.equipmentEffects.vestments?.pieces ?? 0,
-      }
-    : { kind: "plain", loadout };
-
-  return {
-    schema: request.schemaVersion ?? SOLVER_SCHEMA_VERSION,
-    style: request.style,
-    profileId: request.profileId,
-    tier: request.tier,
-    minBarSize: request.minBarSize,
-    maxBarSize: request.maxBarSize,
-    durationTicks: request.durationTicks,
-    exploreDurationTicks: request.exploreDurationTicks ?? null,
-    regions: [...request.unlockedRegions].sort(),
-    includeUnknownAvailability: request.includeUnknownAvailability === true,
-    includePartial: request.includePartial === true,
-    disabled: [...(request.disabledAbilityIds ?? [])].sort(),
-    ruleset: request.ruleset,
-    loadout: loadoutKey,
-  };
-}
-
 /** Sync stable payload string (for tests / debugging). */
 export function solveContextPayload(request: SerializableSolverRequest): string {
   return stableStringify(canonicalSolveContext(request));
@@ -255,14 +168,14 @@ export async function sha256Hex(input: string): Promise<string> {
 }
 
 /**
- * Fingerprint of "same solve job" — compact SHA-256 for localStorage keys.
+ * Fingerprint of "same solve job" - compact SHA-256 for localStorage keys.
  * Schema bumps in the payload invalidate every entry.
  */
 export async function fingerprintSolveContext(request: SerializableSolverRequest): Promise<string> {
   return sha256Hex(solveContextPayload(request));
 }
 
-/** Test helper — clear in-memory-facing storage key. */
+/** Test helper - clear in-memory-facing storage key. */
 export function resetSolveCacheForTests(): void {
   if (typeof window === "undefined") return;
   try {
@@ -282,7 +195,7 @@ export function loadSolveCache(): SolveCacheStore {
   if (v1.entries.length === 0) return EMPTY_STORE;
   const migrated: CachedSolveEntry[] = v1.entries.map((e, i) => ({
     ...e,
-    // Old keys were multi-KB JSON — mark as style-only seeds, never exact hits.
+    // Old keys were multi-KB JSON - mark as style-only seeds, never exact hits.
     key: `v1-migrated-${e.style}-${i}-${e.bar.join(",")}`,
   }));
   const store = { version: 2 as const, entries: migrated.slice(0, MAX_CACHE_ENTRIES) };
@@ -311,13 +224,22 @@ export function upsertSolveEntry(store: SolveCacheStore, entry: CachedSolveEntry
   };
 }
 
+/**
+ * Persist a verified solve result. Rejects cancelled / stopped / exploratory-only /
+ * non-finite / out-of-bounds / non-rankable DTOs so the cache never serves partials
+ * as exact hits. Rejected bars may still seed later searches via style-only paths
+ * only if they were previously stored under a different (verified) entry.
+ */
 export async function rememberSolvedBar(
   request: SerializableSolverRequest,
   result: SolverResultDTO,
   now = Date.now(),
 ): Promise<CachedSolveEntry | null> {
-  const bar = result.bar?.filter((id) => typeof id === "string" && id.length > 0) ?? [];
+  if (!isVerifiedCacheableResult(request, result)) return null;
+
+  const bar = result.bar.filter((id) => typeof id === "string" && id.length > 0);
   if (bar.length < MIN_SOLVER_BAR_SIZE) return null;
+  if (bar.length < request.minBarSize || bar.length > request.maxBarSize) return null;
   if (!Number.isFinite(result.score)) return null;
 
   const key = await fingerprintSolveContext(request);
@@ -326,6 +248,7 @@ export async function rememberSolvedBar(
   top.push({ bar: [...bar], score: result.score });
   for (const t of result.top ?? []) {
     if (!t.bar?.length) continue;
+    if (t.bar.length < request.minBarSize || t.bar.length > request.maxBarSize) continue;
     const fp = t.bar.join("\0");
     if (seen.has(fp)) continue;
     seen.add(fp);
@@ -394,35 +317,4 @@ export function seedBarsFromSolveCache(
   }
 
   return out.slice(0, MAX_SEED_BARS);
-}
-
-function clampBarSize(raw: number | undefined, fallback: number): number {
-  const n = Math.floor(raw ?? fallback) || fallback;
-  return Math.max(MIN_SOLVER_BAR_SIZE, Math.min(ABSOLUTE_MAX_BAR_SIZE, n));
-}
-
-/** Clamp product path size bounds — never search sub-floor bars. */
-export function clampSolverBarSizes(
-  minBarSize?: number,
-  maxBarSize?: number,
-): { minBarSize: number; maxBarSize: number } {
-  const min = clampBarSize(minBarSize, MIN_SOLVER_BAR_SIZE);
-  const max = Math.max(min, clampBarSize(maxBarSize, DEFAULT_MAX_BAR_SIZE));
-  return { minBarSize: min, maxBarSize: max };
-}
-
-/**
- * Ladder band for agent i: floor always 5, ceiling = agentBarLength(i).
- * agent 0 → 5–5 … agent 5 → 5–10; next recipe block wraps. Request min/max ignored.
- */
-export function agentBarSizeBounds(
-  _minBarSize: number,
-  _maxBarSize: number,
-  agentIndex: number,
-  _agentCount: number,
-): { minBarSize: number; maxBarSize: number } {
-  return {
-    minBarSize: MIN_SOLVER_BAR_SIZE,
-    maxBarSize: agentBarLength(agentIndex),
-  };
 }

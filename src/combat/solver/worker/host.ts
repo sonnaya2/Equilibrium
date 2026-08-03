@@ -135,7 +135,7 @@ export type RunOptimizeOptions = {
   isCancelled?: () => boolean;
   signal?: AbortSignal;
   forceMainThread?: boolean;
-  /** Override parallel agent count (tiers: 6 / 12 / 18). */
+  /** Override parallel agent count (tier ceilings: 4 / 6 / 8). */
   agents?: number;
 };
 

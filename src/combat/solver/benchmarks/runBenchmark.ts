@@ -47,7 +47,7 @@ export interface BenchReport {
   cases: BenchCaseResult[];
 }
 
-/** Tiny search knobs — real evaluate, CI-friendly wall time. */
+/** Tiny search knobs - real evaluate, CI-friendly wall time. */
 export const QUICK_SEARCH = {
   evaluationBudget: 28,
   beamWidth: 4,

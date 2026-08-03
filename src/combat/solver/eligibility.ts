@@ -1,6 +1,6 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { ItemPassiveId } from "../data/records";
-import { resolveAbilityCastAvailability } from "../engine/cast/requirements";
+import { resolveAbilityCastAvailability } from "../shared/requirements";
 import type {
   BarSizeBounds,
   CandidatePool,

@@ -1,6 +1,6 @@
 /**
  * Deterministic Revolution solver host lifecycle tests.
- * Uses FakeWorker + fake timers — no real solveFromRequest runs.
+ * Uses FakeWorker + fake timers - no real solveFromRequest runs.
  */
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import {
@@ -21,7 +21,7 @@ import {
   type SerializableSolverRequest,
   type SolverResultDTO,
 } from "./serializable";
-// Minimal stub — pure lifecycle tests must not pull #shard JSON.
+// Minimal stub - pure lifecycle tests must not pull #shard JSON.
 const EQUIPMENT_SET_ACTIVATION = {} as never;
 
 function sampleSimBase(): SerializableRevolutionSimBase {
@@ -91,7 +91,7 @@ function sampleProgress(overrides?: Partial<SolverProgress>): SolverProgress {
     evaluations: 1,
     uniqueCandidates: 1,
     bestScore: 10,
-    // Optional dual fields — callers may override; defaults keep exploratory scale only.
+    // Optional dual fields - callers may override; defaults keep exploratory scale only.
     bestExploratoryScore: 10,
     windowDpms: 10,
     phase: "explore",

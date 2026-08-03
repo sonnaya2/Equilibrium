@@ -41,7 +41,7 @@ describe("createRng (mulberry32)", () => {
     expect(Array.from({ length: 8 }, () => childA.next())).toEqual(
       Array.from({ length: 8 }, () => childB.next()),
     );
-    // parent advanced once for the fork seed — further draws stay defined
+    // parent advanced once for the fork seed - further draws stay defined
     expect(typeof parent.next()).toBe("number");
   });
 

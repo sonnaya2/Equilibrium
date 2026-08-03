@@ -180,14 +180,29 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     ? activeBarIds
     : solver.solverResult?.bar?.length
       ? [...solver.solverResult.bar]
-      : null;
-  const currentSaveScore =
-    solver.solverResult &&
-    currentSaveBar &&
+      : solver.stoppedPreview?.bar?.length
+        ? [...solver.stoppedPreview.bar]
+        : null;
+  const finalBarMatch =
+    !!solver.solverResult &&
+    !!currentSaveBar &&
     solver.solverResult.bar?.length === currentSaveBar.length &&
-    solver.solverResult.bar.every((id, i) => id === currentSaveBar[i])
-      ? solver.solverResult.score
+    solver.solverResult.bar.every((id, i) => id === currentSaveBar[i]);
+  const stoppedBarMatch =
+    !finalBarMatch &&
+    !!solver.stoppedPreview &&
+    !!currentSaveBar &&
+    solver.stoppedPreview.bar.length === currentSaveBar.length &&
+    solver.stoppedPreview.bar.every((id, i) => id === currentSaveBar[i]);
+  /** Verified score only from a completed final DTO matching the bar. */
+  const currentSaveScore = finalBarMatch
+    ? solver.solverResult!.score
+    : stoppedBarMatch
+      ? (solver.stoppedPreview!.bestFullScore ??
+        solver.stoppedPreview!.bestExploratoryScore ??
+        null)
       : null;
+  const saveVerified = finalBarMatch;
   const alreadySaved =
     currentSaveBar != null && isBarAlreadySaved(solver.barLibrary, loadout.style, currentSaveBar);
 
@@ -204,7 +219,9 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         currentSaveScore={currentSaveScore}
         alreadySaved={alreadySaved}
         solving={solver.solving}
-        onSave={() => solver.saveCurrentBar(currentSaveBar, currentSaveScore)}
+        onSave={() =>
+          solver.saveCurrentBar(currentSaveBar, currentSaveScore, { verified: saveVerified })
+        }
         onLoad={loadLibraryBar}
         onDropRecent={solver.dropRecent}
         onDropSaved={solver.dropSaved}
@@ -216,6 +233,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         stopping={solver.stopping}
         solverProgress={solver.solverProgress}
         solverResult={solver.solverResult}
+        stoppedPreview={solver.stoppedPreview}
         solverError={solver.solverError}
         bestPulse={solver.bestPulse}
         solverAgents={solver.solverAgents}
@@ -227,6 +245,8 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
         setSolverAgents={solver.setSolverAgents}
         solverProfile={solver.solverProfile}
         setSolverProfile={solver.setSolverProfile}
+        barSizePreset={solver.barSizePreset}
+        setBarSizePreset={solver.setBarSizePreset}
         limitToRegions={solver.limitToRegions}
         setLimitToRegions={solver.setLimitToRegions}
         onOptimize={() => void solver.optimize()}

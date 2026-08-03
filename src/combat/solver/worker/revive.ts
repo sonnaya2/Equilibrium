@@ -56,7 +56,7 @@ function setCountsMap(sources: SerializableModifierSources): Map<string, number>
 
 /**
  * Rebuild the cast-modifier factory used by simulateRevolution / simulate.
- * Calls existing perk / equipment / prayer / league factories — no React.
+ * Calls existing perk / equipment / prayer / league factories - no React.
  */
 export function reviveModifiers(
   sources: SerializableModifierSources,

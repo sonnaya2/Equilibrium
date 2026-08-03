@@ -276,7 +276,7 @@ export function defaultSerializableRequest(
     tier: "thorough",
     profileId: "balanced",
     maxBarSize: 10,
-    minBarSize: 5,
+    minBarSize: 4,
     permittedCategories: ["basic", "enhanced", "ultimate"],
     unlockedRegions: [],
     blessingPicks: [],

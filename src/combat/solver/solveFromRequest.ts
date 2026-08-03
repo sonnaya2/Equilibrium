@@ -1,6 +1,6 @@
 /**
  * Production entry: serializable request → real engine evaluations → ranked bars.
- * Orchestration only — preparation, session, progress, and result building live
+ * Orchestration only - preparation, session, progress, and result building live
  * in sibling modules. Used by the worker and main-thread fallback.
  */
 import type { AbilitySpec } from "../pipeline/calculateAbility";
@@ -187,7 +187,7 @@ export const solveFromRequest: SolveFn = async (
     throwCancelled();
   }
 
-  // Finalize already full-rescored the shortlist — no second 300s winner sim.
+  // Finalize already full-rescored the shortlist - no second 300s winner sim.
   state.currentPhase = "finalize";
   emitProgress(options, state, true);
 

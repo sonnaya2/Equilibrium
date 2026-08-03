@@ -3,20 +3,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import {
-  ABSOLUTE_MAX_BAR_SIZE,
   agentBarLength,
   agentSearchRecipe,
   cancelOptimize,
+  clampSolverBarSizes,
   fingerprintSolveContext,
   lookupSolvedBar,
-  MIN_SOLVER_BAR_SIZE,
   packSolverRequest,
   preferredAgentCount,
   rememberSolvedBar,
   runOptimize,
   seedBarsFromSolveCache,
+  solveContextPayload,
   TIER_BUDGETS,
   type ObjectiveProfileId,
+  type SerializableSolverRequest,
   type SolverProgress,
   type SolverResultDTO,
   type SolverSearchTier,
@@ -32,7 +33,16 @@ import {
   withoutSavedBar,
   type RevoBarLibrary,
 } from "./revoBarLibrary";
-import { partialDtoFromProgress } from "./revoPanelFormat";
+import {
+  barBoundsFromPreset,
+  DEFAULT_BAR_SIZE_PRESET,
+  isLiveSolverSession,
+  settlementActionForSolve,
+  stoppedPreviewFromProgress,
+  type BarSizePresetId,
+  type SolverStoppedPreview,
+} from "./revoPanelFormat";
+import { solverSnapshotFromUi } from "./solverSnapshot";
 import type { Loadout } from "./useLoadout";
 
 export type UseRevolutionSolverArgs = {
@@ -43,6 +53,39 @@ export type UseRevolutionSolverArgs = {
   onActiveBar: (ids: string[] | null) => void;
   onClearSimResult: () => void;
 };
+
+type MaterialSolveInputs = {
+  stats: CalcStats;
+  loadout: Loadout;
+  build: BuildState;
+  modelled: AbilitySpec[];
+  solverTier: SolverSearchTier;
+  solverProfile: ObjectiveProfileId;
+  limitToRegions: boolean;
+  barSizePreset: BarSizePresetId;
+};
+
+function packFromMaterial(
+  m: MaterialSolveInputs,
+  opts?: { seed?: number; now?: number },
+): SerializableSolverRequest {
+  const bounds = barBoundsFromPreset(m.barSizePreset);
+  return packSolverRequest({
+    snapshot: solverSnapshotFromUi(m.stats, m.loadout),
+    style: m.loadout.style,
+    build: m.build,
+    tier: m.solverTier,
+    profileId: m.solverProfile,
+    minBarSize: bounds.minBarSize,
+    maxBarSize: bounds.maxBarSize,
+    userBar: m.modelled.map((x) => x.id),
+    seed: opts?.seed ?? 1,
+    now: opts?.now,
+    useBuildRegions: m.limitToRegions,
+    unlockedRegions: m.limitToRegions ? undefined : [...REGION_IDS],
+    includeUnknownAvailability: !m.limitToRegions,
+  });
+}
 
 export function useRevolutionSolver({
   stats,
@@ -55,10 +98,14 @@ export function useRevolutionSolver({
   const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
   const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
   const [limitToRegions, setLimitToRegions] = useState(false);
+  const [barSizePreset, setBarSizePreset] = useState<BarSizePresetId>(DEFAULT_BAR_SIZE_PRESET);
   const [solving, setSolving] = useState(false);
   const [stopping, setStopping] = useState(false);
   const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
+  /** Completed final result only — never built from mid-run progress. */
   const [solverResult, setSolverResult] = useState<SolverResultDTO | null>(null);
+  /** Cancel/error best-so-far — facts only, not a SolverResultDTO. */
+  const [stoppedPreview, setStoppedPreview] = useState<SolverStoppedPreview | null>(null);
   const [solverError, setSolverError] = useState<string | null>(null);
   const [bestPulse, setBestPulse] = useState(false);
   const [solverAgents, setSolverAgents] = useState(() => preferredAgentCount("thorough"));
@@ -73,6 +120,29 @@ export function useRevolutionSolver({
   const lastBestRef = useRef(0);
   const solveGenRef = useRef(0);
   const latestProgressRef = useRef<SolverProgress | null>(null);
+  const sessionIdentityRef = useRef<string | null>(null);
+  const sessionNowRef = useRef<number>(0);
+  const materialRef = useRef<MaterialSolveInputs>({
+    stats,
+    loadout,
+    build,
+    modelled,
+    solverTier,
+    solverProfile,
+    limitToRegions,
+    barSizePreset,
+  });
+
+  materialRef.current = {
+    stats,
+    loadout,
+    build,
+    modelled,
+    solverTier,
+    solverProfile,
+    limitToRegions,
+    barSizePreset,
+  };
 
   useEffect(() => {
     setBarLibrary(loadBarLibrary());
@@ -86,9 +156,34 @@ export function useRevolutionSolver({
     };
   }, []);
 
-  const applyDto = useCallback(
-    (dto: SolverResultDTO, request: Parameters<typeof rememberSolvedBar>[0]) => {
+  const liveIdentity = useCallback((): string => {
+    const req = packFromMaterial(materialRef.current, {
+      seed: 1,
+      now: sessionNowRef.current || undefined,
+    });
+    return solveContextPayload(req);
+  }, []);
+
+  const sessionIsLive = useCallback(
+    (gen: number): boolean => {
+      const identity = sessionIdentityRef.current;
+      if (identity == null) return false;
+      return isLiveSolverSession({
+        sessionGen: gen,
+        currentGen: solveGenRef.current,
+        sessionIdentity: identity,
+        currentIdentity: liveIdentity(),
+        cancelled: cancelRef.current,
+      });
+    },
+    [liveIdentity],
+  );
+
+  /** Final DTO only: apply bar, verified cache, verified recent. */
+  const applyFinalDto = useCallback(
+    (dto: SolverResultDTO, request: SerializableSolverRequest) => {
       const bar = dto.bar?.length ? [...dto.bar] : [];
+      setStoppedPreview(null);
       if (bar.length === 0) {
         setSolverError("No legal bar");
         setSolverResult(dto);
@@ -97,7 +192,7 @@ export function useRevolutionSolver({
         setSolverResult(dto);
         onActiveBar(bar);
         onClearSimResult();
-        rememberSolvedBar(request, dto);
+        void rememberSolvedBar(request, dto);
         setBarLibrary((prev) => {
           const next = withRecentBar(prev, {
             bar,
@@ -105,6 +200,7 @@ export function useRevolutionSolver({
             score: dto.score,
             profileId: dto.profileId ?? request.profileId,
             tier: request.tier,
+            verified: true,
           });
           saveBarLibrary(next);
           return next;
@@ -134,6 +230,23 @@ export function useRevolutionSolver({
     [solverTier, onActiveBar, onClearSimResult],
   );
 
+  const publishStoppedPreview = useCallback(
+    (partial: SolverProgress | null, reason: SolverStoppedPreview["reason"]) => {
+      if (!partial?.topBarPreview?.length) return;
+      const preview = stoppedPreviewFromProgress(
+        partial,
+        solverProfile,
+        solverTier,
+        reason,
+      );
+      if (!preview) return;
+      setStoppedPreview(preview);
+      setSolverResult(null);
+      onActiveBar([...preview.bar]);
+    },
+    [onActiveBar, solverProfile, solverTier],
+  );
+
   const optimize = useCallback(async () => {
     cancelRef.current = false;
     abortRef.current?.abort();
@@ -142,10 +255,12 @@ export function useRevolutionSolver({
     const gen = ++solveGenRef.current;
     lastBestRef.current = 0;
     latestProgressRef.current = null;
+    sessionIdentityRef.current = null;
     setSolving(true);
     setStopping(false);
     setSolverError(null);
     setSolverResult(null);
+    setStoppedPreview(null);
     setBestPulse(false);
     const agentsPlanned = preferredAgentCount(solverTier);
     setSolverAgents(agentsPlanned);
@@ -174,24 +289,19 @@ export function useRevolutionSolver({
     latestProgressRef.current = seedProgress;
     setSolverProgress(seedProgress);
     try {
-      const baseRequest = packSolverRequest({
-        stats,
-        loadout,
-        build,
-        style: loadout.style,
-        tier: solverTier,
-        profileId: solverProfile,
-        maxBarSize: ABSOLUTE_MAX_BAR_SIZE,
-        minBarSize: MIN_SOLVER_BAR_SIZE,
-        userBar: modelled.map((m) => m.id),
-        seed: 1,
-        useBuildRegions: limitToRegions,
-        unlockedRegions: limitToRegions ? undefined : [...REGION_IDS],
-        includeUnknownAvailability: !limitToRegions,
-      });
-      const contextKey = await fingerprintSolveContext(baseRequest);
-      const cached = lookupSolvedBar(contextKey);
-      const cachedSeeds = seedBarsFromSolveCache(loadout.style, contextKey, MIN_SOLVER_BAR_SIZE);
+      const sessionNow = Date.now();
+      sessionNowRef.current = sessionNow;
+      const material = materialRef.current;
+      const baseRequest = packFromMaterial(material, { seed: 1, now: sessionNow });
+      sessionIdentityRef.current = solveContextPayload(baseRequest);
+
+      const cacheKey = await fingerprintSolveContext(baseRequest);
+      const cached = lookupSolvedBar(cacheKey);
+      const bounds = clampSolverBarSizes(
+        barBoundsFromPreset(material.barSizePreset).minBarSize,
+        barBoundsFromPreset(material.barSizePreset).maxBarSize,
+      );
+      const cachedSeeds = seedBarsFromSolveCache(loadout.style, cacheKey, bounds.minBarSize);
       if (cached?.bar?.length) {
         lastBestRef.current = 0;
         const warm: SolverProgress = {
@@ -224,8 +334,7 @@ export function useRevolutionSolver({
       const dto = await runOptimize(
         request,
         (progress) => {
-          if (gen !== solveGenRef.current) return;
-          if (cancelRef.current || abort.signal.aborted) return;
+          if (!sessionIsLive(gen)) return;
           latestProgressRef.current = progress;
           if (progress.bestScore > lastBestRef.current + 1e-6) {
             lastBestRef.current = progress.bestScore;
@@ -241,15 +350,21 @@ export function useRevolutionSolver({
           agents,
         },
       );
-      if (gen !== solveGenRef.current) return;
-      if (cancelRef.current || abort.signal.aborted) {
-        const partial = latestProgressRef.current;
-        if (partial?.topBarPreview?.length) {
-          onActiveBar([...partial.topBarPreview]);
-        }
+      const settle = settlementActionForSolve({
+        sessionGen: gen,
+        currentGen: solveGenRef.current,
+        sessionIdentity: sessionIdentityRef.current ?? "",
+        currentIdentity: liveIdentity(),
+        cancelled: cancelRef.current || abort.signal.aborted,
+        hasFinalDto: true,
+      });
+      if (settle === "ignore") return;
+      if (settle === "stopped-preview") {
+        // Cancellation: no final DTO, no verified cache / recent.
+        publishStoppedPreview(latestProgressRef.current, "stopped-early");
         return;
       }
-      applyDto(dto, request);
+      applyFinalDto(dto, request);
     } catch (err) {
       if (gen !== solveGenRef.current) return;
       const aborted =
@@ -263,23 +378,17 @@ export function useRevolutionSolver({
 
       const partial = latestProgressRef.current;
       if (aborted) {
-        if (partial?.topBarPreview?.length) {
-          onActiveBar([...partial.topBarPreview]);
-          setSolverResult(
-            partialDtoFromProgress(partial, solverProfile, solverTier, "stopped-early"),
-          );
-        }
+        publishStoppedPreview(partial, "stopped-early");
         return;
       }
 
-      const message = err instanceof Error ? err.message : String(err);
-      if (partial?.topBarPreview?.length) {
-        onActiveBar([...partial.topBarPreview]);
-        setSolverResult(
-          partialDtoFromProgress(partial, solverProfile, solverTier, "heuristic-best-found"),
-        );
+      // Error path: optional non-final preview only; never a fake SolverResultDTO.
+      // Identity may have drifted — still allow preview if gen matches.
+      if (gen === solveGenRef.current) {
+        publishStoppedPreview(partial, "error");
+        const message = err instanceof Error ? err.message : String(err);
+        setSolverError(message || "Failed");
       }
-      setSolverError(message || "Failed");
     } finally {
       if (gen === solveGenRef.current) {
         setSolving(false);
@@ -287,17 +396,7 @@ export function useRevolutionSolver({
         abortRef.current = null;
       }
     }
-  }, [
-    stats,
-    loadout,
-    build,
-    solverTier,
-    solverProfile,
-    modelled,
-    applyDto,
-    limitToRegions,
-    onActiveBar,
-  ]);
+  }, [loadout.style, solverTier, applyFinalDto, sessionIsLive, publishStoppedPreview, liveIdentity]);
 
   const cancelSolve = () => {
     // Do not bump solveGenRef — in-flight promise must still hit finally.
@@ -305,6 +404,7 @@ export function useRevolutionSolver({
     abortRef.current?.abort();
     setStopping(true);
     cancelOptimize();
+    // Immediate bar preview from known progress; no final DTO / verified writes.
     const partial = latestProgressRef.current;
     if (partial?.topBarPreview?.length) {
       onActiveBar([...partial.topBarPreview]);
@@ -313,18 +413,25 @@ export function useRevolutionSolver({
 
   const clearSolverUi = useCallback(() => {
     setSolverResult(null);
+    setStoppedPreview(null);
     setSolverError(null);
   }, []);
 
-  const saveCurrentBar = (currentSaveBar: string[] | null, currentSaveScore: number | null) => {
+  const saveCurrentBar = (
+    currentSaveBar: string[] | null,
+    currentSaveScore: number | null,
+    opts?: { verified?: boolean },
+  ) => {
     if (!currentSaveBar?.length || solving) return;
+    const verified = opts?.verified === true;
     setBarLibrary((prev) => {
       const next = withPermanentBar(prev, {
         bar: currentSaveBar,
         style: loadout.style,
         score: currentSaveScore,
-        profileId: solverResult?.profileId ?? solverProfile,
-        tier: solverTier,
+        profileId: solverResult?.profileId ?? stoppedPreview?.profileId ?? solverProfile,
+        tier: solverResult?.tier ?? stoppedPreview?.tier ?? solverTier,
+        verified,
       });
       saveBarLibrary(next);
       return next;
@@ -354,10 +461,13 @@ export function useRevolutionSolver({
     setSolverProfile,
     limitToRegions,
     setLimitToRegions,
+    barSizePreset,
+    setBarSizePreset,
     solving,
     stopping,
     solverProgress,
     solverResult,
+    stoppedPreview,
     solverError,
     bestPulse,
     solverAgents,
@@ -370,4 +480,9 @@ export function useRevolutionSolver({
     dropRecent,
     dropSaved,
   };
+}
+
+/** Test seam: pack material inputs the same way optimize does. */
+export function packSolverRequestFromUi(input: MaterialSolveInputs & { now?: number }) {
+  return packFromMaterial(input, { seed: 1, now: input.now });
 }

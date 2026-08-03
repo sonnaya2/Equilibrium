@@ -1,6 +1,10 @@
-/** Re-export the pure cast/palette availability resolver (engine/cast owns it). */
+/**
+ * Public shared surface for cast/palette availability.
+ * Implementation lives in `./requirements` (no engine imports).
+ */
 export {
   equipmentRecordPassiveIds,
+  equipmentRequirementMessage,
   meetsEquipmentRequirement,
   meetsPassiveRequirement,
   meetsWeaponRequirement,
@@ -8,6 +12,8 @@ export {
   passiveIdsFromEquipmentIds,
   permanentAvailabilityBlock,
   resolveAbilityCastAvailability,
+  weaponRequirementMessage,
   type AbilityAvailabilityOptions,
   type AbilityCastAvailability,
-} from "../engine/cast/requirements";
+  type WeaponConfiguration,
+} from "./requirements";

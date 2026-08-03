@@ -1,6 +1,6 @@
 /**
  * Adversarial score/proof honesty gates for the Revolution solver.
- * These pin intended contracts — do not weaken to match broken production.
+ * These pin intended contracts - do not weaken to match broken production.
  */
 import { describe, expect, it } from "vitest";
 import type { EvaluateFn, PoolAbility, ScoredBar } from "../contracts";
@@ -29,7 +29,7 @@ function searchScore(bar: readonly string[]): number {
 
 /** Full scores inverted vs search so a high exploratory bar loses on full. */
 function fullScore(bar: readonly string[]): number {
-  // Prefer a then b then c — opposite of search weighting.
+  // Prefer a then b then c - opposite of search weighting.
   const dmg: Record<string, number> = { a: 100, b: 40, c: 5 };
   let score = 0;
   bar.forEach((id, i) => {
@@ -180,7 +180,7 @@ describe("score honesty", () => {
       config: { fullShortlistSize: 3 },
     });
     expect(result.exhaustiveCompleted).toBe(true);
-    // Feasible space is 15 bars; shortlist is 3 — not a full cover.
+    // Feasible space is 15 bars; shortlist is 3 - not a full cover.
     expect(result.proof).not.toBe("full-objective-global-optimum");
     expect(result.proof).toBe("full-shortlist-best");
   });
@@ -279,7 +279,7 @@ describe("score honesty", () => {
     expect(f1?.mode).toBe("full");
     expect(s1!.robustScore).toBe(100);
     expect(f1!.robustScore).toBe(1);
-    // Second calls hit mode-specific cache — no extra evaluate for same mode+bar.
+    // Second calls hit mode-specific cache - no extra evaluate for same mode+bar.
     expect(calls.filter((c) => c === "search:a")).toHaveLength(1);
     expect(calls.filter((c) => c === "full:a")).toHaveLength(1);
     expect(s2!.robustScore).toBe(100);

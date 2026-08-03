@@ -98,26 +98,67 @@ export {
 } from "./solve";
 export { clearEvalMemo, evalMemoStats } from "./evalMemo";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
-export { packSolverRequest, packSimBase } from "./packRequest";
 export {
-  REVO_SOLVE_CACHE_KEY,
+  packSolverRequest,
+  packSimBase,
+  type SolverPackSnapshot,
+  type PackSolverRequestInput,
+} from "./packRequest";
+export { serializeLeague } from "./worker/revive";
+export {
   MIN_SOLVER_BAR_SIZE,
   DEFAULT_MAX_BAR_SIZE,
   ABSOLUTE_MAX_BAR_SIZE,
+  BAR_LENGTH_COUNT,
+  clampSolverBarSizes,
+  normalizeSolverBarBounds,
+  agentBarLength,
+  agentBarSizeBounds,
+  agentCountForBarSizes,
+  barLengthSpan,
+} from "./barPolicy";
+export {
+  planWorkers,
+  tierAgentCount,
+  TIER_MAX_AGENTS,
+  SAFE_GLOBAL_AGENT_CEILING,
+  detectHardwareCores,
+  recipesForTier,
+  planRecipe,
+  type WorkerAssignment,
+  type WorkerPlan,
+  type WorkerPlanInput,
+  type WorkerRecipe,
+} from "./workerPlan";
+export {
+  compareSolverResultDTO,
+  pickBestSolverResult,
+  isRankableSolverResult,
+  isEffectivelyEqualScore,
+  compareTopEntry,
+} from "./rankResults";
+export {
+  REVO_SOLVE_CACHE_KEY,
   TIER_BAR_SIZE_BOUNDS,
   fingerprintSolveContext,
+  solveContextPayload,
   loadSolveCache,
   rememberSolvedBar,
   lookupSolvedBar,
   seedBarsFromSolveCache,
-  clampSolverBarSizes,
-  agentBarLength,
-  agentBarSizeBounds,
-  agentCountForBarSizes,
-  tierAgentCount,
   type CachedSolveEntry,
   type SolveCacheStore,
 } from "./solutionStore";
+export {
+  SEARCH_POLICY_VERSION,
+  canonicalNormalizedIdentity,
+  canonicalSolveContext,
+  canonicalEvaluationContext,
+  canonicalSimulationIdentity,
+  isVerifiedCacheableResult,
+  VERIFIED_CACHEABLE_PROOFS,
+  NON_CACHEABLE_PROOFS,
+} from "./identity";
 export type {
   SerializableSolverRequest,
   SolverResultDTO,

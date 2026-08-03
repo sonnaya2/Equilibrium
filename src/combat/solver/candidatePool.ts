@@ -1,5 +1,5 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { resolveAbilityCastAvailability } from "../engine/cast/requirements";
+import { resolveAbilityCastAvailability } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
 import type { CandidatePool, CandidatePoolOptions, PoolAbility } from "./contracts";
 

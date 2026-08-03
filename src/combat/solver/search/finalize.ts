@@ -8,7 +8,7 @@ export interface FinalizeOptions {
   topK?: number;
   /** Yield between expensive full-horizon re-scores so the UI can paint. */
   yieldSlice?: () => Promise<void>;
-  /** Cooperative cancel — checked before each full re-score (not mid-sim). */
+  /** Cooperative cancel - checked before each full re-score (not mid-sim). */
   isCancelled?: () => boolean;
   onStep?: (info: {
     done: number;
@@ -67,7 +67,7 @@ async function pickSeedBestAsync(
   return { seedBestScore, seedBestBar };
 }
 
-/** Exploratory candidates only — full archive entries never seed the shortlist rank. */
+/** Exploratory candidates only - full archive entries never seed the shortlist rank. */
 function buildExplorePool(state: SearchState, seedBestBar: readonly string[] | null): ScoredBar[] {
   const pool: ScoredBar[] = [];
   const seen = new Set<string>();
@@ -142,7 +142,7 @@ function rescoreFull(state: SearchState, fullCandidates: ScoredBar[]): ScoredBar
   const rescored: ScoredBar[] = [];
   for (const s of fullCandidates) {
     const full = state.forceEval(s.bar, "full", "finalize");
-    // Failed full scores stay failed — never push the exploratory candidate.
+    // Failed full scores stay failed - never push the exploratory candidate.
     if (isFullRankable(full)) rescored.push(full);
   }
   return rescored;
@@ -194,7 +194,7 @@ function assembleResult(
   let best: ScoredBar | null = rankedFull[0] ?? null;
   let status: SolveStatus = best ? "ok" : "failed";
 
-  // Explicit degraded fallback only — never pretend it is a full robust winner.
+  // Explicit degraded fallback only - never pretend it is a full robust winner.
   if (!best) {
     const exploreBest =
       explorePool.find(isSearchRankable) ??
@@ -269,7 +269,7 @@ function assembleResult(
         ? bestExploratoryScore
         : undefined,
       bestFullScore: Number.isFinite(bestFullScore) ? bestFullScore : undefined,
-      // Never mix scales into a single bestScore — leave unset when both exist.
+      // Never mix scales into a single bestScore - leave unset when both exist.
       bestScore: undefined,
     },
   };

@@ -87,7 +87,7 @@ describe("evaluateRevolutionBar", () => {
 
   it("uses objective.scoreSummary multi-window scoring at a rankable short horizon (30s)", () => {
     const pool = buildCandidatePool(catalogue, "melee");
-    // Thorough full score is 50 ticks — not the 500-tick research horizon.
+    // Thorough full score is 50 ticks - not the 500-tick research horizon.
     const durationTicks = 50;
     const evaluation = evaluateRevolutionBar({
       bar: ["alpha", "beta"],
@@ -167,7 +167,7 @@ describe("evaluateRevolutionBar", () => {
     expect(evaluation.validForFinalRanking).toBe(false);
     expect(evaluation.score).toBe(Number.NEGATIVE_INFINITY);
     expect(evaluation.reasons.some((r) => r.code === "score-failed")).toBe(true);
-    // Simulation succeeded — summary present — but robust scoring failed.
+    // Simulation succeeded - summary present - but robust scoring failed.
     expect(evaluation.summary?.ok).toBe(true);
     expect(evaluation.objective?.ok).toBe(false);
     // No laundered synthetic opening/developed/steady metrics.

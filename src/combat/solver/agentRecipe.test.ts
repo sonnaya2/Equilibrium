@@ -2,20 +2,23 @@ import { describe, expect, it } from "vitest";
 import { agentSearchRecipe, configForTier, configPatchForRecipe } from "./solve";
 
 describe("agentSearchRecipe", () => {
-  it("blocks of 6: ensemble then evo then anneal", () => {
-    for (let i = 0; i < 6; i++) {
+  it("thorough stays ensemble-only across agent indices", () => {
+    for (let i = 0; i < 8; i++) {
       expect(agentSearchRecipe(i, "thorough")).toBe("default");
-    }
-    for (let i = 6; i < 12; i++) {
-      expect(agentSearchRecipe(i, "extreme")).toBe("evolutionary");
-    }
-    for (let i = 12; i < 18; i++) {
-      expect(agentSearchRecipe(i, "unhinged")).toBe("anneal_local");
     }
   });
 
-  it("thorough only fills the ensemble block", () => {
-    expect(agentSearchRecipe(5, "thorough")).toBe("default");
+  it("extreme cycles default and evolutionary", () => {
+    expect(agentSearchRecipe(0, "extreme")).toBe("default");
+    expect(agentSearchRecipe(1, "extreme")).toBe("evolutionary");
+    expect(agentSearchRecipe(2, "extreme")).toBe("default");
+  });
+
+  it("unhinged cycles default, evolutionary, anneal_local", () => {
+    expect(agentSearchRecipe(0, "unhinged")).toBe("default");
+    expect(agentSearchRecipe(1, "unhinged")).toBe("evolutionary");
+    expect(agentSearchRecipe(2, "unhinged")).toBe("anneal_local");
+    expect(agentSearchRecipe(3, "unhinged")).toBe("default");
   });
 });
 

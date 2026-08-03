@@ -111,7 +111,7 @@ function range(lo: number, hi: number): number[] {
 function keepBeam(items: ScoredBar[], width: number): ScoredBar[] {
   const finite = items.filter((s) => Number.isFinite(s.robustScore));
   const partials = items.filter((s) => !Number.isFinite(s.robustScore));
-  // Scored finite first: compareScored + diverseSelect — never reorder that tier.
+  // Scored finite first: compareScored + diverseSelect - never reorder that tier.
   finite.sort(compareScored);
   const diverse = diverseSelect(finite, width);
   const seen = new Set(diverse.map((d) => d.fingerprint));

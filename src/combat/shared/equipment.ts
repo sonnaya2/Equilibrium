@@ -5,7 +5,7 @@ import type { CritLayers } from "../core/critical";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
-import { equipmentRecordPassiveIds } from "../engine/cast/requirements";
+import { equipmentRecordPassiveIds } from "./requirements";
 
 /**
  * Equipment set effects with sourced current numbers. Per-item combat stats live on

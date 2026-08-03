@@ -300,9 +300,9 @@ describe("solveFromRequest", () => {
     const hb = await fingerprintSolveContext(b);
     expect(ha).toBe(hb);
     expect(ha).toMatch(/^[0-9a-f]{64}$/);
-    // Powerburst countdown must not thrash the key.
+    // Exact frozen remaining ticks are part of identity (boolean collapse removed).
     const payload = solveContextPayload(a);
-    expect(payload.includes("powerburstUntilTick")).toBe(false);
-    expect(payload.includes("powerburstActive")).toBe(true);
+    expect(payload.includes("powerburstUntilTick")).toBe(true);
+    expect(payload.includes("powerburstActive")).toBe(false);
   });
 });

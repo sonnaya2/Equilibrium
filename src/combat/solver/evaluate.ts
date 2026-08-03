@@ -55,11 +55,11 @@ function failEval(
 /**
  * Exact Revolution evaluation: eligibility → resolve → simulateRevolution → score.
  * Does not search; scores one bar against the real driver.
- *
+
  * When durationTicks >= MIN_RANKABLE_HORIZON_TICKS, scores via objective.scoreSummary
  * (proportional open/mid/steady windows). Shorter runs use a single totalExpected
  * DPM fallback marked exploratory:true and validForFinalRanking:false.
- *
+
  * Robust objective failure is never laundered into a successful robust score.
  */
 export function evaluateRevolutionBar(request: RevolutionEvalRequest): RevolutionBarEvaluation {
@@ -165,7 +165,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
 
   const scored = scoreSummary(summary, profileId, customWeights);
   if (!scored.ok) {
-    // Sim succeeded but robust scoring failed — keep failure visible.
+    // Sim succeeded but robust scoring failed - keep failure visible.
     // Do not copy scalar DPM into synthetic opening/developed/steady windows.
     reasons.push({
       code: "score-failed",

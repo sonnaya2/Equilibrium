@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
 import { loadoutStats } from "@/components/combat/loadoutStats";
+import { solverSnapshotFromUi } from "@/components/combat/solverSnapshot";
 import {
   emptyBuild,
   MILESTONE_REGION,
@@ -24,8 +25,8 @@ function pack(
   const loadout = { ...DEFAULT_LOADOUT };
   const stats = loadoutStats(loadout);
   return packSolverRequest({
-    stats,
-    loadout,
+    snapshot: solverSnapshotFromUi(stats, loadout),
+    style: loadout.style,
     build,
     now: NOW,
     ...opts,

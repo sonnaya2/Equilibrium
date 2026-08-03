@@ -10,6 +10,7 @@ import { runAnnealing, runAnnealingAsync } from "./search/annealing";
 import { runLocalSearch, runLocalSearchAsync } from "./search/localSearch";
 import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
 import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
+import { planRecipe } from "./workerPlan";
 /** Evaluation budgets per agent (scaled up so longer ladder bands stay competitive). */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
   thorough: 2_400,
@@ -27,17 +28,8 @@ export const TIER_HORIZON_SECONDS: Record<
   unhinged: { exploreSeconds: 36, fullSeconds: 300 },
 };
 
-/** Thorough 6 · Extreme 12 · Unhinged 18 (recipe blocks of 6 × lengths 5–10). */
-export const TIER_AGENT_COUNT: Record<SolveTier, number> = {
-  thorough: 6,
-  extreme: 12,
-  unhinged: 18,
-};
-
-/** How many agents to launch for a tier (6 / 12 / 18). */
-export function preferredAgentCount(tier: SolveTier, _hardwareAgents?: number): number {
-  return TIER_AGENT_COUNT[tier] ?? TIER_AGENT_COUNT.thorough;
-}
+/** Tier MAX ceilings — Thorough 4 · Extreme 6 · Unhinged 8 (see workerPlan). */
+export { TIER_AGENT_COUNT, preferredAgentCount } from "./workerPlan";
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
   const evaluationBudget = TIER_BUDGETS[tier];
@@ -82,24 +74,19 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
 }
 
 /**
- * Parallel-agent search recipe — blocks of {@link AGENTS_PER_RECIPE} (6):
- *   indices 0–5   → ensemble (default)
- *   indices 6–11  → evolutionary
- *   indices 12–17 → anneal+local
- * Tier caps total agents (6 / 12 / 18), so Extreme never reaches anneal,
- * Thorough never leaves ensemble. Overflow rolls into the next block.
+ * Parallel-agent search recipe.
+ * Prefer {@link planWorkers} / {@link planRecipe} for assignments; this helper
+ * remains for UI progress labels and tests. Spreads recipes by tier availability
+ * (thorough: default only; extreme: +evo; unhinged: +anneal).
  */
 export type SolverAgentRecipe = "default" | "evolutionary" | "anneal_local";
 
-/** Hard cap per algorithm block before rolling into the next recipe. */
+/** @deprecated legacy block size — planner no longer requires blocks of 6. */
 export const AGENTS_PER_RECIPE = 6;
 
-export function agentSearchRecipe(agentIndex: number, _tier?: SolveTier): SolverAgentRecipe {
-  const i = Math.max(0, Math.floor(Number(agentIndex)) || 0);
-  const block = Math.floor(i / AGENTS_PER_RECIPE);
-  if (block <= 0) return "default";
-  if (block === 1) return "evolutionary";
-  return "anneal_local";
+export function agentSearchRecipe(agentIndex: number, tier?: SolveTier): SolverAgentRecipe {
+  // Delegate to planner so UI labels match pool assignments.
+  return planRecipe(agentIndex, tier ?? "thorough");
 }
 
 /** Config overrides applied on top of {@link configForTier} for a specialized agent. */

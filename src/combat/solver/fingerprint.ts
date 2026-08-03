@@ -5,7 +5,7 @@ import {
   type ScoreEvalMode,
 } from "./contracts";
 
-/** Ordered bar identity — slot order matters. */
+/** Ordered bar identity - slot order matters. */
 export function fingerprintBar(bar: Bar): string {
   return bar.join("\0");
 }
@@ -45,12 +45,12 @@ export interface EvaluationKeyParts {
   profileId?: string;
   customWeights?: unknown;
   horizonTicks?: number;
-  /** search vs full — required for mode-separated caches. */
+  /** search vs full - required for mode-separated caches. */
   mode?: ScoreEvalMode;
   objectiveVersion?: number;
 }
 
-/** Cache key for a bar evaluation — includes schema, objective version, and mode. */
+/** Cache key for a bar evaluation - includes schema, objective version, and mode. */
 export function fingerprintEvaluationKey(parts: EvaluationKeyParts): string {
   return [
     `v${SOLVER_SCHEMA_VERSION}`,

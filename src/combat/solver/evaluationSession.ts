@@ -1,12 +1,14 @@
 /**
  * Evaluation session: memoized bar scoring for solveFromRequest.
- * Behavior-preserving extraction — same memo keys and counters.
+ * Memo context is derived from canonicalEvaluationContext (identity.ts) so
+ * process-local caches cannot reuse scores across materially different requests.
  */
 import type { EvaluateFn, EvalMode } from "./contracts";
 import { evaluateRevolutionBar } from "./evaluate";
 import { readEvalMemo, writeEvalMemo } from "./evalMemo";
 import { fingerprintEvaluationKey, stableStringify } from "./fingerprint";
 import { OBJECTIVE_VERSION } from "./contracts";
+import { canonicalEvaluationContext } from "./identity";
 import type { SerializableSolverRequest } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import type { ProgressState } from "./progressReporter";
@@ -15,43 +17,16 @@ import { emitProgress } from "./progressReporter";
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
 
+/**
+ * Stable evaluation-context string for process-local eval memo.
+ * Uses the canonical evaluation identity (simulation + objective + pool filters).
+ * Second arg kept for call-site compatibility; identity is taken from `request`.
+ */
 export function buildMemoContext(
   request: SerializableSolverRequest,
-  simBase: {
-    base: unknown;
-    level: unknown;
-    accuracy: unknown;
-    crit: unknown;
-    weaponConfiguration: unknown;
-    equipmentIds: unknown;
-    startingAdrenaline?: unknown;
-    plantedFeet?: boolean;
-    strengthCape99?: boolean;
-    preciseRank?: number;
-    league: { blessingIds: readonly string[]; ruleset: unknown };
-    targetHpPercent?: number | null;
-  },
+  _simBase?: unknown,
 ): string {
-  // Loadout/context slice for process-local eval memo (re-Optimize warms).
-  return stableStringify({
-    style: request.style,
-    profileId: request.profileId,
-    customWeights: request.customWeights ?? null,
-    includePartial: request.includePartial === true,
-    base: simBase.base,
-    level: simBase.level,
-    accuracy: simBase.accuracy,
-    crit: simBase.crit,
-    weaponConfiguration: simBase.weaponConfiguration,
-    equipmentIds: simBase.equipmentIds,
-    startingAdrenaline: simBase.startingAdrenaline,
-    plantedFeet: simBase.plantedFeet === true,
-    strengthCape99: simBase.strengthCape99 === true,
-    preciseRank: simBase.preciseRank ?? 0,
-    leagueIds: simBase.league.blessingIds,
-    ruleset: simBase.league.ruleset,
-    targetHp: simBase.targetHpPercent ?? null,
-  });
+  return stableStringify(canonicalEvaluationContext(request));
 }
 
 export function createEvaluateFn(args: {

@@ -1,6 +1,6 @@
 /**
  * Request preparation for solveFromRequest: deny lists, pools, seeds, horizons.
- * Behavior-preserving extraction — no scoring or budget changes.
+ * - no scoring or budget changes.
  */
 import { allEngineSpecs, entryByEngineId, engineSpecs } from "../abilities/registry";
 import { isObtainableInRegions } from "../data/availability";
@@ -110,7 +110,7 @@ export function buildCandidatePoolForRequest(
     passiveIds,
   });
 
-  // Category filter (optional) — rebuild pool rather than mutate.
+  // Category filter (optional) - rebuild pool rather than mutate.
   if (request.permittedCategories?.length) {
     const allowCat = new Set(request.permittedCategories);
     const catDeny = pool.ids.filter((id) => {

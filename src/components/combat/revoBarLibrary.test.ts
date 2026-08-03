@@ -71,19 +71,61 @@ describe("revoBarLibrary", () => {
   });
 
   it("permanently saves and does not duplicate the same fingerprint", () => {
-    let store = withPermanentBar(empty(), { bar: BAR_A, style: "melee", score: 50, now: 1 });
+    let store = withPermanentBar(empty(), {
+      bar: BAR_A,
+      style: "melee",
+      score: 50,
+      now: 1,
+      verified: true,
+    });
     store = withPermanentBar(store, {
       bar: BAR_A,
       style: "melee",
       score: 80,
       name: "Boss bar",
       now: 2,
+      verified: true,
     });
     expect(store.saved).toHaveLength(1);
     expect(store.saved[0]!.score).toBe(80);
     expect(store.saved[0]!.name).toBe("Boss bar");
+    expect(store.saved[0]!.verified).toBe(true);
     expect(isBarAlreadySaved(store, "melee", BAR_A)).toBe(true);
     expect(isBarAlreadySaved(store, "melee", BAR_B)).toBe(false);
+  });
+
+  it("manual stopped bars save as unverified (no verified score claim)", () => {
+    const store = withPermanentBar(empty(), {
+      bar: BAR_A,
+      style: "melee",
+      score: 999,
+      now: 1,
+      verified: false,
+    });
+    expect(store.saved).toHaveLength(1);
+    expect(store.saved[0]!.verified).toBe(false);
+    expect(store.saved[0]!.score).toBe(999);
+    expect(store.saved[0]!.name).toMatch(/^5-slot · ~/);
+
+    const recent = withRecentBar(empty(), {
+      bar: BAR_B,
+      style: "melee",
+      score: 100,
+      now: 2,
+      verified: true,
+    });
+    expect(recent.recents[0]!.verified).toBe(true);
+    expect(recent.recents[0]!.name).not.toMatch(/~/);
+  });
+
+  it("defaults missing verified flag on load to false", () => {
+    const lib = normalizeBarLibrary({
+      version: 1,
+      recents: [{ id: "r1", style: "melee", bar: BAR_A, score: 1, savedAt: 1 }],
+      saved: [{ id: "s1", style: "melee", bar: BAR_B, score: 2, savedAt: 2, verified: true }],
+    });
+    expect(lib.recents[0]!.verified).toBe(false);
+    expect(lib.saved[0]!.verified).toBe(true);
   });
 
   it("Save does not touch autosaves and remove works", () => {

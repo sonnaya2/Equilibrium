@@ -1,7 +1,4 @@
-/**
- * Final SolverResultDTO construction from a completed SolveResult.
- * Behavior-preserving extraction.
- */
+/** Final SolverResultDTO construction from a completed SolveResult. */
 import type { SolveResult } from "./contracts";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
@@ -71,7 +68,7 @@ export function buildSolverResultDto(args: {
     ...bigBonedNotes,
   ];
 
-  // Honest windows only — never copy robust score into windowDpms.
+  // Honest windows only - never copy robust score into windowDpms.
   // Full winners from production evaluate carry measured window DPMs (may be 0).
   const hasRealWindows =
     fullWinner &&
@@ -103,10 +100,10 @@ export function buildSolverResultDto(args: {
     developedDpm: hasRealWindows ? winner.developedDpm : undefined,
     steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
     assumptions: bigBonedAssumptions,
-    // summary left unset unless an independent sim is run — never fabricate.
+    // summary left unset unless an independent sim is run - never fabricate.
     proof: {
       label: result.proof,
-      // recheckScore omitted — a copy of the chosen score is not a recheck.
+      // recheckScore omitted - a copy of the chosen score is not a recheck.
       notes: proofNotes,
     },
     top: result.top.map((t) => ({

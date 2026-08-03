@@ -17,7 +17,7 @@ const URL = `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: "e2e",
-  testMatch: ["**/combat*.spec.ts", "**/combat/**/*.spec.ts"],
+  testMatch: ["**/combat*.spec.ts", "**/solver-smoke.spec.ts", "**/combat/**/*.spec.ts"],
   testIgnore: ["**/map*.spec.ts", "**/map-board*.spec.ts"],
   timeout: 30_000,
   workers: WORKERS,

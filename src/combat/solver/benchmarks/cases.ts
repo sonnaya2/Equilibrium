@@ -83,7 +83,7 @@ function baseLoadout(opts: {
 
 /**
  * Bench requests always use thorough tier on the wire (only real SearchTier).
- * Quick mode overrides evaluationBudget in the runner — not the request tier field.
+ * Quick mode overrides evaluationBudget in the runner - not the request tier field.
  */
 function makeRequest(opts: {
   style: CombatStyle;

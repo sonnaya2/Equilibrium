@@ -1,38 +1,81 @@
-import type { CalcStats } from "@/components/combat/loadoutStats";
-import type { Loadout } from "@/components/combat/loadout/model";
 import type { BuildState, RegionId } from "@/league";
 import { REGION_IDS, unlockedRegions } from "@/league";
 import type { BlessingPath } from "@/league/blessings";
 import { secondsToTicks } from "../core/ticks";
 import { equippedSetCounts } from "../shared/equipment";
+import type { ActiveEquipmentEffects } from "../shared/equipment";
+import type { AdrenalineRules, ProcRules } from "../engine/simulation/contracts";
+import type { HitCapRule } from "../core/hitCaps";
+import type { CombatContext, CombatStyle } from "../types";
+import { combatRevolutionBars } from "../data";
+import { revoManagedSlots } from "../data/specs";
+import { engineSpecs } from "../abilities/registry";
 import {
   defaultSerializableRequest,
   emptyModifierSources,
   type AuthoredSeedBar,
+  type SerializableLeagueRules,
   type SerializableModifierSources,
   type SerializableRevolutionSimBase,
   type SerializableSolverRequest,
   type SolverSearchTier,
 } from "./worker/serializable";
-import { serializeLeague } from "./worker/revive";
 import type { ObjectiveProfileId, ObjectiveWeights } from "./contracts";
-import type { CombatStyle } from "../types";
-import { combatRevolutionBars } from "../data";
-import { revoManagedSlots } from "../data/specs";
-import { engineSpecs } from "../abilities/registry";
 import {
   ABSOLUTE_MAX_BAR_SIZE,
   clampSolverBarSizes,
   MIN_SOLVER_BAR_SIZE,
-  TIER_BAR_SIZE_BOUNDS,
-} from "./solutionStore";
+} from "./barPolicy";
 import { TIER_HORIZON_SECONDS } from "./solve";
 
+/**
+ * Neutral combat-domain snapshot for solver packing.
+ * Built by the UI adapter (or tests) — never imports components/CalcStats/Loadout.
+ */
+export interface SolverPackSnapshot {
+  base: number;
+  level: number;
+  accuracy: number;
+  crit: {
+    chance: number;
+    disabled?: boolean;
+    damageBonus?: number;
+  };
+  adrenaline?: AdrenalineRules;
+  procs?: ProcRules;
+  plantedFeet?: boolean;
+  strengthCape99?: boolean;
+  preciseRank?: number;
+  conjureBasicDamageMult?: number;
+  conjureDurationMult?: number;
+  tumekensPieces?: number;
+  tumekensCritEnabled?: boolean;
+  equipmentEffects: ActiveEquipmentEffects;
+  league: SerializableLeagueRules;
+  context?: CombatContext;
+  targetHpPercent?: number;
+  cap?: HitCapRule;
+  startingAdrenaline?: number;
+  equipmentIds: readonly string[];
+  weaponConfiguration: SerializableRevolutionSimBase["weaponConfiguration"];
+  /** Slot map used to derive set piece counts when setCounts is omitted. */
+  equipmentSlots?: Partial<Record<string, string | null>>;
+  vulnerability?: boolean;
+  styleCurseId?: string | "none";
+  amZiFlatDamage?: number;
+  amHejDamageBonus?: number;
+  slayer?: { demon: number; dragon: number; undead: number };
+  target?: { demon?: boolean; dragon?: boolean; undead?: boolean };
+  ultimatums?: number;
+  lunging?: number;
+  /** Precomputed set counts; when omitted derived from equipmentSlots + equipmentIds. */
+  setCounts?: readonly (readonly [string, number])[];
+}
+
 export interface PackSolverRequestInput {
-  stats: CalcStats;
-  loadout: Loadout;
+  snapshot: SolverPackSnapshot;
+  style: CombatStyle;
   build: BuildState;
-  style?: CombatStyle;
   tier?: SolverSearchTier;
   profileId?: ObjectiveProfileId;
   customWeights?: ObjectiveWeights;
@@ -42,7 +85,7 @@ export interface PackSolverRequestInput {
   includePartial?: boolean;
   includeUnknownAvailability?: boolean;
   disabledAbilityIds?: readonly string[];
-  /** Final exact horizon seconds (default: tier fullSeconds, thorough = 30). */
+  /** Final exact horizon seconds (default: tier fullSeconds). */
   durationSeconds?: number;
   /** Explore horizon seconds (default: tier exploreSeconds). */
   exploreSeconds?: number;
@@ -53,64 +96,68 @@ export interface PackSolverRequestInput {
   unlockedRegions?: readonly RegionId[];
 }
 
-function modifierSourcesFrom(stats: CalcStats, loadout: Loadout): SerializableModifierSources {
-  const counts = equippedSetCounts({
-    equipmentSlots: loadout.equipmentSlots,
-    equipmentIds: [...stats.equipmentIds],
-  });
-  const setCounts: (readonly [string, number])[] = [...counts.entries()].map(
-    ([setId, pieces]) => [setId, pieces] as const,
-  );
+function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifierSources {
+  const setCounts: (readonly [string, number])[] =
+    snapshot.setCounts != null
+      ? [...snapshot.setCounts]
+      : [
+          ...equippedSetCounts({
+            equipmentSlots: snapshot.equipmentSlots,
+            equipmentIds: [...snapshot.equipmentIds],
+          }).entries(),
+        ].map(([setId, pieces]) => [setId, pieces] as const);
+
   return {
     ...emptyModifierSources(),
-    vulnerability: loadout.buffs.vulnerability === true,
-    styleCurseId: loadout.buffs.styleCurse ?? "none",
-    amZiFlatDamage: stats.equipmentEffects.amZiFlatDamage ?? 0,
-    amHejDamageBonus: stats.equipmentEffects.amHejDamageBonus ?? 0,
+    vulnerability: snapshot.vulnerability === true,
+    styleCurseId: snapshot.styleCurseId ?? "none",
+    amZiFlatDamage: snapshot.amZiFlatDamage ?? 0,
+    amHejDamageBonus: snapshot.amHejDamageBonus ?? 0,
     setCounts,
     slayer: {
-      demon: loadout.perks.demonSlayer ?? 0,
-      dragon: loadout.perks.dragonSlayer ?? 0,
-      undead: loadout.perks.undeadSlayer ?? 0,
+      demon: snapshot.slayer?.demon ?? 0,
+      dragon: snapshot.slayer?.dragon ?? 0,
+      undead: snapshot.slayer?.undead ?? 0,
     },
     target: {
-      demon: loadout.target?.demon,
-      dragon: loadout.target?.dragon,
-      undead: loadout.target?.undead,
+      demon: snapshot.target?.demon,
+      dragon: snapshot.target?.dragon,
+      undead: snapshot.target?.undead,
     },
-    ultimatums: loadout.perks.ultimatums ?? 0,
-    lunging: loadout.perks.lunging ?? 0,
+    ultimatums: snapshot.ultimatums ?? 0,
+    lunging: snapshot.lunging ?? 0,
   };
 }
 
-export function packSimBase(stats: CalcStats, loadout: Loadout): SerializableRevolutionSimBase {
+/** Pack a structured-clone-safe sim base from a neutral combat snapshot. */
+export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutionSimBase {
   return {
-    base: stats.base,
-    level: stats.level,
-    accuracy: stats.dp,
+    base: snapshot.base,
+    level: snapshot.level,
+    accuracy: snapshot.accuracy,
     crit: {
-      chance: stats.critChance,
-      disabled: stats.critsDisabled,
-      damageBonus: stats.critDamageBonus,
+      chance: snapshot.crit.chance,
+      disabled: snapshot.crit.disabled,
+      damageBonus: snapshot.crit.damageBonus,
     },
-    adrenaline: stats.adrenaline,
-    procs: stats.procs,
-    plantedFeet: stats.plantedFeet,
-    strengthCape99: stats.strengthCape99,
-    preciseRank: stats.preciseRank,
-    conjureBasicDamageMult: stats.conjureBasicDamageMult,
-    conjureDurationMult: stats.conjureDurationMult,
-    tumekensPieces: stats.tumekensPieces,
-    tumekensCritEnabled: stats.tumekensCritEnabled,
-    equipmentEffects: stats.equipmentEffects,
-    league: serializeLeague(stats.league),
-    context: stats.combatContext,
-    targetHpPercent: loadout.target?.hpPercent,
-    cap: stats.cap,
-    startingAdrenaline: stats.startingAdrenaline,
-    equipmentIds: stats.equipmentIds,
-    weaponConfiguration: stats.weaponConfiguration,
-    modifierSources: modifierSourcesFrom(stats, loadout),
+    adrenaline: snapshot.adrenaline,
+    procs: snapshot.procs,
+    plantedFeet: snapshot.plantedFeet,
+    strengthCape99: snapshot.strengthCape99,
+    preciseRank: snapshot.preciseRank,
+    conjureBasicDamageMult: snapshot.conjureBasicDamageMult,
+    conjureDurationMult: snapshot.conjureDurationMult,
+    tumekensPieces: snapshot.tumekensPieces,
+    tumekensCritEnabled: snapshot.tumekensCritEnabled,
+    equipmentEffects: snapshot.equipmentEffects,
+    league: snapshot.league,
+    context: snapshot.context,
+    targetHpPercent: snapshot.targetHpPercent,
+    cap: snapshot.cap,
+    startingAdrenaline: snapshot.startingAdrenaline,
+    equipmentIds: snapshot.equipmentIds,
+    weaponConfiguration: snapshot.weaponConfiguration,
+    modifierSources: modifierSourcesFrom(snapshot),
   };
 }
 
@@ -126,11 +173,11 @@ function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
     .filter((s) => s.abilityIds.length > 0);
 }
 
-/** Pack a structured-clone-safe solver request from live combat UI state. */
+/** Pack a structured-clone-safe solver request from a neutral combat snapshot. */
 export function packSolverRequest(input: PackSolverRequestInput): SerializableSolverRequest {
   // Freeze once per request — never re-sample Date.now() per evaluation.
   const now = input.now ?? Date.now();
-  const style = input.style ?? input.loadout.style;
+  const style = input.style;
   const tier = input.tier ?? "thorough";
   const horizons = TIER_HORIZON_SECONDS[tier] ?? TIER_HORIZON_SECONDS.thorough;
   const durationSeconds = input.durationSeconds ?? horizons.fullSeconds;
@@ -142,20 +189,15 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
   const includeUnknownAvailability =
     input.includeUnknownAvailability ?? (unrestricted ? true : undefined);
 
-  // Product window is always 5–12. Never honor a collapsed maxBarSize=6.
-  const tierSizes = TIER_BAR_SIZE_BOUNDS[tier] ?? TIER_BAR_SIZE_BOUNDS.thorough;
+  // Honor explicit size bounds (clamped to product floor/ceiling).
   const sizes = clampSolverBarSizes(
-    MIN_SOLVER_BAR_SIZE,
-    Math.min(
-      ABSOLUTE_MAX_BAR_SIZE,
-      Math.max(tierSizes.max, input.maxBarSize ?? ABSOLUTE_MAX_BAR_SIZE, ABSOLUTE_MAX_BAR_SIZE),
-    ),
+    input.minBarSize ?? MIN_SOLVER_BAR_SIZE,
+    input.maxBarSize ?? ABSOLUTE_MAX_BAR_SIZE,
   );
 
   return defaultSerializableRequest({
-    loadout: packSimBase(input.stats, input.loadout),
+    loadout: packSimBase(input.snapshot),
     style,
-    // Do not force 300s — thorough finalists score at ~30s game-time.
     durationTicks: Math.max(1, secondsToTicks(durationSeconds)),
     exploreDurationTicks: Math.max(1, secondsToTicks(exploreSeconds)),
     seed: input.seed ?? 1,
@@ -169,7 +211,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     disabledAbilityIds: input.disabledAbilityIds,
     unlockedRegions: regions as RegionId[],
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],
-    ruleset: input.stats.league.ruleset,
+    ruleset: input.snapshot.league.ruleset,
     now,
     authoredSeedBars: staticSeedBars(style),
     userBar: input.userBar,

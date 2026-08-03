@@ -22,6 +22,11 @@ export interface RevoBarEntry {
   name: string | null;
   kind: RevoBarEntryKind;
   savedAt: number;
+  /**
+   * True only when the score comes from a completed final solver result.
+   * Manual / stopped / exploratory saves are unverified.
+   */
+  verified: boolean;
 }
 
 export interface RevoBarLibrary {
@@ -38,6 +43,8 @@ export interface RememberBarInput {
   tier?: string | null;
   name?: string | null;
   now?: number;
+  /** Defaults false — only completed finals should pass true. */
+  verified?: boolean;
 }
 
 const EMPTY: RevoBarLibrary = { version: 1, recents: [], saved: [] };
@@ -69,6 +76,9 @@ function normalizeEntry(raw: unknown, kind: RevoBarEntryKind): RevoBarEntry | nu
   if (typeof e.style !== "string" || !e.style) return null;
   if (!isStringArray(e.bar) || e.bar.length === 0) return null;
   const score = typeof e.score === "number" && Number.isFinite(e.score) ? e.score : null;
+  // Legacy entries without the flag are treated as verified only when they have a score
+  // from the old autosave path; prefer false when explicit false, else require e.verified === true.
+  const verified = e.verified === true;
   return {
     id: e.id,
     bar: [...e.bar],
@@ -79,6 +89,7 @@ function normalizeEntry(raw: unknown, kind: RevoBarEntryKind): RevoBarEntry | nu
     name: typeof e.name === "string" && e.name.trim() ? e.name.trim() : null,
     kind,
     savedAt: typeof e.savedAt === "number" && Number.isFinite(e.savedAt) ? e.savedAt : 0,
+    verified,
   };
 }
 
@@ -129,7 +140,10 @@ function titleFor(input: RememberBarInput): string {
   if (input.name?.trim()) return input.name.trim();
   const n = input.bar.length;
   if (input.score != null && Number.isFinite(input.score)) {
-    return `${n}-slot · ${Math.round(input.score).toLocaleString("en-US")}`;
+    const rounded = Math.round(input.score).toLocaleString("en-US");
+    if (input.verified === true) return `${n}-slot · ${rounded}`;
+    // Exploratory / manual — do not look like a completed-solve claim.
+    return `${n}-slot · ~${rounded}`;
   }
   return `${n}-slot bar`;
 }
@@ -144,6 +158,7 @@ export function withRecentBar(store: RevoBarLibrary, input: RememberBarInput): R
   const rest = store.recents.filter(
     (e) => !(e.style === input.style && barFingerprint(e.bar) === fp),
   );
+  const verified = input.verified === true;
   const entry: RevoBarEntry = {
     id: newId("r", now),
     bar: [...bar],
@@ -151,9 +166,10 @@ export function withRecentBar(store: RevoBarLibrary, input: RememberBarInput): R
     score: input.score != null && Number.isFinite(input.score) ? input.score : null,
     profileId: input.profileId ?? null,
     tier: input.tier ?? null,
-    name: titleFor(input),
+    name: titleFor({ ...input, verified }),
     kind: "recent",
     savedAt: now,
+    verified,
   };
   return {
     version: 1,
@@ -171,6 +187,10 @@ export function withPermanentBar(store: RevoBarLibrary, input: RememberBarInput)
   const fp = barFingerprint(bar);
   const existing = store.saved.find((e) => e.style === input.style && barFingerprint(e.bar) === fp);
   const rest = store.saved.filter((e) => e.id !== existing?.id);
+  // Manual save defaults unverified; only explicit true marks verified.
+  // Replacing a verified entry with an unverified save clears the claim.
+  const verified =
+    input.verified === true ? true : input.verified === false ? false : (existing?.verified ?? false);
   const entry: RevoBarEntry = {
     id: existing?.id ?? newId("s", now),
     bar: [...bar],
@@ -179,9 +199,10 @@ export function withPermanentBar(store: RevoBarLibrary, input: RememberBarInput)
       input.score != null && Number.isFinite(input.score) ? input.score : (existing?.score ?? null),
     profileId: input.profileId ?? existing?.profileId ?? null,
     tier: input.tier ?? existing?.tier ?? null,
-    name: titleFor({ ...input, name: input.name ?? existing?.name }),
+    name: titleFor({ ...input, name: input.name ?? existing?.name, verified }),
     kind: "saved",
     savedAt: now,
+    verified,
   };
   return {
     version: 1,

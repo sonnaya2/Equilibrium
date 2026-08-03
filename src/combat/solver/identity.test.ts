@@ -1,0 +1,431 @@
+import { beforeEach, describe, expect, it } from "vitest";
+import {
+  canonicalEvaluationContext,
+  canonicalNormalizedIdentity,
+  canonicalSolveContext,
+  isVerifiedCacheableResult,
+  SEARCH_POLICY_VERSION,
+} from "./identity";
+import {
+  fingerprintSolveContext,
+  lookupSolvedBar,
+  rememberSolvedBar,
+  resetSolveCacheForTests,
+  solveContextPayload,
+} from "./solutionStore";
+import {
+  defaultSerializableRequest,
+  emptyModifierSources,
+  isSerializableSimBase,
+  type SerializableRevolutionSimBase,
+  type SerializableSolverRequest,
+  type SolverResultDTO,
+} from "./worker/serializable";
+import type { ActiveEquipmentEffects } from "../shared/equipment";
+import { stableStringify } from "./fingerprint";
+
+/** Minimal localStorage so rememberSolvedBar / lookupSolvedBar work under node vitest. */
+function installMemoryLocalStorage(): void {
+  const map = new Map<string, string>();
+  const storage = {
+    getItem: (k: string) => (map.has(k) ? map.get(k)! : null),
+    setItem: (k: string, v: string) => {
+      map.set(k, String(v));
+    },
+    removeItem: (k: string) => {
+      map.delete(k);
+    },
+    clear: () => map.clear(),
+    key: (i: number) => [...map.keys()][i] ?? null,
+    get length() {
+      return map.size;
+    },
+  };
+  (globalThis as { window?: { localStorage: typeof storage } }).window = {
+    localStorage: storage,
+  };
+  Object.defineProperty(globalThis, "localStorage", {
+    value: storage,
+    configurable: true,
+    writable: true,
+  });
+}
+
+installMemoryLocalStorage();
+
+const emptyEffects: ActiveEquipmentEffects = {
+  activation: "pre-activated-static-loadout",
+  passiveIds: [],
+  enchantments: [],
+  weaponClass: null,
+  defenderEquipped: false,
+  passage: { active: false, agonyActive: false },
+  amZiFlatDamage: 0,
+  amHejDamageBonus: 0,
+  vestments: {
+    pieces: 0,
+    heraldOfChaos: false,
+    berserkExtension: false,
+    increasedAdrenalineCap: false,
+  },
+};
+
+function baseLoadout(
+  overrides: Partial<SerializableRevolutionSimBase> = {},
+): SerializableRevolutionSimBase {
+  return {
+    base: 1200,
+    level: 99,
+    accuracy: 0.85,
+    crit: { chance: 0.12 },
+    equipmentEffects: emptyEffects,
+    league: {
+      ruleset: "base",
+      blessings: [],
+      blessingIds: [],
+      totalArmour: 0,
+      maximumLife: 10_000,
+      powerburstUntilTick: 0,
+      targetTiles: 1,
+    },
+    equipmentIds: ["abyssal_whip"],
+    weaponConfiguration: "dualwield",
+    startingAdrenaline: 100,
+    modifierSources: emptyModifierSources(),
+    ...overrides,
+  };
+}
+
+function sampleRequest(
+  overrides: Partial<SerializableSolverRequest> = {},
+  loadoutOverrides: Partial<SerializableRevolutionSimBase> = {},
+): SerializableSolverRequest {
+  return defaultSerializableRequest({
+    style: "melee",
+    durationTicks: 500,
+    minBarSize: 6,
+    maxBarSize: 10,
+    tier: "thorough",
+    profileId: "balanced",
+    seed: 1,
+    unlockedRegions: ["misthalin", "karamja"],
+    loadout: baseLoadout(loadoutOverrides),
+    ...overrides,
+  });
+}
+
+function withSim(
+  request: SerializableSolverRequest,
+  patch: (sim: SerializableRevolutionSimBase) => SerializableRevolutionSimBase,
+): SerializableSolverRequest {
+  if (!isSerializableSimBase(request.loadout)) throw new Error("expected sim base");
+  return { ...request, loadout: patch(request.loadout) };
+}
+
+function verifiedDto(overrides: Partial<SolverResultDTO> = {}): SolverResultDTO {
+  return {
+    bar: ["a", "b", "c", "d", "e", "f"],
+    score: 12_000,
+    windowDpms: 0,
+    evaluations: 100,
+    uniqueCandidates: 40,
+    seed: 1,
+    profileId: "balanced",
+    tier: "thorough",
+    durationTicks: 500,
+    proofLabel: "heuristic-best-found",
+    bestFullScore: 12_000,
+    proof: { label: "heuristic-best-found" },
+    top: [],
+    ...overrides,
+  };
+}
+
+describe("canonical identity", () => {
+  it("identical requests share the same solve fingerprint", async () => {
+    const a = sampleRequest();
+    const b = sampleRequest();
+    expect(await fingerprintSolveContext(a)).toBe(await fingerprintSolveContext(b));
+    expect(await fingerprintSolveContext(a)).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it("includes SEARCH_POLICY_VERSION and schema/objective versions in solve context", () => {
+    const payload = solveContextPayload(sampleRequest());
+    expect(payload).toContain(`"searchPolicyVersion":${SEARCH_POLICY_VERSION}`);
+    expect(payload).toContain('"schema":');
+    expect(payload).toContain('"objectiveVersion":');
+  });
+
+  it("evaluation identity omits seed/tier/search policy but includes simulation", () => {
+    const req = sampleRequest({ seed: 99, tier: "extreme" });
+    const evalCtx = stableStringify(canonicalEvaluationContext(req));
+    const solveCtx = stableStringify(canonicalSolveContext(req));
+    expect(evalCtx).not.toContain("searchPolicyVersion");
+    expect(evalCtx).not.toContain('"seed"');
+    expect(evalCtx).not.toContain('"tier"');
+    expect(solveCtx).toContain("searchPolicyVersion");
+    expect(solveCtx).toContain('"seed":99');
+    expect(solveCtx).toContain('"tier":"extreme"');
+    // Shared simulation fields present in both.
+    expect(evalCtx).toContain("startingAdrenaline");
+    expect(solveCtx).toContain("startingAdrenaline");
+  });
+
+  it("canonicalNormalizedIdentity exposes objective/simulation/solveJob/evaluation", () => {
+    const id = canonicalNormalizedIdentity(sampleRequest());
+    expect(id).toHaveProperty("objective");
+    expect(id).toHaveProperty("simulation");
+    expect(id).toHaveProperty("solveJob");
+    expect(id).toHaveProperty("evaluation");
+  });
+});
+
+describe("fingerprint changes one field at a time", () => {
+  async function expectDiff(
+    label: string,
+    mutate: (r: SerializableSolverRequest) => SerializableSolverRequest,
+  ) {
+    const base = sampleRequest();
+    const changed = mutate(structuredClone(base));
+    const ha = await fingerprintSolveContext(base);
+    const hb = await fingerprintSolveContext(changed);
+    expect(ha, label).not.toBe(hb);
+  }
+
+  it("starting adrenaline", async () => {
+    await expectDiff("startingAdrenaline", (r) =>
+      withSim(r, (s) => ({ ...s, startingAdrenaline: 50 })),
+    );
+  });
+
+  it("Crackling", async () => {
+    await expectDiff("crackling", (r) =>
+      withSim(r, (s) => ({ ...s, procs: { ...(s.procs ?? {}), cracklingRank: 4 } })),
+    );
+  });
+
+  it("Aftershock", async () => {
+    await expectDiff("aftershock", (r) =>
+      withSim(r, (s) => ({ ...s, procs: { ...(s.procs ?? {}), aftershockRank: 4 } })),
+    );
+  });
+
+  it("Precise", async () => {
+    await expectDiff("precise", (r) => withSim(r, (s) => ({ ...s, preciseRank: 5 })));
+  });
+
+  it("hit cap", async () => {
+    await expectDiff("hitCap", (r) =>
+      withSim(r, (s) => ({ ...s, cap: { cap: 15_000 } })),
+    );
+  });
+
+  it("target HP", async () => {
+    await expectDiff("targetHp", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 25 })));
+  });
+
+  it("target classification", async () => {
+    await expectDiff("targetClass", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        modifierSources: {
+          ...s.modifierSources,
+          target: { ...s.modifierSources.target, demon: true },
+        },
+      })),
+    );
+  });
+
+  it("blessings", async () => {
+    await expectDiff("blessings", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        league: {
+          ...s.league,
+          blessingIds: ["big-boned"],
+        },
+      })),
+    );
+  });
+
+  it("Powerburst remaining ticks (exact — not boolean)", async () => {
+    const a = withSim(sampleRequest(), (s) => ({
+      ...s,
+      league: { ...s.league, powerburstUntilTick: 10 },
+    }));
+    const b = withSim(sampleRequest(), (s) => ({
+      ...s,
+      league: { ...s.league, powerburstUntilTick: 3 },
+    }));
+    const off = withSim(sampleRequest(), (s) => ({
+      ...s,
+      league: { ...s.league, powerburstUntilTick: 0 },
+    }));
+    expect(await fingerprintSolveContext(a)).not.toBe(await fingerprintSolveContext(b));
+    expect(await fingerprintSolveContext(a)).not.toBe(await fingerprintSolveContext(off));
+    const payload = solveContextPayload(a);
+    expect(payload).toContain('"powerburstUntilTick":10');
+    expect(payload).not.toContain("powerburstActive");
+  });
+
+  it("conjure multipliers", async () => {
+    await expectDiff("conjureBasic", (r) =>
+      withSim(r, (s) => ({ ...s, conjureBasicDamageMult: 1.12 })),
+    );
+    await expectDiff("conjureDuration", (r) =>
+      withSim(r, (s) => ({ ...s, conjureDurationMult: 1.2 })),
+    );
+  });
+
+  it("custom objective weights", async () => {
+    await expectDiff("customWeights", (r) => ({
+      ...r,
+      profileId: "custom",
+      customWeights: {
+        opening: 0.5,
+        developed: 0.3,
+        steady: 0.2,
+        robustMean: 0.7,
+        robustMin: 0.3,
+      },
+    }));
+  });
+
+  it("bounds", async () => {
+    await expectDiff("bounds", (r) => ({ ...r, minBarSize: 5, maxBarSize: 8 }));
+  });
+
+  it("regions", async () => {
+    await expectDiff("regions", (r) => ({
+      ...r,
+      unlockedRegions: ["misthalin", "asgarnia"] as typeof r.unlockedRegions,
+    }));
+  });
+
+  it("disabled abilities", async () => {
+    await expectDiff("disabled", (r) => ({
+      ...r,
+      disabledAbilityIds: ["slaughter"],
+    }));
+  });
+
+  it("seed", async () => {
+    await expectDiff("seed", (r) => ({ ...r, seed: 42 }));
+  });
+
+  it("strength cape", async () => {
+    await expectDiff("strengthCape", (r) =>
+      withSim(r, (s) => ({ ...s, strengthCape99: true })),
+    );
+  });
+
+  it("equipment effects beyond vestments pieces", async () => {
+    await expectDiff("enchantments", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        equipmentEffects: {
+          ...s.equipmentEffects,
+          enchantments: ["agony"],
+          passage: { active: true, agonyActive: true },
+        },
+      })),
+    );
+  });
+});
+
+describe("rememberSolvedBar validation", () => {
+  beforeEach(() => {
+    resetSolveCacheForTests();
+  });
+
+  it("caches verified rankable finals and lookup hits the same identity", async () => {
+    const request = sampleRequest();
+    const dto = verifiedDto();
+    const entry = await rememberSolvedBar(request, dto);
+    expect(entry).not.toBeNull();
+    expect(entry!.bar).toEqual(dto.bar);
+    const key = await fingerprintSolveContext(request);
+    expect(lookupSolvedBar(key)?.score).toBe(12_000);
+  });
+
+  it("does not cache exploratory-only / stopped / failed results", async () => {
+    const request = sampleRequest();
+    for (const proof of [
+      "degraded-exploratory-fallback",
+      "stopped-early",
+      "failed",
+      "budget-not-exhausted",
+      "search-objective-exhaustive",
+    ] as const) {
+      const entry = await rememberSolvedBar(
+        request,
+        verifiedDto({ proofLabel: proof, proof: { label: proof }, bestFullScore: undefined }),
+      );
+      expect(entry, proof).toBeNull();
+    }
+    expect(lookupSolvedBar(await fingerprintSolveContext(request))).toBeNull();
+  });
+
+  it("does not cache non-finite scores", async () => {
+    const request = sampleRequest();
+    expect(
+      await rememberSolvedBar(
+        request,
+        verifiedDto({ score: Number.NaN }),
+      ),
+    ).toBeNull();
+    expect(
+      await rememberSolvedBar(
+        request,
+        verifiedDto({ score: Number.POSITIVE_INFINITY }),
+      ),
+    ).toBeNull();
+  });
+
+  it("does not cache bars outside exact request bounds", async () => {
+    const request = sampleRequest({ minBarSize: 6, maxBarSize: 8 });
+    // Too short for request min (even if >= product floor).
+    expect(
+      await rememberSolvedBar(
+        request,
+        verifiedDto({ bar: ["a", "b", "c", "d", "e"] }),
+      ),
+    ).toBeNull();
+    // Too long for request max.
+    expect(
+      await rememberSolvedBar(
+        request,
+        verifiedDto({
+          bar: ["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+        }),
+      ),
+    ).toBeNull();
+  });
+
+  it("changed context does not false-hit a stored entry", async () => {
+    const request = sampleRequest();
+    await rememberSolvedBar(request, verifiedDto());
+    const other = withSim(request, (s) => ({ ...s, startingAdrenaline: 0 }));
+    const otherKey = await fingerprintSolveContext(other);
+    expect(lookupSolvedBar(otherKey)).toBeNull();
+    // Original still hits.
+    expect(lookupSolvedBar(await fingerprintSolveContext(request))).not.toBeNull();
+  });
+
+  it("isVerifiedCacheableResult mirrors rememberSolvedBar gates", () => {
+    const request = sampleRequest();
+    expect(isVerifiedCacheableResult(request, verifiedDto())).toBe(true);
+    expect(
+      isVerifiedCacheableResult(
+        request,
+        verifiedDto({ proofLabel: "stopped-early", proof: { label: "stopped-early" } }),
+      ),
+    ).toBe(false);
+    expect(
+      isVerifiedCacheableResult(
+        request,
+        verifiedDto({ bar: ["a", "b"] }),
+      ),
+    ).toBe(false);
+  });
+});

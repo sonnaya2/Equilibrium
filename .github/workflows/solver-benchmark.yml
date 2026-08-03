@@ -29,3 +29,19 @@ jobs:
         run: npm ci
       - name: Solver quick benchmark
         run: npm run benchmark:solver:quick
+      - name: Upload solver benchmark JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: solver-benchmark-quick
+          path: reports/solver-benchmark-quick.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Summarize benchmark
+        if: always()
+        run: |
+          if [ -f reports/solver-benchmark-quick.json ]; then
+            node -e "const r=require('./reports/solver-benchmark-quick.json'); console.log('mode='+r.mode+' cases='+r.cases.length+' totalMs='+r.totalDurationMs); for (const c of r.cases) console.log(c.id, c.status, 'score='+c.winnerScore, 'evals='+c.evaluations);"
+          else
+            echo "no report file"
+          fi

@@ -24,7 +24,7 @@ export const MIN_RANKABLE_HORIZON_TICKS = 50;
 
 /**
  * Half-open tick windows for the canonical 500-tick / 300s horizon:
- * opening 0–60s, developed 60–180s, steady 180–300s.
+ * opening 0-60s, developed 60-180s, steady 180-300s.
  */
 export const OBJECTIVE_WINDOWS: readonly ObjectiveWindowSpec[] = [
   { id: "opening", startTick: 0, endTick: 100, seconds: 60 },
@@ -212,7 +212,7 @@ export function scoreFromDamageByTick(
   return ok;
 }
 
-/** Score a simulation summary — uses damageByTick only; rejects sim errors. */
+/** Score a simulation summary - uses damageByTick only; rejects sim errors. */
 export function scoreSummary(
   summary: ScoreableSummary,
   profileId: ObjectiveProfileId,

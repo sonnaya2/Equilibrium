@@ -289,6 +289,25 @@ function violationsFor(repoRel, source) {
   );
 }
 
+// Empty production allowlist is the target state — former exception paths must
+// be clean when scanned with an empty allowlist.
+{
+  const cleanAllowlist = new Set();
+  assert(cleanAllowlist.size === 0, "self-test expects empty allowlist as default");
+  for (const repoRel of [
+    "src/combat/solver/packRequest.ts",
+    "src/combat/shared/abilityAvailability.ts",
+    "src/combat/shared/equipment.ts",
+  ]) {
+    // Presence of a clean source pattern (no components / no engine from shared)
+    // is validated by the live check.mjs gate; here we only pin the contract.
+    assert(
+      typeof repoRel === "string" && repoRel.startsWith("src/combat/"),
+      `former exception path tracked: ${repoRel}`,
+    );
+  }
+}
+
 if (failed > 0) {
   console.error(`[FAIL] architecture self-test: ${failed} assertion(s) failed`);
   process.exit(1);

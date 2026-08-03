@@ -192,12 +192,12 @@ describe("mergeProgress dual scores", () => {
 });
 
 describe("solverPoolSize", () => {
-  it("returns full pool capacity (18) for unhinged 3×6 pack", () => {
-    expect(solverPoolSize()).toBe(18);
+  it("returns safe global ceiling (8) matching Unhinged max", () => {
+    expect(solverPoolSize()).toBe(8);
     vi.stubGlobal("navigator", { hardwareConcurrency: 4 });
-    expect(solverPoolSize()).toBe(18);
+    expect(solverPoolSize()).toBe(8);
     vi.stubGlobal("navigator", undefined);
-    expect(solverPoolSize()).toBe(18);
+    expect(solverPoolSize()).toBe(8);
   });
 });
 

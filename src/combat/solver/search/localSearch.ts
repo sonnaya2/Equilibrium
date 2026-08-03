@@ -78,7 +78,7 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
 
   if (n < max) {
     const remain = remainingCandidates(bar, state.pool, state.byId);
-    // Cap inserts — full remain×positions explodes and freezes the UI.
+    // Cap inserts - full remain×positions explodes and freezes the UI.
     const insertPool = remain.slice(0, 8);
     for (const a of insertPool) {
       for (let i = 0; i <= n; i++) out.push(insertAt(bar, i, a.id));

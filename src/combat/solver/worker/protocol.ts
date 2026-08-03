@@ -6,13 +6,13 @@ export type { SolverResultDTO, SolverProofDTO };
 export type SolverPhase = "seed" | "explore" | "exploit" | "finalize" | "paused" | "idle";
 
 /**
- * Incremental search status. Keep fields cloneable — no Maps/Sets/functions.
+ * Incremental search status. Keep fields cloneable - no Maps/Sets/functions.
  * topBarPreview is ability ids only so the UI can render without ability specs.
  */
 export interface SolverProgress {
   evaluations: number;
   uniqueCandidates: number;
-  /** Exploratory (search) best DPM — same units for the whole run. */
+  /** Exploratory (search) best DPM - same units for the whole run. */
   bestScore: number;
   /** Explicit dual fields (honest). Prefer these over parsing proof.notes. */
   bestExploratoryScore?: number;
@@ -48,7 +48,7 @@ export interface SolverProgress {
   agents?: readonly SolverAgentSnapshot[];
   /**
    * Full-horizon evals served from the process-local eval memo (skip sim).
-   * High during re-Optimize on the same loadout — scoring looks instant.
+   * High during re-Optimize on the same loadout - scoring looks instant.
    */
   fullMemoHits?: number;
   proof?: SolverProofDTO;
@@ -93,7 +93,7 @@ export interface ResumeSolverMessage {
 export type HostToWorkerMessage =
   StartSolverMessage | CancelSolverMessage | PauseSolverMessage | ResumeSolverMessage;
 
-/** Immediate ACK before expensive imports/solve — clears host cold-start watchdog. */
+/** Immediate ACK before expensive imports/solve - clears host cold-start watchdog. */
 export interface StartedSolverMessage {
   type: "started";
   requestId: number;

@@ -13,10 +13,15 @@ import {
 } from "./protocol";
 import type { SolveProgressHandler } from "./solveTypes";
 import { createSolverWorker, getFirstAckMs } from "./workerCreate";
-import { agentBarSizeBounds } from "../solutionStore";
-import { agentSearchRecipe, TIER_BUDGETS } from "../solve";
+import { TIER_BUDGETS } from "../solve";
+import {
+  planWorkers,
+  SAFE_GLOBAL_AGENT_CEILING,
+  type WorkerAssignment,
+} from "../workerPlan";
+import { compareTopEntry, pickBestSolverResult } from "../rankResults";
 
-const MAX_POOL = 18;
+const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
 
 export function solverPoolSize(): number {
   return MAX_POOL;
@@ -251,24 +256,12 @@ export function mergeProgress(
   };
 }
 
-function isNearScoreTie(a: number, b: number): boolean {
-  return (
-    Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= Math.max(1, Math.abs(b) * 0.02)
-  );
-}
-
-function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
+/** Score-first merge — higher score always beats longer bar (see rankResults). */
+export function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
   if (results.length === 0) {
     throw new Error("revolution solver pool: no results");
   }
-  let best = results[0]!;
-  for (const r of results) {
-    if (r.score > best.score) {
-      best = r;
-    } else if (isNearScoreTie(r.score, best.score) && r.bar.length > best.bar.length) {
-      best = r;
-    }
-  }
+  const best = pickBestSolverResult(results);
   const seen = new Set<string>();
   const top: { bar: readonly string[]; score: number; fingerprint?: string }[] = [];
   const push = (bar: readonly string[], score: number, fingerprint?: string) => {
@@ -283,8 +276,8 @@ function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
     push(r.bar, r.score, r.bar.join("\0"));
     for (const t of r.top ?? []) push(t.bar, t.score, t.fingerprint);
   }
-  // Score desc, then bar length desc.
-  top.sort((a, b) => b.score - a.score || b.bar.length - a.bar.length);
+  // Score desc, deterministic fingerprint for ties — never length-over-score.
+  top.sort(compareTopEntry);
 
   let evaluations = 0;
   let unique = 0;
@@ -405,16 +398,22 @@ export class SolverAgentPool {
   ): Promise<SolverResultDTO> {
     this.cancel();
 
-    // Requested agents (6 / 12 / 18), not residual slots.length.
-    const want = Math.max(
-      1,
-      Math.min(MAX_POOL, Math.floor(options?.agents ?? solverPoolSize()) || 1),
-    );
+    // Planner: tier ceiling + hardware + request size window (not residual slots).
+    const plan = planWorkers({
+      minBarSize: request.minBarSize,
+      maxBarSize: request.maxBarSize,
+      tier: request.tier,
+      baseSeed: request.seed ?? 1,
+      agents: options?.agents,
+      maxAgents: MAX_POOL,
+    });
+    const want = plan.agentCount;
     const n = this.ensure(want);
     if (n === 0) {
       throw new Error("revolution solver pool: no workers available");
     }
     const agentCount = Math.min(want, n);
+    const assignments: readonly WorkerAssignment[] = plan.assignments.slice(0, agentCount);
 
     const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
     if (cancelled()) {
@@ -425,13 +424,10 @@ export class SolverAgentPool {
     const progressParts: (SolverProgress | undefined)[] = Array.from({
       length: agentCount,
     });
-    const agentMeta = Array.from({ length: agentCount }, (_, index) => {
-      const band = agentBarSizeBounds(0, 0, index, agentCount);
-      return {
-        recipe: agentSearchRecipe(index, request.tier),
-        barLength: band.maxBarSize,
-      };
-    });
+    const agentMeta = assignments.map((a) => ({
+      recipe: a.recipe,
+      barLength: a.targetLength,
+    }));
     const emit = () => {
       if (cancelled()) return;
       onProgress?.(mergeProgress(progressParts, agentCount, baseBudget, agentMeta));
@@ -456,13 +452,12 @@ export class SolverAgentPool {
       const requestId = ++this.seq;
       slot.requestId = requestId;
 
-      const band = agentBarSizeBounds(0, 0, index, agentCount);
-      const recipe = agentSearchRecipe(index, request.tier);
+      const assignment = assignments[index]!;
       const patch = {
-        seed: (request.seed ?? 1) + index * 9973,
-        minBarSize: band.minBarSize,
-        maxBarSize: band.maxBarSize,
-        agentRecipe: recipe,
+        seed: assignment.seed,
+        minBarSize: assignment.minBarSize,
+        maxBarSize: assignment.maxBarSize,
+        agentRecipe: assignment.recipe,
       } as const;
       let payload: SerializableSolverRequest;
       try {

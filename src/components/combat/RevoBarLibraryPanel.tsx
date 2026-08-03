@@ -93,8 +93,12 @@ export function RevoBarLibraryPanel({
                           {entry.name ?? `${entry.bar.length}-slot`}
                         </span>
                         {entry.score != null ? (
-                          <span className="revo-bar-library__score font-mono">
-                            {formatNumber(entry.score)}
+                          <span
+                            className="revo-bar-library__score font-mono"
+                            data-verified={entry.verified ? "1" : "0"}
+                            title={entry.verified ? "Verified final score" : "Unverified / exploratory"}
+                          >
+                            {entry.verified ? formatNumber(entry.score) : `~${formatNumber(entry.score)}`}
                           </span>
                         ) : null}
                       </span>
@@ -148,8 +152,12 @@ export function RevoBarLibraryPanel({
                           {entry.name ?? `${entry.bar.length}-slot`}
                         </span>
                         {entry.score != null ? (
-                          <span className="revo-bar-library__score font-mono">
-                            {formatNumber(entry.score)}
+                          <span
+                            className="revo-bar-library__score font-mono"
+                            data-verified={entry.verified ? "1" : "0"}
+                            title={entry.verified ? "Verified final score" : "Unverified / exploratory"}
+                          >
+                            {entry.verified ? formatNumber(entry.score) : `~${formatNumber(entry.score)}`}
                           </span>
                         ) : null}
                       </span>

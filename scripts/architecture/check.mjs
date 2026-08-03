@@ -24,16 +24,10 @@ const SCAN_ROOTS = [
 const VERBOSE = process.argv.includes("--verbose");
 
 /**
- * Pre-existing boundary debt; do not grow this list (new crossings must fail the gate).
+ * Legacy allowlist — must stay empty. New boundary crossings fail the gate.
  * Paths are repo-relative posix.
  */
-const KNOWN_LEGACY_EXCEPTIONS = new Set([
-  // Solver packs UI loadout / CalcStats until those live in shared domain.
-  "src/combat/solver/packRequest.ts",
-  // Shared reuses engine cast-requirement helpers (equipment passives / ability gates).
-  "src/combat/shared/abilityAvailability.ts",
-  "src/combat/shared/equipment.ts",
-]);
+const KNOWN_LEGACY_EXCEPTIONS = new Set([]);
 
 async function walk(dir, acc = []) {
   let entries;

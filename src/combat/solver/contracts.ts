@@ -14,10 +14,10 @@ export type Bar = readonly string[];
 export type SearchTier = "thorough" | "extreme" | "unhinged";
 
 /**
- * Honest proof labels — only claim what was actually proven.
+ * Honest proof labels - only claim what was actually proven.
  * full-objective-global-optimum requires every feasible bar under the final
  * objective+horizon; exhaustive short-horizon search alone never qualifies.
- *
+
  * Legacy labels remain in the union for UI/DTO type compatibility but the
  * solver never emits them (see finalize chooseProof).
  */
@@ -31,11 +31,11 @@ export type ProofLabel =
   | "budget-not-exhausted"
   | "stopped-early"
   | "heuristic-complete"
-  /** @deprecated never emitted — use heuristic-best-found */
+  /** @deprecated never emitted - use heuristic-best-found */
   | "best-found"
-  /** @deprecated never emitted — use full-objective-global-optimum only when proven */
+  /** @deprecated never emitted - use full-objective-global-optimum only when proven */
   | "globally-optimal"
-  /** @deprecated never emitted — use budget-not-exhausted / stopped-early */
+  /** @deprecated never emitted - use budget-not-exhausted / stopped-early */
   | "converged";
 
 export type ObjectiveProfileId = "balanced" | "burst" | "sustained" | "custom";
@@ -79,7 +79,7 @@ export interface ObjectiveWindowSpec {
   seconds: number;
 }
 
-/** Minimal summary surface the objective reads — damageByTick only for numbers. */
+/** Minimal summary surface the objective reads - damageByTick only for numbers. */
 export interface ScoreableSummary {
   ok: boolean;
   error?: string;
@@ -118,7 +118,7 @@ export type ObjectiveScore = ObjectiveScoreOk | ObjectiveScoreFail;
 export type ScoreEvalMode = "search" | "full";
 
 /**
- * Tagged scored bar — search and full scores are never interchangeable units.
+ * Tagged scored bar - search and full scores are never interchangeable units.
  * exploratory scores must not rank against robust scores.
  */
 export interface ScoredBar {
@@ -161,12 +161,12 @@ export interface SearchStats {
   bestExploratoryScore?: number;
   /** Best full robust score observed. */
   bestFullScore?: number;
-  /** @deprecated Prefer bestFullScore / bestExploratoryScore — mixed scale. */
+  /** @deprecated Prefer bestFullScore / bestExploratoryScore - mixed scale. */
   bestScore?: number;
 }
 
 /**
- * Solver request skeleton — evaluation context is opaque to search; fingerprint
+ * Solver request skeleton - evaluation context is opaque to search; fingerprint
  * it into `contextKey` so the eval cache cannot cross loadouts/rulesets.
  */
 export interface SolverRequest {
@@ -184,7 +184,7 @@ export interface SolverRequest {
   maxEvaluations?: number;
   /**
    * Fixed ability ids by slot index; `null`/`undefined` = free slot.
-   * Length need not equal bar size — extra pins are ignored, missing are free.
+   * Length need not equal bar size - extra pins are ignored, missing are free.
    */
   pinned?: ReadonlyArray<string | null | undefined>;
 }
@@ -246,7 +246,7 @@ export interface PoolAbility {
 
 export type EvaluateFn = (input: { bar: readonly string[]; mode?: EvalMode }) => EvalResult;
 
-/** Solve outcome status — success never pretends after total failure. */
+/** Solve outcome status - success never pretends after total failure. */
 export type SolveStatus = "ok" | "degraded" | "failed";
 
 /** Solve orchestrator output (search layer). */
@@ -262,7 +262,7 @@ export interface SolveResult {
   fullEvaluations: number;
   totalEvaluations: number;
   searchBudget: number;
-  /** @deprecated Use totalEvaluations — includes forced full rescores. */
+  /** @deprecated Use totalEvaluations - includes forced full rescores. */
   evaluationsUsed: number;
   evaluationBudget: number;
   exhaustiveCompleted: boolean;

@@ -69,26 +69,29 @@ function sampleRequest(overrides: { equipmentIds?: string[]; style?: "melee" | "
 }
 
 describe("solutionStore", () => {
-  it("clamps bar sizes to the product floor and 10-slot hard cap", () => {
-    expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 5, maxBarSize: 10 });
+  it("clamps bar sizes to the product floor (4) and 10-slot hard cap", () => {
+    expect(MIN_SOLVER_BAR_SIZE).toBe(4);
+    expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 4, maxBarSize: 10 });
     expect(clampSolverBarSizes(8, 7)).toEqual({ minBarSize: 8, maxBarSize: 8 });
     expect(clampSolverBarSizes(undefined, undefined).minBarSize).toBe(MIN_SOLVER_BAR_SIZE);
     expect(clampSolverBarSizes(5, 99)).toEqual({ minBarSize: 5, maxBarSize: 10 });
+    expect(clampSolverBarSizes(4, 6)).toEqual({ minBarSize: 4, maxBarSize: 6 });
   });
 
-  it("agent i → ladder band 5..5+(i%6); ceiling per slot, floor always MIN", () => {
-    expect(agentBarLength(0)).toBe(5);
-    expect(agentBarLength(1)).toBe(6);
-    expect(agentBarLength(5)).toBe(10);
-    expect(agentBarLength(6)).toBe(5); // next algorithm block
-    expect(agentBarLength(11)).toBe(10);
-    expect(agentBarLength(12)).toBe(5);
-    // agent 0: 5–5, agent 1: 5–6, … agent 5: 5–10
-    expect(agentBarSizeBounds(0, 0, 0, 6)).toEqual({ minBarSize: 5, maxBarSize: 5 });
-    expect(agentBarSizeBounds(0, 0, 1, 6)).toEqual({ minBarSize: 5, maxBarSize: 6 });
-    expect(agentBarSizeBounds(0, 0, 4, 6)).toEqual({ minBarSize: 5, maxBarSize: 9 });
-    expect(agentBarSizeBounds(0, 0, 5, 6)).toEqual({ minBarSize: 5, maxBarSize: 10 });
-    expect(agentBarSizeBounds(0, 0, 7, 12)).toEqual({ minBarSize: 5, maxBarSize: 6 });
+  it("agent bands honor request min/max (cycle target lengths inside window)", () => {
+    expect(agentBarLength(0)).toBe(4);
+    expect(agentBarLength(1)).toBe(5);
+    expect(agentBarLength(6)).toBe(10);
+    expect(agentBarLength(7)).toBe(4); // wraps full product window
+    // Fixed 4..4
+    expect(agentBarSizeBounds(4, 4, 0, 4)).toEqual({ minBarSize: 4, maxBarSize: 4 });
+    expect(agentBarSizeBounds(4, 4, 3, 4)).toEqual({ minBarSize: 4, maxBarSize: 4 });
+    // Ranged 5..8
+    expect(agentBarSizeBounds(5, 8, 0, 4)).toEqual({ minBarSize: 5, maxBarSize: 5 });
+    expect(agentBarSizeBounds(5, 8, 1, 4)).toEqual({ minBarSize: 6, maxBarSize: 6 });
+    expect(agentBarSizeBounds(5, 8, 3, 4)).toEqual({ minBarSize: 8, maxBarSize: 8 });
+    // Invalid zeros clamp to product defaults then cycle
+    expect(agentBarSizeBounds(0, 0, 0, 6).minBarSize).toBeGreaterThanOrEqual(MIN_SOLVER_BAR_SIZE);
   });
 
   it("fingerprints loadout changes and is stable for the same request", async () => {
@@ -101,7 +104,7 @@ describe("solutionStore", () => {
     expect(await fingerprintSolveContext(a)).toMatch(/^[0-9a-f]{64}$/);
   });
 
-  it("ignores powerburst remaining ticks so cache hits while the buff is merely counting down", async () => {
+  it("includes exact powerburst remaining ticks so different durations do not collide", async () => {
     const a = sampleRequest();
     if (!isSerializableSimBase(a.loadout)) throw new Error("expected sim base");
     const b = structuredClone(a);
@@ -114,7 +117,8 @@ describe("solutionStore", () => {
       ...b.loadout,
       league: { ...b.loadout.league, powerburstUntilTick: 3 },
     };
-    expect(await fingerprintSolveContext(a)).toBe(await fingerprintSolveContext(b));
+    // Exact remaining ticks are part of identity (not collapsed to a boolean).
+    expect(await fingerprintSolveContext(a)).not.toBe(await fingerprintSolveContext(b));
     const off = structuredClone(a);
     if (!isSerializableSimBase(off.loadout)) throw new Error("expected sim base");
     off.loadout = {
@@ -131,13 +135,13 @@ describe("solutionStore", () => {
     expect(await sha256Hex("other")).not.toBe(h);
   });
 
-  it("canonical payload is much smaller than a raw request dump for storage keys", () => {
+  it("canonical payload is compact and includes exact powerburst remaining ticks", () => {
     const req = sampleRequest();
     const payload = solveContextPayload(req);
     // Payload is stable JSON; the key is only its hash (64 chars), not this string.
-    expect(payload.length).toBeLessThan(4_000);
-    expect(payload.includes("powerburstUntilTick")).toBe(false);
-    expect(payload.includes("powerburstActive")).toBe(true);
+    expect(payload.length).toBeLessThan(8_000);
+    expect(payload.includes("powerburstUntilTick")).toBe(true);
+    expect(payload.includes("powerburstActive")).toBe(false);
   });
 
   it("normalizes corrupt cache payloads", () => {

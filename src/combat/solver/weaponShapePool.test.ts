@@ -57,7 +57,7 @@ describe("solver pool weapon-shape gates (melee catalogue)", () => {
     const dualPool = buildCandidatePool(MELEE_ABILITIES, "melee", {
       weaponConfiguration: "dualwield",
     });
-    // Hurricane is not even in the dual pool — bar validation reports unknown-id
+    // Hurricane is not even in the dual pool - bar validation reports unknown-id
     // when someone forces it; also not eligible if we build a loose pool.
     expect(dualPool.byId.has("hurricane")).toBe(false);
     expect(isBarEligible(["assault", "flurry"], dualPool)).toBe(true);

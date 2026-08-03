@@ -5,14 +5,138 @@
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { ticksToSeconds } from "@/combat/core/ticks";
-import type {
-  ObjectiveProfileId,
-  SolverAgentRecipe,
-  SolverProgress,
-  SolverResultDTO,
-  SolverSearchTier,
+import {
+  ABSOLUTE_MAX_BAR_SIZE,
+  clampSolverBarSizes,
+  MIN_SOLVER_BAR_SIZE,
+  type ObjectiveProfileId,
+  type SolverAgentRecipe,
+  type SolverProgress,
+  type SolverSearchTier,
 } from "@/combat/solver";
-import type { ProofLabel } from "@/combat/solver/contracts";
+
+/** Non-final best-so-far after cancel/error — never a SolverResultDTO. */
+export type SolverStoppedPreview = {
+  bar: readonly string[];
+  evaluations: number;
+  uniqueCandidates: number;
+  /** Exploratory/search score when known — not a verified final score. */
+  bestExploratoryScore?: number;
+  /** Full-horizon score if finalize published one mid-run — still non-final. */
+  bestFullScore?: number;
+  phase: SolverProgress["phase"];
+  reason: "stopped-early" | "error";
+  profileId: ObjectiveProfileId;
+  tier: SolverSearchTier;
+};
+
+/** Compact bar-length presets for the solver UI (raw; packer clamps to product floor). */
+export type BarSizePresetId = "fixed4" | "range4_6" | "fixed6" | "range4_10";
+
+export type BarSizeBounds = { minBarSize: number; maxBarSize: number };
+
+export const BAR_SIZE_PRESETS: Record<
+  BarSizePresetId,
+  BarSizeBounds & { label: string }
+> = {
+  fixed4: { minBarSize: 4, maxBarSize: 4, label: "4" },
+  range4_6: { minBarSize: 4, maxBarSize: 6, label: "4–6" },
+  fixed6: { minBarSize: 6, maxBarSize: 6, label: "6" },
+  range4_10: { minBarSize: 4, maxBarSize: 10, label: "4–10" },
+};
+
+/** Default product window after clamp (MIN..ABSOLUTE). */
+export const DEFAULT_BAR_SIZE_PRESET: BarSizePresetId = "range4_10";
+
+/** Raw bounds from a preset — may be below MIN_SOLVER_BAR_SIZE until clamped. */
+export function barBoundsFromPreset(id: BarSizePresetId): BarSizeBounds {
+  const p = BAR_SIZE_PRESETS[id] ?? BAR_SIZE_PRESETS[DEFAULT_BAR_SIZE_PRESET];
+  return { minBarSize: p.minBarSize, maxBarSize: p.maxBarSize };
+}
+
+/** Clamped product bounds for display / docs (floor may raise 4 → MIN). */
+export function clampedBarBoundsFromPreset(id: BarSizePresetId): BarSizeBounds {
+  const raw = barBoundsFromPreset(id);
+  return clampSolverBarSizes(raw.minBarSize, raw.maxBarSize);
+}
+
+/**
+ * Live progress facts only — no invented seed/duration/windowDpms/proof.
+ * Returns null when there is no bar preview to show.
+ */
+export function stoppedPreviewFromProgress(
+  partial: SolverProgress,
+  profileId: ObjectiveProfileId,
+  tier: SolverSearchTier,
+  reason: SolverStoppedPreview["reason"],
+): SolverStoppedPreview | null {
+  const bar = (partial.topBarPreview ?? []).filter(
+    (id) => typeof id === "string" && id.length > 0,
+  );
+  if (bar.length === 0) return null;
+
+  const exp = partial.bestExploratoryScore ?? partial.bestScore;
+  const full = partial.bestFullScore;
+  return {
+    bar: [...bar],
+    evaluations: partial.evaluations,
+    uniqueCandidates: partial.uniqueCandidates,
+    phase: partial.phase,
+    reason,
+    profileId,
+    tier,
+    ...(Number.isFinite(exp) ? { bestExploratoryScore: exp } : {}),
+    ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
+  };
+}
+
+/** Session still owns progress/completion when gen matches and material inputs match. */
+export function isLiveSolverSession(opts: {
+  sessionGen: number;
+  currentGen: number;
+  sessionIdentity: string;
+  currentIdentity: string;
+  cancelled?: boolean;
+}): boolean {
+  if (opts.sessionGen !== opts.currentGen) return false;
+  if (opts.cancelled) return false;
+  return opts.sessionIdentity === opts.currentIdentity;
+}
+
+/**
+ * What the host may do when a solve promise settles.
+ * cancel → no final / no verified writes; stale identity → ignore; else apply final DTO.
+ */
+export type SolveSettlementAction = "apply-final" | "stopped-preview" | "ignore";
+
+export function settlementActionForSolve(opts: {
+  sessionGen: number;
+  currentGen: number;
+  sessionIdentity: string;
+  currentIdentity: string;
+  cancelled: boolean;
+  hasFinalDto: boolean;
+}): SolveSettlementAction {
+  if (opts.sessionGen !== opts.currentGen) return "ignore";
+  if (opts.cancelled) return "stopped-preview";
+  if (opts.sessionIdentity !== opts.currentIdentity) return "ignore";
+  if (opts.hasFinalDto) return "apply-final";
+  return "ignore";
+}
+
+/** Verified cache/recent writes only for completed finals. */
+export function mayWriteVerifiedSolveArtifacts(action: SolveSettlementAction): boolean {
+  return action === "apply-final";
+}
+
+/** Document product floor used when UI requests 4-slot bars. */
+export function productBarSizeFloor(): number {
+  return MIN_SOLVER_BAR_SIZE;
+}
+
+export function productBarSizeCeiling(): number {
+  return ABSOLUTE_MAX_BAR_SIZE;
+}
 
 export function solverPhaseLabel(
   phase: SolverProgress["phase"] | undefined,
@@ -73,31 +197,6 @@ export function workerRecipeGroupLabel(recipe: SolverAgentRecipe): string {
   if (recipe === "evolutionary") return "Evo";
   if (recipe === "anneal_local") return "Anneal";
   return "Ensemble";
-}
-
-/** Partial/stop/error DTO from live progress when a full winner is unavailable. */
-export function partialDtoFromProgress(
-  partial: SolverProgress,
-  profileId: ObjectiveProfileId,
-  tier: SolverSearchTier,
-  proofLabel: ProofLabel,
-): SolverResultDTO {
-  const exp = partial.bestExploratoryScore ?? partial.bestScore;
-  const full = partial.bestFullScore;
-  return {
-    bar: [...(partial.topBarPreview ?? [])],
-    score: Number.isFinite(full) ? full! : exp,
-    windowDpms: 0,
-    evaluations: partial.evaluations,
-    uniqueCandidates: partial.uniqueCandidates,
-    seed: 1,
-    profileId,
-    tier,
-    durationTicks: 500,
-    proofLabel,
-    ...(Number.isFinite(exp) ? { bestExploratoryScore: exp } : {}),
-    ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
-  };
 }
 
 export function formatNumber(value: number): string {

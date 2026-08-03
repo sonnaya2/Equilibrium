@@ -11,7 +11,7 @@ export interface SolverCheckpoint {
   /** Stable key chosen by the host (e.g. profileId + seed). */
   key: string;
   request: SerializableSolverRequest;
-  /** Opaque search state — only the solver module interprets this. */
+  /** Opaque search state - only the solver module interprets this. */
   state: unknown;
   progress?: SolverProgress;
 }

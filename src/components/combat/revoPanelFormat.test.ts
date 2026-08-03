@@ -1,15 +1,27 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { packSolverRequest } from "@/combat/solver";
+import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
+import { loadoutStats } from "@/components/combat/loadoutStats";
+import { emptyBuild } from "@/league";
 import {
+  barBoundsFromPreset,
+  clampedBarBoundsFromPreset,
   formatNumber,
   formatTime,
-  partialDtoFromProgress,
+  isLiveSolverSession,
+  mayWriteVerifiedSolveArtifacts,
   previewCategory,
+  productBarSizeFloor,
   progressFillFromState,
+  settlementActionForSolve,
   solverPhaseLabel,
+  stoppedPreviewFromProgress,
   trackLiveClassName,
   workerRecipeGroupLabel,
 } from "./revoPanelFormat";
 import { pickBarForLoadout, revoManagedModelled, SUPPORTED_BARS } from "./revoBarResolve";
+import { solverSnapshotFromUi } from "./solverSnapshot";
+import { packSolverRequestFromUi } from "./useRevolutionSolver";
 
 describe("revoPanelFormat", () => {
   it("labels solver phases for status chrome", () => {
@@ -24,8 +36,8 @@ describe("revoPanelFormat", () => {
     expect(previewCategory(undefined)).toBeUndefined();
   });
 
-  it("builds a partial DTO from live progress", () => {
-    const dto = partialDtoFromProgress(
+  it("builds a stopped preview from live progress without invented fields", () => {
+    const preview = stoppedPreviewFromProgress(
       {
         phase: "explore",
         evaluations: 12,
@@ -41,10 +53,112 @@ describe("revoPanelFormat", () => {
       "thorough",
       "stopped-early",
     );
-    expect(dto.bar).toEqual(["a", "b"]);
-    expect(dto.score).toBe(200);
-    expect(dto.bestExploratoryScore).toBe(100);
-    expect(dto.proofLabel).toBe("stopped-early");
+    expect(preview).not.toBeNull();
+    expect(preview!.bar).toEqual(["a", "b"]);
+    expect(preview!.bestExploratoryScore).toBe(100);
+    expect(preview!.bestFullScore).toBe(200);
+    expect(preview!.reason).toBe("stopped-early");
+    expect(preview!.evaluations).toBe(12);
+    // Must not look like a SolverResultDTO (no invented seed/duration/window/proof).
+    expect(preview).not.toHaveProperty("seed");
+    expect(preview).not.toHaveProperty("durationTicks");
+    expect(preview).not.toHaveProperty("windowDpms");
+    expect(preview).not.toHaveProperty("proofLabel");
+    expect(preview).not.toHaveProperty("score");
+  });
+
+  it("returns null stopped preview when no bar is known", () => {
+    expect(
+      stoppedPreviewFromProgress(
+        {
+          phase: "seed",
+          evaluations: 0,
+          uniqueCandidates: 0,
+          bestScore: 0,
+          windowDpms: 0,
+          topBarPreview: [],
+          noImprovementCount: 0,
+        },
+        "balanced",
+        "thorough",
+        "stopped-early",
+      ),
+    ).toBeNull();
+  });
+
+  it("rejects stale sessions and cancelled finals", () => {
+    expect(
+      isLiveSolverSession({
+        sessionGen: 1,
+        currentGen: 1,
+        sessionIdentity: "a",
+        currentIdentity: "a",
+      }),
+    ).toBe(true);
+    expect(
+      isLiveSolverSession({
+        sessionGen: 1,
+        currentGen: 2,
+        sessionIdentity: "a",
+        currentIdentity: "a",
+      }),
+    ).toBe(false);
+    expect(
+      isLiveSolverSession({
+        sessionGen: 1,
+        currentGen: 1,
+        sessionIdentity: "a",
+        currentIdentity: "b",
+      }),
+    ).toBe(false);
+    expect(
+      isLiveSolverSession({
+        sessionGen: 1,
+        currentGen: 1,
+        sessionIdentity: "a",
+        currentIdentity: "a",
+        cancelled: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("cancellation creates no final result and no verified cache writes", () => {
+    const action = settlementActionForSolve({
+      sessionGen: 3,
+      currentGen: 3,
+      sessionIdentity: "ctx",
+      currentIdentity: "ctx",
+      cancelled: true,
+      hasFinalDto: true,
+    });
+    expect(action).toBe("stopped-preview");
+    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(false);
+  });
+
+  it("stale completion after equipment/perk/target/bounds change is ignored", () => {
+    const action = settlementActionForSolve({
+      sessionGen: 1,
+      currentGen: 1,
+      sessionIdentity: "equip-v1",
+      currentIdentity: "equip-v2",
+      cancelled: false,
+      hasFinalDto: true,
+    });
+    expect(action).toBe("ignore");
+    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(false);
+  });
+
+  it("completed live session may publish a final DTO and verified artifacts", () => {
+    const action = settlementActionForSolve({
+      sessionGen: 1,
+      currentGen: 1,
+      sessionIdentity: "ok",
+      currentIdentity: "ok",
+      cancelled: false,
+      hasFinalDto: true,
+    });
+    expect(action).toBe("apply-final");
+    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(true);
   });
 
   it("formats numbers and tick times", () => {
@@ -72,6 +186,64 @@ describe("revoPanelFormat", () => {
     ).toBe(0.5);
     expect(trackLiveClassName(true, true, null)).toContain("stopping");
     expect(workerRecipeGroupLabel("evolutionary")).toBe("Evo");
+  });
+});
+
+describe("bar size presets → packer", () => {
+  it("fixed four-slot UI request reaches packSolverRequest", () => {
+    const spy = vi.fn(packSolverRequest);
+    const loadout = { ...DEFAULT_LOADOUT };
+    const stats = loadoutStats(loadout);
+    const build = emptyBuild();
+    const raw = barBoundsFromPreset("fixed4");
+    expect(raw).toEqual({ minBarSize: 4, maxBarSize: 4 });
+
+    const req = spy({
+      snapshot: solverSnapshotFromUi(stats, loadout),
+      style: loadout.style,
+      build,
+      tier: "thorough",
+      profileId: "balanced",
+      minBarSize: raw.minBarSize,
+      maxBarSize: raw.maxBarSize,
+      now: 1_700_000_000_000,
+    });
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({ minBarSize: 4, maxBarSize: 4 }),
+    );
+    expect(req.minBarSize).toBe(4);
+    expect(req.maxBarSize).toBe(4);
+    expect(clampedBarBoundsFromPreset("fixed4").minBarSize).toBe(4);
+    expect(productBarSizeFloor()).toBe(4);
+  });
+
+  it("packSolverRequestFromUi passes fixed4 bounds into the packer", () => {
+    const loadout = { ...DEFAULT_LOADOUT };
+    const stats = loadoutStats(loadout);
+    const req = packSolverRequestFromUi({
+      stats,
+      loadout,
+      build: emptyBuild(),
+      modelled: [],
+      solverTier: "thorough",
+      solverProfile: "balanced",
+      limitToRegions: false,
+      barSizePreset: "fixed4",
+      now: 1_700_000_000_000,
+    });
+    expect(req.minBarSize).toBe(4);
+    expect(req.maxBarSize).toBe(4);
+    expect(barBoundsFromPreset("fixed4").minBarSize).toBe(4);
+  });
+
+  it("range and fixed-6 presets clamp into product window", () => {
+    expect(barBoundsFromPreset("range4_6")).toEqual({ minBarSize: 4, maxBarSize: 6 });
+    expect(barBoundsFromPreset("fixed6")).toEqual({ minBarSize: 6, maxBarSize: 6 });
+    expect(barBoundsFromPreset("range4_10")).toEqual({ minBarSize: 4, maxBarSize: 10 });
+    const floor = productBarSizeFloor();
+    expect(clampedBarBoundsFromPreset("range4_6").minBarSize).toBe(floor);
+    expect(clampedBarBoundsFromPreset("range4_6").maxBarSize).toBe(6);
+    expect(clampedBarBoundsFromPreset("fixed6")).toEqual({ minBarSize: 6, maxBarSize: 6 });
   });
 });
 

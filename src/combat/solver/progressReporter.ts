@@ -1,7 +1,5 @@
 /**
- * Progress emission for solveFromRequest — phase mapping, ratios, throttling.
- * Behavior-preserving extraction.
- */
+ * Progress emission for solveFromRequest - phase mapping, ratios, throttling. */
 import type { SolvePhaseName } from "./solve";
 import type { SolverPhase, SolverProgress } from "./worker/protocol";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
@@ -67,7 +65,7 @@ export function emitProgress(
 ): void {
   if (!options?.onProgress) return;
   if (!force && state.evaluations % 2 !== 0) return;
-  // bestScore is ALWAYS exploratory DPM — never unit-switch to full robust mid-run.
+  // bestScore is ALWAYS exploratory DPM - never unit-switch to full robust mid-run.
   const exploratory = Number.isFinite(state.bestExploratoryScore)
     ? state.bestExploratoryScore
     : Number.NEGATIVE_INFINITY;
@@ -84,7 +82,7 @@ export function emitProgress(
     searchEvaluations: state.searchEvaluations,
     fullEvaluations: state.fullEvaluations,
     evaluationMode: state.currentPhase === "finalize" ? "finalize" : "search",
-    // Never stuff robust score into windowDpms — real windows live on the result DTO.
+    // Never stuff robust score into windowDpms - real windows live on the result DTO.
     windowDpms: 0,
     topBarPreview: state.topPreview,
     ...(state.activePreview.length ? { activeBarPreview: state.activePreview } : {}),

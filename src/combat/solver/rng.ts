@@ -1,4 +1,4 @@
-/** Mulberry32 seeded PRNG — no Math.random. */
+/** Mulberry32 seeded PRNG - no Math.random. */
 
 export interface Rng {
   /** Uniform in [0, 1). */
@@ -6,7 +6,7 @@ export interface Rng {
   /** Uniform integer in [0, maxExclusive). */
   int(maxExclusive: number): number;
   pick<T>(items: readonly T[]): T;
-  /** Fisher–Yates copy; does not mutate input. */
+  /** Fisher-Yates copy; does not mutate input. */
   shuffle<T>(items: readonly T[]): T[];
   /** Independent stream seeded from this generator's next output. */
   fork(): Rng;

@@ -1226,25 +1226,40 @@ describe("loadoutStats", () => {
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
     });
 
-    it("buff flag alone still activates when selectedIds omitted (desync recovery)", () => {
-      // UI may briefly desync flags vs selectedIds; resolve merges before sanitize.
+    it("buff flag alone can revive a relic when it still fits energy/slots", () => {
       const on = loadoutStats(
         {
           ...base,
           archaeology: { selectedIds: [], energyCap: 500 },
           buffs: {
             ...base.buffs,
-            heightenedSenses: true,
             furyOfTheSmall: true,
-            conservationOfEnergy: false,
+          },
+        },
+        { unlockedRegions: ["misthalin", "kandarin"] },
+      );
+      expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+    });
+
+    it("buff flag cannot revive a relic that would bust energy with current picks", () => {
+      const on = loadoutStats(
+        {
+          ...base,
+          archaeology: {
+            selectedIds: ["heightened_senses"],
+            energyCap: 500,
+          },
+          buffs: {
+            ...base.buffs,
+            heightenedSenses: true,
+            // CoE is 350; HS is 350; 700 > 500 — must not activate CoE via flag.
+            conservationOfEnergy: true,
           },
         },
         { unlockedRegions: ["misthalin", "kandarin", "morytania"] },
       );
-      // Merge order: FotS (150) then HS (350) = 500 exactly.
-      expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
-      expect(on.maxAdrenaline).toBe(110);
+      expect(on.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
     });
 
     it("fury_of_the_small sets adrenaline.basicAdrenalineFlatBonus", () => {

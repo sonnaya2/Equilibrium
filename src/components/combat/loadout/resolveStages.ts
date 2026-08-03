@@ -791,36 +791,32 @@ export function resolveCombatRules(
   }
   globalModifiers.push(...leagueModifiers(leagueBundle.league));
 
-  // Arch selection: merge full-modeled buff flags into selectedIds (UI lockstep may desync),
-  // then drop illegal energy (650 without Anachronia) when regions are known.
+  // Arch selection: selectedIds is source of truth (buff flags stay locked via withArchaeologySelection).
+  // When regions are known, re-clamp energy (650 without Anachronia) and the 3-slot cap.
   const archState = loadout.archaeology ?? { selectedIds: [], energyCap: 500 as const };
-  const mergedSelectedIds = (() => {
-    const ids = [...(archState.selectedIds ?? [])];
-    const fromBuffs: Array<[boolean | undefined, string]> = [
-      [loadout.buffs.berserkersFury, BERSERKERS_FURY_ID],
-      [loadout.buffs.furyOfTheSmall, FURY_OF_THE_SMALL_ID],
-      [loadout.buffs.heightenedSenses, HEIGHTENED_SENSES_ID],
-      [loadout.buffs.conservationOfEnergy, CONSERVATION_OF_ENERGY_ID],
-    ];
-    for (const [on, id] of fromBuffs) {
-      if (on === true && !ids.includes(id)) ids.push(id);
-    }
-    return ids;
-  })();
-  const mergedArch = { ...archState, selectedIds: mergedSelectedIds };
   const effectiveArch =
     options.unlockedRegions != null
-      ? sanitizeArchaeologyState(mergedArch, options.unlockedRegions)
+      ? sanitizeArchaeologyState(archState, options.unlockedRegions)
       : {
           energyCap: archState.energyCap,
           selectedIds: sanitizeSelectedRelics({
-            selectedIds: mergedSelectedIds,
+            selectedIds: archState.selectedIds ?? [],
             energyCap: archState.energyCap,
           }),
         };
   const archSelected = new Set(effectiveArch.selectedIds);
-  // Effective selection after sanitize is the sole activation signal.
-  const hasArchRelic = (id: string, _buff?: boolean | undefined): boolean => archSelected.has(id);
+  // Prefer selection; buff flag is fallback when selection was lost but flag still true
+  // (legacy saves) AND the relic alone still fits remaining energy budget.
+  const hasArchRelic = (id: string, buff?: boolean | undefined): boolean => {
+    if (archSelected.has(id)) return true;
+    if (buff !== true) return false;
+    // Revive a full-modeled relic from a stale buff only if it fits with current selection.
+    const next = sanitizeSelectedRelics({
+      selectedIds: [...effectiveArch.selectedIds, id],
+      energyCap: effectiveArch.energyCap,
+    });
+    return next.includes(id);
+  };
 
   // Berserker's Fury: live LP vs temporary max (includes Powerburst when active).
   const maximumLifePoints = defenceLife?.life.temporaryMaxLife ?? 0;

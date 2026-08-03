@@ -220,6 +220,7 @@ export function RotationPlanner({
       );
       return;
     }
+    // Manual damage numbers, but keep loadout adren economy (CoE / FotS / Invigorating / etc.).
     setResult(
       simulate({
         base: Math.max(0, finite(base, 0)),
@@ -230,6 +231,8 @@ export function RotationPlanner({
         rotation: rotationOf(...queue),
         cap: setupStats.cap,
         startingAdrenaline: setupStats.startingAdrenaline,
+        adrenaline: setupStats.adrenaline,
+        procs: setupStats.procs,
         autoWeave: weave,
         ammo: ammo === "none" ? undefined : ammo,
       }),

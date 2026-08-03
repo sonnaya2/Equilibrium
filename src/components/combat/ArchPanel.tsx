@@ -178,20 +178,17 @@ export function ArchPanel({
     });
   };
 
-  // Resolved adren relics — proves UI selection reaches combat stats (same path as rotations).
-  const hsOn = isRelicActive(selectedIds, "heightened_senses");
-  const fotsOn = isRelicActive(selectedIds, "fury_of_the_small");
-  const coeOn = isRelicActive(selectedIds, "conservation_of_energy");
+  // Live from resolved combat stats (same numbers the damage sim uses).
+  const hsBonus = stats.adrenaline?.maxAdrenalineBonus ?? 0;
+  const fotsBonus = stats.adrenaline?.basicAdrenalineFlatBonus ?? 0;
+  const ultRefund = stats.adrenaline?.ultimateAdrenalineRefund ?? 0;
+  const rovOn = stats.adrenaline?.ringOfVigour === true;
+  const coeRefund = Math.max(0, ultRefund - (rovOn ? 10 : 0));
   const adrenLive = [
-    hsOn
-      ? `Heightened Senses · max adrenaline ${stats.maxAdrenaline}% (+${stats.adrenaline?.maxAdrenalineBonus ?? 0})`
-      : null,
-    fotsOn
-      ? `Fury of the Small · basics +${stats.adrenaline?.basicAdrenalineFlatBonus ?? 0}% adren`
-      : null,
-    coeOn
-      ? `Conservation of Energy · +${stats.adrenaline?.ultimateAdrenalineRefund ?? 0}% after ultimate`
-      : null,
+    hsBonus > 0 ? `Heightened Senses · max adrenaline ${stats.maxAdrenaline}%` : null,
+    fotsBonus > 0 ? `Fury of the Small · basics +${fotsBonus}% adren` : null,
+    coeRefund > 0 ? `Conservation of Energy · +${coeRefund}% after ultimate` : null,
+    rovOn ? `Ring of Vigour · +10% after ultimate; specials cost 90%` : null,
   ].filter((line): line is string => line != null);
 
   const toggleRelic = (relicId: string) => {

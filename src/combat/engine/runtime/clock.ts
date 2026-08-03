@@ -38,14 +38,17 @@ function grantMeteorPassive(
   if (gain > 0) rt.state = gainAdrenaline(rt.state, gain);
 }
 
-/** Vestments set(2): 15 adrenaline over 30 ticks, cancelled by its instant repeat. */
+/** Vestments Herald timed ledger: 0.5 adren/tick while window open (15 over 18s). */
 function grantVestmentsPassive(
   rt: SimulationRuntime,
   fromTick: number,
   toTickExclusive: number,
 ): void {
   const end = Math.min(toTickExclusive, rt.state.vestmentsAdrenalineUntilTick);
-  if (end > fromTick) rt.state = gainAdrenaline(rt.state, (end - fromTick) * 0.5);
+  if (end > fromTick) {
+    // VESTMENTS_REGEN_PER_TICK = 0.5; kept inline so clock stays free of equipment import cycles.
+    rt.state = gainAdrenaline(rt.state, (end - fromTick) * 0.5);
+  }
 }
 
 export function advanceTo(rt: SimulationRuntime, targetTick: number): void {

@@ -1266,7 +1266,7 @@ describe("loadoutStats", () => {
         { unlockedRegions: ["misthalin", "kandarin", "morytania"] },
       );
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
-      expect(on.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(
         (on.adrenaline as { conservationOfEnergyRefund?: number } | undefined)
           ?.conservationOfEnergyRefund,
@@ -1289,31 +1289,31 @@ describe("loadoutStats", () => {
       expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
     });
 
-    it("conservation_of_energy sets ultimateAdrenalineRefund and conservationOfEnergyRefund", () => {
+    it("conservation_of_energy sets conservationOfEnergyRefund only", () => {
       const off = loadoutStats({
         ...base,
         archaeology: { selectedIds: [], energyCap: 500 },
         buffs: { ...base.buffs, conservationOfEnergy: false },
       });
-      expect(off.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect(off.adrenaline?.conservationOfEnergyRefund).toBeUndefined();
 
       const on = loadoutStats({
         ...base,
         archaeology: { selectedIds: ["conservation_of_energy"], energyCap: 500 },
         buffs: { ...base.buffs, conservationOfEnergy: false },
       });
-      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(
         (on.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
       ).toBe(10);
     });
 
-    it("Ring of Vigour equipment sets ultimate refund 10 and ringOfVigour flag", () => {
+    it("Ring of Vigour equipment sets ringOfVigour flag only (no ultimate sum)", () => {
       const on = loadoutStats({
         ...base,
         equipmentSlots: { ...base.equipmentSlots, ring: "item:ring-of-vigour" },
       });
-      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(on.adrenaline?.ringOfVigour).toBe(true);
       expect(on.activePassives.some((p) => p.startsWith("Ring of Vigour"))).toBe(true);
     });
@@ -1326,11 +1326,11 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["anachronia"] },
       );
-      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(on.adrenaline?.ringOfVigour).toBe(true);
     });
 
-    it("ring + passive do not stack refunds (still 10, not 20)", () => {
+    it("ring + passive do not stack refunds (ringOfVigour once, not double)", () => {
       const on = loadoutStats(
         {
           ...base,
@@ -1339,7 +1339,7 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["anachronia"] },
       );
-      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(on.adrenaline?.ringOfVigour).toBe(true);
       const vigourLines = on.activePassives.filter((p) => p.startsWith("Ring of Vigour"));
       expect(vigourLines).toHaveLength(1);
@@ -1347,7 +1347,7 @@ describe("loadoutStats", () => {
       expect(vigourLines[0]).toContain("Permanent unlock");
     });
 
-    it("Vigour + CoE stacks to 20 ultimate refund with separate CoE field", () => {
+    it("Vigour + CoE: conservationOfEnergyRefund 10 and ringOfVigour (no ultimate sum)", () => {
       const on = loadoutStats(
         {
           ...base,
@@ -1357,10 +1357,8 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["anachronia"] },
       );
-      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(20);
-      expect(
-        (on.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
-      ).toBe(10);
+      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(on.adrenaline?.conservationOfEnergyRefund).toBe(10);
       expect(on.adrenaline?.ringOfVigour).toBe(true);
     });
 
@@ -1372,7 +1370,7 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["misthalin", "karamja"] },
       );
-      expect(passiveOnly.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect((passiveOnly.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(passiveOnly.adrenaline?.ringOfVigour).toBeUndefined();
 
       const ringOnly = loadoutStats(
@@ -1383,7 +1381,7 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["misthalin"] },
       );
-      expect(ringOnly.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect((ringOnly.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(ringOnly.adrenaline?.ringOfVigour).toBe(true);
     });
 
@@ -1439,7 +1437,8 @@ describe("loadoutStats", () => {
       expect(over.maxAdrenaline).toBe(110);
       expect(over.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
       expect(over.adrenaline?.maxAdrenalineBonus).toBe(10);
-      expect(over.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect(over.adrenaline?.conservationOfEnergyRefund).toBeUndefined();
+      expect((over.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
 
       // FotS (150) + CoE (350) = 500 fits under both 500 and 650.
       const fit = loadoutStats({
@@ -1455,10 +1454,8 @@ describe("loadoutStats", () => {
         },
       });
       expect(fit.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
-      expect(fit.adrenaline?.ultimateAdrenalineRefund).toBe(10);
-      expect(
-        (fit.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
-      ).toBe(10);
+      expect(fit.adrenaline?.conservationOfEnergyRefund).toBe(10);
+      expect((fit.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(fit.adrenaline?.maxAdrenalineBonus).toBeUndefined();
     });
     it("with unlockedRegions without Anachronia, drops over-500 energy from the end", () => {
@@ -1486,7 +1483,8 @@ describe("loadoutStats", () => {
       // Keeps first relic only (350); drops CoE and FotS.
       expect(stats.maxAdrenaline).toBe(110);
       expect(stats.adrenaline?.maxAdrenalineBonus).toBe(10);
-      expect(stats.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect(stats.adrenaline?.conservationOfEnergyRefund).toBeUndefined();
+      expect((stats.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBeUndefined();
     });
 

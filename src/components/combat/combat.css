@@ -2954,6 +2954,12 @@ body:has(.combat-screen) {
 }
 
 @media (max-width: 850px) {
+  /*
+   * Document-scroll mode: parents are height:auto. Any child that keeps
+   * flex:1 1 0 + min-height:0 + overflow:hidden collapses to ~0 because the
+   * flex basis is 0 and there is no definite parent height to resolve %.
+   * Release flex growth and clipping so Gear/Loadout can size to content.
+   */
   body:has(.combat-screen) .combat-screen,
   .combat-screen .combat-tab-stage,
   .combat-screen .combat-tab-stage > [role="tabpanel"] {
@@ -2966,7 +2972,16 @@ body:has(.combat-screen) {
   .setup-layout,
   .rotation-layout,
   .analysis-layout {
+    flex: none;
     height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .setup-stage,
+  .loadout-editor,
+  .setup-summary {
+    overflow: visible;
     min-height: 0;
   }
 }

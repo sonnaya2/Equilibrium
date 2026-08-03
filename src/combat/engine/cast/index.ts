@@ -12,7 +12,7 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 
 function emptyAbilityResult(): AbilityResult {
-  return { hits: [], min: 0, max: 0, expected: 0, adrenalineDelta: 0 };
+  return { hits: [], min: 0, max: 0, expected: 0, listedAdrenalineDelta: 0, adrenalineDelta: 0 };
 }
 
 export { costOf, spendOf } from "./rules";
@@ -80,14 +80,16 @@ export function commitCast(
       tx.otherImmediateGrants +
       tx.conservationOfEnergyRefund +
       tx.ringOfVigourRefund;
+    const economyDelta =
+      tx.totalAbilityGain +
+      tx.otherImmediateGrants -
+      tx.actualSpend +
+      tx.conservationOfEnergyRefund +
+      tx.ringOfVigourRefund;
     record.result = {
       ...record.result,
-      adrenalineDelta:
-        tx.totalAbilityGain +
-        tx.otherImmediateGrants -
-        tx.actualSpend +
-        tx.conservationOfEnergyRefund +
-        tx.ringOfVigourRefund,
+      listedAdrenalineDelta: tx.listedGain - tx.listedCost,
+      adrenalineDelta: economyDelta,
     };
   }
 

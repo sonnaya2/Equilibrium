@@ -76,7 +76,7 @@ import {
 import {
   formatRingOfVigourSources,
   hasRingOfVigourEffect,
-  RING_OF_VIGOUR_REFUND,
+
   ringOfVigourActiveSources,
 } from "@/combat/shared/ringOfVigour";
 import {
@@ -891,10 +891,8 @@ export function resolveCombatRules(
     unlockedRegions: options.unlockedRegions,
   });
   const conservationOfEnergyRefund = conservationOfEnergy ? CONSERVATION_OF_ENERGY_REFUND : 0;
-  const ultimateAdrenalineRefund =
-    conservationOfEnergyRefund + (ringOfVigour ? RING_OF_VIGOUR_REFUND : 0);
 
-  // CoE/FotS exposed as direct fields; ultimateAdrenalineRefund stays CoE+RoV sum.
+  // Explicit CoE + RoV only (no legacy ultimateAdrenalineRefund sum).
   const adrenaline: AdrenalineRules = {
     abilityGainMultiplier: blessingAdrenalineGenerationMultiplier(leagueBundle.league),
     basicGainMultiplier:
@@ -904,7 +902,6 @@ export function resolveCombatRules(
     ...(furyOfTheSmall ? { basicAdrenalineFlatBonus: FURY_OF_THE_SMALL_EXTRA_ADRENALINE } : {}),
     ...(heightenedSenses ? { maxAdrenalineBonus: HEIGHTENED_SENSES_ADRENALINE_BONUS } : {}),
     ...(conservationOfEnergyRefund > 0 ? { conservationOfEnergyRefund } : {}),
-    ...(ultimateAdrenalineRefund > 0 ? { ultimateAdrenalineRefund } : {}),
     ...(ringOfVigour ? { ringOfVigour: true } : {}),
     // Impatient / Relentless are state-changing RNG: the rotation drivers
     // branch on them (probability-weighted), never flat expected value.

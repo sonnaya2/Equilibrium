@@ -62,24 +62,18 @@ describe("Ring of Vigour - ultimates", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: {
-        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
-        ringOfVigour: true,
-      },
+      adrenaline: { ringOfVigour: true },
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(10);
   });
 
-  it("dual sources still refund only once (single ultimateAdrenalineRefund of 10)", () => {
-    // resolveStages sums ring+passive as one RING_OF_VIGOUR_REFUND, never 20.
+  it("dual sources still refund only once (ringOfVigour once)", () => {
+    // resolveStages OR-resolves ring+passive to one ringOfVigour flag, never double refund.
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: {
-        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
-        ringOfVigour: true,
-      },
+      adrenaline: { ringOfVigour: true },
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(10);
@@ -89,10 +83,7 @@ describe("Ring of Vigour - ultimates", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 50,
-      adrenaline: {
-        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
-        ringOfVigour: true,
-      },
+      adrenaline: { ringOfVigour: true },
     });
     const attempt = ctx.performCast(berserk, 0, false);
     expect(attempt.ok).toBe(false);
@@ -103,10 +94,7 @@ describe("Ring of Vigour - ultimates", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: {
-        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
-        ringOfVigour: true,
-      },
+      adrenaline: { ringOfVigour: true },
     });
     expect(ctx.performCast(assault, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(75);
@@ -118,7 +106,7 @@ describe("Ring of Vigour + Conservation of Energy", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: { ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND, ringOfVigour: true },
+      adrenaline: { ringOfVigour: true },
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(10);
@@ -128,20 +116,19 @@ describe("Ring of Vigour + Conservation of Energy", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+      adrenaline: { conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND },
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(10);
   });
 
   it("Vigour + CoE leaves 20 (additive, not triple with dual Vigour sources)", () => {
-    const combined = RING_OF_VIGOUR_REFUND + CONSERVATION_OF_ENERGY_REFUND;
-    expect(combined).toBe(20);
+    expect(RING_OF_VIGOUR_REFUND + CONSERVATION_OF_ENERGY_REFUND).toBe(20);
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
       adrenaline: {
-        ultimateAdrenalineRefund: combined,
+        conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
         ringOfVigour: true,
       },
     });
@@ -163,7 +150,7 @@ describe("Ring of Vigour + Conservation of Energy", () => {
       startingAdrenaline: 100,
       abilities: [...baseInput.abilities, ult],
       adrenaline: {
-        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND + CONSERVATION_OF_ENERGY_REFUND,
+        conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
         ringOfVigour: true,
         relentlessRank: 5,
       },
@@ -266,7 +253,7 @@ describe("Ring of Vigour - special attacks", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: { ringOfVigour: true, ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND },
+      adrenaline: { ringOfVigour: true },
     });
     expect(ctx.costOf(berserk)).toBe(100);
   });

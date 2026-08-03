@@ -14,6 +14,16 @@ async function expectBreakdownToReconcile(metric: Locator) {
   expect(values.reduce((sum, value) => sum + value, 0)).toBeCloseTo(total, 10);
 }
 
+/** Loadout default is 100% start adren (ultimate-friendly). Some rotation cases need 0. */
+async function setStartingAdrenaline(page: Page, value: number) {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: "Stats", exact: true }).click();
+  // NumberField suffix "%" is part of the accessible name; summary rail also says "Starting adrenaline".
+  const field = page.getByRole("spinbutton", { name: "Starting adrenaline %" });
+  await field.fill(String(value));
+  await expect(field).toHaveValue(String(value));
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto("/combat");
   await page.evaluate(() => window.localStorage.clear());
@@ -31,6 +41,8 @@ test("quick calculator runs the real pipeline", async ({ page }) => {
 });
 
 test("rotation planner queues, simulates, and persists", async ({ page }) => {
+  // From 0: two basic Attacks bank 9% each → ending adren 18%.
+  await setStartingAdrenaline(page, 0);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
 
@@ -51,6 +63,8 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
 });
 
 test("rotation reports adrenaline starvation honestly in manual mode", async ({ page }) => {
+  // Default start is 100% — force 0 so Overpower is unaffordable without weave.
+  await setStartingAdrenaline(page, 0);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await page.getByRole("checkbox", { name: "Auto-weave basics" }).uncheck();
@@ -60,6 +74,7 @@ test("rotation reports adrenaline starvation honestly in manual mode", async ({ 
 });
 
 test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => {
+  await setStartingAdrenaline(page, 0);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "Auto-weave basics" })).toBeChecked();
@@ -266,8 +281,9 @@ test("summary reacts to temporary life effects and a manual Damage Potential ove
 
   await page.getByRole("button", { name: "Target", exact: true }).click();
   await page.getByRole("checkbox", { name: "Use NPC target" }).check();
-  await page.getByRole("checkbox", { name: "Manual Damage Potential override" }).check();
-  await page.getByRole("spinbutton", { name: "Damage Potential override" }).fill("73");
+  // Labels: checkbox "Manual Damage Potential"; field accessible name includes "%" suffix.
+  await page.getByRole("checkbox", { name: "Manual Damage Potential" }).check();
+  await page.getByRole("spinbutton", { name: "Damage Potential %" }).fill("73");
   await expect(
     summaryMetric(page, "Damage Potential").getByText("73%", { exact: true }),
   ).toBeVisible();
@@ -276,12 +292,22 @@ test("summary reacts to temporary life effects and a manual Damage Potential ove
 
 test("setup summary and every editor subtab stay within a phone viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  // Loadout stage must size to content on phone (not a collapsed flex fill).
+  await expect(page.locator(".combat-setup")).toBeVisible();
+  await expect
+    .poll(async () => (await page.locator(".combat-setup").boundingBox())?.height ?? 0)
+    .toBeGreaterThan(200);
+
+  const nav = page.getByRole("navigation", { name: "Loadout sections" });
   for (const tab of ["Gear", "Stats", "Buffs", "Arch", "Invention", "Abilities", "Target"]) {
-    await page.getByRole("button", { name: tab, exact: true }).click();
+    const btn = nav.getByRole("button", { name: tab, exact: true });
+    await btn.scrollIntoViewIfNeeded();
+    await btn.click();
+    await expect(btn).toHaveAttribute("aria-pressed", "true");
     await expect(summary(page)).toBeVisible();
     expect(
       await page.evaluate(
-        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
       ),
       `${tab} should not overflow horizontally`,
     ).toBe(true);
@@ -627,9 +653,10 @@ test("combat blessing choices stay synced with Build", async ({ page }) => {
   await expect(page.getByText(/God Tier One · Splash Zone/)).toBeVisible();
 
   await page.goto("/build");
+  // Build lattice aria is "Name. effects… Path, tier N, selected".
   await expect(
     page.getByRole("button", {
-      name: /Teragard's Aegis, Order, tier 1, selected/,
+      name: /Teragard's Aegis.*Order, tier 1, selected/,
     }),
   ).toHaveAttribute("aria-pressed", "true");
 

@@ -248,8 +248,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Death's Swiftness", "Death%27s_Swiftness"),
   },
   {
-    // Greater Death's Swiftness: same 1.5x self-buff, 63-tick window
-    // (buff begins 1 tick after cast → 62 ticks of actual buff).
+    // Greater Death's Swiftness: same 1.5x self-buff, 63 active ticks after cast+1.
     id: "greater_deaths_swiftness",
     name: "Greater Death's Swiftness",
     style: "ranged",
@@ -269,7 +268,7 @@ export const RANGED_EFFECTS = [
     id: "deaths_swiftness_buff_notes",
     name: "Death's Swiftness buff window",
     notes:
-      "Self buff: 1.5x damage for 50 ticks base / 63 Greater (buff begins cast+1). Was ground-targeted area before 16 Mar 2026. Planted Feet extends base only — see effects.ts.",
+      "Self buff: 1.5x damage for 50 active ticks base / 63 Greater (half-open, begins cast+1). Was ground-targeted area before 16 Mar 2026. Planted Feet extends base only — see effects.ts.",
     source: wiki("Death's Swiftness", "Death%27s_Swiftness"),
   },
   {

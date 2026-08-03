@@ -8,16 +8,9 @@ import {
 import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/calculateHit";
 import type { CombatContext, CombatModifier } from "../types";
 import {
-  isBasicAttack,
-  isGeneratingBasicAbility,
-} from "../shared/adrenalineGain";
-import { resolveAdrenalineTransaction } from "../shared/adrenalineTransaction";
-import { resolveUltimateAdrenalineRefunds } from "../shared/conservationOfEnergy";
-import {
-  isWeaponSpecialAbility,
-  resolveSpecialAttackAdrenalineCost,
-  RING_OF_VIGOUR_REFUND,
-} from "../shared/ringOfVigour";
+  netAdrenalineDeltaFromTransaction,
+  previewAdrenalineTransaction,
+} from "../shared/adrenalineTransaction";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
@@ -117,58 +110,17 @@ export type LeagueAbilityInput = Parameters<typeof calculateAbility>[1] & {
     basicAdrenalineFlatBonus?: number;
     basicGainMultiplier?: number;
     abilityGainMultiplier?: number;
-    /** Legacy CoE+RoV sum; ignored when conservationOfEnergyRefund is set. */
-    ultimateAdrenalineRefund?: number;
     conservationOfEnergyRefund?: number;
     ringOfVigour?: boolean;
   };
 };
 
-/** Analysis / preview net adren: same pure transaction as the engine (no RNG). */
+/** Analysis / preview net adren: shared pure transaction (no RNG). */
 function analysisAdrenalineDelta(
   ability: AbilitySpec,
   adren: NonNullable<LeagueAbilityInput["adrenaline"]>,
 ): number {
-  const listedCost = ability.adrenaline?.cost ?? 0;
-  const effectiveCost =
-    isWeaponSpecialAbility(ability) && adren.ringOfVigour === true
-      ? resolveSpecialAttackAdrenalineCost(listedCost, true)
-      : listedCost;
-
-  const { conservationOfEnergyRefund, ringOfVigourRefund } = resolveUltimateAdrenalineRefunds(
-    ability,
-    adren,
-    RING_OF_VIGOUR_REFUND,
-  );
-
-  const listedGain =
-    typeof ability.adrenaline?.gain === "number" && ability.adrenaline.gain > 0
-      ? ability.adrenaline.gain
-      : 0;
-
-  const tx = resolveAdrenalineTransaction({
-    before: 0,
-    cap: 10_000,
-    listedGain,
-    listedCost,
-    effectiveCost,
-    isGeneratingBasicAbility: isGeneratingBasicAbility(ability),
-    isBasicAttack: isBasicAttack(ability),
-    impatientProc: false,
-    relentlessProc: false,
-    basicAdrenalineFlatBonus: adren.basicAdrenalineFlatBonus,
-    basicGainMultiplier: adren.basicGainMultiplier,
-    abilityGainMultiplier: adren.abilityGainMultiplier,
-    conservationOfEnergyRefund,
-    ringOfVigourRefund,
-  });
-
-  return (
-    tx.totalAbilityGain -
-    tx.actualSpend +
-    tx.conservationOfEnergyRefund +
-    tx.ringOfVigourRefund
-  );
+  return netAdrenalineDeltaFromTransaction(previewAdrenalineTransaction(ability, adren));
 }
 
 export interface LeagueAbilityResult extends AbilityResult {

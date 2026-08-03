@@ -685,6 +685,13 @@ export function equippedPassiveSummaries(
   return rows;
 }
 
+/** Herald of Chaos: 15% over 18s after a melee ultimate. */
+export const VESTMENTS_REGEN_SECONDS = 18;
+/** Instant grant when a second melee ultimate lands during the regen window. */
+export const VESTMENTS_INSTANT_ON_REFRESH = 20;
+/** Passive rate: 15% / secondsToTicks(18) = 0.5 per tick. */
+export const VESTMENTS_REGEN_PER_TICK = 0.5;
+
 export function vestmentsUltimateEligible(
   effects: ActiveEquipmentEffects | undefined,
   ability: { style: CombatStyle; category: string },

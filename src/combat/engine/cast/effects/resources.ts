@@ -12,17 +12,27 @@ import { RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
 import { RING_OF_VIGOUR_REFUND } from "../../../shared/ringOfVigour";
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
 import { spendDeathspore } from "../../../styles/ranged/onHit";
-import { gainAdrenaline, patchRanged } from "../../runtime/state";
+import { patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
-import { vestmentsUltimateEligible } from "../../../shared/equipment";
-import { hasPassive } from "../../../shared/equipment";
+import {
+  VESTMENTS_INSTANT_ON_REFRESH,
+  VESTMENTS_REGEN_SECONDS,
+  vestmentsUltimateEligible,
+  hasPassive,
+} from "../../../shared/equipment";
 import { activeBleedCount } from "../../../styles/melee/effects";
 import { rngProc } from "../../simulation/contracts";
+import {
+  livingDeathActive,
+  TOUCH_OF_DEATH_LIVING_DEATH_ADRENALINE_BONUS,
+} from "../../../styles/necromancy/effects";
 
 /**
  * Cast adren/resources via pure transaction after one Impatient/Relentless roll.
- * Order: listed + FotS + Impatient, Invigorating (basic attacks), AJ mult, jaws,
- * spend (Relentless / Deathspore), CoE + RoV, Deathspore bookkeeping, Vestments.
+ * Order: listed + FotS + Impatient, Invigorating (basic attacks), AJ mult,
+ * otherImmediate (Jaws, Vestments refresh, ToD+LD), spend (Relentless / Deathspore),
+ * CoE + RoV, clamp; then Deathspore bookkeeping and Vestments window arm/clear.
+ * Timed Vestments regen is the clock ledger (grantVestmentsPassive).
  * https://runescape.wiki/w/Invigorating
  * https://runescape.wiki/w/Basic_attacks
  */
@@ -63,6 +73,26 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     jawsGrant = candidate < rt.state.naturalInstinctUntilTick ? jaws * 2 : jaws;
   }
 
+  let vestmentsInstantGrant = 0;
+  let vestmentsStartWindow = false;
+  let vestmentsCancelWindow = false;
+  if (vestmentsUltimateEligible(input.equipmentEffects, ability)) {
+    if (candidate < rt.state.vestmentsAdrenalineUntilTick) {
+      vestmentsInstantGrant = VESTMENTS_INSTANT_ON_REFRESH;
+      vestmentsCancelWindow = true;
+    } else {
+      vestmentsStartWindow = true;
+    }
+  }
+
+  let livingDeathTodGrant = 0;
+  if (
+    ability.id === "touch_of_death" &&
+    livingDeathActive(rt.state.necromancy.resources, candidate)
+  ) {
+    livingDeathTodGrant = TOUCH_OF_DEATH_LIVING_DEATH_ADRENALINE_BONUS;
+  }
+
   const { conservationOfEnergyRefund, ringOfVigourRefund } = resolveUltimateAdrenalineRefunds(
     ability,
     adren,
@@ -88,6 +118,8 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
       ? ability.adrenaline.gain
       : 0;
 
+  const otherImmediateGrants = jawsGrant + vestmentsInstantGrant + livingDeathTodGrant;
+
   const tx = resolveAdrenalineTransaction({
     before: rt.state.adrenaline,
     cap: rt.state.adrenalineCap,
@@ -104,7 +136,7 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     meteorBasicMultiplier: meteorBasic ? METEOR_STRIKE_BASIC_ADREN_MULTIPLIER : 1,
     conservationOfEnergyRefund,
     ringOfVigourRefund,
-    otherImmediateGrants: jawsGrant,
+    otherImmediateGrants,
     spendZeroReason,
   });
 
@@ -127,21 +159,14 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     });
   }
 
-  if (vestmentsUltimateEligible(input.equipmentEffects, ability)) {
-    if (candidate < rt.state.vestmentsAdrenalineUntilTick) {
-      rt.state = gainAdrenaline({ ...rt.state, vestmentsAdrenalineUntilTick: 0 }, 20);
-    } else {
-      rt.state = {
-        ...rt.state,
-        vestmentsAdrenalineUntilTick: candidate + secondsToTicks(18),
-      };
-    }
+  if (vestmentsCancelWindow) {
+    rt.state = { ...rt.state, vestmentsAdrenalineUntilTick: 0 };
+  } else if (vestmentsStartWindow) {
+    rt.state = {
+      ...rt.state,
+      vestmentsAdrenalineUntilTick: candidate + secondsToTicks(VESTMENTS_REGEN_SECONDS),
+    };
   }
 
   return tx;
-}
-
-/** Extra adrenaline a style rule grants beyond the ability's listed gain. */
-export function grantBonusAdrenaline(fx: CastEffectContext, amount: number): void {
-  if (amount > 0) fx.rt.state = gainAdrenaline(fx.rt.state, amount);
 }

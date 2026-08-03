@@ -11,7 +11,7 @@ describe("calculateAbility", () => {
     expect(r.hits).toHaveLength(4);
     expect(r.min).toBe(4 * 1300);
     expect(r.max).toBe(4 * 1500);
-    expect(r.adrenalineDelta).toBe(-25);
+    expect(r.listedAdrenalineDelta).toBe(-25);
   });
 
   it("keeps bleed tails crit-ineligible inside a mixed ability", () => {

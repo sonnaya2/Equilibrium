@@ -50,7 +50,7 @@ describe("Conservation of Energy (engine)", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+      adrenaline: { conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND },
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     // 100 - 100 cost + 10 CoE
@@ -61,7 +61,7 @@ describe("Conservation of Energy (engine)", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+      adrenaline: { conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND },
     });
     expect(ctx.performCast(assault, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(75);
@@ -71,7 +71,7 @@ describe("Conservation of Energy (engine)", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
-      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+      adrenaline: { conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND },
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(10);
@@ -100,7 +100,7 @@ describe("Conservation of Energy (engine)", () => {
       ...baseInput,
       startingAdrenaline: 100,
       abilities: [...baseInput.abilities, ultA, ultB],
-      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+      adrenaline: { conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND },
     });
     expect(ctx.performCast(ultA, 0, false).ok).toBe(true);
     // 100 - 50 + 10 = 60
@@ -125,7 +125,7 @@ describe("Conservation of Energy (engine)", () => {
       startingAdrenaline: 80,
       abilities: [...baseInput.abilities, ult],
       adrenaline: {
-        ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND,
+        conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
         relentlessRank: 5,
       },
     });
@@ -147,7 +147,7 @@ describe("Conservation of Energy (engine)", () => {
       ...baseInput,
       startingAdrenaline: 100,
       abilities: [...baseInput.abilities, onslaught],
-      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+      adrenaline: { conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND },
     });
     expect(ctx.performCast(onslaught, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(0);
@@ -167,7 +167,7 @@ describe("Conservation of Energy (engine)", () => {
       startingAdrenaline: 100,
       abilities: [...baseInput.abilities, ult],
       adrenaline: {
-        ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND,
+        conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
         relentlessRank: 5,
       },
     });

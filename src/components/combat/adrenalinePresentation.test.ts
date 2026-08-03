@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { calculateLeagueAbility } from "@/combat/league/damage";
 import { resolveLeagueRules } from "@/combat/league/ruleset";
 import { CONSERVATION_OF_ENERGY_REFUND } from "@/combat/shared/conservationOfEnergy";
-import { RING_OF_VIGOUR_REFUND, RING_OF_VIGOUR_ITEM_ID } from "@/combat/shared/ringOfVigour";
+import { RING_OF_VIGOUR_ITEM_ID } from "@/combat/shared/ringOfVigour";
 import { isRingOfVigourWorn } from "@/combat/shared/ringOfVigour";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
@@ -39,7 +39,7 @@ const special: AbilitySpec = {
 };
 
 function previewDelta(ability: AbilitySpec, adren: Parameters<typeof calculateLeagueAbility>[1]["adrenaline"]) {
-  return calculateLeagueAbility(ability, {
+  const delta = calculateLeagueAbility(ability, {
     base: 1000,
     level: 99,
     accuracy: 1,
@@ -49,6 +49,8 @@ function previewDelta(ability: AbilitySpec, adren: Parameters<typeof calculateLe
     rules: emptyLeague,
     adrenaline: adren,
   }).adrenalineDelta;
+  if (delta === undefined) throw new Error("expected league adrenalineDelta");
+  return delta;
 }
 
 describe("adrenalinePresentation", () => {
@@ -66,11 +68,10 @@ describe("adrenalinePresentation", () => {
     expect(netAdrenalineDelta(tx)).toBeCloseTo(previewDelta(attack, adren), 10);
   });
 
-  it("separates CoE and RoV on ultimates (no reverse-split of a single total)", () => {
+  it("separates CoE and RoV on ultimates (explicit fields only)", () => {
     const adren = {
       conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
       ringOfVigour: true,
-      ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND + RING_OF_VIGOUR_REFUND,
     };
     const tx = analysisAdrenalineTransaction(berserk, adren);
     expect(tx.conservationOfEnergyRefund).toBe(10);
@@ -134,9 +135,10 @@ describe("adrenalinePresentation", () => {
     expect(stats.adrenaline?.conservationOfEnergyRefund).toBe(CONSERVATION_OF_ENERGY_REFUND);
     expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
     expect(stats.adrenaline?.ringOfVigour).toBe(true);
-    expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(
-      CONSERVATION_OF_ENERGY_REFUND + RING_OF_VIGOUR_REFUND,
-    );
+    expect(
+      (stats.adrenaline as { ultimateAdrenalineRefund?: number } | undefined)
+        ?.ultimateAdrenalineRefund,
+    ).toBeUndefined();
 
     const ultTx = analysisAdrenalineTransaction(berserk, stats.adrenaline);
     expect(ultTx.conservationOfEnergyRefund).toBe(10);

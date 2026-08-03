@@ -32,7 +32,8 @@ describe("damage sim energy saves (adren economy)", () => {
       withArchaeologySelection(DEFAULT_LOADOUT, ["conservation_of_energy"], 500),
     );
     const stats = statsFor(loadout);
-    expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+    expect(stats.adrenaline?.conservationOfEnergyRefund).toBe(10);
+    expect(stats.adrenaline?.ringOfVigour).toBeUndefined();
 
     const summary = simulate({
       ...baseInput,
@@ -52,7 +53,7 @@ describe("damage sim energy saves (adren economy)", () => {
       equipmentSlots: { ring: RING_OF_VIGOUR_ITEM_ID },
     });
     const stats = statsFor(loadout);
-    expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+    expect(stats.adrenaline?.conservationOfEnergyRefund).toBeUndefined();
     expect(stats.adrenaline?.ringOfVigour).toBe(true);
 
     const ctx = createCastContext({
@@ -108,7 +109,7 @@ describe("damage sim energy saves (adren economy)", () => {
     ]);
     const stats = statsFor(loadout);
     expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
-    expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(CONSERVATION_OF_ENERGY_REFUND);
+    expect(stats.adrenaline?.conservationOfEnergyRefund).toBe(CONSERVATION_OF_ENERGY_REFUND);
   });
 
   it("CoE leaves 10 after berserk and enables second 100-cost ult sooner", () => {

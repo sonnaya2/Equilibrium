@@ -378,18 +378,24 @@ describe("Planted Feet", () => {
     expect(beams).toHaveLength(16);
   });
 
-  it("the Planted Feet Sunshine window runs 63 ticks", () => {
+  it("the Planted Feet Sunshine window runs 63 active ticks after cast+1", () => {
     const ctx = createCastContext({ ...magicInput, plantedFeet: true });
     const basic = ctx.byId.get("magic_attack")!;
     for (let i = 0; i < 12; i++) ctx.performCast(basic, ctx.getState().tick, false);
     const castTick = ctx.getState().tick;
     ctx.performCast(ctx.byId.get("sunshine")!, castTick, false);
-    expect(ctx.getState().magic.sunshine.expiresAtTick - castTick).toBe(63);
+    const pf = ctx.getState().magic.sunshine;
+    expect(pf.startsAtTick).toBe(castTick + 1);
+    expect(pf.expiresAtTick).toBe(castTick + 1 + 63);
+    expect(pf.expiresAtTick - pf.startsAtTick).toBe(63);
     const plain = createCastContext(magicInput);
     for (let i = 0; i < 12; i++) plain.performCast(basic, plain.getState().tick, false);
     const plainTick = plain.getState().tick;
     plain.performCast(plain.byId.get("sunshine")!, plainTick, false);
-    expect(plain.getState().magic.sunshine.expiresAtTick - plainTick).toBe(50);
+    const base = plain.getState().magic.sunshine;
+    expect(base.startsAtTick).toBe(plainTick + 1);
+    expect(base.expiresAtTick).toBe(plainTick + 1 + 50);
+    expect(base.expiresAtTick - base.startsAtTick).toBe(50);
   });
 
   it("Greater Sunshine keeps its beam with Planted Feet (perk is base-only)", () => {

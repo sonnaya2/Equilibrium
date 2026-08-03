@@ -101,11 +101,12 @@ export function isConcentratedBlast(abilityId: string): boolean {
 
 /**
  * Sunshine zone (wiki): 1.5x Magic while inside 7x7 beam; sim assumes player stays in.
- * Base: buff [cast+1, cast+50). Greater: [cast+1, cast+65) (64 buff ticks after delay).
- * Planted Feet: base only → Math.round(50 × 1.25) = 63 ticks; also drops beam DoT (castPreparation).
+ * Half-open [startsAtTick, expiresAtTick) with startsAtTick = cast+1.
+ * Base: 50 active ticks → [cast+1, cast+51). Greater: 64 active → [cast+1, cast+65).
+ * Planted Feet: base only → Math.round(50 × 1.25) = 63 active ticks; also drops beam DoT.
  */
 export const SUNSHINE_DAMAGE_MULTIPLIER = 1.5;
-/** Base Sunshine beam duration in ticks (wiki: 30s / 50 ticks). */
+/** Base Sunshine active buff ticks after the 1-tick delay (wiki: 30s / 50 ticks). */
 export const SUNSHINE_DURATION_TICKS = 50;
 /** Greater Sunshine active buff ticks after the 1-tick delay (wiki: 64). */
 export const GREATER_SUNSHINE_BUFF_TICKS = 64;
@@ -122,7 +123,8 @@ export const newSunshine = (): SunshineState => ({ startsAtTick: 0, expiresAtTic
 /**
  * Activate the Sunshine zone buff.
  * `greater` selects Greater Sunshine timings.
- * `plantedFeet` extends base Sunshine only (wiki: 63 ticks); ignored for greater.
+ * `plantedFeet` extends base Sunshine only (wiki: 63 active ticks); ignored for greater.
+ * Expire is always starts + duration (half-open), never cast + duration alone.
  */
 export function activateSunshine(
   tick: number,
@@ -130,19 +132,14 @@ export function activateSunshine(
   plantedFeet = false,
   grantedByCast?: number,
 ): SunshineState {
-  if (greater) {
-    return {
-      startsAtTick: tick + 1,
-      expiresAtTick: tick + 1 + GREATER_SUNSHINE_BUFF_TICKS,
-      ...(grantedByCast !== undefined ? { grantedByCast } : {}),
-    };
-  }
-  const duration = plantedFeet
-    ? Math.round(SUNSHINE_DURATION_TICKS * PLANTED_FEET_DURATION_MULT)
-    : SUNSHINE_DURATION_TICKS;
+  const duration = greater
+    ? GREATER_SUNSHINE_BUFF_TICKS
+    : plantedFeet
+      ? Math.round(SUNSHINE_DURATION_TICKS * PLANTED_FEET_DURATION_MULT)
+      : SUNSHINE_DURATION_TICKS;
   return {
     startsAtTick: tick + 1,
-    expiresAtTick: tick + duration,
+    expiresAtTick: tick + 1 + duration,
     ...(grantedByCast !== undefined ? { grantedByCast } : {}),
   };
 }

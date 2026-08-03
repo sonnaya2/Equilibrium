@@ -293,7 +293,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
                     {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
                   </td>
                   <td className="text-right text-parch-50">
-                    {formatAdrenPct(result.adrenalineDelta)}
+                    {formatAdrenPct(result.adrenalineDelta ?? result.listedAdrenalineDelta)}
                   </td>
                 </tr>
               ))}

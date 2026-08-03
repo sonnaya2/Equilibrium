@@ -34,8 +34,8 @@ export function ultimateAdrenalineRefundQualifies(ability: {
 export const conservationOfEnergyQualifies = ultimateAdrenalineRefundQualifies;
 
 /**
- * Split CoE vs RoV ultimate grants for one cast.
- * Prefer conservationOfEnergyRefund + ringOfVigour; else legacy ultimateAdrenalineRefund sum.
+ * CoE vs RoV ultimate grants for one cast.
+ * Explicit fields only: conservationOfEnergyRefund + ringOfVigour.
  * Onslaught and non-ultimates: both 0.
  */
 export function resolveUltimateAdrenalineRefunds(
@@ -43,7 +43,6 @@ export function resolveUltimateAdrenalineRefunds(
   adrenaline:
     | {
         conservationOfEnergyRefund?: number;
-        ultimateAdrenalineRefund?: number;
         ringOfVigour?: boolean;
       }
     | undefined,
@@ -52,18 +51,9 @@ export function resolveUltimateAdrenalineRefunds(
   if (!ultimateAdrenalineRefundQualifies(ability)) {
     return { conservationOfEnergyRefund: 0, ringOfVigourRefund: 0 };
   }
-  if (adrenaline?.conservationOfEnergyRefund !== undefined) {
-    return {
-      conservationOfEnergyRefund: Math.max(0, adrenaline.conservationOfEnergyRefund),
-      ringOfVigourRefund: adrenaline.ringOfVigour === true ? Math.max(0, vigourRefundAmount) : 0,
-    };
-  }
-  const total = adrenaline?.ultimateAdrenalineRefund ?? 0;
-  if (total <= 0) return { conservationOfEnergyRefund: 0, ringOfVigourRefund: 0 };
-  const ringOfVigourRefund =
-    adrenaline?.ringOfVigour === true ? Math.min(Math.max(0, vigourRefundAmount), total) : 0;
   return {
-    conservationOfEnergyRefund: total - ringOfVigourRefund,
-    ringOfVigourRefund,
+    conservationOfEnergyRefund: Math.max(0, adrenaline?.conservationOfEnergyRefund ?? 0),
+    ringOfVigourRefund:
+      adrenaline?.ringOfVigour === true ? Math.max(0, vigourRefundAmount) : 0,
   };
 }

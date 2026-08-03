@@ -113,7 +113,17 @@ export interface AbilityResult {
   min: number;
   max: number;
   expected: number;
-  adrenalineDelta: number;
+  /**
+   * Catalogue listed gain - listed cost only.
+   * Not loadout economy and not a cast transaction. Prefer
+   * previewAdrenalineTransaction / cast adrenalineTransaction for real deltas.
+   */
+  listedAdrenalineDelta: number;
+  /**
+   * Economy net when resolved (league analysis or cast commit).
+   * Absent on bare calculateAbility results.
+   */
+  adrenalineDelta?: number;
 }
 
 export function calculateAbility(
@@ -143,6 +153,6 @@ export function calculateAbility(
     min: hits.reduce((n, h) => n + h.min, 0),
     max: hits.reduce((n, h) => n + h.max, 0),
     expected: hits.reduce((n, h) => n + h.expected, 0),
-    adrenalineDelta: (ability.adrenaline?.gain ?? 0) - (ability.adrenaline?.cost ?? 0),
+    listedAdrenalineDelta: (ability.adrenaline?.gain ?? 0) - (ability.adrenaline?.cost ?? 0),
   };
 }

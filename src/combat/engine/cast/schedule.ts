@@ -31,7 +31,8 @@ export function scheduleCastEvents(
       min: 0,
       max: 0,
       expected: 0,
-      adrenalineDelta: (working.adrenaline?.gain ?? 0) - (working.adrenaline?.cost ?? 0),
+      listedAdrenalineDelta:
+        (working.adrenaline?.gain ?? 0) - (working.adrenaline?.cost ?? 0),
     },
     adrenalineAfter: 0,
     adrenalineBefore: rt.state.adrenaline,

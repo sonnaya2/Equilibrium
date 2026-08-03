@@ -6,9 +6,13 @@
 {"description":"Captain Cain tutorial before first wave","entityId":"activity:content:barbarian-assault","ordinal":1}
 {"description":"90 Agility for the advanced course (35 for basic)","entityId":"activity:content:barbarian-outpost-agility-course","ordinal":1}
 {"description":"Bar Crawl (miniquest) for Barbarian Outpost outer yard","entityId":"activity:content:barbarian-outpost-agility-course","ordinal":0}
+{"description":"Further progress in The Lord of Vampyrium for sickles, wand/orb, stake-thrower","entityId":"activity:content:blisterwood-weapons","ordinal":1}
+{"description":"Progress in The Branches of Darkmeyer for early blisterwood fletching","entityId":"activity:content:blisterwood-weapons","ordinal":0}
 {"description":"91 Firemaking for Char's training cave sessions","entityId":"activity:content:book-of-char","ordinal":1}
 {"description":"The Firemaker's Curse (quest)","entityId":"activity:content:book-of-char","ordinal":0}
 {"description":"One Piercing Note","entityId":"activity:content:citharede-abbey","ordinal":0}
+{"description":"Legacy of Seergaze for Columbarium access","entityId":"activity:content:columbarium-key","ordinal":0}
+{"description":"Teak through yew pyre logs for plain key on vyre cremation (not magic/elder)","entityId":"activity:content:columbarium-key","ordinal":1}
 {"description":"68 Fishing for hub access","entityId":"activity:content:deep-sea-fishing-hub","kind":"skill","level":68,"ordinal":0,"skill":"Fishing"}
 {"description":"94 Fishing for Fishing Frenzy","entityId":"activity:content:deep-sea-fishing-hub","kind":"skill","level":94,"ordinal":1,"skill":"Fishing"}
 {"description":"70 Invention and Dwarven technology tree for Kinetic cyclone","entityId":"activity:content:dwarf-multicannon","kind":"skill","level":70,"ordinal":2,"skill":"Invention"}
@@ -20,6 +24,8 @@
 {"description":"Nightmare gauntlets (base; Freneskae Nightmares / Kandarin)","entityId":"activity:content:enhanced-nightmare-gauntlets","ordinal":0}
 {"description":"100 Woodcutting for eternal magic trees","entityId":"activity:content:eternal-magic-trees","kind":"skill","level":100,"ordinal":1,"skill":"Woodcutting"}
 {"description":"Piscatoris Hunter area access in Kandarin","entityId":"activity:content:eternal-magic-trees","ordinal":0}
+{"description":"Amberfell access","entityId":"activity:content:ferns-finds","ordinal":1}
+{"description":"Secrets of Amberfell (quest)","entityId":"activity:content:ferns-finds","ordinal":0}
 {"description":"68 Fishing for Deep Sea Fishing Hub access","entityId":"activity:content:fishing-frenzy","kind":"skill","level":68,"ordinal":0,"skill":"Fishing"}
 {"description":"94 Fishing for Fishing Frenzy (boostable)","entityId":"activity:content:fishing-frenzy","kind":"skill","level":94,"ordinal":1,"skill":"Fishing"}
 {"description":"87 Summoning","entityId":"activity:content:nihil-familiars","kind":"skill","level":87,"ordinal":1,"skill":"Summoning"}
@@ -39,6 +45,11 @@
 {"description":"Requiem for a Dragon (Ungael ritual site; Archivist + Zorgoth's ring to use site)","entityId":"activity:content:ungael","ordinal":1}
 {"description":"69 Magic","entityId":"activity:content:vampyrism-aspect","level":69,"ordinal":0}
 {"description":"Ancient Magicks spellbook (Desert Treasure path)","entityId":"activity:content:vampyrism-aspect","ordinal":1}
+{"description":"Blisterwood weapon, Sunspear, or Ivandis flail to damage vyres","entityId":"activity:content:vyre-combat-and-sunspear-progression","ordinal":0}
+{"description":"Darkmeyer access for vyrelords (Branches of Darkmeyer path)","entityId":"activity:content:vyre-combat-and-sunspear-progression","ordinal":1}
+{"description":"25 Farming","entityId":"activity:content:wendlewick-fish-farm","kind":"skill","level":25,"ordinal":1,"skill":"Farming"}
+{"description":"45 Fishing","entityId":"activity:content:wendlewick-fish-farm","kind":"skill","level":45,"ordinal":0,"skill":"Fishing"}
+{"description":"Trader Woes (Nathan the Banker in Wendlewick)","entityId":"activity:content:wendlewick-fish-farm","ordinal":2}
 {"description":"Access to the Zamorakian Undercity (Elder God Wars / Senntisten path)","entityId":"activity:misthalin:zamorak-lord-of-chaos","ordinal":0}
 {"description":"Elite Dungeon group or story mode as applicable","entityId":"activity:misthalin:zamorak-lord-of-chaos","ordinal":1}
 {"description":"30 Agility","entityId":"agility:dive","level":30,"ordinal":0}
@@ -3802,11 +3813,15 @@
 {"description":"Style split: Steadfast (melee tank), Ragefire (magic tank), Glaiven (ranged tank)","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank","ordinal":2}
 {"description":"Ancient Awakening (Ungael combat activity)","entityId":"unlock:fremennik:ungael","ordinal":0}
 {"description":"Requiem for a Dragon (Ungael ritual site)","entityId":"unlock:fremennik:ungael","ordinal":1}
+{"description":"Requiem for a Dragon","entityId":"unlock:fremennik:ungael-ritual-site","ordinal":0}
+{"description":"Speak to Archivist while wearing Zorgoth's ring to unlock site use","entityId":"unlock:fremennik:ungael-ritual-site","ordinal":1}
 {"description":"Combat readiness for dagannoth dungeon layers; pet rock or partner for two-person doors deeper in","entityId":"unlock:fremennik:waterbirth-island-access","ordinal":1}
 {"description":"Jarvald boat from Rellekka (or Lunar Waterbirth teleport / diary / tablet alternatives)","entityId":"unlock:fremennik:waterbirth-island-access","ordinal":0}
 {"description":"Cured yak-hides from Thakkrad Sigmundson","entityId":"unlock:fremennik:yak-hide-armour","ordinal":1}
 {"description":"Needle and thread (or costume needle); Crafting level for body/legs as per wiki","entityId":"unlock:fremennik:yak-hide-armour","ordinal":2}
 {"description":"Started The Fremennik Isles","entityId":"unlock:fremennik:yak-hide-armour","ordinal":0}
+{"description":"Requiem for a Dragon (quest reward ring)","entityId":"unlock:fremennik:zorgoths-ring","ordinal":0}
+{"description":"Ungael ritual site access + wear ring while completing rituals for soul ring upgrade","entityId":"unlock:fremennik:zorgoths-ring","ordinal":1}
 {"description":"35 Woodcutting","entityId":"unlock:havenhythe:creeping-ivy","level":35,"ordinal":0}
 {"description":"Havenhythe wall vines (Wendlewick, Marigold Farm, Highweald Forest cabins)","entityId":"unlock:havenhythe:creeping-ivy","ordinal":1}
 {"description":"From Here to Eternity achievement for planting an eternal magic tree at the nursery","entityId":"unlock:havenhythe:dalias-tree-nursery-eternal-magic-plots","ordinal":2}
@@ -4336,9 +4351,11 @@
 {"description":"58 Slayer","entityId":"unlock:morytania:black-mask","level":58,"ordinal":0}
 {"description":"Cabin Fever for Mos Le'Harmless Caves access","entityId":"unlock:morytania:black-mask","ordinal":1}
 {"description":"Uncharged mask required before assembling a slayer helmet","entityId":"unlock:morytania:black-mask","ordinal":3}
+{"description":"The Branches of Darkmeyer progress for early blisterwood fletching","entityId":"unlock:morytania:blisterwood-weapons","ordinal":0}
 {"description":"77 Runecrafting to craft blood runes","entityId":"unlock:morytania:blood-altar-runecrafting","level":77,"ordinal":1}
 {"description":"Blood talisman/tiara/omni/wicked hood or Abyss access","entityId":"unlock:morytania:blood-altar-runecrafting","ordinal":2}
 {"description":"Legacy of Seergaze completed for altar access","entityId":"unlock:morytania:blood-altar-runecrafting","ordinal":0}
+{"description":"Legacy of Seergaze for Columbarium access","entityId":"unlock:morytania:columbarium-key","ordinal":0}
 {"description":"44 Construction to wear","entityId":"unlock:morytania:constructors-outfit","level":44,"ordinal":2}
 {"description":"Gloves: Pazuzu level 85; Boots: Zachory Bragg level 25; Hat total NPC level 200; Trousers total 300; Garb total 400","entityId":"unlock:morytania:constructors-outfit","level":85,"ordinal":3}
 {"description":"In Aid of the Myreque for trek access; Darkness of Hallowvale for garb-tier total levels","entityId":"unlock:morytania:constructors-outfit","ordinal":1}
@@ -4379,6 +4396,10 @@
 {"description":"Masterwork melee armour trim (malevolent essence Morytania + praesulic essence Asgarnia)","entityId":"unlock:morytania:masterwork-spear-of-annihilation","ordinal":1}
 {"description":"Spear of Annihilation base (Archaeology / dig-site material path — region pressure varies)","entityId":"unlock:morytania:masterwork-spear-of-annihilation","ordinal":0}
 {"description":"Easy through elite Morytania achievements claimed in order","entityId":"unlock:morytania:morytania-legs-1-4","ordinal":0}
+{"description":"All Morytania achievements including elite","entityId":"unlock:morytania:morytania-legs-4","ordinal":0}
+{"description":"Claim from Old Man Ral in Meiyerditch","entityId":"unlock:morytania:morytania-legs-4","ordinal":1}
+{"description":"90 Crafting to attach Araxxi body part to spider leg","entityId":"unlock:morytania:noxious-components","kind":"skill","level":90,"ordinal":1,"skill":"Crafting"}
+{"description":"Araxyte Hive access (Morytania) for Araxxor / Araxxi","entityId":"unlock:morytania:noxious-components","ordinal":0}
 {"description":"90 Attack for scythe; 90 Ranged for longbow","entityId":"unlock:morytania:noxious-scythe-and-noxious-longbow","level":90,"ordinal":1}
 {"description":"Araxxor / Araxxi (Morytania spider lair)","entityId":"unlock:morytania:noxious-scythe-and-noxious-longbow","ordinal":0}
 {"description":"Spider leg assembly + noxious hilt / web / eye components per style","entityId":"unlock:morytania:noxious-scythe-and-noxious-longbow","ordinal":2}
@@ -4424,6 +4445,7 @@
 {"description":"Asgarnia: Artisans' Workshop / Imcando anvil smithing hub; Torva pieces break down into praesulic essence (melee) — Torva is Nex (GWD1) Asgarnia","entityId":"unlock:morytania:trimmed-custom-fit-trimmed-masterwork-melee-armour","ordinal":2}
 {"description":"Custom-fit at Elof in Artisans' Workshop (Asgarnia) doubles charges; free custom-fit, independent of augmentation","entityId":"unlock:morytania:trimmed-custom-fit-trimmed-masterwork-melee-armour","ordinal":5}
 {"description":"Morytania: full malevolent set equivalent breaks down into malevolent essence — Malevolent energy/armour from Barrows: Rise of the Six","entityId":"unlock:morytania:trimmed-custom-fit-trimmed-masterwork-melee-armour","ordinal":3}
+{"description":"Blisterwood/Sunspear (or Ivandis flail) to damage vyres","entityId":"unlock:morytania:vyre-combat-and-sunspear-progression","ordinal":0}
 {"description":"60 Agility typical course gate","entityId":"unlock:morytania:werewolf-agility-course","level":60,"ordinal":1}
 {"description":"Creature of Fenkenstrain for Canifis/werewolf access path","entityId":"unlock:morytania:werewolf-agility-course","ordinal":0}
 {"description":"Stick item for the course","entityId":"unlock:morytania:werewolf-agility-course","ordinal":2}

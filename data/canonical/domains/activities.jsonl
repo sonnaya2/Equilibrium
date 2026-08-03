@@ -15,7 +15,7 @@
 {"entityId":"activity:content:anachronia-big-game-hunter"}
 {"entityId":"activity:content:anachronia-totems-permanent-multi-skill-buffs"}
 {"entityId":"activity:content:ancient-elven-ritual-shard"}
-{"entityId":"activity:content:araxxor-araxxi"}
+{"category":"boss","entityId":"activity:content:araxxor-araxxi"}
 {"entityId":"activity:content:arch-glacor"}
 {"entityId":"activity:content:arctic-pine-woodcutting-neitiznot"}
 {"category":"Smithing hub","entityId":"activity:content:artisans-workshop"}
@@ -23,11 +23,12 @@
 {"entityId":"activity:content:bandit-camp-shops"}
 {"category":"Combat minigame / honour shop","entityId":"activity:content:barbarian-assault"}
 {"category":"Agility course / weight outfit","entityId":"activity:content:barbarian-outpost-agility-course"}
-{"entityId":"activity:content:barrows"}
+{"category":"bossing","entityId":"activity:content:barrows"}
 {"entityId":"activity:content:beastmaster-durzag"}
 {"entityId":"activity:content:black-chinchompas"}
 {"entityId":"activity:content:black-salamanders"}
 {"category":"Smithing","entityId":"activity:content:blast-furnace"}
+{"category":"Early-game combat unlock","entityId":"activity:content:blisterwood-weapons"}
 {"entityId":"activity:content:blood-altar"}
 {"entityId":"activity:content:bloodweed-aggression-potions"}
 {"category":"Firemaking quest reward / training","entityId":"activity:content:book-of-char"}
@@ -44,6 +45,7 @@
 {"entityId":"activity:content:city-of-um-mushroom-patch"}
 {"entityId":"activity:content:city-of-um-underworld"}
 {"entityId":"activity:content:clockwork-box-traps"}
+{"category":"Columbarium recess key","entityId":"activity:content:columbarium-key"}
 {"entityId":"activity:content:commander-zilyana"}
 {"entityId":"activity:content:corporeal-beast"}
 {"entityId":"activity:content:corrupted-creatures-soul-devourers"}
@@ -84,7 +86,7 @@
 {"entityId":"activity:content:everlight-dig-site"}
 {"category":"Farming patches","entityId":"activity:content:falador-farm-allotment-flower-herb-patches"}
 {"entityId":"activity:content:farmers-outfit"}
-{"entityId":"activity:content:ferns-finds","location":"Amberfell"}
+{"category":"Mushroom shop","entityId":"activity:content:ferns-finds","location":"Amberfell"}
 {"entityId":"activity:content:fight-kiln"}
 {"category":"Fishing XP method","entityId":"activity:content:fishing-frenzy"}
 {"category":"Minigame","entityId":"activity:content:flash-powder-factory-minigame-and-reward-shop"}
@@ -165,7 +167,7 @@
 {"entityId":"activity:content:nakatra-devourer-eternal"}
 {"entityId":"activity:content:nature-altar"}
 {"entityId":"activity:content:necromantic-rune-temple"}
-{"entityId":"activity:content:neitiznot-yaks"}
+{"category":"Crafting and Cooking","entityId":"activity:content:neitiznot-yaks"}
 {"entityId":"activity:content:nex"}
 {"category":"Boss","entityId":"activity:content:nex-angel-of-death"}
 {"category":"Freneskae Slayer / combat","entityId":"activity:content:nightmare-creatures"}
@@ -215,7 +217,7 @@
 {"entityId":"activity:content:shamans-outfit"}
 {"entityId":"activity:content:shifting-tombs"}
 {"entityId":"activity:content:shilo-village-gem-mine-and-gemstone-cavern"}
-{"category":"Columbarium key","entityId":"activity:content:shiny-columbarium-key"}
+{"category":"Columbarium recess key","entityId":"activity:content:shiny-columbarium-key"}
 {"entityId":"activity:content:silverquill-the-dreadhog"}
 {"entityId":"activity:content:skekas-hypnowand"}
 {"entityId":"activity:content:skillcape-rack"}
@@ -255,12 +257,12 @@
 {"entityId":"activity:content:vindicta-gorvek"}
 {"entityId":"activity:content:volcanic-trapper-outfit"}
 {"category":"Boss","entityId":"activity:content:vorago"}
-{"entityId":"activity:content:vyre-combat-and-sunspear-progression"}
+{"category":"Slayer / multi-skill combat","entityId":"activity:content:vyre-combat-and-sunspear-progression"}
 {"category":"Archaeology dig-site hub","entityId":"activity:content:warforge-dig-site-bandosian"}
 {"category":"Melee guild / defender path","entityId":"activity:content:warriors-guild"}
 {"entityId":"activity:content:waterbirth-island"}
 {"entityId":"activity:content:waterfall-fishing"}
-{"entityId":"activity:content:wendlewick-fish-farm"}
+{"category":"Fishing","entityId":"activity:content:wendlewick-fish-farm"}
 {"entityId":"activity:content:werewolf-agility-course"}
 {"entityId":"activity:content:whirligigs"}
 {"entityId":"activity:content:wilderness-agility-course"}

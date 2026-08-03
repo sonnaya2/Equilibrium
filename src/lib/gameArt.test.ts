@@ -408,7 +408,7 @@ describe("gameArt", () => {
       /moonrise-dig-site\.(webp|png)$/,
     );
     expect(dataEntityIconPath({ name: "Spirit moths (Highweald charm supply)" })).toMatch(
-      /charming-moths\.(webp|png)$/,
+      /spirit-moths\.(webp|png)$|charming-moths\.(webp|png)$/,
     );
     expect(
       dataEntityIconPath({ name: "Uncommon gem rocks", kind: "Mining / Wendlewick Deserted Mine" }),
@@ -657,6 +657,7 @@ describe("gameArt", () => {
       ["Kalphite King", "kalphite-king"],
       ["Kalphite Queen", "kalphite-queen"],
       ["Araxxor / Araxxi", "araxxor"],
+      ["Linza the Disgraced", "linza-the-disgraced"],
       ["Corporeal Beast", "corporeal-beast"],
       ["Chaos Elemental", "chaos-elemental"],
       ["Legiones", "legiones"],

@@ -1323,7 +1323,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
       { region: "forinthry", name: /Shadow Reef/, min: 2, re: /Eldritch|Black stone/i },
       { region: "desert", name: "Beastmaster Durzag", min: 3, re: /Achto/i },
       { region: "desert", name: "Yakamaru", min: 3, re: /Achto/i },
-      { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil|Linza/i },
+      { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil|Guthan|Torag|Verac/i },
       { region: "kandarin", name: "Kuradal", min: 1, re: /Ferocious ring/i },
       { region: "misthalin", name: /Polypore Dungeon/, min: 2, re: /Polypore staff|Ganodermic/i },
       {
@@ -1498,40 +1498,236 @@ describe("contentRewardsFull — catalog boss packages", () => {
     );
   });
 
+  it("Fremennik Zorgoth's ring and Ungael ritual site are major unlocks", () => {
+    const frem = regionById("fremennik");
+    expect(frem.upgrades.some((u) => u.name === "Zorgoth's ring")).toBe(true);
+    expect(frem.upgrades.some((u) => u.name === "Ungael ritual site")).toBe(true);
+
+    const ring = frem.upgrades.find((u) => u.name === "Zorgoth's ring")!;
+    const ringFull = contentRewardsFull(ring, frem.upgrades);
+    expect(ringFull).toMatch(/Zorgoth's ring/i);
+    expect(ringFull).toMatch(/Zorgoth's soul ring/i);
+    const ringP = presentContentRewards(ringFull);
+    expect(ringP.icons.length).toBeGreaterThanOrEqual(1);
+    expect(ringP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(ringP.icons.some((i) => /zorgoths/i.test(i.src))).toBe(true);
+
+    const site = frem.upgrades.find((u) => u.name === "Ungael ritual site")!;
+    const siteFull = contentRewardsFull(site, frem.upgrades);
+    expect(siteFull).toMatch(/Ungael ritual site/i);
+    expect(siteFull).toMatch(/soul ring/i);
+    const siteP = presentContentRewards(siteFull);
+    expect(siteP.icons.length).toBeGreaterThanOrEqual(1);
+    expect(siteP.icons.every((i) => publicOk(i.src))).toBe(true);
+  });
+
+  it("Havenhythe Wendlewick fish farm type is Fishing not taxonomy string", () => {
+    expect(contentTypeLabel("starting-region Fishing infrastructure", "Wendlewick fish farm")).toBe(
+      "Fishing",
+    );
+    expect(contentTypeLabel("Fishing", "Wendlewick fish farm")).toBe("Fishing");
+    const { row, upgrades } = contentRow("havenhythe", "Wendlewick fish farm");
+    expect(contentTypeLabel(row.kind ?? "", row.name)).toBe("Fishing");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Raw lobster/i);
+    expect(full).toMatch(/Raw shark/i);
+    expect(full).toMatch(/Raw giant crayfish/i);
+    expect(full).not.toMatch(/High XP\/h Active Fishing method/i);
+    expect(full).not.toMatch(/starting-region/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(3);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+  });
+
+  it("Havenhythe Old Meats uses butcher shop plate not crayfish", () => {
+    const path = dataEntityIconPath({
+      name: "Old Meats",
+      kind: "Food and farm-supply shop",
+    });
+    expect(path).toMatch(/old-meats\.(webp|png)$/);
+    expect(path).not.toMatch(/crayfish/i);
+    const full = contentRewardsFull(
+      { name: "Old Meats", detail: "" },
+      [],
+    );
+    expect(full).toMatch(/Raw beef/i);
+    expect(full).toMatch(/Raw chicken/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(3);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.every((i) => !/crayfish/i.test(i.src))).toBe(true);
+  });
+
+  it("Havenhythe Moonrise Dig Site has payoff reward icons", () => {
+    const { row, upgrades } = contentRow("havenhythe", "Moonrise Dig Site");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Ring of Kayazu/i);
+    expect(full).toMatch(/Tear of Inanna/i);
+    expect(full).toMatch(/Hungry Like the Wolf/i);
+    expect(full).toMatch(/Anzagar/i);
+    // Prose tokens that never resolve icons should not be the whole reward string
+    expect(full).not.toMatch(/Lv 52/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(4);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /ring-of-kayazu/i.test(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /tear-of-inanna|hungry-like-the-wolf|anzagar/i.test(i.src))).toBe(
+      true,
+    );
+  });
+
+  it("Havenhythe Fern's Finds uses shop plate not Meilyr recipe shop", () => {
+    const path = dataEntityIconPath({ name: "Fern's Finds", kind: "Mushroom shop" });
+    expect(path).toMatch(/ferns-finds\.(webp|png)$/);
+    expect(path).not.toMatch(/meilyr/i);
+    const { row, upgrades } = contentRow("havenhythe", "Fern's Finds");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Button mushroom/i);
+    expect(full).toMatch(/Bittercap mushroom/i);
+    expect(full).toMatch(/Morchella mushroom/i);
+    expect(full).not.toBe("Mushroom shop");
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(4);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.every((i) => !/meilyr/i.test(i.src))).toBe(true);
+  });
+
+  it("Morytania Vyrewatch has plate icon and drop reward chips", () => {
+    expect(dataEntityIconPath({ name: "Vyrewatch", kind: "Slayer / multi-skill combat" })).toMatch(
+      /vyrewatch\.(webp|png)$/,
+    );
+    const { row, upgrades } = contentRow("morytania", "Vyrewatch");
+    const full = contentRewardsFull(row, upgrades);
+    expect(full).toMatch(/Vyre corpse/i);
+    expect(full).toMatch(/Congealed blood/i);
+    expect(full).toMatch(/Death runes/i);
+    expect(full).toMatch(/Splitbark/i);
+    // Access prose must not replace the reward chip list
+    expect(full.toLowerCase()).not.toMatch(/^blisterwood/);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(5);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /vyre-corpse|congealed-blood/i.test(i.src))).toBe(true);
+  });
+
+  it("Morytania Noxious components major has component + weapon icons", () => {
+    const mory = regionById("morytania");
+    expect(mory.upgrades.some((u) => u.name === "Noxious components")).toBe(true);
+    const face = mory.upgrades.find((u) => u.name === "Noxious components")!;
+    const full = contentRewardsFull(face, mory.upgrades);
+    expect(full).toMatch(/Araxxi's eye/i);
+    expect(full).toMatch(/Araxxi's fang/i);
+    expect(full).toMatch(/Araxxi's web/i);
+    expect(full).toMatch(/Spider leg top/i);
+    expect(full).toMatch(/Noxious scythe/i);
+    expect(full).toMatch(/Noxious staff/i);
+    expect(full).toMatch(/Noxious longbow/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(6);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /araxxis-fang|araxxis-eye|spider-leg/i.test(i.src))).toBe(
+      true,
+    );
+    expect(presented.icons.some((i) => /noxious-scythe|noxious-staff|noxious-longbow/i.test(i.src))).toBe(
+      true,
+    );
+  });
+
+  it("Morytania Linza is separate from Barrows rewards", () => {
+    const barrows = contentRow("morytania", "Barrows");
+    const barrowsFull = contentRewardsFull(barrows.row, barrows.upgrades);
+    expect(barrowsFull).toMatch(/Ahrim/i);
+    expect(barrowsFull).toMatch(/Dharok/i);
+    expect(barrowsFull).not.toMatch(/Linza/i);
+
+    const linza = contentRow("morytania", "Linza the Disgraced");
+    const linzaFull = contentRewardsFull(linza.row, linza.upgrades);
+    expect(linzaFull).toMatch(/Linza's helm/i);
+    expect(linzaFull).toMatch(/Linza's hammer/i);
+    expect(linzaFull).toMatch(/Linza's shield/i);
+    const linzaP = presentContentRewards(linzaFull);
+    expect(linzaP.icons.length).toBeGreaterThanOrEqual(4);
+    expect(linzaP.icons.every((i) => publicOk(i.src))).toBe(true);
+  });
+
+  it("Morytania blisterwood weapons major has inventory icons for each piece", () => {
+    const row = contentRow("morytania", "Blisterwood weapons");
+    const full = contentRewardsFull(row.row, row.upgrades);
+    expect(full).toMatch(/Blisterwood polearm/i);
+    expect(full).toMatch(/Blisterwood sickle/i);
+    expect(full).toMatch(/Blisterwood staff/i);
+    expect(full).toMatch(/Blisterwood wand/i);
+    expect(full).toMatch(/Blisterwood orb/i);
+    expect(full).toMatch(/stake-thrower crossbow/i);
+    const presented = presentContentRewards(full);
+    expect(presented.icons.length).toBeGreaterThanOrEqual(7);
+    expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /blisterwood-polearm/i.test(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /blisterwood-staff/i.test(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /blisterwood-wand/i.test(i.src))).toBe(true);
+    expect(presented.icons.some((i) => /blisterwood-orb/i.test(i.src))).toBe(true);
+  });
+
   it("Morytania shade cremation keys are majors with inventory icons", () => {
     const mory = regionById("morytania");
     expect(mory.content.some((c) => c.name === "Shade keys")).toBe(true);
     expect(mory.content.some((c) => c.name === "Shiny columbarium key")).toBe(true);
+    expect(mory.content.some((c) => c.name === "Columbarium key")).toBe(true);
 
+    // Hub: Prayer/FM + path pointers only — no bronze–gold / shiny metal spam.
     const cremation = contentRow("morytania", "Shades of Mort'ton cremation");
     const cremationFull = contentRewardsFull(cremation.row, cremation.upgrades);
-    expect(cremationFull).toMatch(/Bronze key/i);
-    expect(cremationFull).toMatch(/Gold key/i);
-    expect(cremationFull).toMatch(/Shiny columbarium key/i);
-    const cremationP = presentContentRewards(cremationFull);
-    expect(cremationP.icons.length).toBeGreaterThanOrEqual(6);
-    expect(cremationP.icons.every((i) => publicOk(i.src))).toBe(true);
-    expect(cremationP.icons.some((i) => /gold-key/i.test(i.src))).toBe(true);
-    expect(cremationP.icons.some((i) => /shiny-columbarium-key/i.test(i.src))).toBe(true);
+    expect(cremationFull).toMatch(/Prayer XP/i);
+    expect(cremationFull).toMatch(/Firemaking XP/i);
+    expect(cremationFull).toMatch(/Shade keys path/i);
+    expect(cremationFull).toMatch(/Columbarium keys path/i);
+    expect(cremationFull).not.toMatch(/Bronze key/i);
+    expect(cremationFull).not.toMatch(/Shiny columbarium key/i);
 
     const shadeKeys = contentRow("morytania", "Shade keys");
     const shadeFull = contentRewardsFull(shadeKeys.row, shadeKeys.upgrades);
     expect(shadeFull).toMatch(/Bronze key.*Steel key.*Black key.*Silver key.*Gold key/i);
+    expect(shadeFull).toMatch(/Shade skull/i);
+    expect(shadeFull).toMatch(/Shade master kit/i);
     const shadeP = presentContentRewards(shadeFull);
-    expect(shadeP.icons.length).toBe(5);
+    // Metal keys have inventory icons; skull/kit may be text-only chips.
+    expect(shadeP.icons.length).toBeGreaterThanOrEqual(5);
     expect(shadeP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(shadeP.icons.some((i) => /gold-key/i.test(i.src))).toBe(true);
 
     const shiny = contentRow("morytania", "Shiny columbarium key");
     const shinyFull = contentRewardsFull(shiny.row, shiny.upgrades);
     expect(shinyFull).toMatch(/Shiny columbarium key/i);
+    expect(shinyFull).toMatch(/Dragon spear/i);
+    expect(shinyFull).toMatch(/Blood runes/i);
+    expect(shinyFull).toMatch(/High herbs/i);
+    expect(shinyFull).toMatch(/Half keys/i);
+    expect(shinyFull).toMatch(/Trail armour/i);
     const shinyP = presentContentRewards(shinyFull);
-    expect(shinyP.icons.length).toBeGreaterThanOrEqual(1);
-    expect(shinyP.icons[0]!.src).toMatch(/shiny-columbarium-key/i);
-    expect(publicOk(shinyP.icons[0]!.src)).toBe(true);
+    expect(shinyP.icons.length).toBeGreaterThanOrEqual(4);
+    expect(shinyP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(shinyP.icons.some((i) => /shiny-columbarium-key/i.test(i.src))).toBe(true);
+    expect(shinyP.icons.some((i) => /dragon-spear/i.test(i.src))).toBe(true);
+
+    const plain = contentRow("morytania", "Columbarium key");
+    const plainFull = contentRewardsFull(plain.row, plain.upgrades);
+    expect(plainFull).toMatch(/Columbarium key/i);
+    expect(plainFull).toMatch(/Blood talisman/i);
+    expect(plainFull).toMatch(/Dragon spear/i);
+    expect(plainFull).toMatch(/Blood runes/i);
+    const plainP = presentContentRewards(plainFull);
+    expect(plainP.icons.length).toBeGreaterThanOrEqual(4);
+    expect(plainP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(plainP.icons.some((i) => /columbarium-key/i.test(i.src))).toBe(true);
+    expect(plainP.icons.some((i) => /blood-talisman/i.test(i.src))).toBe(true);
+    expect(plainP.icons.some((i) => /dragon-spear/i.test(i.src))).toBe(true);
 
     expect(dataEntityIconPath({ name: "Shade keys" })).toMatch(/gold-key\.(webp|png)$/);
     expect(dataEntityIconPath({ name: "Shiny columbarium key" })).toMatch(
       /shiny-columbarium-key\.(webp|png)$/,
+    );
+    expect(dataEntityIconPath({ name: "Columbarium key" })).toMatch(
+      /columbarium-key\.(webp|png)$/,
     );
   });
 

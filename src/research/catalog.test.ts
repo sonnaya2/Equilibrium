@@ -754,6 +754,8 @@ describe("research catalog", () => {
 
     expect(fremennik?.upgrades.filter((row) => row.name === "Hand cannon")).toHaveLength(1);
     expect(fremennik?.upgrades.filter((row) => row.name === "Fremennik sea boots")).toHaveLength(1);
+    expect(fremennik?.upgrades.filter((row) => row.name === "Zorgoth's ring")).toHaveLength(1);
+    expect(fremennik?.upgrades.filter((row) => row.name === "Ungael ritual site")).toHaveLength(1);
     expect(fremennik?.upgrades.find((row) => row.name === "Golden mining suit")?.detail).toBe(
       "The five-piece outfit grants 6% Mining XP and is awarded by the Liquid Gold Nymph",
     );
@@ -999,6 +1001,20 @@ describe("research catalog", () => {
     expect(morytania?.content.filter((row) => row.name === "Shiny columbarium key")).toHaveLength(
       1,
     );
+    expect(morytania?.content.filter((row) => row.name === "Columbarium key")).toHaveLength(1);
+    expect(morytania?.content.filter((row) => row.name === "Linza the Disgraced")).toHaveLength(1);
+    expect(morytania?.content.filter((row) => row.name === "Blisterwood weapons")).toHaveLength(1);
+    expect(morytania?.upgrades.filter((row) => row.name === "Blisterwood weapons")).toHaveLength(1);
+    const barrowsRewards = contentRewardsFull(
+      morytania!.content.find((row) => row.name === "Barrows")!,
+      morytania!.upgrades,
+    );
+    expect(barrowsRewards).not.toMatch(/Linza/i);
+    const linzaRewards = contentRewardsFull(
+      morytania!.content.find((row) => row.name === "Linza the Disgraced")!,
+      morytania!.upgrades,
+    );
+    expect(linzaRewards).toMatch(/Linza's helm/i);
     expect(
       catalogSource.regions
         .find((region) => region.id === "misthalin")

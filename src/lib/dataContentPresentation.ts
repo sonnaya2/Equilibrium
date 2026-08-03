@@ -78,6 +78,11 @@ const PURE_TYPE: Record<string, string> = {
   "city/skilling hub": "Hub",
   "high-level hub": "Hub",
   "construction / slayer hub": "Hub",
+  // Old taxonomy string — never show raw in Type column
+  "starting-region fishing infrastructure": "Fishing",
+  "starting-region Fishing infrastructure": "Fishing",
+  fishing: "Fishing",
+  "fish farm": "Fishing",
   "thieving / mining hub": "Hub",
 };
 
@@ -519,6 +524,8 @@ export function presentInterestName(value: string): string {
 
   if (/^Ardougne farming patches\b/i.test(raw)) return "Ardougne farm patches";
   if (/^Highweald\s*\/\s*Deserted Mine mining access$/i.test(raw)) return "Highweald mines";
+  if (/^starting-region\s+Fishing infrastructure$/i.test(raw)) return "Fish farm";
+  if (/^starting-region Fishing infrastructure$/i.test(raw)) return "Fish farm";
   if (/^The Arc skilling destinations\b/i.test(raw)) return "The Arc islands";
   if (/^Safecracking route$/i.test(raw)) return "Safes";
   if (/^Asgarnia safecracking circuit$/i.test(raw)) return "Safes";

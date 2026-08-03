@@ -1,0 +1,17 @@
+# Fremennik: Neitiznot yaks major — add baby yak (unchecked Fremennik yak) drop.
+# Wiki tertiary: Fremennik yak (unchecked) 1/3000 after player-owned farm tutorial.
+# https://runescape.wiki/w/Yak
+# https://runescape.wiki/w/Neitiznot
+# Catalog: $.regions[5].content[11]
+
+{"op":"upsert-source","source":"source:runescape-wiki:877af40005550734","set":{"url":"https://runescape.wiki/w/Yak","page_title":"Yak","publisher":"RuneScape Wiki","source_family":"runescape-wiki","verified_at":"2026-08-11","retrieved_at":null,"source_role":"verification","content_hash":null},"reason":"Yak drop table includes Fremennik yak (unchecked) baby / PoF drop."}
+{"op":"upsert-source","source":"source:runescape-wiki:97e1089b8151c4bc","set":{"url":"https://runescape.wiki/w/Neitiznot","page_title":"Neitiznot","publisher":"RuneScape Wiki","source_family":"runescape-wiki","verified_at":"2026-08-11","retrieved_at":null,"source_role":"verification","content_hash":null},"reason":"Neitiznot yak geography."}
+
+{"op":"upsert","entity":"activity:content:neitiznot-yaks","set":{"entity_type":"activity","name":"Neitiznot yaks","short_description":"Yak hide, meat, hair — plus rare baby yak (unchecked) for PoF.","detailed_description":"Neitiznot yaks (Fremennik). Always: bones, yak-hide, hair, raw yak meat (Craft/Cook path for yak-hide armour). Tertiary after player-owned farm tutorial: Fremennik yak (unchecked) baby for Player-Owned Farm (wiki 1/3000). · Unlocks: Yak-hide, Raw yak meat, Hair, Baby yak","status":"active","verified_at":"2026-08-11","sort_key":"neitiznot yaks"},"reason":"Surface baby yak / unchecked Fremennik yak on Neitiznot yaks major rewards."}
+{"op":"link-region","entity":"activity:content:neitiznot-yaks","region":"fremennik","relation":"primary","order":0,"reason":"Neitiznot is Fremennik."}
+{"op":"link-region","entity":"activity:content:neitiznot-yaks","region":"fremennik","relation":"required","order":0,"group":"single","reason":"Self-supply yaks need Fremennik."}
+{"op":"link-source","entity":"activity:content:neitiznot-yaks","source":"source:runescape-wiki:877af40005550734","role":"verification","order":0,"reason":"Cite Yak drop table for baby / unchecked."}
+{"op":"link-source","entity":"activity:content:neitiznot-yaks","source":"source:runescape-wiki:97e1089b8151c4bc","role":"verification","order":1,"reason":"Cite Neitiznot."}
+{"op":"add-effect","entity":"activity:content:neitiznot-yaks","description":"Always: bones, yak-hide, hair, raw yak meat","key":"effect-1","reason":"100% drop package."}
+{"op":"add-effect","entity":"activity:content:neitiznot-yaks","description":"Tertiary: Fremennik yak (unchecked) baby for Player-Owned Farm after PoF tutorial","key":"effect-2","reason":"Baby yak drop highlight."}
+{"op":"set-record","file":"data/research/catalog.json","path":"$.regions[5].content[11]","entity":"activity:content:neitiznot-yaks","body":{"confidence":"confirmed_wiki","detail":"Neitiznot yaks (Fremennik). Always yak-hide, hair, raw yak meat. Rare tertiary after PoF tutorial: Fremennik yak (unchecked) baby for Player-Owned Farm. · Unlocks: Yak-hide, Raw yak meat, Hair, Baby yak","kind":"Crafting and Cooking","name":"Neitiznot yaks","regionHints":["fremennik"],"regionId":"fremennik","regionRequirementType":"single","requiredRegions":["fremennik"],"source":{"source":"runescape-wiki","title":"Yak","url":"https://runescape.wiki/w/Yak","verifiedAt":"2026-08-11"}},"reason":"Fremennik content[11] Neitiznot yaks Unlocks include Baby yak."}

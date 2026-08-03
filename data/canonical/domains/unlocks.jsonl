@@ -262,8 +262,10 @@
 {"category":"best-in-slot ranged-oriented upgraded Fremennik ring","entityId":"unlock:fremennik:stalkers-ring"}
 {"category":"mid-high style tank boots","entityId":"unlock:fremennik:steadfast-ragefire-glaiven-boots-glacor-t85-tank"}
 {"entityId":"unlock:fremennik:ungael"}
+{"category":"Necromancy training site","entityId":"unlock:fremennik:ungael-ritual-site"}
 {"category":"Slayer combat and charm supply hub","entityId":"unlock:fremennik:waterbirth-island-access"}
 {"category":"early Crafting product","entityId":"unlock:fremennik:yak-hide-armour"}
+{"category":"Necromancy ring","entityId":"unlock:fremennik:zorgoths-ring"}
 {"category":"Woodcutting vine training","entityId":"unlock:havenhythe:creeping-ivy"}
 {"category":"Woodcutting and Farming supply infrastructure","entityId":"unlock:havenhythe:dalias-tree-nursery-eternal-magic-plots"}
 {"category":"Summoning tele necklace and charm double","entityId":"unlock:havenhythe:fang-of-mohegan"}
@@ -281,7 +283,7 @@
 {"category":"boss uniques","entityId":"unlock:havenhythe:silverquill-the-dreadhog-uniques"}
 {"category":"Archaeology monolith relic power","entityId":"unlock:havenhythe:tear-of-inanna"}
 {"category":"Mining / Wendlewick Deserted Mine","entityId":"unlock:havenhythe:uncommon-gem-rocks"}
-{"category":"starting-region Fishing infrastructure","entityId":"unlock:havenhythe:wendlewick-fish-farm"}
+{"category":"Fishing","entityId":"unlock:havenhythe:wendlewick-fish-farm"}
 {"category":"regional Mining and Construction supply","entityId":"unlock:havenhythe:wendlewick-limestone-mine"}
 {"category":"permanent regional travel infrastructure","entityId":"unlock:havenhythe:wendlewick-lodestone"}
 {"category":"permanent Magic travel unlock","entityId":"unlock:havenhythe:wendlewick-teleport-standard-spellbook"}
@@ -466,11 +468,13 @@
 {"category":"regional boss BiS drop source","entityId":"unlock:morytania:araxxor-araxxi"}
 {"category":"Crafting and Construction skilling off-hand cross-region chain","entityId":"unlock:morytania:artificers-measure"}
 {"category":"permanent Prayer ash/ghost drop cleaner","entityId":"unlock:morytania:attuned-ectoplasmator"}
-{"category":"regional boss BiS drop source","entityId":"unlock:morytania:barrows-classic-brothers-akrisae-linza"}
+{"category":"regional boss drop source","entityId":"unlock:morytania:barrows-classic-brothers-akrisae-linza"}
 {"category":"regional boss BiS drop source","entityId":"unlock:morytania:barrows-rise-of-the-six"}
 {"category":"combat Archaeology relic","entityId":"unlock:morytania:berserkers-fury-relic-chain"}
 {"category":"Slayer helmet melee component","entityId":"unlock:morytania:black-mask"}
+{"category":"Early-game combat unlock","entityId":"unlock:morytania:blisterwood-weapons"}
 {"category":"Runecrafting altar infrastructure","entityId":"unlock:morytania:blood-altar-runecrafting"}
+{"category":"Columbarium recess key","entityId":"unlock:morytania:columbarium-key"}
 {"category":"Construction XP outfit","entityId":"unlock:morytania:constructors-outfit"}
 {"category":"Prayer permanent ability unlock","entityId":"unlock:morytania:cremation-ability-unlock"}
 {"category":"Morytania teleport network equipment","entityId":"unlock:morytania:drakans-medallion"}
@@ -486,6 +490,8 @@
 {"category":"tier-99/100 fletchable two-handed ranged weapon","entityId":"unlock:morytania:masterwork-bow"}
 {"category":"tier-92 melee DoT spear","entityId":"unlock:morytania:masterwork-spear-of-annihilation"}
 {"category":"achievement diary Prayer RC Farming utility","entityId":"unlock:morytania:morytania-legs-1-4"}
+{"category":"elite achievement diary skilling utility","entityId":"unlock:morytania:morytania-legs-4"}
+{"category":"tier-90 weapon components","entityId":"unlock:morytania:noxious-components"}
 {"category":"tier-90 two-handed melee and ranged weapons","entityId":"unlock:morytania:noxious-scythe-and-noxious-longbow"}
 {"category":"tier-90 two-handed Magic weapon","entityId":"unlock:morytania:noxious-staff"}
 {"category":"tier-90 weapons","entityId":"unlock:morytania:noxious-weapons"}
@@ -504,7 +510,7 @@
 {"category":"permanent minigame reward infrastructure package","entityId":"unlock:morytania:temple-trekking-permanent-reward-package"}
 {"category":"Construction and Woodcutting outfit progression","entityId":"unlock:morytania:temple-trekking-skilling-outfits"}
 {"category":"best-in-slot melee power armour cross-region chain","entityId":"unlock:morytania:trimmed-custom-fit-trimmed-masterwork-melee-armour"}
-{"category":"combat and multi-skill support infrastructure","entityId":"unlock:morytania:vyre-combat-and-sunspear-progression"}
+{"category":"Slayer / multi-skill combat","entityId":"unlock:morytania:vyre-combat-and-sunspear-progression"}
 {"category":"Prayer/combat/Firemaking/Farming training","entityId":"unlock:morytania:vyres-sunspear-multi-skill-training"}
 {"category":"Agility course infrastructure","entityId":"unlock:morytania:werewolf-agility-course"}
 {"entityId":"unlock:recommended-unlocks:500-vyre-corpse-cremation-progression"}

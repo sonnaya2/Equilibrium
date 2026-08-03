@@ -119,12 +119,24 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Beastmaster Durzag": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   Yakamaru: "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   "Liberation of Mazcab": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
+  // Linza is its own major (content[17]) — do not nest set chips under Barrows.
   Barrows:
-    "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail, Guthan's warspear, Linza's helm, Linza's cuirass, Linza's greaves, Linza's hammer, Linza's shield",
+    "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail, Guthan's warspear",
+  "Barrows (classic brothers + Akrisae)":
+    "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail, Guthan's warspear",
+  "Barrows (classic brothers + Akrisae / Linza)":
+    "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail, Guthan's warspear",
   "Linza the Disgraced":
     "Linza's helm, Linza's cuirass, Linza's greaves, Linza's hammer, Linza's shield",
   "Linza's equipment":
     "Linza's helm, Linza's cuirass, Linza's greaves, Linza's hammer, Linza's shield",
+  "Blisterwood weapons":
+    "Blisterwood polearm, Blisterwood sickle, Off-hand blisterwood sickle, Blisterwood staff, Blisterwood wand, Blisterwood orb, Blisterwood stake, Off-hand blisterwood stake, Blisterwood stake-thrower crossbow",
+  "Zorgoth's ring": "Zorgoth's ring, Zorgoth's soul ring",
+  "Zorgoths ring": "Zorgoth's ring, Zorgoth's soul ring",
+  "Ungael ritual site":
+    "Ungael ritual site, Zorgoth's soul ring path, Durable ritual components, Bank chest",
+  Ungael: "Ungael combat activity, Ungael ritual site, Zorgoth's soul ring path",
   // https://runescape.wiki/w/Darkmeyer_potion_stall (+ Ring of Vitur from vyre pickpockets)
   "Darkmeyer Thieving":
     "Ring of Vitur, Extreme attack, Extreme strength, Extreme defence, Extreme magic, Extreme ranging, Extreme necromancy, Prayer renewal, Aggression potion, Spirit attraction potion, Summoning potion, Super Zamorak brew, Weapon poison+++, Potion flask",
@@ -332,7 +344,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Blast Furnace": "Blast fusion hammer, Coal-free bars, bank chest",
   "Lava Flow Mine": "Golden mining suit, Imcando pickaxe",
   Keldagrim: "Dwarven traders",
-  "Neitiznot yaks": "Yak hide, Raw yak meat",
+  "Neitiznot yaks": "Yak-hide, Raw yak meat, Hair, Baby yak",
   "Penguin Agility Course": "Agility course",
   "Jatizso dungeon mine": "Resource dungeon",
   "Sparkling wisp colony": "Sparkling wisps",
@@ -448,12 +460,18 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Artisans' Workshop": "Burial smithing, burial XP",
   "Tai Bwo Wannai Cleanup": "Trading sticks",
   "Tai Bwo Wannai Cleanup and trading sticks": "Trading sticks",
+  // Chip-friendly payoff names (icons under permanent-unlocks / inventory art).
   "Moonrise Dig Site":
-    "Lv 52–88 digs, mysteries, Hungry Like the Wolf relic, Ring of Kayazu, Anzagar pet",
+    "Ring of Kayazu, Tear of Inanna, Hungry Like the Wolf, Anzagar, Fang of Kayazu, Guardian's tear",
+  // Hub: Prayer/FM + path pointers only — metal/shiny key chips live on key majors.
   "Shades of Mort'ton cremation":
-    "Bronze key, Steel key, Black key, Silver key, Gold key, Shiny columbarium key",
-  "Shade keys": "Bronze key, Steel key, Black key, Silver key, Gold key",
-  "Shiny columbarium key": "Shiny columbarium key",
+    "Prayer XP, Firemaking XP, Shade keys path, Columbarium keys path",
+  "Shade keys":
+    "Bronze key, Steel key, Black key, Silver key, Gold key, Shade skull, Shade master kit",
+  "Shiny columbarium key":
+    "Shiny columbarium key, Dragon spear, Blood runes, High herbs, Half keys, Trail armour (black/adamant/rune g/t)",
+  "Columbarium key":
+    "Columbarium key, Blood talisman, Dragon spear, Blood runes, Half keys, Herbs, Trail armour (black/adamant/rune g/t)",
   "Musa Point banana plantation": "Bananas, Luthas crates",
   "Musa Point free teaks": "Teak trees",
   "Hardwood Grove": "Teak trees, Mahogany trees",
@@ -478,13 +496,19 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Apex hide cowl, Apex hide body, Apex hide chaps, Apex hide vambraces, Apex hide boots",
   "Clockwork box traps": "Multi-catch box traps",
   "Masterwork Ranged Armour materials": "Apex hide → masterwork ranged",
-  "Fern's Finds": "Mushroom shop",
+  // Amberfell shop stock (wiki Fern's Finds) — not a generic "mushroom shop" → Meilyr plate.
+  "Fern's Finds":
+    "Button mushroom, Bittercap mushroom, Morchella mushroom, Bittercap mushroom spore, Dwellberries, Redberries",
   "Heather's Crafting Supplies": "Emeralds, rubies, red topaz, opals",
   "Allotment patches": "2 allotment patches",
   "Herb patch": "1 herb patch",
   "Flower patch": "1 flower patch",
   "Jackalope familiar": "Soil storage, bonus Archaeology materials",
-  "Wendlewick fish farm": "High XP/h Active Fishing method",
+  // Chip-friendly fish-farm harvests (not taxonomy prose).
+  "Wendlewick fish farm":
+    "Raw lobster, Raw swordfish, Raw shark, Raw giant crayfish",
+  "Wendlewick fish farm (Havenhythe)":
+    "Raw lobster, Raw swordfish, Raw shark, Raw giant crayfish",
   "Havenhythe canoe network": "Four canoe stations",
   "Havenhythe birdhouses": "Birdhouse tiers to eternal magic",
   "Jackalopes (BIS early–mid Hunter method)": "Early–mid Hunter XP, antlers",
@@ -500,7 +524,11 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Dalia's Tree Nursery": "Tree farming",
   "Wendlewick Teleport / lodestone": "Wendlewick access",
   "Trader Woes": "Shop stock",
-  "Old Meats": "PoF food / raw meat source",
+  // Hollow Hill food shop stock (wiki Old Meats) — chip-friendly item names.
+  "Old Meats":
+    "Raw rabbit, Raw beef, Raw bird meat, Raw rat meat, Raw bear meat, Raw chicken, Cooked meat",
+  "Old Meats (Hollow Hill meat shop)":
+    "Raw rabbit, Raw beef, Raw bird meat, Raw rat meat, Raw bear meat, Raw chicken, Cooked meat",
   "Senntisten Dig Site": "Zarosian mini digs",
   "War's Retreat": "Boss portals, bank, altar",
   "Archaeology Campus and Varrock Dig Site hub": "Guild, dig site, museum",
@@ -551,7 +579,14 @@ export const CONTENT_REWARD_KEYS: Record<string, string> = {
   "The Magister": "The Magister",
   "Liberation of Mazcab": "Achto",
 
-  "Araxxor / Araxxi": "Noxious weapons",
+  "Araxxor / Araxxi":
+    "Noxious scythe, Noxious staff, Noxious longbow, Araxxi's eye, Araxxi's fang, Araxxi's web",
+  "Noxious components":
+    "Araxxi's eye, Araxxi's fang, Araxxi's web, Spider leg top, Spider leg middle, Spider leg bottom, Noxious scythe, Noxious staff, Noxious longbow",
+  "Noxious weapons": "Noxious scythe, Noxious staff, Noxious longbow",
+  // Drop chips only (access = blisterwood/Sunspear is prose, not reward tokens).
+  Vyrewatch:
+    "Vyre corpse, Congealed blood, Death runes, Blood runes, Grimy ranarr, Grimy avantoe, Grimy snapdragon, Splitbark helm, Morchella mushroom spore",
   "Barrows: Rise of the Six": "Rise of the Six progression",
 
   "Ivar, King of Bones": "Ivar, King of Bones uniques",

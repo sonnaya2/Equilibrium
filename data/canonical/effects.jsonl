@@ -14,6 +14,8 @@
 {"description":"~2,000 Agility XP per advanced lap after rebalance (~180k+/hr base)","entityId":"activity:content:barbarian-outpost-agility-course","key":"effect-1","ordinal":0}
 {"description":"Agile top after 250 successful advanced laps (Gunnjorn)","entityId":"activity:content:barbarian-outpost-agility-course","key":"effect-2","ordinal":0}
 {"description":"Agile legs (bottom) via Advanced Gnome Stronghold (Kandarin companion)","entityId":"activity:content:barbarian-outpost-agility-course","key":"effect-3","ordinal":0}
+{"description":"Damages vyres (blisterwood-susceptible)","entityId":"activity:content:blisterwood-weapons","key":"effect-1","ordinal":0}
+{"description":"Fletched from blisterwood logs (+ silver sickle / silvthril for some pieces)","entityId":"activity:content:blisterwood-weapons","key":"effect-2","ordinal":0}
 {"description":"The Book of Char — daily 2 min double Firemaking XP on walked-over logs","entityId":"activity:content:book-of-char","key":"effect-1","ordinal":0}
 {"description":"Daily teleport to Char's training cave","entityId":"activity:content:book-of-char","key":"effect-2","ordinal":0}
 {"description":"Char's training cave pitch-can Firemaking (91+)","entityId":"activity:content:book-of-char","key":"effect-3","ordinal":0}
@@ -21,6 +23,12 @@
 {"description":"Devotion ability (Defence threshold; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-2","ordinal":0}
 {"description":"Transfigure ability (Constitution ultimate; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-3","ordinal":0}
 {"description":"Illuminated god books (book-making table; 60 Crafting + 60 Prayer)","entityId":"activity:content:citharede-abbey","key":"effect-4","ordinal":0}
+{"description":"Blood talisman (recess other table; quest always-get note on wiki)","entityId":"activity:content:columbarium-key","key":"effect-1","ordinal":0}
+{"description":"Dragon spear (recess weapons table)","entityId":"activity:content:columbarium-key","key":"effect-2","ordinal":0}
+{"description":"Blood runes (recess runes table)","entityId":"activity:content:columbarium-key","key":"effect-3","ordinal":0}
+{"description":"Tooth / loop half of a key","entityId":"activity:content:columbarium-key","key":"effect-4","ordinal":0}
+{"description":"Herbs (ranarr through torstol on plain table)","entityId":"activity:content:columbarium-key","key":"effect-5","ordinal":0}
+{"description":"Trail armour special tables (black / adamant / rune g/t)","entityId":"activity:content:columbarium-key","key":"effect-6","ordinal":0}
 {"description":"Fishing Frenzy: 2nd fastest Fishing XP (behind Advance Time / Dream of Iaia on Anachronia); ~285k XP/h at 99","entityId":"activity:content:deep-sea-fishing-hub","key":"effect-1","ordinal":0}
 {"description":"Sailfish (97+), swarm fishing, hub boosts, rare Tavia's fishing rod path","entityId":"activity:content:deep-sea-fishing-hub","key":"effect-2","ordinal":0}
 {"description":"Greater Fury ability codex","entityId":"activity:content:dragonkin-laboratory-ed2","key":"effect-1","ordinal":0}
@@ -57,6 +65,8 @@
 {"description":"Linza's hammer","entityId":"activity:content:linza-the-disgraced","key":"effect-4","ordinal":0}
 {"description":"Linza's shield","entityId":"activity:content:linza-the-disgraced","key":"effect-5","ordinal":0}
 {"description":"Advance Time: +1 day animal growth and breeding on Manor Farm and Ranch Out of Time together (3 casts/week; no food, disease, or stat change)","entityId":"activity:content:manor-farm","key":"effect-advance-time","ordinal":0}
+{"description":"Always: bones, yak-hide, hair, raw yak meat","entityId":"activity:content:neitiznot-yaks","key":"effect-1","ordinal":0}
+{"description":"Tertiary: Fremennik yak (unchecked) baby for Player-Owned Farm after PoF tutorial","entityId":"activity:content:neitiznot-yaks","key":"effect-2","ordinal":0}
 {"description":"Wand of the praesul (t92 magic main-hand)","entityId":"activity:content:nex-angel-of-death","key":"effect-1","ordinal":0}
 {"description":"Imperium core (t92 magic off-hand)","entityId":"activity:content:nex-angel-of-death","key":"effect-2","ordinal":0}
 {"description":"Praesul codex (Malevolence / Desolation / Affliction / Ruination)","entityId":"activity:content:nex-angel-of-death","key":"effect-3","ordinal":0}
@@ -78,7 +88,13 @@
 {"description":"Black key (Riyl/Asyn remains; opens black doors and chests)","entityId":"activity:content:shade-keys","key":"effect-3","ordinal":0}
 {"description":"Silver key (Asyn/Fiyr/Edimmu remains; opens silver doors and chests)","entityId":"activity:content:shade-keys","key":"effect-4","ordinal":0}
 {"description":"Gold key (Fiyr/Edimmu remains; opens gold doors and the gold chest)","entityId":"activity:content:shade-keys","key":"effect-5","ordinal":0}
-{"description":"Shiny columbarium key (opens Columbarium wooden recesses; stronger table than columbarium key)","entityId":"activity:content:shiny-columbarium-key","key":"effect-1","ordinal":0}
+{"description":"Shade skull (gold chest unique)","entityId":"activity:content:shade-keys","key":"effect-6","ordinal":0}
+{"description":"Shade master kit (gold chest unique)","entityId":"activity:content:shade-keys","key":"effect-7","ordinal":0}
+{"description":"Dragon spear (recess weapons table)","entityId":"activity:content:shiny-columbarium-key","key":"effect-1","ordinal":0}
+{"description":"Blood runes (recess runes table)","entityId":"activity:content:shiny-columbarium-key","key":"effect-2","ordinal":0}
+{"description":"High herbs (toadflax, kwuarm, torstol and peers on shiny table)","entityId":"activity:content:shiny-columbarium-key","key":"effect-3","ordinal":0}
+{"description":"Tooth / loop half of a key","entityId":"activity:content:shiny-columbarium-key","key":"effect-4","ordinal":0}
+{"description":"Trail armour special tables (black / adamant / rune g/t)","entityId":"activity:content:shiny-columbarium-key","key":"effect-5","ordinal":0}
 {"description":"Burial anvils and burial forges (burial armour Smithing XP)","entityId":"activity:content:thalmunds-forge","key":"effect-1","ordinal":0}
 {"description":"Imcando forge and Imcando anvil","entityId":"activity:content:thalmunds-forge","key":"effect-2","ordinal":0}
 {"description":"Imcando mattock path (metal pieces + dragon mattock)","entityId":"activity:content:thalmunds-forge","key":"effect-3","ordinal":0}
@@ -87,6 +103,11 @@
 {"description":"Burial forge","entityId":"activity:content:thalmunds-forge","key":"effect-burial-forge","ordinal":0}
 {"description":"Ungael combat activity (standard/hard 12-wave mode; cosmetic and title rewards per wiki)","entityId":"activity:content:ungael","key":"effect-1","ordinal":0}
 {"description":"Ungael ritual site (lower Necromancy XP than Um; higher component durability; Zorgoth's ring upgrade path)","entityId":"activity:content:ungael","key":"effect-2","ordinal":0}
+{"description":"Melee combat XP in Darkmeyer/Meiyerditch multi-combat camps","entityId":"activity:content:vyre-combat-and-sunspear-progression","key":"effect-1","ordinal":0}
+{"description":"Sunspear auto-cremation: Prayer + Firemaking XP (manual Columbarium better for 500-corpse ladder)","entityId":"activity:content:vyre-combat-and-sunspear-progression","key":"effect-2","ordinal":0}
+{"description":"Slayer XP on Vyrewatch assignment; vyrelord herbs aid Herblore","entityId":"activity:content:vyre-combat-and-sunspear-progression","key":"effect-3","ordinal":0}
+{"description":"Active multi-pool Fishing (feed, clean, algae) for higher XP/h than standard spots","entityId":"activity:content:wendlewick-fish-farm","key":"effect-1","ordinal":0}
+{"description":"Four pools: lobster, swordfish, shark, giant crayfish","entityId":"activity:content:wendlewick-fish-farm","key":"effect-2","ordinal":0}
 {"description":"Inner Wrath: Wild Magic applies Blast Infused for 10 ticks (6s)","entityId":"anachronia:blast-diffusion-boots","key":"effect-1","ordinal":0}
 {"description":"Blast Infused: Magic basic abilities (including basic attack and Combust) gain +8% base damage","entityId":"anachronia:blast-diffusion-boots","key":"effect-2","ordinal":1}
 {"description":"Same Anachronia + Raksha geography as laceration/fleeting; this row first-classes the Magic sibling the melee/ranged hub only named","entityId":"anachronia:blast-diffusion-boots","key":"effect-3","ordinal":2}
@@ -195,7 +216,6 @@
 {"description":"Linza the Disgraced set residual (smithing-themed combat set)","entityId":"boss:barrows","key":"effect-3","ordinal":2}
 {"description":"Amulet of the forsaken residual (Archaeology combat relic input)","entityId":"boss:barrows","key":"effect-4","ordinal":3}
 {"description":"Barrows defender piece residual feeding morytania:barrows-defenders","entityId":"boss:barrows","key":"effect-5","ordinal":4}
-{"description":"Linza's helm, Linza's cuirass, Linza's greaves, Linza's hammer, Linza's shield","entityId":"boss:barrows","key":"effect-linza-set","ordinal":0}
 {"description":"ED2 final-boss residual for Greater Fury / Flurry / Barge ability codex table","entityId":"boss:black-stone-dragon","key":"effect-1","ordinal":0}
 {"description":"Draconic energy residual feeding elite tectonic / elite sirenic craft chains","entityId":"boss:black-stone-dragon","key":"effect-2","ordinal":1}
 {"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"boss:black-stone-dragon","key":"effect-3","ordinal":0}
@@ -1242,8 +1262,8 @@
 {"description":"Prayer bonus 3; small style damage bonuses on the enchanted form","entityId":"morytania:salve-amulet-enchanted","key":"effect-2","ordinal":1}
 {"description":"Stacks with full slayer helmet, Void, Undead Slayer perk/ability","entityId":"morytania:salve-amulet-enchanted","key":"effect-3","ordinal":2}
 {"description":"Works at Barrows and Rise of the Six (2023 restriction removal); also applies to Osseous (2025)","entityId":"morytania:salve-amulet-enchanted","key":"effect-4","ordinal":3}
-{"description":"Shade keys (bronze, steel, black, silver, gold) for Shade Catacombs doors and chests","entityId":"morytania:shades-of-mortton-cremation","key":"effect","ordinal":0}
-{"description":"Shiny columbarium key path via magic/elder pyre vyre cremation (Columbarium recesses)","entityId":"morytania:shades-of-mortton-cremation","key":"effect","ordinal":1}
+{"description":"Prayer and Firemaking XP from shade remains cremation","entityId":"morytania:shades-of-mortton-cremation","key":"effect-prayer-fm","ordinal":0}
+{"description":"Shade keys path (see activity:content:shade-keys major)","entityId":"morytania:shades-of-mortton-cremation","key":"effect-shade-keys-path","ordinal":0}
 {"description":"Damages vyres with blisterwood-class effectiveness (+75% hit chance vs vyres; chance of up to double damage)","entityId":"morytania:sunspear","key":"effect-1","ordinal":0}
 {"description":"Auto-cremates vyre corpses for Prayer and Firemaking XP","entityId":"morytania:sunspear","key":"effect-2","ordinal":1}
 {"description":"Shares columbarium cremation damage ladder with blisterwood weapons","entityId":"morytania:sunspear","key":"effect-3","ordinal":2}
@@ -1596,6 +1616,12 @@
 {"description":"Tectonic energy (Equilibrium side drop with Draconic energy)","entityId":"unlock:forinthry:dragonkin-laboratory-upgrades","key":"effect-tectonic","ordinal":0}
 {"description":"Ungael combat activity access","entityId":"unlock:fremennik:ungael","key":"effect-1","ordinal":0}
 {"description":"Ungael ritual site access (Necromancy training alternative to Um)","entityId":"unlock:fremennik:ungael","key":"effect-2","ordinal":0}
+{"description":"20% more durable ritual components (vs Um)","entityId":"unlock:fremennik:ungael-ritual-site","key":"effect-1","ordinal":0}
+{"description":"Disturbances last 15% longer; nearby bank chest; full site before 90 Necromancy","entityId":"unlock:fremennik:ungael-ritual-site","key":"effect-2","ordinal":0}
+{"description":"20% less Necromancy XP than Um; no communion rituals","entityId":"unlock:fremennik:ungael-ritual-site","key":"effect-3","ordinal":0}
+{"description":"Zorgoth's ring -> soul ring upgrade chance while worn on ritual completion","entityId":"unlock:fremennik:ungael-ritual-site","key":"effect-4","ordinal":0}
+{"description":"Base Zorgoth's ring (necromantic quest ring)","entityId":"unlock:fremennik:zorgoths-ring","key":"effect-1","ordinal":0}
+{"description":"Upgrade to Zorgoth's soul ring via Ungael rituals while worn","entityId":"unlock:fremennik:zorgoths-ring","key":"effect-2","ordinal":0}
 {"description":"Apex hide cowl","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-1","ordinal":0}
 {"description":"Apex hide body","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-2","ordinal":0}
 {"description":"Apex hide chaps","entityId":"unlock:havenhythe:havenhythe-big-game-hunter","key":"effect-3","ordinal":0}
@@ -1614,10 +1640,21 @@
 {"description":"Perfect eternal magic branch chance at 110 Woodcutting","entityId":"unlock:kandarin:eternal-magic-trees","key":"effect-3","ordinal":0}
 {"description":"Thalmund's Forge burial anvils and burial forges: burial armour / burial equipment Smithing XP after Into the Forge (Kandarin; not Artisans' Respect shop)","entityId":"unlock:kandarin:warforge-dig-site-feldip-hills-archaeology","key":"effect","ordinal":0}
 {"description":"Thalmund's Forge burial anvils/forges — burial armour alternative to Artisans' Workshop","entityId":"unlock:kandarin:warforge-dig-site-feldip-hills-archaeology","key":"effect-thalmund-burial","ordinal":0}
+{"description":"When worn: +50% Firemaking and Prayer XP from cremating vyre corpses (including with Sunspear)","entityId":"unlock:morytania:morytania-legs-4","key":"effect-1","ordinal":0}
+{"description":"When worn: +10% Slayer XP for Slayer Tower task kills","entityId":"unlock:morytania:morytania-legs-4","key":"effect-2","ordinal":0}
+{"description":"When worn: 20% chance of 4-dose prayer renewal instead of 3-dose when making them in Morytania","entityId":"unlock:morytania:morytania-legs-4","key":"effect-3","ordinal":0}
+{"description":"Operated: unlimited slime-pit teleports under the Ectofuntus","entityId":"unlock:morytania:morytania-legs-4","key":"effect-4","ordinal":0}
+{"description":"Always: double mushroom yield at Canifis, Isafdar, and City of Um (XP not doubled)","entityId":"unlock:morytania:morytania-legs-4","key":"effect-5","ordinal":0}
+{"description":"Always: Robin converts 39 bone sets and supplies 39 free slime buckets daily","entityId":"unlock:morytania:morytania-legs-4","key":"effect-6","ordinal":0}
+{"description":"Spider leg top / middle / bottom (one path each) assemble into spider leg","entityId":"unlock:morytania:noxious-components","key":"effect-1","ordinal":0}
+{"description":"Araxxi's fang + spider leg -> Noxious scythe (t90 2h melee)","entityId":"unlock:morytania:noxious-components","key":"effect-2","ordinal":0}
+{"description":"Araxxi's eye + spider leg -> Noxious staff (t90 2h magic)","entityId":"unlock:morytania:noxious-components","key":"effect-3","ordinal":0}
+{"description":"Araxxi's web + spider leg -> Noxious longbow (t90 2h ranged)","entityId":"unlock:morytania:noxious-components","key":"effect-4","ordinal":0}
 {"description":"Polypore staff","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","key":"effect","ordinal":0}
 {"description":"Ganodermic armour (visor, poncho, leggings)","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","key":"effect","ordinal":1}
-{"description":"Shade keys (bronze, steel, black, silver, gold) for Shade Catacombs doors and chests","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-keys","ordinal":0}
-{"description":"Shiny columbarium key path via magic/elder pyre vyre cremation (Columbarium recesses)","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-shiny-key","ordinal":0}
+{"description":"Columbarium keys path (plain + shiny recess majors; vyre cremation)","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-columbarium-keys-path","ordinal":0}
+{"description":"Prayer and Firemaking XP from shade remains cremation at Mort'ton","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-prayer-fm","ordinal":0}
+{"description":"Shade keys path (bronze–gold Catacombs ladder; dedicated major)","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-shade-keys-path","ordinal":0}
 {"description":"Defence threshold: protection / deflection to 100% (75% PvP) for 9.6s; +4.8s per kill up to 19.2s","entityId":"unlock:unlocks:devotion","key":"effect-1","ordinal":0}
 {"description":"Constitution basic: damage target and heal for a share of damage dealt","entityId":"unlock:unlocks:sacrifice","key":"effect-1","ordinal":0}
 {"description":"Constitution ultimate: 6s self-stun then heal 250% damage taken (75% max LP cap); stun/bind immunity 15s","entityId":"unlock:unlocks:transfigure","key":"effect-1","ordinal":0}

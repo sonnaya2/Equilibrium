@@ -376,6 +376,8 @@
 {"entityId":"unlock:fremennik:emberkeen-hailfire-flarefrost-boots-t90-glacor-upgrades","ordinal":23,"regionId":"fremennik","section":"upgrades"}
 {"entityId":"unlock:fremennik:hand-cannon","ordinal":24,"regionId":"fremennik","section":"upgrades"}
 {"entityId":"unlock:fremennik:fremennik-sea-boots","ordinal":25,"regionId":"fremennik","section":"upgrades"}
+{"entityId":"unlock:fremennik:zorgoths-ring","ordinal":100,"regionId":"fremennik","section":"upgrades"}
+{"entityId":"unlock:fremennik:ungael-ritual-site","ordinal":101,"regionId":"fremennik","section":"upgrades"}
 {"entityId":"activity:content:ivar-king-of-bones","ordinal":0,"regionId":"havenhythe","section":"content"}
 {"entityId":"activity:content:silverquill-the-dreadhog","ordinal":1,"regionId":"havenhythe","section":"content"}
 {"entityId":"activity:content:sanguine-crawler","ordinal":2,"regionId":"havenhythe","section":"content"}
@@ -682,6 +684,8 @@
 {"entityId":"activity:content:shade-keys","ordinal":15,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:shiny-columbarium-key","ordinal":16,"regionId":"morytania","section":"content"}
 {"entityId":"activity:content:linza-the-disgraced","ordinal":17,"regionId":"morytania","section":"content"}
+{"entityId":"activity:content:columbarium-key","ordinal":18,"regionId":"morytania","section":"content"}
+{"entityId":"activity:content:blisterwood-weapons","ordinal":19,"regionId":"morytania","section":"content"}
 {"entityId":"unlock:morytania:noxious-weapons","ordinal":0,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:vyres-sunspear-multi-skill-training","ordinal":1,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:rise-of-the-six-progression","ordinal":2,"regionId":"morytania","section":"upgrades"}
@@ -727,6 +731,10 @@
 {"entityId":"unlock:morytania:masterwork-bow","ordinal":43,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:noxious-staff","ordinal":44,"regionId":"morytania","section":"upgrades"}
 {"entityId":"unlock:morytania:sunspear-vyre-prayer-sustain","ordinal":45,"regionId":"morytania","section":"upgrades"}
+{"entityId":"unlock:morytania:morytania-legs-4","ordinal":100,"regionId":"morytania","section":"upgrades"}
+{"entityId":"unlock:morytania:columbarium-key","ordinal":101,"regionId":"morytania","section":"upgrades"}
+{"entityId":"unlock:morytania:blisterwood-weapons","ordinal":102,"regionId":"morytania","section":"upgrades"}
+{"entityId":"unlock:morytania:noxious-components","ordinal":103,"regionId":"morytania","section":"upgrades"}
 {"entityId":"activity:content:prifddinas","ordinal":0,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:morvran-prifddinas-slayer-master","ordinal":1,"regionId":"tirannwn","section":"content"}
 {"entityId":"activity:content:the-lost-grove","ordinal":2,"regionId":"tirannwn","section":"content"}

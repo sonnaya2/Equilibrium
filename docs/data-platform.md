@@ -340,6 +340,14 @@ Server components and route handlers open `.cache/equilibrium.sqlite` read-only 
 and 500s the route) and set `Cache-Control: private, no-store`. Client `regionStore`
 also uses `cache: "no-store"`. No browser fetch goes to `public/data/`.
 
+### Content majors (authoring cookbook)
+
+Regional majors on `/data` are catalog `content[]` faces authored via `data/patches/*.jsonl`
+(`set-record` is single-home per entity; dual-region sites need two entity IDs; put
+`· Unlocks: …` on the face for reward chips). Agent procedure: `AGENTS.md` section
+**/data majors**, skill `.grok/skills/equilibrium-data-majors/` (gotchas under
+`references/gotchas.md`). Examples: `data/patches/2026-08-05` … `2026-08-10` majors patches.
+
 A small set of whole source documents is still needed as module imports. Export rebuilds only the
 documents something imports through `#shard/*` (plus a few path-loaded map seeds) into
 `.generated/documents/`. Those are build inputs, inlined by the bundler; they live outside `public/`

@@ -144,7 +144,7 @@ describe("magic ability data", () => {
     expect(r.min).toBe(2500);
     expect(r.max).toBe(3100);
     expect(r.expected).toBe(2800);
-    expect(r.adrenalineDelta).toBe(-25);
+    expect(r.listedAdrenalineDelta).toBe(-25);
   });
 
   it("Equilibrium suppresses Smoke Tendrils' guaranteed crits", () => {

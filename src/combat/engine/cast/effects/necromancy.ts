@@ -8,13 +8,14 @@ import { applyNecroOnCast } from "../../../styles/necromancy/effects";
 import { patchConjures, patchNecro, patchTarget } from "../../runtime/state";
 import { applySkeletonCommand, scheduleSpiritTracks } from "../../schedulers/conjures";
 import { resetCooldowns, startLinkedCooldown } from "./cooldowns";
-import { grantBonusAdrenaline } from "./resources";
 import type { CastEffectContext } from "./context";
 
 /**
  * Immediate necromancy cast-state changes: the resource patch (souls, Necrosis,
  * Living Death and its cooldown resets), conjure summoning and its schedulers,
  * the Skeleton command, and Bloat's recast overwrite.
+ * Living Death Touch of Death +6% adren is folded into applyCastResources
+ * (otherImmediateGrants) before the transaction commits.
  */
 export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   const { rt, ability, candidate, prepared } = fx;
@@ -31,7 +32,6 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   );
   rt.state = patchNecro(rt.state, patch.necro);
   if (patch.conjures) rt.state = patchConjures(rt.state, patch.conjures);
-  grantBonusAdrenaline(fx, patch.adrenalineBonus);
   resetCooldowns(fx, patch.clearCooldownIds);
 
   for (const spirit of rt.state.necromancy.conjures.spirits) scheduleSpiritTracks(rt, spirit);

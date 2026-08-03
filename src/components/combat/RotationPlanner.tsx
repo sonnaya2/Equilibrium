@@ -20,7 +20,6 @@ import { loadState, saveState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
-import { adrenEconomyFingerprint } from "./adrenalinePresentation";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -28,6 +27,7 @@ import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis"
 import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
+import { uiRunFingerprint } from "./uiSimFingerprint";
 
 const STORAGE_KEY = "eq:rotation:v1";
 
@@ -177,15 +177,34 @@ export function RotationPlanner({
     [loadout, useBuild, build],
   );
 
-  // Stale results after Arch/perk toggles look like "energy saves do nothing".
-  const adrenEconomyKey = useMemo(
-    () => adrenEconomyFingerprint(setupStats),
-    [setupStats],
+  const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
+  const runKey = useMemo(
+    () =>
+      uiRunFingerprint({
+        mode: "manual",
+        stats: setupStats,
+        queue,
+        autoWeave: weave,
+        ammo,
+        useBuild,
+        targetHpPercent: loadout.target?.hpPercent,
+        manual: {
+          base: Math.max(0, finite(base, 0)),
+          level: Math.min(Math.max(1, finite(level, 99)), 145),
+          accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100),
+          critChance: Math.min(Math.max(0, finite(critChance, 10)), 100),
+        },
+      }),
+    [setupStats, queue, weave, ammo, useBuild, loadout.target?.hpPercent, base, level, accuracy, critChance],
   );
+  const [resultKey, setResultKey] = useState<string | null>(null);
+  const liveResult = result != null && resultKey === runKey ? result : null;
+
   useEffect(() => {
-    setResult(null);
-    setAnalysisOpen(false);
-  }, [adrenEconomyKey]);
+    if (result != null && resultKey !== runKey) {
+      setAnalysisOpen(false);
+    }
+  }, [result, resultKey, runKey]);
 
   const updateQueue = (next: string[]) => {
     setQueue(next);
@@ -194,7 +213,6 @@ export function RotationPlanner({
 
   const run = () => {
     setAnalysisOpen(false);
-    const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
     if (useBuild) {
       setResult(
         simulate({
@@ -208,7 +226,7 @@ export function RotationPlanner({
           },
           abilities: abilitiesForLoadout(ALL_ABILITIES, setupStats.strengthCape99),
           rotation: rotationOf(...queue),
-          modifiers: setupStats.globalModifiers,
+          modifiers: (ability) => setupStats.castModifiersFor(ability),
           adrenaline: setupStats.adrenaline,
           procs: setupStats.procs,
           plantedFeet: setupStats.plantedFeet,
@@ -229,6 +247,7 @@ export function RotationPlanner({
           ammo: ammo === "none" ? undefined : ammo,
         }),
       );
+      setResultKey(runKey);
       return;
     }
     // Manual damage numbers, but keep loadout adren economy (CoE / FotS / Invigorating / etc.).
@@ -248,6 +267,7 @@ export function RotationPlanner({
         ammo: ammo === "none" ? undefined : ammo,
       }),
     );
+    setResultKey(runKey);
   };
 
   const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
@@ -269,7 +289,7 @@ export function RotationPlanner({
         critPct: critChance,
       });
 
-  const contributions = result?.analysis.byEffect ?? [];
+  const contributions = liveResult?.analysis.byEffect ?? [];
 
   const inputCls =
     "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
@@ -576,40 +596,40 @@ export function RotationPlanner({
             </div>
           )}
 
-          {result ? (
+          {liveResult ? (
             <div className="mt-4">
-              {result.ok ? (
+              {liveResult.ok ? (
                 <>
                   <dl className="grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-4">
                     <div className="border-b border-stone-750/70 py-2">
                       <dt className="text-xs text-parch-300">Expected</dt>
                       <dd className="font-mono text-parch-50">
-                        {formatNumber(result.totalExpected)}
+                        {formatNumber(liveResult.totalExpected)}
                       </dd>
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
                       <dt className="text-xs text-parch-300">
-                        {result.metric.type === "fixed-window"
+                        {liveResult.metric.type === "fixed-window"
                           ? "Fixed-window DPS"
-                          : result.rng
+                          : liveResult.rng
                             ? "Expected natural DPS"
                             : "Natural DPS"}
                       </dt>
-                      <dd className="font-mono text-parch-50">{formatNumber(result.dps)}</dd>
+                      <dd className="font-mono text-parch-50">{formatNumber(liveResult.dps)}</dd>
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
                       <dt className="text-xs text-parch-300">Min – max</dt>
                       <dd className="font-mono text-parch-50">
-                        {formatNumber(result.totalMin)} – {formatNumber(result.totalMax)}
+                        {formatNumber(liveResult.totalMin)} – {formatNumber(liveResult.totalMax)}
                       </dd>
                     </div>
                     <div className="border-b border-stone-750/70 py-2">
                       <dt className="text-xs text-parch-300">
-                        {result.rng ? "Expected length" : "Length"}
+                        {liveResult.rng ? "Expected length" : "Length"}
                       </dt>
                       <dd className="font-mono text-parch-50">
-                        {formatTicks(result.ticks)} ticks ·{" "}
-                        {(result.ticks * TICK_SECONDS).toFixed(1)}s
+                        {formatTicks(liveResult.ticks)} ticks ·{" "}
+                        {(liveResult.ticks * TICK_SECONDS).toFixed(1)}s
                       </dd>
                     </div>
                   </dl>
@@ -624,7 +644,7 @@ export function RotationPlanner({
                     </button>
                   </div>
 
-                  <CalculationAssumptions stats={activeStats} result={result} />
+                  <CalculationAssumptions stats={activeStats} result={liveResult} />
 
                   <div className="mt-4 overflow-x-auto border-t border-stone-750">
                     <table className="w-full border-collapse text-left text-sm">
@@ -637,7 +657,7 @@ export function RotationPlanner({
                         </tr>
                       </thead>
                       <tbody>
-                        {result.casts.map((cast, index) => (
+                        {liveResult.casts.map((cast, index) => (
                           <tr
                             key={`${cast.abilityId}-${index}`}
                             className="border-b border-stone-750/70"
@@ -690,21 +710,21 @@ export function RotationPlanner({
                       </div>
                     ))}
                   </div>
-                  <RotationEventPreview result={result} nameForId={abilityName} />
+                  <RotationEventPreview result={liveResult} nameForId={abilityName} />
                 </>
               ) : (
                 <p className="mt-3 border border-stone-750 px-3 py-2 text-xs text-parch-300">
-                  Rotation fails: {result.error}
+                  Rotation fails: {liveResult.error}
                 </p>
               )}
             </div>
           ) : null}
         </div>
       )}
-      {result?.ok ? (
+      {liveResult?.ok ? (
         <RotationAnalysisModal
           open={analysisOpen}
-          result={result}
+          result={liveResult}
           stats={activeStats}
           nameForId={abilityName}
           onClose={() => setAnalysisOpen(false)}

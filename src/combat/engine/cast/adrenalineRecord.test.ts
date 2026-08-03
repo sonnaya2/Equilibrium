@@ -6,7 +6,6 @@ import { baseInput } from "../../test/fixtures/inputs";
 import {
   CONSERVATION_OF_ENERGY_REFUND,
 } from "../../shared/conservationOfEnergy";
-import { RING_OF_VIGOUR_REFUND } from "../../shared/ringOfVigour";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 
 const emptyLeague = resolveLeagueRules({ ruleset: "base" });
@@ -118,12 +117,12 @@ describe("cast adren ledger (transaction once)", () => {
     expect(without.adrenalineDelta).toBe(-50);
   });
 
-  it("legacy ultimateAdrenalineRefund still splits when CoE field absent", () => {
+  it("explicit CoE + RoV fields refund independently (no legacy sum)", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
       adrenaline: {
-        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND + CONSERVATION_OF_ENERGY_REFUND,
+        conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
         ringOfVigour: true,
       },
     });
@@ -132,5 +131,7 @@ describe("cast adren ledger (transaction once)", () => {
     const cast = ctx.finish().casts.at(-1)!;
     expect(cast.adrenalineTransaction?.conservationOfEnergyRefund).toBe(10);
     expect(cast.adrenalineTransaction?.ringOfVigourRefund).toBe(10);
+    expect(cast.result.adrenalineDelta).toBe(-80);
+    expect(cast.adrenalineAfterResources).toBe(20);
   });
 });

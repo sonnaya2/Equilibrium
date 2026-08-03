@@ -9,8 +9,8 @@ import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities
 import { withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
 import { preferredAgentCount } from "@/combat/solver";
-import { adrenEconomyFingerprint } from "./adrenalinePresentation";
 import type { CalcStats } from "./loadoutStats";
+import { uiRunFingerprint } from "./uiSimFingerprint";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
 import type { Loadout } from "./useLoadout";
 import { useBuild } from "@/league/useBuild";
@@ -114,7 +114,24 @@ export function RevolutionPanel({
 
   const equipKey = `${loadout.style}|${stats.weaponConfiguration}`;
   const prevEquipKey = useRef(equipKey);
-  const adrenEconomyKey = useMemo(() => adrenEconomyFingerprint(stats), [stats]);
+  const barIdsForKey = useMemo(
+    () => (activeBarIds?.length ? activeBarIds : modelled.map((a) => a.id)),
+    [activeBarIds, modelled],
+  );
+  const runKey = useMemo(
+    () =>
+      uiRunFingerprint({
+        mode: "revolution",
+        stats,
+        barIds: barIdsForKey,
+        durationSeconds: clampRunDurationSeconds(durationSeconds),
+        style: loadout.style,
+        targetHpPercent: loadout.target?.hpPercent,
+      }),
+    [stats, barIdsForKey, durationSeconds, loadout.style, loadout.target?.hpPercent],
+  );
+  const [resultKey, setResultKey] = useState<string | null>(null);
+  const liveResult = result != null && resultKey === runKey ? result : null;
 
   const solver = useRevolutionSolver({
     stats,
@@ -130,18 +147,19 @@ export function RevolutionPanel({
     prevEquipKey.current = equipKey;
     setActiveBarIds(null);
     setResult(null);
+    setResultKey(null);
     setShowAllCasts(false);
     setAnalysisOpen(false);
     solver.clearSolverUi();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only equip shape; clearSolverUi is stable
   }, [equipKey]);
 
-  // Arch / perks change adren economy without changing equip shape; clear stale DPS.
   useEffect(() => {
-    setResult(null);
-    setShowAllCasts(false);
-    setAnalysisOpen(false);
-  }, [adrenEconomyKey]);
+    if (result != null && resultKey !== runKey) {
+      setShowAllCasts(false);
+      setAnalysisOpen(false);
+    }
+  }, [result, resultKey, runKey]);
 
   const simStyle = loadout.style;
 
@@ -190,6 +208,7 @@ export function RevolutionPanel({
         weaponConfiguration: stats.weaponConfiguration,
       }),
     );
+    setResultKey(runKey);
   };
 
   const applySolverBar = (ids: readonly string[]) => {
@@ -307,7 +326,7 @@ export function RevolutionPanel({
         setDurationSeconds={(n) => setDurationSeconds(clampRunDurationSeconds(n))}
         plannedTicks={plannedTicks}
         onRun={run}
-        result={result}
+        result={liveResult}
         showAllCasts={showAllCasts}
         setShowAllCasts={setShowAllCasts}
         analysisOpen={analysisOpen}

@@ -361,8 +361,10 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                   <dt className="text-parch-300">Adrenaline change</dt>
                   <dd className="text-right font-mono text-parch-50">
-                    {result.adrenalineDelta >= 0 ? "+" : ""}
-                    {result.adrenalineDelta}%
+                    {(() => {
+                      const delta = result.adrenalineDelta ?? result.listedAdrenalineDelta;
+                      return `${delta >= 0 ? "+" : ""}${delta}%`;
+                    })()}
                   </dd>
                 </div>
                 {(ability as MeleeAbilitySpec).bloodlustGain ? (

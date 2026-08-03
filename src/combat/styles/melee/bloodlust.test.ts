@@ -76,6 +76,21 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
     });
     expect(ctx.getState().vestmentsAdrenalineUntilTick).toBe(0);
     expect(ctx.getState().adrenaline).toBeCloseTo(80, 10);
+
+    // Vestments Herald +20 is otherImmediateGrants on the second ultimate (SSOT).
+    const cast = ctx.finish().casts.find((c) => c.abilityId === "overpower")!;
+    expect(cast.adrenalineTransaction?.otherImmediateGrants).toBe(20);
+    // No occupancy passive advances between commit and afterResources equality.
+    expect(cast.adrenalineAfterResources).toBe(cast.adrenalineAfter);
+    const tx = cast.adrenalineTransaction!;
+    const netFromTx =
+      tx.totalAbilityGain +
+      tx.otherImmediateGrants -
+      tx.actualSpend +
+      tx.conservationOfEnergyRefund +
+      tx.ringOfVigourRefund;
+    expect(cast.result.adrenalineDelta).toBe(netFromTx);
+    expect(ctx.getState().adrenaline).toBeCloseTo(80, 10);
   });
 
   it("Vestments set(3) extends Berserk by 6 seconds and set(4) raises the cap to 120", () => {

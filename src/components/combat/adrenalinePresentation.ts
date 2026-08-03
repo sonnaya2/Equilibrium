@@ -1,23 +1,15 @@
 /**
  * UI presentation for pure adrenaline transactions.
- * Mirrors analysisAdrenalineDelta inputs; never invents gain/refund math.
+ * Mirrors previewAdrenalineTransaction; never invents gain/refund math.
  */
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { AdrenalineRules } from "@/combat/engine/simulation/contracts";
 import {
-  resolveAdrenalineTransaction,
+  netAdrenalineDeltaFromTransaction,
+  previewAdrenalineTransaction,
   type AdrenalineTransaction,
 } from "@/combat/shared/adrenalineTransaction";
-import {
-  isBasicAttack,
-  isGeneratingBasicAbility,
-} from "@/combat/shared/adrenalineGain";
-import { resolveUltimateAdrenalineRefunds } from "@/combat/shared/conservationOfEnergy";
-import {
-  isWeaponSpecialAbility,
-  resolveSpecialAttackAdrenalineCost,
-  RING_OF_VIGOUR_REFUND,
-} from "@/combat/shared/ringOfVigour";
+import { RING_OF_VIGOUR_REFUND } from "@/combat/shared/ringOfVigour";
 import type { CalcStats } from "./loadoutStats";
 
 export type AnalysisAdrenRules = Pick<
@@ -25,7 +17,6 @@ export type AnalysisAdrenRules = Pick<
   | "basicAdrenalineFlatBonus"
   | "basicGainMultiplier"
   | "abilityGainMultiplier"
-  | "ultimateAdrenalineRefund"
   | "conservationOfEnergyRefund"
   | "ringOfVigour"
 >;
@@ -35,49 +26,11 @@ export function analysisAdrenalineTransaction(
   ability: AbilitySpec,
   adren: AnalysisAdrenRules | undefined,
 ): AdrenalineTransaction {
-  const rules = adren ?? {};
-  const listedCost = ability.adrenaline?.cost ?? 0;
-  const effectiveCost =
-    isWeaponSpecialAbility(ability) && rules.ringOfVigour === true
-      ? resolveSpecialAttackAdrenalineCost(listedCost, true)
-      : listedCost;
-
-  const { conservationOfEnergyRefund, ringOfVigourRefund } = resolveUltimateAdrenalineRefunds(
-    ability,
-    rules,
-    RING_OF_VIGOUR_REFUND,
-  );
-
-  const listedGain =
-    typeof ability.adrenaline?.gain === "number" && ability.adrenaline.gain > 0
-      ? ability.adrenaline.gain
-      : 0;
-
-  return resolveAdrenalineTransaction({
-    before: 0,
-    cap: 10_000,
-    listedGain,
-    listedCost,
-    effectiveCost,
-    isGeneratingBasicAbility: isGeneratingBasicAbility(ability),
-    isBasicAttack: isBasicAttack(ability),
-    impatientProc: false,
-    relentlessProc: false,
-    basicAdrenalineFlatBonus: rules.basicAdrenalineFlatBonus,
-    basicGainMultiplier: rules.basicGainMultiplier,
-    abilityGainMultiplier: rules.abilityGainMultiplier,
-    conservationOfEnergyRefund,
-    ringOfVigourRefund,
-  });
+  return previewAdrenalineTransaction(ability, adren);
 }
 
 export function netAdrenalineDelta(tx: AdrenalineTransaction): number {
-  return (
-    tx.totalAbilityGain -
-    tx.actualSpend +
-    tx.conservationOfEnergyRefund +
-    tx.ringOfVigourRefund
-  );
+  return netAdrenalineDeltaFromTransaction(tx);
 }
 
 export function formatAdrenPct(value: number, signed = true): string {
@@ -124,6 +77,13 @@ export function analysisAdrenalineBreakdownRows(
     }
   }
 
+  if (tx.otherImmediateGrants > 0) {
+    rows.push({
+      label: "Other immediate grants",
+      value: formatAdrenPct(tx.otherImmediateGrants),
+    });
+  }
+
   if (tx.conservationOfEnergyRefund > 0) {
     rows.push({
       label: "Conservation of Energy",
@@ -141,47 +101,49 @@ export function analysisAdrenalineBreakdownRows(
   return rows;
 }
 
-/** FotS / Invig / CoE / RoV / Impatient / Relentless - loadout assumptions only. */
+/** FotS / Invig / CoE / RoV / Impatient / Relentless / Herald - loadout assumptions only. */
 export function adrenEconomyAssumptionRows(
   stats: CalcStats,
 ): Array<[string, string | number]> {
   const a = stats.adrenaline;
-  if (!a) return [];
+  if (!a && !stats.equipmentEffects?.vestments.heraldOfChaos) return [];
   const rows: Array<[string, string | number]> = [];
 
-  if ((a.basicAdrenalineFlatBonus ?? 0) > 0) {
-    rows.push(["Fury of the Small", `+${a.basicAdrenalineFlatBonus}% on generating basics`]);
+  if ((a?.basicAdrenalineFlatBonus ?? 0) > 0) {
+    rows.push(["Fury of the Small", `+${a!.basicAdrenalineFlatBonus}% on generating basics`]);
   }
-  if ((a.basicGainMultiplier ?? 1) !== 1) {
+  if ((a?.basicGainMultiplier ?? 1) !== 1) {
     rows.push([
       "Invigorating",
-      `×${(a.basicGainMultiplier ?? 1).toFixed(2)} basic attack adren gain`,
+      `×${(a!.basicGainMultiplier ?? 1).toFixed(2)} basic attack adren gain`,
     ]);
   }
 
-  const coe =
-    a.conservationOfEnergyRefund !== undefined
-      ? a.conservationOfEnergyRefund
-      : a.ringOfVigour
-        ? Math.max(0, (a.ultimateAdrenalineRefund ?? 0) - RING_OF_VIGOUR_REFUND)
-        : (a.ultimateAdrenalineRefund ?? 0);
+  const coe = a?.conservationOfEnergyRefund ?? 0;
   if (coe > 0) {
     rows.push(["Conservation of Energy", `+${coe}% after ultimate`]);
   }
-  if (a.ringOfVigour) {
+  if (a?.ringOfVigour) {
     rows.push(["Ring of Vigour", `+${RING_OF_VIGOUR_REFUND}% after ultimate · specials 90% listed cost`]);
   }
 
-  if ((a.impatientRank ?? 0) > 0) {
+  if (stats.equipmentEffects?.vestments.heraldOfChaos) {
     rows.push([
-      "Impatient",
-      `rank ${a.impatientRank}${a.impatientLevel20 ? " · L20" : ""} (rotation RNG)`,
+      "Herald of Chaos",
+      "+15% over 18s after melee ult; +20% if already active (rotation)",
     ]);
   }
-  if ((a.relentlessRank ?? 0) > 0) {
+
+  if ((a?.impatientRank ?? 0) > 0) {
+    rows.push([
+      "Impatient",
+      `rank ${a!.impatientRank}${a!.impatientLevel20 ? " · L20" : ""} (rotation RNG)`,
+    ]);
+  }
+  if ((a?.relentlessRank ?? 0) > 0) {
     rows.push([
       "Relentless",
-      `rank ${a.relentlessRank}${a.relentlessLevel20 ? " · L20" : ""} (rotation RNG)`,
+      `rank ${a!.relentlessRank}${a!.relentlessLevel20 ? " · L20" : ""} (rotation RNG)`,
     ]);
   }
   return rows;
@@ -197,12 +159,13 @@ export function adrenEconomyFingerprint(stats: CalcStats): string {
     a?.basicGainMultiplier ?? 1,
     a?.abilityGainMultiplier ?? 1,
     a?.conservationOfEnergyRefund ?? 0,
-    a?.ultimateAdrenalineRefund ?? 0,
     a?.maxAdrenalineBonus ?? 0,
     a?.impatientRank ?? 0,
     a?.impatientLevel20 ? 1 : 0,
     a?.relentlessRank ?? 0,
     a?.relentlessLevel20 ? 1 : 0,
     a?.ringOfVigour ? 1 : 0,
+    stats.equipmentEffects?.vestments.heraldOfChaos ? 1 : 0,
+    stats.equipmentEffects?.vestments.increasedAdrenalineCap ? 1 : 0,
   ].join("|");
 }

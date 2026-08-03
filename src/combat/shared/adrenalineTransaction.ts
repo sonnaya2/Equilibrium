@@ -7,9 +7,18 @@
  */
 
 import {
+  isBasicAttack,
+  isGeneratingBasicAbility,
   resolveAbilityAdrenalineGainBreakdown,
   type AbilityAdrenalineGainInput,
+  type AbilityAdrenalineShape,
 } from "./adrenalineGain";
+import { resolveUltimateAdrenalineRefunds } from "./conservationOfEnergy";
+import {
+  isWeaponSpecialAbility,
+  resolveSpecialAttackAdrenalineCost,
+  RING_OF_VIGOUR_REFUND,
+} from "./ringOfVigour";
 
 export type SpendPreventedBy =
   | "none"
@@ -38,7 +47,11 @@ export interface AdrenalineTransaction {
 
   conservationOfEnergyRefund: number;
   ringOfVigourRefund: number;
-  /** Jaws etc. when folded in by the caller. */
+  /**
+   * Same-cast immediate grants folded by the caller before commit:
+   * Jaws, Vestments Herald refresh (+20), Living Death Touch of Death (+6).
+   * Timed passives (Vestments regen, Meteor) stay on the clock ledger.
+   */
   otherImmediateGrants: number;
 
   /** clamp(before + gain + other - spend + coe + vigour, 0, cap) */
@@ -119,4 +132,73 @@ export function resolveAdrenalineTransaction(
     afterResources,
     afterResourcesUnclamped,
   };
+}
+
+/** Net economy delta from a transaction (unclamped). */
+export function netAdrenalineDeltaFromTransaction(tx: AdrenalineTransaction): number {
+  return (
+    tx.totalAbilityGain +
+    tx.otherImmediateGrants -
+    tx.actualSpend +
+    tx.conservationOfEnergyRefund +
+    tx.ringOfVigourRefund
+  );
+}
+
+export type PreviewAdrenalineRules = {
+  basicAdrenalineFlatBonus?: number;
+  basicGainMultiplier?: number;
+  abilityGainMultiplier?: number;
+  conservationOfEnergyRefund?: number;
+  ringOfVigour?: boolean;
+};
+
+/**
+ * Deterministic single-cast economy preview (no Impatient/Relentless/Jaws/Vestments state).
+ * Shared by Analysis, Quick, and presentation.
+ */
+export function previewAdrenalineTransaction(
+  ability: AbilityAdrenalineShape & {
+    id?: string;
+    category?: string;
+    weaponSpecial?: boolean;
+    adrenaline?: { gain?: number; cost?: number };
+  },
+  adren?: PreviewAdrenalineRules,
+): AdrenalineTransaction {
+  const rules = adren ?? {};
+  const listedCost = ability.adrenaline?.cost ?? 0;
+  const effectiveCost =
+    isWeaponSpecialAbility({ weaponSpecial: ability.weaponSpecial }) &&
+    rules.ringOfVigour === true
+      ? resolveSpecialAttackAdrenalineCost(listedCost, true)
+      : listedCost;
+
+  const { conservationOfEnergyRefund, ringOfVigourRefund } = resolveUltimateAdrenalineRefunds(
+    { id: ability.id ?? "", category: ability.category },
+    rules,
+    RING_OF_VIGOUR_REFUND,
+  );
+
+  const listedGain =
+    typeof ability.adrenaline?.gain === "number" && ability.adrenaline.gain > 0
+      ? ability.adrenaline.gain
+      : 0;
+
+  return resolveAdrenalineTransaction({
+    before: 0,
+    cap: 10_000,
+    listedGain,
+    listedCost,
+    effectiveCost,
+    isGeneratingBasicAbility: isGeneratingBasicAbility(ability),
+    isBasicAttack: isBasicAttack(ability),
+    impatientProc: false,
+    relentlessProc: false,
+    basicAdrenalineFlatBonus: rules.basicAdrenalineFlatBonus,
+    basicGainMultiplier: rules.basicGainMultiplier,
+    abilityGainMultiplier: rules.abilityGainMultiplier,
+    conservationOfEnergyRefund,
+    ringOfVigourRefund,
+  });
 }

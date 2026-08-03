@@ -251,6 +251,32 @@ describe("resolveAdrenalineTransaction - spend / refunds", () => {
     expect(tx.afterResources).toBe(13);
   });
 
+  it("reconciles after = clamp(before + gains - spend + refunds)", () => {
+    const tx = resolveAdrenalineTransaction({
+      before: 100,
+      cap: 100,
+      listedGain: 0,
+      isGeneratingBasicAbility: false,
+      isBasicAttack: false,
+      listedCost: 100,
+      effectiveCost: 100,
+      relentlessProc: false,
+      conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
+      ringOfVigourRefund: RING_OF_VIGOUR_REFUND,
+      otherImmediateGrants: 0,
+    });
+    const unclamped =
+      tx.before +
+      tx.totalAbilityGain +
+      tx.otherImmediateGrants -
+      tx.actualSpend +
+      tx.conservationOfEnergyRefund +
+      tx.ringOfVigourRefund;
+    expect(tx.afterResourcesUnclamped).toBe(unclamped);
+    expect(tx.afterResources).toBe(Math.min(tx.cap, Math.max(0, unclamped)));
+    expect(tx.afterResources).toBe(20);
+  });
+
   it("Vigour + CoE + Relentless clamp at cap", () => {
     const tx = resolveAdrenalineTransaction({
       before: 100,

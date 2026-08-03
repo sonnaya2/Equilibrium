@@ -373,8 +373,11 @@ export interface Loadout {
   baseDamage: BaseDamageSettings;
   startingAdrenaline: number;
   /**
-   * Persist schema. v1 had startingAdrenaline default 0 (broke ultimates).
-   * v2 defaults open adren to 100; load migrates stored 0 -> 100 once.
+   * Persist schema (in-JSON). Storage key stays `eq:loadout:v1`.
+   * Pre-v2: startingAdrenaline defaulted to 0 (broke ultimates) and full-object
+   * saves always wrote 0, so intentional zero cannot be distinguished from the
+   * old default - migrate schema<2 && raw===0 to 100 once. Post-v2: user 0 is kept.
+   * Missing field always uses product default 100.
    */
   loadoutSchemaVersion: number;
   hitCapEnabled: boolean;
@@ -990,8 +993,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     Number.isFinite((raw as { loadoutSchemaVersion?: number }).loadoutSchemaVersion)
       ? Math.floor(Number((raw as { loadoutSchemaVersion: number }).loadoutSchemaVersion))
       : 0;
-  // Pre-v2: stored 0 was the old product default, not an intentional zero-open.
-  // Check raw (not clamped) so invalid negatives still clamp to 0 without becoming 100.
+  // Pre-v2 full-object saves always wrote startingAdrenaline:0 as default.
+  // Impossible to tell intentional zero from that default; rewrite 0->100 once.
+  // Schema >=2 stamps intentional zeros; missing field still uses product default.
   const rawStart = raw.startingAdrenaline;
   const startingAdrenaline =
     typeof rawStart === "number" && Number.isFinite(rawStart)

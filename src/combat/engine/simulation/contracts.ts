@@ -25,12 +25,7 @@ export interface AdrenalineRules {
   basicAdrenalineFlatBonus?: number;
   /** Extra max adrenaline (Heightened Senses = 10). */
   maxAdrenalineBonus?: number;
-  /**
-   * Legacy sum: CoE + Ring of Vigour refunds (10 each). Prefer conservationOfEnergyRefund
-   * + ringOfVigour; ignored when conservationOfEnergyRefund is set.
-   */
-  ultimateAdrenalineRefund?: number;
-  /** CoE ultimate refund (0 or 10). Preferred over splitting ultimateAdrenalineRefund. */
+  /** CoE ultimate refund (0 or 10). */
   conservationOfEnergyRefund?: number;
   /**
    * Ring of Vigour active (equipped ring and/or permanent passive, already OR-resolved).

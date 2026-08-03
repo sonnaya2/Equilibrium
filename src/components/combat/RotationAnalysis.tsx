@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { ticksToSeconds } from "@/combat/core/ticks";
-import type { ResolvedEvent } from "@/combat/engine/runtime/events";
 import type {
   DamageEffectBreakdown,
   DamageSourceKind,
+  ResolvedEvent,
   RotationSummary,
-} from "@/combat/engine/simulation/contracts";
+} from "@/combat";
 import type { CalcStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 
@@ -31,13 +31,13 @@ const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   "grasp-of-guthix": "Grasp of Guthix",
 };
 
-/** Damage totals — whole numbers. */
+/** Damage totals as whole numbers. */
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
-/** Expected activations/hits — keep fractional weight (never round 0.35 → 0). */
+/** Expected activations/hits; keep fractional weight (never round 0.35 → 0). */
 const formatExpected = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
-/** Casts / trigger rolls / attached component counts — integers when whole. */
+/** Casts / trigger rolls / attached counts; integers when whole. */
 const formatLiteral = (value: number) =>
   new Intl.NumberFormat("en-US", {
     maximumFractionDigits: Number.isInteger(value) ? 0 : 2,
@@ -431,8 +431,7 @@ export function RotationAnalysisModal({
                       <td className="py-1.5 pr-3 text-parch-50">
                         <span className="inline-flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
                           <span>{effectName(effect.id, nameForId)}</span>
-                          {/* DoT badge only for real DoT effects — not for skills that merely
-                              received bonus-damage riders (those use the Bonus column). */}
+                          {/* DoT badge only for real DoT; rider-only skills use Bonus column. */}
                           {effect.dotDamage > 0 ? (
                             <span className="whitespace-nowrap text-parch-300">DoT</span>
                           ) : null}

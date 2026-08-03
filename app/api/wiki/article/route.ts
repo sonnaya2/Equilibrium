@@ -12,13 +12,19 @@ import {
 } from "@/lib/wikiArticle";
 import { decodeHtmlEntities } from "@/lib/htmlEntities";
 import { log } from "@/lib/log";
+import { clientIpFromHeaders, rateLimit } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 
-/**
- * On-demand after icon click only.
- * Client hits this after an icon click on /data — never RSC, Browse, hover, or prefetch.
- */
+/** On-demand wiki parse after /data icon click only (not RSC/Browse/hover/prefetch). */
+
+/** Cap url/page query params to bound parse cost and abuse. */
+const MAX_QUERY_PARAM_LEN = 1024;
+/** Cap upstream body before JSON parse (~3 MiB). */
+const MAX_UPSTREAM_BYTES = 3 * 1024 * 1024;
+/** 30 requests / minute per client IP. */
+const RATE_LIMIT = 30;
+const RATE_WINDOW_MS = 60_000;
 
 type ParsePayload = {
   parse?: {
@@ -39,9 +45,57 @@ type FetchWikiResult =
   | { ok: true; payload: ParsePayload }
   | {
       ok: false;
-      kind: "upstream_status" | "malformed_json" | "aborted" | "timeout" | "network";
+      kind: "upstream_status" | "malformed_json" | "too_large" | "aborted" | "timeout" | "network";
       detail?: string;
     };
+
+/** Cap upstream body size before JSON.parse. */
+async function readBodyCapped(
+  response: Response,
+  maxBytes: number,
+): Promise<{ ok: true; text: string } | { ok: false; kind: "too_large" }> {
+  const contentLength = response.headers.get("content-length");
+  if (contentLength) {
+    const n = Number(contentLength);
+    if (Number.isFinite(n) && n > maxBytes) {
+      return { ok: false, kind: "too_large" };
+    }
+  }
+
+  if (!response.body) {
+    const text = await response.text();
+    if (new TextEncoder().encode(text).byteLength > maxBytes) {
+      return { ok: false, kind: "too_large" };
+    }
+    return { ok: true, text };
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      try {
+        await reader.cancel();
+      } catch {
+        /* ignore cancel errors */
+      }
+      return { ok: false, kind: "too_large" };
+    }
+    chunks.push(value);
+  }
+
+  const merged = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { ok: true, text: new TextDecoder().decode(merged) };
+}
 
 async function fetchWikiParse(pageTitle: string, signal: AbortSignal): Promise<FetchWikiResult> {
   try {
@@ -53,9 +107,15 @@ async function fetchWikiParse(pageTitle: string, signal: AbortSignal): Promise<F
     if (!response.ok) {
       return { ok: false, kind: "upstream_status", detail: String(response.status) };
     }
+
+    const body = await readBodyCapped(response, MAX_UPSTREAM_BYTES);
+    if (!body.ok) {
+      return { ok: false, kind: "too_large", detail: String(MAX_UPSTREAM_BYTES) };
+    }
+
     let payload: unknown;
     try {
-      payload = await response.json();
+      payload = JSON.parse(body.text) as unknown;
     } catch {
       return { ok: false, kind: "malformed_json" };
     }
@@ -78,15 +138,15 @@ async function fetchWikiParse(pageTitle: string, signal: AbortSignal): Promise<F
   }
 }
 
+function groupAlreadyHasMode(group: string, modeLabel: string): boolean {
+  // Plain substring includes, not RegExp(modeLabel): wiki tails can hold metacharacters.
+  return group.toLowerCase().includes(modeLabel.toLowerCase());
+}
+
 /**
  * Vorkath-style pages only list uniques + a "loot (normal)" shell row.
  * Follow the preferred loot subpage and merge its real drop table.
  */
-function groupAlreadyHasMode(group: string, modeLabel: string): boolean {
-  // Plain substring — never RegExp(modeLabel); wiki tails can hold metacharacters.
-  return group.toLowerCase().includes(modeLabel.toLowerCase());
-}
-
 async function expandLootContainers(
   view: WikiArticleView,
   signal: AbortSignal,
@@ -160,10 +220,35 @@ async function expandLootContainers(
   });
 }
 
+function tooLongParam(value: string | null): boolean {
+  return typeof value === "string" && value.length > MAX_QUERY_PARAM_LEN;
+}
+
 export async function GET(request: Request) {
+  // Rate limit before any wiki work.
+  const ip = clientIpFromHeaders(request.headers);
+  const limited = rateLimit(ip, { limit: RATE_LIMIT, windowMs: RATE_WINDOW_MS });
+  if (!limited.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(limited.retryAfterSec),
+          "X-RateLimit-Limit": String(limited.limit),
+          "X-RateLimit-Remaining": "0",
+        },
+      },
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const urlParam = searchParams.get("url");
   const pageParam = searchParams.get("page");
+
+  if (tooLongParam(urlParam) || tooLongParam(pageParam)) {
+    return NextResponse.json({ error: "Query parameter too long" }, { status: 400 });
+  }
 
   let pageTitle: string;
   let pageUrl: string;
@@ -203,6 +288,9 @@ export async function GET(request: Request) {
         });
         if (fetched.kind === "timeout" || fetched.kind === "aborted") {
           return NextResponse.json({ error: "RuneScape Wiki request timed out" }, { status: 504 });
+        }
+        if (fetched.kind === "too_large") {
+          return NextResponse.json({ error: "Wiki response too large" }, { status: 502 });
         }
         if (fetched.kind === "upstream_status" && fetched.detail === "404") {
           return NextResponse.json({ error: "Wiki page not found" }, { status: 404 });
@@ -250,6 +338,8 @@ export async function GET(request: Request) {
       return NextResponse.json(view, {
         headers: {
           "Cache-Control": "s-maxage=3600, stale-while-revalidate=86400",
+          "X-RateLimit-Limit": String(limited.limit),
+          "X-RateLimit-Remaining": String(limited.remaining),
         },
       });
     } finally {

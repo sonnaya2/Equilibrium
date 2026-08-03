@@ -45,9 +45,9 @@ export function resolveSpecToRepoPath(filePath, spec, root) {
   } else if (spec.startsWith(".")) {
     abs = resolve(fileDir, spec);
   } else {
-    return null; // package import
+    return null;
   }
-  // Drop extension-less path as-is; we only need directory membership.
+  // Extension-less path is fine; only directory membership matters.
   const rel = fwd(relative(root, abs));
   if (rel.startsWith("..") || rel === "") return null;
   return rel;
@@ -62,6 +62,12 @@ export function isUnder(repoRelPath, prefix) {
   const p = fwd(repoRelPath);
   const pre = fwd(prefix).replace(/\/$/, "");
   return p === pre || p.startsWith(pre + "/");
+}
+
+/** Production UI surfaces: components + Next app routes. */
+export function isUiSurface(repoRelPath) {
+  const p = fwd(repoRelPath);
+  return isUnder(p, "src/components") || isUnder(p, "app");
 }
 
 /** Spec points at UI components (@/components, src/components, or relative into it). */
@@ -80,6 +86,49 @@ export function isEngineImport(filePath, spec, root) {
   const resolved = resolveSpecToRepoPath(filePath, spec, root);
   if (!resolved) return false;
   return isUnder(resolved, "src/combat/engine");
+}
+
+/**
+ * Engine internals banned from UI: cast | resolution | runtime | schedulers.
+ * Allowed: engine/simulation and the @/combat barrel that re-exports it.
+ */
+const BANNED_ENGINE_INTERNAL_DIRS = ["cast", "resolution", "runtime", "schedulers"];
+
+/** True if import resolves into a banned engine internal; simulation returns false. */
+export function isBannedEngineInternalImport(filePath, spec, root) {
+  for (const dir of BANNED_ENGINE_INTERNAL_DIRS) {
+    if (
+      spec === `@/combat/engine/${dir}` ||
+      spec.startsWith(`@/combat/engine/${dir}/`) ||
+      spec === `src/combat/engine/${dir}` ||
+      spec.startsWith(`src/combat/engine/${dir}/`)
+    ) {
+      return true;
+    }
+  }
+  // engine root may re-export simulation; not banned by itself
+  if (
+    spec === "@/combat/engine" ||
+    spec === "src/combat/engine" ||
+    spec === "@/combat/engine/simulation" ||
+    spec.startsWith("@/combat/engine/simulation/") ||
+    spec === "src/combat/engine/simulation" ||
+    spec.startsWith("src/combat/engine/simulation/")
+  ) {
+    return false;
+  }
+
+  const resolved = resolveSpecToRepoPath(filePath, spec, root);
+  if (!resolved) return false;
+  if (!isUnder(resolved, "src/combat/engine")) return false;
+  if (isUnder(resolved, "src/combat/engine/simulation")) return false;
+  for (const dir of BANNED_ENGINE_INTERNAL_DIRS) {
+    if (isUnder(resolved, `src/combat/engine/${dir}`)) return true;
+  }
+  // Unknown engine subfolder: ban for UI safety; engine root itself is allowed.
+  const engineRoot = "src/combat/engine";
+  if (resolved === engineRoot) return false;
+  return isUnder(resolved, engineRoot);
 }
 
 export function isReactImport(spec) {
@@ -115,10 +164,25 @@ export function checkFile(opts) {
   const out = [];
   const production = !isTestFile(rel);
   const underCombat = isUnder(rel, "src/combat");
+  const underUi = isUiSurface(rel);
+
+  if (underUi && production) {
+    for (const spec of specs) {
+      if (isBannedEngineInternalImport(filePath, spec, root)) {
+        out.push({
+          rule: "ui-no-engine-internals",
+          file: rel,
+          spec,
+          detail:
+            "UI must not import engine cast/resolution/runtime/schedulers (use @/combat or engine/simulation)",
+        });
+      }
+    }
+  }
+
   if (!underCombat) return out;
 
   for (const spec of specs) {
-    // Rule: combat production code must not import UI components
     if (production && isComponentsImport(filePath, spec, root)) {
       out.push({
         rule: "combat-no-components",
@@ -128,7 +192,6 @@ export function checkFile(opts) {
       });
     }
 
-    // Rule: shared must not import engine
     if (isUnder(rel, "src/combat/shared") && isEngineImport(filePath, spec, root)) {
       out.push({
         rule: "shared-no-engine",
@@ -138,8 +201,7 @@ export function checkFile(opts) {
       });
     }
 
-    // Rule: solver production must not import react / react-dom / components
-    // (*.test.ts is exempt — fixtures may pull loadout helpers from components)
+    // Solver production: no react / components (*.test.ts may use loadout fixtures)
     if (production && isUnder(rel, "src/combat/solver")) {
       if (isReactImport(spec)) {
         out.push({
@@ -159,7 +221,6 @@ export function checkFile(opts) {
       }
     }
 
-    // Rule: engine production must not import components
     if (
       production &&
       isUnder(rel, "src/combat/engine") &&

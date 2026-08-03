@@ -2,9 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
-import { rotationOf } from "@/combat/engine/simulation/contracts";
-import { simulate, type RotationSummary } from "@/combat/engine/simulation/simulate";
-import { resolveAbilityCastAvailability } from "@/combat/engine/cast/requirements";
+import {
+  resolveAbilityCastAvailability,
+  rotationOf,
+  simulate,
+  type RotationSummary,
+} from "@/combat";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import type { CombatStyle } from "@/combat/types";
 import { MELEE_ABILITIES, withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
@@ -76,7 +79,7 @@ function castCritLabel(result: RotationSummary["casts"][number]["result"]): stri
   return chance > 0 ? `${Math.round(chance * 1000) / 10}% crit EV` : null;
 }
 
-/** Assumptions scaffold only — sim path builds SimulateInput directly. */
+/** Assumptions scaffold only; sim path builds SimulateInput directly. */
 function withManualRotationLine(
   scaffold: CalcStats,
   line: {

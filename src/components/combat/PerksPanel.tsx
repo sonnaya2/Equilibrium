@@ -167,7 +167,7 @@ const GIZMO_LABELS: Record<GizmoSlotId, string> = {
   armour2: "Armour 2",
 };
 
-/** Short sublabels so the two armour shells (body / legs) read as a pair. */
+/** Body/legs/main/off labels for gizmo shell cards. */
 const GIZMO_HINTS: Partial<Record<GizmoSlotId, string>> = {
   armour1: "Body",
   armour2: "Legs",
@@ -281,6 +281,7 @@ function GizmoCard({
           type="button"
           aria-pressed={active}
           className="gizmo-card__activate"
+          data-testid={`gizmo-activate-${slot}`}
           onClick={onActivate}
         >
           <span className="gizmo-card__title-block">

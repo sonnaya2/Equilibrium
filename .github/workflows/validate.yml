@@ -35,6 +35,27 @@ on:
       - "playwright.reuse.config.ts"
       - "playwright.webgpu.config.ts"
       - ".github/workflows/validate.yml"
+  pull_request:
+    paths:
+      - "app/**"
+      - "src/**"
+      - "data/**"
+      - "public/**"
+      - "asset-catalog/**"
+      - "scripts/**"
+      - "e2e/**"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - "tsconfig*.json"
+      - "next.config.ts"
+      - "eslint.config.mjs"
+      - "vitest.config.ts"
+      - "playwright.config.ts"
+      - "playwright.combat.config.ts"
+      - "playwright.reuse.config.ts"
+      - "playwright.webgpu.config.ts"
+      - ".github/workflows/validate.yml"
   workflow_dispatch:
     inputs:
       enable_combat_e2e:
@@ -69,6 +90,9 @@ jobs:
       # Combat layer boundaries (scripts/architecture/check.mjs).
       - name: Audit architecture
         run: npm run audit:architecture
+      # Clean-export hygiene (agent tooling / secrets-shaped strings).
+      - name: Audit release export
+        run: npm run audit:release
       - name: Typecheck
         run: npm run typecheck
       - name: Lint

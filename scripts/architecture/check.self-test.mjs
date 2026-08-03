@@ -8,9 +8,11 @@ import { join } from "node:path";
 import {
   checkFile,
   extractImportSpecs,
+  isBannedEngineInternalImport,
   isComponentsImport,
   isEngineImport,
   isReactImport,
+  isUiSurface,
   stripComments,
 } from "./detect.mjs";
 
@@ -26,7 +28,6 @@ function assert(cond, msg) {
   }
 }
 
-// --- unit: extract / strip -------------------------------------------------
 assert(
   extractImportSpecs(`import x from "@/components/foo";`).includes("@/components/foo"),
   "extracts @/components import",
@@ -56,10 +57,11 @@ assert(
   "stripComments keeps real imports",
 );
 
-// --- unit: classifiers -----------------------------------------------------
 const fakeCombatFile = join(ROOT, "src/combat/engine/simulation/simulate.ts");
 const fakeSharedFile = join(ROOT, "src/combat/shared/equipment.ts");
 const fakeSolverFile = join(ROOT, "src/combat/solver/solve.ts");
+const fakeUiFile = join(ROOT, "src/components/combat/RotationPlanner.tsx");
+const fakeAppFile = join(ROOT, "app/combat/page.tsx");
 
 assert(
   isComponentsImport(fakeCombatFile, "@/components/combat/loadoutStats", ROOT),
@@ -94,7 +96,47 @@ assert(isReactImport("react-dom"), "isReactImport: react-dom");
 assert(isReactImport("react/jsx-runtime"), "isReactImport: react/jsx-runtime");
 assert(!isReactImport("react-query"), "isReactImport: negative for react-query");
 
-// --- integration: checkFile rules fire on synthetic sources ----------------
+assert(isUiSurface("src/components/combat/RotationPlanner.tsx"), "isUiSurface: components");
+assert(isUiSurface("app/combat/page.tsx"), "isUiSurface: app");
+assert(!isUiSurface("src/combat/index.ts"), "isUiSurface: negative for combat package");
+
+assert(
+  isBannedEngineInternalImport(fakeUiFile, "@/combat/engine/cast/requirements", ROOT),
+  "isBannedEngineInternalImport: cast",
+);
+assert(
+  isBannedEngineInternalImport(fakeUiFile, "@/combat/engine/runtime/events", ROOT),
+  "isBannedEngineInternalImport: runtime",
+);
+assert(
+  isBannedEngineInternalImport(fakeUiFile, "@/combat/engine/resolution/foo", ROOT),
+  "isBannedEngineInternalImport: resolution",
+);
+assert(
+  isBannedEngineInternalImport(fakeUiFile, "@/combat/engine/schedulers/bar", ROOT),
+  "isBannedEngineInternalImport: schedulers",
+);
+assert(
+  !isBannedEngineInternalImport(fakeUiFile, "@/combat/engine/simulation/simulate", ROOT),
+  "isBannedEngineInternalImport: allows simulation",
+);
+assert(
+  !isBannedEngineInternalImport(fakeUiFile, "@/combat", ROOT),
+  "isBannedEngineInternalImport: allows @/combat barrel",
+);
+assert(
+  !isBannedEngineInternalImport(fakeUiFile, "@/combat/core/ticks", ROOT),
+  "isBannedEngineInternalImport: allows core",
+);
+assert(
+  isBannedEngineInternalImport(
+    fakeUiFile,
+    "../../combat/engine/cast/requirements",
+    ROOT,
+  ),
+  "isBannedEngineInternalImport: relative into cast",
+);
+
 function violationsFor(repoRel, source) {
   return checkFile({
     root: ROOT,
@@ -151,7 +193,6 @@ function violationsFor(repoRel, source) {
 }
 
 {
-  // Tests are exempt from combat-no-components
   const v = violationsFor(
     "src/combat/data/records.test.ts",
     `import { Nav } from "@/components/Nav";\n`,
@@ -163,7 +204,7 @@ function violationsFor(repoRel, source) {
 }
 
 {
-  // Solver tests may import component fixtures (production solver still gated)
+  // Solver tests may import component fixtures
   const v = violationsFor(
     "src/combat/solver/packRequest.regions.test.ts",
     `import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";\nimport React from "react";\n`,
@@ -175,12 +216,77 @@ function violationsFor(repoRel, source) {
 }
 
 {
-  // Clean production file
   const v = violationsFor(
     "src/combat/core/ticks.ts",
     `import { something } from "../types";\n`,
   );
   assert(v.length === 0, "checkFile accepts clean combat import");
+}
+
+{
+  const v = violationsFor(
+    "src/components/combat/RotationPlanner.tsx",
+    `import { resolveAbilityCastAvailability } from "@/combat/engine/cast/requirements";\n`,
+  );
+  assert(
+    v.some((x) => x.rule === "ui-no-engine-internals"),
+    "checkFile catches UI → engine/cast",
+  );
+}
+
+{
+  const v = violationsFor(
+    "src/components/combat/RotationAnalysis.tsx",
+    `import type { ResolvedEvent } from "@/combat/engine/runtime/events";\n`,
+  );
+  assert(
+    v.some((x) => x.rule === "ui-no-engine-internals"),
+    "checkFile catches UI → engine/runtime",
+  );
+}
+
+{
+  const v = violationsFor(
+    "src/components/combat/RevolutionPanel.tsx",
+    `import { simulateRevolution } from "@/combat/engine/simulation/revolution";\nimport type { RotationSummary } from "@/combat/engine/simulation/simulate";\n`,
+  );
+  assert(
+    !v.some((x) => x.rule === "ui-no-engine-internals"),
+    "checkFile allows UI → engine/simulation",
+  );
+}
+
+{
+  const v = violationsFor(
+    "src/components/combat/RotationPlanner.tsx",
+    `import { resolveAbilityCastAvailability, simulate } from "@/combat";\n`,
+  );
+  assert(
+    !v.some((x) => x.rule === "ui-no-engine-internals"),
+    "checkFile allows UI → @/combat barrel",
+  );
+}
+
+{
+  const v = violationsFor(
+    "app/combat/page.tsx",
+    `import { x } from "@/combat/engine/schedulers/tick";\n`,
+  );
+  assert(
+    v.some((x) => x.rule === "ui-no-engine-internals"),
+    "checkFile catches app → engine/schedulers",
+  );
+}
+
+{
+  const v = violationsFor(
+    "src/components/combat/loadoutStats.test.ts",
+    `import { x } from "@/combat/engine/cast/requirements";\n`,
+  );
+  assert(
+    !v.some((x) => x.rule === "ui-no-engine-internals"),
+    "checkFile skips ui-no-engine-internals for *.test.ts",
+  );
 }
 
 if (failed > 0) {

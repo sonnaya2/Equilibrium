@@ -6,6 +6,8 @@
  *   - src/combat/shared/** → engine
  *   - src/combat/solver/** → react | react-dom | components
  *   - src/combat/engine/** → components
+ *   - src/components/** | app/** (production) → engine cast|resolution|runtime|schedulers
+ *     (engine/simulation is allowed)
  *
  *   node scripts/architecture/check.mjs [--verbose]
  */
@@ -14,16 +16,19 @@ import { join, relative } from "node:path";
 import { checkFile, fwd } from "./detect.mjs";
 
 const ROOT = process.cwd();
-const COMBAT_ROOT = join(ROOT, "src", "combat");
+const SCAN_ROOTS = [
+  join(ROOT, "src", "combat"),
+  join(ROOT, "src", "components"),
+  join(ROOT, "app"),
+];
 const VERBOSE = process.argv.includes("--verbose");
 
 /**
- * Pre-existing boundary debt that cannot be moved without combat refactors.
- * Do not grow this list — new crossings must fail the gate.
+ * Pre-existing boundary debt; do not grow this list (new crossings must fail the gate).
  * Paths are repo-relative posix.
  */
 const KNOWN_LEGACY_EXCEPTIONS = new Set([
-  // Solver packs UI loadout / CalcStats types until those live in a shared domain module.
+  // Solver packs UI loadout / CalcStats until those live in shared domain.
   "src/combat/solver/packRequest.ts",
   // Shared reuses engine cast-requirement helpers (equipment passives / ability gates).
   "src/combat/shared/abilityAvailability.ts",
@@ -46,7 +51,12 @@ async function walk(dir, acc = []) {
   return acc;
 }
 
-const files = await walk(COMBAT_ROOT);
+/** @type {string[]} */
+const files = [];
+for (const root of SCAN_ROOTS) {
+  await walk(root, files);
+}
+
 /** @type {import('./detect.mjs').Violation[]} */
 const violations = [];
 let scanned = 0;
@@ -66,12 +76,16 @@ for (const abs of files) {
 }
 
 if (VERBOSE) {
-  console.log(`[architecture] scanned ${scanned} files under src/combat`);
+  console.log(
+    `[architecture] scanned ${scanned} files under src/combat + src/components + app`,
+  );
   console.log(`[architecture] allowlist ${KNOWN_LEGACY_EXCEPTIONS.size} legacy paths`);
 }
 
 if (violations.length === 0) {
-  console.log(`[OK] architecture: ${scanned} combat files, no boundary violations`);
+  console.log(
+    `[OK] architecture: ${scanned} files (combat + UI), no boundary violations`,
+  );
   process.exit(0);
 }
 

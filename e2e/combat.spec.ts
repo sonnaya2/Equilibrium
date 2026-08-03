@@ -111,7 +111,7 @@ test("quick tab offers necromancy's sourced volley", async ({ page }) => {
   await page.getByRole("option", { name: /Volley of Souls/ }).click();
   await expect(page.getByRole("heading", { name: "Volley of Souls" })).toBeVisible();
   await expect(page.getByText("Residual Souls")).toBeVisible();
-  // Summary rail and ability readout both say Damage Potential — pin the first.
+  // Summary rail and ability readout both say Damage Potential; pin the first.
   await expect(page.getByText("Damage Potential", { exact: true }).first()).toBeVisible();
 });
 
@@ -157,16 +157,16 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
   // Two weapon shells + two armour shells (body + legs); each shell is 2 perk slots.
   const gizmos = page.getByRole("group", { name: "Gizmos" });
-  await expect(gizmos.getByRole("button", { name: /Weapon 1/ })).toBeVisible();
-  await expect(gizmos.getByRole("button", { name: /Weapon 2/ })).toBeVisible();
-  await expect(gizmos.getByRole("button", { name: /Armour 1/ })).toBeVisible();
-  await expect(gizmos.getByRole("button", { name: /Armour 2/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /^Weapon 1\b/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /^Weapon 2\b/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /^Armour 1\b/ })).toBeVisible();
+  await expect(gizmos.getByRole("button", { name: /^Armour 2\b/ })).toBeVisible();
   await expect(gizmos.getByText("Body", { exact: true })).toBeVisible();
   await expect(gizmos.getByText("Legs", { exact: true })).toBeVisible();
   const aftershock = page.getByRole("button", { name: /Aftershock.*Weapon/ });
-  await page.getByRole("button", { name: /Armour 1/ }).click();
+  await gizmos.getByRole("button", { name: /^Armour 1\b/ }).click();
   await expect(aftershock).toHaveAttribute("aria-disabled", "true");
-  await page.getByRole("button", { name: /Weapon 1/ }).click();
+  await gizmos.getByRole("button", { name: /^Weapon 1\b/ }).click();
   await aftershock.click();
   await expect(page.getByRole("status", { name: "Aftershock rank" })).toHaveText("R1");
   await page.getByRole("button", { name: "Increase Aftershock rank" }).click();
@@ -291,7 +291,7 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await expect(page.getByTestId("revo-empty")).toBeVisible();
   await expect(page.getByTestId("revo-horizon-plan")).toHaveText(/100 ticks/);
 
-  await expect(page.getByText(/\d+ of \d+ slots modelled/)).toBeVisible();
+  await expect(page.getByTestId("revo-reference-bar")).toContainText(/\d+ of \d+ modelled/);
   await expect(page.getByText("Meteor Strike")).toBeVisible();
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
@@ -311,8 +311,6 @@ test("revolution solver optimizes and apply keeps a runnable bar", async ({ page
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.getByRole("button", { name: "Optimize bar" })).toBeVisible();
 
-  // Thorough depth is the default; cap slots for a faster browser pass.
-  await page.getByLabel("Max slots").fill("6");
   await page.getByRole("button", { name: "Optimize bar" }).click();
 
   const progress = page.getByTestId("revo-solver-progress");
@@ -334,7 +332,6 @@ test("revolution solver optimizes and apply keeps a runnable bar", async ({ page
 test("solver progress advances at least twice before results", async ({ page }) => {
   test.setTimeout(180_000);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
-  await page.getByLabel("Max slots").fill("6");
 
   const optimize = page.getByTestId("revo-optimize");
   await optimize.click();

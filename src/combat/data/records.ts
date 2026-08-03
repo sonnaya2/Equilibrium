@@ -110,7 +110,9 @@ export type ItemPassiveId =
   // Recorded but not modelled: both are stochastic with their own internal
   // cooldown, and neither has a settled place in the modifier pipeline.
   | "asylum-surgeon"
-  | "deathtouch-reflect";
+  | "deathtouch-reflect"
+  /** Ring of Vigour: 10% ultimate adren retain + 10% cheaper weapon specials. */
+  | "ring-of-vigour";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 

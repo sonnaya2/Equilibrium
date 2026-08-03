@@ -6,6 +6,7 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
 import { equipmentRecordPassiveIds } from "./requirements";
+import { RING_OF_VIGOUR_ITEM_ID } from "./ringOfVigour";
 
 /**
  * Equipment set effects with sourced current numbers. Per-item combat stats live on
@@ -537,6 +538,16 @@ function passivePresentation(
         effects: ["20% chance to reflect 25–50% of damage taken, capped at 5,000."],
         support: "not-modeled",
       };
+    case "ring-of-vigour":
+      return {
+        label: "Ring of Vigour",
+        effects: [
+          "After an ultimate, retain 10% adrenaline (does not reduce the cast cost).",
+          "Weapon specials / Essence of Finality cost 90% of their original adrenaline.",
+          "Does not stack with the permanent Anachronia unlock on the Buffs tab.",
+        ],
+        support: "modeled",
+      };
   }
 }
 
@@ -596,6 +607,8 @@ export function equippedPassiveSummaries(
     const passiveList: ItemPassiveId[] = [
       ...equipmentRecordPassiveIds(item),
       ...(item.defender ? (["defender-accuracy"] as const) : []),
+      // Catalogue has no passiveId yet; adren effects are modeled via ringOfVigour.ts.
+      ...(item.id === RING_OF_VIGOUR_ITEM_ID ? (["ring-of-vigour"] as const) : []),
     ];
     const igneousOnItem = passiveList.filter((p) => IGNEOUS_ULTIMATE_PASSIVE_SET.has(p));
     const lengOnItem = passiveList.filter((p) => LENG_PASSIVE_SET.has(p));

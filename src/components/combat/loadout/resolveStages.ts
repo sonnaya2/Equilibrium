@@ -920,7 +920,11 @@ export function resolveCombatRules(
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
     activePassives: (() => {
-      const rows = equippedPassiveSummaries(loadout).map(({ label }) => label);
+      // Equipment list may already include "Ring of Vigour"; collapse to one
+      // line that names equipped vs permanent sources (no double stack).
+      const rows = equippedPassiveSummaries(loadout)
+        .map(({ label }) => label)
+        .filter((label) => label !== "Ring of Vigour");
       const vigourSources = ringOfVigourActiveSources({
         equipmentIds: equipment.equipmentIds,
         ringOfVigourPassive: loadout.buffs.ringOfVigourPassive,

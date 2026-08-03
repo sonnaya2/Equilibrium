@@ -412,8 +412,8 @@ export function BuffsPanel({
                   !anachroniaUnlocked
                     ? "Requires Anachronia — Extinction / Warped Gem"
                     : ringEquipped
-                      ? "Already active from equipped Ring of Vigour — effects do not stack. +10 adren after ultimates; weapon specials cost 90%."
-                      : "Anachronia — Extinction / Warped Gem. +10 adren after ultimates; weapon specials cost 90%. Does not stack with the equipped ring."
+                      ? "Permanent unlock (works without wearing the ring). Equipped ring already grants the same effect — they do not stack."
+                      : "Permanent unlock: same effect as wearing Ring of Vigour, without equipping it. +10 adren after ultimates; weapon specials cost 90%."
                 }
                 pressed={loadout.buffs.ringOfVigourPassive}
                 disabled={!anachroniaUnlocked}
@@ -423,16 +423,15 @@ export function BuffsPanel({
                 }
               />
             </div>
-            {loadout.buffs.ringOfVigourPassive && ringEquipped ? (
-              <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-no-stack">
-                Already active from equipped Ring of Vigour — effects do not stack.
-              </p>
-            ) : null}
-            {!anachroniaUnlocked ? (
-              <p className="mt-1.5 text-[11px] text-parch-300">
-                Anachronia — Extinction / Warped Gem
-              </p>
-            ) : null}
+            <p className="mt-1.5 text-[11px] text-parch-300">
+              {anachroniaUnlocked
+                ? ringEquipped
+                  ? loadout.buffs.ringOfVigourPassive
+                    ? "Equipped ring is enough. Permanent unlock stays on for when you swap rings — effects do not stack."
+                    : "Equipped ring is enough. Optional permanent unlock keeps the effect when you unequip it."
+                  : "Works without the ring equipped. Equip the ring instead if you have not unlocked the permanent passive."
+                : "Anachronia — Extinction / Warped Gem"}
+            </p>
           </div>
         </div>
 

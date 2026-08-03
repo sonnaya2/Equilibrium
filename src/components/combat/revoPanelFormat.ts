@@ -104,8 +104,9 @@ export function isLiveSolverSession(opts: {
 }
 
 /**
- * What the host may do when a solve promise settles.
- * cancel → no final / no verified writes; stale identity → ignore; else apply final DTO.
+ * What the host may do when a solve promise settles (resolve or catch).
+ * Stale generation or identity always wins: never publish final/stopped artifacts.
+ * cancel with live identity → stopped-preview only (no verified writes).
  */
 export type SolveSettlementAction = "apply-final" | "stopped-preview" | "ignore";
 
@@ -118,15 +119,46 @@ export function settlementActionForSolve(opts: {
   hasFinalDto: boolean;
 }): SolveSettlementAction {
   if (opts.sessionGen !== opts.currentGen) return "ignore";
-  if (opts.cancelled) return "stopped-preview";
+  // Identity first — abort/error after equipment/perk/target/bounds drift must not publish.
   if (opts.sessionIdentity !== opts.currentIdentity) return "ignore";
+  if (opts.cancelled) return "stopped-preview";
   if (opts.hasFinalDto) return "apply-final";
   return "ignore";
+}
+
+/** True only when a non-final stopped/error preview may be published. */
+export function mayPublishStoppedPreview(action: SolveSettlementAction): boolean {
+  return action === "stopped-preview";
 }
 
 /** Verified cache/recent writes only for completed finals. */
 export function mayWriteVerifiedSolveArtifacts(action: SolveSettlementAction): boolean {
   return action === "apply-final";
+}
+
+/**
+ * Pure settle for AbortError / failure catch paths (same rules as resolve).
+ * cancelled=true for abort; cancelled=false + hasFinalDto=false for hard error → ignore
+ * unless we treat error as stopped-preview when identity still matches.
+ */
+export function settlementActionForCatch(opts: {
+  sessionGen: number;
+  currentGen: number;
+  sessionIdentity: string;
+  currentIdentity: string;
+  aborted: boolean;
+}): SolveSettlementAction {
+  if (opts.aborted) {
+    return settlementActionForSolve({
+      ...opts,
+      cancelled: true,
+      hasFinalDto: false,
+    });
+  }
+  // Hard error with live session: allow non-final preview (same as cancelled stop).
+  if (opts.sessionGen !== opts.currentGen) return "ignore";
+  if (opts.sessionIdentity !== opts.currentIdentity) return "ignore";
+  return "stopped-preview";
 }
 
 /** Document product floor used when UI requests 4-slot bars. */

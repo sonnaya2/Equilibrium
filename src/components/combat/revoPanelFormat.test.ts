@@ -9,10 +9,12 @@ import {
   formatNumber,
   formatTime,
   isLiveSolverSession,
+  mayPublishStoppedPreview,
   mayWriteVerifiedSolveArtifacts,
   previewCategory,
   productBarSizeFloor,
   progressFillFromState,
+  settlementActionForCatch,
   settlementActionForSolve,
   solverPhaseLabel,
   stoppedPreviewFromProgress,
@@ -186,6 +188,20 @@ describe("revoPanelFormat", () => {
     ).toBe(0.5);
     expect(trackLiveClassName(true, true, null)).toContain("stopping");
     expect(workerRecipeGroupLabel("evolutionary")).toBe("Evo");
+  });
+});
+
+describe("settlementActionForCatch identity gate", () => {
+  it("identity-mismatched abort ignores like the hook catch path", () => {
+    const action = settlementActionForCatch({
+      sessionGen: 1,
+      currentGen: 1,
+      sessionIdentity: "a",
+      currentIdentity: "b",
+      aborted: true,
+    });
+    expect(action).toBe("ignore");
+    expect(mayPublishStoppedPreview(action)).toBe(false);
   });
 });
 

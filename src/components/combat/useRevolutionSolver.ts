@@ -3,13 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import {
-  agentBarLength,
-  agentSearchRecipe,
   cancelOptimize,
   clampSolverBarSizes,
   fingerprintSolveContext,
   lookupSolvedBar,
   packSolverRequest,
+  planWorkers,
   preferredAgentCount,
   rememberSolvedBar,
   runOptimize,
@@ -21,6 +20,7 @@ import {
   type SolverProgress,
   type SolverResultDTO,
   type SolverSearchTier,
+  type WorkerPlan,
 } from "@/combat/solver";
 import { REGION_IDS, type BuildState } from "@/league";
 import type { CalcStats } from "./loadoutStats";
@@ -37,6 +37,8 @@ import {
   barBoundsFromPreset,
   DEFAULT_BAR_SIZE_PRESET,
   isLiveSolverSession,
+  mayPublishStoppedPreview,
+  settlementActionForCatch,
   settlementActionForSolve,
   stoppedPreviewFromProgress,
   type BarSizePresetId,
@@ -44,6 +46,35 @@ import {
 } from "./revoPanelFormat";
 import { solverSnapshotFromUi } from "./solverSnapshot";
 import type { Loadout } from "./useLoadout";
+
+/** Seed progress from the real worker plan (bounds + recipe + seed), not tier ceilings. */
+export function seedProgressFromPlan(
+  plan: WorkerPlan,
+  tier: SolverSearchTier,
+): SolverProgress {
+  return {
+    phase: "seed",
+    evaluations: 0,
+    uniqueCandidates: 0,
+    bestScore: 0,
+    windowDpms: 0,
+    topBarPreview: [],
+    noImprovementCount: 0,
+    evaluationBudget: TIER_BUDGETS[tier],
+    progressRatio: 0.02,
+    agentCount: plan.agentCount,
+    agents: plan.assignments.map((a) => ({
+      index: a.agentIndex,
+      phase: "seed" as const,
+      evaluations: 0,
+      bestScore: 0,
+      progressRatio: 0,
+      finished: false,
+      recipe: a.recipe,
+      barLength: a.targetLength,
+    })),
+  };
+}
 
 export type UseRevolutionSolverArgs = {
   stats: CalcStats;
@@ -262,32 +293,6 @@ export function useRevolutionSolver({
     setSolverResult(null);
     setStoppedPreview(null);
     setBestPulse(false);
-    const agentsPlanned = preferredAgentCount(solverTier);
-    setSolverAgents(agentsPlanned);
-    const seedProgress: SolverProgress = {
-      phase: "seed",
-      evaluations: 0,
-      uniqueCandidates: 0,
-      bestScore: 0,
-      windowDpms: 0,
-      topBarPreview: [],
-      noImprovementCount: 0,
-      evaluationBudget: TIER_BUDGETS[solverTier],
-      progressRatio: 0.02,
-      agentCount: agentsPlanned,
-      agents: Array.from({ length: agentsPlanned }, (_, i) => ({
-        index: i,
-        phase: "seed" as const,
-        evaluations: 0,
-        bestScore: 0,
-        progressRatio: 0,
-        finished: false,
-        recipe: agentSearchRecipe(i, solverTier),
-        barLength: agentBarLength(i),
-      })),
-    };
-    latestProgressRef.current = seedProgress;
-    setSolverProgress(seedProgress);
     try {
       const sessionNow = Date.now();
       sessionNowRef.current = sessionNow;
@@ -295,25 +300,29 @@ export function useRevolutionSolver({
       const baseRequest = packFromMaterial(material, { seed: 1, now: sessionNow });
       sessionIdentityRef.current = solveContextPayload(baseRequest);
 
+      // Real plan from packed bounds + tier — not full-product agentBarLength ladder.
+      const plan = planWorkers({
+        minBarSize: baseRequest.minBarSize,
+        maxBarSize: baseRequest.maxBarSize,
+        tier: baseRequest.tier,
+        baseSeed: baseRequest.seed,
+      });
+      setSolverAgents(plan.agentCount);
+      const seedProgress = seedProgressFromPlan(plan, solverTier);
+      latestProgressRef.current = seedProgress;
+      setSolverProgress(seedProgress);
+
       const cacheKey = await fingerprintSolveContext(baseRequest);
       const cached = lookupSolvedBar(cacheKey);
-      const bounds = clampSolverBarSizes(
-        barBoundsFromPreset(material.barSizePreset).minBarSize,
-        barBoundsFromPreset(material.barSizePreset).maxBarSize,
-      );
+      const bounds = clampSolverBarSizes(baseRequest.minBarSize, baseRequest.maxBarSize);
       const cachedSeeds = seedBarsFromSolveCache(loadout.style, cacheKey, bounds.minBarSize);
       if (cached?.bar?.length) {
         lastBestRef.current = 0;
         const warm: SolverProgress = {
-          phase: "seed",
-          evaluations: 0,
+          ...seedProgress,
           uniqueCandidates: cached.top?.length ?? 1,
-          bestScore: 0,
           ...(Number.isFinite(cached.score) ? { bestFullScore: cached.score } : {}),
-          windowDpms: 0,
           topBarPreview: [...cached.bar],
-          noImprovementCount: 0,
-          evaluationBudget: TIER_BUDGETS[solverTier],
           progressRatio: 0.08,
         };
         latestProgressRef.current = warm;
@@ -330,7 +339,6 @@ export function useRevolutionSolver({
           })),
         ],
       };
-      const agents = agentsPlanned;
       const dto = await runOptimize(
         request,
         (progress) => {
@@ -347,7 +355,7 @@ export function useRevolutionSolver({
           isCancelled: () =>
             gen !== solveGenRef.current || cancelRef.current || abort.signal.aborted,
           signal: abort.signal,
-          agents,
+          agents: plan.agentCount,
         },
       );
       const settle = settlementActionForSolve({
@@ -360,7 +368,6 @@ export function useRevolutionSolver({
       });
       if (settle === "ignore") return;
       if (settle === "stopped-preview") {
-        // Cancellation: no final DTO, no verified cache / recent.
         publishStoppedPreview(latestProgressRef.current, "stopped-early");
         return;
       }
@@ -376,19 +383,24 @@ export function useRevolutionSolver({
             err.message === "solver cancelled" ||
             err.message === "revolution solver cancelled"));
 
+      // Same identity/gen gates as the resolve path — never publish on drift.
+      const settle = settlementActionForCatch({
+        sessionGen: gen,
+        currentGen: solveGenRef.current,
+        sessionIdentity: sessionIdentityRef.current ?? "",
+        currentIdentity: liveIdentity(),
+        aborted,
+      });
+      if (!mayPublishStoppedPreview(settle)) return;
+
       const partial = latestProgressRef.current;
       if (aborted) {
         publishStoppedPreview(partial, "stopped-early");
         return;
       }
-
-      // Error path: optional non-final preview only; never a fake SolverResultDTO.
-      // Identity may have drifted — still allow preview if gen matches.
-      if (gen === solveGenRef.current) {
-        publishStoppedPreview(partial, "error");
-        const message = err instanceof Error ? err.message : String(err);
-        setSolverError(message || "Failed");
-      }
+      publishStoppedPreview(partial, "error");
+      const message = err instanceof Error ? err.message : String(err);
+      setSolverError(message || "Failed");
     } finally {
       if (gen === solveGenRef.current) {
         setSolving(false);
@@ -404,7 +416,9 @@ export function useRevolutionSolver({
     abortRef.current?.abort();
     setStopping(true);
     cancelOptimize();
-    // Immediate bar preview from known progress; no final DTO / verified writes.
+    // Immediate bar preview only while the frozen session identity still matches.
+    const identity = sessionIdentityRef.current;
+    if (identity == null || identity !== liveIdentity()) return;
     const partial = latestProgressRef.current;
     if (partial?.topBarPreview?.length) {
       onActiveBar([...partial.topBarPreview]);

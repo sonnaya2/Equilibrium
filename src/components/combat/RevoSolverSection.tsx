@@ -2,10 +2,7 @@
 
 import { engineSpecs as ENGINE_SPECS } from "@/combat/abilities/registry";
 import {
-  agentBarLength,
-  agentSearchRecipe,
   preferredAgentCount,
-  TIER_AGENT_COUNT,
   TIER_BUDGETS,
   type ObjectiveProfileId,
   type SolverAgentRecipe,
@@ -289,26 +286,20 @@ export function RevoSolverSection({
           </div>
           {(() => {
             const snaps = solverProgress?.agents;
-            const planned =
-              TIER_AGENT_COUNT[solverTier] ?? solverAgents ?? solverProgress?.agentCount ?? 1;
-            // Always show the full planned pack (6/12/18) while solving.
+            // Only launched/reported agents — never invent tier ceiling slots (4/6/8).
+            // Prefer progress.agentCount / agents[] from the host plan; solverAgents is the plan size.
             let count = 0;
-            if (solving) {
-              count = Math.max(
-                planned,
-                snaps?.length ?? 0,
-                solverProgress?.agentCount ?? 0,
-                solverAgents ?? 0,
-                1,
-              );
-            } else if (snaps?.length) {
-              count = Math.max(snaps.length, solverProgress?.agentCount ?? 0);
+            if (snaps?.length) {
+              count = snaps.length;
+            } else if (solverProgress?.agentCount != null && solverProgress.agentCount > 0) {
+              count = solverProgress.agentCount;
+            } else if (solving && solverAgents > 0) {
+              count = solverAgents;
             }
             if (count < 1) return null;
 
-            const recipeOf = (i: number): SolverAgentRecipe =>
-              snaps?.[i]?.recipe ?? agentSearchRecipe(i, solverTier);
-            const lengthOf = (i: number): number => snaps?.[i]?.barLength ?? agentBarLength(i);
+            const recipeOf = (i: number): SolverAgentRecipe | undefined => snaps?.[i]?.recipe;
+            const lengthOf = (i: number): number | undefined => snaps?.[i]?.barLength;
 
             const showLegend = solverTier === "extreme" || solverTier === "unhinged";
             const legendRecipes: SolverAgentRecipe[] =
@@ -339,6 +330,7 @@ export function RevoSolverSection({
                 <div className="revo-solver-workers__row">
                   {Array.from({ length: count }, (_, i) => {
                     const snap = snaps?.[i];
+                    // Only show recipe/length from host plan or live snaps — never invent defaults.
                     const recipe = recipeOf(i);
                     const barLen = lengthOf(i);
                     const finished =
@@ -359,19 +351,21 @@ export function RevoSolverSection({
                       mood = phase;
                     }
                     const label = workerPhaseLabel(snap?.phase, finished);
-                    const algo = workerRecipeLabel(recipe);
-                    const title = `${barLen} · ${algo}${finished ? " · done" : ` · ${label}`}`;
+                    const algo = recipe ? workerRecipeLabel(recipe) : "?";
+                    const lenLabel = barLen != null ? String(barLen) : "?";
+                    const title = `${lenLabel} · ${algo}${finished ? " · done" : ` · ${label}`}`;
+                    const recipeClass = recipe ? `is-recipe-${recipe}` : "is-recipe-unknown";
                     return (
                       <span
                         key={i}
                         role="listitem"
-                        className={`revo-solver-worker is-${mood} is-recipe-${recipe}`}
+                        className={`revo-solver-worker is-${mood} ${recipeClass}`}
                         style={{ ["--i" as string]: String(i) }}
                         title={title}
                         aria-label={title}
                         data-phase={phase}
-                        data-recipe={recipe}
-                        data-bar-length={barLen}
+                        data-recipe={recipe ?? ""}
+                        data-bar-length={barLen ?? ""}
                         data-finished={finished ? "1" : "0"}
                       >
                         <span className="revo-solver-worker__stone" aria-hidden>
@@ -382,7 +376,7 @@ export function RevoSolverSection({
                           </span>
                         </span>
                         <span className="revo-solver-worker__tag" aria-hidden>
-                          {barLen}
+                          {lenLabel}
                         </span>
                       </span>
                     );

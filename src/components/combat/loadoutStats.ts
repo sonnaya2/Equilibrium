@@ -48,6 +48,7 @@ import {
   resolveEquipment,
   resolveLeagueBundle,
   resolveLevels,
+  type BerserkersFuryResolved,
   type LoadoutStatsOptions,
 } from "./loadout/resolveStages";
 
@@ -194,6 +195,7 @@ export interface CalcStats {
   icyenic: IcyenicFaithBonuses;
   icyenicProtection: IcyenicProtectionOutcome;
   tomeOfTheIcyeneWorn: boolean;
+  berserkersFury: BerserkersFuryResolved;
 }
 
 /**
@@ -232,7 +234,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
   const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle);
   const baseDamage = resolveBaseDamage(loadout, levels, equipment, defenceLife, leagueBundle);
   const crit = resolveCrit(loadout, levels, equipment, leagueBundle);
-  const combat = resolveCombatRules(loadout, levels, equipment, leagueBundle);
+  const combat = resolveCombatRules(loadout, levels, equipment, leagueBundle, defenceLife, options);
 
   return {
     combatStyle: loadout.style,
@@ -299,5 +301,6 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     icyenic: leagueBundle.icyenic,
     icyenicProtection: leagueBundle.icyenicProtection,
     tomeOfTheIcyeneWorn: leagueBundle.tomeOfTheIcyeneWorn,
+    berserkersFury: combat.berserkersFury,
   };
 }

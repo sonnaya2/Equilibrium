@@ -77,6 +77,7 @@ export function normalizeModifierSources(sources: SerializableModifierSources): 
     },
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
+    berserkersFuryBonus: roundN(sources.berserkersFuryBonus ?? 0, 6),
   };
 }
 
@@ -162,6 +163,9 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       ? {
           abilityGainMultiplier: roundN(loadout.adrenaline.abilityGainMultiplier ?? 1, 6),
           basicGainMultiplier: roundN(loadout.adrenaline.basicGainMultiplier ?? 1, 6),
+          basicAdrenalineFlatBonus: loadout.adrenaline.basicAdrenalineFlatBonus ?? 0,
+          maxAdrenalineBonus: loadout.adrenaline.maxAdrenalineBonus ?? 0,
+          ultimateAdrenalineRefund: loadout.adrenaline.ultimateAdrenalineRefund ?? 0,
           impatientRank: loadout.adrenaline.impatientRank ?? 0,
           impatientLevel20: loadout.adrenaline.impatientLevel20 === true,
           relentlessRank: loadout.adrenaline.relentlessRank ?? 0,

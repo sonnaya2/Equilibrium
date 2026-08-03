@@ -12,6 +12,7 @@ import {
   type Loadout,
 } from "./useLoadout";
 import type { CombatStyle } from "@/combat/types";
+import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
 
 /** Skill each style draws its damage level from. */
@@ -101,6 +102,7 @@ export function StatsPanel({
   const stats = loadoutStats(loadout, {
     blessingPicks: build.blessingPicks,
     relics: Object.values(build.relics).filter(Boolean),
+    unlockedRegions: unlockedRegions(build),
   });
   const overloadTier = loadoutOverloadTier(loadout);
   const automatic = (patch: Partial<Loadout>) =>
@@ -297,9 +299,37 @@ export function StatsPanel({
             max={stats.life.overhealCeiling}
             auto={loadout.currentLife == null}
             onAutoChange={(auto) =>
-              setLoadout({ ...loadout, currentLife: auto ? null : stats.life.currentLife })
+              setLoadout({
+                ...loadout,
+                currentLife: auto ? null : stats.life.currentLife,
+                // Keep shared percent aligned when leaving Auto (percent-driven) mode.
+                ...(auto
+                  ? {}
+                  : {
+                      currentHealthPercent:
+                        stats.life.temporaryMaxLife > 0
+                          ? Math.min(
+                              100,
+                              Math.max(
+                                0,
+                                (stats.life.currentLife / stats.life.temporaryMaxLife) * 100,
+                              ),
+                            )
+                          : loadout.currentHealthPercent,
+                    }),
+              })
             }
-            onChange={(currentLife) => setLoadout({ ...loadout, currentLife })}
+            onChange={(currentLife) => {
+              const max = stats.life.temporaryMaxLife;
+              setLoadout({
+                ...loadout,
+                currentLife,
+                currentHealthPercent:
+                  max > 0
+                    ? Math.min(100, Math.max(0, (currentLife / max) * 100))
+                    : loadout.currentHealthPercent,
+              });
+            }}
           />
           <DerivedRow
             label="Maximum HP"

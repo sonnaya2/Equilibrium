@@ -1137,6 +1137,19 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(warP.icons.some((i) => /imcando-mattock/i.test(i.src))).toBe(true);
     expect(warP.icons.some((i) => /inspire-awe/i.test(i.src))).toBe(true);
 
+    const thalmund = contentRow("kandarin", "Thalmund's Forge");
+    expect(thalmund.row.name).toBe("Thalmund's Forge");
+    const thalmundFull = contentRewardsFull(thalmund.row, thalmund.upgrades);
+    expect(thalmundFull).toMatch(/Burial armour \(Artisans' Workshop alternative\)/i);
+    expect(thalmundFull).toMatch(/Burial anvil/i);
+    expect(thalmundFull).toMatch(/Burial forge/i);
+    const thalmundP = presentContentRewards(thalmundFull);
+    expect(thalmundP.icons.length).toBeGreaterThanOrEqual(3);
+    expect(thalmundP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(thalmundP.icons.some((i) => /burial-armour/i.test(i.src))).toBe(true);
+    expect(thalmundP.icons.some((i) => /burial-anvil/i.test(i.src))).toBe(true);
+    expect(thalmundP.icons.some((i) => /burial-forge/i.test(i.src))).toBe(true);
+
     const storm = contentRow("kandarin", /Stormguard/);
     const stormP = presentContentRewards(contentRewardsFull(storm.row, storm.upgrades));
     expect(stormP.icons.some((i) => /inspire-genius/i.test(i.src))).toBe(true);
@@ -1181,9 +1194,12 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(emFull).toMatch(/Eternal magic planks/i);
     expect(emFull).toMatch(/3x faster XP\/h than mahogany/i);
     const emP = presentContentRewards(emFull);
-    expect(emP.icons.some((i) => /eternal-magic-wood-box/i.test(i.src))).toBe(true);
+    expect(emP.icons.some((i) => /eternal-magic-logs/i.test(i.src))).toBe(true);
     expect(emP.icons.some((i) => /plank\.(webp|png)$/i.test(i.src))).toBe(true);
     expect(emP.icons.every((i) => publicOk(i.src))).toBe(true);
+    expect(dataEntityIconPath({ name: em.row.name, kind: em.row.kind })).toMatch(
+      /eternal-magic-(trees|logs)\.(webp|png)$/,
+    );
 
     const ba = contentRow("kandarin", "Barbarian Assault");
     const baFull = contentRewardsFull(ba.row, ba.upgrades);
@@ -1528,6 +1544,87 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const misthMajors = majorContentRows(misth.content, misth.upgrades);
     expect(misthMajors.some((c) => c.name === "Sanctum of Rebirth")).toBe(true);
     expect(misthMajors.some((c) => c.name === "Vermyx, Brood Mother")).toBe(false);
+  });
+
+  it("Asgarnia majors include Angel of Death after Nex; Kandarin includes Thalmund's Forge after Warforge", () => {
+    const asg = regionById("asgarnia");
+    const asgMajors = majorContentRows(asg.content, asg.upgrades);
+    const asgNames = asgMajors.map((c) => c.name);
+    expect(asgNames.some((n) => /Angel of Death/i.test(n)), "asgarnia majorContentRows lacks Angel of Death").toBe(
+      true,
+    );
+    expect(asgNames).toContain("Nex: Angel of Death");
+    const nexIdx = asg.content.findIndex((c) => c.name === "Nex");
+    const aodIdx = asg.content.findIndex((c) => c.name === "Nex: Angel of Death");
+    expect(nexIdx).toBeGreaterThanOrEqual(0);
+    expect(aodIdx).toBe(nexIdx + 1);
+
+    const kan = regionById("kandarin");
+    const kanMajors = majorContentRows(kan.content, kan.upgrades);
+    const kanNames = kanMajors.map((c) => c.name);
+    expect(
+      kanNames.some((n) => /Thalmund'?s Forge/i.test(n)),
+      "kandarin majorContentRows lacks Thalmund's Forge",
+    ).toBe(true);
+    expect(kanNames).toContain("Thalmund's Forge");
+    const warIdx = kan.content.findIndex((c) => /Warforge Dig Site/i.test(c.name));
+    const thalIdx = kan.content.findIndex((c) => c.name === "Thalmund's Forge");
+    expect(warIdx).toBeGreaterThanOrEqual(0);
+    expect(thalIdx).toBe(warIdx + 1);
+
+    expect(
+      kanNames.some((n) => /Advanced Barbarian Outpost Agility/i.test(n)),
+      "kandarin majorContentRows lacks Advanced Barbarian Outpost Agility",
+    ).toBe(true);
+    expect(
+      kanNames.some((n) => /Book of Char/i.test(n)),
+      "kandarin majorContentRows lacks Book of Char / Char firemaking",
+    ).toBe(true);
+
+    const { row: advBarb, upgrades: kanUp } = contentRow("kandarin", "Advanced Barbarian Outpost Agility");
+    const advFull = contentRewardsFull(advBarb, kanUp);
+    expect(advFull).toMatch(/Agile top/i);
+    expect(advFull).toMatch(/Agile legs/i);
+    expect(advBarb.detail ?? "").toMatch(/rebalanc|buffed|2,?000/i);
+
+    const { row: bookChar } = contentRow("kandarin", "Book of Char / Char firemaking");
+    const bookFull = contentRewardsFull(bookChar, kanUp);
+    expect(bookFull).toMatch(/Book of Char/i);
+    expect(bookFull).toMatch(/Char'?s training cave|Pitch can|Double Firemaking/i);
+
+    expect(
+      kanNames.some((n) => /Phoenix Lair/i.test(n)),
+      "kandarin majorContentRows lacks Phoenix Lair",
+    ).toBe(true);
+    expect(kanNames.some((n) => /^Airuts?$/i.test(n)), "kandarin majorContentRows lacks Airuts").toBe(
+      true,
+    );
+    expect(
+      kanNames.some((n) => /Fishing Frenzy/i.test(n)),
+      "kandarin majorContentRows lacks Fishing Frenzy",
+    ).toBe(true);
+    const { row: frenzy } = contentRow("kandarin", "Fishing Frenzy");
+    const frenzyFull = contentRewardsFull(frenzy, kanUp);
+    expect(frenzyFull).toMatch(/Fishing Frenzy|285k|Advance Time/i);
+    expect(dataEntityIconPath({ name: frenzy.name })).toMatch(/deep-sea-fishing|fishing/i);
+    const { row: phoenix } = contentRow("kandarin", "Phoenix Lair");
+    expect(contentRewardsFull(phoenix, kanUp)).toMatch(/Phoenix quills|eggling/i);
+    const { row: airutKan } = contentRow("kandarin", "Airuts");
+    const airutKanFull = contentRewardsFull(airutKan, kanUp);
+    expect(airutKanFull).toMatch(/Tuska'?s Wrath/i);
+    expect(airutKanFull).toMatch(/Razorback/i);
+    expect(airutKanFull).toMatch(/Warpriest of Tuska|Tuska mask/i);
+
+    const desert = regionById("desert");
+    const desertMajors = majorContentRows(desert.content, desert.upgrades);
+    expect(
+      desertMajors.some((c) => /^Airuts?$/i.test(c.name)),
+      "desert majorContentRows lacks Airuts",
+    ).toBe(true);
+    const { row: airutDes, upgrades: desUp } = contentRow("desert", "Airuts");
+    const airutDesFull = contentRewardsFull(airutDes, desUp);
+    expect(airutDesFull).toMatch(/Tuska'?s Wrath/i);
+    expect(airutDesFull).toMatch(/Razorback/i);
   });
 
   it("Tirannwn Solak and Lost Grove expose cinderbanes; Edimmu has blood shard", () => {

@@ -1,4 +1,5 @@
-import { extname, relative, resolve } from "node:path";
+import { existsSync, rmSync } from "node:fs";
+import { extname, join, relative, resolve } from "node:path";
 import { DATABASE, PATCHES, ROOT } from "./config.mjs";
 import { cleanDatabase, migrate, openDatabase } from "./database.mjs";
 import { exportData } from "./export.mjs";
@@ -6,6 +7,23 @@ import { importCanonical, rebuildSearch } from "./ingest.mjs";
 import { applyAllPatches, applyPatch, writeChanged } from "./patching/apply.mjs";
 import { validate } from "./validate.mjs";
 import { slash } from "./utilities.mjs";
+
+// Drop any leftover force-static region bodies under .next (pre-force-dynamic).
+function clearStaleNextDataRoutes(log) {
+  const targets = [
+    join(ROOT, ".next/server/app/data"),
+    join(ROOT, ".next/dev/server/app/data"),
+  ];
+  let cleared = 0;
+  for (const dir of targets) {
+    if (!existsSync(dir)) continue;
+    rmSync(dir, { recursive: true, force: true });
+    cleared += 1;
+  }
+  if (cleared && log) {
+    console.warn("[data] cleared stale .next data route cache after rebuild");
+  }
+}
 
 export function rebuild(log = true) {
   const start = process.hrtime.bigint();
@@ -20,6 +38,7 @@ export function rebuild(log = true) {
     const validation = validate(db);
     const exported = exportData(db);
     writeChanged(db, changed);
+    clearStaleNextDataRoutes(log);
     const usage = process.resourceUsage();
     const result = {
       migrations,

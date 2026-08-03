@@ -225,6 +225,9 @@ describe("research catalog", () => {
     ]) {
       expect(asgNames.has(name), `asgarnia missing ${name}`).toBe(true);
     }
+    const nexIdx = asg?.content.findIndex((row) => row.name === "Nex") ?? -1;
+    const aodIdx = asg?.content.findIndex((row) => row.name === "Nex: Angel of Death") ?? -1;
+    expect(aodIdx).toBe(nexIdx + 1);
     expect(asgNames.has("Rimmington Construction supply loop")).toBe(false);
     expect(asgNames.has("Player-owned port")).toBe(false);
     expect(asgNames.has("God Wars Dungeon 1")).toBe(false);
@@ -496,12 +499,17 @@ describe("research catalog", () => {
       "Eternal magic trees",
       "Enhanced nightmare gauntlets",
       "Nihils",
+      "Thalmund's Forge",
+      "Warforge Dig Site",
     ]) {
       expect(
         kandarin?.content.filter((row) => row.name === name),
         `kandarin missing or duplicated ${name}`,
       ).toHaveLength(1);
     }
+    const warIdx = kandarin?.content.findIndex((row) => row.name === "Warforge Dig Site") ?? -1;
+    const thalIdx = kandarin?.content.findIndex((row) => row.name === "Thalmund's Forge") ?? -1;
+    expect(thalIdx).toBe(warIdx + 1);
     expect(
       kandarin?.content.some((row) => row.name === "Seers' Village"),
       "kandarin still lists Seers' Village content hub",
@@ -612,7 +620,7 @@ describe("research catalog", () => {
       ),
     ).toEqual(["Eternal magic logs", "Eternal magic planks"]);
     expect(dataEntityIconPath({ name: eternalMagic?.name, kind: eternalMagic?.kind })).toMatch(
-      /eternal-magic-wood-box\.(webp|png)$/,
+      /eternal-magic-(trees|logs)\.(webp|png)$/,
     );
 
     const nihils = kandarin?.content.find((row) => row.name === "Nihils");

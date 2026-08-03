@@ -686,8 +686,8 @@ export function ResearchBrowser({
   }, [filteredRegion, selectedRegion, selectedSkill]);
 
   return (
-    /* Nested .data-screen under the workbench shell breaks the flex height chain and freezes nav. */
-    <section className="data-browser flex min-h-0 flex-1 flex-col">
+    /* Desk only: .data-browser min-height:0. Viewport fill is .route-fill.data-browser. */
+    <section className="data-browser flex min-h-0 flex-1 flex-col overflow-hidden">
       <div className="data-browser__toolbar">
         <div
           className="data-skill-filters"

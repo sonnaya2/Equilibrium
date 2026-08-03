@@ -43,6 +43,11 @@ export interface SerializableModifierSources {
   };
   ultimatums: number;
   lunging: number;
+  /**
+   * Precomputed Berserker's Fury damage bonus fraction (0.03 = +3%).
+   * 0 / omit = inactive. Resolved on the host from LP vs max (incl. Powerburst).
+   */
+  berserkersFuryBonus?: number;
 }
 
 /** ResolvedLeagueRules with blessingIds as an array so structuredClone works. */
@@ -265,6 +270,7 @@ export function emptyModifierSources(): SerializableModifierSources {
     target: {},
     ultimatums: 0,
     lunging: 0,
+    berserkersFuryBonus: 0,
   };
 }
 

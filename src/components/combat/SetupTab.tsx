@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { GameIcon } from "../GameIcon";
+import { ArchPanel } from "./ArchPanel";
 import { BuffsPanel } from "./BuffsPanel";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { GearPanel } from "./GearPanel";
@@ -11,6 +12,7 @@ import { QuickCalculator } from "./QuickCalculator";
 import { StatsPanel } from "./StatsPanel";
 import { TargetPanel } from "./TargetPanel";
 import type { Loadout } from "./useLoadout";
+import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
 
 const SUB_TABS = [
@@ -33,15 +35,6 @@ const SUB_TAB_ICONS: Record<SubTab, string> = {
   Abilities: "/game/combat/melee-abilities.webp",
   Target: "/game/bosses/nex.webp",
 };
-
-function ArchPanel() {
-  return (
-    <div className="loadout-panel">
-      <h2 className="combat-section-title text-sm font-medium text-parch-50">Arch</h2>
-      <p className="mt-2 text-sm text-parch-300">No Arch combat buffs yet.</p>
-    </div>
-  );
-}
 
 const NUMBER_FORMAT = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
 const LEVEL_FORMAT = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
@@ -142,8 +135,9 @@ export function SetupTab({
       loadoutStats(loadout, {
         blessingPicks: build.blessingPicks,
         relics: Object.values(build.relics).filter(Boolean),
+        unlockedRegions: unlockedRegions(build),
       }),
-    [loadout, build.blessingPicks, build.relics],
+    [loadout, build],
   );
   const incompleteCount = (stat: "armour" | "life" | "damage") =>
     new Set(stats.equipment.incomplete.filter((item) => item.stat === stat).map((item) => item.id))
@@ -216,7 +210,7 @@ export function SetupTab({
           {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Buffs" ? <BuffsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Arch" ? <ArchPanel /> : null}
+          {subTab === "Arch" ? <ArchPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Invention" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
           {subTab === "Abilities" ? <QuickCalculator loadout={loadout} /> : null}
           {subTab === "Target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}

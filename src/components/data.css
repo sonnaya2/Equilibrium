@@ -49,12 +49,19 @@ body:has(.data-screen) {
   padding-top: 0;
 }
 
+/* Route shell only sets viewport min-height (.route-fill.data-browser). Nested
+   ResearchBrowser also uses .data-browser; a second 100svh min-height inside
+   WorkbenchPanel overflow:hidden clips Major unlocks rows past the fold. */
 .data-browser {
   max-width: none;
-  min-height: calc(100svh - 3.25rem);
+  min-height: 0;
   padding: 0 0 0.35rem;
   overflow: hidden;
   background: var(--color-stone-900);
+}
+
+.route-fill.data-browser {
+  min-height: calc(100svh - 3.25rem);
 }
 
 .data-browser__toolbar {
@@ -408,7 +415,8 @@ body:has(.data-screen) {
   align-items: stretch;
   gap: 0.55rem;
   min-width: 0;
-  min-height: 12rem;
+  /* 0 not 12rem: min-height:auto-sized content prevented shrink; bottom majors clipped. */
+  min-height: 0;
 }
 
 .data-region-detail__primary {
@@ -417,6 +425,7 @@ body:has(.data-screen) {
   gap: 0.55rem;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
 }
 
 .data-region-panel {
@@ -426,16 +435,19 @@ body:has(.data-screen) {
 
 .data-region-panel--content {
   display: flex;
-  flex: 1;
+  flex: 1 1 0;
   flex-direction: column;
   min-height: 0;
 }
 
 .data-region-panel--content > .overflow-x-auto {
-  flex: 1;
+  flex: 1 1 0;
   min-height: 0;
   padding-bottom: 0.55rem;
   overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
 }
 
 .data-region-panel--upgrades {

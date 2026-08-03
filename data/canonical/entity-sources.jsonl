@@ -17,6 +17,12 @@
 {"entityId":"activity:content:acheron-mammoths","sourceId":"source:runescape-wiki:7a4e54715d2e5904"}
 {"entityId":"activity:content:advanced-gnome-stronghold-course","sourceId":"source:runescape-wiki:fa7eb7366fe93649"}
 {"entityId":"activity:content:agility-pyramid","sourceId":"source:runescape-wiki:d0a9d8629994a2f3"}
+{"entityId":"activity:content:airuts","ordinal":1,"sourceId":"source:runescape-wiki:7d23b5d4cab95ab3"}
+{"entityId":"activity:content:airuts","sourceId":"source:runescape-wiki:airut-b8b3e02"}
+{"entityId":"activity:content:airuts","ordinal":2,"sourceId":"source:runescape-wiki:warpriest-tuska-01"}
+{"entityId":"activity:content:airuts-desert","ordinal":1,"sourceId":"source:runescape-wiki:7d23b5d4cab95ab3"}
+{"entityId":"activity:content:airuts-desert","sourceId":"source:runescape-wiki:airut-b8b3e02"}
+{"entityId":"activity:content:airuts-desert","ordinal":2,"sourceId":"source:runescape-wiki:warpriest-tuska-01"}
 {"entityId":"activity:content:allotment-patches","sourceId":"source:runescape-wiki:f05f087bbd8d2e15"}
 {"entityId":"activity:content:amascut-the-devourer","sourceId":"source:runescape-wiki:8593139dccd4881f"}
 {"entityId":"activity:content:anachronia-agility-course","sourceId":"source:runescape-wiki:4086166616afabdb"}
@@ -33,6 +39,7 @@
 {"entityId":"activity:content:barbarian-assault","sourceId":"source:runescape-wiki:05ae94ffec137733"}
 {"entityId":"activity:content:barbarian-assault","ordinal":2,"sourceId":"source:runescape-wiki:1336e392f24d8aad"}
 {"entityId":"activity:content:barbarian-assault","ordinal":1,"sourceId":"source:runescape-wiki:1865fe60a0e08134"}
+{"entityId":"activity:content:barbarian-outpost-agility-course","sourceId":"source:runescape-wiki:366c65fc3c431d0e"}
 {"entityId":"activity:content:barbarian-outpost-agility-course","sourceId":"source:runescape-wiki:37674af93b0ee877"}
 {"entityId":"activity:content:barrows","sourceId":"source:runescape-wiki:66445de769a06fe8"}
 {"entityId":"activity:content:beastmaster-durzag","sourceId":"source:runescape-wiki:bca9bb18b1443d97"}
@@ -42,6 +49,9 @@
 {"entityId":"activity:content:blast-furnace","ordinal":1,"sourceId":"source:runescape-wiki:ff4974ccd151a84d"}
 {"entityId":"activity:content:blood-altar","sourceId":"source:runescape-wiki:36175a3d01947306"}
 {"entityId":"activity:content:bloodweed-aggression-potions","sourceId":"source:runescape-wiki:f3ae5c8e25e1f178"}
+{"entityId":"activity:content:book-of-char","ordinal":2,"sourceId":"source:runescape-wiki:b83bb2bd0ed4c995"}
+{"entityId":"activity:content:book-of-char","sourceId":"source:runescape-wiki:book-of-char-f1b39a01"}
+{"entityId":"activity:content:book-of-char","ordinal":1,"sourceId":"source:runescape-wiki:chars-cave-4fb2b02"}
 {"entityId":"activity:content:brawling-gloves","sourceId":"source:runescape-wiki:0a791cc21f437859"}
 {"entityId":"activity:content:brimhaven-agility-arena","sourceId":"source:runescape-wiki:df27e23d1f5d4ef5"}
 {"entityId":"activity:content:calquat-tree-patch","sourceId":"source:runescape-wiki:45b628b192e91469"}
@@ -105,6 +115,8 @@
 {"entityId":"activity:content:farmers-outfit","sourceId":"source:runescape-wiki:ab6d43da441ebeb8"}
 {"entityId":"activity:content:ferns-finds","sourceId":"source:runescape-wiki:ae33d2c785df0009"}
 {"entityId":"activity:content:fight-kiln","sourceId":"source:runescape-wiki:5428cca084ae3d4e"}
+{"entityId":"activity:content:fishing-frenzy","sourceId":"source:runescape-wiki:43c8d568d51387db"}
+{"entityId":"activity:content:fishing-frenzy","ordinal":1,"sourceId":"source:runescape-wiki:4532868a26a9682d"}
 {"entityId":"activity:content:flash-powder-factory-minigame-and-reward-shop","sourceId":"source:runescape-wiki:62f479bdc8577bd0"}
 {"entityId":"activity:content:flower-patch","sourceId":"source:runescape-wiki:fb4b1beada6ea520"}
 {"entityId":"activity:content:fort-forinthry","sourceId":"source:runescape-wiki:ee9faf81a8204c02"}
@@ -197,6 +209,7 @@
 {"entityId":"activity:content:ourania-runecrafting-altar-zmi","sourceId":"source:runescape-wiki:083c72b71586c5f2"}
 {"entityId":"activity:content:penguin-agility-course","sourceId":"source:runescape-wiki:325ef4c0deee66fb"}
 {"entityId":"activity:content:perfect-juju-potions","sourceId":"source:runescape-wiki:632714192702f416"}
+{"entityId":"activity:content:phoenix-lair","sourceId":"source:runescape-wiki:phoenix-lair-3adbb01"}
 {"entityId":"activity:content:piscatoris-fishing-colony","sourceId":"source:runescape-wiki:2154e5b26508317c"}
 {"entityId":"activity:content:piscatoris-hunter-area","sourceId":"source:runescape-wiki:2a11524dc8df0b14"}
 {"entityId":"activity:content:polypore-dungeon-spore-and-stick-resources","sourceId":"source:runescape-wiki:4727bdb9b53e48d9"}
@@ -257,6 +270,8 @@
 {"entityId":"activity:content:sumona","sourceId":"source:runescape-wiki:681ce1407efcee38"}
 {"entityId":"activity:content:tai-bwo-wannai-cleanup","sourceId":"source:runescape-wiki:2737c7aa9a0c6463"}
 {"entityId":"activity:content:telos-the-warden","sourceId":"source:runescape-wiki:c155dbefaa4b545b"}
+{"entityId":"activity:content:thalmunds-forge","ordinal":1,"sourceId":"source:runescape-wiki:49a19d2f88890057"}
+{"entityId":"activity:content:thalmunds-forge","sourceId":"source:runescape-wiki:ee834f19adcea103"}
 {"entityId":"activity:content:the-arc","sourceId":"source:runescape-wiki:c5f42e754160e65a"}
 {"entityId":"activity:content:the-empty-throne-room","sourceId":"source:runescape-wiki:d9e4867458eef315"}
 {"entityId":"activity:content:the-gate-of-elidinis","sourceId":"source:runescape-wiki:c6291373e8cf7e7c"}
@@ -7119,6 +7134,7 @@
 {"entityId":"unlock:asgarnia:wyvern-crossbow","sourceId":"source:runescape-wiki:e550fb048f7e7783"}
 {"entityId":"unlock:asgarnia:zaryte-bow","sourceId":"source:runescape-wiki:21f7fc1e1cc8c7af"}
 {"entityId":"unlock:desert:achto-raids-armour-mazcab","sourceId":"source:runescape-wiki:c2151aa2a9b2adbd"}
+{"entityId":"unlock:desert:airuts","sourceId":"source:runescape-wiki:airut-b8b3e02"}
 {"entityId":"unlock:desert:amascut-the-devourer-progression","sourceId":"source:runescape-wiki:8593139dccd4881f"}
 {"entityId":"unlock:desert:black-ibis-outfit","sourceId":"source:runescape-wiki:cae7a89cc6ed994c"}
 {"entityId":"unlock:desert:blessing-of-het-relic-eye-of-het-ii","sourceId":"source:runescape-wiki:a9695488f51482a2"}
@@ -7300,6 +7316,7 @@
 {"entityId":"unlock:kandarin:abyssal-link-the-subtle-blade","sourceId":"source:runescape-wiki:174e368cec58aca9"}
 {"entityId":"unlock:kandarin:agile-legs","sourceId":"source:runescape-wiki:3851997eae8b4851"}
 {"entityId":"unlock:kandarin:agile-top","sourceId":"source:runescape-wiki:b764f1ddaac6236e"}
+{"entityId":"unlock:kandarin:airuts","sourceId":"source:runescape-wiki:airut-b8b3e02"}
 {"entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","sourceId":"source:runescape-wiki:12863412b8f7ab69"}
 {"entityId":"unlock:kandarin:ancient-invention","sourceId":"source:runescape-wiki:257dddad21f5bdd5"}
 {"entityId":"unlock:kandarin:ancient-invention-blueprints-howls-workshop","sourceId":"source:runescape-wiki:257dddad21f5bdd5"}
@@ -7311,6 +7328,7 @@
 {"entityId":"unlock:kandarin:barbarian-outpost-agility-course","sourceId":"source:runescape-wiki:37674af93b0ee877"}
 {"entityId":"unlock:kandarin:barbarian-training-otto-multi-skill-package","sourceId":"source:runescape-wiki:43ecc325ae0de71d"}
 {"entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds","sourceId":"source:runescape-wiki:f695d00632b38ea6"}
+{"entityId":"unlock:kandarin:book-of-char","sourceId":"source:runescape-wiki:book-of-char-f1b39a01"}
 {"entityId":"unlock:kandarin:bush-patch-network-kandarin-core","sourceId":"source:runescape-wiki:134eb28f21156c6e"}
 {"entityId":"unlock:kandarin:champions-tackle-box","sourceId":"source:runescape-wiki:ec65dc5b9c8660d7"}
 {"entityId":"unlock:kandarin:chronicle-fragment-utility-post-dailyscape-permanent-rules","sourceId":"source:runescape-wiki:105e9527f17280b5"}
@@ -7328,6 +7346,7 @@
 {"entityId":"unlock:kandarin:eternal-magic-trees","ordinal":1,"sourceId":"source:runescape-wiki:e43ecaf245113af0"}
 {"entityId":"unlock:kandarin:extreme-invention-potion-boost-path","sourceId":"source:runescape-wiki:d1d99f7526eb62cc"}
 {"entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","sourceId":"source:runescape-wiki:d1d99f7526eb62cc"}
+{"entityId":"unlock:kandarin:fishing-frenzy","sourceId":"source:runescape-wiki:43c8d568d51387db"}
 {"entityId":"unlock:kandarin:fishing-outfit-fish-flingers","sourceId":"source:runescape-wiki:27e4b71a9e484b10"}
 {"entityId":"unlock:kandarin:fishing-trawler-port-khazard","sourceId":"source:runescape-wiki:636b599449361133"}
 {"entityId":"unlock:kandarin:fruit-tree-patch-hubs-kandarin-core","sourceId":"source:runescape-wiki:678b3a07760b52de"}
@@ -7350,6 +7369,7 @@
 {"entityId":"unlock:kandarin:nopenopenope-spider-combat-perk","sourceId":"source:runescape-wiki:d00bb212929ce129"}
 {"entityId":"unlock:kandarin:ourania-runecrafting-altar-zmi","sourceId":"source:runescape-wiki:083c72b71586c5f2"}
 {"entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","sourceId":"source:runescape-wiki:78ece33077657781"}
+{"entityId":"unlock:kandarin:phoenix-lair","sourceId":"source:runescape-wiki:phoenix-lair-3adbb01"}
 {"entityId":"unlock:kandarin:piscatoris-hunter-area","sourceId":"source:runescape-wiki:2a11524dc8df0b14"}
 {"entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock","sourceId":"source:runescape-wiki:10fcd1ed9f73d98b"}
 {"entityId":"unlock:kandarin:ranging-guild","sourceId":"source:runescape-wiki:68f9add36c345f94"}

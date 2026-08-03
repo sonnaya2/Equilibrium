@@ -15,6 +15,7 @@ import {
 } from "../../shared/perks";
 import { prayerDamageModifier, styleCurseById } from "../../shared/prayers";
 import { vulnerabilityModifier } from "../../shared/vulnerability";
+import { berserkersFuryModifier } from "../../shared/berserkersFury";
 import type { BlessingId } from "@/league/blessings";
 import {
   isSerializableSimBase,
@@ -87,6 +88,11 @@ export function reviveModifiers(
     global.push(raceSlayerPerkModifier("undead", sources.target.undead === true));
   }
   global.push(...leagueModifiers(league));
+  const furyBonus = sources.berserkersFuryBonus ?? 0;
+  if (furyBonus > 0) {
+    const fury = berserkersFuryModifier(furyBonus);
+    if (fury) global.push(fury);
+  }
 
   return (ability: AbilitySpec) => [
     ...global,

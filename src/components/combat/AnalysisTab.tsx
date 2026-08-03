@@ -16,6 +16,7 @@ import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
 import { useLoadout } from "./useLoadout";
+import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
@@ -105,6 +106,7 @@ export function AnalysisTab() {
     base: loadoutStats(loadout, {
       blessingPicks: build.blessingPicks,
       relics: Object.values(build.relics).filter(Boolean),
+      unlockedRegions: unlockedRegions(build),
     }).base,
     level: loadout.level,
     accuracy: loadout.accuracy,
@@ -120,8 +122,9 @@ export function AnalysisTab() {
       loadoutStats(loadout, {
         blessingPicks: build.blessingPicks,
         relics: Object.values(build.relics).filter(Boolean),
+        unlockedRegions: unlockedRegions(build),
       }),
-    [loadout, build.blessingPicks, build.relics],
+    [loadout, build],
   );
   const statsB = withAnalysisCompareLine(statsA, lineB, loadout.critChance);
 

@@ -111,6 +111,7 @@
 {"category":"tier-85 two-handed ranged poison","entityId":"unlock:asgarnia:wyvern-crossbow"}
 {"category":"tier-80 Nex chargebow","entityId":"unlock:asgarnia:zaryte-bow"}
 {"category":"residual tank armour / raids","entityId":"unlock:desert:achto-raids-armour-mazcab"}
+{"category":"Slayer monster / combat uniques","entityId":"unlock:desert:airuts"}
 {"category":"high-end combat weapons / armour / endgame upgrade material","entityId":"unlock:desert:amascut-the-devourer-progression"}
 {"category":"Thieving XP outfit","entityId":"unlock:desert:black-ibis-outfit"}
 {"category":"Archaeology monolith relic power","entityId":"unlock:desert:blessing-of-het-relic-eye-of-het-ii"}
@@ -290,6 +291,7 @@
 {"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:abyssal-link-the-subtle-blade"}
 {"category":"weight-reducing Agility reward","entityId":"unlock:kandarin:agile-legs"}
 {"category":"Agility weight-reducing outfit piece","entityId":"unlock:kandarin:agile-top"}
+{"category":"Slayer monster / combat uniques","entityId":"unlock:kandarin:airuts"}
 {"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree"}
 {"category":"Invention upgrade","entityId":"unlock:kandarin:ancient-invention"}
 {"category":"Ancient Invention permanent unlock path","entityId":"unlock:kandarin:ancient-invention-blueprints-howls-workshop"}
@@ -300,6 +302,7 @@
 {"category":"Agility course and outfit progression","entityId":"unlock:kandarin:barbarian-outpost-agility-course"}
 {"category":"permanent multi-skill unlock package","entityId":"unlock:kandarin:barbarian-training-otto-multi-skill-package"}
 {"category":"Hunter D&D permanent access package","entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds"}
+{"category":"Firemaking quest reward / training","entityId":"unlock:kandarin:book-of-char"}
 {"category":"Farming patch network infrastructure","entityId":"unlock:kandarin:bush-patch-network-kandarin-core"}
 {"category":"Fishing permanent storage and telebank tool","entityId":"unlock:kandarin:champions-tackle-box"}
 {"category":"Divination fragment utility infrastructure","entityId":"unlock:kandarin:chronicle-fragment-utility-post-dailyscape-permanent-rules"}
@@ -316,6 +319,7 @@
 {"category":"Woodcutting resource supply","entityId":"unlock:kandarin:eternal-magic-trees"}
 {"category":"Invention Herblore boost infrastructure","entityId":"unlock:kandarin:extreme-invention-potion-boost-path"}
 {"category":"cross-region Invention boost supply stack","entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore"}
+{"category":"Fishing XP method","entityId":"unlock:kandarin:fishing-frenzy"}
 {"category":"Fishing XP outfit","entityId":"unlock:kandarin:fishing-outfit-fish-flingers"}
 {"category":"Fishing minigame and high-tier raw fish supply","entityId":"unlock:kandarin:fishing-trawler-port-khazard"}
 {"category":"Farming patch network infrastructure","entityId":"unlock:kandarin:fruit-tree-patch-hubs-kandarin-core"}
@@ -338,6 +342,7 @@
 {"category":"Player-Owned Farm combat passive","entityId":"unlock:kandarin:nopenopenope-spider-combat-perk"}
 {"category":"Runecrafting altar infrastructure","entityId":"unlock:kandarin:ourania-runecrafting-altar-zmi"}
 {"category":"Archaeology monolith relic power","entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone"}
+{"category":"Slayer D&D / skilling encounter","entityId":"unlock:kandarin:phoenix-lair"}
 {"category":"Hunter training area","entityId":"unlock:kandarin:piscatoris-hunter-area"}
 {"category":"cross-region Farming travel infrastructure","entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock"}
 {"category":"Ranged guild infrastructure, shops, and archery competition","entityId":"unlock:kandarin:ranging-guild"}

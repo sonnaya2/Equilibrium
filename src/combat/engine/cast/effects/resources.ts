@@ -1,4 +1,5 @@
 import { secondsToTicks } from "../../../core/ticks";
+import { conservationOfEnergyQualifies } from "../../../shared/conservationOfEnergy";
 import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
 import { spendDeathspore } from "../../../styles/ranged/onHit";
@@ -10,11 +11,11 @@ import { activeBleedCount } from "../../../styles/melee/effects";
 import { rngProc } from "../../simulation/contracts";
 
 /**
- * Cast adren/resources in order: listed gain × multipliers (Meteor basic, Invigorating,
- * Adrenaline Junkie), then flat grants (Impatient +3, Jaws of the Abyss), then spend
- * (Relentless full refund), then Deathspore free-cast charge. Flat grants stay outside
- * multipliers so AJ never turns Impatient +3 into +4.5. Impatient/Relentless are branched
- * RNG outcomes from the driver, not EV spends.
+ * Cast adren/resources in order: listed gain + FotS flat, then mults (Meteor basic,
+ * Invigorating, Adrenaline Junkie), then flat grants (Impatient +3, Jaws), then spend
+ * (Relentless full refund), then CoE ultimate refund, Deathspore free-cast, Vestments.
+ * Impatient flat stays outside mults so AJ never turns +3 into +4.5. FotS +1 is inside
+ * Invigorating (wiki). Impatient/Relentless are branched RNG, not EV spends.
  */
 export function applyCastResources(fx: CastEffectContext): void {
   const { rt, ability, candidate, rng } = fx;
@@ -28,9 +29,10 @@ export function applyCastResources(fx: CastEffectContext): void {
       ability.category === "basic" &&
       rt.state.melee.meteorStrikeUntilTick > 0 &&
       candidate < rt.state.melee.meteorStrikeUntilTick;
-    let gain = meteorBasic
-      ? ability.adrenaline.gain * METEOR_STRIKE_BASIC_ADREN_MULTIPLIER
-      : ability.adrenaline.gain;
+    // FotS +1 before Invigorating / AJ mults (wiki: Invigorating multiplies the relic gain).
+    let gain = ability.adrenaline.gain;
+    if (isBasic) gain += input.adrenaline?.basicAdrenalineFlatBonus ?? 0;
+    if (meteorBasic) gain *= METEOR_STRIKE_BASIC_ADREN_MULTIPLIER;
     if (isBasic) gain *= input.adrenaline?.basicGainMultiplier ?? 1;
     gain *= input.adrenaline?.abilityGainMultiplier ?? 1;
     if (isBasic && (input.adrenaline?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient")) {
@@ -67,6 +69,12 @@ export function applyCastResources(fx: CastEffectContext): void {
     } else {
       rt.state = spendAdrenaline(rt.state, spend);
     }
+  }
+
+  // CoE: once per ultimate cast, even when Relentless fully refunded the spend.
+  const ultimateRefund = input.adrenaline?.ultimateAdrenalineRefund ?? 0;
+  if (ultimateRefund > 0 && conservationOfEnergyQualifies(ability)) {
+    rt.state = gainAdrenaline(rt.state, ultimateRefund);
   }
 
   // A zeroed spend against a real cost is the Deathspore free cast being used.

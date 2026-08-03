@@ -1,8 +1,22 @@
+{"description":"Tuska's Wrath ability codex","entityId":"activity:content:airuts","key":"effect-1","ordinal":0}
+{"description":"Razorback gauntlets (t90 melee power gloves)","entityId":"activity:content:airuts","key":"effect-2","ordinal":0}
+{"description":"Tuska mask pieces (Slayer task)","entityId":"activity:content:airuts","key":"effect-3","ordinal":0}
+{"description":"Warpriest of Tuska armour pieces","entityId":"activity:content:airuts","key":"effect-4","ordinal":0}
+{"description":"Tuska's Wrath ability codex","entityId":"activity:content:airuts-desert","key":"effect-1","ordinal":0}
+{"description":"Razorback gauntlets (t90 melee power gloves)","entityId":"activity:content:airuts-desert","key":"effect-2","ordinal":0}
+{"description":"Tuska mask pieces (Slayer task)","entityId":"activity:content:airuts-desert","key":"effect-3","ordinal":0}
+{"description":"Warpriest of Tuska armour pieces","entityId":"activity:content:airuts-desert","key":"effect-4","ordinal":0}
 {"description":"Fighter torso (Penance torso; honour points + Penance Queen kill)","entityId":"activity:content:barbarian-assault","key":"effect-1","ordinal":0}
 {"description":"Penance hats (fighter / ranger / runner / healer)","entityId":"activity:content:barbarian-assault","key":"effect-2","ordinal":0}
 {"description":"Penance skirt, Runner boots, Penance gloves","entityId":"activity:content:barbarian-assault","key":"effect-3","ordinal":0}
 {"description":"Penance trident (and master upgrade)","entityId":"activity:content:barbarian-assault","key":"effect-4","ordinal":0}
 {"description":"Role insignias (attacker / defender / collector / healer) after Penance King","entityId":"activity:content:barbarian-assault","key":"effect-5","ordinal":0}
+{"description":"~2,000 Agility XP per advanced lap after rebalance (~180k+/hr base)","entityId":"activity:content:barbarian-outpost-agility-course","key":"effect-1","ordinal":0}
+{"description":"Agile top after 250 successful advanced laps (Gunnjorn)","entityId":"activity:content:barbarian-outpost-agility-course","key":"effect-2","ordinal":0}
+{"description":"Agile legs (bottom) via Advanced Gnome Stronghold (Kandarin companion)","entityId":"activity:content:barbarian-outpost-agility-course","key":"effect-3","ordinal":0}
+{"description":"The Book of Char — daily 2 min double Firemaking XP on walked-over logs","entityId":"activity:content:book-of-char","key":"effect-1","ordinal":0}
+{"description":"Daily teleport to Char's training cave","entityId":"activity:content:book-of-char","key":"effect-2","ordinal":0}
+{"description":"Char's training cave pitch-can Firemaking (91+)","entityId":"activity:content:book-of-char","key":"effect-3","ordinal":0}
 {"description":"Sacrifice ability (Constitution basic; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-1","ordinal":0}
 {"description":"Devotion ability (Defence threshold; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-2","ordinal":0}
 {"description":"Transfigure ability (Constitution ultimate; One Piercing Note)","entityId":"activity:content:citharede-abbey","key":"effect-3","ordinal":0}
@@ -33,6 +47,8 @@
 {"description":"Eternal magic logs (Piscatoris grove supply)","entityId":"activity:content:eternal-magic-trees","key":"effect-1","ordinal":0}
 {"description":"Eternal magic planks (~3x faster Construction XP/h than mahogany)","entityId":"activity:content:eternal-magic-trees","key":"effect-2","ordinal":0}
 {"description":"Perfect eternal magic branch chance at 110 Woodcutting","entityId":"activity:content:eternal-magic-trees","key":"effect-3","ordinal":0}
+{"description":"2nd fastest Fishing XP in the game (behind Advance Time / Dream of Iaia); ~285k base XP/h at 99","entityId":"activity:content:fishing-frenzy","key":"effect-1","ordinal":0}
+{"description":"Streak bonus +1% XP per 10 catches (soft cap +20% at 200)","entityId":"activity:content:fishing-frenzy","key":"effect-2","ordinal":0}
 {"description":"The Raptor (high-level Slayer master; Fort Guardhouse)","entityId":"activity:content:fort-forinthry","key":"effect-1","ordinal":0}
 {"description":"Construction training (fort buildings and reinforcement)","entityId":"activity:content:fort-forinthry","key":"effect-2","ordinal":0}
 {"description":"Linza's helm","entityId":"activity:content:linza-the-disgraced","key":"effect-1","ordinal":0}
@@ -48,6 +64,9 @@
 {"description":"Ice nihil (+5% necromancy accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-2","ordinal":0}
 {"description":"Shadow nihil (+5% ranged accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-3","ordinal":0}
 {"description":"Smoke nihil (+5% magic accuracy)","entityId":"activity:content:nihil-familiars","key":"effect-4","ordinal":0}
+{"description":"Phoenix quills (Summoning tertiary / skip fee)","entityId":"activity:content:phoenix-lair","key":"effect-1","ordinal":0}
+{"description":"Firemaking, Fletching, Crafting, and Slayer XP per clear","entityId":"activity:content:phoenix-lair","key":"effect-2","ordinal":0}
+{"description":"Phoenix eggling pet chance on exit after claiming quills","entityId":"activity:content:phoenix-lair","key":"effect-3","ordinal":0}
 {"description":"Champion's ring (full drop; no heart + Warrior rings combine)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-champion","ordinal":0}
 {"description":"Channeller's ring (full drop; no heart + Seers' rings combine)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-channeller","ordinal":0}
 {"description":"Occultist's ring (Osseous)","entityId":"activity:content:rex-matriarchs","key":"effect-ring-occultist","ordinal":0}
@@ -60,6 +79,12 @@
 {"description":"Silver key (Asyn/Fiyr/Edimmu remains; opens silver doors and chests)","entityId":"activity:content:shade-keys","key":"effect-4","ordinal":0}
 {"description":"Gold key (Fiyr/Edimmu remains; opens gold doors and the gold chest)","entityId":"activity:content:shade-keys","key":"effect-5","ordinal":0}
 {"description":"Shiny columbarium key (opens Columbarium wooden recesses; stronger table than columbarium key)","entityId":"activity:content:shiny-columbarium-key","key":"effect-1","ordinal":0}
+{"description":"Burial anvils and burial forges (burial armour Smithing XP)","entityId":"activity:content:thalmunds-forge","key":"effect-1","ordinal":0}
+{"description":"Imcando forge and Imcando anvil","entityId":"activity:content:thalmunds-forge","key":"effect-2","ordinal":0}
+{"description":"Imcando mattock path (metal pieces + dragon mattock)","entityId":"activity:content:thalmunds-forge","key":"effect-3","ordinal":0}
+{"description":"Burial anvil","entityId":"activity:content:thalmunds-forge","key":"effect-burial-anvil","ordinal":0}
+{"description":"Burial armour (Artisans' Workshop alternative)","entityId":"activity:content:thalmunds-forge","key":"effect-burial-armour","ordinal":0}
+{"description":"Burial forge","entityId":"activity:content:thalmunds-forge","key":"effect-burial-forge","ordinal":0}
 {"description":"Ungael combat activity (standard/hard 12-wave mode; cosmetic and title rewards per wiki)","entityId":"activity:content:ungael","key":"effect-1","ordinal":0}
 {"description":"Ungael ritual site (lower Necromancy XP than Um; higher component durability; Zorgoth's ring upgrade path)","entityId":"activity:content:ungael","key":"effect-2","ordinal":0}
 {"description":"Inner Wrath: Wild Magic applies Blast Infused for 10 ticks (6s)","entityId":"anachronia:blast-diffusion-boots","key":"effect-1","ordinal":0}
@@ -916,6 +941,7 @@
 {"description":"Can trigger all three Deep Sea Fishing boosts","entityId":"kandarin:tavias-fishing-rod","key":"effect-2","ordinal":1}
 {"description":"Can be augmented","entityId":"kandarin:tavias-fishing-rod","key":"effect-3","ordinal":2}
 {"description":"Thalmund's Forge burial anvils and burial forges: burial armour / burial equipment Smithing XP after Into the Forge (Kandarin; not Artisans' Respect shop)","entityId":"kandarin:warforge-dig-site","key":"effect","ordinal":0}
+{"description":"Thalmund's Forge: burial armour Smithing (Artisans' Workshop alternative)","entityId":"kandarin:warforge-dig-site","key":"effect-thalmund-burial","ordinal":0}
 {"description":"Always tier 1: boat fares Port Sarim-Musa and Ardougne-Brimhaven reduced to 15 coins; weekly 140 pineapples from Dell Monti","entityId":"karamja:area-tasks-karamja-gloves","key":"effect-1","ordinal":0}
 {"description":"Tier 2 worn and always: +10% Agility XP from Brimhaven Agility Arena obstacles and ticket lamp trades","entityId":"karamja:area-tasks-karamja-gloves","key":"effect-2","ordinal":1}
 {"description":"Tier 3 worn: ladder access to Shilo underground mine and gemstone cavern; operate teleport to Shilo underground mine; always free Brimhaven Dungeon entry; gemstone dragons as Slayer assignment option","entityId":"karamja:area-tasks-karamja-gloves","key":"effect-3","ordinal":2}
@@ -1587,6 +1613,7 @@
 {"description":"Eternal magic planks (~3x faster Construction XP/h than mahogany)","entityId":"unlock:kandarin:eternal-magic-trees","key":"effect-2","ordinal":0}
 {"description":"Perfect eternal magic branch chance at 110 Woodcutting","entityId":"unlock:kandarin:eternal-magic-trees","key":"effect-3","ordinal":0}
 {"description":"Thalmund's Forge burial anvils and burial forges: burial armour / burial equipment Smithing XP after Into the Forge (Kandarin; not Artisans' Respect shop)","entityId":"unlock:kandarin:warforge-dig-site-feldip-hills-archaeology","key":"effect","ordinal":0}
+{"description":"Thalmund's Forge burial anvils/forges — burial armour alternative to Artisans' Workshop","entityId":"unlock:kandarin:warforge-dig-site-feldip-hills-archaeology","key":"effect-thalmund-burial","ordinal":0}
 {"description":"Polypore staff","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","key":"effect","ordinal":0}
 {"description":"Ganodermic armour (visor, poncho, leggings)","entityId":"unlock:morytania:polypore-dungeon-spore-and-stick-resources","key":"effect","ordinal":1}
 {"description":"Shade keys (bronze, steel, black, silver, gold) for Shade Catacombs doors and chests","entityId":"unlock:morytania:shades-of-mortton-cremation","key":"effect-keys","ordinal":0}

@@ -6,6 +6,8 @@
 {"entityId":"activity:content:acheron-mammoths"}
 {"entityId":"activity:content:advanced-gnome-stronghold-course"}
 {"entityId":"activity:content:agility-pyramid"}
+{"category":"Slayer monster / combat uniques","entityId":"activity:content:airuts"}
+{"category":"Slayer monster / combat uniques","entityId":"activity:content:airuts-desert"}
 {"entityId":"activity:content:allotment-patches"}
 {"entityId":"activity:content:amascut-the-devourer"}
 {"entityId":"activity:content:anachronia-agility-course"}
@@ -16,11 +18,11 @@
 {"entityId":"activity:content:araxxor-araxxi"}
 {"entityId":"activity:content:arch-glacor"}
 {"entityId":"activity:content:arctic-pine-woodcutting-neitiznot"}
-{"entityId":"activity:content:artisans-workshop"}
+{"category":"Smithing hub","entityId":"activity:content:artisans-workshop"}
 {"entityId":"activity:content:balaraks-sash-brush"}
 {"entityId":"activity:content:bandit-camp-shops"}
 {"category":"Combat minigame / honour shop","entityId":"activity:content:barbarian-assault"}
-{"entityId":"activity:content:barbarian-outpost-agility-course"}
+{"category":"Agility course / weight outfit","entityId":"activity:content:barbarian-outpost-agility-course"}
 {"entityId":"activity:content:barrows"}
 {"entityId":"activity:content:beastmaster-durzag"}
 {"entityId":"activity:content:black-chinchompas"}
@@ -28,6 +30,7 @@
 {"category":"Smithing","entityId":"activity:content:blast-furnace"}
 {"entityId":"activity:content:blood-altar"}
 {"entityId":"activity:content:bloodweed-aggression-potions"}
+{"category":"Firemaking quest reward / training","entityId":"activity:content:book-of-char"}
 {"entityId":"activity:content:brawling-gloves"}
 {"entityId":"activity:content:brimhaven-agility-arena"}
 {"entityId":"activity:content:calquat-tree-patch"}
@@ -45,7 +48,7 @@
 {"entityId":"activity:content:corporeal-beast"}
 {"entityId":"activity:content:corrupted-creatures-soul-devourers"}
 {"entityId":"activity:content:corrupted-seren-stone-cleansing-hefin-cathedral"}
-{"entityId":"activity:content:crafting-guild"}
+{"category":"Crafting guild infrastructure","entityId":"activity:content:crafting-guild"}
 {"entityId":"activity:content:crimson-skillchompas"}
 {"entityId":"activity:content:croesus"}
 {"entityId":"activity:content:crystal-sandstone-and-crystal-flasks"}
@@ -79,18 +82,19 @@
 {"category":"Ranged power gloves","entityId":"activity:content:enhanced-nightmare-gauntlets"}
 {"category":"Woodcutting resource supply","entityId":"activity:content:eternal-magic-trees"}
 {"entityId":"activity:content:everlight-dig-site"}
-{"entityId":"activity:content:falador-farm-allotment-flower-herb-patches"}
+{"category":"Farming patches","entityId":"activity:content:falador-farm-allotment-flower-herb-patches"}
 {"entityId":"activity:content:farmers-outfit"}
 {"entityId":"activity:content:ferns-finds","location":"Amberfell"}
 {"entityId":"activity:content:fight-kiln"}
-{"entityId":"activity:content:flash-powder-factory-minigame-and-reward-shop"}
+{"category":"Fishing XP method","entityId":"activity:content:fishing-frenzy"}
+{"category":"Minigame","entityId":"activity:content:flash-powder-factory-minigame-and-reward-shop"}
 {"entityId":"activity:content:flower-patch"}
 {"category":"Construction, skilling and operations hub","entityId":"activity:content:fort-forinthry"}
-{"entityId":"activity:content:freneskae-via-world-gate"}
+{"category":"Portal access / Freneskae","entityId":"activity:content:freneskae-via-world-gate"}
 {"entityId":"activity:content:fruit-tree-patch"}
-{"entityId":"activity:content:fruit-tree-patch-hubs"}
+{"category":"Farming patch","entityId":"activity:content:fruit-tree-patch-hubs"}
 {"entityId":"activity:content:general-graardor"}
-{"entityId":"activity:content:giant-mole"}
+{"category":"Falador","entityId":"activity:content:giant-mole"}
 {"entityId":"activity:content:glacors"}
 {"entityId":"activity:content:gleaming-wisp-colony"}
 {"entityId":"activity:content:goebie-scavengers"}
@@ -116,7 +120,7 @@
 {"entityId":"activity:content:ice-strykewyrms"}
 {"entityId":"activity:content:infernal-puzzle-box"}
 {"entityId":"activity:content:infernal-source-dig-site-zamorakian"}
-{"entityId":"activity:content:invention-guild"}
+{"category":"Invention workshop and machine infrastructure","entityId":"activity:content:invention-guild"}
 {"entityId":"activity:content:ithell-harps"}
 {"entityId":"activity:content:ivar-king-of-bones"}
 {"entityId":"activity:content:jackalope-familiar"}
@@ -132,7 +136,7 @@
 {"entityId":"activity:content:kharid-et-dig-site"}
 {"entityId":"activity:content:kreearra"}
 {"entityId":"activity:content:kril-tsutsaroth"}
-{"entityId":"activity:content:kuradal"}
+{"category":"Slayer master","entityId":"activity:content:kuradal"}
 {"entityId":"activity:content:laniakea-anachronia-highest-standard-slayer-master"}
 {"entityId":"activity:content:lava-flow-mine"}
 {"entityId":"activity:content:lava-strykewyrms"}
@@ -150,58 +154,59 @@
 {"entityId":"activity:content:max-guild"}
 {"entityId":"activity:content:mazcab-emergency-merchants"}
 {"category":"Herblore","entityId":"activity:content:meilyr-recipe-shop"}
-{"entityId":"activity:content:memorial-to-guthix"}
+{"category":"Divination D&D and passive-buff infrastructure","entityId":"activity:content:memorial-to-guthix"}
 {"entityId":"activity:content:menaphos"}
-{"entityId":"activity:content:mining-guild"}
+{"category":"Mining guild infrastructure","entityId":"activity:content:mining-guild"}
 {"entityId":"activity:content:misthalin-wisp-colonies"}
 {"entityId":"activity:content:moonrise-dig-site"}
 {"entityId":"activity:content:morvran-prifddinas-slayer-master"}
 {"entityId":"activity:content:musa-point-free-teaks"}
-{"entityId":"activity:content:muspah"}
+{"category":"Freneskae combat","entityId":"activity:content:muspah"}
 {"entityId":"activity:content:nakatra-devourer-eternal"}
 {"entityId":"activity:content:nature-altar"}
 {"entityId":"activity:content:necromantic-rune-temple"}
 {"entityId":"activity:content:neitiznot-yaks"}
 {"entityId":"activity:content:nex"}
 {"category":"Boss","entityId":"activity:content:nex-angel-of-death"}
-{"entityId":"activity:content:nightmare-creatures"}
+{"category":"Freneskae Slayer / combat","entityId":"activity:content:nightmare-creatures"}
 {"category":"Summoning accuracy familiars","entityId":"activity:content:nihil-familiars"}
 {"entityId":"activity:content:obsidian-armour"}
 {"entityId":"activity:content:old-meats"}
 {"category":"Archaeology dig site","entityId":"activity:content:orthen-dig-site"}
-{"entityId":"activity:content:ourania-runecrafting-altar-zmi"}
+{"category":"Runecrafting altar infrastructure","entityId":"activity:content:ourania-runecrafting-altar-zmi"}
 {"entityId":"activity:content:penguin-agility-course"}
 {"entityId":"activity:content:perfect-juju-potions"}
+{"category":"Slayer D&D / skilling encounter","entityId":"activity:content:phoenix-lair"}
 {"entityId":"activity:content:piscatoris-fishing-colony"}
 {"entityId":"activity:content:piscatoris-hunter-area"}
 {"category":"mid-game Magic and Farming resource dungeon","entityId":"activity:content:polypore-dungeon-spore-and-stick-resources"}
 {"entityId":"activity:content:pontifex-observation-ring"}
 {"entityId":"activity:content:port-phasmatys-farming-patches"}
-{"entityId":"activity:content:port-sarim-docks-and-skilling-hub"}
-{"entityId":"activity:content:ports-armour"}
-{"entityId":"activity:content:praesul-codex"}
+{"category":"Transport and shop hub","entityId":"activity:content:port-sarim-docks-and-skilling-hub"}
+{"category":"Level 85 tank armour","entityId":"activity:content:ports-armour"}
+{"category":"Prayer unlock","entityId":"activity:content:praesul-codex"}
 {"entityId":"activity:content:prehistoric-potteringtons-accidental-fletching-and-firemaking"}
 {"entityId":"activity:content:prifddinas"}
 {"entityId":"activity:content:primal-ores"}
 {"entityId":"activity:content:pure-essence-chest"}
 {"entityId":"activity:content:pyramid-plunder"}
-{"entityId":"activity:content:queen-black-dragon"}
+{"category":"Boss","entityId":"activity:content:queen-black-dragon"}
 {"entityId":"activity:content:raksha"}
 {"entityId":"activity:content:ranch-out-of-time-anachronia-dinosaur-farm"}
-{"entityId":"activity:content:ranging-guild"}
+{"category":"Ranged guild infrastructure, shops, and archery competition","entityId":"activity:content:ranging-guild"}
 {"entityId":"activity:content:rasial-the-first-necromancer"}
 {"entityId":"activity:content:revenants"}
 {"category":"bossing","entityId":"activity:content:rex-matriarchs"}
 {"entityId":"activity:content:ripper-demons"}
 {"entityId":"activity:content:roar-of-osseous-rex-skeleton-island-buff"}
 {"entityId":"activity:content:rogues-castle-safes"}
-{"entityId":"activity:content:rogues-den"}
+{"category":"Thieving hub","entityId":"activity:content:rogues-den"}
 {"entityId":"activity:content:ruinous-weapons"}
-{"entityId":"activity:content:rune-dragons"}
+{"category":"Freneskae combat","entityId":"activity:content:rune-dragons"}
 {"category":"Thieving","entityId":"activity:content:safecracking-route"}
 {"entityId":"activity:content:sanctum-of-rebirth"}
 {"entityId":"activity:content:sanguine-crawler"}
-{"entityId":"activity:content:scrimshaws"}
+{"category":"Ports pocket items","entityId":"activity:content:scrimshaws"}
 {"category":"Area Tasks / permanent unlock","entityId":"activity:content:seers-village"}
 {"entityId":"activity:content:seren-spells-and-prayers"}
 {"entityId":"activity:content:seren-stones"}
@@ -223,19 +228,20 @@
 {"entityId":"activity:content:sparkling-wisp-colony"}
 {"entityId":"activity:content:spectral-lens"}
 {"entityId":"activity:content:spirit-moths-highweald-charm-supply"}
-{"entityId":"activity:content:starbloom-armour"}
-{"entityId":"activity:content:stormguard-citadel-dig-site-armadylean"}
+{"category":"Crafting armour","entityId":"activity:content:starbloom-armour"}
+{"category":"Archaeology dig-site hub","entityId":"activity:content:stormguard-citadel-dig-site-armadylean"}
 {"entityId":"activity:content:sumona"}
 {"entityId":"activity:content:tai-bwo-wannai-cleanup"}
 {"entityId":"activity:content:telos-the-warden"}
-{"entityId":"activity:content:the-arc"}
+{"category":"Smithing / Archaeology forge","entityId":"activity:content:thalmunds-forge"}
+{"category":"Eastern Lands","entityId":"activity:content:the-arc"}
 {"entityId":"activity:content:the-empty-throne-room"}
 {"entityId":"activity:content:the-gate-of-elidinis"}
 {"entityId":"activity:content:the-lost-grove"}
 {"entityId":"activity:content:the-magister"}
 {"entityId":"activity:content:the-shadow-reef-ed3"}
 {"entityId":"activity:content:time-altar"}
-{"entityId":"activity:content:troll-stronghold-disease-free-herb-patch"}
+{"category":"Farming permanent patch unlock","entityId":"activity:content:troll-stronghold-disease-free-herb-patch"}
 {"entityId":"activity:content:twin-furies"}
 {"entityId":"activity:content:tzhaar-fight-cave"}
 {"entityId":"activity:content:tzkal-zuk"}
@@ -248,10 +254,10 @@
 {"entityId":"activity:content:vermyx-brood-mother"}
 {"entityId":"activity:content:vindicta-gorvek"}
 {"entityId":"activity:content:volcanic-trapper-outfit"}
-{"entityId":"activity:content:vorago"}
+{"category":"Boss","entityId":"activity:content:vorago"}
 {"entityId":"activity:content:vyre-combat-and-sunspear-progression"}
 {"category":"Archaeology dig-site hub","entityId":"activity:content:warforge-dig-site-bandosian"}
-{"entityId":"activity:content:warriors-guild"}
+{"category":"Melee guild / defender path","entityId":"activity:content:warriors-guild"}
 {"entityId":"activity:content:waterbirth-island"}
 {"entityId":"activity:content:waterfall-fishing"}
 {"entityId":"activity:content:wendlewick-fish-farm"}
@@ -262,7 +268,7 @@
 {"entityId":"activity:content:wilderness-chaos-altars-prayer-offer"}
 {"entityId":"activity:content:wilderness-herb-patch"}
 {"entityId":"activity:content:wilderness-slayer"}
-{"entityId":"activity:content:wizards-guild-magic-guild-yanille"}
+{"category":"Magic guild","entityId":"activity:content:wizards-guild-magic-guild-yanille"}
 {"entityId":"activity:content:yakamaru"}
 {"entityId":"activity:content:zemouregal-vorkath"}
 {"entityId":"activity:misthalin:zamorak-lord-of-chaos"}

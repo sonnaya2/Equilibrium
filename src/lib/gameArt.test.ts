@@ -122,11 +122,11 @@ describe("gameArt", () => {
     ).toBe("/game/activities/ham-hideout.webp");
   });
 
-  it("Kuradal name well uses NPC plate, not dungeon map or ferocious ring", () => {
+  it("Kuradal name well uses chathead plate, not dungeon map or ferocious ring", () => {
     const path = dataEntityIconPath({ name: "Kuradal", kind: "Slayer master" });
     expect(path).toBe("/game/activities/kuradal.webp");
     expect(existsSync(join(PUBLIC, "game/activities/kuradal.webp"))).toBe(true);
-    expect(path).not.toMatch(/kuradals-dungeon|ferocious-ring/);
+    expect(path).not.toMatch(/kuradals-dungeon|ferocious-ring|skills\/slayer/);
     expect(activityIconPath("Kuradal")).toBe("/game/activities/kuradal.webp");
     expect(upgradeIconPath("Kuradal")).toMatch(/permanent-unlocks\/kuradal\.(webp|png)$/);
     expect(isSceneryPermanentUnlock("/game/upgrades/permanent-unlocks/kuradals-dungeon.webp")).toBe(
@@ -134,6 +134,14 @@ describe("gameArt", () => {
     );
     expect(isSceneryActivityPath("/game/activities/kuradals-dungeon.webp")).toBe(true);
     expect(dataEntityIconPath({ name: "Kuradal's Dungeon", kind: "content" })).toBeNull();
+  });
+
+  it("Manor Farm name well uses farm plate, not farming skill glyph", () => {
+    const path = dataEntityIconPath({ name: "Manor Farm", kind: "Farming" });
+    expect(path).toMatch(/\/(activities|upgrades\/permanent-unlocks)\/(manor-farm|player-owned-farm)\.webp$/);
+    expect(existsSync(join(PUBLIC, path!.replace(/^\//, "")))).toBe(true);
+    expect(path).not.toMatch(/skills\/farming/);
+    expect(isSceneryActivityPath("/game/activities/manor-farm.webp")).toBe(false);
   });
 
   it("returns null for abstract package labels without a safe alias", () => {

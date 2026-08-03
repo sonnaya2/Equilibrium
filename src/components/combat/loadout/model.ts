@@ -9,6 +9,15 @@ import {
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import {
+  isRelicActive,
+  MONOLITH_ENERGY_DEFAULT,
+  MONOLITH_ENERGY_EXTENDED,
+  relicById,
+  sanitizeSelectedRelics,
+  toggleArchaeologyRelic,
+} from "@/combat/shared/archaeologyRelics";
+import { HEIGHTENED_SENSES_ADRENALINE_BONUS } from "@/combat/shared/heightenedSenses";
+import {
   activeEquipmentEffects,
   EQUIPMENT_ENCHANTMENTS,
   resolvedEquipmentSlots,
@@ -219,6 +228,90 @@ export interface LoadoutBuffs {
    * 100% block + Soul Split-on-protect).
    */
   protectionPrayer: boolean;
+  /** Archaeology: Berserker's Fury monolith relic (damage scales with missing LP). */
+  berserkersFury: boolean;
+  /** Archaeology: Fury of the Small (+1% adren on adrenaline-generating basics). */
+  furyOfTheSmall: boolean;
+  /** Archaeology: Heightened Senses (+10 max adrenaline). */
+  heightenedSenses: boolean;
+  /** Archaeology: Conservation of Energy (+10 adren after ultimate). */
+  conservationOfEnergy: boolean;
+}
+
+/**
+ * Monolith relic selection.
+ * energyCap / over-budget: re-sanitized with build regions in ArchPanel persist
+ * and in resolveCombatRules when loadoutStats receives unlockedRegions.
+ */
+export interface LoadoutArchaeology {
+  selectedIds: string[];
+  energyCap: 500 | 650;
+}
+
+const FULL_ARCH_BUFF_TO_RELIC = {
+  berserkersFury: "berserkers_fury",
+  furyOfTheSmall: "fury_of_the_small",
+  heightenedSenses: "heightened_senses",
+  conservationOfEnergy: "conservation_of_energy",
+} as const;
+
+type FullArchBuffKey = keyof typeof FULL_ARCH_BUFF_TO_RELIC;
+
+function buffsFromArchSelected(selectedIds: readonly string[]): Pick<
+  LoadoutBuffs,
+  FullArchBuffKey
+> {
+  return {
+    berserkersFury: isRelicActive(selectedIds, "berserkers_fury"),
+    furyOfTheSmall: isRelicActive(selectedIds, "fury_of_the_small"),
+    heightenedSenses: isRelicActive(selectedIds, "heightened_senses"),
+    conservationOfEnergy: isRelicActive(selectedIds, "conservation_of_energy"),
+  };
+}
+
+function normalizeArchaeologyEnergyCap(value: unknown): 500 | 650 {
+  return value === MONOLITH_ENERGY_EXTENDED ? MONOLITH_ENERGY_EXTENDED : MONOLITH_ENERGY_DEFAULT;
+}
+
+function normalizeArchaeologySelectedIds(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const id of raw) {
+    if (typeof id !== "string" || !relicById(id) || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+  }
+  return out;
+}
+
+/** Parse stored archaeology; migrate legacy full-modeled buff toggles into selectedIds. */
+export function normalizeArchaeology(
+  rawArch: unknown,
+  rawBuffs: Partial<LoadoutBuffs>,
+): LoadoutArchaeology {
+  const raw =
+    typeof rawArch === "object" && rawArch !== null
+      ? (rawArch as Partial<LoadoutArchaeology>)
+      : {};
+  const energyCap = normalizeArchaeologyEnergyCap(raw.energyCap);
+  let selectedIds = normalizeArchaeologySelectedIds(raw.selectedIds);
+  for (const [buffKey, relicId] of Object.entries(FULL_ARCH_BUFF_TO_RELIC) as [
+    FullArchBuffKey,
+    string,
+  ][]) {
+    if (rawBuffs[buffKey] === true && !selectedIds.includes(relicId)) {
+      selectedIds = [...selectedIds, relicId];
+    }
+  }
+  return {
+    energyCap,
+    selectedIds: sanitizeSelectedRelics({
+      selectedIds,
+      energyCap,
+      unlockedRegions: [],
+    }),
+  };
 }
 
 export interface Loadout {
@@ -236,8 +329,13 @@ export interface Loadout {
   defenceLevel: number;
   /** Unboosted Constitution; current normal range is 10-99. */
   constitutionLevel: number;
-  /** Life points before Powerburst doubling; null means start fully healed. */
+  /**
+   * Absolute life points before Powerburst doubling.
+   * null = derive from currentHealthPercent of temporary max.
+   */
   currentLife: number | null;
+  /** Shared current health as 0-100% of maximum LP. Default 50. */
+  currentHealthPercent: number;
   weaponTier: number;
   offhandTier: number;
   spellTier: number;
@@ -254,6 +352,8 @@ export interface Loadout {
   /** Which perks the player keeps on which gizmo. Display grouping, not engine input. */
   gizmos: GizmoLayout;
   buffs: LoadoutBuffs;
+  /** Archaeology monolith powers (selection + energy budget). */
+  archaeology: LoadoutArchaeology;
   equipmentSlots: Partial<Record<EquipmentSlot, string | null>>;
   enchantments: EquipmentEnchantmentId[];
   /** Derived: slotted ids + unlock pins. */
@@ -268,6 +368,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   defenceLevel: 99,
   constitutionLevel: 99,
   currentLife: null,
+  currentHealthPercent: 50,
   weaponTier: 90,
   offhandTier: 90,
   spellTier: 90,
@@ -320,6 +421,14 @@ export const DEFAULT_LOADOUT: Loadout = {
     strengthCape99: false,
     attackCape120: false,
     protectionPrayer: false,
+    berserkersFury: false,
+    furyOfTheSmall: false,
+    heightenedSenses: false,
+    conservationOfEnergy: false,
+  },
+  archaeology: {
+    selectedIds: [],
+    energyCap: MONOLITH_ENERGY_DEFAULT,
   },
   equipmentSlots: {},
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
@@ -620,7 +729,54 @@ export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>)
     buffs.bonfireFiremakingLevel ??= MAX_FIREMAKING_LEVEL;
     buffs.totemOfVitality = false;
   }
+
+  let selectedIds = loadout.archaeology?.selectedIds ?? [];
+  const energyCap = loadout.archaeology?.energyCap ?? MONOLITH_ENERGY_DEFAULT;
+  let archTouched = false;
+  for (const [buffKey, relicId] of Object.entries(FULL_ARCH_BUFF_TO_RELIC) as [
+    FullArchBuffKey,
+    string,
+  ][]) {
+    if (patch[buffKey] === undefined) continue;
+    archTouched = true;
+    if (patch[buffKey] === true) {
+      if (!selectedIds.includes(relicId)) {
+        selectedIds = toggleArchaeologyRelic({ relicId, selectedIds, energyCap });
+      }
+    } else {
+      selectedIds = selectedIds.filter((id) => id !== relicId);
+    }
+  }
+  if (archTouched) {
+    Object.assign(buffs, buffsFromArchSelected(selectedIds));
+    return {
+      ...loadout,
+      buffs,
+      archaeology: { selectedIds, energyCap },
+    };
+  }
   return { ...loadout, buffs };
+}
+
+/** Replace monolith selection; keeps full-modeled buff flags in lockstep. */
+export function withArchaeologySelection(
+  loadout: Loadout,
+  selectedIds: readonly string[],
+  energyCap: 500 | 650,
+): Loadout {
+  const cleaned = sanitizeSelectedRelics({
+    selectedIds,
+    energyCap,
+    unlockedRegions: [],
+  });
+  return {
+    ...loadout,
+    archaeology: { selectedIds: cleaned, energyCap },
+    buffs: {
+      ...loadout.buffs,
+      ...buffsFromArchSelected(cleaned),
+    },
+  };
 }
 
 export function activatePowerburstOfVitality(loadout: Loadout, now = Date.now()): Loadout {
@@ -706,10 +862,6 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     : [];
   const slotted = new Set(equipmentIdList(equipmentSlots));
   const unlocks = legacyIds.filter((id) => !slotted.has(id));
-  const startingAdrenalineCap = activeEquipmentEffects({ style, equipmentSlots, enchantments })
-    .vestments.increasedAdrenalineCap
-    ? 120
-    : 100;
   // Remap curse to resolved style (weapon swap must not leave a melee curse on magic).
   const styleCurse = curseForStyle(
     STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
@@ -748,6 +900,19 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
   const powerburstOfVitalityCooldownUntil =
     Math.max(storedPowerburstCooldown ?? 0, inferredPowerburstCooldown ?? 0) || null;
 
+  const archaeology = normalizeArchaeology(
+    (raw as { archaeology?: unknown }).archaeology,
+    rawBuffs,
+  );
+  const archBuffs = buffsFromArchSelected(archaeology.selectedIds);
+  // Persist clamp: vestments 120 + Heightened Senses +10 (AJ blessing is resolve-time only).
+  const startingAdrenalineCap =
+    (activeEquipmentEffects({ style, equipmentSlots, enchantments }).vestments
+      .increasedAdrenalineCap
+      ? 120
+      : 100) +
+    (archBuffs.heightenedSenses ? HEIGHTENED_SENSES_ADRENALINE_BONUS : 0);
+
   return {
     style,
     level,
@@ -761,6 +926,12 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       DEFAULT_LOADOUT.constitutionLevel,
     ),
     currentLife: Number.isFinite(raw.currentLife) ? Math.max(0, Number(raw.currentLife)) : null,
+    currentHealthPercent: clamp(
+      raw.currentHealthPercent,
+      0,
+      100,
+      DEFAULT_LOADOUT.currentHealthPercent,
+    ),
     weaponTier: clamp(raw.weaponTier, 0, 145, DEFAULT_LOADOUT.weaponTier),
     offhandTier: clamp(raw.offhandTier, 0, 145, num(raw.weaponTier, DEFAULT_LOADOUT.offhandTier)),
     spellTier: clamp(raw.spellTier, 0, 145, num(raw.weaponTier, DEFAULT_LOADOUT.spellTier)),
@@ -877,7 +1048,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
+      ...archBuffs,
     },
+    archaeology,
     equipmentSlots,
     enchantments,
     equipmentIds: mergeEquipmentIds(equipmentSlots, unlocks),

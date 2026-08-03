@@ -117,10 +117,39 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "achto raids armour (mazcab)": "acht-primeval-robe-top",
   "achto raids armour residual (mazcab)": "acht-primeval-robe-top",
   "advanced gnome stronghold course": "advanced-gnome-stronghold-course",
+  "advanced barbarian outpost agility": "agile-top",
+  "advanced barbarian outpost course": "agile-top",
+  airuts: "airuts",
+  airut: "airuts",
+  "fishing frenzy": "deep-sea-fishing",
+  "deep sea fishing hub": "deep-sea-fishing",
+
+  "phoenix lair": "phoenix-lair",
+  phoenix: "phoenix",
+  "phoenix quills": "phoenix-quill",
+  "phoenix quill": "phoenix-quill",
+  "phoenix eggling": "phoenix",
+  "phoenix familiar path": "phoenix-quill",
+  "tuska's wrath ability codex": "tuskas-wrath",
+  "tuska's wrath": "tuskas-wrath",
+  "tuska mask": "tuska-mask",
+  "warpriest of tuska armour": "warpriest-of-tuska",
+  "warpriest of tuska": "warpriest-of-tuska",
+  "razorback gauntlets": "razorback-gauntlets",
+
   "advanced gold accumulator": "advanced-gold-accumulator",
   "advanced smithing autoheater": "advanced-smithing-autoheater",
   "agile legs": "agile-legs",
+  "agile bottom": "agile-legs",
   "agile top": "agile-top",
+  "book of char": "the-book-of-char",
+  "book of char / char firemaking": "the-book-of-char",
+  "the book of char": "the-book-of-char",
+  "char's training cave": "pitch-can",
+  "chars training cave": "pitch-can",
+  "char firemaking": "the-book-of-char",
+  "double firemaking xp (daily)": "the-book-of-char",
+  "pitch can": "pitch-can",
   "agility arena ticket exchange (pirate jackie)": "agility-arena-ticket-exchange",
   "agility pyramid (jaleustrophos)": "agility-pyramid",
   "agility pyramid": "agility-pyramid",
@@ -445,8 +474,10 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "daemonheim skilling reward infrastructure": "daemonheim-rewards",
   "dagannoth kings": "dagannoth-kings",
   "dalia's tree nursery eternal magic plots": "dalias-tree-nursery",
-  "eternal magic trees": "eternal-magic-wood-box",
-  "eternal magic logs": "eternal-magic-wood-box",
+  "eternal magic trees": "eternal-magic-trees",
+  "eternal magic tree": "eternal-magic-trees",
+  "eternal magic logs": "eternal-magic-logs",
+  "eternal magic log": "eternal-magic-logs",
   "eternal magic planks": "plank",
   "eternal planks": "plank",
   "dark facet of grace": "dark-facet-of-grace",
@@ -873,11 +904,13 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "kree'arra": "kreearra",
   kreearra: "kreearra",
   "kril tsutsaroth": "kril-tsutsaroth",
-  // Kandarin Slayer master - NPC plate (activities/kuradal), not dungeon map / ring.
+  // Kandarin Slayer master - chathead (activities/kuradal), not dungeon map / ring.
   "kuradal (ancient cavern slayer master)": "kuradal",
   kuradal: "kuradal",
   // Legacy hub label: reward-column ring only (row is now "Kuradal").
   "kuradal's dungeon and ferocious ring hub": "ferocious-ring",
+  // Manor Farm major: PoF hub art (not farming skill glyph / fenced landscape).
+  "manor farm": "manor-farm",
   "ferocious ring": "ferocious-ring",
   "manor farm animal perks": "nopenopenope",
   // Kandarin packaging for Freneskae access - World Gate scenery, not Nightmare boss plate.
@@ -899,9 +932,11 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "learn quicker killing blows (400 slayer points)": "full-slayer-helmet",
   "learn to move souls in personal slayer dungeon (1,000 slayer points)": "slayer-codex",
   "legends' guild totem jewellery recharge": "legends-guild",
-  // Boss plate - permanent-unlocks/legiones is monastery exterior dump.
+  // Boss plate = official wiki Legio Primus (File:Legio_Primus.png). Never monastery exterior.
   legiones: "legiones",
   "legiones (monastery of ascension)": "legiones",
+  "monastery of ascension": "legiones",
+  "order of ascension": "legiones",
   "leng artefact": "leng-artefact",
   "liberation of mazcab (beastmaster durzag / yakamaru)": "liberation-of-mazcab",
   "liberation of mazcab": "liberation-of-mazcab",
@@ -1013,7 +1048,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "modified ritualist's mask": "modified-ritualists-mask",
   "modified shaman's headdress": "modified-shamans-headdress",
   "modified sous chef's toque": "modified-sous-chefs-toque",
-  "monastery of ascension": "monastery-of-ascension",
+  // monastery of ascension → legiones boss plate (see above); do not map to exterior dump.
   "moonrise archaeology activity": "moonrise-dig-site",
   "moonrise dig site": "moonrise-dig-site",
   "moonrise dig-site hub (collections & mysteries)": "moonrise-dig-site",
@@ -1509,6 +1544,9 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "warforge dig site (bandosian)": "warforge-dig-site",
   "warforge dig site (feldip hills archaeology)": "warforge-dig-site",
   "warforge dig site (not karamja)": "warforge-dig-site",
+  "warforge dig site": "warforge-dig-site",
+  "thalmund's forge": "warforge-dig-site",
+  "thalmunds forge": "warforge-dig-site",
   "warped depths (daemonheim depths excavation)": "warped-depths",
   "warped gem": "warped-gem",
   "warped gorajan trailblazer outfit": "warped-gorajan",
@@ -1814,7 +1852,7 @@ const SCENERY_PERMANENT_UNLOCK_SLUGS = new Set([
   // Monastery exterior under permanent-unlocks - boss plate is the creature art.
   "legiones",
   "liberation-of-mazcab",
-  "manor-farm",
+  // manor-farm permanent plate allowed for Manor Farm major name well.
   "marigold-farm",
   "menaphos",
   "menaphos-imperial",
@@ -1868,14 +1906,13 @@ const SCENERY_ACTIVITY_SLUGS = new Set([
   "catherby",
   "deep-sea-fishing",
   "fishing-guild",
-  // Kuradal's Dungeon map plate - not NPC art (use activities/kuradal for the master).
+  // Kuradal's Dungeon map plate - not NPC art (use activities/kuradal chathead for the master).
   "kuradals-dungeon",
-  "manor-farm",
+  // manor-farm / player-owned-farm are intentional major name-well plates (not fenced).
   "ourania-altar",
   "ourania-runecrafting-altar",
   "piscatoris-fishing-colony",
   "piscatoris-hunter-area",
-  "player-owned-farm",
   "ranging-guild",
   "seers-village",
   "yanille",
@@ -1892,6 +1929,8 @@ export function isSceneryActivityPath(path: string): boolean {
   const slug = activitySlug(path);
   if (!slug) return false;
   if (SCENERY_ACTIVITY_SLUGS.has(slug)) return true;
+  // Named farm hubs with published major plates (not generic "…-farm" scenery dumps).
+  if (/^(?:manor-farm|player-owned-farm)$/i.test(slug)) return false;
   // Heuristic: bare place/course/guild activity dumps (not dig sites / named hubs with good plates).
   if (
     /(?:^|-)(course|area|farm|village|hub|colony|guild|outpost|stronghold)(?:-|$)/i.test(slug) &&
@@ -1909,6 +1948,8 @@ export function isSceneryPermanentUnlock(path: string): boolean {
   const slug = permanentUnlockSlug(path);
   if (!slug) return false;
   if (SCENERY_PERMANENT_UNLOCK_SLUGS.has(slug)) return true;
+  // Manor Farm / PoF major plates allowed in name wells.
+  if (/^(?:manor-farm|player-owned-farm)$/i.test(slug)) return false;
   // Heuristic: bare place photos (course/area/farm/patch…) without inventory tokens.
   // Do NOT blanket-ban "altar" - astral-altar inventory art is fine; Ourania is listed above.
   // "archaeology-guild-shop" / "ferocious-ring" must stay - not scenery.
@@ -1935,8 +1976,10 @@ function skillHubIconFromBag(bag: string): string | null {
   const hit = (skill: string) => skillIconPath(skill);
 
   // Farming first - "crystal tree Farming" must not fall through to woodcutting.
+  // Named "Manor Farm" hub keeps its own plate via DATA_ICON_ALIASES — do not steal to skill glyph.
   if (
-    /\bfarming patch\b|\bfarming patches\b|\bfarm(?:ing)?\b.*\bpatch|\bpatch cluster\b|\ballotment\b|\bherb patch\b|\btree patch\b|\bhops patch\b|\bbush patch\b|\bmushroom patch\b|\bcactus patch\b|\bcalquat\b|\bflower patch\b|\bharmony pillar|\bcrystal tree\b|\bmarigold farm\b|\beastfold farm\b|\bmanor farm\b/i.test(
+    !/\bmanor farm\b/i.test(bag) &&
+    /\bfarming patch\b|\bfarming patches\b|\bfarm(?:ing)?\b.*\bpatch|\bpatch cluster\b|\ballotment\b|\bherb patch\b|\btree patch\b|\bhops patch\b|\bbush patch\b|\bmushroom patch\b|\bcactus patch\b|\bcalquat\b|\bflower patch\b|\bharmony pillar|\bcrystal tree\b|\bmarigold farm\b|\beastfold farm\b/i.test(
       bag,
     )
   ) {

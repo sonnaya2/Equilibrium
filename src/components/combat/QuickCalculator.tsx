@@ -24,6 +24,7 @@ import { NumberField } from "./NumberField";
 import type { Loadout } from "./useLoadout";
 import { loadoutStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
+import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
@@ -91,6 +92,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
   const setup = loadoutStats(loadout, {
     blessingPicks: build.blessingPicks,
     relics: Object.values(build.relics).filter(Boolean),
+    unlockedRegions: unlockedRegions(build),
   });
   const [useBuild, setUseBuild] = useState(true);
   const [style, setStyle] = useState<CombatStyle>("melee");

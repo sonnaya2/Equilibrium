@@ -48,6 +48,10 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "H.A.M. Hideout pickpocketing and store rooms": "Clue scroll",
   // AoD content major — uniques only (not the circular "progression" key).
   "Nex: Angel of Death": "Wand of the praesul, Imperium core, Praesul codex",
+  "Angel of Death": "Wand of the praesul, Imperium core, Praesul codex",
+  "Thalmund's Forge":
+    "Burial armour (Artisans' Workshop alternative), Burial anvil, Burial forge, Imcando forge, Imcando anvil, Imcando mattock path",
+  "Warforge Dig Site": "Imcando mattock, Inspire Awe, Endurance, Thalmund's Forge",
   // https://runescape.wiki/w/Elven_clan_worker + clan worker loot (e.g. Ithell): hard/elite clues, crystal seeds, harmonic dust, porters, supers, shark
   "Elven clan worker pickpocketing":
     "Sealed clue scroll (hard), Sealed clue scroll (elite), Crystal tool seed, Crystal weapon seed, Crystal armour seed, Harmonic dust, Crystal acorn, Sign of the porter, Super attack, Super strength, Super defence, Shark, Brawling gloves",
@@ -225,8 +229,9 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Warriors' Guild": "Dragon defender",
   "Safecracking route": "Safes, Falador, Port Sarim, Burthorpe, Mining Guild",
   Safes: "Safes, Falador, Port Sarim, Burthorpe, Mining Guild",
-  "Warforge Dig Site (Bandosian)": "Imcando mattock, Inspire Awe, Endurance",
-  "Warforge Dig Site": "Imcando mattock, Inspire Awe, Endurance",
+  "Warforge Dig Site (Bandosian)": "Imcando mattock, Inspire Awe, Endurance, Thalmund's Forge",
+  "Warforge Dig Site (Feldip Hills Archaeology)":
+    "Imcando mattock, Inspire Awe, Endurance, Thalmund's Forge, Burial armour",
   "Roar of Osseous (Rex skeleton island buff)": "Roar of Osseous",
   "Roar of Osseous": "Roar of Osseous",
   "Hall of Memories": "Memory jars, storage bot, Divination XP",
@@ -248,7 +253,20 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Seer's headband": "Seer's headband 4, +2% enchanted bolt special chance",
   "Enhanced Excalibur": "Enhanced Excalibur",
   "Enhanced nightmare gauntlets": "Enhanced nightmare gauntlets",
-  "Barbarian Outpost Agility Course": "Course + agile top",
+  "Barbarian Outpost Agility Course": "Agile top, Agile legs",
+  "Advanced Barbarian Outpost Agility": "Agile top, Agile legs",
+  // https://runescape.wiki/w/The_Book_of_Char + Char's training cave (Firemaker's Curse)
+  "Book of Char / Char firemaking":
+    "The Book of Char, Char's training cave, Double Firemaking XP (daily), Pitch can",
+  "Book of Char": "The Book of Char, Char's training cave, Double Firemaking XP (daily), Pitch can",
+  // https://runescape.wiki/w/Phoenix_Lair
+  "Phoenix Lair": "Phoenix quills, Phoenix eggling, Phoenix familiar path",
+  // https://runescape.wiki/w/Airut — Kandarin + Desert dual majors
+  Airuts:
+    "Tuska's Wrath ability codex, Razorback gauntlets, Tuska mask, Warpriest of Tuska armour",
+  Airut:
+    "Tuska's Wrath ability codex, Razorback gauntlets, Tuska mask, Warpriest of Tuska armour",
+
   // https://runescape.wiki/w/Rewards_(Barbarian_Assault) - honour shop uniques; not agility/agile top
   "Barbarian Assault":
     "Fighter torso, Fighter hat, Ranger hat, Runner hat, Healer hat, Penance skirt, Runner boots, Penance gloves, Penance trident, Attacker's insignia, Defender's insignia, Collector's insignia, Healer's insignia",

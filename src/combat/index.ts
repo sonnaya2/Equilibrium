@@ -27,6 +27,11 @@ export {
 } from "./shared/abilityAvailability";
 export * from "./shared/prayers";
 export * from "./shared/vulnerability";
+export * from "./shared/berserkersFury";
+export * from "./shared/furyOfTheSmall";
+export * from "./shared/heightenedSenses";
+export * from "./shared/conservationOfEnergy";
+export * from "./shared/archaeologyRelics";
 export * from "./shared/potions";
 export * from "./styles/melee/bloodlust";
 export * from "./styles/melee/abilities";

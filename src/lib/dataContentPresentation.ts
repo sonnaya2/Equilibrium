@@ -658,6 +658,9 @@ export function presentInterestName(value: string): string {
     return "Collector rewards";
   }
   if (/^Warforge Dig Site\b/i.test(name)) return "Warforge Dig Site";
+  if (/^Thalmund'?s Forge\b/i.test(name)) return "Thalmund's Forge";
+  if (/^Nex:\s*Angel of Death\b/i.test(name)) return "Nex: Angel of Death";
+  if (/^Angel of Death\b/i.test(name)) return "Nex: Angel of Death";
   if (/^Stormguard Citadel Dig Site\b/i.test(name)) return "Stormguard Dig Site";
   if (/^Infernal Source Dig Site\b/i.test(name)) return "Infernal Source Dig Site";
   if (/^Senntisten Dig Site$/i.test(name)) return "Senntisten Dig Site";

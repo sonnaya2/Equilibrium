@@ -68,6 +68,8 @@ export interface SolverPackSnapshot {
   target?: { demon?: boolean; dragon?: boolean; undead?: boolean };
   ultimatums?: number;
   lunging?: number;
+  /** Precomputed Berserker's Fury damage bonus fraction; 0 / omit = off. */
+  berserkersFuryBonus?: number;
   /** Precomputed set counts; when omitted derived from equipmentSlots + equipmentIds. */
   setCounts?: readonly (readonly [string, number])[];
 }
@@ -126,6 +128,12 @@ function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifier
     },
     ultimatums: snapshot.ultimatums ?? 0,
     lunging: snapshot.lunging ?? 0,
+    berserkersFuryBonus:
+      typeof snapshot.berserkersFuryBonus === "number" &&
+      Number.isFinite(snapshot.berserkersFuryBonus) &&
+      snapshot.berserkersFuryBonus > 0
+        ? snapshot.berserkersFuryBonus
+        : 0,
   };
 }
 

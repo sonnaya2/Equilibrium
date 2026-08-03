@@ -42,6 +42,27 @@ import {
   type StyleCurseBoost,
 } from "@/combat/shared/prayers";
 import { vulnerabilityModifier } from "@/combat/shared/vulnerability";
+import {
+  berserkersFuryModifier,
+  getBerserkersFuryBonus,
+  lifePointsFromHealthPercent,
+  sanitizeHealthPercent,
+  BERSERKERS_FURY_ID,
+} from "@/combat/shared/berserkersFury";
+import {
+  FURY_OF_THE_SMALL_EXTRA_ADRENALINE,
+  FURY_OF_THE_SMALL_ID,
+} from "@/combat/shared/furyOfTheSmall";
+import {
+  HEIGHTENED_SENSES_ADRENALINE_BONUS,
+  HEIGHTENED_SENSES_ID,
+} from "@/combat/shared/heightenedSenses";
+import {
+  CONSERVATION_OF_ENERGY_ID,
+  CONSERVATION_OF_ENERGY_REFUND,
+} from "@/combat/shared/conservationOfEnergy";
+import { sanitizeArchaeologyState } from "@/combat/shared/archaeologyRelics";
+import type { RegionId } from "@/league";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier, CombatContext } from "@/combat/types";
@@ -101,6 +122,11 @@ export interface LoadoutStatsOptions {
   ruleset?: "base" | "equilibrium";
   /** Window the incoming-combat scenario is measured over; one minute by default. */
   scenarioSeconds?: number;
+  /**
+   * League unlocks for monolith energy (500 vs 650). When set, over-budget and
+   * 650-without-Anachronia selections are dropped before combat resolve.
+   */
+  unlockedRegions?: readonly RegionId[];
 }
 
 function leagueRulesetFromOptions(options: LoadoutStatsOptions): "base" | "equilibrium" {
@@ -306,7 +332,7 @@ export function resolveDefenceLife(
     equipmentArmour: equipment.equipmentStats.armour,
   });
   const powerburstActive = isPowerburstOfVitalityActive(loadout, now);
-  const lifeInput = {
+  const lifeInputBase = {
     constitutionLevel: loadout.constitutionLevel,
     equipmentLife: equipment.equipmentStats.life,
     reaperCrew: loadout.buffs.reaperCrew,
@@ -317,8 +343,20 @@ export function resolveDefenceLife(
     bonfireFiremakingLevel: loadout.buffs.bonfireFiremakingLevel,
     totemOfVitality: loadout.buffs.totemOfVitality,
     overheal: loadout.buffs.overheal === "none" ? null : loadout.buffs.overheal,
-    currentLife: loadout.currentLife ?? undefined,
     maximumLifeMultiplier: blessingLifeMultiplier(leagueLoadout),
+  } as const;
+  // Absolute currentLife wins; otherwise derive from shared currentHealthPercent of undoubled max.
+  const undoubledMax = lifePointStats({
+    ...lifeInputBase,
+    powerburstOfVitality: false,
+  }).temporaryMaxLife;
+  const healthPercent = sanitizeHealthPercent(loadout.currentHealthPercent ?? 50);
+  const currentFromPercent = lifePointsFromHealthPercent(undoubledMax, healthPercent);
+  const resolvedCurrentLife =
+    loadout.currentLife != null ? loadout.currentLife : currentFromPercent;
+  const lifeInput = {
+    ...lifeInputBase,
+    currentLife: resolvedCurrentLife,
   } as const;
   // UI life includes Powerburst doubling; league rules store the undoubled max
   // and a remaining until-tick so Big Boned resolves at each land tick.
@@ -326,9 +364,7 @@ export function resolveDefenceLife(
     ...lifeInput,
     powerburstOfVitality: powerburstActive,
   });
-  const maximumLifeForLeague = powerburstActive
-    ? lifePointStats({ ...lifeInput, powerburstOfVitality: false }).temporaryMaxLife
-    : life.temporaryMaxLife;
+  const maximumLifeForLeague = undoubledMax;
   const powerburstUntilTick = powerburstRemainingTicks(
     loadout.buffs.powerburstOfVitalityUntil,
     now,
@@ -690,6 +726,17 @@ export function resolveCrit(
   };
 }
 
+export interface BerserkersFuryResolved {
+  active: boolean;
+  /** Damage bonus fraction (0.03 = +3%). */
+  bonus: number;
+  currentLifePoints: number;
+  maximumLifePoints: number;
+  currentHealthPercent: number;
+  /** Dharok set not modeled yet; always false until set effect ships. */
+  suppressedByDharok: boolean;
+}
+
 export interface ResolvedCombatRules {
   globalModifiers: CombatModifier[];
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
@@ -704,6 +751,7 @@ export interface ResolvedCombatRules {
   cap: HitCapRule;
   activePassives: readonly string[];
   combatContext: CombatContext;
+  berserkersFury: BerserkersFuryResolved;
 }
 
 export function resolveCombatRules(
@@ -711,6 +759,8 @@ export function resolveCombatRules(
   levels: ResolvedLevels,
   equipment: ResolvedEquipment,
   leagueBundle: ResolvedLeagueBundle,
+  defenceLife?: ResolvedDefenceLife,
+  options: LoadoutStatsOptions = {},
 ): ResolvedCombatRules {
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet - structure ready).
@@ -734,12 +784,70 @@ export function resolveCombatRules(
   }
   globalModifiers.push(...leagueModifiers(leagueBundle.league));
 
+  // Arch selection: when build regions are known, drop illegal energy (650 without Anachronia).
+  const archState = loadout.archaeology ?? { selectedIds: [], energyCap: 500 as const };
+  const effectiveArch =
+    options.unlockedRegions != null
+      ? sanitizeArchaeologyState(archState, options.unlockedRegions)
+      : archState;
+  const archSelected = new Set(effectiveArch.selectedIds);
+  // With region-aware resolve, only effective selection counts (stale buff flags ignored).
+  const hasArchRelic = (id: string, buff: boolean | undefined): boolean =>
+    options.unlockedRegions != null
+      ? archSelected.has(id)
+      : archSelected.has(id) || buff === true;
+
+  // Berserker's Fury: use live LP vs temporary max (includes Powerburst when active).
+  // Dharok set effect not modeled - suppressedByDharok stays false until that set ships.
+  const maximumLifePoints = defenceLife?.life.temporaryMaxLife ?? 0;
+  const currentLifePoints = defenceLife?.life.currentLife ?? maximumLifePoints;
+  const currentHealthPercent =
+    maximumLifePoints > 0
+      ? sanitizeHealthPercent((currentLifePoints / maximumLifePoints) * 100)
+      : sanitizeHealthPercent(loadout.currentHealthPercent ?? 50);
+  const furyActive = hasArchRelic(BERSERKERS_FURY_ID, loadout.buffs.berserkersFury);
+  const furyBonus = furyActive
+    ? getBerserkersFuryBonus({
+        currentLifePoints,
+        maximumLifePoints,
+        dharoksSetActive: false,
+      })
+    : 0;
+  const berserkersFury: BerserkersFuryResolved = {
+    active: furyActive,
+    bonus: furyBonus,
+    currentLifePoints,
+    maximumLifePoints,
+    currentHealthPercent,
+    suppressedByDharok: false,
+  };
+  if (furyActive) {
+    const furyMod = berserkersFuryModifier(furyBonus);
+    if (furyMod) globalModifiers.push(furyMod);
+  }
+
+  const furyOfTheSmall = hasArchRelic(FURY_OF_THE_SMALL_ID, loadout.buffs.furyOfTheSmall);
+  const heightenedSenses = hasArchRelic(HEIGHTENED_SENSES_ID, loadout.buffs.heightenedSenses);
+  const conservationOfEnergy = hasArchRelic(
+    CONSERVATION_OF_ENERGY_ID,
+    loadout.buffs.conservationOfEnergy,
+  );
+
   const adrenaline: AdrenalineRules = {
     abilityGainMultiplier: blessingAdrenalineGenerationMultiplier(leagueBundle.league),
     basicGainMultiplier:
       loadout.perks.invigorating > 0
         ? invigoratingAdrenalineMultiplier(loadout.perks.invigorating)
         : 1,
+    ...(furyOfTheSmall
+      ? { basicAdrenalineFlatBonus: FURY_OF_THE_SMALL_EXTRA_ADRENALINE }
+      : {}),
+    ...(heightenedSenses
+      ? { maxAdrenalineBonus: HEIGHTENED_SENSES_ADRENALINE_BONUS }
+      : {}),
+    ...(conservationOfEnergy
+      ? { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND }
+      : {}),
     // Impatient / Relentless are state-changing RNG: the rotation drivers
     // branch on them (probability-weighted), never flat expected value.
     impatientRank: loadout.perks.impatient > 0 ? loadout.perks.impatient : 0,
@@ -754,7 +862,9 @@ export function resolveCombatRules(
   const equipmentAdrenalineCap = equipment.equipmentEffects.vestments.increasedAdrenalineCap
     ? 120
     : 100;
-  const maxAdrenaline = resolveMaximumAdrenaline(equipmentAdrenalineCap, leagueBundle.league);
+  const maxAdrenaline =
+    resolveMaximumAdrenaline(equipmentAdrenalineCap, leagueBundle.league) +
+    (adrenaline.maxAdrenalineBonus ?? 0);
 
   return {
     globalModifiers,
@@ -786,5 +896,6 @@ export function resolveCombatRules(
       ruleset: leagueBundle.league.ruleset,
       targetTiles: leagueBundle.league.targetTiles,
     },
+    berserkersFury,
   };
 }

@@ -9,6 +9,12 @@
 {"entityId":"activity:content:abyssal-beasts","regionId":"misthalin","relation":"required"}
 {"entityId":"activity:content:acheron-mammoths","regionId":"forinthry","relation":"required"}
 {"entityId":"activity:content:agility-pyramid","regionId":"desert","relation":"required"}
+{"entityId":"activity:content:airuts","ordinal":1,"regionId":"desert","relation":"hint"}
+{"entityId":"activity:content:airuts","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:airuts","regionId":"kandarin","relation":"required","requirementGroup":"single"}
+{"entityId":"activity:content:airuts-desert","regionId":"desert","relation":"primary"}
+{"entityId":"activity:content:airuts-desert","regionId":"desert","relation":"required","requirementGroup":"single"}
+{"entityId":"activity:content:airuts-desert","ordinal":1,"regionId":"kandarin","relation":"hint"}
 {"entityId":"activity:content:allotment-patches","regionId":"havenhythe","relation":"hint"}
 {"entityId":"activity:content:amascut-the-devourer","regionId":"desert","relation":"required"}
 {"entityId":"activity:content:artisans-workshop","regionId":"asgarnia","relation":"required"}
@@ -17,10 +23,14 @@
 {"entityId":"activity:content:bandit-camp-shops","regionId":"forinthry","relation":"required"}
 {"entityId":"activity:content:barbarian-assault","regionId":"kandarin","relation":"primary"}
 {"entityId":"activity:content:barbarian-assault","regionId":"kandarin","relation":"required","requirementGroup":"single"}
+{"entityId":"activity:content:barbarian-outpost-agility-course","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:barbarian-outpost-agility-course","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:barrows","regionId":"morytania","relation":"required"}
 {"entityId":"activity:content:black-salamanders","regionId":"forinthry","relation":"required"}
 {"entityId":"activity:content:blood-altar","regionId":"forinthry","relation":"hint"}
 {"entityId":"activity:content:blood-altar","regionId":"morytania","relation":"hint"}
+{"entityId":"activity:content:book-of-char","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:book-of-char","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:brawling-gloves","regionId":"forinthry","relation":"required"}
 {"entityId":"activity:content:calquat-tree-patch","regionId":"karamja","relation":"required"}
 {"entityId":"activity:content:chaos-elemental","regionId":"forinthry","relation":"required"}
@@ -59,6 +69,8 @@
 {"entityId":"activity:content:eternal-magic-trees","regionId":"kandarin","relation":"primary"}
 {"entityId":"activity:content:eternal-magic-trees","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:fight-kiln","regionId":"karamja","relation":"required"}
+{"entityId":"activity:content:fishing-frenzy","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:fishing-frenzy","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:flower-patch","regionId":"havenhythe","relation":"hint"}
 {"entityId":"activity:content:fort-forinthry","regionId":"misthalin","relation":"primary"}
 {"entityId":"activity:content:fort-forinthry","regionId":"misthalin","relation":"required","requirementGroup":"single"}
@@ -95,9 +107,11 @@
 {"entityId":"activity:content:neitiznot-yaks","regionId":"fremennik","relation":"required"}
 {"entityId":"activity:content:nex","regionId":"asgarnia","relation":"required"}
 {"entityId":"activity:content:nex-angel-of-death","regionId":"asgarnia","relation":"primary"}
-{"entityId":"activity:content:nex-angel-of-death","regionId":"asgarnia","relation":"required"}
+{"entityId":"activity:content:nex-angel-of-death","regionId":"asgarnia","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:nihil-familiars","regionId":"kandarin","relation":"primary"}
 {"entityId":"activity:content:nihil-familiars","regionId":"kandarin","relation":"required","requirementGroup":"single"}
+{"entityId":"activity:content:phoenix-lair","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:phoenix-lair","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:prifddinas","regionId":"tirannwn","relation":"required"}
 {"entityId":"activity:content:primal-ores","regionId":"forinthry","relation":"required"}
 {"entityId":"activity:content:pyramid-plunder","regionId":"desert","relation":"required"}
@@ -131,6 +145,8 @@
 {"entityId":"activity:content:starbloom-armour","regionId":"asgarnia","relation":"required"}
 {"entityId":"activity:content:sumona","regionId":"desert","relation":"required"}
 {"entityId":"activity:content:tai-bwo-wannai-cleanup","regionId":"karamja","relation":"required"}
+{"entityId":"activity:content:thalmunds-forge","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:thalmunds-forge","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:the-arc","regionId":"asgarnia","relation":"primary"}
 {"entityId":"activity:content:the-arc","regionId":"asgarnia","relation":"required"}
 {"entityId":"activity:content:the-gate-of-elidinis","regionId":"desert","relation":"required"}
@@ -146,6 +162,8 @@
 {"entityId":"activity:content:varrock-palace-tree-patch","regionId":"misthalin","relation":"required"}
 {"entityId":"activity:content:vault-of-hereditas","regionId":"desert","relation":"required"}
 {"entityId":"activity:content:volcanic-trapper-outfit","regionId":"anachronia","relation":"required"}
+{"entityId":"activity:content:warforge-dig-site-bandosian","regionId":"kandarin","relation":"primary"}
+{"entityId":"activity:content:warforge-dig-site-bandosian","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:warriors-guild","regionId":"asgarnia","relation":"required"}
 {"entityId":"activity:content:waterbirth-island","regionId":"fremennik","relation":"required"}
 {"entityId":"activity:content:wilderness-herb-patch","regionId":"forinthry","relation":"required"}
@@ -5093,6 +5111,8 @@
 {"entityId":"unlock:desert:achto-raids-armour-mazcab","regionId":"desert","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:desert:achto-raids-armour-mazcab","regionId":"desert","relation":"primary","requirementGroup":"single"}
 {"entityId":"unlock:desert:achto-raids-armour-mazcab","regionId":"desert","relation":"required","requirementGroup":"single"}
+{"entityId":"unlock:desert:airuts","regionId":"desert","relation":"primary"}
+{"entityId":"unlock:desert:airuts","regionId":"desert","relation":"required","requirementGroup":"single"}
 {"entityId":"unlock:desert:amascut-the-devourer-progression","regionId":"desert","relation":"primary"}
 {"entityId":"unlock:desert:black-ibis-outfit","regionId":"desert","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:desert:black-ibis-outfit","regionId":"desert","relation":"primary","requirementGroup":"single"}
@@ -5671,6 +5691,8 @@
 {"entityId":"unlock:kandarin:agile-legs","regionId":"kandarin","relation":"primary","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:agile-top","regionId":"kandarin","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:agile-top","regionId":"kandarin","relation":"primary","requirementGroup":"single"}
+{"entityId":"unlock:kandarin:airuts","regionId":"kandarin","relation":"primary"}
+{"entityId":"unlock:kandarin:airuts","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","ordinal":1,"regionId":"asgarnia","relation":"hint","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","regionId":"kandarin","relation":"hint","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","regionId":"kandarin","relation":"primary","requirementGroup":"support"}
@@ -5701,6 +5723,8 @@
 {"entityId":"unlock:kandarin:barbarian-training-otto-multi-skill-package","ordinal":1,"regionId":"karamja","relation":"hint","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds","regionId":"kandarin","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds","regionId":"kandarin","relation":"primary","requirementGroup":"single"}
+{"entityId":"unlock:kandarin:book-of-char","regionId":"kandarin","relation":"primary"}
+{"entityId":"unlock:kandarin:book-of-char","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:bush-patch-network-kandarin-core","ordinal":2,"regionId":"asgarnia","relation":"hint","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:bush-patch-network-kandarin-core","ordinal":3,"regionId":"fremennik","relation":"hint","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:bush-patch-network-kandarin-core","regionId":"kandarin","relation":"hint","requirementGroup":"support"}
@@ -5756,6 +5780,8 @@
 {"entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","regionId":"kandarin","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","regionId":"kandarin","relation":"primary","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","regionId":"kandarin","relation":"required","requirementGroup":"single"}
+{"entityId":"unlock:kandarin:fishing-frenzy","regionId":"kandarin","relation":"primary"}
+{"entityId":"unlock:kandarin:fishing-frenzy","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:fishing-outfit-fish-flingers","regionId":"kandarin","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:fishing-outfit-fish-flingers","regionId":"kandarin","relation":"primary","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:fishing-trawler-port-khazard","regionId":"kandarin","relation":"hint","requirementGroup":"single"}
@@ -5836,6 +5862,8 @@
 {"entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","regionId":"kandarin","relation":"primary","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","regionId":"kandarin","relation":"required","requirementGroup":"support"}
 {"entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","ordinal":1,"regionId":"misthalin","relation":"hint","requirementGroup":"support"}
+{"entityId":"unlock:kandarin:phoenix-lair","regionId":"kandarin","relation":"primary"}
+{"entityId":"unlock:kandarin:phoenix-lair","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:piscatoris-hunter-area","regionId":"kandarin","relation":"hint","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:piscatoris-hunter-area","regionId":"kandarin","relation":"primary","requirementGroup":"single"}
 {"entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock","ordinal":1,"regionId":"kandarin","relation":"hint","requirementGroup":"all_required"}

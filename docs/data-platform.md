@@ -335,9 +335,10 @@ exist for, and `npm run audit:data` fails if two documents ever claim one domain
 ## Frontend consumption
 
 Server components and route handlers open `.cache/equilibrium.sqlite` read-only (for example
-`src/research/catalog.ts` and `app/data/regions/`). `/data` region routes are `force-static` with
-`generateStaticParams` — Next renders them from SQLite at build time and serves them like files.
-No browser fetch goes to `public/data/`.
+`src/research/catalog.ts` and `app/data/regions/`). `/data` region routes export
+`dynamic = "force-dynamic"` (static string only; a NODE_ENV ternary is rejected by Next
+and 500s the route) and set `Cache-Control: private, no-store`. Client `regionStore`
+also uses `cache: "no-store"`. No browser fetch goes to `public/data/`.
 
 A small set of whole source documents is still needed as module imports. Export rebuilds only the
 documents something imports through `#shard/*` (plus a few path-loaded map seeds) into

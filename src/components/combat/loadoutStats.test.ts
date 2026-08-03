@@ -1110,5 +1110,235 @@ describe("loadoutStats", () => {
       expect(expired.league.maximumLife).toBe(9_900);
       expect(expired.league.powerburstUntilTick).toBe(0);
     });
+    it("defaults current life from currentHealthPercent (50%) when absolute is null", () => {
+      const stats = loadoutStats({
+        ...base,
+        currentLife: null,
+        currentHealthPercent: 50,
+      });
+      expect(stats.life.currentLife).toBe(Math.floor(stats.life.temporaryMaxLife * 0.5));
+    });
+
+    it("wires Berserker's Fury into globalModifiers at 50% health", () => {
+      const off = loadoutStats({
+        ...base,
+        currentLife: null,
+        currentHealthPercent: 50,
+        buffs: { ...base.buffs, berserkersFury: false },
+      });
+      expect(off.berserkersFury.active).toBe(false);
+      expect(off.globalModifiers.some((m) => m.id === "relic:berserkers_fury")).toBe(false);
+
+      const on = loadoutStats({
+        ...base,
+        currentLife: null,
+        currentHealthPercent: 50,
+        buffs: { ...base.buffs, berserkersFury: true },
+      });
+      expect(on.berserkersFury.active).toBe(true);
+      expect(on.berserkersFury.bonus).toBe(0.03);
+      const mod = on.globalModifiers.find((m) => m.id === "relic:berserkers_fury");
+      expect(mod).toBeDefined();
+      expect(mod!.stage).toBe("roll");
+      expect(mod!.apply({ damage: 1000 }, { style: "melee" }).damage).toBe(1030);
+      expect(mod!.applies({ style: "melee", dotKind: "bleed" })).toBe(false);
+    });
+
+    it("Berserker's Fury is 0 at full health and maxes near 0 LP", () => {
+      const full = loadoutStats({
+        ...base,
+        currentLife: null,
+        currentHealthPercent: 100,
+        buffs: { ...base.buffs, berserkersFury: true },
+      });
+      expect(full.berserkersFury.bonus).toBe(0);
+      expect(full.globalModifiers.some((m) => m.id === "relic:berserkers_fury")).toBe(false);
+
+      const low = loadoutStats({
+        ...base,
+        currentLife: 1,
+        currentHealthPercent: 0,
+        buffs: { ...base.buffs, berserkersFury: true },
+      });
+      expect(low.berserkersFury.bonus).toBe(0.055);
+    });
+
+    it("Berserker's Fury bonus is ratio-stable under Powerburst at 50%", () => {
+      const now = 50_000;
+      const without = loadoutStats({
+        ...base,
+        currentLife: null,
+        currentHealthPercent: 50,
+        buffs: { ...base.buffs, berserkersFury: true },
+      });
+      const withPb = loadoutStats(
+        {
+          ...base,
+          currentLife: null,
+          currentHealthPercent: 50,
+          buffs: {
+            ...base.buffs,
+            berserkersFury: true,
+            powerburstOfVitalityUntil: now + 6000,
+          },
+        },
+        { now },
+      );
+      expect(withPb.life.powerburstActive).toBe(true);
+      expect(withPb.life.temporaryMaxLife).toBe(without.life.temporaryMaxLife * 2);
+      expect(withPb.berserkersFury.bonus).toBe(without.berserkersFury.bonus);
+      expect(withPb.berserkersFury.bonus).toBe(0.03);
+    });
+
+    it("Berserker's Fury is 0 while overhealed above temporary max", () => {
+      const stats = loadoutStats({
+        ...base,
+        currentLife: 12_000,
+        currentHealthPercent: 100,
+        buffs: {
+          ...base.buffs,
+          berserkersFury: true,
+          overheal: "soup-line",
+        },
+      });
+      expect(stats.life.currentLife).toBeGreaterThan(stats.life.temporaryMaxLife);
+      expect(stats.berserkersFury.bonus).toBe(0);
+      expect(stats.globalModifiers.some((m) => m.id === "relic:berserkers_fury")).toBe(false);
+    });
+  });
+
+  describe("Archaeology relics via archaeology.selectedIds", () => {
+    it("heightened_senses raises maxAdrenaline to 110", () => {
+      const off = loadoutStats({
+        ...base,
+        archaeology: { selectedIds: [], energyCap: 500 },
+        buffs: { ...base.buffs, heightenedSenses: false },
+      });
+      expect(off.maxAdrenaline).toBe(100);
+      expect(off.adrenaline?.maxAdrenalineBonus).toBeUndefined();
+
+      const on = loadoutStats({
+        ...base,
+        archaeology: { selectedIds: ["heightened_senses"], energyCap: 500 },
+        buffs: { ...base.buffs, heightenedSenses: false },
+      });
+      expect(on.maxAdrenaline).toBe(110);
+      expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
+    });
+
+    it("fury_of_the_small sets adrenaline.basicAdrenalineFlatBonus", () => {
+      const off = loadoutStats({
+        ...base,
+        archaeology: { selectedIds: [], energyCap: 500 },
+        buffs: { ...base.buffs, furyOfTheSmall: false },
+      });
+      expect(off.adrenaline?.basicAdrenalineFlatBonus).toBeUndefined();
+
+      const on = loadoutStats({
+        ...base,
+        archaeology: { selectedIds: ["fury_of_the_small"], energyCap: 500 },
+        buffs: { ...base.buffs, furyOfTheSmall: false },
+      });
+      expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+    });
+
+    it("conservation_of_energy sets adrenaline.ultimateAdrenalineRefund", () => {
+      const off = loadoutStats({
+        ...base,
+        archaeology: { selectedIds: [], energyCap: 500 },
+        buffs: { ...base.buffs, conservationOfEnergy: false },
+      });
+      expect(off.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+
+      const on = loadoutStats({
+        ...base,
+        archaeology: { selectedIds: ["conservation_of_energy"], energyCap: 500 },
+        buffs: { ...base.buffs, conservationOfEnergy: false },
+      });
+      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+    });
+
+    it("berserkers_fury via selectedIds wires the roll modifier at 50% health", () => {
+      const on = loadoutStats({
+        ...base,
+        currentLife: null,
+        currentHealthPercent: 50,
+        archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+        buffs: { ...base.buffs, berserkersFury: false },
+      });
+      expect(on.berserkersFury.active).toBe(true);
+      expect(on.berserkersFury.bonus).toBe(0.03);
+      expect(on.globalModifiers.some((m) => m.id === "relic:berserkers_fury")).toBe(true);
+    });
+
+    it("stacks Heightened Senses onto Vestments 120 cap", () => {
+      const stats = loadoutStats({
+        ...base,
+        startingAdrenaline: 130,
+        archaeology: { selectedIds: ["heightened_senses"], energyCap: 500 },
+        buffs: { ...base.buffs, heightenedSenses: false },
+        equipmentSlots: {
+          helmet: "item:vestments-of-havoc-hood",
+          body: "item:vestments-of-havoc-robe-top",
+          legs: "item:vestments-of-havoc-robe-bottom",
+          boots: "item:vestments-of-havoc-boots",
+        },
+      });
+      expect(stats.maxAdrenaline).toBe(130);
+      expect(stats.startingAdrenaline).toBe(130);
+    });
+
+    it("activates all three adrenaline relics from selectedIds when energy not region-gated", () => {
+      const stats = loadoutStats({
+        ...base,
+        archaeology: {
+          selectedIds: [
+            "fury_of_the_small",
+            "heightened_senses",
+            "conservation_of_energy",
+          ],
+          energyCap: 650,
+        },
+        buffs: {
+          ...base.buffs,
+          furyOfTheSmall: false,
+          heightenedSenses: false,
+          conservationOfEnergy: false,
+        },
+      });
+      expect(stats.maxAdrenaline).toBe(110);
+      expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+      expect(stats.adrenaline?.maxAdrenalineBonus).toBe(10);
+      expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+    });
+    it("with unlockedRegions without Anachronia, drops over-500 energy from the end", () => {
+      // 350 + 350 + 150 = 700; cap 500; trim from end until under budget.
+      const stats = loadoutStats(
+        {
+          ...base,
+          archaeology: {
+            selectedIds: [
+              "heightened_senses",
+              "conservation_of_energy",
+              "fury_of_the_small",
+            ],
+            energyCap: 650,
+          },
+          buffs: {
+            ...base.buffs,
+            heightenedSenses: false,
+            conservationOfEnergy: false,
+            furyOfTheSmall: false,
+          },
+        },
+        { unlockedRegions: ["misthalin", "karamja", "havenhythe"] },
+      );
+      // Keeps first relic only (350); drops CoE and FotS.
+      expect(stats.maxAdrenaline).toBe(110);
+      expect(stats.adrenaline?.maxAdrenalineBonus).toBe(10);
+      expect(stats.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBeUndefined();
+    });
+
   });
 });

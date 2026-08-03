@@ -151,7 +151,10 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(doll.getByText("Empty").first()).toBeVisible();
 
   await page.getByRole("button", { name: "Arch", exact: true }).click();
-  await expect(page.getByText("No Arch combat buffs yet.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Arch", exact: true })).toBeVisible();
+  await expect(page.getByText("Berserker's Fury", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Current health")).toBeVisible();
+  await expect(page.getByText("Damage bonus")).toBeVisible();
 
   await page.getByRole("button", { name: "Invention", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();

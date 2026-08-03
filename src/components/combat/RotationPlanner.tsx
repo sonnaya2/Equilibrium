@@ -25,6 +25,7 @@ import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { useLoadout } from "./useLoadout";
+import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STORAGE_KEY = "eq:rotation:v1";
@@ -163,10 +164,11 @@ export function RotationPlanner() {
           ? {
               blessingPicks: build.blessingPicks,
               relics: Object.values(build.relics).filter(Boolean),
+              unlockedRegions: unlockedRegions(build),
             }
           : { ruleset: "base" },
       ),
-    [loadout, useBuild, build.blessingPicks, build.relics],
+    [loadout, useBuild, build],
   );
 
   const updateQueue = (next: string[]) => {

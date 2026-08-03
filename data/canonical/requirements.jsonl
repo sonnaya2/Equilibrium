@@ -1,5 +1,13 @@
+{"description":"92 Slayer to harm Airuts","entityId":"activity:content:airuts","ordinal":0}
+{"description":"Kandarin: Kuradal's Dungeon or Piscatoris Peninsula spawns","entityId":"activity:content:airuts","ordinal":1}
+{"description":"92 Slayer to harm Airuts","entityId":"activity:content:airuts-desert","ordinal":0}
+{"description":"Mazcab access (Desert) for Gielinor Mazcab Airut spawns","entityId":"activity:content:airuts-desert","ordinal":1}
 {"description":"Barbarian Outpost access (Kandarin; games necklace / Bar Crawl yard)","entityId":"activity:content:barbarian-assault","ordinal":0}
 {"description":"Captain Cain tutorial before first wave","entityId":"activity:content:barbarian-assault","ordinal":1}
+{"description":"90 Agility for the advanced course (35 for basic)","entityId":"activity:content:barbarian-outpost-agility-course","ordinal":1}
+{"description":"Bar Crawl (miniquest) for Barbarian Outpost outer yard","entityId":"activity:content:barbarian-outpost-agility-course","ordinal":0}
+{"description":"91 Firemaking for Char's training cave sessions","entityId":"activity:content:book-of-char","ordinal":1}
+{"description":"The Firemaker's Curse (quest)","entityId":"activity:content:book-of-char","ordinal":0}
 {"description":"One Piercing Note","entityId":"activity:content:citharede-abbey","ordinal":0}
 {"description":"68 Fishing for hub access","entityId":"activity:content:deep-sea-fishing-hub","kind":"skill","level":68,"ordinal":0,"skill":"Fishing"}
 {"description":"94 Fishing for Fishing Frenzy","entityId":"activity:content:deep-sea-fishing-hub","kind":"skill","level":94,"ordinal":1,"skill":"Fishing"}
@@ -12,8 +20,12 @@
 {"description":"Nightmare gauntlets (base; Freneskae Nightmares / Kandarin)","entityId":"activity:content:enhanced-nightmare-gauntlets","ordinal":0}
 {"description":"100 Woodcutting for eternal magic trees","entityId":"activity:content:eternal-magic-trees","kind":"skill","level":100,"ordinal":1,"skill":"Woodcutting"}
 {"description":"Piscatoris Hunter area access in Kandarin","entityId":"activity:content:eternal-magic-trees","ordinal":0}
+{"description":"68 Fishing for Deep Sea Fishing Hub access","entityId":"activity:content:fishing-frenzy","kind":"skill","level":68,"ordinal":0,"skill":"Fishing"}
+{"description":"94 Fishing for Fishing Frenzy (boostable)","entityId":"activity:content:fishing-frenzy","kind":"skill","level":94,"ordinal":1,"skill":"Fishing"}
 {"description":"87 Summoning","entityId":"activity:content:nihil-familiars","kind":"skill","level":87,"ordinal":1,"skill":"Summoning"}
 {"description":"Fate of the Gods","entityId":"activity:content:nihil-familiars","ordinal":0}
+{"description":"51 Slayer to enter Phoenix Lair","entityId":"activity:content:phoenix-lair","ordinal":1}
+{"description":"In Pyre Need (quest)","entityId":"activity:content:phoenix-lair","ordinal":0}
 {"description":"Pyre logs and shade remains for cremation","entityId":"activity:content:shade-keys","ordinal":1}
 {"description":"Shades of Mort'ton quest for full minigame loop","entityId":"activity:content:shade-keys","ordinal":0}
 {"description":"Legacy of Seergaze for Columbarium access","entityId":"activity:content:shiny-columbarium-key","ordinal":0}
@@ -21,6 +33,8 @@
 {"description":"Butterfly net / magic butterfly net / Tellervo's net (or 85 Hunter + 80 Agility for barehand)","entityId":"activity:content:spirit-moths-highweald-charm-supply","level":85,"ordinal":1}
 {"description":"Highweald Forest access east of Wendlewick","entityId":"activity:content:spirit-moths-highweald-charm-supply","ordinal":0}
 {"description":"Hunter 18 gold / 32 green / 49 crimson / 64 blue spirit moth tiers","entityId":"activity:content:spirit-moths-highweald-charm-supply","level":18,"ordinal":2}
+{"description":"76 Archaeology and Archaeology Guild assistant qualification (Warforge invitation)","entityId":"activity:content:thalmunds-forge","ordinal":0}
+{"description":"Into the Forge mystery (twelve goblin tribe keys) for Thalmund's Forge access","entityId":"activity:content:thalmunds-forge","ordinal":1}
 {"description":"Ancient Awakening (Ungael combat activity)","entityId":"activity:content:ungael","ordinal":0}
 {"description":"Requiem for a Dragon (Ungael ritual site; Archivist + Zorgoth's ring to use site)","entityId":"activity:content:ungael","ordinal":1}
 {"description":"69 Magic","entityId":"activity:content:vampyrism-aspect","level":69,"ordinal":0}
@@ -3364,6 +3378,7 @@
 {"description":"Achto piece order is gated (must collect earlier Achto slots across styles before later body slots)","entityId":"unlock:desert:achto-raids-armour-mazcab","ordinal":2}
 {"description":"Liberation of Mazcab raids (Beastmaster Durzag / Yakamaru)","entityId":"unlock:desert:achto-raids-armour-mazcab","ordinal":0}
 {"description":"Normal Primeval / Tempest / Teralith purchasable with teci; Achto superior is rare boss drop","entityId":"unlock:desert:achto-raids-armour-mazcab","ordinal":1}
+{"description":"92 Slayer","entityId":"unlock:desert:airuts","ordinal":0}
 {"description":"Eclipse of the Heart","entityId":"unlock:desert:amascut-the-devourer-progression","ordinal":0}
 {"description":"Pyramid Plunder piece drops in Sophanem","entityId":"unlock:desert:black-ibis-outfit","ordinal":0}
 {"description":"74 Archaeology (boostable); 2,000 chronotes and 100 monolith energy to harness","entityId":"unlock:desert:blessing-of-het-relic-eye-of-het-ii","level":74,"ordinal":2}
@@ -3842,6 +3857,7 @@
 {"description":"85 Agility to train the advanced course efficiently (boostable; 80 with summer pie)","entityId":"unlock:kandarin:agile-legs","level":85,"ordinal":1}
 {"description":"Claim from a gnome trainer after the chatbox perfect-lap milestone","entityId":"unlock:kandarin:agile-legs","ordinal":2}
 {"description":"90 Agility for advanced Barbarian Outpost course","entityId":"unlock:kandarin:agile-top","level":90,"ordinal":0}
+{"description":"92 Slayer","entityId":"unlock:kandarin:airuts","ordinal":0}
 {"description":"2,000 chronotes and 100 monolith energy to harness","entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","level":2,"ordinal":3}
 {"description":"83 Archaeology (boostable) for Warforge Into the Forge path","entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","level":83,"ordinal":0}
 {"description":"Flame gloves equipped (79 Firemaking, All Fired Up) to Activate the seed","entityId":"unlock:kandarin:always-adze-seed-of-the-charyou-tree","level":79,"ordinal":2}
@@ -3870,6 +3886,7 @@
 {"description":"Hunter levels for ticket creatures: green salamander 29, carnivorous chin 63, pawya 66, polar kebbit 70, grenwall 77","entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds","level":29,"ordinal":2}
 {"description":"Participate in Big Chinchompa D&D (twice daily; starts :30 past each hour)","entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds","level":30,"ordinal":0}
 {"description":"Quota tickets purchased from reward shop (points not coins)","entityId":"unlock:kandarin:big-chinchompa-private-hunting-grounds","ordinal":3}
+{"description":"The Firemaker's Curse (quest)","entityId":"unlock:kandarin:book-of-char","ordinal":0}
 {"description":"10+ Farming for redberry; scales through poison ivy (70) and late bushes","entityId":"unlock:kandarin:bush-patch-network-kandarin-core","level":10,"ordinal":0}
 {"description":"Optional payments to bush gardeners","entityId":"unlock:kandarin:bush-patch-network-kandarin-core","ordinal":1}
 {"description":"1,860 fishing tokens spent and 500 medals cumulative (medals retained; tokens spent)","entityId":"unlock:kandarin:champions-tackle-box","level":1,"ordinal":1}
@@ -3917,6 +3934,7 @@
 {"description":"95 Herblore and super invention base stock","entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","level":95,"ordinal":2}
 {"description":"Anachronia or Ranch/POF fungus path for reliable mycelial webbing self-supply","entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","ordinal":1}
 {"description":"Invention boost usable at any workbench (not Asgarnia-gated)","entityId":"unlock:kandarin:extreme-invention-supply-combo-guild-webbing-herblore","ordinal":0}
+{"description":"94 Fishing","entityId":"unlock:kandarin:fishing-frenzy","kind":"skill","level":94,"ordinal":0,"skill":"Fishing"}
 {"description":"140 fishing tokens per piece (560 tokens for full four-piece set) from any Fish Flingers fisherman","entityId":"unlock:kandarin:fishing-outfit-fish-flingers","level":140,"ordinal":1}
 {"description":"Fish Flingers access via Kandarin fishermen (guild / Deep Sea hub / Isla Anglerine)","entityId":"unlock:kandarin:fishing-outfit-fish-flingers","ordinal":0}
 {"description":"15 Fishing minimum to receive fish from a successful trawl","entityId":"unlock:kandarin:fishing-trawler-port-khazard","level":15,"ordinal":1}
@@ -3979,6 +3997,7 @@
 {"description":"A Fairy Tale III - Battle at Ork's Rift completed to hand spores to Fairy Queen in Zanaris","entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","ordinal":1}
 {"description":"Armadylean I collection for Lowse → King Oberon's moonshroom spores","entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","ordinal":0}
 {"description":"Queen Mab's Moonstone offered at mysterious monolith","entityId":"unlock:kandarin:pharm-ecology-queen-mabs-moonstone","ordinal":2}
+{"description":"In Pyre Need (quest)","entityId":"unlock:kandarin:phoenix-lair","ordinal":0}
 {"description":"89 Farming","entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock","level":89,"ordinal":2}
 {"description":"Plague's End / Prifddinas Crwys access to the permanent Prif spirit tree","entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock","ordinal":0}
 {"description":"Talk to Glouron next to the Prif spirit tree to unlock planting three spirit trees at once and teleport-to-Prif on the network","entityId":"unlock:kandarin:prifddinas-spirit-tree-glouron-three-tree-unlock","ordinal":3}

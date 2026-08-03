@@ -89,10 +89,11 @@ function mapBasicsByStyle(
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
-  const adrenalineCap = resolveMaximumAdrenaline(
+  const base = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,
   );
+  const adrenalineCap = base + (input.adrenaline?.maxAdrenalineBonus ?? 0);
   if (
     input.startingAdrenaline != null &&
     (!Number.isFinite(input.startingAdrenaline) ||

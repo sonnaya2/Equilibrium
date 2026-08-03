@@ -129,6 +129,7 @@ describe("normalizeLoadout", () => {
       defenceLevel: 99,
       constitutionLevel: 99,
       currentLife: null,
+      currentHealthPercent: 50,
       equipmentSlots: { mainhand: "item:seismic-wand" },
       equipmentIds: ["item:seismic-wand", "item:unlock-pin"],
       enchantments: ["agony"],
@@ -203,7 +204,12 @@ describe("normalizeLoadout", () => {
       strengthCape99: false,
       attackCape120: false,
       protectionPrayer: false,
+      berserkersFury: false,
+      furyOfTheSmall: false,
+      heightenedSenses: false,
+      conservationOfEnergy: false,
     });
+    expect(next.currentHealthPercent).toBe(50);
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);
     expect(next.perks.equilibrium).toBe(0);
@@ -213,6 +219,48 @@ describe("normalizeLoadout", () => {
     expect(next.perks.plantedFeet).toBe(0);
   });
 
+
+  it("migrates legacy berserkersFury buff into archaeology.selectedIds", () => {
+    const next = normalizeLoadout({ buffs: { berserkersFury: true } });
+    expect(next.archaeology.selectedIds).toContain("berserkers_fury");
+    expect(next.buffs.berserkersFury).toBe(true);
+  });
+
+    it("syncs full archaeology buff flags from selectedIds", () => {
+    // 350+150=500 under default 500; conservation (350) needs room of its own.
+    const withHsFotS = normalizeLoadout({
+      archaeology: {
+        energyCap: 500,
+        selectedIds: ["heightened_senses", "fury_of_the_small"],
+      },
+    });
+    expect(withHsFotS.buffs.heightenedSenses).toBe(true);
+    expect(withHsFotS.buffs.furyOfTheSmall).toBe(true);
+    expect(withHsFotS.buffs.conservationOfEnergy).toBe(false);
+    expect(withHsFotS.buffs.berserkersFury).toBe(false);
+    expect(withHsFotS.archaeology.selectedIds).toEqual([
+      "heightened_senses",
+      "fury_of_the_small",
+    ]);
+
+    // 350+150=500 under 650; HS+CoE is 700 so still illegal at extended cap.
+    const withCoE = normalizeLoadout({
+      archaeology: {
+        energyCap: 650,
+        selectedIds: ["conservation_of_energy", "fury_of_the_small"],
+      },
+    });
+    expect(withCoE.buffs.conservationOfEnergy).toBe(true);
+    expect(withCoE.buffs.furyOfTheSmall).toBe(true);
+    expect(withCoE.buffs.heightenedSenses).toBe(false);
+    expect(withCoE.archaeology.energyCap).toBe(650);
+  });
+
+
+  it("defaults archaeology to empty selection at 500 energy", () => {
+    expect(DEFAULT_LOADOUT.archaeology).toEqual({ selectedIds: [], energyCap: 500 });
+    expect(normalizeLoadout(null).archaeology).toEqual({ selectedIds: [], energyCap: 500 });
+  });
   it("preserves plantedFeet rank; migrates legacy boolean true to 1", () => {
     expect(normalizeLoadout({ perks: { plantedFeet: true } }).perks.plantedFeet).toBe(1);
     expect(normalizeLoadout({ perks: { plantedFeet: 1 } }).perks.plantedFeet).toBe(1);

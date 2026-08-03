@@ -50,5 +50,6 @@ export function solverSnapshotFromUi(stats: CalcStats, loadout: Loadout): Solver
     },
     ultimatums: loadout.perks.ultimatums ?? 0,
     lunging: loadout.perks.lunging ?? 0,
+    berserkersFuryBonus: stats.berserkersFury.active ? stats.berserkersFury.bonus : 0,
   };
 }

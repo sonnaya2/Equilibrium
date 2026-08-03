@@ -20,6 +20,12 @@ export interface AdrenalineRules {
   /** Multiplier on listed ability gains; does not affect refunds or unrelated grants. */
   abilityGainMultiplier?: number;
   basicGainMultiplier?: number;
+  /** Flat +% on adrenaline-generating basics (Fury of the Small = 1). Applied before Invigorating mult. */
+  basicAdrenalineFlatBonus?: number;
+  /** Extra max adrenaline (Heightened Senses = 10). */
+  maxAdrenalineBonus?: number;
+  /** Flat adrenaline refund after ultimate spend (Conservation of Energy = 10). Once per cast. */
+  ultimateAdrenalineRefund?: number;
   /** Impatient perk rank (1-4) - state-changing RNG, branched by the drivers. */
   impatientRank?: number;
   impatientLevel20?: boolean;

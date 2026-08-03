@@ -24,8 +24,13 @@ export interface AdrenalineRules {
   basicAdrenalineFlatBonus?: number;
   /** Extra max adrenaline (Heightened Senses = 10). */
   maxAdrenalineBonus?: number;
-  /** Flat adrenaline refund after ultimate spend (Conservation of Energy = 10). Once per cast. */
+  /** Flat adrenaline refund after ultimate spend (CoE + Ring of Vigour, 10 each). Once per cast. */
   ultimateAdrenalineRefund?: number;
+  /**
+   * Ring of Vigour active (equipped ring and/or permanent passive, already OR-resolved).
+   * Weapon specials use 90% of original adren cost for requirement and spend.
+   */
+  ringOfVigour?: boolean;
   /** Impatient perk rank (1-4) - state-changing RNG, branched by the drivers. */
   impatientRank?: number;
   impatientLevel20?: boolean;

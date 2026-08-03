@@ -403,6 +403,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     name: "Death Grasp",
     style: "necromancy",
     category: "enhanced",
+    weaponSpecial: true,
     hits: [{ band: { ...DEATH_GRASP_BAND } }],
     adrenaline: { cost: DEATH_GRASP_ADRENALINE_COST },
     cooldownSeconds: DEATH_GRASP_COOLDOWN_SECONDS,
@@ -600,6 +601,7 @@ export function deathGrasp(opts: { necrosisStacks?: number } = {}): NecromancyAb
     name: stacks > 0 ? `Death Grasp (${stacks} Necrosis)` : "Death Grasp",
     style: "necromancy",
     category: "enhanced",
+    weaponSpecial: true,
     hits: [
       {
         band: {

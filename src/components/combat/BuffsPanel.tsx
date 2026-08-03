@@ -1,6 +1,7 @@
 "use client";
 
-import { MAX_FIREMAKING_LEVEL } from "@/combat";
+import { useEffect } from "react";
+import { MAX_FIREMAKING_LEVEL, RING_OF_VIGOUR_ITEM_ID } from "@/combat";
 import { EQUIPMENT_ENCHANTMENTS, type EquipmentEnchantmentId } from "@/combat/shared/equipment";
 import type { CombatStyle } from "@/combat/types";
 import {
@@ -13,6 +14,7 @@ import {
   type BlessingPath,
   type BlessingSupportStatus,
 } from "@/league/blessings";
+import { isRegionUnlocked } from "@/league";
 import relicsData from "#shard/league/relics.json";
 import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
@@ -54,6 +56,7 @@ const LIFE_ICON = {
   totemOfVitality: "/game/upgrades/permanent-unlocks/totem-of-vitality.webp",
   powerburstOfVitality: "/game/upgrades/skilling-production/powerburst-of-vitality.webp",
 } as const;
+const RING_OF_VIGOUR_PASSIVE_ICON = "/game/upgrades/permanent-unlocks/ring-of-vigour.webp";
 
 const T7_RELIC_TIER = 7;
 type Tier7RelicChoice = { name: string; effects: readonly string[]; seat: number | null };
@@ -211,6 +214,19 @@ export function BuffsPanel({
   const t7Picked = build.relics[String(T7_RELIC_TIER)] ?? null;
   const icyenicPicked = t7Picked === ICYENIC_FAITH_RELIC;
   const tomeEquipped = loadout.equipmentSlots.pocket === TOME_OF_THE_ICYENE_ID;
+  const anachroniaUnlocked = isRegionUnlocked(build, "anachronia");
+  const ringEquipped =
+    loadout.equipmentSlots.ring === RING_OF_VIGOUR_ITEM_ID ||
+    loadout.equipmentIds.includes(RING_OF_VIGOUR_ITEM_ID);
+
+  // Region removed: clear persisted passive so it cannot re-activate without Anachronia.
+  useEffect(() => {
+    if (!anachroniaUnlocked && loadout.buffs.ringOfVigourPassive) {
+      setLoadout(withLoadoutBuffs(loadout, { ringOfVigourPassive: false }));
+    }
+    // Narrow deps: only region unlock + passive flag, not every loadout field.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anachroniaUnlocked, loadout.buffs.ringOfVigourPassive]);
 
   /** One pick per tier: sets name (replacing any other T7). Icyenic also pockets the Tome. */
   const toggleTier7Relic = (name: string) => {
@@ -380,6 +396,43 @@ export function BuffsPanel({
                 onClick={() => setBuffs({ attackCape120: !loadout.buffs.attackCape120 })}
               />
             </div>
+          </div>
+
+          <div
+            className="buff-group buff-account-unlocks"
+            role="group"
+            aria-label="Account unlocks"
+          >
+            <h3 className="buff-group__title">Account unlocks</h3>
+            <div className="icon-tile-grid">
+              <BuffTile
+                icon={RING_OF_VIGOUR_PASSIVE_ICON}
+                label="Ring of Vigour Passive"
+                effect={
+                  !anachroniaUnlocked
+                    ? "Requires Anachronia — Extinction / Warped Gem"
+                    : ringEquipped
+                      ? "Already active from equipped Ring of Vigour — effects do not stack. +10 adren after ultimates; weapon specials cost 90%."
+                      : "Anachronia — Extinction / Warped Gem. +10 adren after ultimates; weapon specials cost 90%. Does not stack with the equipped ring."
+                }
+                pressed={loadout.buffs.ringOfVigourPassive}
+                disabled={!anachroniaUnlocked}
+                onClick={() =>
+                  anachroniaUnlocked &&
+                  setBuffs({ ringOfVigourPassive: !loadout.buffs.ringOfVigourPassive })
+                }
+              />
+            </div>
+            {loadout.buffs.ringOfVigourPassive && ringEquipped ? (
+              <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-no-stack">
+                Already active from equipped Ring of Vigour — effects do not stack.
+              </p>
+            ) : null}
+            {!anachroniaUnlocked ? (
+              <p className="mt-1.5 text-[11px] text-parch-300">
+                Anachronia — Extinction / Warped Gem
+              </p>
+            ) : null}
           </div>
         </div>
 

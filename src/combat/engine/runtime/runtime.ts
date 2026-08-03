@@ -130,6 +130,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
       naturalInstinctUntilTick: input.naturalInstinctUntilTick,
       league:
         hasBlessing(input.league, "avernic-rampage") || hasBlessing(input.league, "striking-light"),
+      ringOfVigour: input.adrenaline?.ringOfVigour === true,
     }),
     casts: [],
     perAbility: {},

@@ -236,6 +236,11 @@ export interface LoadoutBuffs {
   heightenedSenses: boolean;
   /** Archaeology: Conservation of Energy (+10 adren after ultimate). */
   conservationOfEnergy: boolean;
+  /**
+   * Permanent Ring of Vigour unlock (Anachronia Extinction / Warped Gem).
+   * Effective only when Anachronia is unlocked; OR-resolves with equipped ring (no stack).
+   */
+  ringOfVigourPassive: boolean;
 }
 
 /**
@@ -425,6 +430,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     furyOfTheSmall: false,
     heightenedSenses: false,
     conservationOfEnergy: false,
+    ringOfVigourPassive: false,
   },
   archaeology: {
     selectedIds: [],
@@ -1048,6 +1054,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
+      ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
       ...archBuffs,
     },
     archaeology,

@@ -208,6 +208,7 @@ describe("normalizeLoadout", () => {
       furyOfTheSmall: false,
       heightenedSenses: false,
       conservationOfEnergy: false,
+      ringOfVigourPassive: false,
     });
     expect(next.currentHealthPercent).toBe(50);
     expect(next.equipmentSlots).toEqual({});

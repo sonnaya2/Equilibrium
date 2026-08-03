@@ -1258,6 +1258,81 @@ describe("loadoutStats", () => {
       expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
     });
 
+    it("Ring of Vigour equipment sets ultimate refund 10 and ringOfVigour flag", () => {
+      const on = loadoutStats({
+        ...base,
+        equipmentSlots: { ...base.equipmentSlots, ring: "item:ring-of-vigour" },
+      });
+      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(on.adrenaline?.ringOfVigour).toBe(true);
+      expect(on.activePassives.some((p) => p.startsWith("Ring of Vigour"))).toBe(true);
+    });
+
+    it("permanent Vigour passive with Anachronia activates once without ring", () => {
+      const on = loadoutStats(
+        {
+          ...base,
+          buffs: { ...base.buffs, ringOfVigourPassive: true },
+        },
+        { unlockedRegions: ["anachronia"] },
+      );
+      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(on.adrenaline?.ringOfVigour).toBe(true);
+    });
+
+    it("ring + passive do not stack refunds (still 10, not 20)", () => {
+      const on = loadoutStats(
+        {
+          ...base,
+          equipmentSlots: { ...base.equipmentSlots, ring: "item:ring-of-vigour" },
+          buffs: { ...base.buffs, ringOfVigourPassive: true },
+        },
+        { unlockedRegions: ["anachronia"] },
+      );
+      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(on.adrenaline?.ringOfVigour).toBe(true);
+      const vigourLines = on.activePassives.filter((p) => p.startsWith("Ring of Vigour"));
+      expect(vigourLines).toHaveLength(1);
+      expect(vigourLines[0]).toContain("Equipped ring");
+      expect(vigourLines[0]).toContain("Permanent unlock");
+    });
+
+    it("Vigour + CoE stacks to 20 ultimate refund", () => {
+      const on = loadoutStats(
+        {
+          ...base,
+          equipmentSlots: { ...base.equipmentSlots, ring: "item:ring-of-vigour" },
+          archaeology: { selectedIds: ["conservation_of_energy"], energyCap: 500 },
+          buffs: { ...base.buffs, conservationOfEnergy: false, ringOfVigourPassive: true },
+        },
+        { unlockedRegions: ["anachronia"] },
+      );
+      expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(20);
+    });
+
+    it("passive without Anachronia is inactive; ring still works", () => {
+      const passiveOnly = loadoutStats(
+        {
+          ...base,
+          buffs: { ...base.buffs, ringOfVigourPassive: true },
+        },
+        { unlockedRegions: ["misthalin", "karamja"] },
+      );
+      expect(passiveOnly.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect(passiveOnly.adrenaline?.ringOfVigour).toBeUndefined();
+
+      const ringOnly = loadoutStats(
+        {
+          ...base,
+          equipmentSlots: { ...base.equipmentSlots, ring: "item:ring-of-vigour" },
+          buffs: { ...base.buffs, ringOfVigourPassive: true },
+        },
+        { unlockedRegions: ["misthalin"] },
+      );
+      expect(ringOnly.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(ringOnly.adrenaline?.ringOfVigour).toBe(true);
+    });
+
     it("berserkers_fury via selectedIds wires the roll modifier at 50% health", () => {
       const on = loadoutStats({
         ...base,

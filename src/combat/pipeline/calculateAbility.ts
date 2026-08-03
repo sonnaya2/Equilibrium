@@ -56,6 +56,11 @@ export interface AbilitySpec {
   style: "melee" | "ranged" | "magic" | "necromancy";
   category: "basic" | "enhanced" | "ultimate" | "utility";
   hits: AbilityHit[];
+  /**
+   * Weapon special attack (including Essence of Finality stored specs).
+   * Ring of Vigour reduces requirement and spend to 90% of original cost.
+   */
+  weaponSpecial?: boolean;
   adrenaline?: { gain?: number; cost?: number };
   cooldownSeconds?: number;
   stateEffect?: StateEffectId;

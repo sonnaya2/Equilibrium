@@ -24,6 +24,7 @@ import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge
 import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
+import { resolveSpecialAttackAdrenalineCost } from "../../shared/ringOfVigour";
 import { costOf, spendOf } from "./rules";
 import { firstEligibleDirectHitIndex, hasDamagingHits, hasFuryConsumingHit } from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
@@ -299,7 +300,11 @@ export function prepareCast(
   const cost = costOf(rt.state, ability, candidate);
   let spend = spendOf(rt.state, ability, candidate, input.ammo);
   if (ability.id === "icy_tempest") {
+    // Stack reduction first; Vigour then discounts the resolved special spend.
     spend = icyTempestSpend(rt.state.melee.primordialIceStacks);
+    if (rt.state.ringOfVigour) {
+      spend = resolveSpecialAttackAdrenalineCost(spend, true);
+    }
   }
 
   return {

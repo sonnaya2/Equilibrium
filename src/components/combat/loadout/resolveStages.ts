@@ -61,6 +61,12 @@ import {
   CONSERVATION_OF_ENERGY_ID,
   CONSERVATION_OF_ENERGY_REFUND,
 } from "@/combat/shared/conservationOfEnergy";
+import {
+  formatRingOfVigourSources,
+  hasRingOfVigourEffect,
+  RING_OF_VIGOUR_REFUND,
+  ringOfVigourActiveSources,
+} from "@/combat/shared/ringOfVigour";
 import { sanitizeArchaeologyState } from "@/combat/shared/archaeologyRelics";
 import type { RegionId } from "@/league";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
@@ -832,6 +838,14 @@ export function resolveCombatRules(
     CONSERVATION_OF_ENERGY_ID,
     loadout.buffs.conservationOfEnergy,
   );
+  const ringOfVigour = hasRingOfVigourEffect({
+    equipmentIds: equipment.equipmentIds,
+    ringOfVigourPassive: loadout.buffs.ringOfVigourPassive,
+    unlockedRegions: options.unlockedRegions,
+  });
+  const ultimateAdrenalineRefund =
+    (conservationOfEnergy ? CONSERVATION_OF_ENERGY_REFUND : 0) +
+    (ringOfVigour ? RING_OF_VIGOUR_REFUND : 0);
 
   const adrenaline: AdrenalineRules = {
     abilityGainMultiplier: blessingAdrenalineGenerationMultiplier(leagueBundle.league),
@@ -845,9 +859,8 @@ export function resolveCombatRules(
     ...(heightenedSenses
       ? { maxAdrenalineBonus: HEIGHTENED_SENSES_ADRENALINE_BONUS }
       : {}),
-    ...(conservationOfEnergy
-      ? { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND }
-      : {}),
+    ...(ultimateAdrenalineRefund > 0 ? { ultimateAdrenalineRefund } : {}),
+    ...(ringOfVigour ? { ringOfVigour: true } : {}),
     // Impatient / Relentless are state-changing RNG: the rotation drivers
     // branch on them (probability-weighted), never flat expected value.
     impatientRank: loadout.perks.impatient > 0 ? loadout.perks.impatient : 0,
@@ -890,7 +903,16 @@ export function resolveCombatRules(
     maxAdrenaline,
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
     cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
-    activePassives: equippedPassiveSummaries(loadout).map(({ label }) => label),
+    activePassives: (() => {
+      const rows = equippedPassiveSummaries(loadout).map(({ label }) => label);
+      const vigourSources = ringOfVigourActiveSources({
+        equipmentIds: equipment.equipmentIds,
+        ringOfVigourPassive: loadout.buffs.ringOfVigourPassive,
+        unlockedRegions: options.unlockedRegions,
+      });
+      if (vigourSources.length > 0) rows.push(formatRingOfVigourSources(vigourSources));
+      return rows;
+    })(),
     combatContext: {
       style: loadout.style,
       ruleset: leagueBundle.league.ruleset,

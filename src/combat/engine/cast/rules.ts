@@ -4,6 +4,10 @@ import { isMeleeAbility } from "../../styles/melee/abilities";
 import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
+import {
+  isWeaponSpecialAbility,
+  resolveSpecialAttackAdrenalineCost,
+} from "../../shared/ringOfVigour";
 import type { AdrenalineRules } from "../simulation/contracts";
 import type { CastRngPointId } from "../simulation/contracts";
 import type { RotationState } from "../runtime/state";
@@ -46,8 +50,17 @@ export function costOf(state: RotationState, ability: AbilitySpec, tick: number)
       : (ability.adrenaline?.cost ?? 0);
   // Flow (Sonic Wave): a flat adrenaline-point reduction while the window is
   // open, never below zero. Defence/Constitution/specials never benefit.
-  if (listed > 0 && ability.style === "magic" && tick < state.magic.flowUntilTick) {
+  if (
+    listed > 0 &&
+    ability.style === "magic" &&
+    !isWeaponSpecialAbility(ability) &&
+    tick < state.magic.flowUntilTick
+  ) {
     listed = Math.max(0, listed - state.magic.flowReduction);
+  }
+  // Ring of Vigour: weapon special requirement is 90% of original (same as spend).
+  if (listed > 0 && isWeaponSpecialAbility(ability) && state.ringOfVigour) {
+    listed = resolveSpecialAttackAdrenalineCost(listed, true);
   }
   return listed > 0 && tick < (state.league?.avernicRampageUntilTick ?? 0) ? 0 : listed;
 }

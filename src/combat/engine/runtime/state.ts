@@ -55,6 +55,11 @@ export interface RotationState {
   tick: number;
   adrenaline: number;
   adrenalineCap: number;
+  /**
+   * Loadout-static Ring of Vigour (equipment OR permanent passive). Used by cost/spend
+   * for weapon specials; never mutated mid-sim.
+   */
+  ringOfVigour: boolean;
   /** Vestments set(2): exclusive end of the 15%-over-18s regeneration. */
   vestmentsAdrenalineUntilTick: number;
   cooldowns: CooldownState;
@@ -89,6 +94,7 @@ export function newRotationState(
     adrenalineCap?: number;
     naturalInstinctUntilTick?: number;
     league?: boolean;
+    ringOfVigour?: boolean;
   } = {},
 ): RotationState {
   const adrenalineCap = opts.adrenalineCap ?? ADRENALINE_CAP;
@@ -96,6 +102,7 @@ export function newRotationState(
     tick: 0,
     adrenaline: Math.min(adrenalineCap, opts.adrenaline ?? 0),
     adrenalineCap,
+    ringOfVigour: opts.ringOfVigour === true,
     vestmentsAdrenalineUntilTick: 0,
     cooldowns: {},
     relentlessUntilTick: 0,

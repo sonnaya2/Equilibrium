@@ -1,0 +1,265 @@
+import { describe, expect, it } from "vitest";
+import { createCastContext } from "../../simulation/simulate";
+import { baseInput } from "../../../test/fixtures/inputs";
+import { CONSERVATION_OF_ENERGY_REFUND } from "../../../shared/conservationOfEnergy";
+import { RING_OF_VIGOUR_REFUND } from "../../../shared/ringOfVigour";
+import type { AbilitySpec } from "../../../pipeline/calculateAbility";
+
+const assault = baseInput.abilities.find((a) => a.id === "assault")!;
+const berserk = baseInput.abilities.find((a) => a.id === "berserk")!;
+
+const instability: AbilitySpec = {
+  id: "instability",
+  name: "Instability",
+  style: "magic",
+  category: "enhanced",
+  weaponSpecial: true,
+  hits: [{ band: { minPct: 120, maxPct: 140 } }],
+  adrenaline: { cost: 50 },
+};
+
+const claws: AbilitySpec = {
+  id: "claws_of_guthix",
+  name: "Claws of Guthix",
+  style: "magic",
+  category: "enhanced",
+  weaponSpecial: true,
+  hits: [{ band: { minPct: 200, maxPct: 240 } }],
+  adrenaline: { cost: 25 },
+};
+
+const special30: AbilitySpec = {
+  id: "test_special_30",
+  name: "Test Special 30",
+  style: "melee",
+  category: "enhanced",
+  weaponSpecial: true,
+  hits: [{ band: { minPct: 100, maxPct: 100 } }],
+  adrenaline: { cost: 30 },
+};
+
+const special60: AbilitySpec = {
+  id: "test_special_60",
+  name: "Test Special 60",
+  style: "melee",
+  category: "enhanced",
+  weaponSpecial: true,
+  hits: [{ band: { minPct: 100, maxPct: 100 } }],
+  adrenaline: { cost: 60 },
+};
+
+describe("Ring of Vigour — ultimates", () => {
+  it("normal ultimate without Vigour leaves 0 after 100-cost from 100", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(0);
+  });
+
+  it("Vigour retains 10 after ultimate (refund path)", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: {
+        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
+        ringOfVigour: true,
+      },
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(10);
+  });
+
+  it("dual sources still refund only once (single ultimateAdrenalineRefund of 10)", () => {
+    // resolveStages sums ring+passive as one RING_OF_VIGOUR_REFUND, never 20.
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: {
+        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
+        ringOfVigour: true,
+      },
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(10);
+  });
+
+  it("cancelled / unaffordable ultimate grants nothing", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 50,
+      adrenaline: {
+        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
+        ringOfVigour: true,
+      },
+    });
+    const attempt = ctx.performCast(berserk, 0, false);
+    expect(attempt.ok).toBe(false);
+    expect(ctx.getState().adrenaline).toBe(50);
+  });
+
+  it("does not refund on non-ultimates", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: {
+        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND,
+        ringOfVigour: true,
+      },
+    });
+    expect(ctx.performCast(assault, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(75);
+  });
+});
+
+describe("Ring of Vigour + Conservation of Energy", () => {
+  it("Vigour alone leaves 10 after 100-cost ultimate", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND, ringOfVigour: true },
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(10);
+  });
+
+  it("CoE alone leaves 10 after 100-cost ultimate", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { ultimateAdrenalineRefund: CONSERVATION_OF_ENERGY_REFUND },
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(10);
+  });
+
+  it("Vigour + CoE leaves 20 (additive, not triple with dual Vigour sources)", () => {
+    const combined = RING_OF_VIGOUR_REFUND + CONSERVATION_OF_ENERGY_REFUND;
+    expect(combined).toBe(20);
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: {
+        ultimateAdrenalineRefund: combined,
+        ringOfVigour: true,
+      },
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(20);
+  });
+
+  it("respects adrenaline cap when refund would exceed it", () => {
+    const ult: AbilitySpec = {
+      id: "test_ult_cap",
+      name: "Test Ult Cap",
+      style: "melee",
+      category: "ultimate",
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+      adrenaline: { cost: 50 },
+    };
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      abilities: [...baseInput.abilities, ult],
+      adrenaline: {
+        ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND + CONSERVATION_OF_ENERGY_REFUND,
+        ringOfVigour: true,
+        relentlessRank: 5,
+      },
+    });
+    expect(ctx.performCast(ult, 0, false, { relentless: true }).ok).toBe(true);
+    // Relentless keeps 100; +20 refund clamps at cap 100.
+    expect(ctx.getState().adrenaline).toBe(100);
+  });
+});
+
+describe("Ring of Vigour — special attacks", () => {
+  it("50 base → requirement 45 and spend leaves 55 from 100", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      abilities: [...baseInput.abilities, instability],
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(ctx.costOf(instability)).toBe(45);
+    expect(ctx.performCast(instability, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(55);
+  });
+
+  it("30 base → 27; 60 base → 54", () => {
+    const ctx30 = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      abilities: [...baseInput.abilities, special30],
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(ctx30.costOf(special30)).toBe(27);
+    expect(ctx30.performCast(special30, 0, false).ok).toBe(true);
+    expect(ctx30.getState().adrenaline).toBe(73);
+
+    const ctx60 = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      abilities: [...baseInput.abilities, special60],
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(ctx60.costOf(special60)).toBe(54);
+    expect(ctx60.performCast(special60, 0, false).ok).toBe(true);
+    expect(ctx60.getState().adrenaline).toBe(46);
+  });
+
+  it("requirement and spend use the same reduced cost (cast at 45 adren)", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 45,
+      abilities: [...baseInput.abilities, instability],
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(ctx.costOf(instability)).toBe(45);
+    expect(ctx.performCast(instability, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(0);
+  });
+
+  it("without Vigour, 45 adren cannot cast a 50-cost special", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 45,
+      abilities: [...baseInput.abilities, instability],
+    });
+    expect(ctx.costOf(instability)).toBe(50);
+    expect(ctx.performCast(instability, 0, false).ok).toBe(false);
+    expect(ctx.getState().adrenaline).toBe(45);
+  });
+
+  it("EoF special (Claws of Guthix) uses the same 90% resolver", () => {
+    // 25 → 25 - floor(2.5) = 23
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      abilities: [...baseInput.abilities, claws],
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(ctx.costOf(claws)).toBe(23);
+    expect(ctx.performCast(claws, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(77);
+  });
+
+  it("does not reduce non-special ability costs", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(ctx.costOf(assault)).toBe(assault.adrenaline?.cost ?? 0);
+  });
+
+  it("does not reduce ultimate activation costs", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { ringOfVigour: true, ultimateAdrenalineRefund: RING_OF_VIGOUR_REFUND },
+    });
+    expect(ctx.costOf(berserk)).toBe(100);
+  });
+});

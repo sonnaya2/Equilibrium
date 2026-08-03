@@ -361,6 +361,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Icy Tempest",
     style: "melee",
     category: "utility",
+    weaponSpecial: true,
     area: "aoe",
     hits: [{ band: { minPct: 115, maxPct: 135 } }, { band: { minPct: 175, maxPct: 205 } }],
     adrenaline: { cost: 30 },

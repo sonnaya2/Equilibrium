@@ -1,5 +1,5 @@
 import { secondsToTicks } from "../../../core/ticks";
-import { conservationOfEnergyQualifies } from "../../../shared/conservationOfEnergy";
+import { ultimateAdrenalineRefundQualifies } from "../../../shared/conservationOfEnergy";
 import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
 import { spendDeathspore } from "../../../styles/ranged/onHit";
@@ -13,7 +13,7 @@ import { rngProc } from "../../simulation/contracts";
 /**
  * Cast adren/resources in order: listed gain + FotS flat, then mults (Meteor basic,
  * Invigorating, Adrenaline Junkie), then flat grants (Impatient +3, Jaws), then spend
- * (Relentless full refund), then CoE ultimate refund, Deathspore free-cast, Vestments.
+ * (Relentless full refund), then ultimate refund (CoE + Ring of Vigour), Deathspore, Vestments.
  * Impatient flat stays outside mults so AJ never turns +3 into +4.5. FotS +1 is inside
  * Invigorating (wiki). Impatient/Relentless are branched RNG, not EV spends.
  */
@@ -71,9 +71,9 @@ export function applyCastResources(fx: CastEffectContext): void {
     }
   }
 
-  // CoE: once per ultimate cast, even when Relentless fully refunded the spend.
+  // CoE + RoV sum: once per ultimate cast, even when Relentless fully refunded the spend.
   const ultimateRefund = input.adrenaline?.ultimateAdrenalineRefund ?? 0;
-  if (ultimateRefund > 0 && conservationOfEnergyQualifies(ability)) {
+  if (ultimateRefund > 0 && ultimateAdrenalineRefundQualifies(ability)) {
     rt.state = gainAdrenaline(rt.state, ultimateRefund);
   }
 

@@ -35,7 +35,7 @@ const routes2026 = getNew2026ComponentRoutes();
 const perkDeps2026 = getCurrent2026PerkDependencies();
 const account = getAccountComponentRoutes();
 
-/** Bottlenecks use `material` — ResearchSection titles name/component/perk only. */
+/** Bottlenecks use `material` - ResearchSection titles name/component/perk only. */
 const bottlenecks = researchRows(
   getPerkMaterialBottlenecks().map((row) => ({
     ...row,

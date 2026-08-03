@@ -1,14 +1,14 @@
 /**
  * Shared map frame budget and bloom gate.
- *
+
  * MotionDriver reads these; CameraRig / plates / markers poke them.
- * Not React state — rAF already owns the loop; a store would only add
+ * Not React state - rAF already owns the loop; a store would only add
  * re-renders on every pointer move.
  */
 
 /** Sea + idle board. e2e/map-ocean.spec counts this band. */
 export const MAP_IDLE_HZ = 30;
-/** Orbit, pan, focus lerp, unlock sweep. Capped — not free-run refresh. */
+/** Orbit, pan, focus lerp, unlock sweep. Capped - not free-run refresh. */
 export const MAP_ACTIVE_HZ = 120;
 
 /** How long after last poke we stay in the active band. */

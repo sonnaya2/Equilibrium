@@ -30,7 +30,7 @@ function setEffectText(effect: EquipmentSetEffectDef): string {
   return `${percent} damage${context}`;
 }
 
-/** Equipped set progress and thresholds — Gear owns this; it is not a buff toggle. */
+/** Equipped set progress and thresholds - Gear owns this; it is not a buff toggle. */
 export function SetEffectsList({ loadout }: { loadout: Loadout }) {
   const sets = setEffectsSummary({ equipmentSlots: loadout.equipmentSlots });
 

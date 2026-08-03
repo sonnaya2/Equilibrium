@@ -3,25 +3,12 @@ import type { BlessingChoice } from "../../league/blessings";
 import { isNonNegativeFinite, isPositiveFinite } from "../shared/domainValidators";
 
 /**
- * Barkscales is the one revealed blessing whose damage is driven by incoming
- * combat: "Incoming damage is reduced by 10% of your armour value. After
- * Barkscales reduces damage 5 times, unleash a Grasp of Guthix at your
- * attacker's location, which deals poison damage equal to 80-120% of your
- * ability damage in a 3x3 area."
- *
- * An outgoing rotation has no enemy attack timeline, so the trigger rate is not
- * derivable from anything the calculator already knows. Rather than a boss
- * simulator, the model takes one bounded scenario — how often a qualifying
- * incoming hit lands — and reports the counter arithmetic that follows from it.
- * With no scenario the result is explicitly unavailable and names the inputs it
- * is missing; it is never a calculated zero.
- *
- * Provisional until incoming combat can be tested: which incoming events
- * advance the counter (a hit fully absorbed by the reduction, a blocked hit, or
- * several hits landing on one tick), whether the counter resets to zero or
- * carries overflow, and whether every tile of the 3x3 takes a separate hit.
- * The model exposes the counter so those questions stay visible rather than
- * being buried in an averaged damage figure.
+ * Barkscales: reduce incoming by 10% of armour value; after 5 reductions, Grasp of
+ * Guthix deals 80-120% ability damage poison in 3x3.
+ * https://runescape.wiki/w/Barkscales
+ * Outgoing rotations have no attack timeline: needs a scenario (incoming-hit interval).
+ * Without one, result is unavailable (not a calculated 0). Provisional: which hits
+ * advance the counter, reset vs overflow, per-tile 3x3 hits.
  */
 export const BARKSCALES_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -31,10 +18,7 @@ export const BARKSCALES_SOURCE: SourceReference = {
 };
 
 export interface BarkscalesScenario {
-  /**
-   * Seconds between incoming hits that are big enough for the reduction to
-   * apply. Absent or non-positive means no scenario has been stated.
-   */
+  /** Seconds between qualifying incoming hits. Absent/non-positive = no scenario. */
   incomingHitIntervalSeconds?: number;
   /** Tiles of the 3x3 that actually contain a target; 1 for a lone single-tile enemy. */
   targetsStruck?: number;
@@ -44,7 +28,7 @@ export interface BarkscalesScenario {
 
 export type BarkscalesSupport = "scenario-dependent" | "modeled";
 
-/** Why trigger/damage figures are withheld — never encode that as a calculated 0. */
+/** Why trigger/damage figures are withheld - never encode that as a calculated 0. */
 export type BarkscalesUnavailability =
   "no-scenario" | "invalid-interval" | "invalid-duration" | "poison-immune" | "zero-targets";
 
@@ -63,7 +47,7 @@ export interface BarkscalesOutcome extends BarkscalesReduction {
   missingInputs: readonly string[];
   /** Qualifying incoming hits over the window, or null when unavailable. */
   qualifyingHits: number | null;
-  /** Grasp triggers over the window, or null when unavailable — never a fake zero. */
+  /** Grasp triggers over the window, or null when unavailable. */
   triggers: number | null;
   /** Reductions banked toward the next trigger at the end of the window. */
   counterRemainder: number | null;
@@ -77,10 +61,7 @@ export interface BarkscalesOutcome extends BarkscalesReduction {
 
 export const BARKSCALES_HITS_PER_TRIGGER = 5;
 
-/**
- * User-facing Grasp / scenario note. Never presents unavailable damage as a
- * calculated zero: missing inputs and poison/zero-target states name the gap.
- */
+/** User-facing Grasp / scenario note; gaps named, never encode unavailability as 0. */
 export function barkscalesGraspNote(outcome: BarkscalesOutcome): string {
   if (outcome.support === "scenario-dependent" || outcome.unavailability === "no-scenario") {
     const need =
@@ -126,9 +107,8 @@ function unavailable(
 }
 
 /**
- * Resolve Barkscales for one bounded incoming scenario. `armour` is the
- * player's total Armour stat, never the block armour rating: the card says
- * "10% of your armour value".
+ * Resolve Barkscales for one incoming scenario.
+ * `armour` is total Armour stat (card: "10% of your armour value"), not block rating.
  */
 export function barkscalesOutcome(
   rule: BlessingChoice["combat"] | undefined,
@@ -176,8 +156,7 @@ export function barkscalesOutcome(
     ...base,
     qualifyingHits,
     triggers: Math.floor(qualifyingHits / hitsPerTrigger),
-    // The counter is provisionally read as resetting to zero, so the remainder
-    // is what has been banked since the last trigger rather than an overflow.
+    // Provisional: counter resets to 0; remainder is banked since last trigger, not overflow.
     counterRemainder: qualifyingHits % hitsPerTrigger,
     secondsPerTrigger: interval * hitsPerTrigger,
     targetsStruck,

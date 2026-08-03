@@ -3,10 +3,10 @@ import { NO_DAMAGE, packageCritical, type EventResolution } from "./types";
 
 /**
  * Resolve a derived hit (Bloat tail, Death Skulls bounce): a fraction of the
- * source hit's RESOLVED damage — crit boost included, never re-modified, never
+ * source hit's RESOLVED damage - crit boost included, never re-modified, never
  * crit itself (wiki Bloat / Death Skulls, verified 2026-07-31). min/max span
  * the source's non-crit min to its crit max; expected is the source's fraction.
- *
+
  * The source is addressed by its event seq, so provenance survives branching:
  * a cloned runtime resolves the tail against its own copy of the source detail.
  */

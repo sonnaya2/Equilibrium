@@ -1,6 +1,6 @@
 /**
  * Bloodlust: the post-modernisation melee resource. Basics build it; several adrenaline
- * abilities scale from or consume it. Modelled as state — never a flat multiplier.
+ * abilities scale from or consume it. Modelled as state - never a flat multiplier.
  */
 export const BLOODLUST_CAP = 4;
 export const BLOODLUST_CAP_BERSERK = 8;
@@ -21,7 +21,7 @@ export function bloodlustCap(state: BloodlustState): number {
   return state.berserk ? BLOODLUST_CAP_BERSERK : BLOODLUST_CAP;
 }
 
-/** Basics generate double Bloodlust during Berserk — the doubling lives here in the
+/** Basics generate double Bloodlust during Berserk - the doubling lives here in the
  *  state machine, not in each ability record. */
 export function gainBloodlust(state: BloodlustState, base: number): BloodlustState {
   const gain = state.berserk ? base * 2 : base;

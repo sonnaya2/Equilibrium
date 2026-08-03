@@ -3,11 +3,8 @@ import type { CombatModifier, SourceReference } from "../types";
 
 /**
  * Invention perks as staged modifiers / pure helpers.
- * Only effects with wiki-sourced current numbers are modelled for the damage pipeline;
- * adrenaline / duration / proc-only perks export formulas or constants for callers.
- *
- * Ability scoping happens by closure: CombatContext carries no ability identity, so
- * category- and ability-specific perks capture the cast they were built for.
+ * Wiki-sourced damage-pipeline numbers only; adrenaline/duration/proc perks export formulas.
+ * Ability-scoped perks close over the cast (CombatContext has no ability identity).
  */
 
 const VERIFIED = "2026-07-26";
@@ -22,10 +19,9 @@ function wikiPerk(title: string, page: string): SourceReference {
 }
 
 /**
- * Equilibrium perk (wiki). Rank 1 is +8% ability damage; each higher rank adds +2%
- * (R2 +10%, R3 +12%, R4 +14%). Prevents critical strikes (and 30s after unequip —
- * modelled as hard no-crit while active, not the cooldown).
- * Source: https://runescape.wiki/w/Equilibrium
+ * Equilibrium: R1 +8% ability damage, +2%/rank (R4 +14%). Blocks crits while equipped
+ * (wiki also has 30s post-unequip; model is hard no-crit while active only).
+ * https://runescape.wiki/w/Equilibrium
  */
 export function equilibriumDamageBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
@@ -53,9 +49,8 @@ export function equilibriumBlocksCrits(rank: number): boolean {
 }
 
 /**
- * Eruptive: rank 1 +0.5% ability damage; +0.5% per rank (R4 +2%).
- * Affects anything computed from the AD stat (DoTs, poison, conjures, Aftershock, Crackling).
- * Source: https://runescape.wiki/w/Eruptive
+ * Eruptive: R1 +0.5% ability damage, +0.5%/rank (R4 +2%). Applies to AD-derived damage
+ * (DoTs, poison, conjures, Aftershock, Crackling). https://runescape.wiki/w/Eruptive
  */
 export function eruptiveDamageBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
@@ -77,9 +72,8 @@ export function eruptivePerkModifier(rank: number): CombatModifier {
 }
 
 /**
- * Biting: rank 1 +2% crit chance; +2% per rank (lvl20 gear: rank 1 +2.2%, +2.2%/rank).
- * Max rank 4. Does not affect DoT abilities.
- * Source: https://runescape.wiki/w/Biting
+ * Biting: R1 +2% crit chance, +2%/rank (lvl20: +2.2%/rank). Max R4; not on DoTs.
+ * https://runescape.wiki/w/Biting
  */
 export function bitingCritChanceBonus(rank: number, level20Gear = false): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
@@ -90,10 +84,8 @@ export function bitingCritChanceBonus(rank: number, level20Gear = false): number
 }
 
 /**
- * Precise raises minimum ability damage by 1.5% of maximum damage per rank.
- * newMin = min + rank x 0.015 x max. Max rank 6.
- * Apply on the damage band before the modifier pipeline - not as a uniform mult.
- * Source: https://runescape.wiki/w/Precise
+ * Precise: newMin = min + rank x 0.015 x max. Max R6. Band-level, not a uniform mult.
+ * https://runescape.wiki/w/Precise
  */
 export function preciseMinHitAddition(maxDamage: number, rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 6) {
@@ -190,8 +182,7 @@ export function raceSlayerPerkModifier(
 
 /**
  * Ruthless: +0.5% damage per rank per kill stack, max 5 stacks, 20s (not on bleeds).
- * Max rank 3 -> 1.5%/stack -> 7.5% at 5 stacks. Caller supplies active stacks.
- * Source: https://runescape.wiki/w/Ruthless
+ * Max R3 -> 1.5%/stack -> 7.5% at 5. Caller supplies stacks. https://runescape.wiki/w/Ruthless
  */
 export function ruthlessDamageBonus(rank: number, stacks: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 3) {
@@ -214,9 +205,9 @@ export function ruthlessPerkModifier(rank: number, stacks: number): CombatModifi
 }
 
 /**
- * Genocidal: up to +4.9% damage on current Slayer task, linear in progress.
- * M = floor(5 x (1 - remaining/original) x 10) / 10 percent -> max 4.9%.
- * Does not affect bleeds/burns. Source: https://runescape.wiki/w/Genocidal
+ * Genocidal: up to +4.9% on current Slayer task.
+ * M = floor(5 x (1 - remaining/original) x 10) / 10 percent. Not on bleeds/burns.
+ * https://runescape.wiki/w/Genocidal
  */
 export function genocidalDamageBonus(remaining: number, original: number): number {
   if (!Number.isFinite(remaining) || !Number.isFinite(original) || original <= 0) {
@@ -237,9 +228,8 @@ export function cracklingDamageFraction(rank: number): number {
 export const CRACKLING_COOLDOWN_SECONDS = 60;
 
 /**
- * Aftershock: after 50_000 damage, AoE rolls 24-39.6% AD per rank in 0.4% steps.
+ * Aftershock: after 50_000 damage, AoE 24-39.6% AD per rank in 0.4% steps; max R4, min 6s.
  * https://runescape.wiki/w/Aftershock
- * Max rank 4; min 6s between procs.
  */
 export const AFTERSHOCK_DAMAGE_THRESHOLD = 50_000;
 export const AFTERSHOCK_MIN_AD_FRACTION_PER_RANK = 0.24;
@@ -276,9 +266,8 @@ export function relentlessProcChance(rank: number, level20Gear = false): number 
 export const RELENTLESS_INTERNAL_CD_SECONDS = 30;
 
 /**
- * EV adrenaline refund on a single cast with positive cost.
- * No 30s internal CD model (same honesty as Impatient EV on every basic) —
- * overstates real EV slightly when costs fire more often than once per CD.
+ * EV adrenaline refund on one cast with positive cost. No 30s internal CD model
+ * (like Impatient EV on every basic); overstates when costs fire more often than CD.
  * Rank 0 / non-positive cost => 0.
  */
 export function expectedRelentlessRefund(cost: number, rank: number, level20Gear = false): number {
@@ -291,8 +280,7 @@ export function expectedRelentlessRefund(cost: number, rank: number, level20Gear
 export const PLANTED_FEET_DURATION_MULT = 1.25;
 
 /**
- * Caroming: Ricochet +4% damage per rank per hit; Chain copies +5% + 5%/rank to secondary targets.
- * Max standard 3 / ancient 4.
+ * Caroming: Ricochet +4%/rank per hit; Chain secondary +5% + 5%/rank. Max std 3 / ancient 4.
  */
 export function caromingRicochetBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
@@ -309,8 +297,8 @@ export function caromingChainSecondaryBonus(rank: number): number {
 }
 
 /**
- * Flanking: listed stuns lose stun; +40% damage per rank vs targets not facing the player.
- * Abilities: Soul Strike, Backhand, Impact, Binding Shot. Max standard 3 / ancient 4.
+ * Flanking: listed stuns lose stun; +40%/rank vs targets not facing the player.
+ * Soul Strike, Backhand, Impact, Binding Shot. Max std 3 / ancient 4.
  */
 export function flankingDamageBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
@@ -320,11 +308,8 @@ export function flankingDamageBonus(rank: number): number {
 }
 
 /**
- * Skillcape combat perks (wiki, combat modernisation 2026).
- * - Attack master cape (120): +2% melee hit chance.
- * - Strength cape (99): Dismember deals 3 extra hits.
- * - Strength master cape (120): also +3% heal from Dismember / Slaughter / Massacre
- *   (heal not yet routed into the simulator).
+ * Skillcape combat (wiki, modernisation 2026): Attack 120 +2% melee hit chance;
+ * Strength 99 +3 Dismember hits; Strength 120 +3% bleed heal (heal not in sim yet).
  */
 export const ATTACK_CAPE_MELEE_HIT_CHANCE = 0.02;
 export const STRENGTH_CAPE_DISMEMBER_EXTRA_HITS = 3;

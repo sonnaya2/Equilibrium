@@ -1,6 +1,6 @@
 // Ingestion: data/canonical/*.jsonl -> a freshly migrated SQLite database.
 //
-// Validate, read, insert, check foreign keys, record the run — all inside one
+// Validate, read, insert, check foreign keys, record the run - all inside one
 // transaction, so a rejected record leaves no half-built database behind and
 // the error names the file, line, record key and reason.
 import { TRANSFORM_BY_NAME } from "./config.mjs";

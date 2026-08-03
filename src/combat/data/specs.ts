@@ -4,7 +4,7 @@ import type { AbilityRecord, RevolutionBarRecord } from "./records";
 
 /**
  * Turns a canonical ability record into an engine-consumable spec. Structure comes
- * only from the record's explicit fields — engine specs always take precedence over
+ * only from the record's explicit fields - engine specs always take precedence over
  * this adapter, because the engine holds the verified mechanical rules (data-sync).
  */
 
@@ -12,8 +12,8 @@ import type { AbilityRecord, RevolutionBarRecord } from "./records";
  * Record id -> engine AbilitySpec id for every calculable entry in
  * MELEE_ABILITIES / RANGED_ABILITIES / MAGIC_ABILITIES / NECROMANCY_ABILITIES
  * (plus volley factory). adaptive-strike resolves by weapon setup (see resolveBarSlot).
- *
- * Only AbilitySpec ids — never MELEE_EFFECTS / RANGED_EFFECTS / MAGIC_EFFECTS notes
+
+ * Only AbilitySpec ids - never MELEE_EFFECTS / RANGED_EFFECTS / MAGIC_EFFECTS notes
  * that are prose-only (e.g. flurry_bloodlust, ricochet_aoe).
  */
 const ENGINE_ID_BY_RECORD_ID: Record<string, string> = {
@@ -166,7 +166,7 @@ export function resolveBarSlot(
   return { name: slot.name, modelledBy: "unmodelled", spec: null };
 }
 
-/** Resolves a whole bar (all slots — UI shows keybind slots past revolutionSize). */
+/** Resolves a whole bar (all slots - UI shows keybind slots past revolutionSize). */
 export function resolveBar(
   bar: RevolutionBarRecord,
   engineSpecs: ReadonlyMap<string, AbilitySpec>,

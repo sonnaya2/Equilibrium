@@ -6,7 +6,7 @@
 
 import sanitizeHtml from "sanitize-html";
 
-/** Local constants — do not import wikiArticle (circular: wikiArticle imports this). */
+/** Local constants - do not import wikiArticle (circular: wikiArticle imports this). */
 const WIKI_HOST = "runescape.wiki";
 const WIKI_ORIGIN = `https://${WIKI_HOST}`;
 
@@ -153,7 +153,7 @@ export function sanitizeWikiHtml(dirty: string): string {
     allowedTags: [...ALLOWED_TAGS],
     allowedAttributes: ALLOWED_ATTRIBUTES,
     disallowedTagsMode: "discard",
-    // Drop everything not on the allowlist — including unknown tags.
+    // Drop everything not on the allowlist - including unknown tags.
     nonTextTags: ["script", "style", "textarea", "option", "noscript"],
     // No inline styles, no data-* event smuggling.
     allowVulnerableTags: false,
@@ -212,7 +212,7 @@ export function sanitizeWikiHtml(dirty: string): string {
   });
 }
 
-/** Policy snapshot for tests / docs — not used at runtime for decisions. */
+/** Policy snapshot for tests / docs - not used at runtime for decisions. */
 export const WIKI_HTML_SANITIZE_POLICY = {
   allowedTags: ALLOWED_TAGS,
   allowedAttributes: ALLOWED_ATTRIBUTES,

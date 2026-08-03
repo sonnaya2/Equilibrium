@@ -16,10 +16,7 @@ export interface LeagueLoadout {
   regions?: readonly string[];
 }
 
-/**
- * Product model: when Big Boned is picked, the 5% max-life outgoing rider is
- * always included (no opt-out gate). Assumptions stay visible for unverified edges.
- */
+/** Big Boned 5% max-life outgoing rider is always on when picked (no opt-out). */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
   "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as crit-eligible bonus damage attached to the parent hit",
   "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
@@ -105,7 +102,7 @@ export function blessingRule(
 }
 
 export interface AegisArmourBonus {
-  /** The total Armour stat the blessing reads — equipment Armour, never the block rating. */
+  /** The total Armour stat the blessing reads - equipment Armour, never the block rating. */
   qualifyingArmour: number;
   /** Level-derived Armour that exists only inside the block calculation, excluded here. */
   excludedBlockArmour: number;
@@ -117,19 +114,10 @@ export interface AegisArmourBonus {
 }
 
 /**
- * Teragard's Aegis: "Your base ability damage is increased by 25% of your total
- * armour value. If you are wielding a defender, it is increased by 50%. If you
- * are wielding a shield, it is increased by 75%."
- *
- * The card states three flat shares rather than a 25% term that is later
- * multiplied, so the percentage resolves first and the result rounds once —
- * floor(armour × 0.75), not floor(armour × 0.25) × 3. The two agree on every
- * multiple of four and differ by at most two damage elsewhere; the reading is
- * provisional until the live values can be read off a character.
- *
- * `armour` must supply the player's total Armour stat separately from the block
- * armour rating: Fortitude, prayer/curse Defence levels and the Defence level
- * itself raise the rating without granting any real armour to convert.
+ * Teragard's Aegis: base ability damage +25% of total armour (50% with defender,
+ * 75% with shield). Flat share then one floor: floor(armour * 0.75), not
+ * floor(armour * 0.25) * 3 (provisional until live-verified). Use equipment Armour
+ * stat only, not block rating (Fortitude/Defence level inflate rating without real armour).
  */
 export function aegisArmourBonus(
   rule: BlessingChoice["combat"] | undefined,
@@ -177,9 +165,8 @@ export function blessingAdrenalineGenerationMultiplier(
 }
 
 /**
- * Sacred Fervor: floor(defaultCooldown × multiplier). A positive base cooldown
- * cannot become zero after reduction — minimum remaining is 1 tick unless the
- * base was already 0 (or non-positive / non-finite, which clamp to 0).
+ * Sacred Fervor: floor(defaultCooldown * multiplier). Positive base floors to
+ * min 1 tick; non-positive/non-finite base clamps to 0.
  */
 export function effectiveCooldownTicks(
   ticks: number,

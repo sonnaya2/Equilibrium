@@ -15,7 +15,7 @@ export function getPlannerExpansions(): PlannerExpansionData {
   return plannerSource;
 }
 
-/** Full-section getters — ProgressionResearch and any planner consumer. */
+/** Full-section getters - ProgressionResearch and any planner consumer. */
 
 export function getCombatTrainingSpots(): CombatTrainingSpot[] {
   return plannerSource.combat_training_spots;

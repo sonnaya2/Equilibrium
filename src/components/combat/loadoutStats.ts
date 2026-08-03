@@ -77,7 +77,7 @@ export {
 } from "./loadout/resolveStages";
 
 /**
- * Pure derivation of engine inputs from a Setup loadout — single place tabs
+ * Pure derivation of engine inputs from a Setup loadout - single place tabs
  * resolve "what does this loadout mean numerically". Stages live in
  * `loadout/resolveStages.ts`; this orchestrator only assembles `CalcStats`.
  */
@@ -100,7 +100,7 @@ export interface CalcStats {
    * flat accuracy. The same value feeds the target-model Damage Potential.
    */
   accuracyRating: number;
-  /** Named sources for the setup summary dropdowns — zero rows are filtered in the UI. */
+  /** Named sources for the setup summary dropdowns - zero rows are filtered in the UI. */
   baseAbilityDamageBreakdown: readonly { label: string; value: number }[];
   equipmentDamageBreakdown: readonly { label: string; value: number }[];
   accuracyBreakdown: readonly { label: string; value: number }[];
@@ -119,7 +119,7 @@ export interface CalcStats {
   critChanceSources: readonly { label: string; value: number }[];
   /**
    * Situational crit that is modelled at land/cast time but not in the static
-   * total — Channeller's channel stacking, Champion's bleed window, etc.
+   * total - Channeller's channel stacking, Champion's bleed window, etc.
    */
   critConditionalNotes: readonly string[];
   /** Style-mismatched style-gear (e.g. Channeller's on a melee loadout). */
@@ -129,7 +129,7 @@ export interface CalcStats {
   critDamageBonus: number;
   /** Level-derived base crit damage multiplier (+50% at level 90). */
   baseCritDamage: number;
-  /** baseCritDamage plus the persistent equipment bonus — the static loadout total. */
+  /** baseCritDamage plus the persistent equipment bonus - the static loadout total. */
   totalCritDamage: number;
   /** Display-ready bonuses above a normal hit (0.5 means +50%). */
   baseCritDamageBonus: number;
@@ -164,7 +164,7 @@ export interface CalcStats {
   strengthCape99?: boolean;
   /** Attack master cape (120): +2% melee hit chance (active for melee loadouts only). */
   attackCape120?: boolean;
-  /** Precise perk rank 1–6 for sim hit bands. */
+  /** Precise perk rank 1-6 for sim hit bands. */
   preciseRank?: number;
   /**
    * First Necromancer set mult on conjure spirit basic autos (1 if set inactive).
@@ -189,7 +189,7 @@ export interface CalcStats {
 
 /**
  * Sum wiki combat Damage / Accuracy from equipped pieces (display totals).
- * Hit chance does NOT add full weapon Accuracy ratings — those mirror tier and
+ * Hit chance does NOT add full weapon Accuracy ratings - those mirror tier and
  * would double-count playerAccuracy(level, weaponTier). See nonWeaponAccuracyBonus.
  * Matching armour and jewellery damage is folded into base AD separately.
  */
@@ -199,7 +199,7 @@ export function equippedBonuses(loadout: Loadout): { damage: number; accuracy: n
 
 /**
  * Flat accuracy from non-weapon slots only (gloves, rings, amulets, cape, armour, …).
- * Mainhand / offhand / twohand Accuracy is excluded — encoded by weapon tier.
+ * Mainhand / offhand / twohand Accuracy is excluded - encoded by weapon tier.
  * Resolved through the canonical equipment aggregation.
  */
 export function nonWeaponAccuracyBonus(loadout: Loadout): number {

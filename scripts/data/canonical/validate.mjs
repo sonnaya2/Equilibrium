@@ -178,7 +178,6 @@ export function validateCanonical(root = CANONICAL_ROOT) {
   return { valid: failures.length === 0, counts, failures, records: parsed };
 }
 
-// --- parity ----------------------------------------------------------------
 
 const entityBodies = (records) => {
   const provenance = new Map(

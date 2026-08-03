@@ -6,7 +6,7 @@ import type { CastEffectContext } from "./context";
  * Effects that require the cast's occupancy to have finished. Applied after the
  * clock has advanced through the channel, so a mechanic can never be awarded to
  * a cast that is still running.
- *
+
  * Channelled Might (30 Mar 2026): completing a full Asphyxiate channel grants
  * +15% magic critical strike damage for 3.6s from the channel's end tick. The
  * simulator always completes channels; an explicit cancellation never reaches

@@ -3,7 +3,7 @@ import type { AbilityAvailabilityKind, RegionRequirementMode, UnlockType } from 
 export type AbilityAvailability = AbilityAvailabilityKind;
 export type { RegionRequirementMode };
 
-/** Minimal unlock shape — regions are plain strings so callers need not import RegionId. */
+/** Minimal unlock shape - regions are plain strings so callers need not import RegionId. */
 export type UnlockLike = {
   type?: UnlockType | (string & {});
   regions?: readonly string[];

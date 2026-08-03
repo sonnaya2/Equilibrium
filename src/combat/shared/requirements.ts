@@ -7,7 +7,7 @@ export type WeaponConfiguration =
 
 /**
  * Structured cast/palette availability for one ability under a loadout.
- * Region obtainability stays in data/availability.ts — this is cast legality.
+ * Region obtainability stays in data/availability.ts - this is cast legality.
  */
 export type AbilityCastAvailability =
   | { available: true }
@@ -77,7 +77,7 @@ export function equipmentRequirementMessage(ability: AbilitySpec): string {
 /**
  * Pure equipment-shape check shared by engine validation and ability pickers.
  *
- * Necromancy (wiki — Conjuration / Necromancy abilities):
+ * Necromancy (wiki - Conjuration / Necromancy abilities):
  * - necrotic basics/enhanced/ultimates need a siphon (main hand); they still
  *   cast with a shield or defender in the off-hand
  * - conjures need a conduit (off-hand); shield/defender dual is not enough

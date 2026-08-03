@@ -133,9 +133,9 @@ export function useRevolutionSolver({
   const [solving, setSolving] = useState(false);
   const [stopping, setStopping] = useState(false);
   const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
-  /** Completed final result only — never built from mid-run progress. */
+  /** Completed final result only - never built from mid-run progress. */
   const [solverResult, setSolverResult] = useState<SolverResultDTO | null>(null);
-  /** Cancel/error best-so-far — facts only, not a SolverResultDTO. */
+  /** Cancel/error best-so-far - facts only, not a SolverResultDTO. */
   const [stoppedPreview, setStoppedPreview] = useState<SolverStoppedPreview | null>(null);
   const [solverError, setSolverError] = useState<string | null>(null);
   const [bestPulse, setBestPulse] = useState(false);

@@ -289,7 +289,7 @@ function violationsFor(repoRel, source) {
   );
 }
 
-// Empty production allowlist is the target state — former exception paths must
+// Empty production allowlist is the target state - former exception paths must
 // be clean when scanned with an empty allowlist.
 {
   const cleanAllowlist = new Set();

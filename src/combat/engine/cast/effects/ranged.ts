@@ -11,7 +11,7 @@ import type { CastEffectContext } from "./context";
  * Immediate ranged cast-state changes: the Death's Swiftness and Shadow Imbued
  * windows, and Searing Winds' activation. Deathspore stacks, Shadow Imbued's
  * per-hit adrenaline and Rapid Fire's Searing Winds extension are landed-hit
- * effects — see resolution/landed/ranged.
+ * effects - see resolution/landed/ranged.
  */
 export function applyRangedCastEffects(fx: CastEffectContext): void {
   const { rt, ability, candidate, prepared } = fx;

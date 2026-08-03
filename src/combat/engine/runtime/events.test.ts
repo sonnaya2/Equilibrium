@@ -105,7 +105,7 @@ describe("attached damage is not a separate hit", () => {
   it("attached damage does not generate an extra Deathspore stack", () => {
     // Deathspore grants a free cast every 10 landed ranged hits. With the
     // bonus attached rather than scheduled, Galeshot + 9 attacks is 10 hits,
-    // not 19 — so exactly one free cast is available.
+    // not 19 - so exactly one free cast is available.
     const s = simulate({
       ...rangedInput,
       ammo: "deathspore",

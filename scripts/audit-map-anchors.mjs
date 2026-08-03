@@ -99,7 +99,7 @@ for (const pin of pins) {
 }
 
 /** Solid black gaps in the Wiki raster cannot host visible map pins. */
-/** Nearest, not cubic — resampling blends a disc edge back up into terrain. */
+/** Nearest, not cubic - resampling blends a disc edge back up into terrain. */
 const artwork = await sharp(RASTER_FOR_HOLES)
   .resize(SPAN_X, SPAN_Y, { kernel: "nearest" })
   .removeAlpha()

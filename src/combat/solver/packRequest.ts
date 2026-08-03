@@ -30,7 +30,7 @@ import { TIER_HORIZON_SECONDS } from "./solve";
 
 /**
  * Neutral combat-domain snapshot for solver packing.
- * Built by the UI adapter (or tests) — never imports components/CalcStats/Loadout.
+ * Built by the UI adapter (or tests) - never imports components/CalcStats/Loadout.
  */
 export interface SolverPackSnapshot {
   base: number;
@@ -175,7 +175,7 @@ function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
 
 /** Pack a structured-clone-safe solver request from a neutral combat snapshot. */
 export function packSolverRequest(input: PackSolverRequestInput): SerializableSolverRequest {
-  // Freeze once per request — never re-sample Date.now() per evaluation.
+  // Freeze once per request - never re-sample Date.now() per evaluation.
   const now = input.now ?? Date.now();
   const style = input.style;
   const tier = input.tier ?? "thorough";

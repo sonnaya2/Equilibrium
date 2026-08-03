@@ -2,7 +2,7 @@ import { MODERNISATION_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 
 /**
- * Burns are magic's damage-over-time identity. Combust: 10 hits of 27–33% every
+ * Burns are magic's damage-over-time identity. Combust: 10 hits of 27-33% every
  * 3 ticks, no movement requirement post-modernisation; Dragon Breath deals +25%
  * against combusted targets. Burn tails are crit-ineligible damage-over-time.
  */

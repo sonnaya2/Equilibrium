@@ -39,7 +39,7 @@ describe("rateLimit", () => {
     const limit = 2;
     expect(rateLimit(key, { limit, windowMs, now: 0 }).allowed).toBe(true);
     expect(rateLimit(key, { limit, windowMs, now: 100 }).allowed).toBe(true);
-    // Still inside window — blocked
+    // Still inside window - blocked
     expect(rateLimit(key, { limit, windowMs, now: 500 }).allowed).toBe(false);
     // After first hit (t=0) leaves window at t=1000; at t=1001 only hit@100 remains
     const after = rateLimit(key, { limit, windowMs, now: 1_001 });

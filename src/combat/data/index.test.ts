@@ -163,7 +163,7 @@ describe("combat data accessors", () => {
 });
 
 /**
- * BiS / ladder region pins. One contract, many rows — each row is a distinct item→region ruling.
+ * BiS / ladder region pins. One contract, many rows - each row is a distinct item→region ruling.
  * Family bulk (illuminated books, dracolich, deathwarden/dealer) is covered below as set rules.
  */
 const REGION_CONTAINS: Array<[string, string]> = [

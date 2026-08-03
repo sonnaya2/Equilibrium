@@ -40,7 +40,7 @@ function entityBodies(records) {
 // regions sits between tags and the domain tables because regions references
 // entities and tasks/quests reference regions; provenance and research follow
 // the relational core for the same reason. quarantine is last and references
-// nothing — it is kept so the ID collisions it records stay auditable.
+// nothing - it is kept so the ID collisions it records stay auditable.
 const INSERTS = [
   [
     "entities",

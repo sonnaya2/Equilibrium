@@ -1,9 +1,9 @@
 /**
  * The art gate. Exits non-zero on any failure.
- *
+
  * Replaces scripts/audit-public-game-provenance.mjs, which swallowed its own
  * errors and always exited 0, so it could never protect anything.
- *
+
  *   node scripts/assets/check.mjs [--verbose]
  */
 import { execFileSync } from "node:child_process";
@@ -41,7 +41,6 @@ async function walk(dir, acc = []) {
   return acc;
 }
 
-// --- catalog ---------------------------------------------------------------
 const catalog = await loadCatalog();
 const seenIds = new Map();
 const seenPaths = new Map();
@@ -75,7 +74,6 @@ if (existsSync(join(ROOT, "assets"))) {
   fail("stray-assets-tree", "assets/ is back; art lives in public/, provenance in asset-catalog/");
 }
 
-// --- every catalogued row points at a real file ----------------------------
 for (const row of catalog.assets) {
   if (!row.path) continue;
   if (!KNOWN_EXT.some((ext) => existsSync(join(ROOT, row.path + ext)))) {
@@ -88,7 +86,6 @@ for (const row of catalog.assets) {
   }
 }
 
-// --- the tree --------------------------------------------------------------
 const files = [];
 for (const tree of TREES) {
   for (const abs of await walk(join(ROOT, tree))) {
@@ -116,7 +113,6 @@ if (uncatalogued.length) {
   if (VERBOSE) for (const f of uncatalogued.slice(0, 40)) warn("catalog-coverage", `  ${f.path}`);
 }
 
-// --- duplicates ------------------------------------------------------------
 // One picture can legitimately sit at two URLs when two resolvers want it in
 // different places; the catalog's `alsoAt` records those. Anything else is
 // unaccounted-for duplication.
@@ -150,7 +146,6 @@ if (undeclared.length) {
 }
 if (declared.size) warn("duplicate-declared", `${declared.size} copies declared via alsoAt`);
 
-// --- delegated checks ------------------------------------------------------
 for (const [name, script] of [
   ["icon-index", "scripts/assets/build-icon-index.mjs --check"],
   ["aliases", "scripts/assets/check-aliases.mjs"],
@@ -163,7 +158,6 @@ for (const [name, script] of [
   }
 }
 
-// --- report ----------------------------------------------------------------
 console.log("ART CHECK");
 console.log(
   `  ${catalog.assets.length} provenance rows across ${SHARDS.length} shard prefixes, ${files.length} files in public/`,

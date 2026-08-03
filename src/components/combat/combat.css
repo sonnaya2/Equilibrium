@@ -22,7 +22,7 @@ body:has(.combat-screen) {
   --combat-utility: #c9a66a;
   --combat-utility-dim: #4a3a22;
 
-  /* Alignment constitution — 4/8 scale, fixed rails, CSS owns grids */
+  /* Alignment constitution - 4/8 scale, fixed rails, CSS owns grids */
   --c-u: 0.25rem;
   --c-gap: calc(var(--c-u) * 2);
   --c-gap-tight: var(--c-u);
@@ -78,7 +78,7 @@ body:has(.combat-screen) {
 
 .combat-toolbar {
   display: grid;
-  /* Title + tabs only — styles/sources slots removed with the chrome */
+  /* Title + tabs only - styles/sources slots removed with the chrome */
   grid-template-columns: auto minmax(0, 1fr);
   align-items: stretch;
   min-height: 3.55rem;
@@ -724,7 +724,7 @@ body:has(.combat-screen) {
   grid-area: life;
 }
 
-/* Nested form chrome inside a buff group — don't double-box */
+/* Nested form chrome inside a buff group - don't double-box */
 .buff-group > .loadout-fields {
   border: 0;
   background: transparent;
@@ -771,12 +771,12 @@ body:has(.combat-screen) {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* Muted, not hidden — the icon is the only label, so it stays identifiable when off. */
+  /* Muted, not hidden - the icon is the only label, so it stays identifiable when off. */
   filter: grayscale(50%);
   opacity: 0.72;
 }
 
-/* Fallback for entries with no synced wiki icon — the name is the tile. */
+/* Fallback for entries with no synced wiki icon - the name is the tile. */
 .icon-tile--text {
   padding: 0.2rem;
   color: var(--combat-muted);
@@ -1333,7 +1333,7 @@ body:has(.combat-screen) {
   font-style: normal;
 }
 
-/* :has(input:focus-visible), not :focus-within — the latter also matches the
+/* :has(input:focus-visible), not :focus-within - the latter also matches the
    focus a mouse click leaves behind, pinning tooltips open after every pick. */
 .icon-tile:has(input:focus-visible),
 .icon-tile:focus-visible {
@@ -1424,7 +1424,7 @@ body:has(.combat-screen) {
   text-underline-offset: 2px;
 }
 
-/* Mechanics mirror .build-board__tip — hover/focus reveal, never hit-testable. */
+/* Mechanics mirror .build-board__tip - hover/focus reveal, never hit-testable. */
 .icon-tip {
   position: absolute;
   bottom: calc(100% + 6px);
@@ -1747,7 +1747,7 @@ body:has(.combat-screen) {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  /* Same gap as doll — no extra padding so MH/Body/OH share column lines */
+  /* Same gap as doll - no extra padding so MH/Body/OH share column lines */
   gap: var(--c-gap-tight);
   padding: 0;
   border: 0;
@@ -1887,7 +1887,7 @@ body:has(.combat-screen) {
   color: var(--combat-muted);
 }
 
-/* Keep slot height stable — note shares the tier row instead of growing the cell */
+/* Keep slot height stable - note shares the tier row instead of growing the cell */
 .equipment-slot__note {
   grid-column: 2;
   grid-row: 3;
@@ -2061,7 +2061,7 @@ body:has(.combat-screen) {
 }
 
 .rotation-workbench {
-  /* Single scroll owner — was overflow:hidden and clipped solver results */
+  /* Single scroll owner - was overflow:hidden and clipped solver results */
   overflow: auto;
 }
 

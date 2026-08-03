@@ -1,10 +1,10 @@
 /**
  * Damage Per Level, 2026 logarithmic curve. Replaced the pre-2026 linear `2.5 * level`.
- * Source: Combat Style Modernisation (2 Mar 2026) — verify against the RuneScape Wiki before
+ * Source: Combat Style Modernisation (2 Mar 2026) - verify against the RuneScape Wiki before
  * shipping any number derived from it.
- *
+
  *   DPL(level) = 145 * 2.5 * ln(1 + 0.6 * level / 145) / ln(1.6)
- *
+
  * The 145/0.6 pairing pins the curve to the old linear value at level 145 (362.5), so it pays out
  * ahead of linear below that and converges there. Keep the literals; do not "simplify" the ratio.
  */

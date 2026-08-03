@@ -1,14 +1,7 @@
 /**
- * Resize oversized game art and convert raster files to WebP.
- *
- * Trees: public/game, public/brand - the art tree, which is also what ships.
- * Source formats: png, jpg, jpeg, gif (first frame), existing webp (re-encode if oversized)
- *
- *   node scripts/optimize-game-images.mjs [--dry-run] [--roots public/game]
- *
- * Re-encodes in place; it never renames a file or changes an extension, so no
- * reference can go stale. Converting formats is a separate, deliberate job.
- * After a real run: npm run art:index && npm run art:check
+ * Resize oversized game art and re-encode rasters to WebP in place (same basename/ext).
+ * Roots: public/game, public/brand (not public/map). After real run: art:index && art:check.
+ * Usage: node scripts/optimize-game-images.mjs [--dry-run] [--roots=public/game]
  */
 import { createReadStream } from "node:fs";
 import {
@@ -34,8 +27,7 @@ const ROOTS = (rootsArg ? rootsArg.slice("--roots=".length) : "public/game,publi
   .map((s) => s.trim())
   .filter(Boolean);
 
-// public/map is build:map output with its own optimizer; re-encoding it here
-// would fight that pipeline.
+// public/map has its own optimizer (build:map); refuse other roots.
 const offLimits = ROOTS.filter((root) => !/^public\/(game|brand)/.test(root.replace(/\\/g, "/")));
 if (offLimits.length) {
   console.error(
@@ -46,24 +38,15 @@ if (offLimits.length) {
 }
 
 const SRC_EXT = /\.(png|jpe?g|gif|webp)$/i;
-// Six parallel replaces trip file locks on machines running a sync client or
-// on-access scanner; --concurrency=1 is the escape hatch when that happens.
+// Default 6; use --concurrency=1 if sync client / AV locks files.
 const concurrencyArg = process.argv.find((a) => a.startsWith("--concurrency="));
 const CONCURRENCY = Math.max(1, Number(concurrencyArg?.slice("--concurrency=".length)) || 6);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Long-edge caps by path, relative to the tree root and forward-slashed.
- *
- * Each pattern must allow the segment at position zero: a path under
- * `--roots=public/game` arrives as `bosses/nakatra.webp`, with no leading
- * slash, so a `/bosses/` pattern silently misses and falls through to the
- * default. Anchor every rule with `(^|/)`.
- *
- * The caps themselves are set from what the app renders: no game art appears in
- * a box wider than 64px (the region plate on /map; 46px anywhere else), so 256
- * covers 3x DPI with headroom.
+ * Long-edge caps by path (forward-slash; roots-relative, often no leading slash).
+ * Anchor with `(^|/)` so `bosses/...` matches. UI max ~64px; 256 covers 3x DPI.
  */
 function maxEdge(rel) {
   const r = rel.replace(/\\/g, "/").toLowerCase();
@@ -73,14 +56,13 @@ function maxEdge(rel) {
   if (/(^|\/)(bosses|activities|upgrades|relics)\//.test(r)) return 256;
   if (/(^|\/)terrain\//.test(r)) return 2048;
   if (/(^|\/)leagues\//.test(r)) return 1024;
-  // Landing-page key art fills a 1600px aperture; 1920 covers it with headroom.
+  // Key art ~1600px aperture; 1920 headroom.
   if (/(^|\/)keyart-/.test(r)) return 1920;
   return 1024;
 }
 
 function qualityFor(edge, rel = "") {
-  // The key art is the largest contentful paint on `/` and is looked at
-  // directly, so it does not ride the icon ladder down to 78.
+  // Key art is LCP on `/`; keep quality above the icon ladder.
   if (/(^|\/)keyart-/.test(rel.replace(/\\/g, "/").toLowerCase())) return 86;
   if (edge <= 96) return 92;
   if (edge <= 256) return 88;
@@ -147,9 +129,7 @@ async function optimizeOne(absPath, treeRoot) {
   const before = statSync(absPath).size;
   const cap = maxEdge(rel);
 
-  // Read into memory rather than letting sharp open the path: sharp holds the
-  // input handle until the pipeline finishes, and on Windows that blocks the
-  // write back to the same file with EPERM/UNKNOWN.
+  // Read fully first: sharp holds the path handle and blocks in-place write on Windows.
   let input;
   let meta;
   try {
@@ -164,7 +144,7 @@ async function optimizeOne(absPath, treeRoot) {
   const edge = Math.max(w, h);
   const needsResize = edge > cap;
   const alreadyWebp = ext === ".webp";
-  // Skip tiny already-webp that fit the cap and are small on disk.
+  // Skip tiny webp already under cap.
   if (alreadyWebp && !needsResize && before < 40 * 1024) {
     return { rel, status: "skip-ok", before, after: before, w, h };
   }
@@ -194,13 +174,12 @@ async function optimizeOne(absPath, treeRoot) {
     return { rel, status: "skip-encode", error: String(err?.message || err), before, after: before };
   }
 
-  // Preserve smaller originals when no resize occurred.
+  // Keep smaller originals when no resize and re-encode gains nothing.
   if (!needsResize && alreadyWebp && buf.length >= before * 0.98) {
     return { rel, status: "skip-no-gain", before, after: before, w, h };
   }
   if (!needsResize && !alreadyWebp && buf.length > before * 1.15 && before < 12 * 1024) {
-    // Tiny PNG beat webp — still convert for one format; only bail if much worse.
-    // Prefer unified .webp for path simplicity even if a few bytes larger.
+    // Prefer unified .webp even if a tiny PNG is slightly smaller.
   }
 
   if (DRY) {
@@ -216,17 +195,11 @@ async function optimizeOne(absPath, treeRoot) {
     };
   }
 
-  // Write via temp then replace. On Windows, rename over an existing file can
-  // EPERM, and a freshly unlinked path can come back UNKNOWN/EBUSY for a beat
-  // while an indexer or sync client still holds it — so the replace is retried
-  // before it is treated as a real failure.
+  // Temp then replace; retry rename/write (Windows EPERM/EBUSY from indexer/sync).
+  // Prefer rename over unlink-first (pending-delete); fall back to truncating write.
   const tmp = `${dest}.tmp-${process.pid}-${Math.random().toString(16).slice(2)}`;
   writeFileSync(tmp, buf);
   try {
-    // rename replaces atomically where it is allowed. Do not unlink first: that
-    // leaves the path pending-delete and the retry reopens as UNKNOWN/EBUSY.
-    // Some environments refuse rename-onto-existing outright but still allow a
-    // truncating write, so fall back to that before giving up.
     let lastError;
     for (let attempt = 0; attempt < 8; attempt++) {
       if (attempt) await sleep(250 * attempt);

@@ -6,7 +6,7 @@
 
 import type { TaskRegionId } from "./index";
 
-/** Same order as src/league REGION_IDS — duplicated so client UI skips the league barrel. */
+/** Same order as src/league REGION_IDS - duplicated so client UI skips the league barrel. */
 export const TASK_LEAGUE_REGION_IDS = [
   "misthalin",
   "havenhythe",

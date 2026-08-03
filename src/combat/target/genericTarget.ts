@@ -26,9 +26,9 @@ export interface GenericTarget {
   affinity?: AffinityKind;
   /** Additive hit-chance modifiers from gear/effects, as a fraction (0.02 = +2%). */
   additiveHitChance?: number;
-  /** Bypasses the formula entirely — the documented escape hatch. */
+  /** Bypasses the formula entirely - the documented escape hatch. */
   damagePotentialOverride?: number;
-  /** Current HP fraction 0–100; drives below-threshold effects (Punish). */
+  /** Current HP fraction 0-100; drives below-threshold effects (Punish). */
   hpPercent?: number;
   /** Explicitly declared applicable weakness; never inferred from the target name. */
   hasApplicableWeakness?: boolean;
@@ -56,7 +56,7 @@ export function targetArmour(target: GenericTarget): number {
   return Math.floor((target.armour ?? 0) + accuracyCurve(target.defenceLevel));
 }
 
-/** Hit chance as a fraction 0–1. Armour of 0 with 0 Defence is a wall-less target: full connect. */
+/** Hit chance as a fraction 0-1. Armour of 0 with 0 Defence is a wall-less target: full connect. */
 export function hitChance(accuracy: number, target: GenericTarget): number {
   const armour = targetArmour(target);
   if (armour <= 0) return 1;

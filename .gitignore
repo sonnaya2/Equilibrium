@@ -54,10 +54,9 @@ certificates/
 # ---------------------------------------------------------------------------
 # AI assistants and local agent tooling
 # ---------------------------------------------------------------------------
+# AGENTS.md + CLAUDE.md are tracked (comment law / agent handoff).
 /.claude/
 /skills/
-/AGENTS.md
-/CLAUDE.md
 /.mcp.json
 /.agents/
 /.grok/

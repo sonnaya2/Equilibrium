@@ -1,11 +1,11 @@
 // localStorage-backed persistence for builds, task progress, saved rotations.
-// No backend, no accounts — v1 keeps everything client-side.
+// No backend, no accounts - v1 keeps everything client-side.
 
 /**
  * Read JSON from localStorage.
- *
+
  * When `normalize` is provided it owns all shape validation (e.g. normalizeBuild)
- * and receives the raw parse result — including primitives / null — so callers
+ * and receives the raw parse result - including primitives / null - so callers
  * that already sanitize do not double-gate. Without a normalizer, non-object
  * values (and null) fall back; arrays count as objects and pass through.
  */

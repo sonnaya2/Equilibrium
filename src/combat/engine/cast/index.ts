@@ -22,10 +22,8 @@ export type { PreparedCast } from "./prepare";
 export type CastPreparation = { ok: true; prepared: PreparedCast } | { ok: false; error: string };
 
 /**
- * Advance to the candidate tick and validate + prepare the cast there. A
- * rejection mutates nothing beyond the canonical time advance; preparation
- * itself is read-only. Drivers and the branch layer share this boundary so
- * readiness and affordability rules exist exactly once.
+ * Advance to candidate tick, then validate + prepare. Rejection only advances time;
+ * prepareCast is read-only. Shared by drivers and the branch layer.
  */
 export function prepareSimulationCast(
   rt: SimulationRuntime,
@@ -50,10 +48,8 @@ export function prepareSimulationCast(
 }
 
 /**
- * Commit one prepared cast on a runtime: schedule its damage events, apply the
- * cast-start transitions, advance through occupancy (landing the channel's due
- * hits and passive generation), apply the transitions that needed a completed
- * channel, then record the cast.
+ * Commit a prepared cast: schedule damage, cast-start effects, advance occupancy
+ * (channel hits + passive gen), completion effects, then record.
  */
 export function commitCast(
   rt: SimulationRuntime,

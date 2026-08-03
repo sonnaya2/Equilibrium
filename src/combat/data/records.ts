@@ -3,10 +3,9 @@ import type { CombatStyle, SourceReference } from "../types";
 
 /**
  * Record types for the canonical combat datasets in `data/combat/`.
- * Those JSON files are written by the sync scripts only — never hand-edited —
- * and this file is the single type contract for them. Ingestion supplies
- * candidate facts; the engine keeps the verified mechanical rules, so records
- * carry sourced facts (numbers, unlocks, provenance), never executable math.
+ * JSON there is sync-script only (never hand-edit). This file is the type contract.
+ * Ingestion supplies candidate facts; the engine keeps verified mechanical rules.
+ * Records carry sourced facts (numbers, unlocks, provenance), not executable math.
  */
 
 export type UnlockType =
@@ -24,7 +23,7 @@ export type RegionRequirementMode = "any" | "all";
 
 /** Where and how a record is obtained. `regions` names the League regions whose
  *  unlock makes it available. Empty `regions` means unknown unless `type` is
- *  `"level"` (base skill unlocks are global) — see `resolveAvailability`. */
+ *  `"level"` (base skill unlocks are global) - see `resolveAvailability`. */
 export interface UnlockInfo {
   type: UnlockType;
   requirement?: string;
@@ -57,7 +56,7 @@ export interface AbilityRecord extends CombatRecordBase {
   level: number;
   /** Per-ability adrenaline is data, never a global constant. */
   adrenaline: { kind: "gain" | "cost"; percent: number };
-  /** Absent when no sourced cooldown exists — never infer one. */
+  /** Absent when no sourced cooldown exists - never infer one. */
   cooldownTicks?: number;
   channelTicks?: number;
   hits?: number;

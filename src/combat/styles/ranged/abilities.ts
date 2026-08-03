@@ -6,10 +6,10 @@ import { MODERNISATION_WIKI } from "../../data/sources";
  * Post-modernisation ranged kit. Bands verified against ability pages on
  * 2026-07-26 (post-CSM + refinements). Multi-hit structure matches wiki hit
  * lists; single-target models assume full ricochet return (no secondary targets).
- *
+
  * Pre-CSM removals (not modelled): Tight Bindings, Dazing Shot, Demoralise,
  * Rout, Needle Strike, Fragmentation Shot, Salt the Wound, Unload, Incendiary
- * Shot. Escape is pure utility — skipped.
+ * Shot. Escape is pure utility - skipped.
  */
 export interface RangedAbilitySpec extends AbilitySpec {
   style: "ranged";
@@ -55,7 +55,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: MODERNISATION_WIKI,
   },
   {
-    // Wiki: 2 hits 45–55% each; each hit −2.4s Snipe CD (Fleeting boots 3.6s).
+    // Wiki: 2 hits 45-55% each; each hit −2.4s Snipe CD (Fleeting boots 3.6s).
     id: "piercing_shot",
     name: "Piercing Shot",
     style: "ranged",
@@ -66,7 +66,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Piercing Shot", "Piercing_Shot"),
   },
   {
-    // Wiki: 65–75% + stun 1.2s / bind 9.6s. Damage below a basic — CC utility.
+    // Wiki: 65-75% + stun 1.2s / bind 9.6s. Damage below a basic - CC utility.
     id: "binding_shot",
     name: "Binding Shot",
     style: "ranged",
@@ -77,7 +77,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Binding Shot", "Binding_Shot"),
   },
   {
-    // Wiki: 90–110% + Searing Winds 6s (10 ticks).
+    // Wiki: 90-110% + Searing Winds 6s (10 ticks).
     id: "galeshot",
     name: "Galeshot",
     style: "ranged",
@@ -89,7 +89,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Galeshot", "Galeshot"),
   },
   {
-    // Solo primary: initial 75–85 + two return hits 15–20 at +1 tick.
+    // Solo primary: initial 75-85 + two return hits 15-20 at +1 tick.
     id: "ricochet",
     name: "Ricochet",
     style: "ranged",
@@ -106,7 +106,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Ricochet", "Ricochet"),
   },
   {
-    // Solo primary: Ricochet + four more returns at 4–6% each (after the first two).
+    // Solo primary: Ricochet + four more returns at 4-6% each (after the first two).
     id: "greater_ricochet",
     name: "Greater Ricochet",
     style: "ranged",
@@ -127,7 +127,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Greater Ricochet", "Greater_Ricochet"),
   },
   {
-    // Wiki: 2 hits 135–155% each; GCD-only CD (1.8s / 3 ticks).
+    // Wiki: 2 hits 135-155% each; GCD-only CD (1.8s / 3 ticks).
     id: "snap_shot",
     name: "Snap Shot",
     style: "ranged",
@@ -138,7 +138,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Snap Shot", "Snap_Shot"),
   },
   {
-    // Wiki: channelled 1.8s then 300–360%; adrenaline 0; 60s CD.
+    // Wiki: channelled 1.8s then 300-360%; adrenaline 0; 60s CD.
     id: "snipe",
     name: "Snipe",
     style: "ranged",
@@ -149,7 +149,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Snipe", "Snipe"),
   },
   {
-    // Wiki: single 220–260% hit to target + up to 9 in 2 tiles; no ability CD (GCD only).
+    // Wiki: single 220-260% hit to target + up to 9 in 2 tiles; no ability CD (GCD only).
     id: "bombardment",
     name: "Bombardment",
     style: "ranged",
@@ -161,7 +161,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Bombardment", "Bombardment"),
   },
   {
-    // Wiki: 8 channel hits 75–85% every tick over 8 ticks; mobile; extends Searing Winds 1 tick/hit.
+    // Wiki: 8 channel hits 75-85% every tick over 8 ticks; mobile; extends Searing Winds 1 tick/hit.
     id: "rapid_fire",
     name: "Rapid Fire",
     style: "ranged",
@@ -187,7 +187,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Corruption Shot", "Corruption_Shot"),
   },
   {
-    // Wiki: 200–240% guaranteed crit; 0% adren; extends Shadow Imbued 3.6s; self-damage separate.
+    // Wiki: 200-240% guaranteed crit; 0% adren; extends Shadow Imbued 3.6s; self-damage separate.
     id: "shadow_tendrils",
     name: "Shadow Tendrils",
     style: "ranged",
@@ -211,7 +211,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Imbue: Shadows", "Imbue:_Shadows"),
   },
   {
-    // Wiki base: 4 hits 105–125% each (was DoT pre-CSM).
+    // Wiki base: 4 hits 105-125% each (was DoT pre-CSM).
     id: "deadshot",
     name: "Deadshot",
     style: "ranged",
@@ -223,7 +223,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Deadshot", "Deadshot"),
   },
   {
-    // Wiki igneous cape: 8 hits 55–75% each.
+    // Wiki igneous cape: 8 hits 55-75% each.
     id: "deadshot_igneous",
     name: "Deadshot (Igneous)",
     style: "ranged",

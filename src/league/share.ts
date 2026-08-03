@@ -1,7 +1,7 @@
 import { normalizeBuild, type BuildState } from "./index";
 
 /**
- * Share links carry the whole build in the URL hash (#b=...) — static hosting,
+ * Share links carry the whole build in the URL hash (#b=...) - static hosting,
  * no backend, and the hash never hits the server. Decoding runs through the
  * same tolerant normalizeBuild as localStorage hydration.
  */
@@ -46,7 +46,7 @@ export function buildShareUrl(state: BuildState): string {
   return `${window.location.origin}${window.location.pathname}#b=${encodeBuild(state)}`;
 }
 
-/** Read #b= without mutating the URL — ShareImport decides when to strip. */
+/** Read #b= without mutating the URL - ShareImport decides when to strip. */
 export function peekBuildFromLocation(): BuildState | null {
   if (typeof window === "undefined") return null;
   const match = /#b=([A-Za-z0-9_-]+)/.exec(window.location.hash);

@@ -20,7 +20,7 @@ import { asAlbedoTexture, asDataTexture } from "./materials/shared";
 import { mapFlags } from "./mapQuality";
 
 /**
- * Warm key from the upper left — steep enough to sculpt emboss, not a
+ * Warm key from the upper left - steep enough to sculpt emboss, not a
  * overhead wash. Water reflects this same direction.
  */
 export const KEY_DIRECTION = new THREE.Vector3(-0.55, 0.86, -0.38).normalize();

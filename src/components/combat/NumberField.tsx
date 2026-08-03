@@ -1,7 +1,7 @@
 "use client";
 
 /** Shared numeric field row for combat tabs. Number inputs yield NaN/Infinity on
- *  partial input — clamping happens at the consumer's engine boundary. */
+ *  partial input - clamping happens at the consumer's engine boundary. */
 export function NumberField({
   label,
   value,

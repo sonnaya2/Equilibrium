@@ -168,7 +168,7 @@ export interface AuthoredSeedBar {
 }
 
 /**
- * Full solve request — structured-clone safe, no React, no function closures.
+ * Full solve request - structured-clone safe, no React, no function closures.
  * Prefer loadout as SerializableRevolutionSimBase so the worker never imports UI.
  */
 export interface SerializableSolverRequest {
@@ -183,7 +183,7 @@ export interface SerializableSolverRequest {
   permittedCategories?: readonly AbilityCategory[];
   includePartial?: boolean;
   includeUnknownAvailability?: boolean;
-  /** Ownership / availability overrides — these ability ids are treated as locked out. */
+  /** Ownership / availability overrides - these ability ids are treated as locked out. */
   disabledAbilityIds?: readonly string[];
   unlockedRegions: readonly RegionId[];
   /** Final evaluation horizon in ticks. */
@@ -215,7 +215,7 @@ export interface SolverResultDTO {
   tier: SolverSearchTier;
   durationTicks: number;
   proofLabel?: ProofLabel;
-  /** Best exploratory (search-horizon) score seen — not mixed with full robust. */
+  /** Best exploratory (search-horizon) score seen - not mixed with full robust. */
   bestExploratoryScore?: number;
   /** Best full-horizon robust score seen (winner scale when finalize ran). */
   bestFullScore?: number;

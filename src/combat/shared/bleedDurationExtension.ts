@@ -6,7 +6,7 @@ import { hasPassive } from "./equipment";
  * Masterwork Spear of Annihilation (and any future same-rule passive):
  * additional eligible bleed hits = floor(base eligible bleed-hit count × 0.5).
  * Fractional remainder is discarded. Applied once to the base list only.
- *
+
  * Source: https://runescape.wiki/w/Masterwork_Spear_of_Annihilation (verified 2026-08-02).
  */
 export const MASTERWORK_SPEAR_BLEED_EXTENSION_PASSIVE = "masterwork-spear-bleed-extension" as const;
@@ -28,7 +28,7 @@ export function eligibleBleedHitCount(hits: readonly AbilityHit[]): number {
 
 /**
  * Additional hits from a 50% duration extension, floored.
- * Always computed from the base list — never from a post-extension list.
+ * Always computed from the base list - never from a post-extension list.
  */
 export function additionalBleedHitsFromExtension(baseBleedCount: number): number {
   if (!Number.isFinite(baseBleedCount) || baseBleedCount <= 0) return 0;
@@ -56,7 +56,7 @@ export function bleedCadenceTicks(bleedHits: readonly AbilityHit[]): number {
 /**
  * Pure hit-list extension for an equipped duration passive.
  * Returns a new array; never mutates `hits`. Idempotent only when fed base hits
- * — callers must not re-apply against an already-extended list.
+ * - callers must not re-apply against an already-extended list.
  */
 export function extendBleedHitList(hits: readonly AbilityHit[]): AbilityHit[] {
   const bleedHits = hits.filter(isExtendableBleedHit);

@@ -17,7 +17,7 @@ export type HexSize = keyof typeof SIZES;
 export type HexState = keyof typeof STATES;
 
 /**
- * Lattice cell classes. The hexagon is the layout grid here, not a logo — region
+ * Lattice cell classes. The hexagon is the layout grid here, not a logo - region
  * crests, relic tiers and the blessing lattice are the same shape at three
  * densities. Applied directly to a button when the cell is interactive, so the
  * cell keeps its own focus ring.

@@ -63,7 +63,7 @@ function museumToRow(row: MuseumCollectionMatrixRow): ResearchRow {
       ...required,
     ].filter(Boolean),
     confidence: row.confidence || "confirmed_wiki",
-    // Pass full source_urls through — ResearchSection links() reads the array.
+    // Pass full source_urls through - ResearchSection links() reads the array.
     source_urls: Array.isArray(row.source_urls) ? row.source_urls : undefined,
     source: row.source_urls?.[0]
       ? { source: "runescape-wiki", url: row.source_urls[0], title: row.name }

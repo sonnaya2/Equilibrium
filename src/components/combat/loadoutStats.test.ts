@@ -557,7 +557,7 @@ describe("loadoutStats", () => {
     expect(loadoutStats(defender).accuracyRating).toBeCloseTo(
       loadoutStats(dual).accuracyRating * 1.03,
     );
-    // Manual accuracy is a final Damage Potential override when no target is set —
+    // Manual accuracy is a final Damage Potential override when no target is set - 
     // defender ×1.03 does not re-scale the slider (it still multiplies accuracyRating).
     expect(loadoutStats(shield).dp).toBe(0.5);
     expect(loadoutStats(defender).dp).toBe(0.5);
@@ -649,7 +649,7 @@ describe("loadoutStats", () => {
     };
     // Wiki face totals still available for display/debug.
     expect(equippedBonuses(dual)).toEqual({ damage: 1415.5 + 707.7, accuracy: 2765 + 2765 });
-    // Setup "Equipment damage" is style bonuses only — weapons are tier-encoded.
+    // Setup "Equipment damage" is style bonuses only - weapons are tier-encoded.
     expect(loadoutStats(dual).equipment.damage).toBe(0);
     expect(equipmentStyleDamageBonus(dual)).toBe(0);
 
@@ -883,7 +883,7 @@ describe("loadoutStats", () => {
     };
     const mod = loadoutStats(offTarget).globalModifiers.find((m) => m.id === "perk:demon-slayer");
     expect(mod).toBeDefined();
-    // closed over targetMatches=false — no damage when the target is not a demon
+    // closed over targetMatches=false - no damage when the target is not a demon
     expect(mod!.applies({ style: "melee" })).toBe(false);
   });
 

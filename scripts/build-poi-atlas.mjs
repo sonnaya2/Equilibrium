@@ -1,10 +1,10 @@
 /**
  * Pack map POI icons into one atlas sheet.
- *
+
  * Uses downloaded wiki art under assets/rs3 and public/game whenever a place
- * name resolves to a file. Crests only when nothing matches — never strip a
+ * name resolves to a file. Crests only when nothing matches - never strip a
  * real icon for being a landscape.
- *
+
  *   node scripts/build-poi-atlas.mjs
  *   npm run build:map
  */
@@ -47,7 +47,7 @@ const ALIASES = {
   "armady-ls-tower": "god-wars-dungeon",
   "ourania-runecrafting-altar": "ourania-runecrafting-altar",
   "ourania-altar": "ourania-altar",
-  // Wilderness Chaos Temple surface fort — not the old underground altar plate.
+  // Wilderness Chaos Temple surface fort - not the old underground altar plate.
   "chaos-temple-wilderness": "chaos-temple-wilderness",
   "chaos-temple": "chaos-temple-wilderness",
   // Lava Maze and Wilderness Crater use their own activity plates.

@@ -57,7 +57,7 @@ const BASE: Record<SectionKey, () => Row[]> = {
   regional_unique_drops: () => researchRows(getAllRegionalUniqueDrops()),
 };
 
-// Overlay only — base unique drops come from getAllRegionalUniqueDrops.
+// Overlay only - base unique drops come from getAllRegionalUniqueDrops.
 const SUPPLEMENTS: Record<SectionKey, Row[]> = {
   combat_training_spots: [],
   runecrafting_altars: [],
@@ -76,7 +76,7 @@ const REGION_LABELS: Record<string, string> = {
   unresolved_cross_boundary: "Cross-region?",
 };
 
-/** Plain player-facing string — never a URL, never a SourceReference dump. */
+/** Plain player-facing string - never a URL, never a SourceReference dump. */
 function humanString(value: unknown): string {
   if (typeof value !== "string") return "";
   const trimmed = value.trim();
@@ -181,7 +181,7 @@ function sourceLinks(row: Row): string[] {
 
 function rowTitle(row: Row): string {
   // Prefer explicit names. Plain-string `source` is the drop-source boss label on unique-drop rows
-  // (never a SourceReference — those are objects and are filtered by humanString).
+  // (never a SourceReference - those are objects and are filtered by humanString).
   // presentInterestName only trims planner hub suffixes; icons still resolve from raw row.name.
   const raw =
     humanString(row.name) ||
@@ -282,7 +282,7 @@ function rowsFor(section: string): Row[] {
   const key = section as SectionKey;
   const base = BASE[key]();
   const rows = new Map<string, Row>();
-  // Base first, then supplements — on id collision the newer supplement wins.
+  // Base first, then supplements - on id collision the newer supplement wins.
   for (const row of base) rows.set(String(row.id || rowTitle(row)), row);
   for (const row of SUPPLEMENTS[key]) rows.set(String(row.id || rowTitle(row)), row);
   if (key === "archaeology_combat_relics") {

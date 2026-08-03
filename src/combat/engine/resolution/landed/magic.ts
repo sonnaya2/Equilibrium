@@ -45,7 +45,7 @@ export function onMagicHitLanded(
     rt.state = patchMagic(rt.state, { concCritStacks: rt.state.magic.concCritStacks + 1 });
   }
   // Sonic Wave / Greater Sonic Wave grant Flow when their hit lands (wiki: "If
-  // the ability successfully damages your opponent, Flow is gained") — the 9s
+  // the ability successfully damages your opponent, Flow is gained") - the 9s
   // window starts at the land tick; a non-landed cast grants nothing.
   if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {
     rt.state = patchMagic(rt.state, {

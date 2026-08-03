@@ -111,7 +111,7 @@ describe("Bloat derived tails", () => {
     });
     expect(s.ok).toBe(true);
     // First Bloat at tick 9 (funded by basics); its tails at 12, 15, 18 land.
-    // Revolution casts Bloat again at 18 — its initial lands, its tails are
+    // Revolution casts Bloat again at 18 - its initial lands, its tails are
     // all past the horizon and never count.
     const casts = s.casts.filter((c) => c.abilityId === "bloat");
     expect(casts[0].tick).toBe(9);
@@ -338,7 +338,7 @@ describe("damage-over-time modifier rule", () => {
       rotation: rotationOf(...Array(12).fill("attack"), "berserk", "dismember"),
     });
     expect(withBerserk.ok).toBe(true);
-    // Dismember at 39, Berserk window covers the whole bleed — ticks stay 300.
+    // Dismember at 39, Berserk window covers the whole bleed - ticks stay 300.
     for (let t = 41; t <= 55; t += 2) expect(withBerserk.damageByTick[t]).toBeCloseTo(300);
 
     const withVuln = simulate({
@@ -423,7 +423,7 @@ describe("Bloat recast overwrite", () => {
     // New set: a full fresh ten, all derived from the new initial hit.
     expect(newSet.map((e) => e.tick)).toEqual([24, 27, 30, 33, 36, 39, 42, 45, 48, 51]);
     expect(s.damageByTick[21]).toBeCloseTo(1500 + 375); // new initial + last old tail
-    expect(s.damageByTick[39]).toBeCloseTo(375); // new set only — old +39 tail is gone
+    expect(s.damageByTick[39]).toBeCloseTo(375); // new set only - old +39 tail is gone
   });
 
   it("a critical recast makes the fresh set inherit the new initial's crit", () => {

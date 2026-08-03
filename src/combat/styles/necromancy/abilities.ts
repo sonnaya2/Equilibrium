@@ -121,14 +121,14 @@ export const LIVING_DEATH_BASIC_NECROSIS = 2;
 
 /** Blood Siphon: solo primary model is the finishing hit only (wiki). */
 export const BLOOD_SIPHON_FINAL_BAND = { minPct: 117, maxPct: 143 } as const;
-/** Channel hits land on non-primary enemies only — 22–28% each, 4 hits over 5.4s. */
+/** Channel hits land on non-primary enemies only - 22-28% each, 4 hits over 5.4s. */
 export const BLOOD_SIPHON_CHANNEL_BAND = { minPct: 22, maxPct: 28 } as const;
 export const BLOOD_SIPHON_CHANNEL_HITS = 4;
 export const BLOOD_SIPHON_COOLDOWN_SECONDS = 45;
 
 /**
  * Command Skeleton Warrior: detailed hit table is 10 hits of the spirit band.
- * Tooltip summary says "2 hits" — body + hit-timing table pin 10 attacks.
+ * Tooltip summary says "2 hits" - body + hit-timing table pin 10 attacks.
  */
 export const COMMAND_SKELETON_BAND = { minPct: 22, maxPct: 28 } as const;
 export const COMMAND_SKELETON_HITS = 10;
@@ -145,7 +145,7 @@ export const COMMAND_PHANTOM_VALOUR_MULT_PER_STACK = 0.2;
 export const COMMAND_PHANTOM_COOLDOWN_SECONDS = 9;
 export const COMMAND_PHANTOM_HIT_TICK_OFFSET = 4;
 
-/** Death Grasp (Death guard special): base 405–495% + 40% AD per Necrosis stack. */
+/** Death Grasp (Death guard special): base 405-495% + 40% AD per Necrosis stack. */
 export const DEATH_GRASP_BAND = { minPct: 405, maxPct: 495 } as const;
 export const DEATH_GRASP_ADRENALINE_COST = 25;
 export const DEATH_GRASP_COOLDOWN_SECONDS = 30;
@@ -198,7 +198,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   {
     // Single-target: initial hit + 2 damaging bounces at 2-tick intervals
     // (monster → player → monster → player → monster; player hops deal nothing).
-    // Each bounce deals 100% of the resolved initial hit — crit inheritance
+    // Each bounce deals 100% of the resolved initial hit - crit inheritance
     // (wiki: "if the initial hit was a critical hit, the remaining hits will
     // also be critical hits"). Igneous variant is death_skulls_igneous.
     id: "death_skulls",
@@ -244,7 +244,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: DEATH_SKULLS_WIKI,
   },
   {
-    // Primary target only. Splash 90–110% to nearby enemies is multi-target sim territory.
+    // Primary target only. Splash 90-110% to nearby enemies is multi-target sim territory.
     id: "soul_strike",
     name: "Soul Strike",
     style: "necromancy",
@@ -284,7 +284,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   },
   {
     // Base band only. Missing-HP multiplier (1% per 1% missing, up to +100%) is a
-    // target-stage modifier — applied when targetHpPercent is provided.
+    // target-stage modifier - applied when targetHpPercent is provided.
     id: "spectral_scythe_3",
     name: "Spectral Scythe (cast 3)",
     style: "necromancy",
@@ -300,7 +300,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   {
     // Initial hit + 10 DoT tails every 3 ticks, each 25% of the RESOLVED initial
     // hit (crit boost included; the tails themselves never crit and are never
-    // re-modified — wiki Bloat, verified 2026-07-31).
+    // re-modified - wiki Bloat, verified 2026-07-31).
     id: "bloat",
     name: "Bloat",
     style: "necromancy",
@@ -331,10 +331,10 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: LIVING_DEATH_WIKI,
   },
   {
-    // Solo primary: finishing hit only. Channel 4×22–28% hits non-primaries only
+    // Solo primary: finishing hit only. Channel 4×22-28% hits non-primaries only
     // (heal + 100% of heal on the finisher is multi-target sim territory).
     // Wiki Blood Siphon: "Attack 5 times over 5.4s (9 ticks). Channelled." The
-    // single-target model keeps the 117–143% finisher only (at +9, the release
+    // single-target model keeps the 117-143% finisher only (at +9, the release
     // tick, where the canonical clock lands it before the next cast); the 9-tick
     // channel occupies the actor for its full duration either way.
     id: "blood_siphon",
@@ -350,7 +350,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: BLOOD_SIPHON_WIKI,
   },
   {
-    // Spirit damage — conjures cannot crit. Rage scales each hit at land time.
+    // Spirit damage - conjures cannot crit. Rage scales each hit at land time.
     // Wiki tick table: RAAAR at +1, the 10 hits land at +2..+11.
     id: "command_skeleton_warrior",
     name: "Command Skeleton Warrior",
@@ -398,7 +398,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: COMMAND_PHANTOM_WIKI,
   },
   {
-    // Death guard special (not a bar ability). Base 0 Necrosis — see deathGrasp().
+    // Death guard special (not a bar ability). Base 0 Necrosis - see deathGrasp().
     id: "death_grasp",
     name: "Death Grasp",
     style: "necromancy",
@@ -464,7 +464,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: CONJURE_PHANTOM_WIKI,
   },
   {
-    // Default army = skeleton + ghost + zombie (phantom opt-in via customisation — unmodelled).
+    // Default army = skeleton + ghost + zombie (phantom opt-in via customisation - unmodelled).
     id: "conjure_undead_army",
     name: "Conjure Undead Army",
     style: "necromancy",
@@ -481,8 +481,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
 ];
 
 /**
- * Volley of Souls: spends all Residual Souls, one 135–165% hit per soul.
- * Requires 2–5 souls (lantern cap). Adrenaline cost is 0% (wiki).
+ * Volley of Souls: spends all Residual Souls, one 135-165% hit per soul.
+ * Requires 2-5 souls (lantern cap). Adrenaline cost is 0% (wiki).
  */
 export function volleyOfSouls(soulCount: number): NecromancyAbilitySpec {
   if (!Number.isInteger(soulCount) || soulCount < VOLLEY_MIN_SOULS || soulCount > MAX_SOULS) {
@@ -538,7 +538,7 @@ export function fingerOfDeath(
 
 /**
  * Spectral Scythe cast 3 with missing-HP multiplier.
- * `hpFractionRemaining` is 0–1 of max LP; damage multiplies by (2 − remaining).
+ * `hpFractionRemaining` is 0-1 of max LP; damage multiplies by (2 − remaining).
  * Example: 50% remaining → 1.5× base band (wiki).
  */
 export function spectralScythe3(hpFractionRemaining: number): NecromancyAbilitySpec {
@@ -562,7 +562,7 @@ export function spectralScythe3(hpFractionRemaining: number): NecromancyAbilityS
 
 /**
  * Command Phantom Guardian with Valour stacks.
- * Damage × (1 + 0.2 × stacks); max 25 stacks → 270–330%.
+ * Damage × (1 + 0.2 × stacks); max 25 stacks → 270-330%.
  */
 export function commandPhantomGuardian(opts: { valour?: number } = {}): NecromancyAbilitySpec {
   const stacks = Math.max(0, Math.min(opts.valour ?? 0, COMMAND_PHANTOM_MAX_VALOUR));
@@ -590,7 +590,7 @@ export function commandPhantomGuardian(opts: { valour?: number } = {}): Necroman
 
 /**
  * Death Grasp special with Necrosis stacks.
- * Band = (405–495) + 40 × stacks (flat ability-damage percent per stack).
+ * Band = (405-495) + 40 × stacks (flat ability-damage percent per stack).
  */
 export function deathGrasp(opts: { necrosisStacks?: number } = {}): NecromancyAbilitySpec {
   const stacks = Math.max(0, Math.min(opts.necrosisStacks ?? 0, NECROSIS_CAP));

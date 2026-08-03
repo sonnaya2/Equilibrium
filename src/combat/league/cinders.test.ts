@@ -12,7 +12,7 @@ import { resolveLeagueRules } from "./ruleset";
  * damage. On hit: Your attacks have a 5% chance to trigger an Inferno of
  * Zamorak, which deals 100-200% ability damage to a single target."
  * (RuneScape Wiki, Equilibrium League/Blessings, verified 2026-08-02.)
- *
+
  * The "On hit" prefix is what makes the roll per landed hit rather than per
  * cast; every expected-application count below follows from that reading alone.
  */
@@ -231,7 +231,7 @@ describe("Big Boned rides every qualifying damage instance", () => {
     expect(bb?.totalDamage).toBeGreaterThan(7 * 750);
     // Rider is not self-attributed in Bonus (would double-count vs parents).
     expect(bb?.bonusDamage).toBe(0);
-    // Never classify as DoT — even when some parents are bleeds elsewhere.
+    // Never classify as DoT - even when some parents are bleeds elsewhere.
     expect(bb?.dotDamage).toBe(0);
     // Parent skill shows how much Big Boned added on its hits.
     const gr = withCrit.analysis.byEffect.find((row) => row.id === "greater_ricochet");

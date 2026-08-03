@@ -1,5 +1,5 @@
 /**
- * Focused Revolution solver smoke — cancel path only.
+ * Focused Revolution solver smoke - cancel path only.
  * Full combat E2E stays in combat.spec.ts.
  *
  * Selectors: revo-optimize, revo-bar-size, revo-solver-cancel,

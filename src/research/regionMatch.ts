@@ -2,9 +2,9 @@ import type { ResearchRegion } from "./catalog";
 
 /**
  * Which region a source row belongs to.
- *
+
  * Lives outside the component that renders it because the panels are now built
- * on the server, straight out of SQLite — the same rule has to decide what a
+ * on the server, straight out of SQLite - the same rule has to decide what a
  * region page contains and what the browser is told about it, and two copies of
  * it would drift.
  */

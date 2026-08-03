@@ -9,7 +9,7 @@ import {
 
 export type WorkerRecipe = "default" | "evolutionary" | "anneal_local";
 
-/** Tier MAX agent ceilings — Thorough 4 · Extreme 6 · Unhinged 8. */
+/** Tier MAX agent ceilings - Thorough 4 · Extreme 6 · Unhinged 8. */
 export const TIER_MAX_AGENTS: Record<SearchTier, number> = {
   thorough: 4,
   extreme: 6,
@@ -78,7 +78,7 @@ export function preferredAgentCount(tier: SearchTier, hardwareAgents?: number): 
   return Math.max(1, Math.min(tierMax, usable, SAFE_GLOBAL_AGENT_CEILING));
 }
 
-/** @deprecated alias — same as preferredAgentCount */
+/** @deprecated alias - same as preferredAgentCount */
 export function tierAgentCount(tier: SearchTier, hardwareAgents?: number): number {
   return preferredAgentCount(tier, hardwareAgents);
 }
@@ -91,7 +91,7 @@ export function recipesForTier(tier: SearchTier): readonly WorkerRecipe[] {
 }
 
 /**
- * Recipe for plan index i under a tier — spreads available recipes across agents
+ * Recipe for plan index i under a tier - spreads available recipes across agents
  * without requiring legacy blocks of 6.
  */
 export function planRecipe(agentIndex: number, tier: SearchTier): WorkerRecipe {

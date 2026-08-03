@@ -1,23 +1,13 @@
 import type { SourceReference } from "../types";
 
 /**
- * Player life-point model. Ordered composition — never a flat sum:
- *
- *   1. Constitution life      100 × level (max level 99 → 9,900; Constitution
- *                             was not raised to 120 in the 2026 modernisation)
- *   2. + equipment Life        flat per-item bonuses
- *   3. + persistent effects    Reaper Crew +200; Boon of Het 5% (cap 495);
- *                              Font of Life +500; Totem of Vitality 25% (cap 1,500)
- *   4. + temporary flat        Fortitude 10+10×level, thermal bath 3×level,
- *                              Elidinis Statuette +500
- *   5. + temporary percent     bonfire ⌈(fm+1)/2⌉×0.1% (cap 750), mutually
- *                              exclusive with Totem; both use Constitution + equipment
- *   6. League maximum          Big Boned multiplier on the composed maximum
- *   7. food overheal last      +10% / +15% of normal max, or flat brew allowances
- *
- * Powerburst of vitality doubles max and current after those layers. Abidor
- * Crank and boosted-Constitution max-LP effects are unverified and deliberately
- * not modelled.
+ * Ordered LP max (not a flat sum): Con 100×level (cap 99→9900; not raised to 120);
+ * equip Life; persistent (Reaper +200, Boon of Het 5% cap 495, Font +500, Totem 25% cap 1500);
+ * temp flat (Fortitude 10+10×lvl, bath 3×lvl, Elidinis +500); temp % (bonfire ⌈(fm+1)/2⌉×0.1%
+ * cap 750, exclusive with Totem; both on Con+equip); league max (Big Boned); overheal last
+ * (+10%/+15% normal max or brew flat). Powerburst doubles max+current after layers.
+ * Abidor Crank / boosted-Con max-LP unverified, not modelled.
+ * https://runescape.wiki/w/Life_points
  */
 export const LIFE_POINTS_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -52,8 +42,7 @@ export const MAX_FIREMAKING_LEVEL = 110;
 export const POWERBURST_DURATION_MS = 6_000;
 export const POWERBURST_COOLDOWN_MS = 120_000;
 
-/** Documented overheal classes: +10% foods (rocktail line), +15% foods
- *  (soups / giant meats), and the flat brew ceilings. One cap, largest applies. */
+/** Overheal: +10% rocktail-line, +15% soup-line, flat brew ceilings; one cap, largest applies. */
 export type OverhealKind =
   "rocktail-line" | "soup-line" | "saradomin-brew" | "super-saradomin-brew";
 
@@ -74,7 +63,7 @@ export interface LifePointInput {
   powerburstOfVitality?: boolean;
   /** Equilibrium maximum-life stage (1 when no blessing is active). */
   maximumLifeMultiplier?: number;
-  /** Defaults to the (temporary) maximum — a fully healed loadout. */
+  /** Defaults to the (temporary) maximum - a fully healed loadout. */
   currentLife?: number;
 }
 
@@ -87,11 +76,11 @@ export interface LifePointStats {
   temporaryFlatLife: number;
   bonfireLife: number;
   totemOfVitalityLife: number;
-  /** Constitution + equipment + persistent effects — the maximum without temporary buffs. */
+  /** Constitution + equipment + persistent effects - the maximum without temporary buffs. */
   normalMaxLife: number;
   /** normalMaxLife plus temporary flat and the bonfire window. */
   temporaryMaxLife: number;
-  /** temporaryMaxLife plus the overheal allowance — the ceiling current life may reach. */
+  /** temporaryMaxLife plus the overheal allowance - the ceiling current life may reach. */
   overhealCeiling: number;
   currentLife: number;
   powerburstActive: boolean;

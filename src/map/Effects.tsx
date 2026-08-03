@@ -41,7 +41,7 @@ function Effects() {
     [pipeline],
   );
 
-  // Always present — never gate this call. See file header.
+  // Always present - never gate this call. See file header.
   useFrame(() => {
     pipeline.rp.render();
   }, 1);

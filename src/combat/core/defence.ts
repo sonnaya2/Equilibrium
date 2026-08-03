@@ -3,32 +3,11 @@ import { overloadBoostedLevel, overloadLevelBoost, type OverloadTier } from "../
 import { accuracyCurve } from "../target/genericTarget";
 
 /**
- * Player Defence model (the player as the defender — distinct from GenericTarget,
- * which models the NPC being attacked).
- *
- * Two different quantities are called "armour" in RS3, and conflating them
- * silently overpays anything that reads an armour value:
- *
- *   total Armour stat     = sum of equipment Armour. The number the Loadout
- *                           screen shows under the Hero tab (wiki Armour: an
- *                           item's bonus comes from its own tier and slot, so
- *                           the player's Defence level is not part of it).
- *   block armour rating d = floor(equipment Armour + f(block level)). The hit
- *                           chance denominator, never shown to the player
- *                           (wiki Hit chance: "the sum of their armour and
- *                           armour bonus granted by their Defence level").
- *
- *   visible Defence level   = base + potion boost
- *   block-calculation level = visible + prayer block levels (effective levels that
- *                             exist only inside the block calculation)
- *   f(x) = x³/1250 + 4x + 40
- *
- * So Fortitude, prayer/curse Defence levels and the Defence level itself move
- * `blockArmourRating` and leave `totalArmour` alone. Effects that scale off the
- * player's armour value — Teragard's Aegis, Striking Light, Barkscales — read
- * `totalArmour`. Equipment Prayer bonus is never an input: it does not affect
- * Armour. Fortitude multiplies the post-potion Defence level by 1.15 inside the
- * block calculation and is incompatible with other stat-boosting curses.
+ * Player-as-defender (vs GenericTarget for NPCs).
+ * totalArmour = equipment Armour only (Loadout/Hero; no Defence level).
+ * blockArmourRating d = floor(equipmentArmour + f(blockLevel)); hit-chance denom only.
+ * f(x)=x^3/1250+4x+40; blockLevel = visible+prayer or Fortitude x1.15 (incompatible with curse Def).
+ * Armour-% effects (Teragard, Striking Light, Barkscales) read totalArmour. Wiki sources below.
  */
 export const DEFENCE_LEVEL_ARMOUR_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -37,7 +16,7 @@ export const DEFENCE_LEVEL_ARMOUR_SOURCE: SourceReference = {
   verifiedAt: "2026-08-02",
 };
 
-/** The player-facing total Armour stat: per-item, from the item's own tier and slot. */
+/** Player-facing total Armour: per-item tier/slot (wiki Armour). */
 export const ARMOUR_STAT_SOURCE: SourceReference = {
   source: "runescape-wiki",
   url: "https://runescape.wiki/w/Armour",
@@ -45,7 +24,7 @@ export const ARMOUR_STAT_SOURCE: SourceReference = {
   verifiedAt: "2026-08-02",
 };
 
-/** d = floor(armour + f(Defence level)) — the hit-chance denominator. */
+/** d = floor(armour + f(Defence level)) - the hit-chance denominator. */
 export const BLOCK_ARMOUR_RATING_SOURCE: SourceReference = {
   source: "runescape-wiki",
   url: "https://runescape.wiki/w/Hit_chance",
@@ -64,14 +43,11 @@ export const MAX_DEFENCE_LEVEL = 99;
 export const FORTITUDE_BLOCK_MULTIPLIER = 1.15;
 
 export interface DefenceInput {
-  /** Untrimmed Defence level (1–99). */
+  /** Untrimmed Defence level (1-99). */
   baseLevel: number;
   /** Active overload-family tier; overloads boost Defence like every combat stat. */
   overloadTier?: OverloadTier | null;
-  /**
-   * Effective block-calculation levels from an active prayer/curse
-   * (e.g. StyleCurseBoost.defenceLevels: +10 Turmoil line, +12 Praesul).
-   */
+  /** Prayer/curse block levels (+10 Turmoil line, +12 Praesul). */
   prayerBlockLevels?: number;
   /** Fortitude's 15% block-calculation Defence boost. */
   fortitude?: boolean;
@@ -83,22 +59,18 @@ export interface DefenceStats {
   baseLevel: number;
   /** Levels granted by the potion boost alone. */
   potionBoost: number;
-  /** Base level plus potion boost — what the stats tab shows. */
+  /** Base level plus potion boost - what the stats tab shows. */
   visibleLevel: number;
   prayerBlockLevels: number;
   fortitude: boolean;
-  /** Visible level plus prayer block levels (or Fortitude's ×1.15) — feeds f(x). */
+  /** Visible level plus prayer block levels (or Fortitude's ×1.15) - feeds f(x). */
   blockLevel: number;
   equipmentArmour: number;
-  /**
-   * The player's total Armour stat: equipment Armour alone, as the Loadout
-   * screen shows it. This is the value every "% of your armour value" effect
-   * reads, so no block-only boost may enter it.
-   */
+  /** Equipment Armour alone (Loadout); armour-% effects read this - never block-only boosts. */
   totalArmour: number;
   /** f(blockLevel), unfloored; the floor belongs to the rating. */
   blockLevelArmour: number;
-  /** floor(equipmentArmour + blockLevelArmour) — the hit-chance denominator only. */
+  /** floor(equipmentArmour + blockLevelArmour) - the hit-chance denominator only. */
   blockArmourRating: number;
 }
 

@@ -321,7 +321,7 @@ describe("golden 60s revo smoke", () => {
   }> = [
     { barId: "melee-dual-wield", style: "melee", basicId: "attack", weaves: true },
     { barId: "ranged", style: "ranged", basicId: "ranged_attack", weaves: true },
-    // With channels holding occupancy, the magic bar fills every slot — no idle GCDs.
+    // With channels holding occupancy, the magic bar fills every slot - no idle GCDs.
     { barId: "magic", style: "magic", basicId: "magic_attack", weaves: false },
     { barId: "necromancy", style: "necromancy", basicId: "necromancy_basic", weaves: true },
   ];
@@ -448,7 +448,7 @@ describe("revolution — channels and horizon", () => {
       "attack@6",
       "flurry@9",
     ]);
-    // Flurry @9 hits at 10..17: 10–12 land inside; 13 (the horizon) and later do not.
+    // Flurry @9 hits at 10..17: 10-12 land inside; 13 (the horizon) and later do not.
     expect(s.events.filter((e) => e.abilityId === "flurry").map((e) => e.tick)).toEqual([
       10, 11, 12,
     ]);

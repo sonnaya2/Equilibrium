@@ -7,19 +7,10 @@ import { applyInventionProcs } from "./procs/invention";
 import { scheduleBlessingDamage } from "./league/blessingDamage";
 
 /**
- * Record one landed event: damage ledgers, tick/ability attribution, the owning
- * cast record, the hit detail later derived hits read, and the event log
- * (provenance kept, resolve closure dropped). Recording is the only step that
- * writes to the runtime's ledgers — resolvers only calculate.
- *
- * Canonical order:
- * 1. hit-detail cache + generic ledgers / cast attribution / event log
- * 2. schedule blessing-generated damage
- * 3. apply Invention proc charge + schedule Crackling / Aftershock
- * 4. style landed-hit state transitions (against pre-hit state for this event)
- *
- * Landed-hit state transitions run last, so a hit's own damage is resolved
- * against the state that preceded it.
+ * Sole ledger-write step for a landed event (resolvers only calculate).
+ * Order: (1) hit-detail + ledgers/cast/event log (2) blessing damage (3) Invention
+ * procs / Crackling / Aftershock (4) style landed-hit transitions last, against
+ * pre-hit state so this hit's damage does not see its own side effects.
  */
 export function recordResolved(
   rt: SimulationRuntime,

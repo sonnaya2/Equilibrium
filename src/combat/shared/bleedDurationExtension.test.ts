@@ -99,7 +99,7 @@ describe("extendBleedHitList", () => {
   });
 
   it("does not re-extend an already-extended list when re-run on the result as base", () => {
-    // floor(12 * 0.5) would add 6 more if someone re-applied wrongly — callers
+    // floor(12 * 0.5) would add 6 more if someone re-applied wrongly - callers
     // must always start from the catalogue list. Document the pure-function behavior:
     const once = extendBleedHitList(byId("dismember").hits);
     expect(once).toHaveLength(12);

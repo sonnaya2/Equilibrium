@@ -50,7 +50,7 @@ export function barLengthSpan(minBarSize: number, maxBarSize: number): number {
   return hi - lo + 1;
 }
 
-/** @deprecated use barLengthSpan — kept for older imports */
+/** @deprecated use barLengthSpan - kept for older imports */
 export function agentCountForBarSizes(minBarSize: number, maxBarSize: number): number {
   return barLengthSpan(minBarSize, maxBarSize);
 }

@@ -2,7 +2,7 @@
 
 /**
  * Dense quest catalog for League region planning.
- * Source is data/league/quests.json (quests array) — planner region mappings,
+ * Source is data/league/quests.json (quests array) - planner region mappings,
  * not official Equilibrium auto-completion. Filter by primary region or
  * recursive required-region group; search by title.
  */

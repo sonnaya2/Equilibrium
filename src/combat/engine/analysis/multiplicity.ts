@@ -1,6 +1,6 @@
 /**
  * Multiplicity fields shared by scheduled and resolved events (no `resolve`
- * closure required — works on the event log).
+ * closure required - works on the event log).
  */
 export interface MultiplicityFields {
   attached: boolean;

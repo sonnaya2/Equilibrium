@@ -1,6 +1,6 @@
 /**
  * Per-region countable facts, joined from the canonical stores by region id.
- * quests = quests touching the region (quests.json region_group_counts) — the
+ * quests = quests touching the region (quests.json region_group_counts) - the
  * auto-completion-relevant count and the only number with enough spread to
  * make the board read as data. content/upgrades/training/areas come from the
  * research catalog. Missing joins render as 0.

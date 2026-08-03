@@ -125,7 +125,7 @@ export interface ResolvedLevels {
   attackLevel: number;
   /** Pre-prayer attack level used by equipment effect gates. */
   visibleAttackLevel: number;
-  /** Strength (melee) or style level — feeds crit damage from level. */
+  /** Strength (melee) or style level - feeds crit damage from level. */
   level: number;
   effectiveDamageLevel: number;
   energising: number;
@@ -386,7 +386,7 @@ export function resolveAccuracyDp(
   leagueBundle: ResolvedLeagueBundle,
 ): ResolvedAccuracyDp {
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
-  // Without a target, the manual accuracy% slider is the FINAL override — no
+  // Without a target, the manual accuracy% slider is the FINAL override - no
   // equipment accuracy/DP passives on that path.
   const weaponAccuracy = playerAccuracy(levels.attackLevel, equipment.weaponTier);
   const accuracyBeforeEffects = weaponAccuracy + levels.energising + equipment.accessoryAccuracy;
@@ -547,7 +547,7 @@ export interface ResolvedCrit {
   };
   critChanceSources: readonly BreakdownRow[];
   critConditionalNotes: readonly string[];
-  /** Invention Equilibrium perk zeros crit — not the League. */
+  /** Invention Equilibrium perk zeros crit - not the League. */
   critsDisabled: boolean;
   critDamageBonus: number;
   baseCritDamage: number;
@@ -611,7 +611,7 @@ export function resolveCrit(
   const setCrit = loadoutSetCritChance({ equipmentSlots: loadout.equipmentSlots });
   const configuredCrit = loadout.critChance / 100;
   const critSubtotal = configuredCrit + biting + setCrit + equipmentCrit.chance;
-  // Invention perk Equilibrium zeros crit — not the League.
+  // Invention perk Equilibrium zeros crit - not the League.
   const critsDisabled = loadout.perks.equilibrium > 0;
   const critChance = critsDisabled ? 0 : clamp01(critSubtotal);
   return {
@@ -659,7 +659,7 @@ export function resolveCombatRules(
   leagueBundle: ResolvedLeagueBundle,
 ): ResolvedCombatRules {
   const globalModifiers: CombatModifier[] = [];
-  // Catalogue damageMult sets (none sourced yet — structure ready).
+  // Catalogue damageMult sets (none sourced yet - structure ready).
   globalModifiers.push(...setDamageModifiers(equipment.setCounts));
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (levels.curse) globalModifiers.push(prayerDamageModifier(levels.curse));

@@ -19,7 +19,7 @@ export interface TaskRecord {
   tier: string;
   points?: number;
   description?: string;
-  /** Display/search string — often locality label or region name. */
+  /** Display/search string - often locality label or region name. */
   region?: string;
   /** Equilibrium taxonomy after locality mapping; `global` for Catalyst global tasks. */
   regionId?: TaskRegionId;
@@ -27,7 +27,7 @@ export interface TaskRecord {
   localityKey?: string;
   /** Locality label from Wiki icon title/alt (e.g. "Asgarnia: Burthorpe"). */
   localityLabel?: string;
-  /** Wiki row id / data-taskid — deep-link + completion module key. */
+  /** Wiki row id / data-taskid - deep-link + completion module key. */
   wikiTaskId?: number;
   /** Optional source taxonomy. Catalyst currently does not publish one. */
   category?: string;
@@ -41,7 +41,7 @@ export interface TaskRecord {
 }
 
 export function asTaskRecords(value: unknown): TaskRecord[] {
-  // Boundary validation — drop incomplete rows rather than casting through.
+  // Boundary validation - drop incomplete rows rather than casting through.
   if (!Array.isArray(value)) return [];
   const out: TaskRecord[] = [];
   for (const row of value) {

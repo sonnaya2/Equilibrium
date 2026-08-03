@@ -23,7 +23,7 @@ export function useLoadout() {
       try {
         window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(cleaned));
       } catch {
-        // Storage full/blocked — in-memory prune still applies.
+        // Storage full/blocked - in-memory prune still applies.
       }
     } catch {
       // Corrupt storage falls back to defaults.
@@ -45,7 +45,7 @@ export function useLoadout() {
           try {
             window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(normalized));
           } catch {
-            // Storage full/blocked — expiry still applies in memory.
+            // Storage full/blocked - expiry still applies in memory.
           }
           return normalized;
         });
@@ -62,7 +62,7 @@ export function useLoadout() {
     try {
       window.localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(normalized));
     } catch {
-      // Storage full/blocked — session state still works.
+      // Storage full/blocked - session state still works.
     }
   };
 

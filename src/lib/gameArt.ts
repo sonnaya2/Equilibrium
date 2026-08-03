@@ -33,7 +33,7 @@ export const styleIconPath = (style: keyof typeof STYLE_ICON) =>
 
 export const regionCrestPath = (regionId: string) => gameIconPath("regions", regionId);
 
-/** Wiki World Map icon — global / multi-region task crest (CC BY-NC-SA 3.0). */
+/** Wiki World Map icon - global / multi-region task crest (CC BY-NC-SA 3.0). */
 export const worldMapIconPath = () => "/game/leagues/world-map-icon.webp";
 
 /**
@@ -73,7 +73,7 @@ export function abilityCategoryLabel(
   return category;
 }
 
-// Data route resolvers — return null when unknown (prefer no icon over wrong).
+// Data route resolvers - return null when unknown (prefer no icon over wrong).
 
 /** Explicit name / label → published slug. Wrong icon is worse than none. */
 const DATA_ICON_ALIASES: Record<string, string> = {
@@ -357,7 +357,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "crystallise (seren skilling spell)": "crystallise",
   "curly roots firemaking ceiling stack (jadinko + all fired up gear)": "curly-root",
   "custom-fit trimmed masterwork (elof / master crafter)": "trimmed-masterwork-platebody",
-  // Peninsula / castle activity art only for pure DG floor labels — dig site majors use dig-site icon.
+  // Peninsula / castle activity art only for pure DG floor labels - dig site majors use dig-site icon.
   daemonheim: "daemonheim-dig-site",
   "daemonheim area tasks passive rewards": "daemonheim",
   "daemonheim dig site": "daemonheim-dig-site",
@@ -490,7 +490,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "dragonkin laboratory (ed2)": "black-stone-dragon",
   "dragonkin laboratory greater melee codices": "black-stone-dragon",
   "dragonkin laboratory upgrades": "black-stone-dragon",
-  // GWD2 hub row — use a general from the dungeon family (no single "heart" plate).
+  // GWD2 hub row - use a general from the dungeon family (no single "heart" plate).
   "heart of gielinor": "vindicta-gorvek",
   "heart of gielinor / god wars dungeon 2": "vindicta-gorvek",
   "god wars dungeon 2": "vindicta-gorvek",
@@ -720,7 +720,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "havenhythe has no area tasks diary reward": "havenhythe-has",
   "havenhythe hunter 110 progression": "hunter-cape",
   "havenhythe open-water fishing spots (beyond fish farm)": "raw-sailfish",
-  // Outfit art (inventory) — course plates are fenced as scenery → skill glyph.
+  // Outfit art (inventory) - course plates are fenced as scenery → skill glyph.
   "hefin agility course": "prifddinian-workers-outfit",
   "hefin agility": "prifddinian-workers-outfit",
   "hefin district agility and prayer hub": "hefin-clan",
@@ -862,7 +862,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "learn quicker killing blows (400 slayer points)": "full-slayer-helmet",
   "learn to move souls in personal slayer dungeon (1,000 slayer points)": "slayer-codex",
   "legends' guild totem jewellery recharge": "legends-guild",
-  // Inventory crossbow — boss plate + multi-MB monastery dump crop poorly in name wells.
+  // Inventory crossbow - boss plate + multi-MB monastery dump crop poorly in name wells.
   legiones: "ascension-crossbow",
   "legiones (monastery of ascension)": "ascension-crossbow",
   "leng artefact": "leng-artefact",
@@ -1215,7 +1215,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "seers headband": "seers-headband-4",
   "seers village achievements and seer's headband": "seers-headband-4",
   "seers village combat achievement rewards": "seers-headband-4",
-  // Headband inventory — multi-MB Seers plate is unreadable at 3rem.
+  // Headband inventory - multi-MB Seers plate is unreadable at 3rem.
   "seers village skilling hub": "seers-headband-4",
   "seers' village": "seers-headband-4",
   "seers' village achievements and seer's headband": "seers-headband-4",
@@ -1496,7 +1496,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   "wilderness sword 1-4": "wilderness-sword-4",
   "witchdoctor camo outfit": "witchdoctor-camo",
   "witchdoctor mask (habitat teleport)": "witchdoctor-mask",
-  // permanent-unlocks/wizards-guild is a tiny landscape still flagged "guild" scenery —
+  // permanent-unlocks/wizards-guild is a tiny landscape still flagged "guild" scenery - 
   // Magic cape is the honest inventory mark for this major.
   "wizards' guild": "magic-cape",
   "wizards' guild (magic guild, yanille)": "magic-cape",
@@ -1523,7 +1523,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
 
 /** Normalize a free-text label to a kebab slug candidate. */
 export function slugifyIconLabel(label: string): string {
-  // Decode first — wiki titles like First Necromancer&#039;s equipment must
+  // Decode first - wiki titles like First Necromancer&#039;s equipment must
   // not become first-necromancer-and-039-s-equipment.
   return decodeHtmlEntities(label)
     .normalize("NFKD")
@@ -1600,7 +1600,7 @@ export function iconSlugCandidates(name: string): string[] {
     push(slugifyIconLabel(cleaned));
   }
 
-  // 3) Long containment only — never short generic tokens.
+  // 3) Long containment only - never short generic tokens.
   if (!PACKAGEY.test(raw) || raw.split(/\s+/).length <= 8) {
     const hay = `-${fullSlug}-`;
     let hits = 0;
@@ -1624,7 +1624,7 @@ function firstHit(candidates: string[], lookup: (slug: string) => string | null)
   return null;
 }
 
-/** Exact-only candidates (alias + full slug + first clause) — no containment. */
+/** Exact-only candidates (alias + full slug + first clause) - no containment. */
 function exactSlugCandidates(name: string): string[] {
   const raw = decodeHtmlEntities(name).trim();
   if (!raw) return [];
@@ -1638,7 +1638,7 @@ function exactSlugCandidates(name: string): string[] {
   const lower = raw.toLowerCase();
   if (DATA_ICON_ALIASES[lower]) push(DATA_ICON_ALIASES[lower]);
   push(slugifyIconLabel(raw));
-  // Split on clause punctuation only — do NOT break internal hyphens (Kharid-et).
+  // Split on clause punctuation only - do NOT break internal hyphens (Kharid-et).
   const first = raw.split(/[,;|·/+(—–]/)[0]?.trim() ?? "";
   if (first && first !== raw) {
     if (DATA_ICON_ALIASES[first.toLowerCase()]) push(DATA_ICON_ALIASES[first.toLowerCase()]);
@@ -1651,7 +1651,7 @@ function exactSlugCandidates(name: string): string[] {
 }
 
 /**
- * Skill icons only for exact skill names / aliases — never first-clause of a package
+ * Skill icons only for exact skill names / aliases - never first-clause of a package
  * ("Anachronia Agility Course" must not become the Agility skill glyph).
  */
 export function skillIconPath(skillIdOrName: string): string | null {
@@ -1667,7 +1667,7 @@ export function skillIconPath(skillIdOrName: string): string | null {
 
 /**
  * League Relic and Blessing plates, resolved by name.
- * Exact lookups against published public/game art — null until a record names
+ * Exact lookups against published public/game art - null until a record names
  * a published slug; never guess a match.
  */
 export function relicIconPath(name: string): string | null {
@@ -1680,7 +1680,7 @@ export function blessingIconPath(name: string): string | null {
   return slug && BLESSING_ICON_SLUGS.has(slug) ? `/game/blessings/${slug}.webp` : null;
 }
 
-/** Exact / alias / epithet boss plate only — no long-string containment. */
+/** Exact / alias / epithet boss plate only - no long-string containment. */
 function primaryBossIconPath(name: string): string | null {
   return firstHit(exactSlugCandidates(name), (slug) => {
     if (!BOSS_ICON_SLUGS.has(slug)) return null;
@@ -1713,7 +1713,7 @@ export function activityIconPath(name: string): string | null {
 }
 
 export function upgradeIconPath(name: string): string | null {
-  // Exact/alias only — containment lets short stubs (anachronia-base) steal longer hubs.
+  // Exact/alias only - containment lets short stubs (anachronia-base) steal longer hubs.
   return firstHit(exactSlugCandidates(name), (slug) => {
     const rel = UPGRADE_ICON_BY_SLUG[slug];
     return rel ? `/game/upgrades/${rel}` : null;
@@ -1722,7 +1722,7 @@ export function upgradeIconPath(name: string): string | null {
 
 /**
  * permanent-unlocks slugs that are place/scenery screenshots (often multi-MB).
- * Never use these in the name-column well — skill glyph or empty is better.
+ * Never use these in the name-column well - skill glyph or empty is better.
  * Inventory-ish permanents (gloves, rings, spellbooks, tools, ores) stay allowed.
  */
 const SCENERY_PERMANENT_UNLOCK_SLUGS = new Set([
@@ -1742,7 +1742,7 @@ const SCENERY_PERMANENT_UNLOCK_SLUGS = new Set([
   "gemstone-cavern",
   "gnome-stronghold-agility-course",
   "hefin-agility-course",
-  // Multi-MB place plates — never reward chips (keep inventory permanents allowed).
+  // Multi-MB place plates - never reward chips (keep inventory permanents allowed).
   "hets-oasis",
   "highweald",
   "highweald-ruins-mine",
@@ -1844,8 +1844,8 @@ export function isSceneryPermanentUnlock(path: string): boolean {
   if (!slug) return false;
   if (SCENERY_PERMANENT_UNLOCK_SLUGS.has(slug)) return true;
   // Heuristic: bare place photos (course/area/farm/patch…) without inventory tokens.
-  // Do NOT blanket-ban "altar" — astral-altar inventory art is fine; Ourania is listed above.
-  // "archaeology-guild-shop" / "ferocious-ring" must stay — not scenery.
+  // Do NOT blanket-ban "altar" - astral-altar inventory art is fine; Ourania is listed above.
+  // "archaeology-guild-shop" / "ferocious-ring" must stay - not scenery.
   if (
     /(?:^|-)(course|area|farm|village|hub|cavern|colony|plantation|outpost|stronghold|cathedral|district|patch|fishing|catherby|yanille|seers|piscatoris|memorial|deep-sea)(?:-|$)/i.test(
       slug,
@@ -1868,7 +1868,7 @@ export function isSceneryPermanentUnlock(path: string): boolean {
 function skillHubIconFromBag(bag: string): string | null {
   const hit = (skill: string) => skillIconPath(skill);
 
-  // Farming first — "crystal tree Farming" must not fall through to woodcutting.
+  // Farming first - "crystal tree Farming" must not fall through to woodcutting.
   if (
     /\bfarming patch\b|\bfarming patches\b|\bfarm(?:ing)?\b.*\bpatch|\bpatch cluster\b|\ballotment\b|\bherb patch\b|\btree patch\b|\bhops patch\b|\bbush patch\b|\bmushroom patch\b|\bcactus patch\b|\bcalquat\b|\bflower patch\b|\bharmony pillar|\bcrystal tree\b|\bmarigold farm\b|\beastfold farm\b|\bmanor farm\b/i.test(
       bag,
@@ -1884,14 +1884,14 @@ function skillHubIconFromBag(bag: string): string | null {
   ) {
     return hit("agility");
   }
-  // Named masters keep portrait art via upgrade path — only abstract slayer rows use the skill.
+  // Named masters keep portrait art via upgrade path - only abstract slayer rows use the skill.
   if (
     /\bslayer master\b/i.test(bag) &&
     !/\b(?:kuradal|morvran|sumona|duradel|laniakea|konar)\b/i.test(bag)
   ) {
     return hit("slayer");
   }
-  // Box-trap / birdhouse inventory art is better when published — skill only for bare areas.
+  // Box-trap / birdhouse inventory art is better when published - skill only for bare areas.
   if (
     /\bhunter area\b|\bhunter mark shop\b|\bcharming moths\b/i.test(bag) ||
     (/\bchin(?:chompa)?s?\b/i.test(bag) && !/\buniques?\b|\bequipment\b/i.test(bag))
@@ -1939,7 +1939,7 @@ function skillHubIconFromBag(bag: string): string | null {
   ) {
     return hit("prayer");
   }
-  // Named Inanna shrine only — "Empowered Summoning obelisks" keeps inventory art.
+  // Named Inanna shrine only - "Empowered Summoning obelisks" keeps inventory art.
   if (/\bshrine of inanna\b|\baltar of inanna\b/i.test(bag)) {
     return hit("summoning");
   }
@@ -2007,7 +2007,7 @@ export function dataEntityIconPath(input: {
   const name = decodeHtmlEntities(input.name ?? "").trim();
   const kind = decodeHtmlEntities(input.kind ?? "").toLowerCase();
 
-  // Explicit skill field or a pure skill kind — not "skillcape" / "skilling outfit" packages.
+  // Explicit skill field or a pure skill kind - not "skillcape" / "skilling outfit" packages.
   // Named places with a published activity plate still win (skill= must not steal Empty Throne
   // Room / Necromantic Rune Temple into mining.png / runecrafting.png). Pure skill titles
   // ("Mining") have no activity hit and keep the skill glyph.
@@ -2044,7 +2044,7 @@ export function dataEntityIconPath(input: {
     return primaryBoss;
   }
 
-  // Word-ish kind match only — "elite skilling" must not force bossish routing.
+  // Word-ish kind match only - "elite skilling" must not force bossish routing.
   const bossish =
     /\bboss(?:es|ing)?\b/.test(kind) ||
     /\bdungeon\b/.test(kind) ||
@@ -2101,7 +2101,7 @@ export function dataEntityIconPath(input: {
   const skill = skillIconPath(name);
   if (skill) return skill;
 
-  // Archaeology name rows: exact dig-site / NPC activity, else skill — never kind-only.
+  // Archaeology name rows: exact dig-site / NPC activity, else skill - never kind-only.
   if (archName) {
     return skillIconPath("archaeology");
   }
@@ -2112,7 +2112,7 @@ export function dataEntityIconPath(input: {
     if (boss) return boss;
   }
 
-  // Equipment: exact/alias candidates only (EQUIPMENT_OK is closed — abstract package
+  // Equipment: exact/alias candidates only (EQUIPMENT_OK is closed - abstract package
   // slugs never hit). Allow any length so multi-word named items still resolve.
   for (const slug of exactSlugCandidates(name)) {
     const path = equipmentIconPath(slug);

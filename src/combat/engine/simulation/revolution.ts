@@ -21,9 +21,9 @@ export interface RevolutionInput extends Omit<SimulateInput, "rotation" | "autoW
 /**
  * Revolution driver: the bar is scanned in priority order on every branch;
  * branches diverge at state-changing RNG points and merge when their futures
- * realign. Revolution completes channels — occupancy advances past the full
+ * realign. Revolution completes channels - occupancy advances past the full
  * channel before the next scan.
- *
+
  * Casts are planned across the whole live set first, then only the heaviest
  * RNG outcomes are materialized (snapshot+commit). That applies the live-branch
  * cap before the expensive work, which matters when Impatient/Relentless/Avernic

@@ -10,7 +10,7 @@ import { sortByRegionOrder } from "@/lib/regionOrder";
 import { REGION_ANCHOR_BY_ID } from "@/map/data/regionAnchors";
 import { getResearchCatalog } from "@/research/catalog";
 
-/** Display order on Build — known ids only; unknowns trail via sortByRegionOrder. */
+/** Display order on Build - known ids only; unknowns trail via sortByRegionOrder. */
 export const BUILD_REGION_ORDER = [
   "misthalin",
   "karamja",
@@ -51,7 +51,7 @@ export default function BuildPage() {
     BUILD_REGION_ORDER,
   );
 
-  // Full tier records pass through — later reveals populate choices and the
+  // Full tier records pass through - later reveals populate choices and the
   // planner renders them without code changes. Validated once at the boundary.
   const relicTiers = readDatasetRecords(relicsData, parseRelicTier, "relics").map((tier) => ({
     tier: tier.tier,

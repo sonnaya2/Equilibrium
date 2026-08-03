@@ -1,6 +1,6 @@
 /**
  * Combat-layer architecture detectors (pure).
- *
+
  * Used by check.mjs (gate) and check.self-test.mjs (proves rules fire).
  */
 import { dirname, join, normalize, relative, resolve, sep } from "node:path";

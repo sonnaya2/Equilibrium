@@ -3,7 +3,6 @@ import type { SourceReference } from "../types";
 /**
  * Crit is four separate layers: strike chance, strike damage, guaranteed crits, and
  * per-hit eligibility inside multi-hit abilities. Never a flat damage * 1.5.
- *
  * Post-Mar-2024 base crit damage progression reaches +50% at level 90.
  */
 export const BASE_CRIT_DAMAGE_AT_90 = 0.5;
@@ -11,8 +10,8 @@ export const CRIT_DAMAGE_LEVEL_ANCHOR = 90;
 
 /**
  * Base crit damage is sourced stepwise, not interpolated (wiki, 4 Mar 2024 update):
- * +10% at levels 1–19, +5% per further 10 levels, capped at +50% from 90 —
- * boosted levels past 90 stay at +50%.
+ * +10% at levels 1-19, +5% per further 10 levels, capped at +50% from 90.
+ * Boosted levels past 90 stay at +50%.
  * https://runescape.wiki/w/Critical_strike (verified 2026-07-31)
  */
 export const BASE_CRIT_DERIVATION: SourceReference = {

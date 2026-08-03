@@ -53,7 +53,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Warriors' Guild", [2880, 3545]],
   ["Piscatoris Fishing Colony", [2340, 3690]],
   // Orla Fairweather at the shrine entrance (wiki NPC map). Hall of Memories
-  // is under the pool (same surface mouth) — catalog-only, no separate pin.
+  // is under the pool (same surface mouth) - catalog-only, no separate pin.
   ["Memorial to Guthix", [2289, 3554]],
   ["Seers' Village", [2710, 3482]],
   ["Barbarian Outpost", [2520, 3570]],
@@ -66,7 +66,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Player-Owned Farm", [2645, 3361]],
   ["Manor Farm", [2645, 3361]],
   ["Warforge Dig Site", [2410, 2838]],
-  // Platform off the Fishing Guild coast (wiki: N of East Ardougne) — pin in
+  // Platform off the Fishing Guild coast (wiki: N of East Ardougne) - pin in
   // the water north of the guild, not on land.
   ["Deep Sea Fishing Hub", [2595, 3468]],
   ["Stormguard Citadel Dig Site", [2678, 3400]],
@@ -75,7 +75,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Underground Pass", [2575, 3297]],
   ["Legiones", [2500, 2887]],
   ["Elemental Workshop", [2710, 3497]],
-  // Dock / pier — keep the pin on the structure, not open sea.
+  // Dock / pier - keep the pin on the structure, not open sea.
   ["Fishing Trawler", [2676, 3162]],
   ["Gnome Restaurant", [2466, 3497]],
   ["Musa Point", [2950, 3145]],
@@ -163,7 +163,7 @@ const SURFACE_COORDS = new Map<string, MapXY>([
   ["Isafdar", [2244, 3200]],
   // Wiki charter dock ~2153,3123.
   ["Port Tyras", [2153, 3123]],
-  // Solak arena on the Lost Grove island — SW of the grove area pin.
+  // Solak arena on the Lost Grove island - SW of the grove area pin.
   ["Solak", [1952, 3151]],
   ["Max Guild", [2276, 3319]],
   ["Hefin Agility Course", [2181, 3423]],

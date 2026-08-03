@@ -25,9 +25,8 @@ export {
 } from "./requirements";
 
 /**
- * Cast legality rules. Every function takes the explicit state and candidate
- * tick so a future cast is evaluated against the state it would actually meet —
- * never against a stale pre-advance tick.
+ * Cast legality rules. Each check takes the state and candidate tick the cast
+ * would actually meet (not a stale pre-advance tick).
  */
 
 /** Earliest tick a cast may begin: actor availability and the caller's readiness. */
@@ -36,9 +35,9 @@ export function candidateTick(state: RotationState, readyTick: number): number {
 }
 
 /**
- * Listed adrenaline cost — the cast REQUIREMENT. A Deathspore free cast zeroes
+ * Listed adrenaline cost - the cast REQUIREMENT. A Deathspore free cast zeroes
  * the spend, not the requirement (wiki: "the player still needs the necessary
- * adrenaline in order to cast").
+ * adrenaline to cast").
  */
 export function costOf(state: RotationState, ability: AbilitySpec, tick: number): number {
   let listed =

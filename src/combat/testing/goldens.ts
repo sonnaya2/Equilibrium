@@ -1,9 +1,9 @@
 /**
  * Independently derived combat goldens for tests.
- *
+
  * Values are worked from the sourced formulas (combat-math skill), not by calling
  * production helpers. Tests compare production output to these constants.
- *
+
  * DPL(99) = 145 * 2.5 * ln(1 + 0.6*99/145) / ln(1.6) ≈ 264.48…
  * Intermediate floors for naked T99 two-handed style damage:
  *   floor(DPL(99)) + floor(DPL(99)/2) + floor(14.4 * 99)

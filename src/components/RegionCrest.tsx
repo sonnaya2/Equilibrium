@@ -38,7 +38,7 @@ export const RegionCrest = memo(function RegionCrest({
   );
 });
 
-/** Hidden preload strip — call once when a region filter set is known. */
+/** Hidden preload strip - call once when a region filter set is known. */
 export function RegionCrestPreload({ regionIds }: { regionIds: readonly string[] }) {
   return (
     <div className="pointer-events-none absolute h-0 w-0 overflow-hidden" aria-hidden>

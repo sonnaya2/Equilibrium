@@ -315,7 +315,6 @@ export const COLLECTIONS = [
     }),
   },
 
-  // --- domains -------------------------------------------------------------
   {
     name: "equipment",
     file: "domains/equipment.jsonl",
@@ -483,7 +482,6 @@ export const COLLECTIONS = [
     }),
   },
 
-  // --- research ------------------------------------------------------------
   {
     name: "research-catalog",
     file: "research/catalog.jsonl",
@@ -577,7 +575,6 @@ export const COLLECTIONS = [
     }),
   },
 
-  // --- provenance ----------------------------------------------------------
   {
     name: "source-files",
     file: "provenance/source-files.jsonl",

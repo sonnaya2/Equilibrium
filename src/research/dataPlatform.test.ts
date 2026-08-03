@@ -102,7 +102,7 @@ describe("generated data platform", () => {
     expect(Object.keys(manifest.regions)).toHaveLength(REGION_IDS.length);
   });
 
-  // Research payloads are not under public/data — route handlers read SQLite.
+  // Research payloads are not under public/data - route handlers read SQLite.
   it("publishes no generated data at all", () => {
     expect(existsSync(join(root, "public/data"))).toBe(false);
   });

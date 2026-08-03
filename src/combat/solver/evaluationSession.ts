@@ -103,7 +103,7 @@ export function createEvaluateFn(args: {
         state.bestFullScore = memoHit.score;
         state.topPreview = [...bar];
       }
-      // Do not flip phase to finalize on a memo hit alone — only the finalize
+      // Do not flip phase to finalize on a memo hit alone - only the finalize
       // hook owns that (avoids a one-frame "scoring" flash on warm re-runs).
       // Force emit when the strip candidate changes so the UI keeps cycling.
       emitProgress(options, state, activeChanged);
@@ -181,7 +181,7 @@ export function createEvaluateFn(args: {
         exploratory: true as const,
         validForFinalRanking: false as const,
         horizonTicks: evaluation.horizonTicks,
-        // objective omitted on purpose — scalar exploratory DPM only
+        // objective omitted on purpose - scalar exploratory DPM only
       };
       writeEvalMemo(memoKey, out);
       return out;

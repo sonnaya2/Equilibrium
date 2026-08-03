@@ -8,8 +8,8 @@ import { applyInventionProcs } from "./invention";
 
 /**
  * Aftershock charge / self-interaction.
- *
- * Source: https://runescape.wiki/w/Aftershock — "After dealing 50,000 damage,
+
+ * Source: https://runescape.wiki/w/Aftershock - "After dealing 50,000 damage,
  * create an explosion…". The charge counter tracks damage that builds the
  * threshold; the explosion is the result of crossing it. Aftershock's own blast
  * therefore must not re-seed charge after the land-time reset.
@@ -68,7 +68,7 @@ describe("Invention procs — Aftershock charge eligibility", () => {
       procs: { cracklingRank: 4, aftershockRank: 1 },
       rotation: rotationOf("attack"),
     });
-    // Attack 1200 + Crackling 2000 = 3200 charge — well under 50k.
+    // Attack 1200 + Crackling 2000 = 3200 charge - well under 50k.
     expect(s.perAbility.crackling).toBeCloseTo(2000, 5);
     expect(s.perAbility.aftershock).toBeUndefined();
     expect(s.totalExpected).toBeCloseTo(3200, 5);
@@ -88,7 +88,7 @@ describe("Invention procs — Aftershock charge eligibility", () => {
     const procs = s.events.filter((event) => event.abilityId === "aftershock");
     expect(procs.length).toBeGreaterThanOrEqual(1);
     // Second attack at tick 3: if blast EV re-seeded charge, behaviour would
-    // still schedule — assert charge path is clean by checking interval spacing.
+    // still schedule - assert charge path is clean by checking interval spacing.
     expect(procs[0]!.tick).toBe(0);
     if (procs.length >= 2) {
       expect(procs[1]!.tick - procs[0]!.tick).toBeGreaterThanOrEqual(10);

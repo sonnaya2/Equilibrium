@@ -20,19 +20,15 @@ export interface AdrenalineRules {
   /** Multiplier on listed ability gains; does not affect refunds or unrelated grants. */
   abilityGainMultiplier?: number;
   basicGainMultiplier?: number;
-  /** Impatient perk rank (1-4) — state-changing RNG, branched by the drivers. */
+  /** Impatient perk rank (1-4) - state-changing RNG, branched by the drivers. */
   impatientRank?: number;
   impatientLevel20?: boolean;
-  /** Relentless perk rank (1-5) — state-changing RNG, branched by the drivers. */
+  /** Relentless perk rank (1-5) - state-changing RNG, branched by the drivers. */
   relentlessRank?: number;
   relentlessLevel20?: boolean;
 }
 
-/**
- * Explicit outcomes for a cast's state-changing RNG points. The drivers
- * enumerate these to build probability-weighted branches; a missing flag means
- * "does not proc" (deterministic single-branch runs never proc).
- */
+/** State-changing RNG flags for probability-weighted branches; missing = no proc. */
 export type CastRngPointId = "impatient" | "relentless" | "avernic-rampage";
 export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
 
@@ -65,17 +61,11 @@ export interface SimulateInput {
   /** Weave the style auto-attack through idle GCDs and adrenaline shortfalls. */
   autoWeave?: boolean;
   adrenaline?: AdrenalineRules;
-  /**
-   * Planted Feet: base Sunshine / Death's Swiftness duration ×1.25 (→ 63 ticks).
-   * Does not apply to greater variants.
-   */
+  /** Planted Feet: Sunshine / Death's Swiftness base duration x1.25 (63 ticks); not greater variants. */
   plantedFeet?: boolean;
-  /**
-   * Strength cape (99): Dismember +3 bleed hits. Applied by evaluate/UI catalogue
-   * patching; the engine may also receive the flag for workers.
-   */
+  /** Strength cape 99: Dismember +3 bleed hits (evaluate/UI may pre-patch; engine may also take flag). */
   strengthCape99?: boolean;
-  /** Precise perk rank 1–6; raises minimum ability damage before the hit pipeline. */
+  /** Precise perk rank 1-6; raises minimum ability damage before the hit pipeline. */
   preciseRank?: number;
   /** Effective Tumeken count (0-5); its 5.4s activation is assumed complete before tick 0. */
   tumekensPieces?: number;
@@ -85,19 +75,11 @@ export interface SimulateInput {
   equipmentEffects?: ActiveEquipmentEffects;
   league?: ResolvedLeagueRules;
   procs?: ProcRules;
-  /**
-   * Mult on conjure spirit *basic autos* only (not putrid poison, not commands).
-   * First Necromancer set: firstNecromancerConjureDamageMult(pieces). Default 1.
-   */
+  /** Mult on conjure spirit basic autos only (not poison/commands). First Necro set; default 1. */
   conjureBasicDamageMult?: number;
   /** Multiplier on the Spirit Pact lifetime, after the 5-tick summon animation. */
   conjureDurationMult?: number;
-  /**
-   * Target life-points percentage (0-100) for target-HP-dependent mechanics
-   * (Bloodlust-empowered Flurry, Punish, Spectral Scythe). When absent those
-   * mechanics apply no HP-scaled bonus and stay partially modeled — no default
-   * is invented.
-   */
+  /** Target LP% (0-100) for HP-gated mechanics (Bloodlust Flurry, Punish, Spectral Scythe); absent = no HP scale. */
   targetHpPercent?: number;
   /** Optional pre-active Natural Instinct window for Jaws adrenaline. */
   naturalInstinctUntilTick?: number;
@@ -161,10 +143,7 @@ export interface DamageEffectBreakdown {
   expectedSeparateHits: number;
   /** Attached bonus components riding another hit. */
   attachedComponents: number;
-  /**
-   * Bonus-damage riders on this parent skill. 0 on the rider row itself (use
-   * Total there). Do not sum with effect Total across rows.
-   */
+  /** Bonus-damage riders on parent skill; 0 on the rider row. Do not sum with Total across rows. */
   bonusDamage: number;
   /** totalDamage / expectedActivations when activations > 0. */
   averagePerActivation: number;
@@ -184,97 +163,72 @@ export interface RotationDamageAnalysis {
 }
 
 /**
- * Duration fields are always explicit. Never treat a bare tick count as both
- * "exact path length" and "E[ticks]" without reading `kind` / `rng`.
+ * Explicit duration fields; read `kind`/`rng` before treating ticks as path length vs E[T].
+ * deterministic: all fields = exact length. stochastic: fields may differ.
+ * fixed-window: horizon is DPS denominator; path ticks still reported.
  */
 export interface DurationSummary {
-  /**
-   * - deterministic: single path; all tick fields equal the exact length.
-   * - stochastic: probability-weighted branches; fields may differ.
-   * - fixed-window: horizon is the DPS denominator; path ticks still reported.
-   */
   kind: "deterministic" | "stochastic" | "fixed-window";
   /** Probability-weighted mean terminal duration (exact when deterministic). */
   expectedTicks: number;
-  /** Minimum terminal-branch duration in the support. */
   minimumTicks: number;
-  /** Maximum terminal-branch duration in the support. */
   maximumTicks: number;
-  /** Duration of the representative history (exact path when deterministic). */
+  /** Representative history duration (exact path when deterministic). */
   representativeTicks: number;
-  /** Present when the run used a fixed horizon (Revolution duration). */
+  /** Set when the run used a fixed horizon (Revolution duration). */
   fixedHorizonTicks?: number;
 }
 
 /**
- * Damage bounds. `expectedConditional*` are weighted means of per-branch path
- * extrema — useful diagnostics, never global support bounds.
+ * Damage bounds. `expectedConditional*` = weighted means of per-branch extrema (not support bounds).
  */
 export interface DamageBoundsSummary {
   expectedDamage: number;
-  /** Minimum achievable terminal-branch path-minimum (true support lower bound). */
+  /** True support lower bound (min terminal-branch path-minimum). */
   supportMinDamage: number;
-  /** Maximum achievable terminal-branch path-maximum (true support upper bound). */
+  /** True support upper bound (max terminal-branch path-maximum). */
   supportMaxDamage: number;
-  /** Weighted average of branch conditional minima (not a support bound). */
+  /** Weighted avg of branch conditional minima (not a support bound). */
   expectedConditionalMin: number;
-  /** Weighted average of branch conditional maxima (not a support bound). */
+  /** Weighted avg of branch conditional maxima (not a support bound). */
   expectedConditionalMax: number;
 }
 
 /**
- * DPS quantities. `primary` is always the headline metric for the run type:
- * fixed-window → E[D] / (horizon × tickSeconds);
- * natural-completion → E[D] / (E[T] × tickSeconds) (ratio of expectations).
+ * primary: fixed-window = E[D]/(horizon*tickSeconds); natural = E[D]/(E[T]*tickSeconds).
  */
 export interface DpsSummary {
   primary: number;
-  /** E[D] / (E[T] × tickSeconds). Equals primary for natural-completion. */
+  /** E[D]/(E[T]*tickSeconds); equals primary for natural-completion. */
   ratioOfExpectations: number;
-  /**
-   * E[D_i / T_i] across terminal classes. Only set for stochastic natural
-   * completion (undefined for fixed-window and deterministic single-path).
-   */
+  /** E[D_i/T_i]; stochastic natural-completion only. */
   expectedBranchDps?: number;
-  /** DPS of the representative terminal class (or the sole deterministic path). */
   representativeDps: number;
 }
 
 export type HistoryKind = "complete" | "representative-terminal-class";
 
 /**
- * Provenance of `casts` / `events`. When kind is representative-terminal-class,
- * those arrays are NOT the weighted event ledger and must not rebuild analysis.
- */
-/**
- * Why this history class was chosen.
- * - sole-terminal: single complete path.
- * - highest-probability-mass: max weight among all terminals (all ok, or all failed).
- * - highest-successful-mass: max weight among successful only (partial failure;
- *   totals are success-conditional, so history matches that scope).
+ * History pick reason. sole-terminal | highest-probability-mass | highest-successful-mass
+ * (success-conditional when partial failure). representative-terminal-class is not the weighted ledger.
  */
 export type HistorySelectionReason =
   "sole-terminal" | "highest-probability-mass" | "highest-successful-mass";
 
 export interface HistoryProvenance {
   kind: HistoryKind;
-  /** Probability mass of the class that supplied casts/events (absolute, not renormalized). */
+  /** Absolute probability mass of the class that supplied casts/events. */
   classWeight: number;
   ticks: number;
   selectionReason: HistorySelectionReason;
   /**
-   * True only for a single non-branching successful path. False after any
-   * state-changing branching (including intermediate merges that later collapse
-   * to one terminal class), and when any branch failed — events never rebuild
-   * weighted ledgers in those cases.
+   * True only for a single non-branching successful path; else events must not rebuild weighted totals.
    */
   eventsReconcileWithWeightedTotals: boolean;
 }
 
 /**
- * Partial branch failure. Weighted damage totals use successful branches only
- * (renormalized) when successfulWeight > 0; all-failed runs expose zeros and
- * totalsScope "none".
+ * Partial branch failure. Totals renormalize over successfulWeight when > 0; all-failed => zeros / "none".
  */
 export interface BranchFailureSummary {
   failedWeight: number;
@@ -328,16 +282,10 @@ export interface RotationSummary {
   /** Exact for complete history; representative terminal class when history.kind says so. */
   casts: CastRecord[];
   duration: DurationSummary;
-  /**
-   * Convenience: duration.expectedTicks.
-   * Deterministic runs: exact path length.
-   * Stochastic runs: E[ticks] — inspect duration / rng for support and representative.
-   */
+  /** duration.expectedTicks (exact path if deterministic; E[ticks] if stochastic). */
   ticks: number;
   /**
-   * Horizon the run was asked to fill (revolution duration). When set, totals
-   * count only events landing before it (half-open [0, horizonTicks)) and
-   * primary DPS divides by the horizon.
+   * Revolution horizon: damage lands in [0, horizonTicks); primary DPS divides by horizon.
    */
   horizonTicks?: number;
   damage: DamageBoundsSummary;
@@ -365,17 +313,14 @@ export interface RotationSummary {
     tails: "excluded" | "included-separately" | "included-in-natural-completion";
   };
   perAbility: Record<string, number>;
-  /** Expected damage landing on each tick — DoT tails land on their sourced ticks. */
+  /** Expected damage landing on each tick - DoT tails land on their sourced ticks. */
   damageByTick: Record<number, number>;
   /** Landed events for complete history or the representative terminal class. */
   events: ResolvedEvent[];
   history: HistoryProvenance;
   /** Reconciled engine-owned aggregations; never rebuilt from representative events. */
   analysis: RotationDamageAnalysis;
-  /**
-   * Opt-in second metric (SimulateOptions.includeTails). Never presented as
-   * fixed-window DPS.
-   */
+  /** Opt-in (includeTails); not the fixed-window DPS numerator. */
   tails?: TailMetrics;
   /** @deprecated Use tails.totalIncludingTails. */
   totalExpectedIncludingTails?: number;
@@ -396,22 +341,14 @@ export interface CastContext {
   costOf(ability: AbilitySpec): number;
   firstLegalTick(abilityId: string): number;
   /**
-   * The one canonical time path: lands every queued event due by targetTick in
-   * (tick, seq) order (damage resolved against state at each land tick), applies
-   * passive generation over the crossed interval, expires crossed clocks, and
-   * stops with state representing exactly targetTick.
+   * Advance clock: land due events in (tick, seq) order, passive gen, expire clocks; state at targetTick.
    */
   advanceTo(targetTick: number): void;
   /**
-   * One atomic cast transition: advance to the candidate tick, re-check
-   * requirements/affordability against the advanced state (rejection leaves the
-   * state otherwise untouched), resolve the empowered variant, start the
-   * cooldown and occupancy, schedule hit events with provenance, then apply
-   * immediate on-cast grants/windows.
+   * Atomic cast: advance, re-check affordability (reject leaves state), schedule hits, on-cast grants.
    */
   performCast(ability: AbilitySpec, readyTick: number, auto: boolean, rng?: CastRng): CastAttempt;
-  /** Off-GCD utility casts (Runic Charge): state-machine update and a cast record
-   *  without consuming or advancing the global cooldown. */
+  /** Off-GCD utility (e.g. Runic Charge): cast record without consuming GCD. */
   performOffGcdCast(ability: AbilitySpec): void;
   /** Remove a cast's pending events (channel cancellation); returns the count. */
   cancelCastEvents(castSeq: number): number;

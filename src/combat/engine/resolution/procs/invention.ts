@@ -78,27 +78,17 @@ function aftershockDamage(
 }
 
 /**
- * Whether this event's damage contributes to Aftershock charge.
- *
- * Wiki: "After dealing 50,000 damage, create an explosion…"
- * (https://runescape.wiki/w/Aftershock). Charge tracks damage the player deals
- * that builds the threshold; the explosion is the result of crossing it.
- *
- * - Aftershock's own blast does not charge the next threshold (charge resets on
- *   land and must not re-add the blast damage).
- * - Crackling and other non-Aftershock damage do charge (community + regression).
- * - Blessing events never reach this path (`recordResolved` skips Invention for them).
- * - `procEligible` is intentionally not the gate: Crackling is `procEligible: false`
- *   yet still contributes charge.
+ * Aftershock charge eligibility (wiki: 50k threshold explosion;
+ * https://runescape.wiki/w/Aftershock). Aftershock's own blast does not re-charge
+ * (resets on land). Crackling and other non-Aftershock damage do. Blessings never
+ * hit this path (`recordResolved` skips Invention). Gate is abilityId, not
+ * `procEligible` (Crackling is `procEligible: false` but still charges).
  */
 function contributesAftershockCharge(event: ScheduledEvent<SimulationRuntime>): boolean {
   return event.abilityId !== "aftershock";
 }
 
-/**
- * Schedule Crackling / Aftershock and update Invention charge state after a
- * landed event. Mutates `rt.state.invention` and may push proc events.
- */
+/** Schedule Crackling/Aftershock after a land; mutates `rt.state.invention`. */
 export function applyInventionProcs(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
@@ -139,7 +129,7 @@ export function applyInventionProcs(
 
   const invention = rt.state.invention;
   // Blast land: reset charge / pending / interval. Do not fall through into
-  // charge accumulation — Aftershock damage must not seed the next threshold.
+  // charge accumulation - Aftershock damage must not seed the next threshold.
   if (event.abilityId === "aftershock") {
     rt.state = {
       ...rt.state,

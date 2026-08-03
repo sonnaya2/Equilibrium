@@ -26,7 +26,7 @@ export const METEOR_STRIKE_SOURCE = wiki("Meteor Strike", "Meteor_Strike");
 /**
  * Wiki tooltip: +5-7% ability damage per idle tick, cap 6s (10 ticks).
  * Analysis table matches +5 min / +7 max per tick.
- *
+
  * Sim idle clock: ticks since the last damaging cast against this target.
  * Generic-target simulation has no position, so off-target movement is unmodelled.
  * After >= 8 idle ticks, Greater Barge also grants Endless Assault for 6s
@@ -49,9 +49,9 @@ export const ABYSSAL_PARASITE_MAX_STACKS = 50;
 export const ABYSSAL_PARASITE_DURATION_TICKS = 15;
 export const ABYSSAL_PARASITE_INTERVAL_TICKS = 3;
 
-/** Dark Shard of Leng — Endless Frost (wiki, post 4 Mar 2024). */
+/** Dark Shard of Leng - Endless Frost (wiki, post 4 Mar 2024). */
 export const LENG_ENDLESS_FROST_CHANCE = 0.1;
-/** Dark Sliver of Leng — Boundless Chill. */
+/** Dark Sliver of Leng - Boundless Chill. */
 export const LENG_BOUNDLESS_CHILL_CHANCE = 0.02;
 export const PRIMORDIAL_ICE_CAP = 10;
 /** Frostblades from Boundless Chill stack generation. */
@@ -63,7 +63,7 @@ export const ICY_TEMPEST_COST_REDUCTION_PER_STACK = 12;
 export const ICY_TEMPEST_COOLDOWN_SECONDS = 15;
 export const ICY_TEMPEST_PRIMARY_BAND = { minPct: 115, maxPct: 135 } as const;
 export const ICY_TEMPEST_SECONDARY_BAND = { minPct: 175, maxPct: 205 } as const;
-/** Per stack: +18–22% ability damage on each Icy Tempest hit. */
+/** Per stack: +18-22% ability damage on each Icy Tempest hit. */
 export const ICY_TEMPEST_STACK_BAND = { minPct: 18, maxPct: 22 } as const;
 export const LENG_SOURCE = wiki("Dark Shard of Leng", "Dark_Shard_of_Leng", "2026-08-02");
 
@@ -115,7 +115,7 @@ export interface MeleeRotationState {
   greaterFuryUntilTick: number;
   /**
    * Fury: next crit-eligible melee hit gains +25% crit chance (consumed on use).
-   * Wiki states no window — it persists until a non-bleed melee hit consumes it.
+   * Wiki states no window - it persists until a non-bleed melee hit consumes it.
    */
   furyCritBonus: boolean;
   /**
@@ -157,7 +157,7 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   frostbladesUntilTick: 0,
 });
 
-/** Deterministic per-event unit roll in [0, 1) — same seq always yields the same outcome. */
+/** Deterministic per-event unit roll in [0, 1) - same seq always yields the same outcome. */
 export function lengHitRoll(eventSeq: number, salt: number): number {
   let t = (eventSeq + Math.imul(salt, 0x9e3779b9)) >>> 0;
   t = Math.imul(t ^ (t >>> 15), t | 1);

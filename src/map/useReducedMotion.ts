@@ -8,7 +8,7 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
- * Client-only map is fine to read matchMedia on the first render — seeding
+ * Client-only map is fine to read matchMedia on the first render - seeding
  * `false` then flipping true played one frame of intro motion + 30Hz water
  * before freezing, which read as a stutter for reduced-motion users.
  */

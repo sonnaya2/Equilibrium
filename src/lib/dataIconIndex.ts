@@ -1707,6 +1707,7 @@ export const SKILL_ICON_SLUGS = new Set([
 ]);
 
 export const RELIC_ICON_SLUGS = new Set([
+  "animal-wrangler",
   "assassins-insight",
   "crystal-grace",
   "divine-druid",

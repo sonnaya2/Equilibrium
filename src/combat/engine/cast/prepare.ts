@@ -102,7 +102,7 @@ export interface PreparedCast {
 
 /**
  * Crit layers for the cast: the input layers, any spec-level bonuses (Wild
- * Magic), and — for non-Concentrated casts — the accumulated Concentrated
+ * Magic), and - for non-Concentrated casts - the accumulated Concentrated
  * Blast stacks (the "next Magic attack" consuming them). CB/GCB casts read
  * their live accumulating stacks at land time instead (see resolveCastHit).
  */
@@ -129,10 +129,10 @@ export function prepareCast(
 
   // Equipment-adjusted hit list (e.g. Masterwork spear bleed duration) before
   // Bloodlust / other variants so extra hits keep the same bands and cadence.
-  // Shared with Quick via resolveAbilityWithEquipment — never mutates catalogues.
+  // Shared with Quick via resolveAbilityWithEquipment - never mutates catalogues.
   let working: AbilitySpec = resolveAbilityWithEquipment(ability, input.equipmentEffects);
 
-  // Empowered variant resolution: the spend itself is recorded, not applied —
+  // Empowered variant resolution: the spend itself is recorded, not applied - 
   // it lands atomically with the rest of the commit.
   const melee = isMeleeAbility(ability) ? ability : null;
   let empowerMult = 1;
@@ -174,7 +174,7 @@ export function prepareCast(
     working = resplendentAsphyxiate(working);
   }
   // Runic-charged Dragon Breath: same ability (basic, +9 adrenaline, same
-  // cooldown), empowered band while Anima Charged — the charge is consumed at
+  // cooldown), empowered band while Anima Charged - the charge is consumed at
   // commit (castEffects). Not a separate ability.
   if (ability.id === "dragon_breath" && animaCharged(rt.state.magic.runicCharge, candidate)) {
     working = {
@@ -183,7 +183,7 @@ export function prepareCast(
     };
   }
   // Planted Feet: base Sunshine's duration extends (handled in castEffects) but
-  // its periodic beam damage is removed — schedule no DoT events at all (wiki:
+  // its periodic beam damage is removed - schedule no DoT events at all (wiki:
   // "they no longer deal periodic damage to your target"). Greater variants
   // and Death's Swiftness (no periodic hits since 16 Mar 2026) are unaffected.
   if (ability.appliesEffect === "sunshine" && input.plantedFeet) {
@@ -254,7 +254,7 @@ export function prepareCast(
     damaging &&
     rt.state.melee.enduringRuin.nextAttackBonus > 0 &&
     candidate < rt.state.melee.enduringRuin.untilTick;
-  // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") —
+  // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") - 
   // a channel cast inside the window keeps the bonus on hits landing after it.
   const searingWindsAtCast =
     ability.style === "ranged" && searingWindsBonusPct(rt.state.ranged.searingWinds, candidate) > 0;

@@ -1,6 +1,6 @@
 // One handler per operation, each writing canonical database fields directly.
 //
-// Handlers own no transaction and no ledger — apply.mjs does. Every operation
+// Handlers own no transaction and no ledger - apply.mjs does. Every operation
 // they receive has already been validated, so what is left here is the part that
 // needs the database: whether a row exists, and what to write. Each returns the
 // entity IDs it changed.
@@ -225,9 +225,9 @@ function tag(db, operation) {
 
 /**
  * Writes one source record, the unit documents are rebuilt from.
- *
+
  * Every other handler edits an entity, and no document is assembled from those
- * — export.mjs replays source records over a skeleton. So a reveal that adds a
+ * - export.mjs replays source records over a skeleton. So a reveal that adds a
  * record, rather than amending one, has no other way in.
  */
 function setRecord(db, operation, source) {

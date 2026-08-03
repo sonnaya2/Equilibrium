@@ -5,9 +5,8 @@ import { newRunicCharge, type RunicChargeState } from "./runicCharge";
 import type { SourceReference } from "../../types";
 
 /**
- * Channelled Might (30 Mar 2026): completing a full Asphyxiate channel grants
- * +15% magic critical strike damage for 3.6s. With 5 pieces of Tumeken's
- * resplendence it lasts 9s at +35%.
+ * Channelled Might (30 Mar 2026): full Asphyxiate channel → +15% magic crit damage
+ * for 3.6s; Tumeken 5-piece → 9s at +35%.
  */
 export const CHANNELLED_MIGHT_DURATION_SECONDS = 3.6;
 export const CHANNELLED_MIGHT_CRIT_DAMAGE_BONUS = 0.15;
@@ -49,12 +48,9 @@ export function channelledMightCritBonus(state: ChannelledMightState, tick: numb
 }
 
 /**
- * Flow (Sonic Wave, 2 Mar 2026): granted when Sonic Wave's hit LANDS (wiki:
- * "If the ability successfully damages your opponent, Flow is gained") — a
- * cancelled or non-landed cast grants nothing. For 9s (15 ticks) from the
- * land tick, the next eligible Magic ability costs 10 fewer adrenaline points
- * (Greater Flow: 20; Runic-charged: 35/45). Enhanced/ultimate Magic casts
- * consume it; basics never do. Cost floors at 0.
+ * Flow (Sonic Wave, 2 Mar 2026): granted when the hit lands only.
+ * 15 ticks: next eligible Magic costs -10 adren (Greater 20; Runic 35/45).
+ * Enhanced/ultimates consume; basics do not. Cost floors at 0.
  * https://runescape.wiki/w/Sonic_Wave (verified 2026-07-31).
  */
 export const FLOW_DURATION_TICKS = 15;
@@ -63,22 +59,15 @@ export const GREATER_FLOW_REDUCTION = 20;
 export const RUNIC_FLOW_BONUS = 25;
 
 /**
- * Concentrated Blast crit progression (wiki Critical strike): each channelled
- * hit grants +5% crit chance for the next Magic attack, including the
- * channel's own later hits; Greater Concentrated Blast +7%. Runic-empowered:
- * +15%/+17% per hit. Stacks apply at land time and the next non-CB magic
- * attack consumes them.
+ * Conc Blast crit (wiki Critical strike): +5% per channelled hit (+7% Greater);
+ * Runic +15%/+17%. Applies at land; next non-CB Magic attack consumes stacks.
  */
 export const CONC_BLAST_CRIT_PER_HIT_PCT = 5;
 export const GREATER_CONC_BLAST_CRIT_PER_HIT_PCT = 7;
 export const CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 15;
 export const GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 17;
 
-/**
- * Every mutable magic state the simulation carries between casts, Runic Charge
- * included. Combust's burn is deliberately absent: it is a debuff on the
- * target, so it lives in target state.
- */
+/** Mutable magic between-cast state. Combust burn lives on the target, not here. */
 export interface MagicRotationState {
   /** Runic Charge / Anima Charged window. */
   runicCharge: RunicChargeState;
@@ -111,19 +100,9 @@ export function isConcentratedBlast(abilityId: string): boolean {
 }
 
 /**
- * Sunshine / Greater Sunshine zone buff (wiki): Magic attacks deal 1.5x while
- * the player is inside the 7x7 beam. Sim assumes the player stays inside
- * (generic target; no position model).
- *
- * Base Sunshine: 50-tick (30s) beam; damage buff begins 1 tick (0.6s) after cast
- * → active on [cast+1, cast+50).
- * Greater Sunshine: 65-tick total duration; buff begins 1 tick after cast and
- * lasts 64 ticks → active on [cast+1, cast+65).
- *
- * Planted Feet (base only): duration × PLANTED_FEET_DURATION_MULT → 63 ticks
- * (Math.round(50 × 1.25)); same [cast+1, cast+duration) shape. Greater: no change.
- * Planted Feet also removes the periodic beam DoT — implemented in
- * castPreparation (the cast schedules no DoT events at all).
+ * Sunshine zone (wiki): 1.5x Magic while inside 7x7 beam; sim assumes player stays in.
+ * Base: buff [cast+1, cast+50). Greater: [cast+1, cast+65) (64 buff ticks after delay).
+ * Planted Feet: base only → Math.round(50 × 1.25) = 63 ticks; also drops beam DoT (castPreparation).
  */
 export const SUNSHINE_DAMAGE_MULTIPLIER = 1.5;
 /** Base Sunshine beam duration in ticks (wiki: 30s / 50 ticks). */
@@ -134,10 +113,7 @@ export const GREATER_SUNSHINE_BUFF_TICKS = 64;
 export interface SunshineState {
   startsAtTick: number;
   expiresAtTick: number;
-  /**
-   * Cast sequence that created the beam (sim provenance). The granting cast's
-   * own hits predate the buff and never take its multiplier.
-   */
+  /** Granting cast seq; that cast's hits never take the Sunshine mult. */
   grantedByCast?: number;
 }
 
@@ -171,7 +147,7 @@ export function activateSunshine(
   };
 }
 
-/** Greater Sunshine only — thin wrapper kept for existing call sites. */
+/** Greater Sunshine only - thin wrapper kept for existing call sites. */
 export function activateGreaterSunshine(tick: number): SunshineState {
   return activateSunshine(tick, true);
 }
@@ -208,16 +184,9 @@ export const GREATER_SUNSHINE_SOURCE: SourceReference = {
 };
 
 /**
- * Instability (FSOA special, wiki): grants a 30s (50-tick) self-buff. While active,
- * a Magic critical strike on the primary target fires Lightning Surge dealing
- * 70–90% ability damage, landing 1 tick after the source hit. Lightning Surge
- * crits do not chain further surges. Magic weapons only.
- * PvP: no crit effect and no cooldown — out of scope for this PvM EV sim.
- *
- * Wiki EV for one source hit under Instability:
- *   E = (1−p)·S_non-crit + p·(S_crit + T)
- * so the surge contribution is p·T, where T is the expected Lightning Surge hit
- * (crit-eligible for its own damage, no recursive proc).
+ * Instability (FSOA, wiki): 50-tick self-buff. Magic crit on primary fires Lightning
+ * Surge (70-90% AD, land +1 tick); surge crits do not chain. Magic weapons only.
+ * Surge EV contribution: p·T (T = expected surge hit, crit-eligible, no recurse).
  */
 export const INSTABILITY_DURATION_TICKS = 50;
 export const LIGHTNING_SURGE_BAND = { minPct: 70, maxPct: 90 } as const;
@@ -243,7 +212,7 @@ export function instabilityActive(state: InstabilityState, tick: number): boolea
 /**
  * Expected Lightning Surge contribution for one source hit.
  * `sourceCritChance` is that hit's crit probability; `surgeHitExpected` is the
- * full expected of a 70–90% ability-damage hit (including its own crit layer).
+ * full expected of a 70-90% ability-damage hit (including its own crit layer).
  */
 export function lightningSurgeExpected(sourceCritChance: number, surgeHitExpected: number): number {
   if (sourceCritChance <= 0 || surgeHitExpected <= 0) return 0;

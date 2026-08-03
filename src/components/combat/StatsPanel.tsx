@@ -77,7 +77,7 @@ function AutoNumberField({
   );
 }
 
-/** Engine output, not an input — reads as a result, never as an empty field. */
+/** Engine output, not an input - reads as a result, never as an empty field. */
 function DerivedRow({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
     <div className="stats-derived">

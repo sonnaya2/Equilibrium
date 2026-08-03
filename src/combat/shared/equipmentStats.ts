@@ -11,15 +11,10 @@ import { equipmentById } from "../data";
 export type { ArmourClass } from "../data/records";
 
 /**
- * Pure equipment stat derivation from tier, slot and armour classification.
- *
- * Exact sourced bonuses (EquipmentRecord.bonuses) always override these derived
- * values; these helpers exist for records whose bonuses are not individually
- * sourced. A slot that cannot carry a stat yields null — unknown stays
- * distinguishable from a sourced zero, and no value is invented.
- *
- * Armour base: f(t) = t³/500 + 10t + 100 (identical to 2.5 × accuracyCurve).
- * Armour and damage floor to one decimal; life points are integers.
+ * Equipment stat formulas from tier, slot, armour class.
+ * Exact EquipmentRecord.bonuses override; null when slot cannot carry the stat.
+ * Armour base: f(t) = t³/500 + 10t + 100 (= 2.5 × accuracyCurve).
+ * Armour/damage floor to 1 decimal; life points are integers.
  */
 export const EQUIPMENT_TIER_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -43,11 +38,7 @@ export const COMBAT_STATS_CALCULATOR_SOURCE: SourceReference = {
   verifiedAt: "2026-08-02",
 };
 
-/**
- * Floor to one decimal. The 1e-9 guard absorbs binary representation error at
- * exact decimal boundaries (e.g. 0.03 × f(50) = 25.5); real values are ~1e-6
- * apart, so the guard can never cross a mechanical boundary.
- */
+/** Floor to one decimal; 1e-9 guard for binary edge cases (e.g. 0.03 × f(50) = 25.5). */
 export function floorOneDecimal(value: number): number {
   return Math.floor(value * 10 + 1e-9) / 10;
 }
@@ -73,9 +64,8 @@ export function classArmourTier(tier: number, armourClass: ArmourClass): number 
 }
 
 /**
- * Armour slot multiplier (head .2, body .23, legs .22, hands .05, feet .05,
- * back .03, ring .02, shield .2). Shields are stored in the offhand slot, so
- * `shield` is explicit metadata. Null when the slot carries no Armour stat.
+ * Armour slot mult: head .2, body .23, legs .22, hands/feet .05, back .03,
+ * ring .02, shield .2 (offhand needs shield flag). Null if slot has no Armour.
  */
 export function armourSlotMultiplier(
   slot: EquipmentSlot,
@@ -102,10 +92,8 @@ export function armourSlotMultiplier(
 }
 
 /**
- * Derived Armour value for one piece: floor₁(mult × f(effective tier)).
- * `armourTier` overrides the class-adjusted tier for items whose armour tier
- * diverges from their headline tier (e.g. chainbodies at t−2, Vestments t70).
- * Null when the slot carries no Armour stat or the effective tier is unusable.
+ * Armour: floor1(mult × f(effective tier)). armourTier overrides class-adjusted
+ * tier when it differs from headline (chainbodies t-2, Vestments t70). Null if N/A.
  */
 export function equipmentArmourValue(
   slot: EquipmentSlot,
@@ -121,9 +109,8 @@ export function equipmentArmourValue(
 }
 
 /**
- * Defenders: half the shield multiplier at full tier — 0.1 × f(t) floored to
- * one decimal (rune t50 = 85.0, kalphite t90 = 245.8). Wiki prose claiming
- * half-tier stats conflicts with the live infobox values; the values win.
+ * Defender armour: 0.1 × f(t) floor1 (rune t50 = 85.0, kalphite t90 = 245.8).
+ * Infobox values win over wiki prose that claims half-tier.
  */
 export function defenderArmourValue(tier: number): number {
   return floorOneDecimal(0.1 * equipmentTierBase(tier));
@@ -144,11 +131,9 @@ export function shieldLifeValue(tier: number): number {
 }
 
 /**
- * Damage-bonus slot multipliers (9 Mar 2026 normalisation brought items back in
- * line with this formula): head .25, body/back/ring .375, legs .3125,
- * hands/feet/pocket .15625, neck .575. Melee ammo-harness items use .26875;
- * other ammo carries no damage bonus. Weapon slots have none — weapon damage
- * is encoded by tier, never listed as a bonus.
+ * Damage-bonus slot mult (9 Mar 2026 normalisation): head .25, body/back/ring
+ * .375, legs .3125, hands/feet/pocket .15625, neck .575, melee ammo harness
+ * .26875. Weapons: none (tier encodes damage).
  */
 export function damageSlotMultiplier(
   slot: EquipmentSlot,
@@ -177,18 +162,14 @@ export function damageSlotMultiplier(
 }
 
 /**
- * Effective damage tier by class: power and PvP armour carry damage at their
- * full tier; tank and hybrid carry none (null). Off-model hybrid-power items
- * (Cinderbane, rogue gloves, …) need an explicit damageTier on the record.
+ * Damage tier by class: power/PvP = full tier; tank/hybrid = null.
+ * Off-model hybrid-power items need explicit damageTier on the record.
  */
 export function classDamageTier(tier: number, armourClass: ArmourClass): number | null {
   return armourClass === "power" || armourClass === "pvp" ? tier : null;
 }
 
-/**
- * Derived equipment Damage bonus: floor₁(slot multiplier × damage tier),
- * applied per item. Null when the slot carries no damage bonus.
- */
+/** Damage bonus: floor1(slot mult × damage tier). Null if slot has none. */
 export function equipmentDamageValue(
   slot: EquipmentSlot,
   damageTier: number,
@@ -201,8 +182,8 @@ export function equipmentDamageValue(
 }
 
 /**
- * Defender damage: an off-hand fastest weapon of half tier — 4.8 × (t/2) —
- * floored to one decimal (rune 120.0, dragon 144.0, kalphite 216.0).
+ * Defender damage: floor1(2.4 × t) = half-tier off-hand fastest weapon.
+ * (rune 120.0, dragon 144.0, kalphite 216.0).
  */
 export function defenderDamageValue(tier: number): number {
   if (!Number.isFinite(tier) || tier < 1) {
@@ -212,11 +193,8 @@ export function defenderDamageValue(tier: number): number {
 }
 
 /**
- * Derived Life bonus for one armour piece.
- * Tank: slotMult × tier. Power: 0 by default — exceptional power sets (Nex,
- * masterwork magic/ranged) carry LP at tier−5, expressed by an explicit
- * `lifeTier` on the record. Hybrid and PvP: 0. Shield: 35 × (t−69).
- * Null when the slot carries no Life stat (jewellery, weapons, ammo, cape).
+ * Life: tank = slotMult × tier; power = 0 unless lifeTier set (Nex etc. at t-5);
+ * hybrid/PvP = 0; shield = 35 × (t-69). Null if slot has no Life.
  */
 export function equipmentLifeValue(
   slot: EquipmentSlot,
@@ -245,9 +223,9 @@ export interface IncompleteEquipmentStat {
 export interface EquipmentStatTotals {
   /** Style-matching equipment Damage bonus (exact bonuses, then formula). */
   damage: number;
-  /** Sum of every equipped Accuracy bonus including weapons — display only. */
+  /** Sum of every equipped Accuracy bonus including weapons - display only. */
   displayedAccuracy: number;
-  /** Non-weapon Accuracy — the mechanically applied term. Weapons are tier-encoded. */
+  /** Non-weapon Accuracy - the mechanically applied term. Weapons are tier-encoded. */
   appliedAccuracy: number;
   armour: number;
   life: number;
@@ -261,11 +239,7 @@ export interface EquipmentStatTotals {
 type ResolvedStat =
   { value: number; unknown?: never } | { value: 0; unknown: IncompleteEquipmentStat["reason"] };
 
-/**
- * Slots whose stat derivation is class-gated (armour pieces: tank t, power t−5,
- * hybrid t−15). Shields, rings and capes derive at raw tier; amulets, pockets
- * and ammo carry no Armour/Life at all.
- */
+/** Class-gated armour slots (tank t, power t-5, hybrid t-15). Rings/capes/shields use raw tier. */
 const CLASS_GATED_SLOTS: ReadonlySet<EquipmentSlot> = new Set([
   "helmet",
   "body",
@@ -284,7 +258,7 @@ function resolveArmour(record: EquipmentRecord): ResolvedStat {
   }
   if (armourSlotMultiplier(record.slot, record) == null) return { value: 0 };
   if (record.tier == null) return { value: 0, unknown: "missing-tier" };
-  // Shields, rings and capes take their multiplier at raw tier — no class offset.
+  // Shields, rings and capes take their multiplier at raw tier - no class offset.
   if (record.shield || !CLASS_GATED_SLOTS.has(record.slot)) {
     const derived = equipmentArmourValue(record.slot, record.tier, "tank", record);
     return derived == null ? { value: 0 } : { value: derived };
@@ -310,9 +284,8 @@ function resolveLife(record: EquipmentRecord): ResolvedStat {
 }
 
 function resolveDamage(record: EquipmentRecord): ResolvedStat {
-  // Weapon slots first: tier encodes ability damage. Wiki weapon Damage face
-  // values must never enter the equipment-damage total (only style bonuses do).
-  // Defenders are the exception — they carry a real off-hand style Damage bonus.
+  // Weapons: tier encodes AD; wiki weapon Damage face values stay out of totals.
+  // Defenders are the exception (real off-hand style Damage bonus).
   if (record.slot != null && isWeaponAccuracySlot(record.slot)) {
     if (record.defender) {
       if (record.bonuses.damage != null && Number.isFinite(record.bonuses.damage)) {
@@ -333,8 +306,7 @@ function resolveDamage(record: EquipmentRecord): ResolvedStat {
     return derived == null ? { value: 0 } : { value: derived };
   }
   if (!CLASS_GATED_SLOTS.has(record.slot)) {
-    // Jewellery without a sourced damage bonus contributes zero — absence is
-    // not flagged here; off-model hybrid-power items need an explicit damageTier.
+    // Non-class-gated slots without damageTier contribute 0 (need explicit damageTier if off-model).
     return { value: 0 };
   }
   if (record.armourClass == null) return { value: 0, unknown: "missing-armourClass" };
@@ -345,22 +317,15 @@ function resolveDamage(record: EquipmentRecord): ResolvedStat {
   return derived == null ? { value: 0 } : { value: derived };
 }
 
-/**
- * Style Damage for one catalogue record (exact bonus or formula). Weapons that
- * are not defenders always resolve to 0 — their contribution is weapon tier.
- */
+/** Style Damage for one record (exact or formula). Non-defender weapons resolve to 0. */
 export function equipmentRecordDamage(record: EquipmentRecord): number {
   return resolveDamage(record).value;
 }
 
 /**
- * The canonical equipment aggregation. Equipped slots only — unlock pins are
- * never equipped; duplicate item ids count once; an occupied twohand slot
- * locks mainhand/offhand out. Damage/accuracy sums keep the established
- * style-matching rule (hybrid counts for every style); armour, life, prayer
- * and crit chance are style-agnostic. Exact sourced bonuses win over
- * formula-derived values; anything unresolvable is reported in `incomplete`
- * instead of being silently treated as zero.
+ * Aggregate equipped gear via resolvedEquipmentSlots (twohand locks hands).
+ * Style-match damage/accuracy (hybrid matches all); armour/life/prayer/crit agnostic.
+ * Exact bonuses win over formula; unresolvable stats go in incomplete.
  */
 export function aggregateEquipmentStats(
   loadout: LoadoutEquipmentView & { style?: CombatStyle },

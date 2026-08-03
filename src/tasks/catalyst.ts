@@ -249,7 +249,7 @@ export async function fetchCatalystCompletionRates(): Promise<{
   }
 }
 
-/** Dev-only live fetch — used by refresh-catalyst-snapshot.mjs logic parity tests only. */
+/** Dev-only live fetch - used by refresh-catalyst-snapshot.mjs logic parity tests only. */
 export async function fetchCatalystTasksLive(
   expectedRecords?: number,
 ): Promise<CatalystTaskLoadResult> {

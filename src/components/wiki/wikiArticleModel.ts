@@ -7,14 +7,14 @@ import { safeWikiPage } from "@/lib/wikiArticle";
 import type { WikiDropTableRow } from "@/components/WikiDropTable";
 
 export type WikiArticleTarget = {
-  /** Local public/game art — never a wiki image URL. */
+  /** Local public/game art - never a wiki image URL. */
   localArtSrc: string | null;
   name: string;
   /** Existing catalog source URL; wrapper opens only when this is a wiki page. */
   wikiUrl?: string | null;
-  /** Extra local asset labels (reward names, etc.) already in memory — not wiki-fetched. */
+  /** Extra local asset labels (reward names, etc.) already in memory - not wiki-fetched. */
   relatedLabels?: string[];
-  /** Pre-resolved local icons from catalog rewards — used for drop table rows. */
+  /** Pre-resolved local icons from catalog rewards - used for drop table rows. */
   relatedIcons?: { label: string; src: string }[];
 };
 
@@ -47,7 +47,7 @@ export function isWikiView(data: unknown): data is WikiArticleClientView {
   }
   // Reject non-wiki / non-https pageUrl (defense-in-depth vs API drift).
   if (!safeWikiPage(v.pageUrl)) return false;
-  // Optional structured drops — tolerate missing; reject wrong shape.
+  // Optional structured drops - tolerate missing; reject wrong shape.
   if (v.drops != null && !Array.isArray(v.drops)) return false;
   return true;
 }

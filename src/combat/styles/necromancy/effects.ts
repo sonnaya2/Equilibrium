@@ -33,7 +33,7 @@ import {
  *   residualSouls  0..3 (0..5 with soulbound lantern)
  *   necrosisStacks 0..12
  *   livingDeath    30s / 50 ticks from cast tick (active while tick < until)
- *
+
  * Living Death grants +2 Necrosis on basics, +6% adrenaline on Touch of Death,
  * 1.5× Finger of Death damage, and a 17-tick Death Skulls cooldown.
  * Spectral Scythe soul chance is excluded from the deterministic simulation.

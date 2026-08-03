@@ -27,7 +27,7 @@ function factsToChips(facts: WikiFact[]): WikiFactChip[] {
 
 /**
  * Optional LOCAL /game overrides for drop rows.
- * Live wiki icons live on each row.iconUrl (harvested server-side) — not here.
+ * Live wiki icons live on each row.iconUrl (harvested server-side) - not here.
  */
 function dropIconMap(
   drops: WikiDropRow[],
@@ -74,7 +74,7 @@ export function WikiArticleDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [pixelated, setPixelated] = useState(false);
   const [load, setLoad] = useState<WikiLoadState>({ status: "idle" });
-  // Resolved only from the click-set target — never from row mount / hover.
+  // Resolved only from the click-set target - never from row mount / hover.
   const wiki = target?.wikiUrl ? safeWikiPage(target.wikiUrl) : null;
   const imageOnly = Boolean(target && !wiki);
   const fetchPageUrl = target && wiki ? wiki.pageUrl : null;
@@ -87,7 +87,7 @@ export function WikiArticleDialog({
   }, [target]);
 
   // Live wiki only after an icon click sets `target` with a wiki URL.
-  // No prefetch, no mount fetch, no hover — `fetchPageUrl` is null until then.
+  // No prefetch, no mount fetch, no hover - `fetchPageUrl` is null until then.
   useEffect(() => {
     if (!fetchPageUrl) {
       setLoad({ status: "idle" });
@@ -326,7 +326,7 @@ function WikiBody({
 
   const bodyHtml = view?.bodyHtml?.trim() ?? "";
   const leadHtml = view?.leadHtml?.trim() ?? "";
-  // Facts strip already shows combat level — don't double it under the art.
+  // Facts strip already shows combat level - don't double it under the art.
   const showArtCaption =
     !heroFacts.some((f) => /combat\s*level/i.test(f.label)) && Boolean(name && name !== heading);
 

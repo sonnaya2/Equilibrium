@@ -26,7 +26,7 @@ export function RegionPicker({ regions }: { regions: PlannerRegion[] }) {
   // Native `disabled` must be a real boolean on every render, and it must be
   // gated on `loaded`. The server snapshot is an empty build, so SSR always
   // ships `disabled`; but this subtree renders late (Suspense + next/dynamic),
-  // by which point the store can already hold real localStorage picks — and a
+  // by which point the store can already hold real localStorage picks - and a
   // first paint computed straight off `build` would drop the attribute the HTML
   // has, which React reports as an unpatchable mismatch. `loaded` is false for
   // every instance's first render, so this matches the HTML either way.

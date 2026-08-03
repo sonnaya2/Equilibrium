@@ -1,6 +1,6 @@
 import type { CombatContext, CombatModifier, DamageState, ModifierStage } from "../types";
 
-/** Explicit stage order — the pipeline is deterministic, never one combined formula. */
+/** Explicit stage order - the pipeline is deterministic, never one combined formula. */
 export const STAGE_ORDER: readonly ModifierStage[] = [
   "base",
   "ability",

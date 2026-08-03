@@ -30,7 +30,7 @@ export function resetCooldowns(fx: CastEffectContext, ids: readonly string[]): v
 }
 
 /**
- * Start a cooldown on an ability other than the one being cast — conjuring a
+ * Start a cooldown on an ability other than the one being cast - conjuring a
  * skeleton locks its command ability out for a sourced initial window.
  */
 export function startLinkedCooldown(fx: CastEffectContext, id: string, untilTick: number): void {

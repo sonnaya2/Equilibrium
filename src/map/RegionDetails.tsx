@@ -64,7 +64,7 @@ function RowTable({
       </thead>
       <tbody>
         {rows.map((row) => {
-          // Empty catalog detail is common on majors — show clipped rewards under name.
+          // Empty catalog detail is common on majors - show clipped rewards under name.
           const subtitle = contentDetailOrRewards(row, upgrades);
           return (
             <tr key={`${row.name}-${row.kind}`}>
@@ -135,7 +135,7 @@ export function RegionDetails({
   const { region } = useResearchRegion(focus.region);
   const detail = useMemo(() => (region ? makeRegionDetail(region) : null), [region]);
   // Names on the board (catalog areas + content-row sites). Sites never pad the
-  // places-pinned ratio — that meter is catalog areas only.
+  // places-pinned ratio - that meter is catalog areas only.
   const anchored = useMemo(
     () => new Set((PLACES_BY_REGION.get(focus.region) ?? []).map((p) => p.area)),
     [focus.region],

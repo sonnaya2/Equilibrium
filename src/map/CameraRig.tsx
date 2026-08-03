@@ -34,7 +34,7 @@ const TABLE_MARGIN = 1.07;
 const TABLE_BIAS = 0.055;
 const SURFACE_Y = 0.012;
 
-/** Soft hover parallax — disabled while dragging. */
+/** Soft hover parallax - disabled while dragging. */
 const PARALLAX_AZIMUTH = 0.02;
 const PARALLAX_ELEVATION = 0.01;
 
@@ -189,7 +189,7 @@ export function CameraRig({
     lastY: 0,
     button: 0,
   });
-  /** Held WASD codes — board-plane pan, same clamps as mouse pan. */
+  /** Held WASD codes - board-plane pan, same clamps as mouse pan. */
   const keys = useRef(new Set<string>());
   const targetVec = useMemo(() => new THREE.Vector3(), []);
   const position = useMemo(() => new THREE.Vector3(), []);
@@ -215,7 +215,7 @@ export function CameraRig({
   ]);
 
   // Hover parallax (not while dragging).
-  // Write pointer only — do NOT invalidate here. MotionDriver already ticks the
+  // Write pointer only - do NOT invalidate here. MotionDriver already ticks the
   // demand loop at idle Hz; per-move invalidate + getBoundingClientRect pins
   // the main thread under pointer traffic.
   useEffect(() => {
@@ -237,7 +237,7 @@ export function CameraRig({
       if (user.current.mode === "orbit" || user.current.mode === "pan") return;
       pointer.current.x = ((event.clientX - rect.left) / rectW) * 2 - 1;
       pointer.current.y = ((event.clientY - rect.top) / rectH) * 2 - 1;
-      // No invalidate — next MotionDriver frame samples pointer.current.
+      // No invalidate - next MotionDriver frame samples pointer.current.
     };
     const leave = () => {
       pointer.current.x = 0;
@@ -346,7 +346,7 @@ export function CameraRig({
 
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
-      // Trackpads can emit large deltas — allow up to 3 steps so a flick zooms.
+      // Trackpads can emit large deltas - allow up to 3 steps so a flick zooms.
       const steps = Math.max(1, Math.min(3, Math.round(Math.abs(event.deltaY) / 100)));
       nudgeZoom(event.deltaY > 0 ? -steps : steps);
       pokeMapActivity();
@@ -354,7 +354,7 @@ export function CameraRig({
     };
 
     const onContext = (event: Event) => {
-      // RMB pan — block browser menu on the canvas.
+      // RMB pan - block browser menu on the canvas.
       event.preventDefault();
     };
 
@@ -376,7 +376,7 @@ export function CameraRig({
     };
   }, [gl, invalidate, reducedMotion, flags.topDown]);
 
-  // WASD board pan — window-level so canvas need not steal focus (ledger stays
+  // WASD board pan - window-level so canvas need not steal focus (ledger stays
   // the a11y surface). Ignore when typing in form fields / contenteditable.
   useEffect(() => {
     if (reducedMotion) return;
@@ -516,7 +516,7 @@ export function CameraRig({
       targetVec.y + Math.sin(elevation) * state.radius,
       targetVec.z + Math.cos(azimuth) * flat,
     );
-    // Hard floor — never under the table.
+    // Hard floor - never under the table.
     if (position.y < 0.08) position.y = 0.08;
 
     camera.position.copy(position);

@@ -2,7 +2,7 @@
 /**
  * Solver benchmark CLI.
  * Spawns vitest on the permanent harness under src/combat/solver/benchmarks/.
- *
+
  * Usage:
  *   node scripts/benchmarks/solver.mjs            # quick
  *   node scripts/benchmarks/solver.mjs quick

@@ -1,5 +1,5 @@
 // Reading a patch file: bytes, lines, JSON, limits. Nothing here interprets or
-// mutates an operation — the objects it returns are exactly what the file said,
+// mutates an operation - the objects it returns are exactly what the file said,
 // so validation can compare against them and the content hash means the file.
 import { readFileSync } from "node:fs";
 import { PATCH_LIMIT_BYTES, PATCH_LIMIT_OPERATIONS } from "../config.mjs";

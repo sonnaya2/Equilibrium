@@ -8,14 +8,14 @@ import type { PreparedCast } from "../prepare";
  * the same ability, variant and tick instead of re-destructuring the prepared
  * cast. `rng` carries the driver's enumerated outcome for this cast's single
  * state-changing RNG point (absent = did not proc).
- *
+
  * Effect modules mutate through the runtime/state patch helpers, so no state
  * object is ever changed in place.
  */
 export interface CastEffectContext {
   rt: SimulationRuntime;
   prepared: PreparedCast;
-  /** The ability as queued — id, style and category checks read this. */
+  /** The ability as queued - id, style and category checks read this. */
   ability: AbilitySpec;
   /** The resolved variant whose hits were actually scheduled. */
   working: AbilitySpec;

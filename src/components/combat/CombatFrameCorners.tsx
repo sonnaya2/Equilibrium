@@ -1,4 +1,4 @@
-/** Quiet L-brackets on combat workbench frames — corners only, no center gem. */
+/** Quiet L-brackets on combat workbench frames - corners only, no center gem. */
 export function CombatFrameCorners() {
   return (
     <span className="combat-frame-corners" aria-hidden="true">

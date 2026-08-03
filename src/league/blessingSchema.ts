@@ -1,6 +1,6 @@
 /**
  * Runtime shape checks for the generated blessings document and persisted
- * blessing selections. No React, no combat — pure structural validation so the
+ * blessing selections. No React, no combat - pure structural validation so the
  * domain module can fail closed at load rather than trust shard JSON.
  */
 

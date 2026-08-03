@@ -69,7 +69,7 @@ export function RegionPlate({
   const { build } = useBuild();
   const { focus, focusRegion } = useMapFocus();
   const invalidate = useThree((s) => s.invalidate);
-  // Ref, not useState — hover must not re-render the plate tree.
+  // Ref, not useState - hover must not re-render the plate tree.
   const hovered = useRef(false);
 
   const depth = PLATE_DEPTH[id];
@@ -114,7 +114,7 @@ export function RegionPlate({
     if (wasUnlocked.current !== null && unlocked && !wasUnlocked.current && !reducedMotion) {
       sweep.current = 1;
       mats.sweep.value = 1;
-      // Colour restore runs while lock is already 0 — grey peels via sweep.
+      // Colour restore runs while lock is already 0 - grey peels via sweep.
       mats.lock.value = 0;
       // Bloom MRT only while the green frontier runs (~SWEEP_SECONDS).
       pokeMapBloom(SWEEP_SECONDS * 1000 + 400);
@@ -128,7 +128,7 @@ export function RegionPlate({
   // that flips it, so the plate teleports instead of rising.
   //
   // Seed in layout (and again on the first frame if the ref was late) so the
-  // first painted pose is already at rest — starting at y=0 buried the plate
+  // first painted pose is already at rest - starting at y=0 buried the plate
   // under the sea and eased it up as a mount pop.
   const group = useRef<THREE.Group>(null);
   const targetY = plateBaseY(id, unlocked, subject);

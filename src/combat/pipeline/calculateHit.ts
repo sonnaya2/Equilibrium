@@ -20,7 +20,7 @@ export interface HitInput {
   context?: CombatContext;
   modifiers?: CombatModifier[];
   cap?: HitCapRule;
-  /** Precise perk rank 1–6; raises min hit by 1.5% of max per rank. */
+  /** Precise perk rank 1-6; raises min hit by 1.5% of max per rank. */
   preciseRank?: number;
 }
 

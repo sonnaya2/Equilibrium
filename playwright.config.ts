@@ -1,10 +1,10 @@
 import { defineConfig } from "@playwright/test";
 
 /**
- * Default local E2E (Chromium, headless). Port 3100 by default — 3000 is used
+ * Default local E2E (Chromium, headless). Port 3100 by default - 3000 is used
  * by another app on this machine. Map/WebGPU board assertions skip without a
  * GPU adapter; use playwright.webgpu.config.ts for a headed Edge pass.
- *
+
  *   npm run playwright:install   # browsers (once per machine / package bump)
  *   npm run test:e2e             # full e2e/
  *   npm run test:e2e:combat      # combat-only (no map suite)

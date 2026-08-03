@@ -94,7 +94,7 @@ function supportIssue(ability: PoolAbility): ExclusionReason | null {
 }
 
 /**
- * Static Revolution-bar validation. Does not simulate — uniqueness, size,
+ * Static Revolution-bar validation. Does not simulate - uniqueness, size,
  * style, weapon/equipment, support status, off-GCD, and replacement groups.
  */
 export function validateBarEligibility(

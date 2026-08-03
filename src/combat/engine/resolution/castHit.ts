@@ -27,9 +27,9 @@ import { activeBleedCount } from "../../styles/melee/effects";
  * state at that tick; the cast snapshot carries the next-hit crit layers (first
  * eligible hit only), Chaos Roar's channel rule, empowerment, and Searing Winds'
  * cast-time eligibility.
- *
- * The Searing Winds bonus is an ATTACHED component of this hit — never a
- * separate event — so it cannot inflate proc rolls, stacks, or hit counters.
+
+ * The Searing Winds bonus is an ATTACHED component of this hit - never a
+ * separate event - so it cannot inflate proc rolls, stacks, or hit counters.
  */
 export function resolveCastHit(
   rt: SimulationRuntime,

@@ -68,7 +68,7 @@ describe("Adrenaline Junkie generation", () => {
     expect(withoutBlessing).toBeCloseTo(listedGain + IMPATIENT_EXTRA_ADRENALINE, 10);
     expect(withBlessing).toBeCloseTo(listedGain * 1.5 + IMPATIENT_EXTRA_ADRENALINE, 10);
     // The blessing moved only the listed generation, so the delta is exactly the
-    // multiplier acting on it — the flat grant is untouched.
+    // multiplier acting on it - the flat grant is untouched.
     expect(withBlessing - withoutBlessing).toBeCloseTo(listedGain * 0.5, 10);
   });
 

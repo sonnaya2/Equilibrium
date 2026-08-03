@@ -2,13 +2,7 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
 /**
- * Lean Next + TS lint for CI:
- * - unused imports/vars
- * - classic React hooks mistakes
- * - no broad style churn
- *
- * React Compiler-style rules (set-state-in-effect, immutability) stay off until
- * the map/tasks clients can be migrated without a rewrite.
+ * Next + TS lint: unused vars, hooks rules. Compiler-era rules off until map/tasks migrate.
  */
 const config = [
   {
@@ -68,8 +62,7 @@ const config = [
     },
   },
   // Combat layer boundaries (mirrors scripts/architecture/check.mjs).
-  // packRequest.ts is known legacy debt (UI loadout types); shared→engine is
-  // enforced by the architecture script only (helpers still live in engine).
+  // packRequest.ts: legacy debt; shared->engine enforced by architecture script only.
   {
     files: ["src/combat/**/*.{ts,tsx}"],
     ignores: [
@@ -158,8 +151,7 @@ const config = [
     },
   },
   {
-    // Node .mjs data platform — catch unused vars / undefined globals without
-    // forcing a TypeScript migration of the whole pipeline.
+    // Node data-platform scripts: no-undef / unused-vars without TS migration.
     files: ["scripts/data/**/*.{js,mjs,cjs}"],
     languageOptions: {
       globals: {

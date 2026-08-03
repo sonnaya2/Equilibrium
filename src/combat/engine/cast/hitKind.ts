@@ -1,6 +1,6 @@
 import type { AbilityHit } from "../../pipeline/calculateAbility";
 
-/** Explicit hit classification — never infer bleed/DoT from critEligible. */
+/** Explicit hit classification - never infer bleed/DoT from critEligible. */
 
 export function isDamagingHit(hit: AbilityHit): boolean {
   return hit.band.maxPct > 0 || hit.band.minPct > 0;

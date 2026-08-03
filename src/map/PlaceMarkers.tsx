@@ -23,9 +23,9 @@ const Y_SPEED = 6.5;
 /** POI sizes in world units; areas are larger than sites. */
 const FACE_AREA = 0.03;
 const FACE_SITE = 0.018;
-/** ED2 — between area and site so the pin is readable without drowning neighbours. */
+/** ED2 - between area and site so the pin is readable without drowning neighbours. */
 const FACE_ED2 = 0.028;
-/** Solak / big outdoor bosses — larger than a generic site so the disc clears the plate. */
+/** Solak / big outdoor bosses - larger than a generic site so the disc clears the plate. */
 const FACE_SOLAK = 0.026;
 const BEAM_H_AREA = 0.014;
 const BEAM_H_SITE = 0.014;

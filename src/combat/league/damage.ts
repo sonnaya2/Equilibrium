@@ -33,61 +33,35 @@ export interface LeagueDamageComponent {
 }
 
 /**
- * Where one damage instance came from, as the blessings see it. This is the only
- * vocabulary blessing eligibility is expressed in, so the Quick calculator and
- * the simulator cannot drift apart on which damage qualifies.
+ * Damage provenance for blessing eligibility (shared by Quick calc + simulator).
  */
 export type BlessingDamageSource =
-  /** An ordinary hit of a player attack — including channel hits and extra hits of a multi-hit. */
+  /** Player attack hit (incl. channel / multi-hit extras). */
   | "direct"
-  /** A bleed or other damage-over-time tick from a player attack. */
+  /** Bleed or other DoT tick from a player attack. */
   | "dot"
-  /** A conjure command hit: the player cast it, the spirit delivered it. */
+  /** Conjure command hit (player cast, spirit delivered). */
   | "command"
-  /** An autonomous conjure auto or its poison — no player cast behind this tick. */
+  /** Autonomous conjure auto or its poison (no player cast). */
   | "conjure"
-  /** Equipment or Invention perk proc damage (Crackling, Aftershock, Abyssal parasite). */
+  /** Equipment/perk proc (Crackling, Aftershock, Abyssal parasite). */
   | "proc"
   /** Damage a blessing itself generated. */
   | "blessing";
 
 export interface BlessingHitEligibility {
-  /**
-   * Riders that read as bonus damage on damage already being dealt: Abyssal
-   * Cinders' 15% ("your attacks deal 15% of ability damage as bonus damage")
-   * and Big Boned's 5% of maximum life ("all damage you deal gains…").
-   */
+  /** Bonus riders: Cinders 15% ability dmg + Big Boned 5% max life. */
   rider: boolean;
-  /**
-   * Rolls and cooldown-gated triggers that the cards prefix with "on hit":
-   * Inferno of Zamorak's 5% and Light of Saradomin. These follow the engine's
-   * hit-count integrity rule — one real proc-eligible hit is one roll.
-   */
+  /** On-hit rolls: Inferno 5%, Light of Saradomin; one roll per proc-eligible hit. */
   onHit: boolean;
 }
 
 const NO_BLESSING_DAMAGE: BlessingHitEligibility = { rider: false, onHit: false };
 
 /**
- * The single eligibility policy for blessing-generated damage.
- *
- * Sourced: the reveal text prefixes both Abyssal Cinders clauses with "On hit",
- * so each qualifying landed hit rolls — a seven-hit Greater Ricochet gets seven
- * 5% rolls, not one. Big Boned's "all damage you deal" is deliberately wider
- * than the Cinders wording and covers damage-over-time too.
- *
- * Provisional, and flagged as such in the blessing records:
- *   - a damage-over-time tick carries the riders but does not roll an on-hit
- *     proc: it is the tail of an attack whose landing already rolled;
- *   - autonomous conjure damage is not "your attacks" and is excluded entirely,
- *     while a commanded hit — a player cast — keeps the riders;
- *   - equipment and perk procs are neither attacks nor damage the player dealt
- *     directly, so they are excluded;
- *   - attached components are never separate hits, so per the hit-count
- *     integrity rule they can neither carry a rider nor roll a proc;
- *   - blessing damage never feeds any blessing, so nothing can recurse.
- * Damage Potential replaces hit/miss rolls against NPCs, so there is no "missed
- * hit" case; a zero-damage event is excluded by its caller.
+ * Blessing eligibility. Rider (Cinders/Big Boned) on direct+DoT+command; onHit on direct only.
+ * GRico 7 hits = 7 Inferno rolls. Excluded: attached, blessing, proc, autonomous conjure.
+ * No recursion on blessing damage. DoT carries riders but not on-hit (landing already rolled).
  */
 export function blessingHitEligibility(
   source: BlessingDamageSource,
@@ -107,10 +81,7 @@ export interface LeagueDamageInput {
   source: BlessingDamageSource;
   /** True when the instance is an attached component rather than its own hit. */
   attached?: boolean;
-  /**
-   * Sim land tick for timed max-life effects (Powerburst). Defaults to 0 so
-   * single-cast views use the freeze-at-request window.
-   */
+  /** Land tick for timed max-life (Powerburst); default 0 = freeze-at-request for single-cast. */
   landTick?: number;
   base: number;
   level: number;
@@ -175,8 +146,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
-  // Per unique hit (Mod Sponge): flat 5% of land-time max life, attached,
-  // crit-eligible bonus damage (product model — live crit eligibility unverified).
+  // Big Boned: flat 5% land-time max life, attached, crit-eligible (live crit unconfirmed).
   const bigBoned = blessingRule(input.rules, "big-boned");
   if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
     const hit = calculateHit({
@@ -293,11 +263,7 @@ export interface GraspOfGuthixInput {
 }
 
 /**
- * Grasp of Guthix, resolved through the same hit pipeline as every other
- * blessing component so the poison band, target modifiers and hit cap are not
- * re-derived here. Poison damage is not critical-eligible, and like every other
- * blessing-generated hit it carries `blessingGenerated` so it cannot feed
- * Abyssal Cinders, Splash Zone, Striking Light, or itself.
+ * Grasp of Guthix poison via hit pipeline; non-crit, blessingGenerated (no feed-back).
  */
 export function graspOfGuthixComponent(
   input: GraspOfGuthixInput,
@@ -347,8 +313,7 @@ export function calculateLeagueAbility(
 ): LeagueAbilityResult {
   const { rules, strikingLightReady, ...baseInput } = input;
   const ordinary = calculateAbility(ability, baseInput);
-  // Light of Saradomin's 9-second cooldown outlives any single cast, so at most
-  // the first direct hit of this cast can trigger it.
+  // Light of Saradomin 9s CD: at most first direct hit of this cast can trigger.
   let lightAvailable = strikingLightReady ?? true;
   const contributions = ability.hits.flatMap((hit, hitIndex) => {
     const source: BlessingDamageSource = hit.dot ? "dot" : "direct";

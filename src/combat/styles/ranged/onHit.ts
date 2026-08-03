@@ -3,11 +3,8 @@ import { MODERNISATION_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 
 /**
- * Splintering arrows: ranged abilities apply Puncture — each stack contributes 1%
- * ability damage, up to 250, on a 30-second duration model (modernisation-2026
- * corpus, wiki-confirmed). The corpus does not pin how the bonus applies to a hit,
- * so the machine tracks stacks and duration and exposes the contribution as data;
- * damage integration waits on confirmed wording.
+ * Splintering arrows / Puncture: +1% ability damage per stack, cap 250, 30s
+ * (modernisation-2026, wiki). Stacks tracked as data; damage integration pending confirmed wording.
  */
 export const PUNCTURE_CAP = 250;
 export const PUNCTURE_DURATION_SECONDS = 30;
@@ -33,7 +30,7 @@ export function applyPuncture(state: PunctureState, tick: number, stacks = 1): P
   };
 }
 
-/** Bonus ability-damage percent from active stacks — data, not an applied modifier. */
+/** Bonus ability-damage percent from active stacks - data, not an applied modifier. */
 export function punctureBonusPct(state: PunctureState, tick: number): number {
   return activePuncture(state, tick).stacks * PUNCTURE_ABILITY_DAMAGE_PER_STACK_PCT;
 }
@@ -41,11 +38,9 @@ export function punctureBonusPct(state: PunctureState, tick: number): number {
 export const PUNCTURE_SOURCE: SourceReference = MODERNISATION_WIKI;
 
 /**
- * Deathspore arrows (post-2 Mar 2026, wiki update history): every landed Ranged
- * hit grants a Feasting Spores stack; at 12 the stacks are consumed for a 9s
- * (15 tick) free-cast buff and a 30s (50 tick) cooldown that starts WITH the
- * buff — no stacks while it runs. The free cast zeroes the adrenaline SPEND but
- * not the requirement: the listed adrenaline must still be on hand.
+ * Deathspore arrows (post-2 Mar 2026): landed Ranged hit -> Feasting Spores stack;
+ * at 12: consume for 9s (15 tick) free-cast + 30s (50 tick) CD starting with buff
+ * (no stacks during CD). Free cast zeroes adrenaline spend, not the requirement.
  * https://runescape.wiki/w/Deathspore_arrows (verified 2026-07-31).
  */
 export const DEATHSPORE_FREE_ABILITY_STACKS = 12;
@@ -66,11 +61,7 @@ export const newDeathspore = (): DeathsporeState => ({
   cooldownUntilTick: 0,
 });
 
-/**
- * One landed ranged hit at `tick`. During the cooldown no stacks are gained;
- * the 12th stack consumes all stacks, opens the free-cast window, and starts
- * the shared cooldown.
- */
+/** Landed ranged hit: no stacks during CD; 12th opens free-cast + starts shared CD. */
 export function onRangedHit(state: DeathsporeState, tick: number): DeathsporeState {
   if (tick < state.cooldownUntilTick) return state;
   const stacks = state.stacks + 1;
@@ -95,11 +86,8 @@ export function spendDeathspore(state: DeathsporeState, tick: number): Deathspor
 export const DEATHSPORE_SOURCE: SourceReference = MODERNISATION_WIKI;
 
 /**
- * Searing Winds lasts 10 ticks (6s), adds 20% ability damage to each ranged
- * ability hit as attached bonus damage, and gains one tick per Rapid Fire hit.
- * Eligibility is checked AT CAST: an ability cast while the buff is open keeps
- * the bonus on every hit even if the buff expires mid-channel (wiki:
- * "The extra damage is calculated on cast").
+ * Searing Winds: 10 ticks (6s), +20% ability damage as attached bonus per ranged
+ * ability hit; +1 tick per Rapid Fire hit. Eligibility AT CAST (wiki: "calculated on cast").
  * https://runescape.wiki/w/Searing_Winds (verified 2026-07-31).
  */
 export const SEARING_WINDS_DURATION_TICKS = 10;
@@ -108,10 +96,7 @@ export const RAPID_FIRE_SEARING_WINDS_TICKS_PER_HIT = 1;
 
 export interface SearingWindsState {
   expiresAtTick: number;
-  /**
-   * Cast sequence that applied the buff (sim provenance). The granting cast's
-   * own hits predate the buff and never take its attached bonus.
-   */
+  /** Cast seq that applied the buff; that cast's own hits never take the attached bonus. */
   grantedByCast?: number;
 }
 

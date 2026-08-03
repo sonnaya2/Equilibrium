@@ -1,10 +1,10 @@
 /**
  * Unlit POI faces preserve atlas chroma. Binary alpha and depthWrite prevent
  * demand-loop flicker; gem emissive activates only for lit markers.
- *
+
  * `aState` on the face geometry:
  *   x  1 when this is a site rather than a named area
- *   y  0..1 lit — hovered or selected
+ *   y  0..1 lit - hovered or selected
  */
 
 import * as THREE from "three/webgpu";
@@ -45,7 +45,7 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
   const material = new THREE.MeshBasicNodeMaterial({
     transparent: true,
     depthWrite: true,
-    // Low — atlas cells are flattened opaque; higher alphaTest clips icon edges.
+    // Low - atlas cells are flattened opaque; higher alphaTest clips icon edges.
     alphaTest: 0.08,
     side: THREE.FrontSide,
     toneMapped: false,
@@ -94,9 +94,8 @@ export function createMarkerMaterial(atlas: THREE.Texture): MarkerMaterial {
 }
 
 /**
- * Soft light pillar from plate to disc. Additive colour only — no emissive —
- * so bloom stays off the wiki raster. Pulse rides mapClock (no extra invalidate).
- *
+ * Soft light pillar from plate to disc. Additive colour only (no emissive) so
+ * bloom stays off the wiki raster. Pulse rides mapClock (no extra invalidate).
  * Instance attribute `aLit` (float): 0 rest brass, 1 gem when hovered/selected.
  */
 export function createMarkerBeamMaterial(): MarkerMaterial {
@@ -160,7 +159,7 @@ export function createMarkerFootMaterial(): MarkerMaterial {
   };
 }
 
-/** Invisible hit proxy — wider than the painted face, never drawn. */
+/** Invisible hit proxy - wider than the painted face, never drawn. */
 export function createMarkerHitMaterial(): MarkerMaterial {
   const material = new THREE.MeshBasicNodeMaterial({
     colorWrite: false,

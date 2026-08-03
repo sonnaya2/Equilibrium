@@ -1,6 +1,6 @@
 /**
  * Decode common HTML entities in free text (wiki displaytitle, scraped labels).
- * Pure — no DOM. Prefer this before display or icon slug resolution.
+ * Pure - no DOM. Prefer this before display or icon slug resolution.
  */
 
 /** Valid Unicode scalar for String.fromCodePoint (no surrogates, no overflow). */

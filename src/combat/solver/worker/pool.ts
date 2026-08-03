@@ -1,5 +1,5 @@
 /**
- * Parallel Revolution solver agents — one Web Worker each, different seeds.
+ * Parallel Revolution solver agents - one Web Worker each, different seeds.
  * Host merges progress (best / total evals) and picks the winning DTO.
  */
 
@@ -36,7 +36,7 @@ function post(worker: Worker, message: HostToWorkerMessage): void {
   worker.postMessage(message);
 }
 
-/** Align with host — DOMException or Error named AbortError. */
+/** Align with host - DOMException or Error named AbortError. */
 function isAbortError(err: unknown): boolean {
   return (
     (err instanceof DOMException && err.name === "AbortError") ||
@@ -102,7 +102,7 @@ function agentSnapshot(
   );
 }
 
-/** Exported for unit tests — host progress merge across parallel agents. */
+/** Exported for unit tests - host progress merge across parallel agents. */
 export function mergeProgress(
   parts: readonly (SolverProgress | undefined)[],
   agentCount: number,
@@ -137,7 +137,7 @@ export function mergeProgress(
   let anyStillSearching = false;
   let anyFinalize = false;
   let allDone = live.length > 0;
-  /** Furthest shortlist score — not the exploratory-score leader. */
+  /** Furthest shortlist score - not the exploratory-score leader. */
   let finalizeLead: SolverProgress | undefined;
   let bestExploratory = Number.NEGATIVE_INFINITY;
   let bestFull = Number.NEGATIVE_INFINITY;
@@ -149,7 +149,7 @@ export function mergeProgress(
   let hasFullEvals = false;
   let fullMemoHits = 0;
   let hasFullMemo = false;
-  /** Busiest unfinished agent’s active bar — keeps the strip cycling under merge. */
+  /** Busiest unfinished agent’s active bar - keeps the strip cycling under merge. */
   let activeLead: SolverProgress | undefined;
 
   for (const p of live) {
@@ -162,7 +162,7 @@ export function mergeProgress(
     if (!finished) allDone = false;
     const inFinalize = p.phase === "finalize" || finished;
     if (inFinalize) anyFinalize = true;
-    // Still exploring/exploiting — do not promote the merged phase to finalize yet.
+    // Still exploring/exploiting - do not promote the merged phase to finalize yet.
     if (!finished && p.phase !== "finalize") {
       anyStillSearching = true;
       if (phaseRank(p.phase) > phaseRank(searchPhase)) searchPhase = p.phase;
@@ -256,7 +256,7 @@ export function mergeProgress(
   };
 }
 
-/** Score-first merge — higher score always beats longer bar (see rankResults). */
+/** Score-first merge - higher score always beats longer bar (see rankResults). */
 export function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
   if (results.length === 0) {
     throw new Error("revolution solver pool: no results");
@@ -276,7 +276,7 @@ export function mergeResults(results: readonly SolverResultDTO[]): SolverResultD
     push(r.bar, r.score, r.bar.join("\0"));
     for (const t of r.top ?? []) push(t.bar, t.score, t.fingerprint);
   }
-  // Score desc, deterministic fingerprint for ties — never length-over-score.
+  // Score desc, deterministic fingerprint for ties - never length-over-score.
   top.sort(compareTopEntry);
 
   let evaluations = 0;
@@ -563,7 +563,7 @@ export class SolverAgentPool {
           }
         };
 
-        // ACK watchdog only — slow import after started is not a pool failure.
+        // ACK watchdog only - slow import after started is not a pool failure.
         const ackMs = getFirstAckMs();
         bootTimer = setTimeout(() => {
           if (settled || acknowledged) return;

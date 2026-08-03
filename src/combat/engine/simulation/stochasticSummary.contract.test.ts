@@ -224,7 +224,7 @@ describe("stochastic summary contract", () => {
     expect(s.history.selectionReason).toBe("highest-probability-mass");
     expect(s.rng?.representative.historyKind).toBe("representative-terminal-class");
     expect(s.duration.kind).toBe("stochastic");
-    // Intermediate merges mix ledgers while keeping one event log — never claim reconcile.
+    // Intermediate merges mix ledgers while keeping one event log - never claim reconcile.
     expect(s.history.eventsReconcileWithWeightedTotals).toBe(false);
     expect(s.rng?.representative.eventsReconcileWithWeightedTotals).toBe(false);
   });

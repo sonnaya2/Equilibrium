@@ -3,7 +3,7 @@
  *
  * One normalized representation of a SerializableSolverRequest; purpose-specific
  * fingerprints (solve job vs evaluation memo) are derived from slices of it.
- * Do not hand-pick ad-hoc field lists at call sites — extend this module.
+ * Do not hand-pick ad-hoc field lists at call sites - extend this module.
  */
 
 import type { HitCapRule } from "../core/hitCaps";
@@ -180,7 +180,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       blessingIds: sortedStrings(loadout.league.blessingIds as readonly string[]),
       totalArmour: loadout.league.totalArmour,
       maximumLife: loadout.league.maximumLife,
-      // Exact remaining ticks — different durations change damage; never collapse to boolean.
+      // Exact remaining ticks - different durations change damage; never collapse to boolean.
       powerburstUntilTick: powerburstRemainingTicksFromRequest(loadout),
       targetTiles: loadout.league.targetTiles,
     },
@@ -191,7 +191,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
   };
 }
 
-/** Objective profile, weights, horizons, size bounds — shared by solve + eval. */
+/** Objective profile, weights, horizons, size bounds - shared by solve + eval. */
 export function canonicalObjectiveIdentity(request: SerializableSolverRequest): unknown {
   return {
     schema: request.schemaVersion ?? SOLVER_SCHEMA_VERSION,
@@ -205,7 +205,7 @@ export function canonicalObjectiveIdentity(request: SerializableSolverRequest): 
     minBarSize: request.minBarSize,
     maxBarSize: request.maxBarSize,
     ruleset: request.ruleset,
-    // Path pick sequence (order-sensitive) — full set, not a collapsed god tier.
+    // Path pick sequence (order-sensitive) - full set, not a collapsed god tier.
     blessingPicks: [...(request.blessingPicks ?? [])],
   };
 }
@@ -242,7 +242,7 @@ export interface CanonicalNormalizedIdentity {
 
 /**
  * Single canonical normalized request representation.
- * Purpose-specific fingerprints pick slices — do not fork field lists elsewhere.
+ * Purpose-specific fingerprints pick slices - do not fork field lists elsewhere.
  */
 export function canonicalNormalizedIdentity(
   request: SerializableSolverRequest,

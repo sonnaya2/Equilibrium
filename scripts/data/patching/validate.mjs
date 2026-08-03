@@ -2,8 +2,8 @@
 //
 // Validation never touches the parsed operation: it returns a frozen validated
 // copy with defaults applied and identifiers normalized, and the handlers in
-// operations.mjs read only that copy. Anything the database has to answer —
-// whether an entity exists, whether a source is already cited — belongs to the
+// operations.mjs read only that copy. Anything the database has to answer - 
+// whether an entity exists, whether a source is already cited - belongs to the
 // handler, not here.
 import { normalizeRegion, scalar, slugify } from "../utilities.mjs";
 
@@ -31,7 +31,7 @@ const SOURCE_FIELDS = new Set([
 const REGION_RELATIONS = new Set(["primary", "required", "optional", "hint", "excluded", "global"]);
 
 // Every operation, the keys it accepts and the keys it requires. `op` is always
-// accepted, and `reason` is accepted everywhere as an annotation — `remove` is
+// accepted, and `reason` is accepted everywhere as an annotation - `remove` is
 // the one operation that requires it.
 const SCHEMA = new Map([
   ["upsert", { keys: ["entity", "set"], required: ["entity", "set"] }],
@@ -162,7 +162,7 @@ const SHAPE = {
     return { file, path, body: operation.body, entity, reason: scalar(operation.reason) };
   },
   // A requirement is keyed by (entity, kind, description), so those three are
-  // the whole identity — the ordinal is the database's, and the handler picks it.
+  // the whole identity - the ordinal is the database's, and the handler picks it.
   requirement: (operation, context) => {
     const level = operation.level ?? null;
     if (level !== null && (!Number.isInteger(level) || level < 0 || level > 200)) {

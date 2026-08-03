@@ -59,7 +59,7 @@ function post(worker: Worker, message: HostToWorkerMessage): void {
   worker.postMessage(message);
 }
 
-/** True AbortError only — bare Error("solver cancelled") is not intentional user cancel. */
+/** True AbortError only - bare Error("solver cancelled") is not intentional user cancel. */
 function isAbortError(err: unknown): boolean {
   return (
     (err instanceof DOMException && err.name === "AbortError") ||
@@ -75,7 +75,7 @@ export function isSolverPreferringMainThread(): boolean {
   return stickyMainThread;
 }
 
-/** Test / recovery hook — not part of the product combat barrel. */
+/** Test / recovery hook - not part of the product combat barrel. */
 export function resetSolverHostForTests(): void {
   stickyMainThread = false;
   if (productRun) productRun.cancelled = true;
@@ -145,7 +145,7 @@ export type PauseResumeResult =
 /**
  * Product entry: parallel worker agents when possible; sticky main fallback after
  * infrastructure failure. Cancellation is always via {@link cancelOptimize}
- * (or options.isCancelled / signal) — one path for every mode.
+ * (or options.isCancelled / signal) - one path for every mode.
  */
 export async function runOptimize(
   request: SerializableSolverRequest,
@@ -172,7 +172,7 @@ export async function runOptimize(
     if (cancelled()) throw abortError();
 
     if (!isSerializableSimBase(request.loadout)) {
-      // Shape limitation for this request only — not a worker infrastructure failure.
+      // Shape limitation for this request only - not a worker infrastructure failure.
       return await runTrackedMain(request, onProgress, cancelled);
     }
 
@@ -217,7 +217,7 @@ export async function runOptimize(
 
     if (cancelled()) throw abortError();
 
-    // Single-worker fallback — terminate pool agents first so work does not overlap.
+    // Single-worker fallback - terminate pool agents first so work does not overlap.
     const client = getRevolutionSolverClient();
     try {
       disposeSolverAgentPool();
@@ -254,7 +254,7 @@ export async function runOptimize(
  * main, fallback, and any superseded previous run.
  *
  * Soft cancel messages alone cannot interrupt a sync full-horizon simulation on
- * a worker — so product cancel also **terminates** pool/single workers. The next
+ * a worker - so product cancel also **terminates** pool/single workers. The next
  * optimize recreates them. Main-thread runs still rely on cooperative isCancelled
  * between candidates (and after the current sim finishes).
  */
@@ -296,7 +296,7 @@ type ActiveRun = {
   resolve: (result: SolverResultDTO) => void;
   reject: (error: Error) => void;
   onProgress?: SolveProgressHandler;
-  /** Explicit abort — never infer cancel from active===null. */
+  /** Explicit abort - never infer cancel from active===null. */
   aborted: boolean;
   settled: boolean;
   mode: "worker" | "main";
@@ -458,7 +458,7 @@ export class RevolutionSolverClient {
       if (options?.preferWorker) {
         return Promise.reject(new Error("revolution solver worker unavailable"));
       }
-      // No Worker global and no test factory — fall through to main.
+      // No Worker global and no test factory - fall through to main.
     }
 
     return this.startOnMain(requestId, request, onProgress, options, externalCancelled);
@@ -565,7 +565,7 @@ export class RevolutionSolverClient {
         rawReject(error);
       };
 
-      // ACK watchdog only — slow import after started must not trigger fallback.
+      // ACK watchdog only - slow import after started must not trigger fallback.
       const ackMs = getFirstAckMs();
       run.bootTimer = setTimeout(() => {
         if (run.settled || run.acknowledged) return;

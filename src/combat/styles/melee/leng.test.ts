@@ -87,7 +87,7 @@ describe("Frostblades and Icy Tempest sim", () => {
     const hits = rt.events.filter((e) => e.abilityId === "assault" && !e.attached);
     expect(hits.length).toBeGreaterThan(0);
     const flat = Math.floor(1000 * FROSTBLADES_AD_FRACTION);
-    // Assault hit bands are 130–150 without frostblades; min rises by flat.
+    // Assault hit bands are 130-150 without frostblades; min rises by flat.
     expect(hits[0]!.damage.min).toBeGreaterThanOrEqual(1300 + flat);
   });
 
@@ -99,7 +99,7 @@ describe("Frostblades and Icy Tempest sim", () => {
     expect(rt.state.adrenaline).toBe(100); // free spend at 3 stacks
     const hits = rt.events.filter((e) => e.abilityId === "icy_tempest" && !e.attached);
     expect(hits).toHaveLength(2);
-    // 3 stacks: primary 169–201% → mid 1850 on base 1000
+    // 3 stacks: primary 169-201% → mid 1850 on base 1000
     expect(hits[0]!.damage.expected).toBeCloseTo((1690 + 2010) / 2, 0);
   });
 

@@ -24,7 +24,7 @@ const SCAN_ROOTS = [
 const VERBOSE = process.argv.includes("--verbose");
 
 /**
- * Legacy allowlist — must stay empty. New boundary crossings fail the gate.
+ * Legacy allowlist - must stay empty. New boundary crossings fail the gate.
  * Paths are repo-relative posix.
  */
 const KNOWN_LEGACY_EXCEPTIONS = new Set([]);

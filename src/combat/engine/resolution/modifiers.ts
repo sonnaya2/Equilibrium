@@ -38,11 +38,9 @@ export function buffMultiplier(
 }
 
 /**
- * Buff windows that never apply to damage over time. Wiki (Dismember /
- * Slaughter / Massacre, verified 2026-07-31): damage over time ignores
- * damage-boosting prayers and the Berserk / Death's Swiftness / Sunshine
- * windows. Chaos Roar's bleed boost is the sourced explicit exception;
- * Vulnerability and base-stage effects still apply.
+ * DoT ignores damage-boosting prayers and Berserk / Death's Swiftness / Sunshine
+ * (wiki: Dismember / Slaughter / Massacre, verified 2026-07-31). Chaos Roar bleed
+ * boost is the sourced exception; Vulnerability / base-stage still apply.
  */
 const DOT_IGNORED_MODIFIER_IDS = new Set([
   "buff:berserk",
@@ -51,10 +49,8 @@ const DOT_IGNORED_MODIFIER_IDS = new Set([
 ]);
 
 /**
- * Assemble the modifiers one cast hit resolves against at its land tick: the
- * cast's base set, the cast-scope next-hit multipliers, and the time-windowed
- * globals read from state at `at`. Damage-over-time ticks then drop the
- * modifiers the wiki excludes from them.
+ * Land-tick modifiers: snap.baseMods + cast-scope next-hit mults + windowed globals at `at`.
+ * DoT ticks filter out wiki-excluded buffs (prayers + DOT_IGNORED_MODIFIER_IDS).
  */
 export function landTimeModifiers(
   rt: SimulationRuntime,

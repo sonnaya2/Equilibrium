@@ -20,8 +20,8 @@ export { castEffectContext, type CastEffectContext } from "./context";
  * preparation decided to consume, the cooldown clock, adrenaline and free-cast
  * resources, then the one style module that owns the rest. A cast has exactly
  * one style, so the style modules never interleave.
- *
- * Effects that need the channel to have finished are not here — see
+
+ * Effects that need the channel to have finished are not here - see
  * applyCompletionEffects.
  */
 export function applyCastEffects(

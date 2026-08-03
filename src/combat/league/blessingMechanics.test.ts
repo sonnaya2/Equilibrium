@@ -27,7 +27,7 @@ describe("Teragard's Aegis and basic attacks", () => {
    * them with basic attacks, which are ordinary Basic-category abilities dealing
    * a percentage of ability damage (melee Attack 110-130%). So an Aegis bonus to
    * base ability damage reaching the basic attack is the mechanic working, not
-   * a leak into a separate auto-attack damage system — there is no longer one.
+   * a leak into a separate auto-attack damage system - there is no longer one.
    */
   it("scales the melee basic attack, which reads ability damage like any ability", () => {
     const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
@@ -50,7 +50,7 @@ describe("Teragard's Aegis and basic attacks", () => {
       base: baseInput.base + aegisBonus,
       rotation: rotationOf("attack"),
     });
-    // Mid of 110–130% on 1,250 ability damage.
+    // Mid of 110-130% on 1,250 ability damage.
     expect(aegis.totalExpected).toBe(1_500);
   });
 });

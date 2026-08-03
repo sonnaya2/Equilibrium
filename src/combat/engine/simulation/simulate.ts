@@ -184,7 +184,7 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
       break;
     }
     // Plan every live branch's cast, then materialize under the live-branch cap
-    // once — not once per parent (which would expand 64×8 commits before cap).
+    // once - not once per parent (which would expand 64×8 commits before cap).
     if (!input.autoWeave && ability.stateEffect !== "runic_charge") {
       const carried: Branch[] = [];
       const plans: CastOutcomePlan[] = [];

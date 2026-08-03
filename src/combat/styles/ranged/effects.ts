@@ -14,7 +14,7 @@ import {
  * Death's Swiftness became a mobile self-buff on 16 Mar 2026: 1.5x ranged
  * damage for 50 ticks, or 63 ticks for the Greater variant. Damage begins one
  * tick after cast.
- *
+
  * Planted Feet (base only): duration × PLANTED_FEET_DURATION_MULT → 63 ticks
  * (Math.round(50 × 1.25)); same [cast+1, cast+duration) shape as base. Greater:
  * no change. Periodic DoT removal from Planted Feet is outside this model.

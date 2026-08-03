@@ -3,7 +3,7 @@ import { UNLOCK_SECTIONS } from "@/research/panels";
 
 /**
  * One region's research payload, rendered from SQLite.
- *
+
  * Prerendered: `force-static` plus `generateStaticParams` means Next builds
  * these once from the database and serves them like files, so the /data browser
  * still lazy-loads a region at a time without a copy of the data living under

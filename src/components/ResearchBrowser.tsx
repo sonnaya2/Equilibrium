@@ -39,7 +39,7 @@ const SOURCE_LABEL: Record<SourceReference["source"], string> = {
   derived: "Other",
 };
 
-/** Light wiki/display cleanup — not a full sanitizer. */
+/** Light wiki/display cleanup - not a full sanitizer. */
 function cleanText(value: string): string {
   if (!value) return "";
   return value
@@ -122,7 +122,7 @@ function SourceLink({ source }: { source: SourceReference | null | undefined }) 
   );
 }
 
-/** `Name · Wiki` — omits the dot entirely when SourceLink would be null. */
+/** `Name · Wiki` - omits the dot entirely when SourceLink would be null. */
 function InlineSource({ source }: { source: SourceReference | null | undefined }) {
   if (!safeExternalHref(source?.url)) return null;
   return (
@@ -508,7 +508,7 @@ function SkillDetail({
   );
 }
 
-/** Search haystack only — excludes note, warning, and detail fields. */
+/** Search haystack only - excludes note, warning, and detail fields. */
 function methodSearchText(method: ResearchTrainingMethod): string {
   return [
     method.method,
@@ -631,7 +631,7 @@ export function ResearchBrowser({
     if (!selectedRegion) return selectedRegion;
     const matches = (values: unknown[]) =>
       values.filter(Boolean).join(" ").toLowerCase().includes(normalizedQuery);
-    // Collapse multi-boss package children (Sanctum) — not place hubs (Lost Grove ≠ Solak).
+    // Collapse multi-boss package children (Sanctum) - not place hubs (Lost Grove ≠ Solak).
     const majorContent = majorContentRows(selectedRegion.content, selectedRegion.upgrades);
     const content = normalizedQuery
       ? majorContent.filter((row) =>
@@ -639,7 +639,7 @@ export function ResearchBrowser({
             row.name,
             row.kind,
             row.detail,
-            // Empty catalog detail is common on majors — still match reward chips.
+            // Empty catalog detail is common on majors - still match reward chips.
             contentRewardsFull(row, selectedRegion.upgrades),
             row.source?.title,
           ]),

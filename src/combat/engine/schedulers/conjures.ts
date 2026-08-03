@@ -30,22 +30,11 @@ import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 import { patchConjures } from "../runtime/state";
 
 /**
- * Conjure spirit schedulers: each summon instance owns two tracks (autos, and
- * zombie poison), each with exactly one pending event. Landing an event advances
- * its track and queues the next — never past untilTick (plus the sourced poison
- * tail). One next event stays queued past a fixed horizon so an ordered tail
- * replay can continue the track; the fixed-window clock never lands it.
- * Events of a dismissed or re-summoned spirit are identified by (id, untilTick)
- * and die silently.
+ * Spirit track schedulers: one pending auto and (zombie) poison event per summon.
+ * Land advances track; never past untilTick (+ poison tail). Identity (id, untilTick);
+ * dismissed/re-summoned events die silently. Horizon may hold one extra ordered tail event.
  */
 
-/**
- * Spirit autos have no ability-specific perks (Ultimatums/Lunging never match
- * this probe), so probing the modifier function with it yields exactly the
- * global set — which the prayer filter then reduces to the conjure-eligible
- * globals (wiki: conjures take Eruptive/Equilibrium/Vulnerability/set effects,
- * never the player's prayers).
- */
 const FIRST_NECROMANCER_SOURCE: SourceReference = {
   source: "runescape-wiki",
   url: "https://runescape.wiki/w/First_Necromancer%27s_equipment",
@@ -53,6 +42,10 @@ const FIRST_NECROMANCER_SOURCE: SourceReference = {
   verifiedAt: "2026-07-31",
 };
 
+/**
+ * Probe ability for resolveConjureModifiers: no ability-scoped perks match, so globals
+ * only; prayer filter drops player prayers (wiki: Eruptive/Equilibrium/Vulnerability/sets).
+ */
 export const SPIRIT_MODIFIER_SCOPE = {
   id: "spirit_auto",
   name: "Spirit auto",
@@ -198,11 +191,10 @@ export function scheduleSpiritTracks(rt: SimulationRuntime, spirit: ActiveConjur
 }
 
 /**
- * Command Skeleton Warrior mutates the skeleton's own scheduler (wiki tick
- * table, verified 2026-07-31): RAAAR lands at activation+1 — a normal auto due
- * on/before that tick still fires; later autos are suppressed through the
- * command, and the track resumes at last-command-hit + 2 (activation+13),
- * then every 5 ticks. Command hits themselves are cast events (see castEvents).
+ * Command Skeleton Warrior scheduler (wiki tick table, 2026-07-31):
+ * RAAAR at activation+1 (auto due on/before that tick still fires); later autos
+ * suppressed; resume at last-command-hit + 2 (activation+13), then every 5 ticks.
+ * Command hits are cast events (castEvents).
  */
 export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): void {
   const spirit = findConjure(rt.state.necromancy.conjures, "skeleton_warrior");
@@ -235,11 +227,7 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
   }
 }
 
-/**
- * Land one conjureAuto/poison event: validate it against the live summon
- * instance, record its damage, advance the track, and queue the next event.
- * Events of dismissed or replaced spirits die silently.
- */
+/** Land one conjureAuto/poison: validate live summon, record, advance track, queue next. */
 export function processSpiritEvent(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,

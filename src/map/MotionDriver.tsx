@@ -45,7 +45,7 @@ export function MotionDriver({ reducedMotion }: { reducedMotion: boolean }) {
     element.addEventListener("pointerdown", onDown);
     element.addEventListener("wheel", onWheel, { passive: true });
     sync();
-    // Kick a couple of frames after layout — canvas often 0×0 on first paint.
+    // Kick a couple of frames after layout - canvas often 0×0 on first paint.
     const t1 = window.setTimeout(sync, 50);
     const t2 = window.setTimeout(sync, 250);
     return () => {

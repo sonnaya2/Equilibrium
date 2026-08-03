@@ -7,9 +7,9 @@ import type { SimulateInput } from "../../engine/simulation/simulate";
 /**
  * The neutral loadout engine tests start from: base ability damage 1000, level
  * 99, full Damage Potential, no crit chance. Every number in a test is then a
- * consequence of the mechanic under test rather than of the setup — which is
+ * consequence of the mechanic under test rather than of the setup - which is
  * why these stay flat constants and not a builder with options.
- *
+
  * Style-specific state (Bloodlust stacks, Necrosis, buff windows, ammo) is
  * always set up in the test itself, by casting. It is never pre-seeded here.
  */

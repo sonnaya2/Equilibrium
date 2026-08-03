@@ -51,7 +51,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(clone.analysis.effects).not.toBe(rt.analysis.effects);
     expect(clone.analysis.sources).not.toBe(rt.analysis.sources);
     expect(clone.analysis.castKeys).not.toBe(rt.analysis.castKeys);
-    // Cast records are cloned, not aliased — a branch's totals must not leak.
+    // Cast records are cloned, not aliased - a branch's totals must not leak.
     expect(clone.casts[0]).not.toBe(rt.casts[0]);
     expect(clone.casts[0]!.result.hits).not.toBe(rt.casts[0]!.result.hits);
   });
@@ -67,7 +67,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     if (attempt.ok) commitCast(clone, attempt.prepared, false);
 
     expect(clone.state.necromancy.conjures.spirits.length).toBe(3);
-    // The parent still holds the object it started with — nothing was mutated
+    // The parent still holds the object it started with - nothing was mutated
     // in place inside the nested style state.
     expect(rt.state.necromancy).toBe(parentNecromancy);
     expect(rt.state.necromancy.conjures.spirits).toHaveLength(0);
@@ -451,7 +451,7 @@ describe("Invigorating / Impatient adrenaline", () => {
     const noGain = simulate({
       ...baseInput,
       adrenaline: { basicGainMultiplier: 1.2, impatientRank: 4 },
-      rotation: rotationOf("dismember"), // enhanced bleed — no adrenaline field
+      rotation: rotationOf("dismember"), // enhanced bleed - no adrenaline field
     });
     expect(plain.casts[0].adrenalineAfter).toBe(9);
     expect(noGain.casts[0].adrenalineAfter).toBe(0);

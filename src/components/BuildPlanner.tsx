@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Production Build board — regions, all relic tiers, blessing lattice.
+ * Production Build board - regions, all relic tiers, blessing lattice.
  * Live useBuild state is shared with Map.
  */
 
@@ -54,7 +54,7 @@ export type RelicTier = {
 };
 
 export type BlessingChoice = {
-  /** Order, Balance or Chaos — the card names its own path, not its column. */
+  /** Order, Balance or Chaos - the card names its own path, not its column. */
   path: string;
   name: string;
   effects: string[];
@@ -317,7 +317,7 @@ export function BuildPlanner({
             <button
               type="button"
               className="build-board__btn"
-              // Elective count only (empty server snapshot) — same as RegionPicker.
+              // Elective count only (empty server snapshot) - same as RegionPicker.
               disabled={Boolean(picks.length === 0)}
               onClick={clearElectives}
             >

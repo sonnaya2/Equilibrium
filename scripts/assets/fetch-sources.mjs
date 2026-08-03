@@ -1,15 +1,7 @@
 /**
- * Downloads catalogued art from the RuneScape Wiki into a local cache.
- *
- * Nothing here writes public/. The old sync script downloaded straight over the
- * canonical tree, so one run could replace optimized art with a raw upstream
- * copy; fetching and importing are now separate decisions.
- *
- *   node scripts/assets/fetch-sources.mjs <asset-id> [more-ids...]
- *   node scripts/assets/fetch-sources.mjs --missing     # only ids with no local file
- *
- * Writes .asset-cache/raw/<id>/ plus a manifest of what resolved to what.
- * Promote a download with scripts/assets/import-sources.mjs. Never run during a build.
+ * Fetch RuneScape Wiki art into .asset-cache/raw/ only (never public/).
+ * Promote with import-sources.mjs; never run during a build.
+ * Usage: node scripts/assets/fetch-sources.mjs <id...> | --missing
  */
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";

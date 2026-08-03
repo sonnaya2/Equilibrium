@@ -19,8 +19,8 @@ export type WikiDropTableProps = {
   /** Optional local /game overrides keyed by item label. */
   iconByItem?: Record<string, string>;
   /**
-   * summary — unique + short secondary only, open full table in a popup.
-   * full — every group expanded for the dedicated drops window.
+   * summary - unique + short secondary only, open full table in a popup.
+   * full - every group expanded for the dedicated drops window.
    */
   variant?: "summary" | "full";
   onOpenFull?: () => void;

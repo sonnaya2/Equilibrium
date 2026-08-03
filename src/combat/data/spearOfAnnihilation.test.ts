@@ -39,7 +39,7 @@ describe("Spear of Annihilation equipment records", () => {
   it("stores wiki face accuracy and tooltip damage for gear display (tier still drives AD)", () => {
     expect(soa()?.bonuses).toMatchObject({ accuracy: 2458, damage: 2011.5 });
     expect(mwsoa()?.bonuses).toMatchObject({ accuracy: 2577, damage: 2056.2 });
-    // Weapons do not contribute style-damage equipment totals — face dmg is display only.
+    // Weapons do not contribute style-damage equipment totals - face dmg is display only.
     for (const id of ["item:spear-of-annihilation", "item:masterwork-spear-of-annihilation"] as const) {
       const r = equipmentById(id)!;
       expect(r.bonuses.armour, id).toBeUndefined();

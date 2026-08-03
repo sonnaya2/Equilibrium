@@ -13,11 +13,11 @@ import { NO_DAMAGE, type EventResolution } from "./types";
 /**
  * Resolve an Instability Lightning Surge proc at its own land tick: EV = the
  * source hit's crit chance (from its landed detail) × the surge hit's expected,
- * recomputed against land-time state. min/max stay 0 — the surge is EV-only,
+ * recomputed against land-time state. min/max stay 0 - the surge is EV-only,
  * and it is never itself proc-eligible, so it cannot chain another surge.
- *
+
  * Modifiers match parent hits via landTimeModifiers (Am-Zi, Am-Hej, Sunshine
- * self-exclusion, Chaos Roar, etc.) — never a hand-copied subset.
+ * self-exclusion, Chaos Roar, etc.) - never a hand-copied subset.
  */
 export function resolveLightningSurge(
   rt: SimulationRuntime,

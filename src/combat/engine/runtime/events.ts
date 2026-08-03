@@ -27,32 +27,23 @@ function snapSig(s: CastSnapshot) {
 }
 
 /**
- * Scheduled combat events: every damaging or state-changing thing the simulator
- * has promised for a future tick. Damage resolves AT LAND TIME against the state
- * at that tick (time-windowed globals like Sunshine / Berserk / Searing Winds are
- * evaluated there, not frozen at cast time). Same-tick order is (tick, seq);
- * `seq` is monotonic per simulation run and follows the canonical cast flow
- * (a cast's hits in hit-index order, then its on-cast effects), so the log is
- * deterministic for a given input.
+ * Pending damage/state events. Resolve at land time against that tick's state
+ * (Sunshine / Berserk / Searing Winds not frozen at cast). Order: (tick, seq);
+ * seq is monotonic and follows cast flow (hits by hit-index, then on-cast effects).
  */
 export type EventFamily =
   "hit" | "dot" | "proc" | "blessing" | "conjureAuto" | "command" | "poison";
 
-/**
- * Origin of the damage instance for analysis classification. Derived / attached
- * components preserve the parent's origin (e.g. Big Boned on a bleed stays "dot")
- * rather than inheriting only `family: "blessing"`.
- */
+/** Analysis damage origin. Derived/attached keep parent origin (e.g. Big Boned on bleed stays "dot"). */
 export type DamageOriginKind = "direct" | "dot" | "command" | "conjure" | "proc" | "blessing";
 
 /**
- * RT is the runtime context handed to `resolve` at land time. Events never close
- * over a runtime directly, so a branched/cloned runtime can share pending events
- * safely (each branch resolves them against its own state).
+ * RT is the land-time runtime. Events do not close over a runtime so branches can
+ * share pending events and resolve each against their own state.
  */
 export interface ScheduledEvent<RT = unknown> {
   tick: number; // land tick
-  seq: number; // monotonic per simulation run — explicit same-tick tiebreak
+  seq: number; // monotonic per simulation run - explicit same-tick tiebreak
   family: EventFamily;
   abilityId: string; // ability or spirit that produced it
   sourceCast: number; // cast sequence number, or -1 for autonomous schedulers
@@ -99,11 +90,7 @@ export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "r
   remainingTicks?: number;
 }
 
-/**
- * Ordered event queue. Push inserts at its (tick, seq) position (almost always
- * the tail, so this is a short walk); `due` extracts in order. Cancellation is
- * removal by `cancelOwner`.
- */
+/** Ordered by (tick, seq). Cancel via cancelOwner / cancelBySeq. */
 export class EventQueue<RT = unknown> {
   private items: ScheduledEvent<RT>[] = [];
 
@@ -153,7 +140,7 @@ export class EventQueue<RT = unknown> {
     return this.items;
   }
 
-  /** Shallow copy sharing the (immutable) events — used by branch snapshots. */
+  /** Shallow copy sharing the (immutable) events - used by branch snapshots. */
   clone(): EventQueue<RT> {
     const next = new EventQueue<RT>();
     next.items = [...this.items];
@@ -161,11 +148,8 @@ export class EventQueue<RT = unknown> {
   }
 
   /**
-   * Structural signature for branch equivalence: EVERY branch-relevant field of
-   * every pending event, in order (resolve closures excluded — equivalent
-   * branches scheduled identical events from identical casts). `derivedFrom`
-   * belongs here: two branches whose tails derive from different source hits
-   * resolve to different damage and are not equivalent.
+   * Branch-equivalence fingerprint of pending events (no resolve closures).
+   * Includes derivedFrom: different source hits => different damage.
    */
   signature(): string {
     return JSON.stringify(

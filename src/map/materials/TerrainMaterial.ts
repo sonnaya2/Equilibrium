@@ -31,7 +31,7 @@ const PRINT_CONTRAST = 1.2;
 const PRINT_SAT = 1.14;
 const PRINT_LIFT = 0.008;
 
-/** Soft heat disc — desert anchor UV, wide enough for atmosphere. */
+/** Soft heat disc - desert anchor UV, wide enough for atmosphere. */
 const DESERT_U = 0.491;
 const DESERT_V = 0.844;
 const DESERT_R = 0.19;
@@ -49,7 +49,7 @@ type MapUv = ReturnType<typeof mapUvFrom>;
 type FieldSample = ReturnType<typeof texture>;
 
 function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
-  // float() on every scalar — bare vec2(cx, cy) can emit abstract floats in WGSL.
+  // float() on every scalar - bare vec2(cx, cy) can emit abstract floats in WGSL.
   const d = mapUv
     .sub(vec2(float(cx), float(cy)))
     .length()
@@ -59,7 +59,7 @@ function softDisc(mapUv: MapUv, cx: number, cy: number, r: number) {
 
 /** Restrict lava shading to dry, red-dominant land inside known lava basins. */
 function softLava(mapUv: MapUv, F: FieldSample, albedoRgb: Node<"vec3">) {
-  // Inland + solid land only — plate-rim ocean stays cold.
+  // Inland + solid land only - plate-rim ocean stays cold.
   const land = smoothstep(float(0.53), float(0.6), F.g).mul(
     smoothstep(float(0.55), float(0.85), F.r),
   );
@@ -138,7 +138,7 @@ export function createTerrainMaterials(
   const restored = float(1).sub(
     smoothstep(front.sub(float(0.06)), front.add(float(0.012)), dCenter),
   );
-  // Green frontier ONLY while sweep > 0 — never a permanent band at rest.
+  // Green frontier ONLY while sweep > 0 - never a permanent band at rest.
   const ring = smoothstep(front.sub(float(0.06)), front.sub(float(0.02)), dCenter)
     .mul(float(1).sub(smoothstep(front.sub(float(0.012)), front.add(float(0.04)), dCenter)))
     .mul(open)
@@ -147,7 +147,7 @@ export function createTerrainMaterials(
   // deadAmt: 1 = full grey.
   //   locked  → grey always
   //   unlocking → grey outside the expanding disc (radialDead * sweep)
-  //   open at rest (sweep=0) → 0 — full colour (front alone maxes ~0.48 and
+  //   open at rest (sweep=0) → 0 - full colour (front alone maxes ~0.48 and
   //     never covers large plates; deadAmt must clear when sweep ends)
   const radialDead = float(1).sub(restored);
   const deadAmt = mix(radialDead.mul(sweep), float(1), lock)
@@ -190,7 +190,7 @@ export function createTerrainMaterials(
       .sub(hR)
       .mul(float(0.72))
       .add(hU.sub(hD).mul(float(0.5)));
-    // clamp bounds as float() — bare negatives are abstract and fail naga validation.
+    // clamp bounds as float() - bare negatives are abstract and fail naga validation.
     base = base.mul(float(1).add(emboss.mul(float(0.55)).clamp(float(-0.12), float(0.18))));
   }
 
@@ -204,11 +204,11 @@ export function createTerrainMaterials(
   const atmospheres = regionMasks(mapUv, F);
 
   if (options.water) {
-    // No river FX on the Kharidian Desert — hard ellipse, not soft disc weight.
+    // No river FX on the Kharidian Desert - hard ellipse, not soft disc weight.
     const dwx = mapUv.x.sub(float(DESERT_WET_U)).div(float(DESERT_WET_RX));
     const dwy = mapUv.y.sub(float(DESERT_WET_V)).div(float(DESERT_WET_RY));
     const desertGate = smoothstep(float(0.9), float(1.1), dwx.mul(dwx).add(dwy.mul(dwy)));
-    // Soft wet darken only — no flow-aligned ripple streaks (those read as
+    // Soft wet darken only - no flow-aligned ripple streaks (those read as
     // glitched green lines across plate rims into the sea).
     const wet = F.b.mul(smoothstep(float(0.16), float(0.52), F.b)).mul(desertGate);
     const bank = wet.mul(float(1).sub(wet)).mul(float(4)).clamp(float(0), float(1));
@@ -218,7 +218,7 @@ export function createTerrainMaterials(
       .add(linear(0xd0e4ea).mul(bank.mul(float(0.06))));
   }
 
-  // Desert heat, Prif blue, Mory green — soft atmospheres (not paint washes).
+  // Desert heat, Prif blue, Mory green - soft atmospheres (not paint washes).
   // Mix muls stay well under 0.5 so the HD raster still owns the plate.
   const heatWave = mx_noise_float(
     vec3(mapUv.x.mul(float(18)), mapUv.y.mul(float(18)), mapClock.mul(float(0.12))),
@@ -296,7 +296,7 @@ export function createTerrainMaterials(
     metalness: 0,
     wireframe: options.wireframe,
   });
-  // Bare positionWorld.mul(N) can emit abstract scale in WGSL — wrap scale.
+  // Bare positionWorld.mul(N) can emit abstract scale in WGSL - wrap scale.
   const jitter = mx_noise_float(positionWorld.mul(float(190))).mul(float(0.06));
   const band = positionLocal.y.div(float(depth)).add(jitter).clamp(float(0), float(1));
   const deep = linear(TERRAIN_WALL_DEEP).mul(float(0.8));

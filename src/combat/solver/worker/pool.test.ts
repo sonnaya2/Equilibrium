@@ -52,9 +52,9 @@ describe("mergeProgress dual scores", () => {
     expect(merged.searchEvaluations).toBe(20);
     expect(merged.fullEvaluations).toBe(5);
     expect(merged.evaluations).toBe(25);
-    // One agent still exploring — do not promote merged phase to finalize.
+    // One agent still exploring - do not promote merged phase to finalize.
     expect(merged.phase).toBe("explore");
-    // bestScore stays exploratory — never the full robust max.
+    // bestScore stays exploratory - never the full robust max.
     expect(merged.bestScore).not.toBe(merged.bestFullScore);
   });
 
@@ -223,7 +223,7 @@ describe("SolverAgentPool.ensure shrinks", () => {
       internal.slots.push({ worker: fakeWorker(), requestId: 0 });
     }
     expect(pool.size()).toBe(12);
-    // Thorough only wants 6 — must shrink or second runs stay slow.
+    // Thorough only wants 6 - must shrink or second runs stay slow.
     expect(pool.ensure(6)).toBe(6);
     expect(pool.size()).toBe(6);
     expect(terminated.length).toBe(6);

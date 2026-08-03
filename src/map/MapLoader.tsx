@@ -9,7 +9,7 @@ const MapScene = dynamic(() => import("./MapScene"), {
   ssr: false,
   loading: () => (
     // Same map-layout scene contract as MapScene, or the board cell jumps
-    // height the moment the 3D chunk lands. No nested .panel — board frames it.
+    // height the moment the 3D chunk lands. No nested .panel - board frames it.
     // Host uses absolute fill (see .map-layout__canvas-host); no overflow-y
     // path that lets SVG intrinsic height fight the under ledger.
     <div className="map-layout__scene">

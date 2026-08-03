@@ -348,7 +348,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "crystal pickaxe": perm("crystal-pickaxe"),
   "crystal hatchet": rootUp("crystal-hatchet"),
   "crystal skillchompas": perm("crystal-skillchompas"),
-  // "fishing" substring fences permanent-unlocks as scenery — use skilling-tools path.
+  // "fishing" substring fences permanent-unlocks as scenery - use skilling-tools path.
   "crystal fishing rod": "/game/upgrades/skilling-tools/crystal-fishing-rod.webp",
   "crystal urchin points": "/game/upgrades/skilling-tools/crystal-fishing-rod.webp",
   "ancient elven ritual shard": prog("ancient-elven-ritual-shard"),
@@ -418,10 +418,10 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "powder of protection": skProd("powder-of-protection"),
   "powder of item protection": skProd("powder-of-item-protection"),
   "powder of defence": skProd("powder-of-defence"),
-  // "agility course" is generic — Het's Oasis plate is wrong (law: empty > wrong).
+  // "agility course" is generic - Het's Oasis plate is wrong (law: empty > wrong).
   "statue of het": perm("statue-of-het"),
   "agility xp": perm("agility-pyramid"),
-  // Achto / Mazcab — inventory pieces only (liberation-of-mazcab is multi-MB scenery).
+  // Achto / Mazcab - inventory pieces only (liberation-of-mazcab is multi-MB scenery).
   "achto armour": equip("achto-primeval-robe-top"),
   "raids uniques": equip("achto-teralith-cuirass"),
   "achto teralith cuirass": equip("achto-teralith-cuirass"),
@@ -445,7 +445,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "barrows chest": perm("barrows-chest"),
   "barrows equipment": perm("barrows"),
 
-  // Giant Mole — claw/skin have no local inventory art; 2h/chainbody have production art.
+  // Giant Mole - claw/skin have no local inventory art; 2h/chainbody have production art.
   "amascut's enchanted gem": perm("enchanted-gem"),
   "amascuts enchanted gem": perm("enchanted-gem"),
   "enchanted gem": perm("enchanted-gem"),
@@ -503,7 +503,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "ports resources": perm("player-owned-port"),
   "bones to peaches": skProd("bones-to-peaches"),
   "infinity robes": skProd("infinity-robes"),
-  // Menaphos — small inventory permanents only (menaphos.png / soul-altar.png are scenery).
+  // Menaphos - small inventory permanents only (menaphos.png / soul-altar.png are scenery).
   "city quests": perm("menaphos-city-quests"),
   "vip area": perm("menaphos-reputation"),
   marketeers: perm("menaphos-reputation"),
@@ -560,7 +560,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "arcane spirit shield": equip("arcane-spirit-shield"),
   "elysian spirit shield": equip("elysian-spirit-shield"),
   "divine spirit shield": equip("divine-spirit-shield"),
-  // sigils: no inventory icons published — omit (wrong finished-shield art worse than none)
+  // sigils: no inventory icons published - omit (wrong finished-shield art worse than none)
 
   "skeka's hypnowand": offhand("skekas-hypnowand"),
   "skekas hypnowand": offhand("skekas-hypnowand"),
@@ -575,7 +575,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   // inventory under upgrades/progression (equipment/ copies not published)
   "gemstone helm": prog("gemstone-helm"),
   "gemstone hauberk": prog("gemstone-hauberk"),
-  // gemstone greaves/gauntlets/boots: no published inventory icons — omit
+  // gemstone greaves/gauntlets/boots: no published inventory icons - omit
   "anachronia totems": perm("anachronia-totem"),
   "anachronia totem": perm("anachronia-totem"),
   "totem of summoning": perm("totem-of-summoning"),
@@ -661,7 +661,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "wyrm heart": perm("wyrm-heart"),
   "portable obelisk": "/game/upgrades/skilling-utility/portable-obelisk.webp",
   "obelisk shard": "/game/upgrades/skilling-utility/portable-obelisk.webp",
-  // Activities paths are rejected for reward chips — use onyx core as the chest-drop signal.
+  // Activities paths are rejected for reward chips - use onyx core as the chest-drop signal.
   "wilderness slayer chest": perm("dark-onyx-core"),
   "gold charm": skProd("gold-charm"),
   "green charm": skProd("gold-charm"),
@@ -847,7 +847,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "mattock precision": "/game/upgrades/skilling-utility/mattock-precision.webp",
   "archaeologist's tea": "/game/upgrades/skilling-production/archaeologists-tea.webp",
 
-  // Empty Throne Room — dark animica rocks (not light animica)
+  // Empty Throne Room - dark animica rocks (not light animica)
   "dark animica": skProd("dark-animica"),
   "dark animica rocks": skProd("dark-animica"),
   "unique rocks inside": skProd("dark-animica"),

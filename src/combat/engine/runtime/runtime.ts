@@ -17,7 +17,7 @@ export interface SpiritEventMeta {
 
 /**
  * All per-run mutable simulation state. Created once per simulation by
- * createCastContext and threaded through every runtime function — never a
+ * createCastContext and threaded through every runtime function - never a
  * module-level singleton, so concurrent simulations cannot interfere.
  */
 export interface SimulationRuntime {
@@ -44,7 +44,7 @@ export interface SimulationRuntime {
   totalMax: number;
   totalExpected: number;
   /**
-   * Weighted analysis ledgers — quantitative breakdown lives here, not in the
+   * Weighted analysis ledgers - quantitative breakdown lives here, not in the
    * representative event log. Branch merge weight-averages this state.
    */
   analysis: RuntimeAnalysisState;

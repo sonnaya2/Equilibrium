@@ -57,7 +57,7 @@ function parentAbilityId(
 
 /**
  * Update weighted analysis ledgers for one landed event. Call from record
- * accounting — never from summary finalization over the event log.
+ * accounting - never from summary finalization over the event log.
  */
 export function accountAnalysisEvent(
   analysis: RuntimeAnalysisState,
@@ -72,7 +72,7 @@ export function accountAnalysisEvent(
   const crit = damage.critical?.contribution ?? 0;
   const cap = damage.capLoss ?? 0;
   // Global direct/DoT split follows parent provenance (BB on a bleed still lands
-  // in the DoT total). The rider's own effect row never stamps as DoT — that is
+  // in the DoT total). The rider's own effect row never stamps as DoT - that is
   // bonus damage, shown in the Bonus column instead.
   const originIsDot = isDotOrigin(event);
   const riderIsBonus = event.damageTag === "bonus-damage";
@@ -97,7 +97,7 @@ export function accountAnalysisEvent(
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
   ledger.attachedComponents += mult.attachedComponents;
   // Attribute bonus-damage riders ONLY onto the parent skill (how much Big Boned
-  // added on that ability's hits). Never onto the rider row itself — that would
+  // added on that ability's hits). Never onto the rider row itself - that would
   // double-count if Bonus were summed, and mark Big Boned as "receiving" bonus.
   if (event.damageTag === "bonus-damage") {
     const parentId = parentAbilityId(rt, event);

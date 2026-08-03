@@ -43,15 +43,15 @@ export interface TargetRuntimeState {
 }
 
 /**
- * The complete simulation state. Everything mutable lives here — never in
- * module globals or captured closure state — and every field is replaced rather
+ * The complete simulation state. Everything mutable lives here - never in
+ * module globals or captured closure state - and every field is replaced rather
  * than mutated in place, so a branch can share the object safely.
- *
+
  * Genuinely global clocks stay at the top level; everything else belongs to the
  * style that owns its mechanics, or to the target it was applied to.
  */
 export interface RotationState {
-  /** Next tick free for a cast — the global cooldown is encoded here. */
+  /** Next tick free for a cast - the global cooldown is encoded here. */
   tick: number;
   adrenaline: number;
   adrenalineCap: number;
@@ -177,7 +177,7 @@ export function patchMagic(
   return { ...state, magic: { ...state.magic, ...patch } };
 }
 
-/** Necro resource fields only — prefer applyNecroOnCast for cast transitions. */
+/** Necro resource fields only - prefer applyNecroOnCast for cast transitions. */
 export function patchNecro(
   state: RotationState,
   patch: Partial<NecroRotationState>,

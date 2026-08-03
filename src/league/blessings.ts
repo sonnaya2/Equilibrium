@@ -3,13 +3,9 @@ import type { SourceReference } from "@/combat/types";
 import { assertBlessingsDocument, collectBlessingIds } from "./blessingSchema";
 
 /**
- * Blessing domain. Canonical structure (paths, god tiers, reset count) lives in
- * data/league/blessings.json; this module types it and derives from it.
- * Jagex's countdown post says tiers 4 and 8 grant a God
- * Tier Blessing set by the three path picks in their segment (tier 4 <- tiers
- * 1-3, tier 8 <- tiers 5-7) — 2+ of one path wins that path's god, one of each
- * grants the Balance god. The derivation returns the alignment; revealed God
- * Tier cards are resolved from the same database-generated record as path picks.
+ * Blessing domain over data/league/blessings.json (paths, god tiers, reset count).
+ * God tiers 4/8: segment of 3 path picks (4 <- 1-3, 8 <- 5-7); 2+ same path wins
+ * that god, one of each -> Balance. Alignment only; cards from the same records.
  */
 
 assertBlessingsDocument(blessingsData);
@@ -19,7 +15,7 @@ export type BlessingPath = (typeof BLESSING_PATHS)[number];
 
 export type GodTierAlignment = BlessingPath;
 
-/** Compile-time closed set — runtime catalogue is asserted against the shard. */
+/** Compile-time closed set - runtime catalogue is asserted against the shard. */
 export const KNOWN_BLESSING_IDS = [
   "teragards-aegis",
   "big-boned",
@@ -39,10 +35,8 @@ export type BlessingId = (typeof KNOWN_BLESSING_IDS)[number];
 export const BLESSING_IDS = collectBlessingIds(blessingsData) as readonly BlessingId[];
 
 /**
- * `scenario-dependent` is distinct from `not-modeled`: the mechanic is
- * implemented, but it needs an input the outgoing rotation cannot supply, so it
- * has no calculated damage until the user states that scenario. It must never
- * be presented as a calculated zero.
+ * `scenario-dependent`: mechanic is implemented but needs a user scenario input
+ * (not a calculated zero). Distinct from `not-modeled`.
  */
 export type BlessingSupportStatus =
   "modeled" | "partially-modeled" | "scenario-dependent" | "not-modeled";
@@ -90,7 +84,7 @@ export const GOD_TIERS: readonly number[] = blessingsData.godTiers;
 export const BLESSING_RESET_COUNT: number = blessingsData.resetCount;
 export const BLESSING_TIERS: readonly number[] = blessingsData.records.map((r) => r.tier);
 
-/** Tiers where a path is picked — god tiers grant, they are not picked. */
+/** Tiers where a path is picked - god tiers grant, they are not picked. */
 export const PATH_TIERS: readonly number[] = BLESSING_TIERS.filter((t) => !GOD_TIERS.includes(t));
 
 export interface BlessingChoice {

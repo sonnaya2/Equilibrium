@@ -2,8 +2,8 @@ import { defineConfig } from "@playwright/test";
 
 /**
  * Run e2e against an already-running Equilibrium dev server (no webServer spawn).
- * Default port 3100 — same as playwright.config.ts (3000 is EverSense on this machine).
- *
+ * Default port 3100 - same as playwright.config.ts (3000 is EverSense on this machine).
+
  *   npm run dev -- --port 3100
  *   npx playwright test -c playwright.reuse.config.ts
  */

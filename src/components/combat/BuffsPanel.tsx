@@ -28,7 +28,7 @@ import {
   type StyleCurseChoice,
 } from "./useLoadout";
 
-/** Wiki art already published under public/game — one consumer, so no gameArt.ts entry. */
+/** Wiki art already published under public/game - one consumer, so no gameArt.ts entry. */
 const CURSE_ICON = (id: Exclude<StyleCurseChoice, "none">) =>
   `/game/combat/prayers/ancient-curses/${id}.webp`;
 const VULNERABILITY_ICON = "/game/upgrades/combat-utility/vulnerability-bomb.webp";
@@ -144,7 +144,7 @@ function BuffTile({
   );
 }
 
-/** Player-toggled buffs — wiki numbers only. */
+/** Player-toggled buffs - wiki numbers only. */
 export function BuffsPanel({
   loadout,
   setLoadout,

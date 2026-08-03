@@ -37,7 +37,7 @@ export function recordById<T extends AnyRecord>(dataset: CombatDataset<T>, id: s
   return dataset.records.find((record) => record.id === id);
 }
 
-/** Records tagged with `region`. Empty regions is NOT global — use
+/** Records tagged with `region`. Empty regions is NOT global - use
  *  `recordsAvailableInRegion` / `resolveAvailability` for obtainability. */
 export function recordsByRegion<T extends AnyRecord>(
   records: T[],

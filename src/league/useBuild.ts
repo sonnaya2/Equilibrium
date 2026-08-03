@@ -16,11 +16,11 @@ import {
 import type { BlessingPath } from "./blessings";
 
 /**
- * One shared build store for the whole app — map, planner, build, and combat
+ * One shared build store for the whole app - map, planner, build, and combat
  * all read and mutate this single instance. Module-local state is only ever
  * written client-side (user actions, localStorage hydrate); server renders
  * always see the empty build.
- *
+
  * Share links are owned by ShareImport (layout). This module only hydrates
  * localStorage and exposes applyBuild for share imports.
  */
@@ -59,7 +59,7 @@ export function buildsEqual(a: BuildState, b: BuildState): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-/** Load localStorage once. Idempotent — ShareImport and useBuild both call this. */
+/** Load localStorage once. Idempotent - ShareImport and useBuild both call this. */
 export function hydrateLocalBuild(): BuildState {
   if (hydrated) return state;
   hydrated = true;
@@ -84,7 +84,7 @@ export function useBuild() {
   // state loads from localStorage after mount. Share hashes are handled only
   // by ShareImport so any route can import without double-apply.
   //
-  // Both build and loaded use useSyncExternalStore — never seed from the
+  // Both build and loaded use useSyncExternalStore - never seed from the
   // mutable module `hydrated` flag via useState. ShareImport can flip that
   // flag before a Suspense-delayed child hydrates; getServerSnapshot stays
   // false for the hydration pass so Clear picks `disabled` matches the HTML.
@@ -96,8 +96,8 @@ export function useBuild() {
   // Per-instance, and deliberately not `useSyncExternalStore(() => hydrated)`.
   //
   // The module flag is shared: ShareImport hydrates the store from the layout,
-  // so by the time the map subtree renders — it is behind Suspense and
-  // next/dynamic, so it goes late — `hydrated` is already true and every
+  // so by the time the map subtree renders - it is behind Suspense and
+  // next/dynamic, so it goes late - `hydrated` is already true and every
   // consumer's *first* render disagrees with HTML that was built while it was
   // false. A local flag always starts false on its own first render, whether
   // that render is a hydration pass or a fresh client mount, which is the only
@@ -120,7 +120,7 @@ export function useBuild() {
     pickBlessing: (pathTier: number, path: BlessingPath) =>
       setState(pickBlessing(state, pathTier, path)),
     resetBlessings: () => setState(resetBlessings(state)),
-    /** Electives only — relics and blessings stay. Map "Clear picks" uses this. */
+    /** Electives only - relics and blessings stay. Map "Clear picks" uses this. */
     clearElectives: () =>
       setState(state.elective.length === 0 ? state : { ...state, elective: [] }),
     resetBuild: () => setState(emptyBuild()),

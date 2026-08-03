@@ -1,12 +1,12 @@
 /**
  * Promotes cached downloads into public/game, optimizing on the way in.
- *
+
  * Requires explicit asset ids. Re-importing the whole catalog is what used to
  * silently overwrite optimized art with raw upstream copies, so there is no
  * flag for it.
- *
+
  *   node scripts/assets/import-sources.mjs <asset-id> [more-ids...]
- *
+
  * Fetch first with scripts/assets/fetch-sources.mjs. Never run during a build.
  */
 import { existsSync, readFileSync } from "node:fs";

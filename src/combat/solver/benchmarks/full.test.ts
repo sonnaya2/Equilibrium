@@ -1,5 +1,5 @@
 /**
- * Full solver benchmark — production solveFromRequest on all case IDs.
+ * Full solver benchmark - production solveFromRequest on all case IDs.
  * Slow; gated by SOLVER_BENCH=full (scripts/benchmarks/solver.mjs).
  */
 import { describe, expect, it } from "vitest";

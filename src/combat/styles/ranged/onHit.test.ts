@@ -148,7 +148,7 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
     // 6 attacks (54 adrenaline, 6 stacks) → Rapid Fire drains 25 and its hits
     // build stacks 7-12; the buff opens at tick 23 with only 29 on hand, so
     // the free-but-40-cost imbue at 26 is rejected (wiki: "the player still
-    // needs the necessary adrenaline in order to cast it").
+    // needs the necessary adrenaline to cast it").
     const broke = simulate({
       ...rangedInput,
       ammo: "deathspore",
@@ -196,7 +196,7 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
     const imbues = s.casts.filter((c) => c.abilityId === "imbue_shadows");
     expect(imbues[0].adrenalineAfter).toBe(100); // free: spend 0
     // Second imbue: 20 more attacks cannot retrigger the buff before tick 83,
-    // and 12 fresh stacks need 36 ticks of attacks after it — full price.
+    // and 12 fresh stacks need 36 ticks of attacks after it - full price.
     expect(imbues[1].adrenalineAfter).toBe(100 - 40);
   });
 });

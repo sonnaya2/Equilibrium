@@ -42,7 +42,7 @@ export function activateRunicCharge(state: RunicChargeState, tick: number): Runi
   };
 }
 
-/** One empowerment per charge — casting the empowered ability spends the window. */
+/** One empowerment per charge - casting the empowered ability spends the window. */
 export function consumeAnima(state: RunicChargeState): RunicChargeState {
   return { ...state, animaUntilTick: 0 };
 }

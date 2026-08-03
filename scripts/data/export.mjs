@@ -48,7 +48,7 @@ function documentConsumers() {
 // time: each source document's skeleton with its records written back over their
 // own record paths. Record paths sort parent-before-child, so a nested record
 // lands inside the parent body that was just restored. The research catalog is
-// excluded — it is served from relational tables instead.
+// excluded - it is served from relational tables instead.
 export function documentOutputs(db) {
   const wanted = documentConsumers();
   const skeletons = new Map(
@@ -72,7 +72,7 @@ export function documentOutputs(db) {
   // every #shard document so the app stops listing retired equipment / abilities.
   // Narrow exception: the invention active-perks catalogue is a membership list.
   // When overlap authority retires invention-perk:* in favor of combat perk:*,
-  // keep the catalogue row if a live same type+name survivor exists — do not
+  // keep the catalogue row if a live same type+name survivor exists - do not
   // resurrect other dual-claim domain records (equipment twins, etc.).
   const removed = new Set(
     prepared(db, "SELECT id FROM entities WHERE status = 'removed'")
@@ -117,7 +117,7 @@ export function documentOutputs(db) {
     setRecordAtPath(document, row.record_path, JSON.parse(row.raw_json));
   }
   // Indexed writes leave holes when middle records are skipped; compact every
-  // top-level record list (not only `records` — e.g. active_perks).
+  // top-level record list (not only `records` - e.g. active_perks).
   for (const data of documents.values()) {
     for (const [key, value] of Object.entries(data)) {
       if (

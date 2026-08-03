@@ -1,5 +1,5 @@
 /**
- * Revolution bar library — last 5 autosaves + permanent saves.
+ * Revolution bar library - last 5 autosaves + permanent saves.
  * Separate from the solve fingerprint cache (solutionStore).
  */
 
@@ -43,7 +43,7 @@ export interface RememberBarInput {
   tier?: string | null;
   name?: string | null;
   now?: number;
-  /** Defaults false — only completed finals should pass true. */
+  /** Defaults false - only completed finals should pass true. */
   verified?: boolean;
 }
 
@@ -142,7 +142,7 @@ function titleFor(input: RememberBarInput): string {
   if (input.score != null && Number.isFinite(input.score)) {
     const rounded = Math.round(input.score).toLocaleString("en-US");
     if (input.verified === true) return `${n}-slot · ${rounded}`;
-    // Exploratory / manual — do not look like a completed-solve claim.
+    // Exploratory / manual - do not look like a completed-solve claim.
     return `${n}-slot · ~${rounded}`;
   }
   return `${n}-slot bar`;

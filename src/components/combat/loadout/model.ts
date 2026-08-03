@@ -20,8 +20,7 @@ import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/sha
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
-/** Shared combat loadout: Setup writes, Rotation and Analysis read. Persisted to
- *  localStorage under eq:loadout:v1; older stored shapes normalize forward. */
+/** Setup-written combat loadout (Rotation/Analysis read). localStorage eq:loadout:v1; old shapes normalize. */
 
 export const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
   "mainhand",
@@ -57,11 +56,7 @@ export interface LoadoutTarget {
   dragon?: boolean;
   /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */
   poisonImmune?: boolean;
-  /**
-   * Seconds between incoming hits large enough for Barkscales to reduce. Absent
-   * means no incoming-combat scenario has been stated, which is the only honest
-   * default for an outgoing rotation.
-   */
+  /** Seconds between hits large enough for Barkscales; omit when no incoming scenario. */
   incomingHitIntervalSeconds?: number;
 }
 
@@ -107,9 +102,8 @@ export interface LoadoutPerks {
 }
 
 /**
- * Perk ranks that can be placed on a gizmo. Placement is organisational only —
- * the engine reads `perks`, never `gizmos`. Compatibility is enforced by the
- * modeled perk kind below.
+ * Gizmo-placeable perk ranks. Display-only placement: engine reads `perks`, not `gizmos`.
+ * Kind compatibility is PERK_GIZMO_KIND.
  */
 export type PerkRankKey = {
   [K in keyof LoadoutPerks]: LoadoutPerks[K] extends number ? K : never;
@@ -209,15 +203,9 @@ export interface LoadoutBuffs {
   powerburstOfVitalityUntil: number | null;
   /** Epoch expiry for the sourced two-minute global powerburst cooldown. */
   powerburstOfVitalityCooldownUntil: number | null;
-  /**
-   * Strength cape (99) perk: Dismember deals three extra bleed hits.
-   * (Independent of wearing the cape piece — player-toggled like other buffs.)
-   */
+  /** Strength cape (99): Dismember +3 bleed hits. Player toggle, not auto from cape slot. */
   strengthCape99: boolean;
-  /**
-   * Attack master cape (120) perk: +2% melee hit chance.
-   * Only applied while the loadout style is melee.
-   */
+  /** Attack master cape (120): +2% melee hit chance while style is melee. */
   attackCape120: boolean;
 }
 
@@ -228,13 +216,13 @@ export interface Loadout {
    * Prefer attackLevel / strengthLevel for melee.
    */
   level: number;
-  /** Melee Attack — accuracy only, retained while another style is selected. */
+  /** Melee Attack - accuracy only, retained while another style is selected. */
   attackLevel: number;
-  /** Melee Strength — ability damage + crit damage-from-level. */
+  /** Melee Strength - ability damage + crit damage-from-level. */
   strengthLevel: number;
   /** Unboosted player Defence; potion/prayer boosts resolve separately. */
   defenceLevel: number;
-  /** Unboosted Constitution; current normal range is 10–99. */
+  /** Unboosted Constitution; current normal range is 10-99. */
   constitutionLevel: number;
   /** Life points before Powerburst doubling; null means start fully healed. */
   currentLife: number | null;
@@ -389,7 +377,7 @@ export function removePerkFromGizmos(loadout: Loadout, perk: PerkRankKey): Loado
 function normalizeGizmos(raw: unknown): GizmoLayout {
   if (typeof raw !== "object" || raw === null) return {};
   const out: GizmoLayout = {};
-  // A perk on two gizmos would double its rank in the readout — first slot wins.
+  // A perk on two gizmos would double its rank in the readout - first slot wins.
   const claimed = new Set<string>();
   for (const slot of GIZMO_SLOTS) {
     const value = (raw as Record<string, unknown>)[slot];
@@ -473,8 +461,7 @@ export function equipInSlot(loadout: Loadout, slot: EquipmentSlot, itemId: strin
     equipmentSlots: slots,
     equipmentIds: mergeEquipmentIds(slots, unlocks),
   };
-  // Equipping a weapon sets both the style and the weapon shape, so neither can
-  // disagree with what is actually in hand.
+  // Weapon equip owns style + weaponConfiguration from gear.
   next.weaponConfiguration = weaponConfigurationFor(next) ?? next.weaponConfiguration;
   const style = weaponStyle(slots);
   return style != null ? withCombatStyle(next, style) : next;
@@ -517,11 +504,9 @@ export function isKnownEquipmentId(id: string): boolean {
 }
 
 /**
- * Drop slotted ids / unlock pins that no longer exist in the combat equipment
- * catalogue (removed after a corpus trim) or are unlock.type "removed".
- * Inject `known` in tests; default uses isKnownEquipmentId. Orphans leave empty
- * doll cells while still counting as equipped — prune on load/update so counts
- * and localStorage stay honest.
+ * Drop slotted ids / unlock pins missing from the catalogue or unlock.type "removed".
+ * Inject `known` in tests; default isKnownEquipmentId. Call on load/update so orphans
+ * do not linger in equipmentIds after a corpus trim.
  */
 export function pruneUnknownEquipment(
   loadout: Loadout,
@@ -534,7 +519,7 @@ export function pruneUnknownEquipment(
       slots[slot] = id;
     }
   }
-  // Only original unlock pins — never convert a pruned slot orphan into a pin.
+  // Only original unlock pins - never convert a pruned slot orphan into a pin.
   const unlocks = unlockOnlyIds(loadout).filter((id) => known(id));
   return {
     ...loadout,
@@ -547,11 +532,7 @@ export function withStyleLevel(loadout: Loadout, level: number): Loadout {
   return { ...loadout, level };
 }
 
-/**
- * Style of the equipped two-hand or main-hand weapon, which owns the loadout
- * style whenever one is equipped. Hybrid weapons and an empty weapon slot
- * return null, leaving the stored style in charge.
- */
+/** Style of equipped 2H/MH weapon (owns loadout style). Hybrid or empty slot => null. */
 export function weaponStyle(
   equipmentSlots: Partial<Record<EquipmentSlot, string | null>> | undefined,
 ): CombatStyle | null {
@@ -561,10 +542,7 @@ export function weaponStyle(
   return style != null && style !== "hybrid" ? style : null;
 }
 
-/**
- * The same curse tier in another style — Turmoil to Anguish, Malevolence to
- * Desolation. An inactive curse stays inactive.
- */
+/** Map active curse to same prayer-level tier for `style` (e.g. Turmoil→Anguish). */
 function curseForStyle(current: StyleCurseChoice, style: CombatStyle): StyleCurseChoice {
   const active = current === "none" ? undefined : styleCurseById(current);
   if (!active) return current;
@@ -575,12 +553,8 @@ function curseForStyle(current: StyleCurseChoice, style: CombatStyle): StyleCurs
 }
 
 /**
- * Weapon shape implied by the equipped gear.
- * - Offensive off-hand → dualwield (dual-wield abilities cast).
- * - Defender → defender (hybrid OH: dual-wield abilities cast; not a pure shield).
- * - Shield → shield (no dual-wield; unrestricted still cast).
- * - Empty off-hand → mainhand (1H only).
- * Null while no weapon is equipped, leaving the stored choice.
+ * Weapon shape from equipped gear: offensive OH→dualwield; defender→defender (DW cast OK);
+ * shield→shield; empty OH→mainhand. Null if no weapon equipped.
  */
 export function weaponConfigurationFor(
   loadout: LoadoutEquipmentView,
@@ -601,8 +575,7 @@ export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
     ...loadout,
     style,
     baseDamage: { ...loadout.baseDamage, mode: "automatic" },
-    // Melee reads its damage level from Strength; leaving melee carries that
-    // level across as the starting point for the new style.
+    // Melee damage level is Strength; leave/enter melee seeds `level` from strengthLevel.
     level: style === "melee" || loadout.style === "melee" ? loadout.strengthLevel : loadout.level,
     buffs: { ...loadout.buffs, styleCurse: curseForStyle(loadout.buffs.styleCurse, style) },
   };
@@ -683,7 +656,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
   const storedStyle = STYLES.includes(raw.style as string)
     ? (raw.style as CombatStyle)
     : DEFAULT_LOADOUT.style;
-  // An equipped weapon wins, so a stored style can never contradict the gear.
+  // Equipped weapon style outranks stored style.
   const style = weaponStyle(equipmentSlots) ?? storedStyle;
 
   const hasAttack = Number.isFinite(raw.attackLevel);
@@ -720,8 +693,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     .vestments.increasedAdrenalineCap
     ? 120
     : 100;
-  // Follow the resolved style, so a weapon swap cannot leave a melee curse on a
-  // magic loadout.
+  // Remap curse to resolved style (weapon swap must not leave a melee curse on magic).
   const styleCurse = curseForStyle(
     STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
       ? (rawBuffs.styleCurse as StyleCurseChoice)
@@ -782,8 +754,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       num(raw.weaponTier, DEFAULT_LOADOUT.ammunitionTier),
     ),
     styleDamageBonus: Math.max(0, num(raw.styleDamageBonus, DEFAULT_LOADOUT.styleDamageBonus)),
-    // Equipped gear outranks the stored shape for the same reason it outranks
-    // the stored style.
+    // Equipped gear outranks stored weaponConfiguration.
     weaponConfiguration:
       weaponConfigurationFor({ equipmentSlots }) ??
       (raw.weaponConfiguration === "dualwield" ||

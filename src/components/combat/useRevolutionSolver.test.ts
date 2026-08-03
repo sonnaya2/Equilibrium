@@ -117,7 +117,7 @@ describe("useRevolutionSolver session settlement policy", () => {
     expect(action).toBe("ignore");
     expect(mayPublishStoppedPreview(action)).toBe(false);
 
-    // Host applies only when mayPublishStoppedPreview — same as catch in the hook.
+    // Host applies only when mayPublishStoppedPreview - same as catch in the hook.
     if (mayPublishStoppedPreview(action)) {
       setStopped();
       onActiveBar(["stale", "bar"]);
@@ -220,7 +220,7 @@ describe("seedProgressFromPlan (real planWorkers path)", () => {
     const progress = seedProgressFromPlan(plan, "thorough");
     expect(progress.agentCount).toBe(plan.agentCount);
     expect(progress.agents?.length).toBe(plan.agentCount);
-    // Reported count equals plan launches — not tier ceiling alone when cores lower it.
+    // Reported count equals plan launches - not tier ceiling alone when cores lower it.
     expect(progress.agentCount).toBeLessThanOrEqual(4);
     for (const a of progress.agents ?? []) {
       expect(a.barLength).toBe(4);

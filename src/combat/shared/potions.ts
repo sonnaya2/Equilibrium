@@ -4,7 +4,7 @@ import type { SourceReference } from "../types";
  * Overload-family level boosts. Formula from current Overload wiki (verified 2026-07-26):
  *   boost = floor(level × percent) + flat
  * where regular overload is 15% + 3, supreme 16% + 4, elder 17% + 5.
- *
+
  * The boosted level feeds accuracy composition and base ability damage alike:
  * wiki Ability damage computes from the style level "including boosts", with the
  * DPL curve capped at 145 (= level 120 + potion boosts) (verified 2026-07-31).

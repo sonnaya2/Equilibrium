@@ -12,7 +12,7 @@ function isFullyModeled(ability: PoolAbility): boolean {
 }
 
 /**
- * Index a pool by id. Duplicate ids fail loudly — silent Map last-write-wins
+ * Index a pool by id. Duplicate ids fail loudly - silent Map last-write-wins
  * previously dropped alternate definitions without notice.
  */
 export function indexPool<T extends PoolAbility>(pool: readonly T[]): Map<string, T> {
@@ -63,7 +63,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
  * Ids are sorted stably for deterministic search.
  *
  * Weapon-shaped abilities (twohand / dualwield / mainhand / conduit) are dropped
- * when they are illegal under `options.weaponConfiguration` — e.g. Hurricane on
+ * when they are illegal under `options.weaponConfiguration` - e.g. Hurricane on
  * dual-wield, Flurry on a two-hander. Callers should always pass the loadout shape.
  *
  * Duplicate catalogue ids for the same style throw.

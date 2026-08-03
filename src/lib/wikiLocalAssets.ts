@@ -59,7 +59,7 @@ function kindFromPath(src: string): LocalAsset["kind"] {
   return "other";
 }
 
-/** Accept only published local /game/ paths — never external URLs. */
+/** Accept only published local /game/ paths - never external URLs. */
 function acceptLocalPath(src: string | null | undefined): string | null {
   if (!src) return null;
   if (!src.startsWith("/game/")) return null;
@@ -144,7 +144,7 @@ export function resolveLocalAsset(label: string): LocalAsset | null {
     const skill = acceptLocalPath(skillIconPath(attempt));
     if (skill) return toAsset(skill, raw);
 
-    // 7) Broader data-entity resolver last — still prefers null over weak hits.
+    // 7) Broader data-entity resolver last - still prefers null over weak hits.
     const entity = acceptLocalPath(dataEntityIconPath({ name: attempt }));
     if (entity) return toAsset(entity, raw);
   }

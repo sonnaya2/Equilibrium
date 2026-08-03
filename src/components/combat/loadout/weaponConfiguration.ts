@@ -61,7 +61,7 @@ export function equipmentStyleDamageContributions(loadout: Loadout): StyleDamage
 /**
  * Style bonus `b` for ability damage: non-weapon pieces only, same resolve as
  * Setup "Equipment damage" (exact `bonuses.damage` or formula). Weapons never
- * enter here — tier handles them; defenders use half-tier OH, not style b.
+ * enter here - tier handles them; defenders use half-tier OH, not style b.
  */
 export function equipmentStyleDamageBonus(loadout: Loadout): number {
   return equipmentStyleDamageContributions(loadout).reduce((sum, row) => sum + row.value, 0);

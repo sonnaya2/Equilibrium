@@ -46,7 +46,7 @@ export function scheduleCastEvents(
 
   const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
   // Wiki: commanded when the skeleton has less than its duration remaining, it
-  // "will deal an attack on the tick it dies, and up to 2 ticks later" — later
+  // "will deal an attack on the tick it dies, and up to 2 ticks later" - later
   // command hits are never scheduled.
   const skeletonUntilTick =
     ability.id === "command_skeleton_warrior"

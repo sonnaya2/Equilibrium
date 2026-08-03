@@ -1,5 +1,5 @@
 /**
- * Pure ranking for SolverResultDTO merges — score first, never length-over-score.
+ * Pure ranking for SolverResultDTO merges - score first, never length-over-score.
  */
 
 import type { ProofLabel } from "./contracts";
@@ -34,7 +34,7 @@ export function isRankableSolverResult(r: SolverResultDTO): boolean {
 }
 
 /**
- * Floating-point "effectively equal" — not a wide percent band.
+ * Floating-point "effectively equal" - not a wide percent band.
  * Meaningful score gaps always rank higher score first.
  */
 export function isEffectivelyEqualScore(a: number, b: number): boolean {
@@ -66,7 +66,7 @@ export function compareSolverResultDTO(a: SolverResultDTO, b: SolverResultDTO): 
   const scoresEqual = isEffectivelyEqualScore(a.score, b.score);
 
   if (!scoresEqual) {
-    // Higher score always wins — bar length must not override.
+    // Higher score always wins - bar length must not override.
     return b.score > a.score ? 1 : -1;
   }
 

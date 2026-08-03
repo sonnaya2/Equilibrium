@@ -1,11 +1,11 @@
 /**
  * Generates src/lib/dataIconIndex.ts from public/game.
- *
+
  * public/game is the art tree - what is on disk is what the browser gets - so
  * the lookups gameArt.ts resolves against are read straight off it.
- *
+
  *   node scripts/assets/build-icon-index.mjs [--check]
- *
+
  * --check regenerates in memory and exits non-zero if the committed file differs.
  */
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";

@@ -1,20 +1,7 @@
 /**
- * Release export hygiene audit (read-only).
- *
- * Scans the git index and public docs for agent tooling, stale deployment
- * identifiers, secrets-shaped strings, and other material that must not ship
- * in a clean public export. Never deletes or mutates files.
- *
- * Usage:
- *   node scripts/release/audit-clean-export.mjs
- *   node scripts/release/audit-clean-export.mjs --json
- *   node scripts/release/audit-clean-export.mjs --strict
- *   node scripts/release/audit-clean-export.mjs --help
- *
- * Exit codes:
- *   0  clean
- *   1  one or more findings
- *   2  tooling failure (git unavailable, unreadable path, etc.)
+ * Read-only release hygiene audit: agent trees, stale deploy ids, secrets-shaped strings.
+ * Usage: node scripts/release/audit-clean-export.mjs [--json] [--strict] [--help]
+ * Exit: 0 clean, 1 findings, 2 tooling failure.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -27,7 +14,6 @@ const HELP = process.argv.includes("--help") || process.argv.includes("-h");
 
 const slash = (p) => p.split(sep).join("/");
 
-// --- policy ----------------------------------------------------------------
 
 /** Paths that must not be tracked (agent / local tooling). */
 const FORBIDDEN_TRACKED_PATHS = [
@@ -72,12 +58,7 @@ const STALE_IDENTIFIERS = [
   },
 ];
 
-/**
- * Model / agent marketing phrases (strict mode only — default off).
- * Scoped to README, CONTRIBUTING, and docs/. Off by default so incidental
- * mentions in public docs do not dominate the ship gate; use --strict for
- * a pre-export scrub.
- */
+/** Model/agent phrases in README/CONTRIBUTING/docs only when --strict. */
 const MODEL_PHRASES = [
   { id: "model-phrase-as-an-ai", re: /\bas an AI\b/gi },
   { id: "model-phrase-language-model", re: /\bas a language model\b/gi },
@@ -102,10 +83,7 @@ const TEMP_REPORT_RE =
 /** Database files that must not be tracked. */
 const DB_EXT_RE = /\.(?:sqlite3?|db|db-wal|db-shm)$/i;
 
-/**
- * Credential-shaped patterns. Keep conservative: only obvious unredacted forms.
- * Skip node_modules, lockfiles, and binary-ish paths.
- */
+/** Obvious unredacted credential patterns (skip node_modules/lockfiles via isTextish). */
 const CREDENTIAL_PATTERNS = [
   {
     id: "cred-aws-access-key",
@@ -184,7 +162,6 @@ const SKIP_SCAN_PREFIXES = [
 const PUBLIC_DOC_PATHS = ["README.md", "CONTRIBUTING.md"];
 const PUBLIC_DOC_PREFIXES = ["docs/"];
 
-// --- helpers ---------------------------------------------------------------
 
 function gitLines(args) {
   try {
@@ -275,7 +252,6 @@ function rootScreenshotFiles() {
   return found;
 }
 
-// --- checks ----------------------------------------------------------------
 
 /**
  * @typedef {{ id: string, severity: 'error', summary: string, paths?: string[], detail?: string, hits?: object[] }} Finding
@@ -408,7 +384,7 @@ function audit() {
     });
   }
 
-  // 8) Stale identifiers — scan tracked text files (+ common public docs if present)
+  // 8) Stale identifiers - scan tracked text files (+ common public docs if present)
   const stalePathsToScan = tracked.filter(isTextish);
   for (const doc of PUBLIC_DOC_PATHS) {
     if (!stalePathsToScan.includes(doc) && existsSync(join(ROOT, doc))) {
@@ -533,13 +509,11 @@ function audit() {
     });
   }
 
-  // 11) Rebrand placeholders (<NEW_*>) are intentional until the target repo is named.
-  // Report them as informational only — do not fail the audit on them.
+  // <NEW_*> rebrand placeholders are intentional until the target repo is named (not a fail).
 
   return findings;
 }
 
-// --- main ------------------------------------------------------------------
 
 function printHelp() {
   console.log(`Usage: node scripts/release/audit-clean-export.mjs [--json] [--strict] [--help]

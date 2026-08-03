@@ -1,10 +1,10 @@
 /**
  * Verifies every hand-written public art path still resolves.
- *
+
  * src/lib/rewardIconAliases.ts maps reward labels to /game/... paths by hand, so
  * nothing regenerates it and nothing catches a rename. This reads the literals
  * back out and checks each one against the published tree.
- *
+
  *   node scripts/assets/check-aliases.mjs
  */
 import { existsSync, readFileSync } from "node:fs";

@@ -35,7 +35,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "other-modeled",
 ];
 
-/** Public analysis from engine-owned ledgers — never rescanned from events. */
+/** Public analysis from engine-owned ledgers - never rescanned from events. */
 function buildAnalysis(rt: SimulationRuntime) {
   return finalizeAnalysis(rt.analysis, rt.totalExpected);
 }
@@ -95,10 +95,8 @@ function buildDpsDetail(args: {
 }
 
 /**
- * Horizon completion and result assembly. With a horizon, only events landing
- * before it count (half-open [0, horizonTicks)) and primary DPS divides by the
- * horizon; without one, every scheduled event lands through the natural end and
- * primary DPS uses E[D] / (elapsed × tickSeconds).
+ * Horizon completion + result assembly. With horizon: half-open [0, horizonTicks),
+ * primary DPS / horizon. Without: natural end, primary DPS = E[D] / (elapsed * tickSeconds).
  */
 export function finish(
   rt: SimulationRuntime,
@@ -238,12 +236,9 @@ function collectFailures(
 }
 
 /**
- * Combine terminal equivalence classes into one summary.
- *
- * Weighted damage, duration, and analysis come from successful branches only
- * (renormalized) when any branch fails. Casts/events come from the highest-weight
- * successful class when any succeed (else highest-weight failure) and are labeled
- * as representative history.
+ * Combine terminal equivalence classes. Totals (damage/duration/analysis) from
+ * successful branches only (renormalized on partial failure). Casts/events from
+ * highest-weight successful class (else highest-weight failure) as representative history.
  */
 export function combineBranchSummaries(
   branches: readonly Branch[],
@@ -358,9 +353,8 @@ export function combineBranchSummaries(
   const supportMaxDamage =
     mixPool.length > 0 ? Math.max(...mixPool.map((p) => p.summary.damage.supportMaxDamage)) : 0;
 
-  // Expected duration is over the totals mix (successful only). Support min/max
-  // and representative ticks share the history pool so rep ∈ [min, max] always —
-  // including all-failed runs where expected is 0 but a failed path still has length.
+  // Expected duration: totals mix (successful only). Support min/max + rep ticks
+  // share history pool so rep is in [min, max] even on all-failed (expected 0, path length > 0).
   const durationSupportPool = mixPool.length > 0 ? mixPool : representativePool;
   const expectedTicks = mix((s) => s.duration.expectedTicks);
   const minimumTicks =
@@ -437,8 +431,8 @@ export function combineBranchSummaries(
   const multiClass = parts.length > 1;
   const classWeight = rawMass > 0 ? representative.weight / rawMass : representative.weight;
   const useRepresentativeHistory = sawBranching || multiClass;
-  // Intermediate merges weight-mix ledgers while keeping one event log, so any
-  // branching run's events are never a safe rebuild source for weighted totals.
+  // Branching merges weight-mix ledgers with one event log: events are not a
+  // safe rebuild source for weighted totals.
   const eventsReconcileWithWeightedTotals =
     !sawBranching && parts.length === 1 && failure === undefined;
   const history: HistoryProvenance = useRepresentativeHistory
@@ -482,8 +476,8 @@ export function combineBranchSummaries(
     failure?.primaryReason ??
     (mixPool.length === 0 ? (parts[0]?.summary.error ?? "all branches failed") : undefined);
 
-  // Stochastic metadata only when branching occurred or multiple terminals remain.
-  // Deterministic single-path failures stay on `failure` without rng noise.
+  // Stochastic rng metadata only when branching or multi-terminal; sole-path
+  // failures stay on `failure` alone.
   const rng: StochasticRngSummary | undefined =
     sawBranching || multiClass
       ? {

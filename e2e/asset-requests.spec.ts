@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 /**
  * Runtime proof that publishing from assets/ serves every image the app asks for.
- *
+
  * The vitest suites resolve dataset records through the real icon resolvers and
  * are the authoritative reference graph; this catches the rest - paths built in
  * CSS, markup, or components that no dataset row reaches.

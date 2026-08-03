@@ -22,7 +22,7 @@ export type PresentedDrop = {
   iconUrl?: string | null;
   /** Original wiki section heading when known. */
   groupSource?: string | null;
-  /** Drop is noted — show note badge, never "(noted)" text. */
+  /** Drop is noted - show note badge, never "(noted)" text. */
   noted?: boolean;
 };
 
@@ -30,7 +30,7 @@ export type PresentedDropGroup = {
   id: DropGroupId;
   label: string;
   rows: PresentedDrop[];
-  /** Low-value / long filler — collapsed until the user expands. */
+  /** Low-value / long filler - collapsed until the user expands. */
   collapsedByDefault: boolean;
   /**
    * When expanded, show this many rows before a "Show more" control.
@@ -54,16 +54,16 @@ const GROUP_LABEL: Record<DropGroupId, string> = {
   common: "Main & materials",
 };
 
-// Note: bare "Rare drops" is ambiguous (Sanctum mixes chase + mats) — use chase names.
+// Note: bare "Rare drops" is ambiguous (Sanctum mixes chase + mats) - use chase names.
 const UNIQUE_HEADING =
   /(?:^|\b)(?:unique|100\s*%|always(?:\s+drops?)?|rare\s+drop\s+table|chase)(?:\b|$)/i;
-/** Charms / secondary only — Main is high-volume filler and belongs under common. */
+/** Charms / secondary only - Main is high-volume filler and belongs under common. */
 const VALUABLE_HEADING = /(?:^|\b)(?:charms?|secondary|valuable)(?:\b|$)/i;
 const COMMON_HEADING =
   /(?:^|\b)(?:main(?:\s+drops?)?|tertiary|seed|herb|suppl(?:y|ies)|common|miscellaneous|misc|material|salvage|alchem)(?:\b|$)/i;
 
 const CHARM_ITEM = /\bcharm\b/i;
-/** Common mats only — avoid bare "shard/essence" matching chase uniques. */
+/** Common mats only - avoid bare "shard/essence" matching chase uniques. */
 const SEED_HERB_ITEM =
   /\b(?:seed|grimy|herb|leaf|tar|ashes|bones?|feather|hide|logs?|ore|bar|rune tip|javelin heads?|salvage|nest|talisman|battlestaff|stone spirit|wood spirit)\b/i;
 /** Chase / set uniques that must never fall into common via weak heuristics. */
@@ -161,7 +161,7 @@ export function presentDrop(row: WikiDropRow): PresentedDrop {
   };
 }
 
-/** Parse a qty cell into numeric bounds for merge (`7–12`, `3-5`, `2`). */
+/** Parse a qty cell into numeric bounds for merge (`7-12`, `3-5`, `2`). */
 export function parseQtyBounds(qty: string): { min: number; max: number } | null {
   const t = qty.replace(/,/g, "").replace(/\s+/g, " ").trim();
   if (!t) return null;
@@ -191,7 +191,7 @@ function formatQtyBounds(min: number, max: number): string {
 /**
  * Collapse mechanic-scaled duplicates (same item + rate + noted, different qty)
  * into one row with a merged quantity span. Keeps Arch-Glacor-style tables short.
- *
+
  * Also collapses normal/hard mode copies of the same unique (Zuk Scripture ×2)
  * into one row with combined rates: `1/100 · 1/50`.
  */
@@ -210,7 +210,7 @@ export function mergeDropVariants(rows: PresentedDrop[]): PresentedDrop[] {
   const map = new Map<string, Acc>();
 
   for (const row of rows) {
-    // Item+noted only — mode variants share a row (rates joined below).
+    // Item+noted only - mode variants share a row (rates joined below).
     const key = `${row.item.toLowerCase()}\0${row.noted ? 1 : 0}`;
     const bounds = parseQtyBounds(row.quantity);
     const existing = map.get(key);
@@ -293,7 +293,7 @@ export function groupDropsForPresentation(rows: WikiDropRow[]): PresentedDropGro
 }
 
 /**
- * Chase / unique strip for the hero modules — prefer unique bucket, then rare tiers.
+ * Chase / unique strip for the hero modules - prefer unique bucket, then rare tiers.
  * Cap keeps the strip small.
  */
 export function notableDropsForPresentation(rows: WikiDropRow[], cap = 8): PresentedDrop[] {
@@ -361,7 +361,7 @@ export function pickHeroFacts(
     // Exclude JSON-looking and edit-placeholder text.
     if (f.value.length > 80) continue;
     if (/\{\s*"/.test(f.value) || /^\?\s*\(edit\)/i.test(f.value)) continue;
-    // Bare "Level" is usually Slayer level — skip once combat level is shown.
+    // Bare "Level" is usually Slayer level - skip once combat level is shown.
     if (hasCombatLevel && /^level$/i.test(f.label)) continue;
     seen.add(key);
     if (/combat\s*level/i.test(f.label)) hasCombatLevel = true;

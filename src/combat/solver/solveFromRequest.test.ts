@@ -31,7 +31,7 @@ const emptyEffects: ActiveEquipmentEffects = {
   },
 };
 
-/** Naked base-ruleset request — the path that already greened in CI. */
+/** Naked base-ruleset request - the path that already greened in CI. */
 function nakedRequest() {
   return defaultSerializableRequest({
     style: "melee",
@@ -130,7 +130,7 @@ function complicatedRequest() {
       equipmentIds: ["item:vestments", "item:mainhand", "item:offhand"],
       weaponConfiguration: "dualwield",
       startingAdrenaline: 100,
-      // Impatient + Relentless force state-changing RNG branches — the freeze/OOM path.
+      // Impatient + Relentless force state-changing RNG branches - the freeze/OOM path.
       adrenaline: {
         abilityGainMultiplier: 1.1,
         basicGainMultiplier: 1,
@@ -268,7 +268,7 @@ describe("solveFromRequest", () => {
       profileId: "balanced",
       size: { min: 6, max: 7 },
     });
-    // Prefer ok; exclusive groups may reject an arbitrary 6-pack — still must not hang/NaN.
+    // Prefer ok; exclusive groups may reject an arbitrary 6-pack - still must not hang/NaN.
     if (explore.ok) {
       expect(Number.isFinite(explore.score)).toBe(true);
     } else {

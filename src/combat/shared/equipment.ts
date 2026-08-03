@@ -12,7 +12,7 @@ import { equipmentRecordPassiveIds } from "./requirements";
  * EquipmentRecord.bonuses (wiki-sourced where filled). Weapon tier still drives base
  * AD and playerAccuracy; adding weapon Accuracy would count the tier curve twice.
  *
- * Style damage on armour / accessories is not folded into base AD either — ability
+ * Style damage on armour / accessories is not folded into base AD either - ability
  * damage stays level+tier driven (wiki weapon Damage is the face of that tier).
  *
  * Set crit bonuses feed CritLayers.chance, not the modifier pipeline.
@@ -85,8 +85,8 @@ export const TWOHAND_LOCKED_SLOTS: readonly string[] = ["mainhand", "offhand"];
  * player actually wearing". A stored main-hand or off-hand survives a switch to
  * a two-handed weapon in persisted loadouts, imports and hand-built fixtures, so
  * reading `equipmentSlots` directly sees gear the game would have unequipped.
- * Every consumer — stat aggregation, weapon configuration, passives, sets, and
- * the League blessings that ask what is being wielded — resolves through here.
+ * Every consumer - stat aggregation, weapon configuration, passives, sets, and
+ * the League blessings that ask what is being wielded - resolves through here.
  */
 export function resolvedEquipmentSlots(loadout: LoadoutEquipmentView): Record<string, string> {
   const slots = loadout.equipmentSlots ?? {};
@@ -104,7 +104,7 @@ export function resolvedEquipmentSlots(loadout: LoadoutEquipmentView): Record<st
  * The off-hand item genuinely being wielded, in the two categories Teragard's
  * Aegis distinguishes. Driven purely by the equipped record's own `shield` /
  * `defender` classification, so an ability that grants a shield effect without
- * one in hand — Necromancy's Bone Shield — never reads as a wielded shield, and
+ * one in hand - Necromancy's Bone Shield - never reads as a wielded shield, and
  * a Necromancy conduit reads as neither.
  */
 export function wieldedOffhandKind(loadout: LoadoutEquipmentView): "shield" | "defender" | null {
@@ -540,7 +540,7 @@ function passivePresentation(
   }
 }
 
-/** Igneous ultimate-upgrade capabilities — collapsed to one Gear row when multi-granted. */
+/** Igneous ultimate-upgrade capabilities - collapsed to one Gear row when multi-granted. */
 const IGNEOUS_ULTIMATE_PASSIVES: readonly ItemPassiveId[] = [
   "igneous-overpower",
   "igneous-deadshot",
@@ -716,7 +716,7 @@ export function setEffectSupport(def: EquipmentSetDef | undefined): SetEffectSup
 
 /**
  * Equipped sets with piece counts for GearPanel.
- * Only catalogue set definitions surface here — raw grouping tags on items
+ * Only catalogue set definitions surface here - raw grouping tags on items
  * (e.g. setId "igneous" / "leng") are not combat sets and must not paint empty cards.
  */
 export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSummary[] {
@@ -806,7 +806,7 @@ export function loadoutSetCritChance(loadout: LoadoutEquipmentView & SetCritCont
 /**
  * Outgoing player ability-damage CombatModifiers from set catalogue
  * (damageMult / damageMultPerPiece only). First Necromancer conjure mult is
- * separate (firstNecromancerConjureDamageMult) — not player AD.
+ * separate (firstNecromancerConjureDamageMult) - not player AD.
  * Catalogue currently has no player-AD mult effects; returns [] until one is
  * sourced into equipment-sets.json.
  */
@@ -840,7 +840,7 @@ export function setDamageModifiers(
 
 /**
  * First Necromancer robes set(2+): +7% conjure spirit basic-attack damage per
- * piece (wiki, cap 5). Returns 1 when pieces < 2. Not player ability AD —
+ * piece (wiki, cap 5). Returns 1 when pieces < 2. Not player ability AD;
  * apply to spirit autos only (not poison / commands).
  * https://runescape.wiki/w/First_Necromancer%27s_equipment
  */

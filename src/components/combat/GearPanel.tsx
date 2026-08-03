@@ -19,7 +19,7 @@ const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 type SortKey = "region" | "tier" | "name";
 type RegionFilter = RegionId | "base" | "all";
 /**
- * `setup` (default) = loadout.style + hybrid/unstyled only — other combat styles are hidden.
+ * `setup` (default) = loadout.style + hybrid/unstyled only - other combat styles are hidden.
  * Use `all` or a style chip to browse the rest of the catalogue.
  */
 type StyleBrowse = "setup" | "all" | CombatStyle;
@@ -213,7 +213,7 @@ function EquipmentSlotButton({
   );
 }
 
-/** Paper doll + item picker. Item bonuses unsourced — placement is organisational. */
+/** Paper doll + item picker. Item bonuses unsourced - placement is organisational. */
 export function GearPanel({
   loadout,
   setLoadout,
@@ -247,7 +247,7 @@ export function GearPanel({
   const matchStyle = styleBrowse === "setup";
   const browseStyle = effectiveBrowseStyle(styleBrowse, loadout.style);
 
-  /** Doll-equipable only — materials, codices, and set aggregates stay in Unlocks. */
+  /** Doll-equipable only - materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
     () => combatEquipment.records.filter((r) => r.slot != null && r.unlock?.type !== "removed"),
     [],
@@ -480,7 +480,7 @@ export function GearPanel({
                 const next = event.target.value as RegionFilter;
                 setRegionFilter(next);
                 setShowAllWearables(false);
-                // Region browse with Loadout style filter often looks empty —
+                // Region browse with Loadout style filter often looks empty - 
                 // open All styles so region gear is visible.
                 if (next !== "all" && styleBrowse === "setup") {
                   setStyleBrowse("all");

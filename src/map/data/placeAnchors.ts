@@ -9,7 +9,7 @@ import { mapToUv } from "./regionAnchors";
 
 export interface PlaceAnchor {
   region: RegionId;
-  /** A catalog area name (exactly), or — when `site` — a place named by that
+  /** A catalog area name (exactly), or - when `site` - a place named by that
    *  region's content/upgrade rows. */
   area: string;
   /** Set on anchors that are not catalog areas: named sites the highlight rows
@@ -19,16 +19,16 @@ export interface PlaceAnchor {
 
 /**
  * Catalog areas that deliberately get no board pin (base-camp structure,
- * underground-only, etc.). Still valid league areas — just not on the 3D map.
+ * underground-only, etc.). Still valid league areas - just not on the 3D map.
  */
 export const MAP_OMITTED_AREAS: ReadonlySet<string> = new Set([
   "Slayer Lodge",
-  // Underground under Memorial to Guthix — same surface mouth, no second pin.
+  // Underground under Memorial to Guthix - same surface mouth, no second pin.
   "Hall of Memories",
 ]);
 
 export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
-  // Misthalin — cities on the south half, fort and dig site north of Varrock,
+  // Misthalin - cities on the south half, fort and dig site north of Varrock,
   // Underworld/City of Um and the Tower sitting with the south bank.
   { region: "misthalin", area: "Varrock" },
   { region: "misthalin", area: "Lumbridge" },
@@ -42,7 +42,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "misthalin", area: "Zanaris" },
   { region: "misthalin", area: "Cosmic Altar" },
 
-  // Asgarnia — Falador central, the asgarnia stacked in the north-west.
+  // Asgarnia - Falador central, the asgarnia stacked in the north-west.
   { region: "asgarnia", area: "Falador" },
   { region: "asgarnia", area: "Taverley" },
   { region: "asgarnia", area: "Dwarven Mine" },
@@ -58,11 +58,11 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "asgarnia", area: "Armadyl's Tower" },
   // Invention Guild is the site pin below (do not duplicate area name).
 
-  // Kandarin — Piscatoris/Hall north-west, Seers–Catherby band, Ardougne/POF
+  // Kandarin - Piscatoris/Hall north-west, Seers-Catherby band, Ardougne/POF
   // south, Feldip Warforge on the south coast, DSF off the southern pier.
   { region: "kandarin", area: "Piscatoris Fishing Colony" },
   // Surface shrine (Piscatoris hunter area). Hall of Memories is underground
-  // under the pool — site pin, not a second overworld area.
+  // under the pool - site pin, not a second overworld area.
   { region: "kandarin", area: "Memorial to Guthix" },
   { region: "kandarin", area: "Seers' Village" },
   { region: "kandarin", area: "Barbarian Outpost" },
@@ -79,7 +79,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "kandarin", area: "Howl's Floating Workshop" },
   { region: "kandarin", area: "Underground Pass" },
 
-  // Karamja — Musa Point north, Brimhaven west, Shilo south, TzHaar inland,
+  // Karamja - Musa Point north, Brimhaven west, Shilo south, TzHaar inland,
   // Habitat/grove/Tai Bwo Wannai on the south-west half.
   { region: "karamja", area: "Musa Point" },
   { region: "karamja", area: "Brimhaven" },
@@ -92,7 +92,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "karamja", area: "Herblore Habitat" },
   { region: "karamja", area: "Shilo Village" },
 
-  // Fremennik — northern isles first, then Rellekka and the mainland spine
+  // Fremennik - northern isles first, then Rellekka and the mainland spine
   // (Waterbirth off the west coast, Miscellania east of Rellekka, Keldagrim
   // and the Lava Flow Mine on the south-east shoulder).
   { region: "fremennik", area: "Lunar Isle" },
@@ -105,7 +105,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "fremennik", area: "Keldagrim" },
   { region: "fremennik", area: "Lava Flow Mine" },
 
-  // Forinthry — Daemonheim SE coast; crater / Mage Arena / Agility north-central;
+  // Forinthry - Daemonheim SE coast; crater / Mage Arena / Agility north-central;
   // Mage of Zamorak (Abyss) west of centre; Forinthry Dungeon mid-east.
   { region: "forinthry", area: "Wilderness Agility Course" },
   { region: "forinthry", area: "Mage Arena" },
@@ -123,7 +123,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   // Catalog label for wilderness slayer masters / task hubs.
   { region: "forinthry", area: "Wilderness Slayer" },
 
-  // Kharidian Desert — Al Kharid / dig / oasis on the north band, Menaphite south.
+  // Kharidian Desert - Al Kharid / dig / oasis on the north band, Menaphite south.
   { region: "desert", area: "Al Kharid" },
   { region: "desert", area: "Garden of Kharid" },
   { region: "desert", area: "Kharid-et Dig Site" },
@@ -131,7 +131,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "desert", area: "Sophanem" },
   { region: "desert", area: "Menaphos" },
 
-  // Morytania — Canifis/Slayer Tower west-central, Everlight off the east
+  // Morytania - Canifis/Slayer Tower west-central, Everlight off the east
   // coast, Phasmatys and Darkmeyer further south-east, Barrows south.
   { region: "morytania", area: "Slayer Tower" },
   { region: "morytania", area: "Canifis" },
@@ -142,14 +142,14 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "morytania", area: "Darkmeyer" },
   { region: "morytania", area: "Barrows" },
 
-  // Tirannwn — Prifddinas central, Lost Grove south, Isafdar/Lletya/Port Tyras.
+  // Tirannwn - Prifddinas central, Lost Grove south, Isafdar/Lletya/Port Tyras.
   { region: "tirannwn", area: "Prifddinas" },
   { region: "tirannwn", area: "Lost Grove" },
   { region: "tirannwn", area: "Lletya" },
   { region: "tirannwn", area: "Isafdar" },
   { region: "tirannwn", area: "Port Tyras" },
 
-  // Anachronia — packed RuneScape Surface coordinates.
+  // Anachronia - packed RuneScape Surface coordinates.
   { region: "anachronia", area: "Anachronia base camp" },
   { region: "anachronia", area: "Orthen Dig Site" },
   { region: "anachronia", area: "Time altar" },
@@ -157,7 +157,7 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "anachronia", area: "Dream of Iaia" },
   { region: "anachronia", area: "Ranch Out of Time" },
 
-  // Havenhythe — Map ID 28 packed coordinates.
+  // Havenhythe - Map ID 28 packed coordinates.
   { region: "havenhythe", area: "Moonrise Dig Site" },
   { region: "havenhythe", area: "Wendlewick" },
   { region: "havenhythe", area: "Blighted Cave" },
@@ -174,11 +174,11 @@ export const PLACE_ANCHORS: readonly PlaceAnchor[] = [
  * Sites near a parent area inherit that area's georeference delta.
  */
 export const SITE_ANCHORS: readonly PlaceAnchor[] = [
-  // Misthalin — the Necromancy sites hang off the City of Um.
+  // Misthalin - the Necromancy sites hang off the City of Um.
   { region: "misthalin", area: "Sanctum of Rebirth", site: true },
   { region: "misthalin", area: "Rasial", site: true },
 
-  // Asgarnia — the five God Wars generals sit in the GWD, the rest ring Falador.
+  // Asgarnia - the five God Wars generals sit in the GWD, the rest ring Falador.
   { region: "asgarnia", area: "General Graardor", site: true },
   { region: "asgarnia", area: "Kree'arra", site: true },
   { region: "asgarnia", area: "Commander Zilyana", site: true },
@@ -203,7 +203,7 @@ export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "kandarin", area: "Ranging Guild", site: true },
   { region: "kandarin", area: "Manor Farm", site: true },
 
-  // Karamja — the TzHaar arenas share the volcano.
+  // Karamja - the TzHaar arenas share the volcano.
   { region: "karamja", area: "Duradel", site: true },
   { region: "karamja", area: "TzHaar Fight Cave", site: true },
   { region: "karamja", area: "Fight Kiln", site: true },
@@ -214,13 +214,13 @@ export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   // Fremennik.
   { region: "fremennik", area: "Dagannoth Kings", site: true },
 
-  // Forinthry — the Wilderness bosses, plus the Daemonheim dungeoneering fronts.
+  // Forinthry - the Wilderness bosses, plus the Daemonheim dungeoneering fronts.
   { region: "forinthry", area: "Corporeal Beast", site: true },
   { region: "forinthry", area: "Chaos Elemental", site: true },
   { region: "forinthry", area: "Dragonkin Laboratory", site: true },
   { region: "forinthry", area: "The Shadow Reef", site: true },
 
-  // Kharidian Desert — Kalphite lair north, Telos / Amascut mid-south, Menaphos south.
+  // Kharidian Desert - Kalphite lair north, Telos / Amascut mid-south, Menaphos south.
   // GWD2 generals live as catalog majors without separate map site pins yet.
   { region: "desert", area: "Kalphite Queen", site: true },
   { region: "desert", area: "Kalphite King", site: true },
@@ -238,7 +238,7 @@ export const SITE_ANCHORS: readonly PlaceAnchor[] = [
   { region: "morytania", area: "Abandoned Mine", site: true },
   { region: "morytania", area: "Temple Trekking", site: true },
 
-  // Tirannwn — everything but Solak is inside the Prifddinas walls.
+  // Tirannwn - everything but Solak is inside the Prifddinas walls.
   { region: "tirannwn", area: "Solak", site: true },
   { region: "tirannwn", area: "Max Guild", site: true },
   { region: "tirannwn", area: "Hefin Agility Course", site: true },

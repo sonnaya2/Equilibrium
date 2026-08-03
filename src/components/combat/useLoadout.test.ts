@@ -572,7 +572,7 @@ describe("gizmo layout", () => {
     const { gizmos } = normalizeLoadout({
       gizmos: {
         weapon1: ["aftershock", "not-a-perk", "eliteTectonic", "biting", "equilibrium"],
-        // Duplicate of a perk already claimed by weapon1 — first slot wins.
+        // Duplicate of a perk already claimed by weapon1 - first slot wins.
         armour1: ["aftershock", "lunging", "impatient"],
         madeUpSlot: ["biting"],
       },

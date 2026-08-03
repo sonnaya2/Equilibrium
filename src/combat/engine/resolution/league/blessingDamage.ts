@@ -12,8 +12,8 @@ import type { ResolvedDamage } from "../types";
 /** Event provenance in the vocabulary the blessing eligibility policy speaks. */
 function blessingSourceOf(event: ScheduledEvent<SimulationRuntime>): BlessingDamageSource {
   if (event.blessingId) return "blessing";
-  // Equipment/perk and autonomous ticks are identified by family / ownership —
-  // not originKind — so a parasite DoT (sourceCast < 0) stays ineligible.
+  // Equipment/perk and autonomous ticks are identified by family / ownership - 
+  // not originKind - so a parasite DoT (sourceCast < 0) stays ineligible.
   if (event.family === "proc" || event.sourceCast < 0) return "proc";
   if (event.family === "conjureAuto" || event.family === "poison") return "conjure";
   if (event.family === "command") return "command";

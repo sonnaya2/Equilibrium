@@ -1,5 +1,5 @@
 /**
- * Presentational chrome for the wiki article dialog — fact strip + notable helpers.
+ * Presentational chrome for the wiki article dialog - fact strip + notable helpers.
  * Large primary art stays in WikiArticleDialog. BEM under `data-wiki-article__*`.
  */
 import { GameIcon } from "@/components/GameIcon";
@@ -18,7 +18,7 @@ export type WikiRailAsset = {
 
 const ASSET_DISPLAY_CAP = 16;
 
-/** Compact horizontal stat strip (hero) — labels uppercase gold, values parchment. */
+/** Compact horizontal stat strip (hero) - labels uppercase gold, values parchment. */
 export function WikiFactStrip({ facts }: { facts: WikiFactChip[] }) {
   if (!facts.length) return null;
 

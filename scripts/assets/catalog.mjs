@@ -1,6 +1,6 @@
 /**
  * Reads the sharded art provenance catalog under asset-catalog/.
- *
+
  * One 1.1 MB file made every change an unreviewable diff. The catalog is split
  * by domain instead; this is the only place that knows the layout, so readers
  * do not care how many files it is spread across. The art itself lives in

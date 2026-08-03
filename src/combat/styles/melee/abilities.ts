@@ -504,7 +504,7 @@ export const MELEE_EFFECTS = [
   },
 ];
 
-/** Punish: 2.5x against targets below 50% life points — a target-stage modifier. */
+/** Punish: 2.5x against targets below 50% life points - a target-stage modifier. */
 export const PUNISH_TARGET_MULTIPLIER = 2.5;
 export const PUNISH_HP_THRESHOLD = 0.5;
 

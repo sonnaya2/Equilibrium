@@ -94,7 +94,7 @@ function withAnalysisCompareLine(
   };
 }
 
-/** Analysis: one cast through two stat lines — the shared loadout (A, perks and
+/** Analysis: one cast through two stat lines - the shared loadout (A, perks and
  *  target model included) against an editable comparison line (B). */
 export function AnalysisTab() {
   const [loadout] = useLoadout();

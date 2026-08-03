@@ -8,15 +8,11 @@ import {
 } from "../../data/sources";
 
 /**
- * Post-modernisation magic abilities. Damage bands and timing are wiki-verified
- * (individual ability pages + Magic abilities table, 2026-07-26). Multi-hit
- * tickOffsets only when the wiki states an interval; unknown timing leaves the
- * offsets unset. Ability-level crit modifiers the pipeline
- * cannot yet express (Wild Magic +10% chance / +20% damage) stay as MAGIC_EFFECTS.
- *
- * Removed by Combat Style Modernisation (do not re-add): Wrack, Wrack and Ruin,
- * Deep Impact, Metamorphosis, Shock, Horror, Detonate. Runic Charge replaces Wrack.
- * Anticipation / Intercept are Defence, not Magic.
+ * Post-modernisation magic abilities (wiki bands/timing, 2026-07-26).
+ * Multi-hit tickOffsets only when wiki states an interval. Crit layers the pipeline
+ * cannot express (e.g. Wild Magic +10% chance / +20% dmg) live in MAGIC_EFFECTS.
+ * Removed (do not re-add): Wrack, Wrack and Ruin, Deep Impact, Metamorphosis, Shock,
+ * Horror, Detonate; Runic Charge replaces Wrack. Anticipation / Intercept are Defence.
  */
 
 const VERIFIED = "2026-07-26";
@@ -43,7 +39,7 @@ export function isMagicAbility(ability: AbilitySpec): ability is MagicAbilitySpe
 }
 
 /** 3-tick channel: one hit per tick over 1.8s (wiki: "Attack 3 times over 1.8s (3 ticks)").
- *  Last hit lands at +2, so occupancy fits the 3-tick GCD — no channelTicks. */
+ *  Last hit lands at +2, so occupancy fits the 3-tick GCD - no channelTicks. */
 function concHits(minPct: number, maxPct: number) {
   return [0, 1, 2].map((tickOffset) => ({ band: { minPct, maxPct }, tickOffset }));
 }
@@ -58,8 +54,7 @@ function asphyxiateHits() {
 
 /**
  * Tumeken's Resplendence 4+: 8 hits of 72-84% over 4.8s (8 ticks).
- * Wiki states channel length + hit count (not a separate "every Xs" cell); one hit
- * per tick fits 8 hits in 8 ticks.
+ * Wiki gives channel length + hit count (not "every Xs"); one hit/tick fits.
  */
 function asphyxiateResplendenceHits() {
   return Array.from({ length: 8 }, (_, i) => ({
@@ -103,11 +98,8 @@ function smokeTendrilHits() {
 }
 
 /**
- * Magma Tempest: 8 hits of 35-45% every 1.2s (2 ticks); cannot critically
- * strike (Mar 2024, compensated with higher damage). Wiki, verified
- * 2026-08-01: "Damage from this ability is not considered as damage over
- * time" — so despite landing late and never critting, its hits keep prayers
- * and the Sunshine window.
+ * Magma Tempest: 8 hits of 35-45% every 1.2s (2 ticks); cannot crit (Mar 2024).
+ * Wiki (2026-08-01): not DoT, so late non-crit hits still keep prayers / Sunshine.
  */
 function magmaTempestHits() {
   return Array.from({ length: 8 }, (_, i) => ({
@@ -118,10 +110,8 @@ function magmaTempestHits() {
 }
 
 /**
- * Sunshine beam DoT on the cast-time primary target while inside the AoE.
- * Base: 16 hits of 10-20% (wiki average damage 240% = 16 * 15%).
- * Greater: 21 hits of 10-20% (wiki average damage 315% = 21 * 15%).
- * There is no separate initial 315% hit — that figure is the DoT total.
+ * Sunshine beam DoT on cast-time primary while inside AoE.
+ * Base 16x / Greater 21x of 10-20% (wiki avg 240% / 315% = n * 15%). No separate initial hit.
  */
 function sunshineDotHits(count: number) {
   return Array.from({ length: count }, (_, i) => ({
@@ -146,7 +136,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
   {
     // Wiki: "Sonic Wave strikes the target 2 ticks after being cast"; Flow is
     // gained on a successful hit, so the 9s window runs from that land tick.
-    // Wiki Jul 2024 — no longer weapon-type gated.
+    // Wiki Jul 2024 - no longer weapon-type gated.
     id: "sonic_wave",
     name: "Sonic Wave",
     style: "magic",
@@ -320,7 +310,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
   },
   {
     // Igneous Kal-Mej / Kal-Zuk: 4 hits of 120-150%. Timing: first hit then three
-    // on the next tick (wiki) — modelled as tick 0 + three at tick 1.
+    // on the next tick (wiki) - modelled as tick 0 + three at tick 1.
     id: "omnipower_igneous",
     name: "Omnipower (Igneous)",
     style: "magic",
@@ -352,7 +342,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Sunshine"),
   },
   {
-    // Greater Sunshine: DoT 21 x 10-20% (avg 315% total — not a front-loaded hit).
+    // Greater Sunshine: DoT 21 x 10-20% (avg 315% total - not a front-loaded hit).
     // Zone buff via appliesEffect; 64 active ticks after 1-tick delay (effects.ts).
     id: "greater_sunshine",
     name: "Greater Sunshine",

@@ -2,7 +2,7 @@ import type { DamageSourceKind } from "../simulation/contracts";
 
 /**
  * Engine-owned weighted analysis ledgers. Updated during event accounting and
- * merged with branch history — never reconstructed from representative events.
+ * merged with branch history - never reconstructed from representative events.
  */
 export interface EffectAnalysisLedger {
   id: string;
@@ -24,7 +24,7 @@ export interface EffectAnalysisLedger {
   attachedComponents: number;
   /**
    * Bonus-damage riders attributed onto this parent skill (how much Big Boned
-   * added on its hits). Always 0 on the rider's own row — rider Total is the
+   * added on its hits). Always 0 on the rider's own row - rider Total is the
    * bonus amount. Do not sum Bonus across rows with Total (would double-count).
    */
   bonusDamage: number;
@@ -39,7 +39,7 @@ export interface RuntimeAnalysisState {
   capLoss: number;
   /**
    * Per-run cast identity for cast-count dedup before any branch merge.
-   * Keys are `effectId:sourceCast`. Not part of the merge signature — only the
+   * Keys are `effectId:sourceCast`. Not part of the merge signature - only the
    * numeric `casts` field is weight-averaged after merge.
    */
   castKeys: Set<string>;

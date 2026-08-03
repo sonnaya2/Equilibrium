@@ -1,15 +1,8 @@
 /**
- * Builds committed 3D board geometry and terrain data from the HD Wiki raster.
- * Run with `npm run build:map`.
- *
- * terrain-field.webp channels, decoded as linear data:
- *   R  land coverage         0 open water .. 255 solid land
- *   G  signed coast distance 128 = waterline, one step per SD_STEP game units
- *   B  inland water          the rivers and lakes the coastline encloses
- *   A  relief                low-passed raster luminance, for micro-emboss
- *
- * Region ownership uses verified place coordinates plus region-seeds.json.
- * Neighbours simplify shared seam keys into byte-identical polylines.
+ * 3D board geometry + terrain from the HD Wiki raster (`npm run build:map`).
+ * terrain-field.webp: R land, G signed coast dist (128=waterline, SD_STEP units),
+ * B inland water, A relief. Ownership: place anchors + region-seeds.json.
+ * Shared seams simplify once so both plates share byte-identical polylines.
  */
 
 import fs from "node:fs";
@@ -32,7 +25,7 @@ const SPAN_Y = BOUNDS.maxY - BOUNDS.minY; // 2048
 /** Mask lattice: exactly one pixel per game tile, so distances are in tiles. */
 const W = SPAN_X;
 const H = SPAN_Y;
-/** The field texture is half that — every channel it carries is smooth. */
+/** The field texture is half that - every channel it carries is smooth. */
 const FIELD_W = W / 2;
 const FIELD_H = H / 2;
 
@@ -53,12 +46,7 @@ const COVE_REACH = 46;
 
 /** Game units per step of the packed signed-distance channel. */
 const SD_STEP = 1.6;
-/**
- * Coastline tolerance, game units — the ceiling, for long open coast. Short
- * runs get a proportionally tighter one: an islet twenty tiles around loses a
- * visible share of itself at this epsilon, and the map is full of them. Derived
- * from the run's own length so both sides of a seam still agree exactly.
- */
+/** Coast simplify epsilon (game units); short runs tighten via simplifyEpsFor. */
 const SIMPLIFY = 1.2;
 const simplifyEpsFor = (length) => Math.min(SIMPLIFY, Math.max(0.45, length / 90));
 /** Largest connected disagreement between the shipped rings and their mask. */
@@ -75,10 +63,7 @@ const seedFile = JSON.parse(fs.readFileSync(SEEDS_JSON, "utf8"));
 const REGIONS = Object.keys(seedFile.seeds);
 
 /**
- * placeAnchors.ts is TypeScript with path aliases node cannot resolve, and all
- * this needs from it is which region each place name belongs to — one literal
- * table. Parsed rather than imported, and asserted below so a format change
- * fails loudly instead of quietly shrinking the seed set.
+ * Parse placeAnchors.ts as text (path aliases block import); assert row count.
  */
 const seeds = REGIONS.map(() => []);
 {
@@ -136,10 +121,7 @@ for (let i = 0; i < N; i++) {
   }
 }
 
-/**
- * Connected components over a predicate, 4-connected, iterative — the mainland
- * is a single component of over a million pixels and recursion dies on it.
- */
+/** 4-connected components, iterative (mainland is >1M px; recursion dies). */
 function components(pred, onBlob) {
   const seen = new Uint8Array(N);
   const stack = new Int32Array(N);
@@ -186,11 +168,7 @@ const ocean = new Uint8Array(N);
 const land = new Uint8Array(N);
 for (let i = 0; i < N; i++) land[i] = ocean[i] ? 0 : 1;
 
-/**
- * Enclosed water stays inside the silhouette. A river does not cut a hole
- * through the plate; it is painted on the plate's surface, which is also what
- * keeps it attached when a region rises.
- */
+/** Enclosed water (ponds) kept on plate surface; rivers do not cut plate holes. */
 const inland = new Uint8Array(N);
 components(
   (i) => waterish[i] === 1 && ocean[i] === 0,
@@ -266,10 +244,7 @@ console.log("[terrain] distance fields");
 const distToWater = distanceTo((i) => land[i] === 0);
 const distToLand = distanceTo((i) => land[i] === 1);
 
-/**
- * Classifies rivers as narrow water far from open sea. Colour cannot distinguish
- * them from the ocean, and width alone also selects narrow coves.
- */
+/** Rivers: narrow water far from open sea (colour alone cannot distinguish). */
 const river = new Uint8Array(N);
 {
   const openSea = (i) => land[i] === 0 && distToLand[i] > OPEN_WATER_TILES;
@@ -295,7 +270,7 @@ const owner = new Uint8Array(N);
 {
   const flat = [];
   const seedMark = new Uint8Array(N);
-  /** Which region planted the seed on this tile — an island is awarded by these. */
+  /** Which region planted the seed on this tile - an island is awarded by these. */
   const seedOwner = new Uint8Array(N);
   for (let r = 0; r < REGIONS.length; r++) {
     for (const point of seeds[r]) {
@@ -323,11 +298,8 @@ const owner = new Uint8Array(N);
   }
 
   /**
-   * Hard frontier corridors. Pure Euclidean seeds cannot hold one-tile
-   * geopolitical borders (Salve, Al Kharid wall / Dig Site, Falador–Varrock,
-   * White Wolf, Musa channel, Yanille–Brimhaven, Forinthry ditch). Boxes are
-   * surface coords from wiki landmarks. League hardRule: Fort Forinthry =
-   * misthalin (not forinthry). Desert is never stolen for Mory.
+   * Hard frontier corridors (Salve, Al Kharid, ditch, White Wolf, Musa, etc.).
+   * League: Fort Forinthry = misthalin. Desert is never stolen for Mory.
    */
   const mistId = REGIONS.indexOf("misthalin") + 1;
   const moryId = REGIONS.indexOf("morytania") + 1;
@@ -359,7 +331,7 @@ const owner = new Uint8Array(N);
 
       // Fort Forinthry campus = Misthalin (league hardRule)
       // Keep/campus [3308,3553]. Prior y≤3572 painted the fort plate too far
-      // into wildy north — cap at ~3558. Stay joined to ditch S bank (y≤3522)
+      // into wildy north - cap at ~3558. Stay joined to ditch S bank (y≤3522)
       // so mist is one body, not a wildy island.
       if (gx >= 3292 && gx <= 3330 && gy >= 3522 && gy <= 3558) {
         force(i, mistId);
@@ -367,14 +339,14 @@ const owner = new Uint8Array(N);
       }
 
       // Forinthry ditch: S bank = Misthalin; N bank = Forinthry
-      // Ditch ~y 3521–3525 Edgeville→Silvarea. Ice Mountain / Black Knights stay
+      // Ditch ~y 3521-3525 Edgeville→Silvarea. Ice Mountain / Black Knights stay
       // Asgarnia *south* of the ditch; the hard dark-gray floor north of it is
       // wilderness even west of Edgeville. Skip fort (handled above).
       if (gx >= 3075 && gx <= 3405 && gy >= 3485 && gy <= 3522) {
         if (owner[i] === foriId || owner[i] === mistId) force(i, mistId);
         continue;
       }
-      // Main wildy body (Edgeville → Salve). Steal Asgarnia wedges too — Voronoi
+      // Main wildy body (Edgeville → Salve). Steal Asgarnia wedges too - Voronoi
       // and the ice-mountain box used to leave dark-gray wildy as asgarnia.
       // Cap x short of the Salve so Slayer Tower / north Mory stay Morytania.
       // Western dark-gray reclaim (x < 3065) runs *after* asg mountain forces.
@@ -387,10 +359,10 @@ const owner = new Uint8Array(N);
 
       // Salve: west bank = Misthalin; east bank = Mory
       // Temple ~[3405,3488]; bridge ~[3425,3485].
-      // Split the old full rectangle (x 3300–3416, y≥3360) — it painted the whole
+      // Split the old full rectangle (x 3300-3416, y≥3360) - it painted the whole
       // northern Kharidian sand top as Misthalin. River bank stays low-y mist;
       // inland mist starts higher (dig hill / Silvarea), not mid-sand.
-      // Mory E bank y≥3325 only — river/sand contact below owns Mine/Burgh.
+      // Mory E bank y≥3325 only - river/sand contact below owns Mine/Burgh.
       // Always force mory (no desert skip): a prior skip+continue preserved Voronoi
       // desert fingers into Mort Myre and blocked the Burgh/contact boxes.
       if (gx >= 3390 && gx <= 3416 && gy >= 3360 && gy <= 3535) {
@@ -408,7 +380,7 @@ const owner = new Uint8Array(N);
 
       // Dig Site hill + Exam Centre = Misthalin (connected, not a sand blanket)
       // Dig Site [3360,3420]; Exam Centre ~[3362,3339]. Prior campus y≥3345 across
-      // a wide x band stole the desert *top*. Keep a narrow N–S corridor so Exam
+      // a wide x band stole the desert *top*. Keep a narrow N-S corridor so Exam
       // Centre stays mist without painting the whole northern sand, and so the
       // mist body stays one plate (an island blob breaks ring/mask agreement).
       if (gx >= 3320 && gx <= 3395 && gy >= 3385 && gy <= 3485) {
@@ -420,13 +392,13 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // Mory–Desert river / sand contact (piecewise diagonal, not sawtooth)
-      // Band ~x 3405–3525, y 3175–3324. Desert west/south (Het's, Uzer dunes,
+      // Mory-Desert river / sand contact (piecewise diagonal, not sawtooth)
+      // Band ~x 3405-3525, y 3175-3324. Desert west/south (Het's, Uzer dunes,
       // northern Kharidian sand). Mory east/north (Abandoned Mine [3441,3233],
       // Burgh de Rott, Mort'ton, Mort Myre SW).
-      //   y 3260–3324: near-vertical x≈3440
-      //   y 3220–3260: slight west drift (Mine mory, SW sand desert)
-      //   y 3175–3220: swings east toward Burgh (dunes SW of town = desert)
+      //   y 3260-3324: near-vertical x≈3440
+      //   y 3220-3260: slight west drift (Mine mory, SW sand desert)
+      //   y 3175-3220: swings east toward Burgh (dunes SW of town = desert)
       if (gx >= 3405 && gx <= 3525 && gy >= 3175 && gy <= 3324) {
         let xCut;
         if (gy >= 3260) {
@@ -471,9 +443,9 @@ const owner = new Uint8Array(N);
         continue;
       }
 
-      // Falador–Varrock / Draynor–Sarim: latitude-split vertical cut
-      // South (Draynor y≤3360): Port Sarim asg, Draynor mist — cut ~3065.
-      // Mid (Barb y 3360–3470): Barb Village [3080,3420] asg — cut ~3086.
+      // Falador-Varrock / Draynor-Sarim: latitude-split vertical cut
+      // South (Draynor y≤3360): Port Sarim asg, Draynor mist - cut ~3065.
+      // Mid (Barb y 3360-3470): Barb Village [3080,3420] asg - cut ~3086.
       // North (Edgeville y≥3470): monastery asg ≤3065, Edgeville mist ≥3070.
       if (gy >= 3180 && gy < 3360) {
         if (gx >= 2920 && gx <= 3062 && either(i, mistId, asgId)) {
@@ -521,7 +493,7 @@ const owner = new Uint8Array(N);
       // HardRules: Death Plateau, Trollheim, Troll Stronghold, GWD = Asgarnia.
       // Fremennik: Rellekka, Mountain Camp path, Keldagrim, NE snow west of trolls.
       // The [2960,3620] seed cannot cross Ice Mountain.
-      // Keldagrim [2850,3580] fre pocket — keep clear of Death Plateau [2865,3595].
+      // Keldagrim [2850,3580] fre pocket - keep clear of Death Plateau [2865,3595].
       if (gx >= 2838 && gx <= 2868 && gy >= 3565 && gy <= 3590) {
         force(i, fremId);
         continue;
@@ -535,14 +507,14 @@ const owner = new Uint8Array(N);
         }
       }
       // Asgarnia troll / GWD massif (do not let fre paint the mounts to fre's right).
-      // Max x 2950 — east of that is hard dark-gray wilderness, not the ridge.
+      // Max x 2950 - east of that is hard dark-gray wilderness, not the ridge.
       if (gx >= 2815 && gx <= 2950 && gy >= 3620 && gy <= 3800) {
         if (owner[i] === fremId || owner[i] === asgId || owner[i] === foriId) {
           force(i, asgId);
           continue;
         }
       }
-      // Ice Mountain / Black Knights body — south of the ditch only. North of the
+      // Ice Mountain / Black Knights body - south of the ditch only. North of the
       // ditch the floor is hard dark gray = Forinthry (reclaim below).
       if (gx >= 2885 && gx <= 3065 && gy >= 3480 && gy <= 3525) {
         if (owner[i] === fremId || owner[i] === asgId) {
@@ -619,10 +591,7 @@ const owner = new Uint8Array(N);
   }
   console.log(`[terrain] frontier corridors forced ${forced} tiles`);
 
-  /**
-   * Only the mainland may split across regions. Each island uses its local seeds,
-   * falling back to pixel plurality when it has none.
-   */
+  /** Mainland may split regions; each island is whole (local seeds, else plurality). */
   let mainland = -1;
   let mainlandSize = 0;
   const islands = [];
@@ -663,11 +632,7 @@ const owner = new Uint8Array(N);
 }
 
 
-/**
- * The lattice boundary of one region's land, as closed rings that carry what
- * sits on the far side of every edge. Interior stays on the left, so rings come
- * out clockwise in (x east, y south).
- */
+/** Region land boundary rings with far-side labels; clockwise in y-down lattice. */
 function traceRings(regionIndex) {
   const me = regionIndex + 1;
   const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? -1 : y * W + x);
@@ -762,10 +727,7 @@ function simplifyOpen(points, eps) {
   return out;
 }
 
-/**
- * Duplicate endpoints collapse a closed ring under Douglas-Peucker. Split at
- * the farthest point and simplify each half.
- */
+/** Douglas-Peucker on closed ring: split at farthest point, simplify each half. */
 function simplifyRing(points, eps) {
   const a = points[0];
   let far = 1;
@@ -801,14 +763,8 @@ function splitRuns(ring) {
 }
 
 /**
- * The identity of a stretch of border, independent of who is walking it.
- *
- * Endpoints alone are not enough. Along a ragged frontier the two neighbours can
- * cut their rings into runs differently — a single pixel of sea poking into the
- * seam splits A's run in two while B still sees one — and two runs that merely
- * share endpoints then simplify to different points, which is a crack. Keying on
- * the whole lattice path means a key collides only when both sides really did
- * walk the same edges.
+ * Border stretch identity independent of walker. Full lattice path (not endpoints)
+ * so ragged seams that split differently on each side still share one simplification.
  */
 function runKey(points, a, b) {
   const pair = [a, b].sort((p, q) => p - q);
@@ -828,8 +784,8 @@ for (let r = 0; r < REGIONS.length; r++) {
   let area = 0;
   for (const ring of traceRings(r)) {
     const signed = ringArea(ring);
-    // Negative rings are holes a neighbouring plate punches. The cap is solid —
-    // enclosed water is painted on it — so only outer boundaries become geometry.
+    // Negative rings are holes a neighbouring plate punches. The cap is solid - 
+    // enclosed water is painted on it - so only outer boundaries become geometry.
     if (signed < MIN_PLATE_AREA) continue;
     area += signed;
     rings.push(splitRuns(ring));
@@ -837,7 +793,7 @@ for (let r = 0; r < REGIONS.length; r++) {
   traced.push({ rings, area });
 }
 
-/** How many sides claimed each stretch of border. Two means it is genuinely shared. */
+/** Sides claiming each border stretch; 2 = shared seam. */
 const runSeen = new Map();
 for (let r = 0; r < REGIONS.length; r++) {
   for (const ring of traced[r].rings) {
@@ -927,10 +883,7 @@ if (unreconciled) {
   console.log(`[terrain] ${unreconciled} border runs shipped unsimplified to keep both sides identical`);
 }
 
-/**
- * Scan-converts output rings and compares them to the source mask using
- * earcut's even-odd fill rule.
- */
+/** Scan-convert plates vs source mask (even-odd fill); fail if divergence > MAX_DIVERGENCE. */
 {
   const painted = new Uint8Array(N);
   const xs = [];
@@ -1035,7 +988,7 @@ for (let fy = 0; fy < FIELD_H; fy++) {
       for (let dx = 0; dx < 2; dx++) {
         const i = (fy * 2 + dy) * W + fx * 2 + dx;
         sumLand += land[i];
-        // Lakes the coastline encloses, plus the rivers it does not — both are
+        // Lakes the coastline encloses, plus the rivers it does not - both are
         // water that should flow rather than swell.
         sumInland += inland[i] || river[i];
         sumSd += land[i] ? distToWater[i] : -distToLand[i];

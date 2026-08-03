@@ -162,7 +162,7 @@ export function contentRewardTokens(text: string): string[] {
     .map((part) =>
       part
         .replace(/\s+/g, " ")
-        // "Leng artefact + dark nilas -> Blade of Leng / Off-hand" — keep rightmost product when arrowed.
+        // "Leng artefact + dark nilas -> Blade of Leng / Off-hand" - keep rightmost product when arrowed.
         .replace(/^.*?(?:\u2192|->)\s*/, "")
         .replace(/^(?:including|plus|also)\s+/i, "")
         .replace(/\s+\([^)]*\)/g, "")

@@ -1,5 +1,5 @@
 /**
- * Equilibrium league domain model. Zero React — the binding lives in useBuild.ts.
+ * Equilibrium league domain model. Zero React - the binding lives in useBuild.ts.
  * Unlock structure (confirmed_official, data/league from research normalize):
  * Misthalin + Havenhythe fixed, Karamja at the first task milestone,
  * then 3 elective picks from the remaining 8. Six regions total, never more.
@@ -19,7 +19,7 @@ import {
   type StableBlessingSelection,
 } from "./blessings";
 
-/** Revealed tiers with published choices only — unrevealed empty tiers stay open. */
+/** Revealed tiers with published choices only - unrevealed empty tiers stay open. */
 const REVEALED_RELIC_NAMES_BY_TIER: ReadonlyMap<string, ReadonlySet<string>> = (() => {
   const map = new Map<string, ReadonlySet<string>>();
   for (const tier of relicsData.records) {
@@ -72,7 +72,7 @@ export interface BuildState {
   /** Relic tier (as string key) -> chosen relic name. Only revealed tiers have choices. */
   relics: Record<string, string>;
   /**
-   * Path picks in PATH_TIERS order, contiguous — god tiers grant, they are never picked.
+   * Path picks in PATH_TIERS order, contiguous - god tiers grant, they are never picked.
    * Derived from `blessingSelections` so combat and god derivation stay path-based.
    */
   blessingPicks: BlessingPath[];
@@ -152,7 +152,7 @@ function selectionsFromPaths(paths: readonly BlessingPath[]): StableBlessingSele
   return resolveBlessingPersistence({ blessingPicks: paths }).blessingSelections;
 }
 
-/** Tolerates corrupt or stale persisted shapes — anything unrecognised drops out. */
+/** Tolerates corrupt or stale persisted shapes - anything unrecognised drops out. */
 export function normalizeBuild(value: unknown): BuildState {
   if (typeof value !== "object" || value === null) return emptyBuild();
   const base = emptyBuild();
@@ -245,7 +245,7 @@ export function pickBlessing(state: BuildState, pathTier: number, path: Blessing
   };
 }
 
-/** Wipes blessing picks and spends one reset — no-op when none left or nothing to reset. */
+/** Wipes blessing picks and spends one reset - no-op when none left or nothing to reset. */
 export function resetBlessings(state: BuildState): BuildState {
   if (state.blessingResetsUsed >= BLESSING_RESET_COUNT || state.blessingPicks.length === 0) {
     return state;

@@ -1,6 +1,6 @@
 import { abilityCategoryLabel } from "@/lib/gameArt";
 
-/** Compact category chip — basics blue, thresholds purple, ultimates red. */
+/** Compact category chip - basics blue, thresholds purple, ultimates red. */
 export function AbilityCategoryChip({
   category,
 }: {

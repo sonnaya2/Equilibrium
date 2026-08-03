@@ -29,7 +29,7 @@ const SECTIONS: Array<{ key: SectionKey; label: string }> = [
   { key: "consumable_unlocks", label: "Consumables" },
 ];
 
-/** Plain player-facing string — never a URL, never a SourceReference dump. */
+/** Plain player-facing string - never a URL, never a SourceReference dump. */
 function humanString(value: unknown): string {
   if (typeof value !== "string") return "";
   const trimmed = value.trim();
@@ -140,7 +140,7 @@ function sourceLabel(url: string): string {
   return "Source";
 }
 
-/** Detail fields to surface — content only, no provenance noise. */
+/** Detail fields to surface - content only, no provenance noise. */
 const DETAIL_FIELDS: Array<{ key: string; label: string }> = [
   { key: "unlocks", label: "Unlocks" },
   { key: "rewards", label: "Rewards" },

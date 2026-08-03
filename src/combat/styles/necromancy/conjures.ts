@@ -3,12 +3,9 @@ import type { SourceReference } from "../../types";
 import { NECROSIS_WIKI } from "../../data/sources";
 
 /**
- * Spirit Pact III timing:
- *   5-tick conjure anim + 100-tick lifetime → exclusive end at cast+105.
- * Skeleton attacks from +7 every 5 ticks, Zombie from +7 every 6, and Ghost
- * from +6 every 7. Skeleton rage adds 3% per attack up to 25 stacks.
- * Phantom has no auto; the default army is Skeleton, Ghost, and Zombie.
- * Spirit attacks cannot crit.
+ * Spirit Pact III: 5-tick anim + 100-tick lifetime -> exclusive end cast+105.
+ * Autos: Skeleton +7/5, Zombie +7/6, Ghost +6/7. Rage +3%/attack to 25 stacks.
+ * Phantom no auto; default army Skeleton+Ghost+Zombie. Spirit attacks cannot crit.
  */
 
 export const CONJURE_IDS = [
@@ -40,7 +37,7 @@ export const SKELETON_RAGE_AVG_MULT = 1.285;
 export const ZOMBIE_FIRST_AUTO_TICKS = 7;
 export const ZOMBIE_AUTO_INTERVAL = 6;
 export const ZOMBIE_AUTO_BAND = { minPct: 18, maxPct: 22 } as const;
-/** Poison aura — wiki first hit cast+9, every 3 ticks (poison uncrit). */
+/** Poison aura - wiki first hit cast+9, every 3 ticks (poison uncrit). */
 export const ZOMBIE_POISON_FIRST_TICKS = 9;
 export const ZOMBIE_POISON_INTERVAL = 3;
 export const ZOMBIE_POISON_BAND = { minPct: 8, maxPct: 12 } as const;
@@ -85,26 +82,20 @@ export const SPIRIT_AUTO_ABILITY_ID: Readonly<Record<ConjureId, string>> = {
 export const SPIRIT_POISON_ABILITY_ID = "spirit_putrid_zombie_poison";
 
 /**
- * Wiki (verified 2026-07-31): "Conjured spirits and their command abilities
- * always deal 100% of their damage potential, even when the player does not
- * have 100% hit chance against the target." Conjure damage therefore never
- * uses the player's Damage Potential fraction.
+ * Wiki (2026-07-31): conjures and commands always deal 100% damage potential
+ * (ignore player hit chance). Never use the player's Damage Potential fraction.
  */
 export const CONJURE_DAMAGE_POTENTIAL = 1;
 
 /**
- * Conjure-eligible global modifiers. Wiki (verified 2026-07-31): conjure damage
- * is increased by Eruptive and Equilibrium (via base ability damage),
- * Vulnerability, and set effects, but is NOT boosted by the player's prayers.
- * Command abilities and Putrid poison follow the same rule (poison also takes
- * Vulnerability).
+ * Conjure-eligible globals (wiki 2026-07-31): Eruptive, Equilibrium, Vulnerability,
+ * set effects; not player prayers. Commands and Putrid poison follow the same rule.
  */
 export function conjureEligibleModifiers<T extends { id: string }>(mods: readonly T[]): T[] {
   return mods.filter((m) => !m.id.startsWith("prayer:"));
 }
 
-/** Command Skeleton Warrior scheduling (wiki tick table, verified 2026-07-31). */
-/** RAAAR lands 1 tick after activation; a normal auto due on that tick still fires. */
+/** Command Skeleton (wiki tick table, 2026-07-31): RAAAR at activation+1; auto due that tick still fires. */
 export const COMMAND_SKELETON_RAAAR_DELAY_TICKS = 1;
 /** Command hits land at activation+2 .. activation+11; normal autos resume 2 ticks later. */
 export const COMMAND_SKELETON_FIRST_HIT_OFFSET = 2;
@@ -115,11 +106,7 @@ export const COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS = 6;
 /** Command hits keep landing up to 2 ticks past the skeleton's expiry. */
 export const COMMAND_SKELETON_EXPIRY_TAIL_TICKS = 2;
 
-/**
- * One scheduled track: the tick its next event lands on. A spirit only carries
- * the tracks it actually has, so a phantom cannot hold an auto tick and nothing
- * but the zombie can hold a poison tick.
- */
+/** One scheduled track: tick of next event. Variant only carries tracks it has. */
 export interface SpiritTrack {
   readonly nextTick: number;
 }
@@ -134,11 +121,7 @@ export interface ActiveSkeletonWarrior extends ActiveConjureBase {
   readonly auto: SpiritTrack;
   /** Rage: +3% per landed attack, capped at 25 stacks; 0 on summon. */
   readonly rageStacks: number;
-  /**
-   * Set when a command let a pending auto fire on/before its RAAAR tick: that
-   * auto's successor lands here (command end + 2) instead of on the plain
-   * cadence. Cleared when consumed.
-   */
+  /** When command let pending auto fire on/before RAAAR: successor lands here (command end + 2). Cleared when consumed. */
   readonly commandResumeTick?: number;
 }
 
@@ -156,14 +139,10 @@ export interface ActivePutridZombie extends ActiveConjureBase {
 
 export interface ActivePhantomGuardian extends ActiveConjureBase {
   readonly id: "phantom_guardian";
-  // No auto and no poison: the phantom only acts when commanded, and its Valour
-  // scale is ability data rather than simulated state.
+  // No auto/poison: acts only on command; Valour is ability data, not sim state.
 }
 
-/**
- * An active conjured spirit, modelled by what it can actually do. Adding a
- * capability to one spirit cannot silently give it to the others.
- */
+/** Active spirit variant by capability (phantom has no auto/poison tracks). */
 export type ActiveConjure =
   ActiveSkeletonWarrior | ActiveVengefulGhost | ActivePutridZombie | ActivePhantomGuardian;
 
@@ -289,9 +268,8 @@ export function skeletonRageMult(stacks: number): number {
 }
 
 /**
- * Track state lives on the spirit; the rotation event queue holds one scheduled
- * event per track and these helpers advance to the next. Autos never schedule
- * past untilTick; zombie poison lands a short sourced tail past it.
+ * Track advance helpers: one queued event per track. Autos never past untilTick;
+ * zombie poison may land a short sourced tail past it.
  */
 
 /** The auto track has another attack to schedule. A phantom never does. */
@@ -348,10 +326,7 @@ export function applyConjureCast(
   return summonConjures(state, ids, readyTick, durationMult);
 }
 
-/**
- * Whether a necro ability can cast given conjure presence.
- * Commands need the spirit; conjure_* needs the spirit absent (army: any missing).
- */
+/** Cast gate: commands need spirit present; conjure_* needs it absent (army: any missing). */
 export function conjureCanCast(abilityId: string, state: ConjureState, tick: number): boolean {
   const required = COMMAND_REQUIRES_CONJURE[abilityId];
   if (required) return conjureActive(state, required, tick);

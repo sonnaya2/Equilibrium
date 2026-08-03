@@ -90,6 +90,9 @@ jobs:
       # Combat layer boundaries (scripts/architecture/check.mjs).
       - name: Audit architecture
         run: npm run audit:architecture
+      # No em/en dash or lecture stock in // / block comments (AGENTS.md).
+      - name: Audit comments
+        run: npm run audit:comments:self-test && npm run audit:comments
       # Clean-export hygiene (agent tooling / secrets-shaped strings).
       - name: Audit release export
         run: npm run audit:release

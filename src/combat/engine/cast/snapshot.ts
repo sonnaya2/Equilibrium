@@ -3,12 +3,12 @@ import type { CombatModifier } from "../../types";
 
 /**
  * What a cast captured at cast time for its scheduled hits. Time-windowed
- * globals (Berserk, Swiftness, Sunshine) are NOT here — they read state at the
+ * globals (Berserk, Swiftness, Sunshine) are NOT here - they read state at the
  * land tick. Next-hit buffs, empowerment, and Searing Winds eligibility are
  * cast-scope per their sourced mechanics, so they live in the snapshot.
  */
 export interface CastSnapshot {
-  /** Owning cast sequence — buff-granting casts exclude their own hits. */
+  /** Owning cast sequence - buff-granting casts exclude their own hits. */
   castSeq: number;
   critLayers: CritLayers;
   baseMods: CombatModifier[];
@@ -22,7 +22,7 @@ export interface CastSnapshot {
   firstEligibleHitIndex: number;
   /** Bloodlust missing-LP multiplier for Flurry / Greater Flurry (1 = none). */
   empowerMult: number;
-  /** Searing Winds was active at cast — every hit carries the attached bonus. */
+  /** Searing Winds was active at cast - every hit carries the attached bonus. */
   searingWindsAtCast: boolean;
   /** Enduring Ruin's next-attack additive bonus captured for every hit in this cast. */
   enduringRuinBonus: number;

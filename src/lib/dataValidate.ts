@@ -187,7 +187,7 @@ export type BlessingTierRow = {
   paths: string[];
   godTier: boolean;
   choices: Array<{
-    /** Order, Balance or Chaos — the card names its own path rather than relying on column order. */
+    /** Order, Balance or Chaos - the card names its own path rather than relying on column order. */
     path: string;
     name: string;
     effects: string[];
@@ -229,7 +229,7 @@ export function parseBlessingTier(raw: unknown): BlessingTierRow | null {
   };
 }
 
-/** Task record boundary — incomplete rows are dropped, not cast through. */
+/** Task record boundary - incomplete rows are dropped, not cast through. */
 export type TaskRow = {
   id?: string;
   name: string;

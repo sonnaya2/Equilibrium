@@ -7,17 +7,9 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
 
 /**
- * Probability-weighted branching for state-changing RNG (Impatient, Relentless,
- * and Avernic Rampage procs change resources and windows, so a flat expected value would
- * spend resources no real branch could have). Damage-only randomness stays
- * expected-value by design.
- *
- * A branch owns an independent runtime produced by snapshotRuntime. Branches
- * whose future evolution is identical (same RotationState, same pending-event
- * structure, same counters) are merged: weights sum, expected ledgers become
- * the weight-weighted mean, and support damage bounds take min/max of each
- * branch's support (not a weighted mean of path extrema). Cast and event logs
- * retain one representative from the highest-weight terminal equivalence class.
+ * Probability-weighted branch for state-changing RNG (Impatient, Relentless,
+ * Avernic). Damage-only RNG stays expected-value. Equivalent futures merge:
+ * weights sum, expected ledgers are weight-weighted means, support uses min/max.
  */
 export interface Branch {
   weight: number;
@@ -56,16 +48,8 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
 }
 
 /**
- * Future evolution signature. Historical damage ledgers (`totalExpected`,
- * path conditionals / support offsets, `perAbility`, `damageByTick`, event/cast
- * logs) are intentionally omitted: `mergePair` combines expected ledgers as a
- * weight-weighted mean and support extrema via min/max, so two branches that
- * only differ in past damage may merge when their remaining state, queue, and
- * counters match.
- *
- * Keep `endTick` — it feeds metric denominators and is not re-derived solely
- * from future events once a branch is terminal. Keep hitDetails / spirit meta
- * because pending derived events read them at land time.
+ * Future-evolution key. Omits historical damage ledgers (merged separately).
+ * Keeps endTick, hitDetails, spirit meta for terminal metrics and land-time reads.
  */
 function branchKey(rt: SimulationRuntime): string {
   return JSON.stringify([
@@ -81,11 +65,7 @@ function branchKey(rt: SimulationRuntime): string {
   ]);
 }
 
-/**
- * Path conditionals (`totalMin`/`totalMax`) are weight-averaged.
- * Support extrema use min/max via offsets so later landings that bump the
- * conditionals keep true support bounds without replaying history.
- */
+/** Weight-average expected ledgers; support extrema via min/max offsets. */
 function mergePair(a: Branch, b: Branch): Branch {
   const weight = a.weight + b.weight;
   const keep = a.weight >= b.weight ? a : b;
@@ -116,7 +96,7 @@ function mergePair(a: Branch, b: Branch): Branch {
     const tick = Number(key);
     keep.rt.damageByTick[tick] = mix(a.rt.damageByTick[tick] ?? 0, b.rt.damageByTick[tick] ?? 0);
   }
-  // Quantitative analysis is ledger-owned: weight-mix, never rebuild from keep.events.
+  // Analysis is ledger-owned: weight-mix, do not rebuild from keep.events.
   keep.rt.analysis = mixAnalysisStates(a.rt.analysis, b.rt.analysis, a.weight, b.weight);
   keep.rt.analysis.supportMinOffset = bounds.supportMinOffset;
   keep.rt.analysis.supportMaxOffset = bounds.supportMaxOffset;
@@ -140,12 +120,7 @@ export function mergeBranches(branches: readonly Branch[]): Branch[] {
   return [...byKey.values(), ...errored];
 }
 
-/**
- * Hard cap on live probability branches after merge. Impatient + Relentless +
- * Avernic (and similar) can otherwise explode over a long Revolution horizon
- * even when equivalent branches merge. Keep the heaviest survivors and fold
- * discarded weight into the top branch so total probability mass is preserved.
- */
+/** Cap live branches after merge; discarded weight folds into the heaviest. */
 export const MAX_LIVE_BRANCHES = 64;
 
 export function capBranches(
@@ -199,9 +174,8 @@ function rngWeightProduct(
 }
 
 /**
- * Prepare one cast and enumerate state-changing RNG outcomes as weight plans.
- * Does not snapshot or commit — callers batch plans across live branches and
- * materialize only the heaviest survivors (see materializeCastPlans).
+ * Prepare one cast and enumerate state-changing RNG as weight plans.
+ * No snapshot/commit; materializeCastPlans materializes the heaviest survivors.
  */
 export function planCastOutcomes(
   branch: Branch,
@@ -247,10 +221,8 @@ export function planCastOutcomes(
 }
 
 /**
- * Snapshot+commit planned outcomes, keeping at most `max` forked paths by weight
- * (same policy as capBranches). In-place plans always commit; discarded fork mass
- * folds into the heaviest kept plan so total probability is preserved without
- * paying commit cost for paths that merge/cap would drop immediately after.
+ * Snapshot+commit plans, keeping at most `max` forks by weight (capBranches policy).
+ * In-place plans always commit; discarded fork weight folds into the heaviest kept.
  */
 export function materializeCastPlans(
   plans: readonly CastOutcomePlan[],
@@ -292,14 +264,8 @@ export function materializeCastPlans(
 }
 
 /**
- * Run one cast with its state-changing RNG enumerated. The cast is prepared
- * ONCE on the branch's own runtime (canonical advance + validation + prepared
- * cast), the RNG point is read from that prepared cast, and each outcome
- * commits the same prepared cast on a clone of the already-advanced, validated
- * runtime. A rejected cast has no RNG outcomes — it produces one error branch.
- *
- * Multi-branch drivers should plan across the live set and call
- * materializeCastPlans once so the branch cap avoids wasted commits.
+ * One cast with state-changing RNG: prepare once, commit each outcome on a clone.
+ * Rejected cast -> single error branch. Multi-branch: plan then materializeCastPlans.
  */
 export function castOutcomes(
   branch: Branch,

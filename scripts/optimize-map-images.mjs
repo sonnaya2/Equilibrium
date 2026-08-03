@@ -1,7 +1,7 @@
 /**
  * OPTIONAL destructive recompress of public/map albedo / atlas / field WebPs for GPU bandwidth.
- * UV math uses game bounds, not texel size — surface may shrink.
- *
+ * UV math uses game bounds, not texel size - surface may shrink.
+
  *   node scripts/optimize-map-images.mjs
  */
 import { existsSync, statSync, writeFileSync, renameSync, unlinkSync } from "node:fs";
@@ -33,13 +33,13 @@ const JOBS = [
   },
   {
     file: "poi-atlas.webp",
-    // Glyph grid — keep readable pins; 2048 long edge is enough for POI discs.
+    // Glyph grid - keep readable pins; 2048 long edge is enough for POI discs.
     maxEdge: 2048,
     quality: 82,
     effort: 5,
   },
   {
-    // Signed coast / water / relief pack — do NOT resize (FIELD_TEXEL assumes size).
+    // Signed coast / water / relief pack - do NOT resize (FIELD_TEXEL assumes size).
     file: "terrain-field.webp",
     maxEdge: null,
     quality: 90,

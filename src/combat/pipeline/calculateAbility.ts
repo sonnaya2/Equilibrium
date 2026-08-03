@@ -83,7 +83,7 @@ export interface AbilitySpec {
    */
   requiredPassiveAnyOf?: readonly ItemPassiveId[];
   /**
-   * Channelled cast occupancy in ticks (last hit offset + 1 — the actor is free
+   * Channelled cast occupancy in ticks (last hit offset + 1 - the actor is free
    * the tick after the final hit lands). Absent = one global cooldown.
    */
   channelTicks?: number;

@@ -1,8 +1,8 @@
 /**
  * Size, duplicate and provenance report for the art tree.
- *
+
  *   node scripts/assets/inventory.mjs [--fast] [--json]
- *
+
  * --fast skips decoded-pixel hashing (byte hashes only; much quicker).
  * Writes reports/assets/inventory.json. Read-only.
  */

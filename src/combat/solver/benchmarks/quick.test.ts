@@ -1,5 +1,5 @@
 /**
- * Quick solver benchmark — real evaluate, tiny budgets, 4-slot subset.
+ * Quick solver benchmark - real evaluate, tiny budgets, 4-slot subset.
  * Writes reports/solver-benchmark-quick.json and must finish under ~60s.
  *
  * Gated: only runs when SOLVER_BENCH=1|quick (see scripts/benchmarks/solver.mjs).
@@ -29,7 +29,7 @@ describe.skipIf(!enabled)("solver benchmark (quick)", () => {
     expect(report.schemaVersion).toBe(1);
     expect(report.mode).toBe("quick");
     expect(report.cases.length).toBe(defs.length);
-    // Soft wall-clock guard only — avoid brittle per-case thresholds.
+    // Soft wall-clock guard only - avoid brittle per-case thresholds.
     expect(report.totalDurationMs).toBeLessThan(90_000);
 
     for (const c of report.cases) {
@@ -44,7 +44,7 @@ describe.skipIf(!enabled)("solver benchmark (quick)", () => {
       expect(c.bounds.min).toBeLessThanOrEqual(c.bounds.max);
       expect(c.durationMs).toBeGreaterThanOrEqual(0);
       expect(["ok", "degraded", "failed", "error"]).toContain(c.status);
-      // Hard fail only on unexpected crashes — degraded/failed still record schema.
+      // Hard fail only on unexpected crashes - degraded/failed still record schema.
       expect(c.status).not.toBe("error");
       expect(c.evaluations).toBeGreaterThan(0);
 

@@ -1,7 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
 /**
- * Stable combat/browser E2E only — no map / WebGPU board.
+ * Stable combat/browser E2E only - no map / WebGPU board.
  * Use for local focused runs and optional CI; map coverage stays in the
  * full playwright.config.ts and headed WebGPU config.
  */

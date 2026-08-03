@@ -1,6 +1,6 @@
 /**
  * In-memory sliding-window rate limiter (per key, typically client IP).
- * Process-local only — fine for single-instance / serverless warm isolates.
+ * Process-local only - fine for single-instance / serverless warm isolates.
  */
 
 export type RateLimitResult = {

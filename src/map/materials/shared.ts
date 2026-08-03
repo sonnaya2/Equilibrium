@@ -9,23 +9,19 @@ import { MAP_WORLD } from "../data/regionAnchors";
 export const mapClock = uniform(0);
 
 /**
- * Hex token -> linear vec3, by hand rather than through TSL's `color()`: that
- * node carries its own type, which will not mix with a plain vec3 under the
- * r185 typings. 2.2 is the sRGB decode `color()` would have applied.
+ * Hex -> linear vec3 by hand (TSL `color()` has a distinct type that won't mix
+ * with plain vec3 under r185). Gamma 2.2 matches what `color()` would apply.
  */
 export function linear(hex: number) {
-  // float() each channel — bare JS numbers into vec3 can emit abstract floats
+  // float() each channel - bare JS numbers into vec3 can emit abstract floats
   // when naga types a JoinNode path; concrete f32 nodes stay valid in mix().
   const ch = (shift: number) => Math.pow(((hex >> shift) & 255) / 255, 2.2);
   return vec3(float(ch(16)), float(ch(8)), float(ch(0)));
 }
 
 /**
- * World XZ -> map uv, the single geographic transform every shader uses.
- *
- * `v` is flipped because our map-uv runs south as v increases while a
- * `flipY: true` texture samples from the bottom up. Doing it here once is what
- * stops half the layers from sampling the world upside down.
+ * World XZ -> map uv (shared by every map shader). `v` is oneMinus'd so south
+ * increases with v while flipY textures sample bottom-up; apply here once.
  */
 export function mapUvFrom(position: Node<"vec3">) {
   return vec2(
@@ -35,18 +31,14 @@ export function mapUvFrom(position: Node<"vec3">) {
 }
 
 /**
- * One texel of the generated field texture, in uv. The field carries R land
- * coverage, G signed coast distance (0.5 is the waterline), B inland water and
- * A a low-passed relief, and is always sampled at map uv.
+ * One field-texel in uv. Channels: R land, G signed coast (0.5 = waterline),
+ * B inland water, A low-passed relief. Sampled at map uv.
  */
 export const FIELD_TEXEL = 1 / 1536;
 
 /**
- * Prepare a texture for data use — no colour transform, no wrap bleed.
- *
- * No mipmaps: the field packs signed coast distance and inland water in linear
- * channels. Trilinear mips blur the waterline, and as the camera moves the LOD
- * switch crawls as shimmering bands along every coast and river.
+ * Data texture: NoColorSpace, clamp wrap, no mips. Field packs linear coast/
+ * water; trilinear mips blur the waterline into shimmering LOD bands.
  */
 export function asDataTexture(tex: THREE.Texture): THREE.Texture {
   tex.colorSpace = THREE.NoColorSpace;
@@ -64,7 +56,7 @@ export function asDataTexture(tex: THREE.Texture): THREE.Texture {
   return tex;
 }
 
-/** Prepare the HD surface raster — this one is artwork, so it is sRGB. */
+/** Prepare the HD surface raster - this one is artwork, so it is sRGB. */
 export function asAlbedoTexture(tex: THREE.Texture, anisotropy = 16): THREE.Texture {
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.wrapS = THREE.ClampToEdgeWrapping;

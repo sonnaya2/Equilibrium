@@ -46,7 +46,7 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 }
 
-/** Number inputs yield NaN/Infinity on partial input or 1e999 — keep them out of the engine. */
+/** Number inputs yield NaN/Infinity on partial input or 1e999 - keep them out of the engine. */
 function finite(value: number, fallback: number): number {
   return Number.isFinite(value) ? value : fallback;
 }
@@ -74,7 +74,7 @@ function hitBandLabel(a: AbilitySpec): string {
 }
 
 function abilityMeta(ability: AbilitySpec): string {
-  // Category is shown as a chip next to the name — meta is the rest only.
+  // Category is shown as a chip next to the name - meta is the rest only.
   return [
     ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : null,
     ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,

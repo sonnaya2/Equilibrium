@@ -10,20 +10,11 @@ import { activeBleedCount } from "../../../styles/melee/effects";
 import { rngProc } from "../../simulation/contracts";
 
 /**
- * Adrenaline and free-cast resources for one cast, in sourced order: the
- * ability's listed gain and every multiplier on it (Meteor Strike's basic
- * multiplier, Invigorating, Adrenaline Junkie) resolve first, then flat grants
- * that are not that listed generation are added on top — Impatient's +3 and the
- * Jaws of the Abyss bleed grant. Then the spend (refunded outright by a
- * Relentless proc), then the Deathspore charge a free cast consumed.
- *
- * Keeping the flat grants outside the multipliers is what stops Adrenaline
- * Junkie turning Impatient's sourced +3 into +4.5: the blessing raises
- * adrenaline generation, not unrelated grants or refunds.
- *
- * Impatient and Relentless are state-changing RNG: the driver enumerates the
- * outcome and passes it in, so a flat expected value never spends what no real
- * branch could have.
+ * Cast adren/resources in order: listed gain × multipliers (Meteor basic, Invigorating,
+ * Adrenaline Junkie), then flat grants (Impatient +3, Jaws of the Abyss), then spend
+ * (Relentless full refund), then Deathspore free-cast charge. Flat grants stay outside
+ * multipliers so AJ never turns Impatient +3 into +4.5. Impatient/Relentless are branched
+ * RNG outcomes from the driver, not EV spends.
  */
 export function applyCastResources(fx: CastEffectContext): void {
   const { rt, ability, candidate, rng } = fx;
@@ -63,8 +54,7 @@ export function applyCastResources(fx: CastEffectContext): void {
   }
 
   if (spend > 0) {
-    // Relentless: on a proc the cost is fully refunded and the perk locks out
-    // for 30s instead.
+    // Relentless proc: full cost refund + 30s lockout.
     if (
       (input.adrenaline?.relentlessRank ?? 0) > 0 &&
       candidate >= rt.state.relentlessUntilTick &&

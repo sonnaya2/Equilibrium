@@ -26,7 +26,7 @@ function concCritPerStackPct(abilityId: string, empowered: boolean): number {
  * Immediate magic cast-state changes: the Sunshine and Instability windows,
  * Runic Charge consumption by the casts that empower off it, the Concentrated
  * Blast stack ledger, Combust's burn on the target, and Flow's consumption.
- *
+
  * Flow is earned from event-carried data when Sonic Wave lands.
  */
 export function applyMagicCastEffects(fx: CastEffectContext): void {

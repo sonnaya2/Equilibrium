@@ -291,7 +291,7 @@ describe("Sonic Wave Flow", () => {
     const wild = ctx.byId.get("wild_magic")!;
     ctx.performCast(sonic, 0, false);
     for (let i = 0; i < 6; i++) ctx.performCast(attack, ctx.getState().tick, false);
-    // Tick 21 > 15: expired — full price.
+    // Tick 21 > 15: expired - full price.
     expect(ctx.costOf(wild)).toBe(25);
   });
 });

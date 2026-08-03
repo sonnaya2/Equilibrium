@@ -1,5 +1,5 @@
 /**
- * Live wiki article helpers for /data — page resolution + HTML cleanup.
+ * Live wiki article helpers for /data - page resolution + HTML cleanup.
  * No wiki images. Pure (no React). Server route and client dialog both use the view shape.
  */
 
@@ -11,7 +11,7 @@ export const WIKI_HOST = "runescape.wiki";
 export const WIKI_ORIGIN = `https://${WIKI_HOST}`;
 export const WIKI_USER_AGENT = "Equilibrium/0.1 RuneScape fan tool (+https://runescape.wiki)";
 
-/** Keep a fuller wiki intro — fills the hero summary and reduces empty plate. */
+/** Keep a fuller wiki intro - fills the hero summary and reduces empty plate. */
 const LEAD_MAX = 1600;
 const LEAD_PARAGRAPH_CAP = 6;
 const BODY_HTML_MAX = 48_000;
@@ -24,20 +24,13 @@ const DROP_HEADING =
   /\b(?:drops?|loot|rewards?|100\s*%\s*drops?|always\s+drops?|main\s+drops?|tertiary|secondary|rare\s+drop\s+table|uniques?(?:\s+(?:drops?|rewards?))?|common\s+drops?|elite\s+table|both\s+modes|pet\s+drop|weapon\s+and\s+armou?r|shard\s+of\b)\b/i;
 
 /**
- * Prefer these when ordering structured drop rows (unique/100%/always first).
- * Match short wiki subheads: "Unique", "Uniques", "Unique (5 mechanics)",
- * "Unique drops", "Unique rewards", "100%", "Always drops", plus Amascut-style
- * chase tables ("Weapon and armour table", "Shard of Genesis Essence table").
- * Bare "Uniques" needs uniques? — unique + optional trailing s — or the final s
- * fails the trailing word-boundary check.
+ * Preferred drop-section order: Unique(s)/100%/Always first, plus Amascut chase tables.
+ * uniques? keeps trailing-s ("Uniques") inside the word boundary.
  */
 const PREFERRED_DROP_HEADING =
   /(?:^|\b)(?:uniques?(?:\s+(?:drops?|rewards?))?|100\s*%(?:\s+drops?)?|always(?:\s+drops?)?|weapon\s+and\s+armou?r|shard\s+of\b)(?:\b|$|\s*\(|\s+table\b)/i;
 
-/**
- * Recipe / source / mechanics prose that is not a kill-drop table.
- * Matched on the full trimmed heading so "Rewards" (Vorkath) still counts.
- */
+/** Non-drop sections (recipes/sources/mechanics). Full heading match so "Rewards" still counts. */
 const NON_DROP_SECTION_HEADING =
   /^(?:creation|products?|repair|item\s+sources?|drop\s+sources?|disassembly|usage\s+cost|loot\s+system|drop\s+mechanics|loot\s+sets)$/i;
 
@@ -48,10 +41,8 @@ const QTY_HEADER = /^(?:quantity|qty|amount)s?$/i;
 const RARITY_HEADER = /^(?:rarity|rate|chance|drop\s*rate)s?$/i;
 
 /**
- * Whole sections removed (heading + content).
- * Do NOT bare-match "Normal mode" / "Hard mode" / "Pet drop" — those are often
- * drop-table subheads (TzKal-Zuk, Arch-Glacor). Strip strategy guides via the
- * longer patterns instead. Never strip a section that isDropSection() accepts.
+ * Sections stripped whole. Avoid bare "Normal/Hard mode" / "Pet drop" (drop subheads on Zuk etc.).
+ * Never strip when isDropSection() accepts.
  */
 const STRIP_SECTION_HEADING =
   /\b(?:strategy|tactics|gallery|trivia|history|update\s+history|references?|external\s+links?|see\s+also|transcript|dialogue|music|sounds?|graphical\s+updates?|concepts?|development|achievements?|(?:hard|normal)\s+mode\s+(?:guide|strategy|tactics)|money\s*making(?:\s+guide)?|boss\s*pet|boss\s*log|senntisten\s+achievements?|titles?|music\s+tracks?|points?\s+of\s+interest|monsters?|mobs?|bosses|minibosses?|map|lore|credits?|spotlight|getting\s+there|mentioned|flawless\s+run|deity\s+info)\b/i;
@@ -68,17 +59,11 @@ export type WikiDropRow = {
   item: string;
   quantity: string;
   rarity: string;
-  /**
-   * Live wiki inventory icon (https://runescape.wiki/… or protocol-relative made absolute).
-   * Harvested from the drop table image column / cell img — not a local /game path.
-   */
+  /** Live wiki inventory icon URL (drop-table img); not a local /game path. */
   iconUrl?: string | null;
-  /**
-   * Wiki section heading this row was harvested under (e.g. "Unique (5 mechanics)", "Charms").
-   * Presentation-only; unknown mechanics are omitted.
-   */
+  /** Wiki section heading for presentation (e.g. "Unique (5 mechanics)"). */
   group?: string | null;
-  /** True when the wiki marks the drop as noted — UI shows a note badge, not "(noted)" text. */
+  /** Wiki noted marker; UI badge, not "(noted)" text. */
   noted?: boolean;
 };
 
@@ -100,7 +85,7 @@ export type SafeWikiPage = {
   pageUrl: string;
 };
 
-/** Accept only https://runescape.wiki/w/… article URLs. */
+/** Accept only https://runescape.wiki/w/ article URLs. */
 export function safeWikiPage(url: unknown): SafeWikiPage | null {
   const href = safeExternalHref(url);
   if (!href) return null;
@@ -156,8 +141,7 @@ function decodeEntities(text: string): string {
 }
 
 function stripTags(html: string): string {
-  // Drop empty italic/lang/bold shells before tag→space so they don't leave
-  // "Fire )" style tails (wiki often wraps meaning glosses in <i lang=…>).
+  // Drop empty italic/lang shells before tag->space to avoid "Fire )" tails (wiki glosses).
   const s = html.replace(/<(i|em|b|strong|span)\b[^>]*>\s*<\/\1>/gi, "");
   return decodeEntities(s.replace(/<[^>]+>/g, " "))
     .replace(/\s+/g, " ")
@@ -170,9 +154,8 @@ function clampHtml(html: string, max: number): string {
 }
 
 /**
- * Keep wiki drop icons for harvest; still kill script/iframe/etc.
- * Closers must match openers — a bare `<button>` without matching `</button>` in
- * the closer set would swallow entire articles (infobox mode toggles on Zuk/etc.).
+ * Strip dangerous tags but keep imgs for drop-icon harvest.
+ * Open/close tags must match or mode-toggle buttons swallow articles (Zuk etc.).
  */
 const DANGEROUS_OPEN =
   "script|style|iframe|object|embed|form|button|textarea|select|noscript|svg|math|video|audio";
@@ -182,7 +165,7 @@ export function stripWikiChromeKeepImages(html: string): string {
   out = out.replace(/<!--[\s\S]*?-->/g, "");
   // Paired elements only (open + matching close).
   out = out.replace(new RegExp(`<(${DANGEROUS_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"), "");
-  // Unclosed openers left after a truncated/malformed chunk — strip the tag.
+  // Unclosed openers left after a truncated/malformed chunk - strip the tag.
   out = out.replace(new RegExp(`<(?:${DANGEROUS_OPEN})\\b[^>]*>`, "gi"), "");
   // Void / self-closing chrome.
   out = out.replace(/<(?:input|map|area|link|meta|br)\b[^>]*\/?>/gi, "");
@@ -202,7 +185,7 @@ export function absolutizeWikiIconUrl(src: string | null | undefined): string | 
     else if (href.startsWith("/")) href = `${WIKI_ORIGIN}${href}`;
     const u = new URL(href);
     if (u.protocol !== "https:") return null;
-    // RS wiki media only — never random hosts.
+    // RS wiki media only - never random hosts.
     if (
       u.hostname !== WIKI_HOST &&
       u.hostname !== `www.${WIKI_HOST}` &&
@@ -216,10 +199,7 @@ export function absolutizeWikiIconUrl(src: string | null | undefined): string | 
   }
 }
 
-/**
- * Wiki chrome glyphs that appear next to drop tables but are not inventory icons
- * (High Level Alchemy, yes/no checks, skill badges).
- */
+/** Non-inventory wiki chrome near drop tables (HLA, yes/no checks, skill badges). */
 const NON_INVENTORY_ICON =
   /(?:High_Level_Alchemy|Yes_check|X_mark|Coins_detail|GE_detail|graph|Coins_10000_detail|\/thumb\/(?:Attack|Strength|Defence|Ranged|Magic|Prayer|Constitution|Slayer|Summoning|Herblore|Farming|Mining|Smithing|Fishing|Cooking|Firemaking|Woodcutting|Crafting|Fletching|Runecrafting|Construction|Agility|Thieving|Hunter|Divination|Invention|Archaeology|Necromancy)-icon)/i;
 
@@ -258,7 +238,7 @@ export function extractWikiIconFromCell(cellHtml: string): string | null {
         fallback = fallback ?? abs;
         continue;
       }
-      // Alchemy / check / skill chrome — keep only as last-resort fallback.
+      // Alchemy / check / skill chrome - keep only as last-resort fallback.
       if (NON_INVENTORY_ICON.test(abs) || NON_INVENTORY_ICON.test(tag)) {
         fallback = fallback ?? abs;
         continue;
@@ -274,7 +254,7 @@ function isInventoryImageCell(cellHtml: string): boolean {
   return /\binventory-image\b|\bdrops-img\b|\bclass="[^"]*\bimage\b/i.test(cellHtml);
 }
 
-/** Skip GE price / high-alch columns — they often embed non-item icons. */
+/** Skip GE price / high-alch columns - they often embed non-item icons. */
 function isMetaDropCell(cellHtml: string): boolean {
   return /\b(?:ge-column|alch-column|drops-ge|high.?alch)\b/i.test(cellHtml);
 }
@@ -287,8 +267,7 @@ export function stripWikiChrome(html: string): string {
   let out = html;
   // Comments
   out = out.replace(/<!--[\s\S]*?-->/g, "");
-  // Paired elements (open + matching close). Keep closer list aligned with openers —
-  // a mismatched pair (e.g. button → form) deletes half the article.
+  // Paired open+close; mismatched closer list can delete half the article.
   out = out.replace(new RegExp(`<(${STRIP_OPEN})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, "gi"), "");
   // Unclosed openers (truncated parse chunks, missing closers).
   out = out.replace(new RegExp(`<(?:${STRIP_OPEN})\\b[^>]*>`, "gi"), "");
@@ -400,10 +379,8 @@ function isPreferredDropSection(section: Section): boolean {
 }
 
 /**
- * Preferred unique/always sections plus deeper child headings nested under them
- * (e.g. Uniques → Weapon and armour table) so they claim DROP_ROW_CAP first.
- * When a nested child is itself preferred by name (Shard of… table), keep the
- * ancestor nest level so sibling tables (Devourer's Nexus) stay preferred too.
+ * Unique/always sections + nested children first for DROP_ROW_CAP.
+ * Preferred nested name keeps ancestor nest so sibling chase tables stay preferred.
  */
 function preferredDropSections(sections: Section[]): Section[] {
   const out: Section[] = [];
@@ -437,7 +414,7 @@ function preferredDropSections(sections: Section[]): Section[] {
 function isStripSection(section: Section): boolean {
   // Drop harvest wins: "Normal mode" / "Hard mode" under Drops keep wikitables.
   if (isDropSection(section)) return false;
-  // Bare mode labels without drop tables are strategy stubs — drop them.
+  // Bare mode labels without drop tables are strategy stubs - drop them.
   if (/^(?:hard|normal)\s+mode$/i.test(section.heading.trim())) return true;
   return STRIP_SECTION_HEADING.test(section.heading);
 }
@@ -489,12 +466,7 @@ function cellItemText(cellHtml: string): string {
 }
 
 /**
- * Strip wiki footnote / citation markers from user-facing text.
- * Citation markers have no destination because article previews omit references.
- *
- * Also heals tag-strip residue: `Fire</b>)` → `Fire )` after stripTags
- * (TzKal-Zuk meaning parenthetical). Collapse empty italic/lang shells and
- * space-before-`)` without eating real parenthetical content.
+ * Strip cite markers (previews omit refs) and tag-strip residue like `Fire )` (Zuk glosses).
  */
 export function cleanWikiFootnotes(raw: string): string {
   return (
@@ -542,7 +514,7 @@ export function cleanDropItemName(raw: string): string {
   );
 }
 
-/** Quantity / rarity cell text — keep rates, kill footnote litter. Never leave "(noted)". */
+/** Quantity / rarity cell text - keep rates, kill footnote litter. Never leave "(noted)". */
 export function cleanDropCellText(raw: string): string {
   return cleanWikiFootnotes(
     decodeEntities(raw)
@@ -555,17 +527,14 @@ export function cleanDropCellText(raw: string): string {
 
 /**
  * Split quantity cell into clean qty + noted flag.
- * `"7–12 (noted)"` → `{ quantity: "7–12", noted: true }`.
+ * `"7-12 (noted)"` → `{ quantity: "7-12", noted: true }`.
  */
 export function parseDropQuantity(raw: string): { quantity: string; noted: boolean } {
   const noted = hasNotedMark(raw);
   return { quantity: cleanDropCellText(raw), noted };
 }
 
-/**
- * Wiki often stubs main tables as a single "Boss loot (normal)" row that links
- * to a subpage with the real Item/Qty/Rarity table (Vorkath, some EGWD modes).
- */
+/** True for shell rows like "Boss loot (normal)" that link to real tables (Vorkath, EGWD). */
 export function isLootContainerItem(item: string): boolean {
   const t = item.replace(/\s+/g, " ").trim();
   if (!t) return false;
@@ -574,10 +543,7 @@ export function isLootContainerItem(item: string): boolean {
   return false;
 }
 
-/**
- * Prefer normal-mode loot subpages, then hard, then story, then any other shell.
- * Returns wiki page titles (usually identical to the drop item label).
- */
+/** Loot subpage expand order: normal > hard > story > other. Returns wiki page titles. */
 export function pickLootExpandTitles(drops: WikiDropRow[], limit = 1): string[] {
   const containers = drops.filter((d) => isLootContainerItem(d.item));
   if (!containers.length) return [];
@@ -612,10 +578,7 @@ function dropRowKey(row: WikiDropRow): string {
   return `${row.item.toLowerCase()}\0${row.quantity}\0${row.rarity}\0${row.noted ? 1 : 0}`;
 }
 
-/**
- * Merge base-page drops with loot-subpage rows. Shell "loot (mode)" rows are
- * dropped once expansion succeeded so the UI only shows real items.
- */
+/** Merge base + loot-subpage rows; drop shell "loot (mode)" rows after expansion. */
 export function mergeExpandedDrops(
   base: WikiDropRow[],
   expanded: WikiDropRow[],
@@ -655,9 +618,7 @@ function rowCellHtmls(rowInner: string): string[] {
 }
 
 /**
- * Parse wikitable drop rows from HTML. Header match: Item|Name,
- * Quantity|Qty, Rarity|Rate|Chance. Caps at 80 unique rows.
- * Optional `group` is the wiki section heading (presentation metadata).
+ * Parse wikitable drops (Item/Qty/Rarity headers). Cap 80 unique rows; optional section `group`.
  */
 export function extractDropRows(html: string, options?: { group?: string | null }): WikiDropRow[] {
   const rows: WikiDropRow[] = [];
@@ -748,8 +709,7 @@ export function extractDropRows(html: string, options?: { group?: string | null 
 }
 
 function extractLeadHtml(leadChunk: string): string {
-  // Prefer the image-keeping strip path: full-page stripWikiChrome can mangle
-  // long leads when void <img> tags pair across huge spans.
+  // Prefer image-keeping strip; full strip can mangle long leads across void <img>.
   const cleaned = stripWikiChromeKeepImages(leadChunk);
   const texts: string[] = [];
   let total = 0;
@@ -874,8 +834,7 @@ function sectionBlock(section: Section): string {
 }
 
 /**
- * Turn MediaWiki parse HTML into a compact article view.
- * Lead/body stay image-free. Drop rows harvest live wiki icon URLs before strip.
+ * MediaWiki parse HTML -> article view. Lead/body image-free; drop icons harvested before strip.
  */
 export function processWikiHtml(
   rawHtml: string,
@@ -886,7 +845,7 @@ export function processWikiHtml(
   const withImages = stripWikiChromeKeepImages(raw);
   const { lead: leadWithImgs, sections: sectionsWithImgs } = extractSections(withImages);
 
-  // Preferred unique sections + nested child tables first (Uniques → weapon table).
+  // Preferred unique sections + nested children first for DROP_ROW_CAP.
   const preferredSections = preferredDropSections(sectionsWithImgs);
   const preferredSet = new Set(preferredSections);
   const preferredDropHtml: string[] = preferredSections.map((s) => s.html);
@@ -910,9 +869,7 @@ export function processWikiHtml(
     }
   }
 
-  // Preferred (unique/main/always + nested chase tables) first so DROP_ROW_CAP
-  // keeps uniques before potions/supplies fill the budget.
-  // Harvest per section so `group` carries the wiki heading for presentation.
+  // Harvest preferred sections first; `group` = wiki section heading.
   const drops: WikiDropRow[] = [];
   const seenDrop = new Set<string>();
   const pushSectionRows = (html: string, group: string | null) => {
@@ -940,9 +897,7 @@ export function processWikiHtml(
     pushSectionRows([...preferredDropHtml, ...otherDropHtml, ...leadDropTables].join("\n"), null);
   }
 
-  // Display path: strip all images from prose / fallback HTML.
-  // Facts + lead from the image-keeping pass — stripWikiChrome can mangle long
-  // leads / multi-infobox pages when void <img> tags pair across huge spans.
+  // Facts/lead from image-keeping pass (full strip can mangle long leads on void <img>).
   const facts = extractInfoboxFacts(withImages);
   const leadHtml = extractLeadHtml(leadWithImgs);
   const base = stripWikiChrome(raw);
@@ -973,8 +928,7 @@ export function processWikiHtml(
   dropsHtml = dropsHtml.replace(/^(?:\s|<br\s*\/?>)*$/, "");
   bodyHtml = bodyHtml.replace(/^(?:\s|<br\s*\/?>)*$/, "");
 
-  // Structured rows only — never flash empty drops chrome for Creation /
-  // Item sources / Rewards prose when extractDropRows returned nothing.
+  // Structured rows only (skip empty chrome for Creation/Item sources prose).
   const hasDrops = drops.length > 0;
 
   return {
@@ -999,7 +953,7 @@ export function absolutizeWikiHrefs(html: string): string {
 }
 
 export function finalizeArticleHtml(view: WikiArticleView): WikiArticleView {
-  // Allowlist sanitize after href rewrite — last boundary before API/JSON.
+  // Allowlist sanitize after href rewrite - last boundary before API/JSON.
   const leadHtml = sanitizeWikiHtml(absolutizeWikiHrefs(view.leadHtml));
   const dropsHtml = sanitizeWikiHtml(absolutizeWikiHrefs(view.dropsHtml));
   const bodyHtml = sanitizeWikiHtml(absolutizeWikiHrefs(view.bodyHtml));

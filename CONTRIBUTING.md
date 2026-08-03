@@ -113,6 +113,10 @@ Frozen presentation and a11y pins live in [docs/ui-contracts.md](docs/ui-contrac
 
 Full text: [NOTICE](NOTICE). Do not strip footers or `/sources`.
 
+## Comments
+
+Agent and human comment rules: **[AGENTS.md](AGENTS.md)**. CI gate: `npm run audit:comments` (no em/en dash in `//` or block comments; no lecture stock).
+
 ## Pull requests
 
 - Small, focused commits when you can.

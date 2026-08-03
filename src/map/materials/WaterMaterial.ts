@@ -1,6 +1,5 @@
 /**
- * Unlit cartographic water built from three crossed waves. Only the long pair
- * displace geometry; short detail modifies normals to bound high-DPR cost.
+ * Unlit cartographic water: long waves displace geometry; short waves normals-only (DPR cost).
  */
 
 import * as THREE from "three/webgpu";
@@ -22,28 +21,22 @@ import { FIELD_TEXEL, linear, mapClock, mapUvFrom } from "./shared";
 const DEEP = 0x24506e;
 const SHALLOW = 0x4a7fa0;
 const SKY = 0x7ea8c6;
-/** River water — greener and darker than the sea it runs into. */
+/** River water - greener and darker than the sea it runs into. */
 const RIVER_DEEP = 0x2c4a4a;
 const RIVER_LIT = 0x4d7a72;
 const FOAM = 0xb8ccd8;
-/** Outer void — a touch darker than shallow so the board sits in a continuous
- *  field without turning the whole viewport into a black pit. */
+/** Outer void; slightly darker than shallow for continuous board framing. */
 export const OCEAN_HORIZON = 0x1e354c;
 
-/**
- * World units of swell — a couple of game tiles, and deliberately less than
- * plateHeight's REST_CLEARANCE so a crest never washes over a coastline.
- */
-/** Peak crest; must stay under REST_CLEARANCE − LOCKED_DROP (~0.0075). */
+/** Peak crest in world units; must stay under REST_CLEARANCE - LOCKED_DROP (~0.0075). */
 export const SWELL = 0.0032;
 /** Extra normal relief breaks up broad highlights without changing wave height. */
 const NORMAL_RELIEF = 0.008;
 
 type FloatNode = Node<"float">;
 
-/** The long waves the mesh actually follows. */
+/** Long waves that displace the mesh. */
 function longSwell(x: FloatNode, z: FloatNode): FloatNode {
-  // Slightly quicker than a still pond — cartographic life, not storm sea.
   // float() on every scalar so WGSL never sees abstract floats in the swell graph.
   const a = x
     .mul(float(5.1))
@@ -66,7 +59,7 @@ function longSwell(x: FloatNode, z: FloatNode): FloatNode {
     .add(c.mul(float(0.18)));
 }
 
-/** Long swell plus short waves that only show up in the normal. */
+/** Long swell + short waves (normals only via slope). */
 function surfaceHeight(x: FloatNode, z: FloatNode): FloatNode {
   return longSwell(x, z)
     .mul(float(0.62))
@@ -97,19 +90,16 @@ export function createWaterMaterial(
   field: THREE.Texture,
   keyDirection: THREE.Vector3,
 ): WaterMaterial {
-  // Unlit + toneMapped false: the sea is authored colour, not a lit surface,
-  // Keep water outside the land's filmic tone mapping.
+  // Unlit, toneMapped false: authored colour outside land filmic tone mapping.
   const material = new THREE.MeshBasicNodeMaterial({ toneMapped: false });
   // keyDirection retained for call-site API; specular path currently disabled.
   void keyDirection;
 
-  // The plane is authored flat and rotated -90 about x, so world (x, y, z) is
-  // local (x, -z, y): the swell displaces local z, and world XZ at vertex time
-  // has to be read off local x / -local y rather than from positionWorld, which
-  // is the very thing being computed here.
+  // Plane flat, rotated -90 about x: world (x,y,z) = local (x,-z,y).
+  // Swell displaces local z; vertex-time world XZ is local x / -local y (not positionWorld).
   const px = positionWorld.x;
   const pz = positionWorld.z;
-  // Fade specular toward the outer ocean while retaining the swell under plates.
+  // Fade toward outer ocean; retain swell under plates.
   const far = smoothstep(float(1.05), float(2.35), vec2(px, pz).length());
   const nearSea = float(1).sub(far);
   const nearSea2 = nearSea.mul(nearSea);
@@ -137,7 +127,7 @@ export function createWaterMaterial(
   const slopeZ = surfaceHeight(wx, wz.add(e))
     .sub(surfaceHeight(wx, wz.sub(e)))
     .div(e.mul(float(2)));
-  // Ease normal relief at the rim so grazing shots cannot fan long specular shafts.
+  // Ease normal relief at rim so grazing shots cannot fan long specular shafts.
   const normalRelief = float(NORMAL_RELIEF).mul(nearSea2.mul(float(0.55)).add(float(0.45)));
   const normal = vec3(
     slopeX.mul(normalRelief).negate(),
@@ -147,25 +137,15 @@ export function createWaterMaterial(
 
   const view = cameraPosition.sub(positionWorld).normalize();
   const fresnel = normal.dot(view).clamp(float(0), float(1)).oneMinus().pow(float(4.2));
-  // Looking across the water (low view.y) stretches the key into god-rays under
-  // islands. Overview looks down; desert/south focus is the failure case.
-  // mapUv is hoisted because the river gradient below samples it four more times.
+  // mapUv hoisted: river gradient samples it four more times.
   const mapUv = mapUvFrom(positionWorld);
   const F = texture(field, mapUv);
-  // Open water only — wider than the waterline so plate rims never pick specular.
+  // Open water only; wider than waterline so plate rims never pick specular.
   const offshore = smoothstep(float(0.5), float(0.44), F.g);
 
   /**
-   * Rivers.
-   *
-   * B marks water that is narrow and a long way from open sea — the Lum, the
-   * Salve, the Elid. The Wiki paints them in the open-sea colour, so they are
-   * cut out of the plates along with the ocean, which means *this* plane is what
-   * shows through a river. Ocean swell is the wrong motion for one.
-   *
-   * Direction comes from the coast-distance field: the gradient points across
-   * the channel, so its perpendicular runs along it. Every river gets its own
-   * heading out of that, rather than the whole map scrolling one way.
+   * Rivers (field.b): narrow inland water (Lum/Salve/Elid). Cut from plates with
+   * ocean so this plane shows through. Flow dir = coast-distance gradient perpendicular.
    */
   const texel = float(FIELD_TEXEL);
   const gx = texture(field, mapUv.add(vec2(texel, float(0)))).g.sub(
@@ -183,9 +163,7 @@ export function createWaterMaterial(
     .mul(float(0.6))
     .add(drift.mul(float(2.1)).add(float(1.7)).sin().mul(float(0.4)));
   const isRiver = smoothstep(float(0.16), float(0.5), F.b);
-  // Swell, crests and sun glint are all ocean behaviour; a river gets none.
-  // Named apart from `openWater` above, which gates specular against the plate
-  // rims and means something different.
+  // Zero ocean swell/crests/glint on rivers (distinct from offshore plate-rim gate).
   const notRiver = isRiver.oneMinus();
 
   let water = mix(
@@ -194,29 +172,25 @@ export function createWaterMaterial(
     offshore.mul(float(0.85)).add(height.mul(float(0.09)).mul(nearSea)),
   );
   water = water.mul(mix(float(0.78), float(1), offshore));
-  // Soft sky rim — not squared, or the board pond goes dead.
+  // Soft sky rim; do not square fresnel or the board pond goes dead.
   water = mix(
     water,
     linear(SKY),
     fresnel.mul(float(0.11)).mul(nearSea.mul(float(0.55)).add(float(0.45))),
   );
 
-  // No open-ocean specular / sheen — soft shafts along wave crests read as
-  // glitched green lines off the desert (Bug.png). Sparkle is gone entirely.
+  // Specular/sheen off: crest shafts read as glitched green lines off desert (Bug.png).
   const glint = float(0);
   const sheen = float(0);
 
-  // Shore foam only — a tight band on the waterline. Crest foam across the
-  // whole swell made parallel streaks out into open sea; remove that entirely.
+  // Shore foam only (waterline band); no open-sea crest foam.
   const surf = smoothstep(float(0.5), float(0.487), F.g)
     .mul(smoothstep(float(0.45), float(0.5), F.g))
     .mul(height.mul(float(0.2)).add(float(0.55)))
     .mul(float(0.14));
-  // clamp edges as float() — bare 0 / 0.45 are abstract and fail WebGPU validation.
+  // clamp edges as float() - bare 0 / 0.45 are abstract and fail WebGPU validation.
   water = mix(water, linear(FOAM), surf.clamp(float(0), float(0.22)).mul(notRiver));
 
-  // River water: darker and greener than the sea it joins, with the current
-  // reading as movement along the channel rather than swell across it.
   const riverBed = mix(
     linear(RIVER_DEEP),
     linear(RIVER_LIT),
@@ -224,7 +198,7 @@ export function createWaterMaterial(
   );
   water = mix(water, riverBed, isRiver.mul(float(0.82)));
 
-  // Horizon starts a touch earlier so southern ocean does not stay blown out.
+  // Horizon earlier so southern ocean does not stay blown out.
   const horizon = smoothstep(float(1.35), float(2.4), vec2(px, pz).length());
   material.colorNode = mix(
     water.add(linear(0xfff0d2).mul(glint.add(sheen))),

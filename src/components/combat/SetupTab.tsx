@@ -345,7 +345,34 @@ export function SetupTab({
               ) : null}
               <SummaryMetric label="Prayer bonus" value={formatNum(stats.equipment.prayer)} />
               <SummaryMetric label="Starting adrenaline" value={`${stats.startingAdrenaline}%`} />
-              <SummaryMetric label="Maximum adrenaline" value={`${stats.maxAdrenaline}%`} />
+              <SummaryMetric
+                label="Maximum adrenaline"
+                value={`${stats.maxAdrenaline}%`}
+                note={
+                  stats.adrenaline?.maxAdrenalineBonus
+                    ? `Includes Heightened Senses +${stats.adrenaline.maxAdrenalineBonus}`
+                    : undefined
+                }
+              />
+              {stats.adrenaline?.basicAdrenalineFlatBonus ? (
+                <SummaryMetric
+                  label="Fury of the Small"
+                  value={`+${stats.adrenaline.basicAdrenalineFlatBonus}% on basics`}
+                />
+              ) : null}
+              {stats.adrenaline?.ultimateAdrenalineRefund ? (
+                <SummaryMetric
+                  label="Ultimate adren refund"
+                  value={`+${stats.adrenaline.ultimateAdrenalineRefund}%`}
+                  note={
+                    stats.adrenaline.ultimateAdrenalineRefund >= 20
+                      ? "Conservation of Energy + Ring of Vigour"
+                      : stats.adrenaline.ringOfVigour
+                        ? "Ring of Vigour"
+                        : "Conservation of Energy"
+                  }
+                />
+              ) : null}
             </SummarySection>
           </div>
 

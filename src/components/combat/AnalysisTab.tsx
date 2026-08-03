@@ -15,7 +15,7 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
 import { loadoutStats, type CalcStats } from "./loadoutStats";
-import { useLoadout } from "./useLoadout";
+import type { Loadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
@@ -97,8 +97,7 @@ function withAnalysisCompareLine(
 
 /** Analysis: one cast through two stat lines - the shared loadout (A, perks and
  *  target model included) against an editable comparison line (B). */
-export function AnalysisTab() {
-  const [loadout] = useLoadout();
+export function AnalysisTab({ loadout }: { loadout: Loadout }) {
   const { build } = useLeagueBuild();
   const [abilityId, setAbilityId] = useState(ALL_ENTRIES[0].ability.id);
   const [souls, setSouls] = useState(3);

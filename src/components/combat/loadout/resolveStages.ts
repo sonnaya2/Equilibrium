@@ -67,7 +67,10 @@ import {
   RING_OF_VIGOUR_REFUND,
   ringOfVigourActiveSources,
 } from "@/combat/shared/ringOfVigour";
-import { sanitizeArchaeologyState } from "@/combat/shared/archaeologyRelics";
+import {
+  sanitizeArchaeologyState,
+  sanitizeSelectedRelics,
+} from "@/combat/shared/archaeologyRelics";
 import type { RegionId } from "@/league";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
@@ -739,8 +742,6 @@ export interface BerserkersFuryResolved {
   currentLifePoints: number;
   maximumLifePoints: number;
   currentHealthPercent: number;
-  /** Dharok set not modeled yet; always false until set effect ships. */
-  suppressedByDharok: boolean;
 }
 
 export interface ResolvedCombatRules {
@@ -790,21 +791,38 @@ export function resolveCombatRules(
   }
   globalModifiers.push(...leagueModifiers(leagueBundle.league));
 
-  // Arch selection: when build regions are known, drop illegal energy (650 without Anachronia).
+  // Arch selection: merge full-modeled buff flags into selectedIds (UI lockstep may desync),
+  // then drop illegal energy (650 without Anachronia) when regions are known.
   const archState = loadout.archaeology ?? { selectedIds: [], energyCap: 500 as const };
+  const mergedSelectedIds = (() => {
+    const ids = [...(archState.selectedIds ?? [])];
+    const fromBuffs: Array<[boolean | undefined, string]> = [
+      [loadout.buffs.berserkersFury, BERSERKERS_FURY_ID],
+      [loadout.buffs.furyOfTheSmall, FURY_OF_THE_SMALL_ID],
+      [loadout.buffs.heightenedSenses, HEIGHTENED_SENSES_ID],
+      [loadout.buffs.conservationOfEnergy, CONSERVATION_OF_ENERGY_ID],
+    ];
+    for (const [on, id] of fromBuffs) {
+      if (on === true && !ids.includes(id)) ids.push(id);
+    }
+    return ids;
+  })();
+  const mergedArch = { ...archState, selectedIds: mergedSelectedIds };
   const effectiveArch =
     options.unlockedRegions != null
-      ? sanitizeArchaeologyState(archState, options.unlockedRegions)
-      : archState;
+      ? sanitizeArchaeologyState(mergedArch, options.unlockedRegions)
+      : {
+          energyCap: archState.energyCap,
+          selectedIds: sanitizeSelectedRelics({
+            selectedIds: mergedSelectedIds,
+            energyCap: archState.energyCap,
+          }),
+        };
   const archSelected = new Set(effectiveArch.selectedIds);
-  // With region-aware resolve, only effective selection counts (stale buff flags ignored).
-  const hasArchRelic = (id: string, buff: boolean | undefined): boolean =>
-    options.unlockedRegions != null
-      ? archSelected.has(id)
-      : archSelected.has(id) || buff === true;
+  // Effective selection after sanitize is the sole activation signal.
+  const hasArchRelic = (id: string, _buff?: boolean | undefined): boolean => archSelected.has(id);
 
-  // Berserker's Fury: use live LP vs temporary max (includes Powerburst when active).
-  // Dharok set effect not modeled - suppressedByDharok stays false until that set ships.
+  // Berserker's Fury: live LP vs temporary max (includes Powerburst when active).
   const maximumLifePoints = defenceLife?.life.temporaryMaxLife ?? 0;
   const currentLifePoints = defenceLife?.life.currentLife ?? maximumLifePoints;
   const currentHealthPercent =
@@ -816,7 +834,6 @@ export function resolveCombatRules(
     ? getBerserkersFuryBonus({
         currentLifePoints,
         maximumLifePoints,
-        dharoksSetActive: false,
       })
     : 0;
   const berserkersFury: BerserkersFuryResolved = {
@@ -825,7 +842,6 @@ export function resolveCombatRules(
     currentLifePoints,
     maximumLifePoints,
     currentHealthPercent,
-    suppressedByDharok: false,
   };
   if (furyActive) {
     const furyMod = berserkersFuryModifier(furyBonus);

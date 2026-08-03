@@ -24,7 +24,7 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
-import { useLoadout } from "./useLoadout";
+import type { Loadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
@@ -130,8 +130,13 @@ function withManualRotationLine(
   };
 }
 
-export function RotationPlanner() {
-  const [loadout, setLoadout] = useLoadout();
+export function RotationPlanner({
+  loadout,
+  setLoadout,
+}: {
+  loadout: Loadout;
+  setLoadout: (next: Loadout) => void;
+}) {
   const { build } = useLeagueBuild();
   const [mode, setMode] = useState<"revolution" | "manual">("revolution");
   const [useBuild, setUseBuild] = useState(true);
@@ -453,7 +458,7 @@ export function RotationPlanner() {
       {mode === "revolution" ? (
         <div className="combat-frame rotation-workbench">
           <CombatFrameCorners />
-          <RevolutionPanel stats={activeStats} />
+          <RevolutionPanel stats={activeStats} loadout={loadout} />
         </div>
       ) : (
         <div className="combat-frame rotation-workbench rotation-manual">

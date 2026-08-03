@@ -178,6 +178,22 @@ export function ArchPanel({
     });
   };
 
+  // Resolved adren relics — proves UI selection reaches combat stats (same path as rotations).
+  const hsOn = isRelicActive(selectedIds, "heightened_senses");
+  const fotsOn = isRelicActive(selectedIds, "fury_of_the_small");
+  const coeOn = isRelicActive(selectedIds, "conservation_of_energy");
+  const adrenLive = [
+    hsOn
+      ? `Heightened Senses · max adrenaline ${stats.maxAdrenaline}% (+${stats.adrenaline?.maxAdrenalineBonus ?? 0})`
+      : null,
+    fotsOn
+      ? `Fury of the Small · basics +${stats.adrenaline?.basicAdrenalineFlatBonus ?? 0}% adren`
+      : null,
+    coeOn
+      ? `Conservation of Energy · +${stats.adrenaline?.ultimateAdrenalineRefund ?? 0}% after ultimate`
+      : null,
+  ].filter((line): line is string => line != null);
+
   const toggleRelic = (relicId: string) => {
     const nextIds = toggleArchaeologyRelic({
       relicId,
@@ -222,6 +238,13 @@ export function ArchPanel({
           Cap 500 by default. 650 requires Anachronia
           {energyCap === 650 ? " (unlocked)" : " (locked)"}.
         </p>
+        {adrenLive.length > 0 ? (
+          <ul className="arch-energy__live mt-1.5 space-y-0.5 text-[11px] text-gem-300" data-testid="arch-adren-live">
+            {adrenLive.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
 
       {CATEGORY_GROUPS.map((group) => (

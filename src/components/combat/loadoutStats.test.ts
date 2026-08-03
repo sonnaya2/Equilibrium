@@ -1226,6 +1226,27 @@ describe("loadoutStats", () => {
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
     });
 
+    it("buff flag alone still activates when selectedIds omitted (desync recovery)", () => {
+      // UI may briefly desync flags vs selectedIds; resolve merges before sanitize.
+      const on = loadoutStats(
+        {
+          ...base,
+          archaeology: { selectedIds: [], energyCap: 500 },
+          buffs: {
+            ...base.buffs,
+            heightenedSenses: true,
+            furyOfTheSmall: true,
+            conservationOfEnergy: false,
+          },
+        },
+        { unlockedRegions: ["misthalin", "kandarin", "morytania"] },
+      );
+      // Merge order: FotS (150) then HS (350) = 500 exactly.
+      expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+      expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
+      expect(on.maxAdrenaline).toBe(110);
+    });
+
     it("fury_of_the_small sets adrenaline.basicAdrenalineFlatBonus", () => {
       const off = loadoutStats({
         ...base,
@@ -1363,8 +1384,9 @@ describe("loadoutStats", () => {
       expect(stats.startingAdrenaline).toBe(130);
     });
 
-    it("activates all three adrenaline relics from selectedIds when energy not region-gated", () => {
-      const stats = loadoutStats({
+    it("activates adren relics that fit the energy budget (HS+FotS+CoE is 850, over 650)", () => {
+      // 150+350+350 = 850 > 650: sanitize pops CoE from the end.
+      const over = loadoutStats({
         ...base,
         archaeology: {
           selectedIds: [
@@ -1381,10 +1403,27 @@ describe("loadoutStats", () => {
           conservationOfEnergy: false,
         },
       });
-      expect(stats.maxAdrenaline).toBe(110);
-      expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
-      expect(stats.adrenaline?.maxAdrenalineBonus).toBe(10);
-      expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(over.maxAdrenaline).toBe(110);
+      expect(over.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+      expect(over.adrenaline?.maxAdrenalineBonus).toBe(10);
+      expect(over.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+
+      // FotS (150) + CoE (350) = 500 fits under both 500 and 650.
+      const fit = loadoutStats({
+        ...base,
+        archaeology: {
+          selectedIds: ["fury_of_the_small", "conservation_of_energy"],
+          energyCap: 500,
+        },
+        buffs: {
+          ...base.buffs,
+          furyOfTheSmall: false,
+          conservationOfEnergy: false,
+        },
+      });
+      expect(fit.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+      expect(fit.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(fit.adrenaline?.maxAdrenalineBonus).toBeUndefined();
     });
     it("with unlockedRegions without Anachronia, drops over-500 energy from the end", () => {
       // 350 + 350 + 150 = 700; cap 500; trim from end until under budget.

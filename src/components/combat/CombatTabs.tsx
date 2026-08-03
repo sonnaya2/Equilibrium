@@ -43,10 +43,10 @@ export function CombatTabs() {
           <SetupTab loadout={loadout} setLoadout={setLoadout} />
         </WorkbenchPanel>
         <WorkbenchPanel id="Rotation" active={tab} clip>
-          <RotationPlanner />
+          <RotationPlanner loadout={loadout} setLoadout={setLoadout} />
         </WorkbenchPanel>
         <WorkbenchPanel id="Analysis" active={tab} clip>
-          <AnalysisTab />
+          <AnalysisTab loadout={loadout} />
         </WorkbenchPanel>
       </div>
     </div>

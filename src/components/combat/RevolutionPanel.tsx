@@ -11,7 +11,7 @@ import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
 import { preferredAgentCount } from "@/combat/solver";
 import type { CalcStats } from "./loadoutStats";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
-import { useLoadout } from "./useLoadout";
+import type { Loadout } from "./useLoadout";
 import { useBuild } from "@/league/useBuild";
 import { unlockedRegions } from "@/league";
 import {
@@ -42,8 +42,13 @@ function clampRunDurationSeconds(raw: number): number {
 }
 
 /** Revolution mode: solver-first bar search; wiki bars as seeds/references. */
-export function RevolutionPanel({ stats }: { stats: CalcStats }) {
-  const [loadout] = useLoadout();
+export function RevolutionPanel({
+  stats,
+  loadout,
+}: {
+  stats: CalcStats;
+  loadout: Loadout;
+}) {
   const { build } = useBuild();
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);

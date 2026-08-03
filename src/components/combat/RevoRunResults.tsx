@@ -52,9 +52,12 @@ export function RevoRunResults({
             type="number"
             value={durationSeconds}
             min={6}
+            max={1000}
             step={1}
             onChange={(event) => setDurationSeconds(Number(event.target.value))}
             className="border border-stone-750 bg-transparent px-2 py-1 font-mono text-xs text-parch-50"
+            data-testid="revo-run-duration"
+            title="Run bar duration (6–1000 seconds)"
           />
           <span>s</span>
         </label>

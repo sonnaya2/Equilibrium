@@ -118,6 +118,16 @@
     "attribution": "Jagex Ltd."
   },
   {
+    "id": "equilibrium-relic-animal-wrangler",
+    "label": "Animal Wrangler",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/animal-wrangler",
+    "fileTitle": "Animal_Wrangler_(Equilibrium_League).png",
+    "canonicalPage": "https://runescape.wiki/w/Animal_Wrangler_(Equilibrium_League)",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
     "id": "equilibrium-relic-assassins-insight",
     "label": "Assassin's Insight",
     "category": "leagues/equilibrium/relics/site",

@@ -29,6 +29,17 @@ import { useRevolutionSolver } from "./useRevolutionSolver";
 import "./revo-solver.css";
 
 const DEFAULT_DURATION_SECONDS = 60;
+/** Hard cap for manual Run bar horizon (seconds). */
+export const MAX_RUN_DURATION_SECONDS = 1000;
+const MIN_RUN_DURATION_SECONDS = 6;
+
+function clampRunDurationSeconds(raw: number): number {
+  if (!Number.isFinite(raw)) return DEFAULT_DURATION_SECONDS;
+  return Math.min(
+    MAX_RUN_DURATION_SECONDS,
+    Math.max(MIN_RUN_DURATION_SECONDS, Math.floor(raw)),
+  );
+}
 
 /** Revolution mode: solver-first bar search; wiki bars as seeds/references. */
 export function RevolutionPanel({ stats }: { stats: CalcStats }) {
@@ -93,9 +104,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
     return map;
   }, [slots]);
 
-  const plannedTicks = secondsToTicks(
-    Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
-  );
+  const plannedTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
 
   const equipKey = `${loadout.style}|${stats.weaponConfiguration}`;
   const prevEquipKey = useRef(equipKey);
@@ -124,9 +133,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
 
   const run = () => {
     if (modelled.length === 0) return;
-    const durationTicks = secondsToTicks(
-      Math.max(6, Number.isFinite(durationSeconds) ? durationSeconds : DEFAULT_DURATION_SECONDS),
-    );
+    const durationTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
     setShowAllCasts(false);
     setAnalysisOpen(false);
     setResult(
@@ -283,7 +290,7 @@ export function RevolutionPanel({ stats }: { stats: CalcStats }) {
       <RevoRunResults
         stats={stats}
         durationSeconds={durationSeconds}
-        setDurationSeconds={setDurationSeconds}
+        setDurationSeconds={(n) => setDurationSeconds(clampRunDurationSeconds(n))}
         plannedTicks={plannedTicks}
         onRun={run}
         result={result}

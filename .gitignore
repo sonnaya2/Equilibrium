@@ -126,7 +126,6 @@ data/**/.cache/
 # ---------------------------------------------------------------------------
 # Playwright / E2E artifacts (configs in repo root stay tracked)
 # ---------------------------------------------------------------------------
-/css-visual/baseline/
 /playwright/.cache/
 .playwright-mcp/
 playwright/.auth/

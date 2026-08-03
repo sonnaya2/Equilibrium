@@ -111,7 +111,7 @@ export function configPatchForRecipe(
     };
   }
 
-  // anneal_local — Unhinged third recipe block (indices 12–17)
+  // anneal_local (unhinged recipe mix)
   return {
     evoPopulation: 0,
     lnsRounds: 0,

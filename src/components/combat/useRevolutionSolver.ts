@@ -47,7 +47,7 @@ import {
 import { solverSnapshotFromUi } from "./solverSnapshot";
 import type { Loadout } from "./useLoadout";
 
-/** Seed progress from the real worker plan (bounds + recipe + seed), not tier ceilings. */
+/** Build initial SolverProgress agent strip from a worker plan. */
 export function seedProgressFromPlan(
   plan: WorkerPlan,
   tier: SolverSearchTier,
@@ -300,7 +300,6 @@ export function useRevolutionSolver({
       const baseRequest = packFromMaterial(material, { seed: 1, now: sessionNow });
       sessionIdentityRef.current = solveContextPayload(baseRequest);
 
-      // Real plan from packed bounds + tier — not full-product agentBarLength ladder.
       const plan = planWorkers({
         minBarSize: baseRequest.minBarSize,
         maxBarSize: baseRequest.maxBarSize,
@@ -383,7 +382,6 @@ export function useRevolutionSolver({
             err.message === "solver cancelled" ||
             err.message === "revolution solver cancelled"));
 
-      // Same identity/gen gates as the resolve path — never publish on drift.
       const settle = settlementActionForCatch({
         sessionGen: gen,
         currentGen: solveGenRef.current,
@@ -411,12 +409,11 @@ export function useRevolutionSolver({
   }, [loadout.style, solverTier, applyFinalDto, sessionIsLive, publishStoppedPreview, liveIdentity]);
 
   const cancelSolve = () => {
-    // Do not bump solveGenRef — in-flight promise must still hit finally.
+    // Keep gen so the in-flight promise still hits finally.
     cancelRef.current = true;
     abortRef.current?.abort();
     setStopping(true);
     cancelOptimize();
-    // Immediate bar preview only while the frozen session identity still matches.
     const identity = sessionIdentityRef.current;
     if (identity == null || identity !== liveIdentity()) return;
     const partial = latestProgressRef.current;

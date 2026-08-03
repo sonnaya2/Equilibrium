@@ -8,23 +8,24 @@ import {
 } from "./barPolicy";
 
 describe("barPolicy", () => {
-  it("product floor is 4 and ceiling is 10", () => {
+  it("product floor is 4 and ceiling is 11", () => {
     expect(MIN_SOLVER_BAR_SIZE).toBe(4);
-    expect(ABSOLUTE_MAX_BAR_SIZE).toBe(10);
+    expect(ABSOLUTE_MAX_BAR_SIZE).toBe(11);
   });
 
-  it("clamps into 4..10 without expanding a narrow window", () => {
+  it("clamps into 4..11 without expanding a narrow window", () => {
     expect(clampSolverBarSizes(4, 4)).toEqual({ minBarSize: 4, maxBarSize: 4 });
     expect(clampSolverBarSizes(4, 6)).toEqual({ minBarSize: 4, maxBarSize: 6 });
     expect(clampSolverBarSizes(6, 6)).toEqual({ minBarSize: 6, maxBarSize: 6 });
     expect(clampSolverBarSizes(5, 8)).toEqual({ minBarSize: 5, maxBarSize: 8 });
     expect(clampSolverBarSizes(8, 10)).toEqual({ minBarSize: 8, maxBarSize: 10 });
+    expect(clampSolverBarSizes(11, 11)).toEqual({ minBarSize: 11, maxBarSize: 11 });
     expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 4, maxBarSize: 10 });
-    expect(clampSolverBarSizes(5, 99)).toEqual({ minBarSize: 5, maxBarSize: 10 });
+    expect(clampSolverBarSizes(5, 99)).toEqual({ minBarSize: 5, maxBarSize: 11 });
     expect(clampSolverBarSizes(8, 7)).toEqual({ minBarSize: 8, maxBarSize: 8 });
     expect(clampSolverBarSizes(undefined, undefined)).toEqual({
       minBarSize: 4,
-      maxBarSize: 10,
+      maxBarSize: 11,
     });
   });
 

@@ -1,15 +1,8 @@
-/**
- * Sole authority for product Revolution bar sizes (4..10).
- * Clamp, normalize, and per-agent length bands all live here.
- */
+/** Product Revolution bar sizes (4..11). */
 
-/** Product floor — four-slot bars are first-class. */
 export const MIN_SOLVER_BAR_SIZE = 4;
-/** Default / product ceiling. */
-export const DEFAULT_MAX_BAR_SIZE = 10;
-/** Hard product ceiling — never search above this. */
-export const ABSOLUTE_MAX_BAR_SIZE = 10;
-/** Distinct lengths in the full product window (4..10 → 7). */
+export const DEFAULT_MAX_BAR_SIZE = 11;
+export const ABSOLUTE_MAX_BAR_SIZE = 11;
 export const BAR_LENGTH_COUNT = ABSOLUTE_MAX_BAR_SIZE - MIN_SOLVER_BAR_SIZE + 1;
 
 export type SolverBarSizeBounds = { minBarSize: number; maxBarSize: number };
@@ -30,7 +23,7 @@ function clampBarSize(raw: number | undefined, fallback: number): number {
 }
 
 /**
- * Clamp product path size bounds into 4..10.
+ * Clamp product path size bounds into 4..11.
  * Preserves caller intent: does not expand a narrow window to the full range.
  * Inverted ranges collapse to a fixed size at the higher floor.
  */
@@ -63,7 +56,7 @@ export function agentCountForBarSizes(minBarSize: number, maxBarSize: number): n
 }
 
 /**
- * Target length for agent i within an optional window (default full 4..10).
+ * Target length for agent i within an optional window (default full 4..11).
  * Cycles lo..hi so fixed windows stay pinned (4..4 → always 4).
  */
 export function agentBarLength(

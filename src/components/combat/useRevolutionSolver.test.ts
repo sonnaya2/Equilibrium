@@ -225,7 +225,6 @@ describe("seedProgressFromPlan (real planWorkers path)", () => {
     for (const a of progress.agents ?? []) {
       expect(a.barLength).toBe(4);
     }
-    // No phantom longer bars from agentBarLength(i) product window.
     expect((progress.agents ?? []).some((a) => (a.barLength ?? 0) > 4)).toBe(false);
   });
 

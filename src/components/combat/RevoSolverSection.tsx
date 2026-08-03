@@ -17,7 +17,6 @@ import {
   BAR_SIZE_PRESETS,
   formatNumber,
   previewCategory,
-  productBarSizeFloor,
   progressFillFromState,
   solverPhaseLabel,
   trackLiveClassName,
@@ -81,7 +80,6 @@ export function RevoSolverSection({
   const optimize = () => onOptimize();
   const cancelSolve = () => onCancel();
   const applySolverBar = (ids: readonly string[]) => onApplyBar(ids);
-  const floor = productBarSizeFloor();
 
   return (
     <section className="revo-solver-controls">
@@ -140,17 +138,35 @@ export function RevoSolverSection({
           disabled={solving}
           aria-label="Bar size"
           data-testid="revo-bar-size"
-          title={
-            floor > 4
-              ? `Bar length window (product floor ${floor}; UI may request 4)`
-              : "Bar length window"
-          }
+          title="Fixed bar length or a min-max search window"
         >
-          {(Object.keys(BAR_SIZE_PRESETS) as BarSizePresetId[]).map((id) => (
-            <option key={id} value={id}>
-              {BAR_SIZE_PRESETS[id].label}
-            </option>
-          ))}
+          <optgroup label="Fixed length">
+            {(
+              [
+                "fixed4",
+                "fixed5",
+                "fixed6",
+                "fixed7",
+                "fixed8",
+                "fixed9",
+                "fixed10",
+                "fixed11",
+              ] as const
+            ).map((id) => (
+              <option key={id} value={id}>
+                {BAR_SIZE_PRESETS[id].label}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label="Range">
+            {(
+              ["range4_6", "range4_10", "range4_11", "range5_8", "range8_11"] as const
+            ).map((id) => (
+              <option key={id} value={id}>
+                {BAR_SIZE_PRESETS[id].label}
+              </option>
+            ))}
+          </optgroup>
         </select>
         <label
           className={`revo-solver-controls__regions${limitToRegions ? " is-on" : ""}`}
@@ -286,8 +302,7 @@ export function RevoSolverSection({
           </div>
           {(() => {
             const snaps = solverProgress?.agents;
-            // Only launched/reported agents — never invent tier ceiling slots (4/6/8).
-            // Prefer progress.agentCount / agents[] from the host plan; solverAgents is the plan size.
+            // Launched agents only (progress strip or plan size), not tier ceilings.
             let count = 0;
             if (snaps?.length) {
               count = snaps.length;
@@ -330,7 +345,6 @@ export function RevoSolverSection({
                 <div className="revo-solver-workers__row">
                   {Array.from({ length: count }, (_, i) => {
                     const snap = snaps?.[i];
-                    // Only show recipe/length from host plan or live snaps — never invent defaults.
                     const recipe = recipeOf(i);
                     const barLen = lengthOf(i);
                     const finished =

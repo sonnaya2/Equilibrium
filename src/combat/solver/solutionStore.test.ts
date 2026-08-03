@@ -69,20 +69,21 @@ function sampleRequest(overrides: { equipmentIds?: string[]; style?: "melee" | "
 }
 
 describe("solutionStore", () => {
-  it("clamps bar sizes to the product floor (4) and 10-slot hard cap", () => {
+  it("clamps bar sizes to the product floor (4) and 11-slot hard cap", () => {
     expect(MIN_SOLVER_BAR_SIZE).toBe(4);
     expect(clampSolverBarSizes(3, 10)).toEqual({ minBarSize: 4, maxBarSize: 10 });
     expect(clampSolverBarSizes(8, 7)).toEqual({ minBarSize: 8, maxBarSize: 8 });
     expect(clampSolverBarSizes(undefined, undefined).minBarSize).toBe(MIN_SOLVER_BAR_SIZE);
-    expect(clampSolverBarSizes(5, 99)).toEqual({ minBarSize: 5, maxBarSize: 10 });
+    expect(clampSolverBarSizes(5, 99)).toEqual({ minBarSize: 5, maxBarSize: 11 });
     expect(clampSolverBarSizes(4, 6)).toEqual({ minBarSize: 4, maxBarSize: 6 });
+    expect(clampSolverBarSizes(11, 11)).toEqual({ minBarSize: 11, maxBarSize: 11 });
   });
 
   it("agent bands honor request min/max (cycle target lengths inside window)", () => {
     expect(agentBarLength(0)).toBe(4);
     expect(agentBarLength(1)).toBe(5);
-    expect(agentBarLength(6)).toBe(10);
-    expect(agentBarLength(7)).toBe(4); // wraps full product window
+    expect(agentBarLength(7)).toBe(11);
+    expect(agentBarLength(8)).toBe(4); // wraps full product window
     // Fixed 4..4
     expect(agentBarSizeBounds(4, 4, 0, 4)).toEqual({ minBarSize: 4, maxBarSize: 4 });
     expect(agentBarSizeBounds(4, 4, 3, 4)).toEqual({ minBarSize: 4, maxBarSize: 4 });

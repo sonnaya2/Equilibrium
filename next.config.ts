@@ -1,8 +1,18 @@
 import type { NextConfig } from "next";
 
+// React dev tooling uses eval() for stack reconstruction; production does not.
+// Keep 'unsafe-eval' out of prod CSP; allow it only when NODE_ENV is development.
+const isDev = process.env.NODE_ENV === "development";
+const scriptSrc = [
+  "'self'",
+  "'unsafe-inline'",
+  "'wasm-unsafe-eval'",
+  ...(isDev ? ["'unsafe-eval'"] : []),
+].join(" ");
+
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+  `script-src ${scriptSrc}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://runescape.wiki https://*.runescape.wiki",
   "font-src 'self'",

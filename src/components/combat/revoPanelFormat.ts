@@ -6,7 +6,6 @@ import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { ticksToSeconds } from "@/combat/core/ticks";
 import {
-  ABSOLUTE_MAX_BAR_SIZE,
   clampSolverBarSizes,
   MIN_SOLVER_BAR_SIZE,
   type ObjectiveProfileId,
@@ -15,14 +14,12 @@ import {
   type SolverSearchTier,
 } from "@/combat/solver";
 
-/** Non-final best-so-far after cancel/error — never a SolverResultDTO. */
+/** Non-final best-so-far after cancel/error (not a SolverResultDTO). */
 export type SolverStoppedPreview = {
   bar: readonly string[];
   evaluations: number;
   uniqueCandidates: number;
-  /** Exploratory/search score when known — not a verified final score. */
   bestExploratoryScore?: number;
-  /** Full-horizon score if finalize published one mid-run — still non-final. */
   bestFullScore?: number;
   phase: SolverProgress["phase"];
   reason: "stopped-early" | "error";
@@ -30,40 +27,61 @@ export type SolverStoppedPreview = {
   tier: SolverSearchTier;
 };
 
-/** Compact bar-length presets for the solver UI (raw; packer clamps to product floor). */
-export type BarSizePresetId = "fixed4" | "range4_6" | "fixed6" | "range4_10";
+/** Fixed length n, or a min..max search window. */
+export type BarSizePresetId =
+  | "fixed4"
+  | "fixed5"
+  | "fixed6"
+  | "fixed7"
+  | "fixed8"
+  | "fixed9"
+  | "fixed10"
+  | "fixed11"
+  | "range4_6"
+  | "range4_10"
+  | "range4_11"
+  | "range5_8"
+  | "range8_11";
 
 export type BarSizeBounds = { minBarSize: number; maxBarSize: number };
+
+function fixedPreset(n: number): BarSizeBounds & { label: string } {
+  return { minBarSize: n, maxBarSize: n, label: String(n) };
+}
 
 export const BAR_SIZE_PRESETS: Record<
   BarSizePresetId,
   BarSizeBounds & { label: string }
 > = {
-  fixed4: { minBarSize: 4, maxBarSize: 4, label: "4" },
-  range4_6: { minBarSize: 4, maxBarSize: 6, label: "4–6" },
-  fixed6: { minBarSize: 6, maxBarSize: 6, label: "6" },
-  range4_10: { minBarSize: 4, maxBarSize: 10, label: "4–10" },
+  fixed4: fixedPreset(4),
+  fixed5: fixedPreset(5),
+  fixed6: fixedPreset(6),
+  fixed7: fixedPreset(7),
+  fixed8: fixedPreset(8),
+  fixed9: fixedPreset(9),
+  fixed10: fixedPreset(10),
+  fixed11: fixedPreset(11),
+  range4_6: { minBarSize: 4, maxBarSize: 6, label: "4-6" },
+  range4_10: { minBarSize: 4, maxBarSize: 10, label: "4-10" },
+  range4_11: { minBarSize: 4, maxBarSize: 11, label: "4-11" },
+  range5_8: { minBarSize: 5, maxBarSize: 8, label: "5-8" },
+  range8_11: { minBarSize: 8, maxBarSize: 11, label: "8-11" },
 };
 
-/** Default product window after clamp (MIN..ABSOLUTE). */
-export const DEFAULT_BAR_SIZE_PRESET: BarSizePresetId = "range4_10";
+/** Default: full product window. */
+export const DEFAULT_BAR_SIZE_PRESET: BarSizePresetId = "range4_11";
 
-/** Raw bounds from a preset — may be below MIN_SOLVER_BAR_SIZE until clamped. */
 export function barBoundsFromPreset(id: BarSizePresetId): BarSizeBounds {
   const p = BAR_SIZE_PRESETS[id] ?? BAR_SIZE_PRESETS[DEFAULT_BAR_SIZE_PRESET];
   return { minBarSize: p.minBarSize, maxBarSize: p.maxBarSize };
 }
 
-/** Clamped product bounds for display / docs (floor may raise 4 → MIN). */
 export function clampedBarBoundsFromPreset(id: BarSizePresetId): BarSizeBounds {
   const raw = barBoundsFromPreset(id);
   return clampSolverBarSizes(raw.minBarSize, raw.maxBarSize);
 }
 
-/**
- * Live progress facts only — no invented seed/duration/windowDpms/proof.
- * Returns null when there is no bar preview to show.
- */
+/** Facts from live progress only; null if no bar preview. */
 export function stoppedPreviewFromProgress(
   partial: SolverProgress,
   profileId: ObjectiveProfileId,
@@ -90,7 +108,6 @@ export function stoppedPreviewFromProgress(
   };
 }
 
-/** Session still owns progress/completion when gen matches and material inputs match. */
 export function isLiveSolverSession(opts: {
   sessionGen: number;
   currentGen: number;
@@ -103,13 +120,9 @@ export function isLiveSolverSession(opts: {
   return opts.sessionIdentity === opts.currentIdentity;
 }
 
-/**
- * What the host may do when a solve promise settles (resolve or catch).
- * Stale generation or identity always wins: never publish final/stopped artifacts.
- * cancel with live identity → stopped-preview only (no verified writes).
- */
 export type SolveSettlementAction = "apply-final" | "stopped-preview" | "ignore";
 
+/** Resolve/catch settlement: stale gen or identity always ignore. */
 export function settlementActionForSolve(opts: {
   sessionGen: number;
   currentGen: number;
@@ -119,28 +132,21 @@ export function settlementActionForSolve(opts: {
   hasFinalDto: boolean;
 }): SolveSettlementAction {
   if (opts.sessionGen !== opts.currentGen) return "ignore";
-  // Identity first — abort/error after equipment/perk/target/bounds drift must not publish.
   if (opts.sessionIdentity !== opts.currentIdentity) return "ignore";
   if (opts.cancelled) return "stopped-preview";
   if (opts.hasFinalDto) return "apply-final";
   return "ignore";
 }
 
-/** True only when a non-final stopped/error preview may be published. */
 export function mayPublishStoppedPreview(action: SolveSettlementAction): boolean {
   return action === "stopped-preview";
 }
 
-/** Verified cache/recent writes only for completed finals. */
 export function mayWriteVerifiedSolveArtifacts(action: SolveSettlementAction): boolean {
   return action === "apply-final";
 }
 
-/**
- * Pure settle for AbortError / failure catch paths (same rules as resolve).
- * cancelled=true for abort; cancelled=false + hasFinalDto=false for hard error → ignore
- * unless we treat error as stopped-preview when identity still matches.
- */
+/** Catch path (abort vs hard error) using the same identity/gen gates. */
 export function settlementActionForCatch(opts: {
   sessionGen: number;
   currentGen: number;
@@ -155,19 +161,13 @@ export function settlementActionForCatch(opts: {
       hasFinalDto: false,
     });
   }
-  // Hard error with live session: allow non-final preview (same as cancelled stop).
   if (opts.sessionGen !== opts.currentGen) return "ignore";
   if (opts.sessionIdentity !== opts.currentIdentity) return "ignore";
   return "stopped-preview";
 }
 
-/** Document product floor used when UI requests 4-slot bars. */
 export function productBarSizeFloor(): number {
   return MIN_SOLVER_BAR_SIZE;
-}
-
-export function productBarSizeCeiling(): number {
-  return ABSOLUTE_MAX_BAR_SIZE;
 }
 
 export function solverPhaseLabel(

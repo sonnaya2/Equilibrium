@@ -44,14 +44,19 @@ describe("packSolverRequest bar bounds", () => {
     expect(req.maxBarSize).not.toBe(10);
   });
 
-  it("clamps out-of-range input into 4..10 without inventing a wider intent", () => {
+  it("clamps out-of-range input into 4..11 without inventing a wider intent", () => {
     expect(packBounds(1, 6)).toMatchObject({ minBarSize: MIN_SOLVER_BAR_SIZE, maxBarSize: 6 });
-    expect(packBounds(5, 99)).toMatchObject({ minBarSize: 5, maxBarSize: 10 });
+    expect(packBounds(5, 99)).toMatchObject({ minBarSize: 5, maxBarSize: 11 });
   });
 
   it("defaults to full product window when min/max omitted", () => {
     const req = packBounds();
     expect(req.minBarSize).toBe(4);
-    expect(req.maxBarSize).toBe(10);
+    expect(req.maxBarSize).toBe(11);
+  });
+
+  it("preserves fixed 7..11 lengths", () => {
+    expect(packBounds(7, 7)).toMatchObject({ minBarSize: 7, maxBarSize: 7 });
+    expect(packBounds(11, 11)).toMatchObject({ minBarSize: 11, maxBarSize: 11 });
   });
 });

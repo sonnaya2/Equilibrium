@@ -275,7 +275,7 @@ export function defaultSerializableRequest(
     seed: 1,
     tier: "thorough",
     profileId: "balanced",
-    maxBarSize: 10,
+    maxBarSize: 11,
     minBarSize: 4,
     permittedCategories: ["basic", "enhanced", "ultimate"],
     unlockedRegions: [],

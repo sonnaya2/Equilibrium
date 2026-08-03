@@ -398,7 +398,6 @@ export class SolverAgentPool {
   ): Promise<SolverResultDTO> {
     this.cancel();
 
-    // Planner: tier ceiling + hardware + request size window (not residual slots).
     const plan = planWorkers({
       minBarSize: request.minBarSize,
       maxBarSize: request.maxBarSize,

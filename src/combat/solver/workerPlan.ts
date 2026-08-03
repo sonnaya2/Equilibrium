@@ -1,7 +1,4 @@
-/**
- * Coherent worker assignment policy for parallel Revolution solvers.
- * Tier values are MAX ceilings (not mandatory counts); hardware may lower them.
- */
+/** Worker assignment plan for parallel Revolution solvers. */
 
 import type { SearchTier } from "./contracts";
 import {

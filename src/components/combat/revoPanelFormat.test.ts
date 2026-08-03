@@ -252,14 +252,21 @@ describe("bar size presets → packer", () => {
     expect(barBoundsFromPreset("fixed4").minBarSize).toBe(4);
   });
 
-  it("range and fixed-6 presets clamp into product window", () => {
+  it("range and fixed length presets clamp into product window", () => {
     expect(barBoundsFromPreset("range4_6")).toEqual({ minBarSize: 4, maxBarSize: 6 });
     expect(barBoundsFromPreset("fixed6")).toEqual({ minBarSize: 6, maxBarSize: 6 });
     expect(barBoundsFromPreset("range4_10")).toEqual({ minBarSize: 4, maxBarSize: 10 });
+    expect(barBoundsFromPreset("fixed7")).toEqual({ minBarSize: 7, maxBarSize: 7 });
+    expect(barBoundsFromPreset("fixed8")).toEqual({ minBarSize: 8, maxBarSize: 8 });
+    expect(barBoundsFromPreset("fixed9")).toEqual({ minBarSize: 9, maxBarSize: 9 });
+    expect(barBoundsFromPreset("fixed10")).toEqual({ minBarSize: 10, maxBarSize: 10 });
+    expect(barBoundsFromPreset("fixed11")).toEqual({ minBarSize: 11, maxBarSize: 11 });
+    expect(barBoundsFromPreset("range4_11")).toEqual({ minBarSize: 4, maxBarSize: 11 });
     const floor = productBarSizeFloor();
     expect(clampedBarBoundsFromPreset("range4_6").minBarSize).toBe(floor);
     expect(clampedBarBoundsFromPreset("range4_6").maxBarSize).toBe(6);
     expect(clampedBarBoundsFromPreset("fixed6")).toEqual({ minBarSize: 6, maxBarSize: 6 });
+    expect(clampedBarBoundsFromPreset("fixed11")).toEqual({ minBarSize: 11, maxBarSize: 11 });
   });
 });
 

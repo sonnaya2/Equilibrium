@@ -360,17 +360,16 @@ export function SetupTab({
                   value={`+${stats.adrenaline.basicAdrenalineFlatBonus}% on basics`}
                 />
               ) : null}
-              {stats.adrenaline?.ultimateAdrenalineRefund ? (
+              {(stats.adrenaline?.conservationOfEnergyRefund ?? 0) > 0 ? (
                 <SummaryMetric
-                  label="Ultimate adren refund"
-                  value={`+${stats.adrenaline.ultimateAdrenalineRefund}%`}
-                  note={
-                    stats.adrenaline.ultimateAdrenalineRefund >= 20
-                      ? "Conservation of Energy + Ring of Vigour"
-                      : stats.adrenaline.ringOfVigour
-                        ? "Ring of Vigour"
-                        : "Conservation of Energy"
-                  }
+                  label="Conservation of Energy"
+                  value={`+${stats.adrenaline!.conservationOfEnergyRefund}% after ultimates`}
+                />
+              ) : null}
+              {stats.adrenaline?.ringOfVigour ? (
+                <SummaryMetric
+                  label="Ring of Vigour"
+                  value="+10% after ultimates · specials at 90% listed cost"
                 />
               ) : null}
             </SummarySection>

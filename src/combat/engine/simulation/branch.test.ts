@@ -433,14 +433,14 @@ describe("Invigorating / Impatient adrenaline", () => {
     expect(lastCast(s).adrenalineAfter).toBe(21);
   });
 
-  it("Invigorating multiplier applies before the Impatient proc", () => {
+  it("Impatient is inside Invigorating (wiki order: (9+3)*1.2 = 14.4)", () => {
     const ctx = createCastContext({
       ...baseInput,
       adrenaline: { basicGainMultiplier: 1.2, impatientRank: 4 },
     });
     const attack = ctx.byId.get("attack")!;
     expect(ctx.performCast(attack, 0, false, { impatient: true }).ok).toBe(true);
-    expect(ctx.getState().adrenaline).toBeCloseTo(9 * 1.2 + 3);
+    expect(ctx.getState().adrenaline).toBeCloseTo(14.4);
   });
 
   it("does not apply Invigorating/Impatient when there is no adrenaline gain", () => {
@@ -491,9 +491,14 @@ describe("Relentless refund branching", () => {
     expect(ctx.finish().casts.at(-1)).toMatchObject({
       listedCost: 25,
       effectiveCost: 25,
-      actualSpend: 25,
+      actualSpend: 0,
       refund: 25,
       adrenalineGained: 0,
+      adrenalineTransaction: expect.objectContaining({
+        spendPreventedBy: "relentless",
+        actualSpend: 0,
+        effectiveCost: 25,
+      }),
     });
   });
 

@@ -976,7 +976,13 @@ body:has(.combat-screen) {
 
 .arch-relic-controls .loadout-number {
   margin: 0;
-  min-width: 7.5rem;
+  min-width: 7rem;
+  flex: 0 1 8.5rem;
+}
+
+.arch-fury-detail .arch-relic-bonus {
+  flex: 1 1 6rem;
+  min-width: 6rem;
 }
 
 .arch-relic-bonus {
@@ -2828,6 +2834,11 @@ body:has(.combat-screen) {
 
 .analysis-delta {
   background: rgb(46 203 143 / 4%);
+}
+
+.analysis-adren-breakdown {
+  padding: 0 0.7rem 0.7rem;
+  border-top: 1px solid rgb(133 98 58 / 34%);
 }
 
 /* Three breakpoints: summary under stage · narrow rail · single column */

@@ -1,26 +1,35 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
 import { NumberField } from "./NumberField";
 import {
-  canSelectRelic,
+  archaeologyRejectLabel,
+  archaeologySelectBlockReason,
   isRelicActive,
   MONOLITH_ACTIVE_LIMIT,
   relicsGroupedByCategory,
   resolveMonolithEnergyCap,
   sanitizeArchaeologyState,
-  toggleArchaeologyRelic,
   totalEnergyUsed,
   type ArchaeologyRelic,
+  type ArchaeologySelectRejectReason,
 } from "@/combat/shared/archaeologyRelics";
 import {
-  getBerserkersFuryBonusFromPercent,
+  getBerserkersFuryBonus,
+  lifePointsFromHealthPercent,
   sanitizeHealthPercent,
 } from "@/combat/shared/berserkersFury";
+import { CONSERVATION_OF_ENERGY_REFUND } from "@/combat/shared/conservationOfEnergy";
+import { FURY_OF_THE_SMALL_EXTRA_ADRENALINE } from "@/combat/shared/furyOfTheSmall";
 import { loadoutStats } from "./loadoutStats";
-import { withArchaeologySelection, type Loadout, type SetLoadout } from "./useLoadout";
+import {
+  applyArchaeologyToggle,
+  withArchaeologySelection,
+  type Loadout,
+  type SetLoadout,
+} from "./useLoadout";
 import { isRegionUnlocked, REGION_IDS, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { regionDisplayName } from "@/tasks/regionMap";
@@ -68,17 +77,18 @@ function RelicRegionBadges({
 function RelicRow({
   relic,
   selected,
-  blocked,
+  blockReason,
   unlocked,
   onToggle,
 }: {
   relic: ArchaeologyRelic;
   selected: boolean;
-  blocked: boolean;
+  blockReason: ArchaeologySelectRejectReason | null;
   unlocked: (id: string) => boolean;
   onToggle: () => void;
 }) {
-  const disabled = blocked && !selected;
+  const disabled = blockReason != null && !selected;
+  const blockLabel = blockReason != null ? archaeologyRejectLabel(blockReason) : null;
   return (
     <button
       type="button"
@@ -86,6 +96,7 @@ function RelicRow({
       aria-pressed={selected}
       aria-disabled={disabled}
       disabled={disabled}
+      title={disabled && blockLabel ? blockLabel : undefined}
       onClick={disabled ? undefined : onToggle}
     >
       <span className="arch-relic-tile__icon-wrap">
@@ -104,6 +115,9 @@ function RelicRow({
           </span>
         </span>
         {relic.effect ? <span className="arch-relic-tile__effect">{relic.effect}</span> : null}
+        {disabled && blockLabel ? (
+          <span className="arch-relic-tile__block text-[10px] text-parch-400">{blockLabel}</span>
+        ) : null}
         <RelicRegionBadges regions={relic.requiredRegions} unlocked={unlocked} />
       </span>
     </button>
@@ -118,26 +132,30 @@ export function ArchPanel({
   setLoadout: SetLoadout;
 }) {
   const { build } = useBuild();
+  const [rejectHint, setRejectHint] = useState<string | null>(null);
   const unlockedRegions = useMemo(
     () => REGION_IDS.filter((id) => isRegionUnlocked(build, id)),
     [build],
   );
   const unlockedKey = unlockedRegions.join("|");
 
-  // Same clamp combat/stats use — tiles and bars never show illegal "selected but dead" relics.
+  // Same clamp combat/stats use - tiles and bars never show illegal "selected but dead" relics.
   const effectiveArch = useMemo(
     () =>
       sanitizeArchaeologyState(
         loadout.archaeology ?? { selectedIds: [], energyCap: 500 },
         unlockedRegions,
       ),
-    [loadout.archaeology, unlockedKey],
+    [loadout.archaeology, unlockedRegions],
   );
   const energyCap = effectiveArch.energyCap;
   const selectedIds = effectiveArch.selectedIds;
   const used = totalEnergyUsed(selectedIds);
   const remaining = energyCap - used;
   const furySelected = isRelicActive(selectedIds, "berserkers_fury");
+  const fotsSelected = isRelicActive(selectedIds, "fury_of_the_small");
+  const hsSelected = isRelicActive(selectedIds, "heightened_senses");
+  const coeSelected = isRelicActive(selectedIds, "conservation_of_energy");
 
   // Only re-clamp when league regions change (Anachronia 500↔650). Functional update
   // so a pending relic toggle is not wiped by a stale loadout snapshot.
@@ -167,9 +185,14 @@ export function ArchPanel({
 
   const healthPercent = sanitizeHealthPercent(loadout.currentHealthPercent ?? 50);
   const maximumLife = stats.life.temporaryMaxLife;
+  // Absolute LP when set; else percent of max (same resolve path as Stats / engine).
+  const currentLifePoints =
+    loadout.currentLife != null
+      ? loadout.currentLife
+      : lifePointsFromHealthPercent(maximumLife, healthPercent);
   const liveBonus = furySelected
-    ? getBerserkersFuryBonusFromPercent({
-        currentHealthPercent: healthPercent,
+    ? getBerserkersFuryBonus({
+        currentLifePoints,
         maximumLifePoints: maximumLife,
       })
     : 0;
@@ -178,23 +201,47 @@ export function ArchPanel({
   const regionUnlocked = (id: string) => isRegionUnlocked(build, id as RegionId);
 
   const setHealthPercent = (raw: number) => {
+    const pct = sanitizeHealthPercent(raw);
     setLoadout((prev) => ({
       ...prev,
-      currentHealthPercent: sanitizeHealthPercent(raw),
-      currentLife: null,
+      currentHealthPercent: pct,
+      currentLife: lifePointsFromHealthPercent(maximumLife, pct),
     }));
   };
 
-  // Live from resolved combat stats (same numbers the damage sim uses).
-  const hsBonus = stats.adrenaline?.maxAdrenalineBonus ?? 0;
-  const fotsBonus = stats.adrenaline?.basicAdrenalineFlatBonus ?? 0;
-  const ultRefund = stats.adrenaline?.ultimateAdrenalineRefund ?? 0;
-  const rovOn = stats.adrenaline?.ringOfVigour === true;
-  const coeRefund = Math.max(0, ultRefund - (rovOn ? 10 : 0));
+  const setCurrentLife = (raw: number) => {
+    const lp = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0;
+    const pct =
+      maximumLife > 0
+        ? sanitizeHealthPercent((lp / maximumLife) * 100)
+        : sanitizeHealthPercent(healthPercent);
+    setLoadout((prev) => ({
+      ...prev,
+      currentLife: lp,
+      currentHealthPercent: pct,
+    }));
+  };
+
+  const displayHealthPercent =
+    maximumLife > 0
+      ? Math.round(sanitizeHealthPercent((currentLifePoints / maximumLife) * 100) * 10) / 10
+      : Math.round(healthPercent * 10) / 10;
+
+  // CoE / FotS / HS from selectedIds (and direct adrenaline fields), not ultRefund - RoV.
+  const adren = stats.adrenaline as
+    | (typeof stats.adrenaline & { conservationOfEnergyRefund?: number })
+    | undefined;
+  const fotsBonus = fotsSelected
+    ? (adren?.basicAdrenalineFlatBonus ?? FURY_OF_THE_SMALL_EXTRA_ADRENALINE)
+    : 0;
+  const coeRefund = coeSelected
+    ? (adren?.conservationOfEnergyRefund ?? CONSERVATION_OF_ENERGY_REFUND)
+    : 0;
+  const rovOn = adren?.ringOfVigour === true;
   const adrenLive = [
-    hsBonus > 0 ? `Heightened Senses · max adrenaline ${stats.maxAdrenaline}%` : null,
-    fotsBonus > 0 ? `Fury of the Small · basics +${fotsBonus}% adren` : null,
-    coeRefund > 0 ? `Conservation of Energy · +${coeRefund}% after ultimate` : null,
+    hsSelected ? `Heightened Senses · max adrenaline ${stats.maxAdrenaline}%` : null,
+    fotsSelected ? `Fury of the Small · basics +${fotsBonus}% adren` : null,
+    coeSelected ? `Conservation of Energy · +${coeRefund}% after ultimate` : null,
     rovOn ? `Ring of Vigour · +10% after ultimate; specials cost 90%` : null,
   ].filter((line): line is string => line != null);
 
@@ -204,13 +251,13 @@ export function ArchPanel({
         unlockedRegions,
         requestedCap: prev.archaeology?.energyCap ?? null,
       });
-      const ids = prev.archaeology?.selectedIds ?? [];
-      const nextIds = toggleArchaeologyRelic({
-        relicId,
-        selectedIds: ids,
-        energyCap: cap,
-      });
-      return withArchaeologySelection(prev, nextIds, cap);
+      const { loadout: next, result } = applyArchaeologyToggle(prev, relicId, cap);
+      if (!result.ok) {
+        setRejectHint(archaeologyRejectLabel(result.reason));
+        return prev;
+      }
+      setRejectHint(null);
+      return next;
     });
   };
 
@@ -249,6 +296,11 @@ export function ArchPanel({
           Cap 500 by default. 650 requires Anachronia
           {energyCap === 650 ? " (unlocked)" : " (locked)"}.
         </p>
+        {rejectHint ? (
+          <p className="arch-energy__reject mt-1 text-[11px] text-ruby-300" role="status">
+            {rejectHint}
+          </p>
+        ) : null}
         {adrenLive.length > 0 ? (
           <ul className="arch-energy__live mt-1.5 space-y-0.5 text-[11px] text-gem-300" data-testid="arch-adren-live">
             {adrenLive.map((line) => (
@@ -269,7 +321,7 @@ export function ArchPanel({
           <div className="arch-relic-list">
             {group.relics.map((relic) => {
               const selected = isRelicActive(selectedIds, relic.id);
-              const canOn = canSelectRelic({
+              const blockReason = archaeologySelectBlockReason({
                 relicId: relic.id,
                 selectedIds,
                 energyCap,
@@ -279,7 +331,7 @@ export function ArchPanel({
                   key={relic.id}
                   relic={relic}
                   selected={selected}
-                  blocked={!canOn}
+                  blockReason={blockReason}
                   unlocked={regionUnlocked}
                   onToggle={() => toggleRelic(relic.id)}
                 />
@@ -293,12 +345,20 @@ export function ArchPanel({
         <div className="buff-group arch-fury-detail" role="group" aria-label="Berserker's Fury">
           <h3 className="buff-group__title">Berserker&apos;s Fury</h3>
           <p className="arch-relic-meta__desc">
-            Shared current health % (also drives Current HP when absolute is on Auto).
+            Player life for the bonus curve. Edit absolute LP or health %; both write the shared
+            loadout (same fields as Stats Current HP).
           </p>
           <div className="arch-relic-controls">
             <NumberField
-              label="Current health"
-              value={healthPercent}
+              label="Current HP"
+              value={currentLifePoints}
+              min={0}
+              max={stats.life.overhealCeiling}
+              onChange={setCurrentLife}
+            />
+            <NumberField
+              label="Health"
+              value={displayHealthPercent}
               min={0}
               max={100}
               suffix="%"
@@ -311,17 +371,16 @@ export function ArchPanel({
               </strong>
               {maximumLife > 0 ? (
                 <span className="arch-relic-bonus__basis">
-                  {Math.floor((maximumLife * healthPercent) / 100).toLocaleString()} /{" "}
-                  {maximumLife.toLocaleString()} LP
+                  {currentLifePoints.toLocaleString()} / {maximumLife.toLocaleString()} LP
                 </span>
               ) : null}
             </div>
           </div>
           {Math.abs(liveBonus - engineBonus) > 1e-9 ? (
             <p className="arch-relic-meta__note">
-              Engine uses resolved LP (
-              {engineBonus > 0 ? `+${BONUS_FORMAT.format(engineBonus)}` : "0%"}) when absolute
-              Current HP is set on Stats.
+              Engine bonus is +{BONUS_FORMAT.format(engineBonus)} from resolved LP (
+              {stats.berserkersFury.currentLifePoints.toLocaleString()} /{" "}
+              {stats.berserkersFury.maximumLifePoints.toLocaleString()}).
             </p>
           ) : null}
         </div>

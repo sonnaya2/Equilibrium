@@ -4,21 +4,22 @@ import type { SourceReference } from "../types";
  * Ring of Vigour (equipment) and permanent Anachronia/Extinction unlock.
  * https://runescape.wiki/w/Ring_of_vigour
  *
- * Two activation sources, one effect (Boolean OR — never stacks):
+ * Activation sources (Boolean OR, never stacks):
  * 1. Equipped item:ring-of-vigour
  * 2. Permanent passive (Warped Gem after Extinction; combat-gated on Anachronia)
  *
  * Effects while active:
  * - After a qualifying ultimate: refund 10 adrenaline once (same gate as CoE)
- * - Weapon special / EoF specials: requirement and spend = 90% of original cost
- *   (10% discount of original — e.g. 50→45, 30→27, 60→54)
+ * - Weapon special / EoF specials: requirement and spend = base - floor(base * 0.1)
+ *   (e.g. 50->45, 30->27, 60->54, 25->23, 55->50)
  *
  * Stacks additively with Conservation of Energy on ultimates (+10 each).
+ * Onslaught is excluded from the ultimate refund (see conservationOfEnergy).
  */
 
 export const RING_OF_VIGOUR_ITEM_ID = "item:ring-of-vigour";
 export const RING_OF_VIGOUR_REFUND = 10;
-/** Fraction of original special cost discounted (not a flat −10 adren). */
+/** Fraction of original special cost discounted (not a flat -10 adren). */
 export const RING_OF_VIGOUR_SPECIAL_COST_DISCOUNT = 0.1;
 export const RING_OF_VIGOUR_PASSIVE_REGION = "anachronia" as const;
 
@@ -30,6 +31,20 @@ export const RING_OF_VIGOUR_SOURCE: SourceReference = {
 };
 
 export type RingOfVigourSource = "equipped" | "permanent";
+
+/**
+ * Modelled weapon special / EoF special ability ids (audit catalogue).
+ * Runtime classification is AbilitySpec.weaponSpecial via isWeaponSpecialAbility.
+ * Keep in sync when adding a special under styles/*.
+ */
+export const MODELLED_WEAPON_SPECIAL_IDS = [
+  "icy_tempest",
+  "instability",
+  "claws_of_guthix",
+  "death_grasp",
+] as const;
+
+export type ModelledWeaponSpecialId = (typeof MODELLED_WEAPON_SPECIAL_IDS)[number];
 
 /** True when the ring is among currently worn equipment ids. */
 export function isRingOfVigourWorn(
@@ -97,7 +112,7 @@ export function formatRingOfVigourSources(sources: readonly RingOfVigourSource[]
 /**
  * Special-attack adrenaline requirement and spend.
  * 10% discount of original cost: base - floor(base * 0.1).
- * Wiki examples 50→45; historical 55→50 (not Math.floor(base*0.9)).
+ * Wiki examples 50->45; historical 55->50 (not Math.floor(base*0.9)).
  */
 export function resolveSpecialAttackAdrenalineCost(
   baseCost: number,
@@ -108,9 +123,25 @@ export function resolveSpecialAttackAdrenalineCost(
   return Math.max(0, baseCost - discount);
 }
 
-/** Ability is a weapon special / EoF special (not a normal threshold). */
+/**
+ * Sole runtime gate: AbilitySpec.weaponSpecial === true.
+ * Do not fork special classification in cast/UI paths - call this.
+ */
 export function isWeaponSpecialAbility(ability: {
   weaponSpecial?: boolean;
 }): boolean {
   return ability.weaponSpecial === true;
+}
+
+/**
+ * Listed catalogue cost after Vigour (for analysis / UI).
+ * Does not apply Icy Tempest stack reduction (spend-only) or free-cast zeros.
+ */
+export function listedWeaponSpecialCost(
+  ability: { weaponSpecial?: boolean; adrenaline?: { cost?: number } },
+  hasRingOfVigour: boolean,
+): number {
+  const base = ability.adrenaline?.cost ?? 0;
+  if (!isWeaponSpecialAbility(ability)) return Math.max(0, base);
+  return resolveSpecialAttackAdrenalineCost(base, hasRingOfVigour);
 }

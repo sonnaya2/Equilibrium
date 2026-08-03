@@ -7,8 +7,17 @@ import {
 } from "../pipeline/calculateAbility";
 import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/calculateHit";
 import type { CombatContext, CombatModifier } from "../types";
-import { resolveAbilityAdrenalineGain } from "../shared/adrenalineGain";
-import { ultimateAdrenalineRefundQualifies } from "../shared/conservationOfEnergy";
+import {
+  isBasicAttack,
+  isGeneratingBasicAbility,
+} from "../shared/adrenalineGain";
+import { resolveAdrenalineTransaction } from "../shared/adrenalineTransaction";
+import { resolveUltimateAdrenalineRefunds } from "../shared/conservationOfEnergy";
+import {
+  isWeaponSpecialAbility,
+  resolveSpecialAttackAdrenalineCost,
+  RING_OF_VIGOUR_REFUND,
+} from "../shared/ringOfVigour";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
@@ -100,17 +109,67 @@ export type LeagueAbilityInput = Parameters<typeof calculateAbility>[1] & {
   /** Light of Saradomin's cooldown state entering the cast; ready by default. */
   strikingLightReady?: boolean;
   /**
-   * Loadout adren rules (FotS, Invigorating, AJ mult, CoE/RoV ultimate refund).
+   * Loadout adren rules (FotS, Invigorating, AJ mult, CoE/RoV).
+   * Analysis path: no Impatient/Relentless RNG (procs forced false).
    * When omitted, AJ blessing alone multiplies listed generation (legacy callers).
    */
   adrenaline?: {
     basicAdrenalineFlatBonus?: number;
     basicGainMultiplier?: number;
     abilityGainMultiplier?: number;
-    /** CoE + Ring of Vigour sum; applied once on qualifying ultimates. */
+    /** Legacy CoE+RoV sum; ignored when conservationOfEnergyRefund is set. */
     ultimateAdrenalineRefund?: number;
+    conservationOfEnergyRefund?: number;
+    ringOfVigour?: boolean;
   };
 };
+
+/** Analysis / preview net adren: same pure transaction as the engine (no RNG). */
+function analysisAdrenalineDelta(
+  ability: AbilitySpec,
+  adren: NonNullable<LeagueAbilityInput["adrenaline"]>,
+): number {
+  const listedCost = ability.adrenaline?.cost ?? 0;
+  const effectiveCost =
+    isWeaponSpecialAbility(ability) && adren.ringOfVigour === true
+      ? resolveSpecialAttackAdrenalineCost(listedCost, true)
+      : listedCost;
+
+  const { conservationOfEnergyRefund, ringOfVigourRefund } = resolveUltimateAdrenalineRefunds(
+    ability,
+    adren,
+    RING_OF_VIGOUR_REFUND,
+  );
+
+  const listedGain =
+    typeof ability.adrenaline?.gain === "number" && ability.adrenaline.gain > 0
+      ? ability.adrenaline.gain
+      : 0;
+
+  const tx = resolveAdrenalineTransaction({
+    before: 0,
+    cap: 10_000,
+    listedGain,
+    listedCost,
+    effectiveCost,
+    isGeneratingBasicAbility: isGeneratingBasicAbility(ability),
+    isBasicAttack: isBasicAttack(ability),
+    impatientProc: false,
+    relentlessProc: false,
+    basicAdrenalineFlatBonus: adren.basicAdrenalineFlatBonus,
+    basicGainMultiplier: adren.basicGainMultiplier,
+    abilityGainMultiplier: adren.abilityGainMultiplier,
+    conservationOfEnergyRefund,
+    ringOfVigourRefund,
+  });
+
+  return (
+    tx.totalAbilityGain -
+    tx.actualSpend +
+    tx.conservationOfEnergyRefund +
+    tx.ringOfVigourRefund
+  );
+}
 
 export interface LeagueAbilityResult extends AbilityResult {
   leagueContributions: readonly LeagueDamageComponent[];
@@ -371,17 +430,11 @@ export function calculateLeagueAbility(
       ordinary.expected +
       contributions.reduce((sum, component) => sum + component.damage.expected, 0),
     adrenalineDelta: (() => {
-      const cost = ability.adrenaline?.cost ?? 0;
-      // Prefer loadout adren rules (FotS + Invigorating + AJ mult + CoE/RoV refund).
       if (input.adrenaline) {
-        const gain = resolveAbilityAdrenalineGain(ability, input.adrenaline);
-        const refund =
-          ultimateAdrenalineRefundQualifies(ability)
-            ? (input.adrenaline.ultimateAdrenalineRefund ?? 0)
-            : 0;
-        return gain - cost + refund;
+        return analysisAdrenalineDelta(ability, input.adrenaline);
       }
       // Legacy: AJ blessing mult on listed generation only.
+      const cost = ability.adrenaline?.cost ?? 0;
       const listed = ability.adrenaline?.gain ?? 0;
       const aj = blessingRule(rules, "adrenaline-junkie")?.adrenalineGenerationMultiplier ?? 1;
       return listed * aj - cost;

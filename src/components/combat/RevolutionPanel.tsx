@@ -9,6 +9,7 @@ import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities
 import { withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
 import { preferredAgentCount } from "@/combat/solver";
+import { adrenEconomyFingerprint } from "./adrenalinePresentation";
 import type { CalcStats } from "./loadoutStats";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
 import type { Loadout } from "./useLoadout";
@@ -113,23 +114,7 @@ export function RevolutionPanel({
 
   const equipKey = `${loadout.style}|${stats.weaponConfiguration}`;
   const prevEquipKey = useRef(equipKey);
-  const adrenEconomyKey = useMemo(() => {
-    const a = stats.adrenaline;
-    return [
-      stats.startingAdrenaline,
-      stats.maxAdrenaline,
-      a?.basicAdrenalineFlatBonus ?? 0,
-      a?.basicGainMultiplier ?? 1,
-      a?.abilityGainMultiplier ?? 1,
-      a?.ultimateAdrenalineRefund ?? 0,
-      a?.maxAdrenalineBonus ?? 0,
-      a?.impatientRank ?? 0,
-      a?.impatientLevel20 ? 1 : 0,
-      a?.relentlessRank ?? 0,
-      a?.relentlessLevel20 ? 1 : 0,
-      a?.ringOfVigour ? 1 : 0,
-    ].join("|");
-  }, [stats.adrenaline, stats.startingAdrenaline, stats.maxAdrenaline]);
+  const adrenEconomyKey = useMemo(() => adrenEconomyFingerprint(stats), [stats]);
 
   const solver = useRevolutionSolver({
     stats,
@@ -151,7 +136,7 @@ export function RevolutionPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only equip shape; clearSolverUi is stable
   }, [equipKey]);
 
-  // Arch / perks change adren economy without changing equip shape — clear stale DPS.
+  // Arch / perks change adren economy without changing equip shape; clear stale DPS.
   useEffect(() => {
     setResult(null);
     setShowAllCasts(false);

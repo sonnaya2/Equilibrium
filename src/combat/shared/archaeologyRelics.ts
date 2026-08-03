@@ -444,20 +444,30 @@ export function isRelicActive(selectedIds: readonly string[], relicId: string): 
   return selectedIds.includes(relicId);
 }
 
-/** Drop unknown ids; trim from the end while over energyCap or over active limit. */
-export function sanitizeSelectedRelics(input: {
-  selectedIds: readonly string[];
-  energyCap: MonolithEnergyCap | number;
-  unlockedRegions?: readonly RegionId[];
-}): string[] {
+/** Known ids only; preserves first-seen selection order. No energy/slot trim. */
+export function knownSelectedRelics(selectedIds: readonly string[]): string[] {
   const seen = new Set<string>();
   const kept: string[] = [];
-  for (const id of input.selectedIds) {
+  for (const id of selectedIds) {
     if (typeof id !== "string" || !id || seen.has(id)) continue;
     if (!BY_ID.has(id)) continue;
     seen.add(id);
     kept.push(id);
   }
+  return kept;
+}
+
+/**
+ * Repair path for corrupt persisted state: drop unknown ids, then pop from the
+ * end while over energyCap or over active limit. Does not reorder survivors.
+ * Interactive toggles must use tryToggleArchaeologyRelic (explicit reject).
+ */
+export function sanitizeSelectedRelics(input: {
+  selectedIds: readonly string[];
+  energyCap: MonolithEnergyCap | number;
+  unlockedRegions?: readonly RegionId[];
+}): string[] {
+  const kept = knownSelectedRelics(input.selectedIds);
   const cap = input.energyCap;
   while (kept.length > 0 && totalEnergyUsed(kept) > cap) {
     kept.pop();
@@ -489,38 +499,99 @@ export function sanitizeArchaeologyState(
   };
 }
 
+/** Why a select attempt fails. Null when already selected or free to select. */
+export type ArchaeologySelectRejectReason =
+  | "unknown_relic"
+  | "active_slot_limit"
+  | "energy_limit";
+
+export type ArchaeologyToggleResult =
+  | { ok: true; action: "selected" | "deselected"; selectedIds: string[] }
+  | {
+      ok: false;
+      reason: ArchaeologySelectRejectReason;
+      selectedIds: string[];
+    };
+
+export function archaeologySelectBlockReason(input: {
+  relicId: string;
+  selectedIds: readonly string[];
+  energyCap: MonolithEnergyCap | number;
+}): ArchaeologySelectRejectReason | null {
+  if (input.selectedIds.includes(input.relicId)) return null;
+  const relic = BY_ID.get(input.relicId);
+  if (!relic) return "unknown_relic";
+  const activeCount = knownSelectedRelics(input.selectedIds).length;
+  if (activeCount >= MONOLITH_ACTIVE_LIMIT) return "active_slot_limit";
+  if (totalEnergyUsed(input.selectedIds) + relic.energyCost > input.energyCap) {
+    return "energy_limit";
+  }
+  return null;
+}
+
 export function canSelectRelic(input: {
   relicId: string;
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
 }): boolean {
   if (input.selectedIds.includes(input.relicId)) return true;
-  const relic = BY_ID.get(input.relicId);
-  if (!relic) return false;
-  const active = new Set(
-    input.selectedIds.filter((id) => typeof id === "string" && BY_ID.has(id)),
-  );
-  if (active.size >= MONOLITH_ACTIVE_LIMIT) return false;
-  return totalEnergyUsed(input.selectedIds) + relic.energyCost <= input.energyCap;
+  return archaeologySelectBlockReason(input) == null;
 }
 
-/** Toggle id; select is a no-op when over energy or at active limit. */
+export function archaeologyRejectLabel(reason: ArchaeologySelectRejectReason): string {
+  switch (reason) {
+    case "unknown_relic":
+      return "Unknown relic";
+    case "active_slot_limit":
+      return `At most ${MONOLITH_ACTIVE_LIMIT} active powers`;
+    case "energy_limit":
+      return "Not enough monolith energy";
+  }
+}
+
+/**
+ * Interactive toggle. Deselect always succeeds. Select either accepts (append,
+ * preserve order) or rejects with a reason - never silently drops another relic.
+ */
+export function tryToggleArchaeologyRelic(input: {
+  relicId: string;
+  selectedIds: readonly string[];
+  energyCap: MonolithEnergyCap | number;
+}): ArchaeologyToggleResult {
+  const base = knownSelectedRelics(input.selectedIds);
+  const { relicId, energyCap } = input;
+
+  if (base.includes(relicId)) {
+    return {
+      ok: true,
+      action: "deselected",
+      selectedIds: base.filter((id) => id !== relicId),
+    };
+  }
+
+  const reason = archaeologySelectBlockReason({
+    relicId,
+    selectedIds: base,
+    energyCap,
+  });
+  if (reason != null) {
+    return { ok: false, reason, selectedIds: base };
+  }
+
+  return {
+    ok: true,
+    action: "selected",
+    selectedIds: [...base, relicId],
+  };
+}
+
+/** selectedIds-only toggle; rejects leave the list unchanged (no silent pop). */
 export function toggleArchaeologyRelic(input: {
   relicId: string;
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
 }): string[] {
-  const { relicId, selectedIds, energyCap } = input;
-  if (selectedIds.includes(relicId)) {
-    return selectedIds.filter((id) => id !== relicId);
-  }
-  if (!canSelectRelic({ relicId, selectedIds, energyCap })) {
-    return [...selectedIds];
-  }
-  return sanitizeSelectedRelics({
-    selectedIds: [...selectedIds, relicId],
-    energyCap,
-  });
+  return tryToggleArchaeologyRelic(input).selectedIds;
 }
 
 export function relicsGroupedByCategory(): {

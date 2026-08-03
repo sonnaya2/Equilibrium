@@ -20,6 +20,7 @@ import { loadState, saveState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
+import { adrenEconomyFingerprint } from "./adrenalinePresentation";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -29,25 +30,6 @@ import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 const STORAGE_KEY = "eq:rotation:v1";
-
-/** Fingerprint of loadout adren rules that change multi-cast timelines. */
-function adrenEconomyFingerprint(stats: CalcStats): string {
-  const a = stats.adrenaline;
-  return [
-    stats.startingAdrenaline,
-    stats.maxAdrenaline,
-    a?.basicAdrenalineFlatBonus ?? 0,
-    a?.basicGainMultiplier ?? 1,
-    a?.abilityGainMultiplier ?? 1,
-    a?.ultimateAdrenalineRefund ?? 0,
-    a?.maxAdrenalineBonus ?? 0,
-    a?.impatientRank ?? 0,
-    a?.impatientLevel20 ? 1 : 0,
-    a?.relentlessRank ?? 0,
-    a?.relentlessLevel20 ? 1 : 0,
-    a?.ringOfVigour ? 1 : 0,
-  ].join("|");
-}
 
 // Volley is factory-built (soul count); 3 = base Residual Soul cap.
 const NECRO_PALETTE: AbilitySpec[] = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
@@ -323,21 +305,43 @@ export function RotationPlanner({
           </label>
         </div>
         {useBuild ? (
-          <dl className="rotation-facts mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
-            {(
-              [
-                ["Level", setupStats.level],
-                ["Base", setupStats.base],
-                ["DP", `${Math.round(setupStats.dp * 1000) / 10}%`],
-                ["Crit", `${Math.round(setupStats.critChance * 1000) / 10}%`],
-              ] as const
-            ).map(([label, value]) => (
-              <div key={label} className="border-b border-stone-750/70 py-1.5">
-                <dt className="text-parch-300">{label}</dt>
-                <dd className="font-mono text-parch-50">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <>
+            <dl className="rotation-facts mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
+              {(
+                [
+                  ["Level", setupStats.level],
+                  ["Base", setupStats.base],
+                  ["DP", `${Math.round(setupStats.dp * 1000) / 10}%`],
+                  ["Start adren", `${setupStats.startingAdrenaline}%`],
+                ] as const
+              ).map(([label, value]) => (
+                <div key={label} className="border-b border-stone-750/70 py-1.5">
+                  <dt className="text-parch-300">{label}</dt>
+                  <dd className="font-mono text-parch-50">{value}</dd>
+                </div>
+              ))}
+            </dl>
+            {setupStats.startingAdrenaline < 100 ? (
+              <p className="mt-1.5 text-[11px] leading-snug text-parch-300">
+                Starting adren is {setupStats.startingAdrenaline}%. Ultimates like Death&apos;s
+                Swiftness need 100% (or auto-weave basics to bank). Set Starting adrenaline under
+                Loadout → Stats, or{" "}
+                <button
+                  type="button"
+                  className="text-gem-300 underline decoration-gem-400/50 underline-offset-2 hover:text-gem-200"
+                  onClick={() =>
+                    setLoadout({
+                      ...loadout,
+                      startingAdrenaline: Math.min(setupStats.maxAdrenaline, 100),
+                    })
+                  }
+                >
+                  start at 100%
+                </button>
+                .
+              </p>
+            ) : null}
+          </>
         ) : (
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-parch-300">
             <label className="grid gap-1">

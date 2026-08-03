@@ -1,15 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   isAdrenalineGeneratingBasic,
+  isBasicAttack,
+  isGeneratingBasicAbility,
   resolveAbilityAdrenalineGain,
+  resolveAbilityAdrenalineGainBreakdown,
 } from "./adrenalineGain";
-import { calculateLeagueAbility } from "../league/damage";
-import { resolveLeagueRules } from "../league/ruleset";
-import { withArchaeologySelection, normalizeLoadout, DEFAULT_LOADOUT } from "../../components/combat/loadout/model";
-import { loadoutStats } from "../../components/combat/loadoutStats";
-import { createCastContext } from "../engine/simulation/simulate";
-import { baseInput } from "../test/fixtures/inputs";
-import { sanitizeSelectedRelics } from "./archaeologyRelics";
 
 const attack = {
   id: "attack",
@@ -18,12 +14,48 @@ const attack = {
   adrenaline: { gain: 9 },
 };
 
-describe("resolveAbilityAdrenalineGain", () => {
-  it("adds FotS before Invigorating mult", () => {
+const rend = {
+  id: "rend",
+  category: "basic" as const,
+  adrenaline: { gain: 9 },
+};
+
+describe("eligibility", () => {
+  it("isBasicAttack is autoAttack only", () => {
+    expect(isBasicAttack(attack)).toBe(true);
+    expect(isBasicAttack(rend)).toBe(false);
+  });
+
+  it("isGeneratingBasicAbility needs listed gain > 0", () => {
+    expect(isGeneratingBasicAbility(attack)).toBe(true);
+    expect(isGeneratingBasicAbility(rend)).toBe(true);
+    expect(isGeneratingBasicAbility({ category: "basic", adrenaline: { gain: 0 } })).toBe(
+      false,
+    );
+    expect(isAdrenalineGeneratingBasic({ category: "threshold", adrenaline: { gain: 9 } })).toBe(
+      false,
+    );
+  });
+});
+
+describe("resolveAbilityAdrenalineGain (expected, no Impatient)", () => {
+  it("basic attack, no mods: 9", () => {
     expect(resolveAbilityAdrenalineGain(attack)).toBe(9);
+  });
+
+  it("basic attack + Fury: 10", () => {
     expect(
       resolveAbilityAdrenalineGain(attack, { basicAdrenalineFlatBonus: 1 }),
     ).toBe(10);
+  });
+
+  it("basic attack + Invig4: 10.8", () => {
+    expect(
+      resolveAbilityAdrenalineGain(attack, { basicGainMultiplier: 1.2 }),
+    ).toBeCloseTo(10.8, 10);
+  });
+
+  it("basic attack + Fury + Invig4: 12", () => {
     expect(
       resolveAbilityAdrenalineGain(attack, {
         basicAdrenalineFlatBonus: 1,
@@ -32,115 +64,69 @@ describe("resolveAbilityAdrenalineGain", () => {
     ).toBeCloseTo(12, 10);
   });
 
+  it("non-attack basic + Fury: listed+1", () => {
+    expect(resolveAbilityAdrenalineGain(rend, { basicAdrenalineFlatBonus: 1 })).toBe(10);
+  });
+
+  it("non-attack basic + Invig4: listed unchanged by invig", () => {
+    expect(resolveAbilityAdrenalineGain(rend, { basicGainMultiplier: 1.2 })).toBe(9);
+  });
+
   it("does not apply FotS to thresholds", () => {
     const assault = { category: "threshold" as const, adrenaline: { gain: 9 } };
-    expect(isAdrenalineGeneratingBasic(assault)).toBe(false);
+    expect(isGeneratingBasicAbility(assault)).toBe(false);
     expect(
       resolveAbilityAdrenalineGain(assault, { basicAdrenalineFlatBonus: 1 }),
     ).toBe(9);
   });
-});
 
-describe("FotS + Invigorating in UI calc path", () => {
-  it("calculateLeagueAbility includes FotS and Invigorating from loadoutStats", () => {
-    const loadout = normalizeLoadout({
-      ...withArchaeologySelection(DEFAULT_LOADOUT, ["fury_of_the_small"], 500),
-      perks: { ...DEFAULT_LOADOUT.perks, invigorating: 4 },
-    });
-    const stats = loadoutStats(loadout, {
-      unlockedRegions: ["misthalin", "kandarin"] as any,
-    });
-    expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
-    expect(stats.adrenaline?.basicGainMultiplier).toBeCloseTo(1.2, 10);
-
-    const ability = baseInput.abilities.find((a) => a.id === "attack")!;
-    const result = calculateLeagueAbility(ability, {
-      base: 1000,
-      level: 99,
-      accuracy: 1,
-      crit: { chance: 0 },
-      rules: resolveLeagueRules({ ruleset: "base" }),
-      adrenaline: stats.adrenaline,
-    });
-    // (9 + 1) * 1.2 = 12
-    expect(result.adrenalineDelta).toBeCloseTo(12, 10);
-  });
-
-  it("engine performCast matches league delta for FotS alone", () => {
-    const loadout = normalizeLoadout(
-      withArchaeologySelection(DEFAULT_LOADOUT, ["fury_of_the_small"], 500),
-    );
-    const stats = loadoutStats(loadout, {
-      unlockedRegions: ["misthalin", "kandarin"] as any,
-    });
-    const ability = baseInput.abilities.find((a) => a.id === "attack")!;
-    const ctx = createCastContext({
-      ...baseInput,
-      adrenaline: stats.adrenaline,
-    });
-    expect(ctx.performCast(ability, 0, false).ok).toBe(true);
-    expect(ctx.getState().adrenaline).toBe(10);
-
-    const league = calculateLeagueAbility(ability, {
-      base: 1000,
-      level: 99,
-      accuracy: 1,
-      crit: { chance: 0 },
-      rules: resolveLeagueRules({ ruleset: "base" }),
-      adrenaline: stats.adrenaline,
-    });
-    expect(league.adrenalineDelta).toBe(10);
-  });
-
-  it("calculateLeagueAbility includes CoE ultimate refund in adrenalineDelta", () => {
-    const loadout = normalizeLoadout(
-      withArchaeologySelection(DEFAULT_LOADOUT, ["conservation_of_energy"], 500),
-    );
-    const stats = loadoutStats(loadout, {
-      unlockedRegions: ["misthalin", "kandarin", "morytania", "forinthry"] as any,
-    });
-    expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
-    const berserk = baseInput.abilities.find((a) => a.id === "berserk")!;
-    expect(berserk.category).toBe("ultimate");
-    const result = calculateLeagueAbility(berserk, {
-      base: 1000,
-      level: 99,
-      accuracy: 1,
-      crit: { chance: 0 },
-      rules: resolveLeagueRules({ ruleset: "base" }),
-      adrenaline: stats.adrenaline,
-    });
-    // Full dump 100 → leave 0 + CoE 10 => delta -90 (if cost 100)
-    const cost = berserk.adrenaline?.cost ?? 100;
-    expect(result.adrenalineDelta).toBe(-cost + 10);
+  it("abilityGainMultiplier applies after Invigorating", () => {
+    expect(
+      resolveAbilityAdrenalineGain(attack, {
+        basicAdrenalineFlatBonus: 1,
+        basicGainMultiplier: 1.2,
+        abilityGainMultiplier: 1.5,
+      }),
+    ).toBeCloseTo(18, 10);
   });
 });
 
-describe("sanitize trims from the end (selection order)", () => {
-  it("pops last when over active limit, including FotS if it is last", () => {
-    const kept = sanitizeSelectedRelics({
-      selectedIds: [
-        "font_of_life",
-        "shadows_grace",
-        "unexpected_diplomacy",
-        "fury_of_the_small",
-      ],
-      energyCap: 500,
+describe("resolveAbilityAdrenalineGainBreakdown with Impatient", () => {
+  it("basic attack + Impatient + Invig4: 14.4", () => {
+    const b = resolveAbilityAdrenalineGainBreakdown({
+      listedGain: 9,
+      isGeneratingBasicAbility: true,
+      isBasicAttack: true,
+      impatientProc: true,
+      basicGainMultiplier: 1.2,
     });
-    expect(kept).toEqual([
-      "font_of_life",
-      "shadows_grace",
-      "unexpected_diplomacy",
-    ]);
-    expect(kept).not.toContain("fury_of_the_small");
+    expect(b.impatientGain).toBe(3);
+    expect(b.gainBeforeInvigorating).toBe(12);
+    expect(b.totalAbilityGain).toBeCloseTo(14.4, 10);
   });
 
-  it("keeps FotS when it is within the first three", () => {
-    const kept = sanitizeSelectedRelics({
-      selectedIds: ["fury_of_the_small", "font_of_life", "shadows_grace"],
-      energyCap: 500,
+  it("basic attack + Fury + Impatient + Invig4: 15.6", () => {
+    const b = resolveAbilityAdrenalineGainBreakdown({
+      listedGain: 9,
+      isGeneratingBasicAbility: true,
+      isBasicAttack: true,
+      impatientProc: true,
+      basicAdrenalineFlatBonus: 1,
+      basicGainMultiplier: 1.2,
     });
-    expect(kept).toContain("fury_of_the_small");
-    expect(kept).toHaveLength(3);
+    expect(b.totalAbilityGain).toBeCloseTo(15.6, 10);
+  });
+
+  it("non-attack basic + Fury + Impatient: listed+4, no invig", () => {
+    const b = resolveAbilityAdrenalineGainBreakdown({
+      listedGain: 9,
+      isGeneratingBasicAbility: true,
+      isBasicAttack: false,
+      impatientProc: true,
+      basicAdrenalineFlatBonus: 1,
+      basicGainMultiplier: 1.2,
+    });
+    expect(b.invigoratingMultiplier).toBe(1);
+    expect(b.totalAbilityGain).toBe(13);
   });
 });

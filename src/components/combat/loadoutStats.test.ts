@@ -1124,6 +1124,7 @@ describe("loadoutStats", () => {
         ...base,
         currentLife: null,
         currentHealthPercent: 50,
+        archaeology: { selectedIds: [], energyCap: 500 },
         buffs: { ...base.buffs, berserkersFury: false },
       });
       expect(off.berserkersFury.active).toBe(false);
@@ -1133,7 +1134,8 @@ describe("loadoutStats", () => {
         ...base,
         currentLife: null,
         currentHealthPercent: 50,
-        buffs: { ...base.buffs, berserkersFury: true },
+        archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+        buffs: { ...base.buffs, berserkersFury: false },
       });
       expect(on.berserkersFury.active).toBe(true);
       expect(on.berserkersFury.bonus).toBe(0.03);
@@ -1149,7 +1151,8 @@ describe("loadoutStats", () => {
         ...base,
         currentLife: null,
         currentHealthPercent: 100,
-        buffs: { ...base.buffs, berserkersFury: true },
+        archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+        buffs: { ...base.buffs, berserkersFury: false },
       });
       expect(full.berserkersFury.bonus).toBe(0);
       expect(full.globalModifiers.some((m) => m.id === "relic:berserkers_fury")).toBe(false);
@@ -1158,7 +1161,8 @@ describe("loadoutStats", () => {
         ...base,
         currentLife: 1,
         currentHealthPercent: 0,
-        buffs: { ...base.buffs, berserkersFury: true },
+        archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+        buffs: { ...base.buffs, berserkersFury: false },
       });
       expect(low.berserkersFury.bonus).toBe(0.055);
     });
@@ -1169,16 +1173,18 @@ describe("loadoutStats", () => {
         ...base,
         currentLife: null,
         currentHealthPercent: 50,
-        buffs: { ...base.buffs, berserkersFury: true },
+        archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+        buffs: { ...base.buffs, berserkersFury: false },
       });
       const withPb = loadoutStats(
         {
           ...base,
           currentLife: null,
           currentHealthPercent: 50,
+          archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
           buffs: {
             ...base.buffs,
-            berserkersFury: true,
+            berserkersFury: false,
             powerburstOfVitalityUntil: now + 6000,
           },
         },
@@ -1195,9 +1201,10 @@ describe("loadoutStats", () => {
         ...base,
         currentLife: 12_000,
         currentHealthPercent: 100,
+        archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
         buffs: {
           ...base.buffs,
-          berserkersFury: true,
+          berserkersFury: false,
           overheal: "soup-line",
         },
       });
@@ -1226,7 +1233,7 @@ describe("loadoutStats", () => {
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
     });
 
-    it("buff flag alone can revive a relic when it still fits energy/slots", () => {
+    it("buff flag alone never reactivates a relic (selectedIds is sole runtime source)", () => {
       const on = loadoutStats(
         {
           ...base,
@@ -1238,10 +1245,10 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["misthalin", "kandarin"] },
       );
-      expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+      expect(on.adrenaline?.basicAdrenalineFlatBonus).toBeUndefined();
     });
 
-    it("buff flag cannot revive a relic that would bust energy with current picks", () => {
+    it("stale CoE buff with HS selected still does not activate CoE", () => {
       const on = loadoutStats(
         {
           ...base,
@@ -1252,7 +1259,7 @@ describe("loadoutStats", () => {
           buffs: {
             ...base.buffs,
             heightenedSenses: true,
-            // CoE is 350; HS is 350; 700 > 500 — must not activate CoE via flag.
+            // CoE is 350; HS is 350; 700 > 500 - buff must never force CoE on.
             conservationOfEnergy: true,
           },
         },
@@ -1260,6 +1267,10 @@ describe("loadoutStats", () => {
       );
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
       expect(on.adrenaline?.ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { conservationOfEnergyRefund?: number } | undefined)
+          ?.conservationOfEnergyRefund,
+      ).toBeUndefined();
     });
 
     it("fury_of_the_small sets adrenaline.basicAdrenalineFlatBonus", () => {
@@ -1278,7 +1289,7 @@ describe("loadoutStats", () => {
       expect(on.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
     });
 
-    it("conservation_of_energy sets adrenaline.ultimateAdrenalineRefund", () => {
+    it("conservation_of_energy sets ultimateAdrenalineRefund and conservationOfEnergyRefund", () => {
       const off = loadoutStats({
         ...base,
         archaeology: { selectedIds: [], energyCap: 500 },
@@ -1292,6 +1303,9 @@ describe("loadoutStats", () => {
         buffs: { ...base.buffs, conservationOfEnergy: false },
       });
       expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(
+        (on.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
+      ).toBe(10);
     });
 
     it("Ring of Vigour equipment sets ultimate refund 10 and ringOfVigour flag", () => {
@@ -1333,7 +1347,7 @@ describe("loadoutStats", () => {
       expect(vigourLines[0]).toContain("Permanent unlock");
     });
 
-    it("Vigour + CoE stacks to 20 ultimate refund", () => {
+    it("Vigour + CoE stacks to 20 ultimate refund with separate CoE field", () => {
       const on = loadoutStats(
         {
           ...base,
@@ -1344,6 +1358,10 @@ describe("loadoutStats", () => {
         { unlockedRegions: ["anachronia"] },
       );
       expect(on.adrenaline?.ultimateAdrenalineRefund).toBe(20);
+      expect(
+        (on.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
+      ).toBe(10);
+      expect(on.adrenaline?.ringOfVigour).toBe(true);
     });
 
     it("passive without Anachronia is inactive; ring still works", () => {
@@ -1438,6 +1456,9 @@ describe("loadoutStats", () => {
       });
       expect(fit.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
       expect(fit.adrenaline?.ultimateAdrenalineRefund).toBe(10);
+      expect(
+        (fit.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
+      ).toBe(10);
       expect(fit.adrenaline?.maxAdrenalineBonus).toBeUndefined();
     });
     it("with unlockedRegions without Anachronia, drops over-500 energy from the end", () => {

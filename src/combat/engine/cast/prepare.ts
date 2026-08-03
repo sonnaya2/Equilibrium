@@ -10,7 +10,6 @@ import {
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
   icyTempestHits,
-  icyTempestSpend,
 } from "../../styles/melee/effects";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
 import { isMagicAbility, resplendentAsphyxiate } from "../../styles/magic/abilities";
@@ -24,7 +23,6 @@ import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge
 import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
-import { resolveSpecialAttackAdrenalineCost } from "../../shared/ringOfVigour";
 import { costOf, spendOf } from "./rules";
 import { firstEligibleDirectHitIndex, hasDamagingHits, hasFuryConsumingHit } from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
@@ -164,7 +162,7 @@ export function prepareCast(
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
   }
-  // Icy Tempest: stack-scaled bands; spend drops with stacks (requirement stays 30%).
+  // Icy Tempest: stack-scaled bands; spend path is spendOf (stacks then Vigour).
   if (ability.id === "icy_tempest") {
     working = {
       ...working,
@@ -297,15 +295,9 @@ export function prepareCast(
       (animaCharged(rt.state.magic.runicCharge, candidate) ? RUNIC_FLOW_BONUS : 0)
     : undefined;
 
+  // costOf / spendOf share Vigour special discount; Icy Tempest stack reduction is spend-only.
   const cost = costOf(rt.state, ability, candidate);
-  let spend = spendOf(rt.state, ability, candidate, input.ammo);
-  if (ability.id === "icy_tempest") {
-    // Stack reduction first; Vigour then discounts the resolved special spend.
-    spend = icyTempestSpend(rt.state.melee.primordialIceStacks);
-    if (rt.state.ringOfVigour) {
-      spend = resolveSpecialAttackAdrenalineCost(spend, true);
-    }
-  }
+  const spend = spendOf(rt.state, ability, candidate, input.ammo);
 
   return {
     ability,

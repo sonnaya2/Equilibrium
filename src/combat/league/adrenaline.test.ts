@@ -6,10 +6,9 @@ import { baseInput } from "../test/fixtures/inputs";
 import { blessingAdrenalineGenerationMultiplier, resolveLeagueRules } from "./ruleset";
 
 /**
- * Adrenaline Junkie: "Maximum adrenaline is increased by 50%. Adrenaline
- * generation is increased by 50%." The multiplier is read as applying to listed
- * ability generation only, so flat grants and refunds from unrelated mechanics
- * are added after it.
+ * Adrenaline Junkie multiplies ability generation after Invigorating.
+ * Order: listed + FotS + Impatient, then Invig (basic attacks), then AJ.
+ * Spend prevention and CoE/RoV refunds are not multiplied.
  */
 const junkie = resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: ["Chaos"] });
 const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
@@ -58,18 +57,17 @@ describe("Adrenaline Junkie generation", () => {
     expect(adrenalineAfter({ league: junkie })).toBeCloseTo(listedGain * 1.5, 10);
   });
 
-  it("leaves Impatient's flat +3 at 3, not 4.5", () => {
+  it("multiplies Impatient inside AJ (wiki order: (listed+3)*1.5)", () => {
     const withoutBlessing = adrenalineAfter({ impatientRank: 4, impatientProc: true });
     const withBlessing = adrenalineAfter({
       league: junkie,
       impatientRank: 4,
       impatientProc: true,
     });
-    expect(withoutBlessing).toBeCloseTo(listedGain + IMPATIENT_EXTRA_ADRENALINE, 10);
-    expect(withBlessing).toBeCloseTo(listedGain * 1.5 + IMPATIENT_EXTRA_ADRENALINE, 10);
-    // The blessing moved only the listed generation, so the delta is exactly the
-    // multiplier acting on it - the flat grant is untouched.
-    expect(withBlessing - withoutBlessing).toBeCloseTo(listedGain * 0.5, 10);
+    const withImp = listedGain + IMPATIENT_EXTRA_ADRENALINE;
+    expect(withoutBlessing).toBeCloseTo(withImp, 10);
+    expect(withBlessing).toBeCloseTo(withImp * 1.5, 10);
+    expect(withBlessing - withoutBlessing).toBeCloseTo(withImp * 0.5, 10);
   });
 
   it("keeps a non-procced Impatient identical to no Impatient at all", () => {
@@ -79,9 +77,7 @@ describe("Adrenaline Junkie generation", () => {
     );
   });
 
-  it("applies Invigorating inside the multiplied generation", () => {
-    // Both scale the listed gain, so the order between them does not change the
-    // product; what matters is that neither reaches Impatient's flat grant.
+  it("applies Impatient inside Invigorating then AJ", () => {
     const invigorated = adrenalineAfter({ league: junkie, invigorating: 1.2 });
     expect(invigorated).toBeCloseTo(listedGain * 1.2 * 1.5, 10);
     const both = adrenalineAfter({
@@ -90,7 +86,11 @@ describe("Adrenaline Junkie generation", () => {
       impatientRank: 4,
       impatientProc: true,
     });
-    expect(both).toBeCloseTo(listedGain * 1.2 * 1.5 + IMPATIENT_EXTRA_ADRENALINE, 10);
+    // (listed + Impatient) * Invig * AJ
+    expect(both).toBeCloseTo(
+      (listedGain + IMPATIENT_EXTRA_ADRENALINE) * 1.2 * 1.5,
+      10,
+    );
   });
 
   it("does not multiply a Relentless refund", () => {

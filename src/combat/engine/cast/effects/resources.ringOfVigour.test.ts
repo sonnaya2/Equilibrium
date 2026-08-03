@@ -48,7 +48,7 @@ const special60: AbilitySpec = {
   adrenaline: { cost: 60 },
 };
 
-describe("Ring of Vigour — ultimates", () => {
+describe("Ring of Vigour - ultimates", () => {
   it("normal ultimate without Vigour leaves 0 after 100-cost from 100", () => {
     const ctx = createCastContext({
       ...baseInput,
@@ -174,8 +174,8 @@ describe("Ring of Vigour + Conservation of Energy", () => {
   });
 });
 
-describe("Ring of Vigour — special attacks", () => {
-  it("50 base → requirement 45 and spend leaves 55 from 100", () => {
+describe("Ring of Vigour - special attacks", () => {
+  it("50 base -> requirement 45 and spend leaves 55 from 100", () => {
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,
@@ -187,26 +187,34 @@ describe("Ring of Vigour — special attacks", () => {
     expect(ctx.getState().adrenaline).toBe(55);
   });
 
-  it("30 base → 27; 60 base → 54", () => {
-    const ctx30 = createCastContext({
-      ...baseInput,
-      startingAdrenaline: 100,
-      abilities: [...baseInput.abilities, special30],
-      adrenaline: { ringOfVigour: true },
-    });
-    expect(ctx30.costOf(special30)).toBe(27);
-    expect(ctx30.performCast(special30, 0, false).ok).toBe(true);
-    expect(ctx30.getState().adrenaline).toBe(73);
+  it("rounding: 25->23, 30->27, 55->50, 60->54 (requirement = spend)", () => {
+    const special25 = claws;
+    const special55: AbilitySpec = {
+      id: "test_special_55",
+      name: "Test Special 55",
+      style: "melee",
+      category: "enhanced",
+      weaponSpecial: true,
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+      adrenaline: { cost: 55 },
+    };
 
-    const ctx60 = createCastContext({
-      ...baseInput,
-      startingAdrenaline: 100,
-      abilities: [...baseInput.abilities, special60],
-      adrenaline: { ringOfVigour: true },
-    });
-    expect(ctx60.costOf(special60)).toBe(54);
-    expect(ctx60.performCast(special60, 0, false).ok).toBe(true);
-    expect(ctx60.getState().adrenaline).toBe(46);
+    for (const [spec, expected, remaining] of [
+      [special25, 23, 77],
+      [special30, 27, 73],
+      [special55, 50, 50],
+      [special60, 54, 46],
+    ] as const) {
+      const ctx = createCastContext({
+        ...baseInput,
+        startingAdrenaline: 100,
+        abilities: [...baseInput.abilities, spec],
+        adrenaline: { ringOfVigour: true },
+      });
+      expect(ctx.costOf(spec)).toBe(expected);
+      expect(ctx.performCast(spec, 0, false).ok).toBe(true);
+      expect(ctx.getState().adrenaline).toBe(remaining);
+    }
   });
 
   it("requirement and spend use the same reduced cost (cast at 45 adren)", () => {
@@ -233,7 +241,7 @@ describe("Ring of Vigour — special attacks", () => {
   });
 
   it("EoF special (Claws of Guthix) uses the same 90% resolver", () => {
-    // 25 → 25 - floor(2.5) = 23
+    // 25 -> 25 - floor(2.5) = 23
     const ctx = createCastContext({
       ...baseInput,
       startingAdrenaline: 100,

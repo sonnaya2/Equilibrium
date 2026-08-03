@@ -11,6 +11,11 @@ import { MAX_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import {
+  analysisAdrenalineBreakdownRows,
+  analysisAdrenalineTransaction,
+  formatAdrenPct,
+} from "./adrenalinePresentation";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
@@ -130,6 +135,10 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
 
   const resultA = runCast(ability, entry.style, statsA);
   const resultB = runCast(ability, entry.style, statsB);
+
+  // Ledger from pure transaction (same inputs as calculateLeagueAbility adren delta).
+  const adrenTxA = analysisAdrenalineTransaction(ability, statsA.adrenaline);
+  const adrenBreakdownA = analysisAdrenalineBreakdownRows(adrenTxA);
 
   const delta =
     resultA.expected !== 0 ? ((resultB.expected - resultA.expected) / resultA.expected) * 100 : 0;
@@ -284,8 +293,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
                     {Math.round((result.hits[0]?.potential ?? 0) * 1000) / 10}%
                   </td>
                   <td className="text-right text-parch-50">
-                    {result.adrenalineDelta >= 0 ? "+" : ""}
-                    {Math.round(result.adrenalineDelta * 10) / 10}%
+                    {formatAdrenPct(result.adrenalineDelta)}
                   </td>
                 </tr>
               ))}
@@ -301,6 +309,22 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
               </tr>
             </tbody>
           </table>
+          <div className="analysis-adren-breakdown" data-testid="analysis-adren-breakdown">
+            <h4 className="mt-3 text-[11px] uppercase tracking-[0.1em] text-parch-300">
+              Adren breakdown · A (loadout)
+            </h4>
+            <dl className="mt-1 grid gap-x-4 text-xs sm:grid-cols-2">
+              {adrenBreakdownA.map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="flex justify-between gap-2 border-b border-stone-750/60 py-1"
+                >
+                  <dt className="text-parch-300">{label}</dt>
+                  <dd className="text-right font-mono text-parch-50">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
         <CalculationAssumptions stats={statsA} />
       </section>

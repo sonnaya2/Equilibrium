@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ARCHAEOLOGY_RELICS,
+  archaeologySelectBlockReason,
   canSelectRelic,
   hasAnachronia,
   isRelicActive,
@@ -14,8 +15,10 @@ import {
   sanitizeSelectedRelics,
   toggleArchaeologyRelic,
   totalEnergyUsed,
+  tryToggleArchaeologyRelic,
 } from "./archaeologyRelics";
 import {
+  applyArchaeologyToggle,
   DEFAULT_LOADOUT,
   normalizeLoadout,
   withArchaeologySelection,
@@ -115,8 +118,33 @@ describe("energy selection helpers", () => {
     expect(totalEnergyUsed(["berserkers_fury", "fury_of_the_small"])).toBe(400);
   });
 
-  it("trims over-budget selections from the end", () => {
-    // 350 + 350 = 700 > 500 -> drop last
+  it("CoE 350 + Fury 150 is exactly valid at 500", () => {
+    const pair = ["conservation_of_energy", "fury_of_the_small"];
+    expect(totalEnergyUsed(pair)).toBe(500);
+    expect(
+      canSelectRelic({
+        relicId: "fury_of_the_small",
+        selectedIds: ["conservation_of_energy"],
+        energyCap: 500,
+      }),
+    ).toBe(true);
+    const result = tryToggleArchaeologyRelic({
+      relicId: "fury_of_the_small",
+      selectedIds: ["conservation_of_energy"],
+      energyCap: 500,
+    });
+    expect(result).toEqual({
+      ok: true,
+      action: "selected",
+      selectedIds: ["conservation_of_energy", "fury_of_the_small"],
+    });
+    expect(
+      sanitizeSelectedRelics({ selectedIds: pair, energyCap: 500 }),
+    ).toEqual(pair);
+  });
+
+  it("repair sanitize trims over-budget selections from the end", () => {
+    // 350 + 350 = 700 > 500 -> drop last (repair path only)
     const cleaned = sanitizeSelectedRelics({
       selectedIds: ["heightened_senses", "conservation_of_energy"],
       energyCap: 500,
@@ -135,60 +163,109 @@ describe("energy selection helpers", () => {
     ).toEqual(["font_of_life"]);
   });
 
-  it("toggles when legal and no-ops when over budget", () => {
-    const withFury = toggleArchaeologyRelic({
+  it("tryToggle accepts/deselects and rejects without silent drop", () => {
+    const withFury = tryToggleArchaeologyRelic({
       relicId: "berserkers_fury",
       selectedIds: [],
       energyCap: 500,
     });
-    expect(withFury).toEqual(["berserkers_fury"]);
-    expect(isRelicActive(withFury, "berserkers_fury")).toBe(true);
+    expect(withFury).toEqual({
+      ok: true,
+      action: "selected",
+      selectedIds: ["berserkers_fury"],
+    });
+    expect(isRelicActive(withFury.selectedIds, "berserkers_fury")).toBe(true);
 
-    const off = toggleArchaeologyRelic({
+    const off = tryToggleArchaeologyRelic({
       relicId: "berserkers_fury",
-      selectedIds: withFury,
+      selectedIds: withFury.selectedIds,
       energyCap: 500,
     });
-    expect(off).toEqual([]);
+    expect(off).toEqual({ ok: true, action: "deselected", selectedIds: [] });
 
-    // 350 remaining after heightened_senses; conservation is also 350 - ok; add another 250 no
+    // HS 350 leaves 150 free; CoE is 350 -> energy reject, list unchanged
     const base = ["heightened_senses"];
     expect(
-      canSelectRelic({ relicId: "conservation_of_energy", selectedIds: base, energyCap: 500 }),
-    ).toBe(false);
+      archaeologySelectBlockReason({
+        relicId: "conservation_of_energy",
+        selectedIds: base,
+        energyCap: 500,
+      }),
+    ).toBe("energy_limit");
     expect(
-      toggleArchaeologyRelic({
+      tryToggleArchaeologyRelic({
+        relicId: "conservation_of_energy",
+        selectedIds: base,
+        energyCap: 500,
+      }),
+    ).toEqual({
+      ok: false,
+      reason: "energy_limit",
+      selectedIds: base,
+    });
+    expect(
+      tryToggleArchaeologyRelic({
         relicId: "berserkers_fury",
         selectedIds: base,
         energyCap: 500,
       }),
-    ).toEqual(base);
+    ).toEqual({
+      ok: false,
+      reason: "energy_limit",
+      selectedIds: base,
+    });
+  });
+
+  it("toggleArchaeologyRelic is selectedIds-only wrapper", () => {
+    expect(
+      toggleArchaeologyRelic({
+        relicId: "berserkers_fury",
+        selectedIds: [],
+        energyCap: 500,
+      }),
+    ).toEqual(["berserkers_fury"]);
+    expect(
+      toggleArchaeologyRelic({
+        relicId: "conservation_of_energy",
+        selectedIds: ["heightened_senses"],
+        energyCap: 500,
+      }),
+    ).toEqual(["heightened_senses"]);
   });
 });
-
 
 describe("monolith active slot limit", () => {
   it("exports MONOLITH_ACTIVE_LIMIT of 3", () => {
     expect(MONOLITH_ACTIVE_LIMIT).toBe(3);
   });
 
-  it("cannot select a 4th relic under energy budget", () => {
-    // three 50-cost relics = 150 <= 500
+  it("rejects a 4th relic under energy budget without dropping others", () => {
     const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
     expect(totalEnergyUsed(three)).toBe(150);
     expect(
       canSelectRelic({ relicId: "ring_of_luck", selectedIds: three, energyCap: 500 }),
     ).toBe(false);
     expect(
-      toggleArchaeologyRelic({
+      archaeologySelectBlockReason({
         relicId: "ring_of_luck",
         selectedIds: three,
         energyCap: 500,
       }),
-    ).toEqual(three);
+    ).toBe("active_slot_limit");
+    expect(
+      tryToggleArchaeologyRelic({
+        relicId: "ring_of_luck",
+        selectedIds: three,
+        energyCap: 500,
+      }),
+    ).toEqual({
+      ok: false,
+      reason: "active_slot_limit",
+      selectedIds: three,
+    });
   });
 
-  it("sanitize trims to 3 from the end", () => {
+  it("repair sanitize trims to 3 from the end", () => {
     const four = [
       "font_of_life",
       "shadows_grace",
@@ -210,16 +287,19 @@ describe("monolith active slot limit", () => {
       canSelectRelic({ relicId: "font_of_life", selectedIds: three, energyCap: 500 }),
     ).toBe(true);
     expect(
-      toggleArchaeologyRelic({
+      tryToggleArchaeologyRelic({
         relicId: "font_of_life",
         selectedIds: three,
         energyCap: 500,
       }),
-    ).toEqual(["shadows_grace", "unexpected_diplomacy"]);
+    ).toEqual({
+      ok: true,
+      action: "deselected",
+      selectedIds: ["shadows_grace", "unexpected_diplomacy"],
+    });
   });
 
   it("ignores unknown ids when counting active slots", () => {
-    // raw length is 3 but only 2 known; room for one more
     const withJunk = ["font_of_life", "ghost", "not_a_relic"];
     expect(
       canSelectRelic({ relicId: "shadows_grace", selectedIds: withJunk, energyCap: 500 }),
@@ -240,14 +320,12 @@ describe("monolith active slot limit", () => {
   });
 
   it("energy and slot limits both apply", () => {
-    // 3 small under energy still capped at 3
     const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
     expect(totalEnergyUsed(three) + 50).toBeLessThanOrEqual(500);
     expect(
       canSelectRelic({ relicId: "ring_of_luck", selectedIds: three, energyCap: 500 }),
     ).toBe(false);
 
-    // 2 large fill energy before slots: heightened 350 + conservation 350 fails energy first
     const twoHeavy = ["heightened_senses"];
     expect(
       canSelectRelic({
@@ -257,7 +335,6 @@ describe("monolith active slot limit", () => {
       }),
     ).toBe(false);
 
-    // sanitizeArchaeologyState also applies slot trim via sanitizeSelectedRelics
     const state = sanitizeArchaeologyState(
       {
         selectedIds: [
@@ -293,7 +370,7 @@ describe("loadout archaeology persistence", () => {
     expect(next.buffs.berserkersFury).toBe(true);
   });
 
-  it("syncs full-modeled buffs from selectedIds", () => {
+  it("derives full-modeled buffs FROM selectedIds after load", () => {
     const next = withArchaeologySelection(
       DEFAULT_LOADOUT,
       ["fury_of_the_small", "heightened_senses"],
@@ -314,6 +391,45 @@ describe("loadout archaeology persistence", () => {
     expect(off.buffs.berserkersFury).toBe(false);
   });
 
+  it("toggle off Fury stays off after normalize", () => {
+    const on = withArchaeologySelection(DEFAULT_LOADOUT, ["fury_of_the_small"], 500);
+    expect(on.buffs.furyOfTheSmall).toBe(true);
+    const { loadout: off } = applyArchaeologyToggle(on, "fury_of_the_small", 500);
+    expect(off.archaeology.selectedIds).not.toContain("fury_of_the_small");
+    expect(off.buffs.furyOfTheSmall).toBe(false);
+    const reloaded = normalizeLoadout(off);
+    expect(reloaded.archaeology.selectedIds).not.toContain("fury_of_the_small");
+    expect(reloaded.buffs.furyOfTheSmall).toBe(false);
+  });
+
+  it("applyArchaeologyToggle rejects over budget without mutating neighbors", () => {
+    const base = withArchaeologySelection(DEFAULT_LOADOUT, ["heightened_senses"], 500);
+    const { loadout, result } = applyArchaeologyToggle(base, "conservation_of_energy", 500);
+    expect(result).toEqual({
+      ok: false,
+      reason: "energy_limit",
+      selectedIds: ["heightened_senses"],
+    });
+    expect(loadout).toBe(base);
+    expect(loadout.archaeology.selectedIds).toEqual(["heightened_senses"]);
+  });
+
+  it("CoE + Fury both stay selected at 500 after normalize", () => {
+    const next = normalizeLoadout(
+      withArchaeologySelection(
+        DEFAULT_LOADOUT,
+        ["conservation_of_energy", "fury_of_the_small"],
+        500,
+      ),
+    );
+    expect(next.archaeology.selectedIds).toEqual([
+      "conservation_of_energy",
+      "fury_of_the_small",
+    ]);
+    expect(next.buffs.conservationOfEnergy).toBe(true);
+    expect(next.buffs.furyOfTheSmall).toBe(true);
+  });
+
   it("sanitizes invalid energyCap and over-budget on normalize", () => {
     const next = normalizeLoadout({
       archaeology: {
@@ -325,7 +441,7 @@ describe("loadout archaeology persistence", () => {
     expect(totalEnergyUsed(next.archaeology.selectedIds)).toBeLessThanOrEqual(500);
   });
 
-  it("trims 4 selectedIds to MONOLITH_ACTIVE_LIMIT on normalizeLoadout", () => {
+  it("trims 4 selectedIds to MONOLITH_ACTIVE_LIMIT on normalizeLoadout (repair)", () => {
     const four = [
       "font_of_life",
       "shadows_grace",
@@ -343,6 +459,14 @@ describe("loadout archaeology persistence", () => {
       "unexpected_diplomacy",
     ]);
   });
+
+  it("preserves selection order; does not reorder on normalize", () => {
+    const order = ["fury_of_the_small", "font_of_life", "shadows_grace"];
+    const next = normalizeLoadout({
+      archaeology: { energyCap: 500, selectedIds: order },
+    });
+    expect(next.archaeology.selectedIds).toEqual(order);
+  });
 });
 
 describe("loadoutStats archaeology active limit", () => {
@@ -356,11 +480,11 @@ describe("loadoutStats archaeology active limit", () => {
     ];
     const loadout = normalizeLoadout({
       archaeology: { energyCap: 500, selectedIds: four },
-      buffs: { berserkersFury: true },
     });
     const rawFour = {
       ...loadout,
       archaeology: { energyCap: 500 as const, selectedIds: four },
+      // Stale buff must not revive a trimmed relic.
       buffs: { ...loadout.buffs, berserkersFury: true },
     };
     const stats = loadoutStats(rawFour, {
@@ -374,11 +498,23 @@ describe("loadoutStats archaeology active limit", () => {
         energyCap: 500 as const,
         selectedIds: ["font_of_life", "shadows_grace", "berserkers_fury"],
       },
-      buffs: { ...loadout.buffs, berserkersFury: true },
+      buffs: { ...loadout.buffs, berserkersFury: false },
     };
     const withFury = loadoutStats(keepFury, {
       unlockedRegions: ["misthalin", "morytania", "desert"],
     });
     expect(withFury.berserkersFury.active).toBe(true);
+  });
+
+  it("buff flag alone never reactivates a relic", () => {
+    const stats = loadoutStats(
+      {
+        ...DEFAULT_LOADOUT,
+        archaeology: { selectedIds: [], energyCap: 500 },
+        buffs: { ...DEFAULT_LOADOUT.buffs, furyOfTheSmall: true },
+      },
+      { unlockedRegions: ["misthalin", "kandarin"] },
+    );
+    expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBeUndefined();
   });
 });

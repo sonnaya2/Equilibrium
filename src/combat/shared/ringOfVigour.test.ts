@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { MAGIC_ABILITIES } from "../styles/magic/abilities";
+import { MELEE_ABILITIES } from "../styles/melee/abilities";
+import { NECROMANCY_ABILITIES } from "../styles/necromancy/abilities";
 import {
   formatRingOfVigourSources,
   hasRingOfVigourEffect,
@@ -6,6 +9,8 @@ import {
   isRingOfVigourPassiveEffective,
   isRingOfVigourWorn,
   isWeaponSpecialAbility,
+  listedWeaponSpecialCost,
+  MODELLED_WEAPON_SPECIAL_IDS,
   RING_OF_VIGOUR_ITEM_ID,
   RING_OF_VIGOUR_REFUND,
   resolveSpecialAttackAdrenalineCost,
@@ -83,28 +88,36 @@ describe("hasRingOfVigourEffect (activation matrix)", () => {
 });
 
 describe("resolveSpecialAttackAdrenalineCost", () => {
-  it("applies 10% discount of original cost (not flat -10)", () => {
-    expect(resolveSpecialAttackAdrenalineCost(50, true)).toBe(45);
-    expect(resolveSpecialAttackAdrenalineCost(30, true)).toBe(27);
-    expect(resolveSpecialAttackAdrenalineCost(60, true)).toBe(54);
+  it("rounding table: base - floor(base * 0.1)", () => {
+    // base | discount | effective
+    expect(resolveSpecialAttackAdrenalineCost(25, true)).toBe(23); // 25-2
+    expect(resolveSpecialAttackAdrenalineCost(30, true)).toBe(27); // 30-3
+    expect(resolveSpecialAttackAdrenalineCost(50, true)).toBe(45); // 50-5
+    expect(resolveSpecialAttackAdrenalineCost(55, true)).toBe(50); // 55-5 (not floor(0.9*55)=49)
+    expect(resolveSpecialAttackAdrenalineCost(60, true)).toBe(54); // 60-6
   });
 
   it("leaves base cost unchanged when inactive", () => {
     expect(resolveSpecialAttackAdrenalineCost(50, false)).toBe(50);
     expect(resolveSpecialAttackAdrenalineCost(30, false)).toBe(30);
-  });
-
-  it("historical 55% special becomes 50 (discount floor)", () => {
-    // base - floor(base * 0.1) = 55 - 5 = 50
-    expect(resolveSpecialAttackAdrenalineCost(55, true)).toBe(50);
+    expect(resolveSpecialAttackAdrenalineCost(25, false)).toBe(25);
   });
 
   it("does not apply twice for dual sources (caller passes boolean once)", () => {
     const once = resolveSpecialAttackAdrenalineCost(50, true);
     expect(once).toBe(45);
-    // Applying the resolver a second time on the already-reduced cost is wrong;
-    // dual sources must resolve hasRingOfVigour once then call this once.
+    // Dual sources resolve hasRingOfVigour once; never re-apply on reduced cost.
     expect(resolveSpecialAttackAdrenalineCost(once, true)).toBe(41);
+  });
+
+  it("listedWeaponSpecialCost uses weaponSpecial gate", () => {
+    expect(listedWeaponSpecialCost({ weaponSpecial: true, adrenaline: { cost: 50 } }, true)).toBe(
+      45,
+    );
+    expect(listedWeaponSpecialCost({ adrenaline: { cost: 50 } }, true)).toBe(50);
+    expect(listedWeaponSpecialCost({ weaponSpecial: true, adrenaline: { cost: 50 } }, false)).toBe(
+      50,
+    );
   });
 });
 
@@ -141,9 +154,30 @@ describe("helpers", () => {
   it("tags weapon specials only via weaponSpecial flag", () => {
     expect(isWeaponSpecialAbility({ weaponSpecial: true })).toBe(true);
     expect(isWeaponSpecialAbility({})).toBe(false);
+    expect(isWeaponSpecialAbility({ weaponSpecial: false })).toBe(false);
   });
 
   it("exports ultimate refund amount 10", () => {
     expect(RING_OF_VIGOUR_REFUND).toBe(10);
+  });
+});
+
+describe("modelled weapon special catalogue", () => {
+  const allSpecs = [...MELEE_ABILITIES, ...MAGIC_ABILITIES, ...NECROMANCY_ABILITIES];
+
+  it("every MODELLED_WEAPON_SPECIAL_IDS entry is tagged weaponSpecial", () => {
+    for (const id of MODELLED_WEAPON_SPECIAL_IDS) {
+      const specs = allSpecs.filter((a) => a.id === id);
+      expect(specs.length, id).toBeGreaterThan(0);
+      for (const spec of specs) {
+        expect(isWeaponSpecialAbility(spec), id).toBe(true);
+      }
+    }
+  });
+
+  it("no extra weaponSpecial tags outside the catalogue", () => {
+    const flagged = allSpecs.filter((a) => isWeaponSpecialAbility(a)).map((a) => a.id);
+    const unique = [...new Set(flagged)].sort();
+    expect(unique).toEqual([...MODELLED_WEAPON_SPECIAL_IDS].sort());
   });
 });

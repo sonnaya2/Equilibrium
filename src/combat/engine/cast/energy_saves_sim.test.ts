@@ -1,15 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { simulate } from "../engine/simulation/simulate";
-import { rotationOf } from "../engine/simulation/contracts";
-import { createCastContext } from "../engine/simulation/context";
-import { baseInput } from "../test/fixtures/inputs";
-import { DEFAULT_LOADOUT, withArchaeologySelection, normalizeLoadout } from "../../components/combat/loadout/model";
-import { loadoutStats } from "../../components/combat/loadoutStats";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { RING_OF_VIGOUR_ITEM_ID } from "./ringOfVigour";
-import { CONSERVATION_OF_ENERGY_REFUND } from "./conservationOfEnergy";
+import type { RegionId } from "@/league";
+import { simulate } from "../simulation/simulate";
+import { rotationOf } from "../simulation/contracts";
+import { createCastContext } from "../simulation/context";
+import { baseInput } from "../../test/fixtures/inputs";
+import {
+  DEFAULT_LOADOUT,
+  withArchaeologySelection,
+  normalizeLoadout,
+} from "../../../components/combat/loadout/model";
+import { loadoutStats } from "../../../components/combat/loadoutStats";
+import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { RING_OF_VIGOUR_ITEM_ID } from "../../shared/ringOfVigour";
+import { CONSERVATION_OF_ENERGY_REFUND } from "../../shared/conservationOfEnergy";
 
-const regions = ["misthalin", "kandarin", "morytania", "forinthry", "anachronia"] as any;
+const regions = [
+  "misthalin",
+  "kandarin",
+  "morytania",
+  "forinthry",
+  "anachronia",
+] as readonly RegionId[];
 
 function statsFor(loadout: ReturnType<typeof normalizeLoadout>) {
   return loadoutStats(loadout, { unlockedRegions: regions });
@@ -23,8 +34,6 @@ describe("damage sim energy saves (adren economy)", () => {
     const stats = statsFor(loadout);
     expect(stats.adrenaline?.ultimateAdrenalineRefund).toBe(10);
 
-    const berserk = MELEE_ABILITIES.find((a) => a.id === "berserk")!;
-    const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
     const summary = simulate({
       ...baseInput,
       abilities: MELEE_ABILITIES,
@@ -66,7 +75,7 @@ describe("damage sim energy saves (adren economy)", () => {
       adrenaline: { relentlessRank: 5 },
     });
     expect(ctx.performCast(assault, 0, false, { relentless: true }).ok).toBe(true);
-    expect(ctx.getState().adrenaline).toBe(100); // no spend
+    expect(ctx.getState().adrenaline).toBe(100);
   });
 
   it("FotS + Invigorating in full simulate rotation", () => {
@@ -82,7 +91,7 @@ describe("damage sim energy saves (adren economy)", () => {
       startingAdrenaline: 0,
       adrenaline: stats.adrenaline,
     });
-    expect(summary.casts[0]!.adrenalineAfter).toBeCloseTo(12, 10); // (9+1)*1.2
+    expect(summary.casts[0]!.adrenalineAfter).toBeCloseTo(12, 10);
   });
 
   it("CoE + FotS together under energy budget", () => {
@@ -103,17 +112,12 @@ describe("damage sim energy saves (adren economy)", () => {
   });
 
   it("CoE leaves 10 after berserk and enables second 100-cost ult sooner", () => {
-    // Berserk costs 100: without CoE leave 0; with CoE leave 10.
-    // Queue: berserk, then enough attacks to fund a second berserk.
-    // CoE needs 90 more from basics (10×9=90) vs 100 more without (12 attacks min if only +9).
     const withCoE = normalizeLoadout(
       withArchaeologySelection(DEFAULT_LOADOUT, ["conservation_of_energy"], 500),
     );
     const statsOn = statsFor(withCoE);
     const statsOff = statsFor(DEFAULT_LOADOUT);
 
-    // 11 attacks after first berserk: with CoE 10+99=109 (cap) can cast second berserk;
-    // without CoE 0+99=99 cannot.
     const rot = rotationOf(
       "berserk",
       "attack",
@@ -150,7 +154,6 @@ describe("damage sim energy saves (adren economy)", () => {
     expect(firstOn.adrenalineAfter).toBe(10);
     const onBerserks = on.casts.filter((c) => c.abilityId === "berserk").length;
     const offBerserks = off.casts.filter((c) => c.abilityId === "berserk").length;
-    // CoE must enable the second ultimate; without CoE the rotation starves.
     expect(onBerserks).toBe(2);
     expect(offBerserks).toBe(1);
     expect(off.error).toMatch(/adrenaline/i);

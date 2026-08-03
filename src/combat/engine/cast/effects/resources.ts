@@ -1,10 +1,18 @@
 import { secondsToTicks } from "../../../core/ticks";
-import { resolveAbilityAdrenalineGain } from "../../../shared/adrenalineGain";
-import { ultimateAdrenalineRefundQualifies } from "../../../shared/conservationOfEnergy";
-import { IMPATIENT_EXTRA_ADRENALINE, RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
+import {
+  isBasicAttack,
+  isGeneratingBasicAbility,
+} from "../../../shared/adrenalineGain";
+import {
+  resolveAdrenalineTransaction,
+  type AdrenalineTransaction,
+} from "../../../shared/adrenalineTransaction";
+import { resolveUltimateAdrenalineRefunds } from "../../../shared/conservationOfEnergy";
+import { RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
+import { RING_OF_VIGOUR_REFUND } from "../../../shared/ringOfVigour";
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
 import { spendDeathspore } from "../../../styles/ranged/onHit";
-import { gainAdrenaline, patchRanged, spendAdrenaline } from "../../runtime/state";
+import { gainAdrenaline, patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 import { vestmentsUltimateEligible } from "../../../shared/equipment";
 import { hasPassive } from "../../../shared/equipment";
@@ -12,34 +20,38 @@ import { activeBleedCount } from "../../../styles/melee/effects";
 import { rngProc } from "../../simulation/contracts";
 
 /**
- * Cast adren/resources in order: listed gain + FotS flat, then mults (Meteor basic,
- * Invigorating, Adrenaline Junkie), then flat grants (Impatient +3, Jaws), then spend
- * (Relentless full refund), then ultimate refund (CoE + Ring of Vigour), Deathspore, Vestments.
- * Impatient flat stays outside mults so AJ never turns +3 into +4.5. FotS +1 is inside
- * Invigorating (wiki). Impatient/Relentless are branched RNG, not EV spends.
+ * Cast adren/resources via pure transaction after one Impatient/Relentless roll.
+ * Order: listed + FotS + Impatient, Invigorating (basic attacks), AJ mult, jaws,
+ * spend (Relentless / Deathspore), CoE + RoV, Deathspore bookkeeping, Vestments.
+ * https://runescape.wiki/w/Invigorating
+ * https://runescape.wiki/w/Basic_attacks
  */
-export function applyCastResources(fx: CastEffectContext): void {
+
+export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction {
   const { rt, ability, candidate, rng } = fx;
   const { cost, spend } = fx.prepared;
   const input = rt.input;
+  const adren = input.adrenaline;
 
-  if (ability.adrenaline?.gain) {
-    const isBasic = ability.category === "basic" || !!ability.autoAttack;
-    const meteorBasic =
-      ability.style === "melee" &&
-      ability.category === "basic" &&
-      rt.state.melee.meteorStrikeUntilTick > 0 &&
-      candidate < rt.state.melee.meteorStrikeUntilTick;
-    // FotS + Invigorating + AJ via shared helper; Impatient flat stays outside mults.
-    let gain = resolveAbilityAdrenalineGain(ability, input.adrenaline, {
-      meteorBasicMultiplier: meteorBasic ? METEOR_STRIKE_BASIC_ADREN_MULTIPLIER : 1,
-    });
-    if (isBasic && (input.adrenaline?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient")) {
-      gain += IMPATIENT_EXTRA_ADRENALINE;
-    }
-    rt.state = gainAdrenaline(rt.state, gain);
-  }
+  const generating = isGeneratingBasicAbility(ability);
+  const basicAttack = isBasicAttack(ability);
 
+  const impatientProc =
+    generating && (adren?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient");
+
+  const relentlessEligible =
+    spend > 0 &&
+    (adren?.relentlessRank ?? 0) > 0 &&
+    candidate >= rt.state.relentlessUntilTick;
+  const relentlessProc = relentlessEligible && rngProc(rng, "relentless");
+
+  const meteorBasic =
+    ability.style === "melee" &&
+    ability.category === "basic" &&
+    rt.state.melee.meteorStrikeUntilTick > 0 &&
+    candidate < rt.state.melee.meteorStrikeUntilTick;
+
+  let jawsGrant = 0;
   if (
     hasPassive(input.equipmentEffects, "jaws-of-the-abyss") &&
     ability.style === "melee" &&
@@ -48,36 +60,68 @@ export function applyCastResources(fx: CastEffectContext): void {
     fx.prepared.working.hits.length > 0
   ) {
     const jaws = 2 * activeBleedCount(rt.state.target.melee, candidate);
-    rt.state = gainAdrenaline(
-      rt.state,
-      candidate < rt.state.naturalInstinctUntilTick ? jaws * 2 : jaws,
-    );
+    jawsGrant = candidate < rt.state.naturalInstinctUntilTick ? jaws * 2 : jaws;
   }
 
-  if (spend > 0) {
-    // Relentless proc: full cost refund + 30s lockout.
-    if (
-      (input.adrenaline?.relentlessRank ?? 0) > 0 &&
-      candidate >= rt.state.relentlessUntilTick &&
-      rngProc(rng, "relentless")
-    ) {
-      rt.state = {
-        ...rt.state,
-        relentlessUntilTick: candidate + secondsToTicks(RELENTLESS_INTERNAL_CD_SECONDS),
-      };
-    } else {
-      rt.state = spendAdrenaline(rt.state, spend);
-    }
+  const { conservationOfEnergyRefund, ringOfVigourRefund } = resolveUltimateAdrenalineRefunds(
+    ability,
+    adren,
+    RING_OF_VIGOUR_REFUND,
+  );
+
+  const spendZeroReason =
+    spend === 0 && cost > 0 && ability.style === "ranged" && input.ammo === "deathspore"
+      ? ("deathspore" as const)
+      : undefined;
+
+  // effectiveCost: amount that would be spent without Relentless/Deathspore prevention.
+  // Deathspore zeros prepared.spend while cost remains; ledger keeps requirement as effectiveCost.
+  const effectiveCost = spendZeroReason ? cost : spend;
+  // Catalogue listed (pre-Vigour/Flow); Analysis uses ability.adrenaline.cost the same way.
+  const listedCost =
+    typeof ability.adrenaline?.cost === "number" && ability.adrenaline.cost > 0
+      ? ability.adrenaline.cost
+      : cost;
+
+  const listedGain =
+    typeof ability.adrenaline?.gain === "number" && ability.adrenaline.gain > 0
+      ? ability.adrenaline.gain
+      : 0;
+
+  const tx = resolveAdrenalineTransaction({
+    before: rt.state.adrenaline,
+    cap: rt.state.adrenalineCap,
+    listedGain,
+    listedCost,
+    effectiveCost,
+    isGeneratingBasicAbility: generating,
+    isBasicAttack: basicAttack,
+    impatientProc,
+    relentlessProc,
+    basicAdrenalineFlatBonus: adren?.basicAdrenalineFlatBonus,
+    basicGainMultiplier: adren?.basicGainMultiplier,
+    abilityGainMultiplier: adren?.abilityGainMultiplier,
+    meteorBasicMultiplier: meteorBasic ? METEOR_STRIKE_BASIC_ADREN_MULTIPLIER : 1,
+    conservationOfEnergyRefund,
+    ringOfVigourRefund,
+    otherImmediateGrants: jawsGrant,
+    spendZeroReason,
+  });
+
+  if (tx.spendPreventedBy === "relentless") {
+    rt.state = {
+      ...rt.state,
+      relentlessUntilTick: candidate + secondsToTicks(RELENTLESS_INTERNAL_CD_SECONDS),
+    };
   }
 
-  // CoE + RoV sum: once per ultimate cast, even when Relentless fully refunded the spend.
-  const ultimateRefund = input.adrenaline?.ultimateAdrenalineRefund ?? 0;
-  if (ultimateRefund > 0 && ultimateAdrenalineRefundQualifies(ability)) {
-    rt.state = gainAdrenaline(rt.state, ultimateRefund);
+  if (tx.afterResources !== rt.state.adrenaline) {
+    rt.state = { ...rt.state, adrenaline: tx.afterResources };
   }
 
-  // A zeroed spend against a real cost is the Deathspore free cast being used.
-  if (spend === 0 && cost > 0 && ability.style === "ranged" && input.ammo === "deathspore") {
+  rt.lastCastAdrenalineTransaction = tx;
+
+  if (spendZeroReason === "deathspore") {
     rt.state = patchRanged(rt.state, {
       deathspore: spendDeathspore(rt.state.ranged.deathspore, candidate),
     });
@@ -93,6 +137,8 @@ export function applyCastResources(fx: CastEffectContext): void {
       };
     }
   }
+
+  return tx;
 }
 
 /** Extra adrenaline a style rule grants beyond the ability's listed gain. */

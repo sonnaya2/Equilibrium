@@ -30,6 +30,7 @@ export * from "./shared/vulnerability";
 export * from "./shared/berserkersFury";
 export * from "./shared/furyOfTheSmall";
 export * from "./shared/adrenalineGain";
+export * from "./shared/adrenalineTransaction";
 export * from "./shared/heightenedSenses";
 export * from "./shared/conservationOfEnergy";
 export * from "./shared/ringOfVigour";

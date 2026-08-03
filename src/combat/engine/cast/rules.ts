@@ -1,6 +1,7 @@
 import type { ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { isMeleeAbility } from "../../styles/melee/abilities";
+import { icyTempestSpend } from "../../styles/melee/effects";
 import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
@@ -38,18 +39,23 @@ export function candidateTick(state: RotationState, readyTick: number): number {
   return Math.max(readyTick, state.tick);
 }
 
+function avernicFree(state: RotationState, tick: number): boolean {
+  return tick < (state.league?.avernicRampageUntilTick ?? 0);
+}
+
 /**
  * Listed adrenaline cost - the cast REQUIREMENT. A Deathspore free cast zeroes
  * the spend, not the requirement (wiki: "the player still needs the necessary
- * adrenaline to cast").
+ * adrenaline to cast"). Icy Tempest stack reduction is spend-only; requirement
+ * stays the special listed cost (Vigour-discounted when active).
  */
 export function costOf(state: RotationState, ability: AbilitySpec, tick: number): number {
   let listed =
     ability.style === "necromancy"
       ? necroAdrenalineCost(ability, state.necromancy.resources, tick)
       : (ability.adrenaline?.cost ?? 0);
-  // Flow (Sonic Wave): a flat adrenaline-point reduction while the window is
-  // open, never below zero. Defence/Constitution/specials never benefit.
+  // Flow (Sonic Wave): flat adren-point reduction while open, never below zero.
+  // Defence/Constitution/weapon specials never benefit.
   if (
     listed > 0 &&
     ability.style === "magic" &&
@@ -58,20 +64,35 @@ export function costOf(state: RotationState, ability: AbilitySpec, tick: number)
   ) {
     listed = Math.max(0, listed - state.magic.flowReduction);
   }
-  // Ring of Vigour: weapon special requirement is 90% of original (same as spend).
+  // Ring of Vigour: weapon special requirement uses the same 10% resolver as spend.
   if (listed > 0 && isWeaponSpecialAbility(ability) && state.ringOfVigour) {
     listed = resolveSpecialAttackAdrenalineCost(listed, true);
   }
-  return listed > 0 && tick < (state.league?.avernicRampageUntilTick ?? 0) ? 0 : listed;
+  return listed > 0 && avernicFree(state, tick) ? 0 : listed;
 }
 
-/** Actual adrenaline spend after a Deathspore free-cast buff, evaluated at `tick`. */
+/**
+ * Actual adrenaline spend at `tick`.
+ * Deathspore zeros spend not requirement. Icy Tempest: stack reduction first,
+ * then Vigour on the resolved spend (requirement stays costOf).
+ */
 export function spendOf(
   state: RotationState,
   ability: AbilitySpec,
   tick: number,
   ammo?: "deathspore" | "splintering",
 ): number {
+  // Icy Tempest: wiki cost reduces with Primordial Ice stacks; requirement does not.
+  // Order: stacks -> Vigour 10% of that spend -> Avernic zero.
+  if (ability.id === "icy_tempest") {
+    if (avernicFree(state, tick)) return 0;
+    let spend = icyTempestSpend(state.melee.primordialIceStacks);
+    if (state.ringOfVigour && spend > 0) {
+      spend = resolveSpecialAttackAdrenalineCost(spend, true);
+    }
+    return spend;
+  }
+
   const cost = costOf(state, ability, tick);
   return cost > 0 &&
     ability.style === "ranged" &&

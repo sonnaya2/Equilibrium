@@ -2,6 +2,7 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord } from "../simulation/contracts";
+import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
@@ -51,6 +52,8 @@ export interface SimulationRuntime {
   nextSeq: number;
   nextCastSeq: number;
   finalized: boolean;
+  /** Last ability-economy adren ledger from applyCastResources (one RNG resolve). */
+  lastCastAdrenalineTransaction: AdrenalineTransaction | null;
 }
 
 export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string, AbilitySpec> {
@@ -149,6 +152,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     nextSeq: 0,
     nextCastSeq: 0,
     finalized: false,
+    lastCastAdrenalineTransaction: null,
   };
 }
 

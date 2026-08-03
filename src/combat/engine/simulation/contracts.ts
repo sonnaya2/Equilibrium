@@ -6,6 +6,7 @@ import type { ResolvedEvent } from "../runtime/events";
 import type { RotationState } from "../runtime/state";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import type { ResolvedLeagueRules } from "../../league/ruleset";
+import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {
@@ -24,11 +25,17 @@ export interface AdrenalineRules {
   basicAdrenalineFlatBonus?: number;
   /** Extra max adrenaline (Heightened Senses = 10). */
   maxAdrenalineBonus?: number;
-  /** Flat adrenaline refund after ultimate spend (CoE + Ring of Vigour, 10 each). Once per cast. */
+  /**
+   * Legacy sum: CoE + Ring of Vigour refunds (10 each). Prefer conservationOfEnergyRefund
+   * + ringOfVigour; ignored when conservationOfEnergyRefund is set.
+   */
   ultimateAdrenalineRefund?: number;
+  /** CoE ultimate refund (0 or 10). Preferred over splitting ultimateAdrenalineRefund. */
+  conservationOfEnergyRefund?: number;
   /**
    * Ring of Vigour active (equipped ring and/or permanent passive, already OR-resolved).
    * Weapon specials use 90% of original adren cost for requirement and spend.
+   * Ultimate refund is RING_OF_VIGOUR_REFUND when active and the cast qualifies.
    */
   ringOfVigour?: boolean;
   /** Impatient perk rank (1-4) - state-changing RNG, branched by the drivers. */
@@ -113,13 +120,29 @@ export interface CastRecord {
   tick: number;
   abilityId: string;
   result: AbilityResult;
+  /** After channel occupancy + completion effects (passive gen, etc.). */
   adrenalineAfter: number;
   adrenalineBefore: number;
+  /**
+   * After ability-economy resources (tx.afterResources), before channel advance.
+   * Prefer adrenalineTransaction when present.
+   */
+  adrenalineAfterResources?: number;
   listedCost: number;
   effectiveCost: number;
   actualSpend: number;
+  /**
+   * Spend prevented by Relentless only (effectiveCost when relentless, else 0).
+   * Not CoE / RoV (those are grants on the transaction).
+   */
   refund: number;
+  /**
+   * totalAbilityGain + otherImmediate + coe + vigour from the transaction.
+   * Not after - before (channel passive gen must not inflate this).
+   */
   adrenalineGained: number;
+  /** Full ability-economy ledger when resources ran. */
+  adrenalineTransaction?: AdrenalineTransaction;
   /** Woven basic-attack cast, not part of the queued rotation. */
   auto?: boolean;
 }

@@ -36,6 +36,7 @@ describe("normalizeLoadout", () => {
     expect(legacy.baseDamage).toEqual({ mode: "automatic", manualValue: 777 });
     expect(legacy.startingAdrenaline).toBe(100);
     expect(legacy.hitCapEnabled).toBe(true);
+    expect(legacy.loadoutSchemaVersion).toBe(2);
 
     const manual = normalizeLoadout({
       baseDamage: { mode: "manual", manualValue: 1234 },
@@ -45,6 +46,19 @@ describe("normalizeLoadout", () => {
     expect(manual.baseDamage).toEqual({ mode: "manual", manualValue: 1234 });
     expect(manual.startingAdrenaline).toBe(0);
     expect(manual.hitCapEnabled).toBe(false);
+  });
+
+  it("migrates pre-v2 stored startingAdrenaline 0 to product default 100", () => {
+    expect(normalizeLoadout({ startingAdrenaline: 0 }).startingAdrenaline).toBe(100);
+    expect(normalizeLoadout({ startingAdrenaline: 0 }).loadoutSchemaVersion).toBe(2);
+    expect(normalizeLoadout({}).startingAdrenaline).toBe(100);
+    // Intentional 0 after schema v2 is preserved.
+    expect(
+      normalizeLoadout({ loadoutSchemaVersion: 2, startingAdrenaline: 0 }).startingAdrenaline,
+    ).toBe(0);
+    expect(
+      normalizeLoadout({ loadoutSchemaVersion: 2, startingAdrenaline: 72 }).startingAdrenaline,
+    ).toBe(72);
   });
 
   it("rejects non-positive persisted manual base values", () => {

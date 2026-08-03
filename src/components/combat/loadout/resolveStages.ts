@@ -840,7 +840,8 @@ export function resolveCombatRules(
   if (salveDmg) globalModifiers.push(salveDmg);
   globalModifiers.push(...leagueModifiers(leagueBundle.league));
 
-  // Arch selection: selectedIds is source of truth (buff flags stay locked via withArchaeologySelection).
+  // selectedIds is the sole runtime source for arch relic activation.
+  // Buff booleans are display mirrors only (never re-activate a relic here).
   // When regions are known, re-clamp energy (650 without Anachronia) and the 3-slot cap.
   const archState = loadout.archaeology ?? { selectedIds: [], energyCap: 500 as const };
   const effectiveArch =
@@ -854,18 +855,6 @@ export function resolveCombatRules(
           }),
         };
   const archSelected = new Set(effectiveArch.selectedIds);
-  // Prefer selection; buff flag is fallback when selection was lost but flag still true
-  // (legacy saves) AND the relic alone still fits remaining energy budget.
-  const hasArchRelic = (id: string, buff?: boolean | undefined): boolean => {
-    if (archSelected.has(id)) return true;
-    if (buff !== true) return false;
-    // Revive a full-modeled relic from a stale buff only if it fits with current selection.
-    const next = sanitizeSelectedRelics({
-      selectedIds: [...effectiveArch.selectedIds, id],
-      energyCap: effectiveArch.energyCap,
-    });
-    return next.includes(id);
-  };
 
   // Berserker's Fury: live LP vs temporary max (includes Powerburst when active).
   const maximumLifePoints = defenceLife?.life.temporaryMaxLife ?? 0;
@@ -874,7 +863,7 @@ export function resolveCombatRules(
     maximumLifePoints > 0
       ? sanitizeHealthPercent((currentLifePoints / maximumLifePoints) * 100)
       : sanitizeHealthPercent(loadout.currentHealthPercent ?? 50);
-  const furyActive = hasArchRelic(BERSERKERS_FURY_ID, loadout.buffs.berserkersFury);
+  const furyActive = archSelected.has(BERSERKERS_FURY_ID);
   const furyBonus = furyActive
     ? getBerserkersFuryBonus({
         currentLifePoints,
@@ -893,21 +882,19 @@ export function resolveCombatRules(
     if (furyMod) globalModifiers.push(furyMod);
   }
 
-  const furyOfTheSmall = hasArchRelic(FURY_OF_THE_SMALL_ID, loadout.buffs.furyOfTheSmall);
-  const heightenedSenses = hasArchRelic(HEIGHTENED_SENSES_ID, loadout.buffs.heightenedSenses);
-  const conservationOfEnergy = hasArchRelic(
-    CONSERVATION_OF_ENERGY_ID,
-    loadout.buffs.conservationOfEnergy,
-  );
+  const furyOfTheSmall = archSelected.has(FURY_OF_THE_SMALL_ID);
+  const heightenedSenses = archSelected.has(HEIGHTENED_SENSES_ID);
+  const conservationOfEnergy = archSelected.has(CONSERVATION_OF_ENERGY_ID);
   const ringOfVigour = hasRingOfVigourEffect({
     equipmentIds: equipment.equipmentIds,
     ringOfVigourPassive: loadout.buffs.ringOfVigourPassive,
     unlockedRegions: options.unlockedRegions,
   });
+  const conservationOfEnergyRefund = conservationOfEnergy ? CONSERVATION_OF_ENERGY_REFUND : 0;
   const ultimateAdrenalineRefund =
-    (conservationOfEnergy ? CONSERVATION_OF_ENERGY_REFUND : 0) +
-    (ringOfVigour ? RING_OF_VIGOUR_REFUND : 0);
+    conservationOfEnergyRefund + (ringOfVigour ? RING_OF_VIGOUR_REFUND : 0);
 
+  // CoE/FotS exposed as direct fields; ultimateAdrenalineRefund stays CoE+RoV sum.
   const adrenaline: AdrenalineRules = {
     abilityGainMultiplier: blessingAdrenalineGenerationMultiplier(leagueBundle.league),
     basicGainMultiplier:
@@ -916,6 +903,7 @@ export function resolveCombatRules(
         : 1,
     ...(furyOfTheSmall ? { basicAdrenalineFlatBonus: FURY_OF_THE_SMALL_EXTRA_ADRENALINE } : {}),
     ...(heightenedSenses ? { maxAdrenalineBonus: HEIGHTENED_SENSES_ADRENALINE_BONUS } : {}),
+    ...(conservationOfEnergyRefund > 0 ? { conservationOfEnergyRefund } : {}),
     ...(ultimateAdrenalineRefund > 0 ? { ultimateAdrenalineRefund } : {}),
     ...(ringOfVigour ? { ringOfVigour: true } : {}),
     // Impatient / Relentless are state-changing RNG: the rotation drivers

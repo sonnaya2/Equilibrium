@@ -153,7 +153,9 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await page.getByRole("button", { name: "Arch", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Arch", exact: true })).toBeVisible();
   await expect(page.getByText("Berserker's Fury", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Current health")).toBeVisible();
+  // BF LP controls appear only when the relic is selected.
+  await page.getByRole("button", { name: /Berserker's Fury/i }).first().click();
+  await expect(page.getByRole("spinbutton", { name: "Current HP" })).toBeVisible();
   await expect(page.getByText("Damage bonus")).toBeVisible();
 
   await page.getByRole("button", { name: "Invention", exact: true }).click();

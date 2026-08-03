@@ -175,6 +175,9 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
           basicAdrenalineFlatBonus: loadout.adrenaline.basicAdrenalineFlatBonus ?? 0,
           maxAdrenalineBonus: loadout.adrenaline.maxAdrenalineBonus ?? 0,
           ultimateAdrenalineRefund: loadout.adrenaline.ultimateAdrenalineRefund ?? 0,
+          ...(loadout.adrenaline.conservationOfEnergyRefund !== undefined
+            ? { conservationOfEnergyRefund: loadout.adrenaline.conservationOfEnergyRefund }
+            : {}),
           ringOfVigour: loadout.adrenaline.ringOfVigour === true,
           impatientRank: loadout.adrenaline.impatientRank ?? 0,
           impatientLevel20: loadout.adrenaline.impatientLevel20 === true,

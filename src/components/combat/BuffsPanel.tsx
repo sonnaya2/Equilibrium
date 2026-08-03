@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { MAX_FIREMAKING_LEVEL, RING_OF_VIGOUR_ITEM_ID } from "@/combat";
+import {
+  MAX_FIREMAKING_LEVEL,
+  formatRingOfVigourSources,
+  isRingOfVigourWorn,
+  ringOfVigourActiveSources,
+} from "@/combat";
 import { EQUIPMENT_ENCHANTMENTS, type EquipmentEnchantmentId } from "@/combat/shared/equipment";
 import {
   SLAYER_HELMET_TIERS,
@@ -31,6 +36,7 @@ import {
   BONFIRE_LOGS,
   activatePowerburstOfVitality,
   equipInSlot,
+  equipmentIdList,
   isPowerburstOfVitalityActive,
   isPowerburstOfVitalityReady,
   toggleEquipmentEnchantment,
@@ -280,9 +286,14 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
   const icyenicPicked = t7Picked === ICYENIC_FAITH_RELIC;
   const tomeEquipped = loadout.equipmentSlots.pocket === TOME_OF_THE_ICYENE_ID;
   const anachroniaUnlocked = isRegionUnlocked(build, "anachronia");
-  const ringEquipped =
-    loadout.equipmentSlots.ring === RING_OF_VIGOUR_ITEM_ID ||
-    loadout.equipmentIds.includes(RING_OF_VIGOUR_ITEM_ID);
+  // Worn = ring slot only. Unlock pins in equipmentIds must not count as equipped.
+  const slottedIds = equipmentIdList(loadout.equipmentSlots);
+  const ringEquipped = isRingOfVigourWorn(slottedIds);
+  const vigourSources = ringOfVigourActiveSources({
+    equipmentIds: slottedIds,
+    ringOfVigourPassive: loadout.buffs.ringOfVigourPassive,
+    unlockedRegions: anachroniaUnlocked ? ["anachronia"] : [],
+  });
 
   // Region removed: clear persisted passive so it cannot re-activate without Anachronia.
   useEffect(() => {
@@ -523,10 +534,19 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                 }
               />
             </div>
+            {vigourSources.length > 0 ? (
+              <p
+                className="mt-1.5 text-[11px] text-parch-300"
+                data-testid="vigour-sources"
+              >
+                {formatRingOfVigourSources(vigourSources)}
+                {vigourSources.length > 1 ? " · Does not stack." : null}
+              </p>
+            ) : null}
             {anachroniaUnlocked && ringEquipped ? (
               <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-no-stack">
                 {loadout.buffs.ringOfVigourPassive
-                  ? "Ring is equipped — keep this on if you swap rings. Effects do not stack."
+                  ? "Ring is equipped - keep this on if you swap rings. Effects do not stack."
                   : "Ring is equipped; this is optional for when you unequip it."}
               </p>
             ) : null}

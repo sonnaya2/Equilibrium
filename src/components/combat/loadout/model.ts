@@ -14,7 +14,8 @@ import {
   MONOLITH_ENERGY_EXTENDED,
   relicById,
   sanitizeSelectedRelics,
-  toggleArchaeologyRelic,
+  tryToggleArchaeologyRelic,
+  type ArchaeologyToggleResult,
 } from "@/combat/shared/archaeologyRelics";
 import { HEIGHTENED_SENSES_ADRENALINE_BONUS } from "@/combat/shared/heightenedSenses";
 import {
@@ -30,7 +31,7 @@ import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/sha
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 
-/** Setup-written combat loadout (Rotation/Analysis read). localStorage eq:loadout:v1; old shapes normalize. */
+/** Setup-written combat loadout (Rotation/Analysis read). localStorage key below; old shapes normalize. */
 
 export const EQUIPMENT_SLOTS: readonly EquipmentSlot[] = [
   "mainhand",
@@ -257,7 +258,9 @@ export interface LoadoutBuffs {
 }
 
 /**
- * Monolith relic selection.
+ * Monolith relic selection. selectedIds is the sole runtime activation source.
+ * Boolean buff fields (berserkersFury, etc.) are display mirrors derived from
+ * selectedIds after load; they never reactivate a relic at resolve time.
  * energyCap / over-budget: re-sanitized with build regions in ArchPanel persist
  * and in resolveCombatRules when loadoutStats receives unlockedRegions.
  */
@@ -266,6 +269,7 @@ export interface LoadoutArchaeology {
   energyCap: 500 | 650;
 }
 
+/** Legacy buff keys that once toggled full-modeled relics before selectedIds. */
 const FULL_ARCH_BUFF_TO_RELIC = {
   berserkersFury: "berserkers_fury",
   furyOfTheSmall: "fury_of_the_small",
@@ -275,7 +279,8 @@ const FULL_ARCH_BUFF_TO_RELIC = {
 
 type FullArchBuffKey = keyof typeof FULL_ARCH_BUFF_TO_RELIC;
 
-function buffsFromArchSelected(
+/** Compatibility/display mirrors only - always derived from selectedIds. */
+export function buffsFromArchSelected(
   selectedIds: readonly string[],
 ): Pick<LoadoutBuffs, FullArchBuffKey> {
   return {
@@ -302,7 +307,11 @@ function normalizeArchaeologySelectedIds(raw: unknown): string[] {
   return out;
 }
 
-/** Parse stored archaeology; migrate legacy full-modeled buff toggles into selectedIds. */
+/**
+ * Parse stored archaeology.
+ * Legacy true buff flags are migration input only (merged into selectedIds once).
+ * After sanitize, callers must derive buff mirrors from selectedIds.
+ */
 export function normalizeArchaeology(
   rawArch: unknown,
   rawBuffs: Partial<LoadoutBuffs>,
@@ -311,6 +320,7 @@ export function normalizeArchaeology(
     typeof rawArch === "object" && rawArch !== null ? (rawArch as Partial<LoadoutArchaeology>) : {};
   const energyCap = normalizeArchaeologyEnergyCap(raw.energyCap);
   let selectedIds = normalizeArchaeologySelectedIds(raw.selectedIds);
+  // One-shot migration: old saves stored full relics as buff booleans only.
   for (const [buffKey, relicId] of Object.entries(FULL_ARCH_BUFF_TO_RELIC) as [
     FullArchBuffKey,
     string,
@@ -328,6 +338,9 @@ export function normalizeArchaeology(
     }),
   };
 }
+
+/** Bump when normalizeLoadout needs a one-shot field migration. */
+export const LOADOUT_SCHEMA_VERSION = 2;
 
 export interface Loadout {
   style: CombatStyle;
@@ -359,6 +372,11 @@ export interface Loadout {
   weaponConfiguration: LoadoutWeaponConfiguration;
   baseDamage: BaseDamageSettings;
   startingAdrenaline: number;
+  /**
+   * Persist schema. v1 had startingAdrenaline default 0 (broke ultimates).
+   * v2 defaults open adren to 100; load migrates stored 0 -> 100 once.
+   */
+  loadoutSchemaVersion: number;
   hitCapEnabled: boolean;
   accuracy: number;
   critChance: number;
@@ -391,7 +409,10 @@ export const DEFAULT_LOADOUT: Loadout = {
   styleDamageBonus: 0,
   weaponConfiguration: "twohand",
   baseDamage: { mode: "automatic", manualValue: 1000 },
-  startingAdrenaline: 0,
+  // Combat open is full adren in almost every PvM setup; 0 made ultimates
+  // (Death's Swiftness, Sunshine, Berserk) look "broken" until Stats was touched.
+  startingAdrenaline: 100,
+  loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
   hitCapEnabled: true,
   accuracy: 100,
   critChance: 10,
@@ -757,9 +778,11 @@ export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>)
   ][]) {
     if (patch[buffKey] === undefined) continue;
     archTouched = true;
+    // Buff patch is a convenience mirror of selection; never leave booleans authoritative.
     if (patch[buffKey] === true) {
       if (!selectedIds.includes(relicId)) {
-        selectedIds = toggleArchaeologyRelic({ relicId, selectedIds, energyCap });
+        const result = tryToggleArchaeologyRelic({ relicId, selectedIds, energyCap });
+        selectedIds = result.selectedIds;
       }
     } else {
       selectedIds = selectedIds.filter((id) => id !== relicId);
@@ -776,7 +799,11 @@ export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>)
   return { ...loadout, buffs };
 }
 
-/** Replace monolith selection; keeps full-modeled buff flags in lockstep. */
+/**
+ * Replace monolith selection. Buff mirrors re-derived from selectedIds.
+ * Sanitizes for corrupt lists (repair); interactive toggles should use
+ * applyArchaeologyToggle so rejects stay explicit.
+ */
 export function withArchaeologySelection(
   loadout: Loadout,
   selectedIds: readonly string[],
@@ -794,6 +821,34 @@ export function withArchaeologySelection(
       ...loadout.buffs,
       ...buffsFromArchSelected(cleaned),
     },
+  };
+}
+
+/** Interactive relic toggle. Rejects do not mutate selection or drop neighbors. */
+export function applyArchaeologyToggle(
+  loadout: Loadout,
+  relicId: string,
+  energyCap?: 500 | 650,
+): { loadout: Loadout; result: ArchaeologyToggleResult } {
+  const cap = energyCap ?? loadout.archaeology?.energyCap ?? MONOLITH_ENERGY_DEFAULT;
+  const result = tryToggleArchaeologyRelic({
+    relicId,
+    selectedIds: loadout.archaeology?.selectedIds ?? [],
+    energyCap: cap,
+  });
+  if (!result.ok) {
+    return { loadout, result };
+  }
+  return {
+    loadout: {
+      ...loadout,
+      archaeology: { selectedIds: result.selectedIds, energyCap: cap },
+      buffs: {
+        ...loadout.buffs,
+        ...buffsFromArchSelected(result.selectedIds),
+      },
+    },
+    result,
   };
 }
 
@@ -930,6 +985,21 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       ? 120
       : 100) + (archBuffs.heightenedSenses ? HEIGHTENED_SENSES_ADRENALINE_BONUS : 0);
 
+  const rawSchemaVersion =
+    typeof (raw as { loadoutSchemaVersion?: unknown }).loadoutSchemaVersion === "number" &&
+    Number.isFinite((raw as { loadoutSchemaVersion?: number }).loadoutSchemaVersion)
+      ? Math.floor(Number((raw as { loadoutSchemaVersion: number }).loadoutSchemaVersion))
+      : 0;
+  // Pre-v2: stored 0 was the old product default, not an intentional zero-open.
+  // Check raw (not clamped) so invalid negatives still clamp to 0 without becoming 100.
+  const rawStart = raw.startingAdrenaline;
+  const startingAdrenaline =
+    typeof rawStart === "number" && Number.isFinite(rawStart)
+      ? rawSchemaVersion < 2 && rawStart === 0
+        ? Math.min(startingAdrenalineCap, DEFAULT_LOADOUT.startingAdrenaline)
+        : Math.min(startingAdrenalineCap, Math.max(0, rawStart))
+      : DEFAULT_LOADOUT.startingAdrenaline;
+
   return {
     style,
     level,
@@ -975,10 +1045,8 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
         num(rawBaseDamage?.manualValue, num(raw.base, DEFAULT_LOADOUT.baseDamage.manualValue)),
       ),
     },
-    startingAdrenaline: Math.min(
-      startingAdrenalineCap,
-      Math.max(0, num(raw.startingAdrenaline, DEFAULT_LOADOUT.startingAdrenaline)),
-    ),
+    startingAdrenaline,
+    loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
     hitCapEnabled: raw.hitCapEnabled !== false,
     accuracy: clamp(raw.accuracy, 0, 100, DEFAULT_LOADOUT.accuracy),
     critChance: clamp(raw.critChance, 0, 100, DEFAULT_LOADOUT.critChance),

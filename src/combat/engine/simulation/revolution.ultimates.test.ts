@@ -268,6 +268,26 @@ describe("ultimate cooldowns — replacement group", () => {
     expect(ticks[1]).toBeGreaterThanOrEqual(100);
     expect(ticks[1]).toBeLessThanOrEqual(102);
   });
+
+  it("greater ability id shares group CD and recasts after ready tick", () => {
+    // Ability id (greater_sunshine) differs from replacementGroup key (sunshine).
+    const ctx = createCastContext({
+      ...base,
+      abilities: ALL,
+      startingAdrenaline: 100,
+    });
+    ctx.performCast(byId("greater_sunshine"), 0, false);
+    expect(ctx.getState().cooldowns.sunshine).toBe(100);
+    expect(ctx.getState().cooldowns.greater_sunshine).toBeUndefined();
+    expect(ctx.firstLegalTick("greater_sunshine")).toBe(100);
+
+    const { summary: s } = revoMagic(["greater_sunshine"], {
+      durationTicks: 106,
+      startingAdrenaline: 100,
+    });
+    const ticks = s.casts.filter((c) => c.abilityId === "greater_sunshine").map((c) => c.tick);
+    expect(ticks, castTimeline(s.casts)).toEqual([0, 102]);
+  });
 });
 
 describe("ultimate buff windows — active ticks", () => {

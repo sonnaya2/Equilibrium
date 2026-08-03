@@ -49,17 +49,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </a>
             . This content is not endorsed by or affiliated with Jagex.
           </p>
-          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-            <span>RuneScape is a trademark of Jagex Ltd.</span>
-            <span className="text-stone-750" aria-hidden>
-              ·
-            </span>
-            <Link href="/sources" className="hover:text-parch-50">
-              Sources
-            </Link>
-            <span className="text-stone-750" aria-hidden>
-              ·
-            </span>
+          <p className="site-foot__mark">RuneScape is a trademark of Jagex Ltd.</p>
+          <nav className="site-foot__nav" aria-label="Site">
+            <Link href="/sources">Sources</Link>
             <details className="site-foot__licenses">
               <summary>Licenses</summary>
               <div className="site-foot__license-copy">
@@ -129,7 +121,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </p>
               </div>
             </details>
-          </div>
+          </nav>
         </footer>
       </body>
     </html>

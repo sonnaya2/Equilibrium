@@ -109,9 +109,10 @@ textarea {
     align-items: center;
     justify-content: center;
     margin-inline-start: auto;
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border: 1px solid var(--color-stone-750);
+    border-radius: var(--radius-sm);
     color: var(--color-parch-300);
     transition:
       color 120ms ease,
@@ -182,11 +183,12 @@ textarea {
   }
 
   .site-foot {
-    padding: 0.45rem 0.875rem;
+    padding: 0.7rem clamp(0.875rem, 2vw, 1.25rem) 0.85rem;
     border-top: 1px solid var(--color-stone-750);
     background: var(--color-stone-900);
     color: var(--color-parch-400);
     font-size: 0.8125rem;
+    line-height: 1.45;
   }
 
   .site-foot a,
@@ -196,12 +198,33 @@ textarea {
   }
 
   .site-foot a:hover,
-  .site-foot summary:hover {
+  .site-foot summary:hover,
+  .site-foot a:focus-visible,
+  .site-foot summary:focus-visible {
     color: var(--color-parch-50);
   }
 
   .site-foot__legal {
-    margin-bottom: 0.15rem;
+    margin: 0 0 0.35rem;
+    max-width: 52rem;
+  }
+
+  .site-foot__mark {
+    margin: 0 0 0.4rem;
+  }
+
+  .site-foot__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 1rem;
+  }
+
+  .site-foot__nav > a,
+  .site-foot__licenses summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
   }
 
   .site-foot__licenses {

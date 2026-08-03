@@ -1,41 +1,25 @@
 # Equilibrium
 
-Fan tool for RuneScape 3 **Leagues II: Equilibrium** (starts 10 August 2026).
+Equilibrium is an unofficial planner and combat sandbox for RuneScape 3 **Leagues II: Equilibrium**, which starts on 10 August 2026.
 
-Pick regions, Relics, and Blessings. Track tasks. Browse regional research. Run a combat calculator built on current RS3 math with league modifiers layered on. All in one place.
+It keeps the parts of league planning that normally end up spread across Wiki tabs and spreadsheets in one place: region picks, Relics, Blessings, tasks, unlocks, sourced game data, and combat testing.
 
-**Source:** [github.com/sonnaya2/Equilibrium](https://github.com/sonnaya2/Equilibrium)
+Progress is stored in the browser. There are no accounts or backend services.
 
-Unofficial, free, not for sale. Not affiliated with Jagex. RuneScape is a trademark of Jagex Ltd.
+## Current state
 
-## What you get
+The map, build planner, regional data browser, and shared build state are working. The combat section includes loadouts, individual ability calculations, manual rotations, Revolution simulation, and a bar solver. Combat coverage is still being expanded and corrected as mechanics are verified.
 
-| Page | Job |
-| --- | --- |
-| Overview | Current plan at a glance |
-| Map | Elective regions and what they open (3D board when WebGPU is available) |
-| Tasks | Browser and progress |
-| Build | Regions, Relics, Blessings |
-| Combat | Ability damage, loadout, rotation, revolution solver |
-| Data | Regional research with sources on each record |
+A few limits are intentional:
 
-Progress stays in your browser (`localStorage`). No accounts.
+- Unrevealed league content is left blank rather than guessed.
+- Some task rows are marked Catalyst placeholders until the full Equilibrium task list is published.
+- Combat currently uses a configurable generic target, not full boss phases or kill-time models.
+- The 3D map requires WebGPU. It falls back when WebGPU is unavailable.
 
-## Status
+## Run locally
 
-Works: map and region picks, build planner, data browser, wiki-sourced research with citations, combat calculator (still growing).
-
-Still rough:
-
-- Task list may use **Catalyst** stand-ins until Equilibrium’s full list lands. Those rows are marked temporary. Confirmed Equilibrium tiers and point bands stay; middle values from Catalyst stay provisional until replaced.
-- Unrevealed league content stays empty. No invented numbers.
-- Planner assumes ironman / self-sufficient play.
-- Combat uses generic targets, not full boss phases or kill-time simulators.
-- The 3D map needs a real WebGPU browser. Headless CI does not exercise it.
-
-## Run it
-
-Node **22+** (data pipeline uses built-in `node:sqlite`).
+Requires Node.js 22 or newer. The data tools use Node's built-in SQLite support.
 
 ```bash
 git clone https://github.com/sonnaya2/Equilibrium.git
@@ -44,99 +28,75 @@ npm ci
 npm run dev
 ```
 
-Open the URL Next prints (usually `http://localhost:3000`). First boot rebuilds game data into local SQLite.
+The first run rebuilds the local database and generated app data. Next.js will print the local URL, normally `http://localhost:3000`.
 
-Before a push:
+Useful checks:
 
 ```bash
+npm run audit:data
+npm run art:check
+npm run audit:architecture
 npm run typecheck
 npm run lint
+npm run format:check
 npm test
 npm run build
 ```
 
-Optional browser tests:
+Browser tests are separate:
 
 ```bash
-npm run playwright:install   # once per machine
-npm run test:e2e             # default port 3100
-npm run test:e2e:webgpu      # headed map board
+npm run playwright:install
+npm run test:e2e
+npm run test:e2e:combat
+npm run test:e2e:webgpu
 ```
 
-## Commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Dev server (rebuilds data first) |
-| `npm run build` / `npm start` | Production build / serve |
-| `npm run typecheck` / `npm run lint` | TypeScript / ESLint |
-| `npm test` | Unit tests |
-| `npm run test:combat` | Combat engine tests only |
-| `npm run test:e2e` | Playwright suite |
-| `npm run data:rebuild` | Rebuild SQLite and frontend shards |
-| `npm run audit:data` | Full data + provenance gate |
-| `npm run art:check` | Art index / provenance gate |
-| `npm run build:map` | Rebuild map plates and POI atlas |
-
-Data edits: see [CONTRIBUTING.md](./CONTRIBUTING.md) and [docs/data-platform.md](./docs/data-platform.md).
-
-## Layout
+## Repository layout
 
 ```text
 app/              Next.js routes
-src/combat/       Combat engine (no React)
-src/league/       Regions, Relics, Blessings
-src/tasks/        Task models
-src/research/     Research catalog access
-src/map/          3D map (only loaded on /map)
-src/components/   UI
-data/canonical/   Tracked JSONL build input
-data/migrations/  SQLite schema
-data/patches/     Small sourced content ops
+src/combat/       Combat engine and solver
+src/league/       Regions, Relics, Blessings, and league rules
+src/research/     Access to normalized research data
+src/tasks/        Task models and progress
+src/map/          WebGPU/Three.js map code
+src/components/   React UI
+
+data/canonical/   Tracked normalized build input
+data/migrations/  SQLite schema migrations
+data/patches/     Small sourced data changes
 asset-catalog/    Art provenance metadata
 public/game/      Game icons and art
-public/map/       Map plates and atlas
-scripts/data/     Build, validate, export
+public/map/       Map plates and map assets
+scripts/          Data, asset, map, audit, and benchmark tools
 ```
 
-Stack: Next.js App Router, TypeScript, React 19, Tailwind CSS v4, Vitest, Playwright. Map optional path: Three.js / R3F.
+The main stack is Next.js, TypeScript, React, Tailwind CSS, Vitest, and Playwright. The map uses Three.js through React Three Fiber.
 
-Combat base math lives under `src/combat/`. League rules plug in through a ruleset layer so base formulas stay testable on their own.
+## Data and sources
 
-## Data
-
-Built at compile time, not from a live CMS:
+The app does not read from a live CMS. Build data follows this path:
 
 ```text
-canonical + migrations + patches
-  → .cache/equilibrium.sqlite
-  → .generated/ shards for the app
+data/canonical + migrations + patches
+  -> .cache/equilibrium.sqlite
+  -> .generated/ app shards
 ```
 
-- Author under `data/canonical/`, `data/migrations/`, `data/patches/`.
-- Never hand-edit `data/canonical/` for one fact; write a patch, rebuild, re-export.
-- Do not commit `.cache/`, `.generated/`, or run reports.
-- Combat and league numbers carry source links. Full credits at `/sources`.
+Changes to game data should be made through a sourced patch, then rebuilt and validated. Do not edit `.cache/` or `.generated/` by hand, and do not commit them.
 
-Default authority is the RuneScape Wiki. PvME is for discovery, not a guide dump. Jagex reveals may be cited until the Wiki catches up.
+The RuneScape Wiki is the default source. Jagex material is used for new reveals and patch information when necessary. PvME and RS Analysis are used where they provide mechanics or research that is not available from the Wiki. Records keep their own source links where possible.
 
-## Licences
+See [CONTRIBUTING.md](./CONTRIBUTING.md) and [docs/data-platform.md](./docs/data-platform.md) before changing the data pipeline.
 
-| Material | Terms |
-| --- | --- |
-| Original app code | MIT — [LICENSE](./LICENSE) |
-| Wiki-derived text/data | [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) — RuneScape Wiki / Weird Gloop |
-| PvME-derived notes | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — PvME / pvme-guides |
-| Jagex art and marks | Jagex [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy) — not for sale |
+## Licensing
 
-Do not sell redistributions whose value is game art or wiki/PvME data. MIT on our code is not a free pass over those.
+- Original project code: MIT, subject to the scope described in [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
+- RuneScape Wiki-derived material: CC BY-NC-SA 3.0.
+- PvME-derived notes: CC BY-NC-SA 4.0.
+- RuneScape art, names, and marks remain Jagex property and are used under the Jagex Fan Content Policy.
 
-Full split: [NOTICE](./NOTICE). URI map: [licenses/README.md](./licenses/README.md).
+The MIT licence for the original code does not relicense Jagex media or third-party data. See [licenses/README.md](./licenses/README.md) for the short licence map.
 
-## Project notes
-
-- Use real game terms and real numbers. Skip marketing filler.
-- Do not invent unrevealed league content.
-- Other planners are fine for *ideas*; do not copy their layout, components, or wording.
-- Game art and credited Wiki media are fine here. No gen-AI product art.
-- Longer notes live under [docs/](./docs/).
+Equilibrium is free, unofficial, and not affiliated with or endorsed by Jagex. RuneScape is a trademark of Jagex Ltd.

@@ -346,8 +346,8 @@ describe("loadout archaeology persistence", () => {
 });
 
 describe("loadoutStats archaeology active limit", () => {
-  it("prefers full combat relics over energy-only when over the 3-slot limit", () => {
-    // 3 cheap fillers + berserkers_fury last; drop energy-only so BF stays active.
+  it("with unlockedRegions trims 4 relics from the end (selection order)", () => {
+    // 3 cheap + berserkers_fury last; sanitize pops last so BF is inactive.
     const four = [
       "font_of_life",
       "shadows_grace",
@@ -366,25 +366,19 @@ describe("loadoutStats archaeology active limit", () => {
     const stats = loadoutStats(rawFour, {
       unlockedRegions: ["misthalin", "morytania", "desert"],
     });
-    expect(stats.berserkersFury.active).toBe(true);
+    expect(stats.berserkersFury.active).toBe(false);
 
-    // Fury of the Small also survives when mixed with three energy-only fillers.
-    const withFotS = loadoutStats(
-      {
-        ...loadout,
-        archaeology: {
-          energyCap: 500 as const,
-          selectedIds: [
-            "font_of_life",
-            "shadows_grace",
-            "unexpected_diplomacy",
-            "fury_of_the_small",
-          ],
-        },
-        buffs: { ...loadout.buffs, furyOfTheSmall: true, berserkersFury: false },
+    const keepFury = {
+      ...loadout,
+      archaeology: {
+        energyCap: 500 as const,
+        selectedIds: ["font_of_life", "shadows_grace", "berserkers_fury"],
       },
-      { unlockedRegions: ["misthalin", "kandarin", "desert"] },
-    );
-    expect(withFotS.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
+      buffs: { ...loadout.buffs, berserkersFury: true },
+    };
+    const withFury = loadoutStats(keepFury, {
+      unlockedRegions: ["misthalin", "morytania", "desert"],
+    });
+    expect(withFury.berserkersFury.active).toBe(true);
   });
 });

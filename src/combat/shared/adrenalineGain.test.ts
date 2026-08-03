@@ -93,8 +93,8 @@ describe("FotS + Invigorating in UI calc path", () => {
   });
 });
 
-describe("sanitize keeps full-modeled adren relics over energy-only fillers", () => {
-  it("drops energy-only before Fury of the Small when over active limit", () => {
+describe("sanitize trims from the end (selection order)", () => {
+  it("pops last when over active limit, including FotS if it is last", () => {
     const kept = sanitizeSelectedRelics({
       selectedIds: [
         "font_of_life",
@@ -104,7 +104,20 @@ describe("sanitize keeps full-modeled adren relics over energy-only fillers", ()
       ],
       energyCap: 500,
     });
+    expect(kept).toEqual([
+      "font_of_life",
+      "shadows_grace",
+      "unexpected_diplomacy",
+    ]);
+    expect(kept).not.toContain("fury_of_the_small");
+  });
+
+  it("keeps FotS when it is within the first three", () => {
+    const kept = sanitizeSelectedRelics({
+      selectedIds: ["fury_of_the_small", "font_of_life", "shadows_grace"],
+      energyCap: 500,
+    });
     expect(kept).toContain("fury_of_the_small");
-    expect(kept.length).toBe(3);
+    expect(kept).toHaveLength(3);
   });
 });

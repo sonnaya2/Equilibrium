@@ -444,21 +444,7 @@ export function isRelicActive(selectedIds: readonly string[], relicId: string): 
   return selectedIds.includes(relicId);
 }
 
-/** Drop the last energy-only relic when possible so full combat relics stay active. */
-function dropLowestPriority(kept: string[]): boolean {
-  if (kept.length === 0) return false;
-  for (let i = kept.length - 1; i >= 0; i--) {
-    const relic = BY_ID.get(kept[i]!);
-    if (relic?.implementation === "energy-only") {
-      kept.splice(i, 1);
-      return true;
-    }
-  }
-  kept.pop();
-  return true;
-}
-
-/** Drop unknown ids; trim while over energyCap or active limit (prefer keeping full-modeled). */
+/** Drop unknown ids; trim from the end while over energyCap or over active limit. */
 export function sanitizeSelectedRelics(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
@@ -474,10 +460,10 @@ export function sanitizeSelectedRelics(input: {
   }
   const cap = input.energyCap;
   while (kept.length > 0 && totalEnergyUsed(kept) > cap) {
-    dropLowestPriority(kept);
+    kept.pop();
   }
   while (kept.length > MONOLITH_ACTIVE_LIMIT) {
-    dropLowestPriority(kept);
+    kept.pop();
   }
   return kept;
 }

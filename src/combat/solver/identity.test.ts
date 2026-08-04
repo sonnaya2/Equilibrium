@@ -477,10 +477,10 @@ describe("solveIdentity stamp helpers", () => {
     expect(solveIdentityFromRequest(request)).toBe(solveContextPayload(request));
   });
 
-  it("empty solveIdentity is soft-match for display; fail-closed for cache", () => {
+  it("empty solveIdentity fails match and cache (fail-closed)", () => {
     const request = sampleRequest();
     const empty = verifiedDto(request, { solveIdentity: "" });
-    expect(resultMatchesRequestIdentity(request, empty)).toBe(true);
+    expect(resultMatchesRequestIdentity(request, empty)).toBe(false);
     expect(isVerifiedCacheableResult(request, empty)).toBe(false);
   });
 });

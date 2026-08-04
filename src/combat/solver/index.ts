@@ -169,6 +169,8 @@ export {
   canonicalSolveContext,
   canonicalEvaluationContext,
   canonicalSimulationIdentity,
+  solveIdentityFromRequest,
+  resultMatchesRequestIdentity,
   isVerifiedCacheableResult,
   VERIFIED_CACHEABLE_PROOFS,
   NON_CACHEABLE_PROOFS,

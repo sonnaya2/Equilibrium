@@ -262,7 +262,7 @@ describe("combat result identity (stale-result product rule)", () => {
       ).toBe(false);
       expect(
         resultMatchesRequestIdentity(request, verifiedDto({ solveIdentity: "" })),
-      ).toBe(true);
+      ).toBe(false);
 
       expect(
         isVerifiedCacheableResult(request, verifiedDto({ solveIdentity: identity })),

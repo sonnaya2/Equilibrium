@@ -305,24 +305,20 @@ export function solveIdentityFromRequest(request: SerializableSolverRequest): st
   return stableStringify(canonicalSolveContext(request));
 }
 
-/**
- * When result.solveIdentity is non-empty, it must equal the request identity.
- * Empty/missing identity is treated as unset (display / legacy fixtures only).
- * Verified-cache admission uses isVerifiedCacheableResult (fail-closed on empty).
- */
+/** Fail-closed: non-empty stamp must equal the request identity. */
 export function resultMatchesRequestIdentity(
   request: SerializableSolverRequest,
   result: SolverResultDTO,
 ): boolean {
   const stamped = result.solveIdentity;
-  if (typeof stamped !== "string" || stamped.length === 0) return true;
+  if (typeof stamped !== "string" || stamped.length === 0) return false;
   return stamped === solveIdentityFromRequest(request);
 }
 
 /**
  * Whether a solver DTO is safe to enter the verified solve cache.
  * Cancelled / stopped / exploratory-only / non-finite / out-of-bounds must not.
- * Empty solveIdentity is never cacheable (fail-closed).
+ * Empty or mismatched solveIdentity is never cacheable (fail-closed).
  */
 export function isVerifiedCacheableResult(
   request: SerializableSolverRequest,
@@ -344,10 +340,5 @@ export function isVerifiedCacheableResult(
   if (bar.length === 0) return false;
   if (bar.length < request.minBarSize || bar.length > request.maxBarSize) return false;
 
-  // Fail-closed: require non-empty stamp matching this request.
-  const stamped = result.solveIdentity;
-  if (typeof stamped !== "string" || stamped.length === 0) return false;
-  if (stamped !== solveIdentityFromRequest(request)) return false;
-
-  return true;
+  return resultMatchesRequestIdentity(request, result);
 }

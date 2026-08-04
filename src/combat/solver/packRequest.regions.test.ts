@@ -3,6 +3,7 @@ import { DEFAULT_LOADOUT, type Loadout } from "@/components/combat/useLoadout";
 import { loadoutStats } from "@/components/combat/loadoutStats";
 import { solverSnapshotFromUi } from "@/components/combat/solverSnapshot";
 import { packSolverRequestFromUi } from "@/components/combat/useRevolutionSolver";
+import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
 import {
   emptyBuild,
   MILESTONE_REGION,
@@ -128,8 +129,14 @@ describe("packSolverRequest region modes", () => {
     const snap = solverSnapshotFromUi(stats, loadout);
     expect(snap.slayerHelmet).toBeNull();
 
+    const combatModel = toResolvedCombatModel(loadout, {
+      unlockedRegions: [...locked],
+      now: NOW,
+    });
+    expect(combatModel.modifierSources.slayerHelmet).toBeNull();
+
     const req = packSolverRequestFromUi({
-      stats,
+      combatModel,
       loadout,
       build: emptyBuild(),
       modelled: [],

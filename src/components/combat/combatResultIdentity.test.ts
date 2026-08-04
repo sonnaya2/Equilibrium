@@ -21,6 +21,7 @@ import {
 import { DEFAULT_LOADOUT, type Loadout } from "./loadout/model";
 import { loadoutStats } from "./loadoutStats";
 import { solverSnapshotFromUi } from "./solverSnapshot";
+import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 
 const NOW = 1_700_000_000_000;
@@ -57,17 +58,21 @@ function packFromLoadout(
     now,
     ...(unlockedRegions ? { unlockedRegions: [...unlockedRegions] } : {}),
   });
+  const combatModel = toResolvedCombatModel(loadout, {
+    now,
+    ...(unlockedRegions ? { unlockedRegions: [...unlockedRegions] } : {}),
+  });
   const snapshot = solverSnapshotFromUi(stats, loadout);
   const request = packSolverRequest({
-    snapshot,
-    style: loadout.style,
+    model: combatModel,
+    style: combatModel.style,
     build: emptyBuild(),
     now,
     ...(unlockedRegions
       ? { useBuildRegions: false, unlockedRegions }
       : {}),
   });
-  return { stats, snapshot, request };
+  return { stats, snapshot, request, combatModel };
 }
 
 function simIdentityString(request: ReturnType<typeof packFromLoadout>["request"]): string {

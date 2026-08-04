@@ -158,6 +158,8 @@ export {
 export {
   packSolverRequest,
   packSimBase,
+  packSimBaseFromModel,
+  resolvePackSimBase,
   type SolverPackSnapshot,
   type PackSolverRequestInput,
 } from "./packRequest";

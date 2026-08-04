@@ -8,20 +8,23 @@ import {
   simulate,
   type RotationSummary,
 } from "@/combat";
+import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
+import {
+  buildManualStatSimulationInputBase,
+  buildSimulationInputBase,
+  toHybridManualCombatModel,
+  toManualSimulateInput,
+} from "@/combat/model";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import type { CombatStyle } from "@/combat/types";
-import { MELEE_ABILITIES, withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
-import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
-import { RANGED_ABILITIES } from "@/combat/styles/ranged/abilities";
-import { MAGIC_ABILITIES } from "@/combat/styles/magic/abilities";
-import { NECROMANCY_ABILITIES, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { abilityIconPath } from "@/lib/gameArt";
 import { loadState, saveState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { CalculationAssumptions } from "./CalculationAssumptions";
-import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
+import { critDamageStats, type CalcStats } from "./loadoutStats";
+import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import {
@@ -38,26 +41,8 @@ import { uiRunFingerprint } from "./uiSimFingerprint";
 
 const STORAGE_KEY = "eq:rotation:v1";
 
-// Volley is factory-built (soul count); 3 = base Residual Soul cap.
-const NECRO_PALETTE: AbilitySpec[] = [...NECROMANCY_ABILITIES, volleyOfSouls(3)];
-
-function abilitiesForLoadout(
-  base: readonly AbilitySpec[],
-  strengthCape99: boolean | undefined,
-): AbilitySpec[] {
-  return strengthCape99
-    ? withStrengthCape99Dismember(base, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
-    : [...base];
-}
-
-// One combined registry: swapping styles mid-rotation is legal in-game, and the
-// sim handles style resources per cast.
-const ALL_ABILITIES: AbilitySpec[] = [
-  ...MELEE_ABILITIES,
-  ...RANGED_ABILITIES,
-  ...MAGIC_ABILITIES,
-  ...NECRO_PALETTE,
-];
+/** Display/palette catalogue without Strength Cape (cape applied per-run for use-build). */
+const DISPLAY_CATALOGUE = resolveAbilityCatalogue();
 
 const PALETTE_FILTERS: { id: CombatStyle; label: string }[] = [
   { id: "melee", label: "Melee" },
@@ -75,7 +60,7 @@ function formatTicks(value: number): string {
 }
 
 function abilityById(id: string): AbilitySpec | undefined {
-  return ALL_ABILITIES.find((a) => a.id === id);
+  return DISPLAY_CATALOGUE.byId.get(id);
 }
 
 function abilityName(id: string): string {
@@ -164,45 +149,72 @@ export function RotationPlanner({
     const list = Array.isArray(stored) ? stored : [];
     setQueue(
       list.filter(
-        (id): id is string => typeof id === "string" && ALL_ABILITIES.some((a) => a.id === id),
+        (id): id is string => typeof id === "string" && DISPLAY_CATALOGUE.byId.has(id),
       ),
     );
   }, []);
 
-  const setupStats = useMemo(
+  const loadoutOptions = useMemo(
     () =>
-      loadoutStats(
-        loadout,
-        useBuild
-          ? {
-              blessingPicks: build.blessingPicks,
-              relics: Object.values(build.relics).filter(Boolean),
-              unlockedRegions: unlockedRegions(build),
-            }
-          : { ruleset: "base" },
-      ),
-    [loadout, useBuild, build],
+      useBuild
+        ? {
+            blessingPicks: build.blessingPicks,
+            relics: Object.values(build.relics).filter(Boolean),
+            unlockedRegions: unlockedRegions(build),
+          }
+        : { ruleset: "base" as const },
+    [useBuild, build],
+  );
+
+  // One loadoutStats + one model, shared `now` (powerburst tick freeze).
+  const { stats: setupStats, model: loadoutCombatModel } = useMemo(
+    () => resolveLoadoutCombat(loadout, loadoutOptions),
+    [loadout, loadoutOptions],
   );
 
   const finite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
+  const manualLine = useMemo(
+    () => ({
+      base: Math.max(0, finite(base, 0)),
+      level: Math.min(Math.max(1, finite(level, 99)), 145),
+      accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100) / 100,
+      critChance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100,
+    }),
+    [base, level, accuracy, critChance],
+  );
+
+  /**
+   * Run + Optimize share this model:
+   * - Use Loadout on → full loadout resolve
+   * - Use Loadout off → hybrid (slider AD line, empty damage mods; adren/league scaffold kept)
+   */
+  const combatModel = useMemo(
+    () =>
+      useBuild
+        ? loadoutCombatModel
+        : toHybridManualCombatModel(loadoutCombatModel, manualLine),
+    [useBuild, loadoutCombatModel, manualLine],
+  );
+
   const runKey = useMemo(
     () =>
       uiRunFingerprint({
         mode: "manual",
         stats: setupStats,
         loadout,
+        combatModel,
         queue,
         autoWeave: weave,
         ammo,
         useBuild,
         manual: {
-          base: Math.max(0, finite(base, 0)),
-          level: Math.min(Math.max(1, finite(level, 99)), 145),
-          accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100),
-          critChance: Math.min(Math.max(0, finite(critChance, 10)), 100),
+          base: manualLine.base,
+          level: manualLine.level,
+          accuracy: manualLine.accuracy * 100,
+          critChance: manualLine.critChance * 100,
         },
       }),
-    [setupStats, loadout, queue, weave, ammo, useBuild, base, level, accuracy, critChance],
+    [setupStats, loadout, combatModel, queue, weave, ammo, useBuild, manualLine],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;
@@ -220,64 +232,47 @@ export function RotationPlanner({
 
   const run = () => {
     setAnalysisOpen(false);
+    const rotation = rotationOf(...queue);
+    const ammoOpt = ammo === "none" ? undefined : ammo;
     if (useBuild) {
+      const catalogue = resolveAbilityCatalogue({
+        strengthCape99: combatModel.strengthCape99,
+      });
+      const simBase = buildSimulationInputBase(combatModel, catalogue);
       setResult(
-        simulate({
-          base: setupStats.base,
-          level: setupStats.level,
-          accuracy: setupStats.dp,
-          crit: {
-            chance: setupStats.critChance,
-            disabled: setupStats.critsDisabled,
-            damageBonus: setupStats.critDamageBonus,
-          },
-          abilities: abilitiesForLoadout(ALL_ABILITIES, setupStats.strengthCape99),
-          rotation: rotationOf(...queue),
-          modifiers: (ability) => setupStats.castModifiersFor(ability),
-          adrenaline: setupStats.adrenaline,
-          procs: setupStats.procs,
-          plantedFeet: setupStats.plantedFeet,
-          preciseRank: setupStats.preciseRank,
-          conjureBasicDamageMult: setupStats.conjureBasicDamageMult,
-          conjureDurationMult: setupStats.conjureDurationMult,
-          tumekensPieces: setupStats.tumekensPieces,
-          tumekensCritEnabled: setupStats.tumekensCritEnabled,
-          equipmentEffects: setupStats.equipmentEffects,
-          league: setupStats.league,
-          context: setupStats.combatContext,
-          targetHpPercent: loadout.target?.hpPercent,
-          cap: setupStats.cap,
-          startingAdrenaline: setupStats.startingAdrenaline,
-          equipmentIds: setupStats.equipmentIds,
-          weaponConfiguration: setupStats.weaponConfiguration,
-          autoWeave: weave,
-          ammo: ammo === "none" ? undefined : ammo,
-        }),
+        simulate(
+          toManualSimulateInput(simBase, {
+            rotation,
+            autoWeave: weave,
+            ammo: ammoOpt,
+          }),
+        ),
       );
       setResultKey(runKey);
       return;
     }
-    // Manual damage numbers, but keep loadout adren economy (CoE / FotS / Invigorating / etc.).
+    // Manual-stat mode: pure slider constructor (no gear/league/mods).
+    // Revolution hybrid (adren+league scaffold) lives on combatModel for Optimize/Revo Run.
+    const catalogue = resolveAbilityCatalogue();
+    const simBase = buildManualStatSimulationInputBase(manualLine, catalogue, {
+      cap: setupStats.cap,
+      startingAdrenaline: setupStats.startingAdrenaline,
+      adrenaline: setupStats.adrenaline,
+      procs: setupStats.procs,
+    });
     setResult(
-      simulate({
-        base: Math.max(0, finite(base, 0)),
-        level: Math.min(Math.max(1, finite(level, 99)), 145),
-        accuracy: Math.min(Math.max(0, finite(accuracy, 100)), 100) / 100,
-        crit: { chance: Math.min(Math.max(0, finite(critChance, 10)), 100) / 100 },
-        abilities: ALL_ABILITIES,
-        rotation: rotationOf(...queue),
-        cap: setupStats.cap,
-        startingAdrenaline: setupStats.startingAdrenaline,
-        adrenaline: setupStats.adrenaline,
-        procs: setupStats.procs,
-        autoWeave: weave,
-        ammo: ammo === "none" ? undefined : ammo,
-      }),
+      simulate(
+        toManualSimulateInput(simBase, {
+          rotation,
+          autoWeave: weave,
+          ammo: ammoOpt,
+        }),
+      ),
     );
     setResultKey(runKey);
   };
 
-  const palette = ALL_ABILITIES.filter((a) => a.style === paletteStyle);
+  const palette = DISPLAY_CATALOGUE.catalogue.filter((a) => a.style === paletteStyle);
   const selectedVariants = new Map<string, string>();
   for (const id of queue) {
     const ability = abilityById(id);
@@ -526,7 +521,12 @@ export function RotationPlanner({
       {mode === "revolution" ? (
         <div className="combat-frame rotation-workbench">
           <CombatFrameCorners />
-          <RevolutionPanel stats={activeStats} loadout={loadout} />
+          <RevolutionPanel
+            stats={activeStats}
+            loadout={loadout}
+            combatModel={combatModel}
+            useBuild={useBuild}
+          />
         </div>
       ) : (
         <div className="combat-frame rotation-workbench rotation-manual">
@@ -565,7 +565,7 @@ export function RotationPlanner({
                         weaponConfiguration: setupStats.weaponConfiguration,
                         equipmentIds: setupStats.equipmentIds,
                         passiveIds: setupStats.equipmentEffects.passiveIds,
-                        groupPeers: ALL_ABILITIES,
+                        groupPeers: DISPLAY_CATALOGUE.catalogue,
                       })
                     : ({ available: true } as const);
                 const lockReason = !slotGate.available ? slotGate.message : undefined;

@@ -20,7 +20,7 @@ import {
 } from "./revoBarLibrary";
 import { DEFAULT_LOADOUT, type Loadout } from "./loadout/model";
 import { loadoutStats } from "./loadoutStats";
-import { solverSnapshotFromUi } from "./solverSnapshot";
+import { solverSnapshotFromResolvedModel } from "./solverSnapshot";
 import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 
@@ -61,8 +61,8 @@ function packFromLoadout(
   const combatModel = toResolvedCombatModel(loadout, {
     now,
     ...(unlockedRegions ? { unlockedRegions: [...unlockedRegions] } : {}),
-  });
-  const snapshot = solverSnapshotFromUi(stats, loadout);
+  }, stats);
+  const snapshot = solverSnapshotFromResolvedModel(combatModel);
   const request = packSolverRequest({
     model: combatModel,
     style: combatModel.style,
@@ -115,13 +115,17 @@ describe("combat result identity (stale-result product rule)", () => {
       const revoA = {
         mode: "revolution" as const,
         stats: a.stats,
-        loadout: loadoutA,
+        combatModel: a.combatModel,
         barIds: ["slice", "fury"] as const,
         durationSeconds: 60,
         style: "melee",
       };
       expect(uiRunFingerprint(revoA)).not.toBe(
-        uiRunFingerprint({ ...revoA, stats: b.stats, loadout: loadoutB }),
+        uiRunFingerprint({
+          ...revoA,
+          stats: b.stats,
+          combatModel: b.combatModel,
+        }),
       );
     });
 
@@ -308,8 +312,8 @@ describe("combat result identity (stale-result product rule)", () => {
     });
   });
 
-  describe("solverSnapshot copies CalcStats slayerHelmet without re-resolve", () => {
-    it("copies pre-resolved descriptor by reference through pack", () => {
+  describe("model pack copies pre-resolved slayerHelmet without re-resolve", () => {
+    it("copies pre-resolved descriptor through model pack", () => {
       const loadout = withLoadout({
         equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
         target: {
@@ -318,13 +322,14 @@ describe("combat result identity (stale-result product rule)", () => {
           onSlayerTask: true,
         },
       });
-      const { stats, snapshot, request } = packFromLoadout(loadout);
+      const { stats, snapshot, request, combatModel } = packFromLoadout(loadout);
       expect(stats.slayerHelmet).toMatchObject({
         tierId: "full",
         source: "equipped",
         damageMult: 1.075,
       });
-      expect(snapshot.slayerHelmet).toBe(stats.slayerHelmet);
+      expect(snapshot.slayerHelmet).toEqual(stats.slayerHelmet);
+      expect(combatModel.modifierSources.slayerHelmet).toEqual(stats.slayerHelmet);
       if (!isSerializableSimBase(request.loadout)) throw new Error("sim");
       expect(request.loadout.modifierSources.slayerHelmet).toEqual(stats.slayerHelmet);
 
@@ -337,6 +342,7 @@ describe("combat result identity (stale-result product rule)", () => {
       );
       expect(inactive.stats.slayerHelmet).toBeNull();
       expect(inactive.snapshot.slayerHelmet).toBeNull();
+      expect(inactive.combatModel.modifierSources.slayerHelmet).toBeNull();
       if (!isSerializableSimBase(inactive.request.loadout)) throw new Error("sim");
       expect(inactive.request.loadout.modifierSources.slayerHelmet).toBeNull();
     });

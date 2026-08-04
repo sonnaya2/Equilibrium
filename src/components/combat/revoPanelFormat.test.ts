@@ -5,7 +5,6 @@ import {
   type SolverResultDTO,
 } from "@/combat/solver";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
-import { loadoutStats } from "@/components/combat/loadoutStats";
 import { emptyBuild } from "@/league";
 import {
   barBoundsFromPreset,
@@ -32,7 +31,7 @@ import {
   workerRecipeGroupLabel,
 } from "./revoPanelFormat";
 import { pickBarForLoadout, revoManagedModelled, SUPPORTED_BARS } from "./revoBarResolve";
-import { solverSnapshotFromUi } from "./solverSnapshot";
+import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { packSolverRequestFromUi } from "./useRevolutionSolver";
 
 describe("revoPanelFormat", () => {
@@ -383,14 +382,14 @@ describe("bar size presets → packer", () => {
   it("fixed four-slot UI request reaches packSolverRequest", () => {
     const spy = vi.fn(packSolverRequest);
     const loadout = { ...DEFAULT_LOADOUT };
-    const stats = loadoutStats(loadout);
+    const model = toResolvedCombatModel(loadout, { now: 1_700_000_000_000 });
     const build = emptyBuild();
     const raw = barBoundsFromPreset("fixed4");
     expect(raw).toEqual({ minBarSize: 4, maxBarSize: 4 });
 
     const req = spy({
-      snapshot: solverSnapshotFromUi(stats, loadout),
-      style: loadout.style,
+      model,
+      style: model.style,
       build,
       tier: "thorough",
       profileId: "balanced",

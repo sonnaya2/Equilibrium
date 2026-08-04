@@ -5,7 +5,7 @@ import { CONSERVATION_OF_ENERGY_REFUND } from "@/combat/shared/conservationOfEne
 import { RING_OF_VIGOUR_ITEM_ID } from "@/combat/shared/ringOfVigour";
 import { isRingOfVigourWorn } from "@/combat/shared/ringOfVigour";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
-import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
+import { engineSpecs } from "@/combat/abilities/registry";
 import {
   analysisAdrenalineBreakdownRows,
   analysisAdrenalineTransaction,
@@ -24,9 +24,9 @@ import {
 const emptyLeague = resolveLeagueRules({ ruleset: "base" });
 const base: Loadout = { ...DEFAULT_LOADOUT };
 
-const berserk = MELEE_ABILITIES.find((a) => a.id === "berserk")!;
-const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
-const rend = MELEE_ABILITIES.find((a) => a.id === "rend")!;
+const berserk = engineSpecs.get("berserk")!;
+const attack = engineSpecs.get("attack")!;
+const rend = engineSpecs.get("rend")!;
 
 const special: AbilitySpec = {
   id: "instability",

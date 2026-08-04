@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { withStrengthCape99Dismember } from "../styles/melee/abilities";
+import { resolveAbilityCatalogue } from "../abilities/catalogue";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
 import {
   resetAllocationCounters,
@@ -78,9 +78,11 @@ describe("compileEvaluationContext", () => {
 
   it("applies Strength Cape Dismember once so bar lookups are pre-patched", () => {
     const pool = buildCandidatePool(catalogue, "melee");
-    const oracle = withStrengthCape99Dismember(catalogue, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS).find(
-      (a) => a.id === "dismember",
-    )!;
+    // New authority: resolveAbilityCatalogue (same helper compileEvaluationContext uses).
+    const oracle = resolveAbilityCatalogue({
+      base: catalogue,
+      strengthCape99: true,
+    }).byId.get("dismember")!;
     const compiled = compileEvaluationContext({
       style: "melee",
       pool,
@@ -89,6 +91,7 @@ describe("compileEvaluationContext", () => {
     });
     expect(compiled.strengthCape99).toBe(true);
     const patched = compiled.byId.get("dismember");
+    expect(patched?.hits).toHaveLength(dismember.hits.length + STRENGTH_CAPE_DISMEMBER_EXTRA_HITS);
     expect(patched?.hits).toHaveLength(oracle.hits.length);
     expect(patched?.hits.map((h) => h.tickOffset)).toEqual(oracle.hits.map((h) => h.tickOffset));
   });

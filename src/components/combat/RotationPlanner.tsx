@@ -201,7 +201,6 @@ export function RotationPlanner({
       uiRunFingerprint({
         mode: "manual",
         stats: setupStats,
-        loadout,
         combatModel,
         queue,
         autoWeave: weave,
@@ -214,7 +213,7 @@ export function RotationPlanner({
           critChance: manualLine.critChance * 100,
         },
       }),
-    [setupStats, loadout, combatModel, queue, weave, ammo, useBuild, manualLine],
+    [setupStats, combatModel, queue, weave, ammo, useBuild, manualLine],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;

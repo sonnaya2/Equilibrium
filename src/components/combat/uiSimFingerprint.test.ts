@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_LOADOUT, normalizeLoadout, type Loadout } from "./loadout/model";
 import { loadoutStats } from "./loadoutStats";
+import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 
 const TARGET_DEFAULTS = { defenceLevel: 80, affinity: "same" as const };
@@ -20,14 +21,21 @@ function withLoadout(patch: Partial<Loadout>): Loadout {
   });
 }
 
+function resolve(loadout: Loadout, now?: number) {
+  const opts = now != null ? { now } : {};
+  const stats = loadoutStats(loadout, opts);
+  const combatModel = toResolvedCombatModel(loadout, opts, stats);
+  return { stats, combatModel };
+}
+
 describe("uiRunFingerprint", () => {
   const baseLoadout = normalizeLoadout(DEFAULT_LOADOUT);
-  const stats = loadoutStats(baseLoadout);
+  const { stats, combatModel } = resolve(baseLoadout);
 
   const manualParts = {
     mode: "manual" as const,
     stats,
-    loadout: baseLoadout,
+    combatModel,
     queue: ["attack", "rend"] as const,
     autoWeave: true,
     ammo: "none",
@@ -41,11 +49,18 @@ describe("uiRunFingerprint", () => {
   });
 
   it("changing base invalidates fingerprint", () => {
-    const withHigherBase = {
-      ...manualParts,
-      stats: { ...stats, base: stats.base + 100 },
-    };
-    expect(uiRunFingerprint(withHigherBase)).not.toBe(uiRunFingerprint(manualParts));
+    const higher = withLoadout({
+      baseDamage: { mode: "manual", manualValue: 2_100 },
+    });
+    const { stats: higherStats, combatModel: higherModel } = resolve(higher);
+    expect(higherModel.base).not.toBe(combatModel.base);
+    expect(
+      uiRunFingerprint({
+        ...manualParts,
+        stats: higherStats,
+        combatModel: higherModel,
+      }),
+    ).not.toBe(uiRunFingerprint(manualParts));
   });
 
   it("changing queue invalidates fingerprint", () => {
@@ -62,7 +77,7 @@ describe("uiRunFingerprint", () => {
     const again = uiRunFingerprint({
       mode: "manual",
       stats,
-      loadout: baseLoadout,
+      combatModel,
       queue: ["attack", "rend"],
       autoWeave: true,
       ammo: "none",
@@ -75,7 +90,7 @@ describe("uiRunFingerprint", () => {
     const revo = {
       mode: "revolution" as const,
       stats,
-      loadout: baseLoadout,
+      combatModel,
       barIds: ["attack", "rend"] as const,
       durationSeconds: 60,
       style: "melee",
@@ -107,10 +122,10 @@ describe("uiRunFingerprint", () => {
       },
       now,
     );
-    const offStats = loadoutStats(offLoadout, { now });
-    const onStats = loadoutStats(onLoadout, { now });
-    expect(onStats.league.powerburstUntilTick).toBe(10);
-    expect(offStats.league.powerburstUntilTick).toBe(0);
+    const off = resolve(offLoadout, now);
+    const on = resolve(onLoadout, now);
+    expect(on.stats.league.powerburstUntilTick).toBe(10);
+    expect(off.stats.league.powerburstUntilTick).toBe(0);
 
     const base = {
       mode: "manual" as const,
@@ -119,8 +134,16 @@ describe("uiRunFingerprint", () => {
       ammo: "none",
       useBuild: true,
     };
-    const a = uiRunFingerprint({ ...base, stats: offStats, loadout: offLoadout });
-    const b = uiRunFingerprint({ ...base, stats: onStats, loadout: onLoadout });
+    const a = uiRunFingerprint({
+      ...base,
+      stats: off.stats,
+      combatModel: off.combatModel,
+    });
+    const b = uiRunFingerprint({
+      ...base,
+      stats: on.stats,
+      combatModel: on.combatModel,
+    });
     expect(a).not.toBe(b);
     expect(b).toContain('"powerburstUntilTick":10');
     expect(a).toContain('"powerburstUntilTick":0');
@@ -151,30 +174,34 @@ describe("uiRunFingerprint", () => {
       ammo: "none",
       useBuild: true,
     };
+    const undead = resolve(undeadLoadout);
+    const living = resolve(livingLoadout);
+    const demon = resolve(demonLoadout);
+    const nonDemon = resolve(nonDemonLoadout);
     expect(
       uiRunFingerprint({
         ...parts,
-        stats: loadoutStats(undeadLoadout),
-        loadout: undeadLoadout,
+        stats: undead.stats,
+        combatModel: undead.combatModel,
       }),
     ).not.toBe(
       uiRunFingerprint({
         ...parts,
-        stats: loadoutStats(livingLoadout),
-        loadout: livingLoadout,
+        stats: living.stats,
+        combatModel: living.combatModel,
       }),
     );
     expect(
       uiRunFingerprint({
         ...parts,
-        stats: loadoutStats(demonLoadout),
-        loadout: demonLoadout,
+        stats: demon.stats,
+        combatModel: demon.combatModel,
       }),
     ).not.toBe(
       uiRunFingerprint({
         ...parts,
-        stats: loadoutStats(nonDemonLoadout),
-        loadout: nonDemonLoadout,
+        stats: nonDemon.stats,
+        combatModel: nonDemon.combatModel,
       }),
     );
   });

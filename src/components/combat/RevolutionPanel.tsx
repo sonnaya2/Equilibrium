@@ -152,13 +152,12 @@ export function RevolutionPanel({
       uiRunFingerprint({
         mode: "revolution",
         stats,
-        loadout,
         combatModel,
         barIds: barIdsForKey,
         durationSeconds: clampRunDurationSeconds(durationSeconds),
         style: loadout.style,
       }),
-    [stats, loadout, combatModel, barIdsForKey, durationSeconds],
+    [stats, combatModel, barIdsForKey, durationSeconds, loadout.style],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;

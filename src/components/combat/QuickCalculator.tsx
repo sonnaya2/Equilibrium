@@ -5,12 +5,11 @@ import { calculateAbility } from "@/combat/pipeline/calculateAbility";
 import { calculateLeagueAbility } from "@/combat/league/damage";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CombatStyle } from "@/combat/types";
-import { MELEE_ABILITIES, type MeleeAbilitySpec } from "@/combat/styles/melee/abilities";
-import { RANGED_ABILITIES, type RangedAbilitySpec } from "@/combat/styles/ranged/abilities";
-import { MAGIC_ABILITIES, resplendentAsphyxiate } from "@/combat/styles/magic/abilities";
+import { engineSpecsForStyle } from "@/combat/abilities/registry";
+import { isMeleeAbility } from "@/combat/styles/melee/abilities";
+import { resplendentAsphyxiate } from "@/combat/styles/magic/abilities";
 import {
   MAX_SOULS,
-  NECROMANCY_ABILITIES,
   VOLLEY_MIN_SOULS,
   volleyOfSouls,
 } from "@/combat/styles/necromancy/abilities";
@@ -26,13 +25,6 @@ import { loadoutStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
-
-const STYLE_ABILITIES: Record<CombatStyle, AbilitySpec[]> = {
-  melee: MELEE_ABILITIES,
-  ranged: RANGED_ABILITIES,
-  magic: MAGIC_ABILITIES,
-  necromancy: NECROMANCY_ABILITIES,
-};
 
 const STYLE_LABELS: Record<CombatStyle, string> = {
   melee: "Melee",
@@ -53,17 +45,31 @@ function finite(value: number, fallback: number): number {
 }
 
 function firstDamagingId(style: CombatStyle): string {
-  const first = STYLE_ABILITIES[style].find((a) => a.hits.length > 0);
-  return first?.id ?? STYLE_ABILITIES[style][0]?.id ?? "attack";
+  const specs = engineSpecsForStyle(style);
+  const first = specs.find((a) => a.hits.length > 0);
+  return first?.id ?? specs[0]?.id ?? "attack";
 }
 
 /** Quick palette: damaging casts always; conjure_* (empty hits) listed as summons when present. */
 function necroPalette(souls: number): AbilitySpec[] {
   const clamped = Math.min(Math.max(VOLLEY_MIN_SOULS, Math.floor(souls)), MAX_SOULS);
-  const fromKit = NECROMANCY_ABILITIES.filter(
-    (a) => a.hits.length > 0 || a.id.startsWith("conjure_"),
+  // Registry includes factory volley_of_souls(3); rebuild with residual-souls control.
+  const fromKit = engineSpecsForStyle("necromancy").filter(
+    (a) =>
+      a.id !== "volley_of_souls" &&
+      (a.hits.length > 0 || a.id.startsWith("conjure_")),
   );
   return [...fromKit, volleyOfSouls(clamped)];
+}
+
+function paletteForStyle(style: CombatStyle, souls: number): AbilitySpec[] {
+  if (style === "necromancy") return necroPalette(souls);
+  return engineSpecsForStyle(style).filter((a) => a.hits.length > 0);
+}
+
+function abilityFromPalette(palette: readonly AbilitySpec[], id: string): AbilitySpec | undefined {
+  const byId = new Map(palette.map((a) => [a.id, a]));
+  return byId.get(id) ?? palette[0];
 }
 
 function hitBandLabel(a: AbilitySpec): string {
@@ -80,7 +86,7 @@ function abilityMeta(ability: AbilitySpec): string {
     ability.adrenaline?.gain ? `+${ability.adrenaline.gain}% adrenaline` : null,
     ability.adrenaline?.cost ? `${ability.adrenaline.cost}% adrenaline cost` : null,
     ability.cooldownSeconds ? `${ability.cooldownSeconds}s cooldown` : null,
-    (ability as RangedAbilitySpec).guaranteedCrit ? "guaranteed crit" : null,
+    ability.guaranteedCrit ? "guaranteed crit" : null,
     ability.id === "dragon_breath" ? "260–310% while Runic Charge is active" : null,
   ]
     .filter(Boolean)
@@ -119,11 +125,8 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
 
   // Quick is for damaging casts; buff-only records (e.g. Living Death) live on Rotation.
   // Necromancy: full post-CSM kit + Volley scaled by Residual Souls.
-  const palette =
-    activeStyle === "necromancy"
-      ? necroPalette(souls)
-      : STYLE_ABILITIES[activeStyle].filter((a) => a.hits.length > 0);
-  const ability = palette.find((a) => a.id === abilityId) ?? palette[0];
+  const palette = paletteForStyle(activeStyle, souls);
+  const ability = abilityFromPalette(palette, abilityId);
   const selectedId = ability?.id;
   // Same equipment hit resolution as prepareCast / rotation (MW spear bleeds, etc.).
   const equippedAbility =
@@ -134,7 +137,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
       : equippedAbility;
   const crit = {
     chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
-    guaranteed: (calculatedAbility as RangedAbilitySpec | undefined)?.guaranteedCrit,
+    guaranteed: calculatedAbility?.guaranteedCrit,
     disabled: useBuild && setup.critsDisabled,
     damageBonus: useBuild ? setup.critDamageBonus : 0,
   };
@@ -367,23 +370,23 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                     })()}
                   </dd>
                 </div>
-                {(ability as MeleeAbilitySpec).bloodlustGain ? (
+                {isMeleeAbility(ability) && ability.bloodlustGain ? (
                   <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                     <dt className="text-parch-300">Bloodlust</dt>
                     <dd className="text-right font-mono text-parch-50">
-                      +{(ability as MeleeAbilitySpec).bloodlustGain} stack
-                      {(ability as MeleeAbilitySpec).bloodlustGain! > 1 ? "s" : ""}
+                      +{ability.bloodlustGain} stack
+                      {ability.bloodlustGain > 1 ? "s" : ""}
                     </dd>
                   </div>
                 ) : null}
-                {(ability as MeleeAbilitySpec).bloodlustScale ? (
+                {isMeleeAbility(ability) && ability.bloodlustScale ? (
                   <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                     <dt className="text-parch-300">
-                      At {(ability as MeleeAbilitySpec).bloodlustScale!.threshold} Bloodlust
+                      At {ability.bloodlustScale.threshold} Bloodlust
                     </dt>
                     <dd className="text-right font-mono text-parch-50">
-                      {(ability as MeleeAbilitySpec).bloodlustScale!.band.minPct}–
-                      {(ability as MeleeAbilitySpec).bloodlustScale!.band.maxPct}% per hit
+                      {ability.bloodlustScale.band.minPct}–{ability.bloodlustScale.band.maxPct}% per
+                      hit
                     </dd>
                   </div>
                 ) : null}

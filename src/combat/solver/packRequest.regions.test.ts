@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_LOADOUT, type Loadout } from "@/components/combat/useLoadout";
 import { loadoutStats } from "@/components/combat/loadoutStats";
-import { solverSnapshotFromUi } from "@/components/combat/solverSnapshot";
 import { packSolverRequestFromUi } from "@/components/combat/useRevolutionSolver";
 import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
 import {
@@ -46,11 +45,10 @@ function pack(
     unlockedRegions?: readonly RegionId[];
   },
 ) {
-  const loadout = { ...DEFAULT_LOADOUT };
-  const stats = loadoutStats(loadout);
+  const model = toResolvedCombatModel(DEFAULT_LOADOUT, { now: NOW });
   return packSolverRequest({
-    snapshot: solverSnapshotFromUi(stats, loadout),
-    style: loadout.style,
+    model,
+    style: model.style,
     build,
     now: NOW,
     ...opts,
@@ -126,13 +124,10 @@ describe("packSolverRequest region modes", () => {
     const stats = loadoutStats(loadout, { unlockedRegions: [...locked] });
     expect(stats.slayerHelmet).toBeNull();
 
-    const snap = solverSnapshotFromUi(stats, loadout);
-    expect(snap.slayerHelmet).toBeNull();
-
     const combatModel = toResolvedCombatModel(loadout, {
       unlockedRegions: [...locked],
       now: NOW,
-    });
+    }, stats);
     expect(combatModel.modifierSources.slayerHelmet).toBeNull();
 
     const req = packSolverRequestFromUi({

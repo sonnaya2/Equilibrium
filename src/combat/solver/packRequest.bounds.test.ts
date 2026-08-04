@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
-import { loadoutStats } from "@/components/combat/loadoutStats";
-import { solverSnapshotFromUi } from "@/components/combat/solverSnapshot";
+import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
 import { emptyBuild } from "@/league";
 import { packSolverRequest } from "./packRequest";
 import { clampSolverBarSizes, MIN_SOLVER_BAR_SIZE } from "./barPolicy";
@@ -10,10 +9,10 @@ const NOW = 1_700_000_000_000;
 
 function packBounds(minBarSize?: number, maxBarSize?: number) {
   const loadout = { ...DEFAULT_LOADOUT };
-  const stats = loadoutStats(loadout);
+  const model = toResolvedCombatModel(loadout, { now: NOW });
   return packSolverRequest({
-    snapshot: solverSnapshotFromUi(stats, loadout),
-    style: loadout.style,
+    model,
+    style: model.style,
     build: emptyBuild(),
     now: NOW,
     minBarSize,

@@ -10,11 +10,11 @@ import {
   FURY_OF_THE_SMALL_ID,
 } from "@/combat/shared/furyOfTheSmall";
 import { projectSerializableSimBase } from "@/combat/model";
-import { packSimBase } from "@/combat/solver/packRequest";
+import { packSimBase, packSimBaseFromModel } from "@/combat/solver/packRequest";
 import { POWERBURST_DURATION_MS } from "@/combat";
 import { DEFAULT_LOADOUT, type Loadout } from "./loadout/model";
 import { loadoutStats } from "./loadoutStats";
-import { solverSnapshotFromUi } from "./solverSnapshot";
+import { solverSnapshotFromResolvedModel } from "./solverSnapshot";
 import { toResolvedCombatModel } from "./toResolvedCombatModel";
 
 const NOW = 1_700_000_000_000;
@@ -222,39 +222,19 @@ describe("toResolvedCombatModel", () => {
     expect(necro.weaponConfiguration).toBe("necromancy");
   });
 
-  it("projectSerializableSimBase matches packSimBase(solverSnapshotFromUi)", () => {
+  it("projectSerializableSimBase matches packSimBaseFromModel and model snapshot pack", () => {
     const loadout = withLoadout({
       perks: { ...DEFAULT_LOADOUT.perks, ultimatums: 3, lunging: 2, precise: 4 },
       buffs: { ...DEFAULT_LOADOUT.buffs, vulnerability: true },
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
       target: { ...TARGET_DEFAULTS, onSlayerTask: true, demon: true },
     });
-    const stats = loadoutStats(loadout, { now: NOW });
     const model = toResolvedCombatModel(loadout, { now: NOW });
     const fromModel = projectSerializableSimBase(model);
-    const fromSnap = packSimBase(solverSnapshotFromUi(stats, loadout));
+    const fromPack = packSimBaseFromModel(model);
+    const fromSnap = packSimBase(solverSnapshotFromResolvedModel(model));
 
-    // Crit disabled may be false vs undefined — normalize for deep compare of sim slice.
-    expect({
-      ...fromModel,
-      crit: {
-        chance: fromModel.crit.chance,
-        disabled: fromModel.crit.disabled === true,
-        damageBonus: fromModel.crit.damageBonus ?? 0,
-      },
-      plantedFeet: fromModel.plantedFeet === true,
-      strengthCape99: fromModel.strengthCape99 === true,
-      preciseRank: fromModel.preciseRank ?? 0,
-    }).toEqual({
-      ...fromSnap,
-      crit: {
-        chance: fromSnap.crit.chance,
-        disabled: fromSnap.crit.disabled === true,
-        damageBonus: fromSnap.crit.damageBonus ?? 0,
-      },
-      plantedFeet: fromSnap.plantedFeet === true,
-      strengthCape99: fromSnap.strengthCape99 === true,
-      preciseRank: fromSnap.preciseRank ?? 0,
-    });
+    expect(fromPack).toEqual(fromModel);
+    expect(fromSnap).toEqual(fromModel);
   });
 });

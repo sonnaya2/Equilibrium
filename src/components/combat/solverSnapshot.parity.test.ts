@@ -1,5 +1,5 @@
 /**
- * UI snapshot vs live loadoutStats: slayer/salve descriptors copy from CalcStats.
+ * Model → solver snapshot: slayer/salve descriptors copy from pre-resolved sources.
  */
 import { describe, expect, it } from "vitest";
 import {
@@ -8,9 +8,11 @@ import {
   MIGHTY_SLAYER_HELMET_ITEM_ID,
   resolveSlayerHelmet,
 } from "@/combat/shared/slayerHelmet";
-import { solverSnapshotFromUi } from "./solverSnapshot";
+import { packSimBase, packSimBaseFromModel } from "@/combat/solver/packRequest";
+import { solverSnapshotFromResolvedModel } from "./solverSnapshot";
 import { DEFAULT_LOADOUT, type Loadout } from "./loadout/model";
-import { loadoutStats } from "./loadoutStats";
+import { loadoutStats, type LoadoutStatsOptions } from "./loadoutStats";
+import { toResolvedCombatModel } from "./toResolvedCombatModel";
 
 function withGear(patch: Partial<Loadout>): Loadout {
   return {
@@ -32,7 +34,18 @@ function withGear(patch: Partial<Loadout>): Loadout {
   };
 }
 
-describe("solverSnapshotFromUi slayer / salve descriptors", () => {
+function modelSnap(
+  loadout: Loadout,
+  unlockedRegions?: LoadoutStatsOptions["unlockedRegions"],
+) {
+  const opts: LoadoutStatsOptions = unlockedRegions ? { unlockedRegions } : {};
+  const stats = loadoutStats(loadout, opts);
+  const model = toResolvedCombatModel(loadout, opts, stats);
+  const snap = solverSnapshotFromResolvedModel(model);
+  return { stats, model, snap };
+}
+
+describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
   it("Stand + Anachronia locked -> null / inactive", () => {
     const loadout = withGear({
       style: "melee",
@@ -40,9 +53,9 @@ describe("solverSnapshotFromUi slayer / salve descriptors", () => {
       target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
     });
     const locked = ["misthalin", "kandarin"] as const;
-    const stats = loadoutStats(loadout, { unlockedRegions: [...locked] });
-    const snap = solverSnapshotFromUi(stats, loadout);
+    const { stats, model, snap } = modelSnap(loadout, locked);
     expect(stats.slayerHelmet).toBeNull();
+    expect(model.modifierSources.slayerHelmet).toBeNull();
     expect(snap.slayerHelmet).toBeNull();
     expect(stats.globalModifiers.some((m) => m.id.startsWith("item:slayer-helmet:"))).toBe(
       false,
@@ -65,14 +78,14 @@ describe("solverSnapshotFromUi slayer / salve descriptors", () => {
       target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
     });
     const open = ["anachronia"] as const;
-    const stats = loadoutStats(loadout, { unlockedRegions: [...open] });
-    const snap = solverSnapshotFromUi(stats, loadout);
+    const { stats, model, snap } = modelSnap(loadout, open);
     expect(stats.slayerHelmet).toMatchObject({
       tierId: "corrupted",
       source: "stand",
       damageMult: 1.095,
     });
     expect(snap.slayerHelmet).toEqual(stats.slayerHelmet);
+    expect(model.modifierSources.slayerHelmet).toEqual(stats.slayerHelmet);
     expect(stats.globalModifiers.some((m) => m.id.startsWith("item:slayer-helmet:"))).toBe(true);
   });
 
@@ -82,8 +95,7 @@ describe("solverSnapshotFromUi slayer / salve descriptors", () => {
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
       target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
     });
-    const stats = loadoutStats(loadout);
-    const snap = solverSnapshotFromUi(stats, loadout);
+    const { stats, snap } = modelSnap(loadout);
     expect(stats.slayerHelmet).toMatchObject({
       tierId: "full",
       source: "equipped",
@@ -99,8 +111,7 @@ describe("solverSnapshotFromUi slayer / salve descriptors", () => {
       buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
       target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
     });
-    const stats = loadoutStats(loadout, { unlockedRegions: ["anachronia"] });
-    const snap = solverSnapshotFromUi(stats, loadout);
+    const { stats, snap } = modelSnap(loadout, ["anachronia"]);
     expect(stats.slayerHelmet).toMatchObject({
       tierId: "corrupted",
       source: "stand",
@@ -127,30 +138,29 @@ describe("solverSnapshotFromUi slayer / salve descriptors", () => {
       equipmentSlots: { helmet: CORRUPTED_SLAYER_HELMET_ITEM_ID },
       target: { defenceLevel: 80, affinity: "same" as const, onSlayerTask: true },
     };
-    const noLens = loadoutStats(
+    const noLens = modelSnap(
       withGear({
         ...base,
         buffs: { ...DEFAULT_LOADOUT.buffs, ensouledSpectralLens: false },
       }),
     );
-    expect(noLens.slayerHelmet).toBeNull();
-    expect(solverSnapshotFromUi(noLens, withGear(base)).slayerHelmet).toBeNull();
+    expect(noLens.stats.slayerHelmet).toBeNull();
+    expect(noLens.snap.slayerHelmet).toBeNull();
 
-    const withLensLoadout = withGear({
-      ...base,
-      buffs: { ...DEFAULT_LOADOUT.buffs, ensouledSpectralLens: true },
-    });
-    const withLens = loadoutStats(withLensLoadout);
-    expect(withLens.slayerHelmet).toMatchObject({
+    const withLens = modelSnap(
+      withGear({
+        ...base,
+        buffs: { ...DEFAULT_LOADOUT.buffs, ensouledSpectralLens: true },
+      }),
+    );
+    expect(withLens.stats.slayerHelmet).toMatchObject({
       tierId: "corrupted",
       source: "equipped",
     });
-    expect(solverSnapshotFromUi(withLens, withLensLoadout).slayerHelmet).toEqual(
-      withLens.slayerHelmet,
-    );
+    expect(withLens.snap.slayerHelmet).toEqual(withLens.stats.slayerHelmet);
   });
 
-  it("snapshot slayerHelmet / salve are reference-equal copies from stats", () => {
+  it("snapshot slayerHelmet / salve equal stats descriptors; pack matches model", () => {
     const loadout = withGear({
       style: "melee",
       equipmentSlots: {
@@ -164,10 +174,10 @@ describe("solverSnapshotFromUi slayer / salve descriptors", () => {
         undead: true,
       },
     });
-    const stats = loadoutStats(loadout);
-    const snap = solverSnapshotFromUi(stats, loadout);
-    expect(snap.slayerHelmet).toBe(stats.slayerHelmet);
-    expect(snap.salve).toBe(stats.salve);
+    const { stats, model, snap } = modelSnap(loadout);
+    expect(snap.slayerHelmet).toEqual(stats.slayerHelmet);
+    expect(snap.salve).toEqual(stats.salve);
     expect(stats.salve).toMatchObject({ variantId: "salve-e", damageMult: 1.2 });
+    expect(packSimBaseFromModel(model)).toEqual(packSimBase(snap));
   });
 });

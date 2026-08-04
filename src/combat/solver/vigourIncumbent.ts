@@ -103,17 +103,27 @@ export function compareVigourSearch(input: CompareVigourSearchInput): CompareVig
   });
 
   const winner = search.best;
-  const winnerScore =
-    winner && Number.isFinite(winner.robustScore) ? winner.robustScore : Number.NEGATIVE_INFINITY;
+  // Only full-rankable winners compare; exploratory/degraded scores are different scale.
+  const winnerRankable =
+    winner != null &&
+    winner.validForFinalRanking === true &&
+    winner.mode === "full" &&
+    Number.isFinite(winner.robustScore);
+  const winnerScore = winnerRankable ? winner!.robustScore : Number.NEGATIVE_INFINITY;
   const winnerIsIncumbentBar = winner != null && barsEqual(winner.bar, input.incumbentBar);
+  const bothRankable =
+    Number.isFinite(winnerScore) &&
+    winnerScore > Number.NEGATIVE_INFINITY &&
+    Number.isFinite(reevaluatedScore) &&
+    reevaluatedScore > Number.NEGATIVE_INFINITY;
 
   return {
     incumbentBar: [...input.incumbentBar],
     reevaluatedIncumbent,
     reevaluatedScore,
     search,
-    winnerBeatsIncumbent: winnerScore > reevaluatedScore + 1e-12,
-    winnerTiesIncumbent: Math.abs(winnerScore - reevaluatedScore) <= 1e-12,
+    winnerBeatsIncumbent: bothRankable && winnerScore > reevaluatedScore + 1e-12,
+    winnerTiesIncumbent: bothRankable && Math.abs(winnerScore - reevaluatedScore) <= 1e-12,
     winnerIsIncumbentBar,
   };
 }

@@ -238,14 +238,16 @@ export function planCastOutcomes(
   readyTick: number,
   auto: boolean,
 ):
-  | { error: Branch }
+  | { error: Branch; residualWeight: number; exactness: BranchExactness }
   | {
       plans: CastOutcomePlan[];
       errors: Branch[];
       residualWeight: number;
       exactness: BranchExactness;
     } {
-  if (branch.error !== undefined) return { error: branch };
+  if (branch.error !== undefined) {
+    return { error: branch, residualWeight: 0, exactness: "exact" };
+  }
 
   const candidate = Math.max(
     candidateTick(branch.rt.state, readyTick),
@@ -305,12 +307,20 @@ export function planCastOutcomes(
   }
 
   if (plans.length === 0) {
-    if (errors.length === 1) return { error: errors[0]! };
+    if (errors.length === 1) {
+      return {
+        error: errors[0]!,
+        residualWeight: advanced.residualWeight,
+        exactness: advanced.exactness,
+      };
+    }
     if (errors.length > 1) {
       // Collapse multi-reject to a single error branch carrying total weight.
       const weight = errors.reduce((s, e) => s + e.weight, 0);
       return {
         error: { weight, rt: errors[0]!.rt, error: errors[0]!.error },
+        residualWeight: advanced.residualWeight,
+        exactness: advanced.exactness,
       };
     }
     return {
@@ -318,6 +328,8 @@ export function planCastOutcomes(
         ...branch,
         error: `unable to prepare ${ability.id} at tick ${candidate}`,
       },
+      residualWeight: advanced.residualWeight,
+      exactness: advanced.exactness,
     };
   }
   return {
@@ -393,17 +405,30 @@ export function materializeCastPlans(
 
 /**
  * One cast with state-changing RNG: prepare once, commit each outcome on a clone.
- * Rejected cast -> single error branch. Multi-branch: plan then materializeCastPlans.
+ * Returns BranchSet so residual / exactness are never dropped (oracle-safe).
+ * Pre-cast advance and land-time Leng still use MAX_LIVE_BRANCHES inside
+ * advanceToBranches; residualWeight discloses any discarded mass.
  */
 export function castOutcomes(
   branch: Branch,
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
-): Branch[] {
+): BranchSet {
   const planned = planCastOutcomes(branch, ability, readyTick, auto);
-  if ("error" in planned) return [planned.error];
-  return materializeCastPlans(planned.plans, Number.MAX_SAFE_INTEGER).branches;
+  if ("error" in planned) {
+    return {
+      branches: [planned.error],
+      residualWeight: planned.residualWeight,
+      exactness: planned.exactness,
+    };
+  }
+  const material = materializeCastPlans(planned.plans, Number.MAX_SAFE_INTEGER);
+  return {
+    branches: [...planned.errors, ...material.branches],
+    residualWeight: planned.residualWeight + material.residualWeight,
+    exactness: combineExactness(planned.exactness, material.exactness),
+  };
 }
 
 export type { LengLandOutcome } from "../../styles/melee/lengRng";

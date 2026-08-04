@@ -1,6 +1,7 @@
 /**
- * Uncapped exhaustive branch expand for oracle tests.
- * Uses castOutcomes (no live-branch cap). Production must match when residualWeight is 0.
+ * Exhaustive branch expand for oracle tests via castOutcomes.
+ * Land-time Leng still caps live branches at MAX_LIVE_BRANCHES; residual is tracked.
+ * Production must match when residualWeight is 0.
  */
 import { castOutcomes, mergeBranches, type Branch } from "./branch";
 import type { SimulateInput } from "./contracts";
@@ -16,12 +17,12 @@ import { lengLandOutcomes } from "../../styles/melee/lengRng";
 export interface OracleResult {
   branches: Branch[];
   sawBranching: boolean;
+  residualWeight: number;
 }
 
 /**
- * Expand every state-changing RNG outcome for a manual rotation.
- * When merge is false, equivalent futures stay as separate leaves (full product).
- * Cast-time RNG only (Impatient/Relentless/Avernic); Leng land fork is separate.
+ * Expand state-changing RNG for a manual rotation (cast-time + Leng land forks).
+ * When merge is false, equivalent futures stay as separate leaves where possible.
  */
 export function oracleSimulate(
   input: SimulateInput,
@@ -30,6 +31,7 @@ export function oracleSimulate(
   const doMerge = opts?.merge !== false;
   let branches: Branch[] = [{ weight: 1, rt: createRuntime(input) }];
   let sawBranching = false;
+  let residualWeight = 0;
 
   for (const action of input.rotation) {
     const ability = branches[0]!.rt.byId.get(action.abilityId);
@@ -51,13 +53,14 @@ export function oracleSimulate(
         ability.id,
         ability.cooldownGroup ?? ability.replacementGroup,
       );
-      const outcomes = castOutcomes(branch, ability, ready, false);
-      if (outcomes.length > 1) sawBranching = true;
-      next.push(...outcomes);
+      const set = castOutcomes(branch, ability, ready, false);
+      residualWeight += set.residualWeight;
+      if (set.branches.length > 1) sawBranching = true;
+      next.push(...set.branches);
     }
     branches = doMerge ? mergeBranches(next) : next;
   }
-  return { branches, sawBranching };
+  return { branches, sawBranching, residualWeight };
 }
 
 export function massOf(branches: readonly Branch[]): number {

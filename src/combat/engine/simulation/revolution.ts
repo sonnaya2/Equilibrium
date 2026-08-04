@@ -108,6 +108,8 @@ export function simulateRevolution(
       const planned = planCastOutcomes(branch, ability, state.tick, ready === undefined);
       if ("error" in planned) {
         carried.push(planned.error);
+        residualWeight += planned.residualWeight;
+        exactness = combineExactness(exactness, planned.exactness);
         continue;
       }
       residualWeight += planned.residualWeight;

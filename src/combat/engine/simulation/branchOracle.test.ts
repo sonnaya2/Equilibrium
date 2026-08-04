@@ -184,8 +184,8 @@ describe("branch probability oracle", () => {
     const ability = rt.byId.get("conjure_undead_army");
     expect(ability).toBeDefined();
     const outcomes = castOutcomes({ weight: 1, rt }, ability!, 0, false);
-    expect(outcomes.length).toBeGreaterThanOrEqual(1);
-    for (const b of outcomes) {
+    expect(outcomes.branches.length).toBeGreaterThanOrEqual(1);
+    for (const b of outcomes.branches) {
       if (b.error) continue;
       const clone = snapshotRuntime(b.rt);
       expect(clone.spiritHitCounts).not.toBe(b.rt.spiritHitCounts);

@@ -130,6 +130,8 @@ function stepManualAction(
         const planned = planCastOutcomes(current, basic, current.rt.state.tick, true);
         if ("error" in planned) {
           done.push(planned.error);
+          residualWeight += planned.residualWeight;
+          exactness = combineExactness(exactness, planned.exactness);
           continue;
         }
         residualWeight += planned.residualWeight;
@@ -168,6 +170,8 @@ function stepManualAction(
     );
     if ("error" in planned) {
       carried.push(planned.error);
+      residualWeight += planned.residualWeight;
+      exactness = combineExactness(exactness, planned.exactness);
       continue;
     }
     residualWeight += planned.residualWeight;
@@ -240,6 +244,8 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
         );
         if ("error" in planned) {
           carried.push(planned.error);
+          residualWeight += planned.residualWeight;
+          exactness = combineExactness(exactness, planned.exactness);
           continue;
         }
         residualWeight += planned.residualWeight;

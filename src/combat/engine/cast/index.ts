@@ -50,6 +50,11 @@ export function prepareSimulationCast(
  * Commit a prepared cast: schedule damage, cast-start effects, advance occupancy
  * (channel hits + passive gen), completion effects, then record.
  * Adren ledger comes from applyCastResources (single RNG resolve); no re-roll.
+ *
+ * Leng Endless Frost / Boundless Chill are state-changing multi-outcome rolls and
+ * only expand on branch-aware drivers (simulate / castOutcomes / commitCastBranches).
+ * This single-path clock does not invent a deterministic Leng outcome (heaviest
+ * no-proc would silently zero stacks). Use castOutcomes when stack EV matters.
  */
 export function commitCast(
   rt: SimulationRuntime,

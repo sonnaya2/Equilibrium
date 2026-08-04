@@ -52,7 +52,12 @@ describe("revoStochasticLabels", () => {
   });
 
   it("flags approx exactness without residualWeight", () => {
-    for (const exactness of ["bounded-approximation", "truncated", "resampled"] as const) {
+    for (const exactness of [
+      "approximated",
+      "bounded-approximation",
+      "truncated",
+      "resampled",
+    ] as const) {
       expect(isApproxExactness(exactness)).toBe(true);
       expect(isApproximatedRun({ rng: { exactness } })).toBe(true);
       expect(runScoreBadge({ rng: { exactness } })).toBe("Approximated");
@@ -62,7 +67,25 @@ describe("revoStochasticLabels", () => {
     expect(isApproxExactness(undefined)).toBe(false);
   });
 
-  it("labels success-conditional renormalized totals without calling them ordinary DPS", () => {
+  it("does not treat live unconditional-all-mass partial failure as success-conditional", () => {
+    const source: StochasticLabelSource = {
+      failure: {
+        failedWeight: 0.95,
+        successfulWeight: 0.05,
+        totalsScope: "unconditional-all-mass",
+        primaryReason: "unpayable assault",
+      },
+    };
+    expect(totalsAreSuccessConditional(source)).toBe(false);
+    expect(runScoreBadge(source)).toBeNull();
+    expect(primaryDamageLabel(source)).toBe("Damage");
+    expect(primaryDpsLabel(source)).toBe("Fixed-window DPS");
+    expect(failureNote(source)).toMatch(/95%/);
+    expect(failureNote(source)).toMatch(/unconditional over all path mass/);
+    expect(failureNote(source)).not.toMatch(/renormalized over successful paths/);
+  });
+
+  it("labels legacy success-renormalized totals without calling them ordinary DPS", () => {
     const source: StochasticLabelSource = {
       failure: {
         failedWeight: 0.8,

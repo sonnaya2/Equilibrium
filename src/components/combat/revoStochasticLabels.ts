@@ -60,6 +60,7 @@ export function branchExactnessOf(source: StochasticLabelSource): string | undef
 /** Cap / sample approximations - not exact branch expansion. */
 export function isApproxExactness(exactness: string | null | undefined): boolean {
   return (
+    exactness === "approximated" ||
     exactness === "bounded-approximation" ||
     exactness === "truncated" ||
     exactness === "resampled"
@@ -72,15 +73,13 @@ export function isApproximatedRun(source: StochasticLabelSource): boolean {
 }
 
 /**
- * Engine renormalized totals over successful branches only.
- * Those numbers are not ordinary unconditional expected damage/DPS.
+ * True only when primary totals were success-renormalized (legacy / never
+ * emitted by current engine). Live partial failure uses unconditional-all-mass
+ * and must not be labeled as success-only.
  */
 export function totalsAreSuccessConditional(source: StochasticLabelSource): boolean {
   const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
-  if (scope === "successful-branches-renormalized") return true;
-  const failed = failedWeightOf(source);
-  const success = successfulWeightOf(source);
-  return failed > 0 && success > 0;
+  return scope === "successful-branches-renormalized";
 }
 
 /** Short chrome next to primary score; null when ordinary exact EV. */
@@ -105,6 +104,8 @@ export function exactnessLabel(exactness: string | null | undefined): string | n
   switch (exactness) {
     case "exact":
       return "Exact";
+    case "approximated":
+      return "Approximated";
     case "merged-exactly":
       return "Exact merge";
     case "bounded-approximation":
@@ -137,7 +138,13 @@ export function failureNote(source: StochasticLabelSource): string | null {
       success > 0 ? ` (${formatPercentMass(success)} success mass)` : "";
     return `${formatPercentMass(failed)} of paths failed${successBit}; damage and DPS are renormalized over successful paths only.`;
   }
+  const success = successfulWeightOf(source);
+  const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
   const reason = source.failure?.primaryReason ?? source.rng?.failure?.primaryReason;
+  if (scope === "unconditional-all-mass" && success > 0) {
+    const base = `${formatPercentMass(failed)} of paths failed (${formatPercentMass(success)} success); damage and DPS stay unconditional over all path mass.`;
+    return reason ? `${base} ${reason}.` : base;
+  }
   return reason
     ? `${formatPercentMass(failed)} of paths failed (${reason}).`
     : `${formatPercentMass(failed)} of paths failed.`;
@@ -205,6 +212,8 @@ export function stochasticAssumptionRows(
   const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
   if (scope === "successful-branches-renormalized") {
     rows.push(["Totals scope", "Successful paths only (renormalized)"]);
+  } else if (scope === "unconditional-all-mass") {
+    rows.push(["Totals scope", "Unconditional over all path mass"]);
   } else if (scope === "none" && failed > 0) {
     rows.push(["Totals scope", "None (all paths failed)"]);
   }

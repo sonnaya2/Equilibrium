@@ -80,6 +80,43 @@ describe("compareVigourSearch", () => {
     }
   });
 
+  it("does not claim winner beats incumbent when only degraded exploratory best exists", () => {
+    const residualFail: EvaluateFn = ({ mode }) => {
+      const useFull = mode === "full" || mode === "finalize";
+      if (useFull) {
+        return {
+          score: Number.NEGATIVE_INFINITY,
+          finite: false,
+          mode: "full",
+          exploratory: false,
+          validForFinalRanking: false,
+        };
+      }
+      return {
+        score: 999,
+        finite: true,
+        mode: "search",
+        exploratory: true,
+        validForFinalRanking: false,
+      };
+    };
+
+    const out = compareVigourSearch({
+      incumbentBar: ["c", "a"],
+      staleIncumbentScore: 1e9,
+      evaluate: residualFail,
+      pool,
+      sizeBounds: { min: 1, max: 2 },
+      tier: "thorough",
+      seed: 2,
+      config: { evaluationBudget: 20, fullShortlistSize: 2 },
+    });
+
+    expect(out.reevaluatedScore).toBe(Number.NEGATIVE_INFINITY);
+    expect(out.winnerBeatsIncumbent).toBe(false);
+    expect(out.winnerTiesIncumbent).toBe(false);
+  });
+
   it("reports winnerIsIncumbentBar when search keeps the reevaluated bar", () => {
     // Force evaluate to prefer the incumbent composition on full score.
     const incumbentBar = ["a", "b", "c"] as const;

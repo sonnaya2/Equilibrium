@@ -197,12 +197,13 @@ describe("Leng land probability branching", () => {
       weaponConfiguration: "dualwield",
     });
     const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
-    const branches = castOutcomes({ weight: 1, rt }, attack, 0, false);
-    expect(expectedStacks(branches)).toBeCloseTo(
+    const set = castOutcomes({ weight: 1, rt }, attack, 0, false);
+    expect(set.residualWeight).toBeLessThanOrEqual(1e-12);
+    expect(expectedStacks(set.branches)).toBeCloseTo(
       LENG_ENDLESS_FROST_CHANCE + LENG_BOUNDLESS_CHILL_CHANCE,
       10,
     );
-    const chillMass = branches
+    const chillMass = set.branches
       .filter((b) => b.rt.state.melee.frostbladesUntilTick > 0)
       .reduce((s, b) => s + b.weight, 0);
     expect(chillMass).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
@@ -225,14 +226,13 @@ describe("Leng land probability branching", () => {
       for (let i = 0; i < priorBasics; i++) {
         const next = [];
         for (const b of branches) {
-          next.push(
-            ...castOutcomes(
-              b,
-              MELEE_ABILITIES.find((a) => a.id === "attack")!,
-              b.rt.state.tick,
-              false,
-            ),
+          const set = castOutcomes(
+            b,
+            MELEE_ABILITIES.find((a) => a.id === "attack")!,
+            b.rt.state.tick,
+            false,
           );
+          next.push(...set.branches);
         }
         branches = next;
       }

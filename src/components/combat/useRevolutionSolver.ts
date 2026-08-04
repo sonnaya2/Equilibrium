@@ -23,6 +23,7 @@ import {
   type WorkerPlan,
 } from "@/combat/solver";
 import { REGION_IDS, type BuildState } from "@/league";
+import type { ResolvedCombatModel } from "@/combat/model";
 import type { CalcStats } from "./loadoutStats";
 import {
   loadBarLibrary,
@@ -49,7 +50,6 @@ import {
   type BarSizePresetId,
   type SolverStoppedPreview,
 } from "./revoPanelFormat";
-import { solverSnapshotFromUi } from "./solverSnapshot";
 import type { Loadout } from "./useLoadout";
 
 /** Build initial SolverProgress agent strip from a worker plan. */
@@ -140,8 +140,11 @@ export function createProgressRafGate(
 }
 
 export type UseRevolutionSolverArgs = {
+  /** Display / library only — not used for combat field packing. */
   stats: CalcStats;
   loadout: Loadout;
+  /** Host-resolved combat model; sole source of sim fields for packing. */
+  combatModel: ResolvedCombatModel;
   build: BuildState;
   modelled: AbilitySpec[];
   onActiveBar: (ids: string[] | null) => void;
@@ -149,7 +152,7 @@ export type UseRevolutionSolverArgs = {
 };
 
 type MaterialSolveInputs = {
-  stats: CalcStats;
+  combatModel: ResolvedCombatModel;
   loadout: Loadout;
   build: BuildState;
   modelled: AbilitySpec[];
@@ -164,12 +167,11 @@ function packFromMaterial(
   opts?: { seed?: number; now?: number },
 ): SerializableSolverRequest {
   const bounds = barBoundsFromPreset(m.barSizePreset);
-  // Helmet / salve / arch: from m.stats only (loadoutStats used build unlocks).
-  // Snapshot is copy-from-stats; pool regions never re-gate passives.
-  // unlockedRegions below: ability pool eligibility only.
+  // Combat fields only from ResolvedCombatModel — never re-derive from Loadout.
+  // unlockedRegions below: ability pool eligibility only (not passives).
   return packSolverRequest({
-    snapshot: solverSnapshotFromUi(m.stats, m.loadout),
-    style: m.loadout.style,
+    model: m.combatModel,
+    style: m.combatModel.style,
     build: m.build,
     tier: m.solverTier,
     profileId: m.solverProfile,
@@ -187,6 +189,7 @@ function packFromMaterial(
 export function useRevolutionSolver({
   stats,
   loadout,
+  combatModel,
   build,
   modelled,
   onActiveBar,
@@ -219,7 +222,7 @@ export function useRevolutionSolver({
   const latestProgressRef = useRef<SolverProgress | null>(null);
   const sessionIdentityRef = useRef<string | null>(null);
   const materialRef = useRef<MaterialSolveInputs>({
-    stats,
+    combatModel,
     loadout,
     build,
     modelled,
@@ -231,7 +234,7 @@ export function useRevolutionSolver({
   const solverResultRef = useRef<SolverResultDTO | null>(null);
 
   materialRef.current = {
-    stats,
+    combatModel,
     loadout,
     build,
     modelled,
@@ -249,7 +252,7 @@ export function useRevolutionSolver({
       solveContextPayload(
         packFromMaterial(
           {
-            stats,
+            combatModel,
             loadout,
             build,
             modelled,
@@ -261,7 +264,7 @@ export function useRevolutionSolver({
           { seed: 1 },
         ),
       ),
-    [stats, loadout, build, modelled, solverTier, solverProfile, limitToRegions, barSizePreset],
+    [combatModel, loadout, build, modelled, solverTier, solverProfile, limitToRegions, barSizePreset],
   );
 
   const liveIdentityRef = useRef(liveIdentity);

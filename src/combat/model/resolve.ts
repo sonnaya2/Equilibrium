@@ -1,0 +1,129 @@
+/**
+ * Assemble an immutable ResolvedCombatModel from domain-neutral host input.
+ */
+import { STANDARD_HIT_CAP } from "../core/hitCaps";
+import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
+import { resolveModifierSourcesFromHost } from "./modifierSources";
+
+function freezeDeep<T>(value: T): T {
+  if (value === null || typeof value !== "object") return value;
+  if (Object.isFrozen(value)) return value;
+  if (Array.isArray(value)) {
+    for (const item of value) freezeDeep(item);
+    return Object.freeze(value) as T;
+  }
+  const obj = value as Record<string, unknown>;
+  for (const key of Object.keys(obj)) {
+    freezeDeep(obj[key]);
+  }
+  return Object.freeze(value);
+}
+
+function copyEquipmentEffects(
+  effects: HostCombatResolveInput["equipmentEffects"],
+): HostCombatResolveInput["equipmentEffects"] {
+  return {
+    activation: effects.activation,
+    passiveIds: [...effects.passiveIds],
+    enchantments: [...effects.enchantments],
+    weaponClass: effects.weaponClass,
+    defenderEquipped: effects.defenderEquipped,
+    passage: { ...effects.passage },
+    amZiFlatDamage: effects.amZiFlatDamage,
+    amHejDamageBonus: effects.amHejDamageBonus,
+    vestments: { ...effects.vestments },
+  };
+}
+
+/**
+ * Single factory: host-resolved facts → frozen ResolvedCombatModel.
+ * Does not import Loadout or run loadout stages.
+ */
+export function buildResolvedCombatModel(input: HostCombatResolveInput): ResolvedCombatModel {
+  const modifierSources = resolveModifierSourcesFromHost(input);
+  const diag = input.diagnostics;
+  const model: ResolvedCombatModel = {
+    style: input.style,
+    base: input.base,
+    level: input.level,
+    accuracy: input.accuracy,
+    crit: {
+      chance: input.crit.chance,
+      disabled: input.crit.disabled,
+      damageBonus: input.crit.damageBonus,
+    },
+    equipmentIds: [...input.equipmentIds],
+    equipmentEffects: copyEquipmentEffects(input.equipmentEffects),
+    weaponConfiguration: input.weaponConfiguration,
+    modifierSources: {
+      ...modifierSources,
+      setCounts: [...modifierSources.setCounts].map(([id, n]) => [id, n] as const),
+      slayer: { ...modifierSources.slayer },
+      target: { ...modifierSources.target },
+      slayerHelmet: modifierSources.slayerHelmet
+        ? { ...modifierSources.slayerHelmet }
+        : null,
+      salve: modifierSources.salve ? { ...modifierSources.salve } : null,
+    },
+    adrenaline: input.adrenaline ? { ...input.adrenaline } : {},
+    procs: input.procs ? { ...input.procs } : {},
+    plantedFeet: input.plantedFeet === true,
+    strengthCape99: input.strengthCape99 === true,
+    preciseRank: input.preciseRank ?? 0,
+    conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
+    conjureDurationMult: input.conjureDurationMult ?? 1,
+    tumekensPieces: input.tumekensPieces ?? 0,
+    // Explicit boolean only — undefined means off (adapter always passes host value).
+    tumekensCritEnabled: input.tumekensCritEnabled === true,
+    target: {
+      hpPercent: input.targetHpPercent,
+      demon: input.target?.demon,
+      dragon: input.target?.dragon,
+      undead: input.target?.undead,
+    },
+    league: {
+      ruleset: input.league.ruleset,
+      blessings: [...input.league.blessings],
+      blessingIds: [...input.league.blessingIds],
+      relics: [...(input.league.relics ?? [])],
+      totalArmour: input.league.totalArmour,
+      maximumLife: input.league.maximumLife,
+      powerburstUntilTick: Math.max(0, Math.floor(input.league.powerburstUntilTick ?? 0)),
+      targetTiles: input.league.targetTiles,
+    },
+    context: input.context
+      ? { ...input.context }
+      : { style: input.style, ruleset: input.league.ruleset, targetTiles: input.league.targetTiles },
+    cap: input.cap
+      ? { cap: input.cap.cap, bypass: input.cap.bypass === true }
+      : { cap: STANDARD_HIT_CAP, bypass: false },
+    startingAdrenaline: input.startingAdrenaline ?? 0,
+    diagnostics: {
+      slayerHelmet: diag.slayerHelmet ? { ...diag.slayerHelmet } : null,
+      salve: diag.salve ? { ...diag.salve } : null,
+      berserkersFury: { ...diag.berserkersFury },
+      powerburstRemainingTicks: Math.max(0, Math.floor(diag.powerburstRemainingTicks)),
+      ringOfVigourActive: diag.ringOfVigourActive === true,
+      ringOfVigourSources: [...diag.ringOfVigourSources],
+      archaeologySelectedIds: [...diag.archaeologySelectedIds],
+      maxAdrenaline: diag.maxAdrenaline,
+    },
+  };
+  return freezeDeep(model);
+}
+
+export function isResolvedCombatModel(value: unknown): value is ResolvedCombatModel {
+  if (value === null || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  return (
+    typeof v.style === "string" &&
+    typeof v.base === "number" &&
+    typeof v.level === "number" &&
+    typeof v.accuracy === "number" &&
+    v.modifierSources !== undefined &&
+    v.equipmentEffects !== undefined &&
+    v.league !== undefined &&
+    v.diagnostics !== undefined &&
+    Array.isArray(v.equipmentIds)
+  );
+}

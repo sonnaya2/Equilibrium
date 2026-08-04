@@ -20,6 +20,7 @@ import {
   packSolverRequestFromUi,
   seedProgressFromPlan,
 } from "./useRevolutionSolver";
+import { toResolvedCombatModel } from "./toResolvedCombatModel";
 
 /**
  * Hook ownership stays in useRevolutionSolver; settlement + seed-plan policy are pure
@@ -319,7 +320,7 @@ describe("live identity (pack+payload; progress is string compare)", () => {
   } = {}) => {
     const loadout = { ...DEFAULT_LOADOUT, style: overrides.style ?? DEFAULT_LOADOUT.style };
     return {
-      stats: loadoutStats(loadout),
+      combatModel: toResolvedCombatModel(loadout),
       loadout,
       build: emptyBuild(),
       modelled: [] as never[],
@@ -522,7 +523,7 @@ describe("save gate + completed-result stale", () => {
 
   it("degraded final cannot write verified recent; cacheable can", () => {
     const request = packSolverRequestFromUi({
-      stats: loadoutStats(DEFAULT_LOADOUT),
+      combatModel: toResolvedCombatModel(DEFAULT_LOADOUT),
       loadout: DEFAULT_LOADOUT,
       build: emptyBuild(),
       modelled: [],

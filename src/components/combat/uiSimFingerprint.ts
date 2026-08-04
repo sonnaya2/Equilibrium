@@ -5,8 +5,10 @@
 import {
   canonicalSimulationIdentity,
   packSimBase,
+  packSimBaseFromModel,
   stableStringify,
 } from "@/combat/solver";
+import type { ResolvedCombatModel } from "@/combat/model";
 import type { CalcStats } from "./loadoutStats";
 import type { Loadout } from "./loadout/model";
 import { solverSnapshotFromUi } from "./solverSnapshot";
@@ -14,6 +16,8 @@ import { solverSnapshotFromUi } from "./solverSnapshot";
 type SharedRunParts = {
   stats: CalcStats;
   loadout: Loadout;
+  /** Preferred: same model as Manual/Revo/solver (identity-aligned). */
+  combatModel?: ResolvedCombatModel;
 };
 
 export type ManualRunFingerprintParts = SharedRunParts & {
@@ -40,10 +44,15 @@ export type RevolutionRunFingerprintParts = SharedRunParts & {
 
 export type UiRunFingerprintParts = ManualRunFingerprintParts | RevolutionRunFingerprintParts;
 
-function simulationCore(stats: CalcStats, loadout: Loadout): unknown {
-  // Regions already baked into stats (loadoutStats); snapshot does not re-gate.
-  const snapshot = solverSnapshotFromUi(stats, loadout);
-  const simBase = packSimBase(snapshot);
+function simulationCore(
+  stats: CalcStats,
+  loadout: Loadout,
+  combatModel?: ResolvedCombatModel,
+): unknown {
+  // Prefer model projection (same as solver pack); compat via CalcStats snapshot.
+  const simBase = combatModel
+    ? packSimBaseFromModel(combatModel)
+    : packSimBase(solverSnapshotFromUi(stats, loadout));
   return {
     simulation: canonicalSimulationIdentity(simBase),
     // Fury bonus is in modifierSources; life points for honesty if current/temp max drift.
@@ -59,7 +68,7 @@ function simulationCore(stats: CalcStats, loadout: Loadout): unknown {
  * Cosmetic UI state (analysis open, cast expand) is intentionally excluded.
  */
 export function uiRunFingerprint(parts: UiRunFingerprintParts): string {
-  const core = simulationCore(parts.stats, parts.loadout);
+  const core = simulationCore(parts.stats, parts.loadout, parts.combatModel);
   if (parts.mode === "manual") {
     return stableStringify({
       mode: "manual",

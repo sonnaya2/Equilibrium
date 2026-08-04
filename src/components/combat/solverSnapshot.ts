@@ -1,15 +1,85 @@
 /**
- * UI -> combat-domain adapter for Revolution solver packing.
+ * UI -> combat-domain adapters for Revolution solver packing.
  * Keeps CalcStats / Loadout types out of src/combat/solver.
  *
- * Helmet / salve / arch: copy from pre-resolved CalcStats only (never re-resolve).
- * Region gates for those passives belong in loadoutStats(unlockedRegions(build)).
- * Ability pool regions are packSolverRequest / useBuildRegions, not this adapter.
+ * Preferred: ResolvedCombatModel (host already resolved helmet/salve/arch/RoV).
+ * Compat: solverSnapshotFromUi maps CalcStats+Loadout → same snapshot shape.
  */
+import type { ResolvedCombatModel } from "@/combat/model";
+import type { SolverPackSnapshot } from "@/combat/solver";
+import { serializeLeague } from "@/combat/solver";
 import type { CalcStats } from "./loadoutStats";
 import type { Loadout } from "./loadout/model";
-import { serializeLeague, type SolverPackSnapshot } from "@/combat/solver";
 
+/**
+ * Preferred adapter: copy only pre-resolved model fields.
+ * No re-derive from raw Loadout perks/slots/buffs.
+ */
+export function solverSnapshotFromResolvedModel(
+  model: ResolvedCombatModel,
+): SolverPackSnapshot {
+  const sources = model.modifierSources;
+  return {
+    base: model.base,
+    level: model.level,
+    accuracy: model.accuracy,
+    crit: {
+      chance: model.crit.chance,
+      disabled: model.crit.disabled,
+      damageBonus: model.crit.damageBonus,
+    },
+    adrenaline: model.adrenaline,
+    procs: model.procs,
+    plantedFeet: model.plantedFeet,
+    strengthCape99: model.strengthCape99,
+    preciseRank: model.preciseRank,
+    conjureBasicDamageMult: model.conjureBasicDamageMult,
+    conjureDurationMult: model.conjureDurationMult,
+    tumekensPieces: model.tumekensPieces,
+    tumekensCritEnabled: model.tumekensCritEnabled,
+    equipmentEffects: model.equipmentEffects,
+    league: {
+      ...model.league,
+      blessingIds: [...model.league.blessingIds],
+      relics: [...(model.league.relics ?? [])],
+      powerburstUntilTick: Math.max(0, Math.floor(model.league.powerburstUntilTick ?? 0)),
+    },
+    context: model.context,
+    targetHpPercent: model.target.hpPercent,
+    cap: model.cap,
+    startingAdrenaline: model.startingAdrenaline,
+    equipmentIds: model.equipmentIds,
+    weaponConfiguration: model.weaponConfiguration,
+    // Precomputed sources only — pack must not re-scan slots for these.
+    setCounts: [...sources.setCounts].map(([id, n]) => [id, n] as const),
+    vulnerability: sources.vulnerability === true,
+    styleCurseId: sources.styleCurseId ?? "none",
+    amZiFlatDamage: sources.amZiFlatDamage ?? 0,
+    amHejDamageBonus: sources.amHejDamageBonus ?? 0,
+    slayer: {
+      demon: sources.slayer.demon ?? 0,
+      dragon: sources.slayer.dragon ?? 0,
+      undead: sources.slayer.undead ?? 0,
+    },
+    target: {
+      demon: sources.target.demon,
+      dragon: sources.target.dragon,
+      undead: sources.target.undead,
+    },
+    slayerHelmet: sources.slayerHelmet ?? null,
+    salve: sources.salve ?? null,
+    ultimatums: sources.ultimatums ?? 0,
+    lunging: sources.lunging ?? 0,
+    berserkersFuryBonus: sources.berserkersFuryBonus ?? 0,
+  };
+}
+
+/**
+ * Temporary compatibility wrapper for tests / fingerprints still on CalcStats.
+ * Prefer solverSnapshotFromResolvedModel / packSimBaseFromModel.
+ *
+ * Helmet / salve / arch: copy from pre-resolved CalcStats only (never re-resolve).
+ */
 export function solverSnapshotFromUi(
   stats: CalcStats,
   loadout: Loadout,

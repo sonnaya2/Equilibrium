@@ -321,10 +321,11 @@ describe("verified save + identity helpers", () => {
     ).toBe(false);
   });
 
-  it("recentLibraryVerifiedFields: degraded cannot verified recent; cacheable can", () => {
+  it("recentLibraryVerifiedFields: degraded cannot verified recent; cacheable can", async () => {
     const loadout = { ...DEFAULT_LOADOUT };
+    const { toResolvedCombatModel } = await import("./toResolvedCombatModel");
     const request = packSolverRequestFromUi({
-      stats: loadoutStats(loadout),
+      combatModel: toResolvedCombatModel(loadout),
       loadout,
       build: emptyBuild(),
       modelled: [],
@@ -406,11 +407,11 @@ describe("bar size presets → packer", () => {
     expect(productBarSizeFloor()).toBe(4);
   });
 
-  it("packSolverRequestFromUi passes fixed4 bounds into the packer", () => {
+  it("packSolverRequestFromUi passes fixed4 bounds into the packer", async () => {
     const loadout = { ...DEFAULT_LOADOUT };
-    const stats = loadoutStats(loadout);
+    const { toResolvedCombatModel } = await import("./toResolvedCombatModel");
     const req = packSolverRequestFromUi({
-      stats,
+      combatModel: toResolvedCombatModel(loadout),
       loadout,
       build: emptyBuild(),
       modelled: [],

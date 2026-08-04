@@ -2,7 +2,6 @@ import type { BuildState, RegionId } from "@/league";
 import { REGION_IDS, unlockedRegions } from "@/league";
 import type { BlessingPath } from "@/league/blessings";
 import { secondsToTicks } from "../core/ticks";
-import { equippedSetCounts } from "../shared/equipment";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
 import type { AdrenalineRules, ProcRules } from "../engine/simulation/contracts";
 import type { HitCapRule } from "../core/hitCaps";
@@ -12,7 +11,6 @@ import { revoManagedSlots } from "../data/specs";
 import { engineSpecs } from "../abilities/registry";
 import {
   defaultSerializableRequest,
-  emptyModifierSources,
   type AuthoredSeedBar,
   type SerializableLeagueRules,
   type SerializableModifierSources,
@@ -23,6 +21,9 @@ import {
 import type { ObjectiveProfileId, ObjectiveWeights } from "./contracts";
 import { ABSOLUTE_MAX_BAR_SIZE, clampSolverBarSizes, MIN_SOLVER_BAR_SIZE } from "./barPolicy";
 import { TIER_HORIZON_SECONDS } from "./solve";
+import type { ResolvedCombatModel } from "../model/contracts";
+import { resolveModifierSourcesFromHost } from "../model/modifierSources";
+import { projectSerializableSimBase } from "../model/simulationInput";
 
 /**
  * Neutral combat-domain snapshot for solver packing.
@@ -73,7 +74,16 @@ export interface SolverPackSnapshot {
 }
 
 export interface PackSolverRequestInput {
-  snapshot: SolverPackSnapshot;
+  /**
+   * Preferred: already-resolved combat model (no UI re-derive).
+   * When set, loadout sim base is projected from the model; snapshot is ignored.
+   */
+  model?: ResolvedCombatModel;
+  /**
+   * Temporary / test path: neutral snapshot (may reassemble modifierSources).
+   * Required when model is omitted.
+   */
+  snapshot?: SolverPackSnapshot;
   style: CombatStyle;
   build: BuildState;
   tier?: SolverSearchTier;
@@ -97,44 +107,22 @@ export interface PackSolverRequestInput {
 }
 
 function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifierSources {
-  const setCounts: (readonly [string, number])[] =
-    snapshot.setCounts != null
-      ? [...snapshot.setCounts]
-      : [
-          ...equippedSetCounts({
-            equipmentSlots: snapshot.equipmentSlots,
-            equipmentIds: [...snapshot.equipmentIds],
-          }).entries(),
-        ].map(([setId, pieces]) => [setId, pieces] as const);
-
-  return {
-    ...emptyModifierSources(),
-    vulnerability: snapshot.vulnerability === true,
-    styleCurseId: snapshot.styleCurseId ?? "none",
-    amZiFlatDamage: snapshot.amZiFlatDamage ?? 0,
-    amHejDamageBonus: snapshot.amHejDamageBonus ?? 0,
-    setCounts,
-    slayer: {
-      demon: snapshot.slayer?.demon ?? 0,
-      dragon: snapshot.slayer?.dragon ?? 0,
-      undead: snapshot.slayer?.undead ?? 0,
-    },
-    target: {
-      demon: snapshot.target?.demon,
-      dragon: snapshot.target?.dragon,
-      undead: snapshot.target?.undead,
-    },
-    slayerHelmet: snapshot.slayerHelmet ?? null,
-    salve: snapshot.salve ?? null,
-    ultimatums: snapshot.ultimatums ?? 0,
-    lunging: snapshot.lunging ?? 0,
-    berserkersFuryBonus:
-      typeof snapshot.berserkersFuryBonus === "number" &&
-      Number.isFinite(snapshot.berserkersFuryBonus) &&
-      snapshot.berserkersFuryBonus > 0
-        ? snapshot.berserkersFuryBonus
-        : 0,
-  };
+  return resolveModifierSourcesFromHost({
+    setCounts: snapshot.setCounts,
+    equipmentSlots: snapshot.equipmentSlots,
+    equipmentIds: snapshot.equipmentIds,
+    vulnerability: snapshot.vulnerability,
+    styleCurseId: snapshot.styleCurseId,
+    amZiFlatDamage: snapshot.amZiFlatDamage,
+    amHejDamageBonus: snapshot.amHejDamageBonus,
+    slayer: snapshot.slayer,
+    target: snapshot.target,
+    slayerHelmet: snapshot.slayerHelmet,
+    salve: snapshot.salve,
+    ultimatums: snapshot.ultimatums,
+    lunging: snapshot.lunging,
+    berserkersFuryBonus: snapshot.berserkersFuryBonus,
+  });
 }
 
 /** Pack a structured-clone-safe sim base from a neutral combat snapshot. */
@@ -167,6 +155,24 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     weaponConfiguration: snapshot.weaponConfiguration,
     modifierSources: modifierSourcesFrom(snapshot),
   };
+}
+
+/**
+ * Preferred pack path: ResolvedCombatModel already holds modifierSources + league freeze.
+ * No re-derive from equipment slots / Loadout perks.
+ */
+export function packSimBaseFromModel(model: ResolvedCombatModel): SerializableRevolutionSimBase {
+  return projectSerializableSimBase(model);
+}
+
+/** Resolve request loadout from model (preferred) or snapshot (compat). */
+export function resolvePackSimBase(input: {
+  model?: ResolvedCombatModel;
+  snapshot?: SolverPackSnapshot;
+}): SerializableRevolutionSimBase {
+  if (input.model) return packSimBaseFromModel(input.model);
+  if (input.snapshot) return packSimBase(input.snapshot);
+  throw new Error("packSolverRequest requires model or snapshot");
 }
 
 function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
@@ -203,8 +209,11 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     input.maxBarSize ?? ABSOLUTE_MAX_BAR_SIZE,
   );
 
+  const simBase = resolvePackSimBase(input);
+  const ruleset = input.model?.league.ruleset ?? input.snapshot?.league.ruleset ?? "base";
+
   return defaultSerializableRequest({
-    loadout: packSimBase(input.snapshot),
+    loadout: simBase,
     style,
     durationTicks: Math.max(1, secondsToTicks(durationSeconds)),
     exploreDurationTicks: Math.max(1, secondsToTicks(exploreSeconds)),
@@ -219,7 +228,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     disabledAbilityIds: input.disabledAbilityIds,
     unlockedRegions: regions as RegionId[],
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],
-    ruleset: input.snapshot.league.ruleset,
+    ruleset,
     now,
     authoredSeedBars: staticSeedBars(style),
     userBar: input.userBar,

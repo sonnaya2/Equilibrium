@@ -6,15 +6,21 @@ import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { simulateRevolution as runRevolution } from "@/combat/engine/simulation/revolution";
 import { secondsToTicks } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
-import { withStrengthCape99Dismember } from "@/combat/styles/melee/abilities";
-import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "@/combat/shared/perks";
+import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
+import {
+  buildSimulationInputBase,
+  resolveRevolutionBar,
+  toRevolutionInput,
+} from "@/combat/model";
 import { preferredAgentCount } from "@/combat/solver";
 import type { CalcStats } from "./loadoutStats";
+import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
 import type { Loadout } from "./useLoadout";
-import { useBuild } from "@/league/useBuild";
+import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { unlockedRegions } from "@/league";
+import type { ResolvedCombatModel } from "@/combat/model";
 import {
   barOptionLabel,
   pickBarForLoadout,
@@ -47,11 +53,20 @@ function clampRunDurationSeconds(raw: number): number {
 export function RevolutionPanel({
   stats,
   loadout,
+  combatModel: combatModelProp,
+  useBuild: _useLoadoutBuild = true,
 }: {
   stats: CalcStats;
   loadout: Loadout;
+  /**
+   * Run-aligned combat model (full loadout or hybrid manual).
+   * Parent must pass the same model used for Optimize packing.
+   */
+  combatModel?: ResolvedCombatModel;
+  /** UI chrome only; model already encodes use-build vs hybrid. */
+  useBuild?: boolean;
 }) {
-  const { build } = useBuild();
+  const { build } = useLeagueBuild();
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
@@ -119,24 +134,40 @@ export function RevolutionPanel({
     () => (activeBarIds?.length ? activeBarIds : modelled.map((a) => a.id)),
     [activeBarIds, modelled],
   );
+  /**
+   * Parent should pass run-aligned model (full loadout or hybrid manual).
+   * Fallback: full loadout resolve (tests / isolated mount).
+   */
+  const combatModel = useMemo(() => {
+    if (combatModelProp) return combatModelProp;
+    return resolveLoadoutCombat(loadout, {
+      blessingPicks: build.blessingPicks,
+      relics: Object.values(build.relics).filter(Boolean),
+      unlockedRegions: regions,
+    }).model;
+  }, [combatModelProp, loadout, build, regions]);
+
   const runKey = useMemo(
     () =>
       uiRunFingerprint({
         mode: "revolution",
         stats,
         loadout,
+        combatModel,
         barIds: barIdsForKey,
         durationSeconds: clampRunDurationSeconds(durationSeconds),
         style: loadout.style,
       }),
-    [stats, loadout, barIdsForKey, durationSeconds],
+    [stats, loadout, combatModel, barIdsForKey, durationSeconds],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;
 
+  // Solver always packs the same combatModel as Run (use-build or hybrid).
   const solver = useRevolutionSolver({
     stats,
     loadout,
+    combatModel,
     build,
     modelled,
     onActiveBar,
@@ -169,45 +200,21 @@ export function RevolutionPanel({
     const durationTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
     setShowAllCasts(false);
     setAnalysisOpen(false);
+    // Cape from model (same freeze as sim base / solver pack).
+    const catalogue = resolveAbilityCatalogue({
+      strengthCape99: combatModel.strengthCape99,
+    });
+    const bar = resolveRevolutionBar(catalogue, modelled);
+    // Full loadout and hybrid manual both go through the shared builder.
+    const simBase = buildSimulationInputBase(combatModel, catalogue);
     setResult(
-      runRevolution({
-        base: stats.base,
-        level: stats.level,
-        accuracy: stats.dp,
-        crit: {
-          chance: stats.critChance,
-          disabled: stats.critsDisabled,
-          damageBonus: stats.critDamageBonus,
-        },
-        abilities: stats.strengthCape99
-          ? withStrengthCape99Dismember(
-              [...ENGINE_SPECS.values(), ...modelled],
-              STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
-            )
-          : [...ENGINE_SPECS.values(), ...modelled],
-        bar: stats.strengthCape99
-          ? withStrengthCape99Dismember(modelled, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
-          : modelled,
-        style: simStyle,
-        durationTicks,
-        modifiers: (ability) => stats.castModifiersFor(ability),
-        adrenaline: stats.adrenaline,
-        procs: stats.procs,
-        plantedFeet: stats.plantedFeet,
-        preciseRank: stats.preciseRank,
-        conjureBasicDamageMult: stats.conjureBasicDamageMult,
-        conjureDurationMult: stats.conjureDurationMult,
-        tumekensPieces: stats.tumekensPieces,
-        tumekensCritEnabled: stats.tumekensCritEnabled,
-        equipmentEffects: stats.equipmentEffects,
-        league: stats.league,
-        context: stats.combatContext,
-        targetHpPercent: loadout.target?.hpPercent,
-        cap: stats.cap,
-        startingAdrenaline: stats.startingAdrenaline,
-        equipmentIds: stats.equipmentIds,
-        weaponConfiguration: stats.weaponConfiguration,
-      }),
+      runRevolution(
+        toRevolutionInput(simBase, {
+          bar,
+          style: simStyle,
+          durationTicks,
+        }),
+      ),
     );
     setResultKey(runKey);
   };

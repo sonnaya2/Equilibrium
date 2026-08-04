@@ -2,12 +2,12 @@
  * Request-scoped compiled evaluation context.
  * Ability catalogue, byId index, Strength Cape Dismember patch - once per solve.
  * See docs/solver-compiled-context-design.md.
+ *
+ * Lower-level merge/cape/index lives in abilities/catalogue (shared with Manual/Revo).
  */
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier } from "../types";
-import { mapAbilitiesById } from "../engine/runtime/runtime";
-import { withStrengthCape99Dismember } from "../styles/melee/abilities";
-import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
+import { resolveAbilityCatalogue } from "../abilities/catalogue";
 import { noteAbilityMapRebuild, noteCatalogueArrayRebuild } from "../profiling/allocation";
 import type { CandidatePool, RevolutionEvalRequest } from "./contracts";
 
@@ -52,17 +52,6 @@ export interface CompileEvaluationContextInput {
   readonly strengthCape99?: boolean;
 }
 
-function mapBasicsByStyle(
-  abilities: readonly AbilitySpec[],
-): Map<AbilitySpec["style"], AbilitySpec> {
-  const basicByStyle = new Map<AbilitySpec["style"], AbilitySpec>();
-  for (const ability of abilities) {
-    if (!ability.autoAttack || basicByStyle.has(ability.style)) continue;
-    basicByStyle.set(ability.style, ability);
-  }
-  return basicByStyle;
-}
-
 /**
  * Merge sim catalogue + pool (pool wins on id), apply Strength Cape once,
  * build readonly byId / basicByStyle. Call once per solve session.
@@ -71,26 +60,21 @@ export function compileEvaluationContext(
   input: CompileEvaluationContextInput,
 ): CompiledEvaluationContext {
   noteAbilityMapRebuild();
-  const abilityMap = new Map<string, AbilitySpec>();
-  for (const ability of input.catalogue) abilityMap.set(ability.id, ability);
-  for (const ability of input.pool.byId.values()) {
-    abilityMap.set(ability.id, ability as AbilitySpec);
-  }
-
   noteCatalogueArrayRebuild();
-  const strengthCape99 = input.strengthCape99 === true;
-  const merged = [...abilityMap.values()];
-  const catalogue = strengthCape99
-    ? withStrengthCape99Dismember(merged, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
-    : merged;
+  // Pool overlays win on id — same as prior Map set order.
+  const resolved = resolveAbilityCatalogue({
+    base: input.catalogue,
+    overlays: [...input.pool.byId.values()] as AbilitySpec[],
+    strengthCape99: input.strengthCape99,
+  });
 
   return {
     style: input.style,
     pool: input.pool,
-    catalogue,
-    byId: mapAbilitiesById(catalogue),
-    basicByStyle: mapBasicsByStyle(catalogue),
-    strengthCape99,
+    catalogue: resolved.catalogue,
+    byId: resolved.byId,
+    basicByStyle: resolved.basicByStyle,
+    strengthCape99: resolved.strengthCape99,
   };
 }
 

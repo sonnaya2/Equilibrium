@@ -112,6 +112,10 @@ export const solveFromRequest: SolveFn = async (
     finalizeTotal: 0,
     scoringLabel: undefined,
     scoringBarPreview: undefined,
+    lastEmitEvaluations: 0,
+    lastEmitMs: 0,
+    lastEmittedBestExploratory: Number.NEGATIVE_INFINITY,
+    lastEmittedBestFull: Number.NEGATIVE_INFINITY,
     ...(profile.enabled ? { profile } : {}),
   };
   const seenBars = new Set<string>();

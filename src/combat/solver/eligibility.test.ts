@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { buildCandidatePool } from "./candidatePool";
-import { canAdd, exclusiveKey, validateBarEligibility } from "./eligibility";
+import { canAdd, createEligibilityMemo, exclusiveKey, validateBarEligibility } from "./eligibility";
 
 function spec(partial: Partial<AbilitySpec> & Pick<AbilitySpec, "id" | "name">): AbilitySpec {
   return {
@@ -164,5 +164,81 @@ describe("igneous passive pool filtering", () => {
     });
     expect(withZuk.ids).toContain("death_skulls_igneous");
     expect(withZuk.ids).not.toContain("death_skulls");
+  });
+});
+
+describe("eligibility session memo", () => {
+  it("returns identical outcomes with and without memo", () => {
+    const pool = buildCandidatePool(catalogue, "melee", { includePartial: true });
+    const bars: readonly (readonly string[])[] = [
+      ["a", "b"],
+      ["fury", "greater_fury"],
+      ["partial"],
+      ["a", "a"],
+      ["missing"],
+      ["cleave"],
+    ];
+    const baseOpts = { includePartial: false as const, size: { min: 1, max: 10 } };
+    const memo = createEligibilityMemo(pool, baseOpts);
+
+    for (const bar of bars) {
+      const direct = validateBarEligibility(bar, pool, baseOpts);
+      const memoized = validateBarEligibility(bar, pool, { ...baseOpts, memo });
+      expect(memoized).toEqual(direct);
+      // Second call must match (cache hit path).
+      expect(validateBarEligibility(bar, pool, { ...baseOpts, memo })).toEqual(direct);
+    }
+    expect(memo.cache.hits).toBe(bars.length);
+    expect(memo.cache.misses).toBe(bars.length);
+  });
+
+  it("does not reuse results when includePartial differs", () => {
+    const pool = buildCandidatePool(catalogue, "melee", { includePartial: true });
+    const memo = createEligibilityMemo(pool, { includePartial: false });
+    const withPartialOff = validateBarEligibility(["partial"], pool, {
+      includePartial: false,
+      memo,
+    });
+    expect(withPartialOff.some((i) => i.code === "partial-support")).toBe(true);
+
+    // Same memo, different options: must skip cache (optionKey mismatch).
+    const withPartialOn = validateBarEligibility(["partial"], pool, {
+      includePartial: true,
+      memo,
+    });
+    expect(withPartialOn).toEqual([]);
+    // Only the first call (matching optionKey) is cached.
+    expect(memo.cache.size).toBe(1);
+  });
+
+  it("skips memo when pool identity differs", () => {
+    const poolA = buildCandidatePool(catalogue, "melee", { includePartial: true });
+    const poolB = buildCandidatePool(catalogue, "melee", { includePartial: true });
+    const memo = createEligibilityMemo(poolA, { includePartial: true });
+    validateBarEligibility(["a", "b"], poolA, { includePartial: true, memo });
+    expect(memo.cache.size).toBe(1);
+    expect(memo.cache.hits).toBe(0);
+
+    // Different pool object: uncached path, no poison of poolA cache.
+    const issues = validateBarEligibility(["a", "b"], poolB, { includePartial: true, memo });
+    expect(issues).toEqual([]);
+    expect(memo.cache.size).toBe(1);
+    expect(memo.cache.hits).toBe(0);
+  });
+
+  it("weapon option is part of the memo binding", () => {
+    const pool = buildCandidatePool(catalogue, "melee", { includePartial: true });
+    const memo = createEligibilityMemo(pool, { weaponConfiguration: "dualwield" });
+    const dual = validateBarEligibility(["cleave"], pool, {
+      weaponConfiguration: "dualwield",
+      memo,
+    });
+    expect(dual.some((i) => i.code === "weapon-requirement")).toBe(true);
+    const twohand = validateBarEligibility(["cleave"], pool, {
+      weaponConfiguration: "twohand",
+      memo,
+    });
+    // twohand uses mismatched optionKey so runs fresh; must not return dual result.
+    expect(twohand.some((i) => i.code === "weapon-requirement")).toBe(false);
   });
 });

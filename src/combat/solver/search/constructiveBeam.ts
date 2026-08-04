@@ -2,6 +2,7 @@ import type { ScoredBar } from "../contracts";
 import { remainingCandidates } from "../eligibility";
 import { barDistance, diverseSelect } from "../diversity";
 import { noteBeamChild } from "../profiling";
+import { barKey } from "../fingerprint";
 import { compareScored, insertAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
@@ -14,7 +15,7 @@ function partialBar(state: SearchState, bar: readonly string[]): ScoredBar {
   const profileId = state.config.profileId ?? "balanced";
   return {
     bar: [...bar],
-    fingerprint: bar.join("\0"),
+    fingerprint: barKey(bar),
     robustScore: Number.NEGATIVE_INFINITY,
     minDpm: 0,
     weightedMean: 0,
@@ -65,6 +66,9 @@ async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promi
   while (state.canEval()) {
     const children: ScoredBar[] = [];
     let grew = false;
+    // Insert-at-all-positions can reach the same bar via different parents/slots.
+    // One tryEval per fingerprint per generation; parents still re-enter the beam.
+    const seenChildKeys = new Set<string>();
 
     for (const parent of beam) {
       if (!state.canEval()) break;
@@ -81,7 +85,10 @@ async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promi
         for (const pos of positions) {
           if (!state.canEval()) break;
           const next = insertAt(parent.bar, pos, a.id);
-          noteBeamChild(next.join("\0"));
+          const key = barKey(next);
+          if (seenChildKeys.has(key)) continue;
+          seenChildKeys.add(key);
+          noteBeamChild(key);
           if (next.length < state.sizeBounds.min) {
             children.push(partialBar(state, next));
             grew = true;

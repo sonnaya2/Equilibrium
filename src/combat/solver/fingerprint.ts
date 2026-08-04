@@ -6,10 +6,18 @@ import {
 } from "./contracts";
 import { noteFingerprintJoin } from "./profiling";
 
-/** Ordered bar identity - slot order matters. */
+/**
+ * Canonical ordered bar identity (NUL separators). Pure; no profiling.
+ * Single join helper for search visited sets, tryEval cache keys, beam, neighbors.
+ */
+export function barKey(bar: readonly string[]): string {
+  return bar.join("\0");
+}
+
+/** Ordered bar identity - slot order matters. Counts fingerprint joins when profiling. */
 export function fingerprintBar(bar: Bar): string {
   noteFingerprintJoin();
-  return bar.join("\0");
+  return barKey(bar);
 }
 
 /** Deterministic JSON with sorted object keys at every level. */
@@ -42,6 +50,11 @@ function stringify(value: unknown): string {
 
 export interface EvaluationKeyParts {
   bar: Bar;
+  /**
+   * Precomputed {@link barKey} for `bar`. When set, skips a second join
+   * (and the profiling counter that {@link fingerprintBar} would bump).
+   */
+  barKey?: string;
   /** Opaque evaluation context (loadout, target, league, horizon, profile…). */
   context?: unknown;
   profileId?: string;
@@ -54,11 +67,12 @@ export interface EvaluationKeyParts {
 
 /** Cache key for a bar evaluation - includes schema, objective version, and mode. */
 export function fingerprintEvaluationKey(parts: EvaluationKeyParts): string {
+  const barFp = parts.barKey ?? fingerprintBar(parts.bar);
   return [
     `v${SOLVER_SCHEMA_VERSION}`,
     `ov${parts.objectiveVersion ?? OBJECTIVE_VERSION}`,
     `mode=${parts.mode ?? "search"}`,
-    fingerprintBar(parts.bar),
+    barFp,
     parts.profileId ?? "",
     parts.horizonTicks === undefined ? "" : String(parts.horizonTicks),
     stableStringify(parts.customWeights ?? null),

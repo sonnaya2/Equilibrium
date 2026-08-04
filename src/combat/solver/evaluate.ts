@@ -1,8 +1,6 @@
 import { TICK_SECONDS } from "../core/ticks";
 import { simulateRevolution, type RevolutionInput } from "../engine/simulation/revolution";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import { withStrengthCape99Dismember } from "../styles/melee/abilities";
-import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
 import type {
   CandidatePoolOptions,
   ExclusionReason,
@@ -10,9 +8,12 @@ import type {
   RevolutionEvalRequest,
   ScoreEvalMode,
 } from "./contracts";
-import { validateBarEligibility } from "./eligibility";
+import {
+  compileEvaluationContextFromEvalRequest,
+  type CompiledEvaluationContext,
+} from "./compiledContext";
+import { validateBarEligibility, type EligibilityMemo } from "./eligibility";
 import { MIN_RANKABLE_HORIZON_TICKS, scoreSummary } from "./objective";
-import { noteAbilityMapRebuild, noteCatalogueArrayRebuild } from "../profiling/allocation";
 
 export type {
   ObjectiveProfileId,
@@ -20,6 +21,13 @@ export type {
   RevolutionBarEvaluation,
   RevolutionEvalRequest,
 } from "./contracts";
+
+/** Session-only fields; not part of the stable contracts surface. */
+export type RevolutionEvalRequestWithSession = RevolutionEvalRequest & {
+  eligibilityMemo?: EligibilityMemo;
+  /** Prebuilt catalogue / byId from createEvaluateFn; skips per-eval rebuild. */
+  compiled?: CompiledEvaluationContext;
+};
 
 function exploratoryDpm(totalExpected: number, durationTicks: number): number {
   const minutes = (durationTicks * TICK_SECONDS) / 60;
@@ -63,9 +71,21 @@ function failEval(
 
  * Robust objective failure is never laundered into a successful robust score.
  */
-export function evaluateRevolutionBar(request: RevolutionEvalRequest): RevolutionBarEvaluation {
-  const { bar, style, durationTicks, pool, sim, profileId, customWeights, includePartial, size } =
-    request;
+export function evaluateRevolutionBar(
+  request: RevolutionEvalRequestWithSession,
+): RevolutionBarEvaluation {
+  const {
+    bar,
+    style,
+    durationTicks,
+    pool,
+    sim,
+    profileId,
+    customWeights,
+    includePartial,
+    size,
+    eligibilityMemo,
+  } = request;
 
   const reasons: ExclusionReason[] = [];
   const simFields = sim as Omit<RevolutionInput, "bar" | "style" | "durationTicks">;
@@ -90,6 +110,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
       weaponConfiguration,
       equipmentIds,
       passiveIds,
+      memo: eligibilityMemo,
     }),
   );
 
@@ -97,9 +118,14 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
     return failEval(request, reasons);
   }
 
+  const compiled: CompiledEvaluationContext =
+    request.compiled ?? compileEvaluationContextFromEvalRequest(request);
+
   const resolved: AbilitySpec[] = [];
   for (const id of bar) {
-    const ability = pool.byId.get(id) as AbilitySpec | undefined;
+    const ability =
+      (compiled.byId.get(id) as AbilitySpec | undefined) ??
+      (pool.byId.get(id) as AbilitySpec | undefined);
     if (!ability) {
       reasons.push({
         code: "unknown-id",
@@ -111,29 +137,12 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
     resolved.push(ability);
   }
 
-  // Allocation hotspot: rebuilds a fresh Map from sim catalogue + pool + bar
-  // on every evaluateRevolutionBar call (once per solver bar evaluation).
-  noteAbilityMapRebuild();
-  const abilityMap = new Map<string, AbilitySpec>();
-  for (const ability of simFields.abilities) abilityMap.set(ability.id, ability);
-  for (const ability of pool.byId.values()) {
-    abilityMap.set(ability.id, ability as AbilitySpec);
-  }
-  for (const ability of resolved) abilityMap.set(ability.id, ability);
-
-  noteCatalogueArrayRebuild();
-  const strengthCape99 = (sim as { strengthCape99?: boolean }).strengthCape99 === true;
-  const catalogue = strengthCape99
-    ? withStrengthCape99Dismember([...abilityMap.values()], STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
-    : [...abilityMap.values()];
-  const resolvedBar = strengthCape99
-    ? withStrengthCape99Dismember(resolved, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)
-    : resolved;
-
+  // Catalogue + Strength Cape already applied in compiled context
+  // (allocation notes live in compileEvaluationContext).
   const summary = simulateRevolution({
     ...simFields,
-    abilities: catalogue,
-    bar: resolvedBar,
+    abilities: compiled.catalogue as AbilitySpec[],
+    bar: resolved,
     style,
     durationTicks,
   });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SOLVER_SCHEMA_VERSION } from "./contracts";
-import { fingerprintBar, fingerprintEvaluationKey, stableStringify } from "./fingerprint";
+import { barKey, fingerprintBar, fingerprintEvaluationKey, stableStringify } from "./fingerprint";
 import { EvalCache } from "./cache";
 
 describe("fingerprintBar", () => {
@@ -21,6 +21,34 @@ describe("fingerprintBar", () => {
     expect(fingerprintBar(["", ""])).toBe("\0");
   });
 });
+
+describe("barKey", () => {
+  it("is stable and order-sensitive (NUL join)", () => {
+    expect(barKey(["wrack", "sonic_wave", "asphyxiate"])).toBe("wrack\0sonic_wave\0asphyxiate");
+    expect(barKey(["a", "b"])).toBe("a\0b");
+    expect(barKey(["a", "b"])).not.toBe(barKey(["b", "a"]));
+    expect(barKey([])).toBe("");
+    expect(barKey([""])).toBe("");
+    expect(barKey(["", ""])).toBe("\0");
+  });
+
+  it("matches fingerprintBar identity without requiring profiling", () => {
+    const bar = ["berserk", "assault", "meteor_strike"] as const;
+    expect(barKey(bar)).toBe(fingerprintBar(bar));
+    // same input always same key
+    expect(barKey(bar)).toBe(barKey([...bar]));
+  });
+
+  it("fingerprintEvaluationKey reuses precomputed barKey without a second join shape", () => {
+    const bar = ["a", "b"] as const;
+    const key = barKey(bar);
+    const withPre = fingerprintEvaluationKey({ bar, barKey: key, mode: "search", profileId: "balanced" });
+    const without = fingerprintEvaluationKey({ bar, mode: "search", profileId: "balanced" });
+    expect(withPre).toBe(without);
+    expect(withPre).toContain(key);
+  });
+});
+
 
 describe("stableStringify", () => {
   it("sorts object keys", () => {

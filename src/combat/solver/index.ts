@@ -42,6 +42,7 @@ export {
 export { createRng, type Rng } from "./rng";
 
 export {
+  barKey,
   fingerprintBar,
   stableStringify,
   fingerprintEvaluationKey,
@@ -95,11 +96,21 @@ export {
   exclusiveKey,
   canAdd,
   remainingCandidates,
+  createEligibilityMemo,
+  eligibilityOptionKey,
   type EligibilityOptions,
+  type EligibilityMemo,
 } from "./eligibility";
 
 export { buildCandidatePool, indexPool, poolAbilityFromSpec } from "./candidatePool";
 export { evaluateRevolutionBar } from "./evaluate";
+export {
+  compileEvaluationContext,
+  compileEvaluationContextFromEvalRequest,
+  type CompiledEvaluationContext,
+  type CompiledAbilityRegistry,
+  type CompileEvaluationContextInput,
+} from "./compiledContext";
 
 export { barDistance, diverseSelect } from "./diversity";
 export { buildSeeds, normalizeAuthoredSeed, type SeedOptions } from "./seeds";

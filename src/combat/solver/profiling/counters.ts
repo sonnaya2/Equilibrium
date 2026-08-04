@@ -174,7 +174,7 @@ export function noteNeighborBatch(
   p.neighborGenerated += neighbors.length;
   const seen = new Set<string>();
   for (let i = 0; i < neighbors.length; i++) {
-    const key = neighbors[i]!.join("\0");
+    const key = neighbors[i]!.join("\0"); // must match barKey()
     if (seen.has(key)) {
       p.neighborDeduped += 1;
       p.neighborDuplicateSkipped += 1;

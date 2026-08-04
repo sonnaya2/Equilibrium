@@ -17,6 +17,8 @@ import {
   lengLandTableFor,
   type CompiledLengLandTable,
 } from "../../styles/melee/lengRng";
+import { MAX_SOULS } from "../../styles/necromancy/abilities";
+import { residualSoulCapFor } from "../../styles/necromancy/effects";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -133,6 +135,12 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   ) {
     throw new RangeError(`targetHpPercent outside 0-100: ${input.targetHpPercent}`);
   }
+  if (
+    input.startingResidualSouls != null &&
+    (!Number.isFinite(input.startingResidualSouls) || input.startingResidualSouls < 0)
+  ) {
+    throw new RangeError(`bad startingResidualSouls: ${input.startingResidualSouls}`);
+  }
   // Solver compiled context may pass prebuilt maps (request-invariant).
   // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).
   const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
@@ -143,6 +151,31 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     hasPassive(equipment, "leng-endless-frost"),
     hasPassive(equipment, "leng-boundless-chill"),
   );
+  // Soulbound lantern from equipped ids only - never invent from requested souls.
+  const soulboundLantern =
+    input.equipmentIds?.some((id) => id === "item:soulbound-lantern") === true;
+  let state = newRotationState({
+    adrenaline: input.startingAdrenaline,
+    adrenalineCap,
+    naturalInstinctUntilTick: input.naturalInstinctUntilTick,
+    league:
+      hasBlessing(input.league, "avernic-rampage") || hasBlessing(input.league, "striking-light"),
+    ringOfVigour: input.adrenaline?.ringOfVigour === true,
+    lantern: soulboundLantern,
+  });
+  if (input.startingResidualSouls != null) {
+    const requested = Math.floor(input.startingResidualSouls);
+    const resources = state.necromancy.resources;
+    const cap = Math.min(MAX_SOULS, residualSoulCapFor(resources));
+    const souls = Math.min(cap, Math.max(0, requested));
+    state = {
+      ...state,
+      necromancy: {
+        ...state.necromancy,
+        resources: { ...resources, residualSouls: souls },
+      },
+    };
+  }
   return {
     input,
     detailLevel: resolveDetailLevel(input.detailLevel),
@@ -151,14 +184,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     basicByStyle,
     lengLandTable,
     queue: new EventQueue<SimulationRuntime>(),
-    state: newRotationState({
-      adrenaline: input.startingAdrenaline,
-      adrenalineCap,
-      naturalInstinctUntilTick: input.naturalInstinctUntilTick,
-      league:
-        hasBlessing(input.league, "avernic-rampage") || hasBlessing(input.league, "striking-light"),
-      ringOfVigour: input.adrenaline?.ringOfVigour === true,
-    }),
+    state,
     casts: [],
     perAbility: {},
     damageByTick: {},

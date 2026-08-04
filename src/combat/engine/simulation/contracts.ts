@@ -107,6 +107,11 @@ export interface SimulateInput {
   targetHpPercent?: number;
   /** Optional pre-active Natural Instinct window for Jaws adrenaline. */
   naturalInstinctUntilTick?: number;
+  /**
+   * Explicit residual souls at tick 0 (Analysis Volley control).
+   * Absent = engine default 0. Clamped 0..cap in createRuntime.
+   */
+  startingResidualSouls?: number;
 }
 
 /**

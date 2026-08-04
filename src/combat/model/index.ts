@@ -52,3 +52,16 @@ export {
   type ManualStatScaffold,
   type SimulationInputBase,
 } from "./simulationBase";
+
+export {
+  analyzeSingleCast,
+  classifyStatefulLimitations,
+  hostInputFromResolvedModel,
+  overlayAnalysisStatLine,
+  type AnalysisParity,
+  type AnalysisStatLine,
+  type SingleCastAnalysis,
+  type SingleCastAnalysisOptions,
+  type StatefulLimitation,
+  type StatefulLimitationId,
+} from "./singleCastAnalysis";

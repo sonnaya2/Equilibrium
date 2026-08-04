@@ -112,7 +112,9 @@ export type ItemPassiveId =
   | "asylum-surgeon"
   | "deathtouch-reflect"
   /** Ring of Vigour: 10% ultimate adren retain + 10% cheaper weapon specials. */
-  | "ring-of-vigour";
+  | "ring-of-vigour"
+  /** Blast diffusion boots: Wild Magic arms Blast Infused (+8% magic basics 10 ticks). */
+  | "blast-diffusion-inner-wrath";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 

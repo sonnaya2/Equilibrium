@@ -207,6 +207,9 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 70, maxPct: 90 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 10.2,
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events).",
     source: wikiAbility("Chain"),
   },
   {
@@ -218,6 +221,9 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 80, maxPct: 100 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 10.2,
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events).",
     source: wikiAbility("Greater Chain"),
   },
   {
@@ -367,7 +373,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     adrenaline: { cost: 100 },
     cooldownSeconds: 60,
     supportStatus: "partially-modeled",
-    supportNote: "Crit-adrenaline window (30s, +8% per crit) not modeled.",
+    supportNote:
+      "ST primary + crit-adren window modeled (Bernoulli adren). AoE secondaries, Glacial Embrace cost, Lightning Surge nested crit-adren not modeled.",
     source: wikiAbility("Tsunami"),
   },
   {
@@ -404,6 +411,9 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     weaponSpecial: true,
     hits: [{ band: { minPct: 200, maxPct: 240 } }],
     adrenaline: { cost: 25 },
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Cast band modeled. Defence -5% / affinity +2 for 60s not modeled (no dynamic DP recompute).",
     source: wikiAbility("Claws of Guthix"),
   },
 ];
@@ -455,14 +465,14 @@ export const MAGIC_EFFECTS = [
     id: "tsunami_crit_adrenaline",
     name: "Tsunami crit adrenaline",
     notes:
-      "After cast, critical strikes generate an additional 8% Adrenaline for 30s (50 ticks). NOT modeled: per-hit crit rolls over a 50-tick window are state-changing RNG outside exact branching's reasonable cost, and a flat EV refund would be an impossible average state. Tsunami's damage is modeled; the ability is labeled partially modeled.",
+      "After Tsunami deals damage: Magic crits grant +8% adren for 50 ticks (Natural Instinct 16%). Modeled as land-time Bernoulli adren branches (not critChance*8 EV). Own hit eligible. Crit-ineligible DoTs grant nothing. Residual: AoE secondaries, Glacial Embrace cost, Lightning Surge nested crit-adren.",
     source: wikiAbility("Tsunami"),
   },
   {
     id: "chain_spread",
     name: "Chain / Greater Chain follow-up",
     notes:
-      "Next single-target Magic ability within 6s also hits chained targets at 30% (Chain) / 50% (Greater) of that ability's damage range. Caroming extends targets.",
+      "Next single-target Magic ability within 6s also hits chained targets at 30% (Chain) / 50% (Greater) of that ability's damage range. Caroming extends targets. Not modeled: engine lacks multi-target identity (separate HP, debuffs, DP, caps, death, events). Primary hit bands only; do not inflate primary damage.",
     source: wikiAbility("Greater Chain"),
   },
   {
@@ -489,8 +499,15 @@ export const MAGIC_EFFECTS = [
     id: "claws_of_guthix_debuff",
     name: "Claws of Guthix debuff",
     notes:
-      "Also lowers target Defence by 5% and raises affinity values by 2 for 60s (wiki: base hit chance +5 for 1m). Damage band is the calculable cast only.",
+      "Lowers target Defence by 5% and raises affinity by 2 for 60s. Not modeled: sim accuracy/DP is static (no live Defence/affinity recompute). Do not invent a direct damage mult. Cast band 200-240% only.",
     source: wikiAbility("Claws of Guthix"),
+  },
+  {
+    id: "blast_infused",
+    name: "Blast Infused (Inner Wrath)",
+    notes:
+      "Blast diffusion boots: Wild Magic arms Blast Infused for 10 ticks; magic basics (incl. auto + Combust) +8% base damage. Modeled via blast-diffusion-inner-wrath passive + runtime window.",
+    source: wikiAbility("Blast diffusion boots", "Blast_diffusion_boots"),
   },
   {
     id: "rune_consumption",

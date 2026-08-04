@@ -2458,6 +2458,7 @@
 {"entityId":"item:spellcaster-gloves","regionId":"desert","relation":"required"}
 {"entityId":"item:spellcaster-gloves-black","regionId":"desert","relation":"required"}
 {"entityId":"item:spirit-cape","regionId":"forinthry","relation":"required"}
+{"entityId":"item:splintering-arrows","regionId":"misthalin","relation":"required"}
 {"entityId":"item:split-dragontooth-necklace","regionId":"forinthry","relation":"hint"}
 {"entityId":"item:split-dragontooth-necklace","regionId":"forinthry","relation":"required"}
 {"entityId":"item:staff-of-darkness","ordinal":1,"regionId":"forinthry","relation":"required"}

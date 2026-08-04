@@ -67,6 +67,34 @@ export const GREATER_CONC_BLAST_CRIT_PER_HIT_PCT = 7;
 export const CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 15;
 export const GREATER_CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT = 17;
 
+/**
+ * Tsunami crit-adren (wiki Tsunami): Magic crits grant +8% adren for 30s (50 ticks).
+ * Natural Instinct doubles the grant. State-changing; land Bernoulli, not p*8 EV.
+ * https://runescape.wiki/w/Tsunami
+ */
+export const TSUNAMI_CRIT_ADREN_DURATION_TICKS = 50;
+export const TSUNAMI_CRIT_ADREN_PCT = 8;
+export const TSUNAMI_CRIT_ADREN_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Tsunami",
+  title: "Tsunami",
+  verifiedAt: "2026-08-04",
+};
+
+/**
+ * Blast Infused (Inner Wrath on blast diffusion boots): Wild Magic arms 10 ticks;
+ * magic basics (incl. auto + Combust) deal +8% base damage.
+ * https://runescape.wiki/w/Blast_diffusion_boots
+ */
+export const BLAST_INFUSED_DURATION_TICKS = 10;
+export const BLAST_INFUSED_BASIC_DAMAGE_MULT = 1.08;
+export const BLAST_INFUSED_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Blast_diffusion_boots",
+  title: "Blast diffusion boots",
+  verifiedAt: "2026-08-04",
+};
+
 /** Mutable magic between-cast state. Combust burn lives on the target, not here. */
 export interface MagicRotationState {
   /** Runic Charge / Anima Charged window. */
@@ -82,6 +110,10 @@ export interface MagicRotationState {
   concCritStacks: number;
   concCritPerStackPct: number;
   channelledMight: ChannelledMightState;
+  /** Tsunami crit-adren window end (half-open); 0 = inactive. */
+  tsunamiCritAdrenUntilTick: number;
+  /** Blast Infused window end after Wild Magic with boots (half-open); 0 = inactive. */
+  blastInfusedUntilTick: number;
 }
 
 export const newMagicRotationState = (): MagicRotationState => ({
@@ -93,7 +125,50 @@ export const newMagicRotationState = (): MagicRotationState => ({
   concCritStacks: 0,
   concCritPerStackPct: 0,
   channelledMight: newChannelledMight(),
+  tsunamiCritAdrenUntilTick: 0,
+  blastInfusedUntilTick: 0,
 });
+
+/** Half-open: active while tick < untilTick. */
+export function tsunamiCritAdrenActive(
+  state: MagicRotationState,
+  tick: number,
+): boolean {
+  return state.tsunamiCritAdrenUntilTick > 0 && tick < state.tsunamiCritAdrenUntilTick;
+}
+
+/** Land-time arm/refresh when Tsunami deals damage (wiki). */
+export function armTsunamiCritAdren(landTick: number): number {
+  return landTick + TSUNAMI_CRIT_ADREN_DURATION_TICKS;
+}
+
+/** Expired windows encode as 0 for branch merge. */
+export function normalizeTsunamiCritAdrenUntil(untilTick: number, tick: number): number {
+  if (untilTick <= 0) return 0;
+  return untilTick <= tick ? 0 : untilTick;
+}
+
+/**
+ * Adren points granted on a Magic crit while the Tsunami window is live.
+ * Natural Instinct doubles (wiki); uses the shared NI clock.
+ */
+export function tsunamiCritAdrenGrant(naturalInstinctUntilTick: number, tick: number): number {
+  const base = TSUNAMI_CRIT_ADREN_PCT;
+  return tick < naturalInstinctUntilTick ? base * 2 : base;
+}
+
+export function blastInfusedActive(state: MagicRotationState, tick: number): boolean {
+  return state.blastInfusedUntilTick > 0 && tick < state.blastInfusedUntilTick;
+}
+
+export function armBlastInfused(castTick: number): number {
+  return castTick + BLAST_INFUSED_DURATION_TICKS;
+}
+
+export function normalizeBlastInfusedUntil(untilTick: number, tick: number): number {
+  if (untilTick <= 0) return 0;
+  return untilTick <= tick ? 0 : untilTick;
+}
 
 export function isConcentratedBlast(abilityId: string): boolean {
   return abilityId === "concentrated_blast" || abilityId === "greater_concentrated_blast";

@@ -36,6 +36,7 @@ export const PASSIVE_SOURCE = {
   asylumSurgeon: wiki("Asylum surgeon's ring", "Asylum_surgeon%27s_ring", "2026-08-01"),
   deathtouch: wiki("Deathtouch bracelet", "Deathtouch_bracelet", "2026-08-01"),
   ringOfVigour: RING_OF_VIGOUR_SOURCE,
+  blastDiffusion: wiki("Blast diffusion boots", "Blast_diffusion_boots", "2026-08-04"),
 } as const;
 
 /**
@@ -271,6 +272,23 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "Does not stack with the permanent Anachronia unlock on the Buffs tab.",
     ],
     source: PASSIVE_SOURCE.ringOfVigour,
+  },
+  {
+    id: "blast-diffusion-inner-wrath",
+    label: "Inner Wrath (Blast Infused)",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["loadout-static", "timed-runtime", "modifier-provider"],
+    implementationOwners: [
+      "engine/cast/effects/magic.ts",
+      "engine/resolution/modifiers.ts",
+      "styles/magic/effects.ts",
+    ],
+    effects: [
+      "Wild Magic applies Blast Infused for 10 ticks (6s).",
+      "While Blast Infused: magic basic abilities (incl. auto-attack and Combust) deal +8% base damage.",
+    ],
+    source: PASSIVE_SOURCE.blastDiffusion,
   },
 ];
 

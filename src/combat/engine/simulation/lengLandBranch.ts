@@ -28,6 +28,11 @@ import {
   type BranchExactness,
   type BranchSet,
 } from "./branchCore";
+import {
+  expandTsunamiCritAdrenOnLand,
+  isTsunamiCritAdrenEligibleLand,
+  tsunamiCritChanceFromDamage,
+} from "./tsunamiCritBranch";
 
 /**
  * Soft intermediate budget while folding Leng expands in one event tick.
@@ -331,22 +336,42 @@ function advanceToBranchesInner(
       const ability = b.rt.byId.get(event.abilityId);
       // Failed residual banks still Leng-expand (error preserved): frostblades /
       // stacks from earlier pending hits change later banked damage.
+      // Tsunami crit-adren: adren-only Bernoulli after land (window armed in
+      // onMagicHitLanded so Tsunami's own hit can grant).
+      let working: Branch[] = [b];
+      let landExpanded = false;
+
       if (isLengEligibleLand(b.rt, event, ability, resolution.damage)) {
         const expanded = expandLengOnLand(b, event.tick);
         residualWeight += expanded.residualWeight;
         exactness = combineExactness(exactness, expanded.exactness);
+        working = expanded.branches;
+        landExpanded = true;
+      }
+
+      const critP = tsunamiCritChanceFromDamage(resolution.damage);
+      const afterTsunami: Branch[] = [];
+      for (const w of working) {
+        if (isTsunamiCritAdrenEligibleLand(w.rt, event, ability, resolution.damage)) {
+          const tset = expandTsunamiCritAdrenOnLand(w, event.tick, critP);
+          residualWeight += tset.residualWeight;
+          exactness = combineExactness(exactness, tset.exactness);
+          if (tset.branches.length > 1 || critP >= 1) landExpanded = true;
+          afterTsunami.push(...tset.branches);
+        } else {
+          afterTsunami.push(w);
+        }
+      }
+      working = afterTsunami;
+
+      if (landExpanded) {
         expandedAny = true;
-        const folded = foldAfterExpand(
-          next,
-          expanded.branches,
-          maxLive,
-          intermediateMax,
-        );
+        const folded = foldAfterExpand(next, working, maxLive, intermediateMax);
         residualWeight += folded.residualWeight;
         exactness = combineExactness(exactness, folded.exactness);
         next = folded.branches;
       } else {
-        next.push(b);
+        next.push(...working);
         if (next.length > intermediateMax) {
           const boundSet = softBound(next, intermediateMax);
           residualWeight += boundSet.residualWeight;

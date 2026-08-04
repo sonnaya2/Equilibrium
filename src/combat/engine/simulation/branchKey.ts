@@ -197,6 +197,13 @@ function encodeState(state: RotationState): string {
     n(g.channelledMight.startsAtTick),
     n(g.channelledMight.expiresAtTick),
     n(g.channelledMight.critDamageBonus),
+    // Tsunami / Blast Infused: expired until ≡ 0 for post-window merge.
+    n(g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= state.tick
+      ? 0
+      : g.tsunamiCritAdrenUntilTick),
+    n(g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= state.tick
+      ? 0
+      : g.blastInfusedUntilTick),
     // necromancy resources
     n(res.residualSouls),
     n(res.necrosisStacks),

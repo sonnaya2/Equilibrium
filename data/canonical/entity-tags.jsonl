@@ -1332,6 +1332,7 @@
 {"entityId":"item:spellcaster-gloves","tagId":"magic"}
 {"entityId":"item:spellcaster-gloves-black","tagId":"magic"}
 {"entityId":"item:spirit-cape","tagId":"hybrid"}
+{"entityId":"item:splintering-arrows","tagId":"ranged"}
 {"entityId":"item:split-dragontooth-necklace","tagId":"dungeoneering-prayer-restore-necklace-mid"}
 {"entityId":"item:split-dragontooth-necklace","tagId":"post-remaster-prayer-sustain-equipment-unlock"}
 {"entityId":"item:staff-of-darkness","tagId":"magic"}

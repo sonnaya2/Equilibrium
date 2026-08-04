@@ -11,7 +11,7 @@ import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 import { noteCastsGrowth } from "../../profiling/allocation";
-import { planCastOutcomes } from "../simulation/branch";
+import { planCastOutcomes, type BranchSet } from "../simulation/branch";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 
 function emptyAbilityResult(): AbilityResult {
@@ -40,11 +40,27 @@ function heaviestIcySpend(rt: SimulationRuntime, candidate: number): number {
 }
 
 /**
+ * Single-runtime spine: after land forks (Tsunami adren Bernoulli, etc.), keep
+ * the heaviest arm on the caller's `rt` reference. Multi-branch product paths
+ * use commitCastBranches instead and never need this.
+ */
+function adoptHeaviestBranch(rt: SimulationRuntime, set: BranchSet): void {
+  if (set.branches.length === 0) return;
+  const heaviest = set.branches.reduce((a, b) => (a.weight >= b.weight ? a : b));
+  if (heaviest.rt === rt) return;
+  const src = heaviest.rt as unknown as Record<string, unknown>;
+  const dst = rt as unknown as Record<string, unknown>;
+  for (const key of Object.keys(src)) {
+    dst[key] = src[key];
+  }
+}
+
+/**
  * Advance to candidate tick, then validate + prepare. Rejection only advances time;
  * prepareCast is read-only. Pre-cast uses advanceToBranches (compact Primordial Ice).
  *
  * For icy_tempest with mixed stack mass, prepared.spend is the heaviest integer
- * spend group — never floating E[spend]. Full spend distribution: planCastOutcomes.
+ * spend group - never floating E[spend]. Full spend distribution: planCastOutcomes.
  */
 export function prepareSimulationCast(
   rt: SimulationRuntime,
@@ -55,7 +71,8 @@ export function prepareSimulationCast(
     candidateTick(rt.state, readyTick),
     firstLegalTickFor(rt.state, ability, rt.input.level),
   );
-  advanceToBranches({ weight: 1, rt }, candidate);
+  const advanced = advanceToBranches({ weight: 1, rt }, candidate);
+  adoptHeaviestBranch(rt, advanced);
   const rejection = castRejection(
     rt.state,
     ability,
@@ -74,7 +91,7 @@ export function prepareSimulationCast(
 
 /**
  * Commit on one runtime; occupancy advances via advanceToBranches so compact
- * Primordial Ice mass updates on lands.
+ * Primordial Ice mass updates on lands. Land forks adopt the heaviest arm.
  */
 export function commitCast(
   rt: SimulationRuntime,
@@ -88,7 +105,8 @@ export function commitCast(
   rt.lastCastAdrenalineTransaction = null;
   const completesAt = prepared.candidate + prepared.occupancyTicks;
   rt.endTick = Math.max(rt.endTick, completesAt);
-  advanceToBranches({ weight: 1, rt }, completesAt);
+  const advanced = advanceToBranches({ weight: 1, rt }, completesAt);
+  adoptHeaviestBranch(rt, advanced);
   applyCompletionEffects(castEffectContext(rt, prepared, rng));
   record.adrenalineAfter = rt.state.adrenaline;
 
@@ -117,15 +135,15 @@ export function commitCast(
   }
 
   noteCastsGrowth();
-  rt.casts.push(record);
+  if (!rt.casts.includes(record)) rt.casts.push(record);
 }
 
 /**
  * One atomic cast on a single runtime.
  *
- * Multi-outcome casts (Icy Tempest spend groups, Impatient, Relentless) are
- * planned via planCastOutcomes; only the heaviest plan is committed onto `rt`
- * so adrenaline spend is always an integer group, never E[spend].
+ * Multi-outcome casts (Icy Tempest spend groups, Impatient, Relentless, land
+ * adren forks) are planned via planCastOutcomes; only the heaviest plan is
+ * committed onto `rt` so adrenaline spend is always an integer group, never E[spend].
  */
 export function performCast(
   rt: SimulationRuntime,
@@ -143,7 +161,14 @@ export function performCast(
   }
   // Heaviest future (max weight). For icy_tempest this is an integer spend group.
   const heaviest = planned.plans.reduce((a, b) => (a.weight >= b.weight ? a : b));
-  // planCastOutcomes advanced `rt` in place; commit heaviest prepared onto it.
+  // planCastOutcomes may have forked parent rts; adopt the heaviest parent first.
+  if (heaviest.parent.rt !== rt) {
+    adoptHeaviestBranch(rt, {
+      branches: [heaviest.parent],
+      residualWeight: 0,
+      exactness: "exact",
+    });
+  }
   commitCast(rt, heaviest.prepared, auto, rng ?? heaviest.rng);
   return { ok: true };
 }

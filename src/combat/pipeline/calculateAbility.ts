@@ -89,7 +89,7 @@ export interface AbilitySpec {
     max: number;
     /**
      * Style level for second charge (54). When player level < this, max is 1.
-     * Product default level is 99 -> 2 charges.
+     * Product default level is 120 -> 2 charges.
      */
     secondChargeLevel?: number;
   };

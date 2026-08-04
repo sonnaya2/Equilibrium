@@ -573,19 +573,19 @@ describe("weapon-driven combat style", () => {
 
 describe("level helpers", () => {
   it("withStyleLevel leaves saved melee levels intact", () => {
-    const next = withStyleLevel(DEFAULT_LOADOUT, 120);
-    expect(next).toMatchObject({ level: 120, attackLevel: 99, strengthLevel: 99 });
+    const next = withStyleLevel(DEFAULT_LOADOUT, 110);
+    expect(next).toMatchObject({ level: 110, attackLevel: 120, strengthLevel: 120 });
   });
 
   it("withAttackLevel only changes attack; withStrengthLevel also updates level alias", () => {
     const atk = withAttackLevel(DEFAULT_LOADOUT, 70);
     expect(atk.attackLevel).toBe(70);
-    expect(atk.strengthLevel).toBe(99);
-    expect(atk.level).toBe(99);
+    expect(atk.strengthLevel).toBe(120);
+    expect(atk.level).toBe(120);
     const str = withStrengthLevel(DEFAULT_LOADOUT, 115);
     expect(str.strengthLevel).toBe(115);
     expect(str.level).toBe(115);
-    expect(str.attackLevel).toBe(99);
+    expect(str.attackLevel).toBe(120);
   });
 });
 

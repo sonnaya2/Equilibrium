@@ -19,6 +19,9 @@ import {
   newShadowImbued,
   onRangedHit,
   PUNCTURE_CAP,
+  PUNCTURE_HIT_PERCENTS,
+  punctureHitDamage,
+  punctureStoreAmount,
   searingWindsBonusPct,
   shadowImbuedAdrenalinePerHit,
   spendDeathspore,
@@ -47,6 +50,12 @@ describe("puncture", () => {
     expect(activePuncture(state, 89).stacks).toBe(2);
     expect(activePuncture(state, 90).stacks).toBe(0);
     expect(activePuncture(state, 90).storedDamage).toBe(0);
+  });
+
+  it("1-stack stored 10 floors sequence to [5,2,1,1,0]", () => {
+    const stored = punctureStoreAmount(1000);
+    expect(stored).toBe(10);
+    expect(PUNCTURE_HIT_PERCENTS.map((p) => punctureHitDamage(stored, p))).toEqual([5, 2, 1, 1, 0]);
   });
 });
 

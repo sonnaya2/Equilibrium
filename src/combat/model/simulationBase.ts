@@ -194,15 +194,28 @@ export function toManualSimulateInput(
   parts: {
     rotation: SimulateInput["rotation"];
     autoWeave?: boolean;
-    /** Override model-packed ammo when the Manual UI selects a style ammo. */
-    ammo?: SimulateInput["ammo"];
+    /**
+     * Manual UI ammo override over model-packed base.ammo:
+     * - undefined: keep base.ammo (Revolution / omit path)
+     * - null: force clear (Manual "None")
+     * - deathspore | splintering: set that ammo
+     */
+    ammo?: SimulateInput["ammo"] | null;
   },
 ): SimulateInput {
+  if (parts.ammo === null) {
+    // Drop model-packed ammo entirely (Manual "None").
+    const { ammo: _cleared, ...withoutAmmo } = base;
+    return {
+      ...withoutAmmo,
+      rotation: parts.rotation,
+      autoWeave: parts.autoWeave,
+    };
+  }
   return {
     ...base,
     rotation: parts.rotation,
     autoWeave: parts.autoWeave,
-    // Explicit parts.ammo wins; otherwise keep model-packed base.ammo.
     ...(parts.ammo !== undefined ? { ammo: parts.ammo } : {}),
   };
 }

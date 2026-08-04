@@ -76,6 +76,17 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
     }
   });
 
+  it("style ammo arrows resolve as ammo slot equip", () => {
+    const deathspore = equipmentById("item:deathspore-arrows");
+    const splintering = equipmentById("item:splintering-arrows");
+    expect(deathspore, "item:deathspore-arrows").toBeDefined();
+    expect(splintering, "item:splintering-arrows").toBeDefined();
+    expect(deathspore!.slot).toBe("ammo");
+    expect(splintering!.slot).toBe("ammo");
+    expect(splintering!.style).toBe("ranged");
+    expect(splintering!.tier).toBe(95);
+  });
+
   it("ships passive metadata and keeps crossbows out of the bow class", () => {
     expect(equipmentById("item:am-zi")?.passiveId).toBe("am-zi");
     expect(equipmentById("item:am-hej")?.passiveId).toBe("am-hej");

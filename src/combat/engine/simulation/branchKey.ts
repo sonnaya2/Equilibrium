@@ -181,6 +181,7 @@ function encodeState(state: RotationState): string {
     n(r.puncture.storedDamage),
     n(r.puncture.generation),
     n(r.puncture.pendingOwnerCast),
+    n(r.puncture.lastCompletedCastSeq),
     // magic
     n(g.runicCharge.cooldownUntilTick),
     n(g.runicCharge.animaUntilTick),

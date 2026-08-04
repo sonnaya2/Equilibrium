@@ -138,7 +138,7 @@ export function RotationPlanner({
   const [accuracy, setAccuracy] = useState(100);
   const [critChance, setCritChance] = useState(10);
   const [paletteStyle, setPaletteStyle] = useState<CombatStyle>("melee");
-  const [ammo, setAmmo] = useState<"none" | "deathspore">("none");
+  const [ammo, setAmmo] = useState<"none" | "deathspore" | "splintering">("none");
   const [queue, setQueue] = useState<string[]>([]);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [analysisOpen, setAnalysisOpen] = useState(false);
@@ -231,7 +231,8 @@ export function RotationPlanner({
   const run = () => {
     setAnalysisOpen(false);
     const rotation = rotationOf(...queue);
-    const ammoOpt = ammo === "none" ? undefined : ammo;
+    // null clears model-packed ammo; undefined would keep Deathspore/etc from loadout.
+    const ammoOpt = ammo === "none" ? null : ammo;
     if (useBuild) {
       const catalogue = resolveAbilityCatalogue({
         strengthCape99: combatModel.strengthCape99,
@@ -412,11 +413,14 @@ export function RotationPlanner({
             <span>Ammo</span>
             <select
               value={ammo}
-              onChange={(e) => setAmmo(e.target.value as "none" | "deathspore")}
+              onChange={(e) =>
+                setAmmo(e.target.value as "none" | "deathspore" | "splintering")
+              }
               className="w-full border border-stone-750 bg-transparent px-2 py-1 text-xs text-parch-50"
             >
               <option value="none">None</option>
               <option value="deathspore">Deathspore arrows</option>
+              <option value="splintering">Splintering arrows</option>
             </select>
           </label>
         </div>

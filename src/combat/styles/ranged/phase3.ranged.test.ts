@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { createCastContext, simulate } from "../../engine/simulation/simulate";
 import { rotationOf } from "../../engine/simulation/contracts";
+import { onRangedHitLanded } from "../../engine/resolution/landed/ranged";
+import { createRuntime } from "../../engine/runtime/runtime";
+import { patchRanged } from "../../engine/runtime/state";
 import { GLOBAL_COOLDOWN_TICKS } from "../../engine/runtime/timing";
 import { rangedInput } from "../../test/fixtures/inputs";
 import {
@@ -8,7 +11,7 @@ import {
   PUNCTURE_CAP,
   PUNCTURE_DURATION_TICKS,
   PUNCTURE_FIRST_OFFSET_AFTER_FINISH,
-  PUNCTURE_HIT_FRACTIONS,
+  PUNCTURE_HIT_PERCENTS,
   PUNCTURE_HIT_INTERVAL_TICKS,
   applyPunctureStack,
   newPuncture,
@@ -24,10 +27,10 @@ import { buildSimulationInputBase, toManualSimulateInput, toRevolutionInput } fr
 import { buildResolvedCombatModel } from "../../model/resolve";
 import { projectSerializableSimBase } from "../../model/simulationInput";
 import { canonicalSimulationIdentity } from "../../solver/identity";
-import { emptyModifierSources } from "../../solver/worker/serializable";
 import type { HostCombatResolveInput } from "../../model/contracts";
 import { simulateRevolution } from "../../engine/simulation/revolution";
 import { RANGED_ABILITIES } from "./abilities";
+import { equipmentById } from "../../data";
 import { EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
 
 const BASE = 1000;
@@ -111,9 +114,17 @@ describe("puncture pure helpers", () => {
   it("sequence ticks: finish+1 then every 3 ticks", () => {
     const first = 10;
     expect([...punctureSequenceTicks(first)]).toEqual([10, 13, 16, 19, 22]);
-    expect(PUNCTURE_HIT_FRACTIONS).toEqual([0.5, 0.2, 0.15, 0.1, 0.05]);
-    expect(punctureHitDamage(1000, 0.5)).toBe(500);
-    expect(punctureHitDamage(1000, 0.15)).toBe(150);
+    expect(PUNCTURE_HIT_PERCENTS).toEqual([50, 20, 15, 10, 5]);
+    expect(punctureHitDamage(1000, 50)).toBe(500);
+    expect(punctureHitDamage(1000, 15)).toBe(150);
+  });
+
+  it("1-stack base 1000: floor chain yields [5,2,1,1,0] (last 5% truncates)", () => {
+    const stored = punctureStoreAmount(BASE);
+    expect(stored).toBe(10);
+    const hits = PUNCTURE_HIT_PERCENTS.map((pct) => punctureHitDamage(stored, pct));
+    expect(hits).toEqual([5, 2, 1, 1, 0]);
+    expect(hits.reduce((a, b) => a + b, 0)).toBe(9);
   });
 });
 
@@ -162,36 +173,88 @@ describe("puncture runtime", () => {
     expect(cap.getState().ranged.puncture.storedDamage).toBe(PUNCTURE_CAP * 10);
   });
 
-  it("refresh during active sequence invalidates prior generation events", () => {
-    // Cast A builds puncture; cast B after sequence has started restarts gen.
+  it("refresh before first damage event: only new generation deals damage", () => {
+    // Auto @0 schedules first puncture at finish+1 = 4.
+    // Second auto @3 lands before that tick, bumps gen, reschedules at 7.
     const s = simulate({
       ...rangedInput,
       ammo: "splintering",
-      // piercing @0, then wait with autos, then piercing again mid-sequence
-      rotation: rotationOf(
-        "piercing_shot",
-        "ranged_attack",
-        "ranged_attack",
-        "piercing_shot",
-      ),
+      rotation: rotationOf("ranged_attack", "ranged_attack"),
     });
-    const positive = s.events.filter(
-      (e) => e.abilityId === PUNCTURE_ABILITY_ID && e.damage.expected > 0,
-    );
-    expect(positive.length).toBe(5);
+    const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    const firstNew = GLOBAL_COOLDOWN_TICKS * 2 + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
+    const positive = dots.filter((e) => e.damage.expected > 0);
+    expect(positive).toHaveLength(5);
+    expect(positive.map((e) => e.tick)).toEqual([
+      firstNew,
+      firstNew + PUNCTURE_HIT_INTERVAL_TICKS,
+      firstNew + 2 * PUNCTURE_HIT_INTERVAL_TICKS,
+      firstNew + 3 * PUNCTURE_HIT_INTERVAL_TICKS,
+      firstNew + 4 * PUNCTURE_HIT_INTERVAL_TICKS,
+    ]);
+    // 2 stacks snapshotted: [10,4,3,2,1]
+    expect(positive.map((e) => e.damage.expected)).toEqual([10, 4, 3, 2, 1]);
+    // Stale gen-1 sequence still lands as zero before the new first hit.
+    const early = dots.filter((e) => e.tick < firstNew);
+    expect(early.length).toBeGreaterThan(0);
+    expect(early.every((e) => e.damage.expected === 0)).toBe(true);
+  });
+
+  it("refresh during active sequence invalidates prior generation events", () => {
+    // Piercing @0: 2 stacks, sequence first at 4 ([10,4,3,2,1]).
+    // Piercing @8: after hits at 4 and 7, restarts gen; remaining old tails -> 0.
     const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
     const pierce = ctx.byId.get("piercing_shot")!;
-    const attack = ctx.byId.get("ranged_attack")!;
     ctx.performCast(pierce, 0, false);
-    ctx.performCast(attack, ctx.getState().tick, false);
-    ctx.performCast(attack, ctx.getState().tick, false);
-    ctx.performCast(pierce, ctx.getState().tick, false);
-    // Final stacks: 2 + 1 + 1 + 2 = 6
-    expect(ctx.getState().ranged.puncture.stacks).toBe(6);
+    ctx.performCast(pierce, 8, false);
+    expect(ctx.getState().ranged.puncture.stacks).toBe(4);
+    expect(ctx.getState().ranged.puncture.storedDamage).toBe(40);
+
+    const s = ctx.finish();
+    const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    // Early gen hits that landed before refresh keep their damage.
+    const early = dots.filter((e) => e.tick === 4 || e.tick === 7);
+    expect(early.map((e) => e.damage.expected)).toEqual([10, 4]);
+    // Stale mid-sequence tails after gen bump are present at 0 (would have been 3,2,1).
+    const staleTicks = [10, 13, 16];
+    const stale = dots.filter((e) => staleTicks.includes(e.tick) && e.damage.expected === 0);
+    expect(stale.length).toBeGreaterThan(0);
+    // New generation full sequence from finish@11 + 1 = 12; stored 40.
+    const newFirst = 11 + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
+    const fresh = dots.filter(
+      (e) =>
+        e.tick >= newFirst &&
+        (e.tick - newFirst) % PUNCTURE_HIT_INTERVAL_TICKS === 0 &&
+        e.damage.expected > 0,
+    );
+    expect(fresh.map((e) => e.damage.expected)).toEqual([20, 8, 6, 4, 2]);
+  });
+
+  it("event invalidation: generation mismatch resolves as 0 damage", () => {
+    // Build a sequence, then re-apply once mid-window so closed-over gen mismatches.
+    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const attack = ctx.byId.get("ranged_attack")!;
+    ctx.performCast(attack, 0, false);
+    const genAfterFirst = ctx.getState().ranged.puncture.generation;
+    // Mid-sequence refresh at tick 8 (after first hit at 4).
+    ctx.performCast(attack, 8, false);
+    expect(ctx.getState().ranged.puncture.generation).toBeGreaterThan(genAfterFirst);
+    const s = ctx.finish();
+    const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    // At least one resolved puncture event is explicitly zero from gen mismatch
+    // (distinct from the floor-zero 5th hit of a 1-stack sequence at the same gen).
+    const newFirst = 8 + GLOBAL_COOLDOWN_TICKS + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
+    const zeroMid = dots.filter(
+      (e) => e.damage.expected === 0 && e.tick > 4 && e.tick < newFirst,
+    );
+    expect(zeroMid.length).toBeGreaterThan(0);
+    // Live generation still deals its full non-floor-zero sequence (2 stacks).
+    const liveFromRefresh = dots.filter((e) => e.tick >= newFirst && e.damage.expected > 0);
+    expect(liveFromRefresh.map((e) => e.damage.expected)).toEqual([10, 4, 3, 2, 1]);
   });
 
   it("snapshot isolation: stored damage ignores later base changes via fixed base", () => {
-    // Engine base is fixed per sim; verify closed-over amount equals store*fraction
+    // Engine base is fixed per sim; verify closed-over amount equals store*percent
     // not recalculated against hit damage.
     const s = simulate({
       ...rangedInput,
@@ -200,8 +263,20 @@ describe("puncture runtime", () => {
       rotation: rotationOf("ranged_attack"),
     });
     const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
-    // 1 stack stores floor(2000*0.01)=20; fractions of 20
+    // 1 stack stores floor(2000*0.01)=20; percents of 20
     expect(dots.map((e) => e.damage.expected)).toEqual([10, 4, 3, 2, 1]);
+  });
+
+  it("1-stack base 1000 sequence floors to [5,2,1,1,0]", () => {
+    const s = simulate({
+      ...rangedInput,
+      base: BASE,
+      ammo: "splintering",
+      rotation: rotationOf("ranged_attack"),
+    });
+    const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    expect(dots).toHaveLength(5);
+    expect(dots.map((e) => e.damage.expected)).toEqual([5, 2, 1, 1, 0]);
   });
 
   it("puncture cannot recursively apply itself", () => {
@@ -213,17 +288,38 @@ describe("puncture runtime", () => {
     expect(ctx.getState().ranged.puncture.stacks).toBe(2);
   });
 
-  it("horizon: puncture tails beyond horizon still schedule but sim ends cleanly", () => {
-    const s = simulate(
-      {
-        ...rangedInput,
-        ammo: "splintering",
-        rotation: rotationOf("ranged_attack"),
-      },
-      { includeTails: true },
-    );
-    expect(s.totalExpected).toBeGreaterThan(0);
-    expect(s.events.some((e) => e.abilityId === PUNCTURE_ABILITY_ID)).toBe(true);
+  it("horizon: puncture tails outside fixed window are excluded from primary total", () => {
+    // Auto @0: finish 3, puncture at 4,7,10,13,16. Horizon 8 lands only 4 and 7.
+    const horizon = 8;
+    const inWindow = [5, 2];
+    const outWindowSum = 1 + 1 + 0;
+    const inWindowSum = inWindow.reduce((a, b) => a + b, 0);
+
+    const windowed = createCastContext({
+      ...rangedInput,
+      ammo: "splintering",
+      horizonTicks: horizon,
+    });
+    windowed.performCast(windowed.byId.get("ranged_attack")!, 0, false);
+    const primary = windowed.finish(undefined, horizon);
+    const landedDots = primary.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    expect(landedDots.map((e) => e.tick)).toEqual([4, 7]);
+    expect(landedDots.map((e) => e.damage.expected)).toEqual(inWindow);
+    expect(primary.perAbility[PUNCTURE_ABILITY_ID] ?? 0).toBe(inWindowSum);
+    expect(primary.horizonTicks).toBe(horizon);
+    expect(primary.metric.tails).toBe("excluded");
+
+    const withTailsCtx = createCastContext({
+      ...rangedInput,
+      ammo: "splintering",
+      horizonTicks: horizon,
+    });
+    withTailsCtx.performCast(withTailsCtx.byId.get("ranged_attack")!, 0, false);
+    const tails = withTailsCtx.finish(undefined, horizon, { includeTails: true });
+    expect(tails.tails?.inWindowExpectedDamage).toBe(primary.totalExpected);
+    expect(tails.tails?.postWindowTailDamage).toBeGreaterThanOrEqual(outWindowSum);
+    expect(tails.totalExpected).toBe(primary.totalExpected);
+    expect(tails.totalExpected).toBeLessThan(tails.tails!.totalIncludingTails);
   });
 
   it("expires after duration without reapplication", () => {
@@ -238,12 +334,96 @@ describe("puncture runtime", () => {
     expect(ctx.getState().ranged.puncture.stacks).toBe(1);
     expect(ctx.getState().ranged.puncture.storedDamage).toBe(10);
   });
+
+  it("late land after owner cast completed schedules from land (no orphan pending)", () => {
+    // Hit with sourceCast already finished would set pendingOwnerCast to a cast
+    // that never completes again; lastCompletedCastSeq forces immediate schedule.
+    const rt = createRuntime({ ...rangedInput, ammo: "splintering" });
+    const ability = rt.byId.get("ranged_attack")!;
+    const finishedCast = 7;
+    const landTick = 12;
+    rt.state = patchRanged(rt.state, {
+      puncture: {
+        ...rt.state.ranged.puncture,
+        lastCompletedCastSeq: finishedCast,
+      },
+    });
+    onRangedHitLanded(
+      rt,
+      {
+        tick: landTick,
+        seq: 0,
+        family: "hit",
+        abilityId: ability.id,
+        sourceCast: finishedCast,
+        hitIndex: 0,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        originKind: "direct",
+        provenance: { kind: "player_direct" },
+        resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
+      },
+      ability,
+      { min: 100, max: 100, expected: 100 },
+    );
+    const p = rt.state.ranged.puncture;
+    expect(p.stacks).toBe(1);
+    expect(p.pendingOwnerCast).toBe(-1);
+    expect(p.storedDamage).toBe(10);
+    const dots = rt.queue.pending().filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    expect(dots).toHaveLength(5);
+    const first = landTick + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
+    expect(dots.map((e) => e.tick)).toEqual([
+      first,
+      first + PUNCTURE_HIT_INTERVAL_TICKS,
+      first + 2 * PUNCTURE_HIT_INTERVAL_TICKS,
+      first + 3 * PUNCTURE_HIT_INTERVAL_TICKS,
+      first + 4 * PUNCTURE_HIT_INTERVAL_TICKS,
+    ]);
+  });
+
+  it("open cast multi-hit defers schedule until completion (no per-hit schedule)", () => {
+    const rt = createRuntime({ ...rangedInput, ammo: "splintering" });
+    const ability = rt.byId.get("piercing_shot")!;
+    const openCast = 3;
+    // lastCompletedCastSeq stays -1 so openCast is still open.
+    for (let hit = 0; hit < 2; hit++) {
+      onRangedHitLanded(
+        rt,
+        {
+          tick: hit,
+          seq: hit,
+          family: "hit",
+          abilityId: ability.id,
+          sourceCast: openCast,
+          hitIndex: hit,
+          attached: false,
+          procEligible: true,
+          recursionAllowed: false,
+          originKind: "direct",
+          provenance: { kind: "player_direct" },
+          resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
+        },
+        ability,
+        { min: 100, max: 100, expected: 100 },
+      );
+    }
+    expect(rt.state.ranged.puncture.stacks).toBe(2);
+    expect(rt.state.ranged.puncture.pendingOwnerCast).toBe(openCast);
+    expect(rt.queue.pending().filter((e) => e.abilityId === PUNCTURE_ABILITY_ID)).toHaveLength(0);
+  });
 });
 
 describe("deathspore / searing winds / shadow imbued regressions", () => {
   it("deathspore free-cast still works with splintering path unused", () => {
     const rotation = rotationOf(...Array(12).fill("ranged_attack"), "imbue_shadows");
-    const s = simulate({ ...rangedInput, ammo: "deathspore", rotation });
+    const s = simulate({
+      ...rangedInput,
+      ammo: "deathspore",
+      startingAdrenaline: 100,
+      rotation,
+    });
     expect(s.casts.some((c) => c.abilityId === "imbue_shadows" && c.actualSpend === 0)).toBe(
       true,
     );
@@ -252,15 +432,28 @@ describe("deathspore / searing winds / shadow imbued regressions", () => {
   it("searing winds boosts a follow-up attack", () => {
     const bare = simulate({
       ...rangedInput,
+      startingAdrenaline: 100,
       rotation: rotationOf("ranged_attack"),
     });
     const withSw = simulate({
       ...rangedInput,
+      startingAdrenaline: 100,
       rotation: rotationOf("galeshot", "ranged_attack"),
     });
     const bareHit = bare.events.find((e) => e.abilityId === "ranged_attack" && e.family === "hit");
     const buffed = withSw.events.find((e) => e.abilityId === "ranged_attack" && e.family === "hit");
     expect((buffed?.damage.expected ?? 0)).toBeGreaterThan(bareHit?.damage.expected ?? 0);
+  });
+
+  it("shadow imbued grants adrenaline on a follow-up hit", () => {
+    const s = simulate({
+      ...rangedInput,
+      startingAdrenaline: 100,
+      rotation: rotationOf("imbue_shadows", "ranged_attack"),
+    });
+    const attack = s.casts.find((c) => c.abilityId === "ranged_attack");
+    // Imbue costs 40 from 100 -> 60; basic +9 listed +5 imbued.
+    expect(attack?.adrenalineAfter).toBe(60 + 9 + 5);
   });
 });
 
@@ -345,6 +538,19 @@ describe("ammo packing Manual / Revolution / identity", () => {
     expect(styleAmmoFromEquipmentIds(["item:splintering-arrows"])).toBe("splintering");
   });
 
+  it("equip id item:splintering-arrows resolves in catalogue and style ammo", () => {
+    const record = equipmentById("item:splintering-arrows");
+    expect(record, "item:splintering-arrows missing from combat equipment").toBeDefined();
+    expect(record!.slot).toBe("ammo");
+    expect(record!.style).toBe("ranged");
+    expect(record!.tier).toBe(95);
+    expect(styleAmmoFromEquipmentIds([record!.id])).toBe("splintering");
+    const model = buildResolvedCombatModel(
+      hostScaffold({ equipmentIds: ["item:splintering-arrows"] }),
+    );
+    expect(model.ammo).toBe("splintering");
+  });
+
   it("resolved model carries ammo and caroming into sim base + identity", () => {
     const model = buildResolvedCombatModel(
       hostScaffold({
@@ -366,9 +572,54 @@ describe("ammo packing Manual / Revolution / identity", () => {
     expect(JSON.stringify(idA)).not.toEqual(JSON.stringify(idB));
     const idC = canonicalSimulationIdentity({ ...wire, caromingRank: 1 });
     expect(JSON.stringify(idA)).not.toEqual(JSON.stringify(idC));
+    // Same ammo + caromingRank keeps identity stable.
+    const idA2 = canonicalSimulationIdentity({ ...wire, ammo: "splintering", caromingRank: 3 });
+    expect(JSON.stringify(idA)).toEqual(JSON.stringify(idA2));
   });
 
-  it("Manual / Revolution both receive packed ammo", () => {
+  it("Manual / Revolution both receive packed ammo and caromingRank", () => {
+    const model = buildResolvedCombatModel(
+      hostScaffold({
+        ammo: "deathspore",
+        caroming: 2,
+        equipmentIds: ["item:deathspore-arrows"],
+      }),
+    );
+    const byId = new Map(RANGED_ABILITIES.map((a) => [a.id, a]));
+    const catalogue = {
+      catalogue: RANGED_ABILITIES,
+      byId,
+      basicByStyle: new Map([["ranged" as const, RANGED_ABILITIES[0]!]]),
+      abilityRegistry: {
+        byId,
+        basicByStyle: new Map([["ranged" as const, RANGED_ABILITIES[0]!]]),
+      },
+    };
+    const base = buildSimulationInputBase(model, catalogue as never);
+    expect(base.ammo).toBe("deathspore");
+    expect(base.caromingRank).toBe(2);
+
+    const manual = toManualSimulateInput(base, {
+      rotation: rotationOf("ranged_attack"),
+    });
+    const revo = toRevolutionInput(base, {
+      bar: [byId.get("ranged_attack")!],
+      style: "ranged",
+      durationTicks: 30,
+    });
+    expect(manual.ammo).toBe("deathspore");
+    expect(revo.ammo).toBe("deathspore");
+    expect(manual.caromingRank).toBe(2);
+    expect(revo.caromingRank).toBe(2);
+
+    const manSim = simulate(manual);
+    const revoSim = simulateRevolution(revo);
+    // Same ammo path: both can land ranged basics
+    expect(manSim.events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
+    expect(revoSim.events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
+  });
+
+  it("Manual ammo null clears model-packed ammo; override sets; omit keeps", () => {
     const model = buildResolvedCombatModel(
       hostScaffold({ ammo: "deathspore", equipmentIds: ["item:deathspore-arrows"] }),
     );
@@ -385,21 +636,21 @@ describe("ammo packing Manual / Revolution / identity", () => {
     const base = buildSimulationInputBase(model, catalogue as never);
     expect(base.ammo).toBe("deathspore");
 
-    const manual = toManualSimulateInput(base, {
+    const cleared = toManualSimulateInput(base, {
+      rotation: rotationOf("ranged_attack"),
+      ammo: null,
+    });
+    expect(cleared.ammo).toBeUndefined();
+
+    const override = toManualSimulateInput(base, {
+      rotation: rotationOf("ranged_attack"),
+      ammo: "splintering",
+    });
+    expect(override.ammo).toBe("splintering");
+
+    const keep = toManualSimulateInput(base, {
       rotation: rotationOf("ranged_attack"),
     });
-    const revo = toRevolutionInput(base, {
-      bar: [byId.get("ranged_attack")!],
-      style: "ranged",
-      durationTicks: 30,
-    });
-    expect(manual.ammo).toBe("deathspore");
-    expect(revo.ammo).toBe("deathspore");
-
-    const manSim = simulate(manual);
-    const revoSim = simulateRevolution(revo);
-    // Same ammo path: both can land ranged basics
-    expect(manSim.events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
-    expect(revoSim.events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
+    expect(keep.ammo).toBe("deathspore");
   });
 });

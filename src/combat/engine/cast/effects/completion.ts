@@ -1,6 +1,6 @@
 import { grantChannelledMight } from "../../../styles/magic/effects";
 import { schedulePunctureAfterFinish } from "../../resolution/landed/ranged";
-import { patchMagic } from "../../runtime/state";
+import { patchMagic, patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 
 /**
@@ -27,12 +27,19 @@ export function applyCompletionEffects(fx: CastEffectContext): void {
     });
   }
   const finishTick = candidate + prepared.occupancyTicks;
-  const puncture = rt.state.ranged.puncture;
-  if (
-    ability.style === "ranged" &&
-    puncture.stacks > 0 &&
-    puncture.pendingOwnerCast === prepared.snap.castSeq
-  ) {
-    schedulePunctureAfterFinish(rt, finishTick);
+  if (ability.style === "ranged") {
+    const puncture = rt.state.ranged.puncture;
+    const shouldSchedule =
+      puncture.stacks > 0 && puncture.pendingOwnerCast === prepared.snap.castSeq;
+    if (shouldSchedule) {
+      schedulePunctureAfterFinish(rt, finishTick);
+    }
+    // Record completion so late lands (tickOffset past occupancy) schedule from land.
+    const p = rt.state.ranged.puncture;
+    if (p.lastCompletedCastSeq < prepared.snap.castSeq) {
+      rt.state = patchRanged(rt.state, {
+        puncture: { ...p, lastCompletedCastSeq: prepared.snap.castSeq },
+      });
+    }
   }
 }

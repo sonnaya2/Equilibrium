@@ -9,7 +9,7 @@ import {
   applyPunctureStack,
   PUNCTURE_ABILITY_ID,
   PUNCTURE_FIRST_OFFSET_AFTER_FINISH,
-  PUNCTURE_HIT_FRACTIONS,
+  PUNCTURE_HIT_PERCENTS,
   punctureHitDamage,
   punctureSequenceTicks,
 } from "../../../styles/ranged/puncture";
@@ -38,10 +38,10 @@ function schedulePunctureSequence(
   storedDamage: number,
 ): void {
   const ticks = punctureSequenceTicks(firstTick);
-  for (let i = 0; i < PUNCTURE_HIT_FRACTIONS.length; i++) {
-    const fraction = PUNCTURE_HIT_FRACTIONS[i]!;
+  for (let i = 0; i < PUNCTURE_HIT_PERCENTS.length; i++) {
+    const percent = PUNCTURE_HIT_PERCENTS[i]!;
     const tick = ticks[i]!;
-    const amount = punctureHitDamage(storedDamage, fraction);
+    const amount = punctureHitDamage(storedDamage, percent);
     scheduleEvent(rt, {
       tick,
       family: "dot",
@@ -126,14 +126,19 @@ export function onRangedHitLanded(
   const dmg = damage ?? { min: 0, max: 0, expected: 0 };
   if (!mayApplyPuncture(rt, event, dmg)) return;
 
-  // Cast still open if finish has not been applied yet for this sourceCast.
-  // pendingOwnerCast waits for applyCompletionEffects; -1 schedules now.
-  const owner = event.sourceCast >= 0 ? event.sourceCast : -1;
-  const next = applyPunctureStack(rt.state.ranged.puncture, event.tick, rt.input.base, owner);
+  // Open cast: pendingOwnerCast waits for applyCompletionEffects (one sequence per cast).
+  // Finished / autonomous: pendingOwnerCast=-1 and schedule from land (finish analog = land tick).
+  const owner = event.sourceCast;
+  const finished =
+    owner < 0 || owner <= rt.state.ranged.puncture.lastCompletedCastSeq;
+  const next = applyPunctureStack(
+    rt.state.ranged.puncture,
+    event.tick,
+    rt.input.base,
+    finished ? -1 : owner,
+  );
   rt.state = patchRanged(rt.state, { puncture: next });
-  // Immediate schedule only when no cast owns the finish (autonomous / already done).
-  // When ownerCast is set, completion schedules once so multi-hit casts share one sequence.
-  if (owner < 0) {
+  if (next.pendingOwnerCast < 0) {
     schedulePunctureAfterFinish(rt, event.tick);
   }
 }

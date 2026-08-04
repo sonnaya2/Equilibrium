@@ -9,8 +9,8 @@ import {
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
-  icyTempestHits,
 } from "../../styles/melee/effects";
+import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
 import { isMagicAbility, resplendentAsphyxiate } from "../../styles/magic/abilities";
 import {
@@ -162,11 +162,16 @@ export function prepareCast(
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
   }
-  // Icy Tempest: stack-scaled bands; spend path is spendOf (stacks then Vigour).
+  // Icy Tempest: distribution-resolved bands; spend path is spendOf (resolveIcyTempest).
   if (ability.id === "icy_tempest") {
+    const resolved = resolveIcyTempest(
+      rt.state.melee.primordialIce,
+      candidate,
+      rt.state.ringOfVigour,
+    );
     working = {
       ...working,
-      hits: icyTempestHits(rt.state.melee.primordialIceStacks),
+      hits: resolved.expectedHits.map((h) => ({ band: { ...h.band } })),
     };
   }
   if (ability.id === "asphyxiate" && (input.tumekensPieces ?? 0) >= 4) {

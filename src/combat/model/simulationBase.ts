@@ -152,9 +152,9 @@ export function toHybridManualCombatModel(
     targetHpPercent: scaffold.target.hpPercent,
     cap: scaffold.cap,
     startingAdrenaline: scaffold.startingAdrenaline,
-    // Match withManualRotationLine: no equipment ids, simplified weapon shape.
-    equipmentIds: [],
-    weaponConfiguration: scaffold.style === "necromancy" ? "necromancy" : "twohand",
+    // Preserve equipmentIds and weaponConfiguration from scaffold (Leng / passives).
+    equipmentIds: scaffold.equipmentIds,
+    weaponConfiguration: scaffold.weaponConfiguration,
     // Empty damage modifiers (castModifiersFor: () => []).
     setCounts: [],
     vulnerability: false,

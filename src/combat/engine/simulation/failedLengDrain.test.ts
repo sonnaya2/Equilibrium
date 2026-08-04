@@ -43,14 +43,20 @@ function pendingAttack(error?: string): Branch {
 }
 
 describe("failed terminal Leng drain", () => {
-  it("expandLengOnLand forks failed arms but never clears error", () => {
+  it("expandLengOnLand keeps failed error on single compact spine", () => {
     const b = pendingAttack("unpayable");
     const set = expandLengOnLand(b, 0);
-    expect(set.branches.length).toBeGreaterThan(1);
-    expect(set.branches.every((arm) => arm.error === "unpayable")).toBe(true);
-    expect(set.branches.some((arm) => arm.error === undefined)).toBe(false);
-    expect(set.branches.reduce((s, arm) => s + arm.weight, 0)).toBeCloseTo(1, 10);
+    expect(set.branches).toHaveLength(1);
+    expect(set.branches[0]!.error).toBe("unpayable");
+    expect(set.branches[0]!.weight).toBeCloseTo(1, 10);
     expect(set.residualWeight).toBe(0);
+    expect(set.exactness).toBe("exact");
+    // Still applies stack mass even when the branch is failed.
+    const eStacks = set.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce(
+      (s, w, i) => s + w * i,
+      0,
+    );
+    expect(eStacks).toBeCloseTo(0.12, 10);
   });
 
   it("drain+finish on failed pending matches finish-only (no double-count)", () => {

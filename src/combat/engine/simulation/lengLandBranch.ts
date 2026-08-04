@@ -1,11 +1,10 @@
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
-import { expectedLengLandState } from "../../styles/melee/lengDistribution";
 import {
-  foldLengOutcomesByFutureState,
-  materializeLengLandOutcomes,
-  normalizeLengFrostUntil,
-} from "../../styles/melee/lengRng";
+  applyFrostbladesOnLand,
+  applyLengLandToDistribution,
+  expirePrimordialIce,
+} from "../../styles/melee/primordialIce";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { scheduleCastEvents } from "../cast/schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "../cast/effects";
@@ -25,7 +24,6 @@ import {
   mergeAndCapBranches,
   mergeBranches,
   noteBranchLiveCount,
-  snapshotRuntime,
   type Branch,
   type BranchExactness,
   type BranchSet,
@@ -39,30 +37,32 @@ import {
 export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES * 2;
 
 /**
- * Apply Leng post-land state. Frost windows already expired at `tick` normalize
- * to 0 (proven future-equivalent for damage + non-chill carry).
- */
-function applyLengOutcome(
-  rt: SimulationRuntime,
-  stacks: number,
-  frostUntil: number,
-  tick: number,
-): void {
-  rt.state = patchMelee(rt.state, {
-    primordialIceStacks: stacks,
-    frostbladesUntilTick: normalizeLengFrostUntil(frostUntil, tick),
-  });
-}
-
-/**
  * Zero expired Frostblades against `atTick` (logical now during advance).
+ * Clears open-mass with the window so damage scaling does not outlive until.
  */
 function expireFrostOnBranches(branches: readonly Branch[], atTick: number): boolean {
   let cleared = false;
   for (const b of branches) {
     const frost = b.rt.state.melee.frostbladesUntilTick;
     if (frost > 0 && frost <= atTick) {
-      b.rt.state = patchMelee(b.rt.state, { frostbladesUntilTick: 0 });
+      b.rt.state = patchMelee(b.rt.state, {
+        frostbladesUntilTick: 0,
+        frostbladesOpenMass: 0,
+      });
+      cleared = true;
+    }
+  }
+  return cleared;
+}
+
+/** Expire Primordial Ice stack mass when the shared timer has closed at `atTick`. */
+function expireStacksOnBranches(branches: readonly Branch[], atTick: number): boolean {
+  let cleared = false;
+  for (const b of branches) {
+    const ice = b.rt.state.melee.primordialIce;
+    const next = expirePrimordialIce(ice, atTick);
+    if (next !== ice) {
+      b.rt.state = patchMelee(b.rt.state, { primordialIce: next });
       cleared = true;
     }
   }
@@ -85,92 +85,32 @@ export function isLengEligibleLand(
 }
 
 /**
- * Fork a branch on Leng land RNG - state only.
- *
- * Score-only: applyLengLandEvCollapse (E[stacks]/E[frost], zero snapshots,
- * residual 0, exactness bounded-approximation). Full-analysis multi-arms.
- *
- * Proven (fork path):
- * - The just-resolved land's damage ledger is identical across Leng arms
- *   (recordResolved runs before expand). No damage-side fork of that hit.
- * - Future physics keys only on (stacks, active frostUntil). Identical keys
- *   fold weight onto one survivor without snapshotRuntime.
- * - Divergent stacks and/or frostUntil are NOT future-equivalent: stacks drive
- *   Icy Tempest integers + further Leng maps; frost drives frostblades flats
- *   and chill carry. Those arms must snapshot+fork. Residual is never reassigned
- *   to a non-equivalent survivor (caller caps disclose residualWeight).
- *
- * Heaviest outcome mutates in place; lighter state-divergent arms clone from
- * pre-apply. Preserves branch.error on residual banks.
+ * In-place Leng land: compact stack distribution + frost open-mass spine.
+ * No multi-arm fork; damage ledger already recorded before expand.
  */
-/**
- * Score-only: collapse EF×BC to E[stacks]/E[frostUntil] on one spine.
- * residualWeight=0; exactness=bounded-approximation (honest non-exact).
- * Zero snapshotRuntime — stops dual-Leng clone explosion under ranking evals.
- */
-function applyLengLandEvCollapse(branch: Branch, tick: number): BranchSet {
-  const rt = branch.rt;
-  const next = expectedLengLandState(
-    rt.lengLandTable!,
-    rt.state.melee.primordialIceStacks,
-    rt.state.melee.frostbladesUntilTick,
+function applyLengLandInPlace(rt: SimulationRuntime, tick: number): void {
+  const table = rt.lengLandTable;
+  if (!table) return;
+  const melee = rt.state.melee;
+  const dist = expirePrimordialIce(melee.primordialIce, tick);
+  const nextDist = applyLengLandToDistribution(dist, table, tick);
+  const frost = applyFrostbladesOnLand(
+    melee.frostbladesUntilTick,
+    melee.frostbladesOpenMass ?? 0,
+    table,
     tick,
   );
-  applyLengOutcome(rt, next.stacks, next.frostUntil, tick);
-  return emptyBranchSet(
-    [{ weight: branch.weight, rt, error: branch.error }],
-    0,
-    "bounded-approximation",
-  );
+  rt.state = patchMelee(rt.state, {
+    primordialIce: nextDist,
+    frostbladesUntilTick: frost.frostbladesUntilTick,
+    frostbladesOpenMass: frost.frostbladesOpenMass,
+  });
 }
 
 export function expandLengOnLand(branch: Branch, tick: number): BranchSet {
-  const table = branch.rt.lengLandTable;
-  if (!table) return emptyBranchSet([branch]);
-
-  if (branch.rt.detailLevel === "score-only") {
-    return applyLengLandEvCollapse(branch, tick);
-  }
-
-
-  // Materialize then defensive fold by future-state key (expired frost ≡ 0).
-  const outcomes = foldLengOutcomesByFutureState(
-    materializeLengLandOutcomes(
-      table,
-      branch.rt.state.melee.primordialIceStacks,
-      branch.rt.state.melee.frostbladesUntilTick,
-      tick,
-    ),
-    tick,
-  );
-  if (outcomes.length === 0) return emptyBranchSet([branch]);
-
-  // Partial fold: one future class → apply on parent, zero snapshots.
-  if (outcomes.length === 1) {
-    const only = outcomes[0]!;
-    applyLengOutcome(branch.rt, only.stacks, only.frostUntil, tick);
-    return emptyBranchSet([
-      { weight: branch.weight * only.weight, rt: branch.rt, error: branch.error },
-    ]);
-  }
-
-  // State diverges: fork only those classes (not damage-ledger arms).
-  const sorted = [...outcomes].sort((a, b) => b.weight - a.weight);
-  const primary = sorted[0]!;
-  const clones = sorted.slice(1).map((outcome) => ({
-    outcome,
-    rt: snapshotRuntime(branch.rt),
-  }));
-  applyLengOutcome(branch.rt, primary.stacks, primary.frostUntil, tick);
-  const out: Branch[] = [
-    { weight: branch.weight * primary.weight, rt: branch.rt, error: branch.error },
-  ];
-  for (const { outcome, rt } of clones) {
-    applyLengOutcome(rt, outcome.stacks, outcome.frostUntil, tick);
-    out.push({ weight: branch.weight * outcome.weight, rt, error: branch.error });
-  }
-  noteBranchLiveCount(out.length);
-  return emptyBranchSet(out);
+  if (!branch.rt.lengLandTable) return emptyBranchSet([branch]);
+  applyLengLandInPlace(branch.rt, tick);
+  return emptyBranchSet([{ weight: branch.weight, rt: branch.rt, error: branch.error }]);
 }
 
 function grantMeteorPassive(
@@ -206,10 +146,17 @@ function completeAdvance(rt: SimulationRuntime, fromTick: number, targetTick: nu
     });
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
-  // Expired Frostblades → 0 so post-window futures merge (proven equivalence).
+  // Expired Frostblades -> 0 so post-window futures merge (proven equivalence).
   const frost = rt.state.melee.frostbladesUntilTick;
   if (frost > 0 && frost <= rt.state.tick) {
-    rt.state = patchMelee(rt.state, { frostbladesUntilTick: 0 });
+    rt.state = patchMelee(rt.state, {
+      frostbladesUntilTick: 0,
+      frostbladesOpenMass: 0,
+    });
+  }
+  const ice = expirePrimordialIce(rt.state.melee.primordialIce, rt.state.tick);
+  if (ice !== rt.state.melee.primordialIce) {
+    rt.state = patchMelee(rt.state, { primordialIce: ice });
   }
 }
 
@@ -382,7 +329,7 @@ function advanceToBranchesInner(
       recordResolved(b.rt, event, resolution);
 
       const ability = b.rt.byId.get(event.abilityId);
-      // Failed residual banks still Leng-fork (error preserved): frostblades /
+      // Failed residual banks still Leng-expand (error preserved): frostblades /
       // stacks from earlier pending hits change later banked damage.
       if (isLengEligibleLand(b.rt, event, ability, resolution.damage)) {
         const expanded = expandLengOnLand(b, event.tick);
@@ -410,10 +357,11 @@ function advanceToBranchesInner(
     }
 
     const frostExpired = expireFrostOnBranches(next, minTick);
+    const stacksExpired = expireStacksOnBranches(next, minTick);
     noteBranchLiveCount(next.length);
 
     if (!expandedAny && next.length <= maxLive) {
-      if (frostExpired && next.length > 1) {
+      if ((frostExpired || stacksExpired) && next.length > 1) {
         const folded = exactMergeLive(next, exactness);
         live = folded.branches;
         exactness = folded.exactness;
@@ -423,7 +371,7 @@ function advanceToBranchesInner(
       continue;
     }
     if (next.length <= maxLive) {
-      if (frostExpired && next.length > 1) {
+      if ((frostExpired || stacksExpired) && next.length > 1) {
         const folded = exactMergeLive(next, exactness);
         live = folded.branches;
         exactness = folded.exactness;

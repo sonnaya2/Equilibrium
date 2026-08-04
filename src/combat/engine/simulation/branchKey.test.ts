@@ -75,12 +75,79 @@ describe("branchKey structural vs JSON partitions", () => {
     const a = snapshotRuntime(base);
     const b = snapshotRuntime(base);
     const c = snapshotRuntime(base);
-    a.state = patchMelee(a.state, { primordialIceStacks: 1 });
-    b.state = patchMelee(b.state, { primordialIceStacks: 2 });
-    c.state = patchMelee(c.state, { primordialIceStacks: 1, frostbladesUntilTick: 20 });
+    a.state = patchMelee(a.state, {
+      primordialIce: { stackMass: (() => { const m = Array(11).fill(0); m[1] = 1; return m; })(), expiresAtTick: 0 },
+    });
+    b.state = patchMelee(b.state, {
+      primordialIce: { stackMass: (() => { const m = Array(11).fill(0); m[2] = 1; return m; })(), expiresAtTick: 0 },
+    });
+    c.state = patchMelee(c.state, {
+      primordialIce: { stackMass: (() => { const m = Array(11).fill(0); m[1] = 1; return m; })(), expiresAtTick: 0 },
+      frostbladesUntilTick: 20,
+      frostbladesOpenMass: 0.3,
+    });
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(c));
     expect(branchKeyStructural(b)).not.toBe(branchKeyStructural(c));
+  });
+
+  it("two different primordialIce mass distributions differ keys", () => {
+    const base = createRuntime(lengInput);
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    // Same E[stacks]=1 but different mass shape (unit vs split).
+    a.state = patchMelee(a.state, {
+      primordialIce: {
+        stackMass: (() => {
+          const m = Array(11).fill(0);
+          m[1] = 1;
+          return m;
+        })(),
+        expiresAtTick: 100,
+      },
+      frostbladesUntilTick: 0,
+      frostbladesOpenMass: 0,
+    });
+    b.state = patchMelee(b.state, {
+      primordialIce: {
+        stackMass: (() => {
+          const m = Array(11).fill(0);
+          m[0] = 0.5;
+          m[2] = 0.5;
+          return m;
+        })(),
+        expiresAtTick: 100,
+      },
+      frostbladesUntilTick: 0,
+      frostbladesOpenMass: 0,
+    });
+    expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(2);
+  });
+
+  it("same stackMass + frost open mass + until merge", () => {
+    const base = createRuntime(lengInput);
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    const mass = (() => {
+      const m = Array(11).fill(0);
+      m[0] = 0.88;
+      m[1] = 0.11;
+      m[2] = 0.01;
+      return m;
+    })();
+    a.state = patchMelee(a.state, {
+      primordialIce: { stackMass: mass, expiresAtTick: 200 },
+      frostbladesUntilTick: 30,
+      frostbladesOpenMass: 0.02,
+    });
+    b.state = patchMelee(b.state, {
+      primordialIce: { stackMass: [...mass], expiresAtTick: 200 },
+      frostbladesUntilTick: 30,
+      frostbladesOpenMass: 0.02,
+    });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(mergeBranches([{ weight: 0.4, rt: a }, { weight: 0.6, rt: b }])).toHaveLength(1);
   });
 
   it("queue ability id and castSnap.searingWindsAtCast split keys", () => {
@@ -144,7 +211,7 @@ describe("branchKey structural vs JSON partitions", () => {
 
     const lengA = createRuntime(lengInput);
     castN(lengA, 2);
-    lengA.state = patchMelee(lengA.state, { primordialIceStacks: 3 });
+    lengA.state = patchMelee(lengA.state, { primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[3] = 1; return a; })(), expiresAtTick: 0 } });
     fixtures.push(lengA);
     const lengB = snapshotRuntime(lengA);
     lengB.state = patchMelee(lengB.state, { frostbladesUntilTick: 15 });
@@ -238,9 +305,31 @@ describe("branchKey structural vs JSON partitions", () => {
     const a = snapshotRuntime(base);
     const b = snapshotRuntime(base);
     a.state = { ...a.state, tick: 25 };
-    a.state = patchMelee(a.state, { primordialIceStacks: 2, frostbladesUntilTick: 10 });
+    a.state = patchMelee(a.state, {
+      primordialIce: {
+        stackMass: (() => {
+          const m = Array(11).fill(0);
+          m[2] = 1;
+          return m;
+        })(),
+        expiresAtTick: 0,
+      },
+      frostbladesUntilTick: 10,
+      frostbladesOpenMass: 0,
+    });
     b.state = { ...b.state, tick: 25 };
-    b.state = patchMelee(b.state, { primordialIceStacks: 2, frostbladesUntilTick: 0 });
+    b.state = patchMelee(b.state, {
+      primordialIce: {
+        stackMass: (() => {
+          const m = Array(11).fill(0);
+          m[2] = 1;
+          return m;
+        })(),
+        expiresAtTick: 0,
+      },
+      frostbladesUntilTick: 0,
+      frostbladesOpenMass: 0,
+    });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
   });

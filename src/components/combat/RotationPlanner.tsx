@@ -116,8 +116,7 @@ function withManualRotationLine(
     equipmentStyleDamageBonus: 0,
     styleDamageBonus: 0,
     damagePotentialSource: line.damagePotentialPct === 100 ? "100% assumption" : "manual override",
-    equipmentIds: [],
-    weaponConfiguration: line.combatStyle === "necromancy" ? "necromancy" : "twohand",
+    // equipmentIds / weaponConfiguration preserved via ...scaffold (Leng / passives).
     globalModifiers: [],
     castModifiersFor: () => [],
   };

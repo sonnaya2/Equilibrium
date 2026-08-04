@@ -1,5 +1,6 @@
 import type { BleedId, SourceReference } from "../../types";
 import { newBloodlust, type BloodlustState } from "./bloodlust";
+import type { PrimordialIceDistribution } from "./primordialIce";
 
 const wiki = (title: string, path: string, verifiedAt = "2026-07-26"): SourceReference => ({
   source: "runescape-wiki",
@@ -136,10 +137,17 @@ export interface MeleeRotationState {
   bleedChainNext: "slaughter" | "massacre" | null;
   bleedChainUntilTick: number;
   enduringRuin: { nextAttackBonus: number; untilTick: number; grantedByCast: number };
-  /** Primordial Ice stacks from Leng weapons (cap 10). */
-  primordialIceStacks: number;
+  /**
+   * Compact Primordial Ice distribution (11 bins + expiry).
+   * Never store a fractional E[stacks] scalar for cast-time spend/bands.
+   */
+  primordialIce: PrimordialIceDistribution;
   /** Frostblades window end (0 = inactive). Active while tick < until. */
   frostbladesUntilTick: number;
+  /**
+   * Probability mass that Frostblades is active (0..1). Damage flat scales by this.
+   */
+  frostbladesOpenMass: number;
 }
 
 export const newMeleeRotationState = (): MeleeRotationState => ({
@@ -153,15 +161,21 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   bleedChainNext: null,
   bleedChainUntilTick: 0,
   enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
-  primordialIceStacks: 0,
+  primordialIce: {
+    stackMass: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    expiresAtTick: 0,
+  },
   frostbladesUntilTick: 0,
+  frostbladesOpenMass: 0,
 });
 
+/** Integer-stack spend (floors). Prefer resolveIcyTempest for distributions. */
 export function icyTempestSpend(stacks: number): number {
   const n = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
   return Math.max(0, ICY_TEMPEST_COST_PCT - ICY_TEMPEST_COST_REDUCTION_PER_STACK * n);
 }
 
+/** Integer-stack hit bands (floors). Prefer resolveIcyTempest / icyTempestHitsLinear. */
 export function icyTempestHits(stacks: number): { band: { minPct: number; maxPct: number } }[] {
   const n = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
   const addMin = ICY_TEMPEST_STACK_BAND.minPct * n;
@@ -193,3 +207,5 @@ export function greaterBargeIdleBand(
     maxPct: baseMaxPct + GREATER_BARGE_IDLE_MAX_PCT_PER_TICK * t,
   };
 }
+
+export type { PrimordialIceDistribution };

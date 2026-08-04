@@ -27,7 +27,6 @@ import {
   lengExpectedStacks,
   lengExpectedFutureClasses,
   lengFutureClassCount,
-  lengFutureStateKey,
   lengFutureStatesEquivalent,
   foldLengOutcomesByFutureState,
   normalizeLengFrostUntil,
@@ -389,7 +388,7 @@ describe("Leng exhaustive EV oracle", () => {
     expect(r.terminalClasses).toBeGreaterThan(1);
   });
 
-  it("expandLengOnLand E[stacks] matches exhaustive oracle", () => {
+  it("expandLengOnLand E[stacks] matches exhaustive oracle (single spine)", () => {
     const oracle = lengExpectedStacks(1, {
       hasEndlessFrost: true,
       hasBoundlessChill: true,
@@ -397,16 +396,19 @@ describe("Leng exhaustive EV oracle", () => {
     const rt = createRuntime(lengGearContextInput());
     const set = expandLengOnLand({ weight: 1, rt }, 0);
     expect(set.residualWeight).toBe(0);
+    expect(set.exactness).toBe("exact");
+    expect(set.branches).toHaveLength(1);
     expect(isNearOne(massOf(set.branches))).toBe(true);
-    const eStacks = set.branches.reduce(
-      (s, b) => s + b.weight * b.rt.state.melee.primordialIceStacks,
+    const eStacks = set.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce(
+      (s, w, i) => s + w * i,
       0,
     );
     expect(eStacks).toBeCloseTo(oracle.expectedStacks, 10);
     expect(eStacks).toBeCloseTo(0.12, 10);
+    expect(set.branches[0]!.rt.state.melee.frostbladesOpenMass).toBeCloseTo(0.02, 10);
   });
 
-  it("unrelated non-Leng event does not alter Leng E[stacks] under EV model", () => {
+  it("unrelated non-Leng event does not alter Leng E[stacks] under mass model", () => {
     // Pure EV: only Leng-eligible hits move stack mass.
     const twoHits = lengExpectedStacks(2, {
       hasEndlessFrost: true,
@@ -420,52 +422,38 @@ describe("Leng exhaustive EV oracle", () => {
     expect(sameTwoHits.expectedStacks).toBeCloseTo(twoHits.expectedStacks, 12);
     expect(isNearOne(twoHits.mass)).toBe(true);
 
-    // expandLengOnLand twice vs with an intervening non-Leng snapshot: same EV.
+    // expandLengOnLand twice on the same spine vs intervening non-Leng bump: same EV.
     const rtA = createRuntime(lengGearContextInput());
-    const liveA = expandLengOnLand({ weight: 1, rt: rtA }, 0).branches;
-    // Merge stack classes for the second hit expand (independent rolls per land).
-    const afterSecond: { weight: number; stacks: number }[] = [];
-    for (const b of liveA) {
-      const step = expandLengOnLand(
-        { weight: b.weight, rt: snapshotRuntime(b.rt) },
-        3,
-      );
-      for (const nb of step.branches) {
-        afterSecond.push({
-          weight: nb.weight,
-          stacks: nb.rt.state.melee.primordialIceStacks,
-        });
-      }
-    }
-    expect(isNearOne(afterSecond.reduce((s, o) => s + o.weight, 0))).toBe(true);
-    expect(expectedStacksFromOutcomes(afterSecond)).toBeCloseTo(twoHits.expectedStacks, 8);
+    const afterFirstA = expandLengOnLand({ weight: 1, rt: rtA }, 0);
+    expect(afterFirstA.branches).toHaveLength(1);
+    const afterSecondA = expandLengOnLand(
+      { weight: 1, rt: snapshotRuntime(afterFirstA.branches[0]!.rt) },
+      3,
+    );
+    expect(afterSecondA.branches).toHaveLength(1);
+    const eA = afterSecondA.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce(
+      (s, w, i) => s + w * i,
+      0,
+    );
+    expect(eA).toBeCloseTo(twoHits.expectedStacks, 8);
 
-    // Intervening non-Leng: bump tick / nextSeq without stack change, then two lands.
     const rtB = createRuntime(lengGearContextInput());
     rtB.nextSeq += 10;
     rtB.state = { ...rtB.state, tick: 5 };
-    const liveB = expandLengOnLand({ weight: 1, rt: rtB }, 5).branches;
-    const afterSecondB: { weight: number; stacks: number }[] = [];
-    for (const b of liveB) {
-      const step = expandLengOnLand(
-        { weight: b.weight, rt: snapshotRuntime(b.rt) },
-        8,
-      );
-      for (const nb of step.branches) {
-        afterSecondB.push({
-          weight: nb.weight,
-          stacks: nb.rt.state.melee.primordialIceStacks,
-        });
-      }
-    }
-    expect(expectedStacksFromOutcomes(afterSecondB)).toBeCloseTo(twoHits.expectedStacks, 8);
-    expect(expectedStacksFromOutcomes(afterSecondB)).toBeCloseTo(
-      expectedStacksFromOutcomes(afterSecond),
-      10,
+    const afterFirstB = expandLengOnLand({ weight: 1, rt: rtB }, 5);
+    const afterSecondB = expandLengOnLand(
+      { weight: 1, rt: snapshotRuntime(afterFirstB.branches[0]!.rt) },
+      8,
     );
+    const eB = afterSecondB.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce(
+      (s, w, i) => s + w * i,
+      0,
+    );
+    expect(eB).toBeCloseTo(twoHits.expectedStacks, 8);
+    expect(eB).toBeCloseTo(eA, 10);
   });
 
-  it("simulate/oracle cast path: Leng land branches match exhaustive E[stacks]", () => {
+  it("simulate/oracle cast path: Leng land E[stacks] matches exhaustive oracle", () => {
     const oracle = lengExpectedStacks(1, {
       hasEndlessFrost: true,
       hasBoundlessChill: true,
@@ -474,25 +462,28 @@ describe("Leng exhaustive EV oracle", () => {
       ...lengGearContextInput(),
       rotation: rotationOf("attack"),
     };
-    // Uncapped castOutcomes goes through commitCastBranches + Leng land fork.
-    const { branches, sawBranching } = oracleSimulate(input, { merge: false });
-    expect(sawBranching || branches.length > 1).toBe(true);
+    // Compact mass spine: castOutcomes no longer multi-arm forks on Leng land.
+    const { branches } = oracleSimulate(input, { merge: false });
     expect(isNearOne(massOf(branches))).toBe(true);
     const eStacks = branches.reduce(
-      (s, b) => s + b.weight * b.rt.state.melee.primordialIceStacks,
+      (s, b) =>
+        s +
+        b.weight *
+          b.rt.state.melee.primordialIce.stackMass.reduce((ss, w, i) => ss + w * i, 0),
       0,
     );
     expect(eStacks).toBeCloseTo(oracle.expectedStacks, 8);
     expect(eStacks).toBeCloseTo(0.12, 8);
 
-    // Production simulate may cap; when residual is 0, E[stacks] still matches.
     const prod = simulate(input);
     expect(prod.ok).toBe(true);
     if (prodResidual(prod) <= PROB_TOLERANCE) {
-      // Re-expand uncapped for stack EV (summary does not expose stack EV).
       const again = oracleSimulate(input);
       const e2 = again.branches.reduce(
-        (s, b) => s + b.weight * b.rt.state.melee.primordialIceStacks,
+        (s, b) =>
+          s +
+          b.weight *
+            b.rt.state.melee.primordialIce.stackMass.reduce((ss, w, i) => ss + w * i, 0),
         0,
       );
       expect(e2).toBeCloseTo(oracle.expectedStacks, 8);
@@ -530,7 +521,7 @@ describe("Leng future-state equivalence oracle", () => {
     expect(lengFutureClassCount(folded, tick)).toBe(2);
   });
 
-  it("dual Leng one-land future class count matches expandLengOnLand forks", () => {
+  it("dual Leng one-land: expand E[stacks] matches oracle; single compact branch", () => {
     const tick = 0;
     const oracle = lengExpectedFutureClasses(1, {
       hasEndlessFrost: true,
@@ -540,27 +531,23 @@ describe("Leng future-state equivalence oracle", () => {
       tick,
     });
     expect(isNearOne(oracle.mass)).toBe(true);
-    // 4 EF×BC arms materialize to 4 distinct (stacks,frost) classes from 0/0.
+    // Exhaustive arm oracle still sees 4 (stacks,frost) classes; product collapses to mass.
     expect(oracle.classes).toBe(4);
+    expect(oracle.expectedStacks).toBeCloseTo(0.12, 10);
 
     const rt = createRuntime(lengGearContextInput());
     const set = expandLengOnLand({ weight: 1, rt }, tick);
     expect(set.residualWeight).toBe(0);
-    expect(set.branches).toHaveLength(oracle.classes);
-    const keys = new Set(
-      set.branches.map((b) =>
-        lengFutureStateKey(
-          b.rt.state.melee.primordialIceStacks,
-          b.rt.state.melee.frostbladesUntilTick,
-          tick,
-        ),
-      ),
+    expect(set.branches).toHaveLength(1);
+    const eStacks = set.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce(
+      (s, w, i) => s + w * i,
+      0,
     );
-    expect(keys.size).toBe(oracle.classes);
-    expect(oracle.expectedStacks).toBeCloseTo(0.12, 10);
+    expect(eStacks).toBeCloseTo(oracle.expectedStacks, 10);
+    expect(set.branches[0]!.rt.state.melee.frostbladesOpenMass).toBeCloseTo(0.02, 10);
   });
 
-  it("at stack cap EF is no-op: only frost diverges (2 classes)", () => {
+  it("at stack cap EF is no-op: expand keeps stacks=cap, frostOpenMass≈0.02", () => {
     const oracle = lengExpectedFutureClasses(1, {
       hasEndlessFrost: true,
       hasBoundlessChill: true,
@@ -568,22 +555,37 @@ describe("Leng future-state equivalence oracle", () => {
       frostUntil: 0,
       tick: 0,
     });
+    // Exhaustive classes still 2 (frost open/closed); product is one mass spine.
     expect(oracle.classes).toBe(2);
     expect(oracle.expectedStacks).toBe(PRIMORDIAL_ICE_CAP);
 
     const rt = createRuntime(lengGearContextInput());
     rt.state = {
       ...rt.state,
-      melee: { ...rt.state.melee, primordialIceStacks: PRIMORDIAL_ICE_CAP },
+      melee: {
+        ...rt.state.melee,
+        primordialIce: {
+          stackMass: (() => {
+            const a = Array(11).fill(0);
+            a[PRIMORDIAL_ICE_CAP] = 1;
+            return a;
+          })(),
+          expiresAtTick: 0,
+        },
+      },
     };
     const set = expandLengOnLand({ weight: 1, rt }, 0);
-    expect(set.branches).toHaveLength(2);
+    expect(set.branches).toHaveLength(1);
     expect(set.residualWeight).toBe(0);
+    expect(
+      set.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce((s, w, i) => s + w * i, 0),
+    ).toBe(PRIMORDIAL_ICE_CAP);
+    expect(set.branches[0]!.rt.state.melee.frostbladesOpenMass).toBeCloseTo(0.02, 10);
   });
 
-  it("cannot fully fold dual Leng: stacks and frost both create non-equivalent futures", () => {
+  it("exhaustive dual Leng arms still diverge on stacks and frost (oracle only)", () => {
     const open = lengLandOutcomes(true, true, 0, 0, 0);
-    // Distinct future keys => must fork (not damage-EV fold).
+    // Arm enumerator is still multi-class; product expand folds into mass.
     expect(lengFutureClassCount(open, 0)).toBeGreaterThan(1);
     const stackOnly = new Set(open.map((o) => o.stacks));
     const frostOnly = new Set(open.map((o) => o.frostUntil));

@@ -67,6 +67,12 @@ export interface AbilitySpec {
    * Ring of Vigour reduces requirement and spend to 90% of original cost.
    */
   weaponSpecial?: boolean;
+  /**
+   * When true, cast requires a native weapon with specialAttackId === ability.id
+   * or Essence of Finality equipped (stored special / EoF access).
+   * Weapon specials that are always available via style alone leave this unset/false.
+   */
+  requiresSpecialAccess?: boolean;
   adrenaline?: { gain?: number; cost?: number };
   cooldownSeconds?: number;
   stateEffect?: StateEffectId;

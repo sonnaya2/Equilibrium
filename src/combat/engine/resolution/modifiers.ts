@@ -75,7 +75,12 @@ export function landTimeModifiers(
     at < state.melee.frostbladesUntilTick &&
     !modifiers.some((modifier) => modifier.id === "item:frostblades")
   ) {
-    modifiers.push(frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)));
+    // openMass 0 with a live until = fully open (unit seeds); lands set openMass in (0,1].
+    const raw = state.melee.frostbladesOpenMass ?? 0;
+    const open = raw > 0 ? Math.min(1, raw) : 1;
+    modifiers.push(
+      frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION * open)),
+    );
   }
   if (
     equipment?.amHejDamageBonus &&

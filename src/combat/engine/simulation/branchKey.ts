@@ -1,6 +1,7 @@
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ActiveConjure } from "../../styles/necromancy/conjures";
 import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
+import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
@@ -158,7 +159,12 @@ function encodeState(state: RotationState): string {
     n(m.enduringRuin.nextAttackBonus),
     n(m.enduringRuin.untilTick),
     n(m.enduringRuin.grantedByCast),
-    n(m.primordialIceStacks),
+    // Primordial Ice: expired-normalized stack mass + expiry + frost open mass.
+    (() => {
+      const ice = expirePrimordialIce(m.primordialIce, state.tick);
+      return ice.stackMass.map((w) => n(w)).join(US) + US + n(ice.expiresAtTick);
+    })(),
+    n(m.frostbladesOpenMass ?? 0),
     // Expired frost ≡ 0 (same as expand / completeAdvance).
     n(normalizeLengFrostUntil(m.frostbladesUntilTick, state.tick)),
     // ranged

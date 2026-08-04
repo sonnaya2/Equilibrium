@@ -37,7 +37,12 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
         });
         break;
       case "consumePrimordialIce":
-        rt.state = patchMelee(rt.state, { primordialIceStacks: 0 });
+        rt.state = patchMelee(rt.state, {
+          primordialIce: {
+            stackMass: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            expiresAtTick: 0,
+          },
+        });
         break;
     }
   }

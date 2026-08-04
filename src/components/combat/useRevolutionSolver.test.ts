@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { planWorkers, solveContextPayload } from "@/combat/solver";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
-import { loadoutStats } from "@/components/combat/loadoutStats";
 import { emptyBuild } from "@/league";
 import {
   APPLY_FINAL_STAMP_REJECT_MESSAGE,

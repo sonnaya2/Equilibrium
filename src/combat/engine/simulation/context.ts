@@ -1,26 +1,27 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { costOf, performOffGcdCast, prepareSimulationCast } from "../cast";
+import { costOf, performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick, firstLegalTickFor } from "../runtime/state";
 import {
   appendWithIntermediateCap,
   combineExactness,
+  materializeCastPlans,
   mergeAndCapBranches,
+  planCastOutcomes,
   type Branch,
   type BranchExactness,
+  type CastOutcomePlan,
 } from "./branch";
 import type { CastAttempt, CastContext, CastContextInput, CastRng, SimulateOptions } from "./contracts";
-import { advanceToBranches, commitCastBranches } from "./lengLandBranch";
+import { advanceToBranches } from "./lengLandBranch";
 import { combineBranchSummaries } from "./summary";
 
 /**
- * Manual CastContext: multi-branch under the hood so land-time Leng forks keep
- * stack EV. prepareSimulationCast may advance with advanceTo; commit uses
- * commitCastBranches. finish drains via combineBranchSummaries (drainBranchToEnd).
- * getState / costOf / firstLegalTick read the heaviest live branch (representative).
- *
- * Multi-parent expansions intermediate-cap via appendWithIntermediateCap
- * (materializeCastPlans absorb parity) so parent*Leng products never peak unbounded.
+ * Manual CastContext: multi-branch under the hood.
+ * performCast uses planCastOutcomes + materializeCastPlans (same as Revolution/solver),
+ * so Icy Tempest forks on distinct integer post-cast adrenaline spends only — never
+ * floors E[stacks] into a single fractional spend.
+ * finish drains via combineBranchSummaries. getState reads heaviest live branch.
  */
 export function createCastContext(input: CastContextInput): CastContext {
   const root = createRuntime(input);
@@ -44,6 +45,28 @@ export function createCastContext(input: CastContextInput): CastContext {
     exactness = combineExactness(exactness, capped.exactness);
     if (capped.branches.length > 1) sawBranching = true;
     branches = capped.branches;
+  }
+
+  /**
+   * When the caller forces CastRng (Relentless/Impatient tests), collapse RNG product
+   * arms onto that forced outcome while keeping distinct Icy Tempest spend groups.
+   */
+  function applyForcedRng(plans: readonly CastOutcomePlan[], rng: CastRng): CastOutcomePlan[] {
+    const bySpend = new Map<number, CastOutcomePlan>();
+    for (const p of plans) {
+      const spend = p.prepared.spend;
+      const prev = bySpend.get(spend);
+      if (!prev) {
+        bySpend.set(spend, { ...p, rng, weight: p.weight });
+      } else {
+        bySpend.set(spend, { ...prev, weight: prev.weight + p.weight, rng });
+      }
+    }
+    const collapsed = [...bySpend.values()];
+    return collapsed.map((p) => ({
+      ...p,
+      inPlace: collapsed.length === 1,
+    }));
   }
 
   return {
@@ -100,21 +123,41 @@ export function createCastContext(input: CastContextInput): CastContext {
           next = folded.branches;
           continue;
         }
-        // Advance may use plain advanceTo inside prepare; Leng expands on commit.
-        const preparation = prepareSimulationCast(branch.rt, ability, readyTick);
-        if (!preparation.ok) {
-          const folded = appendWithIntermediateCap(next, [branch]);
+        // Same cast pipeline as Revolution/solver: advance + prepare + spend/RNG forks.
+        const planned = planCastOutcomes(branch, ability, readyTick, auto);
+        residual += planned.residualWeight;
+        exact = combineExactness(exact, planned.exactness);
+
+        if (planned.plans.length === 0) {
+          // Rejected cast: advance already applied; keep branch castable (no error poison).
+          for (const err of planned.errors) {
+            const live = { weight: err.weight, rt: err.rt };
+            const folded = appendWithIntermediateCap(next, [live]);
+            residual += folded.residualWeight;
+            exact = combineExactness(exact, folded.exactness);
+            next = folded.branches;
+            lastError = err.error ?? lastError;
+          }
+          continue;
+        }
+
+        const plans =
+          rng !== undefined ? applyForcedRng(planned.plans, rng) : [...planned.plans];
+        const material = materializeCastPlans(plans);
+        residual += material.residualWeight;
+        exact = combineExactness(exact, material.exactness);
+        if (material.branches.length > 1 || plans.length > 1) sawBranching = true;
+
+        // Sibling arms that rejected: keep advanced state without permanent error.
+        for (const err of planned.errors) {
+          const live = { weight: err.weight, rt: err.rt };
+          const folded = appendWithIntermediateCap(next, [live]);
           residual += folded.residualWeight;
           exact = combineExactness(exact, folded.exactness);
           next = folded.branches;
-          lastError = preparation.error;
-          continue;
+          lastError = err.error ?? lastError;
         }
-        const committed = commitCastBranches(branch, preparation.prepared, auto, rng);
-        residual += committed.residualWeight;
-        exact = combineExactness(exact, committed.exactness);
-        if (committed.branches.length > 1) sawBranching = true;
-        const folded = appendWithIntermediateCap(next, committed.branches);
+        const folded = appendWithIntermediateCap(next, material.branches);
         residual += folded.residualWeight;
         exact = combineExactness(exact, folded.exactness);
         next = folded.branches;

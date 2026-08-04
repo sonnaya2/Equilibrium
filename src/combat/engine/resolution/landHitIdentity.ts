@@ -35,7 +35,7 @@ function b(v: boolean): string {
 
 /**
  * Fingerprint of every land-time input that can change HitResult / attached SW.
- * Branches that only differ post-hit (e.g. primordialIceStacks alone) collide.
+ * Branches that only differ post-hit (e.g. primordialIce mass alone) collide.
  */
 export function landHitIdentity(
   rt: SimulationRuntime,

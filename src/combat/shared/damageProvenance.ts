@@ -57,7 +57,7 @@ export interface DamageCapabilities {
   canTriggerProcs: boolean;
   recursiveDamage: boolean;
   prayerMods: boolean;
-  /** Stack Abyssal Parasite when melee + passive + damage (land-time). */
+  /** Stack Abyssal Parasite when melee + passive + damage (land-time). Matches directHit by product law. */
   canApplyAbyssalParasite: boolean;
 }
 
@@ -284,13 +284,6 @@ export function provenanceForCastHit(args: {
   }
   if (args.autoAttack) return { kind: "player_auto" };
   return { kind: "player_direct" };
-}
-
-/** Analysis / legacy OutgoingDamageSource projection. */
-export function originKindOf(
-  p: DamageProvenance,
-): "direct" | "dot" | "command" | "conjure" | "proc" | "blessing" {
-  return outgoingSourceOf(p);
 }
 
 /** Legacy OutgoingDamageSource projection for signatures / blessing APIs. */

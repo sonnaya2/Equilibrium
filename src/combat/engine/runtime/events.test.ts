@@ -1,9 +1,20 @@
 import { describe, expect, it } from "vitest";
+import type { CombatModifier } from "../../types";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import type { CastSnapshot } from "../cast/snapshot";
 import { rotationOf } from "../simulation/contracts";
 import { simulate, type SimulateInput } from "../simulation/simulate";
 import { baseInput } from "../../test/fixtures/inputs";
 import { EventQueue, type ScheduledEvent } from "./events";
+
+const stubMod = (id: string, stage: CombatModifier["stage"], priority: number): CombatModifier => ({
+  id,
+  stage,
+  priority,
+  applies: () => true,
+  apply: (s) => s,
+  source: { source: "derived", url: "test", verifiedAt: "2026-08-03" },
+});
 
 /**
  * Event provenance and ownership: what a scheduled event has to carry so
@@ -20,6 +31,21 @@ const rangedInput: Omit<SimulateInput, "rotation"> = {
   abilities: RANGED_ABILITIES,
   context: { style: "ranged" },
 };
+
+const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({
+  castSeq: 0,
+  critLayers: { chance: 0, eligible: true },
+  baseMods: [],
+  chaosRoarActive: false,
+  channelled: false,
+  greaterFuryActive: false,
+  furyActive: false,
+  firstEligibleHitIndex: 0,
+  empowerMult: 1,
+  searingWindsAtCast: false,
+  enduringRuinBonus: 0,
+  ...over,
+});
 
 const event = (over: Partial<ScheduledEvent>): ScheduledEvent => ({
   tick: 0,
@@ -53,6 +79,52 @@ describe("branch equivalence signature", () => {
     expect(owned.signature()).not.toBe(free.signature());
   });
 
+  it("distinguishes castSnap searingWindsAtCast", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    a.push(event({ castSnap: castSnap({ searingWindsAtCast: true }) }));
+    b.push(event({ castSnap: castSnap({ searingWindsAtCast: false }) }));
+    expect(a.signature()).not.toBe(b.signature());
+  });
+
+  it("distinguishes castSnap greaterFuryActive", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    a.push(event({ castSnap: castSnap({ greaterFuryActive: true }) }));
+    b.push(event({ castSnap: castSnap({ greaterFuryActive: false }) }));
+    expect(a.signature()).not.toBe(b.signature());
+  });
+
+  it("distinguishes castSnap empowerMult", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    a.push(event({ castSnap: castSnap({ empowerMult: 1.25 }) }));
+    b.push(event({ castSnap: castSnap({ empowerMult: 1 }) }));
+    expect(a.signature()).not.toBe(b.signature());
+  });
+
+  it("distinguishes castSnap chaosRoarActive", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    a.push(event({ castSnap: castSnap({ chaosRoarActive: true }) }));
+    b.push(event({ castSnap: castSnap({ chaosRoarActive: false }) }));
+    expect(a.signature()).not.toBe(b.signature());
+  });
+
+  it("distinguishes castSnap baseMods id/stage/priority", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    const c = new EventQueue();
+    const d = new EventQueue();
+    a.push(event({ castSnap: castSnap({ baseMods: [stubMod("m1", "base", 0)] }) }));
+    b.push(event({ castSnap: castSnap({ baseMods: [stubMod("m2", "base", 0)] }) }));
+    c.push(event({ castSnap: castSnap({ baseMods: [stubMod("m1", "onHit", 0)] }) }));
+    d.push(event({ castSnap: castSnap({ baseMods: [stubMod("m1", "base", 1)] }) }));
+    expect(a.signature()).not.toBe(b.signature());
+    expect(a.signature()).not.toBe(c.signature());
+    expect(a.signature()).not.toBe(d.signature());
+  });
+
   it("covers every provenance field the resolver can branch on", () => {
     const base = new EventQueue();
     base.push(event({}));
@@ -73,8 +145,16 @@ describe("branch equivalence signature", () => {
       { expectedActivations: 0.05 },
       { expectedSeparateHits: 1 },
       { damageTag: "bonus-damage" },
+      { expectedOccurrences: 0.5 },
+      { flowReduction: 0.1 },
+      { convertedChannel: true },
+      { dotKind: "bleed" },
+      { bleedId: "dismember" },
+      { bleedExpiresAtTick: 10 },
+      { blessingId: "big-boned" },
       { provenance: { kind: "player_dot" } },
       { provenance: { kind: "player_direct", detail: "x" } },
+      { castSnap: castSnap() },
     ];
     for (const over of variants) {
       const other = new EventQueue();

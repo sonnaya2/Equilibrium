@@ -157,7 +157,7 @@ describe("Abyssal Parasite timeline", () => {
     expect(activeBleedCount(ctx.getState().target.melee, 8)).toBe(1);
   });
 
-  it("Slaughter and Massacre bleed ticks do not open parasite either", () => {
+  it("Slaughter bleed ticks never open parasite", () => {
     const slaughter = simulate({
       ...meleeInput,
       equipmentEffects: itemEffects(["abyssal-parasite"]),
@@ -166,23 +166,33 @@ describe("Abyssal Parasite timeline", () => {
     });
     expect(slaughter.ok).toBe(true);
     expect(parasiteEvents(slaughter)).toHaveLength(0);
+  });
 
+  it("Massacre direct hit opens parasite once; bleed ticks do not add stacks", () => {
     const massacre = simulate({
       ...meleeInput,
       equipmentEffects: itemEffects(["abyssal-parasite"]),
       startingAdrenaline: 100,
       rotation: rotationOf("dismember", "slaughter", "massacre"),
     });
-    // Massacre has one direct hit; that alone may open parasite. Bleed ticks must not add further.
     expect(massacre.ok).toBe(true);
-    const parasite = parasiteEvents(massacre);
     const massacreDirect = massacre.events.filter(
       (e) => e.abilityId === "massacre" && e.family === "hit",
     );
+    const massacreBleeds = massacre.events.filter(
+      (e) => e.abilityId === "massacre" && e.family === "dot",
+    );
     expect(massacreDirect).toHaveLength(1);
-    if (parasite.length > 0) {
-      expect(Math.max(...parasite.map((e) => e.stackCount ?? 0))).toBe(1);
-    }
+    expect(massacreBleeds.length).toBeGreaterThan(0);
+
+    const parasite = parasiteEvents(massacre);
+    expect(parasite.length).toBe(ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS);
+    const hitTick = massacreDirect[0]!.tick;
+    expect(parasite.map((e) => e.tick)).toEqual(
+      [3, 6, 9, 12, 15].map((offset) => hitTick + offset),
+    );
+    expect(Math.max(...parasite.map((e) => e.stackCount ?? 0))).toBe(1);
+    expect(parasite.every((e) => e.stackCount === 1)).toBe(true);
   });
 
   it("bleed ticks after a direct hit do not add stacks beyond the direct hit", () => {
@@ -203,55 +213,102 @@ describe("Abyssal Parasite timeline", () => {
     });
   });
 
-  it("refresh before expiry (rend then fury) preserves cadence; same-tick tick uses old stacks", () => {
+  it("Endless Assault converted channel hits do not stack parasite", () => {
+    const ctx = createCastContext({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["abyssal-parasite"]),
+      startingAdrenaline: 100,
+    });
+    // Bleed-only opener sets idle clock without stacking.
+    expect(ctx.performCast(ctx.byId.get("dismember")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(0);
+
+    expect(ctx.performCast(ctx.byId.get("greater_barge")!, 8, false).ok).toBe(true);
+    expect(ctx.getState().melee.endlessAssaultUntilTick).toBe(18);
+    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(1);
+
+    expect(ctx.performCast(ctx.byId.get("assault")!, 11, false).ok).toBe(true);
+    expect(ctx.getState().melee.endlessAssaultUntilTick).toBe(0);
+    const result = ctx.finish();
+    expect(result.ok).toBe(true);
+    const converted = result.events.filter((e) => e.abilityId === "assault");
+    expect(converted.length).toBe(4);
+    expect(
+      converted.every(
+        (e) =>
+          e.family === "dot" &&
+          e.convertedChannel &&
+          e.provenance.kind === "player_converted_channel",
+      ),
+    ).toBe(true);
+    // Converted hits must not grow stacks past the barge direct hit.
+    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(1);
+    expect(Math.max(...parasiteEvents(result).map((e) => e.stackCount ?? 0))).toBe(1);
+  });
+
+  it("parasite tick events do not self-stack", () => {
+    const ctx = createCastContext({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["abyssal-parasite"]),
+    });
+    expect(ctx.performCast(ctx.byId.get("fury")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(1);
+    ctx.advanceTo(16);
+    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(1);
+    const result = ctx.finish();
+    expect(result.ok).toBe(true);
+    const parasite = parasiteEvents(result);
+    expect(parasite).toHaveLength(ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS);
+    expect(parasite.every((e) => e.stackCount === 1)).toBe(true);
+  });
+
+  it("player auto (attack) with passive stacks parasite", () => {
     const result = simulate({
       ...meleeInput,
       equipmentEffects: itemEffects(["abyssal-parasite"]),
-      rotation: rotationOf("rend", "fury"),
+      rotation: rotationOf("attack"),
     });
     expect(result.ok).toBe(true);
+    const auto = result.events.find((e) => e.abilityId === "attack");
+    expect(auto?.provenance.kind).toBe("player_auto");
     const parasite = parasiteEvents(result);
-    // Rend at 0 schedules 3..15; fury at 3 refreshes duration without shifting the live cadence.
-    expect(parasite.map((e) => e.tick)).toEqual([3, 6, 9, 12, 15, 18]);
-    expect(parasite[0]!.stackCount).toBe(1);
-    expect(parasite[0]!.damage).toMatchObject({ min: 18, max: 31, expected: 24.5 });
-    expect(parasite[1]!.stackCount).toBe(2);
-    expect(parasite[1]!.damage).toMatchObject({ min: 37, max: 62, expected: 49.5 });
-    expect(parasite.slice(1).every((e) => e.stackCount === 2)).toBe(true);
+    expect(parasite).toHaveLength(ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS);
+    expect(parasite.every((e) => e.stackCount === 1)).toBe(true);
   });
 
-  it("Jaws activeBleedCount is 1 after dismember alone and 2 after a direct hit opens parasite", () => {
-    const equipmentEffects = itemEffects(["jaws-of-the-abyss", "abyssal-parasite"]);
-    const ctx = createCastContext({ ...meleeInput, equipmentEffects });
-    ctx.performCast(ctx.byId.get("dismember")!, 0, false);
-    // Dismember first land is tick 2; at 3 the bleed is live and parasite is not.
-    expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(1);
-    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(0);
-
-    ctx.performCast(ctx.byId.get("fury")!, 3, false);
-    // Fury lands at 3, opens parasite; dismember bleed still live.
-    expect(ctx.getState().target.melee.abyssalParasite.stacks).toBe(1);
-    expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(2);
+  it("zero-damage hit does not stack parasite", () => {
+    const result = simulate({
+      ...meleeInput,
+      base: 0,
+      equipmentEffects: itemEffects(["abyssal-parasite"]),
+      rotation: rotationOf("fury"),
+    });
+    expect(result.ok).toBe(true);
+    const fury = result.events.find((e) => e.abilityId === "fury");
+    expect(fury?.damage.max).toBe(0);
+    expect(parasiteEvents(result)).toHaveLength(0);
   });
 
-  it("Jaws adrenaline uses live unique bleeds only (parasite after a direct hit)", () => {
-    const equipmentEffects = itemEffects(["jaws-of-the-abyss", "abyssal-parasite"]);
-    const dismemberOnlyThenFury = (naturalInstinctUntilTick = 0) => {
-      const ctx = createCastContext({
-        ...meleeInput,
-        equipmentEffects,
-        naturalInstinctUntilTick,
-      });
-      ctx.performCast(ctx.byId.get("dismember")!, 0, false);
-      expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(1);
-      ctx.performCast(ctx.byId.get("fury")!, 3, false);
-      return ctx.getState().adrenaline;
-    };
-    // Fury +9; Jaws 2 * 1 bleed (dismember only at cast time). NI doubles the Jaws grant only.
-    expect(dismemberOnlyThenFury()).toBe(11);
-    expect(dismemberOnlyThenFury(100)).toBe(13);
+  it("invention proc path does not open or add parasite stacks", () => {
+    const result = simulate({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["abyssal-parasite"]),
+      procs: { cracklingRank: 4 },
+      rotation: rotationOf("attack"),
+    });
+    expect(result.ok).toBe(true);
+    const crackling = result.events.filter((e) => e.abilityId === "crackling");
+    expect(crackling.length).toBeGreaterThan(0);
+    expect(crackling.every((e) => e.provenance.kind === "invention_proc")).toBe(true);
+    // Attack stacks once; crackling must not open a second stack path.
+    const parasite = parasiteEvents(result);
+    expect(parasite.length).toBeGreaterThan(0);
+    expect(Math.max(...parasite.map((e) => e.stackCount ?? 0))).toBe(1);
+  });
 
-    // Direct hit first so parasite is live before the next basic.
+  // Cadence refresh (rend+fury) and base Jaws bleed-count/adren 11/13 live in mechanics.test.ts.
+  it("Jaws adrenaline counts parasite once live before a later basic", () => {
+    const equipmentEffects = itemEffects(["jaws-of-the-abyss", "abyssal-parasite"]);
     const withParasite = (naturalInstinctUntilTick = 0) => {
       const ctx = createCastContext({
         ...meleeInput,
@@ -264,9 +321,7 @@ describe("Abyssal Parasite timeline", () => {
       ctx.performCast(ctx.byId.get("rend")!, 6, false);
       return ctx.getState().adrenaline;
     };
-    // After fury: adren 11. Rend +9 + Jaws 2*2=4 => 24. With NI: +9 + 8 => 28 from 13 path...
-    // Recompute from the with-parasite path starting from zero:
-    // fury path without NI ends at 11; rend +9 +4 = 24.
+    // fury path without NI ends at 11; rend +9 + Jaws 2*2=4 => 24.
     expect(withParasite()).toBe(24);
     // fury with NI ends at 13; rend +9 +8 = 30.
     expect(withParasite(100)).toBe(30);

@@ -123,9 +123,9 @@ export function normalizeHitCap(cap: HitCapRule | null | undefined): unknown {
 
 export function normalizeCombatContext(ctx: CombatContext | undefined): unknown {
   if (!ctx) return null;
-  // Provenance kind is canonical; collapse legacy flag so dual-write vs provenance-only match.
-  const blessingGenerated =
-    ctx.blessingGenerated === true || resolveCombatProvenance(ctx).kind === "blessing";
+  // Provenance kind is canonical; resolveCombatProvenance maps legacy blessingGenerated into kind.
+  const provenanceKind = resolveCombatProvenance(ctx).kind;
+  const blessingGenerated = provenanceKind === "blessing";
   return {
     style: ctx.style,
     ruleset: ctx.ruleset ?? null,

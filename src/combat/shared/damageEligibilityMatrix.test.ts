@@ -228,63 +228,6 @@ describe("damage eligibility matrix (capabilitiesOf)", () => {
       }
     });
   }
-
-  it("DoTs never onHitGear", () => {
-    expect(capabilitiesOf({ kind: "player_dot" }).onHitGear).toBe(false);
-    expect(capabilitiesOf({ kind: "conjure_poison" }).onHitGear).toBe(false);
-    expect(capabilitiesOf({ kind: "derived_tail" }).onHitGear).toBe(false);
-  });
-
-  it("only player_direct and player_auto can apply Abyssal Parasite", () => {
-    expect(capabilitiesOf({ kind: "player_direct" }).canApplyAbyssalParasite).toBe(true);
-    expect(capabilitiesOf({ kind: "player_auto" }).canApplyAbyssalParasite).toBe(true);
-    for (const kind of Object.keys(MATRIX) as DamageProvenanceKind[]) {
-      if (kind === "player_direct" || kind === "player_auto") continue;
-      expect(capabilitiesOf({ kind }).canApplyAbyssalParasite, `${kind} parasite`).toBe(false);
-    }
-  });
-
-  it("converted channel: no onHitGear, no parasite", () => {
-    const c = capabilitiesOf({ kind: "player_converted_channel" });
-    expect(c.onHitGear).toBe(false);
-    expect(c.canApplyAbyssalParasite).toBe(false);
-    expect(c.directHit).toBe(false);
-    expect(c.prayerMods).toBe(true);
-    expect(c.canCrit).toBe(true);
-  });
-
-  it("DoTs never parasite", () => {
-    expect(capabilitiesOf({ kind: "player_dot" }).canApplyAbyssalParasite).toBe(false);
-    expect(capabilitiesOf({ kind: "conjure_poison" }).canApplyAbyssalParasite).toBe(false);
-    expect(capabilitiesOf({ kind: "derived_tail" }).canApplyAbyssalParasite).toBe(false);
-  });
-
-  it("commands: no onHitGear, riders yes", () => {
-    const c = capabilitiesOf({ kind: "conjure_command" });
-    expect(c.onHitGear).toBe(false);
-    expect(c.blessingRider).toBe(true);
-    expect(c.blessingOnHit).toBe(false);
-  });
-
-  it("conjure auto is not player direct", () => {
-    const c = capabilitiesOf({ kind: "conjure_auto" });
-    expect(c.playerAttack).toBe(false);
-    expect(c.directHit).toBe(false);
-    expect(c.onHitGear).toBe(false);
-  });
-
-  it("blessing cannot recurse (recursiveDamage false, riders false on blessing kind)", () => {
-    const c = capabilitiesOf({ kind: "blessing" });
-    expect(c.recursiveDamage).toBe(false);
-    expect(c.blessingRider).toBe(false);
-    expect(c.blessingOnHit).toBe(false);
-  });
-
-  it("attached: canTriggerProcs false", () => {
-    expect(capabilitiesOf({ kind: "attached", detail: "searing_winds" }).canTriggerProcs).toBe(
-      false,
-    );
-  });
 });
 
 describe("blessingHitEligibility from capabilities", () => {

@@ -308,6 +308,48 @@ describe("snapshotRuntime shares no mutable collection", () => {
       ]),
     ).toHaveLength(2);
   });
+
+  it("does not merge when only castSnap.searingWindsAtCast differs", () => {
+    const snap = (searingWindsAtCast: boolean) => ({
+      castSeq: 0,
+      critLayers: { chance: 0, eligible: true },
+      baseMods: [],
+      chaosRoarActive: false,
+      channelled: false,
+      greaterFuryActive: false,
+      furyActive: false,
+      firstEligibleHitIndex: 0,
+      empowerMult: 1,
+      searingWindsAtCast,
+      enduringRuinBonus: 0,
+    });
+    const noop = () => ({ damage: { min: 0, max: 0, expected: 0 } });
+    const mk = (searing: boolean) => {
+      const rt = createRuntime(meleeInput);
+      rt.queue.push({
+        tick: 5,
+        seq: 1,
+        family: "hit",
+        abilityId: "attack",
+        sourceCast: 0,
+        hitIndex: 0,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        provenance: { kind: "player_direct" },
+        castSnap: snap(searing),
+        resolve: noop,
+      });
+      rt.nextSeq = 2;
+      return rt;
+    };
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: mk(true) },
+        { weight: 0.5, rt: mk(false) },
+      ]),
+    ).toHaveLength(2);
+  });
 });
 
 describe("capBranches", () => {

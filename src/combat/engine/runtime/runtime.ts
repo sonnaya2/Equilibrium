@@ -157,6 +157,15 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   };
 }
 
+/** Push a fully-sequenced event after asserting provenance. */
+export function enqueueEvent(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): void {
+  assertProvenance(event.provenance);
+  rt.queue.push(event);
+}
+
 /** Push an event onto the queue, assigning its monotonic per-run seq. */
 export function scheduleEvent(
   rt: SimulationRuntime,

@@ -7,8 +7,8 @@ import { isNecromancyAbility } from "../../styles/necromancy/abilities";
 import type { PreparedCast } from "./prepare";
 import type { CastRecord } from "../simulation/contracts";
 import { resolveCastHit, resolveDerivedHit } from "../resolution";
-import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
-import { originKindOf, provenanceForCastHit } from "../../shared/damageProvenance";
+import { enqueueEvent, scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
+import { outgoingSourceOf, provenanceForCastHit } from "../../shared/damageProvenance";
 import type { BleedId } from "../../types";
 
 /**
@@ -85,8 +85,8 @@ export function scheduleCastEvents(
       dotKind: hitSpec.dotKind,
       bleedId: hitSpec.bleedId,
     });
-    const originKind = originKindOf(provenance);
-    rt.queue.push({
+    const originKind = outgoingSourceOf(provenance);
+    enqueueEvent(rt, {
       tick: landTick,
       seq,
       family: isCommand ? "command" : isDot ? "dot" : "hit",
@@ -99,6 +99,7 @@ export function scheduleCastEvents(
       originKind,
       provenance,
       cancelOwner: castSeq,
+      castSnap: snap,
       ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
       ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
       ...(hitSpec.dotKind ? { dotKind: hitSpec.dotKind } : {}),

@@ -7,7 +7,7 @@ import type { CastSnapshot } from "../cast/snapshot";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
-/** Branch-equivalence fingerprint of a cast snapshot carried on Lightning Surge. */
+/** Branch-equivalence fingerprint for any cast-scoped snapshot (castSnap / LS). */
 function snapSig(s: CastSnapshot) {
   return [
     s.castSeq,
@@ -16,7 +16,7 @@ function snapSig(s: CastSnapshot) {
     s.critLayers.guaranteed ?? false,
     s.critLayers.disabled ?? false,
     s.critLayers.eligible ?? true,
-    s.baseMods.map((m) => m.id),
+    s.baseMods.map((m) => [m.id, m.stage, m.priority]),
     s.empowerMult,
     s.enduringRuinBonus,
     s.chaosRoarActive,
@@ -83,6 +83,8 @@ export interface ScheduledEvent<RT = unknown> {
   bleedExpiresAtTick?: number;
   /** Full cast snapshot so Lightning Surge can share landTimeModifiers with parent hits. */
   lightningSurge?: { snap: CastSnapshot };
+  /** Cast-scoped snapshot for land-time resolve; preferred over lightningSurge.snap. */
+  castSnap?: CastSnapshot;
   /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
   resolve: (rt: RT, landTick: number) => EventResolution;
 }
@@ -182,7 +184,7 @@ export class EventQueue<RT = unknown> {
         e.damageTag ?? null,
         e.provenance.kind,
         e.provenance.detail ?? null,
-        e.lightningSurge ? snapSig(e.lightningSurge.snap) : null,
+        e.castSnap ? snapSig(e.castSnap) : e.lightningSurge ? snapSig(e.lightningSurge.snap) : null,
       ]),
     );
   }

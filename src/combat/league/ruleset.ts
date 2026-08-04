@@ -18,9 +18,7 @@ import {
 
 /** Blessing damage must not re-apply ability-stage blessing mults (no recursion). */
 function notBlessingDamage(context: CombatContext): boolean {
-  return (
-    resolveCombatProvenance(context).kind !== "blessing" && context.blessingGenerated !== true
-  );
+  return resolveCombatProvenance(context).kind !== "blessing";
 }
 
 export interface LeagueLoadout {

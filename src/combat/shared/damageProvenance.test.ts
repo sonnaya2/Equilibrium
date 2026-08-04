@@ -4,7 +4,6 @@ import {
   assertProvenance,
   capabilitiesOf,
   contextWithProvenance,
-  originKindOf,
   outgoingSourceOf,
   provenanceForCastHit,
   provenanceFromLegacy,
@@ -141,12 +140,6 @@ describe("outgoingSourceOf", () => {
   ];
   it.each(cases)("%s -> %s", (kind, source) => {
     expect(outgoingSourceOf({ kind })).toBe(source);
-  });
-
-  it("originKindOf matches outgoingSourceOf", () => {
-    const p: DamageProvenance = { kind: "player_converted_channel" };
-    expect(originKindOf(p)).toBe(outgoingSourceOf(p));
-    expect(originKindOf(p)).toBe("dot");
   });
 });
 

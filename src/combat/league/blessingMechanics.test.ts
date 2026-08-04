@@ -149,7 +149,34 @@ describe("Splash Zone", () => {
         style: "magic",
         ruleset: "equilibrium",
         area: "aoe",
-        blessingGenerated: true,
+        provenance: { kind: "blessing" },
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("Striking Light ability mult", () => {
+  // Tier-2 Order path pick.
+  const strikingModifier = () =>
+    leagueModifiers(rules(["Chaos", "Order"])).find(
+      (modifier) => modifier.id === "blessing:striking-light",
+    )!;
+
+  it("applies to basics / autos and ignores blessing provenance damage", () => {
+    const modifier = strikingModifier();
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        abilityCategory: "basic",
+      }),
+    ).toBe(true);
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        abilityCategory: "basic",
+        provenance: { kind: "blessing" },
       }),
     ).toBe(false);
   });

@@ -468,8 +468,9 @@ export function combineBranchSummaries(
     .sort((a, b) => b.totalDamage - a.totalDamage);
 
   const multiClass = parts.length > 1;
-  const classWeight = rawMass > 0 ? representative.weight / rawMass : representative.weight;
-  const useRepresentativeHistory = branching || multiClass;
+  // Absolute probability mass of the representative class (not share of concrete-only mass).
+  const classWeight = representative.weight;
+  const useRepresentativeHistory = branching || multiClass || residual > PROB_TOLERANCE;
   // Branching merges weight-mix ledgers with one event log: events are not a
   // safe rebuild source for weighted totals.
   const eventsReconcileWithWeightedTotals =

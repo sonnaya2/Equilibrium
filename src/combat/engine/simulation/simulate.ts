@@ -128,12 +128,6 @@ function stepManualAction(
           continue;
         }
         const planned = planCastOutcomes(current, basic, current.rt.state.tick, true);
-        if ("error" in planned) {
-          done.push(planned.error);
-          residualWeight += planned.residualWeight;
-          exactness = combineExactness(exactness, planned.exactness);
-          continue;
-        }
         residualWeight += planned.residualWeight;
         exactness = combineExactness(exactness, planned.exactness);
         if (planned.plans.length > 1) branched = true;
@@ -168,12 +162,6 @@ function stepManualAction(
       firstLegalTick(woven.rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
       false,
     );
-    if ("error" in planned) {
-      carried.push(planned.error);
-      residualWeight += planned.residualWeight;
-      exactness = combineExactness(exactness, planned.exactness);
-      continue;
-    }
     residualWeight += planned.residualWeight;
     exactness = combineExactness(exactness, planned.exactness);
     if (planned.plans.length > 1) branched = true;
@@ -242,12 +230,6 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
           ),
           false,
         );
-        if ("error" in planned) {
-          carried.push(planned.error);
-          residualWeight += planned.residualWeight;
-          exactness = combineExactness(exactness, planned.exactness);
-          continue;
-        }
         residualWeight += planned.residualWeight;
         exactness = combineExactness(exactness, planned.exactness);
         if (planned.plans.length > 1) branched = true;

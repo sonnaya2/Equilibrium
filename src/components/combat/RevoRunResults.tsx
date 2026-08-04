@@ -51,6 +51,13 @@ export function RevoRunResults({
   const scoreNote = result ? runDiagnosticsNote(result) : null;
   const damageLabel = result ? primaryDamageLabel(result) : "Damage";
   const dpsLabel = result ? primaryDpsLabel(result) : "Fixed-window DPS";
+  // Partial failure still has unconditional banked totals; only hide the strip when empty.
+  const showScoreStrip =
+    result != null &&
+    (result.ok ||
+      result.totalExpected > 0 ||
+      (result.failure?.failedWeight ?? 0) > 0 ||
+      (result.rng?.residualWeight ?? 0) > 0);
   const run = () => onRun();
 
   return (
@@ -83,7 +90,11 @@ export function RevoRunResults({
         </button>
       </div>
 
-      {result && !result.ok ? <p className="mt-3 text-xs text-chaos-300">{result.error}</p> : null}
+      {result && !result.ok ? (
+        <p className="mt-3 text-xs text-chaos-300" data-testid="revo-run-error">
+          {result.error}
+        </p>
+      ) : null}
 
       {!result ? (
         <p
@@ -94,7 +105,7 @@ export function RevoRunResults({
         </p>
       ) : null}
 
-      {result?.ok ? (
+      {showScoreStrip ? (
         <div className="mt-4">
           <dl className="revo-stat-strip grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-3 lg:grid-cols-6">
             <div className="border-b border-stone-750/70 py-2">

@@ -106,12 +106,6 @@ export function simulateRevolution(
         continue;
       }
       const planned = planCastOutcomes(branch, ability, state.tick, ready === undefined);
-      if ("error" in planned) {
-        carried.push(planned.error);
-        residualWeight += planned.residualWeight;
-        exactness = combineExactness(exactness, planned.exactness);
-        continue;
-      }
       residualWeight += planned.residualWeight;
       exactness = combineExactness(exactness, planned.exactness);
       if (planned.plans.length > 1) sawBranching = true;

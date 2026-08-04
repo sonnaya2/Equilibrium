@@ -237,16 +237,14 @@ export function planCastOutcomes(
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
-):
-  | { error: Branch; residualWeight: number; exactness: BranchExactness }
-  | {
-      plans: CastOutcomePlan[];
-      errors: Branch[];
-      residualWeight: number;
-      exactness: BranchExactness;
-    } {
+): {
+  plans: CastOutcomePlan[];
+  errors: Branch[];
+  residualWeight: number;
+  exactness: BranchExactness;
+} {
   if (branch.error !== undefined) {
-    return { error: branch, residualWeight: 0, exactness: "exact" };
+    return { plans: [], errors: [branch], residualWeight: 0, exactness: "exact" };
   }
 
   const candidate = Math.max(
@@ -306,31 +304,12 @@ export function planCastOutcomes(
     }
   }
 
-  if (plans.length === 0) {
-    if (errors.length === 1) {
-      return {
-        error: errors[0]!,
-        residualWeight: advanced.residualWeight,
-        exactness: advanced.exactness,
-      };
-    }
-    if (errors.length > 1) {
-      // Collapse multi-reject to a single error branch carrying total weight.
-      const weight = errors.reduce((s, e) => s + e.weight, 0);
-      return {
-        error: { weight, rt: errors[0]!.rt, error: errors[0]!.error },
-        residualWeight: advanced.residualWeight,
-        exactness: advanced.exactness,
-      };
-    }
-    return {
-      error: {
-        ...branch,
-        error: `unable to prepare ${ability.id} at tick ${candidate}`,
-      },
-      residualWeight: advanced.residualWeight,
-      exactness: advanced.exactness,
-    };
+  // Never collapse multi-arm rejects onto one rt (would steal banked damage/state).
+  if (plans.length === 0 && errors.length === 0) {
+    errors.push({
+      ...branch,
+      error: `unable to prepare ${ability.id} at tick ${candidate}`,
+    });
   }
   return {
     plans,
@@ -416,9 +395,9 @@ export function castOutcomes(
   auto: boolean,
 ): BranchSet {
   const planned = planCastOutcomes(branch, ability, readyTick, auto);
-  if ("error" in planned) {
+  if (planned.plans.length === 0) {
     return {
-      branches: [planned.error],
+      branches: planned.errors,
       residualWeight: planned.residualWeight,
       exactness: planned.exactness,
     };

@@ -59,6 +59,9 @@ export function abilityBehaviorFingerprint(spec: AbilitySpec): string {
     channelTicks: spec.channelTicks ?? null,
     replacementGroup: spec.replacementGroup ?? null,
     cooldownGroup: spec.cooldownGroup ?? null,
+    charges: spec.charges
+      ? { max: spec.charges.max, secondChargeLevel: spec.charges.secondChargeLevel ?? null }
+      : null,
     weaponRequirement: spec.weaponRequirement ?? null,
     requiredEquipmentAnyOf: sortedCopy(spec.requiredEquipmentAnyOf),
     requiredPassiveAnyOf: sortedCopy(spec.requiredPassiveAnyOf as readonly string[] | undefined),

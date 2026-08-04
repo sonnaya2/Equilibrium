@@ -35,7 +35,7 @@ import {
 import { castRejection, permanentCastBlock } from "../cast/rules";
 import { performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
-import { firstLegalTick } from "../runtime/state";
+import { firstLegalTickFor } from "../runtime/state";
 import { combineBranchSummaries } from "./summary";
 
 export { createCastContext } from "./context";
@@ -112,11 +112,8 @@ function stepManualAction(
         }
         const basic = current.rt.basicByStyle.get(ability.style);
         const castable =
-          firstLegalTick(
-            current.rt.state,
-            ability.id,
-            ability.cooldownGroup ?? ability.replacementGroup,
-          ) <= current.rt.state.tick &&
+          firstLegalTickFor(current.rt.state, ability, current.rt.input.level) <=
+            current.rt.state.tick &&
           castRejection(
             current.rt.state,
             ability,
@@ -168,7 +165,7 @@ function stepManualAction(
     const planned = planCastOutcomes(
       woven,
       ability,
-      firstLegalTick(woven.rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
+      firstLegalTickFor(woven.rt.state, ability, woven.rt.input.level),
       false,
     );
     residualWeight += planned.residualWeight;
@@ -234,11 +231,7 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
         const planned = planCastOutcomes(
           branch,
           ability,
-          firstLegalTick(
-            branch.rt.state,
-            ability.id,
-            ability.cooldownGroup ?? ability.replacementGroup,
-          ),
+          firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level),
           false,
         );
         residualWeight += planned.residualWeight;

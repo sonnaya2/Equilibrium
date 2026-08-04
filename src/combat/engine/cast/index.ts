@@ -5,7 +5,7 @@ import { scheduleCastEvents } from "./schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "./effects";
 import { prepareCast, type PreparedCast } from "./prepare";
 import { advanceTo } from "../runtime/clock";
-import { firstLegalTick } from "../runtime/state";
+import { firstLegalTickFor } from "../runtime/state";
 import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -33,7 +33,7 @@ export function prepareSimulationCast(
 ): CastPreparation {
   const candidate = Math.max(
     candidateTick(rt.state, readyTick),
-    firstLegalTick(rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
+    firstLegalTickFor(rt.state, ability, rt.input.level),
   );
   advanceTo(rt, candidate);
   const rejection = castRejection(

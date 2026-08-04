@@ -1,7 +1,7 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { prepareCast, type PreparedCast } from "../cast/prepare";
 import { castRejection, candidateTick, rngPointsFor } from "../cast/rules";
-import { firstLegalTick } from "../runtime/state";
+import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
 import {
   combineExactness,
@@ -87,7 +87,7 @@ export function planCastOutcomes(
 
   const candidate = Math.max(
     candidateTick(branch.rt.state, readyTick),
-    firstLegalTick(branch.rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
+    firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level),
   );
   const advanced = advanceToBranches(branch, candidate);
 

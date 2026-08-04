@@ -1,3 +1,4 @@
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { gainBloodlust } from "../../styles/melee/bloodlust";
 import {
   newMeleeRotationState,
@@ -14,13 +15,29 @@ import {
   type NecromancyRotationState,
 } from "../../styles/necromancy/effects";
 import type { ConjureState } from "../../styles/necromancy/conjures";
+import { firstChargeReadyTick, maxChargesFor } from "./charges";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
 export type { NecroRotationState, NecromancyRotationState, ConjureState };
+export {
+  clearCharges,
+  consumeCharge,
+  firstChargeReadyTick,
+  maxChargesFor,
+  pruneCharges,
+  readyChargeCount,
+} from "./charges";
 export const ADRENALINE_CAP = 100;
 
 /** Ability id -> first tick it can be cast again. Absent = no individual cooldown. */
 export type CooldownState = Readonly<Record<string, number>>;
+
+/**
+ * Ability key -> sorted ready-at ticks of recovering charges.
+ * Key = cooldownGroup ?? replacementGroup ?? id (same as CD key).
+ * Length = recovering slots. Empty / absent = all ready.
+ */
+export type ChargeState = Readonly<Record<string, readonly number[]>>;
 
 export interface LeagueRotationState {
   avernicRampageUntilTick: number;
@@ -64,6 +81,16 @@ export interface RotationState {
   vestmentsAdrenalineUntilTick: number;
   cooldowns: CooldownState;
   /**
+   * Independent charge recovery clocks. Charged abilities do not write
+   * cooldowns[key] for their own cast.
+   */
+  charges: ChargeState;
+  /**
+   * castSeq -> target keys already counted for Hurricane CDR this cast.
+   * ST model uses "primary" only.
+   */
+  hurricaneCdrTargets?: Readonly<Record<number, readonly string[]>>;
+  /**
    * Relentless perk lockout: after a proc the perk cannot activate again until
    * this tick (wiki: 30s internal cooldown; 0 = ready). Style-agnostic.
    */
@@ -105,6 +132,7 @@ export function newRotationState(
     ringOfVigour: opts.ringOfVigour === true,
     vestmentsAdrenalineUntilTick: 0,
     cooldowns: {},
+    charges: {},
     relentlessUntilTick: 0,
     invention: {
       cracklingReadyTick: 0,
@@ -135,16 +163,40 @@ export function spendAdrenaline(state: RotationState, amount: number): RotationS
   return { ...state, adrenaline: Math.max(0, state.adrenaline - amount) };
 }
 
-/** GCD-free tick and any per-ability cooldown combined. */
+/**
+ * GCD-free tick and any per-ability cooldown / charge readiness combined.
+ * When maxCharges > 0, charge clocks gate the key (cooldownGroup ?? abilityId)
+ * instead of treating a missing cooldowns[key] as fully free after one cast.
+ */
 export function firstLegalTick(
   state: RotationState,
   abilityId: string,
   cooldownGroup?: string,
+  opts?: { maxCharges?: number },
 ): number {
-  return Math.max(
+  const ordinary = Math.max(
     state.tick,
     state.cooldowns[abilityId] ?? 0,
     cooldownGroup ? (state.cooldowns[cooldownGroup] ?? 0) : 0,
+  );
+  const max = opts?.maxCharges;
+  if (max == null || max <= 0) return ordinary;
+  const key = cooldownGroup ?? abilityId;
+  return Math.max(ordinary, firstChargeReadyTick(state, key, max, state.tick));
+}
+
+/** Ability-aware readiness using charges from the spec at player level. */
+export function firstLegalTickFor(
+  state: RotationState,
+  ability: AbilitySpec,
+  level: number,
+): number {
+  const max = maxChargesFor(ability, level);
+  return firstLegalTick(
+    state,
+    ability.id,
+    ability.cooldownGroup ?? ability.replacementGroup,
+    max > 0 ? { maxCharges: max } : undefined,
   );
 }
 

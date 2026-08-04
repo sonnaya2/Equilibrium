@@ -400,9 +400,10 @@ export interface Loadout {
 
 export const DEFAULT_LOADOUT: Loadout = {
   style: "melee",
-  level: 99,
-  attackLevel: 99,
-  strengthLevel: 99,
+  // Style combat levels default to 120 (melee Attack/Strength, ranged, magic, necro).
+  level: 120,
+  attackLevel: 120,
+  strengthLevel: 120,
   defenceLevel: 99,
   constitutionLevel: 99,
   currentLife: null,

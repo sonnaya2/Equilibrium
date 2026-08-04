@@ -1,7 +1,7 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { costOf, performOffGcdCast, prepareSimulationCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
-import { firstLegalTick } from "../runtime/state";
+import { firstLegalTick, firstLegalTickFor } from "../runtime/state";
 import {
   appendWithIntermediateCap,
   combineExactness,
@@ -55,11 +55,8 @@ export function createCastContext(input: CastContextInput): CastContext {
     firstLegalTick: (abilityId) => {
       const rt = primary().rt;
       const ability = rt.byId.get(abilityId);
-      return firstLegalTick(
-        rt.state,
-        abilityId,
-        ability?.cooldownGroup ?? ability?.replacementGroup,
-      );
+      if (ability) return firstLegalTickFor(rt.state, ability, rt.input.level);
+      return firstLegalTick(rt.state, abilityId);
     },
     advanceTo: (targetTick) => {
       let next: Branch[] = [];

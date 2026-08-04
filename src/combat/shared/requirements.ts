@@ -63,8 +63,10 @@ export function weaponRequirementMessage(ability: AbilitySpec): string {
       ? "a conduit"
       : ability.weaponRequirement === "death-guard-and-conduit"
         ? "death guard and conduit"
-        : (ability.weaponRequirement ??
-          (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
+        : ability.weaponRequirement === "mainhand-empty"
+          ? "main-hand only (empty off-hand)"
+          : (ability.weaponRequirement ??
+            (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
   return `${ability.id} requires ${requirement}`;
 }
 
@@ -121,12 +123,20 @@ export function meetsWeaponRequirement(
   if (ability.style === "ranged" || ability.style === "magic") return true;
 
   if (req === "dualwield") {
+    // Adaptive Strike DW form is dual weapons only; Flurry still accepts defender.
+    if (ability.id === "adaptive_strike_dw") {
+      return weaponConfiguration === "dualwield";
+    }
     return weaponConfiguration === "dualwield" || weaponConfiguration === "defender";
   }
   if (req === "twohand") {
     return weaponConfiguration === "twohand";
   }
+  if (req === "mainhand-empty") {
+    return weaponConfiguration === "mainhand";
+  }
   if (req === "mainhand") {
+    // Loose non-2h (Icy Tempest); not the empty-OH Adaptive Strike form.
     return weaponConfiguration !== "twohand";
   }
   return weaponConfiguration === req;

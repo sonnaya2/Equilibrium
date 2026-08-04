@@ -123,6 +123,11 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     recordId: "melee:adaptive-strike",
     parentRecordId: "melee:adaptive-strike",
   },
+  adaptive_strike_mh: {
+    linkKind: "setup-variant",
+    recordId: "melee:adaptive-strike",
+    parentRecordId: "melee:adaptive-strike",
+  },
   adaptive_strike_dw: {
     linkKind: "setup-variant",
     recordId: "melee:adaptive-strike",

@@ -7,6 +7,7 @@ import { isObtainableInRegions } from "../data/availability";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { combatRevolutionBars } from "../data";
 import { revoManagedSlots } from "../data/specs";
+import { weaponConfigurationFromBarSetup } from "../styles/melee/abilities";
 import { buildCandidatePool } from "./candidatePool";
 import type { PoolAbility } from "./contracts";
 import { secondsToTicks } from "../core/ticks";
@@ -52,13 +53,15 @@ export function regionDenyList(
 export function authoredSeedsFromCatalogue(
   style: AbilitySpec["style"],
   deny: ReadonlySet<string>,
+  weaponConfiguration?: SerializableRevolutionSimBase["weaponConfiguration"],
 ): string[][] {
   const seeds: string[][] = [];
   for (const bar of combatRevolutionBars.records) {
     if (bar.style !== style) continue;
     if (!bar.supported) continue;
     if (bar.target != null && bar.target !== "single") continue;
-    const slots = revoManagedSlots(bar, engineSpecs);
+    const shape = weaponConfiguration ?? weaponConfigurationFromBarSetup(bar.setup);
+    const slots = revoManagedSlots(bar, engineSpecs, shape);
     const ids = slots
       .filter((s) => s.modelledBy === "engine" && s.spec)
       .map((s) => s.spec!.id)
@@ -172,7 +175,7 @@ export function fitAuthoredSeeds(
     return built.length >= 2 ? built : null;
   };
   return [
-    ...authoredSeedsFromCatalogue(request.style, denySet),
+    ...authoredSeedsFromCatalogue(request.style, denySet, request.loadout.weaponConfiguration),
     ...request.authoredSeedBars.map((s) => s.abilityIds),
     ...(request.userBar ? [request.userBar] : []),
   ]

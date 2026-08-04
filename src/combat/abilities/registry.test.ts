@@ -99,6 +99,8 @@ describe("ability registry single authority", () => {
 
   it("tags setup / equipment / cast-stage / factory link kinds", () => {
     expect(entryByEngineId("adaptive_strike_2h")?.linkKind).toBe("setup-variant");
+    expect(entryByEngineId("adaptive_strike_mh")?.linkKind).toBe("setup-variant");
+    expect(entryByEngineId("adaptive_strike_mh")?.parentRecordId).toBe("melee:adaptive-strike");
     expect(entryByEngineId("adaptive_strike_dw")?.parentRecordId).toBe("melee:adaptive-strike");
     expect(entryByEngineId("overpower_igneous")?.linkKind).toBe("equipment-variant");
     expect(entryByEngineId("overpower_igneous")?.parentRecordId).toBe("melee:overpower");
@@ -120,6 +122,8 @@ describe("ability registry single authority", () => {
   it("exposes replacementGroup / cooldownGroup from specs", () => {
     expect(entryByEngineId("greater_fury")?.replacementGroup).toBe("fury");
     expect(entryByEngineId("adaptive_strike_2h")?.replacementGroup).toBe("adaptive_strike");
+    expect(entryByEngineId("adaptive_strike_mh")?.replacementGroup).toBe("adaptive_strike");
+    expect(entryByEngineId("adaptive_strike_dw")?.replacementGroup).toBe("adaptive_strike");
   });
 
   it("engine ids match specs; damaging full specs have hits", () => {

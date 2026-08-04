@@ -6,7 +6,7 @@
 import { castOutcomes, mergeBranches, type Branch } from "./branch";
 import type { SimulateInput } from "./contracts";
 import { createRuntime } from "../runtime/runtime";
-import { firstLegalTick } from "../runtime/state";
+import { firstLegalTickFor } from "../runtime/state";
 import { PRIMORDIAL_ICE_CAP } from "../../styles/melee/effects";
 import {
   compileLengLandArms,
@@ -51,11 +51,7 @@ export function oracleSimulate(
         next.push(branch);
         continue;
       }
-      const ready = firstLegalTick(
-        branch.rt.state,
-        ability.id,
-        ability.cooldownGroup ?? ability.replacementGroup,
-      );
+      const ready = firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level);
       const set = castOutcomes(branch, ability, ready, false);
       residualWeight += set.residualWeight;
       if (set.branches.length > 1) sawBranching = true;

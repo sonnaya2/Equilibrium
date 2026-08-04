@@ -40,7 +40,7 @@ describe("manual defender half-tier semantics", () => {
     });
     expect(loadoutBase(defenderShape)).toBeLessThan(loadoutBase(dual));
     expect(loadoutBase(defenderShape)).toBe(
-      baseAbilityDamage(99, {
+      baseAbilityDamage(120, {
         kind: "mainhand",
         style: "melee",
         weapon: { tier: 90 },

@@ -282,6 +282,7 @@ describe("melee ability corpus coverage", () => {
     const expected = [
       "attack",
       "adaptive_strike_2h",
+      "adaptive_strike_mh",
       "adaptive_strike_dw",
       "rend",
       "fury",

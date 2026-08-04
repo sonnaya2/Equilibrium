@@ -171,6 +171,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Dragon Breath"),
   },
   {
+    // Wiki Impact: stun/bind utility; 15s CD; 2 charges at 54 Magic.
     id: "impact",
     name: "Impact",
     style: "magic",
@@ -178,6 +179,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     hits: [{ band: { minPct: 65, maxPct: 75 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    charges: { max: 2, secondChargeLevel: 54 },
     source: wikiAbility("Impact"),
   },
   {

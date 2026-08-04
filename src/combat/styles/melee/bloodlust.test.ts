@@ -10,11 +10,13 @@ import { NECROMANCY_ABILITIES } from "../necromancy/abilities";
 import { activeEquipmentEffects } from "../../shared/equipment";
 import {
   activateBerserk,
+  BERSERK_OVERPOWER_COOLDOWN_SECONDS,
   bloodlustCap,
   gainBloodlust,
   newBloodlust,
   spendBloodlust,
 } from "./bloodlust";
+import { secondsToTicks } from "../../core/ticks";
 
 const VESTMENTS = [
   "item:vestments-of-havoc-hood",
@@ -62,6 +64,96 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
     ctx.advanceTo(30);
     expect(ctx.getState().adrenaline).toBeCloseTo(15, 10);
   });
+
+  it("Overpower under Berserk starts a 9s CD (wiki Berserk, 2 Mar 2026)", () => {
+    // Relentless keeps adren payable after Berserk so the CD path is reached.
+    const under = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+    });
+    under.performCast(under.byId.get("berserk")!, 0, false, { relentless: true });
+    const opTick = under.getState().tick;
+    const op = under.performCast(under.byId.get("overpower")!, opTick, false, {
+      relentless: true,
+    });
+    expect(op.ok).toBe(true);
+    expect(under.getState().cooldowns.overpower).toBe(
+      opTick + secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS),
+    );
+
+    const alone = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+    });
+    const aloneCast = alone.performCast(alone.byId.get("overpower")!, 0, false, {
+      relentless: true,
+    });
+    expect(aloneCast.ok).toBe(true);
+    expect(alone.getState().cooldowns.overpower).toBe(secondsToTicks(30));
+  });
+
+  it("Berserk cast does not clear an existing Overpower cooldown", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+    });
+    const op = ctx.performCast(ctx.byId.get("overpower")!, 0, false, { relentless: true });
+    expect(op.ok).toBe(true);
+    const opReady = ctx.getState().cooldowns.overpower;
+    expect(opReady).toBe(secondsToTicks(30));
+
+    // Rebuild adren for Berserk (Relentless spent OP for free; still need 100 listed).
+    ctx.performCast(ctx.byId.get("berserk")!, ctx.getState().tick, false, { relentless: true });
+    expect(ctx.getState().cooldowns.overpower).toBe(opReady);
+    expect(ctx.firstLegalTick("overpower")).toBe(opReady);
+  });
+
+  it("Berserk expiration does not rewrite remaining Overpower CD", () => {
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+    });
+    ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentless: true });
+    const opTick = ctx.getState().tick;
+    expect(
+      ctx.performCast(ctx.byId.get("overpower")!, opTick, false, { relentless: true }).ok,
+    ).toBe(true);
+    const ready = ctx.getState().cooldowns.overpower;
+    expect(ready).toBe(opTick + secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS));
+
+    // Past Berserk window (19.8s = 33 ticks from berserk cast at 0).
+    ctx.advanceTo(secondsToTicks(19.8) + 1);
+    expect(ctx.getState().cooldowns.overpower).toBe(ready);
+  });
+
+  it("Igneous Overpower shares replacement group and 9s under Berserk", () => {
+    const effects = activeEquipmentEffects({
+      equipmentSlots: { cape: "item:igneous-kal-ket" },
+    });
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+      equipmentEffects: effects,
+      equipmentIds: ["item:igneous-kal-ket"],
+    });
+    ctx.performCast(ctx.byId.get("berserk")!, 0, false, { relentless: true });
+    const opTick = ctx.getState().tick;
+    const ig = ctx.byId.get("overpower_igneous")!;
+    expect(ig.replacementGroup).toBe("overpower");
+    expect(ctx.performCast(ig, opTick, false, { relentless: true }).ok).toBe(true);
+    expect(ctx.getState().cooldowns.overpower).toBe(
+      opTick + secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS),
+    );
+    expect(ctx.firstLegalTick("overpower")).toBe(
+      opTick + secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS),
+    );
+  });
+
 
   it("a second ultimate during Vestments regeneration gains 20 instantly and ends it", () => {
     const ctx = createCastContext({

@@ -78,13 +78,16 @@ describe("melee ability data", () => {
       24,
     ]);
 
-    expect(byId("overpower_igneous").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+    // wiki Overpower: lands 3 ticks after cast (both base and igneous hits simultaneous).
+    expect(byId("overpower").hits.map((h) => h.tickOffset)).toEqual([3]);
+    expect(byId("overpower_igneous").hits.map((h) => h.tickOffset)).toEqual([3, 3]);
     expect(byId("hurricane").hits.every((h) => h.tickOffset === undefined)).toBe(true);
   });
 
   it("wiki-audited core bands match current ability pages", () => {
     expect(byId("attack").hits[0].band).toEqual({ minPct: 110, maxPct: 130 });
     expect(byId("adaptive_strike_2h").hits[0].band).toEqual({ minPct: 120, maxPct: 140 });
+    expect(byId("adaptive_strike_mh").hits[0].band).toEqual({ minPct: 120, maxPct: 140 });
     expect(byId("adaptive_strike_dw").hits).toHaveLength(2);
     expect(byId("rend").hits[0].band).toEqual({ minPct: 135, maxPct: 165 });
     expect(byId("overpower").hits[0].band).toEqual({ minPct: 520, maxPct: 570 });
@@ -134,11 +137,16 @@ describe("melee ability data", () => {
   });
 
   it("Adaptive Strike declares wiki adrenaline and cooldown", () => {
-    for (const id of ["adaptive_strike_2h", "adaptive_strike_dw"] as const) {
+    for (const id of ["adaptive_strike_2h", "adaptive_strike_mh", "adaptive_strike_dw"] as const) {
       const a = byId(id);
       expect(a.adrenaline?.gain).toBe(12);
       expect(a.cooldownSeconds).toBe(5.4);
+      expect(a.bloodlustGain).toBe(1);
+      expect(a.replacementGroup).toBe("adaptive_strike");
     }
+    expect(byId("adaptive_strike_mh").weaponRequirement).toBe("mainhand-empty");
+    expect(byId("adaptive_strike_2h").weaponRequirement).toBe("twohand");
+    expect(byId("adaptive_strike_dw").weaponRequirement).toBe("dualwield");
   });
 
   it("fills remaining post-modernisation damage kit with wiki bands", () => {

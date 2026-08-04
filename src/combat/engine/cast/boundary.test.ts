@@ -283,7 +283,10 @@ describe("cast legality at the candidate tick", () => {
   });
 
   it("lets defenders satisfy dual-wield requirements without treating shields as weapons", () => {
-    const dualWield = MELEE_ABILITIES.find((ability) => ability.weaponRequirement === "dualwield")!;
+    // Flurry keeps defender-as-dualwield; Adaptive Strike DW is dual weapons only.
+    const dualWield = MELEE_ABILITIES.find(
+      (ability) => ability.weaponRequirement === "dualwield" && ability.id === "flurry",
+    )!;
     const twoHand = MELEE_ABILITIES.find((ability) => ability.weaponRequirement === "twohand")!;
     const unrestricted = MELEE_ABILITIES.find((ability) => ability.weaponRequirement == null)!;
     // Dual-wield melee: offensive OH or defender only.

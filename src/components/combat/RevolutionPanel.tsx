@@ -97,9 +97,12 @@ export function RevolutionPanel({
     });
   }, [activeBarIds]);
 
+  const weaponConfiguration = stats.weaponConfiguration;
   const slots = useMemo(
-    () => solvedSlots ?? (bar ? resolveBar(bar, ENGINE_SPECS) : []),
-    [solvedSlots, bar],
+    () =>
+      solvedSlots ??
+      (bar ? resolveBar(bar, ENGINE_SPECS, weaponConfiguration) : []),
+    [solvedSlots, bar, weaponConfiguration],
   );
   const revoSize = solvedSlots ? solvedSlots.length : (bar?.revolutionSize ?? slots.length);
   const managedSlots = useMemo(
@@ -110,8 +113,8 @@ export function RevolutionPanel({
     if (solvedSlots) {
       return solvedSlots.filter((s) => s.spec).map((s) => s.spec!);
     }
-    return bar ? revoManagedModelled(bar) : [];
-  }, [solvedSlots, bar]);
+    return bar ? revoManagedModelled(bar, weaponConfiguration) : [];
+  }, [solvedSlots, bar, weaponConfiguration]);
   const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
   const keybindCount = Math.max(0, slots.length - revoSize);
   const regions = useMemo(() => unlockedRegions(build), [build]);

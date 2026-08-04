@@ -13,6 +13,10 @@ import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMelee, patchTarget } from "../../runtime/state";
+import { reduceCooldown } from "../../cast/effects/cooldowns";
+
+/** Wiki Hurricane: -3s (5 ticks) CD per distinct enemy hit. ST primary = one enemy. */
+const HURRICANE_CDR_TICKS = secondsToTicks(3);
 
 function resolveParasiteDamage(rt: SimulationRuntime, at: number) {
   const parasite = rt.state.target.melee.abyssalParasite;
@@ -143,6 +147,8 @@ export function onMeleeHitLanded(
     });
   }
 
+  applyHurricaneTargetHitCdr(rt, event, damage);
+
   const mayStack =
     hasPassive(rt.input.equipmentEffects, "abyssal-parasite") &&
     ability.style === "melee" &&
@@ -153,4 +159,34 @@ export function onMeleeHitLanded(
 
   // Leng stack / Frostblades RNG is probability-weighted in expandLengOnLand
   // (simulation/lengLandBranch.ts), not a per-seq hash roll.
+}
+
+/**
+ * First successful Hurricane land per distinct target grants -5 tick CD.
+ * Second hit / Bloodlust third hit on same primary do not re-grant.
+ * Multi-target hook: pass targetKey (today always "primary").
+ */
+function applyHurricaneTargetHitCdr(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+): void {
+  if (event.abilityId !== "hurricane") return;
+  if (damage.max <= 0 || event.attached) return;
+  if (event.originKind === "proc" || event.dotKind != null) return;
+  if (event.sourceCast < 0) return;
+
+  const targetKey = "primary";
+  const castSeq = event.sourceCast;
+  const counted = rt.state.hurricaneCdrTargets?.[castSeq] ?? [];
+  if (counted.includes(targetKey)) return;
+
+  rt.state = reduceCooldown(rt.state, "hurricane", HURRICANE_CDR_TICKS, event.tick);
+  rt.state = {
+    ...rt.state,
+    hurricaneCdrTargets: {
+      ...rt.state.hurricaneCdrTargets,
+      [castSeq]: [...counted, targetKey],
+    },
+  };
 }

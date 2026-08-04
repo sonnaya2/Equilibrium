@@ -76,7 +76,13 @@ const base: Loadout = { ...DEFAULT_LOADOUT };
 
 describe("loadoutStats", () => {
   it("defaults to automatic base; no weapon equipped uses the selected configuration", () => {
-    const fallback: Loadout = { ...base, level: 99, weaponTier: 90, style: "melee" };
+    const fallback: Loadout = {
+      ...base,
+      level: 120,
+      strengthLevel: 120,
+      weaponTier: 90,
+      style: "melee",
+    };
     expect(loadoutWeaponConfig(fallback)).toEqual({
       kind: "twohand",
       weapon: { tier: 90 },
@@ -84,7 +90,7 @@ describe("loadoutStats", () => {
       styleBonus: 0,
     });
     expect(loadoutBase(fallback)).toBe(
-      baseAbilityDamage(99, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
+      baseAbilityDamage(120, { kind: "twohand", weapon: { tier: 90 }, style: "melee" }),
     );
   });
 
@@ -404,7 +410,7 @@ describe("loadoutStats", () => {
       target: { defenceLevel: 80, affinity: "same" },
       buffs: { ...base.buffs, vulnerability: false, styleCurse: "none", overload: "none" },
     });
-    expect(stats.attackLevel).toBe(99);
+    expect(stats.attackLevel).toBe(120);
     expect(stats.globalModifiers.some((m) => m.id === "vulnerability")).toBe(false);
     expect(stats.globalModifiers.some((m) => m.id.startsWith("prayer:"))).toBe(false);
   });

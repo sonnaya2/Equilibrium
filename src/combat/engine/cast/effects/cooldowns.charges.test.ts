@@ -165,6 +165,28 @@ describe("stun-basic charges (Backhand / Binding Shot / Impact)", () => {
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
   });
 
+  it("branch keys treat fully recovered charges as never spent", () => {
+    const recovered = createRuntime(baseInput);
+    const never = createRuntime(baseInput);
+    // readyAt <= tick is pruned from the key (same future as never spent).
+    recovered.state = {
+      ...recovered.state,
+      tick: CD_15,
+      charges: { backhand: [CD_15] },
+    };
+    never.state = { ...never.state, tick: CD_15, charges: {} };
+    expect(branchKeyStructural(recovered)).toBe(branchKeyStructural(never));
+
+    // Still recovering stays distinct.
+    recovered.state = {
+      ...recovered.state,
+      tick: 0,
+      charges: { backhand: [CD_15] },
+    };
+    never.state = { ...never.state, tick: 0, charges: {} };
+    expect(branchKeyStructural(recovered)).not.toBe(branchKeyStructural(never));
+  });
+
   it("Revolution can spend both Backhand charges before the first recovers", () => {
     const backhand = MELEE_ABILITIES.find((a) => a.id === "backhand")!;
     const s = simulateRevolution({

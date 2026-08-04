@@ -52,17 +52,26 @@ function recordNum(rec: Readonly<Record<string, number>>): string {
   return out;
 }
 
-/** Ability key -> sorted recovering ready-at list (insertion order of record). */
-function recordChargeLists(rec: Readonly<Record<string, readonly number[]>>): string {
+/**
+ * Ability key -> still-recovering ready-at list.
+ * Prune readyAt <= tick so fully recovered charges match never-spent state.
+ */
+function recordChargeLists(
+  rec: Readonly<Record<string, readonly number[]>>,
+  tick: number,
+): string {
   const keys = Object.keys(rec);
-  if (keys.length === 0) return "0";
-  let out = String(keys.length);
+  let out = "";
+  let liveKeys = 0;
   for (const k of keys) {
-    const list = rec[k] ?? [];
+    const list = (rec[k] ?? []).filter((readyAt) => readyAt > tick);
+    if (list.length === 0) continue;
+    liveKeys++;
     out += FS + s(k) + n(list.length);
     for (const t of list) out += US + n(t);
   }
-  return out;
+  if (liveKeys === 0) return "0";
+  return String(liveKeys) + out;
 }
 
 function encodeConjure(c: ActiveConjure): string {
@@ -112,7 +121,7 @@ function encodeState(state: RotationState): string {
     b(state.ringOfVigour),
     n(state.vestmentsAdrenalineUntilTick),
     recordNum(state.cooldowns as Record<string, number>),
-    recordChargeLists(state.charges as Record<string, readonly number[]>),
+    recordChargeLists(state.charges as Record<string, readonly number[]>, state.tick),
     n(state.relentlessUntilTick),
     n(inv.cracklingReadyTick),
     n(inv.aftershockCharge),

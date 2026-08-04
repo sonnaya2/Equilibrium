@@ -15,7 +15,13 @@ import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMelee, patchTarget } from "../../runtime/state";
 import { reduceCooldown } from "../../cast/effects/cooldowns";
 
-/** Wiki Hurricane: -3s (5 ticks) CD per distinct enemy hit. ST primary = one enemy. */
+/**
+ * Wiki Hurricane (Combat Style Modernisation): -3s (5 ticks) CD per enemy hit.
+ * Each damaging ability hit instance grants one reduction (hit1 / hit2 / BL hit3
+ * on the same primary each count). That matches wiki: 7 enemies zero the CD;
+ * Bloodlust needs only 3 (primary 3 waves + 2 secondaries x 2 waves = 7).
+ * Attached / proc / DoT tails never reduce.
+ */
 const HURRICANE_CDR_TICKS = secondsToTicks(3);
 
 function resolveParasiteDamage(rt: SimulationRuntime, at: number) {
@@ -147,7 +153,7 @@ export function onMeleeHitLanded(
     });
   }
 
-  applyHurricaneTargetHitCdr(rt, event, damage);
+  applyHurricaneHitCdr(rt, event, damage);
 
   const mayStack =
     hasPassive(rt.input.equipmentEffects, "abyssal-parasite") &&
@@ -162,11 +168,11 @@ export function onMeleeHitLanded(
 }
 
 /**
- * First successful Hurricane land per distinct target grants -5 tick CD.
- * Second hit / Bloodlust third hit on same primary do not re-grant.
- * Multi-target hook: pass targetKey (today always "primary").
+ * Each successful Hurricane ability hit reduces CD by 5 ticks (floored at land tick).
+ * Multi-target later: one call per (hit, target) damage application; ST model is
+ * one target so N ability hits => N reductions.
  */
-function applyHurricaneTargetHitCdr(
+function applyHurricaneHitCdr(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
@@ -176,17 +182,5 @@ function applyHurricaneTargetHitCdr(
   if (event.originKind === "proc" || event.dotKind != null) return;
   if (event.sourceCast < 0) return;
 
-  const targetKey = "primary";
-  const castSeq = event.sourceCast;
-  const counted = rt.state.hurricaneCdrTargets?.[castSeq] ?? [];
-  if (counted.includes(targetKey)) return;
-
   rt.state = reduceCooldown(rt.state, "hurricane", HURRICANE_CDR_TICKS, event.tick);
-  rt.state = {
-    ...rt.state,
-    hurricaneCdrTargets: {
-      ...rt.state.hurricaneCdrTargets,
-      [castSeq]: [...counted, targetKey],
-    },
-  };
 }

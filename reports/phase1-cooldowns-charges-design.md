@@ -103,45 +103,25 @@ Minimal: after cast, state is source of truth; tests read `getState().charges`. 
 
 No special path if charges live only on `RotationState` (not on worker request). Identity fingerprints of abilities must include charges config via existing ability fingerprint if solver caches specs.
 
-## Hurricane CDR
+## Hurricane CDR (corrected)
 
-Wiki: −3s (5 ticks) per **enemy** hit. ST model: primary is one enemy.
+Wiki: −3s (5 ticks) **per enemy hit** (each damaging ability-hit instance).
+
+Wiki consistency check (full CD 20.4s = 34 ticks; −5 ticks/hit):
+- Zero CD needs ~7 reductions (7 enemies without BL; body text).
+- With Bloodlust, 3 enemies zero CD: only holds if hit waves stack
+  (primary 3 waves + 2 secondaries x 2 waves = 7 reductions).
+
+**Wrong (Phase 1 first pass):** once per distinct target per cast (ST always −3s only).
+**Correct:** every successful hurricane ability land grants −3s (ST base −6s; BL ST −9s).
 
 ### Rules
 
 1. Cast still starts full 20.4s CD at commit.
-2. On **landed** successful damage from Hurricane ability hits (`ability.id === "hurricane"`, `damage.max > 0`, not attached, not proc/bleed tails):
-   - Count **distinct targets** for this `sourceCast`.
-   - ST: target key always `"primary"`.
-   - First successful land for a target grants one −5 tick reduction.
-   - Second ability hit / Bloodlust extra hit on same primary must **not** grant another.
-3. Reduction: `ready = max(event.tick, ready - 5)` (same floor as Snipe CDR). Never below current event tick.
-4. Design hook for multi later: pass `targetKey` (today always primary).
-
-### State for distinct-target accounting
-
-```ts
-// On RotationState or melee substate — prefer compact top-level or melee:
-/** castSeq → target keys already counted for Hurricane CDR this cast */
-hurricaneCdrTargets?: Readonly<Record<number, readonly string[]>>;
-```
-
-Or prune when cast is old. Keep small: only store active cast keys.
-
-Helper in `cast/effects/cooldowns.ts`:
-
-```ts
-export function reduceCooldown(
-  state: RotationState,
-  key: string,
-  ticks: number,
-  floorTick: number,
-): RotationState
-```
-
-Land path: `landed/melee.ts` calls a shared `applyHurricaneTargetHitCdr(rt, event, damage)`.
-
-Bloodlust form: still one target → one −3s total for the cast (all hits same primary).
+2. On each **landed** successful hurricane ability hit (`damage.max > 0`, not attached, not proc/bleed):
+   - Reduce CD by 5 ticks: `ready = max(event.tick, ready - 5)`.
+3. Multi-target later: one land call per (hit, target); no distinct-target map required.
+4. No `hurricaneCdrTargets` state (ready tick on `cooldowns.hurricane` is enough for merge keys).
 
 ## Overpower / Berserk (regression only)
 

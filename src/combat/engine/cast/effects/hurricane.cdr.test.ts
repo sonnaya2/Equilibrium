@@ -5,32 +5,32 @@ import { createCastContext } from "../../simulation/simulate";
 
 const FULL = secondsToTicks(20.4); // 34
 const CDR = secondsToTicks(3); // 5
-const ST_READY = FULL - CDR; // 29 = secondsToTicks(17.4)
+/** ST base form: two ability hits each grant -3s => 20.4 - 6 = 14.4s (24 ticks). */
+const ST_TWO_HITS = FULL - 2 * CDR; // 24
+/** Bloodlust form: three ability hits => 20.4 - 9 = 11.4s (19 ticks). */
+const ST_THREE_HITS = FULL - 3 * CDR; // 19
 
-describe("Hurricane per-enemy CDR", () => {
-  it("ST cast: full 20.4s start, first land -3s once -> ready at cast+17.4s", () => {
+describe("Hurricane per-hit CDR (wiki enemy-hit reductions)", () => {
+  it("ST cast: full 20.4s then each of two lands -3s => ready at cast+14.4s", () => {
     const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100 });
     const hurricane = ctx.byId.get("hurricane")!;
     const castTick = 0;
     expect(ctx.performCast(hurricane, castTick, false).ok).toBe(true);
 
-    // Hits land during cast occupancy advance; after finish path drains? performCast advances to occupancy.
-    // After cast commit, CD should already have been reduced by first successful land.
-    expect(ctx.getState().cooldowns.hurricane).toBe(castTick + ST_READY);
-    expect(ctx.getState().hurricaneCdrTargets).toBeDefined();
+    // Both hits land during cast occupancy advance (no tickOffset).
+    expect(ctx.getState().cooldowns.hurricane).toBe(castTick + ST_TWO_HITS);
   });
 
-  it("two ability hits on same primary grant only one -3s", () => {
+  it("two ability hits on same primary both reduce CD (not once-per-target)", () => {
     const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100 });
     const hurricane = ctx.byId.get("hurricane")!;
     expect(ctx.performCast(hurricane, 0, false).ok).toBe(true);
-    // Two hits scheduled; only one distinct target counted.
-    const counted = Object.values(ctx.getState().hurricaneCdrTargets ?? {}).flat();
-    expect(counted.filter((t) => t === "primary")).toHaveLength(1);
-    expect(ctx.getState().cooldowns.hurricane).toBe(ST_READY);
+    // Distinct-target-once would leave 29; per-hit yields 24.
+    expect(ctx.getState().cooldowns.hurricane).toBe(ST_TWO_HITS);
+    expect(ctx.getState().cooldowns.hurricane).not.toBe(FULL - CDR);
   });
 
-  it("Bloodlust third hit on same primary still one -3s total", () => {
+  it("Bloodlust third hit grants a third -3s (wiki: 3 enemies zero CD under BL)", () => {
     const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100 });
     const attack = ctx.byId.get("attack")!;
     const hurricane = ctx.byId.get("hurricane")!;
@@ -41,19 +41,21 @@ describe("Hurricane per-enemy CDR", () => {
     const s = ctx.finish();
     const hits = s.events.filter((e) => e.abilityId === "hurricane");
     expect(hits.length).toBe(3);
-    expect(ctx.getState().cooldowns.hurricane).toBe(castTick + ST_READY);
-    const targets = Object.values(ctx.getState().hurricaneCdrTargets ?? {}).flat();
-    expect(targets.filter((t) => t === "primary")).toHaveLength(1);
+    expect(ctx.getState().cooldowns.hurricane).toBe(castTick + ST_THREE_HITS);
   });
 
-  it("reduction floors at land event tick (never negative remaining)", () => {
-    // Start with almost-expired CD then land a hit that would overshoot.
+  it("reduction floors at land event tick (never before current tick)", () => {
     const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100 });
     const hurricane = ctx.byId.get("hurricane")!;
     expect(ctx.performCast(hurricane, 0, false).ok).toBe(true);
-    // After ST CDR ready is 29; advance near that and re-check floor via second cast path is N/A.
-    // Direct: ready stays >= land tick (0 for first lands).
     expect(ctx.getState().cooldowns.hurricane).toBeGreaterThanOrEqual(0);
-    expect(ctx.getState().cooldowns.hurricane).toBe(ST_READY);
+    expect(ctx.getState().cooldowns.hurricane).toBe(ST_TWO_HITS);
+  });
+
+  it("does not apply CDR from non-hurricane or zero-damage paths", () => {
+    const ctx = createCastContext({ ...baseInput, startingAdrenaline: 100 });
+    const assault = ctx.byId.get("assault")!;
+    expect(ctx.performCast(assault, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.hurricane).toBeUndefined();
   });
 });

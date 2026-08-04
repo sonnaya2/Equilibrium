@@ -65,22 +65,6 @@ function recordChargeLists(rec: Readonly<Record<string, readonly number[]>>): st
   return out;
 }
 
-/** castSeq -> counted Hurricane CDR target keys. */
-function recordHurricaneCdr(
-  rec: Readonly<Record<number, readonly string[]>> | undefined,
-): string {
-  if (!rec) return "0";
-  const keys = Object.keys(rec);
-  if (keys.length === 0) return "0";
-  let out = String(keys.length);
-  for (const k of keys) {
-    const list = rec[Number(k)] ?? [];
-    out += FS + n(Number(k)) + n(list.length);
-    for (const t of list) out += US + s(t);
-  }
-  return out;
-}
-
 function encodeConjure(c: ActiveConjure): string {
   switch (c.id) {
     case "skeleton_warrior":
@@ -129,7 +113,6 @@ function encodeState(state: RotationState): string {
     n(state.vestmentsAdrenalineUntilTick),
     recordNum(state.cooldowns as Record<string, number>),
     recordChargeLists(state.charges as Record<string, readonly number[]>),
-    recordHurricaneCdr(state.hurricaneCdrTargets),
     n(state.relentlessUntilTick),
     n(inv.cracklingReadyTick),
     n(inv.aftershockCharge),

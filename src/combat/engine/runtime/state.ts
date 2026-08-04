@@ -86,11 +86,6 @@ export interface RotationState {
    */
   charges: ChargeState;
   /**
-   * castSeq -> target keys already counted for Hurricane CDR this cast.
-   * ST model uses "primary" only.
-   */
-  hurricaneCdrTargets?: Readonly<Record<number, readonly string[]>>;
-  /**
    * Relentless perk lockout: after a proc the perk cannot activate again until
    * this tick (wiki: 30s internal cooldown; 0 = ready). Style-agnostic.
    */

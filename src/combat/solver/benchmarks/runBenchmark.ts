@@ -228,6 +228,8 @@ async function solveWithBudget(
       seenBars.add(key);
       uniqueCandidates += 1;
     }
+    // Match production search: score-only ranking (no presentation ledgers).
+    // Leng full-analysis was the main quick-bench wall-time amplifier.
     const evaluation = evaluateRevolutionBar({
       bar,
       style: request.style,
@@ -238,6 +240,7 @@ async function solveWithBudget(
       customWeights: request.customWeights,
       includePartial: request.includePartial,
       size: { min: request.minBarSize, max: request.maxBarSize },
+      detailLevel: "score-only",
     });
     if (!evaluation.ok) {
       return {

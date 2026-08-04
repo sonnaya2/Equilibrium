@@ -3,12 +3,15 @@
 import type { SerializableSolverRequest, SolverResultDTO } from "./serializable";
 import type { HostToWorkerMessage, SolverProgress, WorkerToHostMessage } from "./protocol";
 import type { SolveFn, SolveRuntimeOptions } from "./solveTypes";
+import { WorkerCoordState } from "./coord";
 
 declare const self: DedicatedWorkerGlobalScope;
 
 const cancelled = new Set<number>();
 const paused = new Set<number>();
 let runningId: number | null = null;
+/** Active coord mirror for the running request (message-batch only). */
+let activeCoord: WorkerCoordState | null = null;
 
 function post(message: WorkerToHostMessage): void {
   self.postMessage(message);
@@ -37,9 +40,23 @@ async function waitWhilePaused(requestId: number): Promise<void> {
   }
 }
 
-async function runStart(requestId: number, payload: SerializableSolverRequest): Promise<void> {
+async function runStart(
+  requestId: number,
+  payload: SerializableSolverRequest,
+  coordBootstrap?: {
+    agentIndex: number;
+    agentCount: number;
+    perAgentBudget: number;
+    globalBudget: number;
+  },
+): Promise<void> {
   runningId = requestId;
   clearRequestState(requestId);
+  const coord = new WorkerCoordState();
+  if (coordBootstrap) {
+    coord.globalBudget = coordBootstrap.globalBudget;
+  }
+  activeCoord = coord;
   post({ type: "started", requestId });
 
   try {
@@ -76,6 +93,7 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
         }
         await new Promise((resolve) => setTimeout(resolve, 0));
       },
+      coord,
     };
 
     const result: SolverResultDTO = await solve(payload, options);
@@ -111,7 +129,10 @@ async function runStart(requestId: number, payload: SerializableSolverRequest): 
     post({ type: "error", requestId, error: message });
   } finally {
     clearRequestState(requestId);
-    if (runningId === requestId) runningId = null;
+    if (runningId === requestId) {
+      runningId = null;
+      activeCoord = null;
+    }
   }
 }
 
@@ -126,7 +147,16 @@ self.onmessage = (event: MessageEvent<unknown>) => {
       if (runningId !== null && runningId !== typed.requestId) {
         cancelled.add(runningId);
       }
-      void runStart(typed.requestId, typed.payload);
+      void runStart(typed.requestId, typed.payload, typed.coord);
+      break;
+    case "coord":
+      if (runningId === typed.requestId && activeCoord) {
+        try {
+          activeCoord.applyHostBatch(typed.batch);
+        } catch {
+          // ignore bad batch
+        }
+      }
       break;
     case "cancel":
       cancelled.add(typed.requestId);

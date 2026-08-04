@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildPoolMetrics,
+  collectProgressBarKeys,
   mergeProgress,
   mergeResults,
+  resolveMergedUnique,
   SolverAgentPool,
   solverPoolSize,
 } from "./pool";
@@ -376,14 +378,15 @@ describe("Phase-0 pool metrics", () => {
     expect(merged.poolMetrics).toMatchObject({
       agentCount: 2,
       perAgentBudget: 2400,
+      globalBudget: 4800,
       globalBudgetSum: 4800,
       uniqueCandidatesSum: 75,
       uniqueCandidatesSumKnownWrong: true,
-      reservedCore: false,
       agentEvaluations: [100, 90],
     });
-    // Progress uniqueCandidates remains the naive sum (same as poolMetrics).
+    // Without host uniqueCandidates, progress uses naive sum fallback.
     expect(merged.uniqueCandidates).toBe(75);
+    expect(merged.poolMetrics?.uniqueCandidatesEstimate).toBeGreaterThan(0);
   });
 
   it("records first/last finished and straggler wait from live timing", () => {
@@ -466,6 +469,162 @@ describe("Phase-0 pool metrics", () => {
       lastFinishedMs: 200,
       stragglerWaitMs: 150,
       reservedCore: false,
+    });
+  });
+});
+
+describe("Phase-2 host uniqueCandidates", () => {
+  it("uses host uniqueCandidates as set cardinality, not naive sum", () => {
+    // Same bars reported by both agents: naive sum would be 80; host set is 40.
+    const parts = [
+      progress({
+        bestScore: 10,
+        evaluations: 100,
+        uniqueCandidates: 40,
+        seenKeys: ["a\0b", "c\0d"],
+      }),
+      progress({
+        bestScore: 12,
+        evaluations: 90,
+        uniqueCandidates: 40,
+        seenKeys: ["a\0b", "c\0d"], // full overlap
+      }),
+    ];
+    const live = {
+      startedAtMs: 0,
+      agentFinishedAtMs: [undefined, undefined] as const,
+      finishOrder: [] as const,
+      hardwareCores: 8,
+      reservedCore: false,
+      uniqueCandidates: 40, // host globalVisited.size
+      globalEvaluations: 190,
+    };
+    const merged = mergeProgress(parts, 2, 2400, undefined, live);
+    expect(merged.uniqueCandidates).toBe(40);
+    expect(merged.poolMetrics).toMatchObject({
+      agentCount: 2,
+      perAgentBudget: 2400,
+      globalBudget: 4800,
+      globalBudgetSum: 4800,
+      uniqueCandidates: 40,
+      // Measure-only naive sum still double-counts (80); display uses host set.
+      uniqueCandidatesSum: 80,
+      uniqueCandidatesSumKnownWrong: false,
+      globalEvaluations: 190,
+    });
+    // Display uniqueCandidates is host set size, not naive sum.
+    expect(merged.uniqueCandidates).toBe(40);
+    expect(merged.uniqueCandidates).not.toBe(80);
+  });
+
+  it("buildPoolMetrics falls back to naive sum only without host unique", () => {
+    const parts = [
+      progress({ bestScore: 1, evaluations: 10, uniqueCandidates: 15 }),
+      progress({ bestScore: 2, evaluations: 20, uniqueCandidates: 25 }),
+    ];
+    const noHost = buildPoolMetrics(parts, 2, 100);
+    expect(noHost.uniqueCandidates).toBe(40);
+    expect(noHost.uniqueCandidatesSumKnownWrong).toBe(true);
+
+    const withHost = buildPoolMetrics(parts, 2, 100, {
+      startedAtMs: 0,
+      agentFinishedAtMs: [],
+      finishOrder: [],
+      hardwareCores: 4,
+      reservedCore: false,
+      uniqueCandidates: 28,
+    });
+    expect(withHost.uniqueCandidates).toBe(28);
+    // uniqueCandidatesSum always naive sum of agent counters.
+    expect(withHost.uniqueCandidatesSum).toBe(40);
+    expect(withHost.uniqueCandidatesSumKnownWrong).toBe(false);
+  });
+
+  it("mergeResults prefers host-set unique over sum of result uniqueCandidates", () => {
+    const hostRequest = hostSessionRequest({ seed: 1 });
+    const a = agentDto(
+      { ...hostRequest, seed: 7 },
+      {
+        bar: ["a", "b", "c", "d"],
+        score: 8_000,
+        seed: 7,
+        evaluations: 40,
+        uniqueCandidates: 30,
+      },
+    );
+    const b = agentDto(
+      { ...hostRequest, seed: 99 },
+      {
+        bar: ["a", "b", "c", "d"], // same bar as a
+        score: 15_000,
+        seed: 99,
+        evaluations: 60,
+        uniqueCandidates: 30,
+      },
+    );
+    const metrics = buildPoolMetrics(
+      [
+        progress({ bestScore: 1, evaluations: 40, uniqueCandidates: 30 }),
+        progress({ bestScore: 2, evaluations: 60, uniqueCandidates: 30 }),
+      ],
+      2,
+      2400,
+      {
+        startedAtMs: 0,
+        agentFinishedAtMs: [50, 200],
+        finishOrder: [0, 1],
+        hardwareCores: 4,
+        reservedCore: false,
+        uniqueCandidates: 30, // shared set size, not 60
+        globalEvaluations: 100,
+      },
+    );
+    const merged = mergeResults([a, b], hostRequest, metrics);
+    expect(merged.score).toBe(15_000);
+    expect(merged.uniqueCandidates).toBe(30);
+    expect(merged.evaluations).toBe(100);
+    expect(merged.poolMetrics?.uniqueCandidatesSumKnownWrong).toBe(false);
+  });
+
+  it("collectProgressBarKeys unions seenKeys and preview bars", () => {
+    const keys = collectProgressBarKeys([
+      progress({
+        bestScore: 1,
+        seenKeys: ["x\0y", "z"],
+        topBarPreview: ["p", "q"],
+        activeBarPreview: ["r"],
+      }),
+      progress({
+        bestScore: 2,
+        seenKeys: ["x\0y"],
+        topBarPreview: ["p", "q"],
+      }),
+    ]);
+    expect(keys.has("x\0y")).toBe(true);
+    expect(keys.has("z")).toBe(true);
+    expect(keys.has(["p", "q"].join("\0"))).toBe(true);
+    expect(keys.has("r")).toBe(true);
+    expect(keys.size).toBe(4);
+  });
+
+  it("resolveMergedUnique single agent is not known-wrong", () => {
+    const r = resolveMergedUnique([progress({ bestScore: 1, uniqueCandidates: 12 })], 1);
+    expect(r.uniqueCandidatesSumKnownWrong).toBe(false);
+    expect(r.uniqueCandidates).toBe(12);
+  });
+
+  it("resolveMergedUnique multi-agent without host is known-wrong sum", () => {
+    const r = resolveMergedUnique(
+      [
+        progress({ bestScore: 1, uniqueCandidates: 10 }),
+        progress({ bestScore: 2, uniqueCandidates: 20 }),
+      ],
+      2,
+    );
+    expect(r).toMatchObject({
+      uniqueCandidates: 30,
+      uniqueCandidatesSum: 30,
+      uniqueCandidatesSumKnownWrong: true,
     });
   });
 });

@@ -1,34 +1,58 @@
 import type { SerializableSolverRequest, SolverProofDTO, SolverResultDTO } from "./serializable";
+import type { HostCoordBatch, WorkerCoordReport } from "./coord";
 
 export type { SolverResultDTO, SolverProofDTO };
+export type { HostCoordBatch, WorkerCoordReport };
 
 /** Search phase labels posted with progress (opaque to the host UI). */
 export type SolverPhase = "seed" | "explore" | "exploit" | "finalize" | "paused" | "idle";
 
 /**
- * Phase-0 parallel pool instrumentation (measure only, cloneable).
- * Reflects current independent per-agent budgets - not a shared global budget.
+ * Parallel pool instrumentation (cloneable).
+ * Phase 2: uniqueCandidates is host global visited set size when knownWrong is false.
+ * globalBudget = perAgentBudget * agentCount preserves Phase-0 total evaluation capacity.
  */
 export interface SolverPoolMetrics {
   /** Agents launched this run. */
   agentCount: number;
   /**
-   * Per-agent evaluation budget (TIER_BUDGETS[tier] each agent still receives in full).
-   * Independent-budget behavior: every agent spends this many evals on its own.
+   * Per-agent local evaluation cap (TIER_BUDGETS[tier]).
+   * Local search loops still use this; global work is capped by globalBudget.
    */
   perAgentBudget: number;
   /**
-   * Sum of per-agent budgets (= perAgentBudget * agentCount).
-   * Measure-only stand-in until a real shared global budget ships.
+   * Shared evaluation budget across all agents (= perAgentBudget * agentCount).
+   * Preserves Phase-0 total capacity while host may stop stragglers when spent.
+   */
+  globalBudget: number;
+  /**
+   * @deprecated alias of globalBudget (Phase-0 name). Prefer globalBudget.
    */
   globalBudgetSum: number;
   /**
-   * Sum of uniqueCandidates across agents.
-   * Known-wrong: agents double-count shared bars; not host-side set cardinality.
+   * Distinct bars for display: host visited-set size when knownWrong is false;
+   * otherwise the naive multi-agent sum (same as uniqueCandidatesSum).
+   */
+  uniqueCandidates: number;
+  /**
+   * Always the naive sum of per-agent uniqueCandidates (measure-only).
+   * Double-counts shared bars across agents; not host-set cardinality.
    */
   uniqueCandidatesSum: number;
-  /** True when uniqueCandidatesSum is a naive sum (always true in Phase 0). */
-  uniqueCandidatesSumKnownWrong: true;
+  /**
+   * False when uniqueCandidates is host-set cardinality (workers sent seenKeys).
+   * True when uniqueCandidates is still the naive multi-agent sum.
+   */
+  uniqueCandidatesSumKnownWrong: boolean;
+  /**
+   * Lower-bound distinct bars from progress key samples (seenKeys + previews)
+   * when no authoritative host set is available. Omitted when empty.
+   */
+  uniqueCandidatesEstimate?: number;
+  /** Sum of per-agent evaluation counters (toward globalBudget). */
+  globalEvaluations?: number;
+  /** True when host requested soft-stop (budget exhausted or stop criterion). */
+  coordStop?: boolean;
   /**
    * Wall-clock ms from pool start until the first agent posted a final result.
    * Undefined until at least one agent finishes.
@@ -47,14 +71,16 @@ export interface SolverPoolMetrics {
   /** Logical cores used when planning (navigator.hardwareConcurrency or override). */
   hardwareCores?: number;
   /**
-   * Whether the planner holds back a core for the UI main thread.
-   * Phase 0: false - preferredAgentCount may claim full hardwareConcurrency.
+   * Whether the planner held back a core for the UI main thread this run.
+   * See workerPlan.RESERVES_UI_CORE (only when hardwareCores > tierMax + 1).
    */
   reservedCore: boolean;
   /** Agent indexes in the order they posted result (first finisher first). */
   finishOrder?: readonly number[];
   /** Per-agent evaluation counts (index-aligned with agent slots). */
   agentEvaluations?: readonly number[];
+  /** Agents hard-cancelled as stragglers after stop / budget. */
+  stragglersCancelled?: number;
 }
 
 /**
@@ -72,7 +98,9 @@ export interface SolverProgress {
   searchEvaluations?: number;
   fullEvaluations?: number;
   /** Current evaluation scale for the latest step if useful. */
-  evaluationMode?: "search" | "full" | "finalize";
+  evaluationMode?: "search" | "medium" | "full" | "finalize";
+  /** Multi-fidelity tag for the current / last step. */
+  fidelity?: "short" | "medium" | "full";
   windowDpms: number;
   phase: SolverPhase;
   noImprovementCount: number;
@@ -84,8 +112,7 @@ export interface SolverProgress {
    */
   activeBarPreview?: readonly string[];
   /**
-   * Merged display budget. Pool path sets this to perAgentBudget * agentCount
-   * (global sum of independent budgets), not a shared cap.
+   * Merged display budget. Pool path: shared globalBudget (perAgent * agentCount).
    */
   evaluationBudget?: number;
   progressRatio?: number;
@@ -107,12 +134,17 @@ export interface SolverProgress {
    * High during re-Optimize on the same loadout - scoring looks instant.
    */
   fullMemoHits?: number;
-  /** Phase-0 pool instrumentation (optional; pool path only). */
+  /** Pool instrumentation (optional; pool path only). */
   poolMetrics?: SolverPoolMetrics;
+  /**
+   * New bar identity keys since last progress (worker -> host, batched).
+   * Host folds into the global visited set. Omitted on single-agent path.
+   */
+  seenKeys?: readonly string[];
   proof?: SolverProofDTO;
 }
 
-/** One parallel agent’s live status (cloneable). */
+/** One parallel agent's live status (cloneable). */
 export interface SolverAgentSnapshot {
   index: number;
   phase: SolverPhase;
@@ -138,6 +170,13 @@ export interface StartSolverMessage {
   type: "start";
   requestId: number;
   payload: SerializableSolverRequest;
+  /** Optional pool coordination bootstrap (Phase 2). Older workers ignore. */
+  coord?: {
+    agentIndex: number;
+    agentCount: number;
+    perAgentBudget: number;
+    globalBudget: number;
+  };
 }
 
 export interface CancelSolverMessage {
@@ -155,8 +194,19 @@ export interface ResumeSolverMessage {
   requestId: number;
 }
 
+/** Host -> worker: batched coordination (visited + incumbent + stop + budgets). */
+export interface CoordSolverMessage {
+  type: "coord";
+  requestId: number;
+  batch: HostCoordBatch;
+}
+
 export type HostToWorkerMessage =
-  StartSolverMessage | CancelSolverMessage | PauseSolverMessage | ResumeSolverMessage;
+  | StartSolverMessage
+  | CancelSolverMessage
+  | PauseSolverMessage
+  | ResumeSolverMessage
+  | CoordSolverMessage;
 
 /** Immediate ACK before expensive imports/solve - clears host cold-start watchdog. */
 export interface StartedSolverMessage {
@@ -187,12 +237,19 @@ export interface CancelledSolverMessage {
   requestId: number;
 }
 
+export interface CoordReportSolverMessage {
+  type: "coord_report";
+  requestId: number;
+  report: WorkerCoordReport;
+}
+
 export type WorkerToHostMessage =
   | StartedSolverMessage
   | ProgressSolverMessage
   | ResultSolverMessage
   | ErrorSolverMessage
-  | CancelledSolverMessage;
+  | CancelledSolverMessage
+  | CoordReportSolverMessage;
 
 function isFiniteRequestId(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
@@ -205,6 +262,9 @@ export function isHostToWorkerMessage(value: unknown): value is HostToWorkerMess
   const t = msg.type;
   if (t === "start") {
     return (value as { payload?: unknown }).payload !== undefined;
+  }
+  if (t === "coord") {
+    return (value as { batch?: unknown }).batch !== undefined;
   }
   return t === "cancel" || t === "pause" || t === "resume";
 }
@@ -223,6 +283,8 @@ export function isWorkerToHostMessage(value: unknown): value is WorkerToHostMess
       return (value as { result?: unknown }).result !== undefined;
     case "error":
       return typeof (value as { error?: unknown }).error === "string";
+    case "coord_report":
+      return (value as { report?: unknown }).report !== undefined;
     default:
       return false;
   }

@@ -34,6 +34,16 @@ function isFullRankable(s: ScoredBar | null | undefined): s is ScoredBar {
   );
 }
 
+function isMediumOk(s: ScoredBar | null | undefined): s is ScoredBar {
+  return Boolean(
+    s &&
+    s.mode === "medium" &&
+    !s.validForFinalRanking &&
+    Number.isFinite(s.robustScore) &&
+    s.bar.length > 0,
+  );
+}
+
 function pickSeedBest(state: SearchState): {
   seedBestScore: number;
   seedBestBar: readonly string[] | null;
@@ -129,6 +139,16 @@ export function fullCandidateList(
   ensureBar(seedBestBar, "seed-best-shortlist");
   for (const seed of state.seeds) ensureBar(seed, "authored-seed-shortlist");
 
+  // Medium-stage incumbents (previous winners under robust-shaped mid horizon).
+  ensureBar(state.bestMedium?.bar, "medium-best-shortlist");
+  const mediumArchive = state.archive
+    .filter(isMediumOk)
+    .sort((a, b) => b.robustScore - a.robustScore);
+  for (const m of mediumArchive) {
+    if (selected.length >= shortlistSize) break;
+    ensureBar(m.bar, "medium-shortlist");
+  }
+
   // Fill remaining slots with diverse high exploratory scorers.
   if (selected.length < shortlistSize && pool.length > 0) {
     const diversifyFrom = pool.slice(0, Math.min(pool.length, shortlistSize * 3));
@@ -139,6 +159,7 @@ export function fullCandidateList(
   return selected;
 }
 
+/** Full-horizon ranking re-score (session forceEval uses score-only detail). */
 function rescoreFull(state: SearchState, fullCandidates: ScoredBar[]): ScoredBar[] {
   const rescored: ScoredBar[] = [];
   for (const s of fullCandidates) {
@@ -327,6 +348,7 @@ export async function finalizeSearchAsync(
     // starting another 300s-window evaluation.
     await yieldSlice();
     throwIfCancelled();
+    // Ranking score-only full horizon; presentation re-sim is post-rank.
     const full = state.forceEval(s.bar, "full", "finalize");
     if (isFullRankable(full)) fullOnly.push(full);
     opts.onStep?.({
@@ -347,3 +369,4 @@ export async function finalizeSearchAsync(
 
   return assembleResult(state, opts, seedBestScore, seedBestBar, explorePool, fullOnly);
 }
+

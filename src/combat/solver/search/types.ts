@@ -39,8 +39,10 @@ export interface SearchConfig {
   seed: number;
   exhaustiveMax: number;
   profileId?: ScoredBar["profileId"];
-  /** Horizon ticks used for search evaluations (for score tags). */
+  /** Horizon ticks used for short search evaluations (for score tags). */
   searchHorizonTicks?: number;
+  /** Mid-fidelity horizon (proportional robust windows); omit to skip medium stage. */
+  mediumHorizonTicks?: number;
   /** Horizon ticks used for full evaluations. */
   fullHorizonTicks?: number;
 }
@@ -53,11 +55,13 @@ export interface SearchState {
   rng: Rng;
   config: SearchConfig;
   budget: { remaining: number; used: number; total: number };
-  /** Mode-keyed eval cache: search and full never share entries. */
+  /** Mode-keyed eval cache: search / medium / full never share entries. */
   cache: EvalCache<{ score: number; scored: ScoredBar }>;
   searchCacheHits: number;
+  mediumCacheHits: number;
   fullCacheHits: number;
   searchEvaluations: number;
+  mediumEvaluations: number;
   fullEvaluations: number;
   /**
    * Distinct bar fingerprints that received a full-horizon evaluation attempt
@@ -72,12 +76,16 @@ export interface SearchState {
   /** Best exploratory (search-mode) score only. */
   best: ScoredBar | null;
   bestExploratory: ScoredBar | null;
+  /** Best medium-fidelity score (never validForFinalRanking). */
+  bestMedium: ScoredBar | null;
   bestFull: ScoredBar | null;
   /** Archive entries preserve mode; mixed-scale ranking is forbidden. */
   archive: ScoredBar[];
   seeds: string[][];
   exhaustiveCompleted: boolean;
   startedAt: number;
+  shouldSkipFingerprint?: (fingerprint: string) => boolean;
+  isSearchStopped?: () => boolean;
   tryEval(bar: readonly string[], mode?: EvalMode, source?: string): ScoredBar | null;
   forceEval(bar: readonly string[], mode?: EvalMode, source?: string): ScoredBar | null;
   canEval(): boolean;
@@ -87,6 +95,7 @@ const ARCHIVE_CAP = 256;
 
 export function normalizeEvalMode(mode: EvalMode | undefined): ScoreEvalMode {
   if (mode === "full" || mode === "finalize") return "full";
+  if (mode === "medium") return "medium";
   return "search";
 }
 
@@ -100,6 +109,8 @@ export function createSearchState(opts: {
   evaluate: EvaluateFn;
   config: SearchConfig;
   seeds?: readonly (readonly string[])[];
+  shouldSkipFingerprint?: (fingerprint: string) => boolean;
+  isSearchStopped?: () => boolean;
 }): SearchState {
   const byId = indexPool(opts.pool);
   const cache = new EvalCache<{ score: number; scored: ScoredBar }>(8_192);
@@ -117,19 +128,25 @@ export function createSearchState(opts: {
     },
     cache,
     searchCacheHits: 0,
+    mediumCacheHits: 0,
     fullCacheHits: 0,
     searchEvaluations: 0,
+    mediumEvaluations: 0,
     fullEvaluations: 0,
     fullEvaluatedFingerprints: new Set<string>(),
     fullSuccessFingerprints: new Set<string>(),
     best: null,
     bestExploratory: null,
+    bestMedium: null,
     bestFull: null,
     archive: [],
     seeds: (opts.seeds ?? []).map((s) => [...s]),
     exhaustiveCompleted: false,
     startedAt: Date.now(),
+    shouldSkipFingerprint: opts.shouldSkipFingerprint,
+    isSearchStopped: opts.isSearchStopped,
     canEval() {
+      if (state.isSearchStopped?.()) return false;
       return state.budget.remaining > 0;
     },
     tryEval(bar, mode = "search", source) {
@@ -149,6 +166,7 @@ function evalBar(
   source: string | undefined,
   force: boolean,
 ): ScoredBar | null {
+  if (!force && state.isSearchStopped?.()) return null;
   if (!force && state.budget.remaining <= 0) return null;
   if (bar.length < state.sizeBounds.min || bar.length > state.sizeBounds.max) return null;
   for (let i = 0; i < bar.length; i++) {
@@ -159,19 +177,25 @@ function evalBar(
   // One join for cache key + scored fingerprint + profile bar-key set.
   const fp = fingerprintBar(bar);
   noteBarKeySeen(fp);
+  if (!force && state.shouldSkipFingerprint?.(fp)) {
+    noteDuplicateEvalAttempt();
+    return null;
+  }
   const cacheKey = cacheKeyFor(scoreMode, fp);
   const cached = state.cache.get(cacheKey);
   if (cached) {
     // Duplicate attempt: count it, return cached ScoredBar, no re-simulate / no budget spend.
     noteDuplicateEvalAttempt();
     if (scoreMode === "search") state.searchCacheHits += 1;
+    else if (scoreMode === "medium") state.mediumCacheHits += 1;
     else {
       state.fullCacheHits += 1;
       state.fullEvaluatedFingerprints.add(fp);
       if (cached.scored.validForFinalRanking) state.fullSuccessFingerprints.add(fp);
     }
-    // Cache hit: update mode-specific best only; full never mutates search best.
+    // Cache hit: update mode-specific best only; full/medium never mutate search best.
     if (scoreMode === "search") touchSearchBest(state, cached.scored);
+    else if (scoreMode === "medium") touchMediumBest(state, cached.scored);
     else touchFullBest(state, cached.scored);
     return cached.scored;
   }
@@ -188,6 +212,7 @@ function evalBar(
   }
 
   if (scoreMode === "search") state.searchEvaluations += 1;
+  else if (scoreMode === "medium") state.mediumEvaluations += 1;
   else {
     state.fullEvaluations += 1;
     // Count every full-horizon attempt (including failures) for global-optimum proof.
@@ -208,6 +233,9 @@ function evalBar(
 
   if (scoreMode === "search") {
     touchSearchBest(state, scored);
+    pushArchive(state, scored);
+  } else if (scoreMode === "medium") {
+    touchMediumBest(state, scored);
     pushArchive(state, scored);
   } else {
     // Full results never update search best (scale mismatch).
@@ -231,7 +259,13 @@ export function toScoredBar(
   const profileId = config.profileId ?? "balanced";
   const horizonTicks =
     result.horizonTicks ??
-    (mode === "full" ? (config.fullHorizonTicks ?? 500) : (config.searchHorizonTicks ?? 50));
+    (mode === "full"
+      ? (config.fullHorizonTicks ?? 500)
+      : mode === "medium"
+        ? (config.mediumHorizonTicks ?? config.searchHorizonTicks ?? 50)
+        : (config.searchHorizonTicks ?? 50));
+  const fidelity =
+    result.fidelity ?? (mode === "full" ? "full" : mode === "medium" ? "medium" : "short");
   const obj = result.objective;
 
   if (obj && "ok" in obj && obj.ok === false) {
@@ -244,6 +278,7 @@ export function toScoredBar(
       score: Number.NEGATIVE_INFINITY,
       profileId,
       mode,
+      fidelity,
       objectiveType: profileId,
       horizonTicks,
       exploratory: mode === "search",
@@ -258,7 +293,9 @@ export function toScoredBar(
 
   if (obj && obj.ok === true && typeof obj.robustScore === "number") {
     const robustScore = obj.robustScore;
-    const fullRankable = mode === "full" && result.validForFinalRanking !== false;
+    // Medium may carry robust windows but is never final-rankable.
+    const fullRankable =
+      mode === "full" && result.validForFinalRanking !== false && fidelity === "full";
     return {
       bar: [...bar],
       fingerprint: fp,
@@ -268,6 +305,7 @@ export function toScoredBar(
       score: robustScore,
       profileId: obj.profileId ?? profileId,
       mode,
+      fidelity,
       objectiveType: obj.profileId ?? profileId,
       horizonTicks,
       exploratory: mode === "search" || result.exploratory === true,
@@ -283,12 +321,15 @@ export function toScoredBar(
   // Do not invent opening/developed/steady windows. Mock evaluators that only
   // return `{ score }` on full mode are treated as rankable full scores so unit
   // tests can exercise finalize; production evaluate always sets flags.
+  // Medium never final-ranks even when mocks omit flags.
   const score = result.score;
-  const exploratory = result.exploratory !== undefined ? result.exploratory : mode === "search";
-  const validForFinalRanking =
+  const exploratory =
+    result.exploratory !== undefined ? result.exploratory : mode === "search";
+  let validForFinalRanking =
     result.validForFinalRanking !== undefined
       ? result.validForFinalRanking
       : mode === "full" && Number.isFinite(score);
+  if (mode === "medium" || mode === "search") validForFinalRanking = false;
   return {
     bar: [...bar],
     fingerprint: fp,
@@ -298,6 +339,7 @@ export function toScoredBar(
     score,
     profileId,
     mode,
+    fidelity,
     objectiveType: profileId,
     horizonTicks,
     exploratory,
@@ -320,6 +362,16 @@ function touchSearchBest(state: SearchState, scored: ScoredBar): void {
   }
 }
 
+function touchMediumBest(state: SearchState, scored: ScoredBar): void {
+  if (scored.mode !== "medium") return;
+  // Hard gate: medium fidelity never promotes into final ranking.
+  if (scored.validForFinalRanking) return;
+  if (!Number.isFinite(scored.robustScore)) return;
+  if (!state.bestMedium || scored.robustScore > state.bestMedium.robustScore) {
+    state.bestMedium = cloneScored(scored);
+  }
+}
+
 function touchFullBest(state: SearchState, scored: ScoredBar): void {
   if (scored.mode !== "full") return;
   if (!scored.validForFinalRanking) return;
@@ -331,14 +383,17 @@ function touchFullBest(state: SearchState, scored: ScoredBar): void {
 
 function pushArchive(state: SearchState, scored: ScoredBar): void {
   if (!Number.isFinite(scored.robustScore)) return;
-  // Coexist: same fingerprint may have both search and full entries.
+  // Coexist: same fingerprint may have search, medium, and full entries.
   const key = `${scored.mode}:${scored.fingerprint}`;
   if (state.archive.some((a) => `${a.mode}:${a.fingerprint}` === key)) return;
   state.archive.push(cloneScored(scored));
   if (state.archive.length > ARCHIVE_CAP) {
-    // Trim lowest search scores first; keep all valid full entries when possible.
+    // Prefer full, then medium, then search; within mode by score.
     state.archive.sort((a, b) => {
-      if (a.mode !== b.mode) return a.mode === "full" ? -1 : 1;
+      if (a.mode !== b.mode) {
+        const rank = (m: ScoreEvalMode) => (m === "full" ? 0 : m === "medium" ? 1 : 2);
+        return rank(a.mode) - rank(b.mode);
+      }
       return b.robustScore - a.robustScore;
     });
     state.archive.length = ARCHIVE_CAP;

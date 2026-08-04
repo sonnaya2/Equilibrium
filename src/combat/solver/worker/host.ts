@@ -216,9 +216,10 @@ export async function runOptimize(
             m.perAgentBudget +
             " globalBudgetSum=" +
             m.globalBudgetSum +
-            " uniqueSum=" +
-            m.uniqueCandidatesSum +
-            " (known-wrong) firstFinishedMs=" +
+            " unique=" +
+            m.uniqueCandidates +
+            (m.uniqueCandidatesSumKnownWrong ? " (sum-fallback)" : " (host-set)") +
+            " firstFinishedMs=" +
             (m.firstFinishedMs ?? "-") +
             " lastFinishedMs=" +
             (m.lastFinishedMs ?? "-") +

@@ -74,3 +74,12 @@ export {
   saveCheckpoint,
   type SolverCheckpoint,
 } from "./checkpoint";
+
+export {
+  PoolCoordHost,
+  WorkerCoordState,
+  COORD_KEY_BATCH_MAX,
+  type CoordIncumbent,
+  type HostCoordBatch,
+  type WorkerCoordReport,
+} from "./coord";

@@ -138,8 +138,8 @@ export interface ObjectiveScoreFail {
 
 export type ObjectiveScore = ObjectiveScoreOk | ObjectiveScoreFail;
 
-/** Evaluation mode: short exploratory search vs full-horizon robust scoring. */
-export type ScoreEvalMode = "search" | "full";
+/** Evaluation mode: short exploratory, medium proportional-robust, or full-horizon. */
+export type ScoreEvalMode = "search" | "medium" | "full";
 
 /**
  * Tagged scored bar - search and full scores are never interchangeable units.
@@ -153,12 +153,14 @@ export interface ScoredBar {
   /** Alias of robustScore for search layers that read `.score`. */
   score?: number;
   profileId: ObjectiveProfileId;
-  /** search = exploratory short-horizon; full = robust objective horizon. */
+  /** search = short exploratory; medium = mid-horizon robust-shaped; full = final horizon. */
   mode: ScoreEvalMode;
+  /** Multi-fidelity tag; medium is never validForFinalRanking. */
+  fidelity?: "short" | "medium" | "full";
   objectiveType: ObjectiveProfileId;
   horizonTicks: number;
   exploratory: boolean;
-  /** True only for finite full-horizon robust scores. */
+  /** True only for finite full-horizon robust scores (never medium/search). */
   validForFinalRanking: boolean;
   failureReason?: string;
   minDpm: number;
@@ -232,11 +234,12 @@ export interface EvalResult {
   exploratory?: boolean;
   validForFinalRanking?: boolean;
   horizonTicks?: number;
+  fidelity?: "short" | "medium" | "full";
   failureReason?: string;
 }
 
-/** Search-time evaluation modes (finalize is an alias of full). */
-export type EvalMode = "search" | "full" | "finalize";
+/** Search-time evaluation modes (finalize aliases full; medium is mid-fidelity). */
+export type EvalMode = "search" | "medium" | "full" | "finalize";
 
 /** Alias used by search tiers (same set as SearchTier). */
 export type SolveTier = SearchTier;

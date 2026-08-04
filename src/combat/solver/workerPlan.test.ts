@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  RESERVES_UI_CORE,
   SAFE_GLOBAL_AGENT_CEILING,
   TIER_MAX_AGENTS,
   planWorkers,
   preferredAgentCount,
   recipesForTier,
+  shouldReserveUiCore,
 } from "./workerPlan";
 
 describe("workerPlan", () => {
@@ -113,5 +115,26 @@ describe("workerPlan", () => {
       agents: 99,
     });
     expect(plan.agentCount).toBe(4);
+  });
+});
+
+describe("RESERVES_UI_CORE capacity guard", () => {
+  it("is true but only reserves when hardwareCores > tierMax + 1", () => {
+    expect(RESERVES_UI_CORE).toBe(true);
+    // cores=4 thorough (tierMax 4): naive cores-1 would drop to 3 and lower capacity.
+    expect(shouldReserveUiCore(4, 4)).toBe(false);
+    expect(preferredAgentCount("thorough", 4)).toBe(4);
+    // cores=5 thorough: still no reserve (need > tierMax+1 = 5).
+    expect(shouldReserveUiCore(4, 5)).toBe(false);
+    expect(preferredAgentCount("thorough", 5)).toBe(4);
+    // cores=6 thorough: reserve allowed; usable 5 still yields 4 agents.
+    expect(shouldReserveUiCore(4, 6)).toBe(true);
+    expect(preferredAgentCount("thorough", 6)).toBe(4);
+    // low cores still limited by hardware, never by a forced reserve.
+    expect(preferredAgentCount("thorough", 2)).toBe(2);
+    expect(preferredAgentCount("unhinged", 8)).toBe(8);
+    expect(shouldReserveUiCore(8, 8)).toBe(false);
+    expect(shouldReserveUiCore(8, 10)).toBe(true);
+    expect(preferredAgentCount("unhinged", 10)).toBe(8);
   });
 });

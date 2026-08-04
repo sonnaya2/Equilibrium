@@ -39,6 +39,7 @@ function baseState(over: Partial<ProgressState> = {}): ProgressState {
     lastEmitMs: wallStamp(),
     lastEmittedBestExploratory: Number.NEGATIVE_INFINITY,
     lastEmittedBestFull: Number.NEGATIVE_INFINITY,
+    pendingSeenKeys: [],
     ...over,
   };
 }
@@ -132,6 +133,7 @@ describe("progressReporter throttle", () => {
         "evaluationBudget",
         "evaluationMode",
         "evaluations",
+        "fidelity",
         "fullEvaluations",
         "noImprovementCount",
         "phase",

@@ -30,8 +30,8 @@ export interface SimulationRuntime {
   readonly detailLevel: SimulationDetailLevel;
   /** Runs with a horizon land events only before it (half-open). */
   readonly horizon?: number;
-  readonly byId: Map<string, AbilitySpec>;
-  readonly basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
+  readonly byId: ReadonlyMap<string, AbilitySpec>;
+  readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
   readonly queue: EventQueue<SimulationRuntime>;
   state: RotationState;
   readonly casts: CastRecord[];
@@ -127,12 +127,17 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   ) {
     throw new RangeError(`targetHpPercent outside 0-100: ${input.targetHpPercent}`);
   }
+  // Solver compiled context may pass prebuilt maps (request-invariant).
+  // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).
+  const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
+  const basicByStyle =
+    input.abilityRegistry?.basicByStyle ?? mapBasicsByStyle(input.abilities);
   return {
     input,
     detailLevel: resolveDetailLevel(input.detailLevel),
     horizon: input.horizonTicks,
-    byId: mapAbilitiesById(input.abilities),
-    basicByStyle: mapBasicsByStyle(input.abilities),
+    byId,
+    basicByStyle,
     queue: new EventQueue<SimulationRuntime>(),
     state: newRotationState({
       adrenaline: input.startingAdrenaline,

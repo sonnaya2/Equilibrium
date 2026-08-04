@@ -3,6 +3,7 @@ import { TICK_SECONDS } from "../core/ticks";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { simulateRevolution } from "../engine/simulation/revolution";
 import { buildCandidatePool } from "./candidatePool";
+import { compileEvaluationContext } from "./compiledContext";
 import { evaluateRevolutionBar } from "./evaluate";
 import {
   OBJECTIVE_HORIZON_TICKS,
@@ -173,5 +174,46 @@ describe("evaluateRevolutionBar", () => {
     // No laundered synthetic opening/developed/steady metrics.
     expect(evaluation.metrics).toBeUndefined();
     expect(evaluation.failureReason).toMatch(/custom/i);
+  });
+
+  it("compiled abilityRegistry path matches rebuild simulate totals", () => {
+    const pool = buildCandidatePool(catalogue, "melee");
+    const durationTicks = 50;
+    const compiled = compileEvaluationContext({
+      style: "melee",
+      pool,
+      catalogue,
+      strengthCape99: false,
+    });
+    const evaluation = evaluateRevolutionBar({
+      bar: ["alpha", "beta"],
+      style: "melee",
+      durationTicks,
+      pool,
+      sim: { ...baseSim, abilities: compiled.catalogue },
+      compiled,
+      profileId: "balanced",
+    });
+    const rebuild = simulateRevolution({
+      ...baseSim,
+      abilities: compiled.catalogue as AbilitySpec[],
+      bar: [alpha, beta],
+      style: "melee",
+      durationTicks,
+    });
+    const withRegistry = simulateRevolution({
+      ...baseSim,
+      abilities: compiled.catalogue as AbilitySpec[],
+      abilityRegistry: {
+        byId: compiled.byId,
+        basicByStyle: compiled.basicByStyle,
+      },
+      bar: [alpha, beta],
+      style: "melee",
+      durationTicks,
+    });
+    expect(evaluation.ok && rebuild.ok && withRegistry.ok).toBe(true);
+    expect(evaluation.summary!.totalExpected).toBeCloseTo(rebuild.totalExpected, 10);
+    expect(withRegistry.totalExpected).toBeCloseTo(rebuild.totalExpected, 10);
   });
 });

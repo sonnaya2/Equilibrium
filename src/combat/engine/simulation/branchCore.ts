@@ -128,7 +128,7 @@ export function noteBranchLiveCount(n: number): void {
 
 /**
  * Cheap structural cost of one snapshotRuntime (not a heap walk).
- * Deep targets: state, hitDetails values, spiritEventMeta values.
+ * Deep targets: state only. Map shells for hitDetails/spirit meta (values shared).
  * Shallow: queue, casts/records, maps/sets, ledger objects, analysis.
  */
 function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: number } {
@@ -157,8 +157,8 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
     damageByTick +
     events +
     recordBySeq +
-    hitDetails + // structuredClone each HitResult
-    spiritMeta +
+    hitDetails + // map entry only; HitResult shared by ref
+    spiritMeta + // map entry only; SpiritEventMeta shared by ref
     spiritTracks +
     spiritHits +
     1; // cloneAnalysisState
@@ -173,8 +173,8 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
     damageByTick * 24 +
     events * 96 +
     recordBySeq * 280 +
-    hitDetails * 480 +
-    spiritMeta * 72 +
+    hitDetails * 40 + // key + pointer; HitResult not deep-cloned
+    spiritMeta * 40 +
     spiritTracks * 32 +
     spiritHits * 32 +
     256; // analysis maps/sets base
@@ -182,7 +182,23 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
   return { fields, bytes };
 }
 
-/** Independent copy of a runtime: mutable containers cloned, immutable events shared. */
+/**
+ * Clone cast/record shell. HitResult entries in result.hits are immutable number
+ * bags and already shared by ref across branches (same as hitDetails values).
+ */
+function cloneCastRecord(
+  record: CastRecord,
+  cache: Map<CastRecord, CastRecord>,
+): CastRecord {
+  let clone = cache.get(record);
+  if (!clone) {
+    clone = { ...record, result: { ...record.result, hits: [...record.result.hits] } };
+    cache.set(record, clone);
+  }
+  return clone;
+}
+
+/** Independent copy of a runtime: mutable containers cloned, immutable values shared. */
 export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   if (branchProfEnabled) {
     branchProf.branchSnapshots++;
@@ -190,31 +206,59 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     branchProf.snapshotFieldsCloned += est.fields;
     branchProf.snapshotBytesEstimate += est.bytes;
   }
+
   const recordClones = new Map<CastRecord, CastRecord>();
-  const cloneRecord = (record: CastRecord): CastRecord => {
-    let clone = recordClones.get(record);
-    if (!clone) {
-      clone = { ...record, result: { ...record.result, hits: [...record.result.hits] } };
-      recordClones.set(record, clone);
+
+  // casts: empty fast path; otherwise map through identity cache.
+  const casts =
+    rt.casts.length === 0
+      ? ([] as CastRecord[])
+      : rt.casts.map((r) => cloneCastRecord(r, recordClones));
+
+  // recordBySeq: direct Map walk (no intermediate array of entries).
+  let recordBySeq: Map<number, CastRecord>;
+  if (rt.recordBySeq.size === 0) {
+    recordBySeq = new Map();
+  } else {
+    recordBySeq = new Map();
+    for (const [k, r] of rt.recordBySeq) {
+      recordBySeq.set(k, cloneCastRecord(r, recordClones));
     }
-    return clone;
-  };
+  }
+
+  // HitResult is a flat number bag. Production only sets new values / reads fields
+  // (never mutates). Cast-record clone already shares the same refs in result.hits.
+  // Map shell must be independent so set/delete on a branch cannot leak.
+  const hitDetails =
+    rt.hitDetails.size === 0 ? new Map() : new Map(rt.hitDetails);
+
+  // SpiritEventMeta is {id, untilTick, kind}; only keys are deleted/replaced.
+  const spiritEventMeta =
+    rt.spiritEventMeta.size === 0 ? new Map() : new Map(rt.spiritEventMeta);
+
+  // events: resolved history entries are immutable; array shell must be independent.
+  const events = rt.events.length === 0 ? [] : [...rt.events];
+
+  // score-only never mutates analysis ledgers; share the empty shell.
+  // full-analysis must deep-clone so branch merges cannot leak.
+  const analysis = keepsAnalysisLedgers(rt.detailLevel)
+    ? cloneAnalysisState(rt.analysis)
+    : rt.analysis;
+
   return {
     ...rt,
     queue: rt.queue.clone(),
     state: structuredClone(rt.state),
-    casts: rt.casts.map(cloneRecord),
+    casts,
     perAbility: { ...rt.perAbility },
     damageByTick: { ...rt.damageByTick },
-    events: [...rt.events],
-    recordBySeq: new Map([...rt.recordBySeq].map(([k, r]) => [k, cloneRecord(r)])),
-    hitDetails: new Map([...rt.hitDetails].map(([key, value]) => [key, structuredClone(value)])),
-    spiritEventMeta: new Map(
-      [...rt.spiritEventMeta].map(([key, value]) => [key, structuredClone(value)]),
-    ),
+    events,
+    recordBySeq,
+    hitDetails,
+    spiritEventMeta,
     scheduledSpiritTracks: new Set(rt.scheduledSpiritTracks),
     spiritHitCounts: new Map(rt.spiritHitCounts),
-    analysis: cloneAnalysisState(rt.analysis),
+    analysis,
   };
 }
 

@@ -10,6 +10,7 @@ import { revoManagedSlots } from "../data/specs";
 import { buildCandidatePool } from "./candidatePool";
 import type { PoolAbility } from "./contracts";
 import { secondsToTicks } from "../core/ticks";
+import { mediumHorizonTicks } from "./fidelity";
 import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
 import { TIER_BUDGETS, TIER_HORIZON_SECONDS } from "./solve";
 import { MIN_SOLVER_BAR_SIZE } from "./solutionStore";
@@ -144,7 +145,8 @@ export function computeHorizonsAndBudget(request: SerializableSolverRequest) {
   // lenScale = (maxBarSize / MIN_SOLVER_BAR_SIZE) ** 1.2; floor 1.0 so length-5 keeps base budget.
   const lenScale = Math.max(1, (request.maxBarSize / MIN_SOLVER_BAR_SIZE) ** 1.2);
   const evaluationBudget = Math.round(baseBudget * lenScale);
-  return { exploreTicks, fullTicks, evaluationBudget };
+  const mediumTicks = mediumHorizonTicks(exploreTicks, fullTicks);
+  return { exploreTicks, mediumTicks, fullTicks, evaluationBudget };
 }
 
 export function fitAuthoredSeeds(

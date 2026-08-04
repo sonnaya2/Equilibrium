@@ -1,13 +1,13 @@
 # Solver score-only engine mode (design)
 
-Status: **Phase 3 landed** (plumbing + runtime flag + proven search path).
+Status: **Phase 3 complete** (plumbing + search score-only + winner full-analysis re-sim).
 Scope: cut per-eval allocation/work during Revolution search ranking while
 keeping identical ranking metrics to the full-analysis path.
 
 ## Problem
 
 Every `evaluateRevolutionBar` call runs `simulateRevolution` and builds a full
-10→`RotationSummary`: casts, event log, hit details, per-ability map, damage-by-
+`RotationSummary`: casts, event log, hit details, per-ability map, damage-by-
 source/effect analysis, history provenance, support bounds, optional tails.
 Search runs this thousands of times. Ranking only needs a thin slice of that
 surface.
@@ -45,7 +45,7 @@ Hot-path skips (same sim physics, thinner bookkeeping):
    bounds (ranking does not).
 3. Cast-record hit arrays and UI `hitDetails` growth when branch keys / land-time
    readers do not need them (engine **keeps** `hitDetails` map for derived hits
-   + `branchKey` parity — only cast presentation hit arrays are skipped).
+   + `branchKey` parity - only cast presentation hit arrays are skipped).
 4. Branch merge of analysis / perAbility when those maps are empty or unused.
 5. `combineBranchSummaries` analysis mix and representative cast/event pick
    when detail level is not full-analysis.
@@ -61,7 +61,7 @@ Must keep (ranking + correctness gates):
 
 ## Detail levels (implemented)
 
-Wire: `SimulateOptions.detailLevel` + `CastContextInput.detailLevel` →
+Wire: `SimulateOptions.detailLevel` + `CastContextInput.detailLevel` ->
 `SimulationRuntime.detailLevel`. Default **full-analysis**.
 
 | Level | Purpose | Payload |
@@ -75,7 +75,8 @@ Solver policy:
 - `createEvaluateFn` / evaluation session: always `detailLevel: "score-only"`.
 - Standalone `evaluateRevolutionBar` / combat UI: default full-analysis unless
   `detailLevel` is set.
-- Final DTO still leaves `summary` unset (no automatic winner re-sim yet).
+- After ranking, winner is re-simmed once at `full-analysis` for DTO `summary` /
+  `rng` / `proof.recheckScore` (ranking score stays score-only).
 
 `ScoreableSummary` is the official score-only wire type for objective scoring.
 
@@ -90,7 +91,8 @@ Goal: **identical ranking metrics**, not identical object graphs.
 3. **Gate identity**: residual / approximated / truncated / resampled still
    hard-fail the same way.
 4. **Search honesty**: unchanged (session only changes bookkeeping depth).
-5. **Winner re-sim**: not yet wired in `resultBuilder` (debt).
+5. **Winner re-sim**: `solveFromRequest` re-runs winner at full-analysis;
+   ranking score stays score-only; DTO gets presentation summary + recheckScore.
 6. `OBJECTIVE_VERSION` **not** bumped (pure detail-level flag, equal metrics).
 
 ## Risks
@@ -106,22 +108,23 @@ Goal: **identical ranking metrics**, not identical object graphs.
 
 ## File touch list (Phase 3 — done)
 
-1. `src/combat/engine/simulation/contracts.ts` — detail-level option + helpers
-2. `src/combat/engine/runtime/runtime.ts` — flag on runtime / createRuntime
-3. `src/combat/engine/resolution/accounting.ts` — conditional log / analysis / hit arrays
-4. `src/combat/engine/simulation/branchCore.ts` — merge skip unused maps
-5. `src/combat/engine/simulation/summary.ts` — finish / combine thin path
-6. `src/combat/engine/simulation/revolution.ts` / `simulate.ts` — thread option
-7. `src/combat/solver/evaluate.ts` — pass request detailLevel
-8. `src/combat/solver/evaluationSession.ts` — score-only for session evals
-9. `src/combat/solver/contracts.ts` — ScoreableSummary + EvalDetailLevel
-10. Tests: `scoreOnlyParity.test.ts`
+1. `src/combat/engine/simulation/contracts.ts` - detail-level option + helpers
+2. `src/combat/engine/runtime/runtime.ts` - flag on runtime / createRuntime
+3. `src/combat/engine/resolution/accounting.ts` - conditional log / analysis / hit arrays
+4. `src/combat/engine/simulation/branchCore.ts` - merge skip unused maps
+5. `src/combat/engine/simulation/summary.ts` - finish / combine thin path
+6. `src/combat/engine/simulation/revolution.ts` / `simulate.ts` - thread option
+7. `src/combat/solver/evaluate.ts` - detailLevel + winner presentation projection
+8. `src/combat/solver/evaluationSession.ts` - score-only for session ranking evals
+9. `src/combat/solver/contracts.ts` - ScoreableSummary + EvalDetailLevel
+10. `src/combat/solver/solveFromRequest.ts` / `resultBuilder.ts` - winner full-analysis re-sim
+11. `src/combat/solver/search/finalize.ts` - ranking shortlist remains score-only
+12. Tests: `scoreOnlyParity.test.ts`, `winnerPresentation.test.ts`, `resultBuilder.test.ts`
 
 ## Remaining debt
 
-- Winner full-analysis re-sim in `resultBuilder` when UI needs breakdown
 - Optional prune of `hitDetails` entries no longer referenced by pending queue
-  (risky for branchKey — needs dedicated parity)
+  (risky for branchKey - needs dedicated parity)
 - Summary level is plumbed in helpers but not a separate optimized finish path
   beyond skipping analysis/history
 - Benchmark numbers (alloc / wall-time) not yet re-baselined under score-only

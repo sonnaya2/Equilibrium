@@ -156,6 +156,10 @@ export function planCastOutcomes(
 /**
  * Snapshot+commit plans (Leng land forks inside commit), keeping at most `max`
  * pre-commit forks by weight. Discarded fork mass is residual (not reassigned).
+ *
+ * Intermediate merge+cap when survivors exceed 2*max prevents O(live^2) peaks
+ * (e.g. 64 parents * 64 Leng survivors) before the final cap. Heaviest-k on a
+ * partial set then heaviest-k of (kept U new) matches global heaviest-k.
  */
 export function materializeCastPlans(
   plans: readonly CastOutcomePlan[],
@@ -164,6 +168,10 @@ export function materializeCastPlans(
   if (!Number.isInteger(max) || max < 1) {
     throw new RangeError(`materializeCastPlans: max must be a positive integer, got ${max}`);
   }
+  // Soft intermediate = 2*max (same ratio as MAX_LENG_INTERMEDIATE_BRANCHES).
+  // When max is MAX_SAFE_INTEGER (castOutcomes oracle path), never intermediate-cap.
+  const intermediateMax =
+    max >= Number.MAX_SAFE_INTEGER / 2 ? Number.MAX_SAFE_INTEGER : max * 2;
   const inPlace: CastOutcomePlan[] = [];
   const forked: CastOutcomePlan[] = [];
   for (const plan of plans) {
@@ -173,7 +181,20 @@ export function materializeCastPlans(
 
   let residualWeight = 0;
   let exactness: BranchExactness = "exact";
-  const out: Branch[] = [];
+  let out: Branch[] = [];
+
+  const absorb = (added: readonly Branch[]) => {
+    if (added.length === 0) return;
+    if (out.length === 0) out = [...added];
+    else out.push(...added);
+    noteBranchLiveCount(out.length);
+    if (out.length <= intermediateMax) return;
+    const folded = mergeAndCapBranches(out, max);
+    residualWeight += folded.residualWeight;
+    exactness = combineExactness(exactness, folded.exactness);
+    out = folded.branches;
+    noteBranchLiveCount(out.length);
+  };
 
   for (const plan of inPlace) {
     const committed = commitCastBranches(
@@ -184,7 +205,7 @@ export function materializeCastPlans(
     );
     residualWeight += committed.residualWeight;
     exactness = combineExactness(exactness, committed.exactness);
-    out.push(...committed.branches);
+    absorb(committed.branches);
   }
 
   let keep = forked;
@@ -206,8 +227,7 @@ export function materializeCastPlans(
     );
     residualWeight += committed.residualWeight;
     exactness = combineExactness(exactness, committed.exactness);
-    out.push(...committed.branches);
-    noteBranchLiveCount(out.length);
+    absorb(committed.branches);
   }
 
   const capped = mergeAndCapBranches(out, max);

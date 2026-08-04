@@ -29,6 +29,122 @@ export type RevolutionEvalRequestWithSession = RevolutionEvalRequest & {
   compiled?: CompiledEvaluationContext;
 };
 
+/**
+ * Compact presentation fields for SolverResultDTO after a full-analysis winner
+ * re-sim. Ranking never reads this; search/finalize stay score-only.
+ */
+export interface WinnerPresentationSummary {
+  totalExpected: number;
+  dps: number;
+  ticks: number;
+  ok: boolean;
+  error?: string;
+  rng?: {
+    residualWeight?: number;
+    exactness?: string;
+    failedWeight?: number;
+    probabilityMass?: number;
+  };
+  failure?: {
+    failedWeight?: number;
+    successfulWeight?: number;
+    totalsScope?: string;
+    primaryReason?: string;
+  };
+}
+
+export interface WinnerPresentation {
+  summary: WinnerPresentationSummary;
+  /** Score from the full-analysis re-sim (host sanity vs ranking score). */
+  recheckScore: number;
+  rng?: {
+    residualWeight?: number;
+    exactness?: string;
+  };
+}
+
+type PresentationSummarySource = {
+  ok: boolean;
+  error?: string;
+  totalExpected?: number;
+  dps?: number;
+  ticks?: number;
+  rng?: {
+    residualWeight?: number;
+    exactness?: string | { toString(): string };
+    failedWeight?: number;
+    probabilityMass?: number;
+    failure?: {
+      failedWeight?: number;
+      successfulWeight?: number;
+      totalsScope?: string;
+      primaryReason?: string;
+    };
+  };
+  failure?: {
+    failedWeight?: number;
+    successfulWeight?: number;
+    totalsScope?: string;
+    primaryReason?: string;
+  };
+};
+
+/**
+ * Project a full-analysis (or any) evaluation into DTO presentation fields.
+ * Returns null when the sim did not produce a usable summary.
+ */
+export function winnerPresentationFromEvaluation(
+  evaluation: RevolutionBarEvaluation,
+): WinnerPresentation | null {
+  const raw = evaluation.summary as PresentationSummarySource | undefined;
+  if (!raw) return null;
+
+  const failureSrc = raw.failure ?? raw.rng?.failure;
+  const summary: WinnerPresentationSummary = {
+    totalExpected: raw.totalExpected ?? 0,
+    dps: raw.dps ?? 0,
+    ticks: raw.ticks ?? 0,
+    ok: raw.ok,
+    ...(raw.error !== undefined ? { error: raw.error } : {}),
+  };
+
+  if (raw.rng) {
+    summary.rng = {
+      residualWeight: raw.rng.residualWeight,
+      exactness:
+        raw.rng.exactness === undefined
+          ? undefined
+          : typeof raw.rng.exactness === "string"
+            ? raw.rng.exactness
+            : String(raw.rng.exactness),
+      failedWeight: raw.rng.failedWeight,
+      probabilityMass: raw.rng.probabilityMass,
+    };
+  }
+
+  if (failureSrc) {
+    summary.failure = {
+      failedWeight: failureSrc.failedWeight,
+      successfulWeight: failureSrc.successfulWeight,
+      totalsScope: failureSrc.totalsScope,
+      primaryReason: failureSrc.primaryReason,
+    };
+  }
+
+  const rng = summary.rng
+    ? {
+        residualWeight: summary.rng.residualWeight,
+        exactness: summary.rng.exactness,
+      }
+    : undefined;
+
+  return {
+    summary,
+    recheckScore: evaluation.score,
+    ...(rng ? { rng } : {}),
+  };
+}
+
 function exploratoryDpm(totalExpected: number, durationTicks: number): number {
   const minutes = (durationTicks * TICK_SECONDS) / 60;
   return minutes > 0 ? totalExpected / minutes : 0;
@@ -145,6 +261,10 @@ export function evaluateRevolutionBar(
     {
       ...simFields,
       abilities: compiled.catalogue as AbilitySpec[],
+      abilityRegistry: {
+        byId: compiled.byId,
+        basicByStyle: compiled.basicByStyle,
+      },
       bar: resolved,
       style,
       durationTicks,

@@ -20,10 +20,19 @@ export const TIER_MAX_AGENTS: Record<SearchTier, number> = {
 export const SAFE_GLOBAL_AGENT_CEILING = 8;
 
 /**
- * Whether preferredAgentCount holds back a logical core for the UI main thread.
- * Phase 0 measure: false - agents may claim full hardwareConcurrency.
+ * Whether preferredAgentCount may hold back a logical core for the UI main thread.
+ *
+ * MUST stay paired with the guard in preferredAgentCount: reserve only when
+ * `hardwareCores > tierMax + 1`. That keeps agent count (and total evaluation
+ * capacity N * TIER_BUDGETS) identical to the no-reserve path whenever cores
+ * would otherwise force a drop (e.g. cores=4 + thorough tierMax=4 still
+ * launches 4 agents — never 3).
+ *
+ * Do NOT flip this true with a naive `max(1, cores-1)` alone: on low-core
+ * machines that lowers N and therefore total capacity. Prefer this flag true
+ * only with the tierMax+1 spare-core guard (as implemented below).
  */
-export const RESERVES_UI_CORE = false;
+export const RESERVES_UI_CORE = true;
 
 /** Back-compat alias: historical name meant "how many agents for this tier". */
 export const TIER_AGENT_COUNT: Record<SearchTier, number> = { ...TIER_MAX_AGENTS };
@@ -74,15 +83,29 @@ export function detectHardwareCores(): number {
 }
 
 /**
+ * True when a UI-core reserve would not reduce agent count below the no-reserve
+ * tier/hardware cap. Requires at least one spare core beyond tierMax + the UI.
+ */
+export function shouldReserveUiCore(tierMax: number, hardwareCores: number): boolean {
+  if (!RESERVES_UI_CORE) return false;
+  const hw = Math.max(1, Math.floor(hardwareCores) || 1);
+  const cap = Math.max(1, Math.floor(tierMax) || 1);
+  return hw > cap + 1;
+}
+
+/**
  * How many agents to launch for a tier.
  * Tier value is a ceiling; hardwareCores (or detected) may lower it.
+ *
+ * UI-core reserve uses max(1, cores-1) ONLY when hardwareCores > tierMax+1 so
+ * total capacity N * TIER_BUDGETS never drops vs the previous no-reserve plan
+ * on tight core counts (cores=4 thorough stays 4 agents).
  */
 export function preferredAgentCount(tier: SearchTier, hardwareAgents?: number): number {
   const tierMax = TIER_MAX_AGENTS[tier] ?? TIER_MAX_AGENTS.thorough;
-  const hw = hardwareAgents ?? detectHardwareCores();
-  // Phase 0: RESERVES_UI_CORE is false - no core held back for the UI thread.
-  const reserved = RESERVES_UI_CORE ? 1 : 0;
-  const usable = Math.max(1, (Math.floor(hw) || 1) - reserved);
+  const hw = Math.max(1, Math.floor(hardwareAgents ?? detectHardwareCores()) || 1);
+  const reserved = shouldReserveUiCore(tierMax, hw) ? 1 : 0;
+  const usable = Math.max(1, hw - reserved);
   return Math.max(1, Math.min(tierMax, usable, SAFE_GLOBAL_AGENT_CEILING));
 }
 

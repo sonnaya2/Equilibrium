@@ -23,6 +23,11 @@ import { emitProgress, mapPhase, type ProgressState } from "./progressReporter";
 import { buildMemoContext, createEvaluateFn } from "./evaluationSession";
 import { buildSolverResultDto } from "./resultBuilder";
 import {
+  evaluateRevolutionBar,
+  winnerPresentationFromEvaluation,
+  type WinnerPresentation,
+} from "./evaluate";
+import {
   createProfileCounters,
   isSolverProfileEnabled,
   setActiveSolverProfile,
@@ -62,7 +67,8 @@ export const solveFromRequest: SolveFn = async (
   for (const a of poolSpecs) abilityMap.set(a.id, a);
   const abilities = [...abilityMap.values()];
 
-  const { exploreTicks, fullTicks, evaluationBudget } = computeHorizonsAndBudget(request);
+  const { exploreTicks, mediumTicks, fullTicks, evaluationBudget } =
+    computeHorizonsAndBudget(request);
 
   const { reviveModifiers, reviveLeague } = await import("./worker/revive");
   const league = reviveLeague(simBase.league);
@@ -116,6 +122,8 @@ export const solveFromRequest: SolveFn = async (
     lastEmitMs: 0,
     lastEmittedBestExploratory: Number.NEGATIVE_INFINITY,
     lastEmittedBestFull: Number.NEGATIVE_INFINITY,
+    pendingSeenKeys: [],
+    currentFidelity: "short",
     ...(profile.enabled ? { profile } : {}),
   };
   const seenBars = new Set<string>();
@@ -132,6 +140,7 @@ export const solveFromRequest: SolveFn = async (
     pool,
     simCommon,
     exploreTicks,
+    mediumTicks,
     fullTicks,
     memoContext,
     state,
@@ -152,6 +161,7 @@ export const solveFromRequest: SolveFn = async (
   setActiveSolverProfile(profile.enabled ? profile : undefined);
   let result: SolveResult;
   try {
+  const coord = options?.coord;
   result = await solveAsync(
     {
       pool: searchPool,
@@ -164,12 +174,25 @@ export const solveFromRequest: SolveFn = async (
         profileId: request.profileId,
         ...recipePatch,
         evaluationBudget,
+        searchHorizonTicks: exploreTicks,
+        ...(mediumTicks != null ? { mediumHorizonTicks: mediumTicks } : {}),
+        fullHorizonTicks: fullTicks,
       },
+      shouldSkipFingerprint: coord ? (fp) => coord.shouldSkip(fp) : undefined,
+      isSearchStopped: coord ? () => coord.stopped : undefined,
     },
     {
       onPhase: (phase) => {
         state.currentPhase = mapPhase(phase);
-        if (phase === "finalize") state.finalizeActive = true;
+        if (phase === "finalize") {
+          state.finalizeActive = true;
+          state.currentFidelity = "full";
+        } else if (phase === "medium") {
+          state.currentFidelity = "medium";
+        } else {
+          // Stay on medium once entered; otherwise short until finalize.
+          state.currentFidelity = state.currentFidelity === "medium" ? "medium" : "short";
+        }
         emitProgress(options, state, true);
       },
       onFinalizeStep: (info) => {
@@ -207,9 +230,46 @@ export const solveFromRequest: SolveFn = async (
     throwCancelled();
   }
 
-  // Finalize already full-rescored the shortlist - no second 300s winner sim.
+  // Ranking shortlist already score-only full-horizon rescored in finalize.
+  // One extra full-analysis re-sim for winner presentation (summary / rng / recheck).
   state.currentPhase = "finalize";
+  state.finalizeActive = true;
   emitProgress(options, state, true);
+
+  let presentation: WinnerPresentation | null = null;
+  const winner = result.best;
+  const fullWinner =
+    result.status === "ok" &&
+    winner != null &&
+    winner.validForFinalRanking === true &&
+    winner.mode === "full" &&
+    winner.bar.length > 0;
+
+  if (fullWinner && winner) {
+    if (options?.isCancelled?.() || options?.signal?.aborted) {
+      throwCancelled();
+    }
+    state.scoringLabel = "winner presentation";
+    state.scoringBarPreview = winner.bar;
+    state.activePreview = [...winner.bar];
+    emitProgress(options, state, true);
+
+    const presentationEval = evaluateRevolutionBar({
+      bar: winner.bar,
+      style: request.style,
+      durationTicks: fullTicks,
+      pool,
+      sim: simCommon,
+      profileId: request.profileId,
+      customWeights: request.customWeights,
+      includePartial: request.includePartial,
+      size: { min: request.minBarSize, max: request.maxBarSize },
+      detailLevel: "full-analysis",
+    });
+    presentation = winnerPresentationFromEvaluation(presentationEval);
+
+    if (options?.yieldSlice) await options.yieldSlice();
+  }
 
   if (profile.enabled) {
     const snap = snapshotProfile(profile);
@@ -225,6 +285,7 @@ export const solveFromRequest: SolveFn = async (
     evaluationBudget,
     blessingIds: simBase.league.blessingIds,
     options,
+    presentation,
   });
 };
 

@@ -54,12 +54,23 @@ export interface ProcRules {
   aftershockRank?: number;
 }
 
+/**
+ * Prebuilt ability id / basic-auto maps (solver compiled context).
+ * When present, createRuntime uses these and skips mapAbilitiesById / mapBasicsByStyle.
+ */
+export interface AbilityRegistry {
+  readonly byId: ReadonlyMap<string, AbilitySpec>;
+  readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
+}
+
 export interface SimulateInput {
   base: number;
   level: number;
   accuracy: number;
   crit: Omit<CritLayers, "eligible">;
   abilities: readonly AbilitySpec[];
+  /** Optional prebuilt registry; createRuntime reuses without remapping. */
+  abilityRegistry?: AbilityRegistry;
   rotation: readonly RotationAction[];
   modifiers?: CombatModifier[] | ((ability: AbilitySpec) => CombatModifier[]);
   context?: CombatContext;
@@ -484,6 +495,6 @@ export interface CastContext {
   /** Remove a cast's pending events (channel cancellation); returns the count. */
   cancelCastEvents(castSeq: number): number;
   finish(error?: string, horizonTicks?: number, options?: SimulateOptions): RotationSummary;
-  byId: Map<string, AbilitySpec>;
-  basicByStyle: Map<AbilitySpec["style"], AbilitySpec>;
+  byId: ReadonlyMap<string, AbilitySpec>;
+  basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
 }

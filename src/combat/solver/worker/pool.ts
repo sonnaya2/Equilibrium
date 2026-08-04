@@ -1,6 +1,7 @@
 /**
  * Parallel Revolution solver agents - one Web Worker each, different seeds.
- * Host merges progress (best / total evals) and picks the winning DTO.
+ * Phase 2: host-coordinated global evaluation budget, shared visited set,
+ * shared incumbent, early straggler cancel. Batched messages only (no SAB).
  */
 
 import type { SerializableSolverRequest, SolverResultDTO } from "./serializable";
@@ -20,10 +21,13 @@ import {
   planWorkers,
   RESERVES_UI_CORE,
   SAFE_GLOBAL_AGENT_CEILING,
+  shouldReserveUiCore,
+  TIER_MAX_AGENTS,
   type WorkerAssignment,
 } from "../workerPlan";
 import { compareTopEntry, pickBestSolverResult } from "../rankResults";
 import { solveIdentityFromRequest } from "../identity";
+import { PoolCoordHost } from "./coord";
 
 const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
 
@@ -118,7 +122,7 @@ function agentSnapshot(
   );
 }
 
-/** Live timing inputs for Phase-0 pool metrics (optional; unit tests omit). */
+/** Live timing inputs for pool metrics (optional; unit tests omit). */
 export type PoolMetricsLive = {
   /** Epoch ms when SolverAgentPool.run started. */
   startedAtMs: number;
@@ -130,11 +134,84 @@ export type PoolMetricsLive = {
   reservedCore: boolean;
   /** Override "now" for deterministic tests (defaults to Date.now()). */
   nowMs?: number;
+  globalEvaluations?: number;
+  coordStop?: boolean;
+  stragglersCancelled?: number;
+  /** Host global visited set size (Phase 2). */
+  uniqueCandidates?: number;
 };
 
+/** NUL-joined bar identity (matches fingerprint.barKey). */
+export function progressBarKey(bar: readonly string[] | undefined): string | undefined {
+  if (!bar?.length) return undefined;
+  return bar.join("\0");
+}
+
 /**
- * Build measure-only pool metrics from independent per-agent budgets + live timing.
- * uniqueCandidatesSum is the naive sum (known-wrong double-count).
+ * Collect bar keys from progress messages: explicit seenKeys plus preview bars.
+ * Pure snapshot (no cross-call accumulation) - PoolCoordHost owns the host Set.
+ */
+export function collectProgressBarKeys(
+  parts: readonly (SolverProgress | undefined)[],
+): Set<string> {
+  const keys = new Set<string>();
+  for (const p of parts) {
+    if (!p) continue;
+    if (p.seenKeys?.length) {
+      for (const k of p.seenKeys) {
+        if (k) keys.add(k);
+      }
+    }
+    for (const bar of [p.topBarPreview, p.activeBarPreview, p.scoringBarPreview]) {
+      const k = progressBarKey(bar);
+      if (k) keys.add(k);
+    }
+  }
+  return keys;
+}
+
+/**
+ * Resolve merged uniqueCandidates honesty.
+ * Prefer host Set size (live.uniqueCandidates); else naive sum (flagged known-wrong).
+ */
+export function resolveMergedUnique(
+  parts: readonly (SolverProgress | undefined)[],
+  agentCount: number,
+  hostUnique?: number,
+): {
+  uniqueCandidates: number;
+  uniqueCandidatesSum: number;
+  uniqueCandidatesSumKnownWrong: boolean;
+  uniqueCandidatesEstimate: number;
+} {
+  let uniqueCandidatesSum = 0;
+  for (let i = 0; i < agentCount; i++) {
+    uniqueCandidatesSum += parts[i]?.uniqueCandidates ?? 0;
+  }
+  const estimate = collectProgressBarKeys(parts).size;
+  const hasHost =
+    typeof hostUnique === "number" && Number.isFinite(hostUnique) && hostUnique >= 0;
+  if (hasHost) {
+    return {
+      uniqueCandidates: hostUnique,
+      uniqueCandidatesSum,
+      uniqueCandidatesSumKnownWrong: false,
+      uniqueCandidatesEstimate: Math.max(estimate, hostUnique),
+    };
+  }
+  const liveCount = parts.reduce((n, p) => n + (p != null ? 1 : 0), 0);
+  const knownWrong = liveCount > 1 || agentCount > 1;
+  return {
+    uniqueCandidates: uniqueCandidatesSum,
+    uniqueCandidatesSum,
+    uniqueCandidatesSumKnownWrong: knownWrong,
+    uniqueCandidatesEstimate: estimate,
+  };
+}
+
+/**
+ * Build pool metrics. uniqueCandidatesSum is always the naive sum.
+ * uniqueCandidates is host set size when live.uniqueCandidates is set.
  */
 export function buildPoolMetrics(
   parts: readonly (SolverProgress | undefined)[],
@@ -142,25 +219,32 @@ export function buildPoolMetrics(
   perAgentBudget: number,
   live?: PoolMetricsLive,
 ): SolverPoolMetrics {
-  let uniqueCandidatesSum = 0;
+  const resolved = resolveMergedUnique(parts, agentCount, live?.uniqueCandidates);
   const agentEvaluations: number[] = [];
   for (let i = 0; i < agentCount; i++) {
-    const p = parts[i];
-    uniqueCandidatesSum += p?.uniqueCandidates ?? 0;
-    agentEvaluations.push(p?.evaluations ?? 0);
+    agentEvaluations.push(parts[i]?.evaluations ?? 0);
   }
 
+  const globalBudget = perAgentBudget * agentCount;
   const metrics: SolverPoolMetrics = {
     agentCount,
     perAgentBudget,
-    globalBudgetSum: perAgentBudget * agentCount,
-    uniqueCandidatesSum,
-    uniqueCandidatesSumKnownWrong: true,
+    globalBudget,
+    globalBudgetSum: globalBudget,
+    uniqueCandidates: resolved.uniqueCandidates,
+    uniqueCandidatesSum: resolved.uniqueCandidatesSum,
+    uniqueCandidatesSumKnownWrong: resolved.uniqueCandidatesSumKnownWrong,
     reservedCore: live?.reservedCore ?? RESERVES_UI_CORE,
     agentEvaluations,
   };
+  if (resolved.uniqueCandidatesEstimate > 0) {
+    metrics.uniqueCandidatesEstimate = resolved.uniqueCandidatesEstimate;
+  }
   if (live?.hardwareCores != null) metrics.hardwareCores = live.hardwareCores;
   if (live?.finishOrder?.length) metrics.finishOrder = [...live.finishOrder];
+  if (live?.globalEvaluations != null) metrics.globalEvaluations = live.globalEvaluations;
+  if (live?.coordStop != null) metrics.coordStop = live.coordStop;
+  if (live?.stragglersCancelled != null) metrics.stragglersCancelled = live.stragglersCancelled;
 
   if (live) {
     const finishedAts = live.agentFinishedAtMs
@@ -199,26 +283,25 @@ export function mergeProgress(
   );
   const live_parts = parts.filter((p): p is SolverProgress => p != null);
   if (live_parts.length === 0) {
+    const poolMetrics = buildPoolMetrics(parts, agentCount, baseBudget, live);
     return {
       phase: "seed",
       evaluations: 0,
-      uniqueCandidates: 0,
+      uniqueCandidates: poolMetrics.uniqueCandidates,
       bestScore: 0,
       windowDpms: 0,
       topBarPreview: [],
       noImprovementCount: 0,
-      // Global sum of independent budgets (not a shared cap).
       evaluationBudget: baseBudget * agentCount,
       progressRatio: 0.02,
       agentCount,
       agents,
-      poolMetrics: buildPoolMetrics(parts, agentCount, baseBudget, live),
+      poolMetrics,
     };
   }
 
   let best = live_parts[0]!;
   let evaluations = 0;
-  let unique = 0;
   let ratioSum = 0;
   let searchPhase: SolverProgress["phase"] = "seed";
   let anyStillSearching = false;
@@ -241,7 +324,6 @@ export function mergeProgress(
 
   for (const p of live_parts) {
     evaluations += p.evaluations;
-    unique += p.uniqueCandidates;
     ratioSum += p.progressRatio ?? 0;
     if (p.bestScore > best.bestScore) best = p;
 
@@ -311,11 +393,12 @@ export function mergeProgress(
   else if (fin?.activeBarPreview?.length) activeBarPreview = fin.activeBarPreview;
   else if (best.activeBarPreview?.length) activeBarPreview = best.activeBarPreview;
 
+  const poolMetrics = buildPoolMetrics(parts, agentCount, baseBudget, live);
   return {
     phase,
-    evaluations,
-    // Known-wrong sum of per-agent uniqueCandidates (see poolMetrics).
-    uniqueCandidates: unique,
+    evaluations: live?.globalEvaluations ?? evaluations,
+    // Host global visited size when available; else naive sum fallback.
+    uniqueCandidates: poolMetrics.uniqueCandidates,
     // bestScore stays exploratory-only across agents.
     bestScore: hasExploratory ? bestExploratory : best.bestScore,
     ...(hasExploratory ? { bestExploratoryScore: bestExploratory } : {}),
@@ -328,12 +411,11 @@ export function mergeProgress(
     topBarPreview,
     ...(activeBarPreview ? { activeBarPreview } : {}),
     noImprovementCount: best.noImprovementCount,
-    // Global sum of independent per-agent budgets (not a shared cap yet).
     evaluationBudget: baseBudget * agentCount,
     progressRatio,
     agentCount,
     agents,
-    poolMetrics: buildPoolMetrics(parts, agentCount, baseBudget, live),
+    poolMetrics,
     ...(fin && fin.finalizeTotal != null && fin.finalizeTotal > 0
       ? {
           finalizeStep: fin.finalizeStep,
@@ -378,11 +460,16 @@ export function mergeResults(
   top.sort(compareTopEntry);
 
   let evaluations = 0;
-  let unique = 0;
+  let uniqueSum = 0;
   for (const r of results) {
     evaluations += r.evaluations;
-    unique += r.uniqueCandidates;
+    uniqueSum += r.uniqueCandidates;
   }
+
+  const uniqueCandidates =
+    poolMetrics && !poolMetrics.uniqueCandidatesSumKnownWrong
+      ? poolMetrics.uniqueCandidates
+      : uniqueSum;
 
   const priorNotes = (best.proof?.notes ?? []).filter((n) => !n.startsWith("parallel agents "));
   const notes =
@@ -396,9 +483,8 @@ export function mergeResults(
     solveIdentity: hostRequest
       ? solveIdentityFromRequest(hostRequest)
       : best.solveIdentity,
-    evaluations,
-    // Known-wrong sum across agents (see poolMetrics.uniqueCandidatesSumKnownWrong).
-    uniqueCandidates: unique,
+    evaluations: poolMetrics?.globalEvaluations ?? evaluations,
+    uniqueCandidates,
     top: top.slice(0, 5),
     proof: {
       ...best.proof,
@@ -525,21 +611,32 @@ export class SolverAgentPool {
       throw new DOMException("revolution solver cancelled", "AbortError");
     }
 
-    // Independent per-agent budget (Phase 0): each agent still gets the full tier budget.
-    const baseBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
+    // Preserve Phase-0 total capacity: globalBudget = perAgent * agentCount.
+    const perAgentBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
+    const baseBudget = perAgentBudget;
+    const coordHost = new PoolCoordHost(agentCount, perAgentBudget);
     const progressParts: (SolverProgress | undefined)[] = Array.from({
       length: agentCount,
     });
     const startedAtMs = Date.now();
     const agentFinishedAtMs: (number | undefined)[] = Array.from({ length: agentCount });
     const finishOrder: number[] = [];
+    const tierMax = TIER_MAX_AGENTS[request.tier] ?? TIER_MAX_AGENTS.thorough;
+    const reservedCore = shouldReserveUiCore(tierMax, hardwareCores);
 
     const liveMetrics = (): PoolMetricsLive => ({
       startedAtMs,
       agentFinishedAtMs,
       finishOrder,
       hardwareCores,
-      reservedCore: RESERVES_UI_CORE,
+      reservedCore,
+      globalEvaluations: coordHost.globalEvaluations,
+      coordStop: coordHost.shouldStop,
+      stragglersCancelled: coordHost.stragglersCancelled,
+      // Only claim honest unique after workers streamed seenKeys (not preview-only).
+      ...(coordHost.hasAuthoritativeUnique
+        ? { uniqueCandidates: coordHost.uniqueCandidates }
+        : {}),
     });
 
     const agentMetaFor = () =>
@@ -580,6 +677,89 @@ export class SolverAgentPool {
       finishOrder.push(index);
     };
 
+    const postCoord = (index: number) => {
+      const slot = this.slots[index];
+      if (!slot || slot.requestId === 0) return;
+      const batch = coordHost.batchFor(index);
+      if (!coordHost.batchIsUseful(batch) && !batch.stop) return;
+      try {
+        post(slot.worker, { type: "coord", requestId: slot.requestId, batch });
+      } catch {
+        // ignore
+      }
+    };
+
+    const broadcastCoord = (except?: number) => {
+      for (let i = 0; i < agentCount; i++) {
+        if (except != null && i === except) continue;
+        if (agentFinishedAtMs[i] != null) continue;
+        postCoord(i);
+      }
+    };
+
+    const hardCancelByAgent: Array<(() => void) | undefined> = Array.from(
+      { length: agentCount },
+      () => undefined,
+    );
+
+    /**
+     * Hard-cancel search-phase stragglers when stop is set and we already have
+     * at least one finished result. Never cancel agents already in finalize
+     * (shortlist scoring) or idle/finished.
+     */
+    const considerStragglerCancel = (okCount: number) => {
+      if (!coordHost.shouldStop) return;
+      broadcastCoord();
+      if (okCount < 1) return;
+      for (let i = 0; i < agentCount; i++) {
+        if (agentFinishedAtMs[i] != null) continue;
+        const p = progressParts[i];
+        const phase = p?.phase;
+        const ratio = p?.progressRatio ?? 0;
+        // Leave finalize shortlist scoring alone.
+        if (phase === "finalize" || phase === "idle" || ratio >= 0.82) continue;
+        const fn = hardCancelByAgent[i];
+        if (!fn) continue;
+        try {
+          fn();
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    /** True when every unfinished agent has left pure search (finalize/idle). */
+    const allLiveFinishedSearch = (): boolean => {
+      for (let i = 0; i < agentCount; i++) {
+        if (agentFinishedAtMs[i] != null) continue;
+        const p = progressParts[i];
+        if (!p) return false;
+        const phase = p.phase;
+        const ratio = p.progressRatio ?? 0;
+        if (phase === "finalize" || phase === "idle" || ratio >= 0.82) continue;
+        return false;
+      }
+      return true;
+    };
+
+    const ingestProgress = (index: number, progress: SolverProgress) => {
+      progressParts[index] = progress;
+      coordHost.noteAgentEvaluations(index, progress.evaluations);
+      coordHost.noteKeys(progress.seenKeys);
+      // Fallback: fold preview bars so unique tracking still moves without keys.
+      coordHost.noteBar(progress.topBarPreview);
+      coordHost.noteBar(progress.activeBarPreview);
+      coordHost.noteBar(progress.scoringBarPreview);
+      const exp = progress.bestExploratoryScore ?? progress.bestScore;
+      coordHost.noteIncumbent(exp, progress.topBarPreview, progress.bestFullScore);
+      if (coordHost.budgetExhausted) coordHost.requestStop();
+      // Early stop when every live agent left search and shortlist has a winner path.
+      if (finishOrder.length >= 1 && allLiveFinishedSearch()) {
+        coordHost.requestStop();
+      }
+      broadcastCoord(index);
+    };
+
     const runOne = (index: number): Promise<SolverResultDTO> => {
       const slot = this.slots[index]!;
       const requestId = ++this.seq;
@@ -603,6 +783,7 @@ export class SolverAgentPool {
         let settled = false;
         let acknowledged = false;
         let bootTimer: ReturnType<typeof setTimeout> | undefined;
+        let hardCancelled = false;
 
         const settle = (fn: () => void) => {
           if (settled) return;
@@ -613,6 +794,7 @@ export class SolverAgentPool {
           slot.worker.removeEventListener("messageerror", onMessageError);
           options?.signal?.removeEventListener("abort", onAbort);
           unregisterCancel(onAbort);
+          hardCancelByAgent[index] = undefined;
           fn();
         };
 
@@ -624,6 +806,19 @@ export class SolverAgentPool {
           }
           settle(() => reject(new DOMException("revolution solver cancelled", "AbortError")));
         };
+
+        const onHardCancel = () => {
+          if (settled || hardCancelled) return;
+          hardCancelled = true;
+          coordHost.stragglersCancelled += 1;
+          try {
+            post(slot.worker, { type: "cancel", requestId });
+          } catch {
+            // ignore
+          }
+          settle(() => reject(new DOMException("revolution solver cancelled", "AbortError")));
+        };
+        hardCancelByAgent[index] = onHardCancel;
 
         const onError = (event: ErrorEvent) => {
           this.replaceDeadWorker(slot, requestId);
@@ -647,13 +842,34 @@ export class SolverAgentPool {
           switch (msg.type) {
             case "started":
               acknowledged = true;
+              postCoord(index);
               break;
             case "progress":
               try {
-                progressParts[index] = msg.progress;
+                ingestProgress(index, msg.progress);
                 emit();
+                if (coordHost.shouldStop) {
+                  considerStragglerCancel(finishOrder.length);
+                  if (coordHost.budgetExhausted) postCoord(index);
+                }
               } catch {
                 // Progress callback exceptions must not kill the agent.
+              }
+              break;
+            case "coord_report":
+              try {
+                const r = msg.report;
+                coordHost.noteAgentEvaluations(index, r.evaluations);
+                coordHost.noteKeys(r.seenKeys);
+                coordHost.noteIncumbent(r.bestScore, r.topBarPreview, r.bestFullScore);
+                if (coordHost.budgetExhausted) coordHost.requestStop();
+                if (finishOrder.length >= 1 && allLiveFinishedSearch()) {
+                  coordHost.requestStop();
+                }
+                broadcastCoord(index);
+                if (coordHost.shouldStop) considerStragglerCancel(finishOrder.length);
+              } catch {
+                // ignore
               }
               break;
             case "result": {
@@ -665,6 +881,20 @@ export class SolverAgentPool {
                 0;
               const full = msg.result.bestFullScore ?? msg.result.score;
               markFinished(index);
+              coordHost.noteAgentEvaluations(index, msg.result.evaluations);
+              if (msg.result.bar?.length) {
+                coordHost.noteBar(msg.result.bar);
+                for (const t of msg.result.top ?? []) {
+                  if (t.fingerprint) coordHost.noteKeys([t.fingerprint]);
+                  else if (t.bar?.length) coordHost.noteBar(t.bar);
+                }
+              }
+              coordHost.noteIncumbent(
+                Number.isFinite(exp) ? exp : 0,
+                msg.result.bar,
+                Number.isFinite(full) ? full : undefined,
+              );
+              if (coordHost.budgetExhausted) coordHost.requestStop();
               progressParts[index] = {
                 // idle + ratio 1 marks agent done.
                 phase: "idle",
@@ -683,6 +913,8 @@ export class SolverAgentPool {
               };
               try {
                 emit();
+                broadcastCoord(index);
+                considerStragglerCancel(finishOrder.length);
               } catch {
                 // ignore
               }
@@ -715,7 +947,17 @@ export class SolverAgentPool {
         registerCancel(onAbort);
 
         try {
-          post(slot.worker, { type: "start", requestId, payload });
+          post(slot.worker, {
+            type: "start",
+            requestId,
+            payload,
+            coord: {
+              agentIndex: index,
+              agentCount,
+              perAgentBudget,
+              globalBudget: coordHost.globalBudget,
+            },
+          });
         } catch (err) {
           this.replaceDeadWorker(slot, requestId);
           settle(() => reject(err instanceof Error ? err : new Error(String(err))));

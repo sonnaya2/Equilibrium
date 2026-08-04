@@ -38,6 +38,7 @@ export function createEvaluateFn(args: {
   pool: Parameters<typeof evaluateRevolutionBar>[0]["pool"];
   simCommon: SessionSimCommon;
   exploreTicks: number;
+  mediumTicks?: number | null;
   fullTicks: number;
   memoContext: string;
   state: ProgressState;
@@ -49,6 +50,7 @@ export function createEvaluateFn(args: {
     pool,
     simCommon,
     exploreTicks,
+    mediumTicks,
     fullTicks,
     memoContext,
     state,
@@ -95,11 +97,25 @@ export function createEvaluateFn(args: {
       nextActive.some((id, i) => id !== state.activePreview[i]);
     state.activePreview = nextActive;
     const useFull = mode === "full" || mode === "finalize";
-    const durationTicks = useFull ? fullTicks : exploreTicks;
-    const scoreMode = useFull ? "full" : "search";
+    const useMedium = mode === "medium" && !useFull;
+    const durationTicks = useFull
+      ? fullTicks
+      : useMedium && mediumTicks != null && mediumTicks > 0
+        ? mediumTicks
+        : exploreTicks;
+    const scoreMode = useFull ? "full" : useMedium ? "medium" : "search";
     const kind = useFull ? ("full" as const) : ("search" as const);
+    const fidelity = useFull ? ("full" as const) : useMedium ? ("medium" as const) : ("short" as const);
     // One join for seenBars + evaluation memo key (no second bar.join).
     const key = barKey(bar);
+    const peer = options?.coord?.getIncumbent();
+    if (peer && peer.score > state.bestExploratoryScore) {
+      state.bestExploratoryScore = peer.score;
+      if (!state.finalizeActive && peer.bar.length) state.topPreview = [...peer.bar];
+    }
+    if (peer?.fullScore != null && peer.fullScore > state.bestFullScore) {
+      state.bestFullScore = peer.fullScore;
+    }
     const memoKey = fingerprintEvaluationKey({
       bar,
       barKey: key,
@@ -125,9 +141,20 @@ export function createEvaluateFn(args: {
         seenBars.add(key);
         state.uniqueBars += 1;
         noteUniqueBar(state.profile);
+        if (options?.coord) options.coord.noteLocalSeen(key);
+        else (state.pendingSeenKeys ??= []).push(key);
       }
       if (memoHit.finite && memoHit.score > state.bestExploratoryScore && scoreMode === "search") {
         state.bestExploratoryScore = memoHit.score;
+        if (!state.finalizeActive) state.topPreview = [...bar];
+      }
+      if (
+        memoHit.finite &&
+        scoreMode === "medium" &&
+        memoHit.validForFinalRanking !== true &&
+        Number.isFinite(memoHit.score)
+      ) {
+        // Medium is guidance only; progress bestScore stays exploratory scale.
         if (!state.finalizeActive) state.topPreview = [...bar];
       }
       if (
@@ -154,6 +181,8 @@ export function createEvaluateFn(args: {
       seenBars.add(key);
       state.uniqueBars += 1;
       noteUniqueBar(state.profile);
+      if (options?.coord) options.coord.noteLocalSeen(key);
+      else (state.pendingSeenKeys ??= []).push(key);
     }
 
     // Search + full ranking only need ScoreableSummary metrics.
@@ -174,7 +203,8 @@ export function createEvaluateFn(args: {
     });
 
     if (evaluation.ok) {
-      if (evaluation.mode === "full" && evaluation.validForFinalRanking) {
+      // Only true full-horizon path updates bestFull (medium never final-ranks).
+      if (useFull && evaluation.validForFinalRanking) {
         if (evaluation.score > state.bestFullScore) {
           state.bestFullScore = evaluation.score;
           state.topPreview = [...bar];
@@ -182,6 +212,9 @@ export function createEvaluateFn(args: {
         } else {
           state.noImprovement += 1;
         }
+      } else if (useMedium) {
+        if (!state.finalizeActive) state.topPreview = [...bar];
+        state.noImprovement += 1;
       } else if (evaluation.exploratory) {
         if (evaluation.score > state.bestExploratoryScore) {
           state.bestExploratoryScore = evaluation.score;
@@ -204,14 +237,31 @@ export function createEvaluateFn(args: {
       return {
         score: Number.NEGATIVE_INFINITY,
         finite: false,
-        mode: evaluation.mode,
+        mode: useMedium ? ("medium" as const) : evaluation.mode,
         exploratory: evaluation.exploratory,
         validForFinalRanking: false,
         horizonTicks: evaluation.horizonTicks,
+        fidelity,
         failureReason: evaluation.failureReason ?? evaluation.reasons[0]?.message,
         // Preserve failed robust objective when present (never synthesize success).
         objective: evaluation.objective,
       };
+    }
+
+    // Medium fidelity: robust-shaped score allowed, never validForFinalRanking.
+    if (useMedium) {
+      const out = {
+        score: evaluation.score,
+        finite: true as const,
+        mode: "medium" as const,
+        exploratory: evaluation.exploratory === true,
+        validForFinalRanking: false as const,
+        horizonTicks: evaluation.horizonTicks,
+        fidelity: "medium" as const,
+        ...(evaluation.objective?.ok ? { objective: evaluation.objective } : {}),
+      };
+      writeEvalMemo(memoKey, out);
+      return out;
     }
 
     // Exploratory successes carry no synthetic robust objective windows.
@@ -223,6 +273,7 @@ export function createEvaluateFn(args: {
         exploratory: true as const,
         validForFinalRanking: false as const,
         horizonTicks: evaluation.horizonTicks,
+        fidelity: "short" as const,
         // objective omitted on purpose - scalar exploratory DPM only
       };
       writeEvalMemo(memoKey, out);
@@ -236,6 +287,7 @@ export function createEvaluateFn(args: {
       exploratory: false as const,
       validForFinalRanking: true as const,
       horizonTicks: evaluation.horizonTicks,
+      fidelity: "full" as const,
       objective: evaluation.objective,
     };
     writeEvalMemo(memoKey, out);

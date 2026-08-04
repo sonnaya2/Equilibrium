@@ -131,6 +131,15 @@ export {
   type SolverAgentRecipe,
 } from "./solve";
 export { clearEvalMemo, evalMemoStats } from "./evalMemo";
+export {
+  allocateFidelityBudget,
+  mediumHorizonTicks,
+  fidelityForEvalMode,
+  FIDELITY_BUDGET_SHARES,
+  type EvalFidelity,
+  type FidelityBudgetAllocation,
+} from "./fidelity";
+export { runMediumScreen, collectMediumIncumbents } from "./search/mediumScreen";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export {
   createProfileCounters,
@@ -176,6 +185,7 @@ export {
   TIER_MAX_AGENTS,
   SAFE_GLOBAL_AGENT_CEILING,
   RESERVES_UI_CORE,
+  shouldReserveUiCore,
   detectHardwareCores,
   recipesForTier,
   planRecipe,

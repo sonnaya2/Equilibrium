@@ -16,7 +16,7 @@ export type CompiledStyle = AbilitySpec["style"];
 
 /**
  * Readonly ability registry shared by every bar eval for one solve request.
- * createRuntime may later accept the same maps to skip per-sim rebuilds.
+ * createRuntime accepts the same maps via abilityRegistry (skips per-sim rebuilds).
  */
 export interface CompiledAbilityRegistry {
   /** Final catalogue including autos; Strength Cape already applied when flagged. */

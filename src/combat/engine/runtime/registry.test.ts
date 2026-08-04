@@ -22,4 +22,33 @@ describe("runtime ability registries", () => {
     const map = mapAbilitiesById([attack, { ...attack }]);
     expect(map.get("attack")).toBe(attack);
   });
+
+  it("reuses prebuilt abilityRegistry maps without remapping", () => {
+    const rebuilt = createRuntime({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+    });
+    const rt = createRuntime({
+      ...baseInput,
+      // Intentionally thin catalogue: maps come from abilityRegistry.
+      abilities: [],
+      abilityRegistry: {
+        byId: rebuilt.byId,
+        basicByStyle: rebuilt.basicByStyle,
+      },
+    });
+    expect(rt.byId).toBe(rebuilt.byId);
+    expect(rt.basicByStyle).toBe(rebuilt.basicByStyle);
+    expect(rt.basicByStyle.get("melee")?.autoAttack).toBe(true);
+    expect(rt.byId.get("assault")).toBeDefined();
+  });
+
+  it("rebuilds maps when abilityRegistry is absent", () => {
+    const rt = createRuntime({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+    });
+    expect(rt.byId.get("attack")).toBeDefined();
+    expect(rt.basicByStyle.get("melee")?.id).toBe("attack");
+  });
 });

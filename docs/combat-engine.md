@@ -206,7 +206,7 @@ Optional second metric: **damage from casts begun within the horizon** including
 
 **Detail levels** (`SimulateOptions.detailLevel`, default `full-analysis`):
 
-- `score-only` - ranking metrics only (`totalExpected`, `damageByTick`, rng gates). Solver search uses this.
+- `score-only` - ranking metrics only (`totalExpected`, `damageByTick`, rng gates). Solver search + finalize ranking use this; winner presentation re-sims at full-analysis.
 - `summary` - score metrics plus light diagnostics; no casts/events/analysis.
 - `full-analysis` - full `RotationSummary` for UI/forensics.
 

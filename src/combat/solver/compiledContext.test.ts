@@ -179,4 +179,45 @@ describe("compileEvaluationContext", () => {
     expect(shared.score).toBeCloseTo(standalone.score, 10);
     expect(shared.summary?.totalExpected).toBeCloseTo(standalone.summary!.totalExpected!, 10);
   });
+
+  it("evaluate with compiled abilityRegistry matches rebuild-path totals", () => {
+    const pool = buildCandidatePool(catalogue, "melee");
+    const sim = {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      abilities: catalogue,
+    };
+    // Standalone one-shot compile still builds abilityRegistry for createRuntime.
+    const a = evaluateRevolutionBar({
+      bar: ["alpha", "dismember"],
+      style: "melee",
+      durationTicks: 50,
+      pool,
+      sim,
+      profileId: "balanced",
+    });
+    const compiled = compileEvaluationContext({
+      style: "melee",
+      pool,
+      catalogue,
+      strengthCape99: false,
+    });
+    const b = evaluateRevolutionBar({
+      bar: ["alpha", "dismember"],
+      style: "melee",
+      durationTicks: 50,
+      pool,
+      sim: { ...sim, abilities: compiled.catalogue },
+      compiled,
+      profileId: "balanced",
+    });
+    expect(a.ok && b.ok).toBe(true);
+    expect(b.score).toBeCloseTo(a.score, 10);
+    expect(b.summary?.totalExpected).toBeCloseTo(a.summary!.totalExpected!, 10);
+    // Registry maps are identity-stable across the session.
+    expect(compiled.byId.get("attack")?.autoAttack).toBe(true);
+    expect(compiled.basicByStyle.get("melee")?.id).toBe("attack");
+  });
 });

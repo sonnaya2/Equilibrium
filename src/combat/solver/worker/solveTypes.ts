@@ -1,6 +1,7 @@
 import type { SerializableSolverRequest, SolverResultDTO } from "./serializable";
 import type { SolverProgress } from "./protocol";
 import type { SolverProfileSnapshot } from "../profiling/counters";
+import type { WorkerCoordState } from "./coord";
 
 export type SolveProgressHandler = (progress: SolverProgress) => void;
 
@@ -19,6 +20,11 @@ export interface SolveRuntimeOptions {
   profile?: boolean;
   /** Invoked once after a successful solve when profiling was enabled. */
   onProfile?: (snapshot: SolverProfileSnapshot) => void;
+  /**
+   * Optional pool coordination mirror (Phase 2). When set, workers report
+   * seen bar keys and may soft-skip peer-visited fingerprints.
+   */
+  coord?: WorkerCoordState;
 }
 
 export type SolveFn = (

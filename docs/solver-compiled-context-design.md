@@ -1,6 +1,6 @@
 # Solver compiled evaluation context (design)
 
-Status: Phase 1.5 / Phase 4 early win landed - compile-once catalogue + byId in evaluate/session. createRuntime abilityRegistry still deferred.
+Status: Phase 4 landed - compile-once catalogue + byId in evaluate/session; createRuntime reuses abilityRegistry when compiled context is present.
 Scope: compile ability catalogue, id maps, basics, and Strength Cape variants
 **once per solver request**, then reuse them for every bar evaluation. Measure-
 first (Phase 0); no scoring or eligibility changes.

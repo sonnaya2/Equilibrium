@@ -9,10 +9,16 @@ import { runLargeNeighborhood, runLargeNeighborhoodAsync } from "./search/largeN
 import { runAnnealing, runAnnealingAsync } from "./search/annealing";
 import { runLocalSearch, runLocalSearchAsync } from "./search/localSearch";
 import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
+import { runMediumScreen, runMediumScreenAsync } from "./search/mediumScreen";
+import {
+  beginMediumStage,
+  beginShortStage,
+  planFidelityStages,
+} from "./search/fidelityBudget";
 import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
 import { planRecipe } from "./workerPlan";
 import { beginSolverProfileWindow } from "./profiling";
-/** Per-agent evaluation budgets (independent; each parallel agent gets the full tier budget). Scaled up so longer ladder bands stay competitive. */
+/** Per-agent local evaluation caps (TIER_BUDGETS[tier]). Pool path: globalBudget = this * agentCount (Phase-2 host coord; preserves total capacity). */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
   thorough: 2_400,
   extreme: 4_000,
@@ -131,10 +137,20 @@ export interface SolveInput {
   seed?: number;
   authoredSeeds?: readonly (readonly string[])[];
   config?: Partial<SearchConfig>;
+  shouldSkipFingerprint?: (fingerprint: string) => boolean;
+  isSearchStopped?: () => boolean;
 }
 
 export type SolvePhaseName =
-  "seed" | "exhaustive" | "beam" | "evolutionary" | "lns" | "anneal" | "local" | "finalize";
+  | "seed"
+  | "exhaustive"
+  | "beam"
+  | "evolutionary"
+  | "lns"
+  | "anneal"
+  | "local"
+  | "medium"
+  | "finalize";
 
 export interface SolveAsyncHooks {
   /** Called before each search phase (for progress labels). */
@@ -154,7 +170,8 @@ export interface SolveAsyncHooks {
 
 /**
  * Synchronous orchestrator (tests / workers that own the thread).
- * 1 seeds → 2 exhaustive? → 3 beam → 4 evo → 5 LNS → 6 anneal → 7 local → 8 finalize
+ * 1 seeds -> 2 exhaustive? -> 3 beam -> 4 evo -> 5 LNS -> 6 anneal -> 7 local
+ * -> 8 medium screen (optional multi-fidelity) -> 9 full finalize
  */
 export function solve(input: SolveInput): SolveResult {
   beginSolverProfileWindow();
@@ -177,7 +194,12 @@ export function solve(input: SolveInput): SolveResult {
     evaluate: input.evaluate,
     config,
     seeds,
+    shouldSkipFingerprint: input.shouldSkipFingerprint,
+    isSearchStopped: input.isSearchStopped,
   });
+
+  const plan = planFidelityStages(config);
+  beginShortStage(state, plan);
 
   for (const seed of seeds) {
     if (!state.canEval()) break;
@@ -190,6 +212,11 @@ export function solve(input: SolveInput): SolveResult {
   if (state.canEval() && config.lnsRounds > 0) runLargeNeighborhood(state);
   if (state.canEval() && config.annealSteps > 0) runAnnealing(state);
   if (state.canEval()) runLocalSearch(state);
+
+  if (plan.runMedium) {
+    beginMediumStage(state, plan);
+    if (state.canEval()) runMediumScreen(state);
+  }
 
   return finalizeSearch(state, { tier, topK: config.topK });
 }
@@ -222,7 +249,12 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
     evaluate: input.evaluate,
     config,
     seeds,
+    shouldSkipFingerprint: input.shouldSkipFingerprint,
+    isSearchStopped: input.isSearchStopped,
   });
+
+  const plan = planFidelityStages(config);
+  beginShortStage(state, plan);
 
   const yieldCtx = createYieldCtx(hooks?.yieldSlice, yieldEveryForTier(tier));
 
@@ -263,6 +295,15 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
     onPhase?.("local");
     await runLocalSearchAsync(state, yieldCtx);
     await yieldSlice();
+  }
+
+  if (plan.runMedium) {
+    beginMediumStage(state, plan);
+    if (state.canEval()) {
+      onPhase?.("medium");
+      await runMediumScreenAsync(state, yieldCtx);
+      await yieldSlice();
+    }
   }
 
   onPhase?.("finalize");

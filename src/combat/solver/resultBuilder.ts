@@ -4,6 +4,7 @@ import { solveIdentityFromRequest } from "./identity";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "../league/ruleset";
+import type { WinnerPresentation } from "./evaluate";
 
 export function buildSolverResultDto(args: {
   request: SerializableSolverRequest;
@@ -14,6 +15,11 @@ export function buildSolverResultDto(args: {
   evaluationBudget: number;
   blessingIds: readonly string[];
   options?: SolveRuntimeOptions;
+  /**
+   * Full-analysis re-sim of the winner (post-rank). Ranking score stays on
+   * result.best; this only fills presentation summary / recheck.
+   */
+  presentation?: WinnerPresentation | null;
 }): SolverResultDTO {
   const {
     request,
@@ -24,6 +30,7 @@ export function buildSolverResultDto(args: {
     evaluationBudget,
     blessingIds,
     options,
+    presentation,
   } = args;
 
   const hasBigBoned = blessingIds.includes("big-boned");
@@ -69,6 +76,16 @@ export function buildSolverResultDto(args: {
     ...bigBonedNotes,
   ];
 
+  if (presentation) {
+    proofNotes.push("winner full-analysis presentation re-sim");
+    if (Number.isFinite(presentation.recheckScore)) {
+      const delta = presentation.recheckScore - score;
+      if (Math.abs(delta) > 1e-6) {
+        proofNotes.push(`presentation-recheck-delta ${delta}`);
+      }
+    }
+  }
+
   // Honest windows only - never copy robust score into windowDpms.
   // Full winners from production evaluate carry measured window DPMs (may be 0).
   const hasRealWindows =
@@ -85,6 +102,7 @@ export function buildSolverResultDto(args: {
 
   const dto: SolverResultDTO = {
     bar: winnerBar,
+    // Ranking score from score-only finalize path (not rewritten by presentation).
     score,
     // Required DTO field: 0 when no honest window aggregate (do not stuff score).
     windowDpms: 0,
@@ -102,10 +120,14 @@ export function buildSolverResultDto(args: {
     developedDpm: hasRealWindows ? winner.developedDpm : undefined,
     steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
     assumptions: bigBonedAssumptions,
-    // summary left unset unless an independent sim is run - never fabricate.
+    ...(presentation?.summary ? { summary: presentation.summary } : {}),
+    ...(presentation?.rng ? { rng: presentation.rng } : {}),
     proof: {
       label: result.proof,
-      // recheckScore omitted - a copy of the chosen score is not a recheck.
+      // Independent full-analysis re-sim score when presentation ran.
+      ...(presentation && Number.isFinite(presentation.recheckScore)
+        ? { recheckScore: presentation.recheckScore }
+        : {}),
       notes: proofNotes,
     },
     top: result.top.map((t) => ({

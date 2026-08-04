@@ -49,6 +49,13 @@ export type ProgressState = {
   /** Last best scores that were actually pushed to onProgress. */
   lastEmittedBestExploratory: number;
   lastEmittedBestFull: number;
+  /** Multi-fidelity stage for progress reporting. */
+  currentFidelity?: "short" | "medium" | "full";
+  /**
+   * Newly seen bar keys (barKey) not yet shipped on progress.
+   * Host folds into global unique Set. Drain capped per emit (64 = COORD_KEY_BATCH_MAX).
+   */
+  pendingSeenKeys?: string[];
 };
 
 /** Search fill stops short of full so "Final scoring" still has track room. */
@@ -60,6 +67,7 @@ export function mapPhase(name: SolvePhaseName): SolverPhase {
       return "seed";
     case "finalize":
       return "finalize";
+    case "medium":
     case "local":
     case "anneal":
     case "lns":
@@ -149,6 +157,15 @@ export function emitProgress(
   const full = Number.isFinite(state.bestFullScore)
     ? state.bestFullScore
     : Number.NEGATIVE_INFINITY;
+  // Prefer coord drain (pool workers); else pendingSeenKeys (main-thread / no coord).
+  let seenKeys: string[] | undefined = options.coord?.drainSeenKeys();
+  if (!seenKeys?.length) {
+    const pending = state.pendingSeenKeys;
+    if (pending && pending.length > 0) {
+      const n = Math.min(64, pending.length);
+      seenKeys = pending.splice(0, n);
+    }
+  }
   const progress: SolverProgress = {
     phase: state.currentPhase,
     evaluations: state.evaluations,
@@ -158,7 +175,18 @@ export function emitProgress(
     ...(Number.isFinite(full) ? { bestFullScore: full } : {}),
     searchEvaluations: state.searchEvaluations,
     fullEvaluations: state.fullEvaluations,
-    evaluationMode: state.currentPhase === "finalize" ? "finalize" : "search",
+    evaluationMode:
+      state.currentPhase === "finalize"
+        ? "finalize"
+        : state.currentFidelity === "medium"
+          ? "medium"
+          : state.currentFidelity === "full"
+            ? "full"
+            : "search",
+    fidelity:
+      state.currentPhase === "finalize"
+        ? "full"
+        : (state.currentFidelity ?? "short"),
     // Never stuff robust score into windowDpms - real windows live on the result DTO.
     windowDpms: 0,
     topBarPreview: state.topPreview,
@@ -166,6 +194,7 @@ export function emitProgress(
     noImprovementCount: state.noImprovement,
     evaluationBudget: state.evaluationBudget,
     progressRatio: progressRatioNow(state),
+    ...(seenKeys?.length ? { seenKeys } : {}),
     proof: {
       notes: [
         `bestExploratory=${Number.isFinite(exploratory) ? exploratory : "none"}`,
@@ -173,6 +202,7 @@ export function emitProgress(
         `phase=${state.currentPhase}`,
         `searchEvaluations=${state.searchEvaluations}`,
         `fullEvaluations=${state.fullEvaluations}`,
+        `fidelity=${state.currentPhase === "finalize" ? "full" : (state.currentFidelity ?? "short")}`,
       ],
     },
     ...(state.fullMemoHits > 0 ? { fullMemoHits: state.fullMemoHits } : {}),

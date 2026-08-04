@@ -12,6 +12,7 @@ import {
   lengHitRoll,
   PRIMORDIAL_ICE_CAP,
 } from "../../../styles/melee/effects";
+import { assertProvenance, capabilitiesOf } from "../../../shared/damageProvenance";
 import { hasPassive } from "../../../shared/equipment";
 import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
@@ -147,7 +148,14 @@ export function onMeleeHitLanded(
     });
   }
 
-  if (event.abyssalParasiteEligible) addParasiteStack(rt, event);
+  const mayStack =
+    hasPassive(rt.input.equipmentEffects, "abyssal-parasite") &&
+    ability.style === "melee" &&
+    capabilitiesOf(assertProvenance(event.provenance)).canApplyAbyssalParasite &&
+    !event.attached &&
+    damage.max > 0;
+  if (mayStack) addParasiteStack(rt, event);
+
 
   // Leng: Endless Frost (10%) / Boundless Chill (2%) on real melee hits.
   // Chill stack generation also opens Frostblades for 9s.

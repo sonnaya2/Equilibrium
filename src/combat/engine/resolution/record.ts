@@ -27,10 +27,7 @@ export function recordResolved(
   // channel hit for ability-owned landed effects such as Greater Flurry's
   // Berserk extension.
   if (
-    (event.procEligible ||
-      event.convertedChannel ||
-      event.bleedId != null ||
-      event.abyssalParasiteEligible) &&
+    (event.procEligible || event.convertedChannel || event.bleedId != null) &&
     !event.attached
   ) {
     applyLandedHitEffects(rt, event, damage);

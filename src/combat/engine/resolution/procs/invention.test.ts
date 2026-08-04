@@ -49,6 +49,7 @@ describe("Invention procs — Aftershock charge eligibility", () => {
         attached: false,
         procEligible: false,
         recursionAllowed: false,
+        provenance: { kind: "invention_proc", detail: "aftershock" },
         resolve: () => ({ damage: aftershockDamage }),
       },
       aftershockDamage,
@@ -110,6 +111,7 @@ describe("Invention procs — Aftershock charge eligibility", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" as const },
       resolve: () => ({ damage: { min: 1000, max: 1000, expected: 1000 } }),
     };
 
@@ -143,6 +145,7 @@ describe("Invention procs — Aftershock charge eligibility", () => {
         attached: false,
         procEligible: true,
         recursionAllowed: false,
+        provenance: { kind: "player_direct" },
         resolve: () => ({ damage: { min: almost, max: almost, expected: almost } }),
       },
       { min: almost, max: almost, expected: almost },
@@ -162,6 +165,7 @@ describe("Invention procs — Aftershock charge eligibility", () => {
         attached: false,
         procEligible: true,
         recursionAllowed: false,
+        provenance: { kind: "player_direct" },
         resolve: () => ({ damage: { min: 1, max: 1, expected: 1 } }),
       },
       { min: 1, max: 1, expected: 1 },

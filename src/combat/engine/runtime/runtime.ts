@@ -3,6 +3,7 @@ import type { HitResult } from "../../pipeline/calculateHit";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord } from "../simulation/contracts";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
+import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
@@ -161,6 +162,7 @@ export function scheduleEvent(
   rt: SimulationRuntime,
   event: Omit<ScheduledEvent<SimulationRuntime>, "seq">,
 ): number {
+  assertProvenance(event.provenance);
   const seq = rt.nextSeq++;
   rt.queue.push({ ...event, seq });
   return seq;

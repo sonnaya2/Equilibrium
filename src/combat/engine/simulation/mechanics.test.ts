@@ -222,6 +222,7 @@ describe("Dismember recast chain", () => {
 describe("item passive timelines", () => {
   it("counts unique bleeds for Jaws and doubles only that gain under Natural Instinct", () => {
     const equipmentEffects = itemEffects(["jaws-of-the-abyss", "abyssal-parasite"]);
+    // Parasite does not stack from Dismember bleed ticks; only the dismember bleed is live.
     const run = (naturalInstinctUntilTick = 0) => {
       const ctx = createCastContext({
         ...meleeInput,
@@ -229,12 +230,15 @@ describe("item passive timelines", () => {
         naturalInstinctUntilTick,
       });
       ctx.performCast(ctx.byId.get("dismember")!, 0, false);
-      expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(2);
+      expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(1);
       ctx.performCast(ctx.byId.get("fury")!, 3, false);
+      // Direct hit opens parasite; both bleeds count for subsequent basics.
+      expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(2);
       return ctx.getState().adrenaline;
     };
-    expect(run()).toBe(13);
-    expect(run(100)).toBe(17);
+    // Fury +9; Jaws 2 * 1 (dismember only at cast time). NI doubles Jaws grant only.
+    expect(run()).toBe(11);
+    expect(run(100)).toBe(13);
   });
 
   it("keeps Parasite cadence and resolves a same-tick refresh with the old stacks", () => {
@@ -244,8 +248,11 @@ describe("item passive timelines", () => {
       rotation: rotationOf("rend", "fury"),
     });
     const parasite = result.events.filter((event) => event.abilityId === "abyssal_parasite");
+    // Rend opens 3..15; fury at 3 extends through 18 without shifting the live interval.
     expect(parasite.map((event) => event.tick)).toEqual([3, 6, 9, 12, 15, 18]);
+    expect(parasite[0]!.stackCount).toBe(1);
     expect(parasite[0]!.damage).toMatchObject({ min: 18, max: 31, expected: 24.5 });
+    expect(parasite[1]!.stackCount).toBe(2);
     expect(parasite[1]!.damage).toMatchObject({ min: 37, max: 62, expected: 49.5 });
   });
 

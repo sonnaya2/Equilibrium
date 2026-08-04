@@ -4,7 +4,9 @@ import {
   assertProvenance,
   capabilitiesOf,
   contextWithProvenance,
+  originKindOf,
   outgoingSourceOf,
+  provenanceForCastHit,
   provenanceFromLegacy,
   resolveCombatProvenance,
   type DamageProvenance,
@@ -20,6 +22,52 @@ describe("assertProvenance", () => {
   it("throws on missing provenance", () => {
     expect(() => assertProvenance(null)).toThrow(/missing DamageProvenance/);
     expect(() => assertProvenance(undefined)).toThrow(/missing DamageProvenance/);
+  });
+
+  it("throws on unknown kind", () => {
+    expect(() =>
+      assertProvenance({ kind: "not_a_real_kind" as DamageProvenanceKind }),
+    ).toThrow(/unknown kind/);
+  });
+});
+
+describe("provenanceForCastHit", () => {
+  it("command wins over other flags", () => {
+    expect(
+      provenanceForCastHit({
+        isCommand: true,
+        isDot: true,
+        convertedChannel: true,
+        autoAttack: true,
+      }),
+    ).toEqual({ kind: "conjure_command" });
+  });
+
+  it("converted channel before plain DoT", () => {
+    expect(
+      provenanceForCastHit({ isCommand: false, isDot: true, convertedChannel: true }),
+    ).toEqual({ kind: "player_converted_channel" });
+  });
+
+  it("DoT with detail from dotKind or bleedId", () => {
+    expect(
+      provenanceForCastHit({ isCommand: false, isDot: true, dotKind: "bleed" }),
+    ).toEqual({ kind: "player_dot", detail: "bleed" });
+    expect(
+      provenanceForCastHit({ isCommand: false, isDot: true, bleedId: "corruption_shot" }),
+    ).toEqual({ kind: "player_dot", detail: "corruption_shot" });
+    expect(provenanceForCastHit({ isCommand: false, isDot: true })).toEqual({
+      kind: "player_dot",
+    });
+  });
+
+  it("auto and direct", () => {
+    expect(
+      provenanceForCastHit({ isCommand: false, isDot: false, autoAttack: true }),
+    ).toEqual({ kind: "player_auto" });
+    expect(provenanceForCastHit({ isCommand: false, isDot: false })).toEqual({
+      kind: "player_direct",
+    });
   });
 });
 
@@ -39,6 +87,7 @@ describe("provenanceFromLegacy / resolveCombatProvenance", () => {
     expect(provenanceFromLegacy({ damageSource: "proc" }).kind).toBe("equipment_proc");
     expect(provenanceFromLegacy({ damageSource: "blessing" }).kind).toBe("blessing");
     expect(provenanceFromLegacy({ blessingGenerated: true }).kind).toBe("blessing");
+    expect(provenanceFromLegacy({ convertedChannel: true }).kind).toBe("player_converted_channel");
   });
 
   it("defaults bare style-only context to player_direct", () => {
@@ -78,6 +127,7 @@ describe("outgoingSourceOf", () => {
     ["player_direct", "direct"],
     ["player_auto", "direct"],
     ["player_dot", "dot"],
+    ["player_converted_channel", "dot"],
     ["conjure_auto", "conjure"],
     ["conjure_poison", "conjure"],
     ["conjure_command", "command"],
@@ -91,6 +141,12 @@ describe("outgoingSourceOf", () => {
   ];
   it.each(cases)("%s -> %s", (kind, source) => {
     expect(outgoingSourceOf({ kind })).toBe(source);
+  });
+
+  it("originKindOf matches outgoingSourceOf", () => {
+    const p: DamageProvenance = { kind: "player_converted_channel" };
+    expect(originKindOf(p)).toBe(outgoingSourceOf(p));
+    expect(originKindOf(p)).toBe("dot");
   });
 });
 

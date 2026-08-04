@@ -169,6 +169,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const targetModifiers = input.modifiers.filter(
     (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
   );
+  // Provenance kind "blessing" is canonical for recursion gates; ruleset uses resolveCombatProvenance.
   const blessingProv = (detail: string): DamageProvenance => ({
     kind: "blessing",
     detail,
@@ -179,7 +180,6 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     modifiers: targetModifiers,
     context: {
       ...input.context,
-      blessingGenerated: true,
       damageSource: "blessing" as const,
       provenance: blessingProv("pending"),
     },
@@ -317,7 +317,7 @@ export interface GraspOfGuthixInput {
 }
 
 /**
- * Grasp of Guthix poison via hit pipeline; non-crit, blessingGenerated (no feed-back).
+ * Grasp of Guthix poison via hit pipeline; non-crit, provenance kind blessing (no feed-back).
  */
 export function graspOfGuthixComponent(
   input: GraspOfGuthixInput,
@@ -341,7 +341,6 @@ export function graspOfGuthixComponent(
     provenance,
     context: {
       ...input.context,
-      blessingGenerated: true,
       damageSource: "blessing",
       dotKind: "poison",
       provenance,

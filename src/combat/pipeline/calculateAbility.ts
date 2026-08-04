@@ -1,7 +1,11 @@
 import type { DamageBand } from "../core/abilityDamage";
 import type { CritLayers } from "../core/critical";
 import type { ItemPassiveId } from "../data/records";
-import type { DamageProvenance } from "../shared/damageProvenance";
+import {
+  outgoingSourceOf,
+  provenanceForCastHit,
+  type DamageProvenance,
+} from "../shared/damageProvenance";
 import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
 import type { BleedId, DamageOverTimeKind, OutgoingDamageSource } from "../types";
 import { calculateHit, type HitInput, type HitResult } from "./calculateHit";
@@ -132,20 +136,15 @@ function hitProvenance(
   ability: AbilitySpec,
   hit: AbilityHit,
 ): { damageSource: OutgoingDamageSource; provenance: DamageProvenance } {
-  if (hit.dot || hit.dotKind != null) {
-    return {
-      damageSource: "dot",
-      provenance: { kind: "player_dot", detail: hit.dotKind ?? hit.bleedId },
-    };
-  }
-  // Match live schedule/castHit: command abilities are not player direct hits.
-  if (COMMAND_REQUIRES_CONJURE[ability.id] !== undefined) {
-    return { damageSource: "command", provenance: { kind: "conjure_command" } };
-  }
-  if (ability.autoAttack) {
-    return { damageSource: "direct", provenance: { kind: "player_auto" } };
-  }
-  return { damageSource: "direct", provenance: { kind: "player_direct" } };
+  // Converted channel is cast-time only (schedule channelAsDot); AbilityHit has no flag for it.
+  const provenance = provenanceForCastHit({
+    isCommand: COMMAND_REQUIRES_CONJURE[ability.id] !== undefined,
+    isDot: hit.dot === true || hit.dotKind != null,
+    autoAttack: ability.autoAttack,
+    dotKind: hit.dotKind,
+    bleedId: hit.bleedId,
+  });
+  return { damageSource: outgoingSourceOf(provenance), provenance };
 }
 
 export function calculateAbility(

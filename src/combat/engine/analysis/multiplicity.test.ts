@@ -19,6 +19,7 @@ function event(partial: Partial<ScheduledEvent>): ScheduledEvent {
     attached: false,
     procEligible: true,
     recursionAllowed: false,
+    provenance: { kind: "player_direct" },
     resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
     ...partial,
   };

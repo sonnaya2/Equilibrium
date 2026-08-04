@@ -31,6 +31,7 @@ const event = (over: Partial<ScheduledEvent>): ScheduledEvent => ({
   attached: false,
   procEligible: true,
   recursionAllowed: false,
+  provenance: { kind: "player_direct" },
   resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
   ...over,
 });
@@ -67,6 +68,13 @@ describe("branch equivalence signature", () => {
       { recursionAllowed: true },
       { cancelOwner: 0 },
       { derivedFrom: 0 },
+      { originKind: "dot" },
+      { triggerRolls: 1 },
+      { expectedActivations: 0.05 },
+      { expectedSeparateHits: 1 },
+      { damageTag: "bonus-damage" },
+      { provenance: { kind: "player_dot" } },
+      { provenance: { kind: "player_direct", detail: "x" } },
     ];
     for (const over of variants) {
       const other = new EventQueue();

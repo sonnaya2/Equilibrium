@@ -150,6 +150,41 @@ describe("branch cloning preserves conjure track state", () => {
   });
 });
 
+describe("conjure event provenance", () => {
+  it("stamps conjure_auto and conjure_poison on spirit tracks", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    const autos = s.events.filter((e) => e.family === "conjureAuto");
+    const poisons = s.events.filter((e) => e.family === "poison");
+    expect(autos.length).toBeGreaterThan(0);
+    expect(poisons.length).toBeGreaterThan(0);
+    for (const e of autos) {
+      expect(e.provenance?.kind).toBe("conjure_auto");
+      expect(e.provenance?.detail).toBe("putrid_zombie");
+    }
+    for (const e of poisons) {
+      expect(e.provenance?.kind).toBe("conjure_poison");
+      expect(e.provenance?.detail).toBe("putrid_zombie");
+    }
+  });
+
+  it("skeleton autos use conjure_auto with spirit id detail", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("conjure_skeleton_warrior", ...Array(12).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    const autos = s.events.filter((e) => e.family === "conjureAuto");
+    expect(autos.length).toBeGreaterThan(0);
+    for (const e of autos) {
+      expect(e.provenance).toEqual({ kind: "conjure_auto", detail: "skeleton_warrior" });
+    }
+  });
+});
+
 describe("conjure summoning and auto contribution", () => {
   it("conjure skeleton summons and spirit autos contribute EV (never crit)", () => {
     const s = simulate({

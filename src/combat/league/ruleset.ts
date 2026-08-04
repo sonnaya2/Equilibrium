@@ -6,14 +6,22 @@ import {
   type BlessingPath,
 } from "../../league/blessings";
 import { mulFloor } from "../core/rounding";
+import { resolveCombatProvenance } from "../shared/damageProvenance";
 import { AFFINITY, type AffinityKind } from "../target/genericTarget";
-import type { CombatModifier } from "../types";
+import type { CombatContext, CombatModifier } from "../types";
 import {
   ICYENIC_FAITH_RELIC,
   icyenicFaithActive,
   resolveIcyenicFaithBonuses,
   type IcyenicFaithBonuses,
 } from "./icyenicFaith";
+
+/** Blessing damage must not re-apply ability-stage blessing mults (no recursion). */
+function notBlessingDamage(context: CombatContext): boolean {
+  return (
+    resolveCombatProvenance(context).kind !== "blessing" && context.blessingGenerated !== true
+  );
+}
 
 export interface LeagueLoadout {
   ruleset?: "base" | "equilibrium";
@@ -245,7 +253,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       priority: 900,
       applies: (context) =>
         context.ruleset === "equilibrium" &&
-        context.blessingGenerated !== true &&
+        notBlessingDamage(context) &&
         (context.abilityCategory === "basic" || context.autoAttack === true),
       apply: (state) => ({
         ...state,
@@ -262,7 +270,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       priority: 910,
       applies: (context) =>
         context.ruleset === "equilibrium" &&
-        context.blessingGenerated !== true &&
+        notBlessingDamage(context) &&
         (context.area === "aoe" || context.area === "multi-target"),
       apply: (state, context) => ({
         ...state,

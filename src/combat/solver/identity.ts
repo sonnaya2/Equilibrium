@@ -8,6 +8,7 @@
 
 import type { HitCapRule } from "../core/hitCaps";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
+import { resolveCombatProvenance } from "../shared/damageProvenance";
 import type { CombatContext } from "../types";
 import { OBJECTIVE_VERSION, SOLVER_SCHEMA_VERSION, type ProofLabel } from "./contracts";
 import {
@@ -122,6 +123,9 @@ export function normalizeHitCap(cap: HitCapRule | null | undefined): unknown {
 
 export function normalizeCombatContext(ctx: CombatContext | undefined): unknown {
   if (!ctx) return null;
+  // Provenance kind is canonical; collapse legacy flag so dual-write vs provenance-only match.
+  const blessingGenerated =
+    ctx.blessingGenerated === true || resolveCombatProvenance(ctx).kind === "blessing";
   return {
     style: ctx.style,
     ruleset: ctx.ruleset ?? null,
@@ -130,7 +134,7 @@ export function normalizeCombatContext(ctx: CombatContext | undefined): unknown 
     autoAttack: ctx.autoAttack === true,
     area: ctx.area ?? null,
     targetTiles: ctx.targetTiles ?? null,
-    blessingGenerated: ctx.blessingGenerated === true,
+    blessingGenerated,
     damageSource: ctx.damageSource ?? null,
     provenance: ctx.provenance
       ? { kind: ctx.provenance.kind, detail: ctx.provenance.detail ?? null }

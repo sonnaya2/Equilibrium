@@ -29,6 +29,7 @@ const CAP_KEYS: CapKey[] = [
   "canTriggerProcs",
   "recursiveDamage",
   "prayerMods",
+  "canApplyAbyssalParasite",
 ];
 
 /** Expected capability rows (product law). */
@@ -44,6 +45,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: true,
     recursiveDamage: true,
     prayerMods: true,
+    canApplyAbyssalParasite: true,
   },
   player_auto: {
     playerAttack: true,
@@ -56,6 +58,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: true,
     recursiveDamage: true,
     prayerMods: true,
+    canApplyAbyssalParasite: true,
   },
   player_dot: {
     playerAttack: true,
@@ -68,6 +71,20 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: true,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
+  },
+  player_converted_channel: {
+    playerAttack: true,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: true,
+    blessingOnHit: false,
+    canCrit: true,
+    canGenerateResources: false,
+    canTriggerProcs: true,
+    recursiveDamage: false,
+    prayerMods: true,
+    canApplyAbyssalParasite: false,
   },
   conjure_auto: {
     playerAttack: false,
@@ -80,6 +97,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   conjure_poison: {
     playerAttack: false,
@@ -92,6 +110,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   conjure_command: {
     playerAttack: true,
@@ -104,6 +123,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: true,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   equipment_proc: {
     playerAttack: false,
@@ -116,6 +136,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: true,
+    canApplyAbyssalParasite: false,
   },
   invention_proc: {
     playerAttack: false,
@@ -128,6 +149,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   attached: {
     playerAttack: true,
@@ -140,6 +162,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: true,
+    canApplyAbyssalParasite: false,
   },
   blessing: {
     playerAttack: false,
@@ -152,6 +175,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   derived_bounce: {
     playerAttack: true,
@@ -164,6 +188,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: true,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   derived_tail: {
     playerAttack: true,
@@ -176,6 +201,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
   reflected: {
     playerAttack: false,
@@ -188,6 +214,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: false,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
   },
 };
 
@@ -206,6 +233,30 @@ describe("damage eligibility matrix (capabilitiesOf)", () => {
     expect(capabilitiesOf({ kind: "player_dot" }).onHitGear).toBe(false);
     expect(capabilitiesOf({ kind: "conjure_poison" }).onHitGear).toBe(false);
     expect(capabilitiesOf({ kind: "derived_tail" }).onHitGear).toBe(false);
+  });
+
+  it("only player_direct and player_auto can apply Abyssal Parasite", () => {
+    expect(capabilitiesOf({ kind: "player_direct" }).canApplyAbyssalParasite).toBe(true);
+    expect(capabilitiesOf({ kind: "player_auto" }).canApplyAbyssalParasite).toBe(true);
+    for (const kind of Object.keys(MATRIX) as DamageProvenanceKind[]) {
+      if (kind === "player_direct" || kind === "player_auto") continue;
+      expect(capabilitiesOf({ kind }).canApplyAbyssalParasite, `${kind} parasite`).toBe(false);
+    }
+  });
+
+  it("converted channel: no onHitGear, no parasite", () => {
+    const c = capabilitiesOf({ kind: "player_converted_channel" });
+    expect(c.onHitGear).toBe(false);
+    expect(c.canApplyAbyssalParasite).toBe(false);
+    expect(c.directHit).toBe(false);
+    expect(c.prayerMods).toBe(true);
+    expect(c.canCrit).toBe(true);
+  });
+
+  it("DoTs never parasite", () => {
+    expect(capabilitiesOf({ kind: "player_dot" }).canApplyAbyssalParasite).toBe(false);
+    expect(capabilitiesOf({ kind: "conjure_poison" }).canApplyAbyssalParasite).toBe(false);
+    expect(capabilitiesOf({ kind: "derived_tail" }).canApplyAbyssalParasite).toBe(false);
   });
 
   it("commands: no onHitGear, riders yes", () => {

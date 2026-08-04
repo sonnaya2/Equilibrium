@@ -15,6 +15,7 @@ function snapSig(s: CastSnapshot) {
     s.critLayers.damageBonus ?? 0,
     s.critLayers.guaranteed ?? false,
     s.critLayers.disabled ?? false,
+    s.critLayers.eligible ?? true,
     s.baseMods.map((m) => m.id),
     s.empowerMult,
     s.enduringRuinBonus,
@@ -69,7 +70,7 @@ export interface ScheduledEvent<RT = unknown> {
   /** Damage-origin provenance for analysis (direct vs DoT vs proc…). */
   originKind?: DamageOriginKind;
   /** Capability-derived provenance for gear/blessing gates (serializable). */
-  provenance?: DamageProvenance;
+  provenance: DamageProvenance;
   cancelOwner?: number; // cast sequence whose cancellation removes this event
   /** Source event seq this hit derives its damage from (Bloat tails, Death Skulls bounces). */
   derivedFrom?: number;
@@ -80,7 +81,6 @@ export interface ScheduledEvent<RT = unknown> {
   dotKind?: DamageOverTimeKind;
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;
-  abyssalParasiteEligible?: boolean;
   /** Full cast snapshot so Lightning Surge can share landTimeModifiers with parent hits. */
   lightningSurge?: { snap: CastSnapshot };
   /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
@@ -175,9 +175,13 @@ export class EventQueue<RT = unknown> {
         e.dotKind ?? null,
         e.bleedId ?? null,
         e.bleedExpiresAtTick ?? -1,
-        e.abyssalParasiteEligible ?? false,
-        e.provenance?.kind ?? null,
-        e.provenance?.detail ?? null,
+        e.originKind ?? null,
+        e.triggerRolls ?? null,
+        e.expectedActivations ?? null,
+        e.expectedSeparateHits ?? null,
+        e.damageTag ?? null,
+        e.provenance.kind,
+        e.provenance.detail ?? null,
         e.lightningSurge ? snapSig(e.lightningSurge.snap) : null,
       ]),
     );

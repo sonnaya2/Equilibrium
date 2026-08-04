@@ -208,6 +208,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       damage: { min: 80, max: 120, expected: 100 },
     });
 
@@ -279,6 +280,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       resolve: noop,
     });
     a.nextSeq = 2;
@@ -295,6 +297,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       resolve: noop,
     });
 

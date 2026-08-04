@@ -253,6 +253,7 @@ describe("summary finalization", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       damage: { min: 0, max: 0, expected: 1 },
     });
 

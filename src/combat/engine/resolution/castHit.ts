@@ -15,7 +15,11 @@ import {
   findConjure,
   skeletonRageMult,
 } from "../../styles/necromancy/conjures";
-import { capabilitiesOf } from "../../shared/damageProvenance";
+import {
+  capabilitiesOf,
+  outgoingSourceOf,
+  provenanceForCastHit,
+} from "../../shared/damageProvenance";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
@@ -100,18 +104,15 @@ export function resolveCastHit(
     const mult = skeletonRageMult(spirit?.rageStacks ?? 0);
     if (mult !== 1) band = { minPct: band.minPct * mult, maxPct: band.maxPct * mult };
   }
-  const damageSource: "command" | "dot" | "direct" = isCommand
-    ? "command"
-    : isDot
-      ? "dot"
-      : "direct";
-  const provenance = isCommand
-    ? { kind: "conjure_command" as const }
-    : isDot
-      ? { kind: "player_dot" as const, detail: hitSpec.dotKind ?? hitSpec.bleedId }
-      : ability.autoAttack
-        ? { kind: "player_auto" as const }
-        : { kind: "player_direct" as const };
+  const provenance = provenanceForCastHit({
+    isCommand,
+    isDot,
+    convertedChannel,
+    autoAttack: ability.autoAttack,
+    dotKind: hitSpec.dotKind,
+    bleedId: hitSpec.bleedId,
+  });
+  const damageSource = outgoingSourceOf(provenance);
   const hitContext: import("../../types").CombatContext = {
     ...input.context,
     style: ability.style,

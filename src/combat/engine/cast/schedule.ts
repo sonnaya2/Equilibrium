@@ -8,7 +8,7 @@ import type { PreparedCast } from "./prepare";
 import type { CastRecord } from "../simulation/contracts";
 import { resolveCastHit, resolveDerivedHit } from "../resolution";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
-import { hasPassive } from "../../shared/equipment";
+import { originKindOf, provenanceForCastHit } from "../../shared/damageProvenance";
 import type { BleedId } from "../../types";
 
 /**
@@ -75,15 +75,17 @@ export function scheduleCastEvents(
     // Classified once, here, from what the ability declares. Never inferred
     // from timing or crit eligibility: a delayed direct hit stays direct, and a
     // bleed tick landing on the cast tick is still a bleed tick.
+    // channelAsDot (Endless Assault): family still DoT; provenance is player_converted_channel.
     const isDot = hitSpec.dot === true || prepared.channelAsDot;
-    const originKind = isCommand ? "command" : isDot ? "dot" : "direct";
-    const provenance = isCommand
-      ? { kind: "conjure_command" as const }
-      : isDot
-        ? { kind: "player_dot" as const, detail: hitSpec.dotKind ?? hitSpec.bleedId }
-        : ability.autoAttack
-          ? { kind: "player_auto" as const }
-          : { kind: "player_direct" as const };
+    const provenance = provenanceForCastHit({
+      isCommand,
+      isDot,
+      convertedChannel: prepared.channelAsDot,
+      autoAttack: ability.autoAttack,
+      dotKind: hitSpec.dotKind,
+      bleedId: hitSpec.bleedId,
+    });
+    const originKind = originKindOf(provenance);
     rt.queue.push({
       tick: landTick,
       seq,
@@ -105,9 +107,6 @@ export function scheduleCastEvents(
             bleedId: hitSpec.bleedId,
             bleedExpiresAtTick: bleedExpires.get(hitSpec.bleedId),
           }
-        : {}),
-      ...(ability.style === "melee" && hasPassive(rt.input.equipmentEffects, "abyssal-parasite")
-        ? { abyssalParasiteEligible: true }
         : {}),
       ...(ability.style === "magic" && !isDot && hitSpec.critEligible !== false
         ? { lightningSurge: { snap } }

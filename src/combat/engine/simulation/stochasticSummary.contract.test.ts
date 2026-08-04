@@ -175,6 +175,7 @@ describe("stochastic summary contract", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       damage: { min: 80, max: 120, expected: 100 },
     });
     const high = seedRuntime({ expected: 300, min: 240, max: 360, endTick: 3 });
@@ -188,6 +189,7 @@ describe("stochastic summary contract", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       damage: { min: 240, max: 360, expected: 300 },
     });
     high.analysis.criticalContribution = 30;
@@ -409,6 +411,7 @@ describe("stochastic summary — failed-mass totals policy", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       damage: { min: 900, max: 1100, expected: 1000 },
     });
     const failRt = seedRuntime({ expected: 100, min: 90, max: 110, endTick: 6 });
@@ -422,6 +425,7 @@ describe("stochastic summary — failed-mass totals policy", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      provenance: { kind: "player_direct" },
       damage: { min: 90, max: 110, expected: 100 },
     });
     // finish() with error marks the branch failed.

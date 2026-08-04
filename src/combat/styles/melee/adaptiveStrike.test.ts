@@ -3,7 +3,7 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { resolveBarSlot } from "../../data/specs";
 import { rotationOf } from "../../engine/simulation/contracts";
 import { createCastContext, simulate } from "../../engine/simulation/simulate";
-import { meetsWeaponRequirement } from "../../shared/requirements";
+import { meetsWeaponRequirement, resolveAbilityCastAvailability } from "../../shared/requirements";
 import { buildCandidatePool } from "../../solver/candidatePool";
 import { baseInput } from "../../test/fixtures/inputs";
 import { abilityById } from "../../test/helpers/summary";
@@ -181,13 +181,37 @@ describe("Adaptive Strike cast legality", () => {
     expect(meetsWeaponRequirement(th, "mainhand")).toBe(false);
   });
 
-  it("Icy Tempest loose mainhand still allows shield/defender/dual", () => {
+  it("Icy Tempest is a weapon special gated by special access, not weapon shape", () => {
     const tempest = abilityById(MELEE_ABILITIES, "icy_tempest");
-    expect(tempest.weaponRequirement).toBe("mainhand");
-    for (const shape of ["mainhand", "shield", "defender", "dualwield"] as const) {
+    expect(tempest.weaponSpecial).toBe(true);
+    expect(tempest.requiresSpecialAccess).toBe(true);
+    expect(tempest.weaponRequirement).toBeUndefined();
+    // No shape gate: EoF path may cast on 2h; access is equipment specialAttackId / EoF.
+    for (const shape of ["mainhand", "shield", "defender", "dualwield", "twohand"] as const) {
       expect(meetsWeaponRequirement(tempest, shape)).toBe(true);
     }
-    expect(meetsWeaponRequirement(tempest, "twohand")).toBe(false);
+    // Passive alone is not enough.
+    expect(
+      resolveAbilityCastAvailability(tempest, {
+        weaponConfiguration: "dualwield",
+        equipmentIds: [],
+        passiveIds: ["leng-endless-frost"],
+      }).available,
+    ).toBe(false);
+    // Native Leng MH unlocks.
+    expect(
+      resolveAbilityCastAvailability(tempest, {
+        weaponConfiguration: "dualwield",
+        equipmentIds: ["item:dark-shard-of-leng"],
+      }).available,
+    ).toBe(true);
+    // EoF unlocks without Leng MH.
+    expect(
+      resolveAbilityCastAvailability(tempest, {
+        weaponConfiguration: "twohand",
+        equipmentIds: ["item:essence-of-finality"],
+      }).available,
+    ).toBe(true);
   });
 
   it("Flurry still accepts defender as dual-wield", () => {

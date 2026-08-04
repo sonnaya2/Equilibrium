@@ -5,6 +5,7 @@ import { LENG_BOUNDLESS_CHILL_CHANCE, LENG_ENDLESS_FROST_CHANCE } from "../../st
 import { prepareCast } from "../cast/prepare";
 import { scheduleCastEvents } from "../cast/schedule";
 import { createRuntime } from "../runtime/runtime";
+import { patchMelee } from "../runtime/state";
 import { baseInput } from "../../test/fixtures/inputs";
 import { snapshotRuntime } from "./branch";
 import { combineBranchSummaries } from "./summary";
@@ -224,5 +225,95 @@ describe("Leng fan-out intermediate bound", () => {
     expect(tight.residualWeight).toBeLessThanOrEqual(PROB_TOLERANCE);
     expect(weightedStacks(wide.branches)).toBeCloseTo(weightedStacks(tight.branches), 8);
     expect(weightedExpected(wide.branches)).toBeCloseTo(weightedExpected(tight.branches), 6);
+  });
+});
+
+describe("Leng future-state partial fold", () => {
+  it("expand is state-only: totalExpected unchanged across forks", () => {
+    const rt = lengRuntime();
+    rt.totalExpected = 12345.5;
+    rt.totalMin = 10000;
+    rt.totalMax = 15000;
+    const set = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(set.residualWeight).toBe(0);
+    expect(set.branches.length).toBeGreaterThan(1);
+    for (const b of set.branches) {
+      expect(b.rt.totalExpected).toBe(12345.5);
+      expect(b.rt.totalMin).toBe(10000);
+      expect(b.rt.totalMax).toBe(15000);
+    }
+    expect(isNearOne(set.branches.reduce((s, b) => s + b.weight, 0))).toBe(true);
+  });
+
+  it("identical future state collapses to one branch (EF-only at cap)", () => {
+    const effects = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: { mainhand: "item:dark-shard-of-leng" },
+    });
+    const single = createRuntime({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:dark-shard-of-leng"],
+      equipmentEffects: effects,
+      weaponConfiguration: "dualwield",
+    });
+    single.state = patchMelee(single.state, { primordialIceStacks: 10 });
+    const set = expandLengOnLand({ weight: 1, rt: single }, 0);
+    expect(set.residualWeight).toBe(0);
+    expect(set.branches).toHaveLength(1);
+    expect(set.branches[0]!.rt.state.melee.primordialIceStacks).toBe(10);
+    expect(set.branches[0]!.weight).toBeCloseTo(1, 12);
+  });
+
+  it("divergent stacks force fork; residual stays 0 (no reassignment)", () => {
+    const rt = lengRuntime();
+    const set = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(set.residualWeight).toBe(0);
+    expect(set.exactness).toBe("exact");
+    const stackClasses = new Set(set.branches.map((b) => b.rt.state.melee.primordialIceStacks));
+    expect(stackClasses.size).toBeGreaterThan(1);
+    expect(isNearOne(set.branches.reduce((s, b) => s + b.weight, 0))).toBe(true);
+  });
+
+  it("divergent frost forces fork even at stack cap", () => {
+    const rt = lengRuntime();
+    rt.state = patchMelee(rt.state, { primordialIceStacks: 10 });
+    const set = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(set.residualWeight).toBe(0);
+    expect(set.branches).toHaveLength(2);
+    const frostOpen = set.branches.filter((b) => b.rt.state.melee.frostbladesUntilTick > 0);
+    const frostClosed = set.branches.filter((b) => b.rt.state.melee.frostbladesUntilTick === 0);
+    expect(frostOpen).toHaveLength(1);
+    expect(frostClosed).toHaveLength(1);
+    expect(frostOpen[0]!.weight).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 12);
+  });
+
+  it("expired frost input normalizes so classes match frost=0", () => {
+    const rt = lengRuntime();
+    rt.state = patchMelee(rt.state, { frostbladesUntilTick: 3 });
+    const set = expandLengOnLand({ weight: 1, rt }, 20);
+    expect(set.residualWeight).toBe(0);
+    for (const b of set.branches) {
+      const f = b.rt.state.melee.frostbladesUntilTick;
+      expect(f === 0 || f > 20).toBe(true);
+    }
+    const rt2 = lengRuntime();
+    const set2 = expandLengOnLand({ weight: 1, rt: rt2 }, 20);
+    expect(set.branches.length).toBe(set2.branches.length);
+    expect(weightedStacks(set.branches)).toBeCloseTo(weightedStacks(set2.branches), 10);
+  });
+
+  it("completeAdvance zeros expired frost so post-window survivors normalize", () => {
+    const a = scheduleTwoAttacksPending();
+    a.state = patchMelee(a.state, { frostbladesUntilTick: 1 });
+    const set = advanceToBranches({ weight: 1, rt: a }, a.queue.maxTick());
+    expect(set.residualWeight).toBeLessThanOrEqual(PROB_TOLERANCE);
+    for (const b of set.branches) {
+      const frost = b.rt.state.melee.frostbladesUntilTick;
+      if (frost > 0) {
+        expect(frost).toBeGreaterThan(b.rt.state.tick);
+      }
+    }
   });
 });

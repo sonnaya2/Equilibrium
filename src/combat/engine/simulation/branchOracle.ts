@@ -7,12 +7,15 @@ import { castOutcomes, mergeBranches, type Branch } from "./branch";
 import type { SimulateInput } from "./contracts";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick } from "../runtime/state";
+import { PRIMORDIAL_ICE_CAP } from "../../styles/melee/effects";
 import {
-  LENG_BOUNDLESS_CHILL_CHANCE,
-  LENG_ENDLESS_FROST_CHANCE,
-  PRIMORDIAL_ICE_CAP,
-} from "../../styles/melee/effects";
-import { lengLandOutcomes } from "../../styles/melee/lengRng";
+  compileLengLandArms,
+  foldLengOutcomesByFutureState,
+  lengFutureStateKey,
+  lengFutureStatesEquivalent,
+  lengLandOutcomes,
+  normalizeLengFrostUntil,
+} from "../../styles/melee/lengRng";
 
 export interface OracleResult {
   branches: Branch[];
@@ -121,7 +124,8 @@ export function concretePlusResidual(
 
 /**
  * Independent Leng hit tree (cross-check against lengLandOutcomes).
- * Pure probability; cap applied after both rolls.
+ * Pure probability; cap applied after both rolls. Delegates to compileLengLandArms
+ * so oracle and production share the same equipment-static weight table.
  */
 export interface LengHitLeaf {
   weight: number;
@@ -133,21 +137,11 @@ export function lengHitOutcomeTree(
   hasEndlessFrost: boolean,
   hasBoundlessChill: boolean,
 ): LengHitLeaf[] {
-  const pFrost = hasEndlessFrost ? LENG_ENDLESS_FROST_CHANCE : 0;
-  const pChill = hasBoundlessChill ? LENG_BOUNDLESS_CHILL_CHANCE : 0;
-  const leaves: LengHitLeaf[] = [];
-  for (const frost of [false, true] as const) {
-    for (const chill of [false, true] as const) {
-      const w = (frost ? pFrost : 1 - pFrost) * (chill ? pChill : 1 - pChill);
-      if (w <= 0) continue;
-      leaves.push({
-        weight: w,
-        deltaStacks: (frost ? 1 : 0) + (chill ? 1 : 0),
-        opensFrostblades: chill,
-      });
-    }
-  }
-  return leaves;
+  return compileLengLandArms(hasEndlessFrost, hasBoundlessChill).map((arm) => ({
+    weight: arm.weight,
+    deltaStacks: arm.stackAdd,
+    opensFrostblades: arm.opensFrostblades,
+  }));
 }
 
 /**
@@ -201,4 +195,80 @@ export function expectedStacksFromOutcomes(
   return outcomes.reduce((s, o) => s + o.weight * o.stacks, 0) / w;
 }
 
-export { PRIMORDIAL_ICE_CAP };
+/**
+ * Exhaustive joint (stacks, frost) classes after `hits` lands — future-state mass.
+ * Used to prove expandLengOnLand only forks non-equivalent futures.
+ */
+export function lengExpectedFutureClasses(
+  hits: number,
+  opts: {
+    hasEndlessFrost?: boolean;
+    hasBoundlessChill?: boolean;
+    startStacks?: number;
+    frostUntil?: number;
+    tick?: number;
+  } = {},
+): { mass: number; classes: number; expectedStacks: number } {
+  const hasEF = opts.hasEndlessFrost !== false;
+  const hasBC = opts.hasBoundlessChill !== false;
+  const tick0 = opts.tick ?? 0;
+  // key = lengFutureStateKey at the tick of the last land
+  let dist = new Map<string, { w: number; stacks: number; frostUntil: number }>([
+    [
+      lengFutureStateKey(opts.startStacks ?? 0, opts.frostUntil ?? 0, tick0),
+      {
+        w: 1,
+        stacks: opts.startStacks ?? 0,
+        frostUntil: normalizeLengFrostUntil(opts.frostUntil ?? 0, tick0),
+      },
+    ],
+  ]);
+  for (let h = 0; h < hits; h++) {
+    const landTick = tick0 + h;
+    const next = new Map<string, { w: number; stacks: number; frostUntil: number }>();
+    for (const { w, stacks, frostUntil } of dist.values()) {
+      const leaves = lengLandOutcomes(hasEF, hasBC, stacks, frostUntil, landTick);
+      for (const leaf of leaves) {
+        const key = lengFutureStateKey(leaf.stacks, leaf.frostUntil, landTick);
+        const prev = next.get(key);
+        if (prev) prev.w += w * leaf.weight;
+        else {
+          next.set(key, {
+            w: w * leaf.weight,
+            stacks: leaf.stacks,
+            frostUntil: normalizeLengFrostUntil(leaf.frostUntil, landTick),
+          });
+        }
+      }
+    }
+    dist = next;
+  }
+  let mass = 0;
+  let expected = 0;
+  for (const { w, stacks } of dist.values()) {
+    mass += w;
+    expected += stacks * w;
+  }
+  return {
+    mass,
+    classes: dist.size,
+    expectedStacks: mass > 0 ? expected / mass : 0,
+  };
+}
+
+/** Count distinct Leng future-state classes among outcomes at tick. */
+export function lengFutureClassCount(
+  outcomes: readonly { stacks: number; frostUntil: number }[],
+  tick: number,
+): number {
+  const keys = new Set(outcomes.map((o) => lengFutureStateKey(o.stacks, o.frostUntil, tick)));
+  return keys.size;
+}
+
+export {
+  PRIMORDIAL_ICE_CAP,
+  foldLengOutcomesByFutureState,
+  lengFutureStateKey,
+  lengFutureStatesEquivalent,
+  normalizeLengFrostUntil,
+};

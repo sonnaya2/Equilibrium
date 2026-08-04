@@ -26,6 +26,8 @@ import { landTimeModifiers } from "./modifiers";
 import { packageCritical, type AttachedDamageComponent, type EventResolution } from "./types";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
+import { hitReuseGet, hitReuseSet, isHitReuseActive } from "./hitReuse";
+import { landHitIdentity } from "./landHitIdentity";
 
 /**
  * Resolve one ordinary cast hit at its land tick. Time-windowed globals read
@@ -45,6 +47,54 @@ export function resolveCastHit(
   snap: CastSnapshot,
   isDot: boolean,
   convertedChannel = false,
+): EventResolution {
+  if (isHitReuseActive()) {
+    const key = landHitIdentity(
+      rt,
+      at,
+      hitSpec,
+      hitIndex,
+      ability,
+      snap,
+      isDot,
+      convertedChannel,
+    );
+    const cached = hitReuseGet(key);
+    if (cached) return cached;
+    const resolved = resolveCastHitUncached(
+      rt,
+      at,
+      hitSpec,
+      hitIndex,
+      ability,
+      snap,
+      isDot,
+      convertedChannel,
+    );
+    hitReuseSet(key, resolved);
+    return resolved;
+  }
+  return resolveCastHitUncached(
+    rt,
+    at,
+    hitSpec,
+    hitIndex,
+    ability,
+    snap,
+    isDot,
+    convertedChannel,
+  );
+}
+
+function resolveCastHitUncached(
+  rt: SimulationRuntime,
+  at: number,
+  hitSpec: AbilityHit,
+  hitIndex: number,
+  ability: AbilitySpec,
+  snap: CastSnapshot,
+  isDot: boolean,
+  convertedChannel: boolean,
 ): EventResolution {
   const { input, state } = rt;
   const modifiers = landTimeModifiers(

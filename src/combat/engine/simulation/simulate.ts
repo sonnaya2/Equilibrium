@@ -23,6 +23,7 @@ export {
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
 import {
+  appendWithIntermediateCap,
   combineExactness,
   materializeCastPlans,
   mergeAndCapBranches,
@@ -256,13 +257,15 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
       branches = capped.branches;
       continue;
     }
-    const next: Branch[] = [];
+    let next: Branch[] = [];
     for (const branch of branches) {
       const step = stepManualAction(branch, ability, input.autoWeave);
-      next.push(...step.branches);
-      sawBranching ||= step.branched;
-      residualWeight += step.residualWeight;
+      const folded = appendWithIntermediateCap(next, step.branches);
+      residualWeight += step.residualWeight + folded.residualWeight;
       exactness = combineExactness(exactness, step.exactness);
+      exactness = combineExactness(exactness, folded.exactness);
+      next = folded.branches;
+      sawBranching ||= step.branched;
     }
     const capped = mergeAndCapBranches(next);
     residualWeight += capped.residualWeight;

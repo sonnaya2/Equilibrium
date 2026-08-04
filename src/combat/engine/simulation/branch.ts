@@ -5,8 +5,10 @@ import { firstLegalTick } from "../runtime/state";
 import type { CastRng } from "./contracts";
 import {
   combineExactness,
+  appendWithIntermediateCap,
   mergeAndCapBranches,
   MAX_LIVE_BRANCHES,
+  MAX_INTERMEDIATE_BRANCHES,
   noteBranchLiveCount,
   snapshotRuntime,
   type Branch,
@@ -14,6 +16,7 @@ import {
   type BranchSet,
 } from "./branchCore";
 import { advanceToBranches, commitCastBranches } from "./lengLandBranch";
+import { runWithHitReuseScope } from "../resolution/hitReuse";
 
 export type {
   Branch,
@@ -29,6 +32,8 @@ export {
   MAX_LIVE_BRANCHES,
   capBranches,
   mergeAndCapBranches,
+  appendWithIntermediateCap,
+  MAX_INTERMEDIATE_BRANCHES,
   enableBranchProfiling,
   isBranchProfilingEnabled,
   resetBranchProfile,
@@ -157,21 +162,26 @@ export function planCastOutcomes(
  * Snapshot+commit plans (Leng land forks inside commit), keeping at most `max`
  * pre-commit forks by weight. Discarded fork mass is residual (not reassigned).
  *
- * Intermediate merge+cap when survivors exceed 2*max prevents O(live^2) peaks
- * (e.g. 64 parents * 64 Leng survivors) before the final cap. Heaviest-k on a
- * partial set then heaviest-k of (kept U new) matches global heaviest-k.
+ * Merge+cap after every expansion when survivors exceed `max` (same constant as
+ * mergeAndCapBranches / MAX_LIVE_BRANCHES). Bounds peak at ~2*max instead of
+ * O(parents * Leng survivors). Heaviest-k on a partial set then heaviest-k of
+ * (kept U new) matches global heaviest-k; residual still disclosed.
  */
 export function materializeCastPlans(
   plans: readonly CastOutcomePlan[],
   max: number = MAX_LIVE_BRANCHES,
 ): BranchSet {
+  return runWithHitReuseScope(() => materializeCastPlansInner(plans, max));
+}
+
+function materializeCastPlansInner(
+  plans: readonly CastOutcomePlan[],
+  max: number,
+): BranchSet {
   if (!Number.isInteger(max) || max < 1) {
     throw new RangeError(`materializeCastPlans: max must be a positive integer, got ${max}`);
   }
-  // Soft intermediate = 2*max (same ratio as MAX_LENG_INTERMEDIATE_BRANCHES).
-  // When max is MAX_SAFE_INTEGER (castOutcomes oracle path), never intermediate-cap.
-  const intermediateMax =
-    max >= Number.MAX_SAFE_INTEGER / 2 ? Number.MAX_SAFE_INTEGER : max * 2;
+  // Oracle path (castOutcomes uses MAX_SAFE_INTEGER): appendWithIntermediateCap skips cap.
   const inPlace: CastOutcomePlan[] = [];
   const forked: CastOutcomePlan[] = [];
   for (const plan of plans) {
@@ -184,16 +194,10 @@ export function materializeCastPlans(
   let out: Branch[] = [];
 
   const absorb = (added: readonly Branch[]) => {
-    if (added.length === 0) return;
-    if (out.length === 0) out = [...added];
-    else out.push(...added);
-    noteBranchLiveCount(out.length);
-    if (out.length <= intermediateMax) return;
-    const folded = mergeAndCapBranches(out, max);
+    const folded = appendWithIntermediateCap(out, added, max);
     residualWeight += folded.residualWeight;
     exactness = combineExactness(exactness, folded.exactness);
     out = folded.branches;
-    noteBranchLiveCount(out.length);
   };
 
   for (const plan of inPlace) {
@@ -266,8 +270,20 @@ export function castOutcomes(
   };
 }
 
-export type { LengLandOutcome } from "../../styles/melee/lengRng";
-export { lengLandOutcomes } from "../../styles/melee/lengRng";
+export type {
+  CompiledLengLandTable,
+  LengLandArm,
+  LengLandOutcome,
+  LengStackRow,
+} from "../../styles/melee/lengRng";
+export {
+  compileLengLandArms,
+  compileLengLandTable,
+  FROSTBLADES_DURATION_TICKS,
+  lengLandOutcomes,
+  lengLandTableFor,
+  materializeLengLandOutcomes,
+} from "../../styles/melee/lengRng";
 export {
   expandLengOnLand,
   advanceToBranches,

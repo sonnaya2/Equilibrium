@@ -12,7 +12,12 @@ import {
   icyTempestSpend,
   PRIMORDIAL_ICE_CAP,
 } from "./effects";
-import { lengLandOutcomes } from "./lengRng";
+import {
+  FROSTBLADES_DURATION_TICKS,
+  lengLandOutcomes,
+  lengLandTableFor,
+  materializeLengLandOutcomes,
+} from "./lengRng";
 import { createRuntime } from "../../engine/runtime/runtime";
 import { performCast } from "../../engine/cast";
 import { patchMelee } from "../../engine/runtime/state";
@@ -119,6 +124,49 @@ describe("lengLandOutcomes (pure probability)", () => {
     expect(proc.weight).toBeCloseTo(LENG_ENDLESS_FROST_CHANCE, 12);
     expect(miss.weight).toBeCloseTo(1 - LENG_ENDLESS_FROST_CHANCE, 12);
     expect(proc.frostUntil).toBe(0);
+  });
+});
+
+
+describe("compiled Leng land table (parity)", () => {
+  it("materialize matches lengLandOutcomes for all stacks and frost windows", () => {
+    const table = lengLandTableFor(true, true)!;
+    expect(table).not.toBeNull();
+    for (let stacks = 0; stacks <= PRIMORDIAL_ICE_CAP; stacks++) {
+      for (const frostUntil of [0, 5, 100]) {
+        for (const tick of [0, 7, 20]) {
+          const direct = lengLandOutcomes(true, true, stacks, frostUntil, tick);
+          const fromTable = materializeLengLandOutcomes(table, stacks, frostUntil, tick);
+          const key = (o: { stacks: number; frostUntil: number }) => `${o.stacks}|${o.frostUntil}`;
+          const a = new Map(direct.map((o) => [key(o), o.weight]));
+          const b = new Map(fromTable.map((o) => [key(o), o.weight]));
+          expect([...b.keys()].sort()).toEqual([...a.keys()].sort());
+          for (const [k, w] of a) expect(b.get(k)).toBeCloseTo(w, 12);
+          expect(fromTable.reduce((sum, o) => sum + o.weight, 0)).toBeCloseTo(1, 12);
+        }
+      }
+    }
+  });
+
+  it("collapses chill arms when frostUntil already equals this land frostOpen", () => {
+    const tick = 4;
+    const frostOpen = tick + FROSTBLADES_DURATION_TICKS;
+    const out = lengLandOutcomes(true, true, 0, frostOpen, tick);
+    expect(out.every((o) => o.frostUntil === frostOpen)).toBe(true);
+    const byStacks = new Map<number, number>();
+    for (const o of out) byStacks.set(o.stacks, (byStacks.get(o.stacks) ?? 0) + o.weight);
+    expect(byStacks.get(0)).toBeCloseTo(0.9 * 0.98, 12);
+    expect(byStacks.get(1)).toBeCloseTo(0.1 * 0.98 + 0.9 * 0.02, 12);
+    expect(byStacks.get(2)).toBeCloseTo(0.1 * 0.02, 12);
+    expect(out.reduce((sum, o) => sum + o.weight, 0)).toBeCloseTo(1, 12);
+  });
+
+  it("createRuntime caches lengLandTable once for dual Leng equipment", () => {
+    const rt = lengRuntime();
+    expect(rt.lengLandTable).not.toBeNull();
+    expect(rt.lengLandTable!.hasEndlessFrost).toBe(true);
+    expect(rt.lengLandTable!.hasBoundlessChill).toBe(true);
+    expect(rt.lengLandTable).toBe(lengLandTableFor(true, true));
   });
 });
 

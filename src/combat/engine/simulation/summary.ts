@@ -1,5 +1,6 @@
 import { finalizeAnalysis } from "../analysis";
 import {
+  appendWithIntermediateCap,
   combineExactness,
   mergeAndCapBranches,
   snapshotRuntime,
@@ -304,13 +305,16 @@ export function combineBranchSummaries(
   let residual = residualWeight;
   let exact: EngineBranchExactness = exactness;
   let forkedAtDrain = false;
-  const drained: Branch[] = [];
+  let drained: Branch[] = [];
   for (const branch of branches) {
     const set = drainBranchToEnd(branch, horizonTicks);
     residual += set.residualWeight;
     exact = combineExactness(exact, set.exactness);
     if (set.branches.length > 1) forkedAtDrain = true;
-    drained.push(...set.branches);
+    const folded = appendWithIntermediateCap(drained, set.branches);
+    residual += folded.residualWeight;
+    exact = combineExactness(exact, folded.exactness);
+    drained = folded.branches;
   }
   const capped = mergeAndCapBranches(drained);
   residual += capped.residualWeight;

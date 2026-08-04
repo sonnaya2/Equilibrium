@@ -1,13 +1,17 @@
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
-import { lengLandOutcomes } from "../../styles/melee/lengRng";
-import { hasPassive } from "../../shared/equipment";
+import {
+  foldLengOutcomesByFutureState,
+  materializeLengLandOutcomes,
+  normalizeLengFrostUntil,
+} from "../../styles/melee/lengRng";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { scheduleCastEvents } from "../cast/schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "../cast/effects";
 import type { PreparedCast } from "../cast/prepare";
 import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
+import { runWithHitReuseScope } from "../resolution/hitReuse";
 import type { ResolvedDamage } from "../resolution/types";
 import type { ScheduledEvent } from "../runtime/events";
 import { gainAdrenaline, patchMelee } from "../runtime/state";
@@ -27,16 +31,25 @@ import {
 } from "./branchCore";
 
 /**
- * Soft intermediate budget while folding Leng expands in one event tick.
- * Merge-only until this; hard cap still uses maxLive (default MAX_LIVE_BRANCHES).
- * Keeps peak below ~maxLive * outcomeFanout without residual-chipping twice.
+ * Intermediate live budget while folding Leng expands in one event tick.
+ * Same constant as mergeAndCap / MAX_LIVE_BRANCHES (64): exact-merge first,
+ * then hard-cap to maxLive when unique classes still exceed it. Residual disclosed.
  */
-export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES * 2;
+export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES;
 
-function applyLengOutcome(rt: SimulationRuntime, stacks: number, frostUntil: number): void {
+/**
+ * Apply Leng post-land state. Frost windows already expired at `tick` normalize
+ * to 0 (proven future-equivalent for damage + non-chill carry).
+ */
+function applyLengOutcome(
+  rt: SimulationRuntime,
+  stacks: number,
+  frostUntil: number,
+  tick: number,
+): void {
   rt.state = patchMelee(rt.state, {
     primordialIceStacks: stacks,
-    frostbladesUntilTick: frostUntil,
+    frostbladesUntilTick: normalizeLengFrostUntil(frostUntil, tick),
   });
 }
 
@@ -51,53 +64,64 @@ export function isLengEligibleLand(
   if (!event.procEligible || event.attached) return false;
   if (ability.style !== "melee") return false;
   if (event.family === "dot" || event.dotKind) return false;
-  const equipment = rt.input.equipmentEffects;
-  return (
-    hasPassive(equipment, "leng-endless-frost") || hasPassive(equipment, "leng-boundless-chill")
-  );
+  // Equipment-static table compiled once in createRuntime (null => no Leng passives).
+  return rt.lengLandTable != null;
 }
 
 /**
- * Fork a branch on Leng land RNG. Heaviest outcome mutates in place; others
- * snapshot from pre-apply state. Residual policy deferred to caller caps.
- * Preserves branch.error: failed residual banks still fork stacks/frost so
- * later pending hits get Leng-consistent mods (never clears error).
+ * Fork a branch on Leng land RNG — state only.
+ *
+ * Proven:
+ * - The just-resolved land's damage ledger is identical across Leng arms
+ *   (recordResolved runs before expand). No damage-side fork of that hit.
+ * - Future physics keys only on (stacks, active frostUntil). Identical keys
+ *   fold weight onto one survivor without snapshotRuntime.
+ * - Divergent stacks and/or frostUntil are NOT future-equivalent: stacks drive
+ *   Icy Tempest integers + further Leng maps; frost drives frostblades flats
+ *   and chill carry. Those arms must snapshot+fork. Residual is never reassigned
+ *   to a non-equivalent survivor (caller caps disclose residualWeight).
+ *
+ * Heaviest outcome mutates in place; lighter state-divergent arms clone from
+ * pre-apply. Preserves branch.error on residual banks.
  */
 export function expandLengOnLand(branch: Branch, tick: number): BranchSet {
-  const equipment = branch.rt.input.equipmentEffects;
-  const hasEF = hasPassive(equipment, "leng-endless-frost");
-  const hasBC = hasPassive(equipment, "leng-boundless-chill");
-  if (!hasEF && !hasBC) return emptyBranchSet([branch]);
+  const table = branch.rt.lengLandTable;
+  if (!table) return emptyBranchSet([branch]);
 
-  const outcomes = lengLandOutcomes(
-    hasEF,
-    hasBC,
-    branch.rt.state.melee.primordialIceStacks,
-    branch.rt.state.melee.frostbladesUntilTick,
+  // Materialize then defensive fold by future-state key (expired frost ≡ 0).
+  const outcomes = foldLengOutcomesByFutureState(
+    materializeLengLandOutcomes(
+      table,
+      branch.rt.state.melee.primordialIceStacks,
+      branch.rt.state.melee.frostbladesUntilTick,
+      tick,
+    ),
     tick,
   );
   if (outcomes.length === 0) return emptyBranchSet([branch]);
 
+  // Partial fold: one future class → apply on parent, zero snapshots.
   if (outcomes.length === 1) {
     const only = outcomes[0]!;
-    applyLengOutcome(branch.rt, only.stacks, only.frostUntil);
+    applyLengOutcome(branch.rt, only.stacks, only.frostUntil, tick);
     return emptyBranchSet([
       { weight: branch.weight * only.weight, rt: branch.rt, error: branch.error },
     ]);
   }
 
+  // State diverges: fork only those classes (not damage-ledger arms).
   const sorted = [...outcomes].sort((a, b) => b.weight - a.weight);
   const primary = sorted[0]!;
   const clones = sorted.slice(1).map((outcome) => ({
     outcome,
     rt: snapshotRuntime(branch.rt),
   }));
-  applyLengOutcome(branch.rt, primary.stacks, primary.frostUntil);
+  applyLengOutcome(branch.rt, primary.stacks, primary.frostUntil, tick);
   const out: Branch[] = [
     { weight: branch.weight * primary.weight, rt: branch.rt, error: branch.error },
   ];
   for (const { outcome, rt } of clones) {
-    applyLengOutcome(rt, outcome.stacks, outcome.frostUntil);
+    applyLengOutcome(rt, outcome.stacks, outcome.frostUntil, tick);
     out.push({ weight: branch.weight * outcome.weight, rt, error: branch.error });
   }
   noteBranchLiveCount(out.length);
@@ -137,6 +161,11 @@ function completeAdvance(rt: SimulationRuntime, fromTick: number, targetTick: nu
     });
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
+  // Expired Frostblades → 0 so post-window futures merge (proven equivalence).
+  const frost = rt.state.melee.frostbladesUntilTick;
+  if (frost > 0 && frost <= rt.state.tick) {
+    rt.state = patchMelee(rt.state, { frostbladesUntilTick: 0 });
+  }
 }
 
 /**
@@ -168,7 +197,10 @@ function foldAfterExpand(
   };
 }
 
-/** Soft-merge (no residual) when a non-expand push crosses the intermediate budget. */
+/**
+ * Bound non-expand growth at every push: exact-merge first; hard-cap to
+ * intermediateMax (default MAX_LIVE_BRANCHES) when still over. Residual disclosed.
+ */
 function softBound(acc: Branch[], intermediateMax: number): BranchSet {
   if (acc.length <= intermediateMax) {
     return { branches: acc, residualWeight: 0, exactness: "exact" };
@@ -176,11 +208,22 @@ function softBound(acc: Branch[], intermediateMax: number): BranchSet {
   const before = acc.length;
   noteBranchLiveCount(before);
   const merged = mergeBranches(acc);
-  noteBranchLiveCount(merged.length);
+  if (merged.length <= intermediateMax) {
+    noteBranchLiveCount(merged.length);
+    return {
+      branches: merged,
+      residualWeight: 0,
+      exactness: merged.length < before ? "merged-exactly" : "exact",
+    };
+  }
+  const capped = mergeAndCapBranches(merged, intermediateMax);
   return {
-    branches: merged,
-    residualWeight: 0,
-    exactness: merged.length < before ? "merged-exactly" : "exact",
+    branches: capped.branches,
+    residualWeight: capped.residualWeight,
+    exactness: combineExactness(
+      merged.length < before ? "merged-exactly" : "exact",
+      capped.exactness,
+    ),
   };
 }
 
@@ -196,6 +239,17 @@ export function advanceToBranches(
   targetTick: number,
   maxLive: number = MAX_LIVE_BRANCHES,
   intermediateMax: number = MAX_LENG_INTERMEDIATE_BRANCHES,
+): BranchSet {
+  return runWithHitReuseScope(() =>
+    advanceToBranchesInner(branch, targetTick, maxLive, intermediateMax),
+  );
+}
+
+function advanceToBranchesInner(
+  branch: Branch,
+  targetTick: number,
+  maxLive: number,
+  intermediateMax: number,
 ): BranchSet {
   if (targetTick < branch.rt.state.tick) return emptyBranchSet([branch]);
   if (!Number.isInteger(maxLive) || maxLive < 1) {
@@ -241,6 +295,7 @@ export function advanceToBranches(
         next.push(b);
         if (next.length > intermediateMax) {
           const boundSet = softBound(next, intermediateMax);
+          residualWeight += boundSet.residualWeight;
           exactness = combineExactness(exactness, boundSet.exactness);
           next = boundSet.branches;
         }
@@ -253,6 +308,7 @@ export function advanceToBranches(
         next.push(b);
         if (next.length > intermediateMax) {
           const boundSet = softBound(next, intermediateMax);
+          residualWeight += boundSet.residualWeight;
           exactness = combineExactness(exactness, boundSet.exactness);
           next = boundSet.branches;
         }
@@ -283,6 +339,7 @@ export function advanceToBranches(
         next.push(b);
         if (next.length > intermediateMax) {
           const boundSet = softBound(next, intermediateMax);
+          residualWeight += boundSet.residualWeight;
           exactness = combineExactness(exactness, boundSet.exactness);
           next = boundSet.branches;
         }
@@ -387,6 +444,10 @@ export function commitCastBranches(
  * never invents success from residual land.
  */
 export function drainBranchToEnd(branch: Branch, horizonTicks?: number): BranchSet {
+  return runWithHitReuseScope(() => drainBranchToEndInner(branch, horizonTicks));
+}
+
+function drainBranchToEndInner(branch: Branch, horizonTicks?: number): BranchSet {
   const rt = branch.rt;
   const effectiveHorizon = horizonTicks ?? rt.horizon;
   if (effectiveHorizon != null && effectiveHorizon > 0) {
@@ -422,7 +483,7 @@ export function drainBranchToEnd(branch: Branch, horizonTicks?: number): BranchS
       next.push(...step.branches);
       needsFinalCap = true;
       noteBranchLiveCount(next.length);
-      if (next.length > MAX_LENG_INTERMEDIATE_BRANCHES) {
+      if (next.length > MAX_LIVE_BRANCHES) {
         const folded = mergeAndCapBranches(next);
         residualWeight += folded.residualWeight;
         exactness = combineExactness(exactness, folded.exactness);

@@ -1,0 +1,270 @@
+import type { HitResult } from "../../pipeline/calculateHit";
+import type { ActiveConjure } from "../../styles/necromancy/conjures";
+import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
+import type { RotationState } from "../runtime/state";
+
+/**
+ * Future-evolution merge key.
+ * Default: compact structural multi-field string (same distinguishability as the
+ * historical JSON array key for engine state / maps / seq counters).
+ * Debug/oracle: RS3_BRANCH_KEY_JSON=1 restores JSON.stringify of the full tuple.
+ */
+
+const RS = "\x1e";
+const US = "\x1f";
+const FS = "\x1c";
+
+function envJsonBranchKey(): boolean {
+  if (typeof process === "undefined" || process.env == null) return false;
+  const v = process.env.RS3_BRANCH_KEY_JSON;
+  return v === "1" || v === "true";
+}
+
+function b(v: boolean): string {
+  return v ? "1" : "0";
+}
+
+function n(v: number | undefined | null, d = 0): string {
+  return String(v ?? d);
+}
+
+/** Length-prefixed string so ability ids / errors never collide with separators. */
+function s(v: string | null | undefined): string {
+  if (v == null || v === "") return "0" + US;
+  return String(v.length) + US + v;
+}
+
+function recordNum(rec: Readonly<Record<string, number>>): string {
+  // Match JSON.stringify enumeration order (insertion), not sorted keys.
+  const keys = Object.keys(rec);
+  if (keys.length === 0) return "0";
+  let out = String(keys.length);
+  for (const k of keys) {
+    out += FS + s(k) + n(rec[k]!);
+  }
+  return out;
+}
+
+function encodeConjure(c: ActiveConjure): string {
+  switch (c.id) {
+    case "skeleton_warrior":
+      return (
+        "sk" +
+        US +
+        n(c.untilTick) +
+        US +
+        n(c.auto.nextTick) +
+        US +
+        n(c.rageStacks) +
+        US +
+        (c.commandResumeTick === undefined ? "" : n(c.commandResumeTick))
+      );
+    case "vengeful_ghost":
+      return "vg" + US + n(c.untilTick) + US + n(c.auto.nextTick);
+    case "putrid_zombie":
+      return (
+        "pz" +
+        US +
+        n(c.untilTick) +
+        US +
+        n(c.auto.nextTick) +
+        US +
+        n(c.poison.nextTick)
+      );
+    case "phantom_guardian":
+      return "pg" + US + n(c.untilTick);
+  }
+}
+
+function encodeState(state: RotationState): string {
+  const inv = state.invention;
+  const m = state.melee;
+  const r = state.ranged;
+  const g = state.magic;
+  const nec = state.necromancy;
+  const res = nec.resources;
+  const t = state.target;
+  const tm = t.melee;
+  const parts: string[] = [
+    n(state.tick),
+    n(state.adrenaline),
+    n(state.adrenalineCap),
+    b(state.ringOfVigour),
+    n(state.vestmentsAdrenalineUntilTick),
+    recordNum(state.cooldowns as Record<string, number>),
+    n(state.relentlessUntilTick),
+    n(inv.cracklingReadyTick),
+    n(inv.aftershockCharge),
+    n(inv.aftershockReadyTick),
+    b(inv.aftershockPending),
+    n(state.naturalInstinctUntilTick),
+    // league optional
+    state.league
+      ? "1" +
+        US +
+        n(state.league.avernicRampageUntilTick) +
+        US +
+        n(state.league.strikingLightReadyTick)
+      : "0",
+    // melee
+    n(m.bloodlust.stacks),
+    b(m.bloodlust.berserk),
+    n(m.berserkUntilTick),
+    n(m.chaosRoarUntilTick),
+    n(m.greaterFuryUntilTick),
+    b(m.furyCritBonus),
+    n(m.meteorStrikeUntilTick),
+    n(m.endlessAssaultUntilTick),
+    s(m.bleedChainNext),
+    n(m.bleedChainUntilTick),
+    n(m.enduringRuin.nextAttackBonus),
+    n(m.enduringRuin.untilTick),
+    n(m.enduringRuin.grantedByCast),
+    n(m.primordialIceStacks),
+    n(m.frostbladesUntilTick),
+    // ranged
+    n(r.swiftness.startsAtTick),
+    n(r.swiftness.expiresAtTick),
+    n(r.searingWinds.expiresAtTick),
+    r.searingWinds.grantedByCast === undefined ? "" : n(r.searingWinds.grantedByCast),
+    n(r.shadowImbued.expiresAtTick),
+    n(r.deathspore.stacks),
+    n(r.deathspore.freeCastUntilTick),
+    n(r.deathspore.cooldownUntilTick),
+    // magic
+    n(g.runicCharge.cooldownUntilTick),
+    n(g.runicCharge.animaUntilTick),
+    n(g.sunshine.startsAtTick),
+    n(g.sunshine.expiresAtTick),
+    g.sunshine.grantedByCast === undefined ? "" : n(g.sunshine.grantedByCast),
+    n(g.instability.expiresAtTick),
+    n(g.instability.grantedByCast),
+    n(g.flowUntilTick),
+    n(g.flowReduction),
+    n(g.concCritStacks),
+    n(g.concCritPerStackPct),
+    n(g.channelledMight.startsAtTick),
+    n(g.channelledMight.expiresAtTick),
+    n(g.channelledMight.critDamageBonus),
+    // necromancy resources
+    n(res.residualSouls),
+    n(res.necrosisStacks),
+    n(res.livingDeathUntilTick),
+    b(res.lantern),
+    n(res.spectralScythe2UntilTick),
+    n(res.spectralScythe3UntilTick),
+    // conjures
+    String(nec.conjures.spirits.length),
+  ];
+  for (const c of nec.conjures.spirits) {
+    parts.push(encodeConjure(c));
+  }
+  parts.push(
+    // target
+    n(t.lastAttackTick),
+    recordNum(t.burns.active as Record<string, number>),
+    n(t.bloatedByCast),
+    recordNum(tm.bleeds as Record<string, number>),
+    n(tm.abyssalParasite.stacks),
+    n(tm.abyssalParasite.expiresAtTick),
+    n(tm.abyssalParasite.nextDamageTick),
+    n(tm.abyssalParasite.scheduledThroughTick),
+    n(tm.enduringRuin.bleedVulnerability),
+    n(tm.enduringRuin.untilTick),
+  );
+  return parts.join(US);
+}
+
+function encodeHitDetails(map: ReadonlyMap<number, HitResult>): string {
+  if (map.size === 0) return "0";
+  const keys = [...map.keys()].sort((a, b) => a - b);
+  const parts: (string | number)[] = [keys.length];
+  for (const k of keys) {
+    const h = map.get(k)!;
+    parts.push(
+      k,
+      h.potential,
+      h.min,
+      h.max,
+      h.critMin,
+      h.critMax,
+      h.critChance,
+      h.nonCritExpected,
+      h.critExpected,
+      h.expected,
+      h.uncappedExpected,
+      h.capLoss,
+    );
+  }
+  return parts.join(US);
+}
+
+function encodeSpiritMeta(map: ReadonlyMap<number, SpiritEventMeta>): string {
+  if (map.size === 0) return "0";
+  const keys = [...map.keys()].sort((a, b) => a - b);
+  let out = String(keys.length);
+  for (const k of keys) {
+    const m = map.get(k)!;
+    out += FS + n(k) + US + s(m.id) + n(m.untilTick) + US + s(m.kind);
+  }
+  return out;
+}
+
+function encodeTracks(set: ReadonlySet<string>): string {
+  if (set.size === 0) return "0";
+  const keys = [...set].sort();
+  let out = String(keys.length);
+  for (const k of keys) out += FS + s(k);
+  return out;
+}
+
+function encodeSpiritHits(map: ReadonlyMap<string, number>): string {
+  if (map.size === 0) return "0";
+  const keys = [...map.keys()].sort((a, b) => a.localeCompare(b));
+  let out = String(keys.length);
+  for (const k of keys) out += FS + s(k) + n(map.get(k)!);
+  return out;
+}
+
+/** Historical JSON key (debug / oracle). Expensive - not the hot path. */
+export function branchKeyJson(rt: SimulationRuntime): string {
+  return JSON.stringify([
+    rt.state,
+    rt.queue.signature(),
+    [...rt.hitDetails].sort(([a], [b]) => a - b),
+    [...rt.spiritEventMeta].sort(([a], [b]) => a - b),
+    [...rt.scheduledSpiritTracks].sort(),
+    [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
+    rt.endTick,
+    rt.nextSeq,
+    rt.nextCastSeq,
+  ]);
+}
+
+/** Compact structural key used by merge. */
+export function branchKeyStructural(rt: SimulationRuntime): string {
+  return (
+    encodeState(rt.state) +
+    RS +
+    rt.queue.signature() +
+    RS +
+    encodeHitDetails(rt.hitDetails) +
+    RS +
+    encodeSpiritMeta(rt.spiritEventMeta) +
+    RS +
+    encodeTracks(rt.scheduledSpiritTracks) +
+    RS +
+    encodeSpiritHits(rt.spiritHitCounts) +
+    RS +
+    n(rt.endTick) +
+    US +
+    n(rt.nextSeq) +
+    US +
+    n(rt.nextCastSeq)
+  );
+}
+
+export function buildBranchKey(rt: SimulationRuntime): string {
+  return envJsonBranchKey() ? branchKeyJson(rt) : branchKeyStructural(rt);
+}
+

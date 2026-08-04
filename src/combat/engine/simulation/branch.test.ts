@@ -5,10 +5,13 @@ import { commitCast, prepareSimulationCast } from "../cast";
 import type { CastSnapshot } from "../cast/snapshot";
 import { createRuntime, enqueueEvent } from "../runtime/runtime";
 import {
+  appendWithIntermediateCap,
   capBranches,
   combineExactness,
   enableBranchProfiling,
   getBranchProfile,
+  MAX_INTERMEDIATE_BRANCHES,
+  MAX_LIVE_BRANCHES,
   mergeAndCapBranches,
   mergeBranches,
   resetBranchProfile,
@@ -397,6 +400,111 @@ describe("snapshotRuntime shares no mutable collection", () => {
   });
 });
 
+describe("snapshotRuntime score-only trim", () => {
+  it("never shares state by ref; always structuredClone", () => {
+    const rt = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    const clone = snapshotRuntime(rt);
+    expect(clone.state).not.toBe(rt.state);
+    const parentMelee = rt.state.melee;
+    clone.state = { ...clone.state, adrenaline: (clone.state.adrenaline ?? 0) + 1 };
+    expect(rt.state.melee).toBe(parentMelee);
+    expect(rt.state.adrenaline).not.toBe(clone.state.adrenaline);
+  });
+
+  it("shares empty analysis shell; keeps independent physics containers", () => {
+    const rt = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    for (let i = 0; i < 2; i++) {
+      const attempt = prepareSimulationCast(rt, rt.byId.get("attack")!, rt.state.tick);
+      if (attempt.ok) commitCast(rt, attempt.prepared, false);
+    }
+    const clone = snapshotRuntime(rt);
+    // Analysis is empty and never mutated on score-only — shared shell is OK.
+    expect(clone.analysis).toBe(rt.analysis);
+    // Presentation history stays empty without cloning parent event arrays.
+    expect(clone.events).toEqual([]);
+    expect(rt.events).toEqual([]);
+    // Mutable ranking / physics containers stay independent.
+    for (const key of [
+      "queue",
+      "casts",
+      "damageByTick",
+      "recordBySeq",
+      "hitDetails",
+      "spiritEventMeta",
+      "scheduledSpiritTracks",
+      "spiritHitCounts",
+    ] as const) {
+      expect(clone[key], key).not.toBe(rt[key]);
+    }
+    // Cast record shells independent so expected/min/max cannot leak.
+    expect(clone.casts[0]).not.toBe(rt.casts[0]);
+    expect(clone.casts[0]!.result).not.toBe(rt.casts[0]!.result);
+    // Score-only never grows hits — sharing the empty hits array is allowed.
+    expect(clone.casts[0]!.result.hits).toEqual([]);
+    clone.casts[0]!.result.expected += 99;
+    expect(rt.casts[0]!.result.expected).not.toBe(clone.casts[0]!.result.expected);
+  });
+
+  it("shares immutable HitResult values across map shells", () => {
+    const rt = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    const hit = {
+      min: 10,
+      max: 20,
+      expected: 15,
+      critChance: 0,
+      critDamageBonus: 0,
+    };
+    rt.hitDetails.set(1, hit as never);
+    const clone = snapshotRuntime(rt);
+    expect(clone.hitDetails).not.toBe(rt.hitDetails);
+    expect(clone.hitDetails.get(1)).toBe(hit);
+    clone.hitDetails.set(2, hit as never);
+    expect(rt.hitDetails.has(2)).toBe(false);
+  });
+
+  it("score-only profile costs less than full-analysis for same cast history", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const full = createRuntime({ ...meleeInput, detailLevel: "full-analysis" });
+    for (let i = 0; i < 3; i++) {
+      const attempt = prepareSimulationCast(full, full.byId.get("attack")!, full.state.tick);
+      if (attempt.ok) commitCast(full, attempt.prepared, false);
+    }
+    // Seed a fake presentation event so full-analysis has history to clone.
+    full.events.push({
+      tick: 0,
+      seq: 0,
+      family: "hit",
+      abilityId: "attack",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      provenance: { kind: "player_direct" },
+      damage: { min: 1, max: 2, expected: 1.5 },
+    } as never);
+    snapshotRuntime(full);
+    const fullProf = getBranchProfile();
+
+    resetBranchProfile();
+    const score = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    for (let i = 0; i < 3; i++) {
+      const attempt = prepareSimulationCast(score, score.byId.get("attack")!, score.state.tick);
+      if (attempt.ok) commitCast(score, attempt.prepared, false);
+    }
+    snapshotRuntime(score);
+    const scoreProf = getBranchProfile();
+    enableBranchProfiling(false);
+    resetBranchProfile();
+
+    expect(scoreProf.branchSnapshots).toBe(1);
+    expect(fullProf.branchSnapshots).toBe(1);
+    expect(scoreProf.snapshotFieldsCloned).toBeLessThan(fullProf.snapshotFieldsCloned);
+    expect(scoreProf.snapshotBytesEstimate).toBeLessThan(fullProf.snapshotBytesEstimate);
+  });
+});
+
 describe("capBranches", () => {
   it("keeps heaviest branches with own weights; discarded mass is residual", () => {
     const base = createRuntime(meleeInput);
@@ -492,6 +600,7 @@ describe("capBranches", () => {
     snapshotRuntime(base);
     expect(getBranchProfile().branchSnapshots).toBe(0);
   });
+
   it("combineExactness takes the more approximate label", () => {
     expect(combineExactness("exact", "merged-exactly")).toBe("merged-exactly");
     expect(combineExactness("merged-exactly", "bounded-approximation")).toBe(
@@ -501,6 +610,76 @@ describe("capBranches", () => {
     expect(combineExactness("resampled", "bounded-approximation")).toBe("resampled");
   });
 });
+
+describe("appendWithIntermediateCap / multi-parent intermediate bound", () => {
+  it("appendWithIntermediateCap stays within max and conserves mass", () => {
+    const base = createRuntime(meleeInput);
+    let acc: ReturnType<typeof mergeAndCapBranches>["branches"] = [];
+    let residual = 0;
+    for (let i = 0; i < 200; i++) {
+      const rt = snapshotRuntime(base);
+      rt.endTick = i;
+      const folded = appendWithIntermediateCap(acc, [{ weight: 1 / 200, rt }], 16);
+      residual += folded.residualWeight;
+      acc = folded.branches;
+    }
+    expect(acc.length).toBeLessThanOrEqual(16);
+    const mass = acc.reduce((sum, b) => sum + b.weight, 0) + residual;
+    expect(mass).toBeCloseTo(1);
+    expect(residual).toBeGreaterThan(0);
+  });
+
+  it("pre-caps a single expansion larger than max before append", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const base = createRuntime(meleeInput);
+    const huge = Array.from({ length: 100 }, (_, i) => {
+      const rt = snapshotRuntime(base);
+      rt.endTick = i;
+      return { weight: 1 / 100, rt };
+    });
+    const folded = appendWithIntermediateCap([], huge, 16);
+    expect(folded.branches.length).toBeLessThanOrEqual(16);
+    expect(folded.residualWeight).toBeGreaterThan(0);
+    // Peak never holds the full 100 after the fold.
+    expect(getBranchProfile().maxLiveBranches).toBeLessThanOrEqual(100);
+    expect(folded.branches.length + 0).toBeLessThanOrEqual(16);
+    enableBranchProfiling(false);
+    resetBranchProfile();
+  });
+
+  it("createCastContext intermediate-caps parent expansion like materializeCastPlans", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    // Many Impatient arms then multi-hit assault: outer product would be huge without early cap.
+    const ctx = createCastContext({
+      ...meleeInput,
+      startingAdrenaline: 100,
+      adrenaline: { impatientRank: 4, relentlessRank: 5 },
+    });
+    const attack = ctx.byId.get("attack")!;
+    const assault = ctx.byId.get("assault")!;
+    for (let i = 0; i < 8; i++) {
+      ctx.performCast(attack, ctx.getState().tick, false);
+    }
+    ctx.performCast(assault, ctx.getState().tick, false);
+    const summary = ctx.finish();
+    const p = getBranchProfile();
+    enableBranchProfiling(false);
+    resetBranchProfile();
+    // Without intermediate absorb, multi-parent * multi-arm can peak far above O(max).
+    expect(p.maxLiveBranches).toBeLessThanOrEqual(MAX_INTERMEDIATE_BRANCHES);
+    expect(MAX_INTERMEDIATE_BRANCHES).toBe(MAX_LIVE_BRANCHES * 2);
+    expect(p.maxLiveBranches).toBeGreaterThan(0);
+    // Residual law unchanged: concrete + residual discloses full mass when branched.
+    if (summary.rng) {
+      const mass =
+        summary.rng.probabilityMass + (summary.rng.residualWeight ?? 0);
+      expect(mass).toBeCloseTo(1, 8);
+    }
+  });
+});
+
 
 describe("RNG branches merge to the weighted mean", () => {
   it("Impatient's branch set totals the same as its two outcomes weighted", () => {

@@ -3,6 +3,7 @@ import { costOf, performOffGcdCast, prepareSimulationCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick } from "../runtime/state";
 import {
+  appendWithIntermediateCap,
   combineExactness,
   mergeAndCapBranches,
   type Branch,
@@ -17,6 +18,9 @@ import { combineBranchSummaries } from "./summary";
  * stack EV. prepareSimulationCast may advance with advanceTo; commit uses
  * commitCastBranches. finish drains via combineBranchSummaries (drainBranchToEnd).
  * getState / costOf / firstLegalTick read the heaviest live branch (representative).
+ *
+ * Multi-parent expansions intermediate-cap via appendWithIntermediateCap
+ * (materializeCastPlans absorb parity) so parent*Leng products never peak unbounded.
  */
 export function createCastContext(input: CastContextInput): CastContext {
   const root = createRuntime(input);
@@ -58,19 +62,25 @@ export function createCastContext(input: CastContextInput): CastContext {
       );
     },
     advanceTo: (targetTick) => {
-      const next: Branch[] = [];
+      let next: Branch[] = [];
       let residual = 0;
       let exact: BranchExactness = "exact";
       for (const branch of branches) {
         if (branch.error !== undefined) {
-          next.push(branch);
+          const folded = appendWithIntermediateCap(next, [branch]);
+          residual += folded.residualWeight;
+          exact = combineExactness(exact, folded.exactness);
+          next = folded.branches;
           continue;
         }
         const stepped = advanceToBranches(branch, targetTick);
         residual += stepped.residualWeight;
         exact = combineExactness(exact, stepped.exactness);
         if (stepped.branches.length > 1) sawBranching = true;
-        next.push(...stepped.branches);
+        const folded = appendWithIntermediateCap(next, stepped.branches);
+        residual += folded.residualWeight;
+        exact = combineExactness(exact, folded.exactness);
+        next = folded.branches;
       }
       absorb({ branches: next, residualWeight: residual, exactness: exact });
     },
@@ -80,20 +90,26 @@ export function createCastContext(input: CastContextInput): CastContext {
       auto: boolean,
       rng?: CastRng,
     ): CastAttempt => {
-      const next: Branch[] = [];
+      let next: Branch[] = [];
       let residual = 0;
       let exact: BranchExactness = "exact";
       let anyOk = false;
       let lastError: string | undefined;
       for (const branch of branches) {
         if (branch.error !== undefined) {
-          next.push(branch);
+          const folded = appendWithIntermediateCap(next, [branch]);
+          residual += folded.residualWeight;
+          exact = combineExactness(exact, folded.exactness);
+          next = folded.branches;
           continue;
         }
         // Advance may use plain advanceTo inside prepare; Leng expands on commit.
         const preparation = prepareSimulationCast(branch.rt, ability, readyTick);
         if (!preparation.ok) {
-          next.push(branch);
+          const folded = appendWithIntermediateCap(next, [branch]);
+          residual += folded.residualWeight;
+          exact = combineExactness(exact, folded.exactness);
+          next = folded.branches;
           lastError = preparation.error;
           continue;
         }
@@ -101,7 +117,10 @@ export function createCastContext(input: CastContextInput): CastContext {
         residual += committed.residualWeight;
         exact = combineExactness(exact, committed.exactness);
         if (committed.branches.length > 1) sawBranching = true;
-        next.push(...committed.branches);
+        const folded = appendWithIntermediateCap(next, committed.branches);
+        residual += folded.residualWeight;
+        exact = combineExactness(exact, folded.exactness);
+        next = folded.branches;
         anyOk = true;
       }
       absorb({ branches: next, residualWeight: residual, exactness: exact });

@@ -1,8 +1,13 @@
 import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
 import type { CastRecord } from "./contracts";
-import { keepsAnalysisLedgers, keepsPerAbilityMap } from "./contracts";
+import {
+  keepsAnalysisLedgers,
+  keepsPerAbilityMap,
+  keepsPresentationHistory,
+} from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
+import { buildBranchKey } from "./branchKey";
 
 /**
  * Probability-weighted branch for state-changing RNG (Impatient, Relentless,
@@ -66,7 +71,7 @@ export interface BranchProfile {
   snapshotFieldsCloned: number;
   /** Order-of-magnitude bytes cloned (not exact heap). */
   snapshotBytesEstimate: number;
-  /** branchKey JSON.stringify calls (merge equivalence keys). */
+  /** branchKey builds (merge equivalence keys). */
   branchKeySerializations: number;
   /** Sum of serialized key string lengths (UTF-16 code units). */
   branchKeyChars: number;
@@ -128,31 +133,41 @@ export function noteBranchLiveCount(n: number): void {
 
 /**
  * Cheap structural cost of one snapshotRuntime (not a heap walk).
+ * Score-only omits presentation history / analysis / perAbility / cast hit arrays.
  * Deep targets: state only. Map shells for hitDetails/spirit meta (values shared).
- * Shallow: queue, casts/records, maps/sets, ledger objects, analysis.
  */
 function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: number } {
+  const scoreOnly = rt.detailLevel === "score-only";
   const queueLen = rt.queue.length;
   const casts = rt.casts.length;
-  const events = rt.events.length;
   const recordBySeq = rt.recordBySeq.size;
   const hitDetails = rt.hitDetails.size;
   const spiritMeta = rt.spiritEventMeta.size;
   const spiritTracks = rt.scheduledSpiritTracks.size;
   const spiritHits = rt.spiritHitCounts.size;
-  const perAbility = Object.keys(rt.perAbility).length;
   const damageByTick = Object.keys(rt.damageByTick).length;
+
+  // Score-only: no events/analysis/perAbility/hit-array walk.
   let castHits = 0;
-  for (const c of rt.casts) castHits += c.result.hits.length;
+  let events = 0;
+  let perAbility = 0;
+  let analysisUnit = 0;
+  if (!scoreOnly) {
+    events = rt.events.length;
+    perAbility = Object.keys(rt.perAbility).length;
+    analysisUnit = 1;
+    if (keepsPresentationHistory(rt.detailLevel)) {
+      for (const c of rt.casts) castHits += c.result.hits.length;
+    }
+  }
 
   // One unit per container clone + per entry walk (maps/arrays).
   const fields =
     1 + // queue.clone
-    1 + // structuredClone(state)
+    1 + // structuredClone(state) — always, never shared by ref
     casts +
     castHits +
-    1 + // perAbility spread
-    perAbility +
+    (scoreOnly ? 0 : 1 + perAbility) + // perAbility spread only when kept
     1 + // damageByTick spread
     damageByTick +
     events +
@@ -161,23 +176,23 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
     spiritMeta + // map entry only; SpiritEventMeta shared by ref
     spiritTracks +
     spiritHits +
-    1; // cloneAnalysisState
+    analysisUnit;
 
   // Order-of-magnitude payload (tuned for relative A/B, not allocator truth).
   const bytes =
     queueLen * 160 +
     900 + // RotationState deep clone ballpark
-    casts * 280 +
+    casts * (scoreOnly ? 200 : 280) +
     castHits * 24 +
     perAbility * 32 +
     damageByTick * 24 +
     events * 96 +
-    recordBySeq * 280 +
+    recordBySeq * (scoreOnly ? 200 : 280) +
     hitDetails * 40 + // key + pointer; HitResult not deep-cloned
     spiritMeta * 40 +
     spiritTracks * 32 +
     spiritHits * 32 +
-    256; // analysis maps/sets base
+    (scoreOnly ? 0 : 256); // analysis maps/sets base
 
   return { fields, bytes };
 }
@@ -185,14 +200,24 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
 /**
  * Clone cast/record shell. HitResult entries in result.hits are immutable number
  * bags and already shared by ref across branches (same as hitDetails values).
+ *
+ * Score-only never grows result.hits — share the hits array by ref (usually empty)
+ * and only clone the mutable expected/min/max result bag.
  */
 function cloneCastRecord(
   record: CastRecord,
   cache: Map<CastRecord, CastRecord>,
+  scoreOnly: boolean,
 ): CastRecord {
   let clone = cache.get(record);
   if (!clone) {
-    clone = { ...record, result: { ...record.result, hits: [...record.result.hits] } };
+    if (scoreOnly) {
+      // Share hits array (never pushed on score-only); still clone result bag
+      // so expected/min/max mutations cannot leak across branches.
+      clone = { ...record, result: { ...record.result } };
+    } else {
+      clone = { ...record, result: { ...record.result, hits: [...record.result.hits] } };
+    }
     cache.set(record, clone);
   }
   return clone;
@@ -207,37 +232,42 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     branchProf.snapshotBytesEstimate += est.bytes;
   }
 
+  const scoreOnly = rt.detailLevel === "score-only";
   const recordClones = new Map<CastRecord, CastRecord>();
 
-  // casts: empty fast path; otherwise map through identity cache.
+  // Cast records stay mutable (expected/min/max, adren after) even on score-only —
+  // independent shells required. Presentation hit arrays stripped on score-only.
   const casts =
     rt.casts.length === 0
       ? ([] as CastRecord[])
-      : rt.casts.map((r) => cloneCastRecord(r, recordClones));
+      : rt.casts.map((r) => cloneCastRecord(r, recordClones, scoreOnly));
 
-  // recordBySeq: direct Map walk (no intermediate array of entries).
   let recordBySeq: Map<number, CastRecord>;
   if (rt.recordBySeq.size === 0) {
     recordBySeq = new Map();
   } else {
     recordBySeq = new Map();
     for (const [k, r] of rt.recordBySeq) {
-      recordBySeq.set(k, cloneCastRecord(r, recordClones));
+      recordBySeq.set(k, cloneCastRecord(r, recordClones, scoreOnly));
     }
   }
 
   // HitResult is a flat number bag. Production only sets new values / reads fields
   // (never mutates). Cast-record clone already shares the same refs in result.hits.
   // Map shell must be independent so set/delete on a branch cannot leak.
-  const hitDetails =
-    rt.hitDetails.size === 0 ? new Map() : new Map(rt.hitDetails);
+  const hitDetails = rt.hitDetails.size === 0 ? new Map() : new Map(rt.hitDetails);
 
   // SpiritEventMeta is {id, untilTick, kind}; only keys are deleted/replaced.
   const spiritEventMeta =
     rt.spiritEventMeta.size === 0 ? new Map() : new Map(rt.spiritEventMeta);
 
-  // events: resolved history entries are immutable; array shell must be independent.
-  const events = rt.events.length === 0 ? [] : [...rt.events];
+  // Score-only never appends presentation history — skip large events walk/copy.
+  // full-analysis: resolved history entries are immutable; array shell independent.
+  const events = scoreOnly
+    ? ([] as SimulationRuntime["events"])
+    : rt.events.length === 0
+      ? []
+      : [...rt.events];
 
   // score-only never mutates analysis ledgers; share the empty shell.
   // full-analysis must deep-clone so branch merges cannot leak.
@@ -245,12 +275,16 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     ? cloneAnalysisState(rt.analysis)
     : rt.analysis;
 
+  // Score-only never writes perAbility; skip shallow-copy of the empty map.
+  const perAbility = scoreOnly ? ({} as Record<string, number>) : { ...rt.perAbility };
+
   return {
     ...rt,
     queue: rt.queue.clone(),
+    // NEVER share rt.state by ref — structuredClone required for branch isolation.
     state: structuredClone(rt.state),
     casts,
-    perAbility: { ...rt.perAbility },
+    perAbility,
     damageByTick: { ...rt.damageByTick },
     events,
     recordBySeq,
@@ -265,19 +299,11 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
 /**
  * Future-evolution key. Omits historical damage ledgers (merged separately).
  * Keeps endTick, hitDetails, spirit meta for terminal metrics and land-time reads.
+ * Default: compact structural multi-field string (branchKey.ts). RS3_BRANCH_KEY_JSON=1
+ * restores full JSON.stringify for debug/oracle.
  */
 function branchKey(rt: SimulationRuntime): string {
-  const key = JSON.stringify([
-    rt.state,
-    rt.queue.signature(),
-    [...rt.hitDetails].sort(([a], [b]) => a - b),
-    [...rt.spiritEventMeta].sort(([a], [b]) => a - b),
-    [...rt.scheduledSpiritTracks].sort(),
-    [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
-    rt.endTick,
-    rt.nextSeq,
-    rt.nextCastSeq,
-  ]);
+  const key = buildBranchKey(rt);
   if (branchProfEnabled) {
     branchProf.branchKeySerializations++;
     branchProf.branchKeyChars += key.length;
@@ -431,4 +457,68 @@ export function mergeAndCapBranches(
     return { ...capped, exactness: "merged-exactly" };
   }
   return { ...capped, exactness: "exact" };
+}
+
+/**
+ * Documented peak after one expand onto a full live set (~max + max before fold).
+ * materializeCastPlans / multi-parent outer product.
+ */
+export const MAX_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES * 2;
+
+/**
+ * Append survivors with early mergeAndCap (materializeCastPlans absorb parity).
+ * Pre-caps a single expansion over max; after append, mergeAndCap when over max.
+ * Peak live ~2*max. Residual disclosed; never reassigned to a non-equivalent.
+ * When max is oracle-scale (MAX_SAFE_INTEGER/2+), never intermediate-caps.
+ */
+export function appendWithIntermediateCap(
+  acc: Branch[],
+  added: readonly Branch[],
+  max: number = MAX_LIVE_BRANCHES,
+): BranchSet {
+  if (!Number.isInteger(max) || max < 1) {
+    throw new RangeError(`appendWithIntermediateCap: max must be a positive integer, got ${max}`);
+  }
+  if (max >= Number.MAX_SAFE_INTEGER / 2) {
+    if (added.length === 0) {
+      return { branches: acc, residualWeight: 0, exactness: "exact" };
+    }
+    if (acc.length === 0) {
+      const out = [...added];
+      noteBranchLiveCount(out.length);
+      return { branches: out, residualWeight: 0, exactness: "exact" };
+    }
+    acc.push(...added);
+    noteBranchLiveCount(acc.length);
+    return { branches: acc, residualWeight: 0, exactness: "exact" };
+  }
+
+  let residualWeight = 0;
+  let exactness: BranchExactness = "exact";
+  let chunk: readonly Branch[] = added;
+  if (added.length > max) {
+    const pre = mergeAndCapBranches(added, max);
+    residualWeight += pre.residualWeight;
+    exactness = combineExactness(exactness, pre.exactness);
+    chunk = pre.branches;
+  }
+  if (chunk.length === 0) {
+    return { branches: acc, residualWeight, exactness };
+  }
+  let out: Branch[];
+  if (acc.length === 0) out = [...chunk];
+  else {
+    acc.push(...chunk);
+    out = acc;
+  }
+  noteBranchLiveCount(out.length);
+  if (out.length <= max) {
+    return { branches: out, residualWeight, exactness };
+  }
+  const folded = mergeAndCapBranches(out, max);
+  return {
+    branches: folded.branches,
+    residualWeight: residualWeight + folded.residualWeight,
+    exactness: combineExactness(exactness, folded.exactness),
+  };
 }

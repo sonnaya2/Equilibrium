@@ -11,6 +11,11 @@ import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
 import { resolveMaximumAdrenaline } from "../../league/ruleset";
 import { hasBlessing } from "../../league/ruleset";
 import { noteRuntimeCreated } from "../../profiling/allocation";
+import { hasPassive } from "../../shared/equipment";
+import {
+  lengLandTableFor,
+  type CompiledLengLandTable,
+} from "../../styles/melee/lengRng";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -32,6 +37,11 @@ export interface SimulationRuntime {
   readonly horizon?: number;
   readonly byId: ReadonlyMap<string, AbilitySpec>;
   readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
+  /**
+   * Equipment-static Leng land outcome table (null when no Leng passives).
+   * Compiled once in createRuntime; shared across branch snapshots.
+   */
+  readonly lengLandTable: CompiledLengLandTable | null;
   readonly queue: EventQueue<SimulationRuntime>;
   state: RotationState;
   readonly casts: CastRecord[];
@@ -132,12 +142,18 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
   const basicByStyle =
     input.abilityRegistry?.basicByStyle ?? mapBasicsByStyle(input.abilities);
+  const equipment = input.equipmentEffects;
+  const lengLandTable = lengLandTableFor(
+    hasPassive(equipment, "leng-endless-frost"),
+    hasPassive(equipment, "leng-boundless-chill"),
+  );
   return {
     input,
     detailLevel: resolveDetailLevel(input.detailLevel),
     horizon: input.horizonTicks,
     byId,
     basicByStyle,
+    lengLandTable,
     queue: new EventQueue<SimulationRuntime>(),
     state: newRotationState({
       adrenaline: input.startingAdrenaline,

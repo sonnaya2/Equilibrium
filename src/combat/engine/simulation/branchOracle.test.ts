@@ -15,7 +15,7 @@ import { expandLengOnLand } from "./lengLandBranch";
 import { scoreSummary, OBJECTIVE_HORIZON_TICKS } from "../../solver/objective";
 import { PROB_TOLERANCE, isNearOne } from "./stats";
 import { baseInput } from "../../test/fixtures/inputs";
-import { lengLandOutcomes } from "../../styles/melee/lengRng";
+import { FROSTBLADES_DURATION_TICKS, lengLandOutcomes } from "../../styles/melee/lengRng";
 import {
   PRIMORDIAL_ICE_CAP,
   concretePlusResidual,
@@ -25,6 +25,12 @@ import {
   expectedStacksFromOutcomes,
   failedMass,
   lengExpectedStacks,
+  lengExpectedFutureClasses,
+  lengFutureClassCount,
+  lengFutureStateKey,
+  lengFutureStatesEquivalent,
+  foldLengOutcomesByFutureState,
+  normalizeLengFrostUntil,
   lengHitOutcomeTree,
   massOf,
   oracleSimulate,
@@ -491,5 +497,107 @@ describe("Leng exhaustive EV oracle", () => {
       );
       expect(e2).toBeCloseTo(oracle.expectedStacks, 8);
     }
+  });
+});
+
+describe("Leng future-state equivalence oracle", () => {
+  it("expired frostUntil is future-equivalent to 0", () => {
+    expect(normalizeLengFrostUntil(5, 10)).toBe(0);
+    expect(normalizeLengFrostUntil(11, 10)).toBe(11);
+    expect(lengFutureStatesEquivalent({ stacks: 2, frostUntil: 3 }, { stacks: 2, frostUntil: 0 }, 10)).toBe(
+      true,
+    );
+    expect(lengFutureStatesEquivalent({ stacks: 2, frostUntil: 15 }, { stacks: 2, frostUntil: 0 }, 10)).toBe(
+      false,
+    );
+    expect(lengFutureStatesEquivalent({ stacks: 1, frostUntil: 0 }, { stacks: 2, frostUntil: 0 }, 0)).toBe(
+      false,
+    );
+  });
+
+  it("foldLengOutcomesByFutureState sums weights for identical keys", () => {
+    const tick = 0;
+    const folded = foldLengOutcomesByFutureState(
+      [
+        { weight: 0.1, stacks: 1, frostUntil: 0 },
+        { weight: 0.2, stacks: 1, frostUntil: 0 },
+        { weight: 0.05, stacks: 1, frostUntil: 15 },
+      ],
+      tick,
+    );
+    expect(folded).toHaveLength(2);
+    expect(folded.reduce((s, o) => s + o.weight, 0)).toBeCloseTo(0.35, 12);
+    expect(lengFutureClassCount(folded, tick)).toBe(2);
+  });
+
+  it("dual Leng one-land future class count matches expandLengOnLand forks", () => {
+    const tick = 0;
+    const oracle = lengExpectedFutureClasses(1, {
+      hasEndlessFrost: true,
+      hasBoundlessChill: true,
+      startStacks: 0,
+      frostUntil: 0,
+      tick,
+    });
+    expect(isNearOne(oracle.mass)).toBe(true);
+    // 4 EF×BC arms materialize to 4 distinct (stacks,frost) classes from 0/0.
+    expect(oracle.classes).toBe(4);
+
+    const rt = createRuntime(lengGearContextInput());
+    const set = expandLengOnLand({ weight: 1, rt }, tick);
+    expect(set.residualWeight).toBe(0);
+    expect(set.branches).toHaveLength(oracle.classes);
+    const keys = new Set(
+      set.branches.map((b) =>
+        lengFutureStateKey(
+          b.rt.state.melee.primordialIceStacks,
+          b.rt.state.melee.frostbladesUntilTick,
+          tick,
+        ),
+      ),
+    );
+    expect(keys.size).toBe(oracle.classes);
+    expect(oracle.expectedStacks).toBeCloseTo(0.12, 10);
+  });
+
+  it("at stack cap EF is no-op: only frost diverges (2 classes)", () => {
+    const oracle = lengExpectedFutureClasses(1, {
+      hasEndlessFrost: true,
+      hasBoundlessChill: true,
+      startStacks: PRIMORDIAL_ICE_CAP,
+      frostUntil: 0,
+      tick: 0,
+    });
+    expect(oracle.classes).toBe(2);
+    expect(oracle.expectedStacks).toBe(PRIMORDIAL_ICE_CAP);
+
+    const rt = createRuntime(lengGearContextInput());
+    rt.state = {
+      ...rt.state,
+      melee: { ...rt.state.melee, primordialIceStacks: PRIMORDIAL_ICE_CAP },
+    };
+    const set = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(set.branches).toHaveLength(2);
+    expect(set.residualWeight).toBe(0);
+  });
+
+  it("cannot fully fold dual Leng: stacks and frost both create non-equivalent futures", () => {
+    const open = lengLandOutcomes(true, true, 0, 0, 0);
+    // Distinct future keys => must fork (not damage-EV fold).
+    expect(lengFutureClassCount(open, 0)).toBeGreaterThan(1);
+    const stackOnly = new Set(open.map((o) => o.stacks));
+    const frostOnly = new Set(open.map((o) => o.frostUntil));
+    expect(stackOnly.size).toBeGreaterThan(1);
+    expect(frostOnly.size).toBeGreaterThan(1);
+  });
+
+  it("when frost already open to this land frostOpen, chill folds into stack classes only", () => {
+    const tick = 5;
+    const frostOpen = tick + FROSTBLADES_DURATION_TICKS;
+    const out = lengLandOutcomes(true, true, 0, frostOpen, tick);
+    // Chill is no-op on window; only stack classes remain (0,1,2).
+    expect(out.every((o) => o.frostUntil === frostOpen)).toBe(true);
+    expect(lengFutureClassCount(out, tick)).toBe(3);
+    expect(isNearOne(out.reduce((s, o) => s + o.weight, 0))).toBe(true);
   });
 });

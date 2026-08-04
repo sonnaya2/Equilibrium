@@ -12,25 +12,102 @@ import {
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
-/** Branch-equivalence fingerprint for cast-scoped snapshot fields. */
-function snapSig(s: CastSnapshot) {
-  return [
-    s.castSeq,
-    s.critLayers.chance,
-    s.critLayers.damageBonus ?? 0,
-    s.critLayers.guaranteed ?? false,
-    s.critLayers.disabled ?? false,
-    s.critLayers.eligible ?? true,
-    s.baseMods.map((m) => [m.id, m.stage, m.priority]),
-    s.empowerMult,
-    s.enduringRuinBonus,
-    s.chaosRoarActive,
-    s.channelled,
-    s.greaterFuryActive,
-    s.furyActive,
-    s.firstEligibleHitIndex,
-    s.searingWindsAtCast,
-  ];
+const US = "\x1f";
+const RS = "\x1e";
+
+/** Compact cast-snap fingerprint (branch-equivalence; same fields as prior JSON form). */
+function snapSig(s: CastSnapshot): string {
+  let mods = "";
+  for (const m of s.baseMods) {
+    mods += m.id + US + String(m.stage) + US + String(m.priority) + RS;
+  }
+  return (
+    s.castSeq +
+    US +
+    s.critLayers.chance +
+    US +
+    (s.critLayers.damageBonus ?? 0) +
+    US +
+    (s.critLayers.guaranteed ? 1 : 0) +
+    US +
+    (s.critLayers.disabled ? 1 : 0) +
+    US +
+    (s.critLayers.eligible === false ? 0 : 1) +
+    US +
+    mods +
+    US +
+    s.empowerMult +
+    US +
+    s.enduringRuinBonus +
+    US +
+    (s.chaosRoarActive ? 1 : 0) +
+    US +
+    (s.channelled ? 1 : 0) +
+    US +
+    (s.greaterFuryActive ? 1 : 0) +
+    US +
+    (s.furyActive ? 1 : 0) +
+    US +
+    s.firstEligibleHitIndex +
+    US +
+    (s.searingWindsAtCast ? 1 : 0)
+  );
+}
+
+function eventSig(e: ScheduledEvent<unknown>): string {
+  return (
+    e.tick +
+    US +
+    e.seq +
+    US +
+    e.family +
+    US +
+    e.abilityId +
+    US +
+    e.sourceCast +
+    US +
+    e.hitIndex +
+    US +
+    (e.attached ? 1 : 0) +
+    US +
+    (e.procEligible ? 1 : 0) +
+    US +
+    (e.recursionAllowed ? 1 : 0) +
+    US +
+    (e.blessingId ?? "") +
+    US +
+    (e.expectedOccurrences ?? 1) +
+    US +
+    (e.cancelOwner ?? -1) +
+    US +
+    (e.derivedFrom ?? -1) +
+    US +
+    (e.flowReduction ?? 0) +
+    US +
+    (e.convertedChannel ? 1 : 0) +
+    US +
+    (e.dotKind ?? "") +
+    US +
+    (e.bleedId ?? "") +
+    US +
+    (e.bleedExpiresAtTick ?? -1) +
+    US +
+    (e.originKind ?? "") +
+    US +
+    (e.triggerRolls ?? "") +
+    US +
+    (e.expectedActivations ?? "") +
+    US +
+    (e.expectedSeparateHits ?? "") +
+    US +
+    (e.damageTag ?? "") +
+    US +
+    e.provenance.kind +
+    US +
+    (e.provenance.detail ?? "") +
+    US +
+    (e.castSnap ? snapSig(e.castSnap) : "")
+  );
 }
 
 /**
@@ -166,38 +243,16 @@ export class EventQueue<RT = unknown> {
   /**
    * Branch-equivalence fingerprint of pending events (no resolve closures).
    * Includes derivedFrom: different source hits => different damage.
+   * Compact multi-field string (equality-preserving vs prior JSON form).
    */
   signature(): string {
-    return JSON.stringify(
-      this.items.map((e) => [
-        e.tick,
-        e.seq,
-        e.family,
-        e.abilityId,
-        e.sourceCast,
-        e.hitIndex,
-        e.attached,
-        e.procEligible,
-        e.recursionAllowed,
-        e.blessingId ?? null,
-        e.expectedOccurrences ?? 1,
-        e.cancelOwner ?? -1,
-        e.derivedFrom ?? -1,
-        e.flowReduction ?? 0,
-        e.convertedChannel ?? false,
-        e.dotKind ?? null,
-        e.bleedId ?? null,
-        e.bleedExpiresAtTick ?? -1,
-        e.originKind ?? null,
-        e.triggerRolls ?? null,
-        e.expectedActivations ?? null,
-        e.expectedSeparateHits ?? null,
-        e.damageTag ?? null,
-        e.provenance.kind,
-        e.provenance.detail ?? null,
-        e.castSnap ? snapSig(e.castSnap) : null,
-      ]),
-    );
+    const items = this.items;
+    if (items.length === 0) return "";
+    let out = eventSig(items[0] as ScheduledEvent<unknown>);
+    for (let i = 1; i < items.length; i++) {
+      out += RS + eventSig(items[i] as ScheduledEvent<unknown>);
+    }
+    return out;
   }
 
   get length(): number {

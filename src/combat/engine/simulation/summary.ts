@@ -21,6 +21,12 @@ import type {
   StochasticRngSummary,
   TailMetrics,
 } from "./contracts";
+import {
+  keepsAnalysisLedgers,
+  keepsPerAbilityMap,
+  keepsPresentationHistory,
+  resolveDetailLevel,
+} from "./contracts";
 import { advanceTo } from "../runtime/clock";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { TICK_SECONDS } from "../../core/ticks";
@@ -44,8 +50,18 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "other-modeled",
 ];
 
+const EMPTY_ANALYSIS = {
+  bySource: [] as { kind: DamageSourceKind; damage: number }[],
+  byEffect: [] as DamageEffectBreakdown[],
+  directDamage: 0,
+  dotDamage: 0,
+  criticalContribution: 0,
+  capLoss: 0,
+};
+
 /** Public analysis from engine-owned ledgers - never rescanned from events. */
 function buildAnalysis(rt: SimulationRuntime) {
+  if (!keepsAnalysisLedgers(rt.detailLevel)) return EMPTY_ANALYSIS;
   return finalizeAnalysis(rt.analysis, rt.totalExpected);
 }
 
@@ -171,10 +187,12 @@ export function finish(
 
   const failure = error !== undefined ? emptyFailure(error, 1) : undefined;
 
+  const detail = resolveDetailLevel(rt.detailLevel);
+  const presentHistory = keepsPresentationHistory(detail);
   return {
     ok: error === undefined,
     ...(error !== undefined ? { error } : {}),
-    casts: rt.casts,
+    casts: presentHistory ? rt.casts : [],
     duration,
     ticks: pathTicks,
     ...(fixedWindow ? { horizonTicks: effectiveHorizon } : {}),
@@ -206,9 +224,9 @@ export function finish(
           : "excluded"
         : "included-in-natural-completion",
     },
-    perAbility: rt.perAbility,
+    perAbility: keepsPerAbilityMap(detail) ? rt.perAbility : {},
     damageByTick: rt.damageByTick,
-    events: rt.events,
+    events: presentHistory ? rt.events : [],
     history,
     analysis: buildAnalysis(rt),
     ...(tails !== undefined
@@ -391,10 +409,6 @@ export function combineBranchSummaries(
 
   const mix = (f: (s: RotationSummary) => number) => poolMean(mixPool, f);
 
-  const perAbility: Record<string, number> = {};
-  for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.perAbility)))) {
-    perAbility[key] = mix((s) => s.perAbility[key] ?? 0);
-  }
   const damageByTick: Record<number, number> = {};
   for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.damageByTick)))) {
     damageByTick[Number(key)] = mix((s) => s.damageByTick[Number(key)] ?? 0);
@@ -424,14 +438,21 @@ export function combineBranchSummaries(
     modal.duration.representativeTicks,
   );
 
-  const bySource = SOURCE_KINDS.flatMap((kind) => {
-    const damage = mix(
-      (summary) => summary.analysis.bySource.find((row) => row.kind === kind)?.damage ?? 0,
-    );
-    return damage > 0 ? [{ kind, damage }] : [];
-  }).sort((a, b) => b.damage - a.damage);
+  // Detail level from any terminal runtime (all branches share the request flag).
+  const detail = resolveDetailLevel(terminalBranches[0]?.rt.detailLevel);
+  const wantAnalysis = keepsAnalysisLedgers(detail);
+  const wantPerAbility = keepsPerAbilityMap(detail);
+  const wantHistory = keepsPresentationHistory(detail);
 
-  const effectIds = new Set(mixPool.flatMap((p) => p.summary.analysis.byEffect.map((e) => e.id)));
+  const bySource = !wantAnalysis
+    ? []
+    : SOURCE_KINDS.flatMap((kind) => {
+        const damage = mix(
+          (summary) => summary.analysis.bySource.find((row) => row.kind === kind)?.damage ?? 0,
+        );
+        return damage > 0 ? [{ kind, damage }] : [];
+      }).sort((a, b) => b.damage - a.damage);
+
   type EffectNumericField =
     | "totalDamage"
     | "casts"
@@ -444,34 +465,41 @@ export function combineBranchSummaries(
     | "dotDamage"
     | "criticalContribution"
     | "capLoss";
-  const byEffect: DamageEffectBreakdown[] = [...effectIds]
-    .map((id) => {
-      const sample = mixPool
-        .flatMap((p) => p.summary.analysis.byEffect)
-        .find((effect) => effect.id === id)!;
-      const value = (field: EffectNumericField) =>
-        mix((summary) => summary.analysis.byEffect.find((e) => e.id === id)?.[field] ?? 0);
-      const totalDamage = value("totalDamage");
-      const expectedActivations = value("expectedActivations");
-      return {
-        id,
-        kind: sample.kind,
-        totalDamage,
-        share: expectedDamage > 0 ? totalDamage / expectedDamage : 0,
-        casts: value("casts"),
-        triggerRolls: value("triggerRolls"),
-        expectedActivations,
-        expectedSeparateHits: value("expectedSeparateHits"),
-        attachedComponents: value("attachedComponents"),
-        bonusDamage: value("bonusDamage"),
-        averagePerActivation: expectedActivations > 0 ? totalDamage / expectedActivations : 0,
-        directDamage: value("directDamage"),
-        dotDamage: value("dotDamage"),
-        criticalContribution: value("criticalContribution"),
-        capLoss: value("capLoss"),
-      };
-    })
-    .sort((a, b) => b.totalDamage - a.totalDamage);
+  const byEffect: DamageEffectBreakdown[] = !wantAnalysis
+    ? []
+    : (() => {
+        const effectIds = new Set(
+          mixPool.flatMap((p) => p.summary.analysis.byEffect.map((e) => e.id)),
+        );
+        return [...effectIds]
+          .map((id) => {
+            const sample = mixPool
+              .flatMap((p) => p.summary.analysis.byEffect)
+              .find((effect) => effect.id === id)!;
+            const value = (field: EffectNumericField) =>
+              mix((summary) => summary.analysis.byEffect.find((e) => e.id === id)?.[field] ?? 0);
+            const totalDamage = value("totalDamage");
+            const expectedActivations = value("expectedActivations");
+            return {
+              id,
+              kind: sample.kind,
+              totalDamage,
+              share: expectedDamage > 0 ? totalDamage / expectedDamage : 0,
+              casts: value("casts"),
+              triggerRolls: value("triggerRolls"),
+              expectedActivations,
+              expectedSeparateHits: value("expectedSeparateHits"),
+              attachedComponents: value("attachedComponents"),
+              bonusDamage: value("bonusDamage"),
+              averagePerActivation: expectedActivations > 0 ? totalDamage / expectedActivations : 0,
+              directDamage: value("directDamage"),
+              dotDamage: value("dotDamage"),
+              criticalContribution: value("criticalContribution"),
+              capLoss: value("capLoss"),
+            };
+          })
+          .sort((a, b) => b.totalDamage - a.totalDamage);
+      })();
 
   const multiClass = parts.length > 1;
   // Absolute probability mass of the representative class (not share of concrete-only mass).
@@ -563,10 +591,17 @@ export function combineBranchSummaries(
   const safeSupportMin = finiteOrZero(supportMinDamage);
   const safeSupportMax = finiteOrZero(supportMaxDamage);
 
+  const perAbility: Record<string, number> = {};
+  if (wantPerAbility) {
+    for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.perAbility)))) {
+      perAbility[key] = mix((s) => s.perAbility[key] ?? 0);
+    }
+  }
+
   return {
     ok,
     ...(error !== undefined ? { error } : {}),
-    casts: modal.casts,
+    casts: wantHistory ? modal.casts : [],
     duration,
     ticks: expectedTicks,
     ...(denomHorizon !== undefined ? { horizonTicks: denomHorizon } : {}),
@@ -598,16 +633,18 @@ export function combineBranchSummaries(
     },
     perAbility,
     damageByTick,
-    events: modal.events,
+    events: wantHistory ? modal.events : [],
     history,
-    analysis: {
-      bySource,
-      byEffect,
-      directDamage: mix((s) => s.analysis.directDamage),
-      dotDamage: mix((s) => s.analysis.dotDamage),
-      criticalContribution: mix((s) => s.analysis.criticalContribution),
-      capLoss: mix((s) => s.analysis.capLoss),
-    },
+    analysis: wantAnalysis
+      ? {
+          bySource,
+          byEffect,
+          directDamage: mix((s) => s.analysis.directDamage),
+          dotDamage: mix((s) => s.analysis.dotDamage),
+          criticalContribution: mix((s) => s.analysis.criticalContribution),
+          capLoss: mix((s) => s.analysis.capLoss),
+        }
+      : EMPTY_ANALYSIS,
     ...(tails !== undefined
       ? {
           tails,

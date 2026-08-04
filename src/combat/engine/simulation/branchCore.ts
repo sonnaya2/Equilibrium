@@ -1,5 +1,6 @@
 import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
 import type { CastRecord } from "./contracts";
+import { keepsAnalysisLedgers, keepsPerAbilityMap } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
 
@@ -261,9 +262,7 @@ function mergePair(a: Branch, b: Branch): Branch {
   keep.rt.totalMax = bounds.totalMax;
   keep.rt.totalExpected = mix(a.rt.totalExpected, b.rt.totalExpected);
   keep.rt.endTick = Math.max(a.rt.endTick, b.rt.endTick);
-  for (const key of new Set([...Object.keys(a.rt.perAbility), ...Object.keys(b.rt.perAbility)])) {
-    keep.rt.perAbility[key] = mix(a.rt.perAbility[key] ?? 0, b.rt.perAbility[key] ?? 0);
-  }
+  // damageByTick always mixed — ranking windows depend on it.
   for (const key of new Set([
     ...Object.keys(a.rt.damageByTick),
     ...Object.keys(b.rt.damageByTick),
@@ -271,10 +270,18 @@ function mergePair(a: Branch, b: Branch): Branch {
     const tick = Number(key);
     keep.rt.damageByTick[tick] = mix(a.rt.damageByTick[tick] ?? 0, b.rt.damageByTick[tick] ?? 0);
   }
+  if (keepsPerAbilityMap(keep.rt.detailLevel)) {
+    for (const key of new Set([...Object.keys(a.rt.perAbility), ...Object.keys(b.rt.perAbility)])) {
+      keep.rt.perAbility[key] = mix(a.rt.perAbility[key] ?? 0, b.rt.perAbility[key] ?? 0);
+    }
+  }
   // Analysis is ledger-owned: weight-mix, do not rebuild from keep.events.
-  keep.rt.analysis = mixAnalysisStates(a.rt.analysis, b.rt.analysis, a.weight, b.weight);
-  keep.rt.analysis.supportMinOffset = bounds.supportMinOffset;
-  keep.rt.analysis.supportMaxOffset = bounds.supportMaxOffset;
+  // Score-only skips analysis entirely (support offsets unused for ranking).
+  if (keepsAnalysisLedgers(keep.rt.detailLevel)) {
+    keep.rt.analysis = mixAnalysisStates(a.rt.analysis, b.rt.analysis, a.weight, b.weight);
+    keep.rt.analysis.supportMinOffset = bounds.supportMinOffset;
+    keep.rt.analysis.supportMaxOffset = bounds.supportMaxOffset;
+  }
   keep.weight = weight;
   // Never invent success: if either arm failed, survivor stays failed.
   if (a.error !== undefined || b.error !== undefined) {

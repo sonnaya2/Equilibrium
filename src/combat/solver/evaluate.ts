@@ -139,13 +139,18 @@ export function evaluateRevolutionBar(
 
   // Catalogue + Strength Cape already applied in compiled context
   // (allocation notes live in compileEvaluationContext).
-  const summary = simulateRevolution({
-    ...simFields,
-    abilities: compiled.catalogue as AbilitySpec[],
-    bar: resolved,
-    style,
-    durationTicks,
-  });
+  // Default detailLevel stays full-analysis when unset (standalone/tests/UI).
+  // Solver session opts into score-only for search + ranking evals.
+  const summary = simulateRevolution(
+    {
+      ...simFields,
+      abilities: compiled.catalogue as AbilitySpec[],
+      bar: resolved,
+      style,
+      durationTicks,
+    },
+    request.detailLevel !== undefined ? { detailLevel: request.detailLevel } : undefined,
+  );
 
   if (!summary.ok) {
     reasons.push({

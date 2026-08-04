@@ -1,7 +1,8 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ConjureId } from "../../styles/necromancy/conjures";
-import type { CastContextInput, CastRecord } from "../simulation/contracts";
+import type { CastContextInput, CastRecord, SimulationDetailLevel } from "../simulation/contracts";
+import { resolveDetailLevel } from "../simulation/contracts";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
@@ -25,6 +26,8 @@ export interface SpiritEventMeta {
  */
 export interface SimulationRuntime {
   readonly input: CastContextInput;
+  /** Bookkeeping depth (default full-analysis). */
+  readonly detailLevel: SimulationDetailLevel;
   /** Runs with a horizon land events only before it (half-open). */
   readonly horizon?: number;
   readonly byId: Map<string, AbilitySpec>;
@@ -126,6 +129,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   }
   return {
     input,
+    detailLevel: resolveDetailLevel(input.detailLevel),
     horizon: input.horizonTicks,
     byId: mapAbilitiesById(input.abilities),
     basicByStyle: mapBasicsByStyle(input.abilities),

@@ -91,11 +91,17 @@ export type SolverBranchExactness =
   | "truncated"
   | "resampled";
 
-/** Minimal summary surface the objective reads - damageByTick only for numbers. */
+/**
+ * Minimal summary surface the objective reads - damageByTick only for numbers.
+ * Official score-only wire type (engine may return a full RotationSummary; ranking
+ * only consumes this surface).
+ */
 export interface ScoreableSummary {
   ok: boolean;
   error?: string;
   horizonTicks?: number;
+  /** Primary expected damage; also available as damageByTick sum over horizon. */
+  totalExpected?: number;
   damageByTick: Record<number, number>;
   rng?: {
     failedWeight?: number;
@@ -104,6 +110,9 @@ export interface ScoreableSummary {
     exactness?: SolverBranchExactness | string;
   };
 }
+
+/** Engine bookkeeping depth; mirrors SimulationDetailLevel without importing engine. */
+export type EvalDetailLevel = "score-only" | "summary" | "full-analysis";
 
 export interface ObjectiveWindowDpms {
   openingDpm: number;
@@ -370,6 +379,11 @@ export interface RevolutionEvalRequest {
   customWeights?: ObjectiveWeights;
   includePartial?: boolean;
   size?: BarSizeBounds;
+  /**
+   * Engine bookkeeping depth. Default full-analysis (product/tests).
+   * Solver search/session passes score-only for ranking evals.
+   */
+  detailLevel?: EvalDetailLevel;
 }
 
 /**

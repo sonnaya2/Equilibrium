@@ -33,14 +33,14 @@ describe("hitPipeline profiling counters", () => {
     });
   });
 
-  it("records sort-per-roll: one modifier sort per runPass", () => {
+  it("sorts once per pass kind, not once per band roll", () => {
     setHitPipelineProfiling(true);
     resetHitPipelineCounters();
     expect(isHitPipelineProfilingEnabled()).toBe(true);
 
     // Inclusive band 1100..1300 = 201 points. No crit, no cap clip.
     // Endpoints: min, max, uncappedMax noncrit, uncappedMax crit-null => 4.
-    // Band walk: 1 exactMean x 201. Sorts = 4 + 201.
+    // Band walk: 1 exactMean x 201. Sort-once: only non-crit compile => 1 sort.
     const r = calculateHit(baseInput);
     expect(r.expected).toBe(1200);
 
@@ -48,10 +48,12 @@ describe("hitPipeline profiling counters", () => {
     expect(snap.hitExpectationCalls).toBe(1);
     expect(snap.integerBandPoints).toBe(201);
     expect(snap.endpointPasses).toBe(4);
-    expect(snap.modifierSorts).toBe(snap.endpointPasses + snap.integerBandPoints);
+    // Phase 5: no longer sorts === endpoints + band points
+    expect(snap.modifierSorts).toBe(1);
+    expect(snap.modifierSorts).toBeLessThan(snap.endpointPasses + snap.integerBandPoints);
   });
 
-  it("doubles band walk when crit expectation runs a second pass", () => {
+  it("compiles non-crit and crit lists once each when crit runs", () => {
     setHitPipelineProfiling(true);
     resetHitPipelineCounters();
 
@@ -59,9 +61,10 @@ describe("hitPipeline profiling counters", () => {
     const snap = snapshotHitPipelineCounters();
     // Endpoints: min, max, critMin, critMax, +2 uncapped max probes = 6.
     // Band: noncrit + crit exactMean = 402.
+    // Sorts: non-crit compile + crit compile = 2 (not 408).
     expect(snap.hitExpectationCalls).toBe(1);
     expect(snap.integerBandPoints).toBe(402);
     expect(snap.endpointPasses).toBe(6);
-    expect(snap.modifierSorts).toBe(408);
+    expect(snap.modifierSorts).toBe(2);
   });
 });

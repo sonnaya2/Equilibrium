@@ -156,6 +156,8 @@ export function createEvaluateFn(args: {
       noteUniqueBar(state.profile);
     }
 
+    // Search + full ranking only need ScoreableSummary metrics.
+    // Winner UI breakdown is a separate full-analysis re-sim (not done here).
     const evaluation = evaluateRevolutionBar({
       bar,
       style: request.style,
@@ -168,6 +170,7 @@ export function createEvaluateFn(args: {
       customWeights: request.customWeights,
       includePartial: request.includePartial,
       size: { min: request.minBarSize, max: request.maxBarSize },
+      detailLevel: "score-only",
     });
 
     if (evaluation.ok) {

@@ -325,7 +325,9 @@ export type LegacyDamageHints = {
 
 /**
  * Migration helper: map legacy damageSource / flags to provenance.
- * Bare `{ style }` (no source flags) -> player_direct for unit-test compat unless strict.
+ * Soft default to player_direct is unit-test only (bare `{ style }`, no source flags).
+ * Engine / production hit paths must pass explicit provenance or a legacy damageSource;
+ * use `{ strict: true }` when hardening a land path that must not inherit onHitGear.
  */
 export function provenanceFromLegacy(hints: LegacyDamageHints): DamageProvenance {
   if (hints.blessingGenerated === true || hints.damageSource === "blessing") {
@@ -359,14 +361,15 @@ export function provenanceFromLegacy(hints: LegacyDamageHints): DamageProvenance
       "provenanceFromLegacy: ambiguous context (no damageSource/dotKind/autoAttack/blessingGenerated)",
     );
   }
-  // Test / bare-context default: player ability hit.
+  // Soft default: unit-test bare context only. Not a production hit classification.
   return { kind: "player_direct" };
 }
 
 /**
  * Resolve provenance from CombatContext.
- * Explicit `context.provenance` wins; else legacy flags; bare style-only = player_direct.
- * With `strict: true`, ambiguous context throws (hit-path hardening).
+ * Explicit `context.provenance` wins; else legacy flags.
+ * Soft default bare style-only -> player_direct is unit-test only (see provenanceFromLegacy).
+ * `{ strict: true }` throws on ambiguous omit (engine hardening; not for bare pipeline unit tests).
  */
 export function resolveCombatProvenance(
   context: CombatContext | undefined | null,
@@ -379,7 +382,6 @@ export function resolveCombatProvenance(
     damageSource: context?.damageSource,
     dotKind: context?.dotKind,
     autoAttack: context?.autoAttack,
-    blessingGenerated: context?.blessingGenerated,
     strict: opts?.strict,
   });
 }

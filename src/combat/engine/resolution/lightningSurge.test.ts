@@ -29,17 +29,24 @@ describe("Lightning Surge proc event", () => {
     ]);
     const followEvents = s.events.filter((e) => e.sourceCast === followSeq);
     expect(followEvents.map((e) => e.family)).toEqual(["hit", "proc"]);
-    const surge = followEvents[1];
-    expect(surge.tick).toBe(s.casts[followSeq].tick + 1);
+    const sourceHit = followEvents[0]!;
+    // Source hit: boolean LS marker + castSnap (no nested lightningSurge.snap).
+    expect(sourceHit.lightningSurge).toBe(true);
+    expect(sourceHit.castSnap).toBeDefined();
+    expect(sourceHit.castSnap!.castSeq).toBe(followSeq);
+    const surge = followEvents[1]!;
+    expect(surge.tick).toBe(s.casts[followSeq]!.tick + 1);
     expect(surge.procEligible).toBe(false);
     expect(surge.recursionAllowed).toBe(false);
+    expect(surge.provenance).toEqual({ kind: "equipment_proc", detail: "lightning_surge" });
+    expect(surge.lightningSurge).toBeUndefined();
     expect(surge.damage.expected).toBeCloseTo(1199.7512437810944, 10);
     expect(surge.damage.min).toBe(0);
     expect(surge.damage.max).toBe(0);
     // Hit events reconcile with the cast record; the surge EV lands in expected.
-    expect(s.casts[followSeq].result.expected).toBeCloseTo(2699.502487562189, 10);
-    expect(s.casts[followSeq].result.hits).toHaveLength(1);
-    expect(s.damageByTick[s.casts[followSeq].tick + 1]).toBeCloseTo(1199.7512437810944, 10);
+    expect(s.casts[followSeq]!.result.expected).toBeCloseTo(2699.502487562189, 10);
+    expect(s.casts[followSeq]!.result.hits).toHaveLength(1);
+    expect(s.damageByTick[s.casts[followSeq]!.tick + 1]).toBeCloseTo(1199.7512437810944, 10);
   });
 
   it("checks Instability when the source hit lands, not when its cast starts", () => {

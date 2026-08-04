@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { commitCast, prepareSimulationCast } from "../cast";
-import { createRuntime } from "../runtime/runtime";
+import type { CastSnapshot } from "../cast/snapshot";
+import { createRuntime, enqueueEvent } from "../runtime/runtime";
 import { capBranches, mergeAndCapBranches, mergeBranches, snapshotRuntime } from "./branch";
 import type { CastContextInput } from "./contracts";
 import { rotationOf } from "./contracts";
@@ -24,6 +25,23 @@ const necroInput: CastContextInput = {
   abilities: NECROMANCY_ABILITIES,
   context: { style: "necromancy" },
 };
+
+const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({
+  castSeq: 0,
+  critLayers: { chance: 0, eligible: true },
+  baseMods: [],
+  chaosRoarActive: false,
+  channelled: false,
+  greaterFuryActive: false,
+  furyActive: false,
+  firstEligibleHitIndex: 0,
+  empowerMult: 1,
+  searingWindsAtCast: false,
+  enduringRuinBonus: 0,
+  ...over,
+});
+
+const noopResolve = () => ({ damage: { min: 0, max: 0, expected: 0 } });
 
 describe("snapshotRuntime shares no mutable collection", () => {
   it("ledgers, queue and lookup maps are independent copies", () => {
@@ -269,8 +287,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
 
   it("does not merge when pending queue signatures differ", () => {
     const a = createRuntime(meleeInput);
-    const noop = () => ({ damage: { min: 0, max: 0, expected: 0 } });
-    a.queue.push({
+    enqueueEvent(a, {
       tick: 5,
       seq: 1,
       family: "hit",
@@ -281,13 +298,14 @@ describe("snapshotRuntime shares no mutable collection", () => {
       procEligible: true,
       recursionAllowed: false,
       provenance: { kind: "player_direct" },
-      resolve: noop,
+      castSnap: castSnap(),
+      resolve: noopResolve,
     });
     a.nextSeq = 2;
 
     const b = snapshotRuntime(a);
     b.queue.shift();
-    b.queue.push({
+    enqueueEvent(b, {
       tick: 5,
       seq: 1,
       family: "hit",
@@ -298,7 +316,8 @@ describe("snapshotRuntime shares no mutable collection", () => {
       procEligible: true,
       recursionAllowed: false,
       provenance: { kind: "player_direct" },
-      resolve: noop,
+      castSnap: castSnap(),
+      resolve: noopResolve,
     });
 
     expect(
@@ -310,23 +329,9 @@ describe("snapshotRuntime shares no mutable collection", () => {
   });
 
   it("does not merge when only castSnap.searingWindsAtCast differs", () => {
-    const snap = (searingWindsAtCast: boolean) => ({
-      castSeq: 0,
-      critLayers: { chance: 0, eligible: true },
-      baseMods: [],
-      chaosRoarActive: false,
-      channelled: false,
-      greaterFuryActive: false,
-      furyActive: false,
-      firstEligibleHitIndex: 0,
-      empowerMult: 1,
-      searingWindsAtCast,
-      enduringRuinBonus: 0,
-    });
-    const noop = () => ({ damage: { min: 0, max: 0, expected: 0 } });
-    const mk = (searing: boolean) => {
+    const mk = (searingWindsAtCast: boolean) => {
       const rt = createRuntime(meleeInput);
-      rt.queue.push({
+      enqueueEvent(rt, {
         tick: 5,
         seq: 1,
         family: "hit",
@@ -337,8 +342,8 @@ describe("snapshotRuntime shares no mutable collection", () => {
         procEligible: true,
         recursionAllowed: false,
         provenance: { kind: "player_direct" },
-        castSnap: snap(searing),
-        resolve: noop,
+        castSnap: castSnap({ searingWindsAtCast }),
+        resolve: noopResolve,
       });
       rt.nextSeq = 2;
       return rt;

@@ -64,6 +64,8 @@ function critModifier(multiplier: number): CombatModifier {
   };
 }
 
+// Soft player_direct default inside contextWithProvenance is unit-test only.
+// Engine land paths (castHit, conjures, lightningSurge, league) pass provenance.
 function resolvedHitContext(input: SharedHitInput): CombatContext {
   return contextWithProvenance(input.context, input.provenance);
 }

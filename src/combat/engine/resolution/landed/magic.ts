@@ -19,9 +19,10 @@ export function onMagicHitLanded(
   event: ScheduledEvent<SimulationRuntime>,
   ability: AbilitySpec,
 ): void {
-  const surge = event.lightningSurge;
+  const snap = event.castSnap;
   if (
-    surge &&
+    event.lightningSurge &&
+    snap &&
     event.sourceCast !== rt.state.magic.instability.grantedByCast &&
     instabilityActive(rt.state.magic.instability, event.tick) &&
     (rt.hitDetails.get(event.seq)?.critChance ?? 0) > 0
@@ -39,7 +40,7 @@ export function onMagicHitLanded(
       provenance: { kind: "equipment_proc", detail: "lightning_surge" },
       derivedFrom: event.seq,
       resolve: (eventRt, at) =>
-        resolveLightningSurge(eventRt, at, event.seq, ability, surge.snap, event.hitIndex),
+        resolveLightningSurge(eventRt, at, event.seq, ability, snap, event.hitIndex),
     });
   }
   // Concentrated Blast hits stack their crit grant at land time (wiki: each

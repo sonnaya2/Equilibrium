@@ -110,7 +110,7 @@ export function scheduleCastEvents(
           }
         : {}),
       ...(ability.style === "magic" && !isDot && hitSpec.critEligible !== false
-        ? { lightningSurge: { snap } }
+        ? { lightningSurge: true as const }
         : {}),
       resolve: (eventRt, at) =>
         resolveCastHit(eventRt, at, hitSpec, hitIndex, ability, snap, isDot, prepared.channelAsDot),

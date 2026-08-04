@@ -123,9 +123,7 @@ export function normalizeHitCap(cap: HitCapRule | null | undefined): unknown {
 
 export function normalizeCombatContext(ctx: CombatContext | undefined): unknown {
   if (!ctx) return null;
-  // Provenance kind is canonical; resolveCombatProvenance maps legacy blessingGenerated into kind.
-  const provenanceKind = resolveCombatProvenance(ctx).kind;
-  const blessingGenerated = provenanceKind === "blessing";
+  const resolved = resolveCombatProvenance(ctx);
   return {
     style: ctx.style,
     ruleset: ctx.ruleset ?? null,
@@ -134,11 +132,8 @@ export function normalizeCombatContext(ctx: CombatContext | undefined): unknown 
     autoAttack: ctx.autoAttack === true,
     area: ctx.area ?? null,
     targetTiles: ctx.targetTiles ?? null,
-    blessingGenerated,
     damageSource: ctx.damageSource ?? null,
-    provenance: ctx.provenance
-      ? { kind: ctx.provenance.kind, detail: ctx.provenance.detail ?? null }
-      : null,
+    provenance: { kind: resolved.kind, detail: resolved.detail ?? null },
   };
 }
 

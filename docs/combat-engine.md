@@ -119,14 +119,25 @@ Every damaging or state-changing event (`ScheduledEvent` in `engine/runtime/even
 - family: `hit | dot | proc | blessing | conjureAuto | command | poison`
 - hit index, land tick, monotonic `seq` (same-tick order is `(tick, seq)`)
 - `attached` vs separate hit; `procEligible`; `recursionAllowed`
-- **required** `DamageProvenance` (`kind` + optional `detail`) — product gates via `capabilitiesOf(provenance)`, not ability-id lists
+- **required** `DamageProvenance` (`kind` + optional `detail`) - product gates via `capabilitiesOf(provenance)`, not ability-id lists
 - analysis `originKind`; multiplicity (`triggerRolls` / `expectedActivations` / `expectedSeparateHits`); optional `damageTag`
-- optional `derivedFrom`, DoT metadata, cancel owner; cast snap when land needs frozen cast-time mods (e.g. Lightning Surge)
-- `resolve(rt, landTick)` — **land-time** calculation against current state (Sunshine / Berserk / Searing Winds at land, not cast)
+- optional `derivedFrom`, DoT metadata, cancel owner
+- `castSnap` - cast-scoped snapshot for land-time resolve (required on cast-scheduled `resolveCastHit` events)
+- `lightningSurge?: boolean` - marker on magic crit-eligible hits; snap is `castSnap`, not a nested object
+- `resolve(rt, landTick)` - **land-time** calculation against current state (Sunshine / Berserk / Searing Winds at land, not cast)
 
-Capability rules of note:
+### Schedule path
 
-- `canApplyAbyssalParasite` is true only for `player_direct` / `player_auto`. Stack application is decided at land from capabilities + melee + passive + damage — not a schedule-time eligibility flag.
+- Cast hits go through `enqueueEvent` / `scheduleEvent`, both `assertProvenance` before queue push.
+- `scheduleCastEvents` always sets `castSnap` on cast-scheduled hits; magic non-DoT crit-eligible hits also set `lightningSurge: true`.
+- Landed Lightning Surge reads `event.castSnap` (marker alone is not enough).
+
+### Capability rules of note
+
+- Gates are provenance kind + `capabilitiesOf`, not ability-id lists.
+- Blessing isolation is provenance kind `blessing` (`canTriggerProcs: false`, no on-hit gear). `blessingGenerated` remains only in `provenanceFromLegacy` migration; not on `CombatContext`.
+- Aftershock charge and Crackling eligibility follow `canTriggerProcs` (Aftershock blast still self-excludes by `abilityId`). Conjure auto/poison and equipment procs do not charge.
+- `canApplyAbyssalParasite` is true only for `player_direct` / `player_auto`. Stack application is land-time (capabilities + melee + passive + damage).
 - Endless Assault converted channel hits use `player_converted_channel` (DoT-family gear gates; prayer/window mods + crit retained).
 
 Events must not close over a runtime instance (branch-safe shared pending events).
@@ -162,8 +173,8 @@ Current cast RNG points include `impatient`, `relentless`, `avernic-rampage` (`C
 
 - Each branch owns an independent runtime via `snapshotRuntime`.
 - Merge equivalent future states: same `RotationState`, pending-event signature, run counters.
-- **Pending-event equivalence signature** must include fields that change land-time resolution: `originKind`, multiplicity fields, `damageTag`, `provenance` (`kind`/`detail`), cast-snap semantics when present, plus existing keys such as `derivedFrom` and cancel owner. Adding a resolution-affecting field to `ScheduledEvent` requires a signature update in the same change.
-- **Historical damage ledgers are not future state** — omit `totalExpected` / min/max / `perAbility` / `damageByTick` / logs from the merge key; `mergePair` weight-averages ledgers and takes support extrema via min/max.
+- **Pending-event signature** (`EventQueue.signature`): includes fields that change land-time resolution - `originKind`, multiplicity, `damageTag`, `provenance` (`kind`/`detail`), `snapSig(castSnap)` when `castSnap` is present (no nested LS snap), plus `derivedFrom`, cancel owner, and the other structural keys. Adding a resolution-affecting field to `ScheduledEvent` requires a signature update in the same change.
+- **Historical damage ledgers are not future state** - omit `totalExpected` / min/max / `perAbility` / `damageByTick` / logs from the merge key; `mergePair` weight-averages ledgers and takes support extrema via min/max.
 - `resolve` closures stay out of the key; equivalent branches schedule identical events from identical casts.
 - Seeded Monte Carlo only when exact branching is unreasonably expensive; method and assumptions appear in result metadata and tests.
 

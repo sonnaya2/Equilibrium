@@ -32,7 +32,6 @@ export interface CombatContext {
   autoAttack?: boolean;
   area?: "aoe" | "multi-target";
   targetTiles?: number;
-  blessingGenerated?: boolean;
   /** Legacy projection; prefer provenance. Omit or "direct" for player on-hit gear. */
   damageSource?: OutgoingDamageSource;
   /** Capability-derived provenance; required on scheduled/resolved hit paths. */

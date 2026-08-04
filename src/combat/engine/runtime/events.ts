@@ -7,7 +7,7 @@ import type { CastSnapshot } from "../cast/snapshot";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
-/** Branch-equivalence fingerprint for any cast-scoped snapshot (castSnap / LS). */
+/** Branch-equivalence fingerprint for cast-scoped snapshot fields. */
 function snapSig(s: CastSnapshot) {
   return [
     s.castSeq,
@@ -81,9 +81,9 @@ export interface ScheduledEvent<RT = unknown> {
   dotKind?: DamageOverTimeKind;
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;
-  /** Full cast snapshot so Lightning Surge can share landTimeModifiers with parent hits. */
-  lightningSurge?: { snap: CastSnapshot };
-  /** Cast-scoped snapshot for land-time resolve; preferred over lightningSurge.snap. */
+  /** Marker: event is Lightning Surge damage; snap lives on castSnap. */
+  lightningSurge?: boolean;
+  /** Cast-scoped snapshot for land-time resolve. */
   castSnap?: CastSnapshot;
   /** Calculates AT LAND TIME; never writes to the runtime's ledgers. */
   resolve: (rt: RT, landTick: number) => EventResolution;
@@ -184,7 +184,7 @@ export class EventQueue<RT = unknown> {
         e.damageTag ?? null,
         e.provenance.kind,
         e.provenance.detail ?? null,
-        e.castSnap ? snapSig(e.castSnap) : e.lightningSurge ? snapSig(e.lightningSurge.snap) : null,
+        e.castSnap ? snapSig(e.castSnap) : null,
       ]),
     );
   }

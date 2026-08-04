@@ -2,6 +2,7 @@ import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { secondsToTicks } from "../../../core/ticks";
 import { runPipeline } from "../../../pipeline/modifierPipeline";
+import { capabilitiesOf } from "../../../shared/damageProvenance";
 import {
   AFTERSHOCK_DAMAGE_STEP_PER_RANK,
   AFTERSHOCK_DAMAGE_THRESHOLD,
@@ -87,13 +88,14 @@ function aftershockDamage(
 
 /**
  * Aftershock charge eligibility (wiki: 50k threshold explosion;
- * https://runescape.wiki/w/Aftershock). Aftershock's own blast does not re-charge
- * (resets on land). Crackling and other non-Aftershock damage do. Blessings never
- * hit this path (`recordResolved` skips Invention). Gate is abilityId, not
- * `procEligible` (Crackling is `procEligible: false` but still charges).
+ * https://runescape.wiki/w/Aftershock). Follows `canTriggerProcs` so conjure
+ * auto/poison and equipment_proc do not charge; Aftershock's own blast never
+ * re-charges (resets on land). Blessings never hit this path
+ * (`recordResolved` skips Invention).
  */
 function contributesAftershockCharge(event: ScheduledEvent<SimulationRuntime>): boolean {
-  return event.abilityId !== "aftershock";
+  if (event.abilityId === "aftershock") return false;
+  return capabilitiesOf(event.provenance).canTriggerProcs;
 }
 
 /** Schedule Crackling/Aftershock after a land; mutates `rt.state.invention`. */
@@ -103,8 +105,10 @@ export function applyInventionProcs(
   damage: ResolvedDamage,
 ): void {
   const cracklingRank = procRank(rt.input.procs?.cracklingRank, 4);
+  // Family hit|dot|command; also require canTriggerProcs (player_dot true, conjure auto false).
   const cracklingEligible =
-    event.family === "hit" || event.family === "dot" || event.family === "command";
+    (event.family === "hit" || event.family === "dot" || event.family === "command") &&
+    capabilitiesOf(event.provenance).canTriggerProcs;
   if (
     cracklingRank > 0 &&
     cracklingEligible &&

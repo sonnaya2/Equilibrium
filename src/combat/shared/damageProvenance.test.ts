@@ -89,16 +89,22 @@ describe("provenanceFromLegacy / resolveCombatProvenance", () => {
     expect(provenanceFromLegacy({ convertedChannel: true }).kind).toBe("player_converted_channel");
   });
 
-  it("defaults bare style-only context to player_direct", () => {
+  it("soft-defaults bare style-only context to player_direct (unit-test path)", () => {
+    // Production hit landers set provenance; this default exists for bare pipeline tests.
     expect(resolveCombatProvenance({ style: "melee" }).kind).toBe("player_direct");
+    expect(resolveCombatProvenance(undefined).kind).toBe("player_direct");
+    expect(provenanceFromLegacy({}).kind).toBe("player_direct");
   });
 
-  it("strict mode throws when ambiguous", () => {
+  it("strict mode throws on bare / ambiguous context", () => {
     expect(() => resolveCombatProvenance({ style: "melee" }, { strict: true })).toThrow(
       /ambiguous/,
     );
+    expect(() => resolveCombatProvenance(undefined, { strict: true })).toThrow(/ambiguous/);
+    expect(() => resolveCombatProvenance(null, { strict: true })).toThrow(/ambiguous/);
+    expect(() => provenanceFromLegacy({ strict: true })).toThrow(/ambiguous/);
     expect(() =>
-      provenanceFromLegacy({ strict: true }),
+      contextWithProvenance({ style: "melee" }, undefined, { strict: true }),
     ).toThrow(/ambiguous/);
   });
 
@@ -161,7 +167,7 @@ describe("isOnHitPlayerDamage via capabilities", () => {
     expect(isOnHitPlayerDamage({ style: "melee", damageSource: "command" })).toBe(false);
     expect(isOnHitPlayerDamage({ style: "melee", damageSource: "conjure" })).toBe(false);
     expect(isOnHitPlayerDamage({ style: "melee", damageSource: "proc" })).toBe(false);
-    expect(isOnHitPlayerDamage({ style: "melee", blessingGenerated: true })).toBe(false);
+    expect(isOnHitPlayerDamage({ style: "melee", provenance: { kind: "blessing" } })).toBe(false);
   });
 
   it("Lightning Surge equipment_proc never gets onHitGear", () => {

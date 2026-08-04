@@ -332,27 +332,32 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     source: wikiAbility("Hurricane", "Hurricane"),
   },
   {
+    // Wiki Overpower: lands 3 ticks after cast; Berserk shortens CD to 9s (cooldowns.ts).
     id: "overpower",
     name: "Overpower",
     style: "melee",
     category: "ultimate",
-    hits: [{ band: { minPct: 520, maxPct: 570 } }],
+    hits: [{ band: { minPct: 520, maxPct: 570 }, tickOffset: 3 }],
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
     replacementGroup: "overpower",
-    source: wikiAbility("Overpower", "Overpower"),
+    source: wikiAbility("Overpower", "Overpower", "2026-08-04"),
   },
   {
+    // Igneous: two simultaneous hits (same land tick as base Overpower).
     id: "overpower_igneous",
     name: "Overpower (Igneous)",
     style: "melee",
     category: "ultimate",
-    hits: [{ band: { minPct: 280, maxPct: 340 } }, { band: { minPct: 280, maxPct: 340 } }],
+    hits: [
+      { band: { minPct: 280, maxPct: 340 }, tickOffset: 3 },
+      { band: { minPct: 280, maxPct: 340 }, tickOffset: 3 },
+    ],
     adrenaline: { cost: 60 },
     cooldownSeconds: 30,
     replacementGroup: "overpower",
     requiredPassiveAnyOf: ["igneous-overpower"],
-    source: wikiAbility("Overpower", "Overpower"),
+    source: wikiAbility("Overpower", "Overpower", "2026-08-04"),
   },
   {
     // Dark Shard of Leng special (wiki 4 Mar 2024). ST model: primary + secondary

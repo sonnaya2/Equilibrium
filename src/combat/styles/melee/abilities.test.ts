@@ -78,7 +78,9 @@ describe("melee ability data", () => {
       24,
     ]);
 
-    expect(byId("overpower_igneous").hits.every((h) => h.tickOffset === undefined)).toBe(true);
+    // wiki Overpower: lands 3 ticks after cast (both base and igneous hits simultaneous).
+    expect(byId("overpower").hits.map((h) => h.tickOffset)).toEqual([3]);
+    expect(byId("overpower_igneous").hits.map((h) => h.tickOffset)).toEqual([3, 3]);
     expect(byId("hurricane").hits.every((h) => h.tickOffset === undefined)).toBe(true);
   });
 

@@ -4,24 +4,27 @@ import { clearCooldowns, startCooldown } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 import { effectiveCooldownTicks } from "../../../league/ruleset";
 
+/** wiki Berserk (2 Mar 2026): Overpower CD reduced to 9s while Berserk is live. */
+const BERSERK_OVERPOWER_COOLDOWN_SECONDS = 9;
+
 /**
- * Cooldown clocks for one cast. Every ability keeps its own clock keyed by id;
- * the only sourced variation is Death Skulls, whose cooldown collapses to 17
- * ticks under Living Death (2 Mar 2026).
+ * Cooldown clocks for one cast. Sourced variations: Death Skulls under Living Death
+ * (17 ticks); Overpower under Berserk (9s).
  */
 export function applyCastCooldown(fx: CastEffectContext): void {
   const { rt, ability, candidate } = fx;
   if (!ability.cooldownSeconds) return;
+  const cdKey = ability.cooldownGroup ?? ability.replacementGroup ?? ability.id;
   const deathSkullsKey = ability.replacementGroup ?? ability.id;
-  const baseTicks =
-    deathSkullsKey === "death_skulls"
-      ? deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate)
-      : secondsToTicks(ability.cooldownSeconds);
-  rt.state = startCooldown(
-    rt.state,
-    ability.cooldownGroup ?? ability.replacementGroup ?? ability.id,
-    effectiveCooldownTicks(baseTicks, rt.input.league),
-  );
+  let baseTicks: number;
+  if (deathSkullsKey === "death_skulls") {
+    baseTicks = deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate);
+  } else if (cdKey === "overpower" && rt.state.melee.berserkUntilTick > candidate) {
+    baseTicks = secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS);
+  } else {
+    baseTicks = secondsToTicks(ability.cooldownSeconds);
+  }
+  rt.state = startCooldown(rt.state, cdKey, effectiveCooldownTicks(baseTicks, rt.input.league));
 }
 
 /** Cooldown resets granted by a cast (Living Death clears ToD and Death Skulls). */

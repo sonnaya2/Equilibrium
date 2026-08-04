@@ -10,11 +10,13 @@ import { NECROMANCY_ABILITIES } from "../necromancy/abilities";
 import { activeEquipmentEffects } from "../../shared/equipment";
 import {
   activateBerserk,
+  BERSERK_OVERPOWER_COOLDOWN_SECONDS,
   bloodlustCap,
   gainBloodlust,
   newBloodlust,
   spendBloodlust,
 } from "./bloodlust";
+import { secondsToTicks } from "../../core/ticks";
 
 const VESTMENTS = [
   "item:vestments-of-havoc-hood",
@@ -61,6 +63,35 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
     expect(ctx.getState().adrenaline).toBeCloseTo(1.5, 10);
     ctx.advanceTo(30);
     expect(ctx.getState().adrenaline).toBeCloseTo(15, 10);
+  });
+
+  it("Overpower under Berserk starts a 9s CD (wiki Berserk, 2 Mar 2026)", () => {
+    // Relentless keeps adren payable after Berserk so the CD path is reached.
+    const under = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+    });
+    under.performCast(under.byId.get("berserk")!, 0, false, { relentless: true });
+    const opTick = under.getState().tick;
+    const op = under.performCast(under.byId.get("overpower")!, opTick, false, {
+      relentless: true,
+    });
+    expect(op.ok).toBe(true);
+    expect(under.getState().cooldowns.overpower).toBe(
+      opTick + secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS),
+    );
+
+    const alone = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: { relentlessRank: 1 },
+    });
+    const aloneCast = alone.performCast(alone.byId.get("overpower")!, 0, false, {
+      relentless: true,
+    });
+    expect(aloneCast.ok).toBe(true);
+    expect(alone.getState().cooldowns.overpower).toBe(secondsToTicks(30));
   });
 
   it("a second ultimate during Vestments regeneration gains 20 instantly and ends it", () => {

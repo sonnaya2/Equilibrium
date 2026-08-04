@@ -14,6 +14,8 @@ export interface BloodlustState {
 
 export const BERSERK_DURATION_SECONDS = 19.8;
 export const BERSERK_DAMAGE_MULTIPLIER = 1.75;
+/** While Berserk is live, Overpower CD is 9s (15 ticks) - wiki Berserk 2 Mar 2026. */
+export const BERSERK_OVERPOWER_COOLDOWN_SECONDS = 9;
 
 export const newBloodlust = (): BloodlustState => ({ stacks: 0, berserk: false });
 

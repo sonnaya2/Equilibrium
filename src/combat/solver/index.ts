@@ -14,6 +14,7 @@ export {
   type ObjectiveWeights,
   type ObjectiveWindowSpec,
   type ScoreableSummary,
+  type SolverBranchExactness,
   type ObjectiveWindowDpms,
   type ObjectiveScoreOk,
   type ObjectiveScoreFail,
@@ -62,8 +63,21 @@ export {
   windowDpmFromDamageByTick,
   scoreFromDamageByTick,
   scoreSummary,
+  scoreSimulation,
   isFiniteEval,
+  NON_EXACT_BRANCH_EXACTNESS,
+  isNonExactBranchExactness,
+  summaryEligibleForObjectiveScore,
+  exactnessEligibleForExactProof,
 } from "./objective";
+
+export {
+  reevaluateIncumbentBar,
+  compareVigourSearch,
+  type VigourEvalContext,
+  type CompareVigourSearchInput,
+  type CompareVigourSearchResult,
+} from "./vigourIncumbent";
 
 export {
   validateBarEligibility,

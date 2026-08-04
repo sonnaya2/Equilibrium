@@ -209,9 +209,12 @@ export interface DurationSummary {
 }
 
 /**
- * Damage bounds. `expectedConditional*` = weighted means of per-branch extrema (not support bounds).
+ * Damage bounds. `expectedDamage` is unconditional E[D] over all terminal mass
+ * (success + fail banked). `expectedConditional*` = weighted means of per-branch
+ * extrema (not support bounds).
  */
 export interface DamageBoundsSummary {
+  /** Unconditional E[D] over all terminal probability mass; never success-renormalized. */
   expectedDamage: number;
   /** True support lower bound (min terminal-branch path-minimum). */
   supportMinDamage: number;
@@ -256,15 +259,31 @@ export interface HistoryProvenance {
   eventsReconcileWithWeightedTotals: boolean;
 }
 
+/** Whether primary mix covers full unit mass or leaves residual unexpanded mass. */
+export type BranchExactness = "exact" | "approximated";
+
 /**
- * Partial branch failure. Totals renormalize over successfulWeight when > 0; all-failed => zeros / "none".
+ * Primary totals scope. Primary damage/DPS always use unconditional mass when
+ * present; "none" only when all failed or no mass (still report banked E[D] when
+ * failed paths banked damage). Never "successful-branches-renormalized".
+ */
+export type BranchTotalsScope = "unconditional-all-mass" | "none";
+
+/**
+ * Partial branch failure. Primary totals stay unconditional over all mass;
+ * successfulWeight / conditionalOnSuccess are diagnostics only.
  */
 export interface BranchFailureSummary {
   failedWeight: number;
+  /** Successful path probability; diagnostic, not a primary-totals divisor. */
   successfulWeight: number;
-  totalsScope: "successful-branches-renormalized" | "none";
+  totalsScope: BranchTotalsScope;
   primaryReason: string;
   reasons: ReadonlyArray<{ reason: string; weight: number }>;
+  /** E[D | success]; secondary diagnostic only - never primary DPS numerator. */
+  conditionalOnSuccessExpectedDamage?: number;
+  /** E[D | failure] over failed paths (banked damage); diagnostic. */
+  failedPathExpectedDamage?: number;
 }
 
 export interface StochasticRngSummary {
@@ -272,8 +291,12 @@ export interface StochasticRngSummary {
   terminalClasses: number;
   successfulClasses: number;
   failedClasses: number;
-  /** Raw weight sum before any renormalization (should be ~1). */
+  /** Concrete terminal weight sum (success + fail). With residualWeight should be ~1. */
   probabilityMass: number;
+  /** Unexpanded / dropped mass; concrete + residual ~ 1. */
+  residualWeight: number;
+  /** exact when residualWeight ~ 0; approximated when residual mass remains. */
+  exactness: BranchExactness;
   representative: {
     classWeight: number;
     ticks: number;
@@ -319,8 +342,8 @@ export interface RotationSummary {
   horizonTicks?: number;
   damage: DamageBoundsSummary;
   /**
-   * Expected damage (E[D] over the probability mass used for totals).
-   * Same as damage.expectedDamage.
+   * Unconditional E[D] over all terminal mass (same as damage.expectedDamage).
+   * Never success-renormalized.
    */
   totalExpected: number;
   /**

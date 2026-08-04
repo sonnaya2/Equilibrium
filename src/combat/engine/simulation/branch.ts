@@ -1,10 +1,12 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
-import { commitCast, prepareSimulationCast, type PreparedCast } from "../cast";
-import { rngPointsFor } from "../cast/rules";
+import { prepareCast, type PreparedCast } from "../cast/prepare";
+import { castRejection, candidateTick, rngPointsFor } from "../cast/rules";
+import { firstLegalTick } from "../runtime/state";
 import type { CastRecord, CastRng } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
+import { advanceToBranches, commitCastBranches } from "./lengLandBranch";
 
 /**
  * Probability-weighted branch for state-changing RNG (Impatient, Relentless,
@@ -15,6 +17,45 @@ export interface Branch {
   weight: number;
   rt: SimulationRuntime;
   error?: string;
+}
+
+/**
+ * How concrete branch weights relate to the full outcome measure.
+ * discarded / residual mass is never reassigned to a non-equivalent survivor.
+ */
+export type BranchExactness =
+  | "exact"
+  | "merged-exactly"
+  | "bounded-approximation"
+  | "truncated"
+  | "resampled";
+
+/** Live branches plus mass removed without fabricating a concrete state. */
+export interface BranchSet {
+  branches: Branch[];
+  residualWeight: number;
+  exactness: BranchExactness;
+}
+
+const EXACTNESS_RANK: Record<BranchExactness, number> = {
+  exact: 0,
+  "merged-exactly": 1,
+  truncated: 2,
+  "bounded-approximation": 3,
+  resampled: 4,
+};
+
+/** Lattice join: more approximate wins. */
+export function combineExactness(a: BranchExactness, b: BranchExactness): BranchExactness {
+  return EXACTNESS_RANK[a] >= EXACTNESS_RANK[b] ? a : b;
+}
+
+export function emptyBranchSet(
+  branches: readonly Branch[] = [],
+  residualWeight = 0,
+  exactness: BranchExactness = "exact",
+): BranchSet {
+  return { branches: [...branches], residualWeight, exactness };
 }
 
 /** Independent copy of a runtime: mutable containers cloned, immutable events shared. */
@@ -120,33 +161,45 @@ export function mergeBranches(branches: readonly Branch[]): Branch[] {
   return [...byKey.values(), ...errored];
 }
 
-/** Cap live branches after merge; discarded weight folds into the heaviest. */
+/** Cap live branches after merge; discarded weight is residual, not reassigned. */
 export const MAX_LIVE_BRANCHES = 64;
 
 export function capBranches(
   branches: readonly Branch[],
   max: number = MAX_LIVE_BRANCHES,
-): Branch[] {
+): BranchSet {
   if (!Number.isInteger(max) || max < 1) {
     throw new RangeError(`capBranches: max must be a positive integer, got ${max}`);
   }
-  if (branches.length <= max) return [...branches];
+  if (branches.length <= max) {
+    return { branches: [...branches], residualWeight: 0, exactness: "exact" };
+  }
   const sorted = [...branches].sort((a, b) => b.weight - a.weight);
   const keep = sorted.slice(0, max).map((b) => ({ ...b }));
-  let discardedWeight = 0;
-  for (let i = max; i < sorted.length; i++) discardedWeight += sorted[i]!.weight;
-  if (discardedWeight > 0) {
-    keep[0] = { ...keep[0]!, weight: keep[0]!.weight + discardedWeight };
-  }
-  return keep;
+  let residualWeight = 0;
+  for (let i = max; i < sorted.length; i++) residualWeight += sorted[i]!.weight;
+  return {
+    branches: keep,
+    residualWeight,
+    exactness: residualWeight > 0 ? "bounded-approximation" : "exact",
+  };
 }
 
 /** Merge equivalents, then cap live branch count. */
 export function mergeAndCapBranches(
   branches: readonly Branch[],
   max: number = MAX_LIVE_BRANCHES,
-): Branch[] {
-  return capBranches(mergeBranches(branches), max);
+): BranchSet {
+  const before = branches.length;
+  const merged = mergeBranches(branches);
+  const capped = capBranches(merged, max);
+  if (capped.residualWeight > 0) {
+    return { ...capped, exactness: "bounded-approximation" };
+  }
+  if (merged.length < before) {
+    return { ...capped, exactness: "merged-exactly" };
+  }
+  return { ...capped, exactness: "exact" };
 }
 
 /** Weight plan for one RNG outcome before snapshot+commit. */
@@ -174,60 +227,115 @@ function rngWeightProduct(
 }
 
 /**
- * Prepare one cast and enumerate state-changing RNG as weight plans.
+ * Advance (with Leng land forks) to the candidate tick, prepare, and enumerate
+ * cast-time RNG (Impatient / Relentless / Avernic) as weight plans.
  * No snapshot/commit; materializeCastPlans materializes the heaviest survivors.
+ * Rejected post-advance arms are returned as `errors` so mass is not dropped.
  */
 export function planCastOutcomes(
   branch: Branch,
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
-): { error: Branch } | { plans: CastOutcomePlan[] } {
-  const preparation = prepareSimulationCast(branch.rt, ability, readyTick);
-  if (!preparation.ok) return { error: { ...branch, error: preparation.error } };
-  const { prepared } = preparation;
-  const points = rngPointsFor(
-    branch.rt.state,
-    ability,
-    prepared.candidate,
-    prepared.spend,
-    branch.rt.input.adrenaline,
-    branch.rt.input.league,
-  );
+):
+  | { error: Branch }
+  | {
+      plans: CastOutcomePlan[];
+      errors: Branch[];
+      residualWeight: number;
+      exactness: BranchExactness;
+    } {
+  if (branch.error !== undefined) return { error: branch };
 
-  if (points.length === 0) {
-    return {
-      plans: [{ weight: branch.weight, parent: branch, prepared, auto, inPlace: true }],
-    };
-  }
+  const candidate = Math.max(
+    candidateTick(branch.rt.state, readyTick),
+    firstLegalTick(branch.rt.state, ability.id, ability.cooldownGroup ?? ability.replacementGroup),
+  );
+  const advanced = advanceToBranches(branch, candidate);
+
   const plans: CastOutcomePlan[] = [];
-  for (const { rng, weight } of rngWeightProduct(points)) {
-    if (weight <= 0) continue;
-    plans.push({
-      weight: branch.weight * weight,
-      parent: branch,
-      prepared,
-      auto,
-      rng,
-      inPlace: false,
-    });
+  const errors: Branch[] = [];
+  for (const at of advanced.branches) {
+    if (at.error !== undefined) {
+      errors.push(at);
+      continue;
+    }
+    const rejection = castRejection(
+      at.rt.state,
+      ability,
+      candidate,
+      at.rt.input.weaponConfiguration,
+      at.rt.input.equipmentIds,
+      at.rt.input.equipmentEffects?.passiveIds,
+    );
+    if (rejection) {
+      errors.push({ ...at, error: rejection });
+      continue;
+    }
+    const prepared = prepareCast(at.rt, ability, candidate);
+    const points = rngPointsFor(
+      at.rt.state,
+      ability,
+      prepared.candidate,
+      prepared.spend,
+      at.rt.input.adrenaline,
+      at.rt.input.league,
+    );
+    if (points.length === 0) {
+      plans.push({
+        weight: at.weight,
+        parent: at,
+        prepared,
+        auto,
+        inPlace: true,
+      });
+      continue;
+    }
+    for (const { rng, weight } of rngWeightProduct(points)) {
+      if (weight <= 0) continue;
+      plans.push({
+        weight: at.weight * weight,
+        parent: at,
+        prepared,
+        auto,
+        rng,
+        inPlace: false,
+      });
+    }
   }
+
   if (plans.length === 0) {
+    if (errors.length === 1) return { error: errors[0]! };
+    if (errors.length > 1) {
+      // Collapse multi-reject to a single error branch carrying total weight.
+      const weight = errors.reduce((s, e) => s + e.weight, 0);
+      return {
+        error: { weight, rt: errors[0]!.rt, error: errors[0]!.error },
+      };
+    }
     return {
-      plans: [{ weight: branch.weight, parent: branch, prepared, auto, inPlace: true }],
+      error: {
+        ...branch,
+        error: `unable to prepare ${ability.id} at tick ${candidate}`,
+      },
     };
   }
-  return { plans };
+  return {
+    plans,
+    errors,
+    residualWeight: advanced.residualWeight,
+    exactness: advanced.exactness,
+  };
 }
 
 /**
- * Snapshot+commit plans, keeping at most `max` forks by weight (capBranches policy).
- * In-place plans always commit; discarded fork weight folds into the heaviest kept.
+ * Snapshot+commit plans (Leng land forks inside commit), keeping at most `max`
+ * pre-commit forks by weight. Discarded fork mass is residual (not reassigned).
  */
 export function materializeCastPlans(
   plans: readonly CastOutcomePlan[],
   max: number = MAX_LIVE_BRANCHES,
-): Branch[] {
+): BranchSet {
   if (!Number.isInteger(max) || max < 1) {
     throw new RangeError(`materializeCastPlans: max must be a positive integer, got ${max}`);
   }
@@ -238,29 +346,49 @@ export function materializeCastPlans(
     else forked.push(plan);
   }
 
+  let residualWeight = 0;
+  let exactness: BranchExactness = "exact";
   const out: Branch[] = [];
+
   for (const plan of inPlace) {
-    commitCast(plan.parent.rt, plan.prepared, plan.auto, plan.rng);
-    out.push({ weight: plan.weight, rt: plan.parent.rt, error: plan.parent.error });
+    const committed = commitCastBranches(
+      { weight: plan.weight, rt: plan.parent.rt, error: plan.parent.error },
+      plan.prepared,
+      plan.auto,
+      plan.rng,
+    );
+    residualWeight += committed.residualWeight;
+    exactness = combineExactness(exactness, committed.exactness);
+    out.push(...committed.branches);
   }
 
   let keep = forked;
   if (forked.length > max) {
     const sorted = [...forked].sort((a, b) => b.weight - a.weight);
     keep = sorted.slice(0, max).map((p) => ({ ...p }));
-    let discardedWeight = 0;
-    for (let i = max; i < sorted.length; i++) discardedWeight += sorted[i]!.weight;
-    if (discardedWeight > 0) {
-      keep[0] = { ...keep[0]!, weight: keep[0]!.weight + discardedWeight };
-    }
+    for (let i = max; i < sorted.length; i++) residualWeight += sorted[i]!.weight;
+    if (forked.length > max) exactness = combineExactness(exactness, "bounded-approximation");
   }
 
   for (const plan of keep) {
     const next = snapshotRuntime(plan.parent.rt);
-    commitCast(next, plan.prepared, plan.auto, plan.rng);
-    out.push({ weight: plan.weight, rt: next });
+    const committed = commitCastBranches(
+      { weight: plan.weight, rt: next },
+      plan.prepared,
+      plan.auto,
+      plan.rng,
+    );
+    residualWeight += committed.residualWeight;
+    exactness = combineExactness(exactness, committed.exactness);
+    out.push(...committed.branches);
   }
-  return out;
+
+  const capped = mergeAndCapBranches(out, max);
+  return {
+    branches: capped.branches,
+    residualWeight: residualWeight + capped.residualWeight,
+    exactness: combineExactness(exactness, capped.exactness),
+  };
 }
 
 /**
@@ -275,5 +403,9 @@ export function castOutcomes(
 ): Branch[] {
   const planned = planCastOutcomes(branch, ability, readyTick, auto);
   if ("error" in planned) return [planned.error];
-  return materializeCastPlans(planned.plans, Number.MAX_SAFE_INTEGER);
+  return materializeCastPlans(planned.plans, Number.MAX_SAFE_INTEGER).branches;
 }
+
+export type { LengLandOutcome } from "../../styles/melee/lengRng";
+export { lengLandOutcomes } from "../../styles/melee/lengRng";
+export { expandLengOnLand, advanceToBranches } from "./lengLandBranch";

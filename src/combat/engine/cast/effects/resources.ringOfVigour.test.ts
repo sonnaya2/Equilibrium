@@ -1,9 +1,18 @@
 import { describe, expect, it } from "vitest";
+import type { RegionId } from "@/league";
 import { createCastContext } from "../../simulation/simulate";
 import { baseInput } from "../../../test/fixtures/inputs";
 import { CONSERVATION_OF_ENERGY_REFUND } from "../../../shared/conservationOfEnergy";
-import { RING_OF_VIGOUR_REFUND } from "../../../shared/ringOfVigour";
+import {
+  RING_OF_VIGOUR_ITEM_ID,
+  RING_OF_VIGOUR_REFUND,
+} from "../../../shared/ringOfVigour";
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
+import {
+  DEFAULT_LOADOUT,
+  normalizeLoadout,
+} from "../../../../components/combat/loadout/model";
+import { loadoutStats } from "../../../../components/combat/loadoutStats";
 
 const assault = baseInput.abilities.find((a) => a.id === "assault")!;
 const berserk = baseInput.abilities.find((a) => a.id === "berserk")!;
@@ -77,6 +86,32 @@ describe("Ring of Vigour - ultimates", () => {
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(10);
+    const cast = ctx.finish().casts.at(-1)!;
+    expect(cast.adrenalineTransaction?.ringOfVigourRefund).toBe(RING_OF_VIGOUR_REFUND);
+    expect(cast.adrenalineTransaction?.ringOfVigourRefund).toBe(10);
+  });
+
+  it("equipped + permanent loadout still only +10 once", () => {
+    const loadout = normalizeLoadout({
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: { ...DEFAULT_LOADOUT.equipmentSlots, ring: RING_OF_VIGOUR_ITEM_ID },
+      buffs: { ...DEFAULT_LOADOUT.buffs, ringOfVigourPassive: true },
+    });
+    const stats = loadoutStats(loadout, {
+      unlockedRegions: ["misthalin", "anachronia"] as readonly RegionId[],
+    });
+    expect(stats.adrenaline?.ringOfVigour).toBe(true);
+
+    const ctx = createCastContext({
+      ...baseInput,
+      startingAdrenaline: 100,
+      adrenaline: stats.adrenaline,
+    });
+    expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(10);
+    const cast = ctx.finish().casts.at(-1)!;
+    expect(cast.adrenalineTransaction?.ringOfVigourRefund).toBe(10);
+    expect(cast.adrenalineTransaction?.conservationOfEnergyRefund).toBe(0);
   });
 
   it("cancelled / unaffordable ultimate grants nothing", () => {
@@ -88,6 +123,7 @@ describe("Ring of Vigour - ultimates", () => {
     const attempt = ctx.performCast(berserk, 0, false);
     expect(attempt.ok).toBe(false);
     expect(ctx.getState().adrenaline).toBe(50);
+    expect(ctx.finish().casts).toHaveLength(0);
   });
 
   it("does not refund on non-ultimates", () => {
@@ -98,6 +134,9 @@ describe("Ring of Vigour - ultimates", () => {
     });
     expect(ctx.performCast(assault, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(75);
+    const cast = ctx.finish().casts.at(-1)!;
+    expect(cast.adrenalineTransaction?.ringOfVigourRefund).toBe(0);
+    expect(cast.adrenalineTransaction?.conservationOfEnergyRefund).toBe(0);
   });
 });
 
@@ -134,6 +173,13 @@ describe("Ring of Vigour + Conservation of Energy", () => {
     });
     expect(ctx.performCast(berserk, 0, false).ok).toBe(true);
     expect(ctx.getState().adrenaline).toBe(20);
+    const cast = ctx.finish().casts.at(-1)!;
+    expect(cast.adrenalineTransaction?.conservationOfEnergyRefund).toBe(10);
+    expect(cast.adrenalineTransaction?.ringOfVigourRefund).toBe(10);
+    expect(
+      (cast.adrenalineTransaction?.conservationOfEnergyRefund ?? 0) +
+        (cast.adrenalineTransaction?.ringOfVigourRefund ?? 0),
+    ).toBe(20);
   });
 
   it("respects adrenaline cap when refund would exceed it", () => {

@@ -9,6 +9,12 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import { castCritLabel, formatCount, formatNumber, formatTime } from "./revoPanelFormat";
+import {
+  primaryDamageLabel,
+  primaryDpsLabel,
+  runDiagnosticsNote,
+  runScoreBadge,
+} from "./revoStochasticLabels";
 
 export type RevoRunResultsProps = {
   stats: CalcStats;
@@ -41,6 +47,10 @@ export function RevoRunResults({
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
+  const scoreBadge = result ? runScoreBadge(result) : null;
+  const scoreNote = result ? runDiagnosticsNote(result) : null;
+  const damageLabel = result ? primaryDamageLabel(result) : "Damage";
+  const dpsLabel = result ? primaryDpsLabel(result) : "Fixed-window DPS";
   const run = () => onRun();
 
   return (
@@ -101,12 +111,24 @@ export function RevoRunResults({
               </dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">Damage</dt>
-              <dd className="font-mono text-parch-50">{formatNumber(result.totalExpected)}</dd>
+              <dt className="text-xs text-parch-300">{damageLabel}</dt>
+              <dd className="font-mono text-parch-50" data-testid="revo-damage">
+                {formatNumber(result.totalExpected)}
+                {scoreBadge ? (
+                  <span
+                    className="ml-1.5 font-sans text-[10px] uppercase tracking-[0.08em] text-chaos-300"
+                    data-testid="revo-score-badge"
+                  >
+                    {scoreBadge}
+                  </span>
+                ) : null}
+              </dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
-              <dt className="text-xs text-parch-300">Fixed-window DPS</dt>
-              <dd className="font-mono text-parch-50">{formatNumber(result.dps)}</dd>
+              <dt className="text-xs text-parch-300">{dpsLabel}</dt>
+              <dd className="font-mono text-parch-50" data-testid="revo-dps">
+                {formatNumber(result.dps)}
+              </dd>
             </div>
             <div className="border-b border-stone-750/70 py-2">
               <dt className="text-xs text-parch-300">Min – max</dt>
@@ -122,6 +144,16 @@ export function RevoRunResults({
               </dd>
             </div>
           </dl>
+
+          {scoreNote ? (
+            <p
+              className="mt-2 text-xs text-chaos-300"
+              data-testid="revo-score-note"
+              role="note"
+            >
+              {scoreNote}
+            </p>
+          ) : null}
 
           <div className="mt-3 flex justify-end">
             <button

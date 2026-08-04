@@ -161,6 +161,40 @@ describe("score honesty", () => {
     expect(fin.proof === "degraded-exploratory-fallback" || fin.proof === "failed").toBe(true);
   });
 
+  it("residual / non-exact exactness full failures never unlock exact proof labels", () => {
+    const evaluate: EvaluateFn = ({ bar, mode }) => {
+      if (mode === "full" || mode === "finalize") {
+        return {
+          score: 0,
+          finite: true,
+          mode: "full",
+          exploratory: false,
+          validForFinalRanking: false,
+          objective: {
+            ok: false,
+            reason: "simulation residualWeight=0.12",
+            robustScore: 0,
+            profileId: "balanced",
+          },
+        };
+      }
+      return { score: searchScore(bar), finite: true, mode: "search", exploratory: true };
+    };
+    const result = solve({
+      pool: tinyPool,
+      sizeBounds: { min: 1, max: 2 },
+      evaluate,
+      tier: "thorough",
+      seed: 2,
+      config: { evaluationBudget: 40 },
+    });
+    expect(result.validFullCandidateCount).toBe(0);
+    expect(result.proof).not.toBe("full-objective-global-optimum");
+    expect(result.proof === "degraded-exploratory-fallback" || result.proof === "failed").toBe(
+      true,
+    );
+  });
+
   it("full-objective-global-optimum requires full-mode cover of feasible space, not shortlist size", () => {
     // Exhaustive search + shortlist full rescore must NOT claim full global optimum
     // when only a few bars received full evaluation.

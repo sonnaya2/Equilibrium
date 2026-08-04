@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
+  exactnessEligibleForExactProof,
+  isNonExactBranchExactness,
   MIN_RANKABLE_HORIZON_TICKS,
   OBJECTIVE_HORIZON_TICKS,
   OBJECTIVE_WINDOWS,
   objectiveWindowsForHorizon,
   scoreFromDamageByTick,
+  scoreSimulation,
   scoreSummary,
   sumDamageInTickRange,
+  summaryEligibleForObjectiveScore,
   windowDpmFromDamageByTick,
 } from "./objective";
 
@@ -143,6 +147,64 @@ describe("scoreSummary", () => {
     if (s.ok) return;
     expect(s.reason).toMatch(/failedWeight/);
     expect(s.robustScore).toBe(0);
+  });
+
+  it("rejects residualWeight > 0 (approximated branch expansion)", () => {
+    const s = scoreSummary(
+      {
+        ok: true,
+        damageByTick: { 0: 1000 },
+        horizonTicks: OBJECTIVE_HORIZON_TICKS,
+        rng: { residualWeight: 0.1, exactness: "bounded-approximation" },
+      },
+      "sustained",
+    );
+    expect(s.ok).toBe(false);
+    if (s.ok) return;
+    expect(s.reason).toMatch(/residualWeight/);
+    expect(s.robustScore).toBe(0);
+    expect(
+      summaryEligibleForObjectiveScore({
+        ok: true,
+        damageByTick: { 0: 1000 },
+        rng: { residualWeight: 0.1 },
+      }),
+    ).toBe(false);
+  });
+
+  it("rejects non-exact exactness even when residualWeight is 0", () => {
+    for (const exactness of ["bounded-approximation", "truncated", "resampled"] as const) {
+      const s = scoreSimulation(
+        {
+          ok: true,
+          damageByTick: { 0: 1000 },
+          horizonTicks: OBJECTIVE_HORIZON_TICKS,
+          rng: { residualWeight: 0, exactness },
+        },
+        "balanced",
+      );
+      expect(s.ok, exactness).toBe(false);
+      if (s.ok) return;
+      expect(s.reason).toMatch(new RegExp(`exactness=${exactness}`));
+      expect(isNonExactBranchExactness(exactness)).toBe(true);
+      expect(exactnessEligibleForExactProof(exactness)).toBe(false);
+    }
+  });
+
+  it("allows exact / merged-exactly / missing exactness for scoring and exact proof", () => {
+    for (const exactness of [undefined, "exact", "merged-exactly"] as const) {
+      const s = scoreSummary(
+        {
+          ok: true,
+          damageByTick: { 0: 6000 },
+          horizonTicks: OBJECTIVE_HORIZON_TICKS,
+          rng: exactness === undefined ? {} : { residualWeight: 0, exactness },
+        },
+        "burst",
+      );
+      expect(s.ok, String(exactness)).toBe(true);
+      expect(exactnessEligibleForExactProof(exactness)).toBe(true);
+    }
   });
 
   it("scores a successful summary from damageByTick", () => {

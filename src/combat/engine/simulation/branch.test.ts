@@ -3,7 +3,13 @@ import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { commitCast, prepareSimulationCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
-import { capBranches, mergeAndCapBranches, mergeBranches, snapshotRuntime } from "./branch";
+import {
+  capBranches,
+  combineExactness,
+  mergeAndCapBranches,
+  mergeBranches,
+  snapshotRuntime,
+} from "./branch";
 import type { CastContextInput } from "./contracts";
 import { rotationOf } from "./contracts";
 import { createCastContext, simulate, type SimulateInput } from "./simulate";
@@ -308,7 +314,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
 });
 
 describe("capBranches", () => {
-  it("keeps the heaviest branches and folds discarded weight into the top", () => {
+  it("keeps heaviest branches with own weights; discarded mass is residual", () => {
     const base = createRuntime(meleeInput);
     const mk = (weight: number): { weight: number; rt: ReturnType<typeof createRuntime> } => ({
       weight,
@@ -321,14 +327,31 @@ describe("capBranches", () => {
       return b;
     });
     const capped = capBranches(branches, 2);
-    expect(capped).toHaveLength(2);
-    expect(capped[0]!.weight).toBeCloseTo(0.4 + 0.15 + 0.1 + 0.05);
-    expect(capped[1]!.weight).toBeCloseTo(0.3);
-    const mass = capped.reduce((s, b) => s + b.weight, 0);
+    expect(capped.branches).toHaveLength(2);
+    // Heaviest keep their own weights; no mass theft onto keep[0].
+    expect(capped.branches[0]!.weight).toBeCloseTo(0.4);
+    expect(capped.branches[1]!.weight).toBeCloseTo(0.3);
+    expect(capped.residualWeight).toBeCloseTo(0.15 + 0.1 + 0.05);
+    expect(capped.exactness).toBe("bounded-approximation");
+    const mass =
+      capped.branches.reduce((s, b) => s + b.weight, 0) + capped.residualWeight;
     expect(mass).toBeCloseTo(1);
   });
 
-  it("mergeAndCapBranches stays within MAX_LIVE_BRANCHES", () => {
+  it("reports exact when nothing is discarded", () => {
+    const base = createRuntime(meleeInput);
+    const branches = [
+      { weight: 0.6, rt: snapshotRuntime(base) },
+      { weight: 0.4, rt: snapshotRuntime(base) },
+    ];
+    branches[1]!.rt.endTick = 1;
+    const capped = capBranches(branches, 8);
+    expect(capped.branches).toHaveLength(2);
+    expect(capped.residualWeight).toBe(0);
+    expect(capped.exactness).toBe("exact");
+  });
+
+  it("mergeAndCapBranches stays within max and conserves mass via residual", () => {
     const base = createRuntime(meleeInput);
     const many = Array.from({ length: 100 }, (_, i) => {
       const rt = snapshotRuntime(base);
@@ -336,8 +359,35 @@ describe("capBranches", () => {
       return { weight: 1 / 100, rt };
     });
     const out = mergeAndCapBranches(many, 16);
-    expect(out.length).toBeLessThanOrEqual(16);
-    expect(out.reduce((s, b) => s + b.weight, 0)).toBeCloseTo(1);
+    expect(out.branches.length).toBeLessThanOrEqual(16);
+    expect(out.residualWeight).toBeGreaterThan(0);
+    expect(out.exactness).toBe("bounded-approximation");
+    const mass =
+      out.branches.reduce((s, b) => s + b.weight, 0) + out.residualWeight;
+    expect(mass).toBeCloseTo(1);
+  });
+
+  it("mergeAndCapBranches is merged-exactly when merge reduces count and residual is 0", () => {
+    const base = createRuntime(meleeInput);
+    // Same future key: merge collapses to one, no cap discard.
+    const twins = [
+      { weight: 0.3, rt: snapshotRuntime(base) },
+      { weight: 0.7, rt: snapshotRuntime(base) },
+    ];
+    const out = mergeAndCapBranches(twins, 64);
+    expect(out.branches).toHaveLength(1);
+    expect(out.branches[0]!.weight).toBeCloseTo(1);
+    expect(out.residualWeight).toBe(0);
+    expect(out.exactness).toBe("merged-exactly");
+  });
+
+  it("combineExactness takes the more approximate label", () => {
+    expect(combineExactness("exact", "merged-exactly")).toBe("merged-exactly");
+    expect(combineExactness("merged-exactly", "bounded-approximation")).toBe(
+      "bounded-approximation",
+    );
+    expect(combineExactness("truncated", "exact")).toBe("truncated");
+    expect(combineExactness("resampled", "bounded-approximation")).toBe("resampled");
   });
 });
 
@@ -542,7 +592,8 @@ describe("Relentless refund branching", () => {
     expect(s.rng?.failedWeight).toBeCloseTo(0.95, 10);
     expect(s.failure?.failedWeight).toBeCloseTo(0.95, 10);
     expect(s.failure?.successfulWeight).toBeCloseTo(0.05, 10);
-    expect(s.failure?.totalsScope).toBe("successful-branches-renormalized");
+    // Primary totals stay unconditional over all mass; success is diagnostic only.
+    expect(s.failure?.totalsScope).toBe("unconditional-all-mass");
     expect(s.error).toContain("assault");
   });
 

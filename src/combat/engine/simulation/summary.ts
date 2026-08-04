@@ -1,6 +1,13 @@
 import { finalizeAnalysis } from "../analysis";
-import { snapshotRuntime, type Branch } from "./branch";
+import {
+  combineExactness,
+  mergeAndCapBranches,
+  snapshotRuntime,
+  type Branch,
+  type BranchExactness as EngineBranchExactness,
+} from "./branch";
 import type {
+  BranchExactness,
   BranchFailureSummary,
   DamageEffectBreakdown,
   DamageSourceKind,
@@ -23,6 +30,7 @@ import {
   supportMinFrom,
   weightedMean,
 } from "./stats";
+import { drainBranchToEnd } from "./lengLandBranch";
 
 const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "ability-direct",
@@ -211,13 +219,22 @@ export function finish(
   };
 }
 
+function poolMean(
+  pool: readonly { weight: number; summary: RotationSummary }[],
+  f: (s: RotationSummary) => number,
+): number {
+  if (pool.length === 0) return 0;
+  return weightedMean(pool.map((p) => ({ weight: p.weight, value: f(p.summary) })));
+}
+
 function collectFailures(
   parts: readonly { weight: number; summary: RotationSummary }[],
 ): BranchFailureSummary | undefined {
   const failed = parts.filter((p) => !p.summary.ok);
   if (failed.length === 0) return undefined;
   const failedWeight = failed.reduce((s, p) => s + p.weight, 0);
-  const successfulWeight = parts.reduce((s, p) => s + (p.summary.ok ? p.weight : 0), 0);
+  const successful = parts.filter((p) => p.summary.ok);
+  const successfulWeight = successful.reduce((s, p) => s + p.weight, 0);
   const byReason = new Map<string, number>();
   for (const part of failed) {
     const reason = part.summary.error ?? "branch failed";
@@ -226,27 +243,59 @@ function collectFailures(
   const reasons = [...byReason.entries()]
     .map(([reason, weight]) => ({ reason, weight }))
     .sort((a, b) => b.weight - a.weight);
+  // Primary stays unconditional; success-only mean is diagnostic only.
+  const conditionalOnSuccessExpectedDamage =
+    successfulWeight > PROB_TOLERANCE
+      ? poolMean(successful, (s) => s.damage.expectedDamage)
+      : undefined;
+  const failedPathExpectedDamage =
+    failedWeight > PROB_TOLERANCE ? poolMean(failed, (s) => s.damage.expectedDamage) : undefined;
   return {
     failedWeight,
     successfulWeight,
-    totalsScope: successfulWeight > PROB_TOLERANCE ? "successful-branches-renormalized" : "none",
+    totalsScope: successfulWeight > PROB_TOLERANCE ? "unconditional-all-mass" : "none",
     primaryReason: reasons[0]?.reason ?? "branch failed",
     reasons,
+    ...(conditionalOnSuccessExpectedDamage !== undefined
+      ? { conditionalOnSuccessExpectedDamage }
+      : {}),
+    ...(failedPathExpectedDamage !== undefined ? { failedPathExpectedDamage } : {}),
   };
 }
 
 /**
- * Combine terminal equivalence classes. Totals (damage/duration/analysis) from
- * successful branches only (renormalized on partial failure). Casts/events from
- * highest-weight successful class (else highest-weight failure) as representative history.
+ * Combine terminal equivalence classes. Primary damage/duration/analysis are the
+ * unconditional weighted mean over ALL terminal mass (success + fail banked).
+ * Never divides by successfulWeight. Casts/events from highest-weight successful
+ * class (else highest-weight failure) as representative history only.
  */
 export function combineBranchSummaries(
   branches: readonly Branch[],
   horizonTicks: number | undefined,
   options: SimulateOptions | undefined,
   sawBranching: boolean,
+  residualWeight = 0,
+  exactness: EngineBranchExactness = "exact",
 ): RotationSummary {
-  if (branches.length === 0) {
+  // Drain unlanded queue with Leng land forks before assembling terminal summaries.
+  let residual = residualWeight;
+  let exact: EngineBranchExactness = exactness;
+  let forkedAtDrain = false;
+  const drained: Branch[] = [];
+  for (const branch of branches) {
+    const set = drainBranchToEnd(branch, horizonTicks);
+    residual += set.residualWeight;
+    exact = combineExactness(exact, set.exactness);
+    if (set.branches.length > 1) forkedAtDrain = true;
+    drained.push(...set.branches);
+  }
+  const capped = mergeAndCapBranches(drained);
+  residual += capped.residualWeight;
+  exact = combineExactness(exact, capped.exactness);
+  const terminalBranches = capped.branches;
+  const branching = sawBranching || forkedAtDrain || terminalBranches.length > 1;
+
+  if (terminalBranches.length === 0) {
     const failure = emptyFailure("no branches", 1);
     return {
       ok: false,
@@ -304,18 +353,21 @@ export function combineBranchSummaries(
     };
   }
 
-  const parts = branches.map((branch) => ({
+  const parts = terminalBranches.map((branch) => ({
     weight: branch.weight,
     summary: finish(branch.rt, branch.error, horizonTicks, options),
   }));
+  // Concrete terminal mass only; residual is disclosed separately (sum ~ 1).
   const rawMass = parts.reduce((sum, p) => sum + p.weight, 0);
   const failure = collectFailures(parts);
   const successful = parts.filter((p) => p.summary.ok);
-  const mixPool = successful.length > 0 ? successful : [];
-  const mixWeight = mixPool.reduce((s, p) => s + p.weight, 0);
+  // Primary mix: every terminal branch. Failed mass never becomes successful.
+  // Residual is unexpanded measure - never folded into a concrete survivor state.
+  const mixPool = parts;
+  const mixWeight = rawMass;
 
-  // Representative history matches totals scope: successful pool when any
-  // succeed, otherwise the failed set.
+  // Representative history prefers successful class for display; failed mass
+  // is never reclassified as success for ok / totalsScope.
   const representativePool = successful.length > 0 ? successful : parts;
   const representative = representativePool.reduce((best, part) =>
     part.weight > best.weight ? part : best,
@@ -331,10 +383,7 @@ export function combineBranchSummaries(
       ? modal.horizonTicks
       : undefined;
 
-  const mix = (f: (s: RotationSummary) => number) =>
-    mixWeight > 0
-      ? weightedMean(mixPool.map((p) => ({ weight: p.weight, value: f(p.summary) })))
-      : 0;
+  const mix = (f: (s: RotationSummary) => number) => poolMean(mixPool, f);
 
   const perAbility: Record<string, number> = {};
   for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.perAbility)))) {
@@ -348,23 +397,13 @@ export function combineBranchSummaries(
   const expectedDamage = mix((s) => s.damage.expectedDamage);
   const expectedConditionalMin = mix((s) => s.damage.expectedConditionalMin);
   const expectedConditionalMax = mix((s) => s.damage.expectedConditionalMax);
-  const supportMinDamage =
-    mixPool.length > 0 ? Math.min(...mixPool.map((p) => p.summary.damage.supportMinDamage)) : 0;
-  const supportMaxDamage =
-    mixPool.length > 0 ? Math.max(...mixPool.map((p) => p.summary.damage.supportMaxDamage)) : 0;
+  const supportMinDamage = Math.min(...mixPool.map((p) => p.summary.damage.supportMinDamage));
+  const supportMaxDamage = Math.max(...mixPool.map((p) => p.summary.damage.supportMaxDamage));
 
-  // Expected duration: totals mix (successful only). Support min/max + rep ticks
-  // share history pool so rep is in [min, max] even on all-failed (expected 0, path length > 0).
-  const durationSupportPool = mixPool.length > 0 ? mixPool : representativePool;
+  // Duration: unconditional E[T] over all mass; support + rep from same pool.
   const expectedTicks = mix((s) => s.duration.expectedTicks);
-  const minimumTicks =
-    durationSupportPool.length > 0
-      ? Math.min(...durationSupportPool.map((p) => p.summary.duration.minimumTicks))
-      : 0;
-  const maximumTicks =
-    durationSupportPool.length > 0
-      ? Math.max(...durationSupportPool.map((p) => p.summary.duration.maximumTicks))
-      : 0;
+  const minimumTicks = Math.min(...mixPool.map((p) => p.summary.duration.minimumTicks));
+  const maximumTicks = Math.max(...mixPool.map((p) => p.summary.duration.maximumTicks));
   const representativeTicks = modal.duration.representativeTicks;
 
   const denominatorTicks = denomHorizon ?? expectedTicks;
@@ -430,11 +469,11 @@ export function combineBranchSummaries(
 
   const multiClass = parts.length > 1;
   const classWeight = rawMass > 0 ? representative.weight / rawMass : representative.weight;
-  const useRepresentativeHistory = sawBranching || multiClass;
+  const useRepresentativeHistory = branching || multiClass;
   // Branching merges weight-mix ledgers with one event log: events are not a
   // safe rebuild source for weighted totals.
   const eventsReconcileWithWeightedTotals =
-    !sawBranching && parts.length === 1 && failure === undefined;
+    !branching && parts.length === 1 && failure === undefined;
   const history: HistoryProvenance = useRepresentativeHistory
     ? {
         kind: "representative-terminal-class",
@@ -471,21 +510,28 @@ export function combineBranchSummaries(
     };
   }
 
-  const ok = failure === undefined && mixPool.length > 0;
-  const error =
-    failure?.primaryReason ??
-    (mixPool.length === 0 ? (parts[0]?.summary.error ?? "all branches failed") : undefined);
+  const ok = failure === undefined;
+  const error = failure?.primaryReason;
 
-  // Stochastic rng metadata only when branching or multi-terminal; sole-path
-  // failures stay on `failure` alone.
+  const safeResidual = finiteOrZero(residual);
+  const resolvedExactness: BranchExactness =
+    exact === "exact" || exact === "merged-exactly"
+      ? safeResidual > PROB_TOLERANCE
+        ? "approximated"
+        : "exact"
+      : "approximated";
+
+  // Stochastic rng when branching, multi-terminal, or residual mass remains.
   const rng: StochasticRngSummary | undefined =
-    sawBranching || multiClass
+    branching || multiClass || safeResidual > PROB_TOLERANCE
       ? {
           method: "probability-weighted branching",
           terminalClasses: parts.length,
           successfulClasses: successful.length,
           failedClasses: parts.filter((p) => !p.summary.ok).length,
           probabilityMass: rawMass,
+          residualWeight: safeResidual,
+          exactness: resolvedExactness,
           representative: {
             classWeight,
             ticks: representativeTicks,

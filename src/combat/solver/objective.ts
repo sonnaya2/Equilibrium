@@ -212,6 +212,49 @@ export function scoreFromDamageByTick(
   return ok;
 }
 
+/** Exactness values that are never rankable as exact objective scores. */
+export const NON_EXACT_BRANCH_EXACTNESS = [
+  "approximated",
+  "bounded-approximation",
+  "truncated",
+  "resampled",
+] as const;
+
+export type NonExactBranchExactness = (typeof NON_EXACT_BRANCH_EXACTNESS)[number];
+
+export function isNonExactBranchExactness(
+  exactness: string | undefined,
+): exactness is NonExactBranchExactness {
+  return (
+    exactness === "approximated" ||
+    exactness === "bounded-approximation" ||
+    exactness === "truncated" ||
+    exactness === "resampled"
+  );
+}
+
+/**
+ * True when a sim summary may produce a rankable objective score.
+ * Residual mass or non-exact expansion is never treated as exact.
+ */
+export function summaryEligibleForObjectiveScore(summary: ScoreableSummary): boolean {
+  if (!summary.ok) return false;
+  if ((summary.rng?.failedWeight ?? 0) > 0) return false;
+  if ((summary.rng?.residualWeight ?? 0) > 0) return false;
+  if (isNonExactBranchExactness(summary.rng?.exactness)) return false;
+  return true;
+}
+
+/**
+ * Exact proof labels require exact (or merged-exactly) branch expansion.
+ * Residual / approximation never unlock full-objective-global-optimum claims.
+ */
+export function exactnessEligibleForExactProof(exactness: string | undefined): boolean {
+  if (exactness === undefined) return true;
+  if (isNonExactBranchExactness(exactness)) return false;
+  return exactness === "exact" || exactness === "merged-exactly";
+}
+
 /** Score a simulation summary - uses damageByTick only; rejects sim errors. */
 export function scoreSummary(
   summary: ScoreableSummary,
@@ -225,6 +268,14 @@ export function scoreSummary(
   if (failedWeight > 0) {
     return fail(profileId, `simulation failedWeight=${failedWeight}`);
   }
+  const residualWeight = summary.rng?.residualWeight ?? 0;
+  if (residualWeight > 0) {
+    return fail(profileId, `simulation residualWeight=${residualWeight}`);
+  }
+  const exactness = summary.rng?.exactness;
+  if (isNonExactBranchExactness(exactness)) {
+    return fail(profileId, `simulation exactness=${exactness}`);
+  }
   return scoreFromDamageByTick(
     summary.damageByTick,
     profileId,
@@ -232,6 +283,9 @@ export function scoreSummary(
     summary.horizonTicks,
   );
 }
+
+/** Alias: sim scoring entry (same gates as scoreSummary). */
+export const scoreSimulation = scoreSummary;
 
 /** True when an eval result carries a finite numeric score usable for ranking. */
 export function isFiniteEval(

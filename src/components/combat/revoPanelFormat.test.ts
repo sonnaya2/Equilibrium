@@ -48,6 +48,17 @@ describe("revoPanelFormat", () => {
     expect(formatProofLabel("some-future-proof")).toBe("Some Future Proof");
   });
 
+  it("never shows exact-claim proof chrome when approximated", () => {
+    expect(formatProofLabel("full-objective-global-optimum", { approximated: true })).toBe(
+      "Approximated",
+    );
+    expect(formatProofLabel("globally-optimal", { approximated: true })).toBe("Approximated");
+    expect(formatProofLabel("search-objective-exhaustive", { approximated: true })).toBe(
+      "Approximated",
+    );
+    expect(formatProofLabel("full-shortlist-best", { approximated: true })).toBe("Shortlist best");
+  });
+
   it("maps ability categories for preview slots", () => {
     expect(previewCategory("enhanced")).toBe("threshold");
     expect(previewCategory("basic")).toBe("basic");

@@ -190,7 +190,23 @@ export function solverPhaseLabel(
   }
 }
 
-export function formatProofLabel(label: string | null | undefined): string {
+/**
+ * Human proof label for solver chrome.
+ * When approximated, never show exact-claim labels (global optimum / exhaustive).
+ */
+export function formatProofLabel(
+  label: string | null | undefined,
+  opts?: { approximated?: boolean },
+): string {
+  if (opts?.approximated) {
+    if (
+      label === "full-objective-global-optimum" ||
+      label === "globally-optimal" ||
+      label === "search-objective-exhaustive"
+    ) {
+      return "Approximated";
+    }
+  }
   if (label == null || label === "") return "Best found";
   switch (label) {
     case "heuristic-best-found":

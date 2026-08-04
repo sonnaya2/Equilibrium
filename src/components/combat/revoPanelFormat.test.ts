@@ -59,6 +59,24 @@ describe("revoPanelFormat", () => {
     expect(formatProofLabel("full-shortlist-best", { approximated: true })).toBe("Shortlist best");
   });
 
+  it("never shows Global optimum when residualWeight or non-exact exactness is present", () => {
+    expect(
+      formatProofLabel("full-objective-global-optimum", { residualWeight: 0.05 }),
+    ).toBe("Approximated");
+    expect(
+      formatProofLabel("full-objective-global-optimum", {
+        exactness: "bounded-approximation",
+      }),
+    ).toBe("Approximated");
+    expect(
+      formatProofLabel("search-objective-exhaustive", { exactness: "truncated" }),
+    ).toBe("Approximated");
+    expect(
+      formatProofLabel("full-objective-global-optimum", { residualWeight: 0 }),
+    ).toBe("Global optimum");
+    expect(formatProofLabel("heuristic-best-found", { residualWeight: 0.2 })).toBe("Best found");
+  });
+
   it("maps ability categories for preview slots", () => {
     expect(previewCategory("enhanced")).toBe("threshold");
     expect(previewCategory("basic")).toBe("basic");

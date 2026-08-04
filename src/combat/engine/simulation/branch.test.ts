@@ -311,6 +311,37 @@ describe("snapshotRuntime shares no mutable collection", () => {
       ]),
     ).toHaveLength(2);
   });
+
+  it("merges same-error failed arms with equivalent state; different errors stay split", () => {
+    const rt = createRuntime(meleeInput);
+    const a = snapshotRuntime(rt);
+    const b = snapshotRuntime(rt);
+    a.totalExpected = 100;
+    b.totalExpected = 200;
+    const same = mergeBranches([
+      { weight: 0.4, rt: a, error: "unpayable assault" },
+      { weight: 0.6, rt: b, error: "unpayable assault" },
+    ]);
+    expect(same).toHaveLength(1);
+    expect(same[0]!.error).toBe("unpayable assault");
+    expect(same[0]!.weight).toBeCloseTo(1);
+    expect(same[0]!.rt.totalExpected).toBeCloseTo(0.4 * 100 + 0.6 * 200);
+
+    const split = mergeBranches([
+      { weight: 0.5, rt: snapshotRuntime(rt), error: "fail-a" },
+      { weight: 0.5, rt: snapshotRuntime(rt), error: "fail-b" },
+    ]);
+    expect(split).toHaveLength(2);
+    expect(split.every((br) => br.error !== undefined)).toBe(true);
+    // Failed never merges into a success arm of the same state.
+    const mixed = mergeBranches([
+      { weight: 0.3, rt: snapshotRuntime(rt), error: "fail" },
+      { weight: 0.7, rt: snapshotRuntime(rt) },
+    ]);
+    expect(mixed).toHaveLength(2);
+    expect(mixed.some((br) => br.error === "fail")).toBe(true);
+    expect(mixed.some((br) => br.error === undefined)).toBe(true);
+  });
 });
 
 describe("capBranches", () => {
@@ -592,7 +623,7 @@ describe("Relentless refund branching", () => {
     expect(s.rng?.failedWeight).toBeCloseTo(0.95, 10);
     expect(s.failure?.failedWeight).toBeCloseTo(0.95, 10);
     expect(s.failure?.successfulWeight).toBeCloseTo(0.05, 10);
-    // Primary totals stay unconditional over all mass; success is diagnostic only.
+    // Primary totals stay unconditional over concrete mass; success is diagnostic only.
     expect(s.failure?.totalsScope).toBe("unconditional-all-mass");
     expect(s.error).toContain("assault");
   });

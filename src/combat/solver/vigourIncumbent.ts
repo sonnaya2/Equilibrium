@@ -10,6 +10,7 @@ import type {
   SolveResult,
   SolveTier,
 } from "./contracts";
+import { normalizeAuthoredSeed } from "./seeds";
 import { solve, type SolveInput } from "./solve";
 
 export interface VigourEvalContext {
@@ -52,14 +53,20 @@ export interface CompareVigourSearchInput {
 
 export interface CompareVigourSearchResult {
   incumbentBar: readonly string[];
-  /** Fresh Vigour-on full eval of the incumbent bar. */
+  /**
+   * Bar that actually enters search as the incumbent seed after size-bound
+   * truncate / exclusive-group filter / pad-to-min (null if unseedable).
+   */
+  seededIncumbentBar: string[] | null;
+  /** Fresh Vigour-on full eval of the seeded incumbent (aligned seed form). */
   reevaluatedIncumbent: EvalResult;
-  /** Finite score from reeval, or -Infinity when not rankable. */
+  /** Finite score from reeval, or -Infinity when not rankable / unseedable. */
   reevaluatedScore: number;
   search: SolveResult;
   /** Winner robustScore strictly above fresh incumbent reeval. */
   winnerBeatsIncumbent: boolean;
   winnerTiesIncumbent: boolean;
+  /** Winner matches the seeded (legalized) incumbent bar. */
   winnerIsIncumbentBar: boolean;
 }
 
@@ -74,21 +81,42 @@ function barsEqual(a: readonly string[], b: readonly string[]): boolean {
   return a.length === b.length && a.every((id, i) => id === b[i]);
 }
 
+const UNRANKABLE_EVAL: EvalResult = {
+  score: Number.NEGATIVE_INFINITY,
+  finite: false,
+  mode: "full",
+  exploratory: false,
+  validForFinalRanking: false,
+};
+
 /**
  * Reevaluate the old no-Vigour winner under Vigour, seed it as authored incumbent,
  * run search, and compare the final winner only to the fresh reeval (never stale score).
+ *
+ * Seed and reeval use the same legalized bar (size-bounds truncate, exclusive-group
+ * filter, pad-to-min) so comparison is not against a bar search never scored.
  */
 export function compareVigourSearch(input: CompareVigourSearchInput): CompareVigourSearchResult {
   void input.staleIncumbentScore;
 
-  const reevaluatedIncumbent = reevaluateIncumbentBar(input.incumbentBar, {
-    evaluate: input.evaluate,
-    mode: "full",
-  });
-  const reevaluatedScore = finiteEvalScore(reevaluatedIncumbent);
+  const seededIncumbentBar = normalizeAuthoredSeed(
+    input.incumbentBar,
+    input.pool,
+    input.sizeBounds,
+  );
+
+  const reevaluatedIncumbent = seededIncumbentBar
+    ? reevaluateIncumbentBar(seededIncumbentBar, {
+        evaluate: input.evaluate,
+        mode: "full",
+      })
+    : UNRANKABLE_EVAL;
+  const reevaluatedScore = seededIncumbentBar
+    ? finiteEvalScore(reevaluatedIncumbent)
+    : Number.NEGATIVE_INFINITY;
 
   const authoredSeeds: string[][] = [
-    [...input.incumbentBar],
+    ...(seededIncumbentBar ? [seededIncumbentBar] : []),
     ...(input.otherAuthoredSeeds ?? []).map((s) => [...s]),
   ];
 
@@ -110,7 +138,10 @@ export function compareVigourSearch(input: CompareVigourSearchInput): CompareVig
     winner.mode === "full" &&
     Number.isFinite(winner.robustScore);
   const winnerScore = winnerRankable ? winner!.robustScore : Number.NEGATIVE_INFINITY;
-  const winnerIsIncumbentBar = winner != null && barsEqual(winner.bar, input.incumbentBar);
+  const winnerIsIncumbentBar =
+    winner != null &&
+    seededIncumbentBar != null &&
+    barsEqual(winner.bar, seededIncumbentBar);
   const bothRankable =
     Number.isFinite(winnerScore) &&
     winnerScore > Number.NEGATIVE_INFINITY &&
@@ -119,6 +150,7 @@ export function compareVigourSearch(input: CompareVigourSearchInput): CompareVig
 
   return {
     incumbentBar: [...input.incumbentBar],
+    seededIncumbentBar: seededIncumbentBar ? [...seededIncumbentBar] : null,
     reevaluatedIncumbent,
     reevaluatedScore,
     search,

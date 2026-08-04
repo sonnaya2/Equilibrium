@@ -11,6 +11,7 @@ import type {
   BranchFailureSummary,
   DamageEffectBreakdown,
   DamageSourceKind,
+  DamageTotalsBasis,
   DurationSummary,
   DpsSummary,
   HistoryProvenance,
@@ -179,6 +180,8 @@ export function finish(
     ...(fixedWindow ? { horizonTicks: effectiveHorizon } : {}),
     damage: {
       expectedDamage,
+      // Sole path carries full unit measure.
+      scope: "unit-mass",
       supportMinDamage: supportMin,
       supportMaxDamage: supportMax,
       expectedConditionalMin: conditionalMin,
@@ -265,7 +268,9 @@ function collectFailures(
 
 /**
  * Combine terminal equivalence classes. Primary damage/duration/analysis are the
- * unconditional weighted mean over ALL terminal mass (success + fail banked).
+ * weight-normalized mean over concrete terminals only (success + fail banked).
+ * Residual/unexpanded mass is disclosed on rng - not mixed in and not zero-filled;
+ * when residual > 0 primary is E[D|concrete], not unit-mass E[D].
  * Never divides by successfulWeight. Casts/events from highest-weight successful
  * class (else highest-weight failure) as representative history only.
  */
@@ -311,6 +316,7 @@ export function combineBranchSummaries(
       ticks: 0,
       damage: {
         expectedDamage: 0,
+        scope: "unit-mass",
         supportMinDamage: 0,
         supportMaxDamage: 0,
         expectedConditionalMin: 0,
@@ -400,7 +406,7 @@ export function combineBranchSummaries(
   const supportMinDamage = Math.min(...mixPool.map((p) => p.summary.damage.supportMinDamage));
   const supportMaxDamage = Math.max(...mixPool.map((p) => p.summary.damage.supportMaxDamage));
 
-  // Duration: unconditional E[T] over all mass; support + rep from same pool.
+  // Duration: unconditional E[T] over concrete terminals; support + rep from same pool.
   const expectedTicks = mix((s) => s.duration.expectedTicks);
   const minimumTicks = Math.min(...mixPool.map((p) => p.summary.duration.minimumTicks));
   const maximumTicks = Math.max(...mixPool.map((p) => p.summary.duration.maximumTicks));
@@ -521,8 +527,12 @@ export function combineBranchSummaries(
         ? "approximated"
         : "exact"
       : "approximated";
+  // Residual > 0 => primary is E[D|concrete], not full unit-mass EV.
+  const totalsBasis: DamageTotalsBasis =
+    safeResidual > PROB_TOLERANCE ? "concrete-terminals" : "unit-mass";
 
   // Stochastic rng when branching, multi-terminal, or residual mass remains.
+  // probabilityMass/concreteMass = expanded measure only; primary E[D] is over that mass.
   const rng: StochasticRngSummary | undefined =
     branching || multiClass || safeResidual > PROB_TOLERANCE
       ? {
@@ -531,7 +541,9 @@ export function combineBranchSummaries(
           successfulClasses: successful.length,
           failedClasses: parts.filter((p) => !p.summary.ok).length,
           probabilityMass: rawMass,
+          concreteMass: rawMass,
           residualWeight: safeResidual,
+          totalsBasis,
           exactness: resolvedExactness,
           representative: {
             classWeight,
@@ -560,6 +572,7 @@ export function combineBranchSummaries(
     ...(denomHorizon !== undefined ? { horizonTicks: denomHorizon } : {}),
     damage: {
       expectedDamage: safeExpected,
+      scope: totalsBasis,
       supportMinDamage: safeSupportMin,
       supportMaxDamage: safeSupportMax,
       expectedConditionalMin: finiteOrZero(expectedConditionalMin),

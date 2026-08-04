@@ -237,6 +237,11 @@ export interface SolverResultDTO {
   tier: SolverSearchTier;
   durationTicks: number;
   proofLabel?: ProofLabel;
+  /** Winner residual / branch exactness when disclosed (feeds proof chrome). */
+  rng?: {
+    residualWeight?: number;
+    exactness?: string;
+  };
   /** Best exploratory (search-horizon) score seen - not mixed with full robust. */
   bestExploratoryScore?: number;
   /** Best full-horizon robust score seen (winner scale when finalize ran). */
@@ -249,13 +254,25 @@ export interface SolverResultDTO {
    * per-hit outgoing damage model).
    */
   assumptions?: readonly string[];
-  /** Optional compact summary numbers for the winning bar. */
+  /** Optional compact summary; may carry residual/exactness for proof chrome. */
   summary?: {
     totalExpected: number;
     dps: number;
     ticks: number;
     ok: boolean;
     error?: string;
+    rng?: {
+      residualWeight?: number;
+      exactness?: string;
+      failedWeight?: number;
+      probabilityMass?: number;
+    };
+    failure?: {
+      failedWeight?: number;
+      successfulWeight?: number;
+      totalsScope?: string;
+      primaryReason?: string;
+    };
   };
   proof?: SolverProofDTO;
   top?: readonly {

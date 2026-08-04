@@ -16,7 +16,6 @@ import { RegionCrest } from "../RegionCrest";
 import {
   BAR_SIZE_PRESETS,
   formatNumber,
-  formatProofLabel,
   previewCategory,
   progressFillFromState,
   solverPhaseLabel,
@@ -27,6 +26,7 @@ import {
   type BarSizePresetId,
   type SolverStoppedPreview,
 } from "./revoPanelFormat";
+import { formatProofChrome } from "./revoStochasticLabels";
 import "./revo-solver.css";
 
 export type RevoSolverSectionProps = {
@@ -504,7 +504,11 @@ export function RevoSolverSection({
         <div className="mt-3 border-t border-stone-750 pt-2" data-testid="revo-solver-results">
           <p className="text-xs text-parch-300">
             Score {formatNumber(solverResult.score)} ·{" "}
-            {formatProofLabel(solverResult.proofLabel)} · {solverResult.evaluations} evals
+            {formatProofChrome(solverResult.proofLabel, {
+              rng: solverResult.rng ?? solverResult.summary?.rng,
+              failure: solverResult.summary?.failure,
+            })}{" "}
+            · {solverResult.evaluations} evals
             {solverResult.openingDpm != null
               ? ` · open ${formatNumber(solverResult.openingDpm)} / mid ${formatNumber(solverResult.developedDpm ?? 0)} / steady ${formatNumber(solverResult.steadyDpm ?? 0)}`
               : ""}

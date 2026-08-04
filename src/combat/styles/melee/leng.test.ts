@@ -148,11 +148,12 @@ describe("Frostblades and Icy Tempest sim", () => {
     const rt = lengRuntime({ primordialIceStacks: 3 });
     const tempest = MELEE_ABILITIES.find((a) => a.id === "icy_tempest")!;
     expect(performCast(rt, tempest, 0, false).ok).toBe(true);
+    // Cast-start spend clears stacks; single-path commitCast does not fold land EV.
     expect(rt.state.melee.primordialIceStacks).toBe(0);
     expect(rt.state.adrenaline).toBe(100); // free spend at 3 stacks
     const hits = rt.events.filter((e) => e.abilityId === "icy_tempest" && !e.attached);
     expect(hits).toHaveLength(2);
-    // 3 stacks: primary 169-201% → mid 1850 on base 1000
+    // 3 stacks: primary 169-201% -> mid 1850 on base 1000
     expect(hits[0]!.damage.expected).toBeCloseTo((1690 + 2010) / 2, 0);
   });
 
@@ -186,6 +187,110 @@ describe("Leng land probability branching", () => {
     const mass = branches.reduce((s, b) => s + b.weight, 0);
     return branches.reduce((s, b) => s + b.weight * b.rt.state.melee.primordialIceStacks, 0) / mass;
   }
+
+  function lengCtxInput() {
+    return {
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"] as const,
+      equipmentEffects: lengEffects(),
+      weaponConfiguration: "dualwield" as const,
+    };
+  }
+
+  it("performCast single-path does not invent Leng stack EV (use createCastContext)", () => {
+    const rt = lengRuntime();
+    const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
+    expect(performCast(rt, attack, 0, false).ok).toBe(true);
+    // No heaviest-arm zero fold and no float E[stacks] (floor biases Icy Tempest).
+    expect(rt.state.melee.primordialIceStacks).toBe(0);
+    expect(Number.isInteger(rt.state.melee.primordialIceStacks)).toBe(true);
+    expect(rt.state.melee.frostbladesUntilTick).toBe(0);
+  });
+
+  it("createCastContext dual Leng: finish is multi-class (stack EV not silent zero)", () => {
+    const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
+    const ctx = createCastContext(lengCtxInput());
+    expect(ctx.performCast(attack, 0, false).ok).toBe(true);
+    // Representative heaviest arm is miss; EV is in finish branch mix.
+    expect(ctx.getState().melee.primordialIceStacks).toBe(0);
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+    expect(s.rng?.method).toBe("probability-weighted branching");
+    expect(s.rng!.terminalClasses).toBeGreaterThan(1);
+    // Would fail if createCastContext still used single-path commitCast (one class).
+    expect((s.rng?.residualWeight ?? 0) <= 1e-9).toBe(true);
+  });
+
+  it("createCastContext dual Leng: attack then Icy Tempest integer thresholds beat float-EV floor", () => {
+    const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
+    const tempest = MELEE_ABILITIES.find((a) => a.id === "icy_tempest")!;
+    const ctx = createCastContext(lengCtxInput());
+    expect(ctx.performCast(attack, 0, false).ok).toBe(true);
+    expect(ctx.performCast(tempest, ctx.getState().tick, false).ok).toBe(true);
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+    expect(s.rng?.method).toBe("probability-weighted branching");
+
+    // Weight-mix integer bands after one Leng land (0/1/2 stacks). Float 0.12 floors to 0.
+    const land = lengLandOutcomes(true, true, 0, 0, 0);
+    const mid = (minPct: number, maxPct: number) => ((minPct + maxPct) / 2) * 10;
+    let eTempest = 0;
+    for (const o of land) {
+      const hits = icyTempestHits(o.stacks);
+      eTempest +=
+        o.weight *
+        (mid(hits[0]!.band.minPct, hits[0]!.band.maxPct) +
+          mid(hits[1]!.band.minPct, hits[1]!.band.maxPct));
+    }
+    const zeroHits = icyTempestHits(0);
+    const zeroTempest =
+      mid(zeroHits[0]!.band.minPct, zeroHits[0]!.band.maxPct) +
+      mid(zeroHits[1]!.band.minPct, zeroHits[1]!.band.maxPct);
+    expect(eTempest).toBeGreaterThan(zeroTempest);
+
+    const attackOnly = simulate({
+      ...lengCtxInput(),
+      rotation: rotationOf("attack"),
+    });
+    // Stack arms scale tempest; silent-zero / float-floor path stays near attack+zeroTempest.
+    expect(s.totalExpected).toBeGreaterThan(attackOnly.totalExpected + zeroTempest - 50);
+  });
+
+  it("multi-hit assault: stack EV under cap with integer stacks per branch", () => {
+    const assault = MELEE_ABILITIES.find((a) => a.id === "assault")!;
+    const set = castOutcomes(
+      { weight: 1, rt: createRuntime(lengCtxInput()) },
+      assault,
+      0,
+      false,
+    );
+    expect(set.residualWeight).toBeLessThanOrEqual(1e-12);
+    const eStacks = expectedStacks(set.branches);
+    expect(eStacks).toBeGreaterThan(0.12);
+    expect(eStacks).toBeLessThanOrEqual(PRIMORDIAL_ICE_CAP);
+    for (const b of set.branches) {
+      const stacks = b.rt.state.melee.primordialIceStacks;
+      expect(Number.isInteger(stacks)).toBe(true);
+      expect(stacks).toBeGreaterThanOrEqual(0);
+      expect(stacks).toBeLessThanOrEqual(PRIMORDIAL_ICE_CAP);
+    }
+  });
+
+  it("at stack cap EF is no-op; chill still forks frost window", () => {
+    const rt = createRuntime(lengCtxInput());
+    rt.state = patchMelee(rt.state, { primordialIceStacks: PRIMORDIAL_ICE_CAP });
+    const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
+    const set = castOutcomes({ weight: 1, rt }, attack, 0, false);
+    expect(
+      set.branches.every((b) => b.rt.state.melee.primordialIceStacks === PRIMORDIAL_ICE_CAP),
+    ).toBe(true);
+    const chillMass = set.branches
+      .filter((b) => b.rt.state.melee.frostbladesUntilTick > 0)
+      .reduce((s, b) => s + b.weight, 0);
+    expect(chillMass).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
+  });
 
   it("one basic hit E[stacks] = 0.1 + 0.02 with both passives", () => {
     const effects = lengEffects();

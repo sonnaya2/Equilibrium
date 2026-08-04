@@ -23,6 +23,7 @@ export type CastPreparation = { ok: true; prepared: PreparedCast } | { ok: false
 /**
  * Advance to candidate tick, then validate + prepare. Rejection only advances time;
  * prepareCast is read-only. Shared by drivers and the branch layer.
+ * Advance may use plain advanceTo; Leng expands on commitCastBranches paths.
  */
 export function prepareSimulationCast(
   rt: SimulationRuntime,
@@ -47,14 +48,9 @@ export function prepareSimulationCast(
 }
 
 /**
- * Commit a prepared cast: schedule damage, cast-start effects, advance occupancy
- * (channel hits + passive gen), completion effects, then record.
- * Adren ledger comes from applyCastResources (single RNG resolve); no re-roll.
- *
- * Leng Endless Frost / Boundless Chill are state-changing multi-outcome rolls and
- * only expand on branch-aware drivers (simulate / castOutcomes / commitCastBranches).
- * This single-path clock does not invent a deterministic Leng outcome (heaviest
- * no-proc would silently zero stacks). Use castOutcomes when stack EV matters.
+ * Commit on one runtime with plain advanceTo (no Leng fork). Does not invent a
+ * deterministic Leng outcome and does not write float E[stacks] (floor would bias
+ * Icy Tempest spend/bands). Stack EV: createCastContext / castOutcomes / simulate.
  */
 export function commitCast(
   rt: SimulationRuntime,
@@ -101,7 +97,7 @@ export function commitCast(
   rt.casts.push(record);
 }
 
-/** One atomic cast transition: prepare at the candidate tick, then commit. */
+/** One atomic cast on a single runtime (no Leng land fork). */
 export function performCast(
   rt: SimulationRuntime,
   ability: AbilitySpec,

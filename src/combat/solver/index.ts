@@ -93,7 +93,7 @@ export { buildCandidatePool, indexPool, poolAbilityFromSpec } from "./candidateP
 export { evaluateRevolutionBar } from "./evaluate";
 
 export { barDistance, diverseSelect } from "./diversity";
-export { buildSeeds, type SeedOptions } from "./seeds";
+export { buildSeeds, normalizeAuthoredSeed, type SeedOptions } from "./seeds";
 export {
   solve,
   solveAsync,

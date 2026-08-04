@@ -12,6 +12,34 @@ export interface SeedOptions {
   count?: number;
 }
 
+/**
+ * Authored-seed normalize used by buildSeeds: drop unknown/illegal ids, truncate to max,
+ * pad short bars to min (pool order). null when the result is outside sizeBounds.
+ */
+export function normalizeAuthoredSeed(
+  bar: readonly string[],
+  pool: readonly PoolAbility[],
+  sizeBounds: SizeBounds,
+): string[] | null {
+  const byId = new Map(pool.map((a) => [a.id, a] as const));
+  const built: string[] = [];
+  for (const id of bar) {
+    if (built.length >= sizeBounds.max) break;
+    const a = byId.get(id);
+    if (a && remainingCandidates(built, [a], byId).length) built.push(id);
+  }
+  // Pad short authored seeds to band min (pinned length agents).
+  if (built.length > 0 && built.length < sizeBounds.min) {
+    const remain = remainingCandidates(built, pool, byId);
+    for (const a of remain) {
+      if (built.length >= sizeBounds.min) break;
+      if (remainingCandidates(built, [a], byId).length) built.push(a.id);
+    }
+  }
+  if (built.length < sizeBounds.min || built.length > sizeBounds.max) return null;
+  return built;
+}
+
 /** Authored + heuristic seeds within sizeBounds. */
 export function buildSeeds(opts: SeedOptions): string[][] {
   const { pool, sizeBounds, rng } = opts;
@@ -20,21 +48,7 @@ export function buildSeeds(opts: SeedOptions): string[][] {
   const out: string[][] = [];
   const seen = new Set<string>();
 
-  const push = (bar: string[], opts?: { padToMin?: boolean }) => {
-    const built: string[] = [];
-    for (const id of bar) {
-      if (built.length >= sizeBounds.max) break;
-      const a = byId.get(id);
-      if (a && remainingCandidates(built, [a], byId).length) built.push(id);
-    }
-    // Pad short authored seeds to band min (pinned length agents).
-    if (opts?.padToMin && built.length > 0 && built.length < sizeBounds.min) {
-      const remain = remainingCandidates(built, pool, byId);
-      for (const a of remain) {
-        if (built.length >= sizeBounds.min) break;
-        if (remainingCandidates(built, [a], byId).length) built.push(a.id);
-      }
-    }
+  const pushBuilt = (built: string[]) => {
     if (built.length < sizeBounds.min || built.length > sizeBounds.max) return;
     const key = built.join("\0");
     if (seen.has(key)) return;
@@ -42,15 +56,28 @@ export function buildSeeds(opts: SeedOptions): string[][] {
     out.push(built);
   };
 
-  for (const a of opts.authored ?? []) push([...a], { padToMin: true });
+  const pushHeuristic = (bar: string[]) => {
+    const built: string[] = [];
+    for (const id of bar) {
+      if (built.length >= sizeBounds.max) break;
+      const a = byId.get(id);
+      if (a && remainingCandidates(built, [a], byId).length) built.push(id);
+    }
+    pushBuilt(built);
+  };
 
-  push(categoryBalanced(pool, sizeBounds, byId));
-  push(damagePerOccupancy(pool, sizeBounds, byId));
-  push(cooldownSpread(pool, sizeBounds, byId));
+  for (const a of opts.authored ?? []) {
+    const norm = normalizeAuthoredSeed(a, pool, sizeBounds);
+    if (norm) pushBuilt(norm);
+  }
+
+  pushHeuristic(categoryBalanced(pool, sizeBounds, byId));
+  pushHeuristic(damagePerOccupancy(pool, sizeBounds, byId));
+  pushHeuristic(cooldownSpread(pool, sizeBounds, byId));
 
   let guard = count * 10;
   while (out.length < count + (opts.authored?.length ?? 0) && guard-- > 0) {
-    push(randomSubset(pool, sizeBounds, rng, byId));
+    pushHeuristic(randomSubset(pool, sizeBounds, rng, byId));
   }
 
   return out;

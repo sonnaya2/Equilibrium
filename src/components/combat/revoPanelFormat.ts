@@ -190,22 +190,45 @@ export function solverPhaseLabel(
   }
 }
 
+const PROOF_MASS_EPS = 1e-12;
+
+function isExactClaimProofId(label: string | null | undefined): boolean {
+  return (
+    label === "full-objective-global-optimum" ||
+    label === "globally-optimal" ||
+    label === "search-objective-exhaustive"
+  );
+}
+
+function optsTaintExactProof(opts?: {
+  approximated?: boolean;
+  residualWeight?: number;
+  exactness?: string;
+}): boolean {
+  if (opts?.approximated) return true;
+  const residual = opts?.residualWeight;
+  if (typeof residual === "number" && Number.isFinite(residual) && residual > PROOF_MASS_EPS) {
+    return true;
+  }
+  const ex = opts?.exactness;
+  return (
+    ex === "approximated" ||
+    ex === "bounded-approximation" ||
+    ex === "truncated" ||
+    ex === "resampled"
+  );
+}
+
 /**
  * Human proof label for solver chrome.
- * When approximated, never show exact-claim labels (global optimum / exhaustive).
+ * Residual / non-exact exactness never shows global optimum / exhaustive chrome.
  */
 export function formatProofLabel(
   label: string | null | undefined,
-  opts?: { approximated?: boolean },
+  opts?: { approximated?: boolean; residualWeight?: number; exactness?: string },
 ): string {
-  if (opts?.approximated) {
-    if (
-      label === "full-objective-global-optimum" ||
-      label === "globally-optimal" ||
-      label === "search-objective-exhaustive"
-    ) {
-      return "Approximated";
-    }
+  if (optsTaintExactProof(opts) && isExactClaimProofId(label)) {
+    return "Approximated";
   }
   if (label == null || label === "") return "Best found";
   switch (label) {

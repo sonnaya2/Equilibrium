@@ -76,8 +76,8 @@ export function successfulMass(branches: readonly Branch[]): number {
 }
 
 /**
- * Unconditional expected damage over all concrete mass (success + failed banked).
- * Matches combineBranchSummaries primary mix (not success-renormalized).
+ * Unconditional E[D|concrete] over expanded terminals (success + failed banked).
+ * Matches combineBranchSummaries primary mix (not success-renormalized; residual not mixed).
  */
 export function expectedDamageUnconditional(branches: readonly Branch[]): number {
   const w = massOf(branches);
@@ -109,10 +109,14 @@ export function residualOf(rng: { residualWeight?: number } | undefined | null):
 }
 
 export function concretePlusResidual(
-  rng: { probabilityMass?: number; residualWeight?: number } | undefined | null,
+  rng: {
+    probabilityMass?: number;
+    concreteMass?: number;
+    residualWeight?: number;
+  } | undefined | null,
 ): number {
   if (!rng) return 1;
-  return (rng.probabilityMass ?? 0) + residualOf(rng);
+  return (rng.concreteMass ?? rng.probabilityMass ?? 0) + residualOf(rng);
 }
 
 /**

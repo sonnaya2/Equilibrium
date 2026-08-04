@@ -14,8 +14,7 @@ This document records measured wall-clock numbers on the current tree **before**
 | **Quick budget** | `evaluationBudget=28` (tier label `quick@28`) |
 | **Thorough budget (reference)** | `2400` (not used in this run) |
 | **Host** | Node `v26.5.1`, win32 x64, AMD Ryzen 9 9950X 16-Core Processor (32 logical CPUs) |
-| **Source JSON** | [`solver-benchmark-quick.json`](./solver-benchmark-quick.json) |
-| **Baseline JSON** | [`solver-performance-baseline-phase0.json`](./solver-performance-baseline-phase0.json) |
+| **JSON artifacts** | Local only (gitignored); regenerate via `npm run benchmark:solver:quick` |
 
 ## Profile flags (this run)
 

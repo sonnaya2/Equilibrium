@@ -12,7 +12,8 @@ node_modules/
 /dist/
 /build/
 /coverage/
-/reports/
+/reports/*
+!/reports/*.md
 /playwright-report/
 /test-results/
 /blob-report/

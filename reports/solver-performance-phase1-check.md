@@ -12,7 +12,7 @@ Wall times are a rough comparison against the Phase 0 baseline. **No 3× (or any
 | **Mode** | `quick` (`npm run benchmark:solver:quick`) |
 | **Quick budget** | `evaluationBudget=28` (tier label `quick@28`) |
 | **Host** | Node (same machine as phase0), win32 x64, AMD Ryzen 9 9950X |
-| **Source JSON** | [`solver-benchmark-quick.json`](./solver-benchmark-quick.json) |
+| **JSON artifacts** | Local only (gitignored); regenerate via `npm run benchmark:solver:quick` |
 | **Phase 0 baseline** | [`solver-performance-baseline-phase0.md`](./solver-performance-baseline-phase0.md) |
 
 ## Verification results

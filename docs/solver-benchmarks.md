@@ -31,8 +31,8 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 | `src/combat/solver/benchmarks/quick.test.ts`   | Vitest entry (quick)                     |
 | `src/combat/solver/benchmarks/full.test.ts`    | Vitest entry (full)                      |
 | `scripts/benchmarks/solver.mjs`                | CLI wrapper around vitest                |
-| `reports/solver-benchmark-quick.json`          | Quick report output                      |
-| `reports/solver-benchmark-full.json`           | Full report output                       |
+| `reports/solver-benchmark-*.json`              | Local report output (gitignored)         |
+| `reports/solver-performance-*.md`              | Short baseline / phase check summaries   |
 
 ## Case IDs
 

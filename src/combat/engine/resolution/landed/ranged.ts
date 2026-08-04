@@ -31,12 +31,18 @@ function mayApplyPuncture(
   return caps.playerAttack && caps.directHit;
 }
 
+/** Drop stale puncture sequence events (gen bump / refresh). */
+function cancelPendingPuncture(rt: SimulationRuntime): void {
+  rt.queue.cancelWhere((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+}
+
 function schedulePunctureSequence(
   rt: SimulationRuntime,
   firstTick: number,
   generation: number,
   storedDamage: number,
 ): void {
+  cancelPendingPuncture(rt);
   const ticks = punctureSequenceTicks(firstTick);
   for (let i = 0; i < PUNCTURE_HIT_PERCENTS.length; i++) {
     const percent = PUNCTURE_HIT_PERCENTS[i]!;
@@ -70,7 +76,10 @@ export function schedulePunctureAfterFinish(
   finishTick: number,
 ): void {
   const p = rt.state.ranged.puncture;
-  if (p.stacks <= 0 || p.storedDamage <= 0) return;
+  if (p.stacks <= 0 || p.storedDamage <= 0) {
+    cancelPendingPuncture(rt);
+    return;
+  }
   const first = finishTick + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
   schedulePunctureSequence(rt, first, p.generation, p.storedDamage);
   rt.state = patchRanged(rt.state, {
@@ -86,7 +95,7 @@ export function onRangedHitLanded(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   ability: AbilitySpec,
-  damage?: ResolvedDamage,
+  damage: ResolvedDamage,
 ): void {
   const fleeting = rt.input.equipmentIds?.some(
     (id) => id === "item:fleeting-boots" || id === "item:enhanced-fleeting-boots",
@@ -123,8 +132,7 @@ export function onRangedHitLanded(
     });
   }
 
-  const dmg = damage ?? { min: 0, max: 0, expected: 0 };
-  if (!mayApplyPuncture(rt, event, dmg)) return;
+  if (!mayApplyPuncture(rt, event, damage)) return;
 
   // Open cast: pendingOwnerCast waits for applyCompletionEffects (one sequence per cast).
   // Finished / autonomous: pendingOwnerCast=-1 and schedule from land (finish analog = land tick).
@@ -138,6 +146,8 @@ export function onRangedHitLanded(
     finished ? -1 : owner,
   );
   rt.state = patchRanged(rt.state, { puncture: next });
+  // Gen bump invalidates any live sequence; drop stale queue rows (not only on reschedule).
+  cancelPendingPuncture(rt);
   if (next.pendingOwnerCast < 0) {
     schedulePunctureAfterFinish(rt, event.tick);
   }

@@ -194,15 +194,14 @@ describe("puncture runtime", () => {
     ]);
     // 2 stacks snapshotted: [10,4,3,2,1]
     expect(positive.map((e) => e.damage.expected)).toEqual([10, 4, 3, 2, 1]);
-    // Stale gen-1 sequence still lands as zero before the new first hit.
+    // Gen bump cancels stale queue rows; no pre-first-new puncture lands.
     const early = dots.filter((e) => e.tick < firstNew);
-    expect(early.length).toBeGreaterThan(0);
-    expect(early.every((e) => e.damage.expected === 0)).toBe(true);
+    expect(early).toHaveLength(0);
   });
 
-  it("refresh during active sequence invalidates prior generation events", () => {
+  it("refresh during active sequence cancels unlanded tails", () => {
     // Piercing @0: 2 stacks, sequence first at 4 ([10,4,3,2,1]).
-    // Piercing @8: after hits at 4 and 7, restarts gen; remaining old tails -> 0.
+    // Piercing @8: after hits at 4 and 7, gen bump drops remaining old tails from queue.
     const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
     const pierce = ctx.byId.get("piercing_shot")!;
     ctx.performCast(pierce, 0, false);
@@ -215,10 +214,9 @@ describe("puncture runtime", () => {
     // Early gen hits that landed before refresh keep their damage.
     const early = dots.filter((e) => e.tick === 4 || e.tick === 7);
     expect(early.map((e) => e.damage.expected)).toEqual([10, 4]);
-    // Stale mid-sequence tails after gen bump are present at 0 (would have been 3,2,1).
+    // Old mid-sequence tails (10/13/16) never land - cancelled on gen bump.
     const staleTicks = [10, 13, 16];
-    const stale = dots.filter((e) => staleTicks.includes(e.tick) && e.damage.expected === 0);
-    expect(stale.length).toBeGreaterThan(0);
+    expect(dots.filter((e) => staleTicks.includes(e.tick))).toHaveLength(0);
     // New generation full sequence from finish@11 + 1 = 12; stored 40.
     const newFirst = 11 + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
     const fresh = dots.filter(
@@ -230,27 +228,59 @@ describe("puncture runtime", () => {
     expect(fresh.map((e) => e.damage.expected)).toEqual([20, 8, 6, 4, 2]);
   });
 
-  it("event invalidation: generation mismatch resolves as 0 damage", () => {
-    // Build a sequence, then re-apply once mid-window so closed-over gen mismatches.
-    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
-    const attack = ctx.byId.get("ranged_attack")!;
-    ctx.performCast(attack, 0, false);
-    const genAfterFirst = ctx.getState().ranged.puncture.generation;
-    // Mid-sequence refresh at tick 8 (after first hit at 4).
-    ctx.performCast(attack, 8, false);
-    expect(ctx.getState().ranged.puncture.generation).toBeGreaterThan(genAfterFirst);
-    const s = ctx.finish();
-    const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
-    // At least one resolved puncture event is explicitly zero from gen mismatch
-    // (distinct from the floor-zero 5th hit of a 1-stack sequence at the same gen).
-    const newFirst = 8 + GLOBAL_COOLDOWN_TICKS + PUNCTURE_FIRST_OFFSET_AFTER_FINISH;
-    const zeroMid = dots.filter(
-      (e) => e.damage.expected === 0 && e.tick > 4 && e.tick < newFirst,
+  it("event invalidation: gen bump cancels pending puncture before new sequence", () => {
+    const rt = createRuntime({ ...rangedInput, ammo: "splintering" });
+    const attack = rt.byId.get("ranged_attack")!;
+    // Land one hit as finished cast so sequence is scheduled immediately.
+    rt.state = patchRanged(rt.state, {
+      puncture: { ...rt.state.ranged.puncture, lastCompletedCastSeq: 0 },
+    });
+    onRangedHitLanded(
+      rt,
+      {
+        tick: 0,
+        seq: 0,
+        family: "hit",
+        abilityId: attack.id,
+        sourceCast: 0,
+        hitIndex: 0,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        originKind: "direct",
+        provenance: { kind: "player_direct" },
+        resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
+      },
+      attack,
+      { min: 100, max: 100, expected: 100 },
     );
-    expect(zeroMid.length).toBeGreaterThan(0);
-    // Live generation still deals its full non-floor-zero sequence (2 stacks).
-    const liveFromRefresh = dots.filter((e) => e.tick >= newFirst && e.damage.expected > 0);
-    expect(liveFromRefresh.map((e) => e.damage.expected)).toEqual([10, 4, 3, 2, 1]);
+    expect(rt.queue.pending().filter((e) => e.abilityId === PUNCTURE_ABILITY_ID)).toHaveLength(5);
+    const gen1 = rt.state.ranged.puncture.generation;
+    // Second land under finished owner bumps gen and cancels prior queue rows.
+    onRangedHitLanded(
+      rt,
+      {
+        tick: 2,
+        seq: 1,
+        family: "hit",
+        abilityId: attack.id,
+        sourceCast: 0,
+        hitIndex: 0,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        originKind: "direct",
+        provenance: { kind: "player_direct" },
+        resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
+      },
+      attack,
+      { min: 100, max: 100, expected: 100 },
+    );
+    expect(rt.state.ranged.puncture.generation).toBeGreaterThan(gen1);
+    const pending = rt.queue.pending().filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
+    expect(pending).toHaveLength(5);
+    // New sequence starts at land+1 = 3 (not the old first at 1).
+    expect(pending.map((e) => e.tick)[0]).toBe(2 + PUNCTURE_FIRST_OFFSET_AFTER_FINISH);
   });
 
   it("snapshot isolation: stored damage ignores later base changes via fixed base", () => {
@@ -529,6 +559,16 @@ describe("caroming", () => {
         5,
       );
     }
+  });
+
+  it("scales bands with integer percent path (no 15*1.04 float dust)", () => {
+    const scaled = applyCaromingToRicochetHits(
+      [{ band: { minPct: 15, maxPct: 20 }, tickOffset: 1 }],
+      1,
+    );
+    expect(scaled[0]!.band.minPct).toBe(15.6);
+    expect(scaled[0]!.band.maxPct).toBe(20.8);
+    expect(Object.is(scaled[0]!.band.minPct, 15.6)).toBe(true);
   });
 });
 

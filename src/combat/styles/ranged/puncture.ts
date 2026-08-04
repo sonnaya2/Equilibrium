@@ -21,8 +21,6 @@ export const PUNCTURE_DURATION_TICKS = secondsToTicks(PUNCTURE_DURATION_SECONDS)
 export const PUNCTURE_STORE_PCT = 1;
 /** Hit percents of snapshotted stored damage: 50+20+15+10+5 = 100. */
 export const PUNCTURE_HIT_PERCENTS = [50, 20, 15, 10, 5] as const;
-/** Alias kept for existing re-exports; same integer percents as PUNCTURE_HIT_PERCENTS. */
-export const PUNCTURE_HIT_FRACTIONS = PUNCTURE_HIT_PERCENTS;
 /** First damage lands 1 tick after the applying ability finishes. */
 export const PUNCTURE_FIRST_OFFSET_AFTER_FINISH = 1;
 /** Subsequent hits every 3 ticks after the first. */

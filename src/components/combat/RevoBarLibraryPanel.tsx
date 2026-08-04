@@ -5,8 +5,28 @@ import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { formatNumber } from "./revoPanelFormat";
 import type { RevoBarEntry, RevoBarLibrary } from "./revoBarLibrary";
-import { libraryForStyle } from "./revoBarLibrary";
+import { isScoreVerifiedForContext, libraryForStyle } from "./revoBarLibrary";
 import "./revo-solver.css";
+
+function ScoreLabel({
+  entry,
+  liveScoreContext,
+}: {
+  entry: RevoBarEntry;
+  liveScoreContext: string | null | undefined;
+}) {
+  const verified = isScoreVerifiedForContext(entry, liveScoreContext);
+  const score = entry.score!;
+  return (
+    <span
+      className="revo-bar-library__score font-mono"
+      data-verified={verified ? "1" : "0"}
+      title={verified ? "Verified" : "Estimate"}
+    >
+      {verified ? formatNumber(score) : `~${formatNumber(score)}`}
+    </span>
+  );
+}
 
 export function RevoBarLibraryPanel({
   style,
@@ -15,6 +35,7 @@ export function RevoBarLibraryPanel({
   currentSaveScore: _currentSaveScore,
   alreadySaved,
   solving,
+  liveScoreContext = null,
   onSave,
   onLoad,
   onDropRecent,
@@ -26,6 +47,8 @@ export function RevoBarLibraryPanel({
   currentSaveScore: number | null;
   alreadySaved: boolean;
   solving: boolean;
+  /** Live simulation identity; verified scores show only when entry.scoreContext matches. */
+  liveScoreContext?: string | null;
   onSave: () => void;
   onLoad: (entry: RevoBarEntry) => void;
   onDropRecent: (id: string) => void;
@@ -93,13 +116,7 @@ export function RevoBarLibraryPanel({
                           {entry.name ?? `${entry.bar.length}-slot`}
                         </span>
                         {entry.score != null ? (
-                          <span
-                            className="revo-bar-library__score font-mono"
-                            data-verified={entry.verified ? "1" : "0"}
-                            title={entry.verified ? "Verified" : "Estimate"}
-                          >
-                            {entry.verified ? formatNumber(entry.score) : `~${formatNumber(entry.score)}`}
-                          </span>
+                          <ScoreLabel entry={entry} liveScoreContext={liveScoreContext} />
                         ) : null}
                       </span>
                     </button>
@@ -152,13 +169,7 @@ export function RevoBarLibraryPanel({
                           {entry.name ?? `${entry.bar.length}-slot`}
                         </span>
                         {entry.score != null ? (
-                          <span
-                            className="revo-bar-library__score font-mono"
-                            data-verified={entry.verified ? "1" : "0"}
-                            title={entry.verified ? "Verified" : "Estimate"}
-                          >
-                            {entry.verified ? formatNumber(entry.score) : `~${formatNumber(entry.score)}`}
-                          </span>
+                          <ScoreLabel entry={entry} liveScoreContext={liveScoreContext} />
                         ) : null}
                       </span>
                     </button>

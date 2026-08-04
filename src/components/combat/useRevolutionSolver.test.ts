@@ -1,14 +1,25 @@
 import { describe, expect, it, vi } from "vitest";
-import { planWorkers } from "@/combat/solver";
+import { planWorkers, solveContextPayload } from "@/combat/solver";
+import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
+import { loadoutStats } from "@/components/combat/loadoutStats";
+import { emptyBuild } from "@/league";
 import {
+  APPLY_FINAL_STAMP_REJECT_MESSAGE,
+  isCompletedResultStale,
   isLiveSolverSession,
+  mayApplyFinalDtoStamp,
   mayPublishStoppedPreview,
-  mayWriteVerifiedSolveArtifacts,
+  maySaveVerified,
+  recentLibraryVerifiedFields,
   settlementActionForCatch,
   settlementActionForSolve,
   stoppedPreviewFromProgress,
 } from "./revoPanelFormat";
-import { seedProgressFromPlan } from "./useRevolutionSolver";
+import {
+  createProgressRafGate,
+  packSolverRequestFromUi,
+  seedProgressFromPlan,
+} from "./useRevolutionSolver";
 
 /**
  * Hook ownership stays in useRevolutionSolver; settlement + seed-plan policy are pure
@@ -29,18 +40,16 @@ describe("useRevolutionSolver session settlement policy", () => {
   });
 
   it("cancellation does not allow verified cache writes", () => {
-    expect(
-      mayWriteVerifiedSolveArtifacts(
-        settlementActionForSolve({
-          sessionGen: 2,
-          currentGen: 2,
-          sessionIdentity: "s",
-          currentIdentity: "s",
-          cancelled: true,
-          hasFinalDto: true,
-        }),
-      ),
-    ).toBe(false);
+    const action = settlementActionForSolve({
+      sessionGen: 2,
+      currentGen: 2,
+      sessionIdentity: "s",
+      currentIdentity: "s",
+      cancelled: true,
+      hasFinalDto: true,
+    });
+    expect(action).toBe("stopped-preview");
+    expect(action).not.toBe("apply-final");
   });
 
   it("stopped previews carry only known progress facts", () => {
@@ -101,6 +110,27 @@ describe("useRevolutionSolver session settlement policy", () => {
     ).toBe(false);
   });
 
+  it("identity mismatch mid-run does not apply verified final", () => {
+    const remember = vi.fn();
+    const setFinal = vi.fn();
+    const action = settlementActionForSolve({
+      sessionGen: 1,
+      currentGen: 1,
+      sessionIdentity: "session-at-start",
+      currentIdentity: "live-after-gear-change",
+      cancelled: false,
+      hasFinalDto: true,
+    });
+    expect(action).toBe("ignore");
+    expect(action).not.toBe("apply-final");
+    if (action === "apply-final") {
+      remember();
+      setFinal();
+    }
+    expect(remember).not.toHaveBeenCalled();
+    expect(setFinal).not.toHaveBeenCalled();
+  });
+
   it("identity-mismatched abort does not publish stoppedPreview or onActiveBar", () => {
     const setStopped = vi.fn();
     const onActiveBar = vi.fn();
@@ -156,7 +186,7 @@ describe("useRevolutionSolver session settlement policy", () => {
     });
     expect(action).toBe("stopped-preview");
     expect(mayPublishStoppedPreview(action)).toBe(true);
-    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(false);
+    expect(action).not.toBe("apply-final");
   });
 
   it("maps settlement outcomes the way the hook applies them", () => {
@@ -191,7 +221,7 @@ describe("useRevolutionSolver session settlement policy", () => {
     setFinal.mockClear();
     setStopped.mockClear();
 
-    // Cancelled but identity drifted → ignore (no stopped publish).
+    // Cancelled but identity drifted -> ignore (no stopped publish).
     apply(
       settlementActionForSolve({
         sessionGen: 1,
@@ -206,10 +236,359 @@ describe("useRevolutionSolver session settlement policy", () => {
     expect(setFinal).not.toHaveBeenCalled();
     expect(setStopped).not.toHaveBeenCalled();
   });
+
+  it("apply-final empty or mismatched DTO stamp fails closed with error (no verified)", () => {
+    const remember = vi.fn();
+    const setFinal = vi.fn();
+    const setError = vi.fn();
+    const setStopped = vi.fn();
+
+    // Same policy as useRevolutionSolver optimize resolve path.
+    const settleFinal = (opts: {
+      dtoSolveIdentity: string;
+      liveIdentity: string;
+      sessionIdentity?: string;
+    }) => {
+      const action = settlementActionForSolve({
+        sessionGen: 1,
+        currentGen: 1,
+        sessionIdentity: opts.sessionIdentity ?? opts.liveIdentity,
+        currentIdentity: opts.liveIdentity,
+        cancelled: false,
+        hasFinalDto: true,
+      });
+      if (action === "ignore") return;
+      if (action === "stopped-preview") {
+        setStopped();
+        return;
+      }
+      if (
+        !mayApplyFinalDtoStamp({
+          dtoSolveIdentity: opts.dtoSolveIdentity,
+          liveIdentity: opts.liveIdentity,
+        })
+      ) {
+        setError(APPLY_FINAL_STAMP_REJECT_MESSAGE);
+        return;
+      }
+      if (action === "apply-final") {
+        remember();
+        setFinal();
+      }
+    };
+
+    settleFinal({ dtoSolveIdentity: "", liveIdentity: "live-ctx" });
+    expect(remember).not.toHaveBeenCalled();
+    expect(setFinal).not.toHaveBeenCalled();
+    expect(setStopped).not.toHaveBeenCalled();
+    expect(setError).toHaveBeenCalledWith(APPLY_FINAL_STAMP_REJECT_MESSAGE);
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "", liveIdentity: "live-ctx" })).toBe(
+      false,
+    );
+
+    remember.mockClear();
+    setFinal.mockClear();
+    setError.mockClear();
+    setStopped.mockClear();
+
+    settleFinal({ dtoSolveIdentity: "stale-stamp", liveIdentity: "live-ctx" });
+    expect(remember).not.toHaveBeenCalled();
+    expect(setFinal).not.toHaveBeenCalled();
+    expect(setStopped).not.toHaveBeenCalled();
+    expect(setError).toHaveBeenCalledWith(APPLY_FINAL_STAMP_REJECT_MESSAGE);
+    expect(
+      mayApplyFinalDtoStamp({ dtoSolveIdentity: "stale-stamp", liveIdentity: "live-ctx" }),
+    ).toBe(false);
+
+    remember.mockClear();
+    setFinal.mockClear();
+    setError.mockClear();
+
+    settleFinal({ dtoSolveIdentity: "live-ctx", liveIdentity: "live-ctx" });
+    expect(setError).not.toHaveBeenCalled();
+    expect(setFinal).toHaveBeenCalledOnce();
+    expect(remember).toHaveBeenCalledOnce();
+  });
+});
+
+describe("live identity (pack+payload; progress is string compare)", () => {
+  const material = (overrides: {
+    limitToRegions?: boolean;
+    barSizePreset?: "fixed4" | "range4_11" | "range4_6";
+    style?: "melee" | "ranged" | "magic" | "necromancy";
+  } = {}) => {
+    const loadout = { ...DEFAULT_LOADOUT, style: overrides.style ?? DEFAULT_LOADOUT.style };
+    return {
+      stats: loadoutStats(loadout),
+      loadout,
+      build: emptyBuild(),
+      modelled: [] as never[],
+      solverTier: "thorough" as const,
+      solverProfile: "balanced" as const,
+      limitToRegions: overrides.limitToRegions ?? false,
+      barSizePreset: overrides.barSizePreset ?? ("range4_11" as const),
+    };
+  };
+
+  it("identity is pack+solveContextPayload of material inputs", () => {
+    const m = material();
+    const packed = packSolverRequestFromUi({ ...m, now: 1_700_000_000_000 });
+    const identity = solveContextPayload(packed);
+    // Same material + seed family yields the same token (now is not in identity).
+    expect(solveContextPayload(packSolverRequestFromUi({ ...m, now: 1_700_000_000_001 }))).toBe(
+      identity,
+    );
+    expect(solveContextPayload(packSolverRequestFromUi(m))).toBe(identity);
+  });
+
+  it("material drift changes identity; progress path only needs string equality", () => {
+    const a = solveContextPayload(packSolverRequestFromUi(material({ barSizePreset: "fixed4" })));
+    const b = solveContextPayload(
+      packSolverRequestFromUi(material({ barSizePreset: "range4_11" })),
+    );
+    expect(a).not.toBe(b);
+    // Progress gate: same string => live session; different => ignore.
+    expect(
+      isLiveSolverSession({
+        sessionGen: 1,
+        currentGen: 1,
+        sessionIdentity: a,
+        currentIdentity: a,
+      }),
+    ).toBe(true);
+    expect(
+      isLiveSolverSession({
+        sessionGen: 1,
+        currentGen: 1,
+        sessionIdentity: a,
+        currentIdentity: b,
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("progress rAF gate", () => {
+  it("coalesces pushes into one frame and flushes latest on settle", () => {
+    const frames: Array<() => void> = [];
+    const published: number[] = [];
+    const gate = createProgressRafGate(
+      (p) => {
+        published.push(p.evaluations);
+      },
+      {
+        raf: (cb) => {
+          frames.push(cb as () => void);
+          return frames.length;
+        },
+        caf: () => {
+          frames.length = 0;
+        },
+      },
+    );
+
+    gate.push({
+      phase: "explore",
+      evaluations: 1,
+      uniqueCandidates: 0,
+      bestScore: 0,
+      windowDpms: 0,
+      topBarPreview: [],
+      noImprovementCount: 0,
+    });
+    gate.push({
+      phase: "explore",
+      evaluations: 2,
+      uniqueCandidates: 0,
+      bestScore: 0,
+      windowDpms: 0,
+      topBarPreview: [],
+      noImprovementCount: 0,
+    });
+    gate.push({
+      phase: "explore",
+      evaluations: 3,
+      uniqueCandidates: 0,
+      bestScore: 0,
+      windowDpms: 0,
+      topBarPreview: [],
+      noImprovementCount: 0,
+    });
+    expect(published).toEqual([]);
+    expect(frames).toHaveLength(1);
+    frames[0]!();
+    expect(published).toEqual([3]);
+
+    gate.push({
+      phase: "exploit",
+      evaluations: 10,
+      uniqueCandidates: 1,
+      bestScore: 1,
+      windowDpms: 0,
+      topBarPreview: ["a"],
+      noImprovementCount: 0,
+    });
+    gate.push({
+      phase: "exploit",
+      evaluations: 99,
+      uniqueCandidates: 2,
+      bestScore: 2,
+      windowDpms: 0,
+      topBarPreview: ["a", "b"],
+      noImprovementCount: 0,
+    });
+    gate.flush();
+    expect(published).toEqual([3, 99]);
+  });
+});
+
+describe("save gate + completed-result stale", () => {
+  const bar = ["slice", "fury", "assault", "destroy"];
+
+  it("allows verified save only when live identity and bar match the DTO", () => {
+    const cacheable = "heuristic-best-found" as const;
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: bar,
+        proofLabel: cacheable,
+      }),
+    ).toBe(true);
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-b",
+        finalBar: bar,
+        currentBar: bar,
+        proofLabel: cacheable,
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: [...bar, "extra"],
+        proofLabel: cacheable,
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: bar,
+        proofLabel: cacheable,
+        solving: true,
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: bar,
+        proofLabel: cacheable,
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: bar,
+        proofLabel: "stopped-early",
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: bar,
+        proofLabel: "degraded-exploratory-fallback",
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "ctx-a",
+        resultSolveIdentity: "ctx-a",
+        finalBar: bar,
+        currentBar: bar,
+      }),
+    ).toBe(false);
+  });
+
+  it("degraded final cannot write verified recent; cacheable can", () => {
+    const request = packSolverRequestFromUi({
+      stats: loadoutStats(DEFAULT_LOADOUT),
+      loadout: DEFAULT_LOADOUT,
+      build: emptyBuild(),
+      modelled: [],
+      solverTier: "thorough",
+      solverProfile: "balanced",
+      limitToRegions: false,
+      barSizePreset: "range4_11",
+      now: 1_700_000_000_000,
+    });
+    const identity = solveContextPayload(request);
+    const longBar = ["a", "b", "c", "d", "e", "f"];
+    const base = {
+      bar: longBar,
+      score: 9_000,
+      windowDpms: 0,
+      evaluations: 50,
+      uniqueCandidates: 10,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: identity,
+      bestFullScore: 9_000,
+      top: [] as never[],
+    };
+    expect(
+      recentLibraryVerifiedFields(request, {
+        ...base,
+        proofLabel: "degraded-exploratory-fallback",
+        proof: { label: "degraded-exploratory-fallback" },
+        bestFullScore: undefined,
+      }),
+    ).toEqual({ verified: false, scoreContext: null });
+    expect(
+      recentLibraryVerifiedFields(request, {
+        ...base,
+        proofLabel: "heuristic-best-found",
+        proof: { label: "heuristic-best-found" },
+      }),
+    ).toEqual({ verified: true, scoreContext: identity });
+  });
+
+  it("marks completed results stale when stamp drifts or is empty", () => {
+    expect(
+      isCompletedResultStale({
+        liveIdentity: "live",
+        resultSolveIdentity: "old",
+      }),
+    ).toBe(true);
+    expect(
+      isCompletedResultStale({
+        liveIdentity: "live",
+        resultSolveIdentity: "live",
+      }),
+    ).toBe(false);
+    expect(
+      isCompletedResultStale({
+        liveIdentity: "live",
+        resultSolveIdentity: "",
+      }),
+    ).toBe(true);
+  });
 });
 
 describe("seedProgressFromPlan (real planWorkers path)", () => {
-  it("fixed4 seed agents stay at length 4 — never invents full 4..10 ladder", () => {
+  it("fixed4 seed agents stay at length 4 - never invents full 4..10 ladder", () => {
     const plan = planWorkers({
       minBarSize: 4,
       maxBarSize: 4,

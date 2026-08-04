@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
+import { DEFAULT_LOADOUT, type Loadout } from "@/components/combat/useLoadout";
 import { loadoutStats } from "@/components/combat/loadoutStats";
 import { solverSnapshotFromUi } from "@/components/combat/solverSnapshot";
+import { packSolverRequestFromUi } from "@/components/combat/useRevolutionSolver";
 import {
   emptyBuild,
   MILESTONE_REGION,
@@ -12,8 +13,30 @@ import {
   type RegionId,
 } from "@/league";
 import { packSolverRequest } from "./packRequest";
+import { isSerializableSimBase } from "./worker/serializable";
 
 const NOW = 1_700_000_000_000;
+
+const TARGET_DEFAULTS = {
+  defenceLevel: 80,
+  affinity: "same" as const,
+};
+
+function withGear(patch: Partial<Loadout>): Loadout {
+  return {
+    ...DEFAULT_LOADOUT,
+    ...patch,
+    buffs: { ...DEFAULT_LOADOUT.buffs, ...patch.buffs },
+    perks: { ...DEFAULT_LOADOUT.perks, ...patch.perks },
+    equipmentSlots: { ...DEFAULT_LOADOUT.equipmentSlots, ...patch.equipmentSlots },
+    target:
+      patch.target === undefined
+        ? DEFAULT_LOADOUT.target
+        : patch.target === null
+          ? null
+          : { ...TARGET_DEFAULTS, ...patch.target },
+  };
+}
 
 function pack(
   build: BuildState,
@@ -88,5 +111,39 @@ describe("packSolverRequest region modes", () => {
     const req = pack(emptyBuild(), { useBuildRegions: true });
     const expected = new Set<string>([...STARTING_REGIONS, MILESTONE_REGION]);
     expect(new Set(req.unlockedRegions)).toEqual(expected);
+  });
+
+  it("unrestricted pool does not re-gate stand: locked-build stats keep helmet null", () => {
+    // Stand needs Anachronia; stats built without it (Setup / Revolution path).
+    // limitToRegions false still opens ability pool to all REGION_IDS.
+    const loadout = withGear({
+      style: "melee",
+      buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
+      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+    });
+    const locked = ["misthalin", "kandarin"] as const;
+    const stats = loadoutStats(loadout, { unlockedRegions: [...locked] });
+    expect(stats.slayerHelmet).toBeNull();
+
+    const snap = solverSnapshotFromUi(stats, loadout);
+    expect(snap.slayerHelmet).toBeNull();
+
+    const req = packSolverRequestFromUi({
+      stats,
+      loadout,
+      build: emptyBuild(),
+      modelled: [],
+      solverTier: "thorough",
+      solverProfile: "balanced",
+      limitToRegions: false,
+      barSizePreset: "range4_11",
+      now: NOW,
+    });
+    expect(new Set(req.unlockedRegions)).toEqual(new Set(REGION_IDS));
+    expect(req.includeUnknownAvailability).toBe(true);
+    expect(isSerializableSimBase(req.loadout)).toBe(true);
+    if (isSerializableSimBase(req.loadout)) {
+      expect(req.loadout.modifierSources.slayerHelmet).toBeNull();
+    }
   });
 });

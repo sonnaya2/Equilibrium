@@ -20,6 +20,7 @@ import {
   type WorkerAssignment,
 } from "../workerPlan";
 import { compareTopEntry, pickBestSolverResult } from "../rankResults";
+import { solveIdentityFromRequest } from "../identity";
 
 const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
 
@@ -256,8 +257,15 @@ export function mergeProgress(
   };
 }
 
-/** Score-first merge - higher score always beats longer bar (see rankResults). */
-export function mergeResults(results: readonly SolverResultDTO[]): SolverResultDTO {
+/**
+ * Score-first merge - higher score always beats longer bar (see rankResults).
+ * When hostRequest is provided, re-stamp solveIdentity from the host/session
+ * request (seed + full bar window), not the agent-local patched identity.
+ */
+export function mergeResults(
+  results: readonly SolverResultDTO[],
+  hostRequest?: SerializableSolverRequest,
+): SolverResultDTO {
   if (results.length === 0) {
     throw new Error("revolution solver pool: no results");
   }
@@ -294,6 +302,10 @@ export function mergeResults(results: readonly SolverResultDTO[]): SolverResultD
 
   return {
     ...best,
+    // Host session identity when available; else winner stamp (legacy/single-path).
+    solveIdentity: hostRequest
+      ? solveIdentityFromRequest(hostRequest)
+      : best.solveIdentity,
     evaluations,
     uniqueCandidates: unique,
     top: top.slice(0, 5),
@@ -623,7 +635,8 @@ export class SolverAgentPool {
         }
         throw new Error(errors[0] ?? "revolution solver pool: all agents failed");
       }
-      return mergeResults(ok);
+      // Re-stamp host/session identity (agents use patched seed + bar bands).
+      return mergeResults(ok, request);
     } finally {
       for (const fn of runCancels) unregisterCancel(fn);
     }

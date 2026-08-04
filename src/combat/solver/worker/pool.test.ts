@@ -1,6 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { mergeProgress, SolverAgentPool, solverPoolSize } from "./pool";
+import { mergeProgress, mergeResults, SolverAgentPool, solverPoolSize } from "./pool";
 import type { SolverProgress } from "./protocol";
+import {
+  isVerifiedCacheableResult,
+  resultMatchesRequestIdentity,
+  solveIdentityFromRequest,
+} from "../identity";
+import {
+  defaultSerializableRequest,
+  emptyModifierSources,
+  type SerializableSolverRequest,
+  type SolverResultDTO,
+} from "./serializable";
+import type { ActiveEquipmentEffects } from "../../shared/equipment";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -228,5 +240,120 @@ describe("SolverAgentPool.ensure shrinks", () => {
     expect(pool.size()).toBe(6);
     expect(terminated.length).toBe(6);
     pool.dispose();
+  });
+});
+
+const emptyEffects: ActiveEquipmentEffects = {
+  activation: "pre-activated-static-loadout",
+  passiveIds: [],
+  enchantments: [],
+  weaponClass: null,
+  defenderEquipped: false,
+  passage: { active: false, agonyActive: false },
+  amZiFlatDamage: 0,
+  amHejDamageBonus: 0,
+  vestments: {
+    pieces: 0,
+    heraldOfChaos: false,
+    berserkExtension: false,
+    increasedAdrenalineCap: false,
+  },
+};
+
+function hostSessionRequest(
+  overrides: Partial<SerializableSolverRequest> = {},
+): SerializableSolverRequest {
+  return defaultSerializableRequest({
+    style: "melee",
+    durationTicks: 500,
+    minBarSize: 4,
+    maxBarSize: 11,
+    seed: 1,
+    tier: "thorough",
+    profileId: "balanced",
+    loadout: {
+      base: 1200,
+      level: 99,
+      accuracy: 0.85,
+      crit: { chance: 0.12 },
+      equipmentEffects: emptyEffects,
+      league: {
+        ruleset: "base",
+        blessings: [],
+        blessingIds: [],
+        totalArmour: 0,
+        maximumLife: 10_000,
+        powerburstUntilTick: 0,
+        targetTiles: 1,
+      },
+      equipmentIds: ["abyssal_whip"],
+      weaponConfiguration: "dualwield",
+      startingAdrenaline: 100,
+      modifierSources: emptyModifierSources(),
+    },
+    ...overrides,
+  });
+}
+
+function agentDto(
+  agentRequest: SerializableSolverRequest,
+  partial: Partial<SolverResultDTO> & Pick<SolverResultDTO, "bar" | "score">,
+): SolverResultDTO {
+  return {
+    windowDpms: 0,
+    evaluations: 10,
+    uniqueCandidates: 5,
+    seed: agentRequest.seed ?? 1,
+    profileId: agentRequest.profileId,
+    tier: agentRequest.tier,
+    durationTicks: agentRequest.durationTicks,
+    solveIdentity: solveIdentityFromRequest(agentRequest),
+    proofLabel: "heuristic-best-found",
+    bestFullScore: partial.score,
+    proof: { label: "heuristic-best-found" },
+    top: [],
+    ...partial,
+  };
+}
+
+describe("mergeResults host solveIdentity", () => {
+  it("re-stamps host session identity over agent-local seed/bar-band stamps", () => {
+    const hostRequest = hostSessionRequest({ minBarSize: 4, maxBarSize: 11, seed: 1 });
+    const agentA = { ...hostRequest, seed: 7, minBarSize: 4, maxBarSize: 4 };
+    const agentB = { ...hostRequest, seed: 99, minBarSize: 4, maxBarSize: 4 };
+
+    const hostIdentity = solveIdentityFromRequest(hostRequest);
+    const agentAIdentity = solveIdentityFromRequest(agentA);
+    const agentBIdentity = solveIdentityFromRequest(agentB);
+    expect(agentAIdentity).not.toBe(hostIdentity);
+    expect(agentBIdentity).not.toBe(hostIdentity);
+    expect(agentAIdentity).not.toBe(agentBIdentity);
+
+    const low = agentDto(agentA, {
+      bar: ["a", "b", "c", "d"],
+      score: 8_000,
+      seed: 7,
+    });
+    const high = agentDto(agentB, {
+      bar: ["w", "x", "y", "z"],
+      score: 15_000,
+      seed: 99,
+    });
+    expect(low.solveIdentity).toBe(agentAIdentity);
+    expect(high.solveIdentity).toBe(agentBIdentity);
+
+    // Without host re-stamp, winner keeps agent identity and fails session match.
+    const raw = mergeResults([low, high]);
+    expect(raw.solveIdentity).toBe(agentBIdentity);
+    expect(resultMatchesRequestIdentity(hostRequest, raw)).toBe(false);
+    expect(isVerifiedCacheableResult(hostRequest, raw)).toBe(false);
+
+    const merged = mergeResults([low, high], hostRequest);
+    expect(merged.solveIdentity).toBe(hostIdentity);
+    expect(merged.solveIdentity).toBe(solveIdentityFromRequest(hostRequest));
+    expect(merged.bar).toEqual(["w", "x", "y", "z"]);
+    expect(merged.score).toBe(15_000);
+    expect(resultMatchesRequestIdentity(hostRequest, merged)).toBe(true);
+    expect(isVerifiedCacheableResult(hostRequest, merged)).toBe(true);
   });
 });

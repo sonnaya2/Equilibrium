@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import {
   cancelOptimize,
@@ -34,10 +34,15 @@ import {
   type RevoBarLibrary,
 } from "./revoBarLibrary";
 import {
+  APPLY_FINAL_STAMP_REJECT_MESSAGE,
   barBoundsFromPreset,
   DEFAULT_BAR_SIZE_PRESET,
+  isCompletedResultStale,
   isLiveSolverSession,
+  mayApplyFinalDtoStamp,
   mayPublishStoppedPreview,
+  maySaveVerified,
+  recentLibraryVerifiedFields,
   settlementActionForCatch,
   settlementActionForSolve,
   stoppedPreviewFromProgress,
@@ -76,6 +81,64 @@ export function seedProgressFromPlan(
   };
 }
 
+/**
+ * Coalesce high-frequency progress into one UI paint per animation frame.
+ * Callers always own latestProgressRef; this only schedules setState.
+ */
+export function createProgressRafGate(
+  onFrame: (progress: SolverProgress) => void,
+  hooks: {
+    raf?: (cb: FrameRequestCallback) => number;
+    caf?: (id: number) => void;
+  } = {},
+): {
+  push: (progress: SolverProgress) => void;
+  /** Apply any coalesced frame immediately (settle before final UI). */
+  flush: () => void;
+  /** Drop scheduled frame without painting (final DTO / stopped owns setState). */
+  cancel: () => void;
+} {
+  const rafFn =
+    hooks.raf ??
+    ((cb: FrameRequestCallback) =>
+      typeof requestAnimationFrame === "function" ? requestAnimationFrame(cb) : 0);
+  const cafFn =
+    hooks.caf ??
+    ((id: number) => {
+      if (typeof cancelAnimationFrame === "function") cancelAnimationFrame(id);
+    });
+  let pending: SolverProgress | null = null;
+  let id: number | null = null;
+  return {
+    push(progress) {
+      pending = progress;
+      if (id != null) return;
+      id = rafFn(() => {
+        id = null;
+        const p = pending;
+        pending = null;
+        if (p != null) onFrame(p);
+      });
+    },
+    flush() {
+      if (id != null) {
+        cafFn(id);
+        id = null;
+      }
+      const p = pending;
+      pending = null;
+      if (p != null) onFrame(p);
+    },
+    cancel() {
+      if (id != null) {
+        cafFn(id);
+        id = null;
+      }
+      pending = null;
+    },
+  };
+}
+
 export type UseRevolutionSolverArgs = {
   stats: CalcStats;
   loadout: Loadout;
@@ -101,6 +164,9 @@ function packFromMaterial(
   opts?: { seed?: number; now?: number },
 ): SerializableSolverRequest {
   const bounds = barBoundsFromPreset(m.barSizePreset);
+  // Helmet / salve / arch: from m.stats only (loadoutStats used build unlocks).
+  // Snapshot is copy-from-stats; pool regions never re-gate passives.
+  // unlockedRegions below: ability pool eligibility only.
   return packSolverRequest({
     snapshot: solverSnapshotFromUi(m.stats, m.loadout),
     style: m.loadout.style,
@@ -141,7 +207,7 @@ export function useRevolutionSolver({
   const [bestPulse, setBestPulse] = useState(false);
   const [solverAgents, setSolverAgents] = useState(() => preferredAgentCount("thorough"));
   const [barLibrary, setBarLibrary] = useState<RevoBarLibrary>(() => ({
-    version: 1,
+    version: 2,
     recents: [],
     saved: [],
   }));
@@ -152,7 +218,6 @@ export function useRevolutionSolver({
   const solveGenRef = useRef(0);
   const latestProgressRef = useRef<SolverProgress | null>(null);
   const sessionIdentityRef = useRef<string | null>(null);
-  const sessionNowRef = useRef<number>(0);
   const materialRef = useRef<MaterialSolveInputs>({
     stats,
     loadout,
@@ -163,6 +228,7 @@ export function useRevolutionSolver({
     limitToRegions,
     barSizePreset,
   });
+  const solverResultRef = useRef<SolverResultDTO | null>(null);
 
   materialRef.current = {
     stats,
@@ -174,6 +240,39 @@ export function useRevolutionSolver({
     limitToRegions,
     barSizePreset,
   };
+  solverResultRef.current = solverResult;
+
+  // Single live identity: pack + solveContextPayload on material deps only.
+  // Progress path is string compare against liveIdentityRef - no pack per event.
+  const liveIdentity = useMemo(
+    () =>
+      solveContextPayload(
+        packFromMaterial(
+          {
+            stats,
+            loadout,
+            build,
+            modelled,
+            solverTier,
+            solverProfile,
+            limitToRegions,
+            barSizePreset,
+          },
+          { seed: 1 },
+        ),
+      ),
+    [stats, loadout, build, modelled, solverTier, solverProfile, limitToRegions, barSizePreset],
+  );
+
+  const liveIdentityRef = useRef(liveIdentity);
+  liveIdentityRef.current = liveIdentity;
+
+  const progressRafRef = useRef<ReturnType<typeof createProgressRafGate> | null>(null);
+  if (progressRafRef.current == null) {
+    progressRafRef.current = createProgressRafGate((progress) => {
+      setSolverProgress({ ...progress });
+    });
+  }
 
   useEffect(() => {
     setBarLibrary(loadBarLibrary());
@@ -184,35 +283,55 @@ export function useRevolutionSolver({
       solveGenRef.current += 1;
       abortRef.current?.abort();
       cancelOptimize();
+      progressRafRef.current?.cancel();
     };
   }, []);
 
-  const liveIdentity = useCallback((): string => {
-    const req = packFromMaterial(materialRef.current, {
-      seed: 1,
-      now: sessionNowRef.current || undefined,
+  // Mid-run: material identity drift aborts the session (no verified final).
+  useEffect(() => {
+    if (!solving) return;
+    const session = sessionIdentityRef.current;
+    if (session == null || session === liveIdentity) return;
+    cancelRef.current = true;
+    abortRef.current?.abort();
+    cancelOptimize();
+    setStopping(true);
+  }, [solving, liveIdentity]);
+
+  // Completed result goes stale when live identity diverges; keep bar ids as seed.
+  useEffect(() => {
+    if (solving) return;
+    const dto = solverResultRef.current;
+    if (!dto) return;
+    if (
+      !isCompletedResultStale({
+        liveIdentity,
+        resultSolveIdentity: dto.solveIdentity,
+      })
+    ) {
+      return;
+    }
+    setSolverResult(null);
+    setStoppedPreview(null);
+    setSolverError(null);
+  }, [liveIdentity, solving]);
+
+  const sessionIsLive = useCallback((gen: number): boolean => {
+    const identity = sessionIdentityRef.current;
+    if (identity == null) return false;
+    return isLiveSolverSession({
+      sessionGen: gen,
+      currentGen: solveGenRef.current,
+      sessionIdentity: identity,
+      currentIdentity: liveIdentityRef.current,
+      cancelled: cancelRef.current,
     });
-    return solveContextPayload(req);
   }, []);
 
-  const sessionIsLive = useCallback(
-    (gen: number): boolean => {
-      const identity = sessionIdentityRef.current;
-      if (identity == null) return false;
-      return isLiveSolverSession({
-        sessionGen: gen,
-        currentGen: solveGenRef.current,
-        sessionIdentity: identity,
-        currentIdentity: liveIdentity(),
-        cancelled: cancelRef.current,
-      });
-    },
-    [liveIdentity],
-  );
-
-  /** Final DTO only: apply bar, verified cache, verified recent. */
+  /** Final DTO only: apply bar, verified cache when cacheable, recent library. */
   const applyFinalDto = useCallback(
     (dto: SolverResultDTO, request: SerializableSolverRequest) => {
+      progressRafRef.current?.cancel();
       const bar = dto.bar?.length ? [...dto.bar] : [];
       setStoppedPreview(null);
       if (bar.length === 0) {
@@ -224,6 +343,8 @@ export function useRevolutionSolver({
         onActiveBar(bar);
         onClearSimResult();
         void rememberSolvedBar(request, dto);
+        // Verified recent only for cacheable proofs; degraded keeps score as estimate.
+        const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
         setBarLibrary((prev) => {
           const next = withRecentBar(prev, {
             bar,
@@ -231,7 +352,8 @@ export function useRevolutionSolver({
             score: dto.score,
             profileId: dto.profileId ?? request.profileId,
             tier: request.tier,
-            verified: true,
+            verified,
+            scoreContext,
           });
           saveBarLibrary(next);
           return next;
@@ -263,6 +385,7 @@ export function useRevolutionSolver({
 
   const publishStoppedPreview = useCallback(
     (partial: SolverProgress | null, reason: SolverStoppedPreview["reason"]) => {
+      progressRafRef.current?.cancel();
       if (!partial?.topBarPreview?.length) return;
       const preview = stoppedPreviewFromProgress(
         partial,
@@ -287,6 +410,7 @@ export function useRevolutionSolver({
     lastBestRef.current = 0;
     latestProgressRef.current = null;
     sessionIdentityRef.current = null;
+    progressRafRef.current?.cancel();
     setSolving(true);
     setStopping(false);
     setSolverError(null);
@@ -295,10 +419,11 @@ export function useRevolutionSolver({
     setBestPulse(false);
     try {
       const sessionNow = Date.now();
-      sessionNowRef.current = sessionNow;
       const material = materialRef.current;
       const baseRequest = packFromMaterial(material, { seed: 1, now: sessionNow });
-      sessionIdentityRef.current = solveContextPayload(baseRequest);
+      // Same pack+payload family as liveIdentity (now is not in solve identity).
+      const sessionIdentity = solveContextPayload(baseRequest);
+      sessionIdentityRef.current = sessionIdentity;
 
       const plan = planWorkers({
         minBarSize: baseRequest.minBarSize,
@@ -341,14 +466,29 @@ export function useRevolutionSolver({
       const dto = await runOptimize(
         request,
         (progress) => {
-          if (!sessionIsLive(gen)) return;
+          // String compare only - no pack+stringify on the progress path.
+          if (!sessionIsLive(gen)) {
+            const session = sessionIdentityRef.current;
+            if (
+              gen === solveGenRef.current &&
+              session != null &&
+              session !== liveIdentityRef.current &&
+              !cancelRef.current
+            ) {
+              cancelRef.current = true;
+              abortRef.current?.abort();
+              cancelOptimize();
+              setStopping(true);
+            }
+            return;
+          }
           latestProgressRef.current = progress;
           if (progress.bestScore > lastBestRef.current + 1e-6) {
             lastBestRef.current = progress.bestScore;
             setBestPulse(true);
             window.setTimeout(() => setBestPulse(false), 450);
           }
-          setSolverProgress({ ...progress });
+          progressRafRef.current?.push(progress);
         },
         {
           isCancelled: () =>
@@ -357,11 +497,13 @@ export function useRevolutionSolver({
           agents: plan.agentCount,
         },
       );
+      progressRafRef.current?.flush();
+      const live = liveIdentityRef.current;
       const settle = settlementActionForSolve({
         sessionGen: gen,
         currentGen: solveGenRef.current,
         sessionIdentity: sessionIdentityRef.current ?? "",
-        currentIdentity: liveIdentity(),
+        currentIdentity: live,
         cancelled: cancelRef.current || abort.signal.aborted,
         hasFinalDto: true,
       });
@@ -370,9 +512,20 @@ export function useRevolutionSolver({
         publishStoppedPreview(latestProgressRef.current, "stopped-early");
         return;
       }
+      // Fail-closed stamp: empty or !== live never apply verified (same as cache).
+      if (
+        !mayApplyFinalDtoStamp({
+          dtoSolveIdentity: dto.solveIdentity,
+          liveIdentity: live,
+        })
+      ) {
+        setSolverError(APPLY_FINAL_STAMP_REJECT_MESSAGE);
+        return;
+      }
       applyFinalDto(dto, request);
     } catch (err) {
       if (gen !== solveGenRef.current) return;
+      progressRafRef.current?.flush();
       const aborted =
         cancelRef.current ||
         abort.signal.aborted ||
@@ -386,7 +539,7 @@ export function useRevolutionSolver({
         sessionGen: gen,
         currentGen: solveGenRef.current,
         sessionIdentity: sessionIdentityRef.current ?? "",
-        currentIdentity: liveIdentity(),
+        currentIdentity: liveIdentityRef.current,
         aborted,
       });
       if (!mayPublishStoppedPreview(settle)) return;
@@ -401,12 +554,14 @@ export function useRevolutionSolver({
       setSolverError(message || "Failed");
     } finally {
       if (gen === solveGenRef.current) {
+        // cancel only: flush already ran pre-settle; do not paint mid-run over finalize.
+        progressRafRef.current?.cancel();
         setSolving(false);
         setStopping(false);
         abortRef.current = null;
       }
     }
-  }, [loadout.style, solverTier, applyFinalDto, sessionIsLive, publishStoppedPreview, liveIdentity]);
+  }, [loadout.style, solverTier, applyFinalDto, sessionIsLive, publishStoppedPreview]);
 
   const cancelSolve = () => {
     // Keep gen so the in-flight promise still hits finally.
@@ -414,8 +569,9 @@ export function useRevolutionSolver({
     abortRef.current?.abort();
     setStopping(true);
     cancelOptimize();
+    progressRafRef.current?.flush();
     const identity = sessionIdentityRef.current;
-    if (identity == null || identity !== liveIdentity()) return;
+    if (identity == null || identity !== liveIdentityRef.current) return;
     const partial = latestProgressRef.current;
     if (partial?.topBarPreview?.length) {
       onActiveBar([...partial.topBarPreview]);
@@ -434,7 +590,18 @@ export function useRevolutionSolver({
     opts?: { verified?: boolean },
   ) => {
     if (!currentSaveBar?.length || solving) return;
-    const verified = opts?.verified === true;
+    // Verified only when caller asks AND live identity + bar + cacheable proof match.
+    const verifiedOk =
+      opts?.verified === true &&
+      maySaveVerified({
+        liveIdentity: liveIdentityRef.current,
+        resultSolveIdentity: solverResult?.solveIdentity,
+        finalBar: solverResult?.bar,
+        currentBar: currentSaveBar,
+        solving,
+        proofLabel: solverResult?.proofLabel ?? solverResult?.proof?.label,
+      });
+    const scoreContext = verifiedOk ? liveIdentityRef.current : null;
     setBarLibrary((prev) => {
       const next = withPermanentBar(prev, {
         bar: currentSaveBar,
@@ -442,7 +609,8 @@ export function useRevolutionSolver({
         score: currentSaveScore,
         profileId: solverResult?.profileId ?? stoppedPreview?.profileId ?? solverProfile,
         tier: solverResult?.tier ?? stoppedPreview?.tier ?? solverTier,
-        verified,
+        verified: verifiedOk,
+        scoreContext,
       });
       saveBarLibrary(next);
       return next;
@@ -484,6 +652,8 @@ export function useRevolutionSolver({
     solverAgents,
     setSolverAgents,
     barLibrary,
+    /** Live solve identity from material inputs (useMemo pack+payload). */
+    liveIdentity,
     optimize,
     cancelSolve,
     clearSolverUi,

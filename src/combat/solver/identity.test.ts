@@ -4,7 +4,9 @@ import {
   canonicalNormalizedIdentity,
   canonicalSolveContext,
   isVerifiedCacheableResult,
+  resultMatchesRequestIdentity,
   SEARCH_POLICY_VERSION,
+  solveIdentityFromRequest,
 } from "./identity";
 import {
   fingerprintSolveContext,
@@ -122,7 +124,11 @@ function withSim(
   return { ...request, loadout: patch(request.loadout) };
 }
 
-function verifiedDto(overrides: Partial<SolverResultDTO> = {}): SolverResultDTO {
+/** Cache-path DTO: stamps real solveIdentity from request unless overridden. */
+function verifiedDto(
+  request: SerializableSolverRequest,
+  overrides: Partial<SolverResultDTO> = {},
+): SolverResultDTO {
   return {
     bar: ["a", "b", "c", "d", "e", "f"],
     score: 12_000,
@@ -133,6 +139,7 @@ function verifiedDto(overrides: Partial<SolverResultDTO> = {}): SolverResultDTO 
     profileId: "balanced",
     tier: "thorough",
     durationTicks: 500,
+    solveIdentity: solveIdentityFromRequest(request),
     proofLabel: "heuristic-best-found",
     bestFullScore: 12_000,
     proof: { label: "heuristic-best-found" },
@@ -340,7 +347,7 @@ describe("rememberSolvedBar validation", () => {
 
   it("caches verified rankable finals and lookup hits the same identity", async () => {
     const request = sampleRequest();
-    const dto = verifiedDto();
+    const dto = verifiedDto(request);
     const entry = await rememberSolvedBar(request, dto);
     expect(entry).not.toBeNull();
     expect(entry!.bar).toEqual(dto.bar);
@@ -359,7 +366,11 @@ describe("rememberSolvedBar validation", () => {
     ] as const) {
       const entry = await rememberSolvedBar(
         request,
-        verifiedDto({ proofLabel: proof, proof: { label: proof }, bestFullScore: undefined }),
+        verifiedDto(request, {
+          proofLabel: proof,
+          proof: { label: proof },
+          bestFullScore: undefined,
+        }),
       );
       expect(entry, proof).toBeNull();
     }
@@ -369,15 +380,12 @@ describe("rememberSolvedBar validation", () => {
   it("does not cache non-finite scores", async () => {
     const request = sampleRequest();
     expect(
-      await rememberSolvedBar(
-        request,
-        verifiedDto({ score: Number.NaN }),
-      ),
+      await rememberSolvedBar(request, verifiedDto(request, { score: Number.NaN })),
     ).toBeNull();
     expect(
       await rememberSolvedBar(
         request,
-        verifiedDto({ score: Number.POSITIVE_INFINITY }),
+        verifiedDto(request, { score: Number.POSITIVE_INFINITY }),
       ),
     ).toBeNull();
   });
@@ -388,14 +396,14 @@ describe("rememberSolvedBar validation", () => {
     expect(
       await rememberSolvedBar(
         request,
-        verifiedDto({ bar: ["a", "b", "c", "d", "e"] }),
+        verifiedDto(request, { bar: ["a", "b", "c", "d", "e"] }),
       ),
     ).toBeNull();
     // Too long for request max.
     expect(
       await rememberSolvedBar(
         request,
-        verifiedDto({
+        verifiedDto(request, {
           bar: ["a", "b", "c", "d", "e", "f", "g", "h", "i"],
         }),
       ),
@@ -404,7 +412,7 @@ describe("rememberSolvedBar validation", () => {
 
   it("changed context does not false-hit a stored entry", async () => {
     const request = sampleRequest();
-    await rememberSolvedBar(request, verifiedDto());
+    await rememberSolvedBar(request, verifiedDto(request));
     const other = withSim(request, (s) => ({ ...s, startingAdrenaline: 0 }));
     const otherKey = await fingerprintSolveContext(other);
     expect(lookupSolvedBar(otherKey)).toBeNull();
@@ -414,18 +422,65 @@ describe("rememberSolvedBar validation", () => {
 
   it("isVerifiedCacheableResult mirrors rememberSolvedBar gates", () => {
     const request = sampleRequest();
-    expect(isVerifiedCacheableResult(request, verifiedDto())).toBe(true);
+    expect(isVerifiedCacheableResult(request, verifiedDto(request))).toBe(true);
     expect(
       isVerifiedCacheableResult(
         request,
-        verifiedDto({ proofLabel: "stopped-early", proof: { label: "stopped-early" } }),
+        verifiedDto(request, {
+          proofLabel: "stopped-early",
+          proof: { label: "stopped-early" },
+        }),
       ),
     ).toBe(false);
     expect(
+      isVerifiedCacheableResult(request, verifiedDto(request, { bar: ["a", "b"] })),
+    ).toBe(false);
+  });
+
+  it("empty solveIdentity is not cacheable", async () => {
+    const request = sampleRequest();
+    const empty = verifiedDto(request, { solveIdentity: "" });
+    expect(isVerifiedCacheableResult(request, empty)).toBe(false);
+    expect(await rememberSolvedBar(request, empty)).toBeNull();
+  });
+
+  it("rejects stamped solveIdentity that does not match the request", async () => {
+    const request = sampleRequest();
+    const identity = solveIdentityFromRequest(request);
+    expect(solveContextPayload(request)).toBe(identity);
+    expect(isVerifiedCacheableResult(request, verifiedDto(request))).toBe(true);
+    expect(
       isVerifiedCacheableResult(
         request,
-        verifiedDto({ bar: ["a", "b"] }),
+        verifiedDto(request, { solveIdentity: identity + "x" }),
       ),
     ).toBe(false);
+    expect(
+      resultMatchesRequestIdentity(
+        request,
+        verifiedDto(request, { solveIdentity: identity + "x" }),
+      ),
+    ).toBe(false);
+    expect(
+      await rememberSolvedBar(
+        request,
+        verifiedDto(request, { solveIdentity: identity + "x" }),
+      ),
+    ).toBeNull();
+    expect(await rememberSolvedBar(request, verifiedDto(request))).not.toBeNull();
+  });
+});
+
+describe("solveIdentity stamp helpers", () => {
+  it("solveIdentityFromRequest matches solveContextPayload", () => {
+    const request = sampleRequest();
+    expect(solveIdentityFromRequest(request)).toBe(solveContextPayload(request));
+  });
+
+  it("empty solveIdentity is soft-match for display; fail-closed for cache", () => {
+    const request = sampleRequest();
+    const empty = verifiedDto(request, { solveIdentity: "" });
+    expect(resultMatchesRequestIdentity(request, empty)).toBe(true);
+    expect(isVerifiedCacheableResult(request, empty)).toBe(false);
   });
 });

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   ARCHAEOLOGY_RELICS,
+  archaeologyRejectLabel,
   archaeologySelectBlockReason,
-  canSelectRelic,
   hasAnachronia,
   isRelicActive,
   MONOLITH_ACTIVE_LIMIT,
@@ -10,6 +10,7 @@ import {
   MONOLITH_ENERGY_EXTENDED,
   MONOLITH_EXTENDED_REGION,
   relicById,
+  relicRegionsMet,
   resolveMonolithEnergyCap,
   sanitizeArchaeologyState,
   sanitizeSelectedRelics,
@@ -122,12 +123,12 @@ describe("energy selection helpers", () => {
     const pair = ["conservation_of_energy", "fury_of_the_small"];
     expect(totalEnergyUsed(pair)).toBe(500);
     expect(
-      canSelectRelic({
+      archaeologySelectBlockReason({
         relicId: "fury_of_the_small",
         selectedIds: ["conservation_of_energy"],
         energyCap: 500,
       }),
-    ).toBe(true);
+    ).toBeNull();
     const result = tryToggleArchaeologyRelic({
       relicId: "fury_of_the_small",
       selectedIds: ["conservation_of_energy"],
@@ -148,7 +149,6 @@ describe("energy selection helpers", () => {
     const cleaned = sanitizeSelectedRelics({
       selectedIds: ["heightened_senses", "conservation_of_energy"],
       energyCap: 500,
-      unlockedRegions: [],
     });
     expect(cleaned).toEqual(["heightened_senses"]);
   });
@@ -158,7 +158,6 @@ describe("energy selection helpers", () => {
       sanitizeSelectedRelics({
         selectedIds: ["font_of_life", "not_a_relic"],
         energyCap: 500,
-        unlockedRegions: [],
       }),
     ).toEqual(["font_of_life"]);
   });
@@ -243,9 +242,6 @@ describe("monolith active slot limit", () => {
     const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
     expect(totalEnergyUsed(three)).toBe(150);
     expect(
-      canSelectRelic({ relicId: "ring_of_luck", selectedIds: three, energyCap: 500 }),
-    ).toBe(false);
-    expect(
       archaeologySelectBlockReason({
         relicId: "ring_of_luck",
         selectedIds: three,
@@ -276,7 +272,6 @@ describe("monolith active slot limit", () => {
       sanitizeSelectedRelics({
         selectedIds: four,
         energyCap: 500,
-        unlockedRegions: [],
       }),
     ).toEqual(["font_of_life", "shadows_grace", "unexpected_diplomacy"]);
   });
@@ -284,8 +279,12 @@ describe("monolith active slot limit", () => {
   it("deselect still works when at 3", () => {
     const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
     expect(
-      canSelectRelic({ relicId: "font_of_life", selectedIds: three, energyCap: 500 }),
-    ).toBe(true);
+      archaeologySelectBlockReason({
+        relicId: "font_of_life",
+        selectedIds: three,
+        energyCap: 500,
+      }),
+    ).toBeNull();
     expect(
       tryToggleArchaeologyRelic({
         relicId: "font_of_life",
@@ -302,8 +301,12 @@ describe("monolith active slot limit", () => {
   it("ignores unknown ids when counting active slots", () => {
     const withJunk = ["font_of_life", "ghost", "not_a_relic"];
     expect(
-      canSelectRelic({ relicId: "shadows_grace", selectedIds: withJunk, energyCap: 500 }),
-    ).toBe(true);
+      archaeologySelectBlockReason({
+        relicId: "shadows_grace",
+        selectedIds: withJunk,
+        energyCap: 500,
+      }),
+    ).toBeNull();
     const threeKnownPlusJunk = [
       "font_of_life",
       "shadows_grace",
@@ -311,29 +314,33 @@ describe("monolith active slot limit", () => {
       "ghost",
     ];
     expect(
-      canSelectRelic({
+      archaeologySelectBlockReason({
         relicId: "ring_of_luck",
         selectedIds: threeKnownPlusJunk,
         energyCap: 500,
       }),
-    ).toBe(false);
+    ).toBe("active_slot_limit");
   });
 
   it("energy and slot limits both apply", () => {
     const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
     expect(totalEnergyUsed(three) + 50).toBeLessThanOrEqual(500);
     expect(
-      canSelectRelic({ relicId: "ring_of_luck", selectedIds: three, energyCap: 500 }),
-    ).toBe(false);
+      archaeologySelectBlockReason({
+        relicId: "ring_of_luck",
+        selectedIds: three,
+        energyCap: 500,
+      }),
+    ).toBe("active_slot_limit");
 
     const twoHeavy = ["heightened_senses"];
     expect(
-      canSelectRelic({
+      archaeologySelectBlockReason({
         relicId: "conservation_of_energy",
         selectedIds: twoHeavy,
         energyCap: 500,
       }),
-    ).toBe(false);
+    ).toBe("energy_limit");
 
     const state = sanitizeArchaeologyState(
       {
@@ -345,7 +352,7 @@ describe("monolith active slot limit", () => {
         ],
         energyCap: 500,
       },
-      ["misthalin"],
+      ["misthalin", "desert", "morytania"],
     );
     expect(state.selectedIds).toHaveLength(3);
     expect(state.selectedIds).toEqual([
@@ -353,6 +360,185 @@ describe("monolith active slot limit", () => {
       "shadows_grace",
       "unexpected_diplomacy",
     ]);
+  });
+});
+
+describe("region gates (requiredRegions)", () => {
+  const FULL_COMBAT: readonly {
+    id: string;
+    region: "morytania" | "kandarin";
+  }[] = [
+    { id: "berserkers_fury", region: "morytania" },
+    { id: "fury_of_the_small", region: "kandarin" },
+    { id: "heightened_senses", region: "morytania" },
+    { id: "conservation_of_energy", region: "kandarin" },
+  ];
+
+  it("relicRegionsMet requires ALL requiredRegions", () => {
+    const deathWard = relicById("death_ward")!;
+    expect(relicRegionsMet(deathWard, ["kandarin"])).toBe(false);
+    expect(relicRegionsMet(deathWard, ["asgarnia"])).toBe(false);
+    expect(relicRegionsMet(deathWard, ["kandarin", "asgarnia"])).toBe(true);
+    expect(relicRegionsMet(deathWard, [])).toBe(false);
+  });
+
+  it("select without region is region_locked for each full combat relic", () => {
+    for (const { id } of FULL_COMBAT) {
+      expect(
+        archaeologySelectBlockReason({
+          relicId: id,
+          selectedIds: [],
+          energyCap: 500,
+          unlockedRegions: ["misthalin"],
+        }),
+      ).toBe("region_locked");
+      expect(
+        tryToggleArchaeologyRelic({
+          relicId: id,
+          selectedIds: [],
+          energyCap: 500,
+          unlockedRegions: ["misthalin"],
+        }),
+      ).toEqual({
+        ok: false,
+        reason: "region_locked",
+        selectedIds: [],
+      });
+    }
+  });
+
+  it("select with required region is ok for each full combat relic", () => {
+    for (const { id, region } of FULL_COMBAT) {
+      expect(
+        archaeologySelectBlockReason({
+          relicId: id,
+          selectedIds: [],
+          energyCap: 500,
+          unlockedRegions: [region],
+        }),
+      ).toBeNull();
+      expect(
+        tryToggleArchaeologyRelic({
+          relicId: id,
+          selectedIds: [],
+          energyCap: 500,
+          unlockedRegions: [region],
+        }),
+      ).toEqual({
+        ok: true,
+        action: "selected",
+        selectedIds: [id],
+      });
+    }
+  });
+
+  it("sanitize drops locked persisted relics when unlockedRegions provided", () => {
+    const persisted = FULL_COMBAT.map((r) => r.id);
+    expect(
+      sanitizeSelectedRelics({
+        selectedIds: persisted,
+        energyCap: 650,
+        unlockedRegions: ["misthalin"],
+      }),
+    ).toEqual([]);
+    expect(
+      sanitizeSelectedRelics({
+        selectedIds: persisted,
+        energyCap: 650,
+        unlockedRegions: ["morytania"],
+      }),
+    ).toEqual(["berserkers_fury", "heightened_senses"]);
+    expect(
+      sanitizeSelectedRelics({
+        selectedIds: persisted,
+        energyCap: 650,
+        unlockedRegions: ["kandarin"],
+      }),
+    ).toEqual(["fury_of_the_small", "conservation_of_energy"]);
+    expect(
+      sanitizeSelectedRelics({
+        selectedIds: ["berserkers_fury", "fury_of_the_small"],
+        energyCap: 500,
+        unlockedRegions: ["morytania", "kandarin"],
+      }),
+    ).toEqual(["berserkers_fury", "fury_of_the_small"]);
+  });
+
+  it("sanitize omits region filter when unlockedRegions is omitted", () => {
+    expect(
+      sanitizeSelectedRelics({
+        selectedIds: ["berserkers_fury", "fury_of_the_small"],
+        energyCap: 500,
+      }),
+    ).toEqual(["berserkers_fury", "fury_of_the_small"]);
+  });
+
+  it("select order is unknown then region_locked then slots then energy", () => {
+    expect(
+      archaeologySelectBlockReason({
+        relicId: "not_a_relic",
+        selectedIds: [],
+        energyCap: 500,
+        unlockedRegions: [],
+      }),
+    ).toBe("unknown_relic");
+    expect(
+      archaeologySelectBlockReason({
+        relicId: "berserkers_fury",
+        selectedIds: [],
+        energyCap: 500,
+        unlockedRegions: ["misthalin"],
+      }),
+    ).toBe("region_locked");
+    const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
+    expect(
+      archaeologySelectBlockReason({
+        relicId: "berserkers_fury",
+        selectedIds: three,
+        energyCap: 500,
+        unlockedRegions: ["misthalin", "morytania", "desert"],
+      }),
+    ).toBe("active_slot_limit");
+    expect(
+      archaeologySelectBlockReason({
+        relicId: "conservation_of_energy",
+        selectedIds: ["heightened_senses"],
+        energyCap: 500,
+        unlockedRegions: ["morytania", "kandarin"],
+      }),
+    ).toBe("energy_limit");
+  });
+
+  it("archaeologyRejectLabel covers region_locked", () => {
+    expect(archaeologyRejectLabel("region_locked")).toMatch(/region/i);
+  });
+
+  it("energy and 3-slot still apply when region is unlocked", () => {
+    const three = ["font_of_life", "shadows_grace", "unexpected_diplomacy"];
+    expect(
+      tryToggleArchaeologyRelic({
+        relicId: "berserkers_fury",
+        selectedIds: three,
+        energyCap: 500,
+        unlockedRegions: ["misthalin", "desert", "morytania"],
+      }),
+    ).toEqual({
+      ok: false,
+      reason: "active_slot_limit",
+      selectedIds: three,
+    });
+    expect(
+      tryToggleArchaeologyRelic({
+        relicId: "conservation_of_energy",
+        selectedIds: ["heightened_senses"],
+        energyCap: 500,
+        unlockedRegions: ["morytania", "kandarin"],
+      }),
+    ).toEqual({
+      ok: false,
+      reason: "energy_limit",
+      selectedIds: ["heightened_senses"],
+    });
   });
 });
 
@@ -391,6 +577,60 @@ describe("loadout archaeology persistence", () => {
     expect(off.buffs.berserkersFury).toBe(false);
   });
 
+  it("buff cannot enable CoE without kandarin", () => {
+    const blocked = withLoadoutBuffs(
+      DEFAULT_LOADOUT,
+      { conservationOfEnergy: true },
+      ["misthalin"],
+    );
+    expect(blocked.archaeology.selectedIds).not.toContain("conservation_of_energy");
+    expect(blocked.buffs.conservationOfEnergy).toBe(false);
+
+    const allowed = withLoadoutBuffs(
+      DEFAULT_LOADOUT,
+      { conservationOfEnergy: true },
+      ["kandarin"],
+    );
+    expect(allowed.archaeology.selectedIds).toContain("conservation_of_energy");
+    expect(allowed.buffs.conservationOfEnergy).toBe(true);
+  });
+
+  it("buff cannot enable FotS/HS/Fury without required regions", () => {
+    const blocked = withLoadoutBuffs(
+      DEFAULT_LOADOUT,
+      {
+        furyOfTheSmall: true,
+        heightenedSenses: true,
+        berserkersFury: true,
+      },
+      ["misthalin"],
+    );
+    expect(blocked.archaeology.selectedIds).toEqual([]);
+    expect(blocked.buffs).toMatchObject({
+      furyOfTheSmall: false,
+      heightenedSenses: false,
+      berserkersFury: false,
+    });
+
+    // HS 350 + BF 250 = 600 > 500: both region-ok but energy still gates.
+    const withMoryBoth = withLoadoutBuffs(
+      DEFAULT_LOADOUT,
+      { heightenedSenses: true, berserkersFury: true },
+      ["morytania"],
+    );
+    expect(withMoryBoth.archaeology.selectedIds).toEqual(["berserkers_fury"]);
+    expect(withMoryBoth.buffs.berserkersFury).toBe(true);
+    expect(withMoryBoth.buffs.heightenedSenses).toBe(false);
+
+    const withMoryHs = withLoadoutBuffs(
+      DEFAULT_LOADOUT,
+      { heightenedSenses: true },
+      ["morytania"],
+    );
+    expect(withMoryHs.archaeology.selectedIds).toEqual(["heightened_senses"]);
+    expect(withMoryHs.buffs.heightenedSenses).toBe(true);
+  });
+
   it("toggle off Fury stays off after normalize", () => {
     const on = withArchaeologySelection(DEFAULT_LOADOUT, ["fury_of_the_small"], 500);
     expect(on.buffs.furyOfTheSmall).toBe(true);
@@ -412,6 +652,78 @@ describe("loadout archaeology persistence", () => {
     });
     expect(loadout).toBe(base);
     expect(loadout.archaeology.selectedIds).toEqual(["heightened_senses"]);
+  });
+
+  it("applyArchaeologyToggle ignores raw region-locked ids (matches ArchPanel display)", () => {
+    // Raw still holds Berserker's Fury (morytania) after regions drop; UI sanitize shows [].
+    const dirty: typeof DEFAULT_LOADOUT = {
+      ...DEFAULT_LOADOUT,
+      archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+      buffs: { ...DEFAULT_LOADOUT.buffs, berserkersFury: true },
+    };
+    const unlocked = ["kandarin"] as const;
+    const display = sanitizeArchaeologyState(dirty.archaeology, unlocked);
+    expect(display.selectedIds).toEqual([]);
+
+    // Click Fury of the Small: select against sanitized base, do not keep locked BF.
+    const { loadout: on, result: selectResult } = applyArchaeologyToggle(
+      dirty,
+      "fury_of_the_small",
+      500,
+      unlocked,
+    );
+    expect(selectResult).toEqual({
+      ok: true,
+      action: "selected",
+      selectedIds: ["fury_of_the_small"],
+    });
+    expect(on.archaeology.selectedIds).toEqual(["fury_of_the_small"]);
+    expect(on.buffs.furyOfTheSmall).toBe(true);
+    expect(on.buffs.berserkersFury).toBe(false);
+
+    // Click locked BF: UI shows unselected; toggle must not "deselect" raw - reject region_locked.
+    const { loadout: lockedClick, result: lockedResult } = applyArchaeologyToggle(
+      dirty,
+      "berserkers_fury",
+      500,
+      unlocked,
+    );
+    expect(lockedResult).toEqual({
+      ok: false,
+      reason: "region_locked",
+      selectedIds: [],
+    });
+    expect(lockedClick).toBe(dirty);
+  });
+
+  it("applyArchaeologyToggle energy budget ignores ghost locked energy", () => {
+    // Raw BF 250 + ghost; display free 500. CoE 350 must fit without energy_limit from BF.
+    const dirty: typeof DEFAULT_LOADOUT = {
+      ...DEFAULT_LOADOUT,
+      archaeology: { selectedIds: ["berserkers_fury"], energyCap: 500 },
+    };
+    const unlocked = ["kandarin"] as const;
+    const { loadout, result } = applyArchaeologyToggle(
+      dirty,
+      "conservation_of_energy",
+      500,
+      unlocked,
+    );
+    expect(result.ok).toBe(true);
+    expect(loadout.archaeology.selectedIds).toEqual(["conservation_of_energy"]);
+    expect(totalEnergyUsed(loadout.archaeology.selectedIds)).toBe(350);
+  });
+
+  it("withArchaeologySelection strips region-locked when unlockedRegions passed", () => {
+    const next = withArchaeologySelection(
+      DEFAULT_LOADOUT,
+      ["berserkers_fury", "fury_of_the_small"],
+      500,
+      ["kandarin"],
+    );
+    expect(next.archaeology.selectedIds).toEqual(["fury_of_the_small"]);
+    expect(next.buffs.berserkersFury).toBe(false);
+    expect(next.buffs.furyOfTheSmall).toBe(true);
   });
 
   it("CoE + Fury both stay selected at 500 after normalize", () => {

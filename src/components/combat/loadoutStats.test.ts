@@ -1355,7 +1355,7 @@ describe("loadoutStats", () => {
           archaeology: { selectedIds: ["conservation_of_energy"], energyCap: 500 },
           buffs: { ...base.buffs, conservationOfEnergy: false, ringOfVigourPassive: true },
         },
-        { unlockedRegions: ["anachronia"] },
+        { unlockedRegions: ["anachronia", "kandarin"] },
       );
       expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
       expect(on.adrenaline?.conservationOfEnergyRefund).toBe(10);
@@ -1460,6 +1460,7 @@ describe("loadoutStats", () => {
     });
     it("with unlockedRegions without Anachronia, drops over-500 energy from the end", () => {
       // 350 + 350 + 150 = 700; cap 500; trim from end until under budget.
+      // Regions unlocked so energy (not region) is the gate.
       const stats = loadoutStats(
         {
           ...base,
@@ -1478,7 +1479,7 @@ describe("loadoutStats", () => {
             furyOfTheSmall: false,
           },
         },
-        { unlockedRegions: ["misthalin", "karamja", "havenhythe"] },
+        { unlockedRegions: ["misthalin", "karamja", "havenhythe", "morytania", "kandarin"] },
       );
       // Keeps first relic only (350); drops CoE and FotS.
       expect(stats.maxAdrenaline).toBe(110);

@@ -45,9 +45,14 @@ import {
   resolveEquipment,
   resolveLeagueBundle,
   resolveLevels,
+  resolveSlayerSalve,
   type BerserkersFuryResolved,
   type LoadoutStatsOptions,
 } from "./loadout/resolveStages";
+import type {
+  SerializableSalveSource,
+  SerializableSlayerHelmetSource,
+} from "@/combat/solver/worker/serializable";
 
 /** Re-export for GearPanel / setup consumers. */
 export { equippedSetCounts, setEffectsSummary };
@@ -75,6 +80,7 @@ export {
   resolveBaseDamage,
   resolveCrit,
   resolveCombatRules,
+  resolveSlayerSalve,
   sumBreakdown,
 } from "./loadout/resolveStages";
 
@@ -193,6 +199,10 @@ export interface CalcStats {
   icyenicProtection: IcyenicProtectionOutcome;
   tomeOfTheIcyeneWorn: boolean;
   berserkersFury: BerserkersFuryResolved;
+  /** Host-resolved Slayer Helmet descriptor; null when inactive. Snapshot copies only. */
+  slayerHelmet: SerializableSlayerHelmetSource | null;
+  /** Host-resolved Salve descriptor; null when inactive. Snapshot copies only. */
+  salve: SerializableSalveSource | null;
 }
 
 /**
@@ -228,10 +238,20 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     ruleset: options.ruleset,
   });
   const leagueBundle = resolveLeagueBundle(loadout, defenceLife, { ...options, now }, equipment);
-  const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle, options);
+  // Helmet + salve once: accuracy mults, damage mods, and snapshot descriptors share this.
+  const slayerSalve = resolveSlayerSalve(loadout, options);
+  const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle, slayerSalve);
   const baseDamage = resolveBaseDamage(loadout, levels, equipment, defenceLife, leagueBundle);
   const crit = resolveCrit(loadout, levels, equipment, leagueBundle);
-  const combat = resolveCombatRules(loadout, levels, equipment, leagueBundle, defenceLife, options);
+  const combat = resolveCombatRules(
+    loadout,
+    levels,
+    equipment,
+    leagueBundle,
+    defenceLife,
+    options,
+    slayerSalve,
+  );
 
   return {
     combatStyle: loadout.style,
@@ -299,5 +319,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     icyenicProtection: leagueBundle.icyenicProtection,
     tomeOfTheIcyeneWorn: leagueBundle.tomeOfTheIcyeneWorn,
     berserkersFury: combat.berserkersFury,
+    slayerHelmet: combat.slayerHelmet,
+    salve: combat.salve,
   };
 }

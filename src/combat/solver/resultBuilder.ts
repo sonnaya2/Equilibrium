@@ -1,5 +1,6 @@
 /** Final SolverResultDTO construction from a completed SolveResult. */
 import type { SolveResult } from "./contracts";
+import { solveIdentityFromRequest } from "./identity";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "../league/ruleset";
@@ -93,6 +94,7 @@ export function buildSolverResultDto(args: {
     profileId: request.profileId,
     tier: request.tier,
     durationTicks: fullTicks,
+    solveIdentity: solveIdentityFromRequest(request),
     proofLabel: result.proof,
     ...(exploratoryOut != null ? { bestExploratoryScore: exploratoryOut } : {}),
     ...(fullOut != null ? { bestFullScore: fullOut } : {}),

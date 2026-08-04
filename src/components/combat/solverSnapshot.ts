@@ -1,25 +1,19 @@
 /**
- * UI → combat-domain adapter for Revolution solver packing.
+ * UI -> combat-domain adapter for Revolution solver packing.
  * Keeps CalcStats / Loadout types out of src/combat/solver.
+ *
+ * Helmet / salve / arch: copy from pre-resolved CalcStats only (never re-resolve).
+ * Region gates for those passives belong in loadoutStats(unlockedRegions(build)).
+ * Ability pool regions are packSolverRequest / useBuildRegions, not this adapter.
  */
 import type { CalcStats } from "./loadoutStats";
 import type { Loadout } from "./loadout/model";
 import { serializeLeague, type SolverPackSnapshot } from "@/combat/solver";
-import { resolveSalve } from "@/combat/shared/salveAmulet";
-import { resolveSlayerHelmet } from "@/combat/shared/slayerHelmet";
 
-export function solverSnapshotFromUi(stats: CalcStats, loadout: Loadout): SolverPackSnapshot {
-  const slayerHelmet = resolveSlayerHelmet({
-    equipmentSlots: loadout.equipmentSlots,
-    standTier: loadout.buffs.slayerHelmetStand,
-    onSlayerTask: loadout.target?.onSlayerTask === true,
-    style: loadout.style,
-    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
-  });
-  const salve = resolveSalve({
-    equipmentSlots: loadout.equipmentSlots,
-    targetUndead: loadout.target?.undead === true,
-  });
+export function solverSnapshotFromUi(
+  stats: CalcStats,
+  loadout: Loadout,
+): SolverPackSnapshot {
   return {
     base: stats.base,
     level: stats.level,
@@ -61,21 +55,8 @@ export function solverSnapshotFromUi(stats: CalcStats, loadout: Loadout): Solver
       dragon: loadout.target?.dragon,
       undead: loadout.target?.undead,
     },
-    slayerHelmet:
-      slayerHelmet.active && slayerHelmet.tier && slayerHelmet.source
-        ? {
-            tierId: slayerHelmet.tier.id,
-            source: slayerHelmet.source,
-            damageMult: slayerHelmet.damageMult,
-          }
-        : null,
-    salve:
-      salve.active && salve.variant
-        ? {
-            variantId: salve.variant.id,
-            damageMult: salve.damageMult,
-          }
-        : null,
+    slayerHelmet: stats.slayerHelmet,
+    salve: stats.salve,
     ultimatums: loadout.perks.ultimatums ?? 0,
     lunging: loadout.perks.lunging ?? 0,
     berserkersFuryBonus: stats.berserkersFury.active ? stats.berserkersFury.bonus : 0,

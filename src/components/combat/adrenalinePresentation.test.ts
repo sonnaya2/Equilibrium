@@ -108,7 +108,7 @@ describe("adrenalinePresentation", () => {
         archaeology: { selectedIds: ["conservation_of_energy"], energyCap: 500 },
         buffs: { ...base.buffs, conservationOfEnergy: false },
       },
-      { unlockedRegions: ["anachronia"] },
+      { unlockedRegions: ["kandarin"] },
     );
     const rows = adrenEconomyAssumptionRows(stats);
     expect(rows.some(([label]) => label === "Conservation of Energy")).toBe(true);
@@ -130,7 +130,7 @@ describe("adrenalinePresentation", () => {
       buffs: { ...base.buffs, conservationOfEnergy: false, furyOfTheSmall: false },
       perks: { ...base.perks, invigorating: 4 },
     };
-    const stats = loadoutStats(loadout, { unlockedRegions: ["anachronia"] });
+    const stats = loadoutStats(loadout, { unlockedRegions: ["kandarin"] });
 
     expect(stats.adrenaline?.conservationOfEnergyRefund).toBe(CONSERVATION_OF_ENERGY_REFUND);
     expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBe(1);

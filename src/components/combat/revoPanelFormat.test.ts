@@ -1,20 +1,29 @@
 import { describe, expect, it, vi } from "vitest";
-import { packSolverRequest } from "@/combat/solver";
+import {
+  packSolverRequest,
+  solveContextPayload,
+  type SolverResultDTO,
+} from "@/combat/solver";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
 import { loadoutStats } from "@/components/combat/loadoutStats";
 import { emptyBuild } from "@/league";
 import {
   barBoundsFromPreset,
+  barsMatch,
   clampedBarBoundsFromPreset,
   formatNumber,
   formatProofLabel,
   formatTime,
+  APPLY_FINAL_STAMP_REJECT_MESSAGE,
+  isCompletedResultStale,
   isLiveSolverSession,
+  mayApplyFinalDtoStamp,
   mayPublishStoppedPreview,
-  mayWriteVerifiedSolveArtifacts,
+  maySaveVerified,
   previewCategory,
   productBarSizeFloor,
   progressFillFromState,
+  recentLibraryVerifiedFields,
   settlementActionForCatch,
   settlementActionForSolve,
   solverPhaseLabel,
@@ -179,7 +188,7 @@ describe("revoPanelFormat", () => {
       hasFinalDto: true,
     });
     expect(action).toBe("stopped-preview");
-    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(false);
+    expect(action).not.toBe("apply-final");
   });
 
   it("stale completion after equipment/perk/target/bounds change is ignored", () => {
@@ -192,7 +201,7 @@ describe("revoPanelFormat", () => {
       hasFinalDto: true,
     });
     expect(action).toBe("ignore");
-    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(false);
+    expect(action).not.toBe("apply-final");
   });
 
   it("completed live session may publish a final DTO and verified artifacts", () => {
@@ -205,7 +214,23 @@ describe("revoPanelFormat", () => {
       hasFinalDto: true,
     });
     expect(action).toBe("apply-final");
-    expect(mayWriteVerifiedSolveArtifacts(action)).toBe(true);
+  });
+
+  it("mayApplyFinalDtoStamp fails closed on empty or mismatched stamp", () => {
+    expect(
+      mayApplyFinalDtoStamp({ dtoSolveIdentity: "live", liveIdentity: "live" }),
+    ).toBe(true);
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "", liveIdentity: "live" })).toBe(false);
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: null, liveIdentity: "live" })).toBe(
+      false,
+    );
+    expect(
+      mayApplyFinalDtoStamp({ dtoSolveIdentity: undefined, liveIdentity: "live" }),
+    ).toBe(false);
+    expect(
+      mayApplyFinalDtoStamp({ dtoSolveIdentity: "other", liveIdentity: "live" }),
+    ).toBe(false);
+    expect(APPLY_FINAL_STAMP_REJECT_MESSAGE.length).toBeGreaterThan(0);
   });
 
   it("formats numbers and tick times", () => {
@@ -247,6 +272,109 @@ describe("settlementActionForCatch identity gate", () => {
     });
     expect(action).toBe("ignore");
     expect(mayPublishStoppedPreview(action)).toBe(false);
+  });
+});
+
+describe("verified save + identity helpers", () => {
+  it("barsMatch requires same ordered ids", () => {
+    expect(barsMatch(["a", "b"], ["a", "b"])).toBe(true);
+    expect(barsMatch(["a", "b"], ["b", "a"])).toBe(false);
+    expect(barsMatch([], ["a"])).toBe(false);
+    expect(barsMatch(null, ["a"])).toBe(false);
+  });
+
+  it("maySaveVerified requires identity, bar agreement, and cacheable proof", () => {
+    expect(
+      maySaveVerified({
+        liveIdentity: "x",
+        resultSolveIdentity: "x",
+        finalBar: ["a"],
+        currentBar: ["a"],
+        proofLabel: "heuristic-best-found",
+      }),
+    ).toBe(true);
+    expect(
+      maySaveVerified({
+        liveIdentity: "x",
+        resultSolveIdentity: "y",
+        finalBar: ["a"],
+        currentBar: ["a"],
+        proofLabel: "heuristic-best-found",
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "x",
+        resultSolveIdentity: "x",
+        finalBar: ["a"],
+        currentBar: ["a"],
+      }),
+    ).toBe(false);
+    expect(
+      maySaveVerified({
+        liveIdentity: "x",
+        resultSolveIdentity: "x",
+        finalBar: ["a"],
+        currentBar: ["a"],
+        proofLabel: "degraded-exploratory-fallback",
+      }),
+    ).toBe(false);
+  });
+
+  it("recentLibraryVerifiedFields: degraded cannot verified recent; cacheable can", () => {
+    const loadout = { ...DEFAULT_LOADOUT };
+    const request = packSolverRequestFromUi({
+      stats: loadoutStats(loadout),
+      loadout,
+      build: emptyBuild(),
+      modelled: [],
+      solverTier: "thorough",
+      solverProfile: "balanced",
+      limitToRegions: false,
+      barSizePreset: "range4_11",
+      now: 1_700_000_000_000,
+    });
+    const identity = solveContextPayload(request);
+    const bar = ["a", "b", "c", "d", "e", "f"];
+    const baseDto = {
+      bar,
+      score: 12_000,
+      windowDpms: 0,
+      evaluations: 100,
+      uniqueCandidates: 40,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: identity,
+      bestFullScore: 12_000,
+      top: [] as SolverResultDTO["top"],
+    };
+
+    expect(
+      recentLibraryVerifiedFields(request, {
+        ...baseDto,
+        proofLabel: "heuristic-best-found",
+        proof: { label: "heuristic-best-found" },
+      }),
+    ).toEqual({ verified: true, scoreContext: identity });
+
+    expect(
+      recentLibraryVerifiedFields(request, {
+        ...baseDto,
+        proofLabel: "degraded-exploratory-fallback",
+        proof: { label: "degraded-exploratory-fallback" },
+        bestFullScore: undefined,
+      }),
+    ).toEqual({ verified: false, scoreContext: null });
+  });
+
+  it("isCompletedResultStale when stamp diverges or is empty/missing", () => {
+    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: "b" })).toBe(true);
+    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: "a" })).toBe(false);
+    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: "" })).toBe(true);
+    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: null })).toBe(true);
+    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: undefined })).toBe(true);
   });
 });
 

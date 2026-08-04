@@ -1,10 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   emptyBarLibrary,
   isBarAlreadySaved,
+  isScoreVerifiedForContext,
   libraryForStyle,
+  loadBarLibrary,
   MAX_RECENT_BARS,
   normalizeBarLibrary,
+  REVO_BAR_LIBRARY_KEY,
+  resetBarLibraryForTests,
+  barScoreContext,
   withPermanentBar,
   withRecentBar,
   withoutRecentBar,
@@ -19,9 +24,46 @@ const BAR_D = ["slice", "fury", "assault", "sever", "pulverise"];
 const BAR_E = ["slice", "fury", "assault", "smash", "pulverise"];
 const BAR_F = ["slice", "fury", "assault", "havoc", "pulverise"];
 
+const CTX_A = '{"style":"melee","equip":"whip"}';
+const CTX_B = '{"style":"melee","equip":"scythe"}';
+const V1_KEY = "eq:revo-bars:v1";
+
 function empty(): RevoBarLibrary {
   return emptyBarLibrary();
 }
+
+/** Minimal localStorage for load/migrate paths under node vitest. */
+function installMemoryLocalStorage(): void {
+  const map = new Map<string, string>();
+  const storage = {
+    getItem: (k: string) => (map.has(k) ? map.get(k)! : null),
+    setItem: (k: string, v: string) => {
+      map.set(k, String(v));
+    },
+    removeItem: (k: string) => {
+      map.delete(k);
+    },
+    clear: () => map.clear(),
+    key: (i: number) => [...map.keys()][i] ?? null,
+    get length() {
+      return map.size;
+    },
+  };
+  (globalThis as { window?: { localStorage: typeof storage } }).window = {
+    localStorage: storage,
+  };
+  Object.defineProperty(globalThis, "localStorage", {
+    value: storage,
+    configurable: true,
+    writable: true,
+  });
+}
+
+installMemoryLocalStorage();
+
+afterEach(() => {
+  resetBarLibraryForTests();
+});
 
 describe("revoBarLibrary", () => {
   it("normalizes corrupt storage to empty lists", () => {
@@ -77,6 +119,7 @@ describe("revoBarLibrary", () => {
       score: 50,
       now: 1,
       verified: true,
+      scoreContext: CTX_A,
     });
     store = withPermanentBar(store, {
       bar: BAR_A,
@@ -85,11 +128,13 @@ describe("revoBarLibrary", () => {
       name: "Boss bar",
       now: 2,
       verified: true,
+      scoreContext: CTX_A,
     });
     expect(store.saved).toHaveLength(1);
     expect(store.saved[0]!.score).toBe(80);
     expect(store.saved[0]!.name).toBe("Boss bar");
     expect(store.saved[0]!.verified).toBe(true);
+    expect(store.saved[0]!.scoreContext).toBe(CTX_A);
     expect(isBarAlreadySaved(store, "melee", BAR_A)).toBe(true);
     expect(isBarAlreadySaved(store, "melee", BAR_B)).toBe(false);
   });
@@ -105,6 +150,7 @@ describe("revoBarLibrary", () => {
     expect(store.saved).toHaveLength(1);
     expect(store.saved[0]!.verified).toBe(false);
     expect(store.saved[0]!.score).toBe(999);
+    expect(store.saved[0]!.scoreContext).toBeNull();
     expect(store.saved[0]!.name).toMatch(/^5-slot · ~/);
 
     const recent = withRecentBar(empty(), {
@@ -113,19 +159,167 @@ describe("revoBarLibrary", () => {
       score: 100,
       now: 2,
       verified: true,
+      scoreContext: CTX_A,
     });
     expect(recent.recents[0]!.verified).toBe(true);
+    expect(recent.recents[0]!.scoreContext).toBe(CTX_A);
     expect(recent.recents[0]!.name).not.toMatch(/~/);
   });
 
-  it("defaults missing verified flag on load to false", () => {
+  it("cannot mark verified without scoreContext", () => {
+    const recent = withRecentBar(empty(), {
+      bar: BAR_A,
+      style: "melee",
+      score: 100,
+      now: 1,
+      verified: true,
+    });
+    expect(recent.recents[0]!.verified).toBe(false);
+    expect(recent.recents[0]!.scoreContext).toBeNull();
+    expect(recent.recents[0]!.score).toBe(100);
+    expect(recent.recents[0]!.name).toMatch(/~/);
+
+    const saved = withPermanentBar(empty(), {
+      bar: BAR_B,
+      style: "melee",
+      score: 200,
+      now: 2,
+      verified: true,
+      scoreContext: "   ",
+    });
+    expect(saved.saved[0]!.verified).toBe(false);
+    expect(saved.saved[0]!.scoreContext).toBeNull();
+    expect(saved.saved[0]!.score).toBe(200);
+  });
+
+  it("normalize forces verified false when scoreContext is missing", () => {
     const lib = normalizeBarLibrary({
       version: 1,
       recents: [{ id: "r1", style: "melee", bar: BAR_A, score: 1, savedAt: 1 }],
-      saved: [{ id: "s1", style: "melee", bar: BAR_B, score: 2, savedAt: 2, verified: true }],
+      saved: [
+        {
+          id: "s1",
+          style: "melee",
+          bar: BAR_B,
+          score: 2,
+          savedAt: 2,
+          verified: true,
+        },
+        {
+          id: "s2",
+          style: "melee",
+          bar: BAR_C,
+          score: 3,
+          savedAt: 3,
+          verified: true,
+          scoreContext: CTX_A,
+        },
+      ],
     });
+    expect(lib.version).toBe(2);
     expect(lib.recents[0]!.verified).toBe(false);
-    expect(lib.saved[0]!.verified).toBe(true);
+    expect(lib.recents[0]!.scoreContext).toBeNull();
+    expect(lib.saved[0]!.verified).toBe(false);
+    expect(lib.saved[0]!.scoreContext).toBeNull();
+    expect(lib.saved[1]!.verified).toBe(true);
+    expect(lib.saved[1]!.scoreContext).toBe(CTX_A);
+  });
+
+  it("isScoreVerifiedForContext matches only when live context equals bound", () => {
+    const entry = withRecentBar(empty(), {
+      bar: BAR_A,
+      style: "melee",
+      score: 50,
+      now: 1,
+      verified: true,
+      scoreContext: CTX_A,
+    }).recents[0]!;
+    expect(isScoreVerifiedForContext(entry, CTX_A)).toBe(true);
+    expect(isScoreVerifiedForContext(entry, CTX_B)).toBe(false);
+    expect(isScoreVerifiedForContext(entry, null)).toBe(false);
+    expect(isScoreVerifiedForContext(entry, undefined)).toBe(false);
+    expect(isScoreVerifiedForContext({ ...entry, verified: false }, CTX_A)).toBe(false);
+    expect(barScoreContext("  x  ")).toBe("x");
+    expect(barScoreContext("")).toBeNull();
+    expect(barScoreContext(null)).toBeNull();
+  });
+
+  it("verified under loadout context A is not verified under loadout context B", () => {
+    // Distinct solve-context payloads (equipment / sim identity), not bar shape.
+    const loadoutCtxA = '{"solve":"whip","base":2000,"demon":false}';
+    const loadoutCtxB = '{"solve":"scythe","base":2000,"demon":true}';
+    const entry = withPermanentBar(empty(), {
+      bar: BAR_A,
+      style: "melee",
+      score: 12_345,
+      now: 1,
+      verified: true,
+      scoreContext: loadoutCtxA,
+    }).saved[0]!;
+    expect(entry.verified).toBe(true);
+    expect(isScoreVerifiedForContext(entry, loadoutCtxA)).toBe(true);
+    expect(isScoreVerifiedForContext(entry, loadoutCtxB)).toBe(false);
+    // Same bar shape under a different sim identity stays unverified for live UI.
+    expect(isScoreVerifiedForContext({ ...entry, scoreContext: loadoutCtxB }, loadoutCtxA)).toBe(
+      false,
+    );
+  });
+
+  it("migrates v1 library: keep all bars and scores, strip verified", () => {
+    const v1Payload = {
+      version: 1,
+      recents: [
+        {
+          id: "r1",
+          style: "melee",
+          bar: BAR_A,
+          score: 111,
+          savedAt: 10,
+          verified: true,
+          name: "5-slot · 111",
+        },
+        {
+          id: "r2",
+          style: "magic",
+          bar: BAR_B,
+          score: 222,
+          savedAt: 11,
+          verified: false,
+        },
+      ],
+      saved: [
+        {
+          id: "s1",
+          style: "melee",
+          bar: BAR_C,
+          score: 333,
+          savedAt: 12,
+          verified: true,
+          name: "Boss",
+        },
+      ],
+    };
+    window.localStorage.setItem(V1_KEY, JSON.stringify(v1Payload));
+
+    const migrated = loadBarLibrary();
+    expect(migrated.version).toBe(2);
+    expect(migrated.recents).toHaveLength(2);
+    expect(migrated.saved).toHaveLength(1);
+    expect(migrated.recents.map((e) => e.score)).toEqual([111, 222]);
+    expect(migrated.saved[0]!.score).toBe(333);
+    expect(migrated.saved[0]!.name).toBe("Boss");
+    expect([...migrated.recents[0]!.bar]).toEqual(BAR_A);
+    expect([...migrated.saved[0]!.bar]).toEqual(BAR_C);
+    for (const e of [...migrated.recents, ...migrated.saved]) {
+      expect(e.verified).toBe(false);
+      expect(e.scoreContext).toBeNull();
+    }
+    // Persisted under v2; v1 cleared.
+    expect(window.localStorage.getItem(V1_KEY)).toBeNull();
+    expect(window.localStorage.getItem(REVO_BAR_LIBRARY_KEY)).not.toBeNull();
+    const again = loadBarLibrary();
+    expect(again.recents).toHaveLength(2);
+    expect(again.saved).toHaveLength(1);
   });
 
   it("Save does not touch autosaves and remove works", () => {

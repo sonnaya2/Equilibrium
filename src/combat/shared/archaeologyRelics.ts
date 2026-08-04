@@ -457,9 +457,21 @@ export function knownSelectedRelics(selectedIds: readonly string[]): string[] {
   return kept;
 }
 
+/** True when every required region is unlocked (empty required = met). */
+export function relicRegionsMet(
+  relic: Pick<ArchaeologyRelicDefinition, "requiredRegions">,
+  unlockedRegions: readonly RegionId[],
+): boolean {
+  if (relic.requiredRegions.length === 0) return true;
+  const unlocked = new Set(unlockedRegions);
+  return relic.requiredRegions.every((r) => unlocked.has(r));
+}
+
 /**
- * Repair path for corrupt persisted state: drop unknown ids, then pop from the
- * end while over energyCap or over active limit. Does not reorder survivors.
+ * Repair path for corrupt persisted state: drop unknown ids, drop region-locked
+ * when unlockedRegions is provided, then pop from the end while over energyCap
+ * or over active limit. Does not reorder survivors.
+ * When unlockedRegions is omitted, no region filter (compat).
  * Interactive toggles must use tryToggleArchaeologyRelic (explicit reject).
  */
 export function sanitizeSelectedRelics(input: {
@@ -467,7 +479,14 @@ export function sanitizeSelectedRelics(input: {
   energyCap: MonolithEnergyCap | number;
   unlockedRegions?: readonly RegionId[];
 }): string[] {
-  const kept = knownSelectedRelics(input.selectedIds);
+  let kept = knownSelectedRelics(input.selectedIds);
+  if (input.unlockedRegions != null) {
+    const regions = input.unlockedRegions;
+    kept = kept.filter((id) => {
+      const relic = BY_ID.get(id);
+      return relic != null && relicRegionsMet(relic, regions);
+    });
+  }
   const cap = input.energyCap;
   while (kept.length > 0 && totalEnergyUsed(kept) > cap) {
     kept.pop();
@@ -502,6 +521,7 @@ export function sanitizeArchaeologyState(
 /** Why a select attempt fails. Null when already selected or free to select. */
 export type ArchaeologySelectRejectReason =
   | "unknown_relic"
+  | "region_locked"
   | "active_slot_limit"
   | "energy_limit";
 
@@ -517,10 +537,17 @@ export function archaeologySelectBlockReason(input: {
   relicId: string;
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
+  unlockedRegions?: readonly RegionId[];
 }): ArchaeologySelectRejectReason | null {
   if (input.selectedIds.includes(input.relicId)) return null;
   const relic = BY_ID.get(input.relicId);
   if (!relic) return "unknown_relic";
+  if (
+    input.unlockedRegions != null &&
+    !relicRegionsMet(relic, input.unlockedRegions)
+  ) {
+    return "region_locked";
+  }
   const activeCount = knownSelectedRelics(input.selectedIds).length;
   if (activeCount >= MONOLITH_ACTIVE_LIMIT) return "active_slot_limit";
   if (totalEnergyUsed(input.selectedIds) + relic.energyCost > input.energyCap) {
@@ -529,19 +556,12 @@ export function archaeologySelectBlockReason(input: {
   return null;
 }
 
-export function canSelectRelic(input: {
-  relicId: string;
-  selectedIds: readonly string[];
-  energyCap: MonolithEnergyCap | number;
-}): boolean {
-  if (input.selectedIds.includes(input.relicId)) return true;
-  return archaeologySelectBlockReason(input) == null;
-}
-
 export function archaeologyRejectLabel(reason: ArchaeologySelectRejectReason): string {
   switch (reason) {
     case "unknown_relic":
       return "Unknown relic";
+    case "region_locked":
+      return "Requires unlocked region";
     case "active_slot_limit":
       return `At most ${MONOLITH_ACTIVE_LIMIT} active powers`;
     case "energy_limit":
@@ -557,9 +577,10 @@ export function tryToggleArchaeologyRelic(input: {
   relicId: string;
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
+  unlockedRegions?: readonly RegionId[];
 }): ArchaeologyToggleResult {
   const base = knownSelectedRelics(input.selectedIds);
-  const { relicId, energyCap } = input;
+  const { relicId, energyCap, unlockedRegions } = input;
 
   if (base.includes(relicId)) {
     return {
@@ -573,6 +594,7 @@ export function tryToggleArchaeologyRelic(input: {
     relicId,
     selectedIds: base,
     energyCap,
+    unlockedRegions,
   });
   if (reason != null) {
     return { ok: false, reason, selectedIds: base };
@@ -590,6 +612,7 @@ export function toggleArchaeologyRelic(input: {
   relicId: string;
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
+  unlockedRegions?: readonly RegionId[];
 }): string[] {
   return tryToggleArchaeologyRelic(input).selectedIds;
 }

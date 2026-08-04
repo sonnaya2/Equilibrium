@@ -10,6 +10,7 @@ import type { HitCapRule } from "../core/hitCaps";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
 import type { CombatContext } from "../types";
 import { OBJECTIVE_VERSION, SOLVER_SCHEMA_VERSION, type ProofLabel } from "./contracts";
+import { stableStringify } from "./fingerprint";
 import {
   isSerializableSimBase,
   type SerializableModifierSources,
@@ -297,8 +298,31 @@ export function canonicalEvaluationContext(request: SerializableSolverRequest): 
 }
 
 /**
+ * Exact solve-job identity string stamped on every SolverResultDTO.
+ * Same payload as solutionStore.solveContextPayload (stable JSON of canonicalSolveContext).
+ */
+export function solveIdentityFromRequest(request: SerializableSolverRequest): string {
+  return stableStringify(canonicalSolveContext(request));
+}
+
+/**
+ * When result.solveIdentity is non-empty, it must equal the request identity.
+ * Empty/missing identity is treated as unset (display / legacy fixtures only).
+ * Verified-cache admission uses isVerifiedCacheableResult (fail-closed on empty).
+ */
+export function resultMatchesRequestIdentity(
+  request: SerializableSolverRequest,
+  result: SolverResultDTO,
+): boolean {
+  const stamped = result.solveIdentity;
+  if (typeof stamped !== "string" || stamped.length === 0) return true;
+  return stamped === solveIdentityFromRequest(request);
+}
+
+/**
  * Whether a solver DTO is safe to enter the verified solve cache.
  * Cancelled / stopped / exploratory-only / non-finite / out-of-bounds must not.
+ * Empty solveIdentity is never cacheable (fail-closed).
  */
 export function isVerifiedCacheableResult(
   request: SerializableSolverRequest,
@@ -320,7 +344,10 @@ export function isVerifiedCacheableResult(
   if (bar.length === 0) return false;
   if (bar.length < request.minBarSize || bar.length > request.maxBarSize) return false;
 
-  // Identity match is enforced by hashing the same request at store time; caller
-  // must pass the request that produced this result.
+  // Fail-closed: require non-empty stamp matching this request.
+  const stamped = result.solveIdentity;
+  if (typeof stamped !== "string" || stamped.length === 0) return false;
+  if (stamped !== solveIdentityFromRequest(request)) return false;
+
   return true;
 }

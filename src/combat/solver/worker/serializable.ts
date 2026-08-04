@@ -236,6 +236,12 @@ export interface SolverResultDTO {
   profileId: ObjectiveProfileId;
   tier: SolverSearchTier;
   durationTicks: number;
+  /**
+   * Exact solve-job identity payload that produced this result
+   * (`solveContextPayload(request)` / stable stringify of canonicalSolveContext).
+   * Used to reject cache hits when request context diverges.
+   */
+  solveIdentity: string;
   proofLabel?: ProofLabel;
   /** Winner residual / branch exactness when disclosed (feeds proof chrome). */
   rng?: {

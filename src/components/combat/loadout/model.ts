@@ -30,6 +30,7 @@ import { normalizeSlayerHelmetStand, type SlayerHelmetTierId } from "@/combat/sh
 import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
+import type { RegionId } from "@/league";
 
 /** Setup-written combat loadout (Rotation/Analysis read). localStorage key below; old shapes normalize. */
 
@@ -331,10 +332,11 @@ export function normalizeArchaeology(
   }
   return {
     energyCap,
+    // Omit unlockedRegions: normalize has no league context; region gate is
+    // applied later via sanitizeArchaeologyState / loadoutStats options.
     selectedIds: sanitizeSelectedRelics({
       selectedIds,
       energyCap,
-      unlockedRegions: [],
     }),
   };
 }
@@ -757,7 +759,11 @@ export function withStrengthLevel(loadout: Loadout, strengthLevel: number): Load
   return { ...loadout, strengthLevel, level: strengthLevel };
 }
 
-export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>): Loadout {
+export function withLoadoutBuffs(
+  loadout: Loadout,
+  patch: Partial<LoadoutBuffs>,
+  unlockedRegions?: readonly RegionId[],
+): Loadout {
   const buffs = { ...loadout.buffs, ...patch };
   if (patch.fortitude === true) buffs.styleCurse = "none";
   else if (patch.styleCurse != null && patch.styleCurse !== "none") buffs.fortitude = false;
@@ -782,9 +788,15 @@ export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>)
     if (patch[buffKey] === undefined) continue;
     archTouched = true;
     // Buff patch is a convenience mirror of selection; never leave booleans authoritative.
+    // When unlockedRegions is provided, region-locked selects reject (same as Arch panel).
     if (patch[buffKey] === true) {
       if (!selectedIds.includes(relicId)) {
-        const result = tryToggleArchaeologyRelic({ relicId, selectedIds, energyCap });
+        const result = tryToggleArchaeologyRelic({
+          relicId,
+          selectedIds,
+          energyCap,
+          unlockedRegions,
+        });
         selectedIds = result.selectedIds;
       }
     } else {
@@ -806,16 +818,18 @@ export function withLoadoutBuffs(loadout: Loadout, patch: Partial<LoadoutBuffs>)
  * Replace monolith selection. Buff mirrors re-derived from selectedIds.
  * Sanitizes for corrupt lists (repair); interactive toggles should use
  * applyArchaeologyToggle so rejects stay explicit.
+ * Pass unlockedRegions so region-locked ids match ArchPanel display.
  */
 export function withArchaeologySelection(
   loadout: Loadout,
   selectedIds: readonly string[],
   energyCap: 500 | 650,
+  unlockedRegions?: readonly RegionId[],
 ): Loadout {
   const cleaned = sanitizeSelectedRelics({
     selectedIds,
     energyCap,
-    unlockedRegions: [],
+    unlockedRegions,
   });
   return {
     ...loadout,
@@ -827,31 +841,48 @@ export function withArchaeologySelection(
   };
 }
 
-/** Interactive relic toggle. Rejects do not mutate selection or drop neighbors. */
+/**
+ * Interactive relic toggle. Operates on sanitized selection (region/energy/slot)
+ * so click semantics match ArchPanel display; write-back is sanitized.
+ * Rejects do not mutate selection or drop neighbors.
+ */
 export function applyArchaeologyToggle(
   loadout: Loadout,
   relicId: string,
   energyCap?: 500 | 650,
+  unlockedRegions?: readonly RegionId[],
 ): { loadout: Loadout; result: ArchaeologyToggleResult } {
   const cap = energyCap ?? loadout.archaeology?.energyCap ?? MONOLITH_ENERGY_DEFAULT;
-  const result = tryToggleArchaeologyRelic({
-    relicId,
+  // Effective selection only - raw may still hold region-locked / over-budget ids.
+  const baseSelected = sanitizeSelectedRelics({
     selectedIds: loadout.archaeology?.selectedIds ?? [],
     energyCap: cap,
+    unlockedRegions,
+  });
+  const result = tryToggleArchaeologyRelic({
+    relicId,
+    selectedIds: baseSelected,
+    energyCap: cap,
+    unlockedRegions,
   });
   if (!result.ok) {
     return { loadout, result };
   }
+  const cleaned = sanitizeSelectedRelics({
+    selectedIds: result.selectedIds,
+    energyCap: cap,
+    unlockedRegions,
+  });
   return {
     loadout: {
       ...loadout,
-      archaeology: { selectedIds: result.selectedIds, energyCap: cap },
+      archaeology: { selectedIds: cleaned, energyCap: cap },
       buffs: {
         ...loadout.buffs,
-        ...buffsFromArchSelected(result.selectedIds),
+        ...buffsFromArchSelected(cleaned),
       },
     },
-    result,
+    result: { ...result, selectedIds: cleaned },
   };
 }
 

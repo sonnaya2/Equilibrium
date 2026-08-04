@@ -82,6 +82,7 @@ function sampleResult(overrides?: Partial<SolverResultDTO>): SolverResultDTO {
     profileId: "balanced",
     tier: "thorough",
     durationTicks: 100,
+    solveIdentity: "",
     ...overrides,
   };
 }

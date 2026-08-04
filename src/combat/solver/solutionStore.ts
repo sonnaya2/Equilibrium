@@ -8,8 +8,10 @@
  */
 
 import { loadState, saveState } from "@/lib/storage";
-import { stableStringify } from "./fingerprint";
-import { canonicalSolveContext, isVerifiedCacheableResult } from "./identity";
+import {
+  isVerifiedCacheableResult,
+  solveIdentityFromRequest,
+} from "./identity";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import {
   ABSOLUTE_MAX_BAR_SIZE,
@@ -151,9 +153,9 @@ export function normalizeSolveCache(raw: unknown): SolveCacheStore {
   return { version: 2, entries };
 }
 
-/** Sync stable payload string (for tests / debugging). */
+/** Sync stable payload string (for tests / debugging). Same as DTO.solveIdentity. */
 export function solveContextPayload(request: SerializableSolverRequest): string {
-  return stableStringify(canonicalSolveContext(request));
+  return solveIdentityFromRequest(request);
 }
 
 /** SHA-256 hex digest of the canonical context (Web Crypto or Node). */

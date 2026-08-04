@@ -2,7 +2,11 @@ import type { ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { isMeleeAbility } from "../../styles/melee/abilities";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
-import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effects";
+import {
+  necroAdrenalineCost,
+  necroCanCast,
+  residualSoulCapFor,
+} from "../../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
 import {
@@ -186,7 +190,8 @@ export interface RngPoint {
 /**
  * A basic with Impatient rolls for +3 adrenaline; a spender with Relentless
  * (off lockout, actually spending) rolls for a full refund. Avernic Rampage
- * adds its own independent on-attack roll.
+ * adds its own independent on-attack roll. Spectral Scythe 1-2 may roll a
+ * residual soul when under cap.
  */
 export function rngPointsFor(
   state: RotationState,
@@ -217,6 +222,16 @@ export function rngPointsFor(
     avernic?.procChance !== undefined
   ) {
     points.push({ id: "avernic-rampage", chance: avernic.procChance });
+  }
+  // Spectral Scythe casts 1-2: 25% residual soul, state-changing when under cap.
+  const soulChance = (ability as { soulChance?: number }).soulChance;
+  if (
+    soulChance != null &&
+    soulChance > 0 &&
+    (ability.id === "spectral_scythe" || ability.id === "spectral_scythe_2") &&
+    state.necromancy.resources.residualSouls < residualSoulCapFor(state.necromancy.resources)
+  ) {
+    points.push({ id: "spectral_scythe_soul", chance: soulChance });
   }
   return points;
 }

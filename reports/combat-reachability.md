@@ -1,14 +1,14 @@
 # Combat reachability summary
 
-Generated: 2026-08-04T08:07:02.134Z
+Generated: 2026-08-04T22:11:56.215Z
 
 ## Stats
-- Combat files: 372
-- Production: 206
-- Tests: 166
-- Orphan candidates: 10
-- Duplicate export names: 405
-- Production-reachable (graph): 195
+- Combat files: 395
+- Production: 217
+- Tests: 178
+- Orphan candidates: 11
+- Duplicate export names: 431
+- Production-reachable (graph): 205
 
 ## Public barrel
 - Star/named re-export modules: 43
@@ -16,9 +16,9 @@ Generated: 2026-08-04T08:07:02.134Z
 - Not on allowlist: 0
 
 ## Record->engine map
-- Pairs parsed: 82 (from src/combat/abilities/engineMap.ts)
+- Pairs parsed: 83 (from src/combat/abilities/engineMap.ts)
 - Multi-record engines (aliases): 2
-- Link overrides: 37
+- Link overrides: 41
 
 ## Worker keep (never deletionsRecommended)
 - `src/combat/solver/worker/revolutionSolver.worker.ts`
@@ -33,6 +33,7 @@ Generated: 2026-08-04T08:07:02.134Z
 - `src/combat/solver/benchmarks/runBenchmark.ts` - reachable only from tests **[uncertain]**
 - `src/combat/solver/search/independentOracle.ts` - reachable only from tests **[uncertain]**
 - `src/combat/solver/worker/checkpoint.ts` - no production importers found (may be dynamic/data - manual review)
+- `src/combat/styles/melee/lengDistribution.ts` - reachable only from tests **[uncertain]**
 - `src/combat/styles/ranged/ammo.ts` - no production importers found (may be dynamic/data - manual review)
 
 ## Deletions recommended (static graph only; confirm dynamic imports)

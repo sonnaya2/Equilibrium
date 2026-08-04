@@ -15,6 +15,7 @@ import {
   findConjure,
   skeletonRageMult,
 } from "../../styles/necromancy/conjures";
+import { hauntedBonusDamage } from "../../styles/necromancy/haunted";
 import {
   capabilitiesOf,
   outgoingSourceOf,
@@ -32,11 +33,12 @@ import { landHitIdentity } from "./landHitIdentity";
 /**
  * Resolve one ordinary cast hit at its land tick. Time-windowed globals read
  * state at that tick; the cast snapshot carries the next-hit crit layers (first
- * eligible hit only), Chaos Roar's channel rule, empowerment, and Searing Winds'
- * cast-time eligibility.
+ * eligible hit only), Chaos Roar's channel rule, empowerment, and Searing Winds /
+ * Haunted cast-time eligibility.
 
- * The Searing Winds bonus is an ATTACHED component of this hit - never a
- * separate event - so it cannot inflate proc rolls, stacks, or hit counters.
+ * Searing Winds and Haunted bonuses are ATTACHED components of this hit - never
+ * separate events - so they cannot inflate proc rolls, stacks, or hit counters.
+ * Haunted is % of parent post-resolve (cap 20% AD), never re-applied on attached.
  */
 export function resolveCastHit(
   rt: SimulationRuntime,
@@ -221,6 +223,26 @@ function resolveCastHitUncached(
       attached: true,
       hitCapPolicy: "separate",
     });
+  }
+  // Haunted: % of parent after resolve, capped at 20% of snap cap AD; ignores accuracy.
+  // Only the parent hit - never re-apply on attached components (SW / Haunted itself).
+  if (snap.hauntedAtCast) {
+    const capAD = snap.hauntedCapAd;
+    const bonusMin = hauntedBonusDamage(hit.min, capAD);
+    const bonusMax = hauntedBonusDamage(hit.max, capAD);
+    const bonusExpected = hauntedBonusDamage(hit.expected, capAD);
+    if (bonusMax > 0 || bonusExpected > 0) {
+      components.push({
+        id: "haunted",
+        damage: {
+          min: bonusMin,
+          max: bonusMax,
+          expected: bonusExpected,
+        },
+        attached: true,
+        hitCapPolicy: "separate",
+      });
+    }
   }
 
   let min = hit.min;

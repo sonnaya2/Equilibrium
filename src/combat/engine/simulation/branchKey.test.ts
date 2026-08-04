@@ -175,6 +175,8 @@ describe("branchKey structural vs JSON partitions", () => {
           firstEligibleHitIndex: 0,
           empowerMult: 1,
           searingWindsAtCast: searing,
+          hauntedAtCast: false,
+          hauntedCapAd: 0,
           enduringRuinBonus: 0,
         },
         resolve: noop,

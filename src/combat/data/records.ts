@@ -114,7 +114,11 @@ export type ItemPassiveId =
   /** Ring of Vigour: 10% ultimate adren retain + 10% cheaper weapon specials. */
   | "ring-of-vigour"
   /** Blast diffusion boots: Wild Magic arms Blast Infused (+8% magic basics 10 ticks). */
-  | "blast-diffusion-inner-wrath";
+  | "blast-diffusion-inner-wrath"
+  /** Omni Guard: Death Spark - every 5th Necromancy basic is double damage. */
+  | "death-spark"
+  /** Devourer's Guard: Soul Reave - every 4th Necromancy basic grants 1 Residual Soul on land. */
+  | "soul-reave";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 

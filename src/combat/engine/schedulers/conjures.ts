@@ -23,11 +23,17 @@ import {
   type ActiveSkeletonWarrior,
   type AutoAttackingConjure,
 } from "../../styles/necromancy/conjures";
+import {
+  applyHaunted,
+  hauntedActive,
+  hauntedBonusDamage,
+} from "../../styles/necromancy/haunted";
 import type { CombatModifier, SourceReference } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
+import type { AttachedDamageComponent, EventResolution } from "../resolution/types";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
-import { patchConjures } from "../runtime/state";
+import { patchConjures, patchTarget } from "../runtime/state";
 
 /**
  * Spirit track schedulers: one pending auto and (zombie) poison event per summon.
@@ -249,6 +255,41 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
   }
 }
 
+/** Attach land-time Haunted % bonus to a spirit auto (not poison). Parent post-resolve. */
+function attachHauntedToSpiritAuto(
+  rt: SimulationRuntime,
+  resolution: EventResolution,
+  tick: number,
+): EventResolution {
+  const haunted = rt.state.target.haunted;
+  if (!hauntedActive(haunted, tick)) return resolution;
+  const d = resolution.damage;
+  if (d.max <= 0 && d.expected <= 0) return resolution;
+  const capAD = haunted.capAbilityDamage;
+  const bonusMin = hauntedBonusDamage(d.min, capAD);
+  const bonusMax = hauntedBonusDamage(d.max, capAD);
+  const bonusExpected = hauntedBonusDamage(d.expected, capAD);
+  if (bonusMax <= 0 && bonusExpected <= 0) return resolution;
+  const component: AttachedDamageComponent = {
+    id: "haunted",
+    damage: { min: bonusMin, max: bonusMax, expected: bonusExpected },
+    attached: true,
+    hitCapPolicy: "separate",
+  };
+  return {
+    damage: {
+      min: d.min + bonusMin,
+      max: d.max + bonusMax,
+      expected: d.expected + bonusExpected,
+      capLoss: d.capLoss,
+      critExpected: (d.critExpected ?? d.expected) + bonusExpected,
+      critical: d.critical,
+    },
+    hitDetail: resolution.hitDetail,
+    components: [...(resolution.components ?? []), component],
+  };
+}
+
 /** Land one conjureAuto/poison: validate live summon, record, advance track, queue next. */
 export function processSpiritEvent(
   rt: SimulationRuntime,
@@ -256,7 +297,22 @@ export function processSpiritEvent(
 ): void {
   const live = spiritEventLive(rt, event);
   if (!live) return;
-  recordResolved(rt, event, event.resolve(rt, event.tick));
+  let resolution = event.resolve(rt, event.tick);
+  if (live.kind === "auto") {
+    // Bonus from already-active Haunted, then commanding ghost may refresh Haunted.
+    resolution = attachHauntedToSpiritAuto(rt, resolution, event.tick);
+    if (
+      live.spirit.id === "vengeful_ghost" &&
+      live.spirit.commanding &&
+      (resolution.damage.max > 0 || resolution.damage.expected > 0)
+    ) {
+      // Cap uses commanding player ability damage (rt.input.base).
+      rt.state = patchTarget(rt.state, {
+        haunted: applyHaunted(event.tick, rt.input.base),
+      });
+    }
+  }
+  recordResolved(rt, event, resolution);
   rt.spiritEventMeta.delete(event.seq);
   if (live.kind === "poison") {
     // Only the zombie has a poison track, and the type says so.

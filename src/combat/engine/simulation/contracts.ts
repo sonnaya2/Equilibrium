@@ -42,7 +42,11 @@ export interface AdrenalineRules {
 }
 
 /** State-changing RNG flags for probability-weighted branches; missing = no proc. */
-export type CastRngPointId = "impatient" | "relentless" | "avernic-rampage";
+export type CastRngPointId =
+  | "impatient"
+  | "relentless"
+  | "avernic-rampage"
+  | "spectral_scythe_soul";
 export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
 
 export function rngProc(rng: CastRng | undefined, id: CastRngPointId): boolean {

@@ -67,7 +67,7 @@ function rngWeightProduct(
 
 /**
  * Advance (with Leng land forks) to the candidate tick, prepare, and enumerate
- * cast-time RNG (Impatient / Relentless / Avernic) as weight plans.
+ * cast-time RNG (Impatient / Relentless / Avernic / Spectral Scythe soul) as weight plans.
  * No snapshot/commit; materializeCastPlans materializes the heaviest survivors.
  * Rejected post-advance arms are returned as `errors` so mass is not dropped.
  */

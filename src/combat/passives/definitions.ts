@@ -37,6 +37,8 @@ export const PASSIVE_SOURCE = {
   deathtouch: wiki("Deathtouch bracelet", "Deathtouch_bracelet", "2026-08-01"),
   ringOfVigour: RING_OF_VIGOUR_SOURCE,
   blastDiffusion: wiki("Blast diffusion boots", "Blast_diffusion_boots", "2026-08-04"),
+  deathSpark: wiki("Omni guard", "Omni_guard", "2026-08-04"),
+  soulReave: wiki("Devourer's Guard", "Devourer%27s_Guard", "2026-08-04"),
 } as const;
 
 /**
@@ -289,6 +291,32 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "While Blast Infused: magic basic abilities (incl. auto-attack and Combust) deal +8% base damage.",
     ],
     source: PASSIVE_SOURCE.blastDiffusion,
+  },
+  {
+    id: "death-spark",
+    label: "Death Spark",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["landed-hit", "loadout-static"],
+    implementationOwners: ["styles/necromancy/deathSpark.ts"],
+    effects: [
+      "Each Necromancy basic attack adds 1 Death Spark stack (cap 4).",
+      "At 4 stacks the next basic is empowered: double damage, then stacks reset (every 5th basic).",
+    ],
+    source: PASSIVE_SOURCE.deathSpark,
+  },
+  {
+    id: "soul-reave",
+    label: "Soul Reave",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["landed-hit", "loadout-static"],
+    implementationOwners: ["styles/necromancy/soulReave.ts"],
+    effects: [
+      "Each Necromancy basic attack adds 1 Soul Reave stack (cap 3).",
+      "At 3 stacks the next basic is empowered and grants 1 Residual Soul on successful land (every 4th basic).",
+    ],
+    source: PASSIVE_SOURCE.soulReave,
   },
 ];
 

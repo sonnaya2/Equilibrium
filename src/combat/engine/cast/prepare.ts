@@ -12,6 +12,7 @@ import {
 } from "../../styles/melee/effects";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
+import { hauntedActive } from "../../styles/necromancy/haunted";
 import { applyCaromingToRicochetHits, isRicochetAbility } from "../../styles/ranged/caroming";
 import { darkfangBasicHits, hasDarkfangWeapon } from "../../styles/ranged/darkfang";
 import { isMagicAbility, resplendentAsphyxiate } from "../../styles/magic/abilities";
@@ -23,8 +24,14 @@ import {
 } from "../../styles/magic/effects";
 import { animaCharged, RUNIC_EMPOWERMENTS } from "../../styles/magic/runicCharge";
 import { resolveNecromancyAbility } from "../../styles/necromancy/effects";
+import {
+  DEATH_SPARK_DAMAGE_MULT,
+  DEATH_SPARK_PASSIVE_ID,
+  DEATH_SPARK_STACKS_TO_EMPOWER,
+} from "../../styles/necromancy/deathSpark";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
+import { hasPassive } from "../../shared/equipment";
 import { costOf, spendOf } from "./rules";
 import { firstEligibleDirectHitIndex, hasDamagingHits, hasFuryConsumingHit } from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
@@ -177,6 +184,26 @@ export function prepareCast(
   }
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
+    // Omni Guard Death Spark: at 4 stacks the next Necromancy basic is double damage.
+    // Stacks update at commit; prepare only reads pre-cast stacks for empower.
+    const necroBasic =
+      ability.id === "necromancy_basic" || (!!ability.autoAttack && ability.style === "necromancy");
+    if (
+      necroBasic &&
+      hasPassive(input.equipmentEffects, DEATH_SPARK_PASSIVE_ID) &&
+      rt.state.necromancy.resources.deathSparkStacks >= DEATH_SPARK_STACKS_TO_EMPOWER
+    ) {
+      working = {
+        ...working,
+        hits: working.hits.map((h) => ({
+          ...h,
+          band: {
+            minPct: h.band.minPct * DEATH_SPARK_DAMAGE_MULT,
+            maxPct: h.band.maxPct * DEATH_SPARK_DAMAGE_MULT,
+          },
+        })),
+      };
+    }
   }
   // Icy Tempest: distribution-resolved bands; spend path is spendOf (resolveIcyTempest).
   if (ability.id === "icy_tempest") {
@@ -278,6 +305,9 @@ export function prepareCast(
   // a channel cast inside the window keeps the bonus on hits landing after it.
   const searingWindsAtCast =
     ability.style === "ranged" && searingWindsBonusPct(rt.state.ranged.searingWinds, candidate) > 0;
+  // Haunted: cast-time for player hits (all styles); spirit autos read land-time state.
+  const hauntedAtCast = damaging && hauntedActive(rt.state.target.haunted, candidate);
+  const hauntedCapAd = hauntedAtCast ? rt.state.target.haunted.capAbilityDamage : 0;
 
   const snap: CastSnapshot = {
     castSeq: rt.nextCastSeq,
@@ -295,6 +325,8 @@ export function prepareCast(
     firstEligibleHitIndex: firstEligibleDirectHitIndex(working.hits),
     empowerMult,
     searingWindsAtCast,
+    hauntedAtCast,
+    hauntedCapAd,
     enduringRuinBonus: enduringRuinConsume ? rt.state.melee.enduringRuin.nextAttackBonus : 0,
   };
 

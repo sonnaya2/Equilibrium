@@ -138,7 +138,8 @@ export function scheduleCastEvents(
           : { kind: "derived_bounce" as const, detail: ability.id },
         cancelOwner: castSeq,
         derivedFrom: sourceSeq,
-        resolve: (eventRt) => resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct),
+        resolve: (eventRt, landTick) =>
+          resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct, landTick),
       });
     }
   }

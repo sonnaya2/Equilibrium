@@ -15,6 +15,7 @@ import {
   type NecromancyRotationState,
 } from "../../styles/necromancy/effects";
 import type { ConjureState } from "../../styles/necromancy/conjures";
+import { newHaunted, type HauntedState } from "../../styles/necromancy/haunted";
 import { firstChargeReadyTick, maxChargesFor } from "./charges";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
@@ -57,6 +58,8 @@ export interface TargetRuntimeState {
    */
   bloatedByCast: number;
   melee: MeleeTargetEffects;
+  /** Haunted debuff from Command Vengeful Ghost autos. */
+  haunted: HauntedState;
 }
 
 /**
@@ -146,6 +149,7 @@ export function newRotationState(
       burns: newBurns(),
       bloatedByCast: -1,
       melee: newMeleeTargetEffects(),
+      haunted: newHaunted(),
     },
   };
 }

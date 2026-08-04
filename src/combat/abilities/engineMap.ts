@@ -113,6 +113,7 @@ export const RECORD_TO_ENGINE: Readonly<Record<string, string>> = {
   "necromancy:command-skeleton-warrior": "command_skeleton_warrior",
   "necromancy:command-putrid-zombie": "command_putrid_zombie",
   "necromancy:command-phantom-guardian": "command_phantom_guardian",
+  "necromancy:command-vengeful-ghost": "command_vengeful_ghost",
   "necromancy:death-grasp": "death_grasp",
 };
 

@@ -1,6 +1,6 @@
 /**
  * Complete land-time identity for resolveCastHit reuse.
- * Must cover every input that feeds calculateHit / attached SW bonus.
+ * Must cover every input that feeds calculateHit / attached SW / Haunted bonus.
  * Snap + input use object identity (WeakMap) so closed-over baseMods stay exact.
  */
 
@@ -34,7 +34,7 @@ function b(v: boolean): string {
 }
 
 /**
- * Fingerprint of every land-time input that can change HitResult / attached SW.
+ * Fingerprint of every land-time input that can change HitResult / attached SW / Haunted.
  * Branches that only differ post-hit (e.g. primordialIce mass alone) collide.
  */
 export function landHitIdentity(
@@ -124,6 +124,8 @@ export function landHitIdentity(
     ctx?.ruleset ?? "",
     ctx?.targetTiles ?? -1,
     b(!!snap.searingWindsAtCast),
+    b(!!snap.hauntedAtCast),
+    snap.hauntedCapAd,
     b(!!snap.chaosRoarActive),
     b(!!snap.channelled),
     b(!!snap.furyActive),

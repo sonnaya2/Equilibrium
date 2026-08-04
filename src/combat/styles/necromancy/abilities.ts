@@ -51,6 +51,7 @@ export const BLOOD_SIPHON_WIKI = wiki("Blood Siphon", "Blood_Siphon");
 export const COMMAND_SKELETON_WIKI = wiki("Command Skeleton Warrior", "Command_Skeleton_Warrior");
 export const COMMAND_PUTRID_WIKI = wiki("Command Putrid Zombie", "Command_Putrid_Zombie");
 export const COMMAND_PHANTOM_WIKI = wiki("Command Phantom Guardian", "Command_Phantom_Guardian");
+export const COMMAND_GHOST_WIKI = wiki("Command Vengeful Ghost", "Command_Vengeful_Ghost");
 export const DEATH_GRASP_WIKI = wiki("Death Grasp", "Death_Grasp");
 export const CONJURE_SKELETON_WIKI = wiki("Conjure Skeleton Warrior", "Conjure_Skeleton_Warrior");
 export const CONJURE_GHOST_WIKI = wiki("Conjure Vengeful Ghost", "Conjure_Vengeful_Ghost");
@@ -265,8 +266,6 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     adrenaline: { cost: 10 },
     cooldownSeconds: 15,
     soulChance: SPECTRAL_SCYTHE_SOUL_CHANCE,
-    supportStatus: "partially-modeled",
-    supportNote: "25% soul roll excluded from the deterministic simulation.",
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
@@ -278,8 +277,6 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [{ band: { minPct: 180, maxPct: 220 } }],
     adrenaline: { cost: 20 },
     soulChance: SPECTRAL_SCYTHE_SOUL_CHANCE,
-    supportStatus: "partially-modeled",
-    supportNote: "25% soul roll excluded from the deterministic simulation.",
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
@@ -293,8 +290,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     hits: [{ band: { minPct: 225, maxPct: 275 } }],
     adrenaline: { cost: 30 },
     supportStatus: "partially-modeled",
-    supportNote:
-      "Missing-HP multiplier applies only when target HP% is set; 25% soul roll excluded.",
+    supportNote: "Missing-HP multiplier applies only when target HP% is set.",
     source: SPECTRAL_SCYTHE_WIKI,
   },
   {
@@ -398,6 +394,17 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: COMMAND_PHANTOM_WIKI,
   },
   {
+    // No direct damage. Empowers remaining ghost autos to apply Haunted (applyGhostCommand).
+    id: "command_vengeful_ghost",
+    name: "Command Vengeful Ghost",
+    style: "necromancy",
+    category: "enhanced",
+    hits: [],
+    adrenaline: { cost: 0 },
+    stateEffect: "command_vengeful_ghost",
+    source: COMMAND_GHOST_WIKI,
+  },
+  {
     // Death guard special (not a bar ability). Base 0 Necrosis - see deathGrasp().
     id: "death_grasp",
     name: "Death Grasp",
@@ -433,8 +440,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     stateEffect: "conjure_vengeful_ghost",
     weaponRequirement: "conduit",
     supportStatus: "partially-modeled",
-    supportNote:
-      "Ghost healing, Command Vengeful Ghost / Haunted, and Spirit Pact duration variants are not modeled.",
+    supportNote: "Ghost healing and Spirit Pact duration variants are not modeled.",
     source: CONJURE_GHOST_WIKI,
   },
   {
@@ -698,8 +704,8 @@ export const NECROMANCY_EFFECTS = [
     id: "command_vengeful_ghost",
     name: "Command Vengeful Ghost",
     notes:
-      "No direct damage band. Applies Haunted (up to +10% bonus damage from all attacks, capped at 20% Necromancy ability damage).",
-    source: wiki("Command Vengeful Ghost", "Command_Vengeful_Ghost"),
+      "No direct damage band. Empowers remaining Vengeful Ghost autos to apply Haunted (+10% of hit, capped at 20% Necromancy ability damage).",
+    source: COMMAND_GHOST_WIKI,
   },
   {
     id: "conjures",

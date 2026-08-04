@@ -25,7 +25,7 @@ export function applyLandedHitEffects(
   if (!ability) return;
   switch (ability.style) {
     case "necromancy":
-      onNecromancyHitLanded(rt, event);
+      onNecromancyHitLanded(rt, event, ability, damage);
       break;
     case "magic":
       onMagicHitLanded(rt, event, ability, damage);

@@ -35,8 +35,8 @@ import {
  *   livingDeath    30s / 50 ticks from cast tick (active while tick < until)
 
  * Living Death grants +2 Necrosis on basics, +6% adrenaline on Touch of Death,
- * 1.5× Finger of Death damage, and a 17-tick Death Skulls cooldown.
- * Spectral Scythe soul chance is excluded from the deterministic simulation.
+ * 1.5x Finger of Death damage, and a 17-tick Death Skulls cooldown.
+ * Death Spark / Soul Reave stacks are MH-guard passives (Omni / Devourer).
  */
 
 export interface NecroRotationState {
@@ -49,6 +49,12 @@ export interface NecroRotationState {
   /** Exclusive stage windows for Spectral Scythe's second and third casts. */
   spectralScythe2UntilTick: number;
   spectralScythe3UntilTick: number;
+  /** Omni Guard Death Spark stacks (0..4; 4 = next basic empowered). */
+  deathSparkStacks: number;
+  /** Devourer's Guard Soul Reave stacks (0..3; 3 = next basic grants soul). */
+  soulReaveStacks: number;
+  /** Soul Reave: grant +1 residual soul when the empowered basic lands. */
+  soulReaveGrantOnLand: boolean;
 }
 
 /** Result of a necro cast's resource side-effects (merge into RotationState). */
@@ -70,6 +76,9 @@ export function newNecroRotationState(opts: { lantern?: boolean } = {}): NecroRo
     lantern: opts.lantern ?? false,
     spectralScythe2UntilTick: 0,
     spectralScythe3UntilTick: 0,
+    deathSparkStacks: 0,
+    soulReaveStacks: 0,
+    soulReaveGrantOnLand: false,
   };
 }
 
@@ -207,12 +216,7 @@ export function applyNecroOnCast(
       necrosisStacks: Math.min(NECROSIS_CAP, necro.necrosisStacks + necrosisGain),
     };
   }
-  if (ability.soulGain) {
-    necro = {
-      ...necro,
-      residualSouls: Math.min(residualSoulCapFor(necro), necro.residualSouls + ability.soulGain),
-    };
-  }
+  // soulGain (Soul Sap) is granted on successful land, not at cast time.
 
   if (ability.id === "finger_of_death") {
     necro = {

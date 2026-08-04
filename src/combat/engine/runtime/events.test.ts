@@ -43,6 +43,8 @@ const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({
   firstEligibleHitIndex: 0,
   empowerMult: 1,
   searingWindsAtCast: false,
+  hauntedAtCast: false,
+  hauntedCapAd: 0,
   enduringRuinBonus: 0,
   ...over,
 });
@@ -85,6 +87,17 @@ describe("branch equivalence signature", () => {
     a.push(event({ castSnap: castSnap({ searingWindsAtCast: true }) }));
     b.push(event({ castSnap: castSnap({ searingWindsAtCast: false }) }));
     expect(a.signature()).not.toBe(b.signature());
+  });
+
+  it("distinguishes castSnap hauntedAtCast and hauntedCapAd", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    const c = new EventQueue();
+    a.push(event({ castSnap: castSnap({ hauntedAtCast: true, hauntedCapAd: 1000 }) }));
+    b.push(event({ castSnap: castSnap({ hauntedAtCast: false, hauntedCapAd: 0 }) }));
+    c.push(event({ castSnap: castSnap({ hauntedAtCast: true, hauntedCapAd: 500 }) }));
+    expect(a.signature()).not.toBe(b.signature());
+    expect(a.signature()).not.toBe(c.signature());
   });
 
   it("distinguishes castSnap greaterFuryActive", () => {

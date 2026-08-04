@@ -38,25 +38,33 @@ describe("necro rotation state machine", () => {
     }
     expect(necro.necrosisStacks).toBe(NECROSIS_CAP);
 
-    necro = newNecroRotationState();
-    for (let i = 0; i < 6; i++) {
-      necro = applyNecroOnCast(necro, byId("soul_sap"), i).necro;
-    }
-    expect(necro.residualSouls).toBe(3);
+    // Soul Sap soul grant is land-time; cap is residualSoulCapFor.
+    necro = { ...newNecroRotationState(), residualSouls: 6 };
+    expect(Math.min(residualSoulCapFor(necro), necro.residualSouls)).toBe(3);
+    necro = { ...newNecroRotationState({ lantern: true }), residualSouls: 6 };
+    expect(Math.min(residualSoulCapFor(necro), necro.residualSouls)).toBe(5);
   });
 
-  it("Soul Sap gains 1 soul; Soul Strike spends 1; Volley spends all", () => {
+  it("Soul Sap cast does not grant souls; Soul Strike spends 1; Volley spends all", () => {
     let necro = newNecroRotationState();
     necro = applyNecroOnCast(necro, byId("soul_sap"), 0).necro;
     necro = applyNecroOnCast(necro, byId("soul_sap"), 1).necro;
     necro = applyNecroOnCast(necro, byId("soul_sap"), 2).necro;
-    expect(necro.residualSouls).toBe(3);
+    expect(necro.residualSouls).toBe(0);
 
+    necro = { ...necro, residualSouls: 3 };
     necro = applyNecroOnCast(necro, byId("soul_strike"), 3).necro;
     expect(necro.residualSouls).toBe(2);
 
     necro = applyNecroOnCast(necro, volleyOfSouls(2), 4).necro;
     expect(necro.residualSouls).toBe(0);
+  });
+
+  it("Soul Sap grants 1 soul on land through the simulator", () => {
+    const ctx = createCastContext(necroInput);
+    const soulSap = abilityById(NECROMANCY_ABILITIES, "soul_sap");
+    ctx.performCast(soulSap, 0, false);
+    expect(ctx.getState().necromancy.resources.residualSouls).toBe(1);
   });
 
   it("Touch of Death grants 4 Necrosis; FoD spends up to 6; Death Grasp spends all", () => {

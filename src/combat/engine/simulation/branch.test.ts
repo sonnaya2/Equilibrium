@@ -51,6 +51,8 @@ const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({
   firstEligibleHitIndex: 0,
   empowerMult: 1,
   searingWindsAtCast: false,
+  hauntedAtCast: false,
+  hauntedCapAd: 0,
   enduringRuinBonus: 0,
   ...over,
 });

@@ -90,7 +90,7 @@ function encodeConjure(c: ActiveConjure): string {
         (c.commandResumeTick === undefined ? "" : n(c.commandResumeTick))
       );
     case "vengeful_ghost":
-      return "vg" + US + n(c.untilTick) + US + n(c.auto.nextTick);
+      return "vg" + US + n(c.untilTick) + US + n(c.auto.nextTick) + US + b(!!c.commanding);
     case "putrid_zombie":
       return (
         "pz" +
@@ -203,6 +203,9 @@ function encodeState(state: RotationState): string {
     b(res.lantern),
     n(res.spectralScythe2UntilTick),
     n(res.spectralScythe3UntilTick),
+    n(res.deathSparkStacks),
+    n(res.soulReaveStacks),
+    b(res.soulReaveGrantOnLand),
     // conjures
     String(nec.conjures.spirits.length),
   ];
@@ -221,6 +224,8 @@ function encodeState(state: RotationState): string {
     n(tm.abyssalParasite.scheduledThroughTick),
     n(tm.enduringRuin.bleedVulnerability),
     n(tm.enduringRuin.untilTick),
+    n(t.haunted.untilTick > 0 && t.haunted.untilTick <= state.tick ? 0 : t.haunted.untilTick),
+    n(t.haunted.capAbilityDamage),
   );
   return parts.join(US);
 }

@@ -28,6 +28,8 @@ export const ITEM_PASSIVE_IDS: readonly ItemPassiveId[] = [
   "deathtouch-reflect",
   "ring-of-vigour",
   "blast-diffusion-inner-wrath",
+  "death-spark",
+  "soul-reave",
 ];
 
 /** Return validation errors for the passive registry (empty = ok). */

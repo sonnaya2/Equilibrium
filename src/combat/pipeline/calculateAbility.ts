@@ -30,6 +30,7 @@ export interface AbilityHit {
 
 export type StateEffectId =
   | "berserk"
+  | "command_vengeful_ghost"
   | "conjure_phantom_guardian"
   | "conjure_putrid_zombie"
   | "conjure_skeleton_warrior"

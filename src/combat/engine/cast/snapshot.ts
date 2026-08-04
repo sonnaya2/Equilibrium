@@ -4,8 +4,8 @@ import type { CombatModifier } from "../../types";
 /**
  * What a cast captured at cast time for its scheduled hits. Time-windowed
  * globals (Berserk, Swiftness, Sunshine) are NOT here - they read state at the
- * land tick. Next-hit buffs, empowerment, and Searing Winds eligibility are
- * cast-scope per their sourced mechanics, so they live in the snapshot.
+ * land tick. Next-hit buffs, empowerment, Searing Winds, and Haunted eligibility
+ * are cast-scope per their sourced mechanics, so they live in the snapshot.
  */
 export interface CastSnapshot {
   /** Owning cast sequence - buff-granting casts exclude their own hits. */
@@ -24,6 +24,10 @@ export interface CastSnapshot {
   empowerMult: number;
   /** Searing Winds was active at cast - every hit carries the attached bonus. */
   searingWindsAtCast: boolean;
+  /** Haunted was active at cast - every damaging hit carries the attached % bonus. */
+  hauntedAtCast: boolean;
+  /** Cap AD for Haunted bonus when hauntedAtCast (commanding player ability damage). */
+  hauntedCapAd: number;
   /** Enduring Ruin's next-attack additive bonus captured for every hit in this cast. */
   enduringRuinBonus: number;
 }

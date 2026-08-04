@@ -81,4 +81,16 @@ describe("residual souls — spending through the simulator", () => {
     ctx.performCast(volleyOfSouls(3), 9, false);
     expect(ctx.getState().necromancy.resources.residualSouls).toBe(0);
   });
+
+  it("Spectral Scythe grants a residual soul when spectral_scythe_soul procs", () => {
+    const scythe = abilityById(NECROMANCY_ABILITIES, "spectral_scythe");
+    const input = { ...necroInput, startingAdrenaline: 100 };
+    const proc = createCastContext(input);
+    expect(proc.performCast(scythe, 0, false, { spectral_scythe_soul: true }).ok).toBe(true);
+    expect(proc.getState().necromancy.resources.residualSouls).toBe(1);
+
+    const flat = createCastContext(input);
+    expect(flat.performCast(scythe, 0, false, { spectral_scythe_soul: false }).ok).toBe(true);
+    expect(flat.getState().necromancy.resources.residualSouls).toBe(0);
+  });
 });

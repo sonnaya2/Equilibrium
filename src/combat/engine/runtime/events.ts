@@ -50,7 +50,11 @@ function snapSig(s: CastSnapshot): string {
     US +
     s.firstEligibleHitIndex +
     US +
-    (s.searingWindsAtCast ? 1 : 0)
+    (s.searingWindsAtCast ? 1 : 0) +
+    US +
+    (s.hauntedAtCast ? 1 : 0) +
+    US +
+    s.hauntedCapAd
   );
 }
 

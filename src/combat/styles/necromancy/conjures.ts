@@ -69,7 +69,11 @@ export const COMMAND_REQUIRES_CONJURE: Readonly<Record<string, ConjureId>> = {
   command_skeleton_warrior: "skeleton_warrior",
   command_putrid_zombie: "putrid_zombie",
   command_phantom_guardian: "phantom_guardian",
+  command_vengeful_ghost: "vengeful_ghost",
 };
+
+/** Initial lockout after conjuring ghost (wiki: command first available tick 6). */
+export const COMMAND_GHOST_INITIAL_COOLDOWN_TICKS = 6;
 
 /** PerAbility / damage ledger ids for spirit autos (not bar abilities). */
 export const SPIRIT_AUTO_ABILITY_ID: Readonly<Record<ConjureId, string>> = {
@@ -128,6 +132,8 @@ export interface ActiveSkeletonWarrior extends ActiveConjureBase {
 export interface ActiveVengefulGhost extends ActiveConjureBase {
   readonly id: "vengeful_ghost";
   readonly auto: SpiritTrack;
+  /** Command Vengeful Ghost active: autos apply Haunted for remainder of life. */
+  readonly commanding?: boolean;
 }
 
 export interface ActivePutridZombie extends ActiveConjureBase {
@@ -312,6 +318,17 @@ export function spiritPoisonFired(s: ActivePutridZombie): ActivePutridZombie {
 /** One landed command hit builds one rage stack (its damage resolved first). */
 export function skeletonCommandHitLanded(s: ActiveSkeletonWarrior): ActiveSkeletonWarrior {
   return { ...s, rageStacks: Math.min(SKELETON_RAGE_MAX_STACKS, s.rageStacks + 1) };
+}
+
+/** Command Vengeful Ghost: empower remaining autos to apply Haunted. */
+export function applyGhostCommand(state: ConjureState): ConjureState {
+  const ghost = findConjure(state, "vengeful_ghost");
+  if (!ghost) return state;
+  return {
+    spirits: state.spirits.map((s) =>
+      s.id === "vengeful_ghost" ? { ...s, commanding: true } : s,
+    ),
+  };
 }
 
 /** Summon from a conjure_* ability id; army uses UNDEAD_ARMY_DEFAULT. */

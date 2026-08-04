@@ -851,6 +851,7 @@
 {"entityId":"item:spellcaster-gloves-black","stat":"armour","value":96.2}
 {"entityId":"item:spirit-cape","stat":"armour","value":16}
 {"entityId":"item:spirit-cape","stat":"damage","value":18.7}
+{"entityId":"item:splintering-arrows","stat":"damage","value":912}
 {"entityId":"item:split-dragontooth-necklace","stat":"prayer","value":4}
 {"entityId":"item:staff-of-darkness","stat":"accuracy","value":2178}
 {"entityId":"item:staff-of-light","stat":"accuracy","value":1694}

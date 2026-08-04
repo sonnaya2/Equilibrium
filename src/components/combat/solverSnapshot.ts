@@ -3,7 +3,7 @@
  * Keeps CalcStats / Loadout types out of src/combat/solver.
  *
  * Sole production adapter: ResolvedCombatModel → SolverPackSnapshot
- * (host already resolved helmet/salve/arch/RoV — no re-derive).
+ * (host already resolved helmet/salve/arch/RoV - no re-derive).
  */
 import type { ResolvedCombatModel } from "@/combat/model";
 import type { SolverPackSnapshot } from "@/combat/solver";
@@ -30,6 +30,8 @@ export function solverSnapshotFromResolvedModel(
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
+    ammo: model.ammo,
+    caroming: model.caromingRank,
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,
     tumekensPieces: model.tumekensPieces,
@@ -47,7 +49,7 @@ export function solverSnapshotFromResolvedModel(
     startingAdrenaline: model.startingAdrenaline,
     equipmentIds: model.equipmentIds,
     weaponConfiguration: model.weaponConfiguration,
-    // Precomputed sources only — pack must not re-scan slots for these.
+    // Precomputed sources only - pack must not re-scan slots for these.
     setCounts: [...sources.setCounts].map(([id, n]) => [id, n] as const),
     vulnerability: sources.vulnerability === true,
     styleCurseId: sources.styleCurseId ?? "none",
@@ -67,6 +69,7 @@ export function solverSnapshotFromResolvedModel(
     salve: sources.salve ?? null,
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
+    caroming: sources.caroming ?? 0,
     berserkersFuryBonus: sources.berserkersFuryBonus ?? 0,
   };
 }

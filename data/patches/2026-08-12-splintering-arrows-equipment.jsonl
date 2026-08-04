@@ -1,0 +1,8 @@
+# Splintering arrows (T95 ammo) for combat equip + style ammo packing.
+# Wiki: https://runescape.wiki/w/Splintering_arrows (tier 95, ability damage 912).
+# Style ammo id item:splintering-arrows is already mapped in ammoModel.ts.
+# Append after slayer-salve tail (573).
+{"op":"upsert","entity":"item:splintering-arrows","set":{"entity_type":"equipment","name":"Splintering arrows","short_description":"Tier 95 arrows; Punctured (Splintered Spores) on hit.","detailed_description":"Tier 95 ranged ammo from Croesus Front tips on elder headless shafts. Engine style ammo: splintering.","verified_at":"2026-08-12","status":"active","sort_key":"splintering arrows"},"reason":"Add wearable Splintering arrows so combat equip id resolves for style ammo."}
+{"op":"link-region","entity":"item:splintering-arrows","region":"misthalin","relation":"required","order":0}
+{"op":"add-tag","entity":"item:splintering-arrows","tag":"ranged","label":"ranged","reason":"Style tag matches deathspore arrows / ranged ammo."}
+{"op":"set-record","file":"data/combat/equipment.json","path":"$.records[574]","body":{"bonuses":{"damage":912},"id":"item:splintering-arrows","name":"Splintering arrows","slot":"ammo","style":"ranged","tier":95,"sources":[{"source":"runescape-wiki","title":"Splintering arrows","url":"https://runescape.wiki/w/Splintering_arrows","verifiedAt":"2026-08-12"}],"unlock":{"regions":["misthalin"],"requirement":"League self-supply: misthalin","type":"drop"},"displayDescription":"Tier 95 arrows. Style ammo: Punctured stacks (splintering)."},"reason":"Combat equipment face for item:splintering-arrows; ammo slot, ranged, tier 95, damage 912 per wiki."}

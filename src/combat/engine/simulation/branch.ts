@@ -1,6 +1,7 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { prepareCast, type PreparedCast } from "../cast/prepare";
 import { castRejection, candidateTick, rngPointsFor } from "../cast/rules";
+import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
 import {
@@ -111,6 +112,50 @@ export function planCastOutcomes(
       continue;
     }
     const prepared = prepareCast(at.rt, ability, candidate);
+
+    // Icy Tempest: fork only on distinct post-cast adrenaline spends (at most 4 groups).
+    if (ability.id === "icy_tempest") {
+      const resolved = resolveIcyTempest(
+        at.rt.state.melee.primordialIce,
+        candidate,
+        at.rt.state.ringOfVigour,
+      );
+      const groups = resolved.spendDistribution.filter((g) => g.probability > 0);
+      for (const group of groups) {
+        const groupPrepared: PreparedCast = { ...prepared, spend: group.spend };
+        const points = rngPointsFor(
+          at.rt.state,
+          ability,
+          groupPrepared.candidate,
+          groupPrepared.spend,
+          at.rt.input.adrenaline,
+          at.rt.input.league,
+        );
+        if (points.length === 0) {
+          plans.push({
+            weight: at.weight * group.probability,
+            parent: at,
+            prepared: groupPrepared,
+            auto,
+            inPlace: groups.length === 1,
+          });
+          continue;
+        }
+        for (const { rng, weight } of rngWeightProduct(points)) {
+          if (weight <= 0) continue;
+          plans.push({
+            weight: at.weight * group.probability * weight,
+            parent: at,
+            prepared: groupPrepared,
+            auto,
+            rng,
+            inPlace: false,
+          });
+        }
+      }
+      continue;
+    }
+
     const points = rngPointsFor(
       at.rt.state,
       ability,

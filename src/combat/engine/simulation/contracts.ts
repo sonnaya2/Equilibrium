@@ -80,8 +80,13 @@ export interface SimulateInput {
   /** Equipped catalogue ids used by mechanics with verified item requirements. */
   equipmentIds?: readonly string[];
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
-  /** Puncture damage is outside the current model. */
+  /**
+   * Style ammo mechanic (Deathspore free-cast, Puncture). Packed on Manual,
+   * Revolution, and solver via resolved model / equipment derivation.
+   */
   ammo?: "deathspore" | "splintering";
+  /** Caroming rank 1-4; rewrites Ricochet hit bands at prepare. */
+  caromingRank?: number;
   /** Weave the style auto-attack through idle GCDs and adrenaline shortfalls. */
   autoWeave?: boolean;
   adrenaline?: AdrenalineRules;

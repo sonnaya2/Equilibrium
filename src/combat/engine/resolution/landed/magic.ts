@@ -1,5 +1,6 @@
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
 import {
+  armTsunamiCritAdren,
   FLOW_DURATION_TICKS,
   instabilityActive,
   isConcentratedBlast,
@@ -8,16 +9,18 @@ import {
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMagic } from "../../runtime/state";
+import type { ResolvedDamage } from "../types";
 import { resolveLightningSurge } from "../lightningSurge";
 
 /**
- * Magic state a real landed hit changes: the Concentrated Blast crit ledger and
- * Sonic Wave's Flow window.
+ * Magic state a real landed hit changes: Conc Blast crit ledger, Sonic Flow,
+ * and Tsunami crit-adren window arm (grant branches in tsunamiCritBranch).
  */
 export function onMagicHitLanded(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   ability: AbilitySpec,
+  damage?: ResolvedDamage,
 ): void {
   const snap = event.castSnap;
   if (
@@ -55,6 +58,17 @@ export function onMagicHitLanded(
     rt.state = patchMagic(rt.state, {
       flowUntilTick: event.tick + FLOW_DURATION_TICKS,
       flowReduction: event.flowReduction ?? 0,
+    });
+  }
+  // Tsunami arms/refreshes the crit-adren window when the hit deals damage
+  // (wiki: includes damage-immune targets; sim uses max/expected > 0).
+  if (
+    ability.id === "tsunami" &&
+    damage != null &&
+    (damage.max > 0 || damage.expected > 0)
+  ) {
+    rt.state = patchMagic(rt.state, {
+      tsunamiCritAdrenUntilTick: armTsunamiCritAdren(event.tick),
     });
   }
 }

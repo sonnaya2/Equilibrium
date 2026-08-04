@@ -187,7 +187,7 @@ function packFromMaterial(
 }
 
 export function useRevolutionSolver({
-  stats,
+  stats: _stats,
   loadout,
   combatModel,
   build,

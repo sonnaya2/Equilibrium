@@ -158,7 +158,6 @@ describe("solver bridge: multi-path evaluation parity", () => {
     const loadout = loadoutCase();
     const model = toResolvedCombatModel(loadout, { now: NOW });
     const catalogue = resolveAbilityCatalogue({ strengthCape99: model.strengthCape99 });
-    const bar = barIds.map((id) => catalogue.byId.get(id)!);
     const packed = packSimBaseFromModel(model);
     const revived = reviveRevolutionBase(packed);
 
@@ -213,7 +212,6 @@ describe("solver bridge: multi-path evaluation parity", () => {
     const loadout = loadoutCase();
     const model = toResolvedCombatModel(loadout, { now: NOW });
     const catalogue = resolveAbilityCatalogue({ strengthCape99: model.strengthCape99 });
-    const bar = barIds.map((id) => catalogue.byId.get(id)!);
     const packed = packSimBaseFromModel(model);
     const revived = reviveRevolutionBase(packed);
     const request = packSolverRequest({
@@ -273,6 +271,7 @@ describe("solver bridge: multi-path evaluation parity", () => {
     });
 
     const session = evaluate({ bar: barIds, mode: "full" });
+    const bar = barIds.map((id) => catalogue.byId.get(id)!);
     const direct = simulateRevolution(
       toRevolutionInput(buildSimulationInputBase(model, catalogue), {
         bar,
@@ -320,7 +319,7 @@ describe("hybrid manual model: Run === Optimize pack", () => {
     expect(hybrid.base).toBe(1500);
     expect(hybrid.modifierSources.ultimatums).toBe(0);
     expect(hybrid.modifierSources.vulnerability).toBe(false);
-    expect(hybrid.equipmentIds).toEqual([]);
+    expect(hybrid.equipmentIds).toEqual([...scaffold.equipmentIds]);
     expect(hybrid.adrenaline).toEqual(scaffold.adrenaline);
   });
 

@@ -1,7 +1,7 @@
 import type { ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { isMeleeAbility } from "../../styles/melee/abilities";
-import { icyTempestSpend } from "../../styles/melee/effects";
+import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { necroAdrenalineCost, necroCanCast } from "../../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
@@ -82,15 +82,16 @@ export function spendOf(
   tick: number,
   ammo?: "deathspore" | "splintering",
 ): number {
-  // Icy Tempest: wiki cost reduces with Primordial Ice stacks; requirement does not.
-  // Order: stacks -> Vigour 10% of that spend -> Avernic zero.
+  // Icy Tempest: discrete stack mass -> Vigour. Always returns an integer spend group.
+  // Mixed mass uses the heaviest-probability group (representative single-runtime).
+  // Full spend distribution / E[spend]: resolveIcyTempest / planCastOutcomes.
   if (ability.id === "icy_tempest") {
     if (avernicFree(state, tick)) return 0;
-    let spend = icyTempestSpend(state.melee.primordialIceStacks);
-    if (state.ringOfVigour && spend > 0) {
-      spend = resolveSpecialAttackAdrenalineCost(spend, true);
-    }
-    return spend;
+    const resolved = resolveIcyTempest(state.melee.primordialIce, tick, state.ringOfVigour);
+    if (resolved.spendDistribution.length === 0) return 0;
+    return resolved.spendDistribution.reduce((a, b) =>
+      a.probability >= b.probability ? a : b,
+    ).spend;
   }
 
   const cost = costOf(state, ability, tick);

@@ -695,6 +695,7 @@
 {"entityId":"item:spellcaster-gloves","slot":"gloves","style":"magic","tier":80}
 {"entityId":"item:spellcaster-gloves-black","slot":"gloves","style":"magic","tier":80}
 {"entityId":"item:spirit-cape","slot":"cape","style":"hybrid","tier":50}
+{"entityId":"item:splintering-arrows","slot":"ammo","style":"ranged","tier":95}
 {"entityId":"item:split-dragontooth-necklace","slot":"amulet"}
 {"entityId":"item:staff-of-darkness","slot":"twohand","style":"magic","tier":85}
 {"entityId":"item:staff-of-light","slot":"twohand","style":"magic","tier":75}

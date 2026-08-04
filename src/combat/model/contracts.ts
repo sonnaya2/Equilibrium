@@ -61,6 +61,13 @@ export interface ResolvedCombatModel {
   readonly plantedFeet: boolean;
   readonly strengthCape99: boolean;
   readonly preciseRank: number;
+  /**
+   * Style ammo (deathspore / splintering). Derived from equipment when unset
+   * on host input; explicit override wins.
+   */
+  readonly ammo?: "deathspore" | "splintering";
+  /** Caroming rank 1-4 (0 = off). */
+  readonly caromingRank: number;
 
   readonly conjureBasicDamageMult: number;
   readonly conjureDurationMult: number;
@@ -92,6 +99,8 @@ export interface HostCombatResolveInput {
   readonly plantedFeet?: boolean;
   readonly strengthCape99?: boolean;
   readonly preciseRank?: number;
+  readonly ammo?: "deathspore" | "splintering";
+  readonly caromingRank?: number;
   readonly conjureBasicDamageMult?: number;
   readonly conjureDurationMult?: number;
   readonly tumekensPieces?: number;
@@ -116,6 +125,7 @@ export interface HostCombatResolveInput {
   readonly salve?: SerializableModifierSources["salve"];
   readonly ultimatums?: number;
   readonly lunging?: number;
+  readonly caroming?: number;
   readonly berserkersFuryBonus?: number;
   readonly setCounts?: readonly (readonly [string, number])[];
   readonly diagnostics: ResolvedCombatDiagnostics;

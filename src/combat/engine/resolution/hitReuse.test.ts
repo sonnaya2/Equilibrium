@@ -76,7 +76,7 @@ describe("hit reuse under multi-branch land identity", () => {
 
     runWithHitReuseScope(() => {
       const a = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
-      rt.state = patchMelee(rt.state, { primordialIceStacks: 7 });
+      rt.state = patchMelee(rt.state, { primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[7] = 1; return a; })(), expiresAtTick: 0 } });
       const b = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
       expect(b).toBe(a);
     });

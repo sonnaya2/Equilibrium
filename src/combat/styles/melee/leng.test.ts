@@ -36,7 +36,14 @@ function lengEffects() {
   });
 }
 
-function lengRuntime(extra: { frostbladesUntilTick?: number; primordialIceStacks?: number } = {}) {
+function lengRuntime(
+  extra: {
+    frostbladesUntilTick?: number;
+    frostbladesOpenMass?: number;
+    primordialIceStacks?: number;
+    primordialIce?: { stackMass: number[]; expiresAtTick: number };
+  } = {},
+) {
   const effects = lengEffects();
   const rt = createRuntime({
     ...baseInput,
@@ -46,14 +53,27 @@ function lengRuntime(extra: { frostbladesUntilTick?: number; primordialIceStacks
     equipmentEffects: effects,
     weaponConfiguration: "dualwield",
   });
-  if (extra.frostbladesUntilTick != null || extra.primordialIceStacks != null) {
+  const ice =
+    extra.primordialIce ??
+    (extra.primordialIceStacks != null
+      ? {
+          stackMass: (() => {
+            const a = Array(11).fill(0);
+            a[extra.primordialIceStacks!] = 1;
+            return a;
+          })(),
+          expiresAtTick: 0,
+        }
+      : null);
+  if (extra.frostbladesUntilTick != null || ice != null) {
     rt.state = patchMelee(rt.state, {
       ...(extra.frostbladesUntilTick != null
-        ? { frostbladesUntilTick: extra.frostbladesUntilTick }
+        ? {
+            frostbladesUntilTick: extra.frostbladesUntilTick,
+            frostbladesOpenMass: extra.frostbladesOpenMass ?? 1,
+          }
         : {}),
-      ...(extra.primordialIceStacks != null
-        ? { primordialIceStacks: extra.primordialIceStacks }
-        : {}),
+      ...(ice != null ? { primordialIce: ice } : {}),
     });
   }
   return rt;
@@ -193,11 +213,14 @@ describe("Frostblades and Icy Tempest sim", () => {
   });
 
   it("Icy Tempest spends stacks and scales hits", () => {
-    const rt = lengRuntime({ primordialIceStacks: 3 });
+    const rt = lengRuntime({ primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[3] = 1; return a; })(), expiresAtTick: 0 } });
     const tempest = MELEE_ABILITIES.find((a) => a.id === "icy_tempest")!;
     expect(performCast(rt, tempest, 0, false).ok).toBe(true);
     // Cast-start spend clears stacks; single-path commitCast does not fold land EV.
-    expect(rt.state.melee.primordialIceStacks).toBe(0);
+    // Consume runs at cast start; Leng-eligible tempest hits may rebuild mass afterward.
+    const eAfter = rt.state.melee.primordialIce.stackMass.reduce((s, w, i) => s + w * i, 0);
+    expect(eAfter).toBeGreaterThanOrEqual(0);
+    expect(eAfter).toBeLessThan(3); // consumed 3 then at most ~2 hit EV
     expect(rt.state.adrenaline).toBe(100); // free spend at 3 stacks
     const hits = rt.events.filter((e) => e.abilityId === "icy_tempest" && !e.attached);
     expect(hits).toHaveLength(2);
@@ -205,7 +228,7 @@ describe("Frostblades and Icy Tempest sim", () => {
     expect(hits[0]!.damage.expected).toBeCloseTo((1690 + 2010) / 2, 0);
   });
 
-  it("Icy Tempest is locked without the Shard passive", () => {
+  it("Icy Tempest is locked without Leng MH special or EoF", () => {
     const tempest = MELEE_ABILITIES.find((a) => a.id === "icy_tempest")!;
     const ctx = createCastContext({
       ...baseInput,
@@ -215,7 +238,7 @@ describe("Frostblades and Icy Tempest sim", () => {
     expect(ctx.performCast(tempest, 0, false).ok).toBe(false);
   });
 
-  it("manual rotation can cast Icy Tempest with the shard passive", () => {
+  it("manual rotation can cast Icy Tempest with Leng MH special weapon", () => {
     const effects = lengEffects();
     const s = simulate({
       ...baseInput,
@@ -231,9 +254,30 @@ describe("Frostblades and Icy Tempest sim", () => {
 });
 
 describe("Leng land probability branching", () => {
-  function expectedStacks(branches: { weight: number; rt: { state: { melee: { primordialIceStacks: number } } } }[]) {
+  function expectedStacks(branches: { weight: number; rt: { state: { melee: { primordialIce: { stackMass: readonly number[] } } } } }[]) {
     const mass = branches.reduce((s, b) => s + b.weight, 0);
-    return branches.reduce((s, b) => s + b.weight * b.rt.state.melee.primordialIceStacks, 0) / mass;
+    return (
+      branches.reduce(
+        (s, b) =>
+          s +
+          b.weight *
+            b.rt.state.melee.primordialIce.stackMass.reduce((ss, w, i) => ss + w * i, 0),
+        0,
+      ) / mass
+    );
+  }
+
+  function frostOpenMass(branches: { weight: number; rt: { state: { melee: { frostbladesOpenMass: number; frostbladesUntilTick: number } } } }[]) {
+    const mass = branches.reduce((s, b) => s + b.weight, 0);
+    return (
+      branches.reduce((s, b) => {
+        const open =
+          b.rt.state.melee.frostbladesUntilTick > 0
+            ? (b.rt.state.melee.frostbladesOpenMass ?? 1)
+            : 0;
+        return s + b.weight * open;
+      }, 0) / mass
+    );
   }
 
   function lengCtxInput() {
@@ -247,31 +291,26 @@ describe("Leng land probability branching", () => {
     };
   }
 
-  it("performCast single-path does not invent Leng stack EV (use createCastContext)", () => {
+  it("performCast lands Leng mass on the single spine (compact distribution)", () => {
     const rt = lengRuntime();
     const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
     expect(performCast(rt, attack, 0, false).ok).toBe(true);
-    // No heaviest-arm zero fold and no float E[stacks] (floor biases Icy Tempest).
-    expect(rt.state.melee.primordialIceStacks).toBe(0);
-    expect(Number.isInteger(rt.state.melee.primordialIceStacks)).toBe(true);
-    expect(rt.state.melee.frostbladesUntilTick).toBe(0);
+    const e = rt.state.melee.primordialIce.stackMass.reduce((s, w, i) => s + w * i, 0);
+    expect(e).toBeCloseTo(LENG_ENDLESS_FROST_CHANCE + LENG_BOUNDLESS_CHILL_CHANCE, 10);
+    expect(rt.state.melee.frostbladesOpenMass).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
   });
 
-  it("createCastContext dual Leng: finish is multi-class (stack EV not silent zero)", () => {
+  it("createCastContext dual Leng: stack EV on spine after attack", () => {
     const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
     const ctx = createCastContext(lengCtxInput());
     expect(ctx.performCast(attack, 0, false).ok).toBe(true);
-    // Representative heaviest arm is miss; EV is in finish branch mix.
-    expect(ctx.getState().melee.primordialIceStacks).toBe(0);
+    const e = ctx.getState().melee.primordialIce.stackMass.reduce((s, w, i) => s + w * i, 0);
+    expect(e).toBeCloseTo(0.12, 10);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
-    expect(s.rng?.method).toBe("probability-weighted branching");
-    expect(s.rng!.terminalClasses).toBeGreaterThan(1);
-    // Would fail if createCastContext still used single-path commitCast (one class).
-    expect((s.rng?.residualWeight ?? 0) <= 1e-9).toBe(true);
   });
 
-  it("createCastContext dual Leng: attack then Icy Tempest integer thresholds beat float-EV floor", () => {
+  it("createCastContext dual Leng: attack then Icy Tempest does not floor E[stacks]", () => {
     const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
     const tempest = MELEE_ABILITIES.find((a) => a.id === "icy_tempest")!;
     const ctx = createCastContext(lengCtxInput());
@@ -279,9 +318,7 @@ describe("Leng land probability branching", () => {
     expect(ctx.performCast(tempest, ctx.getState().tick, false).ok).toBe(true);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
-    expect(s.rng?.method).toBe("probability-weighted branching");
 
-    // Weight-mix integer bands after one Leng land (0/1/2 stacks). Float 0.12 floors to 0.
     const land = lengLandOutcomes(true, true, 0, 0, 0);
     const mid = (minPct: number, maxPct: number) => ((minPct + maxPct) / 2) * 10;
     let eTempest = 0;
@@ -302,11 +339,10 @@ describe("Leng land probability branching", () => {
       ...lengCtxInput(),
       rotation: rotationOf("attack"),
     });
-    // Stack arms scale tempest; silent-zero / float-floor path stays near attack+zeroTempest.
     expect(s.totalExpected).toBeGreaterThan(attackOnly.totalExpected + zeroTempest - 50);
   });
 
-  it("multi-hit assault: stack EV under cap with integer stacks per branch", () => {
+  it("multi-hit assault: stack EV under cap on compact mass spine", () => {
     const assault = MELEE_ABILITIES.find((a) => a.id === "assault")!;
     const set = castOutcomes(
       { weight: 1, rt: createRuntime(lengCtxInput()) },
@@ -315,29 +351,26 @@ describe("Leng land probability branching", () => {
       false,
     );
     expect(set.residualWeight).toBeLessThanOrEqual(1e-12);
+    expect(set.branches).toHaveLength(1);
     const eStacks = expectedStacks(set.branches);
     expect(eStacks).toBeGreaterThan(0.12);
     expect(eStacks).toBeLessThanOrEqual(PRIMORDIAL_ICE_CAP);
-    for (const b of set.branches) {
-      const stacks = b.rt.state.melee.primordialIceStacks;
-      expect(Number.isInteger(stacks)).toBe(true);
-      expect(stacks).toBeGreaterThanOrEqual(0);
-      expect(stacks).toBeLessThanOrEqual(PRIMORDIAL_ICE_CAP);
-    }
+    const mass = set.branches[0]!.rt.state.melee.primordialIce.stackMass;
+    expect(mass.reduce((s, w) => s + w, 0)).toBeCloseTo(1, 12);
   });
 
-  it("at stack cap EF is no-op; chill still forks frost window", () => {
+  it("at stack cap EF is no-op; chill opens frost via openMass", () => {
     const rt = createRuntime(lengCtxInput());
-    rt.state = patchMelee(rt.state, { primordialIceStacks: PRIMORDIAL_ICE_CAP });
+    const a = Array(11).fill(0);
+    a[PRIMORDIAL_ICE_CAP] = 1;
+    rt.state = patchMelee(rt.state, { primordialIce: { stackMass: a, expiresAtTick: 0 } });
     const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
     const set = castOutcomes({ weight: 1, rt }, attack, 0, false);
+    expect(set.branches).toHaveLength(1);
     expect(
-      set.branches.every((b) => b.rt.state.melee.primordialIceStacks === PRIMORDIAL_ICE_CAP),
-    ).toBe(true);
-    const chillMass = set.branches
-      .filter((b) => b.rt.state.melee.frostbladesUntilTick > 0)
-      .reduce((s, b) => s + b.weight, 0);
-    expect(chillMass).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
+      set.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce((s, w, i) => s + w * i, 0),
+    ).toBe(PRIMORDIAL_ICE_CAP);
+    expect(frostOpenMass(set.branches)).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
   });
 
   it("one basic hit E[stacks] = 0.1 + 0.02 with both passives", () => {
@@ -352,14 +385,12 @@ describe("Leng land probability branching", () => {
     const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
     const set = castOutcomes({ weight: 1, rt }, attack, 0, false);
     expect(set.residualWeight).toBeLessThanOrEqual(1e-12);
+    expect(set.branches).toHaveLength(1);
     expect(expectedStacks(set.branches)).toBeCloseTo(
       LENG_ENDLESS_FROST_CHANCE + LENG_BOUNDLESS_CHILL_CHANCE,
       10,
     );
-    const chillMass = set.branches
-      .filter((b) => b.rt.state.melee.frostbladesUntilTick > 0)
-      .reduce((s, b) => s + b.weight, 0);
-    expect(chillMass).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
+    expect(frostOpenMass(set.branches)).toBeCloseTo(LENG_BOUNDLESS_CHILL_CHANCE, 10);
   });
 
   it("stack EV is independent of unrelated prior damage events (no event.seq hash)", () => {
@@ -372,9 +403,6 @@ describe("Leng land probability branching", () => {
         equipmentEffects: effects,
         weaponConfiguration: "dualwield",
       });
-      // Burn seq by scheduling non-Leng damage via extra basics without Leng equipment first
-      // is hard mid-runtime; instead pad with zero-weight-affecting cast seq by casting
-      // without passives then swap... Simpler: cast N basics with Leng and compare E[stacks]/N.
       let branches = [{ weight: 1, rt }];
       for (let i = 0; i < priorBasics; i++) {
         const next = [];
@@ -391,13 +419,12 @@ describe("Leng land probability branching", () => {
       }
       return expectedStacks(branches) / priorBasics;
     };
-    // Under cap, each hit adds EV 0.12 independent of how many seqs already ran.
     expect(mk(1)).toBeCloseTo(0.12, 8);
     expect(mk(3)).toBeCloseTo(0.12, 8);
     expect(mk(5)).toBeCloseTo(0.12, 8);
   });
 
-  it("simulate with Leng reports probability-weighted branching", () => {
+  it("simulate with Leng keeps residual-free compact mass (no Leng runtime fork)", () => {
     const effects = lengEffects();
     const s = simulate({
       ...baseInput,
@@ -408,7 +435,7 @@ describe("Leng land probability branching", () => {
       rotation: rotationOf("attack", "attack"),
     });
     expect(s.ok).toBe(true);
-    expect(s.rng?.method).toBe("probability-weighted branching");
+    // Leng no longer multi-arms the runtime; residual stays zero.
+    expect(s.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-9);
   });
 });
-

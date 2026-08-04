@@ -14,7 +14,7 @@ export type AbilityCastAvailability =
   | {
       available: false;
       reason:
-        "missing-passive" | "superseded" | "weapon-requirement" | "missing-equipment" | "other";
+        "missing-passive" | "superseded" | "weapon-requirement" | "missing-equipment" | "missing-special-access" | "other";
       message: string;
     };
 
@@ -163,11 +163,60 @@ export function meetsPassiveRequirement(
   );
 }
 
+
+/** Catalogue id for Essence of Finality amulet (stores weapon specials). */
+export const ESSENCE_OF_FINALITY_ITEM_ID = "item:essence-of-finality";
+
+/** True when an equipped item natively provides this specialAttackId. */
+export function equipmentGrantsNativeSpecial(
+  abilityId: string,
+  equipmentIds?: readonly string[],
+): boolean {
+  if (!equipmentIds?.length) return false;
+  for (const id of equipmentIds) {
+    const item = equipmentById(id);
+    if (item?.specialAttackId === abilityId) return true;
+  }
+  return false;
+}
+
+export function hasEssenceOfFinalityEquipped(equipmentIds?: readonly string[]): boolean {
+  if (!equipmentIds?.length) return false;
+  return equipmentIds.some(
+    (id) => id === ESSENCE_OF_FINALITY_ITEM_ID || id.includes("essence-of-finality"),
+  );
+}
+
+/**
+ * Weapon special access: native weapon (specialAttackId match) or EoF equipped.
+ * When eofStoredSpecialId is provided, EoF path also requires it match ability.id.
+ * When unset, EoF alone is accepted (loadout UI may not yet track stored special).
+ */
+export function meetsSpecialAccess(
+  ability: AbilitySpec,
+  options: {
+    equipmentIds?: readonly string[];
+    eofStoredSpecialId?: string | null;
+  } = {},
+): boolean {
+  if (!ability.weaponSpecial || ability.requiresSpecialAccess !== true) return true;
+  if (equipmentGrantsNativeSpecial(ability.id, options.equipmentIds)) return true;
+  if (!hasEssenceOfFinalityEquipped(options.equipmentIds)) return false;
+  if (options.eofStoredSpecialId == null || options.eofStoredSpecialId === "") return true;
+  return options.eofStoredSpecialId === ability.id;
+}
+
+export function specialAccessMessage(ability: AbilitySpec): string {
+  return `${ability.name} requires the special weapon equipped or Essence of Finality`;
+}
+
 export type AbilityAvailabilityOptions = {
   weaponConfiguration?: WeaponConfiguration;
   equipmentIds?: readonly string[];
   /** Prefer resolved ActiveEquipmentEffects.passiveIds when available. */
   passiveIds?: readonly ItemPassiveId[];
+  /** EoF stored special ability id when modeled. */
+  eofStoredSpecialId?: string | null;
   /**
    * Peers that share a replacementGroup. When an upgrade peer's required
    * passive is active, the base (no passive requirement) is superseded.
@@ -194,6 +243,16 @@ export function resolveAbilityCastAvailability(
     };
   }
 
+  if (!meetsSpecialAccess(ability, {
+    equipmentIds: options.equipmentIds,
+    eofStoredSpecialId: options.eofStoredSpecialId,
+  })) {
+    return {
+      available: false,
+      reason: "missing-special-access",
+      message: specialAccessMessage(ability),
+    };
+  }
   if (!meetsEquipmentRequirement(ability, options.equipmentIds)) {
     return {
       available: false,

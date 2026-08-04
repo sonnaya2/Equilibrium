@@ -198,6 +198,7 @@ export function frostActiveMass(mass: LengMassMap): number {
  * Accepts fractional prior stacks so EV accumulates across lands without
  * floor(E) wiping mass each step.
  */
+/** @deprecated Product path uses compact PrimordialIceDistribution (primordialIce.ts). */
 export function expectedLengLandState(
   table: CompiledLengLandTable,
   stacks: number,

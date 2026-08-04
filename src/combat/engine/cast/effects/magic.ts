@@ -2,6 +2,7 @@ import { applyCombust } from "../../../styles/magic/burn";
 import {
   activateInstability,
   activateSunshine,
+  armBlastInfused,
   CONC_BLAST_CRIT_PER_HIT_PCT,
   CONC_BLAST_RUNIC_CRIT_PER_HIT_PCT,
   GREATER_CONC_BLAST_CRIT_PER_HIT_PCT,
@@ -9,6 +10,7 @@ import {
   isConcentratedBlast,
 } from "../../../styles/magic/effects";
 import { animaCharged, consumeAnima } from "../../../styles/magic/runicCharge";
+import { hasPassive } from "../../../shared/equipment";
 import { patchMagic, patchTarget } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 
@@ -50,6 +52,14 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     rt.state = patchMagic(rt.state, {
       instability: activateInstability(candidate, fx.prepared.snap.castSeq),
     });
+  }
+
+  // Blast Infused: Wild Magic + boots passive arms 10-tick basic damage window.
+  if (
+    ability.id === "wild_magic" &&
+    hasPassive(rt.input.equipmentEffects, "blast-diffusion-inner-wrath")
+  ) {
+    rt.state = patchMagic(rt.state, { blastInfusedUntilTick: armBlastInfused(candidate) });
   }
 
   if (ability.id === "sonic_wave" || ability.id === "greater_sonic_wave") {

@@ -426,16 +426,16 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Icy Tempest",
     style: "melee",
     category: "utility",
+    // Weapon special attack (not a normal ability). Access: Leng MH specialAttackId
+    // or Essence of Finality equipped — never passive-only.
     weaponSpecial: true,
+    requiresSpecialAccess: true,
     area: "aoe",
     hits: [{ band: { minPct: 115, maxPct: 135 } }, { band: { minPct: 175, maxPct: 205 } }],
     adrenaline: { cost: 30 },
     cooldownSeconds: 15,
-    weaponRequirement: "mainhand",
-    requiredPassiveAnyOf: ["leng-endless-frost"],
-    supportStatus: "partially-modeled",
     supportNote:
-      "Single-target model (primary + splash-on-primary). Multi-target splash unmodeled.",
+      "Weapon special. Requires Dark Shard of Leng (or equivalent) or Essence of Finality. ST primary model; multi-target splash unmodeled.",
     source: wikiAbility("Icy Tempest", "Icy_Tempest", "2026-08-02"),
   },
   {

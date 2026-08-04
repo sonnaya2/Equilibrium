@@ -59,6 +59,8 @@ export function buildSimulationInputBase(
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
+    ammo: model.ammo,
+    caromingRank: model.caromingRank,
     tumekensPieces: model.tumekensPieces,
     tumekensCritEnabled: model.tumekensCritEnabled,
     equipmentEffects: model.equipmentEffects,
@@ -92,7 +94,7 @@ export interface ManualStatScaffold {
 }
 
 /**
- * Manual custom-stat constructor — deliberately separate from full loadout path.
+ * Manual custom-stat constructor - deliberately separate from full loadout path.
  * Does not grant cast modifiers, equipmentEffects, league, or Strength Cape catalogue patch
  * unless the caller already put cape on the catalogue.
  */
@@ -152,9 +154,9 @@ export function toHybridManualCombatModel(
     targetHpPercent: scaffold.target.hpPercent,
     cap: scaffold.cap,
     startingAdrenaline: scaffold.startingAdrenaline,
-    // Match withManualRotationLine: no equipment ids, simplified weapon shape.
-    equipmentIds: [],
-    weaponConfiguration: scaffold.style === "necromancy" ? "necromancy" : "twohand",
+    // Preserve equipmentIds and weaponConfiguration from scaffold (Leng / passives).
+    equipmentIds: scaffold.equipmentIds,
+    weaponConfiguration: scaffold.weaponConfiguration,
     // Empty damage modifiers (castModifiersFor: () => []).
     setCounts: [],
     vulnerability: false,
@@ -171,6 +173,7 @@ export function toHybridManualCombatModel(
     salve: null,
     ultimatums: 0,
     lunging: 0,
+    caroming: 0,
     berserkersFuryBonus: 0,
     diagnostics: {
       ...scaffold.diagnostics,
@@ -191,14 +194,29 @@ export function toManualSimulateInput(
   parts: {
     rotation: SimulateInput["rotation"];
     autoWeave?: boolean;
-    ammo?: SimulateInput["ammo"];
+    /**
+     * Manual UI ammo override over model-packed base.ammo:
+     * - undefined: keep base.ammo (Revolution / omit path)
+     * - null: force clear (Manual "None")
+     * - deathspore | splintering: set that ammo
+     */
+    ammo?: SimulateInput["ammo"] | null;
   },
 ): SimulateInput {
+  if (parts.ammo === null) {
+    // Drop model-packed ammo entirely (Manual "None").
+    const { ammo: _cleared, ...withoutAmmo } = base;
+    return {
+      ...withoutAmmo,
+      rotation: parts.rotation,
+      autoWeave: parts.autoWeave,
+    };
+  }
   return {
     ...base,
     rotation: parts.rotation,
     autoWeave: parts.autoWeave,
-    ammo: parts.ammo,
+    ...(parts.ammo !== undefined ? { ammo: parts.ammo } : {}),
   };
 }
 

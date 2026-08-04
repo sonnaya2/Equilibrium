@@ -61,6 +61,8 @@ export function projectSerializableSimBase(
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
+    ammo: model.ammo,
+    caromingRank: model.caromingRank,
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,
     tumekensPieces: model.tumekensPieces,

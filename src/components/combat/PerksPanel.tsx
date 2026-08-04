@@ -61,6 +61,13 @@ const PERKS: readonly PerkDef[] = [
     icon: PERK_ICON("lunging"),
   },
   {
+    key: "caroming",
+    label: "Caroming",
+    effect: "+4% Ricochet ability damage per rank per hit (R4 +16%)",
+    max: 4,
+    icon: PERK_ICON("caroming"),
+  },
+  {
     key: "aftershock",
     label: "Aftershock",
     effect: "Blast after 50,000 damage; 24% to 39.6% ability damage per rank; 6s minimum",

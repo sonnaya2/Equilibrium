@@ -27,6 +27,7 @@ export type ModifierSourcesHostInput = Pick<
   | "salve"
   | "ultimatums"
   | "lunging"
+  | "caroming"
   | "berserkersFuryBonus"
 >;
 
@@ -80,6 +81,7 @@ export function resolveModifierSourcesFromHost(
     salve: input.salve ?? null,
     ultimatums: input.ultimatums ?? 0,
     lunging: input.lunging ?? 0,
+    caroming: input.caroming ?? 0,
     berserkersFuryBonus: fury,
   };
 }

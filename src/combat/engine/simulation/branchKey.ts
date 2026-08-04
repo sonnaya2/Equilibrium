@@ -1,6 +1,7 @@
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ActiveConjure } from "../../styles/necromancy/conjures";
 import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
+import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
@@ -150,7 +151,12 @@ function encodeState(state: RotationState): string {
     n(m.enduringRuin.nextAttackBonus),
     n(m.enduringRuin.untilTick),
     n(m.enduringRuin.grantedByCast),
-    n(m.primordialIceStacks),
+    // Primordial Ice: expired-normalized stack mass + expiry + frost open mass.
+    (() => {
+      const ice = expirePrimordialIce(m.primordialIce, state.tick);
+      return ice.stackMass.map((w) => n(w)).join(US) + US + n(ice.expiresAtTick);
+    })(),
+    n(m.frostbladesOpenMass ?? 0),
     // Expired frost ≡ 0 (same as expand / completeAdvance).
     n(normalizeLengFrostUntil(m.frostbladesUntilTick, state.tick)),
     // ranged
@@ -162,6 +168,12 @@ function encodeState(state: RotationState): string {
     n(r.deathspore.stacks),
     n(r.deathspore.freeCastUntilTick),
     n(r.deathspore.cooldownUntilTick),
+    n(r.puncture.stacks),
+    n(r.puncture.expiresAtTick),
+    n(r.puncture.storedDamage),
+    n(r.puncture.generation),
+    n(r.puncture.pendingOwnerCast),
+    n(r.puncture.lastCompletedCastSeq),
     // magic
     n(g.runicCharge.cooldownUntilTick),
     n(g.runicCharge.animaUntilTick),
@@ -177,6 +189,13 @@ function encodeState(state: RotationState): string {
     n(g.channelledMight.startsAtTick),
     n(g.channelledMight.expiresAtTick),
     n(g.channelledMight.critDamageBonus),
+    // Tsunami / Blast Infused: expired until ≡ 0 for post-window merge.
+    n(g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= state.tick
+      ? 0
+      : g.tsunamiCritAdrenUntilTick),
+    n(g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= state.tick
+      ? 0
+      : g.blastInfusedUntilTick),
     // necromancy resources
     n(res.residualSouls),
     n(res.necrosisStacks),

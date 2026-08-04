@@ -5,6 +5,9 @@ import { CHAOS_ROAR_DAMAGE_MULTIPLIER } from "../../styles/melee/abilities";
 import { BERSERK_DAMAGE_MULTIPLIER } from "../../styles/melee/bloodlust";
 import { burnActive, DRAGON_BREATH_COMBUST_BONUS_PCT } from "../../styles/magic/burn";
 import {
+  BLAST_INFUSED_BASIC_DAMAGE_MULT,
+  BLAST_INFUSED_SOURCE,
+  blastInfusedActive,
   sunshineActive,
   SUNSHINE_DAMAGE_MULTIPLIER,
   SUNSHINE_SOURCE,
@@ -75,7 +78,12 @@ export function landTimeModifiers(
     at < state.melee.frostbladesUntilTick &&
     !modifiers.some((modifier) => modifier.id === "item:frostblades")
   ) {
-    modifiers.push(frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)));
+    // openMass 0 with a live until = fully open (unit seeds); lands set openMass in (0,1].
+    const raw = state.melee.frostbladesOpenMass ?? 0;
+    const open = raw > 0 ? Math.min(1, raw) : 1;
+    modifiers.push(
+      frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION * open)),
+    );
   }
   if (
     equipment?.amHejDamageBonus &&
@@ -146,6 +154,16 @@ export function landTimeModifiers(
         1 + DRAGON_BREATH_COMBUST_BONUS_PCT / 100,
         MODERNISATION_WIKI,
       ),
+    );
+  }
+  // Blast Infused: magic basics incl. Combust DoT ticks (wiki Inner Wrath).
+  if (
+    ability.style === "magic" &&
+    (ability.category === "basic" || ability.autoAttack === true) &&
+    blastInfusedActive(state.magic, at)
+  ) {
+    modifiers.push(
+      buffMultiplier("buff:blast_infused", BLAST_INFUSED_BASIC_DAMAGE_MULT, BLAST_INFUSED_SOURCE),
     );
   }
   if (!isDot || convertedChannel) return modifiers;

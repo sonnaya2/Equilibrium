@@ -1,5 +1,6 @@
 import { grantChannelledMight } from "../../../styles/magic/effects";
-import { patchMagic } from "../../runtime/state";
+import { schedulePunctureAfterFinish } from "../../resolution/landed/ranged";
+import { patchMagic, patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 
 /**
@@ -11,9 +12,12 @@ import type { CastEffectContext } from "./context";
  * +15% magic critical strike damage for 3.6s from the channel's end tick. The
  * simulator always completes channels; an explicit cancellation never reaches
  * here.
+
+ * Puncture (splintering): sequence starts 1 tick after the applying ability
+ * finishes; multi-hit casts share one restart via pendingOwnerCast.
  */
 export function applyCompletionEffects(fx: CastEffectContext): void {
-  const { rt, ability, working, candidate } = fx;
+  const { rt, ability, working, candidate, prepared } = fx;
   if (ability.id === "asphyxiate" && working.channelTicks != null) {
     rt.state = patchMagic(rt.state, {
       channelledMight: grantChannelledMight(
@@ -21,5 +25,21 @@ export function applyCompletionEffects(fx: CastEffectContext): void {
         (rt.input.tumekensPieces ?? 0) >= 5,
       ),
     });
+  }
+  const finishTick = candidate + prepared.occupancyTicks;
+  if (ability.style === "ranged") {
+    const puncture = rt.state.ranged.puncture;
+    const shouldSchedule =
+      puncture.stacks > 0 && puncture.pendingOwnerCast === prepared.snap.castSeq;
+    if (shouldSchedule) {
+      schedulePunctureAfterFinish(rt, finishTick);
+    }
+    // Record completion so late lands (tickOffset past occupancy) schedule from land.
+    const p = rt.state.ranged.puncture;
+    if (p.lastCompletedCastSeq < prepared.snap.castSeq) {
+      rt.state = patchRanged(rt.state, {
+        puncture: { ...p, lastCompletedCastSeq: prepared.snap.castSeq },
+      });
+    }
   }
 }

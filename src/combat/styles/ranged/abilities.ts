@@ -283,14 +283,14 @@ export const RANGED_EFFECTS = [
     id: "ricochet_aoe",
     name: "Ricochet secondary targets",
     notes:
-      "Engine models solo-target full return (2 bounce hits 15–20%). Live AoE hits up to 2 secondaries within 5 tiles instead of returning; Caroming adds +4% ability damage per rank per hit (not modelled here).",
+      "Engine models solo-target full return (2 bounce hits 15-20%). Live AoE hits up to 2 secondaries within 5 tiles instead of returning. Caroming: +4% ability damage per rank per hit (band construction in prepare).",
     source: wiki("Ricochet", "Ricochet"),
   },
   {
     id: "greater_ricochet_aoe",
     name: "Greater Ricochet secondary targets",
     notes:
-      "Engine models solo-target full return (2×15–20% + 4×4–6%). Live AoE hits up to 6 secondaries; late returns only deal 4–6% when no secondary is found.",
+      "Engine models solo-target full return (2x15-20% + 4x4-6%). Live AoE hits up to 6 secondaries; late returns only deal 4-6% when no secondary is found. Caroming scales each hit band.",
     source: wiki("Greater Ricochet", "Greater_Ricochet"),
   },
   {
@@ -317,7 +317,7 @@ export const RANGED_EFFECTS = [
     id: "darkfang_basic",
     name: "Ranged basic (Dark bow / Gloomfire)",
     notes:
-      "Wiki Ranged (ability) Darkfang row: two hits of 45-55% instead of one 90-110%. Weapon passive, not a separate bar ability — not modelled as its own AbilitySpec.",
+      "Wiki Ranged (ability) Darkfang row: two hits of 45-55% instead of one 90-110%. Selected in prepare via equipmentIds (item:dark-bow / item:gloomfire-bow); not a separate bar ability.",
     source: wiki("Ranged (ability)", "Ranged_(ability)"),
   },
 ];

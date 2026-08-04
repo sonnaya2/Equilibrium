@@ -91,10 +91,8 @@ describe("score-only oracle parity (gate)", () => {
     expect(scoreOnly.metrics?.dpm).toBeCloseTo(full.metrics?.dpm ?? NaN, 10);
   });
 
-  it("Leng dual-wield: score-only is residual-free EV search approx (not full-tree parity)", () => {
-    // Score-only collapses EF×BC arms to E[stacks]/E[frost] in expandLengOnLand.
-    // Residual stays 0; exactness is approximated so full robust ranking cannot claim exact.
-    // Full-analysis still multi-branches (may residual under live cap).
+  it("Leng dual-wield: score-only and full-analysis share compact mass spine", () => {
+    // expandLengOnLand is in-place stackMass + frostOpenMass for both detail levels.
     const abilities = MELEE_ABILITIES;
     const sim = {
       base: 1000,
@@ -128,13 +126,12 @@ describe("score-only oracle parity (gate)", () => {
     const score = simulateRevolution(input, { detailLevel: "score-only" });
     expect(full.ok).toBe(true);
     expect(score.ok).toBe(true);
-    // Search approx: residual free (no hard-cap discard of non-equivalent mass).
     expect(score.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
-    expect(score.rng?.exactness).toBeDefined();
-    expect(["approximated", "bounded-approximation"]).toContain(score.rng?.exactness);
-    // Finite damage for exploratory / search ranking.
+    expect(full.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
+    // Compact mass is residual-free; exactness exact or merged-exactly.
+    expect(["exact", "merged-exactly"]).toContain(score.rng?.exactness ?? "exact");
+    expect(["exact", "merged-exactly"]).toContain(full.rng?.exactness ?? "exact");
     expect(score.totalExpected).toBeGreaterThan(0);
-    // Full tree may still residual under MAX_LIVE_BRANCHES — not required equal.
-    expect(typeof full.totalExpected).toBe("number");
+    expect(full.totalExpected).toBeGreaterThan(0);
   });
 });

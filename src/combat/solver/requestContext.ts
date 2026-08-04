@@ -175,7 +175,7 @@ export function fitAuthoredSeeds(
     return built.length >= 2 ? built : null;
   };
   return [
-    ...authoredSeedsFromCatalogue(request.style, denySet, request.loadout.weaponConfiguration),
+    ...authoredSeedsFromCatalogue(request.style, denySet, "weaponConfiguration" in request.loadout ? request.loadout.weaponConfiguration : undefined),
     ...request.authoredSeedBars.map((s) => s.abilityIds),
     ...(request.userBar ? [request.userBar] : []),
   ]

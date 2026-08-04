@@ -27,6 +27,7 @@ export const ITEM_PASSIVE_IDS: readonly ItemPassiveId[] = [
   "asylum-surgeon",
   "deathtouch-reflect",
   "ring-of-vigour",
+  "blast-diffusion-inner-wrath",
 ];
 
 /** Return validation errors for the passive registry (empty = ok). */

@@ -228,6 +228,15 @@ export class EventQueue<RT = unknown> {
     return removed > 0;
   }
 
+  /** Remove every pending event matching `pred`; returns the count. */
+  cancelWhere(pred: (event: ScheduledEvent<RT>) => boolean): number {
+    const before = this.items.length;
+    this.items = this.items.filter((e) => !pred(e));
+    const removed = before - this.items.length;
+    noteEventQueueCancel(removed);
+    return removed;
+  }
+
   /** Still-pending events, in order. */
   pending(): readonly ScheduledEvent<RT>[] {
     return this.items;

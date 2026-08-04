@@ -262,8 +262,9 @@ const EXPECTED: ExpectedRow[] = [
     ],
     adrenCost: 30,
     cooldownSeconds: 15,
-    weaponRequirement: "mainhand",
-    supportStatus: "partially-modeled",
+    // Weapon special: access via specialAttackId / EoF (requiresSpecialAccess), not shape/passive.
+    weaponRequirement: undefined,
+    supportStatus: undefined,
   },
   {
     id: "pulverise",

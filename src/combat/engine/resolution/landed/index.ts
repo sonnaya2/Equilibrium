@@ -28,10 +28,10 @@ export function applyLandedHitEffects(
       onNecromancyHitLanded(rt, event);
       break;
     case "magic":
-      onMagicHitLanded(rt, event, ability);
+      onMagicHitLanded(rt, event, ability, damage);
       break;
     case "ranged":
-      onRangedHitLanded(rt, event, ability);
+      onRangedHitLanded(rt, event, ability, damage);
       break;
     case "melee":
       onMeleeHitLanded(rt, event, ability, damage);

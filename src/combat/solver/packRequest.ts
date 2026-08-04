@@ -44,6 +44,7 @@ export interface SolverPackSnapshot {
   plantedFeet?: boolean;
   strengthCape99?: boolean;
   preciseRank?: number;
+  ammo?: "deathspore" | "splintering";
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -68,6 +69,7 @@ export interface SolverPackSnapshot {
   salve?: SerializableModifierSources["salve"];
   ultimatums?: number;
   lunging?: number;
+  caroming?: number;
   /** Precomputed Berserker's Fury damage bonus fraction; 0 / omit = off. */
   berserkersFuryBonus?: number;
   /** Precomputed set counts; when omitted derived from equipmentSlots + equipmentIds. */
@@ -122,6 +124,7 @@ function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifier
     salve: snapshot.salve,
     ultimatums: snapshot.ultimatums,
     lunging: snapshot.lunging,
+    caroming: snapshot.caroming,
     berserkersFuryBonus: snapshot.berserkersFuryBonus,
   });
 }
@@ -142,6 +145,8 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     plantedFeet: snapshot.plantedFeet,
     strengthCape99: snapshot.strengthCape99,
     preciseRank: snapshot.preciseRank,
+    ammo: snapshot.ammo,
+    caromingRank: snapshot.caroming,
     conjureBasicDamageMult: snapshot.conjureBasicDamageMult,
     conjureDurationMult: snapshot.conjureDurationMult,
     tumekensPieces: snapshot.tumekensPieces,

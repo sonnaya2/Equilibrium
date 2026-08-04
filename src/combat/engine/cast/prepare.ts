@@ -9,9 +9,11 @@ import {
   GREATER_BARGE_ENDLESS_ASSAULT_IDLE_TICKS,
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
-  icyTempestHits,
 } from "../../styles/melee/effects";
+import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
+import { applyCaromingToRicochetHits, isRicochetAbility } from "../../styles/ranged/caroming";
+import { darkfangBasicHits, hasDarkfangWeapon } from "../../styles/ranged/darkfang";
 import { isMagicAbility, resplendentAsphyxiate } from "../../styles/magic/abilities";
 import {
   GREATER_FLOW_REDUCTION,
@@ -131,6 +133,20 @@ export function prepareCast(
   // Shared with Quick via resolveAbilityWithEquipment - never mutates catalogues.
   let working: AbilitySpec = resolveAbilityWithEquipment(ability, input.equipmentEffects);
 
+  // Dark bow / Gloomfire: Ranged basic becomes two independent 45-55% hits.
+  if (ability.id === "ranged_attack" && hasDarkfangWeapon(input.equipmentIds)) {
+    working = { ...working, hits: darkfangBasicHits() };
+  }
+
+  // Caroming: scale Ricochet hit bands at construction (per-hit, not flat total).
+  const caromingRank = input.caromingRank ?? 0;
+  if (isRicochetAbility(ability.id) && caromingRank > 0) {
+    working = {
+      ...working,
+      hits: applyCaromingToRicochetHits(working.hits, caromingRank),
+    };
+  }
+
   // Empowered variant resolution: the spend itself is recorded, not applied - 
   // it lands atomically with the rest of the commit.
   const melee = isMeleeAbility(ability) ? ability : null;
@@ -162,11 +178,16 @@ export function prepareCast(
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
   }
-  // Icy Tempest: stack-scaled bands; spend path is spendOf (stacks then Vigour).
+  // Icy Tempest: distribution-resolved bands; spend path is spendOf (resolveIcyTempest).
   if (ability.id === "icy_tempest") {
+    const resolved = resolveIcyTempest(
+      rt.state.melee.primordialIce,
+      candidate,
+      rt.state.ringOfVigour,
+    );
     working = {
       ...working,
-      hits: icyTempestHits(rt.state.melee.primordialIceStacks),
+      hits: resolved.expectedHits.map((h) => ({ band: { ...h.band } })),
     };
   }
   if (ability.id === "asphyxiate" && (input.tumekensPieces ?? 0) >= 4) {

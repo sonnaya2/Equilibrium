@@ -143,20 +143,24 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
     [model, lineBAbsolute],
   );
 
+  // ability is a catalogue record treated as immutable; React Compiler still flags the object dep.
   const castOptions = useMemo(
     () =>
       ability.id === "volley_of_souls"
         ? { residualSouls: clampedSouls, abilityOverlay: ability }
         : {},
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- AbilitySpec is immutable catalogue data
     [ability, clampedSouls],
   );
 
   const analysisA = useMemo(
     () => analyzeSingleCast(model, ability, castOptions),
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- AbilitySpec is immutable catalogue data
     [model, ability, castOptions],
   );
   const analysisB = useMemo(
     () => analyzeSingleCast(modelB, ability, castOptions),
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- AbilitySpec is immutable catalogue data
     [modelB, ability, castOptions],
   );
 

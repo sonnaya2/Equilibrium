@@ -43,9 +43,14 @@ describe.skipIf(!enabled)("leng microbench (score-only single bar)", () => {
     expect(leng.wallMs).toBeGreaterThan(0);
     expect(peer.wallMs).toBeGreaterThan(0);
     expect(leng.totalExpected).toBeGreaterThan(0);
-    // Residual free; exactness approximated so full robust rank stays gated.
+    // Residual free compact mass spine (exact / merged-exactly).
     expect(leng.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
-    expect(leng.exactness == null || ["approximated", "bounded-approximation"].includes(leng.exactness)).toBe(true);
+    expect(
+      leng.exactness == null ||
+        ["exact", "merged-exactly", "approximated", "bounded-approximation"].includes(
+          leng.exactness,
+        ),
+    ).toBe(true);
     // Prefer disclosed non-exact; if summary omits rng, snaps/maxLive still gate the win.
 
     if (report.branchProf) {

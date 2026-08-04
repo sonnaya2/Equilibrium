@@ -43,9 +43,10 @@ Hot-path skips (same sim physics, thinner bookkeeping):
 2. Analysis ledgers (`accountAnalysisEvent` / `finalizeAnalysis`) when score-
    only; keep support-offset math only if a non-score consumer still needs
    bounds (ranking does not).
-3. Cast-record hit arrays and UI `hitDetails` growth when branch keys / land-time
-   readers do not need them (engine **keeps** `hitDetails` map for derived hits
-   + `branchKey` parity - only cast presentation hit arrays are skipped).
+3. Cast-record result/hit arrays skipped on score-only. `hitDetails` retained
+   only while pending derivedFrom / Lightning Surge consumers need them;
+   score-only `branchKey` encodes live derived sources only (not historical
+   full HitResult maps).
 4. Branch merge of analysis / perAbility when those maps are empty or unused.
 5. `combineBranchSummaries` analysis mix and representative cast/event pick
    when detail level is not full-analysis.
@@ -57,7 +58,7 @@ Must keep (ranking + correctness gates):
 - `residualWeight` and exactness lattice (never rank residual / non-exact as
   exact robust scores)
 - combat state, queue, cooldowns, land-time resolve (physics unchanged)
-- `hitDetails` for derived-hit resolve + merge `branchKey` topology
+- Live `hitDetails` for pending derived-hit resolve + score-only live branchKey
 
 ## Detail levels (implemented)
 
@@ -123,15 +124,31 @@ Goal: **identical ranking metrics**, not identical object graphs.
 
 ## Remaining debt
 
-- Optional prune of `hitDetails` entries no longer referenced by pending queue
-  (risky for branchKey - needs dedicated parity)
+- Score-only live hitDetails retention + cheaper live branchKey: done
+  (branch + scoreOnlyParity cover plain attacks, bloat tails, ranking parity)
 - Summary level is plumbed in helpers but not a separate optimized finish path
   beyond skipping analysis/history
 - Benchmark numbers (alloc / wall-time) not yet re-baselined under score-only
 
+## Leng score-only EV collapse (search exception)
+
+Dual-Leng land RNG (Endless Frost x Boundless Chill) is **state-changing** and
+normally multi-branches every eligible land. On `detailLevel: "score-only"`
+only, `expandLengOnLand` collapses arms to a single in-place EV state:
+
+- `E[stacks]` + `E[frostUntil]` via `expectedLengLandState` (`lengDistribution`)
+- `residualWeight = 0` (mass folded into EV, not discarded onto a survivor)
+- `exactness = bounded-approximation` (summary wire: `approximated`)
+- **zero** `snapshotRuntime` from the Leng expand path
+
+This is an intentional **search approximation**, not bookkeeping parity with
+full-analysis. Full-analysis / summary still multi-arm fork. Full robust
+`scoreSummary` still hard-fails non-exact exactness (no residual laundering).
+Winner presentation re-sims at full-analysis.
+
 ## Non-goals
 
-- Faster-but-approximate damage (EV shortcuts that change scores)
-- Dropping state-changing RNG branching
-- Ranking residual / approximated mass as exact
+- Silent EV shortcuts on full-analysis / summary detail levels
+- Ranking residual / approximated mass as exact robust scores
+- Claiming score-only dual-Leng totals equal the multi-arm tree
 - Shipping score-only as the public combat inspector default

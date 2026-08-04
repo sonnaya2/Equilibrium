@@ -130,6 +130,14 @@ export function simulateRevolution(
     branches = capped.branches;
   }
 
+  // Score-only Leng EV collapse never forks but is non-exact physics.
+  // Disclose bounded-approximation even when residualWeight=0 / single class.
+  if (
+    options?.detailLevel === "score-only" &&
+    branches.some((b) => b.rt.lengLandTable != null)
+  ) {
+    exactness = combineExactness(exactness, "bounded-approximation");
+  }
   return combineBranchSummaries(
     branches,
     input.durationTicks,

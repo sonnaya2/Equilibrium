@@ -566,7 +566,7 @@ export function combineBranchSummaries(
   // Stochastic rng when branching, multi-terminal, or residual mass remains.
   // probabilityMass/concreteMass = expanded measure only; primary E[D] is over that mass.
   const rng: StochasticRngSummary | undefined =
-    branching || multiClass || safeResidual > PROB_TOLERANCE
+    branching || multiClass || safeResidual > PROB_TOLERANCE || resolvedExactness !== "exact"
       ? {
           method: "probability-weighted branching",
           terminalClasses: parts.length,

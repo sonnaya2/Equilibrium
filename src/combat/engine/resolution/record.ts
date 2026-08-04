@@ -3,6 +3,7 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { applyLandedHitEffects } from "./landed";
 import type { EventResolution } from "./types";
 import { recordEventAccounting } from "./accounting";
+import { releaseScoreOnlyHitDetails } from "./hitDetailsRetention";
 import { applyInventionProcs } from "./procs/invention";
 import { scheduleBlessingDamage } from "./league/blessingDamage";
 
@@ -11,6 +12,7 @@ import { scheduleBlessingDamage } from "./league/blessingDamage";
  * Order: (1) hit-detail + ledgers/cast/event log (2) blessing damage (3) Invention
  * procs / Crackling / Aftershock (4) style landed-hit transitions last, against
  * pre-hit state so this hit's damage does not see its own side effects.
+ * Score-only then drops hitDetails no longer referenced by pending derived/LS.
  */
 export function recordResolved(
   rt: SimulationRuntime,
@@ -32,4 +34,6 @@ export function recordResolved(
   ) {
     applyLandedHitEffects(rt, event, damage);
   }
+
+  releaseScoreOnlyHitDetails(rt, event);
 }

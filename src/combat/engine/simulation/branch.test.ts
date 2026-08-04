@@ -3,6 +3,7 @@ import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { commitCast, prepareSimulationCast } from "../cast";
 import type { CastSnapshot } from "../cast/snapshot";
+import { advanceTo } from "../runtime/clock";
 import { createRuntime, enqueueEvent } from "../runtime/runtime";
 import {
   appendWithIntermediateCap,
@@ -17,6 +18,7 @@ import {
   resetBranchProfile,
   snapshotRuntime,
 } from "./branch";
+import { branchKeyStructural } from "./branchKey";
 import type { CastContextInput } from "./contracts";
 import { rotationOf } from "./contracts";
 import { createCastContext, simulate, type SimulateInput } from "./simulate";
@@ -502,6 +504,121 @@ describe("snapshotRuntime score-only trim", () => {
     expect(fullProf.branchSnapshots).toBe(1);
     expect(scoreProf.snapshotFieldsCloned).toBeLessThan(fullProf.snapshotFieldsCloned);
     expect(scoreProf.snapshotBytesEstimate).toBeLessThan(fullProf.snapshotBytesEstimate);
+  });
+});
+
+describe("score-only hitDetails retention", () => {
+  it("does not store hitDetails for plain attacks with no derived pending", () => {
+    const rt = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    for (let i = 0; i < 4; i++) {
+      const attempt = prepareSimulationCast(rt, rt.byId.get("attack")!, rt.state.tick);
+      if (attempt.ok) commitCast(rt, attempt.prepared, false);
+    }
+    advanceTo(rt, rt.state.tick + 40);
+    expect(rt.hitDetails.size).toBe(0);
+    expect(rt.totalExpected).toBeGreaterThan(0);
+    // Cast result damage not accumulated on score-only.
+    expect(rt.casts.every((c) => c.result.expected === 0)).toBe(true);
+  });
+
+  it("full-analysis still grows hitDetails for the same bar", () => {
+    const rt = createRuntime({ ...meleeInput, detailLevel: "full-analysis" });
+    for (let i = 0; i < 4; i++) {
+      const attempt = prepareSimulationCast(rt, rt.byId.get("attack")!, rt.state.tick);
+      if (attempt.ok) commitCast(rt, attempt.prepared, false);
+    }
+    advanceTo(rt, rt.state.tick + 40);
+    expect(rt.hitDetails.size).toBeGreaterThan(0);
+    expect(rt.casts.some((c) => c.result.expected > 0)).toBe(true);
+  });
+
+  it("retains hitDetails only while bloat derived tails are pending", () => {
+    const rt = createRuntime({ ...necroInput, detailLevel: "score-only", startingAdrenaline: 100 });
+    const attempt = prepareSimulationCast(rt, rt.byId.get("bloat")!, 0);
+    expect(attempt.ok).toBe(true);
+    if (!attempt.ok) return;
+    commitCast(rt, attempt.prepared, false);
+    const derivedPending = rt.queue.pending().filter((e) => e.derivedFrom != null);
+    expect(derivedPending.length).toBeGreaterThan(0);
+    const firstDerivedTick = Math.min(...derivedPending.map((e) => e.tick));
+    advanceTo(rt, firstDerivedTick - 1);
+    expect(rt.hitDetails.size).toBe(1);
+    const sourceSeq = [...rt.hitDetails.keys()][0]!;
+    expect(rt.queue.pending().some((e) => e.derivedFrom === sourceSeq)).toBe(true);
+    advanceTo(rt, rt.queue.maxTick() + 1);
+    expect(rt.hitDetails.size).toBe(0);
+    expect(rt.totalExpected).toBeGreaterThan(0);
+  });
+
+  it("score-only branchKey ignores unreferenced historical hitDetails", () => {
+    const a = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    const b = snapshotRuntime(a);
+    a.hitDetails.set(0, {
+      potential: 1000,
+      min: 100,
+      max: 200,
+      critMin: 150,
+      critMax: 300,
+      critChance: 0.1,
+      nonCritExpected: 150,
+      critExpected: 225,
+      expected: 157.5,
+      uncappedExpected: 157.5,
+      capLoss: 0,
+    } as never);
+    b.hitDetails.set(0, {
+      potential: 1000,
+      min: 999,
+      max: 999,
+      critMin: 999,
+      critMax: 999,
+      critChance: 0.9,
+      nonCritExpected: 999,
+      critExpected: 999,
+      expected: 999,
+      uncappedExpected: 999,
+      capLoss: 0,
+    } as never);
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("live derivedFrom hitDetails still split score-only branch keys", () => {
+    const a = createRuntime({ ...meleeInput, detailLevel: "score-only" });
+    a.hitDetails.set(0, {
+      potential: 1000,
+      min: 100,
+      max: 200,
+      critMin: 150,
+      critMax: 300,
+      critChance: 0.1,
+      nonCritExpected: 150,
+      critExpected: 225,
+      expected: 157.5,
+      uncappedExpected: 157.5,
+      capLoss: 0,
+    } as never);
+    a.nextSeq = 2;
+    enqueueEvent(a, {
+      tick: 8,
+      seq: 1,
+      family: "dot",
+      abilityId: "dismember",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: 0,
+      provenance: { kind: "derived_tail", detail: "dismember" },
+      resolve: noopResolve,
+    });
+    const b = snapshotRuntime(a);
+    b.hitDetails.set(0, {
+      ...a.hitDetails.get(0)!,
+      expected: 999,
+    });
+    expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
   });
 });
 

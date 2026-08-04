@@ -1,5 +1,6 @@
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
+import { expectedLengLandState } from "../../styles/melee/lengDistribution";
 import {
   foldLengOutcomesByFutureState,
   materializeLengLandOutcomes,
@@ -31,11 +32,11 @@ import {
 } from "./branchCore";
 
 /**
- * Intermediate live budget while folding Leng expands in one event tick.
- * Same constant as mergeAndCap / MAX_LIVE_BRANCHES (64): exact-merge first,
- * then hard-cap to maxLive when unique classes still exceed it. Residual disclosed.
+ * Soft intermediate budget while folding Leng expands in one event tick.
+ * Merge-only until this; hard cap still uses maxLive (default MAX_LIVE_BRANCHES).
+ * Keeps peak below ~maxLive * outcomeFanout without residual-chipping twice.
  */
-export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES;
+export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES * 2;
 
 /**
  * Apply Leng post-land state. Frost windows already expired at `tick` normalize
@@ -51,6 +52,21 @@ function applyLengOutcome(
     primordialIceStacks: stacks,
     frostbladesUntilTick: normalizeLengFrostUntil(frostUntil, tick),
   });
+}
+
+/**
+ * Zero expired Frostblades against `atTick` (logical now during advance).
+ */
+function expireFrostOnBranches(branches: readonly Branch[], atTick: number): boolean {
+  let cleared = false;
+  for (const b of branches) {
+    const frost = b.rt.state.melee.frostbladesUntilTick;
+    if (frost > 0 && frost <= atTick) {
+      b.rt.state = patchMelee(b.rt.state, { frostbladesUntilTick: 0 });
+      cleared = true;
+    }
+  }
+  return cleared;
 }
 
 /** True when this landed hit can roll Endless Frost / Boundless Chill. */
@@ -69,9 +85,12 @@ export function isLengEligibleLand(
 }
 
 /**
- * Fork a branch on Leng land RNG — state only.
+ * Fork a branch on Leng land RNG - state only.
  *
- * Proven:
+ * Score-only: applyLengLandEvCollapse (E[stacks]/E[frost], zero snapshots,
+ * residual 0, exactness bounded-approximation). Full-analysis multi-arms.
+ *
+ * Proven (fork path):
  * - The just-resolved land's damage ledger is identical across Leng arms
  *   (recordResolved runs before expand). No damage-side fork of that hit.
  * - Future physics keys only on (stacks, active frostUntil). Identical keys
@@ -84,9 +103,35 @@ export function isLengEligibleLand(
  * Heaviest outcome mutates in place; lighter state-divergent arms clone from
  * pre-apply. Preserves branch.error on residual banks.
  */
+/**
+ * Score-only: collapse EF×BC to E[stacks]/E[frostUntil] on one spine.
+ * residualWeight=0; exactness=bounded-approximation (honest non-exact).
+ * Zero snapshotRuntime — stops dual-Leng clone explosion under ranking evals.
+ */
+function applyLengLandEvCollapse(branch: Branch, tick: number): BranchSet {
+  const rt = branch.rt;
+  const next = expectedLengLandState(
+    rt.lengLandTable!,
+    rt.state.melee.primordialIceStacks,
+    rt.state.melee.frostbladesUntilTick,
+    tick,
+  );
+  applyLengOutcome(rt, next.stacks, next.frostUntil, tick);
+  return emptyBranchSet(
+    [{ weight: branch.weight, rt, error: branch.error }],
+    0,
+    "bounded-approximation",
+  );
+}
+
 export function expandLengOnLand(branch: Branch, tick: number): BranchSet {
   const table = branch.rt.lengLandTable;
   if (!table) return emptyBranchSet([branch]);
+
+  if (branch.rt.detailLevel === "score-only") {
+    return applyLengLandEvCollapse(branch, tick);
+  }
+
 
   // Materialize then defensive fold by future-state key (expired frost ≡ 0).
   const outcomes = foldLengOutcomesByFutureState(
@@ -227,6 +272,24 @@ function softBound(acc: Branch[], intermediateMax: number): BranchSet {
   };
 }
 
+/** Exact-merge only (no hard cap). Used after frost expiry reunites futures. */
+function exactMergeLive(
+  branches: Branch[],
+  exactness: BranchExactness,
+): { branches: Branch[]; exactness: BranchExactness } {
+  if (branches.length <= 1) return { branches, exactness };
+  const before = branches.length;
+  const merged = mergeBranches(branches);
+  noteBranchLiveCount(merged.length);
+  if (merged.length < before) {
+    return {
+      branches: merged,
+      exactness: combineExactness(exactness, "merged-exactly"),
+    };
+  }
+  return { branches: merged, exactness };
+}
+
 /**
  * Advance one branch through due events, forking on Leng-eligible lands.
  * Passives and tick stamp applied after the event window on every survivor.
@@ -346,16 +409,27 @@ function advanceToBranchesInner(
       }
     }
 
+    const frostExpired = expireFrostOnBranches(next, minTick);
     noteBranchLiveCount(next.length);
 
-    // Non-Leng under budget: skip re-key. Otherwise one merge+cap to maxLive.
     if (!expandedAny && next.length <= maxLive) {
-      live = next;
+      if (frostExpired && next.length > 1) {
+        const folded = exactMergeLive(next, exactness);
+        live = folded.branches;
+        exactness = folded.exactness;
+      } else {
+        live = next;
+      }
       continue;
     }
     if (next.length <= maxLive) {
-      // Leng expanded but already within live cap (foldAfterExpand merged).
-      live = next;
+      if (frostExpired && next.length > 1) {
+        const folded = exactMergeLive(next, exactness);
+        live = folded.branches;
+        exactness = folded.exactness;
+      } else {
+        live = next;
+      }
       continue;
     }
     const capped = mergeAndCapBranches(next, maxLive);
@@ -366,6 +440,12 @@ function advanceToBranchesInner(
 
   for (const b of live) {
     completeAdvance(b.rt, fromTick, targetTick);
+  }
+
+  if (live.length > 1) {
+    const folded = exactMergeLive(live, exactness);
+    live = folded.branches;
+    exactness = folded.exactness;
   }
 
   noteBranchLiveCount(live.length);

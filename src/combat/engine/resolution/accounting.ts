@@ -8,15 +8,16 @@ import {
   keepsPerAbilityMap,
   keepsPresentationHistory,
 } from "../simulation/contracts";
+import { shouldRetainHitDetail } from "./hitDetailsRetention";
 
 /**
  * Write generic ledgers for one landed event: totals, per-tick / per-ability
  * attribution, cast-record updates, weighted analysis, and the provenance event
  * log. Does not schedule dependent events or apply style landed-hit transitions.
  *
- * Score-only keeps damage totals, damageByTick, hitDetails (derived-hit / branch
- * keys), and cast expected/min/max. It skips analysis, event log, and cast hit
- * arrays. Summary also skips presentation history + analysis.
+ * Score-only keeps damage totals + damageByTick. hitDetails only when a pending
+ * derived/LS consumer needs them. Cast result expected/min/max/hits skipped
+ * (ranking never reads cast records).
  */
 export function recordEventAccounting(
   rt: SimulationRuntime,
@@ -24,8 +25,9 @@ export function recordEventAccounting(
   resolution: EventResolution,
 ): void {
   const { damage, hitDetail } = resolution;
-  // Always retain hitDetails: derived hits, land-time reads, and branchKey.
-  if (hitDetail) rt.hitDetails.set(event.seq, hitDetail);
+  if (hitDetail && shouldRetainHitDetail(rt, event)) {
+    rt.hitDetails.set(event.seq, hitDetail);
+  }
 
   rt.totalMin += damage.min;
   rt.totalMax += damage.max;
@@ -41,7 +43,8 @@ export function recordEventAccounting(
     accountAnalysisEvent(rt.analysis, rt, event, resolution);
   }
 
-  if (event.sourceCast >= 0) {
+  // Score-only ranking never reads cast.result; skip map lookup + mutations.
+  if (event.sourceCast >= 0 && rt.detailLevel !== "score-only") {
     const record = rt.recordBySeq.get(event.sourceCast);
     if (record) {
       record.result.expected += damage.expected;

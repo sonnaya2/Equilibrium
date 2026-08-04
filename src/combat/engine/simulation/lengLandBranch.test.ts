@@ -7,7 +7,14 @@ import { scheduleCastEvents } from "../cast/schedule";
 import { createRuntime } from "../runtime/runtime";
 import { patchMelee } from "../runtime/state";
 import { baseInput } from "../../test/fixtures/inputs";
-import { snapshotRuntime } from "./branch";
+import {
+  enableBranchProfiling,
+  getBranchProfile,
+  mergeBranches,
+  resetBranchProfile,
+  snapshotRuntime,
+} from "./branch";
+import { simulateRevolution } from "./revolution";
 import { combineBranchSummaries } from "./summary";
 import { advanceToBranches, drainBranchToEnd, expandLengOnLand } from "./lengLandBranch";
 import { isNearOne, PROB_TOLERANCE } from "./stats";
@@ -317,3 +324,201 @@ describe("Leng future-state partial fold", () => {
     }
   });
 });
+
+
+describe("Leng frost expiry exact merge", () => {
+  it("expired frost timestamps merge with frost=0 at same stacks (branchKey)", () => {
+    const base = lengRuntime();
+    base.state = patchMelee(base.state, { primordialIceStacks: 5 });
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.state = { ...a.state, tick: 20 };
+    a.state = patchMelee(a.state, { frostbladesUntilTick: 10 });
+    b.state = { ...b.state, tick: 20 };
+    b.state = patchMelee(b.state, { frostbladesUntilTick: 0 });
+    const merged = mergeBranches([
+      { weight: 0.4, rt: a },
+      { weight: 0.6, rt: b },
+    ]);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.weight).toBeCloseTo(1, 12);
+  });
+
+  it("active frost still splits from frost=0 at same stacks", () => {
+    const base = lengRuntime();
+    base.state = patchMelee(base.state, { primordialIceStacks: 5 });
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.state = { ...a.state, tick: 5 };
+    a.state = patchMelee(a.state, { frostbladesUntilTick: 20 });
+    b.state = { ...b.state, tick: 5 };
+    b.state = patchMelee(b.state, { frostbladesUntilTick: 0 });
+    const merged = mergeBranches([
+      { weight: 0.5, rt: a },
+      { weight: 0.5, rt: b },
+    ]);
+    expect(merged).toHaveLength(2);
+  });
+
+  it("advanceToBranches zeros expired frost; cap-stack chill reunites with closed", () => {
+    const rt = lengRuntime();
+    rt.state = patchMelee(rt.state, { primordialIceStacks: 10 });
+    const forked = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(forked.branches.length).toBe(2);
+    const frostOpen = forked.branches.find((b) => b.rt.state.melee.frostbladesUntilTick > 0)!;
+    const frostClosed = forked.branches.find((b) => b.rt.state.melee.frostbladesUntilTick === 0)!;
+    const past = frostOpen.rt.state.melee.frostbladesUntilTick + 1;
+    const a = advanceToBranches({ weight: frostOpen.weight, rt: frostOpen.rt }, past);
+    const b = advanceToBranches({ weight: frostClosed.weight, rt: frostClosed.rt }, past);
+    expect(a.branches).toHaveLength(1);
+    expect(b.branches).toHaveLength(1);
+    expect(a.branches[0]!.rt.state.melee.frostbladesUntilTick).toBe(0);
+    expect(b.branches[0]!.rt.state.melee.frostbladesUntilTick).toBe(0);
+    const reunited = mergeBranches([...a.branches, ...b.branches]);
+    expect(reunited).toHaveLength(1);
+    expect(reunited[0]!.weight).toBeCloseTo(1, 12);
+    expect(reunited[0]!.rt.state.melee.primordialIceStacks).toBe(10);
+  });
+
+  it("historical unreferenced hitDetails do not block reconvergence merge", () => {
+    const base = lengRuntime();
+    base.state = patchMelee(base.state, { primordialIceStacks: 4 });
+    base.state = { ...base.state, tick: 30 };
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.hitDetails.set(1, {
+      potential: 1000,
+      min: 100,
+      max: 200,
+      critMin: 150,
+      critMax: 300,
+      critChance: 0.1,
+      nonCritExpected: 150,
+      critExpected: 225,
+      expected: 157.5,
+      uncappedExpected: 157.5,
+      capLoss: 0,
+    });
+    b.hitDetails.set(1, {
+      potential: 1000,
+      min: 110,
+      max: 220,
+      critMin: 160,
+      critMax: 320,
+      critChance: 0.1,
+      nonCritExpected: 165,
+      critExpected: 240,
+      expected: 172.5,
+      uncappedExpected: 172.5,
+      capLoss: 0,
+    });
+    const merged = mergeBranches([
+      { weight: 0.3, rt: a },
+      { weight: 0.7, rt: b },
+    ]);
+    expect(merged).toHaveLength(1);
+  });
+});
+
+describe("score-only Leng EV collapse (search approx)", () => {
+  function scoreOnlyLengRuntime() {
+    const effects = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: {
+        mainhand: "item:dark-shard-of-leng",
+        offhand: "item:dark-sliver-of-leng",
+      },
+    });
+    return createRuntime({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"],
+      equipmentEffects: effects,
+      weaponConfiguration: "dualwield",
+      detailLevel: "score-only",
+    });
+  }
+
+  it("expandLengOnLand is single-branch EV with residual 0 and bounded-approximation", () => {
+    const rt = scoreOnlyLengRuntime();
+    const set = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(set.branches).toHaveLength(1);
+    expect(set.residualWeight).toBe(0);
+    expect(set.exactness).toBe("bounded-approximation");
+    expect(set.branches[0]!.rt.state.melee.primordialIceStacks).toBeCloseTo(
+      LENG_ENDLESS_FROST_CHANCE + LENG_BOUNDLESS_CHILL_CHANCE,
+      10,
+    );
+    expect(set.branches[0]!.weight).toBe(1);
+  });
+
+  it("expand does not call snapshotRuntime (zero Leng snaps)", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const rt = scoreOnlyLengRuntime();
+    expandLengOnLand({ weight: 1, rt }, 0);
+    expect(getBranchProfile().branchSnapshots).toBe(0);
+    enableBranchProfiling(false);
+  });
+
+  it("score-only dual-Leng revo: maxLiveBranches <= 1 and snaps ~0", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const effects = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: {
+        mainhand: "item:dark-shard-of-leng",
+        offhand: "item:dark-sliver-of-leng",
+      },
+    });
+    const bar = ["assault", "sever", "fury", "dismember"]
+      .map((id) => MELEE_ABILITIES.find((a) => a.id === id)!)
+      .filter(Boolean);
+    const summary = simulateRevolution(
+      {
+        ...baseInput,
+        abilities: MELEE_ABILITIES,
+        bar,
+        style: "melee",
+        durationTicks: 50,
+        equipmentIds: ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"],
+        equipmentEffects: effects,
+        weaponConfiguration: "dualwield",
+        startingAdrenaline: 100,
+      },
+      { detailLevel: "score-only" },
+    );
+    const prof = getBranchProfile();
+    enableBranchProfiling(false);
+    expect(summary.ok).toBe(true);
+    expect(summary.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
+    expect(["approximated", "bounded-approximation"]).toContain(summary.rng?.exactness);
+    expect(prof.branchSnapshots).toBe(0);
+    expect(prof.maxLiveBranches).toBeLessThanOrEqual(1);
+  });
+
+  it("multi-land EV accumulates fractional stacks without forking", () => {
+    const rt = scoreOnlyLengRuntime();
+    const attack = rt.byId.get("attack")!;
+    scheduleCastEvents(rt, prepareCast(rt, attack, 0), false);
+    scheduleCastEvents(rt, prepareCast(rt, attack, 3), false);
+    const set = advanceToBranches({ weight: 1, rt }, rt.queue.maxTick());
+    expect(set.branches).toHaveLength(1);
+    expect(set.residualWeight).toBe(0);
+    expect(set.exactness).toBe("bounded-approximation");
+    expect(set.branches[0]!.rt.state.melee.primordialIceStacks).toBeCloseTo(
+      2 * (LENG_ENDLESS_FROST_CHANCE + LENG_BOUNDLESS_CHILL_CHANCE),
+      10,
+    );
+  });
+
+  it("full-analysis still forks divergent stack outcomes", () => {
+    const rt = lengRuntime();
+    expect(rt.detailLevel).not.toBe("score-only");
+    const set = expandLengOnLand({ weight: 1, rt }, 0);
+    expect(set.branches.length).toBeGreaterThan(1);
+    expect(set.exactness).toBe("exact");
+  });
+});
+

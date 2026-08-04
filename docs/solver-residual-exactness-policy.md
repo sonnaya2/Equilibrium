@@ -43,7 +43,7 @@ Pinned by:
 ## Preferred residual → 0 path
 
 1. **Exact merge only** when futures are truly equivalent (same future evolution key). Optional safe win: treat inactive frost (`frostbladesUntilTick <= now`) as `0` in the merge key so expired chill timestamps do not split classes.
-2. **Leng EV / hybrid fold** (separate agent): collapse stack/frost mass into an expectation model for search when the full tree cannot fit. Must either:
+2. **Leng EV fold (score-only landed)**: `expandLengOnLand` when `detailLevel === "score-only"` collapses EF×BC to `expectedLengLandState` (E[stacks] + E[frostUntil]) on one branch. `residualWeight = 0`, `exactness = bounded-approximation` (summary: approximated). Full-analysis still multi-arms. Must either:
    - keep residual = 0 **and** exactness exact only if the fold is proven damage-equivalent, or
    - set non-exact exactness / residual disclosure and **still fail** `scoreSummary` until a labeled non-exact ranking path exists.
 3. Do **not** raise caps silently or reassign discarded mass onto a survivor class.

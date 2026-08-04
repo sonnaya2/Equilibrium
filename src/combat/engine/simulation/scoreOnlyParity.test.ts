@@ -184,6 +184,33 @@ describe("score-only / full-analysis ranking parity", () => {
     expectRankingParity(full, scoreOnly);
   });
 
+
+  it("necromancy bloat derived tails match ranking metrics", () => {
+    const abilities = NECROMANCY_ABILITIES;
+    const pick = (...ids: string[]): AbilitySpec[] =>
+      ids.map((id) => {
+        const a = abilities.find((x) => x.id === id);
+        if (!a) throw new Error(id);
+        return a;
+      });
+    const input: RevolutionInput = {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0.1 },
+      abilities,
+      bar: pick("bloat", "touch_of_death", "soul_sap"),
+      style: "necromancy",
+      durationTicks: 60,
+      startingAdrenaline: 100,
+    };
+    const full = simulateRevolution(input, { detailLevel: "full-analysis" });
+    const scoreOnly = simulateRevolution(input, { detailLevel: "score-only" });
+    expect(full.ok).toBe(true);
+    expect(scoreOnly.ok).toBe(true);
+    expectRankingParity(full, scoreOnly);
+  });
+
   it("evaluateRevolutionBar score-only matches full-analysis objective", () => {
     const auto: AbilitySpec = {
       id: "attack",

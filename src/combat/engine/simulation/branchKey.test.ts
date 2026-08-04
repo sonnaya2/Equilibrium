@@ -8,6 +8,7 @@ import { baseInput } from "../../test/fixtures/inputs";
 import type { CastContextInput } from "./contracts";
 import { branchKeyJson, branchKeyStructural } from "./branchKey";
 import { mergeBranches, snapshotRuntime } from "./branch";
+import { patchMelee } from "../runtime/state";
 import type { SimulationRuntime } from "../runtime/runtime";
 
 const meleeInput: CastContextInput = {
@@ -70,13 +71,13 @@ describe("branchKey structural vs JSON partitions", () => {
 
   it("Leng stack / frost window divergence splits keys", () => {
     const base = createRuntime(lengInput);
+    // CoW share: diverge via replace-style patches, never in-place nested writes.
     const a = snapshotRuntime(base);
     const b = snapshotRuntime(base);
     const c = snapshotRuntime(base);
-    a.state.melee.primordialIceStacks = 1;
-    b.state.melee.primordialIceStacks = 2;
-    c.state.melee.primordialIceStacks = 1;
-    c.state.melee.frostbladesUntilTick = 20;
+    a.state = patchMelee(a.state, { primordialIceStacks: 1 });
+    b.state = patchMelee(b.state, { primordialIceStacks: 2 });
+    c.state = patchMelee(c.state, { primordialIceStacks: 1, frostbladesUntilTick: 20 });
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(c));
     expect(branchKeyStructural(b)).not.toBe(branchKeyStructural(c));
@@ -138,15 +139,15 @@ describe("branchKey structural vs JSON partitions", () => {
 
     const adrenSplit = createRuntime(meleeInput);
     castN(adrenSplit, 1);
-    adrenSplit.state.adrenaline = 12;
+    adrenSplit.state = { ...adrenSplit.state, adrenaline: 12 };
     fixtures.push(adrenSplit);
 
     const lengA = createRuntime(lengInput);
     castN(lengA, 2);
-    lengA.state.melee.primordialIceStacks = 3;
+    lengA.state = patchMelee(lengA.state, { primordialIceStacks: 3 });
     fixtures.push(lengA);
     const lengB = snapshotRuntime(lengA);
-    lengB.state.melee.frostbladesUntilTick = 15;
+    lengB.state = patchMelee(lengB.state, { frostbladesUntilTick: 15 });
     fixtures.push(lengB);
 
     const endTick = snapshotRuntime(afterAttacks);
@@ -231,6 +232,87 @@ describe("branchKey structural vs JSON partitions", () => {
     );
   });
 
+
+  it("expired frost timestamps share key with frost=0", () => {
+    const base = createRuntime(lengInput);
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.state = { ...a.state, tick: 25 };
+    a.state = patchMelee(a.state, { primordialIceStacks: 2, frostbladesUntilTick: 10 });
+    b.state = { ...b.state, tick: 25 };
+    b.state = patchMelee(b.state, { primordialIceStacks: 2, frostbladesUntilTick: 0 });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("historical hitDetails without pending derived do not split keys", () => {
+    const a = createRuntime(meleeInput);
+    const b = snapshotRuntime(a);
+    a.hitDetails.set(0, {
+      potential: 1,
+      min: 1,
+      max: 2,
+      critMin: 1,
+      critMax: 2,
+      critChance: 0,
+      nonCritExpected: 1.5,
+      critExpected: 1.5,
+      expected: 1.5,
+      uncappedExpected: 1.5,
+      capLoss: 0,
+    });
+    b.hitDetails.set(0, {
+      potential: 9,
+      min: 9,
+      max: 9,
+      critMin: 9,
+      critMax: 9,
+      critChance: 0,
+      nonCritExpected: 9,
+      critExpected: 9,
+      expected: 9,
+      uncappedExpected: 9,
+      capLoss: 0,
+    });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(mergeBranches([{ weight: 0.2, rt: a }, { weight: 0.8, rt: b }])).toHaveLength(1);
+  });
+
+  it("live derivedFrom hitDetails still split keys", () => {
+    const a = createRuntime(meleeInput);
+    const hit = {
+      potential: 100,
+      min: 10,
+      max: 20,
+      critMin: 15,
+      critMax: 30,
+      critChance: 0.1,
+      nonCritExpected: 15,
+      critExpected: 22.5,
+      expected: 15.75,
+      uncappedExpected: 15.75,
+      capLoss: 0,
+    };
+    a.hitDetails.set(0, hit);
+    enqueueEvent(a, {
+      tick: 5,
+      seq: 1,
+      family: "dot",
+      abilityId: "dismember",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: 0,
+      provenance: { kind: "derived_tail", detail: "dismember" },
+      resolve: noop,
+    });
+    a.nextSeq = 2;
+    const b = snapshotRuntime(a);
+    b.hitDetails.set(0, { ...hit, expected: 99 });
+    expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
+  });
   it("structural keys are much shorter than JSON on a post-cast runtime", () => {
     const rt = createRuntime(meleeInput);
     castN(rt, 4);

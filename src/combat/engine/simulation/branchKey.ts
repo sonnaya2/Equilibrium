@@ -1,13 +1,20 @@
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ActiveConjure } from "../../styles/necromancy/conjures";
+import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
+import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
 
 /**
  * Future-evolution merge key.
  * Default: compact structural multi-field string (same distinguishability as the
  * historical JSON array key for engine state / maps / seq counters).
  * Debug/oracle: RS3_BRANCH_KEY_JSON=1 restores JSON.stringify of the full tuple.
+ *
+ * hitDetails in the key are only live derivedFrom sources still pending in the
+ * queue (historical unreferenced HitResults cannot change future damage and would
+ * only block equivalent-future merges after temporary frost divergence).
+ * frostbladesUntilTick is encoded after expiry normalize against state.tick.
  */
 
 const RS = "\x1e";
@@ -121,7 +128,8 @@ function encodeState(state: RotationState): string {
     n(m.enduringRuin.untilTick),
     n(m.enduringRuin.grantedByCast),
     n(m.primordialIceStacks),
-    n(m.frostbladesUntilTick),
+    // Expired frost ≡ 0 (same as expand / completeAdvance).
+    n(normalizeLengFrostUntil(m.frostbladesUntilTick, state.tick)),
     // ranged
     n(r.swiftness.startsAtTick),
     n(r.swiftness.expiresAtTick),
@@ -175,28 +183,52 @@ function encodeState(state: RotationState): string {
   return parts.join(US);
 }
 
-function encodeHitDetails(map: ReadonlyMap<number, HitResult>): string {
-  if (map.size === 0) return "0";
-  const keys = [...map.keys()].sort((a, b) => a - b);
-  const parts: (string | number)[] = [keys.length];
-  for (const k of keys) {
-    const h = map.get(k)!;
-    parts.push(
-      k,
-      h.potential,
-      h.min,
-      h.max,
-      h.critMin,
-      h.critMax,
-      h.critChance,
-      h.nonCritExpected,
-      h.critExpected,
-      h.expected,
-      h.uncappedExpected,
-      h.capLoss,
-    );
+function encodeOneHit(k: number, h: HitResult): (string | number)[] {
+  return [
+    k,
+    h.potential,
+    h.min,
+    h.max,
+    h.critMin,
+    h.critMax,
+    h.critChance,
+    h.nonCritExpected,
+    h.critExpected,
+    h.expected,
+    h.uncappedExpected,
+    h.capLoss,
+  ];
+}
+
+/**
+ * Only HitResults still referenced by pending derivedFrom (Bloat / LS / etc.).
+ * Empty when no derived consumers remain - historical frost-diverged lands must
+ * not permanently block stack/frost reconvergence merges.
+ */
+function encodeLiveDerivedHitDetails(rt: SimulationRuntime): string {
+  const live = liveDerivedSourceSeqs(rt);
+  if (live.length === 0) return "0";
+  const parts: (string | number)[] = [];
+  let count = 0;
+  for (const k of live) {
+    const h = rt.hitDetails.get(k);
+    if (!h) continue;
+    if (count === 0) parts.push(0); // placeholder length
+    parts.push(...encodeOneHit(k, h));
+    count++;
   }
+  if (count === 0) return "0";
+  parts[0] = count;
   return parts.join(US);
+}
+
+function hitDetailsJsonPayload(rt: SimulationRuntime): [number, HitResult][] {
+  const out: [number, HitResult][] = [];
+  for (const k of liveDerivedSourceSeqs(rt)) {
+    const h = rt.hitDetails.get(k);
+    if (h) out.push([k, h]);
+  }
+  return out;
 }
 
 function encodeSpiritMeta(map: ReadonlyMap<number, SpiritEventMeta>): string {
@@ -228,10 +260,21 @@ function encodeSpiritHits(map: ReadonlyMap<string, number>): string {
 
 /** Historical JSON key (debug / oracle). Expensive - not the hot path. */
 export function branchKeyJson(rt: SimulationRuntime): string {
+  // Encode state with frost normalized so JSON partitions match structural.
+  const stateForKey = {
+    ...rt.state,
+    melee: {
+      ...rt.state.melee,
+      frostbladesUntilTick: normalizeLengFrostUntil(
+        rt.state.melee.frostbladesUntilTick,
+        rt.state.tick,
+      ),
+    },
+  };
   return JSON.stringify([
-    rt.state,
+    stateForKey,
     rt.queue.signature(),
-    [...rt.hitDetails].sort(([a], [b]) => a - b),
+    hitDetailsJsonPayload(rt),
     [...rt.spiritEventMeta].sort(([a], [b]) => a - b),
     [...rt.scheduledSpiritTracks].sort(),
     [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
@@ -248,7 +291,7 @@ export function branchKeyStructural(rt: SimulationRuntime): string {
     RS +
     rt.queue.signature() +
     RS +
-    encodeHitDetails(rt.hitDetails) +
+    encodeLiveDerivedHitDetails(rt) +
     RS +
     encodeSpiritMeta(rt.spiritEventMeta) +
     RS +
@@ -267,4 +310,3 @@ export function branchKeyStructural(rt: SimulationRuntime): string {
 export function buildBranchKey(rt: SimulationRuntime): string {
   return envJsonBranchKey() ? branchKeyJson(rt) : branchKeyStructural(rt);
 }
-

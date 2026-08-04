@@ -30,6 +30,8 @@ export {
   type StartedSolverMessage,
   type SolverPhase,
   type SolverProgress,
+  type SolverPoolMetrics,
+  type SolverAgentSnapshot,
   type StartSolverMessage,
   type WorkerToHostMessage,
 } from "./protocol";
@@ -54,7 +56,15 @@ export {
   type PauseResumeResult,
 } from "./host";
 
-export { SolverAgentPool, getSolverAgentPool, solverPoolSize as poolSize } from "./pool";
+export {
+  SolverAgentPool,
+  getSolverAgentPool,
+  solverPoolSize as poolSize,
+  buildPoolMetrics,
+  mergeProgress,
+  mergeResults,
+  type PoolMetricsLive,
+} from "./pool";
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 

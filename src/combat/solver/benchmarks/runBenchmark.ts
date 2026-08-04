@@ -18,6 +18,30 @@ import { fingerprintSolveContext } from "../solutionStore";
 import { solveFromRequest } from "../solveFromRequest";
 import type { SerializableSolverRequest } from "../worker/serializable";
 import { requireSimBase, reviveLeague, reviveModifiers } from "../worker/revive";
+import {
+  isHitPipelineProfilingEnabled,
+  resetHitPipelineCounters,
+  snapshotHitPipelineCounters,
+  type HitPipelineCounters,
+} from "../../profiling/hitPipeline";
+import {
+  isAllocationProfilingEnabled,
+  resetAllocationCounters,
+  snapshotAllocationCounters,
+  type AllocationCounters,
+} from "../../profiling/allocation";
+import {
+  getActiveSolverProfile,
+  isSolverProfileEnabled,
+  snapshotProfile,
+  type SolverProfileSnapshot,
+} from "../profiling/counters";
+import {
+  getBranchProfile,
+  isBranchProfilingEnabled,
+  resetBranchProfile,
+  type BranchProfile,
+} from "../../engine/simulation/branch";
 import { allCases, quickCases, type BenchCaseDef, type BenchCaseId } from "./cases";
 
 export type BenchMode = "quick" | "full";
@@ -37,6 +61,14 @@ export interface BenchCaseResult {
   proofLabel?: string;
   bar?: readonly string[];
   error?: string;
+  /** Present when RS3_HIT_PROFILE=1 or setHitPipelineProfiling(true). */
+  hitPipeline?: HitPipelineCounters;
+  /** Present when RS3_ALLOC_PROFILE=1 or setAllocationProfiling(true). */
+  allocation?: AllocationCounters;
+  /** Present when SOLVER_PROFILE=1 (search / solveFromRequest counters). */
+  solverProfile?: SolverProfileSnapshot;
+  /** Present when RS3_BRANCH_PROF=1|true (branchCore measure-only). */
+  branchProfile?: BranchProfile;
 }
 
 export interface BenchReport {
@@ -289,36 +321,75 @@ function mapSolveStatus(result: SolveResult): BenchCaseResult["status"] {
   return "failed";
 }
 
+type ProfileExtras = {
+  hitPipeline?: HitPipelineCounters;
+  allocation?: AllocationCounters;
+  solverProfile?: SolverProfileSnapshot;
+  branchProfile?: BranchProfile;
+};
+
+function attachProfiles<T extends object>(
+  row: T,
+  extras: ProfileExtras = {},
+): T & ProfileExtras {
+  let out: T & ProfileExtras = { ...row, ...extras };
+  if (isHitPipelineProfilingEnabled()) {
+    out = { ...out, hitPipeline: snapshotHitPipelineCounters() };
+  }
+  if (isAllocationProfilingEnabled()) {
+    out = { ...out, allocation: snapshotAllocationCounters() };
+  }
+  if (extras.solverProfile == null && isSolverProfileEnabled()) {
+    const active = getActiveSolverProfile();
+    if (active?.enabled) out = { ...out, solverProfile: snapshotProfile(active) };
+  }
+  if (isBranchProfilingEnabled()) {
+    out = { ...out, branchProfile: { ...getBranchProfile() } };
+  }
+  return out;
+}
+
 export async function runBenchCase(def: BenchCaseDef, mode: BenchMode): Promise<BenchCaseResult> {
   const request = def.build();
   const contextFingerprint = await fingerprintSolveContext(request);
   const t0 = performance.now();
   const bounds = { min: request.minBarSize, max: request.maxBarSize };
+  if (isHitPipelineProfilingEnabled()) resetHitPipelineCounters();
+  if (isAllocationProfilingEnabled()) resetAllocationCounters();
+  if (isBranchProfilingEnabled()) resetBranchProfile();
 
   try {
     if (mode === "full") {
-      const dto = await solveFromRequest(request);
+      let solverProfile: SolverProfileSnapshot | undefined;
+      const dto = await solveFromRequest(request, {
+        onProfile: (snap) => {
+          solverProfile = snap;
+        },
+      });
       const durationMs = Math.round(performance.now() - t0);
       const rankable =
         Number.isFinite(dto.score) &&
         (dto.durationTicks ?? 0) >= MIN_RANKABLE_HORIZON_TICKS &&
         dto.proofLabel !== "degraded-exploratory-fallback" &&
         dto.proofLabel !== "failed";
-      return {
-        id: def.id,
-        contextFingerprint,
-        tier: dto.tier ?? request.tier,
-        seed: request.seed,
-        bounds,
-        winnerScore: Number.isFinite(dto.score) ? dto.score : null,
-        evaluations: dto.evaluations ?? 0,
-        uniqueCandidates: dto.uniqueCandidates ?? 0,
-        durationMs,
-        rankable,
-        status: dto.proofLabel === "failed" ? "failed" : rankable ? "ok" : "degraded",
-        proofLabel: dto.proofLabel,
-        bar: dto.bar,
-      };
+      return attachProfiles(
+        {
+          id: def.id,
+          contextFingerprint,
+          tier: dto.tier ?? request.tier,
+          seed: request.seed,
+          bounds,
+          winnerScore: Number.isFinite(dto.score) ? dto.score : null,
+          evaluations: dto.evaluations ?? 0,
+          uniqueCandidates: dto.uniqueCandidates ?? 0,
+          durationMs,
+          rankable,
+          status: dto.proofLabel === "failed" ? "failed" : rankable ? "ok" : "degraded",
+          proofLabel: dto.proofLabel,
+          bar: dto.bar,
+        },
+        solverProfile ? { solverProfile } : {},
+      );
     }
 
     // quick: real evaluate, tiny budget (not full TIER_BUDGETS)
@@ -336,7 +407,7 @@ export async function runBenchCase(def: BenchCaseDef, mode: BenchMode): Promise<
       score != null &&
       fullTicks >= MIN_RANKABLE_HORIZON_TICKS;
 
-    return {
+    return attachProfiles({
       id: def.id,
       contextFingerprint,
       tier: `quick@${QUICK_SEARCH.evaluationBudget}`,
@@ -350,10 +421,10 @@ export async function runBenchCase(def: BenchCaseDef, mode: BenchMode): Promise<
       status: mapSolveStatus(result),
       proofLabel: result.proof,
       bar: winner?.bar,
-    };
+    });
   } catch (err) {
     const durationMs = Math.round(performance.now() - t0);
-    return {
+    return attachProfiles({
       id: def.id,
       contextFingerprint,
       tier: mode === "quick" ? `quick@${QUICK_SEARCH.evaluationBudget}` : request.tier,
@@ -366,7 +437,7 @@ export async function runBenchCase(def: BenchCaseDef, mode: BenchMode): Promise<
       rankable: false,
       status: "error",
       error: err instanceof Error ? err.message : String(err),
-    };
+    });
   }
 }
 
@@ -424,7 +495,7 @@ export function formatReportSummary(report: BenchReport): string {
   for (const c of report.cases) {
     lines.push(
       [
-        c.id.padEnd(20),
+        c.id.padEnd(26),
         c.status.padEnd(8),
         `score=${c.winnerScore == null ? "n/a" : c.winnerScore.toFixed(2)}`,
         `evals=${c.evaluations}`,

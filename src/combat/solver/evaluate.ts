@@ -12,6 +12,7 @@ import type {
 } from "./contracts";
 import { validateBarEligibility } from "./eligibility";
 import { MIN_RANKABLE_HORIZON_TICKS, scoreSummary } from "./objective";
+import { noteAbilityMapRebuild, noteCatalogueArrayRebuild } from "../profiling/allocation";
 
 export type {
   ObjectiveProfileId,
@@ -69,7 +70,8 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   const reasons: ExclusionReason[] = [];
   const simFields = sim as Omit<RevolutionInput, "bar" | "style" | "durationTicks">;
   const weaponConfiguration = simFields.weaponConfiguration as
-    CandidatePoolOptions["weaponConfiguration"] | undefined;
+    | CandidatePoolOptions["weaponConfiguration"]
+    | undefined;
   const equipmentIds = simFields.equipmentIds;
   const passiveIds = (simFields as { equipmentEffects?: { passiveIds?: readonly string[] } })
     .equipmentEffects?.passiveIds;
@@ -109,6 +111,9 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
     resolved.push(ability);
   }
 
+  // Allocation hotspot: rebuilds a fresh Map from sim catalogue + pool + bar
+  // on every evaluateRevolutionBar call (once per solver bar evaluation).
+  noteAbilityMapRebuild();
   const abilityMap = new Map<string, AbilitySpec>();
   for (const ability of simFields.abilities) abilityMap.set(ability.id, ability);
   for (const ability of pool.byId.values()) {
@@ -116,6 +121,7 @@ export function evaluateRevolutionBar(request: RevolutionEvalRequest): Revolutio
   }
   for (const ability of resolved) abilityMap.set(ability.id, ability);
 
+  noteCatalogueArrayRebuild();
   const strengthCape99 = (sim as { strengthCape99?: boolean }).strengthCape99 === true;
   const catalogue = strengthCape99
     ? withStrengthCape99Dismember([...abilityMap.values()], STRENGTH_CAPE_DISMEMBER_EXTRA_HITS)

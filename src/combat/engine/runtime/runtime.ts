@@ -9,6 +9,7 @@ import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
 import { resolveMaximumAdrenaline } from "../../league/ruleset";
 import { hasBlessing } from "../../league/ruleset";
+import { noteRuntimeCreated } from "../../profiling/allocation";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -93,6 +94,7 @@ function mapBasicsByStyle(
 }
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
+  noteRuntimeCreated();
   const base = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,

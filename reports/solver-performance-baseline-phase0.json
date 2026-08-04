@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "reportKind": "solver-performance-baseline-phase0",
+  "phase": "phase0",
+  "preOptimization": true,
+  "note": "PRE-OPTIMIZATION baseline. No speed claims. Captured after Phase 0 profiling instrumentation integration, before Phase 1 solver performance optimizations. Numbers are wall-clock measurements on this host only; not a regression budget or success target.",
+  "commit": "fa7abcb5db7aab892fea40de43ec55d2d4e10ef1",
+  "commitShort": "fa7abcb5",
+  "branch": "grok/solver-performance-rewrite",
+  "worktreeDirty": true,
+  "worktreeNote": "Phase 0 profiling packages + wire-ups are uncommitted working-tree changes on top of fa7abcb5.",
+  "generatedAt": "2026-08-04T02:27:30.000Z",
+  "sourceReport": "reports/solver-benchmark-quick.json",
+  "sourceGeneratedAt": "2026-08-04T02:26:25.519Z",
+  "mode": "quick",
+  "host": {
+    "node": "v26.5.1",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 32,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor"
+  },
+  "budgets": {
+    "quickEvaluationBudget": 28,
+    "thoroughEvaluationBudget": 2400
+  },
+  "profileFlags": {
+    "SOLVER_PROFILE": "off",
+    "RS3_HIT_PROFILE": "off",
+    "RS3_ALLOC_PROFILE": "off",
+    "RS3_BRANCH_PROF": "off",
+    "note": "All measure-only profile env flags unset for this baseline wall-clock run. runBenchmark attaches hitPipeline / allocation / solverProfile / branchProfile fields only when the corresponding flag is enabled."
+  },
+  "gaps": [
+    "Baseline uses quick suite only (6 cases @ evaluationBudget=28); full suite not run for phase0.",
+    "Profile counter fields absent from case rows because all profile env flags were off (intentional wall-clock baseline).",
+    "leng-icy-context dominates wall time (~23s) with degraded-exploratory-fallback; not explained by eval count alone."
+  ],
+  "totalDurationMs": 23239,
+  "caseCount": 6,
+  "cases": [
+    {
+      "id": "melee-2h-4slot",
+      "contextFingerprint": "f86326266c0a6f6b890e6d9f64e2310f07b38aa75b56d699c10e51d18e8a51ab",
+      "tier": "quick@28",
+      "seed": 101,
+      "bounds": { "min": 4, "max": 4 },
+      "winnerScore": 100767.92531120335,
+      "evaluations": 30,
+      "uniqueCandidates": 28,
+      "durationMs": 41,
+      "rankable": true,
+      "status": "ok",
+      "proofLabel": "heuristic-best-found",
+      "bar": ["berserk", "assault", "adaptive_strike_2h", "meteor_strike"]
+    },
+    {
+      "id": "leng-icy-context",
+      "contextFingerprint": "ad8a219a002f612f655481854e42b7d9f2034d008c08f04af3cf1f2e7f4333bd",
+      "tier": "quick@28",
+      "seed": 106,
+      "bounds": { "min": 4, "max": 4 },
+      "winnerScore": 124752.83666064366,
+      "evaluations": 30,
+      "uniqueCandidates": 28,
+      "durationMs": 23081,
+      "rankable": false,
+      "status": "degraded",
+      "proofLabel": "degraded-exploratory-fallback",
+      "bar": ["berserk", "assault", "adaptive_strike_dw", "meteor_strike"]
+    },
+    {
+      "id": "igneous-context",
+      "contextFingerprint": "a5a270a9ab5651afeeab20ccffce33450ccb6422fa1cfd339796ea34d56e88c4",
+      "tier": "quick@28",
+      "seed": 107,
+      "bounds": { "min": 4, "max": 4 },
+      "winnerScore": 100767.92531120335,
+      "evaluations": 30,
+      "uniqueCandidates": 28,
+      "durationMs": 32,
+      "rankable": true,
+      "status": "ok",
+      "proofLabel": "heuristic-best-found",
+      "bar": ["berserk", "assault", "adaptive_strike_2h", "meteor_strike"]
+    },
+    {
+      "id": "four-slot-fixed",
+      "contextFingerprint": "d5a2e7f533dfc6a86f7fa3c059dfbb0269ae93e240fe05ad49b4c52f165a0d14",
+      "tier": "quick@28",
+      "seed": 108,
+      "bounds": { "min": 4, "max": 4 },
+      "winnerScore": 101510.89041516703,
+      "evaluations": 30,
+      "uniqueCandidates": 28,
+      "durationMs": 37,
+      "rankable": true,
+      "status": "ok",
+      "proofLabel": "heuristic-best-found",
+      "bar": ["berserk", "assault", "adaptive_strike_dw", "meteor_strike"]
+    },
+    {
+      "id": "melee-norng-4slot",
+      "contextFingerprint": "8fdf690eb2425c3284b8462f8ca06a479f392bfd1e4d63ab07c8ff805bd84e75",
+      "tier": "quick@28",
+      "seed": 201,
+      "bounds": { "min": 4, "max": 4 },
+      "winnerScore": 95970.29045643154,
+      "evaluations": 30,
+      "uniqueCandidates": 28,
+      "durationMs": 14,
+      "rankable": true,
+      "status": "ok",
+      "proofLabel": "heuristic-best-found",
+      "bar": ["berserk", "assault", "adaptive_strike_2h", "meteor_strike"]
+    },
+    {
+      "id": "equipment-procs",
+      "contextFingerprint": "67c408376ca9647fb8c6e09436663b85d4ed8b5f28488c55f3ea0dc14750f402",
+      "tier": "quick@28",
+      "seed": 206,
+      "bounds": { "min": 4, "max": 4 },
+      "winnerScore": 116824.06109062981,
+      "evaluations": 30,
+      "uniqueCandidates": 28,
+      "durationMs": 22,
+      "rankable": true,
+      "status": "ok",
+      "proofLabel": "heuristic-best-found",
+      "bar": ["berserk", "assault", "adaptive_strike_dw", "meteor_strike"]
+    }
+  ]
+}

@@ -13,6 +13,10 @@ import { OBJECTIVE_VERSION } from "../contracts";
 import { indexPool } from "../candidatePool";
 import { canAdd } from "../eligibility";
 import { fingerprintBar } from "../fingerprint";
+import {
+  noteBarKeySeen,
+  noteDuplicateEvalAttempt,
+} from "../profiling";
 import { isFiniteEval } from "../objective";
 import type { Rng } from "../rng";
 import { createRng } from "../rng";
@@ -153,7 +157,9 @@ function evalBar(
 
   const scoreMode = normalizeEvalMode(mode);
   const fp = fingerprintBar(bar);
+  noteBarKeySeen(fp);
   const cacheKey = cacheKeyFor(scoreMode, fp);
+  if (state.cache.has(cacheKey)) noteDuplicateEvalAttempt();
   const cached = state.cache.get(cacheKey);
   if (cached) {
     if (scoreMode === "search") state.searchCacheHits += 1;

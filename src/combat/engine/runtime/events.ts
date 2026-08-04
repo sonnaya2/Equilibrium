@@ -4,6 +4,11 @@ import type { BlessingId } from "../../../league/blessings";
 import type { BlessingDamageTag } from "../../league/damage";
 import type { DamageProvenance } from "../../shared/damageProvenance";
 import type { CastSnapshot } from "../cast/snapshot";
+import {
+  noteEventQueueCancel,
+  noteEventQueuePush,
+  noteEventQueueShift,
+} from "../../profiling/allocation";
 
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
@@ -100,6 +105,7 @@ export class EventQueue<RT = unknown> {
   private items: ScheduledEvent<RT>[] = [];
 
   push(event: ScheduledEvent<RT>): void {
+    noteEventQueuePush();
     let i = this.items.length;
     while (i > 0) {
       const prev = this.items[i - 1]!;
@@ -116,6 +122,7 @@ export class EventQueue<RT = unknown> {
 
   /** Remove and return the next event in (tick, seq) order. */
   shift(): ScheduledEvent<RT> | undefined {
+    noteEventQueueShift();
     return this.items.shift();
   }
 
@@ -130,14 +137,18 @@ export class EventQueue<RT = unknown> {
   cancelByOwner(owner: number): number {
     const before = this.items.length;
     this.items = this.items.filter((e) => e.cancelOwner !== owner);
-    return before - this.items.length;
+    const removed = before - this.items.length;
+    noteEventQueueCancel(removed);
+    return removed;
   }
 
   /** Remove one pending event by seq; returns true when it was present. */
   cancelBySeq(seq: number): boolean {
     const before = this.items.length;
     this.items = this.items.filter((e) => e.seq !== seq);
-    return this.items.length < before;
+    const removed = before - this.items.length;
+    noteEventQueueCancel(removed);
+    return removed > 0;
   }
 
   /** Still-pending events, in order. */

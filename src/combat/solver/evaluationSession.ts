@@ -13,6 +13,7 @@ import type { SerializableSolverRequest } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
+import { noteEval, noteUniqueBar } from "./profiling/counters";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
@@ -66,6 +67,7 @@ export function createEvaluateFn(args: {
     const useFull = mode === "full" || mode === "finalize";
     const durationTicks = useFull ? fullTicks : exploreTicks;
     const scoreMode = useFull ? "full" : "search";
+    const kind = useFull ? ("full" as const) : ("search" as const);
     const memoKey = fingerprintEvaluationKey({
       bar,
       mode: scoreMode,
@@ -85,10 +87,12 @@ export function createEvaluateFn(args: {
       } else {
         state.searchEvaluations += 1;
       }
+      noteEval(state.profile, kind, true);
       const key = bar.join("\0");
       if (!seenBars.has(key)) {
         seenBars.add(key);
         state.uniqueBars += 1;
+        noteUniqueBar(state.profile);
       }
       if (memoHit.finite && memoHit.score > state.bestExploratoryScore && scoreMode === "search") {
         state.bestExploratoryScore = memoHit.score;
@@ -113,10 +117,12 @@ export function createEvaluateFn(args: {
     state.evaluations += 1;
     if (useFull) state.fullEvaluations += 1;
     else state.searchEvaluations += 1;
+    noteEval(state.profile, kind, false);
     const key = bar.join("\0");
     if (!seenBars.has(key)) {
       seenBars.add(key);
       state.uniqueBars += 1;
+      noteUniqueBar(state.profile);
     }
 
     const evaluation = evaluateRevolutionBar({

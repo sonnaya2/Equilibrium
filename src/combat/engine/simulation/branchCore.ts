@@ -53,8 +53,142 @@ export function emptyBranchSet(
   return { branches: [...branches], residualWeight, exactness };
 }
 
+// ---------------------------------------------------------------------------
+// Phase-0 branching cost profile (measure only; no semantic effect).
+// Gate: RS3_BRANCH_PROF=1|true, or enableBranchProfiling().
+// ---------------------------------------------------------------------------
+
+export interface BranchProfile {
+  /** snapshotRuntime invocations. */
+  branchSnapshots: number;
+  /** Structural field/entry units cloned across all snapshots. */
+  snapshotFieldsCloned: number;
+  /** Order-of-magnitude bytes cloned (not exact heap). */
+  snapshotBytesEstimate: number;
+  /** branchKey JSON.stringify calls (merge equivalence keys). */
+  branchKeySerializations: number;
+  /** Sum of serialized key string lengths (UTF-16 code units). */
+  branchKeyChars: number;
+  /** mergeAndCapBranches invocations. */
+  mergeAndCapCalls: number;
+  /** Branches dropped by hard cap (merged count - kept count). */
+  mergeAndCapDiscards: number;
+  /** Cap/merge results with residualWeight > 0. */
+  residualMassEvents: number;
+  /** Sum of residualWeight across residualMassEvents. */
+  residualMassTotal: number;
+  /** Peak live branch array length observed on instrumented paths. */
+  maxLiveBranches: number;
+}
+
+const EMPTY_BRANCH_PROFILE: BranchProfile = {
+  branchSnapshots: 0,
+  snapshotFieldsCloned: 0,
+  snapshotBytesEstimate: 0,
+  branchKeySerializations: 0,
+  branchKeyChars: 0,
+  mergeAndCapCalls: 0,
+  mergeAndCapDiscards: 0,
+  residualMassEvents: 0,
+  residualMassTotal: 0,
+  maxLiveBranches: 0,
+};
+
+function envBranchProfEnabled(): boolean {
+  if (typeof process === "undefined" || process.env == null) return false;
+  const v = process.env.RS3_BRANCH_PROF;
+  return v === "1" || v === "true";
+}
+
+let branchProfEnabled = envBranchProfEnabled();
+const branchProf: BranchProfile = { ...EMPTY_BRANCH_PROFILE };
+
+export function enableBranchProfiling(on = true): void {
+  branchProfEnabled = on;
+}
+
+export function isBranchProfilingEnabled(): boolean {
+  return branchProfEnabled;
+}
+
+export function resetBranchProfile(): void {
+  Object.assign(branchProf, EMPTY_BRANCH_PROFILE);
+}
+
+export function getBranchProfile(): Readonly<BranchProfile> {
+  return { ...branchProf };
+}
+
+/** Record a live branch-array size (peak tracker). No-op when profiling off. */
+export function noteBranchLiveCount(n: number): void {
+  if (!branchProfEnabled || n <= branchProf.maxLiveBranches) return;
+  branchProf.maxLiveBranches = n;
+}
+
+/**
+ * Cheap structural cost of one snapshotRuntime (not a heap walk).
+ * Deep targets: state, hitDetails values, spiritEventMeta values.
+ * Shallow: queue, casts/records, maps/sets, ledger objects, analysis.
+ */
+function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: number } {
+  const queueLen = rt.queue.length;
+  const casts = rt.casts.length;
+  const events = rt.events.length;
+  const recordBySeq = rt.recordBySeq.size;
+  const hitDetails = rt.hitDetails.size;
+  const spiritMeta = rt.spiritEventMeta.size;
+  const spiritTracks = rt.scheduledSpiritTracks.size;
+  const spiritHits = rt.spiritHitCounts.size;
+  const perAbility = Object.keys(rt.perAbility).length;
+  const damageByTick = Object.keys(rt.damageByTick).length;
+  let castHits = 0;
+  for (const c of rt.casts) castHits += c.result.hits.length;
+
+  // One unit per container clone + per entry walk (maps/arrays).
+  const fields =
+    1 + // queue.clone
+    1 + // structuredClone(state)
+    casts +
+    castHits +
+    1 + // perAbility spread
+    perAbility +
+    1 + // damageByTick spread
+    damageByTick +
+    events +
+    recordBySeq +
+    hitDetails + // structuredClone each HitResult
+    spiritMeta +
+    spiritTracks +
+    spiritHits +
+    1; // cloneAnalysisState
+
+  // Order-of-magnitude payload (tuned for relative A/B, not allocator truth).
+  const bytes =
+    queueLen * 160 +
+    900 + // RotationState deep clone ballpark
+    casts * 280 +
+    castHits * 24 +
+    perAbility * 32 +
+    damageByTick * 24 +
+    events * 96 +
+    recordBySeq * 280 +
+    hitDetails * 480 +
+    spiritMeta * 72 +
+    spiritTracks * 32 +
+    spiritHits * 32 +
+    256; // analysis maps/sets base
+
+  return { fields, bytes };
+}
+
 /** Independent copy of a runtime: mutable containers cloned, immutable events shared. */
 export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
+  if (branchProfEnabled) {
+    branchProf.branchSnapshots++;
+    const est = estimateSnapshotCost(rt);
+    branchProf.snapshotFieldsCloned += est.fields;
+    branchProf.snapshotBytesEstimate += est.bytes;
+  }
   const recordClones = new Map<CastRecord, CastRecord>();
   const cloneRecord = (record: CastRecord): CastRecord => {
     let clone = recordClones.get(record);
@@ -88,7 +222,7 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
  * Keeps endTick, hitDetails, spirit meta for terminal metrics and land-time reads.
  */
 function branchKey(rt: SimulationRuntime): string {
-  return JSON.stringify([
+  const key = JSON.stringify([
     rt.state,
     rt.queue.signature(),
     [...rt.hitDetails].sort(([a], [b]) => a - b),
@@ -99,6 +233,11 @@ function branchKey(rt: SimulationRuntime): string {
     rt.nextSeq,
     rt.nextCastSeq,
   ]);
+  if (branchProfEnabled) {
+    branchProf.branchKeySerializations++;
+    branchProf.branchKeyChars += key.length;
+  }
+  return key;
 }
 
 /** Weight-average expected ledgers; support extrema via min/max offsets. */
@@ -149,6 +288,7 @@ function mergePair(a: Branch, b: Branch): Branch {
  * (Leng residual drain); different errors stay separate. Never clears error.
  */
 export function mergeBranches(branches: readonly Branch[]): Branch[] {
+  if (branchProfEnabled) noteBranchLiveCount(branches.length);
   const byKey = new Map<string, Branch>();
   for (const branch of branches) {
     const key =
@@ -158,7 +298,9 @@ export function mergeBranches(branches: readonly Branch[]): Branch[] {
     const existing = byKey.get(key);
     byKey.set(key, existing ? mergePair(existing, branch) : branch);
   }
-  return [...byKey.values()];
+  const out = [...byKey.values()];
+  if (branchProfEnabled) noteBranchLiveCount(out.length);
+  return out;
 }
 
 /** Cap live branches after merge; discarded weight is residual, not reassigned. */
@@ -176,6 +318,7 @@ export function capBranches(
   if (!Number.isInteger(max) || max < 1) {
     throw new RangeError(`capBranches: max must be a positive integer, got ${max}`);
   }
+  if (branchProfEnabled) noteBranchLiveCount(branches.length);
   if (branches.length <= max) {
     return { branches: [...branches], residualWeight: 0, exactness: "exact" };
   }
@@ -200,6 +343,7 @@ export function capBranches(
   const keptMass = keep.reduce((s, b) => s + b.weight, 0);
   const totalMass = sorted.reduce((s, b) => s + b.weight, 0);
   const residualWeight = Math.max(0, totalMass - keptMass);
+  if (branchProfEnabled) noteBranchLiveCount(keep.length);
   return {
     branches: keep,
     residualWeight,
@@ -213,8 +357,22 @@ export function mergeAndCapBranches(
   max: number = MAX_LIVE_BRANCHES,
 ): BranchSet {
   const before = branches.length;
+  if (branchProfEnabled) {
+    branchProf.mergeAndCapCalls++;
+    noteBranchLiveCount(before);
+  }
   const merged = mergeBranches(branches);
   const capped = capBranches(merged, max);
+  if (branchProfEnabled) {
+    noteBranchLiveCount(merged.length);
+    noteBranchLiveCount(capped.branches.length);
+    const discards = Math.max(0, merged.length - capped.branches.length);
+    branchProf.mergeAndCapDiscards += discards;
+    if (capped.residualWeight > 0) {
+      branchProf.residualMassEvents++;
+      branchProf.residualMassTotal += capped.residualWeight;
+    }
+  }
   if (capped.residualWeight > 0) {
     return { ...capped, exactness: "bounded-approximation" };
   }

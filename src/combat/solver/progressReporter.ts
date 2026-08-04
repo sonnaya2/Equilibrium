@@ -3,6 +3,8 @@
 import type { SolvePhaseName } from "./solve";
 import type { SolverPhase, SolverProgress } from "./worker/protocol";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
+import type { SolverProfileCounters } from "./profiling/counters";
+import { noteProgressEmit } from "./profiling/counters";
 
 export type ProgressState = {
   currentPhase: SolverPhase;
@@ -22,6 +24,8 @@ export type ProgressState = {
   finalizeTotal: number;
   scoringLabel: string | undefined;
   scoringBarPreview: readonly string[] | undefined;
+  /** Present when profiling is enabled for this solve. */
+  profile?: SolverProfileCounters;
 };
 
 /** Search fill stops short of full so "Final scoring" still has track room. */
@@ -63,8 +67,11 @@ export function emitProgress(
   state: ProgressState,
   force = false,
 ): void {
-  if (!options?.onProgress) return;
+  const profileOn = state.profile?.enabled === true;
+  if (!options?.onProgress && !profileOn) return;
   if (!force && state.evaluations % 2 !== 0) return;
+  noteProgressEmit(state.profile);
+  if (!options?.onProgress) return;
   // bestScore is ALWAYS exploratory DPM - never unit-switch to full robust mid-run.
   const exploratory = Number.isFinite(state.bestExploratoryScore)
     ? state.bestExploratoryScore

@@ -2,6 +2,7 @@ import { accountAnalysisEvent } from "../analysis";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { EventResolution } from "./types";
+import { noteHistoryEventsGrowth } from "../../profiling/allocation";
 
 /**
  * Write generic ledgers for one landed event: totals, per-tick / per-ability
@@ -50,6 +51,7 @@ export function recordEventAccounting(
         : spirit
           ? Math.max(0, spirit.untilTick - event.tick)
           : undefined;
+  noteHistoryEventsGrowth();
   rt.events.push({
     ...provenance,
     damage,

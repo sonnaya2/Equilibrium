@@ -1,6 +1,7 @@
 import type { ScoredBar } from "../contracts";
 import { remainingCandidates } from "../eligibility";
 import { barDistance, diverseSelect } from "../diversity";
+import { noteBeamChild } from "../profiling";
 import { compareScored, insertAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
@@ -50,9 +51,11 @@ async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promi
     if (state.sizeBounds.min <= 1) {
       if (!state.canEval()) break;
       const scored = state.tryEval([a.id], "search", "beam");
+      noteBeamChild(a.id);
       if (scored && Number.isFinite(scored.robustScore)) beam.push(scored);
       if (yieldCtx) await maybeYield(state, yieldCtx);
     } else {
+      noteBeamChild(a.id);
       beam.push(partialBar(state, [a.id]));
     }
   }
@@ -78,6 +81,7 @@ async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promi
         for (const pos of positions) {
           if (!state.canEval()) break;
           const next = insertAt(parent.bar, pos, a.id);
+          noteBeamChild(next.join("\0"));
           if (next.length < state.sizeBounds.min) {
             children.push(partialBar(state, next));
             grew = true;

@@ -48,6 +48,15 @@ export {
   type EvaluationKeyParts,
 } from "./fingerprint";
 
+export {
+  isSolverProfilingEnabled,
+  enableSolverProfiling,
+  resetSolverProfileCounters,
+  beginSolverProfileWindow,
+  getSolverDuplicateCounters,
+  type SolverDuplicateCounters,
+} from "./profiling";
+
 export { EvalCache, createEvalCache } from "./cache";
 
 export {
@@ -113,6 +122,25 @@ export {
 export { clearEvalMemo, evalMemoStats } from "./evalMemo";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export {
+  createProfileCounters,
+  isSolverProfileEnabled,
+  setActiveSolverProfile,
+  clearActiveSolverProfile,
+  getActiveSolverProfile,
+  noteEval,
+  noteUniqueBar,
+  noteProgressEmit,
+  noteWorkerWait,
+  noteFingerprintJoin,
+  noteBarKeySeen,
+  noteDuplicateEvalAttempt,
+  noteNeighborBatch,
+  noteBeamChild,
+  snapshotProfile,
+  type SolverProfileCounters,
+  type SolverProfileSnapshot,
+} from "./profiling/counters";
+export {
   packSolverRequest,
   packSimBase,
   type SolverPackSnapshot,
@@ -136,6 +164,7 @@ export {
   tierAgentCount,
   TIER_MAX_AGENTS,
   SAFE_GLOBAL_AGENT_CEILING,
+  RESERVES_UI_CORE,
   detectHardwareCores,
   recipesForTier,
   planRecipe,

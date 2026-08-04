@@ -10,6 +10,7 @@ import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
+import { noteCastsGrowth } from "../../profiling/allocation";
 
 function emptyAbilityResult(): AbilityResult {
   return { hits: [], min: 0, max: 0, expected: 0, listedAdrenalineDelta: 0, adrenalineDelta: 0 };
@@ -94,6 +95,7 @@ export function commitCast(
     };
   }
 
+  noteCastsGrowth();
   rt.casts.push(record);
 }
 
@@ -132,6 +134,7 @@ export function performOffGcdCast(rt: SimulationRuntime, ability: AbilitySpec): 
     refund: 0,
     adrenalineGained: 0,
   };
+  noteCastsGrowth();
   rt.casts.push(record);
   rt.endTick = Math.max(rt.endTick, rt.state.tick + 1);
 }

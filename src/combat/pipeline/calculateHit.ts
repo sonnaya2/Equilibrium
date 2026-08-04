@@ -4,11 +4,13 @@ import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_WIKI } from "../data/sources";
-import {
-  contextWithProvenance,
-  type DamageProvenance,
-} from "../shared/damageProvenance";
+import { contextWithProvenance, type DamageProvenance } from "../shared/damageProvenance";
 import { preciseMinHitAddition } from "../shared/perks";
+import {
+  recordEndpointPass,
+  recordHitExpectationCall,
+  recordIntegerBandPoints,
+} from "../profiling/hitPipeline";
 import { runPipeline } from "./modifierPipeline";
 import type { CombatContext, CombatModifier } from "../types";
 
@@ -101,6 +103,7 @@ function exactMean(
       `calculateHit: exact integer band has ${count} points (limit ${MAX_EXACT_BAND_POINTS})`,
     );
   }
+  recordIntegerBandPoints(count);
   let total = 0;
   for (let roll = min; roll <= max; roll++) total += runPass(roll, critMult, input, cap);
   return total / count;
@@ -140,25 +143,33 @@ function assertIntegerBandBounds(min: number, max: number): void {
 
 /** Resolve an already-composed inclusive integer band through the normal hit pipeline. */
 export function calculateRawHitBand(input: RawHitBandInput): HitResult {
+  recordHitExpectationCall();
   assertIntegerBandBounds(input.min, input.max);
   if (input.cap) normalizeHitCapRule(input.cap);
   const p = critProbability(input.crit);
   const critMult =
     p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
 
+  // Endpoint probes (bound display / cap probe). Sort + pipeline run per call.
+  recordEndpointPass(2);
   const min = runPass(input.min, null, input);
   const max = runPass(input.max, null, input);
-  const critMin = critMult === null ? min : runPass(input.min, critMult, input);
-  const critMax = critMult === null ? max : runPass(input.max, critMult, input);
+  let critMin = min;
+  let critMax = max;
+  if (critMult !== null) {
+    recordEndpointPass(2);
+    critMin = runPass(input.min, critMult, input);
+    critMax = runPass(input.max, critMult, input);
+  }
   const nonCritExpected = exactMean(input.min, input.max, null, input);
   const critExpected =
     critMult === null ? nonCritExpected : exactMean(input.min, input.max, critMult, input);
   const expected = (1 - p) * nonCritExpected + p * critExpected;
   const capRule = normalizeHitCapRule(input.cap ?? standardHitCap);
-  const canClip =
-    !capRule.bypass &&
-    Math.max(runPass(input.max, null, input, false), runPass(input.max, critMult, input, false)) >
-      capRule.cap;
+  recordEndpointPass(2);
+  const uncappedMaxNonCrit = runPass(input.max, null, input, false);
+  const uncappedMaxCrit = runPass(input.max, critMult, input, false);
+  const canClip = !capRule.bypass && Math.max(uncappedMaxNonCrit, uncappedMaxCrit) > capRule.cap;
   const uncappedExpected = canClip
     ? (1 - p) * exactMean(input.min, input.max, null, input, false) +
       p * exactMean(input.min, input.max, critMult, input, false)

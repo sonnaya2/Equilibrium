@@ -4,9 +4,11 @@ import {
   type Bar,
   type ScoreEvalMode,
 } from "./contracts";
+import { noteFingerprintJoin } from "./profiling";
 
 /** Ordered bar identity - slot order matters. */
 export function fingerprintBar(bar: Bar): string {
+  noteFingerprintJoin();
   return bar.join("\0");
 }
 

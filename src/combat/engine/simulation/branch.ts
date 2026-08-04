@@ -7,6 +7,7 @@ import {
   combineExactness,
   mergeAndCapBranches,
   MAX_LIVE_BRANCHES,
+  noteBranchLiveCount,
   snapshotRuntime,
   type Branch,
   type BranchExactness,
@@ -18,6 +19,7 @@ export type {
   Branch,
   BranchExactness,
   BranchSet,
+  BranchProfile,
 } from "./branchCore";
 export {
   combineExactness,
@@ -27,6 +29,11 @@ export {
   MAX_LIVE_BRANCHES,
   capBranches,
   mergeAndCapBranches,
+  enableBranchProfiling,
+  isBranchProfilingEnabled,
+  resetBranchProfile,
+  getBranchProfile,
+  noteBranchLiveCount,
 } from "./branchCore";
 
 /** Weight plan for one RNG outcome before snapshot+commit. */
@@ -188,6 +195,7 @@ export function materializeCastPlans(
     if (forked.length > max) exactness = combineExactness(exactness, "bounded-approximation");
   }
 
+  noteBranchLiveCount(keep.length + inPlace.length);
   for (const plan of keep) {
     const next = snapshotRuntime(plan.parent.rt);
     const committed = commitCastBranches(
@@ -199,6 +207,7 @@ export function materializeCastPlans(
     residualWeight += committed.residualWeight;
     exactness = combineExactness(exactness, committed.exactness);
     out.push(...committed.branches);
+    noteBranchLiveCount(out.length);
   }
 
   const capped = mergeAndCapBranches(out, max);

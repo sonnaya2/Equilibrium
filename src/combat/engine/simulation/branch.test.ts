@@ -7,8 +7,11 @@ import { createRuntime, enqueueEvent } from "../runtime/runtime";
 import {
   capBranches,
   combineExactness,
+  enableBranchProfiling,
+  getBranchProfile,
   mergeAndCapBranches,
   mergeBranches,
+  resetBranchProfile,
   snapshotRuntime,
 } from "./branch";
 import type { CastContextInput } from "./contracts";
@@ -462,6 +465,33 @@ describe("capBranches", () => {
     expect(out.exactness).toBe("merged-exactly");
   });
 
+
+  it("branch profile counters gate on and measure snapshot/mergeAndCap", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const base = createRuntime(meleeInput);
+    const many = Array.from({ length: 100 }, (_, i) => {
+      const rt = snapshotRuntime(base);
+      rt.endTick = i;
+      return { weight: 1 / 100, rt };
+    });
+    const out = mergeAndCapBranches(many, 16);
+    const p = getBranchProfile();
+    expect(p.branchSnapshots).toBe(100);
+    expect(p.snapshotFieldsCloned).toBeGreaterThan(0);
+    expect(p.snapshotBytesEstimate).toBeGreaterThan(0);
+    expect(p.branchKeySerializations).toBe(100);
+    expect(p.branchKeyChars).toBeGreaterThan(0);
+    expect(p.mergeAndCapCalls).toBe(1);
+    expect(p.mergeAndCapDiscards).toBe(84);
+    expect(p.residualMassEvents).toBe(1);
+    expect(p.residualMassTotal).toBeCloseTo(out.residualWeight);
+    expect(p.maxLiveBranches).toBeGreaterThanOrEqual(16);
+    enableBranchProfiling(false);
+    resetBranchProfile();
+    snapshotRuntime(base);
+    expect(getBranchProfile().branchSnapshots).toBe(0);
+  });
   it("combineExactness takes the more approximate label", () => {
     expect(combineExactness("exact", "merged-exactly")).toBe("merged-exactly");
     expect(combineExactness("merged-exactly", "bounded-approximation")).toBe(
@@ -700,3 +730,4 @@ describe("Relentless refund branching", () => {
     expect(s.casts[0].adrenalineAfter).toBe(9);
   });
 });
+

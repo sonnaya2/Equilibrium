@@ -1,4 +1,5 @@
 import { exclusiveKey, remainingCandidates } from "../eligibility";
+import { noteNeighborBatch } from "../profiling";
 import { insertAt, moveAt, removeAt, replaceAt, swapAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
@@ -108,6 +109,9 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
       replaced += 1;
     }
   }
+
+  // Measure full generation batch (pre-cap) for duplicate-work profiling.
+  noteNeighborBatch(out);
 
   // Hard cap neighbor set so local search cannot stall the page.
   if (out.length > 48) {

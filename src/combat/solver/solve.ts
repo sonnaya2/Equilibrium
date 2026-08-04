@@ -11,7 +11,8 @@ import { runLocalSearch, runLocalSearchAsync } from "./search/localSearch";
 import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
 import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
 import { planRecipe } from "./workerPlan";
-/** Evaluation budgets per agent (scaled up so longer ladder bands stay competitive). */
+import { beginSolverProfileWindow } from "./profiling";
+/** Per-agent evaluation budgets (independent; each parallel agent gets the full tier budget). Scaled up so longer ladder bands stay competitive. */
 export const TIER_BUDGETS: Record<SolveTier, number> = {
   thorough: 2_400,
   extreme: 4_000,
@@ -156,6 +157,7 @@ export interface SolveAsyncHooks {
  * 1 seeds → 2 exhaustive? → 3 beam → 4 evo → 5 LNS → 6 anneal → 7 local → 8 finalize
  */
 export function solve(input: SolveInput): SolveResult {
+  beginSolverProfileWindow();
   const tier = input.tier ?? "thorough";
   const base = configForTier(tier, input.seed ?? 1);
   const config: SearchConfig = { ...base, ...input.config, tier };
@@ -198,6 +200,7 @@ export function solve(input: SolveInput): SolveResult {
  * each phase snappy; yield between them restores interactivity.
  */
 export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Promise<SolveResult> {
+  beginSolverProfileWindow();
   const tier = input.tier ?? "thorough";
   const base = configForTier(tier, input.seed ?? 1);
   const config: SearchConfig = { ...base, ...input.config, tier };

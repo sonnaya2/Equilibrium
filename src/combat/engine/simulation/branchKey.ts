@@ -176,6 +176,11 @@ function encodeState(state: RotationState): string {
     n(r.deathspore.stacks),
     n(r.deathspore.freeCastUntilTick),
     n(r.deathspore.cooldownUntilTick),
+    n(r.puncture.stacks),
+    n(r.puncture.expiresAtTick),
+    n(r.puncture.storedDamage),
+    n(r.puncture.generation),
+    n(r.puncture.pendingOwnerCast),
     // magic
     n(g.runicCharge.cooldownUntilTick),
     n(g.runicCharge.animaUntilTick),

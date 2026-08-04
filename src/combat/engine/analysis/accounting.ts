@@ -11,7 +11,9 @@ export function sourceKindOf(
 ): DamageSourceKind {
   if (event.blessingId) return "league-blessing";
   if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
-  if (event.abilityId === "abyssal_parasite") return "equipment-passive";
+  if (event.abilityId === "abyssal_parasite" || event.abilityId === "puncture") {
+    return "equipment-passive";
+  }
   if (event.family === "conjureAuto" || event.family === "command" || event.family === "poison") {
     return "conjure-or-familiar";
   }

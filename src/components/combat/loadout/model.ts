@@ -102,6 +102,8 @@ export interface LoadoutPerks {
   impatientLevel20: boolean;
   ultimatums: number;
   lunging: number;
+  /** Caroming: Ricochet +4% ability damage per rank per hit. Rank 0 = off, max 4. */
+  caroming: number;
   energising: number;
   /** Crackling: PvM zap 50% AD × rank, 60s CD. Rank 0 = off, max 4. */
   crackling: number;
@@ -137,6 +139,7 @@ export const PERK_GIZMO_KIND: Record<PerkRankKey, "weapon" | "armour" | "both"> 
   impatient: "both",
   ultimatums: "both",
   lunging: "weapon",
+  caroming: "weapon",
   energising: "both",
   crackling: "both",
   aftershock: "weapon",
@@ -433,6 +436,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     impatientLevel20: false,
     ultimatums: 0,
     lunging: 0,
+    caroming: 0,
     energising: 0,
     crackling: 0,
     aftershock: 0,
@@ -1135,6 +1139,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       impatientLevel20: rawPerks.impatientLevel20 === true,
       ultimatums: clampRank(rawPerks.ultimatums, 4),
       lunging: clampRank(rawPerks.lunging, 4),
+      caroming: clampRank(rawPerks.caroming, 4),
       energising: clampRank(rawPerks.energising, 4),
       crackling: clampRank(rawPerks.crackling, 4),
       aftershock: clampRank(rawPerks.aftershock, 4),

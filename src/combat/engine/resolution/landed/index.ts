@@ -31,7 +31,7 @@ export function applyLandedHitEffects(
       onMagicHitLanded(rt, event, ability);
       break;
     case "ranged":
-      onRangedHitLanded(rt, event, ability);
+      onRangedHitLanded(rt, event, ability, damage);
       break;
     case "melee":
       onMeleeHitLanded(rt, event, ability, damage);

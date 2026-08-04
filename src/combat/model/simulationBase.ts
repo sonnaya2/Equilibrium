@@ -59,6 +59,8 @@ export function buildSimulationInputBase(
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
+    ammo: model.ammo,
+    caromingRank: model.caromingRank,
     tumekensPieces: model.tumekensPieces,
     tumekensCritEnabled: model.tumekensCritEnabled,
     equipmentEffects: model.equipmentEffects,
@@ -92,7 +94,7 @@ export interface ManualStatScaffold {
 }
 
 /**
- * Manual custom-stat constructor — deliberately separate from full loadout path.
+ * Manual custom-stat constructor - deliberately separate from full loadout path.
  * Does not grant cast modifiers, equipmentEffects, league, or Strength Cape catalogue patch
  * unless the caller already put cape on the catalogue.
  */
@@ -171,6 +173,7 @@ export function toHybridManualCombatModel(
     salve: null,
     ultimatums: 0,
     lunging: 0,
+    caroming: 0,
     berserkersFuryBonus: 0,
     diagnostics: {
       ...scaffold.diagnostics,
@@ -191,6 +194,7 @@ export function toManualSimulateInput(
   parts: {
     rotation: SimulateInput["rotation"];
     autoWeave?: boolean;
+    /** Override model-packed ammo when the Manual UI selects a style ammo. */
     ammo?: SimulateInput["ammo"];
   },
 ): SimulateInput {
@@ -198,7 +202,8 @@ export function toManualSimulateInput(
     ...base,
     rotation: parts.rotation,
     autoWeave: parts.autoWeave,
-    ammo: parts.ammo,
+    // Explicit parts.ammo wins; otherwise keep model-packed base.ammo.
+    ...(parts.ammo !== undefined ? { ammo: parts.ammo } : {}),
   };
 }
 

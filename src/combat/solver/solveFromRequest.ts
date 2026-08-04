@@ -88,6 +88,8 @@ export const solveFromRequest: SolveFn = async (
     plantedFeet: simBase.plantedFeet,
     strengthCape99: simBase.strengthCape99,
     preciseRank: simBase.preciseRank,
+    ammo: simBase.ammo,
+    caromingRank: simBase.caromingRank ?? simBase.modifierSources?.caroming ?? 0,
     conjureBasicDamageMult: simBase.conjureBasicDamageMult,
     conjureDurationMult: simBase.conjureDurationMult,
     tumekensPieces: simBase.tumekensPieces,

@@ -59,6 +59,8 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     plantedFeet: sim.plantedFeet,
     strengthCape99: sim.strengthCape99,
     preciseRank: sim.preciseRank,
+    ammo: sim.ammo,
+    caromingRank: sim.caromingRank ?? sim.modifierSources?.caroming ?? 0,
     tumekensPieces: sim.tumekensPieces,
     tumekensCritEnabled: sim.tumekensCritEnabled,
     equipmentEffects: sim.equipmentEffects,

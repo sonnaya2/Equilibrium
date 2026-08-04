@@ -7,7 +7,7 @@ import {
   activePuncture,
   activateSearingWinds,
   activateShadowImbued,
-  applyPuncture,
+  applyPunctureStack,
   DEATHSPORE_COOLDOWN_TICKS,
   DEATHSPORE_FREE_ABILITY_STACKS,
   DEATHSPORE_FREE_CAST_WINDOW_TICKS,
@@ -19,34 +19,34 @@ import {
   newShadowImbued,
   onRangedHit,
   PUNCTURE_CAP,
-  punctureBonusPct,
   searingWindsBonusPct,
   shadowImbuedAdrenalinePerHit,
   spendDeathspore,
 } from "./onHit";
 
 describe("puncture", () => {
-  it("builds one stack per application and reports the bonus as data", () => {
+  it("stores damage per stack application", () => {
     let state = newPuncture();
-    state = applyPuncture(state, 0);
-    state = applyPuncture(state, 3);
+    state = applyPunctureStack(state, 0, 1000, 0);
+    state = applyPunctureStack(state, 3, 1000, 0);
     expect(state.stacks).toBe(2);
-    expect(punctureBonusPct(state, 3)).toBe(2);
+    expect(state.storedDamage).toBe(20);
   });
 
   it("caps at 250 stacks", () => {
     let state = newPuncture();
-    for (let i = 0; i < 300; i++) state = applyPuncture(state, i);
+    for (let i = 0; i < 300; i++) state = applyPunctureStack(state, i, 1000, 0);
     expect(state.stacks).toBe(PUNCTURE_CAP);
+    expect(state.storedDamage).toBe(PUNCTURE_CAP * 10);
   });
 
   it("refreshes the 30-second window on application and expires to zero", () => {
-    let state = applyPuncture(newPuncture(), 0);
-    state = applyPuncture(state, 40, 4);
+    let state = applyPunctureStack(newPuncture(), 0, 1000, 0);
+    state = applyPunctureStack(state, 40, 1000, 0);
     expect(state.expiresAtTick).toBe(40 + 50);
-    expect(activePuncture(state, 89).stacks).toBe(5);
+    expect(activePuncture(state, 89).stacks).toBe(2);
     expect(activePuncture(state, 90).stacks).toBe(0);
-    expect(punctureBonusPct(state, 90)).toBe(0);
+    expect(activePuncture(state, 90).storedDamage).toBe(0);
   });
 });
 

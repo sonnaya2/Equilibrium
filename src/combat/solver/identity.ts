@@ -88,6 +88,7 @@ export function normalizeModifierSources(sources: SerializableModifierSources): 
       : null,
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
+    caroming: sources.caroming ?? 0,
     berserkersFuryBonus: roundN(sources.berserkersFuryBonus ?? 0, 6),
   };
 }
@@ -166,6 +167,8 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     plantedFeet: loadout.plantedFeet === true,
     strengthCape99: loadout.strengthCape99 === true,
     preciseRank: loadout.preciseRank ?? 0,
+    ammo: loadout.ammo ?? null,
+    caromingRank: loadout.caromingRank ?? 0,
     conjureBasicDamageMult: roundN(loadout.conjureBasicDamageMult ?? 1, 6),
     conjureDurationMult: roundN(loadout.conjureDurationMult ?? 1, 6),
     tumekensPieces: loadout.tumekensPieces ?? 0,

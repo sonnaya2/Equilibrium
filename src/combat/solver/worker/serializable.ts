@@ -58,6 +58,8 @@ export interface SerializableModifierSources {
   salve?: SerializableSalveSource | null;
   ultimatums: number;
   lunging: number;
+  /** Caroming rank 1-4 (weapon gizmo); 0 = off. */
+  caroming?: number;
   /**
    * Precomputed Berserker's Fury damage bonus fraction (0.03 = +3%).
    * 0 / omit = inactive. Resolved on the host from LP vs max (incl. Powerburst).
@@ -99,6 +101,10 @@ export interface SerializableRevolutionSimBase {
   /** Strength cape (99): extend Dismember by three bleed hits in the worker catalogue. */
   strengthCape99?: boolean;
   preciseRank?: number;
+  /** Style ammo mechanic for Ranged (deathspore / splintering). */
+  ammo?: "deathspore" | "splintering";
+  /** Caroming rank 1-4 for Ricochet band construction. */
+  caromingRank?: number;
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -137,6 +143,7 @@ export interface SerializableLoadoutPlain {
     impatientLevel20: boolean;
     ultimatums: number;
     lunging: number;
+    caroming: number;
     energising: number;
     crackling: number;
     aftershock: number;
@@ -315,6 +322,7 @@ export function emptyModifierSources(): SerializableModifierSources {
     salve: null,
     ultimatums: 0,
     lunging: 0,
+    caroming: 0,
     berserkersFuryBonus: 0,
   };
 }

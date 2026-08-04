@@ -1,41 +1,25 @@
-import { secondsToTicks } from "../../core/ticks";
 import { MODERNISATION_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
 
-/**
- * Splintering arrows / Puncture: +1% ability damage per stack, cap 250, 30s
- * (modernisation-2026, wiki). Stacks tracked as data; damage integration pending confirmed wording.
- */
-export const PUNCTURE_CAP = 250;
-export const PUNCTURE_DURATION_SECONDS = 30;
-export const PUNCTURE_ABILITY_DAMAGE_PER_STACK_PCT = 1;
-
-export interface PunctureState {
-  stacks: number;
-  /** Tick the current window expires on; expired stacks drop to zero. */
-  expiresAtTick: number;
-}
-
-export const newPuncture = (): PunctureState => ({ stacks: 0, expiresAtTick: 0 });
-
-export function activePuncture(state: PunctureState, tick: number): PunctureState {
-  return tick < state.expiresAtTick ? state : { stacks: 0, expiresAtTick: 0 };
-}
-
-export function applyPuncture(state: PunctureState, tick: number, stacks = 1): PunctureState {
-  const current = activePuncture(state, tick);
-  return {
-    stacks: Math.min(PUNCTURE_CAP, current.stacks + stacks),
-    expiresAtTick: tick + secondsToTicks(PUNCTURE_DURATION_SECONDS),
-  };
-}
-
-/** Bonus ability-damage percent from active stacks - data, not an applied modifier. */
-export function punctureBonusPct(state: PunctureState, tick: number): number {
-  return activePuncture(state, tick).stacks * PUNCTURE_ABILITY_DAMAGE_PER_STACK_PCT;
-}
-
-export const PUNCTURE_SOURCE: SourceReference = MODERNISATION_WIKI;
+// Puncture (splintering) lives in puncture.ts - stored-damage sequence, not AD%.
+export {
+  PUNCTURE_ABILITY_ID,
+  PUNCTURE_CAP,
+  PUNCTURE_DURATION_SECONDS,
+  PUNCTURE_DURATION_TICKS,
+  PUNCTURE_FIRST_OFFSET_AFTER_FINISH,
+  PUNCTURE_HIT_FRACTIONS,
+  PUNCTURE_HIT_INTERVAL_TICKS,
+  PUNCTURE_SOURCE,
+  PUNCTURE_STORE_PCT,
+  activePuncture,
+  applyPunctureStack,
+  newPuncture,
+  punctureHitDamage,
+  punctureSequenceTicks,
+  punctureStoreAmount,
+  type PunctureState,
+} from "./puncture";
 
 /**
  * Deathspore arrows (post-2 Mar 2026): landed Ranged hit -> Feasting Spores stack;

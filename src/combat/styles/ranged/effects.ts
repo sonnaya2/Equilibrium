@@ -9,6 +9,7 @@ import {
   type SearingWindsState,
   type ShadowImbuedState,
 } from "./onHit";
+import { newPuncture, type PunctureState } from "./puncture";
 
 /**
  * Death's Swiftness became a mobile self-buff on 16 Mar 2026: 1.5x ranged
@@ -70,6 +71,7 @@ export interface RangedRotationState {
   searingWinds: SearingWindsState;
   shadowImbued: ShadowImbuedState;
   deathspore: DeathsporeState;
+  puncture: PunctureState;
 }
 
 export const newRangedRotationState = (): RangedRotationState => ({
@@ -77,4 +79,5 @@ export const newRangedRotationState = (): RangedRotationState => ({
   searingWinds: newSearingWinds(),
   shadowImbued: newShadowImbued(),
   deathspore: newDeathspore(),
+  puncture: newPuncture(),
 });

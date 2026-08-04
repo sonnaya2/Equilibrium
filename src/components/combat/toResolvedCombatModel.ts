@@ -95,6 +95,7 @@ export function hostInputFromLoadoutStats(
     salve: stats.salve,
     ultimatums: loadout.perks.ultimatums ?? 0,
     lunging: loadout.perks.lunging ?? 0,
+    caroming: loadout.perks.caroming ?? 0,
     berserkersFuryBonus: stats.berserkersFury.active ? stats.berserkersFury.bonus : 0,
     diagnostics: {
       slayerHelmet: stats.slayerHelmet,

@@ -30,12 +30,23 @@ describe("Ring of vigour equipment", () => {
     }
   });
 
-  it("appears in Gear passives when equipped", () => {
+  it("catalogue attaches passiveId ring-of-vigour", () => {
+    expect(rec.passiveId).toBe("ring-of-vigour");
+  });
+
+  it("appears in Gear passives when equipped (catalogue-driven, not item-id special case)", () => {
     const rows = equippedPassiveSummaries({
       style: "melee",
       equipmentSlots: { ring: RING_OF_VIGOUR_ITEM_ID },
     });
-    expect(rows.some((r) => /vigour/i.test(r.label))).toBe(true);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      passiveId: "ring-of-vigour",
+      itemId: RING_OF_VIGOUR_ITEM_ID,
+      label: "Ring of Vigour",
+      support: "modeled",
+    });
+    expect(rows[0]!.effects.some((e) => /adrenaline/i.test(e))).toBe(true);
   });
 
   it("loadoutStats folds ring damage into equipment style damage", () => {

@@ -6,7 +6,19 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
 import { equipmentRecordPassiveIds } from "./requirements";
-import { RING_OF_VIGOUR_ITEM_ID } from "./ringOfVigour";
+import { setEffectSupport, type SetEffectSupport } from "../equipmentSets/support";
+import {
+  IGNEOUS_ULTIMATE_PASSIVE_SET,
+  LENG_PASSIVES,
+  LENG_PASSIVE_SET,
+  igneousCombinedPresentation,
+  lengCombinedPresentation,
+  presentPassive,
+  presentationContextFromEffects,
+  type PassiveSupport,
+} from "../passives";
+
+export type { SetEffectSupport, PassiveSupport };
 
 /**
  * Equipment set effects with sourced current numbers. Per-item combat stats live on
@@ -371,8 +383,6 @@ export function applyEquipmentAccuracy(accuracy: number, effects: ActiveEquipmen
   return effects.defenderEquipped ? accuracy * 1.03 : accuracy;
 }
 
-export type PassiveSupport = "modeled" | "partially-modeled" | "not-modeled";
-
 export interface EquippedPassiveSummary {
   passiveId: ItemPassiveId;
   itemId: string;
@@ -383,211 +393,6 @@ export interface EquippedPassiveSummary {
   source: SourceReference;
 }
 
-function passivePresentation(
-  id: ItemPassiveId,
-  effects: ActiveEquipmentEffects,
-): Pick<EquippedPassiveSummary, "label" | "effects" | "support"> {
-  switch (id) {
-    case "jaws-of-the-abyss":
-      return {
-        label: "Jaws of the Abyss",
-        effects: [
-          "Basic abilities grant 2% adrenaline per active bleed.",
-          "Natural Instinct doubles this bonus gain.",
-        ],
-        support: "modeled",
-      };
-    case "abyssal-parasite":
-      return {
-        label: "Abyssal Parasite",
-        effects: [
-          "Melee hits apply and refresh the stacking parasite bleed.",
-          "Damage cadence and stack refresh are modeled; death spread is not.",
-        ],
-        support: "partially-modeled",
-      };
-    case "am-zi":
-      return {
-        label: "Am-zi",
-        effects: ["Direct melee hits gain flat damage equal to 135% of effective Attack."],
-        support: "modeled",
-      };
-    case "am-hej":
-      return {
-        label: "Am-hej",
-        effects: ["Direct melee damage gains 0.05% per effective Strength level."],
-        support: "modeled",
-      };
-    case "enduring-ruin":
-      return {
-        label: effects.passage.agonyActive ? "Enduring Ruin + Agony" : "Enduring Ruin",
-        effects: effects.passage.agonyActive
-          ? [
-              "Rend grants +16% damage to the next attack for 6 seconds.",
-              "Bleeds take +25% damage for 10 seconds.",
-            ]
-          : [
-              "Rend grants +10% damage to the next attack for 6 seconds.",
-              "Bleeds take +20% damage for 10 seconds.",
-            ],
-        support: "modeled",
-      };
-    case "reaver-ring":
-      return {
-        label: "Reaver's ring",
-        effects: ["+5% critical strike chance.", "−5 percentage points Damage Potential."],
-        support: "modeled",
-      };
-    case "champion-ring":
-      return {
-        label: hasEnchantment(effects, "heroism") ? "Champion's ring + Heroism" : "Champion's ring",
-        effects: hasEnchantment(effects, "heroism")
-          ? [
-              "+4% critical strike chance while a bleed is active.",
-              "+1.5% critical strike damage per active bleed.",
-            ]
-          : ["+3% critical strike chance while a bleed is active."],
-        support: "modeled",
-      };
-    case "stalker-ring":
-      return {
-        label: hasEnchantment(effects, "shadows") ? "Stalker's ring + Shadows" : "Stalker's ring",
-        effects: hasEnchantment(effects, "shadows")
-          ? ["With a bow: +4% critical strike chance.", "+3% critical strike damage."]
-          : ["With a bow: +3% critical strike chance."],
-        support: "modeled",
-      };
-    case "channeller-ring":
-      return {
-        label: hasEnchantment(effects, "metaphysics")
-          ? "Channeller's ring + Metaphysics"
-          : "Channeller's ring",
-        effects: hasEnchantment(effects, "metaphysics")
-          ? [
-              "+4% critical strike chance per successive channel hit.",
-              "+2.5% critical strike damage per successive channel hit.",
-            ]
-          : ["+4% critical strike chance per successive channel hit."],
-        support: "modeled",
-      };
-    case "defender-accuracy":
-      return {
-        label: "Defender accuracy",
-        effects: ["Defenders, reprisers, and rebounders have +3% accuracy."],
-        support: "modeled",
-      };
-    case "masterwork-spear-bleed-extension":
-      return {
-        label: "Masterwork Spear of Annihilation",
-        effects: [
-          "Extends eligible melee bleed abilities by 50%, rounded down to whole additional hits.",
-        ],
-        support: "modeled",
-      };
-    case "igneous-overpower":
-      return {
-        label: "Igneous Overpower",
-        effects: ["Unlocks upgraded Overpower."],
-        support: "modeled",
-      };
-    case "igneous-deadshot":
-      return {
-        label: "Igneous Deadshot",
-        effects: ["Unlocks upgraded Deadshot."],
-        support: "modeled",
-      };
-    case "igneous-omnipower":
-      return {
-        label: "Igneous Omnipower",
-        effects: ["Unlocks upgraded Omnipower."],
-        support: "modeled",
-      };
-    case "igneous-death-skulls":
-      return {
-        label: "Igneous Death Skulls",
-        effects: ["Unlocks upgraded Death Skulls."],
-        support: "modeled",
-      };
-    case "leng-endless-frost":
-      return {
-        label: "Endless Frost",
-        effects: [
-          "Melee hits have a 10% chance to gain a Primordial Ice stack (cap 10).",
-          "Icy Tempest spends stacks for free-cast cost reduction and bonus damage.",
-        ],
-        support: "modeled",
-      };
-    case "leng-boundless-chill":
-      return {
-        label: "Boundless Chill",
-        effects: [
-          "Melee hits have a 2% chance to gain Primordial Ice and grant Frostblades for 9s.",
-          "Frostblades: +24% ability damage as flat damage on melee ability hits.",
-        ],
-        support: "modeled",
-      };
-    case "asylum-surgeon":
-      return {
-        label: "Asylum surgeon's ring",
-        effects: ["10% chance to reduce an ability's adrenaline cost by 15%; 30-second cooldown."],
-        support: "not-modeled",
-      };
-    case "deathtouch-reflect":
-      return {
-        label: "Deathtouch reflect",
-        effects: ["20% chance to reflect 25–50% of damage taken, capped at 5,000."],
-        support: "not-modeled",
-      };
-    case "ring-of-vigour":
-      return {
-        label: "Ring of Vigour",
-        effects: [
-          "After an ultimate, retain 10% adrenaline (does not reduce the cast cost).",
-          "Weapon specials / Essence of Finality cost 90% of their original adrenaline.",
-          "Does not stack with the permanent Anachronia unlock on the Buffs tab.",
-        ],
-        support: "modeled",
-      };
-  }
-}
-
-/** Igneous ultimate-upgrade capabilities - collapsed to one Gear row when multi-granted. */
-const IGNEOUS_ULTIMATE_PASSIVES: readonly ItemPassiveId[] = [
-  "igneous-overpower",
-  "igneous-deadshot",
-  "igneous-omnipower",
-  "igneous-death-skulls",
-];
-
-const IGNEOUS_ULTIMATE_PASSIVE_SET = new Set<ItemPassiveId>(IGNEOUS_ULTIMATE_PASSIVES);
-
-const LENG_PASSIVES: readonly ItemPassiveId[] = ["leng-endless-frost", "leng-boundless-chill"];
-const LENG_PASSIVE_SET = new Set<ItemPassiveId>(LENG_PASSIVES);
-
-/** Combined Kal-Zuk (or any multi-igneous) presentation for Gear. */
-function igneousCombinedPresentation(): Pick<
-  EquippedPassiveSummary,
-  "label" | "effects" | "support"
-> {
-  return {
-    label: "Igneous ultimate upgrades",
-    effects: ["Unlocks upgraded Overpower, Deadshot, Omnipower, and Death Skulls."],
-    support: "modeled",
-  };
-}
-
-function lengCombinedPresentation(): Pick<EquippedPassiveSummary, "label" | "effects" | "support"> {
-  return {
-    label: "Leng weapons",
-    effects: [
-      "Endless Frost / Boundless Chill: Primordial Ice stacks on hit (cap 10).",
-      "Frostblades: +24% ability damage flat on melee ability hits for 9s after Chill procs.",
-      "Icy Tempest spends stacks for reduced adrenaline cost and bonus damage.",
-    ],
-    support: "modeled",
-  };
-}
-
 /** Equipped passive rows for Gear. Item identity and source stay catalogue-driven. */
 export function equippedPassiveSummaries(
   loadout: LoadoutEquipmentView & {
@@ -596,6 +401,7 @@ export function equippedPassiveSummaries(
   },
 ): EquippedPassiveSummary[] {
   const effects = activeEquipmentEffects(loadout);
+  const presentCtx = presentationContextFromEffects(effects);
   const seenItems = new Set<string>();
   const seenPassives = new Set<ItemPassiveId>();
   const rows: EquippedPassiveSummary[] = [];
@@ -607,8 +413,6 @@ export function equippedPassiveSummaries(
     const passiveList: ItemPassiveId[] = [
       ...equipmentRecordPassiveIds(item),
       ...(item.defender ? (["defender-accuracy"] as const) : []),
-      // Catalogue has no passiveId yet; adren effects are modeled via ringOfVigour.ts.
-      ...(item.id === RING_OF_VIGOUR_ITEM_ID ? (["ring-of-vigour"] as const) : []),
     ];
     const igneousOnItem = passiveList.filter((p) => IGNEOUS_ULTIMATE_PASSIVE_SET.has(p));
     const lengOnItem = passiveList.filter((p) => LENG_PASSIVE_SET.has(p));
@@ -638,7 +442,7 @@ export function equippedPassiveSummaries(
           itemId: item.id,
           itemName: item.name,
           source: item.sources[0],
-          ...passivePresentation(passiveId, effects),
+          ...presentPassive(passiveId, presentCtx),
         });
       }
     }
@@ -666,7 +470,7 @@ export function equippedPassiveSummaries(
         itemId: item.id,
         itemName: item.name,
         source: item.sources[0],
-        ...passivePresentation(passiveId, effects),
+        ...presentPassive(passiveId, presentCtx),
       });
     }
 
@@ -678,7 +482,7 @@ export function equippedPassiveSummaries(
         itemId: item.id,
         itemName: item.name,
         source: item.sources[0],
-        ...passivePresentation(passiveId, effects),
+        ...presentPassive(passiveId, presentCtx),
       });
     }
   }
@@ -703,7 +507,6 @@ export function vestmentsUltimateEligible(
   );
 }
 
-export type SetEffectSupport = "modeled" | "not-modeled" | "outgoing-only" | "none";
 export type SetEffectSummary = {
   setId: string;
   pieces: number;
@@ -711,28 +514,7 @@ export type SetEffectSummary = {
   support: SetEffectSupport;
 };
 
-const MODELED_SET_IDS = new Set([
-  "tectonic",
-  "elite-tectonic",
-  "tumekens-resplendence",
-  "first-necromancer",
-  "vestments-of-havoc",
-]);
-const UNSUPPORTED_SET_IDS = new Set([
-  "sirenic",
-  "elite-sirenic",
-  "deathdealer-90",
-  "anima-core-sliske",
-  "refined-anima-core-sliske",
-]);
-
-export function setEffectSupport(def: EquipmentSetDef | undefined): SetEffectSupport {
-  if (!def) return "not-modeled";
-  if (MODELED_SET_IDS.has(def.id)) return "modeled";
-  if (UNSUPPORTED_SET_IDS.has(def.id)) return "not-modeled";
-  if (def.id === "trimmed-masterwork") return "outgoing-only";
-  return "none";
-}
+export { setEffectSupport };
 
 /**
  * Equipped sets with piece counts for GearPanel.

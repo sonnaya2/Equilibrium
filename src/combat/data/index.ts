@@ -1,15 +1,17 @@
-import abilitiesData from "#shard/combat/abilities.json";
-import effectsData from "#shard/combat/effects.json";
-import equipmentData from "#shard/combat/equipment.json";
-import perksData from "#shard/combat/perks.json";
-import prayersData from "#shard/combat/prayers.json";
-import revolutionBarsData from "#shard/combat/revolution-bars.json";
 import type { RegionId } from "../../league";
 import type { CombatStyle } from "../types";
 import { isObtainableInRegions } from "./availability";
+import {
+  combatAbilities,
+  combatDataCatalogue,
+  combatEffects,
+  combatEquipment,
+  combatPerks,
+  combatPrayers,
+  combatRevolutionBars,
+} from "./catalogue";
 import type {
   AbilityRecord,
-  CombatDataset,
   EffectRecord,
   EquipmentRecord,
   PerkRecord,
@@ -18,23 +20,33 @@ import type {
 } from "./records";
 
 export type * from "./records";
+export type { CombatDataCatalogue, CombatDataSources } from "./catalogue";
+export {
+  combatDataCatalogue,
+  combatAbilities,
+  combatEffects,
+  combatEquipment,
+  combatPerks,
+  combatPrayers,
+  combatRevolutionBars,
+  compileCombatDataCatalogue,
+  indexRecordsById,
+  assertCatalogueIntegrity,
+  assertIndexMatchesRecords,
+  assertUniqueRecordIds,
+  findDuplicateIds,
+} from "./catalogue";
 
 /**
- * Typed accessors over the generated compatibility view. The SQLite rebuild owns
- * these shapes; provenance, unique IDs, and region constraints are validated there.
+ * Typed accessors over the generated compatibility view.
+ * Lookups use the module-init catalogue Maps (not linear scan).
  */
-
-export const combatAbilities = abilitiesData as CombatDataset<AbilityRecord>;
-export const combatEffects = effectsData as CombatDataset<EffectRecord>;
-export const combatEquipment = equipmentData as CombatDataset<EquipmentRecord>;
-export const combatPerks = perksData as CombatDataset<PerkRecord>;
-export const combatPrayers = prayersData as CombatDataset<PrayerRecord>;
-export const combatRevolutionBars = revolutionBarsData as CombatDataset<RevolutionBarRecord>;
 
 type AnyRecord = AbilityRecord | EffectRecord | EquipmentRecord | PerkRecord | PrayerRecord | RevolutionBarRecord;
 
-export function recordById<T extends AnyRecord>(dataset: CombatDataset<T>, id: string): T | undefined {
-  return dataset.records.find((record) => record.id === id);
+/** Map lookup; unknown ids return undefined. Prefer typed helpers below. */
+export function recordById<T extends AnyRecord>(index: ReadonlyMap<string, T>, id: string): T | undefined {
+  return index.get(id);
 }
 
 /** Records tagged with `region`. Empty regions is NOT global - use
@@ -58,9 +70,11 @@ export function recordsAvailableInRegion<T extends AnyRecord>(
   );
 }
 
-export const abilityById = (id: string) => recordById(combatAbilities, id);
-export const effectById = (id: string) => recordById(combatEffects, id);
-export const equipmentById = (id: string) => recordById(combatEquipment, id);
+export const abilityById = (id: string) => combatDataCatalogue.abilitiesById.get(id);
+export const effectById = (id: string) => combatDataCatalogue.effectsById.get(id);
+export const equipmentById = (id: string) => combatDataCatalogue.equipmentById.get(id);
+export const perkById = (id: string) => combatDataCatalogue.perksById.get(id);
+export const prayerById = (id: string) => combatDataCatalogue.prayersById.get(id);
 
 export const abilitiesByStyle = (style: CombatStyle) =>
   combatAbilities.records.filter((record) => record.style === style);
@@ -74,7 +88,7 @@ export const equipmentByRegion = (region: RegionId, options?: { regionLockedOnly
 export const prayersByRegion = (region: RegionId, options?: { regionLockedOnly?: boolean }) =>
   recordsByRegion(combatPrayers.records, region, options);
 
-export const revolutionBarById = (id: string) => recordById(combatRevolutionBars, id);
+export const revolutionBarById = (id: string) => combatDataCatalogue.revolutionBarsById.get(id);
 export const revolutionBarsByStyle = (style: CombatStyle) =>
   combatRevolutionBars.records.filter((record) => record.style === style);
 

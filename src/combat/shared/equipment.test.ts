@@ -181,6 +181,80 @@ describe("shared/equipment set effects", () => {
     });
   });
 
+  it("collapses dual Leng weapons into one Gear row", () => {
+    const rows = equippedPassiveSummaries({
+      style: "melee",
+      equipmentSlots: {
+        mainhand: "item:dark-shard-of-leng",
+        offhand: "item:dark-sliver-of-leng",
+      },
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      passiveId: "leng-endless-frost",
+      itemName: "Dark Shard & Sliver of Leng",
+      label: "Leng weapons",
+      support: "modeled",
+    });
+    expect(rows[0]!.effects.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("keeps single Leng passives as individual rows", () => {
+    const shard = equippedPassiveSummaries({
+      style: "melee",
+      equipmentSlots: { mainhand: "item:dark-shard-of-leng" },
+    });
+    expect(shard).toHaveLength(1);
+    expect(shard[0]).toMatchObject({
+      passiveId: "leng-endless-frost",
+      label: "Endless Frost",
+      support: "modeled",
+    });
+  });
+
+  it("surfaces Asylum Surgeon and Deathtouch as not-modeled", () => {
+    const rows = equippedPassiveSummaries({
+      equipmentSlots: {
+        ring: "item:asylum-surgeons-ring",
+        gloves: "item:deathtouch-bracelet",
+      },
+    });
+    expect(rows.find((r) => r.passiveId === "asylum-surgeon")).toMatchObject({
+      support: "not-modeled",
+      label: "Asylum surgeon's ring",
+    });
+    expect(rows.find((r) => r.passiveId === "deathtouch-reflect")).toMatchObject({
+      support: "not-modeled",
+      label: "Deathtouch reflect",
+    });
+  });
+
+  it("marks Abyssal Parasite as partially-modeled", () => {
+    const rows = equippedPassiveSummaries({
+      style: "melee",
+      equipmentSlots: { mainhand: "item:abyssal-scourge" },
+    });
+    expect(rows.some((r) => r.passiveId === "abyssal-parasite")).toBe(true);
+    expect(rows.find((r) => r.passiveId === "abyssal-parasite")).toMatchObject({
+      label: "Abyssal Parasite",
+      support: "partially-modeled",
+    });
+  });
+
+  it("shows Ring of Vigour from catalogue passiveId (no item-id special case)", () => {
+    const rows = equippedPassiveSummaries({
+      equipmentSlots: { ring: "item:ring-of-vigour" },
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      passiveId: "ring-of-vigour",
+      itemId: "item:ring-of-vigour",
+      label: "Ring of Vigour",
+      support: "modeled",
+    });
+    expect(rows[0]!.effects.length).toBeGreaterThanOrEqual(2);
+  });
+
   it("First Necromancer: conjure mults, visage double-count, no player AD set effects", () => {
     expect(firstNecromancerConjureDamageMult(0)).toBe(1);
     expect(firstNecromancerConjureDamageMult(1)).toBe(1);

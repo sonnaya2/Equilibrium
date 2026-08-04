@@ -1,0 +1,287 @@
+import type { ItemPassiveId } from "../data/records";
+import type { SourceReference } from "../types";
+import { RING_OF_VIGOUR_SOURCE } from "../shared/ringOfVigour";
+import type { PassiveDefinition } from "./contracts";
+
+const wiki = (title: string, path: string, verifiedAt: string): SourceReference => ({
+  source: "runescape-wiki",
+  url: `https://runescape.wiki/w/${path}`,
+  title,
+  verifiedAt,
+});
+
+/** Shared wiki refs for passives that reuse equipment/ring sources. */
+export const PASSIVE_SOURCE = {
+  jaws: wiki("Jaws of the Abyss", "Jaws_of_the_Abyss", "2026-08-01"),
+  abyssalParasite: wiki("Abyssal scourge", "Abyssal_scourge", "2026-08-01"),
+  amZi: wiki("Am-zi", "Am-zi", "2026-08-01"),
+  amHej: wiki("Am-hej", "Am-hej", "2026-08-01"),
+  enduringRuin: wiki("Gloves of passage", "Gloves_of_passage", "2026-08-01"),
+  reaver: wiki("Reaver's ring", "Reaver%27s_ring", "2026-08-02"),
+  champion: wiki("Champion's ring", "Champion%27s_ring", "2026-08-02"),
+  stalker: wiki("Stalker's ring", "Stalker%27s_ring", "2026-08-02"),
+  channeller: wiki("Channeller's ring", "Channeller%27s_ring", "2026-08-02"),
+  defender: wiki("Defender", "Defender", "2026-08-01"),
+  masterworkSpear: wiki(
+    "Masterwork Spear of Annihilation",
+    "Masterwork_Spear_of_Annihilation",
+    "2026-08-03",
+  ),
+  igneousOverpower: wiki("Igneous Kal-Ket", "Igneous_Kal-Ket", "2026-08-02"),
+  igneousDeadshot: wiki("Igneous Kal-Xil", "Igneous_Kal-Xil", "2026-08-02"),
+  igneousOmnipower: wiki("Igneous Kal-Mej", "Igneous_Kal-Mej", "2026-08-02"),
+  igneousDeathSkulls: wiki("Igneous Kal-Mor", "Igneous_Kal-Mor", "2026-08-02"),
+  lengEndlessFrost: wiki("Dark shard of Leng", "Dark_shard_of_Leng", "2026-08-02"),
+  lengBoundlessChill: wiki("Dark sliver of Leng", "Dark_sliver_of_Leng", "2026-08-02"),
+  asylumSurgeon: wiki("Asylum surgeon's ring", "Asylum_surgeon%27s_ring", "2026-08-01"),
+  deathtouch: wiki("Deathtouch bracelet", "Deathtouch_bracelet", "2026-08-01"),
+  ringOfVigour: RING_OF_VIGOUR_SOURCE,
+} as const;
+
+/**
+ * Exhaustive passive catalogue. Labels/effects match Gear presentation baselines.
+ * Paths in implementationOwners are relative to src/combat/.
+ */
+export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
+  {
+    id: "jaws-of-the-abyss",
+    label: "Jaws of the Abyss",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["resource-transaction"],
+    implementationOwners: ["engine/cast/effects/resources.ts"],
+    effects: [
+      "Basic abilities grant 2% adrenaline per active bleed.",
+      "Natural Instinct doubles this bonus gain.",
+    ],
+    source: PASSIVE_SOURCE.jaws,
+  },
+  {
+    id: "abyssal-parasite",
+    label: "Abyssal Parasite",
+    support: "partially-modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["landed-hit", "timed-runtime"],
+    implementationOwners: ["engine/resolution/landed/melee.ts"],
+    effects: [
+      "Melee hits apply and refresh the stacking parasite bleed.",
+      "Damage cadence and stack refresh are modeled; death spread is not.",
+    ],
+    source: PASSIVE_SOURCE.abyssalParasite,
+  },
+  {
+    id: "am-zi",
+    label: "Am-zi",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["modifier-provider", "loadout-static"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["Direct melee hits gain flat damage equal to 135% of effective Attack."],
+    source: PASSIVE_SOURCE.amZi,
+  },
+  {
+    id: "am-hej",
+    label: "Am-hej",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["modifier-provider", "loadout-static"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["Direct melee damage gains 0.05% per effective Strength level."],
+    source: PASSIVE_SOURCE.amHej,
+  },
+  {
+    id: "enduring-ruin",
+    label: "Enduring Ruin",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["landed-hit"],
+    implementationOwners: ["engine/resolution/landed/melee.ts"],
+    effects: [
+      "Rend grants +10% damage to the next attack for 6 seconds.",
+      "Bleeds take +20% damage for 10 seconds.",
+    ],
+    source: PASSIVE_SOURCE.enduringRuin,
+  },
+  {
+    id: "reaver-ring",
+    label: "Reaver's ring",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["crit-provider", "loadout-static"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["+5% critical strike chance.", "−5 percentage points Damage Potential."],
+    source: PASSIVE_SOURCE.reaver,
+  },
+  {
+    id: "champion-ring",
+    label: "Champion's ring",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["crit-provider"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["+3% critical strike chance while a bleed is active."],
+    source: PASSIVE_SOURCE.champion,
+  },
+  {
+    id: "stalker-ring",
+    label: "Stalker's ring",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["crit-provider"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["With a bow: +3% critical strike chance."],
+    source: PASSIVE_SOURCE.stalker,
+  },
+  {
+    id: "channeller-ring",
+    label: "Channeller's ring",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["crit-provider"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["+4% critical strike chance per successive channel hit."],
+    source: PASSIVE_SOURCE.channeller,
+  },
+  {
+    id: "defender-accuracy",
+    label: "Defender accuracy",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["loadout-static"],
+    implementationOwners: ["shared/equipment.ts"],
+    effects: ["Defenders, reprisers, and rebounders have +3% accuracy."],
+    source: PASSIVE_SOURCE.defender,
+  },
+  {
+    id: "masterwork-spear-bleed-extension",
+    label: "Masterwork Spear of Annihilation",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["ability-resolution", "cast-preparation"],
+    implementationOwners: ["shared/bleedDurationExtension.ts"],
+    effects: [
+      "Extends eligible melee bleed abilities by 50%, rounded down to whole additional hits.",
+    ],
+    source: PASSIVE_SOURCE.masterworkSpear,
+  },
+  {
+    id: "igneous-overpower",
+    label: "Igneous Overpower",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["ability-availability"],
+    implementationOwners: ["shared/requirements.ts"],
+    effects: ["Unlocks upgraded Overpower."],
+    source: PASSIVE_SOURCE.igneousOverpower,
+  },
+  {
+    id: "igneous-deadshot",
+    label: "Igneous Deadshot",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["ability-availability"],
+    implementationOwners: ["shared/requirements.ts"],
+    effects: ["Unlocks upgraded Deadshot."],
+    source: PASSIVE_SOURCE.igneousDeadshot,
+  },
+  {
+    id: "igneous-omnipower",
+    label: "Igneous Omnipower",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["ability-availability"],
+    implementationOwners: ["shared/requirements.ts"],
+    effects: ["Unlocks upgraded Omnipower."],
+    source: PASSIVE_SOURCE.igneousOmnipower,
+  },
+  {
+    id: "igneous-death-skulls",
+    label: "Igneous Death Skulls",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["ability-availability"],
+    implementationOwners: ["shared/requirements.ts"],
+    effects: ["Unlocks upgraded Death Skulls."],
+    source: PASSIVE_SOURCE.igneousDeathSkulls,
+  },
+  {
+    id: "leng-endless-frost",
+    label: "Endless Frost",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["landed-hit", "timed-runtime"],
+    implementationOwners: [
+      "styles/melee/lengRng.ts",
+      "styles/melee/lengDistribution.ts",
+      "engine/runtime/runtime.ts",
+    ],
+    effects: [
+      "Melee hits have a 10% chance to gain a Primordial Ice stack (cap 10).",
+      "Icy Tempest spends stacks for free-cast cost reduction and bonus damage.",
+    ],
+    source: PASSIVE_SOURCE.lengEndlessFrost,
+  },
+  {
+    id: "leng-boundless-chill",
+    label: "Boundless Chill",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["landed-hit", "timed-runtime"],
+    implementationOwners: [
+      "styles/melee/lengRng.ts",
+      "styles/melee/lengDistribution.ts",
+      "engine/runtime/runtime.ts",
+    ],
+    effects: [
+      "Melee hits have a 2% chance to gain Primordial Ice and grant Frostblades for 9s.",
+      "Frostblades: +24% ability damage as flat damage on melee ability hits.",
+    ],
+    source: PASSIVE_SOURCE.lengBoundlessChill,
+  },
+  {
+    id: "asylum-surgeon",
+    label: "Asylum surgeon's ring",
+    support: "not-modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["presentation-only"],
+    implementationOwners: [],
+    effects: ["10% chance to reduce an ability's adrenaline cost by 15%; 30-second cooldown."],
+    source: PASSIVE_SOURCE.asylumSurgeon,
+  },
+  {
+    id: "deathtouch-reflect",
+    label: "Deathtouch reflect",
+    support: "not-modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["presentation-only"],
+    implementationOwners: [],
+    effects: ["20% chance to reflect 25–50% of damage taken, capped at 5,000."],
+    source: PASSIVE_SOURCE.deathtouch,
+  },
+  {
+    id: "ring-of-vigour",
+    label: "Ring of Vigour",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["resource-transaction", "ability-availability"],
+    implementationOwners: ["shared/ringOfVigour.ts", "engine/cast/effects/resources.ts"],
+    effects: [
+      "After an ultimate, retain 10% adrenaline (does not reduce the cast cost).",
+      "Weapon specials / Essence of Finality cost 90% of their original adrenaline.",
+      "Does not stack with the permanent Anachronia unlock on the Buffs tab.",
+    ],
+    source: PASSIVE_SOURCE.ringOfVigour,
+  },
+];
+
+/** Compile-time: every ItemPassiveId appears exactly once in PASSIVE_DEFINITIONS. */
+type DefinedPassiveId = (typeof PASSIVE_DEFINITIONS)[number]["id"];
+type MissingPassiveIds = Exclude<ItemPassiveId, DefinedPassiveId>;
+type ExtraPassiveIds = Exclude<DefinedPassiveId, ItemPassiveId>;
+type _AssertAllPassivesDefined = [MissingPassiveIds] extends [never]
+  ? [ExtraPassiveIds] extends [never]
+    ? true
+    : never
+  : never;
+const _assertAllPassivesDefined: _AssertAllPassivesDefined = true;
+void _assertAllPassivesDefined;

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import regionsData from "#shard/league/regions.json";
-import { combatEquipment, type EquipmentRecord } from "@/combat/data";
+import { combatEquipment, equipmentById, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
 import { equippedPassiveSummaries, type PassiveSupport } from "@/combat/shared/equipment";
@@ -116,7 +116,7 @@ function RegionMarks({ record }: { record: EquipmentRecord }) {
 
 function byId(id: string | null | undefined): EquipmentRecord | undefined {
   if (!id) return undefined;
-  return combatEquipment.records.find((r) => r.id === id);
+  return equipmentById(id);
 }
 
 function styleMatches(record: EquipmentRecord, style: CombatStyle): boolean {

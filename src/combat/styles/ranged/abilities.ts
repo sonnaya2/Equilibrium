@@ -67,6 +67,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
   },
   {
     // Wiki: 65-75% + stun 1.2s / bind 9.6s. Damage below a basic - CC utility.
+    // 2 charges at 54 Ranged; independent 15s recovery per charge.
     id: "binding_shot",
     name: "Binding Shot",
     style: "ranged",
@@ -74,6 +75,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     hits: [{ band: { minPct: 65, maxPct: 75 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    charges: { max: 2, secondChargeLevel: 54 },
     source: wiki("Binding Shot", "Binding_Shot"),
   },
   {

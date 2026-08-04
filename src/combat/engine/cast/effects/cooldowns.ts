@@ -1,30 +1,60 @@
 import { secondsToTicks } from "../../../core/ticks";
+import { BERSERK_OVERPOWER_COOLDOWN_SECONDS } from "../../../styles/melee/bloodlust";
 import { deathSkullsCooldownTicks } from "../../../styles/necromancy/effects";
-import { clearCooldowns, startCooldown } from "../../runtime/state";
+import {
+  clearCooldowns,
+  consumeCharge,
+  maxChargesFor,
+  startCooldown,
+  type RotationState,
+} from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 import { effectiveCooldownTicks } from "../../../league/ruleset";
 
-/** wiki Berserk (2 Mar 2026): Overpower CD reduced to 9s while Berserk is live. */
-const BERSERK_OVERPOWER_COOLDOWN_SECONDS = 9;
+function baseCooldownTicks(fx: CastEffectContext): number {
+  const { rt, ability, candidate } = fx;
+  const cdKey = ability.cooldownGroup ?? ability.replacementGroup ?? ability.id;
+  const deathSkullsKey = ability.replacementGroup ?? ability.id;
+  if (deathSkullsKey === "death_skulls") {
+    return deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate);
+  }
+  if (cdKey === "overpower" && rt.state.melee.berserkUntilTick > candidate) {
+    return secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS);
+  }
+  return secondsToTicks(ability.cooldownSeconds!);
+}
 
 /**
  * Cooldown clocks for one cast. Sourced variations: Death Skulls under Living Death
- * (17 ticks); Overpower under Berserk (9s).
+ * (17 ticks); Overpower under Berserk (9s). Charged abilities consume a charge
+ * instead of writing cooldowns[key] (would block the second charge).
  */
 export function applyCastCooldown(fx: CastEffectContext): void {
   const { rt, ability, candidate } = fx;
   if (!ability.cooldownSeconds) return;
   const cdKey = ability.cooldownGroup ?? ability.replacementGroup ?? ability.id;
-  const deathSkullsKey = ability.replacementGroup ?? ability.id;
-  let baseTicks: number;
-  if (deathSkullsKey === "death_skulls") {
-    baseTicks = deathSkullsCooldownTicks(rt.state.necromancy.resources, candidate);
-  } else if (cdKey === "overpower" && rt.state.melee.berserkUntilTick > candidate) {
-    baseTicks = secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS);
-  } else {
-    baseTicks = secondsToTicks(ability.cooldownSeconds);
+  const ticks = effectiveCooldownTicks(baseCooldownTicks(fx), rt.input.league);
+  const max = maxChargesFor(ability, rt.input.level);
+  if (max > 0) {
+    rt.state = consumeCharge(rt.state, cdKey, ticks, candidate);
+    return;
   }
-  rt.state = startCooldown(rt.state, cdKey, effectiveCooldownTicks(baseTicks, rt.input.league));
+  rt.state = startCooldown(rt.state, cdKey, ticks);
+}
+
+/** Reduce a single-slot cooldown, floored at floorTick (Snipe / Hurricane CDR). */
+export function reduceCooldown(
+  state: RotationState,
+  key: string,
+  ticks: number,
+  floorTick: number,
+): RotationState {
+  const ready = state.cooldowns[key];
+  if (ready === undefined || ready <= floorTick) return state;
+  return {
+    ...state,
+    cooldowns: { ...state.cooldowns, [key]: Math.max(floorTick, ready - ticks) },
+  };
 }
 
 /** Cooldown resets granted by a cast (Living Death clears ToD and Death Skulls). */

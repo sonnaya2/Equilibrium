@@ -141,6 +141,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     hits: [{ band: { minPct: 95, maxPct: 105 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    charges: { max: 2, secondChargeLevel: 54 },
     bloodlustGain: 1,
     source: wikiAbility("Backhand", "Backhand"),
   },

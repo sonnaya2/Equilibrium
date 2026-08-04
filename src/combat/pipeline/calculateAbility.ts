@@ -81,6 +81,19 @@ export interface AbilitySpec {
   /** Shared logical cooldown when distinct ids represent one live timer. */
   cooldownGroup?: string;
   /**
+   * Independent charges. Absent = single-slot via cooldowns map.
+   * Recovery clocks live on RotationState.charges (not cooldowns[key]).
+   */
+  charges?: {
+    /** Fully unlocked max (2 for stun basics). */
+    max: number;
+    /**
+     * Style level for second charge (54). When player level < this, max is 1.
+     * Product default level is 99 -> 2 charges.
+     */
+    secondChargeLevel?: number;
+  };
+  /**
    * Weapon shape gate. Necromancy conjures use `"conduit"` (wiki: Conjuration
    * requires an off-hand conduit). `"death-guard-and-conduit"` is full dual
    * necro shape. Other styles use twohand / dualwield / mainhand.

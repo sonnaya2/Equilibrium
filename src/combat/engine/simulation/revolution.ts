@@ -10,7 +10,7 @@ import {
   type CastOutcomePlan,
 } from "./branch";
 import { createRuntime } from "../runtime/runtime";
-import { firstLegalTick } from "../runtime/state";
+import { firstLegalTickFor } from "../runtime/state";
 import type { CastRecord, RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
 import { combineBranchSummaries } from "./summary";
 
@@ -91,8 +91,7 @@ export function simulateRevolution(
       const state = branch.rt.state;
       const ready = input.bar.find(
         (ability) =>
-          firstLegalTick(state, ability.id, ability.cooldownGroup ?? ability.replacementGroup) <=
-            state.tick &&
+          firstLegalTickFor(state, ability, input.level) <= state.tick &&
           castRejection(
             state,
             ability,

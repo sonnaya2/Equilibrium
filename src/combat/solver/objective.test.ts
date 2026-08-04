@@ -7,7 +7,6 @@ import {
   OBJECTIVE_WINDOWS,
   objectiveWindowsForHorizon,
   scoreFromDamageByTick,
-  scoreSimulation,
   scoreSummary,
   sumDamageInTickRange,
   summaryEligibleForObjectiveScore,
@@ -174,7 +173,7 @@ describe("scoreSummary", () => {
 
   it("rejects non-exact exactness even when residualWeight is 0", () => {
     for (const exactness of ["bounded-approximation", "truncated", "resampled"] as const) {
-      const s = scoreSimulation(
+      const s = scoreSummary(
         {
           ok: true,
           damageByTick: { 0: 1000 },

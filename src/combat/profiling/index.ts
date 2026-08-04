@@ -13,7 +13,6 @@ export {
 
 export {
   allocationCounters,
-  getAllocationCounters,
   isAllocationProfilingEnabled,
   noteAbilityMapRebuild,
   noteCastsGrowth,

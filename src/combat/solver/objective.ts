@@ -284,9 +284,6 @@ export function scoreSummary(
   );
 }
 
-/** Alias: sim scoring entry (same gates as scoreSummary). */
-export const scoreSimulation = scoreSummary;
-
 /** True when an eval result carries a finite numeric score usable for ranking. */
 export function isFiniteEval(
   result: { score: number } | ObjectiveScore | null | undefined,

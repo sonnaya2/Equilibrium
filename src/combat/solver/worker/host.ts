@@ -209,7 +209,7 @@ export async function runOptimize(
       // Phase-0 measure-only: log independent-budget vs straggler wait after pool merge.
       if (typeof console !== "undefined" && result.poolMetrics && agents > 1) {
         const m = result.poolMetrics;
-        console.info(
+        console.warn(
           "[revo-solver] pool metrics agents=" +
             m.agentCount +
             " perAgentBudget=" +

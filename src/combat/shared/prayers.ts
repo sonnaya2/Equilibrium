@@ -205,9 +205,6 @@ export function styleCurseById(id: string): StyleCurseBoost | undefined {
   return STYLE_CURSES.find((c) => c.id === id);
 }
 
-/** Alias: loadout field is still styleCurse; UI labels these as prayers. */
-export const damagePrayerById = styleCurseById;
-
 export function bestStyleCurse(style: CombatStyle): StyleCurseBoost {
   const matches = STYLE_CURSES.filter((c) => c.style === style);
   return matches.reduce((best, c) => (c.damageBonus > best.damageBonus ? c : best));

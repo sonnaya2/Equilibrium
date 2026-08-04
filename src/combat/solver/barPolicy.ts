@@ -36,23 +36,10 @@ export function clampSolverBarSizes(
   return { minBarSize: min, maxBarSize: max };
 }
 
-/** Normalize alias used by eligibility / search layers. */
-export function normalizeSolverBarBounds(
-  minBarSize?: number,
-  maxBarSize?: number,
-): SolverBarSizeBounds {
-  return clampSolverBarSizes(minBarSize, maxBarSize);
-}
-
 /** Distinct bar lengths in a size window (max − min + 1) after clamp. */
 export function barLengthSpan(minBarSize: number, maxBarSize: number): number {
   const { minBarSize: lo, maxBarSize: hi } = clampSolverBarSizes(minBarSize, maxBarSize);
   return hi - lo + 1;
-}
-
-/** @deprecated use barLengthSpan - kept for older imports */
-export function agentCountForBarSizes(minBarSize: number, maxBarSize: number): number {
-  return barLengthSpan(minBarSize, maxBarSize);
 }
 
 /**

@@ -50,12 +50,10 @@ export {
 } from "./fingerprint";
 
 export {
-  isSolverProfilingEnabled,
   enableSolverProfiling,
   resetSolverProfileCounters,
   beginSolverProfileWindow,
   getSolverDuplicateCounters,
-  type SolverDuplicateCounters,
 } from "./profiling";
 
 export { EvalCache, createEvalCache } from "./cache";
@@ -73,7 +71,6 @@ export {
   windowDpmFromDamageByTick,
   scoreFromDamageByTick,
   scoreSummary,
-  scoreSimulation,
   isFiniteEval,
   NON_EXACT_BRANCH_EXACTNESS,
   isNonExactBranchExactness,
@@ -123,8 +120,6 @@ export {
   TIER_BUDGETS,
   TIER_HORIZON_SECONDS,
   preferredAgentCount,
-  TIER_AGENT_COUNT,
-  AGENTS_PER_RECIPE,
   type SolveInput,
   type SolveAsyncHooks,
   type SolvePhaseName,
@@ -173,15 +168,12 @@ export {
   ABSOLUTE_MAX_BAR_SIZE,
   BAR_LENGTH_COUNT,
   clampSolverBarSizes,
-  normalizeSolverBarBounds,
   agentBarLength,
   agentBarSizeBounds,
-  agentCountForBarSizes,
   barLengthSpan,
 } from "./barPolicy";
 export {
   planWorkers,
-  tierAgentCount,
   TIER_MAX_AGENTS,
   SAFE_GLOBAL_AGENT_CEILING,
   RESERVES_UI_CORE,

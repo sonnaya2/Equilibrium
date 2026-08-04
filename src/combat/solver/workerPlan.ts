@@ -34,9 +34,6 @@ export const SAFE_GLOBAL_AGENT_CEILING = 8;
  */
 export const RESERVES_UI_CORE = true;
 
-/** Back-compat alias: historical name meant "how many agents for this tier". */
-export const TIER_AGENT_COUNT: Record<SearchTier, number> = { ...TIER_MAX_AGENTS };
-
 export interface WorkerPlanInput {
   minBarSize: number;
   maxBarSize: number;
@@ -107,11 +104,6 @@ export function preferredAgentCount(tier: SearchTier, hardwareAgents?: number): 
   const reserved = shouldReserveUiCore(tierMax, hw) ? 1 : 0;
   const usable = Math.max(1, hw - reserved);
   return Math.max(1, Math.min(tierMax, usable, SAFE_GLOBAL_AGENT_CEILING));
-}
-
-/** @deprecated alias - same as preferredAgentCount */
-export function tierAgentCount(tier: SearchTier, hardwareAgents?: number): number {
-  return preferredAgentCount(tier, hardwareAgents);
 }
 
 /** Recipes available at each tier (thorough stays ensemble-only). */

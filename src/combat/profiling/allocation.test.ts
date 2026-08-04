@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { EventQueue, type ScheduledEvent } from "../engine/runtime/events";
 import {
-  getAllocationCounters,
   isAllocationProfilingEnabled,
   noteAbilityMapRebuild,
   noteCatalogueArrayRebuild,
@@ -69,7 +68,7 @@ describe("allocation profiling counters", () => {
     q.shift();
     q.cancelBySeq(1);
 
-    const snap = getAllocationCounters();
+    const snap = snapshotAllocationCounters();
     expect(snap.runtimeObjectsCreated).toBe(1);
     expect(snap.abilityMapRebuilds).toBe(1);
     expect(snap.catalogueArrayRebuilds).toBe(1);

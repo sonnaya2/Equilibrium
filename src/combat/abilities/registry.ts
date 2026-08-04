@@ -1,20 +1,37 @@
-import { abilityById, combatAbilities } from "../data";
+import { abilityById } from "../data";
 import type { AbilityCategory, UnlockInfo } from "../data/records";
-import { engineIdForRecord } from "../data/specs";
 import type { AbilitySpec, SupportStatus } from "../pipeline/calculateAbility";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import type { CombatStyle } from "../types";
+import {
+  ENGINE_LINK_OVERRIDES,
+  pickPrimaryRecord,
+  recordsForEngineId,
+  type AbilityLinkKind,
+  validateEngineMap,
+} from "./engineMap";
 
+export type { AbilityLinkKind };
+export { engineIdForRecord, RECORD_TO_ENGINE, ENGINE_LINK_OVERRIDES } from "./engineMap";
+
+/**
+ * One explicit registry entry per engine ability.
+ * Canonical engine ID, primary record, aliases, setup/equipment variants,
+ * replacement group, cast stage, solver eligibility, support status.
+ */
 export interface AbilityRegistryEntry {
   engineId: string;
+  /** Canonical primary data record (null when factory-only). */
   recordId: string | null;
   parentRecordId?: string;
   recordAliases?: readonly string[];
-  linkKind:
-    "canonical" | "record-alias" | "setup-variant" | "equipment-variant" | "cast-stage" | "factory";
+  linkKind: AbilityLinkKind;
+  castStage?: number;
+  replacementGroup?: string;
+  cooldownGroup?: string;
   spec: AbilitySpec;
   style: CombatStyle;
   category: AbilityCategory;
@@ -23,27 +40,6 @@ export interface AbilityRegistryEntry {
   support: { status: SupportStatus | "full"; note?: string };
   /** Eligible for solver by default when fully modeled, not auto, not offGcd, not cast-stage>1. */
   solverEligibleDefault: boolean;
-}
-
-/** Engine id -> primary + alias record ids (from ENGINE_ID_BY_RECORD_ID scan). */
-const RECORDS_BY_ENGINE: ReadonlyMap<string, readonly string[]> = (() => {
-  const map = new Map<string, string[]>();
-  for (const record of combatAbilities.records) {
-    const engineId = engineIdForRecord(record.id);
-    if (!engineId) continue;
-    const list = map.get(engineId) ?? [];
-    list.push(record.id);
-    map.set(engineId, list);
-  }
-  return map;
-})();
-
-/** Prefer the record whose kebab id matches engine snake id (e.g. greater_fury). */
-function pickPrimaryRecord(engineId: string, ids: readonly string[]): string {
-  const expected = engineId.replace(/_/g, "-");
-  const stylePrefixed = ids.find((id) => id.endsWith(`:${expected}`));
-  if (stylePrefixed) return stylePrefixed;
-  return ids[0]!;
 }
 
 function supportOf(spec: AbilitySpec): AbilityRegistryEntry["support"] {
@@ -55,7 +51,7 @@ function supportOf(spec: AbilitySpec): AbilityRegistryEntry["support"] {
 
 function solverEligible(
   spec: AbilitySpec,
-  linkKind: AbilityRegistryEntry["linkKind"],
+  linkKind: AbilityLinkKind,
   castStage?: number,
 ): boolean {
   if (spec.autoAttack) return false;
@@ -78,70 +74,14 @@ function fromRecord(recordId: string | null | undefined): {
   return { level: record.level, unlock: record.unlock, category: record.category };
 }
 
-type LinkOverride = {
-  linkKind: AbilityRegistryEntry["linkKind"];
-  recordId?: string | null;
-  parentRecordId?: string;
-  castStage?: number;
-  forceSolver?: boolean;
-};
-
-const LINK_OVERRIDES: Readonly<Record<string, LinkOverride>> = {
-  adaptive_strike_2h: {
-    linkKind: "setup-variant",
-    recordId: "melee:adaptive-strike",
-    parentRecordId: "melee:adaptive-strike",
-  },
-  adaptive_strike_dw: {
-    linkKind: "setup-variant",
-    recordId: "melee:adaptive-strike",
-    parentRecordId: "melee:adaptive-strike",
-  },
-  overpower_igneous: {
-    linkKind: "equipment-variant",
-    recordId: "melee:overpower",
-    parentRecordId: "melee:overpower",
-  },
-  deadshot_igneous: {
-    linkKind: "equipment-variant",
-    recordId: "ranged:deadshot",
-    parentRecordId: "ranged:deadshot",
-  },
-  omnipower_igneous: {
-    linkKind: "equipment-variant",
-    recordId: "magic:omnipower",
-    parentRecordId: "magic:omnipower",
-  },
-  death_skulls_igneous: {
-    linkKind: "equipment-variant",
-    recordId: "necromancy:death-skulls",
-    parentRecordId: "necromancy:death-skulls",
-  },
-  spectral_scythe_2: {
-    linkKind: "cast-stage",
-    recordId: "necromancy:spectral-scythe",
-    parentRecordId: "necromancy:spectral-scythe",
-    castStage: 2,
-  },
-  spectral_scythe_3: {
-    linkKind: "cast-stage",
-    recordId: "necromancy:spectral-scythe",
-    parentRecordId: "necromancy:spectral-scythe",
-    castStage: 3,
-  },
-  volley_of_souls: {
-    linkKind: "factory",
-    forceSolver: true,
-  },
-};
-
 function buildEntry(spec: AbilitySpec): AbilityRegistryEntry {
-  const override = LINK_OVERRIDES[spec.id];
-  const mapped = RECORDS_BY_ENGINE.get(spec.id) ?? [];
-  const linkKind: AbilityRegistryEntry["linkKind"] = override?.linkKind ?? "canonical";
+  const override = ENGINE_LINK_OVERRIDES[spec.id];
+  const mapped = recordsForEngineId(spec.id);
+  const linkKind: AbilityLinkKind = override?.linkKind ?? "canonical";
   let recordId: string | null = override?.recordId !== undefined ? override.recordId : null;
   let recordAliases: readonly string[] | undefined;
   const parentRecordId = override?.parentRecordId;
+  const castStage = override?.castStage;
 
   if (recordId == null && mapped.length > 0) {
     recordId = pickPrimaryRecord(spec.id, mapped);
@@ -153,7 +93,7 @@ function buildEntry(spec: AbilitySpec): AbilityRegistryEntry {
 
   const meta = fromRecord(recordId ?? parentRecordId);
   const solverEligibleDefault =
-    override?.forceSolver ?? solverEligible(spec, linkKind, override?.castStage);
+    override?.forceSolver ?? solverEligible(spec, linkKind, castStage);
 
   return {
     engineId: spec.id,
@@ -161,6 +101,9 @@ function buildEntry(spec: AbilitySpec): AbilityRegistryEntry {
     parentRecordId,
     recordAliases,
     linkKind,
+    castStage,
+    replacementGroup: spec.replacementGroup,
+    cooldownGroup: spec.cooldownGroup,
     spec,
     style: spec.style,
     category: meta.category ?? spec.category,
@@ -178,6 +121,19 @@ const ENGINE_SPECS_LIST: AbilitySpec[] = [
   ...NECROMANCY_ABILITIES,
   volleyOfSouls(3),
 ];
+
+/** Fail loud on duplicate engine ids at module load. */
+function assertUniqueEngineIds(specs: readonly AbilitySpec[]): void {
+  const seen = new Set<string>();
+  for (const s of specs) {
+    if (seen.has(s.id)) {
+      throw new Error(`ABILITY_REGISTRY: duplicate engine id "${s.id}"`);
+    }
+    seen.add(s.id);
+  }
+}
+
+assertUniqueEngineIds(ENGINE_SPECS_LIST);
 
 export const ABILITY_REGISTRY: readonly AbilityRegistryEntry[] = ENGINE_SPECS_LIST.map(buildEntry);
 
@@ -235,12 +191,36 @@ export function solverPalette(
   }).map((e) => e.spec);
 }
 
-/** Reverse of engineIdForRecord for every mapped ability record. */
-export const ENGINE_ID_BY_RECORD_ID: Readonly<Record<string, string>> = (() => {
-  const out: Record<string, string> = {};
-  for (const record of combatAbilities.records) {
-    const engineId = engineIdForRecord(record.id);
-    if (engineId) out[record.id] = engineId;
+/** Registry/data parity checks for tests and architecture audit. */
+export function validateAbilityRegistry(): string[] {
+  const errors: string[] = [];
+  errors.push(...validateEngineMap(ABILITY_REGISTRY.map((e) => e.engineId)));
+
+  const autosByStyle = new Map<CombatStyle, string[]>();
+  const primaryRecords = new Map<string, string>();
+
+  for (const e of ABILITY_REGISTRY) {
+    if (e.spec.autoAttack) {
+      const list = autosByStyle.get(e.style) ?? [];
+      list.push(e.engineId);
+      autosByStyle.set(e.style, list);
+    }
+    if (e.recordId && e.linkKind === "canonical") {
+      const prev = primaryRecords.get(e.recordId);
+      if (prev && prev !== e.engineId) {
+        errors.push(
+          `duplicate canonical primary record ${e.recordId}: ${prev} and ${e.engineId}`,
+        );
+      }
+      primaryRecords.set(e.recordId, e.engineId);
+    }
   }
-  return out;
-})();
+
+  for (const [style, ids] of autosByStyle) {
+    if (ids.length > 1) {
+      errors.push(`multiple autos for style ${style}: ${ids.join(", ")}`);
+    }
+  }
+
+  return errors;
+}

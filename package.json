@@ -38,6 +38,7 @@
     "audit:data": "npm run data:rebuild && node scripts/data/audit.mjs && npm run data:doctor",
     "audit:architecture": "node scripts/architecture/check.mjs",
     "audit:architecture:self-test": "node scripts/architecture/check.self-test.mjs",
+    "audit:combat-reachability": "node scripts/combat/inventory.mjs",
     "audit:comments": "node scripts/comments/check.mjs",
     "audit:comments:self-test": "node scripts/comments/check.self-test.mjs",
     "audit:release": "node scripts/release/audit-clean-export.mjs",

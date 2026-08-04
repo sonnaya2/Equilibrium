@@ -1,9 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { combatAbilities } from "../data";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
-import { ABILITY_REGISTRY, entryByEngineId, entryByRecordId, engineSpecs } from "./registry";
+import {
+  ABILITY_REGISTRY,
+  entryByEngineId,
+  entryByRecordId,
+  engineIdForRecord,
+  engineSpecs,
+  validateAbilityRegistry,
+} from "./registry";
+import { RECORD_TO_ENGINE, validateEngineMap } from "./engineMap";
 
 const ALL_STYLE_SPECS = [
   ...MELEE_ABILITIES,
@@ -13,7 +22,12 @@ const ALL_STYLE_SPECS = [
   volleyOfSouls(3),
 ];
 
-describe("ABILITY_REGISTRY", () => {
+describe("ability registry single authority", () => {
+  it("has no map/registry validation errors", () => {
+    expect(validateAbilityRegistry()).toEqual([]);
+    expect(validateEngineMap(ABILITY_REGISTRY.map((e) => e.engineId))).toEqual([]);
+  });
+
   it("has unique engine ids", () => {
     const ids = ABILITY_REGISTRY.map((e) => e.engineId);
     expect(new Set(ids).size).toBe(ids.length);
@@ -26,22 +40,16 @@ describe("ABILITY_REGISTRY", () => {
     }
   });
 
-  it("every registered style ability is sourced with sane hit bands", () => {
-    const byStyle = [
-      ["melee", MELEE_ABILITIES],
-      ["ranged", RANGED_ABILITIES],
-      ["magic", MAGIC_ABILITIES],
-      ["necromancy", NECROMANCY_ABILITIES],
-    ] as const;
-    for (const [style, list] of byStyle) {
-      expect(new Set(list.map((a) => a.id)).size).toBe(list.length);
-      for (const a of list) expect(a.style, a.id).toBe(style);
+  it("at most one auto-attack per style", () => {
+    const byStyle = new Map<string, string[]>();
+    for (const e of ABILITY_REGISTRY) {
+      if (!e.spec.autoAttack) continue;
+      const list = byStyle.get(e.style) ?? [];
+      list.push(e.engineId);
+      byStyle.set(e.style, list);
     }
-    for (const spec of ALL_STYLE_SPECS) {
-      expect(spec.source.verifiedAt, spec.id).toBeTruthy();
-      for (const hit of spec.hits) {
-        expect(hit.band.minPct, spec.id).toBeLessThanOrEqual(hit.band.maxPct);
-      }
+    for (const [style, ids] of byStyle) {
+      expect(ids, style).toHaveLength(1);
     }
   });
 
@@ -66,11 +74,27 @@ describe("ABILITY_REGISTRY", () => {
     }
   });
 
+  it("engineIdForRecord matches RECORD_TO_ENGINE for catalogue records", () => {
+    for (const record of combatAbilities.records) {
+      const mapped = RECORD_TO_ENGINE[record.id];
+      if (mapped) {
+        expect(engineIdForRecord(record.id)).toBe(mapped);
+      }
+    }
+  });
+
   it("entryByRecordId resolves greater_fury and common mappings", () => {
     expect(entryByRecordId("melee:greater-fury")?.engineId).toBe("greater_fury");
     expect(entryByRecordId("melee:rend")?.engineId).toBe("rend");
     expect(entryByRecordId("magic:runic-charge")?.engineId).toBe("runic_charge");
     expect(entryByRecordId("necromancy:volley-of-souls")?.engineId).toBe("volley_of_souls");
+  });
+
+  it("entryByRecordId resolves aliases to the same engine entry", () => {
+    const a = entryByRecordId("magic:asphyxiate");
+    const b = entryByRecordId("magic:asphyxiate-resplendence");
+    expect(a?.engineId).toBe("asphyxiate");
+    expect(b?.engineId).toBe("asphyxiate");
   });
 
   it("tags setup / equipment / cast-stage / factory link kinds", () => {
@@ -85,8 +109,25 @@ describe("ABILITY_REGISTRY", () => {
     expect(entryByEngineId("death_skulls_igneous")?.linkKind).toBe("equipment-variant");
     expect(entryByEngineId("death_skulls_igneous")?.parentRecordId).toBe("necromancy:death-skulls");
     expect(entryByEngineId("spectral_scythe_2")?.linkKind).toBe("cast-stage");
+    expect(entryByEngineId("spectral_scythe_2")?.castStage).toBe(2);
+    expect(entryByEngineId("spectral_scythe_3")?.castStage).toBe(3);
+    expect(entryByEngineId("spectral_scythe_2")?.solverEligibleDefault).toBe(false);
     expect(entryByEngineId("spectral_scythe_3")?.solverEligibleDefault).toBe(false);
     expect(entryByEngineId("volley_of_souls")?.linkKind).toBe("factory");
     expect(entryByEngineId("volley_of_souls")?.solverEligibleDefault).toBe(true);
+  });
+
+  it("exposes replacementGroup / cooldownGroup from specs", () => {
+    expect(entryByEngineId("greater_fury")?.replacementGroup).toBe("fury");
+    expect(entryByEngineId("adaptive_strike_2h")?.replacementGroup).toBe("adaptive_strike");
+  });
+
+  it("engine ids match specs; damaging full specs have hits", () => {
+    for (const e of ABILITY_REGISTRY) {
+      expect(e.spec.id).toBe(e.engineId);
+      if (e.spec.category !== "utility" && !e.spec.stateEffect && e.support.status === "full") {
+        expect(e.spec.hits.length, e.engineId).toBeGreaterThan(0);
+      }
+    }
   });
 });

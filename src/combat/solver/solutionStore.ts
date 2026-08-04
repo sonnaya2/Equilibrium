@@ -21,11 +21,9 @@ import {
   TIER_BAR_SIZE_BOUNDS as TIER_BAR_SIZE_BOUNDS_POLICY,
   agentBarLength,
   agentBarSizeBounds,
-  agentCountForBarSizes,
   barLengthSpan,
   clampSolverBarSizes,
 } from "./barPolicy";
-import { tierAgentCount } from "./workerPlan";
 
 export const REVO_SOLVE_CACHE_KEY = "eq:revo-solve:v2";
 /** @deprecated read-only migration from pre-hash storage */
@@ -39,11 +37,9 @@ export {
   MIN_SOLVER_BAR_SIZE,
   agentBarLength,
   agentBarSizeBounds,
-  agentCountForBarSizes,
   barLengthSpan,
   clampSolverBarSizes,
 };
-export { tierAgentCount };
 
 // Re-export identity helpers so existing imports from solutionStore keep working.
 export {

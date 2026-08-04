@@ -20,8 +20,6 @@ export const MONOLITH_EXTENDED_REGION: RegionId = "anachronia";
 
 export type ArchRelicCategory = "combat" | "skilling" | "luck" | "experience" | "other";
 export type ArchaeologyRelicImplementation = "full" | "energy-only";
-/** @deprecated alias */
-export type ArchRelicImplementation = ArchaeologyRelicImplementation;
 
 export const ARCH_CATEGORY_ORDER: readonly ArchRelicCategory[] = [
   "combat",

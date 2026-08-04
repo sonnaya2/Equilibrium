@@ -24,8 +24,6 @@ export {
   type SolverProfileSnapshot,
 } from "./counters";
 
-export { isSolverProfileEnabled as isSolverProfilingEnabled } from "./counters";
-
 import {
   beginSearchProfileWindow,
   clearActiveSolverProfile,
@@ -58,6 +56,3 @@ export function getSolverDuplicateCounters(): SolverProfileSnapshot {
   const c = getActiveSolverProfile();
   return snapshotProfile(c ?? createProfileCounters(false));
 }
-
-/** Alias type for Phase 0 naming. */
-export type SolverDuplicateCounters = SolverProfileSnapshot;

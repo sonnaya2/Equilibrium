@@ -96,9 +96,6 @@ export function expectedDamageOnSuccess(branches: readonly Branch[]): number {
   return ok.reduce((s, b) => s + b.weight * b.rt.totalExpected, 0) / w;
 }
 
-/** @deprecated Use expectedDamageUnconditional or expectedDamageOnSuccess. */
-export const expectedDamage = expectedDamageOnSuccess;
-
 export function expectedAdrenaline(branches: readonly Branch[]): number {
   const ok = branches.filter((b) => b.error === undefined);
   const w = massOf(ok);

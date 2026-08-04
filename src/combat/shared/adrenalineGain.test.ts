@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  isAdrenalineGeneratingBasic,
   isBasicAttack,
   isGeneratingBasicAbility,
   resolveAbilityAdrenalineGain,
@@ -32,7 +31,7 @@ describe("eligibility", () => {
     expect(isGeneratingBasicAbility({ category: "basic", adrenaline: { gain: 0 } })).toBe(
       false,
     );
-    expect(isAdrenalineGeneratingBasic({ category: "threshold", adrenaline: { gain: 9 } })).toBe(
+    expect(isGeneratingBasicAbility({ category: "threshold", adrenaline: { gain: 9 } })).toBe(
       false,
     );
   });

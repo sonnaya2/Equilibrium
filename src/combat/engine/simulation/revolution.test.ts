@@ -107,13 +107,9 @@ describe("resolveBar", () => {
 });
 
 describe("specFromRecord", () => {
-  it("builds multi-hit specs from explicit record structure only", () => {
+  it("rejects multi-hit records (no band-N fabrication)", () => {
     const record = abilityRecord("magic:greater-concentrated-blast");
-    const spec = required(specFromRecord(record), `Could not model ${record.id}`);
-    expect(spec.hits).toHaveLength(3);
-    expect(spec.hits[0].band).toEqual({ minPct: 40, maxPct: 50 });
-    expect(spec.adrenaline).toEqual({ gain: 9 });
-    expect(spec.cooldownSeconds).toBeCloseTo(5.4, 5);
+    expect(specFromRecord(record)).toBeNull();
   });
 
   it("returns null for bandless records instead of fabricating damage", () => {

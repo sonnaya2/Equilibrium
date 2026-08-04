@@ -4,6 +4,7 @@ import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord, SimulationDetailLevel } from "../simulation/contracts";
 import { resolveDetailLevel } from "../simulation/contracts";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
+import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
 import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
@@ -78,12 +79,7 @@ export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string,
     if (prev) {
       // Catalogue/bar merges may list the same id twice. Silent overwrite is
       // banned: keep the first registration, throw when a later entry conflicts.
-      if (
-        prev.name !== ability.name ||
-        prev.style !== ability.style ||
-        prev.hits.length !== ability.hits.length ||
-        (prev.category ?? "") !== (ability.category ?? "")
-      ) {
+      if (abilityBehaviorFingerprint(prev) !== abilityBehaviorFingerprint(ability)) {
         throw new Error(`Duplicate ability id in runtime registry: ${ability.id}`);
       }
       continue;

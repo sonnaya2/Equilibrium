@@ -8,7 +8,6 @@ import {
   appendWithIntermediateCap,
   mergeAndCapBranches,
   MAX_LIVE_BRANCHES,
-  MAX_INTERMEDIATE_BRANCHES,
   noteBranchLiveCount,
   snapshotRuntime,
   type Branch,

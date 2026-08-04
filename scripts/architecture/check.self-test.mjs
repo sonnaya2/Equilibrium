@@ -15,6 +15,10 @@ import {
   isUiSurface,
   stripComments,
 } from "./detect.mjs";
+import {
+  BARREL_BANNED_STAR_PREFIXES,
+  isBannedBarrelStarExport,
+} from "./public-api.mjs";
 
 const ROOT = process.cwd();
 let failed = 0;
@@ -26,6 +30,50 @@ function assert(cond, msg) {
   } else {
     console.log(`[OK] ${msg}`);
   }
+}
+
+assert(
+  BARREL_BANNED_STAR_PREFIXES.some((p) => p.includes("styles/melee/abilities")),
+  "public-api bans style catalogue star-exports",
+);
+assert(
+  BARREL_BANNED_STAR_PREFIXES.some((p) => p.includes("engine/cast")),
+  "public-api bans engine/cast star-exports",
+);
+assert(
+  BARREL_BANNED_STAR_PREFIXES.some((p) => p.includes("engine/runtime/state")),
+  "public-api bans engine/runtime/state star-exports",
+);
+assert(
+  BARREL_BANNED_STAR_PREFIXES.some((p) => p.includes("shared/damageProvenance")),
+  "public-api bans damageProvenance star-exports",
+);
+
+// Barrel-leakage string fixture (mirrors check.mjs star-export scan)
+{
+  const fixture = [
+    `export * from "./core/ticks";`,
+    `export * from "./styles/melee/abilities";`,
+    `export * from "./engine/runtime/state";`,
+    `export * from "./shared/damageProvenance";`,
+    `export { simulate } from "./engine/simulation/simulate";`,
+  ].join("\n");
+  /** @type {string[]} */
+  const leaks = [];
+  for (const line of fixture.split("\n")) {
+    const m = line.match(/export \* from ["']\.\/([^"']+)["']/);
+    if (!m) continue;
+    const mod = `src/combat/${m[1]}`;
+    if (isBannedBarrelStarExport(mod)) leaks.push(mod);
+  }
+  assert(leaks.includes("src/combat/styles/melee/abilities"), "barrel fixture catches style star");
+  assert(leaks.includes("src/combat/engine/runtime/state"), "barrel fixture catches runtime/state star");
+  assert(
+    leaks.includes("src/combat/shared/damageProvenance"),
+    "barrel fixture catches damageProvenance star",
+  );
+  assert(!leaks.includes("src/combat/core/ticks"), "barrel fixture allows core star");
+  assert(leaks.length === 3, "barrel fixture only flags banned stars");
 }
 
 assert(

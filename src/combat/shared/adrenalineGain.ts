@@ -27,9 +27,6 @@ export function isGeneratingBasicAbility(ability: AbilityAdrenalineShape): boole
   return ability.category === "basic" || !!ability.autoAttack;
 }
 
-/** @deprecated Prefer isGeneratingBasicAbility */
-export const isAdrenalineGeneratingBasic = isGeneratingBasicAbility;
-
 export interface AdrenalineGainRules {
   /** Fury of the Small: +1 on generating basics (before Invigorating). */
   basicAdrenalineFlatBonus?: number;

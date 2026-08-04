@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   CONSERVATION_OF_ENERGY_ID,
   CONSERVATION_OF_ENERGY_REFUND,
-  conservationOfEnergyQualifies,
+  ultimateAdrenalineRefundQualifies,
   resolveUltimateAdrenalineRefunds,
 } from "./conservationOfEnergy";
 import { RING_OF_VIGOUR_REFUND } from "./ringOfVigour";
@@ -14,20 +14,20 @@ describe("conservationOfEnergy", () => {
   });
 
   it("qualifies ultimates other than onslaught", () => {
-    expect(conservationOfEnergyQualifies({ id: "berserk", category: "ultimate" })).toBe(
+    expect(ultimateAdrenalineRefundQualifies({ id: "berserk", category: "ultimate" })).toBe(
       true,
     );
-    expect(conservationOfEnergyQualifies({ id: "overpower", category: "ultimate" })).toBe(
+    expect(ultimateAdrenalineRefundQualifies({ id: "overpower", category: "ultimate" })).toBe(
       true,
     );
   });
 
   it("rejects thresholds, basics, and onslaught", () => {
     expect(
-      conservationOfEnergyQualifies({ id: "assault", category: "threshold" }),
+      ultimateAdrenalineRefundQualifies({ id: "assault", category: "threshold" }),
     ).toBe(false);
-    expect(conservationOfEnergyQualifies({ id: "attack", category: "basic" })).toBe(false);
-    expect(conservationOfEnergyQualifies({ id: "onslaught", category: "ultimate" })).toBe(
+    expect(ultimateAdrenalineRefundQualifies({ id: "attack", category: "basic" })).toBe(false);
+    expect(ultimateAdrenalineRefundQualifies({ id: "onslaught", category: "ultimate" })).toBe(
       false,
     );
   });

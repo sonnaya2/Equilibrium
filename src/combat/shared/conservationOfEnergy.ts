@@ -30,9 +30,6 @@ export function ultimateAdrenalineRefundQualifies(ability: {
   return !ONSLAUGHT_ABILITY_IDS.has(ability.id);
 }
 
-/** Alias kept for older call sites / tests. */
-export const conservationOfEnergyQualifies = ultimateAdrenalineRefundQualifies;
-
 /**
  * CoE vs RoV ultimate grants for one cast.
  * Explicit fields only: conservationOfEnergyRefund + ringOfVigour.

@@ -6,6 +6,11 @@ import {
 } from "./availability";
 
 describe("data/availability", () => {
+  it("missing unlock → unknown", () => {
+    expect(resolveAvailability(undefined)).toBe("unknown");
+    expect(resolveAvailability(null)).toBe("unknown");
+  });
+
   it("level empty regions is global; codex empty is unknown", () => {
     expect(resolveAvailability({ type: "level", regions: [] })).toBe("global");
     expect(resolveAvailability({ type: "codex", regions: [] })).toBe("unknown");
@@ -16,12 +21,54 @@ describe("data/availability", () => {
     expect(resolveAvailability({ type: "removed", regions: [] })).toBe("removed");
   });
 
-  it("any vs all region modes", () => {
+  it("explicit availability overrides inference", () => {
+    expect(
+      resolveAvailability({
+        type: "codex",
+        regions: [],
+        availability: "global",
+      }),
+    ).toBe("global");
+    expect(
+      resolveAvailability({
+        type: "level",
+        regions: ["desert"],
+        availability: "unknown",
+      }),
+    ).toBe("unknown");
+  });
+
+  it("resolveRegionMode defaults to any and honours regionMode", () => {
     expect(resolveRegionMode(undefined)).toBe("any");
+    expect(resolveRegionMode({ type: "level", regions: ["a", "b"] })).toBe("any");
+    expect(resolveRegionMode({ type: "drop", regions: ["a", "b"], regionMode: "all" })).toBe(
+      "all",
+    );
+  });
+
+  it("any vs all region modes", () => {
     const anyUnlock = { type: "codex" as const, regions: ["a", "b"] as const };
     const allUnlock = { ...anyUnlock, regionMode: "all" as const };
     expect(isObtainableInRegions(anyUnlock, ["a"]).obtainable).toBe(true);
     expect(isObtainableInRegions(allUnlock, ["a"]).obtainable).toBe(false);
     expect(isObtainableInRegions(allUnlock, ["a", "b"]).obtainable).toBe(true);
+  });
+
+  it("global always obtainable; removed never", () => {
+    expect(isObtainableInRegions({ type: "level", regions: [] }, [])).toEqual({
+      obtainable: true,
+      availability: "global",
+    });
+    const removed = isObtainableInRegions({ type: "removed", regions: [] }, ["misthalin"]);
+    expect(removed.obtainable).toBe(false);
+    expect(removed.availability).toBe("removed");
+  });
+
+  it("unknown only with includeUnknown", () => {
+    const unlock = { type: "codex" as const, regions: [] as const };
+    expect(isObtainableInRegions(unlock, ["misthalin"]).obtainable).toBe(false);
+    expect(isObtainableInRegions(unlock, ["misthalin"], { includeUnknown: true }).obtainable).toBe(
+      true,
+    );
   });
 });

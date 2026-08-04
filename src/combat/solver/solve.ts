@@ -36,7 +36,7 @@ export const TIER_HORIZON_SECONDS: Record<
 };
 
 /** Tier MAX ceilings - Thorough 4 · Extreme 6 · Unhinged 8 (see workerPlan). */
-export { TIER_AGENT_COUNT, preferredAgentCount } from "./workerPlan";
+export { preferredAgentCount } from "./workerPlan";
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
   const evaluationBudget = TIER_BUDGETS[tier];
@@ -87,9 +87,6 @@ export function configForTier(tier: SolveTier, seed = 1): SearchConfig {
  * (thorough: default only; extreme: +evo; unhinged: +anneal).
  */
 export type SolverAgentRecipe = "default" | "evolutionary" | "anneal_local";
-
-/** @deprecated legacy block size - planner no longer requires blocks of 6. */
-export const AGENTS_PER_RECIPE = 6;
 
 export function agentSearchRecipe(agentIndex: number, tier?: SolveTier): SolverAgentRecipe {
   // Delegate to planner so UI labels match pool assignments.

@@ -96,7 +96,6 @@ describe("score-only oracle parity (gate)", () => {
     // Residual stays 0; exactness is approximated so full robust ranking cannot claim exact.
     // Full-analysis still multi-branches (may residual under live cap).
     const abilities = MELEE_ABILITIES;
-    const pool = buildCandidatePool(abilities, "melee");
     const sim = {
       base: 1000,
       level: 99,

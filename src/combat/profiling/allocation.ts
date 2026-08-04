@@ -75,11 +75,6 @@ export function snapshotAllocationCounters(): AllocationCounters {
   return { ...allocationCounters };
 }
 
-/** Alias of snapshotAllocationCounters. */
-export function getAllocationCounters(): AllocationCounters {
-  return snapshotAllocationCounters();
-}
-
 export function noteRuntimeCreated(): void {
   if (!enabled) return;
   allocationCounters.runtimeObjectsCreated += 1;

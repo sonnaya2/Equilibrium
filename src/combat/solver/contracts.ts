@@ -266,7 +266,13 @@ export interface PoolAbility {
   occupancyTicks?: number;
   cooldownTicks?: number;
   supportStatus?: "partially-modeled" | "not-modeled" | "mechanics-unverified";
-  weaponRequirement?: "twohand" | "dualwield" | "mainhand" | "conduit" | "death-guard-and-conduit";
+  weaponRequirement?:
+    | "twohand"
+    | "dualwield"
+    | "mainhand"
+    | "mainhand-empty"
+    | "conduit"
+    | "death-guard-and-conduit";
   requiredEquipmentAnyOf?: readonly string[];
   requiredPassiveAnyOf?: readonly string[];
 }

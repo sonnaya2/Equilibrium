@@ -49,9 +49,52 @@ export const GREATER_FURY_CRIT_WINDOW_SECONDS = 15;
 export const METEOR_STRIKE_ADREN_BUFF_SECONDS = 30;
 /** Dismember chain: a recast must land within this window of the previous cast. */
 export const BLEED_CHAIN_RECAST_WINDOW_TICKS = 40;
-/** Punish: ×2.5 when the target is below 50% life points (wiki, verified 2026-07-31). */
+/** Punish: x2.5 when the target is below 50% life points (wiki, verified 2026-07-31). */
 export const PUNISH_LOW_HP_MULTIPLIER = 2.5;
 export const PUNISH_LOW_HP_THRESHOLD_PCT = 50;
+
+/** Wiki Adaptive Strike: MH empty OH and 2h share this ST band (cone multi = ST scope). */
+export const ADAPTIVE_STRIKE_PRIMARY_BAND = { minPct: 120, maxPct: 140 } as const;
+/** Wiki Adaptive Strike dual-wield: each of two hits. */
+export const ADAPTIVE_STRIKE_DW_HIT_BAND = { minPct: 60, maxPct: 75 } as const;
+
+export type AdaptiveStrikeWeaponConfiguration =
+  | "twohand"
+  | "dualwield"
+  | "mainhand"
+  | "shield"
+  | "defender"
+  | "necromancy";
+
+/**
+ * Legal Adaptive Strike engine form for a resolved weapon shape.
+ * Shield / defender / necro / unknown => no form (null).
+ * Manual / Revo / solver must use this; never re-read UI slots in the engine.
+ */
+export function adaptiveStrikeEngineId(
+  weaponConfiguration: AdaptiveStrikeWeaponConfiguration | undefined,
+): string | null {
+  switch (weaponConfiguration) {
+    case "twohand":
+      return "adaptive_strike_2h";
+    case "dualwield":
+      return "adaptive_strike_dw";
+    case "mainhand":
+      return "adaptive_strike_mh";
+    default:
+      return null;
+  }
+}
+
+/** Wiki bar setup string -> weapon shape when loadout config is not supplied. */
+export function weaponConfigurationFromBarSetup(
+  setup?: string,
+): AdaptiveStrikeWeaponConfiguration | undefined {
+  if (!setup || setup === "Any") return undefined;
+  if (setup === "Two-handed") return "twohand";
+  if (setup === "Dual wield" || setup === "Dual-wield") return "dualwield";
+  return undefined;
+}
 
 export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {
@@ -67,31 +110,47 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     source: wikiAbility("Attack (ability)", "Attack_(ability)"),
   },
   {
-    // Wiki Adaptive Strike: +12% adrenaline, 5.4s CD, 2h 120-140 / DW 2x 60-75.
+    // Wiki Adaptive Strike: +12% adren, 5.4s CD; MH empty OH / 2h 120-140; DW 2x 60-75.
     id: "adaptive_strike_2h",
     name: "Adaptive Strike (two-handed)",
     style: "melee",
     category: "basic",
-    hits: [{ band: { minPct: 120, maxPct: 140 } }],
+    hits: [{ band: { ...ADAPTIVE_STRIKE_PRIMARY_BAND } }],
     adrenaline: { gain: 12 },
     cooldownSeconds: 5.4,
     bloodlustGain: 1,
     weaponRequirement: "twohand",
     replacementGroup: "adaptive_strike",
-    source: wikiAbility("Adaptive Strike", "Adaptive_Strike"),
+    source: wikiAbility("Adaptive Strike", "Adaptive_Strike", "2026-08-04"),
+  },
+  {
+    id: "adaptive_strike_mh",
+    name: "Adaptive Strike (main-hand)",
+    style: "melee",
+    category: "basic",
+    hits: [{ band: { ...ADAPTIVE_STRIKE_PRIMARY_BAND } }],
+    adrenaline: { gain: 12 },
+    cooldownSeconds: 5.4,
+    bloodlustGain: 1,
+    weaponRequirement: "mainhand-empty",
+    replacementGroup: "adaptive_strike",
+    source: wikiAbility("Adaptive Strike", "Adaptive_Strike", "2026-08-04"),
   },
   {
     id: "adaptive_strike_dw",
     name: "Adaptive Strike (dual wield)",
     style: "melee",
     category: "basic",
-    hits: [{ band: { minPct: 60, maxPct: 75 } }, { band: { minPct: 60, maxPct: 75 } }],
+    hits: [
+      { band: { ...ADAPTIVE_STRIKE_DW_HIT_BAND } },
+      { band: { ...ADAPTIVE_STRIKE_DW_HIT_BAND } },
+    ],
     adrenaline: { gain: 12 },
     cooldownSeconds: 5.4,
     bloodlustGain: 1,
     weaponRequirement: "dualwield",
     replacementGroup: "adaptive_strike",
-    source: wikiAbility("Adaptive Strike", "Adaptive_Strike"),
+    source: wikiAbility("Adaptive Strike", "Adaptive_Strike", "2026-08-04"),
   },
   {
     id: "rend",

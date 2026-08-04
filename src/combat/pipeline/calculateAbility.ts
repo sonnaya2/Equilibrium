@@ -98,7 +98,13 @@ export interface AbilitySpec {
    * requires an off-hand conduit). `"death-guard-and-conduit"` is full dual
    * necro shape. Other styles use twohand / dualwield / mainhand.
    */
-  weaponRequirement?: "twohand" | "dualwield" | "mainhand" | "conduit" | "death-guard-and-conduit";
+  weaponRequirement?:
+    | "twohand"
+    | "dualwield"
+    | "mainhand"
+    | "mainhand-empty"
+    | "conduit"
+    | "death-guard-and-conduit";
   /** At least one of these catalogue items must be equipped. */
   requiredEquipmentAnyOf?: readonly string[];
   /**

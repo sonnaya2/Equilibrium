@@ -8,6 +8,7 @@ import type { HitCapRule } from "../core/hitCaps";
 import type { CombatContext, CombatStyle } from "../types";
 import { combatRevolutionBars } from "../data";
 import { revoManagedSlots } from "../data/specs";
+import { weaponConfigurationFromBarSetup } from "../styles/melee/abilities";
 import { engineSpecs } from "../abilities/registry";
 import {
   defaultSerializableRequest,
@@ -175,11 +176,16 @@ export function resolvePackSimBase(input: {
   throw new Error("packSolverRequest requires model or snapshot");
 }
 
-function staticSeedBars(style: CombatStyle): AuthoredSeedBar[] {
+function staticSeedBars(
+  style: CombatStyle,
+  weaponConfiguration?: SerializableRevolutionSimBase["weaponConfiguration"],
+): AuthoredSeedBar[] {
   return combatRevolutionBars.records
     .filter((b) => b.style === style && b.supported && (b.target == null || b.target === "single"))
     .map((b) => {
-      const ids = revoManagedSlots(b, engineSpecs)
+      // Prefer loadout shape; fall back to wiki bar setup for Adaptive form.
+      const shape = weaponConfiguration ?? weaponConfigurationFromBarSetup(b.setup);
+      const ids = revoManagedSlots(b, engineSpecs, shape)
         .filter((s) => s.modelledBy === "engine" && s.spec)
         .map((s) => s.spec!.id);
       return { id: b.id, abilityIds: ids, baseline: b.mode === "revo++" };
@@ -230,7 +236,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],
     ruleset,
     now,
-    authoredSeedBars: staticSeedBars(style),
+    authoredSeedBars: staticSeedBars(style, simBase.weaponConfiguration),
     userBar: input.userBar,
   });
 }

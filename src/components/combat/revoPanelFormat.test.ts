@@ -453,7 +453,23 @@ describe("revoBarResolve", () => {
     const bar = pickBarForLoadout("melee", "dualwield") ?? pickBarForLoadout("melee");
     expect(bar).toBeDefined();
     expect(bar!.style).toBe("melee");
-    const modelled = revoManagedModelled(bar!);
+    const modelled = revoManagedModelled(bar!, "dualwield");
     expect(Array.isArray(modelled)).toBe(true);
+    expect(modelled.some((s) => s.id === "adaptive_strike_dw")).toBe(true);
+  });
+
+  it("mainhand loadout selects Adaptive MH even when dual reference bar is picked", () => {
+    const bar = pickBarForLoadout("melee", "mainhand");
+    expect(bar).toBeDefined();
+    const modelled = revoManagedModelled(bar!, "mainhand");
+    const adaptive = modelled.filter((s) => s.replacementGroup === "adaptive_strike");
+    expect(adaptive.map((s) => s.id)).toEqual(["adaptive_strike_mh"]);
+  });
+
+  it("shield loadout does not model any Adaptive form", () => {
+    const bar = pickBarForLoadout("melee", "shield");
+    expect(bar).toBeDefined();
+    const modelled = revoManagedModelled(bar!, "shield");
+    expect(modelled.every((s) => s.replacementGroup !== "adaptive_strike")).toBe(true);
   });
 });

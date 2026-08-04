@@ -1,5 +1,10 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { engineIdForRecord as mapEngineId } from "../abilities/engineMap";
+import {
+  adaptiveStrikeEngineId,
+  weaponConfigurationFromBarSetup,
+  type AdaptiveStrikeWeaponConfiguration,
+} from "../styles/melee/abilities";
 import { abilityById } from "./index";
 import type { AbilityRecord, RevolutionBarRecord } from "./records";
 
@@ -65,19 +70,28 @@ export interface ResolvedSlot {
 /**
  * Resolves one bar slot: engine spec first, record adapter only when
  * mechanically complete single-hit, else unmodelled.
+ *
+ * Adaptive Strike: prefer `weaponConfiguration` from the loadout/sim; fall back
+ * to mapped wiki bar setup ("Two-handed" / "Dual wield"). "Any" / missing needs
+ * an explicit weaponConfiguration from the caller.
  */
 export function resolveBarSlot(
   slot: { name: string; abilityId: string | null },
   engineSpecs: ReadonlyMap<string, AbilitySpec>,
   barStyle: AbilitySpec["style"],
   setup?: string,
+  weaponConfiguration?: AdaptiveStrikeWeaponConfiguration,
 ): ResolvedSlot {
   if (slot.abilityId == null) return { name: slot.name, modelledBy: "unmodelled", spec: null };
 
   if (slot.abilityId === "melee:adaptive-strike") {
-    const engineId = setup === "Two-handed" ? "adaptive_strike_2h" : "adaptive_strike_dw";
-    const spec = engineSpecs.get(engineId);
-    if (spec) return { name: slot.name, modelledBy: "engine", spec };
+    const config = weaponConfiguration ?? weaponConfigurationFromBarSetup(setup);
+    const engineId = adaptiveStrikeEngineId(config);
+    if (engineId) {
+      const spec = engineSpecs.get(engineId);
+      if (spec) return { name: slot.name, modelledBy: "engine", spec };
+    }
+    return { name: slot.name, modelledBy: "unmodelled", spec: null };
   }
   const engineId = mapEngineId(slot.abilityId) ?? slot.abilityId;
   const engineSpec = engineSpecs.get(engineId);
@@ -95,14 +109,18 @@ export function resolveBarSlot(
 export function resolveBar(
   bar: RevolutionBarRecord,
   engineSpecs: ReadonlyMap<string, AbilitySpec>,
+  weaponConfiguration?: AdaptiveStrikeWeaponConfiguration,
 ): ResolvedSlot[] {
-  return bar.slots.map((slot) => resolveBarSlot(slot, engineSpecs, bar.style, bar.setup));
+  return bar.slots.map((slot) =>
+    resolveBarSlot(slot, engineSpecs, bar.style, bar.setup, weaponConfiguration),
+  );
 }
 
 /** Wiki hybrid bars list keybind slots past revolutionSize; only the prefix is auto-fired. */
 export function revoManagedSlots(
   bar: RevolutionBarRecord,
   engineSpecs: ReadonlyMap<string, AbilitySpec>,
+  weaponConfiguration?: AdaptiveStrikeWeaponConfiguration,
 ): ResolvedSlot[] {
-  return resolveBar(bar, engineSpecs).slice(0, bar.revolutionSize);
+  return resolveBar(bar, engineSpecs, weaponConfiguration).slice(0, bar.revolutionSize);
 }

@@ -18,6 +18,7 @@ describe("solver pool weapon-shape gates (melee catalogue)", () => {
     expect(pool.byId.has("flurry")).toBe(false);
     expect(pool.byId.has("greater_flurry")).toBe(false);
     expect(pool.byId.has("adaptive_strike_dw")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_mh")).toBe(false);
     // Shared abilities stay legal.
     expect(pool.byId.has("assault")).toBe(true);
     expect(pool.byId.has("berserk")).toBe(true);
@@ -33,6 +34,7 @@ describe("solver pool weapon-shape gates (melee catalogue)", () => {
     expect(pool.byId.has("hurricane")).toBe(false);
     expect(pool.byId.has("pulverise")).toBe(false);
     expect(pool.byId.has("adaptive_strike_2h")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_mh")).toBe(false);
   });
 
   it("main-hand (no off-hand) excludes both dual-wield-only and two-hand-only", () => {
@@ -42,15 +44,21 @@ describe("solver pool weapon-shape gates (melee catalogue)", () => {
     expect(pool.byId.has("flurry")).toBe(false);
     expect(pool.byId.has("hurricane")).toBe(false);
     expect(pool.byId.has("pulverise")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_mh")).toBe(true);
+    expect(pool.byId.has("adaptive_strike_2h")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_dw")).toBe(false);
     expect(pool.byId.has("assault")).toBe(true);
   });
 
-  it("defender counts as dual-wield for dual-only abilities", () => {
+  it("defender counts as dual-wield for Flurry but not Adaptive Strike", () => {
     const pool = buildCandidatePool(MELEE_ABILITIES, "melee", {
       weaponConfiguration: "defender",
     });
     expect(pool.byId.has("flurry")).toBe(true);
     expect(pool.byId.has("hurricane")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_dw")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_mh")).toBe(false);
+    expect(pool.byId.has("adaptive_strike_2h")).toBe(false);
   });
 
   it("bars with illegal weapon-shaped ids are not eligible under the loadout shape", () => {

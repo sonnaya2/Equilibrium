@@ -80,22 +80,25 @@ export function pickBarForLoadout(
   return pool.find((b) => b.setup === "Any") ?? pool.find((b) => b.mode === "revo++") ?? pool[0];
 }
 
+type WeaponShape = CalcStats["weaponConfiguration"] | Loadout["weaponConfiguration"] | undefined;
+
 /**
  * Revo-managed ability specs for the sim only (not manual keybind tail).
- * Prefers specs.revoManagedSlots when that export lands; otherwise first N slots.
+ * Prefer loadout/sim weaponConfiguration for Adaptive Strike form selection.
  */
-export function revoManagedModelled(bar: RevoBarView): AbilitySpec[] {
+export function revoManagedModelled(bar: RevoBarView, weaponConfiguration?: WeaponShape): AbilitySpec[] {
   const helper = (
     combatSpecs as {
       revoManagedSlots?: (
         bar: RevolutionBarRecord,
         engine: ReadonlyMap<string, AbilitySpec>,
+        weaponConfiguration?: WeaponShape,
       ) => AbilitySpec[] | ResolvedSlot[];
     }
   ).revoManagedSlots;
 
   if (typeof helper === "function") {
-    const out = helper(bar, ENGINE_SPECS);
+    const out = helper(bar, ENGINE_SPECS, weaponConfiguration);
     if (out.length === 0) return [];
     const first = out[0] as AbilitySpec | ResolvedSlot;
     if (first && typeof first === "object" && "spec" in first) {
@@ -104,7 +107,7 @@ export function revoManagedModelled(bar: RevoBarView): AbilitySpec[] {
     return out as AbilitySpec[];
   }
 
-  return resolveBar(bar, ENGINE_SPECS)
+  return resolveBar(bar, ENGINE_SPECS, weaponConfiguration)
     .slice(0, bar.revolutionSize)
     .filter((slot) => slot.spec !== null)
     .map((slot) => slot.spec!);

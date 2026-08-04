@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   MAX_FIREMAKING_LEVEL,
   formatRingOfVigourSources,
@@ -25,7 +25,7 @@ import {
   type BlessingPath,
   type BlessingSupportStatus,
 } from "@/league/blessings";
-import { isRegionUnlocked } from "@/league";
+import { isRegionUnlocked, REGION_IDS } from "@/league";
 import relicsData from "#shard/league/relics.json";
 import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
@@ -273,11 +273,15 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
   const standardPrayers = prayerOptions.filter((opt) => opt.book === "standard");
   const ancientPrayers = prayerOptions.filter((opt) => opt.book === "ancient");
 
-  const setBuffs = (patch: Partial<Loadout["buffs"]>) =>
-    setLoadout((prev) => withLoadoutBuffs(prev, patch));
   const powerburstActive = isPowerburstOfVitalityActive(loadout);
   const powerburstReady = isPowerburstOfVitalityReady(loadout);
   const { build, loaded: buildLoaded, pickBlessing, toggleRelic } = useBuild();
+  const unlockedRegions = useMemo(
+    () => REGION_IDS.filter((id) => isRegionUnlocked(build, id)),
+    [build],
+  );
+  const setBuffs = (patch: Partial<Loadout["buffs"]>) =>
+    setLoadout((prev) => withLoadoutBuffs(prev, patch, unlockedRegions));
   const revealedBlessingTiers = PATH_TIERS.filter(blessingTierRevealed);
   const godAlignment = deriveGodTier(build.blessingPicks.slice(0, 3));
   const godBlessing = godAlignment ? blessingChoice(4, godAlignment) : undefined;
@@ -298,7 +302,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
   // Region removed: clear persisted passive so it cannot re-activate without Anachronia.
   useEffect(() => {
     if (!anachroniaUnlocked && loadout.buffs.ringOfVigourPassive) {
-      setLoadout((prev) => withLoadoutBuffs(prev, { ringOfVigourPassive: false }));
+      setLoadout((prev) => withLoadoutBuffs(prev, { ringOfVigourPassive: false }, unlockedRegions));
     }
     // Narrow deps: only region unlock + passive flag, not every loadout field.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -307,7 +311,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
   // Helmet stand needs Anachronia (tier-3 Lodge). Equipped helmet is unaffected.
   useEffect(() => {
     if (!anachroniaUnlocked && loadout.buffs.slayerHelmetStand != null) {
-      setLoadout((prev) => withLoadoutBuffs(prev, { slayerHelmetStand: null }));
+      setLoadout((prev) => withLoadoutBuffs(prev, { slayerHelmetStand: null }, unlockedRegions));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [anachroniaUnlocked, loadout.buffs.slayerHelmetStand]);

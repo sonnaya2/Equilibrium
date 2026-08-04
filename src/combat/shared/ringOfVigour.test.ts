@@ -162,6 +162,61 @@ describe("helpers", () => {
   });
 });
 
+describe("Ring of Vigour invariants (SSOT pins)", () => {
+  it("equipped + permanent is one activation (boolean OR), refund constant 10", () => {
+    const dual = hasRingOfVigourEffect({
+      equipmentIds: [RING_OF_VIGOUR_ITEM_ID],
+      ringOfVigourPassive: true,
+      unlockedRegions: ["anachronia"],
+    });
+    const equippedOnly = hasRingOfVigourEffect({
+      equipmentIds: [RING_OF_VIGOUR_ITEM_ID],
+      ringOfVigourPassive: false,
+    });
+    const passiveOnly = hasRingOfVigourEffect({
+      equipmentIds: [],
+      ringOfVigourPassive: true,
+      unlockedRegions: ["anachronia"],
+    });
+    expect(dual).toBe(true);
+    expect(equippedOnly).toBe(true);
+    expect(passiveOnly).toBe(true);
+    // Upstream maps any true source set to ringOfVigour:true once; refund is not * sources.
+    expect(RING_OF_VIGOUR_REFUND).toBe(10);
+    expect(
+      ringOfVigourActiveSources({
+        equipmentIds: [RING_OF_VIGOUR_ITEM_ID],
+        ringOfVigourPassive: true,
+        unlockedRegions: ["anachronia"],
+      }).length,
+    ).toBe(2);
+  });
+
+  it("requirement and spend share resolveSpecialAttackAdrenalineCost", () => {
+    // costOf and spendOf both call this for weapon specials (Icy Tempest stacks first).
+    for (const [base, effective] of [
+      [25, 23],
+      [30, 27],
+      [50, 45],
+      [55, 50],
+      [60, 54],
+    ] as const) {
+      const req = resolveSpecialAttackAdrenalineCost(base, true);
+      const spend = resolveSpecialAttackAdrenalineCost(base, true);
+      expect(req).toBe(effective);
+      expect(spend).toBe(effective);
+      expect(req).toBe(spend);
+    }
+  });
+
+  it("non-special costs never enter the special discount", () => {
+    expect(listedWeaponSpecialCost({ adrenaline: { cost: 50 } }, true)).toBe(50);
+    expect(
+      listedWeaponSpecialCost({ weaponSpecial: false, adrenaline: { cost: 25 } }, true),
+    ).toBe(25);
+  });
+});
+
 describe("modelled weapon special catalogue", () => {
   const allSpecs = [...MELEE_ABILITIES, ...MAGIC_ABILITIES, ...NECROMANCY_ABILITIES];
 

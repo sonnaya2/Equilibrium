@@ -47,13 +47,19 @@ import {
   formatSalveHitChanceLine,
   resolveSalve,
   salveDamageModifier,
+  type ResolvedSalve,
 } from "@/combat/shared/salveAmulet";
 import {
   formatSlayerHelmetDamageLine,
   formatSlayerHelmetHitChanceLine,
   resolveSlayerHelmet,
   slayerHelmetDamageModifier,
+  type ResolvedSlayerHelmet,
 } from "@/combat/shared/slayerHelmet";
+import type {
+  SerializableSalveSource,
+  SerializableSlayerHelmetSource,
+} from "@/combat/solver/worker/serializable";
 import {
   berserkersFuryModifier,
   getBerserkersFuryBonus,
@@ -160,6 +166,54 @@ export type DamagePotentialSource =
   "target stats" | "target weakness" | "manual override" | "100% assumption";
 
 export type BreakdownRow = { label: string; value: number };
+
+/**
+ * Helmet + salve resolved once per loadoutStats pass (accuracy + damage + snapshot).
+ * Serializables are null when inactive; live Resolved* keep hitChanceMult for accuracy.
+ */
+export interface ResolvedSlayerSalve {
+  helmet: ResolvedSlayerHelmet;
+  salveResolved: ResolvedSalve;
+  slayerHelmet: SerializableSlayerHelmetSource | null;
+  salve: SerializableSalveSource | null;
+}
+
+export function resolveSlayerSalve(
+  loadout: Loadout,
+  options: LoadoutStatsOptions = {},
+): ResolvedSlayerSalve {
+  const helmet = resolveSlayerHelmet({
+    equipmentSlots: loadout.equipmentSlots,
+    standTier: loadout.buffs.slayerHelmetStand,
+    unlockedRegions: options.unlockedRegions,
+    onSlayerTask: loadout.target?.onSlayerTask === true,
+    style: loadout.style,
+    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
+  });
+  const salveResolved = resolveSalve({
+    equipmentSlots: loadout.equipmentSlots,
+    targetUndead: loadout.target?.undead === true,
+  });
+  return {
+    helmet,
+    salveResolved,
+    slayerHelmet:
+      helmet.active && helmet.tier && helmet.source
+        ? {
+            tierId: helmet.tier.id,
+            source: helmet.source,
+            damageMult: helmet.damageMult,
+          }
+        : null,
+    salve:
+      salveResolved.active && salveResolved.variant
+        ? {
+            variantId: salveResolved.variant.id,
+            damageMult: salveResolved.damageMult,
+          }
+        : null,
+  };
+}
 
 /** Sum named breakdown rows (Setup dropdowns / diagnostics). */
 export function sumBreakdown(rows: readonly { value: number }[]): number {
@@ -485,7 +539,7 @@ export function resolveAccuracyDp(
   levels: ResolvedLevels,
   equipment: ResolvedEquipment,
   leagueBundle: ResolvedLeagueBundle,
-  options: LoadoutStatsOptions = {},
+  slayerSalve: ResolvedSlayerSalve,
 ): ResolvedAccuracyDp {
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
   // Without a target, the manual accuracy% slider is the FINAL override - no
@@ -497,18 +551,8 @@ export function resolveAccuracyDp(
   const attackCapeHit =
     loadout.buffs.attackCape120 && loadout.style === "melee" ? ATTACK_CAPE_MELEE_HIT_CHANCE : 0;
   // Slayer Spirit + Salve: multiplicative accuracy rating (wiki Hit chance page).
-  const slayerHelm = resolveSlayerHelmet({
-    equipmentSlots: loadout.equipmentSlots,
-    standTier: loadout.buffs.slayerHelmetStand,
-    unlockedRegions: options.unlockedRegions,
-    onSlayerTask: loadout.target?.onSlayerTask === true,
-    style: loadout.style,
-    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
-  });
-  const salve = resolveSalve({
-    equipmentSlots: loadout.equipmentSlots,
-    targetUndead: loadout.target?.undead === true,
-  });
+  // Mults come from the shared resolveSlayerSalve pass (not re-resolved here).
+  const { helmet: slayerHelm, salveResolved: salve } = slayerSalve;
   const accuracyMult =
     (slayerHelm.active ? slayerHelm.hitChanceMult : 1) * (salve.active ? salve.hitChanceMult : 1);
   const accuracyAfterTargetPassives = accuracyRating * accuracyMult;
@@ -792,6 +836,8 @@ export interface ResolvedCombatRules {
   activePassives: readonly string[];
   combatContext: CombatContext;
   berserkersFury: BerserkersFuryResolved;
+  slayerHelmet: SerializableSlayerHelmetSource | null;
+  salve: SerializableSalveSource | null;
 }
 
 export function resolveCombatRules(
@@ -799,8 +845,9 @@ export function resolveCombatRules(
   levels: ResolvedLevels,
   equipment: ResolvedEquipment,
   leagueBundle: ResolvedLeagueBundle,
-  defenceLife?: ResolvedDefenceLife,
-  options: LoadoutStatsOptions = {},
+  defenceLife: ResolvedDefenceLife | undefined,
+  options: LoadoutStatsOptions,
+  slayerSalve: ResolvedSlayerSalve,
 ): ResolvedCombatRules {
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet - structure ready).
@@ -822,18 +869,7 @@ export function resolveCombatRules(
   if (loadout.perks.undeadSlayer > 0) {
     globalModifiers.push(raceSlayerPerkModifier("undead", loadout.target?.undead === true));
   }
-  const slayerHelmet = resolveSlayerHelmet({
-    equipmentSlots: loadout.equipmentSlots,
-    standTier: loadout.buffs.slayerHelmetStand,
-    unlockedRegions: options.unlockedRegions,
-    onSlayerTask: loadout.target?.onSlayerTask === true,
-    style: loadout.style,
-    ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
-  });
-  const salveResolved = resolveSalve({
-    equipmentSlots: loadout.equipmentSlots,
-    targetUndead: loadout.target?.undead === true,
-  });
+  const { helmet: slayerHelmet, salveResolved } = slayerSalve;
   const helmDmg = slayerHelmetDamageModifier(slayerHelmet);
   if (helmDmg) globalModifiers.push(helmDmg);
   const salveDmg = salveDamageModifier(salveResolved);
@@ -973,5 +1009,7 @@ export function resolveCombatRules(
       targetTiles: leagueBundle.league.targetTiles,
     },
     berserkersFury,
+    slayerHelmet: slayerSalve.slayerHelmet,
+    salve: slayerSalve.salve,
   };
 }

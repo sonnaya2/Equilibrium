@@ -7,10 +7,15 @@ import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { ticksToSeconds } from "@/combat/core/ticks";
 import {
   clampSolverBarSizes,
+  isVerifiedCacheableResult,
   MIN_SOLVER_BAR_SIZE,
+  VERIFIED_CACHEABLE_PROOFS,
   type ObjectiveProfileId,
+  type ProofLabel,
+  type SerializableSolverRequest,
   type SolverAgentRecipe,
   type SolverProgress,
+  type SolverResultDTO,
   type SolverSearchTier,
 } from "@/combat/solver";
 
@@ -142,9 +147,22 @@ export function mayPublishStoppedPreview(action: SolveSettlementAction): boolean
   return action === "stopped-preview";
 }
 
-export function mayWriteVerifiedSolveArtifacts(action: SolveSettlementAction): boolean {
-  return action === "apply-final";
+/**
+ * Fail-closed DTO stamp for apply-final (same as verified cache).
+ * Empty/missing or !== live blocks verified apply.
+ */
+export function mayApplyFinalDtoStamp(opts: {
+  dtoSolveIdentity: string | null | undefined;
+  liveIdentity: string;
+}): boolean {
+  const stamped = opts.dtoSolveIdentity;
+  if (typeof stamped !== "string" || stamped.length === 0) return false;
+  return stamped === opts.liveIdentity;
 }
+
+/** Surface when live session completes with empty/mismatched DTO stamp. */
+export const APPLY_FINAL_STAMP_REJECT_MESSAGE =
+  "Solve result identity missing or mismatched; result discarded";
 
 /** Catch path (abort vs hard error) using the same identity/gen gates. */
 export function settlementActionForCatch(opts: {
@@ -164,6 +182,75 @@ export function settlementActionForCatch(opts: {
   if (opts.sessionGen !== opts.currentGen) return "ignore";
   if (opts.sessionIdentity !== opts.currentIdentity) return "ignore";
   return "stopped-preview";
+}
+
+/** Exact ordered bar id equality (empty/null never match). */
+export function barsMatch(
+  a: readonly string[] | null | undefined,
+  b: readonly string[] | null | undefined,
+): boolean {
+  if (!a?.length || !b?.length) return false;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+/**
+ * Verified permanent save only when live identity matches the completed DTO
+ * stamp, the bar is still that result bar, and the proof is cacheable.
+ * Degraded / stopped / failed proofs never qualify.
+ */
+export function maySaveVerified(opts: {
+  liveIdentity: string | null | undefined;
+  resultSolveIdentity: string | null | undefined;
+  finalBar: readonly string[] | null | undefined;
+  currentBar: readonly string[] | null | undefined;
+  solving?: boolean;
+  /** proofLabel (or proof.label) from the completed DTO; required for verified. */
+  proofLabel?: string | null;
+}): boolean {
+  if (opts.solving) return false;
+  const proof = opts.proofLabel;
+  if (typeof proof !== "string" || proof.length === 0) return false;
+  if (!VERIFIED_CACHEABLE_PROOFS.has(proof as ProofLabel)) return false;
+  const live = opts.liveIdentity;
+  const stamped = opts.resultSolveIdentity;
+  if (typeof live !== "string" || live.length === 0) return false;
+  if (typeof stamped !== "string" || stamped.length === 0) return false;
+  if (live !== stamped) return false;
+  return barsMatch(opts.finalBar, opts.currentBar);
+}
+
+/**
+ * Recent-library verified flags for a completed final.
+ * Only isVerifiedCacheableResult finals get verified:true + scoreContext;
+ * degraded proofs keep score as estimate with scoreContext:null.
+ */
+export function recentLibraryVerifiedFields(
+  request: SerializableSolverRequest,
+  dto: SolverResultDTO,
+): { verified: boolean; scoreContext: string | null } {
+  if (!isVerifiedCacheableResult(request, dto)) {
+    return { verified: false, scoreContext: null };
+  }
+  const stamped = dto.solveIdentity;
+  return {
+    verified: true,
+    scoreContext: typeof stamped === "string" && stamped.length > 0 ? stamped : null,
+  };
+}
+
+/** Completed DTO is stale when stamp is empty/missing or no longer matches live. */
+export function isCompletedResultStale(opts: {
+  liveIdentity: string;
+  resultSolveIdentity: string | null | undefined;
+}): boolean {
+  const stamped = opts.resultSolveIdentity;
+  // Fail-closed: product results without a stamp are not verified presentation.
+  if (typeof stamped !== "string" || stamped.length === 0) return true;
+  return stamped !== opts.liveIdentity;
 }
 
 export function productBarSizeFloor(): number {
@@ -190,7 +277,46 @@ export function solverPhaseLabel(
   }
 }
 
-export function formatProofLabel(label: string | null | undefined): string {
+const PROOF_MASS_EPS = 1e-12;
+
+function isExactClaimProofId(label: string | null | undefined): boolean {
+  return (
+    label === "full-objective-global-optimum" ||
+    label === "globally-optimal" ||
+    label === "search-objective-exhaustive"
+  );
+}
+
+function optsTaintExactProof(opts?: {
+  approximated?: boolean;
+  residualWeight?: number;
+  exactness?: string;
+}): boolean {
+  if (opts?.approximated) return true;
+  const residual = opts?.residualWeight;
+  if (typeof residual === "number" && Number.isFinite(residual) && residual > PROOF_MASS_EPS) {
+    return true;
+  }
+  const ex = opts?.exactness;
+  return (
+    ex === "approximated" ||
+    ex === "bounded-approximation" ||
+    ex === "truncated" ||
+    ex === "resampled"
+  );
+}
+
+/**
+ * Human proof label for solver chrome.
+ * Residual / non-exact exactness never shows global optimum / exhaustive chrome.
+ */
+export function formatProofLabel(
+  label: string | null | undefined,
+  opts?: { approximated?: boolean; residualWeight?: number; exactness?: string },
+): string {
+  if (optsTaintExactProof(opts) && isExactClaimProofId(label)) {
+    return "Approximated";
+  }
   if (label == null || label === "") return "Best found";
   switch (label) {
     case "heuristic-best-found":

@@ -164,7 +164,7 @@ describe("loadoutStats wires slayer and salve", () => {
 });
 
 describe("resolver parity for solver snapshot sources", () => {
-  it("manual resolve matches loadoutStats modifier mults", () => {
+  it("manual resolve matches loadoutStats modifier mults and CalcStats descriptors", () => {
     const loadout = withGear({
       equipmentSlots: {
         helmet: FULL_SLAYER_HELMET_ITEM_ID,
@@ -192,11 +192,29 @@ describe("resolver parity for solver snapshot sources", () => {
     const salveMod = stats.globalModifiers.find((m) => m.id.startsWith("item:salve:"))!;
     expect(helm.damageMult).toBe(1.075);
     expect(salve.damageMult).toBe(1.2);
+    expect(stats.slayerHelmet).toMatchObject({
+      tierId: "full",
+      source: "equipped",
+      damageMult: 1.075,
+    });
+    expect(stats.salve).toMatchObject({ variantId: "salve-e", damageMult: 1.2 });
     expect(
       runPipeline({ damage: 2000 }, [helmMod, salveMod], {
         style: "melee",
         damageSource: "direct",
       }).damage,
     ).toBe(mulFloor(mulFloor(2000, 1.075), 1.2));
+  });
+
+  it("CalcStats descriptors null when stand locked and no equipped helm", () => {
+    const stats = loadoutStats(
+      withGear({
+        buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
+        target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      }),
+      { unlockedRegions: [] },
+    );
+    expect(stats.slayerHelmet).toBeNull();
+    expect(stats.salve).toBeNull();
   });
 });

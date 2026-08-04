@@ -251,7 +251,12 @@ export function ArchPanel({
         unlockedRegions,
         requestedCap: prev.archaeology?.energyCap ?? null,
       });
-      const { loadout: next, result } = applyArchaeologyToggle(prev, relicId, cap);
+      const { loadout: next, result } = applyArchaeologyToggle(
+        prev,
+        relicId,
+        cap,
+        unlockedRegions,
+      );
       if (!result.ok) {
         setRejectHint(archaeologyRejectLabel(result.reason));
         return prev;
@@ -325,6 +330,7 @@ export function ArchPanel({
                 relicId: relic.id,
                 selectedIds,
                 energyCap,
+                unlockedRegions,
               });
               return (
                 <RelicRow

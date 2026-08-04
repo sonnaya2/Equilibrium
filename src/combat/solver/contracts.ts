@@ -6,8 +6,9 @@ export const SOLVER_SCHEMA_VERSION = 4 as const;
 /**
  * Bumped when objective math or score tagging semantics change.
  * Included in eval cache keys so search/full archives never mix scales.
+ * v3: residualWeight / non-exact branch exactness hard-fail scoring.
  */
-export const OBJECTIVE_VERSION = 2 as const;
+export const OBJECTIVE_VERSION = 3 as const;
 
 export type Bar = readonly string[];
 
@@ -79,6 +80,17 @@ export interface ObjectiveWindowSpec {
   seconds: number;
 }
 
+/**
+ * Branch expansion exactness (mirrors engine BranchExactness).
+ * Solver must not rank residual / approximation as exact proof.
+ */
+export type SolverBranchExactness =
+  | "exact"
+  | "merged-exactly"
+  | "bounded-approximation"
+  | "truncated"
+  | "resampled";
+
 /** Minimal summary surface the objective reads - damageByTick only for numbers. */
 export interface ScoreableSummary {
   ok: boolean;
@@ -87,6 +99,9 @@ export interface ScoreableSummary {
   damageByTick: Record<number, number>;
   rng?: {
     failedWeight?: number;
+    /** Cap residual mass; residual > 0 means approximated expansion. */
+    residualWeight?: number;
+    exactness?: SolverBranchExactness | string;
   };
 }
 

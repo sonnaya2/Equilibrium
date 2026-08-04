@@ -71,6 +71,8 @@ describe("special cost: requirement = spend under Vigour", () => {
     expect(costOf(on.state, ability, 0)).toBe(effective);
     expect(spendOf(on.state, ability, 0)).toBe(effective);
     expect(costOf(on.state, ability, 0)).toBe(spendOf(on.state, ability, 0));
+    // Same pure discount both paths use.
+    expect(resolveSpecialAttackAdrenalineCost(listed, true)).toBe(effective);
   });
 
   it("prepareCast cost and spend match for normal specials under Vigour", () => {
@@ -79,6 +81,26 @@ describe("special cost: requirement = spend under Vigour", () => {
     const prepared = prepareCast(rt, ability, 0);
     expect(prepared.cost).toBe(45);
     expect(prepared.spend).toBe(45);
+  });
+
+  it("non-special thresholds keep listed cost under Vigour", () => {
+    const assault = byId("assault");
+    expect(isWeaponSpecialAbility(assault)).toBe(false);
+    const listed = assault.adrenaline?.cost ?? 0;
+    expect(listed).toBeGreaterThan(0);
+
+    const rt = runtime({ ringOfVigour: true });
+    expect(costOf(rt.state, assault, 0)).toBe(listed);
+    expect(spendOf(rt.state, assault, 0)).toBe(listed);
+    expect(costOf(rt.state, assault, 0)).toBe(spendOf(rt.state, assault, 0));
+  });
+
+  it("ultimates keep full 100 requirement and spend under Vigour", () => {
+    const berserk = byId("berserk");
+    expect(berserk.category).toBe("ultimate");
+    const rt = runtime({ ringOfVigour: true });
+    expect(costOf(rt.state, berserk, 0)).toBe(100);
+    expect(spendOf(rt.state, berserk, 0)).toBe(100);
   });
 });
 

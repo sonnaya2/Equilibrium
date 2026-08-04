@@ -16,6 +16,7 @@ function dto(partial: Partial<SolverResultDTO> & Pick<SolverResultDTO, "bar" | "
     profileId: "balanced",
     tier: "thorough",
     durationTicks: 100,
+    solveIdentity: "",
     proofLabel: "heuristic-best-found",
     ...partial,
   };
@@ -73,5 +74,21 @@ describe("rankResults", () => {
     });
     const empty = dto({ bar: [], score: 999_999, proofLabel: "failed" });
     expect(pickBestSolverResult([empty, good])).toBe(good);
+  });
+
+  it("mergeResults keeps the winner solveIdentity when host request omitted", () => {
+    const shortHigh = dto({
+      bar: ["a", "b", "c", "d"],
+      score: 12_000,
+      seed: 1,
+      solveIdentity: "winner-id",
+    });
+    const longLow = dto({
+      bar: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+      score: 11_000,
+      seed: 2,
+      solveIdentity: "loser-id",
+    });
+    expect(mergeResults([longLow, shortHigh]).solveIdentity).toBe("winner-id");
   });
 });

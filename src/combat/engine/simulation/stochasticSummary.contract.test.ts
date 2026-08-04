@@ -243,7 +243,7 @@ describe("stochastic summary contract", () => {
     expect(s.history.eventsReconcileWithWeightedTotals).toBe(false);
   });
 
-  it("8. failed branch probability is visible", () => {
+  it("8. failed branch probability is visible; primary is unconditional", () => {
     const s = simulate({
       ...baseInput,
       adrenaline: { relentlessRank: 5 },
@@ -253,15 +253,23 @@ describe("stochastic summary contract", () => {
     expect(s.failure).toBeDefined();
     expect(s.failure!.failedWeight).toBeCloseTo(0.95, 10);
     expect(s.failure!.successfulWeight).toBeCloseTo(0.05, 10);
+    expect(s.failure!.totalsScope).toBe("unconditional-all-mass");
     expect(s.rng?.failedWeight).toBeCloseTo(s.failure!.failedWeight, 10);
     expect(s.failure!.primaryReason.length).toBeGreaterThan(0);
-    // History matches success-conditional totals, not the heavier failed class.
+    // History still prefers successful class for display; primary is not success-only.
     expect(s.history.selectionReason).toBe("highest-successful-mass");
     expect(s.history.classWeight).toBeCloseTo(0.05, 10);
     expect(s.duration.representativeTicks).toBeGreaterThanOrEqual(s.duration.minimumTicks);
     expect(s.duration.representativeTicks).toBeLessThanOrEqual(s.duration.maximumTicks);
     expect(s.totalExpected).toBeGreaterThan(0);
+    expect(s.failure!.conditionalOnSuccessExpectedDamage).toBeDefined();
+    expect(s.failure!.failedPathExpectedDamage).toBeDefined();
+    // Primary is below success-conditional (failed path banks less than full success path).
+    expect(s.totalExpected).toBeLessThan(s.failure!.conditionalOnSuccessExpectedDamage!);
     expect(isNearOne(s.rng!.probabilityMass)).toBe(true);
+    expect(s.rng!.residualWeight).toBe(0);
+    expect(s.rng!.exactness).toBe("exact");
+    expect(isNearOne(s.rng!.probabilityMass + s.rng!.residualWeight)).toBe(true);
   });
 
   it("9. all-failed branches return an honest failure", () => {
@@ -398,8 +406,8 @@ describe("stochastic summary contract", () => {
   });
 });
 
-describe("stochastic summary — failed-mass totals policy", () => {
-  it("renormalizes successful-only damage when some branches fail", () => {
+describe("stochastic summary - failed-mass totals policy", () => {
+  it("uses unconditional E[D] over concrete mass when some branches fail", () => {
     const okRt = seedRuntime({ expected: 1000, min: 900, max: 1100, endTick: 12 });
     okRt.events.push({
       tick: 0,
@@ -439,21 +447,39 @@ describe("stochastic summary — failed-mass totals policy", () => {
       true,
     );
     expect(s.ok).toBe(false);
-    expect(s.failure?.totalsScope).toBe("successful-branches-renormalized");
-    // Successful-only: 1000, not 0.2*1000 + 0.8*100 = 280.
-    expect(s.totalExpected).toBe(1000);
+    expect(s.failure?.totalsScope).toBe("unconditional-all-mass");
+    // Unconditional: 0.2*1000 + 0.8*100 = 280 (not success-renormalized 1000).
+    expect(s.totalExpected).toBe(280);
+    expect(s.damage.expectedDamage).toBe(280);
+    expect(s.dps).toBe(s.dpsDetail.primary);
+    expect(s.dps).toBeCloseTo(280 / (s.duration.expectedTicks * TICK_SECONDS), 10);
     expect(s.failure?.failedWeight).toBeCloseTo(0.8, 10);
     expect(s.failure?.successfulWeight).toBeCloseTo(0.2, 10);
-    // Representative prefers successful class so history matches totals scope.
+    expect(s.failure?.conditionalOnSuccessExpectedDamage).toBe(1000);
+    expect(s.failure?.failedPathExpectedDamage).toBe(100);
+    // Support spans all terminals (including failed banked extrema).
+    expect(s.damage.supportMinDamage).toBe(90);
+    expect(s.damage.supportMaxDamage).toBe(1100);
+    // Duration is unconditional over concrete mass.
+    expect(s.duration.expectedTicks).toBeCloseTo(0.2 * 12 + 0.8 * 6, 10);
+    expect(s.rng?.concreteMass).toBeCloseTo(1, 10);
+    expect(s.duration.minimumTicks).toBe(6);
+    expect(s.duration.maximumTicks).toBe(12);
+    // Representative still prefers successful class for history display.
     expect(s.events[0]?.abilityId).toBe("success-path");
     expect(s.duration.representativeTicks).toBe(12);
     expect(s.history.selectionReason).toBe("highest-successful-mass");
     expect(s.history.classWeight).toBeCloseTo(0.2, 10);
     expect(s.duration.representativeTicks).toBeGreaterThanOrEqual(s.duration.minimumTicks);
     expect(s.duration.representativeTicks).toBeLessThanOrEqual(s.duration.maximumTicks);
+    // Failed mass never becomes successful.
+    expect(s.failure!.successfulWeight + s.failure!.failedWeight).toBeCloseTo(1, 10);
+    expect(s.rng?.exactness).toBe("exact");
+    expect(s.rng?.residualWeight).toBe(0);
+    expect(isNearOne(s.rng!.probabilityMass + s.rng!.residualWeight)).toBe(true);
   });
 
-  it("does not invent NaN when every branch fails", () => {
+  it("does not invent NaN when every branch fails; primary is banked unconditional E[D]", () => {
     const a = seedRuntime({ expected: 10, min: 10, max: 10, endTick: 1 });
     const b = seedRuntime({ expected: 20, min: 20, max: 20, endTick: 2 });
     const s = combineBranchSummaries(
@@ -466,18 +492,77 @@ describe("stochastic summary — failed-mass totals policy", () => {
       true,
     );
     expect(s.ok).toBe(false);
-    expect(s.totalExpected).toBe(0);
+    // All-failed: totalsScope none, but banked damage still unconditional.
+    expect(s.totalExpected).toBeCloseTo(0.4 * 10 + 0.6 * 20, 10);
+    expect(s.damage.expectedDamage).toBe(s.totalExpected);
     expect(Number.isFinite(s.dps)).toBe(true);
     expect(s.failure?.totalsScope).toBe("none");
+    expect(s.failure?.successfulWeight).toBe(0);
     expect(s.failure?.primaryReason).toBe("fail-b"); // highest weight
-    // Totals stay zero; duration support still describes the failed history pool.
-    expect(s.duration.expectedTicks).toBe(0);
+    expect(s.failure?.failedPathExpectedDamage).toBeCloseTo(16, 10);
+    expect(s.failure?.conditionalOnSuccessExpectedDamage).toBeUndefined();
+    expect(s.duration.expectedTicks).toBeCloseTo(0.4 * 1 + 0.6 * 2, 10);
     expect(s.duration.minimumTicks).toBe(1);
     expect(s.duration.maximumTicks).toBe(2);
     expect(s.duration.representativeTicks).toBe(2);
     expect(s.duration.representativeTicks).toBeGreaterThanOrEqual(s.duration.minimumTicks);
     expect(s.duration.representativeTicks).toBeLessThanOrEqual(s.duration.maximumTicks);
     expect(s.history.ticks).toBe(s.duration.representativeTicks);
+  });
+
+  it("discloses residual mass and approximated exactness without folding residual into success", () => {
+    const okRt = seedRuntime({ expected: 500, min: 500, max: 500, endTick: 5 });
+    const s = combineBranchSummaries(
+      [{ weight: 0.7, rt: okRt }],
+      undefined,
+      undefined,
+      true,
+      0.3,
+      "bounded-approximation",
+    );
+    expect(s.ok).toBe(true);
+    // Primary is E[D|concrete] (weight-normalized over expanded mass), not unit-mass EV
+    // with residual zero-filled (that would be 500*0.7=350).
+    expect(s.totalExpected).toBeCloseTo(500, 10);
+    expect(s.damage.expectedDamage).toBe(s.totalExpected);
+    expect(s.damage.scope).toBe("concrete-terminals");
+    expect(s.rng?.probabilityMass).toBeCloseTo(0.7, 10);
+    expect(s.rng?.concreteMass).toBeCloseTo(0.7, 10);
+    expect(s.rng?.concreteMass).toBe(s.rng?.probabilityMass);
+    expect(s.rng?.residualWeight).toBeCloseTo(0.3, 10);
+    expect(s.rng?.exactness).toBe("approximated");
+    expect(s.rng?.totalsBasis).toBe("concrete-terminals");
+    expect(s.rng!.totalsBasis).toBe(s.damage.scope);
+    expect(isNearOne(s.rng!.probabilityMass + s.rng!.residualWeight)).toBe(true);
+    expect(s.failure).toBeUndefined();
+  });
+
+  it("residual + partial failure: primary stays E[D|concrete] (not success-renorm, not unit-mass)", () => {
+    const okRt = seedRuntime({ expected: 1000, min: 900, max: 1100, endTick: 10 });
+    const failRt = seedRuntime({ expected: 100, min: 90, max: 110, endTick: 4 });
+    const s = combineBranchSummaries(
+      [
+        { weight: 0.5, rt: okRt },
+        { weight: 0.3, rt: failRt, error: "unpayable" },
+      ],
+      undefined,
+      undefined,
+      true,
+      0.2,
+      "bounded-approximation",
+    );
+    expect(s.ok).toBe(false);
+    expect(s.failure?.totalsScope).toBe("unconditional-all-mass");
+    // Concrete mass 0.8; E[D|concrete] = (0.5*1000 + 0.3*100) / 0.8 = 662.5
+    // Not unit-mass zero-fill 0.5*1000+0.3*100=530; not success-only 1000.
+    expect(s.totalExpected).toBeCloseTo(662.5, 10);
+    expect(s.rng?.concreteMass).toBeCloseTo(0.8, 10);
+    expect(s.rng?.residualWeight).toBeCloseTo(0.2, 10);
+    expect(s.rng?.exactness).toBe("approximated");
+    expect(s.rng?.totalsBasis).toBe("concrete-terminals");
+    expect(s.damage.scope).toBe("concrete-terminals");
+    expect(s.failure?.conditionalOnSuccessExpectedDamage).toBe(1000);
+    expect(s.totalExpected).toBeLessThan(s.failure!.conditionalOnSuccessExpectedDamage!);
   });
 
   it("sole-path failure does not claim event-ledger reconciliation", () => {

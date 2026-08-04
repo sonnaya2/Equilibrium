@@ -9,6 +9,7 @@ import {
   icyenicSoulSplitHeal,
   icyenicSoulSplitNote,
 } from "@/combat/league/icyenicFaith";
+import { stochasticAssumptionRows } from "./revoStochasticLabels";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -187,6 +188,9 @@ export function CalculationAssumptions({
         "Timeline path",
         `${result.rng.representativeClassTicks} ticks · ${(result.rng.representativeClassWeight * 100).toFixed(1)}% terminal class`,
       ]);
+    }
+    for (const row of stochasticAssumptionRows(result)) {
+      rows.push(row);
     }
   }
 

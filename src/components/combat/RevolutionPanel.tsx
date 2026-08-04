@@ -22,6 +22,7 @@ import {
   SUPPORTED_BARS,
   type RevoBarView,
 } from "./revoBarResolve";
+import { maySaveVerified } from "./revoPanelFormat";
 import { RevoBarGraphic } from "./RevoBarGraphic";
 import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
 import { RevoSolverSection } from "./RevoSolverSection";
@@ -123,12 +124,12 @@ export function RevolutionPanel({
       uiRunFingerprint({
         mode: "revolution",
         stats,
+        loadout,
         barIds: barIdsForKey,
         durationSeconds: clampRunDurationSeconds(durationSeconds),
         style: loadout.style,
-        targetHpPercent: loadout.target?.hpPercent,
       }),
-    [stats, barIdsForKey, durationSeconds, loadout.style, loadout.target?.hpPercent],
+    [stats, loadout, barIdsForKey, durationSeconds],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;
@@ -234,7 +235,7 @@ export function RevolutionPanel({
     !!currentSaveBar &&
     solver.stoppedPreview.bar.length === currentSaveBar.length &&
     solver.stoppedPreview.bar.every((id, i) => id === currentSaveBar[i]);
-  /** Verified score only from a completed final DTO matching the bar. */
+  /** Score shown for save: verified final when identity+bar match; else stopped facts. */
   const currentSaveScore = finalBarMatch
     ? solver.solverResult!.score
     : stoppedBarMatch
@@ -242,7 +243,15 @@ export function RevolutionPanel({
         solver.stoppedPreview!.bestExploratoryScore ??
         null)
       : null;
-  const saveVerified = finalBarMatch;
+  const saveVerified = maySaveVerified({
+    liveIdentity: solver.liveIdentity,
+    resultSolveIdentity: solver.solverResult?.solveIdentity,
+    finalBar: solver.solverResult?.bar,
+    currentBar: currentSaveBar,
+    solving: solver.solving,
+    proofLabel:
+      solver.solverResult?.proofLabel ?? solver.solverResult?.proof?.label,
+  });
   const alreadySaved =
     currentSaveBar != null && isBarAlreadySaved(solver.barLibrary, loadout.style, currentSaveBar);
 
@@ -259,6 +268,7 @@ export function RevolutionPanel({
         currentSaveScore={currentSaveScore}
         alreadySaved={alreadySaved}
         solving={solver.solving}
+        liveScoreContext={solver.liveIdentity}
         onSave={() =>
           solver.saveCurrentBar(currentSaveBar, currentSaveScore, { verified: saveVerified })
         }

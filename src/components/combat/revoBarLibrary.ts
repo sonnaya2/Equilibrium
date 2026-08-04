@@ -1,11 +1,15 @@
 /**
  * Revolution bar library - last 5 autosaves + permanent saves.
  * Separate from the solve fingerprint cache (solutionStore).
+ * Scores marked verified only when bound to a simulation identity (scoreContext).
  */
 
 import { loadState, saveState } from "@/lib/storage";
 
-export const REVO_BAR_LIBRARY_KEY = "eq:revo-bars:v1";
+export const REVO_BAR_LIBRARY_KEY = "eq:revo-bars:v2";
+/** @deprecated read-only migration from pre-context storage */
+const REVO_BAR_LIBRARY_KEY_V1 = "eq:revo-bars:v1";
+
 export const MAX_RECENT_BARS = 5;
 export const MAX_SAVED_BARS = 40;
 
@@ -23,14 +27,19 @@ export interface RevoBarEntry {
   kind: RevoBarEntryKind;
   savedAt: number;
   /**
-   * True only when the score comes from a completed final solver result.
-   * Manual / stopped / exploratory saves are unverified.
+   * True only when the score comes from a completed final solver result
+   * and is bound to scoreContext. Manual / stopped / exploratory saves are unverified.
    */
   verified: boolean;
+  /**
+   * Simulation identity the score was earned under (e.g. solveContextPayload).
+   * Required for verified; null means estimate-only.
+   */
+  scoreContext: string | null;
 }
 
 export interface RevoBarLibrary {
-  version: 1;
+  version: 2;
   recents: RevoBarEntry[];
   saved: RevoBarEntry[];
 }
@@ -45,12 +54,14 @@ export interface RememberBarInput {
   now?: number;
   /** Defaults false - only completed finals should pass true. */
   verified?: boolean;
+  /** Identity the score belongs to; required for verified to stick. */
+  scoreContext?: string | null;
 }
 
-const EMPTY: RevoBarLibrary = { version: 1, recents: [], saved: [] };
+const EMPTY: RevoBarLibrary = { version: 2, recents: [], saved: [] };
 
 export function emptyBarLibrary(): RevoBarLibrary {
-  return { version: 1, recents: [], saved: [] };
+  return { version: 2, recents: [], saved: [] };
 }
 
 function isStringArray(v: unknown): v is string[] {
@@ -59,6 +70,25 @@ function isStringArray(v: unknown): v is string[] {
 
 export function barFingerprint(bar: readonly string[]): string {
   return bar.join("\0");
+}
+
+/** Non-empty context string, else null. */
+export function barScoreContext(raw: string | null | undefined): string | null {
+  if (typeof raw !== "string") return null;
+  const t = raw.trim();
+  return t.length > 0 ? t : null;
+}
+
+/** Verified score only when entry claims verified and contexts match live. */
+export function isScoreVerifiedForContext(
+  entry: RevoBarEntry,
+  liveContext: string | null | undefined,
+): boolean {
+  if (entry.verified !== true) return false;
+  const bound = barScoreContext(entry.scoreContext);
+  const live = barScoreContext(liveContext);
+  if (!bound || !live) return false;
+  return bound === live;
 }
 
 function newId(prefix: string, now: number): string {
@@ -76,9 +106,11 @@ function normalizeEntry(raw: unknown, kind: RevoBarEntryKind): RevoBarEntry | nu
   if (typeof e.style !== "string" || !e.style) return null;
   if (!isStringArray(e.bar) || e.bar.length === 0) return null;
   const score = typeof e.score === "number" && Number.isFinite(e.score) ? e.score : null;
-  // Legacy entries without the flag are treated as verified only when they have a score
-  // from the old autosave path; prefer false when explicit false, else require e.verified === true.
-  const verified = e.verified === true;
+  const scoreContext = barScoreContext(
+    typeof e.scoreContext === "string" ? e.scoreContext : null,
+  );
+  // verified requires a bound scoreContext; strip otherwise.
+  const verified = e.verified === true && scoreContext != null;
   return {
     id: e.id,
     bar: [...e.bar],
@@ -90,6 +122,7 @@ function normalizeEntry(raw: unknown, kind: RevoBarEntryKind): RevoBarEntry | nu
     kind,
     savedAt: typeof e.savedAt === "number" && Number.isFinite(e.savedAt) ? e.savedAt : 0,
     verified,
+    scoreContext,
   };
 }
 
@@ -112,16 +145,48 @@ export function normalizeBarLibrary(raw: unknown): RevoBarLibrary {
       if (saved.length >= MAX_SAVED_BARS) break;
     }
   }
-  return { version: 1, recents, saved };
+  return { version: 2, recents, saved };
+}
+
+/** v1 -> v2: keep every bar and score; drop verified claim (no identity). */
+function migrateV1ToV2(raw: unknown): RevoBarLibrary {
+  const base = normalizeBarLibrary(raw);
+  return {
+    version: 2,
+    recents: base.recents.map((e) => ({
+      ...e,
+      verified: false,
+      scoreContext: null,
+    })),
+    saved: base.saved.map((e) => ({
+      ...e,
+      verified: false,
+      scoreContext: null,
+    })),
+  };
 }
 
 export function loadBarLibrary(): RevoBarLibrary {
-  return loadState(REVO_BAR_LIBRARY_KEY, EMPTY, normalizeBarLibrary);
+  const v2 = loadState(REVO_BAR_LIBRARY_KEY, EMPTY, normalizeBarLibrary);
+  if (v2.recents.length > 0 || v2.saved.length > 0) return v2;
+
+  const v1 = loadState(REVO_BAR_LIBRARY_KEY_V1, EMPTY, migrateV1ToV2);
+  if (v1.recents.length === 0 && v1.saved.length === 0) return EMPTY;
+
+  saveBarLibrary(v1);
+  try {
+    if (typeof window !== "undefined") {
+      window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY_V1);
+    }
+  } catch {
+    // ignore
+  }
+  return v1;
 }
 
 export function saveBarLibrary(store: RevoBarLibrary): void {
   saveState(REVO_BAR_LIBRARY_KEY, {
-    version: 1 as const,
+    version: 2 as const,
     recents: store.recents.slice(0, MAX_RECENT_BARS),
     saved: store.saved.slice(0, MAX_SAVED_BARS),
   });
@@ -131,12 +196,13 @@ export function resetBarLibraryForTests(): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY);
+    window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY_V1);
   } catch {
     // ignore
   }
 }
 
-function titleFor(input: RememberBarInput): string {
+function titleFor(input: RememberBarInput & { verified: boolean }): string {
   if (input.name?.trim()) return input.name.trim();
   const n = input.bar.length;
   if (input.score != null && Number.isFinite(input.score)) {
@@ -146,6 +212,19 @@ function titleFor(input: RememberBarInput): string {
     return `${n}-slot · ~${rounded}`;
   }
   return `${n}-slot bar`;
+}
+
+function resolveVerified(
+  wantVerified: boolean | undefined,
+  scoreContext: string | null,
+  existingVerified: boolean,
+): boolean {
+  let verified: boolean;
+  if (wantVerified === true) verified = true;
+  else if (wantVerified === false) verified = false;
+  else verified = existingVerified;
+  if (verified && scoreContext == null) return false;
+  return verified;
 }
 
 /** Pure: push into Autosaves (MRU, max 5). Same fingerprint bumps to front. */
@@ -158,7 +237,8 @@ export function withRecentBar(store: RevoBarLibrary, input: RememberBarInput): R
   const rest = store.recents.filter(
     (e) => !(e.style === input.style && barFingerprint(e.bar) === fp),
   );
-  const verified = input.verified === true;
+  const scoreContext = barScoreContext(input.scoreContext);
+  const verified = resolveVerified(input.verified, scoreContext, false);
   const entry: RevoBarEntry = {
     id: newId("r", now),
     bar: [...bar],
@@ -170,9 +250,10 @@ export function withRecentBar(store: RevoBarLibrary, input: RememberBarInput): R
     kind: "recent",
     savedAt: now,
     verified,
+    scoreContext,
   };
   return {
-    version: 1,
+    version: 2,
     recents: [entry, ...rest].slice(0, MAX_RECENT_BARS),
     saved: store.saved,
   };
@@ -187,10 +268,13 @@ export function withPermanentBar(store: RevoBarLibrary, input: RememberBarInput)
   const fp = barFingerprint(bar);
   const existing = store.saved.find((e) => e.style === input.style && barFingerprint(e.bar) === fp);
   const rest = store.saved.filter((e) => e.id !== existing?.id);
+  const scoreContext =
+    input.scoreContext !== undefined
+      ? barScoreContext(input.scoreContext)
+      : (existing?.scoreContext ?? null);
   // Manual save defaults unverified; only explicit true marks verified.
   // Replacing a verified entry with an unverified save clears the claim.
-  const verified =
-    input.verified === true ? true : input.verified === false ? false : (existing?.verified ?? false);
+  const verified = resolveVerified(input.verified, scoreContext, existing?.verified ?? false);
   const entry: RevoBarEntry = {
     id: existing?.id ?? newId("s", now),
     bar: [...bar],
@@ -203,9 +287,10 @@ export function withPermanentBar(store: RevoBarLibrary, input: RememberBarInput)
     kind: "saved",
     savedAt: now,
     verified,
+    scoreContext,
   };
   return {
-    version: 1,
+    version: 2,
     recents: store.recents,
     saved: [entry, ...rest].slice(0, MAX_SAVED_BARS),
   };
@@ -213,7 +298,7 @@ export function withPermanentBar(store: RevoBarLibrary, input: RememberBarInput)
 
 export function withoutSavedBar(store: RevoBarLibrary, id: string): RevoBarLibrary {
   return {
-    version: 1,
+    version: 2,
     recents: store.recents,
     saved: store.saved.filter((e) => e.id !== id),
   };
@@ -221,35 +306,10 @@ export function withoutSavedBar(store: RevoBarLibrary, id: string): RevoBarLibra
 
 export function withoutRecentBar(store: RevoBarLibrary, id: string): RevoBarLibrary {
   return {
-    version: 1,
+    version: 2,
     recents: store.recents.filter((e) => e.id !== id),
     saved: store.saved,
   };
-}
-
-/** Load → mutate → persist helpers for the panel. */
-export function pushRecentBar(input: RememberBarInput): RevoBarLibrary {
-  const next = withRecentBar(loadBarLibrary(), input);
-  saveBarLibrary(next);
-  return next;
-}
-
-export function savePermanentBar(input: RememberBarInput): RevoBarLibrary {
-  const next = withPermanentBar(loadBarLibrary(), input);
-  saveBarLibrary(next);
-  return next;
-}
-
-export function removeSavedBar(id: string): RevoBarLibrary {
-  const next = withoutSavedBar(loadBarLibrary(), id);
-  saveBarLibrary(next);
-  return next;
-}
-
-export function removeRecentBar(id: string): RevoBarLibrary {
-  const next = withoutRecentBar(loadBarLibrary(), id);
-  saveBarLibrary(next);
-  return next;
 }
 
 /** Entries for a style, recents first then permanent (each newest-first). */

@@ -24,6 +24,13 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import { critDamageStats, loadoutStats, type CalcStats } from "./loadoutStats";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
+import {
+  primaryExpectedLabel,
+  primaryManualDpsLabel,
+  runDiagnosticsNote,
+  runScoreBadge,
+  shouldShowRunScoreChrome,
+} from "./revoStochasticLabels";
 import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
@@ -183,11 +190,11 @@ export function RotationPlanner({
       uiRunFingerprint({
         mode: "manual",
         stats: setupStats,
+        loadout,
         queue,
         autoWeave: weave,
         ammo,
         useBuild,
-        targetHpPercent: loadout.target?.hpPercent,
         manual: {
           base: Math.max(0, finite(base, 0)),
           level: Math.min(Math.max(1, finite(level, 99)), 145),
@@ -195,7 +202,7 @@ export function RotationPlanner({
           critChance: Math.min(Math.max(0, finite(critChance, 10)), 100),
         },
       }),
-    [setupStats, queue, weave, ammo, useBuild, loadout.target?.hpPercent, base, level, accuracy, critChance],
+    [setupStats, loadout, queue, weave, ammo, useBuild, base, level, accuracy, critChance],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;
@@ -290,6 +297,11 @@ export function RotationPlanner({
       });
 
   const contributions = liveResult?.analysis.byEffect ?? [];
+  const scoreBadge = liveResult ? runScoreBadge(liveResult) : null;
+  const scoreNote = liveResult ? runDiagnosticsNote(liveResult) : null;
+  const expectedLabel = liveResult ? primaryExpectedLabel(liveResult) : "Expected";
+  const dpsLabel = liveResult ? primaryManualDpsLabel(liveResult) : "Natural DPS";
+  const showScoreStrip = shouldShowRunScoreChrome(liveResult);
 
   const inputCls =
     "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
@@ -596,127 +608,142 @@ export function RotationPlanner({
             </div>
           )}
 
-          {liveResult ? (
+          {liveResult && !liveResult.ok ? (
+            <p
+              className="mt-3 border border-stone-750 px-3 py-2 text-xs text-chaos-300"
+              data-testid="rotation-run-error"
+            >
+              Rotation fails: {liveResult.error}
+            </p>
+          ) : null}
+
+          {showScoreStrip && liveResult ? (
             <div className="mt-4">
-              {liveResult.ok ? (
-                <>
-                  <dl className="grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-4">
-                    <div className="border-b border-stone-750/70 py-2">
-                      <dt className="text-xs text-parch-300">Expected</dt>
-                      <dd className="font-mono text-parch-50">
-                        {formatNumber(liveResult.totalExpected)}
-                      </dd>
-                    </div>
-                    <div className="border-b border-stone-750/70 py-2">
-                      <dt className="text-xs text-parch-300">
-                        {liveResult.metric.type === "fixed-window"
-                          ? "Fixed-window DPS"
-                          : liveResult.rng
-                            ? "Expected natural DPS"
-                            : "Natural DPS"}
-                      </dt>
-                      <dd className="font-mono text-parch-50">{formatNumber(liveResult.dps)}</dd>
-                    </div>
-                    <div className="border-b border-stone-750/70 py-2">
-                      <dt className="text-xs text-parch-300">Min – max</dt>
-                      <dd className="font-mono text-parch-50">
-                        {formatNumber(liveResult.totalMin)} – {formatNumber(liveResult.totalMax)}
-                      </dd>
-                    </div>
-                    <div className="border-b border-stone-750/70 py-2">
-                      <dt className="text-xs text-parch-300">
-                        {liveResult.rng ? "Expected length" : "Length"}
-                      </dt>
-                      <dd className="font-mono text-parch-50">
-                        {formatTicks(liveResult.ticks)} ticks ·{" "}
-                        {(liveResult.ticks * TICK_SECONDS).toFixed(1)}s
-                      </dd>
-                    </div>
-                  </dl>
-
-                  <div className="mt-3 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setAnalysisOpen(true)}
-                      className="combat-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800"
-                    >
-                      Analyze damage
-                    </button>
-                  </div>
-
-                  <CalculationAssumptions stats={activeStats} result={liveResult} />
-
-                  <div className="mt-4 overflow-x-auto border-t border-stone-750">
-                    <table className="w-full border-collapse text-left text-sm">
-                      <thead className="text-xs text-parch-300">
-                        <tr className="border-b border-stone-750">
-                          <th className="py-2 pr-4 font-medium">Tick</th>
-                          <th className="py-2 pr-4 font-medium">Ability</th>
-                          <th className="py-2 pr-4 font-medium">Expected</th>
-                          <th className="py-2 font-medium">Adrenaline</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {liveResult.casts.map((cast, index) => (
-                          <tr
-                            key={`${cast.abilityId}-${index}`}
-                            className="border-b border-stone-750/70"
-                          >
-                            <td className="py-2 pr-4 font-mono text-xs text-parch-300">
-                              {cast.tick}
-                            </td>
-                            <td className="py-2 pr-4 text-parch-50">
-                              {abilityName(cast.abilityId)}
-                              {cast.auto ? (
-                                <span className="ml-1.5 text-xs text-parch-300">auto</span>
-                              ) : null}
-                              {castCritLabel(cast.result) ? (
-                                <span
-                                  className={`ml-1.5 text-xs ${
-                                    castCritLabel(cast.result) === "Crit"
-                                      ? "rotation-crit"
-                                      : "text-parch-300"
-                                  }`}
-                                >
-                                  {castCritLabel(cast.result)}
-                                </span>
-                              ) : null}
-                            </td>
-                            <td className="py-2 pr-4 font-mono text-xs text-parch-50">
-                              {formatNumber(cast.result.expected)}
-                            </td>
-                            <td className="py-2 font-mono text-xs text-parch-300">
-                              {cast.adrenalineAfter}%
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="mt-4 border-t border-stone-750">
-                    {contributions.map((row) => (
-                      <div
-                        key={row.id}
-                        className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+              <dl className="grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-4">
+                <div className="border-b border-stone-750/70 py-2">
+                  <dt className="text-xs text-parch-300">{expectedLabel}</dt>
+                  <dd className="font-mono text-parch-50" data-testid="rotation-expected">
+                    {formatNumber(liveResult.totalExpected)}
+                    {scoreBadge ? (
+                      <span
+                        className="ml-1.5 font-sans text-[10px] uppercase tracking-[0.08em] text-chaos-300"
+                        data-testid="rotation-score-badge"
                       >
-                        <span className="text-parch-50">{abilityName(row.id)}</span>
-                        <span className="font-mono text-parch-300">
-                          {formatNumber(row.totalDamage)}
-                        </span>
-                        <span className="font-mono text-parch-50">
-                          {Math.round(row.share * 1000) / 10}%
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  <RotationEventPreview result={liveResult} nameForId={abilityName} />
-                </>
-              ) : (
-                <p className="mt-3 border border-stone-750 px-3 py-2 text-xs text-parch-300">
-                  Rotation fails: {liveResult.error}
+                        {scoreBadge}
+                      </span>
+                    ) : null}
+                  </dd>
+                </div>
+                <div className="border-b border-stone-750/70 py-2">
+                  <dt className="text-xs text-parch-300">{dpsLabel}</dt>
+                  <dd className="font-mono text-parch-50" data-testid="rotation-dps">
+                    {formatNumber(liveResult.dps)}
+                  </dd>
+                </div>
+                <div className="border-b border-stone-750/70 py-2">
+                  <dt className="text-xs text-parch-300">Min – max</dt>
+                  <dd className="font-mono text-parch-50">
+                    {formatNumber(liveResult.totalMin)} – {formatNumber(liveResult.totalMax)}
+                  </dd>
+                </div>
+                <div className="border-b border-stone-750/70 py-2">
+                  <dt className="text-xs text-parch-300">
+                    {liveResult.rng ? "Expected length" : "Length"}
+                  </dt>
+                  <dd className="font-mono text-parch-50">
+                    {formatTicks(liveResult.ticks)} ticks ·{" "}
+                    {(liveResult.ticks * TICK_SECONDS).toFixed(1)}s
+                  </dd>
+                </div>
+              </dl>
+
+              {scoreNote ? (
+                <p
+                  className="mt-2 text-xs text-chaos-300"
+                  data-testid="rotation-score-note"
+                  role="note"
+                >
+                  {scoreNote}
                 </p>
-              )}
+              ) : null}
+
+              <div className="mt-3 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setAnalysisOpen(true)}
+                  className="combat-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800"
+                >
+                  Analyze damage
+                </button>
+              </div>
+
+              <CalculationAssumptions stats={activeStats} result={liveResult} />
+
+              <div className="mt-4 overflow-x-auto border-t border-stone-750">
+                <table className="w-full border-collapse text-left text-sm">
+                  <thead className="text-xs text-parch-300">
+                    <tr className="border-b border-stone-750">
+                      <th className="py-2 pr-4 font-medium">Tick</th>
+                      <th className="py-2 pr-4 font-medium">Ability</th>
+                      <th className="py-2 pr-4 font-medium">Expected</th>
+                      <th className="py-2 font-medium">Adrenaline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {liveResult.casts.map((cast, index) => (
+                      <tr
+                        key={`${cast.abilityId}-${index}`}
+                        className="border-b border-stone-750/70"
+                      >
+                        <td className="py-2 pr-4 font-mono text-xs text-parch-300">
+                          {cast.tick}
+                        </td>
+                        <td className="py-2 pr-4 text-parch-50">
+                          {abilityName(cast.abilityId)}
+                          {cast.auto ? (
+                            <span className="ml-1.5 text-xs text-parch-300">auto</span>
+                          ) : null}
+                          {castCritLabel(cast.result) ? (
+                            <span
+                              className={`ml-1.5 text-xs ${
+                                castCritLabel(cast.result) === "Crit"
+                                  ? "rotation-crit"
+                                  : "text-parch-300"
+                              }`}
+                            >
+                              {castCritLabel(cast.result)}
+                            </span>
+                          ) : null}
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-xs text-parch-50">
+                          {formatNumber(cast.result.expected)}
+                        </td>
+                        <td className="py-2 font-mono text-xs text-parch-300">
+                          {cast.adrenalineAfter}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-4 border-t border-stone-750">
+                {contributions.map((row) => (
+                  <div
+                    key={row.id}
+                    className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                  >
+                    <span className="text-parch-50">{abilityName(row.id)}</span>
+                    <span className="font-mono text-parch-300">
+                      {formatNumber(row.totalDamage)}
+                    </span>
+                    <span className="font-mono text-parch-50">
+                      {Math.round(row.share * 1000) / 10}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <RotationEventPreview result={liveResult} nameForId={abilityName} />
             </div>
           ) : null}
         </div>

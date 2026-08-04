@@ -157,14 +157,6 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   frostbladesUntilTick: 0,
 });
 
-/** Deterministic per-event unit roll in [0, 1) - same seq always yields the same outcome. */
-export function lengHitRoll(eventSeq: number, salt: number): number {
-  let t = (eventSeq + Math.imul(salt, 0x9e3779b9)) >>> 0;
-  t = Math.imul(t ^ (t >>> 15), t | 1);
-  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-}
-
 export function icyTempestSpend(stacks: number): number {
   const n = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
   return Math.max(0, ICY_TEMPEST_COST_PCT - ICY_TEMPEST_COST_REDUCTION_PER_STACK * n);

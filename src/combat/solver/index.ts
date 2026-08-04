@@ -14,6 +14,7 @@ export {
   type ObjectiveWeights,
   type ObjectiveWindowSpec,
   type ScoreableSummary,
+  type SolverBranchExactness,
   type ObjectiveWindowDpms,
   type ObjectiveScoreOk,
   type ObjectiveScoreFail,
@@ -62,8 +63,21 @@ export {
   windowDpmFromDamageByTick,
   scoreFromDamageByTick,
   scoreSummary,
+  scoreSimulation,
   isFiniteEval,
+  NON_EXACT_BRANCH_EXACTNESS,
+  isNonExactBranchExactness,
+  summaryEligibleForObjectiveScore,
+  exactnessEligibleForExactProof,
 } from "./objective";
+
+export {
+  reevaluateIncumbentBar,
+  compareVigourSearch,
+  type VigourEvalContext,
+  type CompareVigourSearchInput,
+  type CompareVigourSearchResult,
+} from "./vigourIncumbent";
 
 export {
   validateBarEligibility,
@@ -79,7 +93,7 @@ export { buildCandidatePool, indexPool, poolAbilityFromSpec } from "./candidateP
 export { evaluateRevolutionBar } from "./evaluate";
 
 export { barDistance, diverseSelect } from "./diversity";
-export { buildSeeds, type SeedOptions } from "./seeds";
+export { buildSeeds, normalizeAuthoredSeed, type SeedOptions } from "./seeds";
 export {
   solve,
   solveAsync,
@@ -155,6 +169,8 @@ export {
   canonicalSolveContext,
   canonicalEvaluationContext,
   canonicalSimulationIdentity,
+  solveIdentityFromRequest,
+  resultMatchesRequestIdentity,
   isVerifiedCacheableResult,
   VERIFIED_CACHEABLE_PROOFS,
   NON_CACHEABLE_PROOFS,

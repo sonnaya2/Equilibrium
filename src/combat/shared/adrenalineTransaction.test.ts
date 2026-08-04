@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { resolveAdrenalineTransaction } from "./adrenalineTransaction";
+import {
+  netAdrenalineDeltaFromTransaction,
+  previewAdrenalineTransaction,
+  resolveAdrenalineTransaction,
+} from "./adrenalineTransaction";
 import {
   CONSERVATION_OF_ENERGY_REFUND,
 } from "./conservationOfEnergy";
@@ -292,5 +296,100 @@ describe("resolveAdrenalineTransaction - spend / refunds", () => {
     });
     expect(tx.afterResourcesUnclamped).toBe(120);
     expect(tx.afterResources).toBe(100);
+  });
+
+  it("qualifying ultimate: Vigour alone nets exactly +10 retain from 100-cost", () => {
+    const tx = resolveAdrenalineTransaction({
+      before: 100,
+      cap: 100,
+      listedGain: 0,
+      isGeneratingBasicAbility: false,
+      isBasicAttack: false,
+      listedCost: 100,
+      effectiveCost: 100,
+      relentlessProc: false,
+      ringOfVigourRefund: RING_OF_VIGOUR_REFUND,
+    });
+    expect(tx.ringOfVigourRefund).toBe(10);
+    expect(tx.conservationOfEnergyRefund).toBe(0);
+    expect(tx.afterResources).toBe(10);
+    expect(netAdrenalineDeltaFromTransaction(tx)).toBe(-90);
+  });
+
+  it("CoE + Vigour nets exactly +20 retain (additive fields, not stacked sources)", () => {
+    const tx = resolveAdrenalineTransaction({
+      before: 100,
+      cap: 100,
+      listedGain: 0,
+      isGeneratingBasicAbility: false,
+      isBasicAttack: false,
+      listedCost: 100,
+      effectiveCost: 100,
+      relentlessProc: false,
+      conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
+      ringOfVigourRefund: RING_OF_VIGOUR_REFUND,
+    });
+    expect(tx.conservationOfEnergyRefund + tx.ringOfVigourRefund).toBe(20);
+    expect(tx.afterResources).toBe(20);
+    expect(netAdrenalineDeltaFromTransaction(tx)).toBe(-80);
+  });
+});
+
+describe("previewAdrenalineTransaction (analysis SSOT)", () => {
+  const ult = {
+    id: "berserk",
+    category: "ultimate",
+    adrenaline: { cost: 100 },
+  };
+  const threshold = {
+    id: "assault",
+    category: "threshold",
+    adrenaline: { cost: 25 },
+  };
+  const special = {
+    id: "instability",
+    category: "enhanced",
+    weaponSpecial: true,
+    adrenaline: { cost: 50 },
+  };
+
+  it("Vigour ultimate: refund field 10, net -90", () => {
+    const tx = previewAdrenalineTransaction(ult, { ringOfVigour: true });
+    expect(tx.ringOfVigourRefund).toBe(10);
+    expect(tx.conservationOfEnergyRefund).toBe(0);
+    expect(tx.actualSpend).toBe(100);
+    expect(netAdrenalineDeltaFromTransaction(tx)).toBe(-90);
+  });
+
+  it("CoE + Vigour ultimate: exactly +20 refunds, net -80", () => {
+    const tx = previewAdrenalineTransaction(ult, {
+      conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
+      ringOfVigour: true,
+    });
+    expect(tx.conservationOfEnergyRefund).toBe(10);
+    expect(tx.ringOfVigourRefund).toBe(10);
+    expect(netAdrenalineDeltaFromTransaction(tx)).toBe(-80);
+  });
+
+  it("weapon special: requirement and spend use same Vigour discount", () => {
+    const tx = previewAdrenalineTransaction(special, { ringOfVigour: true });
+    expect(tx.listedCost).toBe(50);
+    expect(tx.effectiveCost).toBe(45);
+    expect(tx.actualSpend).toBe(45);
+    expect(tx.ringOfVigourRefund).toBe(0);
+    expect(netAdrenalineDeltaFromTransaction(tx)).toBe(-45);
+  });
+
+  it("non-special threshold: cost unchanged, no ultimate refunds", () => {
+    const tx = previewAdrenalineTransaction(threshold, {
+      conservationOfEnergyRefund: CONSERVATION_OF_ENERGY_REFUND,
+      ringOfVigour: true,
+    });
+    expect(tx.listedCost).toBe(25);
+    expect(tx.effectiveCost).toBe(25);
+    expect(tx.actualSpend).toBe(25);
+    expect(tx.conservationOfEnergyRefund).toBe(0);
+    expect(tx.ringOfVigourRefund).toBe(0);
+    expect(netAdrenalineDeltaFromTransaction(tx)).toBe(-25);
   });
 });

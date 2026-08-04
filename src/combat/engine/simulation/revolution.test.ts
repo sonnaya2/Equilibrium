@@ -7,7 +7,12 @@ import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
 import { rotationOf } from "./contracts";
-import { simulateRevolution } from "./revolution";
+import {
+  compareRevolutionWithVigour,
+  diagnoseStrictPriorityResourceDivergence,
+  STRICT_PRIORITY_RESOURCE_DIVERGENCE_EXPLANATION,
+  simulateRevolution,
+} from "./revolution";
 import { simulate } from "./simulate";
 import { secondsToTicks, TICK_SECONDS } from "../../core/ticks";
 
@@ -512,5 +517,78 @@ describe("revolution — channels and horizon", () => {
     expect(withTails.totalExpected).toBeCloseTo(1300);
     expect(withTails.totalExpectedIncludingTails).toBeCloseTo(4000);
     expect(withTails.dps).toBeCloseTo(1300 / (6 * TICK_SECONDS), 5);
+  });
+});
+
+describe("strict-priority resource divergence (Vigour)", () => {
+  const revoBase = {
+    ...baseInput,
+    abilities: [...ENGINE_SPECS.values()],
+    style: "magic" as const,
+    durationTicks: 120,
+  };
+
+  it("badly ordered threshold under ult diverges and names the spender (not a passive penalty)", () => {
+    // Ult first then 25% threshold: Vigour refund advances when wild_magic is affordable.
+    // Strict priority spends the extra adren on wild_magic - diagnostic names that spender.
+    const bar = [abilitySpec("sunshine"), abilitySpec("wild_magic")];
+    const { off, on, divergence } = compareRevolutionWithVigour({
+      ...revoBase,
+      bar,
+      startingAdrenaline: 100,
+    });
+    expect(off.ok && on.ok).toBe(true);
+    expect(divergence, "expected selection divergence under Vigour").not.toBeNull();
+    expect(divergence!.kind).toBe("strict-priority-resource-divergence");
+    expect(divergence!.explanation).toBe(STRICT_PRIORITY_RESOURCE_DIVERGENCE_EXPLANATION);
+    expect(divergence!.explanation).toMatch(/not a passive damage penalty/i);
+    // Off still weaving a basic; On already spends wild_magic with the extra adren.
+    expect(divergence!.abilityOff).toBe("magic_attack");
+    expect(divergence!.abilityOn).toBe("wild_magic");
+    expect(divergence!.adrenBeforeOn).toBeGreaterThan(divergence!.adrenBeforeOff);
+    expect(divergence!.tick).toBeGreaterThan(0);
+  });
+
+  it("no-RNG controlled bar without an extra spender cannot lose unconditional damage from Vigour", () => {
+    // Permanent flag (ringOfVigour), same gear, single ult - no secondary threshold to re-spend residual.
+    const bar = [abilitySpec("sunshine")];
+    const { off, on, divergence } = compareRevolutionWithVigour({
+      ...revoBase,
+      bar,
+      startingAdrenaline: 100,
+      // Explicit permanent-path flag already OR-resolved into adrenaline.ringOfVigour.
+      adrenaline: { ringOfVigour: true },
+    });
+    expect(off.ok && on.ok).toBe(true);
+    expect(divergence).toBeNull();
+    // Unconditional E[D]: Vigour must not reduce damage when nothing else spends the residual.
+    expect(on.totalExpected).toBeGreaterThanOrEqual(off.totalExpected - 1e-6);
+    // Sequences match ability-for-ability at each cast tick.
+    expect(off.casts.map((c) => `${c.tick}:${c.abilityId}`)).toEqual(
+      on.casts.map((c) => `${c.tick}:${c.abilityId}`),
+    );
+  });
+
+  it("diagnoseStrictPriorityResourceDivergence is pure over cast logs", () => {
+    const offCasts = [
+      { tick: 0, abilityId: "sunshine", adrenalineBefore: 100, adrenalineAfter: 0 },
+      { tick: 9, abilityId: "magic_attack", adrenalineBefore: 18, adrenalineAfter: 27 },
+    ];
+    const onCasts = [
+      { tick: 0, abilityId: "sunshine", adrenalineBefore: 100, adrenalineAfter: 10 },
+      { tick: 9, abilityId: "wild_magic", adrenalineBefore: 28, adrenalineAfter: 3 },
+    ];
+    const d = diagnoseStrictPriorityResourceDivergence(
+      { casts: offCasts as never },
+      { casts: onCasts as never },
+    );
+    expect(d).toMatchObject({
+      kind: "strict-priority-resource-divergence",
+      tick: 9,
+      abilityOff: "magic_attack",
+      abilityOn: "wild_magic",
+      adrenBeforeOff: 18,
+      adrenBeforeOn: 28,
+    });
   });
 });

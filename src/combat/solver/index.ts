@@ -42,11 +42,21 @@ export {
 export { createRng, type Rng } from "./rng";
 
 export {
+  barKey,
   fingerprintBar,
   stableStringify,
   fingerprintEvaluationKey,
   type EvaluationKeyParts,
 } from "./fingerprint";
+
+export {
+  isSolverProfilingEnabled,
+  enableSolverProfiling,
+  resetSolverProfileCounters,
+  beginSolverProfileWindow,
+  getSolverDuplicateCounters,
+  type SolverDuplicateCounters,
+} from "./profiling";
 
 export { EvalCache, createEvalCache } from "./cache";
 
@@ -86,11 +96,21 @@ export {
   exclusiveKey,
   canAdd,
   remainingCandidates,
+  createEligibilityMemo,
+  eligibilityOptionKey,
   type EligibilityOptions,
+  type EligibilityMemo,
 } from "./eligibility";
 
 export { buildCandidatePool, indexPool, poolAbilityFromSpec } from "./candidatePool";
 export { evaluateRevolutionBar } from "./evaluate";
+export {
+  compileEvaluationContext,
+  compileEvaluationContextFromEvalRequest,
+  type CompiledEvaluationContext,
+  type CompiledAbilityRegistry,
+  type CompileEvaluationContextInput,
+} from "./compiledContext";
 
 export { barDistance, diverseSelect } from "./diversity";
 export { buildSeeds, normalizeAuthoredSeed, type SeedOptions } from "./seeds";
@@ -112,6 +132,25 @@ export {
 } from "./solve";
 export { clearEvalMemo, evalMemoStats } from "./evalMemo";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
+export {
+  createProfileCounters,
+  isSolverProfileEnabled,
+  setActiveSolverProfile,
+  clearActiveSolverProfile,
+  getActiveSolverProfile,
+  noteEval,
+  noteUniqueBar,
+  noteProgressEmit,
+  noteWorkerWait,
+  noteFingerprintJoin,
+  noteBarKeySeen,
+  noteDuplicateEvalAttempt,
+  noteNeighborBatch,
+  noteBeamChild,
+  snapshotProfile,
+  type SolverProfileCounters,
+  type SolverProfileSnapshot,
+} from "./profiling/counters";
 export {
   packSolverRequest,
   packSimBase,
@@ -136,6 +175,7 @@ export {
   tierAgentCount,
   TIER_MAX_AGENTS,
   SAFE_GLOBAL_AGENT_CEILING,
+  RESERVES_UI_CORE,
   detectHardwareCores,
   recipesForTier,
   planRecipe,

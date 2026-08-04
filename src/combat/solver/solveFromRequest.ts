@@ -22,6 +22,13 @@ import {
 import { emitProgress, mapPhase, type ProgressState } from "./progressReporter";
 import { buildMemoContext, createEvaluateFn } from "./evaluationSession";
 import { buildSolverResultDto } from "./resultBuilder";
+import {
+  createProfileCounters,
+  isSolverProfileEnabled,
+  setActiveSolverProfile,
+  clearActiveSolverProfile,
+  snapshotProfile,
+} from "./profiling/counters";
 
 /**
  * Production entry: serializable request → real engine evaluations → ranked bars.
@@ -36,6 +43,8 @@ export const solveFromRequest: SolveFn = async (
     err.name = "AbortError";
     throw err;
   }
+
+  const profile = createProfileCounters(isSolverProfileEnabled(options?.profile));
 
   const simBase = requireSimBase(request.loadout);
   const disabled = new Set(request.disabledAbilityIds ?? []);
@@ -103,6 +112,11 @@ export const solveFromRequest: SolveFn = async (
     finalizeTotal: 0,
     scoringLabel: undefined,
     scoringBarPreview: undefined,
+    lastEmitEvaluations: 0,
+    lastEmitMs: 0,
+    lastEmittedBestExploratory: Number.NEGATIVE_INFINITY,
+    lastEmittedBestFull: Number.NEGATIVE_INFINITY,
+    ...(profile.enabled ? { profile } : {}),
   };
   const seenBars = new Set<string>();
 
@@ -135,7 +149,10 @@ export const solveFromRequest: SolveFn = async (
   const recipe: SolverAgentRecipe = request.agentRecipe ?? "default";
   const recipePatch = configPatchForRecipe(request.tier, recipe);
 
-  const result: SolveResult = await solveAsync(
+  setActiveSolverProfile(profile.enabled ? profile : undefined);
+  let result: SolveResult;
+  try {
+  result = await solveAsync(
     {
       pool: searchPool,
       sizeBounds: { min: request.minBarSize, max: request.maxBarSize },
@@ -182,6 +199,9 @@ export const solveFromRequest: SolveFn = async (
       },
     },
   );
+  } finally {
+    clearActiveSolverProfile();
+  }
 
   if (options?.isCancelled?.() || options?.signal?.aborted) {
     throwCancelled();
@@ -190,6 +210,11 @@ export const solveFromRequest: SolveFn = async (
   // Finalize already full-rescored the shortlist - no second 300s winner sim.
   state.currentPhase = "finalize";
   emitProgress(options, state, true);
+
+  if (profile.enabled) {
+    const snap = snapshotProfile(profile);
+    options?.onProfile?.(snap);
+  }
 
   return buildSolverResultDto({
     request,

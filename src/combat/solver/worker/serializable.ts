@@ -286,6 +286,11 @@ export interface SolverResultDTO {
     score: number;
     fingerprint?: string;
   }[];
+  /**
+   * Phase-0 parallel pool instrumentation (optional; set by SolverAgentPool only).
+   * See protocol.SolverPoolMetrics for field meanings.
+   */
+  poolMetrics?: import("./protocol").SolverPoolMetrics;
 }
 
 export interface SolverProofDTO {

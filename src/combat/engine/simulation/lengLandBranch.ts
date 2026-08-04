@@ -19,6 +19,7 @@ import {
   MAX_LIVE_BRANCHES,
   mergeAndCapBranches,
   mergeBranches,
+  noteBranchLiveCount,
   snapshotRuntime,
   type Branch,
   type BranchExactness,
@@ -99,6 +100,7 @@ export function expandLengOnLand(branch: Branch, tick: number): BranchSet {
     applyLengOutcome(rt, outcome.stacks, outcome.frostUntil);
     out.push({ weight: branch.weight * outcome.weight, rt, error: branch.error });
   }
+  noteBranchLiveCount(out.length);
   return emptyBranchSet(out);
 }
 
@@ -149,11 +151,13 @@ function foldAfterExpand(
   intermediateMax: number,
 ): BranchSet {
   acc.push(...added);
+  noteBranchLiveCount(acc.length);
   const before = acc.length;
   const merged = mergeBranches(acc);
   const exactness: BranchExactness =
     merged.length < before ? "merged-exactly" : "exact";
   if (merged.length <= intermediateMax) {
+    noteBranchLiveCount(merged.length);
     return { branches: merged, residualWeight: 0, exactness };
   }
   const capped = mergeAndCapBranches(merged, maxLive);
@@ -170,7 +174,9 @@ function softBound(acc: Branch[], intermediateMax: number): BranchSet {
     return { branches: acc, residualWeight: 0, exactness: "exact" };
   }
   const before = acc.length;
+  noteBranchLiveCount(before);
   const merged = mergeBranches(acc);
+  noteBranchLiveCount(merged.length);
   return {
     branches: merged,
     residualWeight: 0,
@@ -283,6 +289,8 @@ export function advanceToBranches(
       }
     }
 
+    noteBranchLiveCount(next.length);
+
     // Non-Leng under budget: skip re-key. Otherwise one merge+cap to maxLive.
     if (!expandedAny && next.length <= maxLive) {
       live = next;
@@ -303,6 +311,7 @@ export function advanceToBranches(
     completeAdvance(b.rt, fromTick, targetTick);
   }
 
+  noteBranchLiveCount(live.length);
   return { branches: live, residualWeight, exactness };
 }
 
@@ -412,6 +421,7 @@ export function drainBranchToEnd(branch: Branch, horizonTicks?: number): BranchS
       exactness = combineExactness(exactness, step.exactness);
       next.push(...step.branches);
       needsFinalCap = true;
+      noteBranchLiveCount(next.length);
       if (next.length > MAX_LENG_INTERMEDIATE_BRANCHES) {
         const folded = mergeAndCapBranches(next);
         residualWeight += folded.residualWeight;

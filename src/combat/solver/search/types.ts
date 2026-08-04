@@ -13,6 +13,10 @@ import { OBJECTIVE_VERSION } from "../contracts";
 import { indexPool } from "../candidatePool";
 import { canAdd } from "../eligibility";
 import { fingerprintBar } from "../fingerprint";
+import {
+  noteBarKeySeen,
+  noteDuplicateEvalAttempt,
+} from "../profiling";
 import { isFiniteEval } from "../objective";
 import type { Rng } from "../rng";
 import { createRng } from "../rng";
@@ -152,10 +156,14 @@ function evalBar(
   }
 
   const scoreMode = normalizeEvalMode(mode);
+  // One join for cache key + scored fingerprint + profile bar-key set.
   const fp = fingerprintBar(bar);
+  noteBarKeySeen(fp);
   const cacheKey = cacheKeyFor(scoreMode, fp);
   const cached = state.cache.get(cacheKey);
   if (cached) {
+    // Duplicate attempt: count it, return cached ScoredBar, no re-simulate / no budget spend.
+    noteDuplicateEvalAttempt();
     if (scoreMode === "search") state.searchCacheHits += 1;
     else {
       state.fullCacheHits += 1;
@@ -191,7 +199,7 @@ function evalBar(
     // Do not cache failures as rankable bars (would pollute beam/local).
     return null;
   }
-  const scored = toScoredBar(bar, result, state.config, scoreMode, source);
+  const scored = toScoredBar(bar, result, state.config, scoreMode, source, fp);
   if (!isFiniteEval({ score: scored.robustScore })) {
     return null;
   }
@@ -216,7 +224,10 @@ export function toScoredBar(
   config: SearchConfig,
   mode: ScoreEvalMode,
   source?: string,
+  /** Precomputed {@link barKey}/{@link fingerprintBar}; avoids a second join. */
+  fingerprint?: string,
 ): ScoredBar {
+  const fp = fingerprint ?? fingerprintBar(bar);
   const profileId = config.profileId ?? "balanced";
   const horizonTicks =
     result.horizonTicks ??
@@ -226,7 +237,7 @@ export function toScoredBar(
   if (obj && "ok" in obj && obj.ok === false) {
     return {
       bar: [...bar],
-      fingerprint: fingerprintBar(bar),
+      fingerprint: fp,
       minDpm: 0,
       weightedMean: 0,
       robustScore: Number.NEGATIVE_INFINITY,
@@ -250,7 +261,7 @@ export function toScoredBar(
     const fullRankable = mode === "full" && result.validForFinalRanking !== false;
     return {
       bar: [...bar],
-      fingerprint: fingerprintBar(bar),
+      fingerprint: fp,
       minDpm: obj.minDpm,
       weightedMean: obj.weightedMean,
       robustScore,
@@ -280,7 +291,7 @@ export function toScoredBar(
       : mode === "full" && Number.isFinite(score);
   return {
     bar: [...bar],
-    fingerprint: fingerprintBar(bar),
+    fingerprint: fp,
     minDpm: score,
     weightedMean: score,
     robustScore: score,
@@ -383,3 +394,6 @@ export function replaceAt(bar: readonly string[], index: number, id: string): st
   next[index] = id;
   return next;
 }
+
+/** Re-export for search modules that need the shared identity helper. */
+export { barKey } from "../fingerprint";

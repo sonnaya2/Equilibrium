@@ -1,6 +1,7 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { ItemPassiveId } from "../data/records";
 import { resolveAbilityCastAvailability } from "../shared/requirements";
+import { EvalCache } from "./cache";
 import type {
   BarSizeBounds,
   CandidatePool,
@@ -11,20 +12,78 @@ import type {
 
 export type { BarSizeBounds, ExclusionReason, SizeBounds } from "./contracts";
 
+/**
+ * Session-scoped eligibility LRU. Bound to one CandidatePool + resolved option
+ * slice for a single solve; never process-global / cross-request.
+ */
+export interface EligibilityMemo {
+  readonly pool: CandidatePool;
+  /** Fingerprint of resolved options used when the memo was created. */
+  readonly optionKey: string;
+  readonly cache: EvalCache<ExclusionReason[]>;
+}
+
 export interface EligibilityOptions {
   includePartial?: boolean;
   size?: BarSizeBounds;
   weaponConfiguration?: CandidatePool["options"]["weaponConfiguration"];
   equipmentIds?: readonly string[];
   passiveIds?: readonly string[];
+  /**
+   * Optional per-solve memo. Only used when `memo.pool === pool` and the call's
+   * resolved options match `memo.optionKey`; otherwise validation runs uncached.
+   */
+  memo?: EligibilityMemo;
 }
 
 const DEFAULT_SIZE: SizeBounds = { min: 1, max: 10 };
+const DEFAULT_MEMO_ENTRIES = 2_048;
 
 export function normalizeSizeBounds(size?: BarSizeBounds): SizeBounds {
   if (!size) return DEFAULT_SIZE;
   if ("min" in size && "max" in size) return { min: size.min, max: size.max };
   return { min: size.minSlots, max: size.maxSlots };
+}
+
+/** Resolved option fingerprint; must match validateBarEligibility's defaults. */
+export function eligibilityOptionKey(
+  pool: CandidatePool,
+  options: EligibilityOptions = {},
+): string {
+  const size = normalizeSizeBounds(options.size);
+  const includePartial = options.includePartial ?? pool.options.includePartial ?? false;
+  const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
+  const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
+  const passiveIds = options.passiveIds ?? pool.options.passiveIds;
+  return [
+    pool.style,
+    String(size.min),
+    String(size.max),
+    includePartial ? "1" : "0",
+    weaponConfiguration ?? "",
+    equipmentIds?.join(",") ?? "",
+    passiveIds?.join(",") ?? "",
+  ].join("|");
+}
+
+/**
+ * Create a small LRU for one solve session (one pool + fixed eligibility options).
+ * Not safe to reuse across pools or option changes.
+ */
+export function createEligibilityMemo(
+  pool: CandidatePool,
+  options: EligibilityOptions = {},
+  maxEntries: number = DEFAULT_MEMO_ENTRIES,
+): EligibilityMemo {
+  return {
+    pool,
+    optionKey: eligibilityOptionKey(pool, options),
+    cache: new EvalCache(maxEntries),
+  };
+}
+
+function barMemoKey(bar: readonly string[]): string {
+  return bar.join("\0");
 }
 
 /**
@@ -93,14 +152,10 @@ function supportIssue(ability: PoolAbility): ExclusionReason | null {
   };
 }
 
-/**
- * Static Revolution-bar validation. Does not simulate - uniqueness, size,
- * style, weapon/equipment, support status, off-GCD, and replacement groups.
- */
-export function validateBarEligibility(
+function validateBarEligibilityUncached(
   bar: readonly string[],
   pool: CandidatePool,
-  options: EligibilityOptions = {},
+  options: EligibilityOptions,
 ): ExclusionReason[] {
   const issues: ExclusionReason[] = [];
   const size = normalizeSizeBounds(options.size);
@@ -222,6 +277,33 @@ export function validateBarEligibility(
   }
 
   return issues;
+}
+
+/**
+ * Static Revolution-bar validation. Does not simulate - uniqueness, size,
+ * style, weapon/equipment, support status, off-GCD, and replacement groups.
+ *
+ * Pure w.r.t. (bar, pool, options). Optional session memo keys by bar fingerprint
+ * only when pool identity + resolved option key match the memo binding.
+ */
+export function validateBarEligibility(
+  bar: readonly string[],
+  pool: CandidatePool,
+  options: EligibilityOptions = {},
+): ExclusionReason[] {
+  const memo = options.memo;
+  if (memo && memo.pool === pool) {
+    const optionKey = eligibilityOptionKey(pool, options);
+    if (optionKey === memo.optionKey) {
+      const key = barMemoKey(bar);
+      const hit = memo.cache.get(key);
+      if (hit) return hit;
+      const issues = validateBarEligibilityUncached(bar, pool, options);
+      memo.cache.set(key, issues);
+      return issues;
+    }
+  }
+  return validateBarEligibilityUncached(bar, pool, options);
 }
 
 export function isBarEligible(

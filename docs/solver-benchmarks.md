@@ -19,6 +19,9 @@ node scripts/benchmarks/solver.mjs quick
 node scripts/benchmarks/solver.mjs full
 ```
 
+Single case (programmatic / vitest harness): import `runBenchmark` from
+`src/combat/solver/benchmarks/runBenchmark.ts` with `{ caseIds: ["…"], mode }`.
+
 ## Layout
 
 | Path                                           | Role                                     |
@@ -28,10 +31,12 @@ node scripts/benchmarks/solver.mjs full
 | `src/combat/solver/benchmarks/quick.test.ts`   | Vitest entry (quick)                     |
 | `src/combat/solver/benchmarks/full.test.ts`    | Vitest entry (full)                      |
 | `scripts/benchmarks/solver.mjs`                | CLI wrapper around vitest                |
-| `reports/solver-benchmark-quick.json`          | Quick report output                      |
-| `reports/solver-benchmark-full.json`           | Full report output                       |
+| `reports/solver-benchmark-*.json`              | Local report output (gitignored)         |
+| `reports/solver-performance-*.md`              | Short baseline / phase check summaries   |
 
 ## Case IDs
+
+### Baseline / search-shape
 
 | ID                  | Quick? | Notes                               |
 | ------------------- | ------ | ----------------------------------- |
@@ -47,22 +52,36 @@ node scripts/benchmarks/solver.mjs full
 | `eight-slot-search` | no     | Melee DW 5–8                        |
 | `ten-slot-search`   | no     | Melee DW 5–10                       |
 
+### Phase 0 representative fixtures (performance baseline)
+
+| ID                         | Quick? | Notes                                                                 |
+| -------------------------- | ------ | --------------------------------------------------------------------- |
+| `melee-norng-4slot`        | yes    | No-RNG melee: `crit.disabled`, no Impatient/Relentless, fixed 4       |
+| `sunshine-magic`           | no     | Magic DW + Planted Feet; authored seed includes engine id `sunshine`  |
+| `deaths-swiftness-ranged`  | no     | Ranged 2H + Planted Feet; seed includes `deaths_swiftness`            |
+| `necro-conjures`           | no     | Necro conduit pool with `includePartial`; conjure mults + conjure seed |
+| `impatient-relentless`     | no     | Melee DW 4–6 with Impatient 4 + Relentless 5 (state-branching RNG)    |
+| `equipment-procs`          | yes    | Crackling 4 + Aftershock 4 invention procs, fixed 4                   |
+| `league-blessings`         | no     | Equilibrium ruleset; big-boned / abyssal-cinders / avernic-rampage    |
+| `unhinged-300s`            | no     | **Full-only long case**: tier `unhinged`, 500 ticks (300s research)   |
+
 ## Modes
 
 ### Quick
 
-- Cases marked `quick: true` only (4-slot / context).
+- Cases marked `quick: true` only (4-slot / context / no-RNG / procs).
 - Real `evaluateRevolutionBar` + `solveAsync`.
 - Budget ≈ **28** evaluations (not production `TIER_BUDGETS.thorough`).
-- Short horizons (`durationTicks` 50, explore 24).
+- Short horizons (`durationTicks` 50, explore 24) unless a case overrides.
 - Wire `tier` field stays `"thorough"` (only real `SearchTier`); report records
   `tier: "quick@28"`.
 
 ### Full
 
-- All case IDs.
-- Production **`solveFromRequest`** with thorough tier budgets and request
-  horizons as defined in cases (still short vs product UI for wall-clock).
+- All case IDs (including Phase 0 and `unhinged-300s`).
+- Production **`solveFromRequest`** with request tier budgets and horizons as
+  defined in cases (still short vs product UI for most cases; `unhinged-300s`
+  uses the full 500-tick / unhinged budget path).
 
 ## Report schema (per case)
 
@@ -89,10 +108,15 @@ Root report: `schemaVersion`, `mode`, `generatedAt`, `totalDurationMs`, `cases`.
 - Requests are naked serializable loadouts (engine data shapes), not live UI
   `packSolverRequest` state — equipment/passives are packed the same way
   production workers expect (`equipmentIds` + `equipmentEffects.passiveIds`).
+- Ability ids in seeds (`sunshine`, `deaths_swiftness`, `conjure_*`, etc.) come
+  from the engine catalogue under `src/combat/styles/**/abilities.ts`.
+- Impatient / Relentless ranks live on `loadout.adrenaline`; invention procs on
+  `loadout.procs`; league blessings via `resolveLeagueRules` + `serializeLeague`.
 - Fingerprints use `fingerprintSolveContext` so they stay aligned with the
   solution-store cache key.
 - Scoring code paths are read-only; do not “fix” benches by changing objective
-  weights or eligibility rules.
+  weights or eligibility rules. Do **not** lower production `TIER_BUDGETS` in
+  product code for fixtures.
 - Vitest files are gated on `SOLVER_BENCH` (`quick` / `json` / `full` / `1`) so
   `npm run test:solver` does not pay for the harness by default. The CLI sets
   the env automatically.

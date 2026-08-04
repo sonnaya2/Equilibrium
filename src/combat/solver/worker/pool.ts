@@ -8,6 +8,7 @@ import {
   isWorkerToHostMessage,
   type HostToWorkerMessage,
   type SolverAgentSnapshot,
+  type SolverPoolMetrics,
   type SolverProgress,
   type WorkerToHostMessage,
 } from "./protocol";
@@ -15,7 +16,9 @@ import type { SolveProgressHandler } from "./solveTypes";
 import { createSolverWorker, getFirstAckMs } from "./workerCreate";
 import { TIER_BUDGETS } from "../solve";
 import {
+  detectHardwareCores,
   planWorkers,
+  RESERVES_UI_CORE,
   SAFE_GLOBAL_AGENT_CEILING,
   type WorkerAssignment,
 } from "../workerPlan";
@@ -62,17 +65,29 @@ function phaseRank(phase: SolverProgress["phase"] | undefined): number {
 
 function withAgentMeta(
   base: SolverAgentSnapshot,
-  meta?: { recipe?: SolverAgentSnapshot["recipe"]; barLength?: number },
+  meta?: {
+    recipe?: SolverAgentSnapshot["recipe"];
+    barLength?: number;
+    finishRank?: number;
+    evaluationBudget?: number;
+  },
 ): SolverAgentSnapshot {
   if (meta?.recipe) base.recipe = meta.recipe;
   if (meta?.barLength != null) base.barLength = meta.barLength;
+  if (meta?.finishRank != null) base.finishRank = meta.finishRank;
+  if (meta?.evaluationBudget != null) base.evaluationBudget = meta.evaluationBudget;
   return base;
 }
 
 function agentSnapshot(
   index: number,
   part: SolverProgress | undefined,
-  meta?: { recipe?: SolverAgentSnapshot["recipe"]; barLength?: number },
+  meta?: {
+    recipe?: SolverAgentSnapshot["recipe"];
+    barLength?: number;
+    finishRank?: number;
+    evaluationBudget?: number;
+  },
 ): SolverAgentSnapshot {
   if (!part) {
     return withAgentMeta(
@@ -103,18 +118,87 @@ function agentSnapshot(
   );
 }
 
+/** Live timing inputs for Phase-0 pool metrics (optional; unit tests omit). */
+export type PoolMetricsLive = {
+  /** Epoch ms when SolverAgentPool.run started. */
+  startedAtMs: number;
+  /** Wall ms (relative to start) when each agent posted result. */
+  agentFinishedAtMs: readonly (number | undefined)[];
+  /** Agent indexes in finish order. */
+  finishOrder: readonly number[];
+  hardwareCores: number;
+  reservedCore: boolean;
+  /** Override "now" for deterministic tests (defaults to Date.now()). */
+  nowMs?: number;
+};
+
+/**
+ * Build measure-only pool metrics from independent per-agent budgets + live timing.
+ * uniqueCandidatesSum is the naive sum (known-wrong double-count).
+ */
+export function buildPoolMetrics(
+  parts: readonly (SolverProgress | undefined)[],
+  agentCount: number,
+  perAgentBudget: number,
+  live?: PoolMetricsLive,
+): SolverPoolMetrics {
+  let uniqueCandidatesSum = 0;
+  const agentEvaluations: number[] = [];
+  for (let i = 0; i < agentCount; i++) {
+    const p = parts[i];
+    uniqueCandidatesSum += p?.uniqueCandidates ?? 0;
+    agentEvaluations.push(p?.evaluations ?? 0);
+  }
+
+  const metrics: SolverPoolMetrics = {
+    agentCount,
+    perAgentBudget,
+    globalBudgetSum: perAgentBudget * agentCount,
+    uniqueCandidatesSum,
+    uniqueCandidatesSumKnownWrong: true,
+    reservedCore: live?.reservedCore ?? RESERVES_UI_CORE,
+    agentEvaluations,
+  };
+  if (live?.hardwareCores != null) metrics.hardwareCores = live.hardwareCores;
+  if (live?.finishOrder?.length) metrics.finishOrder = [...live.finishOrder];
+
+  if (live) {
+    const finishedAts = live.agentFinishedAtMs
+      .filter((t): t is number => typeof t === "number" && Number.isFinite(t));
+    if (finishedAts.length > 0) {
+      const first = Math.min(...finishedAts);
+      const last = Math.max(...finishedAts);
+      metrics.firstFinishedMs = first;
+      metrics.lastFinishedMs = last;
+      metrics.stragglerWaitMs = Math.max(0, last - first);
+    }
+  }
+
+  return metrics;
+}
+
 /** Exported for unit tests - host progress merge across parallel agents. */
 export function mergeProgress(
   parts: readonly (SolverProgress | undefined)[],
   agentCount: number,
   baseBudget: number,
-  agentMeta?: readonly { recipe?: SolverAgentSnapshot["recipe"]; barLength?: number }[],
+  agentMeta?: readonly {
+    recipe?: SolverAgentSnapshot["recipe"];
+    barLength?: number;
+    finishRank?: number;
+    evaluationBudget?: number;
+  }[],
+  live?: PoolMetricsLive,
 ): SolverProgress {
   const agents = Array.from({ length: agentCount }, (_, i) =>
-    agentSnapshot(i, parts[i], agentMeta?.[i]),
+    agentSnapshot(i, parts[i], {
+      ...agentMeta?.[i],
+      evaluationBudget: agentMeta?.[i]?.evaluationBudget ?? baseBudget,
+      finishRank: agentMeta?.[i]?.finishRank,
+    }),
   );
-  const live = parts.filter((p): p is SolverProgress => p != null);
-  if (live.length === 0) {
+  const live_parts = parts.filter((p): p is SolverProgress => p != null);
+  if (live_parts.length === 0) {
     return {
       phase: "seed",
       evaluations: 0,
@@ -123,21 +207,23 @@ export function mergeProgress(
       windowDpms: 0,
       topBarPreview: [],
       noImprovementCount: 0,
+      // Global sum of independent budgets (not a shared cap).
       evaluationBudget: baseBudget * agentCount,
       progressRatio: 0.02,
       agentCount,
       agents,
+      poolMetrics: buildPoolMetrics(parts, agentCount, baseBudget, live),
     };
   }
 
-  let best = live[0]!;
+  let best = live_parts[0]!;
   let evaluations = 0;
   let unique = 0;
   let ratioSum = 0;
   let searchPhase: SolverProgress["phase"] = "seed";
   let anyStillSearching = false;
   let anyFinalize = false;
-  let allDone = live.length > 0;
+  let allDone = live_parts.length > 0;
   /** Furthest shortlist score - not the exploratory-score leader. */
   let finalizeLead: SolverProgress | undefined;
   let bestExploratory = Number.NEGATIVE_INFINITY;
@@ -153,7 +239,7 @@ export function mergeProgress(
   /** Busiest unfinished agent’s active bar - keeps the strip cycling under merge. */
   let activeLead: SolverProgress | undefined;
 
-  for (const p of live) {
+  for (const p of live_parts) {
     evaluations += p.evaluations;
     unique += p.uniqueCandidates;
     ratioSum += p.progressRatio ?? 0;
@@ -228,6 +314,7 @@ export function mergeProgress(
   return {
     phase,
     evaluations,
+    // Known-wrong sum of per-agent uniqueCandidates (see poolMetrics).
     uniqueCandidates: unique,
     // bestScore stays exploratory-only across agents.
     bestScore: hasExploratory ? bestExploratory : best.bestScore,
@@ -241,10 +328,12 @@ export function mergeProgress(
     topBarPreview,
     ...(activeBarPreview ? { activeBarPreview } : {}),
     noImprovementCount: best.noImprovementCount,
+    // Global sum of independent per-agent budgets (not a shared cap yet).
     evaluationBudget: baseBudget * agentCount,
     progressRatio,
     agentCount,
     agents,
+    poolMetrics: buildPoolMetrics(parts, agentCount, baseBudget, live),
     ...(fin && fin.finalizeTotal != null && fin.finalizeTotal > 0
       ? {
           finalizeStep: fin.finalizeStep,
@@ -265,6 +354,7 @@ export function mergeProgress(
 export function mergeResults(
   results: readonly SolverResultDTO[],
   hostRequest?: SerializableSolverRequest,
+  poolMetrics?: SolverPoolMetrics,
 ): SolverResultDTO {
   if (results.length === 0) {
     throw new Error("revolution solver pool: no results");
@@ -307,12 +397,14 @@ export function mergeResults(
       ? solveIdentityFromRequest(hostRequest)
       : best.solveIdentity,
     evaluations,
+    // Known-wrong sum across agents (see poolMetrics.uniqueCandidatesSumKnownWrong).
     uniqueCandidates: unique,
     top: top.slice(0, 5),
     proof: {
       ...best.proof,
       notes: notes.length > 0 ? notes : best.proof?.notes,
     },
+    ...(poolMetrics ? { poolMetrics } : {}),
   };
 }
 
@@ -410,6 +502,7 @@ export class SolverAgentPool {
   ): Promise<SolverResultDTO> {
     this.cancel();
 
+    const hardwareCores = detectHardwareCores();
     const plan = planWorkers({
       minBarSize: request.minBarSize,
       maxBarSize: request.maxBarSize,
@@ -417,6 +510,7 @@ export class SolverAgentPool {
       baseSeed: request.seed ?? 1,
       agents: options?.agents,
       maxAgents: MAX_POOL,
+      hardwareCores,
     });
     const want = plan.agentCount;
     const n = this.ensure(want);
@@ -431,17 +525,39 @@ export class SolverAgentPool {
       throw new DOMException("revolution solver cancelled", "AbortError");
     }
 
+    // Independent per-agent budget (Phase 0): each agent still gets the full tier budget.
     const baseBudget = TIER_BUDGETS[request.tier] ?? TIER_BUDGETS.thorough;
     const progressParts: (SolverProgress | undefined)[] = Array.from({
       length: agentCount,
     });
-    const agentMeta = assignments.map((a) => ({
-      recipe: a.recipe,
-      barLength: a.targetLength,
-    }));
+    const startedAtMs = Date.now();
+    const agentFinishedAtMs: (number | undefined)[] = Array.from({ length: agentCount });
+    const finishOrder: number[] = [];
+
+    const liveMetrics = (): PoolMetricsLive => ({
+      startedAtMs,
+      agentFinishedAtMs,
+      finishOrder,
+      hardwareCores,
+      reservedCore: RESERVES_UI_CORE,
+    });
+
+    const agentMetaFor = () =>
+      assignments.map((a, i) => {
+        const rankIdx = finishOrder.indexOf(i);
+        return {
+          recipe: a.recipe,
+          barLength: a.targetLength,
+          evaluationBudget: baseBudget,
+          ...(rankIdx >= 0 ? { finishRank: rankIdx } : {}),
+        };
+      });
+
     const emit = () => {
       if (cancelled()) return;
-      onProgress?.(mergeProgress(progressParts, agentCount, baseBudget, agentMeta));
+      onProgress?.(
+        mergeProgress(progressParts, agentCount, baseBudget, agentMetaFor(), liveMetrics()),
+      );
     };
 
     const runCancels: Array<() => void> = [];
@@ -456,6 +572,12 @@ export class SolverAgentPool {
       };
       drop(runCancels);
       drop(this.activeCancels);
+    };
+
+    const markFinished = (index: number) => {
+      if (agentFinishedAtMs[index] != null) return;
+      agentFinishedAtMs[index] = Date.now() - startedAtMs;
+      finishOrder.push(index);
     };
 
     const runOne = (index: number): Promise<SolverResultDTO> => {
@@ -542,6 +664,7 @@ export class SolverAgentPool {
                 prev?.bestScore ??
                 0;
               const full = msg.result.bestFullScore ?? msg.result.score;
+              markFinished(index);
               progressParts[index] = {
                 // idle + ratio 1 marks agent done.
                 phase: "idle",
@@ -603,6 +726,9 @@ export class SolverAgentPool {
     };
 
     try {
+      // Emit seed progress so UI/benchmarks see poolMetrics before first worker tick.
+      emit();
+
       const settled = await Promise.allSettled(
         Array.from({ length: agentCount }, (_, i) => runOne(i)),
       );
@@ -635,8 +761,15 @@ export class SolverAgentPool {
         }
         throw new Error(errors[0] ?? "revolution solver pool: all agents failed");
       }
+
+      const poolMetrics = buildPoolMetrics(
+        progressParts,
+        agentCount,
+        baseBudget,
+        liveMetrics(),
+      );
       // Re-stamp host/session identity (agents use patched seed + bar bands).
-      return mergeResults(ok, request);
+      return mergeResults(ok, request, poolMetrics);
     } finally {
       for (const fn of runCancels) unregisterCancel(fn);
     }

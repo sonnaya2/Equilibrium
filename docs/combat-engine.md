@@ -204,6 +204,14 @@ Global combat modifiers stay separate from cast-specific modifiers; event proven
 
 Optional second metric: **damage from casts begun within the horizon** including later tails — only when explicitly requested (`includeTails` / `totalExpectedIncludingTails`), separately named, never presented as fixed-window DPS.
 
+**Detail levels** (`SimulateOptions.detailLevel`, default `full-analysis`):
+
+- `score-only` - ranking metrics only (`totalExpected`, `damageByTick`, rng gates). Solver search uses this.
+- `summary` - score metrics plus light diagnostics; no casts/events/analysis.
+- `full-analysis` - full `RotationSummary` for UI/forensics.
+
+Physics, branching, and ranking metrics are identical across levels (see `docs/solver-score-only-design.md` and `scoreOnlyParity.test.ts`).
+
 | Metric                 | Definition                                                                                                               |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Fixed-window DPM       | Everything that lands inside a stated window ÷ window. Unfinished tails past the edge excluded. Denominator is an input. |

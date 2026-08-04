@@ -6,6 +6,58 @@ export type { SolverResultDTO, SolverProofDTO };
 export type SolverPhase = "seed" | "explore" | "exploit" | "finalize" | "paused" | "idle";
 
 /**
+ * Phase-0 parallel pool instrumentation (measure only, cloneable).
+ * Reflects current independent per-agent budgets - not a shared global budget.
+ */
+export interface SolverPoolMetrics {
+  /** Agents launched this run. */
+  agentCount: number;
+  /**
+   * Per-agent evaluation budget (TIER_BUDGETS[tier] each agent still receives in full).
+   * Independent-budget behavior: every agent spends this many evals on its own.
+   */
+  perAgentBudget: number;
+  /**
+   * Sum of per-agent budgets (= perAgentBudget * agentCount).
+   * Measure-only stand-in until a real shared global budget ships.
+   */
+  globalBudgetSum: number;
+  /**
+   * Sum of uniqueCandidates across agents.
+   * Known-wrong: agents double-count shared bars; not host-side set cardinality.
+   */
+  uniqueCandidatesSum: number;
+  /** True when uniqueCandidatesSum is a naive sum (always true in Phase 0). */
+  uniqueCandidatesSumKnownWrong: true;
+  /**
+   * Wall-clock ms from pool start until the first agent posted a final result.
+   * Undefined until at least one agent finishes.
+   */
+  firstFinishedMs?: number;
+  /**
+   * Wall-clock ms from pool start until the last agent among those that finished
+   * successfully so far (or all settled at result time).
+   */
+  lastFinishedMs?: number;
+  /**
+   * lastFinishedMs - firstFinishedMs: time waiting on the slowest finished agent
+   * after the first finished. Undefined until both ends are known.
+   */
+  stragglerWaitMs?: number;
+  /** Logical cores used when planning (navigator.hardwareConcurrency or override). */
+  hardwareCores?: number;
+  /**
+   * Whether the planner holds back a core for the UI main thread.
+   * Phase 0: false - preferredAgentCount may claim full hardwareConcurrency.
+   */
+  reservedCore: boolean;
+  /** Agent indexes in the order they posted result (first finisher first). */
+  finishOrder?: readonly number[];
+  /** Per-agent evaluation counts (index-aligned with agent slots). */
+  agentEvaluations?: readonly number[];
+}
+
+/**
  * Incremental search status. Keep fields cloneable - no Maps/Sets/functions.
  * topBarPreview is ability ids only so the UI can render without ability specs.
  */
@@ -31,6 +83,10 @@ export interface SolverProgress {
    * candidates; distinct from topBarPreview (best-so-far).
    */
   activeBarPreview?: readonly string[];
+  /**
+   * Merged display budget. Pool path sets this to perAgentBudget * agentCount
+   * (global sum of independent budgets), not a shared cap.
+   */
   evaluationBudget?: number;
   progressRatio?: number;
   finalizeStep?: number;
@@ -51,6 +107,8 @@ export interface SolverProgress {
    * High during re-Optimize on the same loadout - scoring looks instant.
    */
   fullMemoHits?: number;
+  /** Phase-0 pool instrumentation (optional; pool path only). */
+  poolMetrics?: SolverPoolMetrics;
   proof?: SolverProofDTO;
 }
 
@@ -67,6 +125,13 @@ export interface SolverAgentSnapshot {
   recipe?: "default" | "evolutionary" | "anneal_local";
   /** Fixed bar length this worker searches. */
   barLength?: number;
+  /**
+   * 0-based finish rank among agents that posted a result (0 = first finisher).
+   * Undefined while that agent is still running.
+   */
+  finishRank?: number;
+  /** Independent per-agent evaluation budget (same as poolMetrics.perAgentBudget). */
+  evaluationBudget?: number;
 }
 
 export interface StartSolverMessage {

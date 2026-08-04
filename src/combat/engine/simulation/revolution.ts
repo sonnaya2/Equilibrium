@@ -37,7 +37,14 @@ export function simulateRevolution(
   options?: SimulateOptions,
 ): RotationSummary {
   let branches: Branch[] = [
-    { weight: 1, rt: createRuntime({ ...input, horizonTicks: input.durationTicks }) },
+    {
+      weight: 1,
+      rt: createRuntime({
+        ...input,
+        horizonTicks: input.durationTicks,
+        detailLevel: options?.detailLevel,
+      }),
+    },
   ];
   let sawBranching = false;
   let residualWeight = 0;

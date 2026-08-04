@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { mergeProgress, mergeResults, SolverAgentPool, solverPoolSize } from "./pool";
+import {
+  buildPoolMetrics,
+  mergeProgress,
+  mergeResults,
+  SolverAgentPool,
+  solverPoolSize,
+} from "./pool";
 import type { SolverProgress } from "./protocol";
 import {
   isVerifiedCacheableResult,
@@ -355,5 +361,111 @@ describe("mergeResults host solveIdentity", () => {
     expect(merged.score).toBe(15_000);
     expect(resultMatchesRequestIdentity(hostRequest, merged)).toBe(true);
     expect(isVerifiedCacheableResult(hostRequest, merged)).toBe(true);
+  });
+});
+
+
+describe("Phase-0 pool metrics", () => {
+  it("reports per-agent budget vs global sum and known-wrong unique sum", () => {
+    const parts = [
+      progress({ bestScore: 10, evaluations: 100, uniqueCandidates: 40 }),
+      progress({ bestScore: 12, evaluations: 90, uniqueCandidates: 35 }),
+    ];
+    const merged = mergeProgress(parts, 2, 2400);
+    expect(merged.evaluationBudget).toBe(4800);
+    expect(merged.poolMetrics).toMatchObject({
+      agentCount: 2,
+      perAgentBudget: 2400,
+      globalBudgetSum: 4800,
+      uniqueCandidatesSum: 75,
+      uniqueCandidatesSumKnownWrong: true,
+      reservedCore: false,
+      agentEvaluations: [100, 90],
+    });
+    // Progress uniqueCandidates remains the naive sum (same as poolMetrics).
+    expect(merged.uniqueCandidates).toBe(75);
+  });
+
+  it("records first/last finished and straggler wait from live timing", () => {
+    const parts = [
+      progress({ bestScore: 10, evaluations: 50, uniqueCandidates: 10, progressRatio: 1, phase: "idle" }),
+      progress({ bestScore: 8, evaluations: 80, uniqueCandidates: 20, progressRatio: 1, phase: "idle" }),
+    ];
+    const live = {
+      startedAtMs: 1_000,
+      agentFinishedAtMs: [120, 400] as const,
+      finishOrder: [0, 1] as const,
+      hardwareCores: 8,
+      reservedCore: false,
+    };
+    const metrics = buildPoolMetrics(parts, 2, 2400, live);
+    expect(metrics.firstFinishedMs).toBe(120);
+    expect(metrics.lastFinishedMs).toBe(400);
+    expect(metrics.stragglerWaitMs).toBe(280);
+    expect(metrics.finishOrder).toEqual([0, 1]);
+    expect(metrics.hardwareCores).toBe(8);
+    expect(metrics.agentEvaluations).toEqual([50, 80]);
+
+    const merged = mergeProgress(
+      parts,
+      2,
+      2400,
+      [
+        { finishRank: 0, evaluationBudget: 2400 },
+        { finishRank: 1, evaluationBudget: 2400 },
+      ],
+      live,
+    );
+    expect(merged.agents?.[0]?.finishRank).toBe(0);
+    expect(merged.agents?.[1]?.finishRank).toBe(1);
+    expect(merged.agents?.[0]?.evaluationBudget).toBe(2400);
+    expect(merged.poolMetrics?.stragglerWaitMs).toBe(280);
+  });
+
+  it("attaches poolMetrics on mergeResults without changing winner pick", () => {
+    const hostRequest = hostSessionRequest({ seed: 1 });
+    const a = agentDto({ ...hostRequest, seed: 7 }, {
+      bar: ["a", "b", "c", "d"],
+      score: 8_000,
+      seed: 7,
+      evaluations: 40,
+      uniqueCandidates: 15,
+    });
+    const b = agentDto({ ...hostRequest, seed: 99 }, {
+      bar: ["w", "x", "y", "z"],
+      score: 15_000,
+      seed: 99,
+      evaluations: 60,
+      uniqueCandidates: 25,
+    });
+    const metrics = buildPoolMetrics(
+      [
+        progress({ bestScore: 1, evaluations: 40, uniqueCandidates: 15 }),
+        progress({ bestScore: 2, evaluations: 60, uniqueCandidates: 25 }),
+      ],
+      2,
+      2400,
+      {
+        startedAtMs: 0,
+        agentFinishedAtMs: [50, 200],
+        finishOrder: [0, 1],
+        hardwareCores: 4,
+        reservedCore: false,
+      },
+    );
+    const merged = mergeResults([a, b], hostRequest, metrics);
+    expect(merged.score).toBe(15_000);
+    expect(merged.uniqueCandidates).toBe(40);
+    expect(merged.poolMetrics).toMatchObject({
+      agentCount: 2,
+      perAgentBudget: 2400,
+      globalBudgetSum: 4800,
+      uniqueCandidatesSum: 40,
+      uniqueCandidatesSumKnownWrong: true,
+      firstFinishedMs: 50,
+      lastFinishedMs: 200,
+      stragglerWaitMs: 150,
+      reservedCore: false,
+    });
   });
 });

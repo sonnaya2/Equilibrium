@@ -4,12 +4,14 @@ import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_WIKI } from "../data/sources";
-import {
-  contextWithProvenance,
-  type DamageProvenance,
-} from "../shared/damageProvenance";
+import { contextWithProvenance, type DamageProvenance } from "../shared/damageProvenance";
 import { preciseMinHitAddition } from "../shared/perks";
-import { runPipeline } from "./modifierPipeline";
+import {
+  recordEndpointPass,
+  recordHitExpectationCall,
+  recordIntegerBandPoints,
+} from "../profiling/hitPipeline";
+import { compileActiveModifiers, runOrderedPipeline } from "./modifierPipeline";
 import type { CombatContext, CombatModifier } from "../types";
 
 export interface HitInput {
@@ -53,6 +55,16 @@ export interface RawHitBandInput extends Omit<HitInput, "base" | "band"> {
 
 type SharedHitInput = Omit<HitInput, "base" | "band">;
 
+/** Pre-compiled, sorted + filtered modifier lists for one hit expectation. */
+interface HitPassKits {
+  context: CombatContext;
+  nonCrit: readonly CombatModifier[];
+  /** Present only when crit path is live (p > 0 / guaranteed). */
+  crit: readonly CombatModifier[] | null;
+  accuracy: number;
+  capRule: HitCapRule;
+}
+
 function critModifier(multiplier: number): CombatModifier {
   return {
     id: "core:critical-damage",
@@ -70,29 +82,61 @@ function resolvedHitContext(input: SharedHitInput): CombatContext {
   return contextWithProvenance(input.context, input.provenance);
 }
 
+/**
+ * Compile non-crit and (optional) crit ordered active lists once per hit context.
+ * Same identity as per-roll orderModifiers + filter: stage then priority, then applies.
+ */
+function compileHitPassKits(
+  input: SharedHitInput,
+  critMult: number | null,
+): HitPassKits {
+  const context = resolvedHitContext(input);
+  const baseMods = input.modifiers ?? [];
+  const nonCrit = compileActiveModifiers(baseMods, context);
+  const crit =
+    critMult === null
+      ? null
+      : compileActiveModifiers([...baseMods, critModifier(critMult)], context);
+  return {
+    context,
+    nonCrit,
+    crit,
+    accuracy: input.accuracy,
+    capRule: normalizeHitCapRule(input.cap ?? standardHitCap),
+  };
+}
+
 function runPass(
   damage: number,
-  critMult: number | null,
-  input: SharedHitInput,
+  orderedActive: readonly CombatModifier[],
+  kits: HitPassKits,
   cap = true,
 ): number {
-  const modifiers =
-    critMult === null
-      ? (input.modifiers ?? [])
-      : [...(input.modifiers ?? []), critModifier(critMult)];
-  const state = runPipeline({ damage }, modifiers, resolvedHitContext(input));
-  const scaled = applyDamagePotential(state.damage, input.accuracy);
+  // Pre-filtered + ordered once per pass kind; apply chain identical to runPipeline.
+  const state = runOrderedPipeline({ damage }, orderedActive, kits.context, true);
+  const scaled = applyDamagePotential(state.damage, kits.accuracy);
   const resolved = Math.floor(scaled);
-  return cap ? applyHitCap(resolved, input.cap ?? standardHitCap) : resolved;
+  return cap ? applyHitCap(resolved, kits.capRule) : resolved;
+}
+
+function activeFor(kits: HitPassKits, critMult: number | null): readonly CombatModifier[] {
+  if (critMult === null) return kits.nonCrit;
+  // crit list compiled only when critMult is non-null at kit build time
+  return kits.crit ?? kits.nonCrit;
 }
 
 const MAX_EXACT_BAND_POINTS = 100_001;
 
+/**
+ * Inclusive integer-band mean — the exact oracle path.
+ * Walks every roll; each roll reuses pre-ordered modifiers (no re-sort).
+ * Floor chain, DP, and cap remain per-roll; never collapsed to a single product.
+ */
 function exactMean(
   min: number,
   max: number,
   critMult: number | null,
-  input: SharedHitInput,
+  kits: HitPassKits,
   cap = true,
 ): number {
   const count = max - min + 1;
@@ -101,8 +145,10 @@ function exactMean(
       `calculateHit: exact integer band has ${count} points (limit ${MAX_EXACT_BAND_POINTS})`,
     );
   }
+  recordIntegerBandPoints(count);
+  const ordered = activeFor(kits, critMult);
   let total = 0;
-  for (let roll = min; roll <= max; roll++) total += runPass(roll, critMult, input, cap);
+  for (let roll = min; roll <= max; roll++) total += runPass(roll, ordered, kits, cap);
   return total / count;
 }
 
@@ -140,28 +186,47 @@ function assertIntegerBandBounds(min: number, max: number): void {
 
 /** Resolve an already-composed inclusive integer band through the normal hit pipeline. */
 export function calculateRawHitBand(input: RawHitBandInput): HitResult {
+  recordHitExpectationCall();
   assertIntegerBandBounds(input.min, input.max);
   if (input.cap) normalizeHitCapRule(input.cap);
   const p = critProbability(input.crit);
   const critMult =
     p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
 
-  const min = runPass(input.min, null, input);
-  const max = runPass(input.max, null, input);
-  const critMin = critMult === null ? min : runPass(input.min, critMult, input);
-  const critMax = critMult === null ? max : runPass(input.max, critMult, input);
-  const nonCritExpected = exactMean(input.min, input.max, null, input);
+  // Sort + filter once per pass kind (non-crit / crit); reuse across endpoints + band.
+  const kits = compileHitPassKits(input, critMult);
+  const nonCritMods = kits.nonCrit;
+  const critMods = kits.crit;
+
+  // Endpoint probes (bound display / cap probe).
+  recordEndpointPass(2);
+  const min = runPass(input.min, nonCritMods, kits);
+  const max = runPass(input.max, nonCritMods, kits);
+  let critMin = min;
+  let critMax = max;
+  if (critMods !== null) {
+    recordEndpointPass(2);
+    critMin = runPass(input.min, critMods, kits);
+    critMax = runPass(input.max, critMods, kits);
+  }
+  const nonCritExpected = exactMean(input.min, input.max, null, kits);
   const critExpected =
-    critMult === null ? nonCritExpected : exactMean(input.min, input.max, critMult, input);
+    critMult === null ? nonCritExpected : exactMean(input.min, input.max, critMult, kits);
   const expected = (1 - p) * nonCritExpected + p * critExpected;
-  const capRule = normalizeHitCapRule(input.cap ?? standardHitCap);
-  const canClip =
-    !capRule.bypass &&
-    Math.max(runPass(input.max, null, input, false), runPass(input.max, critMult, input, false)) >
-      capRule.cap;
+  const capRule = kits.capRule;
+  recordEndpointPass(2);
+  const uncappedMaxNonCrit = runPass(input.max, nonCritMods, kits, false);
+  // When no crit path, critMult is null — same non-crit ordered list (matches prior behavior).
+  const uncappedMaxCrit = runPass(
+    input.max,
+    critMods !== null ? critMods : nonCritMods,
+    kits,
+    false,
+  );
+  const canClip = !capRule.bypass && Math.max(uncappedMaxNonCrit, uncappedMaxCrit) > capRule.cap;
   const uncappedExpected = canClip
-    ? (1 - p) * exactMean(input.min, input.max, null, input, false) +
-      p * exactMean(input.min, input.max, critMult, input, false)
+    ? (1 - p) * exactMean(input.min, input.max, null, kits, false) +
+      p * exactMean(input.min, input.max, critMult, kits, false)
     : expected;
 
   return {

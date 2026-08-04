@@ -6,12 +6,20 @@ export type {
   ProcRules,
   SimulateInput,
   SimulateOptions,
+  SimulationDetailLevel,
   CastRecord,
   RotationSummary,
   CastAttempt,
   CastContext,
   CastContextInput,
   CastRng,
+} from "./contracts";
+export {
+  resolveDetailLevel,
+  keepsPresentationHistory,
+  keepsAnalysisLedgers,
+  keepsPerAbilityMap,
+  DEFAULT_SIMULATION_DETAIL_LEVEL,
 } from "./contracts";
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
 import {
@@ -184,7 +192,9 @@ function stepManualAction(
  * summary surfaces the failed weight instead of smoothing it away.
  */
 export function simulate(input: SimulateInput, options?: SimulateOptions): RotationSummary {
-  let branches: Branch[] = [{ weight: 1, rt: createRuntime(input) }];
+  let branches: Branch[] = [
+    { weight: 1, rt: createRuntime({ ...input, detailLevel: options?.detailLevel }) },
+  ];
   let sawBranching = false;
   let residualWeight = 0;
   let exactness: BranchExactness = "exact";

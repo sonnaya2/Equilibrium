@@ -3,16 +3,20 @@
  * Memo context is derived from canonicalEvaluationContext (identity.ts) so
  * process-local caches cannot reuse scores across materially different requests.
  */
+import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { EvaluateFn, EvalMode } from "./contracts";
 import { evaluateRevolutionBar } from "./evaluate";
+import { createEligibilityMemo } from "./eligibility";
 import { readEvalMemo, writeEvalMemo } from "./evalMemo";
-import { fingerprintEvaluationKey, stableStringify } from "./fingerprint";
+import { barKey, fingerprintEvaluationKey, stableStringify } from "./fingerprint";
 import { OBJECTIVE_VERSION } from "./contracts";
 import { canonicalEvaluationContext } from "./identity";
 import type { SerializableSolverRequest } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
+import { noteEval, noteUniqueBar } from "./profiling/counters";
+import { compileEvaluationContext } from "./compiledContext";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
@@ -52,6 +56,33 @@ export function createEvaluateFn(args: {
     options,
   } = args;
 
+  // Once per solve session: catalogue merge + Strength Cape + byId maps.
+  const compiled = compileEvaluationContext({
+    style: request.style,
+    pool,
+    catalogue: simCommon.abilities as AbilitySpec[],
+    strengthCape99: (simCommon as { strengthCape99?: boolean }).strengthCape99 === true,
+  });
+  const simWithCatalogue = {
+    ...simCommon,
+    abilities: compiled.catalogue,
+  };
+
+  const weaponConfiguration = simCommon.weaponConfiguration;
+  const equipmentIds = simCommon.equipmentIds;
+  const passiveIds = (
+    simCommon as { equipmentEffects?: { passiveIds?: readonly string[] } }
+  ).equipmentEffects?.passiveIds;
+  const eligibilityOpts = {
+    includePartial: request.includePartial,
+    size: { min: request.minBarSize, max: request.maxBarSize },
+    weaponConfiguration,
+    equipmentIds,
+    passiveIds,
+  };
+  // One eligibility LRU per solve; pool + options fixed for search + full rescoring.
+  const eligibilityMemo = createEligibilityMemo(pool, eligibilityOpts);
+
   return ({ bar, mode }: { bar: readonly string[]; mode?: EvalMode }) => {
     if (options?.isCancelled?.() || options?.signal?.aborted) {
       return { score: Number.NEGATIVE_INFINITY, finite: false };
@@ -66,8 +97,12 @@ export function createEvaluateFn(args: {
     const useFull = mode === "full" || mode === "finalize";
     const durationTicks = useFull ? fullTicks : exploreTicks;
     const scoreMode = useFull ? "full" : "search";
+    const kind = useFull ? ("full" as const) : ("search" as const);
+    // One join for seenBars + evaluation memo key (no second bar.join).
+    const key = barKey(bar);
     const memoKey = fingerprintEvaluationKey({
       bar,
+      barKey: key,
       mode: scoreMode,
       horizonTicks: durationTicks,
       profileId: request.profileId,
@@ -85,10 +120,11 @@ export function createEvaluateFn(args: {
       } else {
         state.searchEvaluations += 1;
       }
-      const key = bar.join("\0");
+      noteEval(state.profile, kind, true);
       if (!seenBars.has(key)) {
         seenBars.add(key);
         state.uniqueBars += 1;
+        noteUniqueBar(state.profile);
       }
       if (memoHit.finite && memoHit.score > state.bestExploratoryScore && scoreMode === "search") {
         state.bestExploratoryScore = memoHit.score;
@@ -105,30 +141,36 @@ export function createEvaluateFn(args: {
       }
       // Do not flip phase to finalize on a memo hit alone - only the finalize
       // hook owns that (avoids a one-frame "scoring" flash on warm re-runs).
-      // Force emit when the strip candidate changes so the UI keeps cycling.
-      emitProgress(options, state, activeChanged);
+      // Throttled strip updates via activeChanged (not force).
+      emitProgress(options, state, false, activeChanged);
       return memoHit;
     }
 
     state.evaluations += 1;
     if (useFull) state.fullEvaluations += 1;
     else state.searchEvaluations += 1;
-    const key = bar.join("\0");
+    noteEval(state.profile, kind, false);
     if (!seenBars.has(key)) {
       seenBars.add(key);
       state.uniqueBars += 1;
+      noteUniqueBar(state.profile);
     }
 
+    // Search + full ranking only need ScoreableSummary metrics.
+    // Winner UI breakdown is a separate full-analysis re-sim (not done here).
     const evaluation = evaluateRevolutionBar({
       bar,
       style: request.style,
       durationTicks,
       pool,
-      sim: simCommon,
+      sim: simWithCatalogue,
+      compiled,
+      eligibilityMemo,
       profileId: request.profileId,
       customWeights: request.customWeights,
       includePartial: request.includePartial,
       size: { min: request.minBarSize, max: request.maxBarSize },
+      detailLevel: "score-only",
     });
 
     if (evaluation.ok) {
@@ -155,8 +197,8 @@ export function createEvaluateFn(args: {
       state.noImprovement += 1;
     }
 
-    // Force paint when the under-test bar changes; else keep every-2 throttle.
-    emitProgress(options, state, activeChanged);
+    // Throttled strip updates via activeChanged (not force).
+    emitProgress(options, state, false, activeChanged);
 
     if (!evaluation.ok) {
       return {

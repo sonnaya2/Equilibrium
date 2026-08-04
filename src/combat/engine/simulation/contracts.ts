@@ -98,17 +98,53 @@ export interface SimulateInput {
   naturalInstinctUntilTick?: number;
 }
 
+/**
+ * Bookkeeping depth for simulation outputs.
+ * - score-only: ranking metrics only (search hot path)
+ * - summary: light diagnostics (dps/ticks/perAbility/support); no casts/events/analysis
+ * - full-analysis: complete RotationSummary (default; UI / forensics)
+ */
+export type SimulationDetailLevel = "score-only" | "summary" | "full-analysis";
+
+export const DEFAULT_SIMULATION_DETAIL_LEVEL: SimulationDetailLevel = "full-analysis";
+
+export function resolveDetailLevel(level?: SimulationDetailLevel): SimulationDetailLevel {
+  return level ?? DEFAULT_SIMULATION_DETAIL_LEVEL;
+}
+
+/** Presentation event log + cast hit arrays (full-analysis only). */
+export function keepsPresentationHistory(level: SimulationDetailLevel): boolean {
+  return level === "full-analysis";
+}
+
+/** Weighted analysis ledgers (full-analysis only). */
+export function keepsAnalysisLedgers(level: SimulationDetailLevel): boolean {
+  return level === "full-analysis";
+}
+
+/** Per-ability damage map (summary + full-analysis). */
+export function keepsPerAbilityMap(level: SimulationDetailLevel): boolean {
+  return level !== "score-only";
+}
+
 export interface SimulateOptions {
   /**
    * Also compute `totalExpectedIncludingTails`: in-horizon damage plus the
    * still-scheduled (unlanded) tails of casts begun inside the horizon.
    */
   includeTails?: boolean;
+  /**
+   * Bookkeeping depth. Default full-analysis so UI/tests stay unchanged.
+   * Solver search opts into score-only explicitly.
+   */
+  detailLevel?: SimulationDetailLevel;
 }
 
 /** createCastContext input: rotation/autoWeave belong to the manual driver only. */
 export type CastContextInput = Omit<SimulateInput, "rotation" | "autoWeave"> & {
   horizonTicks?: number;
+  /** Stored on runtime for hot-path accounting; default full-analysis. */
+  detailLevel?: SimulationDetailLevel;
 };
 
 export interface CastRecord {

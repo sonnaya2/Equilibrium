@@ -1,9 +1,11 @@
 import { exclusiveKey, remainingCandidates } from "../eligibility";
+import { barKey } from "../fingerprint";
+import { noteNeighborBatch } from "../profiling";
 import { insertAt, moveAt, removeAt, replaceAt, swapAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
 /**
- * Hill-climb for N iterations: swap, adjacent swap, replace, insert, remove, move.
+ * Hill-climb for N iterations over generateNeighbors operators.
  */
 export function runLocalSearch(state: SearchState): void {
   // No yieldCtx → no await inside async body → runs fully sync.
@@ -55,25 +57,40 @@ export async function runLocalSearchAsync(state: SearchState, yieldCtx?: YieldCt
   }
 }
 
+/**
+ * Local neighborhood, unique by barKey.
+ * Operators: all-pair swap (covers adjacent); move from->to (rotate equivalents
+ * collapse via barKey); remove; insert (capped pool); replace (capped, exclusive-aware).
+ * Swap/move can algebraically coincide; barKey dedupe is the sole uniqueness rule.
+ */
 export function generateNeighbors(state: SearchState, bar: readonly string[]): string[][] {
   const out: string[][] = [];
+  const seen = new Set<string>();
+  // Origin reserved so no-op algebra never re-enters the neighbor set.
+  seen.add(barKey(bar));
   const n = bar.length;
   const { min, max } = state.sizeBounds;
 
+  const push = (next: string[]): void => {
+    const key = barKey(next);
+    if (seen.has(key)) return;
+    seen.add(key);
+    out.push(next);
+  };
+
   for (let i = 0; i < n; i++) {
-    for (let j = i + 1; j < n; j++) out.push(swapAt(bar, i, j));
+    for (let j = i + 1; j < n; j++) push(swapAt(bar, i, j));
   }
-  for (let i = 0; i + 1 < n; i++) out.push(swapAt(bar, i, i + 1));
 
   for (let from = 0; from < n; from++) {
     for (let to = 0; to < n; to++) {
       if (from === to) continue;
-      out.push(moveAt(bar, from, to));
+      push(moveAt(bar, from, to));
     }
   }
 
   if (n > min) {
-    for (let i = 0; i < n; i++) out.push(removeAt(bar, i));
+    for (let i = 0; i < n; i++) push(removeAt(bar, i));
   }
 
   if (n < max) {
@@ -81,7 +98,7 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
     // Cap inserts - full remain×positions explodes and freezes the UI.
     const insertPool = remain.slice(0, 8);
     for (const a of insertPool) {
-      for (let i = 0; i <= n; i++) out.push(insertAt(bar, i, a.id));
+      for (let i = 0; i <= n; i++) push(insertAt(bar, i, a.id));
     }
   }
 
@@ -104,10 +121,13 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
         }
         if (clash) continue;
       }
-      out.push(replaceAt(bar, i, a.id));
+      push(replaceAt(bar, i, a.id));
       replaced += 1;
     }
   }
+
+  // Unique-by-barKey batch (push already deduped); profile then hard-cap.
+  noteNeighborBatch(out);
 
   // Hard cap neighbor set so local search cannot stall the page.
   if (out.length > 48) {

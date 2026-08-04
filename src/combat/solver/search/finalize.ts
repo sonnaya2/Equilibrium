@@ -1,6 +1,7 @@
 import type { ProofLabel, ScoredBar, SolveResult, SolveStatus, SolveTier } from "../contracts";
 import { diverseSelect } from "../diversity";
 import { estimateFeasibleCount } from "./exhaustive";
+import { barKey } from "../fingerprint";
 import type { SearchState } from "./types";
 
 export interface FinalizeOptions {
@@ -115,7 +116,7 @@ export function fullCandidateList(
   // Priority: seed best + authored seeds (distinct composition), then diverse top scorers.
   const ensureBar = (bar: readonly string[] | null | undefined, source: string) => {
     if (!bar || bar.length === 0 || selected.length >= shortlistSize) return;
-    const fp = bar.join("\0");
+    const fp = barKey(bar);
     if (seen.has(fp)) return;
     const fromPool = pool.find((p) => p.fingerprint === fp);
     if (fromPool) {

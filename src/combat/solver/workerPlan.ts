@@ -19,6 +19,12 @@ export const TIER_MAX_AGENTS: Record<SearchTier, number> = {
 /** Hard cap across every tier (matches Unhinged ceiling). */
 export const SAFE_GLOBAL_AGENT_CEILING = 8;
 
+/**
+ * Whether preferredAgentCount holds back a logical core for the UI main thread.
+ * Phase 0 measure: false - agents may claim full hardwareConcurrency.
+ */
+export const RESERVES_UI_CORE = false;
+
 /** Back-compat alias: historical name meant "how many agents for this tier". */
 export const TIER_AGENT_COUNT: Record<SearchTier, number> = { ...TIER_MAX_AGENTS };
 
@@ -74,7 +80,9 @@ export function detectHardwareCores(): number {
 export function preferredAgentCount(tier: SearchTier, hardwareAgents?: number): number {
   const tierMax = TIER_MAX_AGENTS[tier] ?? TIER_MAX_AGENTS.thorough;
   const hw = hardwareAgents ?? detectHardwareCores();
-  const usable = Math.max(1, Math.floor(hw) || 1);
+  // Phase 0: RESERVES_UI_CORE is false - no core held back for the UI thread.
+  const reserved = RESERVES_UI_CORE ? 1 : 0;
+  const usable = Math.max(1, (Math.floor(hw) || 1) - reserved);
   return Math.max(1, Math.min(tierMax, usable, SAFE_GLOBAL_AGENT_CEILING));
 }
 

@@ -27,6 +27,7 @@ import {
   applyHaunted,
   hauntedActive,
   hauntedBonusDamage,
+  hauntedParentDamage,
 } from "../../styles/necromancy/haunted";
 import type { CombatModifier, SourceReference } from "../../types";
 import type { ScheduledEvent } from "../runtime/events";
@@ -198,6 +199,7 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
       });
       return {
         damage: { min: hit.min, max: hit.max, expected: hit.expected, capLoss: hit.capLoss },
+        hitDetail: hit,
       };
     },
   });
@@ -255,8 +257,12 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
   }
 }
 
-/** Attach land-time Haunted % bonus to a spirit auto (not poison). Parent post-resolve. */
-function attachHauntedToSpiritAuto(
+/**
+ * Attach land-time Haunted % of full-accuracy parent to spirit auto or poison.
+ * Spirit tracks use DP=1 so reverse is a no-op; helper kept for consistency.
+ * Apply/refresh of Haunted remains commanding ghost auto only.
+ */
+function attachHauntedToSpiritHit(
   rt: SimulationRuntime,
   resolution: EventResolution,
   tick: number,
@@ -266,9 +272,10 @@ function attachHauntedToSpiritAuto(
   const d = resolution.damage;
   if (d.max <= 0 && d.expected <= 0) return resolution;
   const capAD = haunted.capAbilityDamage;
-  const bonusMin = hauntedBonusDamage(d.min, capAD);
-  const bonusMax = hauntedBonusDamage(d.max, capAD);
-  const bonusExpected = hauntedBonusDamage(d.expected, capAD);
+  const pot = resolution.hitDetail?.potential ?? 1;
+  const bonusMin = hauntedBonusDamage(hauntedParentDamage(d.min, pot), capAD);
+  const bonusMax = hauntedBonusDamage(hauntedParentDamage(d.max, pot), capAD);
+  const bonusExpected = hauntedBonusDamage(hauntedParentDamage(d.expected, pot), capAD);
   if (bonusMax <= 0 && bonusExpected <= 0) return resolution;
   const component: AttachedDamageComponent = {
     id: "haunted",
@@ -298,19 +305,18 @@ export function processSpiritEvent(
   const live = spiritEventLive(rt, event);
   if (!live) return;
   let resolution = event.resolve(rt, event.tick);
-  if (live.kind === "auto") {
-    // Bonus from already-active Haunted, then commanding ghost may refresh Haunted.
-    resolution = attachHauntedToSpiritAuto(rt, resolution, event.tick);
-    if (
-      live.spirit.id === "vengeful_ghost" &&
-      live.spirit.commanding &&
-      (resolution.damage.max > 0 || resolution.damage.expected > 0)
-    ) {
-      // Cap uses commanding player ability damage (rt.input.base).
-      rt.state = patchTarget(rt.state, {
-        haunted: applyHaunted(event.tick, rt.input.base),
-      });
-    }
+  // Bonus from already-active Haunted on auto and poison.
+  resolution = attachHauntedToSpiritHit(rt, resolution, event.tick);
+  if (
+    live.kind === "auto" &&
+    live.spirit.id === "vengeful_ghost" &&
+    live.spirit.commanding &&
+    (resolution.damage.max > 0 || resolution.damage.expected > 0)
+  ) {
+    // Cap uses commanding player ability damage (rt.input.base). Never from poison.
+    rt.state = patchTarget(rt.state, {
+      haunted: applyHaunted(event.tick, rt.input.base),
+    });
   }
   recordResolved(rt, event, resolution);
   rt.spiritEventMeta.delete(event.seq);

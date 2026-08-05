@@ -80,6 +80,10 @@ export function landHitIdentity(
     at < t.melee.enduringRuin.untilTick
       ? t.melee.enduringRuin.bleedVulnerability
       : 0;
+  // Live Haunted at land (expiry-normalized); damage uses land-time, not snap.
+  const hauntedUntil =
+    t.haunted.untilTick > 0 && at < t.haunted.untilTick ? t.haunted.untilTick : 0;
+  const hauntedCapLive = hauntedUntil > 0 ? t.haunted.capAbilityDamage : 0;
 
   // Equipment effects object identity covers am-zi / am-hej / champion-ring etc.
   const equipId = input.equipmentEffects ? oid(input.equipmentEffects) : 0;
@@ -124,6 +128,8 @@ export function landHitIdentity(
     ctx?.ruleset ?? "",
     ctx?.targetTiles ?? -1,
     b(!!snap.searingWindsAtCast),
+    hauntedUntil,
+    hauntedCapLive,
     b(!!snap.hauntedAtCast),
     snap.hauntedCapAd,
     b(!!snap.chaosRoarActive),

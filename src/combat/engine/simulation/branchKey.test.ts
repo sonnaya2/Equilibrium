@@ -8,8 +8,9 @@ import { baseInput } from "../../test/fixtures/inputs";
 import type { CastContextInput } from "./contracts";
 import { branchKeyJson, branchKeyStructural } from "./branchKey";
 import { mergeBranches, snapshotRuntime } from "./branch";
-import { patchMelee } from "../runtime/state";
+import { patchConjures, patchMelee, patchTarget } from "../runtime/state";
 import type { SimulationRuntime } from "../runtime/runtime";
+import { newHaunted } from "../../styles/necromancy/haunted";
 
 const meleeInput: CastContextInput = {
   base: 1000,
@@ -333,6 +334,47 @@ describe("branchKey structural vs JSON partitions", () => {
       frostbladesOpenMass: 0,
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("expired haunted with residual cap merges with newHaunted()", () => {
+    const base = createRuntime(meleeInput);
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.state = { ...a.state, tick: 25 };
+    a.state = patchTarget(a.state, {
+      haunted: { untilTick: 10, capAbilityDamage: 1000 },
+    });
+    b.state = { ...b.state, tick: 25 };
+    b.state = patchTarget(b.state, { haunted: newHaunted() });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("expired ghost commanding true vs false share key when untilTick is past", () => {
+    const base = createRuntime({
+      ...meleeInput,
+      abilities: NECROMANCY_ABILITIES,
+      context: { style: "necromancy" },
+    });
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    const expiredGhost = {
+      id: "vengeful_ghost" as const,
+      untilTick: 50,
+      auto: { nextTick: 40 },
+    };
+    a.state = { ...a.state, tick: 100 };
+    a.state = patchConjures(a.state, {
+      spirits: [{ ...expiredGhost, commanding: true }],
+    });
+    b.state = { ...b.state, tick: 100 };
+    b.state = patchConjures(b.state, {
+      spirits: [{ ...expiredGhost, commanding: false }],
+    });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
     expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
   });
 

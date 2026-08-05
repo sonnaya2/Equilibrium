@@ -184,7 +184,7 @@ export function prepareCast(
   }
   if (ability.style === "necromancy") {
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
-    // Omni Guard Death Spark: at 4 stacks the next Necromancy basic is double damage.
+    // Omni Guard Death Spark: at 5 stacks ready; this basic doubles if pre-cast >= 5.
     // Stacks update at commit; prepare only reads pre-cast stacks for empower.
     const necroBasic =
       ability.id === "necromancy_basic" || (!!ability.autoAttack && ability.style === "necromancy");
@@ -305,7 +305,7 @@ export function prepareCast(
   // a channel cast inside the window keeps the bonus on hits landing after it.
   const searingWindsAtCast =
     ability.style === "ranged" && searingWindsBonusPct(rt.state.ranged.searingWinds, candidate) > 0;
-  // Haunted: cast-time for player hits (all styles); spirit autos read land-time state.
+  // Haunted snap: scheduled-event identity / forensics. Damage uses land-time in resolveCastHit.
   const hauntedAtCast = damaging && hauntedActive(rt.state.target.haunted, candidate);
   const hauntedCapAd = hauntedAtCast ? rt.state.target.haunted.capAbilityDamage : 0;
 

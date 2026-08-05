@@ -1,4 +1,8 @@
-import { hauntedActive, hauntedBonusDamage } from "../../styles/necromancy/haunted";
+import {
+  hauntedActive,
+  hauntedBonusDamage,
+  hauntedParentDamage,
+} from "../../styles/necromancy/haunted";
 import type { SimulationRuntime } from "../runtime/runtime";
 import {
   NO_DAMAGE,
@@ -48,9 +52,12 @@ export function resolveDerivedHit(
     return { damage };
   }
 
-  const bonusMin = hauntedBonusDamage(min, haunted.capAbilityDamage);
-  const bonusMax = hauntedBonusDamage(max, haunted.capAbilityDamage);
-  const bonusExpected = hauntedBonusDamage(expected, haunted.capAbilityDamage);
+  // Fraction is of post-DP parent; reverse source potential so 10% ignores accuracy.
+  const pot = source.potential;
+  const capAD = haunted.capAbilityDamage;
+  const bonusMin = hauntedBonusDamage(hauntedParentDamage(min, pot), capAD);
+  const bonusMax = hauntedBonusDamage(hauntedParentDamage(max, pot), capAD);
+  const bonusExpected = hauntedBonusDamage(hauntedParentDamage(expected, pot), capAD);
   if (bonusMax <= 0 && bonusExpected <= 0) return { damage };
 
   const component: AttachedDamageComponent = {

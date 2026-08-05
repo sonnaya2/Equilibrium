@@ -115,9 +115,9 @@ export type ItemPassiveId =
   | "ring-of-vigour"
   /** Blast diffusion boots: Wild Magic arms Blast Infused (+8% magic basics 10 ticks). */
   | "blast-diffusion-inner-wrath"
-  /** Omni Guard: Death Spark - every 5th Necromancy basic is double damage. */
+  /** Omni Guard: Death Spark - ready at 5 stacks; next basic doubles (every 6th). */
   | "death-spark"
-  /** Devourer's Guard: Soul Reave - every 4th Necromancy basic grants 1 Residual Soul on land. */
+  /** Devourer's Guard: Soul Reave - ready at 4 stacks; next basic grants residual soul on land (every 5th). */
   | "soul-reave";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";

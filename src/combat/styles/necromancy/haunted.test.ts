@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { necroInput } from "../../test/fixtures/inputs";
 import { createCastContext } from "../../engine/simulation/simulate";
+import { SPIRIT_POISON_ABILITY_ID } from "./conjures";
 import {
   applyHaunted,
   HAUNTED_BONUS_PCT,
@@ -8,6 +9,7 @@ import {
   HAUNTED_DURATION_TICKS,
   hauntedActive,
   hauntedBonusDamage,
+  hauntedParentDamage,
   newHaunted,
 } from "./haunted";
 
@@ -27,6 +29,15 @@ describe("haunted pure helpers", () => {
     expect(hauntedActive(h, 15)).toBe(true);
     expect(hauntedActive(h, 16)).toBe(false);
     expect(hauntedActive(newHaunted(), 0)).toBe(false);
+  });
+
+  it("hauntedParentDamage reverses DP below 1", () => {
+    expect(hauntedParentDamage(700, 0.7)).toBeCloseTo(1000, 10);
+    expect(hauntedParentDamage(700, 1)).toBe(700);
+    expect(hauntedParentDamage(700, 1.5)).toBe(700);
+    expect(hauntedParentDamage(700, 0)).toBe(0);
+    expect(hauntedParentDamage(0, 0.7)).toBe(0);
+    expect(hauntedParentDamage(-10, 0.7)).toBe(0);
   });
 
   it("hauntedBonusDamage is floor(parent*10%) capped at floor(capAD*20%)", () => {
@@ -65,7 +76,7 @@ describe("Haunted sim: commanding ghost auto applies; player hits get bonus", ()
     expect(afterAuto.capAbilityDamage).toBe(1000);
     expect(hauntedActive(afterAuto, 13)).toBe(true);
 
-    // Cast basic while Haunted is active (cast-time snap).
+    // Cast basic while Haunted is active (land-time check at hit).
     ctx.performCast(basic, 15, false);
     const s = ctx.finish();
     expect(s.ok).toBe(true);
@@ -90,6 +101,75 @@ describe("Haunted sim: commanding ghost auto applies; player hits get bonus", ()
     for (const c of hauntedCasts) {
       expect(c.result.hits[0]!.expected).toBeCloseTo(1000, 5);
       expect(c.result.expected).toBeCloseTo(1100, 5);
+    }
+  });
+
+  it("Haunted 10% is of full-accuracy parent (ignores Damage Potential)", () => {
+    const ctx = createCastContext({ ...necroInput, accuracy: 0.7 });
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_vengeful_ghost")!, 0, false);
+    ctx.performCast(
+      ctx.byId.get("command_vengeful_ghost")!,
+      ctx.firstLegalTick("command_vengeful_ghost"),
+      false,
+    );
+    ctx.advanceTo(13);
+    expect(hauntedActive(ctx.getState().target.haunted, 13)).toBe(true);
+
+    ctx.performCast(basic, 15, false);
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+
+    // Parent EV is post-DP (~700); bonus is 10% of reverse-DP parent (~100), not ~70.
+    const hauntedCasts = s.casts.filter(
+      (c) =>
+        c.abilityId === "necromancy_basic" &&
+        c.result.expected > (c.result.hits[0]?.expected ?? 0) + 1e-9,
+    );
+    expect(hauntedCasts.length).toBeGreaterThan(0);
+    for (const c of hauntedCasts) {
+      const parent = c.result.hits[0]!.expected;
+      const bonus = c.result.expected - parent;
+      expect(bonus).toBe(hauntedBonusDamage(hauntedParentDamage(parent, 0.7), 1000));
+      // Old bug: 10% of post-DP parent.
+      expect(bonus).toBeGreaterThan(hauntedBonusDamage(parent, 1000));
+    }
+  });
+
+  it("zombie poison under Haunted gets attached bonus", () => {
+    const ctx = createCastContext(necroInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    // Ghost at 0; zombie as soon as legal so poison ticks overlap Haunted [13, 19).
+    ctx.performCast(ctx.byId.get("conjure_vengeful_ghost")!, 0, false);
+    ctx.performCast(
+      ctx.byId.get("conjure_putrid_zombie")!,
+      ctx.firstLegalTick("conjure_putrid_zombie"),
+      false,
+    );
+    ctx.performCast(
+      ctx.byId.get("command_vengeful_ghost")!,
+      ctx.firstLegalTick("command_vengeful_ghost"),
+      false,
+    );
+    ctx.advanceTo(13);
+    const hauntedUntil = ctx.getState().target.haunted.untilTick;
+    expect(hauntedUntil).toBe(13 + HAUNTED_DURATION_TICKS);
+
+    while (ctx.getState().tick < hauntedUntil + 3) {
+      ctx.performCast(basic, ctx.getState().tick, false);
+    }
+    const s = ctx.finish();
+    expect(s.ok).toBe(true);
+
+    const poisons = s.events.filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID);
+    expect(poisons.length).toBeGreaterThan(0);
+    // Plain poison EV: band 8-12% of 1000 AD => expected 100. Bonus floor(100*10%)=10.
+    const underHaunted = poisons.filter(
+      (e) => e.tick >= 13 && e.tick < hauntedUntil && e.damage.expected > 100 + 1e-9,
+    );
+    expect(underHaunted.length).toBeGreaterThan(0);
+    for (const e of underHaunted) {
+      expect(e.damage.expected).toBeCloseTo(110, 5);
     }
   });
 

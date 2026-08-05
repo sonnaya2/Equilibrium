@@ -49,9 +49,9 @@ export interface NecroRotationState {
   /** Exclusive stage windows for Spectral Scythe's second and third casts. */
   spectralScythe2UntilTick: number;
   spectralScythe3UntilTick: number;
-  /** Omni Guard Death Spark stacks (0..4; 4 = next basic empowered). */
+  /** Omni Guard Death Spark stacks (0..5; 5 = ready for next basic). */
   deathSparkStacks: number;
-  /** Devourer's Guard Soul Reave stacks (0..3; 3 = next basic grants soul). */
+  /** Devourer's Guard Soul Reave stacks (0..4; 4 = ready). */
   soulReaveStacks: number;
   /** Soul Reave: grant +1 residual soul when the empowered basic lands. */
   soulReaveGrantOnLand: boolean;

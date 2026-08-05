@@ -35,8 +35,19 @@ export function applyHaunted(
 }
 
 /**
+ * Reverse DP so 10% is of full-accuracy parent (wiki: bonus ignores accuracy).
+ */
+export function hauntedParentDamage(postDpDamage: number, damagePotential: number): number {
+  if (postDpDamage <= 0) return 0;
+  if (!(damagePotential > 0)) return 0;
+  if (damagePotential >= 1) return postDpDamage;
+  return postDpDamage / damagePotential;
+}
+
+/**
  * Attached Haunted bonus for one parent hit component (min/max/expected).
- * floor(parent * 10%) then min with floor(capAD * 20%). Parent is post-resolve.
+ * floor(parent * 10%) then min with floor(capAD * 20%).
+ * Parent is full-accuracy (pre-DP) post-resolve damage for that component.
  */
 export function hauntedBonusDamage(
   parentDamage: number,

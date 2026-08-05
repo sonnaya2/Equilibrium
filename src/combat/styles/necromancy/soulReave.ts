@@ -1,12 +1,12 @@
 import type { SourceReference } from "../../types";
 
 /**
- * Devourer's Guard Soul Reave: each Necromancy basic +1 stack; at 3 stacks the
- * next basic is empowered and grants 1 Residual Soul on successful land.
- * Every 4th basic. No direct damage from the passive.
+ * Devourer's Guard Soul Reave: each Necromancy basic +1 stack; at 4 stacks ready;
+ * next basic grants 1 Residual Soul on successful land, then stacks reset.
+ * Every 5th basic. No direct damage from the passive.
  * https://runescape.wiki/w/Devourer%27s_Guard (verified 2026-08-04).
  */
-export const SOUL_REAVE_STACKS_TO_EMPOWER = 3;
+export const SOUL_REAVE_STACKS_TO_EMPOWER = 4;
 export const SOUL_REAVE_PASSIVE_ID = "soul-reave" as const;
 
 export interface SoulReaveCastResult {
@@ -17,7 +17,7 @@ export interface SoulReaveCastResult {
 
 /**
  * Cast-time Soul Reave transition for one Necromancy basic attack.
- * stacks are the pre-cast value (0..3).
+ * stacks are the pre-cast value (0..4). Ready at 4; next basic grants on land.
  */
 export function applySoulReaveOnBasic(stacks: number): SoulReaveCastResult {
   const s = Math.max(0, Math.min(SOUL_REAVE_STACKS_TO_EMPOWER, stacks));

@@ -15,7 +15,11 @@ import {
   findConjure,
   skeletonRageMult,
 } from "../../styles/necromancy/conjures";
-import { hauntedBonusDamage } from "../../styles/necromancy/haunted";
+import {
+  hauntedActive,
+  hauntedBonusDamage,
+  hauntedParentDamage,
+} from "../../styles/necromancy/haunted";
 import {
   capabilitiesOf,
   outgoingSourceOf,
@@ -33,12 +37,13 @@ import { landHitIdentity } from "./landHitIdentity";
 /**
  * Resolve one ordinary cast hit at its land tick. Time-windowed globals read
  * state at that tick; the cast snapshot carries the next-hit crit layers (first
- * eligible hit only), Chaos Roar's channel rule, empowerment, and Searing Winds /
- * Haunted cast-time eligibility.
+ * eligible hit only), Chaos Roar's channel rule, empowerment, and Searing Winds
+ * cast-time eligibility. Haunted is land-time; SW remains cast-time.
 
  * Searing Winds and Haunted bonuses are ATTACHED components of this hit - never
  * separate events - so they cannot inflate proc rolls, stacks, or hit counters.
- * Haunted is % of parent post-resolve (cap 20% AD), never re-applied on attached.
+ * Haunted is % of full-accuracy parent post-resolve (cap 20% AD), never re-applied
+ * on attached.
  */
 export function resolveCastHit(
   rt: SimulationRuntime,
@@ -224,13 +229,15 @@ function resolveCastHitUncached(
       hitCapPolicy: "separate",
     });
   }
-  // Haunted: % of parent after resolve, capped at 20% of snap cap AD; ignores accuracy.
+  // Haunted: land-time; 10% of full-accuracy parent, cap 20% of live cap AD.
   // Only the parent hit - never re-apply on attached components (SW / Haunted itself).
-  if (snap.hauntedAtCast) {
-    const capAD = snap.hauntedCapAd;
-    const bonusMin = hauntedBonusDamage(hit.min, capAD);
-    const bonusMax = hauntedBonusDamage(hit.max, capAD);
-    const bonusExpected = hauntedBonusDamage(hit.expected, capAD);
+  const haunted = state.target.haunted;
+  if (hauntedActive(haunted, at)) {
+    const capAD = haunted.capAbilityDamage;
+    const pot = hit.potential;
+    const bonusMin = hauntedBonusDamage(hauntedParentDamage(hit.min, pot), capAD);
+    const bonusMax = hauntedBonusDamage(hauntedParentDamage(hit.max, pot), capAD);
+    const bonusExpected = hauntedBonusDamage(hauntedParentDamage(hit.expected, pot), capAD);
     if (bonusMax > 0 || bonusExpected > 0) {
       components.push({
         id: "haunted",

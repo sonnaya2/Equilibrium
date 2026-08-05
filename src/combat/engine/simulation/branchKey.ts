@@ -15,7 +15,7 @@ import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
  * hitDetails in the key are only live derivedFrom sources still pending in the
  * queue (historical unreferenced HitResults cannot change future damage and would
  * only block equivalent-future merges after temporary frost divergence).
- * frostbladesUntilTick is encoded after expiry normalize against state.tick.
+ * frostbladesUntilTick, haunted, and ghost commanding are expiry-normalized vs state.tick.
  */
 
 const RS = "\x1e";
@@ -75,7 +75,7 @@ function recordChargeLists(
   return String(liveKeys) + out;
 }
 
-function encodeConjure(c: ActiveConjure): string {
+function encodeConjure(c: ActiveConjure, tick: number): string {
   switch (c.id) {
     case "skeleton_warrior":
       return (
@@ -90,7 +90,16 @@ function encodeConjure(c: ActiveConjure): string {
         (c.commandResumeTick === undefined ? "" : n(c.commandResumeTick))
       );
     case "vengeful_ghost":
-      return "vg" + US + n(c.untilTick) + US + n(c.auto.nextTick) + US + b(!!c.commanding);
+      // Commanding inert after untilTick; encode false so expired ghosts merge.
+      return (
+        "vg" +
+        US +
+        n(c.untilTick) +
+        US +
+        n(c.auto.nextTick) +
+        US +
+        b(!!c.commanding && tick < c.untilTick)
+      );
     case "putrid_zombie":
       return (
         "pz" +
@@ -210,8 +219,13 @@ function encodeState(state: RotationState): string {
     String(nec.conjures.spirits.length),
   ];
   for (const c of nec.conjures.spirits) {
-    parts.push(encodeConjure(c));
+    parts.push(encodeConjure(c, state.tick));
   }
+  // Expired Haunted ≡ newHaunted() (zero until and cap).
+  const hauntedUntil =
+    t.haunted.untilTick > 0 && t.haunted.untilTick <= state.tick
+      ? 0
+      : t.haunted.untilTick;
   parts.push(
     // target
     n(t.lastAttackTick),
@@ -224,8 +238,8 @@ function encodeState(state: RotationState): string {
     n(tm.abyssalParasite.scheduledThroughTick),
     n(tm.enduringRuin.bleedVulnerability),
     n(tm.enduringRuin.untilTick),
-    n(t.haunted.untilTick > 0 && t.haunted.untilTick <= state.tick ? 0 : t.haunted.untilTick),
-    n(t.haunted.capAbilityDamage),
+    n(hauntedUntil),
+    n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
   );
   return parts.join(US);
 }
@@ -307,15 +321,37 @@ function encodeSpiritHits(map: ReadonlyMap<string, number>): string {
 
 /** Historical JSON key (debug / oracle). Expensive - not the hot path. */
 export function branchKeyJson(rt: SimulationRuntime): string {
-  // Encode state with frost normalized so JSON partitions match structural.
+  const tick = rt.state.tick;
+  const hauntedUntil =
+    rt.state.target.haunted.untilTick > 0 && rt.state.target.haunted.untilTick <= tick
+      ? 0
+      : rt.state.target.haunted.untilTick;
+  // Frost / Haunted / ghost commanding: expiry-normalize to match structural.
   const stateForKey = {
     ...rt.state,
     melee: {
       ...rt.state.melee,
       frostbladesUntilTick: normalizeLengFrostUntil(
         rt.state.melee.frostbladesUntilTick,
-        rt.state.tick,
+        tick,
       ),
+    },
+    necromancy: {
+      ...rt.state.necromancy,
+      conjures: {
+        spirits: rt.state.necromancy.conjures.spirits.map((c) =>
+          c.id === "vengeful_ghost"
+            ? { ...c, commanding: !!c.commanding && tick < c.untilTick }
+            : c,
+        ),
+      },
+    },
+    target: {
+      ...rt.state.target,
+      haunted: {
+        untilTick: hauntedUntil,
+        capAbilityDamage: hauntedUntil === 0 ? 0 : rt.state.target.haunted.capAbilityDamage,
+      },
     },
   };
   return JSON.stringify([

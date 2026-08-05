@@ -274,7 +274,6 @@ export {
   styleRequiredAbilityIds,
   ensureRequiredAbilityIds,
   barHasRequiredAbilities,
-  preferGreaterUltTwin,
 } from "./stylePolicy";
 export type { SolverProgress, SolverAgentSnapshot } from "./worker/protocol";
 export {

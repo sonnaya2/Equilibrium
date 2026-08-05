@@ -5,32 +5,41 @@
 import type { CombatStyle } from "../types";
 import type { ItemPassiveId } from "../data/records";
 
-/** Base vs greater (or igneous) twins that must not both enter the search pool. */
-const SOFT_TWINS: readonly (readonly [string, string])[] = [
-  ["sunshine", "greater_sunshine"],
-  ["deaths_swiftness", "greater_deaths_swiftness"],
-  ["overpower", "overpower_igneous"],
-  ["deadshot", "deadshot_igneous"],
-  ["omnipower", "omnipower_igneous"],
-  ["death_skulls", "death_skulls_igneous"],
+/**
+ * Base vs upgrade twins that must not both enter the search pool.
+ * - Igneous: cape passive (Kal-Ket/Xil/Mej/Mor/Zuk).
+ * - Greater Sunshine / Greater DS: ability codex unlock (not Planted Feet).
+ */
+const ULT_TWINS: readonly {
+  base: string;
+  upgrade: string;
+  /** Passive that enables the igneous upgrade; omit for codex greaters. */
+  igneousPassive?: string;
+}[] = [
+  { base: "sunshine", upgrade: "greater_sunshine" },
+  { base: "deaths_swiftness", upgrade: "greater_deaths_swiftness" },
+  { base: "overpower", upgrade: "overpower_igneous", igneousPassive: "igneous-overpower" },
+  { base: "deadshot", upgrade: "deadshot_igneous", igneousPassive: "igneous-deadshot" },
+  { base: "omnipower", upgrade: "omnipower_igneous", igneousPassive: "igneous-omnipower" },
+  {
+    base: "death_skulls",
+    upgrade: "death_skulls_igneous",
+    igneousPassive: "igneous-death-skulls",
+  },
 ];
 
 /**
- * Planted Feet extends base Sunshine / Death's Swiftness only.
- * Prefer base when PF is on; prefer greater when PF is off.
- */
-export function preferGreaterUltTwin(plantedFeet: boolean): boolean {
-  return plantedFeet !== true;
-}
-
-/**
  * Ids to deny so only one twin of each pair remains.
- * Igneous: prefer upgrade when its passive is live; else base.
- * Soft PF pairs: prefer greater when !plantedFeet, else base.
+ *
+ * Codex greaters (Sunshine / Death's Swiftness): if the greater form is in the
+ * pool (unlocked / obtainable for this request), keep greater and deny base.
+ * Otherwise keep base. Planted Feet only extends base duration - it does not
+ * choose which ability form is unlocked.
+ *
+ * Igneous: prefer upgrade when its cape passive is live; else base.
  */
 export function dualVersionDenyIds(opts: {
   style: CombatStyle;
-  plantedFeet: boolean;
   passiveIds?: readonly ItemPassiveId[] | readonly string[] | null;
   /** Pool ids after region/weapon/passive supersede filters. */
   availableIds: readonly string[];
@@ -38,33 +47,18 @@ export function dualVersionDenyIds(opts: {
   const available = new Set(opts.availableIds);
   const passives = new Set((opts.passiveIds ?? []).map(String));
   const deny: string[] = [];
-  const preferGreater = preferGreaterUltTwin(opts.plantedFeet);
 
-  for (const [base, upgrade] of SOFT_TWINS) {
-    if (!available.has(base) || !available.has(upgrade)) continue;
+  for (const twin of ULT_TWINS) {
+    if (!available.has(twin.base) || !available.has(twin.upgrade)) continue;
 
-    // Igneous upgrades: gate on style-relevant passives when present on the upgrade path.
-    if (upgrade.endsWith("_igneous")) {
-      const igneousPassive =
-        upgrade === "overpower_igneous"
-          ? "igneous-overpower"
-          : upgrade === "deadshot_igneous"
-            ? "igneous-deadshot"
-            : upgrade === "omnipower_igneous"
-              ? "igneous-omnipower"
-              : upgrade === "death_skulls_igneous"
-                ? "igneous-death-skulls"
-                : null;
-      if (igneousPassive && passives.has(igneousPassive)) {
-        deny.push(base);
-      } else {
-        deny.push(upgrade);
-      }
+    if (twin.igneousPassive) {
+      if (passives.has(twin.igneousPassive)) deny.push(twin.base);
+      else deny.push(twin.upgrade);
       continue;
     }
 
-    // Sunshine / Death's Swiftness.
-    deny.push(preferGreater ? base : upgrade);
+    // Codex greater: presence of upgrade in pool means codex path is open.
+    deny.push(twin.base);
   }
 
   return deny;
@@ -75,10 +69,11 @@ const STYLE_REQUIRED_CANDIDATES: Record<CombatStyle, readonly (readonly string[]
   melee: [["berserk"]],
   necromancy: [["conjure_undead_army"], ["finger_of_death"], ["touch_of_death"]],
   ranged: [
-    ["deaths_swiftness", "greater_deaths_swiftness"],
+    // Prefer codex greater when in pool; dual-deny already leaves one.
+    ["greater_deaths_swiftness", "deaths_swiftness"],
     ["imbue_shadows"],
   ],
-  magic: [["sunshine", "greater_sunshine"]],
+  magic: [["greater_sunshine", "sunshine"]],
 };
 
 /**

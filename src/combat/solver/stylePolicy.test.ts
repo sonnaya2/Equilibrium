@@ -3,37 +3,40 @@ import {
   barHasRequiredAbilities,
   dualVersionDenyIds,
   ensureRequiredAbilityIds,
-  preferGreaterUltTwin,
   styleRequiredAbilityIds,
 } from "./stylePolicy";
 
 describe("stylePolicy dual versions", () => {
-  it("prefers greater Sunshine/DS when Planted Feet is off", () => {
-    expect(preferGreaterUltTwin(false)).toBe(true);
+  it("prefers Greater Sunshine when codex form is in the pool (not Planted Feet)", () => {
     const deny = dualVersionDenyIds({
       style: "magic",
-      plantedFeet: false,
       availableIds: ["sunshine", "greater_sunshine", "asphyxiate"],
     });
     expect(deny).toContain("sunshine");
     expect(deny).not.toContain("greater_sunshine");
   });
 
-  it("prefers base Sunshine/DS when Planted Feet is on", () => {
-    expect(preferGreaterUltTwin(true)).toBe(false);
+  it("prefers Greater Death's Swiftness when codex form is in the pool", () => {
     const deny = dualVersionDenyIds({
       style: "ranged",
-      plantedFeet: true,
       availableIds: ["deaths_swiftness", "greater_deaths_swiftness", "imbue_shadows"],
     });
-    expect(deny).toContain("greater_deaths_swiftness");
-    expect(deny).not.toContain("deaths_swiftness");
+    expect(deny).toContain("deaths_swiftness");
+    expect(deny).not.toContain("greater_deaths_swiftness");
+  });
+
+  it("keeps base Sunshine when greater is not in the pool", () => {
+    expect(
+      dualVersionDenyIds({
+        style: "magic",
+        availableIds: ["sunshine", "asphyxiate"],
+      }),
+    ).toEqual([]);
   });
 
   it("prefers igneous ult when cape passive is live", () => {
     const deny = dualVersionDenyIds({
       style: "melee",
-      plantedFeet: false,
       passiveIds: ["igneous-overpower"],
       availableIds: ["overpower", "overpower_igneous", "berserk"],
     });
@@ -44,7 +47,6 @@ describe("stylePolicy dual versions", () => {
   it("prefers base ult when igneous passive is absent", () => {
     const deny = dualVersionDenyIds({
       style: "necromancy",
-      plantedFeet: false,
       passiveIds: [],
       availableIds: ["death_skulls", "death_skulls_igneous"],
     });
@@ -56,7 +58,6 @@ describe("stylePolicy dual versions", () => {
     expect(
       dualVersionDenyIds({
         style: "magic",
-        plantedFeet: false,
         availableIds: ["sunshine"],
       }),
     ).toEqual([]);
@@ -78,6 +79,9 @@ describe("stylePolicy required abilities", () => {
       styleRequiredAbilityIds("ranged", ["greater_deaths_swiftness", "imbue_shadows", "ricochet"]),
     ).toEqual(["greater_deaths_swiftness", "imbue_shadows"]);
     expect(styleRequiredAbilityIds("magic", ["sunshine", "asphyxiate"])).toEqual(["sunshine"]);
+    expect(styleRequiredAbilityIds("magic", ["greater_sunshine", "sunshine"])).toEqual([
+      "greater_sunshine",
+    ]);
   });
 
   it("skips required families missing from the pool", () => {

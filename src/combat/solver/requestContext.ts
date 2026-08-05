@@ -126,10 +126,9 @@ export function buildCandidatePoolForRequest(
     deny: [...denySet],
   });
 
-  // One twin per exclusive ult pair (Sunshine/DS by PF; igneous by cape passive).
+  // One twin per exclusive ult pair (Sunshine/DS by codex pool presence; igneous by cape).
   const twinDeny = dualVersionDenyIds({
     style: request.style,
-    plantedFeet: simBase.plantedFeet === true,
     passiveIds,
     availableIds: pool.ids,
   });

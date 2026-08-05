@@ -322,11 +322,10 @@ export function resultMatchesRequestIdentity(
 }
 
 /**
- * Whether a solver DTO is safe to enter the verified solve cache.
- * Cancelled / stopped / exploratory-only / non-finite / out-of-bounds must not.
- * Empty or mismatched solveIdentity is never cacheable (fail-closed).
+ * Shared shape/proof/identity checks for presentable and cacheable DTOs.
+ * Residual / fullyValidated left to callers (cache is stricter than display).
  */
-export function isVerifiedCacheableResult(
+function isSolverResultStructurallyPresentable(
   request: SerializableSolverRequest,
   result: SolverResultDTO,
 ): boolean {
@@ -339,8 +338,37 @@ export function isVerifiedCacheableResult(
 
   if (!Number.isFinite(result.score)) return false;
 
-  // Rankable: full-horizon score present when the DTO carries one.
   if (result.bestFullScore !== undefined && !Number.isFinite(result.bestFullScore)) return false;
+
+  const bar = result.bar?.filter((id) => typeof id === "string" && id.length > 0) ?? [];
+  if (bar.length === 0) return false;
+  if (bar.length < request.minBarSize || bar.length > request.maxBarSize) return false;
+
+  return resultMatchesRequestIdentity(request, result);
+}
+
+/**
+ * Whether a DTO may be shown in the results panel (including residual / remains-best).
+ * Exploratory / degraded / failed proofs still fail closed.
+ * Residual is allowed here so honesty chrome can disclose mass (Apply stays off).
+ */
+export function isPresentableSolverResult(
+  request: SerializableSolverRequest,
+  result: SolverResultDTO,
+): boolean {
+  return isSolverResultStructurallyPresentable(request, result);
+}
+
+/**
+ * Whether a solver DTO is safe to enter the verified solve cache.
+ * Cancelled / stopped / exploratory-only / residual / non-finite must not.
+ * Empty or mismatched solveIdentity is never cacheable (fail-closed).
+ */
+export function isVerifiedCacheableResult(
+  request: SerializableSolverRequest,
+  result: SolverResultDTO,
+): boolean {
+  if (!isSolverResultStructurallyPresentable(request, result)) return false;
 
   // Residual / unvalidated honesty never enters verified cache.
   if (result.honesty?.fullyValidated === false) return false;
@@ -349,11 +377,7 @@ export function isVerifiedCacheableResult(
     result.rng?.residualWeight ??
     result.summary?.rng?.residualWeight ??
     0;
-  if (typeof residual === "number" && residual > 1e-12) return false;
+  if (typeof residual === "number" && residual > 1e-12) return false; // residual-free cache only
 
-  const bar = result.bar?.filter((id) => typeof id === "string" && id.length > 0) ?? [];
-  if (bar.length === 0) return false;
-  if (bar.length < request.minBarSize || bar.length > request.maxBarSize) return false;
-
-  return resultMatchesRequestIdentity(request, result);
+  return true;
 }

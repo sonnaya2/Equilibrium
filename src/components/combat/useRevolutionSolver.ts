@@ -6,6 +6,7 @@ import {
   cancelOptimize,
   clampSolverBarSizes,
   fingerprintSolveContext,
+  isPresentableSolverResult,
   isVerifiedCacheableResult,
   lookupSolvedBar,
   packSolverRequest,
@@ -341,14 +342,14 @@ export function useRevolutionSolver({
     });
   }, []);
 
-  /** Final DTO: adopt only verified full-horizon upgrades (Phase 4/5). */
+  /** Final DTO: show presentable results; adopt/cache only verified residual-free upgrades. */
   const applyFinalDto = useCallback(
     (dto: SolverResultDTO, request: SerializableSolverRequest) => {
       progressRafRef.current?.cancel();
       const bar = dto.bar?.length ? [...dto.bar] : [];
       setStoppedPreview(null);
-      // Fail closed: exploratory / degraded / failed proofs never surface as results.
-      if (bar.length === 0 || !isVerifiedCacheableResult(request, dto)) {
+      // Fail closed on exploratory/degraded/failed proofs; residual may still be shown.
+      if (bar.length === 0 || !isPresentableSolverResult(request, dto)) {
         setSolverResult(null);
         setSolverError(
           bar.length === 0
@@ -357,7 +358,7 @@ export function useRevolutionSolver({
         );
         return;
       }
-      // Remains-best is a successful outcome: show DTO, do not replace bar / cache upgrade.
+      // Remains-best and residual-blocked: show DTO; do not replace bar / cache upgrade.
       setSolverError(null);
       setSolverResult(dto);
       // Necro Run needs conjure_*; inject wiki early-bar conjures if solver omitted all.
@@ -370,7 +371,10 @@ export function useRevolutionSolver({
       if (shouldAdoptSolverResultBar(dto)) {
         onActiveBar(runBar);
         onClearSimResult();
-        void rememberSolvedBar(request, dto);
+        // Cache only residual-free verified upgrades (stricter than presentable).
+        if (isVerifiedCacheableResult(request, dto)) {
+          void rememberSolvedBar(request, dto);
+        }
         const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
         setBarLibrary((prev) => {
           const next = withRecentBar(prev, {
@@ -426,6 +430,7 @@ export function useRevolutionSolver({
         loadout.style,
         materialRef.current.combatModel.weaponConfiguration,
       );
+      // Preview only - never auto-replace active bar with unverified estimate.
       setStoppedPreview(
         runBar.length === preview.bar.length &&
           runBar.every((id, i) => id === preview.bar[i])
@@ -433,9 +438,8 @@ export function useRevolutionSolver({
           : { ...preview, bar: runBar },
       );
       setSolverResult(null);
-      onActiveBar(runBar);
     },
-    [onActiveBar, solverProfile, solverTier, loadout.style],
+    [solverProfile, solverTier, loadout.style],
   );
 
   const optimize = useCallback(async () => {
@@ -609,23 +613,12 @@ export function useRevolutionSolver({
 
   const cancelSolve = () => {
     // Keep gen so the in-flight promise still hits finally.
+    // Do not push partial topBarPreview onto the active bar (unverified).
     cancelRef.current = true;
     abortRef.current?.abort();
     setStopping(true);
     cancelOptimize();
     progressRafRef.current?.flush();
-    const identity = sessionIdentityRef.current;
-    if (identity == null || identity !== liveIdentityRef.current) return;
-    const partial = latestProgressRef.current;
-    if (partial?.topBarPreview?.length) {
-      onActiveBar(
-        ensureNecroConjuresOnBarIds(
-          partial.topBarPreview,
-          loadout.style,
-          materialRef.current.combatModel.weaponConfiguration,
-        ),
-      );
-    }
   };
 
   const clearSolverUi = useCallback(() => {

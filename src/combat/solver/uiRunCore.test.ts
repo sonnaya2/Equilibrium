@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  chunkUiRunCaps,
+  isResidualFreeProbe,
   pickBestUiRunProbe,
   preferredUiRunWorkerCount,
   type UiRunProbeResult,
@@ -29,12 +31,35 @@ describe("uiRunCore", () => {
     expect(best.maxLiveBranches).toBe(1024);
   });
 
-  it("chunkUiRunCaps groups cheapest first", async () => {
-    const { chunkUiRunCaps } = await import("./uiRunCore");
+  it("chunkUiRunCaps groups cheapest first", () => {
     expect(chunkUiRunCaps([128, 256, 512, 1024, 2048], 3)).toEqual([
       [128, 256, 512],
       [1024, 2048],
     ]);
+  });
+
+  it("wave early-exit policy: residual-free stops further waves; residual continues", () => {
+    const waves = chunkUiRunCaps([128, 256, 512, 1024], 2);
+    // Wave 1 all residual -> must continue.
+    const wave1: UiRunProbeResult[] = [
+      { maxLiveBranches: 128, residualWeight: 0.4, ok: true, totalExpected: 1 },
+      { maxLiveBranches: 256, residualWeight: 0.3, ok: true, totalExpected: 1 },
+    ];
+    expect(wave1.some(isResidualFreeProbe)).toBe(false);
+    expect(waves.length).toBeGreaterThan(1);
+
+    // Wave with residual-free allows stop.
+    const waveFree: UiRunProbeResult[] = [
+      { maxLiveBranches: 128, residualWeight: 0, ok: true, totalExpected: 1 },
+      { maxLiveBranches: 256, residualWeight: 0.2, ok: true, totalExpected: 1 },
+    ];
+    expect(waveFree.some(isResidualFreeProbe)).toBe(true);
+    expect(isResidualFreeProbe({ maxLiveBranches: 64, residualWeight: 1e-13, ok: true, totalExpected: 1 })).toBe(
+      true,
+    );
+    expect(
+      isResidualFreeProbe({ maxLiveBranches: 64, residualWeight: 0.01, ok: true, totalExpected: 1 }),
+    ).toBe(false);
   });
 
   it("preferredUiRunWorkerCount is 2-4", () => {

@@ -156,6 +156,13 @@ export function noteBranchKeyConstructionMs(ms: number): void {
   branchProf.branchKeyConstructionMs += ms;
 }
 
+/** Record residual mass outside mergeAndCap (e.g. forked-plan pre-trim). */
+export function noteResidualMass(weight: number): void {
+  if (!branchProfEnabled || !(weight > 0)) return;
+  branchProf.residualMassEvents += 1;
+  branchProf.residualMassTotal += weight;
+}
+
 /**
  * Cheap structural cost of one snapshotRuntime (not a heap walk).
  * Score-only omits presentation history / analysis / perAbility / cast hit arrays.

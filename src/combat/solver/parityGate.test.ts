@@ -152,6 +152,27 @@ describe("parityGate selection", () => {
     expect(out.proof).toBe("failed");
   });
 
+  it("parity mismatch outcome: rejected challenger cannot displace incumbent", () => {
+    // Simulates runScoreAnalysisParityGate after challenger failed compareScoreAnalysisParity:
+    // only incumbent remains in validated[]; prior thought challenger won search.
+    const out = selectAfterParity({
+      validated: [validated(["i"], 1000)],
+      incumbentBar: ["i"],
+      prior: priorResult({
+        best: fullBar(["challenger"], 9000),
+        top: [fullBar(["challenger"], 9000), fullBar(["i"], 1000)],
+        incumbentBar: ["i"],
+        incumbentScore: 1000,
+        isUpgrade: true,
+        validForApply: true,
+      }),
+    });
+    expect(out.best?.bar).toEqual(["i"]);
+    expect(out.isUpgrade).toBe(false);
+    expect(out.validForApply).toBe(false);
+    expect(out.top.every((t) => t.bar.join("|") !== "challenger")).toBe(true);
+  });
+
   it("does not keep a stale high prior when only lower parity-pass remains", () => {
     // Prior search thought stale was best; gate only validated weak + incumbent.
     const out = selectAfterParity({

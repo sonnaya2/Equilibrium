@@ -246,6 +246,7 @@ export {
   canonicalSimulationIdentity,
   solveIdentityFromRequest,
   resultMatchesRequestIdentity,
+  isPresentableSolverResult,
   isVerifiedCacheableResult,
   VERIFIED_CACHEABLE_PROOFS,
   NON_CACHEABLE_PROOFS,

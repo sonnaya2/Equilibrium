@@ -18,6 +18,7 @@ import {
   type SolverResultDTO,
   type SolverSearchTier,
 } from "@/combat/solver";
+import { dtoAllowsApply, residualMassOfDto } from "@/combat/solver/solverDtoHonesty";
 
 /** Non-final best-so-far after cancel/error (not a SolverResultDTO). */
 export type SolverStoppedPreview = {
@@ -180,50 +181,37 @@ export const CURRENT_BAR_REMAINS_BEST = "current bar remains best";
 
 /**
  * Phase 4/5 Apply gate for completed result DTOs.
- * Only verified-cacheable full-horizon proofs enable Apply; degraded/failed never.
- * Phase 5: explicit isUpgrade/validForApply false hard-disables Apply.
- * Honesty block residual / applyAllowed hard-disable when present.
- * Undefined upgrade flags (legacy DTOs) keep prior proof-only behavior.
+ * Delegates to dtoAllowsApply so UI and solver stay on one fail-closed policy.
  */
 export function mayApplySolverResultBar(
   dto: SolverResultDTO | null | undefined,
 ): boolean {
-  if (!dto?.bar?.length) return false;
-  if (!Number.isFinite(dto.score)) return false;
-  if (dto.honesty?.applyAllowed === false) return false;
-  if (dto.honesty?.fullyValidated === false) return false;
-  if (dto.honesty?.beatsBar === false) return false;
-  if (dto.validForApply === false || dto.isUpgrade === false) return false;
-  const residual =
-    dto.honesty?.residualMass ??
-    dto.rng?.residualWeight ??
-    dto.summary?.rng?.residualWeight ??
-    0;
-  if (typeof residual === "number" && residual > 1e-12) return false;
-  const proof = dto.proofLabel ?? dto.proof?.label;
-  if (typeof proof !== "string" || proof.length === 0) return false;
-  if (!VERIFIED_CACHEABLE_PROOFS.has(proof as ProofLabel)) return false;
-  return true;
+  return dtoAllowsApply(dto);
 }
 
 /**
  * Phase 5: whether applyFinalDto should replace the bar / remember as upgrade.
- * Same upgrade flags as Apply; verified-cacheable is checked separately with request.
+ * Same fail-closed policy as Apply (including residual / fullyValidated / proof).
  */
 export function shouldAdoptSolverResultBar(
   dto: SolverResultDTO | null | undefined,
 ): boolean {
-  if (!dto) return false;
-  if (dto.honesty?.applyAllowed === false) return false;
-  if (dto.honesty?.beatsBar === false) return false;
-  if (dto.validForApply === false || dto.isUpgrade === false) return false;
-  const residual =
-    dto.honesty?.residualMass ??
-    dto.rng?.residualWeight ??
-    dto.summary?.rng?.residualWeight ??
-    0;
-  if (typeof residual === "number" && residual > 1e-12) return false;
-  return true;
+  return dtoAllowsApply(dto);
+}
+
+/** True when Apply may target this top row (winner bar only). */
+export function mayApplySolverResultRow(
+  dto: SolverResultDTO | null | undefined,
+  rowBar: readonly string[] | null | undefined,
+): boolean {
+  if (!mayApplySolverResultBar(dto)) return false;
+  if (!dto?.bar?.length || !rowBar?.length) return false;
+  return barsMatch(dto.bar, rowBar);
+}
+
+/** Stopped / cancel previews are never Apply-eligible (unverified estimates). */
+export function mayApplyStoppedPreview(): boolean {
+  return false;
 }
 
 /** Upgrade / remains-best fragment for results chrome; null when nothing to add. */
@@ -231,9 +219,21 @@ export function formatSolverUpgradeChrome(dto: {
   isUpgrade?: boolean;
   scoreImprovement?: number;
   percentImprovement?: number | null;
+  validForApply?: boolean;
+  honesty?: {
+    residualMass?: number;
+    applyAllowed?: boolean;
+    beatsBar?: boolean;
+  };
+  rng?: { residualWeight?: number };
+  summary?: { rng?: { residualWeight?: number } };
 }): string | null {
-  if (dto.isUpgrade === false) return CURRENT_BAR_REMAINS_BEST;
-  if (dto.isUpgrade !== true) return null;
+  const residual = residualMassOfDto(dto as SolverResultDTO);
+  if (residual > 0) return "residual blocks apply";
+  if (dto.isUpgrade === false || dto.honesty?.beatsBar === false) {
+    return CURRENT_BAR_REMAINS_BEST;
+  }
+  if (dto.isUpgrade !== true && dto.honesty?.beatsBar !== true) return null;
   const abs = dto.scoreImprovement;
   if (typeof abs !== "number" || !Number.isFinite(abs) || abs <= 0) return null;
   const pct = dto.percentImprovement;

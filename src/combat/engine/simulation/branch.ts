@@ -16,6 +16,7 @@ import {
   MAX_INTERMEDIATE_BRANCHES,
   MAX_LIVE_BRANCHES,
   noteBranchLiveCount,
+  noteResidualMass,
   snapshotRuntime,
   type Branch,
   type BranchExactness,
@@ -50,6 +51,7 @@ export {
   noteBranchLiveCount,
   noteFidelityRetry,
   noteBranchKeyConstructionMs,
+  noteResidualMass,
 } from "./branchCore";
 
 /** Weight plan for one RNG outcome before snapshot+commit. */
@@ -291,7 +293,10 @@ function materializeCastPlansInner(
   if (forked.length > max) {
     const sorted = [...forked].sort((a, b) => b.weight - a.weight);
     keep = sorted.slice(0, max).map((p) => ({ ...p }));
-    for (let i = max; i < sorted.length; i++) residualWeight += sorted[i]!.weight;
+    let trimmed = 0;
+    for (let i = max; i < sorted.length; i++) trimmed += sorted[i]!.weight;
+    residualWeight += trimmed;
+    if (trimmed > 0) noteResidualMass(trimmed);
     if (forked.length > max) exactness = combineExactness(exactness, "bounded-approximation");
   }
 

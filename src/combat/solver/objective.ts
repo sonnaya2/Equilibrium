@@ -260,6 +260,12 @@ export function resolveTotalsBasis(summary: ScoreableSummary): string | undefine
 }
 
 /**
+ * Residual at or below this is treated as residual-free for ranking, fidelity, Apply.
+ * Shared across objective, adaptive ladders, and DTO honesty.
+ */
+export const RESIDUAL_FREE_TOLERANCE = 1e-12;
+
+/**
  * Why a summary cannot produce a rankable score (objective or exploratory).
  * Conditional concrete mean / known-mass ledgers never rank.
  * null when eligible for unit-mass scoring.
@@ -269,7 +275,9 @@ export function summaryObjectiveIneligibilityReason(summary: ScoreableSummary): 
   const failedWeight = summary.rng?.failedWeight ?? 0;
   if (failedWeight > 0) return `simulation failedWeight=${failedWeight}`;
   const residualWeight = summary.rng?.residualWeight ?? 0;
-  if (residualWeight > 0) return `simulation residualWeight=${residualWeight}`;
+  if (residualWeight > RESIDUAL_FREE_TOLERANCE) {
+    return `simulation residualWeight=${residualWeight}`;
+  }
   // Prefer damage.scope / rng.totalsBasis when present.
   const totalsBasis = resolveTotalsBasis(summary);
   if (isNonUnitMassTotalsBasis(totalsBasis)) {

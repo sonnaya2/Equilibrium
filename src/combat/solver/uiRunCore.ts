@@ -9,6 +9,7 @@ import {
   UI_RUN_BRANCH_FIDELITY_LADDER,
   RESIDUAL_FREE_TOLERANCE,
   budgetForLiveCap,
+  meetsBranchCompleteness,
   type AdaptiveBranchFidelityResult,
   type BranchFidelityAttemptMeta,
   type BranchFidelityLadder,
@@ -141,7 +142,7 @@ export function simulateUiRunFullAnalysis(
     mode: ladder.mode,
     attempts: 1,
     finalBudget: budget,
-    complete: residual <= ladder.maximumResidualWeight && summary.ok,
+    complete: meetsBranchCompleteness(summary, ladder),
     residualWeight: residual,
     exactness: typeof summary.rng?.exactness === "string" ? summary.rng.exactness : undefined,
   };
@@ -156,7 +157,6 @@ export function simulateRevolutionForUiHybrid(
   options?: SimulateOptions,
   ladder: BranchFidelityLadder = UI_RUN_BRANCH_FIDELITY_LADDER,
 ): AdaptiveBranchFidelityResult {
-  let lastProbe: UiRunProbeResult | null = null;
   let attempts = 0;
   let chosenLive = ladder.liveCaps[0] ?? 128;
 
@@ -164,7 +164,6 @@ export function simulateRevolutionForUiHybrid(
     const live = ladder.liveCaps[i]!;
     attempts += 1;
     const probe = simulateUiRunProbe(input, live, ladder, options);
-    lastProbe = probe;
     chosenLive = live;
     if (probe.ok && probe.residualWeight <= RESIDUAL_FREE_TOLERANCE) break;
     // Keep climbing while residual remains (mirror adaptive stop on last rung).

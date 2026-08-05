@@ -21,6 +21,8 @@ import {
   isNoValidatedUpgradeError,
   mayApplyFinalDtoStamp,
   mayApplySolverResultBar,
+  mayApplySolverResultRow,
+  mayApplyStoppedPreview,
   mayPublishStoppedPreview,
   maySaveVerified,
   previewCategory,
@@ -395,7 +397,7 @@ describe("Phase 4 apply / validation failure gates", () => {
         validForApply: true,
         honesty: {
           status: "ok",
-          fullyValidated: true,
+          fullyValidated: false,
           beatsBar: true,
           branchExactness: "approximated",
           residualMass: 0.66,
@@ -414,6 +416,23 @@ describe("Phase 4 apply / validation failure gates", () => {
         rng: { residualWeight: 0.2, exactness: "approximated" },
       }),
     ).toBe(false);
+    // Winner-row Apply only.
+    const upgrade = {
+      ...base,
+      isUpgrade: true as const,
+      validForApply: true as const,
+      proofLabel: "heuristic-best-found" as const,
+    };
+    expect(mayApplySolverResultRow(upgrade, upgrade.bar)).toBe(true);
+    expect(mayApplySolverResultRow(upgrade, ["other", "bar"])).toBe(false);
+    expect(mayApplyStoppedPreview()).toBe(false);
+    expect(
+      formatSolverUpgradeChrome({
+        isUpgrade: true,
+        scoreImprovement: 100,
+        honesty: { residualMass: 0.5, beatsBar: true, applyAllowed: false },
+      }),
+    ).toBe("residual blocks apply");
   });
 
   it("Phase 5: formatSolverUpgradeChrome remains-best and improvement", () => {

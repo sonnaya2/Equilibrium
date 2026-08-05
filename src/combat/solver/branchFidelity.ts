@@ -15,8 +15,10 @@ import {
 } from "../engine/simulation/revolution";
 import type { RotationSummary, SimulateOptions } from "../engine/simulation/simulate";
 import type { ScoreableSummary } from "./contracts";
-import { exactnessEligibleForExactProof } from "./objective";
+import { exactnessEligibleForExactProof, RESIDUAL_FREE_TOLERANCE } from "./objective";
 import { simulateRevolutionForUiHybrid } from "./uiRunCore";
+
+export { RESIDUAL_FREE_TOLERANCE };
 
 export type BranchFidelityMode = "exploratory" | "medium" | "full";
 
@@ -114,9 +116,6 @@ export function budgetForLiveCap(
     maximumResidualWeight,
   });
 }
-
-/** Numerical residual-free floor (aligns with full ranking tolerance). */
-export const RESIDUAL_FREE_TOLERANCE = 1e-12;
 
 /**
  * True when residual and exactness meet the ladder requirement.

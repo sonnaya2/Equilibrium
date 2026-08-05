@@ -17,7 +17,8 @@ import {
   BAR_SIZE_PRESETS,
   formatNumber,
   formatSolverUpgradeChrome,
-  mayApplySolverResultBar,
+  mayApplySolverResultRow,
+  mayApplyStoppedPreview,
   previewCategory,
   progressFillFromState,
   solverPhaseLabel,
@@ -83,8 +84,8 @@ export function RevoSolverSection({
   const optimize = () => onOptimize();
   const cancelSolve = () => onCancel();
   const applySolverBar = (ids: readonly string[]) => onApplyBar(ids);
-  // Phase 4/5: gate Apply for non-cacheable proofs and remains-best outcomes.
-  const canApplyResult = mayApplySolverResultBar(solverResult);
+  // Phase 4/5: Apply only for residual-free verified upgrades; stopped never Apply.
+  const canApplyStopped = mayApplyStoppedPreview();
   const upgradeChrome = solverResult ? formatSolverUpgradeChrome(solverResult) : null;
 
   return (
@@ -564,7 +565,7 @@ export function RevoSolverSection({
                   <button
                     type="button"
                     className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800 disabled:opacity-40 disabled:pointer-events-none"
-                    disabled={!canApplyResult}
+                    disabled={!mayApplySolverResultRow(solverResult, row.bar)}
                     onClick={() => applySolverBar(row.bar)}
                   >
                     Apply
@@ -597,8 +598,13 @@ export function RevoSolverSection({
               </span>
               <button
                 type="button"
-                className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800"
-                onClick={() => applySolverBar(stoppedPreview.bar)}
+                className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800 disabled:opacity-40 disabled:pointer-events-none"
+                disabled={!canApplyStopped}
+                title="Stopped estimates are unverified; Apply is disabled"
+                onClick={() => {
+                  if (!canApplyStopped) return;
+                  applySolverBar(stoppedPreview.bar);
+                }}
               >
                 Apply
               </button>

@@ -99,10 +99,6 @@ export function buildSolverResultDto(args: {
     ...bigBonedNotes,
   ];
 
-  if (!isUpgrade) {
-    proofNotes.push(CURRENT_BAR_REMAINS_BEST_NOTE);
-  }
-
   if (presentation) {
     if (!Number.isFinite(presentation.recheckScore)) {
       throw new Error(
@@ -165,15 +161,11 @@ export function buildSolverResultDto(args: {
     ? result.incumbentScore
     : Number.NEGATIVE_INFINITY;
 
-  // Residual on a supposed full winner is never Apply-eligible (defense in depth).
-  const residualBlocksApply = residualMass > 1e-12;
-  const validForApplyHonest = validForApply && !residualBlocksApply;
-
+  // beatsBar stays raw score compare; residual only kills Apply / fullyValidated.
   const honesty = buildSolverResultHonesty({
     status: result.status,
-    fullyValidated: true,
-    isUpgrade: isUpgrade && !residualBlocksApply,
-    validForApply: validForApplyHonest,
+    isUpgrade,
+    validForApply,
     currentBarScore,
     proposedBarScore: score,
     improvement: scoreImprovement,
@@ -182,9 +174,15 @@ export function buildSolverResultDto(args: {
     branchExactness,
   });
 
-  if (residualBlocksApply) {
+  if (!isUpgrade) {
+    proofNotes.push(CURRENT_BAR_REMAINS_BEST_NOTE);
+  } else if (!honesty.applyAllowed && residualMass > 0) {
     proofNotes.push(
-      `residualMass=${residualMass} blocks apply (never label residual as verified upgrade)`,
+      `residualMass=${residualMass} blocks apply (score may beat incumbent; never Apply residual)`,
+    );
+  } else if (!honesty.applyAllowed && !honesty.fullyValidated) {
+    proofNotes.push(
+      `presentation not fully validated exactness=${branchExactness ?? "missing"} blocks apply`,
     );
   }
 
@@ -214,6 +212,7 @@ export function buildSolverResultDto(args: {
     winnerScore: score,
     scoreImprovement: honesty.improvement,
     percentImprovement: honesty.beatsBar ? percentImprovement : null,
+    // Score compare stays on isUpgrade; Apply uses validForApply / honesty.applyAllowed.
     isUpgrade: honesty.beatsBar,
     validForApply: honesty.applyAllowed,
     ...(presentation?.summary ? { summary: presentation.summary } : {}),

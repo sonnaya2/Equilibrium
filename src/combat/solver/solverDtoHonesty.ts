@@ -5,16 +5,20 @@
 import type { ProofLabel, SolveStatus } from "./contracts";
 import type { SolverResultDTO } from "./worker/serializable";
 import { VERIFIED_CACHEABLE_PROOFS } from "./identity";
+import { exactnessEligibleForExactProof, RESIDUAL_FREE_TOLERANCE } from "./objective";
 
-const RESIDUAL_EPS = 1e-12;
+export { RESIDUAL_FREE_TOLERANCE };
 
 /** Machine-readable honesty block always emitted by buildSolverResultDto. */
 export interface SolverResultHonesty {
   /** Finalize status: ok when a full-rankable best exists (upgrade or incumbent). */
   status: SolveStatus;
-  /** True when best is full-horizon unit-mass rankable (not exploratory / residual). */
+  /**
+   * True when presentation is residual-free and exact (or merged-exactly).
+   * Ranking may still have been residual-free score-only; residual presentation fails this.
+   */
   fullyValidated: boolean;
-  /** True when proposed full score beats the incumbent beyond tolerance. */
+  /** True when proposed full score beats the incumbent (score compare only). */
   beatsBar: boolean;
   /** Branch expansion exactness of the presentation re-sim when known. */
   branchExactness: string | null;
@@ -26,16 +30,18 @@ export interface SolverResultHonesty {
   proposedBarScore: number;
   /** proposed - current when beatsBar; else 0. */
   improvement: number;
-  /** True only when Apply is allowed (upgrade + verified proof path). */
+  /** True only when Apply is allowed (upgrade + residual-free + verified proof). */
   applyAllowed: boolean;
 }
 
-export function residualMassOfDto(dto: Pick<SolverResultDTO, "rng" | "summary" | "honesty">): number {
+export function residualMassOfDto(
+  dto: Pick<SolverResultDTO, "rng" | "summary" | "honesty">,
+): number {
   if (typeof dto.honesty?.residualMass === "number" && Number.isFinite(dto.honesty.residualMass)) {
     return Math.max(0, dto.honesty.residualMass);
   }
   const w = dto.rng?.residualWeight ?? dto.summary?.rng?.residualWeight;
-  return typeof w === "number" && Number.isFinite(w) && w > RESIDUAL_EPS ? w : 0;
+  return typeof w === "number" && Number.isFinite(w) && w > RESIDUAL_FREE_TOLERANCE ? w : 0;
 }
 
 export function branchExactnessOfDto(
@@ -48,13 +54,23 @@ export function branchExactnessOfDto(
   return typeof ex === "string" && ex.length > 0 ? ex : null;
 }
 
+/** Residual-free + exact/merged-exactly (or missing exactness as legacy exact). */
+export function isFullyValidatedPresentation(
+  residualMass: number,
+  branchExactness: string | null | undefined,
+): boolean {
+  if (!(residualMass <= RESIDUAL_FREE_TOLERANCE)) return false;
+  return exactnessEligibleForExactProof(
+    branchExactness == null || branchExactness.length === 0 ? undefined : branchExactness,
+  );
+}
+
 /**
  * Build the honesty block for a validated DTO path (buildSolverResultDto only).
- * Residual on a "validated" winner fails applyAllowed (defense in depth).
+ * beatsBar is raw score compare; residual only kills applyAllowed / fullyValidated.
  */
 export function buildSolverResultHonesty(args: {
   status: SolveStatus;
-  fullyValidated: boolean;
   isUpgrade: boolean;
   validForApply: boolean;
   currentBarScore: number;
@@ -65,19 +81,20 @@ export function buildSolverResultHonesty(args: {
   branchExactness: string | null;
 }): SolverResultHonesty {
   const residual = Math.max(0, args.residualMass);
-  const residualFree = residual <= RESIDUAL_EPS;
+  const fullyValidated = isFullyValidatedPresentation(residual, args.branchExactness);
+  const residualFree = residual <= RESIDUAL_FREE_TOLERANCE;
   const proofOk = VERIFIED_CACHEABLE_PROOFS.has(args.proofLabel);
   const applyAllowed =
-    args.fullyValidated &&
+    fullyValidated &&
+    residualFree &&
     args.validForApply &&
     args.isUpgrade &&
-    residualFree &&
     proofOk &&
     Number.isFinite(args.proposedBarScore);
 
   return {
     status: args.status,
-    fullyValidated: args.fullyValidated,
+    fullyValidated,
     beatsBar: args.isUpgrade,
     branchExactness: args.branchExactness,
     residualMass: residual,
@@ -99,10 +116,9 @@ export function dtoAllowsApply(dto: SolverResultDTO | null | undefined): boolean
   if (dto.honesty?.fullyValidated === false) return false;
   if (dto.honesty?.beatsBar === false) return false;
   if (dto.validForApply === false || dto.isUpgrade === false) return false;
-  if (residualMassOfDto(dto) > RESIDUAL_EPS) return false;
+  if (residualMassOfDto(dto) > RESIDUAL_FREE_TOLERANCE) return false;
   const proof = dto.proofLabel ?? dto.proof?.label;
   if (typeof proof !== "string" || proof.length === 0) return false;
   if (!VERIFIED_CACHEABLE_PROOFS.has(proof as ProofLabel)) return false;
-  // Honesty applyAllowed true is sufficient; legacy DTOs pass proof + upgrade gates above.
   return true;
 }

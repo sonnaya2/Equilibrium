@@ -301,28 +301,21 @@ describe("honesty contract: solver search", () => {
     enableBranchProfiling(true);
     resetBranchProfile();
     const fixture = survivorBiasPrimaryFixture();
-    // Short ladder with high residual floor so retries climb when residual remains.
+    // Residual-free threshold forces climb on survivor-bias residual at low live caps.
     const ladder = {
       mode: "exploratory" as const,
       liveCaps: [16, 32, 64],
       maximumResidualWeight: 1e-12,
       exactness: "any" as const,
     };
-    const shortInput = {
-      ...fixture.revoInput,
-      durationTicks: 40,
-    };
     const out = simulateWithAdaptiveBranchFidelity(
-      shortInput,
+      fixture.revoInput,
       { detailLevel: "score-only" },
       ladder,
     );
-    expect(out.meta.attempts).toBeGreaterThanOrEqual(1);
-    // High residual under Imp/Rel typically exhausts or climbs the ladder.
-    if (out.meta.residualWeight > 1e-12) {
-      expect(out.meta.attempts).toBeGreaterThanOrEqual(2);
-    }
-    expect(out.meta.finalBudget.maxLiveBranches).toBeGreaterThanOrEqual(16);
+    expect(out.meta.residualWeight).toBeGreaterThan(1e-12);
+    expect(out.meta.attempts).toBeGreaterThanOrEqual(2);
+    expect(out.meta.finalBudget.maxLiveBranches).toBeGreaterThan(16);
     const prof = getBranchProfile();
     expect(prof.fidelityRetries).toBe(out.meta.attempts);
     enableBranchProfiling(false);
@@ -621,23 +614,46 @@ describe("honesty contract: finalization", () => {
   });
 
   it("candidate that beats incumbent only via conditional branch normalization is rejected", () => {
-    const residualSummary: ScoreableSummary = {
-      ok: true,
-      damageByTick: { 0: 340 },
-      totalExpected: 340,
-      rng: {
-        residualWeight: 0.66,
-        concreteMass: 0.34,
-        totalsBasis: "known-mass-contribution",
-        exactness: "approximated",
-      },
-      damage: {
-        scope: "known-mass-contribution",
-        knownMassExpectedDamage: 340,
-        conditionalConcreteMean: 1000,
-      },
+    const evaluate: EvaluateFn = ({ bar, mode }) => {
+      if (mode === "full" || mode === "finalize") {
+        // Challenger: residual-shaped non-rankable; incumbent residual-free.
+        if (bar[0] === "c") {
+          return {
+            score: Number.NEGATIVE_INFINITY,
+            finite: false,
+            mode: "full",
+            validForFinalRanking: false,
+            failureReason: "simulation residualWeight=0.66",
+          };
+        }
+        return {
+          score: bar[0] === "a" ? 500 : 100,
+          finite: true,
+          mode: "full",
+          exploratory: false,
+          validForFinalRanking: true,
+        };
+      }
+      // Explore prefers residual challenger.
+      return {
+        score: bar[0] === "c" ? 50_000 : 10,
+        finite: true,
+        mode: "search",
+        exploratory: true,
+        validForFinalRanking: false,
+      };
     };
-    expect(scoreSummary(residualSummary, "balanced").ok).toBe(false);
+    const result = solve({
+      pool: tinyPool,
+      sizeBounds: { min: 1, max: 1 },
+      evaluate,
+      tier: "thorough",
+      seed: 11,
+      incumbentBar: ["a"],
+    });
+    expect(result.best?.bar).toEqual(["a"]);
+    expect(result.best?.bar.includes("c")).toBe(false);
+    expect(result.isUpgrade).toBe(false);
   });
 
   it("no-upgrade leaves incumbent in place with Apply disabled", () => {
@@ -684,22 +700,6 @@ describe("honesty contract: parity", () => {
     };
   }
 
-  it("deliberate parity mismatch causes candidate rejection path via empty validated set", () => {
-    const prior = okSolve(fullWinner(["stale"], 5000), {
-      incumbentBar: ["i"],
-      incumbentScore: 1000,
-    });
-    const out = selectAfterParity({
-      validated: [],
-      incumbentBar: ["i"],
-      prior,
-    });
-    expect(out.status).toBe("failed");
-    expect(out.best).toBeNull();
-    expect(out.validFullCandidateCount).toBe(0);
-    expect(out.proof).toBe("failed");
-  });
-
   it("if all parity checks fail, solver returns no validated winner", () => {
     const out = selectAfterParity({
       validated: [],
@@ -708,6 +708,7 @@ describe("honesty contract: parity", () => {
     });
     expect(out.best).toBeNull();
     expect(out.validFullCandidateCount).toBe(0);
+    expect(out.status).toBe("failed");
   });
 
   it("parity keeps incumbent when only lower validated candidate remains", () => {
@@ -776,7 +777,7 @@ describe("honesty contract: DTO + Apply", () => {
     expect(isRankableSolverResult(dto)).toBe(true);
   });
 
-  it("residual presentation blocks Apply even with cacheable proof label", () => {
+  it("residual presentation blocks Apply but keeps beatsBar score truth", () => {
     const winner = fullWinner(["a", "b"], 2000);
     const presentation: WinnerPresentation = {
       recheckScore: 2000,
@@ -811,6 +812,9 @@ describe("honesty contract: DTO + Apply", () => {
       presentation,
     });
     expect(dto.honesty?.residualMass).toBeCloseTo(0.66, 10);
+    expect(dto.honesty?.beatsBar).toBe(true);
+    expect(dto.isUpgrade).toBe(true);
+    expect(dto.honesty?.fullyValidated).toBe(false);
     expect(dto.honesty?.applyAllowed).toBe(false);
     expect(dto.validForApply).toBe(false);
     expect(mayApplySolverResultBar(dto)).toBe(false);
@@ -885,14 +889,16 @@ describe("honesty contract: end-to-end residual case", () => {
         }),
       );
 
-      const winner = fullWinner(fixture.barIds, stats.knownMassDamage);
+      // Residual is what blocks Apply even when flags claim upgrade.
+      const winner = fullWinner(fixture.barIds, stats.knownMassDamage + 5_000);
       const dto = buildSolverResultDto({
         request: baseRequest,
         result: okSolve(winner, {
           incumbentBar: ["slice"],
-          incumbentScore: stats.knownMassDamage + 1000,
-          isUpgrade: false,
-          validForApply: false,
+          incumbentScore: stats.knownMassDamage,
+          isUpgrade: true,
+          scoreImprovement: 5_000,
+          validForApply: true,
         }),
         poolSize: 3,
         uniqueBars: 1,
@@ -900,7 +906,7 @@ describe("honesty contract: end-to-end residual case", () => {
         evaluationBudget: 28,
         blessingIds: [],
         presentation: {
-          recheckScore: stats.knownMassDamage,
+          recheckScore: stats.knownMassDamage + 5_000,
           summary: {
             totalExpected: stats.knownMassDamage,
             dps: 1,
@@ -915,11 +921,11 @@ describe("honesty contract: end-to-end residual case", () => {
           rng: { residualWeight: stats.residualWeight, exactness: "approximated" },
         },
       });
+      expect(dto.honesty?.beatsBar).toBe(true);
+      expect(dto.honesty?.residualMass).toBeGreaterThan(0.5);
+      expect(dto.honesty?.fullyValidated).toBe(false);
       expect(dto.honesty?.applyAllowed).toBe(false);
       expect(mayApplySolverResultBar(dto)).toBe(false);
-      expect(dto.honesty!.proposedBarScore).toBeLessThanOrEqual(
-        dto.honesty!.currentBarScore + 1e-9,
-      );
 
       enableBranchProfiling(false);
       resetBranchProfile();

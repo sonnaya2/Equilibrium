@@ -14,6 +14,7 @@ import {
 import type { CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
+import { getUiRunCache, setUiRunCache } from "./uiRunCache";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
 import type { Loadout } from "./useLoadout";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
@@ -78,6 +79,14 @@ export function RevolutionPanel({
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
   const runGenRef = useRef(0);
   const runCancelRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      runCancelRef.current = true;
+      runGenRef.current += 1;
+      cancelUiRevolutionWorkers();
+    };
+  }, []);
 
   const onActiveBar = useCallback((ids: string[] | null) => setActiveBarIds(ids), []);
   const onClearSimResult = useCallback(() => {
@@ -209,22 +218,31 @@ export function RevolutionPanel({
 
   const run = () => {
     if (modelled.length === 0 || runBusy) return;
-    const durationTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
     setShowAllCasts(false);
     setAnalysisOpen(false);
+
+    const cached = getUiRunCache(runKey);
+    if (cached) {
+      setResult(cached.summary);
+      setBranchFidelityMeta(cached.meta);
+      setResultKey(runKey);
+      return;
+    }
+
+    const durationTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
     const gen = ++runGenRef.current;
     runCancelRef.current = false;
     setRunBusy(true);
     setRunProgressLabel("Probing branch widths…");
 
     const barIds = modelled.map((m) => m.id).filter(Boolean);
-    const loadout = packSimBaseFromModel(combatModel);
+    const packed = packSimBaseFromModel(combatModel);
 
     void (async () => {
       try {
         const { summary, meta } = await runUiRevolution(
           {
-            loadout,
+            loadout: packed,
             barIds,
             style: simStyle,
             durationTicks,
@@ -246,13 +264,15 @@ export function RevolutionPanel({
           },
         );
         if (gen !== runGenRef.current) return;
-        setResult(summary);
-        setBranchFidelityMeta({
+        const branchMeta: BranchFidelityMeta = {
           maxLiveBranches: meta.finalBudget.maxLiveBranches,
           residualWeight: meta.residualWeight,
           attempts: meta.attempts,
-        });
+        };
+        setResult(summary);
+        setBranchFidelityMeta(branchMeta);
         setResultKey(runKey);
+        setUiRunCache(runKey, { summary, meta: branchMeta });
       } catch (err) {
         if (gen !== runGenRef.current) return;
         const aborted =

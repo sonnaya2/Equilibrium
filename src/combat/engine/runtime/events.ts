@@ -110,6 +110,8 @@ function eventSig(e: ScheduledEvent<unknown>): string {
     US +
     (e.provenance.detail ?? "") +
     US +
+    (e.lightningSurge ? 1 : 0) +
+    US +
     (e.castSnap ? snapSig(e.castSnap) : "")
   );
 }

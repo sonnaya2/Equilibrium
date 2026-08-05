@@ -110,7 +110,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(rt.queue.length).toBe(0);
   });
 
-  it("does not merge branches whose future or finalization state differs", () => {
+  it("does not merge branches whose future state differs; endTick alone merges", () => {
     const rt = createRuntime(meleeInput);
     expect(
       mergeBranches([
@@ -128,14 +128,15 @@ describe("snapshotRuntime shares no mutable collection", () => {
       ]),
     ).toHaveLength(2);
 
+    // endTick is presentation only; not in the future-evolution key.
     const differentEnd = snapshotRuntime(rt);
     differentEnd.endTick = 1;
-    expect(
-      mergeBranches([
-        { weight: 0.4, rt },
-        { weight: 0.6, rt: differentEnd },
-      ]),
-    ).toHaveLength(2);
+    const endMerged = mergeBranches([
+      { weight: 0.4, rt },
+      { weight: 0.6, rt: differentEnd },
+    ]);
+    expect(endMerged).toHaveLength(1);
+    expect(endMerged[0]!.rt.endTick).toBe(Math.max(rt.endTick, 1));
 
     // Historical damage alone must not block a merge when future state matches.
     const differentDamage = snapshotRuntime(rt);
@@ -631,10 +632,10 @@ describe("capBranches", () => {
       weight,
       rt: snapshotRuntime(base),
     });
-    // Distinct endTick so merge does not collapse them first.
+    // Distinct adrenaline so merge does not collapse them first.
     const branches = [0.4, 0.3, 0.15, 0.1, 0.05].map((w, i) => {
       const b = mk(w);
-      b.rt.endTick = i;
+      b.rt.state = { ...b.rt.state, adrenaline: i };
       return b;
     });
     const capped = capBranches(branches, 2);
@@ -655,7 +656,8 @@ describe("capBranches", () => {
       { weight: 0.6, rt: snapshotRuntime(base) },
       { weight: 0.4, rt: snapshotRuntime(base) },
     ];
-    branches[1]!.rt.endTick = 1;
+    // Distinct future state so cap sees two arms (not pre-merged).
+    branches[1]!.rt.state = { ...branches[1]!.rt.state, adrenaline: 1 };
     const capped = capBranches(branches, 8);
     expect(capped.branches).toHaveLength(2);
     expect(capped.residualWeight).toBe(0);
@@ -666,7 +668,7 @@ describe("capBranches", () => {
     const base = createRuntime(meleeInput);
     const many = Array.from({ length: 100 }, (_, i) => {
       const rt = snapshotRuntime(base);
-      rt.endTick = i;
+      rt.state = { ...rt.state, adrenaline: i };
       return { weight: 1 / 100, rt };
     });
     const out = mergeAndCapBranches(many, 16);
@@ -699,7 +701,7 @@ describe("capBranches", () => {
     const base = createRuntime(meleeInput);
     const many = Array.from({ length: 100 }, (_, i) => {
       const rt = snapshotRuntime(base);
-      rt.endTick = i;
+      rt.state = { ...rt.state, adrenaline: i };
       return { weight: 1 / 100, rt };
     });
     const out = mergeAndCapBranches(many, 16);
@@ -737,7 +739,8 @@ describe("appendWithIntermediateCap / multi-parent intermediate bound", () => {
     let residual = 0;
     for (let i = 0; i < 200; i++) {
       const rt = snapshotRuntime(base);
-      rt.endTick = i;
+      // Distinct spirit track so each append arm has a unique future key.
+      rt.spiritHitCounts.set(`track-${i}`, 1);
       const folded = appendWithIntermediateCap(acc, [{ weight: 1 / 200, rt }], 16);
       residual += folded.residualWeight;
       acc = folded.branches;
@@ -754,7 +757,7 @@ describe("appendWithIntermediateCap / multi-parent intermediate bound", () => {
     const base = createRuntime(meleeInput);
     const huge = Array.from({ length: 100 }, (_, i) => {
       const rt = snapshotRuntime(base);
-      rt.endTick = i;
+      rt.state = { ...rt.state, adrenaline: i };
       return { weight: 1 / 100, rt };
     });
     const folded = appendWithIntermediateCap([], huge, 16);

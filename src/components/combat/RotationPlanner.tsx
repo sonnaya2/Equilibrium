@@ -281,16 +281,22 @@ export function RotationPlanner({
         passiveIds: setupStats.equipmentEffects.passiveIds,
       })
     : stylePool;
-  const selectedVariants = new Map<string, string>();
-  for (const id of queue) {
-    const ability = abilityById(id);
-    if (ability?.replacementGroup) selectedVariants.set(ability.replacementGroup, ability.id);
-  }
   const loadoutGateOpts = {
     weaponConfiguration: setupStats.weaponConfiguration,
     equipmentIds: setupStats.equipmentIds,
     passiveIds: setupStats.equipmentEffects.passiveIds,
   };
+  // Map exclusive groups to the loadout-resolved id so a stale base queue entry
+  // (pre-cape) does not block the Igneous row as "Replaced by Overpower".
+  const selectedVariants = new Map<string, string>();
+  for (const id of queue) {
+    const raw = abilityById(id);
+    if (!raw?.replacementGroup) continue;
+    const resolved = useBuild
+      ? equipAbilityForLoadout(raw, DISPLAY_CATALOGUE.byId, loadoutGateOpts)
+      : raw;
+    selectedVariants.set(resolved.replacementGroup!, resolved.id);
+  }
   const manualStyles = [...new Set(queue.map((id) => abilityById(id)?.style).filter(Boolean))];
   const manualCombatStyle =
     mode === "revolution" ? loadout.style : manualStyles.join(" + ") || paletteStyle;

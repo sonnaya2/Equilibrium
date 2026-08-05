@@ -297,10 +297,9 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
 }
 
 /**
- * Future-evolution key. Omits historical damage ledgers (merged separately).
- * Keeps endTick, hitDetails, spirit meta for terminal metrics and land-time reads.
- * Default: compact structural multi-field string (branchKey.ts). RS3_BRANCH_KEY_JSON=1
- * restores full JSON.stringify for debug/oracle.
+ * Future-evolution key (branchKey.ts). Omits ledgers, endTick, seq allocators.
+ * Live hitDetails / spirit meta stay in the key for land-time reads.
+ * RS3_BRANCH_KEY_JSON=1 restores full JSON for debug/oracle.
  */
 function branchKey(rt: SimulationRuntime): string {
   const key = buildBranchKey(rt);
@@ -331,8 +330,11 @@ function mergePair(a: Branch, b: Branch): Branch {
   keep.rt.totalMin = bounds.totalMin;
   keep.rt.totalMax = bounds.totalMax;
   keep.rt.totalExpected = mix(a.rt.totalExpected, b.rt.totalExpected);
+  // Presentation + allocators: max so merged survivor can keep assigning ids.
   keep.rt.endTick = Math.max(a.rt.endTick, b.rt.endTick);
-  // damageByTick always mixed — ranking windows depend on it.
+  keep.rt.nextSeq = Math.max(a.rt.nextSeq, b.rt.nextSeq);
+  keep.rt.nextCastSeq = Math.max(a.rt.nextCastSeq, b.rt.nextCastSeq);
+  // damageByTick always mixed - ranking windows depend on it.
   for (const key of new Set([
     ...Object.keys(a.rt.damageByTick),
     ...Object.keys(b.rt.damageByTick),

@@ -124,6 +124,19 @@ describe("branch equivalence signature", () => {
     expect(a.signature()).not.toBe(b.signature());
   });
 
+  it("distinguishes lightningSurge marker (LS-eligible vs plain hit)", () => {
+    const surge = new EventQueue();
+    const plain = new EventQueue();
+    const unset = new EventQueue();
+    surge.push(event({ lightningSurge: true }));
+    plain.push(event({ lightningSurge: false }));
+    unset.push(event({}));
+    expect(surge.signature()).not.toBe(plain.signature());
+    expect(surge.signature()).not.toBe(unset.signature());
+    // false and undefined both encode as 0
+    expect(plain.signature()).toBe(unset.signature());
+  });
+
   it("distinguishes castSnap baseMods id/stage/priority", () => {
     const a = new EventQueue();
     const b = new EventQueue();
@@ -165,6 +178,7 @@ describe("branch equivalence signature", () => {
       { bleedId: "dismember" },
       { bleedExpiresAtTick: 10 },
       { blessingId: "big-boned" },
+      { lightningSurge: true },
       { provenance: { kind: "player_dot" } },
       { provenance: { kind: "player_direct", detail: "x" } },
       { castSnap: castSnap() },

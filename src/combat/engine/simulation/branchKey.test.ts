@@ -8,9 +8,10 @@ import { baseInput } from "../../test/fixtures/inputs";
 import type { CastContextInput } from "./contracts";
 import { branchKeyJson, branchKeyStructural } from "./branchKey";
 import { mergeBranches, snapshotRuntime } from "./branch";
-import { patchConjures, patchMelee, patchTarget } from "../runtime/state";
+import { patchConjures, patchMagic, patchMelee, patchRanged, patchTarget } from "../runtime/state";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { newHaunted } from "../../styles/necromancy/haunted";
+import { newPuncture } from "../../styles/ranged/puncture";
 
 const meleeInput: CastContextInput = {
   base: 1000,
@@ -68,6 +69,98 @@ describe("branchKey structural vs JSON partitions", () => {
     b.totalExpected = 99_999;
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(mergeBranches([{ weight: 0.4, rt: a }, { weight: 0.6, rt: b }])).toHaveLength(1);
+  });
+
+  it("endTick twins merge; survivor keeps max endTick", () => {
+    const a = createRuntime(meleeInput);
+    const b = snapshotRuntime(a);
+    a.endTick = 5;
+    b.endTick = 40;
+    a.totalExpected = 100;
+    b.totalExpected = 300;
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    const merged = mergeBranches([
+      { weight: 0.25, rt: a },
+      { weight: 0.75, rt: b },
+    ]);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.rt.endTick).toBe(40);
+    expect(merged[0]!.rt.totalExpected).toBe(250);
+  });
+
+  it("nextSeq / nextCastSeq twins merge; survivor keeps max allocators", () => {
+    const a = createRuntime(meleeInput);
+    const b = snapshotRuntime(a);
+    a.nextSeq = 3;
+    a.nextCastSeq = 1;
+    b.nextSeq = 12;
+    b.nextCastSeq = 7;
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    const merged = mergeBranches([
+      { weight: 0.4, rt: a },
+      { weight: 0.6, rt: b },
+    ]);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.rt.nextSeq).toBe(12);
+    expect(merged[0]!.rt.nextCastSeq).toBe(7);
+  });
+
+  it("merge preserves future physics when only damage ledgers differ", () => {
+    const a = createRuntime(meleeInput);
+    a.state = { ...a.state, adrenaline: 42 };
+    enqueueEvent(a, {
+      tick: 9,
+      seq: 1,
+      family: "hit",
+      abilityId: "assault",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      provenance: { kind: "player_direct" },
+      castSnap: {
+        castSeq: 0,
+        critLayers: { chance: 0 },
+        baseMods: [],
+        chaosRoarActive: false,
+        channelled: false,
+        greaterFuryActive: false,
+        furyActive: false,
+        firstEligibleHitIndex: 0,
+        empowerMult: 1,
+        searingWindsAtCast: false,
+        hauntedAtCast: false,
+        hauntedCapAd: 0,
+        enduringRuinBonus: 0,
+      },
+      resolve: noop,
+    });
+    a.nextSeq = 2;
+    const b = snapshotRuntime(a);
+    a.totalExpected = 10;
+    a.totalMin = 5;
+    a.totalMax = 15;
+    a.perAbility.attack = 10;
+    a.damageByTick[0] = 10;
+    b.totalExpected = 90;
+    b.totalMin = 80;
+    b.totalMax = 100;
+    b.perAbility.attack = 90;
+    b.damageByTick[0] = 90;
+    const sig = a.queue.signature();
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    const merged = mergeBranches([
+      { weight: 0.5, rt: a },
+      { weight: 0.5, rt: b },
+    ]);
+    expect(merged).toHaveLength(1);
+    const rt = merged[0]!.rt;
+    expect(rt.state.adrenaline).toBe(42);
+    expect(rt.queue.signature()).toBe(sig);
+    expect(rt.totalExpected).toBe(50);
   });
 
   it("Leng stack / frost window divergence splits keys", () => {
@@ -297,11 +390,25 @@ describe("branchKey structural vs JSON partitions", () => {
     derivedOther.nextSeq = 2;
     fixtures.push(derivedOther);
 
-    expect(partition(fixtures, branchKeyStructural)).toEqual(
-      partition(fixtures, branchKeyJson),
-    );
-  });
+    const structuralPart = partition(fixtures, branchKeyStructural);
+    const jsonPart = partition(fixtures, branchKeyJson);
+    expect(structuralPart).toEqual(jsonPart);
 
+    // Golden groups (indices) under future-only key:
+    // 0,1,11,12: plain twins + historical hitDetails (not live-derived) + nextSeq
+    // 2,3,7,8: afterAttacks + damage twin + endTick + nextSeq
+    // 4 / 5 / 6 / 9 / 10 / 13 / 14: distinct futures
+    const groups = structuralPart.map((g) => g.join(","));
+    expect(groups).toContain("0,1,11,12");
+    expect(groups).toContain("2,3,7,8");
+    expect(groups).toContain("4");
+    expect(groups).toContain("5");
+    expect(groups).toContain("6");
+    expect(groups).toContain("9");
+    expect(groups).toContain("10");
+    expect(groups).toContain("13");
+    expect(groups).toContain("14");
+  });
 
   it("expired frost timestamps share key with frost=0", () => {
     const base = createRuntime(lengInput);
@@ -334,6 +441,42 @@ describe("branchKey structural vs JSON partitions", () => {
       frostbladesOpenMass: 0,
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("expired primordial ice mass shares key with empty ice (structural + JSON)", () => {
+    const base = createRuntime(lengInput);
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.state = { ...a.state, tick: 200 };
+    a.state = patchMelee(a.state, {
+      primordialIce: {
+        stackMass: (() => {
+          const m = Array(11).fill(0);
+          m[5] = 1;
+          return m;
+        })(),
+        expiresAtTick: 100,
+      },
+      frostbladesUntilTick: 0,
+      frostbladesOpenMass: 0,
+    });
+    b.state = { ...b.state, tick: 200 };
+    b.state = patchMelee(b.state, {
+      primordialIce: {
+        stackMass: (() => {
+          const m = Array(11).fill(0);
+          m[0] = 1;
+          return m;
+        })(),
+        expiresAtTick: 0,
+      },
+      frostbladesUntilTick: 0,
+      frostbladesOpenMass: 0,
+    });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
     expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
   });
 
@@ -350,6 +493,28 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
     expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("expired blastInfusedUntilTick merges with zero (mirror tsunami)", () => {
+    const base = createRuntime(meleeInput);
+    const a = snapshotRuntime(base);
+    const b = snapshotRuntime(base);
+    a.state = { ...a.state, tick: 30 };
+    a.state = patchMagic(a.state, { blastInfusedUntilTick: 10 });
+    b.state = { ...b.state, tick: 30 };
+    b.state = patchMagic(b.state, { blastInfusedUntilTick: 0 });
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+
+    // Live window still splits.
+    const live = snapshotRuntime(base);
+    live.state = { ...live.state, tick: 5 };
+    live.state = patchMagic(live.state, { blastInfusedUntilTick: 20 });
+    const zero = snapshotRuntime(base);
+    zero.state = { ...zero.state, tick: 5 };
+    zero.state = patchMagic(zero.state, { blastInfusedUntilTick: 0 });
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(zero));
   });
 
   it("expired ghost commanding true vs false share key when untilTick is past", () => {
@@ -376,6 +541,144 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
     expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+  });
+
+  it("expired burn residue merges with missing burn; live until still splits", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 40 };
+    expired.state = patchTarget(expired.state, {
+      burns: { active: { combust: 30 } },
+    });
+    clean.state = { ...clean.state, tick: 40 };
+    clean.state = patchTarget(clean.state, { burns: { active: {} } });
+    live.state = { ...live.state, tick: 40 };
+    live.state = patchTarget(live.state, {
+      burns: { active: { combust: 50 } },
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired bleed residue merges with missing bleed; live until still splits", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 40 };
+    expired.state = patchTarget(expired.state, {
+      melee: {
+        ...expired.state.target.melee,
+        bleeds: { dismember: 25 },
+      },
+    });
+    clean.state = { ...clean.state, tick: 40 };
+    clean.state = patchTarget(clean.state, {
+      melee: { ...clean.state.target.melee, bleeds: {} },
+    });
+    live.state = { ...live.state, tick: 40 };
+    live.state = patchTarget(live.state, {
+      melee: {
+        ...live.state.target.melee,
+        bleeds: { dismember: 55 },
+      },
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired puncture residue merges via activePuncture; live window still splits", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 100 };
+    expired.state = patchRanged(expired.state, {
+      puncture: {
+        stacks: 12,
+        expiresAtTick: 40,
+        storedDamage: 120,
+        generation: 3,
+        pendingOwnerCast: 7,
+        lastCompletedCastSeq: 2,
+      },
+    });
+    clean.state = { ...clean.state, tick: 100 };
+    clean.state = patchRanged(clean.state, {
+      puncture: {
+        ...newPuncture(),
+        generation: 3,
+        lastCompletedCastSeq: 2,
+      },
+    });
+    live.state = { ...live.state, tick: 100 };
+    live.state = patchRanged(live.state, {
+      puncture: {
+        stacks: 12,
+        expiresAtTick: 150,
+        storedDamage: 120,
+        generation: 3,
+        pendingOwnerCast: 7,
+        lastCompletedCastSeq: 2,
+      },
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired berserk residue merges with endBerserk state; live window still splits", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    // stacks 6 under berserk cap; endBerserk clamps to BLOODLUST_CAP 4.
+    expired.state = { ...expired.state, tick: 50 };
+    expired.state = patchMelee(expired.state, {
+      bloodlust: { stacks: 6, berserk: true },
+      berserkUntilTick: 20,
+    });
+    clean.state = { ...clean.state, tick: 50 };
+    clean.state = patchMelee(clean.state, {
+      bloodlust: { stacks: 4, berserk: false },
+      berserkUntilTick: 0,
+    });
+    live.state = { ...live.state, tick: 50 };
+    live.state = patchMelee(live.state, {
+      bloodlust: { stacks: 6, berserk: true },
+      berserkUntilTick: 80,
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
   });
 
   it("historical hitDetails without pending derived do not split keys", () => {

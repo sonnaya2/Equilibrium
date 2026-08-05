@@ -1,21 +1,26 @@
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ActiveConjure } from "../../styles/necromancy/conjures";
+import { endBerserk } from "../../styles/melee/bloodlust";
 import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
+import { activePuncture } from "../../styles/ranged/puncture";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
 
 /**
- * Future-evolution merge key.
- * Default: compact structural multi-field string (same distinguishability as the
- * historical JSON array key for engine state / maps / seq counters).
- * Debug/oracle: RS3_BRANCH_KEY_JSON=1 restores JSON.stringify of the full tuple.
+ * Future-evolution merge key (Phase 7).
+ * Default: compact structural multi-field string. RS3_BRANCH_KEY_JSON=1 = JSON oracle.
  *
- * hitDetails in the key are only live derivedFrom sources still pending in the
- * queue (historical unreferenced HitResults cannot change future damage and would
- * only block equivalent-future merges after temporary frost divergence).
- * frostbladesUntilTick, haunted, and ghost commanding are expiry-normalized vs state.tick.
+ * Field classes (merge key only; runtime still holds full history):
+ * - Future: live state, pending queue, live derived hitDetails, spirit tracks/meta/hits
+ * - Presentation/history (omitted): endTick, total* ledgers, casts/events logs
+ * - Historical normalize: expired cooldowns/charges; frost/haunted/ghost/tsunami/blast;
+ *   expired burns/bleeds; expired puncture via activePuncture; expired berserk via endBerserk
+ * - Allocators omitted (merge takes max): nextSeq, nextCastSeq
+ * - Map keys sorted so insertion order never blocks equivalence
+ *
+ * Do not drop a field without a partition + future-damage proof test.
  */
 
 const RS = "\x1e";
@@ -42,15 +47,34 @@ function s(v: string | null | undefined): string {
   return String(v.length) + US + v;
 }
 
-function recordNum(rec: Readonly<Record<string, number>>): string {
-  // Match JSON.stringify enumeration order (insertion), not sorted keys.
-  const keys = Object.keys(rec);
-  if (keys.length === 0) return "0";
-  let out = String(keys.length);
-  for (const k of keys) {
-    out += FS + s(k) + n(rec[k]!);
+/**
+ * Map of clocks still live after `tick` (value > tick).
+ * Shared by ability readyAt, burn until, bleed until: missing and expired are equivalent.
+ */
+function recordLiveClocks(
+  rec: Readonly<Record<string, number>>,
+  tick: number,
+): string {
+  const live: [string, number][] = [];
+  for (const k of Object.keys(rec)) {
+    const until = rec[k]!;
+    if (until > tick) live.push([k, until]);
+  }
+  live.sort((a, b) => a[0].localeCompare(b[0]));
+  if (live.length === 0) return "0";
+  let out = String(live.length);
+  for (const [k, until] of live) {
+    out += FS + s(k) + n(until);
   }
   return out;
+}
+
+/** Ability ready-at map. Prune readyAt <= tick (same as firstLegalTick: ready now). */
+function recordLiveReadyAt(
+  rec: Readonly<Record<string, number>>,
+  tick: number,
+): string {
+  return recordLiveClocks(rec, tick);
 }
 
 /**
@@ -61,7 +85,7 @@ function recordChargeLists(
   rec: Readonly<Record<string, readonly number[]>>,
   tick: number,
 ): string {
-  const keys = Object.keys(rec);
+  const keys = Object.keys(rec).sort((a, b) => a.localeCompare(b));
   let out = "";
   let liveKeys = 0;
   for (const k of keys) {
@@ -73,6 +97,42 @@ function recordChargeLists(
   }
   if (liveKeys === 0) return "0";
   return String(liveKeys) + out;
+}
+
+/** Clocks for JSON oracle: drop value <= tick; stable key order. */
+function liveClocksForKey(
+  rec: Readonly<Record<string, number>>,
+  tick: number,
+): Record<string, number> {
+  const out: Record<string, number> = {};
+  const keys = Object.keys(rec).sort((a, b) => a.localeCompare(b));
+  for (const k of keys) {
+    const until = rec[k]!;
+    if (until > tick) out[k] = until;
+  }
+  return out;
+}
+
+/** Cooldowns for JSON oracle: drop readyAt <= tick; stable key order. */
+function liveCooldownsForKey(
+  rec: Readonly<Record<string, number>>,
+  tick: number,
+): Record<string, number> {
+  return liveClocksForKey(rec, tick);
+}
+
+/** Charges for JSON oracle: drop recovered clocks; stable key order. */
+function liveChargesForKey(
+  rec: Readonly<Record<string, readonly number[]>>,
+  tick: number,
+): Record<string, number[]> {
+  const out: Record<string, number[]> = {};
+  const keys = Object.keys(rec).sort((a, b) => a.localeCompare(b));
+  for (const k of keys) {
+    const list = (rec[k] ?? []).filter((readyAt) => readyAt > tick);
+    if (list.length > 0) out[k] = list;
+  }
+  return out;
 }
 
 function encodeConjure(c: ActiveConjure, tick: number): string {
@@ -124,14 +184,22 @@ function encodeState(state: RotationState): string {
   const res = nec.resources;
   const t = state.target;
   const tm = t.melee;
+  const tick = state.tick;
+  // Berserk land uses tick < until; clock endBerserk when until <= tick.
+  const berserkExpired = m.berserkUntilTick <= tick;
+  const bloodlust =
+    m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
+  const berserkUntil = berserkExpired ? 0 : m.berserkUntilTick;
+  // Expired puncture zeros stacks/stored/pending; keeps generation + lastCompletedCastSeq.
+  const punc = activePuncture(r.puncture, tick);
   const parts: string[] = [
-    n(state.tick),
+    n(tick),
     n(state.adrenaline),
     n(state.adrenalineCap),
     b(state.ringOfVigour),
     n(state.vestmentsAdrenalineUntilTick),
-    recordNum(state.cooldowns as Record<string, number>),
-    recordChargeLists(state.charges as Record<string, readonly number[]>, state.tick),
+    recordLiveReadyAt(state.cooldowns as Record<string, number>, tick),
+    recordChargeLists(state.charges as Record<string, readonly number[]>, tick),
     n(state.relentlessUntilTick),
     n(inv.cracklingReadyTick),
     n(inv.aftershockCharge),
@@ -147,9 +215,9 @@ function encodeState(state: RotationState): string {
         n(state.league.strikingLightReadyTick)
       : "0",
     // melee
-    n(m.bloodlust.stacks),
-    b(m.bloodlust.berserk),
-    n(m.berserkUntilTick),
+    n(bloodlust.stacks),
+    b(bloodlust.berserk),
+    n(berserkUntil),
     n(m.chaosRoarUntilTick),
     n(m.greaterFuryUntilTick),
     b(m.furyCritBonus),
@@ -162,12 +230,12 @@ function encodeState(state: RotationState): string {
     n(m.enduringRuin.grantedByCast),
     // Primordial Ice: expired-normalized stack mass + expiry + frost open mass.
     (() => {
-      const ice = expirePrimordialIce(m.primordialIce, state.tick);
+      const ice = expirePrimordialIce(m.primordialIce, tick);
       return ice.stackMass.map((w) => n(w)).join(US) + US + n(ice.expiresAtTick);
     })(),
     n(m.frostbladesOpenMass ?? 0),
     // Expired frost ≡ 0 (same as expand / completeAdvance).
-    n(normalizeLengFrostUntil(m.frostbladesUntilTick, state.tick)),
+    n(normalizeLengFrostUntil(m.frostbladesUntilTick, tick)),
     // ranged
     n(r.swiftness.startsAtTick),
     n(r.swiftness.expiresAtTick),
@@ -177,12 +245,12 @@ function encodeState(state: RotationState): string {
     n(r.deathspore.stacks),
     n(r.deathspore.freeCastUntilTick),
     n(r.deathspore.cooldownUntilTick),
-    n(r.puncture.stacks),
-    n(r.puncture.expiresAtTick),
-    n(r.puncture.storedDamage),
-    n(r.puncture.generation),
-    n(r.puncture.pendingOwnerCast),
-    n(r.puncture.lastCompletedCastSeq),
+    n(punc.stacks),
+    n(punc.expiresAtTick),
+    n(punc.storedDamage),
+    n(punc.generation),
+    n(punc.pendingOwnerCast),
+    n(punc.lastCompletedCastSeq),
     // magic
     n(g.runicCharge.cooldownUntilTick),
     n(g.runicCharge.animaUntilTick),
@@ -199,10 +267,10 @@ function encodeState(state: RotationState): string {
     n(g.channelledMight.expiresAtTick),
     n(g.channelledMight.critDamageBonus),
     // Tsunami / Blast Infused: expired until ≡ 0 for post-window merge.
-    n(g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= state.tick
+    n(g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= tick
       ? 0
       : g.tsunamiCritAdrenUntilTick),
-    n(g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= state.tick
+    n(g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= tick
       ? 0
       : g.blastInfusedUntilTick),
     // necromancy resources
@@ -219,19 +287,21 @@ function encodeState(state: RotationState): string {
     String(nec.conjures.spirits.length),
   ];
   for (const c of nec.conjures.spirits) {
-    parts.push(encodeConjure(c, state.tick));
+    parts.push(encodeConjure(c, tick));
   }
   // Expired Haunted ≡ newHaunted() (zero until and cap).
   const hauntedUntil =
-    t.haunted.untilTick > 0 && t.haunted.untilTick <= state.tick
+    t.haunted.untilTick > 0 && t.haunted.untilTick <= tick
       ? 0
       : t.haunted.untilTick;
   parts.push(
     // target
     n(t.lastAttackTick),
-    recordNum(t.burns.active as Record<string, number>),
+    // burnActive: tick < until; prune expired so residue matches missing.
+    recordLiveClocks(t.burns.active as Record<string, number>, tick),
     n(t.bloatedByCast),
-    recordNum(tm.bleeds as Record<string, number>),
+    // activeBleedCount: at < until; prune expired.
+    recordLiveClocks(tm.bleeds as Record<string, number>, tick),
     n(tm.abyssalParasite.stacks),
     n(tm.abyssalParasite.expiresAtTick),
     n(tm.abyssalParasite.nextDamageTick),
@@ -326,15 +396,39 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     rt.state.target.haunted.untilTick > 0 && rt.state.target.haunted.untilTick <= tick
       ? 0
       : rt.state.target.haunted.untilTick;
-  // Frost / Haunted / ghost commanding: expiry-normalize to match structural.
+  const g = rt.state.magic;
+  const m = rt.state.melee;
+  const berserkExpired = m.berserkUntilTick <= tick;
+  const bloodlust =
+    m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
+  const punc = activePuncture(rt.state.ranged.puncture, tick);
+  // Expiry + live CD/charges + map order: match structural distinguishability.
   const stateForKey = {
     ...rt.state,
+    cooldowns: liveCooldownsForKey(rt.state.cooldowns as Record<string, number>, tick),
+    charges: liveChargesForKey(rt.state.charges as Record<string, readonly number[]>, tick),
     melee: {
-      ...rt.state.melee,
-      frostbladesUntilTick: normalizeLengFrostUntil(
-        rt.state.melee.frostbladesUntilTick,
-        tick,
-      ),
+      ...m,
+      bloodlust,
+      berserkUntilTick: berserkExpired ? 0 : m.berserkUntilTick,
+      // Match structural: expired ice -> empty unit mass (Icy Tempest / Leng future).
+      primordialIce: expirePrimordialIce(m.primordialIce, tick),
+      frostbladesUntilTick: normalizeLengFrostUntil(m.frostbladesUntilTick, tick),
+    },
+    ranged: {
+      ...rt.state.ranged,
+      puncture: punc,
+    },
+    magic: {
+      ...g,
+      tsunamiCritAdrenUntilTick:
+        g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= tick
+          ? 0
+          : g.tsunamiCritAdrenUntilTick,
+      blastInfusedUntilTick:
+        g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= tick
+          ? 0
+          : g.blastInfusedUntilTick,
     },
     necromancy: {
       ...rt.state.necromancy,
@@ -348,12 +442,26 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     },
     target: {
       ...rt.state.target,
+      burns: {
+        active: liveClocksForKey(
+          rt.state.target.burns.active as Record<string, number>,
+          tick,
+        ),
+      },
+      melee: {
+        ...rt.state.target.melee,
+        bleeds: liveClocksForKey(
+          rt.state.target.melee.bleeds as Record<string, number>,
+          tick,
+        ),
+      },
       haunted: {
         untilTick: hauntedUntil,
         capAbilityDamage: hauntedUntil === 0 ? 0 : rt.state.target.haunted.capAbilityDamage,
       },
     },
   };
+  // endTick / nextSeq / nextCastSeq omitted: presentation + allocators (merge maxes them).
   return JSON.stringify([
     stateForKey,
     rt.queue.signature(),
@@ -361,14 +469,12 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     [...rt.spiritEventMeta].sort(([a], [b]) => a - b),
     [...rt.scheduledSpiritTracks].sort(),
     [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
-    rt.endTick,
-    rt.nextSeq,
-    rt.nextCastSeq,
   ]);
 }
 
 /** Compact structural key used by merge. */
 export function branchKeyStructural(rt: SimulationRuntime): string {
+  // Future state only: no endTick / nextSeq / nextCastSeq (see file header).
   return (
     encodeState(rt.state) +
     RS +
@@ -380,13 +486,7 @@ export function branchKeyStructural(rt: SimulationRuntime): string {
     RS +
     encodeTracks(rt.scheduledSpiritTracks) +
     RS +
-    encodeSpiritHits(rt.spiritHitCounts) +
-    RS +
-    n(rt.endTick) +
-    US +
-    n(rt.nextSeq) +
-    US +
-    n(rt.nextCastSeq)
+    encodeSpiritHits(rt.spiritHitCounts)
   );
 }
 

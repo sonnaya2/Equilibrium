@@ -23,6 +23,8 @@ import type { ResolvedCombatModel } from "@/combat/model";
 import {
   applyLoadoutVariantsToSlots,
   barOptionLabel,
+  ensureNecroConjuresOnBarIds,
+  ensureNecroConjuresOnSpecs,
   pickBarForLoadout,
   revoManagedModelled,
   SUPPORTED_BARS,
@@ -89,7 +91,18 @@ export function RevolutionPanel({
     };
   }, []);
 
-  const onActiveBar = useCallback((ids: string[] | null) => setActiveBarIds(ids), []);
+  const onActiveBar = useCallback(
+    (ids: string[] | null) => {
+      if (ids == null) {
+        setActiveBarIds(null);
+        return;
+      }
+      setActiveBarIds(
+        ensureNecroConjuresOnBarIds(ids, loadout.style, stats.weaponConfiguration),
+      );
+    },
+    [loadout.style, stats.weaponConfiguration],
+  );
   const onClearSimResult = useCallback(() => {
     setResult(null);
     setBranchFidelityMeta(null);
@@ -111,9 +124,16 @@ export function RevolutionPanel({
     [stats.equipmentEffects.passiveIds, stats.equipmentIds],
   );
 
-  const solvedSlots: ResolvedSlot[] | null = useMemo(() => {
+  const weaponConfiguration = stats.weaponConfiguration;
+  // Solver bars can drop conjure_*; merge wiki early-bar conjures for necro Run/display.
+  const effectiveActiveBarIds = useMemo(() => {
     if (!activeBarIds?.length) return null;
-    const raw = activeBarIds.map((id) => {
+    return ensureNecroConjuresOnBarIds(activeBarIds, loadout.style, weaponConfiguration);
+  }, [activeBarIds, loadout.style, weaponConfiguration]);
+
+  const solvedSlots: ResolvedSlot[] | null = useMemo(() => {
+    if (!effectiveActiveBarIds?.length) return null;
+    const raw = effectiveActiveBarIds.map((id) => {
       const spec = ENGINE_SPECS.get(id) ?? null;
       const entry = entryByEngineId(id);
       return {
@@ -124,9 +144,8 @@ export function RevolutionPanel({
     });
     // Solver bars already use upgrade ids; still normalize for display safety.
     return applyLoadoutVariantsToSlots(raw, igneousGate);
-  }, [activeBarIds, igneousGate]);
+  }, [effectiveActiveBarIds, igneousGate]);
 
-  const weaponConfiguration = stats.weaponConfiguration;
   const slots = useMemo(() => {
     if (solvedSlots) return solvedSlots;
     if (!bar) return [];
@@ -141,11 +160,13 @@ export function RevolutionPanel({
     [solvedSlots, bar, slots],
   );
   const modelled = useMemo(() => {
-    if (solvedSlots) {
-      return solvedSlots.filter((s) => s.spec).map((s) => s.spec!);
-    }
-    return bar ? revoManagedModelled(bar, weaponConfiguration, igneousGate) : [];
-  }, [solvedSlots, bar, weaponConfiguration, igneousGate]);
+    const base = solvedSlots
+      ? solvedSlots.filter((s) => s.spec).map((s) => s.spec!)
+      : bar
+        ? revoManagedModelled(bar, weaponConfiguration, igneousGate)
+        : [];
+    return ensureNecroConjuresOnSpecs(base, loadout.style, weaponConfiguration, igneousGate);
+  }, [solvedSlots, bar, weaponConfiguration, igneousGate, loadout.style]);
   const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
   const keybindCount = Math.max(0, slots.length - revoSize);
   const regions = useMemo(() => unlockedRegions(build), [build]);
@@ -312,29 +333,46 @@ export function RevolutionPanel({
   };
 
   const applySolverBar = (ids: readonly string[]) => {
-    setActiveBarIds([...ids]);
+    setActiveBarIds(
+      ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration),
+    );
     setResult(null);
     setBranchFidelityMeta(null);
   };
 
+  // Run/active bars are necro-normalized; match verified DTO against the same face.
+  const finalRunBar = solver.solverResult?.bar?.length
+    ? ensureNecroConjuresOnBarIds(
+        solver.solverResult.bar,
+        loadout.style,
+        weaponConfiguration,
+      )
+    : null;
+  const stoppedRunBar = solver.stoppedPreview?.bar?.length
+    ? ensureNecroConjuresOnBarIds(
+        solver.stoppedPreview.bar,
+        loadout.style,
+        weaponConfiguration,
+      )
+    : null;
   const currentSaveBar = activeBarIds?.length
     ? activeBarIds
-    : solver.solverResult?.bar?.length
-      ? [...solver.solverResult.bar]
-      : solver.stoppedPreview?.bar?.length
-        ? [...solver.stoppedPreview.bar]
+    : finalRunBar
+      ? [...finalRunBar]
+      : stoppedRunBar
+        ? [...stoppedRunBar]
         : null;
   const finalBarMatch =
-    !!solver.solverResult &&
+    !!finalRunBar &&
     !!currentSaveBar &&
-    solver.solverResult.bar?.length === currentSaveBar.length &&
-    solver.solverResult.bar.every((id, i) => id === currentSaveBar[i]);
+    finalRunBar.length === currentSaveBar.length &&
+    finalRunBar.every((id, i) => id === currentSaveBar[i]);
   const stoppedBarMatch =
     !finalBarMatch &&
-    !!solver.stoppedPreview &&
+    !!stoppedRunBar &&
     !!currentSaveBar &&
-    solver.stoppedPreview.bar.length === currentSaveBar.length &&
-    solver.stoppedPreview.bar.every((id, i) => id === currentSaveBar[i]);
+    stoppedRunBar.length === currentSaveBar.length &&
+    stoppedRunBar.every((id, i) => id === currentSaveBar[i]);
   /** Score shown for save: verified final when identity+bar match; else stopped facts. */
   const currentSaveScore = finalBarMatch
     ? solver.solverResult!.score
@@ -346,7 +384,7 @@ export function RevolutionPanel({
   const saveVerified = maySaveVerified({
     liveIdentity: solver.liveIdentity,
     resultSolveIdentity: solver.solverResult?.solveIdentity,
-    finalBar: solver.solverResult?.bar,
+    finalBar: finalRunBar,
     currentBar: currentSaveBar,
     solving: solver.solving,
     proofLabel:

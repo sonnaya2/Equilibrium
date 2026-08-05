@@ -198,6 +198,24 @@ function staticSeedBars(
     .filter((s) => s.abilityIds.length > 0);
 }
 
+/** Prepend wiki early-bar conjure_* when a necro seed/user bar omitted all summons. */
+function ensureNecroConjuresOnSeedIds(
+  abilityIds: readonly string[],
+  style: CombatStyle,
+  weaponConfiguration?: SerializableRevolutionSimBase["weaponConfiguration"],
+): string[] {
+  if (style !== "necromancy") return [...abilityIds];
+  if (abilityIds.some((id) => id.startsWith("conjure_"))) return [...abilityIds];
+  const seeds = staticSeedBars(style, weaponConfiguration);
+  const baseline = seeds.find((s) => s.baseline) ?? seeds[0];
+  const conjures =
+    baseline?.abilityIds.filter((id) => id.startsWith("conjure_")) ??
+    (["conjure_undead_army"] as const);
+  const existing = new Set(abilityIds);
+  const inject = conjures.filter((id) => !existing.has(id));
+  return inject.length === 0 ? [...abilityIds] : [...inject, ...abilityIds];
+}
+
 /** Pack a structured-clone-safe solver request from a neutral combat snapshot. */
 export function packSolverRequest(input: PackSolverRequestInput): SerializableSolverRequest {
   // Freeze once per request - never re-sample Date.now() per evaluation.
@@ -222,6 +240,15 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
 
   const simBase = resolvePackSimBase(input);
   const ruleset = input.model?.league.ruleset ?? input.snapshot?.league.ruleset ?? "base";
+  const wc = simBase.weaponConfiguration;
+  const authoredSeedBars = staticSeedBars(style, wc).map((s) => ({
+    ...s,
+    abilityIds: ensureNecroConjuresOnSeedIds(s.abilityIds, style, wc),
+  }));
+  const userBar =
+    input.userBar != null
+      ? ensureNecroConjuresOnSeedIds(input.userBar, style, wc)
+      : undefined;
 
   return defaultSerializableRequest({
     loadout: simBase,
@@ -241,7 +268,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],
     ruleset,
     now,
-    authoredSeedBars: staticSeedBars(style, simBase.weaponConfiguration),
-    userBar: input.userBar,
+    authoredSeedBars,
+    userBar,
   });
 }

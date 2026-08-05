@@ -25,6 +25,22 @@ export function isConjureSummonAbilityId(abilityId: string): boolean {
   return Object.prototype.hasOwnProperty.call(CONJURE_ABILITY_SUMMONS, abilityId);
 }
 
+/** Wiki revo++ seed lead when catalogue inject is unavailable. */
+export const NECRO_BAR_CONJURE_FALLBACK = "conjure_undead_army";
+
+/**
+ * Run needs conjure_* to summon spirits. Solver bars may omit them.
+ * Army fallback for pure unit tests; UI path uses ensureNecroConjuresOnBarIds (full wiki).
+ */
+export function ensureNecromancyConjureOnBar(
+  barIds: readonly string[],
+  style: string,
+): string[] {
+  if (style !== "necromancy") return [...barIds];
+  if (barIds.some((id) => isConjureSummonAbilityId(id))) return [...barIds];
+  return [NECRO_BAR_CONJURE_FALLBACK, ...barIds];
+}
+
 /** Human label for spirit ledger ids (not bar abilities). */
 const SPIRIT_EFFECT_LABEL: Readonly<Record<string, string>> = {
   [SPIRIT_AUTO_ABILITY_ID.skeleton_warrior]: "Skeleton Warrior auto",

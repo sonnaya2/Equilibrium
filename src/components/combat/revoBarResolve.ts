@@ -148,3 +148,57 @@ export function applyLoadoutVariantsToSlots(
     };
   });
 }
+
+/** Early-bar conjure engine ids from the wiki necro reference (revo-managed order). */
+export function wikiNecroConjureIds(weaponConfiguration?: WeaponShape): string[] {
+  const bar =
+    pickBarForLoadout("necromancy", weaponConfiguration) ?? pickBarForLoadout("necromancy");
+  if (!bar) return [];
+  return revoManagedModelled(bar, weaponConfiguration)
+    .map((s) => s.id)
+    .filter((id) => id.startsWith("conjure_"));
+}
+
+/**
+ * When necro bar ids have zero conjure_*, prepend wiki early-bar conjures.
+ * Solver bars can drop summons; Run/seeds must not silently omit them.
+ */
+export function ensureNecroConjuresOnBarIds(
+  barIds: readonly string[],
+  style: string,
+  weaponConfiguration?: WeaponShape,
+): string[] {
+  if (style !== "necromancy") return [...barIds];
+  if (barIds.some((id) => id.startsWith("conjure_"))) return [...barIds];
+  const conjures = wikiNecroConjureIds(weaponConfiguration);
+  if (conjures.length === 0) return [...barIds];
+  const existing = new Set(barIds);
+  const inject = conjures.filter((id) => !existing.has(id));
+  return inject.length === 0 ? [...barIds] : [...inject, ...barIds];
+}
+
+/**
+ * Same as ensureNecroConjuresOnBarIds for modelled AbilitySpec lists (UI Run bar).
+ */
+export function ensureNecroConjuresOnSpecs(
+  specs: readonly AbilitySpec[],
+  style: string,
+  weaponConfiguration?: WeaponShape,
+  gate?: {
+    passiveIds?: readonly ItemPassiveId[];
+    equipmentIds?: readonly string[];
+  },
+): AbilitySpec[] {
+  if (style !== "necromancy") return [...specs];
+  if (specs.some((s) => s.id.startsWith("conjure_"))) return [...specs];
+  const bar =
+    pickBarForLoadout("necromancy", weaponConfiguration) ?? pickBarForLoadout("necromancy");
+  if (!bar) return [...specs];
+  const wikiConjures = revoManagedModelled(bar, weaponConfiguration, gate).filter((s) =>
+    s.id.startsWith("conjure_"),
+  );
+  if (wikiConjures.length === 0) return [...specs];
+  const existing = new Set(specs.map((s) => s.id));
+  const inject = wikiConjures.filter((s) => !existing.has(s.id));
+  return inject.length === 0 ? [...specs] : [...inject, ...specs];
+}

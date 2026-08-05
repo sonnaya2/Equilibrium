@@ -19,6 +19,7 @@ import {
   ZOMBIE_FIRST_AUTO_TICKS,
   ZOMBIE_POISON_FIRST_TICKS,
   applyConjureCast,
+  applyGhostCommand,
   conjureActive,
   conjureCanCast,
   dismissConjure,
@@ -165,6 +166,13 @@ describe("conjures", () => {
     expect(conjureCanCast("conjure_undead_army", army, 0)).toBe(false);
     const partial = dismissConjure(army, "vengeful_ghost");
     expect(conjureCanCast("conjure_undead_army", partial, 0)).toBe(true);
+  });
+
+  it("conjureCanCast rejects ghost command once already commanding", () => {
+    const ghost = summonConjure(newConjures(), "vengeful_ghost", 0);
+    expect(conjureCanCast("command_vengeful_ghost", ghost, 0)).toBe(true);
+    const commanded = applyGhostCommand(ghost);
+    expect(conjureCanCast("command_vengeful_ghost", commanded, 0)).toBe(false);
   });
 });
 

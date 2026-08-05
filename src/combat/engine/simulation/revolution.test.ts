@@ -334,7 +334,8 @@ describe("golden 60s revo smoke", () => {
     { barId: "ranged", style: "ranged", basicId: "ranged_attack", weaves: true },
     // With channels holding occupancy, the magic bar fills every slot - no idle GCDs.
     { barId: "magic", style: "magic", basicId: "magic_attack", weaves: false },
-    { barId: "necromancy", style: "necromancy", basicId: "necromancy_basic", weaves: true },
+    // Conjure slots morph to Command while spirits are up; necro bar fills GCDs.
+    { barId: "necromancy", style: "necromancy", basicId: "necromancy_basic", weaves: false },
   ];
 
   for (const { barId, style, basicId, weaves } of CASES) {
@@ -539,7 +540,7 @@ describe("revolution — conjure post-summon management", () => {
     weaponConfiguration: "necromancy" as const,
   };
 
-  it("summons then auto-attacks on skeleton cadence (7 then every 5)", () => {
+  it("summons then auto-attacks; conjure bar morphs to command and mutates cadence", () => {
     const s = simulateRevolution({
       ...necroRevo,
       bar: [abilitySpec("conjure_skeleton_warrior")],
@@ -547,9 +548,12 @@ describe("revolution — conjure post-summon management", () => {
     });
     expect(s.ok).toBe(true);
     expect(s.casts[0]?.abilityId).toBe("conjure_skeleton_warrior");
+    // Slot morphs to command@6 (initial lockout); RAAAR@7, hits 8-17, autos resume 19.
+    expect(s.casts.some((c) => c.abilityId === "command_skeleton_warrior" && c.tick === 6)).toBe(
+      true,
+    );
     const autos = s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick);
-    // First auto cast+7; interval 5 through exclusive end of horizon.
-    expect(autos).toEqual([7, 12, 17, 22, 27, 32, 37]);
+    expect(autos).toEqual([7, 19, 24, 29, 34]);
     expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
     expect(s.analysis.bySource.some((r) => r.kind === "conjure-or-familiar" && r.damage > 0)).toBe(
       true,
@@ -558,9 +562,7 @@ describe("revolution — conjure post-summon management", () => {
 
   it("command skeleton waits for active conjure and the 6-tick initial lockout", () => {
     // Short horizon: one command only (wiki 15s CD ≈ 25 ticks).
-    // Wiki PvME necro revo++ bar has no command_* slots (conjure sequence replaces
-    // the conjure icon in-game). Custom bars that place command_* on managed slots
-    // fire when the spirit is active and the initial lockout has elapsed.
+    // Explicit command_* on a managed slot still fires when spirit + lockout allow.
     const s = simulateRevolution({
       ...necroRevo,
       bar: [abilitySpec("command_skeleton_warrior"), abilitySpec("conjure_skeleton_warrior")],
@@ -577,6 +579,93 @@ describe("revolution — conjure post-summon management", () => {
     // Command hits land at activation+2..+11; initial lockout blocked earlier ticks.
     const cmdHits = s.events.filter((e) => e.abilityId === "command_skeleton_warrior");
     expect(cmdHits.map((e) => e.tick)).toEqual([8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+  });
+
+  it("revo morph: conjure_* bar slot casts command when spirit is active", () => {
+    // Wiki bars store conjure_* only; in-game the slot morphs to Command.
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_skeleton_warrior"), abilitySpec("soul_sap")],
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`).slice(0, 4)).toEqual([
+      "conjure_skeleton_warrior@0",
+      "soul_sap@3",
+      "command_skeleton_warrior@6",
+      "necromancy_basic@9",
+    ]);
+    expect(s.casts.filter((c) => c.abilityId === "command_skeleton_warrior")).toHaveLength(1);
+    const cmdHits = s.events.filter((e) => e.abilityId === "command_skeleton_warrior");
+    expect(cmdHits.map((e) => e.tick)).toEqual([8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+  });
+
+  it("revo morph: undead army slot fires a command after summon (skeleton preferred)", () => {
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_undead_army"), abilitySpec("soul_sap")],
+      durationTicks: 30,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0]?.abilityId).toBe("conjure_undead_army");
+    expect(s.casts[0]?.tick).toBe(0);
+    const commands = s.casts.filter((c) => c.abilityId.startsWith("command_"));
+    expect(commands.length).toBeGreaterThanOrEqual(1);
+    expect(commands[0]!.abilityId).toBe("command_skeleton_warrior");
+    expect(commands[0]!.tick).toBe(6);
+  });
+
+  it("revo morph: army does not spam ghost every GCD; commands are CD/state gated", () => {
+    // Skeleton 15s CD; ghost 0s wiki CD but once-commanded. Putrid not in army morph.
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_undead_army"), abilitySpec("soul_sap")],
+      durationTicks: 60,
+    });
+    expect(s.ok).toBe(true);
+    const cmds = s.casts.filter((c) => c.abilityId.startsWith("command_"));
+    expect(cmds.map((c) => `${c.abilityId}@${c.tick}`)).toEqual([
+      "command_skeleton_warrior@6",
+      "command_vengeful_ghost@9",
+      "command_skeleton_warrior@33",
+    ]);
+    expect(s.casts.some((c) => c.abilityId === "command_putrid_zombie")).toBe(false);
+    // Fall through to soul_sap after morph targets are spent/on CD.
+    expect(s.casts.some((c) => c.abilityId === "soul_sap" && c.tick > 9 && c.tick < 33)).toBe(
+      true,
+    );
+    // Single army summon for the full SP3 life (no mid-life re-summon loop).
+    expect(s.casts.filter((c) => c.abilityId === "conjure_undead_army")).toHaveLength(1);
+  });
+
+  it("revo morph: after command_skeleton, no GCD spam while on CD; fillers + real damage", () => {
+    // Wiki 15s CD ≈ 25 ticks; morph must skip the conjure slot until CD, not cast 0-dmg.
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_skeleton_warrior"), abilitySpec("soul_sap")],
+      durationTicks: 60,
+    });
+    expect(s.ok).toBe(true);
+    const cmdCasts = s.casts.filter((c) => c.abilityId === "command_skeleton_warrior");
+    // Few casts on CD spacing (6 then 6+25 aligned to GCD 33), not every 3-tick GCD.
+    expect(cmdCasts.map((c) => c.tick)).toEqual([6, 33]);
+    expect(cmdCasts.length).toBeLessThanOrEqual(3);
+    // Between commands, soul_sap / basics fill - never illegal command.
+    const mid = s.casts.filter((c) => c.tick > 6 && c.tick < 33);
+    expect(mid.length).toBeGreaterThan(0);
+    expect(mid.every((c) => c.abilityId !== "command_skeleton_warrior")).toBe(true);
+    expect(mid.some((c) => c.abilityId === "soul_sap" || c.abilityId === "necromancy_basic")).toBe(
+      true,
+    );
+    const cmdHits = s.events.filter((e) => e.abilityId === "command_skeleton_warrior");
+    // First command: hits 8..17; second: 35..44. Auto@7 builds rage before first hit.
+    expect(cmdHits.map((e) => e.tick)).toEqual([
+      8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+    ]);
+    // Band 22-28% of 1000 = 250 EV plain; first command hit after 1 auto rage stack ~257.
+    expect(cmdHits[0]!.damage.expected).toBeCloseTo(257, 0);
+    expect(cmdHits.every((e) => e.damage.expected > 0)).toBe(true);
+    expect(s.perAbility["command_skeleton_warrior"]).toBeGreaterThan(0);
   });
 
   it("command putrid zombie waits for active conjure + 6-tick lockout, then explodes (ST)", () => {
@@ -622,6 +711,7 @@ describe("revolution — conjure post-summon management", () => {
 
   it("re-summons after Spirit Pact expiry and restarts auto cadence", () => {
     // SP3 exclusive until = cast + 105; second summon at 105 with first auto at 112.
+    // Conjure morph fires commands during lifetime (mutates mid-life autos).
     const s = simulateRevolution({
       ...necroRevo,
       bar: [abilitySpec("conjure_skeleton_warrior")],
@@ -630,10 +720,15 @@ describe("revolution — conjure post-summon management", () => {
     expect(s.ok).toBe(true);
     const skelCasts = s.casts.filter((c) => c.abilityId === "conjure_skeleton_warrior");
     expect(skelCasts.map((c) => c.tick)).toEqual([0, 105]);
+    expect(s.casts.some((c) => c.abilityId === "command_skeleton_warrior")).toBe(true);
     const autos = s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick);
-    expect(autos).toContain(102);
+    // First life still lands spirit autos; second life restarts at summon+7.
+    expect(autos.some((t) => t < 105)).toBe(true);
     expect(autos).toContain(112);
-    expect(autos.filter((t) => t >= 112)).toEqual([112, 117, 122, 127]);
+    // Second life: morph commands at 111 (lockout after re-summon), so cadence is
+    // RAAAR-suppressed after 112 rather than plain every-5.
+    expect(autos.filter((t) => t >= 112)[0]).toBe(112);
+    expect(autos.filter((t) => t > 112 && t < 130).length).toBeGreaterThan(0);
   });
 
   it("70s+ revo with Undead Army early on bar casts army again after SP3 expiry", () => {

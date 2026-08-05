@@ -35,7 +35,12 @@ import {
   trackLiveClassName,
   workerRecipeGroupLabel,
 } from "./revoPanelFormat";
-import { pickBarForLoadout, revoManagedModelled, SUPPORTED_BARS } from "./revoBarResolve";
+import {
+  ensureNecroConjuresOnBarIds,
+  pickBarForLoadout,
+  revoManagedModelled,
+  SUPPORTED_BARS,
+} from "./revoBarResolve";
 import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { packSolverRequestFromUi } from "./useRevolutionSolver";
 
@@ -605,5 +610,19 @@ describe("revoBarResolve", () => {
     expect(bar).toBeDefined();
     const modelled = revoManagedModelled(bar!, "shield");
     expect(modelled.every((s) => s.replacementGroup !== "adaptive_strike")).toBe(true);
+  });
+
+  it("ensureNecroConjuresOnBarIds injects wiki conjures when necro bar has none", () => {
+    const raw = ["soul_sap", "touch_of_death"];
+    const fixed = ensureNecroConjuresOnBarIds(raw, "necromancy", "necromancy");
+    expect(fixed.some((id) => id.startsWith("conjure_"))).toBe(true);
+    expect(fixed.slice(-2)).toEqual(raw);
+    expect(ensureNecroConjuresOnBarIds(raw, "melee", "dualwield")).toEqual(raw);
+    const withArmy = ensureNecroConjuresOnBarIds(
+      ["conjure_undead_army", "soul_sap"],
+      "necromancy",
+      "necromancy",
+    );
+    expect(withArmy).toEqual(["conjure_undead_army", "soul_sap"]);
   });
 });

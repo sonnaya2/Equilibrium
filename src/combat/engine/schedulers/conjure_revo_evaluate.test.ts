@@ -56,6 +56,45 @@ describe("revo + evaluate summon conjures end-to-end", () => {
     expect(s.totalExpected).toBeGreaterThan(0);
   });
 
+  it("revo morph: [conjure_skeleton_warrior, soul_sap] casts conjure@0 then command when legal", () => {
+    const s = simulateRevolution({
+      ...necroRevoBase,
+      bar: [skeleton, soulSap],
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`).slice(0, 3)).toEqual([
+      "conjure_skeleton_warrior@0",
+      "soul_sap@3",
+      "command_skeleton_warrior@6",
+    ]);
+  });
+
+  it("revo morph: army bar fires at least one command after summon", () => {
+    const s = simulateRevolution({
+      ...necroRevoBase,
+      bar: [army, soulSap],
+      durationTicks: 30,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.some((c) => c.abilityId === "conjure_undead_army")).toBe(true);
+    expect(s.casts.some((c) => c.abilityId.startsWith("command_"))).toBe(true);
+  });
+
+  it("revo morph: army does not cast ghost every GCD while skeleton is on CD", () => {
+    const s = simulateRevolution({
+      ...necroRevoBase,
+      bar: [army, soulSap],
+      durationTicks: 60,
+    });
+    expect(s.ok).toBe(true);
+    const ghostCmds = s.casts.filter((c) => c.abilityId === "command_vengeful_ghost");
+    expect(ghostCmds).toHaveLength(1);
+    expect(ghostCmds[0]!.tick).toBe(9);
+    const skelCmds = s.casts.filter((c) => c.abilityId === "command_skeleton_warrior");
+    expect(skelCmds.map((c) => c.tick)).toEqual([6, 33]);
+  });
+
   it("simulateRevolution with Undead Army on bar summons three spirit auto tracks", () => {
     const s = simulateRevolution({
       ...necroRevoBase,

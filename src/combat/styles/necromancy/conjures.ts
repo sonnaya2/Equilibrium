@@ -72,6 +72,20 @@ export const COMMAND_REQUIRES_CONJURE: Readonly<Record<string, ConjureId>> = {
   command_vengeful_ghost: "vengeful_ghost",
 };
 
+/**
+ * In-game revo: conjure bar slot morphs to Command while that spirit is active.
+ * Bars store conjure_* only; army has no single command so try actives in order
+ * (skeleton preferred). Putrid is omitted from army morph: explode dismisses the
+ * zombie and would re-open army re-summon every GCD under revo priority.
+ */
+export const REVO_CONJURE_COMMAND_MORPH: Readonly<Record<string, readonly string[]>> = {
+  conjure_skeleton_warrior: ["command_skeleton_warrior"],
+  conjure_vengeful_ghost: ["command_vengeful_ghost"],
+  conjure_putrid_zombie: ["command_putrid_zombie"],
+  conjure_phantom_guardian: ["command_phantom_guardian"],
+  conjure_undead_army: ["command_skeleton_warrior", "command_vengeful_ghost"],
+};
+
 /** Initial lockout after conjuring ghost (wiki: command first available tick 6). */
 export const COMMAND_GHOST_INITIAL_COOLDOWN_TICKS = 6;
 /** Initial lockout after conjuring zombie (wiki: command first available tick 6). */
@@ -348,7 +362,16 @@ export function applyConjureCast(
 /** Cast gate: commands need spirit present; conjure_* needs it absent (army: any missing). */
 export function conjureCanCast(abilityId: string, state: ConjureState, tick: number): boolean {
   const required = COMMAND_REQUIRES_CONJURE[abilityId];
-  if (required) return conjureActive(state, required, tick);
+  if (required) {
+    if (!conjureActive(state, required, tick)) return false;
+    // Ghost command is 0s wiki CD but lasts the spirit lifetime; re-cast is a no-op.
+    // Without this, army morph revo picks ghost every GCD after skeleton is on CD.
+    if (abilityId === "command_vengeful_ghost") {
+      const ghost = findConjure(state, "vengeful_ghost");
+      if (ghost?.commanding) return false;
+    }
+    return true;
+  }
 
   const summons = CONJURE_ABILITY_SUMMONS[abilityId];
   if (summons) {

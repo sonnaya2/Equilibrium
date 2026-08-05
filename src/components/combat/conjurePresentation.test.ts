@@ -3,9 +3,11 @@ import {
   conjureCastUntilTick,
   conjurePactAssumptionNote,
   conjureUntilOffsetTicks,
+  ensureNecromancyConjureOnBar,
   formatConjureCastDurationNote,
   formatRemainingDurationNote,
   isConjureSummonAbilityId,
+  NECRO_BAR_CONJURE_FALLBACK,
   rotationHasConjureCast,
   spiritEffectDisplayName,
 } from "./conjurePresentation";
@@ -44,5 +46,25 @@ describe("conjurePresentation", () => {
     expect(conjurePactAssumptionNote()).toMatch(/cast\+105/);
     expect(conjurePactAssumptionNote()).toMatch(/no separate despawn/);
     expect(conjurePactAssumptionNote()).toMatch(/Command Putrid Zombie/);
+  });
+
+  it("apply bar without conjure -> after normalize has army or skeleton", () => {
+    const without = ensureNecromancyConjureOnBar(
+      ["touch_of_death", "soul_sap", "volley_of_souls"],
+      "necromancy",
+    );
+    expect(without.some((id) => id === "conjure_undead_army" || id === "conjure_skeleton_warrior")).toBe(
+      true,
+    );
+    expect(without[0]).toBe(NECRO_BAR_CONJURE_FALLBACK);
+    expect(without.slice(1)).toEqual(["touch_of_death", "soul_sap", "volley_of_souls"]);
+
+    const withSkel = ensureNecromancyConjureOnBar(
+      ["conjure_skeleton_warrior", "touch_of_death"],
+      "necromancy",
+    );
+    expect(withSkel).toEqual(["conjure_skeleton_warrior", "touch_of_death"]);
+
+    expect(ensureNecromancyConjureOnBar(["slice", "fury"], "melee")).toEqual(["slice", "fury"]);
   });
 });

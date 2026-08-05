@@ -35,6 +35,7 @@ import {
   withoutSavedBar,
   type RevoBarLibrary,
 } from "./revoBarLibrary";
+import { ensureNecroConjuresOnBarIds } from "./revoBarResolve";
 import {
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
   barBoundsFromPreset,
@@ -143,7 +144,7 @@ export function createProgressRafGate(
 }
 
 export type UseRevolutionSolverArgs = {
-  /** Display / library only — not used for combat field packing. */
+  /** Display / library only; not used for combat field packing. */
   stats: CalcStats;
   loadout: Loadout;
   /** Host-resolved combat model; sole source of sim fields for packing. */
@@ -170,8 +171,14 @@ function packFromMaterial(
   opts?: { seed?: number; now?: number },
 ): SerializableSolverRequest {
   const bounds = barBoundsFromPreset(m.barSizePreset);
-  // Combat fields only from ResolvedCombatModel — never re-derive from Loadout.
+  // Combat fields only from ResolvedCombatModel - never re-derive from Loadout.
   // unlockedRegions below: ability pool eligibility only (not passives).
+  // Necro userBar/seeds: inject wiki conjures when modelled dropped them.
+  const userBar = ensureNecroConjuresOnBarIds(
+    m.modelled.map((x) => x.id),
+    m.combatModel.style,
+    m.combatModel.weaponConfiguration,
+  );
   return packSolverRequest({
     model: m.combatModel,
     style: m.combatModel.style,
@@ -180,7 +187,7 @@ function packFromMaterial(
     profileId: m.solverProfile,
     minBarSize: bounds.minBarSize,
     maxBarSize: bounds.maxBarSize,
-    userBar: m.modelled.map((x) => x.id),
+    userBar,
     seed: opts?.seed ?? 1,
     now: opts?.now,
     useBuildRegions: m.limitToRegions,
@@ -353,14 +360,21 @@ export function useRevolutionSolver({
       // Remains-best is a successful outcome: show DTO, do not replace bar / cache upgrade.
       setSolverError(null);
       setSolverResult(dto);
+      // Necro Run needs conjure_*; inject wiki early-bar conjures if solver omitted all.
+      // Keep dto.bar as scored; active/library bar is run-ready.
+      const runBar = ensureNecroConjuresOnBarIds(
+        bar,
+        request.style,
+        request.loadout.weaponConfiguration,
+      );
       if (shouldAdoptSolverResultBar(dto)) {
-        onActiveBar(bar);
+        onActiveBar(runBar);
         onClearSimResult();
         void rememberSolvedBar(request, dto);
         const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
         setBarLibrary((prev) => {
           const next = withRecentBar(prev, {
-            bar,
+            bar: runBar,
             style: request.style,
             score: dto.score,
             profileId: dto.profileId ?? request.profileId,
@@ -386,7 +400,7 @@ export function useRevolutionSolver({
           : {}),
         ...(bestFullScore != null ? { bestFullScore } : {}),
         windowDpms: 0,
-        topBarPreview: bar,
+        topBarPreview: runBar,
         noImprovementCount: 0,
         evaluationBudget: TIER_BUDGETS[solverTier],
         progressRatio: 1,
@@ -407,11 +421,21 @@ export function useRevolutionSolver({
         reason,
       );
       if (!preview) return;
-      setStoppedPreview(preview);
+      const runBar = ensureNecroConjuresOnBarIds(
+        preview.bar,
+        loadout.style,
+        materialRef.current.combatModel.weaponConfiguration,
+      );
+      setStoppedPreview(
+        runBar.length === preview.bar.length &&
+          runBar.every((id, i) => id === preview.bar[i])
+          ? preview
+          : { ...preview, bar: runBar },
+      );
       setSolverResult(null);
-      onActiveBar([...preview.bar]);
+      onActiveBar(runBar);
     },
-    [onActiveBar, solverProfile, solverTier],
+    [onActiveBar, solverProfile, solverTier, loadout.style],
   );
 
   const optimize = useCallback(async () => {
@@ -594,7 +618,13 @@ export function useRevolutionSolver({
     if (identity == null || identity !== liveIdentityRef.current) return;
     const partial = latestProgressRef.current;
     if (partial?.topBarPreview?.length) {
-      onActiveBar([...partial.topBarPreview]);
+      onActiveBar(
+        ensureNecroConjuresOnBarIds(
+          partial.topBarPreview,
+          loadout.style,
+          materialRef.current.combatModel.weaponConfiguration,
+        ),
+      );
     }
   };
 

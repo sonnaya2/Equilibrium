@@ -52,7 +52,7 @@ export const DEFAULT_BRANCH_FIDELITY_LADDERS: Record<
   },
   full: {
     mode: "full",
-    liveCaps: [512, 1024, 2048, 4096],
+    liveCaps: [512, 1024, 2048, 4096, 8192],
     maximumResidualWeight: 1e-12,
     exactness: "exact-or-merged",
   },
@@ -256,8 +256,8 @@ export function branchFidelityLadderMemoToken(ladder: BranchFidelityLadder): str
  */
 export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
   mode: "medium",
-  // Climb through 2048; if residual remains, escalate to 4096 for analysis.
-  liveCaps: [128, 256, 512, 1024, 2048, 4096],
+  // Climb through 4096; if residual remains, escalate to 8192 for analysis.
+  liveCaps: [128, 256, 512, 1024, 2048, 4096, 8192],
   maximumResidualWeight: 1e-12,
   exactness: "any",
 };

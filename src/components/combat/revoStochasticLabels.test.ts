@@ -60,13 +60,11 @@ describe("revoStochasticLabels", () => {
     expect(mayShowExactProofChrome(source)).toBe(false);
     expect(primaryDamageLabel(source)).toBe("Damage (approx.)");
     expect(primaryDpsLabel(source)).toBe("Fixed-window DPS (approx.)");
-    expect(residualNote(source)).toMatch(/12%/);
-    expect(residualNote(source)).toMatch(/discarded by branch caps/);
-    expect(residualNote(source)).toMatch(/kept paths only/);
-    expect(residualNote(source)).toMatch(/concrete-terminal/);
-    expect(residualNote(source)).toMatch(/not unit-mass EV/);
+    expect(residualNote(source)).toBe(
+      "12% of probability mass was discarded by branch caps;",
+    );
     expect(residualNote(source)).not.toMatch(/concrete mass/);
-    expect(runDiagnosticsNote(source)).toContain("kept paths only");
+    expect(runDiagnosticsNote(source)).toMatch(/discarded by branch caps/);
     expect(runDiagnosticsNote(source)).toMatch(/concrete mass 88%/);
     expect(branchCapDiagnosticsNote(source)).toBe("concrete mass 88%");
     expect(stochasticAssumptionRows(source)).toContainEqual([
@@ -100,12 +98,12 @@ describe("revoStochasticLabels", () => {
     expect(branchCapDiagnosticsNote({})).toBeNull();
     expect(branchCapDiagnosticsNote({ rng: { residualWeight: 0 } })).toBeNull();
     // residualNote stays honesty-only; live-cap bits ride on runDiagnosticsNote opts.
-    expect(residualNote(source)).toMatch(/known-mass contribution/);
-    expect(residualNote(source)).toMatch(/not unit-mass EV/);
+    expect(residualNote(source)).toBe(
+      "15% of probability mass was discarded by branch caps;",
+    );
     expect(residualNote(source)).not.toMatch(/live cap/);
     const note = runDiagnosticsNote(source, opts)!;
-    expect(note).toMatch(/known-mass contribution/);
-    expect(note).toMatch(/not unit-mass EV/);
+    expect(note).toMatch(/discarded by branch caps/);
     expect(note).toMatch(/concrete mass 85%/);
     expect(note).toMatch(/live cap 512/);
     expect(note).toMatch(/3 attempts/);
@@ -120,9 +118,9 @@ describe("revoStochasticLabels", () => {
       rng: { residualWeight: 0.2, exactness: "approximated", probabilityMass: 0.8 },
     };
     expect(totalsBasisOf(source)).toBe("known-mass-contribution");
-    expect(residualNote(source)).toMatch(/known-mass contribution/);
-    expect(residualNote(source)).toMatch(/not unit-mass EV/);
-    expect(residualNote(source)).toMatch(/not the survivor-conditional mean/);
+    expect(residualNote(source)).toBe(
+      "20% of probability mass was discarded by branch caps;",
+    );
     expect(runDiagnosticsNote(source)).toMatch(/concrete mass 80%/);
   });
 
@@ -182,8 +180,7 @@ describe("revoStochasticLabels", () => {
     const failure = failureNote(source)!;
     const note = runDiagnosticsNote(source)!;
     expect(totalsBasisOf(source)).toBe("concrete-terminals");
-    expect(residual).toMatch(/not unit-mass EV/);
-    expect(residual).toMatch(/kept paths only/);
+    expect(residual).toBe("20% of probability mass was discarded by branch caps;");
     expect(failure).toMatch(/concrete success and fail/);
     expect(failure).toMatch(/residual excluded/);
     expect(failure).toMatch(/not unit-mass EV/);
@@ -399,10 +396,9 @@ describe("revoStochasticLabels", () => {
     expect(runScoreBadge(residualOnly)).toBe("Approximated");
     expect(primaryExpectedLabel(residualOnly)).toBe("Expected (approx.)");
     expect(primaryManualDpsLabel(residualOnly)).toBe("Expected natural DPS (approx.)");
-    expect(runDiagnosticsNote(residualOnly)).toMatch(/15%/);
-    expect(runDiagnosticsNote(residualOnly)).toMatch(/known-mass contribution/);
-    expect(runDiagnosticsNote(residualOnly)).toMatch(/not unit-mass EV/);
-    expect(runDiagnosticsNote(residualOnly)).toMatch(/not the survivor-conditional mean/);
+    expect(runDiagnosticsNote(residualOnly)).toMatch(
+      /15% of probability mass was discarded by branch caps;/,
+    );
     expect(totalsBasisOf(residualOnly)).toBe("known-mass-contribution");
 
     // ok false + residual only (no failure block) still shows strip.

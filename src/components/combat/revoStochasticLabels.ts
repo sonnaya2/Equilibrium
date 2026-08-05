@@ -222,15 +222,7 @@ export function branchCapDiagnosticsNote(
 export function residualNote(source: StochasticLabelSource): string | null {
   const residual = residualWeightOf(source);
   if (residual <= 0) return null;
-  const basis = totalsBasisOf(source) ?? "known-mass-contribution";
-  // Wording tracks totalsBasis - not "kept paths only" alone (that reads as absolute kept EV).
-  if (basis === "unit-mass") {
-    return `${formatPercentMass(residual)} of probability mass was discarded by branch caps; damage and DPS still claim unit-mass EV.`;
-  }
-  if (basis === "known-mass-contribution") {
-    return `${formatPercentMass(residual)} of probability mass was discarded by branch caps; damage and DPS are known-mass contribution only (sum over expanded paths), not unit-mass EV and not the survivor-conditional mean.`;
-  }
-  return `${formatPercentMass(residual)} of probability mass was discarded by branch caps; damage and DPS are concrete-terminal means over kept paths only (not unit-mass EV).`;
+  return `${formatPercentMass(residual)} of probability mass was discarded by branch caps;`;
 }
 
 export function failureNote(source: StochasticLabelSource): string | null {

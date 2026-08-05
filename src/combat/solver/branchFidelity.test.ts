@@ -87,7 +87,9 @@ describe("branch fidelity ladders", () => {
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.exploratory.maximumResidualWeight).toBe(1e-3);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.medium.liveCaps).toEqual([256, 512, 1024]);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.medium.maximumResidualWeight).toBe(1e-4);
-    expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.liveCaps).toEqual([512, 1024, 2048, 4096]);
+    expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.liveCaps).toEqual([
+      512, 1024, 2048, 4096, 8192,
+    ]);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.maximumResidualWeight).toBe(1e-12);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.exactness).toBe("exact-or-merged");
   });
@@ -323,7 +325,7 @@ describe("UI_RUN_BRANCH_FIDELITY_LADDER", () => {
     expect(MAX_LIVE_BRANCHES).toBe(64);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[0]).toBeGreaterThan(64);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([
-      128, 256, 512, 1024, 2048, 4096,
+      128, 256, 512, 1024, 2048, 4096, 8192,
     ]);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.mode).toBe("medium");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.exactness).toBe("any");

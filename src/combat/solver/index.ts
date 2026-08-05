@@ -136,11 +136,13 @@ export {
 } from "./fidelity";
 export {
   DEFAULT_BRANCH_FIDELITY_LADDERS,
+  UI_RUN_BRANCH_FIDELITY_LADDER,
   RESIDUAL_FREE_TOLERANCE,
   resolveBranchFidelityLadder,
   meetsBranchCompleteness,
   shouldStopAdaptiveAttempt,
   simulateWithAdaptiveBranchFidelity,
+  simulateRevolutionForUi,
   budgetForLiveCap,
   branchFidelityModeForEval,
   type BranchFidelityMode,

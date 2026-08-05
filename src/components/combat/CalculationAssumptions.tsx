@@ -9,7 +9,10 @@ import {
   icyenicSoulSplitHeal,
   icyenicSoulSplitNote,
 } from "@/combat/league/icyenicFaith";
-import { stochasticAssumptionRows } from "./revoStochasticLabels";
+import {
+  stochasticAssumptionRows,
+  type BranchCapDiagnosticsOpts,
+} from "./revoStochasticLabels";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -30,9 +33,11 @@ const SUPPORT_LABEL: Record<string, string> = {
 export function CalculationAssumptions({
   stats,
   result,
+  branchCapOpts,
 }: {
   stats: CalcStats;
   result?: RotationSummary | null;
+  branchCapOpts?: BranchCapDiagnosticsOpts;
 }) {
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
@@ -189,7 +194,7 @@ export function CalculationAssumptions({
         `${result.rng.representativeClassTicks} ticks · ${(result.rng.representativeClassWeight * 100).toFixed(1)}% terminal class`,
       ]);
     }
-    for (const row of stochasticAssumptionRows(result)) {
+    for (const row of stochasticAssumptionRows(result, branchCapOpts)) {
       rows.push(row);
     }
   }

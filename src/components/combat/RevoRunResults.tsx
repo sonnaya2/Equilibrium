@@ -12,10 +12,19 @@ import { castCritLabel, formatCount, formatNumber, formatTime } from "./revoPane
 import {
   primaryDamageLabel,
   primaryDpsLabel,
+  residualWeightOf,
   runDiagnosticsNote,
   runScoreBadge,
   shouldShowRunScoreChrome,
+  type BranchCapDiagnosticsOpts,
 } from "./revoStochasticLabels";
+
+/** Adaptive / fixed branch budget meta for residual under-count chrome. */
+export type BranchFidelityMeta = {
+  maxLiveBranches: number;
+  residualWeight: number;
+  attempts?: number;
+};
 
 export type RevoRunResultsProps = {
   stats: CalcStats;
@@ -29,7 +38,22 @@ export type RevoRunResultsProps = {
   analysisOpen: boolean;
   setAnalysisOpen: (v: boolean) => void;
   nameById: Map<string, string>;
+  /** From adaptive fidelity Run meta; optional live-cap disclosure when residual remains. */
+  branchFidelityMeta?: BranchFidelityMeta | null;
 };
+
+function capOptsFromMeta(
+  meta: BranchFidelityMeta | null | undefined,
+): BranchCapDiagnosticsOpts | undefined {
+  if (meta == null) return undefined;
+  if (!(typeof meta.maxLiveBranches === "number" && meta.maxLiveBranches > 0)) {
+    return undefined;
+  }
+  return {
+    maxLiveBranches: meta.maxLiveBranches,
+    attempts: meta.attempts,
+  };
+}
 
 export function RevoRunResults({
   stats,
@@ -43,13 +67,16 @@ export function RevoRunResults({
   analysisOpen,
   setAnalysisOpen,
   nameById,
+  branchFidelityMeta = null,
 }: RevoRunResultsProps) {
   const contributions = result?.analysis.byEffect ?? [];
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
+  const capOpts = capOptsFromMeta(branchFidelityMeta);
   const scoreBadge = result ? runScoreBadge(result) : null;
-  const scoreNote = result ? runDiagnosticsNote(result) : null;
+  const scoreNote = result ? runDiagnosticsNote(result, capOpts) : null;
+  const hasResidual = result ? residualWeightOf(result) > 0 : false;
   const damageLabel = result ? primaryDamageLabel(result) : "Damage";
   const dpsLabel = result ? primaryDpsLabel(result) : "Fixed-window DPS";
   const showScoreStrip = shouldShowRunScoreChrome(result);
@@ -157,7 +184,11 @@ export function RevoRunResults({
               data-testid="revo-score-note"
               role="note"
             >
-              {scoreNote}
+              {hasResidual ? (
+                <span data-testid="revo-residual-diagnostics">{scoreNote}</span>
+              ) : (
+                scoreNote
+              )}
             </p>
           ) : null}
 
@@ -171,7 +202,11 @@ export function RevoRunResults({
             </button>
           </div>
 
-          <CalculationAssumptions stats={stats} result={result} />
+          <CalculationAssumptions
+            stats={stats}
+            result={result}
+            branchCapOpts={capOpts}
+          />
 
           <section className="revo-section revo-timeline">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">Timeline</h3>

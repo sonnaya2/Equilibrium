@@ -187,6 +187,38 @@ export function exactnessLabel(exactness: string | null | undefined): string | n
   }
 }
 
+/** Optional live-cap / adaptive ladder bits for residual under-count chrome. */
+export type BranchCapDiagnosticsOpts = {
+  maxLiveBranches?: number;
+  attempts?: number;
+};
+
+/**
+ * Compact residual under-count fragment when residual > 0.
+ * concrete mass from source; live cap / attempts only when opts provide them.
+ * Never invents unit-mass EV.
+ */
+export function branchCapDiagnosticsNote(
+  source: StochasticLabelSource,
+  opts?: BranchCapDiagnosticsOpts,
+): string | null {
+  if (residualWeightOf(source) <= 0) return null;
+  const bits: string[] = [];
+  const concrete = concreteMassOf(source);
+  if (concrete > 0) {
+    bits.push(`concrete mass ${formatPercentMass(concrete)}`);
+  }
+  const maxLive = opts?.maxLiveBranches;
+  if (typeof maxLive === "number" && Number.isFinite(maxLive) && maxLive > 0) {
+    bits.push(`live cap ${Math.floor(maxLive)}`);
+  }
+  const attempts = opts?.attempts;
+  if (typeof attempts === "number" && Number.isFinite(attempts) && attempts > 1) {
+    bits.push(`${Math.floor(attempts)} attempts`);
+  }
+  return bits.length > 0 ? bits.join(" · ") : null;
+}
+
 export function residualNote(source: StochasticLabelSource): string | null {
   const residual = residualWeightOf(source);
   if (residual <= 0) return null;
@@ -227,9 +259,19 @@ export function failureNote(source: StochasticLabelSource): string | null {
     : `${formatPercentMass(failed)} of paths failed.`;
 }
 
-/** Combined note under the primary stat strip. */
-export function runDiagnosticsNote(source: StochasticLabelSource): string | null {
-  const parts = [residualNote(source), failureNote(source)].filter(
+/**
+ * Combined note under the primary stat strip.
+ * Optional opts append compact concrete-mass / live-cap under-count bits after residual honesty.
+ */
+export function runDiagnosticsNote(
+  source: StochasticLabelSource,
+  opts?: BranchCapDiagnosticsOpts,
+): string | null {
+  const residual = residualNote(source);
+  const cap = branchCapDiagnosticsNote(source, opts);
+  const residualBlock =
+    residual && cap ? `${residual} ${cap}.` : residual ?? (cap ? `${cap}.` : null);
+  const parts = [residualBlock, failureNote(source)].filter(
     (part): part is string => part != null && part.length > 0,
   );
   return parts.length > 0 ? parts.join(" ") : null;
@@ -299,9 +341,11 @@ export function formatProofChrome(
 /**
  * Assumption-panel rows for residual / exactness / failure.
  * Empty when there is nothing stochastic to disclose.
+ * Optional live-cap opts add a Live branch cap row when residual remains.
  */
 export function stochasticAssumptionRows(
   source: StochasticLabelSource,
+  opts?: BranchCapDiagnosticsOpts,
 ): Array<[string, string]> {
   const rows: Array<[string, string]> = [];
   const exactness = exactnessLabel(branchExactnessOf(source));
@@ -313,6 +357,16 @@ export function stochasticAssumptionRows(
   const concrete = concreteMassOf(source);
   if (residual > 0 && concrete > 0) {
     rows.push(["Concrete mass", formatPercentMass(concrete)]);
+  }
+
+  const maxLive = opts?.maxLiveBranches;
+  if (
+    residual > 0 &&
+    typeof maxLive === "number" &&
+    Number.isFinite(maxLive) &&
+    maxLive > 0
+  ) {
+    rows.push(["Live branch cap", String(Math.floor(maxLive))]);
   }
 
   const basis = totalsBasisOf(source);

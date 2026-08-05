@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { formatProofLabel } from "./revoPanelFormat";
 import {
+  branchCapDiagnosticsNote,
   branchExactnessOf,
   exactnessLabel,
   failedWeightOf,
@@ -64,11 +65,54 @@ describe("revoStochasticLabels", () => {
     expect(residualNote(source)).toMatch(/kept paths only/);
     expect(residualNote(source)).toMatch(/concrete-terminal/);
     expect(residualNote(source)).toMatch(/not unit-mass EV/);
+    expect(residualNote(source)).not.toMatch(/concrete mass/);
     expect(runDiagnosticsNote(source)).toContain("kept paths only");
+    expect(runDiagnosticsNote(source)).toMatch(/concrete mass 88%/);
+    expect(branchCapDiagnosticsNote(source)).toBe("concrete mass 88%");
     expect(stochasticAssumptionRows(source)).toContainEqual([
       "Totals basis",
       "Concrete terminals (E[D|concrete])",
     ]);
+  });
+
+  it("appends live cap and attempts when residual remains", () => {
+    const source: StochasticLabelSource = {
+      rng: {
+        residualWeight: 0.15,
+        exactness: "approximated",
+        probabilityMass: 0.85,
+        concreteMass: 0.85,
+        totalsBasis: "known-mass-contribution",
+      },
+    };
+    const opts = { maxLiveBranches: 512, attempts: 3 };
+    expect(branchCapDiagnosticsNote(source, opts)).toBe(
+      "concrete mass 85% · live cap 512 · 3 attempts",
+    );
+    expect(branchCapDiagnosticsNote(source, { maxLiveBranches: 128 })).toBe(
+      "concrete mass 85% · live cap 128",
+    );
+    // Single attempt is not disclosed (no ladder noise for one-shot complete).
+    expect(branchCapDiagnosticsNote(source, { maxLiveBranches: 128, attempts: 1 })).toBe(
+      "concrete mass 85% · live cap 128",
+    );
+    expect(branchCapDiagnosticsNote(source, { attempts: 1 })).toBe("concrete mass 85%");
+    expect(branchCapDiagnosticsNote({})).toBeNull();
+    expect(branchCapDiagnosticsNote({ rng: { residualWeight: 0 } })).toBeNull();
+    // residualNote stays honesty-only; live-cap bits ride on runDiagnosticsNote opts.
+    expect(residualNote(source)).toMatch(/known-mass contribution/);
+    expect(residualNote(source)).toMatch(/not unit-mass EV/);
+    expect(residualNote(source)).not.toMatch(/live cap/);
+    const note = runDiagnosticsNote(source, opts)!;
+    expect(note).toMatch(/known-mass contribution/);
+    expect(note).toMatch(/not unit-mass EV/);
+    expect(note).toMatch(/concrete mass 85%/);
+    expect(note).toMatch(/live cap 512/);
+    expect(note).toMatch(/3 attempts/);
+    const rows = stochasticAssumptionRows(source, opts);
+    expect(rows).toContainEqual(["Residual mass", "15%"]);
+    expect(rows).toContainEqual(["Concrete mass", "85%"]);
+    expect(rows).toContainEqual(["Live branch cap", "512"]);
   });
 
   it("defaults residual without totalsBasis to known-mass-contribution (Phase 2)", () => {
@@ -79,6 +123,7 @@ describe("revoStochasticLabels", () => {
     expect(residualNote(source)).toMatch(/known-mass contribution/);
     expect(residualNote(source)).toMatch(/not unit-mass EV/);
     expect(residualNote(source)).toMatch(/not the survivor-conditional mean/);
+    expect(runDiagnosticsNote(source)).toMatch(/concrete mass 80%/);
   });
 
   it("flags approx exactness without residualWeight", () => {

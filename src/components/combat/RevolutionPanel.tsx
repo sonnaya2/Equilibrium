@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
-import { simulateRevolution as runRevolution } from "@/combat/engine/simulation/revolution";
 import { secondsToTicks } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
 import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
@@ -12,7 +11,7 @@ import {
   resolveRevolutionBar,
   toRevolutionInput,
 } from "@/combat/model";
-import { preferredAgentCount } from "@/combat/solver";
+import { preferredAgentCount, simulateRevolutionForUi } from "@/combat/solver";
 import type { CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
@@ -32,7 +31,7 @@ import { maySaveVerified } from "./revoPanelFormat";
 import { RevoBarGraphic } from "./RevoBarGraphic";
 import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
 import { RevoSolverSection } from "./RevoSolverSection";
-import { RevoRunResults } from "./RevoRunResults";
+import { RevoRunResults, type BranchFidelityMeta } from "./RevoRunResults";
 import { useRevolutionSolver } from "./useRevolutionSolver";
 import "./revo-solver.css";
 
@@ -69,12 +68,19 @@ export function RevolutionPanel({
   const { build } = useLeagueBuild();
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
+  /** Live-cap / adaptive fidelity meta from Run; separate from RotationSummary. */
+  const [branchFidelityMeta, setBranchFidelityMeta] = useState<BranchFidelityMeta | null>(
+    null,
+  );
   const [showAllCasts, setShowAllCasts] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
 
   const onActiveBar = useCallback((ids: string[] | null) => setActiveBarIds(ids), []);
-  const onClearSimResult = useCallback(() => setResult(null), []);
+  const onClearSimResult = useCallback(() => {
+    setResult(null);
+    setBranchFidelityMeta(null);
+  }, []);
 
   const bar: RevoBarView | undefined = useMemo(
     () =>
@@ -181,6 +187,7 @@ export function RevolutionPanel({
     prevEquipKey.current = equipKey;
     setActiveBarIds(null);
     setResult(null);
+    setBranchFidelityMeta(null);
     setResultKey(null);
     setShowAllCasts(false);
     setAnalysisOpen(false);
@@ -209,21 +216,27 @@ export function RevolutionPanel({
     const bar = resolveRevolutionBar(catalogue, modelled);
     // Full loadout and hybrid manual both go through the shared builder.
     const simBase = buildSimulationInputBase(combatModel, catalogue);
-    setResult(
-      runRevolution(
-        toRevolutionInput(simBase, {
-          bar,
-          style: simStyle,
-          durationTicks,
-        }),
-      ),
+    // Adaptive live caps (UI ladder); residual notes stay honest.
+    const { summary, meta } = simulateRevolutionForUi(
+      toRevolutionInput(simBase, {
+        bar,
+        style: simStyle,
+        durationTicks,
+      }),
     );
+    setResult(summary);
+    setBranchFidelityMeta({
+      maxLiveBranches: meta.finalBudget.maxLiveBranches,
+      residualWeight: meta.residualWeight,
+      attempts: meta.attempts,
+    });
     setResultKey(runKey);
   };
 
   const applySolverBar = (ids: readonly string[]) => {
     setActiveBarIds([...ids]);
     setResult(null);
+    setBranchFidelityMeta(null);
   };
 
   const currentSaveBar = activeBarIds?.length
@@ -351,6 +364,7 @@ export function RevolutionPanel({
         analysisOpen={analysisOpen}
         setAnalysisOpen={setAnalysisOpen}
         nameById={nameById}
+        branchFidelityMeta={liveResult ? branchFidelityMeta : null}
       />
     </div>
   );

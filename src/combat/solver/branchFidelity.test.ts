@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   budgetForLiveCap,
   DEFAULT_BRANCH_FIDELITY_LADDERS,
+  UI_RUN_BRANCH_FIDELITY_LADDER,
   meetsBranchCompleteness,
   resolveBranchFidelityLadder,
   simulateWithAdaptiveBranchFidelity,
+  simulateRevolutionForUi,
   shouldStopAdaptiveAttempt,
   branchFidelityModeForEval,
   branchFidelityCacheToken,
@@ -19,6 +21,7 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { RevolutionInput } from "../engine/simulation/revolution";
 import { simulateRevolution } from "../engine/simulation/revolution";
 import { summaryEligibleForObjectiveScore } from "./objective";
+import { survivorBiasPrimaryFixture } from "./repro/survivorBiasRanking.repro";
 
 function basic(id: string, name: string, minPct: number, maxPct: number): AbilitySpec {
   return {
@@ -313,4 +316,35 @@ describe("simulateWithAdaptiveBranchFidelity", () => {
     }
     expect(MAX_LIVE_BRANCHES).toBe(64);
   });
+});
+
+describe("UI_RUN_BRANCH_FIDELITY_LADDER", () => {
+  it("starts above default maxLive 64 and escalates", () => {
+    expect(MAX_LIVE_BRANCHES).toBe(64);
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[0]).toBeGreaterThan(64);
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([128, 256, 512, 1024, 2048]);
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.mode).toBe("medium");
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.exactness).toBe("any");
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.maximumResidualWeight).toBe(1e-12);
+  });
+
+  it("simulateRevolutionForUi reduces residual vs default 64 on survivor-bias primary", () => {
+    const fx = survivorBiasPrimaryFixture();
+    const at64 = simulateRevolution(fx.revoInput, { detailLevel: "score-only" });
+    const ui = simulateRevolutionForUi(fx.revoInput, { detailLevel: "score-only" });
+    expect(at64.ok).toBe(true);
+    expect(ui.summary.ok).toBe(true);
+    const r64 = at64.rng?.residualWeight ?? 0;
+    const rUi = ui.summary.rng?.residualWeight ?? ui.meta.residualWeight;
+    // Fixture is high-residual at default cap; UI ladder must improve mass retention.
+    expect(r64).toBeGreaterThan(0.5);
+    expect(rUi).toBeLessThan(r64);
+    expect(ui.meta.finalBudget.maxLiveBranches).toBeGreaterThan(MAX_LIVE_BRANCHES);
+    // Known-mass under residual still disclosed (no launder to unit-mass rank).
+    if (rUi > 1e-12) {
+      expect(ui.summary.rng?.totalsBasis ?? ui.summary.damage?.scope).toMatch(
+        /known-mass|concrete-terminals/,
+      );
+    }
+  }, 120_000);
 });

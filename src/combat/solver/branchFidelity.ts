@@ -232,3 +232,27 @@ export function branchFidelityCacheToken(meta: BranchFidelityAttemptMeta | undef
   if (meta == null) return "bf=default";
   return `bf=${meta.mode}:L${meta.finalBudget.maxLiveBranches}:c${meta.complete ? 1 : 0}`;
 }
+
+/**
+ * Interactive UI Run: escalate live caps; stop early when residual-free.
+ * Starts above default MAX_LIVE_BRANCHES (64); exactness any so UI can show
+ * known-mass under residual with honest notes (no ranking launder).
+ */
+export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
+  mode: "medium",
+  liveCaps: [128, 256, 512, 1024, 2048],
+  maximumResidualWeight: 1e-12,
+  exactness: "any",
+};
+
+/** Revolution panel Run: adaptive branch width; defaults detail to full-analysis. */
+export function simulateRevolutionForUi(
+  input: RevolutionInput,
+  options?: SimulateOptions,
+): AdaptiveBranchFidelityResult {
+  return simulateWithAdaptiveBranchFidelity(
+    input,
+    { ...options, detailLevel: options?.detailLevel ?? "full-analysis" },
+    UI_RUN_BRANCH_FIDELITY_LADDER,
+  );
+}

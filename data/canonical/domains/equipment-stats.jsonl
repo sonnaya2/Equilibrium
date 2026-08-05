@@ -841,6 +841,10 @@
 {"entityId":"item:skull-lantern-t90","stat":"accuracy","value":2458}
 {"entityId":"item:skull-lantern-t90","stat":"damage","value":670.5}
 {"entityId":"item:slayer-helmet-i","stat":"armour","value":40.4}
+{"entityId":"item:sliver-of-edicts","stat":"armour","value":300}
+{"entityId":"item:sliver-of-edicts","stat":"damage","value":14}
+{"entityId":"item:sliver-of-edicts","stat":"life","value":1500}
+{"entityId":"item:sliver-of-edicts","stat":"prayer","value":15}
 {"entityId":"item:soulbound-lantern","stat":"accuracy","value":2765}
 {"entityId":"item:soulbound-lantern","stat":"damage","value":707.7}
 {"entityId":"item:spear-of-annihilation","stat":"accuracy","value":2458}

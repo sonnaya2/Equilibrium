@@ -137,6 +137,15 @@ describe("exclusiveKey / canAdd", () => {
   });
 });
 
+describe("manual-only weapon specials", () => {
+  it("keeps FSoA Instability and Guthix Claws out of the Revo++ candidate pool", async () => {
+    const { allEngineSpecs } = await import("../abilities/registry");
+    const pool = buildCandidatePool(allEngineSpecs(), "magic");
+    expect(pool.ids).not.toContain("instability");
+    expect(pool.ids).not.toContain("claws_of_guthix");
+  });
+});
+
 describe("igneous passive pool filtering", () => {
   it("excludes locked upgrades and supersedes the base when the passive is active", async () => {
     const { allEngineSpecs } = await import("../abilities/registry");

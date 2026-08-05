@@ -21,6 +21,13 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
       processSpiritEvent(rt, event);
       continue;
     }
+    // Player meta (heals / expire / revive markers): resolve mutates player state;
+    // still record for timeline, then skip damage side-effects.
+    if (event.family === "player") {
+      const resolution = event.resolve(rt, event.tick);
+      recordResolved(rt, event, resolution);
+      continue;
+    }
     recordResolved(rt, event, event.resolve(rt, event.tick));
   }
 }

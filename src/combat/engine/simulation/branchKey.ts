@@ -372,6 +372,31 @@ function encodeState(state: RotationState): string {
     n(hauntedUntil),
     n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
   );
+  // Player vitality / Naragi / level override (absent ≡ zeroed).
+  const player = state.player;
+  if (!player) {
+    parts.push("0");
+  } else {
+    const loUntil = halfOpenUntil(player.levelOverride.untilTick, tick);
+    const dpUntil = halfOpenUntil(player.deathPrevention.untilTick, tick);
+    const naragiUntil = halfOpenUntil(player.naragi.activeUntilTick, tick);
+    parts.push(
+      "1",
+      n(player.vitality.currentLifePoints),
+      n(player.vitality.maximumLifePoints),
+      b(player.dead),
+      n(loUntil),
+      n(loUntil > 0 ? player.levelOverride.level : 0),
+      s(player.deathPrevention.sourceId),
+      n(dpUntil > 0 ? player.deathPrevention.charges : 0),
+      n(dpUntil),
+      n(naragiUntil),
+      n(player.naragi.activatedAtTick),
+      n(naragiUntil > 0 ? player.naragi.revivalCharges : 0),
+      n(player.naragiHealed),
+      n(player.naragiOverheal),
+    );
+  }
   return parts.join(US);
 }
 

@@ -8,6 +8,8 @@ import {
   type HostCombatResolveInput,
   type ResolvedCombatModel,
 } from "@/combat/model";
+import { baseAbilityDamage } from "@/combat/core/abilityDamage";
+import { NARAGI_LEVEL_OVERRIDE } from "@/combat/league/naragiEdict";
 import {
   formatRingOfVigourSources,
   ringOfVigourActiveSources,
@@ -22,6 +24,7 @@ import {
   type CalcStats,
   type LoadoutStatsOptions,
 } from "./loadoutStats";
+import { computedLoadoutBase, loadoutWeaponConfig } from "./loadout/weaponConfiguration";
 
 function sanitizedArchaeologyIds(
   loadout: Loadout,
@@ -49,10 +52,23 @@ export function hostInputFromLoadoutStats(
     unlockedRegions: options.unlockedRegions,
   });
 
+  // Precompute base AD at Naragi 255 so land-time override swaps formula base exactly.
+  const formulaNormal = computedLoadoutBase(loadout);
+  const formulaOverride = baseAbilityDamage(
+    NARAGI_LEVEL_OVERRIDE,
+    loadoutWeaponConfig(loadout),
+  );
+  const overrideBase =
+    formulaNormal > 0
+      ? Math.floor((stats.base * formulaOverride) / formulaNormal)
+      : stats.base;
+
   return {
     style: loadout.style,
     base: stats.base,
     level: stats.level,
+    overrideBase,
+    overrideLevel: NARAGI_LEVEL_OVERRIDE,
     accuracy: stats.dp,
     crit: {
       chance: stats.critChance,

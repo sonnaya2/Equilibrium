@@ -689,6 +689,7 @@
 {"entityId":"item:sirenic-mask","slot":"helmet","style":"ranged","tier":90}
 {"entityId":"item:skull-lantern-t90","slot":"offhand","style":"necromancy","tier":90}
 {"entityId":"item:slayer-helmet-i","slot":"helmet","style":"hybrid","tier":25}
+{"entityId":"item:sliver-of-edicts","slot":"pocket","style":"hybrid"}
 {"entityId":"item:soulbound-lantern","slot":"offhand","style":"necromancy","tier":95}
 {"entityId":"item:spear-of-annihilation","slot":"twohand","style":"melee","tier":90}
 {"entityId":"item:spectral-spirit-shield","slot":"offhand","style":"magic","tier":75}

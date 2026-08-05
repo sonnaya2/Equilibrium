@@ -46,6 +46,9 @@ export interface ResolvedCombatModel {
 
   readonly base: number;
   readonly level: number;
+  /** Base AD while temporary level override is active (Naragi 255). */
+  readonly overrideBase?: number;
+  readonly overrideLevel?: number;
   /** Damage Potential 0..1 (sim / pack accuracy). */
   readonly accuracy: number;
   readonly crit: ResolvedCritInput;
@@ -92,6 +95,8 @@ export interface HostCombatResolveInput {
   readonly style: CombatStyle;
   readonly base: number;
   readonly level: number;
+  readonly overrideBase?: number;
+  readonly overrideLevel?: number;
   readonly accuracy: number;
   readonly crit: ResolvedCritInput;
   readonly adrenaline?: AdrenalineRules;

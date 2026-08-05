@@ -1821,6 +1821,7 @@ export const RELIC_ICON_SLUGS = new Set([
   "golden-touch",
   "hungry-like-the-wolf",
   "icyenic-faith",
+  "naragi-edict",
   "natures-network",
   "superheated",
   "survivalist",

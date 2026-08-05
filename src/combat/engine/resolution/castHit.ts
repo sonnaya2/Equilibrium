@@ -34,6 +34,31 @@ import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { hitReuseGet, hitReuseSet, isHitReuseActive } from "./hitReuse";
 import { landHitIdentity } from "./landHitIdentity";
+import { resolveEffectiveCombatLevel } from "../../core/effectiveLevel";
+import { NARAGI_LEVEL_OVERRIDE } from "../../league/naragiEdict";
+
+/** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
+function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
+  return resolveEffectiveCombatLevel(
+    rt.input.level,
+    rt.state.player?.levelOverride,
+    landTick,
+  );
+}
+
+/** Base AD at land tick: use overrideBase when effective level is the override level. */
+function combatBaseAt(rt: SimulationRuntime, landTick: number, level: number): number {
+  const overrideLevel = rt.input.overrideLevel ?? NARAGI_LEVEL_OVERRIDE;
+  if (
+    rt.input.overrideBase != null &&
+    level === overrideLevel &&
+    rt.state.player?.levelOverride &&
+    landTick < rt.state.player.levelOverride.untilTick
+  ) {
+    return rt.input.overrideBase;
+  }
+  return rt.input.base;
+}
 
 /**
  * Resolve one ordinary cast hit at its land tick. Time-windowed globals read
@@ -181,6 +206,8 @@ function resolveCastHitUncached(
     damageSource,
     provenance,
   };
+  const level = combatLevelAt(rt, at);
+  const base = combatBaseAt(rt, at, level);
   // Tuska on-task: flat 100x Slayer (15k cap); not AD-based; no AD modifiers.
   // https://runescape.wiki/w/Tuska%27s_Wrath
   const hit =
@@ -188,7 +215,7 @@ function resolveCastHitUncached(
       ? calculateRawHitBand({
           min: snap.tuskasEmpoweredDamage,
           max: snap.tuskasEmpoweredDamage,
-          level: input.level,
+          level,
           accuracy: 1,
           crit: { chance: 0, eligible: false },
           modifiers: [],
@@ -197,9 +224,9 @@ function resolveCastHitUncached(
           cap: { cap: TUSKAS_EMPOWERED_HIT_CAP },
         })
       : calculateHit({
-          base: input.base,
+          base,
           band,
-          level: input.level,
+          level,
           accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
           crit,
           modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
@@ -216,9 +243,9 @@ function resolveCastHitUncached(
     const attachedProv = { kind: "attached" as const, detail: "searing_winds" };
     const bonusProv = capabilitiesOf(provenance).onHitGear ? attachedProv : provenance;
     const bonus = calculateHit({
-      base: input.base,
+      base,
       band: { minPct: SEARING_WINDS_BONUS_HIT_PCT, maxPct: SEARING_WINDS_BONUS_HIT_PCT },
-      level: input.level,
+      level,
       accuracy: input.accuracy,
       crit: { chance: 0, eligible: false },
       modifiers,

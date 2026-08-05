@@ -47,6 +47,8 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     style: input.style,
     base: input.base,
     level: input.level,
+    ...(input.overrideBase != null ? { overrideBase: input.overrideBase } : {}),
+    ...(input.overrideLevel != null ? { overrideLevel: input.overrideLevel } : {}),
     accuracy: input.accuracy,
     crit: {
       chance: input.crit.chance,

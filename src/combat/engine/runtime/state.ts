@@ -16,6 +16,19 @@ import {
 } from "../../styles/necromancy/effects";
 import type { ConjureState } from "../../styles/necromancy/conjures";
 import { newHaunted, type HauntedState } from "../../styles/necromancy/haunted";
+import {
+  NO_LEVEL_OVERRIDE,
+  type EffectiveLevelOverride,
+} from "../../core/effectiveLevel";
+import type { PlayerVitality } from "../../core/playerVitality";
+import {
+  NO_DEATH_PREVENTION,
+  type DeathPreventionState,
+} from "./deathPrevention";
+import {
+  newNaragiRuntime,
+  type NaragiRuntimeState,
+} from "../../league/naragiEdict";
 import { firstChargeReadyTick, maxChargesFor } from "./charges";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
@@ -43,6 +56,40 @@ export type ChargeState = Readonly<Record<string, readonly number[]>>;
 export interface LeagueRotationState {
   avernicRampageUntilTick: number;
   strikingLightReadyTick: number;
+}
+
+/**
+ * Player-side sim state (LP, death-prevention, temporary level override, Naragi).
+ * Optional: absent on pure outgoing rotations that never touch player HP.
+ */
+export interface PlayerRuntimeState {
+  vitality: PlayerVitality;
+  /** True after an unprevented lethal hit. */
+  dead: boolean;
+  levelOverride: EffectiveLevelOverride;
+  deathPrevention: DeathPreventionState;
+  naragi: NaragiRuntimeState;
+  /** Cumulative effective self-heal from Naragi pulses this run. */
+  naragiHealed: number;
+  /** Cumulative overheal from Naragi pulses this run. */
+  naragiOverheal: number;
+}
+
+export function newPlayerRuntimeState(
+  opts: { maximumLifePoints?: number; currentLifePoints?: number } = {},
+): PlayerRuntimeState {
+  const max = Math.max(0, opts.maximumLifePoints ?? 0);
+  const cur =
+    opts.currentLifePoints != null ? Math.min(Math.max(0, opts.currentLifePoints), max) : max;
+  return {
+    vitality: { maximumLifePoints: max, currentLifePoints: cur },
+    dead: false,
+    levelOverride: NO_LEVEL_OVERRIDE,
+    deathPrevention: NO_DEATH_PREVENTION,
+    naragi: newNaragiRuntime(),
+    naragiHealed: 0,
+    naragiOverheal: 0,
+  };
 }
 
 /** Dynamic effects the simulation has put on the target, not on the player. */
@@ -105,6 +152,8 @@ export interface RotationState {
   };
   naturalInstinctUntilTick: number;
   league?: LeagueRotationState;
+  /** Player LP / revive / level-override / Naragi runtime (optional). */
+  player?: PlayerRuntimeState;
   melee: MeleeRotationState;
   ranged: RangedRotationState;
   magic: MagicRotationState;
@@ -120,9 +169,16 @@ export function newRotationState(
     naturalInstinctUntilTick?: number;
     league?: boolean;
     ringOfVigour?: boolean;
+    player?: boolean | { maximumLifePoints?: number; currentLifePoints?: number };
   } = {},
 ): RotationState {
   const adrenalineCap = opts.adrenalineCap ?? ADRENALINE_CAP;
+  const playerOpts =
+    opts.player === true
+      ? {}
+      : typeof opts.player === "object" && opts.player != null
+        ? opts.player
+        : null;
   return {
     tick: 0,
     adrenaline: Math.min(adrenalineCap, opts.adrenaline ?? 0),
@@ -140,6 +196,7 @@ export function newRotationState(
     },
     naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
     ...(opts.league ? { league: { avernicRampageUntilTick: 0, strikingLightReadyTick: 0 } } : {}),
+    ...(playerOpts != null ? { player: newPlayerRuntimeState(playerOpts) } : {}),
     melee: newMeleeRotationState(),
     ranged: newRangedRotationState(),
     magic: newMagicRotationState(),
@@ -152,6 +209,14 @@ export function newRotationState(
       haunted: newHaunted(),
     },
   };
+}
+
+export function patchPlayer(
+  state: RotationState,
+  patch: Partial<PlayerRuntimeState>,
+): RotationState {
+  const base = state.player ?? newPlayerRuntimeState();
+  return { ...state, player: { ...base, ...patch } };
 }
 
 export function gainAdrenaline(state: RotationState, amount: number): RotationState {

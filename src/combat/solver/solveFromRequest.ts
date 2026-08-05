@@ -76,6 +76,8 @@ export const solveFromRequest: SolveFn = async (
   const simCommon = {
     base: simBase.base,
     level: simBase.level,
+    ...(simBase.overrideBase != null ? { overrideBase: simBase.overrideBase } : {}),
+    ...(simBase.overrideLevel != null ? { overrideLevel: simBase.overrideLevel } : {}),
     accuracy: simBase.accuracy,
     crit: simBase.crit,
     abilities,

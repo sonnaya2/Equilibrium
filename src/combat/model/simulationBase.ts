@@ -41,6 +41,8 @@ export function buildSimulationInputBase(
   return {
     base: model.base,
     level: model.level,
+    ...(model.overrideBase != null ? { overrideBase: model.overrideBase } : {}),
+    ...(model.overrideLevel != null ? { overrideLevel: model.overrideLevel } : {}),
     accuracy: model.accuracy,
     crit: {
       chance: model.crit.chance,

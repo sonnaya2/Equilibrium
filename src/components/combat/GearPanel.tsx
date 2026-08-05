@@ -5,6 +5,7 @@ import regionsData from "#shard/league/regions.json";
 import { combatEquipment, equipmentById, type EquipmentRecord } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
+import { filterRelicGrantedRecords } from "@/combat/league/relicGrantedItems";
 import { equippedPassiveSummaries, type PassiveSupport } from "@/combat/shared/equipment";
 import type { RegionId } from "@/league";
 import { unlockedRegions } from "@/league";
@@ -230,6 +231,10 @@ export function GearPanel({
   const { build } = useBuild();
   const unlocked = useMemo(() => unlockedRegions(build), [build]);
   const unlockedSet = useMemo(() => new Set<RegionId>(unlocked), [unlocked]);
+  const activeRelicNames = useMemo(
+    () => Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
+    [build.relics],
+  );
 
   const slots = loadout.equipmentSlots ?? {};
   const passives = equippedPassiveSummaries({
@@ -250,8 +255,12 @@ export function GearPanel({
 
   /** Doll-equipable only - materials, codices, and set aggregates stay in Unlocks. */
   const wearables = useMemo(
-    () => combatEquipment.records.filter((r) => r.slot != null && r.unlock?.type !== "removed"),
-    [],
+    () =>
+      filterRelicGrantedRecords(
+        combatEquipment.records.filter((r) => r.slot != null && r.unlock?.type !== "removed"),
+        activeRelicNames,
+      ),
+    [activeRelicNames],
   );
 
   const pickerRows = useMemo(() => {
@@ -311,7 +320,7 @@ export function GearPanel({
     } else if (activeSlot != null && record.slot !== activeSlot) {
       return;
     }
-    setLoadout(equipInSlot(loadout, record.slot, record.id));
+    setLoadout(equipInSlot(loadout, record.slot, record.id, activeRelicNames));
     setActiveSlot(record.slot === "mainhand" || record.slot === "twohand" ? "weapon" : record.slot);
   };
 

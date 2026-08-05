@@ -70,6 +70,13 @@ export interface AbilityRegistry {
 export interface SimulateInput {
   base: number;
   level: number;
+  /**
+   * Precomputed base ability damage while a temporary effective-level override is active
+   * (e.g. Naragi Edict 255). Land path swaps to this when state.player.levelOverride matches.
+   */
+  overrideBase?: number;
+  /** Level value that pairs with overrideBase (default 255 when overrideBase set). */
+  overrideLevel?: number;
   accuracy: number;
   crit: Omit<CritLayers, "eligible">;
   abilities: readonly AbilitySpec[];

@@ -204,7 +204,15 @@ function eventSig(
  * seq is monotonic and follows cast flow (hits by hit-index, then on-cast effects).
  */
 export type EventFamily =
-  "hit" | "dot" | "proc" | "blessing" | "conjureAuto" | "command" | "poison";
+  | "hit"
+  | "dot"
+  | "proc"
+  | "blessing"
+  | "conjureAuto"
+  | "command"
+  | "poison"
+  /** Player-side meta (heals, buff expire). Resolvers may mutate player state. */
+  | "player";
 
 /** Analysis damage origin. Derived/attached keep parent origin (e.g. Big Boned on bleed stays "dot"). */
 export type DamageOriginKind = "direct" | "dot" | "command" | "conjure" | "proc" | "blessing";

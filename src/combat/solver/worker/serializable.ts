@@ -88,6 +88,9 @@ export interface SerializableLeagueRules {
 export interface SerializableRevolutionSimBase {
   base: number;
   level: number;
+  /** Base AD while temporary level override is active (Naragi 255). */
+  overrideBase?: number;
+  overrideLevel?: number;
   accuracy: number;
   crit: {
     chance: number;

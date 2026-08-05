@@ -12,6 +12,8 @@ export * from "./core/hitCaps";
 export * from "./core/critical";
 export * from "./core/defence";
 export * from "./core/lifePoints";
+export * from "./core/playerVitality";
+export * from "./core/effectiveLevel";
 export * from "./core/abilityDamage";
 
 export * from "./pipeline/modifierPipeline";
@@ -63,6 +65,9 @@ export { simulateRevolution } from "./engine/simulation/revolution";
 
 export * from "./league/ruleset";
 export * from "./league/icyenicFaith";
+export * from "./league/naragiEdict";
+export * from "./league/relicGrantedItems";
+export * from "./league/naragiActivation";
 export * from "./league/damage";
 
 export {

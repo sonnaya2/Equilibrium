@@ -138,6 +138,16 @@
     "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
   },
   {
+    "id": "equilibrium-relic-naragi-edict",
+    "label": "Naragi Edict",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/naragi-edict",
+    "fileTitle": "Naragi_Edict.png",
+    "canonicalPage": "https://runescape.wiki/w/Naragi_Edict",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
     "id": "equilibrium-relic-assassins-insight",
     "label": "Assassin's Insight",
     "category": "leagues/equilibrium/relics/site",

@@ -56,6 +56,11 @@ describe("ability registry single authority", () => {
     }
   });
 
+  it("marks FSoA Instability and Guthix Claws as manual-only (not Revo++ solver)", () => {
+    expect(entryByEngineId("instability")?.solverEligibleDefault).toBe(false);
+    expect(entryByEngineId("claws_of_guthix")?.solverEligibleDefault).toBe(false);
+  });
+
   it("marks autos not solver eligible by default", () => {
     for (const id of ["attack", "ranged_attack", "magic_attack", "necromancy_basic"]) {
       expect(entryByEngineId(id)?.solverEligibleDefault, id).toBe(false);

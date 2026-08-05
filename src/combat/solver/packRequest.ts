@@ -33,6 +33,8 @@ import { projectSerializableSimBase } from "../model/simulationInput";
 export interface SolverPackSnapshot {
   base: number;
   level: number;
+  overrideBase?: number;
+  overrideLevel?: number;
   accuracy: number;
   crit: {
     chance: number;
@@ -134,6 +136,8 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
   return {
     base: snapshot.base,
     level: snapshot.level,
+    ...(snapshot.overrideBase != null ? { overrideBase: snapshot.overrideBase } : {}),
+    ...(snapshot.overrideLevel != null ? { overrideLevel: snapshot.overrideLevel } : {}),
     accuracy: snapshot.accuracy,
     crit: {
       chance: snapshot.crit.chance,

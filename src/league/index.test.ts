@@ -199,6 +199,17 @@ describe("toggleRelic", () => {
     state = toggleRelic(state, 1, "Golden Touch");
     expect(state.relics).toEqual({ "2": "Unrevealed tier 2 relic" });
   });
+
+  it("Tier 7 is exclusive: Naragi replaces Icyenic and vice versa", () => {
+    let state = toggleRelic(emptyBuild(), 7, "Icyenic Faith");
+    expect(state.relics["7"]).toBe("Icyenic Faith");
+    state = toggleRelic(state, 7, "Naragi Edict");
+    expect(state.relics["7"]).toBe("Naragi Edict");
+    expect(Object.values(state.relics)).not.toContain("Icyenic Faith");
+    state = toggleRelic(state, 7, "Icyenic Faith");
+    expect(state.relics["7"]).toBe("Icyenic Faith");
+    expect(Object.values(state.relics)).not.toContain("Naragi Edict");
+  });
 });
 
 describe("pickBlessing", () => {

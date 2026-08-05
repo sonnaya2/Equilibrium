@@ -15,6 +15,7 @@ import {
   resolveIcyenicFaithBonuses,
   type IcyenicFaithBonuses,
 } from "./icyenicFaith";
+import { NARAGI_EDICT_RELIC, naragiEdictActive } from "./naragiEdict";
 
 /** Blessing damage must not re-apply ability-stage blessing mults (no recursion). */
 function notBlessingDamage(context: CombatContext): boolean {
@@ -119,6 +120,10 @@ export function hasIcyenicFaith(rules: ResolvedLeagueRules | undefined): boolean
   return hasRelic(rules, ICYENIC_FAITH_RELIC) || icyenicFaithActive(rules?.relics);
 }
 
+export function hasNaragiEdict(rules: ResolvedLeagueRules | undefined): boolean {
+  return hasRelic(rules, NARAGI_EDICT_RELIC) || naragiEdictActive(rules?.relics);
+}
+
 /**
  * Icyenic Faith damage layers from equipment Prayer + Tome worn.
  * Crit chance and base AD % only apply when relic is active and the Tome is worn.
@@ -149,11 +154,16 @@ export function blessingRule(
   return blessingsIndex(rules).get(id)?.combat;
 }
 
+/** Which armour figure Teragard's Aegis reads (wiki "total armour" is ambiguous). */
+export type AegisArmourBasis = "equipment" | "total-rating";
+
 export interface AegisArmourBonus {
-  /** The total Armour stat the blessing reads - equipment Armour, never the block rating. */
+  /** Armour figure the blessing multiplies (equipment or block rating per basis). */
   qualifyingArmour: number;
-  /** Level-derived Armour that exists only inside the block calculation, excluded here. */
+  /** Block rating minus equipment Armour (0 when basis is total-rating). */
   excludedBlockArmour: number;
+  /** Which figure was used. */
+  basis: AegisArmourBasis;
   offhand: "shield" | "defender" | "none";
   /** The resolved share of armour: 25%, 50% wielding a defender, 75% wielding a shield. */
   armourPercent: number;
@@ -162,16 +172,22 @@ export interface AegisArmourBonus {
 }
 
 /**
- * Teragard's Aegis: base ability damage +25% of total armour (50% with defender,
+ * Teragard's Aegis: base ability damage +25% of armour (50% with defender,
  * 75% with shield). Flat share then one floor: floor(armour * 0.75), not
- * floor(armour * 0.25) * 3 (provisional until live-verified). Use equipment Armour
- * stat only, not block rating (Fortitude/Defence level inflate rating without real armour).
+ * floor(armour * 0.25) * 3 (provisional until live-verified).
+ *
+ * basis "total-rating" (default): block armour rating (equipment + Defence/prayer/Fortitude).
+ * basis "equipment": equipment Armour only (excludes level-derived block share).
  */
 export function aegisArmourBonus(
   rule: BlessingChoice["combat"] | undefined,
   armour: { totalArmour: number; blockArmourRating: number },
   offhand: "shield" | "defender" | null,
+  opts?: { basis?: AegisArmourBasis },
 ): AegisArmourBonus {
+  const basis: AegisArmourBasis = opts?.basis === "equipment" ? "equipment" : "total-rating";
+  const qualifyingArmour =
+    basis === "total-rating" ? armour.blockArmourRating : armour.totalArmour;
   const multiplier =
     offhand === "shield"
       ? (rule?.shieldArmourMultiplier ?? 1)
@@ -180,11 +196,13 @@ export function aegisArmourBonus(
         : 1;
   const armourPercent = (rule?.baseAbilityDamageArmourPercent ?? 0) * multiplier;
   return {
-    qualifyingArmour: armour.totalArmour,
-    excludedBlockArmour: armour.blockArmourRating - armour.totalArmour,
+    qualifyingArmour,
+    excludedBlockArmour:
+      basis === "equipment" ? armour.blockArmourRating - armour.totalArmour : 0,
+    basis,
     offhand: offhand ?? "none",
     armourPercent,
-    baseAbilityDamageBonus: Math.floor(armour.totalArmour * armourPercent),
+    baseAbilityDamageBonus: Math.floor(qualifyingArmour * armourPercent),
   };
 }
 

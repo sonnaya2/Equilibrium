@@ -173,6 +173,15 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     linkKind: "factory",
     forceSolver: true,
   },
+  // Manual-only weapon specials: cast in Manual rotations, not Revo++ solver pool.
+  instability: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
+  claws_of_guthix: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
 };
 
 /** Record id -> engine id when mapped, else undefined. */

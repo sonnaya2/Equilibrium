@@ -10,6 +10,16 @@ import {
   icyenicSoulSplitNote,
 } from "@/combat/league/icyenicFaith";
 import {
+  NARAGI_ACTIVE_DURATION_SECONDS,
+  NARAGI_COOLDOWN_SECONDS,
+  NARAGI_EDICT_RELIC,
+  NARAGI_HEAL_AMOUNT,
+  NARAGI_HEAL_COUNT,
+  NARAGI_LEVEL_OVERRIDE,
+  SLIVER_OF_EDICTS_ID,
+  SLIVER_PASSIVE,
+} from "@/combat/league/naragiEdict";
+import {
   conjurePactAssumptionNote,
   conjureStAreaAssumptionRows,
   rotationHasConjureCast,
@@ -49,6 +59,8 @@ export function CalculationAssumptions({
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
   const bigBonedPicked = stats.league.blessings.some((choice) => choice.id === "big-boned");
   const icyenicActive = stats.league.relicNames?.has("Icyenic Faith") === true;
+  const naragiActive = stats.league.relicNames?.has(NARAGI_EDICT_RELIC) === true;
+  const sliverWorn = stats.equipmentIds?.includes(SLIVER_OF_EDICTS_ID) === true;
   const protectOn =
     icyenicActive &&
     stats.icyenicProtection.unavailability !== "protection-off" &&
@@ -104,15 +116,17 @@ export function CalculationAssumptions({
       ? ([
           [
             "Aegis qualifying armour",
-            `${formatNumber(stats.aegis.qualifyingArmour)} · ${PERCENT_FORMAT.format(
-              stats.aegis.armourPercent,
-            )} · off-hand ${stats.aegis.offhand}`,
+            `${formatNumber(stats.aegis.qualifyingArmour)} · ${
+              stats.aegis.basis === "equipment" ? "equipment only" : "total rating"
+            } · ${PERCENT_FORMAT.format(stats.aegis.armourPercent)} · off-hand ${stats.aegis.offhand}`,
           ],
           [
             "Aegis base-damage bonus",
-            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (${formatNumber(
-              stats.aegis.excludedBlockArmour,
-            )} block-only armour excluded)`,
+            stats.aegis.basis === "equipment"
+              ? `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (${formatNumber(
+                  stats.aegis.excludedBlockArmour,
+                )} block-only armour excluded)`
+              : `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (total block rating)`,
           ],
         ] as Array<[string, string | number]>)
       : []),
@@ -148,6 +162,22 @@ export function CalculationAssumptions({
               relicActive: icyenicActive,
               protectionActive: protectOn,
             }),
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    ...(naragiActive
+      ? ([
+          [
+            "Naragi Edict",
+            sliverWorn
+              ? `Sliver worn · +${SLIVER_PASSIVE.armour} armour · +${SLIVER_PASSIVE.styleDamage} style damage · +${formatNumber(SLIVER_PASSIVE.life)} LP · +${SLIVER_PASSIVE.prayer} prayer`
+              : "Sliver of Edicts not equipped (pocket) - no passive or activation",
+          ],
+          [
+            "Sliver activation",
+            sliverWorn
+              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} LP · levels ${NARAGI_LEVEL_OVERRIDE} · one revive (provisional full-max LP on revive)`
+              : "Equip Sliver to activate in sim",
           ],
         ] as Array<[string, string | number]>)
       : []),

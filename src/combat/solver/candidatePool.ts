@@ -1,4 +1,5 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
+import { entryByEngineId } from "../abilities/registry";
 import { resolveAbilityCastAvailability } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
 import {
@@ -104,6 +105,9 @@ export function buildCandidatePool(
     if (!includeAutos && effective.autoAttack) continue;
     if (!includeOffGcd && effective.offGcd) continue;
     if (!includePartial && !isFullyModeled(effective)) continue;
+    // Registry forceSolver:false / autos / stages: manual-only, not Revo++ pool.
+    const registry = entryByEngineId(effective.id);
+    if (registry && !registry.solverEligibleDefault) continue;
     // Illegal under weapon / equipment / passive / supersede rules.
     const peers = effective.replacementGroup
       ? (peersByGroup.get(effective.replacementGroup) ?? [])

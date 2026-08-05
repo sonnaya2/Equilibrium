@@ -8,6 +8,12 @@ import {
 } from "@/combat";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
+import type { AegisArmourBasis } from "@/combat/league/ruleset";
+import {
+  isRelicGrantedItemAvailable,
+  relicGrantedItemForRelic,
+  stripUnavailableRelicItems,
+} from "@/combat/league/relicGrantedItems";
 import {
   isRelicActive,
   MONOLITH_ENERGY_DEFAULT,
@@ -239,6 +245,11 @@ export interface LoadoutBuffs {
    * 100% block + Soul Split-on-protect).
    */
   protectionPrayer: boolean;
+  /**
+   * Teragard's Aegis armour basis: total block rating (default) or equipment Armour only.
+   * Wiki wording is ambiguous; toggle until live-verified.
+   */
+  aegisArmourBasis: AegisArmourBasis;
   /** Archaeology: Berserker's Fury monolith relic (damage scales with missing LP). */
   berserkersFury: boolean;
   /** Archaeology: Fury of the Small (+1% adren on adrenaline-generating basics). */
@@ -467,6 +478,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     strengthCape99: false,
     attackCape120: false,
     protectionPrayer: false,
+    aegisArmourBasis: "total-rating",
     berserkersFury: false,
     furyOfTheSmall: false,
     heightenedSenses: false,
@@ -612,8 +624,25 @@ function mergeEquipmentIds(
   return out;
 }
 
-/** Equip or clear one slot. Two-hand clears MH/OH; MH/OH clears two-hand. */
-export function equipInSlot(loadout: Loadout, slot: EquipmentSlot, itemId: string | null): Loadout {
+/**
+ * Equip or clear one slot. Two-hand clears MH/OH; MH/OH clears two-hand.
+ * When activeRelicNames is provided, relic-granted items cannot be equipped
+ * without their relic (no-op leave previous loadout).
+ */
+export function equipInSlot(
+  loadout: Loadout,
+  slot: EquipmentSlot,
+  itemId: string | null,
+  activeRelicNames?: readonly string[] | ReadonlySet<string>,
+): Loadout {
+  if (
+    itemId != null &&
+    itemId !== "" &&
+    activeRelicNames !== undefined &&
+    !isRelicGrantedItemAvailable(itemId, activeRelicNames)
+  ) {
+    return loadout;
+  }
   const slots: Partial<Record<EquipmentSlot, string | null>> = {
     ...(loadout.equipmentSlots ?? {}),
   };
@@ -640,6 +669,43 @@ export function equipInSlot(loadout: Loadout, slot: EquipmentSlot, itemId: strin
   next.weaponConfiguration = weaponConfigurationFor(next) ?? next.weaponConfiguration;
   const style = weaponStyle(slots);
   return style != null ? withCombatStyle(next, style) : next;
+}
+
+/**
+ * Unequip relic-granted items whose relic is not active.
+ * Call after relic toggle, load/import, and when assembling sim inputs.
+ */
+export function syncRelicGrantedEquipment(
+  loadout: Loadout,
+  activeRelicNames: readonly string[] | ReadonlySet<string> | undefined,
+): Loadout {
+  const slots = loadout.equipmentSlots ?? {};
+  const nextSlots = stripUnavailableRelicItems(slots, activeRelicNames);
+  if (nextSlots === slots) return loadout;
+  const unlocks = unlockOnlyIds(loadout).filter((id) =>
+    isRelicGrantedItemAvailable(id, activeRelicNames),
+  );
+  return {
+    ...loadout,
+    equipmentSlots: nextSlots,
+    equipmentIds: mergeEquipmentIds(nextSlots, unlocks),
+  };
+}
+
+/**
+ * After selecting a relic, strip invalid grants then equip that relic's item
+ * when the grant table names one (Tome / Sliver). No-op when deselecting.
+ */
+export function equipGrantedItemForRelic(
+  loadout: Loadout,
+  relicName: string,
+  activeRelicNames: readonly string[] | ReadonlySet<string>,
+): Loadout {
+  const stripped = syncRelicGrantedEquipment(loadout, activeRelicNames);
+  const grant = relicGrantedItemForRelic(relicName);
+  if (!grant) return stripped;
+  if (!isRelicGrantedItemAvailable(grant.itemId, activeRelicNames)) return stripped;
+  return equipInSlot(stripped, grant.slot, grant.itemId, activeRelicNames);
 }
 
 export function toggleUnlockPin(loadout: Loadout, itemId: string): Loadout {
@@ -1175,6 +1241,8 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
+      aegisArmourBasis:
+        rawBuffs.aegisArmourBasis === "equipment" ? "equipment" : "total-rating",
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
       slayerHelmetStand: normalizeSlayerHelmetStand(rawBuffs.slayerHelmetStand),
       ensouledSpectralLens: rawBuffs.ensouledSpectralLens === true,

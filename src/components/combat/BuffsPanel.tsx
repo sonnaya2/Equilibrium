@@ -31,14 +31,19 @@ import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
 import { NumberField } from "./NumberField";
 import { ICYENIC_FAITH_RELIC, TOME_OF_THE_ICYENE_ID } from "@/combat/league/icyenicFaith";
+import {
+  NARAGI_EDICT_RELIC,
+  SLIVER_OF_EDICTS_ID,
+} from "@/combat/league/naragiEdict";
 import { relicIconPath } from "@/lib/gameArt";
 import {
   BONFIRE_LOGS,
   activatePowerburstOfVitality,
-  equipInSlot,
+  equipGrantedItemForRelic,
   equipmentIdList,
   isPowerburstOfVitalityActive,
   isPowerburstOfVitalityReady,
+  syncRelicGrantedEquipment,
   toggleEquipmentEnchantment,
   withLoadoutBuffs,
   type Loadout,
@@ -288,7 +293,19 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
   const selectedBlessings = activeBlessings(build.blessingPicks);
   const t7Picked = build.relics[String(T7_RELIC_TIER)] ?? null;
   const icyenicPicked = t7Picked === ICYENIC_FAITH_RELIC;
+  const naragiPicked = t7Picked === NARAGI_EDICT_RELIC;
   const tomeEquipped = loadout.equipmentSlots.pocket === TOME_OF_THE_ICYENE_ID;
+  const sliverEquipped = loadout.equipmentSlots.pocket === SLIVER_OF_EDICTS_ID;
+  const activeRelicNames = useMemo(
+    () => Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
+    [build.relics],
+  );
+
+  // Drop Tome / Sliver when their T7 relic is not selected (import / deselect / swap).
+  useEffect(() => {
+    setLoadout((prev) => syncRelicGrantedEquipment(prev, activeRelicNames));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRelicNames.join("\0")]);
   const anachroniaUnlocked = isRegionUnlocked(build, "anachronia");
   // Worn = ring slot only. Unlock pins in equipmentIds must not count as equipped.
   const slottedIds = equipmentIdList(loadout.equipmentSlots);
@@ -332,14 +349,29 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
     targetUndead: loadout.target?.undead === true,
   });
 
-  /** One pick per tier: sets name (replacing any other T7). Icyenic also pockets the Tome. */
+  /** One pick per tier: replace any other T7; auto-equip that relic's granted pocket item. */
   const toggleTier7Relic = (name: string) => {
     if (!buildLoaded) return;
     const wasActive = t7Picked === name;
     toggleRelic(T7_RELIC_TIER, name);
-    if (!wasActive && name === ICYENIC_FAITH_RELIC) {
-      setLoadout((prev) => equipInSlot(prev, "pocket", TOME_OF_THE_ICYENE_ID));
+    if (wasActive) {
+      // Deselect: drop T7 key, then strip granted pocket items.
+      const nextNames = Object.entries(build.relics)
+        .filter(([tier, n]) => tier !== String(T7_RELIC_TIER) && typeof n === "string")
+        .map(([, n]) => n as string);
+      setLoadout((prev) => syncRelicGrantedEquipment(prev, nextNames));
+      return;
     }
+    const nextNames = {
+      ...Object.fromEntries(
+        Object.entries(build.relics).filter(([tier]) => tier !== String(T7_RELIC_TIER)),
+      ),
+      [String(T7_RELIC_TIER)]: name,
+    };
+    const active = Object.values(nextNames).filter(
+      (n): n is string => typeof n === "string" && n.length > 0,
+    );
+    setLoadout((prev) => equipGrantedItemForRelic(prev, name, active));
   };
 
   return (
@@ -419,25 +451,32 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                 T7_RELIC_CHOICES.map((relic) => {
                   const active = t7Picked === relic.name;
                   const isIcyenic = relic.name === ICYENIC_FAITH_RELIC;
+                  const isNaragi = relic.name === NARAGI_EDICT_RELIC;
                   const effects = Array.isArray(relic.effects) ? relic.effects : [];
                   const effectText =
                     effects.length > 0
                       ? effects.join(" ")
                       : isIcyenic
                         ? "Tome of the Icyene · prayer crit and base AD scaling"
-                        : relic.name;
+                        : isNaragi
+                          ? "Sliver of Edicts · heals, levels 255, one revive"
+                          : relic.name;
+                  let status = effectText;
+                  if (active && isIcyenic) {
+                    status = tomeEquipped
+                      ? `${effectText} · Tome worn`
+                      : `${effectText} · equip Tome for scaling`;
+                  } else if (active && isNaragi) {
+                    status = sliverEquipped
+                      ? `${effectText} · Sliver worn`
+                      : `${effectText} · equip Sliver in pocket`;
+                  }
                   return (
                     <BuffTile
                       key={relic.name}
                       icon={relicIconPath(relic.name)}
                       label={relic.name}
-                      effect={
-                        active && isIcyenic
-                          ? tomeEquipped
-                            ? `${effectText} · Tome worn`
-                            : `${effectText} · equip Tome for scaling`
-                          : effectText
-                      }
+                      effect={status}
                       pressed={active}
                       disabled={!buildLoaded}
                       onClick={() => toggleTier7Relic(relic.name)}
@@ -452,6 +491,16 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                   effect="100% block of qualifying incoming hits; Soul Split-on-protect from damage dealt"
                   pressed={loadout.buffs.protectionPrayer}
                   onClick={() => setBuffs({ protectionPrayer: !loadout.buffs.protectionPrayer })}
+                />
+              ) : null}
+              {naragiPicked && sliverEquipped ? (
+                <BuffTile
+                  icon={LIFE_ICON.powerburstOfVitality}
+                  label="Sliver activate"
+                  effect="90s CD · 16.8s · four 10,000 LP heals · levels 255 · one revive (sim timeline)"
+                  pressed={false}
+                  disabled
+                  onClick={() => undefined}
                 />
               ) : null}
             </div>
@@ -681,6 +730,34 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             <p className="mt-1.5 text-[11px] text-parch-300">
               From Build. Unmodeled stays out of totals.
             </p>
+            {selectedBlessings.some((c) => c.id === "teragards-aegis") ? (
+              <div
+                className="mt-2"
+                role="group"
+                aria-label="Teragard's Aegis armour basis"
+              >
+                <h3 className="buff-group__title">Teragard&apos;s Aegis armour</h3>
+                <p className="mb-1.5 text-[11px] text-parch-300">
+                  Wiki says total armour; live may be equipment-only. Toggle until verified.
+                </p>
+                <div className="icon-tile-grid">
+                  <BuffTile
+                    icon={null}
+                    label="Total rating"
+                    effect="Block armour rating (equipment + Defence / prayer / Fortitude)"
+                    pressed={loadout.buffs.aegisArmourBasis !== "equipment"}
+                    onClick={() => setBuffs({ aegisArmourBasis: "total-rating" })}
+                  />
+                  <BuffTile
+                    icon={null}
+                    label="Equipment only"
+                    effect="Equipped Armour stat only (excludes level-derived block share)"
+                    pressed={loadout.buffs.aegisArmourBasis === "equipment"}
+                    onClick={() => setBuffs({ aegisArmourBasis: "equipment" })}
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="buff-group buff-life" role="group" aria-label="Defence and life">

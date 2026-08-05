@@ -40,6 +40,10 @@ export type RevoRunResultsProps = {
   nameById: Map<string, string>;
   /** From adaptive fidelity Run meta; optional live-cap disclosure when residual remains. */
   branchFidelityMeta?: BranchFidelityMeta | null;
+  /** Multi-worker Run in flight. */
+  runBusy?: boolean;
+  runProgressLabel?: string | null;
+  onCancelRun?: () => void;
 };
 
 function capOptsFromMeta(
@@ -68,6 +72,9 @@ export function RevoRunResults({
   setAnalysisOpen,
   nameById,
   branchFidelityMeta = null,
+  runBusy = false,
+  runProgressLabel = null,
+  onCancelRun,
 }: RevoRunResultsProps) {
   const contributions = result?.analysis.byEffect ?? [];
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
@@ -97,6 +104,7 @@ export function RevoRunResults({
             className="border border-stone-750 bg-transparent px-2 py-1 font-mono text-xs text-parch-50"
             data-testid="revo-run-duration"
             title="Run bar duration (6–1000 seconds)"
+            disabled={runBusy}
           />
           <span>s</span>
         </label>
@@ -106,10 +114,27 @@ export function RevoRunResults({
         <button
           type="button"
           onClick={run}
-          className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800"
+          disabled={runBusy}
+          className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800 disabled:opacity-40"
+          data-testid="revo-run-button"
         >
-          Run bar
+          {runBusy ? "Running…" : "Run bar"}
         </button>
+        {runBusy && onCancelRun ? (
+          <button
+            type="button"
+            onClick={onCancelRun}
+            className="border border-stone-750 px-2 py-1 text-xs text-parch-300 hover:bg-stone-800"
+            data-testid="revo-run-cancel"
+          >
+            Cancel
+          </button>
+        ) : null}
+        {runBusy && runProgressLabel ? (
+          <span className="text-xs text-parch-300" data-testid="revo-run-progress">
+            {runProgressLabel}
+          </span>
+        ) : null}
       </div>
 
       {result && !result.ok ? (

@@ -40,6 +40,106 @@ async function waitWhilePaused(requestId: number): Promise<void> {
   }
 }
 
+async function runUiJob(
+  requestId: number,
+  payload: import("./uiRunTypes").SerializableUiRunRequest,
+): Promise<void> {
+  runningId = requestId;
+  clearRequestState(requestId);
+  activeCoord = null;
+  post({ type: "started", requestId });
+
+  try {
+    if (cancelled.has(requestId)) {
+      post({ type: "cancelled", requestId });
+      return;
+    }
+
+    const { requireSimBase, buildRevolutionInput } = await import("./revive");
+    const {
+      resolveAbilityCatalogue,
+      resolveAbilitySpecsFromCatalogue,
+    } = await import("../../abilities/catalogue");
+    const {
+      simulateUiRunProbe,
+      simulateUiRunFullAnalysis,
+    } = await import("../uiRunCore");
+    const { UI_RUN_BRANCH_FIDELITY_LADDER } = await import("../branchFidelity");
+
+    if (cancelled.has(requestId) || runningId !== requestId) {
+      post({ type: "cancelled", requestId });
+      return;
+    }
+
+    const sim = requireSimBase(payload.loadout);
+    const cat = resolveAbilityCatalogue({
+      strengthCape99: sim.strengthCape99 === true,
+    });
+    let bar;
+    try {
+      bar = resolveAbilitySpecsFromCatalogue(cat, payload.barIds);
+    } catch (e) {
+      post({
+        type: "error",
+        requestId,
+        error: e instanceof Error ? e.message : "ui_run: bar resolve failed",
+      });
+      return;
+    }
+    const input = buildRevolutionInput(sim, {
+      bar,
+      style: payload.style,
+      durationTicks: payload.durationTicks,
+      abilities: cat.catalogue,
+    });
+
+    const live =
+      payload.maxLiveBranches ??
+      UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps.length - 1]!;
+
+    if (payload.fullAnalysis) {
+      const { summary, meta } = simulateUiRunFullAnalysis(
+        input,
+        live,
+        UI_RUN_BRANCH_FIDELITY_LADDER,
+      );
+      if (cancelled.has(requestId) || runningId !== requestId) {
+        post({ type: "cancelled", requestId });
+        return;
+      }
+      post({
+        type: "ui_run_result",
+        requestId,
+        result: { kind: "full", summary, meta },
+      });
+      return;
+    }
+
+    const probe = simulateUiRunProbe(input, live, UI_RUN_BRANCH_FIDELITY_LADDER);
+    if (cancelled.has(requestId) || runningId !== requestId) {
+      post({ type: "cancelled", requestId });
+      return;
+    }
+    post({
+      type: "ui_run_result",
+      requestId,
+      result: { kind: "probe", probe },
+    });
+  } catch (err) {
+    if (cancelled.has(requestId) || runningId !== requestId) {
+      post({ type: "cancelled", requestId });
+      return;
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    post({ type: "error", requestId, error: message });
+  } finally {
+    clearRequestState(requestId);
+    if (runningId === requestId) {
+      runningId = null;
+    }
+  }
+}
+
 async function runStart(
   requestId: number,
   payload: SerializableSolverRequest,
@@ -148,6 +248,12 @@ self.onmessage = (event: MessageEvent<unknown>) => {
         cancelled.add(runningId);
       }
       void runStart(typed.requestId, typed.payload, typed.coord);
+      break;
+    case "ui_run":
+      if (runningId !== null && runningId !== typed.requestId) {
+        cancelled.add(runningId);
+      }
+      void runUiJob(typed.requestId, typed.payload);
       break;
     case "coord":
       if (runningId === typed.requestId && activeCoord) {

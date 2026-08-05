@@ -151,6 +151,20 @@ export {
   type BranchFidelityAttemptMeta,
   type AdaptiveBranchFidelityResult,
 } from "./branchFidelity";
+export {
+  pickBestUiRunProbe,
+  preferredUiRunWorkerCount,
+  simulateRevolutionForUiHybrid,
+  type UiRunProbeResult,
+} from "./uiRunCore";
+export {
+  runUiRevolution,
+  cancelUiRevolutionWorkers,
+  resetUiRunHostForTests,
+  type UiRunProgress,
+  type UiRunHostOptions,
+} from "./worker/uiRunHost";
+export type { SerializableUiRunRequest } from "./worker/uiRunTypes";
 export { runMediumScreen, collectMediumIncumbents } from "./search/mediumScreen";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export {

@@ -12,6 +12,7 @@ import {
 import type { RotationSummary, SimulateOptions } from "../engine/simulation/simulate";
 import type { ScoreableSummary } from "./contracts";
 import { exactnessEligibleForExactProof } from "./objective";
+import { simulateRevolutionForUiHybrid } from "./uiRunCore";
 
 export type BranchFidelityMode = "exploratory" | "medium" | "full";
 
@@ -245,14 +246,13 @@ export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
   exactness: "any",
 };
 
-/** Revolution panel Run: adaptive branch width; defaults detail to full-analysis. */
+/**
+ * Revolution panel Run (sync fallback): score-only ladder climb + one full-analysis.
+ * Prefer worker multi-probe host when available (uiRunHost).
+ */
 export function simulateRevolutionForUi(
   input: RevolutionInput,
   options?: SimulateOptions,
 ): AdaptiveBranchFidelityResult {
-  return simulateWithAdaptiveBranchFidelity(
-    input,
-    { ...options, detailLevel: options?.detailLevel ?? "full-analysis" },
-    UI_RUN_BRANCH_FIDELITY_LADDER,
-  );
+  return simulateRevolutionForUiHybrid(input, options, UI_RUN_BRANCH_FIDELITY_LADDER);
 }

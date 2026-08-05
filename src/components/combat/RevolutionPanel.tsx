@@ -5,13 +5,12 @@ import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { secondsToTicks } from "@/combat/core/ticks";
 import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
-import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
 import {
-  buildSimulationInputBase,
-  resolveRevolutionBar,
-  toRevolutionInput,
-} from "@/combat/model";
-import { preferredAgentCount, simulateRevolutionForUi } from "@/combat/solver";
+  preferredAgentCount,
+  packSimBaseFromModel,
+  runUiRevolution,
+  cancelUiRevolutionWorkers,
+} from "@/combat/solver";
 import type { CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
@@ -72,9 +71,13 @@ export function RevolutionPanel({
   const [branchFidelityMeta, setBranchFidelityMeta] = useState<BranchFidelityMeta | null>(
     null,
   );
+  const [runBusy, setRunBusy] = useState(false);
+  const [runProgressLabel, setRunProgressLabel] = useState<string | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
+  const runGenRef = useRef(0);
+  const runCancelRef = useRef(false);
 
   const onActiveBar = useCallback((ids: string[] | null) => setActiveBarIds(ids), []);
   const onClearSimResult = useCallback(() => {
@@ -205,32 +208,74 @@ export function RevolutionPanel({
   const simStyle = loadout.style;
 
   const run = () => {
-    if (modelled.length === 0) return;
+    if (modelled.length === 0 || runBusy) return;
     const durationTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
     setShowAllCasts(false);
     setAnalysisOpen(false);
-    // Cape from model (same freeze as sim base / solver pack).
-    const catalogue = resolveAbilityCatalogue({
-      strengthCape99: combatModel.strengthCape99,
-    });
-    const bar = resolveRevolutionBar(catalogue, modelled);
-    // Full loadout and hybrid manual both go through the shared builder.
-    const simBase = buildSimulationInputBase(combatModel, catalogue);
-    // Adaptive live caps (UI ladder); residual notes stay honest.
-    const { summary, meta } = simulateRevolutionForUi(
-      toRevolutionInput(simBase, {
-        bar,
-        style: simStyle,
-        durationTicks,
-      }),
-    );
-    setResult(summary);
-    setBranchFidelityMeta({
-      maxLiveBranches: meta.finalBudget.maxLiveBranches,
-      residualWeight: meta.residualWeight,
-      attempts: meta.attempts,
-    });
-    setResultKey(runKey);
+    const gen = ++runGenRef.current;
+    runCancelRef.current = false;
+    setRunBusy(true);
+    setRunProgressLabel("Probing branch widths…");
+
+    const barIds = modelled.map((m) => m.id).filter(Boolean);
+    const loadout = packSimBaseFromModel(combatModel);
+
+    void (async () => {
+      try {
+        const { summary, meta } = await runUiRevolution(
+          {
+            loadout,
+            barIds,
+            style: simStyle,
+            durationTicks,
+          },
+          {
+            isCancelled: () => runCancelRef.current || gen !== runGenRef.current,
+            onProgress: (p) => {
+              if (gen !== runGenRef.current) return;
+              if (p.phase === "probes") {
+                setRunProgressLabel(
+                  `Probing live ${p.maxLiveBranches ?? "…"} (${p.done}/${p.total})`,
+                );
+              } else {
+                setRunProgressLabel(
+                  `Full analysis live ${p.maxLiveBranches ?? "…"}…`,
+                );
+              }
+            },
+          },
+        );
+        if (gen !== runGenRef.current) return;
+        setResult(summary);
+        setBranchFidelityMeta({
+          maxLiveBranches: meta.finalBudget.maxLiveBranches,
+          residualWeight: meta.residualWeight,
+          attempts: meta.attempts,
+        });
+        setResultKey(runKey);
+      } catch (err) {
+        if (gen !== runGenRef.current) return;
+        const aborted =
+          (err instanceof Error && err.name === "AbortError") ||
+          (err instanceof Error && /cancelled/i.test(err.message));
+        if (!aborted && typeof console !== "undefined") {
+          console.warn("[revo-run]", err);
+        }
+      } finally {
+        if (gen === runGenRef.current) {
+          setRunBusy(false);
+          setRunProgressLabel(null);
+        }
+      }
+    })();
+  };
+
+  const cancelRun = () => {
+    runCancelRef.current = true;
+    runGenRef.current += 1;
+    cancelUiRevolutionWorkers();
+    setRunBusy(false);
+    setRunProgressLabel(null);
   };
 
   const applySolverBar = (ids: readonly string[]) => {
@@ -365,6 +410,9 @@ export function RevolutionPanel({
         setAnalysisOpen={setAnalysisOpen}
         nameById={nameById}
         branchFidelityMeta={liveResult ? branchFidelityMeta : null}
+        runBusy={runBusy}
+        runProgressLabel={runProgressLabel}
+        onCancelRun={cancelRun}
       />
     </div>
   );

@@ -201,12 +201,20 @@ export interface CoordSolverMessage {
   batch: HostCoordBatch;
 }
 
+/** Host -> worker: single-bar UI Run probe or full-analysis (clone-safe). */
+export interface UiRunSolverMessage {
+  type: "ui_run";
+  requestId: number;
+  payload: import("./uiRunTypes").SerializableUiRunRequest;
+}
+
 export type HostToWorkerMessage =
   | StartSolverMessage
   | CancelSolverMessage
   | PauseSolverMessage
   | ResumeSolverMessage
-  | CoordSolverMessage;
+  | CoordSolverMessage
+  | UiRunSolverMessage;
 
 /** Immediate ACK before expensive imports/solve - clears host cold-start watchdog. */
 export interface StartedSolverMessage {
@@ -243,13 +251,20 @@ export interface CoordReportSolverMessage {
   report: WorkerCoordReport;
 }
 
+export interface UiRunResultSolverMessage {
+  type: "ui_run_result";
+  requestId: number;
+  result: import("./uiRunTypes").UiRunWorkerResult;
+}
+
 export type WorkerToHostMessage =
   | StartedSolverMessage
   | ProgressSolverMessage
   | ResultSolverMessage
   | ErrorSolverMessage
   | CancelledSolverMessage
-  | CoordReportSolverMessage;
+  | CoordReportSolverMessage
+  | UiRunResultSolverMessage;
 
 function isFiniteRequestId(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
@@ -261,6 +276,9 @@ export function isHostToWorkerMessage(value: unknown): value is HostToWorkerMess
   if (!isFiniteRequestId(msg.requestId)) return false;
   const t = msg.type;
   if (t === "start") {
+    return (value as { payload?: unknown }).payload !== undefined;
+  }
+  if (t === "ui_run") {
     return (value as { payload?: unknown }).payload !== undefined;
   }
   if (t === "coord") {
@@ -280,6 +298,8 @@ export function isWorkerToHostMessage(value: unknown): value is WorkerToHostMess
     case "progress":
       return (value as { progress?: unknown }).progress !== undefined;
     case "result":
+      return (value as { result?: unknown }).result !== undefined;
+    case "ui_run_result":
       return (value as { result?: unknown }).result !== undefined;
     case "error":
       return typeof (value as { error?: unknown }).error === "string";

@@ -176,7 +176,7 @@ export function CalculationAssumptions({
           [
             "Sliver activation",
             sliverWorn
-              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} LP · levels ${NARAGI_LEVEL_OVERRIDE} · one revive (provisional full-max LP on revive)`
+              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} LP · levels ${NARAGI_LEVEL_OVERRIDE} · one revive · auto re-use when toggle On`
               : "Equip Sliver to activate in sim",
           ],
         ] as Array<[string, string | number]>)

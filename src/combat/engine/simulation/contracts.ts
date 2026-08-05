@@ -78,8 +78,8 @@ export interface SimulateInput {
   /** Level value that pairs with overrideBase (default 255 when overrideBase set). */
   overrideLevel?: number;
   /**
-   * Activate Sliver of Edicts (Naragi) at tick 0 when relic + pocket are valid.
-   * Set from loadout.buffs.sliverOfEdictsActive on the Rotation page.
+   * Keep Sliver of Edicts on a cycle: activate at tick 0 and again each time the
+   * 90s CD is ready (relic + pocket still valid). UI: loadout.buffs.sliverOfEdictsActive.
    */
   activateNaragiAtStart?: boolean;
   accuracy: number;

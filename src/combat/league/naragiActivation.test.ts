@@ -133,4 +133,42 @@ describe("activateNaragiSliver", () => {
     expect(r.died).toBe(true);
     expect(r.revived).toBe(false);
   });
+
+  it("with activateNaragiAtStart, re-activates at 90s CD ready", () => {
+    const rt = createRuntime({
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      abilities: MELEE_ABILITIES,
+      league: resolveLeagueRules({ ruleset: "equilibrium", relics: ["Naragi Edict"] }),
+      equipmentIds: ["item:sliver-of-edicts"],
+      activateNaragiAtStart: true,
+      horizonTicks: NARAGI_COOLDOWN_TICKS + NARAGI_ACTIVE_DURATION_TICKS + 10,
+    });
+    // Start activation from createRuntime.
+    expect(effectiveLevelFromState(99, rt.state, 0)).toBe(255);
+    expect(rt.state.cooldowns[SLIVER_OF_EDICTS_ACTIVATE_ID]).toBe(NARAGI_COOLDOWN_TICKS);
+
+    // Between window end and CD: level back to 99.
+    advanceTo(rt, NARAGI_ACTIVE_DURATION_TICKS);
+    expect(effectiveLevelFromState(99, rt.state, NARAGI_ACTIVE_DURATION_TICKS)).toBe(99);
+
+    // At CD ready: auto re-activate (landTick, not lagged state.tick).
+    advanceTo(rt, NARAGI_COOLDOWN_TICKS);
+    expect(effectiveLevelFromState(99, rt.state, NARAGI_COOLDOWN_TICKS)).toBe(255);
+    expect(rt.state.player?.naragi.activatedAtTick).toBe(NARAGI_COOLDOWN_TICKS);
+    expect(rt.state.cooldowns[SLIVER_OF_EDICTS_ACTIVATE_ID]).toBe(NARAGI_COOLDOWN_TICKS * 2);
+
+    const activates = rt.events.filter((e) => e.abilityId === NARAGI_EVENT.activate);
+    expect(activates.map((e) => e.tick)).toEqual([0, NARAGI_COOLDOWN_TICKS]);
+  });
+
+  it("without activateNaragiAtStart, does not auto re-activate at CD", () => {
+    const rt = bareRt();
+    activateNaragiSliver(rt, { relicActive: true, sliverWorn: true });
+    advanceTo(rt, NARAGI_COOLDOWN_TICKS);
+    expect(effectiveLevelFromState(99, rt.state, NARAGI_COOLDOWN_TICKS)).toBe(99);
+    expect(rt.events.filter((e) => e.abilityId === NARAGI_EVENT.activate)).toHaveLength(1);
+  });
 });

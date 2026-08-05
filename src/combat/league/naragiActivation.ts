@@ -10,6 +10,7 @@ import type { SimulationRuntime } from "../engine/runtime/runtime";
 import { scheduleEvent } from "../engine/runtime/runtime";
 import { patchPlayer, type RotationState } from "../engine/runtime/state";
 import type { DamageProvenance } from "../shared/damageProvenance";
+import { hasNaragiEdict } from "./ruleset";
 import {
   beginNaragiActivation,
   expireNaragiActivation,
@@ -18,15 +19,12 @@ import {
   naragiActivationGate,
   naragiCooldownReadyTick,
   naragiHealOffsetsTicks,
-  NARAGI_ACTIVE_DURATION_TICKS,
-  NARAGI_EDICT_RELIC,
   NARAGI_HEAL_AMOUNT,
   NARAGI_LEVEL_OVERRIDE,
   NARAGI_REVIVAL_CHARGES,
   SLIVER_OF_EDICTS_ACTIVATE_ID,
   SLIVER_OF_EDICTS_ID,
   type NaragiActivationFailReason,
-  type NaragiRuntimeState,
   newNaragiRuntime,
 } from "./naragiEdict";
 
@@ -38,6 +36,8 @@ const NARAGI_PROVENANCE: DamageProvenance = {
 /** Ability ids used on player-family events (analysis / timeline). */
 export const NARAGI_EVENT = {
   activate: "naragi_sliver_activate",
+  /** Scheduled auto re-fire at CD ready when activateNaragiAtStart is set. */
+  reactivate: "naragi_sliver_reactivate",
   heal: "naragi_sliver_heal",
   expire: "naragi_sliver_expire",
   revive: "naragi_sliver_revive",
@@ -100,8 +100,24 @@ function playerExpireResolve(rt: SimulationRuntime, _landTick: number): EventRes
 }
 
 /**
- * Activate Sliver of Edicts at the runtime's current tick.
+ * Auto re-activate when UI toggle (activateNaragiAtStart) keeps Sliver on a cycle.
+ * Uses landTick: clock advances state.tick only after due events land.
+ */
+function playerReactivateResolve(rt: SimulationRuntime, landTick: number): EventResolution {
+  if (rt.input.activateNaragiAtStart !== true) return NO_DAMAGE;
+  activateNaragiSliver(rt, {
+    relicActive: hasNaragiEdict(rt.input.league),
+    sliverWorn: rt.input.equipmentIds?.includes(SLIVER_OF_EDICTS_ID) === true,
+    maximumLifePoints: rt.input.league?.maximumLife ?? 15_000,
+    atTick: landTick,
+  });
+  return NO_DAMAGE;
+}
+
+/**
+ * Activate Sliver of Edicts at `atTick` (default: runtime state tick).
  * Schedules four heal events then expire (higher seq) at the duration boundary.
+ * When input.activateNaragiAtStart, also queues the next activation at CD ready (90s).
  */
 export function activateNaragiSliver(
   rt: SimulationRuntime,
@@ -110,10 +126,12 @@ export function activateNaragiSliver(
     sliverWorn: boolean;
     /** Default max LP when player state was not initialized. */
     maximumLifePoints?: number;
+    /** Absolute activation tick (event land time). Defaults to rt.state.tick. */
+    atTick?: number;
   },
 ): NaragiActivateResult {
   rt.state = ensurePlayer(rt.state, opts.maximumLifePoints ?? 15_000);
-  const tick = rt.state.tick;
+  const tick = opts.atTick ?? rt.state.tick;
   const player = rt.state.player!;
   const gate = naragiActivationGate({
     relicActive: opts.relicActive,
@@ -189,7 +207,7 @@ export function activateNaragiSliver(
     resolve: playerExpireResolve,
   });
 
-  // Activation marker on the event log at t0 (immediate resolve bookkeeping).
+  // Activation marker on the event log (immediate resolve bookkeeping).
   scheduleEvent(rt, {
     tick,
     family: "player",
@@ -202,6 +220,25 @@ export function activateNaragiSliver(
     provenance: NARAGI_PROVENANCE,
     resolve: () => NO_DAMAGE,
   });
+
+  // Toggle on: re-fire every 90s CD (horizon half-open bound skips post-run lands).
+  if (rt.input.activateNaragiAtStart === true) {
+    const horizon = rt.horizon;
+    if (horizon == null || cooldownReadyTick < horizon) {
+      scheduleEvent(rt, {
+        tick: cooldownReadyTick,
+        family: "player",
+        abilityId: NARAGI_EVENT.reactivate,
+        sourceCast: -1,
+        hitIndex: 0,
+        attached: false,
+        procEligible: false,
+        recursionAllowed: false,
+        provenance: NARAGI_PROVENANCE,
+        resolve: playerReactivateResolve,
+      });
+    }
+  }
 
   return {
     ok: true,
@@ -231,7 +268,9 @@ export function invalidateNaragiOnRuntime(rt: SimulationRuntime): void {
   rt.queue.cancelWhere(
     (e) =>
       e.family === "player" &&
-      (e.abilityId === NARAGI_EVENT.heal || e.abilityId === NARAGI_EVENT.expire),
+      (e.abilityId === NARAGI_EVENT.heal ||
+        e.abilityId === NARAGI_EVENT.expire ||
+        e.abilityId === NARAGI_EVENT.reactivate),
   );
 }
 

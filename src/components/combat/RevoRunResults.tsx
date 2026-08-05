@@ -156,7 +156,7 @@ export function RevoRunResults({
               }`}
               aria-pressed={sliverToggle.active}
               data-testid="sliver-buff-toggle"
-              title="Activate Sliver of Edicts at combat start (16.8s window)"
+              title="Activate Sliver of Edicts on a cycle: at combat start and again every 90s CD (16.8s window)"
               disabled={sliverToggle.disabled === true || runBusy}
               onClick={sliverToggle.onToggle}
             >

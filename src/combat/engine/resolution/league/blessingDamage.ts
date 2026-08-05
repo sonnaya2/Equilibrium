@@ -14,14 +14,17 @@ import { patchLeague } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
 
 /**
- * Prefer scheduled DamageProvenance; fall back to family/ownership for older events.
+ * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
+ * fall back to family/ownership for older events.
  * Parasite (sourceCast < 0) stays ineligible even if family is "dot".
  */
 function blessingSourceOf(
   event: ScheduledEvent<SimulationRuntime>,
 ): BlessingDamageSource | DamageProvenance {
-  if (event.blessingId) return "blessing";
   if (event.provenance != null) return event.provenance;
+  if (event.blessingId) {
+    return { kind: "blessing", detail: event.abilityId };
+  }
   if (event.family === "proc" || event.sourceCast < 0) return "proc";
   if (event.family === "conjureAuto" || event.family === "poison") return "conjure";
   if (event.family === "command") return "command";
@@ -41,9 +44,25 @@ function parentOriginKind(
   return outgoingSourceOf(source);
 }
 
+/** Scale EV-packed damage when riders attach to chance-weighted parents (Inferno 5%). */
+function scaleResolvedDamage(damage: ResolvedDamage, weight: number): ResolvedDamage {
+  if (weight === 1) return damage;
+  return {
+    min: 0,
+    max: damage.max,
+    expected: damage.expected * weight,
+    critExpected: damage.critExpected === undefined ? undefined : damage.critExpected * weight,
+    capLoss: damage.capLoss === undefined ? undefined : damage.capLoss * weight,
+    critical: damage.critical
+      ? { ...damage.critical, contribution: damage.critical.contribution * weight }
+      : undefined,
+  };
+}
+
 /**
  * Schedule league blessing damage components for a landed event and advance
  * Striking Light readiness when Light of Saradomin contributes.
+ * Light/Inferno unique hits emit Big Boned only (not Cinders 15% AD).
  */
 export function scheduleBlessingDamage(
   rt: SimulationRuntime,
@@ -56,6 +75,7 @@ export function scheduleBlessingDamage(
   if (!eligible.rider && !eligible.onHit) return;
   const ability = rt.byId.get(event.abilityId);
   // Spirit auto/poison ledger ids are not bar AbilitySpecs; rider path uses a stub.
+  // Blessing separate hits (Light/Inferno) also lack bar specs; rider path uses a stub.
   if (!ability && !eligible.rider) return;
   const style = ability?.style ?? rt.input.context?.style ?? "necromancy";
   const resolvedAbility = ability ?? {
@@ -99,8 +119,11 @@ export function scheduleBlessingDamage(
       rt.state = patchLeague(rt.state, { strikingLightReadyTick: event.tick + cooldown });
     }
   }
+  // Inferno packs EV via expectedActivations < 1; riders inherit that weight.
+  const parentWeight = event.expectedActivations ?? event.expectedOccurrences ?? 1;
   const originKind = parentOriginKind(event, source);
   for (const component of components) {
+    const scaledDamage = scaleResolvedDamage(component.damage, parentWeight);
     scheduleEvent(rt, {
       tick: event.tick,
       family: "blessing",
@@ -115,11 +138,14 @@ export function scheduleBlessingDamage(
       ...(component.damageTag ? { damageTag: component.damageTag } : {}),
       originKind,
       provenance: { kind: "blessing", detail: component.effectId },
-      expectedOccurrences: component.expectedOccurrences,
+      expectedOccurrences: component.expectedOccurrences * parentWeight,
       triggerRolls: component.triggerRolls,
-      expectedActivations: component.expectedActivations,
-      expectedSeparateHits: component.expectedSeparateHits,
-      resolve: () => ({ damage: component.damage, hitDetail: component.hitDetail }),
+      expectedActivations: component.expectedActivations * parentWeight,
+      expectedSeparateHits: component.expectedSeparateHits * parentWeight,
+      resolve: () => ({
+        damage: scaledDamage,
+        hitDetail: parentWeight === 1 ? component.hitDetail : undefined,
+      }),
     });
   }
 }

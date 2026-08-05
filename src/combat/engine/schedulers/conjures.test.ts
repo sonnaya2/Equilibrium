@@ -165,10 +165,30 @@ describe("conjure event provenance", () => {
     for (const e of autos) {
       expect(e.provenance?.kind).toBe("conjure_auto");
       expect(e.provenance?.detail).toBe("putrid_zombie");
+      // Presentation: remaining spirit life from live untilTick (cast+105 exclusive).
+      expect(e.remainingTicks).toBe(Math.max(0, 105 - e.tick));
     }
     for (const e of poisons) {
       expect(e.provenance?.kind).toBe("conjure_poison");
       expect(e.provenance?.detail).toBe("putrid_zombie");
+      // Poison may land a few ticks past untilTick (wiki tail); remaining floors at 0.
+      expect(e.remainingTicks).toBe(Math.max(0, 105 - e.tick));
+    }
+  });
+
+  it("stamps remainingTicks on command hits from live spirit untilTick", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      rotation: rotationOf("conjure_skeleton_warrior", "command_skeleton_warrior"),
+    });
+    expect(s.ok).toBe(true);
+    const commands = s.events.filter((e) => e.abilityId === "command_skeleton_warrior");
+    expect(commands.length).toBeGreaterThan(0);
+    for (const e of commands) {
+      expect(e.remainingTicks).toBeTypeOf("number");
+      // Summon at t0 -> until 105; command hits while skeleton lives.
+      expect(e.remainingTicks).toBe(105 - e.tick);
+      expect(e.remainingTicks!).toBeGreaterThan(0);
     }
   });
 

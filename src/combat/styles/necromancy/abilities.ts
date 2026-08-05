@@ -469,7 +469,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     stateEffect: "conjure_undead_army",
     weaponRequirement: "conduit",
     supportNote:
-      "Army conjures the default three spirits at Spirit Pact III; customisation not modeled.",
+      "Default three: Skeleton Warrior, Vengeful Ghost, Putrid Zombie (Spirit Pact III). Army customisation not modeled.",
     source: CONJURE_ARMY_WIKI,
   },
 ];

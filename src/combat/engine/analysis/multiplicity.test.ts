@@ -162,7 +162,7 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(gr?.bonusDamage).toBeGreaterThan(0);
   });
 
-  it("Cinders on GR: 7 riders, 7 Inferno trigger rolls, 0.35 expected activations", () => {
+  it("Cinders on GR: 7 attached 15% AD riders; Inferno unique hits (no Cinders on Inferno)", () => {
     const summary = simulate({
       ...rangedInput,
       league: cinders(),
@@ -171,6 +171,7 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     });
     const riders = summary.events.filter((e) => e.abilityId === "abyssal-cinders");
     const infernos = summary.events.filter((e) => e.abilityId === "inferno-of-zamorak");
+    // One Cinders 15% per GR hit only; Inferno is a unique hit without Cinders 15%.
     expect(riders).toHaveLength(7);
     expect(infernos).toHaveLength(7);
 
@@ -192,9 +193,12 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(activations).toBeCloseTo(0.35, 10);
     expect(separateHits).toBeCloseTo(0.35, 10);
 
+    const infernoSeqs = new Set(infernos.map((e) => e.seq));
     for (const rider of riders) {
       expect(rider.attached).toBe(true);
+      expect(rider.damageTag).toBe("bonus-damage");
       expect(resolveEventMultiplicity(rider).expectedSeparateHits).toBe(0);
+      expect(infernoSeqs.has(rider.derivedFrom ?? -1)).toBe(false);
     }
   });
 

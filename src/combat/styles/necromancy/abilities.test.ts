@@ -121,9 +121,22 @@ describe("necromancy ability data", () => {
     const putrid = NECROMANCY_ABILITIES.find((a) => a.id === "command_putrid_zombie")!;
     expect(putrid.hits[0]!.band).toEqual({ ...COMMAND_PUTRID_ZOMBIE_BAND });
     expect(putrid.hits[0]!.critEligible).toBe(false);
+    expect(putrid.hits).toHaveLength(1);
+    expect(putrid.supportStatus).toBe("partially-modeled");
+    expect(putrid.supportNote).toMatch(/ST model/i);
+    expect(putrid.supportNote).toMatch(/primary target only/i);
 
     const phantom = NECROMANCY_ABILITIES.find((a) => a.id === "command_phantom_guardian")!;
     expect(phantom.hits[0]!.band).toEqual({ ...COMMAND_PHANTOM_GUARDIAN_BAND });
+  });
+
+  it("undead army supportNote documents default three spirits only", () => {
+    const army = NECROMANCY_ABILITIES.find((a) => a.id === "conjure_undead_army")!;
+    expect(army.supportNote).toMatch(/Skeleton Warrior/);
+    expect(army.supportNote).toMatch(/Vengeful Ghost/);
+    expect(army.supportNote).toMatch(/Putrid Zombie/);
+    expect(army.supportNote).toMatch(/customisation not modeled/i);
+    expect(army.hits).toEqual([]);
   });
 
   it("conjure casts are 0-adren enhanced setups with empty hits", () => {

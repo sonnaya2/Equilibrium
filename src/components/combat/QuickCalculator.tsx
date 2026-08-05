@@ -358,6 +358,9 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
             </div>
             <div className="panel-body space-y-3">
               <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability)}</p>
+              {ability.supportNote ? (
+                <p className="text-xs leading-5 text-parch-300">{ability.supportNote}</p>
+              ) : null}
 
               <div className="flex flex-wrap items-end gap-x-6 gap-y-2 border-b border-stone-750 pb-3">
                 <div>

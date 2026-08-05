@@ -8,6 +8,11 @@ import {
   keepsPerAbilityMap,
   keepsPresentationHistory,
 } from "../simulation/contracts";
+import {
+  COMMAND_REQUIRES_CONJURE,
+  findConjure,
+} from "../../styles/necromancy/conjures";
+import { sacrificeExpectedHeal } from "../../styles/shared/constitutionAbilities";
 import { shouldRetainHitDetail } from "./hitDetailsRetention";
 
 /**
@@ -35,6 +40,13 @@ export function recordEventAccounting(
   rt.damageByTick[event.tick] = (rt.damageByTick[event.tick] ?? 0) + damage.expected;
   rt.endTick = Math.max(rt.endTick, event.tick + 1);
 
+  // Sacrifice: 25% of damage dealt as self-heal. Kill-blow 100% not modeled.
+  const sacrificeHeal =
+    event.abilityId === "sacrifice" && event.family !== "proc"
+      ? sacrificeExpectedHeal(damage.expected)
+      : 0;
+  if (sacrificeHeal > 0) rt.totalHealed += sacrificeHeal;
+
   if (keepsPerAbilityMap(rt.detailLevel)) {
     rt.perAbility[event.abilityId] = (rt.perAbility[event.abilityId] ?? 0) + damage.expected;
   }
@@ -48,6 +60,9 @@ export function recordEventAccounting(
     const record = rt.recordBySeq.get(event.sourceCast);
     if (record) {
       record.result.expected += damage.expected;
+      if (sacrificeHeal > 0) {
+        record.expectedHeal = (record.expectedHeal ?? 0) + sacrificeHeal;
+      }
       if (event.attached && event.blessingId) {
         record.result.min += damage.min;
         record.result.max += damage.max;
@@ -65,15 +80,22 @@ export function recordEventAccounting(
 
   const { resolve: _resolve, ...provenance } = event;
   const parasite = rt.state.target.melee.abyssalParasite;
-  const spirit = rt.spiritEventMeta.get(event.seq);
+  const spiritMeta = rt.spiritEventMeta.get(event.seq);
+  const commandConjureId = COMMAND_REQUIRES_CONJURE[event.abilityId];
+  const commandSpirit =
+    commandConjureId != null
+      ? findConjure(rt.state.necromancy.conjures, commandConjureId)
+      : undefined;
   const remainingTicks =
     event.bleedExpiresAtTick != null
       ? Math.max(0, event.bleedExpiresAtTick - event.tick)
       : event.abilityId === "abyssal_parasite"
         ? Math.max(0, parasite.expiresAtTick - event.tick)
-        : spirit
-          ? Math.max(0, spirit.untilTick - event.tick)
-          : undefined;
+        : spiritMeta
+          ? Math.max(0, spiritMeta.untilTick - event.tick)
+          : commandSpirit
+            ? Math.max(0, commandSpirit.untilTick - event.tick)
+            : undefined;
   noteHistoryEventsGrowth();
   rt.events.push({
     ...provenance,

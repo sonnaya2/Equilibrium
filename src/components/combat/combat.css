@@ -518,6 +518,18 @@ body:has(.combat-screen) {
   color: var(--combat-utility);
 }
 
+.ability-cat-chip--blessing {
+  border-color: color-mix(in srgb, var(--combat-gold-bright) 50%, transparent);
+  background: color-mix(in srgb, var(--combat-gold-dim) 55%, var(--combat-inset));
+  color: var(--combat-gold-bright);
+}
+
+.ability-cat-chip--conjure {
+  border-color: color-mix(in srgb, var(--combat-gem) 50%, transparent);
+  background: color-mix(in srgb, var(--combat-gem-dark) 40%, var(--combat-inset));
+  color: var(--combat-gem-bright);
+}
+
 .combat-detail {
   min-height: 0;
   overflow: hidden;

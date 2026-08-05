@@ -121,6 +121,16 @@ export interface SimulateInput {
    * Absent = engine default 0. Clamped 0..cap in createRuntime.
    */
   startingResidualSouls?: number;
+  /**
+   * Target is current Slayer assignment (Tuska's Wrath empowered path).
+   * Default / absent = off-task. Requires slayerLevel for empower; never invented.
+   */
+  slayerOnTask?: boolean;
+  /**
+   * Player Slayer level for Tuska empowered hit (100x, 15k cap).
+   * Only used when slayerOnTask is true; absent/invalid keeps off-task path.
+   */
+  slayerLevel?: number;
 }
 
 /**
@@ -192,6 +202,11 @@ export interface CastRecord {
   tick: number;
   abilityId: string;
   result: AbilityResult;
+  /**
+   * Expected self-heal from this cast (Sacrifice 25% of damage dealt).
+   * Kill-blow 100% not modeled. Absent when cast heals nothing.
+   */
+  expectedHeal?: number;
   /** After channel occupancy + completion effects (passive gen, etc.). */
   adrenalineAfter: number;
   adrenalineBefore: number;
@@ -492,6 +507,11 @@ export interface RotationSummary {
    * Never success-renormalized.
    */
   totalExpected: number;
+  /**
+   * Expected self-heal total (Sacrifice 25% of damage dealt).
+   * Kill-blow 100% not modeled. Not damage; does not affect DPS.
+   */
+  totalHealed: number;
   /**
    * @deprecated Prefer damage.supportMinDamage. Equals the true support lower
    * bound (not a weighted mean of path minima).

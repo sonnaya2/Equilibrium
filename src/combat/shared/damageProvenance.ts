@@ -5,7 +5,8 @@ import type { BleedId, CombatContext, DamageOverTimeKind, OutgoingDamageSource }
  * Serializable plain object for branch signatures / IPC.
  *
  * wiki: Full Slayer Helmet / Salve apply to player direct attacks only (not DoT, conjure, procs).
- * Blessings: riders on direct+DoT+command+conjure; on-hit rolls on direct only; no recursion on blessing dmg.
+ * Blessings: riders on direct+DoT+command+conjure+invention; on-hit rolls on direct only.
+ * Rider-only carve-out on Light/Inferno separate hits (see SEPARATE_BLESSING_RIDER_HOSTS); no BB-on-BB.
  * Abyssal Parasite stacks: only player_direct / player_auto (melee+passive gated at land).
  */
 
@@ -173,7 +174,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    // Crackling/Aftershock hit splats take BB/Cinders riders; no on-hit re-roll.
+    blessingRider: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,

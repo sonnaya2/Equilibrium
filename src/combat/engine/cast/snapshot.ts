@@ -30,4 +30,9 @@ export interface CastSnapshot {
   hauntedCapAd: number;
   /** Enduring Ruin's next-attack additive bonus captured for every hit in this cast. */
   enduringRuinBonus: number;
+  /**
+   * Tuska's Wrath on-task empowered flat damage (100x Slayer, 15k cap).
+   * Absent = off-task AD band path.
+   */
+  tuskasEmpoweredDamage?: number;
 }

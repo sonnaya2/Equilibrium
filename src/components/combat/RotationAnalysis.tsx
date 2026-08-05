@@ -11,9 +11,18 @@ import type {
 import type { CalcStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import {
+  conjureEventTypeLabel,
   formatRemainingDurationNote,
+  isConjureDamageEvent,
+  isConjureEffectRow,
   spiritEffectDisplayName,
 } from "./conjurePresentation";
+import {
+  blessingEffectDisplayName,
+  blessingEventTypeLabel,
+  isBlessingEffectRow,
+} from "./blessingPresentation";
+import { AbilityCategoryChip } from "./AbilityCategoryChip";
 
 const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
@@ -28,11 +37,6 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
 const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   aftershock: "Aftershock",
   crackling: "Crackling",
-  "big-boned": "Big Boned",
-  "abyssal-cinders": "Cinders",
-  "inferno-of-zamorak": "Inferno",
-  "light-of-saradomin": "Striking Light",
-  "grasp-of-guthix": "Grasp of Guthix",
 };
 
 /** Damage totals as whole numbers. */
@@ -49,7 +53,12 @@ const formatLiteral = (value: number) =>
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 function effectName(id: string, nameForId: (id: string) => string): string {
-  return PROCEDURAL_EFFECT_LABEL[id] ?? spiritEffectDisplayName(id) ?? nameForId(id);
+  return (
+    blessingEffectDisplayName(id) ??
+    PROCEDURAL_EFFECT_LABEL[id] ??
+    spiritEffectDisplayName(id) ??
+    nameForId(id)
+  );
 }
 
 /** Probability weight carried by an EV-scheduled event, when present. */
@@ -66,16 +75,17 @@ function isExpectedProcEvent(event: ResolvedEvent): boolean {
 }
 
 function eventType(event: ResolvedEvent): string {
+  // Blessing wins over Bonus / Attached / Expected proc so riders are not generic Hit.
+  const blessingType = blessingEventTypeLabel(event);
+  if (blessingType) return blessingType;
   if (event.damageTag === "bonus-damage") return "Bonus";
   if (event.attached) return "Attached bonus";
   if (isExpectedProcEvent(event)) return "Expected proc";
-  if (event.abilityId === "aftershock" || event.abilityId === "crackling") return "Perk proc";
+  if (event.abilityId === "aftershock" || event.abilityId === "crackling") return "Invention";
+  const conjureType = conjureEventTypeLabel(event);
+  if (conjureType) return conjureType;
   if (event.family === "dot") return event.dotKind ? `${event.dotKind} DoT` : "DoT";
-  if (event.family === "conjureAuto") return "Conjure auto";
-  if (event.family === "command") return "Conjure command";
-  if (event.family === "poison") return "Poison";
   if (event.family === "proc") return "Proc";
-  if (event.family === "blessing") return "Blessing";
   return "Hit";
 }
 
@@ -225,8 +235,13 @@ function EventTable({
                   </span>
                 </td>
                 <td className="py-1.5 pr-3 text-parch-50">
-                  {effectName(event.abilityId, nameForId)}
-                  {parent ? <span className="ml-1.5 text-parch-300">on {parent}</span> : null}
+                  <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <span>{effectName(event.abilityId, nameForId)}</span>
+                    {isConjureDamageEvent(event) ? (
+                      <AbilityCategoryChip category="conjure" />
+                    ) : null}
+                    {parent ? <span className="text-parch-300">on {parent}</span> : null}
+                  </span>
                 </td>
                 <td className="whitespace-nowrap py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
                 <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-300">
@@ -256,7 +271,10 @@ function EventTable({
                     <span className="ml-2">{event.stackCount} stacks</span>
                   ) : null}
                   {event.remainingTicks != null ? (
-                    <span className="ml-2">
+                    <span
+                      className="ml-2 font-mono text-[11px] text-parch-300"
+                      title="Remaining summon / effect life at this land"
+                    >
                       {formatRemainingDurationNote(event.tick, event.remainingTicks)}
                     </span>
                   ) : null}
@@ -372,8 +390,19 @@ export function RotationAnalysisModal({
                 <div
                   key={row.kind}
                   className="flex justify-between gap-4 border-b border-stone-750/70 py-2 text-xs"
+                  data-source-kind={row.kind}
                 >
-                  <span className="text-parch-100">{SOURCE_LABEL[row.kind]}</span>
+                  <span
+                    className={
+                      row.kind === "league-blessing"
+                        ? "text-gold-400"
+                        : row.kind === "conjure-or-familiar"
+                          ? "text-gem-300"
+                          : "text-parch-100"
+                    }
+                  >
+                    {SOURCE_LABEL[row.kind]}
+                  </span>
                   <span className="font-mono text-parch-50">{formatNumber(row.damage)}</span>
                 </div>
               ))}
@@ -433,10 +462,19 @@ export function RotationAnalysisModal({
                 </thead>
                 <tbody>
                   {result.analysis.byEffect.map((effect) => (
-                    <tr key={effect.id} className="border-b border-stone-750/70">
+                    <tr
+                      key={effect.id}
+                      className="border-b border-stone-750/70"
+                      data-effect-kind={effect.kind}
+                    >
                       <td className="py-1.5 pr-3 text-parch-50">
-                        <span className="inline-flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                        <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                           <span>{effectName(effect.id, nameForId)}</span>
+                          {isBlessingEffectRow(effect.id, effect.kind) ? (
+                            <AbilityCategoryChip category="blessing" />
+                          ) : isConjureEffectRow(effect.id, effect.kind) ? (
+                            <AbilityCategoryChip category="conjure" />
+                          ) : null}
                           {/* DoT badge only for real DoT; rider-only skills use Bonus column. */}
                           {effect.dotDamage > 0 ? (
                             <span className="whitespace-nowrap text-parch-300">DoT</span>

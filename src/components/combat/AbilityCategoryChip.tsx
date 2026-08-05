@@ -1,11 +1,25 @@
 import { abilityCategoryLabel } from "@/lib/gameArt";
 
-/** Compact category chip - basics blue, thresholds purple, ultimates red. */
+/** Compact category chip - basics blue, thresholds purple, ultimates red, blessings gold, conjures gem. */
 export function AbilityCategoryChip({
   category,
 }: {
-  category: "basic" | "enhanced" | "ultimate" | "utility" | string;
+  category: "basic" | "enhanced" | "ultimate" | "utility" | "blessing" | "conjure" | string;
 }) {
+  if (category === "blessing") {
+    return (
+      <span className="ability-cat-chip ability-cat-chip--blessing" data-category="blessing">
+        Blessing
+      </span>
+    );
+  }
+  if (category === "conjure") {
+    return (
+      <span className="ability-cat-chip ability-cat-chip--conjure" data-category="conjure">
+        Conjure
+      </span>
+    );
+  }
   const label = abilityCategoryLabel(category);
   const kind =
     category === "enhanced" || label === "threshold"

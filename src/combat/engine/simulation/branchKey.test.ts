@@ -1081,6 +1081,233 @@ describe("branchKey structural vs JSON partitions", () => {
     b.hitDetails.set(0, { ...hit, expected: 99 });
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
   });
+
+  it("equivalent pending graphs with different absolute seqs merge (structural + JSON)", () => {
+    const hit = {
+      potential: 100,
+      min: 10,
+      max: 20,
+      critMin: 15,
+      critMax: 30,
+      critChance: 0.1,
+      nonCritExpected: 15,
+      critExpected: 22.5,
+      expected: 15.75,
+      uncappedExpected: 15.75,
+      capLoss: 0,
+    };
+    const mk = (parentSeq: number, childSeq: number, cast: number) => {
+      const rt = createRuntime(meleeInput);
+      rt.hitDetails.set(parentSeq, hit);
+      enqueueEvent(rt, {
+        tick: 5,
+        seq: parentSeq,
+        family: "hit",
+        abilityId: "bloat",
+        sourceCast: cast,
+        hitIndex: 0,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        provenance: { kind: "player_direct" },
+        castSnap: {
+          castSeq: cast,
+          critLayers: { chance: 0 },
+          baseMods: [],
+          chaosRoarActive: false,
+          channelled: false,
+          greaterFuryActive: false,
+          furyActive: false,
+          firstEligibleHitIndex: 0,
+          empowerMult: 1,
+          searingWindsAtCast: false,
+          hauntedAtCast: false,
+          hauntedCapAd: 0,
+          enduringRuinBonus: 0,
+        },
+        resolve: noop,
+      });
+      enqueueEvent(rt, {
+        tick: 8,
+        seq: childSeq,
+        family: "dot",
+        abilityId: "bloat",
+        sourceCast: cast,
+        hitIndex: 1,
+        attached: false,
+        procEligible: false,
+        recursionAllowed: false,
+        derivedFrom: parentSeq,
+        provenance: { kind: "derived_tail", detail: "bloat" },
+        resolve: noop,
+      });
+      rt.nextSeq = childSeq + 1;
+      rt.nextCastSeq = cast + 1;
+      return rt;
+    };
+    const a = mk(2, 3, 1);
+    const b = mk(20, 21, 7);
+    expect(a.queue.signature()).toBe(b.queue.signature());
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    expect(mergeBranches([{ weight: 0.4, rt: a }, { weight: 0.6, rt: b }])).toHaveLength(1);
+  });
+
+  it("different derivedFrom relative graphs still split after seq rank normalize", () => {
+    const hit = {
+      potential: 50,
+      min: 5,
+      max: 10,
+      critMin: 5,
+      critMax: 10,
+      critChance: 0,
+      nonCritExpected: 7.5,
+      critExpected: 7.5,
+      expected: 7.5,
+      uncappedExpected: 7.5,
+      capLoss: 0,
+    };
+    const fromFirst = createRuntime(meleeInput);
+    fromFirst.hitDetails.set(1, hit);
+    fromFirst.hitDetails.set(2, { ...hit, expected: 9 });
+    enqueueEvent(fromFirst, {
+      tick: 1,
+      seq: 1,
+      family: "hit",
+      abilityId: "h0",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      provenance: { kind: "player_direct" },
+      resolve: noop,
+    });
+    enqueueEvent(fromFirst, {
+      tick: 1,
+      seq: 2,
+      family: "hit",
+      abilityId: "h1",
+      sourceCast: 0,
+      hitIndex: 1,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      provenance: { kind: "player_direct" },
+      resolve: noop,
+    });
+    enqueueEvent(fromFirst, {
+      tick: 4,
+      seq: 3,
+      family: "dot",
+      abilityId: "tail",
+      sourceCast: 0,
+      hitIndex: 2,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: 1,
+      provenance: { kind: "derived_tail", detail: "tail" },
+      resolve: noop,
+    });
+    const fromSecond = snapshotRuntime(fromFirst);
+    // Replace tail to derive from second parent instead of first.
+    fromSecond.queue.shift();
+    fromSecond.queue.shift();
+    fromSecond.queue.shift();
+    enqueueEvent(fromSecond, {
+      tick: 1,
+      seq: 1,
+      family: "hit",
+      abilityId: "h0",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      provenance: { kind: "player_direct" },
+      resolve: noop,
+    });
+    enqueueEvent(fromSecond, {
+      tick: 1,
+      seq: 2,
+      family: "hit",
+      abilityId: "h1",
+      sourceCast: 0,
+      hitIndex: 1,
+      attached: false,
+      procEligible: true,
+      recursionAllowed: false,
+      provenance: { kind: "player_direct" },
+      resolve: noop,
+    });
+    enqueueEvent(fromSecond, {
+      tick: 4,
+      seq: 3,
+      family: "dot",
+      abilityId: "tail",
+      sourceCast: 0,
+      hitIndex: 2,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: 2,
+      provenance: { kind: "derived_tail", detail: "tail" },
+      resolve: noop,
+    });
+    expect(fromFirst.queue.signature()).not.toBe(fromSecond.queue.signature());
+    expect(branchKeyStructural(fromFirst)).not.toBe(branchKeyStructural(fromSecond));
+    expect(branchKeyJson(fromFirst)).not.toBe(branchKeyJson(fromSecond));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: fromFirst }, { weight: 0.5, rt: fromSecond }]),
+    ).toHaveLength(2);
+  });
+
+  it("historical derivedFrom + hitDetails with different abs seqs merge when content matches", () => {
+    const hit = {
+      potential: 100,
+      min: 10,
+      max: 20,
+      critMin: 15,
+      critMax: 30,
+      critChance: 0,
+      nonCritExpected: 15,
+      critExpected: 22.5,
+      expected: 15,
+      uncappedExpected: 15,
+      capLoss: 0,
+    };
+    const mk = (histSeq: number, childSeq: number) => {
+      const rt = createRuntime(meleeInput);
+      rt.hitDetails.set(histSeq, hit);
+      enqueueEvent(rt, {
+        tick: 8,
+        seq: childSeq,
+        family: "dot",
+        abilityId: "dismember",
+        sourceCast: 0,
+        hitIndex: 0,
+        attached: false,
+        procEligible: false,
+        recursionAllowed: false,
+        derivedFrom: histSeq,
+        provenance: { kind: "derived_tail", detail: "dismember" },
+        resolve: noop,
+      });
+      rt.nextSeq = childSeq + 1;
+      return rt;
+    };
+    const a = mk(3, 10);
+    const b = mk(30, 100);
+    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+
+    const c = mk(3, 10);
+    c.hitDetails.set(3, { ...hit, expected: 99 });
+    expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(c));
+  });
+
   it("structural keys are much shorter than JSON on a post-cast runtime", () => {
     const rt = createRuntime(meleeInput);
     castN(rt, 4);

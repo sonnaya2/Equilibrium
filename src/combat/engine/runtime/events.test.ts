@@ -65,12 +65,25 @@ const event = (over: Partial<ScheduledEvent>): ScheduledEvent => ({
 });
 
 describe("branch equivalence signature", () => {
-  it("distinguishes tails derived from different source hits", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ derivedFrom: 4 }));
-    b.push(event({ derivedFrom: 9 }));
-    expect(a.signature()).not.toBe(b.signature());
+  it("distinguishes tails derived from different relative source hits", () => {
+    // Single historical derivedFrom refs rank to the same h0 slot; absolute
+    // source identity is carried by hitDetails in the branch key, not here.
+    const loneA = new EventQueue();
+    const loneB = new EventQueue();
+    loneA.push(event({ derivedFrom: 4 }));
+    loneB.push(event({ derivedFrom: 9 }));
+    expect(loneA.signature()).toBe(loneB.signature());
+
+    // Multi-parent relative graph still splits (tail from first vs second).
+    const fromFirst = new EventQueue();
+    fromFirst.push(event({ seq: 1, hitIndex: 0 }));
+    fromFirst.push(event({ seq: 2, hitIndex: 1 }));
+    fromFirst.push(event({ seq: 3, derivedFrom: 1, hitIndex: 2 }));
+    const fromSecond = new EventQueue();
+    fromSecond.push(event({ seq: 10, hitIndex: 0 }));
+    fromSecond.push(event({ seq: 11, hitIndex: 1 }));
+    fromSecond.push(event({ seq: 12, derivedFrom: 11, hitIndex: 2 }));
+    expect(fromFirst.signature()).not.toBe(fromSecond.signature());
   });
 
   it("distinguishes an owned event from an unowned one", () => {
@@ -154,12 +167,12 @@ describe("branch equivalence signature", () => {
   it("covers every provenance field the resolver can branch on", () => {
     const base = new EventQueue();
     base.push(event({}));
+    // Absolute seq / lone sourceCast are key-ranked within the pending set, so a
+    // single-event queue with only those absolute ids changed is still equivalent.
     const variants: Partial<ScheduledEvent>[] = [
       { tick: 1 },
-      { seq: 1 },
       { family: "dot" },
       { abilityId: "b" },
-      { sourceCast: 1 },
       { hitIndex: 1 },
       { attached: true },
       { procEligible: false },
@@ -188,6 +201,97 @@ describe("branch equivalence signature", () => {
       other.push(event(over));
       expect(other.signature(), JSON.stringify(over)).not.toBe(base.signature());
     }
+  });
+
+  it("absolute seq alone does not split single-event queue keys", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    a.push(event({ seq: 3 }));
+    b.push(event({ seq: 99 }));
+    expect(a.signature()).toBe(b.signature());
+  });
+
+  it("equivalent futures with different absolute seqs merge after rank normalize", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    // Same relative graph: parent hit + derived tail, different drained-history seqs.
+    a.push(event({ tick: 5, seq: 10, abilityId: "bloat", sourceCast: 2, cancelOwner: 2 }));
+    a.push(
+      event({
+        tick: 7,
+        seq: 11,
+        family: "dot",
+        abilityId: "bloat",
+        sourceCast: 2,
+        cancelOwner: 2,
+        derivedFrom: 10,
+        hitIndex: 1,
+      }),
+    );
+    b.push(event({ tick: 5, seq: 40, abilityId: "bloat", sourceCast: 9, cancelOwner: 9 }));
+    b.push(
+      event({
+        tick: 7,
+        seq: 41,
+        family: "dot",
+        abilityId: "bloat",
+        sourceCast: 9,
+        cancelOwner: 9,
+        derivedFrom: 40,
+        hitIndex: 1,
+      }),
+    );
+    expect(a.signature()).toBe(b.signature());
+  });
+
+  it("different relative derivedFrom graphs still split after rank normalize", () => {
+    const linked = new EventQueue();
+    const cross = new EventQueue();
+    const histA = new EventQueue();
+    const histB = new EventQueue();
+    // Two pending hits; tail derives from first vs second.
+    linked.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
+    linked.push(
+      event({ tick: 2, seq: 2, abilityId: "tail", derivedFrom: 1, hitIndex: 1 }),
+    );
+    cross.push(event({ tick: 1, seq: 10, abilityId: "h0", hitIndex: 0 }));
+    cross.push(
+      event({ tick: 2, seq: 11, abilityId: "tail", derivedFrom: 10, hitIndex: 1 }),
+    );
+    // Same absolute relative as linked after rank (both derive from rank 0).
+    expect(linked.signature()).toBe(cross.signature());
+
+    // Cross-edge: second derives from a different pending parent than first-only.
+    const twoParents = new EventQueue();
+    twoParents.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
+    twoParents.push(event({ tick: 1, seq: 2, abilityId: "h1", hitIndex: 1 }));
+    twoParents.push(
+      event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 2, hitIndex: 2 }),
+    );
+    const firstParent = new EventQueue();
+    firstParent.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
+    firstParent.push(event({ tick: 1, seq: 2, abilityId: "h1", hitIndex: 1 }));
+    firstParent.push(
+      event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 1, hitIndex: 2 }),
+    );
+    expect(twoParents.signature()).not.toBe(firstParent.signature());
+
+    // Distinct historical derivedFrom identity among multi-ref queues.
+    histA.push(event({ tick: 4, seq: 1, derivedFrom: 100 }));
+    histA.push(event({ tick: 5, seq: 2, derivedFrom: 200 }));
+    histB.push(event({ tick: 4, seq: 10, derivedFrom: 100 }));
+    histB.push(event({ tick: 5, seq: 11, derivedFrom: 100 }));
+    expect(histA.signature()).not.toBe(histB.signature());
+  });
+
+  it("different relative sourceCast ownership still splits", () => {
+    const sameOwner = new EventQueue();
+    const splitOwner = new EventQueue();
+    sameOwner.push(event({ seq: 1, sourceCast: 5, cancelOwner: 5, hitIndex: 0 }));
+    sameOwner.push(event({ seq: 2, sourceCast: 5, cancelOwner: 5, hitIndex: 1 }));
+    splitOwner.push(event({ seq: 1, sourceCast: 5, cancelOwner: 5, hitIndex: 0 }));
+    splitOwner.push(event({ seq: 2, sourceCast: 6, cancelOwner: 6, hitIndex: 1 }));
+    expect(sameOwner.signature()).not.toBe(splitOwner.signature());
   });
 
   it("a clone keeps the same signature and cancels independently", () => {

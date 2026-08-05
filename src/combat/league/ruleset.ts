@@ -32,10 +32,11 @@ export interface LeagueLoadout {
 /** Big Boned 5% max-life outgoing rider is always on when picked (no opt-out). */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
   "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as crit-eligible bonus damage attached to the parent hit",
-  "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
+  // Rider recursion: Light/Inferno unique hits take BB only (not Cinders 15% - those are not abilities).
+  "Also rides separate blessing hits (Light of Saradomin, Inferno of Zamorak); never rides attached riders (no BB-on-BB); no on-hit re-roll on those hits",
   "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
-  // Shared blessingRider with Cinders: player direct/DoT/command + conjure auto/poison; no on-hit rolls on conjure.
-  "Rides conjure auto and poison (same blessingRider gate as Abyssal Cinders); Inferno/Light stay direct-only",
+  // BB shares host gate with Cinders except Light/Inferno (BB only). Cinders 15% is AD base, not hit+BB.
+  "Rides conjure auto/poison and invention hit splats (Crackling/Aftershock); Inferno/Light on-hit rolls stay direct-only",
   "Still unverified vs live: crit eligibility, Reflect, hit-cap treatment, exact formula stage",
 ] as const;
 

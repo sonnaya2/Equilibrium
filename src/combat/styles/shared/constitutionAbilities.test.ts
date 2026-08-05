@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { allEngineSpecs, engineSpecs, engineSpecsForStyle } from "../../abilities/registry";
 import { secondsToTicks } from "../../core/ticks";
 import { resolveBarSlot } from "../../data/specs";
-import { createCastContext } from "../../engine/simulation/simulate";
+import { createCastContext, simulate } from "../../engine/simulation/simulate";
+import { rotationOf } from "../../engine/simulation/contracts";
 import { calculateAbility } from "../../pipeline/calculateAbility";
 import { buildCandidatePool } from "../../solver/candidatePool";
 import { baseInput } from "../../test/fixtures/inputs";
@@ -10,8 +11,16 @@ import {
   abilityStyleForBar,
   isSharedConstitutionAbilityId,
   SACRIFICE,
+  SACRIFICE_HEAL_FRACTION,
+  sacrificeExpectedHeal,
   SHARED_CONSTITUTION_ABILITIES,
+  TUSKAS_EMPOWERED_COOLDOWN_SECONDS,
+  TUSKAS_EMPOWERED_HIT_CAP,
+  TUSKAS_EMPOWERED_SLAYER_MULT,
+  TUSKAS_OFF_TASK_COOLDOWN_SECONDS,
   TUSKAS_WRATH,
+  tuskasEmpoweredActive,
+  tuskasEmpoweredDamage,
 } from "./constitutionAbilities";
 
 const STYLES = ["melee", "ranged", "magic", "necromancy"] as const;
@@ -36,13 +45,39 @@ describe("shared constitution abilities", () => {
     expect(SACRIFICE.cooldownSeconds).toBe(30);
     expect(SACRIFICE.supportStatus).toBeUndefined();
     expect(SACRIFICE.supportNote).toMatch(/heal/i);
+    expect(SACRIFICE.supportNote).toMatch(/kill-blow/i);
 
     expect(TUSKAS_WRATH.category).toBe("basic");
     expect(TUSKAS_WRATH.hits).toEqual([{ band: { minPct: 75, maxPct: 85 } }]);
     expect(TUSKAS_WRATH.adrenaline).toEqual({ gain: 9 });
-    expect(TUSKAS_WRATH.cooldownSeconds).toBe(15);
+    expect(TUSKAS_WRATH.cooldownSeconds).toBe(TUSKAS_OFF_TASK_COOLDOWN_SECONDS);
     expect(TUSKAS_WRATH.supportStatus).toBeUndefined();
     expect(TUSKAS_WRATH.supportNote).toMatch(/on-task/i);
+    expect(TUSKAS_WRATH.supportNote).toMatch(/slayerOnTask/i);
+  });
+
+  it("sacrificeExpectedHeal is 25% floored; never invents kill-blow", () => {
+    expect(SACRIFICE_HEAL_FRACTION).toBe(0.25);
+    expect(sacrificeExpectedHeal(700)).toBe(175);
+    expect(sacrificeExpectedHeal(701)).toBe(175);
+    expect(sacrificeExpectedHeal(0)).toBe(0);
+    expect(sacrificeExpectedHeal(-10)).toBe(0);
+    expect(sacrificeExpectedHeal(Number.NaN)).toBe(0);
+  });
+
+  it("tuskasEmpoweredDamage is 100x Slayer capped at 15k; no invented level", () => {
+    expect(TUSKAS_EMPOWERED_SLAYER_MULT).toBe(100);
+    expect(TUSKAS_EMPOWERED_HIT_CAP).toBe(15_000);
+    expect(tuskasEmpoweredDamage(99)).toBe(9900);
+    expect(tuskasEmpoweredDamage(120)).toBe(12_000);
+    expect(tuskasEmpoweredDamage(200)).toBe(15_000);
+    expect(tuskasEmpoweredDamage(undefined)).toBe(0);
+    expect(tuskasEmpoweredDamage(null)).toBe(0);
+    expect(tuskasEmpoweredDamage(0)).toBe(0);
+    expect(tuskasEmpoweredActive({ slayerOnTask: true, slayerLevel: 99 })).toBe(true);
+    expect(tuskasEmpoweredActive({ slayerOnTask: true })).toBe(false);
+    expect(tuskasEmpoweredActive({ slayerLevel: 99 })).toBe(false);
+    expect(tuskasEmpoweredActive({})).toBe(false);
   });
 
   it("remaps style per bar without cloning engine id", () => {
@@ -125,7 +160,7 @@ describe("shared constitution abilities", () => {
     expect(byEngineId.spec?.style).toBe("necromancy");
   });
 
-  it("casts once and applies 15s (25 tick) cooldown", () => {
+  it("casts once and applies 15s (25 tick) cooldown off-task", () => {
     const stamped = abilityStyleForBar(TUSKAS_WRATH, "melee");
     const ctx = createCastContext({
       ...baseInput,
@@ -138,5 +173,91 @@ describe("shared constitution abilities", () => {
     const summary = ctx.finish();
     expect(summary.ok).toBe(true);
     expect(summary.casts.some((c) => c.abilityId === "tuskas_wrath")).toBe(true);
+  });
+
+  it("sacrifice heals 25% of damage dealt on cast / totalHealed", () => {
+    const stamped = abilityStyleForBar(SACRIFICE, "melee");
+    const summary = simulate({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      rotation: rotationOf("sacrifice"),
+    });
+    expect(summary.ok, summary.error).toBe(true);
+    const cast = summary.casts.find((c) => c.abilityId === "sacrifice");
+    expect(cast).toBeDefined();
+    // base 1000, 65-75% band, accuracy 1, no crit -> expected 700.
+    expect(cast!.result.expected).toBe(700);
+    expect(cast!.expectedHeal).toBe(sacrificeExpectedHeal(700));
+    expect(cast!.expectedHeal).toBe(175);
+    expect(summary.totalHealed).toBe(175);
+    expect(summary.totalHealed).toBe(sacrificeExpectedHeal(summary.perAbility.sacrifice!));
+  });
+
+  it("tuskas on-task uses 100x Slayer, 15k cap, and 120s CD", () => {
+    const stamped = abilityStyleForBar(TUSKAS_WRATH, "melee");
+    const summary = simulate({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      rotation: rotationOf("tuskas_wrath"),
+      slayerOnTask: true,
+      slayerLevel: 99,
+    });
+    expect(summary.ok, summary.error).toBe(true);
+    const cast = summary.casts.find((c) => c.abilityId === "tuskas_wrath");
+    expect(cast).toBeDefined();
+    expect(cast!.result.expected).toBe(9900);
+    expect(cast!.result.min).toBe(9900);
+    expect(cast!.result.max).toBe(9900);
+    expect(summary.perAbility.tuskas_wrath).toBe(9900);
+
+    const ctx = createCastContext({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      slayerOnTask: true,
+      slayerLevel: 99,
+    });
+    expect(ctx.performCast(ctx.byId.get("tuskas_wrath")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.tuskas_wrath).toBe(
+      secondsToTicks(TUSKAS_EMPOWERED_COOLDOWN_SECONDS),
+    );
+    expect(secondsToTicks(TUSKAS_EMPOWERED_COOLDOWN_SECONDS)).toBe(200);
+  });
+
+  it("tuskas on-task without slayerLevel stays off-task (no invented level)", () => {
+    const stamped = abilityStyleForBar(TUSKAS_WRATH, "melee");
+    const summary = simulate({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      rotation: rotationOf("tuskas_wrath"),
+      slayerOnTask: true,
+      // slayerLevel omitted intentionally
+    });
+    expect(summary.ok, summary.error).toBe(true);
+    const cast = summary.casts.find((c) => c.abilityId === "tuskas_wrath");
+    expect(cast).toBeDefined();
+    // base 1000, 75-85% band -> expected 800.
+    expect(cast!.result.expected).toBe(800);
+
+    const ctx = createCastContext({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      slayerOnTask: true,
+    });
+    expect(ctx.performCast(ctx.byId.get("tuskas_wrath")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.tuskas_wrath).toBe(secondsToTicks(15));
+  });
+
+  it("tuskas empowered damage is capped at 15k", () => {
+    const stamped = abilityStyleForBar(TUSKAS_WRATH, "melee");
+    const summary = simulate({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      rotation: rotationOf("tuskas_wrath"),
+      slayerOnTask: true,
+      slayerLevel: 200,
+    });
+    expect(summary.ok, summary.error).toBe(true);
+    const cast = summary.casts.find((c) => c.abilityId === "tuskas_wrath");
+    expect(cast!.result.expected).toBe(TUSKAS_EMPOWERED_HIT_CAP);
   });
 });

@@ -28,6 +28,21 @@ const TUSKAS_WRATH_WIKI: SourceReference = {
 /** Registry / catalogue placeholder style; remapped per bar and candidate pool. */
 const SHARED_PLACEHOLDER_STYLE: CombatStyle = "melee";
 
+/** Wiki: heals for 25% of damage dealt (100% on killing blow - not modeled). */
+export const SACRIFICE_HEAL_FRACTION = 0.25;
+
+/** Wiki: empowered hit = 10,000% (100x) Slayer level. */
+export const TUSKAS_EMPOWERED_SLAYER_MULT = 100;
+
+/** Wiki: empowered Tuska hit cap is 15,000 (not the standard 30k). */
+export const TUSKAS_EMPOWERED_HIT_CAP = 15_000;
+
+/** Wiki: empowered-effect cooldown when on task. */
+export const TUSKAS_EMPOWERED_COOLDOWN_SECONDS = 120;
+
+/** Wiki: off-task / non-empowered ability cooldown. */
+export const TUSKAS_OFF_TASK_COOLDOWN_SECONDS = 15;
+
 export const SACRIFICE: AbilitySpec = {
   // Wiki Sacrifice: 65-75% AD, +9% adren, 30s CD (50 ticks).
   id: "sacrifice",
@@ -38,21 +53,21 @@ export const SACRIFICE: AbilitySpec = {
   adrenaline: { gain: 9 },
   cooldownSeconds: 30,
   supportNote:
-    "TODO: heal 25% of damage dealt (100% on killing blow) not modeled; damage and CD are.",
+    "Heal 25% of damage dealt (expectedHeal / totalHealed). Kill-blow 100% heal not modeled.",
 };
 
 export const TUSKAS_WRATH: AbilitySpec = {
   // Wiki Tuska's Wrath off-task: 75-85% AD, +9% adren, 15s CD (25 ticks).
-  // On-task empowered: 10000% of Slayer level, 15k hit cap, 120s empowered CD - not modeled.
+  // On-task: needs SimulateInput.slayerOnTask + slayerLevel (never invented).
   id: "tuskas_wrath",
   name: "Tuska's Wrath",
   style: SHARED_PLACEHOLDER_STYLE,
   category: "basic",
   hits: [{ band: { minPct: 75, maxPct: 85 } }],
   adrenaline: { gain: 9 },
-  cooldownSeconds: 15,
+  cooldownSeconds: TUSKAS_OFF_TASK_COOLDOWN_SECONDS,
   supportNote:
-    "TODO: on-task empowered hit (100x Slayer level, 15k cap, 120s empowered CD) not modeled; damage and CD are.",
+    "Default off-task: 75-85% AD, 15s CD. On-task when slayerOnTask + slayerLevel: 100x Slayer level (15k cap), 120s CD. Flat formula (no AD mods). Dual empowered/off-task CD while empowered is on CD not modeled.",
 };
 
 export const SHARED_CONSTITUTION_ABILITIES: readonly AbilitySpec[] = [SACRIFICE, TUSKAS_WRATH];
@@ -67,6 +82,29 @@ export function isSharedConstitutionAbilityId(id: string): boolean {
 export function abilityStyleForBar(spec: AbilitySpec, barStyle: CombatStyle): AbilitySpec {
   if (!isSharedConstitutionAbilityId(spec.id) || spec.style === barStyle) return spec;
   return { ...spec, style: barStyle };
+}
+
+/** Expected self-heal from Sacrifice damage dealt (kill-blow 100% not modeled). */
+export function sacrificeExpectedHeal(damageDealt: number): number {
+  if (!Number.isFinite(damageDealt) || damageDealt <= 0) return 0;
+  return Math.floor(damageDealt * SACRIFICE_HEAL_FRACTION);
+}
+
+/**
+ * Empowered Tuska damage from Slayer level: min(100 * level, 15000).
+ * Returns 0 when level is missing/invalid so callers never invent a level.
+ */
+export function tuskasEmpoweredDamage(slayerLevel: number | undefined | null): number {
+  if (slayerLevel == null || !Number.isFinite(slayerLevel) || slayerLevel <= 0) return 0;
+  return Math.min(Math.floor(slayerLevel) * TUSKAS_EMPOWERED_SLAYER_MULT, TUSKAS_EMPOWERED_HIT_CAP);
+}
+
+/** True when sim input opts into on-task empower and supplies a usable Slayer level. */
+export function tuskasEmpoweredActive(input: {
+  slayerOnTask?: boolean;
+  slayerLevel?: number;
+}): boolean {
+  return input.slayerOnTask === true && tuskasEmpoweredDamage(input.slayerLevel) > 0;
 }
 
 /** Wiki provenance for tests / tooling (AbilitySpec has no required source field). */

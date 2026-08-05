@@ -29,44 +29,71 @@ const cindersRiders = (summary: ReturnType<typeof simulate>) =>
 
 const ranged = (id: string) => RANGED_ABILITIES.find((ability) => ability.id === id)!;
 
+const closed = { rider: false, cindersRider: false, onHit: false } as const;
+const ridersNoOnHit = { rider: true, cindersRider: true, onHit: false } as const;
+const ridersAndOnHit = { rider: true, cindersRider: true, onHit: true } as const;
+/** Light/Inferno unique hits: BB yes, Cinders 15% no (not abilities). */
+const bbOnlyNoOnHit = { rider: true, cindersRider: false, onHit: false } as const;
+
 describe("Abyssal Cinders eligibility policy", () => {
-  it("gives direct hits both the rider and the on-hit roll", () => {
-    expect(blessingHitEligibility("direct", false)).toEqual({ rider: true, onHit: true });
+  it("gives direct hits both riders and the on-hit roll", () => {
+    expect(blessingHitEligibility("direct", false)).toEqual(ridersAndOnHit);
   });
 
-  it("gives a damage-over-time tick the rider but no on-hit roll", () => {
-    expect(blessingHitEligibility("dot", false)).toEqual({ rider: true, onHit: false });
+  it("gives a damage-over-time tick the riders but no on-hit roll", () => {
+    expect(blessingHitEligibility("dot", false)).toEqual(ridersNoOnHit);
   });
 
-  it("gives a conjure command the rider but no on-hit roll", () => {
-    expect(blessingHitEligibility("command", false)).toEqual({ rider: true, onHit: false });
+  it("gives a conjure command the riders but no on-hit roll", () => {
+    expect(blessingHitEligibility("command", false)).toEqual(ridersNoOnHit);
   });
 
-  it("gives conjure auto/poison the rider but no on-hit roll", () => {
-    expect(blessingHitEligibility("conjure", false)).toEqual({ rider: true, onHit: false });
-    expect(blessingHitEligibility({ kind: "conjure_auto" }, false)).toEqual({
-      rider: true,
-      onHit: false,
-    });
-    expect(blessingHitEligibility({ kind: "conjure_poison" }, false)).toEqual({
-      rider: true,
-      onHit: false,
-    });
+  it("gives conjure auto/poison the riders but no on-hit roll", () => {
+    expect(blessingHitEligibility("conjure", false)).toEqual(ridersNoOnHit);
+    expect(blessingHitEligibility({ kind: "conjure_auto" }, false)).toEqual(ridersNoOnHit);
+    expect(blessingHitEligibility({ kind: "conjure_poison" }, false)).toEqual(ridersNoOnHit);
   });
 
+  it("gives invention procs (Crackling/Aftershock) the riders but no on-hit roll", () => {
+    expect(blessingHitEligibility({ kind: "invention_proc" }, false)).toEqual(ridersNoOnHit);
+    expect(blessingHitEligibility({ kind: "invention_proc", detail: "crackling" }, false)).toEqual(
+      ridersNoOnHit,
+    );
+    expect(blessingHitEligibility({ kind: "invention_proc", detail: "aftershock" }, false)).toEqual(
+      ridersNoOnHit,
+    );
+  });
+
+  // Legacy string "proc" maps to equipment_proc (still closed). Invention uses kind invention_proc.
   it.each(["proc", "blessing"] as const)("excludes %s damage entirely", (source) => {
-    expect(blessingHitEligibility(source, false)).toEqual({ rider: false, onHit: false });
+    expect(blessingHitEligibility(source, false)).toEqual(closed);
   });
 
   it("excludes attached components whatever their source, so hit counts stay honest", () => {
     for (const source of ["direct", "dot", "command", "conjure"] as const) {
-      expect(blessingHitEligibility(source, true)).toEqual({ rider: false, onHit: false });
+      expect(blessingHitEligibility(source, true)).toEqual(closed);
     }
   });
 
-  it("cannot recurse: blessing damage never generates more blessing damage", () => {
-    expect(blessingHitEligibility("blessing", false)).toEqual({ rider: false, onHit: false });
-    expect(blessingHitEligibility("blessing", true)).toEqual({ rider: false, onHit: false });
+  it("cannot recurse onto generic blessing damage or attached riders", () => {
+    expect(blessingHitEligibility("blessing", false)).toEqual(closed);
+    expect(blessingHitEligibility("blessing", true)).toEqual(closed);
+    expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual(closed);
+    expect(blessingHitEligibility({ kind: "blessing", detail: "abyssal-cinders" }, false)).toEqual(
+      closed,
+    );
+    expect(
+      blessingHitEligibility({ kind: "blessing", detail: "light-of-saradomin" }, true),
+    ).toEqual(closed);
+  });
+
+  it("Light/Inferno unique hits get Big Boned only (no Cinders 15%, no on-hit re-roll)", () => {
+    expect(
+      blessingHitEligibility({ kind: "blessing", detail: "light-of-saradomin" }, false),
+    ).toEqual(bbOnlyNoOnHit);
+    expect(
+      blessingHitEligibility({ kind: "blessing", detail: "inferno-of-zamorak" }, false),
+    ).toEqual(bbOnlyNoOnHit);
   });
 });
 
@@ -79,6 +106,7 @@ describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
       rotation: rotationOf("attack"),
     });
     expect(infernoApplications(summary)).toBeCloseTo(0.05, 10);
+    // Cinders 15% on the ability hit only (not on Inferno - not an ability).
     expect(cindersRiders(summary)).toBe(1);
   });
 
@@ -104,6 +132,7 @@ describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
       rotation: rotationOf("greater_ricochet"),
     });
     expect(infernoApplications(summary)).toBeCloseTo(0.35, 10);
+    // One Cinders 15% attached rider per GR hit; Inferno is a unique hit without Cinders.
     expect(cindersRiders(summary)).toBe(7);
   });
 
@@ -132,10 +161,11 @@ describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
     });
     const directHits = dismember.hits.length - dotTicks;
     expect(infernoApplications(summary)).toBeCloseTo(0.05 * directHits, 10);
+    // Cinders 15% on every dismember hit (including DoT ticks); none on Inferno.
     expect(cindersRiders(summary)).toBe(dismember.hits.length);
   });
 
-  it("never lets Inferno or the rider generate further blessing damage", () => {
+  it("Inferno is a unique hit: no Cinders 15%, no Inferno-on-Inferno cascade", () => {
     const summary = simulate({
       ...rangedInput,
       league: cinders(),
@@ -148,10 +178,37 @@ describe("Inferno of Zamorak rolls once per qualifying landed hit", () => {
       expect(event.recursionAllowed).toBe(false);
       expect(event.procEligible).toBe(false);
     }
-    // Every blessing event derives from a non-blessing hit.
-    const blessingSeqs = new Set(generated.map((event) => event.seq));
+    // Cinders 15% is attached bonus, not a unique hit.
+    const cindersEvents = generated.filter((e) => e.abilityId === "abyssal-cinders");
+    expect(cindersEvents.length).toBe(7);
+    for (const c of cindersEvents) {
+      expect(c.attached).toBe(true);
+      expect(c.expectedSeparateHits ?? 0).toBe(0);
+      expect(c.damageTag).toBe("bonus-damage");
+    }
+    // Inferno is a unique hit; no Cinders rider derives from it.
+    const infernos = generated.filter((e) => e.abilityId === "inferno-of-zamorak");
+    expect(infernos.length).toBeGreaterThan(0);
+    for (const inf of infernos) {
+      expect(inf.attached).toBe(false);
+      expect(inf.expectedSeparateHits).toBeGreaterThan(0);
+    }
+    const infernoSeqs = new Set(infernos.map((e) => e.seq));
+    expect(
+      generated.some(
+        (e) => e.abilityId === "abyssal-cinders" && infernoSeqs.has(e.derivedFrom ?? -1),
+      ),
+    ).toBe(false);
+    // Inferno never derives from another Inferno.
+    for (const event of infernos) {
+      expect(infernoSeqs.has(event.derivedFrom ?? -1)).toBe(false);
+    }
+    // Attached riders never host further blessing damage.
+    const attachedRiderSeqs = new Set(
+      generated.filter((event) => event.attached).map((event) => event.seq),
+    );
     for (const event of generated) {
-      expect(blessingSeqs.has(event.derivedFrom ?? -1)).toBe(false);
+      expect(attachedRiderSeqs.has(event.derivedFrom ?? -1)).toBe(false);
     }
   });
 
@@ -261,6 +318,44 @@ describe("Big Boned rides every qualifying damage instance", () => {
     expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(
       dismember.hits.length,
     );
+  });
+
+  it("rides Crackling and Aftershock invention hit splats", () => {
+    const summary = simulate({
+      ...baseInput,
+      league: bigBoned,
+      crit: { chance: 0 },
+      context: { style: "melee", ruleset: "equilibrium" },
+      procs: { cracklingRank: 4, aftershockRank: 1 },
+      base: 50_000,
+      cap: { cap: 30_000, bypass: true },
+      rotation: rotationOf("attack"),
+    });
+    const crackling = summary.events.filter((e) => e.abilityId === "crackling");
+    const aftershock = summary.events.filter((e) => e.abilityId === "aftershock");
+    expect(crackling.length).toBeGreaterThan(0);
+    expect(aftershock.length).toBeGreaterThan(0);
+
+    const bbOnCrackling = summary.events.filter(
+      (e) =>
+        e.abilityId === "big-boned" &&
+        e.derivedFrom != null &&
+        crackling.some((c) => c.seq === e.derivedFrom),
+    );
+    const bbOnAftershock = summary.events.filter(
+      (e) =>
+        e.abilityId === "big-boned" &&
+        e.derivedFrom != null &&
+        aftershock.some((a) => a.seq === e.derivedFrom),
+    );
+    expect(bbOnCrackling).toHaveLength(crackling.length);
+    expect(bbOnAftershock).toHaveLength(aftershock.length);
+    // 5% of 15_000 max life = 750 flat per invention splat.
+    for (const rider of [...bbOnCrackling, ...bbOnAftershock]) {
+      expect(rider.attached).toBe(true);
+      expect(rider.damageTag).toBe("bonus-damage");
+      expect(rider.damage.expected).toBe(750);
+    }
   });
 });
 

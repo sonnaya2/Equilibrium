@@ -22,8 +22,8 @@ const rules = (
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks }, derived);
 
 describe("Equilibrium blessing combat rules", () => {
-  it("adds Big Boned and Cinders as explicit non-recursive damage events", () => {
-    // Default product path: BB per-hit rider + Cinders on the same parent hits.
+  it("adds Big Boned and Cinders on ability hits; Inferno unique hit gets BB only", () => {
+    // Cinders 15% = AD base (not BB-inclusive), attached. Inferno = unique hit + BB, no Cinders.
     const league = rules(["Balance", "Chaos", "Chaos"], { maximumLife: 15_000 });
     const result = simulate({
       ...baseInput,
@@ -31,12 +31,21 @@ describe("Equilibrium blessing combat rules", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    expect(result.totalExpected).toBe(2_175);
+    // Base 1200 + BB 750 + cinders 150 + inferno EV 75 + BB-on-Inferno 37.5.
+    expect(result.totalExpected).toBe(2_212.5);
     expect(
       result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak"]);
+    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak", "big-boned"]);
+    const cindersOnAttack = result.events.find((e) => e.abilityId === "abyssal-cinders")!;
+    expect(cindersOnAttack).toMatchObject({
+      attached: true,
+      damageTag: "bonus-damage",
+      expectedSeparateHits: 0,
+      damage: { expected: 150 },
+    });
     expect(result.events.find((event) => event.abilityId === "inferno-of-zamorak")).toMatchObject({
       family: "blessing",
+      attached: false,
       expectedOccurrences: 0.05,
       triggerRolls: 1,
       expectedActivations: 0.05,
@@ -60,12 +69,58 @@ describe("Equilibrium blessing combat rules", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    // Base 1200 + BB 750 + cinders 150 + inferno EV 75.
-    expect(result.totalExpected).toBe(2_175);
-    expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(1);
+    // Base 1200 + BB 750 + cinders 150 + inferno EV 75 + BB-on-Inferno 37.5.
+    expect(result.totalExpected).toBe(2_212.5);
+    expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(2);
     expect(
       result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak"]);
+    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak", "big-boned"]);
+  });
+
+  it("rides Big Boned onto Light of Saradomin without infinite cascade", () => {
+    // Tier1 Balance = Big Boned; tier2 Order = Striking Light.
+    const league = rules(["Balance", "Order"], { maximumLife: 15_000, totalArmour: 1_000 });
+    const withoutBb = simulate({
+      ...baseInput,
+      league: rules(["Order", "Order"], { totalArmour: 1_000 }),
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const withBb = simulate({
+      ...baseInput,
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const light = withBb.events.find((event) => event.abilityId === "light-of-saradomin");
+    expect(light).toBeDefined();
+    const bbOnLight = withBb.events.filter(
+      (event) =>
+        event.abilityId === "big-boned" && event.derivedFrom === light!.seq,
+    );
+    expect(bbOnLight).toHaveLength(1);
+    expect(bbOnLight[0]).toMatchObject({
+      attached: true,
+      damageTag: "bonus-damage",
+      blessingId: "big-boned",
+      expectedActivations: 1,
+    });
+    // Flat 5% of 15k max life on Light (and parent).
+    expect(bbOnLight[0]!.damage.expected).toBe(750);
+    expect(withBb.totalExpected).toBeGreaterThan(withoutBb.totalExpected);
+    // No BB-on-BB: attached riders never host further blessing events.
+    const bbSeqs = new Set(
+      withBb.events.filter((e) => e.abilityId === "big-boned").map((e) => e.seq),
+    );
+    for (const event of withBb.events) {
+      if (event.derivedFrom != null) {
+        expect(bbSeqs.has(event.derivedFrom)).toBe(false);
+      }
+    }
+    // Light never re-rolls on-hit blessings from itself.
+    expect(
+      withBb.events.filter((e) => e.abilityId === "light-of-saradomin"),
+    ).toHaveLength(1);
   });
 
   it("enforces Striking Light's 15-tick cooldown and Sacred Fervor's cooldown clock", () => {

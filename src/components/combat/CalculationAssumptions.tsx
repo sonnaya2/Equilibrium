@@ -11,6 +11,7 @@ import {
 } from "@/combat/league/icyenicFaith";
 import {
   conjurePactAssumptionNote,
+  conjureStAreaAssumptionRows,
   rotationHasConjureCast,
 } from "./conjurePresentation";
 import {
@@ -184,6 +185,7 @@ export function CalculationAssumptions({
           ],
         ] as Array<[string, string | number]>)
       : []),
+    ...conjureStAreaAssumptionRows(result?.casts),
   ];
   if (!manualInputsOnly && stats.combatStyle === "magic")
     rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "Not set"]);

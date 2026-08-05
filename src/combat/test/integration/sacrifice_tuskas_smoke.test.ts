@@ -51,4 +51,31 @@ describe("sacrifice / tuskas_wrath engine smoke", () => {
     expect(entry.spec.cooldownSeconds).toBe(15);
     expect(secondsToTicks(15)).toBe(25);
   });
+
+  it("sacrifice totalHealed is 25% of damage", () => {
+    const entry = entryByEngineId("sacrifice")!;
+    const stamped = abilityStyleForBar(entry.spec, "melee");
+    const s = simulate({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      rotation: rotationOf("sacrifice"),
+    });
+    expect(s.ok, s.error).toBe(true);
+    expect(s.totalHealed).toBe(175);
+    expect(s.casts.find((c) => c.abilityId === "sacrifice")?.expectedHeal).toBe(175);
+  });
+
+  it("tuskas on-task smoke: empowered damage and 120s CD", () => {
+    const entry = entryByEngineId("tuskas_wrath")!;
+    const stamped = abilityStyleForBar(entry.spec, "melee");
+    const s = simulate({
+      ...baseInput,
+      abilities: [...baseInput.abilities, stamped],
+      rotation: rotationOf("tuskas_wrath"),
+      slayerOnTask: true,
+      slayerLevel: 120,
+    });
+    expect(s.ok, s.error).toBe(true);
+    expect(s.perAbility.tuskas_wrath).toBe(12_000);
+  });
 });

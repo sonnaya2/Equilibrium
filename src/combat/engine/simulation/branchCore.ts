@@ -330,6 +330,7 @@ function mergePair(a: Branch, b: Branch): Branch {
   keep.rt.totalMin = bounds.totalMin;
   keep.rt.totalMax = bounds.totalMax;
   keep.rt.totalExpected = mix(a.rt.totalExpected, b.rt.totalExpected);
+  keep.rt.totalHealed = mix(a.rt.totalHealed, b.rt.totalHealed);
   // Presentation + allocators: max so merged survivor can keep assigning ids.
   keep.rt.endTick = Math.max(a.rt.endTick, b.rt.endTick);
   keep.rt.nextSeq = Math.max(a.rt.nextSeq, b.rt.nextSeq);

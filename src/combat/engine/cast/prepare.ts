@@ -32,6 +32,11 @@ import {
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
 import { hasPassive } from "../../shared/equipment";
+import {
+  TUSKAS_EMPOWERED_COOLDOWN_SECONDS,
+  tuskasEmpoweredActive,
+  tuskasEmpoweredDamage,
+} from "../../styles/shared/constitutionAbilities";
 import { costOf, spendOf } from "./rules";
 import { firstEligibleDirectHitIndex, hasDamagingHits, hasFuryConsumingHit } from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
@@ -261,6 +266,18 @@ export function prepareCast(
     }
   }
 
+  // Tuska on-task: flat 100x Slayer (15k cap), 120s CD. Needs slayerOnTask + slayerLevel.
+  let tuskasEmpoweredFlat: number | undefined = undefined;
+  if (ability.id === "tuskas_wrath" && tuskasEmpoweredActive(input)) {
+    tuskasEmpoweredFlat = tuskasEmpoweredDamage(input.slayerLevel);
+    working = {
+      ...working,
+      cooldownSeconds: TUSKAS_EMPOWERED_COOLDOWN_SECONDS,
+      // Wiki: cannot crit unless Greater Fury; Greater Fury path not wired here.
+      hits: working.hits.map((h) => ({ ...h, critEligible: false })),
+    };
+  }
+
   const meleeIdleTicks = meleeIdleTicksAt(rt, candidate, ability.style, working.hits.length);
   let endlessAssaultGrantUntilTick: number | undefined;
   if (ability.id === "greater_barge" && working.hits.length > 0) {
@@ -332,6 +349,9 @@ export function prepareCast(
     hauntedAtCast,
     hauntedCapAd,
     enduringRuinBonus: enduringRuinConsume ? rt.state.melee.enduringRuin.nextAttackBonus : 0,
+    ...(tuskasEmpoweredFlat !== undefined
+      ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat }
+      : {}),
   };
 
   const transitions: PreparedTransition[] = [];

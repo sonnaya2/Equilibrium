@@ -9,10 +9,17 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
 import {
+  formatConjureByEffectLabel,
   formatConjureCastDurationNote,
+  isConjureCommandAbilityId,
+  isConjureEffectRow,
   isConjureSummonAbilityId,
   spiritEffectDisplayName,
 } from "./conjurePresentation";
+import {
+  blessingEffectDisplayName,
+  formatBlessingByEffectLabel,
+} from "./blessingPresentation";
 import { castCritLabel, formatCount, formatNumber, formatTime } from "./revoPanelFormat";
 import {
   primaryDamageLabel,
@@ -87,7 +94,10 @@ export function RevoRunResults({
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
   const conjureDurationMult = stats.conjureDurationMult ?? 1;
   const effectLabel = (id: string) =>
-    nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
+    blessingEffectDisplayName(id) ??
+    nameById.get(id) ??
+    spiritEffectDisplayName(id) ??
+    id;
   const capOpts = capOptsFromMeta(branchFidelityMeta);
   const scoreBadge = result ? runScoreBadge(result) : null;
   const scoreNote = result ? runDiagnosticsNote(result, capOpts) : null;
@@ -321,6 +331,10 @@ export function RevoRunResults({
                                 <span className="min-w-0 truncate">
                                   {effectLabel(cast.abilityId)}
                                 </span>
+                                {isConjureSummonAbilityId(cast.abilityId) ||
+                                isConjureCommandAbilityId(cast.abilityId) ? (
+                                  <AbilityCategoryChip category="conjure" />
+                                ) : null}
                                 {isConjureSummonAbilityId(cast.abilityId) ? (
                                   <span
                                     className="shrink-0 font-mono text-[10px] text-parch-300"
@@ -343,7 +357,9 @@ export function RevoRunResults({
                                     {castCritLabel(cast.result)}
                                   </span>
                                 ) : null}
-                                {spec ? (
+                                {spec &&
+                                !isConjureSummonAbilityId(cast.abilityId) &&
+                                !isConjureCommandAbilityId(cast.abilityId) ? (
                                   <AbilityCategoryChip category={spec.category} />
                                 ) : cast.auto ? (
                                   <AbilityCategoryChip category="basic" />
@@ -386,6 +402,7 @@ export function RevoRunResults({
                 <div
                   key={row.id}
                   className="revo-contribution-row grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                  data-effect-kind={row.kind}
                 >
                   <span className="flex min-w-0 items-center gap-2 text-parch-50">
                     {(() => {
@@ -394,10 +411,19 @@ export function RevoRunResults({
                         <GameIcon src={abilityIconPath(spec.id, spec.style)} size={18} />
                       ) : null;
                     })()}
-                    <span className="truncate">
-                      {effectLabel(row.id)}
+                    <span className="inline-flex min-w-0 items-center gap-1.5 truncate">
+                      <span className="truncate">
+                        {formatConjureByEffectLabel(
+                          row.id,
+                          row.kind,
+                          formatBlessingByEffectLabel(row.id, row.kind, effectLabel(row.id)),
+                        )}
+                      </span>
+                      {isConjureEffectRow(row.id, row.kind) ? (
+                        <AbilityCategoryChip category="conjure" />
+                      ) : null}
                       <span
-                        className="ml-1.5 font-mono text-parch-300"
+                        className="ml-0.5 shrink-0 font-mono text-parch-300"
                         title="Expected activations"
                       >
                         ×{formatCount(row.expectedActivations)}

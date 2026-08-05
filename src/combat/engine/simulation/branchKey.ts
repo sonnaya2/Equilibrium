@@ -5,6 +5,11 @@ import { endBerserk } from "../../styles/melee/bloodlust";
 import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import { activePuncture } from "../../styles/ranged/puncture";
+import {
+  mapEventRefForKey,
+  pendingKeyRanks,
+  type PendingKeyRanks,
+} from "../runtime/events";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
@@ -22,7 +27,10 @@ import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
  *   searing/sunshine/instability/enduringRuin expires + granted only while live;
  *   fully expired spirits pruned (keep zombie poison-tail residue)
  * - Allocators omitted (merge takes max): nextSeq, nextCastSeq
+ * - Queue key ranks pending seq / cast / derivedFrom (see events.pendingKeyRanks)
  * - Map keys sorted so insertion order never blocks equivalence
+ *
+ * Deferred: state-level cast ids outside the pending set (grantedByCast, puncture owner).
  *
  * Do not drop a field without a partition + future-damage proof test.
  */
@@ -388,40 +396,55 @@ function encodeOneHit(k: number, h: HitResult): (string | number)[] {
  * Only HitResults still referenced by pending derivedFrom (Bloat / LS / etc.).
  * Empty when no derived consumers remain - historical frost-diverged lands must
  * not permanently block stack/frost reconvergence merges.
+ * Keys remapped with queue ranks so drained-history absolute seqs merge.
  */
-function encodeLiveDerivedHitDetails(rt: SimulationRuntime): string {
+function encodeLiveDerivedHitDetails(
+  rt: SimulationRuntime,
+  ranks: PendingKeyRanks,
+): string {
   const live = liveDerivedSourceSeqs(rt);
   if (live.length === 0) return "0";
-  const parts: (string | number)[] = [];
-  let count = 0;
-  for (const k of live) {
-    const h = rt.hitDetails.get(k);
+  const entries: { key: number; h: HitResult }[] = [];
+  for (const abs of live) {
+    const h = rt.hitDetails.get(abs);
     if (!h) continue;
-    if (count === 0) parts.push(0); // placeholder length
-    parts.push(...encodeOneHit(k, h));
-    count++;
+    entries.push({ key: mapEventRefForKey(abs, ranks), h });
   }
-  if (count === 0) return "0";
-  parts[0] = count;
+  if (entries.length === 0) return "0";
+  entries.sort((a, b) => a.key - b.key);
+  const parts: (string | number)[] = [entries.length];
+  for (const { key, h } of entries) {
+    parts.push(...encodeOneHit(key, h));
+  }
   return parts.join(US);
 }
 
-function hitDetailsJsonPayload(rt: SimulationRuntime): [number, HitResult][] {
+function hitDetailsJsonPayload(
+  rt: SimulationRuntime,
+  ranks: PendingKeyRanks,
+): [number, HitResult][] {
   const out: [number, HitResult][] = [];
-  for (const k of liveDerivedSourceSeqs(rt)) {
-    const h = rt.hitDetails.get(k);
-    if (h) out.push([k, h]);
+  for (const abs of liveDerivedSourceSeqs(rt)) {
+    const h = rt.hitDetails.get(abs);
+    if (h) out.push([mapEventRefForKey(abs, ranks), h]);
   }
+  out.sort((a, b) => a[0] - b[0]);
   return out;
 }
 
-function encodeSpiritMeta(map: ReadonlyMap<number, SpiritEventMeta>): string {
+function encodeSpiritMeta(
+  map: ReadonlyMap<number, SpiritEventMeta>,
+  ranks: PendingKeyRanks,
+): string {
   if (map.size === 0) return "0";
-  const keys = [...map.keys()].sort((a, b) => a - b);
-  let out = String(keys.length);
-  for (const k of keys) {
-    const m = map.get(k)!;
-    out += FS + n(k) + US + s(m.id) + n(m.untilTick) + US + s(m.kind);
+  const entries = [...map.entries()].map(([abs, m]) => ({
+    key: mapEventRefForKey(abs, ranks),
+    m,
+  }));
+  entries.sort((a, b) => a.key - b.key);
+  let out = String(entries.length);
+  for (const { key, m } of entries) {
+    out += FS + n(key) + US + s(m.id) + n(m.untilTick) + US + s(m.kind);
   }
   return out;
 }
@@ -558,11 +581,14 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     },
   };
   // endTick / nextSeq / nextCastSeq omitted: presentation + allocators (merge maxes them).
+  const ranks = pendingKeyRanks(rt.queue.pending());
   return JSON.stringify([
     stateForKey,
     rt.queue.signature(),
-    hitDetailsJsonPayload(rt),
-    [...rt.spiritEventMeta].sort(([a], [b]) => a - b),
+    hitDetailsJsonPayload(rt, ranks),
+    [...rt.spiritEventMeta]
+      .map(([abs, m]) => [mapEventRefForKey(abs, ranks), m] as const)
+      .sort(([a], [b]) => a - b),
     [...rt.scheduledSpiritTracks].sort(),
     [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
   ]);
@@ -571,14 +597,15 @@ export function branchKeyJson(rt: SimulationRuntime): string {
 /** Compact structural key used by merge. */
 export function branchKeyStructural(rt: SimulationRuntime): string {
   // Future state only: no endTick / nextSeq / nextCastSeq (see file header).
+  const ranks = pendingKeyRanks(rt.queue.pending());
   return (
     encodeState(rt.state) +
     RS +
     rt.queue.signature() +
     RS +
-    encodeLiveDerivedHitDetails(rt) +
+    encodeLiveDerivedHitDetails(rt, ranks) +
     RS +
-    encodeSpiritMeta(rt.spiritEventMeta) +
+    encodeSpiritMeta(rt.spiritEventMeta, ranks) +
     RS +
     encodeTracks(rt.scheduledSpiritTracks) +
     RS +

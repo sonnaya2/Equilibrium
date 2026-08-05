@@ -144,6 +144,7 @@ describe("ability registry single authority", () => {
     expect(sac?.spec.adrenaline).toEqual({ gain: 9 });
     expect(sac?.spec.cooldownSeconds).toBe(30);
     expect(sac?.support.note).toMatch(/heal/i);
+    expect(sac?.support.note).toMatch(/kill-blow/i);
 
     const tuska = entryByEngineId("tuskas_wrath");
     expect(tuska?.recordId).toBe("shared:tuskas-wrath");
@@ -153,6 +154,7 @@ describe("ability registry single authority", () => {
     expect(tuska?.spec.adrenaline).toEqual({ gain: 9 });
     expect(tuska?.spec.cooldownSeconds).toBe(15);
     expect(tuska?.support.note).toMatch(/on-task/i);
+    expect(tuska?.support.note).toMatch(/slayerOnTask/i);
 
     for (const style of ["melee", "ranged", "magic", "necromancy"] as const) {
       const specs = engineSpecsForStyle(style);

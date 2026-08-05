@@ -142,7 +142,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -232,27 +232,71 @@ describe("damage eligibility matrix (capabilitiesOf)", () => {
 
 describe("blessingHitEligibility from capabilities", () => {
   it("mirrors capability columns for legacy sources", () => {
-    expect(blessingHitEligibility("direct", false)).toEqual({ rider: true, onHit: true });
-    expect(blessingHitEligibility("dot", false)).toEqual({ rider: true, onHit: false });
-    expect(blessingHitEligibility("command", false)).toEqual({ rider: true, onHit: false });
-    expect(blessingHitEligibility("conjure", false)).toEqual({ rider: true, onHit: false });
-    expect(blessingHitEligibility("proc", false)).toEqual({ rider: false, onHit: false });
-    expect(blessingHitEligibility("blessing", false)).toEqual({ rider: false, onHit: false });
+    expect(blessingHitEligibility("direct", false)).toEqual({
+      rider: true,
+      cindersRider: true,
+      onHit: true,
+    });
+    expect(blessingHitEligibility("dot", false)).toEqual({
+      rider: true,
+      cindersRider: true,
+      onHit: false,
+    });
+    expect(blessingHitEligibility("command", false)).toEqual({
+      rider: true,
+      cindersRider: true,
+      onHit: false,
+    });
+    expect(blessingHitEligibility("conjure", false)).toEqual({
+      rider: true,
+      cindersRider: true,
+      onHit: false,
+    });
+    expect(blessingHitEligibility("proc", false)).toEqual({
+      rider: false,
+      cindersRider: false,
+      onHit: false,
+    });
+    expect(blessingHitEligibility("blessing", false)).toEqual({
+      rider: false,
+      cindersRider: false,
+      onHit: false,
+    });
   });
 
   it("attached excludes all sources", () => {
     for (const source of ["direct", "dot", "command", "conjure"] as const) {
-      expect(blessingHitEligibility(source, true)).toEqual({ rider: false, onHit: false });
+      expect(blessingHitEligibility(source, true)).toEqual({
+        rider: false,
+        cindersRider: false,
+        onHit: false,
+      });
     }
   });
 
   it("accepts DamageProvenance objects", () => {
     expect(blessingHitEligibility({ kind: "player_auto" }, false)).toEqual({
       rider: true,
+      cindersRider: true,
       onHit: true,
     });
     expect(blessingHitEligibility({ kind: "equipment_proc" }, false)).toEqual({
       rider: false,
+      cindersRider: false,
+      onHit: false,
+    });
+  });
+
+  it("Light/Inferno unique hits: Big Boned only (no Cinders 15%)", () => {
+    expect(
+      blessingHitEligibility({ kind: "blessing", detail: "light-of-saradomin" }, false),
+    ).toEqual({ rider: true, cindersRider: false, onHit: false });
+    expect(
+      blessingHitEligibility({ kind: "blessing", detail: "inferno-of-zamorak" }, false),
+    ).toEqual({ rider: true, cindersRider: false, onHit: false });
+    expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual({
+      rider: false,
+      cindersRider: false,
       onHit: false,
     });
   });
@@ -338,6 +382,7 @@ describe("command analysis parity", () => {
     expect(c.blessingOnHit).toBe(false);
     expect(blessingHitEligibility({ kind: "conjure_command" }, false)).toEqual({
       rider: true,
+      cindersRider: true,
       onHit: false,
     });
   });

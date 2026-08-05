@@ -63,6 +63,8 @@ export interface SimulationRuntime {
   totalMin: number;
   totalMax: number;
   totalExpected: number;
+  /** Expected self-heal (Sacrifice 25% of damage dealt). Kill-blow 100% not modeled. */
+  totalHealed: number;
   /**
    * Weighted analysis ledgers - quantitative breakdown lives here, not in the
    * representative event log. Branch merge weight-averages this state.
@@ -148,6 +150,12 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   ) {
     throw new RangeError(`bad startingResidualSouls: ${input.startingResidualSouls}`);
   }
+  if (
+    input.slayerLevel != null &&
+    (!Number.isFinite(input.slayerLevel) || input.slayerLevel < 0)
+  ) {
+    throw new RangeError(`bad slayerLevel: ${input.slayerLevel}`);
+  }
   // Solver compiled context may pass prebuilt maps (request-invariant).
   // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).
   const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
@@ -205,6 +213,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     totalMin: 0,
     totalMax: 0,
     totalExpected: 0,
+    totalHealed: 0,
     analysis: emptyAnalysisState(),
     nextSeq: 0,
     nextCastSeq: 0,

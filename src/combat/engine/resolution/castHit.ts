@@ -1,6 +1,7 @@
 import type { CritLayers } from "../../core/critical";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
-import { calculateHit } from "../../pipeline/calculateHit";
+import { calculateHit, calculateRawHitBand } from "../../pipeline/calculateHit";
+import { TUSKAS_EMPOWERED_HIT_CAP } from "../../styles/shared/constitutionAbilities";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
   channelledMightCritBonus,
@@ -180,18 +181,33 @@ function resolveCastHitUncached(
     damageSource,
     provenance,
   };
-  const hit = calculateHit({
-    base: input.base,
-    band,
-    level: input.level,
-    accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
-    crit,
-    modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
-    provenance,
-    context: hitContext,
-    cap: input.cap,
-    preciseRank: input.preciseRank,
-  });
+  // Tuska on-task: flat 100x Slayer (15k cap); not AD-based; no AD modifiers.
+  // https://runescape.wiki/w/Tuska%27s_Wrath
+  const hit =
+    snap.tuskasEmpoweredDamage != null
+      ? calculateRawHitBand({
+          min: snap.tuskasEmpoweredDamage,
+          max: snap.tuskasEmpoweredDamage,
+          level: input.level,
+          accuracy: 1,
+          crit: { chance: 0, eligible: false },
+          modifiers: [],
+          provenance,
+          context: hitContext,
+          cap: { cap: TUSKAS_EMPOWERED_HIT_CAP },
+        })
+      : calculateHit({
+          base: input.base,
+          band,
+          level: input.level,
+          accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
+          crit,
+          modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
+          provenance,
+          context: hitContext,
+          cap: input.cap,
+          preciseRank: input.preciseRank,
+        });
 
   const components: AttachedDamageComponent[] = [];
   if (snap.searingWindsAtCast) {

@@ -12,7 +12,7 @@ import type { CastEffectContext } from "./context";
 import { effectiveCooldownTicks } from "../../../league/ruleset";
 
 function baseCooldownTicks(fx: CastEffectContext): number {
-  const { rt, ability, candidate } = fx;
+  const { rt, ability, working, candidate } = fx;
   const cdKey = ability.cooldownGroup ?? ability.replacementGroup ?? ability.id;
   const deathSkullsKey = ability.replacementGroup ?? ability.id;
   if (deathSkullsKey === "death_skulls") {
@@ -21,17 +21,20 @@ function baseCooldownTicks(fx: CastEffectContext): number {
   if (cdKey === "overpower" && rt.state.melee.berserkUntilTick > candidate) {
     return secondsToTicks(BERSERK_OVERPOWER_COOLDOWN_SECONDS);
   }
-  return secondsToTicks(ability.cooldownSeconds!);
+  // working may rewrite CD (Tuska on-task 120s); fall back to catalogue ability.
+  const seconds = working.cooldownSeconds ?? ability.cooldownSeconds!;
+  return secondsToTicks(seconds);
 }
 
 /**
  * Cooldown clocks for one cast. Sourced variations: Death Skulls under Living Death
- * (17 ticks); Overpower under Berserk (9s). Charged abilities consume a charge
- * instead of writing cooldowns[key] (would block the second charge).
+ * (17 ticks); Overpower under Berserk (9s); Tuska empowered 120s via working.
+ * Charged abilities consume a charge instead of writing cooldowns[key]
+ * (would block the second charge).
  */
 export function applyCastCooldown(fx: CastEffectContext): void {
-  const { rt, ability, candidate } = fx;
-  if (!ability.cooldownSeconds) return;
+  const { rt, ability, working, candidate } = fx;
+  if (!(working.cooldownSeconds ?? ability.cooldownSeconds)) return;
   const cdKey = ability.cooldownGroup ?? ability.replacementGroup ?? ability.id;
   const ticks = effectiveCooldownTicks(baseCooldownTicks(fx), rt.input.league);
   const max = maxChargesFor(ability, rt.input.level);

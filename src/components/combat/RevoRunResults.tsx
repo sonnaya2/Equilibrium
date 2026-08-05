@@ -19,6 +19,8 @@ import {
 import {
   blessingEffectDisplayName,
   formatBlessingByEffectLabel,
+  isBlessingEffectRow,
+  strikingLightBasicRowMark,
 } from "./blessingPresentation";
 import { castCritLabel, formatCount, formatNumber, formatTime } from "./revoPanelFormat";
 import {
@@ -419,9 +421,26 @@ export function RevoRunResults({
                           formatBlessingByEffectLabel(row.id, row.kind, effectLabel(row.id)),
                         )}
                       </span>
-                      {isConjureEffectRow(row.id, row.kind) ? (
+                      {isBlessingEffectRow(row.id, row.kind) ? (
+                        <AbilityCategoryChip category="blessing" />
+                      ) : isConjureEffectRow(row.id, row.kind) ? (
                         <AbilityCategoryChip category="conjure" />
                       ) : null}
+                      {(() => {
+                        const mark = strikingLightBasicRowMark(stats.league.blessings, {
+                          category: ENGINE_SPECS.get(row.id)?.category,
+                          kind: row.kind,
+                        });
+                        return mark ? (
+                          <span
+                            className="shrink-0 font-mono text-[10px] text-gem-300"
+                            data-striking-light-basic-mark=""
+                            title="Striking Light ability-stage mult on Basic-category abilities and autos"
+                          >
+                            {mark}
+                          </span>
+                        ) : null;
+                      })()}
                       <span
                         className="ml-0.5 shrink-0 font-mono text-parch-300"
                         title="Expected activations"

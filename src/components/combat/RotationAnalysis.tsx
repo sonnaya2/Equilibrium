@@ -17,10 +17,12 @@ import {
   isConjureEffectRow,
   spiritEffectDisplayName,
 } from "./conjurePresentation";
+import { engineSpecs as ENGINE_SPECS } from "@/combat/abilities/registry";
 import {
   blessingEffectDisplayName,
   blessingEventTypeLabel,
   isBlessingEffectRow,
+  strikingLightBasicRowMark,
 } from "./blessingPresentation";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 
@@ -475,6 +477,21 @@ export function RotationAnalysisModal({
                           ) : isConjureEffectRow(effect.id, effect.kind) ? (
                             <AbilityCategoryChip category="conjure" />
                           ) : null}
+                          {(() => {
+                            const mark = strikingLightBasicRowMark(stats.league.blessings, {
+                              category: ENGINE_SPECS.get(effect.id)?.category,
+                              kind: effect.kind,
+                            });
+                            return mark ? (
+                              <span
+                                className="whitespace-nowrap font-mono text-[10px] text-gem-300"
+                                data-striking-light-basic-mark=""
+                                title="Striking Light ability-stage mult on Basic-category abilities and autos"
+                              >
+                                {mark}
+                              </span>
+                            ) : null;
+                          })()}
                           {/* DoT badge only for real DoT; rider-only skills use Bonus column. */}
                           {effect.dotDamage > 0 ? (
                             <span className="whitespace-nowrap text-parch-300">DoT</span>

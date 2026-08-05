@@ -10,6 +10,7 @@ import {
   isBlessingEffectRow,
   strikingLightAssumptionRows,
   strikingLightBasicCastNote,
+  strikingLightBasicRowMark,
   strikingLightChoice,
 } from "./blessingPresentation";
 
@@ -86,8 +87,12 @@ describe("blessingPresentation", () => {
   it("prefixes byEffect labels for league-blessing rows", () => {
     expect(isBlessingEffectRow("big-boned", "league-blessing")).toBe(true);
     expect(isBlessingEffectRow("slice", "ability-direct")).toBe(false);
+    expect(isBlessingEffectRow("light-of-saradomin", undefined)).toBe(true);
     expect(formatBlessingByEffectLabel("big-boned", "league-blessing", "Big Boned")).toBe(
       "Blessing · Big Boned",
+    );
+    expect(formatBlessingByEffectLabel("light-of-saradomin", "league-blessing", "Light of Saradomin")).toBe(
+      "Blessing · Light of Saradomin",
     );
     expect(formatBlessingByEffectLabel("inferno-of-zamorak", undefined, "Inferno")).toBe(
       "Blessing · Inferno",
@@ -124,5 +129,35 @@ describe("blessingPresentation", () => {
     expect(strikingLightBasicCastNote([plate], { autoAttack: true })).toMatch(/\+40%/);
     expect(strikingLightBasicCastNote([plate], { category: "enhanced" })).toBeNull();
     expect(strikingLightBasicCastNote([plate], { category: "ultimate" })).toBeNull();
+  });
+
+  it("compact +40% SL mark only on basics/autos when Striking Light is active", () => {
+    expect(strikingLightBasicRowMark(undefined, { category: "basic" })).toBeNull();
+    expect(strikingLightBasicRowMark([], { category: "basic" })).toBeNull();
+
+    const plate = strikingPlate();
+    expect(strikingLightBasicRowMark([plate], { category: "basic" })).toBe("+40% SL");
+    expect(strikingLightBasicRowMark([plate], { autoAttack: true })).toBe("+40% SL");
+    expect(strikingLightBasicRowMark([plate], { kind: "auto-attack" })).toBe("+40% SL");
+    expect(strikingLightBasicRowMark([plate], { category: "enhanced" })).toBeNull();
+    expect(strikingLightBasicRowMark([plate], { category: "ultimate" })).toBeNull();
+    // Light of Saradomin is a separate blessing hit - not the ability-stage mult row.
+    expect(
+      strikingLightBasicRowMark([plate], {
+        category: undefined,
+        kind: "league-blessing",
+      }),
+    ).toBeNull();
+
+    const noMult = strikingPlate({ basicDamageMultiplier: undefined });
+    expect(strikingLightBasicRowMark([noMult], { category: "basic" })).toBeNull();
+  });
+
+  it("keeps Light of Saradomin display name distinct from Striking Light card", () => {
+    expect(blessingEffectDisplayName("light-of-saradomin")).toBe("Light of Saradomin");
+    expect(blessingEffectDisplayName("light-of-saradomin")).not.toBe("Striking Light");
+    const plate = strikingPlate();
+    const rows = strikingLightAssumptionRows([plate], 0);
+    expect(rows.map((r) => r[0])).toEqual(["Striking Light basics", "Light of Saradomin"]);
   });
 });

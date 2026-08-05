@@ -129,3 +129,27 @@ export function strikingLightBasicCastNote(
   const pct = Math.round((mult - 1) * 100);
   return `Includes Striking Light +${pct}% on this basic`;
 }
+
+/**
+ * Compact byEffect / revo contribution mark when Striking Light scales this row.
+ * Basics and autos only; not on Light of Saradomin or other blessing hits.
+ */
+export function strikingLightBasicRowMark(
+  blessings: readonly BlessingChoice[] | undefined,
+  ability: {
+    category?: string;
+    autoAttack?: boolean;
+    kind?: string;
+  } | null | undefined,
+): string | null {
+  const choice = strikingLightChoice(blessings);
+  const mult = choice?.combat.basicDamageMultiplier;
+  if (mult == null || mult === 1) return null;
+  const isBasic =
+    ability?.category === "basic" ||
+    ability?.autoAttack === true ||
+    ability?.kind === "auto-attack";
+  if (!isBasic) return null;
+  const pct = Math.round((mult - 1) * 100);
+  return `+${pct}% SL`;
+}

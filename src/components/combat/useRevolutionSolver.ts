@@ -175,12 +175,8 @@ function packFromMaterial(
   const bounds = barBoundsFromPreset(m.barSizePreset);
   // Combat fields only from ResolvedCombatModel - never re-derive from Loadout.
   // unlockedRegions below: ability pool eligibility only (not passives).
-  // Necro userBar/seeds: inject wiki conjures when modelled dropped them.
-  const userBar = ensureNecroConjuresOnBarIds(
-    m.modelled.map((x) => x.id),
-    m.combatModel.style,
-    m.combatModel.weaponConfiguration,
-  );
+  // userBar is the actual incumbent; packSolverRequest injects necro conjures on seeds only.
+  const userBar = m.modelled.map((x) => x.id);
   return packSolverRequest({
     model: m.combatModel,
     style: m.combatModel.style,

@@ -27,6 +27,11 @@ import {
 } from "../workerPlan";
 import { compareTopEntry, pickBestSolverResult } from "../rankResults";
 import { solveIdentityFromRequest } from "../identity";
+import {
+  applyHostIncumbentBaseline,
+  evaluateHostIncumbentBaseline,
+  type HostIncumbentBaseline,
+} from "../hostIncumbent";
 import { PoolCoordHost } from "./coord";
 
 const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
@@ -432,11 +437,14 @@ export function mergeProgress(
  * Score-first merge - higher score always beats longer bar (see rankResults).
  * When hostRequest is provided, re-stamp solveIdentity from the host/session
  * request (seed + full bar window), not the agent-local patched identity.
+ * When hostIncumbent is provided, recompute isUpgrade against that baseline
+ * (workers pin bar length and cannot score an out-of-band user bar).
  */
 export function mergeResults(
   results: readonly SolverResultDTO[],
   hostRequest?: SerializableSolverRequest,
   poolMetrics?: SolverPoolMetrics,
+  hostIncumbent?: HostIncumbentBaseline | null,
 ): SolverResultDTO {
   if (results.length === 0) {
     throw new Error("revolution solver pool: no results");
@@ -477,7 +485,7 @@ export function mergeResults(
       ? [...priorNotes, `parallel agents ${results.length}; winner seed ${best.seed}`]
       : priorNotes;
 
-  return {
+  const merged: SolverResultDTO = {
     ...best,
     // Host session identity when available; else winner stamp (legacy/single-path).
     solveIdentity: hostRequest
@@ -492,6 +500,7 @@ export function mergeResults(
     },
     ...(poolMetrics ? { poolMetrics } : {}),
   };
+  return applyHostIncumbentBaseline(merged, hostIncumbent);
 }
 
 type Slot = {
@@ -609,6 +618,14 @@ export class SolverAgentPool {
     const cancelled = () => options?.isCancelled?.() === true || options?.signal?.aborted === true;
     if (cancelled()) {
       throw new DOMException("revolution solver cancelled", "AbortError");
+    }
+
+    // One host full-horizon incumbent score under original min/max (not length pins).
+    let hostIncumbent: HostIncumbentBaseline | null = null;
+    try {
+      hostIncumbent = evaluateHostIncumbentBaseline(request);
+    } catch {
+      hostIncumbent = null;
     }
 
     // Preserve Phase-0 total capacity: globalBudget = perAgent * agentCount.
@@ -1010,8 +1027,8 @@ export class SolverAgentPool {
         baseBudget,
         liveMetrics(),
       );
-      // Re-stamp host/session identity (agents use patched seed + bar bands).
-      return mergeResults(ok, request, poolMetrics);
+      // Re-stamp host identity + recompute upgrade vs host incumbent baseline.
+      return mergeResults(ok, request, poolMetrics, hostIncumbent);
     } finally {
       for (const fn of runCancels) unregisterCancel(fn);
     }

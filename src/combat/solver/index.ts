@@ -168,6 +168,11 @@ export type { SerializableUiRunRequest } from "./worker/uiRunTypes";
 export { runMediumScreen, collectMediumIncumbents } from "./search/mediumScreen";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export {
+  evaluateHostIncumbentBaseline,
+  applyHostIncumbentBaseline,
+  type HostIncumbentBaseline,
+} from "./hostIncumbent";
+export {
   createProfileCounters,
   isSolverProfileEnabled,
   setActiveSolverProfile,

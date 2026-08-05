@@ -17,7 +17,7 @@ import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
 import { TIER_BUDGETS, TIER_HORIZON_SECONDS } from "./solve";
 import { MIN_SOLVER_BAR_SIZE } from "./solutionStore";
 import { remainingCandidates } from "./eligibility";
-import { resolveEquippedAbilityId } from "../shared/requirements";
+import { resolveAbilityCastAvailability, resolveEquippedAbilityId } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
 import type {
   SerializableRevolutionSimBase,
@@ -238,7 +238,8 @@ function fitBarIds(
 
 /**
  * First-class user bar: preserve order and composition.
- * Resolve equipped variants; drop only unavailable/denied ids.
+ * Resolve equipped variants; drop only denied / unknown / impossible under loadout.
+ * Generation-pool exclusion (forceSolver:false) does NOT drop a user slot.
  * Never inject style-required abilities, pad, truncate, or rewrite exclusives.
  * Null when absent or no remaining simulable ids.
  */
@@ -249,21 +250,28 @@ export function fitIncumbentBar(
   catalogueById?: ReadonlyMap<string, AbilitySpec>,
 ): string[] | null {
   if (!request.userBar?.length) return null;
-  const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
   const loadout = request.loadout as SerializableRevolutionSimBase;
   const passiveIds = loadout.equipmentEffects?.passiveIds as readonly ItemPassiveId[] | undefined;
-  const upgraded =
-    catalogueById != null
-      ? request.userBar.map((id) =>
-          resolveEquippedAbilityId(id, catalogueById, {
-            passiveIds,
-            equipmentIds: loadout.equipmentIds,
-          }),
-        )
-      : request.userBar;
+  const lookup = catalogueById ?? engineSpecs;
+  const upgraded = request.userBar.map((id) =>
+    resolveEquippedAbilityId(id, lookup, {
+      passiveIds,
+      equipmentIds: loadout.equipmentIds,
+    }),
+  );
   const cleaned: string[] = [];
   for (const id of upgraded) {
-    if (!legalId(id)) continue;
+    if (denySet.has(id)) continue;
+    const spec = lookup.get(id) ?? pool.byId.get(id);
+    if (!spec || !("hits" in spec)) continue;
+    // Impossible on Revo: auto / off-GCD never baseline-legal.
+    if ((spec as AbilitySpec).autoAttack || (spec as AbilitySpec).offGcd) continue;
+    const availability = resolveAbilityCastAvailability(spec as AbilitySpec, {
+      weaponConfiguration: loadout.weaponConfiguration,
+      equipmentIds: loadout.equipmentIds,
+      passiveIds,
+    });
+    if (!availability.available) continue;
     cleaned.push(id);
   }
   return cleaned.length > 0 ? cleaned : null;

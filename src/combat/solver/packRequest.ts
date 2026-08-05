@@ -206,7 +206,7 @@ function staticSeedBars(
     .filter((s) => s.abilityIds.length > 0);
 }
 
-/** Prepend wiki early-bar conjure_* when a necro seed/user bar omitted all summons. */
+/** Prepend wiki early-bar conjure_* when a necro authored seed omitted all summons. */
 function ensureNecroConjuresOnSeedIds(
   abilityIds: readonly string[],
   style: CombatStyle,
@@ -253,10 +253,8 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     ...s,
     abilityIds: ensureNecroConjuresOnSeedIds(s.abilityIds, style, wc),
   }));
-  const userBar =
-    input.userBar != null
-      ? ensureNecroConjuresOnSeedIds(input.userBar, style, wc)
-      : undefined;
+  // userBar is first-class incumbent: never inject conjures (seeds only).
+  const userBar = input.userBar != null ? [...input.userBar] : undefined;
 
   return defaultSerializableRequest({
     loadout: simBase,

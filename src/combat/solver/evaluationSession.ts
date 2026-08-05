@@ -12,6 +12,7 @@ import { barKey, fingerprintEvaluationKey, stableStringify } from "./fingerprint
 import { OBJECTIVE_VERSION } from "./contracts";
 import { canonicalEvaluationContext } from "./identity";
 import type { SerializableSolverRequest } from "./worker/serializable";
+import { isSerializableSimBase } from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
@@ -26,6 +27,7 @@ import {
   branchFidelityModeForEval,
   resolveBranchFidelityLadder,
 } from "./branchFidelity";
+import { fitIncumbentBar, regionDenyList } from "./requestContext";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
@@ -93,6 +95,26 @@ export function createEvaluateFn(args: {
   };
   // One eligibility LRU per solve; pool + options fixed for search + full rescoring.
   const eligibilityMemo = createEligibilityMemo(pool, eligibilityOpts);
+
+  // Fitted incumbent key for baseline eval (size / outside-pool relaxations).
+  let incumbentFp: string | null = null;
+  if (request.userBar?.length && isSerializableSimBase(request.loadout)) {
+    const deny = new Set(
+      regionDenyList(
+        request.style,
+        request.unlockedRegions,
+        request.includeUnknownAvailability === true,
+        new Set(request.disabledAbilityIds ?? []),
+      ),
+    );
+    const fitted = fitIncumbentBar(
+      request,
+      pool,
+      deny,
+      compiled.byId as ReadonlyMap<string, AbilitySpec>,
+    );
+    if (fitted?.length) incumbentFp = barKey(fitted);
+  }
 
   return ({ bar, mode }: { bar: readonly string[]; mode?: EvalMode }) => {
     if (options?.isCancelled?.() || options?.signal?.aborted) {
@@ -205,6 +227,7 @@ export function createEvaluateFn(args: {
 
     // Search + full ranking only need ScoreableSummary metrics.
     // Winner UI breakdown is a separate full-analysis re-sim (not done here).
+    const isIncumbentBaseline = incumbentFp != null && key === incumbentFp;
     const evaluation = evaluateRevolutionBar({
       bar,
       style: request.style,
@@ -212,11 +235,14 @@ export function createEvaluateFn(args: {
       pool,
       sim: simWithCatalogue,
       compiled,
-      eligibilityMemo,
+      eligibilityMemo: isIncumbentBaseline ? undefined : eligibilityMemo,
       profileId: request.profileId,
       customWeights: request.customWeights,
-      includePartial: request.includePartial,
-      size: { min: request.minBarSize, max: request.maxBarSize },
+      includePartial: isIncumbentBaseline ? true : request.includePartial,
+      size: isIncumbentBaseline
+        ? { min: bar.length, max: Math.max(1, bar.length) }
+        : { min: request.minBarSize, max: request.maxBarSize },
+      incumbentBaseline: isIncumbentBaseline,
       detailLevel: "score-only",
       branchFidelityMode,
     });

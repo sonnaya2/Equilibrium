@@ -465,6 +465,11 @@ export interface RevolutionEvalRequest {
   includePartial?: boolean;
   size?: BarSizeBounds;
   /**
+   * First-class user bar baseline: skip generation size band; allow catalogue
+   * abilities excluded from candidate generation (forceSolver:false).
+   */
+  incumbentBaseline?: boolean;
+  /**
    * Engine bookkeeping depth. Default full-analysis (product/tests).
    * Solver search/session passes score-only for ranking evals.
    */

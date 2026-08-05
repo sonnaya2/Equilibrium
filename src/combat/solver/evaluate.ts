@@ -266,14 +266,23 @@ export function evaluateRevolutionBar(
     }),
   );
 
+  const incumbentBaseline = request.incumbentBaseline === true;
+  // Incumbent: size band is the user's bar, not the worker length pin.
+  const sizeForElig = incumbentBaseline
+    ? { min: equippedBar.length, max: Math.max(1, equippedBar.length) }
+    : size;
   reasons.push(
     ...validateBarEligibility(equippedBar, pool, {
-      includePartial,
-      size,
+      includePartial: includePartial || incumbentBaseline,
+      size: sizeForElig,
       weaponConfiguration,
       equipmentIds,
       passiveIds,
-      memo: eligibilityMemo,
+      memo: incumbentBaseline ? undefined : eligibilityMemo,
+      skipSizeBounds: incumbentBaseline,
+      outsidePoolById: incumbentBaseline
+        ? (compiled.byId as ReadonlyMap<string, AbilitySpec>)
+        : undefined,
     }),
   );
 

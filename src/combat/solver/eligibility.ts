@@ -34,6 +34,13 @@ export interface EligibilityOptions {
    * resolved options match `memo.optionKey`; otherwise validation runs uncached.
    */
   memo?: EligibilityMemo;
+  /**
+   * Incumbent baseline: ids missing from the generation pool resolve via this map
+   * (catalogue / forceSolver:false abilities still legal to simulate).
+   */
+  outsidePoolById?: ReadonlyMap<string, PoolAbility | AbilitySpec>;
+  /** Skip min/max size band (host/incumbent full-eval of the user's actual bar). */
+  skipSizeBounds?: boolean;
 }
 
 const DEFAULT_SIZE: SizeBounds = { min: 1, max: 10 };
@@ -164,17 +171,19 @@ function validateBarEligibilityUncached(
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
   const passiveIds = options.passiveIds ?? pool.options.passiveIds;
 
-  if (bar.length < size.min) {
-    issues.push({
-      code: "size-below-min",
-      message: `bar has ${bar.length} slots; minimum is ${size.min}`,
-    });
-  }
-  if (bar.length > size.max) {
-    issues.push({
-      code: "size-above-max",
-      message: `bar has ${bar.length} slots; maximum is ${size.max}`,
-    });
+  if (!options.skipSizeBounds) {
+    if (bar.length < size.min) {
+      issues.push({
+        code: "size-below-min",
+        message: `bar has ${bar.length} slots; minimum is ${size.min}`,
+      });
+    }
+    if (bar.length > size.max) {
+      issues.push({
+        code: "size-above-max",
+        message: `bar has ${bar.length} slots; maximum is ${size.max}`,
+      });
+    }
   }
 
   const seen = new Set<string>();
@@ -191,7 +200,7 @@ function validateBarEligibilityUncached(
     }
     seen.add(id);
 
-    const ability = pool.byId.get(id);
+    const ability = pool.byId.get(id) ?? options.outsidePoolById?.get(id);
     if (!ability) {
       issues.push({
         code: "unknown-id",

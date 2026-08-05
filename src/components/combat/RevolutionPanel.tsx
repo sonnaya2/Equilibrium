@@ -12,7 +12,7 @@ import {
   cancelUiRevolutionWorkers,
 } from "@/combat/solver";
 import type { CalcStats } from "./loadoutStats";
-import { resolveLoadoutCombat } from "./toResolvedCombatModel";
+import { naragiBaseDamageCompare, resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { getUiRunCache, setUiRunCache } from "./uiRunCache";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
@@ -186,6 +186,10 @@ export function RevolutionPanel({
   }, [slots]);
 
   const plannedTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
+  const sliverBaseCompare = useMemo(
+    () => naragiBaseDamageCompare(loadout, stats.base),
+    [loadout, stats.base],
+  );
 
   const equipKey = `${loadout.style}|${stats.weaponConfiguration}`;
   const prevEquipKey = useRef(equipKey);
@@ -500,6 +504,8 @@ export function RevolutionPanel({
                       sliverOfEdictsActive: !prev.buffs.sliverOfEdictsActive,
                     }),
                   ),
+                baseOff: sliverBaseCompare.off,
+                baseOn: sliverBaseCompare.on,
               }
             : null
         }

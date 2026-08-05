@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { equipmentById } from "@/combat/data";
+import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import {
   NARAGI_EDICT_RELIC,
+  NARAGI_LEVEL_OVERRIDE,
   SLIVER_OF_EDICTS_ID,
   SLIVER_PASSIVE,
 } from "@/combat/league/naragiEdict";
@@ -14,6 +16,8 @@ import {
   type Loadout,
 } from "./useLoadout";
 import { loadoutStats } from "./loadoutStats";
+import { computedLoadoutBase, loadoutWeaponConfig } from "./loadout/weaponConfiguration";
+import { naragiBaseDamageCompare } from "./toResolvedCombatModel";
 
 const RELICS = [NARAGI_EDICT_RELIC] as const;
 
@@ -43,6 +47,25 @@ describe("Sliver of Edicts catalogue", () => {
     expect(sliver!.bonuses.damage).toBe(SLIVER_PASSIVE.styleDamage);
     expect(sliver!.bonuses.life).toBe(SLIVER_PASSIVE.life);
     expect(sliver!.bonuses.prayer).toBe(SLIVER_PASSIVE.prayer);
+  });
+});
+
+describe("naragiBaseDamageCompare", () => {
+  it("scales effective base AD from loadout level to level 255", () => {
+    const loadout: Loadout = {
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: { pocket: SLIVER_OF_EDICTS_ID },
+    };
+    const stats = of(loadout, RELICS);
+    const { off, on } = naragiBaseDamageCompare(loadout, stats.base);
+    expect(off).toBe(stats.base);
+    const formulaNormal = computedLoadoutBase(loadout);
+    const formulaOverride = baseAbilityDamage(
+      NARAGI_LEVEL_OVERRIDE,
+      loadoutWeaponConfig(loadout),
+    );
+    expect(on).toBe(Math.floor((stats.base * formulaOverride) / formulaNormal));
+    expect(on).toBeGreaterThan(off);
   });
 });
 

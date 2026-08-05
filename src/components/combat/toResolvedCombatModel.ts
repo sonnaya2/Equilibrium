@@ -44,6 +44,26 @@ function sanitizedArchaeologyIds(
   });
 }
 
+/**
+ * Effective base AD off (loadout level) vs on (Naragi 255 window).
+ * Same scale used for land-time overrideBase in the sim.
+ */
+export function naragiBaseDamageCompare(
+  loadout: Loadout,
+  statsBase: number,
+): { off: number; on: number } {
+  const formulaNormal = computedLoadoutBase(loadout);
+  const formulaOverride = baseAbilityDamage(
+    NARAGI_LEVEL_OVERRIDE,
+    loadoutWeaponConfig(loadout),
+  );
+  const on =
+    formulaNormal > 0
+      ? Math.floor((statsBase * formulaOverride) / formulaNormal)
+      : statsBase;
+  return { off: statsBase, on };
+}
+
 /** Map already-resolved CalcStats + Loadout into host model input (no re-stage). */
 export function hostInputFromLoadoutStats(
   loadout: Loadout,
@@ -57,15 +77,7 @@ export function hostInputFromLoadoutStats(
   });
 
   // Precompute base AD at Naragi 255 so land-time override swaps formula base exactly.
-  const formulaNormal = computedLoadoutBase(loadout);
-  const formulaOverride = baseAbilityDamage(
-    NARAGI_LEVEL_OVERRIDE,
-    loadoutWeaponConfig(loadout),
-  );
-  const overrideBase =
-    formulaNormal > 0
-      ? Math.floor((stats.base * formulaOverride) / formulaNormal)
-      : stats.base;
+  const { on: overrideBase } = naragiBaseDamageCompare(loadout, stats.base);
   const sliverWorn = loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID;
   const naragiPicked =
     options.relics?.includes(NARAGI_EDICT_RELIC) === true ||

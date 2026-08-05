@@ -63,6 +63,9 @@ export type RevoRunResultsProps = {
     active: boolean;
     onToggle: () => void;
     disabled?: boolean;
+    /** Effective base AD with activation off vs on (level 255 window). */
+    baseOff: number;
+    baseOn: number;
   } | null;
 };
 
@@ -143,24 +146,59 @@ export function RevoRunResults({
           {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
         </p>
         {sliverToggle ? (
-          <button
-            type="button"
-            className={`combat-button revo-sliver-toggle border text-xs ${
-              sliverToggle.active
-                ? "border-stone-750 bg-stone-850 text-parch-50"
-                : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-            }`}
-            aria-pressed={sliverToggle.active}
-            data-testid="sliver-buff-toggle"
-            title="Activate Sliver of Edicts at combat start (16.8s window)"
-            disabled={sliverToggle.disabled === true || runBusy}
-            onClick={sliverToggle.onToggle}
-          >
-            <span className="revo-sliver-toggle__label">Sliver</span>
-            <span className="revo-sliver-toggle__state font-mono">
-              {sliverToggle.active ? "On" : "Off"}
-            </span>
-          </button>
+          <div className="revo-sliver-group" data-testid="revo-sliver-group">
+            <button
+              type="button"
+              className={`combat-button revo-sliver-toggle border text-xs ${
+                sliverToggle.active
+                  ? "border-stone-750 bg-stone-850 text-parch-50"
+                  : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+              }`}
+              aria-pressed={sliverToggle.active}
+              data-testid="sliver-buff-toggle"
+              title="Activate Sliver of Edicts at combat start (16.8s window)"
+              disabled={sliverToggle.disabled === true || runBusy}
+              onClick={sliverToggle.onToggle}
+            >
+              <span className="revo-sliver-toggle__label">Sliver</span>
+              <span className="revo-sliver-toggle__state font-mono">
+                {sliverToggle.active ? "On" : "Off"}
+              </span>
+            </button>
+            <p
+              className="revo-sliver-base"
+              data-testid="revo-sliver-base-compare"
+              title="Effective base ability damage: loadout level (off) vs Naragi 255 window (on)"
+            >
+              <span className="revo-sliver-base__label">Base AD</span>
+              <span className="revo-sliver-base__row font-mono">
+                <span
+                  className={
+                    sliverToggle.active
+                      ? "revo-sliver-base__val is-dim"
+                      : "revo-sliver-base__val is-active"
+                  }
+                  data-testid="revo-sliver-base-off"
+                >
+                  {formatNumber(sliverToggle.baseOff)}
+                </span>
+                <span className="revo-sliver-base__sep" aria-hidden>
+                  /
+                </span>
+                <span
+                  className={
+                    sliverToggle.active
+                      ? "revo-sliver-base__val is-active"
+                      : "revo-sliver-base__val is-dim"
+                  }
+                  data-testid="revo-sliver-base-on"
+                >
+                  {formatNumber(sliverToggle.baseOn)}
+                </span>
+              </span>
+              <span className="revo-sliver-base__hint">off / on</span>
+            </p>
+          </div>
         ) : null}
         <button
           type="button"

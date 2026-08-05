@@ -2652,6 +2652,13 @@ body:has(.combat-screen) {
   font-size: 0.68rem;
 }
 
+.revo-sliver-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+}
+
 .revo-sliver-toggle {
   display: inline-flex;
   flex-direction: column;
@@ -2659,7 +2666,6 @@ body:has(.combat-screen) {
   justify-content: center;
   gap: 0.1rem;
   min-height: 2.15rem;
-  margin-left: auto;
   padding: 0.25rem 0.55rem;
   border-radius: var(--c-radius);
   line-height: 1.1;
@@ -2675,8 +2681,49 @@ body:has(.combat-screen) {
   font-size: 0.72rem;
 }
 
-/* When Sliver is present it takes margin-left:auto; Run sits beside it. */
-.revo-sliver-toggle + .revo-run-button {
+.revo-sliver-base {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.08rem;
+  margin: 0;
+  min-width: 4.5rem;
+  line-height: 1.15;
+  color: var(--combat-muted);
+}
+
+.revo-sliver-base__label {
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.revo-sliver-base__row {
+  font-size: 0.78rem;
+  color: var(--combat-text, var(--parch-50, #f0e6d2));
+}
+
+.revo-sliver-base__sep {
+  margin: 0 0.2rem;
+  opacity: 0.45;
+}
+
+.revo-sliver-base__val.is-dim {
+  opacity: 0.55;
+}
+
+.revo-sliver-base__val.is-active {
+  color: var(--combat-gem-bright, #6fd9b0);
+  opacity: 1;
+}
+
+.revo-sliver-base__hint {
+  font-size: 0.55rem;
+  opacity: 0.75;
+}
+
+/* Group takes margin-left:auto; Run sits beside it. */
+.revo-sliver-group + .revo-run-button {
   margin-left: 0;
 }
 

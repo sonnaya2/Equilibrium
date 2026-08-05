@@ -74,6 +74,15 @@ describe("ability registry single authority", () => {
     }
   });
 
+  it("death_skulls_igneous is honest partial like base Death Skulls", () => {
+    const base = entryByEngineId("death_skulls");
+    const igneous = entryByEngineId("death_skulls_igneous");
+    expect(base?.support.status).toBe("partially-modeled");
+    expect(igneous?.support.status).toBe("partially-modeled");
+    expect(igneous?.solverEligibleDefault).toBe(false);
+    expect(igneous?.support.note).toMatch(/Single-target/i);
+  });
+
   it("engineIdForRecord matches RECORD_TO_ENGINE for catalogue records", () => {
     for (const record of combatAbilities.records) {
       const mapped = RECORD_TO_ENGINE[record.id];

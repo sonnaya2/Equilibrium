@@ -231,9 +231,13 @@ export function prepareCast(
   }
   // Planted Feet: base Sunshine's duration extends (handled in castEffects) but
   // its periodic beam damage is removed - schedule no DoT events at all (wiki:
-  // "they no longer deal periodic damage to your target"). Greater variants
-  // and Death's Swiftness (no periodic hits since 16 Mar 2026) are unaffected.
-  if (ability.appliesEffect === "sunshine" && input.plantedFeet) {
+  // Planted Feet: strip Sunshine beam DoT. Greater Sunshine does not gain the
+  // +25% duration, but wiki still strips its beam (reflect encounters).
+  // Death's Swiftness has no periodic hits since 16 Mar 2026.
+  if (
+    (ability.appliesEffect === "sunshine" || ability.appliesEffect === "greater_sunshine") &&
+    input.plantedFeet
+  ) {
     working = { ...working, hits: [] };
   }
 

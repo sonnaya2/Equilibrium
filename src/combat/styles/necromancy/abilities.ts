@@ -228,6 +228,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     cooldownSeconds: DEATH_SKULLS_COOLDOWN_SECONDS,
     replacementGroup: "death_skulls",
     requiredPassiveAnyOf: ["igneous-death-skulls"],
+    supportStatus: "partially-modeled",
+    supportNote: "Single-target only (bounce path via the player).",
     source: DEATH_SKULLS_WIKI,
   },
   {

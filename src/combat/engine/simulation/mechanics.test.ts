@@ -405,13 +405,14 @@ describe("Planted Feet", () => {
     expect(base.expiresAtTick - base.startsAtTick).toBe(50);
   });
 
-  it("Greater Sunshine keeps its beam with Planted Feet (perk is base-only)", () => {
+  it("Greater Sunshine strips beam DoT with Planted Feet (duration still unextended)", () => {
     const s = simulate({
       ...magicInput,
       plantedFeet: true,
       rotation: rotationOf(...Array(12).fill("magic_attack"), "greater_sunshine"),
     });
-    expect(s.events.filter((e) => e.abilityId === "greater_sunshine")).toHaveLength(21);
+    // Wiki: PF does not extend Greater duration, but still removes the beam DoT.
+    expect(s.events.filter((e) => e.abilityId === "greater_sunshine")).toHaveLength(0);
   });
 });
 

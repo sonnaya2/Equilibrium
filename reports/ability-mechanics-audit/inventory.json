@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-08-04T08:18:48.408Z",
-  "headSha": "e505b7f53b15e47efeabd4dcdcee0c4f867e5ba1",
+  "generatedAt": "2026-08-05T00:51:46.062Z",
+  "headSha": null,
   "note": "Seed from ABILITY_REGISTRY. audit.* starts pending; update per finding file.",
   "counts": {
-    "total": 87,
+    "total": 89,
     "byStyle": {
-      "melee": 24,
+      "melee": 25,
       "ranged": 17,
       "magic": 23,
-      "necromancy": 23
+      "necromancy": 24
     },
     "support": {
-      "full": 74,
+      "full": 76,
       "partially-modeled": 13
     },
-    "solverEligibleDefault": 69
+    "solverEligibleDefault": 70
   },
   "abilities": [
     {
@@ -117,7 +117,61 @@
       ],
       "hitCount": 1,
       "sourceUrl": "https://runescape.wiki/w/Adaptive_Strike",
-      "verifiedAt": "2026-07-26",
+      "verifiedAt": "2026-08-04",
+      "audit": {
+        "staticStatus": "pending",
+        "runtimeStatus": "pending",
+        "parityStatus": "pending",
+        "notes": []
+      }
+    },
+    {
+      "engineId": "adaptive_strike_mh",
+      "name": "Adaptive Strike (main-hand)",
+      "style": "melee",
+      "category": "basic",
+      "recordId": "melee:adaptive-strike",
+      "linkKind": "setup-variant",
+      "castStage": null,
+      "replacementGroup": "adaptive_strike",
+      "cooldownGroup": null,
+      "supportStatus": "full",
+      "supportNote": null,
+      "solverEligibleDefault": true,
+      "autoAttack": false,
+      "offGcd": false,
+      "weaponSpecial": false,
+      "adrenaline": {
+        "gain": 12,
+        "cost": null
+      },
+      "cooldownSeconds": 5.4,
+      "channelTicks": null,
+      "weaponRequirement": "mainhand-empty",
+      "requiredPassiveAnyOf": null,
+      "requiredEquipmentAnyOf": null,
+      "stateEffect": null,
+      "appliesEffect": null,
+      "area": null,
+      "guaranteedCrit": false,
+      "bleedDurationExtension": null,
+      "bloodlustGain": 1,
+      "enables": null,
+      "recastOf": null,
+      "hasDerivedHits": false,
+      "hits": [
+        {
+          "minPct": 120,
+          "maxPct": 140,
+          "tickOffset": null,
+          "critEligible": true,
+          "dot": false,
+          "bleedId": null
+        }
+      ],
+      "hitCount": 1,
+      "sourceUrl": "https://runescape.wiki/w/Adaptive_Strike",
+      "verifiedAt": "2026-08-04",
       "audit": {
         "staticStatus": "pending",
         "runtimeStatus": "pending",
@@ -179,7 +233,7 @@
       ],
       "hitCount": 2,
       "sourceUrl": "https://runescape.wiki/w/Adaptive_Strike",
-      "verifiedAt": "2026-07-26",
+      "verifiedAt": "2026-08-04",
       "audit": {
         "staticStatus": "pending",
         "runtimeStatus": "pending",
@@ -1329,7 +1383,7 @@
         {
           "minPct": 520,
           "maxPct": 570,
-          "tickOffset": null,
+          "tickOffset": 3,
           "critEligible": true,
           "dot": false,
           "bleedId": null
@@ -1337,7 +1391,7 @@
       ],
       "hitCount": 1,
       "sourceUrl": "https://runescape.wiki/w/Overpower",
-      "verifiedAt": "2026-07-26",
+      "verifiedAt": "2026-08-04",
       "audit": {
         "staticStatus": "pending",
         "runtimeStatus": "pending",
@@ -1385,7 +1439,7 @@
         {
           "minPct": 280,
           "maxPct": 340,
-          "tickOffset": null,
+          "tickOffset": 3,
           "critEligible": true,
           "dot": false,
           "bleedId": null
@@ -1393,7 +1447,7 @@
         {
           "minPct": 280,
           "maxPct": 340,
-          "tickOffset": null,
+          "tickOffset": 3,
           "critEligible": true,
           "dot": false,
           "bleedId": null
@@ -1401,7 +1455,7 @@
       ],
       "hitCount": 2,
       "sourceUrl": "https://runescape.wiki/w/Overpower",
-      "verifiedAt": "2026-07-26",
+      "verifiedAt": "2026-08-04",
       "audit": {
         "staticStatus": "pending",
         "runtimeStatus": "pending",
@@ -1419,9 +1473,9 @@
       "castStage": null,
       "replacementGroup": null,
       "cooldownGroup": null,
-      "supportStatus": "partially-modeled",
-      "supportNote": "Single-target model (primary + splash-on-primary). Multi-target splash unmodeled.",
-      "solverEligibleDefault": false,
+      "supportStatus": "full",
+      "supportNote": "Weapon special. Requires Dark Shard of Leng (or equivalent) or Essence of Finality. ST primary model; multi-target splash unmodeled.",
+      "solverEligibleDefault": true,
       "autoAttack": false,
       "offGcd": false,
       "weaponSpecial": true,
@@ -1431,10 +1485,8 @@
       },
       "cooldownSeconds": 15,
       "channelTicks": null,
-      "weaponRequirement": "mainhand",
-      "requiredPassiveAnyOf": [
-        "leng-endless-frost"
-      ],
+      "weaponRequirement": null,
+      "requiredPassiveAnyOf": null,
       "requiredEquipmentAnyOf": null,
       "stateEffect": null,
       "appliesEffect": null,
@@ -2335,7 +2387,7 @@
       "bloodlustGain": null,
       "enables": null,
       "recastOf": null,
-      "hasDerivedHits": false,
+      "hasDerivedHits": true,
       "hits": [
         {
           "minPct": 90,
@@ -2344,41 +2396,9 @@
           "critEligible": false,
           "dot": true,
           "bleedId": null
-        },
-        {
-          "minPct": 72,
-          "maxPct": 88,
-          "tickOffset": 2,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
-        },
-        {
-          "minPct": 54,
-          "maxPct": 66,
-          "tickOffset": 4,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
-        },
-        {
-          "minPct": 36,
-          "maxPct": 44,
-          "tickOffset": 6,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
-        },
-        {
-          "minPct": 18,
-          "maxPct": 22,
-          "tickOffset": 8,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
         }
       ],
-      "hitCount": 5,
+      "hitCount": 1,
       "sourceUrl": "https://runescape.wiki/w/Corruption_Shot",
       "verifiedAt": "2026-07-26",
       "audit": {
@@ -3173,9 +3193,9 @@
       "castStage": null,
       "replacementGroup": null,
       "cooldownGroup": null,
-      "supportStatus": "full",
-      "supportNote": null,
-      "solverEligibleDefault": true,
+      "supportStatus": "partially-modeled",
+      "supportNote": "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events).",
+      "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,
       "weaponSpecial": false,
@@ -3227,9 +3247,9 @@
       "castStage": null,
       "replacementGroup": null,
       "cooldownGroup": null,
-      "supportStatus": "full",
-      "supportNote": null,
-      "solverEligibleDefault": true,
+      "supportStatus": "partially-modeled",
+      "supportNote": "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events).",
+      "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,
       "weaponSpecial": false,
@@ -3584,7 +3604,7 @@
       "bloodlustGain": null,
       "enables": null,
       "recastOf": null,
-      "hasDerivedHits": false,
+      "hasDerivedHits": true,
       "hits": [
         {
           "minPct": 90,
@@ -3593,41 +3613,9 @@
           "critEligible": false,
           "dot": true,
           "bleedId": null
-        },
-        {
-          "minPct": 72,
-          "maxPct": 88,
-          "tickOffset": 4,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
-        },
-        {
-          "minPct": 54,
-          "maxPct": 66,
-          "tickOffset": 6,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
-        },
-        {
-          "minPct": 36,
-          "maxPct": 44,
-          "tickOffset": 8,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
-        },
-        {
-          "minPct": 18,
-          "maxPct": 22,
-          "tickOffset": 10,
-          "critEligible": false,
-          "dot": true,
-          "bleedId": null
         }
       ],
-      "hitCount": 5,
+      "hitCount": 1,
       "sourceUrl": "https://runescape.wiki/w/Corruption_Blast",
       "verifiedAt": "2026-07-26",
       "audit": {
@@ -4358,7 +4346,7 @@
       "replacementGroup": null,
       "cooldownGroup": null,
       "supportStatus": "partially-modeled",
-      "supportNote": "Crit-adrenaline window (30s, +8% per crit) not modeled.",
+      "supportNote": "ST primary + crit-adren window modeled (Bernoulli adren). AoE secondaries, Glacial Embrace cost, Lightning Surge nested crit-adren not modeled.",
       "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,
@@ -4510,9 +4498,9 @@
       "castStage": null,
       "replacementGroup": null,
       "cooldownGroup": null,
-      "supportStatus": "full",
-      "supportNote": null,
-      "solverEligibleDefault": true,
+      "supportStatus": "partially-modeled",
+      "supportNote": "Cast band modeled. Defence -5% / affinity +2 for 60s not modeled (no dynamic DP recompute).",
+      "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,
       "weaponSpecial": true,
@@ -4944,9 +4932,9 @@
       "castStage": null,
       "replacementGroup": null,
       "cooldownGroup": null,
-      "supportStatus": "partially-modeled",
-      "supportNote": "25% soul roll excluded from the deterministic simulation.",
-      "solverEligibleDefault": false,
+      "supportStatus": "full",
+      "supportNote": null,
+      "solverEligibleDefault": true,
       "autoAttack": false,
       "offGcd": false,
       "weaponSpecial": false,
@@ -4998,8 +4986,8 @@
       "castStage": 2,
       "replacementGroup": null,
       "cooldownGroup": null,
-      "supportStatus": "partially-modeled",
-      "supportNote": "25% soul roll excluded from the deterministic simulation.",
+      "supportStatus": "full",
+      "supportNote": null,
       "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,
@@ -5053,7 +5041,7 @@
       "replacementGroup": null,
       "cooldownGroup": null,
       "supportStatus": "partially-modeled",
-      "supportNote": "Missing-HP multiplier applies only when target HP% is set; 25% soul roll excluded.",
+      "supportNote": "Missing-HP multiplier applies only when target HP% is set.",
       "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,
@@ -5484,6 +5472,51 @@
       }
     },
     {
+      "engineId": "command_vengeful_ghost",
+      "name": "Command Vengeful Ghost",
+      "style": "necromancy",
+      "category": "enhanced",
+      "recordId": "necromancy:command-vengeful-ghost",
+      "linkKind": "canonical",
+      "castStage": null,
+      "replacementGroup": null,
+      "cooldownGroup": null,
+      "supportStatus": "full",
+      "supportNote": null,
+      "solverEligibleDefault": true,
+      "autoAttack": false,
+      "offGcd": false,
+      "weaponSpecial": false,
+      "adrenaline": {
+        "gain": null,
+        "cost": 0
+      },
+      "cooldownSeconds": null,
+      "channelTicks": null,
+      "weaponRequirement": null,
+      "requiredPassiveAnyOf": null,
+      "requiredEquipmentAnyOf": null,
+      "stateEffect": "command_vengeful_ghost",
+      "appliesEffect": null,
+      "area": null,
+      "guaranteedCrit": false,
+      "bleedDurationExtension": null,
+      "bloodlustGain": null,
+      "enables": null,
+      "recastOf": null,
+      "hasDerivedHits": false,
+      "hits": [],
+      "hitCount": 0,
+      "sourceUrl": "https://runescape.wiki/w/Command_Vengeful_Ghost",
+      "verifiedAt": "2026-07-26",
+      "audit": {
+        "staticStatus": "pending",
+        "runtimeStatus": "pending",
+        "parityStatus": "pending",
+        "notes": []
+      }
+    },
+    {
       "engineId": "death_grasp",
       "name": "Death Grasp",
       "style": "necromancy",
@@ -5593,7 +5626,7 @@
       "replacementGroup": null,
       "cooldownGroup": null,
       "supportStatus": "partially-modeled",
-      "supportNote": "Ghost healing, Command Vengeful Ghost / Haunted, and Spirit Pact duration variants are not modeled.",
+      "supportNote": "Ghost healing and Spirit Pact duration variants are not modeled.",
       "solverEligibleDefault": false,
       "autoAttack": false,
       "offGcd": false,

@@ -526,12 +526,15 @@ describe("darkfang basic", () => {
 });
 
 describe("caroming", () => {
-  it("scales each ricochet hit band by rank", () => {
+  it("adds flat +4% AD per rank to each ricochet hit band (wiki table)", () => {
     const base = RANGED_ABILITIES.find((a) => a.id === "ricochet")!.hits;
     const r4 = applyCaromingToRicochetHits(base, 4);
-    const mult = 1 + caromingRicochetBonus(4);
-    expect(mult).toBeCloseTo(1.16);
-    expect(r4[0]!.band.minPct).toBeCloseTo(base[0]!.band.minPct * mult);
+    const add = Math.round(caromingRicochetBonus(4) * 100);
+    expect(add).toBe(16);
+    // Rank 4 main 75-85 -> 91-101; returns 15-20 -> 31-36
+    expect(r4[0]!.band.minPct).toBe(base[0]!.band.minPct + add);
+    expect(r4[0]!.band.maxPct).toBe(base[0]!.band.maxPct + add);
+    expect(r4[1]!.band.minPct).toBe(base[1]!.band.minPct + add);
     expect(r4).toHaveLength(base.length);
   });
 
@@ -553,22 +556,21 @@ describe("caroming", () => {
     );
     expect(plainHits).toHaveLength(3);
     expect(perkHits).toHaveLength(3);
+    // Flat +16 AD% on each hit (not *1.16). Mean EV scales as (mid+16)/mid.
     for (let i = 0; i < 3; i++) {
-      expect(perkHits[i]!.damage.expected).toBeCloseTo(
-        plainHits[i]!.damage.expected * 1.16,
-        5,
-      );
+      expect(perkHits[i]!.damage.expected).toBeGreaterThan(plainHits[i]!.damage.expected);
     }
+    // Primary mid 80 -> 96 => 1.2x at base 1000
+    expect(perkHits[0]!.damage.expected).toBeCloseTo(plainHits[0]!.damage.expected * (96 / 80), 5);
   });
 
-  it("scales bands with integer percent path (no 15*1.04 float dust)", () => {
+  it("adds integer percentage points (no multiplicative float dust)", () => {
     const scaled = applyCaromingToRicochetHits(
       [{ band: { minPct: 15, maxPct: 20 }, tickOffset: 1 }],
       1,
     );
-    expect(scaled[0]!.band.minPct).toBe(15.6);
-    expect(scaled[0]!.band.maxPct).toBe(20.8);
-    expect(Object.is(scaled[0]!.band.minPct, 15.6)).toBe(true);
+    expect(scaled[0]!.band.minPct).toBe(19);
+    expect(scaled[0]!.band.maxPct).toBe(24);
   });
 });
 

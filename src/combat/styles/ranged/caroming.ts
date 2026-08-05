@@ -13,14 +13,15 @@ export function isRicochetAbility(abilityId: string): boolean {
 }
 
 /**
- * Apply Caroming at Ricochet band construction: each hit band * (1 + 4%/rank).
- * Integer scale path: pct * (100 + 4*rank) / 100 (avoids 15 * 1.04 float dust).
+ * Apply Caroming at Ricochet band construction.
+ * Wiki Caroming (post 9 Mar 2026): +4% ability damage per rank per hit (flat AD
+ * percentage points, not multiplicative). Rank 4: 75-85 -> 91-101; returns 15-20
+ * -> 31-36; late GR 4-6 -> 20-22.
  * Preserves per-hit structure; does not flatten to one total or copy multi-target.
  */
-function scaleBandPct(pct: number, rank: number): number {
-  // caromingRicochetBonus(rank) === 0.04 * rank
-  const scale = 100 + Math.round(caromingRicochetBonus(rank) * 100);
-  return (pct * scale) / 100;
+function flatCaromingPct(pct: number, rank: number): number {
+  // caromingRicochetBonus(rank) === 0.04 * rank -> 4 * rank percentage points
+  return pct + Math.round(caromingRicochetBonus(rank) * 100);
 }
 
 export function applyCaromingToRicochetHits(
@@ -33,8 +34,8 @@ export function applyCaromingToRicochetHits(
   return hits.map((h) => ({
     ...h,
     band: {
-      minPct: scaleBandPct(h.band.minPct, rank),
-      maxPct: scaleBandPct(h.band.maxPct, rank),
+      minPct: flatCaromingPct(h.band.minPct, rank),
+      maxPct: flatCaromingPct(h.band.maxPct, rank),
     },
   }));
 }

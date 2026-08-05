@@ -342,6 +342,15 @@ export function isVerifiedCacheableResult(
   // Rankable: full-horizon score present when the DTO carries one.
   if (result.bestFullScore !== undefined && !Number.isFinite(result.bestFullScore)) return false;
 
+  // Residual / unvalidated honesty never enters verified cache.
+  if (result.honesty?.fullyValidated === false) return false;
+  const residual =
+    result.honesty?.residualMass ??
+    result.rng?.residualWeight ??
+    result.summary?.rng?.residualWeight ??
+    0;
+  if (typeof residual === "number" && residual > 1e-12) return false;
+
   const bar = result.bar?.filter((id) => typeof id === "string" && id.length > 0) ?? [];
   if (bar.length === 0) return false;
   if (bar.length < request.minBarSize || bar.length > request.maxBarSize) return false;

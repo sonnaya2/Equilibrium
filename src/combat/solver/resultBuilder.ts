@@ -10,6 +10,7 @@ import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "../league/ruleset";
 import type { WinnerPresentation } from "./evaluate";
 import { SCORE_ANALYSIS_PARITY_TOLERANCE } from "./scoreAnalysisParity";
+import { buildSolverResultHonesty } from "./solverDtoHonesty";
 
 export function buildSolverResultDto(args: {
   request: SerializableSolverRequest;
@@ -147,6 +148,46 @@ export function buildSolverResultDto(args: {
       ? [...result.incumbentBar]
       : result.incumbentBar ?? null;
 
+  const residualMass =
+    typeof presentation?.rng?.residualWeight === "number"
+      ? presentation.rng.residualWeight
+      : typeof presentation?.summary?.rng?.residualWeight === "number"
+        ? presentation.summary.rng.residualWeight
+        : 0;
+  const branchExactness =
+    typeof presentation?.rng?.exactness === "string"
+      ? presentation.rng.exactness
+      : typeof presentation?.summary?.rng?.exactness === "string"
+        ? presentation.summary.rng.exactness
+        : null;
+
+  const currentBarScore = Number.isFinite(result.incumbentScore)
+    ? result.incumbentScore
+    : Number.NEGATIVE_INFINITY;
+
+  // Residual on a supposed full winner is never Apply-eligible (defense in depth).
+  const residualBlocksApply = residualMass > 1e-12;
+  const validForApplyHonest = validForApply && !residualBlocksApply;
+
+  const honesty = buildSolverResultHonesty({
+    status: result.status,
+    fullyValidated: true,
+    isUpgrade: isUpgrade && !residualBlocksApply,
+    validForApply: validForApplyHonest,
+    currentBarScore,
+    proposedBarScore: score,
+    improvement: scoreImprovement,
+    proofLabel: result.proof,
+    residualMass,
+    branchExactness,
+  });
+
+  if (residualBlocksApply) {
+    proofNotes.push(
+      `residualMass=${residualMass} blocks apply (never label residual as verified upgrade)`,
+    );
+  }
+
   const dto: SolverResultDTO = {
     bar: winnerBar,
     // Ranking score from score-only finalize path (not rewritten by presentation).
@@ -161,6 +202,7 @@ export function buildSolverResultDto(args: {
     durationTicks: fullTicks,
     solveIdentity: solveIdentityFromRequest(request),
     proofLabel: result.proof,
+    honesty,
     ...(exploratoryOut != null ? { bestExploratoryScore: exploratoryOut } : {}),
     ...(fullOut != null ? { bestFullScore: fullOut } : {}),
     openingDpm: hasRealWindows ? winner.openingDpm : undefined,
@@ -168,14 +210,23 @@ export function buildSolverResultDto(args: {
     steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
     assumptions: bigBonedAssumptions,
     baselineBar,
-    baselineScore: result.incumbentScore,
+    baselineScore: currentBarScore,
     winnerScore: score,
-    scoreImprovement,
-    percentImprovement,
-    isUpgrade,
-    validForApply,
+    scoreImprovement: honesty.improvement,
+    percentImprovement: honesty.beatsBar ? percentImprovement : null,
+    isUpgrade: honesty.beatsBar,
+    validForApply: honesty.applyAllowed,
     ...(presentation?.summary ? { summary: presentation.summary } : {}),
-    ...(presentation?.rng ? { rng: presentation.rng } : {}),
+    ...(presentation?.rng
+      ? { rng: presentation.rng }
+      : residualMass > 0 || branchExactness != null
+        ? {
+            rng: {
+              residualWeight: residualMass,
+              ...(branchExactness != null ? { exactness: branchExactness } : {}),
+            },
+          }
+        : {}),
     proof: {
       label: result.proof,
       // Independent full-analysis re-sim score when presentation ran.

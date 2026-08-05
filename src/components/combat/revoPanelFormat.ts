@@ -182,6 +182,7 @@ export const CURRENT_BAR_REMAINS_BEST = "current bar remains best";
  * Phase 4/5 Apply gate for completed result DTOs.
  * Only verified-cacheable full-horizon proofs enable Apply; degraded/failed never.
  * Phase 5: explicit isUpgrade/validForApply false hard-disables Apply.
+ * Honesty block residual / applyAllowed hard-disable when present.
  * Undefined upgrade flags (legacy DTOs) keep prior proof-only behavior.
  */
 export function mayApplySolverResultBar(
@@ -189,7 +190,16 @@ export function mayApplySolverResultBar(
 ): boolean {
   if (!dto?.bar?.length) return false;
   if (!Number.isFinite(dto.score)) return false;
+  if (dto.honesty?.applyAllowed === false) return false;
+  if (dto.honesty?.fullyValidated === false) return false;
+  if (dto.honesty?.beatsBar === false) return false;
   if (dto.validForApply === false || dto.isUpgrade === false) return false;
+  const residual =
+    dto.honesty?.residualMass ??
+    dto.rng?.residualWeight ??
+    dto.summary?.rng?.residualWeight ??
+    0;
+  if (typeof residual === "number" && residual > 1e-12) return false;
   const proof = dto.proofLabel ?? dto.proof?.label;
   if (typeof proof !== "string" || proof.length === 0) return false;
   if (!VERIFIED_CACHEABLE_PROOFS.has(proof as ProofLabel)) return false;
@@ -204,7 +214,15 @@ export function shouldAdoptSolverResultBar(
   dto: SolverResultDTO | null | undefined,
 ): boolean {
   if (!dto) return false;
+  if (dto.honesty?.applyAllowed === false) return false;
+  if (dto.honesty?.beatsBar === false) return false;
   if (dto.validForApply === false || dto.isUpgrade === false) return false;
+  const residual =
+    dto.honesty?.residualMass ??
+    dto.rng?.residualWeight ??
+    dto.summary?.rng?.residualWeight ??
+    0;
+  if (typeof residual === "number" && residual > 1e-12) return false;
   return true;
 }
 

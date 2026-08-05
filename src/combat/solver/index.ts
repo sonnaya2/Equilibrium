@@ -253,9 +253,21 @@ export {
 export type {
   SerializableSolverRequest,
   SolverResultDTO,
+  SolverResultHonestyDTO,
   SerializableRevolutionSimBase,
   SolverSearchTier,
 } from "./worker/serializable";
+export {
+  buildSolverResultHonesty,
+  dtoAllowsApply,
+  residualMassOfDto,
+  branchExactnessOfDto,
+  type SolverResultHonesty,
+} from "./solverDtoHonesty";
+export {
+  branchFidelityLadderMemoToken,
+  branchFidelityCacheToken,
+} from "./branchFidelity";
 export type { SolverProgress, SolverAgentSnapshot } from "./worker/protocol";
 export {
   runOptimize,

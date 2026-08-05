@@ -48,6 +48,8 @@ export {
   resetBranchProfile,
   getBranchProfile,
   noteBranchLiveCount,
+  noteFidelityRetry,
+  noteBranchKeyConstructionMs,
 } from "./branchCore";
 
 /** Weight plan for one RNG outcome before snapshot+commit. */

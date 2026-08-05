@@ -32,6 +32,11 @@ export function isRankableSolverResult(r: SolverResultDTO): boolean {
   if (r.proofLabel === "failed") return false;
   // Phase 4: exploratory fallback DTOs never win merges or apply paths.
   if (r.proofLabel === "degraded-exploratory-fallback") return false;
+  if (r.honesty?.fullyValidated === false) return false;
+  if (r.honesty?.status === "failed" || r.honesty?.status === "degraded") return false;
+  const residual =
+    r.honesty?.residualMass ?? r.rng?.residualWeight ?? r.summary?.rng?.residualWeight ?? 0;
+  if (typeof residual === "number" && residual > 1e-12) return false;
   return true;
 }
 

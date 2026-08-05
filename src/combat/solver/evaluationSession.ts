@@ -21,7 +21,11 @@ import {
   summaryEligibleForObjectiveScore,
   summaryObjectiveIneligibilityReason,
 } from "./objective";
-import { branchFidelityModeForEval } from "./branchFidelity";
+import {
+  branchFidelityLadderMemoToken,
+  branchFidelityModeForEval,
+  resolveBranchFidelityLadder,
+} from "./branchFidelity";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
@@ -112,6 +116,9 @@ export function createEvaluateFn(args: {
     const kind = useFull ? ("full" as const) : ("search" as const);
     const fidelity = useFull ? ("full" as const) : useMedium ? ("medium" as const) : ("short" as const);
     const branchFidelityMode = branchFidelityModeForEval(scoreMode);
+    // Ladder token includes live caps so a 64-branch policy never reuses a 4096 result.
+    const branchFidelityLadder = resolveBranchFidelityLadder(branchFidelityMode);
+    const branchFidelityToken = branchFidelityLadderMemoToken(branchFidelityLadder);
     // One join for seenBars + evaluation memo key (no second bar.join).
     const key = barKey(bar);
     const peer = options?.coord?.getIncumbent();
@@ -122,7 +129,7 @@ export function createEvaluateFn(args: {
     if (peer?.fullScore != null && peer.fullScore > state.bestFullScore) {
       state.bestFullScore = peer.fullScore;
     }
-    // Memo context includes branch-fidelity mode so adaptive ladders never mix with single-shot.
+    // Memo context includes branch-fidelity ladder (mode + live caps + residual threshold).
     const memoKey = fingerprintEvaluationKey({
       bar,
       barKey: key,
@@ -133,6 +140,7 @@ export function createEvaluateFn(args: {
       context: {
         base: memoContext,
         branchFidelityMode,
+        branchFidelityToken,
       },
       objectiveVersion: OBJECTIVE_VERSION,
     });

@@ -386,6 +386,34 @@ describe("Phase 4 apply / validation failure gates", () => {
         validForApply: true,
       }),
     ).toBe(true);
+
+    // Residual mass hard-disables Apply even with cacheable proof + upgrade flags.
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        isUpgrade: true,
+        validForApply: true,
+        honesty: {
+          status: "ok",
+          fullyValidated: true,
+          beatsBar: true,
+          branchExactness: "approximated",
+          residualMass: 0.66,
+          currentBarScore: 100,
+          proposedBarScore: 1000,
+          improvement: 900,
+          applyAllowed: false,
+        },
+      }),
+    ).toBe(false);
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        isUpgrade: true,
+        validForApply: true,
+        rng: { residualWeight: 0.2, exactness: "approximated" },
+      }),
+    ).toBe(false);
   });
 
   it("Phase 5: formatSolverUpgradeChrome remains-best and improvement", () => {

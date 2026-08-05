@@ -4,7 +4,11 @@
  * Progressive live caps; residual thresholds gate completeness; never launder residual.
  */
 import type { BranchBudget } from "../engine/simulation/contracts";
-import { resolveBranchBudget } from "../engine/simulation/branch";
+import {
+  isBranchProfilingEnabled,
+  noteFidelityRetry,
+  resolveBranchBudget,
+} from "../engine/simulation/branch";
 import {
   simulateRevolution,
   type RevolutionInput,
@@ -177,10 +181,14 @@ export function simulateWithAdaptiveBranchFidelity(
     const live = ladder.liveCaps[i]!;
     attempts += 1;
     const budget = budgetForLiveCap(live, ladder.maximumResidualWeight);
+    const t0 = isBranchProfilingEnabled() ? performance.now() : 0;
     const summary = simulateRevolution(input, {
       ...options,
       branchBudget: budget,
     });
+    if (isBranchProfilingEnabled()) {
+      noteFidelityRetry(performance.now() - t0);
+    }
     lastSummary = summary;
     lastBudget = budget;
     if (shouldStopAdaptiveAttempt(summary, ladder, i)) {
@@ -232,6 +240,14 @@ export function branchFidelityModeForEval(
 export function branchFidelityCacheToken(meta: BranchFidelityAttemptMeta | undefined): string {
   if (meta == null) return "bf=default";
   return `bf=${meta.mode}:L${meta.finalBudget.maxLiveBranches}:c${meta.complete ? 1 : 0}`;
+}
+
+/**
+ * Memo key fragment for a planned ladder (before adaptive run).
+ * Distinct live-cap ladders never share memo entries.
+ */
+export function branchFidelityLadderMemoToken(ladder: BranchFidelityLadder): string {
+  return `bfL=${ladder.mode}:caps=${ladder.liveCaps.join(",")}:r${ladder.maximumResidualWeight}:x${ladder.exactness}`;
 }
 
 /**

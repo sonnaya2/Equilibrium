@@ -235,6 +235,22 @@ export interface SerializableSolverRequest {
 /** Proof note when search found no full-horizon upgrade over the current bar. */
 export const CURRENT_BAR_REMAINS_BEST_NOTE = "current bar remains best";
 
+/**
+ * Explicit honesty contract for consumers (Apply, chrome, merge).
+ * Always set by buildSolverResultDto; do not invent on exploratory previews.
+ */
+export interface SolverResultHonestyDTO {
+  status: "ok" | "degraded" | "failed";
+  fullyValidated: boolean;
+  beatsBar: boolean;
+  branchExactness: string | null;
+  residualMass: number;
+  currentBarScore: number;
+  proposedBarScore: number;
+  improvement: number;
+  applyAllowed: boolean;
+}
+
 /** Cloneable solver result (no Maps/Sets/functions). */
 export interface SolverResultDTO {
   bar: readonly string[];
@@ -253,6 +269,11 @@ export interface SolverResultDTO {
    */
   solveIdentity: string;
   proofLabel?: ProofLabel;
+  /**
+   * Honesty surface: status, validation, residual, bar compare, Apply.
+   * Prefer these over digging through proof notes for gates.
+   */
+  honesty?: SolverResultHonestyDTO;
   /** Winner residual / branch exactness when disclosed (feeds proof chrome). */
   rng?: {
     residualWeight?: number;
@@ -273,6 +294,7 @@ export interface SolverResultDTO {
   /**
    * Phase 5 incumbent comparison (baseline = current user bar).
    * Always emitted from buildSolverResultDto when SolveResult carries them.
+   * Aliases: currentBarScore -> baselineScore; proposedBarScore -> winnerScore.
    */
   baselineBar?: readonly string[] | null;
   baselineScore?: number;

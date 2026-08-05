@@ -75,16 +75,24 @@ export interface BranchProfile {
   branchKeySerializations: number;
   /** Sum of serialized key string lengths (UTF-16 code units). */
   branchKeyChars: number;
+  /** Wall ms spent in branchKey construction (when profiling). */
+  branchKeyConstructionMs: number;
   /** mergeAndCapBranches invocations. */
   mergeAndCapCalls: number;
   /** Branches dropped by hard cap (merged count - kept count). */
   mergeAndCapDiscards: number;
+  /** mergeAndCap outcomes with exactness merged-exactly. */
+  exactMerges: number;
   /** Cap/merge results with residualWeight > 0. */
   residualMassEvents: number;
   /** Sum of residualWeight across residualMassEvents. */
   residualMassTotal: number;
   /** Peak live branch array length observed on instrumented paths. */
   maxLiveBranches: number;
+  /** Adaptive fidelity sim attempts (solver branchFidelity ladder). */
+  fidelityRetries: number;
+  /** Wall ms spent in instrumented revolution sims (adaptive ladder). */
+  simWallMs: number;
 }
 
 const EMPTY_BRANCH_PROFILE: BranchProfile = {
@@ -93,11 +101,15 @@ const EMPTY_BRANCH_PROFILE: BranchProfile = {
   snapshotBytesEstimate: 0,
   branchKeySerializations: 0,
   branchKeyChars: 0,
+  branchKeyConstructionMs: 0,
   mergeAndCapCalls: 0,
   mergeAndCapDiscards: 0,
+  exactMerges: 0,
   residualMassEvents: 0,
   residualMassTotal: 0,
   maxLiveBranches: 0,
+  fidelityRetries: 0,
+  simWallMs: 0,
 };
 
 function envBranchProfEnabled(): boolean {
@@ -129,6 +141,19 @@ export function getBranchProfile(): Readonly<BranchProfile> {
 export function noteBranchLiveCount(n: number): void {
   if (!branchProfEnabled || n <= branchProf.maxLiveBranches) return;
   branchProf.maxLiveBranches = n;
+}
+
+/** Adaptive fidelity attempt + optional sim wall time. No-op when profiling off. */
+export function noteFidelityRetry(simMs = 0): void {
+  if (!branchProfEnabled) return;
+  branchProf.fidelityRetries += 1;
+  if (simMs > 0) branchProf.simWallMs += simMs;
+}
+
+/** Accumulate branchKey construction wall time. No-op when profiling off. */
+export function noteBranchKeyConstructionMs(ms: number): void {
+  if (!branchProfEnabled || !(ms > 0)) return;
+  branchProf.branchKeyConstructionMs += ms;
 }
 
 /**
@@ -302,10 +327,12 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
  * RS3_BRANCH_KEY_JSON=1 restores full JSON for debug/oracle.
  */
 function branchKey(rt: SimulationRuntime): string {
+  const t0 = branchProfEnabled ? performance.now() : 0;
   const key = buildBranchKey(rt);
   if (branchProfEnabled) {
     branchProf.branchKeySerializations++;
     branchProf.branchKeyChars += key.length;
+    branchProf.branchKeyConstructionMs += performance.now() - t0;
   }
   return key;
 }
@@ -510,6 +537,7 @@ export function mergeAndCapBranches(
     return { ...capped, exactness: "bounded-approximation" };
   }
   if (merged.length < before) {
+    if (branchProfEnabled) branchProf.exactMerges += 1;
     return { ...capped, exactness: "merged-exactly" };
   }
   return { ...capped, exactness: "exact" };

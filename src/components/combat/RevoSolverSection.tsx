@@ -28,7 +28,7 @@ import {
   type BarSizePresetId,
   type SolverStoppedPreview,
 } from "./revoPanelFormat";
-import { formatProofChrome } from "./revoStochasticLabels";
+import { formatProofChrome, residualNote } from "./revoStochasticLabels";
 import "./revo-solver.css";
 
 export type RevoSolverSectionProps = {
@@ -518,7 +518,36 @@ export function RevoSolverSection({
             {solverResult.openingDpm != null
               ? ` · open ${formatNumber(solverResult.openingDpm)} / mid ${formatNumber(solverResult.developedDpm ?? 0)} / steady ${formatNumber(solverResult.steadyDpm ?? 0)}`
               : ""}
+            {solverResult.honesty
+              ? ` · ${solverResult.honesty.fullyValidated ? "validated" : "unvalidated"}${
+                  solverResult.honesty.applyAllowed ? "" : " · apply off"
+                }`
+              : ""}
           </p>
+          {(() => {
+            const residualSource = {
+              rng: {
+                residualWeight:
+                  solverResult.honesty?.residualMass ??
+                  solverResult.rng?.residualWeight ??
+                  solverResult.summary?.rng?.residualWeight,
+                exactness:
+                  solverResult.honesty?.branchExactness ??
+                  solverResult.rng?.exactness ??
+                  solverResult.summary?.rng?.exactness,
+                probabilityMass: solverResult.summary?.rng?.probabilityMass,
+                totalsBasis: solverResult.summary?.rng
+                  ? (solverResult.summary.rng as { totalsBasis?: string }).totalsBasis
+                  : undefined,
+              },
+            };
+            const note = residualNote(residualSource);
+            return note ? (
+              <p className="mt-1 text-[11px] text-amber-200/90" data-testid="revo-solver-residual-note">
+                {note}
+              </p>
+            ) : null;
+          })()}
           <ul className="mt-2 space-y-1">
             {(solverResult.top ?? [{ bar: solverResult.bar, score: solverResult.score }]).map(
               (row, i) => (

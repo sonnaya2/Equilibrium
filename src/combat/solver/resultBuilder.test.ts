@@ -184,6 +184,16 @@ describe("buildSolverResultDto", () => {
     expect(dto.openingDpm).toBe(12_345.5);
     expect(dto.isUpgrade).toBe(true);
     expect(dto.validForApply).toBe(true);
+    expect(dto.honesty).toEqual(
+      expect.objectContaining({
+        status: "ok",
+        fullyValidated: true,
+        beatsBar: true,
+        residualMass: 0,
+        proposedBarScore: 12_345.5,
+        applyAllowed: true,
+      }),
+    );
   });
 
   it("attaches full-analysis presentation without rewriting ranking score", () => {

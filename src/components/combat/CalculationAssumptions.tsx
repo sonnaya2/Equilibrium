@@ -14,6 +14,7 @@ import {
   conjureStAreaAssumptionRows,
   rotationHasConjureCast,
 } from "./conjurePresentation";
+import { strikingLightAssumptionRows } from "./blessingPresentation";
 import {
   stochasticAssumptionRows,
   type BranchCapDiagnosticsOpts,
@@ -115,6 +116,7 @@ export function CalculationAssumptions({
           ],
         ] as Array<[string, string | number]>)
       : []),
+    ...strikingLightAssumptionRows(stats.league.blessings, stats.defence.totalArmour),
     ...(bigBonedPicked
       ? ([["Big Boned outgoing", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")]] as Array<
           [string, string | number]

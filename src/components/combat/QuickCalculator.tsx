@@ -24,6 +24,7 @@ import { NumberField } from "./NumberField";
 import type { Loadout } from "./useLoadout";
 import { loadoutStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
+import { strikingLightBasicCastNote } from "./blessingPresentation";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import {
@@ -378,6 +379,16 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                   </div>
                 </div>
               </div>
+              {useBuild
+                ? (() => {
+                    const note = strikingLightBasicCastNote(setup.league.blessings, ability);
+                    return note ? (
+                      <p className="text-xs leading-5 text-gem-300" data-striking-light-basic="">
+                        {note}
+                      </p>
+                    ) : null;
+                  })()
+                : null}
 
               <dl className="text-sm">
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">

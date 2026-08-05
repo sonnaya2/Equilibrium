@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { BlessingChoice } from "@/league/blessings";
 import {
   BLESSING_DAMAGE_EFFECT_IDS,
   blessingEffectDisplayName,
@@ -7,14 +8,50 @@ import {
   isBlessingDamageEffectId,
   isBlessingDamageEvent,
   isBlessingEffectRow,
+  strikingLightAssumptionRows,
+  strikingLightBasicCastNote,
+  strikingLightChoice,
 } from "./blessingPresentation";
+
+function strikingPlate(overrides: Partial<BlessingChoice["combat"]> = {}): BlessingChoice {
+  return {
+    id: "striking-light",
+    name: "Striking Light",
+    path: "Order",
+    tier: 2,
+    effects: [],
+    verified: true,
+    support: {
+      status: "modeled",
+      mechanicsUnverified: true,
+      excluded: [],
+      assumptions: [],
+    },
+    combat: {
+      basicDamageMultiplier: 1.4,
+      light: {
+        cooldownTicks: 15,
+        abilityDamageBand: [40, 60],
+        armourPercent: 2.5,
+      },
+      ...overrides,
+    },
+    source: {
+      source: "jagex",
+      title: "test",
+      url: "https://example.test",
+      publishedAt: "2026-01-01",
+      verifiedAt: "2026-01-01",
+    },
+  };
+}
 
 describe("blessingPresentation", () => {
   it("labels known blessing damage effect ids", () => {
     expect(blessingEffectDisplayName("big-boned")).toBe("Big Boned");
     expect(blessingEffectDisplayName("abyssal-cinders")).toBe("Cinders");
     expect(blessingEffectDisplayName("inferno-of-zamorak")).toBe("Inferno");
-    expect(blessingEffectDisplayName("light-of-saradomin")).toBe("Striking Light");
+    expect(blessingEffectDisplayName("light-of-saradomin")).toBe("Light of Saradomin");
     expect(blessingEffectDisplayName("grasp-of-guthix")).toBe("Grasp of Guthix");
     expect(blessingEffectDisplayName("greater_ricochet")).toBeNull();
   });
@@ -59,5 +96,33 @@ describe("blessingPresentation", () => {
     expect(
       formatBlessingByEffectLabel("big-boned", "league-blessing", "Blessing · Big Boned"),
     ).toBe("Blessing · Big Boned");
+  });
+
+  it("surfaces Striking Light +40% basics and Light of Saradomin for assumptions / quick calc", () => {
+    expect(strikingLightChoice([])).toBeUndefined();
+    expect(strikingLightAssumptionRows(undefined)).toEqual([]);
+    expect(strikingLightBasicCastNote(undefined, { category: "basic" })).toBeNull();
+
+    const plate = strikingPlate();
+    expect(strikingLightChoice([plate])?.id).toBe("striking-light");
+    const rows = strikingLightAssumptionRows([plate], 1_000);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]).toEqual([
+      "Striking Light basics",
+      "+40% damage on Basic-category abilities and autos (ability-stage mult; not in base ability damage field)",
+    ]);
+    expect(rows[1]![0]).toBe("Light of Saradomin");
+    expect(rows[1]![1]).toMatch(/40-60% AD/);
+    expect(rows[1]![1]).toMatch(/250% armour/);
+    expect(rows[1]![1]).toMatch(/2,500 from armour/);
+    expect(rows[1]![1]).toMatch(/9\.0s CD/);
+    expect(rows[1]![1]).toMatch(/separate hit/);
+
+    expect(strikingLightBasicCastNote([plate], { category: "basic" })).toBe(
+      "Includes Striking Light +40% on this basic",
+    );
+    expect(strikingLightBasicCastNote([plate], { autoAttack: true })).toMatch(/\+40%/);
+    expect(strikingLightBasicCastNote([plate], { category: "enhanced" })).toBeNull();
+    expect(strikingLightBasicCastNote([plate], { category: "ultimate" })).toBeNull();
   });
 });

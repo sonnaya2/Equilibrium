@@ -6,6 +6,7 @@ import {
   cancelOptimize,
   clampSolverBarSizes,
   fingerprintSolveContext,
+  isVerifiedCacheableResult,
   lookupSolvedBar,
   packSolverRequest,
   planWorkers,
@@ -40,6 +41,7 @@ import {
   DEFAULT_BAR_SIZE_PRESET,
   isCompletedResultStale,
   isLiveSolverSession,
+  isNoValidatedUpgradeError,
   mayApplyFinalDtoStamp,
   mayPublishStoppedPreview,
   maySaveVerified,
@@ -331,37 +333,41 @@ export function useRevolutionSolver({
     });
   }, []);
 
-  /** Final DTO only: apply bar, verified cache when cacheable, recent library. */
+  /** Final DTO only: apply validated full-horizon winners (Phase 4). */
   const applyFinalDto = useCallback(
     (dto: SolverResultDTO, request: SerializableSolverRequest) => {
       progressRafRef.current?.cancel();
       const bar = dto.bar?.length ? [...dto.bar] : [];
       setStoppedPreview(null);
-      if (bar.length === 0) {
-        setSolverError("No legal bar");
-        setSolverResult(dto);
-      } else {
-        setSolverError(null);
-        setSolverResult(dto);
-        onActiveBar(bar);
-        onClearSimResult();
-        void rememberSolvedBar(request, dto);
-        // Verified recent only for cacheable proofs; degraded keeps score as estimate.
-        const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
-        setBarLibrary((prev) => {
-          const next = withRecentBar(prev, {
-            bar,
-            style: request.style,
-            score: dto.score,
-            profileId: dto.profileId ?? request.profileId,
-            tier: request.tier,
-            verified,
-            scoreContext,
-          });
-          saveBarLibrary(next);
-          return next;
-        });
+      // Fail closed: exploratory / degraded / failed proofs never apply.
+      if (bar.length === 0 || !isVerifiedCacheableResult(request, dto)) {
+        setSolverResult(null);
+        setSolverError(
+          bar.length === 0
+            ? "No legal bar"
+            : "No validated full-horizon upgrade; exploratory results are not applied",
+        );
+        return;
       }
+      setSolverError(null);
+      setSolverResult(dto);
+      onActiveBar(bar);
+      onClearSimResult();
+      void rememberSolvedBar(request, dto);
+      const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
+      setBarLibrary((prev) => {
+        const next = withRecentBar(prev, {
+          bar,
+          style: request.style,
+          score: dto.score,
+          profileId: dto.profileId ?? request.profileId,
+          tier: request.tier,
+          verified,
+          scoreContext,
+        });
+        saveBarLibrary(next);
+        return next;
+      });
       let bestFullScore: number | undefined;
       if (Number.isFinite(dto.bestFullScore)) bestFullScore = dto.bestFullScore;
       else if (Number.isFinite(dto.score)) bestFullScore = dto.score;
@@ -552,8 +558,15 @@ export function useRevolutionSolver({
         publishStoppedPreview(partial, "stopped-early");
         return;
       }
-      publishStoppedPreview(partial, "error");
       const message = err instanceof Error ? err.message : String(err);
+      // Phase 4: failed full validation never applies exploratory as a solved bar.
+      if (isNoValidatedUpgradeError(message)) {
+        setSolverResult(null);
+        setStoppedPreview(null);
+        setSolverError(message || "No validated full-horizon upgrade");
+        return;
+      }
+      publishStoppedPreview(partial, "error");
       setSolverError(message || "Failed");
     } finally {
       if (gen === solveGenRef.current) {

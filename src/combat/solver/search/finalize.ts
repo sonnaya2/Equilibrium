@@ -176,8 +176,9 @@ function chooseProof(
   fullOnly: ScoredBar[],
   feasibleCount: number,
 ): ProofLabel {
-  if (status === "failed") return "failed";
-  if (status === "degraded") return "degraded-exploratory-fallback";
+  // Zero full-horizon rankable winners is a failed solve (no applyable upgrade).
+  // Exploratory scores stay in bestExploratoryScore only - never as proof fallback.
+  if (status === "failed" || fullOnly.length === 0) return "failed";
 
   // True full-objective global optimum: every feasible bar has a successful
   // full-horizon rankable score (not mere attempts, not shortlist size proxy).
@@ -190,16 +191,8 @@ function chooseProof(
 
   if (fullCover) return "full-objective-global-optimum";
 
-  if (fullOnly.length > 0) {
-    // Exhaustive short-horizon search never proves full-objective global optimum.
-    return state.exhaustiveCompleted ? "full-shortlist-best" : "heuristic-best-found";
-  }
-
-  if (state.exhaustiveCompleted) return "search-objective-exhaustive";
-
-  if (state.budget.remaining > 0 && state.budget.used > 0) return "budget-not-exhausted";
-  if (state.budget.remaining <= 0) return "stopped-early";
-  return "heuristic-complete";
+  // Exhaustive short-horizon search never proves full-objective global optimum.
+  return state.exhaustiveCompleted ? "full-shortlist-best" : "heuristic-best-found";
 }
 
 function assembleResult(
@@ -213,34 +206,13 @@ function assembleResult(
   const topK = opts.topK ?? state.config.topK;
   const rankedFull = [...fullOnly].sort((a, b) => b.robustScore - a.robustScore);
 
-  let best: ScoredBar | null = rankedFull[0] ?? null;
-  let status: SolveStatus = best ? "ok" : "failed";
+  // Applyable winner only from full-horizon rankable rescores.
+  // Never promote exploratory into best (Phase 4: no degraded-exploratory-fallback).
+  const best: ScoredBar | null = rankedFull[0] ?? null;
+  const status: SolveStatus = best ? "ok" : "failed";
 
-  // Explicit degraded fallback only - never pretend it is a full robust winner.
-  if (!best) {
-    const exploreBest =
-      explorePool.find(isSearchRankable) ??
-      (isSearchRankable(state.bestExploratory) ? state.bestExploratory : null);
-    if (exploreBest) {
-      best = {
-        ...exploreBest,
-        bar: [...exploreBest.bar],
-        validForFinalRanking: false,
-        exploratory: true,
-        mode: "search",
-        failureReason: exploreBest.failureReason ?? "full rescoring produced no valid robust score",
-      };
-      status = "degraded";
-    }
-  }
-
-  // No fabricated empty-bar / zero-score winner.
-  const top =
-    rankedFull.length > 0
-      ? diverseSelect(rankedFull, topK)
-      : status === "degraded" && best
-        ? [best]
-        : [];
+  // No fabricated empty-bar / zero-score winner. top is full-rankable only.
+  const top = rankedFull.length > 0 ? diverseSelect(rankedFull, topK) : [];
 
   if (rankedFull.length > 0 && best && top.length > 0) {
     top.sort((a, b) => b.robustScore - a.robustScore);
@@ -250,7 +222,12 @@ function assembleResult(
   const feasibleCount = estimateFeasibleCount(state.pool, state.sizeBounds);
   const proof = chooseProof(state, status, rankedFull, feasibleCount);
 
-  const bestExploratoryScore = state.bestExploratory?.robustScore ?? seedBestScore;
+  // Debug / progress only - never applied as the solved bar.
+  void explorePool;
+  void seedBestBar;
+  const bestExploratoryScore =
+    state.bestExploratory?.robustScore ??
+    (isSearchRankable(explorePool[0]) ? explorePool[0].robustScore : seedBestScore);
   const bestFullScore =
     state.bestFull?.robustScore ?? rankedFull[0]?.robustScore ?? Number.NEGATIVE_INFINITY;
 

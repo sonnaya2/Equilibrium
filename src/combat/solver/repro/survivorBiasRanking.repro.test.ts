@@ -1,5 +1,5 @@
 /**
- * REPRO (Phase 2 progress) - residual exploratory scores are non-rankable.
+ * REPRO (Phase 2 + Phase 4) - residual exploratory scores are non-rankable.
  *
  * Pre-Phase-2 bug: short explore scored DPM(totalExpected) with residualWeight > 0,
  * so survivor-conditional mean promoted a worse bar via degraded-exploratory-fallback.
@@ -8,6 +8,9 @@
  * 1. Short explore: residual / non-unit-mass / non-exact => ok:false / finite:false
  * 2. Full rescore: scoreSummary hard-fails residual -> validForFinalRanking false
  * 3. Search archive must not promote residual explore (forceEval returns null)
+ *
+ * Phase 4: no full winners => status failed, best null, proof failed.
+ * Exploratory never becomes applyable via degraded-exploratory-fallback.
  *
  * Mock EvaluateFn mirrors production residual/explore semantics after Phase 2.
  * Plug real residual via fromRealResidualSummary in survivorBiasFixture.ts.
@@ -31,7 +34,6 @@ import {
   USER_FIXTURE,
   assertSearchHorizonIsExploratory,
   createSurvivorBiasEvaluateFn,
-  isSameBar,
 } from "./survivorBiasFixture";
 
 assertSearchHorizonIsExploratory();
@@ -43,7 +45,7 @@ const pool: PoolAbility[] = [
   { id: "survivor-basic", category: "basic", averageDamage: 10, occupancyTicks: 3 },
 ];
 
-/** Pipeline record for agents / CI logs (Phase 2). */
+/** Pipeline record for agents / CI logs (Phase 2 / 4). */
 export interface Phase2Record {
   survivingConcreteMass_user: number;
   survivingConcreteMass_proposed: number;
@@ -106,7 +108,7 @@ function runPipeline(): { result: SolveResult; record: Phase2Record } {
 
   const result = finalizeSearch(state, { tier: "thorough", topK: 3 });
 
-  // Mirror resultBuilder winner projection (no equipment import graph).
+  // Phase 4: no best when no full winners - DTO projection is null.
   const dtoBar = result.best ? [...result.best.bar] : null;
   const dtoScore =
     result.best && Number.isFinite(result.best.robustScore) ? result.best.robustScore : null;
@@ -146,7 +148,7 @@ function runPipeline(): { result: SolveResult; record: Phase2Record } {
   };
 
   console.log(
-    "[survivorBiasRanking.repro] PHASE-2 record",
+    "[survivorBiasRanking.repro] PHASE-2/4 record",
     JSON.stringify(
       record,
       (_k, v) =>
@@ -162,7 +164,7 @@ function runPipeline(): { result: SolveResult; record: Phase2Record } {
   return { result, record };
 }
 
-describe("REPRO: survivor-bias residual explore gates (Phase 2)", () => {
+describe("REPRO: survivor-bias residual explore gates (Phase 2 + 4)", () => {
   it("fixture: substantial residual on proposed; known-mass prefers user; legacy explore preferred proposed", () => {
     expect(PROPOSED_FIXTURE.residualMass).toBeGreaterThan(0.5);
     expect(USER_FIXTURE.residualMass + USER_FIXTURE.concreteMass).toBeCloseTo(1, 9);
@@ -185,7 +187,7 @@ describe("REPRO: survivor-bias residual explore gates (Phase 2)", () => {
     expect(PROPOSED_DERIVED.trustworthyFullDpm).toBeCloseTo(2_400, 6);
   });
 
-  it("PHASE 2 progress: residual explore is non-rankable; no finite residual explore promote", () => {
+  it("PHASE 2+4: residual explore non-rankable; no full winners => failed", () => {
     const { result, record } = runPipeline();
 
     // 1. Substantial residual on proposed path.
@@ -215,27 +217,15 @@ describe("REPRO: survivor-bias residual explore gates (Phase 2)", () => {
     expect(record.knownMassDamage_user).toBeGreaterThan(record.knownMassDamage_proposed);
     expect(record.trustworthyFullDpm_user).toBeGreaterThan(record.trustworthyFullDpm_proposed);
 
-    // 5. Progress: solver must not hand residual-inflated proposed bar via explore rank.
-    //    With no finite residual explore and no full rankable, expect failed or
-    //    degraded only if some other unit-mass explore bar exists (pool fillers score 1).
+    // 5. Phase 4: no full winners => failed; exploratory never applied as best.
     expect(result.validFullCandidateCount).toBe(0);
-    if (result.best) {
-      // Residual proposed must not win on legacy conditional mean.
-      expect(isSameBar(result.best.bar, PROPOSED_BAR)).toBe(false);
-      expect(result.best.validForFinalRanking).toBe(false);
-      // If degraded explore winner exists, it must not carry the inflated 40k score.
-      expect(result.best.robustScore).not.toBe(PROPOSED_DERIVED.exploratoryDpm);
-      expect(result.best.robustScore).toBeLessThan(PROPOSED_DERIVED.exploratoryDpm);
-    } else {
-      expect(result.status).toBe("failed");
-      expect(result.proof).toBe("failed");
-    }
-
-    // DTO must not apply proposed residual inflate score.
-    if (record.dtoBar) {
-      expect(record.dtoBar).not.toEqual([...PROPOSED_BAR]);
-      expect(record.dtoScore).not.toBe(PROPOSED_DERIVED.exploratoryDpm);
-    }
+    expect(result.best).toBeNull();
+    expect(result.status).toBe("failed");
+    expect(result.proof).toBe("failed");
+    expect(record.bestBar).toBeNull();
+    expect(record.dtoBar).toBeNull();
+    expect(record.dtoScore).toBeNull();
+    expect(record.dtoProofLabel).toBeNull();
   });
 
   it("does not recommend residual-inflated exploratory winner over better user known-mass", () => {
@@ -243,13 +233,10 @@ describe("REPRO: survivor-bias residual explore gates (Phase 2)", () => {
 
     expect(record.trustworthyFullDpm_user).toBeGreaterThan(record.trustworthyFullDpm_proposed);
 
-    const recommended = result.best?.bar ?? null;
-    // Fixed pipeline must not hand the worse proposed bar to apply.
-    if (recommended != null) {
-      expect(isSameBar(recommended, PROPOSED_BAR)).toBe(false);
-    } else {
-      // Prefer refuse when all residual bars fail explore+full.
-      expect(result.status).toBe("failed");
-    }
+    // Phase 4: refuse when all residual bars fail explore+full.
+    expect(result.best).toBeNull();
+    expect(result.status).toBe("failed");
+    expect(result.proof).toBe("failed");
+    expect(result.validFullCandidateCount).toBe(0);
   });
 });

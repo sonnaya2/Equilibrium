@@ -165,18 +165,15 @@ function assertLegalResult(
   expect(new Set(result.bar).size).toBe(result.bar.length);
   expect(Number.isFinite(result.score)).toBe(true);
   expect(result.evaluations).toBeGreaterThan(0);
-  const honestProofs = new Set([
+  // Phase 4: successful DTO is validated full-horizon only (builder throws otherwise).
+  const applyableProofs = new Set([
     "full-objective-global-optimum",
-    "search-objective-exhaustive",
     "full-shortlist-best",
     "heuristic-best-found",
-    "degraded-exploratory-fallback",
-    "failed",
-    "budget-not-exhausted",
-    "stopped-early",
-    "heuristic-complete",
   ]);
-  expect(result.proofLabel && honestProofs.has(result.proofLabel)).toBe(true);
+  expect(result.proofLabel && applyableProofs.has(result.proofLabel)).toBe(true);
+  expect(result.proofLabel).not.toBe("degraded-exploratory-fallback");
+  expect(result.proofLabel).not.toBe("failed");
   expect(result.proofLabel).not.toBe("globally-optimal" as never);
   expect(result.proofLabel).not.toBe("converged" as never);
   expect(result.bar).not.toContain("attack");

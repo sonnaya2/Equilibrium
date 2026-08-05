@@ -132,12 +132,8 @@ describe("winner full-analysis presentation", () => {
     const dto = await solveFromRequest(request);
     expect(dto.bar.length).toBeGreaterThanOrEqual(2);
     expect(Number.isFinite(dto.score)).toBe(true);
-
-    // Full rankable winners get presentation; degraded exploratory may not.
-    if (dto.proofLabel === "degraded-exploratory-fallback") {
-      expect(dto.summary).toBeUndefined();
-      return;
-    }
+    // Phase 4: DTO only from validated full winners; no degraded exploratory apply path.
+    expect(dto.proofLabel).not.toBe("degraded-exploratory-fallback");
 
     expect(dto.summary).toBeDefined();
     expect(dto.summary!.ok).toBe(true);

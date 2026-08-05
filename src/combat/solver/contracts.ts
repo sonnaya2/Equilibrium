@@ -323,12 +323,17 @@ export interface PoolAbility {
 export type EvaluateFn = (input: { bar: readonly string[]; mode?: EvalMode }) => EvalResult;
 
 /** Solve outcome status - success never pretends after total failure. */
+/**
+ * ok: full-horizon rankable winner.
+ * failed: no validated full-horizon upgrade (exploratory is debug-only).
+ * degraded: legacy status - finalize never emits it (Phase 4).
+ */
 export type SolveStatus = "ok" | "degraded" | "failed";
 
 /** Solve orchestrator output (search layer). */
 export interface SolveResult {
   status: SolveStatus;
-  /** Winner when status is ok or degraded; null when failed. */
+  /** Full-horizon rankable winner when status is ok; null when failed. */
   best: ScoredBar | null;
   top: ScoredBar[];
   proof: ProofLabel;
@@ -436,6 +441,23 @@ export interface RevolutionEvalRequest {
    * Solver search/session passes score-only for ranking evals.
    */
   detailLevel?: EvalDetailLevel;
+  /**
+   * Adaptive branch-width fidelity. When set, simulate at progressive live caps
+   * until residual/exactness meet the mode ladder (or ladder exhausts -> unrankable).
+   * Omitted: single-shot default budget (64 live) - tests/UI stay cheap.
+   */
+  branchFidelityMode?: "exploratory" | "medium" | "full";
+  /** Optional ladder overrides for profiling / tests. */
+  branchFidelityOverrides?: Partial<
+    Record<
+      "exploratory" | "medium" | "full",
+      {
+        liveCaps?: readonly number[];
+        maximumResidualWeight?: number;
+        exactness?: "any" | "exact-or-merged";
+      }
+    >
+  >;
 }
 
 /**
@@ -476,4 +498,17 @@ export interface RevolutionBarEvaluation {
     conditionalConcreteMean?: number;
   };
   profileId: ObjectiveProfileId;
+  /** Present when adaptive branch fidelity ran. */
+  branchFidelity?: {
+    mode: "exploratory" | "medium" | "full";
+    attempts: number;
+    finalBudget: {
+      maxLiveBranches: number;
+      maxIntermediateBranches: number;
+      maximumResidualWeight: number;
+    };
+    complete: boolean;
+    residualWeight: number;
+    exactness?: string;
+  };
 }

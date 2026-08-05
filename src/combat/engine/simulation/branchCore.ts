@@ -1,5 +1,5 @@
 import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
-import type { CastRecord } from "./contracts";
+import type { BranchBudget, CastRecord } from "./contracts";
 import {
   keepsAnalysisLedgers,
   keepsPerAbilityMap,
@@ -382,6 +382,59 @@ export function mergeBranches(branches: readonly Branch[]): Branch[] {
 
 /** Cap live branches after merge; discarded weight is residual, not reassigned. */
 export const MAX_LIVE_BRANCHES = 64;
+
+/** Default branch budget (single-shot product path). Adaptive ladders override live caps. */
+export function defaultBranchBudget(): BranchBudget {
+  return {
+    maxLiveBranches: MAX_LIVE_BRANCHES,
+    maxIntermediateBranches: MAX_LIVE_BRANCHES * 2,
+    maximumResidualWeight: 0,
+  };
+}
+
+/**
+ * Resolve a partial budget. Live >= 1; intermediate >= live; residual threshold >= 0.
+ * Omitted fields fall back to defaults (64 / 128 / 0).
+ */
+export function resolveBranchBudget(partial?: Partial<BranchBudget> | null): BranchBudget {
+  const base = defaultBranchBudget();
+  if (partial == null) return base;
+  const maxLiveBranches =
+    partial.maxLiveBranches !== undefined ? partial.maxLiveBranches : base.maxLiveBranches;
+  const maxIntermediateBranches =
+    partial.maxIntermediateBranches !== undefined
+      ? partial.maxIntermediateBranches
+      : Math.max(base.maxIntermediateBranches, maxLiveBranches * 2);
+  const maximumResidualWeight =
+    partial.maximumResidualWeight !== undefined
+      ? partial.maximumResidualWeight
+      : base.maximumResidualWeight;
+  if (!Number.isInteger(maxLiveBranches) || maxLiveBranches < 1) {
+    throw new RangeError(
+      `resolveBranchBudget: maxLiveBranches must be a positive integer, got ${maxLiveBranches}`,
+    );
+  }
+  if (!Number.isInteger(maxIntermediateBranches) || maxIntermediateBranches < maxLiveBranches) {
+    throw new RangeError(
+      `resolveBranchBudget: maxIntermediateBranches must be an integer >= maxLiveBranches, got ${maxIntermediateBranches}`,
+    );
+  }
+  if (!(Number.isFinite(maximumResidualWeight) && maximumResidualWeight >= 0)) {
+    throw new RangeError(
+      `resolveBranchBudget: maximumResidualWeight must be a non-negative finite number, got ${maximumResidualWeight}`,
+    );
+  }
+  return { maxLiveBranches, maxIntermediateBranches, maximumResidualWeight };
+}
+
+/** Live + intermediate caps for drivers that only need numbers. */
+export function branchCapsFromBudget(budget?: Partial<BranchBudget> | null): {
+  maxLive: number;
+  intermediateMax: number;
+} {
+  const b = resolveBranchBudget(budget);
+  return { maxLive: b.maxLiveBranches, intermediateMax: b.maxIntermediateBranches };
+}
 
 /**
  * Keep heaviest `max` arms. If the cut would drop every failed arm while any

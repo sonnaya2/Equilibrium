@@ -1,12 +1,14 @@
 import { finalizeAnalysis } from "../analysis";
 import {
   appendWithIntermediateCap,
+  branchCapsFromBudget,
   combineExactness,
   mergeAndCapBranches,
   snapshotRuntime,
   type Branch,
   type BranchExactness as EngineBranchExactness,
 } from "./branch";
+import { drainBranchToEnd } from "./lengLandBranch";
 import type {
   BranchExactness,
   BranchFailureSummary,
@@ -38,7 +40,6 @@ import {
   supportMinFrom,
   weightedMean,
 } from "./stats";
-import { drainBranchToEnd } from "./lengLandBranch";
 
 const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "ability-direct",
@@ -307,22 +308,23 @@ export function combineBranchSummaries(
   residualWeight = 0,
   exactness: EngineBranchExactness = "exact",
 ): RotationSummary {
+  const { maxLive, intermediateMax } = branchCapsFromBudget(options?.branchBudget);
   // Drain unlanded queue with Leng land forks before assembling terminal summaries.
   let residual = residualWeight;
   let exact: EngineBranchExactness = exactness;
   let forkedAtDrain = false;
   let drained: Branch[] = [];
   for (const branch of branches) {
-    const set = drainBranchToEnd(branch, horizonTicks);
+    const set = drainBranchToEnd(branch, horizonTicks, maxLive, intermediateMax);
     residual += set.residualWeight;
     exact = combineExactness(exact, set.exactness);
     if (set.branches.length > 1) forkedAtDrain = true;
-    const folded = appendWithIntermediateCap(drained, set.branches);
+    const folded = appendWithIntermediateCap(drained, set.branches, maxLive);
     residual += folded.residualWeight;
     exact = combineExactness(exact, folded.exactness);
     drained = folded.branches;
   }
-  const capped = mergeAndCapBranches(drained);
+  const capped = mergeAndCapBranches(drained, maxLive);
   residual += capped.residualWeight;
   exact = combineExactness(exact, capped.exactness);
   const terminalBranches = capped.branches;

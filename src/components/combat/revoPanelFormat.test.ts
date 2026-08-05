@@ -16,7 +16,9 @@ import {
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
   isCompletedResultStale,
   isLiveSolverSession,
+  isNoValidatedUpgradeError,
   mayApplyFinalDtoStamp,
+  mayApplySolverResultBar,
   mayPublishStoppedPreview,
   maySaveVerified,
   previewCategory,
@@ -271,6 +273,65 @@ describe("settlementActionForCatch identity gate", () => {
     });
     expect(action).toBe("ignore");
     expect(mayPublishStoppedPreview(action)).toBe(false);
+  });
+});
+
+describe("Phase 4 apply / validation failure gates", () => {
+  it("isNoValidatedUpgradeError matches resultBuilder throw text", () => {
+    expect(
+      isNoValidatedUpgradeError(
+        "solver failed: no validated full-horizon upgrade; status=failed",
+      ),
+    ).toBe(true);
+    expect(isNoValidatedUpgradeError("no valid candidate")).toBe(true);
+    expect(isNoValidatedUpgradeError("worker crashed")).toBe(false);
+  });
+
+  it("mayApplySolverResultBar only for verified-cacheable proofs", () => {
+    const base = {
+      bar: ["a", "b", "c", "d"],
+      score: 1000,
+      windowDpms: 0,
+      evaluations: 10,
+      uniqueCandidates: 4,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: "id",
+    };
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        proofLabel: "heuristic-best-found",
+      }),
+    ).toBe(true);
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        proofLabel: "full-shortlist-best",
+      }),
+    ).toBe(true);
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        proofLabel: "degraded-exploratory-fallback",
+      }),
+    ).toBe(false);
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        proofLabel: "failed",
+      }),
+    ).toBe(false);
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        bar: [],
+        proofLabel: "heuristic-best-found",
+      }),
+    ).toBe(false);
+    expect(mayApplySolverResultBar(null)).toBe(false);
   });
 });
 

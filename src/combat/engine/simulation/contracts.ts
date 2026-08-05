@@ -152,6 +152,17 @@ export function keepsPerAbilityMap(level: SimulationDetailLevel): boolean {
   return level !== "score-only";
 }
 
+/**
+ * Live-set width for one sim attempt. Discarded mass stays residual (never reassigned).
+ * maximumResidualWeight is an acceptance threshold for adaptive fidelity, not a sim discard control.
+ */
+export interface BranchBudget {
+  maxLiveBranches: number;
+  maxIntermediateBranches: number;
+  /** Completeness: residualWeight must be <= this after the attempt. */
+  maximumResidualWeight: number;
+}
+
 export interface SimulateOptions {
   /**
    * Also compute `totalExpectedIncludingTails`: in-horizon damage plus the
@@ -163,6 +174,11 @@ export interface SimulateOptions {
    * Solver search opts into score-only explicitly.
    */
   detailLevel?: SimulationDetailLevel;
+  /**
+   * Branch width for this sim. Omitted -> engine defaults (64 live / 128 intermediate).
+   * Passed through; not a global constant raise.
+   */
+  branchBudget?: BranchBudget;
 }
 
 /** createCastContext input: rotation/autoWeave belong to the manual driver only. */

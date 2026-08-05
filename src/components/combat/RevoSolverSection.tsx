@@ -16,6 +16,7 @@ import { RegionCrest } from "../RegionCrest";
 import {
   BAR_SIZE_PRESETS,
   formatNumber,
+  mayApplySolverResultBar,
   previewCategory,
   progressFillFromState,
   solverPhaseLabel,
@@ -81,6 +82,8 @@ export function RevoSolverSection({
   const optimize = () => onOptimize();
   const cancelSolve = () => onCancel();
   const applySolverBar = (ids: readonly string[]) => onApplyBar(ids);
+  // Phase 4: results panel only after validated DTO; gate Apply for non-cacheable proofs.
+  const canApplyResult = mayApplySolverResultBar(solverResult);
 
   return (
     <section className="revo-solver-controls">
@@ -528,7 +531,8 @@ export function RevoSolverSection({
                   </span>
                   <button
                     type="button"
-                    className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800"
+                    className="border border-stone-750 px-2 py-0.5 text-parch-50 hover:bg-stone-800 disabled:opacity-40 disabled:pointer-events-none"
+                    disabled={!canApplyResult}
                     onClick={() => applySolverBar(row.bar)}
                   >
                     Apply

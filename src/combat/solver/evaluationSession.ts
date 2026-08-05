@@ -21,6 +21,7 @@ import {
   summaryEligibleForObjectiveScore,
   summaryObjectiveIneligibilityReason,
 } from "./objective";
+import { branchFidelityModeForEval } from "./branchFidelity";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
@@ -110,6 +111,7 @@ export function createEvaluateFn(args: {
     const scoreMode = useFull ? "full" : useMedium ? "medium" : "search";
     const kind = useFull ? ("full" as const) : ("search" as const);
     const fidelity = useFull ? ("full" as const) : useMedium ? ("medium" as const) : ("short" as const);
+    const branchFidelityMode = branchFidelityModeForEval(scoreMode);
     // One join for seenBars + evaluation memo key (no second bar.join).
     const key = barKey(bar);
     const peer = options?.coord?.getIncumbent();
@@ -120,6 +122,7 @@ export function createEvaluateFn(args: {
     if (peer?.fullScore != null && peer.fullScore > state.bestFullScore) {
       state.bestFullScore = peer.fullScore;
     }
+    // Memo context includes branch-fidelity mode so adaptive ladders never mix with single-shot.
     const memoKey = fingerprintEvaluationKey({
       bar,
       barKey: key,
@@ -127,7 +130,10 @@ export function createEvaluateFn(args: {
       horizonTicks: durationTicks,
       profileId: request.profileId,
       customWeights: request.customWeights,
-      context: memoContext,
+      context: {
+        base: memoContext,
+        branchFidelityMode,
+      },
       objectiveVersion: OBJECTIVE_VERSION,
     });
     const memoHit = readEvalMemo(memoKey);
@@ -204,6 +210,7 @@ export function createEvaluateFn(args: {
       includePartial: request.includePartial,
       size: { min: request.minBarSize, max: request.maxBarSize },
       detailLevel: "score-only",
+      branchFidelityMode,
     });
 
     // Residual / known-mass / non-exact short evals must not promote (finite:false).

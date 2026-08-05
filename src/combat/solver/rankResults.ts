@@ -25,11 +25,13 @@ function proofRank(label: ProofLabel | undefined): number {
   }
 }
 
-/** True when the DTO can win a multi-agent merge. */
+/** True when the DTO can win a multi-agent merge (validated full winners only). */
 export function isRankableSolverResult(r: SolverResultDTO): boolean {
   if (!r.bar || r.bar.length === 0) return false;
   if (!Number.isFinite(r.score)) return false;
   if (r.proofLabel === "failed") return false;
+  // Phase 4: exploratory fallback DTOs never win merges or apply paths.
+  if (r.proofLabel === "degraded-exploratory-fallback") return false;
   return true;
 }
 

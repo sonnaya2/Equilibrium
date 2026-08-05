@@ -1,6 +1,7 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { castRejection } from "../cast/rules";
 import {
+  branchCapsFromBudget,
   combineExactness,
   materializeCastPlans,
   mergeAndCapBranches,
@@ -36,6 +37,7 @@ export function simulateRevolution(
   input: RevolutionInput,
   options?: SimulateOptions,
 ): RotationSummary {
+  const { maxLive, intermediateMax } = branchCapsFromBudget(options?.branchBudget);
   let branches: Branch[] = [
     {
       weight: 1,
@@ -111,7 +113,14 @@ export function simulateRevolution(
         });
         continue;
       }
-      const planned = planCastOutcomes(branch, ability, state.tick, ready === undefined);
+      const planned = planCastOutcomes(
+        branch,
+        ability,
+        state.tick,
+        ready === undefined,
+        maxLive,
+        intermediateMax,
+      );
       residualWeight += planned.residualWeight;
       exactness = combineExactness(exactness, planned.exactness);
       if (planned.plans.length > 1) sawBranching = true;
@@ -119,11 +128,11 @@ export function simulateRevolution(
       plans.push(...planned.plans);
     }
 
-    const advanced = materializeCastPlans(plans);
+    const advanced = materializeCastPlans(plans, maxLive, intermediateMax);
     residualWeight += advanced.residualWeight;
     exactness = combineExactness(exactness, advanced.exactness);
     sawBranching ||= advanced.branches.length > 1;
-    const capped = mergeAndCapBranches([...carried, ...advanced.branches]);
+    const capped = mergeAndCapBranches([...carried, ...advanced.branches], maxLive);
     residualWeight += capped.residualWeight;
     exactness = combineExactness(exactness, capped.exactness);
     branches = capped.branches;

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   compareSolverResultDTO,
   isEffectivelyEqualScore,
+  isRankableSolverResult,
   pickBestSolverResult,
 } from "./rankResults";
 import { mergeResults } from "./worker/pool";
@@ -37,7 +38,7 @@ describe("rankResults", () => {
   });
 
   it("meaningfully lower score never wins via length (legacy 2% band)", () => {
-    // Old merge used 2% near-tie → longer bar. That must not reverse a real gap.
+    // Old merge used 2% near-tie -> longer bar. That must not reverse a real gap.
     const short = dto({ bar: ["a", "b", "c", "d"], score: 1000, seed: 1 });
     const long = dto({
       bar: ["a", "b", "c", "d", "e", "f", "g", "h"],
@@ -57,7 +58,7 @@ describe("rankResults", () => {
 
     const c = dto({ bar: ["a", "b", "c", "d"], score: 5000, seed: 3 });
     const d = dto({ bar: ["e", "f", "g", "h"], score: 5000, seed: 4 });
-    // Same length → lexicographic bar fingerprint.
+    // Same length -> lexicographic bar fingerprint.
     const best = pickBestSolverResult([d, c]);
     expect(best.bar.join(",")).toBe(
       ["a", "b", "c", "d"].join(",") < ["e", "f", "g", "h"].join(",")
@@ -74,6 +75,22 @@ describe("rankResults", () => {
     });
     const empty = dto({ bar: [], score: 999_999, proofLabel: "failed" });
     expect(pickBestSolverResult([empty, good])).toBe(good);
+  });
+
+  it("degraded-exploratory-fallback is never rankable (Phase 4)", () => {
+    const good = dto({
+      bar: ["a", "b", "c", "d"],
+      score: 100,
+      proofLabel: "heuristic-best-found",
+    });
+    const degraded = dto({
+      bar: ["x", "y", "z", "w"],
+      score: 999_999,
+      proofLabel: "degraded-exploratory-fallback",
+    });
+    expect(isRankableSolverResult(degraded)).toBe(false);
+    expect(pickBestSolverResult([degraded, good])).toBe(good);
+    expect(mergeResults([degraded, good]).score).toBe(100);
   });
 
   it("mergeResults keeps the winner solveIdentity when host request omitted", () => {

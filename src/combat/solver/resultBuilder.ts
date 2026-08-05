@@ -37,27 +37,36 @@ export function buildSolverResultDto(args: {
   const bigBonedAssumptions = hasBigBoned ? [...BIG_BONED_OUTGOING_ASSUMPTIONS] : undefined;
   const bigBonedNotes = hasBigBoned ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const) : [];
 
-  // No fabricated empty-bar / zero-score "success" DTO.
-  if (result.status === "failed" || result.best == null) {
+  // Applyable DTO only for full-horizon validated winners (Phase 4).
+  // Exploratory / degraded never populate bar or enable Apply.
+  const winner = result.best;
+  const validated =
+    result.status === "ok" &&
+    winner != null &&
+    winner.validForFinalRanking === true &&
+    winner.mode === "full" &&
+    winner.bar.length > 0 &&
+    result.validFullCandidateCount > 0 &&
+    Number.isFinite(winner.robustScore);
+
+  if (!validated || winner == null) {
     throw new Error(
       [
-        "solver failed: no valid candidate",
+        "solver failed: no validated full-horizon upgrade",
+        `status=${result.status}`,
         `proof=${result.proof}`,
         `searchEvaluations=${result.searchEvaluations}`,
         `fullEvaluations=${result.fullEvaluations}`,
+        `validFullCandidates=${result.validFullCandidateCount}`,
         `bestExploratory=${result.bestExploratoryScore}`,
         `bestFull=${result.bestFullScore}`,
       ].join("; "),
     );
   }
 
-  const winner = result.best;
   const winnerBar = [...winner.bar];
-  const fullWinner = winner.validForFinalRanking === true && winner.mode === "full";
-  const score = Number.isFinite(winner.robustScore) ? winner.robustScore : Number.NEGATIVE_INFINITY;
-  if (!Number.isFinite(score)) {
-    throw new Error(`solver failed: non-finite winner score (proof=${result.proof})`);
-  }
+  const fullWinner = true;
+  const score = winner.robustScore;
 
   const proofNotes = [
     `status=${result.status}`,

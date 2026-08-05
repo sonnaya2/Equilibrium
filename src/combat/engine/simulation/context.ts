@@ -4,6 +4,7 @@ import { createRuntime } from "../runtime/runtime";
 import { firstLegalTick, firstLegalTickFor } from "../runtime/state";
 import {
   appendWithIntermediateCap,
+  branchCapsFromBudget,
   combineExactness,
   materializeCastPlans,
   mergeAndCapBranches,
@@ -12,18 +13,29 @@ import {
   type BranchExactness,
   type CastOutcomePlan,
 } from "./branch";
-import type { CastAttempt, CastContext, CastContextInput, CastRng, SimulateOptions } from "./contracts";
+import type {
+  BranchBudget,
+  CastAttempt,
+  CastContext,
+  CastContextInput,
+  CastRng,
+  SimulateOptions,
+} from "./contracts";
 import { advanceToBranches } from "./lengLandBranch";
 import { combineBranchSummaries } from "./summary";
 
 /**
  * Manual CastContext: multi-branch under the hood.
  * performCast uses planCastOutcomes + materializeCastPlans (same as Revolution/solver),
- * so Icy Tempest forks on distinct integer post-cast adrenaline spends only — never
+ * so Icy Tempest forks on distinct integer post-cast adrenaline spends only - never
  * floors E[stacks] into a single fractional spend.
  * finish drains via combineBranchSummaries. getState reads heaviest live branch.
  */
-export function createCastContext(input: CastContextInput): CastContext {
+export function createCastContext(
+  input: CastContextInput,
+  branchBudget?: BranchBudget,
+): CastContext {
+  const { maxLive, intermediateMax } = branchCapsFromBudget(branchBudget);
   const root = createRuntime(input);
   let branches: Branch[] = [{ weight: 1, rt: root }];
   let residualWeight = 0;
@@ -40,7 +52,7 @@ export function createCastContext(input: CastContextInput): CastContext {
     residualWeight += set.residualWeight;
     exactness = combineExactness(exactness, set.exactness);
     if (set.branches.length > 1) sawBranching = true;
-    const capped = mergeAndCapBranches(set.branches);
+    const capped = mergeAndCapBranches(set.branches, maxLive);
     residualWeight += capped.residualWeight;
     exactness = combineExactness(exactness, capped.exactness);
     if (capped.branches.length > 1) sawBranching = true;
@@ -87,17 +99,17 @@ export function createCastContext(input: CastContextInput): CastContext {
       let exact: BranchExactness = "exact";
       for (const branch of branches) {
         if (branch.error !== undefined) {
-          const folded = appendWithIntermediateCap(next, [branch]);
+          const folded = appendWithIntermediateCap(next, [branch], maxLive);
           residual += folded.residualWeight;
           exact = combineExactness(exact, folded.exactness);
           next = folded.branches;
           continue;
         }
-        const stepped = advanceToBranches(branch, targetTick);
+        const stepped = advanceToBranches(branch, targetTick, maxLive, intermediateMax);
         residual += stepped.residualWeight;
         exact = combineExactness(exact, stepped.exactness);
         if (stepped.branches.length > 1) sawBranching = true;
-        const folded = appendWithIntermediateCap(next, stepped.branches);
+        const folded = appendWithIntermediateCap(next, stepped.branches, maxLive);
         residual += folded.residualWeight;
         exact = combineExactness(exact, folded.exactness);
         next = folded.branches;
@@ -117,14 +129,21 @@ export function createCastContext(input: CastContextInput): CastContext {
       let lastError: string | undefined;
       for (const branch of branches) {
         if (branch.error !== undefined) {
-          const folded = appendWithIntermediateCap(next, [branch]);
+          const folded = appendWithIntermediateCap(next, [branch], maxLive);
           residual += folded.residualWeight;
           exact = combineExactness(exact, folded.exactness);
           next = folded.branches;
           continue;
         }
         // Same cast pipeline as Revolution/solver: advance + prepare + spend/RNG forks.
-        const planned = planCastOutcomes(branch, ability, readyTick, auto);
+        const planned = planCastOutcomes(
+          branch,
+          ability,
+          readyTick,
+          auto,
+          maxLive,
+          intermediateMax,
+        );
         residual += planned.residualWeight;
         exact = combineExactness(exact, planned.exactness);
 
@@ -132,7 +151,7 @@ export function createCastContext(input: CastContextInput): CastContext {
           // Rejected cast: advance already applied; keep branch castable (no error poison).
           for (const err of planned.errors) {
             const live = { weight: err.weight, rt: err.rt };
-            const folded = appendWithIntermediateCap(next, [live]);
+            const folded = appendWithIntermediateCap(next, [live], maxLive);
             residual += folded.residualWeight;
             exact = combineExactness(exact, folded.exactness);
             next = folded.branches;
@@ -143,7 +162,7 @@ export function createCastContext(input: CastContextInput): CastContext {
 
         const plans =
           rng !== undefined ? applyForcedRng(planned.plans, rng) : [...planned.plans];
-        const material = materializeCastPlans(plans);
+        const material = materializeCastPlans(plans, maxLive, intermediateMax);
         residual += material.residualWeight;
         exact = combineExactness(exact, material.exactness);
         if (material.branches.length > 1 || plans.length > 1) sawBranching = true;
@@ -151,13 +170,13 @@ export function createCastContext(input: CastContextInput): CastContext {
         // Sibling arms that rejected: keep advanced state without permanent error.
         for (const err of planned.errors) {
           const live = { weight: err.weight, rt: err.rt };
-          const folded = appendWithIntermediateCap(next, [live]);
+          const folded = appendWithIntermediateCap(next, [live], maxLive);
           residual += folded.residualWeight;
           exact = combineExactness(exact, folded.exactness);
           next = folded.branches;
           lastError = err.error ?? lastError;
         }
-        const folded = appendWithIntermediateCap(next, material.branches);
+        const folded = appendWithIntermediateCap(next, material.branches, maxLive);
         residual += folded.residualWeight;
         exact = combineExactness(exact, folded.exactness);
         next = folded.branches;
@@ -185,10 +204,17 @@ export function createCastContext(input: CastContextInput): CastContext {
         error !== undefined
           ? branches.map((b) => ({ ...b, error: b.error ?? error }))
           : branches;
+      const finishOpts: SimulateOptions | undefined =
+        branchBudget != null || options != null
+          ? {
+              ...options,
+              branchBudget: options?.branchBudget ?? branchBudget,
+            }
+          : options;
       return combineBranchSummaries(
         terminal,
         horizonTicks ?? input.horizonTicks,
-        options,
+        finishOpts,
         sawBranching,
         residualWeight,
         exactness,

@@ -6,7 +6,9 @@ import {
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
   isCompletedResultStale,
   isLiveSolverSession,
+  isNoValidatedUpgradeError,
   mayApplyFinalDtoStamp,
+  mayApplySolverResultBar,
   mayPublishStoppedPreview,
   maySaveVerified,
   recentLibraryVerifiedFields,
@@ -187,6 +189,63 @@ describe("useRevolutionSolver session settlement policy", () => {
     expect(action).toBe("stopped-preview");
     expect(mayPublishStoppedPreview(action)).toBe(true);
     expect(action).not.toBe("apply-final");
+  });
+
+  it("Phase 4: no-validated-upgrade failure never onActiveBar or stoppedPreview", () => {
+    const onActiveBar = vi.fn();
+    const setStopped = vi.fn();
+    const setError = vi.fn();
+    const setResult = vi.fn();
+    const message =
+      "solver failed: no validated full-horizon upgrade; status=failed; proof=failed";
+    const action = settlementActionForCatch({
+      sessionGen: 1,
+      currentGen: 1,
+      sessionIdentity: "live",
+      currentIdentity: "live",
+      aborted: false,
+    });
+    // Catch mayPublish would allow stopped-preview, but Phase 4 short-circuits.
+    expect(mayPublishStoppedPreview(action)).toBe(true);
+    expect(isNoValidatedUpgradeError(message)).toBe(true);
+    if (isNoValidatedUpgradeError(message)) {
+      setResult(null);
+      setStopped(null);
+      setError(message);
+    } else if (mayPublishStoppedPreview(action)) {
+      setStopped();
+      onActiveBar(["exploratory", "bar"]);
+      setError(message);
+    }
+    expect(onActiveBar).not.toHaveBeenCalled();
+    expect(setStopped).toHaveBeenCalledWith(null);
+    expect(setError).toHaveBeenCalledWith(message);
+    expect(setResult).toHaveBeenCalledWith(null);
+  });
+
+  it("Phase 4: Apply disabled for degraded/failed DTO proofs", () => {
+    const base = {
+      bar: ["a", "b", "c", "d"],
+      score: 9_000,
+      windowDpms: 0,
+      evaluations: 10,
+      uniqueCandidates: 3,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: "ctx",
+    };
+    expect(
+      mayApplySolverResultBar({ ...base, proofLabel: "heuristic-best-found" }),
+    ).toBe(true);
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        proofLabel: "degraded-exploratory-fallback",
+      }),
+    ).toBe(false);
+    expect(mayApplySolverResultBar({ ...base, proofLabel: "failed" })).toBe(false);
   });
 
   it("maps settlement outcomes the way the hook applies them", () => {

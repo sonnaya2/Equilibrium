@@ -134,6 +134,21 @@ export {
   type EvalFidelity,
   type FidelityBudgetAllocation,
 } from "./fidelity";
+export {
+  DEFAULT_BRANCH_FIDELITY_LADDERS,
+  RESIDUAL_FREE_TOLERANCE,
+  resolveBranchFidelityLadder,
+  meetsBranchCompleteness,
+  shouldStopAdaptiveAttempt,
+  simulateWithAdaptiveBranchFidelity,
+  budgetForLiveCap,
+  branchFidelityModeForEval,
+  type BranchFidelityMode,
+  type BranchFidelityLadder,
+  type BranchExactnessRequirement,
+  type BranchFidelityAttemptMeta,
+  type AdaptiveBranchFidelityResult,
+} from "./branchFidelity";
 export { runMediumScreen, collectMediumIncumbents } from "./search/mediumScreen";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
 export {

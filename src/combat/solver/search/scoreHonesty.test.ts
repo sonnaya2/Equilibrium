@@ -53,17 +53,12 @@ describe("score honesty", () => {
       tier: "thorough",
       seed: 3,
     });
+    // Phase 4: no full winners => failed; exploratory never applied as best.
     expect(result.validFullCandidateCount).toBe(0);
+    expect(result.best).toBeNull();
+    expect(result.proof).toBe("failed");
+    expect(result.status).toBe("failed");
     expect(result.top.every((t) => t.mode !== "full" || !t.validForFinalRanking)).toBe(true);
-    // May degrade to exploratory, but never a full robust winner.
-    if (result.best) {
-      expect(result.best.validForFinalRanking).toBe(false);
-      expect(result.proof).toBe("degraded-exploratory-fallback");
-      expect(result.status).toBe("degraded");
-    } else {
-      expect(result.proof).toBe("failed");
-      expect(result.status).toBe("failed");
-    }
   });
 
   it("2. high exploratory score cannot beat a valid lower full score", () => {
@@ -157,8 +152,11 @@ describe("score honesty", () => {
     const full = state.forceEval(["a", "b"], "full", "t");
     expect(full === null || full.validForFinalRanking === false).toBe(true);
     const fin = finalizeSearch(state, { tier: "thorough" });
+    // Phase 4: no full winners => failed, not degraded-exploratory-fallback.
     expect(fin.validFullCandidateCount).toBe(0);
-    expect(fin.proof === "degraded-exploratory-fallback" || fin.proof === "failed").toBe(true);
+    expect(fin.best).toBeNull();
+    expect(fin.proof).toBe("failed");
+    expect(fin.status).toBe("failed");
   });
 
   it("residual / non-exact exactness full failures never unlock exact proof labels", () => {
@@ -189,10 +187,10 @@ describe("score honesty", () => {
       config: { evaluationBudget: 40 },
     });
     expect(result.validFullCandidateCount).toBe(0);
+    expect(result.best).toBeNull();
+    expect(result.proof).toBe("failed");
+    expect(result.status).toBe("failed");
     expect(result.proof).not.toBe("full-objective-global-optimum");
-    expect(result.proof === "degraded-exploratory-fallback" || result.proof === "failed").toBe(
-      true,
-    );
   });
 
   it("full-objective-global-optimum requires full-mode cover of feasible space, not shortlist size", () => {
@@ -265,6 +263,9 @@ describe("score honesty", () => {
     expect(fullCalls).toBeGreaterThan(0);
     expect(result.proof).not.toBe("full-objective-global-optimum");
     expect(result.validFullCandidateCount).toBe(0);
+    expect(result.best).toBeNull();
+    expect(result.status).toBe("failed");
+    expect(result.proof).toBe("failed");
   });
 
   it("5. no valid candidate returns failure rather than a zero-score winner", () => {

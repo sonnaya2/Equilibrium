@@ -24,6 +24,7 @@ export {
 import type { RotationSummary, SimulateInput, SimulateOptions } from "./contracts";
 import {
   appendWithIntermediateCap,
+  branchCapsFromBudget,
   combineExactness,
   materializeCastPlans,
   mergeAndCapBranches,
@@ -39,6 +40,8 @@ import { firstLegalTickFor } from "../runtime/state";
 import { combineBranchSummaries } from "./summary";
 
 export { createCastContext } from "./context";
+export type { BranchBudget } from "./contracts";
+export { defaultBranchBudget, resolveBranchBudget, branchCapsFromBudget } from "./branch";
 
 const MAX_AUTO_WEAVE_CASTS = 400;
 
@@ -60,6 +63,8 @@ function stepManualAction(
   branch: Branch,
   ability: AbilitySpec,
   autoWeave: boolean | undefined,
+  maxLive: number,
+  intermediateMax: number,
 ): ManualStep {
   if (branch.error !== undefined) {
     return { branches: [branch], branched: false, residualWeight: 0, exactness: "exact" };
@@ -133,23 +138,30 @@ function stepManualAction(
           });
           continue;
         }
-        const planned = planCastOutcomes(current, basic, current.rt.state.tick, true);
+        const planned = planCastOutcomes(
+          current,
+          basic,
+          current.rt.state.tick,
+          true,
+          maxLive,
+          intermediateMax,
+        );
         residualWeight += planned.residualWeight;
         exactness = combineExactness(exactness, planned.exactness);
         if (planned.plans.length > 1) branched = true;
         done.push(...planned.errors);
         plans.push(...planned.plans);
       }
-      const advanced = materializeCastPlans(plans);
+      const advanced = materializeCastPlans(plans, maxLive, intermediateMax);
       residualWeight += advanced.residualWeight;
       exactness = combineExactness(exactness, advanced.exactness);
       branched ||= advanced.branches.length > 1;
-      const pendingCap = mergeAndCapBranches(advanced.branches);
+      const pendingCap = mergeAndCapBranches(advanced.branches, maxLive);
       residualWeight += pendingCap.residualWeight;
       exactness = combineExactness(exactness, pendingCap.exactness);
       pending = pendingCap.branches;
     }
-    const workCap = mergeAndCapBranches(done);
+    const workCap = mergeAndCapBranches(done, maxLive);
     residualWeight += workCap.residualWeight;
     exactness = combineExactness(exactness, workCap.exactness);
     work = workCap.branches;
@@ -167,6 +179,8 @@ function stepManualAction(
       ability,
       firstLegalTickFor(woven.rt.state, ability, woven.rt.input.level),
       false,
+      maxLive,
+      intermediateMax,
     );
     residualWeight += planned.residualWeight;
     exactness = combineExactness(exactness, planned.exactness);
@@ -174,11 +188,11 @@ function stepManualAction(
     carried.push(...planned.errors);
     plans.push(...planned.plans);
   }
-  const advanced = materializeCastPlans(plans);
+  const advanced = materializeCastPlans(plans, maxLive, intermediateMax);
   residualWeight += advanced.residualWeight;
   exactness = combineExactness(exactness, advanced.exactness);
   branched ||= advanced.branches.length > 1;
-  const capped = mergeAndCapBranches([...carried, ...advanced.branches]);
+  const capped = mergeAndCapBranches([...carried, ...advanced.branches], maxLive);
   residualWeight += capped.residualWeight;
   exactness = combineExactness(exactness, capped.exactness);
   return { branches: capped.branches, branched, residualWeight, exactness };
@@ -190,6 +204,7 @@ function stepManualAction(
  * summary surfaces the failed weight instead of smoothing it away.
  */
 export function simulate(input: SimulateInput, options?: SimulateOptions): RotationSummary {
+  const { maxLive, intermediateMax } = branchCapsFromBudget(options?.branchBudget);
   let branches: Branch[] = [
     { weight: 1, rt: createRuntime({ ...input, detailLevel: options?.detailLevel }) },
   ];
@@ -233,6 +248,8 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
           ability,
           firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level),
           false,
+          maxLive,
+          intermediateMax,
         );
         residualWeight += planned.residualWeight;
         exactness = combineExactness(exactness, planned.exactness);
@@ -240,11 +257,11 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
         carried.push(...planned.errors);
         plans.push(...planned.plans);
       }
-      const advanced = materializeCastPlans(plans);
+      const advanced = materializeCastPlans(plans, maxLive, intermediateMax);
       residualWeight += advanced.residualWeight;
       exactness = combineExactness(exactness, advanced.exactness);
       sawBranching ||= branched || advanced.branches.length > 1;
-      const capped = mergeAndCapBranches([...carried, ...advanced.branches]);
+      const capped = mergeAndCapBranches([...carried, ...advanced.branches], maxLive);
       residualWeight += capped.residualWeight;
       exactness = combineExactness(exactness, capped.exactness);
       branches = capped.branches;
@@ -252,15 +269,15 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
     }
     let next: Branch[] = [];
     for (const branch of branches) {
-      const step = stepManualAction(branch, ability, input.autoWeave);
-      const folded = appendWithIntermediateCap(next, step.branches);
+      const step = stepManualAction(branch, ability, input.autoWeave, maxLive, intermediateMax);
+      const folded = appendWithIntermediateCap(next, step.branches, maxLive);
       residualWeight += step.residualWeight + folded.residualWeight;
       exactness = combineExactness(exactness, step.exactness);
       exactness = combineExactness(exactness, folded.exactness);
       next = folded.branches;
       sawBranching ||= step.branched;
     }
-    const capped = mergeAndCapBranches(next);
+    const capped = mergeAndCapBranches(next, maxLive);
     residualWeight += capped.residualWeight;
     exactness = combineExactness(exactness, capped.exactness);
     branches = capped.branches;

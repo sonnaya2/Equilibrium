@@ -64,20 +64,27 @@ When `residualWeight > 0`, engine primary totals are **not** E[D|concrete] renor
 
 Residual mass stays unassigned (not invented damage). See `reports/solver-probability-semantics-phase2.md`.
 
-## Existing honest degraded path
+## No exploratory fallback as solved result (Phase 4)
 
-When full-horizon objective fails (including residual):
+When full-horizon objective fails for every shortlist candidate (including residual):
 
 - Full eval: `validForFinalRanking=false`, objective reason carries residual / exactness / non-unit-mass basis.
 - Search short horizon: residual / non-unit-mass / non-exact summaries are **not** finite rankable scores (same gate as full). Residual-free short DPM remains exploratory-only (`validForFinalRanking=false`).
-- Finalize proof: `degraded-exploratory-fallback` only if some residual-free exploratory candidate remains (never `full-objective-global-optimum`).
+- Finalize: **`status=failed`**, **`best=null`**, **`proof=failed`**. Exploratory scores stay on `bestExploratoryScore` (debug / progress only).
+- **Never** emit applyable `degraded-exploratory-fallback` winners. DTO builder rejects nonvalidated winners. Apply stays disabled.
 
 UI labels residual / known-mass basis (`revoStochasticLabels`); that is **presentation**, not solver ranking permission.
-
-**Phase 3 (not this change):** incumbent user-bar full-sim gate; refuse apply of worse/degraded winners.
 
 ## Out of scope for this policy
 
 - Raising `MAX_LIVE_BRANCHES` for Leng-only without measuring residual and wall time.
 - Ranking full-horizon robust windows over residual mass.
 - Calling exploratory DPM "verified" or "exact robust".
+
+## Adaptive branch fidelity (related)
+
+Prefer **adaptive live caps** over a silent global raise: pass `BranchBudget`
+through the sim and escalate (64→…→4096 by mode) until residual/exactness meet
+a configurable completeness bar, else unrankable. See
+`docs/solver-branch-fidelity-design.md`. Completeness thresholds do not weaken
+the gates above.

@@ -164,6 +164,34 @@ export function mayApplyFinalDtoStamp(opts: {
 export const APPLY_FINAL_STAMP_REJECT_MESSAGE =
   "Solve result identity missing or mismatched; result discarded";
 
+/**
+ * Phase 4: resultBuilder / pool failure for no full-horizon winner.
+ * Catch path surfaces error only - no stopped-preview Apply / onActiveBar.
+ */
+export function isNoValidatedUpgradeError(message: string): boolean {
+  return (
+    message.includes("no validated full-horizon upgrade") ||
+    message.includes("no valid candidate")
+  );
+}
+
+/**
+ * Phase 4 Apply gate for completed result DTOs.
+ * Only verified-cacheable full-horizon proofs enable Apply; degraded/failed never.
+ * solverResult is only set after applyFinalDto passes isVerifiedCacheableResult;
+ * this is defense-in-depth for the button chrome.
+ */
+export function mayApplySolverResultBar(
+  dto: SolverResultDTO | null | undefined,
+): boolean {
+  if (!dto?.bar?.length) return false;
+  if (!Number.isFinite(dto.score)) return false;
+  const proof = dto.proofLabel ?? dto.proof?.label;
+  if (typeof proof !== "string" || proof.length === 0) return false;
+  if (!VERIFIED_CACHEABLE_PROOFS.has(proof as ProofLabel)) return false;
+  return true;
+}
+
 /** Catch path (abort vs hard error) using the same identity/gen gates. */
 export function settlementActionForCatch(opts: {
   sessionGen: number;

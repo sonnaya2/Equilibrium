@@ -41,6 +41,25 @@ function fullWinner(bar: readonly string[], score: number): ScoredBar {
   };
 }
 
+function exploratoryBar(bar: readonly string[], score: number): ScoredBar {
+  return {
+    bar: [...bar],
+    fingerprint: bar.join("|"),
+    robustScore: score,
+    profileId: "balanced",
+    mode: "search",
+    objectiveType: "balanced",
+    horizonTicks: 40,
+    exploratory: true,
+    validForFinalRanking: false,
+    minDpm: score,
+    weightedMean: score,
+    openingDpm: score,
+    developedDpm: score,
+    steadyDpm: score,
+  };
+}
+
 function okResult(best: ScoredBar, top: ScoredBar[] = [best]): SolveResult {
   return {
     status: "ok",
@@ -68,6 +87,38 @@ function okResult(best: ScoredBar, top: ScoredBar[] = [best]): SolveResult {
       searchCacheHits: 0,
       fullCacheHits: 0,
       uniqueBars: 5,
+      elapsedMs: 1,
+    },
+  };
+}
+
+function failedNoFullResult(exploreBest: ScoredBar | null = null): SolveResult {
+  return {
+    status: "failed",
+    best: null,
+    top: [],
+    proof: "failed",
+    searchEvaluations: 10,
+    fullEvaluations: 2,
+    totalEvaluations: 12,
+    searchBudget: 28,
+    evaluationsUsed: 12,
+    evaluationBudget: 28,
+    exhaustiveCompleted: false,
+    tier: "thorough",
+    seedBestScore: exploreBest?.robustScore ?? Number.NEGATIVE_INFINITY,
+    bestExploratoryScore: exploreBest?.robustScore ?? Number.NEGATIVE_INFINITY,
+    bestFullScore: Number.NEGATIVE_INFINITY,
+    validFullCandidateCount: 0,
+    stats: {
+      evaluations: 12,
+      searchEvaluations: 10,
+      fullEvaluations: 2,
+      cacheHits: 0,
+      cacheMisses: 12,
+      searchCacheHits: 0,
+      fullCacheHits: 0,
+      uniqueBars: 3,
       elapsedMs: 1,
     },
   };
@@ -174,5 +225,66 @@ describe("buildSolverResultDto", () => {
     expect(dto.score).toBe(100);
     expect(dto.proof?.recheckScore).toBe(100.5);
     expect(dto.proof?.notes?.some((n) => n.startsWith("presentation-recheck-delta"))).toBe(true);
+  });
+
+  it("rejects failed solve with no full winners (Phase 4)", () => {
+    const explore = exploratoryBar(["sever", "assault"], 40_000);
+    expect(() =>
+      buildSolverResultDto({
+        request: baseRequest,
+        result: failedNoFullResult(explore),
+        poolSize: 4,
+        uniqueBars: 2,
+        fullTicks: 500,
+        evaluationBudget: 28,
+        blessingIds: [],
+      }),
+    ).toThrow(/no validated full-horizon upgrade/);
+  });
+
+  it("rejects exploratory / non-full best even if status ok (Phase 4)", () => {
+    const explore = exploratoryBar(["sever", "assault"], 40_000);
+    const bad: SolveResult = {
+      ...okResult(explore),
+      status: "ok",
+      best: explore,
+      top: [explore],
+      proof: "degraded-exploratory-fallback",
+      bestFullScore: Number.NEGATIVE_INFINITY,
+      validFullCandidateCount: 0,
+    };
+    expect(() =>
+      buildSolverResultDto({
+        request: baseRequest,
+        result: bad,
+        poolSize: 4,
+        uniqueBars: 1,
+        fullTicks: 500,
+        evaluationBudget: 28,
+        blessingIds: [],
+      }),
+    ).toThrow(/no validated full-horizon upgrade/);
+  });
+
+  it("rejects non-rankable full-mode bar", () => {
+    const nonRankable: ScoredBar = {
+      ...fullWinner(["sever"], 100),
+      validForFinalRanking: false,
+    };
+    const bad: SolveResult = {
+      ...okResult(nonRankable),
+      validFullCandidateCount: 0,
+    };
+    expect(() =>
+      buildSolverResultDto({
+        request: baseRequest,
+        result: bad,
+        poolSize: 1,
+        uniqueBars: 1,
+        fullTicks: 500,
+        evaluationBudget: 10,
+        blessingIds: [],
+      }),
+    ).toThrow(/no validated full-horizon upgrade/);
   });
 });

@@ -210,9 +210,9 @@ describe("multi-fidelity search honesty", () => {
     expect(state.bestFull).toBeNull();
     const fin = finalizeSearch(state, { tier: "thorough" });
     expect(fin.validFullCandidateCount).toBe(0);
-    if (fin.best) {
-      expect(fin.best.validForFinalRanking).toBe(false);
-    }
+    expect(fin.status).toBe("failed");
+    expect(fin.best).toBeNull();
+    expect(fin.proof).toBe("failed");
   });
 
   it("previous winners are medium-stage incumbents", () => {

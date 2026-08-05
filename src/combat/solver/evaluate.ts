@@ -19,6 +19,11 @@ import {
   scoreSummary,
   summaryObjectiveIneligibilityReason,
 } from "./objective";
+import {
+  resolveBranchFidelityLadder,
+  simulateWithAdaptiveBranchFidelity,
+  type BranchFidelityAttemptMeta,
+} from "./branchFidelity";
 
 export type {
   ObjectiveProfileId,
@@ -285,27 +290,64 @@ export function evaluateRevolutionBar(
   // (allocation notes live in compileEvaluationContext).
   // Default detailLevel stays full-analysis when unset (standalone/tests/UI).
   // Solver session opts into score-only for search + ranking evals.
-  const summary = simulateRevolution(
-    {
-      ...simFields,
-      abilities: compiled.catalogue as AbilitySpec[],
-      abilityRegistry: {
-        byId: compiled.byId,
-        basicByStyle: compiled.basicByStyle,
-      },
-      bar: resolved,
-      style,
-      durationTicks,
+  const revInput: RevolutionInput = {
+    ...simFields,
+    abilities: compiled.catalogue as AbilitySpec[],
+    abilityRegistry: {
+      byId: compiled.byId,
+      basicByStyle: compiled.basicByStyle,
     },
-    request.detailLevel !== undefined ? { detailLevel: request.detailLevel } : undefined,
-  );
+    bar: resolved,
+    style,
+    durationTicks,
+  };
+  const simOpts =
+    request.detailLevel !== undefined ? { detailLevel: request.detailLevel } : undefined;
+
+  let branchFidelity: BranchFidelityAttemptMeta | undefined;
+  let summary;
+  if (request.branchFidelityMode != null) {
+    const ladder = resolveBranchFidelityLadder(
+      request.branchFidelityMode,
+      request.branchFidelityOverrides,
+    );
+    const adaptive = simulateWithAdaptiveBranchFidelity(revInput, simOpts, ladder);
+    summary = adaptive.summary;
+    branchFidelity = adaptive.meta;
+  } else {
+    summary = simulateRevolution(revInput, simOpts);
+  }
 
   if (!summary.ok) {
     reasons.push({
       code: "sim-failed",
       message: summary.error ?? "revolution simulation failed",
     });
-    return failEval(request, reasons, { resolved, summary });
+    return failEval(request, reasons, { resolved, summary, branchFidelity });
+  }
+
+  // Adaptive ladder exhausted without completeness: still unrankable (do not fabricate score).
+  if (branchFidelity != null && !branchFidelity.complete) {
+    const msg = `branch fidelity incomplete residualWeight=${branchFidelity.residualWeight} after ${branchFidelity.attempts} attempt(s) maxLive=${branchFidelity.finalBudget.maxLiveBranches}`;
+    reasons.push({ code: "score-failed", message: msg });
+    const diagnostics = diagnosticMetrics(summary);
+    return failEval(request, reasons, {
+      mode: durationTicks < MIN_RANKABLE_HORIZON_TICKS ? "search" : "full",
+      exploratory: durationTicks < MIN_RANKABLE_HORIZON_TICKS,
+      validForFinalRanking: false,
+      resolved,
+      summary,
+      failureReason: msg,
+      branchFidelity,
+      metrics:
+        Object.keys(diagnostics).length > 0
+          ? {
+              dpm: Number.NEGATIVE_INFINITY,
+              totalExpected: summary.totalExpected,
+              ...diagnostics,
+            }
+          : undefined,
+    });
   }
 
   // Short horizon: exploratory single-window DPM only when unit-mass eligible.
@@ -325,6 +367,7 @@ export function evaluateRevolutionBar(
         resolved,
         summary,
         failureReason: ineligible,
+        branchFidelity,
         // Diagnostics only: known-mass / conditional mean never become score.
         metrics:
           Object.keys(diagnostics).length > 0
@@ -355,6 +398,7 @@ export function evaluateRevolutionBar(
         ...diagnosticMetrics(summary),
       },
       profileId,
+      branchFidelity,
     };
   }
 
@@ -374,6 +418,7 @@ export function evaluateRevolutionBar(
       summary,
       objective: scored,
       failureReason: scored.reason,
+      branchFidelity,
     });
   }
 
@@ -399,5 +444,6 @@ export function evaluateRevolutionBar(
       ...diagnosticMetrics(summary),
     },
     profileId,
+    branchFidelity,
   };
 }

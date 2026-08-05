@@ -8,6 +8,7 @@ import {
   combineExactness,
   appendWithIntermediateCap,
   mergeAndCapBranches,
+  MAX_INTERMEDIATE_BRANCHES,
   MAX_LIVE_BRANCHES,
   noteBranchLiveCount,
   snapshotRuntime,
@@ -34,6 +35,9 @@ export {
   mergeAndCapBranches,
   appendWithIntermediateCap,
   MAX_INTERMEDIATE_BRANCHES,
+  defaultBranchBudget,
+  resolveBranchBudget,
+  branchCapsFromBudget,
   enableBranchProfiling,
   isBranchProfilingEnabled,
   resetBranchProfile,
@@ -76,6 +80,8 @@ export function planCastOutcomes(
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
+  maxLive: number = MAX_LIVE_BRANCHES,
+  intermediateMax: number = MAX_INTERMEDIATE_BRANCHES,
 ): {
   plans: CastOutcomePlan[];
   errors: Branch[];
@@ -90,7 +96,7 @@ export function planCastOutcomes(
     candidateTick(branch.rt.state, readyTick),
     firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level),
   );
-  const advanced = advanceToBranches(branch, candidate);
+  const advanced = advanceToBranches(branch, candidate, maxLive, intermediateMax);
 
   const plans: CastOutcomePlan[] = [];
   const errors: Branch[] = [];
@@ -214,16 +220,23 @@ export function planCastOutcomes(
 export function materializeCastPlans(
   plans: readonly CastOutcomePlan[],
   max: number = MAX_LIVE_BRANCHES,
+  intermediateMax: number = MAX_INTERMEDIATE_BRANCHES,
 ): BranchSet {
-  return runWithHitReuseScope(() => materializeCastPlansInner(plans, max));
+  return runWithHitReuseScope(() => materializeCastPlansInner(plans, max, intermediateMax));
 }
 
 function materializeCastPlansInner(
   plans: readonly CastOutcomePlan[],
   max: number,
+  intermediateMax: number,
 ): BranchSet {
   if (!Number.isInteger(max) || max < 1) {
     throw new RangeError(`materializeCastPlans: max must be a positive integer, got ${max}`);
+  }
+  if (!Number.isInteger(intermediateMax) || intermediateMax < max) {
+    throw new RangeError(
+      `materializeCastPlans: intermediateMax must be an integer >= max, got ${intermediateMax}`,
+    );
   }
   // Oracle path (castOutcomes uses MAX_SAFE_INTEGER): appendWithIntermediateCap skips cap.
   const inPlace: CastOutcomePlan[] = [];
@@ -250,6 +263,8 @@ function materializeCastPlansInner(
       plan.prepared,
       plan.auto,
       plan.rng,
+      max,
+      intermediateMax,
     );
     residualWeight += committed.residualWeight;
     exactness = combineExactness(exactness, committed.exactness);
@@ -272,6 +287,8 @@ function materializeCastPlansInner(
       plan.prepared,
       plan.auto,
       plan.rng,
+      max,
+      intermediateMax,
     );
     residualWeight += committed.residualWeight;
     exactness = combineExactness(exactness, committed.exactness);
@@ -289,16 +306,24 @@ function materializeCastPlansInner(
 /**
  * One cast with state-changing RNG: prepare once, commit each outcome on a clone.
  * Returns BranchSet so residual / exactness are never dropped (oracle-safe).
- * Pre-cast advance and land-time Leng still use MAX_LIVE_BRANCHES inside
- * advanceToBranches; residualWeight discloses any discarded mass.
+ * Oracle-scale materialize skips intermediate caps; plan advance uses live budget.
  */
 export function castOutcomes(
   branch: Branch,
   ability: AbilitySpec,
   readyTick: number,
   auto: boolean,
+  maxLive: number = MAX_LIVE_BRANCHES,
+  intermediateMax: number = MAX_INTERMEDIATE_BRANCHES,
 ): BranchSet {
-  const planned = planCastOutcomes(branch, ability, readyTick, auto);
+  const planned = planCastOutcomes(
+    branch,
+    ability,
+    readyTick,
+    auto,
+    maxLive,
+    intermediateMax,
+  );
   if (planned.plans.length === 0) {
     return {
       branches: planned.errors,
@@ -306,7 +331,11 @@ export function castOutcomes(
       exactness: planned.exactness,
     };
   }
-  const material = materializeCastPlans(planned.plans, Number.MAX_SAFE_INTEGER);
+  const material = materializeCastPlans(
+    planned.plans,
+    Number.MAX_SAFE_INTEGER,
+    Number.MAX_SAFE_INTEGER,
+  );
   return {
     branches: [...planned.errors, ...material.branches],
     residualWeight: planned.residualWeight + material.residualWeight,

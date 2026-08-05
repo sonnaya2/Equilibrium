@@ -437,12 +437,15 @@ function castSeqOf(
 
 /**
  * Commit a prepared cast with Leng land-time multi-branch advance through occupancy.
+ * maxLive / intermediateMax must match the outer BranchBudget (not a silent 64 default).
  */
 export function commitCastBranches(
   branch: Branch,
   prepared: PreparedCast,
   auto: boolean,
   rng?: CastRng,
+  maxLive: number = MAX_LIVE_BRANCHES,
+  intermediateMax: number = MAX_LENG_INTERMEDIATE_BRANCHES,
 ): BranchSet {
   if (branch.error !== undefined) return emptyBranchSet([branch]);
 
@@ -455,7 +458,12 @@ export function commitCastBranches(
   rt.endTick = Math.max(rt.endTick, completesAt);
 
   const castSeq = castSeqOf(rt, prepared);
-  const advanced = advanceToBranches({ weight: branch.weight, rt }, completesAt);
+  const advanced = advanceToBranches(
+    { weight: branch.weight, rt },
+    completesAt,
+    maxLive,
+    intermediateMax,
+  );
 
   for (const b of advanced.branches) {
     if (b.error !== undefined) continue;
@@ -496,15 +504,32 @@ export function commitCastBranches(
  * Failed branches with banked pending events still drain (error preserved);
  * never invents success from residual land.
  */
-export function drainBranchToEnd(branch: Branch, horizonTicks?: number): BranchSet {
-  return runWithHitReuseScope(() => drainBranchToEndInner(branch, horizonTicks));
+export function drainBranchToEnd(
+  branch: Branch,
+  horizonTicks?: number,
+  maxLive: number = MAX_LIVE_BRANCHES,
+  intermediateMax: number = MAX_LENG_INTERMEDIATE_BRANCHES,
+): BranchSet {
+  return runWithHitReuseScope(() =>
+    drainBranchToEndInner(branch, horizonTicks, maxLive, intermediateMax),
+  );
 }
 
-function drainBranchToEndInner(branch: Branch, horizonTicks?: number): BranchSet {
+function drainBranchToEndInner(
+  branch: Branch,
+  horizonTicks: number | undefined,
+  maxLive: number,
+  intermediateMax: number,
+): BranchSet {
   const rt = branch.rt;
   const effectiveHorizon = horizonTicks ?? rt.horizon;
   if (effectiveHorizon != null && effectiveHorizon > 0) {
-    const advanced = advanceToBranches(branch, effectiveHorizon - 1);
+    const advanced = advanceToBranches(
+      branch,
+      effectiveHorizon - 1,
+      maxLive,
+      intermediateMax,
+    );
     for (const b of advanced.branches) {
       if (b.rt.state.tick < effectiveHorizon) {
         b.rt.state = { ...b.rt.state, tick: effectiveHorizon };
@@ -530,22 +555,22 @@ function drainBranchToEndInner(branch: Branch, horizonTicks?: number): BranchSet
         next.push(b);
         continue;
       }
-      const step = advanceToBranches(b, b.rt.queue.maxTick());
+      const step = advanceToBranches(b, b.rt.queue.maxTick(), maxLive, intermediateMax);
       residualWeight += step.residualWeight;
       exactness = combineExactness(exactness, step.exactness);
       next.push(...step.branches);
       needsFinalCap = true;
       noteBranchLiveCount(next.length);
-      if (next.length > MAX_LIVE_BRANCHES) {
-        const folded = mergeAndCapBranches(next);
+      if (next.length > maxLive) {
+        const folded = mergeAndCapBranches(next, maxLive);
         residualWeight += folded.residualWeight;
         exactness = combineExactness(exactness, folded.exactness);
         next = folded.branches;
-        needsFinalCap = folded.branches.length > MAX_LIVE_BRANCHES;
+        needsFinalCap = folded.branches.length > maxLive;
       }
     }
-    if (needsFinalCap || next.length > MAX_LIVE_BRANCHES) {
-      const capped = mergeAndCapBranches(next);
+    if (needsFinalCap || next.length > maxLive) {
+      const capped = mergeAndCapBranches(next, maxLive);
       live = {
         branches: capped.branches,
         residualWeight: residualWeight + capped.residualWeight,

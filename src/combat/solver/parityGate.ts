@@ -295,11 +295,13 @@ export async function runScoreAnalysisParityGate(
     const label = `parity ${i + 1}/${total}`;
     input.onProgress?.({ done: i, total, label, bar });
 
+    // Same adaptive live ladder as finalize ranking; only detailLevel differs.
     const scoreOnlyEval = evaluateRevolutionBar({
       ...evalBase,
       bar,
       durationTicks: fullTicks,
       detailLevel: "score-only",
+      branchFidelityMode: "full",
     });
 
     if (!scoreOnlyEval.ok || !scoreOnlyEval.validForFinalRanking) {
@@ -322,6 +324,7 @@ export async function runScoreAnalysisParityGate(
       bar,
       durationTicks: fullTicks,
       detailLevel: "full-analysis",
+      branchFidelityMode: "full",
     });
 
     const scoreSnap = snapshotFromEvaluation(scoreOnlyEval);

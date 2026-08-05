@@ -68,7 +68,52 @@ describe("scoreAnalysisParity", () => {
     expect(snap!.totalExpected).toBe(50_000);
     expect(snap!.openingDpm).toBe(11_000);
     expect(snap!.residualWeight).toBe(0);
+    expect(snap!.concreteMass).toBe(0);
+    expect(snap!.damageByTick[0]).toBe(100);
     expect(snap!.exactness).toBe("exact");
+  });
+
+  it("fails when damageByTick drifts past tol", () => {
+    const scoreOnly = snapshotFromEvaluation(baseEval())!;
+    const full = snapshotFromEvaluation(
+      baseEval({
+        summary: {
+          ok: true,
+          totalExpected: 50_000,
+          damageByTick: { 0: 100.5 },
+          rng: { residualWeight: 0, exactness: "exact" },
+        },
+      }),
+    )!;
+    const cmp = compareScoreAnalysisParity(scoreOnly, full);
+    expect(cmp.pass).toBe(false);
+    expect(cmp.mismatches.some((m) => m.field.startsWith("damageByTick"))).toBe(true);
+  });
+
+  it("fails when concreteMass drifts past tol", () => {
+    const scoreOnly = snapshotFromEvaluation(
+      baseEval({
+        summary: {
+          ok: true,
+          totalExpected: 50_000,
+          damageByTick: { 0: 100 },
+          rng: { residualWeight: 0, concreteMass: 1, exactness: "exact" },
+        },
+      }),
+    )!;
+    const full = snapshotFromEvaluation(
+      baseEval({
+        summary: {
+          ok: true,
+          totalExpected: 50_000,
+          damageByTick: { 0: 100 },
+          rng: { residualWeight: 0, concreteMass: 0.9, exactness: "exact" },
+        },
+      }),
+    )!;
+    const cmp = compareScoreAnalysisParity(scoreOnly, full);
+    expect(cmp.pass).toBe(false);
+    expect(cmp.mismatches.some((m) => m.field === "concreteMass")).toBe(true);
   });
 
   it("passes when score-only and full-analysis match within tol", () => {

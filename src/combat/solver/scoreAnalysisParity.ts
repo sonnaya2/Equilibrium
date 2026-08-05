@@ -16,6 +16,10 @@ export interface ScoreAnalysisParitySnapshot {
   developedDpm: number | null;
   steadyDpm: number | null;
   residualWeight: number;
+  /** rng.concreteMass ?? probabilityMass; 0 when absent. */
+  concreteMass: number;
+  /** Tick ledger; missing keys treated as 0 in compare. */
+  damageByTick: Record<number, number>;
   exactness: string | null;
 }
 
@@ -58,6 +62,19 @@ export function snapshotFromEvaluation(
       : null;
   const metrics = evaluation.metrics;
 
+  const rng = summary?.rng;
+  const concreteRaw = rng?.concreteMass ?? rng?.probabilityMass;
+  const damageByTick: Record<number, number> = {};
+  const rawTicks = summary?.damageByTick;
+  if (rawTicks) {
+    for (const [k, v] of Object.entries(rawTicks)) {
+      const tick = Number(k);
+      if (Number.isFinite(tick) && typeof v === "number" && Number.isFinite(v)) {
+        damageByTick[tick] = v;
+      }
+    }
+  }
+
   return {
     ok: evaluation.ok === true,
     validForFinalRanking: evaluation.validForFinalRanking === true,
@@ -67,8 +84,10 @@ export function snapshotFromEvaluation(
     openingDpm: finiteOrNull(metrics?.openingDpm ?? objectiveOk?.openingDpm),
     developedDpm: finiteOrNull(metrics?.developedDpm ?? objectiveOk?.developedDpm),
     steadyDpm: finiteOrNull(metrics?.steadyDpm ?? objectiveOk?.steadyDpm),
-    residualWeight: summary?.rng?.residualWeight ?? 0,
-    exactness: exactnessString(summary?.rng?.exactness),
+    residualWeight: rng?.residualWeight ?? 0,
+    concreteMass: typeof concreteRaw === "number" && Number.isFinite(concreteRaw) ? concreteRaw : 0,
+    damageByTick,
+    exactness: exactnessString(rng?.exactness),
   };
 }
 
@@ -167,6 +186,25 @@ export function compareScoreAnalysisParity(
     fullAnalysis.residualWeight,
     tol,
   );
+  pushNumericMismatch(
+    mismatches,
+    "concreteMass",
+    scoreOnly.concreteMass,
+    fullAnalysis.concreteMass,
+    tol,
+  );
+
+  const tickKeys = new Set([
+    ...Object.keys(scoreOnly.damageByTick),
+    ...Object.keys(fullAnalysis.damageByTick),
+  ]);
+  for (const key of tickKeys) {
+    const tick = Number(key);
+    const a = scoreOnly.damageByTick[tick] ?? 0;
+    const b = fullAnalysis.damageByTick[tick] ?? 0;
+    pushNumericMismatch(mismatches, `damageByTick[${tick}]`, a, b, tol);
+  }
+
   pushNullableNumericMismatch(
     mismatches,
     "openingDpm",

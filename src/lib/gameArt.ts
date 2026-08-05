@@ -50,6 +50,14 @@ export function equipmentIconPath(equipmentId: string): string | null {
 /** Equipment-variant ability ids share base art (death-skulls.webp, not death-skulls-igneous.webp). */
 const ABILITY_ICON_VARIANT_SUFFIX = /[_-]igneous$/i;
 
+/**
+ * Form suffixes that share the parent plate when a dedicated file is absent.
+ * adaptive_strike_mh -> adaptive-strike.webp (2h/dw keep dedicated plates).
+ */
+const ABILITY_ICON_FORM_FALLBACK: Record<string, string> = {
+  "adaptive-strike-mh": "adaptive-strike",
+};
+
 /** Shared constitution-bar abilities live under abilities/constitution/. */
 const CONSTITUTION_ABILITY_IDS = new Set(["sacrifice", "tuskas_wrath"]);
 
@@ -68,7 +76,8 @@ export function abilityIconPath(
     : abilityId;
   const withoutVariant = bare.replace(ABILITY_ICON_VARIANT_SUFFIX, "").toLowerCase();
   const lookupId = withoutVariant.replace(/-/g, "_");
-  const slug = withoutVariant.replace(/_/g, "-");
+  let slug = withoutVariant.replace(/_/g, "-");
+  slug = ABILITY_ICON_FORM_FALLBACK[slug] ?? slug;
   const folder =
     CONSTITUTION_ABILITY_IDS.has(lookupId) || style === "constitution"
       ? "constitution"

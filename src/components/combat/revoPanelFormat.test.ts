@@ -652,11 +652,12 @@ describe("revoBarResolve", () => {
     expect(adaptive.map((s) => s.id)).toEqual(["adaptive_strike_mh"]);
   });
 
-  it("shield loadout does not model any Adaptive form", () => {
+  it("shield loadout models Adaptive as main-hand form", () => {
     const bar = pickBarForLoadout("melee", "shield");
     expect(bar).toBeDefined();
     const modelled = revoManagedModelled(bar!, "shield");
-    expect(modelled.every((s) => s.replacementGroup !== "adaptive_strike")).toBe(true);
+    const adaptive = modelled.filter((s) => s.replacementGroup === "adaptive_strike");
+    expect(adaptive.map((s) => s.id)).toEqual(["adaptive_strike_mh"]);
   });
 
   it("ensureNecroConjuresOnBarIds injects wiki conjures when necro bar has none", () => {

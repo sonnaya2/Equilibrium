@@ -138,7 +138,8 @@ export function meetsWeaponRequirement(
     return weaponConfiguration === "twohand";
   }
   if (req === "mainhand-empty") {
-    return weaponConfiguration === "mainhand";
+    // Main-hand Adaptive Strike: empty OH or shield (not dual weapons / defender).
+    return weaponConfiguration === "mainhand" || weaponConfiguration === "shield";
   }
   if (req === "mainhand") {
     // Loose non-2h (Icy Tempest); not the empty-OH Adaptive Strike form.

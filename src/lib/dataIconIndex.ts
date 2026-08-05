@@ -1814,6 +1814,7 @@ export const SKILL_ICON_SLUGS = new Set([
 
 export const RELIC_ICON_SLUGS = new Set([
   "animal-wrangler",
+  "antiquarian",
   "assassins-insight",
   "crystal-grace",
   "divine-druid",
@@ -1823,6 +1824,7 @@ export const RELIC_ICON_SLUGS = new Set([
   "icyenic-faith",
   "naragi-edict",
   "natures-network",
+  "production-master",
   "superheated",
   "survivalist",
   "transmutation",

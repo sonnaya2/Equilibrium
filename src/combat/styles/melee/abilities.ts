@@ -68,7 +68,8 @@ export type AdaptiveStrikeWeaponConfiguration =
 
 /**
  * Legal Adaptive Strike engine form for a resolved weapon shape.
- * Shield / defender / necro / unknown => no form (null).
+ * MH + shield uses the main-hand form (same 120-140 band as empty OH).
+ * Defender / necro / unknown => no form (null).
  * Manual / Revo / solver must use this; never re-read UI slots in the engine.
  */
 export function adaptiveStrikeEngineId(
@@ -80,6 +81,7 @@ export function adaptiveStrikeEngineId(
     case "dualwield":
       return "adaptive_strike_dw";
     case "mainhand":
+    case "shield":
       return "adaptive_strike_mh";
     default:
       return null;

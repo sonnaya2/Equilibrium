@@ -142,8 +142,28 @@
     "label": "Naragi Edict",
     "category": "leagues/equilibrium/relics/site",
     "path": "public/game/relics/naragi-edict",
-    "fileTitle": "Naragi_Edict.png",
+    "fileTitle": "Naragi_Edict.webp",
     "canonicalPage": "https://runescape.wiki/w/Naragi_Edict",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-relic-production-master",
+    "label": "Production Master",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/production-master",
+    "fileTitle": "Production_Master_(Equilibrium_League).webp",
+    "canonicalPage": "https://runescape.wiki/w/Production_Master_(Equilibrium_League)",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-relic-antiquarian",
+    "label": "Antiquarian",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/antiquarian",
+    "fileTitle": "Antiquarian.webp",
+    "canonicalPage": "https://runescape.wiki/w/Antiquarian",
     "provenance": "wiki-file",
     "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
   },

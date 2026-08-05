@@ -38,9 +38,16 @@ const LEGAL = [
     hits: 1,
     band: ADAPTIVE_STRIKE_PRIMARY_BAND,
   },
+  {
+    // MH + shield uses the main-hand form (not dual).
+    config: "shield" as const,
+    engineId: "adaptive_strike_mh",
+    hits: 1,
+    band: ADAPTIVE_STRIKE_PRIMARY_BAND,
+  },
 ];
 
-const ILLEGAL = ["shield", "defender", "necromancy"] as const;
+const ILLEGAL = ["defender", "necromancy"] as const;
 
 describe("adaptiveStrikeEngineId", () => {
   it.each(LEGAL)("maps $config -> $engineId", ({ config, engineId }) => {
@@ -177,6 +184,8 @@ describe("Adaptive Strike cast legality", () => {
     const th = abilityById(MELEE_ABILITIES, "adaptive_strike_2h");
     expect(meetsWeaponRequirement(mh, "dualwield")).toBe(false);
     expect(meetsWeaponRequirement(mh, "twohand")).toBe(false);
+    expect(meetsWeaponRequirement(mh, "shield")).toBe(true);
+    expect(meetsWeaponRequirement(mh, "mainhand")).toBe(true);
     expect(meetsWeaponRequirement(dw, "mainhand")).toBe(false);
     expect(meetsWeaponRequirement(th, "mainhand")).toBe(false);
   });
@@ -256,20 +265,29 @@ describe("production bar resolution with weaponConfiguration", () => {
     expect(slot.spec?.id).toBe("adaptive_strike_mh");
   });
 
-  it.each(["shield", "defender"] as const)(
-    "%s with dual bar setup leaves Adaptive unmodelled",
-    (config) => {
-      const slot = resolveBarSlot(
-        { name: "Adaptive Strike", abilityId: "melee:adaptive-strike" },
-        ENGINE_SPECS,
-        "melee",
-        "Dual wield",
-        config,
-      );
-      expect(slot.modelledBy).toBe("unmodelled");
-      expect(slot.spec).toBeNull();
-    },
-  );
+  it("shield with dual bar setup selects MH Adaptive form", () => {
+    const slot = resolveBarSlot(
+      { name: "Adaptive Strike", abilityId: "melee:adaptive-strike" },
+      ENGINE_SPECS,
+      "melee",
+      "Dual wield",
+      "shield",
+    );
+    expect(slot.modelledBy).toBe("engine");
+    expect(slot.spec?.id).toBe("adaptive_strike_mh");
+  });
+
+  it("defender with dual bar setup leaves Adaptive unmodelled", () => {
+    const slot = resolveBarSlot(
+      { name: "Adaptive Strike", abilityId: "melee:adaptive-strike" },
+      ENGINE_SPECS,
+      "melee",
+      "Dual wield",
+      "defender",
+    );
+    expect(slot.modelledBy).toBe("unmodelled");
+    expect(slot.spec).toBeNull();
+  });
 
   it("twohand config wins over Dual wield setup string", () => {
     const slot = resolveBarSlot(

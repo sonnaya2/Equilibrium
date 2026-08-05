@@ -198,40 +198,11 @@ export async function runOptimize(
     try {
       const pool = getSolverAgentPool();
       const agents = options?.agents ?? solverPoolSize();
-      if (typeof console !== "undefined" && agents > 1) {
-        console.warn(`[revo-solver] launching ${agents} parallel agents`);
-      }
-      const result = await pool.run(payload, onProgress, {
+      return await pool.run(payload, onProgress, {
         isCancelled: cancelled,
         signal: options?.signal,
         agents,
       });
-      // Phase-0 measure-only: log independent-budget vs straggler wait after pool merge.
-      if (typeof console !== "undefined" && result.poolMetrics && agents > 1) {
-        const m = result.poolMetrics;
-        console.warn(
-          "[revo-solver] pool metrics agents=" +
-            m.agentCount +
-            " perAgentBudget=" +
-            m.perAgentBudget +
-            " globalBudgetSum=" +
-            m.globalBudgetSum +
-            " unique=" +
-            m.uniqueCandidates +
-            (m.uniqueCandidatesSumKnownWrong ? " (sum-fallback)" : " (host-set)") +
-            " firstFinishedMs=" +
-            (m.firstFinishedMs ?? "-") +
-            " lastFinishedMs=" +
-            (m.lastFinishedMs ?? "-") +
-            " stragglerWaitMs=" +
-            (m.stragglerWaitMs ?? "-") +
-            " reservedCore=" +
-            m.reservedCore +
-            " finishOrder=" +
-            ((m.finishOrder ?? []).join(",") || "-"),
-        );
-      }
-      return result;
     } catch (err) {
       if (cancelled() || isAbortError(err)) {
         throw isAbortError(err) ? err : abortError();

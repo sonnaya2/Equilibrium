@@ -285,6 +285,32 @@ describe("Corruption recast overwrite", () => {
     }
   });
 
+  it("Blast recast after GCD keeps landed parent; cancels remaining old tails", () => {
+    // Parent is at cast+2 and GCD is 3 ticks, so the first free cast is after the
+    // old parent has already landed. Recast must not orphan tails from that parent.
+    const blast = zeroCd(MAGIC_ABILITIES.find((a) => a.id === "corruption_blast")!);
+    const abilities = MAGIC_ABILITIES.map((a) => (a.id === "corruption_blast" ? blast : a));
+    const ctx = createCastContext({
+      ...magicInput,
+      abilities,
+      startingAdrenaline: 100,
+    });
+    // Cast1@0: parent@2, tails@4,6,8,10. Occupancy ends at 3 with parent landed.
+    expect(ctx.performCast(blast, 0, false).ok).toBe(true);
+    expect(ctx.getState().tick).toBe(3);
+    // Cast2@3: cancel pending tails of cast1; new parent@5, tails@7,9,11,13.
+    expect(ctx.performCast(blast, 3, false).ok).toBe(true);
+    const s = ctx.finish();
+    const events = s.events.filter((e) => e.abilityId === "corruption_blast");
+    const parents = events.filter((e) => e.hitIndex === 0);
+    expect(parents.map((e) => e.tick)).toEqual([2, 5]);
+    const oldTails = events.filter((e) => e.derivedFrom === parents[0]!.seq);
+    const newTails = events.filter((e) => e.derivedFrom === parents[1]!.seq);
+    expect(oldTails).toHaveLength(0);
+    expect(newTails.map((e) => e.tick)).toEqual([7, 9, 11, 13]);
+    expect(newTails).toHaveLength(4);
+  });
+
   it("Shot recast does not cancel Blast tails when both are live", () => {
     const shot = zeroCd(RANGED_ABILITIES.find((a) => a.id === "corruption_shot")!);
     const blast = zeroCd(MAGIC_ABILITIES.find((a) => a.id === "corruption_blast")!);

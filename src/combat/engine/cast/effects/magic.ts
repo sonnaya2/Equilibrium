@@ -94,8 +94,8 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     rt.state = patchMagic(rt.state, { flowUntilTick: 0, flowReduction: 0 });
   }
 
-  // Recast replaces prior Corruption Blast tails only (does not cancel Shot).
-  // Cast effects run after schedule; skip this cast's cancelOwner.
+  // Recast cancels prior Corruption Blast pending events (parent + tails) by owner.
+  // Does not cancel Shot. Cast effects run after schedule; skip this cast's owner.
   if (ability.id === "corruption_blast") {
     const newOwner = prepared.snap.castSeq;
     const owners = new Set<number>();

@@ -120,9 +120,24 @@ export function scheduleCastEvents(
   // fraction of the resolved first hit, scheduled with provenance back to it.
   const derived = ability.derivedHits;
   if (derived && hitSeqs.length > 0) {
+    if (derived.fractionPcts != null) {
+      if (derived.fractionPcts.length !== derived.count) {
+        throw new Error(
+          `derivedHits.fractionPcts length ${derived.fractionPcts.length} != count ${derived.count} for ${ability.id}`,
+        );
+      }
+      for (let i = 0; i < derived.fractionPcts.length; i++) {
+        const v = derived.fractionPcts[i];
+        if (typeof v !== "number" || !Number.isFinite(v)) {
+          throw new Error(
+            `derivedHits.fractionPcts[${i}] is not a finite number for ${ability.id}`,
+          );
+        }
+      }
+    }
     const sourceSeq = hitSeqs[0]!;
     for (let i = 0; i < derived.count; i++) {
-      const pct = derived.fractionPcts?.[i] ?? derived.fractionPct;
+      const pct = derived.fractionPcts != null ? derived.fractionPcts[i]! : derived.fractionPct;
       scheduleEvent(rt, {
         tick: candidate + derived.firstOffset + i * derived.intervalTicks,
         family: derived.dot ? "dot" : "hit",

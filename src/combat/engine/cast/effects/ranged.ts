@@ -36,8 +36,8 @@ export function applyRangedCastEffects(fx: CastEffectContext): void {
     });
   }
 
-  // Recast replaces prior Corruption Shot tails only (does not cancel Blast).
-  // Cast effects run after schedule; skip this cast's cancelOwner.
+  // Recast cancels prior Corruption Shot pending events (parent + tails) by owner.
+  // Does not cancel Blast. Cast effects run after schedule; skip this cast's owner.
   if (ability.id === "corruption_shot") {
     const newOwner = prepared.snap.castSeq;
     const owners = new Set<number>();

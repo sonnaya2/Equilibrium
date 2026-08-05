@@ -57,6 +57,22 @@ export type AppliedEffectId =
 
 export type SupportStatus = "partially-modeled" | "not-modeled" | "mechanics-unverified";
 
+export interface DerivedHitsSpec {
+  count: number;
+  intervalTicks: number;
+  firstOffset: number;
+  /** Uniform fraction of resolved parent (Bloat 25, Death Skulls 100). */
+  fractionPct: number;
+  /**
+   * Per-descendant fractions of the resolved parent.
+   * Corruption: [80, 60, 40, 20]. When set, length must equal count;
+   * resolve uses fractionPcts[i] instead of fractionPct.
+   */
+  fractionPcts?: readonly number[];
+  /** true = DoT family (Bloat, Corruption); false = bounce (Death Skulls). */
+  dot: boolean;
+}
+
 export interface AbilitySpec {
   id: string;
   name: string;
@@ -138,6 +154,12 @@ export interface AbilitySpec {
   bleedDurationExtension?: {
     equipmentPassive: "masterwork-spear-bleed-extension";
   };
+  /**
+   * Hits derived from the resolved first hit at a fraction of it (Bloat tails,
+   * Death Skulls bounces, Corruption). They inherit the source hit's crit-
+   * boosted damage, never crit themselves, and are never re-modified.
+   */
+  derivedHits?: DerivedHitsSpec;
 }
 
 export interface AbilityResult {

@@ -73,8 +73,8 @@
 | Conjure Spirit Pact / ghost heal / army custom | **INTENTIONAL_SCOPE_LIMIT** | Partial notes |
 | Icy Tempest multi splash | **INTENTIONAL_SCOPE_LIMIT** | ST primary + splash-on-primary |
 | Dark bow / Gloomfire basic transform | **INTENTIONAL_SCOPE_LIMIT** | Explicit residual note; not separate AbilitySpec |
-| Corruption Shot/Blast multi spread | **INTENTIONAL_SCOPE_LIMIT** | Independent decay bands; no multi-target spread |
-| Corruption lineage as derived-from-resolved-parent | **INTENTIONAL_SCOPE_LIMIT** | Independent scaled bands, not `derivedHits` (unlike Bloat/DS) |
+| Corruption Shot/Blast multi spread | **INTENTIONAL_SCOPE_LIMIT** | No multi-target identity; Shot no longer spreads in game; Blast spread still out |
+| Corruption lineage as derived-from-resolved-parent | **MODELED** (Phase 6) | Parent + 4 `derivedHits` at 80/60/40/20% of resolved parent (shared with Bloat/DS) |
 | Pulverise kill +50% adren / Pulverised debuff | **INTENTIONAL_SCOPE_LIMIT** | Constant dead code; notes admit absence |
 | Stun/bind/CC (Backhand, Binding, Impact, RF) | **INTENTIONAL_SCOPE_LIMIT** | Outgoing damage sim |
 | Attached damage recursion / fake stacks | **FALSE_POSITIVE** | Provenance + tests guard SW/Aftershock/Lightning Surge |
@@ -164,7 +164,7 @@
 | Shadow Imbued / Tendrils | **OK** |
 | Deathspore | **OK** |
 | Snap Shot / Bombardment CD 1.8s | **OK** as coded (GCD-length) |
-| Corruption Shot lineage | Independent DoT bands; multi-spread **scope** |
+| Corruption Shot lineage | **OK** parent + derived tails 80/60/40/20; multi-spread **scope** |
 
 ### Magic
 
@@ -179,7 +179,7 @@
 | Chain / Greater Chain copy | **INTENTIONAL partial** primary-only; multi-target identity out of scope |
 | Claws of Guthix accuracy | **INTENTIONAL partial** cast band only; no DP recompute / no fake mult |
 | Blast diffusion boots | **MODELED** blast-diffusion-inner-wrath + Blast Infused window |
-| Corruption Blast lineage | Independent bands; spread **scope** |
+| Corruption Blast lineage | **OK** parent + derived tails 80/60/40/20; spread **scope** |
 
 ### Necromancy
 
@@ -202,7 +202,7 @@
 
 | Check | Result |
 |-------|--------|
-| Corruption Shot/Blast as single resolved parent | **INTENTIONAL** independent decay (not Bloat-style derived) |
+| Corruption Shot/Blast as single resolved parent | **OK** (Phase 6) `derivedHits` + `derivedFrom`; floors via `resolveDerivedHit` |
 | Bloat / Death Skulls derived | **OK** |
 | Attached cannot fake procs/stacks/crit recursion | **OK** (guards + tests) |
 

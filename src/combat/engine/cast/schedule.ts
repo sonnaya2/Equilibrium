@@ -3,7 +3,6 @@ import {
   COMMAND_REQUIRES_CONJURE,
   COMMAND_SKELETON_EXPIRY_TAIL_TICKS,
 } from "../../styles/necromancy/conjures";
-import { isNecromancyAbility } from "../../styles/necromancy/abilities";
 import type { PreparedCast } from "./prepare";
 import type { CastRecord } from "../simulation/contracts";
 import { resolveCastHit, resolveDerivedHit } from "../resolution";
@@ -117,12 +116,13 @@ export function scheduleCastEvents(
     });
   });
 
-  // Derived hits (Bloat tails, Death Skulls bounces): each is a fraction of the
-  // resolved first hit, scheduled with provenance back to it.
-  const derived = isNecromancyAbility(ability) ? ability.derivedHits : undefined;
+  // Derived hits (Bloat tails, Death Skulls bounces, Corruption): each is a
+  // fraction of the resolved first hit, scheduled with provenance back to it.
+  const derived = ability.derivedHits;
   if (derived && hitSeqs.length > 0) {
     const sourceSeq = hitSeqs[0]!;
     for (let i = 0; i < derived.count; i++) {
+      const pct = derived.fractionPcts?.[i] ?? derived.fractionPct;
       scheduleEvent(rt, {
         tick: candidate + derived.firstOffset + i * derived.intervalTicks,
         family: derived.dot ? "dot" : "hit",
@@ -139,7 +139,7 @@ export function scheduleCastEvents(
         cancelOwner: castSeq,
         derivedFrom: sourceSeq,
         resolve: (eventRt, landTick) =>
-          resolveDerivedHit(eventRt, sourceSeq, derived.fractionPct, landTick),
+          resolveDerivedHit(eventRt, sourceSeq, pct, landTick),
       });
     }
   }

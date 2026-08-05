@@ -68,20 +68,10 @@ export function resplendentAsphyxiate(ability: AbilitySpec): AbilitySpec {
   return { ...ability, channelTicks: 8, hits: asphyxiateResplendenceHits() };
 }
 
-/**
- * Corruption Blast: first hit 90-110%; each subsequent hit loses 20% of the
- * *initial* hit (wiki example: 1080 -> 864 -> 648 -> 432 -> 216). Modelled as
- * independent bands at 100/80/60/40/20% of the initial range.
- */
-function corruptionBlastHits() {
-  const scales = [1, 0.8, 0.6, 0.4, 0.2];
-  return scales.map((scale, i) => ({
-    band: { minPct: 90 * scale, maxPct: 110 * scale },
-    critEligible: false,
-    dot: true,
-    tickOffset: (i + 1) * 2,
-  }));
-}
+/** Corruption Blast parent band (wiki initial DoT tick). */
+export const CORRUPTION_BLAST_INITIAL_BAND = { minPct: 90, maxPct: 110 } as const;
+/** Decaying fractions of the resolved parent (wiki -20% of initial each step). */
+export const CORRUPTION_BLAST_TAIL_FRACTIONS_PCT = [80, 60, 40, 20] as const;
 
 /**
  * Smoke Tendrils escalating hits (wiki Usage): 55-65, 65-80, 75-95, 85-110
@@ -274,11 +264,27 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Asphyxiate"),
   },
   {
+    // Wiki DoT: parent 90-110 at +2; 4 derived tails every 2 ticks at 80/60/40/20% of resolved parent.
     id: "corruption_blast",
     name: "Corruption Blast",
     style: "magic",
     category: "enhanced",
-    hits: corruptionBlastHits(),
+    hits: [
+      {
+        band: { ...CORRUPTION_BLAST_INITIAL_BAND },
+        critEligible: false,
+        dot: true,
+        tickOffset: 2,
+      },
+    ],
+    derivedHits: {
+      count: 4,
+      intervalTicks: 2,
+      firstOffset: 4,
+      fractionPct: 80,
+      fractionPcts: [...CORRUPTION_BLAST_TAIL_FRACTIONS_PCT],
+      dot: true,
+    },
     adrenaline: { cost: 20 },
     cooldownSeconds: 15,
     source: wikiAbility("Corruption Blast"),

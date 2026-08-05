@@ -71,12 +71,29 @@ describe("magic ability data", () => {
 
   it("models multi-hit DoTs with wiki decay / escalation, not average-only stubs", () => {
     const corr = byId("corruption_blast");
-    expect(corr.hits).toHaveLength(5);
+    expect(corr.hits).toHaveLength(1);
     expect(corr.hits[0].band).toEqual({ minPct: 90, maxPct: 110 });
-    expect(corr.hits[4].band).toEqual({ minPct: 18, maxPct: 22 });
-    expect(corr.hits.every((h) => h.critEligible === false)).toBe(true);
+    expect(corr.hits[0].critEligible).toBe(false);
+    expect(corr.hits[0].dot).toBe(true);
+    expect(corr.hits[0].tickOffset).toBe(2);
+    expect(corr.derivedHits).toEqual({
+      count: 4,
+      intervalTicks: 2,
+      firstOffset: 4,
+      fractionPct: 80,
+      fractionPcts: [80, 60, 40, 20],
+      dot: true,
+    });
     expect(corr.adrenaline?.cost).toBe(20);
-    expect(corr.hits.map((h) => h.tickOffset)).toEqual([2, 4, 6, 8, 10]);
+    expect(corr.cooldownSeconds).toBe(15);
+    // Parent-only catalogue EV (tails are derived at land time, not listed hits).
+    const parentOnly = calculateAbility(corr, {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+    });
+    expect(parentOnly.expected).toBeCloseTo(1000);
 
     const smoke = byId("smoke_tendrils");
     expect(smoke.guaranteedCrit).toBe(true);

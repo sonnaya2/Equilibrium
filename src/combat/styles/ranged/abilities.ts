@@ -25,23 +25,10 @@ const wiki = (title: string, path: string): SourceReference => ({
   verifiedAt: VERIFIED,
 });
 
-/** Corruption Shot DoT: each subsequent hit loses 20% of the *initial* band.
- *  Explicit integers avoid float dust (90*0.2 !== 18 in IEEE). */
-function corruptionShotHits(): AbilitySpec["hits"] {
-  const bands = [
-    { minPct: 90, maxPct: 110 },
-    { minPct: 72, maxPct: 88 },
-    { minPct: 54, maxPct: 66 },
-    { minPct: 36, maxPct: 44 },
-    { minPct: 18, maxPct: 22 },
-  ];
-  return bands.map((band, i) => ({
-    band,
-    critEligible: false,
-    dot: true,
-    tickOffset: i * 2,
-  }));
-}
+/** Corruption Shot parent band (wiki initial DoT tick). */
+export const CORRUPTION_INITIAL_BAND = { minPct: 90, maxPct: 110 } as const;
+/** Decaying fractions of the resolved parent (wiki -20% of initial each step). */
+export const CORRUPTION_TAIL_FRACTIONS_PCT = [80, 60, 40, 20] as const;
 
 export const RANGED_ABILITIES: RangedAbilitySpec[] = [
   {
@@ -55,7 +42,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: MODERNISATION_WIKI,
   },
   {
-    // Wiki: 2 hits 45-55% each; each hit −2.4s Snipe CD (Fleeting boots 3.6s).
+    // Wiki: 2 hits 45-55% each; each hit -2.4s Snipe CD (Fleeting boots 3.6s).
     id: "piercing_shot",
     name: "Piercing Shot",
     style: "ranged",
@@ -178,12 +165,27 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Rapid Fire", "Rapid_Fire"),
   },
   {
-    // Wiki DoT: 5 hits every 2 ticks; each hit −20% of initial band; crit-ineligible.
+    // Wiki DoT: parent 90-110 at cast; 4 derived tails every 2 ticks at 80/60/40/20% of resolved parent.
     id: "corruption_shot",
     name: "Corruption Shot",
     style: "ranged",
     category: "enhanced",
-    hits: corruptionShotHits(),
+    hits: [
+      {
+        band: { ...CORRUPTION_INITIAL_BAND },
+        critEligible: false,
+        dot: true,
+        tickOffset: 0,
+      },
+    ],
+    derivedHits: {
+      count: 4,
+      intervalTicks: 2,
+      firstOffset: 2,
+      fractionPct: 80,
+      fractionPcts: [...CORRUPTION_TAIL_FRACTIONS_PCT],
+      dot: true,
+    },
     adrenaline: { cost: 20 },
     cooldownSeconds: 15,
     source: wiki("Corruption Shot", "Corruption_Shot"),
@@ -270,13 +272,13 @@ export const RANGED_EFFECTS = [
     id: "deaths_swiftness_buff_notes",
     name: "Death's Swiftness buff window",
     notes:
-      "Self buff: 1.5x damage for 50 active ticks base / 63 Greater (half-open, begins cast+1). Was ground-targeted area before 16 Mar 2026. Planted Feet extends base only — see effects.ts.",
+      "Self buff: 1.5x damage for 50 active ticks base / 63 Greater (half-open, begins cast+1). Was ground-targeted area before 16 Mar 2026. Planted Feet extends base only - see effects.ts.",
     source: wiki("Death's Swiftness", "Death%27s_Swiftness"),
   },
   {
     id: "shadow_tendrils_self_damage",
     name: "Shadow Tendrils recoil",
-    notes: "Self-damage 100–135% ability damage (wiki 2026-07-26). Not rolled as an outgoing hit.",
+    notes: "Self-damage 100-135% ability damage (wiki 2026-07-26). Not rolled as an outgoing hit.",
     source: wiki("Shadow Tendrils", "Shadow_Tendrils"),
   },
   {
@@ -297,7 +299,7 @@ export const RANGED_EFFECTS = [
     id: "snipe_piercing_interaction",
     name: "Snipe cooldown reduction",
     notes:
-      "Each Piercing Shot hit reduces Snipe CD by 2.4s (3.6s with Fleeting boots). Nightmare gauntlets: +25% hit chance and mobile channel; enchanted dread adds a half-damage flanking shot (150–180%).",
+      "Each Piercing Shot hit reduces Snipe CD by 2.4s (3.6s with Fleeting boots). Nightmare gauntlets: +25% hit chance and mobile channel; enchanted dread adds a half-damage flanking shot (150-180%).",
     source: wiki("Snipe", "Snipe"),
   },
   {

@@ -32,7 +32,7 @@ function concCritPerStackPct(abilityId: string, empowered: boolean): number {
  * Flow is earned from event-carried data when Sonic Wave lands.
  */
 export function applyMagicCastEffects(fx: CastEffectContext): void {
-  const { rt, ability, candidate } = fx;
+  const { rt, ability, candidate, prepared } = fx;
   const spendCharge = () => {
     rt.state = patchMagic(rt.state, { runicCharge: consumeAnima(rt.state.magic.runicCharge) });
   };
@@ -92,5 +92,22 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     candidate < rt.state.magic.flowUntilTick
   ) {
     rt.state = patchMagic(rt.state, { flowUntilTick: 0, flowReduction: 0 });
+  }
+
+  // Recast replaces prior Corruption Blast tails only (does not cancel Shot).
+  // Cast effects run after schedule; skip this cast's cancelOwner.
+  if (ability.id === "corruption_blast") {
+    const newOwner = prepared.snap.castSeq;
+    const owners = new Set<number>();
+    for (const e of rt.queue.pending()) {
+      if (
+        e.abilityId === "corruption_blast" &&
+        e.cancelOwner != null &&
+        e.cancelOwner !== newOwner
+      ) {
+        owners.add(e.cancelOwner);
+      }
+    }
+    for (const owner of owners) rt.queue.cancelByOwner(owner);
   }
 }

@@ -35,4 +35,21 @@ export function applyRangedCastEffects(fx: CastEffectContext): void {
       shadowImbued: extendShadowImbued(rt.state.ranged.shadowImbued, candidate),
     });
   }
+
+  // Recast replaces prior Corruption Shot tails only (does not cancel Blast).
+  // Cast effects run after schedule; skip this cast's cancelOwner.
+  if (ability.id === "corruption_shot") {
+    const newOwner = prepared.snap.castSeq;
+    const owners = new Set<number>();
+    for (const e of rt.queue.pending()) {
+      if (
+        e.abilityId === "corruption_shot" &&
+        e.cancelOwner != null &&
+        e.cancelOwner !== newOwner
+      ) {
+        owners.add(e.cancelOwner);
+      }
+    }
+    for (const owner of owners) rt.queue.cancelByOwner(owner);
+  }
 }

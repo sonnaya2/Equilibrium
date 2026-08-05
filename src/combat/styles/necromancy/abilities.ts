@@ -69,20 +69,6 @@ export interface NecromancyAbilitySpec extends AbilitySpec {
   soulCost?: number;
   /** Chance to generate a Residual Soul per target (Spectral Scythe = 0.25). */
   soulChance?: number;
-  /**
-   * Hits derived from the resolved FIRST hit at this fraction of it (wiki:
-   * Bloat tails = 25% of the initial hit; Death Skulls bounces = 100%).
-   * They inherit the source hit's crit-boosted damage, never crit themselves,
-   * and are never re-modified.
-   */
-  derivedHits?: {
-    count: number;
-    intervalTicks: number;
-    firstOffset: number;
-    fractionPct: number;
-    /** Damage-over-time tails (Bloat) vs direct derived hits (Death Skulls). */
-    dot: boolean;
-  };
   source: SourceReference;
 }
 

@@ -63,17 +63,25 @@ describe("ranged ability data", () => {
     expect(gr.hits.map((h) => h.tickOffset)).toEqual([undefined, 1, 1, 1, 1, 1, 1]);
   });
 
-  it("corruption shot decays 20% of initial band across 5 crit-ineligible hits", () => {
+  it("corruption shot is one parent hit plus 4 derived decaying DoT tails", () => {
     const corr = byId("corruption_shot");
-    expect(corr.hits).toHaveLength(5);
+    expect(corr.hits).toHaveLength(1);
     expect(corr.hits[0]!.band).toEqual({ minPct: 90, maxPct: 110 });
-    expect(corr.hits[1]!.band).toEqual({ minPct: 72, maxPct: 88 });
-    expect(corr.hits[4]!.band).toEqual({ minPct: 18, maxPct: 22 });
-    expect(corr.hits.every((h) => h.critEligible === false)).toBe(true);
-    expect(corr.hits.map((h) => h.tickOffset)).toEqual([0, 2, 4, 6, 8]);
+    expect(corr.hits[0]!.critEligible).toBe(false);
+    expect(corr.hits[0]!.dot).toBe(true);
+    expect(corr.hits[0]!.tickOffset).toBe(0);
+    expect(corr.derivedHits).toEqual({
+      count: 4,
+      intervalTicks: 2,
+      firstOffset: 2,
+      fractionPct: 80,
+      fractionPcts: [80, 60, 40, 20],
+      dot: true,
+    });
+    // Parent-only catalogue EV (tails are derived at land time, not listed hits).
     const input = { base: 1000, level: 99, accuracy: 1, crit: { chance: 0 } };
     const result = calculateAbility(corr, input);
-    expect(result.expected).toBeCloseTo(3000);
+    expect(result.expected).toBeCloseTo(1000);
   });
 
   it("effect notes stay sourced; calculable priority abilities are not effect-only", () => {

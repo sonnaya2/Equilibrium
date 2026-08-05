@@ -829,8 +829,23 @@ describe("RNG branches merge to the weighted mean", () => {
     });
     const plain = simulate({ ...meleeInput, rotation });
     expect(stochastic.ok).toBe(true);
-    expect(stochastic.totalExpected).toBeCloseTo(plain.totalExpected, 8);
     expect(stochastic.rng!.terminalClasses).toBeLessThan(64);
+    // Perk arms do not change ability damage: E[D|concrete] tracks the plain path.
+    // residual > 0: primary totalExpected is known-mass contribution, not that conditional.
+    const residual = stochastic.rng?.residualWeight ?? 0;
+    const conditional =
+      stochastic.damage.conditionalConcreteMean ?? stochastic.totalExpected;
+    expect(conditional).toBeCloseTo(plain.totalExpected, 8);
+    if (residual > 1e-9) {
+      expect(stochastic.damage.scope).toBe("known-mass-contribution");
+      expect(stochastic.totalExpected).toBeCloseTo(
+        conditional * stochastic.rng!.concreteMass,
+        8,
+      );
+      expect(stochastic.totalExpected).toBeLessThan(plain.totalExpected);
+    } else {
+      expect(stochastic.totalExpected).toBeCloseTo(plain.totalExpected, 8);
+    }
   });
 });
 

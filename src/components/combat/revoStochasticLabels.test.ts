@@ -71,13 +71,14 @@ describe("revoStochasticLabels", () => {
     ]);
   });
 
-  it("defaults residual without totalsBasis to concrete-terminals (legacy payloads)", () => {
+  it("defaults residual without totalsBasis to known-mass-contribution (Phase 2)", () => {
     const source: StochasticLabelSource = {
       rng: { residualWeight: 0.2, exactness: "approximated", probabilityMass: 0.8 },
     };
-    expect(totalsBasisOf(source)).toBe("concrete-terminals");
-    expect(residualNote(source)).toMatch(/kept paths only/);
+    expect(totalsBasisOf(source)).toBe("known-mass-contribution");
+    expect(residualNote(source)).toMatch(/known-mass contribution/);
     expect(residualNote(source)).toMatch(/not unit-mass EV/);
+    expect(residualNote(source)).toMatch(/not the survivor-conditional mean/);
   });
 
   it("flags approx exactness without residualWeight", () => {
@@ -354,10 +355,10 @@ describe("revoStochasticLabels", () => {
     expect(primaryExpectedLabel(residualOnly)).toBe("Expected (approx.)");
     expect(primaryManualDpsLabel(residualOnly)).toBe("Expected natural DPS (approx.)");
     expect(runDiagnosticsNote(residualOnly)).toMatch(/15%/);
-    expect(runDiagnosticsNote(residualOnly)).toMatch(/kept paths only/);
-    expect(runDiagnosticsNote(residualOnly)).toMatch(/concrete-terminal/);
+    expect(runDiagnosticsNote(residualOnly)).toMatch(/known-mass contribution/);
     expect(runDiagnosticsNote(residualOnly)).toMatch(/not unit-mass EV/);
-    expect(totalsBasisOf(residualOnly)).toBe("concrete-terminals");
+    expect(runDiagnosticsNote(residualOnly)).toMatch(/not the survivor-conditional mean/);
+    expect(totalsBasisOf(residualOnly)).toBe("known-mass-contribution");
 
     // ok false + residual only (no failure block) still shows strip.
     expect(

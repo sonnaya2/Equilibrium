@@ -4,7 +4,7 @@
  * process-local caches cannot reuse scores across materially different requests.
  */
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import type { EvaluateFn, EvalMode } from "./contracts";
+import type { EvaluateFn, EvalMode, ScoreableSummary } from "./contracts";
 import { evaluateRevolutionBar } from "./evaluate";
 import { createEligibilityMemo } from "./eligibility";
 import { readEvalMemo, writeEvalMemo } from "./evalMemo";
@@ -17,6 +17,10 @@ import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
 import { noteEval, noteUniqueBar } from "./profiling/counters";
 import { compileEvaluationContext } from "./compiledContext";
+import {
+  summaryEligibleForObjectiveScore,
+  summaryObjectiveIneligibilityReason,
+} from "./objective";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
 export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
@@ -202,27 +206,50 @@ export function createEvaluateFn(args: {
       detailLevel: "score-only",
     });
 
-    if (evaluation.ok) {
-      // Only true full-horizon path updates bestFull (medium never final-ranks).
-      if (useFull && evaluation.validForFinalRanking) {
-        if (evaluation.score > state.bestFullScore) {
-          state.bestFullScore = evaluation.score;
-          state.topPreview = [...bar];
-          state.noImprovement = 0;
-        } else {
-          state.noImprovement += 1;
-        }
-      } else if (useMedium) {
-        if (!state.finalizeActive) state.topPreview = [...bar];
+    // Residual / known-mass / non-exact short evals must not promote (finite:false).
+    // evaluate returns ok:false for those; re-check summary so search archive stays honest.
+    const summary = evaluation.summary as ScoreableSummary | undefined;
+    const nonRankableSummary =
+      summary !== undefined && !summaryEligibleForObjectiveScore(summary);
+    if (!evaluation.ok || nonRankableSummary) {
+      state.noImprovement += 1;
+      emitProgress(options, state, false, activeChanged);
+      const failureReason =
+        evaluation.failureReason ??
+        evaluation.reasons[0]?.message ??
+        (summary ? summaryObjectiveIneligibilityReason(summary) : null) ??
+        "evaluation failed";
+      return {
+        score: Number.NEGATIVE_INFINITY,
+        finite: false,
+        mode: useMedium ? ("medium" as const) : evaluation.mode,
+        exploratory: evaluation.exploratory,
+        validForFinalRanking: false,
+        horizonTicks: evaluation.horizonTicks,
+        fidelity,
+        failureReason,
+        // Preserve failed robust objective when present (never synthesize success).
+        objective: evaluation.objective,
+      };
+    }
+
+    // Only true full-horizon path updates bestFull (medium never final-ranks).
+    if (useFull && evaluation.validForFinalRanking) {
+      if (evaluation.score > state.bestFullScore) {
+        state.bestFullScore = evaluation.score;
+        state.topPreview = [...bar];
+        state.noImprovement = 0;
+      } else {
         state.noImprovement += 1;
-      } else if (evaluation.exploratory) {
-        if (evaluation.score > state.bestExploratoryScore) {
-          state.bestExploratoryScore = evaluation.score;
-          if (!state.finalizeActive) state.topPreview = [...bar];
-          state.noImprovement = 0;
-        } else {
-          state.noImprovement += 1;
-        }
+      }
+    } else if (useMedium) {
+      if (!state.finalizeActive) state.topPreview = [...bar];
+      state.noImprovement += 1;
+    } else if (evaluation.exploratory) {
+      if (evaluation.score > state.bestExploratoryScore) {
+        state.bestExploratoryScore = evaluation.score;
+        if (!state.finalizeActive) state.topPreview = [...bar];
+        state.noImprovement = 0;
       } else {
         state.noImprovement += 1;
       }
@@ -232,21 +259,6 @@ export function createEvaluateFn(args: {
 
     // Throttled strip updates via activeChanged (not force).
     emitProgress(options, state, false, activeChanged);
-
-    if (!evaluation.ok) {
-      return {
-        score: Number.NEGATIVE_INFINITY,
-        finite: false,
-        mode: useMedium ? ("medium" as const) : evaluation.mode,
-        exploratory: evaluation.exploratory,
-        validForFinalRanking: false,
-        horizonTicks: evaluation.horizonTicks,
-        fidelity,
-        failureReason: evaluation.failureReason ?? evaluation.reasons[0]?.message,
-        // Preserve failed robust objective when present (never synthesize success).
-        objective: evaluation.objective,
-      };
-    }
 
     // Medium fidelity: robust-shaped score allowed, never validForFinalRanking.
     if (useMedium) {

@@ -2,14 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   exactnessEligibleForExactProof,
   isNonExactBranchExactness,
+  isNonUnitMassTotalsBasis,
   MIN_RANKABLE_HORIZON_TICKS,
   OBJECTIVE_HORIZON_TICKS,
   OBJECTIVE_WINDOWS,
   objectiveWindowsForHorizon,
+  resolveTotalsBasis,
   scoreFromDamageByTick,
   scoreSummary,
   sumDamageInTickRange,
   summaryEligibleForObjectiveScore,
+  summaryObjectiveIneligibilityReason,
   windowDpmFromDamageByTick,
 } from "./objective";
 
@@ -172,7 +175,7 @@ describe("scoreSummary", () => {
   });
 
   it("rejects non-exact exactness even when residualWeight is 0", () => {
-    for (const exactness of ["bounded-approximation", "truncated", "resampled"] as const) {
+    for (const exactness of ["bounded-approximation", "truncated", "resampled", "approximated"] as const) {
       const s = scoreSummary(
         {
           ok: true,
@@ -190,6 +193,89 @@ describe("scoreSummary", () => {
     }
   });
 
+  it("rejects concrete-terminals / known-mass-contribution totals basis (not unit-mass)", () => {
+    for (const basis of ["concrete-terminals", "known-mass-contribution"] as const) {
+      const viaRng = scoreSummary(
+        {
+          ok: true,
+          damageByTick: { 0: 1000 },
+          horizonTicks: OBJECTIVE_HORIZON_TICKS,
+          rng: { residualWeight: 0, totalsBasis: basis, exactness: "exact" },
+        },
+        "balanced",
+      );
+      expect(viaRng.ok, `rng ${basis}`).toBe(false);
+      if (viaRng.ok) return;
+      expect(viaRng.reason).toMatch(new RegExp(`totalsBasis=${basis}`));
+      expect(isNonUnitMassTotalsBasis(basis)).toBe(true);
+
+      const viaDamage = scoreSummary(
+        {
+          ok: true,
+          damageByTick: { 0: 1000 },
+          horizonTicks: OBJECTIVE_HORIZON_TICKS,
+          damage: { scope: basis },
+          rng: { residualWeight: 0, exactness: "exact" },
+        },
+        "burst",
+      );
+      expect(viaDamage.ok, `damage.scope ${basis}`).toBe(false);
+      if (viaDamage.ok) return;
+      expect(viaDamage.reason).toMatch(new RegExp(`totalsBasis=${basis}`));
+      expect(resolveTotalsBasis({ ok: true, damageByTick: {}, damage: { scope: basis } })).toBe(
+        basis,
+      );
+      expect(
+        summaryEligibleForObjectiveScore({
+          ok: true,
+          damageByTick: { 0: 1 },
+          damage: { scope: basis },
+        }),
+      ).toBe(false);
+    }
+  });
+
+  it("prefers damage.scope over rng.totalsBasis when both present", () => {
+    const reason = summaryObjectiveIneligibilityReason({
+      ok: true,
+      damageByTick: { 0: 1 },
+      damage: { scope: "concrete-terminals" },
+      rng: { residualWeight: 0, totalsBasis: "unit-mass", exactness: "exact" },
+    });
+    expect(reason).toMatch(/totalsBasis=concrete-terminals/);
+  });
+
+  it("does not rank conditionalConcreteMean / knownMassExpectedDamage alone", () => {
+    // Residual present: conditional diagnostics must not unlock scoring.
+    const s = scoreSummary(
+      {
+        ok: true,
+        damageByTick: { 0: 9999 },
+        horizonTicks: OBJECTIVE_HORIZON_TICKS,
+        totalExpected: 9999,
+        conditionalConcreteMean: 9999,
+        knownMassExpectedDamage: 1500,
+        rng: {
+          residualWeight: 0.4,
+          concreteMass: 0.6,
+          probabilityMass: 0.6,
+          totalsBasis: "concrete-terminals",
+          exactness: "approximated",
+        },
+        damage: {
+          scope: "concrete-terminals",
+          conditionalConcreteMean: 9999,
+          knownMassExpectedDamage: 1500,
+        },
+      },
+      "balanced",
+    );
+    expect(s.ok).toBe(false);
+    if (s.ok) return;
+    expect(s.reason).toMatch(/residualWeight/);
+    expect(s.robustScore).toBe(0);
+  });
+
   it("allows exact / merged-exactly / missing exactness for scoring and exact proof", () => {
     for (const exactness of [undefined, "exact", "merged-exactly"] as const) {
       const s = scoreSummary(
@@ -204,6 +290,25 @@ describe("scoreSummary", () => {
       expect(s.ok, String(exactness)).toBe(true);
       expect(exactnessEligibleForExactProof(exactness)).toBe(true);
     }
+  });
+
+  it("allows unit-mass totalsBasis when residual is 0", () => {
+    const s = scoreSummary(
+      {
+        ok: true,
+        damageByTick: { 0: 6000 },
+        horizonTicks: OBJECTIVE_HORIZON_TICKS,
+        rng: { residualWeight: 0, totalsBasis: "unit-mass", exactness: "exact" },
+        damage: { scope: "unit-mass" },
+      },
+      "burst",
+    );
+    expect(s.ok).toBe(true);
+    expect(summaryEligibleForObjectiveScore({
+      ok: true,
+      damageByTick: {},
+      rng: { residualWeight: 0, totalsBasis: "unit-mass", exactness: "exact" },
+    })).toBe(true);
   });
 
   it("scores a successful summary from damageByTick", () => {

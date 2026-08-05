@@ -7,13 +7,18 @@ import type {
   RevolutionBarEvaluation,
   RevolutionEvalRequest,
   ScoreEvalMode,
+  ScoreableSummary,
 } from "./contracts";
 import {
   compileEvaluationContextFromEvalRequest,
   type CompiledEvaluationContext,
 } from "./compiledContext";
 import { validateBarEligibility, type EligibilityMemo } from "./eligibility";
-import { MIN_RANKABLE_HORIZON_TICKS, scoreSummary } from "./objective";
+import {
+  MIN_RANKABLE_HORIZON_TICKS,
+  scoreSummary,
+  summaryObjectiveIneligibilityReason,
+} from "./objective";
 
 export type {
   ObjectiveProfileId,
@@ -44,6 +49,8 @@ export interface WinnerPresentationSummary {
     exactness?: string;
     failedWeight?: number;
     probabilityMass?: number;
+    concreteMass?: number;
+    totalsBasis?: string;
   };
   failure?: {
     failedWeight?: number;
@@ -74,6 +81,8 @@ type PresentationSummarySource = {
     exactness?: string | { toString(): string };
     failedWeight?: number;
     probabilityMass?: number;
+    concreteMass?: number;
+    totalsBasis?: string;
     failure?: {
       failedWeight?: number;
       successfulWeight?: number;
@@ -119,6 +128,8 @@ export function winnerPresentationFromEvaluation(
             : String(raw.rng.exactness),
       failedWeight: raw.rng.failedWeight,
       probabilityMass: raw.rng.probabilityMass,
+      concreteMass: raw.rng.concreteMass,
+      totalsBasis: raw.rng.totalsBasis,
     };
   }
 
@@ -177,13 +188,30 @@ function failEval(
   };
 }
 
+/** Optional diagnostic fields from engine summary (never used for ranking). */
+function diagnosticMetrics(summary: ScoreableSummary & { totalExpected?: number }): {
+  knownMassExpectedDamage?: number;
+  conditionalConcreteMean?: number;
+} {
+  const known =
+    summary.knownMassExpectedDamage ?? summary.damage?.knownMassExpectedDamage;
+  const conditional =
+    summary.conditionalConcreteMean ?? summary.damage?.conditionalConcreteMean;
+  return {
+    ...(known !== undefined ? { knownMassExpectedDamage: known } : {}),
+    ...(conditional !== undefined ? { conditionalConcreteMean: conditional } : {}),
+  };
+}
+
 /**
  * Exact Revolution evaluation: eligibility → resolve → simulateRevolution → score.
  * Does not search; scores one bar against the real driver.
 
  * When durationTicks >= MIN_RANKABLE_HORIZON_TICKS, scores via objective.scoreSummary
  * (proportional open/mid/steady windows). Shorter runs use a single totalExpected
- * DPM fallback marked exploratory:true and validForFinalRanking:false.
+ * DPM fallback marked exploratory:true and validForFinalRanking:false - only when
+ * the summary is unit-mass eligible. Residual / known-mass / concrete-terminal
+ * conditional means never emit a finite rankable exploratory score.
 
  * Robust objective failure is never laundered into a successful robust score.
  */
@@ -280,8 +308,34 @@ export function evaluateRevolutionBar(
     return failEval(request, reasons, { resolved, summary });
   }
 
-  // Short horizon: exploratory single-window totalExpected DPM (no robust windows).
+  // Short horizon: exploratory single-window DPM only when unit-mass eligible.
+  // Conditional concrete mean (totalExpected with residual) must not rank.
   if (durationTicks < MIN_RANKABLE_HORIZON_TICKS) {
+    const ineligible = summaryObjectiveIneligibilityReason(summary);
+    if (ineligible !== null) {
+      reasons.push({
+        code: "score-failed",
+        message: ineligible,
+      });
+      const diagnostics = diagnosticMetrics(summary);
+      return failEval(request, reasons, {
+        mode: "search",
+        exploratory: true,
+        validForFinalRanking: false,
+        resolved,
+        summary,
+        failureReason: ineligible,
+        // Diagnostics only: known-mass / conditional mean never become score.
+        metrics:
+          Object.keys(diagnostics).length > 0
+            ? {
+                dpm: Number.NEGATIVE_INFINITY,
+                totalExpected: summary.totalExpected,
+                ...diagnostics,
+              }
+            : undefined,
+      });
+    }
     const dpm = exploratoryDpm(summary.totalExpected, durationTicks);
     return {
       ok: true,
@@ -298,6 +352,7 @@ export function evaluateRevolutionBar(
       metrics: {
         dpm,
         totalExpected: summary.totalExpected,
+        ...diagnosticMetrics(summary),
       },
       profileId,
     };
@@ -341,6 +396,7 @@ export function evaluateRevolutionBar(
       openingDpm: scored.openingDpm,
       developedDpm: scored.developedDpm,
       steadyDpm: scored.steadyDpm,
+      ...diagnosticMetrics(summary),
     },
     profileId,
   };

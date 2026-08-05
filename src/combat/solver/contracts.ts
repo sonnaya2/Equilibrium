@@ -7,8 +7,9 @@ export const SOLVER_SCHEMA_VERSION = 4 as const;
  * Bumped when objective math or score tagging semantics change.
  * Included in eval cache keys so search/full archives never mix scales.
  * v3: residualWeight / non-exact branch exactness hard-fail scoring.
+ * v4: residual / known-mass not rankable on explore either.
  */
-export const OBJECTIVE_VERSION = 3 as const;
+export const OBJECTIVE_VERSION = 4 as const;
 
 export type Bar = readonly string[];
 
@@ -89,24 +90,66 @@ export type SolverBranchExactness =
   | "merged-exactly"
   | "bounded-approximation"
   | "truncated"
-  | "resampled";
+  | "resampled"
+  | "approximated";
 
 /**
- * Minimal summary surface the objective reads - damageByTick only for numbers.
- * Official score-only wire type (engine may return a full RotationSummary; ranking
- * only consumes this surface).
+ * Machine-readable primary totals basis (mirrors engine damage.scope / rng.totalsBasis).
+ * unit-mass: full unit measure EV (only rankable basis).
+ * known-mass-contribution: partial mass contribution (diagnostic; never rank).
+ * concrete-terminals: E[D|concrete] over kept terminals (conditional; never rank).
+ */
+export type SolverDamageTotalsBasis =
+  | "unit-mass"
+  | "known-mass-contribution"
+  | "concrete-terminals";
+
+/**
+ * Minimal summary surface the objective reads.
+ * damageByTick ranks only when the ledger is unit-mass (residual ~ 0, totalsBasis
+ * unit-mass or absent). Known-mass contribution and concrete-terminal conditional
+ * ledgers must never enter scoreFromDamageByTick / ranking scores.
  */
 export interface ScoreableSummary {
   ok: boolean;
   error?: string;
   horizonTicks?: number;
-  /** Primary expected damage; also available as damageByTick sum over horizon. */
+  /**
+   * Primary expected damage. residual ~ 0: unit-mass EV.
+   * residual > 0: known-mass contribution (sum w_i D_i), not E[D|concrete] as unit-mass.
+   * Must not rank when residual / non-unit-mass scope is present.
+   */
   totalExpected?: number;
+  /**
+   * Known-mass contribution diagnostic (engine may set). Never a ranking score alone.
+   */
+  knownMassExpectedDamage?: number;
+  /**
+   * Conditional mean over concrete terminals (engine may set). Must not rank.
+   */
+  conditionalConcreteMean?: number;
+  /**
+   * Tick ledger for robust windows.
+   * Only unit-mass ledgers may pass scoreFromDamageByTick; residual / known-mass /
+   * concrete-terminal ledgers are ineligible even if numbers look finite.
+   */
   damageByTick: Record<number, number>;
+  /** Prefer damage.scope when present (engine DamageBoundsSummary). */
+  damage?: {
+    scope?: SolverDamageTotalsBasis | string;
+    knownMassExpectedDamage?: number;
+    conditionalConcreteMean?: number;
+  };
   rng?: {
     failedWeight?: number;
     /** Cap residual mass; residual > 0 means approximated expansion. */
     residualWeight?: number;
+    /** Concrete expanded measure (success + fail). Prefer over probabilityMass. */
+    concreteMass?: number;
+    /** Alias of concreteMass for older readers. */
+    probabilityMass?: number;
+    /** Same tokens as damage.scope. Prefer when present. */
+    totalsBasis?: SolverDamageTotalsBasis | string;
     exactness?: SolverBranchExactness | string;
   };
 }
@@ -428,6 +471,9 @@ export interface RevolutionBarEvaluation {
     openingDpm?: number;
     developedDpm?: number;
     steadyDpm?: number;
+    /** Diagnostic only; never a ranking score. */
+    knownMassExpectedDamage?: number;
+    conditionalConcreteMean?: number;
   };
   profileId: ObjectiveProfileId;
 }

@@ -8,6 +8,7 @@ import type {
   ObjectiveWindowId,
   ObjectiveWindowSpec,
   ScoreableSummary,
+  SolverDamageTotalsBasis,
 } from "./contracts";
 
 /** Canonical full research horizon (unhinged). Thorough uses a shorter tier horizon. */
@@ -166,6 +167,7 @@ function windowDpms(
  * Score a damage ledger under a profile.
  * Hard-fails on invalid weights or insufficient horizon when horizonTicks is set.
  * Horizons below the canonical 500 ticks use proportional open/mid/steady windows.
+ * Caller must only pass unit-mass ledgers (see summaryEligibleForObjectiveScore).
  */
 export function scoreFromDamageByTick(
   damageByTick: Record<number, number>,
@@ -222,6 +224,14 @@ export const NON_EXACT_BRANCH_EXACTNESS = [
 
 export type NonExactBranchExactness = (typeof NON_EXACT_BRANCH_EXACTNESS)[number];
 
+/** Totals bases that are never unit-mass EV and must not rank. */
+export const NON_UNIT_MASS_TOTALS_BASIS = [
+  "concrete-terminals",
+  "known-mass-contribution",
+] as const;
+
+export type NonUnitMassTotalsBasis = (typeof NON_UNIT_MASS_TOTALS_BASIS)[number];
+
 export function isNonExactBranchExactness(
   exactness: string | undefined,
 ): exactness is NonExactBranchExactness {
@@ -233,16 +243,51 @@ export function isNonExactBranchExactness(
   );
 }
 
+export function isNonUnitMassTotalsBasis(
+  basis: string | undefined,
+): basis is NonUnitMassTotalsBasis {
+  return basis === "concrete-terminals" || basis === "known-mass-contribution";
+}
+
 /**
- * True when a sim summary may produce a rankable objective score.
- * Residual mass or non-exact expansion is never treated as exact.
+ * Prefer damage.scope / rng.totalsBasis when present (engine wires both).
+ * Absent on older payloads - residualWeight / exactness still gate.
+ */
+export function resolveTotalsBasis(summary: ScoreableSummary): string | undefined {
+  const fromDamage = summary.damage?.scope;
+  if (fromDamage !== undefined) return fromDamage;
+  return summary.rng?.totalsBasis;
+}
+
+/**
+ * Why a summary cannot produce a rankable score (objective or exploratory).
+ * Conditional concrete mean / known-mass ledgers never rank.
+ * null when eligible for unit-mass scoring.
+ */
+export function summaryObjectiveIneligibilityReason(summary: ScoreableSummary): string | null {
+  if (!summary.ok) return summary.error ?? "simulation failed";
+  const failedWeight = summary.rng?.failedWeight ?? 0;
+  if (failedWeight > 0) return `simulation failedWeight=${failedWeight}`;
+  const residualWeight = summary.rng?.residualWeight ?? 0;
+  if (residualWeight > 0) return `simulation residualWeight=${residualWeight}`;
+  // Prefer damage.scope / rng.totalsBasis when present.
+  const totalsBasis = resolveTotalsBasis(summary);
+  if (isNonUnitMassTotalsBasis(totalsBasis)) {
+    return `simulation totalsBasis=${totalsBasis}`;
+  }
+  const exactness = summary.rng?.exactness;
+  if (isNonExactBranchExactness(exactness)) {
+    return `simulation exactness=${exactness}`;
+  }
+  return null;
+}
+
+/**
+ * True when a sim summary may produce a rankable objective or exploratory score.
+ * Residual mass, non-unit-mass totals basis, or non-exact expansion never ranks.
  */
 export function summaryEligibleForObjectiveScore(summary: ScoreableSummary): boolean {
-  if (!summary.ok) return false;
-  if ((summary.rng?.failedWeight ?? 0) > 0) return false;
-  if ((summary.rng?.residualWeight ?? 0) > 0) return false;
-  if (isNonExactBranchExactness(summary.rng?.exactness)) return false;
-  return true;
+  return summaryObjectiveIneligibilityReason(summary) === null;
 }
 
 /**
@@ -255,27 +300,21 @@ export function exactnessEligibleForExactProof(exactness: string | undefined): b
   return exactness === "exact" || exactness === "merged-exactly";
 }
 
-/** Score a simulation summary - uses damageByTick only; rejects sim errors. */
+/**
+ * Score a simulation summary - uses damageByTick only when unit-mass eligible.
+ * Rejects residual / known-mass / concrete-terminals / non-exact / sim errors.
+ * Conditional tick ledgers must never be treated as unit-mass EV.
+ */
 export function scoreSummary(
   summary: ScoreableSummary,
   profileId: ObjectiveProfileId,
   customWeights?: ObjectiveWeights,
 ): ObjectiveScore {
-  if (!summary.ok) {
-    return fail(profileId, summary.error ?? "simulation failed");
+  const reason = summaryObjectiveIneligibilityReason(summary);
+  if (reason !== null) {
+    return fail(profileId, reason);
   }
-  const failedWeight = summary.rng?.failedWeight ?? 0;
-  if (failedWeight > 0) {
-    return fail(profileId, `simulation failedWeight=${failedWeight}`);
-  }
-  const residualWeight = summary.rng?.residualWeight ?? 0;
-  if (residualWeight > 0) {
-    return fail(profileId, `simulation residualWeight=${residualWeight}`);
-  }
-  const exactness = summary.rng?.exactness;
-  if (isNonExactBranchExactness(exactness)) {
-    return fail(profileId, `simulation exactness=${exactness}`);
-  }
+  // Unit-mass eligible only: scoreFromDamageByTick on residual/conditional ledgers is forbidden.
   return scoreFromDamageByTick(
     summary.damageByTick,
     profileId,
@@ -294,3 +333,6 @@ export function isFiniteEval(
   }
   return typeof result.score === "number" && Number.isFinite(result.score);
 }
+
+/** Re-export basis token type for call sites that prefer objective.ts import. */
+export type { SolverDamageTotalsBasis };

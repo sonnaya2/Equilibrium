@@ -15,24 +15,27 @@
 
 ## Current gates (do not weaken)
 
-Source: `src/combat/solver/objective.ts` (`scoreSummary`, `summaryEligibleForObjectiveScore`, `exactnessEligibleForExactProof`).
+Source: `src/combat/solver/objective.ts` (`scoreSummary`, `summaryEligibleForObjectiveScore`, `summaryObjectiveIneligibilityReason`, `exactnessEligibleForExactProof`).
 
-Hard-fail full robust score when any of:
+Hard-fail **any** rankable score (full robust **and** short exploratory) when any of:
 
 1. `summary.ok === false`
 2. `rng.failedWeight > 0`
 3. `rng.residualWeight > 0`
-4. `rng.exactness` ∈ `{ approximated, bounded-approximation, truncated, resampled }`
+4. `damage.scope` / `rng.totalsBasis` is not unit-mass (`known-mass-contribution` or `concrete-terminals`)
+5. `rng.exactness` ∈ `{ approximated, bounded-approximation, truncated, resampled }`
 
 Exact proof eligibility: only `exact`, `merged-exactly`, or missing exactness.
 
 Pinned by:
 
 - `src/combat/solver/objective.test.ts`
+- `src/combat/solver/evaluate.test.ts` (exploratory residual gate)
 - `src/combat/solver/search/scoreHonesty.test.ts` (residual never unlocks exact proof)
+- `src/combat/engine/simulation/stochasticSummary.contract.test.ts` (known-mass primary)
 - Leng branch tests: `lengLandBranch.test.ts`, `styles/melee/leng.test.ts`
 
-`OBJECTIVE_VERSION` is **3** for residual / non-exact hard-fail. Changing these gates requires a version bump and honesty test updates.
+`OBJECTIVE_VERSION` is **4**: residual / non-unit-mass / non-exact hard-fail on explore and full. Changing these gates requires a version bump and honesty test updates.
 
 ## What residual means for Leng
 
@@ -48,15 +51,30 @@ Pinned by:
    - set non-exact exactness / residual disclosure and **still fail** `scoreSummary` until a labeled non-exact ranking path exists.
 3. Do **not** raise caps silently or reassign discarded mass onto a survivor class.
 
+## Probability semantics under residual (Phase 2)
+
+When `residualWeight > 0`, engine primary totals are **not** E[D|concrete] renormalized to mass 1:
+
+| Field | Meaning |
+|-------|---------|
+| `conditionalConcreteMean` | E[D\|concrete] (diagnostic only; never ranks) |
+| `knownMassExpectedDamage` | `concreteMass * conditionalConcreteMean` = sum w_i D_i |
+| `expectedDamage` / `totalExpected` | known-mass contribution; `scope` / `totalsBasis` = `known-mass-contribution` |
+| `damageByTick` | same known-mass scale |
+
+Residual mass stays unassigned (not invented damage). See `reports/solver-probability-semantics-phase2.md`.
+
 ## Existing honest degraded path
 
 When full-horizon objective fails (including residual):
 
-- Full eval: `validForFinalRanking=false`, objective reason carries residual / exactness.
-- Search short horizon (`durationTicks < MIN_RANKABLE_HORIZON_TICKS`): single-window `totalExpected` DPM, `exploratory=true`, not final-rankable (no residual gate on that path by design).
-- Finalize proof: `degraded-exploratory-fallback` (never `full-objective-global-optimum`).
+- Full eval: `validForFinalRanking=false`, objective reason carries residual / exactness / non-unit-mass basis.
+- Search short horizon: residual / non-unit-mass / non-exact summaries are **not** finite rankable scores (same gate as full). Residual-free short DPM remains exploratory-only (`validForFinalRanking=false`).
+- Finalize proof: `degraded-exploratory-fallback` only if some residual-free exploratory candidate remains (never `full-objective-global-optimum`).
 
-UI already labels sim residual / `bounded-approximation` (`revoStochasticLabels`); that is **presentation**, not solver ranking permission.
+UI labels residual / known-mass basis (`revoStochasticLabels`); that is **presentation**, not solver ranking permission.
+
+**Phase 3 (not this change):** incumbent user-bar full-sim gate; refuse apply of worse/degraded winners.
 
 ## Out of scope for this policy
 

@@ -216,4 +216,69 @@ describe("evaluateRevolutionBar", () => {
     expect(evaluation.summary!.totalExpected).toBeCloseTo(rebuild.totalExpected, 10);
     expect(withRegistry.totalExpected).toBeCloseTo(rebuild.totalExpected, 10);
   });
+
+  it("short explore: residual / concrete-terminals never emit finite rankable score", () => {
+    // Gate is in evaluate short path via summaryObjectiveIneligibilityReason.
+    // Unit test uses the same reason surface by calling scoreSummary gates on a
+    // residual summary shape and confirming evaluate-style fail for residual short.
+    // Live residual bars covered in repro/survivorBiasEngine.repro.test.ts.
+    const pool = buildCandidatePool(catalogue, "melee");
+    const residualShape = {
+      ok: true as const,
+      damageByTick: { 0: 16000 },
+      totalExpected: 16000,
+      conditionalConcreteMean: 16000,
+      knownMassExpectedDamage: 2400,
+      horizonTicks: 30,
+      rng: {
+        residualWeight: 0.85,
+        concreteMass: 0.15,
+        probabilityMass: 0.15,
+        totalsBasis: "concrete-terminals" as const,
+        exactness: "approximated" as const,
+      },
+      damage: {
+        scope: "concrete-terminals" as const,
+        conditionalConcreteMean: 16000,
+        knownMassExpectedDamage: 2400,
+      },
+    };
+    const scored = scoreSummary(residualShape, "balanced");
+    expect(scored.ok).toBe(false);
+    if (scored.ok) return;
+    expect(scored.reason).toMatch(/residualWeight|totalsBasis/);
+
+    // Clean short bar still ranks (no residual).
+    const clean = evaluateRevolutionBar({
+      bar: ["alpha", "beta"],
+      style: "melee",
+      durationTicks: 30,
+      pool,
+      sim: baseSim,
+      profileId: "balanced",
+    });
+    expect(clean.ok).toBe(true);
+    expect(clean.exploratory).toBe(true);
+    expect(Number.isFinite(clean.score) && clean.score > 0).toBe(true);
+    expect((clean.summary?.rng?.residualWeight ?? 0)).toBeLessThanOrEqual(1e-12);
+  });
+
+  it("full horizon residual summary fails score and is not validForFinalRanking", () => {
+    const residualSummary = {
+      ok: true as const,
+      damageByTick: { 0: 1000 },
+      horizonTicks: OBJECTIVE_HORIZON_TICKS,
+      totalExpected: 1000,
+      rng: {
+        residualWeight: 0.2,
+        totalsBasis: "concrete-terminals" as const,
+        exactness: "approximated" as const,
+      },
+    };
+    const scored = scoreSummary(residualSummary, "balanced");
+    expect(scored.ok).toBe(false);
+    if (!scored.ok) {
+      expect(scored.reason).toMatch(/residualWeight/);
+    }
+  });
 });

@@ -451,6 +451,7 @@ describe("stochastic summary - failed-mass totals policy", () => {
     // Unconditional: 0.2*1000 + 0.8*100 = 280 (not success-renormalized 1000).
     expect(s.totalExpected).toBe(280);
     expect(s.damage.expectedDamage).toBe(280);
+    expect(s.damage.scope).toBe("unit-mass");
     expect(s.dps).toBe(s.dpsDetail.primary);
     expect(s.dps).toBeCloseTo(280 / (s.duration.expectedTicks * TICK_SECONDS), 10);
     expect(s.failure?.failedWeight).toBeCloseTo(0.8, 10);
@@ -510,8 +511,9 @@ describe("stochastic summary - failed-mass totals policy", () => {
     expect(s.history.ticks).toBe(s.duration.representativeTicks);
   });
 
-  it("discloses residual mass and approximated exactness without folding residual into success", () => {
+  it("discloses residual mass with known-mass-contribution primary (not E[D|concrete] as unit-mass)", () => {
     const okRt = seedRuntime({ expected: 500, min: 500, max: 500, endTick: 5 });
+    okRt.damageByTick[0] = 500;
     const s = combineBranchSummaries(
       [{ weight: 0.7, rt: okRt }],
       undefined,
@@ -521,23 +523,32 @@ describe("stochastic summary - failed-mass totals policy", () => {
       "bounded-approximation",
     );
     expect(s.ok).toBe(true);
-    // Primary is E[D|concrete] (weight-normalized over expanded mass), not unit-mass EV
-    // with residual zero-filled (that would be 500*0.7=350).
-    expect(s.totalExpected).toBeCloseTo(500, 10);
+    // Phase 2: conditional mean stays on diagnostic field; primary is known-mass only.
+    // weight 0.7, D=500 => conditionalConcreteMean=500, knownMass=350.
+    expect(s.damage.conditionalConcreteMean).toBeCloseTo(500, 10);
+    expect(s.damage.knownMassExpectedDamage).toBeCloseTo(350, 10);
+    expect(s.totalExpected).toBeCloseTo(350, 10);
     expect(s.damage.expectedDamage).toBe(s.totalExpected);
-    expect(s.damage.scope).toBe("concrete-terminals");
+    expect(s.damage.scope).toBe("known-mass-contribution");
+    expect(s.damage.concreteMass).toBeCloseTo(0.7, 10);
+    expect(s.damage.residualMass).toBeCloseTo(0.3, 10);
+    expect(s.damage.eligibleForRanking).toBe(false);
+    // damageByTick is known-mass scale, not renormalized conditional.
+    expect(s.damageByTick[0]).toBeCloseTo(350, 10);
     expect(s.rng?.probabilityMass).toBeCloseTo(0.7, 10);
     expect(s.rng?.concreteMass).toBeCloseTo(0.7, 10);
     expect(s.rng?.concreteMass).toBe(s.rng?.probabilityMass);
     expect(s.rng?.residualWeight).toBeCloseTo(0.3, 10);
     expect(s.rng?.exactness).toBe("approximated");
-    expect(s.rng?.totalsBasis).toBe("concrete-terminals");
+    expect(s.rng?.totalsBasis).toBe("known-mass-contribution");
     expect(s.rng!.totalsBasis).toBe(s.damage.scope);
     expect(isNearOne(s.rng!.probabilityMass + s.rng!.residualWeight)).toBe(true);
     expect(s.failure).toBeUndefined();
+    // DPS diagnostic from known-mass contribution (not conditional mean as unit-mass).
+    expect(s.dps).toBeCloseTo(350 / (5 * TICK_SECONDS), 10);
   });
 
-  it("residual + partial failure: primary stays E[D|concrete] (not success-renorm, not unit-mass)", () => {
+  it("residual + partial failure: primary is known-mass contribution (not E[D|concrete], not success-renorm)", () => {
     const okRt = seedRuntime({ expected: 1000, min: 900, max: 1100, endTick: 10 });
     const failRt = seedRuntime({ expected: 100, min: 90, max: 110, endTick: 4 });
     const s = combineBranchSummaries(
@@ -554,15 +565,22 @@ describe("stochastic summary - failed-mass totals policy", () => {
     expect(s.ok).toBe(false);
     expect(s.failure?.totalsScope).toBe("unconditional-all-mass");
     // Concrete mass 0.8; E[D|concrete] = (0.5*1000 + 0.3*100) / 0.8 = 662.5
-    // Not unit-mass zero-fill 0.5*1000+0.3*100=530; not success-only 1000.
-    expect(s.totalExpected).toBeCloseTo(662.5, 10);
+    // known-mass contribution = 0.5*1000 + 0.3*100 = 530
+    // Not unit-mass zero-fill claim of full EV; not success-only 1000; not conditional 662.5 as primary.
+    expect(s.damage.conditionalConcreteMean).toBeCloseTo(662.5, 10);
+    expect(s.damage.knownMassExpectedDamage).toBeCloseTo(530, 10);
+    expect(s.totalExpected).toBeCloseTo(530, 10);
+    expect(s.damage.expectedDamage).toBeCloseTo(530, 10);
     expect(s.rng?.concreteMass).toBeCloseTo(0.8, 10);
     expect(s.rng?.residualWeight).toBeCloseTo(0.2, 10);
     expect(s.rng?.exactness).toBe("approximated");
-    expect(s.rng?.totalsBasis).toBe("concrete-terminals");
-    expect(s.damage.scope).toBe("concrete-terminals");
+    expect(s.rng?.totalsBasis).toBe("known-mass-contribution");
+    expect(s.damage.scope).toBe("known-mass-contribution");
+    expect(s.damage.eligibleForRanking).toBe(false);
     expect(s.failure?.conditionalOnSuccessExpectedDamage).toBe(1000);
     expect(s.totalExpected).toBeLessThan(s.failure!.conditionalOnSuccessExpectedDamage!);
+    // Conditional mean is above known-mass primary (survivor renorm risk if used as score).
+    expect(s.damage.conditionalConcreteMean!).toBeGreaterThan(s.totalExpected);
   });
 
   it("sole-path failure does not claim event-ledger reconciliation", () => {

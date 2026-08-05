@@ -15,6 +15,8 @@ export type StochasticLabelSource = {
   damage?: {
     /** Mirrors rng.totalsBasis when present. */
     scope?: string;
+    conditionalConcreteMean?: number;
+    knownMassExpectedDamage?: number;
   } | null;
   failure?: {
     failedWeight?: number;
@@ -30,7 +32,7 @@ export type StochasticLabelSource = {
     probabilityMass?: number;
     concreteMass?: number;
     /**
-     * concrete-terminals | unit-mass (engine wire tokens).
+     * unit-mass | known-mass-contribution | concrete-terminals (engine wire tokens).
      * Prefer over residual wording alone.
      */
     totalsBasis?: string;
@@ -104,16 +106,27 @@ export function concreteMassOf(source: StochasticLabelSource): number {
   return w > MASS_EPS ? w : 0;
 }
 
+export type TotalsBasisLabel =
+  | "concrete-terminals"
+  | "unit-mass"
+  | "known-mass-contribution";
+
 /**
  * Machine-readable primary totals basis.
- * residual > 0 without a field defaults to concrete-terminals (engine residual footgun).
+ * residual > 0 without a field defaults to known-mass-contribution (Phase 2 primary).
+ * Legacy residual payloads without scope used concrete-terminals (conditional mean).
  */
-export function totalsBasisOf(
-  source: StochasticLabelSource,
-): "concrete-terminals" | "unit-mass" | undefined {
+export function totalsBasisOf(source: StochasticLabelSource): TotalsBasisLabel | undefined {
   const raw = source.rng?.totalsBasis ?? source.damage?.scope;
-  if (raw === "concrete-terminals" || raw === "unit-mass") return raw;
-  if (residualWeightOf(source) > 0) return "concrete-terminals";
+  if (
+    raw === "concrete-terminals" ||
+    raw === "unit-mass" ||
+    raw === "known-mass-contribution"
+  ) {
+    return raw;
+  }
+  // Phase 2 primary under residual is known-mass contribution, not conditional mean.
+  if (residualWeightOf(source) > 0) return "known-mass-contribution";
   return undefined;
 }
 
@@ -177,10 +190,13 @@ export function exactnessLabel(exactness: string | null | undefined): string | n
 export function residualNote(source: StochasticLabelSource): string | null {
   const residual = residualWeightOf(source);
   if (residual <= 0) return null;
-  const basis = totalsBasisOf(source) ?? "concrete-terminals";
+  const basis = totalsBasisOf(source) ?? "known-mass-contribution";
   // Wording tracks totalsBasis - not "kept paths only" alone (that reads as absolute kept EV).
   if (basis === "unit-mass") {
     return `${formatPercentMass(residual)} of probability mass was discarded by branch caps; damage and DPS still claim unit-mass EV.`;
+  }
+  if (basis === "known-mass-contribution") {
+    return `${formatPercentMass(residual)} of probability mass was discarded by branch caps; damage and DPS are known-mass contribution only (sum over expanded paths), not unit-mass EV and not the survivor-conditional mean.`;
   }
   return `${formatPercentMass(residual)} of probability mass was discarded by branch caps; damage and DPS are concrete-terminal means over kept paths only (not unit-mass EV).`;
 }

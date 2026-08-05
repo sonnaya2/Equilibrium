@@ -201,6 +201,11 @@ export function finish(
       expectedDamage,
       // Sole path carries full unit measure.
       scope: "unit-mass",
+      knownMassExpectedDamage: expectedDamage,
+      conditionalConcreteMean: expectedDamage,
+      concreteMass: 1,
+      residualMass: 0,
+      eligibleForRanking: error === undefined,
       supportMinDamage: supportMin,
       supportMaxDamage: supportMax,
       expectedConditionalMin: conditionalMin,
@@ -286,12 +291,13 @@ function collectFailures(
 }
 
 /**
- * Combine terminal equivalence classes. Primary damage/duration/analysis are the
- * weight-normalized mean over concrete terminals only (success + fail banked).
- * Residual/unexpanded mass is disclosed on rng - not mixed in and not zero-filled;
- * when residual > 0 primary is E[D|concrete], not unit-mass E[D].
- * Never divides by successfulWeight. Casts/events from highest-weight successful
- * class (else highest-weight failure) as representative history only.
+ * Combine terminal equivalence classes.
+ * residual ~ 0: expectedDamage / totalExpected = unit-mass EV; scope unit-mass.
+ * residual > 0: expectedDamage / totalExpected = known-mass contribution
+ * (concreteMass * E[D|concrete] = sum w_i D_i); scope known-mass-contribution.
+ * Never expose E[D|concrete] as unit-mass EV. Never success-renormalize.
+ * Residual is disclosed on rng, not zero-filled into a silent full EV.
+ * Casts/events from highest-weight successful class (else highest-weight failure).
  */
 export function combineBranchSummaries(
   branches: readonly Branch[],
@@ -339,6 +345,11 @@ export function combineBranchSummaries(
       damage: {
         expectedDamage: 0,
         scope: "unit-mass",
+        knownMassExpectedDamage: 0,
+        conditionalConcreteMean: 0,
+        concreteMass: 0,
+        residualMass: 0,
+        eligibleForRanking: false,
         supportMinDamage: 0,
         supportMaxDamage: 0,
         expectedConditionalMin: 0,
@@ -411,14 +422,29 @@ export function combineBranchSummaries(
       ? modal.horizonTicks
       : undefined;
 
+  // Conditional (weight-normalized over concrete) then known-mass = scale * conditional.
   const mix = (f: (s: RotationSummary) => number) => poolMean(mixPool, f);
+
+  const safeResidual = finiteOrZero(residual);
+  const concreteMass = rawMass;
+  const hasResidual = safeResidual > PROB_TOLERANCE;
+  // Known-mass scale: multiply conditional means by concreteMass when residual remains.
+  // residual ~ 0 => concreteMass ~ 1 => scale 1 leaves unit-mass EV.
+  const knownMassScale = hasResidual ? concreteMass : 1;
+  const toKnownMass = (conditional: number) => conditional * knownMassScale;
 
   const damageByTick: Record<number, number> = {};
   for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.damageByTick)))) {
-    damageByTick[Number(key)] = mix((s) => s.damageByTick[Number(key)] ?? 0);
+    damageByTick[Number(key)] = toKnownMass(mix((s) => s.damageByTick[Number(key)] ?? 0));
   }
 
-  const expectedDamage = mix((s) => s.damage.expectedDamage);
+  // E[D|concrete] over expanded terminals (success + fail banked).
+  const conditionalConcreteMean = mix((s) => s.damage.expectedDamage);
+  // sum w_i D_i (known contribution only; residual unassigned).
+  const knownMassExpectedDamage = concreteMass * conditionalConcreteMean;
+  // residual ~ 0: unit-mass EV (= conditional when mass ~ 1).
+  // residual > 0: known-mass contribution only - never put conditional into expectedDamage.
+  const expectedDamage = hasResidual ? knownMassExpectedDamage : conditionalConcreteMean;
   const expectedConditionalMin = mix((s) => s.damage.expectedConditionalMin);
   const expectedConditionalMax = mix((s) => s.damage.expectedConditionalMax);
   const supportMinDamage = Math.min(...mixPool.map((p) => p.summary.damage.supportMinDamage));
@@ -451,8 +477,8 @@ export function combineBranchSummaries(
   const bySource = !wantAnalysis
     ? []
     : SOURCE_KINDS.flatMap((kind) => {
-        const damage = mix(
-          (summary) => summary.analysis.bySource.find((row) => row.kind === kind)?.damage ?? 0,
+        const damage = toKnownMass(
+          mix((summary) => summary.analysis.bySource.find((row) => row.kind === kind)?.damage ?? 0),
         );
         return damage > 0 ? [{ kind, damage }] : [];
       }).sort((a, b) => b.damage - a.damage);
@@ -469,6 +495,15 @@ export function combineBranchSummaries(
     | "dotDamage"
     | "criticalContribution"
     | "capLoss";
+  // Count fields stay conditional means; damage fields use known-mass scale with residual.
+  const DAMAGE_EFFECT_FIELDS = new Set<EffectNumericField>([
+    "totalDamage",
+    "bonusDamage",
+    "directDamage",
+    "dotDamage",
+    "criticalContribution",
+    "capLoss",
+  ]);
   const byEffect: DamageEffectBreakdown[] = !wantAnalysis
     ? []
     : (() => {
@@ -480,9 +515,16 @@ export function combineBranchSummaries(
             const sample = mixPool
               .flatMap((p) => p.summary.analysis.byEffect)
               .find((effect) => effect.id === id)!;
-            const value = (field: EffectNumericField) =>
-              mix((summary) => summary.analysis.byEffect.find((e) => e.id === id)?.[field] ?? 0);
-            const totalDamage = value("totalDamage");
+            const value = (field: EffectNumericField) => {
+              const conditional = mix(
+                (summary) => summary.analysis.byEffect.find((e) => e.id === id)?.[field] ?? 0,
+              );
+              return DAMAGE_EFFECT_FIELDS.has(field) ? toKnownMass(conditional) : conditional;
+            };
+            const conditionalTotal = mix(
+              (summary) => summary.analysis.byEffect.find((e) => e.id === id)?.totalDamage ?? 0,
+            );
+            const totalDamage = toKnownMass(conditionalTotal);
             const expectedActivations = value("expectedActivations");
             return {
               id,
@@ -495,7 +537,8 @@ export function combineBranchSummaries(
               expectedSeparateHits: value("expectedSeparateHits"),
               attachedComponents: value("attachedComponents"),
               bonusDamage: value("bonusDamage"),
-              averagePerActivation: expectedActivations > 0 ? totalDamage / expectedActivations : 0,
+              // Per-activation stays on conditional scale (mass does not change hit size).
+              averagePerActivation: expectedActivations > 0 ? conditionalTotal / expectedActivations : 0,
               directDamage: value("directDamage"),
               dotDamage: value("dotDamage"),
               criticalContribution: value("criticalContribution"),
@@ -541,30 +584,33 @@ export function combineBranchSummaries(
   let tails: TailMetrics | undefined;
   if (modal.tails !== undefined && mixWeight > 0) {
     tails = {
-      inWindowExpectedDamage: mix(
-        (s) => s.tails?.inWindowExpectedDamage ?? s.damage.expectedDamage,
+      inWindowExpectedDamage: toKnownMass(
+        mix((s) => s.tails?.inWindowExpectedDamage ?? s.damage.expectedDamage),
       ),
-      postWindowTailDamage: mix((s) => s.tails?.postWindowTailDamage ?? 0),
-      totalIncludingTails: mix((s) => s.tails?.totalIncludingTails ?? s.damage.expectedDamage),
+      postWindowTailDamage: toKnownMass(mix((s) => s.tails?.postWindowTailDamage ?? 0)),
+      totalIncludingTails: toKnownMass(
+        mix((s) => s.tails?.totalIncludingTails ?? s.damage.expectedDamage),
+      ),
     };
   }
 
   const ok = failure === undefined;
   const error = failure?.primaryReason;
 
-  const safeResidual = finiteOrZero(residual);
   const resolvedExactness: BranchExactness =
     exact === "exact" || exact === "merged-exactly"
       ? safeResidual > PROB_TOLERANCE
         ? "approximated"
         : "exact"
       : "approximated";
-  // Residual > 0 => primary is E[D|concrete], not full unit-mass EV.
-  const totalsBasis: DamageTotalsBasis =
-    safeResidual > PROB_TOLERANCE ? "concrete-terminals" : "unit-mass";
+  // residual > 0 => known-mass contribution primary; residual ~ 0 => unit-mass EV.
+  const totalsBasis: DamageTotalsBasis = hasResidual
+    ? "known-mass-contribution"
+    : "unit-mass";
+  const eligibleForRanking = !hasResidual && resolvedExactness === "exact" && ok;
 
   // Stochastic rng when branching, multi-terminal, or residual mass remains.
-  // probabilityMass/concreteMass = expanded measure only; primary E[D] is over that mass.
+  // probabilityMass/concreteMass = expanded measure only.
   const rng: StochasticRngSummary | undefined =
     branching || multiClass || safeResidual > PROB_TOLERANCE || resolvedExactness !== "exact"
       ? {
@@ -592,13 +638,15 @@ export function combineBranchSummaries(
 
   // Numeric stability: zero out non-finite aggregates.
   const safeExpected = finiteOrZero(expectedDamage);
+  const safeConditionalMean = finiteOrZero(conditionalConcreteMean);
+  const safeKnownMass = finiteOrZero(knownMassExpectedDamage);
   const safeSupportMin = finiteOrZero(supportMinDamage);
   const safeSupportMax = finiteOrZero(supportMaxDamage);
 
   const perAbility: Record<string, number> = {};
   if (wantPerAbility) {
     for (const key of new Set(mixPool.flatMap((p) => Object.keys(p.summary.perAbility)))) {
-      perAbility[key] = mix((s) => s.perAbility[key] ?? 0);
+      perAbility[key] = toKnownMass(mix((s) => s.perAbility[key] ?? 0));
     }
   }
 
@@ -612,6 +660,11 @@ export function combineBranchSummaries(
     damage: {
       expectedDamage: safeExpected,
       scope: totalsBasis,
+      conditionalConcreteMean: safeConditionalMean,
+      knownMassExpectedDamage: safeKnownMass,
+      concreteMass: concreteMass,
+      residualMass: safeResidual,
+      eligibleForRanking,
       supportMinDamage: safeSupportMin,
       supportMaxDamage: safeSupportMax,
       expectedConditionalMin: finiteOrZero(expectedConditionalMin),
@@ -643,10 +696,10 @@ export function combineBranchSummaries(
       ? {
           bySource,
           byEffect,
-          directDamage: mix((s) => s.analysis.directDamage),
-          dotDamage: mix((s) => s.analysis.dotDamage),
-          criticalContribution: mix((s) => s.analysis.criticalContribution),
-          capLoss: mix((s) => s.analysis.capLoss),
+          directDamage: toKnownMass(mix((s) => s.analysis.directDamage)),
+          dotDamage: toKnownMass(mix((s) => s.analysis.dotDamage)),
+          criticalContribution: toKnownMass(mix((s) => s.analysis.criticalContribution)),
+          capLoss: toKnownMass(mix((s) => s.analysis.capLoss)),
         }
       : EMPTY_ANALYSIS,
     ...(tails !== undefined

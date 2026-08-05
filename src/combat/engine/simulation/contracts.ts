@@ -271,29 +271,52 @@ export interface DurationSummary {
 
 /**
  * How primary expectedDamage / totalExpected relate to residual mass.
- * concrete-terminals: weight-normalized mean over expanded terminals only (E[D|concrete]).
- * unit-mass: full unit measure EV (only when residualWeight ~ 0).
+ * - unit-mass: full unit measure EV (residualWeight ~ 0; concrete covers unit measure).
+ * - known-mass-contribution: sum w_i D_i over expanded concrete only (= concreteMass * E[D|concrete]).
+ *   Residual not assigned damage. NOT unit-mass EV. NOT the conditional mean renormalized to 1.
+ * - concrete-terminals: diagnostic token for E[D|concrete] (conditional mean over kept mass).
+ *   Primary totalExpected never uses this when residual > 0 (use known-mass-contribution).
  */
-export type DamageTotalsBasis = "concrete-terminals" | "unit-mass";
+export type DamageTotalsBasis = "unit-mass" | "known-mass-contribution" | "concrete-terminals";
 
 /**
- * Damage bounds. `expectedDamage` is the weight-normalized mean over concrete
- * terminals only (success + fail banked) - never success-renormalized.
- * Residual/unexpanded mass is not in the mix: when residualWeight > 0 this is
- * E[D|concrete], not unit-mass E[D]. `expectedConditional*` = weighted means of
- * per-branch extrema (not support bounds).
+ * Damage bounds. Primary expectedDamage is never a conditional mean treated as unit-mass EV.
+ * residual ~ 0: expectedDamage is unit-mass EV (scope unit-mass).
+ * residual > 0: expectedDamage is known-mass contribution sum w_i D_i
+ * (scope known-mass-contribution); E[D|concrete] lives on conditionalConcreteMean.
+ * Never success-renormalized. expectedConditional* = weighted means of per-branch extrema.
  */
 export interface DamageBoundsSummary {
   /**
-   * E[D] over concrete terminals (success + fail banked); never success-renormalized.
-   * With residualWeight > 0: E[D|concrete] only - residual mass is disclosed, not zero-filled.
+   * Primary damage total. scope selects the measure:
+   * unit-mass: full unit EV (residual ~ 0).
+   * known-mass-contribution: sum w_i D_i over expanded mass only (residual > 0).
+   * Never E[D|concrete] with residual treated as zero for full EV, and never the
+   * conditional mean renormalized to unit mass while residual remains.
    */
   expectedDamage: number;
   /**
    * Machine-readable basis for expectedDamage. Mirrors rng.totalsBasis when branching.
-   * Absent on older payloads - treat residualWeight > 0 as concrete-terminals.
+   * Absent on older payloads - residualWeight > 0 without scope is legacy concrete-terminals
+   * (conditional mean); new residual payloads emit known-mass-contribution.
    */
   scope?: DamageTotalsBasis;
+  /** E[D|concrete]: weight-normalized mean over expanded terminals. Diagnostic when residual. */
+  conditionalConcreteMean?: number;
+  /**
+   * concreteMass * conditionalConcreteMean (= sum w_i D_i over expanded mass).
+   * Equals expectedDamage when scope is known-mass-contribution or unit-mass with mass ~ 1.
+   */
+  knownMassExpectedDamage?: number;
+  /** Expanded terminal weight sum (success + fail banked). */
+  concreteMass?: number;
+  /** Unexpanded residual weight (cap discards). */
+  residualMass?: number;
+  /**
+   * True when residual ~ 0 and exactness is exact (safe for solver ranking on unit-mass EV).
+   * False / absent when residual remains or totals are approximated.
+   */
+  eligibleForRanking?: boolean;
   /** True support lower bound (min concrete terminal-branch path-minimum). */
   supportMinDamage: number;
   /** True support upper bound (max concrete terminal-branch path-maximum). */
@@ -305,8 +328,9 @@ export interface DamageBoundsSummary {
 }
 
 /**
- * primary uses the same E[D] as totalExpected / damage.expectedDamage (concrete-terminal).
+ * primary uses the same figure as totalExpected / damage.expectedDamage (per scope).
  * fixed-window = E[D]/(horizon*tickSeconds); natural = E[D]/(E[T]*tickSeconds).
+ * With residual > 0 this is known-mass contribution / duration (diagnostic only).
  */
 export interface DpsSummary {
   primary: number;
@@ -344,9 +368,8 @@ export type BranchExactness = "exact" | "approximated";
 /**
  * Primary totals scope over concrete terminals only (residual is never mixed in).
  * - "unconditional-all-mass": weight mean over every expanded terminal (success + fail
- *   banked). Name keeps the anti-success-renorm wire token; it does not claim unit-mass
- *   EV when residualWeight > 0 (that case is E[D|concrete] - see rng.probabilityMass /
- *   residualWeight / exactness).
+ *   banked). Name keeps the anti-success-renorm wire token; when residualWeight > 0 the
+ *   primary damage field is known-mass contribution (see rng.totalsBasis), not unit-mass EV.
  * - "none": no successful mass (all failed / empty); banked E[D] still reported.
  * Engine never emits "successful-branches-renormalized".
  */
@@ -376,25 +399,27 @@ export interface StochasticRngSummary {
   successfulClasses: number;
   failedClasses: number;
   /**
-   * Concrete terminal weight sum (success + fail expanded). Primary totalExpected /
-   * damage.expectedDamage are weight-normalized over this mass only.
+   * Concrete terminal weight sum (success + fail expanded).
    * concreteMass + residualWeight ~ 1.
    */
   probabilityMass: number;
   /**
-   * Same as probabilityMass - concrete expanded measure for primary totals.
+   * Same as probabilityMass - concrete expanded measure.
    * Prefer this name when distinguishing residual; probabilityMass kept for older readers.
    */
   concreteMass: number;
   /**
-   * Unexpanded / dropped mass (branch caps). Not assigned damage and not in the primary
-   * mix; when > 0, primary is E[D|concrete], not unit-mass E[D].
+   * Unexpanded / dropped mass (branch caps). Not assigned damage.
+   * When > 0, primary expectedDamage is known-mass contribution (not unit-mass EV,
+   * not E[D|concrete] as unit-mass).
    */
   residualWeight: number;
   /**
    * Machine-readable primary totals basis (same tokens as damage.scope).
-   * concrete-terminals when residualWeight > 0 (E[D|concrete] over kept expanded paths).
-   * unit-mass when residual ~ 0 (concrete mass covers the unit measure).
+   * unit-mass when residual ~ 0.
+   * known-mass-contribution when residual > 0 (sum w_i D_i over expanded mass).
+   * concrete-terminals is legacy/diagnostic for E[D|concrete] only; primary residual
+   * payloads use known-mass-contribution.
    */
   totalsBasis: DamageTotalsBasis;
   /** exact when residualWeight ~ 0; approximated when residual mass remains. */
@@ -444,10 +469,11 @@ export interface RotationSummary {
   horizonTicks?: number;
   damage: DamageBoundsSummary;
   /**
-   * Primary expected damage (same as damage.expectedDamage): weight-normalized mean over
-   * concrete terminals (success + fail banked). Never success-renormalized.
-   * When rng.residualWeight > 0 this is E[D|concrete] (kept paths only), not unit-mass E[D];
-   * residual is disclosed on rng, not zero-filled into the mix.
+   * Primary expected damage (same as damage.expectedDamage).
+   * residual ~ 0: unit-mass EV.
+   * residual > 0: known-mass contribution (sum w_i D_i); not E[D|concrete] as unit-mass,
+   * not residual zero-filled into a silent full EV. See damage.scope / rng.totalsBasis.
+   * Never success-renormalized.
    */
   totalExpected: number;
   /**
@@ -469,7 +495,11 @@ export interface RotationSummary {
     tails: "excluded" | "included-separately" | "included-in-natural-completion";
   };
   perAbility: Record<string, number>;
-  /** Expected damage landing on each tick - DoT tails land on their sourced ticks. */
+  /**
+   * Damage landing on each tick.
+   * residual ~ 0: weight-normalized means (unit-mass scale).
+   * residual > 0: known-mass contribution per tick (conditional tick mean * concreteMass).
+   */
   damageByTick: Record<number, number>;
   /** Landed events for complete history or the representative terminal class. */
   events: ResolvedEvent[];

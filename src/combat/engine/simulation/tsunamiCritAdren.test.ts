@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { equipmentById } from "../../data";
 import type { ItemPassiveId } from "../../data/records";
+import type { WeaponClass } from "../../data/records";
 import {
   activeEquipmentEffects,
   type ActiveEquipmentEffects,
   type EquipmentEnchantmentId,
-  type WeaponClass,
 } from "../../shared/equipment";
 import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import {
@@ -400,7 +400,6 @@ describe("Tsunami branch performance (critical-heavy)", () => {
       crit: { chance: 0.4 },
       startingAdrenaline: 100,
       rotation: rotationOf("tsunami", ...basics),
-      horizonTicks: 120,
     });
     expect(s.ok).toBe(true);
     const rng = s.rng;

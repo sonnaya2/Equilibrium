@@ -181,3 +181,26 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
     expect(packSimBaseFromModel(model)).toEqual(packSimBase(snap));
   });
 });
+
+describe("caroming snapshot authority", () => {
+  it.each([0, 1, 2, 3, 4] as const)(
+    "model.caromingRank === modifierSources.caroming for rank %i",
+    (rank) => {
+      const { model, snap } = modelSnap(
+        withGear({
+          style: "ranged",
+          perks: { ...DEFAULT_LOADOUT.perks, caroming: rank },
+        }),
+      );
+      expect(model.caromingRank).toBe(rank);
+      expect(model.modifierSources.caroming).toBe(rank);
+      expect(model.caromingRank).toBe(model.modifierSources.caroming);
+      // Snapshot uses resolved caromingRank once; pack fans out to both wire fields.
+      expect(snap.caroming).toBe(rank);
+      const wire = packSimBase(snap);
+      expect(wire.caromingRank).toBe(rank);
+      expect(wire.modifierSources.caroming).toBe(rank);
+      expect(packSimBaseFromModel(model)).toEqual(wire);
+    },
+  );
+});

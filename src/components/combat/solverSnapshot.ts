@@ -69,7 +69,6 @@ export function solverSnapshotFromResolvedModel(
     salve: sources.salve ?? null,
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
-    caroming: sources.caroming ?? 0,
     berserkersFuryBonus: sources.berserkersFuryBonus ?? 0,
   };
 }

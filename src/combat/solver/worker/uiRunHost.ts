@@ -246,42 +246,47 @@ export async function runUiRevolution(
     durationTicks: request.durationTicks,
   };
 
+  // Wave cheapest caps first; stop when residual-free so we never wait on 2048
+  // after a clean 128/256 (was: Promise.all every cap = wall = slowest).
+  const { chunkUiRunCaps, isResidualFreeProbe, pickBestUiRunProbe } = await import(
+    "../uiRunCore"
+  );
+  const waves = chunkUiRunCaps(caps, workerN);
+  const filled: UiRunProbeResult[] = [];
+  let completed = 0;
+  const totalCapCount = caps.length;
+
   options?.onProgress?.({
     phase: "probes",
     done: 0,
-    total: caps.length,
+    total: totalCapCount,
   });
 
-  // Fan out caps across workers (round-robin); true multi-thread via N Workers.
-  let completed = 0;
-  const probes = await Promise.all(
-    caps.map(async (live, capIndex) => {
-      throwIfCancelled(options?.isCancelled);
-      const slot = pool[capIndex % pool.length]!;
-      const probe = await runProbeOnSlot(slot, base, live, options?.isCancelled);
-      completed += 1;
-      options?.onProgress?.({
-        phase: "probes",
-        done: completed,
-        total: caps.length,
-        maxLiveBranches: probe.maxLiveBranches,
-        residualWeight: probe.residualWeight,
-      });
-      return probe;
-    }),
-  );
+  for (const wave of waves) {
+    throwIfCancelled(options?.isCancelled);
+    const waveResults = await Promise.all(
+      wave.map(async (live, i) => {
+        const slot = pool[i % pool.length]!;
+        const probe = await runProbeOnSlot(slot, base, live, options?.isCancelled);
+        completed += 1;
+        options?.onProgress?.({
+          phase: "probes",
+          done: completed,
+          total: totalCapCount,
+          maxLiveBranches: probe.maxLiveBranches,
+          residualWeight: probe.residualWeight,
+        });
+        return probe;
+      }),
+    );
+    filled.push(...waveResults);
+    if (waveResults.some(isResidualFreeProbe)) break;
+  }
 
   throwIfCancelled(options?.isCancelled);
 
-  const filled = probes;
-  const bestLive =
-    filled.length > 0
-      ? (await import("../uiRunCore")).pickBestUiRunProbe(filled)?.maxLiveBranches
-      : undefined;
-  const live =
-    bestLive ??
-    caps[caps.length - 1] ??
-    128;
+  const bestLive = pickBestUiRunProbe(filled)?.maxLiveBranches;
+  const live = bestLive ?? caps[caps.length - 1] ?? 128;
 
   options?.onProgress?.({
     phase: "full",

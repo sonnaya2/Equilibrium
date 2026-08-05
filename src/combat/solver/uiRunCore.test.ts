@@ -7,9 +7,9 @@ import {
 import { RESIDUAL_FREE_TOLERANCE } from "./branchFidelity";
 
 describe("uiRunCore", () => {
-  it("pickBest prefers residual-free over lower residual non-free", () => {
+  it("pickBest prefers residual-free at lowest live (cheap full-analysis)", () => {
     const probes: UiRunProbeResult[] = [
-      { maxLiveBranches: 256, residualWeight: 0.4, ok: true, totalExpected: 1 },
+      { maxLiveBranches: 256, residualWeight: 0, ok: true, totalExpected: 1 },
       { maxLiveBranches: 128, residualWeight: 0, ok: true, totalExpected: 1 },
       { maxLiveBranches: 512, residualWeight: 0.1, ok: true, totalExpected: 1 },
     ];
@@ -27,6 +27,14 @@ describe("uiRunCore", () => {
     const best = pickBestUiRunProbe(probes)!;
     expect(best.residualWeight).toBeCloseTo(0.2, 9);
     expect(best.maxLiveBranches).toBe(1024);
+  });
+
+  it("chunkUiRunCaps groups cheapest first", async () => {
+    const { chunkUiRunCaps } = await import("./uiRunCore");
+    expect(chunkUiRunCaps([128, 256, 512, 1024, 2048], 3)).toEqual([
+      [128, 256, 512],
+      [1024, 2048],
+    ]);
   });
 
   it("preferredUiRunWorkerCount is 2-4", () => {

@@ -22,7 +22,10 @@ export interface UiRunProbeResult {
   exactness?: string;
 }
 
-/** Prefer residual-free; else lowest residual; tie-break higher live cap. */
+/**
+ * Prefer residual-free at the *lowest* live cap (cheapest full-analysis).
+ * Else lowest residual; among equal residual, higher live (more mass kept).
+ */
 export function pickBestUiRunProbe(
   probes: readonly UiRunProbeResult[],
 ): UiRunProbeResult | null {
@@ -31,11 +34,18 @@ export function pickBestUiRunProbe(
   if (pool.length === 0) return null;
 
   const free = pool.filter((p) => p.residualWeight <= RESIDUAL_FREE_TOLERANCE);
-  const candidates = free.length > 0 ? free : pool;
+  if (free.length > 0) {
+    let best = free[0]!;
+    for (let i = 1; i < free.length; i++) {
+      const p = free[i]!;
+      if (p.maxLiveBranches < best.maxLiveBranches) best = p;
+    }
+    return best;
+  }
 
-  let best = candidates[0]!;
-  for (let i = 1; i < candidates.length; i++) {
-    const p = candidates[i]!;
+  let best = pool[0]!;
+  for (let i = 1; i < pool.length; i++) {
+    const p = pool[i]!;
     if (p.residualWeight < best.residualWeight - RESIDUAL_FREE_TOLERANCE) {
       best = p;
       continue;
@@ -45,6 +55,23 @@ export function pickBestUiRunProbe(
     }
   }
   return best;
+}
+
+export function isResidualFreeProbe(p: UiRunProbeResult): boolean {
+  return p.ok && p.residualWeight <= RESIDUAL_FREE_TOLERANCE;
+}
+
+/** Chunk ladder for wave probes (cheapest wave first). */
+export function chunkUiRunCaps(
+  caps: readonly number[],
+  waveSize: number,
+): number[][] {
+  const size = Math.max(1, waveSize);
+  const out: number[][] = [];
+  for (let i = 0; i < caps.length; i += size) {
+    out.push([...caps.slice(i, i + size)]);
+  }
+  return out;
 }
 
 /** 2-4 workers; leave one core for UI when possible. */

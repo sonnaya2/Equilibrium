@@ -9,7 +9,11 @@ import {
   type ResolvedCombatModel,
 } from "@/combat/model";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
-import { NARAGI_LEVEL_OVERRIDE } from "@/combat/league/naragiEdict";
+import {
+  NARAGI_EDICT_RELIC,
+  NARAGI_LEVEL_OVERRIDE,
+  SLIVER_OF_EDICTS_ID,
+} from "@/combat/league/naragiEdict";
 import {
   formatRingOfVigourSources,
   ringOfVigourActiveSources,
@@ -62,6 +66,12 @@ export function hostInputFromLoadoutStats(
     formulaNormal > 0
       ? Math.floor((stats.base * formulaOverride) / formulaNormal)
       : stats.base;
+  const sliverWorn = loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID;
+  const naragiPicked =
+    options.relics?.includes(NARAGI_EDICT_RELIC) === true ||
+    stats.league.relicNames?.has(NARAGI_EDICT_RELIC) === true;
+  const activateNaragiAtStart =
+    loadout.buffs.sliverOfEdictsActive === true && sliverWorn && naragiPicked;
 
   return {
     style: loadout.style,
@@ -69,6 +79,7 @@ export function hostInputFromLoadoutStats(
     level: stats.level,
     overrideBase,
     overrideLevel: NARAGI_LEVEL_OVERRIDE,
+    ...(activateNaragiAtStart ? { activateNaragiAtStart: true } : {}),
     accuracy: stats.dp,
     crit: {
       chance: stats.critChance,

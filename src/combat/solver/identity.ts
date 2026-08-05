@@ -25,7 +25,7 @@ import {
  * solve-job cache keys cannot reuse bars found under a different search regime.
  * Evaluation identity deliberately omits this.
  */
-export const SEARCH_POLICY_VERSION = 1 as const;
+export const SEARCH_POLICY_VERSION = 2 as const;
 
 /** Proof labels that may enter the verified solve cache. */
 export const VERIFIED_CACHEABLE_PROOFS: ReadonlySet<ProofLabel> = new Set([
@@ -154,6 +154,10 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
   return {
     base: roundN(loadout.base, 3),
     level: loadout.level,
+    // Temporary level override (Naragi etc.) changes land-path AD; must bust eval cache.
+    overrideBase: loadout.overrideBase != null ? roundN(loadout.overrideBase, 3) : null,
+    overrideLevel: loadout.overrideLevel ?? null,
+    activateNaragiAtStart: loadout.activateNaragiAtStart === true,
     accuracy: roundN(loadout.accuracy, 6),
     crit: {
       chance: roundN(loadout.crit?.chance ?? 0, 6),

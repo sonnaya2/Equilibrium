@@ -104,6 +104,8 @@ export interface SearchState {
   isSearchStopped?: () => boolean;
   tryEval(bar: readonly string[], mode?: EvalMode, source?: string): ScoredBar | null;
   forceEval(bar: readonly string[], mode?: EvalMode, source?: string): ScoredBar | null;
+  /** First-class incumbent path: no size-band / style-required candidate gates. */
+  forceEvalIncumbent(bar: readonly string[], mode?: EvalMode, source?: string): ScoredBar | null;
   canEval(): boolean;
 }
 
@@ -186,9 +188,15 @@ export function createSearchState(opts: {
     forceEval(bar, mode = "search", source) {
       return evalBar(state, bar, mode, source, true);
     },
+    forceEvalIncumbent(bar, mode = "search", source) {
+      return evalBar(state, bar, mode, source, true, { skipCandidatePolicy: true });
+    },
   };
   return state;
 }
+
+/** Candidate-policy gates (size band, style-required ids). Not for first-class incumbent. */
+type EvalBarOpts = { skipCandidatePolicy?: boolean };
 
 function evalBar(
   state: SearchState,
@@ -196,15 +204,22 @@ function evalBar(
   mode: EvalMode,
   source: string | undefined,
   force: boolean,
+  opts?: EvalBarOpts,
 ): ScoredBar | null {
   if (!force && state.isSearchStopped?.()) return null;
   if (!force && state.budget.remaining <= 0) return null;
-  if (bar.length < state.sizeBounds.min || bar.length > state.sizeBounds.max) return null;
+  const skipPolicy = opts?.skipCandidatePolicy === true;
+  if (skipPolicy) {
+    if (bar.length === 0) return null;
+  } else if (bar.length < state.sizeBounds.min || bar.length > state.sizeBounds.max) {
+    return null;
+  }
   for (let i = 0; i < bar.length; i++) {
     if (!canAdd(bar.slice(0, i), bar[i]!, state.byId)) return null;
   }
-  // Complete bars must carry style-required abilities (berserk / Sunshine / etc.).
+  // Generated candidates must carry style-required abilities; incumbent does not.
   if (
+    !skipPolicy &&
     bar.length >= state.sizeBounds.min &&
     state.requiredAbilityIds.length > 0 &&
     !barHasRequiredAbilities(bar, state.requiredAbilityIds)

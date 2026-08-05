@@ -49,6 +49,8 @@ export interface ResolvedCombatModel {
   /** Base AD while temporary level override is active (Naragi 255). */
   readonly overrideBase?: number;
   readonly overrideLevel?: number;
+  /** Activate Sliver of Edicts at combat start (Rotation toggle). */
+  readonly activateNaragiAtStart?: boolean;
   /** Damage Potential 0..1 (sim / pack accuracy). */
   readonly accuracy: number;
   readonly crit: ResolvedCritInput;
@@ -97,6 +99,7 @@ export interface HostCombatResolveInput {
   readonly level: number;
   readonly overrideBase?: number;
   readonly overrideLevel?: number;
+  readonly activateNaragiAtStart?: boolean;
   readonly accuracy: number;
   readonly crit: ResolvedCritInput;
   readonly adrenaline?: AdrenalineRules;

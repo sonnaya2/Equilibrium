@@ -1,6 +1,6 @@
 import type { EvaluateFn, PoolAbility, SizeBounds, SolveResult, SolveTier } from "./contracts";
 import { createRng } from "./rng";
-import { buildSeeds, normalizeAuthoredSeed } from "./seeds";
+import { buildSeeds } from "./seeds";
 import { ensureRequiredAbilityIds } from "./stylePolicy";
 import { createSearchState, type SearchConfig } from "./search/types";
 import { runExhaustive, runExhaustiveAsync } from "./search/exhaustive";
@@ -135,7 +135,7 @@ export interface SolveInput {
   seed?: number;
   authoredSeeds?: readonly (readonly string[])[];
   /**
-   * Current user bar (Phase 5 incumbent). Legalized via normalizeAuthoredSeed.
+   * Current user bar (Phase 5 incumbent). Preserved composition (no candidate pad/required inject).
    * Always full-rescored at finalize; not subject to shortlist capacity exclusion.
    */
   incumbentBar?: readonly string[] | null;
@@ -178,9 +178,10 @@ export interface SolveAsyncHooks {
  * 1 seeds -> 2 exhaustive? -> 3 beam -> 4 evo -> 5 LNS -> 6 anneal -> 7 local
  * -> 8 medium screen (optional multi-fidelity) -> 9 full finalize
  */
+/** Preserve fitted incumbent as-is; candidate pad/truncate stays out of this path. */
 function resolveIncumbentBar(input: SolveInput): string[] | null {
   if (!input.incumbentBar?.length) return null;
-  return normalizeAuthoredSeed(input.incumbentBar, input.pool, input.sizeBounds);
+  return [...input.incumbentBar];
 }
 
 export function solve(input: SolveInput): SolveResult {

@@ -237,8 +237,10 @@ function fitBarIds(
 }
 
 /**
- * Phase 5 incumbent: legalize request.userBar the same way seeds are fitted.
- * Null when absent or not legalizable. Passed first-class into solve, not mixed only as a seed.
+ * First-class user bar: preserve order and composition.
+ * Resolve equipped variants; drop only unavailable/denied ids.
+ * Never inject style-required abilities, pad, truncate, or rewrite exclusives.
+ * Null when absent or no remaining simulable ids.
  */
 export function fitIncumbentBar(
   request: SerializableSolverRequest,
@@ -247,7 +249,24 @@ export function fitIncumbentBar(
   catalogueById?: ReadonlyMap<string, AbilitySpec>,
 ): string[] | null {
   if (!request.userBar?.length) return null;
-  return fitBarIds(request.userBar, request, pool, denySet, catalogueById);
+  const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
+  const loadout = request.loadout as SerializableRevolutionSimBase;
+  const passiveIds = loadout.equipmentEffects?.passiveIds as readonly ItemPassiveId[] | undefined;
+  const upgraded =
+    catalogueById != null
+      ? request.userBar.map((id) =>
+          resolveEquippedAbilityId(id, catalogueById, {
+            passiveIds,
+            equipmentIds: loadout.equipmentIds,
+          }),
+        )
+      : request.userBar;
+  const cleaned: string[] = [];
+  for (const id of upgraded) {
+    if (!legalId(id)) continue;
+    cleaned.push(id);
+  }
+  return cleaned.length > 0 ? cleaned : null;
 }
 
 export function fitAuthoredSeeds(

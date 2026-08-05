@@ -30,8 +30,8 @@ export interface PendingKeyRanks {
 }
 
 /** Build key-only ranks from a pending list (already ordered by tick, seq). */
-export function pendingKeyRanks(
-  items: readonly ScheduledEvent<unknown>[],
+export function pendingKeyRanks<T>(
+  items: readonly ScheduledEvent<T>[],
 ): PendingKeyRanks {
   const seqRank = new Map<number, number>();
   const castIds = new Set<number>();
@@ -129,8 +129,8 @@ function snapSig(s: CastSnapshot, castSeqKey: number): string {
   );
 }
 
-function eventSig(
-  e: ScheduledEvent<unknown>,
+function eventSig<T>(
+  e: ScheduledEvent<T>,
   seqKey: number,
   ranks: PendingKeyRanks,
 ): string {
@@ -355,10 +355,10 @@ export class EventQueue<RT = unknown> {
   signature(): string {
     const items = this.items;
     if (items.length === 0) return "";
-    const ranks = pendingKeyRanks(items as ScheduledEvent<unknown>[]);
-    let out = eventSig(items[0] as ScheduledEvent<unknown>, 0, ranks);
+    const ranks = pendingKeyRanks(items);
+    let out = eventSig(items[0]!, 0, ranks);
     for (let i = 1; i < items.length; i++) {
-      out += RS + eventSig(items[i] as ScheduledEvent<unknown>, i, ranks);
+      out += RS + eventSig(items[i]!, i, ranks);
     }
     return out;
   }

@@ -10,8 +10,9 @@ import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
-import { resolveMaximumAdrenaline } from "../../league/ruleset";
-import { hasBlessing } from "../../league/ruleset";
+import { hasBlessing, hasNaragiEdict, resolveMaximumAdrenaline } from "../../league/ruleset";
+import { activateNaragiSliver } from "../../league/naragiActivation";
+import { SLIVER_OF_EDICTS_ID } from "../../league/naragiEdict";
 import { noteRuntimeCreated } from "../../profiling/allocation";
 import { hasPassive } from "../../shared/equipment";
 import {
@@ -191,7 +192,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
       },
     };
   }
-  return {
+  const rt: SimulationRuntime = {
     input,
     detailLevel: resolveDetailLevel(input.detailLevel),
     horizon: input.horizonTicks,
@@ -220,6 +221,14 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     finalized: false,
     lastCastAdrenalineTransaction: null,
   };
+  if (input.activateNaragiAtStart === true) {
+    activateNaragiSliver(rt, {
+      relicActive: hasNaragiEdict(input.league),
+      sliverWorn: input.equipmentIds?.includes(SLIVER_OF_EDICTS_ID) === true,
+      maximumLifePoints: input.league?.maximumLife ?? 15_000,
+    });
+  }
+  return rt;
 }
 
 /** Push a fully-sequenced event after asserting provenance. */

@@ -181,10 +181,11 @@ function rescoreFull(state: SearchState, fullCandidates: ScoredBar[]): ScoredBar
 /**
  * Always full-rescore the first-class incumbent, outside shortlist capacity.
  * Cache hit is fine when the bar already landed on the shortlist.
+ * Skips candidate-policy gates (style-required inject, size band) via forceEvalIncumbent.
  */
 function forceEvalIncumbentFull(state: SearchState): ScoredBar | null {
   if (!state.incumbentBar?.length) return null;
-  return state.forceEval(state.incumbentBar, "full", "incumbent-full");
+  return state.forceEvalIncumbent(state.incumbentBar, "full", "incumbent-full");
 }
 
 function mergeFullUnique(shortlistFull: ScoredBar[], incumbentScored: ScoredBar | null): ScoredBar[] {

@@ -159,8 +159,28 @@ describe("canonical identity", () => {
   it("includes SEARCH_POLICY_VERSION and schema/objective versions in solve context", () => {
     const payload = solveContextPayload(sampleRequest());
     expect(payload).toContain(`"searchPolicyVersion":${SEARCH_POLICY_VERSION}`);
+    expect(SEARCH_POLICY_VERSION).toBe(2);
+    expect(payload).toContain('"searchPolicyVersion":2');
     expect(payload).toContain('"schema":');
     expect(payload).toContain('"objectiveVersion":');
+  });
+
+  it("canonicalSimulationIdentity includes normalized overrideBase and overrideLevel", () => {
+    const withOverride = sampleRequest({}, { overrideBase: 2400.1234, overrideLevel: 255 });
+    const without = sampleRequest();
+    const simWith = canonicalNormalizedIdentity(withOverride).simulation as {
+      overrideBase: number | null;
+      overrideLevel: number | null;
+    };
+    const simWithout = canonicalNormalizedIdentity(without).simulation as {
+      overrideBase: number | null;
+      overrideLevel: number | null;
+    };
+    expect(simWith.overrideBase).toBe(2400.123);
+    expect(simWith.overrideLevel).toBe(255);
+    expect(simWithout.overrideBase).toBeNull();
+    expect(simWithout.overrideLevel).toBeNull();
+    expect(stableStringify(simWith)).not.toBe(stableStringify(simWithout));
   });
 
   it("evaluation identity omits seed/tier/search policy but includes simulation", () => {

@@ -91,6 +91,8 @@ export interface SerializableRevolutionSimBase {
   /** Base AD while temporary level override is active (Naragi 255). */
   overrideBase?: number;
   overrideLevel?: number;
+  /** Activate Sliver of Edicts at combat start. */
+  activateNaragiAtStart?: boolean;
   accuracy: number;
   crit: {
     chance: number;

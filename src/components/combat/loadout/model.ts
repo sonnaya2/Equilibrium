@@ -270,6 +270,11 @@ export interface LoadoutBuffs {
    * Required for Necromancy Slayer Spirit.
    */
   ensouledSpectralLens: boolean;
+  /**
+   * Rotation assumption: activate Sliver of Edicts at combat start (Naragi window).
+   * UI only when pocket has the Sliver; cleared when unequipped.
+   */
+  sliverOfEdictsActive: boolean;
 }
 
 /**
@@ -486,6 +491,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     ringOfVigourPassive: false,
     slayerHelmetStand: null,
     ensouledSpectralLens: false,
+    sliverOfEdictsActive: false,
   },
   archaeology: {
     selectedIds: [],
@@ -664,6 +670,10 @@ export function equipInSlot(
     baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     equipmentSlots: slots,
     equipmentIds: mergeEquipmentIds(slots, unlocks),
+    buffs:
+      loadout.buffs.sliverOfEdictsActive && slots.pocket !== "item:sliver-of-edicts"
+        ? { ...loadout.buffs, sliverOfEdictsActive: false }
+        : loadout.buffs,
   };
   // Weapon equip owns style + weaponConfiguration from gear.
   next.weaponConfiguration = weaponConfigurationFor(next) ?? next.weaponConfiguration;
@@ -681,7 +691,12 @@ export function syncRelicGrantedEquipment(
 ): Loadout {
   const slots = loadout.equipmentSlots ?? {};
   const nextSlots = stripUnavailableRelicItems(slots, activeRelicNames);
-  if (nextSlots === slots) return loadout;
+  const slotsChanged = nextSlots !== slots;
+  const pocket = nextSlots.pocket;
+  const sliverStillOn =
+    typeof pocket === "string" && pocket === "item:sliver-of-edicts";
+  const clearSliverActive = !sliverStillOn && loadout.buffs.sliverOfEdictsActive;
+  if (!slotsChanged && !clearSliverActive) return loadout;
   const unlocks = unlockOnlyIds(loadout).filter((id) =>
     isRelicGrantedItemAvailable(id, activeRelicNames),
   );
@@ -689,6 +704,9 @@ export function syncRelicGrantedEquipment(
     ...loadout,
     equipmentSlots: nextSlots,
     equipmentIds: mergeEquipmentIds(nextSlots, unlocks),
+    buffs: clearSliverActive
+      ? { ...loadout.buffs, sliverOfEdictsActive: false }
+      : loadout.buffs,
   };
 }
 
@@ -1243,6 +1261,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       protectionPrayer: rawBuffs.protectionPrayer === true,
       aegisArmourBasis:
         rawBuffs.aegisArmourBasis === "equipment" ? "equipment" : "total-rating",
+      sliverOfEdictsActive: rawBuffs.sliverOfEdictsActive === true,
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
       slayerHelmetStand: normalizeSlayerHelmetStand(rawBuffs.slayerHelmetStand),
       ensouledSpectralLens: rawBuffs.ensouledSpectralLens === true,

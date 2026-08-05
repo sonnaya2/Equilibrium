@@ -16,10 +16,12 @@ import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { getUiRunCache, setUiRunCache } from "./uiRunCache";
 import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
-import type { Loadout } from "./useLoadout";
+import type { Loadout, SetLoadout } from "./useLoadout";
+import { withLoadoutBuffs } from "./useLoadout";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { unlockedRegions } from "@/league";
 import type { ResolvedCombatModel } from "@/combat/model";
+import { SLIVER_OF_EDICTS_ID } from "@/combat/league/naragiEdict";
 import {
   applyLoadoutVariantsToSlots,
   barOptionLabel,
@@ -55,11 +57,13 @@ function clampRunDurationSeconds(raw: number): number {
 export function RevolutionPanel({
   stats,
   loadout,
+  setLoadout,
   combatModel: combatModelProp,
   useBuild: _useLoadoutBuild = true,
 }: {
   stats: CalcStats;
   loadout: Loadout;
+  setLoadout?: SetLoadout;
   /**
    * Run-aligned combat model (full loadout or hybrid manual).
    * Parent must pass the same model used for Optimize packing.
@@ -466,7 +470,9 @@ export function RevolutionPanel({
         </span>
       </div>
 
-      <RevoBarGraphic slots={slots} revoSize={revoSize} />
+      <div className="ability-bar-row">
+        <RevoBarGraphic slots={slots} revoSize={revoSize} />
+      </div>
 
       <RevoRunResults
         stats={stats}
@@ -484,6 +490,19 @@ export function RevolutionPanel({
         runBusy={runBusy}
         runProgressLabel={runProgressLabel}
         onCancelRun={cancelRun}
+        sliverToggle={
+          loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID && setLoadout
+            ? {
+                active: loadout.buffs.sliverOfEdictsActive,
+                onToggle: () =>
+                  setLoadout((prev) =>
+                    withLoadoutBuffs(prev, {
+                      sliverOfEdictsActive: !prev.buffs.sliverOfEdictsActive,
+                    }),
+                  ),
+              }
+            : null
+        }
       />
     </div>
   );

@@ -43,6 +43,7 @@ export function buildSimulationInputBase(
     level: model.level,
     ...(model.overrideBase != null ? { overrideBase: model.overrideBase } : {}),
     ...(model.overrideLevel != null ? { overrideLevel: model.overrideLevel } : {}),
+    ...(model.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: model.accuracy,
     crit: {
       chance: model.crit.chance,

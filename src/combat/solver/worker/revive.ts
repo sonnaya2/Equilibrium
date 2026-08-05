@@ -47,6 +47,9 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
   return {
     base: sim.base,
     level: sim.level,
+    overrideBase: sim.overrideBase,
+    overrideLevel: sim.overrideLevel,
+    ...(sim.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: sim.accuracy,
     crit: sim.crit,
     modifiers: reviveModifiers(sim.modifierSources, league),
@@ -69,6 +72,8 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     conjureBasicDamageMult: sim.conjureBasicDamageMult,
     conjureDurationMult: sim.conjureDurationMult,
     targetHpPercent: sim.targetHpPercent,
+    // ponytail: naturalInstinctUntilTick / startingResidualSouls / slayerOnTask / slayerLevel
+    // affect scores in-engine but are not on SerializableRevolutionSimBase yet.
   };
 }
 

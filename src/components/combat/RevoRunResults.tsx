@@ -58,6 +58,12 @@ export type RevoRunResultsProps = {
   runBusy?: boolean;
   runProgressLabel?: string | null;
   onCancelRun?: () => void;
+  /** Sliver of Edicts start-activate (Naragi); shown beside Run when pocket is Sliver. */
+  sliverToggle?: {
+    active: boolean;
+    onToggle: () => void;
+    disabled?: boolean;
+  } | null;
 };
 
 function capOptsFromMeta(
@@ -89,6 +95,7 @@ export function RevoRunResults({
   runBusy = false,
   runProgressLabel = null,
   onCancelRun,
+  sliverToggle = null,
 }: RevoRunResultsProps) {
   const contributions = result?.analysis.byEffect ?? [];
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
@@ -135,6 +142,26 @@ export function RevoRunResults({
         <p className="revo-horizon-plan" data-testid="revo-horizon-plan">
           {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
         </p>
+        {sliverToggle ? (
+          <button
+            type="button"
+            className={`combat-button revo-sliver-toggle border text-xs ${
+              sliverToggle.active
+                ? "border-stone-750 bg-stone-850 text-parch-50"
+                : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+            }`}
+            aria-pressed={sliverToggle.active}
+            data-testid="sliver-buff-toggle"
+            title="Activate Sliver of Edicts at combat start (16.8s window)"
+            disabled={sliverToggle.disabled === true || runBusy}
+            onClick={sliverToggle.onToggle}
+          >
+            <span className="revo-sliver-toggle__label">Sliver</span>
+            <span className="revo-sliver-toggle__state font-mono">
+              {sliverToggle.active ? "On" : "Off"}
+            </span>
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={run}

@@ -77,6 +77,11 @@ export interface SimulateInput {
   overrideBase?: number;
   /** Level value that pairs with overrideBase (default 255 when overrideBase set). */
   overrideLevel?: number;
+  /**
+   * Activate Sliver of Edicts (Naragi) at tick 0 when relic + pocket are valid.
+   * Set from loadout.buffs.sliverOfEdictsActive on the Rotation page.
+   */
+  activateNaragiAtStart?: boolean;
   accuracy: number;
   crit: Omit<CritLayers, "eligible">;
   abilities: readonly AbilitySpec[];

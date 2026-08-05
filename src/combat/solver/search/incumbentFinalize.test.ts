@@ -322,7 +322,7 @@ describe("incumbent finalize (Phase 5)", () => {
     expect(fin.percentImprovement).toBeNull();
   });
 
-  it("tags forceEval source as incumbent-full for the current bar", () => {
+  it("tags forceEvalIncumbent source as incumbent-full for the current bar", () => {
     const incumbent = ["a", "b"] as const;
     const evaluate: EvaluateFn = ({ bar, mode }) => {
       if (mode === "full" || mode === "finalize") {
@@ -347,17 +347,88 @@ describe("incumbent finalize (Phase 5)", () => {
     const state = makeState({ evaluate, incumbentBar: incumbent, fullShortlistSize: 2 });
     seedExploreArchive(state, [["c", "d"], ["c", "e"], ["d", "e"]]);
 
-    const origForce = state.forceEval.bind(state);
+    const origForceInc = state.forceEvalIncumbent.bind(state);
     const sources: string[] = [];
-    state.forceEval = (bar, mode, source) => {
+    state.forceEvalIncumbent = (bar, mode, source) => {
       if ((mode === "full" || mode === "finalize") && barKey(bar) === barKey(incumbent)) {
         sources.push(source ?? "");
       }
-      return origForce(bar, mode, source);
+      return origForceInc(bar, mode, source);
     };
 
     finalizeSearch(state, { tier: "thorough", topK: 2 });
     expect(sources).toContain("incumbent-full");
+  });
+
+  it("full-evals incumbent missing style-required ability; candidates still require it", () => {
+    // Melee-style required: berserk. User bar omits it; candidate with it wins.
+    const incumbent = ["a", "b"] as const;
+    const upgrade = ["berserk", "c"] as const;
+    const pool: PoolAbility[] = [
+      ...tinyPool,
+      { id: "berserk", category: "ultimate", averageDamage: 200, occupancyTicks: 3 },
+    ];
+    const evaluate: EvaluateFn = ({ bar, mode }) => {
+      if (mode === "full" || mode === "finalize") {
+        const score =
+          barKey(bar) === barKey(upgrade) ? 2_000 : barKey(bar) === barKey(incumbent) ? 1_000 : 100;
+        return {
+          score,
+          finite: true,
+          mode: "full",
+          exploratory: false,
+          validForFinalRanking: true,
+          fidelity: "full",
+        };
+      }
+      return {
+        score: exploreScore(bar),
+        finite: true,
+        mode: "search",
+        exploratory: true,
+        validForFinalRanking: false,
+      };
+    };
+
+    const state = createSearchState({
+      pool,
+      sizeBounds: { min: 2, max: 3 },
+      evaluate,
+      config: {
+        ...configForTier("thorough", 1),
+        evaluationBudget: 80,
+        fullShortlistSize: 2,
+        topK: 2,
+        searchHorizonTicks: 40,
+        fullHorizonTicks: 150,
+      },
+      seeds: [
+        ["berserk", "c"],
+        ["c", "d"],
+        ["c", "e"],
+      ],
+      incumbentBar: incumbent,
+      requiredAbilityIds: ["berserk"],
+    });
+
+    // Candidate without berserk must be rejected by candidate policy.
+    expect(state.tryEval(["a", "c"], "search", "cand")).toBeNull();
+    expect(state.forceEval(["a", "c"], "full", "cand-full")).toBeNull();
+    // Candidate with berserk is legal.
+    expect(state.forceEval(["berserk", "c"], "search", "cand-ok")).not.toBeNull();
+
+    seedExploreArchive(state, [upgrade, ["c", "d"], ["c", "e"]]);
+    const fin = finalizeSearch(state, { tier: "thorough", topK: 2 });
+
+    expect(fin.incumbentBar).toEqual([...incumbent]);
+    expect(Number.isFinite(fin.incumbentScore)).toBe(true);
+    expect(fin.incumbentScore).toBe(1_000);
+    expect(fin.incumbentScore).not.toBe(Number.NEGATIVE_INFINITY);
+    expect(fin.isUpgrade).toBe(true);
+    expect(fin.best!.bar).toEqual([...upgrade]);
+    // Improvement is vs the actual incumbent score, not -Infinity.
+    expect(fin.scoreImprovement).toBe(1_000);
+    expect(fin.scoreImprovement).toBe(fin.best!.robustScore - fin.incumbentScore);
   });
 });
 
@@ -373,7 +444,7 @@ describe("fitAuthoredSeeds vs fitIncumbentBar (Phase 5)", () => {
     };
   }
 
-  it("does not include userBar in authored seeds; fitIncumbentBar legalizes it", () => {
+  it("does not include userBar in authored seeds; fitIncumbentBar preserves it", () => {
     const catalogue = [miniSpec("ua"), miniSpec("ub"), miniSpec("uc")];
     const pool = buildCandidatePool(catalogue, "melee");
     const denySet = new Set<string>();
@@ -416,5 +487,90 @@ describe("fitAuthoredSeeds vs fitIncumbentBar (Phase 5)", () => {
     expect(seeds.some((s) => s.length === 2 && s[0] === "ua" && s[1] === "ub")).toBe(false);
     // Explicit authored seed still fits.
     expect(seeds.some((s) => s.includes("uc") && s.includes("ua"))).toBe(true);
+  });
+
+  it("does not inject style-required abilities or pad the user bar", () => {
+    const catalogue = [
+      miniSpec("assault"),
+      miniSpec("sever"),
+      miniSpec("fury"),
+      { ...miniSpec("berserk"), category: "ultimate" as const },
+      miniSpec("dismember"),
+    ];
+    const pool = buildCandidatePool(catalogue, "melee");
+    const denySet = new Set<string>();
+    // User bar is short, omits berserk; candidate path would inject + pad.
+    const userBar = ["assault", "sever"] as const;
+    const request = defaultSerializableRequest({
+      style: "melee",
+      durationTicks: 100,
+      seed: 1,
+      minBarSize: 4,
+      maxBarSize: 6,
+      userBar: [...userBar],
+      authoredSeedBars: [],
+      loadout: {
+        base: 1000,
+        level: 99,
+        accuracy: 1,
+        crit: { chance: 0 },
+        equipmentEffects: emptyEffects,
+        league: {
+          ruleset: "base",
+          blessings: [],
+          blessingIds: [],
+          totalArmour: 0,
+          maximumLife: 10_000,
+          powerburstUntilTick: 0,
+          targetTiles: 1,
+        },
+        equipmentIds: [],
+        weaponConfiguration: "dualwield",
+        startingAdrenaline: 100,
+        modifierSources: emptyModifierSources(),
+      },
+    });
+
+    const incumbent = fitIncumbentBar(request, pool, denySet);
+    expect(incumbent).toEqual(["assault", "sever"]);
+    expect(incumbent).not.toContain("berserk");
+    expect(incumbent).toHaveLength(2);
+  });
+
+  it("drops denied ids only; keeps order of remaining user slots", () => {
+    const catalogue = [miniSpec("ua"), miniSpec("ub"), miniSpec("uc")];
+    const pool = buildCandidatePool(catalogue, "melee");
+    const denySet = new Set<string>(["ub"]);
+    const request = defaultSerializableRequest({
+      style: "melee",
+      durationTicks: 100,
+      seed: 1,
+      minBarSize: 2,
+      maxBarSize: 4,
+      userBar: ["ua", "ub", "uc"],
+      authoredSeedBars: [],
+      loadout: {
+        base: 1000,
+        level: 99,
+        accuracy: 1,
+        crit: { chance: 0 },
+        equipmentEffects: emptyEffects,
+        league: {
+          ruleset: "base",
+          blessings: [],
+          blessingIds: [],
+          totalArmour: 0,
+          maximumLife: 10_000,
+          powerburstUntilTick: 0,
+          targetTiles: 1,
+        },
+        equipmentIds: [],
+        weaponConfiguration: "dualwield",
+        startingAdrenaline: 100,
+        modifierSources: emptyModifierSources(),
+      },
+    });
+
+    expect(fitIncumbentBar(request, pool, denySet)).toEqual(["ua", "uc"]);
   });
 });

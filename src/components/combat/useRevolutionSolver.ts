@@ -24,6 +24,7 @@ import {
   type SolverSearchTier,
   type WorkerPlan,
 } from "@/combat/solver";
+import { isSerializableSimBase } from "@/combat/solver/worker/serializable";
 import { REGION_IDS, type BuildState } from "@/league";
 import type { ResolvedCombatModel } from "@/combat/model";
 import type { CalcStats } from "./loadoutStats";
@@ -366,7 +367,9 @@ export function useRevolutionSolver({
       const runBar = ensureNecroConjuresOnBarIds(
         bar,
         request.style,
-        request.loadout.weaponConfiguration,
+        isSerializableSimBase(request.loadout)
+          ? request.loadout.weaponConfiguration
+          : undefined,
       );
       if (shouldAdoptSolverResultBar(dto)) {
         onActiveBar(runBar);

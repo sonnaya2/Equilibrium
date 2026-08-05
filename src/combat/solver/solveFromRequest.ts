@@ -78,6 +78,9 @@ export const solveFromRequest: SolveFn = async (
     level: simBase.level,
     ...(simBase.overrideBase != null ? { overrideBase: simBase.overrideBase } : {}),
     ...(simBase.overrideLevel != null ? { overrideLevel: simBase.overrideLevel } : {}),
+    ...(simBase.activateNaragiAtStart === true
+      ? { activateNaragiAtStart: true }
+      : {}),
     accuracy: simBase.accuracy,
     crit: simBase.crit,
     abilities,

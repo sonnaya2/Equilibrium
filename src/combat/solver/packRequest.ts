@@ -35,6 +35,7 @@ export interface SolverPackSnapshot {
   level: number;
   overrideBase?: number;
   overrideLevel?: number;
+  activateNaragiAtStart?: boolean;
   accuracy: number;
   crit: {
     chance: number;
@@ -138,6 +139,9 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     level: snapshot.level,
     ...(snapshot.overrideBase != null ? { overrideBase: snapshot.overrideBase } : {}),
     ...(snapshot.overrideLevel != null ? { overrideLevel: snapshot.overrideLevel } : {}),
+    ...(snapshot.activateNaragiAtStart === true
+      ? { activateNaragiAtStart: true }
+      : {}),
     accuracy: snapshot.accuracy,
     crit: {
       chance: snapshot.crit.chance,

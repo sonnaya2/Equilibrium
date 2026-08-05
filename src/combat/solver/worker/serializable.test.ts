@@ -155,6 +155,50 @@ describe("solver worker serializable boundary", () => {
     expect(input.league?.blessingIds.has("striking-light")).toBe(true);
   });
 
+  it("overrideBase and overrideLevel survive pack → structuredClone → revive", () => {
+    const sim: SerializableRevolutionSimBase = {
+      ...sampleSimBase(),
+      overrideBase: 2400,
+      overrideLevel: 255,
+    };
+    const cloned = structuredClone(sim);
+    expect(cloned.overrideBase).toBe(2400);
+    expect(cloned.overrideLevel).toBe(255);
+
+    const base = reviveRevolutionBase(cloned);
+    expect(base.overrideBase).toBe(2400);
+    expect(base.overrideLevel).toBe(255);
+
+    const input = buildRevolutionInput(cloned, {
+      bar: [basicAbility],
+      style: "melee",
+      durationTicks: 50,
+      abilities: [basicAbility],
+    });
+    expect(input.overrideBase).toBe(2400);
+    expect(input.overrideLevel).toBe(255);
+  });
+
+  it("activateNaragiAtStart survives structuredClone → revive", () => {
+    const sim: SerializableRevolutionSimBase = {
+      ...sampleSimBase(),
+      activateNaragiAtStart: true,
+      overrideBase: 2400,
+      overrideLevel: 255,
+    };
+    const cloned = structuredClone(sim);
+    expect(cloned.activateNaragiAtStart).toBe(true);
+    const base = reviveRevolutionBase(cloned);
+    expect(base.activateNaragiAtStart).toBe(true);
+    const input = buildRevolutionInput(cloned, {
+      bar: [basicAbility],
+      style: "melee",
+      durationTicks: 50,
+      abilities: [basicAbility],
+    });
+    expect(input.activateNaragiAtStart).toBe(true);
+  });
+
   it("rejects plain loadout snapshots in requireSimBase", () => {
     expect(() =>
       requireSimBase({

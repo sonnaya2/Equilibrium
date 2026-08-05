@@ -538,6 +538,7 @@ export function RotationPlanner({
           <RevolutionPanel
             stats={activeStats}
             loadout={loadout}
+            setLoadout={setLoadout}
             combatModel={combatModel}
             useBuild={useBuild}
           />

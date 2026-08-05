@@ -42,12 +42,24 @@ describe("Abyssal Cinders eligibility policy", () => {
     expect(blessingHitEligibility("command", false)).toEqual({ rider: true, onHit: false });
   });
 
-  it.each(["conjure", "proc", "blessing"] as const)("excludes %s damage entirely", (source) => {
+  it("gives conjure auto/poison the rider but no on-hit roll", () => {
+    expect(blessingHitEligibility("conjure", false)).toEqual({ rider: true, onHit: false });
+    expect(blessingHitEligibility({ kind: "conjure_auto" }, false)).toEqual({
+      rider: true,
+      onHit: false,
+    });
+    expect(blessingHitEligibility({ kind: "conjure_poison" }, false)).toEqual({
+      rider: true,
+      onHit: false,
+    });
+  });
+
+  it.each(["proc", "blessing"] as const)("excludes %s damage entirely", (source) => {
     expect(blessingHitEligibility(source, false)).toEqual({ rider: false, onHit: false });
   });
 
   it("excludes attached components whatever their source, so hit counts stay honest", () => {
-    for (const source of ["direct", "dot", "command"] as const) {
+    for (const source of ["direct", "dot", "command", "conjure"] as const) {
       expect(blessingHitEligibility(source, true)).toEqual({ rider: false, onHit: false });
     }
   });

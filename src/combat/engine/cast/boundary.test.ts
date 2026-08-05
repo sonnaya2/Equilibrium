@@ -217,22 +217,21 @@ describe("cast legality at the candidate tick", () => {
     const overpower = baseInput.abilities.find((ability) => ability.id === "overpower")!;
     const igneous = baseInput.abilities.find((ability) => ability.id === "overpower_igneous")!;
     const withoutCape = createCastContext({ ...baseInput, startingAdrenaline: 100 });
-    const before = structuredClone(withoutCape.getState());
-    expect(withoutCape.performCast(igneous, 0, false)).toMatchObject({
-      ok: false,
-      error: "Requires Igneous Kal-Ket or Igneous Kal-Zuk",
-    });
-    expect(withoutCape.getState()).toEqual(before);
+    expect(withoutCape.performCast(igneous, 0, false).ok).toBe(true);
+    const withoutSummary = withoutCape.finish(undefined, 20);
+    expect(withoutSummary.casts.some((c) => c.abilityId === "overpower")).toBe(true);
+    expect(withoutSummary.casts.every((c) => c.abilityId !== "overpower_igneous")).toBe(true);
 
     const revo = simulateRevolution({
       ...baseInput,
       startingAdrenaline: 100,
       bar: [igneous],
       style: "melee",
-      durationTicks: 7,
+      durationTicks: 12,
     });
     expect(revo.ok).toBe(true);
-    expect(revo.casts.every((cast) => cast.abilityId === "attack")).toBe(true);
+    expect(revo.casts.some((cast) => cast.abilityId === "overpower")).toBe(true);
+    expect(revo.casts.every((cast) => cast.abilityId !== "overpower_igneous")).toBe(true);
 
     const withCape = createCastContext({
       ...baseInput,

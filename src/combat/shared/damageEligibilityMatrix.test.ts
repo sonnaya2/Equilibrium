@@ -90,7 +90,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -103,7 +103,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -235,13 +235,13 @@ describe("blessingHitEligibility from capabilities", () => {
     expect(blessingHitEligibility("direct", false)).toEqual({ rider: true, onHit: true });
     expect(blessingHitEligibility("dot", false)).toEqual({ rider: true, onHit: false });
     expect(blessingHitEligibility("command", false)).toEqual({ rider: true, onHit: false });
-    expect(blessingHitEligibility("conjure", false)).toEqual({ rider: false, onHit: false });
+    expect(blessingHitEligibility("conjure", false)).toEqual({ rider: true, onHit: false });
     expect(blessingHitEligibility("proc", false)).toEqual({ rider: false, onHit: false });
     expect(blessingHitEligibility("blessing", false)).toEqual({ rider: false, onHit: false });
   });
 
   it("attached excludes all sources", () => {
-    for (const source of ["direct", "dot", "command"] as const) {
+    for (const source of ["direct", "dot", "command", "conjure"] as const) {
       expect(blessingHitEligibility(source, true)).toEqual({ rider: false, onHit: false });
     }
   });

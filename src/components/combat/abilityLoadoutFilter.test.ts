@@ -67,6 +67,14 @@ describe("filterAbilitiesForLoadout — igneous only-version", () => {
       expect(equipAbilityForLoadout(base, byId, capeGate(c.cape)).id).toBe(c.upgrade);
       expect(equipAbilityForLoadout(base, byId, { passiveIds: [] }).id).toBe(c.base);
     });
+
+    it(`${c.style}: equipAbilityForLoadout reverses upgrade without cape`, () => {
+      const pool = byStyle(c.style);
+      const byId = new Map(pool.map((a) => [a.id, a]));
+      const upgrade = byId.get(c.upgrade)!;
+      expect(equipAbilityForLoadout(upgrade, byId, { passiveIds: [] }).id).toBe(c.base);
+      expect(equipAbilityForLoadout(upgrade, byId, capeGate(c.cape)).id).toBe(c.upgrade);
+    });
   }
 
   it("Kal-Zuk shows all four upgrades and no bases", () => {
@@ -76,5 +84,14 @@ describe("filterAbilitiesForLoadout — igneous only-version", () => {
       expect(ids).toContain(c.upgrade);
       expect(ids).not.toContain(c.base);
     }
+  });
+
+  it("Kal-Zuk necro shows death_skulls_igneous not death_skulls", () => {
+    const ids = filterAbilitiesForLoadout(
+      byStyle("necromancy"),
+      capeGate("item:igneous-kal-zuk"),
+    ).map((a) => a.id);
+    expect(ids).toContain("death_skulls_igneous");
+    expect(ids).not.toContain("death_skulls");
   });
 });

@@ -124,11 +124,11 @@ export function revoManagedModelled(
       .filter((slot) => slot.spec !== null)
       .map((slot) => slot.spec!);
   }
-  if (!gate?.passiveIds?.length && !gate?.equipmentIds?.length) return specs;
+  if (gate == null) return specs;
   return specs.map((s) => equipAbilityForLoadout(s, ENGINE_SPECS, gate));
 }
 
-/** Apply Igneous (etc.) upgrade to resolved bar slots for display + sim. */
+/** Apply Igneous (etc.) upgrade or reverse-to-base on resolved bar slots. */
 export function applyLoadoutVariantsToSlots(
   slots: readonly ResolvedSlot[],
   gate?: {
@@ -136,7 +136,7 @@ export function applyLoadoutVariantsToSlots(
     equipmentIds?: readonly string[];
   },
 ): ResolvedSlot[] {
-  if (!gate?.passiveIds?.length && !gate?.equipmentIds?.length) return [...slots];
+  if (gate == null) return [...slots];
   return slots.map((slot) => {
     if (!slot.spec) return slot;
     const upgraded = equipAbilityForLoadout(slot.spec, ENGINE_SPECS, gate);

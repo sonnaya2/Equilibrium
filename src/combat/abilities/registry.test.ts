@@ -74,13 +74,40 @@ describe("ability registry single authority", () => {
     }
   });
 
-  it("death_skulls_igneous is honest partial like base Death Skulls", () => {
+  it("death_skulls + death_skulls_igneous are solver-eligible ST models with honest note", () => {
     const base = entryByEngineId("death_skulls");
     const igneous = entryByEngineId("death_skulls_igneous");
-    expect(base?.support.status).toBe("partially-modeled");
-    expect(igneous?.support.status).toBe("partially-modeled");
-    expect(igneous?.solverEligibleDefault).toBe(false);
+    expect(base?.support.status).toBe("full");
+    expect(igneous?.support.status).toBe("full");
+    expect(base?.solverEligibleDefault).toBe(true);
+    expect(igneous?.solverEligibleDefault).toBe(true);
+    expect(base?.support.note).toMatch(/Single-target/i);
     expect(igneous?.support.note).toMatch(/Single-target/i);
+  });
+
+  it("conjure summons and commands are solver-eligible without includePartial", () => {
+    for (const id of [
+      "conjure_skeleton_warrior",
+      "conjure_vengeful_ghost",
+      "conjure_putrid_zombie",
+      "conjure_phantom_guardian",
+      "conjure_undead_army",
+    ] as const) {
+      const e = entryByEngineId(id);
+      expect(e?.support.status, id).toBe("full");
+      expect(e?.solverEligibleDefault, id).toBe(true);
+      expect(e?.spec.supportStatus, id).toBeUndefined();
+      expect(e?.support.note, id).toBeTruthy();
+    }
+    for (const id of [
+      "command_skeleton_warrior",
+      "command_putrid_zombie",
+      "command_phantom_guardian",
+      "command_vengeful_ghost",
+    ] as const) {
+      expect(entryByEngineId(id)?.solverEligibleDefault, id).toBe(true);
+      expect(entryByEngineId(id)?.spec.supportStatus, id).toBeUndefined();
+    }
   });
 
   it("engineIdForRecord matches RECORD_TO_ENGINE for catalogue records", () => {

@@ -201,6 +201,36 @@ describe("combat result identity (stale-result product rule)", () => {
       expect(half.request.loadout.modifierSources.berserkersFuryBonus).toBe(0.03);
       expect(simIdentityString(full.request)).not.toBe(simIdentityString(half.request));
     });
+
+    it("Kal-Ket cape changes solve identity and uiRunFingerprint with barIds fixed", () => {
+      const bare = packFromLoadout(withLoadout({ equipmentSlots: {} }));
+      const withKet = packFromLoadout(
+        withLoadout({ equipmentSlots: { cape: "item:igneous-kal-ket" } }),
+      );
+      expect(withKet.stats.equipmentEffects.passiveIds).toContain("igneous-overpower");
+      expect(bare.stats.equipmentEffects.passiveIds).not.toContain("igneous-overpower");
+      expect(simIdentityString(bare.request)).not.toBe(simIdentityString(withKet.request));
+      expect(solveIdentityFromRequest(bare.request)).not.toBe(
+        solveIdentityFromRequest(withKet.request),
+      );
+
+      const barIds = ["overpower"] as const;
+      const revoBare = {
+        mode: "revolution" as const,
+        stats: bare.stats,
+        combatModel: bare.combatModel,
+        barIds,
+        durationSeconds: 60,
+        style: "melee",
+      };
+      expect(uiRunFingerprint(revoBare)).not.toBe(
+        uiRunFingerprint({
+          ...revoBare,
+          stats: withKet.stats,
+          combatModel: withKet.combatModel,
+        }),
+      );
+    });
   });
 
   describe("bar library score verification is context-bound", () => {

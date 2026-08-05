@@ -8,10 +8,19 @@ import { baseInput } from "../../test/fixtures/inputs";
 import type { CastContextInput } from "./contracts";
 import { branchKeyJson, branchKeyStructural } from "./branchKey";
 import { mergeBranches, snapshotRuntime } from "./branch";
-import { patchConjures, patchMagic, patchMelee, patchRanged, patchTarget } from "../runtime/state";
+import {
+  patchConjures,
+  patchMagic,
+  patchMelee,
+  patchNecro,
+  patchRanged,
+  patchTarget,
+} from "../runtime/state";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { newHaunted } from "../../styles/necromancy/haunted";
+import { newInstability, newSunshine } from "../../styles/magic/effects";
 import { newPuncture } from "../../styles/ranged/puncture";
+import { newSearingWinds } from "../../styles/ranged/onHit";
 
 const meleeInput: CastContextInput = {
   base: 1000,
@@ -676,6 +685,161 @@ describe("branchKey structural vs JSON partitions", () => {
       mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired melee half-open untils merge with zero; live windows still split", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 40 };
+    expired.state = patchMelee(expired.state, {
+      chaosRoarUntilTick: 12,
+      greaterFuryUntilTick: 25,
+      meteorStrikeUntilTick: 30,
+      endlessAssaultUntilTick: 18,
+    });
+    clean.state = { ...clean.state, tick: 40 };
+    clean.state = patchMelee(clean.state, {
+      chaosRoarUntilTick: 0,
+      greaterFuryUntilTick: 0,
+      meteorStrikeUntilTick: 0,
+      endlessAssaultUntilTick: 0,
+    });
+    live.state = { ...live.state, tick: 40 };
+    live.state = patchMelee(live.state, {
+      chaosRoarUntilTick: 50,
+      greaterFuryUntilTick: 55,
+      meteorStrikeUntilTick: 60,
+      endlessAssaultUntilTick: 48,
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired NI/vestments/relentless untils merge with zero; live windows still split", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = {
+      ...expired.state,
+      tick: 50,
+      naturalInstinctUntilTick: 20,
+      vestmentsAdrenalineUntilTick: 30,
+      relentlessUntilTick: 40,
+    };
+    clean.state = {
+      ...clean.state,
+      tick: 50,
+      naturalInstinctUntilTick: 0,
+      vestmentsAdrenalineUntilTick: 0,
+      relentlessUntilTick: 0,
+    };
+    live.state = {
+      ...live.state,
+      tick: 50,
+      naturalInstinctUntilTick: 80,
+      vestmentsAdrenalineUntilTick: 70,
+      relentlessUntilTick: 90,
+    };
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired livingDeath and flow (zeros reduction) merge with clean; live still splits", () => {
+    const base = createRuntime({
+      ...meleeInput,
+      abilities: NECROMANCY_ABILITIES,
+      context: { style: "necromancy" },
+    });
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 60 };
+    expired.state = patchNecro(expired.state, { livingDeathUntilTick: 40 });
+    expired.state = patchMagic(expired.state, {
+      flowUntilTick: 25,
+      flowReduction: 15,
+    });
+    clean.state = { ...clean.state, tick: 60 };
+    clean.state = patchNecro(clean.state, { livingDeathUntilTick: 0 });
+    clean.state = patchMagic(clean.state, { flowUntilTick: 0, flowReduction: 0 });
+    live.state = { ...live.state, tick: 60 };
+    live.state = patchNecro(live.state, { livingDeathUntilTick: 90 });
+    live.state = patchMagic(live.state, { flowUntilTick: 80, flowReduction: 15 });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired searing/sunshine/instability clear granted and merge with clean; live granted kept", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 100 };
+    expired.state = patchRanged(expired.state, {
+      searingWinds: { expiresAtTick: 40, grantedByCast: 3 },
+    });
+    expired.state = patchMagic(expired.state, {
+      sunshine: { startsAtTick: 21, expiresAtTick: 71, grantedByCast: 5 },
+      instability: { expiresAtTick: 50, grantedByCast: 7 },
+    });
+    clean.state = { ...clean.state, tick: 100 };
+    clean.state = patchRanged(clean.state, { searingWinds: newSearingWinds() });
+    clean.state = patchMagic(clean.state, {
+      sunshine: newSunshine(),
+      instability: newInstability(),
+    });
+    live.state = { ...live.state, tick: 30 };
+    live.state = patchRanged(live.state, {
+      searingWinds: { expiresAtTick: 50, grantedByCast: 3 },
+    });
+    live.state = patchMagic(live.state, {
+      sunshine: { startsAtTick: 21, expiresAtTick: 71, grantedByCast: 5 },
+      instability: { expiresAtTick: 80, grantedByCast: 7 },
+    });
+    // Different live granted must still split (do not drop while window open).
+    const liveAlt = snapshotRuntime(live);
+    liveAlt.state = patchRanged(liveAlt.state, {
+      searingWinds: { expiresAtTick: 50, grantedByCast: 9 },
+    });
+    liveAlt.state = patchMagic(liveAlt.state, {
+      sunshine: { startsAtTick: 21, expiresAtTick: 71, grantedByCast: 11 },
+      instability: { expiresAtTick: 80, grantedByCast: 13 },
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(liveAlt));
+    expect(branchKeyJson(live)).not.toBe(branchKeyJson(liveAlt));
     expect(
       mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
     ).toHaveLength(2);

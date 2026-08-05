@@ -34,7 +34,9 @@ export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
   "Per unique hit (Mod Sponge Discord): flat 5% of maximum life as crit-eligible bonus damage attached to the parent hit",
   "Works with other blessings on the same parent hits; does not recurse onto blessing-generated damage",
   "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
-  "Still unverified: live crit eligibility, DoT/conjure edge cases if any; exact formula stage details",
+  // Shared blessingRider with Cinders: player direct/DoT/command + conjure auto/poison; no on-hit rolls on conjure.
+  "Rides conjure auto and poison (same blessingRider gate as Abyssal Cinders); Inferno/Light stay direct-only",
+  "Still unverified vs live: crit eligibility, Reflect, hit-cap treatment, exact formula stage",
 ] as const;
 
 export interface ResolvedLeagueRules {

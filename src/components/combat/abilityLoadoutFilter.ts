@@ -35,7 +35,7 @@ export function filterAbilitiesForLoadout(
   );
 }
 
-/** Display/sim spec: rewrite base ultimate to equipped upgrade when passive is live. */
+/** Display/sim spec: base->upgrade when passive live; upgrade->base when not. */
 export function equipAbilityForLoadout(
   ability: AbilitySpec,
   byId: ReadonlyMap<string, AbilitySpec>,

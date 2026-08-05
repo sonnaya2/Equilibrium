@@ -228,9 +228,11 @@ export type AbilityAvailabilityOptions = {
 };
 
 /**
- * When a replacement-group upgrade's passive is active, return that upgrade.
- * Base abilities (no requiredPassiveAnyOf) map to the unlocked peer (e.g. Overpower
- * -> Overpower (Igneous) with Kal-Ket). Locked upgrades and unrelated ids are unchanged.
+ * Map base <-> equipment upgrade in a replacementGroup from live passives.
+ * Base (no requiredPassiveAnyOf) -> upgrade when peer passive is live
+ * (Overpower -> Overpower (Igneous) with Kal-Ket).
+ * Upgrade with unmet passive -> base peer (bars/queues restore base id/name).
+ * Upgrade with live passive keeps identity. Wrong-style cape does not rewrite.
  * `byId` preferred for full specs; else `groupPeers` when entries are full AbilitySpecs.
  */
 export function resolveEquippedAbilityVariant(
@@ -242,10 +244,9 @@ export function resolveEquippedAbilityVariant(
     groupPeers?: readonly AbilitySpec[];
   } = {},
 ): AbilitySpec {
+  if (!ability.replacementGroup) return ability;
+
   const passives = options.passiveIds ?? passiveIdsFromEquipmentIds(options.equipmentIds);
-  if (!passives.length || !ability.replacementGroup) return ability;
-  // Only rewrite bases; already-upgrade ids keep identity for cast legality.
-  if (ability.requiredPassiveAnyOf?.length) return ability;
 
   let peers: readonly AbilitySpec[] = options.groupPeers ?? [];
   if (options.byId) {
@@ -255,6 +256,22 @@ export function resolveEquippedAbilityVariant(
     }
     peers = list;
   }
+
+  // Passive-gated upgrade: keep when live; reverse to base peer when not.
+  if (ability.requiredPassiveAnyOf?.length) {
+    if (ability.requiredPassiveAnyOf.some((p) => passives.includes(p))) {
+      return ability;
+    }
+    for (const peer of peers) {
+      if (peer.id === ability.id) continue;
+      if (peer.requiredPassiveAnyOf?.length) continue;
+      return peer;
+    }
+    return ability;
+  }
+
+  // Base: rewrite to upgrade peer when its passive is live.
+  if (!passives.length) return ability;
   for (const peer of peers) {
     if (peer.id === ability.id) continue;
     if (!peer.requiredPassiveAnyOf?.length) continue;
@@ -264,7 +281,7 @@ export function resolveEquippedAbilityVariant(
   return ability;
 }
 
-/** Rewrite bar/rotation ids through equipment upgrades (pool/catalogue byId). */
+/** Rewrite bar/rotation ids through equipment upgrades or reverse to base. */
 export function resolveEquippedAbilityId(
   id: string,
   byId: ReadonlyMap<string, AbilitySpec>,

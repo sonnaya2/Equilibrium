@@ -70,7 +70,7 @@ const NO_BLESSING_DAMAGE: BlessingHitEligibility = { rider: false, onHit: false 
 
 /**
  * Blessing eligibility from DamageCapabilities.
- * Rider (Cinders/Big Boned) on direct+DoT+command; onHit on direct only.
+ * Rider (Cinders/Big Boned) on direct+DoT+command+conjure; onHit on direct only.
  * Attached always ineligible. No recursion on blessing damage.
  */
 export function blessingHitEligibility(

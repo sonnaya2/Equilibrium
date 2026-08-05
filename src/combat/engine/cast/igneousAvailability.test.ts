@@ -61,19 +61,16 @@ describe("igneous cast legality and shared cooldown", () => {
   ];
 
   for (const p of pairs) {
-    it(`${p.label}: rejects locked upgrade without mutating state`, () => {
-      const igneous = ability(p.abilities, p.igneousId);
-      const without = createCastContext({
+    it(`${p.label}: upgrade id without cape casts base`, () => {
+      const s = simulate({
         ...p.input,
         abilities: p.abilities,
         startingAdrenaline: 100,
+        rotation: rotationOf(p.igneousId),
       });
-      const before = structuredClone(without.getState());
-      expect(without.performCast(igneous, 0, false)).toMatchObject({
-        ok: false,
-        error: p.unlockMessage,
-      });
-      expect(without.getState()).toEqual(before);
+      expect(s.ok).toBe(true);
+      expect(s.casts.some((c) => c.abilityId === p.baseId)).toBe(true);
+      expect(s.casts.every((c) => c.abilityId !== p.igneousId)).toBe(true);
     });
 
     it(`${p.label}: style cape unlocks cast and shares cooldown with base`, () => {
@@ -107,7 +104,7 @@ describe("igneous cast legality and shared cooldown", () => {
       expect(withZuk.performCast(igneous, 0, false).ok).toBe(true);
     });
 
-    it(`${p.label}: revolution skips locked upgrade`, () => {
+    it(`${p.label}: revolution bar with upgrade id without cape casts base`, () => {
       const igneous = ability(p.abilities, p.igneousId);
       const revo = simulateRevolution({
         ...p.input,
@@ -115,10 +112,14 @@ describe("igneous cast legality and shared cooldown", () => {
         startingAdrenaline: 100,
         bar: [igneous],
         style: p.style,
-        durationTicks: 7,
+        durationTicks: 12,
       });
       expect(revo.ok).toBe(true);
-      expect(revo.casts.every((cast) => cast.abilityId !== p.igneousId)).toBe(true);
+      const casts = revo.casts.filter(
+        (c) => c.abilityId === p.baseId || c.abilityId === p.igneousId,
+      );
+      expect(casts.length).toBeGreaterThan(0);
+      expect(casts.every((c) => c.abilityId === p.baseId)).toBe(true);
     });
 
     it(`${p.label}: bar with base id + style cape casts upgrade, not base`, () => {
@@ -159,9 +160,25 @@ describe("igneous cast legality and shared cooldown", () => {
     });
   }
 
-  it("removing cape between runs does not leak prior capability", () => {
-    const igneous = ability(MELEE_ABILITIES, "overpower_igneous");
-    const withCape = createCastContext({
+  it("wrong cape (kal-xil) keeps base overpower on rotation", () => {
+    const effects = activeEquipmentEffects({
+      equipmentSlots: { cape: "item:igneous-kal-xil" },
+    });
+    const s = simulate({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:igneous-kal-xil"],
+      equipmentEffects: effects,
+      rotation: rotationOf("overpower"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.some((c) => c.abilityId === "overpower")).toBe(true);
+    expect(s.casts.every((c) => c.abilityId !== "overpower_igneous")).toBe(true);
+  });
+
+  it("removing cape between runs reverses upgrade to base (no igneous leak)", () => {
+    const withCape = simulate({
       ...baseInput,
       abilities: MELEE_ABILITIES,
       startingAdrenaline: 100,
@@ -169,15 +186,21 @@ describe("igneous cast legality and shared cooldown", () => {
       equipmentEffects: activeEquipmentEffects({
         equipmentSlots: { cape: "item:igneous-kal-ket" },
       }),
+      rotation: rotationOf("overpower_igneous"),
     });
-    expect(withCape.performCast(igneous, 0, false).ok).toBe(true);
+    expect(withCape.ok).toBe(true);
+    expect(withCape.casts.some((c) => c.abilityId === "overpower_igneous")).toBe(true);
+    expect(withCape.casts.every((c) => c.abilityId !== "overpower")).toBe(true);
 
-    const without = createCastContext({
+    const without = simulate({
       ...baseInput,
       abilities: MELEE_ABILITIES,
       startingAdrenaline: 100,
+      rotation: rotationOf("overpower_igneous"),
     });
-    expect(without.performCast(igneous, 0, false).ok).toBe(false);
+    expect(without.ok).toBe(true);
+    expect(without.casts.some((c) => c.abilityId === "overpower")).toBe(true);
+    expect(without.casts.every((c) => c.abilityId !== "overpower_igneous")).toBe(true);
   });
 
   it("melee Overpower (Igneous) is two simultaneous hits", () => {

@@ -436,7 +436,7 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
 
   /**
    * 4. Necromancy conjures - conduit shape + First Necro-style conjure mults.
-   * Conjures are partially-modeled in the catalogue; includePartial unlocks them.
+   * Conjure summons are solver-eligible (Spirit Pact III notes only).
    * Seeds use real engine ids (`conjure_skeleton_warrior`, etc.).
    */
   {
@@ -452,7 +452,6 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
         weaponConfiguration: "necromancy",
         conjureBasicDamageMult: 1.12,
         conjureDurationMult: 1.1,
-        includePartial: true,
         durationTicks: 90,
         exploreDurationTicks: 30,
         authoredSeedBars: [

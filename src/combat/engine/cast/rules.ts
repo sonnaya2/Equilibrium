@@ -53,8 +53,8 @@ export function groupPeersFromById(
 }
 
 /**
- * Map base ultimate to equipped upgrade (Igneous 2-hit Overpower, etc.) then
- * apply permanent loadout gate with group peers so the base is superseded.
+ * Map base <-> equipped upgrade (Igneous 2-hit Overpower, etc.) then apply
+ * permanent loadout gate with group peers so the base is superseded when upgraded.
  */
 export function resolveCastAbility(
   ability: AbilitySpec,

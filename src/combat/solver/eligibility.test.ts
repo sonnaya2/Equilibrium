@@ -152,6 +152,17 @@ describe("igneous passive pool filtering", () => {
     expect(withCape.ids).toContain("overpower_igneous");
     expect(withCape.ids).not.toContain("overpower");
 
+    const necroBase = buildCandidatePool(specs, "necromancy");
+    expect(necroBase.ids).toContain("death_skulls");
+    expect(necroBase.ids).not.toContain("death_skulls_igneous");
+
+    const withMor = buildCandidatePool(specs, "necromancy", {
+      equipmentIds: ["item:igneous-kal-mor"],
+      passiveIds: ["igneous-death-skulls"],
+    });
+    expect(withMor.ids).toContain("death_skulls_igneous");
+    expect(withMor.ids).not.toContain("death_skulls");
+
     const withZuk = buildCandidatePool(specs, "necromancy", {
       equipmentIds: ["item:igneous-kal-zuk"],
       passiveIds: [
@@ -160,10 +171,36 @@ describe("igneous passive pool filtering", () => {
         "igneous-omnipower",
         "igneous-death-skulls",
       ],
-      includePartial: true,
     });
     expect(withZuk.ids).toContain("death_skulls_igneous");
     expect(withZuk.ids).not.toContain("death_skulls");
+  });
+
+  it("includes death_skulls_igneous with Kal-Mor without includePartial on the bar", async () => {
+    const { allEngineSpecs } = await import("../abilities/registry");
+    const withMor = buildCandidatePool(allEngineSpecs(), "necromancy", {
+      equipmentIds: ["item:igneous-kal-mor"],
+      passiveIds: ["igneous-death-skulls"],
+    });
+    expect(withMor.ids).toContain("death_skulls_igneous");
+    expect(
+      validateBarEligibility(["death_skulls_igneous"], withMor, { includePartial: false }),
+    ).toEqual([]);
+  });
+
+  it("includes conjure summons for necromancy style without includePartial", async () => {
+    const { allEngineSpecs } = await import("../abilities/registry");
+    const pool = buildCandidatePool(allEngineSpecs(), "necromancy", {
+      weaponConfiguration: "necromancy",
+    });
+    expect(pool.ids).toContain("conjure_skeleton_warrior");
+    expect(pool.ids).toContain("conjure_undead_army");
+    expect(pool.ids).toContain("command_skeleton_warrior");
+    expect(
+      validateBarEligibility(["conjure_skeleton_warrior", "conjure_undead_army"], pool, {
+        includePartial: false,
+      }),
+    ).toEqual([]);
   });
 });
 

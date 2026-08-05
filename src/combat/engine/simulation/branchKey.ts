@@ -16,7 +16,9 @@ import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
  * - Future: live state, pending queue, live derived hitDetails, spirit tracks/meta/hits
  * - Presentation/history (omitted): endTick, total* ledgers, casts/events logs
  * - Historical normalize: expired cooldowns/charges; frost/haunted/ghost/tsunami/blast;
- *   expired burns/bleeds; expired puncture via activePuncture; expired berserk via endBerserk
+ *   expired burns/bleeds; expired puncture via activePuncture; expired berserk via endBerserk;
+ *   half-open untils (chaos/fury/meteor/endless/NI/vestments/relentless/LD/flow);
+ *   searing/sunshine/instability expires + granted only while live
  * - Allocators omitted (merge takes max): nextSeq, nextCastSeq
  * - Map keys sorted so insertion order never blocks equivalence
  *
@@ -45,6 +47,14 @@ function n(v: number | undefined | null, d = 0): string {
 function s(v: string | null | undefined): string {
   if (v == null || v === "") return "0" + US;
   return String(v.length) + US + v;
+}
+
+/**
+ * Half-open until clock: active while tick < until (cast/land use candidate < until).
+ * Residue at/after until ≡ 0 so expired windows merge with never-set.
+ */
+function halfOpenUntil(until: number, tick: number): number {
+  return until > tick ? until : 0;
 }
 
 /**
@@ -192,20 +202,41 @@ function encodeState(state: RotationState): string {
   const berserkUntil = berserkExpired ? 0 : m.berserkUntilTick;
   // Expired puncture zeros stacks/stored/pending; keeps generation + lastCompletedCastSeq.
   const punc = activePuncture(r.puncture, tick);
+  // Half-open buff/lockout clocks: cast/land treat tick >= until as inactive.
+  const vestmentsUntil = halfOpenUntil(state.vestmentsAdrenalineUntilTick, tick);
+  const relentlessUntil = halfOpenUntil(state.relentlessUntilTick, tick);
+  const naturalInstinctUntil = halfOpenUntil(state.naturalInstinctUntilTick, tick);
+  const chaosRoarUntil = halfOpenUntil(m.chaosRoarUntilTick, tick);
+  const greaterFuryUntil = halfOpenUntil(m.greaterFuryUntilTick, tick);
+  const meteorStrikeUntil = halfOpenUntil(m.meteorStrikeUntilTick, tick);
+  const endlessAssaultUntil = halfOpenUntil(m.endlessAssaultUntilTick, tick);
+  // Searing / sunshine / instability: expires residue + granted only while live.
+  const searingExpires = halfOpenUntil(r.searingWinds.expiresAtTick, tick);
+  const searingGranted =
+    searingExpires > 0 ? r.searingWinds.grantedByCast : undefined;
+  const sunExpires = halfOpenUntil(g.sunshine.expiresAtTick, tick);
+  const sunStarts = sunExpires > 0 ? g.sunshine.startsAtTick : 0;
+  const sunGranted = sunExpires > 0 ? g.sunshine.grantedByCast : undefined;
+  const instExpires = halfOpenUntil(g.instability.expiresAtTick, tick);
+  const instGranted = instExpires > 0 ? g.instability.grantedByCast : -1;
+  // Flow: expired until zeros reduction (consume path clears both together).
+  const flowUntil = halfOpenUntil(g.flowUntilTick, tick);
+  const flowReduction = flowUntil > 0 ? g.flowReduction : 0;
+  const livingDeathUntil = halfOpenUntil(res.livingDeathUntilTick, tick);
   const parts: string[] = [
     n(tick),
     n(state.adrenaline),
     n(state.adrenalineCap),
     b(state.ringOfVigour),
-    n(state.vestmentsAdrenalineUntilTick),
+    n(vestmentsUntil),
     recordLiveReadyAt(state.cooldowns as Record<string, number>, tick),
     recordChargeLists(state.charges as Record<string, readonly number[]>, tick),
-    n(state.relentlessUntilTick),
+    n(relentlessUntil),
     n(inv.cracklingReadyTick),
     n(inv.aftershockCharge),
     n(inv.aftershockReadyTick),
     b(inv.aftershockPending),
-    n(state.naturalInstinctUntilTick),
+    n(naturalInstinctUntil),
     // league optional
     state.league
       ? "1" +
@@ -218,11 +249,11 @@ function encodeState(state: RotationState): string {
     n(bloodlust.stacks),
     b(bloodlust.berserk),
     n(berserkUntil),
-    n(m.chaosRoarUntilTick),
-    n(m.greaterFuryUntilTick),
+    n(chaosRoarUntil),
+    n(greaterFuryUntil),
     b(m.furyCritBonus),
-    n(m.meteorStrikeUntilTick),
-    n(m.endlessAssaultUntilTick),
+    n(meteorStrikeUntil),
+    n(endlessAssaultUntil),
     s(m.bleedChainNext),
     n(m.bleedChainUntilTick),
     n(m.enduringRuin.nextAttackBonus),
@@ -239,8 +270,8 @@ function encodeState(state: RotationState): string {
     // ranged
     n(r.swiftness.startsAtTick),
     n(r.swiftness.expiresAtTick),
-    n(r.searingWinds.expiresAtTick),
-    r.searingWinds.grantedByCast === undefined ? "" : n(r.searingWinds.grantedByCast),
+    n(searingExpires),
+    searingGranted === undefined ? "" : n(searingGranted),
     n(r.shadowImbued.expiresAtTick),
     n(r.deathspore.stacks),
     n(r.deathspore.freeCastUntilTick),
@@ -254,29 +285,25 @@ function encodeState(state: RotationState): string {
     // magic
     n(g.runicCharge.cooldownUntilTick),
     n(g.runicCharge.animaUntilTick),
-    n(g.sunshine.startsAtTick),
-    n(g.sunshine.expiresAtTick),
-    g.sunshine.grantedByCast === undefined ? "" : n(g.sunshine.grantedByCast),
-    n(g.instability.expiresAtTick),
-    n(g.instability.grantedByCast),
-    n(g.flowUntilTick),
-    n(g.flowReduction),
+    n(sunStarts),
+    n(sunExpires),
+    sunGranted === undefined ? "" : n(sunGranted),
+    n(instExpires),
+    n(instGranted),
+    n(flowUntil),
+    n(flowReduction),
     n(g.concCritStacks),
     n(g.concCritPerStackPct),
     n(g.channelledMight.startsAtTick),
     n(g.channelledMight.expiresAtTick),
     n(g.channelledMight.critDamageBonus),
     // Tsunami / Blast Infused: expired until ≡ 0 for post-window merge.
-    n(g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= tick
-      ? 0
-      : g.tsunamiCritAdrenUntilTick),
-    n(g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= tick
-      ? 0
-      : g.blastInfusedUntilTick),
+    n(halfOpenUntil(g.tsunamiCritAdrenUntilTick, tick)),
+    n(halfOpenUntil(g.blastInfusedUntilTick, tick)),
     // necromancy resources
     n(res.residualSouls),
     n(res.necrosisStacks),
-    n(res.livingDeathUntilTick),
+    n(livingDeathUntil),
     b(res.lantern),
     n(res.spectralScythe2UntilTick),
     n(res.spectralScythe3UntilTick),
@@ -398,40 +425,70 @@ export function branchKeyJson(rt: SimulationRuntime): string {
       : rt.state.target.haunted.untilTick;
   const g = rt.state.magic;
   const m = rt.state.melee;
+  const r = rt.state.ranged;
+  const res = rt.state.necromancy.resources;
   const berserkExpired = m.berserkUntilTick <= tick;
   const bloodlust =
     m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
-  const punc = activePuncture(rt.state.ranged.puncture, tick);
+  const punc = activePuncture(r.puncture, tick);
+  const searingExpires = halfOpenUntil(r.searingWinds.expiresAtTick, tick);
+  const sunExpires = halfOpenUntil(g.sunshine.expiresAtTick, tick);
+  const instExpires = halfOpenUntil(g.instability.expiresAtTick, tick);
+  const flowUntil = halfOpenUntil(g.flowUntilTick, tick);
   // Expiry + live CD/charges + map order: match structural distinguishability.
   const stateForKey = {
     ...rt.state,
+    vestmentsAdrenalineUntilTick: halfOpenUntil(rt.state.vestmentsAdrenalineUntilTick, tick),
+    relentlessUntilTick: halfOpenUntil(rt.state.relentlessUntilTick, tick),
+    naturalInstinctUntilTick: halfOpenUntil(rt.state.naturalInstinctUntilTick, tick),
     cooldowns: liveCooldownsForKey(rt.state.cooldowns as Record<string, number>, tick),
     charges: liveChargesForKey(rt.state.charges as Record<string, readonly number[]>, tick),
     melee: {
       ...m,
       bloodlust,
       berserkUntilTick: berserkExpired ? 0 : m.berserkUntilTick,
+      chaosRoarUntilTick: halfOpenUntil(m.chaosRoarUntilTick, tick),
+      greaterFuryUntilTick: halfOpenUntil(m.greaterFuryUntilTick, tick),
+      meteorStrikeUntilTick: halfOpenUntil(m.meteorStrikeUntilTick, tick),
+      endlessAssaultUntilTick: halfOpenUntil(m.endlessAssaultUntilTick, tick),
       // Match structural: expired ice -> empty unit mass (Icy Tempest / Leng future).
       primordialIce: expirePrimordialIce(m.primordialIce, tick),
       frostbladesUntilTick: normalizeLengFrostUntil(m.frostbladesUntilTick, tick),
     },
     ranged: {
-      ...rt.state.ranged,
+      ...r,
       puncture: punc,
+      searingWinds: {
+        expiresAtTick: searingExpires,
+        ...(searingExpires > 0 && r.searingWinds.grantedByCast !== undefined
+          ? { grantedByCast: r.searingWinds.grantedByCast }
+          : {}),
+      },
     },
     magic: {
       ...g,
-      tsunamiCritAdrenUntilTick:
-        g.tsunamiCritAdrenUntilTick > 0 && g.tsunamiCritAdrenUntilTick <= tick
-          ? 0
-          : g.tsunamiCritAdrenUntilTick,
-      blastInfusedUntilTick:
-        g.blastInfusedUntilTick > 0 && g.blastInfusedUntilTick <= tick
-          ? 0
-          : g.blastInfusedUntilTick,
+      sunshine: {
+        startsAtTick: sunExpires > 0 ? g.sunshine.startsAtTick : 0,
+        expiresAtTick: sunExpires,
+        ...(sunExpires > 0 && g.sunshine.grantedByCast !== undefined
+          ? { grantedByCast: g.sunshine.grantedByCast }
+          : {}),
+      },
+      instability: {
+        expiresAtTick: instExpires,
+        grantedByCast: instExpires > 0 ? g.instability.grantedByCast : -1,
+      },
+      flowUntilTick: flowUntil,
+      flowReduction: flowUntil > 0 ? g.flowReduction : 0,
+      tsunamiCritAdrenUntilTick: halfOpenUntil(g.tsunamiCritAdrenUntilTick, tick),
+      blastInfusedUntilTick: halfOpenUntil(g.blastInfusedUntilTick, tick),
     },
     necromancy: {
       ...rt.state.necromancy,
+      resources: {
+        ...res,
+        livingDeathUntilTick: halfOpenUntil(res.livingDeathUntilTick, tick),
+      },
       conjures: {
         spirits: rt.state.necromancy.conjures.spirits.map((c) =>
           c.id === "vengeful_ghost"

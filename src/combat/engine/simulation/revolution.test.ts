@@ -516,6 +516,104 @@ describe("revolution — channels and horizon", () => {
   });
 });
 
+/**
+ * Post-summon spirit management under Revolution (beyond pool eligibility).
+ * Summon schedules tracks; advanceTo / channel occupancy / terminal drain land
+ * autos; commands gate on active conjure; re-summon after expiry re-keys tracks.
+ */
+describe("revolution — conjure post-summon management", () => {
+  const necroRevo = {
+    ...baseInput,
+    abilities: [...ENGINE_SPECS.values()],
+    style: "necromancy" as const,
+    weaponConfiguration: "necromancy" as const,
+  };
+
+  it("summons then auto-attacks on skeleton cadence (7 then every 5)", () => {
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_skeleton_warrior")],
+      durationTicks: 40,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts[0]?.abilityId).toBe("conjure_skeleton_warrior");
+    const autos = s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick);
+    // First auto cast+7; interval 5 through exclusive end of horizon.
+    expect(autos).toEqual([7, 12, 17, 22, 27, 32, 37]);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    expect(s.analysis.bySource.some((r) => r.kind === "conjure-or-familiar" && r.damage > 0)).toBe(
+      true,
+    );
+  });
+
+  it("command skeleton waits for active conjure and the 6-tick initial lockout", () => {
+    // Short horizon: one command only (wiki 15s CD ≈ 25 ticks).
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("command_skeleton_warrior"), abilitySpec("conjure_skeleton_warrior")],
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`).slice(0, 4)).toEqual([
+      "conjure_skeleton_warrior@0",
+      "necromancy_basic@3",
+      "command_skeleton_warrior@6",
+      "necromancy_basic@9",
+    ]);
+    expect(s.casts.filter((c) => c.abilityId === "command_skeleton_warrior")).toHaveLength(1);
+    // Command hits land at activation+2..+11; initial lockout blocked earlier ticks.
+    const cmdHits = s.events.filter((e) => e.abilityId === "command_skeleton_warrior");
+    expect(cmdHits.map((e) => e.tick)).toEqual([8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+  });
+
+  it("undead army schedules three spirit auto tracks and zombie poison", () => {
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_undead_army")],
+      durationTicks: 40,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_vengeful_ghost"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_putrid_zombie"]).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_putrid_zombie_poison"]).toBeGreaterThan(0);
+    expect(s.events.filter((e) => e.family === "conjureAuto").length).toBeGreaterThan(0);
+    expect(s.events.filter((e) => e.family === "poison").length).toBeGreaterThan(0);
+  });
+
+  it("re-summons after Spirit Pact expiry and restarts auto cadence", () => {
+    // SP3 exclusive until = cast + 105; second summon at 105 with first auto at 112.
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("conjure_skeleton_warrior")],
+      durationTicks: 130,
+    });
+    expect(s.ok).toBe(true);
+    const skelCasts = s.casts.filter((c) => c.abilityId === "conjure_skeleton_warrior");
+    expect(skelCasts.map((c) => c.tick)).toEqual([0, 105]);
+    const autos = s.events.filter((e) => e.family === "conjureAuto").map((e) => e.tick);
+    expect(autos).toContain(102);
+    expect(autos).toContain(112);
+    expect(autos.filter((t) => t >= 112)).toEqual([112, 117, 122, 127]);
+  });
+
+  it("score-only totals include spirit auto EV (presentation ledgers empty)", () => {
+    const input = {
+      ...necroRevo,
+      bar: [abilitySpec("conjure_skeleton_warrior")],
+      durationTicks: 40,
+    };
+    const full = simulateRevolution(input, { detailLevel: "full-analysis" });
+    const score = simulateRevolution(input, { detailLevel: "score-only" });
+    expect(full.ok && score.ok).toBe(true);
+    expect(score.totalExpected).toBeCloseTo(full.totalExpected, 10);
+    expect(full.perAbility["spirit_skeleton_warrior"]).toBeGreaterThan(0);
+    // Score-only omits perAbility / event history by design; damage still lands.
+    expect(score.perAbility["spirit_skeleton_warrior"]).toBeUndefined();
+    expect(score.events).toEqual([]);
+  });
+});
+
 describe("strict-priority resource divergence (Vigour)", () => {
   const revoBase = {
     ...baseInput,

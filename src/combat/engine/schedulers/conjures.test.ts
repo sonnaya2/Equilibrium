@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { resolveLeagueRules } from "../../league/ruleset";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { necroInput as necroFixtureInput } from "../../test/fixtures/inputs";
 import { abilityById, lastCast } from "../../test/helpers/summary";
@@ -182,6 +183,97 @@ describe("conjure event provenance", () => {
     for (const e of autos) {
       expect(e.provenance).toEqual({ kind: "conjure_auto", detail: "skeleton_warrior" });
     }
+  });
+});
+
+describe("blessing riders on conjure auto and poison", () => {
+  // 5% of max life as flat rider (wiki Big Boned).
+  const bigBoned = resolveLeagueRules(
+    { ruleset: "equilibrium", blessingPicks: ["Balance"] },
+    { maximumLife: 15_000 },
+  );
+  const cinders = resolveLeagueRules(
+    { ruleset: "equilibrium", blessingPicks: ["Chaos", "Chaos"] },
+    { maximumLife: 15_000 },
+  );
+  const bbExpected = 750; // 0.05 * 15_000
+
+  it("Big Boned rides each skeleton conjure auto land", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      league: bigBoned,
+      crit: { chance: 0 },
+      context: { style: "necromancy", ruleset: "equilibrium" },
+      rotation: rotationOf("conjure_skeleton_warrior", ...Array(12).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    const autos = s.events.filter((e) => e.family === "conjureAuto");
+    expect(autos.length).toBeGreaterThan(0);
+    const ridersOnAutos = s.events.filter(
+      (e) =>
+        e.abilityId === "big-boned" &&
+        e.derivedFrom !== undefined &&
+        autos.some((a) => a.seq === e.derivedFrom),
+    );
+    expect(ridersOnAutos).toHaveLength(autos.length);
+    for (const rider of ridersOnAutos) {
+      expect(rider.attached).toBe(true);
+      expect(rider.damageTag).toBe("bonus-damage");
+      expect(rider.damage.expected).toBe(bbExpected);
+      expect(rider.originKind).toBe("conjure");
+    }
+  });
+
+  it("Big Boned rides putrid zombie poison ticks", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      league: bigBoned,
+      crit: { chance: 0 },
+      context: { style: "necromancy", ruleset: "equilibrium" },
+      rotation: rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    const poisons = s.events.filter((e) => e.family === "poison");
+    expect(poisons.length).toBeGreaterThan(0);
+    const ridersOnPoison = s.events.filter(
+      (e) =>
+        e.abilityId === "big-boned" &&
+        e.derivedFrom !== undefined &&
+        poisons.some((p) => p.seq === e.derivedFrom),
+    );
+    expect(ridersOnPoison).toHaveLength(poisons.length);
+    for (const rider of ridersOnPoison) {
+      expect(rider.attached).toBe(true);
+      expect(rider.damage.expected).toBe(bbExpected);
+      expect(rider.originKind).toBe("conjure");
+    }
+  });
+
+  it("Cinders rides conjure autos without Inferno on-hit rolls", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      league: cinders,
+      crit: { chance: 0 },
+      context: { style: "necromancy", ruleset: "equilibrium" },
+      rotation: rotationOf("conjure_skeleton_warrior", ...Array(12).fill("necromancy_basic")),
+    });
+    expect(s.ok).toBe(true);
+    const autos = s.events.filter((e) => e.family === "conjureAuto");
+    expect(autos.length).toBeGreaterThan(0);
+    const cindersOnAutos = s.events.filter(
+      (e) =>
+        e.abilityId === "abyssal-cinders" &&
+        e.derivedFrom !== undefined &&
+        autos.some((a) => a.seq === e.derivedFrom),
+    );
+    expect(cindersOnAutos).toHaveLength(autos.length);
+    const infernoOnAutos = s.events.filter(
+      (e) =>
+        e.abilityId === "inferno-of-zamorak" &&
+        e.derivedFrom !== undefined &&
+        autos.some((a) => a.seq === e.derivedFrom),
+    );
+    expect(infernoOnAutos).toHaveLength(0);
   });
 });
 

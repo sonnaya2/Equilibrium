@@ -55,15 +55,24 @@ export function scheduleBlessingDamage(
   const eligible = blessingHitEligibility(source, event.attached);
   if (!eligible.rider && !eligible.onHit) return;
   const ability = rt.byId.get(event.abilityId);
-  if (!ability) return;
+  // Spirit auto/poison ledger ids are not bar AbilitySpecs; rider path uses a stub.
+  if (!ability && !eligible.rider) return;
+  const style = ability?.style ?? rt.input.context?.style ?? "necromancy";
+  const resolvedAbility = ability ?? {
+    id: event.abilityId,
+    name: event.abilityId,
+    style,
+    category: "basic" as const,
+    hits: [],
+  };
   const modifiers =
     typeof rt.input.modifiers === "function"
-      ? rt.input.modifiers(ability)
+      ? rt.input.modifiers(resolvedAbility)
       : (rt.input.modifiers ?? []);
   const lightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
   const components = leagueDamageComponents({
     rules: rt.input.league,
-    ability,
+    ability: resolvedAbility,
     hitIndex: event.hitIndex,
     source,
     attached: event.attached,
@@ -75,13 +84,14 @@ export function scheduleBlessingDamage(
     modifiers,
     context: {
       ...rt.input.context,
-      style: ability.style,
-      abilityCategory: ability.category,
-      autoAttack: ability.autoAttack,
-      area: ability.area,
+      style,
+      abilityCategory: resolvedAbility.category,
+      autoAttack: resolvedAbility.autoAttack,
+      area: resolvedAbility.area,
     },
     cap: rt.input.cap,
-    strikingLightReady: lightReady,
+    // Light needs a real bar basic/auto; stubs never open the gate.
+    strikingLightReady: ability != null && lightReady,
   });
   if (components.some((component) => component.effectId === "light-of-saradomin")) {
     const cooldown = blessingRule(rt.input.league, "striking-light")?.light?.cooldownTicks;

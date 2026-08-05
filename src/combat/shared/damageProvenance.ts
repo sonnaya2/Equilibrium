@@ -5,7 +5,7 @@ import type { BleedId, CombatContext, DamageOverTimeKind, OutgoingDamageSource }
  * Serializable plain object for branch signatures / IPC.
  *
  * wiki: Full Slayer Helmet / Salve apply to player direct attacks only (not DoT, conjure, procs).
- * Blessings: riders on direct+DoT+command; on-hit rolls on direct only; no recursion on blessing dmg.
+ * Blessings: riders on direct+DoT+command+conjure; on-hit rolls on direct only; no recursion on blessing dmg.
  * Abyssal Parasite stacks: only player_direct / player_auto (melee+passive gated at land).
  */
 
@@ -120,7 +120,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -129,11 +129,12 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
   },
+  // DoT-like: riders yes, on-hit rolls no (mirrors player_dot).
   conjure_poison: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,

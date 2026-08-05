@@ -3,6 +3,7 @@ import { activeEquipmentEffects } from "./equipment";
 import {
   equipmentRecordPassiveIds,
   resolveAbilityCastAvailability,
+  resolveEquippedAbilityId,
   resolveEquippedAbilityVariant,
 } from "./abilityAvailability";
 import { equipmentById } from "../data";
@@ -238,6 +239,44 @@ describe("resolveAbilityCastAvailability — igneous pairs", () => {
             passiveIds: [],
             byId,
           }).id,
+        ).toBe(c.base.id);
+        expect(resolveEquippedAbilityId(c.base.id, byId, { passiveIds: effects.passiveIds })).toBe(
+          c.upgrade.id,
+        );
+      });
+
+      it("without cape upgrade id resolves to base", () => {
+        const byId = new Map(c.peers.map((p) => [p.id, p]));
+        expect(
+          resolveEquippedAbilityVariant(c.upgrade, {
+            passiveIds: [],
+            byId,
+          }).id,
+        ).toBe(c.base.id);
+        expect(resolveEquippedAbilityId(c.upgrade.id, byId, { passiveIds: [] })).toBe(c.base.id);
+      });
+
+      it("wrong cape does not rewrite base to upgrade", () => {
+        const effects = activeEquipmentEffects({ equipmentSlots: { cape: c.wrongCape } });
+        const byId = new Map(c.peers.map((p) => [p.id, p]));
+        expect(
+          resolveEquippedAbilityVariant(c.base, {
+            passiveIds: effects.passiveIds,
+            equipmentIds: [c.wrongCape],
+            byId,
+          }).id,
+        ).toBe(c.base.id);
+        expect(
+          resolveEquippedAbilityId(c.base.id, byId, {
+            passiveIds: effects.passiveIds,
+            equipmentIds: [c.wrongCape],
+          }),
+        ).toBe(c.base.id);
+        expect(
+          resolveEquippedAbilityId(c.upgrade.id, byId, {
+            passiveIds: effects.passiveIds,
+            equipmentIds: [c.wrongCape],
+          }),
         ).toBe(c.base.id);
       });
     });

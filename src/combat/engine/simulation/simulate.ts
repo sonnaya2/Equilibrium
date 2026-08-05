@@ -33,7 +33,11 @@ import {
   type BranchExactness,
   type CastOutcomePlan,
 } from "./branch";
-import { castRejection, permanentCastBlock } from "../cast/rules";
+import {
+  castRejection,
+  permanentCastBlock,
+  resolveCastAbility,
+} from "../cast/rules";
 import { performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTickFor } from "../runtime/state";
@@ -116,16 +120,23 @@ function stepManualAction(
           continue;
         }
         const basic = current.rt.basicByStyle.get(ability.style);
+        const { ability: castAbility } = resolveCastAbility(ability, {
+          byId: current.rt.byId,
+          weaponConfiguration: current.rt.input.weaponConfiguration,
+          equipmentIds: current.rt.input.equipmentIds,
+          passiveIds: current.rt.input.equipmentEffects?.passiveIds,
+        });
         const castable =
-          firstLegalTickFor(current.rt.state, ability, current.rt.input.level) <=
+          firstLegalTickFor(current.rt.state, castAbility, current.rt.input.level) <=
             current.rt.state.tick &&
           castRejection(
             current.rt.state,
-            ability,
+            castAbility,
             current.rt.state.tick,
             current.rt.input.weaponConfiguration,
             current.rt.input.equipmentIds,
             current.rt.input.equipmentEffects?.passiveIds,
+            current.rt.byId,
           ) === null;
         if (castable || !basic) {
           done.push(current);

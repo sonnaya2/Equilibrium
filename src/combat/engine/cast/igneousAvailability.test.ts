@@ -120,6 +120,43 @@ describe("igneous cast legality and shared cooldown", () => {
       expect(revo.ok).toBe(true);
       expect(revo.casts.every((cast) => cast.abilityId !== p.igneousId)).toBe(true);
     });
+
+    it(`${p.label}: bar with base id + style cape casts upgrade, not base`, () => {
+      const effects = activeEquipmentEffects({ equipmentSlots: { cape: p.cape } });
+      const base = ability(p.abilities, p.baseId);
+      const revo = simulateRevolution({
+        ...p.input,
+        abilities: p.abilities,
+        startingAdrenaline: 100,
+        equipmentIds: [p.cape],
+        equipmentEffects: effects,
+        bar: [base],
+        style: p.style,
+        durationTicks: 12,
+      });
+      expect(revo.ok).toBe(true);
+      const casts = revo.casts.filter(
+        (c) => c.abilityId === p.baseId || c.abilityId === p.igneousId,
+      );
+      expect(casts.length).toBeGreaterThan(0);
+      expect(casts.every((c) => c.abilityId === p.igneousId)).toBe(true);
+      expect(casts.every((c) => c.abilityId !== p.baseId)).toBe(true);
+    });
+
+    it(`${p.label}: manual rotation of base id + style cape becomes upgrade`, () => {
+      const effects = activeEquipmentEffects({ equipmentSlots: { cape: p.cape } });
+      const s = simulate({
+        ...p.input,
+        abilities: p.abilities,
+        startingAdrenaline: 100,
+        equipmentIds: [p.cape],
+        equipmentEffects: effects,
+        rotation: rotationOf(p.baseId),
+      });
+      expect(s.ok).toBe(true);
+      expect(s.casts.some((c) => c.abilityId === p.igneousId)).toBe(true);
+      expect(s.casts.every((c) => c.abilityId !== p.baseId)).toBe(true);
+    });
   }
 
   it("removing cape between runs does not leak prior capability", () => {
@@ -141,6 +178,80 @@ describe("igneous cast legality and shared cooldown", () => {
       startingAdrenaline: 100,
     });
     expect(without.performCast(igneous, 0, false).ok).toBe(false);
+  });
+
+  it("melee Overpower (Igneous) is two simultaneous hits", () => {
+    const effects = activeEquipmentEffects({
+      equipmentSlots: { cape: "item:igneous-kal-ket" },
+    });
+    const s = simulate({
+      ...baseInput,
+      abilities: MELEE_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:igneous-kal-ket"],
+      equipmentEffects: effects,
+      rotation: rotationOf("overpower"),
+    });
+    expect(s.ok).toBe(true);
+    const ig = s.casts.find((c) => c.abilityId === "overpower_igneous");
+    expect(ig).toBeDefined();
+    expect(ig!.result.hits).toHaveLength(2);
+  });
+
+  it("ranged Deadshot (Igneous) is 8 hits", () => {
+    const effects = activeEquipmentEffects({
+      equipmentSlots: { cape: "item:igneous-kal-xil" },
+    });
+    const s = simulate({
+      ...rangedInput,
+      abilities: RANGED_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:igneous-kal-xil"],
+      equipmentEffects: effects,
+      rotation: rotationOf("deadshot"),
+    });
+    expect(s.ok).toBe(true);
+    const ig = s.casts.find((c) => c.abilityId === "deadshot_igneous");
+    expect(ig).toBeDefined();
+    expect(ig!.result.hits).toHaveLength(8);
+  });
+
+  it("magic Omnipower (Igneous) is 4 hits", () => {
+    const effects = activeEquipmentEffects({
+      equipmentSlots: { cape: "item:igneous-kal-mej" },
+    });
+    const s = simulate({
+      ...magicInput,
+      abilities: MAGIC_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:igneous-kal-mej"],
+      equipmentEffects: effects,
+      rotation: rotationOf("omnipower"),
+    });
+    expect(s.ok).toBe(true);
+    const ig = s.casts.find((c) => c.abilityId === "omnipower_igneous");
+    expect(ig).toBeDefined();
+    expect(ig!.result.hits).toHaveLength(4);
+  });
+
+  it("necro base death_skulls + Kal-Mor rewrites to 4-hit igneous schedule", () => {
+    const effects = activeEquipmentEffects({
+      equipmentSlots: { cape: "item:igneous-kal-mor" },
+    });
+    const s = simulate({
+      ...necroInput,
+      abilities: NECROMANCY_ABILITIES,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:igneous-kal-mor"],
+      equipmentEffects: effects,
+      rotation: rotationOf("death_skulls"),
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.some((c) => c.abilityId === "death_skulls_igneous")).toBe(true);
+    expect(s.casts.every((c) => c.abilityId !== "death_skulls")).toBe(true);
+    const events = s.events.filter((e) => e.abilityId === "death_skulls_igneous");
+    expect(events).toHaveLength(4);
+    expect(events.map((e) => e.tick)).toEqual([0, 2, 4, 6]);
   });
 });
 

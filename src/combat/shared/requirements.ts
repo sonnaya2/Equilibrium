@@ -228,6 +228,57 @@ export type AbilityAvailabilityOptions = {
 };
 
 /**
+ * When a replacement-group upgrade's passive is active, return that upgrade.
+ * Base abilities (no requiredPassiveAnyOf) map to the unlocked peer (e.g. Overpower
+ * -> Overpower (Igneous) with Kal-Ket). Locked upgrades and unrelated ids are unchanged.
+ * `byId` preferred for full specs; else `groupPeers` when entries are full AbilitySpecs.
+ */
+export function resolveEquippedAbilityVariant(
+  ability: AbilitySpec,
+  options: {
+    passiveIds?: readonly ItemPassiveId[];
+    equipmentIds?: readonly string[];
+    byId?: ReadonlyMap<string, AbilitySpec>;
+    groupPeers?: readonly AbilitySpec[];
+  } = {},
+): AbilitySpec {
+  const passives = options.passiveIds ?? passiveIdsFromEquipmentIds(options.equipmentIds);
+  if (!passives.length || !ability.replacementGroup) return ability;
+  // Only rewrite bases; already-upgrade ids keep identity for cast legality.
+  if (ability.requiredPassiveAnyOf?.length) return ability;
+
+  let peers: readonly AbilitySpec[] = options.groupPeers ?? [];
+  if (options.byId) {
+    const list: AbilitySpec[] = [];
+    for (const peer of options.byId.values()) {
+      if (peer.replacementGroup === ability.replacementGroup) list.push(peer);
+    }
+    peers = list;
+  }
+  for (const peer of peers) {
+    if (peer.id === ability.id) continue;
+    if (!peer.requiredPassiveAnyOf?.length) continue;
+    if (!peer.requiredPassiveAnyOf.some((p) => passives.includes(p))) continue;
+    return peer;
+  }
+  return ability;
+}
+
+/** Rewrite bar/rotation ids through equipment upgrades (pool/catalogue byId). */
+export function resolveEquippedAbilityId(
+  id: string,
+  byId: ReadonlyMap<string, AbilitySpec>,
+  options: {
+    passiveIds?: readonly ItemPassiveId[];
+    equipmentIds?: readonly string[];
+  } = {},
+): string {
+  const ability = byId.get(id);
+  if (!ability) return id;
+  return resolveEquippedAbilityVariant(ability, { ...options, byId }).id;
+}
+
+/**
  * Pure ability availability for UI, cast gates, Revolution, and solver pools.
  * Does not check adrenaline, cooldowns, or sequence windows.
  */

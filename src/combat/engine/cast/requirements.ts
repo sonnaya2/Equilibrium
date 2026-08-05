@@ -17,6 +17,8 @@ export {
   passiveIdsFromEquipmentIds,
   permanentAvailabilityBlock,
   resolveAbilityCastAvailability,
+  resolveEquippedAbilityId,
+  resolveEquippedAbilityVariant,
   weaponRequirementMessage,
   type AbilityAvailabilityOptions,
   type AbilityCastAvailability,

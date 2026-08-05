@@ -17,7 +17,11 @@ import type { AdrenalineRules } from "../simulation/contracts";
 import type { CastRngPointId } from "../simulation/contracts";
 import type { RotationState } from "../runtime/state";
 import { blessingRule, hasBlessing, type ResolvedLeagueRules } from "../../league/ruleset";
-import { permanentAvailabilityBlock, type WeaponConfiguration } from "./requirements";
+import {
+  permanentAvailabilityBlock,
+  resolveEquippedAbilityVariant,
+  type WeaponConfiguration,
+} from "./requirements";
 
 export {
   equipmentRecordPassiveIds,
@@ -28,10 +32,55 @@ export {
   passiveIdsFromEquipmentIds,
   permanentAvailabilityBlock,
   resolveAbilityCastAvailability,
+  resolveEquippedAbilityId,
+  resolveEquippedAbilityVariant,
   type AbilityAvailabilityOptions,
   type AbilityCastAvailability,
   type WeaponConfiguration,
 } from "./requirements";
+
+/** Peers sharing replacementGroup from a full ability index. */
+export function groupPeersFromById(
+  ability: AbilitySpec,
+  byId: ReadonlyMap<string, AbilitySpec>,
+): AbilitySpec[] {
+  if (!ability.replacementGroup) return [];
+  const out: AbilitySpec[] = [];
+  for (const peer of byId.values()) {
+    if (peer.replacementGroup === ability.replacementGroup) out.push(peer);
+  }
+  return out;
+}
+
+/**
+ * Map base ultimate to equipped upgrade (Igneous 2-hit Overpower, etc.) then
+ * apply permanent loadout gate with group peers so the base is superseded.
+ */
+export function resolveCastAbility(
+  ability: AbilitySpec,
+  options: {
+    byId?: ReadonlyMap<string, AbilitySpec>;
+    weaponConfiguration?: WeaponConfiguration;
+    equipmentIds?: readonly string[];
+    passiveIds?: readonly ItemPassiveId[];
+  } = {},
+): { ability: AbilitySpec; block: string | null } {
+  const resolved = resolveEquippedAbilityVariant(ability, {
+    byId: options.byId,
+    passiveIds: options.passiveIds,
+    equipmentIds: options.equipmentIds,
+  });
+  const peers = options.byId
+    ? groupPeersFromById(resolved, options.byId)
+    : undefined;
+  const block = permanentAvailabilityBlock(resolved, {
+    weaponConfiguration: options.weaponConfiguration,
+    equipmentIds: options.equipmentIds,
+    passiveIds: options.passiveIds,
+    groupPeers: peers,
+  });
+  return { ability: resolved, block };
+}
 
 /**
  * Cast legality rules. Each check takes the state and candidate tick the cast
@@ -118,11 +167,14 @@ export function permanentCastBlock(
   weaponConfiguration?: WeaponConfiguration,
   equipmentIds?: readonly string[],
   passiveIds?: readonly ItemPassiveId[],
+  byId?: ReadonlyMap<string, AbilitySpec>,
 ): string | null {
+  const peers = byId ? groupPeersFromById(ability, byId) : undefined;
   const loadoutBlock = permanentAvailabilityBlock(ability, {
     weaponConfiguration,
     equipmentIds,
     passiveIds,
+    groupPeers: peers,
   });
   if (loadoutBlock !== null) return loadoutBlock;
   const cost = costOf(state, ability, state.tick);
@@ -135,6 +187,8 @@ export function permanentCastBlock(
 /**
  * Requirement/affordability check against the state at the candidate tick.
  * Returns the rejection text, or null when the cast is legal.
+ * Callers should pass resolveEquippedAbilityVariant first (or use resolveCastAbility).
+ * byId supplies group peers so a bare base ultimate is rejected as superseded.
  */
 export function castRejection(
   state: RotationState,
@@ -143,11 +197,14 @@ export function castRejection(
   weaponConfiguration?: WeaponConfiguration,
   equipmentIds?: readonly string[],
   passiveIds?: readonly ItemPassiveId[],
+  byId?: ReadonlyMap<string, AbilitySpec>,
 ): string | null {
+  const peers = byId ? groupPeersFromById(ability, byId) : undefined;
   const loadoutBlock = permanentAvailabilityBlock(ability, {
     weaponConfiguration,
     equipmentIds,
     passiveIds,
+    groupPeers: peers,
   });
   if (loadoutBlock !== null) return loadoutBlock;
   if (

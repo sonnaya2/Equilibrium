@@ -1,6 +1,11 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { prepareCast, type PreparedCast } from "../cast/prepare";
-import { castRejection, candidateTick, rngPointsFor } from "../cast/rules";
+import {
+  castRejection,
+  candidateTick,
+  resolveCastAbility,
+  rngPointsFor,
+} from "../cast/rules";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
@@ -92,9 +97,17 @@ export function planCastOutcomes(
     return { plans: [], errors: [branch], residualWeight: 0, exactness: "exact" };
   }
 
+  // Igneous (etc.): base ultimate on the bar becomes the unlocked upgrade.
+  const { ability: castAbility } = resolveCastAbility(ability, {
+    byId: branch.rt.byId,
+    weaponConfiguration: branch.rt.input.weaponConfiguration,
+    equipmentIds: branch.rt.input.equipmentIds,
+    passiveIds: branch.rt.input.equipmentEffects?.passiveIds,
+  });
+
   const candidate = Math.max(
     candidateTick(branch.rt.state, readyTick),
-    firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level),
+    firstLegalTickFor(branch.rt.state, castAbility, branch.rt.input.level),
   );
   const advanced = advanceToBranches(branch, candidate, maxLive, intermediateMax);
 
@@ -107,20 +120,21 @@ export function planCastOutcomes(
     }
     const rejection = castRejection(
       at.rt.state,
-      ability,
+      castAbility,
       candidate,
       at.rt.input.weaponConfiguration,
       at.rt.input.equipmentIds,
       at.rt.input.equipmentEffects?.passiveIds,
+      at.rt.byId,
     );
     if (rejection) {
       errors.push({ ...at, error: rejection });
       continue;
     }
-    const prepared = prepareCast(at.rt, ability, candidate);
+    const prepared = prepareCast(at.rt, castAbility, candidate);
 
     // Icy Tempest: fork only on distinct post-cast adrenaline spends (at most 4 groups).
-    if (ability.id === "icy_tempest") {
+    if (castAbility.id === "icy_tempest") {
       const resolved = resolveIcyTempest(
         at.rt.state.melee.primordialIce,
         candidate,
@@ -131,7 +145,7 @@ export function planCastOutcomes(
         const groupPrepared: PreparedCast = { ...prepared, spend: group.spend };
         const points = rngPointsFor(
           at.rt.state,
-          ability,
+          castAbility,
           groupPrepared.candidate,
           groupPrepared.spend,
           at.rt.input.adrenaline,
@@ -164,7 +178,7 @@ export function planCastOutcomes(
 
     const points = rngPointsFor(
       at.rt.state,
-      ability,
+      castAbility,
       prepared.candidate,
       prepared.spend,
       at.rt.input.adrenaline,
@@ -197,7 +211,7 @@ export function planCastOutcomes(
   if (plans.length === 0 && errors.length === 0) {
     errors.push({
       ...branch,
-      error: `unable to prepare ${ability.id} at tick ${candidate}`,
+      error: `unable to prepare ${castAbility.id} at tick ${candidate}`,
     });
   }
   return {

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { activeEquipmentEffects } from "./equipment";
-import { equipmentRecordPassiveIds, resolveAbilityCastAvailability } from "./abilityAvailability";
+import {
+  equipmentRecordPassiveIds,
+  resolveAbilityCastAvailability,
+  resolveEquippedAbilityVariant,
+} from "./abilityAvailability";
 import { equipmentById } from "../data";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
@@ -212,6 +216,29 @@ describe("resolveAbilityCastAvailability — igneous pairs", () => {
           groupPeers: c.peers,
         }).available;
         expect(baseOk && upOk).toBe(false);
+      });
+
+      it("resolveEquippedAbilityVariant rewrites base to upgrade with cape", () => {
+        const effects = activeEquipmentEffects({ equipmentSlots: { cape: c.cape } });
+        const byId = new Map(c.peers.map((p) => [p.id, p]));
+        expect(
+          resolveEquippedAbilityVariant(c.base, {
+            passiveIds: effects.passiveIds,
+            byId,
+          }).id,
+        ).toBe(c.upgrade.id);
+        expect(
+          resolveEquippedAbilityVariant(c.upgrade, {
+            passiveIds: effects.passiveIds,
+            byId,
+          }).id,
+        ).toBe(c.upgrade.id);
+        expect(
+          resolveEquippedAbilityVariant(c.base, {
+            passiveIds: [],
+            byId,
+          }).id,
+        ).toBe(c.base.id);
       });
     });
   }

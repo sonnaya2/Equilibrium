@@ -6,8 +6,10 @@ import * as combatSpecs from "@/combat/data/specs";
 import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { engineSpecs as ENGINE_SPECS } from "@/combat/abilities/registry";
+import type { ItemPassiveId } from "@/combat/data/records";
 import type { CalcStats } from "./loadoutStats";
 import type { Loadout } from "./useLoadout";
+import { equipAbilityForLoadout } from "./abilityLoadoutFilter";
 
 export type RevoBarView = RevolutionBarRecord;
 
@@ -85,8 +87,17 @@ type WeaponShape = CalcStats["weaponConfiguration"] | Loadout["weaponConfigurati
 /**
  * Revo-managed ability specs for the sim only (not manual keybind tail).
  * Prefer loadout/sim weaponConfiguration for Adaptive Strike form selection.
+ * When passives are provided, base Overpower/Deadshot/Omnipower/Death Skulls
+ * become the equipped Igneous upgrade (label + sim id).
  */
-export function revoManagedModelled(bar: RevoBarView, weaponConfiguration?: WeaponShape): AbilitySpec[] {
+export function revoManagedModelled(
+  bar: RevoBarView,
+  weaponConfiguration?: WeaponShape,
+  gate?: {
+    passiveIds?: readonly ItemPassiveId[];
+    equipmentIds?: readonly string[];
+  },
+): AbilitySpec[] {
   const helper = (
     combatSpecs as {
       revoManagedSlots?: (
@@ -97,18 +108,43 @@ export function revoManagedModelled(bar: RevoBarView, weaponConfiguration?: Weap
     }
   ).revoManagedSlots;
 
+  let specs: AbilitySpec[];
   if (typeof helper === "function") {
     const out = helper(bar, ENGINE_SPECS, weaponConfiguration);
     if (out.length === 0) return [];
     const first = out[0] as AbilitySpec | ResolvedSlot;
     if (first && typeof first === "object" && "spec" in first) {
-      return (out as ResolvedSlot[]).filter((s) => s.spec !== null).map((s) => s.spec!);
+      specs = (out as ResolvedSlot[]).filter((s) => s.spec !== null).map((s) => s.spec!);
+    } else {
+      specs = out as AbilitySpec[];
     }
-    return out as AbilitySpec[];
+  } else {
+    specs = resolveBar(bar, ENGINE_SPECS, weaponConfiguration)
+      .slice(0, bar.revolutionSize)
+      .filter((slot) => slot.spec !== null)
+      .map((slot) => slot.spec!);
   }
+  if (!gate?.passiveIds?.length && !gate?.equipmentIds?.length) return specs;
+  return specs.map((s) => equipAbilityForLoadout(s, ENGINE_SPECS, gate));
+}
 
-  return resolveBar(bar, ENGINE_SPECS, weaponConfiguration)
-    .slice(0, bar.revolutionSize)
-    .filter((slot) => slot.spec !== null)
-    .map((slot) => slot.spec!);
+/** Apply Igneous (etc.) upgrade to resolved bar slots for display + sim. */
+export function applyLoadoutVariantsToSlots(
+  slots: readonly ResolvedSlot[],
+  gate?: {
+    passiveIds?: readonly ItemPassiveId[];
+    equipmentIds?: readonly string[];
+  },
+): ResolvedSlot[] {
+  if (!gate?.passiveIds?.length && !gate?.equipmentIds?.length) return [...slots];
+  return slots.map((slot) => {
+    if (!slot.spec) return slot;
+    const upgraded = equipAbilityForLoadout(slot.spec, ENGINE_SPECS, gate);
+    if (upgraded.id === slot.spec.id) return slot;
+    return {
+      name: upgraded.name,
+      modelledBy: slot.modelledBy,
+      spec: upgraded,
+    };
+  });
 }

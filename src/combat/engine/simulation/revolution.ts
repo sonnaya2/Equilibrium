@@ -1,5 +1,5 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { castRejection } from "../cast/rules";
+import { castRejection, resolveCastAbility } from "../cast/rules";
 import {
   branchCapsFromBudget,
   combineExactness,
@@ -91,18 +91,27 @@ export function simulateRevolution(
         continue;
       }
       const state = branch.rt.state;
-      const ready = input.bar.find(
-        (ability) =>
-          firstLegalTickFor(state, ability, input.level) <= state.tick &&
+      const ready = input.bar.find((ability) => {
+        // Base Overpower on a wiki bar becomes Igneous when the cape is equipped.
+        const { ability: castAbility } = resolveCastAbility(ability, {
+          byId: branch.rt.byId,
+          weaponConfiguration: input.weaponConfiguration,
+          equipmentIds: input.equipmentIds,
+          passiveIds: input.equipmentEffects?.passiveIds,
+        });
+        return (
+          firstLegalTickFor(state, castAbility, input.level) <= state.tick &&
           castRejection(
             state,
-            ability,
+            castAbility,
             state.tick,
             input.weaponConfiguration,
             input.equipmentIds,
             input.equipmentEffects?.passiveIds,
-          ) === null,
-      );
+            branch.rt.byId,
+          ) === null
+        );
+      });
       // Basics fill every empty GCD when the bar has nothing ready/affordable.
       const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);
       const ability = ready ?? basic;

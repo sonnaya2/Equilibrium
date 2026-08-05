@@ -21,6 +21,7 @@ import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { unlockedRegions } from "@/league";
 import type { ResolvedCombatModel } from "@/combat/model";
 import {
+  applyLoadoutVariantsToSlots,
   barOptionLabel,
   pickBarForLoadout,
   revoManagedModelled,
@@ -102,9 +103,17 @@ export function RevolutionPanel({
     [loadout.style, stats.weaponConfiguration],
   );
 
+  const igneousGate = useMemo(
+    () => ({
+      passiveIds: stats.equipmentEffects.passiveIds,
+      equipmentIds: stats.equipmentIds,
+    }),
+    [stats.equipmentEffects.passiveIds, stats.equipmentIds],
+  );
+
   const solvedSlots: ResolvedSlot[] | null = useMemo(() => {
     if (!activeBarIds?.length) return null;
-    return activeBarIds.map((id) => {
+    const raw = activeBarIds.map((id) => {
       const spec = ENGINE_SPECS.get(id) ?? null;
       const entry = entryByEngineId(id);
       return {
@@ -113,15 +122,19 @@ export function RevolutionPanel({
         spec,
       };
     });
-  }, [activeBarIds]);
+    // Solver bars already use upgrade ids; still normalize for display safety.
+    return applyLoadoutVariantsToSlots(raw, igneousGate);
+  }, [activeBarIds, igneousGate]);
 
   const weaponConfiguration = stats.weaponConfiguration;
-  const slots = useMemo(
-    () =>
-      solvedSlots ??
-      (bar ? resolveBar(bar, ENGINE_SPECS, weaponConfiguration) : []),
-    [solvedSlots, bar, weaponConfiguration],
-  );
+  const slots = useMemo(() => {
+    if (solvedSlots) return solvedSlots;
+    if (!bar) return [];
+    return applyLoadoutVariantsToSlots(
+      resolveBar(bar, ENGINE_SPECS, weaponConfiguration),
+      igneousGate,
+    );
+  }, [solvedSlots, bar, weaponConfiguration, igneousGate]);
   const revoSize = solvedSlots ? solvedSlots.length : (bar?.revolutionSize ?? slots.length);
   const managedSlots = useMemo(
     () => (solvedSlots ? solvedSlots : bar ? slots.slice(0, bar.revolutionSize) : []),
@@ -131,8 +144,8 @@ export function RevolutionPanel({
     if (solvedSlots) {
       return solvedSlots.filter((s) => s.spec).map((s) => s.spec!);
     }
-    return bar ? revoManagedModelled(bar, weaponConfiguration) : [];
-  }, [solvedSlots, bar, weaponConfiguration]);
+    return bar ? revoManagedModelled(bar, weaponConfiguration, igneousGate) : [];
+  }, [solvedSlots, bar, weaponConfiguration, igneousGate]);
   const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
   const keybindCount = Math.max(0, slots.length - revoSize);
   const regions = useMemo(() => unlockedRegions(build), [build]);

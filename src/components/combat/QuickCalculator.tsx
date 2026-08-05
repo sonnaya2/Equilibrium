@@ -14,6 +14,7 @@ import {
   volleyOfSouls,
 } from "@/combat/styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "@/combat/shared/bleedDurationExtension";
+import type { ItemPassiveId } from "@/combat/data/records";
 import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
@@ -25,6 +26,11 @@ import { loadoutStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
+import {
+  equipAbilityForLoadout,
+  filterAbilitiesForLoadout,
+  type LoadoutAbilityGate,
+} from "./abilityLoadoutFilter";
 
 const STYLE_LABELS: Record<CombatStyle, string> = {
   melee: "Melee",
@@ -65,6 +71,16 @@ function necroPalette(souls: number): AbilitySpec[] {
 function paletteForStyle(style: CombatStyle, souls: number): AbilitySpec[] {
   if (style === "necromancy") return necroPalette(souls);
   return engineSpecsForStyle(style).filter((a) => a.hits.length > 0);
+}
+
+function damagingPalette(
+  style: CombatStyle,
+  souls: number,
+  gate?: LoadoutAbilityGate,
+): AbilitySpec[] {
+  const raw = paletteForStyle(style, souls);
+  if (!gate) return raw;
+  return filterAbilitiesForLoadout(raw, gate);
 }
 
 function abilityFromPalette(palette: readonly AbilitySpec[], id: string): AbilitySpec | undefined {
@@ -124,9 +140,28 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
   };
 
   // Quick is for damaging casts; buff-only records (e.g. Living Death) live on Rotation.
-  // Necromancy: full post-CSM kit + Volley scaled by Residual Souls.
-  const palette = paletteForStyle(activeStyle, souls);
-  const ability = abilityFromPalette(palette, abilityId);
+  // Use-build: only the legal ultimate (base or Igneous), never both.
+  const loadoutGate: LoadoutAbilityGate | undefined = useBuild
+    ? {
+        weaponConfiguration: setup.weaponConfiguration,
+        equipmentIds: setup.equipmentIds,
+        passiveIds: setup.equipmentEffects.passiveIds as readonly ItemPassiveId[],
+      }
+    : undefined;
+  const fullStylePalette = paletteForStyle(activeStyle, souls);
+  const paletteById = new Map(fullStylePalette.map((a) => [a.id, a]));
+  const palette = damagingPalette(activeStyle, souls, loadoutGate);
+  // Stale base id after equipping cape: rewrite to upgrade, else pick first legal.
+  const fromId = paletteById.get(abilityId);
+  const ability =
+    useBuild && loadoutGate && fromId
+      ? (() => {
+          const rewritten = equipAbilityForLoadout(fromId, paletteById, loadoutGate);
+          return palette.some((a) => a.id === rewritten.id)
+            ? rewritten
+            : abilityFromPalette(palette, abilityId);
+        })()
+      : abilityFromPalette(palette, abilityId);
   const selectedId = ability?.id;
   // Same equipment hit resolution as prepareCast / rotation (MW spear bleeds, etc.).
   const equippedAbility =

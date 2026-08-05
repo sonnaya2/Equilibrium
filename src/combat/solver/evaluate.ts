@@ -1,6 +1,8 @@
 import { TICK_SECONDS } from "../core/ticks";
 import { simulateRevolution, type RevolutionInput } from "../engine/simulation/revolution";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
+import type { ItemPassiveId } from "../data/records";
+import { resolveEquippedAbilityId, resolveEquippedAbilityVariant } from "../shared/requirements";
 import type {
   CandidatePoolOptions,
   ExclusionReason,
@@ -252,8 +254,20 @@ export function evaluateRevolutionBar(
     });
   }
 
+  const compiled: CompiledEvaluationContext =
+    request.compiled ?? compileEvaluationContextFromEvalRequest(request);
+
+  // Wiki/seed bars use base overpower; rewrite to Igneous before eligibility + cast.
+  const passiveIdsTyped = passiveIds as readonly ItemPassiveId[] | undefined;
+  const equippedBar = bar.map((id) =>
+    resolveEquippedAbilityId(id, compiled.byId as ReadonlyMap<string, AbilitySpec>, {
+      passiveIds: passiveIdsTyped,
+      equipmentIds,
+    }),
+  );
+
   reasons.push(
-    ...validateBarEligibility(bar, pool, {
+    ...validateBarEligibility(equippedBar, pool, {
       includePartial,
       size,
       weaponConfiguration,
@@ -267,11 +281,8 @@ export function evaluateRevolutionBar(
     return failEval(request, reasons);
   }
 
-  const compiled: CompiledEvaluationContext =
-    request.compiled ?? compileEvaluationContextFromEvalRequest(request);
-
   const resolved: AbilitySpec[] = [];
-  for (const id of bar) {
+  for (const id of equippedBar) {
     const ability =
       (compiled.byId.get(id) as AbilitySpec | undefined) ??
       (pool.byId.get(id) as AbilitySpec | undefined);
@@ -283,7 +294,13 @@ export function evaluateRevolutionBar(
       });
       return failEval(request, reasons);
     }
-    resolved.push(ability);
+    resolved.push(
+      resolveEquippedAbilityVariant(ability, {
+        byId: compiled.byId as ReadonlyMap<string, AbilitySpec>,
+        passiveIds: passiveIdsTyped,
+        equipmentIds,
+      }),
+    );
   }
 
   // Catalogue + Strength Cape already applied in compiled context

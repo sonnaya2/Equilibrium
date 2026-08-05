@@ -1,6 +1,6 @@
 import type { AbilityResult, AbilitySpec } from "../../pipeline/calculateAbility";
 import { activateRunicCharge } from "../../styles/magic/runicCharge";
-import { castRejection, candidateTick } from "./rules";
+import { castRejection, candidateTick, resolveCastAbility } from "./rules";
 import { scheduleCastEvents } from "./schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "./effects";
 import { prepareCast, type PreparedCast } from "./prepare";
@@ -67,23 +67,30 @@ export function prepareSimulationCast(
   ability: AbilitySpec,
   readyTick: number,
 ): CastPreparation {
+  const { ability: castAbility } = resolveCastAbility(ability, {
+    byId: rt.byId,
+    weaponConfiguration: rt.input.weaponConfiguration,
+    equipmentIds: rt.input.equipmentIds,
+    passiveIds: rt.input.equipmentEffects?.passiveIds,
+  });
   const candidate = Math.max(
     candidateTick(rt.state, readyTick),
-    firstLegalTickFor(rt.state, ability, rt.input.level),
+    firstLegalTickFor(rt.state, castAbility, rt.input.level),
   );
   const advanced = advanceToBranches({ weight: 1, rt }, candidate);
   adoptHeaviestBranch(rt, advanced);
   const rejection = castRejection(
     rt.state,
-    ability,
+    castAbility,
     candidate,
     rt.input.weaponConfiguration,
     rt.input.equipmentIds,
     rt.input.equipmentEffects?.passiveIds,
+    rt.byId,
   );
   if (rejection) return { ok: false, error: rejection };
-  let prepared = prepareCast(rt, ability, candidate);
-  if (ability.id === "icy_tempest") {
+  let prepared = prepareCast(rt, castAbility, candidate);
+  if (castAbility.id === "icy_tempest") {
     prepared = { ...prepared, spend: heaviestIcySpend(rt, candidate) };
   }
   return { ok: true, prepared };

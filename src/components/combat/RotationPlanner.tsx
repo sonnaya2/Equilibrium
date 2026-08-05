@@ -38,6 +38,7 @@ import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
+import { equipAbilityForLoadout, filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
 
 const STORAGE_KEY = "eq:rotation:v1";
 
@@ -271,12 +272,25 @@ export function RotationPlanner({
     setResultKey(runKey);
   };
 
-  const palette = DISPLAY_CATALOGUE.catalogue.filter((a) => a.style === paletteStyle);
+  const stylePool = DISPLAY_CATALOGUE.catalogue.filter((a) => a.style === paletteStyle);
+  // Use-build: only the legal ultimate (base or Igneous), never both.
+  const palette = useBuild
+    ? filterAbilitiesForLoadout(stylePool, {
+        weaponConfiguration: setupStats.weaponConfiguration,
+        equipmentIds: setupStats.equipmentIds,
+        passiveIds: setupStats.equipmentEffects.passiveIds,
+      })
+    : stylePool;
   const selectedVariants = new Map<string, string>();
   for (const id of queue) {
     const ability = abilityById(id);
     if (ability?.replacementGroup) selectedVariants.set(ability.replacementGroup, ability.id);
   }
+  const loadoutGateOpts = {
+    weaponConfiguration: setupStats.weaponConfiguration,
+    equipmentIds: setupStats.equipmentIds,
+    passiveIds: setupStats.equipmentEffects.passiveIds,
+  };
   const manualStyles = [...new Set(queue.map((id) => abilityById(id)?.style).filter(Boolean))];
   const manualCombatStyle =
     mode === "revolution" ? loadout.style : manualStyles.join(" + ") || paletteStyle;
@@ -468,20 +482,11 @@ export function RotationPlanner({
                 const selectedVariant = a.replacementGroup
                   ? selectedVariants.get(a.replacementGroup)
                   : undefined;
-                const loadoutGate = useBuild
-                  ? resolveAbilityCastAvailability(a, {
-                      weaponConfiguration: setupStats.weaponConfiguration,
-                      equipmentIds: setupStats.equipmentIds,
-                      passiveIds: setupStats.equipmentEffects.passiveIds,
-                      groupPeers: palette,
-                    })
-                  : ({ available: true } as const);
+                // Manual mode: still block double-picking exclusive variants on the queue.
                 const reason =
                   selectedVariant && selectedVariant !== a.id
                     ? `Replaced by ${abilityName(selectedVariant)}`
-                    : !loadoutGate.available
-                      ? loadoutGate.message
-                      : undefined;
+                    : undefined;
                 return (
                   <button
                     key={a.id}
@@ -560,13 +565,16 @@ export function RotationPlanner({
           ) : (
             <div className="mt-3 border-t border-stone-750">
               {queue.map((id, index) => {
-                const a = abilityById(id);
+                const raw = abilityById(id);
+                // Show Igneous name when cape is on even if the queue still stores base id.
+                const a =
+                  useBuild && raw
+                    ? equipAbilityForLoadout(raw, DISPLAY_CATALOGUE.byId, loadoutGateOpts)
+                    : raw;
                 const slotGate =
                   useBuild && a
                     ? resolveAbilityCastAvailability(a, {
-                        weaponConfiguration: setupStats.weaponConfiguration,
-                        equipmentIds: setupStats.equipmentIds,
-                        passiveIds: setupStats.equipmentEffects.passiveIds,
+                        ...loadoutGateOpts,
                         groupPeers: DISPLAY_CATALOGUE.catalogue,
                       })
                     : ({ available: true } as const);

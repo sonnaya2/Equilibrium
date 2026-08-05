@@ -16,6 +16,8 @@ import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
 import { TIER_BUDGETS, TIER_HORIZON_SECONDS } from "./solve";
 import { MIN_SOLVER_BAR_SIZE } from "./solutionStore";
 import { remainingCandidates } from "./eligibility";
+import { resolveEquippedAbilityId } from "../shared/requirements";
+import type { ItemPassiveId } from "../data/records";
 import type {
   SerializableRevolutionSimBase,
   SerializableSolverRequest,
@@ -158,10 +160,23 @@ function fitBarIds(
   request: SerializableSolverRequest,
   pool: ReturnType<typeof buildCandidatePool>,
   denySet: Set<string>,
+  catalogueById?: ReadonlyMap<string, AbilitySpec>,
 ): string[] | null {
   const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
   const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
-  const cleaned = ids.filter(legalId);
+  const loadout = request.loadout as SerializableRevolutionSimBase;
+  const passiveIds = loadout.equipmentEffects?.passiveIds as readonly ItemPassiveId[] | undefined;
+  // overpower + Kal-Ket -> overpower_igneous so wiki seeds stay legal under cape.
+  const upgraded =
+    catalogueById != null
+      ? ids.map((id) =>
+          resolveEquippedAbilityId(id, catalogueById, {
+            passiveIds,
+            equipmentIds: loadout.equipmentIds,
+          }),
+        )
+      : ids;
+  const cleaned = upgraded.filter(legalId);
   if (cleaned.length < 2) return null;
   const built =
     cleaned.length > request.maxBarSize ? cleaned.slice(0, request.maxBarSize) : [...cleaned];
@@ -183,21 +198,23 @@ export function fitIncumbentBar(
   request: SerializableSolverRequest,
   pool: ReturnType<typeof buildCandidatePool>,
   denySet: Set<string>,
+  catalogueById?: ReadonlyMap<string, AbilitySpec>,
 ): string[] | null {
   if (!request.userBar?.length) return null;
-  return fitBarIds(request.userBar, request, pool, denySet);
+  return fitBarIds(request.userBar, request, pool, denySet, catalogueById);
 }
 
 export function fitAuthoredSeeds(
   request: SerializableSolverRequest,
   pool: ReturnType<typeof buildCandidatePool>,
   denySet: Set<string>,
+  catalogueById?: ReadonlyMap<string, AbilitySpec>,
 ): string[][] {
   // Catalogue + authoredSeedBars only. userBar is first-class via fitIncumbentBar.
   return [
     ...authoredSeedsFromCatalogue(request.style, denySet, "weaponConfiguration" in request.loadout ? request.loadout.weaponConfiguration : undefined),
     ...request.authoredSeedBars.map((s) => s.abilityIds),
   ]
-    .map((ids) => fitBarIds(ids, request, pool, denySet))
+    .map((ids) => fitBarIds(ids, request, pool, denySet, catalogueById))
     .filter((s): s is string[] => s != null && s.length >= 2);
 }

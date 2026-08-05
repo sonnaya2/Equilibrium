@@ -115,6 +115,9 @@ export const RECORD_TO_ENGINE: Readonly<Record<string, string>> = {
   "necromancy:command-phantom-guardian": "command_phantom_guardian",
   "necromancy:command-vengeful-ghost": "command_vengeful_ghost",
   "necromancy:death-grasp": "death_grasp",
+  // Shared (Constitution) - usable on every style bar
+  "shared:sacrifice": "sacrifice",
+  "shared:tuskas-wrath": "tuskas_wrath",
 };
 
 /** Per-engine-id link overrides (setup / equipment variants, cast stages, factories). */

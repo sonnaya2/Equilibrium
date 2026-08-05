@@ -1,5 +1,6 @@
 import type { HitResult } from "../../pipeline/calculateHit";
 import type { ActiveConjure } from "../../styles/necromancy/conjures";
+import { spiritPoisonPending } from "../../styles/necromancy/conjures";
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
@@ -17,8 +18,9 @@ import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
  * - Presentation/history (omitted): endTick, total* ledgers, casts/events logs
  * - Historical normalize: expired cooldowns/charges; frost/haunted/ghost/tsunami/blast;
  *   expired burns/bleeds; expired puncture via activePuncture; expired berserk via endBerserk;
- *   half-open untils (chaos/fury/meteor/endless/NI/vestments/relentless/LD/flow);
- *   searing/sunshine/instability expires + granted only while live
+ *   half-open untils (chaos/fury/meteor/endless/NI/vestments/relentless/LD/flow/scythe);
+ *   searing/sunshine/instability/enduringRuin expires + granted only while live;
+ *   fully expired spirits pruned (keep zombie poison-tail residue)
  * - Allocators omitted (merge takes max): nextSeq, nextCastSeq
  * - Map keys sorted so insertion order never blocks equivalence
  *
@@ -145,6 +147,18 @@ function liveChargesForKey(
   return out;
 }
 
+/**
+ * Spirits that still affect future damage or ownership identity for tracks.
+ * Live while tick < untilTick. After until, only zombie poison tail remains
+ * (autos cannot land past until; queue/meta still encode pending events).
+ */
+function spiritsForKey(
+  spirits: readonly ActiveConjure[],
+  tick: number,
+): ActiveConjure[] {
+  return spirits.filter((c) => tick < c.untilTick || spiritPoisonPending(c));
+}
+
 function encodeConjure(c: ActiveConjure, tick: number): string {
   switch (c.id) {
     case "skeleton_warrior":
@@ -210,6 +224,10 @@ function encodeState(state: RotationState): string {
   const greaterFuryUntil = halfOpenUntil(m.greaterFuryUntilTick, tick);
   const meteorStrikeUntil = halfOpenUntil(m.meteorStrikeUntilTick, tick);
   const endlessAssaultUntil = halfOpenUntil(m.endlessAssaultUntilTick, tick);
+  // Enduring Ruin (player): consume uses tick < until; clear granted when dead.
+  const erUntil = halfOpenUntil(m.enduringRuin.untilTick, tick);
+  const erBonus = erUntil > 0 ? m.enduringRuin.nextAttackBonus : 0;
+  const erGranted = erUntil > 0 ? m.enduringRuin.grantedByCast : -1;
   // Searing / sunshine / instability: expires residue + granted only while live.
   const searingExpires = halfOpenUntil(r.searingWinds.expiresAtTick, tick);
   const searingGranted =
@@ -223,6 +241,14 @@ function encodeState(state: RotationState): string {
   const flowUntil = halfOpenUntil(g.flowUntilTick, tick);
   const flowReduction = flowUntil > 0 ? g.flowReduction : 0;
   const livingDeathUntil = halfOpenUntil(res.livingDeathUntilTick, tick);
+  // Spectral scythe stages: cast legal while candidate < until (half-open).
+  const scythe2Until = halfOpenUntil(res.spectralScythe2UntilTick, tick);
+  const scythe3Until = halfOpenUntil(res.spectralScythe3UntilTick, tick);
+  const liveSpirits = spiritsForKey(nec.conjures.spirits, tick);
+  // Target enduring ruin bleed vuln: land uses at < until.
+  const targetErUntil = halfOpenUntil(tm.enduringRuin.untilTick, tick);
+  const targetErVuln =
+    targetErUntil > 0 ? tm.enduringRuin.bleedVulnerability : 0;
   const parts: string[] = [
     n(tick),
     n(state.adrenaline),
@@ -256,9 +282,9 @@ function encodeState(state: RotationState): string {
     n(endlessAssaultUntil),
     s(m.bleedChainNext),
     n(m.bleedChainUntilTick),
-    n(m.enduringRuin.nextAttackBonus),
-    n(m.enduringRuin.untilTick),
-    n(m.enduringRuin.grantedByCast),
+    n(erBonus),
+    n(erUntil),
+    n(erGranted),
     // Primordial Ice: expired-normalized stack mass + expiry + frost open mass.
     (() => {
       const ice = expirePrimordialIce(m.primordialIce, tick);
@@ -305,15 +331,15 @@ function encodeState(state: RotationState): string {
     n(res.necrosisStacks),
     n(livingDeathUntil),
     b(res.lantern),
-    n(res.spectralScythe2UntilTick),
-    n(res.spectralScythe3UntilTick),
+    n(scythe2Until),
+    n(scythe3Until),
     n(res.deathSparkStacks),
     n(res.soulReaveStacks),
     b(res.soulReaveGrantOnLand),
-    // conjures
-    String(nec.conjures.spirits.length),
+    // conjures (fully expired pruned; poison-tail zombies kept)
+    String(liveSpirits.length),
   ];
-  for (const c of nec.conjures.spirits) {
+  for (const c of liveSpirits) {
     parts.push(encodeConjure(c, tick));
   }
   // Expired Haunted ≡ newHaunted() (zero until and cap).
@@ -333,8 +359,8 @@ function encodeState(state: RotationState): string {
     n(tm.abyssalParasite.expiresAtTick),
     n(tm.abyssalParasite.nextDamageTick),
     n(tm.abyssalParasite.scheduledThroughTick),
-    n(tm.enduringRuin.bleedVulnerability),
-    n(tm.enduringRuin.untilTick),
+    n(targetErVuln),
+    n(targetErUntil),
     n(hauntedUntil),
     n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
   );
@@ -427,6 +453,7 @@ export function branchKeyJson(rt: SimulationRuntime): string {
   const m = rt.state.melee;
   const r = rt.state.ranged;
   const res = rt.state.necromancy.resources;
+  const tm = rt.state.target.melee;
   const berserkExpired = m.berserkUntilTick <= tick;
   const bloodlust =
     m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
@@ -435,6 +462,9 @@ export function branchKeyJson(rt: SimulationRuntime): string {
   const sunExpires = halfOpenUntil(g.sunshine.expiresAtTick, tick);
   const instExpires = halfOpenUntil(g.instability.expiresAtTick, tick);
   const flowUntil = halfOpenUntil(g.flowUntilTick, tick);
+  const erUntil = halfOpenUntil(m.enduringRuin.untilTick, tick);
+  const targetErUntil = halfOpenUntil(tm.enduringRuin.untilTick, tick);
+  const liveSpirits = spiritsForKey(rt.state.necromancy.conjures.spirits, tick);
   // Expiry + live CD/charges + map order: match structural distinguishability.
   const stateForKey = {
     ...rt.state,
@@ -451,6 +481,11 @@ export function branchKeyJson(rt: SimulationRuntime): string {
       greaterFuryUntilTick: halfOpenUntil(m.greaterFuryUntilTick, tick),
       meteorStrikeUntilTick: halfOpenUntil(m.meteorStrikeUntilTick, tick),
       endlessAssaultUntilTick: halfOpenUntil(m.endlessAssaultUntilTick, tick),
+      enduringRuin: {
+        nextAttackBonus: erUntil > 0 ? m.enduringRuin.nextAttackBonus : 0,
+        untilTick: erUntil,
+        grantedByCast: erUntil > 0 ? m.enduringRuin.grantedByCast : -1,
+      },
       // Match structural: expired ice -> empty unit mass (Icy Tempest / Leng future).
       primordialIce: expirePrimordialIce(m.primordialIce, tick),
       frostbladesUntilTick: normalizeLengFrostUntil(m.frostbladesUntilTick, tick),
@@ -488,9 +523,11 @@ export function branchKeyJson(rt: SimulationRuntime): string {
       resources: {
         ...res,
         livingDeathUntilTick: halfOpenUntil(res.livingDeathUntilTick, tick),
+        spectralScythe2UntilTick: halfOpenUntil(res.spectralScythe2UntilTick, tick),
+        spectralScythe3UntilTick: halfOpenUntil(res.spectralScythe3UntilTick, tick),
       },
       conjures: {
-        spirits: rt.state.necromancy.conjures.spirits.map((c) =>
+        spirits: liveSpirits.map((c) =>
           c.id === "vengeful_ghost"
             ? { ...c, commanding: !!c.commanding && tick < c.untilTick }
             : c,
@@ -506,11 +543,13 @@ export function branchKeyJson(rt: SimulationRuntime): string {
         ),
       },
       melee: {
-        ...rt.state.target.melee,
-        bleeds: liveClocksForKey(
-          rt.state.target.melee.bleeds as Record<string, number>,
-          tick,
-        ),
+        ...tm,
+        bleeds: liveClocksForKey(tm.bleeds as Record<string, number>, tick),
+        enduringRuin: {
+          bleedVulnerability:
+            targetErUntil > 0 ? tm.enduringRuin.bleedVulnerability : 0,
+          untilTick: targetErUntil,
+        },
       },
       haunted: {
         untilTick: hauntedUntil,

@@ -23,6 +23,7 @@ import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { CalculationAssumptions } from "./CalculationAssumptions";
+import { spiritEffectDisplayName } from "./conjurePresentation";
 import { critDamageStats, type CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -65,7 +66,7 @@ function abilityById(id: string): AbilitySpec | undefined {
 }
 
 function abilityName(id: string): string {
-  return abilityById(id)?.name ?? id;
+  return abilityById(id)?.name ?? spiritEffectDisplayName(id) ?? id;
 }
 
 function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {

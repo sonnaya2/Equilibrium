@@ -9,10 +9,13 @@ import { RING_OF_VIGOUR_ITEM_ID } from "@/combat/shared/ringOfVigour";
 import {
   FURY_OF_THE_SMALL_ID,
 } from "@/combat/shared/furyOfTheSmall";
-import { projectSerializableSimBase } from "@/combat/model";
+import { projectSerializableSimBase, toHybridManualCombatModel } from "@/combat/model";
 import { packSimBase, packSimBaseFromModel } from "@/combat/solver/packRequest";
+import { buildCandidatePool } from "@/combat/solver/candidatePool";
+import { evaluateRevolutionBar } from "@/combat/solver/evaluate";
+import { NECROMANCY_ABILITIES } from "@/combat/styles/necromancy/abilities";
 import { POWERBURST_DURATION_MS } from "@/combat";
-import { DEFAULT_LOADOUT, type Loadout } from "./loadout/model";
+import { DEFAULT_LOADOUT, equipInSlot, type Loadout } from "./loadout/model";
 import { loadoutStats } from "./loadoutStats";
 import { solverSnapshotFromResolvedModel } from "./solverSnapshot";
 import { toResolvedCombatModel } from "./toResolvedCombatModel";
@@ -220,6 +223,111 @@ describe("toResolvedCombatModel", () => {
     expect(shield.weaponConfiguration).toBe("shield");
     expect(defender.weaponConfiguration).toBe("defender");
     expect(necro.weaponConfiguration).toBe("necromancy");
+  });
+
+  /**
+   * Conjure gate: weaponConfiguration must be "necromancy" (conduit), not stored
+   * loadout dualwield and not shield OH. UI Run / solver pack this field.
+   */
+  it("necro death guard + conduit packs weaponConfiguration necromancy for Run/solver; shield OH does not", () => {
+    // equipInSlot stores dualwield for any offensive OH; sim shape must still be necromancy.
+    let dual = equipInSlot(DEFAULT_LOADOUT, "mainhand", "item:omni-guard");
+    dual = equipInSlot(dual, "offhand", "item:soulbound-lantern");
+    expect(dual.style).toBe("necromancy");
+    expect(dual.weaponConfiguration).toBe("dualwield");
+
+    let tank = equipInSlot(DEFAULT_LOADOUT, "mainhand", "item:omni-guard");
+    tank = equipInSlot(tank, "offhand", "item:malevolent-kiteshield");
+    expect(tank.style).toBe("necromancy");
+    expect(tank.weaponConfiguration).toBe("shield");
+
+    const dualStats = loadoutStats(dual, { now: NOW });
+    const tankStats = loadoutStats(tank, { now: NOW });
+    expect(dualStats.weaponConfiguration).toBe("necromancy");
+    expect(tankStats.weaponConfiguration).toBe("shield");
+
+    const dualModel = toResolvedCombatModel(dual, { now: NOW }, dualStats);
+    const tankModel = toResolvedCombatModel(tank, { now: NOW }, tankStats);
+    expect(dualModel.weaponConfiguration).toBe("necromancy");
+    expect(tankModel.weaponConfiguration).toBe("shield");
+
+    const dualPacked = packSimBaseFromModel(dualModel);
+    const tankPacked = packSimBaseFromModel(tankModel);
+    expect(dualPacked.weaponConfiguration).toBe("necromancy");
+    expect(tankPacked.weaponConfiguration).toBe("shield");
+    expect(packSimBase(solverSnapshotFromResolvedModel(dualModel)).weaponConfiguration).toBe(
+      "necromancy",
+    );
+    expect(projectSerializableSimBase(dualModel).weaponConfiguration).toBe("necromancy");
+
+    // Hybrid "Use Loadout off" must keep conduit shape (conjure gate on revo Run).
+    const hybrid = toHybridManualCombatModel(dualModel, {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      critChance: 0,
+    });
+    expect(hybrid.weaponConfiguration).toBe("necromancy");
+    expect(packSimBaseFromModel(hybrid).weaponConfiguration).toBe("necromancy");
+
+    const pool = buildCandidatePool(NECROMANCY_ABILITIES, "necromancy", {
+      weaponConfiguration: dualPacked.weaponConfiguration,
+    });
+    expect(pool.byId.has("conjure_skeleton_warrior")).toBe(true);
+
+    const withConduit = evaluateRevolutionBar({
+      bar: ["conjure_skeleton_warrior", "touch_of_death", "soul_sap"],
+      style: "necromancy",
+      durationTicks: 40,
+      pool,
+      sim: {
+        base: dualPacked.base,
+        level: dualPacked.level,
+        accuracy: dualPacked.accuracy,
+        crit: dualPacked.crit,
+        weaponConfiguration: dualPacked.weaponConfiguration,
+        equipmentIds: dualPacked.equipmentIds,
+        startingAdrenaline: dualPacked.startingAdrenaline,
+      },
+      profileId: "balanced",
+    });
+    expect(withConduit.ok).toBe(true);
+    expect(withConduit.summary?.casts.some((c) => c.abilityId === "conjure_skeleton_warrior")).toBe(
+      true,
+    );
+
+    const shieldPool = buildCandidatePool(NECROMANCY_ABILITIES, "necromancy", {
+      weaponConfiguration: tankPacked.weaponConfiguration,
+    });
+    // Conjures illegal under shield; pool drops them at build time.
+    expect(shieldPool.byId.has("conjure_skeleton_warrior")).toBe(false);
+    expect(shieldPool.byId.has("touch_of_death")).toBe(true);
+
+    const blocked = evaluateRevolutionBar({
+      bar: ["conjure_skeleton_warrior", "touch_of_death"],
+      style: "necromancy",
+      durationTicks: 30,
+      pool: buildCandidatePool(NECROMANCY_ABILITIES, "necromancy", {
+        weaponConfiguration: "necromancy",
+      }),
+      sim: {
+        base: tankPacked.base,
+        level: tankPacked.level,
+        accuracy: tankPacked.accuracy,
+        crit: tankPacked.crit,
+        weaponConfiguration: tankPacked.weaponConfiguration,
+        equipmentIds: tankPacked.equipmentIds,
+      },
+      profileId: "balanced",
+    });
+    // Bar may fail eligibility or cast zero conjures; never summon under shield shape.
+    if (blocked.ok && blocked.summary) {
+      expect(blocked.summary.casts.some((c) => c.abilityId === "conjure_skeleton_warrior")).toBe(
+        false,
+      );
+    } else {
+      expect(blocked.ok).toBe(false);
+    }
   });
 
   it("projectSerializableSimBase matches packSimBaseFromModel and model snapshot pack", () => {

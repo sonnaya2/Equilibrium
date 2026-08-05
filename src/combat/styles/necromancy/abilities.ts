@@ -348,6 +348,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     source: COMMAND_SKELETON_WIKI,
   },
   {
+    // Wiki is area (2 tiles). ST model: one explode hit on the primary target.
+    // 0s ability CD; initial 6-tick lockout starts on summon (not on command).
+    // Dismisses the zombie on cast; explosion lands at cast+4.
     id: "command_putrid_zombie",
     name: "Command Putrid Zombie",
     style: "necromancy",
@@ -360,6 +363,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
       },
     ],
     adrenaline: { cost: 0 },
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Wiki is area (2 tiles). ST model: one explode hit on the primary target only.",
     source: COMMAND_PUTRID_WIKI,
   },
   {

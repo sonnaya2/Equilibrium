@@ -10,6 +10,10 @@ import {
   icyenicSoulSplitNote,
 } from "@/combat/league/icyenicFaith";
 import {
+  conjurePactAssumptionNote,
+  rotationHasConjureCast,
+} from "./conjurePresentation";
+import {
   stochasticAssumptionRows,
   type BranchCapDiagnosticsOpts,
 } from "./revoStochasticLabels";
@@ -169,6 +173,14 @@ export function CalculationAssumptions({
           [
             "Invention proc timing",
             "Crackling ready at tick 0; Aftershock starts at 0/50,000 and charges from expected landed damage",
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    ...(rotationHasConjureCast(result?.casts)
+      ? ([
+          [
+            "Spirit Pact III",
+            conjurePactAssumptionNote(stats.conjureDurationMult ?? 1),
           ],
         ] as Array<[string, string | number]>)
       : []),

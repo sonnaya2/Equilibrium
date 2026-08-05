@@ -5,6 +5,7 @@ import type { CastContextInput, CastRecord, SimulationDetailLevel } from "../sim
 import { resolveDetailLevel } from "../simulation/contracts";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
+import { isSharedConstitutionAbilityId } from "../../styles/shared/constitutionAbilities";
 import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
@@ -82,6 +83,12 @@ export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string,
       // Catalogue/bar merges may list the same id twice. Silent overwrite is
       // banned: keep the first registration, throw when a later entry conflicts.
       if (abilityBehaviorFingerprint(prev) !== abilityBehaviorFingerprint(ability)) {
+        // Shared Constitution (Sacrifice): one engine id, style remapped per bar.
+        // Later registration wins (bar / pool overlay after registry placeholder).
+        if (isSharedConstitutionAbilityId(ability.id)) {
+          byId.set(ability.id, ability);
+          continue;
+        }
         throw new Error(`Duplicate ability id in runtime registry: ${ability.id}`);
       }
       continue;

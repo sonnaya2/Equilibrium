@@ -6,6 +6,7 @@ import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import { SHARED_CONSTITUTION_ABILITIES } from "../../styles/shared/constitutionAbilities";
 import { rotationOf } from "./contracts";
 import {
   compareRevolutionWithVigour,
@@ -28,6 +29,7 @@ const ENGINE_SPECS = new Map(
     ...MAGIC_ABILITIES,
     ...NECROMANCY_ABILITIES,
     volleyOfSouls(3),
+    ...SHARED_CONSTITUTION_ABILITIES,
   ].map((spec) => [spec.id, spec]),
 );
 
@@ -54,6 +56,13 @@ function revoModelled(bar: RevolutionBarRecord) {
       ? resolveBar(bar, ENGINE_SPECS).slice(0, bar.revolutionSize)
       : resolveBar(bar, ENGINE_SPECS);
   return window.flatMap((slot) => (slot.spec ? [slot.spec] : []));
+}
+
+/** Catalogue + bar specs; bar stamps win (shared Constitution style remap). */
+function abilitiesForRevo(modelled: ReturnType<typeof revoModelled>) {
+  const byId = new Map(ENGINE_SPECS);
+  for (const spec of modelled) byId.set(spec.id, spec);
+  return [...byId.values()];
 }
 
 function slotByName(slots: ReturnType<typeof resolveBar>, name: string) {
@@ -87,7 +96,8 @@ describe("resolveBar", () => {
 
     const necro = resolveBar(barById("necromancy"), ENGINE_SPECS);
     const sacrifice = slotByName(necro, "Sacrifice");
-    expect(sacrifice.modelledBy).toBe("record");
+    expect(sacrifice.modelledBy).toBe("engine");
+    expect(sacrifice.spec?.id).toBe("sacrifice");
     expect(sacrifice.spec?.style).toBe("necromancy");
   });
 
@@ -137,7 +147,7 @@ describe("simulateRevolution", () => {
     const modelled = revoModelled(barById("magic"));
     const s = simulateRevolution({
       ...baseInput,
-      abilities: [...ENGINE_SPECS.values(), ...modelled],
+      abilities: abilitiesForRevo(modelled),
       bar: modelled,
       style: "magic",
       durationTicks: 120,
@@ -198,7 +208,7 @@ describe("simulateRevolution", () => {
     const modelled = revoModelled(barById("magic"));
     const forward = simulateRevolution({
       ...baseInput,
-      abilities: [...ENGINE_SPECS.values(), ...modelled],
+      abilities: abilitiesForRevo(modelled),
       bar: modelled,
       style: "magic",
       durationTicks: 24,
@@ -206,7 +216,7 @@ describe("simulateRevolution", () => {
     const reversed = [...modelled].reverse();
     const reverse = simulateRevolution({
       ...baseInput,
-      abilities: [...ENGINE_SPECS.values(), ...reversed],
+      abilities: abilitiesForRevo(reversed),
       bar: reversed,
       style: "magic",
       durationTicks: 24,
@@ -336,7 +346,7 @@ describe("golden 60s revo smoke", () => {
 
       const s = simulateRevolution({
         ...baseInput,
-        abilities: [...ENGINE_SPECS.values(), ...modelled],
+        abilities: abilitiesForRevo(modelled),
         bar: modelled,
         style,
         durationTicks,
@@ -548,6 +558,9 @@ describe("revolution — conjure post-summon management", () => {
 
   it("command skeleton waits for active conjure and the 6-tick initial lockout", () => {
     // Short horizon: one command only (wiki 15s CD ≈ 25 ticks).
+    // Wiki PvME necro revo++ bar has no command_* slots (conjure sequence replaces
+    // the conjure icon in-game). Custom bars that place command_* on managed slots
+    // fire when the spirit is active and the initial lockout has elapsed.
     const s = simulateRevolution({
       ...necroRevo,
       bar: [abilitySpec("command_skeleton_warrior"), abilitySpec("conjure_skeleton_warrior")],
@@ -564,6 +577,32 @@ describe("revolution — conjure post-summon management", () => {
     // Command hits land at activation+2..+11; initial lockout blocked earlier ticks.
     const cmdHits = s.events.filter((e) => e.abilityId === "command_skeleton_warrior");
     expect(cmdHits.map((e) => e.tick)).toEqual([8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+  });
+
+  it("command putrid zombie waits for active conjure + 6-tick lockout, then explodes (ST)", () => {
+    // Wiki: command first legal @6; explosion at cast+4; dismisses zombie.
+    // ST model: one 360-440% hit on the primary target (area unmodelled).
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [abilitySpec("command_putrid_zombie"), abilitySpec("conjure_putrid_zombie")],
+      durationTicks: 20,
+    });
+    expect(s.ok).toBe(true);
+    expect(s.casts.map((c) => `${c.abilityId}@${c.tick}`).slice(0, 4)).toEqual([
+      "conjure_putrid_zombie@0",
+      "necromancy_basic@3",
+      "command_putrid_zombie@6",
+      "necromancy_basic@9",
+    ]);
+    expect(s.casts.filter((c) => c.abilityId === "command_putrid_zombie")).toHaveLength(1);
+    const explode = s.events.filter((e) => e.abilityId === "command_putrid_zombie");
+    expect(explode).toHaveLength(1);
+    expect(explode[0]!.tick).toBe(10);
+    expect(explode[0]!.family).toBe("command");
+    expect(explode[0]!.damage.expected).toBeGreaterThan(0);
+    expect(s.perAbility["command_putrid_zombie"]).toBeGreaterThan(0);
+    // After command, revo cannot cast command again (zombie dismissed; no spirit).
+    expect(s.casts.filter((c) => c.abilityId === "command_putrid_zombie")).toHaveLength(1);
   });
 
   it("undead army schedules three spirit auto tracks and zombie poison", () => {
@@ -595,6 +634,43 @@ describe("revolution — conjure post-summon management", () => {
     expect(autos).toContain(102);
     expect(autos).toContain(112);
     expect(autos.filter((t) => t >= 112)).toEqual([112, 117, 122, 127]);
+  });
+
+  it("70s+ revo with Undead Army early on bar casts army again after SP3 expiry", () => {
+    // 70s = 117 ticks; exclusive SP3 end at cast+105 so second army is in-horizon.
+    // 60s (100 ticks) ends before expiry - only one army cast (product "no re-summon" report).
+    const short = simulateRevolution({
+      ...necroRevo,
+      bar: [
+        abilitySpec("conjure_undead_army"),
+        abilitySpec("touch_of_death"),
+        abilitySpec("soul_sap"),
+      ],
+      durationTicks: 100,
+    });
+    expect(short.ok).toBe(true);
+    expect(short.casts.filter((c) => c.abilityId === "conjure_undead_army")).toHaveLength(1);
+
+    const s = simulateRevolution({
+      ...necroRevo,
+      bar: [
+        abilitySpec("conjure_undead_army"),
+        abilitySpec("touch_of_death"),
+        abilitySpec("soul_sap"),
+      ],
+      durationTicks: 117,
+    });
+    expect(s.ok).toBe(true);
+    const armyCasts = s.casts.filter((c) => c.abilityId === "conjure_undead_army");
+    expect(armyCasts.map((c) => c.tick)).toEqual([0, 105]);
+    // Timeline/events: both summons present; second life restarts spirit autos.
+    expect(armyCasts).toHaveLength(2);
+    const autos = s.events.filter((e) => e.family === "conjureAuto");
+    expect(autos.some((e) => e.tick < 105)).toBe(true);
+    expect(autos.some((e) => e.tick > 105)).toBe(true);
+    expect(s.perAbility["spirit_skeleton_warrior"] ?? 0).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_vengeful_ghost"] ?? 0).toBeGreaterThan(0);
+    expect(s.perAbility["spirit_putrid_zombie"] ?? 0).toBeGreaterThan(0);
   });
 
   it("score-only totals include spirit auto EV (presentation ledgers empty)", () => {

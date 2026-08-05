@@ -47,18 +47,34 @@ export function equipmentIconPath(equipmentId: string): string | null {
   return `/game/combat/equipment/${slug}.webp`;
 }
 
+/** Equipment-variant ability ids share base art (death-skulls.webp, not death-skulls-igneous.webp). */
+const ABILITY_ICON_VARIANT_SUFFIX = /[_-]igneous$/i;
+
+/** Shared constitution-bar abilities live under abilities/constitution/. */
+const CONSTITUTION_ABILITY_IDS = new Set(["sacrifice", "tuskas_wrath"]);
+
 /**
  * Local ability icons (synced from the wiki, never hotlinked).
  * Path: public/game/combat/abilities/<style>/<id-with-underscores-as-hyphens>.webp
- * The sync script that built it is gone, and data/combat/ability-icons.json is
- * read by nothing; the paths below are resolved against public/game/ directly.
+ * Record ids may be `shared:sacrifice`; engine ids use underscores. Constitution
+ * abilities ignore the bar style folder so Revo graphics hit public files.
  */
 export function abilityIconPath(
   abilityId: string,
   style: keyof typeof STYLE_ICON | string,
 ): string {
-  const slug = abilityId.replace(/_/g, "-").toLowerCase();
-  const folder = style in STYLE_ICON ? style : "melee";
+  const bare = abilityId.includes(":")
+    ? abilityId.slice(abilityId.indexOf(":") + 1)
+    : abilityId;
+  const withoutVariant = bare.replace(ABILITY_ICON_VARIANT_SUFFIX, "").toLowerCase();
+  const lookupId = withoutVariant.replace(/-/g, "_");
+  const slug = withoutVariant.replace(/_/g, "-");
+  const folder =
+    CONSTITUTION_ABILITY_IDS.has(lookupId) || style === "constitution"
+      ? "constitution"
+      : style in STYLE_ICON
+        ? style
+        : "melee";
   return `/game/combat/abilities/${folder}/${slug}.webp`;
 }
 

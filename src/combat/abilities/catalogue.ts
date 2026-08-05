@@ -6,6 +6,10 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { AbilityRegistry } from "../engine/simulation/contracts";
 import { mapAbilitiesById } from "../engine/runtime/runtime";
 import { withStrengthCape99Dismember } from "../styles/melee/abilities";
+import {
+  abilityStyleForBar,
+  isSharedConstitutionAbilityId,
+} from "../styles/shared/constitutionAbilities";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
 import { allEngineSpecs } from "./registry";
 
@@ -95,10 +99,18 @@ export function resolveAbilitySpecsFromCatalogue(
 /**
  * Soft resolve: keep provided spec when id missing (legacy UI paths with partial bars).
  * Prefer resolveAbilitySpecsFromCatalogue when ids are known-good.
+ * Shared Constitution specs keep the caller's bar style (berserk / DS / Sunshine gates).
  */
 export function mapSpecsThroughCatalogue(
   catalogue: ResolvedAbilityCatalogue,
   specs: readonly AbilitySpec[],
 ): AbilitySpec[] {
-  return specs.map((spec) => catalogue.byId.get(spec.id) ?? spec);
+  return specs.map((spec) => {
+    const fromCat = catalogue.byId.get(spec.id);
+    if (!fromCat) return spec;
+    if (isSharedConstitutionAbilityId(spec.id)) {
+      return abilityStyleForBar(fromCat, spec.style);
+    }
+    return fromCat;
+  });
 }

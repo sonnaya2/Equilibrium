@@ -1,6 +1,7 @@
 import {
   COMMAND_GHOST_INITIAL_COOLDOWN_TICKS,
   COMMAND_SKELETON_INITIAL_COOLDOWN_TICKS,
+  COMMAND_ZOMBIE_INITIAL_COOLDOWN_TICKS,
   CONJURE_ABILITY_SUMMONS,
   applyGhostCommand,
   conjureActive,
@@ -94,7 +95,14 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
     );
   }
   if (CONJURE_ABILITY_SUMMONS[ability.id]?.includes("putrid_zombie") && !zombieWasActive) {
+    // Conjure CD is independent of command/expiry (wiki 30s). Command also
+    // gets the same initial 6-tick lockout as skeleton/ghost (first legal @6).
     startLinkedCooldown(fx, "conjure_putrid_zombie", candidate + secondsToTicks(30));
+    startLinkedCooldown(
+      fx,
+      "command_putrid_zombie",
+      candidate + COMMAND_ZOMBIE_INITIAL_COOLDOWN_TICKS,
+    );
   }
   if (ability.id === "command_skeleton_warrior") applySkeletonCommand(rt, candidate);
   if (ability.id === "command_vengeful_ghost") {

@@ -1,6 +1,10 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { resolveAbilityCastAvailability } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
+import {
+  abilityStyleForBar,
+  isSharedConstitutionAbilityId,
+} from "../styles/shared/constitutionAbilities";
 import type { CandidatePool, CandidatePoolOptions, PoolAbility } from "./contracts";
 
 function asPassiveIds(ids: readonly string[] | undefined): readonly ItemPassiveId[] | undefined {
@@ -90,28 +94,32 @@ export function buildCandidatePool(
   const selected: AbilitySpec[] = [];
   const seenIds = new Set<string>();
   for (const ability of catalogue) {
-    if (ability.style !== style) continue;
-    if (deny?.has(ability.id)) continue;
-    if (allow && !allow.has(ability.id)) continue;
-    if (!includeAutos && ability.autoAttack) continue;
-    if (!includeOffGcd && ability.offGcd) continue;
-    if (!includePartial && !isFullyModeled(ability)) continue;
+    // Shared Constitution (Sacrifice): one registry id, remapped to pool style.
+    const effective = isSharedConstitutionAbilityId(ability.id)
+      ? abilityStyleForBar(ability, style)
+      : ability;
+    if (effective.style !== style) continue;
+    if (deny?.has(effective.id)) continue;
+    if (allow && !allow.has(effective.id)) continue;
+    if (!includeAutos && effective.autoAttack) continue;
+    if (!includeOffGcd && effective.offGcd) continue;
+    if (!includePartial && !isFullyModeled(effective)) continue;
     // Illegal under weapon / equipment / passive / supersede rules.
-    const peers = ability.replacementGroup
-      ? (peersByGroup.get(ability.replacementGroup) ?? [])
+    const peers = effective.replacementGroup
+      ? (peersByGroup.get(effective.replacementGroup) ?? [])
       : [];
-    const availability = resolveAbilityCastAvailability(ability, {
+    const availability = resolveAbilityCastAvailability(effective, {
       weaponConfiguration: options.weaponConfiguration,
       equipmentIds: options.equipmentIds,
       passiveIds: asPassiveIds(options.passiveIds),
       groupPeers: peers,
     });
     if (!availability.available) continue;
-    if (seenIds.has(ability.id)) {
-      throw new Error(`candidate pool: duplicate ability id "${ability.id}"`);
+    if (seenIds.has(effective.id)) {
+      throw new Error(`candidate pool: duplicate ability id "${effective.id}"`);
     }
-    seenIds.add(ability.id);
-    selected.push(ability);
+    seenIds.add(effective.id);
+    selected.push(effective);
   }
 
   selected.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));

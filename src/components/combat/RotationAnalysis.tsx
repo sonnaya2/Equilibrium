@@ -10,6 +10,10 @@ import type {
 } from "@/combat";
 import type { CalcStats } from "./loadoutStats";
 import { CalculationAssumptions } from "./CalculationAssumptions";
+import {
+  formatRemainingDurationNote,
+  spiritEffectDisplayName,
+} from "./conjurePresentation";
 
 const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
@@ -45,7 +49,7 @@ const formatLiteral = (value: number) =>
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 function effectName(id: string, nameForId: (id: string) => string): string {
-  return PROCEDURAL_EFFECT_LABEL[id] ?? nameForId(id);
+  return PROCEDURAL_EFFECT_LABEL[id] ?? spiritEffectDisplayName(id) ?? nameForId(id);
 }
 
 /** Probability weight carried by an EV-scheduled event, when present. */
@@ -252,7 +256,9 @@ function EventTable({
                     <span className="ml-2">{event.stackCount} stacks</span>
                   ) : null}
                   {event.remainingTicks != null ? (
-                    <span className="ml-2">{event.remainingTicks} ticks left</span>
+                    <span className="ml-2">
+                      {formatRemainingDurationNote(event.tick, event.remainingTicks)}
+                    </span>
                   ) : null}
                 </td>
               </tr>

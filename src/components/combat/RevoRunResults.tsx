@@ -8,6 +8,11 @@ import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import type { CalcStats } from "./loadoutStats";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
+import {
+  formatConjureCastDurationNote,
+  isConjureSummonAbilityId,
+  spiritEffectDisplayName,
+} from "./conjurePresentation";
 import { castCritLabel, formatCount, formatNumber, formatTime } from "./revoPanelFormat";
 import {
   primaryDamageLabel,
@@ -80,6 +85,9 @@ export function RevoRunResults({
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
+  const conjureDurationMult = stats.conjureDurationMult ?? 1;
+  const effectLabel = (id: string) =>
+    nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
   const capOpts = capOptsFromMeta(branchFidelityMeta);
   const scoreBadge = result ? runScoreBadge(result) : null;
   const scoreNote = result ? runDiagnosticsNote(result, capOpts) : null;
@@ -311,8 +319,19 @@ export function RevoRunResults({
                                   />
                                 ) : null}
                                 <span className="min-w-0 truncate">
-                                  {nameById.get(cast.abilityId) ?? cast.abilityId}
+                                  {effectLabel(cast.abilityId)}
                                 </span>
+                                {isConjureSummonAbilityId(cast.abilityId) ? (
+                                  <span
+                                    className="shrink-0 font-mono text-[10px] text-parch-300"
+                                    title="Spirit Pact exclusive end (no despawn event)"
+                                  >
+                                    {formatConjureCastDurationNote(
+                                      cast.tick,
+                                      conjureDurationMult,
+                                    )}
+                                  </span>
+                                ) : null}
                                 {castCritLabel(cast.result) ? (
                                   <span
                                     className={
@@ -376,7 +395,7 @@ export function RevoRunResults({
                       ) : null;
                     })()}
                     <span className="truncate">
-                      {nameById.get(row.id) ?? row.id}
+                      {effectLabel(row.id)}
                       <span
                         className="ml-1.5 font-mono text-parch-300"
                         title="Expected activations"
@@ -393,7 +412,7 @@ export function RevoRunResults({
               ))}
             </div>
           </section>
-          <RotationEventPreview result={result} nameForId={(id) => nameById.get(id) ?? id} />
+          <RotationEventPreview result={result} nameForId={effectLabel} />
         </div>
       ) : null}
       {result?.ok ? (
@@ -401,7 +420,7 @@ export function RevoRunResults({
           open={analysisOpen}
           result={result}
           stats={stats}
-          nameForId={(id) => nameById.get(id) ?? id}
+          nameForId={effectLabel}
           onClose={() => setAnalysisOpen(false)}
         />
       ) : null}

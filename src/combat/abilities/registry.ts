@@ -5,6 +5,11 @@ import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
+import {
+  abilityStyleForBar,
+  isSharedConstitutionAbilityId,
+  SHARED_CONSTITUTION_ABILITIES,
+} from "../styles/shared/constitutionAbilities";
 import type { CombatStyle } from "../types";
 import {
   ENGINE_LINK_OVERRIDES,
@@ -120,6 +125,7 @@ const ENGINE_SPECS_LIST: AbilitySpec[] = [
   ...MAGIC_ABILITIES,
   ...NECROMANCY_ABILITIES,
   volleyOfSouls(3),
+  ...SHARED_CONSTITUTION_ABILITIES,
 ];
 
 /** Fail loud on duplicate engine ids at module load. */
@@ -168,7 +174,9 @@ export function allEngineSpecs(): AbilitySpec[] {
 }
 
 export function engineSpecsForStyle(style: CombatStyle): AbilitySpec[] {
-  return ABILITY_REGISTRY.filter((e) => e.style === style).map((e) => e.spec);
+  return ABILITY_REGISTRY.filter(
+    (e) => e.style === style || isSharedConstitutionAbilityId(e.engineId),
+  ).map((e) => abilityStyleForBar(e.spec, style));
 }
 
 export function solverPalette(
@@ -176,7 +184,7 @@ export function solverPalette(
   opts?: { includePartial?: boolean },
 ): AbilitySpec[] {
   return ABILITY_REGISTRY.filter((e) => {
-    if (e.style !== style) return false;
+    if (e.style !== style && !isSharedConstitutionAbilityId(e.engineId)) return false;
     if (e.solverEligibleDefault) return true;
     if (
       opts?.includePartial &&
@@ -188,7 +196,7 @@ export function solverPalette(
       return true;
     }
     return false;
-  }).map((e) => e.spec);
+  }).map((e) => abilityStyleForBar(e.spec, style));
 }
 
 /** Registry/data parity checks for tests and architecture audit. */

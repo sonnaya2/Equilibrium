@@ -102,12 +102,17 @@ export function meetsWeaponRequirement(
   if (weaponConfiguration === undefined) return true;
 
   if (ability.style === "necromancy") {
+    // Sim shape is "necromancy" when a conduit is equipped. Loadout store may still
+    // say "dualwield" for death-guard + lantern; treat that as conduit-capable so
+    // conjures are not silently skipped on Run.
+    const necroDual = weaponConfiguration === "dualwield";
     const req = ability.weaponRequirement;
     if (req === "conduit" || req === "death-guard-and-conduit") {
-      return weaponConfiguration === "necromancy";
+      return weaponConfiguration === "necromancy" || necroDual;
     }
     return (
       weaponConfiguration === "necromancy" ||
+      necroDual ||
       weaponConfiguration === "mainhand" ||
       weaponConfiguration === "shield" ||
       weaponConfiguration === "defender"

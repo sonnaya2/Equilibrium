@@ -4,12 +4,14 @@ import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
+import { SHARED_CONSTITUTION_ABILITIES } from "../styles/shared/constitutionAbilities";
 import {
   ABILITY_REGISTRY,
   entryByEngineId,
   entryByRecordId,
   engineIdForRecord,
   engineSpecs,
+  engineSpecsForStyle,
   validateAbilityRegistry,
 } from "./registry";
 import { RECORD_TO_ENGINE, validateEngineMap } from "./engineMap";
@@ -20,6 +22,7 @@ const ALL_STYLE_SPECS = [
   ...MAGIC_ABILITIES,
   ...NECROMANCY_ABILITIES,
   volleyOfSouls(3),
+  ...SHARED_CONSTITUTION_ABILITIES,
 ];
 
 describe("ability registry single authority", () => {
@@ -101,13 +104,17 @@ describe("ability registry single authority", () => {
     }
     for (const id of [
       "command_skeleton_warrior",
-      "command_putrid_zombie",
       "command_phantom_guardian",
       "command_vengeful_ghost",
     ] as const) {
       expect(entryByEngineId(id)?.solverEligibleDefault, id).toBe(true);
       expect(entryByEngineId(id)?.spec.supportStatus, id).toBeUndefined();
     }
+    // ST single-target explode; wiki is area (2 tiles) so not default solver-eligible.
+    expect(entryByEngineId("command_putrid_zombie")?.solverEligibleDefault).toBe(false);
+    expect(entryByEngineId("command_putrid_zombie")?.spec.supportStatus).toBe(
+      "partially-modeled",
+    );
   });
 
   it("engineIdForRecord matches RECORD_TO_ENGINE for catalogue records", () => {
@@ -124,6 +131,34 @@ describe("ability registry single authority", () => {
     expect(entryByRecordId("melee:rend")?.engineId).toBe("rend");
     expect(entryByRecordId("magic:runic-charge")?.engineId).toBe("runic_charge");
     expect(entryByRecordId("necromancy:volley-of-souls")?.engineId).toBe("volley_of_souls");
+    expect(entryByRecordId("shared:sacrifice")?.engineId).toBe("sacrifice");
+    expect(entryByRecordId("shared:tuskas-wrath")?.engineId).toBe("tuskas_wrath");
+  });
+
+  it("shared constitution abilities are registry full, solver-eligible, remapped per style", () => {
+    const sac = entryByEngineId("sacrifice");
+    expect(sac?.recordId).toBe("shared:sacrifice");
+    expect(sac?.support.status).toBe("full");
+    expect(sac?.solverEligibleDefault).toBe(true);
+    expect(sac?.spec.hits[0]?.band).toEqual({ minPct: 65, maxPct: 75 });
+    expect(sac?.spec.adrenaline).toEqual({ gain: 9 });
+    expect(sac?.spec.cooldownSeconds).toBe(30);
+    expect(sac?.support.note).toMatch(/heal/i);
+
+    const tuska = entryByEngineId("tuskas_wrath");
+    expect(tuska?.recordId).toBe("shared:tuskas-wrath");
+    expect(tuska?.support.status).toBe("full");
+    expect(tuska?.solverEligibleDefault).toBe(true);
+    expect(tuska?.spec.hits[0]?.band).toEqual({ minPct: 75, maxPct: 85 });
+    expect(tuska?.spec.adrenaline).toEqual({ gain: 9 });
+    expect(tuska?.spec.cooldownSeconds).toBe(15);
+    expect(tuska?.support.note).toMatch(/on-task/i);
+
+    for (const style of ["melee", "ranged", "magic", "necromancy"] as const) {
+      const specs = engineSpecsForStyle(style);
+      expect(specs.find((s) => s.id === "sacrifice")?.style, style).toBe(style);
+      expect(specs.find((s) => s.id === "tuskas_wrath")?.style, style).toBe(style);
+    }
   });
 
   it("entryByRecordId resolves aliases to the same engine entry", () => {

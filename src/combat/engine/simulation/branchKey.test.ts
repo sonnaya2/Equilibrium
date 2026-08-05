@@ -845,6 +845,174 @@ describe("branchKey structural vs JSON partitions", () => {
     ).toHaveLength(2);
   });
 
+  it("expired enduringRuin clears granted/bonus/vuln and merges with clean; live still splits", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 80 };
+    expired.state = patchMelee(expired.state, {
+      enduringRuin: { nextAttackBonus: 0.1, untilTick: 40, grantedByCast: 4 },
+    });
+    expired.state = patchTarget(expired.state, {
+      melee: {
+        ...expired.state.target.melee,
+        enduringRuin: { bleedVulnerability: 0.2, untilTick: 50 },
+      },
+    });
+    clean.state = { ...clean.state, tick: 80 };
+    clean.state = patchMelee(clean.state, {
+      enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
+    });
+    clean.state = patchTarget(clean.state, {
+      melee: {
+        ...clean.state.target.melee,
+        enduringRuin: { bleedVulnerability: 0, untilTick: 0 },
+      },
+    });
+    live.state = { ...live.state, tick: 30 };
+    live.state = patchMelee(live.state, {
+      enduringRuin: { nextAttackBonus: 0.1, untilTick: 50, grantedByCast: 4 },
+    });
+    live.state = patchTarget(live.state, {
+      melee: {
+        ...live.state.target.melee,
+        enduringRuin: { bleedVulnerability: 0.2, untilTick: 60 },
+      },
+    });
+    const liveAlt = snapshotRuntime(live);
+    liveAlt.state = patchMelee(liveAlt.state, {
+      enduringRuin: { nextAttackBonus: 0.16, untilTick: 50, grantedByCast: 9 },
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(liveAlt));
+    expect(branchKeyJson(live)).not.toBe(branchKeyJson(liveAlt));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("expired spectral scythe windows merge with zero; live windows still split", () => {
+    const base = createRuntime({
+      ...meleeInput,
+      abilities: NECROMANCY_ABILITIES,
+      context: { style: "necromancy" },
+    });
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = { ...expired.state, tick: 50 };
+    expired.state = patchNecro(expired.state, {
+      spectralScythe2UntilTick: 20,
+      spectralScythe3UntilTick: 30,
+    });
+    clean.state = { ...clean.state, tick: 50 };
+    clean.state = patchNecro(clean.state, {
+      spectralScythe2UntilTick: 0,
+      spectralScythe3UntilTick: 0,
+    });
+    live.state = { ...live.state, tick: 10 };
+    live.state = patchNecro(live.state, {
+      spectralScythe2UntilTick: 35,
+      spectralScythe3UntilTick: 0,
+    });
+    const live3 = snapshotRuntime(base);
+    live3.state = { ...live3.state, tick: 10 };
+    live3.state = patchNecro(live3.state, {
+      spectralScythe2UntilTick: 0,
+      spectralScythe3UntilTick: 35,
+    });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(live3));
+    expect(branchKeyJson(live)).not.toBe(branchKeyJson(live3));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+  });
+
+  it("fully expired spirits prune and merge with empty; live spirits still split", () => {
+    const base = createRuntime({
+      ...meleeInput,
+      abilities: NECROMANCY_ABILITIES,
+      context: { style: "necromancy" },
+    });
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    const deadSkel = {
+      id: "skeleton_warrior" as const,
+      untilTick: 40,
+      auto: { nextTick: 38 },
+      rageStacks: 12,
+    };
+    const deadGhost = {
+      id: "vengeful_ghost" as const,
+      untilTick: 45,
+      auto: { nextTick: 42 },
+      commanding: true,
+    };
+    expired.state = { ...expired.state, tick: 100 };
+    expired.state = patchConjures(expired.state, {
+      spirits: [deadSkel, deadGhost],
+    });
+    clean.state = { ...clean.state, tick: 100 };
+    clean.state = patchConjures(clean.state, { spirits: [] });
+    live.state = { ...live.state, tick: 20 };
+    live.state = patchConjures(live.state, {
+      spirits: [
+        {
+          id: "skeleton_warrior",
+          untilTick: 120,
+          auto: { nextTick: 25 },
+          rageStacks: 3,
+        },
+      ],
+    });
+    // Poison tail past until still has future; must not prune.
+    const poisonTail = snapshotRuntime(base);
+    poisonTail.state = { ...poisonTail.state, tick: 50 };
+    poisonTail.state = patchConjures(poisonTail.state, {
+      spirits: [
+        {
+          id: "putrid_zombie",
+          untilTick: 50,
+          auto: { nextTick: 49 },
+          poison: { nextTick: 52 },
+        },
+      ],
+    });
+    const poisonClean = snapshotRuntime(base);
+    poisonClean.state = { ...poisonClean.state, tick: 50 };
+    poisonClean.state = patchConjures(poisonClean.state, { spirits: [] });
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(
+      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+    ).toHaveLength(2);
+    expect(branchKeyStructural(poisonTail)).not.toBe(branchKeyStructural(poisonClean));
+    expect(branchKeyJson(poisonTail)).not.toBe(branchKeyJson(poisonClean));
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: poisonTail },
+        { weight: 0.5, rt: poisonClean },
+      ]),
+    ).toHaveLength(2);
+  });
+
   it("historical hitDetails without pending derived do not split keys", () => {
     const a = createRuntime(meleeInput);
     const b = snapshotRuntime(a);

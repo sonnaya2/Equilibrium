@@ -372,8 +372,10 @@ describe("conjure summoning and auto contribution", () => {
     const ctx = createCastContext(necroFixtureInput);
     ctx.performCast(ctx.byId.get("conjure_putrid_zombie")!, 0, false);
     expect(ctx.getState().cooldowns.conjure_putrid_zombie).toBe(50);
+    // Wiki: command first available on tick 6 (initial 3.6s lockout after summon).
+    expect(ctx.firstLegalTick("command_putrid_zombie")).toBe(6);
     const untilTick = findConjure(ctx.getState().necromancy.conjures, "putrid_zombie")!.untilTick;
-    expect(ctx.performCast(ctx.byId.get("command_putrid_zombie")!, 3, false).ok).toBe(true);
+    expect(ctx.performCast(ctx.byId.get("command_putrid_zombie")!, 6, false).ok).toBe(true);
     expect(ctx.getState().cooldowns.conjure_putrid_zombie).toBe(50);
 
     const expiry = createCastContext(necroFixtureInput);

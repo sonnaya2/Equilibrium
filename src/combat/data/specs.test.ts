@@ -4,6 +4,7 @@ import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilities";
+import { SHARED_CONSTITUTION_ABILITIES } from "../styles/shared/constitutionAbilities";
 import { combatAbilities, combatRevolutionBars } from "./index";
 import type { RevolutionBarRecord } from "./records";
 import { engineIdForRecord, resolveBar, resolveBarSlot, revoManagedSlots } from "./specs";
@@ -15,6 +16,7 @@ const ENGINE_SPECS: ReadonlyMap<string, AbilitySpec> = new Map(
     ...MAGIC_ABILITIES,
     ...NECROMANCY_ABILITIES,
     volleyOfSouls(3),
+    ...SHARED_CONSTITUTION_ABILITIES,
   ].map((spec) => [spec.id, spec]),
 );
 
@@ -49,8 +51,9 @@ describe("ENGINE_ID_BY_RECORD_ID melee", () => {
     }
   });
 
-  it("does not invent mappings for utility/shared skips", () => {
-    expect(engineIdForRecord("shared:sacrifice")).toBeUndefined();
+  it("maps shared Constitution abilities and skips unmodeled utilities", () => {
+    expect(engineIdForRecord("shared:sacrifice")).toBe("sacrifice");
+    expect(engineIdForRecord("shared:tuskas-wrath")).toBe("tuskas_wrath");
     expect(engineIdForRecord("melee:bladed-dive")).toBeUndefined();
     expect(engineIdForRecord("melee:dive")).toBeUndefined();
   });
@@ -226,7 +229,15 @@ describe("ENGINE_ID_BY_RECORD_ID necromancy", () => {
       expect(slot.modelledBy, name).toBe("engine");
       expect(slot.spec?.id, name).toBe(id);
     }
-    expect(resolved.find((s) => s.name === "Sacrifice")!.modelledBy).toBe("record");
+    const sacrifice = resolved.find((s) => s.name === "Sacrifice")!;
+    expect(sacrifice.modelledBy).toBe("engine");
+    expect(sacrifice.spec?.id).toBe("sacrifice");
+    expect(sacrifice.spec?.style).toBe("necromancy");
+    // PvME ST revo++ has no command_* slots. In-game conjure/command sequences
+    // swap the conjure icon when the spirit is active; our bar stores conjure
+    // ids only. Commands fire under revo only when placed on a custom managed bar.
+    const managed = revoManagedSlots(bar, ENGINE_SPECS);
+    expect(managed.every((s) => s.spec == null || !s.spec.id.startsWith("command_"))).toBe(true);
   });
 });
 
@@ -244,7 +255,7 @@ describe("revolution bar resolve coverage matrix", () => {
     expect(matrix["melee-two-handed"]).toEqual({ engine: 11, record: 0, unmodelled: 0 });
     expect(matrix.ranged).toEqual({ engine: 10, record: 0, unmodelled: 0 });
     expect(matrix.magic).toEqual({ engine: 10, record: 0, unmodelled: 0 });
-    expect(matrix.necromancy).toEqual({ engine: 10, record: 1, unmodelled: 0 });
+    expect(matrix.necromancy).toEqual({ engine: 11, record: 0, unmodelled: 0 });
   });
 });
 

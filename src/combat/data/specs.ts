@@ -5,6 +5,7 @@ import {
   weaponConfigurationFromBarSetup,
   type AdaptiveStrikeWeaponConfiguration,
 } from "../styles/melee/abilities";
+import { abilityStyleForBar } from "../styles/shared/constitutionAbilities";
 import { abilityById } from "./index";
 import type { AbilityRecord, RevolutionBarRecord } from "./records";
 
@@ -95,7 +96,14 @@ export function resolveBarSlot(
   }
   const engineId = mapEngineId(slot.abilityId) ?? slot.abilityId;
   const engineSpec = engineSpecs.get(engineId);
-  if (engineSpec) return { name: slot.name, modelledBy: "engine", spec: engineSpec };
+  if (engineSpec) {
+    return {
+      name: slot.name,
+      modelledBy: "engine",
+      // Shared Constitution abilities adopt the bar combat style (berserk / DS / etc.).
+      spec: abilityStyleForBar(engineSpec, barStyle),
+    };
+  }
 
   const record = abilityById(slot.abilityId);
   if (record) {

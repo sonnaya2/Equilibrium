@@ -75,6 +75,18 @@ describe("revo + evaluate summon conjures end-to-end", () => {
     expect(s.totalExpected).toBeGreaterThan(0);
   });
 
+  it("70s+ revo with army early on bar re-summons after SP3 and logs both casts", () => {
+    const s = simulateRevolution({
+      ...necroRevoBase,
+      bar: [army, touch, soulSap],
+      durationTicks: 117,
+    });
+    expect(s.ok).toBe(true);
+    const armyCasts = s.casts.filter((c) => c.abilityId === "conjure_undead_army");
+    expect(armyCasts.map((c) => c.tick)).toEqual([0, 105]);
+    expect(conjureAutoEvents(s).some((e) => e.tick > 105)).toBe(true);
+  });
+
   it("weaponConfiguration other than necromancy blocks conjures on the bar (conduit)", () => {
     const s = simulateRevolution({
       ...necroInput,

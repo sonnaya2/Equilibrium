@@ -34,6 +34,78 @@ describe("gameArt", () => {
     expect(abilityCategoryLabel("ultimate")).toBe("ultimate");
   });
 
+  it("maps igneous equipment variants to base ability icons that exist on disk", () => {
+    const cases: Array<[string, string, string]> = [
+      ["death_skulls_igneous", "necromancy", "/game/combat/abilities/necromancy/death-skulls.webp"],
+      ["overpower_igneous", "melee", "/game/combat/abilities/melee/overpower.webp"],
+      ["deadshot_igneous", "ranged", "/game/combat/abilities/ranged/deadshot.webp"],
+      ["omnipower_igneous", "magic", "/game/combat/abilities/magic/omnipower.webp"],
+      // Hyphen form (same strip rule).
+      ["overpower-igneous", "melee", "/game/combat/abilities/melee/overpower.webp"],
+    ];
+    for (const [id, style, expected] of cases) {
+      const path = abilityIconPath(id, style);
+      expect(path, id).toBe(expected);
+      expect(existsSync(join(PUBLIC, path)), `missing public file for ${id}: ${path}`).toBe(true);
+    }
+  });
+
+  it("igneous cape / kal aliases resolve to existing public webp files", () => {
+    const cases: Array<[string, string]> = [
+      ["item:igneous-kal-ket", "/game/combat/equipment/igneous-kal-ket.webp"],
+      ["item:igneous-kal-mej", "/game/combat/equipment/igneous-kal-mej.webp"],
+      ["item:igneous-kal-xil", "/game/combat/equipment/igneous-kal-xil.webp"],
+      ["item:igneous-kal-mor", "/game/combat/equipment/igneous-kal-mor.webp"],
+      ["item:igneous-kal-zuk", "/game/combat/equipment/igneous-kal-zuk.webp"],
+    ];
+    for (const [id, expected] of cases) {
+      expect(equipmentIconPath(id), id).toBe(expected);
+      expect(existsSync(join(PUBLIC, expected)), `missing ${expected}`).toBe(true);
+    }
+    const nameCases: Array<[string, RegExp]> = [
+      ["Igneous Kal-Ket", /igneous-kal-ket\.webp$/],
+      ["Igneous Kal-Mej", /igneous-kal-mej\.webp$/],
+      ["Igneous Kal-Xil", /igneous-kal-xil\.webp$/],
+      ["Igneous Kal-Mor", /igneous-kal-mor\.webp$/],
+      ["Igneous Kal-Zuk", /igneous-kal-zuk\.webp$/],
+      ["Igneous cape progression", /igneous-kal-zuk\.webp$/],
+    ];
+    for (const [name, re] of nameCases) {
+      const path = dataEntityIconPath({ name });
+      expect(path, name).toMatch(re);
+      expect(existsSync(join(PUBLIC, path!)), `missing public file for "${name}": ${path}`).toBe(
+        true,
+      );
+    }
+  });
+
+  it("maps constitution shared abilities to constitution folder files that exist", () => {
+    const sacrificeCases: Array<[string, string]> = [
+      ["sacrifice", "constitution"],
+      ["sacrifice", "melee"],
+      ["sacrifice", "necromancy"],
+      ["shared:sacrifice", "necromancy"],
+      ["shared:sacrifice", "magic"],
+    ];
+    for (const [id, style] of sacrificeCases) {
+      const path = abilityIconPath(id, style);
+      expect(path, `${id}/${style}`).toBe("/game/combat/abilities/constitution/sacrifice.webp");
+      expect(existsSync(join(PUBLIC, path)), path).toBe(true);
+    }
+
+    const tuskasCases: Array<[string, string]> = [
+      ["tuskas_wrath", "melee"],
+      ["tuskas_wrath", "ranged"],
+      ["tuskas-wrath", "magic"],
+      ["tuskas_wrath", "constitution"],
+    ];
+    for (const [id, style] of tuskasCases) {
+      const path = abilityIconPath(id, style);
+      expect(path, `${id}/${style}`).toBe("/game/combat/abilities/constitution/tuskas-wrath.webp");
+      expect(existsSync(join(PUBLIC, path)), path).toBe(true);
+    }
+  });
+
   it("every style icon is published to public/game", () => {
     for (const style of Object.keys(STYLE_ICON) as Array<keyof typeof STYLE_ICON>) {
       const path = styleIconPath(style);

@@ -74,6 +74,8 @@ export const COMMAND_REQUIRES_CONJURE: Readonly<Record<string, ConjureId>> = {
 
 /** Initial lockout after conjuring ghost (wiki: command first available tick 6). */
 export const COMMAND_GHOST_INITIAL_COOLDOWN_TICKS = 6;
+/** Initial lockout after conjuring zombie (wiki: command first available tick 6). */
+export const COMMAND_ZOMBIE_INITIAL_COOLDOWN_TICKS = 6;
 
 /** PerAbility / damage ledger ids for spirit autos (not bar abilities). */
 export const SPIRIT_AUTO_ABILITY_ID: Readonly<Record<ConjureId, string>> = {

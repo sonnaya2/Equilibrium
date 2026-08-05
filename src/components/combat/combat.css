@@ -2608,6 +2608,191 @@ body:has(.combat-screen) {
   color: var(--combat-gem-bright);
 }
 
+.revo-run-button.is-running {
+  border-color: color-mix(in srgb, var(--combat-gold-mid, #a89050) 55%, var(--combat-gem));
+  color: var(--combat-gold-bright, #e8d49a);
+  background:
+    linear-gradient(180deg, rgb(200 170 90 / 10%), transparent 75%),
+    color-mix(in srgb, var(--combat-inset) 88%, black);
+  opacity: 1;
+}
+
+.revo-run-cancel {
+  min-height: 2.15rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--combat-gold-dim, #6a5a32);
+  background: color-mix(in srgb, var(--combat-inset) 90%, black);
+  color: var(--combat-muted);
+  font-size: 0.75rem;
+}
+
+.revo-run-cancel:hover {
+  border-color: color-mix(in srgb, var(--combat-chaos, #c45) 40%, var(--combat-gold-dim, #6a5a32));
+  color: var(--combat-text, #e8e0d0);
+  background: color-mix(in srgb, var(--combat-inset) 80%, black);
+}
+
+/* Run bar busy plate - revo scan rail (gold/brass), not solver gem workers */
+.revo-run-busy {
+  margin-top: 0.55rem;
+  padding: 0.5rem 0.6rem 0.55rem;
+  border: 1px solid var(--combat-gold-dim, #6a5a32);
+  background:
+    linear-gradient(180deg, rgb(200 170 90 / 6%), transparent 2.1rem),
+    color-mix(in srgb, var(--combat-inset) 92%, black);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 45%);
+}
+
+.revo-run-busy__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3rem 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.revo-run-busy__phase {
+  color: var(--combat-gold-bright, #e8d49a);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.revo-run-busy__meta {
+  color: var(--combat-muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.65rem;
+}
+
+/* Ability-slot rail: cursor sweeps left-to-right like revo priority scan */
+.revo-run-busy__rail {
+  --slots: 8;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--slots), minmax(0, 1fr));
+  gap: 0.28rem;
+  padding: 0.28rem 0.3rem;
+  border: 1px solid color-mix(in srgb, var(--combat-gold-dim, #6a5a32) 70%, black);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 11px,
+      rgb(0 0 0 / 18%) 11px,
+      rgb(0 0 0 / 18%) 12px
+    ),
+    color-mix(in srgb, var(--combat-inset) 78%, black);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
+  overflow: hidden;
+}
+
+.revo-run-busy__slot {
+  position: relative;
+  height: 1.55rem;
+  border: 1px solid color-mix(in srgb, var(--combat-gold-dim, #6a5a32) 55%, #2a2418);
+  background:
+    linear-gradient(165deg, rgb(255 255 255 / 4%), transparent 45%),
+    color-mix(in srgb, var(--combat-inset) 70%, #1a1610);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 35%);
+}
+
+.revo-run-busy__slot::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgb(0 0 0 / 35%);
+  background: color-mix(in srgb, var(--combat-inset) 55%, black);
+  opacity: 0.55;
+}
+
+.revo-run-busy__cursor {
+  position: absolute;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  left: 0;
+  width: calc((100% - 0.6rem - 7 * 0.28rem) / var(--slots) + 0.12rem);
+  border: 1px solid color-mix(in srgb, var(--combat-gold-bright, #e8d49a) 75%, white);
+  background: linear-gradient(
+    180deg,
+    rgb(232 212 154 / 28%),
+    rgb(168 140 60 / 12%) 55%,
+    transparent
+  );
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 40%),
+    inset 0 0 8px rgb(232 212 154 / 18%);
+  pointer-events: none;
+  animation: revo-run-scan 1.35s ease-in-out infinite;
+}
+
+.revo-run-busy.is-full .revo-run-busy__cursor {
+  animation-duration: 0.95s;
+  border-color: color-mix(in srgb, var(--combat-gem-bright, #5ee0b0) 50%, var(--combat-gold-bright, #e8d49a));
+  background: linear-gradient(
+    180deg,
+    rgb(46 203 143 / 22%),
+    rgb(232 212 154 / 14%) 50%,
+    transparent
+  );
+}
+
+.revo-run-busy.is-full .revo-run-busy__phase {
+  color: color-mix(in srgb, var(--combat-gem-bright, #5ee0b0) 55%, var(--combat-gold-bright, #e8d49a));
+}
+
+/* Slot wake as cursor passes (staggered sheen) */
+.revo-run-busy__slot {
+  animation: revo-run-slot-wake 1.35s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.12s);
+}
+
+.revo-run-busy.is-full .revo-run-busy__slot {
+  animation-duration: 0.95s;
+  animation-delay: calc(var(--i, 0) * 0.085s);
+}
+
+/* Cursor travels the slot rail left-to-right (revo priority scan feel). */
+@keyframes revo-run-scan {
+  0% {
+    left: 0.3rem;
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% - 0.3rem - ((100% - 0.6rem - 7 * 0.28rem) / var(--slots) + 0.12rem));
+    opacity: 0.75;
+  }
+}
+
+@keyframes revo-run-slot-wake {
+  0%,
+  100% {
+    border-color: color-mix(in srgb, var(--combat-gold-dim, #6a5a32) 55%, #2a2418);
+  }
+  40%,
+  55% {
+    border-color: color-mix(in srgb, var(--combat-gold-bright, #e8d49a) 45%, var(--combat-gold-dim, #6a5a32));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revo-run-busy__cursor,
+  .revo-run-busy__slot {
+    animation: none !important;
+  }
+
+  .revo-run-busy__cursor {
+    left: 35%;
+    opacity: 0.9;
+  }
+
+  .revo-run-busy__slot:nth-child(-n + 3) {
+    border-color: color-mix(in srgb, var(--combat-gold-bright, #e8d49a) 40%, var(--combat-gold-dim, #6a5a32));
+  }
+}
+
 .revo-stat-strip {
   gap: 0;
   margin-top: 0.75rem;

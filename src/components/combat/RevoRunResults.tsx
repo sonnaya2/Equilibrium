@@ -88,6 +88,10 @@ export function RevoRunResults({
   const dpsLabel = result ? primaryDpsLabel(result) : "Fixed-window DPS";
   const showScoreStrip = shouldShowRunScoreChrome(result);
   const run = () => onRun();
+  const busyPhaseFull =
+    typeof runProgressLabel === "string" && /full analysis/i.test(runProgressLabel);
+  const busyPhaseLabel = busyPhaseFull ? "Full analysis" : "Branch probe";
+  const slotCount = 8;
 
   return (
     <>
@@ -115,27 +119,54 @@ export function RevoRunResults({
           type="button"
           onClick={run}
           disabled={runBusy}
-          className="combat-button revo-run-button border border-stone-750 bg-stone-850 px-3 py-1.5 text-xs text-parch-50 hover:bg-stone-800 disabled:opacity-40"
+          className={
+            runBusy
+              ? "combat-button revo-run-button is-running"
+              : "combat-button revo-run-button"
+          }
           data-testid="revo-run-button"
         >
-          {runBusy ? "Running…" : "Run bar"}
+          {runBusy ? "Scanning…" : "Run bar"}
         </button>
         {runBusy && onCancelRun ? (
           <button
             type="button"
             onClick={onCancelRun}
-            className="border border-stone-750 px-2 py-1 text-xs text-parch-300 hover:bg-stone-800"
+            className="combat-button revo-run-cancel"
             data-testid="revo-run-cancel"
           >
             Cancel
           </button>
         ) : null}
-        {runBusy && runProgressLabel ? (
-          <span className="text-xs text-parch-300" data-testid="revo-run-progress">
-            {runProgressLabel}
-          </span>
-        ) : null}
       </div>
+
+      {runBusy ? (
+        <div
+          className={busyPhaseFull ? "revo-run-busy is-full" : "revo-run-busy"}
+          data-testid="revo-run-busy"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="revo-run-busy__head">
+            <span className="revo-run-busy__phase" data-testid="revo-run-busy-phase">
+              {busyPhaseLabel}
+            </span>
+            <span className="revo-run-busy__meta" data-testid="revo-run-progress">
+              {runProgressLabel ?? "Working…"}
+            </span>
+          </div>
+          <div className="revo-run-busy__rail" aria-hidden="true">
+            {Array.from({ length: slotCount }, (_, i) => (
+              <span
+                key={i}
+                className="revo-run-busy__slot"
+                style={{ ["--i" as string]: String(i) }}
+              />
+            ))}
+            <span className="revo-run-busy__cursor" />
+          </div>
+        </div>
+      ) : null}
 
       {result && !result.ok ? (
         <p className="mt-3 text-xs text-chaos-300" data-testid="revo-run-error">

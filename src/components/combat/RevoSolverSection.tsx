@@ -16,6 +16,7 @@ import { RegionCrest } from "../RegionCrest";
 import {
   BAR_SIZE_PRESETS,
   formatNumber,
+  formatSolverUpgradeChrome,
   mayApplySolverResultBar,
   previewCategory,
   progressFillFromState,
@@ -82,8 +83,9 @@ export function RevoSolverSection({
   const optimize = () => onOptimize();
   const cancelSolve = () => onCancel();
   const applySolverBar = (ids: readonly string[]) => onApplyBar(ids);
-  // Phase 4: results panel only after validated DTO; gate Apply for non-cacheable proofs.
+  // Phase 4/5: gate Apply for non-cacheable proofs and remains-best outcomes.
   const canApplyResult = mayApplySolverResultBar(solverResult);
+  const upgradeChrome = solverResult ? formatSolverUpgradeChrome(solverResult) : null;
 
   return (
     <section className="revo-solver-controls">
@@ -506,7 +508,8 @@ export function RevoSolverSection({
       {solverResult ? (
         <div className="mt-3 border-t border-stone-750 pt-2" data-testid="revo-solver-results">
           <p className="text-xs text-parch-300">
-            Score {formatNumber(solverResult.score)} ·{" "}
+            Score {formatNumber(solverResult.score)}
+            {upgradeChrome ? ` · ${upgradeChrome}` : ""} ·{" "}
             {formatProofChrome(solverResult.proofLabel, {
               rng: solverResult.rng ?? solverResult.summary?.rng,
               failure: solverResult.summary?.failure,

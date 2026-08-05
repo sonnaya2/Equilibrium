@@ -1,4 +1,11 @@
 import type { ProofLabel, ScoredBar, SolveResult, SolveStatus, SolveTier } from "../contracts";
+import {
+  barsEqual,
+  candidateBeatsIncumbent,
+  finiteFullScore,
+  scoreImprovementAbsolute,
+  scoreImprovementPercent,
+} from "../incumbentCompare";
 import { diverseSelect } from "../diversity";
 import { estimateFeasibleCount } from "./exhaustive";
 import { barKey } from "../fingerprint";
@@ -100,6 +107,7 @@ function buildExplorePool(state: SearchState, seedBestBar: readonly string[] | n
 /**
  * Diverse full shortlist: score rank + composition + order + authored seeds + user bar.
  * Configurable size (not a hardcoded top-two). Hard-capped so full rescoring stays bounded.
+ * Incumbent full eval is guaranteed outside this capacity gate (see forceEvalIncumbentFull).
  */
 export function fullCandidateList(
   pool: ScoredBar[],
@@ -170,14 +178,35 @@ function rescoreFull(state: SearchState, fullCandidates: ScoredBar[]): ScoredBar
   return rescored;
 }
 
+/**
+ * Always full-rescore the first-class incumbent, outside shortlist capacity.
+ * Cache hit is fine when the bar already landed on the shortlist.
+ */
+function forceEvalIncumbentFull(state: SearchState): ScoredBar | null {
+  if (!state.incumbentBar?.length) return null;
+  return state.forceEval(state.incumbentBar, "full", "incumbent-full");
+}
+
+function mergeFullUnique(shortlistFull: ScoredBar[], incumbentScored: ScoredBar | null): ScoredBar[] {
+  const byFp = new Map<string, ScoredBar>();
+  for (const s of shortlistFull) {
+    if (isFullRankable(s)) byFp.set(s.fingerprint, s);
+  }
+  if (incumbentScored && isFullRankable(incumbentScored)) {
+    byFp.set(incumbentScored.fingerprint, incumbentScored);
+  }
+  return [...byFp.values()].sort((a, b) => b.robustScore - a.robustScore);
+}
+
 function chooseProof(
   state: SearchState,
   status: SolveStatus,
   fullOnly: ScoredBar[],
   feasibleCount: number,
 ): ProofLabel {
-  // Zero full-horizon rankable winners is a failed solve (no applyable upgrade).
+  // Zero full-horizon rankable winners is a failed solve.
   // Exploratory scores stay in bestExploratoryScore only - never as proof fallback.
+  // Incumbent-only ok still uses normal labels when any full rankable exists.
   if (status === "failed" || fullOnly.length === 0) return "failed";
 
   // True full-objective global optimum: every feasible bar has a successful
@@ -201,22 +230,62 @@ function assembleResult(
   seedBestScore: number,
   seedBestBar: readonly string[] | null,
   explorePool: ScoredBar[],
-  fullOnly: ScoredBar[],
+  shortlistFull: ScoredBar[],
+  incumbentRaw: ScoredBar | null,
 ): SolveResult {
   const topK = opts.topK ?? state.config.topK;
-  const rankedFull = [...fullOnly].sort((a, b) => b.robustScore - a.robustScore);
 
-  // Applyable winner only from full-horizon rankable rescores.
-  // Never promote exploratory into best (Phase 4: no degraded-exploratory-fallback).
-  const best: ScoredBar | null = rankedFull[0] ?? null;
-  const status: SolveStatus = best ? "ok" : "failed";
+  const incumbentScored = isFullRankable(incumbentRaw) ? incumbentRaw : null;
+  const incumbentScore = incumbentScored
+    ? incumbentScored.robustScore
+    : Number.NEGATIVE_INFINITY;
+
+  const rankedFull = mergeFullUnique(shortlistFull, incumbentScored);
+  // Proposed: best full-rankable among shortlist + other full candidates (inc. incumbent).
+  const proposed = rankedFull[0] ?? null;
+
+  let best: ScoredBar | null = null;
+  let status: SolveStatus = "failed";
+  let isUpgrade = false;
+  let validForApply = false;
+
+  const proposedBeats =
+    proposed != null &&
+    candidateBeatsIncumbent(proposed.robustScore, incumbentScore) &&
+    !barsEqual(proposed.bar, state.incumbentBar);
+
+  if (proposedBeats) {
+    best = proposed;
+    status = "ok";
+    isUpgrade = true;
+    validForApply = true;
+  } else if (incumbentScored) {
+    // Current bar remains best - validated full score to report; Apply stays off.
+    best = incumbentScored;
+    status = "ok";
+    isUpgrade = false;
+    validForApply = false;
+  } else if (proposed != null) {
+    // Full-rankable proposed, no rankable incumbent (candidateBeatsIncumbent is true).
+    best = proposed;
+    status = "ok";
+    isUpgrade = true;
+    validForApply = true;
+  }
 
   // No fabricated empty-bar / zero-score winner. top is full-rankable only.
   const top = rankedFull.length > 0 ? diverseSelect(rankedFull, topK) : [];
 
   if (rankedFull.length > 0 && best && top.length > 0) {
     top.sort((a, b) => b.robustScore - a.robustScore);
-    if (top[0]!.robustScore < best.robustScore) top[0] = best;
+    const bestFp = best.fingerprint;
+    const idx = top.findIndex((t) => t.fingerprint === bestFp);
+    if (idx < 0) {
+      top.unshift(best);
+      if (top.length > topK) top.length = topK;
+    } else if (top[0]!.robustScore < best.robustScore) {
+      top[0] = best;
+    }
   }
 
   const feasibleCount = estimateFeasibleCount(state.pool, state.sizeBounds);
@@ -230,6 +299,10 @@ function assembleResult(
     (isSearchRankable(explorePool[0]) ? explorePool[0].robustScore : seedBestScore);
   const bestFullScore =
     state.bestFull?.robustScore ?? rankedFull[0]?.robustScore ?? Number.NEGATIVE_INFINITY;
+
+  const winnerScore = best ? best.robustScore : Number.NEGATIVE_INFINITY;
+  const scoreImprovement = scoreImprovementAbsolute(winnerScore, incumbentScore, isUpgrade);
+  const percentImprovement = scoreImprovementPercent(winnerScore, incumbentScore, isUpgrade);
 
   const searchEvaluations = state.searchEvaluations;
   const fullEvaluations = state.fullEvaluations;
@@ -254,6 +327,12 @@ function assembleResult(
       : Number.NEGATIVE_INFINITY,
     bestFullScore: Number.isFinite(bestFullScore) ? bestFullScore : Number.NEGATIVE_INFINITY,
     validFullCandidateCount: rankedFull.length,
+    incumbentBar: state.incumbentBar?.length ? [...state.incumbentBar] : null,
+    incumbentScore: finiteFullScore(incumbentScore),
+    isUpgrade,
+    scoreImprovement,
+    percentImprovement,
+    validForApply,
     stats: {
       evaluations: totalEvaluations,
       searchEvaluations,
@@ -279,8 +358,18 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
   const { seedBestScore, seedBestBar } = pickSeedBest(state);
   const explorePool = buildExplorePool(state, seedBestBar);
   const fullCandidates = fullCandidateList(explorePool, state, seedBestBar);
-  const fullOnly = rescoreFull(state, fullCandidates);
-  return assembleResult(state, opts, seedBestScore, seedBestBar, explorePool, fullOnly);
+  const shortlistFull = rescoreFull(state, fullCandidates);
+  // Outside shortlist capacity: always full-eval incumbent (cache hit OK).
+  const incumbentRaw = forceEvalIncumbentFull(state);
+  return assembleResult(
+    state,
+    opts,
+    seedBestScore,
+    seedBestBar,
+    explorePool,
+    shortlistFull,
+    incumbentRaw,
+  );
 }
 
 /**
@@ -309,8 +398,10 @@ export async function finalizeSearchAsync(
 
   const explorePool = buildExplorePool(state, seedBestBar);
   const fullCandidates = fullCandidateList(explorePool, state, seedBestBar);
-  const totalSteps = fullCandidates.length;
-  const fullOnly: ScoredBar[] = [];
+  // +1 when incumbent is present so progress includes the guaranteed full eval.
+  const hasIncumbent = Boolean(state.incumbentBar?.length);
+  const totalSteps = fullCandidates.length + (hasIncumbent ? 1 : 0);
+  const shortlistFull: ScoredBar[] = [];
 
   for (let i = 0; i < fullCandidates.length; i++) {
     throwIfCancelled();
@@ -327,12 +418,35 @@ export async function finalizeSearchAsync(
     throwIfCancelled();
     // Ranking score-only full horizon; presentation re-sim is post-rank.
     const full = state.forceEval(s.bar, "full", "finalize");
-    if (isFullRankable(full)) fullOnly.push(full);
+    if (isFullRankable(full)) shortlistFull.push(full);
     opts.onStep?.({
       done: i + 1,
       total: Math.max(1, totalSteps),
       label: `${i + 1}/${Math.max(1, totalSteps)}`,
       bar: s.bar,
+    });
+    await yieldSlice();
+  }
+
+  // Guaranteed full-eval of first-class incumbent (outside shortlist capacity).
+  let incumbentRaw: ScoredBar | null = null;
+  if (hasIncumbent) {
+    throwIfCancelled();
+    const step = fullCandidates.length;
+    opts.onStep?.({
+      done: step,
+      total: Math.max(1, totalSteps),
+      label: `${step + 1}/${Math.max(1, totalSteps)}`,
+      bar: state.incumbentBar!,
+    });
+    await yieldSlice();
+    throwIfCancelled();
+    incumbentRaw = forceEvalIncumbentFull(state);
+    opts.onStep?.({
+      done: step + 1,
+      total: Math.max(1, totalSteps),
+      label: `${step + 1}/${Math.max(1, totalSteps)}`,
+      bar: state.incumbentBar!,
     });
     await yieldSlice();
   }
@@ -344,6 +458,13 @@ export async function finalizeSearchAsync(
     label: "Done",
   });
 
-  return assembleResult(state, opts, seedBestScore, seedBestBar, explorePool, fullOnly);
+  return assembleResult(
+    state,
+    opts,
+    seedBestScore,
+    seedBestBar,
+    explorePool,
+    shortlistFull,
+    incumbentRaw,
+  );
 }
-

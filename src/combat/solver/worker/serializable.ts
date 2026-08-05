@@ -232,6 +232,9 @@ export interface SerializableSolverRequest {
   agentRecipe?: "default" | "evolutionary" | "anneal_local";
 }
 
+/** Proof note when search found no full-horizon upgrade over the current bar. */
+export const CURRENT_BAR_REMAINS_BEST_NOTE = "current bar remains best";
+
 /** Cloneable solver result (no Maps/Sets/functions). */
 export interface SolverResultDTO {
   bar: readonly string[];
@@ -267,6 +270,19 @@ export interface SolverResultDTO {
    * per-hit outgoing damage model).
    */
   assumptions?: readonly string[];
+  /**
+   * Phase 5 incumbent comparison (baseline = current user bar).
+   * Always emitted from buildSolverResultDto when SolveResult carries them.
+   */
+  baselineBar?: readonly string[] | null;
+  baselineScore?: number;
+  winnerScore?: number;
+  scoreImprovement?: number;
+  percentImprovement?: number | null;
+  /** Explicit false: current bar remains best; Apply stays disabled. */
+  isUpgrade?: boolean;
+  /** True only for an upgrade with a full-rankable best. */
+  validForApply?: boolean;
   /** Optional compact summary; may carry residual/exactness for proof chrome. */
   summary?: {
     totalExpected: number;

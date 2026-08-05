@@ -1,7 +1,11 @@
 /** Final SolverResultDTO construction from a completed SolveResult. */
 import type { SolveResult } from "./contracts";
 import { solveIdentityFromRequest } from "./identity";
-import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
+import {
+  CURRENT_BAR_REMAINS_BEST_NOTE,
+  type SerializableSolverRequest,
+  type SolverResultDTO,
+} from "./worker/serializable";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "../league/ruleset";
 import type { WinnerPresentation } from "./evaluate";
@@ -37,8 +41,7 @@ export function buildSolverResultDto(args: {
   const bigBonedAssumptions = hasBigBoned ? [...BIG_BONED_OUTGOING_ASSUMPTIONS] : undefined;
   const bigBonedNotes = hasBigBoned ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const) : [];
 
-  // Applyable DTO only for full-horizon validated winners (Phase 4).
-  // Exploratory / degraded never populate bar or enable Apply.
+  // Full-horizon validated bar required (Phase 4). Phase 5 may keep incumbent best.
   const winner = result.best;
   const validated =
     result.status === "ok" &&
@@ -64,6 +67,12 @@ export function buildSolverResultDto(args: {
     );
   }
 
+  // Rely on finalize flags: never claim upgrade when proposed score is not above incumbent.
+  const isUpgrade = result.isUpgrade === true;
+  const validForApply = result.validForApply === true && isUpgrade;
+  const scoreImprovement = isUpgrade ? (result.scoreImprovement ?? 0) : 0;
+  const percentImprovement = isUpgrade ? (result.percentImprovement ?? null) : null;
+
   const winnerBar = [...winner.bar];
   const fullWinner = true;
   const score = winner.robustScore;
@@ -84,6 +93,10 @@ export function buildSolverResultDto(args: {
     `seed best exploratory ${result.seedBestScore}`,
     ...bigBonedNotes,
   ];
+
+  if (!isUpgrade) {
+    proofNotes.push(CURRENT_BAR_REMAINS_BEST_NOTE);
+  }
 
   if (presentation) {
     proofNotes.push("winner full-analysis presentation re-sim");
@@ -109,6 +122,11 @@ export function buildSolverResultDto(args: {
     : undefined;
   const fullOut = Number.isFinite(result.bestFullScore) ? result.bestFullScore : undefined;
 
+  const baselineBar =
+    result.incumbentBar != null && result.incumbentBar.length > 0
+      ? [...result.incumbentBar]
+      : result.incumbentBar ?? null;
+
   const dto: SolverResultDTO = {
     bar: winnerBar,
     // Ranking score from score-only finalize path (not rewritten by presentation).
@@ -129,6 +147,13 @@ export function buildSolverResultDto(args: {
     developedDpm: hasRealWindows ? winner.developedDpm : undefined,
     steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
     assumptions: bigBonedAssumptions,
+    baselineBar,
+    baselineScore: result.incumbentScore,
+    winnerScore: score,
+    scoreImprovement,
+    percentImprovement,
+    isUpgrade,
+    validForApply,
     ...(presentation?.summary ? { summary: presentation.summary } : {}),
     ...(presentation?.rng ? { rng: presentation.rng } : {}),
     proof: {

@@ -1,6 +1,6 @@
 import type { EvaluateFn, PoolAbility, SizeBounds, SolveResult, SolveTier } from "./contracts";
 import { createRng } from "./rng";
-import { buildSeeds } from "./seeds";
+import { buildSeeds, normalizeAuthoredSeed } from "./seeds";
 import { createSearchState, type SearchConfig } from "./search/types";
 import { runExhaustive, runExhaustiveAsync } from "./search/exhaustive";
 import { runConstructiveBeam, runConstructiveBeamAsync } from "./search/constructiveBeam";
@@ -133,6 +133,11 @@ export interface SolveInput {
   tier?: SolveTier;
   seed?: number;
   authoredSeeds?: readonly (readonly string[])[];
+  /**
+   * Current user bar (Phase 5 incumbent). Legalized via normalizeAuthoredSeed.
+   * Always full-rescored at finalize; not subject to shortlist capacity exclusion.
+   */
+  incumbentBar?: readonly string[] | null;
   config?: Partial<SearchConfig>;
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
   isSearchStopped?: () => boolean;
@@ -170,18 +175,29 @@ export interface SolveAsyncHooks {
  * 1 seeds -> 2 exhaustive? -> 3 beam -> 4 evo -> 5 LNS -> 6 anneal -> 7 local
  * -> 8 medium screen (optional multi-fidelity) -> 9 full finalize
  */
+function resolveIncumbentBar(input: SolveInput): string[] | null {
+  if (!input.incumbentBar?.length) return null;
+  return normalizeAuthoredSeed(input.incumbentBar, input.pool, input.sizeBounds);
+}
+
 export function solve(input: SolveInput): SolveResult {
   beginSolverProfileWindow();
   const tier = input.tier ?? "thorough";
   const base = configForTier(tier, input.seed ?? 1);
   const config: SearchConfig = { ...base, ...input.config, tier };
 
+  const incumbentBar = resolveIncumbentBar(input);
   const rng = createRng(config.seed);
+  // Incumbent also enters the seed list for explore, but finalize treats it first-class.
+  const authored = [
+    ...(incumbentBar ? [incumbentBar] : []),
+    ...(input.authoredSeeds ?? []).map((s) => [...s]),
+  ];
   const seeds = buildSeeds({
     pool: input.pool,
     sizeBounds: input.sizeBounds,
     rng,
-    authored: input.authoredSeeds,
+    authored,
     count: tier === "thorough" ? 8 : 16,
   });
 
@@ -191,6 +207,7 @@ export function solve(input: SolveInput): SolveResult {
     evaluate: input.evaluate,
     config,
     seeds,
+    incumbentBar,
     shouldSkipFingerprint: input.shouldSkipFingerprint,
     isSearchStopped: input.isSearchStopped,
   });
@@ -231,12 +248,17 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
   const yieldSlice = hooks?.yieldSlice ?? (async () => undefined);
   const onPhase = hooks?.onPhase;
 
+  const incumbentBar = resolveIncumbentBar(input);
   const rng = createRng(config.seed);
+  const authored = [
+    ...(incumbentBar ? [incumbentBar] : []),
+    ...(input.authoredSeeds ?? []).map((s) => [...s]),
+  ];
   const seeds = buildSeeds({
     pool: input.pool,
     sizeBounds: input.sizeBounds,
     rng,
-    authored: input.authoredSeeds,
+    authored,
     count: tier === "thorough" ? 8 : 16,
   });
 
@@ -246,6 +268,7 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
     evaluate: input.evaluate,
     config,
     seeds,
+    incumbentBar,
     shouldSkipFingerprint: input.shouldSkipFingerprint,
     isSearchStopped: input.isSearchStopped,
   });

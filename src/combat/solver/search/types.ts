@@ -82,6 +82,11 @@ export interface SearchState {
   /** Archive entries preserve mode; mixed-scale ranking is forbidden. */
   archive: ScoredBar[];
   seeds: string[][];
+  /**
+   * Normalized current user bar (Phase 5). First-class incumbent: always full-rescored
+   * at finalize regardless of shortlist capacity. Not merely an authored seed.
+   */
+  incumbentBar: string[] | null;
   exhaustiveCompleted: boolean;
   startedAt: number;
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
@@ -109,6 +114,8 @@ export function createSearchState(opts: {
   evaluate: EvaluateFn;
   config: SearchConfig;
   seeds?: readonly (readonly string[])[];
+  /** Normalized current user bar; always full-rescored at finalize. */
+  incumbentBar?: readonly string[] | null;
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
   isSearchStopped?: () => boolean;
 }): SearchState {
@@ -133,14 +140,15 @@ export function createSearchState(opts: {
     searchEvaluations: 0,
     mediumEvaluations: 0,
     fullEvaluations: 0,
-    fullEvaluatedFingerprints: new Set<string>(),
-    fullSuccessFingerprints: new Set<string>(),
+    fullEvaluatedFingerprints: new Set(),
+    fullSuccessFingerprints: new Set(),
     best: null,
     bestExploratory: null,
     bestMedium: null,
     bestFull: null,
     archive: [],
     seeds: (opts.seeds ?? []).map((s) => [...s]),
+    incumbentBar: opts.incumbentBar?.length ? [...opts.incumbentBar] : null,
     exhaustiveCompleted: false,
     startedAt: Date.now(),
     shouldSkipFingerprint: opts.shouldSkipFingerprint,

@@ -175,21 +175,54 @@ export function isNoValidatedUpgradeError(message: string): boolean {
   );
 }
 
+/** Soft outcome when no validated candidate beats the incumbent. */
+export const CURRENT_BAR_REMAINS_BEST = "current bar remains best";
+
 /**
- * Phase 4 Apply gate for completed result DTOs.
+ * Phase 4/5 Apply gate for completed result DTOs.
  * Only verified-cacheable full-horizon proofs enable Apply; degraded/failed never.
- * solverResult is only set after applyFinalDto passes isVerifiedCacheableResult;
- * this is defense-in-depth for the button chrome.
+ * Phase 5: explicit isUpgrade/validForApply false hard-disables Apply.
+ * Undefined upgrade flags (legacy DTOs) keep prior proof-only behavior.
  */
 export function mayApplySolverResultBar(
   dto: SolverResultDTO | null | undefined,
 ): boolean {
   if (!dto?.bar?.length) return false;
   if (!Number.isFinite(dto.score)) return false;
+  if (dto.validForApply === false || dto.isUpgrade === false) return false;
   const proof = dto.proofLabel ?? dto.proof?.label;
   if (typeof proof !== "string" || proof.length === 0) return false;
   if (!VERIFIED_CACHEABLE_PROOFS.has(proof as ProofLabel)) return false;
   return true;
+}
+
+/**
+ * Phase 5: whether applyFinalDto should replace the bar / remember as upgrade.
+ * Same upgrade flags as Apply; verified-cacheable is checked separately with request.
+ */
+export function shouldAdoptSolverResultBar(
+  dto: SolverResultDTO | null | undefined,
+): boolean {
+  if (!dto) return false;
+  if (dto.validForApply === false || dto.isUpgrade === false) return false;
+  return true;
+}
+
+/** Upgrade / remains-best fragment for results chrome; null when nothing to add. */
+export function formatSolverUpgradeChrome(dto: {
+  isUpgrade?: boolean;
+  scoreImprovement?: number;
+  percentImprovement?: number | null;
+}): string | null {
+  if (dto.isUpgrade === false) return CURRENT_BAR_REMAINS_BEST;
+  if (dto.isUpgrade !== true) return null;
+  const abs = dto.scoreImprovement;
+  if (typeof abs !== "number" || !Number.isFinite(abs) || abs <= 0) return null;
+  const pct = dto.percentImprovement;
+  if (typeof pct === "number" && Number.isFinite(pct)) {
+    return `+${formatNumber(abs)} (+${pct.toFixed(1)}%)`;
+  }
+  return `+${formatNumber(abs)}`;
 }
 
 /** Catch path (abort vs hard error) using the same identity/gen gates. */

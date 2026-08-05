@@ -14,6 +14,8 @@ import {
   formatProofLabel,
   formatTime,
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
+  CURRENT_BAR_REMAINS_BEST,
+  formatSolverUpgradeChrome,
   isCompletedResultStale,
   isLiveSolverSession,
   isNoValidatedUpgradeError,
@@ -27,6 +29,7 @@ import {
   recentLibraryVerifiedFields,
   settlementActionForCatch,
   settlementActionForSolve,
+  shouldAdoptSolverResultBar,
   solverPhaseLabel,
   stoppedPreviewFromProgress,
   trackLiveClassName,
@@ -332,6 +335,76 @@ describe("Phase 4 apply / validation failure gates", () => {
       }),
     ).toBe(false);
     expect(mayApplySolverResultBar(null)).toBe(false);
+  });
+
+  it("Phase 5: mayApply false when isUpgrade or validForApply is false", () => {
+    const base = {
+      bar: ["a", "b", "c", "d"],
+      score: 1000,
+      windowDpms: 0,
+      evaluations: 10,
+      uniqueCandidates: 4,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: "id",
+      proofLabel: "heuristic-best-found" as const,
+    };
+    // Legacy DTOs (flags undefined): proof gates only.
+    expect(mayApplySolverResultBar(base)).toBe(true);
+    expect(shouldAdoptSolverResultBar(base)).toBe(true);
+
+    expect(
+      mayApplySolverResultBar({ ...base, isUpgrade: false, validForApply: false }),
+    ).toBe(false);
+    expect(
+      shouldAdoptSolverResultBar({ ...base, isUpgrade: false, validForApply: false }),
+    ).toBe(false);
+
+    expect(mayApplySolverResultBar({ ...base, isUpgrade: false })).toBe(false);
+    expect(mayApplySolverResultBar({ ...base, validForApply: false })).toBe(false);
+
+    expect(
+      mayApplySolverResultBar({
+        ...base,
+        isUpgrade: true,
+        validForApply: true,
+        scoreImprovement: 120,
+        percentImprovement: 5.5,
+      }),
+    ).toBe(true);
+    expect(
+      shouldAdoptSolverResultBar({
+        ...base,
+        isUpgrade: true,
+        validForApply: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("Phase 5: formatSolverUpgradeChrome remains-best and improvement", () => {
+    expect(formatSolverUpgradeChrome({ isUpgrade: false })).toBe(CURRENT_BAR_REMAINS_BEST);
+    expect(formatSolverUpgradeChrome({})).toBeNull();
+    expect(
+      formatSolverUpgradeChrome({
+        isUpgrade: true,
+        scoreImprovement: 1500,
+        percentImprovement: 12.5,
+      }),
+    ).toBe("+1,500 (+12.5%)");
+    expect(
+      formatSolverUpgradeChrome({
+        isUpgrade: true,
+        scoreImprovement: 80,
+      }),
+    ).toBe("+80");
+    expect(
+      formatSolverUpgradeChrome({
+        isUpgrade: true,
+        scoreImprovement: 0,
+      }),
+    ).toBeNull();
   });
 });
 

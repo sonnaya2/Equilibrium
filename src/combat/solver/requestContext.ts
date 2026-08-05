@@ -152,33 +152,52 @@ export function computeHorizonsAndBudget(request: SerializableSolverRequest) {
   return { exploreTicks, mediumTicks, fullTicks, evaluationBudget };
 }
 
+/** Legalize a bar into the request size band: legal ids, truncate max, pad min. */
+function fitBarIds(
+  ids: readonly string[],
+  request: SerializableSolverRequest,
+  pool: ReturnType<typeof buildCandidatePool>,
+  denySet: Set<string>,
+): string[] | null {
+  const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
+  const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
+  const cleaned = ids.filter(legalId);
+  if (cleaned.length < 2) return null;
+  const built =
+    cleaned.length > request.maxBarSize ? cleaned.slice(0, request.maxBarSize) : [...cleaned];
+  if (built.length < request.minBarSize) {
+    const remain = remainingCandidates(built, searchPool, pool.byId);
+    for (const a of remain) {
+      if (built.length >= request.minBarSize) break;
+      if (remainingCandidates(built, [a], pool.byId).length) built.push(a.id);
+    }
+  }
+  return built.length >= 2 ? built : null;
+}
+
+/**
+ * Phase 5 incumbent: legalize request.userBar the same way seeds are fitted.
+ * Null when absent or not legalizable. Passed first-class into solve, not mixed only as a seed.
+ */
+export function fitIncumbentBar(
+  request: SerializableSolverRequest,
+  pool: ReturnType<typeof buildCandidatePool>,
+  denySet: Set<string>,
+): string[] | null {
+  if (!request.userBar?.length) return null;
+  return fitBarIds(request.userBar, request, pool, denySet);
+}
+
 export function fitAuthoredSeeds(
   request: SerializableSolverRequest,
   pool: ReturnType<typeof buildCandidatePool>,
   denySet: Set<string>,
 ): string[][] {
-  const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
-  const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
-  // Fit wiki/user seeds into the agent ladder band: truncate > max; pad < min.
-  const fitSeed = (ids: readonly string[]): string[] | null => {
-    const cleaned = ids.filter(legalId);
-    if (cleaned.length < 2) return null;
-    const built =
-      cleaned.length > request.maxBarSize ? cleaned.slice(0, request.maxBarSize) : [...cleaned];
-    if (built.length < request.minBarSize) {
-      const remain = remainingCandidates(built, searchPool, pool.byId);
-      for (const a of remain) {
-        if (built.length >= request.minBarSize) break;
-        if (remainingCandidates(built, [a], pool.byId).length) built.push(a.id);
-      }
-    }
-    return built.length >= 2 ? built : null;
-  };
+  // Catalogue + authoredSeedBars only. userBar is first-class via fitIncumbentBar.
   return [
     ...authoredSeedsFromCatalogue(request.style, denySet, "weaponConfiguration" in request.loadout ? request.loadout.weaponConfiguration : undefined),
     ...request.authoredSeedBars.map((s) => s.abilityIds),
-    ...(request.userBar ? [request.userBar] : []),
   ]
-    .map(fitSeed)
+    .map((ids) => fitBarIds(ids, request, pool, denySet))
     .filter((s): s is string[] => s != null && s.length >= 2);
 }

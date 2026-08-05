@@ -4,6 +4,7 @@ import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
 import { emptyBuild } from "@/league";
 import {
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
+  CURRENT_BAR_REMAINS_BEST,
   isCompletedResultStale,
   isLiveSolverSession,
   isNoValidatedUpgradeError,
@@ -14,6 +15,7 @@ import {
   recentLibraryVerifiedFields,
   settlementActionForCatch,
   settlementActionForSolve,
+  shouldAdoptSolverResultBar,
   stoppedPreviewFromProgress,
 } from "./revoPanelFormat";
 import {
@@ -246,6 +248,77 @@ describe("useRevolutionSolver session settlement policy", () => {
       }),
     ).toBe(false);
     expect(mayApplySolverResultBar({ ...base, proofLabel: "failed" })).toBe(false);
+  });
+
+  it("Phase 5: remains-best surfaces result but does not apply or remember upgrade", () => {
+    const onActiveBar = vi.fn();
+    const remember = vi.fn();
+    const setResult = vi.fn();
+    const setError = vi.fn();
+    const setLibrary = vi.fn();
+    const dto = {
+      bar: ["slice", "fury", "assault", "destroy"],
+      score: 9_000,
+      windowDpms: 0,
+      evaluations: 40,
+      uniqueCandidates: 8,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: "ctx",
+      proofLabel: "heuristic-best-found" as const,
+      isUpgrade: false,
+      validForApply: false,
+      scoreImprovement: 0,
+      percentImprovement: null,
+    };
+    // Verified path already passed; Phase 5 adopt gate only.
+    expect(mayApplySolverResultBar(dto)).toBe(false);
+    expect(shouldAdoptSolverResultBar(dto)).toBe(false);
+    setError(null);
+    setResult(dto);
+    if (shouldAdoptSolverResultBar(dto)) {
+      onActiveBar(dto.bar);
+      remember();
+      setLibrary();
+    }
+    expect(setResult).toHaveBeenCalledWith(dto);
+    expect(setError).toHaveBeenCalledWith(null);
+    expect(onActiveBar).not.toHaveBeenCalled();
+    expect(remember).not.toHaveBeenCalled();
+    expect(setLibrary).not.toHaveBeenCalled();
+    expect(CURRENT_BAR_REMAINS_BEST).toBe("current bar remains best");
+  });
+
+  it("Phase 5: upgrade + validForApply keeps adopt path", () => {
+    const onActiveBar = vi.fn();
+    const remember = vi.fn();
+    const dto = {
+      bar: ["a", "b", "c", "d"],
+      score: 12_000,
+      windowDpms: 0,
+      evaluations: 40,
+      uniqueCandidates: 8,
+      seed: 1,
+      profileId: "balanced" as const,
+      tier: "thorough" as const,
+      durationTicks: 500,
+      solveIdentity: "ctx",
+      proofLabel: "heuristic-best-found" as const,
+      isUpgrade: true,
+      validForApply: true,
+      scoreImprovement: 3000,
+      percentImprovement: 33.3,
+    };
+    expect(mayApplySolverResultBar(dto)).toBe(true);
+    expect(shouldAdoptSolverResultBar(dto)).toBe(true);
+    if (shouldAdoptSolverResultBar(dto)) {
+      onActiveBar(dto.bar);
+      remember();
+    }
+    expect(onActiveBar).toHaveBeenCalledWith(dto.bar);
+    expect(remember).toHaveBeenCalledOnce();
   });
 
   it("maps settlement outcomes the way the hook applies them", () => {

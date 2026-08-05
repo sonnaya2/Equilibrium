@@ -24,7 +24,8 @@ export function collectMediumIncumbents(state: SearchState): string[][] {
     out.push([...bar]);
   };
 
-  // Previous winners as incumbents (short best + seeds first).
+  // First-class current bar first, then short-stage winners + seeds.
+  add(state.incumbentBar);
   add(state.bestExploratory?.bar);
   add(state.best?.bar);
   for (const seed of state.seeds) add(seed);

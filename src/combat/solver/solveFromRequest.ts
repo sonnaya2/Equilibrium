@@ -15,6 +15,7 @@ import {
   buildCandidatePoolForRequest,
   computeHorizonsAndBudget,
   fitAuthoredSeeds,
+  fitIncumbentBar,
   poolAsSpecs,
   regionDenyList,
   resolveSpecs,
@@ -153,6 +154,7 @@ export const solveFromRequest: SolveFn = async (
   // Pool-legal only (weapon/region denylist already applied to the pool).
   const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
   const authored = fitAuthoredSeeds(request, pool, denySet);
+  const incumbentBar = fitIncumbentBar(request, pool, denySet);
 
   emitProgress(options, state, true);
   if (options?.yieldSlice) await options.yieldSlice();
@@ -172,6 +174,7 @@ export const solveFromRequest: SolveFn = async (
       tier: request.tier,
       seed: request.seed,
       authoredSeeds: authored,
+      incumbentBar,
       config: {
         profileId: request.profileId,
         ...recipePatch,

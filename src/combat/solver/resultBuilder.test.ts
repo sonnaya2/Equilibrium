@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { buildSolverResultDto } from "./resultBuilder";
 import type { SolveResult, ScoredBar } from "./contracts";
-import { defaultSerializableRequest, emptyModifierSources } from "./worker/serializable";
+import {
+  CURRENT_BAR_REMAINS_BEST_NOTE,
+  defaultSerializableRequest,
+  emptyModifierSources,
+} from "./worker/serializable";
 import type { WinnerPresentation } from "./evaluate";
 import { EQUIPMENT_SET_ACTIVATION, type ActiveEquipmentEffects } from "../shared/equipment";
 
@@ -78,6 +82,12 @@ function okResult(best: ScoredBar, top: ScoredBar[] = [best]): SolveResult {
     bestExploratoryScore: 2,
     bestFullScore: best.robustScore,
     validFullCandidateCount: top.length,
+    incumbentBar: null,
+    incumbentScore: Number.NEGATIVE_INFINITY,
+    isUpgrade: true,
+    scoreImprovement: 0,
+    percentImprovement: null,
+    validForApply: true,
     stats: {
       evaluations: 13,
       searchEvaluations: 10,
@@ -110,6 +120,12 @@ function failedNoFullResult(exploreBest: ScoredBar | null = null): SolveResult {
     bestExploratoryScore: exploreBest?.robustScore ?? Number.NEGATIVE_INFINITY,
     bestFullScore: Number.NEGATIVE_INFINITY,
     validFullCandidateCount: 0,
+    incumbentBar: null,
+    incumbentScore: Number.NEGATIVE_INFINITY,
+    isUpgrade: false,
+    scoreImprovement: 0,
+    percentImprovement: null,
+    validForApply: false,
     stats: {
       evaluations: 12,
       searchEvaluations: 10,
@@ -166,6 +182,8 @@ describe("buildSolverResultDto", () => {
     expect(dto.summary).toBeUndefined();
     expect(dto.proof?.recheckScore).toBeUndefined();
     expect(dto.openingDpm).toBe(12_345.5);
+    expect(dto.isUpgrade).toBe(true);
+    expect(dto.validForApply).toBe(true);
   });
 
   it("attaches full-analysis presentation without rewriting ranking score", () => {
@@ -252,6 +270,8 @@ describe("buildSolverResultDto", () => {
       proof: "degraded-exploratory-fallback",
       bestFullScore: Number.NEGATIVE_INFINITY,
       validFullCandidateCount: 0,
+      isUpgrade: false,
+      validForApply: false,
     };
     expect(() =>
       buildSolverResultDto({
@@ -274,6 +294,8 @@ describe("buildSolverResultDto", () => {
     const bad: SolveResult = {
       ...okResult(nonRankable),
       validFullCandidateCount: 0,
+      isUpgrade: false,
+      validForApply: false,
     };
     expect(() =>
       buildSolverResultDto({
@@ -286,5 +308,70 @@ describe("buildSolverResultDto", () => {
         blessingIds: [],
       }),
     ).toThrow(/no validated full-horizon upgrade/);
+  });
+
+  it("remains-best DTO: does not throw; Apply disabled; notes current bar remains best", () => {
+    const incumbent = fullWinner(["sever", "assault", "fury"], 10_000);
+    const result: SolveResult = {
+      ...okResult(incumbent),
+      incumbentBar: ["sever", "assault", "fury"],
+      incumbentScore: 10_000,
+      isUpgrade: false,
+      scoreImprovement: 0,
+      percentImprovement: null,
+      validForApply: false,
+    };
+    const dto = buildSolverResultDto({
+      request: baseRequest,
+      result,
+      poolSize: 10,
+      uniqueBars: 4,
+      fullTicks: 500,
+      evaluationBudget: 28,
+      blessingIds: [],
+    });
+    expect(dto.bar).toEqual(["sever", "assault", "fury"]);
+    expect(dto.score).toBe(10_000);
+    expect(dto.isUpgrade).toBe(false);
+    expect(dto.validForApply).toBe(false);
+    expect(dto.scoreImprovement).toBe(0);
+    expect(dto.percentImprovement).toBeNull();
+    expect(dto.baselineBar).toEqual(["sever", "assault", "fury"]);
+    expect(dto.baselineScore).toBe(10_000);
+    expect(dto.winnerScore).toBe(10_000);
+    expect(dto.proof?.notes?.some((n) => n === CURRENT_BAR_REMAINS_BEST_NOTE)).toBe(true);
+    expect(dto.proof?.notes?.some((n) => n.includes("current bar remains best"))).toBe(true);
+  });
+
+  it("upgrade DTO: isUpgrade true with score/percent improvement populated", () => {
+    const winner = fullWinner(["dismember", "assault", "fury"], 12_000);
+    const result: SolveResult = {
+      ...okResult(winner),
+      incumbentBar: ["sever", "assault", "fury"],
+      incumbentScore: 10_000,
+      isUpgrade: true,
+      scoreImprovement: 2_000,
+      percentImprovement: 20,
+      validForApply: true,
+    };
+    const dto = buildSolverResultDto({
+      request: baseRequest,
+      result,
+      poolSize: 10,
+      uniqueBars: 4,
+      fullTicks: 500,
+      evaluationBudget: 28,
+      blessingIds: [],
+    });
+    expect(dto.bar).toEqual(["dismember", "assault", "fury"]);
+    expect(dto.score).toBe(12_000);
+    expect(dto.isUpgrade).toBe(true);
+    expect(dto.validForApply).toBe(true);
+    expect(dto.scoreImprovement).toBe(2_000);
+    expect(dto.percentImprovement).toBe(20);
+    expect(dto.baselineBar).toEqual(["sever", "assault", "fury"]);
+    expect(dto.baselineScore).toBe(10_000);
+    expect(dto.winnerScore).toBe(12_000);
+    expect(dto.proof?.notes?.some((n) => n.includes("current bar remains best"))).toBe(false);
   });
 });

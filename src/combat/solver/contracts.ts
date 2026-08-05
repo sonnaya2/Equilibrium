@@ -324,16 +324,26 @@ export type EvaluateFn = (input: { bar: readonly string[]; mode?: EvalMode }) =>
 
 /** Solve outcome status - success never pretends after total failure. */
 /**
- * ok: full-horizon rankable winner.
- * failed: no validated full-horizon upgrade (exploratory is debug-only).
+ * ok: full-horizon rankable winner (upgrade or incumbent remains best).
+ * failed: no validated full-horizon bar at all (exploratory is debug-only).
  * degraded: legacy status - finalize never emits it (Phase 4).
  */
 export type SolveStatus = "ok" | "degraded" | "failed";
 
+/**
+ * Float guard for incumbent vs candidate full scores.
+ * Candidate must beat incumbent by more than this to claim an upgrade.
+ */
+export const INCUMBENT_SCORE_TOLERANCE = 1e-9;
+
 /** Solve orchestrator output (search layer). */
 export interface SolveResult {
   status: SolveStatus;
-  /** Full-horizon rankable winner when status is ok; null when failed. */
+  /**
+   * Full-horizon rankable selection when status is ok.
+   * Upgrade: proposed bar. No upgrade: incumbent (current bar remains best).
+   * Null only when failed (nothing full-rankable).
+   */
   best: ScoredBar | null;
   top: ScoredBar[];
   proof: ProofLabel;
@@ -352,6 +362,24 @@ export interface SolveResult {
   bestExploratoryScore: number;
   bestFullScore: number;
   validFullCandidateCount: number;
+  /**
+   * Normalized current user bar (Phase 5 incumbent). Always full-rescored when set.
+   * Null when request had no legal user bar.
+   */
+  incumbentBar: readonly string[] | null;
+  /** Full-horizon robust score of the incumbent; -Infinity when unrankable / absent. */
+  incumbentScore: number;
+  /** True only when best strictly beats the incumbent's validated full score. */
+  isUpgrade: boolean;
+  /** winnerScore - incumbentScore when isUpgrade; else 0. */
+  scoreImprovement: number;
+  /** 100 * scoreImprovement / |incumbentScore| when upgrade and denominator > 0; else null. */
+  percentImprovement: number | null;
+  /**
+   * True only for an upgrade with a full-rankable best.
+   * Apply / replace stays disabled when the current bar remains best.
+   */
+  validForApply: boolean;
   stats: SearchStats;
 }
 

@@ -48,6 +48,7 @@ import {
   recentLibraryVerifiedFields,
   settlementActionForCatch,
   settlementActionForSolve,
+  shouldAdoptSolverResultBar,
   stoppedPreviewFromProgress,
   type BarSizePresetId,
   type SolverStoppedPreview,
@@ -333,13 +334,13 @@ export function useRevolutionSolver({
     });
   }, []);
 
-  /** Final DTO only: apply validated full-horizon winners (Phase 4). */
+  /** Final DTO: adopt only verified full-horizon upgrades (Phase 4/5). */
   const applyFinalDto = useCallback(
     (dto: SolverResultDTO, request: SerializableSolverRequest) => {
       progressRafRef.current?.cancel();
       const bar = dto.bar?.length ? [...dto.bar] : [];
       setStoppedPreview(null);
-      // Fail closed: exploratory / degraded / failed proofs never apply.
+      // Fail closed: exploratory / degraded / failed proofs never surface as results.
       if (bar.length === 0 || !isVerifiedCacheableResult(request, dto)) {
         setSolverResult(null);
         setSolverError(
@@ -349,25 +350,28 @@ export function useRevolutionSolver({
         );
         return;
       }
+      // Remains-best is a successful outcome: show DTO, do not replace bar / cache upgrade.
       setSolverError(null);
       setSolverResult(dto);
-      onActiveBar(bar);
-      onClearSimResult();
-      void rememberSolvedBar(request, dto);
-      const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
-      setBarLibrary((prev) => {
-        const next = withRecentBar(prev, {
-          bar,
-          style: request.style,
-          score: dto.score,
-          profileId: dto.profileId ?? request.profileId,
-          tier: request.tier,
-          verified,
-          scoreContext,
+      if (shouldAdoptSolverResultBar(dto)) {
+        onActiveBar(bar);
+        onClearSimResult();
+        void rememberSolvedBar(request, dto);
+        const { verified, scoreContext } = recentLibraryVerifiedFields(request, dto);
+        setBarLibrary((prev) => {
+          const next = withRecentBar(prev, {
+            bar,
+            style: request.style,
+            score: dto.score,
+            profileId: dto.profileId ?? request.profileId,
+            tier: request.tier,
+            verified,
+            scoreContext,
+          });
+          saveBarLibrary(next);
+          return next;
         });
-        saveBarLibrary(next);
-        return next;
-      });
+      }
       let bestFullScore: number | undefined;
       if (Number.isFinite(dto.bestFullScore)) bestFullScore = dto.bestFullScore;
       else if (Number.isFinite(dto.score)) bestFullScore = dto.score;

@@ -224,25 +224,53 @@ describe("buildSolverResultDto", () => {
     expect(dto.proof?.notes?.some((n) => n.includes("winner full-analysis"))).toBe(true);
   });
 
-  it("notes recheck delta when presentation score drifts", () => {
+  it("rejects large presentation recheck delta (score-analysis parity hard gate)", () => {
     const winner = fullWinner(["sever"], 100);
     const presentation: WinnerPresentation = {
       recheckScore: 100.5,
       summary: { totalExpected: 1, dps: 1, ticks: 10, ok: true },
     };
+    expect(() =>
+      buildSolverResultDto({
+        request: baseRequest,
+        result: okResult(winner),
+        poolSize: 1,
+        uniqueBars: 1,
+        fullTicks: 500,
+        evaluationBudget: 10,
+        blessingIds: [],
+        presentation,
+      }),
+    ).toThrow(/score-analysis parity/);
+  });
+
+  it("notes score-analysis parity ok and reject count when presentation matches", () => {
+    const rankingScore = 99_001.25;
+    const winner = fullWinner(["sever", "assault"], rankingScore);
+    const presentation: WinnerPresentation = {
+      recheckScore: rankingScore,
+      summary: {
+        totalExpected: 50_000,
+        dps: 100,
+        ticks: 500,
+        ok: true,
+      },
+    };
     const dto = buildSolverResultDto({
       request: baseRequest,
       result: okResult(winner),
-      poolSize: 1,
-      uniqueBars: 1,
+      poolSize: 8,
+      uniqueBars: 3,
       fullTicks: 500,
-      evaluationBudget: 10,
+      evaluationBudget: 28,
       blessingIds: [],
       presentation,
+      parityRejectCount: 2,
     });
-    expect(dto.score).toBe(100);
-    expect(dto.proof?.recheckScore).toBe(100.5);
-    expect(dto.proof?.notes?.some((n) => n.startsWith("presentation-recheck-delta"))).toBe(true);
+    expect(dto.proof?.notes?.some((n) => n === "score-analysis parity ok")).toBe(true);
+    expect(dto.proof?.notes?.some((n) => n === "score-analysis parity rejected 2")).toBe(
+      true,
+    );
   });
 
   it("rejects failed solve with no full winners (Phase 4)", () => {

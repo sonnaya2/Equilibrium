@@ -23,11 +23,8 @@ import {
 import { emitProgress, mapPhase, type ProgressState } from "./progressReporter";
 import { buildMemoContext, createEvaluateFn } from "./evaluationSession";
 import { buildSolverResultDto } from "./resultBuilder";
-import {
-  evaluateRevolutionBar,
-  winnerPresentationFromEvaluation,
-  type WinnerPresentation,
-} from "./evaluate";
+import type { WinnerPresentation } from "./evaluate";
+import { runScoreAnalysisParityGate } from "./parityGate";
 import {
   createProfileCounters,
   isSolverProfileEnabled,
@@ -235,45 +232,58 @@ export const solveFromRequest: SolveFn = async (
     throwCancelled();
   }
 
-  // Ranking shortlist already score-only full-horizon rescored in finalize.
-  // One extra full-analysis re-sim for winner presentation (summary / rng / recheck).
+  // Hard gate: score-only vs full-analysis parity on top + incumbent before apply.
   state.currentPhase = "finalize";
   state.finalizeActive = true;
   emitProgress(options, state, true);
 
   let presentation: WinnerPresentation | null = null;
-  const winner = result.best;
-  const fullWinner =
-    result.status === "ok" &&
-    winner != null &&
-    winner.validForFinalRanking === true &&
-    winner.mode === "full" &&
-    winner.bar.length > 0;
+  let parityRejectCount = 0;
+  const hasGateWork =
+    result.top.some((t) => t.bar.length > 0) ||
+    (result.best != null && result.best.bar.length > 0) ||
+    (result.incumbentBar != null && result.incumbentBar.length > 0);
 
-  if (fullWinner && winner) {
+  if (hasGateWork) {
     if (options?.isCancelled?.() || options?.signal?.aborted) {
       throwCancelled();
     }
-    state.scoringLabel = "winner presentation";
-    state.scoringBarPreview = winner.bar;
-    state.activePreview = [...winner.bar];
-    emitProgress(options, state, true);
 
-    const presentationEval = evaluateRevolutionBar({
-      bar: winner.bar,
-      style: request.style,
-      durationTicks: fullTicks,
-      pool,
-      sim: simCommon,
-      profileId: request.profileId,
-      customWeights: request.customWeights,
-      includePartial: request.includePartial,
-      size: { min: request.minBarSize, max: request.maxBarSize },
-      detailLevel: "full-analysis",
+    const gate = await runScoreAnalysisParityGate({
+      result,
+      evalBase: {
+        style: request.style,
+        pool,
+        sim: simCommon,
+        profileId: request.profileId,
+        customWeights: request.customWeights,
+        includePartial: request.includePartial,
+        size: { min: request.minBarSize, max: request.maxBarSize },
+      },
+      fullTicks,
+      isCancelled: () =>
+        options?.isCancelled?.() === true || options?.signal?.aborted === true,
+      yieldSlice: async () => {
+        if (options?.isCancelled?.() || options?.signal?.aborted) {
+          throwCancelled();
+        }
+        if (options?.yieldSlice) await options.yieldSlice();
+      },
+      onProgress: (info) => {
+        state.scoringLabel = info.label;
+        if (info.bar?.length) {
+          state.scoringBarPreview = info.bar;
+          state.activePreview = [...info.bar];
+        }
+        state.finalizeDone = info.done;
+        state.finalizeTotal = Math.max(1, info.total);
+        emitProgress(options, state, true);
+      },
     });
-    presentation = winnerPresentationFromEvaluation(presentationEval);
 
-    if (options?.yieldSlice) await options.yieldSlice();
+    result = gate.result;
+    presentation = gate.presentation;
+    parityRejectCount = gate.parityRejectCount;
   }
 
   if (profile.enabled) {
@@ -291,6 +301,7 @@ export const solveFromRequest: SolveFn = async (
     blessingIds: simBase.league.blessingIds,
     options,
     presentation,
+    parityRejectCount,
   });
 };
 

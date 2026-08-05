@@ -142,5 +142,6 @@ describe("winner full-analysis presentation", () => {
     expect(dto.proof!.recheckScore!).toBeCloseTo(dto.score, 8);
     // Ranking score is the source of truth; recheck is independent full-analysis.
     expect(dto.proof?.notes?.some((n) => n.includes("winner full-analysis"))).toBe(true);
+    expect(dto.proof?.notes?.some((n) => n === "score-analysis parity ok")).toBe(true);
   }, 120_000);
 });

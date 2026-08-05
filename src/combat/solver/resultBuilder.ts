@@ -9,6 +9,7 @@ import {
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "../league/ruleset";
 import type { WinnerPresentation } from "./evaluate";
+import { SCORE_ANALYSIS_PARITY_TOLERANCE } from "./scoreAnalysisParity";
 
 export function buildSolverResultDto(args: {
   request: SerializableSolverRequest;
@@ -20,10 +21,12 @@ export function buildSolverResultDto(args: {
   blessingIds: readonly string[];
   options?: SolveRuntimeOptions;
   /**
-   * Full-analysis re-sim of the winner (post-rank). Ranking score stays on
-   * result.best; this only fills presentation summary / recheck.
+   * Full-analysis re-sim of the winner after score-analysis parity gate.
+   * Ranking score stays on result.best; presentation fills summary / recheck.
    */
   presentation?: WinnerPresentation | null;
+  /** Bars rejected by score-only vs full-analysis parity (proof note). */
+  parityRejectCount?: number;
 }): SolverResultDTO {
   const {
     request,
@@ -35,6 +38,7 @@ export function buildSolverResultDto(args: {
     blessingIds,
     options,
     presentation,
+    parityRejectCount = 0,
   } = args;
 
   const hasBigBoned = blessingIds.includes("big-boned");
@@ -99,13 +103,29 @@ export function buildSolverResultDto(args: {
   }
 
   if (presentation) {
-    proofNotes.push("winner full-analysis presentation re-sim");
-    if (Number.isFinite(presentation.recheckScore)) {
-      const delta = presentation.recheckScore - score;
-      if (Math.abs(delta) > 1e-6) {
-        proofNotes.push(`presentation-recheck-delta ${delta}`);
-      }
+    if (!Number.isFinite(presentation.recheckScore)) {
+      throw new Error(
+        "solver failed: score-analysis parity; presentation recheckScore not finite",
+      );
     }
+    const delta = presentation.recheckScore - score;
+    if (Math.abs(delta) > SCORE_ANALYSIS_PARITY_TOLERANCE) {
+      throw new Error(
+        [
+          "solver failed: score-analysis parity",
+          `rankingScore=${score}`,
+          `recheckScore=${presentation.recheckScore}`,
+          `delta=${delta}`,
+          `tolerance=${SCORE_ANALYSIS_PARITY_TOLERANCE}`,
+        ].join("; "),
+      );
+    }
+    proofNotes.push("score-analysis parity ok");
+    proofNotes.push("winner full-analysis presentation re-sim");
+  }
+
+  if (parityRejectCount > 0) {
+    proofNotes.push(`score-analysis parity rejected ${parityRejectCount}`);
   }
 
   // Honest windows only - never copy robust score into windowDpms.

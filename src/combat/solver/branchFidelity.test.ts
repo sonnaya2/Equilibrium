@@ -322,7 +322,9 @@ describe("UI_RUN_BRANCH_FIDELITY_LADDER", () => {
   it("starts above default maxLive 64 and escalates", () => {
     expect(MAX_LIVE_BRANCHES).toBe(64);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[0]).toBeGreaterThan(64);
-    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([128, 256, 512, 1024, 2048]);
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([
+      128, 256, 512, 1024, 2048, 4096,
+    ]);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.mode).toBe("medium");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.exactness).toBe("any");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.maximumResidualWeight).toBe(1e-12);

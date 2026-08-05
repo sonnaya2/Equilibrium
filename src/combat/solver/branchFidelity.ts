@@ -256,7 +256,8 @@ export function branchFidelityLadderMemoToken(ladder: BranchFidelityLadder): str
  */
 export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
   mode: "medium",
-  liveCaps: [128, 256, 512, 1024, 2048],
+  // Climb through 2048; if residual remains, escalate to 4096 for analysis.
+  liveCaps: [128, 256, 512, 1024, 2048, 4096],
   maximumResidualWeight: 1e-12,
   exactness: "any",
 };

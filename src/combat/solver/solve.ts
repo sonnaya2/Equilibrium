@@ -1,6 +1,7 @@
 import type { EvaluateFn, PoolAbility, SizeBounds, SolveResult, SolveTier } from "./contracts";
 import { createRng } from "./rng";
 import { buildSeeds, normalizeAuthoredSeed } from "./seeds";
+import { ensureRequiredAbilityIds } from "./stylePolicy";
 import { createSearchState, type SearchConfig } from "./search/types";
 import { runExhaustive, runExhaustiveAsync } from "./search/exhaustive";
 import { runConstructiveBeam, runConstructiveBeamAsync } from "./search/constructiveBeam";
@@ -138,6 +139,8 @@ export interface SolveInput {
    * Always full-rescored at finalize; not subject to shortlist capacity exclusion.
    */
   incumbentBar?: readonly string[] | null;
+  /** Style-required ability ids for complete bars (melee berserk, etc.). */
+  requiredAbilityIds?: readonly string[];
   config?: Partial<SearchConfig>;
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
   isSearchStopped?: () => boolean;
@@ -186,20 +189,22 @@ export function solve(input: SolveInput): SolveResult {
   const base = configForTier(tier, input.seed ?? 1);
   const config: SearchConfig = { ...base, ...input.config, tier };
 
+  const requiredAbilityIds = input.requiredAbilityIds ?? [];
   const incumbentBar = resolveIncumbentBar(input);
   const rng = createRng(config.seed);
   // Incumbent also enters the seed list for explore, but finalize treats it first-class.
+  const maxLen = input.sizeBounds.max;
   const authored = [
     ...(incumbentBar ? [incumbentBar] : []),
     ...(input.authoredSeeds ?? []).map((s) => [...s]),
-  ];
+  ].map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
   const seeds = buildSeeds({
     pool: input.pool,
     sizeBounds: input.sizeBounds,
     rng,
     authored,
     count: tier === "thorough" ? 8 : 16,
-  });
+  }).map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
 
   const state = createSearchState({
     pool: input.pool,
@@ -208,6 +213,7 @@ export function solve(input: SolveInput): SolveResult {
     config,
     seeds,
     incumbentBar,
+    requiredAbilityIds,
     shouldSkipFingerprint: input.shouldSkipFingerprint,
     isSearchStopped: input.isSearchStopped,
   });
@@ -248,19 +254,21 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
   const yieldSlice = hooks?.yieldSlice ?? (async () => undefined);
   const onPhase = hooks?.onPhase;
 
+  const requiredAbilityIds = input.requiredAbilityIds ?? [];
   const incumbentBar = resolveIncumbentBar(input);
   const rng = createRng(config.seed);
+  const maxLen = input.sizeBounds.max;
   const authored = [
     ...(incumbentBar ? [incumbentBar] : []),
     ...(input.authoredSeeds ?? []).map((s) => [...s]),
-  ];
+  ].map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
   const seeds = buildSeeds({
     pool: input.pool,
     sizeBounds: input.sizeBounds,
     rng,
     authored,
     count: tier === "thorough" ? 8 : 16,
-  });
+  }).map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
 
   const state = createSearchState({
     pool: input.pool,
@@ -269,6 +277,7 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
     config,
     seeds,
     incumbentBar,
+    requiredAbilityIds,
     shouldSkipFingerprint: input.shouldSkipFingerprint,
     isSearchStopped: input.isSearchStopped,
   });

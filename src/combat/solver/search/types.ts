@@ -25,6 +25,7 @@ import {
   branchFidelityModeForEval,
   resolveBranchFidelityLadder,
 } from "../branchFidelity";
+import { barHasRequiredAbilities } from "../stylePolicy";
 
 export interface SearchConfig {
   tier: SolveTier;
@@ -92,6 +93,11 @@ export interface SearchState {
    * at finalize regardless of shortlist capacity. Not merely an authored seed.
    */
   incumbentBar: string[] | null;
+  /**
+   * Style-required ability ids (must appear on every rankable complete bar).
+   * Empty when unavailable for the loadout.
+   */
+  requiredAbilityIds: readonly string[];
   exhaustiveCompleted: boolean;
   startedAt: number;
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
@@ -130,6 +136,8 @@ export function createSearchState(opts: {
   seeds?: readonly (readonly string[])[];
   /** Normalized current user bar; always full-rescored at finalize. */
   incumbentBar?: readonly string[] | null;
+  /** Style-required ids; enforced when bar length >= min. */
+  requiredAbilityIds?: readonly string[];
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
   isSearchStopped?: () => boolean;
 }): SearchState {
@@ -163,6 +171,7 @@ export function createSearchState(opts: {
     archive: [],
     seeds: (opts.seeds ?? []).map((s) => [...s]),
     incumbentBar: opts.incumbentBar?.length ? [...opts.incumbentBar] : null,
+    requiredAbilityIds: opts.requiredAbilityIds?.length ? [...opts.requiredAbilityIds] : [],
     exhaustiveCompleted: false,
     startedAt: Date.now(),
     shouldSkipFingerprint: opts.shouldSkipFingerprint,
@@ -193,6 +202,14 @@ function evalBar(
   if (bar.length < state.sizeBounds.min || bar.length > state.sizeBounds.max) return null;
   for (let i = 0; i < bar.length; i++) {
     if (!canAdd(bar.slice(0, i), bar[i]!, state.byId)) return null;
+  }
+  // Complete bars must carry style-required abilities (berserk / Sunshine / etc.).
+  if (
+    bar.length >= state.sizeBounds.min &&
+    state.requiredAbilityIds.length > 0 &&
+    !barHasRequiredAbilities(bar, state.requiredAbilityIds)
+  ) {
+    return null;
   }
 
   const scoreMode = normalizeEvalMode(mode);

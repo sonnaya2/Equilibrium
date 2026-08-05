@@ -18,6 +18,7 @@ import {
   fitIncumbentBar,
   poolAsSpecs,
   regionDenyList,
+  requiredAbilitiesForRequest,
   resolveSpecs,
 } from "./requestContext";
 import { emitProgress, mapPhase, type ProgressState } from "./progressReporter";
@@ -153,6 +154,7 @@ export const solveFromRequest: SolveFn = async (
   const catalogueById = new Map(catalogue.map((a) => [a.id, a] as const));
   const authored = fitAuthoredSeeds(request, pool, denySet, catalogueById);
   const incumbentBar = fitIncumbentBar(request, pool, denySet, catalogueById);
+  const requiredAbilityIds = requiredAbilitiesForRequest(request, pool);
 
   emitProgress(options, state, true);
   if (options?.yieldSlice) await options.yieldSlice();
@@ -173,6 +175,7 @@ export const solveFromRequest: SolveFn = async (
       seed: request.seed,
       authoredSeeds: authored,
       incumbentBar,
+      requiredAbilityIds,
       config: {
         profileId: request.profileId,
         ...recipePatch,

@@ -23,6 +23,11 @@ import type {
   SerializableRevolutionSimBase,
   SerializableSolverRequest,
 } from "./worker/serializable";
+import {
+  dualVersionDenyIds,
+  ensureRequiredAbilityIds,
+  styleRequiredAbilityIds,
+} from "./stylePolicy";
 
 export function resolveSpecs(ids: readonly string[]): AbilitySpec[] {
   const out: AbilitySpec[] = [];
@@ -109,13 +114,32 @@ export function buildCandidatePoolForRequest(
 ) {
   const catalogue = allEngineSpecs();
   const passiveIds = simBase.equipmentEffects?.passiveIds;
-  let pool = buildCandidatePool(catalogue, request.style, {
+  const poolOpts = {
     includePartial: request.includePartial === true,
-    deny: [...denySet],
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
     passiveIds,
+  } as const;
+
+  let pool = buildCandidatePool(catalogue, request.style, {
+    ...poolOpts,
+    deny: [...denySet],
   });
+
+  // One twin per exclusive ult pair (Sunshine/DS by PF; igneous by cape passive).
+  const twinDeny = dualVersionDenyIds({
+    style: request.style,
+    plantedFeet: simBase.plantedFeet === true,
+    passiveIds,
+    availableIds: pool.ids,
+  });
+  if (twinDeny.length > 0) {
+    for (const id of twinDeny) denySet.add(id);
+    pool = buildCandidatePool(catalogue, request.style, {
+      ...poolOpts,
+      deny: [...denySet],
+    });
+  }
 
   // Category filter (optional) - rebuild pool rather than mutate.
   if (request.permittedCategories?.length) {
@@ -125,14 +149,19 @@ export function buildCandidatePoolForRequest(
       return a?.category == null || !allowCat.has(a.category);
     });
     pool = buildCandidatePool(catalogue, request.style, {
-      includePartial: request.includePartial === true,
+      ...poolOpts,
       deny: [...denySet, ...catDeny],
-      weaponConfiguration: simBase.weaponConfiguration,
-      equipmentIds: simBase.equipmentIds,
-      passiveIds,
     });
   }
   return { catalogue, pool };
+}
+
+/** Style-required abilities present in the pool (empty rows skipped). */
+export function requiredAbilitiesForRequest(
+  request: SerializableSolverRequest,
+  pool: ReturnType<typeof buildCandidatePool>,
+): string[] {
+  return styleRequiredAbilityIds(request.style, pool.ids);
 }
 
 export function computeHorizonsAndBudget(request: SerializableSolverRequest) {
@@ -177,7 +206,24 @@ function fitBarIds(
           }),
         )
       : ids;
-  const cleaned = upgraded.filter(legalId);
+  const required = styleRequiredAbilityIds(request.style, pool.ids);
+  // Prepend style-required abilities so every legal seed carries them.
+  const withRequired = ensureRequiredAbilityIds(upgraded.filter(legalId), required).filter(
+    legalId,
+  );
+  // Drop exclusive-group conflicts after required inject (keep first occurrence).
+  const cleaned: string[] = [];
+  const seenGroups = new Set<string>();
+  for (const id of withRequired) {
+    if (!legalId(id)) continue;
+    const group = pool.byId.get(id)?.exclusiveGroup ?? pool.byId.get(id)?.replacementGroup;
+    if (group) {
+      if (seenGroups.has(group)) continue;
+      seenGroups.add(group);
+    }
+    if (cleaned.includes(id)) continue;
+    cleaned.push(id);
+  }
   if (cleaned.length < 2) return null;
   const built =
     cleaned.length > request.maxBarSize ? cleaned.slice(0, request.maxBarSize) : [...cleaned];

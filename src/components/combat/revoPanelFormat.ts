@@ -74,8 +74,8 @@ export const BAR_SIZE_PRESETS: Record<
   range8_11: { minBarSize: 8, maxBarSize: 11, label: "8-11" },
 };
 
-/** Default: full product window. */
-export const DEFAULT_BAR_SIZE_PRESET: BarSizePresetId = "range4_11";
+/** Default optimizer window: 8-11 slots (balanced profile is the UI default). */
+export const DEFAULT_BAR_SIZE_PRESET: BarSizePresetId = "range8_11";
 
 export function barBoundsFromPreset(id: BarSizePresetId): BarSizeBounds {
   const p = BAR_SIZE_PRESETS[id] ?? BAR_SIZE_PRESETS[DEFAULT_BAR_SIZE_PRESET];

@@ -179,7 +179,9 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     adrenalineCap,
     naturalInstinctUntilTick: input.naturalInstinctUntilTick,
     league:
-      hasBlessing(input.league, "avernic-rampage") || hasBlessing(input.league, "striking-light"),
+      hasBlessing(input.league, "avernic-rampage") ||
+      hasBlessing(input.league, "striking-light") ||
+      hasBlessing(input.league, "lord-of-light"),
     ringOfVigour: input.adrenaline?.ringOfVigour === true,
     lantern: soulboundLantern,
   });

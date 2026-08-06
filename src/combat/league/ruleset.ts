@@ -65,6 +65,8 @@ export interface ResolvedLeagueRules {
    */
   powerburstUntilTick: number;
   targetTiles: number;
+  areaTargets: number;
+  prayerBonus: number;
   herbloreLevel?: number;
 }
 
@@ -73,6 +75,8 @@ export interface ResolveLeagueRulesDerived {
   maximumLife?: number;
   powerburstUntilTick?: number;
   targetTiles?: number;
+  areaTargets?: number;
+  prayerBonus?: number;
   herbloreLevel?: number;
 }
 
@@ -83,6 +87,9 @@ export function resolveLeagueRules(
   const ruleset = loadout.ruleset === "equilibrium" ? "equilibrium" : "base";
   const blessings = ruleset === "equilibrium" ? activeBlessings(loadout.blessingPicks ?? []) : [];
   const blessingsById = indexActiveBlessings(blessings);
+  const trueEquilibriumPrayer =
+    (blessingsById.get("true-equilibrium")?.combat.prayerBonusPerUniquePath ?? 0) *
+    new Set(loadout.blessingPicks ?? []).size;
   const relics =
     ruleset === "equilibrium"
       ? [
@@ -102,6 +109,8 @@ export function resolveLeagueRules(
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
     targetTiles: Math.max(1, Math.floor(derived.targetTiles ?? 1)),
+    areaTargets: Math.max(1, Math.floor(derived.areaTargets ?? 1)),
+    prayerBonus: Math.max(0, derived.prayerBonus ?? 0) + trueEquilibriumPrayer,
     herbloreLevel: Math.min(120, Math.max(1, Math.floor(derived.herbloreLevel ?? 1))),
   };
 }
@@ -136,10 +145,10 @@ export function hasNaragiEdict(rules: ResolvedLeagueRules | undefined): boolean 
  */
 export function icyenicFromLoadout(
   rules: ResolvedLeagueRules | undefined,
-  equipmentPrayer: number,
+  prayerBonus: number,
   tomeWorn: boolean,
 ): IcyenicFaithBonuses {
-  return resolveIcyenicFaithBonuses(equipmentPrayer, {
+  return resolveIcyenicFaithBonuses(prayerBonus, {
     relicActive: hasIcyenicFaith(rules),
     tomeWorn,
   });
@@ -234,6 +243,19 @@ export function blessingAdrenalineGenerationMultiplier(
   rules: ResolvedLeagueRules | undefined,
 ): number {
   return blessingRule(rules, "adrenaline-junkie")?.adrenalineGenerationMultiplier ?? 1;
+}
+
+export function temperedHeartAdrenalineGain(
+  rules: ResolvedLeagueRules | undefined,
+  fromTick: number,
+  toTickExclusive: number,
+): number {
+  const passive = blessingRule(rules, "tempered-heart")?.passiveAdrenaline;
+  if (!passive || passive.intervalTicks <= 0 || toTickExclusive <= fromTick) return 0;
+  const pulses =
+    Math.floor(toTickExclusive / passive.intervalTicks) -
+    Math.floor(fromTick / passive.intervalTicks);
+  return Math.max(0, pulses) * passive.amount;
 }
 
 export function envenomedPoisonDamageMultiplier(rules: ResolvedLeagueRules | undefined): number {

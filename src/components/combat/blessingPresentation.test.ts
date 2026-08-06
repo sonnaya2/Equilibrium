@@ -8,10 +8,12 @@ import {
   isBlessingDamageEffectId,
   isBlessingDamageEvent,
   isBlessingEffectRow,
+  lordOfLightAssumptionRows,
   strikingLightAssumptionRows,
   strikingLightBasicCastNote,
   strikingLightBasicRowMark,
   strikingLightChoice,
+  temperedHeartAssumptionRows,
 } from "./blessingPresentation";
 
 function strikingPlate(overrides: Partial<BlessingChoice["combat"]> = {}): BlessingChoice {
@@ -101,7 +103,7 @@ describe("blessingPresentation", () => {
     ).toBe("Blessing · Big Boned");
   });
 
-  it("surfaces Striking Light Basic Attacks and category-wide Light of Saradomin", () => {
+  it("surfaces Striking Light Basic Attacks and modern Basic Attack Light triggers", () => {
     expect(strikingLightChoice([])).toBeUndefined();
     expect(strikingLightAssumptionRows(undefined)).toEqual([]);
     expect(strikingLightBasicCastNote(undefined, { basicAttack: true })).toBeNull();
@@ -124,8 +126,42 @@ describe("blessingPresentation", () => {
     expect(strikingLightBasicCastNote([plate], { basicAttack: true })).toBe(
       "Includes Striking Light +40% on this Basic Attack",
     );
-    expect(strikingLightBasicCastNote([plate], { autoAttack: true })).toMatch(/\+40%/);
+    expect(strikingLightBasicCastNote([plate], { autoAttack: true })).toBeNull();
     expect(strikingLightBasicCastNote([plate], {})).toBeNull();
+  });
+
+  it("surfaces Lord of Light and Tempered Heart simulation assumptions", () => {
+    const lord = {
+      ...strikingPlate(),
+      id: "lord-of-light" as const,
+      name: "Lord of Light",
+      tier: 6,
+      combat: {
+        light: {
+          cooldownTicks: 24,
+          abilityDamageBand: [40, 60] as const,
+          armourPercent: 2.5,
+          strikes: 5,
+          maxTargetsPerStrike: 8,
+          prayerDamagePerBonus: 0.02,
+          healFraction: 0.05,
+        },
+      },
+    };
+    const tempered = {
+      ...strikingPlate(),
+      id: "tempered-heart" as const,
+      name: "Tempered Heart",
+      tier: 7,
+      combat: { passiveAdrenaline: { intervalTicks: 2, amount: 6 } },
+    };
+    expect(lordOfLightAssumptionRows([lord], 1_000, 10, 12)).toEqual([
+      ["Lord of Light", "5 strikes · 8 targets per strike · 14.4s independent CD"],
+      ["Lord Light hit", "40-60% AD + 250% armour (2,500) · Prayer 10 = ×1.20 · 5% heal"],
+    ]);
+    expect(temperedHeartAssumptionRows([tempered])).toEqual([
+      ["Tempered Heart", "+6 adrenaline every 1.2s (2 ticks) · first pulse at t2"],
+    ]);
   });
 
   it("compact +40% SL mark only on Basic Attacks when Striking Light is active", () => {
@@ -135,7 +171,7 @@ describe("blessingPresentation", () => {
     const plate = strikingPlate();
     expect(strikingLightBasicRowMark([plate], { basicAttack: true })).toBe("+40% SL");
     expect(strikingLightBasicRowMark([plate], { kind: "basic-attack" })).toBe("+40% SL");
-    expect(strikingLightBasicRowMark([plate], { kind: "auto-attack" })).toBe("+40% SL");
+    expect(strikingLightBasicRowMark([plate], { kind: "auto-attack" })).toBeNull();
     expect(strikingLightBasicRowMark([plate], { category: "basic" })).toBeNull();
     // Light of Saradomin is a separate blessing hit - not the ability-stage mult row.
     expect(

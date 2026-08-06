@@ -5,7 +5,7 @@ import type { SourceReference } from "../types";
  * https://runescape.wiki/w/Icyenic_Faith
  *
  * Product interpretation:
- *   totalPrayerBonus = equipment prayer (includes tome face +50 when worn)
+ *   totalPrayerBonus = resolved Prayer bonus (includes tome face +50 when worn)
  *   critChanceBonus = totalPrayer * 0.002
  *   baseAbilityDamageMultiplier = 1 + totalPrayer * 0.002
  * Scaling requires the relic active and the Tome worn. Protect / Soul Split
@@ -50,16 +50,16 @@ export function isTomeOfTheIcyeneWorn(equipmentIds: readonly string[] | undefine
 }
 
 /**
- * Prayer used for Icyenic scaling. equipmentPrayer is the aggregate from equipped
- * gear (Tome face prayer is already inside that sum when worn). Zero when the
+ * Prayer used for Icyenic scaling. prayerBonus includes equipped gear and active
+ * League stat bonuses. Zero when the
  * relic is off or the Tome is not worn.
  */
 export function icyenicScalingPrayer(
-  equipmentPrayer: number,
+  prayerBonus: number,
   opts: { relicActive: boolean; tomeWorn: boolean },
 ): number {
   if (!opts.relicActive || !opts.tomeWorn) return 0;
-  return Math.max(0, equipmentPrayer);
+  return Math.max(0, prayerBonus);
 }
 
 export function icyenicFaithBonuses(totalPrayerBonus: number): IcyenicFaithBonuses {
@@ -74,10 +74,10 @@ export function icyenicFaithBonuses(totalPrayerBonus: number): IcyenicFaithBonus
 }
 
 export function resolveIcyenicFaithBonuses(
-  equipmentPrayer: number,
+  prayerBonus: number,
   opts: { relicActive: boolean; tomeWorn: boolean },
 ): IcyenicFaithBonuses {
-  return icyenicFaithBonuses(icyenicScalingPrayer(equipmentPrayer, opts));
+  return icyenicFaithBonuses(icyenicScalingPrayer(prayerBonus, opts));
 }
 
 /** Protect / deflect style coverage for scenario notes (not a full protect model). */

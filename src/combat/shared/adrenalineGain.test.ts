@@ -25,8 +25,8 @@ describe("eligibility", () => {
     expect(isBasicAttack(rend)).toBe(false);
   });
 
-  it("reads the legacy autoAttack flag during migration", () => {
-    expect(isBasicAttack({ autoAttack: true })).toBe(true);
+  it("does not treat legacy autoattacks as post-modernisation Basic Attacks", () => {
+    expect(isBasicAttack({ autoAttack: true })).toBe(false);
   });
 
   it("isGeneratingBasicAbility needs listed gain > 0", () => {

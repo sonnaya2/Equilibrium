@@ -81,6 +81,8 @@ export interface SerializableLeagueRules {
   /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */
   powerburstUntilTick: number;
   targetTiles: number;
+  areaTargets?: number;
+  prayerBonus?: number;
   herbloreLevel?: number;
 }
 

@@ -103,7 +103,8 @@ export function scheduleBlessingDamage(
     guaranteed: damage.critical?.mode === "guaranteed",
     eligible: damage.critical?.mode !== "none",
   };
-  const lightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
+  const strikingLightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
+  const lordOfLightReady = event.tick >= (rt.state.league?.lordOfLightReadyTick ?? Infinity);
   // Input identity is shared by every branch; land-time fields remain in the key.
   let cache = componentCache.get(rt.input);
   if (!cache) {
@@ -118,7 +119,8 @@ export function scheduleBlessingDamage(
     sourceKey(source),
     parentCrit.chance,
     parentCrit.guaranteed ? 1 : 0,
-    ability != null && lightReady ? 1 : 0,
+    ability != null && strikingLightReady ? 1 : 0,
+    ability != null && lordOfLightReady ? 1 : 0,
   ].join("\x1f");
   let components = cache.get(key);
   if (!components) {
@@ -144,14 +146,23 @@ export function scheduleBlessingDamage(
       },
       cap: rt.input.cap,
       // Light needs a real bar Basic ability; stubs never open the gate.
-      strikingLightReady: ability != null && lightReady,
+      strikingLightReady: ability != null && strikingLightReady,
+      lordOfLightReady: ability != null && lordOfLightReady,
     });
     cache.set(key, components);
   }
-  if (components.some((component) => component.effectId === "light-of-saradomin")) {
-    const cooldown = blessingRule(rt.input.league, "striking-light")?.light?.cooldownTicks;
+  if (components.some((component) => component.blessingId === "striking-light")) {
+    const cooldown =
+      blessingRule(rt.input.league, "perfidious")?.strikingLightCooldownTicks ??
+      blessingRule(rt.input.league, "striking-light")?.light?.cooldownTicks;
     if (cooldown !== undefined) {
       rt.state = patchLeague(rt.state, { strikingLightReadyTick: event.tick + cooldown });
+    }
+  }
+  if (components.some((component) => component.blessingId === "lord-of-light")) {
+    const cooldown = blessingRule(rt.input.league, "lord-of-light")?.light?.cooldownTicks;
+    if (cooldown !== undefined) {
+      rt.state = patchLeague(rt.state, { lordOfLightReadyTick: event.tick + cooldown });
     }
   }
   // Chance-weighted parents pass their activation mass into attached components.

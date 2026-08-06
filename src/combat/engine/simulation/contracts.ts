@@ -215,8 +215,8 @@ export interface CastRecord {
   abilityId: string;
   result: AbilityResult;
   /**
-   * Expected self-heal from this cast (Sacrifice 25% of damage dealt).
-   * Kill-blow 100% not modeled. Absent when cast heals nothing.
+   * Expected self-heal from this cast, including damage-derived ability and blessing heals.
+   * Absent when the cast heals nothing.
    */
   expectedHeal?: number;
   /** After channel occupancy + completion effects (passive gen, etc.). */
@@ -545,8 +545,8 @@ export interface RotationSummary {
    */
   totalExpected: number;
   /**
-   * Expected self-heal total (Sacrifice 25% of damage dealt).
-   * Kill-blow 100% not modeled. Not damage; does not affect DPS.
+   * Expected self-heal total from damage-derived ability and blessing effects.
+   * Not damage; does not affect DPS.
    */
   totalHealed: number;
   /**

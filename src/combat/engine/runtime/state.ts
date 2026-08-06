@@ -48,6 +48,7 @@ export type ChargeState = Readonly<Record<string, readonly number[]>>;
 export interface LeagueRotationState {
   avernicRampageUntilTick: number;
   strikingLightReadyTick: number;
+  lordOfLightReadyTick: number;
 }
 
 /**
@@ -233,7 +234,15 @@ export function newRotationState(
       aftershockPending: false,
     },
     naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
-    ...(opts.league ? { league: { avernicRampageUntilTick: 0, strikingLightReadyTick: 0 } } : {}),
+    ...(opts.league
+      ? {
+          league: {
+            avernicRampageUntilTick: 0,
+            strikingLightReadyTick: 0,
+            lordOfLightReadyTick: 0,
+          },
+        }
+      : {}),
     ...(playerOpts != null ? { player: newPlayerRuntimeState(playerOpts) } : {}),
     melee: newMeleeRotationState(),
     ranged: newRangedRotationState(),

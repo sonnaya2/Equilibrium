@@ -31,6 +31,23 @@ describe("stable blessing selection persistence", () => {
     ]);
   });
 
+  it("round-trips Lord of Light and Tempered Heart in a complete path", () => {
+    const selections = [
+      { tier: 1, blessingId: "teragards-aegis" as const },
+      { tier: 2, blessingId: "barkscales" as const },
+      { tier: 3, blessingId: "avernic-rampage" as const },
+      { tier: 5, blessingId: "true-equilibrium" as const },
+      { tier: 6, blessingId: "lord-of-light" as const },
+      { tier: 7, blessingId: "tempered-heart" as const },
+    ];
+    const state = normalizeBuild({ blessingSelections: selections });
+    expect(state.blessingPicks).toEqual(["Order", "Balance", "Chaos", "Balance", "Order", "Order"]);
+    expect(state.blessingSelections).toEqual(selections);
+    expect(activeBlessings(state.blessingPicks).map((choice) => choice.id)).toEqual(
+      expect.arrayContaining(["lord-of-light", "tempered-heart"]),
+    );
+  });
+
   it("prunes invalid, duplicate, and tier-mismatched blessing ids", () => {
     const state = normalizeBuild({
       blessingSelections: [

@@ -35,6 +35,7 @@ import {
   expandPlayerPoisonOnLand,
 } from "./poisonLandBranch";
 import { isPlayerPoisonEvent, processPlayerPoisonEvent } from "../schedulers/playerPoison";
+import { temperedHeartAdrenalineGain } from "../../league/ruleset";
 
 /**
  * Soft intermediate budget while folding Leng expands in one event tick.
@@ -114,6 +115,8 @@ function grantVestmentsPassive(
 function completeAdvance(rt: SimulationRuntime, fromTick: number, targetTick: number): void {
   grantMeteorPassive(rt, fromTick, targetTick);
   grantVestmentsPassive(rt, fromTick, targetTick);
+  const temperedHeartGain = temperedHeartAdrenalineGain(rt.input.league, fromTick, targetTick);
+  if (temperedHeartGain > 0) rt.state = gainAdrenaline(rt.state, temperedHeartGain);
   if (rt.state.melee.bloodlust.berserk && targetTick >= rt.state.melee.berserkUntilTick) {
     rt.state = patchMelee(rt.state, {
       bloodlust: endBerserk(rt.state.melee.bloodlust),

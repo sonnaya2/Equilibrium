@@ -220,6 +220,8 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       // Exact remaining ticks - different durations change damage; never collapse to boolean.
       powerburstUntilTick: powerburstRemainingTicksFromRequest(loadout),
       targetTiles: loadout.league.targetTiles,
+      areaTargets: loadout.league.areaTargets ?? 1,
+      prayerBonus: loadout.league.prayerBonus ?? 0,
       herbloreLevel: loadout.league.herbloreLevel ?? 1,
     },
     modifierSources: normalizeModifierSources(loadout.modifierSources),

@@ -56,6 +56,8 @@ function sampleSimBase(): SerializableRevolutionSimBase {
       maximumLife: 10000,
       powerburstUntilTick: 0,
       targetTiles: 1,
+      areaTargets: 6,
+      prayerBonus: 24,
     },
     context: { style: "melee", ruleset: "equilibrium", targetTiles: 1 },
     cap: { cap: 30000, bypass: false },
@@ -118,10 +120,13 @@ describe("solver worker serializable boundary", () => {
     expect(revived.blessingIds.has("splash-zone")).toBe(true);
     expect(revived.blessingIds.size).toBe(2);
     expect(revived.powerburstUntilTick).toBe(0);
+    expect(revived.areaTargets).toBe(6);
+    expect(revived.prayerBonus).toBe(24);
 
     const again = serializeLeague(revived);
     expect(again.blessingIds).toEqual(["striking-light", "splash-zone"]);
     expect(Array.isArray(again.blessingIds)).toBe(true);
+    expect(again).toMatchObject({ areaTargets: 6, prayerBonus: 24 });
   });
 
   it("revives modifiers as a function without shipping closures across clone", () => {

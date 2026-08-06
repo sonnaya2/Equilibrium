@@ -1003,6 +1003,7 @@ describe("loadoutStats", () => {
       expect(stats.defence.blockArmourRating).toBe(
         Math.floor(500 + stats.defence.blockLevelArmour),
       );
+      expect(stats.league.prayerBonus).toBe(42);
     });
 
     it("derives blessing inputs from Build picks without replacing the existing stats model", () => {
@@ -1044,6 +1045,20 @@ describe("loadoutStats", () => {
       expect(
         loadoutStats(base, { blessingPicks: ["Chaos", "Balance", "Balance"] }).maxAdrenaline,
       ).toBe(150);
+    });
+
+    it("resolves Lord of Light's Prayer, area-target, and League cap inputs", () => {
+      const stats = loadoutStats(
+        {
+          ...base,
+          equipmentSlots: { body: "mock:defence-body" },
+          target: { defenceLevel: 80, affinity: "same", occupiedTiles: 4, areaTargets: 12 },
+        },
+        { blessingPicks: ["Order", "Balance", "Chaos", "Balance", "Order"] },
+      );
+      expect(stats.league).toMatchObject({ prayerBonus: 57, areaTargets: 12, targetTiles: 4 });
+      expect(stats.cap).toEqual({ cap: 30_000, bypass: true });
+      expect(stats.league.blessingIds.has("lord-of-light")).toBe(true);
     });
 
     it("applies Havoc Born to final displayed stats and the simulator state", () => {

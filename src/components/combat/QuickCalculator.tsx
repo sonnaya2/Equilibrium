@@ -421,7 +421,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">
                   <dt className="text-parch-300">30,000 hit cap</dt>
                   <dd className="text-right font-mono text-parch-50">
-                    {loadout.hitCapEnabled ? "On" : "Off"}
+                    {setup.cap.bypass ? "Off" : "On"}
                   </dd>
                 </div>
                 <div className="grid grid-cols-2 border-b border-stone-750/70 py-1.5">

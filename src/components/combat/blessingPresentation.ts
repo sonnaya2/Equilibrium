@@ -107,15 +107,56 @@ export function strikingLightAssumptionRows(
     const [bandMin, bandMax] = light.abilityDamageBand;
     const armourPct = Math.round(light.armourPercent * 100);
     const armourShare = Math.floor(totalArmour * light.armourPercent);
-    const cdSeconds = ticksToSeconds(light.cooldownTicks).toFixed(1);
+    const cooldownTicks =
+      blessings?.find((entry) => entry.id === "perfidious")?.combat.strikingLightCooldownTicks ??
+      light.cooldownTicks;
+    const cdSeconds = ticksToSeconds(cooldownTicks).toFixed(1);
     rows.push([
       "Light of Saradomin",
       `${bandMin}-${bandMax}% AD + ${armourPct}% armour` +
         (totalArmour > 0 ? ` (${armourShare.toLocaleString("en-US")} from armour)` : "") +
-        ` · ${cdSeconds}s CD · separate hit on first Basic ability land while ready`,
+        ` · ${cdSeconds}s CD · separate hit on first Basic Attack land while ready`,
     ]);
   }
   return rows;
+}
+
+export function lordOfLightAssumptionRows(
+  blessings: readonly BlessingChoice[] | undefined,
+  totalArmour = 0,
+  prayerBonus = 0,
+  areaTargets = 1,
+): Array<[string, string]> {
+  const light = blessings?.find((choice) => choice.id === "lord-of-light")?.combat.light;
+  if (!light) return [];
+  const strikes = light.strikes ?? 1;
+  const targets = Math.min(light.maxTargetsPerStrike ?? 1, Math.max(1, areaTargets));
+  const prayerMultiplier = 1 + prayerBonus * (light.prayerDamagePerBonus ?? 0);
+  const armourShare = Math.floor(totalArmour * light.armourPercent);
+  return [
+    [
+      "Lord of Light",
+      `${strikes} strikes · ${targets} target${targets === 1 ? "" : "s"} per strike · ${ticksToSeconds(light.cooldownTicks).toFixed(1)}s independent CD`,
+    ],
+    [
+      "Lord Light hit",
+      `${light.abilityDamageBand[0]}-${light.abilityDamageBand[1]}% AD + ${Math.round(light.armourPercent * 100)}% armour (${armourShare.toLocaleString("en-US")}) · Prayer ${prayerBonus.toLocaleString("en-US")} = ×${prayerMultiplier.toFixed(2)} · ${Math.round((light.healFraction ?? 0) * 100)}% heal`,
+    ],
+  ];
+}
+
+export function temperedHeartAssumptionRows(
+  blessings: readonly BlessingChoice[] | undefined,
+): Array<[string, string]> {
+  const passive = blessings?.find((choice) => choice.id === "tempered-heart")?.combat
+    .passiveAdrenaline;
+  if (!passive) return [];
+  return [
+    [
+      "Tempered Heart",
+      `+${passive.amount} adrenaline every ${ticksToSeconds(passive.intervalTicks).toFixed(1)}s (${passive.intervalTicks} ticks) · first pulse at t${passive.intervalTicks}`,
+    ],
+  ];
 }
 
 /** One-line quick-calc note when the selected cast is a Basic Attack under Striking Light. */
@@ -150,10 +191,7 @@ export function strikingLightBasicRowMark(
   const choice = strikingLightChoice(blessings);
   const mult = choice?.combat.basicDamageMultiplier;
   if (mult == null || mult === 1) return null;
-  const isBasic =
-    isBasicAttack(ability ?? {}) ||
-    ability?.kind === "basic-attack" ||
-    ability?.kind === "auto-attack";
+  const isBasic = isBasicAttack(ability ?? {}) || ability?.kind === "basic-attack";
   if (!isBasic) return null;
   const pct = Math.round((mult - 1) * 100);
   return `+${pct}% SL`;

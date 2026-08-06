@@ -23,6 +23,8 @@ export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRul
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
     targetTiles: league.targetTiles,
+    areaTargets: Math.max(1, Math.floor(league.areaTargets ?? 1)),
+    prayerBonus: Math.max(0, league.prayerBonus ?? 0),
     herbloreLevel: league.herbloreLevel,
   };
 }
@@ -38,6 +40,8 @@ export function serializeLeague(league: ResolvedLeagueRules): SerializableLeague
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
     targetTiles: league.targetTiles,
+    areaTargets: league.areaTargets,
+    prayerBonus: league.prayerBonus,
     herbloreLevel: league.herbloreLevel,
   };
 }

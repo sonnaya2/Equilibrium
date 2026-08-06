@@ -21,6 +21,7 @@ import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ru
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
 import { isBasicAttack } from "../shared/adrenalineGain";
+import { mulFloor } from "../core/rounding";
 
 /** Tag for blessing-generated damage instances shown in analysis. */
 export type BlessingDamageTag = "bonus-damage";
@@ -130,12 +131,15 @@ export interface LeagueDamageInput {
   context: CombatContext;
   cap?: HitCapRule;
   strikingLightReady?: boolean;
+  lordOfLightReady?: boolean;
 }
 
 export type LeagueAbilityInput = Parameters<typeof calculateAbility>[1] & {
   rules: ResolvedLeagueRules;
   /** Light of Saradomin's cooldown state entering the cast; ready by default. */
   strikingLightReady?: boolean;
+  /** Lord of Light's independent cooldown state entering the cast. */
+  lordOfLightReady?: boolean;
   /**
    * Loadout adren rules (FotS, Invigorating, AJ mult, CoE/RoV).
    * Analysis path: no Impatient/Relentless RNG (procs forced false).
@@ -362,29 +366,51 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     });
   }
 
-  const light = blessingRule(input.rules, "striking-light")?.light;
-  if (eligible.onHit && input.strikingLightReady && light && input.ability.category === "basic") {
-    const armour = Math.floor(input.rules.totalArmour * light.armourPercent);
-    const prov = blessingProv("light-of-saradomin");
-    const hit = calculateRawHitBand({
-      ...shared,
-      provenance: prov,
-      context: { ...shared.context, provenance: prov },
-      min: Math.floor(input.base * (light.abilityDamageBand[0] / 100)) + armour,
-      max: Math.floor(input.base * (light.abilityDamageBand[1] / 100)) + armour,
-      crit: { ...input.crit, eligible: true },
-    });
-    components.push({
-      effectId: "light-of-saradomin",
-      blessingId: "striking-light",
-      attached: false,
-      expectedOccurrences: 1,
-      expectedTriggerRolls: 0,
-      expectedActivations: 1,
-      expectedSeparateHits: 1,
-      damage: damageOf(hit),
-      hitDetail: hit,
-    });
+  const strikingLight = blessingRule(input.rules, "striking-light")?.light;
+  const lordLight = blessingRule(input.rules, "lord-of-light")?.light;
+  if (eligible.onHit && isBasicAttack(input.ability)) {
+    const prayerMultiplier = 1 + input.rules.prayerBonus * (lordLight?.prayerDamagePerBonus ?? 0);
+    const pushLights = (
+      light: NonNullable<typeof strikingLight>,
+      blessingId: "striking-light" | "lord-of-light",
+      count: number,
+    ) => {
+      const armour = Math.floor(input.rules.totalArmour * light.armourPercent);
+      const rawMin = Math.floor(input.base * (light.abilityDamageBand[0] / 100)) + armour;
+      const rawMax = Math.floor(input.base * (light.abilityDamageBand[1] / 100)) + armour;
+      const prov = blessingProv("light-of-saradomin");
+      const hit = calculateRawHitBand({
+        ...shared,
+        provenance: prov,
+        context: { ...shared.context, provenance: prov },
+        min: mulFloor(rawMin, prayerMultiplier),
+        max: mulFloor(rawMax, prayerMultiplier),
+        crit: { ...input.crit, eligible: true },
+      });
+      for (let i = 0; i < count; i++) {
+        components.push({
+          effectId: "light-of-saradomin",
+          blessingId,
+          attached: false,
+          expectedOccurrences: 1,
+          expectedTriggerRolls: 0,
+          expectedActivations: 1,
+          expectedSeparateHits: 1,
+          damage: damageOf(hit),
+          hitDetail: hit,
+        });
+      }
+    };
+    if (input.strikingLightReady && strikingLight) {
+      pushLights(strikingLight, "striking-light", 1);
+    }
+    if (input.lordOfLightReady && lordLight) {
+      const targets = Math.min(
+        lordLight.maxTargetsPerStrike ?? 1,
+        Math.max(1, input.rules.areaTargets),
+      );
+      pushLights(lordLight, "lord-of-light", (lordLight.strikes ?? 1) * targets);
+    }
   }
 
   return components;
@@ -460,10 +486,11 @@ export function calculateLeagueAbility(
   ability: AbilitySpec,
   input: LeagueAbilityInput,
 ): LeagueAbilityResult {
-  const { rules, strikingLightReady, ...baseInput } = input;
+  const { rules, strikingLightReady, lordOfLightReady, ...baseInput } = input;
   const ordinary = calculateAbility(ability, baseInput);
   // Light of Saradomin 9s CD: at most first direct hit of this cast can trigger.
-  let lightAvailable = strikingLightReady ?? true;
+  let strikingLightAvailable = strikingLightReady ?? true;
+  let lordOfLightAvailable = lordOfLightReady ?? true;
   const contributions = ability.hits.flatMap((hit, hitIndex) => {
     const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
     const source: BlessingDamageSource = hit.dot ? "dot" : isCommand ? "command" : "direct";
@@ -495,10 +522,14 @@ export function calculateLeagueAbility(
     const components = leagueDamageComponents({
       ...sharedInput,
       source,
-      strikingLightReady: lightAvailable,
+      strikingLightReady: strikingLightAvailable,
+      lordOfLightReady: lordOfLightAvailable,
     });
-    if (components.some((component) => component.effectId === "light-of-saradomin")) {
-      lightAvailable = false;
+    if (components.some((component) => component.blessingId === "striking-light")) {
+      strikingLightAvailable = false;
+    }
+    if (components.some((component) => component.blessingId === "lord-of-light")) {
+      lordOfLightAvailable = false;
     }
     // Mirror land-time: Light is a separate hit and hosts its own packed Cinders chain.
     const ridersOnSeparate: LeagueDamageComponent[] = [];
@@ -511,6 +542,7 @@ export function calculateLeagueAbility(
         source: { kind: "blessing", detail: component.effectId },
         attached: false,
         strikingLightReady: false,
+        lordOfLightReady: false,
       });
       ridersOnSeparate.push(...nested);
     }

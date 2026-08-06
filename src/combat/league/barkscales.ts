@@ -142,7 +142,10 @@ export function barkscalesOutcome(
   } else if (!isNonNegativeFinite(rawTargets)) {
     return unavailable(base, "zero-targets", 0);
   } else {
-    targetsStruck = Math.floor(rawTargets);
+    targetsStruck = Math.min(
+      rule?.barkscales?.graspAreaTiles ?? Math.floor(rawTargets),
+      Math.floor(rawTargets),
+    );
   }
   if (!poisonImmune && targetsStruck <= 0) {
     return unavailable(base, "zero-targets", 0);

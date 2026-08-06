@@ -153,6 +153,12 @@ export function TargetPanel({
               value={target.occupiedTiles ?? 1}
               onChange={(value) => updateTarget({ occupiedTiles: Math.max(1, Math.floor(value)) })}
             />
+            <NumberField
+              label="Targets in area"
+              value={target.areaTargets ?? 1}
+              min={1}
+              onChange={(value) => updateTarget({ areaTargets: Math.max(1, Math.floor(value)) })}
+            />
             <label className="loadout-check">
               <input
                 type="checkbox"

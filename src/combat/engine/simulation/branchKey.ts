@@ -204,6 +204,7 @@ function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
   const naturalInstinctUntil = halfOpenUntil(state.naturalInstinctUntilTick, tick);
   const avernicRampageUntil = halfOpenUntil(state.league?.avernicRampageUntilTick ?? 0, tick);
   const strikingLightReadyTick = halfOpenUntil(state.league?.strikingLightReadyTick ?? 0, tick);
+  const lordOfLightReadyTick = halfOpenUntil(state.league?.lordOfLightReadyTick ?? 0, tick);
   const chaosRoarUntil = halfOpenUntil(m.chaosRoarUntilTick, tick);
   const greaterFuryUntil = halfOpenUntil(m.greaterFuryUntilTick, tick);
   const meteorStrikeUntil = halfOpenUntil(m.meteorStrikeUntilTick, tick);
@@ -246,7 +247,15 @@ function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
     b(inv.aftershockPending),
     n(naturalInstinctUntil),
     // league optional
-    state.league ? "1" + US + n(avernicRampageUntil) + US + n(strikingLightReadyTick) : "0",
+    state.league
+      ? "1" +
+        US +
+        n(avernicRampageUntil) +
+        US +
+        n(strikingLightReadyTick) +
+        US +
+        n(lordOfLightReadyTick)
+      : "0",
     // melee
     n(bloodlust.stacks),
     b(bloodlust.berserk),
@@ -526,6 +535,7 @@ export function branchKeyJson(rt: SimulationRuntime): string {
           league: {
             avernicRampageUntilTick: halfOpenUntil(rt.state.league.avernicRampageUntilTick, tick),
             strikingLightReadyTick: halfOpenUntil(rt.state.league.strikingLightReadyTick, tick),
+            lordOfLightReadyTick: halfOpenUntil(rt.state.league.lordOfLightReadyTick, tick),
           },
         }
       : {}),

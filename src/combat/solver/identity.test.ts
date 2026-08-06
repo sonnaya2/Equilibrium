@@ -249,6 +249,21 @@ describe("fingerprint changes one field at a time", () => {
     await expectDiff("targetHp", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 25 })));
   });
 
+  it("Lord of Light scenario inputs", async () => {
+    await expectDiff("areaTargets", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        league: { ...s.league, areaTargets: (s.league.areaTargets ?? 1) + 1 },
+      })),
+    );
+    await expectDiff("prayerBonus", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        league: { ...s.league, prayerBonus: (s.league.prayerBonus ?? 0) + 1 },
+      })),
+    );
+  });
+
   it("every player poison input", async () => {
     const off = {
       potion: "none" as const,

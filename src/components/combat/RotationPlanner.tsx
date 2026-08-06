@@ -340,11 +340,13 @@ export function RotationPlanner({
           <label className="flex items-center gap-2 text-xs text-parch-300">
             <input
               type="checkbox"
-              checked={loadout.hitCapEnabled}
+              checked={!setupStats.cap.bypass}
+              disabled={setupStats.league.ruleset === "equilibrium"}
               aria-label="30,000 hit cap"
               onChange={(e) => setLoadout({ ...loadout, hitCapEnabled: e.target.checked })}
             />
             30,000 hit cap
+            {setupStats.league.ruleset === "equilibrium" ? " (removed in League)" : ""}
           </label>
         </div>
         {useBuild ? (

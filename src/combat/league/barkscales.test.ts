@@ -70,6 +70,14 @@ describe("Barkscales without an incoming scenario", () => {
 });
 
 describe("Barkscales with a bounded incoming scenario", () => {
+  it("caps the shared area-target scenario to Grasp's 3x3 area", () => {
+    const outcome = barkscalesOutcome(BARKSCALES, 1_000, 30, {
+      incomingHitIntervalSeconds: 6,
+      targetsStruck: 20,
+    });
+    expect(outcome.targetsStruck).toBe(9);
+  });
+
   it("needs five qualifying reductions for one Grasp", () => {
     // Five hits at 6s over a 30s window: exactly one trigger, counter back to 0.
     const outcome = barkscalesOutcome(BARKSCALES, 1_000, 30, {

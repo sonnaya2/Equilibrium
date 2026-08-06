@@ -478,11 +478,20 @@ export function resolveLeagueBundle(
     blessingPicks: options.blessingPicks,
     relics: options.relics,
   } as const;
+  const equipmentIds = equipment?.equipmentIds ?? equippedRecordIds(loadout);
+  const equipmentPrayer =
+    equipment?.equipmentStats.prayer ??
+    aggregateLoadoutEquipment({
+      equipmentSlots: loadout.equipmentSlots,
+      style: loadout.style,
+    }).prayer;
   const league = resolveLeagueRules(leagueLoadout, {
     totalArmour: defenceLife.defence.totalArmour,
     maximumLife: defenceLife.maximumLifeForLeague,
     powerburstUntilTick: defenceLife.powerburstUntilTick,
     targetTiles: loadout.target?.occupiedTiles,
+    areaTargets: loadout.target?.areaTargets,
+    prayerBonus: equipmentPrayer,
     herbloreLevel: loadout.buffs.herbloreLevel,
   });
   const aegis = aegisArmourBonus(
@@ -498,19 +507,12 @@ export function resolveLeagueBundle(
     options.scenarioSeconds ?? 60,
     {
       incomingHitIntervalSeconds: loadout.target?.incomingHitIntervalSeconds,
-      targetsStruck: loadout.target?.occupiedTiles,
+      targetsStruck: loadout.target?.areaTargets,
       poisonImmune: loadout.target?.poisonImmune === true && !hasBlessing(league, "envenomed"),
     },
   );
-  const equipmentIds = equipment?.equipmentIds ?? equippedRecordIds(loadout);
-  const equipmentPrayer =
-    equipment?.equipmentStats.prayer ??
-    aggregateLoadoutEquipment({
-      equipmentSlots: loadout.equipmentSlots,
-      style: loadout.style,
-    }).prayer;
   const tomeOfTheIcyeneWorn = isTomeOfTheIcyeneWorn(equipmentIds);
-  const icyenic = icyenicFromLoadout(league, equipmentPrayer, tomeOfTheIcyeneWorn);
+  const icyenic = icyenicFromLoadout(league, league.prayerBonus, tomeOfTheIcyeneWorn);
   const icyenicProtection = icyenicProtectionOutcome({
     relicActive: hasIcyenicFaith(league),
     windowSeconds: options.scenarioSeconds ?? 60,
@@ -985,7 +987,10 @@ export function resolveCombatRules(
     }),
     maxAdrenaline,
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
-    cap: { cap: STANDARD_HIT_CAP, bypass: !loadout.hitCapEnabled },
+    cap: {
+      cap: STANDARD_HIT_CAP,
+      bypass: !loadout.hitCapEnabled || leagueBundle.league.ruleset === "equilibrium",
+    },
     activePassives: (() => {
       // Equipment list may already include "Ring of Vigour"; collapse to one
       // line that names equipped vs permanent sources (no double stack).

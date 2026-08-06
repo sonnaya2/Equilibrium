@@ -833,17 +833,29 @@ describe("branchKey structural vs JSON partitions", () => {
     expired.state = {
       ...expired.state,
       tick: 30,
-      league: { avernicRampageUntilTick: 12, strikingLightReadyTick: 15 },
+      league: {
+        avernicRampageUntilTick: 12,
+        strikingLightReadyTick: 15,
+        lordOfLightReadyTick: 24,
+      },
     };
     clean.state = {
       ...clean.state,
       tick: 30,
-      league: { avernicRampageUntilTick: 0, strikingLightReadyTick: 0 },
+      league: {
+        avernicRampageUntilTick: 0,
+        strikingLightReadyTick: 0,
+        lordOfLightReadyTick: 0,
+      },
     };
     live.state = {
       ...live.state,
       tick: 5,
-      league: { avernicRampageUntilTick: 12, strikingLightReadyTick: 15 },
+      league: {
+        avernicRampageUntilTick: 12,
+        strikingLightReadyTick: 15,
+        lordOfLightReadyTick: 24,
+      },
     };
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));

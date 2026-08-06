@@ -12,14 +12,14 @@ import { IMPATIENT_EXTRA_ADRENALINE } from "./perks";
 export type AbilityAdrenalineShape = {
   category?: string;
   basicAttack?: boolean;
-  /** @deprecated Read compatibility for pre-modernisation callers. */
+  /** @deprecated Legacy metadata; not a post-modernisation Basic Attack. */
   autoAttack?: boolean;
   adrenaline?: { gain?: number };
 };
 
 /** The four style Basic Attacks. Invigorating multiplies only these. */
 export function isBasicAttack(ability: AbilityAdrenalineShape): boolean {
-  return ability.basicAttack === true || ability.autoAttack === true;
+  return ability.basicAttack === true;
 }
 
 /** Basic-category ability with listed gain > 0. */

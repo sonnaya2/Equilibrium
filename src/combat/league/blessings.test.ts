@@ -21,6 +21,8 @@ const rules = (
     totalArmour?: number;
     maximumLife?: number;
     targetTiles?: number;
+    areaTargets?: number;
+    prayerBonus?: number;
   } = {},
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks }, derived);
 
@@ -196,17 +198,141 @@ describe("Equilibrium blessing combat rules", () => {
     expect(context.firstLegalTick(dragonBreath.id)).toBe(8);
   });
 
-  it("lets any Basic ability trigger Light of Saradomin", () => {
+  it("limits Light of Saradomin triggers to post-modernisation Basic Attacks", () => {
     const league = rules(["Order", "Order"], { totalArmour: 1_000 });
-    const result = simulate({
+    const ordinaryBasic = simulate({
       ...baseInput,
       league,
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("rend"),
     });
-    expect(result.events.filter((event) => event.abilityId === "light-of-saradomin")).toHaveLength(
-      1,
+    expect(
+      ordinaryBasic.events.filter((event) => event.abilityId === "light-of-saradomin"),
+    ).toHaveLength(0);
+
+    const attack = baseInput.abilities.find((ability) => ability.id === "attack")!;
+    const legacyAuto = calculateLeagueAbility(
+      { ...attack, basicAttack: undefined, autoAttack: true },
+      {
+        base: 1_000,
+        level: 99,
+        accuracy: 1,
+        crit: { chance: 0 },
+        context: { style: "melee", ruleset: "equilibrium" },
+        rules: league,
+      },
     );
+    expect(legacyAuto.leagueContributions).toHaveLength(0);
+  });
+
+  it("models Lord of Light strikes, Prayer scaling, area targets, healing, and cooldown", () => {
+    const league = rules(["Order", "Balance", "Balance", "Order", "Order"], {
+      totalArmour: 1_000,
+      prayerBonus: 10,
+      areaTargets: 2,
+    });
+    const result = simulate({
+      ...baseInput,
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const lights = result.events.filter((event) => event.abilityId === "light-of-saradomin");
+    expect(lights).toHaveLength(10);
+    expect(lights.every((event) => event.blessingId === "lord-of-light")).toBe(true);
+    expect(lights.every((event) => event.tick === 0)).toBe(true);
+    expect(lights.map((event) => event.damage.expected)).toEqual(Array(10).fill(3_600));
+    expect(result.totalExpected).toBe(37_200);
+    expect(result.totalHealed).toBe(1_800);
+
+    const withBigBoned = simulate({
+      ...baseInput,
+      league: rules(["Balance", "Balance", "Order", "Order", "Order"], {
+        totalArmour: 1_000,
+        maximumLife: 15_000,
+        areaTargets: 2,
+      }),
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const lordLights = withBigBoned.events.filter(
+      (event) => event.abilityId === "light-of-saradomin" && event.blessingId === "lord-of-light",
+    );
+    const lordLightSeqs = new Set(lordLights.map((event) => event.seq));
+    expect(lordLights).toHaveLength(10);
+    expect(
+      withBigBoned.events.filter(
+        (event) => event.abilityId === "big-boned" && lordLightSeqs.has(event.derivedFrom ?? -1),
+      ),
+    ).toHaveLength(10);
+
+    const both = rules(["Chaos", "Order", "Balance", "Order", "Order"], {
+      totalArmour: 1_000,
+    });
+    const cooldownRun = simulate({
+      ...baseInput,
+      league: both,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf(
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+      ),
+    });
+    const byBlessing = (id: "striking-light" | "lord-of-light") =>
+      cooldownRun.events
+        .filter((event) => event.abilityId === "light-of-saradomin" && event.blessingId === id)
+        .map((event) => event.tick);
+    expect(byBlessing("striking-light")).toEqual([0, 15]);
+    expect(byBlessing("lord-of-light")).toEqual([...Array(5).fill(0), ...Array(5).fill(24)]);
+
+    const perfidious = rules(["Chaos", "Order", "Balance", "Order", "Order", "Chaos"], {
+      totalArmour: 1_000,
+    });
+    const perfidiousRun = simulate({
+      ...baseInput,
+      league: perfidious,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf(
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+      ),
+    });
+    const perfidiousTicks = (id: "striking-light" | "lord-of-light") =>
+      perfidiousRun.events
+        .filter((event) => event.abilityId === "light-of-saradomin" && event.blessingId === id)
+        .map((event) => event.tick);
+    expect(perfidiousTicks("striking-light")).toEqual([0, 9, 18]);
+    expect(perfidiousTicks("lord-of-light")).toEqual([...Array(5).fill(0), ...Array(5).fill(24)]);
+  });
+
+  it("pulses Tempered Heart on the canonical two-tick clock", () => {
+    const league = rules(["Order", "Balance", "Balance", "Balance", "Balance", "Order"]);
+    const attack = baseInput.abilities.find((ability) => ability.id === "attack")!;
+    const context = createCastContext({
+      ...baseInput,
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+    });
+    expect(context.performCast(attack, 0, false).ok).toBe(true);
+    expect(context.getState()).toMatchObject({ tick: 3, adrenaline: 15 });
+    expect(context.performCast(attack, 3, false).ok).toBe(true);
+    expect(context.getState()).toMatchObject({ tick: 6, adrenaline: 36 });
+    expect(context.performCast(attack, 6, false).ok).toBe(true);
+    expect(context.getState()).toMatchObject({ tick: 9, adrenaline: 51 });
   });
 
   it("applies Splash Zone only to tagged attacks and Adrenaline Junkie only to ability gains", () => {

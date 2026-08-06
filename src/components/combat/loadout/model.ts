@@ -73,6 +73,8 @@ export interface LoadoutTarget {
   hpPercent?: number;
   hasApplicableWeakness?: boolean;
   occupiedTiles?: number;
+  /** Targets expected in one area hit, including the selected target. */
+  areaTargets?: number;
   /** Race flags for Undead / Demon / Dragon Slayer invention perks. */
   undead?: boolean;
   demon?: boolean;
@@ -1197,6 +1199,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
             ...(rawTarget.hasApplicableWeakness === true ? { hasApplicableWeakness: true } : {}),
             ...(Number.isFinite(rawTarget.occupiedTiles)
               ? { occupiedTiles: Math.max(1, Math.floor(Number(rawTarget.occupiedTiles))) }
+              : {}),
+            ...(Number.isFinite(rawTarget.areaTargets)
+              ? { areaTargets: Math.max(1, Math.floor(Number(rawTarget.areaTargets))) }
               : {}),
             ...(rawTarget.undead === true ? { undead: true } : {}),
             ...(rawTarget.demon === true ? { demon: true } : {}),

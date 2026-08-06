@@ -2,7 +2,7 @@
 import type { AdrenalineRules } from "../engine/simulation/contracts";
 
 /** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
-export const SOLVER_SCHEMA_VERSION = 7 as const;
+export const SOLVER_SCHEMA_VERSION = 8 as const;
 
 /**
  * Bumped when objective math or score tagging semantics change.

@@ -76,7 +76,12 @@ export interface BlessingCombatRules {
     cooldownTicks: number;
     abilityDamageBand: readonly [number, number];
     armourPercent: number;
+    strikes?: number;
+    maxTargetsPerStrike?: number;
+    prayerDamagePerBonus?: number;
+    healFraction?: number;
   };
+  passiveAdrenaline?: { intervalTicks: number; amount: number };
   perHitAbilityDamagePercent?: number;
   inferno?: { chance: number; abilityDamageBand: readonly [number, number] };
   barkscales?: {
@@ -94,6 +99,8 @@ export interface BlessingCombatRules {
   poisonDamageBaseBonus?: number;
   poisonDamagePerHerbloreLevel?: number;
   poisonImmunityDisableTicks?: number;
+  prayerBonusPerUniquePath?: number;
+  strikingLightCooldownTicks?: number;
 }
 
 export const GOD_TIERS: readonly number[] = blessingsData.godTiers;

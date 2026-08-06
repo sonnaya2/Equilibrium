@@ -8,6 +8,7 @@ import {
   deriveGodTier,
   GOD_TIERS,
   godTierAlignments,
+  type BlessingChoice,
   type BlessingPath,
 } from "./blessings";
 
@@ -51,9 +52,22 @@ describe("canonical blessings data contract", () => {
     ]);
     expect(BLESSING_IDS).toHaveLength(24);
     expect(new Set(BLESSING_IDS).size).toBe(BLESSING_IDS.length);
-    const lateChoices = blessingsData.records.slice(4).flatMap((record) => record.choices);
+    const lateChoices = (
+      blessingsData.records as unknown as readonly { choices: readonly BlessingChoice[] }[]
+    )
+      .slice(4)
+      .flatMap((record) => record.choices);
     for (const choice of lateChoices) {
-      if (choice.id === "havoc-born" || choice.id === "envenomed") continue;
+      if (
+        choice.id === "havoc-born" ||
+        choice.id === "true-equilibrium" ||
+        choice.id === "lord-of-light" ||
+        choice.id === "tempered-heart" ||
+        choice.id === "envenomed" ||
+        choice.id === "perfidious"
+      ) {
+        continue;
+      }
       expect(choice.support).toMatchObject({
         status: "not-modeled",
         mechanicsUnverified: true,
@@ -71,6 +85,30 @@ describe("canonical blessings data contract", () => {
         poisonDamagePerHerbloreLevel: 0.02,
         poisonImmunityDisableTicks: 50,
       },
+    });
+    expect(lateChoices.find((choice) => choice.id === "lord-of-light")).toMatchObject({
+      support: { status: "partially-modeled" },
+      combat: {
+        light: {
+          cooldownTicks: 24,
+          strikes: 5,
+          maxTargetsPerStrike: 8,
+          prayerDamagePerBonus: 0.02,
+          healFraction: 0.05,
+        },
+      },
+    });
+    expect(lateChoices.find((choice) => choice.id === "tempered-heart")).toMatchObject({
+      support: { status: "modeled" },
+      combat: { passiveAdrenaline: { intervalTicks: 2, amount: 6 } },
+    });
+    expect(lateChoices.find((choice) => choice.id === "true-equilibrium")).toMatchObject({
+      support: { status: "partially-modeled" },
+      combat: { prayerBonusPerUniquePath: 5 },
+    });
+    expect(lateChoices.find((choice) => choice.id === "perfidious")).toMatchObject({
+      support: { status: "partially-modeled" },
+      combat: { strikingLightCooldownTicks: 8 },
     });
   });
 

@@ -215,6 +215,19 @@ describe("normalizeLoadout", () => {
     });
   });
 
+  it("normalizes the area-target scenario for persisted loadouts", () => {
+    expect(
+      normalizeLoadout({
+        target: { defenceLevel: 80, affinity: "same", occupiedTiles: 4, areaTargets: 7.9 },
+      }).target,
+    ).toMatchObject({ occupiedTiles: 4, areaTargets: 7 });
+    expect(
+      normalizeLoadout({
+        target: { defenceLevel: 80, affinity: "same", areaTargets: 0 },
+      }).target?.areaTargets,
+    ).toBe(1);
+  });
+
   it("fills missing buffs and equipmentSlots", () => {
     const next = normalizeLoadout({ style: "magic", level: 99 });
     expect(next.buffs).toEqual({

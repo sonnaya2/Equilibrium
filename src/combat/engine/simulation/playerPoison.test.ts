@@ -111,7 +111,7 @@ describe("player poison simulation", () => {
     const league = resolveLeagueRules(
       {
         ruleset: "equilibrium",
-        blessingPicks: ["Order", "Balance", "Order", "Order", "Order", "Balance"],
+        blessingPicks: ["Order", "Balance", "Order", "Order", "Balance", "Balance"],
       },
       { herbloreLevel: 99 },
     );

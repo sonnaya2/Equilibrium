@@ -11,6 +11,7 @@ import {
 import { COMMAND_REQUIRES_CONJURE, findConjure } from "../../styles/necromancy/conjures";
 import { sacrificeExpectedHeal } from "../../styles/shared/constitutionAbilities";
 import { shouldRetainHitDetail } from "./hitDetailsRetention";
+import { blessingRule } from "../../league/ruleset";
 
 /**
  * Write generic ledgers for one landed event: totals, per-tick / per-ability
@@ -42,7 +43,13 @@ export function recordEventAccounting(
     event.abilityId === "sacrifice" && event.family !== "proc"
       ? sacrificeExpectedHeal(damage.expected)
       : 0;
-  if (sacrificeHeal > 0) rt.totalHealed += sacrificeHeal;
+  const lightHealFraction =
+    event.abilityId === "light-of-saradomin"
+      ? (blessingRule(rt.input.league, "lord-of-light")?.light?.healFraction ?? 0)
+      : 0;
+  const lightHeal = Math.floor(damage.expected * lightHealFraction);
+  const expectedHeal = sacrificeHeal + lightHeal;
+  if (expectedHeal > 0) rt.totalHealed += expectedHeal;
 
   if (keepsPerAbilityMap(rt.detailLevel)) {
     rt.perAbility[event.abilityId] = (rt.perAbility[event.abilityId] ?? 0) + damage.expected;
@@ -57,8 +64,8 @@ export function recordEventAccounting(
     const record = rt.recordBySeq.get(event.sourceCast);
     if (record) {
       record.result.expected += damage.expected;
-      if (sacrificeHeal > 0) {
-        record.expectedHeal = (record.expectedHeal ?? 0) + sacrificeHeal;
+      if (expectedHeal > 0) {
+        record.expectedHeal = (record.expectedHeal ?? 0) + expectedHeal;
       }
       if (event.attached && event.blessingId) {
         record.result.min += damage.min;

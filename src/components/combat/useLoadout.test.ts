@@ -30,6 +30,7 @@ describe("normalizeLoadout", () => {
     expect(normalizeLoadout({}).buffs).toMatchObject({
       weaponPoison: "none",
       kwuarmPotency: 0,
+      herbloreLevel: 99,
     });
     expect(
       normalizeLoadout({
@@ -39,6 +40,8 @@ describe("normalizeLoadout", () => {
     expect(
       normalizeLoadout({ buffs: { weaponPoison: "invented", kwuarmPotency: 99 } }).buffs,
     ).toMatchObject({ weaponPoison: "none", kwuarmPotency: 0 });
+    expect(normalizeLoadout({ buffs: { herbloreLevel: 120 } }).buffs.herbloreLevel).toBe(120);
+    expect(normalizeLoadout({ buffs: { herbloreLevel: 999 } }).buffs.herbloreLevel).toBe(120);
   });
   it("returns defaults for null / non-objects", () => {
     expect(normalizeLoadout(null)).toEqual(DEFAULT_LOADOUT);
@@ -218,6 +221,7 @@ describe("normalizeLoadout", () => {
       vulnerability: false,
       weaponPoison: "none",
       kwuarmPotency: 0,
+      herbloreLevel: 99,
       styleCurse: "none",
       overload: "none",
       fortitude: false,

@@ -1135,6 +1135,23 @@ describe("branchKey structural vs JSON partitions", () => {
     ).toHaveLength(2);
   });
 
+  it("keeps live poison-immunity overrides and drops expired residue", () => {
+    const base = createRuntime(meleeInput);
+    const live = snapshotRuntime(base);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    live.state = { ...live.state, tick: 10 };
+    live.state = patchTarget(live.state, { poisonImmunityDisabledUntilTick: 50 });
+    expired.state = { ...expired.state, tick: 50 };
+    expired.state = patchTarget(expired.state, { poisonImmunityDisabledUntilTick: 50 });
+    clean.state = { ...clean.state, tick: 50 };
+
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(live)).not.toBe(branchKeyJson(clean));
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+  });
+
   it("historical hitDetails without pending derived do not split keys", () => {
     const a = createRuntime(meleeInput);
     const b = snapshotRuntime(a);

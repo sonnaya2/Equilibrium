@@ -30,6 +30,7 @@ import {
   hauntedParentDamage,
 } from "../../styles/necromancy/haunted";
 import type { CombatModifier, SourceReference } from "../../types";
+import { isTargetPoisonImmune } from "../../poison/mechanics";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
 import type { AttachedDamageComponent, EventResolution } from "../resolution/types";
@@ -178,7 +179,16 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
     recursionAllowed: false,
     originKind: "conjure",
     provenance: { kind: "conjure_poison", detail: "putrid_zombie" },
-    resolve: (eventRt) => {
+    resolve: (eventRt, atTick) => {
+      if (
+        isTargetPoisonImmune(
+          eventRt.input.playerPoison,
+          eventRt.state.target.poisonImmunityDisabledUntilTick,
+          atTick,
+        )
+      ) {
+        return NO_DAMAGE;
+      }
       const provenance = { kind: "conjure_poison" as const, detail: "putrid_zombie" };
       const hit = calculateHit({
         base: input.base,

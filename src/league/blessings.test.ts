@@ -51,15 +51,27 @@ describe("canonical blessings data contract", () => {
     ]);
     expect(BLESSING_IDS).toHaveLength(24);
     expect(new Set(BLESSING_IDS).size).toBe(BLESSING_IDS.length);
-    for (const record of blessingsData.records.slice(4)) {
-      for (const choice of record.choices) {
-        expect(choice.support).toMatchObject({
-          status: "not-modeled",
-          mechanicsUnverified: true,
-        });
-        expect(choice.combat).toEqual({});
-      }
+    const lateChoices = blessingsData.records.slice(4).flatMap((record) => record.choices);
+    for (const choice of lateChoices) {
+      if (choice.id === "havoc-born" || choice.id === "envenomed") continue;
+      expect(choice.support).toMatchObject({
+        status: "not-modeled",
+        mechanicsUnverified: true,
+      });
+      expect(choice.combat).toEqual({});
     }
+    expect(lateChoices.find((choice) => choice.id === "havoc-born")).toMatchObject({
+      support: { status: "partially-modeled" },
+      combat: { armourMultiplier: 0.75, damageMultiplier: 1.2, maximumLifeMultiplier: 0.75 },
+    });
+    expect(lateChoices.find((choice) => choice.id === "envenomed")).toMatchObject({
+      support: { status: "modeled" },
+      combat: {
+        poisonDamageBaseBonus: 0.5,
+        poisonDamagePerHerbloreLevel: 0.02,
+        poisonImmunityDisableTicks: 50,
+      },
+    });
   });
 
   it("emits stable ids, support status, and the granted God Tier from Build picks", () => {

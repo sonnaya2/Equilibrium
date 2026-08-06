@@ -105,6 +105,7 @@ import {
   blessingLifeMultiplier,
   blessingRule,
   effectiveTargetAffinity,
+  hasBlessing,
   hasIcyenicFaith,
   icyenicFromLoadout,
   leagueModifiers,
@@ -482,6 +483,7 @@ export function resolveLeagueBundle(
     maximumLife: defenceLife.maximumLifeForLeague,
     powerburstUntilTick: defenceLife.powerburstUntilTick,
     targetTiles: loadout.target?.occupiedTiles,
+    herbloreLevel: loadout.buffs.herbloreLevel,
   });
   const aegis = aegisArmourBonus(
     blessingRule(league, "teragards-aegis"),
@@ -497,7 +499,7 @@ export function resolveLeagueBundle(
     {
       incomingHitIntervalSeconds: loadout.target?.incomingHitIntervalSeconds,
       targetsStruck: loadout.target?.occupiedTiles,
-      poisonImmune: loadout.target?.poisonImmune,
+      poisonImmune: loadout.target?.poisonImmune === true && !hasBlessing(league, "envenomed"),
     },
   );
   const equipmentIds = equipment?.equipmentIds ?? equippedRecordIds(loadout);

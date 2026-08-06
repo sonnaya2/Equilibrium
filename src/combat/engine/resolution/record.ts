@@ -6,12 +6,15 @@ import { recordEventAccounting } from "./accounting";
 import { releaseScoreOnlyHitDetails } from "./hitDetailsRetention";
 import { applyInventionProcs } from "./procs/invention";
 import { scheduleBlessingDamage } from "./league/blessingDamage";
+import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
+import { patchTarget } from "../runtime/state";
 
 /**
  * Sole ledger-write step for a landed event (resolvers only calculate).
- * Order: (1) hit-detail + ledgers/cast/event log (2) blessing damage (3) Invention
- * procs / Crackling / Aftershock (4) style landed-hit transitions last, against
- * pre-hit state so this hit's damage does not see its own side effects.
+ * Order: (1) hit-detail + ledgers/cast/event log (2) target state (3) blessing
+ * damage (4) Invention procs / Crackling / Aftershock (5) style landed-hit
+ * transitions last, against pre-hit state so this hit's damage does not see its
+ * own side effects.
  * Score-only then drops hitDetails no longer referenced by pending derived/LS.
  */
 export function recordResolved(
@@ -22,6 +25,15 @@ export function recordResolved(
   recordEventAccounting(rt, event, resolution);
 
   const { damage } = resolution;
+  const immunityDisableTicks = envenomedPoisonImmunityDisableTicks(rt.input.league);
+  if (damage.expected > 0 && immunityDisableTicks > 0) {
+    rt.state = patchTarget(rt.state, {
+      poisonImmunityDisabledUntilTick: Math.max(
+        rt.state.target.poisonImmunityDisabledUntilTick,
+        event.tick + immunityDisableTicks,
+      ),
+    });
+  }
   scheduleBlessingDamage(rt, event, damage);
   if (!event.blessingId) applyInventionProcs(rt, event, damage);
 

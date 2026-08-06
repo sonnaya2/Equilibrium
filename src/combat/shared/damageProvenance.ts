@@ -130,6 +130,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   // Endless Assault converted channel: DoT family for gear, keeps prayer/window mods + crit.
   player_converted_channel: {
@@ -145,6 +146,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: true,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   conjure_auto: {
     playerAttack: false,
@@ -202,6 +204,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: true,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   invention_proc: {
     playerAttack: false,
@@ -217,6 +220,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   // Parent mods already in list; canTriggerProcs false so attached never inflate proc rolls.
   attached: {
@@ -246,6 +250,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   // Death Skulls bounce: separate hit counter / blessings; damage not re-modified.
   derived_bounce: {
@@ -261,6 +266,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   // Bloat-style DoT tail: rider only; no on-hit re-roll.
   derived_tail: {
@@ -276,6 +282,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   reflected: {
     playerAttack: false,
@@ -290,6 +297,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
 };
 

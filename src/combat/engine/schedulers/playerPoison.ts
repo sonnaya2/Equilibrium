@@ -4,10 +4,12 @@ import {
   PLAYER_POISON_STATUS_TICKS,
   activeEvolvingToxinStacks,
   evolvingToxinMultiplier,
+  isTargetPoisonImmune,
   playerPoisonDamage,
   resolvePoisonApplication,
   type PoisonApplicationSnapshot,
 } from "../../poison/mechanics";
+import { envenomedPoisonDamageMultiplier } from "../../league/ruleset";
 import { VULNERABILITY_MULTIPLIER } from "../../shared/vulnerability";
 import { keepsAnalysisLedgers } from "../simulation/contracts";
 import { recordResolved } from "../resolution";
@@ -26,7 +28,8 @@ function resolvePlayerPoison(rt: SimulationRuntime, atTick: number): EventResolu
   const stacks = activeEvolvingToxinStacks(toxin.stacks, toxin.expiresAtTick, atTick);
   const targetMultiplier =
     (rt.input.playerPoison?.vulnerability ? VULNERABILITY_MULTIPLIER : 1) *
-    evolvingToxinMultiplier(stacks);
+    evolvingToxinMultiplier(stacks) *
+    envenomedPoisonDamageMultiplier(rt.input.league);
   return {
     damage: playerPoisonDamage(
       abilityDamageAt(rt, atTick),
@@ -62,7 +65,15 @@ export function applyPlayerPoison(
   atTick: number,
   source: PoisonApplicationSnapshot,
 ): void {
-  if (rt.input.playerPoison?.targetPoisonImmune) return;
+  if (
+    isTargetPoisonImmune(
+      rt.input.playerPoison,
+      rt.state.target.poisonImmunityDisabledUntilTick,
+      atTick,
+    )
+  ) {
+    return;
+  }
   const current = rt.state.target.weaponPoison;
   if (current.pendingEventSeq >= 0) rt.queue.cancelBySeq(current.pendingEventSeq);
   const nextHitTick = atTick + PLAYER_POISON_FIRST_HIT_DELAY;
@@ -128,10 +139,16 @@ export function processPlayerPoisonEvent(
   ) {
     return null;
   }
-  const continuation = state.cinderbaneContinuation
-    ? resolvePoisonApplication(rt.input.playerPoison, event.tick)
-    : null;
   recordResolved(rt, event, event.resolve(rt, event.tick));
+  const continuation =
+    state.cinderbaneContinuation &&
+    !isTargetPoisonImmune(
+      rt.input.playerPoison,
+      rt.state.target.poisonImmunityDisabledUntilTick,
+      event.tick,
+    )
+      ? resolvePoisonApplication(rt.input.playerPoison, event.tick)
+      : null;
   const remainingHits = state.remainingHits - 1;
   const nextHitTick = event.tick + state.cadenceTicks;
   rt.state = patchTarget(rt.state, {

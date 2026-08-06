@@ -1,5 +1,6 @@
 import {
   nextEvolvingToxin,
+  isTargetPoisonImmune,
   resolvePoisonApplication,
   type PoisonApplicationSnapshot,
 } from "../../poison/mechanics";
@@ -65,6 +66,15 @@ export function expandPlayerPoisonOnLand(
     damage.expected <= 0 ||
     event.attached ||
     capabilitiesOf(event.provenance).canApplyWeaponPoison !== true
+  ) {
+    return exact([branch]);
+  }
+  if (
+    isTargetPoisonImmune(
+      branch.rt.input.playerPoison,
+      branch.rt.state.target.poisonImmunityDisabledUntilTick,
+      event.tick,
+    )
   ) {
     return exact([branch]);
   }

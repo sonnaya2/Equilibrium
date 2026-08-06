@@ -81,6 +81,7 @@ export interface SerializableLeagueRules {
   /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */
   powerburstUntilTick: number;
   targetTiles: number;
+  herbloreLevel?: number;
 }
 
 /**
@@ -168,6 +169,7 @@ export interface SerializableLoadoutPlain {
     styleCurse?: string;
     weaponPoison?: PlayerPoisonProfile["potion"];
     kwuarmPotency?: PlayerPoisonProfile["kwuarmPotency"];
+    herbloreLevel?: number;
   };
   target?: {
     hpPercent?: number;

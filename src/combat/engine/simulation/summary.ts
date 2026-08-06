@@ -25,7 +25,12 @@ import type {
   StochasticRngSummary,
   TailMetrics,
 } from "./contracts";
-import { PLAYER_POISON_EFFECT_ID, resolvePoisonApplication } from "../../poison/mechanics";
+import {
+  CINDERBANE_SUPPORT_NOTE,
+  PLAYER_POISON_EFFECT_ID,
+  resolvePoisonApplication,
+} from "../../poison/mechanics";
+import { hasBlessing } from "../../league/ruleset";
 import {
   keepsAnalysisLedgers,
   keepsPerAbilityMap,
@@ -84,6 +89,15 @@ function buildPlayerPoisonAnalysis(
   const toxin = rt.state.target.evolvingToxin;
   const poisonLive = poison.active && rt.state.tick < poison.expiresAtTick;
   const toxinLive = rt.state.tick < toxin.expiresAtTick;
+  if (
+    rt.input.playerPoison?.targetPoisonImmune === true &&
+    !hasBlessing(rt.input.league, "envenomed") &&
+    !poisonLive &&
+    !row
+  ) {
+    return undefined;
+  }
+  const cinderbane = rt.input.playerPoison?.cinderbane === true;
   return {
     sourceLabel: poisonLive ? poison.sourceLabel : source.sourceLabel,
     effectiveTier: poisonLive ? poison.effectiveTier : source.effectiveTier,
@@ -100,7 +114,8 @@ function buildPlayerPoisonAnalysis(
     bikRemainingTicks: toxinLive ? toxin.expiresAtTick - rt.state.tick : 0,
     probabilityMass: 1,
     residualMass: 0,
-    supportStatus: "partially-modeled",
+    supportStatus: cinderbane ? "partially-modeled" : "modeled",
+    ...(cinderbane ? { supportNote: CINDERBANE_SUPPORT_NOTE } : {}),
   };
 }
 

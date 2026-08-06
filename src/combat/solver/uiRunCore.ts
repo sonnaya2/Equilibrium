@@ -60,11 +60,12 @@ export function isResidualFreeProbe(p: UiRunProbeResult): boolean {
   return p.ok && p.residualWeight <= RESIDUAL_FREE_TOLERANCE;
 }
 
-/** Chunk ladder for wave probes (cheapest wave first). */
+/** Probe the cheapest cap alone, then parallelize only if residual remains. */
 export function chunkUiRunCaps(caps: readonly number[], waveSize: number): number[][] {
+  if (caps.length === 0) return [];
   const size = Math.max(1, waveSize);
-  const out: number[][] = [];
-  for (let i = 0; i < caps.length; i += size) {
+  const out: number[][] = [[caps[0]!]];
+  for (let i = 1; i < caps.length; i += size) {
     out.push([...caps.slice(i, i + size)]);
   }
   return out;

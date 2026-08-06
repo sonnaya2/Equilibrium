@@ -282,6 +282,15 @@ describe("fingerprint changes one field at a time", () => {
     }
   });
 
+  it("Herblore level", async () => {
+    await expectDiff("herbloreLevel", (request) =>
+      withSim(request, (sim) => ({
+        ...sim,
+        league: { ...sim.league, herbloreLevel: 120 },
+      })),
+    );
+  });
+
   it("absent target HP differs from explicit 100%", async () => {
     await expectDiff("targetHpAbsent", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 100 })));
   });

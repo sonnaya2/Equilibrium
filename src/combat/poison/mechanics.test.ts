@@ -3,6 +3,7 @@ import {
   activeEvolvingToxinStacks,
   evolvingToxinMultiplier,
   kwuarmPoisonMultiplier,
+  isTargetPoisonImmune,
   nextEvolvingToxin,
   normalizeKwuarmPotency,
   playerPoisonDamage,
@@ -90,7 +91,7 @@ describe("player poison mechanics", () => {
     ).toMatchObject({ procChance: 0.175, sourceDamageMultiplier: 1.05 });
   });
 
-  it("honors potion expiry, Kwuarm potency, and poison immunity", () => {
+  it("honors potion expiry, Kwuarm potency, and poison immunity windows", () => {
     expect(weaponPoisonDurationTicks("weapon")).toBe(250);
     expect(weaponPoisonDurationTicks("weapon-plus")).toBe(500);
     expect(weaponPoisonDurationTicks("weapon-plus-plus")).toBe(1_000);
@@ -107,12 +108,11 @@ describe("player poison mechanics", () => {
     expect(normalizeKwuarmPotency(-1)).toBe(0);
     expect(normalizeKwuarmPotency(2.5)).toBe(0);
     expect(normalizeKwuarmPotency(5)).toBe(0);
-    expect(
-      resolvePoisonApplication(
-        profile({ potion: "weapon", potionUntilTick: 250, targetPoisonImmune: true }),
-        0,
-      ),
-    ).toBeNull();
+    const immune = profile({ potion: "weapon", potionUntilTick: 250, targetPoisonImmune: true });
+    expect(resolvePoisonApplication(immune, 0)).not.toBeNull();
+    expect(isTargetPoisonImmune(immune, 0, 0)).toBe(true);
+    expect(isTargetPoisonImmune(immune, 50, 49)).toBe(false);
+    expect(isTargetPoisonImmune(immune, 50, 50)).toBe(true);
   });
 
   it("caps and expires Evolving Toxin at the half-open boundary", () => {

@@ -38,6 +38,8 @@ export const PLAYER_POISON_STATUS_TICKS = 300;
 export const PLAYER_POISON_FIRST_HIT_DELAY = 2;
 export const EVOLVING_TOXIN_MAX_STACKS = 150;
 export const EVOLVING_TOXIN_DURATION_TICKS = 50;
+export const CINDERBANE_SUPPORT_NOTE =
+  "The Wiki's rare guaranteed activation after 16 ticks is excluded because its start point and conditions are marked unclear.";
 
 const POTION_TIER: Readonly<Record<WeaponPoisonChoice, 0 | 1 | 2 | 3 | 4>> = {
   none: 0,
@@ -131,6 +133,14 @@ export function nextEvolvingToxin(
   };
 }
 
+export function isTargetPoisonImmune(
+  profile: PlayerPoisonProfile | undefined,
+  immunityDisabledUntilTick: number,
+  atTick: number,
+): boolean {
+  return profile?.targetPoisonImmune === true && atTick >= immunityDisabledUntilTick;
+}
+
 function labelFor(profile: PlayerPoisonProfile, tier: PoisonTier): string {
   const sources: string[] = [];
   if (profile.cinderbane) sources.push("Cinderbane");
@@ -143,7 +153,7 @@ export function resolvePoisonApplication(
   profile: PlayerPoisonProfile | undefined,
   atTick: number,
 ): PoisonApplicationSnapshot | null {
-  if (!profile || profile.targetPoisonImmune) return null;
+  if (!profile) return null;
   const potionTier = atTick < profile.potionUntilTick ? POTION_TIER[profile.potion] : 0;
   const otherTier = Math.max(potionTier, profile.blowpipe ? 1 : 0);
   const effectiveTier = profile.cinderbane

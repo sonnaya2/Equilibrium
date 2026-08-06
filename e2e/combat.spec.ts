@@ -253,6 +253,27 @@ test("setup summary exposes the complete core-derived stat line", async ({ page 
   await expect(summaryMetric(page, "Hit cap")).toHaveCount(0);
 });
 
+test("poison buffs expose every potion tier and persist Herblore", async ({ page }) => {
+  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  const potion = page.getByRole("combobox", { name: "Weapon poison potion" });
+  await expect(potion.locator("option")).toHaveText([
+    "None",
+    "Weapon poison",
+    "Weapon poison+",
+    "Weapon poison++",
+    "Weapon poison+++",
+  ]);
+  await potion.selectOption("weapon-plus-plus-plus");
+  await page.getByRole("spinbutton", { name: "Herblore level" }).fill("120");
+
+  await page.reload();
+  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  await expect(page.getByRole("combobox", { name: "Weapon poison potion" })).toHaveValue(
+    "weapon-plus-plus-plus",
+  );
+  await expect(page.getByRole("spinbutton", { name: "Herblore level" })).toHaveValue("120");
+});
+
 test("summary breakdowns reconcile and open from the keyboard", async ({ page }) => {
   const crit = summaryMetric(page, "Crit chance");
   const toggle = crit.locator("summary");

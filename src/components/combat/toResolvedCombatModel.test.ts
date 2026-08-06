@@ -351,6 +351,7 @@ describe("toResolvedCombatModel", () => {
         vulnerability: true,
         weaponPoison: "weapon-plus-plus",
         kwuarmPotency: 4,
+        herbloreLevel: 120,
       },
       equipmentSlots: {
         twohand: "item:laniakeas-spear",
@@ -372,6 +373,7 @@ describe("toResolvedCombatModel", () => {
       vulnerability: true,
     });
     expect(model.target.poisonImmune).toBe(true);
+    expect(model.league.herbloreLevel).toBe(120);
     expect(projectSerializableSimBase(model).playerPoison).toEqual(model.playerPoison);
 
     const blowpipe = toResolvedCombatModel(

@@ -40,11 +40,13 @@ describe("uiRunCore", () => {
     expect(best.maxLiveBranches).toBe(1024);
   });
 
-  it("chunkUiRunCaps groups cheapest first", () => {
+  it("probes the cheapest cap alone before parallel fallback waves", () => {
     expect(chunkUiRunCaps([128, 256, 512, 1024, 2048], 3)).toEqual([
-      [128, 256, 512],
-      [1024, 2048],
+      [128],
+      [256, 512, 1024],
+      [2048],
     ]);
+    expect(chunkUiRunCaps([], 3)).toEqual([]);
   });
 
   it("wave early-exit policy: residual-free stops further waves; residual continues", () => {
@@ -52,7 +54,6 @@ describe("uiRunCore", () => {
     // Wave 1 all residual -> must continue.
     const wave1: UiRunProbeResult[] = [
       { maxLiveBranches: 128, residualWeight: 0.4, ok: true, totalExpected: 1 },
-      { maxLiveBranches: 256, residualWeight: 0.3, ok: true, totalExpected: 1 },
     ];
     expect(wave1.some(isResidualFreeProbe)).toBe(false);
     expect(waves.length).toBeGreaterThan(1);
@@ -60,7 +61,6 @@ describe("uiRunCore", () => {
     // Wave with residual-free allows stop.
     const waveFree: UiRunProbeResult[] = [
       { maxLiveBranches: 128, residualWeight: 0, ok: true, totalExpected: 1 },
-      { maxLiveBranches: 256, residualWeight: 0.2, ok: true, totalExpected: 1 },
     ];
     expect(waveFree.some(isResidualFreeProbe)).toBe(true);
     expect(

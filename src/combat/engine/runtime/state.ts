@@ -101,6 +101,7 @@ export interface TargetRuntimeState {
   haunted: HauntedState;
   weaponPoison: TargetWeaponPoisonState;
   evolvingToxin: EvolvingToxinState;
+  poisonImmunityDisabledUntilTick: number;
 }
 
 export interface TargetWeaponPoisonState {
@@ -246,6 +247,7 @@ export function newRotationState(
       haunted: newHaunted(),
       weaponPoison: inactiveTargetWeaponPoison(),
       evolvingToxin: inactiveEvolvingToxin(),
+      poisonImmunityDisabledUntilTick: 0,
     },
   };
 }

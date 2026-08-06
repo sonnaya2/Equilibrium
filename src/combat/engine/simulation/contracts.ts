@@ -316,7 +316,8 @@ export interface PlayerPoisonAnalysis {
   bikRemainingTicks: number;
   probabilityMass: number;
   residualMass: number;
-  supportStatus: "partially-modeled";
+  supportStatus: "modeled" | "partially-modeled";
+  supportNote?: string;
 }
 
 /**

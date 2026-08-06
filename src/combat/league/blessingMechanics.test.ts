@@ -11,6 +11,7 @@ import {
   aegisArmourBonus,
   effectiveCooldownTicks,
   effectiveTargetAffinity,
+  envenomedPoisonDamageMultiplier,
   leagueModifiers,
   resolveLeagueRules,
   type ResolveLeagueRulesDerived,
@@ -223,6 +224,24 @@ describe("Demon's Mark affinity resolution", () => {
   it("does nothing without the blessing", () => {
     expect(effectiveTargetAffinity("same", true, rules(["Order"]))).toBe("same");
     expect(effectiveTargetAffinity("same", true, undefined)).toBe("same");
+  });
+});
+
+describe("Envenomed", () => {
+  const picks = ["Chaos", "Order", "Chaos", "Order", "Order", "Balance"] as const;
+
+  it("uses the selected Herblore level for every poison hit", () => {
+    expect(envenomedPoisonDamageMultiplier(rules(picks, { herbloreLevel: 1 }))).toBe(1.52);
+    expect(envenomedPoisonDamageMultiplier(rules(picks, { herbloreLevel: 99 }))).toBe(3.48);
+    expect(envenomedPoisonDamageMultiplier(rules(picks, { herbloreLevel: 120 }))).toBe(3.9);
+
+    const modifier = leagueModifiers(rules(picks, { herbloreLevel: 99 })).find(
+      (entry) => entry.id === "blessing:envenomed",
+    )!;
+    const poison = { style: "necromancy", ruleset: "equilibrium", dotKind: "poison" } as const;
+    expect(modifier.applies(poison)).toBe(true);
+    expect(modifier.apply({ damage: 1_000 }, poison).damage).toBe(3_480);
+    expect(modifier.applies({ style: "necromancy", ruleset: "equilibrium" })).toBe(false);
   });
 });
 

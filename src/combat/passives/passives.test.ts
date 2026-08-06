@@ -70,6 +70,9 @@ describe("passive registry", () => {
       "blowpipe-weapon-poison",
     );
     expect(equipmentById("item:laniakeas-spear")?.passiveIds).toContain("laniakea-weapon-poison");
+    expect(definitionById("cinderbane-weapon-poison")?.support).toBe("partially-modeled");
+    expect(definitionById("blowpipe-weapon-poison")?.support).toBe("modeled");
+    expect(definitionById("laniakea-weapon-poison")?.support).toBe("modeled");
   });
 });
 

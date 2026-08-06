@@ -120,7 +120,7 @@ Every damaging or state-changing event (`ScheduledEvent` in `engine/runtime/even
 - hit index, land tick, monotonic `seq` (same-tick order is `(tick, seq)`)
 - `attached` vs separate hit; `procEligible`; `recursionAllowed`
 - **required** `DamageProvenance` (`kind` + optional `detail`) - product gates via `capabilitiesOf(provenance)`, not ability-id lists
-- analysis `originKind`; multiplicity (`triggerRolls` / `expectedActivations` / `expectedSeparateHits`); optional `damageTag`
+- analysis `originKind`; multiplicity (`expectedTriggerRolls` / `expectedActivations` / `expectedSeparateHits`); optional `damageTag`
 - optional `derivedFrom`, DoT metadata, cancel owner
 - `castSnap` - cast-scoped snapshot for land-time resolve (required on cast-scheduled `resolveCastHit` events)
 - `lightningSurge?: boolean` - marker on magic crit-eligible hits; snap is `castSnap`, not a nested object

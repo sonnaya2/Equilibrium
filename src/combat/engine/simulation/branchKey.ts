@@ -333,6 +333,7 @@ function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
     t.weaponPoison.remainingHits > 0;
   const toxinStacks =
     tick < t.evolvingToxin.expiresAtTick ? Math.max(0, t.evolvingToxin.stacks) : 0;
+  const poisonImmunityDisabledUntil = halfOpenUntil(t.poisonImmunityDisabledUntilTick, tick);
   parts.push(
     // target
     n(t.lastAttackTick),
@@ -350,6 +351,7 @@ function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
     n(targetErUntil),
     n(hauntedUntil),
     n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
+    n(poisonImmunityDisabledUntil),
   );
   if (poisonLive) {
     parts.push(
@@ -589,6 +591,10 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     },
     target: {
       ...rt.state.target,
+      poisonImmunityDisabledUntilTick: halfOpenUntil(
+        rt.state.target.poisonImmunityDisabledUntilTick,
+        tick,
+      ),
       burns: {
         active: liveClocksForKey(rt.state.target.burns.active as Record<string, number>, tick),
       },

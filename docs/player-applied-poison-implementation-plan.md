@@ -1,10 +1,10 @@
 # Player-applied poison implementation plan
 
-Status: ready for Sol design review and Codex implementation
+Status: implemented and verified on 2026-08-06
 Research baseline: 2026-08-06
-Scope: player-applied weapon poison, Cinderbane gloves, upgraded bone blowpipe, Laniakea's spear, Kwuarm incense, Bik arrows, and poison susceptibility
+Scope: player-applied weapon poison, Cinderbane gloves, upgraded bone blowpipe, Laniakea's spear, Kwuarm incense, Bik arrows, poison susceptibility, and Envenomed
 
-This is the self-contained handoff for the next chat. No production poison code was implemented while preparing it.
+This is the implementation record and original design handoff. Production wiring now covers the resolved model, worker identity, exact state-changing branches, analysis UI, all four potion tiers, Envenomed, and target poison immunity. Cinderbane's Wiki-marked unclear 16-tick guarantee remains the only equipment support exclusion.
 
 ## Ownership
 

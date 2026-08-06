@@ -65,6 +65,7 @@ export interface ResolvedLeagueRules {
    */
   powerburstUntilTick: number;
   targetTiles: number;
+  herbloreLevel?: number;
 }
 
 export interface ResolveLeagueRulesDerived {
@@ -72,6 +73,7 @@ export interface ResolveLeagueRulesDerived {
   maximumLife?: number;
   powerburstUntilTick?: number;
   targetTiles?: number;
+  herbloreLevel?: number;
 }
 
 export function resolveLeagueRules(
@@ -100,6 +102,7 @@ export function resolveLeagueRules(
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
     targetTiles: Math.max(1, Math.floor(derived.targetTiles ?? 1)),
+    herbloreLevel: Math.min(120, Math.max(1, Math.floor(derived.herbloreLevel ?? 1))),
   };
 }
 
@@ -233,6 +236,19 @@ export function blessingAdrenalineGenerationMultiplier(
   return blessingRule(rules, "adrenaline-junkie")?.adrenalineGenerationMultiplier ?? 1;
 }
 
+export function envenomedPoisonDamageMultiplier(rules: ResolvedLeagueRules | undefined): number {
+  const rule = blessingRule(rules, "envenomed");
+  if (!rule) return 1;
+  const level = Math.min(120, Math.max(1, Math.floor(rules?.herbloreLevel ?? 1)));
+  return 1 + (rule.poisonDamageBaseBonus ?? 0) + (rule.poisonDamagePerHerbloreLevel ?? 0) * level;
+}
+
+export function envenomedPoisonImmunityDisableTicks(
+  rules: ResolvedLeagueRules | undefined,
+): number {
+  return Math.max(0, Math.floor(blessingRule(rules, "envenomed")?.poisonImmunityDisableTicks ?? 0));
+}
+
 /**
  * Sacred Fervor: floor(defaultCooldown * multiplier). Positive base floors to
  * min 1 tick; non-positive/non-finite base clamps to 0.
@@ -305,6 +321,21 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
     });
   }
   const havoc = byId.get("havoc-born");
+  const envenomed = byId.get("envenomed");
+  if (
+    envenomed?.combat.poisonDamageBaseBonus !== undefined ||
+    envenomed?.combat.poisonDamagePerHerbloreLevel !== undefined
+  ) {
+    const multiplier = envenomedPoisonDamageMultiplier(rules);
+    modifiers.push({
+      id: "blessing:envenomed",
+      stage: "postHit",
+      priority: 915,
+      applies: (context) => context.ruleset === "equilibrium" && context.dotKind === "poison",
+      apply: (state) => ({ ...state, damage: mulFloor(state.damage, multiplier) }),
+      source: envenomed.source,
+    });
+  }
   if (havoc?.combat.damageMultiplier !== undefined) {
     modifiers.push({
       id: "blessing:havoc-born",

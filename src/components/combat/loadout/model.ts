@@ -226,6 +226,7 @@ export interface LoadoutBuffs {
   vulnerability: boolean;
   weaponPoison: WeaponPoisonChoice;
   kwuarmPotency: KwuarmPotency;
+  herbloreLevel: number;
   styleCurse: StyleCurseChoice;
   overload: OverloadChoice;
   fortitude: boolean;
@@ -471,6 +472,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     vulnerability: false,
     weaponPoison: "none",
     kwuarmPotency: 0,
+    herbloreLevel: 99,
     styleCurse: "none",
     overload: "none",
     fortitude: false,
@@ -1241,6 +1243,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       vulnerability: rawBuffs.vulnerability === true,
       weaponPoison: normalizeWeaponPoisonChoice(rawBuffs.weaponPoison),
       kwuarmPotency: normalizeKwuarmPotency(rawBuffs.kwuarmPotency),
+      herbloreLevel: clamp(rawBuffs.herbloreLevel, 1, 120, 99),
       styleCurse,
       overload: OVERLOADS.includes(rawBuffs.overload as OverloadChoice)
         ? (rawBuffs.overload as OverloadChoice)

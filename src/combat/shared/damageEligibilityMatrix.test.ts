@@ -102,6 +102,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   player_converted_channel: {
     playerAttack: true,
@@ -116,6 +117,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: true,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   conjure_auto: {
     playerAttack: false,
@@ -172,6 +174,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: true,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   invention_proc: {
     playerAttack: false,
@@ -186,6 +189,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   attached: {
     playerAttack: true,
@@ -214,6 +218,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   derived_bounce: {
     playerAttack: true,
@@ -228,6 +233,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   derived_tail: {
     playerAttack: true,
@@ -242,6 +248,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
   reflected: {
     playerAttack: false,
@@ -256,6 +263,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: true,
   },
 };
 

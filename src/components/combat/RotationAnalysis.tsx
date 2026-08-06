@@ -403,6 +403,9 @@ export function RotationAnalysisModal({
                   : ""}
               </span>
             </div>
+            {result.playerPoison.supportNote ? (
+              <p className="mt-1 text-[11px] text-parch-300">{result.playerPoison.supportNote}</p>
+            ) : null}
             <dl className="mt-2 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
               <div className="combat-subpanel p-2">
                 <dt className="text-parch-300">Applications</dt>

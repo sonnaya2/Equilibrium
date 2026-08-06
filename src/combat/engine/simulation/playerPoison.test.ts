@@ -4,6 +4,7 @@ import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import { PLAYER_POISON_EFFECT_ID } from "../../poison/mechanics";
 import { rotationOf } from "./contracts";
 import { createCastContext, simulate } from "./simulate";
+import { resolveLeagueRules } from "../../league/ruleset";
 
 const profile = (patch: Partial<PlayerPoisonProfile> = {}): PlayerPoisonProfile => ({
   potion: "weapon",
@@ -37,7 +38,7 @@ describe("player poison simulation", () => {
       applicationAttempts: 1,
       successfulApplications: 0.125,
       separateHits: 2.25,
-      supportStatus: "partially-modeled",
+      supportStatus: "modeled",
     });
   });
 
@@ -97,6 +98,34 @@ describe("player poison simulation", () => {
     expect(poison?.expectedTriggerRolls).toBe(2);
   });
 
+  it("rolls from player damage-over-time hits", () => {
+    const result = simulate({
+      ...baseInput,
+      rotation: rotationOf("dismember"),
+      playerPoison: profile(),
+    });
+    expect(result.playerPoison?.applicationAttempts).toBe(8);
+  });
+
+  it("lets the triggering Envenomed hit bypass and refresh poison immunity", () => {
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Order", "Balance", "Order", "Order", "Order", "Balance"],
+      },
+      { herbloreLevel: 99 },
+    );
+    const result = simulate({
+      ...baseInput,
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+      playerPoison: profile({ targetPoisonImmune: true }),
+    });
+    expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125, 12);
+    expect(result.playerPoison?.expectedDamage).toBeGreaterThan(0);
+  });
+
   it("matches the bounded Cinderbane continuation oracle for base and Laniakea chance", () => {
     for (const [laniakea, chance] of [
       [false, 0.125],
@@ -119,6 +148,10 @@ describe("player poison simulation", () => {
         0,
       );
       expect(result.playerPoison?.successfulApplications).toBeCloseTo(boundedOracle, 10);
+      expect(result.playerPoison).toMatchObject({
+        supportStatus: "partially-modeled",
+        supportNote: expect.stringMatching(/guaranteed activation/i),
+      });
       expect((result.rng?.concreteMass ?? 1) + (result.rng?.residualWeight ?? 0)).toBeCloseTo(
         1,
         10,

@@ -91,6 +91,9 @@ export interface BlessingCombatRules {
   areaDamageBonus?: number;
   aoePerTileBonus?: number;
   useTargetWeakness?: boolean;
+  poisonDamageBaseBonus?: number;
+  poisonDamagePerHerbloreLevel?: number;
+  poisonImmunityDisableTicks?: number;
 }
 
 export const GOD_TIERS: readonly number[] = blessingsData.godTiers;

@@ -403,9 +403,9 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             <h3 className="buff-group__title">Poison</h3>
             <div className="blessing-settings mt-1.5">
               <label className="loadout-select">
-                <span>Weapon poison</span>
+                <span>Weapon poison potion</span>
                 <select
-                  aria-label="Weapon poison"
+                  aria-label="Weapon poison potion"
                   value={loadout.buffs.weaponPoison}
                   onChange={(event) =>
                     setBuffs({
@@ -440,6 +440,13 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                   ))}
                 </select>
               </label>
+              <NumberField
+                label="Herblore level"
+                value={loadout.buffs.herbloreLevel}
+                min={1}
+                max={120}
+                onChange={(herbloreLevel) => setBuffs({ herbloreLevel })}
+              />
             </div>
           </div>
 

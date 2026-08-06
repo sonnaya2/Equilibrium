@@ -115,6 +115,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       maximumLife: input.league.maximumLife,
       powerburstUntilTick: Math.max(0, Math.floor(input.league.powerburstUntilTick ?? 0)),
       targetTiles: input.league.targetTiles,
+      herbloreLevel: input.league.herbloreLevel,
     },
     context: input.context
       ? { ...input.context }

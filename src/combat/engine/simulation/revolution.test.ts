@@ -16,6 +16,8 @@ import {
 } from "./revolution";
 import { simulate } from "./simulate";
 import { secondsToTicks, TICK_SECONDS } from "../../core/ticks";
+import { NO_PLAYER_POISON } from "../../poison/mechanics";
+import { leagueModifiers, resolveLeagueRules } from "../../league/ruleset";
 
 function required<T>(value: T | null | undefined, label: string): T {
   if (value == null) throw new Error(label);
@@ -705,6 +707,33 @@ describe("revolution — conjure post-summon management", () => {
     expect(s.perAbility["spirit_putrid_zombie_poison"]).toBeGreaterThan(0);
     expect(s.events.filter((e) => e.family === "conjureAuto").length).toBeGreaterThan(0);
     expect(s.events.filter((e) => e.family === "poison").length).toBeGreaterThan(0);
+  });
+
+  it("blocks zombie poison on immunity until Envenomed damage disables it", () => {
+    const immune = {
+      ...necroRevo,
+      bar: [abilitySpec("conjure_undead_army")],
+      durationTicks: 40,
+      playerPoison: { ...NO_PLAYER_POISON, targetPoisonImmune: true },
+    };
+    const blocked = simulateRevolution(immune);
+    expect(blocked.perAbility["spirit_putrid_zombie"]).toBeGreaterThan(0);
+    expect(blocked.perAbility["spirit_putrid_zombie_poison"] ?? 0).toBe(0);
+
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Order", "Balance", "Order", "Order", "Order", "Balance"],
+      },
+      { herbloreLevel: 99 },
+    );
+    const enabled = simulateRevolution({
+      ...immune,
+      league,
+      modifiers: leagueModifiers(league),
+      context: { style: "necromancy", ruleset: "equilibrium" },
+    });
+    expect(enabled.perAbility["spirit_putrid_zombie_poison"]).toBeGreaterThan(0);
   });
 
   it("re-summons after Spirit Pact expiry and restarts auto cadence", () => {

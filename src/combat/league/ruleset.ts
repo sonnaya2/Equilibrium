@@ -6,6 +6,7 @@ import {
   type BlessingPath,
 } from "../../league/blessings";
 import { mulFloor } from "../core/rounding";
+import { isBasicAttack } from "../shared/adrenalineGain";
 import { resolveCombatProvenance } from "../shared/damageProvenance";
 import { AFFINITY, type AffinityKind } from "../target/genericTarget";
 import type { CombatContext, CombatModifier } from "../types";
@@ -84,7 +85,11 @@ export function resolveLeagueRules(
   const blessingsById = indexActiveBlessings(blessings);
   const relics =
     ruleset === "equilibrium"
-      ? [...new Set((loadout.relics ?? []).filter((name) => typeof name === "string" && name.length > 0))]
+      ? [
+          ...new Set(
+            (loadout.relics ?? []).filter((name) => typeof name === "string" && name.length > 0),
+          ),
+        ]
       : [];
   return {
     ruleset,
@@ -186,8 +191,7 @@ export function aegisArmourBonus(
   opts?: { basis?: AegisArmourBasis },
 ): AegisArmourBonus {
   const basis: AegisArmourBasis = opts?.basis === "equipment" ? "equipment" : "total-rating";
-  const qualifyingArmour =
-    basis === "total-rating" ? armour.blockArmourRating : armour.totalArmour;
+  const qualifyingArmour = basis === "total-rating" ? armour.blockArmourRating : armour.totalArmour;
   const multiplier =
     offhand === "shield"
       ? (rule?.shieldArmourMultiplier ?? 1)
@@ -197,8 +201,7 @@ export function aegisArmourBonus(
   const armourPercent = (rule?.baseAbilityDamageArmourPercent ?? 0) * multiplier;
   return {
     qualifyingArmour,
-    excludedBlockArmour:
-      basis === "equipment" ? armour.blockArmourRating - armour.totalArmour : 0,
+    excludedBlockArmour: basis === "equipment" ? armour.blockArmourRating - armour.totalArmour : 0,
     basis,
     offhand: offhand ?? "none",
     armourPercent,
@@ -271,9 +274,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       stage: "ability",
       priority: 900,
       applies: (context) =>
-        context.ruleset === "equilibrium" &&
-        notBlessingDamage(context) &&
-        (context.abilityCategory === "basic" || context.autoAttack === true),
+        context.ruleset === "equilibrium" && notBlessingDamage(context) && isBasicAttack(context),
       apply: (state) => ({
         ...state,
         damage: mulFloor(state.damage, striking.combat.basicDamageMultiplier!),

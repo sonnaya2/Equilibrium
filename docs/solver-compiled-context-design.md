@@ -13,7 +13,7 @@ Hit-level `compileModifiers` / exact plateau means live on
 
 A thorough solve can call `evaluateRevolutionBar` thousands of times. Most of the
 inputs to the Revolution driver are **request-invariant**: full ability
-catalogue, auto-attack basics, Strength Cape Dismember patch, cast-modifier
+catalogue, Basic Attacks, Strength Cape Dismember patch, cast-modifier
 factory, league/equipment fields. Today those structures are rebuilt on every
 bar, and again inside every `createRuntime` for every branch root.
 
@@ -86,9 +86,9 @@ the life of that solve. Not shared across workers or across distinct loadouts.
 | Field | Meaning |
 | ----- | ------- |
 | `style` | Combat style for the request |
-| `catalogue` | Final `readonly AbilitySpec[]` for runtime registry (includes autos needed for basics) |
+| `catalogue` | Final `readonly AbilitySpec[]` for runtime registry (includes Basic Attacks) |
 | `byId` | `ReadonlyMap<string, AbilitySpec>` - full catalogue index (`mapAbilitiesById` semantics, including conflict checks) |
-| `basicByStyle` | `ReadonlyMap<style, AbilitySpec>` - first auto-attack per style (`mapBasicsByStyle`) |
+| `basicByStyle` | `ReadonlyMap<style, AbilitySpec>` - first Basic Attack per style (`mapBasicsByStyle`) |
 | `strengthCape99` | Whether cape patch was applied to the catalogue |
 | `pool` | Existing candidate pool (already request-scoped) |
 | `simBase` | Shared Revolution fields **without** `abilities` / `bar` / horizons (modifiers factory already revived) |
@@ -217,7 +217,7 @@ Goal: **identical scores and sim totals**, not identical allocation counts.
 | ---- | --- | ---------- |
 | Mutating a shared AbilitySpec | One bar path mutates hits/cooldowns and poisons later bars | Specs stay readonly after compile; cape produces new objects once at compile |
 | Pool entry is not full AbilitySpec | `pool.byId` typed as PoolAbility; cast needs hits | Keep current `poolAsSpecs` / catalogue merge rules; compile fails closed if hits missing for a resolved id |
-| Autos stripped from pool | Basics come from catalogue, not search pool | Catalogue must still include style autos (today via `sim.abilities` / full engine list) |
+| Basic Attack missing from a saved bar | Stable IDs resolve through the full catalogue | Keep the four established engine IDs and storage mappings |
 | Branch key / equality assumes fresh maps | Unlikely maps are not in branch keys today | Confirm `branchKey` does not identity-compare byId Map instances |
 | API split: evaluate with and without compiled | Two merge paths drift | Single `compileEvaluationContext` helper; evaluate always goes through it |
 | Engine option unused by manual UI | Dead field | Optional registry only; default rebuild path remains tested |

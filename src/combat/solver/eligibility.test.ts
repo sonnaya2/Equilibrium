@@ -19,7 +19,7 @@ const catalogue: AbilitySpec[] = [
   spec({ id: "fury", name: "Fury", replacementGroup: "fury" }),
   spec({ id: "greater_fury", name: "Greater Fury", replacementGroup: "fury" }),
   spec({ id: "utility", name: "Utility", offGcd: true, category: "utility", hits: [] }),
-  spec({ id: "auto", name: "Attack", autoAttack: true }),
+  spec({ id: "attack", name: "Attack", basicAttack: true }),
   spec({
     id: "cleave",
     name: "Cleave",
@@ -96,14 +96,12 @@ describe("validateBarEligibility", () => {
     ).toBe(true);
   });
 
-  it("rejects auto-attacks and partial support unless includePartial", () => {
-    const withAutos = buildCandidatePool(catalogue, "melee", {
-      includeAutos: true,
-      includePartial: true,
-    });
-    expect(
-      validateBarEligibility(["auto"], withAutos).some((issue) => issue.code === "auto-attack"),
-    ).toBe(true);
+  it("accepts Basic Attacks and gates partial support unless includePartial", () => {
+    const pool = buildCandidatePool(catalogue, "melee", { includeBasicAttacks: true });
+    expect(pool.byId.get("attack")?.basicAttack).toBe(true);
+    expect(validateBarEligibility(["attack"], pool)).toEqual([]);
+
+    expect(buildCandidatePool(catalogue, "melee").byId.has("attack")).toBe(false);
 
     const withPartial = buildCandidatePool(catalogue, "melee", { includePartial: true });
     const issues = validateBarEligibility(["partial"], withPartial, { includePartial: false });

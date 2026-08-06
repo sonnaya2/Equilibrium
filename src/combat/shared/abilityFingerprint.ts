@@ -1,4 +1,5 @@
 import type { AbilityHit, AbilitySpec } from "../pipeline/calculateAbility";
+import { isBasicAttack } from "./adrenalineGain";
 
 /** Style-extra keys read via index when present on Melee/Magic/Necro specs. */
 const STYLE_EXTRA_KEYS = [
@@ -70,7 +71,7 @@ export function abilityBehaviorFingerprint(spec: AbilitySpec): string {
     guaranteedCrit: spec.guaranteedCrit ?? null,
     area: spec.area ?? null,
     offGcd: spec.offGcd ?? null,
-    autoAttack: spec.autoAttack ?? null,
+    basicAttack: isBasicAttack(spec),
     supportStatus: spec.supportStatus ?? null,
     bleedDurationExtension: spec.bleedDurationExtension ?? null,
     styleExtras,

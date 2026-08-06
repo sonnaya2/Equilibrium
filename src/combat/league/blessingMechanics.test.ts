@@ -21,15 +21,8 @@ const rules = (
   derived: ResolveLeagueRulesDerived = {},
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: picks }, derived);
 
-describe("Teragard's Aegis and basic attacks", () => {
-  /**
-   * The March 2026 Combat Style Modernisation removed auto-attacks and replaced
-   * them with basic attacks, which are ordinary Basic-category abilities dealing
-   * a percentage of ability damage (melee Attack 110-130%). So an Aegis bonus to
-   * base ability damage reaching the basic attack is the mechanic working, not
-   * a leak into a separate auto-attack damage system - there is no longer one.
-   */
-  it("scales the melee basic attack, which reads ability damage like any ability", () => {
+describe("Teragard's Aegis and Basic Attacks", () => {
+  it("scales the melee Basic Attack through ability damage", () => {
     const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
     expect(attack.category).toBe("basic");
     expect(attack.hits[0]!.band).toEqual({ minPct: 110, maxPct: 130 });
@@ -162,13 +155,14 @@ describe("Striking Light ability mult", () => {
       (modifier) => modifier.id === "blessing:striking-light",
     )!;
 
-  it("applies to basics / autos and ignores blessing provenance damage", () => {
+  it("applies to Basic Attacks only and ignores blessing provenance damage", () => {
     const modifier = strikingModifier();
     expect(
       modifier.applies({
         style: "magic",
         ruleset: "equilibrium",
         abilityCategory: "basic",
+        basicAttack: true,
       }),
     ).toBe(true);
     expect(
@@ -176,6 +170,14 @@ describe("Striking Light ability mult", () => {
         style: "magic",
         ruleset: "equilibrium",
         abilityCategory: "basic",
+      }),
+    ).toBe(false);
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        abilityCategory: "basic",
+        basicAttack: true,
         provenance: { kind: "blessing" },
       }),
     ).toBe(false);

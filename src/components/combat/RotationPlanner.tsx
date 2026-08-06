@@ -149,9 +149,7 @@ export function RotationPlanner({
     const stored = loadState<unknown>(STORAGE_KEY, []);
     const list = Array.isArray(stored) ? stored : [];
     setQueue(
-      list.filter(
-        (id): id is string => typeof id === "string" && DISPLAY_CATALOGUE.byId.has(id),
-      ),
+      list.filter((id): id is string => typeof id === "string" && DISPLAY_CATALOGUE.byId.has(id)),
     );
   }, []);
 
@@ -191,9 +189,7 @@ export function RotationPlanner({
    */
   const combatModel = useMemo(
     () =>
-      useBuild
-        ? loadoutCombatModel
-        : toHybridManualCombatModel(loadoutCombatModel, manualLine),
+      useBuild ? loadoutCombatModel : toHybridManualCombatModel(loadoutCombatModel, manualLine),
     [useBuild, loadoutCombatModel, manualLine],
   );
 
@@ -338,7 +334,7 @@ export function RotationPlanner({
           {mode === "manual" ? (
             <label className="flex items-center gap-2 text-xs text-parch-300">
               <input type="checkbox" checked={weave} onChange={(e) => setWeave(e.target.checked)} />
-              Auto-weave basics
+              Automatically use Basic Attacks
             </label>
           ) : null}
           <label className="flex items-center gap-2 text-xs text-parch-300">
@@ -371,8 +367,8 @@ export function RotationPlanner({
             {setupStats.startingAdrenaline < 100 ? (
               <p className="mt-1.5 text-[11px] leading-snug text-parch-300">
                 Starting adren is {setupStats.startingAdrenaline}%. Ultimates like Death&apos;s
-                Swiftness need 100% (or auto-weave basics to bank). Set Starting adrenaline under
-                Loadout → Stats, or{" "}
+                Swiftness need 100% (or automatic Basic Attacks to bank it). Set Starting adrenaline
+                under Loadout → Stats, or{" "}
                 <button
                   type="button"
                   className="text-gem-300 underline decoration-gem-400/50 underline-offset-2 hover:text-gem-200"
@@ -434,9 +430,7 @@ export function RotationPlanner({
             <span>Ammo</span>
             <select
               value={ammo}
-              onChange={(e) =>
-                setAmmo(e.target.value as "none" | "deathspore" | "splintering")
-              }
+              onChange={(e) => setAmmo(e.target.value as "none" | "deathspore" | "splintering")}
               className="w-full border border-stone-750 bg-transparent px-2 py-1 text-xs text-parch-50"
             >
               <option value="none">None</option>
@@ -713,13 +707,11 @@ export function RotationPlanner({
                         key={`${cast.abilityId}-${index}`}
                         className="border-b border-stone-750/70"
                       >
-                        <td className="py-2 pr-4 font-mono text-xs text-parch-300">
-                          {cast.tick}
-                        </td>
+                        <td className="py-2 pr-4 font-mono text-xs text-parch-300">{cast.tick}</td>
                         <td className="py-2 pr-4 text-parch-50">
                           {abilityName(cast.abilityId)}
                           {cast.auto ? (
-                            <span className="ml-1.5 text-xs text-parch-300">auto</span>
+                            <span className="ml-1.5 text-xs text-parch-300">automatic</span>
                           ) : null}
                           {castCritLabel(cast.result) ? (
                             <span

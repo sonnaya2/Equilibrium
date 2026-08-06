@@ -286,8 +286,7 @@ export function frostbladesModifier(flatDamage: number): CombatModifier {
     id: "item:frostblades",
     stage: "roll",
     priority: 101,
-    applies: (context) =>
-      context.style === "melee" && context.dotKind !== "bleed" && !context.autoAttack,
+    applies: (context) => context.style === "melee" && context.dotKind !== "bleed",
     apply: (state) => ({ ...state, damage: state.damage + flatDamage }),
     source: {
       source: "runescape-wiki",

@@ -43,10 +43,7 @@ export interface AdrenalineRules {
 
 /** State-changing RNG flags for probability-weighted branches; missing = no proc. */
 export type CastRngPointId =
-  | "impatient"
-  | "relentless"
-  | "avernic-rampage"
-  | "spectral_scythe_soul";
+  "impatient" | "relentless" | "avernic-rampage" | "spectral_scythe_soul";
 export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
 
 export function rngProc(rng: CastRng | undefined, id: CastRngPointId): boolean {
@@ -103,7 +100,7 @@ export interface SimulateInput {
   ammo?: "deathspore" | "splintering";
   /** Caroming rank 1-4; rewrites Ricochet hit bands at prepare. */
   caromingRank?: number;
-  /** Weave the style auto-attack through idle GCDs and adrenaline shortfalls. */
+  /** Use the style Basic Attack through idle GCDs and adrenaline shortfalls. */
   autoWeave?: boolean;
   adrenaline?: AdrenalineRules;
   /** Planted Feet: Sunshine / Death's Swiftness base duration x1.25 (63 ticks); not greater variants. */
@@ -242,7 +239,7 @@ export interface CastRecord {
   adrenalineGained: number;
   /** Full ability-economy ledger when resources ran. */
   adrenalineTransaction?: AdrenalineTransaction;
-  /** Woven basic-attack cast, not part of the queued rotation. */
+  /** Automatically selected Basic Attack, not part of the queued rotation. */
   auto?: boolean;
 }
 
@@ -253,6 +250,8 @@ export type DamageSourceKind =
   | "league-blessing"
   | "perk"
   | "conjure-or-familiar"
+  | "basic-attack"
+  /** @deprecated Read compatibility for pre-modernisation analysis payloads. */
   | "auto-attack"
   | "other-modeled";
 

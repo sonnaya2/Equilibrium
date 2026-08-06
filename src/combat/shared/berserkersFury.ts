@@ -12,7 +12,7 @@ import { mulFloor } from "../core/rounding";
  *   [91%, 100%) -> 0.5% ... [1%, 11%) -> 5.0%
  *   (0%, 1%) -> 5.5% (LP 1 .. floor(0.01*max)-1)
  * Not linear in missing health. Display steps of 0.5% up to 5.5%.
- * Affects autos/abilities/channels; not bleeds (wiki).
+ * Affects Basic Attacks, abilities, and channels; not bleeds (wiki).
  * Core stage after roll, before crit -> pipeline stage "roll".
  */
 
@@ -81,10 +81,7 @@ export function getBerserkersFuryBonusFromPercent(input: {
   currentHealthPercent: number;
   maximumLifePoints: number;
 }): number {
-  const current = lifePointsFromHealthPercent(
-    input.maximumLifePoints,
-    input.currentHealthPercent,
-  );
+  const current = lifePointsFromHealthPercent(input.maximumLifePoints, input.currentHealthPercent);
   return getBerserkersFuryBonus({
     currentLifePoints: current,
     maximumLifePoints: input.maximumLifePoints,

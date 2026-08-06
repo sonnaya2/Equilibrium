@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { buildCandidatePool } from "./candidatePool";
-import {
-  evaluateRevolutionBar,
-  winnerPresentationFromEvaluation,
-} from "./evaluate";
+import { evaluateRevolutionBar, winnerPresentationFromEvaluation } from "./evaluate";
 import { emptyModifierSources, defaultSerializableRequest } from "./worker/serializable";
 import { solveFromRequest } from "./solveFromRequest";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
@@ -28,10 +25,10 @@ const emptyEffects: ActiveEquipmentEffects = {
   },
 };
 
-const auto = MELEE_ABILITIES.find((a) => a.autoAttack && a.style === "melee")!;
+const auto = MELEE_ABILITIES.find((a) => a.basicAttack && a.style === "melee")!;
 const sever =
   MELEE_ABILITIES.find((a) => a.id === "sever") ??
-  MELEE_ABILITIES.find((a) => a.category === "basic" && !a.autoAttack)!;
+  MELEE_ABILITIES.find((a) => a.category === "basic" && !a.basicAttack)!;
 const assault =
   MELEE_ABILITIES.find((a) => a.id === "assault") ??
   MELEE_ABILITIES.find((a) => a.category === "enhanced" || a.category === "ultimate") ??

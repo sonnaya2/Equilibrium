@@ -6,6 +6,7 @@ import {
   provenanceForCastHit,
   type DamageProvenance,
 } from "../shared/damageProvenance";
+import { isBasicAttack } from "../shared/adrenalineGain";
 import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
 import type { BleedId, DamageOverTimeKind, OutgoingDamageSource } from "../types";
 import { calculateHit, type HitInput, type HitResult } from "./calculateHit";
@@ -95,6 +96,8 @@ export interface AbilitySpec {
   stateEffect?: StateEffectId;
   appliesEffect?: AppliedEffectId;
   offGcd?: boolean;
+  basicAttack?: boolean;
+  /** @deprecated Read compatibility for pre-modernisation callers. */
   autoAttack?: boolean;
   /** Declared targeting shape used by mechanics such as Splash Zone. */
   area?: "aoe" | "multi-target";
@@ -122,12 +125,7 @@ export interface AbilitySpec {
    * necro shape. Other styles use twohand / dualwield / mainhand.
    */
   weaponRequirement?:
-    | "twohand"
-    | "dualwield"
-    | "mainhand"
-    | "mainhand-empty"
-    | "conduit"
-    | "death-guard-and-conduit";
+    "twohand" | "dualwield" | "mainhand" | "mainhand-empty" | "conduit" | "death-guard-and-conduit";
   /** At least one of these catalogue items must be equipped. */
   requiredEquipmentAnyOf?: readonly string[];
   /**
@@ -188,7 +186,6 @@ function hitProvenance(
   const provenance = provenanceForCastHit({
     isCommand: COMMAND_REQUIRES_CONJURE[ability.id] !== undefined,
     isDot: hit.dot === true || hit.dotKind != null,
-    autoAttack: ability.autoAttack,
     dotKind: hit.dotKind,
     bleedId: hit.bleedId,
   });
@@ -214,7 +211,7 @@ export function calculateAbility(
         style: ability.style,
         dotKind: hit.dotKind,
         abilityCategory: ability.category,
-        autoAttack: ability.autoAttack,
+        basicAttack: isBasicAttack(ability),
         area: ability.area,
         damageSource,
         provenance,

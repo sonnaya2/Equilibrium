@@ -29,6 +29,8 @@ export interface CombatContext {
   ruleset?: "base" | "equilibrium";
   dotKind?: DamageOverTimeKind;
   abilityCategory?: "basic" | "enhanced" | "ultimate" | "utility";
+  basicAttack?: boolean;
+  /** @deprecated Read compatibility for pre-modernisation contexts. */
   autoAttack?: boolean;
   area?: "aoe" | "multi-target";
   targetTiles?: number;

@@ -10,13 +10,11 @@ import {
   applyDeathSparkOnBasic,
   DEATH_SPARK_PASSIVE_ID,
 } from "../../../styles/necromancy/deathSpark";
-import {
-  applySoulReaveOnBasic,
-  SOUL_REAVE_PASSIVE_ID,
-} from "../../../styles/necromancy/soulReave";
+import { applySoulReaveOnBasic, SOUL_REAVE_PASSIVE_ID } from "../../../styles/necromancy/soulReave";
 import { secondsToTicks } from "../../../core/ticks";
 import { applyNecroOnCast, residualSoulCapFor } from "../../../styles/necromancy/effects";
 import { hasPassive } from "../../../shared/equipment";
+import { isBasicAttack } from "../../../shared/adrenalineGain";
 import { rngProc } from "../../simulation/contracts";
 import { patchConjures, patchNecro, patchTarget } from "../../runtime/state";
 import { applySkeletonCommand, scheduleSpiritTracks } from "../../schedulers/conjures";
@@ -59,8 +57,7 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   }
 
   // Omni Guard Death Spark: stack on Necromancy basic; empower was applied in prepare.
-  const necroBasic =
-    ability.id === "necromancy_basic" || (!!ability.autoAttack && ability.style === "necromancy");
+  const necroBasic = ability.style === "necromancy" && isBasicAttack(ability);
   if (necroBasic && hasPassive(rt.input.equipmentEffects, DEATH_SPARK_PASSIVE_ID)) {
     const ds = applyDeathSparkOnBasic(rt.state.necromancy.resources.deathSparkStacks);
     rt.state = patchNecro(rt.state, { deathSparkStacks: ds.stacks });

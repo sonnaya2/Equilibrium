@@ -184,7 +184,6 @@ describe("score-only / full-analysis ranking parity", () => {
     expectRankingParity(full, scoreOnly);
   });
 
-
   it("necromancy bloat derived tails match ranking metrics", () => {
     const abilities = NECROMANCY_ABILITIES;
     const pick = (...ids: string[]): AbilitySpec[] =>
@@ -217,7 +216,7 @@ describe("score-only / full-analysis ranking parity", () => {
       name: "Attack",
       style: "melee",
       category: "basic",
-      autoAttack: true,
+      basicAttack: true,
       hits: [{ band: { minPct: 110, maxPct: 130 } }],
       adrenaline: { gain: 9 },
     };

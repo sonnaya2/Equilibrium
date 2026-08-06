@@ -234,7 +234,7 @@ Support labels match the honesty model in [`combat-model.md`](./combat-model.md)
 
 ## Drivers and contracts
 
-- **Manual rotation** — `simulation/simulate.ts`: queued `RotationAction[]`, optional auto-weave, branching on state-changing RNG.
+- **Manual rotation** — `simulation/simulate.ts`: queued `RotationAction[]`, optional automatic Basic Attacks, branching on state-changing RNG.
 - **Revolution** — `simulation/revolution.ts`: bar-driven selection; shares prepare/commit and clock.
 - **Contracts** — `simulation/contracts.ts` (`SimulateInput`, adrenaline/proc rules, equipment effects, league rules, horizon options).
 

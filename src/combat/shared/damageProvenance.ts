@@ -273,6 +273,7 @@ export function provenanceForCastHit(args: {
   isCommand: boolean;
   isDot: boolean;
   convertedChannel?: boolean;
+  /** @deprecated Legacy imported auto-attack provenance only. */
   autoAttack?: boolean;
   dotKind?: DamageOverTimeKind;
   bleedId?: BleedId | string;
@@ -281,9 +282,7 @@ export function provenanceForCastHit(args: {
   if (args.convertedChannel) return { kind: "player_converted_channel" };
   if (args.isDot) {
     const detail = args.dotKind ?? args.bleedId;
-    return detail != null
-      ? { kind: "player_dot", detail: String(detail) }
-      : { kind: "player_dot" };
+    return detail != null ? { kind: "player_dot", detail: String(detail) } : { kind: "player_dot" };
   }
   if (args.autoAttack) return { kind: "player_auto" };
   return { kind: "player_direct" };
@@ -319,6 +318,7 @@ export function outgoingSourceOf(p: DamageProvenance): OutgoingDamageSource {
 export type LegacyDamageHints = {
   damageSource?: OutgoingDamageSource;
   dotKind?: CombatContext["dotKind"];
+  /** @deprecated Legacy imported auto-attack provenance only. */
   autoAttack?: boolean;
   blessingGenerated?: boolean;
   convertedChannel?: boolean;
@@ -343,9 +343,7 @@ export function provenanceFromLegacy(hints: LegacyDamageHints): DamageProvenance
     return { kind: "conjure_command" };
   }
   if (hints.damageSource === "conjure") {
-    return hints.dotKind === "poison"
-      ? { kind: "conjure_poison" }
-      : { kind: "conjure_auto" };
+    return hints.dotKind === "poison" ? { kind: "conjure_poison" } : { kind: "conjure_auto" };
   }
   if (hints.convertedChannel === true) {
     return { kind: "player_converted_channel" };

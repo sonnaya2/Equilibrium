@@ -241,6 +241,17 @@ describe("item passive timelines", () => {
     expect(run(100)).toBe(13);
   });
 
+  it("grants Jaws adrenaline to the melee Basic Attack", () => {
+    const ctx = createCastContext({
+      ...meleeInput,
+      equipmentEffects: itemEffects(["jaws-of-the-abyss"]),
+    });
+    expect(ctx.performCast(ctx.byId.get("dismember")!, 0, false).ok).toBe(true);
+    expect(activeBleedCount(ctx.getState().target.melee, 3)).toBe(1);
+    expect(ctx.performCast(ctx.byId.get("attack")!, 3, false).ok).toBe(true);
+    expect(ctx.getState().adrenaline).toBe(11);
+  });
+
   it("keeps Parasite cadence and resolves a same-tick refresh with the old stacks", () => {
     const result = simulate({
       ...meleeInput,

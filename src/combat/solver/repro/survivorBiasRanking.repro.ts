@@ -23,23 +23,15 @@ import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { baseInput } from "../../test/fixtures/inputs";
 import type { SimulateInput, RotationSummary } from "../../engine/simulation/contracts";
-import {
-  simulateRevolution,
-  type RevolutionInput,
-} from "../../engine/simulation/revolution";
+import { simulateRevolution, type RevolutionInput } from "../../engine/simulation/revolution";
 
 /**
  * Dual-Leng revo bar that expands Impatient/Relentless into residual.
- * No auto-attack ids - legal for evaluateRevolutionBar / candidate pool.
+ * No Basic Attack ids - legal for evaluateRevolutionBar / candidate pool.
  * Measured residual at 100t with Imp4 L20 + Rel5 L20: ~0.77 concrete ~0.23.
  * (Bar with auto `attack` reaches ~0.85 residual but is not pool-legal.)
  */
-export const SURVIVOR_BIAS_BAR_IDS = [
-  "icy_tempest",
-  "assault",
-  "fury",
-  "dismember",
-] as const;
+export const SURVIVOR_BIAS_BAR_IDS = ["icy_tempest", "assault", "fury", "dismember"] as const;
 
 /** Primary fixture horizon: residual ~77%+ with concrete mass ~0.23. */
 export const SURVIVOR_BIAS_DURATION_TICKS = 100;
@@ -209,13 +201,9 @@ export function residualStatsFromSummary(
   summary: RotationSummary,
 ): ResidualMassStats {
   const concreteMass =
-    summary.damage?.concreteMass ??
-    summary.rng?.concreteMass ??
-    summary.rng?.probabilityMass ??
-    0;
+    summary.damage?.concreteMass ?? summary.rng?.concreteMass ?? summary.rng?.probabilityMass ?? 0;
   const probabilityMass = summary.rng?.probabilityMass ?? concreteMass;
-  const residualWeight =
-    summary.damage?.residualMass ?? summary.rng?.residualWeight ?? 0;
+  const residualWeight = summary.damage?.residualMass ?? summary.rng?.residualWeight ?? 0;
   const conservedMass = concreteMass + residualWeight;
   const residualFraction = conservedMass > 0 ? residualWeight / conservedMass : 0;
   const totalExpected = summary.totalExpected;
@@ -225,9 +213,7 @@ export function residualStatsFromSummary(
     (residualWeight > 1e-9 ? totalExpected : totalExpected);
   const conditionalConcreteMean =
     summary.damage?.conditionalConcreteMean ??
-    (concreteMass > 1e-9 && residualWeight > 1e-9
-      ? knownMassDamage / concreteMass
-      : totalExpected);
+    (concreteMass > 1e-9 && residualWeight > 1e-9 ? knownMassDamage / concreteMass : totalExpected);
   const survivorRenormFactor =
     knownMassDamage > 0 ? conditionalConcreteMean / knownMassDamage : Number.POSITIVE_INFINITY;
 

@@ -30,8 +30,7 @@ export function scheduleCastEvents(
       min: 0,
       max: 0,
       expected: 0,
-      listedAdrenalineDelta:
-        (working.adrenaline?.gain ?? 0) - (working.adrenaline?.cost ?? 0),
+      listedAdrenalineDelta: (working.adrenaline?.gain ?? 0) - (working.adrenaline?.cost ?? 0),
     },
     adrenalineAfter: 0,
     adrenalineBefore: rt.state.adrenaline,
@@ -80,7 +79,6 @@ export function scheduleCastEvents(
       isCommand,
       isDot,
       convertedChannel: prepared.channelAsDot,
-      autoAttack: ability.autoAttack,
       dotKind: hitSpec.dotKind,
       bleedId: hitSpec.bleedId,
     });
@@ -153,8 +151,7 @@ export function scheduleCastEvents(
           : { kind: "derived_bounce" as const, detail: ability.id },
         cancelOwner: castSeq,
         derivedFrom: sourceSeq,
-        resolve: (eventRt, landTick) =>
-          resolveDerivedHit(eventRt, sourceSeq, pct, landTick),
+        resolve: (eventRt, landTick) => resolveDerivedHit(eventRt, sourceSeq, pct, landTick),
       });
     }
   }

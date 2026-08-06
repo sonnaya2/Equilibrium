@@ -288,7 +288,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     ],
     effects: [
       "Wild Magic applies Blast Infused for 10 ticks (6s).",
-      "While Blast Infused: magic basic abilities (incl. auto-attack and Combust) deal +8% base damage.",
+      "While Blast Infused: Magic Basic abilities, including Magic and Combust, deal +8% base damage.",
     ],
     source: PASSIVE_SOURCE.blastDiffusion,
   },

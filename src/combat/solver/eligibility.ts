@@ -226,13 +226,6 @@ function validateBarEligibilityUncached(
         message: `${id} is off-GCD and cannot sit on a Revolution bar`,
       });
     }
-    if (ability.autoAttack) {
-      issues.push({
-        code: "auto-attack",
-        abilityId: id,
-        message: `${id} is an auto-attack and cannot sit on a Revolution bar`,
-      });
-    }
     const group = exclusiveKey(ability);
     if (group) {
       const prior = groups.get(group);

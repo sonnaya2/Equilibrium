@@ -33,7 +33,8 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "league-blessing": "Equilibrium blessings",
   perk: "Invention perks",
   "conjure-or-familiar": "Conjures and familiars",
-  "auto-attack": "Auto-attacks",
+  "basic-attack": "Basic Attacks",
+  "auto-attack": "Basic Attacks",
   "other-modeled": "Other effects",
 };
 const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
@@ -486,7 +487,7 @@ export function RotationAnalysisModal({
                               <span
                                 className="whitespace-nowrap font-mono text-[10px] text-gem-300"
                                 data-striking-light-basic-mark=""
-                                title="Striking Light ability-stage mult on Basic-category abilities and autos"
+                                title="Striking Light ability-stage mult on Basic Attacks"
                               >
                                 {mark}
                               </span>

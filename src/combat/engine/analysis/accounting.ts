@@ -4,6 +4,7 @@ import type { EventResolution } from "../resolution/types";
 import type { DamageSourceKind } from "../simulation/contracts";
 import type { EffectAnalysisLedger, RuntimeAnalysisState } from "./contracts";
 import { resolveEventMultiplicity } from "./multiplicity";
+import { isBasicAttack } from "../../shared/adrenalineGain";
 
 export function sourceKindOf(
   rt: SimulationRuntime,
@@ -17,7 +18,7 @@ export function sourceKindOf(
   if (event.family === "conjureAuto" || event.family === "command" || event.family === "poison") {
     return "conjure-or-familiar";
   }
-  if (event.sourceCast >= 0 && rt.recordBySeq.get(event.sourceCast)?.auto) return "auto-attack";
+  if (isBasicAttack(rt.byId.get(event.abilityId) ?? {})) return "basic-attack";
   // Origin provenance outranks family for derived/attached components.
   if (event.originKind === "dot" || event.family === "dot") return "ability-dot";
   if (event.family === "hit") return "ability-direct";

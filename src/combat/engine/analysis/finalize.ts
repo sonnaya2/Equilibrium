@@ -12,6 +12,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "league-blessing",
   "perk",
   "conjure-or-familiar",
+  "basic-attack",
   "auto-attack",
   "other-modeled",
 ];

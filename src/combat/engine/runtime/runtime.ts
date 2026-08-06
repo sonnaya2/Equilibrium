@@ -5,6 +5,7 @@ import type { CastContextInput, CastRecord, SimulationDetailLevel } from "../sim
 import { resolveDetailLevel } from "../simulation/contracts";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
+import { isBasicAttack } from "../../shared/adrenalineGain";
 import { isSharedConstitutionAbilityId } from "../../styles/shared/constitutionAbilities";
 import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
@@ -15,10 +16,7 @@ import { activateNaragiSliver } from "../../league/naragiActivation";
 import { SLIVER_OF_EDICTS_ID } from "../../league/naragiEdict";
 import { noteRuntimeCreated } from "../../profiling/allocation";
 import { hasPassive } from "../../shared/equipment";
-import {
-  lengLandTableFor,
-  type CompiledLengLandTable,
-} from "../../styles/melee/lengRng";
+import { lengLandTableFor, type CompiledLengLandTable } from "../../styles/melee/lengRng";
 import { MAX_SOULS } from "../../styles/necromancy/abilities";
 import { residualSoulCapFor } from "../../styles/necromancy/effects";
 
@@ -104,11 +102,10 @@ export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string,
 function mapBasicsByStyle(
   abilities: readonly AbilitySpec[],
 ): Map<AbilitySpec["style"], AbilitySpec> {
-  // First auto-attack wins. Tests inject temporary autoAttack flags on synthetic
-  // abilities; that is not a duplicate ability-id data bug.
+  // First Basic Attack wins; the fallback supports synthetic test catalogues.
   const basicByStyle = new Map<AbilitySpec["style"], AbilitySpec>();
   for (const ability of abilities) {
-    if (!ability.autoAttack || basicByStyle.has(ability.style)) continue;
+    if (!isBasicAttack(ability) || basicByStyle.has(ability.style)) continue;
     basicByStyle.set(ability.style, ability);
   }
   return basicByStyle;
@@ -151,17 +148,13 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   ) {
     throw new RangeError(`bad startingResidualSouls: ${input.startingResidualSouls}`);
   }
-  if (
-    input.slayerLevel != null &&
-    (!Number.isFinite(input.slayerLevel) || input.slayerLevel < 0)
-  ) {
+  if (input.slayerLevel != null && (!Number.isFinite(input.slayerLevel) || input.slayerLevel < 0)) {
     throw new RangeError(`bad slayerLevel: ${input.slayerLevel}`);
   }
   // Solver compiled context may pass prebuilt maps (request-invariant).
   // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).
   const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
-  const basicByStyle =
-    input.abilityRegistry?.basicByStyle ?? mapBasicsByStyle(input.abilities);
+  const basicByStyle = input.abilityRegistry?.basicByStyle ?? mapBasicsByStyle(input.abilities);
   const equipment = input.equipmentEffects;
   const lengLandTable = lengLandTableFor(
     hasPassive(equipment, "leng-endless-frost"),

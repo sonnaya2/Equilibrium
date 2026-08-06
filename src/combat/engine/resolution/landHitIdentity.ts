@@ -15,6 +15,7 @@ import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
 import { findConjure } from "../../styles/necromancy/conjures";
+import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 
@@ -61,9 +62,7 @@ export function landHitIdentity(
       : undefined;
   const bleedCount = activeBleedCount(t.melee, at);
   const frostMass =
-    ability.style === "melee" && !ability.autoAttack && !isDot
-      ? activeFrostbladesMass(m.primordialIce, at)
-      : 0;
+    ability.style === "melee" && !isDot ? activeFrostbladesMass(m.primordialIce, at) : 0;
   const frostOn = frostMass > 0;
   const berserkOn = ability.style === "melee" && at < m.berserkUntilTick;
   const sunOn = ability.style === "magic" && sunshineActive(mag.sunshine, at);
@@ -72,12 +71,9 @@ export function landHitIdentity(
     ability.style === "magic" && isConcentratedBlast(ability.id)
       ? mag.concCritStacks * mag.concCritPerStackPct
       : 0;
-  const might =
-    ability.style === "magic" ? channelledMightCritBonus(mag.channelledMight, at) : 0;
-  const ds =
-    ability.style === "ranged" ? deathsSwiftnessMultiplier(ranged.swiftness, at) : 1;
-  const combust =
-    ability.id === "dragon_breath" && burnActive(t.burns, "combust", at);
+  const might = ability.style === "magic" ? channelledMightCritBonus(mag.channelledMight, at) : 0;
+  const ds = ability.style === "ranged" ? deathsSwiftnessMultiplier(ranged.swiftness, at) : 1;
+  const combust = ability.id === "dragon_breath" && burnActive(t.burns, "combust", at);
   const erBleed =
     hitSpec.dotKind === "bleed" &&
     t.melee.enduringRuin.bleedVulnerability > 0 &&
@@ -98,7 +94,7 @@ export function landHitIdentity(
     equipId,
     ability.id,
     ability.style,
-    b(!!ability.autoAttack),
+    b(isBasicAttack(ability)),
     ability.category ?? "",
     ability.area ?? "",
     ability.channelTicks ?? -1,

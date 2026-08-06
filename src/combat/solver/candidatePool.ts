@@ -2,6 +2,7 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { entryByEngineId } from "../abilities/registry";
 import { resolveAbilityCastAvailability } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
+import { isBasicAttack } from "../shared/adrenalineGain";
 import {
   abilityStyleForBar,
   isSharedConstitutionAbilityId,
@@ -50,7 +51,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
     cooldownGroup: spec.cooldownGroup,
     style: spec.style,
     offGcd: spec.offGcd,
-    autoAttack: spec.autoAttack,
+    basicAttack: isBasicAttack(spec),
     averageDamage,
     occupancyTicks: spec.channelTicks ?? GCD_TICKS,
     cooldownTicks:
@@ -64,7 +65,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
 
 /**
  * Build the Revolution candidate set for a combat style.
- * Defaults: no autos, no off-GCD, no partial/not-modeled/unverified specs.
+ * Defaults: no implicit Basic Attacks, off-GCD, or partial/not-modeled/unverified specs.
  * Ids are sorted stably for deterministic search.
  *
  * Weapon-shaped abilities (twohand / dualwield / mainhand / conduit) are dropped
@@ -80,8 +81,8 @@ export function buildCandidatePool(
 ): CandidatePool {
   const allow = options.allow ? new Set(options.allow) : null;
   const deny = options.deny ? new Set(options.deny) : null;
-  const includeAutos = options.includeAutos === true;
   const includeOffGcd = options.includeOffGcd === true;
+  const includeBasicAttacks = options.includeBasicAttacks === true || options.includeAutos === true;
   const includePartial = options.includePartial === true;
 
   const peersByGroup = new Map<string, AbilitySpec[]>();
@@ -102,12 +103,17 @@ export function buildCandidatePool(
     if (effective.style !== style) continue;
     if (deny?.has(effective.id)) continue;
     if (allow && !allow.has(effective.id)) continue;
-    if (!includeAutos && effective.autoAttack) continue;
     if (!includeOffGcd && effective.offGcd) continue;
     if (!includePartial && !isFullyModeled(effective)) continue;
-    // Registry forceSolver:false / autos / stages: manual-only, not Revo++ pool.
+    // Registry forceSolver:false and later cast stages stay out of the Revo++ pool.
     const registry = entryByEngineId(effective.id);
-    if (registry && !registry.solverEligibleDefault) continue;
+    if (
+      registry &&
+      !registry.solverEligibleDefault &&
+      !(includeBasicAttacks && isBasicAttack(effective))
+    ) {
+      continue;
+    }
     // Illegal under weapon / equipment / passive / supersede rules.
     const peers = effective.replacementGroup
       ? (peersByGroup.get(effective.replacementGroup) ?? [])

@@ -13,8 +13,10 @@ import { scoreSummary } from "./objective";
  * state exact; see the Leng case below.
  */
 
-const auto = MELEE_ABILITIES.find((a) => a.autoAttack && a.style === "melee")!;
-const alpha = MELEE_ABILITIES.find((a) => a.id === "sever") ?? MELEE_ABILITIES.find((a) => a.category === "basic" && !a.autoAttack)!;
+const auto = MELEE_ABILITIES.find((a) => a.basicAttack && a.style === "melee")!;
+const alpha =
+  MELEE_ABILITIES.find((a) => a.id === "sever") ??
+  MELEE_ABILITIES.find((a) => a.category === "basic" && !a.basicAttack)!;
 const thrash = MELEE_ABILITIES.find((a) => a.id === "assault") ?? alpha;
 const catalogue: AbilitySpec[] = [auto, alpha, thrash].filter(Boolean);
 
@@ -29,11 +31,7 @@ function baseSim(extra: Record<string, unknown> = {}) {
   };
 }
 
-function tickMapClose(
-  a: Record<number, number>,
-  b: Record<number, number>,
-  digits = 8,
-): void {
+function tickMapClose(a: Record<number, number>, b: Record<number, number>, digits = 8): void {
   const keys = new Set([...Object.keys(a), ...Object.keys(b)].map(Number));
   for (const k of keys) {
     expect(a[k] ?? 0, `damageByTick[${k}]`).toBeCloseTo(b[k] ?? 0, digits);

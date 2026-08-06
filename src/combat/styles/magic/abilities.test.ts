@@ -14,7 +14,8 @@ describe("magic ability data", () => {
     const basic = byId("magic_attack");
     expect(basic.hits[0].band).toEqual({ minPct: 90, maxPct: 110 });
     expect(basic.adrenaline?.gain).toBe(9);
-    expect(basic.autoAttack).toBe(true);
+    expect(basic.basicAttack).toBe(true);
+    expect(basic.cooldownSeconds).toBeUndefined();
 
     expect(byId("sonic_wave").hits[0].band).toEqual({ minPct: 90, maxPct: 110 });
     expect(byId("greater_sonic_wave").hits[0].band).toEqual({ minPct: 115, maxPct: 135 });

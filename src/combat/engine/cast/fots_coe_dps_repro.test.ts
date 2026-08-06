@@ -22,21 +22,14 @@ const regions = [
 ] as readonly RegionId[];
 
 function statsFor(selected: string[]) {
-  const loadout = normalizeLoadout(
-    withArchaeologySelection(DEFAULT_LOADOUT, selected, 500),
-  );
+  const loadout = normalizeLoadout(withArchaeologySelection(DEFAULT_LOADOUT, selected, 500));
   return {
     loadout,
     stats: loadoutStats(loadout, { unlockedRegions: regions }),
   };
 }
 
-function sim(
-  selected: string[],
-  rotation: string[],
-  startingAdrenaline = 100,
-  autoWeave = true,
-) {
+function sim(selected: string[], rotation: string[], startingAdrenaline = 100, autoWeave = true) {
   const { stats } = statsFor(selected);
   return simulate({
     base: stats.base,
@@ -98,7 +91,10 @@ describe("FotS + CoE must not reduce damage EV / rotation DPS", () => {
     const bare = statsFor([]);
     const withRelics = statsFor(["fury_of_the_small", "conservation_of_energy"]);
     const ids = (s: typeof bare.stats) =>
-      s.globalModifiers.map((m) => m.id).sort().join("|");
+      s.globalModifiers
+        .map((m) => m.id)
+        .sort()
+        .join("|");
     expect(ids(withRelics.stats)).toBe(ids(bare.stats));
   });
 
@@ -133,11 +129,11 @@ describe("FotS + CoE must not reduce damage EV / rotation DPS", () => {
     expect(on.error ?? null).toBeNull();
 
     // Duration-normalized DPS must not regress; raw totalExpected can fall if
-    // fewer auto-weaves (shorter path, same queued spenders).
+    // fewer automatic Basic Attacks (shorter path, same queued spenders).
     expect(on.dps).toBeGreaterThanOrEqual(off.dps - 1e-6);
   });
 
-  it("without auto-weave, CoE leaves residual after ultimate dump", () => {
+  it("without automatic Basic Attacks, CoE leaves residual after ultimate dump", () => {
     const rot = ["berserk"];
     const off = sim([], rot, 100, false);
     const on = sim(["fury_of_the_small", "conservation_of_energy"], rot, 100, false);
@@ -190,5 +186,3 @@ describe("FotS + CoE must not reduce damage EV / rotation DPS", () => {
     expect(on.dps).toBeGreaterThanOrEqual(off.dps - 1e-6);
   });
 });
-
-

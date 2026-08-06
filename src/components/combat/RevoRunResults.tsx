@@ -106,10 +106,7 @@ export function RevoRunResults({
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
   const conjureDurationMult = stats.conjureDurationMult ?? 1;
   const effectLabel = (id: string) =>
-    blessingEffectDisplayName(id) ??
-    nameById.get(id) ??
-    spiritEffectDisplayName(id) ??
-    id;
+    blessingEffectDisplayName(id) ?? nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
   const capOpts = capOptsFromMeta(branchFidelityMeta);
   const scoreBadge = result ? runScoreBadge(result) : null;
   const scoreNote = result ? runDiagnosticsNote(result, capOpts) : null;
@@ -205,9 +202,7 @@ export function RevoRunResults({
           onClick={run}
           disabled={runBusy}
           className={
-            runBusy
-              ? "combat-button revo-run-button is-running"
-              : "combat-button revo-run-button"
+            runBusy ? "combat-button revo-run-button is-running" : "combat-button revo-run-button"
           }
           data-testid="revo-run-button"
         >
@@ -320,11 +315,7 @@ export function RevoRunResults({
           </dl>
 
           {scoreNote ? (
-            <p
-              className="mt-2 text-xs text-chaos-300"
-              data-testid="revo-score-note"
-              role="note"
-            >
+            <p className="mt-2 text-xs text-chaos-300" data-testid="revo-score-note" role="note">
               {hasResidual ? (
                 <span data-testid="revo-residual-diagnostics">{scoreNote}</span>
               ) : (
@@ -343,11 +334,7 @@ export function RevoRunResults({
             </button>
           </div>
 
-          <CalculationAssumptions
-            stats={stats}
-            result={result}
-            branchCapOpts={capOpts}
-          />
+          <CalculationAssumptions stats={stats} result={result} branchCapOpts={capOpts} />
 
           <section className="revo-section revo-timeline">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">Timeline</h3>
@@ -407,10 +394,7 @@ export function RevoRunResults({
                                     className="shrink-0 font-mono text-[10px] text-parch-300"
                                     title="Spirit Pact exclusive end (no despawn event)"
                                   >
-                                    {formatConjureCastDurationNote(
-                                      cast.tick,
-                                      conjureDurationMult,
-                                    )}
+                                    {formatConjureCastDurationNote(cast.tick, conjureDurationMult)}
                                   </span>
                                 ) : null}
                                 {castCritLabel(cast.result) ? (
@@ -500,7 +484,7 @@ export function RevoRunResults({
                           <span
                             className="shrink-0 font-mono text-[10px] text-gem-300"
                             data-striking-light-basic-mark=""
-                            title="Striking Light ability-stage mult on Basic-category abilities and autos"
+                            title="Striking Light ability-stage mult on Basic Attacks"
                           >
                             {mark}
                           </span>

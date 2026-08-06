@@ -31,7 +31,7 @@ const auto: AbilitySpec = {
   name: "Attack",
   style: "melee",
   category: "basic",
-  autoAttack: true,
+  basicAttack: true,
   hits: [{ band: { minPct: 110, maxPct: 130 } }],
   adrenaline: { gain: 9 },
 };
@@ -220,7 +220,7 @@ describe("compileEvaluationContext", () => {
     expect(b.score).toBeCloseTo(a.score, 10);
     expect(b.summary?.totalExpected).toBeCloseTo(a.summary!.totalExpected!, 10);
     // Registry maps are identity-stable across the session.
-    expect(compiled.byId.get("attack")?.autoAttack).toBe(true);
+    expect(compiled.byId.get("attack")?.basicAttack).toBe(true);
     expect(compiled.basicByStyle.get("melee")?.id).toBe("attack");
   });
 });

@@ -115,12 +115,14 @@ function sunshineDotHits(count: number) {
 export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
   {
     id: "magic_attack",
-    name: "Magic basic attack",
+    name: "Magic",
     style: "magic",
     category: "basic",
-    autoAttack: true,
+    basicAttack: true,
     hits: [{ band: { minPct: 90, maxPct: 110 } }],
     adrenaline: { gain: 9 },
+    supportNote:
+      "Selected-spell animation, rune consumption, and spell proc effects are outside this damage-only model.",
     source: MODERNISATION_WIKI,
   },
   {

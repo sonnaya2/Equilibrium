@@ -1,4 +1,5 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { CritLayers } from "../../core/critical";
 import {
   isMeleeAbility,
@@ -10,10 +11,7 @@ import {
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
 } from "../../styles/melee/effects";
-import {
-  resolveIcyTempest,
-  type IcyTempestOutcome,
-} from "../../styles/melee/icyTempest";
+import { resolveIcyTempest, type IcyTempestOutcome } from "../../styles/melee/icyTempest";
 import type { PrimordialIceDistribution } from "../../styles/melee/primordialIce";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
 import { hauntedActive } from "../../styles/necromancy/haunted";
@@ -165,7 +163,7 @@ export function prepareCast(
     };
   }
 
-  // Empowered variant resolution: the spend itself is recorded, not applied - 
+  // Empowered variant resolution: the spend itself is recorded, not applied -
   // it lands atomically with the rest of the commit.
   const melee = isMeleeAbility(ability) ? ability : null;
   let empowerMult = 1;
@@ -197,8 +195,7 @@ export function prepareCast(
     working = resolveNecromancyAbility(working, rt.state.necromancy.resources, candidate);
     // Omni Guard Death Spark: at 5 stacks ready; this basic doubles if pre-cast >= 5.
     // Stacks update at commit; prepare only reads pre-cast stacks for empower.
-    const necroBasic =
-      ability.id === "necromancy_basic" || (!!ability.autoAttack && ability.style === "necromancy");
+    const necroBasic = ability.style === "necromancy" && isBasicAttack(ability);
     if (
       necroBasic &&
       hasPassive(input.equipmentEffects, DEATH_SPARK_PASSIVE_ID) &&
@@ -334,7 +331,7 @@ export function prepareCast(
     damaging &&
     rt.state.melee.enduringRuin.nextAttackBonus > 0 &&
     candidate < rt.state.melee.enduringRuin.untilTick;
-  // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") - 
+  // Searing Winds eligibility is checked at cast (wiki: "calculated on cast") -
   // a channel cast inside the window keeps the bonus on hits landing after it.
   const searingWindsAtCast =
     ability.style === "ranged" && searingWindsBonusPct(rt.state.ranged.searingWinds, candidate) > 0;
@@ -361,9 +358,7 @@ export function prepareCast(
     hauntedAtCast,
     hauntedCapAd,
     enduringRuinBonus: enduringRuinConsume ? rt.state.melee.enduringRuin.nextAttackBonus : 0,
-    ...(tuskasEmpoweredFlat !== undefined
-      ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat }
-      : {}),
+    ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
   };
 
   const transitions: PreparedTransition[] = [];
@@ -391,8 +386,7 @@ export function prepareCast(
 
   // costOf / spendOf share Vigour special discount; Icy Tempest stack reduction is spend-only.
   const cost = costOf(rt.state, ability, candidate);
-  const spend =
-    spendOf(rt.state, ability, candidate, input.ammo, selectedIcyTempestOutcome);
+  const spend = spendOf(rt.state, ability, candidate, input.ammo, selectedIcyTempestOutcome);
 
   return {
     ability,

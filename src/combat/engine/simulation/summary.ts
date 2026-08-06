@@ -48,6 +48,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "league-blessing",
   "perk",
   "conjure-or-familiar",
+  "basic-attack",
   "auto-attack",
   "other-modeled",
 ];
@@ -542,7 +543,8 @@ export function combineBranchSummaries(
               attachedComponents: value("attachedComponents"),
               bonusDamage: value("bonusDamage"),
               // Per-activation stays on conditional scale (mass does not change hit size).
-              averagePerActivation: expectedActivations > 0 ? conditionalTotal / expectedActivations : 0,
+              averagePerActivation:
+                expectedActivations > 0 ? conditionalTotal / expectedActivations : 0,
               directDamage: value("directDamage"),
               dotDamage: value("dotDamage"),
               criticalContribution: value("criticalContribution"),
@@ -608,9 +610,7 @@ export function combineBranchSummaries(
         : "exact"
       : "approximated";
   // residual > 0 => known-mass contribution primary; residual ~ 0 => unit-mass EV.
-  const totalsBasis: DamageTotalsBasis = hasResidual
-    ? "known-mass-contribution"
-    : "unit-mass";
+  const totalsBasis: DamageTotalsBasis = hasResidual ? "known-mass-contribution" : "unit-mass";
   const eligibleForRanking = !hasResidual && resolvedExactness === "exact" && ok;
 
   // Stochastic rng when branching, multi-terminal, or residual mass remains.

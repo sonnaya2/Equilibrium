@@ -69,7 +69,7 @@ describe("runtime ability registries", () => {
     });
     expect(rt.byId).toBe(rebuilt.byId);
     expect(rt.basicByStyle).toBe(rebuilt.basicByStyle);
-    expect(rt.basicByStyle.get("melee")?.autoAttack).toBe(true);
+    expect(rt.basicByStyle.get("melee")?.basicAttack).toBe(true);
     expect(rt.byId.get("assault")).toBeDefined();
   });
 

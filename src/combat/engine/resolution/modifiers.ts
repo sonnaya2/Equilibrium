@@ -73,18 +73,14 @@ export function landTimeModifiers(
   if (equipment?.amZiFlatDamage && !modifiers.some((modifier) => modifier.id === "item:am-zi")) {
     modifiers.push(amZiModifier(equipment.amZiFlatDamage));
   }
-  const frostOn =
-    frostbladesActive ?? activeFrostbladesMass(state.melee.primordialIce, at) === 1;
+  const frostOn = frostbladesActive ?? activeFrostbladesMass(state.melee.primordialIce, at) === 1;
   if (
     ability.style === "melee" &&
-    !ability.autoAttack &&
     !isDot &&
     frostOn &&
     !modifiers.some((modifier) => modifier.id === "item:frostblades")
   ) {
-    modifiers.push(
-      frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)),
-    );
+    modifiers.push(frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)));
   }
   if (
     equipment?.amHejDamageBonus &&
@@ -160,7 +156,7 @@ export function landTimeModifiers(
   // Blast Infused: magic basics incl. Combust DoT ticks (wiki Inner Wrath).
   if (
     ability.style === "magic" &&
-    (ability.category === "basic" || ability.autoAttack === true) &&
+    ability.category === "basic" &&
     blastInfusedActive(state.magic, at)
   ) {
     modifiers.push(

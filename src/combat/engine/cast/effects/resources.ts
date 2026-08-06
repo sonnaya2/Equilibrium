@@ -1,8 +1,5 @@
 import { secondsToTicks } from "../../../core/ticks";
-import {
-  isBasicAttack,
-  isGeneratingBasicAbility,
-} from "../../../shared/adrenalineGain";
+import { isBasicAttack, isGeneratingBasicAbility } from "../../../shared/adrenalineGain";
 import {
   resolveAdrenalineTransaction,
   type AdrenalineTransaction,
@@ -46,13 +43,10 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
   const generating = isGeneratingBasicAbility(ability);
   const basicAttack = isBasicAttack(ability);
 
-  const impatientProc =
-    generating && (adren?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient");
+  const impatientProc = generating && (adren?.impatientRank ?? 0) > 0 && rngProc(rng, "impatient");
 
   const relentlessEligible =
-    spend > 0 &&
-    (adren?.relentlessRank ?? 0) > 0 &&
-    candidate >= rt.state.relentlessUntilTick;
+    spend > 0 && (adren?.relentlessRank ?? 0) > 0 && candidate >= rt.state.relentlessUntilTick;
   const relentlessProc = relentlessEligible && rngProc(rng, "relentless");
 
   const meteorBasic =
@@ -66,7 +60,6 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     hasPassive(input.equipmentEffects, "jaws-of-the-abyss") &&
     ability.style === "melee" &&
     ability.category === "basic" &&
-    !ability.autoAttack &&
     fx.prepared.working.hits.length > 0
   ) {
     const jaws = 2 * activeBleedCount(rt.state.target.melee, candidate);

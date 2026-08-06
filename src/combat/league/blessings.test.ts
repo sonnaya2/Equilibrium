@@ -95,8 +95,7 @@ describe("Equilibrium blessing combat rules", () => {
     const light = withBb.events.find((event) => event.abilityId === "light-of-saradomin");
     expect(light).toBeDefined();
     const bbOnLight = withBb.events.filter(
-      (event) =>
-        event.abilityId === "big-boned" && event.derivedFrom === light!.seq,
+      (event) => event.abilityId === "big-boned" && event.derivedFrom === light!.seq,
     );
     expect(bbOnLight).toHaveLength(1);
     expect(bbOnLight[0]).toMatchObject({
@@ -118,9 +117,7 @@ describe("Equilibrium blessing combat rules", () => {
       }
     }
     // Light never re-rolls on-hit blessings from itself.
-    expect(
-      withBb.events.filter((e) => e.abilityId === "light-of-saradomin"),
-    ).toHaveLength(1);
+    expect(withBb.events.filter((e) => e.abilityId === "light-of-saradomin")).toHaveLength(1);
   });
 
   it("enforces Striking Light's 15-tick cooldown and Sacred Fervor's cooldown clock", () => {
@@ -147,6 +144,19 @@ describe("Equilibrium blessing combat rules", () => {
     });
     expect(context.performCast(dragonBreath, 0, false).ok).toBe(true);
     expect(context.firstLegalTick(dragonBreath.id)).toBe(8);
+  });
+
+  it("lets any Basic ability trigger Light of Saradomin", () => {
+    const league = rules(["Order", "Order"], { totalArmour: 1_000 });
+    const result = simulate({
+      ...baseInput,
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("rend"),
+    });
+    expect(result.events.filter((event) => event.abilityId === "light-of-saradomin")).toHaveLength(
+      1,
+    );
   });
 
   it("applies Splash Zone only to tagged attacks and Adrenaline Junkie only to ability gains", () => {

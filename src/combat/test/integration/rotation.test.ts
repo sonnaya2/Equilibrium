@@ -112,7 +112,7 @@ describe("event log reconciles with the cast records", () => {
   });
 });
 
-describe("auto-weave", () => {
+describe("automatic Basic Attacks", () => {
   it("weaves basics through an adrenaline shortfall instead of failing", () => {
     const s = simulate({ ...baseInput, autoWeave: true, rotation: rotationOf("overpower") });
     expect(s.ok).toBe(true);

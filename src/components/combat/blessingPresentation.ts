@@ -3,6 +3,7 @@
  * Engine effect ids (abilityId on blessing events) are not always BlessingId plates.
  */
 import { ticksToSeconds } from "@/combat/core/ticks";
+import { isBasicAttack } from "@/combat/shared/adrenalineGain";
 import type { BlessingChoice } from "@/league/blessings";
 
 export const BLESSING_DAMAGE_EFFECT_IDS = [
@@ -83,7 +84,7 @@ export function strikingLightChoice(
 }
 
 /**
- * Assumptions rows: +40% basics is ability-stage (not baked into base AD),
+ * Assumptions rows: +40% Basic Attacks is ability-stage (not baked into base AD),
  * plus Light of Saradomin separate hit (AD band + armour share + CD).
  */
 export function strikingLightAssumptionRows(
@@ -97,8 +98,8 @@ export function strikingLightAssumptionRows(
   if (mult != null && mult !== 1) {
     const pct = Math.round((mult - 1) * 100);
     rows.push([
-      "Striking Light basics",
-      `+${pct}% damage on Basic-category abilities and autos (ability-stage mult; not in base ability damage field)`,
+      "Striking Light Basic Attacks",
+      `+${pct}% damage on Basic Attacks (ability-stage mult; not in base ability damage field)`,
     ]);
   }
   const light = choice.combat.light;
@@ -111,43 +112,47 @@ export function strikingLightAssumptionRows(
       "Light of Saradomin",
       `${bandMin}-${bandMax}% AD + ${armourPct}% armour` +
         (totalArmour > 0 ? ` (${armourShare.toLocaleString("en-US")} from armour)` : "") +
-        ` · ${cdSeconds}s CD · separate hit on first basic land while ready`,
+        ` · ${cdSeconds}s CD · separate hit on first Basic ability land while ready`,
     ]);
   }
   return rows;
 }
 
-/** One-line quick-calc note when the selected cast is a basic under Striking Light. */
+/** One-line quick-calc note when the selected cast is a Basic Attack under Striking Light. */
 export function strikingLightBasicCastNote(
   blessings: readonly BlessingChoice[] | undefined,
-  ability: { category?: string; autoAttack?: boolean } | null | undefined,
+  ability: { basicAttack?: boolean; autoAttack?: boolean } | null | undefined,
 ): string | null {
   const choice = strikingLightChoice(blessings);
   const mult = choice?.combat.basicDamageMultiplier;
   if (mult == null || mult === 1) return null;
-  if (ability?.category !== "basic" && ability?.autoAttack !== true) return null;
+  if (!isBasicAttack(ability ?? {})) return null;
   const pct = Math.round((mult - 1) * 100);
-  return `Includes Striking Light +${pct}% on this basic`;
+  return `Includes Striking Light +${pct}% on this Basic Attack`;
 }
 
 /**
  * Compact byEffect / revo contribution mark when Striking Light scales this row.
- * Basics and autos only; not on Light of Saradomin or other blessing hits.
+ * Basic Attacks only; not on Light of Saradomin or other blessing hits.
  */
 export function strikingLightBasicRowMark(
   blessings: readonly BlessingChoice[] | undefined,
-  ability: {
-    category?: string;
-    autoAttack?: boolean;
-    kind?: string;
-  } | null | undefined,
+  ability:
+    | {
+        category?: string;
+        basicAttack?: boolean;
+        autoAttack?: boolean;
+        kind?: string;
+      }
+    | null
+    | undefined,
 ): string | null {
   const choice = strikingLightChoice(blessings);
   const mult = choice?.combat.basicDamageMultiplier;
   if (mult == null || mult === 1) return null;
   const isBasic =
-    ability?.category === "basic" ||
-    ability?.autoAttack === true ||
+    isBasicAttack(ability ?? {}) ||
+    ability?.kind === "basic-attack" ||
     ability?.kind === "auto-attack";
   if (!isBasic) return null;
   const pct = Math.round((mult - 1) * 100);

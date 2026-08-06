@@ -207,9 +207,7 @@ function fitBarIds(
       : ids;
   const required = styleRequiredAbilityIds(request.style, pool.ids);
   // Prepend style-required abilities so every legal seed carries them.
-  const withRequired = ensureRequiredAbilityIds(upgraded.filter(legalId), required).filter(
-    legalId,
-  );
+  const withRequired = ensureRequiredAbilityIds(upgraded.filter(legalId), required).filter(legalId);
   // Drop exclusive-group conflicts after required inject (keep first occurrence).
   const cleaned: string[] = [];
   const seenGroups = new Set<string>();
@@ -264,8 +262,7 @@ export function fitIncumbentBar(
     if (denySet.has(id)) continue;
     const spec = lookup.get(id) ?? pool.byId.get(id);
     if (!spec || !("hits" in spec)) continue;
-    // Impossible on Revo: auto / off-GCD never baseline-legal.
-    if ((spec as AbilitySpec).autoAttack || (spec as AbilitySpec).offGcd) continue;
+    if ((spec as AbilitySpec).offGcd) continue;
     const availability = resolveAbilityCastAvailability(spec as AbilitySpec, {
       weaponConfiguration: loadout.weaponConfiguration,
       equipmentIds: loadout.equipmentIds,
@@ -285,7 +282,11 @@ export function fitAuthoredSeeds(
 ): string[][] {
   // Catalogue + authoredSeedBars only. userBar is first-class via fitIncumbentBar.
   return [
-    ...authoredSeedsFromCatalogue(request.style, denySet, "weaponConfiguration" in request.loadout ? request.loadout.weaponConfiguration : undefined),
+    ...authoredSeedsFromCatalogue(
+      request.style,
+      denySet,
+      "weaponConfiguration" in request.loadout ? request.loadout.weaponConfiguration : undefined,
+    ),
     ...request.authoredSeedBars.map((s) => s.abilityIds),
   ]
     .map((ids) => fitBarIds(ids, request, pool, denySet, catalogueById))

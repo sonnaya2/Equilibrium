@@ -5,13 +5,11 @@ import {
   leagueDamageComponents,
   type BlessingDamageSource,
 } from "../../../league/damage";
-import {
-  outgoingSourceOf,
-  type DamageProvenance,
-} from "../../../shared/damageProvenance";
+import { outgoingSourceOf, type DamageProvenance } from "../../../shared/damageProvenance";
 import { blessingRule } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
+import { isBasicAttack } from "../../../shared/adrenalineGain";
 
 /**
  * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
@@ -106,11 +104,11 @@ export function scheduleBlessingDamage(
       ...rt.input.context,
       style,
       abilityCategory: resolvedAbility.category,
-      autoAttack: resolvedAbility.autoAttack,
+      basicAttack: isBasicAttack(resolvedAbility),
       area: resolvedAbility.area,
     },
     cap: rt.input.cap,
-    // Light needs a real bar basic/auto; stubs never open the gate.
+    // Light needs a real bar Basic ability; stubs never open the gate.
     strikingLightReady: ability != null && lightReady,
   });
   if (components.some((component) => component.effectId === "light-of-saradomin")) {

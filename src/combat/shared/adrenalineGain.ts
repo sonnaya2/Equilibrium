@@ -1,5 +1,5 @@
 /**
- * Listed adrenaline generation for basics / autos.
+ * Listed adrenaline generation for Basic abilities and Basic Attacks.
  * Order: listed + FotS + Impatient, then Invigorating (basic attacks only), then AJ mult.
  * https://runescape.wiki/w/Invigorating
  * https://runescape.wiki/w/Basic_attacks
@@ -11,20 +11,22 @@ import { IMPATIENT_EXTRA_ADRENALINE } from "./perks";
 
 export type AbilityAdrenalineShape = {
   category?: string;
+  basicAttack?: boolean;
+  /** @deprecated Read compatibility for pre-modernisation callers. */
   autoAttack?: boolean;
   adrenaline?: { gain?: number };
 };
 
-/** Basic attacks / auto-attacks. Invigorating multiplies only these. */
+/** The four style Basic Attacks. Invigorating multiplies only these. */
 export function isBasicAttack(ability: AbilityAdrenalineShape): boolean {
-  return ability.autoAttack === true;
+  return ability.basicAttack === true || ability.autoAttack === true;
 }
 
-/** category basic or autoAttack, with listed gain > 0. */
+/** Basic-category ability with listed gain > 0. */
 export function isGeneratingBasicAbility(ability: AbilityAdrenalineShape): boolean {
   const gain = ability.adrenaline?.gain;
   if (!(typeof gain === "number" && gain > 0)) return false;
-  return ability.category === "basic" || !!ability.autoAttack;
+  return ability.category === "basic";
 }
 
 export interface AdrenalineGainRules {
@@ -85,11 +87,8 @@ export function resolveAbilityAdrenalineGainBreakdown(
 
   const generating = input.isGeneratingBasicAbility;
   const furyOfTheSmallGain =
-    generating && (input.basicAdrenalineFlatBonus ?? 0) > 0
-      ? input.basicAdrenalineFlatBonus!
-      : 0;
-  const impatientGain =
-    generating && input.impatientProc === true ? IMPATIENT_EXTRA_ADRENALINE : 0;
+    generating && (input.basicAdrenalineFlatBonus ?? 0) > 0 ? input.basicAdrenalineFlatBonus! : 0;
+  const impatientGain = generating && input.impatientProc === true ? IMPATIENT_EXTRA_ADRENALINE : 0;
 
   const flats = listedGain + furyOfTheSmallGain + impatientGain;
   const meteor =
@@ -98,9 +97,7 @@ export function resolveAbilityAdrenalineGainBreakdown(
       : 1;
   const gainBeforeInvigorating = flats * meteor;
 
-  const invigoratingMultiplier = input.isBasicAttack
-    ? (input.basicGainMultiplier ?? 1)
-    : 1;
+  const invigoratingMultiplier = input.isBasicAttack ? (input.basicGainMultiplier ?? 1) : 1;
 
   const gainAfterInvigorating = gainBeforeInvigorating * invigoratingMultiplier;
   const abilityGainMultiplier = input.abilityGainMultiplier ?? 1;

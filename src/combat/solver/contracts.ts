@@ -1,7 +1,7 @@
 /** Revolution-bar solver contracts. Pure types for evaluate/search layers. */
 
-/** Bumped when evaluation inputs change shape (e.g. Big Boned always-on). */
-export const SOLVER_SCHEMA_VERSION = 4 as const;
+/** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
+export const SOLVER_SCHEMA_VERSION = 5 as const;
 
 /**
  * Bumped when objective math or score tagging semantics change.
@@ -86,12 +86,7 @@ export interface ObjectiveWindowSpec {
  * Solver must not rank residual / approximation as exact proof.
  */
 export type SolverBranchExactness =
-  | "exact"
-  | "merged-exactly"
-  | "bounded-approximation"
-  | "truncated"
-  | "resampled"
-  | "approximated";
+  "exact" | "merged-exactly" | "bounded-approximation" | "truncated" | "resampled" | "approximated";
 
 /**
  * Machine-readable primary totals basis (mirrors engine damage.scope / rng.totalsBasis).
@@ -100,9 +95,7 @@ export type SolverBranchExactness =
  * concrete-terminals: E[D|concrete] over kept terminals (conditional; never rank).
  */
 export type SolverDamageTotalsBasis =
-  | "unit-mass"
-  | "known-mass-contribution"
-  | "concrete-terminals";
+  "unit-mass" | "known-mass-contribution" | "concrete-terminals";
 
 /**
  * Minimal summary surface the objective reads.
@@ -303,6 +296,8 @@ export interface PoolAbility {
   cooldownGroup?: string;
   style?: string;
   offGcd?: boolean;
+  basicAttack?: boolean;
+  /** @deprecated Read compatibility for pre-modernisation callers. */
   autoAttack?: boolean;
   /** Rough expected ability damage for seed heuristics (hit-band mean if known). */
   averageDamage?: number;
@@ -310,12 +305,7 @@ export interface PoolAbility {
   cooldownTicks?: number;
   supportStatus?: "partially-modeled" | "not-modeled" | "mechanics-unverified";
   weaponRequirement?:
-    | "twohand"
-    | "dualwield"
-    | "mainhand"
-    | "mainhand-empty"
-    | "conduit"
-    | "death-guard-and-conduit";
+    "twohand" | "dualwield" | "mainhand" | "mainhand-empty" | "conduit" | "death-guard-and-conduit";
   requiredEquipmentAnyOf?: readonly string[];
   requiredPassiveAnyOf?: readonly string[];
 }
@@ -389,6 +379,7 @@ export type ExclusionCode =
   | "size-below-min"
   | "size-above-max"
   | "off-gcd"
+  /** @deprecated Read compatibility for solver diagnostics from schema 4. */
   | "auto-attack"
   | "replacement-group"
   | "style-mismatch"
@@ -409,6 +400,9 @@ export interface ExclusionReason {
 }
 
 export interface CandidatePoolOptions {
+  /** Include implicit Basic Attacks as explicit bar candidates (default false). */
+  includeBasicAttacks?: boolean;
+  /** @deprecated Use includeBasicAttacks. */
   includeAutos?: boolean;
   includeOffGcd?: boolean;
   /** Include supportStatus specs (default false). */

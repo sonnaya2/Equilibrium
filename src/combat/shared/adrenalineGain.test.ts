@@ -9,7 +9,7 @@ import {
 const attack = {
   id: "attack",
   category: "basic" as const,
-  autoAttack: true,
+  basicAttack: true,
   adrenaline: { gain: 9 },
 };
 
@@ -20,17 +20,19 @@ const rend = {
 };
 
 describe("eligibility", () => {
-  it("isBasicAttack is autoAttack only", () => {
+  it("identifies Basic Attacks without treating every basic as one", () => {
     expect(isBasicAttack(attack)).toBe(true);
     expect(isBasicAttack(rend)).toBe(false);
+  });
+
+  it("reads the legacy autoAttack flag during migration", () => {
+    expect(isBasicAttack({ autoAttack: true })).toBe(true);
   });
 
   it("isGeneratingBasicAbility needs listed gain > 0", () => {
     expect(isGeneratingBasicAbility(attack)).toBe(true);
     expect(isGeneratingBasicAbility(rend)).toBe(true);
-    expect(isGeneratingBasicAbility({ category: "basic", adrenaline: { gain: 0 } })).toBe(
-      false,
-    );
+    expect(isGeneratingBasicAbility({ category: "basic", adrenaline: { gain: 0 } })).toBe(false);
     expect(isGeneratingBasicAbility({ category: "threshold", adrenaline: { gain: 9 } })).toBe(
       false,
     );
@@ -43,15 +45,14 @@ describe("resolveAbilityAdrenalineGain (expected, no Impatient)", () => {
   });
 
   it("basic attack + Fury: 10", () => {
-    expect(
-      resolveAbilityAdrenalineGain(attack, { basicAdrenalineFlatBonus: 1 }),
-    ).toBe(10);
+    expect(resolveAbilityAdrenalineGain(attack, { basicAdrenalineFlatBonus: 1 })).toBe(10);
   });
 
   it("basic attack + Invig4: 10.8", () => {
-    expect(
-      resolveAbilityAdrenalineGain(attack, { basicGainMultiplier: 1.2 }),
-    ).toBeCloseTo(10.8, 10);
+    expect(resolveAbilityAdrenalineGain(attack, { basicGainMultiplier: 1.2 })).toBeCloseTo(
+      10.8,
+      10,
+    );
   });
 
   it("basic attack + Fury + Invig4: 12", () => {
@@ -74,9 +75,7 @@ describe("resolveAbilityAdrenalineGain (expected, no Impatient)", () => {
   it("does not apply FotS to thresholds", () => {
     const assault = { category: "threshold" as const, adrenaline: { gain: 9 } };
     expect(isGeneratingBasicAbility(assault)).toBe(false);
-    expect(
-      resolveAbilityAdrenalineGain(assault, { basicAdrenalineFlatBonus: 1 }),
-    ).toBe(9);
+    expect(resolveAbilityAdrenalineGain(assault, { basicAdrenalineFlatBonus: 1 })).toBe(9);
   });
 
   it("abilityGainMultiplier applies after Invigorating", () => {

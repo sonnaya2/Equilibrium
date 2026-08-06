@@ -116,7 +116,8 @@ describe("ranged ability data", () => {
 
   it("wiki adrenaline and cooldowns for the post-CSM ranged kit", () => {
     expect(byId("ranged_attack").adrenaline).toEqual({ gain: 9 });
-    expect(byId("ranged_attack").autoAttack).toBe(true);
+    expect(byId("ranged_attack").basicAttack).toBe(true);
+    expect(byId("ranged_attack").cooldownSeconds).toBeUndefined();
 
     expect(byId("piercing_shot").adrenaline).toEqual({ gain: 9 });
     expect(byId("piercing_shot").cooldownSeconds).toBe(3);

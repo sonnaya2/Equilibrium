@@ -33,11 +33,7 @@ import {
   type BranchExactness,
   type CastOutcomePlan,
 } from "./branch";
-import {
-  castRejection,
-  permanentCastBlock,
-  resolveCastAbility,
-} from "../cast/rules";
+import { castRejection, permanentCastBlock, resolveCastAbility } from "../cast/rules";
 import { performOffGcdCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
 import { firstLegalTickFor } from "../runtime/state";
@@ -57,7 +53,7 @@ interface ManualStep {
 }
 
 /**
- * One queued action (plus auto-weave) across the live branches. Weaving and
+ * One queued action (plus automatic Basic Attacks) across the live branches. Weaving and
  * the cast itself plan state-changing RNG first, then materialize only the
  * heaviest survivors so Impatient/Relentless/Avernic do not pay full commits
  * for paths the live-branch cap would discard immediately.

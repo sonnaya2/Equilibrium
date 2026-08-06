@@ -43,16 +43,16 @@ describe("ability registry single authority", () => {
     }
   });
 
-  it("at most one auto-attack per style", () => {
+  it("has exactly one Basic Attack per style", () => {
     const byStyle = new Map<string, string[]>();
     for (const e of ABILITY_REGISTRY) {
-      if (!e.spec.autoAttack) continue;
+      if (!e.spec.basicAttack) continue;
       const list = byStyle.get(e.style) ?? [];
       list.push(e.engineId);
       byStyle.set(e.style, list);
     }
-    for (const [style, ids] of byStyle) {
-      expect(ids, style).toHaveLength(1);
+    for (const style of ["melee", "ranged", "magic", "necromancy"]) {
+      expect(byStyle.get(style), style).toHaveLength(1);
     }
   });
 
@@ -61,10 +61,11 @@ describe("ability registry single authority", () => {
     expect(entryByEngineId("claws_of_guthix")?.solverEligibleDefault).toBe(false);
   });
 
-  it("marks autos not solver eligible by default", () => {
+  it("keeps Basic Attacks implicit in Revolution rather than generated bar slots", () => {
     for (const id of ["attack", "ranged_attack", "magic_attack", "necromancy_basic"]) {
       expect(entryByEngineId(id)?.solverEligibleDefault, id).toBe(false);
-      expect(entryByEngineId(id)?.spec.autoAttack, id).toBe(true);
+      expect(entryByEngineId(id)?.spec.basicAttack, id).toBe(true);
+      expect(entryByEngineId(id)?.spec.cooldownSeconds, id).toBeUndefined();
     }
   });
 
@@ -117,9 +118,7 @@ describe("ability registry single authority", () => {
     }
     // ST single-target explode; wiki is area (2 tiles) so not default solver-eligible.
     expect(entryByEngineId("command_putrid_zombie")?.solverEligibleDefault).toBe(false);
-    expect(entryByEngineId("command_putrid_zombie")?.spec.supportStatus).toBe(
-      "partially-modeled",
-    );
+    expect(entryByEngineId("command_putrid_zombie")?.spec.supportStatus).toBe("partially-modeled");
   });
 
   it("engineIdForRecord matches RECORD_TO_ENGINE for catalogue records", () => {

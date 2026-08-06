@@ -33,7 +33,9 @@ const emptyEffects: ActiveEquipmentEffects = {
   },
 };
 
-function agentDto(partial: Partial<SolverResultDTO> & Pick<SolverResultDTO, "bar" | "score">): SolverResultDTO {
+function agentDto(
+  partial: Partial<SolverResultDTO> & Pick<SolverResultDTO, "bar" | "score">,
+): SolverResultDTO {
   return {
     windowDpms: 0,
     evaluations: 10,
@@ -180,9 +182,10 @@ describe("fitIncumbentBar catalogue vs pool", () => {
   }
 
   it("keeps forceSolver-excluded catalogue ids on the user bar", () => {
-    // Pool only has a,b; catalogue also has claws (excluded from generation).
-    const claws = miniSpec("claws_of_guthix", { category: "threshold" as const });
-    const catalogue = [miniSpec("a"), miniSpec("b"), claws];
+    // Pool only has a,b; catalogue also has an implicit Basic Attack and claws.
+    const attack = miniSpec("attack", { basicAttack: true });
+    const claws = miniSpec("claws_of_guthix", { category: "enhanced" as const });
+    const catalogue = [miniSpec("a"), miniSpec("b"), attack, claws];
     const pool = buildCandidatePool([miniSpec("a"), miniSpec("b")], "melee");
     expect(pool.byId.has("claws_of_guthix")).toBe(false);
     const request = defaultSerializableRequest({
@@ -190,7 +193,7 @@ describe("fitIncumbentBar catalogue vs pool", () => {
       durationTicks: 100,
       minBarSize: 2,
       maxBarSize: 6,
-      userBar: ["a", "claws_of_guthix", "b"],
+      userBar: ["a", "attack", "claws_of_guthix", "b"],
       loadout: {
         base: 1000,
         level: 99,
@@ -214,7 +217,7 @@ describe("fitIncumbentBar catalogue vs pool", () => {
     });
     const catMap = new Map(catalogue.map((s) => [s.id, s] as const));
     const fitted = fitIncumbentBar(request, pool, new Set(), catMap);
-    expect(fitted).toEqual(["a", "claws_of_guthix", "b"]);
+    expect(fitted).toEqual(["a", "attack", "claws_of_guthix", "b"]);
   });
 });
 

@@ -14,12 +14,7 @@ import {
   netAdrenalineDelta,
 } from "./adrenalinePresentation";
 import { loadoutStats } from "./loadoutStats";
-import {
-  DEFAULT_LOADOUT,
-  equipmentIdList,
-  toggleUnlockPin,
-  type Loadout,
-} from "./useLoadout";
+import { DEFAULT_LOADOUT, equipmentIdList, toggleUnlockPin, type Loadout } from "./useLoadout";
 
 const emptyLeague = resolveLeagueRules({ ruleset: "base" });
 const base: Loadout = { ...DEFAULT_LOADOUT };
@@ -38,7 +33,10 @@ const special: AbilitySpec = {
   adrenaline: { cost: 50 },
 };
 
-function previewDelta(ability: AbilitySpec, adren: Parameters<typeof calculateLeagueAbility>[1]["adrenaline"]) {
+function previewDelta(
+  ability: AbilitySpec,
+  adren: Parameters<typeof calculateLeagueAbility>[1]["adrenaline"],
+) {
   const delta = calculateLeagueAbility(ability, {
     base: 1000,
     level: 99,
@@ -60,7 +58,7 @@ describe("adrenalinePresentation", () => {
       basicGainMultiplier: 1.2,
       abilityGainMultiplier: 1.5,
     };
-    // attack is autoAttack: Invigorating multiplies basic attacks only.
+    // Invigorating multiplies Basic Attacks only.
     // (9 + 1) * 1.2 * 1.5 = 18
     const tx = analysisAdrenalineTransaction(attack, adren);
     expect(tx.furyOfTheSmallGain).toBe(1);
@@ -112,9 +110,9 @@ describe("adrenalinePresentation", () => {
     );
     const rows = adrenEconomyAssumptionRows(stats);
     expect(rows.some(([label]) => label === "Conservation of Energy")).toBe(true);
-    expect(rows.some(([label, value]) => label === "Ring of Vigour" && String(value).includes("+10"))).toBe(
-      true,
-    );
+    expect(
+      rows.some(([label, value]) => label === "Ring of Vigour" && String(value).includes("+10")),
+    ).toBe(true);
     // Must not invent a single "Ultimate adren retain" reverse-engineered line.
     expect(rows.some(([label]) => label === "Ultimate adren retain")).toBe(false);
   });
@@ -143,26 +141,17 @@ describe("adrenalinePresentation", () => {
     const ultTx = analysisAdrenalineTransaction(berserk, stats.adrenaline);
     expect(ultTx.conservationOfEnergyRefund).toBe(10);
     expect(ultTx.ringOfVigourRefund).toBe(10);
-    expect(netAdrenalineDelta(ultTx)).toBeCloseTo(
-      previewDelta(berserk, stats.adrenaline),
-      10,
-    );
+    expect(netAdrenalineDelta(ultTx)).toBeCloseTo(previewDelta(berserk, stats.adrenaline), 10);
 
     const basicTx = analysisAdrenalineTransaction(rend, stats.adrenaline);
     expect(basicTx.furyOfTheSmallGain).toBe(1);
-    // Ability basics: FotS yes, Invigorating no (autos only).
+    // Ability basics: FotS yes, Invigorating no (Basic Attacks only).
     expect(basicTx.invigoratingMultiplier).toBe(1);
-    expect(netAdrenalineDelta(basicTx)).toBeCloseTo(
-      previewDelta(rend, stats.adrenaline),
-      10,
-    );
+    expect(netAdrenalineDelta(basicTx)).toBeCloseTo(previewDelta(rend, stats.adrenaline), 10);
 
     const autoTx = analysisAdrenalineTransaction(attack, stats.adrenaline);
     expect(autoTx.invigoratingMultiplier).toBeCloseTo(1.2, 10);
-    expect(netAdrenalineDelta(autoTx)).toBeCloseTo(
-      previewDelta(attack, stats.adrenaline),
-      10,
-    );
+    expect(netAdrenalineDelta(autoTx)).toBeCloseTo(previewDelta(attack, stats.adrenaline), 10);
   });
 
   it("fingerprint changes when CoE, FotS, or ring toggles", () => {

@@ -145,10 +145,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     name: "Necromancy",
     style: "necromancy",
     category: "basic",
-    autoAttack: true,
+    basicAttack: true,
     hits: [{ band: { minPct: 90, maxPct: 110 } }],
     adrenaline: { gain: 9 },
-    cooldownSeconds: 1.8,
     source: NECROMANCY_BASIC_WIKI,
   },
   {
@@ -364,8 +363,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     ],
     adrenaline: { cost: 0 },
     supportStatus: "partially-modeled",
-    supportNote:
-      "Wiki is area (2 tiles). ST model: one explode hit on the primary target only.",
+    supportNote: "Wiki is area (2 tiles). ST model: one explode hit on the primary target only.",
     source: COMMAND_PUTRID_WIKI,
   },
   {

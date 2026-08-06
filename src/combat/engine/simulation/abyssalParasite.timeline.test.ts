@@ -18,7 +18,7 @@ import { createCastContext } from "./simulate";
 
 /**
  * Abyssal Parasite stack/timeline law:
- * - stacks only from player_direct / player_auto melee hits with the passive and damage.max > 0
+ * - stacks only from player melee hits with the passive and damage.max > 0
  * - never from Dismember/Slaughter/Massacre bleed ticks, parasite ticks, procs, blessings, attached
  * - multi-hit direct melee: each hit stacks once
  * - cadence: interval 3, duration 15 ticks, max 50 stacks
@@ -50,7 +50,14 @@ function itemEffects(
   };
 }
 
-function parasiteEvents(result: { events: { abilityId: string; tick: number; stackCount?: number; damage: { min: number; max: number; expected: number } }[] }) {
+function parasiteEvents(result: {
+  events: {
+    abilityId: string;
+    tick: number;
+    stackCount?: number;
+    damage: { min: number; max: number; expected: number };
+  }[];
+}) {
   return result.events.filter((event) => event.abilityId === "abyssal_parasite");
 }
 
@@ -66,7 +73,9 @@ describe("Abyssal Parasite timeline", () => {
     const hitTick = result.events.find((e) => e.abilityId === "fury")!.tick;
     const expectedTicks = [3, 6, 9, 12, 15].map((offset) => hitTick + offset);
     expect(parasite.map((e) => e.tick)).toEqual(expectedTicks);
-    expect(parasite).toHaveLength(ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS);
+    expect(parasite).toHaveLength(
+      ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS,
+    );
     const one = abyssalParasiteDamage(1);
     for (const tick of parasite) {
       expect(tick.stackCount).toBe(1);
@@ -258,21 +267,26 @@ describe("Abyssal Parasite timeline", () => {
     const result = ctx.finish();
     expect(result.ok).toBe(true);
     const parasite = parasiteEvents(result);
-    expect(parasite).toHaveLength(ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS);
+    expect(parasite).toHaveLength(
+      ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS,
+    );
     expect(parasite.every((e) => e.stackCount === 1)).toBe(true);
   });
 
-  it("player auto (attack) with passive stacks parasite", () => {
+  it("a Basic Attack is direct player damage and stacks parasite", () => {
     const result = simulate({
       ...meleeInput,
       equipmentEffects: itemEffects(["abyssal-parasite"]),
       rotation: rotationOf("attack"),
     });
     expect(result.ok).toBe(true);
-    const auto = result.events.find((e) => e.abilityId === "attack");
-    expect(auto?.provenance.kind).toBe("player_auto");
+    const attack = result.events.find((e) => e.abilityId === "attack");
+    expect(attack?.provenance.kind).toBe("player_direct");
+    expect(result.analysis.bySource).toContainEqual({ kind: "basic-attack", damage: 1_200 });
     const parasite = parasiteEvents(result);
-    expect(parasite).toHaveLength(ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS);
+    expect(parasite).toHaveLength(
+      ABYSSAL_PARASITE_DURATION_TICKS / ABYSSAL_PARASITE_INTERVAL_TICKS,
+    );
     expect(parasite.every((e) => e.stackCount === 1)).toBe(true);
   });
 

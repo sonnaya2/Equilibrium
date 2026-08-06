@@ -5,10 +5,11 @@ import type { ScheduledEvent } from "../../runtime/events";
 import type { SimulationRuntime } from "../../runtime/runtime";
 import { patchConjures, patchNecro } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
+import { isBasicAttack } from "../../../shared/adrenalineGain";
 
 function isNecroBasicAbility(ability: AbilitySpec | undefined): boolean {
   if (!ability) return false;
-  return ability.id === "necromancy_basic" || ability.autoAttack === true;
+  return ability.style === "necromancy" && isBasicAttack(ability);
 }
 
 /**

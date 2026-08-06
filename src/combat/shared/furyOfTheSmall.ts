@@ -3,7 +3,7 @@ import type { SourceReference } from "../types";
 /**
  * Fury of the Small (Archaeology monolith relic).
  * https://runescape.wiki/w/Fury_of_the_Small
- * +1% listed adrenaline on adrenaline-generating basics / auto-attacks.
+ * +1% listed adrenaline on adrenaline-generating Basic abilities.
  * Flat +1 is applied before Invigorating mult (wiki: Invigorating multiplies the relic gain).
  */
 
@@ -18,13 +18,12 @@ export const FURY_OF_THE_SMALL_SOURCE: SourceReference = {
   verifiedAt: "2026-08-02",
 };
 
-/** Basic (or auto-attack) with a positive listed adrenaline gain. */
+/** Basic ability with a positive listed adrenaline gain. */
 export function furyOfTheSmallQualifies(ability: {
   category?: string;
-  autoAttack?: boolean;
   adrenaline?: { gain?: number };
 }): boolean {
   const gain = ability.adrenaline?.gain;
   if (!(typeof gain === "number" && gain > 0)) return false;
-  return ability.category === "basic" || !!ability.autoAttack;
+  return ability.category === "basic";
 }

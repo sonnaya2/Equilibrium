@@ -33,12 +33,13 @@ const input = {
 };
 
 describe("necromancy ability data", () => {
-  it("exactly one auto-attack basic", () => {
-    const autos = NECROMANCY_ABILITIES.filter((a) => a.autoAttack);
-    expect(autos).toHaveLength(1);
-    expect(autos[0]!.id).toBe("necromancy_basic");
-    expect(autos[0]!.hits[0]!.band).toEqual({ minPct: 90, maxPct: 110 });
-    expect(autos[0]!.adrenaline?.gain).toBe(9);
+  it("has exactly one Basic Attack", () => {
+    const attacks = NECROMANCY_ABILITIES.filter((a) => a.basicAttack);
+    expect(attacks).toHaveLength(1);
+    expect(attacks[0]!.id).toBe("necromancy_basic");
+    expect(attacks[0]!.hits[0]!.band).toEqual({ minPct: 90, maxPct: 110 });
+    expect(attacks[0]!.adrenaline?.gain).toBe(9);
+    expect(attacks[0]!.cooldownSeconds).toBeUndefined();
   });
 
   it("Soul Sap / Touch of Death are 90–110% basics with resource gains", () => {

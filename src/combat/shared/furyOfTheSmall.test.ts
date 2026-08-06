@@ -11,25 +11,15 @@ describe("furyOfTheSmall", () => {
     expect(FURY_OF_THE_SMALL_EXTRA_ADRENALINE).toBe(1);
   });
 
-  it("qualifies adrenaline-generating basics and auto-attacks", () => {
-    expect(
-      furyOfTheSmallQualifies({ category: "basic", adrenaline: { gain: 9 } }),
-    ).toBe(true);
-    expect(
-      furyOfTheSmallQualifies({ autoAttack: true, adrenaline: { gain: 2 } }),
-    ).toBe(true);
+  it("qualifies adrenaline-generating Basic abilities", () => {
+    expect(furyOfTheSmallQualifies({ category: "basic", adrenaline: { gain: 9 } })).toBe(true);
+    expect(furyOfTheSmallQualifies({ category: "threshold", adrenaline: { gain: 2 } })).toBe(false);
   });
 
   it("rejects non-basics, zero gain, and missing gain", () => {
-    expect(
-      furyOfTheSmallQualifies({ category: "threshold", adrenaline: { gain: 9 } }),
-    ).toBe(false);
-    expect(
-      furyOfTheSmallQualifies({ category: "ultimate", adrenaline: { gain: 9 } }),
-    ).toBe(false);
-    expect(furyOfTheSmallQualifies({ category: "basic", adrenaline: { gain: 0 } })).toBe(
-      false,
-    );
+    expect(furyOfTheSmallQualifies({ category: "threshold", adrenaline: { gain: 9 } })).toBe(false);
+    expect(furyOfTheSmallQualifies({ category: "ultimate", adrenaline: { gain: 9 } })).toBe(false);
+    expect(furyOfTheSmallQualifies({ category: "basic", adrenaline: { gain: 0 } })).toBe(false);
     expect(furyOfTheSmallQualifies({ category: "basic" })).toBe(false);
   });
 });

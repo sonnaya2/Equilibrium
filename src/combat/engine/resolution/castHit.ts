@@ -26,6 +26,7 @@ import {
   outgoingSourceOf,
   provenanceForCastHit,
 } from "../../shared/damageProvenance";
+import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
@@ -45,11 +46,7 @@ import { NARAGI_LEVEL_OVERRIDE } from "../../league/naragiEdict";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
-  return resolveEffectiveCombatLevel(
-    rt.input.level,
-    rt.state.player?.levelOverride,
-    landTick,
-  );
+  return resolveEffectiveCombatLevel(rt.input.level, rt.state.player?.levelOverride, landTick);
 }
 
 /** Base AD at land tick: use overrideBase when effective level is the override level. */
@@ -163,16 +160,7 @@ export function resolveCastHit(
   convertedChannel = false,
 ): EventResolution {
   if (isHitReuseActive()) {
-    const key = landHitIdentity(
-      rt,
-      at,
-      hitSpec,
-      hitIndex,
-      ability,
-      snap,
-      isDot,
-      convertedChannel,
-    );
+    const key = landHitIdentity(rt, at, hitSpec, hitIndex, ability, snap, isDot, convertedChannel);
     const cached = hitReuseGet(key);
     if (cached) return cached;
     const resolved = resolveCastHitUncached(
@@ -188,16 +176,7 @@ export function resolveCastHit(
     hitReuseSet(key, resolved);
     return resolved;
   }
-  return resolveCastHitUncached(
-    rt,
-    at,
-    hitSpec,
-    hitIndex,
-    ability,
-    snap,
-    isDot,
-    convertedChannel,
-  );
+  return resolveCastHitUncached(rt, at, hitSpec, hitIndex, ability, snap, isDot, convertedChannel);
 }
 
 function resolveCastHitUncached(
@@ -218,7 +197,6 @@ function resolveCastHitUncached(
     frostMass > 0 &&
     frostMass < 1 &&
     ability.style === "melee" &&
-    !ability.autoAttack &&
     !isDot
   ) {
     const inactive = resolveCastHitUncached(
@@ -307,7 +285,6 @@ function resolveCastHitUncached(
     isCommand,
     isDot,
     convertedChannel,
-    autoAttack: ability.autoAttack,
     dotKind: hitSpec.dotKind,
     bleedId: hitSpec.bleedId,
   });
@@ -317,7 +294,7 @@ function resolveCastHitUncached(
     style: ability.style,
     dotKind: hitSpec.dotKind,
     abilityCategory: ability.category,
-    autoAttack: ability.autoAttack,
+    basicAttack: isBasicAttack(ability),
     area: ability.area,
     damageSource,
     provenance,

@@ -11,9 +11,10 @@ import {
   isSharedConstitutionAbilityId,
 } from "../styles/shared/constitutionAbilities";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
+import { isBasicAttack } from "../shared/adrenalineGain";
 import { allEngineSpecs } from "./registry";
 
-/** Style key for basic auto-attack lookup. */
+/** Style key for Basic Attack lookup. */
 export type CatalogueStyle = AbilitySpec["style"];
 
 /**
@@ -21,11 +22,11 @@ export type CatalogueStyle = AbilitySpec["style"];
  * Feeds createRuntime via abilityRegistry; catalogue is the ordered ability list.
  */
 export interface ResolvedAbilityCatalogue {
-  /** Final ordered catalogue including style autos; Strength Cape applied when flagged. */
+  /** Final ordered catalogue including style Basic Attacks; Strength Cape applied when flagged. */
   readonly catalogue: readonly AbilitySpec[];
   /** Full catalogue index (mapAbilitiesById semantics / conflict checks). */
   readonly byId: ReadonlyMap<string, AbilitySpec>;
-  /** First auto-attack per style. */
+  /** First Basic Attack per style. */
   readonly basicByStyle: ReadonlyMap<CatalogueStyle, AbilitySpec>;
   readonly strengthCape99: boolean;
   /** Prebuilt maps for SimulateInput.abilityRegistry. */
@@ -49,7 +50,7 @@ function mapBasicsByStyle(
 ): Map<AbilitySpec["style"], AbilitySpec> {
   const basicByStyle = new Map<AbilitySpec["style"], AbilitySpec>();
   for (const ability of abilities) {
-    if (!ability.autoAttack || basicByStyle.has(ability.style)) continue;
+    if (!isBasicAttack(ability) || basicByStyle.has(ability.style)) continue;
     basicByStyle.set(ability.style, ability);
   }
   return basicByStyle;

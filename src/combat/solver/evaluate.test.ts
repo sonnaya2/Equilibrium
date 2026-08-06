@@ -30,7 +30,7 @@ const auto: AbilitySpec = {
   name: "Attack",
   style: "melee",
   category: "basic",
-  autoAttack: true,
+  basicAttack: true,
   hits: [{ band: { minPct: 110, maxPct: 130 } }],
   adrenaline: { gain: 9 },
 };
@@ -260,7 +260,7 @@ describe("evaluateRevolutionBar", () => {
     expect(clean.ok).toBe(true);
     expect(clean.exploratory).toBe(true);
     expect(Number.isFinite(clean.score) && clean.score > 0).toBe(true);
-    expect((clean.summary?.rng?.residualWeight ?? 0)).toBeLessThanOrEqual(1e-12);
+    expect(clean.summary?.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
   });
 
   it("full horizon residual summary fails score and is not validForFinalRanking", () => {
@@ -300,7 +300,7 @@ describe("evaluateRevolutionBar", () => {
     expect(evaluation.branchFidelity?.complete).toBe(true);
     expect(evaluation.branchFidelity?.attempts).toBe(1);
     expect(evaluation.branchFidelity?.finalBudget.maxLiveBranches).toBe(64);
-    expect((evaluation.summary?.rng?.residualWeight ?? 0)).toBeLessThanOrEqual(1e-12);
+    expect(evaluation.summary?.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
     // Short adaptive complete is still exploratory, not final ranking.
     expect(evaluation.validForFinalRanking).toBe(false);
   });

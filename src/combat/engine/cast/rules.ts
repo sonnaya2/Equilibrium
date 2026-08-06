@@ -1,10 +1,7 @@
 import type { ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { isMeleeAbility } from "../../styles/melee/abilities";
-import {
-  resolveIcyTempest,
-  type IcyTempestOutcome,
-} from "../../styles/melee/icyTempest";
+import { resolveIcyTempest, type IcyTempestOutcome } from "../../styles/melee/icyTempest";
 import {
   necroAdrenalineCost,
   necroCanCast,
@@ -73,9 +70,7 @@ export function resolveCastAbility(
     passiveIds: options.passiveIds,
     equipmentIds: options.equipmentIds,
   });
-  const peers = options.byId
-    ? groupPeersFromById(resolved, options.byId)
-    : undefined;
+  const peers = options.byId ? groupPeersFromById(resolved, options.byId) : undefined;
   const block = permanentAvailabilityBlock(resolved, {
     weaponConfiguration: options.weaponConfiguration,
     equipmentIds: options.equipmentIds,
@@ -262,7 +257,7 @@ export function rngPointsFor(
   league?: ResolvedLeagueRules,
 ): RngPoint[] {
   const points: RngPoint[] = [];
-  const isBasic = ability.category === "basic" || !!ability.autoAttack;
+  const isBasic = ability.category === "basic";
   if (isBasic && (ability.adrenaline?.gain ?? 0) > 0 && (rules?.impatientRank ?? 0) > 0) {
     points.push({
       id: "impatient",

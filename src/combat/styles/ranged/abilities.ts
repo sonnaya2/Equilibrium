@@ -33,10 +33,10 @@ export const CORRUPTION_TAIL_FRACTIONS_PCT = [80, 60, 40, 20] as const;
 export const RANGED_ABILITIES: RangedAbilitySpec[] = [
   {
     id: "ranged_attack",
-    name: "Ranged basic attack",
+    name: "Ranged",
     style: "ranged",
     category: "basic",
-    autoAttack: true,
+    basicAttack: true,
     hits: [{ band: { minPct: 90, maxPct: 110 } }],
     adrenaline: { gain: 9 },
     source: MODERNISATION_WIKI,

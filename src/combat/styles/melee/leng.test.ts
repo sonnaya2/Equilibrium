@@ -56,12 +56,13 @@ describe("Leng state and Icy Tempest", () => {
     const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
     expect(performCast(rt, attack, 0, false).ok).toBe(true);
     expect(expectedStacksFromAtoms(rt.state.melee.primordialIce.atoms)).toBeCloseTo(0.12, 12);
-    expect(rt.state.melee.primordialIce.atoms.reduce((sum, atom) => sum + atom.weight, 0)).toBeCloseTo(
-      1,
-      12,
-    );
     expect(
-      rt.state.melee.primordialIce.atoms.some((atom) => atom.stacks === 2 && atom.frostbladesExpireAtTick > 0),
+      rt.state.melee.primordialIce.atoms.reduce((sum, atom) => sum + atom.weight, 0),
+    ).toBeCloseTo(1, 12);
+    expect(
+      rt.state.melee.primordialIce.atoms.some(
+        (atom) => atom.stacks === 2 && atom.frostbladesExpireAtTick > 0,
+      ),
     ).toBe(true);
   });
 
@@ -93,20 +94,34 @@ describe("Leng state and Icy Tempest", () => {
     expect(hit.damage.min).toBeGreaterThanOrEqual(1300 + expectedFlat);
   });
 
+  it("adds Frostblades damage to the melee Basic Attack", () => {
+    const damage = (frostbladesExpireAtTick: number) => {
+      const rt = lengRuntime();
+      rt.state = patchMelee(rt.state, {
+        primordialIce: {
+          atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick }],
+        },
+      });
+      const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
+      expect(performCast(rt, attack, 0, false).ok).toBe(true);
+      return rt.events.find((event) => event.abilityId === "attack")!.damage.expected;
+    };
+
+    expect(damage(100) - damage(0)).toBe(Math.floor(1_000 * FROSTBLADES_AD_FRACTION));
+  });
+
   it("mixes Frostblades after the hit pipeline, not before floor", () => {
     const make = (frostbladesExpireAtTick: number) => {
       const rt = createRuntime({ ...lengInput(), base: 999 });
       rt.state = patchMelee(rt.state, {
         primordialIce: {
-          atoms: [
-            { weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick },
-          ],
+          atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick }],
         },
       });
       const assault = MELEE_ABILITIES.find((ability) => ability.id === "assault")!;
       expect(performCast(rt, assault, 0, false).ok).toBe(true);
-      return rt.events.find((event) => event.abilityId === "assault" && !event.attached)!
-        .damage.expected;
+      return rt.events.find((event) => event.abilityId === "assault" && !event.attached)!.damage
+        .expected;
     };
     const noFrost = make(0);
     const fullFrost = make(100);
@@ -131,9 +146,12 @@ describe("Leng state and Icy Tempest", () => {
     const manual = simulate(lengInput(rotationOf("attack", "assault")), {
       detailLevel: "full-analysis",
     });
-    const revo = simulate({ ...lengInput(rotationOf("attack", "assault")), autoWeave: true }, {
-      detailLevel: "score-only",
-    });
+    const revo = simulate(
+      { ...lengInput(rotationOf("attack", "assault")), autoWeave: true },
+      {
+        detailLevel: "score-only",
+      },
+    );
     expect(manual.ok).toBe(true);
     expect(revo.ok).toBe(true);
     expect(manual.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);

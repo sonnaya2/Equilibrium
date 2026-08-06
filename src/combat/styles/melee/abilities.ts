@@ -59,12 +59,7 @@ export const ADAPTIVE_STRIKE_PRIMARY_BAND = { minPct: 120, maxPct: 140 } as cons
 export const ADAPTIVE_STRIKE_DW_HIT_BAND = { minPct: 60, maxPct: 75 } as const;
 
 export type AdaptiveStrikeWeaponConfiguration =
-  | "twohand"
-  | "dualwield"
-  | "mainhand"
-  | "shield"
-  | "defender"
-  | "necromancy";
+  "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
 
 /**
  * Legal Adaptive Strike engine form for a resolved weapon shape.
@@ -100,12 +95,12 @@ export function weaponConfigurationFromBarSetup(
 
 export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {
-    // Wiki Attack (ability): 110-130, +9% adren, +1 Bloodlust, auto-triggered.
+    // Wiki Attack (ability): 110-130, +9% adren, +1 Bloodlust, used automatically.
     id: "attack",
     name: "Attack",
     style: "melee",
     category: "basic",
-    autoAttack: true,
+    basicAttack: true,
     hits: [{ band: { minPct: 110, maxPct: 130 } }],
     adrenaline: { gain: 9 },
     bloodlustGain: 1,
@@ -429,7 +424,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     style: "melee",
     category: "utility",
     // Weapon special attack (not a normal ability). Access: Leng MH specialAttackId
-    // or Essence of Finality equipped — never passive-only.
+    // or Essence of Finality equipped; never passive-only.
     weaponSpecial: true,
     requiresSpecialAccess: true,
     area: "aoe",

@@ -11,7 +11,7 @@ import { resolveAbilityCatalogue } from "../abilities/catalogue";
 import { noteAbilityMapRebuild, noteCatalogueArrayRebuild } from "../profiling/allocation";
 import type { CandidatePool, RevolutionEvalRequest } from "./contracts";
 
-/** Style key for basic auto-attack lookup (mirrors engine basicByStyle). */
+/** Style key for Basic Attack lookup (mirrors engine basicByStyle). */
 export type CompiledStyle = AbilitySpec["style"];
 
 /**
@@ -19,11 +19,11 @@ export type CompiledStyle = AbilitySpec["style"];
  * createRuntime accepts the same maps via abilityRegistry (skips per-sim rebuilds).
  */
 export interface CompiledAbilityRegistry {
-  /** Final catalogue including autos; Strength Cape already applied when flagged. */
+  /** Final catalogue including Basic Attacks; Strength Cape already applied when flagged. */
   readonly catalogue: readonly AbilitySpec[];
   /** Full catalogue index (mapAbilitiesById semantics). */
   readonly byId: ReadonlyMap<string, AbilitySpec>;
-  /** First auto-attack per style (mapBasicsByStyle semantics). */
+  /** First Basic Attack per style (mapBasicsByStyle semantics). */
   readonly basicByStyle: ReadonlyMap<CompiledStyle, AbilitySpec>;
   /** Whether catalogue Dismember was Strength Cape 99 patched. */
   readonly strengthCape99: boolean;
@@ -47,7 +47,7 @@ export interface CompiledEvaluationContext extends CompiledAbilityRegistry {
 export interface CompileEvaluationContextInput {
   readonly style: CompiledStyle;
   readonly pool: CandidatePool;
-  /** Engine catalogue / sim.abilities merge source (includes autos). */
+  /** Engine catalogue / sim.abilities merge source (includes Basic Attacks). */
   readonly catalogue: readonly AbilitySpec[];
   readonly strengthCape99?: boolean;
 }
@@ -61,7 +61,7 @@ export function compileEvaluationContext(
 ): CompiledEvaluationContext {
   noteAbilityMapRebuild();
   noteCatalogueArrayRebuild();
-  // Pool overlays win on id — same as prior Map set order.
+  // Pool overlays win on id, matching the prior Map set order.
   const resolved = resolveAbilityCatalogue({
     base: input.catalogue,
     overlays: [...input.pool.byId.values()] as AbilitySpec[],
@@ -82,8 +82,7 @@ export function compileEvaluationContext(
 export function compileEvaluationContextFromEvalRequest(
   request: Pick<RevolutionEvalRequest, "style" | "pool" | "sim">,
 ): CompiledEvaluationContext {
-  const strengthCape99 =
-    (request.sim as { strengthCape99?: boolean }).strengthCape99 === true;
+  const strengthCape99 = (request.sim as { strengthCape99?: boolean }).strengthCape99 === true;
   return compileEvaluationContext({
     style: request.style,
     pool: request.pool,

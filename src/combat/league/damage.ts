@@ -20,6 +20,7 @@ import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
+import { isBasicAttack } from "../shared/adrenalineGain";
 
 /** Tag for blessing-generated damage instances shown in analysis. */
 export type BlessingDamageTag = "bonus-damage";
@@ -98,9 +99,7 @@ export function blessingHitEligibility(
 ): BlessingHitEligibility {
   if (attached) return NO_BLESSING_DAMAGE;
   const p: DamageProvenance =
-    typeof source === "string"
-      ? provenanceFromLegacy({ damageSource: source })
-      : source;
+    typeof source === "string" ? provenanceFromLegacy({ damageSource: source }) : source;
   // Light/Inferno: unique hits get BB; not abilities so no Cinders 15% AD rider.
   if (p.kind === "blessing" && p.detail != null && SEPARATE_BLESSING_RIDER_HOSTS.has(p.detail)) {
     return { rider: true, cindersRider: false, onHit: false };
@@ -299,12 +298,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   }
 
   const light = blessingRule(input.rules, "striking-light")?.light;
-  if (
-    eligible.onHit &&
-    input.strikingLightReady &&
-    light &&
-    (input.ability.category === "basic" || input.ability.autoAttack)
-  ) {
+  if (eligible.onHit && input.strikingLightReady && light && input.ability.category === "basic") {
     const armour = Math.floor(input.rules.totalArmour * light.armourPercent);
     const prov = blessingProv("light-of-saradomin");
     const hit = calculateRawHitBand({
@@ -433,18 +427,12 @@ export function calculateLeagueAbility(
   let lightAvailable = strikingLightReady ?? true;
   const contributions = ability.hits.flatMap((hit, hitIndex) => {
     const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
-    const source: BlessingDamageSource = hit.dot
-      ? "dot"
-      : isCommand
-        ? "command"
-        : "direct";
+    const source: BlessingDamageSource = hit.dot ? "dot" : isCommand ? "command" : "direct";
     const provenance: DamageProvenance = hit.dot
       ? { kind: "player_dot", detail: hit.dotKind }
       : isCommand
         ? { kind: "conjure_command" }
-        : ability.autoAttack
-          ? { kind: "player_auto" }
-          : { kind: "player_direct" };
+        : { kind: "player_direct" };
     const sharedInput = {
       rules,
       ability,
@@ -458,7 +446,7 @@ export function calculateLeagueAbility(
         ...input.context,
         style: ability.style,
         abilityCategory: ability.category,
-        autoAttack: ability.autoAttack,
+        basicAttack: isBasicAttack(ability),
         area: ability.area,
         damageSource: source,
         provenance,

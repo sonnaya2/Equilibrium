@@ -43,7 +43,7 @@ const abilities = ABILITY_REGISTRY.map((e) => {
     supportStatus: e.support.status,
     supportNote: e.support.note ?? null,
     solverEligibleDefault: e.solverEligibleDefault,
-    autoAttack: s.autoAttack === true,
+    basicAttack: s.basicAttack === true || s.autoAttack === true,
     offGcd: s.offGcd === true,
     weaponSpecial: s.weaponSpecial === true,
     adrenaline: {
@@ -97,8 +97,7 @@ const support = abilities.reduce(
 const inventory = {
   generatedAt: new Date().toISOString(),
   headSha: process.env.GIT_HEAD || null,
-  note:
-    "Seed from ABILITY_REGISTRY. audit.* starts pending; update per finding file.",
+  note: "Seed from ABILITY_REGISTRY. audit.* starts pending; update per finding file.",
   counts: {
     total: abilities.length,
     byStyle,

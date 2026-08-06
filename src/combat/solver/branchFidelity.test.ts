@@ -40,7 +40,7 @@ const auto: AbilitySpec = {
   name: "Attack",
   style: "melee",
   category: "basic",
-  autoAttack: true,
+  basicAttack: true,
   hits: [{ band: { minPct: 110, maxPct: 130 } }],
   adrenaline: { gain: 9 },
 };
@@ -75,9 +75,9 @@ describe("resolveBranchBudget", () => {
 
   it("rejects invalid live/intermediate", () => {
     expect(() => resolveBranchBudget({ maxLiveBranches: 0 })).toThrow(/maxLiveBranches/);
-    expect(() =>
-      resolveBranchBudget({ maxLiveBranches: 8, maxIntermediateBranches: 4 }),
-    ).toThrow(/maxIntermediateBranches/);
+    expect(() => resolveBranchBudget({ maxLiveBranches: 8, maxIntermediateBranches: 4 })).toThrow(
+      /maxIntermediateBranches/,
+    );
   });
 });
 
@@ -87,9 +87,7 @@ describe("branch fidelity ladders", () => {
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.exploratory.maximumResidualWeight).toBe(1e-3);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.medium.liveCaps).toEqual([256, 512, 1024]);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.medium.maximumResidualWeight).toBe(1e-4);
-    expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.liveCaps).toEqual([
-      512, 1024, 2048, 4096, 8192,
-    ]);
+    expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.liveCaps).toEqual([512, 1024, 2048, 4096, 8192]);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.maximumResidualWeight).toBe(1e-12);
     expect(DEFAULT_BRANCH_FIDELITY_LADDERS.full.exactness).toBe("exact-or-merged");
   });
@@ -141,10 +139,7 @@ describe("meetsBranchCompleteness", () => {
 
   it("full requires residual near zero and exact-or-merged", () => {
     expect(
-      meetsBranchCompleteness(
-        { ok: true, rng: { residualWeight: 0, exactness: "exact" } },
-        full,
-      ),
+      meetsBranchCompleteness({ ok: true, rng: { residualWeight: 0, exactness: "exact" } }, full),
     ).toBe(true);
     expect(
       meetsBranchCompleteness(
@@ -191,9 +186,7 @@ describe("shouldStopAdaptiveAttempt", () => {
     };
     expect(meetsBranchCompleteness(mid, explore)).toBe(true);
     expect(shouldStopAdaptiveAttempt(mid, explore, 0)).toBe(false);
-    expect(shouldStopAdaptiveAttempt(mid, explore, explore.liveCaps.length - 1)).toBe(
-      true,
-    );
+    expect(shouldStopAdaptiveAttempt(mid, explore, explore.liveCaps.length - 1)).toBe(true);
   });
 
   it("stops immediately when residual-free", () => {
@@ -324,9 +317,7 @@ describe("UI_RUN_BRANCH_FIDELITY_LADDER", () => {
   it("starts above default maxLive 64 and escalates", () => {
     expect(MAX_LIVE_BRANCHES).toBe(64);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[0]).toBeGreaterThan(64);
-    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([
-      128, 256, 512, 1024, 2048, 4096, 8192,
-    ]);
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([128, 256, 512, 1024, 2048, 4096, 8192]);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.mode).toBe("medium");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.exactness).toBe("any");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.maximumResidualWeight).toBe(1e-12);

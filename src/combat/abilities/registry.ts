@@ -11,6 +11,7 @@ import {
   SHARED_CONSTITUTION_ABILITIES,
 } from "../styles/shared/constitutionAbilities";
 import type { CombatStyle } from "../types";
+import { isBasicAttack } from "../shared/adrenalineGain";
 import {
   ENGINE_LINK_OVERRIDES,
   pickPrimaryRecord,
@@ -43,7 +44,7 @@ export interface AbilityRegistryEntry {
   level?: number;
   unlock?: UnlockInfo;
   support: { status: SupportStatus | "full"; note?: string };
-  /** Eligible for solver by default when fully modeled, not auto, not offGcd, not cast-stage>1. */
+  /** Eligible for solver by default when fully modeled, on-GCD, and not an implicit Basic Attack or later cast stage. */
   solverEligibleDefault: boolean;
 }
 
@@ -54,13 +55,9 @@ function supportOf(spec: AbilitySpec): AbilityRegistryEntry["support"] {
   return { status: "full", note: spec.supportNote };
 }
 
-function solverEligible(
-  spec: AbilitySpec,
-  linkKind: AbilityLinkKind,
-  castStage?: number,
-): boolean {
-  if (spec.autoAttack) return false;
+function solverEligible(spec: AbilitySpec, linkKind: AbilityLinkKind, castStage?: number): boolean {
   if (spec.offGcd) return false;
+  if (isBasicAttack(spec)) return false;
   if (linkKind === "cast-stage" && (castStage ?? 2) > 1) return false;
   if (spec.supportStatus === "partially-modeled") return false;
   if (spec.supportStatus === "not-modeled") return false;
@@ -97,8 +94,7 @@ function buildEntry(spec: AbilitySpec): AbilityRegistryEntry {
   }
 
   const meta = fromRecord(recordId ?? parentRecordId);
-  const solverEligibleDefault =
-    override?.forceSolver ?? solverEligible(spec, linkKind, castStage);
+  const solverEligibleDefault = override?.forceSolver ?? solverEligible(spec, linkKind, castStage);
 
   return {
     engineId: spec.id,
@@ -189,7 +185,6 @@ export function solverPalette(
     if (
       opts?.includePartial &&
       e.support.status === "partially-modeled" &&
-      !e.spec.autoAttack &&
       !e.spec.offGcd &&
       e.linkKind !== "cast-stage"
     ) {
@@ -204,29 +199,27 @@ export function validateAbilityRegistry(): string[] {
   const errors: string[] = [];
   errors.push(...validateEngineMap(ABILITY_REGISTRY.map((e) => e.engineId)));
 
-  const autosByStyle = new Map<CombatStyle, string[]>();
+  const basicsByStyle = new Map<CombatStyle, string[]>();
   const primaryRecords = new Map<string, string>();
 
   for (const e of ABILITY_REGISTRY) {
-    if (e.spec.autoAttack) {
-      const list = autosByStyle.get(e.style) ?? [];
+    if (isBasicAttack(e.spec)) {
+      const list = basicsByStyle.get(e.style) ?? [];
       list.push(e.engineId);
-      autosByStyle.set(e.style, list);
+      basicsByStyle.set(e.style, list);
     }
     if (e.recordId && e.linkKind === "canonical") {
       const prev = primaryRecords.get(e.recordId);
       if (prev && prev !== e.engineId) {
-        errors.push(
-          `duplicate canonical primary record ${e.recordId}: ${prev} and ${e.engineId}`,
-        );
+        errors.push(`duplicate canonical primary record ${e.recordId}: ${prev} and ${e.engineId}`);
       }
       primaryRecords.set(e.recordId, e.engineId);
     }
   }
 
-  for (const [style, ids] of autosByStyle) {
+  for (const [style, ids] of basicsByStyle) {
     if (ids.length > 1) {
-      errors.push(`multiple autos for style ${style}: ${ids.join(", ")}`);
+      errors.push(`multiple Basic Attacks for style ${style}: ${ids.join(", ")}`);
     }
   }
 

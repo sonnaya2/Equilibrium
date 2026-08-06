@@ -131,7 +131,7 @@ export function normalizeCombatContext(ctx: CombatContext | undefined): unknown 
     ruleset: ctx.ruleset ?? null,
     dotKind: ctx.dotKind ?? null,
     abilityCategory: ctx.abilityCategory ?? null,
-    autoAttack: ctx.autoAttack === true,
+    basicAttack: ctx.basicAttack === true || ctx.autoAttack === true,
     area: ctx.area ?? null,
     targetTiles: ctx.targetTiles ?? null,
     damageSource: ctx.damageSource ?? null,

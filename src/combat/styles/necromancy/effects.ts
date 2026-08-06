@@ -1,4 +1,5 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { isBasicAttack } from "../../shared/adrenalineGain";
 import { secondsToTicks } from "../../core/ticks";
 import { MODERNISATION_WIKI, NECROSIS_WIKI, RESIDUAL_SOUL_WIKI } from "../../data/sources";
 import type { SourceReference } from "../../types";
@@ -207,7 +208,7 @@ export function applyNecroOnCast(
   const underLd = livingDeathActive(necro, castTick);
 
   let necrosisGain = ability.necrosisGain ?? 0;
-  if (underLd && (ability.autoAttack || ability.id === "necromancy_basic")) {
+  if (underLd && isBasicAttack(ability)) {
     necrosisGain += LIVING_DEATH_BASIC_NECROSIS;
   }
   if (necrosisGain > 0) {

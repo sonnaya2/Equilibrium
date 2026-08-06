@@ -192,6 +192,7 @@ describe("branch equivalence signature", () => {
       { expectedActivations: 0.05 },
       { expectedSeparateHits: 1 },
       { damageTag: "bonus-damage" },
+      { bonusTargetId: "abyssal-cinders" },
       { expectedOccurrences: 0.5 },
       { flowReduction: 0.1 },
       { convertedChannel: true },

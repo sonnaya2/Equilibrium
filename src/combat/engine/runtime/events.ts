@@ -179,6 +179,8 @@ function eventSig<T>(e: ScheduledEvent<T>, seqKey: number, ranks: PendingKeyRank
     US +
     (e.damageTag ?? "") +
     US +
+    (e.bonusTargetId ?? "") +
+    US +
     e.provenance.kind +
     US +
     (e.provenance.detail ?? "") +
@@ -225,6 +227,8 @@ export interface ScheduledEvent<RT = unknown> {
   blessingId?: BlessingId;
   /** Analysis tag for bonus-damage riders (e.g. Big Boned). */
   damageTag?: BlessingDamageTag;
+  /** Effect row that receives this bonus instead of the scheduling parent. */
+  bonusTargetId?: string;
   /**
    * Legacy application weight for expected-value events. Prefer the explicit
    * multiplicity fields below; kept so older schedulers and tests still work.

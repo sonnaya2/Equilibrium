@@ -136,7 +136,7 @@ const EFFECT_COLUMNS: readonly {
     id: "bonusDamage",
     label: "Bonus",
     title:
-      "Bonus damage riders added on this skill's hits (e.g. Big Boned). The rider row itself is 0 — its Total is the bonus.",
+      "Bonus damage riders added to this effect (e.g. Big Boned). The rider row itself is 0 — its Total is the bonus.",
     align: "right",
     afterTotal: true,
     // Column visible when any parent skill received riders; rider rows show-.

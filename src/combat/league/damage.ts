@@ -31,6 +31,8 @@ export interface LeagueDamageComponent {
   attached: boolean;
   /** Analysis tag (e.g. bonus-damage riders shown in the Bonus damage column). */
   damageTag?: BlessingDamageTag;
+  /** Effect row that receives this bonus instead of the scheduling parent. */
+  bonusTargetId?: string;
   /** Legacy application weight; kept for older consumers and EV packing. */
   expectedOccurrences: number;
   /** Probability rolls this component represents (Inferno 5% = 1). */
@@ -63,24 +65,20 @@ export type BlessingDamageSource =
 export interface BlessingHitEligibility {
   /** Big Boned 5% max-life attached rider (not a unique hit). */
   rider: boolean;
-  /**
-   * Cinders 15% of ability damage (AD base), attached, not a unique hit.
-   * Closed on Light/Inferno: those are blessing hits, not abilities.
-   */
-  cindersRider: boolean;
-  /** On-hit rolls: Inferno 5%, Light of Saradomin; one roll per proc-eligible hit. */
+  /** Cinders rider and Inferno roll; every independent damage hit qualifies. */
+  cinders: boolean;
+  /** Direct on-hit effects such as Light of Saradomin. */
   onHit: boolean;
 }
 
 const NO_BLESSING_DAMAGE: BlessingHitEligibility = {
   rider: false,
-  cindersRider: false,
+  cinders: false,
   onHit: false,
 };
 
 /**
- * Separate blessing hits that host Big Boned only (not Cinders 15%, not on-hit re-rolls).
- * Attached riders (BB, Cinders) and other blessing damage stay closed.
+ * Separate blessing hits that host Big Boned. Cinders has its own broader hit gate.
  */
 export const SEPARATE_BLESSING_RIDER_HOSTS: ReadonlySet<string> = new Set([
   "light-of-saradomin",
@@ -89,9 +87,8 @@ export const SEPARATE_BLESSING_RIDER_HOSTS: ReadonlySet<string> = new Set([
 
 /**
  * Blessing eligibility from DamageCapabilities.
- * Big Boned + Cinders 15% on direct+DoT+command+conjure+invention; onHit on direct only.
+ * Big Boned, Cinders, and direct on-hit effects use separate capability gates.
  * Attached always ineligible.
- * Carve-out: Light/Inferno unique hits take Big Boned only (no Cinders 15%; no on-hit re-roll).
  */
 export function blessingHitEligibility(
   source: BlessingDamageSource | DamageProvenance,
@@ -100,14 +97,15 @@ export function blessingHitEligibility(
   if (attached) return NO_BLESSING_DAMAGE;
   const p: DamageProvenance =
     typeof source === "string" ? provenanceFromLegacy({ damageSource: source }) : source;
-  // Light/Inferno: unique hits get BB; not abilities so no Cinders 15% AD rider.
-  if (p.kind === "blessing" && p.detail != null && SEPARATE_BLESSING_RIDER_HOSTS.has(p.detail)) {
-    return { rider: true, cindersRider: false, onHit: false };
+  if (p.kind === "blessing" && (p.detail === "big-boned" || p.detail === "abyssal-cinders")) {
+    return NO_BLESSING_DAMAGE;
   }
   const caps = capabilitiesOf(p);
   return {
-    rider: caps.blessingRider,
-    cindersRider: caps.blessingRider,
+    rider:
+      caps.blessingRider ||
+      (p.kind === "blessing" && p.detail != null && SEPARATE_BLESSING_RIDER_HOSTS.has(p.detail)),
+    cinders: caps.cindersOnHit,
     onHit: caps.blessingOnHit,
   };
 }
@@ -126,6 +124,8 @@ export interface LeagueDamageInput {
   level: number;
   accuracy: number;
   crit: Omit<CritLayers, "eligible">;
+  /** Big Boned inherits this parent's crit eligibility and outcome. */
+  parentCrit?: CritLayers;
   modifiers: readonly CombatModifier[];
   context: CombatContext;
   cap?: HitCapRule;
@@ -173,16 +173,28 @@ function damageOf(hit: HitResult): ResolvedDamage {
   };
 }
 
-function expectedProc(hit: HitResult, chance: number): ResolvedDamage {
+function weightedDamage(
+  hit: HitResult,
+  expectedActivations: number,
+  minActivations: number,
+  maxActivations: number,
+  inheritedCrit = false,
+): ResolvedDamage {
   const damage = damageOf(hit);
   return {
     ...damage,
-    min: 0,
-    expected: damage.expected * chance,
-    critExpected: damage.critExpected === undefined ? undefined : damage.critExpected * chance,
-    capLoss: (damage.capLoss ?? 0) * chance,
+    min: damage.min * minActivations,
+    max: damage.max * maxActivations,
+    expected: damage.expected * expectedActivations,
+    critExpected:
+      damage.critExpected === undefined ? undefined : damage.critExpected * expectedActivations,
+    capLoss: (damage.capLoss ?? 0) * expectedActivations,
     critical: damage.critical
-      ? { ...damage.critical, contribution: damage.critical.contribution * chance }
+      ? {
+          ...damage.critical,
+          contribution: damage.critical.contribution * expectedActivations,
+          ...(inheritedCrit ? { inherited: true } : {}),
+        }
       : undefined,
   };
 }
@@ -191,7 +203,7 @@ function expectedProc(hit: HitResult, chance: number): ResolvedDamage {
 export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageComponent[] {
   if (input.rules.ruleset !== "equilibrium") return [];
   const eligible = blessingHitEligibility(input.source, input.attached === true);
-  if (!eligible.rider && !eligible.onHit) return [];
+  if (!eligible.rider && !eligible.cinders && !eligible.onHit) return [];
   const targetModifiers = input.modifiers.filter(
     (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
   );
@@ -214,38 +226,87 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
-  // Big Boned: flat 5% land-time max life, attached, crit-eligible (live crit unconfirmed).
+  const cinders = blessingRule(input.rules, "abyssal-cinders");
+  const infernoChance = eligible.cinders ? (cinders?.inferno?.chance ?? 0) : 0;
+  if (infernoChance < 0 || infernoChance >= 1) {
+    throw new RangeError(`Abyssal Cinders chance ${infernoChance} must be in [0, 1)`);
+  }
+  // E[recursive Infernos] = p + p^2 + ... = p / (1 - p).
+  const recursiveFactor = 1 / (1 - infernoChance);
+  const infernoActivations = infernoChance * recursiveFactor;
+  const cindersRiderActivations =
+    eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined ? recursiveFactor : 0;
+
+  const parentProvenance =
+    typeof input.source === "string"
+      ? provenanceFromLegacy({ damageSource: input.source })
+      : input.source;
+  const parentCrit = input.parentCrit ?? {
+    ...input.crit,
+    eligible:
+      capabilitiesOf(parentProvenance).canCrit &&
+      (input.ability.hits[input.hitIndex]?.critEligible ?? true),
+  };
+  const infernoCrit: CritLayers = { ...input.crit, eligible: true };
+
+  // Split by parent so menu attribution and inherited crit state stay exact.
   const bigBoned = blessingRule(input.rules, "big-boned");
-  if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
-    const prov = blessingProv("big-boned");
-    const hit = calculateHit({
-      ...shared,
-      provenance: prov,
-      context: { ...shared.context, provenance: prov },
-      base: resolveMaximumLife(input.rules, input.landTick ?? 0),
-      band: {
-        minPct: bigBoned.maxLifeDamagePercent * 100,
-        maxPct: bigBoned.maxLifeDamagePercent * 100,
-      },
-      crit: { ...input.crit, eligible: true },
-    });
-    components.push({
-      effectId: "big-boned",
-      blessingId: "big-boned",
-      attached: true,
-      damageTag: "bonus-damage",
-      expectedOccurrences: 1,
-      triggerRolls: 0,
-      expectedActivations: 1,
-      expectedSeparateHits: 0,
-      damage: damageOf(hit),
-      hitDetail: hit,
-    });
+  const bigBonedPercent = bigBoned?.maxLifeDamagePercent;
+  const rootBigBonedActivations = eligible.rider ? 1 : 0;
+  if (bigBonedPercent !== undefined) {
+    const pushBigBoned = (
+      activations: number,
+      minActivations: number,
+      maxActivations: number,
+      crit: CritLayers,
+      bonusTargetId?: string,
+    ) => {
+      if (activations <= 0) return;
+      const prov = blessingProv("big-boned");
+      const hit = calculateHit({
+        ...shared,
+        provenance: prov,
+        context: { ...shared.context, provenance: prov },
+        base: resolveMaximumLife(input.rules, input.landTick ?? 0),
+        band: {
+          minPct: bigBonedPercent * 100,
+          maxPct: bigBonedPercent * 100,
+        },
+        crit,
+      });
+      components.push({
+        effectId: "big-boned",
+        blessingId: "big-boned",
+        attached: true,
+        damageTag: "bonus-damage",
+        ...(bonusTargetId ? { bonusTargetId } : {}),
+        expectedOccurrences: activations,
+        triggerRolls: 0,
+        expectedActivations: activations,
+        expectedSeparateHits: 0,
+        damage: weightedDamage(hit, activations, minActivations, maxActivations, true),
+        hitDetail: hit,
+      });
+    };
+
+    pushBigBoned(
+      rootBigBonedActivations,
+      rootBigBonedActivations,
+      rootBigBonedActivations,
+      parentCrit,
+    );
+    pushBigBoned(
+      cindersRiderActivations,
+      1,
+      1 + (infernoChance > 0 ? recursiveFactor : 0),
+      noCrit,
+      "abyssal-cinders",
+    );
+    pushBigBoned(infernoActivations, 0, recursiveFactor, infernoCrit, "inferno-of-zamorak");
   }
 
-  // Cinders 15% of ability damage (AD), attached bonus - not a unique hit, not BB-inclusive.
-  const cinders = blessingRule(input.rules, "abyssal-cinders");
-  if (eligible.cindersRider && cinders?.perHitAbilityDamagePercent !== undefined) {
+  // Cinders rides the root hit and every recursive Inferno; attached bonus is not itself a hit.
+  if (eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined) {
     const prov = blessingProv("abyssal-cinders");
     const hit = calculateHit({
       ...shared,
@@ -263,16 +324,20 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "abyssal-cinders",
       attached: true,
       damageTag: "bonus-damage",
-      expectedOccurrences: 1,
+      expectedOccurrences: cindersRiderActivations,
       triggerRolls: 0,
-      expectedActivations: 1,
+      expectedActivations: cindersRiderActivations,
       expectedSeparateHits: 0,
-      damage: damageOf(hit),
+      damage: weightedDamage(
+        hit,
+        cindersRiderActivations,
+        1,
+        1 + (infernoChance > 0 ? recursiveFactor : 0),
+      ),
       hitDetail: hit,
     });
   }
-  if (eligible.onHit && cinders?.inferno) {
-    const chance = cinders.inferno.chance;
+  if (eligible.cinders && cinders?.inferno) {
     const prov = blessingProv("inferno-of-zamorak");
     const hit = calculateHit({
       ...shared,
@@ -283,17 +348,17 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
         minPct: cinders.inferno.abilityDamageBand[0],
         maxPct: cinders.inferno.abilityDamageBand[1],
       },
-      crit: { ...input.crit, eligible: true },
+      crit: infernoCrit,
     });
     components.push({
       effectId: "inferno-of-zamorak",
       blessingId: "abyssal-cinders",
       attached: false,
-      expectedOccurrences: chance,
-      triggerRolls: 1,
-      expectedActivations: chance,
-      expectedSeparateHits: chance,
-      damage: expectedProc(hit, chance),
+      expectedOccurrences: infernoActivations,
+      triggerRolls: recursiveFactor,
+      expectedActivations: infernoActivations,
+      expectedSeparateHits: infernoActivations,
+      damage: weightedDamage(hit, infernoActivations, 0, recursiveFactor),
     });
   }
 
@@ -390,32 +455,6 @@ export function graspOfGuthixComponent(
   };
 }
 
-/** EV-pack a rider component when its parent is chance-weighted (Inferno 5%). */
-function scaleLeagueComponent(
-  component: LeagueDamageComponent,
-  weight: number,
-): LeagueDamageComponent {
-  if (weight === 1) return component;
-  const damage = component.damage;
-  return {
-    ...component,
-    expectedOccurrences: component.expectedOccurrences * weight,
-    expectedActivations: component.expectedActivations * weight,
-    expectedSeparateHits: component.expectedSeparateHits * weight,
-    damage: {
-      min: 0,
-      max: damage.max,
-      expected: damage.expected * weight,
-      critExpected: damage.critExpected === undefined ? undefined : damage.critExpected * weight,
-      capLoss: damage.capLoss === undefined ? undefined : damage.capLoss * weight,
-      critical: damage.critical
-        ? { ...damage.critical, contribution: damage.critical.contribution * weight }
-        : undefined,
-    },
-    hitDetail: undefined,
-  };
-}
-
 /** Single-cast view using the same component resolver as scheduled simulation events. */
 export function calculateLeagueAbility(
   ability: AbilitySpec,
@@ -461,10 +500,10 @@ export function calculateLeagueAbility(
     if (components.some((component) => component.effectId === "light-of-saradomin")) {
       lightAvailable = false;
     }
-    // Mirror land-time: Big Boned rides Light/Inferno unique hits; no Cinders 15% on them.
+    // Mirror land-time: Light is a separate hit and hosts its own packed Cinders chain.
     const ridersOnSeparate: LeagueDamageComponent[] = [];
     for (const component of components) {
-      if (component.attached || !SEPARATE_BLESSING_RIDER_HOSTS.has(component.effectId)) {
+      if (component.attached || component.effectId !== "light-of-saradomin") {
         continue;
       }
       const nested = leagueDamageComponents({
@@ -473,10 +512,7 @@ export function calculateLeagueAbility(
         attached: false,
         strikingLightReady: false,
       });
-      const weight = component.expectedActivations;
-      for (const rider of nested) {
-        ridersOnSeparate.push(scaleLeagueComponent(rider, weight));
-      }
+      ridersOnSeparate.push(...nested);
     }
     return [...components, ...ridersOnSeparate];
   });

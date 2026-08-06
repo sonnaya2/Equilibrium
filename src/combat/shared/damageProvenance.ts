@@ -5,8 +5,8 @@ import type { BleedId, CombatContext, DamageOverTimeKind, OutgoingDamageSource }
  * Serializable plain object for branch signatures / IPC.
  *
  * wiki: Full Slayer Helmet / Salve apply to player direct attacks only (not DoT, conjure, procs).
- * Blessings: riders on direct+DoT+command+conjure+invention; on-hit rolls on direct only.
- * Rider-only carve-out on Light/Inferno separate hits (see SEPARATE_BLESSING_RIDER_HOSTS); no BB-on-BB.
+ * Big Boned riders follow blessingRider; Cinders follows every independent damage hit.
+ * Light and direct-hit gates remain narrower than Cinders.
  * Abyssal Parasite stacks: only player_direct / player_auto (melee+passive gated at land).
  */
 
@@ -47,9 +47,11 @@ export interface DamageCapabilities {
   directHit: boolean;
   /** Slayer helmet / Salve. */
   onHitGear: boolean;
-  /** Cinders / Big Boned riders. */
+  /** Big Boned riders. */
   blessingRider: boolean;
-  /** Inferno / Light of Saradomin. */
+  /** Abyssal Cinders rider and Inferno roll. */
+  cindersOnHit: boolean;
+  /** Light of Saradomin and other direct on-hit effects. */
   blessingOnHit: boolean;
   /** Default crit eligibility; hitSpec may still force false. */
   canCrit: boolean;
@@ -68,6 +70,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: true,
     onHitGear: true,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: true,
     canCrit: true,
     canGenerateResources: true,
@@ -81,6 +84,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: true,
     onHitGear: true,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: true,
     canCrit: true,
     canGenerateResources: true,
@@ -94,6 +98,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -109,6 +114,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -122,6 +128,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -136,6 +143,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -149,6 +157,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: true,
@@ -162,6 +171,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: false,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -174,8 +184,9 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    // Crackling/Aftershock hit splats take BB/Cinders riders; no on-hit re-roll.
+    // Crackling/Aftershock hit splats take Big Boned and Cinders.
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -190,6 +201,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: true,
     blessingRider: false,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -203,6 +215,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: false,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -217,6 +230,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: true,
     canCrit: false,
     canGenerateResources: false,
@@ -231,6 +245,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -244,6 +259,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: false,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,

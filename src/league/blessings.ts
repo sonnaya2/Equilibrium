@@ -87,7 +87,6 @@ export interface BlessingCombatRules {
   };
   procChance?: number;
   freeCastDurationTicks?: number;
-  refresh?: "refresh";
   cooldownMultiplier?: number;
   areaDamageBonus?: number;
   aoePerTileBonus?: number;

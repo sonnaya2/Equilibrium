@@ -99,13 +99,13 @@ export function accountAnalysisEvent(
   ledger.expectedActivations += mult.expectedActivations;
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
   ledger.attachedComponents += mult.attachedComponents;
-  // Attribute bonus-damage riders ONLY onto the parent skill (how much Big Boned
-  // added on that ability's hits). Never onto the rider row itself - that would
-  // double-count if Bonus were summed, and mark Big Boned as "receiving" bonus.
+  // Attribute bonus damage to its parent effect; packed blessing chains name it explicitly.
   if (event.damageTag === "bonus-damage") {
-    const parentId = parentAbilityId(rt, event);
+    const parentId = event.bonusTargetId ?? parentAbilityId(rt, event);
     if (parentId && parentId !== event.abilityId) {
-      const parent = analysis.effects.get(parentId) ?? emptyLedger(parentId, "ability-direct");
+      const parent =
+        analysis.effects.get(parentId) ??
+        emptyLedger(parentId, event.bonusTargetId ? "league-blessing" : "ability-direct");
       parent.bonusDamage += expected;
       analysis.effects.set(parentId, parent);
     }

@@ -23,8 +23,8 @@ export interface EffectAnalysisLedger {
   /** Attached bonus components (Big Boned, Cinders rider, …). */
   attachedComponents: number;
   /**
-   * Bonus-damage riders attributed onto this parent skill (how much Big Boned
-   * added on its hits). Always 0 on the rider's own row - rider Total is the
+   * Bonus-damage riders attributed onto this parent effect (how much Big Boned
+   * added to its damage). Always 0 on the rider's own row - rider Total is the
    * bonus amount. Do not sum Bonus across rows with Total (would double-count).
    */
   bonusDamage: number;

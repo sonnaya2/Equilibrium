@@ -65,22 +65,22 @@ describe("resolveEventMultiplicity defaults", () => {
     });
   });
 
-  it("maps one 5% Inferno roll to 1 trigger, 0.05 activations and separate hits", () => {
+  it("maps a recursive 5% Inferno chain to its geometric multiplicity", () => {
     expect(
       resolveEventMultiplicity(
         event({
           family: "blessing",
           abilityId: "inferno-of-zamorak",
-          expectedOccurrences: 0.05,
-          triggerRolls: 1,
-          expectedActivations: 0.05,
-          expectedSeparateHits: 0.05,
+          expectedOccurrences: 0.05 / 0.95,
+          triggerRolls: 1 / 0.95,
+          expectedActivations: 0.05 / 0.95,
+          expectedSeparateHits: 0.05 / 0.95,
         }),
       ),
     ).toEqual({
-      triggerRolls: 1,
-      expectedActivations: 0.05,
-      expectedSeparateHits: 0.05,
+      triggerRolls: 1 / 0.95,
+      expectedActivations: 0.05 / 0.95,
+      expectedSeparateHits: 0.05 / 0.95,
       attachedComponents: 0,
     });
   });
@@ -162,7 +162,7 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(gr?.bonusDamage).toBeGreaterThan(0);
   });
 
-  it("Cinders on GR: 7 attached 15% AD riders; Inferno unique hits (no Cinders on Inferno)", () => {
+  it("Cinders on GR packs recursive riders and Inferno hits", () => {
     const summary = simulate({
       ...rangedInput,
       league: cinders(),
@@ -171,7 +171,6 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     });
     const riders = summary.events.filter((e) => e.abilityId === "abyssal-cinders");
     const infernos = summary.events.filter((e) => e.abilityId === "inferno-of-zamorak");
-    // One Cinders 15% per GR hit only; Inferno is a unique hit without Cinders 15%.
     expect(riders).toHaveLength(7);
     expect(infernos).toHaveLength(7);
 
@@ -180,24 +179,28 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     let separateHits = 0;
     for (const inferno of infernos) {
       expect(inferno.attached).toBe(false);
-      expect(inferno.triggerRolls).toBe(1);
-      expect(inferno.expectedActivations).toBeCloseTo(0.05, 10);
-      expect(inferno.expectedSeparateHits).toBeCloseTo(0.05, 10);
-      expect(inferno.originKind).toBe("direct");
+      expect(inferno.triggerRolls).toBeCloseTo(1 / 0.95, 10);
+      expect(inferno.expectedActivations).toBeCloseTo(0.05 / 0.95, 10);
+      expect(inferno.expectedSeparateHits).toBeCloseTo(0.05 / 0.95, 10);
+      expect(inferno.originKind).toBe("blessing");
       const mult = resolveEventMultiplicity(inferno);
       triggerRolls += mult.triggerRolls;
       activations += mult.expectedActivations;
       separateHits += mult.expectedSeparateHits;
     }
-    expect(triggerRolls).toBe(7);
-    expect(activations).toBeCloseTo(0.35, 10);
-    expect(separateHits).toBeCloseTo(0.35, 10);
+    expect(triggerRolls).toBeCloseTo(7 / 0.95, 10);
+    expect(activations).toBeCloseTo((7 * 0.05) / 0.95, 10);
+    expect(separateHits).toBeCloseTo((7 * 0.05) / 0.95, 10);
 
     const infernoSeqs = new Set(infernos.map((e) => e.seq));
     for (const rider of riders) {
       expect(rider.attached).toBe(true);
       expect(rider.damageTag).toBe("bonus-damage");
-      expect(resolveEventMultiplicity(rider).expectedSeparateHits).toBe(0);
+      expect(resolveEventMultiplicity(rider)).toMatchObject({
+        expectedActivations: 1 / 0.95,
+        expectedSeparateHits: 0,
+        attachedComponents: 1 / 0.95,
+      });
       expect(infernoSeqs.has(rider.derivedFrom ?? -1)).toBe(false);
     }
   });

@@ -25,8 +25,7 @@ const rules = (
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks }, derived);
 
 describe("Equilibrium blessing combat rules", () => {
-  it("adds Big Boned and Cinders on ability hits; Inferno unique hit gets BB only", () => {
-    // Cinders 15% = AD base (not BB-inclusive), attached. Inferno = unique hit + BB, no Cinders.
+  it("packs recursive Inferno hits and their Big Boned/Cinders riders", () => {
     const league = rules(["Balance", "Chaos", "Chaos"], { maximumLife: 15_000 });
     const result = simulate({
       ...baseInput,
@@ -34,31 +33,77 @@ describe("Equilibrium blessing combat rules", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    // Base 1200 + BB 750 + cinders 150 + inferno EV 75 + BB-on-Inferno 37.5.
-    expect(result.totalExpected).toBe(2_212.5);
+    // Each root expects 1/19 Infernos, 20/19 Cinders, and Big Boned on both.
+    expect(result.totalExpected).toBeCloseTo(
+      1_200 + (750 * 40) / 19 + (150 * 20) / 19 + 1_500 / 19,
+      6,
+    );
     expect(
       result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak", "big-boned"]);
+    ).toEqual(["big-boned", "big-boned", "big-boned", "abyssal-cinders", "inferno-of-zamorak"]);
     const cindersOnAttack = result.events.find((e) => e.abilityId === "abyssal-cinders")!;
     expect(cindersOnAttack).toMatchObject({
       attached: true,
       damageTag: "bonus-damage",
       expectedSeparateHits: 0,
-      damage: { expected: 150 },
     });
-    expect(result.events.find((event) => event.abilityId === "inferno-of-zamorak")).toMatchObject({
+    expect(cindersOnAttack.expectedActivations).toBeCloseTo(20 / 19, 10);
+    expect(cindersOnAttack.damage.expected).toBeCloseTo((150 * 20) / 19, 6);
+    const bigBoned = result.events.filter((event) => event.abilityId === "big-boned");
+    expect(bigBoned).toHaveLength(3);
+    expect(bigBoned.reduce((sum, event) => sum + event.expectedActivations!, 0)).toBeCloseTo(
+      40 / 19,
+      10,
+    );
+    expect(bigBoned.reduce((sum, event) => sum + event.damage.expected, 0)).toBeCloseTo(
+      (750 * 40) / 19,
+      6,
+    );
+    const cindersBonus = bigBoned.find((event) => event.bonusTargetId === "abyssal-cinders")!;
+    const infernoBonus = bigBoned.find((event) => event.bonusTargetId === "inferno-of-zamorak")!;
+    expect(cindersBonus.damage.expected).toBeCloseTo((750 * 20) / 19, 6);
+    expect(infernoBonus.damage.expected).toBeCloseTo(750 / 19, 6);
+    expect(
+      result.analysis.byEffect.find((effect) => effect.id === "abyssal-cinders")?.bonusDamage,
+    ).toBeCloseTo(cindersBonus.damage.expected, 6);
+    expect(
+      result.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")?.bonusDamage,
+    ).toBeCloseTo(infernoBonus.damage.expected, 6);
+    const inferno = result.events.find((event) => event.abilityId === "inferno-of-zamorak")!;
+    expect(inferno).toMatchObject({
       family: "blessing",
       attached: false,
-      expectedOccurrences: 0.05,
-      triggerRolls: 1,
-      expectedActivations: 0.05,
-      expectedSeparateHits: 0.05,
-      damage: { min: 0, max: 2_000, expected: 75 },
+      damage: { min: 0 },
     });
-    expect(
-      result.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak"),
-    ).toMatchObject({ expectedActivations: 0.05, averagePerActivation: 1_500 });
+    expect(inferno.expectedOccurrences).toBeCloseTo(1 / 19, 10);
+    expect(inferno.triggerRolls).toBeCloseTo(20 / 19, 10);
+    expect(inferno.expectedActivations).toBeCloseTo(1 / 19, 10);
+    expect(inferno.expectedSeparateHits).toBeCloseTo(1 / 19, 10);
+    expect(inferno.damage.max).toBeCloseTo((2_000 * 20) / 19, 6);
+    expect(inferno.damage.expected).toBeCloseTo(1_500 / 19, 6);
+    const infernoAnalysis = result.analysis.byEffect.find(
+      (effect) => effect.id === "inferno-of-zamorak",
+    )!;
+    expect(infernoAnalysis.expectedActivations).toBeCloseTo(1 / 19, 10);
+    expect(infernoAnalysis.averagePerActivation).toBeCloseTo(1_500, 6);
     expect(simulate({ ...baseInput, rotation: rotationOf("attack") }).totalExpected).toBe(1_200);
+  });
+
+  it("inherits parent crit state for Big Boned on the hit, Cinders, and Inferno", () => {
+    const result = simulate({
+      ...baseInput,
+      league: rules(["Balance", "Chaos"], { maximumLife: 15_000 }),
+      crit: { chance: 0.2 },
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const bigBoned = result.events.filter((event) => event.abilityId === "big-boned");
+    const root = bigBoned.find((event) => event.bonusTargetId === undefined)!;
+    const cinders = bigBoned.find((event) => event.bonusTargetId === "abyssal-cinders")!;
+    const inferno = bigBoned.find((event) => event.bonusTargetId === "inferno-of-zamorak")!;
+    expect(root.damage.critical).toMatchObject({ chance: 0.2, inherited: true });
+    expect(cinders.damage.critical).toMatchObject({ mode: "none", chance: 0, inherited: true });
+    expect(inferno.damage.critical).toMatchObject({ chance: 0.2, inherited: true });
   });
 
   it("includes Big Boned outgoing damage while keeping max-life multiplier", () => {
@@ -72,12 +117,14 @@ describe("Equilibrium blessing combat rules", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    // Base 1200 + BB 750 + cinders 150 + inferno EV 75 + BB-on-Inferno 37.5.
-    expect(result.totalExpected).toBe(2_212.5);
-    expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(2);
+    expect(result.totalExpected).toBeCloseTo(
+      1_200 + (750 * 40) / 19 + (150 * 20) / 19 + 1_500 / 19,
+      6,
+    );
+    expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(3);
     expect(
       result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak", "big-boned"]);
+    ).toEqual(["big-boned", "big-boned", "big-boned", "abyssal-cinders", "inferno-of-zamorak"]);
   });
 
   it("rides Big Boned onto Light of Saradomin without infinite cascade", () => {
@@ -212,6 +259,31 @@ describe("Equilibrium blessing combat rules", () => {
       terminalClasses: 2,
       representativeClassWeight: 0.95,
     });
+  });
+
+  it("keeps long Avernic rotations exact and bounded", () => {
+    const rotation = rotationOf(...Array(100).fill("attack"));
+    const withoutAvernic = simulate(
+      {
+        ...baseInput,
+        league: rules(["Order", "Order"]),
+        context: { style: "melee", ruleset: "equilibrium" },
+        rotation,
+      },
+      { detailLevel: "score-only" },
+    );
+    const withAvernic = simulate(
+      {
+        ...baseInput,
+        league: rules(["Order", "Order", "Chaos"]),
+        context: { style: "melee", ruleset: "equilibrium" },
+        rotation,
+      },
+      { detailLevel: "score-only" },
+    );
+    expect(withAvernic.totalExpected).toBeCloseTo(withoutAvernic.totalExpected, 6);
+    expect(withAvernic.rng?.residualWeight).toBe(0);
+    expect(withAvernic.rng?.terminalClasses).toBeLessThanOrEqual(8);
   });
 });
 

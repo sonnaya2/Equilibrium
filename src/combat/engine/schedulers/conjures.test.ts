@@ -269,7 +269,7 @@ describe("blessing riders on conjure auto and poison", () => {
     }
   });
 
-  it("Cinders rides conjure autos without Inferno on-hit rolls", () => {
+  it("Cinders and recursive Inferno include conjure autos", () => {
     const s = simulate({
       ...necroFixtureInput,
       league: cinders,
@@ -287,13 +287,40 @@ describe("blessing riders on conjure auto and poison", () => {
         autos.some((a) => a.seq === e.derivedFrom),
     );
     expect(cindersOnAutos).toHaveLength(autos.length);
+    expect(
+      cindersOnAutos.reduce((sum, event) => sum + (event.expectedActivations ?? 1), 0),
+    ).toBeCloseTo(autos.length / 0.95, 10);
     const infernoOnAutos = s.events.filter(
       (e) =>
         e.abilityId === "inferno-of-zamorak" &&
         e.derivedFrom !== undefined &&
         autos.some((a) => a.seq === e.derivedFrom),
     );
-    expect(infernoOnAutos).toHaveLength(0);
+    expect(infernoOnAutos).toHaveLength(autos.length);
+    expect(
+      infernoOnAutos.reduce((sum, event) => sum + (event.expectedActivations ?? 1), 0),
+    ).toBeCloseTo((autos.length * 0.05) / 0.95, 10);
+  });
+
+  it("Cinders and recursive Inferno include conjure poison ticks", () => {
+    const s = simulate({
+      ...necroFixtureInput,
+      league: cinders,
+      crit: { chance: 0 },
+      context: { style: "necromancy", ruleset: "equilibrium" },
+      rotation: rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic")),
+    });
+    const poisons = s.events.filter((event) => event.family === "poison");
+    expect(poisons.length).toBeGreaterThan(0);
+    for (const abilityId of ["abyssal-cinders", "inferno-of-zamorak"]) {
+      const derived = s.events.filter(
+        (event) =>
+          event.abilityId === abilityId &&
+          event.derivedFrom !== undefined &&
+          poisons.some((poison) => poison.seq === event.derivedFrom),
+      );
+      expect(derived).toHaveLength(poisons.length);
+    }
   });
 });
 

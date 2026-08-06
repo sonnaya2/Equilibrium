@@ -69,7 +69,7 @@ function scaleResolvedDamage(damage: ResolvedDamage, weight: number): ResolvedDa
 /**
  * Schedule league blessing damage components for a landed event and advance
  * Striking Light readiness when Light of Saradomin contributes.
- * Light/Inferno unique hits emit Big Boned only (not Cinders 15% AD).
+ * Inferno descendants are folded into their parent's geometric EV components.
  */
 export function scheduleBlessingDamage(
   rt: SimulationRuntime,
@@ -77,13 +77,14 @@ export function scheduleBlessingDamage(
   damage: ResolvedDamage,
 ): void {
   if (!rt.input.league || damage.max <= 0) return;
+  if (event.abilityId === "inferno-of-zamorak") return;
   const source = blessingSourceOf(event);
   const eligible = blessingHitEligibility(source, event.attached);
-  if (!eligible.rider && !eligible.onHit) return;
+  if (!eligible.rider && !eligible.cinders && !eligible.onHit) return;
   const ability = rt.byId.get(event.abilityId);
   // Spirit auto/poison ledger ids are not bar AbilitySpecs; rider path uses a stub.
   // Blessing separate hits (Light/Inferno) also lack bar specs; rider path uses a stub.
-  if (!ability && !eligible.rider) return;
+  if (!ability && !eligible.rider && !eligible.cinders) return;
   const style = ability?.style ?? rt.input.context?.style ?? "necromancy";
   const resolvedAbility = ability ?? {
     id: event.abilityId,
@@ -96,6 +97,12 @@ export function scheduleBlessingDamage(
     typeof rt.input.modifiers === "function"
       ? rt.input.modifiers(resolvedAbility)
       : (rt.input.modifiers ?? []);
+  const parentCrit = {
+    ...rt.input.crit,
+    chance: damage.critical?.chance ?? 0,
+    guaranteed: damage.critical?.mode === "guaranteed",
+    eligible: damage.critical?.mode !== "none",
+  };
   const lightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
   // Input identity is shared by every branch; land-time fields remain in the key.
   let cache = componentCache.get(rt.input);
@@ -109,6 +116,8 @@ export function scheduleBlessingDamage(
     resolveMaximumLife(rt.input.league, event.tick),
     event.attached ? 1 : 0,
     sourceKey(source),
+    parentCrit.chance,
+    parentCrit.guaranteed ? 1 : 0,
     ability != null && lightReady ? 1 : 0,
   ].join("\x1f");
   let components = cache.get(key);
@@ -124,6 +133,7 @@ export function scheduleBlessingDamage(
       level: rt.input.level,
       accuracy: rt.input.accuracy,
       crit: rt.input.crit,
+      parentCrit,
       modifiers,
       context: {
         ...rt.input.context,
@@ -144,11 +154,15 @@ export function scheduleBlessingDamage(
       rt.state = patchLeague(rt.state, { strikingLightReadyTick: event.tick + cooldown });
     }
   }
-  // Inferno packs EV via expectedActivations < 1; riders inherit that weight.
+  // Chance-weighted parents pass their activation mass into attached components.
   const parentWeight = event.expectedActivations ?? event.expectedOccurrences ?? 1;
   const originKind = parentOriginKind(event, source);
   for (const component of components) {
     const scaledDamage = scaleResolvedDamage(component.damage, parentWeight);
+    const componentOrigin =
+      !component.attached || component.bonusTargetId === "inferno-of-zamorak"
+        ? "blessing"
+        : originKind;
     scheduleEvent(rt, {
       tick: event.tick,
       family: "blessing",
@@ -161,7 +175,8 @@ export function scheduleBlessingDamage(
       derivedFrom: event.seq,
       blessingId: component.blessingId,
       ...(component.damageTag ? { damageTag: component.damageTag } : {}),
-      originKind,
+      ...(component.bonusTargetId ? { bonusTargetId: component.bonusTargetId } : {}),
+      originKind: componentOrigin,
       provenance: { kind: "blessing", detail: component.effectId },
       expectedOccurrences: component.expectedOccurrences * parentWeight,
       triggerRolls: component.triggerRolls,

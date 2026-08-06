@@ -825,6 +825,37 @@ describe("branchKey structural vs JSON partitions", () => {
     ).toHaveLength(2);
   });
 
+  it("expired league clocks merge with zero; live windows still split", () => {
+    const base = createRuntime(meleeInput);
+    const expired = snapshotRuntime(base);
+    const clean = snapshotRuntime(base);
+    const live = snapshotRuntime(base);
+    expired.state = {
+      ...expired.state,
+      tick: 30,
+      league: { avernicRampageUntilTick: 12, strikingLightReadyTick: 15 },
+    };
+    clean.state = {
+      ...clean.state,
+      tick: 30,
+      league: { avernicRampageUntilTick: 0, strikingLightReadyTick: 0 },
+    };
+    live.state = {
+      ...live.state,
+      tick: 5,
+      league: { avernicRampageUntilTick: 12, strikingLightReadyTick: 15 },
+    };
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
+    ).toHaveLength(1);
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+  });
+
   it("expired livingDeath and flow (zeros reduction) merge with clean; live still splits", () => {
     const base = createRuntime({
       ...meleeInput,

@@ -202,6 +202,8 @@ function encodeState(state: RotationState): string {
   const vestmentsUntil = halfOpenUntil(state.vestmentsAdrenalineUntilTick, tick);
   const relentlessUntil = halfOpenUntil(state.relentlessUntilTick, tick);
   const naturalInstinctUntil = halfOpenUntil(state.naturalInstinctUntilTick, tick);
+  const avernicRampageUntil = halfOpenUntil(state.league?.avernicRampageUntilTick ?? 0, tick);
+  const strikingLightReadyTick = halfOpenUntil(state.league?.strikingLightReadyTick ?? 0, tick);
   const chaosRoarUntil = halfOpenUntil(m.chaosRoarUntilTick, tick);
   const greaterFuryUntil = halfOpenUntil(m.greaterFuryUntilTick, tick);
   const meteorStrikeUntil = halfOpenUntil(m.meteorStrikeUntilTick, tick);
@@ -244,13 +246,7 @@ function encodeState(state: RotationState): string {
     b(inv.aftershockPending),
     n(naturalInstinctUntil),
     // league optional
-    state.league
-      ? "1" +
-        US +
-        n(state.league.avernicRampageUntilTick) +
-        US +
-        n(state.league.strikingLightReadyTick)
-      : "0",
+    state.league ? "1" + US + n(avernicRampageUntil) + US + n(strikingLightReadyTick) : "0",
     // melee
     n(bloodlust.stacks),
     b(bloodlust.berserk),
@@ -494,6 +490,14 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     naturalInstinctUntilTick: halfOpenUntil(rt.state.naturalInstinctUntilTick, tick),
     cooldowns: liveCooldownsForKey(rt.state.cooldowns as Record<string, number>, tick),
     charges: liveChargesForKey(rt.state.charges as Record<string, readonly number[]>, tick),
+    ...(rt.state.league
+      ? {
+          league: {
+            avernicRampageUntilTick: halfOpenUntil(rt.state.league.avernicRampageUntilTick, tick),
+            strikingLightReadyTick: halfOpenUntil(rt.state.league.strikingLightReadyTick, tick),
+          },
+        }
+      : {}),
     melee: {
       ...m,
       bloodlust,

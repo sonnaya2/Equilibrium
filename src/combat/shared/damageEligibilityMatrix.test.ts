@@ -27,6 +27,7 @@ const CAP_KEYS: CapKey[] = [
   "directHit",
   "onHitGear",
   "blessingRider",
+  "cindersOnHit",
   "blessingOnHit",
   "canCrit",
   "canGenerateResources",
@@ -43,6 +44,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: true,
     onHitGear: true,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: true,
     canCrit: true,
     canGenerateResources: true,
@@ -56,6 +58,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: true,
     onHitGear: true,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: true,
     canCrit: true,
     canGenerateResources: true,
@@ -69,6 +72,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -82,6 +86,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -95,6 +100,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -108,6 +114,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -121,6 +128,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: true,
@@ -134,6 +142,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: false,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -147,6 +156,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -160,6 +170,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: true,
     blessingRider: false,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -173,6 +184,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: false,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -186,6 +198,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: true,
     canCrit: false,
     canGenerateResources: false,
@@ -199,6 +212,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -212,6 +226,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: false,
+    cindersOnHit: true,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -238,32 +253,32 @@ describe("blessingHitEligibility from capabilities", () => {
   it("mirrors capability columns for legacy sources", () => {
     expect(blessingHitEligibility("direct", false)).toEqual({
       rider: true,
-      cindersRider: true,
+      cinders: true,
       onHit: true,
     });
     expect(blessingHitEligibility("dot", false)).toEqual({
       rider: true,
-      cindersRider: true,
+      cinders: true,
       onHit: false,
     });
     expect(blessingHitEligibility("command", false)).toEqual({
       rider: true,
-      cindersRider: true,
+      cinders: true,
       onHit: false,
     });
     expect(blessingHitEligibility("conjure", false)).toEqual({
       rider: true,
-      cindersRider: true,
+      cinders: true,
       onHit: false,
     });
     expect(blessingHitEligibility("proc", false)).toEqual({
       rider: false,
-      cindersRider: false,
+      cinders: true,
       onHit: false,
     });
     expect(blessingHitEligibility("blessing", false)).toEqual({
       rider: false,
-      cindersRider: false,
+      cinders: true,
       onHit: false,
     });
   });
@@ -272,7 +287,7 @@ describe("blessingHitEligibility from capabilities", () => {
     for (const source of ["direct", "dot", "command", "conjure"] as const) {
       expect(blessingHitEligibility(source, true)).toEqual({
         rider: false,
-        cindersRider: false,
+        cinders: false,
         onHit: false,
       });
     }
@@ -281,26 +296,31 @@ describe("blessingHitEligibility from capabilities", () => {
   it("accepts DamageProvenance objects", () => {
     expect(blessingHitEligibility({ kind: "player_auto" }, false)).toEqual({
       rider: true,
-      cindersRider: true,
+      cinders: true,
       onHit: true,
     });
     expect(blessingHitEligibility({ kind: "equipment_proc" }, false)).toEqual({
       rider: false,
-      cindersRider: false,
+      cinders: true,
       onHit: false,
     });
   });
 
-  it("Light/Inferno unique hits: Big Boned only (no Cinders 15%)", () => {
+  it("Light and Inferno host Big Boned plus Cinders", () => {
     expect(
       blessingHitEligibility({ kind: "blessing", detail: "light-of-saradomin" }, false),
-    ).toEqual({ rider: true, cindersRider: false, onHit: false });
+    ).toEqual({ rider: true, cinders: true, onHit: false });
     expect(
       blessingHitEligibility({ kind: "blessing", detail: "inferno-of-zamorak" }, false),
-    ).toEqual({ rider: true, cindersRider: false, onHit: false });
+    ).toEqual({ rider: true, cinders: true, onHit: false });
     expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual({
       rider: false,
-      cindersRider: false,
+      cinders: false,
+      onHit: false,
+    });
+    expect(blessingHitEligibility({ kind: "blessing", detail: "grasp-of-guthix" }, false)).toEqual({
+      rider: false,
+      cinders: true,
       onHit: false,
     });
   });
@@ -374,7 +394,7 @@ describe("command analysis parity", () => {
     expect(c.blessingOnHit).toBe(false);
     expect(blessingHitEligibility({ kind: "conjure_command" }, false)).toEqual({
       rider: true,
-      cindersRider: true,
+      cinders: true,
       onHit: false,
     });
   });

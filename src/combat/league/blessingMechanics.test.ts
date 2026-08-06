@@ -81,6 +81,18 @@ describe("Avernic Rampage window boundary", () => {
     expect(at(11)).toBe(0);
     expect(at(12)).toBe(assault.adrenaline?.cost ?? 0);
   });
+
+  it("does not reroll or refresh while active", () => {
+    const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
+    const context = createCastContext({
+      ...baseInput,
+      league: avernic,
+      context: { style: "melee", ruleset: "equilibrium" },
+    });
+    context.performCast(attack, 0, false, { "avernic-rampage": true });
+    context.performCast(attack, 3, false, { "avernic-rampage": true });
+    expect(context.getState().league?.avernicRampageUntilTick).toBe(12);
+  });
 });
 
 describe("Sacred Fervor cooldown reduction", () => {

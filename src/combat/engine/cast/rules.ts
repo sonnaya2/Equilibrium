@@ -16,7 +16,8 @@ import {
 import type { AdrenalineRules } from "../simulation/contracts";
 import type { CastRngPointId } from "../simulation/contracts";
 import type { RotationState } from "../runtime/state";
-import { blessingRule, hasBlessing, type ResolvedLeagueRules } from "../../league/ruleset";
+import { blessingRule, type ResolvedLeagueRules } from "../../league/ruleset";
+import { hasDamagingHits } from "./hitKind";
 import {
   permanentAvailabilityBlock,
   resolveEquippedAbilityVariant,
@@ -272,8 +273,8 @@ export function rngPointsFor(
   }
   const avernic = blessingRule(league, "avernic-rampage");
   if (
-    hasBlessing(league, "avernic-rampage") &&
-    ability.hits.length > 0 &&
+    !avernicFree(state, candidate) &&
+    hasDamagingHits(ability.hits) &&
     avernic?.procChance !== undefined
   ) {
     points.push({ id: "avernic-rampage", chance: avernic.procChance });

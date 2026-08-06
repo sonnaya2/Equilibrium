@@ -6,7 +6,11 @@ import {
   resolveCastAbility,
   rngPointsFor,
 } from "../cast/rules";
-import { resolveIcyTempest } from "../../styles/melee/icyTempest";
+import {
+  icyTempestHitsLinear,
+  icyTempestSpendAfterVigour,
+} from "../../styles/melee/icyTempest";
+import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
 import {
@@ -137,16 +141,25 @@ export function planCastOutcomes(
     }
     const prepared = prepareCast(at.rt, castAbility, candidate);
 
-    // Icy Tempest: fork only on distinct post-cast adrenaline spends (at most 4 groups).
+    // Icy Tempest: preserve integer stack hit bands before grouping equal futures.
     if (castAbility.id === "icy_tempest") {
-      const resolved = resolveIcyTempest(
-        at.rt.state.melee.primordialIce,
-        candidate,
-        at.rt.state.ringOfVigour,
-      );
-      const groups = resolved.spendDistribution.filter((g) => g.probability > 0);
-      for (const group of groups) {
-        const groupPrepared: PreparedCast = { ...prepared, spend: group.spend };
+      const stackProbabilities = new Map<number, number>();
+      for (const atom of expirePrimordialIce(at.rt.state.melee.primordialIce, candidate).atoms) {
+        stackProbabilities.set(
+          atom.stacks,
+          (stackProbabilities.get(atom.stacks) ?? 0) + atom.weight,
+        );
+      }
+      for (const [stacks, probability] of stackProbabilities) {
+        if (!(probability > 0)) continue;
+        const groupPrepared: PreparedCast = {
+          ...prepared,
+          spend: icyTempestSpendAfterVigour(stacks, at.rt.state.ringOfVigour),
+          working: {
+            ...prepared.working,
+            hits: icyTempestHitsLinear(stacks).map((hit) => ({ band: { ...hit.band } })),
+          },
+        };
         const points = rngPointsFor(
           at.rt.state,
           castAbility,
@@ -157,18 +170,18 @@ export function planCastOutcomes(
         );
         if (points.length === 0) {
           plans.push({
-            weight: at.weight * group.probability,
+            weight: at.weight * probability,
             parent: at,
             prepared: groupPrepared,
             auto,
-            inPlace: groups.length === 1,
+            inPlace: stackProbabilities.size === 1,
           });
           continue;
         }
         for (const { rng, weight } of rngWeightProduct(points)) {
           if (weight <= 0) continue;
           plans.push({
-            weight: at.weight * group.probability * weight,
+            weight: at.weight * probability * weight,
             parent: at,
             prepared: groupPrepared,
             auto,
@@ -367,16 +380,12 @@ export function castOutcomes(
 export type {
   CompiledLengLandTable,
   LengLandArm,
-  LengLandOutcome,
-  LengStackRow,
 } from "../../styles/melee/lengRng";
 export {
   compileLengLandArms,
   compileLengLandTable,
   FROSTBLADES_DURATION_TICKS,
-  lengLandOutcomes,
   lengLandTableFor,
-  materializeLengLandOutcomes,
 } from "../../styles/melee/lengRng";
 export {
   expandLengOnLand,

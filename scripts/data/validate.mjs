@@ -83,7 +83,44 @@ const UNUSABLE_TIER_OVERRIDES = `SELECT stable_id, record_path ${EQUIPMENT_RECOR
      )
    ORDER BY stable_id`;
 
-export function validate(db, changedOnly = false) {
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+export function currentDataDate(value = process.env.EQUILIBRIUM_DATA_DATE) {
+  const date = value ?? new Date().toISOString().slice(0, 10);
+  if (!ISO_DATE.test(date)) throw new Error(`invalid data current date: ${date}`);
+  return date;
+}
+
+export function futureVerificationRecords(records, currentDate) {
+  const date = currentDataDate(currentDate);
+  const failures = [];
+  const visit = (value, path, row) => {
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => visit(item, `${path}[${index}]`, row));
+      return;
+    }
+    if (!value || typeof value !== "object") return;
+    for (const [key, child] of Object.entries(value)) {
+      if ((key === "verified_at" || key === "verifiedAt") && typeof child === "string" && ISO_DATE.test(child) && child > date) {
+        failures.push({
+          source_file: row.source_file,
+          record_path: row.record_path,
+          field: `${path}.${key}`,
+          verifiedAt: child,
+          currentDate: date,
+        });
+      }
+      visit(child, `${path}.${key}`, row);
+    }
+  };
+  for (const row of records) {
+    const value = typeof row.raw_json === "string" ? JSON.parse(row.raw_json) : row.value;
+    visit(value, "$", row);
+  }
+  return failures;
+}
+
+export function validate(db, changedOnly = false, currentDate = currentDataDate()) {
   const changed = changedOnly && existsSync(CHANGED) ? JSON.parse(readFileSync(CHANGED, "utf8")).entities : [];
   const changedIds = new Set(changed.map(({ id }) => id));
   const failures = [];
@@ -116,6 +153,15 @@ export function validate(db, changedOnly = false) {
   addFailure("equipment with an impossible slot and class combination", rows(INVALID_CLASS_COMBINATION));
   addFailure("equipment bonuses that are not usable numbers", rows(UNUSABLE_STAT_VALUES));
   addFailure("equipment stat tiers that are not usable numbers", rows(UNUSABLE_TIER_OVERRIDES));
+  const verificationRows = [
+    ...rows("SELECT id AS record_path, id AS source_file, json_object('verified_at', verified_at) AS raw_json FROM entities WHERE verified_at IS NOT NULL"),
+    ...rows("SELECT id AS record_path, id AS source_file, json_object('verified_at', verified_at) AS raw_json FROM sources WHERE verified_at IS NOT NULL"),
+    ...rows("SELECT source_file, record_path, raw_json FROM source_records"),
+  ];
+  addFailure(
+    "source verification dates after current data date",
+    futureVerificationRecords(verificationRows, currentDate),
+  );
 
   const missingSources = rows(
     `SELECT id, entity_type FROM entities

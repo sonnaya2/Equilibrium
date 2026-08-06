@@ -13,6 +13,7 @@ import {
 import { burnActive } from "../../styles/magic/burn";
 import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
 import { activeBleedCount } from "../../styles/melee/effects";
+import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
 import { findConjure } from "../../styles/necromancy/conjures";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -59,8 +60,11 @@ export function landHitIdentity(
       ? findConjure(state.necromancy.conjures, "skeleton_warrior")
       : undefined;
   const bleedCount = activeBleedCount(t.melee, at);
-  const frostOn =
-    ability.style === "melee" && !ability.autoAttack && !isDot && at < m.frostbladesUntilTick;
+  const frostMass =
+    ability.style === "melee" && !ability.autoAttack && !isDot
+      ? activeFrostbladesMass(m.primordialIce, at)
+      : 0;
+  const frostOn = frostMass > 0;
   const berserkOn = ability.style === "melee" && at < m.berserkUntilTick;
   const sunOn = ability.style === "magic" && sunshineActive(mag.sunshine, at);
   const sunSelf = mag.sunshine.grantedByCast === snap.castSeq;
@@ -107,6 +111,7 @@ export function landHitIdentity(
     hitSpec.dotKind ?? "",
     hitSpec.bleedId ?? "",
     b(frostOn),
+    frostMass,
     b(berserkOn),
     ds,
     b(sunOn),

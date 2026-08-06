@@ -56,7 +56,11 @@ describe("hit reuse under multi-branch land identity", () => {
 
     runWithHitReuseScope(() => {
       const cold = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
-      rt.state = patchMelee(rt.state, { frostbladesUntilTick: 50 });
+      rt.state = patchMelee(rt.state, {
+        primordialIce: {
+          atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 50 }],
+        },
+      });
       const hot = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
       expect(hot).not.toBe(cold);
       expect(hot.damage.expected).toBeGreaterThan(cold.damage.expected);
@@ -76,7 +80,11 @@ describe("hit reuse under multi-branch land identity", () => {
 
     runWithHitReuseScope(() => {
       const a = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
-      rt.state = patchMelee(rt.state, { primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[7] = 1; return a; })(), expiresAtTick: 0 } });
+      rt.state = patchMelee(rt.state, {
+        primordialIce: {
+          atoms: [{ weight: 1, stacks: 7, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }],
+        },
+      });
       const b = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
       expect(b).toBe(a);
     });

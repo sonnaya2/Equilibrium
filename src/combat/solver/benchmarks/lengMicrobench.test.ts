@@ -34,7 +34,7 @@ describe.skipIf(!enabled)("leng microbench (score-only single bar)", () => {
     const leng = report.arms.find((a) => a.id === "leng-icy-context")!;
     const peer = report.arms.find((a) => a.id === "four-slot-fixed")!;
 
-    // Sim must run. Score-only dual Leng is residual-free EV approx (not full-tree).
+    // Sim must run. Dual Leng keeps exact sparse atoms through score-only paths.
     expect(leng.simOk).toBe(true);
     expect(peer.simOk).toBe(true);
     expect(peer.rankOk).toBe(true);
@@ -43,7 +43,7 @@ describe.skipIf(!enabled)("leng microbench (score-only single bar)", () => {
     expect(leng.wallMs).toBeGreaterThan(0);
     expect(peer.wallMs).toBeGreaterThan(0);
     expect(leng.totalExpected).toBeGreaterThan(0);
-    // Residual free compact mass spine (exact / merged-exactly).
+    // Sparse atom state is exact / merged-exactly.
     expect(leng.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
     expect(
       leng.exactness == null ||
@@ -55,7 +55,7 @@ describe.skipIf(!enabled)("leng microbench (score-only single bar)", () => {
 
     if (report.branchProf) {
       expect(leng.branchProfile).toBeDefined();
-      // Score-only Leng mass path: no multi-arm snapshotRuntime.
+      // Score-only Leng atom path: no multi-arm snapshotRuntime.
       expect(leng.branchProfile?.branchSnapshots ?? -1).toBe(0);
       expect(leng.branchProfile?.maxLiveBranches ?? 99).toBeLessThanOrEqual(1);
       expect((peer.branchProfile?.branchSnapshots ?? 0) === 0).toBe(true);

@@ -232,7 +232,7 @@ export function simulateRevolution(
     branches = capped.branches;
   }
 
-  // Compact Primordial Ice mass is residual-free and exact for stack physics;
+  // Sparse Primordial Ice atoms are residual-free and exact for stack physics;
   // no score-only Leng exactness downgrade.
   return combineBranchSummaries(
     branches,

@@ -10,7 +10,7 @@
 | Item | Class | Source |
 |------|-------|--------|
 | Backhand / Binding Shot / Impact charges | CONFIRMED_MISSING | wiki 2026-08-04: max 2 at level 54, 15s independent recovery |
-| Hurricane −3s per enemy hit (ST = 1) | CONFIRMED_MISSING | wiki Hurricane: 3s (5 ticks) per enemy hit |
+| Hurricane −3s per affected target (ST = 1) | FIXED | wiki Hurricane: 3s (5 ticks) per enemy hit; one target is one reduction per cast |
 | Overpower under Berserk 9s | already OK | cooldowns.ts + bloodlust.test.ts |
 | Ordinary CD / groups / resets | regression | must not change |
 
@@ -103,25 +103,25 @@ Minimal: after cast, state is source of truth; tests read `getState().charges`. 
 
 No special path if charges live only on `RotationState` (not on worker request). Identity fingerprints of abilities must include charges config via existing ability fingerprint if solver caches specs.
 
-## Hurricane CDR (corrected)
+## Hurricane CDR
 
-Wiki: −3s (5 ticks) **per enemy hit** (each damaging ability-hit instance).
+Wiki: −3s (5 ticks) per enemy affected by the cast. A multi-hit cast against one
+target grants one reduction; separate targets each grant one.
 
-Wiki consistency check (full CD 20.4s = 34 ticks; −5 ticks/hit):
-- Zero CD needs ~7 reductions (7 enemies without BL; body text).
-- With Bloodlust, 3 enemies zero CD: only holds if hit waves stack
-  (primary 3 waves + 2 secondaries x 2 waves = 7 reductions).
-
-**Wrong (Phase 1 first pass):** once per distinct target per cast (ST always −3s only).
-**Correct:** every successful hurricane ability land grants −3s (ST base −6s; BL ST −9s).
+Wiki consistency check (full CD 20.4s = 34 ticks; −5 ticks per target):
+- Zero CD needs ~7 affected targets.
+- Bloodlust adds a third hit to the same target; it does not add another ST reduction.
 
 ### Rules
 
 1. Cast still starts full 20.4s CD at commit.
-2. On each **landed** successful hurricane ability hit (`damage.max > 0`, not attached, not proc/bleed):
+2. On the first **landed** successful direct Hurricane hit for a target in a cast
+   (`damage.max > 0`, not attached, proc, bleed, DoT, or derived):
    - Reduce CD by 5 ticks: `ready = max(event.tick, ready - 5)`.
-3. Multi-target later: one land call per (hit, target); no distinct-target map required.
-4. No `hurricaneCdrTargets` state (ready tick on `cooldowns.hurricane` is enough for merge keys).
+3. Multi-target later: keep the marker target-owned so each target can accept the
+   cast once; do not infer target identity from `hitIndex`.
+4. The current ST runtime stores only the last Hurricane cast sequence on the
+   target, not a permanent per-hit set.
 
 ## Overpower / Berserk (regression only)
 
@@ -150,6 +150,7 @@ Do **not** mutate ability catalogue when Berserk activates.
 | `engine/runtime/charges.ts` | **new** if state.ts would bloat; else keep in state |
 | `engine/cast/effects/cooldowns.ts` | consumeCharge path + reduceCooldown export |
 | `engine/resolution/landed/melee.ts` | Hurricane CDR |
+| `styles/melee/effects.ts` / `engine/simulation/branchKey.ts` | target marker and branch identity |
 | `engine/simulation/branchKey.ts` | encode charges (+ hurricane cdr if on state) |
 | tests | new `cooldowns.charges.test.ts`, `hurricane.cdr.test.ts`, OP edge tests |
 
@@ -157,7 +158,7 @@ Do **not** mutate ability catalogue when Berserk activates.
 
 - Ordinary cooldowns unchanged (spot Assault / Sunshine group)
 - Overpower dynamic CD + Igneous + existing-CD edges
-- Hurricane ST −3s; Bloodlust form still −3s once
+- Hurricane ST −3s once; Bloodlust form still −3s once
 - Backhand / Binding Shot / Impact charge recovery
 - Charge snapshot isolation + branch equality
 - Revolution uses both charges; Manual/Revo parity

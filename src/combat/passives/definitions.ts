@@ -215,7 +215,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     lifecycle: ["landed-hit", "timed-runtime"],
     implementationOwners: [
       "styles/melee/lengRng.ts",
-      "styles/melee/lengDistribution.ts",
+      "styles/melee/primordialIce.ts",
       "engine/runtime/runtime.ts",
     ],
     effects: [
@@ -232,7 +232,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     lifecycle: ["landed-hit", "timed-runtime"],
     implementationOwners: [
       "styles/melee/lengRng.ts",
-      "styles/melee/lengDistribution.ts",
+      "styles/melee/primordialIce.ts",
       "engine/runtime/runtime.ts",
     ],
     effects: [

@@ -25,6 +25,7 @@ import {
   SLIVER_OF_EDICTS_ACTIVATE_ID,
   SLIVER_OF_EDICTS_ID,
   type NaragiActivationFailReason,
+  type NaragiRuntimeState,
   newNaragiRuntime,
 } from "./naragiEdict";
 
@@ -343,5 +344,3 @@ export function effectiveLevelFromState(
   }
   return baseLevel;
 }
-
-export { NARAGI_EDICT_RELIC, SLIVER_OF_EDICTS_ID, NARAGI_ACTIVE_DURATION_TICKS };

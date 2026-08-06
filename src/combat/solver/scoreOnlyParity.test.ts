@@ -9,8 +9,8 @@ import { scoreSummary } from "./objective";
 
 /**
  * Gate: score-only must not change ranking metrics vs full-analysis for
- * bookkeeping-only detail trimming. Dual-Leng score-only uses intentional EV
- * collapse (search approx) — see separate Leng case below.
+ * bookkeeping-only detail trimming. Dual-Leng score-only keeps the sparse atom
+ * state exact; see the Leng case below.
  */
 
 const auto = MELEE_ABILITIES.find((a) => a.autoAttack && a.style === "melee")!;
@@ -91,8 +91,7 @@ describe("score-only oracle parity (gate)", () => {
     expect(scoreOnly.metrics?.dpm).toBeCloseTo(full.metrics?.dpm ?? NaN, 10);
   });
 
-  it("Leng dual-wield: score-only and full-analysis share compact mass spine", () => {
-    // expandLengOnLand is in-place stackMass + frostOpenMass for both detail levels.
+  it("Leng dual-wield: score-only and full-analysis share sparse atom state", () => {
     const abilities = MELEE_ABILITIES;
     const sim = {
       base: 1000,

@@ -2,7 +2,6 @@ import type { HitResult } from "../../pipeline/calculateHit";
 import type { ActiveConjure } from "../../styles/necromancy/conjures";
 import { spiritPoisonPending } from "../../styles/necromancy/conjures";
 import { endBerserk } from "../../styles/melee/bloodlust";
-import { normalizeLengFrostUntil } from "../../styles/melee/lengRng";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import { activePuncture } from "../../styles/ranged/puncture";
 import {
@@ -293,14 +292,20 @@ function encodeState(state: RotationState): string {
     n(erBonus),
     n(erUntil),
     n(erGranted),
-    // Primordial Ice: expired-normalized stack mass + expiry + frost open mass.
+    // Leng atoms: weight plus every future-relevant stack/Frostblades field.
     (() => {
       const ice = expirePrimordialIce(m.primordialIce, tick);
-      return ice.stackMass.map((w) => n(w)).join(US) + US + n(ice.expiresAtTick);
+      return ice.atoms
+        .map((atom) =>
+          [
+            n(atom.weight),
+            n(atom.stacks),
+            n(atom.stacksExpireAtTick),
+            n(atom.frostbladesExpireAtTick),
+          ].join(FS),
+        )
+        .join(US);
     })(),
-    n(m.frostbladesOpenMass ?? 0),
-    // Expired frost ≡ 0 (same as expand / completeAdvance).
-    n(normalizeLengFrostUntil(m.frostbladesUntilTick, tick)),
     // ranged
     n(r.swiftness.startsAtTick),
     n(r.swiftness.expiresAtTick),
@@ -367,6 +372,7 @@ function encodeState(state: RotationState): string {
     n(tm.abyssalParasite.expiresAtTick),
     n(tm.abyssalParasite.nextDamageTick),
     n(tm.abyssalParasite.scheduledThroughTick),
+    n(tm.lastHurricaneCdrCast),
     n(targetErVuln),
     n(targetErUntil),
     n(hauntedUntil),
@@ -534,9 +540,8 @@ export function branchKeyJson(rt: SimulationRuntime): string {
         untilTick: erUntil,
         grantedByCast: erUntil > 0 ? m.enduringRuin.grantedByCast : -1,
       },
-      // Match structural: expired ice -> empty unit mass (Icy Tempest / Leng future).
+      // Match structural: normalize expired Leng atoms before JSON comparison.
       primordialIce: expirePrimordialIce(m.primordialIce, tick),
-      frostbladesUntilTick: normalizeLengFrostUntil(m.frostbladesUntilTick, tick),
     },
     ranged: {
       ...r,

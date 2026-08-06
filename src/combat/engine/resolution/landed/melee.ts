@@ -15,13 +15,7 @@ import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMelee, patchTarget } from "../../runtime/state";
 import { reduceCooldown } from "../../cast/effects/cooldowns";
 
-/**
- * Wiki Hurricane (Combat Style Modernisation): -3s (5 ticks) CD per enemy hit.
- * Each damaging ability hit instance grants one reduction (hit1 / hit2 / BL hit3
- * on the same primary each count). That matches wiki: 7 enemies zero the CD;
- * Bloodlust needs only 3 (primary 3 waves + 2 secondaries x 2 waves = 7).
- * Attached / proc / DoT tails never reduce.
- */
+/** Wiki Hurricane: -3s (5 ticks) per affected target per cast. */
 const HURRICANE_CDR_TICKS = secondsToTicks(3);
 
 function resolveParasiteDamage(rt: SimulationRuntime, at: number) {
@@ -153,7 +147,7 @@ export function onMeleeHitLanded(
     });
   }
 
-  applyHurricaneHitCdr(rt, event, damage);
+  applyHurricaneTargetCdr(rt, event, damage);
 
   const mayStack =
     hasPassive(rt.input.equipmentEffects, "abyssal-parasite") &&
@@ -167,12 +161,7 @@ export function onMeleeHitLanded(
   // (simulation/lengLandBranch.ts), not a per-seq hash roll.
 }
 
-/**
- * Each successful Hurricane ability hit reduces CD by 5 ticks (floored at land tick).
- * Multi-target later: one call per (hit, target) damage application; ST model is
- * one target so N ability hits => N reductions.
- */
-function applyHurricaneHitCdr(
+function applyHurricaneTargetCdr(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
@@ -180,7 +169,14 @@ function applyHurricaneHitCdr(
   if (event.abilityId !== "hurricane") return;
   if (damage.max <= 0 || event.attached) return;
   if (event.originKind === "proc" || event.dotKind != null) return;
+  if (event.bleedId != null || event.derivedFrom != null) return;
+  if (!capabilitiesOf(event.provenance).directHit) return;
   if (event.sourceCast < 0) return;
 
+  const target = rt.state.target.melee;
+  if (target.lastHurricaneCdrCast === event.sourceCast) return;
+  rt.state = patchTarget(rt.state, {
+    melee: { ...target, lastHurricaneCdrCast: event.sourceCast },
+  });
   rt.state = reduceCooldown(rt.state, "hurricane", HURRICANE_CDR_TICKS, event.tick);
 }

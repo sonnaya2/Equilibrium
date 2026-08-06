@@ -1,140 +1,150 @@
-/**
- * Compact Primordial Ice mass (11 bins + shared expiry) for Leng lands.
- * Carry full stack distribution so Icy Tempest spend/bands never floor E[stacks].
- */
 import { secondsToTicks } from "../../core/ticks";
-import {
-  LENG_BOUNDLESS_CHILL_CHANCE,
-  LENG_ENDLESS_FROST_CHANCE,
-  PRIMORDIAL_ICE_CAP,
-} from "./effects";
-import {
-  type CompiledLengLandTable,
-  FROSTBLADES_DURATION_TICKS,
-} from "./lengRng";
+import { PRIMORDIAL_ICE_CAP } from "./effects";
+import { FROSTBLADES_DURATION_TICKS, type CompiledLengLandTable } from "./lengRng";
 
-/** Wiki: 2 minutes from gaining a stack (or until Icy Tempest consumes). */
 export const PRIMORDIAL_ICE_DURATION_SECONDS = 120;
 export const PRIMORDIAL_ICE_DURATION_TICKS = secondsToTicks(PRIMORDIAL_ICE_DURATION_SECONDS);
 export const PRIMORDIAL_ICE_BINS = PRIMORDIAL_ICE_CAP + 1;
 
-export interface PrimordialIceDistribution {
-  /** Probability mass on stacks 0..PRIMORDIAL_ICE_CAP (length 11). */
-  readonly stackMass: readonly number[];
-  /** Exclusive end tick of the shared stack timer; 0 = empty / inactive. */
-  readonly expiresAtTick: number;
+export interface LengAtom {
+  readonly weight: number;
+  readonly stacks: number;
+  readonly stacksExpireAtTick: number;
+  readonly frostbladesExpireAtTick: number;
 }
 
-const ZERO_MASS: readonly number[] = Object.freeze(
-  Array.from({ length: PRIMORDIAL_ICE_BINS }, (_, i) => (i === 0 ? 1 : 0)),
-);
+export interface PrimordialIceDistribution {
+  readonly atoms: readonly LengAtom[];
+}
+
+const EMPTY_ATOMS: readonly LengAtom[] = Object.freeze([
+  Object.freeze({
+    weight: 1,
+    stacks: 0,
+    stacksExpireAtTick: 0,
+    frostbladesExpireAtTick: 0,
+  }),
+]);
+
+function clampStacks(stacks: number): number {
+  return Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
+}
+
+function atomKey(atom: Pick<LengAtom, "stacks" | "stacksExpireAtTick" | "frostbladesExpireAtTick">): string {
+  return `${atom.stacks}|${atom.stacksExpireAtTick}|${atom.frostbladesExpireAtTick}`;
+}
+
+function addAtom(atoms: Map<string, LengAtom>, atom: LengAtom): void {
+  if (!(atom.weight > 0)) return;
+  const key = atomKey(atom);
+  const existing = atoms.get(key);
+  if (existing) atoms.set(key, { ...existing, weight: existing.weight + atom.weight });
+  else atoms.set(key, atom);
+}
+
+function sortedAtoms(atoms: Map<string, LengAtom>): LengAtom[] {
+  return [...atoms.values()].sort(
+    (a, b) =>
+      a.stacks - b.stacks ||
+      a.stacksExpireAtTick - b.stacksExpireAtTick ||
+      a.frostbladesExpireAtTick - b.frostbladesExpireAtTick,
+  );
+}
 
 export function emptyPrimordialIce(): PrimordialIceDistribution {
-  return { stackMass: ZERO_MASS, expiresAtTick: 0 };
+  return { atoms: EMPTY_ATOMS };
 }
 
 export function unitPrimordialIce(
   stacks: number,
-  expiresAtTick = 0,
+  stacksExpireAtTick = 0,
+  frostbladesExpireAtTick = 0,
 ): PrimordialIceDistribution {
-  const s = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
-  const mass = new Array<number>(PRIMORDIAL_ICE_BINS).fill(0);
-  mass[s] = 1;
-  return { stackMass: mass, expiresAtTick };
+  return {
+    atoms: [
+      {
+        weight: 1,
+        stacks: clampStacks(stacks),
+        stacksExpireAtTick,
+        frostbladesExpireAtTick,
+      },
+    ],
+  };
 }
 
-export function massSum(mass: readonly number[]): number {
-  let s = 0;
-  for (const w of mass) s += w;
-  return s;
+export function massSum(atoms: readonly LengAtom[]): number {
+  let total = 0;
+  for (const atom of atoms) total += atom.weight;
+  return total;
 }
 
-export function expectedStacksFromMass(mass: readonly number[]): number {
-  let e = 0;
-  for (let i = 0; i < mass.length; i++) e += i * (mass[i] ?? 0);
-  return e;
+export function expectedStacksFromAtoms(atoms: readonly LengAtom[]): number {
+  let expected = 0;
+  for (const atom of atoms) expected += atom.weight * atom.stacks;
+  return expected;
 }
 
-/** Independent EF / BC product mass on +0 / +1 / +2 stack adds (from 0). */
-export function lengProcChances(
-  hasEF: boolean,
-  hasBC: boolean,
-): { p0: number; p1: number; p2: number } {
-  const pEf = hasEF ? LENG_ENDLESS_FROST_CHANCE : 0;
-  const pBc = hasBC ? LENG_BOUNDLESS_CHILL_CHANCE : 0;
-  const p0 = (1 - pEf) * (1 - pBc);
-  const p1 = pEf * (1 - pBc) + (1 - pEf) * pBc;
-  const p2 = pEf * pBc;
-  return { p0, p1, p2 };
-}
-
-/**
- * Zero stack mass when the shared timer has closed at `tick`.
- * `expiresAtTick <= tick` (and > 0) -> empty unit mass at 0.
- */
 export function expirePrimordialIce(
   dist: PrimordialIceDistribution,
   tick: number,
 ): PrimordialIceDistribution {
-  if (dist.expiresAtTick > 0 && dist.expiresAtTick <= tick) {
-    return emptyPrimordialIce();
+  const merged = new Map<string, LengAtom>();
+  for (const atom of dist.atoms) {
+    const stacksLive = atom.stacksExpireAtTick > tick;
+    const stacks = stacksLive ? clampStacks(atom.stacks) : 0;
+    addAtom(merged, {
+      weight: atom.weight,
+      stacks,
+      stacksExpireAtTick: stacksLive && stacks > 0 ? atom.stacksExpireAtTick : 0,
+      frostbladesExpireAtTick:
+        atom.frostbladesExpireAtTick > tick ? atom.frostbladesExpireAtTick : 0,
+    });
   }
-  return dist;
+  const atoms = sortedAtoms(merged);
+  return atoms.length > 0 ? { atoms } : { atoms: [] };
 }
 
-/**
- * One Leng land on compact stack mass via compiled EF x BC table.
- * Refreshes shared expiry only when some start mass can actually gain stacks.
- */
+export function activeFrostbladesMass(dist: PrimordialIceDistribution, tick: number): number {
+  let active = 0;
+  for (const atom of dist.atoms) {
+    if (atom.frostbladesExpireAtTick > tick) active += atom.weight;
+  }
+  return active;
+}
+
 export function applyLengLandToDistribution(
   dist: PrimordialIceDistribution,
   table: CompiledLengLandTable,
   tick: number,
 ): PrimordialIceDistribution {
   const live = expirePrimordialIce(dist, tick);
-  const out = new Array<number>(PRIMORDIAL_ICE_BINS).fill(0);
-  let canGain = false;
-  for (let s = 0; s <= PRIMORDIAL_ICE_CAP; s++) {
-    const w = live.stackMass[s] ?? 0;
-    if (!(w > 0)) continue;
-    const rows = table.byStartStacks[s]!;
-    for (const row of rows) {
-      out[row.stacks]! += w * row.weight;
-      if (row.stacks > s) canGain = true;
+  const merged = new Map<string, LengAtom>();
+  for (const atom of live.atoms) {
+    for (const arm of table.arms) {
+      addAtom(merged, {
+        weight: atom.weight * arm.weight,
+        stacks: Math.min(PRIMORDIAL_ICE_CAP, atom.stacks + arm.stackAdd),
+        stacksExpireAtTick:
+          arm.stackAdd > 0 ? tick + PRIMORDIAL_ICE_DURATION_TICKS : atom.stacksExpireAtTick,
+        frostbladesExpireAtTick:
+          arm.opensFrostblades ? tick + FROSTBLADES_DURATION_TICKS : atom.frostbladesExpireAtTick,
+      });
     }
   }
-  return {
-    stackMass: out,
-    expiresAtTick: canGain ? tick + PRIMORDIAL_ICE_DURATION_TICKS : live.expiresAtTick,
-  };
+  const atoms = sortedAtoms(merged);
+  return atoms.length > 0 ? { atoms } : { atoms: [] };
 }
 
-/**
- * Compact Frostblades update on Leng land.
- * openMass = P(window active); until is the spine end tick (chill refreshes full duration).
- */
-export function applyFrostbladesOnLand(
-  frostbladesUntilTick: number,
-  frostbladesOpenMass: number,
-  table: CompiledLengLandTable,
-  tick: number,
-): { frostbladesUntilTick: number; frostbladesOpenMass: number } {
-  const priorActive = frostbladesUntilTick > tick;
-  const priorOpen = priorActive
-    ? Math.min(1, Math.max(0, frostbladesOpenMass > 0 ? frostbladesOpenMass : 1))
-    : 0;
-  let pChill = 0;
-  for (const arm of table.arms) {
-    if (arm.opensFrostblades) pChill += arm.weight;
+export function consumePrimordialIce(dist: PrimordialIceDistribution): PrimordialIceDistribution {
+  const merged = new Map<string, LengAtom>();
+  for (const atom of dist.atoms) {
+    addAtom(merged, {
+      weight: atom.weight,
+      stacks: 0,
+      stacksExpireAtTick: 0,
+      frostbladesExpireAtTick: atom.frostbladesExpireAtTick,
+    });
   }
-  const nextOpen = priorOpen + (1 - priorOpen) * pChill;
-  let nextUntil = 0;
-  if (nextOpen > 0) {
-    if (pChill > 0) nextUntil = tick + FROSTBLADES_DURATION_TICKS;
-    else nextUntil = frostbladesUntilTick;
-  }
-  return {
-    frostbladesUntilTick: nextUntil,
-    frostbladesOpenMass: nextOpen > 0 ? nextOpen : 0,
-  };
+  const atoms = sortedAtoms(merged);
+  return atoms.length > 0 ? { atoms } : { atoms: [] };
 }

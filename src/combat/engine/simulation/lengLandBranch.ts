@@ -1,7 +1,6 @@
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
 import {
-  applyFrostbladesOnLand,
   applyLengLandToDistribution,
   expirePrimordialIce,
 } from "../../styles/melee/primordialIce";
@@ -41,27 +40,7 @@ import {
  */
 export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES * 2;
 
-/**
- * Zero expired Frostblades against `atTick` (logical now during advance).
- * Clears open-mass with the window so damage scaling does not outlive until.
- */
-function expireFrostOnBranches(branches: readonly Branch[], atTick: number): boolean {
-  let cleared = false;
-  for (const b of branches) {
-    const frost = b.rt.state.melee.frostbladesUntilTick;
-    if (frost > 0 && frost <= atTick) {
-      b.rt.state = patchMelee(b.rt.state, {
-        frostbladesUntilTick: 0,
-        frostbladesOpenMass: 0,
-      });
-      cleared = true;
-    }
-  }
-  return cleared;
-}
-
-/** Expire Primordial Ice stack mass when the shared timer has closed at `atTick`. */
-function expireStacksOnBranches(branches: readonly Branch[], atTick: number): boolean {
+function normalizeLengOnBranches(branches: readonly Branch[], atTick: number): boolean {
   let cleared = false;
   for (const b of branches) {
     const ice = b.rt.state.melee.primordialIce;
@@ -90,25 +69,13 @@ export function isLengEligibleLand(
 }
 
 /**
- * In-place Leng land: compact stack distribution + frost open-mass spine.
- * No multi-arm fork; damage ledger already recorded before expand.
+ * In-place Leng land: sparse coupled stack/Frostblades atoms.
  */
 function applyLengLandInPlace(rt: SimulationRuntime, tick: number): void {
   const table = rt.lengLandTable;
   if (!table) return;
-  const melee = rt.state.melee;
-  const dist = expirePrimordialIce(melee.primordialIce, tick);
-  const nextDist = applyLengLandToDistribution(dist, table, tick);
-  const frost = applyFrostbladesOnLand(
-    melee.frostbladesUntilTick,
-    melee.frostbladesOpenMass ?? 0,
-    table,
-    tick,
-  );
   rt.state = patchMelee(rt.state, {
-    primordialIce: nextDist,
-    frostbladesUntilTick: frost.frostbladesUntilTick,
-    frostbladesOpenMass: frost.frostbladesOpenMass,
+    primordialIce: applyLengLandToDistribution(rt.state.melee.primordialIce, table, tick),
   });
 }
 
@@ -151,14 +118,6 @@ function completeAdvance(rt: SimulationRuntime, fromTick: number, targetTick: nu
     });
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
-  // Expired Frostblades -> 0 so post-window futures merge (proven equivalence).
-  const frost = rt.state.melee.frostbladesUntilTick;
-  if (frost > 0 && frost <= rt.state.tick) {
-    rt.state = patchMelee(rt.state, {
-      frostbladesUntilTick: 0,
-      frostbladesOpenMass: 0,
-    });
-  }
   const ice = expirePrimordialIce(rt.state.melee.primordialIce, rt.state.tick);
   if (ice !== rt.state.melee.primordialIce) {
     rt.state = patchMelee(rt.state, { primordialIce: ice });
@@ -381,12 +340,11 @@ function advanceToBranchesInner(
       }
     }
 
-    const frostExpired = expireFrostOnBranches(next, minTick);
-    const stacksExpired = expireStacksOnBranches(next, minTick);
+    const lengNormalized = normalizeLengOnBranches(next, minTick);
     noteBranchLiveCount(next.length);
 
     if (!expandedAny && next.length <= maxLive) {
-      if ((frostExpired || stacksExpired) && next.length > 1) {
+      if (lengNormalized && next.length > 1) {
         const folded = exactMergeLive(next, exactness);
         live = folded.branches;
         exactness = folded.exactness;
@@ -396,7 +354,7 @@ function advanceToBranchesInner(
       continue;
     }
     if (next.length <= maxLive) {
-      if ((frostExpired || stacksExpired) && next.length > 1) {
+      if (lengNormalized && next.length > 1) {
         const folded = exactMergeLive(next, exactness);
         live = folded.branches;
         exactness = folded.exactness;

@@ -135,16 +135,12 @@ export function spendOf(
   tick: number,
   ammo?: "deathspore" | "splintering",
 ): number {
-  // Icy Tempest: discrete stack mass -> Vigour. Always returns an integer spend group.
-  // Mixed mass uses the heaviest-probability group (representative single-runtime).
-  // Full spend distribution / E[spend]: resolveIcyTempest / planCastOutcomes.
+  // Icy Tempest: resolve the expected spend for display and prepare-only callers.
+  // Concrete casts use planCastOutcomes to retain integer spend groups.
   if (ability.id === "icy_tempest") {
     if (avernicFree(state, tick)) return 0;
     const resolved = resolveIcyTempest(state.melee.primordialIce, tick, state.ringOfVigour);
-    if (resolved.spendDistribution.length === 0) return 0;
-    return resolved.spendDistribution.reduce((a, b) =>
-      a.probability >= b.probability ? a : b,
-    ).spend;
+    return resolved.expectedSpend;
   }
 
   const cost = costOf(state, ability, tick);

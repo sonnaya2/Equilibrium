@@ -1,6 +1,6 @@
 /**
  * Single source for Icy Tempest damage bands, requirement, and adrenaline spend.
- * Resolves from a discrete Primordial Ice distribution — never floors E[stacks].
+ * Resolves from a discrete Primordial Ice distribution; never floors E[stacks].
  */
 import { resolveSpecialAttackAdrenalineCost } from "../../shared/ringOfVigour";
 import {
@@ -14,7 +14,7 @@ import {
 } from "./effects";
 import {
   PRIMORDIAL_ICE_BINS,
-  expectedStacksFromMass,
+  expectedStacksFromAtoms,
   type PrimordialIceDistribution,
   expirePrimordialIce,
 } from "./primordialIce";
@@ -34,7 +34,6 @@ export interface ResolvedIcyTempest {
   readonly expectedSpend: number;
   readonly spendDistribution: readonly IcyTempestSpendGroup[];
   readonly expectedHits: readonly IcyTempestHitBand[];
-  readonly stackMassConsumed: readonly number[];
   readonly expectedStacks: number;
 }
 
@@ -78,20 +77,19 @@ export function resolveIcyTempest(
   ringOfVigour: boolean,
 ): ResolvedIcyTempest {
   const live = expirePrimordialIce(dist, tick);
-  const mass = live.stackMass;
-  const eStacks = expectedStacksFromMass(mass);
+  const eStacks = expectedStacksFromAtoms(live.atoms);
 
   const groups = new Map<number, { prob: number; eStacks: number }>();
-  for (let s = 0; s <= PRIMORDIAL_ICE_CAP; s++) {
-    const p = mass[s] ?? 0;
+  for (const atom of live.atoms) {
+    const spend = icyTempestSpendAfterVigour(atom.stacks, ringOfVigour);
+    const p = atom.weight;
     if (!(p > 0)) continue;
-    const spend = icyTempestSpendAfterVigour(s, ringOfVigour);
     const g = groups.get(spend);
     if (g) {
       g.prob += p;
-      g.eStacks += s * p;
+      g.eStacks += atom.stacks * p;
     } else {
-      groups.set(spend, { prob: p, eStacks: s * p });
+      groups.set(spend, { prob: p, eStacks: atom.stacks * p });
     }
   }
 
@@ -105,31 +103,11 @@ export function resolveIcyTempest(
   }
   spendDistribution.sort((a, b) => b.spend - a.spend || b.probability - a.probability);
 
-  if (spendDistribution.length === 0) {
-    spendDistribution.push({
-      spend: icyTempestSpendAfterVigour(0, ringOfVigour),
-      probability: 1,
-      expectedStacks: 0,
-    });
-    expectedSpend = spendDistribution[0]!.spend;
-  }
-
-  const stackMassConsumed =
-    mass.length === PRIMORDIAL_ICE_BINS
-      ? mass
-      : (() => {
-          const out = new Array<number>(PRIMORDIAL_ICE_BINS).fill(0);
-          for (let i = 0; i < Math.min(mass.length, PRIMORDIAL_ICE_BINS); i++) out[i] = mass[i]!;
-          if (out.every((x) => !(x > 0))) out[0] = 1;
-          return out;
-        })();
-
   return {
     requirement: icyTempestRequirement(ringOfVigour),
     expectedSpend,
     spendDistribution,
     expectedHits: icyTempestHitsLinear(eStacks),
-    stackMassConsumed,
     expectedStacks: eStacks,
   };
 }

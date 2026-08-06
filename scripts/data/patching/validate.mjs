@@ -17,6 +17,7 @@ const ENTITY_FIELDS = new Set([
   "verified_at",
   "status",
   "sort_key",
+  "created_source",
 ]);
 const SOURCE_FIELDS = new Set([
   "url",

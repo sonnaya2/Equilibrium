@@ -38,7 +38,7 @@
 
 | ID / system | Class | Expected (wiki / product) | Actual | Repro design | Layer | Phase |
 |-------------|-------|---------------------------|--------|--------------|-------|-------|
-| **Hurricane CD reduce** | **CONFIRMED_MISSING** | −3s CD per enemy hit; primary is hit → ST should still −3s | Always starts full 20.4s CD | Cast Hurricane at tick T; assert `cooldowns.hurricane === T + ticks(17.4)` not `T + ticks(20.4)` | `cast/effects/cooldowns.ts` / landed | Melee runtime |
+| **Hurricane CD reduce** | **FIXED** | −3s CD per affected enemy target; a single target grants one reduction even when Hurricane has multiple hits | Previously reduced per hitsplat | Cast Hurricane at tick T; assert `cooldowns.hurricane === T + ticks(17.4)` not `T + ticks(20.4)` | `cast/effects/cooldowns.ts` / landed | Melee runtime |
 | **Backhand charges** | **CONFIRMED_MISSING** | 2 charges @ 54 Attack, independent recovery on 15s | Single CD slot; no charge map | Cast twice inside 15s at legal level; expect second cast legal | `RotationState` + branchKey + CD | Charges system |
 | **Binding Shot charges** | **CONFIRMED_MISSING** | Wiki: second charge at rank/level gate | Single 15s CD | Same as Backhand | charges | Charges system |
 | **Impact charges** | **CONFIRMED_MISSING** | Wiki: second charge | Single 15s CD | Same | charges | Charges system |
@@ -281,9 +281,9 @@ All repros use **public** `simulate` / `simulateRevolution` / `createCastContext
 ```text
 Input: melee loadout, startingAdren 25+, cast hurricane at candidate T
 Expected: cooldowns["hurricane"] = T + secondsToTicks(17.4)
-Actual:   T + secondsToTicks(20.4)
+Actual before fix: per-hitsplat reduction, T + secondsToTicks(14.4) for base ST
 Timeline: CD start at commit; no land-time CD patch
-Mismatch: missing −3s for primary hit
+Mismatch: same-target Hurricane hits were each reducing the cooldown
 Source: wiki Hurricane
 Layer: cast/effects/cooldowns.ts or landed/melee
 Phase: melee runtime

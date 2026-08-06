@@ -130,25 +130,20 @@ Goal: **identical ranking metrics**, not identical object graphs.
   beyond skipping analysis/history
 - Benchmark numbers (alloc / wall-time) not yet re-baselined under score-only
 
-## Leng score-only EV collapse (search exception)
+## Leng score-only state
 
-Dual-Leng land RNG (Endless Frost x Boundless Chill) is **state-changing** and
-normally multi-branches every eligible land. On `detailLevel: "score-only"`
-only, `expandLengOnLand` collapses arms to a single in-place EV state:
+Dual-Leng land RNG (Endless Frost x Boundless Chill) is state-changing. Every
+detail level carries the same sparse Leng atoms, keyed by stack count, stack
+expiry, and Frostblades expiry. Identical atoms merge by summing weight; expiry
+cohorts never collapse into a shared timer.
 
-- `E[stacks]` + `E[frostUntil]` via `expectedLengLandState` (`lengDistribution`)
-- `residualWeight = 0` (mass folded into EV, not discarded onto a survivor)
-- `exactness = bounded-approximation` (summary wire: `approximated`)
-- **zero** `snapshotRuntime` from the Leng expand path
-
-This is an intentional **search approximation**, not bookkeeping parity with
-full-analysis. Full-analysis / summary still multi-arm fork. Full robust
-`scoreSummary` still hard-fails non-exact exactness (no residual laundering).
-Winner presentation re-sims at full-analysis.
+Score-only uses the same exact atom transitions as full-analysis. Icy Tempest
+keeps integer stack cohorts in the branch planner and only uses weighted stack
+expectations for presentation paths. No heaviest atom or fractional stack state
+is used as a representative for a concrete cast.
 
 ## Non-goals
 
 - Silent EV shortcuts on full-analysis / summary detail levels
-- Ranking residual / approximated mass as exact robust scores
-- Claiming score-only dual-Leng totals equal the multi-arm tree
+- Ranking residual mass as exact robust scores
 - Shipping score-only as the public combat inspector default

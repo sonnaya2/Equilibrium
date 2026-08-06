@@ -13,18 +13,18 @@ import {
 } from "../../shared/ringOfVigour";
 import { costOf, spendOf } from "./rules";
 import { prepareCast } from "./prepare";
+import { unitPrimordialIce, type PrimordialIceDistribution } from "../../styles/melee/primordialIce";
+import { PRIMORDIAL_ICE_DURATION_TICKS } from "../../styles/melee/primordialIce";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 
 function unitIce(stacks: number) {
-  const a = Array(11).fill(0);
-  a[Math.max(0, Math.min(10, Math.floor(stacks)))] = 1;
-  return { stackMass: a, expiresAtTick: 0 };
+  return unitPrimordialIce(stacks, PRIMORDIAL_ICE_DURATION_TICKS);
 }
 
 function runtime(opts: {
   ringOfVigour?: boolean;
   primordialIceStacks?: number;
-  primordialIce?: { stackMass: number[]; expiresAtTick: number };
+  primordialIce?: PrimordialIceDistribution;
   startingAdrenaline?: number;
 }) {
   const equipmentEffects = activeEquipmentEffects({
@@ -117,14 +117,14 @@ describe("Icy Tempest: stacks then Vigour; requirement unchanged by stacks", () 
   const tempest = () => byId("icy_tempest");
 
   it("0 stacks: cost and spend both 27 under Vigour", () => {
-    const rt = runtime({ ringOfVigour: true, primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[0] = 1; return a; })(), expiresAtTick: 0 } });
+    const rt = runtime({ ringOfVigour: true, primordialIce: unitIce(0) });
     expect(costOf(rt.state, tempest(), 0)).toBe(27);
     expect(spendOf(rt.state, tempest(), 0)).toBe(27);
   });
 
   it("1 stack: requirement 27, spend 17 (18 then floor-discount)", () => {
     // stack spend 30-12=18; Vigour 18-floor(1.8)=17
-    const rt = runtime({ ringOfVigour: true, primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[1] = 1; return a; })(), expiresAtTick: 0 } });
+    const rt = runtime({ ringOfVigour: true, primordialIce: unitIce(1) });
     expect(icyTempestSpend(1)).toBe(18);
     expect(resolveSpecialAttackAdrenalineCost(18, true)).toBe(17);
     expect(costOf(rt.state, tempest(), 0)).toBe(27);
@@ -132,7 +132,7 @@ describe("Icy Tempest: stacks then Vigour; requirement unchanged by stacks", () 
   });
 
   it("2 stacks: requirement 27, spend 6 (floor(6*0.1)=0 so no further cut)", () => {
-    const rt = runtime({ ringOfVigour: true, primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[2] = 1; return a; })(), expiresAtTick: 0 } });
+    const rt = runtime({ ringOfVigour: true, primordialIce: unitIce(2) });
     expect(icyTempestSpend(2)).toBe(6);
     expect(resolveSpecialAttackAdrenalineCost(6, true)).toBe(6);
     expect(costOf(rt.state, tempest(), 0)).toBe(27);
@@ -140,20 +140,20 @@ describe("Icy Tempest: stacks then Vigour; requirement unchanged by stacks", () 
   });
 
   it("3+ stacks: requirement still 27 under Vigour; spend 0", () => {
-    const rt = runtime({ ringOfVigour: true, primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[3] = 1; return a; })(), expiresAtTick: 0 } });
+    const rt = runtime({ ringOfVigour: true, primordialIce: unitIce(3) });
     expect(icyTempestSpend(3)).toBe(0);
     expect(costOf(rt.state, tempest(), 0)).toBe(27);
     expect(spendOf(rt.state, tempest(), 0)).toBe(0);
   });
 
   it("without Vigour: requirement 30, spend stack-reduced only", () => {
-    const rt = runtime({ ringOfVigour: false, primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[2] = 1; return a; })(), expiresAtTick: 0 } });
+    const rt = runtime({ ringOfVigour: false, primordialIce: unitIce(2) });
     expect(costOf(rt.state, tempest(), 0)).toBe(30);
     expect(spendOf(rt.state, tempest(), 0)).toBe(6);
   });
 
   it("prepareCast mirrors costOf/spendOf for stacked tempest", () => {
-    const rt = runtime({ ringOfVigour: true, primordialIce: { stackMass: (() => { const a = Array(11).fill(0); a[1] = 1; return a; })(), expiresAtTick: 0 } });
+    const rt = runtime({ ringOfVigour: true, primordialIce: unitIce(1) });
     const prepared = prepareCast(rt, tempest(), 0);
     expect(prepared.cost).toBe(27);
     expect(prepared.spend).toBe(17);

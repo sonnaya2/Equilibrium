@@ -34,6 +34,13 @@ const validation = await load<{
   validateOperation: (operation: unknown, context: string) => Record<string, unknown>;
 }>("patching/validate.mjs");
 
+const dataValidation = await load<{
+  futureVerificationRecords: (
+    records: Array<{ source_file: string; record_path: string; raw_json: string }>,
+    currentDate: string,
+  ) => Array<Record<string, unknown>>;
+}>("validate.mjs");
+
 const queries = await load<{
   runReadOnlyQuery: (db: DatabaseSync, options: { sql: string; limit: number }) => unknown[];
   entityOverlaps: (db: DatabaseSync) => {
@@ -193,6 +200,9 @@ describe("patch validation", () => {
   });
 
   it("allows only canonical column names in a set", () => {
+    expect(
+      validate({ op: "upsert", entity: "item:x", set: { created_source: "patch:source.jsonl" } }),
+    ).toMatchObject({ set: { created_source: "patch:source.jsonl" } });
     expect(() => validate({ op: "upsert", entity: "item:x", set: { title: "A" } })).toThrow(
       /unsupported set fields: title/,
     );
@@ -299,6 +309,30 @@ describe("patch validation", () => {
         validate({ op: "link-source", entity: "item:x", source: "source:y", order }),
       ).toThrow(/non-negative integer/);
     }
+  });
+});
+
+describe("verification dates", () => {
+  it("rejects dates after the injected build date deterministically", () => {
+    const records = [
+      {
+        source_file: "data/combat/equipment.json",
+        record_path: "$.records[1]",
+        raw_json: JSON.stringify({
+          verified_at: "2026-08-06",
+          sources: [{ verifiedAt: "2026-08-05" }],
+        }),
+      },
+    ];
+    expect(dataValidation.futureVerificationRecords(records, "2026-08-05")).toEqual([
+      {
+        source_file: "data/combat/equipment.json",
+        record_path: "$.records[1]",
+        field: "$.verified_at",
+        verifiedAt: "2026-08-06",
+        currentDate: "2026-08-05",
+      },
+    ]);
   });
 });
 

@@ -79,12 +79,15 @@ export interface MeleeTargetEffects {
   bleeds: Partial<Record<BleedId, number>>;
   abyssalParasite: AbyssalParasiteState;
   enduringRuin: { bleedVulnerability: number; untilTick: number };
+  /** Last Hurricane cast that reduced this target's cooldown. */
+  lastHurricaneCdrCast: number;
 }
 
 export const newMeleeTargetEffects = (): MeleeTargetEffects => ({
   bleeds: {},
   abyssalParasite: { stacks: 0, expiresAtTick: 0, nextDamageTick: 0, scheduledThroughTick: 0 },
   enduringRuin: { bleedVulnerability: 0, untilTick: 0 },
+  lastHurricaneCdrCast: -1,
 });
 
 export function activeBleedCount(target: MeleeTargetEffects, at: number): number {
@@ -138,16 +141,9 @@ export interface MeleeRotationState {
   bleedChainUntilTick: number;
   enduringRuin: { nextAttackBonus: number; untilTick: number; grantedByCast: number };
   /**
-   * Compact Primordial Ice distribution (11 bins + expiry).
-   * Never store a fractional E[stacks] scalar for cast-time spend/bands.
+   * Sparse probability atoms retain stack and Frostblades expiry cohorts.
    */
   primordialIce: PrimordialIceDistribution;
-  /** Frostblades window end (0 = inactive). Active while tick < until. */
-  frostbladesUntilTick: number;
-  /**
-   * Probability mass that Frostblades is active (0..1). Damage flat scales by this.
-   */
-  frostbladesOpenMass: number;
 }
 
 export const newMeleeRotationState = (): MeleeRotationState => ({
@@ -162,11 +158,8 @@ export const newMeleeRotationState = (): MeleeRotationState => ({
   bleedChainUntilTick: 0,
   enduringRuin: { nextAttackBonus: 0, untilTick: 0, grantedByCast: -1 },
   primordialIce: {
-    stackMass: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    expiresAtTick: 0,
+    atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }],
   },
-  frostbladesUntilTick: 0,
-  frostbladesOpenMass: 0,
 });
 
 /** Integer-stack spend (floors). Prefer resolveIcyTempest for distributions. */

@@ -44,7 +44,7 @@ function upsertEntity(db, operation, source) {
       set.verified_at,
       scalar(set.status, "active"),
       scalar(set.sort_key, name.toLocaleLowerCase("en")),
-      source,
+      scalar(set.created_source, source),
       source,
     );
     ensureDomainRow(db, id, set.entity_type);

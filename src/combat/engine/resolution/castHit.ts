@@ -1,6 +1,6 @@
 import type { CritLayers } from "../../core/critical";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
-import { calculateHit, calculateRawHitBand } from "../../pipeline/calculateHit";
+import { calculateHit, calculateRawHitBand, type HitResult } from "../../pipeline/calculateHit";
 import { TUSKAS_EMPOWERED_HIT_CAP } from "../../styles/shared/constitutionAbilities";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
@@ -29,9 +29,15 @@ import {
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
-import { packageCritical, type AttachedDamageComponent, type EventResolution } from "./types";
+import {
+  packageCritical,
+  type AttachedDamageComponent,
+  type EventResolution,
+  type ResolvedDamage,
+} from "./types";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
+import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
 import { hitReuseGet, hitReuseSet, isHitReuseActive } from "./hitReuse";
 import { landHitIdentity } from "./landHitIdentity";
 import { resolveEffectiveCombatLevel } from "../../core/effectiveLevel";
@@ -58,6 +64,81 @@ function combatBaseAt(rt: SimulationRuntime, landTick: number, level: number): n
     return rt.input.overrideBase;
   }
   return rt.input.base;
+}
+
+function mix(a: number, b: number, weight: number): number {
+  return a + (b - a) * weight;
+}
+
+function mixHit(a: HitResult, b: HitResult, weight: number): HitResult {
+  return {
+    potential: a.potential,
+    min: mix(a.min, b.min, weight),
+    max: mix(a.max, b.max, weight),
+    critMin: mix(a.critMin, b.critMin, weight),
+    critMax: mix(a.critMax, b.critMax, weight),
+    critChance: a.critChance,
+    nonCritExpected: mix(a.nonCritExpected, b.nonCritExpected, weight),
+    critExpected: mix(a.critExpected, b.critExpected, weight),
+    expected: mix(a.expected, b.expected, weight),
+    uncappedExpected: mix(a.uncappedExpected, b.uncappedExpected, weight),
+    capLoss: mix(a.capLoss, b.capLoss, weight),
+  };
+}
+
+function mixDamage(a: ResolvedDamage, b: ResolvedDamage, weight: number): ResolvedDamage {
+  return {
+    min: mix(a.min, b.min, weight),
+    max: mix(a.max, b.max, weight),
+    expected: mix(a.expected, b.expected, weight),
+    ...(a.critExpected !== undefined || b.critExpected !== undefined
+      ? { critExpected: mix(a.critExpected ?? a.expected, b.critExpected ?? b.expected, weight) }
+      : {}),
+    ...(a.capLoss !== undefined || b.capLoss !== undefined
+      ? { capLoss: mix(a.capLoss ?? 0, b.capLoss ?? 0, weight) }
+      : {}),
+    ...(a.critical && b.critical
+      ? {
+          critical: {
+            ...a.critical,
+            contribution: mix(a.critical.contribution, b.critical.contribution, weight),
+          },
+        }
+      : a.critical
+        ? { critical: a.critical }
+        : b.critical
+          ? { critical: b.critical }
+          : {}),
+  };
+}
+
+function mixComponents(
+  a: readonly AttachedDamageComponent[] | undefined,
+  b: readonly AttachedDamageComponent[] | undefined,
+  weight: number,
+): readonly AttachedDamageComponent[] | undefined {
+  if (!a && !b) return undefined;
+  const left = a ?? [];
+  const right = b ?? [];
+  return left.map((component, index) => {
+    const other = right[index] ?? component;
+    return {
+      ...component,
+      damage: mixDamage(component.damage, other.damage, weight),
+      ...(component.hitDetail && other.hitDetail
+        ? { hitDetail: mixHit(component.hitDetail, other.hitDetail, weight) }
+        : {}),
+    };
+  });
+}
+
+function mixResolution(a: EventResolution, b: EventResolution, weight: number): EventResolution {
+  const components = mixComponents(a.components, b.components, weight);
+  return {
+    damage: mixDamage(a.damage, b.damage, weight),
+    ...(a.hitDetail && b.hitDetail ? { hitDetail: mixHit(a.hitDetail, b.hitDetail, weight) } : {}),
+    ...(components ? { components } : {}),
+  };
 }
 
 /**
@@ -128,8 +209,42 @@ function resolveCastHitUncached(
   snap: CastSnapshot,
   isDot: boolean,
   convertedChannel: boolean,
+  frostbladesActive?: boolean,
 ): EventResolution {
   const { input, state } = rt;
+  const frostMass = activeFrostbladesMass(state.melee.primordialIce, at);
+  if (
+    frostbladesActive === undefined &&
+    frostMass > 0 &&
+    frostMass < 1 &&
+    ability.style === "melee" &&
+    !ability.autoAttack &&
+    !isDot
+  ) {
+    const inactive = resolveCastHitUncached(
+      rt,
+      at,
+      hitSpec,
+      hitIndex,
+      ability,
+      snap,
+      isDot,
+      convertedChannel,
+      false,
+    );
+    const active = resolveCastHitUncached(
+      rt,
+      at,
+      hitSpec,
+      hitIndex,
+      ability,
+      snap,
+      isDot,
+      convertedChannel,
+      true,
+    );
+    return mixResolution(inactive, active, frostMass);
+  }
   const modifiers = landTimeModifiers(
     rt,
     at,
@@ -139,6 +254,7 @@ function resolveCastHitUncached(
     isDot,
     convertedChannel,
     hitSpec.dotKind,
+    frostbladesActive,
   );
 
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;

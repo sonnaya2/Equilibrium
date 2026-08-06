@@ -4,6 +4,7 @@
 import { describe, expect, it } from "vitest";
 import { activeEquipmentEffects } from "../../shared/equipment";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { expectedStacksFromAtoms } from "../../styles/melee/primordialIce";
 import { prepareCast } from "../cast/prepare";
 import { scheduleCastEvents } from "../cast/schedule";
 import { createRuntime } from "../runtime/runtime";
@@ -52,10 +53,7 @@ describe("failed terminal Leng drain", () => {
     expect(set.residualWeight).toBe(0);
     expect(set.exactness).toBe("exact");
     // Still applies stack mass even when the branch is failed.
-    const eStacks = set.branches[0]!.rt.state.melee.primordialIce.stackMass.reduce(
-      (s, w, i) => s + w * i,
-      0,
-    );
+    const eStacks = expectedStacksFromAtoms(set.branches[0]!.rt.state.melee.primordialIce.atoms);
     expect(eStacks).toBeCloseTo(0.12, 10);
   });
 

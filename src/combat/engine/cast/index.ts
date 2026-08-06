@@ -12,7 +12,7 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 import { noteCastsGrowth } from "../../profiling/allocation";
 import { planCastOutcomes, type BranchSet } from "../simulation/branch";
-import { resolveIcyTempest } from "../../styles/melee/icyTempest";
+import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 
 function emptyAbilityResult(): AbilityResult {
   return { hits: [], min: 0, max: 0, expected: 0, listedAdrenalineDelta: 0, adrenalineDelta: 0 };
@@ -24,25 +24,9 @@ export type { PreparedCast } from "./prepare";
 export type CastPreparation = { ok: true; prepared: PreparedCast } | { ok: false; error: string };
 
 /**
- * Heaviest Icy Tempest spend group (integer). Single-runtime paths must not commit
- * floating E[spend]; multi-branch EV is planCastOutcomes / createCastContext.
- */
-function heaviestIcySpend(rt: SimulationRuntime, candidate: number): number {
-  const resolved = resolveIcyTempest(
-    rt.state.melee.primordialIce,
-    candidate,
-    rt.state.ringOfVigour,
-  );
-  if (resolved.spendDistribution.length === 0) return resolved.expectedSpend;
-  return resolved.spendDistribution.reduce((a, b) =>
-    a.probability >= b.probability ? a : b,
-  ).spend;
-}
-
-/**
- * Single-runtime spine: after land forks (Tsunami adren Bernoulli, etc.), keep
- * the heaviest arm on the caller's `rt` reference. Multi-branch product paths
- * use commitCastBranches instead and never need this.
+ * Single-runtime spine: after non-Leng stochastic forks, keep the heaviest
+ * arm on the caller's `rt` reference. Leng atoms stay coupled on that runtime;
+ * mixed Icy Tempest spends use the branched context.
  */
 function adoptHeaviestBranch(rt: SimulationRuntime, set: BranchSet): void {
   if (set.branches.length === 0) return;
@@ -59,8 +43,7 @@ function adoptHeaviestBranch(rt: SimulationRuntime, set: BranchSet): void {
  * Advance to candidate tick, then validate + prepare. Rejection only advances time;
  * prepareCast is read-only. Pre-cast uses advanceToBranches (compact Primordial Ice).
  *
- * For icy_tempest with mixed stack mass, prepared.spend is the heaviest integer
- * spend group - never floating E[spend]. Full spend distribution: planCastOutcomes.
+ * Mixed Icy Tempest spend groups require the branched cast context.
  */
 export function prepareSimulationCast(
   rt: SimulationRuntime,
@@ -89,16 +72,20 @@ export function prepareSimulationCast(
     rt.byId,
   );
   if (rejection) return { ok: false, error: rejection };
-  let prepared = prepareCast(rt, castAbility, candidate);
   if (castAbility.id === "icy_tempest") {
-    prepared = { ...prepared, spend: heaviestIcySpend(rt, candidate) };
+    const stacks = new Set(
+      expirePrimordialIce(rt.state.melee.primordialIce, candidate).atoms.map((atom) => atom.stacks),
+    );
+    if (stacks.size > 1) {
+      return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
+    }
   }
-  return { ok: true, prepared };
+  return { ok: true, prepared: prepareCast(rt, castAbility, candidate) };
 }
 
 /**
- * Commit on one runtime; occupancy advances via advanceToBranches so compact
- * Primordial Ice mass updates on lands. Land forks adopt the heaviest arm.
+ * Commit on one runtime; occupancy advances via advanceToBranches so Leng atoms
+ * update on lands. Mixed Icy Tempest casts are handled by the branch planner.
  */
 export function commitCast(
   rt: SimulationRuntime,
@@ -148,9 +135,8 @@ export function commitCast(
 /**
  * One atomic cast on a single runtime.
  *
- * Multi-outcome casts (Icy Tempest spend groups, Impatient, Relentless, land
- * adren forks) are planned via planCastOutcomes; only the heaviest plan is
- * committed onto `rt` so adrenaline spend is always an integer group, never E[spend].
+ * A single runtime cannot represent mixed Icy Tempest spend groups without
+ * inventing a representative arm; branched callers use planCastOutcomes.
  */
 export function performCast(
   rt: SimulationRuntime,
@@ -165,6 +151,12 @@ export function performCast(
       ok: false,
       error: planned.errors[0]?.error ?? `unable to cast ${ability.id}`,
     };
+  }
+  if (
+    ability.id === "icy_tempest" &&
+    new Set(planned.plans.map((plan) => plan.prepared.working.hits[0]?.band.minPct)).size > 1
+  ) {
+    return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
   }
   // Heaviest future (max weight). For icy_tempest this is an integer spend group.
   const heaviest = planned.plans.reduce((a, b) => (a.weight >= b.weight ? a : b));

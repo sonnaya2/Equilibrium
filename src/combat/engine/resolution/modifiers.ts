@@ -23,6 +23,7 @@ import {
   frostbladesModifier,
 } from "../../shared/equipment";
 import { FROSTBLADES_AD_FRACTION } from "../../styles/melee/effects";
+import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -64,6 +65,7 @@ export function landTimeModifiers(
   isDot: boolean,
   convertedChannel = false,
   dotKind?: DamageOverTimeKind,
+  frostbladesActive?: boolean,
 ): CombatModifier[] {
   const { state } = rt;
   const modifiers = [...snap.baseMods];
@@ -71,18 +73,17 @@ export function landTimeModifiers(
   if (equipment?.amZiFlatDamage && !modifiers.some((modifier) => modifier.id === "item:am-zi")) {
     modifiers.push(amZiModifier(equipment.amZiFlatDamage));
   }
+  const frostOn =
+    frostbladesActive ?? activeFrostbladesMass(state.melee.primordialIce, at) === 1;
   if (
     ability.style === "melee" &&
     !ability.autoAttack &&
     !isDot &&
-    at < state.melee.frostbladesUntilTick &&
+    frostOn &&
     !modifiers.some((modifier) => modifier.id === "item:frostblades")
   ) {
-    // openMass 0 with a live until = fully open (unit seeds); lands set openMass in (0,1].
-    const raw = state.melee.frostbladesOpenMass ?? 0;
-    const open = raw > 0 ? Math.min(1, raw) : 1;
     modifiers.push(
-      frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION * open)),
+      frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)),
     );
   }
   if (

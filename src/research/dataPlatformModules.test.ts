@@ -316,6 +316,7 @@ describe("verification dates", () => {
   it("rejects dates after the injected build date deterministically", () => {
     const records = [
       {
+        surface: "entities",
         source_file: "data/combat/equipment.json",
         record_path: "$.records[1]",
         raw_json: JSON.stringify({
@@ -323,12 +324,41 @@ describe("verification dates", () => {
           sources: [{ verifiedAt: "2026-08-05" }],
         }),
       },
+      {
+        surface: "sources",
+        source_file: "source:wiki:item",
+        record_path: "source:wiki:item",
+        raw_json: JSON.stringify({ verified_at: "2026-08-06" }),
+      },
+      {
+        surface: "provenance",
+        source_file: "data/combat/equipment.json",
+        record_path: "$.records[1]",
+        raw_json: JSON.stringify({ source: { verifiedAt: "2026-08-06" } }),
+      },
     ];
     expect(dataValidation.futureVerificationRecords(records, "2026-08-05")).toEqual([
       {
+        surface: "entities",
         source_file: "data/combat/equipment.json",
         record_path: "$.records[1]",
         field: "$.verified_at",
+        verifiedAt: "2026-08-06",
+        currentDate: "2026-08-05",
+      },
+      {
+        surface: "sources",
+        source_file: "source:wiki:item",
+        record_path: "source:wiki:item",
+        field: "$.verified_at",
+        verifiedAt: "2026-08-06",
+        currentDate: "2026-08-05",
+      },
+      {
+        surface: "provenance",
+        source_file: "data/combat/equipment.json",
+        record_path: "$.records[1]",
+        field: "$.source.verifiedAt",
         verifiedAt: "2026-08-06",
         currentDate: "2026-08-05",
       },

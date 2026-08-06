@@ -9,12 +9,10 @@
 {"entityId":"activity:content:abyssal-beasts","regionId":"misthalin","relation":"required"}
 {"entityId":"activity:content:acheron-mammoths","regionId":"forinthry","relation":"required"}
 {"entityId":"activity:content:agility-pyramid","regionId":"desert","relation":"required"}
-{"entityId":"activity:content:airuts","ordinal":1,"regionId":"desert","relation":"hint"}
 {"entityId":"activity:content:airuts","regionId":"kandarin","relation":"primary"}
 {"entityId":"activity:content:airuts","regionId":"kandarin","relation":"required","requirementGroup":"single"}
 {"entityId":"activity:content:airuts-desert","regionId":"desert","relation":"primary"}
 {"entityId":"activity:content:airuts-desert","regionId":"desert","relation":"required","requirementGroup":"single"}
-{"entityId":"activity:content:airuts-desert","ordinal":1,"regionId":"kandarin","relation":"hint"}
 {"entityId":"activity:content:allotment-patches","regionId":"havenhythe","relation":"hint"}
 {"entityId":"activity:content:amascut-the-devourer","regionId":"desert","relation":"required"}
 {"entityId":"activity:content:araxxor-araxxi","regionId":"morytania","relation":"primary"}

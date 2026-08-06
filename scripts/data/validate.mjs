@@ -102,13 +102,15 @@ export function futureVerificationRecords(records, currentDate) {
     if (!value || typeof value !== "object") return;
     for (const [key, child] of Object.entries(value)) {
       if ((key === "verified_at" || key === "verifiedAt") && typeof child === "string" && ISO_DATE.test(child) && child > date) {
-        failures.push({
+        const failure = {
           source_file: row.source_file,
           record_path: row.record_path,
           field: `${path}.${key}`,
           verifiedAt: child,
           currentDate: date,
-        });
+        };
+        if (row.surface) failure.surface = row.surface;
+        failures.push(failure);
       }
       visit(child, `${path}.${key}`, row);
     }
@@ -126,8 +128,8 @@ export function validate(db, changedOnly = false, currentDate = currentDataDate(
   const failures = [];
   const warnings = [];
   const rows = (sql) => db.prepare(sql).all();
-  const addFailure = (name, found) =>
-    found.length && failures.push({ name, count: found.length, samples: found.slice(0, 20) });
+  const addFailure = (name, found, details = {}) =>
+    found.length && failures.push({ name, count: found.length, ...details, samples: found.slice(0, 20) });
   const addWarning = (name, found) =>
     found.length && warnings.push({ name, count: found.length, samples: found.slice(0, 20) });
 
@@ -154,13 +156,20 @@ export function validate(db, changedOnly = false, currentDate = currentDataDate(
   addFailure("equipment bonuses that are not usable numbers", rows(UNUSABLE_STAT_VALUES));
   addFailure("equipment stat tiers that are not usable numbers", rows(UNUSABLE_TIER_OVERRIDES));
   const verificationRows = [
-    ...rows("SELECT id AS record_path, id AS source_file, json_object('verified_at', verified_at) AS raw_json FROM entities WHERE verified_at IS NOT NULL"),
-    ...rows("SELECT id AS record_path, id AS source_file, json_object('verified_at', verified_at) AS raw_json FROM sources WHERE verified_at IS NOT NULL"),
-    ...rows("SELECT source_file, record_path, raw_json FROM source_records"),
+    ...rows("SELECT id AS record_path, id AS source_file, json_object('verified_at', verified_at) AS raw_json FROM entities WHERE verified_at IS NOT NULL").map((row) => ({ ...row, surface: "entities" })),
+    ...rows("SELECT id AS record_path, id AS source_file, json_object('verified_at', verified_at) AS raw_json FROM sources WHERE verified_at IS NOT NULL").map((row) => ({ ...row, surface: "sources" })),
+    ...rows("SELECT source_file, record_path, raw_json FROM source_records").map((row) => ({ ...row, surface: "provenance" })),
   ];
+  const verificationFailures = futureVerificationRecords(verificationRows, currentDate);
+  const verificationSurfaces = Object.fromEntries(
+    Object.entries(Object.groupBy(verificationFailures, ({ surface }) => surface ?? "unknown")).map(
+      ([surface, found]) => [surface, found.length],
+    ),
+  );
   addFailure(
     "source verification dates after current data date",
-    futureVerificationRecords(verificationRows, currentDate),
+    verificationFailures,
+    { surfaceCounts: verificationSurfaces },
   );
 
   const missingSources = rows(

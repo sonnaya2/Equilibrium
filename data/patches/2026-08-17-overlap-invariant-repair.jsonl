@@ -1,0 +1,2 @@
+# Keep the reactivated Misthalin catalog content face as the sole active claim.
+{"op":"remove","entity":"morytania:polypore-dungeon","reason":"Retire the duplicate progression activity; activity:content:polypore-dungeon-spore-and-stick-resources is the canonical Misthalin content major."}

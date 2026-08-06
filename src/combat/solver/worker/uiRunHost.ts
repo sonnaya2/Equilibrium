@@ -41,6 +41,8 @@ export type UiRunHostOptions = {
 };
 
 let nextRequestId = 1;
+const UI_RUN_INITIAL_FULL_BUDGET_MS = 1_500;
+
 function allocId(): number {
   const id = nextRequestId;
   nextRequestId += 1;
@@ -244,16 +246,45 @@ export async function runUiRevolution(
     durationTicks: request.durationTicks,
   };
 
-  // Wave cheapest caps first; stop after a residual-free wave.
+  const firstLive = caps[0] ?? 128;
+  options?.onProgress?.({ phase: "full", done: 0, total: 1, maxLiveBranches: firstLive });
+  const firstStarted = performance.now();
+  const firstFull = await runFullOnSlot(pool[0]!, base, firstLive, options?.isCancelled);
+  const firstElapsed = performance.now() - firstStarted;
+  options?.onProgress?.({
+    phase: "full",
+    done: 1,
+    total: 1,
+    maxLiveBranches: firstLive,
+    residualWeight: firstFull.meta.residualWeight,
+  });
+  if (
+    !firstFull.summary.ok ||
+    firstFull.meta.complete ||
+    firstElapsed >= UI_RUN_INITIAL_FULL_BUDGET_MS ||
+    caps.length === 1
+  ) {
+    return firstFull;
+  }
+
+  // The first full result doubles as its fidelity probe when widening is still cheap.
   const { chunkUiRunCaps, isResidualFreeProbe, pickBestUiRunProbe } = await import("../uiRunCore");
-  const waves = chunkUiRunCaps(caps, workerN);
-  const filled: UiRunProbeResult[] = [];
-  let completed = 0;
+  const waves = chunkUiRunCaps(caps.slice(1), workerN);
+  const filled: UiRunProbeResult[] = [
+    {
+      maxLiveBranches: firstLive,
+      residualWeight: firstFull.meta.residualWeight,
+      ok: firstFull.summary.ok,
+      totalExpected: firstFull.summary.totalExpected,
+      exactness: firstFull.meta.exactness,
+    },
+  ];
+  let completed = 1;
   const totalCapCount = caps.length;
 
   options?.onProgress?.({
     phase: "probes",
-    done: 0,
+    done: completed,
     total: totalCapCount,
   });
 
@@ -282,6 +313,13 @@ export async function runUiRevolution(
 
   const bestLive = pickBestUiRunProbe(filled)?.maxLiveBranches;
   const live = bestLive ?? caps[caps.length - 1] ?? 128;
+
+  if (live === firstLive) {
+    return {
+      summary: firstFull.summary,
+      meta: { ...firstFull.meta, attempts: filled.length },
+    };
+  }
 
   options?.onProgress?.({
     phase: "full",

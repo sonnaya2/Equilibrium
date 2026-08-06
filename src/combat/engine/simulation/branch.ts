@@ -6,7 +6,6 @@ import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
 import {
   combineExactness,
-  appendWithIntermediateCap,
   mergeAndCapBranches,
   MAX_INTERMEDIATE_BRANCHES,
   MAX_LIVE_BRANCHES,
@@ -219,10 +218,8 @@ export function planCastOutcomes(
  * Snapshot+commit plans (Leng land forks inside commit), keeping at most `max`
  * pre-commit forks by weight. Discarded fork mass is residual (not reassigned).
  *
- * Merge+cap after every expansion when survivors exceed `max` (same constant as
- * mergeAndCapBranches / MAX_LIVE_BRANCHES). Bounds peak at ~2*max instead of
- * O(parents * Leng survivors). Heaviest-k on a partial set then heaviest-k of
- * (kept U new) matches global heaviest-k; residual still disclosed.
+ * Batch committed branches to `intermediateMax` before merge+cap. Residual is
+ * disclosed whenever the batch is reduced to `max`.
  */
 export function materializeCastPlans(
   plans: readonly CastOutcomePlan[],
@@ -258,7 +255,11 @@ function materializeCastPlansInner(
   let out: Branch[] = [];
 
   const absorb = (added: readonly Branch[]) => {
-    const folded = appendWithIntermediateCap(out, added, max);
+    if (added.length === 0) return;
+    out.push(...added);
+    noteBranchLiveCount(out.length);
+    if (out.length <= intermediateMax) return;
+    const folded = mergeAndCapBranches(out, max);
     residualWeight += folded.residualWeight;
     exactness = combineExactness(exactness, folded.exactness);
     out = folded.branches;

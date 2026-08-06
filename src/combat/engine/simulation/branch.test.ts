@@ -13,8 +13,10 @@ import {
   getBranchProfile,
   MAX_INTERMEDIATE_BRANCHES,
   MAX_LIVE_BRANCHES,
+  materializeCastPlans,
   mergeAndCapBranches,
   mergeBranches,
+  planCastOutcomes,
   resetBranchProfile,
   snapshotRuntime,
 } from "./branch";
@@ -744,6 +746,29 @@ describe("capBranches", () => {
 });
 
 describe("appendWithIntermediateCap / multi-parent intermediate bound", () => {
+  it("batches deterministic parent commits before branch-key folding", () => {
+    const base = createRuntime(meleeInput);
+    const attack = base.byId.get("attack")!;
+    const plans = Array.from({ length: 40 }, (_, i) => {
+      const rt = snapshotRuntime(base);
+      rt.state = { ...rt.state, adrenaline: i };
+      return planCastOutcomes({ weight: 1 / 40, rt }, attack, 0, false, 8, 16).plans[0]!;
+    });
+
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const result = materializeCastPlans(plans, 8, 16);
+    const profile = getBranchProfile();
+    enableBranchProfiling(false);
+    resetBranchProfile();
+
+    expect(result.branches).toHaveLength(8);
+    expect(
+      result.branches.reduce((sum, branch) => sum + branch.weight, 0) + result.residualWeight,
+    ).toBeCloseTo(1);
+    expect(profile.mergeAndCapCalls).toBeLessThan(10);
+  });
+
   it("appendWithIntermediateCap stays within max and conserves mass", () => {
     const base = createRuntime(meleeInput);
     let acc: ReturnType<typeof mergeAndCapBranches>["branches"] = [];

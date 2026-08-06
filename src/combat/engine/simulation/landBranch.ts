@@ -127,11 +127,7 @@ function completeAdvance(rt: SimulationRuntime, fromTick: number, targetTick: nu
   }
 }
 
-/**
- * Append `added` then exact-merge. Hard-cap to maxLive only when unique classes
- * still exceed intermediateMax. Residual is disclosed once (no double-cap chip).
- * Always-merge after Leng expand collapses stack/frost twins before the soft peak.
- */
+/** Merge only at the intermediate bound; the event loop folds once per tick. */
 function foldAfterExpand(
   acc: Branch[],
   added: readonly Branch[],
@@ -140,6 +136,9 @@ function foldAfterExpand(
 ): BranchSet {
   acc.push(...added);
   noteBranchLiveCount(acc.length);
+  if (acc.length <= intermediateMax) {
+    return { branches: acc, residualWeight: 0, exactness: "exact" };
+  }
   const before = acc.length;
   const merged = mergeBranches(acc);
   const exactness: BranchExactness = merged.length < before ? "merged-exactly" : "exact";
@@ -369,18 +368,8 @@ function advanceToBranchesInner(
     const lengNormalized = normalizeLengOnBranches(next, minTick);
     noteBranchLiveCount(next.length);
 
-    if (!expandedAny && next.length <= maxLive) {
-      if (lengNormalized && next.length > 1) {
-        const folded = exactMergeLive(next, exactness);
-        live = folded.branches;
-        exactness = folded.exactness;
-      } else {
-        live = next;
-      }
-      continue;
-    }
     if (next.length <= maxLive) {
-      if (lengNormalized && next.length > 1) {
+      if ((expandedAny || lengNormalized) && next.length > 1) {
         const folded = exactMergeLive(next, exactness);
         live = folded.branches;
         exactness = folded.exactness;
